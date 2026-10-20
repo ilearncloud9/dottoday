@@ -6,24 +6,52 @@ part of 'env_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$envHash() => r'2d8af06ae5ed1161a8172d38551308b6ea869167';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// The loaded [Env]. Overridden in `bootstrap()`; reading it without the
+/// override is a wiring bug.
+
+@ProviderFor(env)
+final envProvider = EnvProvider._();
 
 /// The loaded [Env]. Overridden in `bootstrap()`; reading it without the
 /// override is a wiring bug.
-///
-/// Copied from [env].
-@ProviderFor(env)
-final envProvider = Provider<Env>.internal(
-  env,
-  name: r'envProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$envHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef EnvRef = ProviderRef<Env>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class EnvProvider extends $FunctionalProvider<Env, Env, Env>
+    with $Provider<Env> {
+  /// The loaded [Env]. Overridden in `bootstrap()`; reading it without the
+  /// override is a wiring bug.
+  EnvProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'envProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$envHash();
+
+  @$internal
+  @override
+  $ProviderElement<Env> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Env create(Ref ref) {
+    return env(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Env value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Env>(value),
+    );
+  }
+}
+
+String _$envHash() => r'2d8af06ae5ed1161a8172d38551308b6ea869167';

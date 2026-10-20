@@ -6,23 +6,49 @@ part of 'clock_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$clockHash() => r'55214d6539f7396a3ae1aa23b06eea79fdac0ebe';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// App-wide [Clock]; tests override it with a fake.
+
+@ProviderFor(clock)
+final clockProvider = ClockProvider._();
 
 /// App-wide [Clock]; tests override it with a fake.
-///
-/// Copied from [clock].
-@ProviderFor(clock)
-final clockProvider = Provider<Clock>.internal(
-  clock,
-  name: r'clockProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$clockHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ClockRef = ProviderRef<Clock>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class ClockProvider extends $FunctionalProvider<Clock, Clock, Clock>
+    with $Provider<Clock> {
+  /// App-wide [Clock]; tests override it with a fake.
+  ClockProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'clockProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$clockHash();
+
+  @$internal
+  @override
+  $ProviderElement<Clock> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Clock create(Ref ref) {
+    return clock(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Clock value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Clock>(value),
+    );
+  }
+}
+
+String _$clockHash() => r'55214d6539f7396a3ae1aa23b06eea79fdac0ebe';

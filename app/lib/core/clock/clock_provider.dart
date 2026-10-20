@@ -1,5 +1,4 @@
 import 'package:dottoday/core/clock/clock.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show Ref;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'clock_provider.g.dart';

@@ -39,7 +39,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 
 ## Milestone 2 — Data layer (goal: encrypted local DB + repositories, no network yet)
 
-- [ ] M2.1 Drift schema mirroring 05 + sync columns + `change_log`, `sync_cursors`; SQLCipher key from secure storage; web WASM/OPFS variant behind the same interface. (06 §4, ADR-0003)
+- [ ] M2.1 Drift schema mirroring 05 + sync columns + `change_log`, `sync_cursors`; SQLCipher key from secure storage; web WASM/OPFS variant behind the same interface. (06 §4, ADR-0003) **Decide first:** `drift`/`drift_dev` ≥ 2.32 require `sqlite3` 3.x, which builds SQLite via native-assets hooks and changes how SQLCipher is bundled (affects `sqlcipher_flutter_libs`, CLAUDE.md §2). Both are capped `<2.32` in `pubspec.yaml` until this is decided (M0.11).
 - [ ] M2.2 DAOs + repository implementations (`OccurrenceRepository`, `SeriesRepository`, `SubtaskRepository`, `SettingsRepository`) with reactive streams for day/inbox/week/month queries.
 - [ ] M2.3 Write path: every mutation goes through a `WriteUseCase` that updates DB, appends `change_log`, triggers `Materialiser` (if series), `NotificationPlanner` diff, widget snapshot write. Tests.
 - [ ] M2.4 `BackupService`: daily local JSON backup (keep 7), pre-migration backup; restore. Tests. (R-08, R-11)
