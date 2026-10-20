@@ -73,12 +73,21 @@ jobs:
         include:
           - { target: web, os: ubuntu-24.04, cmd: "flutter build web" }
           - { target: android, os: ubuntu-24.04, cmd: "flutter build apk --debug" }
-          - { target: macos, os: macos-15, cmd: "flutter build macos --debug" }
-          - { target: ios, os: macos-15, cmd: "flutter build ios --simulator --debug" }
+          # Apple targets need the Xcode 26 SDK (connectivity_plus uses NWPath.isUltraConstrained).
+          - { target: macos, os: macos-26, cmd: "flutter build macos --debug" }
+          - { target: ios, os: macos-26, cmd: "flutter build ios --simulator --debug" }
     name: build (${{ matrix.target }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     steps:
+      # Android build exhausts the default ubuntu disk; drop unused preinstalled toolchains.
+      - if: matrix.target == 'android'
+        working-directory: .
+        run: sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL && df -h /
+      # Pin Xcode so an image default change can't silently move the SDK (matches local 26.5).
+      - if: runner.os == 'macOS'
+        working-directory: .
+        run: sudo xcode-select -s /Applications/Xcode_26.5.app && xcodebuild -version
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:

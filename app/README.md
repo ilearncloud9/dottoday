@@ -18,5 +18,9 @@ Env (ADR-0005): copy `.env.example` to `.env` (git-ignored) and run with
 pick them up.** Without the flag the app fails at startup with an `EnvConfigError` naming this
 command.
 
+Toolchain: Apple targets need **Xcode 26+** (iOS/macOS 26 SDK; `connectivity_plus` uses
+`NWPath.isUltraConstrained`). CI pins Xcode 26.5 on `macos-26`. Minimums (docs/07): iOS 16, Android
+API 26, macOS 12.
+
 Fonts: download Inter (OFL) into `assets/fonts/Inter-Variable.ttf`.
 Palette: `assets/design/palette.json` is generated per docs/03-ux-spec.md §1 in Milestone 1.
