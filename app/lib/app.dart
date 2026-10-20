@@ -1,18 +1,19 @@
+import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Root widget. Themed and otherwise blank until router (M0.5) and l10n
-/// (M0.6) land.
-class DottodayApp extends StatelessWidget {
+/// Root widget: theme + router. Shell UI lands in M0.13, l10n in M0.6.
+class DottodayApp extends ConsumerWidget {
   const DottodayApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      home: const Scaffold(),
+      routerConfig: ref.watch(routerProvider),
     );
   }
 }

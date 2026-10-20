@@ -1,0 +1,44 @@
+/// Route paths and typed location builders (docs/09 M0.5).
+///
+/// Build locations with these helpers instead of concatenating strings:
+/// ```dart
+/// context.go(AppRoutes.day(DateTime(2026, 10, 20))); // '/day/2026-10-20'
+/// ```
+abstract final class AppRoutes {
+  static const today = '/today';
+  static const inbox = '/inbox';
+  static const week = '/week';
+  static const month = '/month';
+  static const search = '/search';
+  static const settings = '/settings';
+
+  static const dayPattern = '/day/:date';
+  static const taskPattern = '/task/:id';
+
+  /// Location for the calendar date of [date] (its y/m/d fields as given).
+  static String day(DateTime date) => '/day/${formatRouteDate(date)}';
+
+  /// Location for the task with [id] (a UUID v7).
+  static String task(String id) => '/task/$id';
+}
+
+final _datePattern = RegExp(r'^(\d{4})-(\d{2})-(\d{2})$');
+
+/// Formats the y/m/d fields of [date] as `yyyy-MM-dd`.
+String formatRouteDate(DateTime date) {
+  String two(int v) => v.toString().padLeft(2, '0');
+  return '${date.year.toString().padLeft(4, '0')}-${two(date.month)}-'
+      '${two(date.day)}';
+}
+
+/// Parses a `yyyy-MM-dd` route segment into a UTC midnight calendar date.
+///
+/// Returns null for malformed or non-existent dates (`2026-02-30`).
+DateTime? parseRouteDate(String raw) {
+  final m = _datePattern.firstMatch(raw);
+  if (m == null) return null;
+  final (y, mo, d) = (int.parse(m[1]!), int.parse(m[2]!), int.parse(m[3]!));
+  final date = DateTime.utc(y, mo, d);
+  final roundTrips = date.year == y && date.month == mo && date.day == d;
+  return roundTrips ? date : null;
+}

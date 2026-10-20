@@ -1,6 +1,9 @@
 import 'package:dottoday/app.dart';
+import 'package:dottoday/app_screens.dart';
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
+import 'package:dottoday/core/router/app_router.dart';
+import 'package:dottoday/core/router/router_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +19,10 @@ Future<void> bootstrap() async {
 
   runApp(
     ProviderScope(
-      overrides: [envProvider.overrideWithValue(env)],
+      overrides: [
+        envProvider.overrideWithValue(env),
+        routerProvider.overrideWithValue(buildRouter(appScreens)),
+      ],
       child: const DottodayApp(),
     ),
   );
