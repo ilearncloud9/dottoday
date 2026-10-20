@@ -32,13 +32,13 @@ select is((select title from public.occurrences where id = '10000000-0000-0000-0
 
 -- sync_push ignores spoofed user_id
 select lives_ok(
-  $$select public.sync_push('[{"entity":"occurrences","id":"10000000-0000-0000-0000-000000000001","hlc":"0000000001-0001-dev","fields":{"title":"renamed","user_id":"00000000-0000-0000-0000-00000000000b"}}]'::jsonb)$$,
+  $$select public.sync_push('[{"entity":"occurrences","id":"10000000-0000-0000-0000-000000000001","hlc":"1760000000000-0001-00000000000000aa","fields":{"title":"renamed","user_id":"00000000-0000-0000-0000-00000000000b"}}]'::jsonb)$$,
   'sync_push runs');
 
 -- B pushing to A's row must fail loudly (RLS hides the row)
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-00000000000b","role":"authenticated"}';
 select throws_ok(
-  $$select public.sync_push('[{"entity":"occurrences","id":"10000000-0000-0000-0000-000000000001","hlc":"0000000009-0001","fields":{"title":"B hack"}}]'::jsonb)$$,
+  $$select public.sync_push('[{"entity":"occurrences","id":"10000000-0000-0000-0000-000000000001","hlc":"1760000000009-0001-00000000000000bb","fields":{"title":"B hack"}}]'::jsonb)$$,
   '42501', null, 'B cannot sync_push into A row');
 
 select * from finish();
