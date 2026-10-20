@@ -21,7 +21,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [x] M0.9 Supabase project: apply `supabase/migrations/0001_init.sql`; run `supabase/tests/0001_rls.sql`; fix any dialect issues found in the `sync_push` dynamic SQL (keep allow-listing and `auth.uid()` enforcement). (05, 06 §3) **Done when** green locally (`supabase db reset && supabase test db`) and in CI; pushing to the linked project is M6.0.
 - [ ] M0.10 CHANGELOG.md created; `/ship-check` passes.
 - [x] M0.11 Codegen/lint toolchain upgrade: move to custom_lint/riverpod_generator (or riverpod_lint 3 native analyzer plugin) that support analyzer ≥ 7.4; drop the `analyzer` pin in `pubspec.yaml` and the `analysis_options_deprecated_plugins: ignore` in `analysis_options.yaml`; `build_runner build` + `flutter analyze` clean. Discovered in M0.1.
-- [ ] M0.12 Release builds take `SUPABASE_URL`/`SUPABASE_ANON_KEY` from `--dart-define-from-file` (e.g. `app/.env.prod`) and do not bundle `.env` as an asset; debug builds keep reading `app/.env`. (06 §1)
+- [x] M0.12 Release builds take `SUPABASE_URL`/`SUPABASE_ANON_KEY` from `--dart-define-from-file` (e.g. `app/.env.prod`) and do not bundle `.env` as an asset; debug builds keep reading `app/.env`. (06 §1)
 - [ ] M0.13 App shell: bottom `NavigationBar` (compact) / `NavigationRail` (≥ 600 dp) with the five destinations from 03 §2 (Today · Inbox · Week · Search · Settings), l10n labels, Quick Add FAB placeholder; desktop/web shortcuts ⌘/Ctrl+1 Today, +2 Inbox, +3 Week, +4 Month (pushes `/month`) per 07 macOS. (03 §2, 07)
 
 ## Milestone 1 — Domain core (goal: pure-Dart engine fully tested before any UI)
