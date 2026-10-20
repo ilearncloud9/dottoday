@@ -32,8 +32,6 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      # .env is a bundled asset (M0.3); tests never validate its values.
-      - run: cp .env.example .env
       - run: flutter pub get
       - name: Codegen is fresh (generated files are committed)
         run: |
@@ -56,7 +54,6 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
-      - run: cp .env.example .env
       - run: flutter pub get
       # Verify only: never --update-goldens in CI. Tolerance: test/flutter_test_config.dart.
       - run: flutter test --tags golden
@@ -66,3 +63,27 @@ jobs:
           name: golden-failures
           path: app/test/**/failures/
           retention-days: 7
+
+  build:
+    # Every target must compile, so a broken platform build can't go unnoticed (M0.12).
+    # Defines come from .env.example: builds only need the keys to exist, not real values.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { target: web, os: ubuntu-24.04, cmd: "flutter build web" }
+          - { target: android, os: ubuntu-24.04, cmd: "flutter build apk --debug" }
+          - { target: macos, os: macos-15, cmd: "flutter build macos --debug" }
+          - { target: ios, os: macos-15, cmd: "flutter build ios --simulator --debug" }
+    name: build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: ${{ matrix.cmd }} --dart-define-from-file=.env.example
