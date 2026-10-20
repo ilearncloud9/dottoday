@@ -10,67 +10,60 @@ environment:
 # Versions are floors; `flutter pub get` pins them in pubspec.lock (commit the lockfile).
 # Agents: run `flutter pub outdated` and bump deliberately; justify any new dependency.
 dependencies:
-  flutter:
-    sdk: flutter
-  flutter_localizations:
-    sdk: flutter
-
-  # state & DI
-  flutter_riverpod: ^2.6.0
-  riverpod_annotation: ^2.6.0
-  # navigation
-  go_router: ^14.0.0
-  # models
-  freezed_annotation: ^2.4.0
-  json_annotation: ^4.9.0
-  # local db (encrypted)
+  connectivity_plus: ^6.0.0
+  crypto: ^3.0.5
+  device_calendar: ^4.3.0
   drift: ^2.20.0
   drift_flutter: ^0.2.0
+  file_picker: ^8.1.0
+  flutter:
+    sdk: flutter
+  flutter_animate: ^4.5.0
+  flutter_dotenv: ^5.1.0
+  flutter_local_notifications: ^18.0.0
+  flutter_localizations:
+    sdk: flutter
+  flutter_riverpod: ^2.6.0
+  flutter_secure_storage: ^9.2.0
+  flutter_timezone: ^3.0.0
+  freezed_annotation: ^2.4.0
+  go_router: ^14.0.0
+  google_fonts: ^6.2.0
+  home_widget: ^0.7.0
+  intl: ^0.20.3  # 0.20 required by flutter_localizations in Flutter 3.47
+  json_annotation: ^4.9.0
+  local_auth: ^2.3.0
+  package_info_plus: ^8.0.0
+  path_provider: ^2.1.0
+  riverpod_annotation: ^2.6.0
+  rrule: ^0.2.16
+  sentry_flutter: ^8.9.0
+  share_plus: ^10.0.0
   sqlcipher_flutter_libs: ^0.6.0
   sqlite3: ^2.4.0
-  # backend
   supabase_flutter: ^2.8.0
-  # time
   timezone: ^0.9.4
-  flutter_timezone: ^3.0.0
-  rrule: ^0.2.16
-  intl: ^0.19.0
-  # ids & crypto
-  uuid: ^4.5.0
-  crypto: ^3.0.5
-  # platform
-  flutter_local_notifications: ^18.0.0
-  home_widget: ^0.7.0
-  device_calendar: ^4.3.0
-  flutter_secure_storage: ^9.2.0
-  local_auth: ^2.3.0
-  flutter_dotenv: ^5.1.0
   url_launcher: ^6.3.0
-  share_plus: ^10.0.0
-  file_picker: ^8.1.0
-  path_provider: ^2.1.0
-  package_info_plus: ^8.0.0
-  connectivity_plus: ^6.0.0
-  # ui
-  google_fonts: ^6.2.0
-  flutter_animate: ^4.5.0
-  # observability
-  sentry_flutter: ^8.9.0
+  uuid: ^4.5.0
 
 dev_dependencies:
+  # reason: analyzer >=7.4 breaks analyzer_plugin 0.12.0 (pulled in by custom_lint 0.7 /
+  # riverpod_generator 2.x), so build_runner fails to compile. Drop this pin once
+  # custom_lint/riverpod_generator support analyzer >=7.4 (docs/09 M0.11).
+  analyzer: ">=7.0.0 <7.4.0"
+  build_runner: ^2.4.0
+  custom_lint: ^0.7.0
+  drift_dev: ^2.20.0
+  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
+  freezed: ^2.5.0
+  golden_toolkit: ^0.15.0
   integration_test:
     sdk: flutter
-  build_runner: ^2.4.0
-  riverpod_generator: ^2.6.0
-  freezed: ^2.5.0
   json_serializable: ^6.8.0
-  drift_dev: ^2.20.0
   mocktail: ^1.0.4
-  golden_toolkit: ^0.15.0
-  flutter_lints: ^5.0.0
-  custom_lint: ^0.7.0
+  riverpod_generator: ^2.6.0
   riverpod_lint: ^2.6.0
 
 flutter:

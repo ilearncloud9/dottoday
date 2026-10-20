@@ -24,3 +24,5 @@ android/key.properties
 *.pem
 *.mobileprovision
 web/.well-known/
+.flutter-plugins
+.flutter-plugins-dependencies

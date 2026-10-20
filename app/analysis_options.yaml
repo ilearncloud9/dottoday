@@ -8,6 +8,9 @@ analyzer:
     strict-inference: true
     strict-raw-types: true
   errors:
+    # custom_lint (riverpod_lint 2.x) still uses the legacy analyzer-plugin API, deprecated in
+    # current Dart. Silenced until the riverpod_lint 3 / native-plugin migration task (docs/09 M0.11).
+    analysis_options_deprecated_plugins: ignore
     missing_required_param: error
     missing_return: error
     todo: info
@@ -15,6 +18,11 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - "lib/l10n/generated/**"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - macos/**
 
 linter:
   rules:

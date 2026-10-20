@@ -10,7 +10,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 
 ## Milestone 0 — Project bootstrap (goal: `flutter run` on all four targets with a blank themed screen)
 
-- [ ] M0.1 Run `flutter create` in `app/` per `app/README.md`; restore seeded files; `flutter pub get`; commit lockfile.
+- [x] M0.1 Run `flutter create` in `app/` per `app/README.md`; restore seeded files; `flutter pub get`; commit lockfile.
 - [ ] M0.2 Folder layout from CLAUDE.md §3 with placeholder `README.md` in each top-level dir explaining its boundary.
 - [ ] M0.3 `core/env`: load `.env` via flutter_dotenv; fail fast with a clear message if `SUPABASE_URL` missing. (06 §1)
 - [ ] M0.4 `core/theme`: tokens from 03 §1 (colours light/dark, typography, spacing, radii, motion durations); `AppTheme.of(context)`; respects reduced motion. Golden test light/dark.
@@ -20,6 +20,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [ ] M0.8 CI: GitHub Actions `analyze → format → test` for the app; `supabase start && supabase test db` for RLS. gitleaks step.
 - [ ] M0.9 Supabase project: apply `supabase/migrations/0001_init.sql`; run `supabase/tests/0001_rls.sql`; fix any dialect issues found in the `sync_push` dynamic SQL (keep allow-listing and `auth.uid()` enforcement). (05, 06 §3)
 - [ ] M0.10 CHANGELOG.md created; `/ship-check` passes.
+- [ ] M0.11 Codegen/lint toolchain upgrade: move to custom_lint/riverpod_generator (or riverpod_lint 3 native analyzer plugin) that support analyzer ≥ 7.4; drop the `analyzer` pin in `pubspec.yaml` and the `analysis_options_deprecated_plugins: ignore` in `analysis_options.yaml`; `build_runner build` + `flutter analyze` clean. Discovered in M0.1.
 
 ## Milestone 1 — Domain core (goal: pure-Dart engine fully tested before any UI)
 
