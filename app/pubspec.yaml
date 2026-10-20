@@ -16,7 +16,6 @@ dependencies:
   # reason: drift/drift_dev >=2.32 require sqlite3 3.x (native-assets build, affects SQLCipher
   # packaging). Decided in M2.1; keep both <2.32 until then.
   drift: ">=2.28.0 <2.32.0"
-  drift_flutter: ^0.2.0
   file_picker: ^13.1.0
   flutter:
     sdk: flutter
