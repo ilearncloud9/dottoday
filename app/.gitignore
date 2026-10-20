@@ -26,3 +26,5 @@ android/key.properties
 web/.well-known/
 .flutter-plugins
 .flutter-plugins-dependencies
+# golden diff output
+test/**/failures/

@@ -57,5 +57,11 @@ jobs:
           cache: true
       - run: cp .env.example .env
       - run: flutter pub get
-      # Verify only: never --update-goldens in CI.
+      # Verify only: never --update-goldens in CI. Tolerance: test/flutter_test_config.dart.
       - run: flutter test --tags golden
+      - if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: golden-failures
+          path: app/test/**/failures/
+          retention-days: 7
