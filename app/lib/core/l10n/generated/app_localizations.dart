@@ -99,6 +99,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dottoday'**
   String get appTitle;
+
+  /// Local database read/write failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save on this device. Try again.'**
+  String get failureStorage;
+
+  /// No network connection.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re offline. Changes are saved on this device and will sync later.'**
+  String get failureNetworkOffline;
+
+  /// Network request timed out.
+  ///
+  /// In en, this message translates to:
+  /// **'The server took too long to respond. Try again.'**
+  String get failureNetworkTimeout;
+
+  /// Backend returned an error.
+  ///
+  /// In en, this message translates to:
+  /// **'The server had a problem. Your data is safe on this device.'**
+  String get failureNetworkServer;
+
+  /// Auth session missing or expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has ended. Sign in again to keep syncing.'**
+  String get failureAuth;
+
+  /// A required input was empty.
+  ///
+  /// In en, this message translates to:
+  /// **'This can\'t be empty.'**
+  String get failureValidationRequired;
+
+  /// Input exceeded the maximum length.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s too long. Try something shorter.'**
+  String get failureValidationTooLong;
+
+  /// Numeric/time input out of range.
+  ///
+  /// In en, this message translates to:
+  /// **'That value is outside the allowed range.'**
+  String get failureValidationOutOfRange;
+
+  /// Input had an invalid format.
+  ///
+  /// In en, this message translates to:
+  /// **'That doesn\'t look right. Check the format.'**
+  String get failureValidationInvalidFormat;
+
+  /// Imported file exceeded the size limit.
+  ///
+  /// In en, this message translates to:
+  /// **'That file is too large.'**
+  String get failureValidationTooLarge;
+
+  /// Entity missing or not visible to the user.
+  ///
+  /// In en, this message translates to:
+  /// **'This item no longer exists.'**
+  String get failureNotFound;
+
+  /// Same-field sync conflict needing a decision.
+  ///
+  /// In en, this message translates to:
+  /// **'This item changed on another device. Choose which version to keep.'**
+  String get failureConflict;
+
+  /// Notification permission denied.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are off for Dottoday. You can turn them on in system settings.'**
+  String get failurePermissionNotifications;
+
+  /// Calendar permission denied.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday can\'t see your calendars. You can allow access in system settings.'**
+  String get failurePermissionCalendar;
+
+  /// Fallback for unclassified failures.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Try again.'**
+  String get failureUnexpected;
 }
 
 class _AppLocalizationsDelegate

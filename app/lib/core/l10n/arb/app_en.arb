@@ -3,5 +3,65 @@
   "appTitle": "Dottoday",
   "@appTitle": {
     "description": "App name shown in the OS task switcher, window title and browser tab."
+  },
+  "failureStorage": "Couldn't save on this device. Try again.",
+  "@failureStorage": {
+    "description": "Local database read/write failed."
+  },
+  "failureNetworkOffline": "You're offline. Changes are saved on this device and will sync later.",
+  "@failureNetworkOffline": {
+    "description": "No network connection."
+  },
+  "failureNetworkTimeout": "The server took too long to respond. Try again.",
+  "@failureNetworkTimeout": {
+    "description": "Network request timed out."
+  },
+  "failureNetworkServer": "The server had a problem. Your data is safe on this device.",
+  "@failureNetworkServer": {
+    "description": "Backend returned an error."
+  },
+  "failureAuth": "Your session has ended. Sign in again to keep syncing.",
+  "@failureAuth": {
+    "description": "Auth session missing or expired."
+  },
+  "failureValidationRequired": "This can't be empty.",
+  "@failureValidationRequired": {
+    "description": "A required input was empty."
+  },
+  "failureValidationTooLong": "That's too long. Try something shorter.",
+  "@failureValidationTooLong": {
+    "description": "Input exceeded the maximum length."
+  },
+  "failureValidationOutOfRange": "That value is outside the allowed range.",
+  "@failureValidationOutOfRange": {
+    "description": "Numeric/time input out of range."
+  },
+  "failureValidationInvalidFormat": "That doesn't look right. Check the format.",
+  "@failureValidationInvalidFormat": {
+    "description": "Input had an invalid format."
+  },
+  "failureValidationTooLarge": "That file is too large.",
+  "@failureValidationTooLarge": {
+    "description": "Imported file exceeded the size limit."
+  },
+  "failureNotFound": "This item no longer exists.",
+  "@failureNotFound": {
+    "description": "Entity missing or not visible to the user."
+  },
+  "failureConflict": "This item changed on another device. Choose which version to keep.",
+  "@failureConflict": {
+    "description": "Same-field sync conflict needing a decision."
+  },
+  "failurePermissionNotifications": "Notifications are off for Dottoday. You can turn them on in system settings.",
+  "@failurePermissionNotifications": {
+    "description": "Notification permission denied."
+  },
+  "failurePermissionCalendar": "Dottoday can't see your calendars. You can allow access in system settings.",
+  "@failurePermissionCalendar": {
+    "description": "Calendar permission denied."
+  },
+  "failureUnexpected": "Something went wrong. Try again.",
+  "@failureUnexpected": {
+    "description": "Fallback for unclassified failures."
   }
 }
