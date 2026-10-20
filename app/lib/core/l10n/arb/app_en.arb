@@ -1,0 +1,7 @@
+{
+  "@@locale": "en",
+  "appTitle": "Dottoday",
+  "@appTitle": {
+    "description": "App name shown in the OS task switcher, window title and browser tab."
+  }
+}

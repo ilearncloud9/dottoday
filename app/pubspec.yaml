@@ -67,7 +67,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  generate: true   # AppLocalizations from lib/l10n/*.arb
+  generate: true   # AppLocalizations from lib/core/l10n/arb (see l10n.yaml)
   assets:
     # flutter_dotenv reads .env from the bundle; public values only (docs/06 §1).
     # Release builds stop bundling it in M0.12.

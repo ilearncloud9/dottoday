@@ -1,0 +1,8 @@
+# gen-l10n config (docs/09 M0.6). en is the source locale; de/fr/es land in M8.3.
+arb-dir: lib/core/l10n/arb
+template-arb-file: app_en.arb
+output-dir: lib/core/l10n/generated
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+# A missing key is a compile error, not a runtime null.
+nullable-getter: false
