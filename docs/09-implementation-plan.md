@@ -11,7 +11,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 ## Milestone 0 — Project bootstrap (goal: `flutter run` on all four targets with a blank themed screen)
 
 - [x] M0.1 Run `flutter create` in `app/` per `app/README.md`; restore seeded files; `flutter pub get`; commit lockfile.
-- [ ] M0.2 Folder layout from CLAUDE.md §3 with placeholder `README.md` in each top-level dir explaining its boundary.
+- [x] M0.2 Folder layout from CLAUDE.md §3 with placeholder `README.md` in each top-level dir explaining its boundary.
 - [ ] M0.3 `core/env`: load `.env` via flutter_dotenv; fail fast with a clear message if `SUPABASE_URL` missing. (06 §1)
 - [ ] M0.4 `core/theme`: tokens from 03 §1 (colours light/dark, typography, spacing, radii, motion durations); `AppTheme.of(context)`; respects reduced motion. Golden test light/dark.
 - [ ] M0.5 `core/router`: go_router with routes `/today`, `/day/:date`, `/inbox`, `/week`, `/month`, `/search`, `/settings`, `/task/:id`; allow-listed deep links. (07 shared)
