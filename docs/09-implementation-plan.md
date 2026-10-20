@@ -23,6 +23,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [x] M0.11 Codegen/lint toolchain upgrade: move to custom_lint/riverpod_generator (or riverpod_lint 3 native analyzer plugin) that support analyzer ≥ 7.4; drop the `analyzer` pin in `pubspec.yaml` and the `analysis_options_deprecated_plugins: ignore` in `analysis_options.yaml`; `build_runner build` + `flutter analyze` clean. Discovered in M0.1.
 - [x] M0.12 Release builds take `SUPABASE_URL`/`SUPABASE_ANON_KEY` from `--dart-define-from-file` (e.g. `app/.env.prod`) and do not bundle `.env` as an asset; debug builds keep reading `app/.env`. (06 §1)
 - [x] M0.13 App shell: bottom `NavigationBar` (compact) / `NavigationRail` (≥ 600 dp) with the five destinations from 03 §2 (Today · Inbox · Week · Search · Settings), l10n labels, Quick Add FAB placeholder; desktop/web shortcuts ⌘/Ctrl+1 Today, +2 Inbox, +3 Week, +4 Month (pushes `/month`) per 07 macOS. (03 §2, 07)
+- [ ] M0.14 Automated accessibility checks per 08 §3 (found by M0 `/ship-check`): a reusable test helper running `androidTapTargetGuideline`, `iOSTapTargetGuideline`, `labeledTapTargetGuideline`, `textContrastGuideline` over every screen (shell now, each new screen later) in light + dark, compact + expanded; axe-core scan of the web build in CI. (R-12)
 
 ## Milestone 1 — Domain core (goal: pure-Dart engine fully tested before any UI)
 
@@ -75,7 +76,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [ ] M4.7 Week and Month views (free), Search screen. (02 F8, R-03, R-14)
 - [ ] M4.8 Settings screen (all items in 02 F8) incl. per-weekday boundaries, snapping, shift default, alerts default, theme/accent, 12/24 h, language. (R-16, R-17)
 - [ ] M4.9 Onboarding (≤ 3 screens, skippable, < 90 s), with notification pre-prompt. (02 F10)
-- [ ] M4.10 Integration test: onboarding → quick add → drag w/ shift → recurrence edit scopes. `/ship-check`.
+- [ ] M4.10 Integration test: onboarding → quick add → drag w/ shift → recurrence edit scopes. `/ship-check`. Add the Android-emulator `integration_test` CI job required by 08 §6 ("integration (Android)").
 
 ## Milestone 5 — Notifications, widgets, platform polish
 
