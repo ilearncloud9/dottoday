@@ -189,6 +189,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong. Try again.'**
   String get failureUnexpected;
+
+  /// Bottom bar / rail tab: today's timeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get navToday;
+
+  /// Tab: unscheduled tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get navInbox;
+
+  /// Tab: week view.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get navWeek;
+
+  /// Tab: search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get navSearch;
+
+  /// Tab: settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get navSettings;
+
+  /// Tooltip and screen-reader label for the Quick Add button.
+  ///
+  /// In en, this message translates to:
+  /// **'Add task'**
+  String get quickAddTooltip;
 }
 
 class _AppLocalizationsDelegate

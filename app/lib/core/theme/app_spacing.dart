@@ -13,6 +13,17 @@ abstract final class AppSpacing {
 
   /// Hairline stroke width, drawn in `AppColors.outline`.
   static const double hairline = 1;
+
+  /// Extra bottom inset for content under a floating action button: 56 dp
+  /// FAB + its 16 dp margin + 16 dp breathing room, so the end of a scrolled
+  /// list is never hidden behind it (M0.13).
+  static const double fabClearance = 56 + l + l;
+}
+
+/// Layout breakpoints (Material 3 window size classes, docs/03 §2).
+abstract final class AppBreakpoints {
+  /// From this width up, navigation is a rail instead of a bottom bar.
+  static const double navigationRail = 600;
 }
 
 /// Corner radii from docs/03-ux-spec.md §1.

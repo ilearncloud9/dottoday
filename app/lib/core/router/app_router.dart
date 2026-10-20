@@ -3,6 +3,20 @@ import 'package:dottoday/core/router/deep_link_guard.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+/// The five top-level tabs, in branch order (docs/03 §2). The shell maps
+/// these to destinations; never index branches with bare numbers.
+enum ShellTab {
+  today(AppRoutes.today),
+  inbox(AppRoutes.inbox),
+  week(AppRoutes.week),
+  search(AppRoutes.search),
+  settings(AppRoutes.settings);
+
+  const ShellTab(this.path);
+
+  final String path;
+}
+
 /// Screens the router renders, supplied by the composition root so `core`
 /// never imports `features` (CLAUDE.md §3).
 final class RouteScreens {
@@ -41,11 +55,8 @@ GoRouter buildRouter(RouteScreens screens) {
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => screens.shell(context, shell),
         branches: [
-          _branch(AppRoutes.today, screens.today),
-          _branch(AppRoutes.inbox, screens.inbox),
-          _branch(AppRoutes.week, screens.week),
-          _branch(AppRoutes.search, screens.search),
-          _branch(AppRoutes.settings, screens.settings),
+          for (final tab in ShellTab.values)
+            _branch(tab.path, _tabScreen(screens, tab)),
         ],
       ),
       GoRoute(
@@ -67,6 +78,16 @@ GoRouter buildRouter(RouteScreens screens) {
       ),
     ],
   );
+}
+
+WidgetBuilder _tabScreen(RouteScreens screens, ShellTab tab) {
+  return switch (tab) {
+    ShellTab.today => screens.today,
+    ShellTab.inbox => screens.inbox,
+    ShellTab.week => screens.week,
+    ShellTab.search => screens.search,
+    ShellTab.settings => screens.settings,
+  };
 }
 
 String? _redirect(Uri uri) {

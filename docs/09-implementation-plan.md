@@ -22,7 +22,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [ ] M0.10 CHANGELOG.md created; `/ship-check` passes.
 - [x] M0.11 Codegen/lint toolchain upgrade: move to custom_lint/riverpod_generator (or riverpod_lint 3 native analyzer plugin) that support analyzer ≥ 7.4; drop the `analyzer` pin in `pubspec.yaml` and the `analysis_options_deprecated_plugins: ignore` in `analysis_options.yaml`; `build_runner build` + `flutter analyze` clean. Discovered in M0.1.
 - [x] M0.12 Release builds take `SUPABASE_URL`/`SUPABASE_ANON_KEY` from `--dart-define-from-file` (e.g. `app/.env.prod`) and do not bundle `.env` as an asset; debug builds keep reading `app/.env`. (06 §1)
-- [ ] M0.13 App shell: bottom `NavigationBar` (compact) / `NavigationRail` (≥ 600 dp) with the five destinations from 03 §2 (Today · Inbox · Week · Search · Settings), l10n labels, Quick Add FAB placeholder; desktop/web shortcuts ⌘/Ctrl+1 Today, +2 Inbox, +3 Week, +4 Month (pushes `/month`) per 07 macOS. (03 §2, 07)
+- [x] M0.13 App shell: bottom `NavigationBar` (compact) / `NavigationRail` (≥ 600 dp) with the five destinations from 03 §2 (Today · Inbox · Week · Search · Settings), l10n labels, Quick Add FAB placeholder; desktop/web shortcuts ⌘/Ctrl+1 Today, +2 Inbox, +3 Week, +4 Month (pushes `/month`) per 07 macOS. (03 §2, 07)
 
 ## Milestone 1 — Domain core (goal: pure-Dart engine fully tested before any UI)
 
@@ -84,7 +84,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [ ] M5.2 Background refresh: iOS BGAppRefresh, Android WorkManager — re-materialise + re-plan daily. (07)
 - [ ] M5.3 Web push: service worker, VAPID, `send-push` Edge Function; in-app fallback. (07 Web)
 - [ ] M5.4 Widgets: iOS/Android "Next up", "Today timeline", "Inbox count" via `home_widget`; snapshot JSON updated on every write; macOS WidgetKit shares app group. (02 F9, R-08)
-- [ ] M5.5 macOS: menu bar + shortcuts, window min size, sandbox entitlements; crash-free verification on Intel + Apple Silicon. (07 macOS, R-13)
+- [ ] M5.5 macOS: menu bar + shortcuts, window min size, sandbox entitlements; crash-free verification on Intel + Apple Silicon. (07 macOS, R-13) Verify the shell `NavigationRail` (wrapped in `SafeArea`, M0.13) against the real macOS title bar / traffic lights and full-screen mode.
 - [ ] M5.6 Android: predictive back, edge-to-edge, exact-alarm rationale + inexact fallback. (07 Android)
 - [ ] M5.7 Web: PWA manifest, offline page, CSP headers, keyboard-first audit, responsive 360 px. (07 Web, 06 §8)
 - [ ] M5.8 App lock (biometric/passcode), blur in switcher, FLAG_SECURE. (06 §2)

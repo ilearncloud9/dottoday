@@ -63,5 +63,29 @@
   "failureUnexpected": "Something went wrong. Try again.",
   "@failureUnexpected": {
     "description": "Fallback for unclassified failures."
+  },
+  "navToday": "Today",
+  "@navToday": {
+    "description": "Bottom bar / rail tab: today's timeline."
+  },
+  "navInbox": "Inbox",
+  "@navInbox": {
+    "description": "Tab: unscheduled tasks."
+  },
+  "navWeek": "Week",
+  "@navWeek": {
+    "description": "Tab: week view."
+  },
+  "navSearch": "Search",
+  "@navSearch": {
+    "description": "Tab: search."
+  },
+  "navSettings": "Settings",
+  "@navSettings": {
+    "description": "Tab: settings."
+  },
+  "quickAddTooltip": "Add task",
+  "@quickAddTooltip": {
+    "description": "Tooltip and screen-reader label for the Quick Add button."
   }
 }

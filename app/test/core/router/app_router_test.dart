@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../support/test_app.dart';
+
 const _v7 = '01929a3e-7c4b-7d2a-9f10-3b5c6d7e8f90';
 
 Future<GoRouter> _pump(WidgetTester tester) async {
   final router = buildRouter(appScreens);
   addTearDown(router.dispose);
-  await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+  await tester.pumpWidget(testRouterApp(router));
   return router;
 }
 

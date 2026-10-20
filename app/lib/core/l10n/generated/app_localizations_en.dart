@@ -65,4 +65,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failureUnexpected => 'Something went wrong. Try again.';
+
+  @override
+  String get navToday => 'Today';
+
+  @override
+  String get navInbox => 'Inbox';
+
+  @override
+  String get navWeek => 'Week';
+
+  @override
+  String get navSearch => 'Search';
+
+  @override
+  String get navSettings => 'Settings';
+
+  @override
+  String get quickAddTooltip => 'Add task';
 }
