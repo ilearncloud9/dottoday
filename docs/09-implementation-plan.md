@@ -15,7 +15,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [ ] M0.3 `core/env`: load `.env` via flutter_dotenv; fail fast with a clear message if `SUPABASE_URL` missing. (06 §1)
 - [ ] M0.4 `core/theme`: tokens from 03 §1 (colours light/dark, typography, spacing, radii, motion durations); `AppTheme.of(context)`; respects reduced motion. Golden test light/dark.
 - [ ] M0.5 `core/router`: go_router with routes `/today`, `/day/:date`, `/inbox`, `/week`, `/month`, `/search`, `/settings`, `/task/:id`; allow-listed deep links. (07 shared)
-- [ ] M0.6 `core/l10n`: ARB setup (en source), `AppLocalizations`; lint that forbids string literals in `features/**/widgets` (custom_lint rule or test scanning).
+- [ ] M0.6 `core/l10n`: ARB setup (en source), `AppLocalizations`; lint that forbids string literals in `features/**/widgets` (custom_lint rule or test scanning). Also an import-boundary test (scans `lib/**` imports) failing on: `features/X` → `features/Y`, `domain/` → `package:flutter`, `shared/` → `features/`. (CLAUDE.md §3)
 - [ ] M0.7 `core/clock`, `core/logger` (PII redaction + test that `Logger.info('title: x')` is rejected by lint/test), `core/failures` sealed class.
 - [ ] M0.8 CI: GitHub Actions `analyze → format → test` for the app; `supabase start && supabase test db` for RLS. gitleaks step.
 - [ ] M0.9 Supabase project: apply `supabase/migrations/0001_init.sql`; run `supabase/tests/0001_rls.sql`; fix any dialect issues found in the `sync_push` dynamic SQL (keep allow-listing and `auth.uid()` enforcement). (05, 06 §3)
