@@ -33,14 +33,13 @@ Widget e() => Text('•'); // l10n-ignore: bullet glyph, not copy
     });
   });
 
-  test('no UI string literals in features/**/widgets and shared/', () {
+  // All of features/ and shared/, not just widgets/: notifiers produce
+  // user-visible text too. Legitimate exceptions use `// l10n-ignore: <why>`.
+  test('no UI string literals in features/** and shared/**', () {
     final sources = {
       ...readLibSources('lib/features'),
       ...readLibSources('lib/shared'),
-    }..removeWhere(
-        (path, _) =>
-            path.startsWith('features/') && !path.contains('/widgets/'),
-      );
+    };
     final offenders = [
       for (final MapEntry(key: path, value: src) in sources.entries)
         for (final line in uiStringLiteralLines(src)) 'lib/$path:$line',
