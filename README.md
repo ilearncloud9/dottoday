@@ -32,7 +32,7 @@ without you re-explaining the product every session:
 ## How to start
 
 1. Create an empty git repo and copy this folder's contents into its root.
-2. Create a Supabase project; copy URL + anon key into `app/.env` (never commit it).
+2. Create a Supabase project; copy URL + anon key into `app/.env` (never commit it); run with `flutter run --dart-define-from-file=.env` (ADR-0005).
 3. Open the repo in Claude Code (`claude`) or Codex (`codex`).
 4. First prompt: **"Read CLAUDE.md and docs/09-implementation-plan.md, then start Milestone 0."**
    Or in Claude Code: `/next-task`.

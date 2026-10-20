@@ -11,8 +11,12 @@ flutter pub get
 dart run build_runner build -d
 ```
 
-Env: copy `.env.example` to `.env` (git-ignored) before building — it is bundled as an asset and
-the app fails fast at startup if `SUPABASE_URL`/`SUPABASE_ANON_KEY` are missing (docs/09 M0.3).
+Env (ADR-0005): copy `.env.example` to `.env` (git-ignored) and run with
+`flutter run --dart-define-from-file=.env`. Release builds use `.env.prod`:
+`flutter build <target> --dart-define-from-file=.env.prod`. Values are compile-time constants —
+**after changing `.env`, do a full restart (stop and `flutter run` again); hot reload/restart won't
+pick them up.** Without the flag the app fails at startup with an `EnvConfigError` naming this
+command.
 
 Fonts: download Inter (OFL) into `assets/fonts/Inter-Variable.ttf`.
 Palette: `assets/design/palette.json` is generated per docs/03-ux-spec.md §1 in Milestone 1.

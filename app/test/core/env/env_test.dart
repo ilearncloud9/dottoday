@@ -91,6 +91,14 @@ void main() {
       );
     });
 
+    test('missing define names the exact command to run', () {
+      // No --dart-define-from-file in `flutter test`, so defines are empty.
+      expect(
+        Env.fromEnvironment,
+        _throwsEnv('flutter run --dart-define-from-file=.env'),
+      );
+    });
+
     test('error messages never echo config values', () {
       try {
         Env.fromMap(_valid({'SUPABASE_URL': 'http://leak.example.com'}));

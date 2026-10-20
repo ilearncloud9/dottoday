@@ -9,20 +9,18 @@ import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Composition root: error handlers, config, then the app.
 ///
-/// Throws [EnvConfigError] before the first frame if `app/.env` is incomplete,
-/// so misconfiguration never reaches the UI (docs/09 M0.3).
+/// Throws [EnvConfigError] before the first frame if the compile-time env
+/// defines are missing or invalid (docs/09 M0.3, ADR-0005).
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   final logger = Logger(const DeveloperLogSink(), const SystemClock());
   installErrorHandlers(logger);
 
-  await dotenv.load();
-  final env = Env.fromMap(dotenv.env);
+  final env = Env.fromEnvironment();
 
   runApp(
     ProviderScope(

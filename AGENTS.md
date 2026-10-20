@@ -28,7 +28,7 @@ Never start coding from memory of the product. Always open the spec for the feat
 | IDs | UUID v7 (`uuid` package, `Uuid().v7()`) |
 | Notifications | `flutter_local_notifications` (mobile/desktop), Web Push via service worker |
 | Calendar | `device_calendar` (iOS/Android/macOS), CalDAV/Google/Microsoft via backend functions (web) |
-| Secrets | `flutter_secure_storage` on device; `.env` via `flutter_dotenv` for public keys only |
+| Secrets | `flutter_secure_storage` on device; public config (Supabase URL + anon key) compiled in via `--dart-define-from-file=.env` / `.env.prod` (ADR-0005) |
 | i18n | `flutter_localizations` + ARB files; every user-facing string goes through `AppLocalizations` |
 | Tests | `flutter_test`, `mocktail`, `integration_test`, `golden_toolkit` |
 

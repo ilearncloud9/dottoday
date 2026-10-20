@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-/// Public client configuration read from `app/.env` at startup.
+/// Public client configuration, compiled in via `--dart-define-from-file`
+/// (ADR-0005): `app/.env` for debug, `app/.env.prod` for release.
 ///
 /// Only public values belong here (docs/06-security.md §1): the Supabase URL
 /// and **anon** key, plus optional Sentry DSN and Web Push VAPID public key.
@@ -11,6 +12,18 @@ final class Env {
     this.sentryDsn,
     this.webPushVapidPublicKey,
   });
+
+  /// Reads the compile-time defines and validates them via [Env.fromMap].
+  ///
+  /// Values are `const` (baked in at compile time), so changing `.env`
+  /// needs a full restart, not hot reload.
+  factory Env.fromEnvironment() => Env.fromMap(const {
+        'SUPABASE_URL': String.fromEnvironment('SUPABASE_URL'),
+        'SUPABASE_ANON_KEY': String.fromEnvironment('SUPABASE_ANON_KEY'),
+        'SENTRY_DSN': String.fromEnvironment('SENTRY_DSN'),
+        'WEB_PUSH_VAPID_PUBLIC_KEY':
+            String.fromEnvironment('WEB_PUSH_VAPID_PUBLIC_KEY'),
+      });
 
   /// Builds an [Env] from raw key/value pairs, failing fast on bad config.
   ///
@@ -58,7 +71,12 @@ final class EnvConfigError extends Error {
   String toString() => 'EnvConfigError: $message';
 }
 
-const _hint = 'Copy app/.env.example to app/.env and fill it in.';
+/// Exact fix, shown whenever a required define is missing (ADR-0005).
+const _hint = 'Run from app/: '
+    'flutter run --dart-define-from-file=.env '
+    '(copy .env.example to .env first). Release: '
+    'flutter build <target> --dart-define-from-file=.env.prod. '
+    'Changing values needs a full restart.';
 
 String _required(Map<String, String> raw, String key) {
   final value = raw[key]?.trim() ?? '';
