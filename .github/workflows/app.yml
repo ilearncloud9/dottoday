@@ -1,0 +1,61 @@
+# App gates (docs/09 M0.8, docs/04 §10). Actions pinned to commit SHAs.
+name: app
+
+on:
+  push:
+    paths: ["app/**", ".github/workflows/app.yml"]
+  pull_request:
+    paths: ["app/**", ".github/workflows/app.yml"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: "3.47.7"
+
+defaults:
+  run:
+    working-directory: app
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      # .env is a bundled asset (M0.3); tests never validate its values.
+      - run: cp .env.example .env
+      - run: flutter pub get
+      - name: Codegen is fresh (generated files are committed)
+        run: |
+          dart run build_runner build -d
+          flutter gen-l10n
+          git diff --exit-code -- . || { echo "::error::Generated files are stale. Run build_runner and gen-l10n, then commit."; exit 1; }
+      - run: dart format --set-exit-if-changed lib test
+      - run: flutter analyze --fatal-infos
+      - run: flutter test --exclude-tags golden --test-randomize-ordering-seed random
+
+  goldens:
+    # Goldens are baselined on macOS; Linux font rendering differs (M0.4).
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: cp .env.example .env
+      - run: flutter pub get
+      # Verify only: never --update-goldens in CI.
+      - run: flutter test --tags golden

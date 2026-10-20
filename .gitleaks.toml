@@ -1,0 +1,10 @@
+# gitleaks config (docs/06 §1). Extends the default ruleset.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Placeholders and test fixtures, not secrets"
+paths = [
+  '''app/\.env\.example$''',
+  '''app/pubspec\.lock$''',
+]
