@@ -1,0 +1,3 @@
+tags:
+  golden:
+    # Pixel goldens are baselined on macOS; run on a macOS runner (docs/09 M0.8).

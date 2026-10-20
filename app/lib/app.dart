@@ -1,15 +1,18 @@
+import 'package:dottoday/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
-/// Root widget. Intentionally blank until theme (M0.4), router (M0.5) and
-/// l10n (M0.6) land.
+/// Root widget. Themed and otherwise blank until router (M0.5) and l10n
+/// (M0.6) land.
 class DottodayApp extends StatelessWidget {
   const DottodayApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(),
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      home: const Scaffold(),
     );
   }
 }

@@ -9,3 +9,4 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - M0.1: Flutter project scaffold (iOS, Android, macOS, Web) with blank shell app, smoke test, Inter font, placeholder assets and committed `pubspec.lock`; `intl` bumped to ^0.20.3 and `analyzer` pinned <7.4 so codegen compiles.
 - M0.2: Feature-first folder layout (`core`, `data`, `domain`, `features/*`, `shared`, `integration_test`) with boundary READMEs.
 - M0.3: `core/env` — `Env` loaded from `app/.env` in `bootstrap()`, provided via `envProvider`; fails fast on missing/invalid `SUPABASE_URL`/`SUPABASE_ANON_KEY` and rejects service-role keys.
+- M0.4: `core/theme` — semantic colour, type (Inter), spacing, radii and motion tokens from 03 §1 via `AppTheme.of(context)`; zero-duration motion under reduced motion; light/dark goldens. Removed unused `google_fonts`.

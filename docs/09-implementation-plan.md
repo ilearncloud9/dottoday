@@ -13,11 +13,11 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [x] M0.1 Run `flutter create` in `app/` per `app/README.md`; restore seeded files; `flutter pub get`; commit lockfile.
 - [x] M0.2 Folder layout from CLAUDE.md §3 with placeholder `README.md` in each top-level dir explaining its boundary.
 - [x] M0.3 `core/env`: load `.env` via flutter_dotenv; fail fast with a clear message if `SUPABASE_URL` missing. (06 §1)
-- [ ] M0.4 `core/theme`: tokens from 03 §1 (colours light/dark, typography, spacing, radii, motion durations); `AppTheme.of(context)`; respects reduced motion. Golden test light/dark.
+- [x] M0.4 `core/theme`: tokens from 03 §1 (colours light/dark, typography, spacing, radii, motion durations); `AppTheme.of(context)`; respects reduced motion. Golden test light/dark.
 - [ ] M0.5 `core/router`: go_router with routes `/today`, `/day/:date`, `/inbox`, `/week`, `/month`, `/search`, `/settings`, `/task/:id`; allow-listed deep links. (07 shared)
 - [ ] M0.6 `core/l10n`: ARB setup (en source), `AppLocalizations`; lint that forbids string literals in `features/**/widgets` (custom_lint rule or test scanning). Also an import-boundary test (scans `lib/**` imports) failing on: `features/X` → `features/Y`, `domain/` → `package:flutter`, `shared/` → `features/`. (CLAUDE.md §3)
 - [ ] M0.7 `core/clock`, `core/logger` (PII redaction + test that `Logger.info('title: x')` is rejected by lint/test), `core/failures` sealed class.
-- [ ] M0.8 CI: GitHub Actions `analyze → format → test` for the app; `supabase start && supabase test db` for RLS. gitleaks step.
+- [ ] M0.8 CI: GitHub Actions `analyze → format → test` for the app; `supabase start && supabase test db` for RLS. gitleaks step. Golden-test job must run on a **macOS runner** (goldens are baselined on macOS, M0.4).
 - [ ] M0.9 Supabase project: apply `supabase/migrations/0001_init.sql`; run `supabase/tests/0001_rls.sql`; fix any dialect issues found in the `sync_push` dynamic SQL (keep allow-listing and `auth.uid()` enforcement). (05, 06 §3)
 - [ ] M0.10 CHANGELOG.md created; `/ship-check` passes.
 - [ ] M0.11 Codegen/lint toolchain upgrade: move to custom_lint/riverpod_generator (or riverpod_lint 3 native analyzer plugin) that support analyzer ≥ 7.4; drop the `analyzer` pin in `pubspec.yaml` and the `analysis_options_deprecated_plugins: ignore` in `analysis_options.yaml`; `build_runner build` + `flutter analyze` clean. Discovered in M0.1.
@@ -25,6 +25,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 
 ## Milestone 1 — Domain core (goal: pure-Dart engine fully tested before any UI)
 
+- [ ] M1.0 Block palette: the 12 names fixed in 03 §1 (coral … slate); define hex `base`/`strong` for light and dark in `assets/design/palette.json`; test that every `strong` is ≥ 3:1 against `surface` in its mode; build step generates Dart (`lib/core/theme/block_palette.g.dart`). (03 §1)
 - [ ] M1.1 Entities with freezed: `Series`, `Occurrence`, `Subtask`, `Alert`, `CalendarAccount`, `CalendarLink`, `Profile/Settings`. Validators per 05 "Validation". Unit tests.
 - [ ] M1.2 `RecurrenceExpander` (rrule + timezone): expand series → occurrences for a window; exceptions; tests listed in 08 §2 `recurrence_expander_test`. (ADR-0004, R-01, R-09)
 - [ ] M1.3 `Materialiser`: idempotent 90-day materialisation; subtask instantiation from template per occurrence; `subtask_occurrence_test`. (R-09)
