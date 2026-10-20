@@ -1,4 +1,4 @@
-import 'package:dottoday/main.dart';
+import 'package:dottoday/app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

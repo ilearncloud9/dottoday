@@ -11,5 +11,8 @@ flutter pub get
 dart run build_runner build -d
 ```
 
+Env: copy `.env.example` to `.env` (git-ignored) before building — it is bundled as an asset and
+the app fails fast at startup if `SUPABASE_URL`/`SUPABASE_ANON_KEY` are missing (docs/09 M0.3).
+
 Fonts: download Inter (OFL) into `assets/fonts/Inter-Variable.ttf`.
 Palette: `assets/design/palette.json` is generated per docs/03-ux-spec.md §1 in Milestone 1.

@@ -70,6 +70,9 @@ flutter:
   uses-material-design: true
   generate: true   # AppLocalizations from lib/l10n/*.arb
   assets:
+    # flutter_dotenv reads .env from the bundle; public values only (docs/06 §1).
+    # Release builds stop bundling it in M0.12.
+    - .env
     - assets/design/palette.json
     - assets/icons/
     - assets/sounds/
