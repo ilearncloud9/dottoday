@@ -1,0 +1,92 @@
+# 05 — Data Model
+
+All IDs are UUID v7 (time-ordered, client-generated). All timestamps are UTC epoch ms (`*_utc`).
+Server and local schemas are identical in meaning; local adds sync columns. SQL in
+`supabase/migrations/0001_init.sql`.
+
+## Entities
+
+### `profiles`
+One per auth user. `id (= auth.users.id)`, `display_name`, `tz_id`, `locale`, `settings jsonb`
+(day boundaries per weekday, snapping, shift policy, default alerts, theme…), `created_at`, `updated_at`.
+
+### `series`  (a recurring task template)
+`id, user_id, title, notes, color_key, icon_key, duration_min, rrule text, dtstart_local text
+(ISO without zone), tz_id, until_utc?, count?, pinned bool, travel_buffer_min int, energy smallint?,
+alerts jsonb [ {offsetMin:int, kind:'before'|'at_start'|'at_end'|'overdue', sound?} ],
+subtask_template jsonb [ {id, title, sortOrder} ], archived_at?, created_at, updated_at, deleted_at?`
+
+### `occurrences`  (every block on the timeline, scheduled or not)
+`id, user_id, series_id? (null = one-off), original_start_utc? (for series exceptions),
+title, notes, color_key, icon_key, start_utc? (null = inbox), tz_id, duration_min, pinned,
+travel_buffer_min, energy?, alerts jsonb (overrides series when non-null), status
+('planned'|'done'|'skipped'), completed_at_utc?, sort_order (inbox ordering), source
+('user'|'calendar'), calendar_link_id?, snoozed_until_utc?, created_at, updated_at, deleted_at?`
+
+Rules
+- A series row never appears on the timeline itself; the client materialises occurrences 90 days
+  ahead (`materialised_through_utc` on series). Materialised rows for an unchanged series are
+  idempotent (`unique(series_id, original_start_utc)`).
+- Editing "this occurrence" writes the occurrence row (keeps `series_id`, `original_start_utc`).
+  "This and following" splits the series (`until` on old, new series from that date). "All" edits the
+  series and re-materialises untouched occurrences (occurrences with user edits are preserved).
+- Completion is **per occurrence** (R-09). Subtask state too (below).
+
+### `subtasks`
+`id, user_id, occurrence_id, title, done bool, sort_order, created_at, updated_at, deleted_at?`
+Created from `series.subtask_template` when an occurrence is materialised; never shared across
+occurrences.
+
+### `calendar_accounts`
+`id, user_id, provider ('apple_device'|'android_device'|'google'|'microsoft'|'caldav'), label,
+external_account_id, write_back bool, enabled bool, created_at, updated_at`
+OAuth refresh tokens are **not** in this table — they live in `vault.secrets` (Supabase Vault), keyed
+by `calendar_accounts.id`, accessible only from Edge Functions.
+
+### `calendar_links`
+`id, user_id, account_id, external_calendar_id, external_event_id, etag, last_synced_utc,
+read_only bool`. Joined to `occurrences.calendar_link_id`.
+
+### `conflicts`
+`id, user_id, entity, entity_id, field, mine jsonb, theirs jsonb, created_at, resolved_at?`
+
+### `change_log` (local only) and `sync_cursors` (local only)
+See architecture §4.
+
+### `trash` is a view: rows where `deleted_at is not null and deleted_at > now() - 30 days`.
+A nightly job purges older tombstones.
+
+## Settings JSON (profiles.settings) — validated with a schema on both sides
+```json
+{
+  "dayBoundaries": {"mon": {"start": "07:00", "end": "22:00"}, "...": {}},
+  "snapMinutes": 5,
+  "shiftFollowers": "ask",
+  "includeCalendarInShift": false,
+  "defaultDurationMin": 30,
+  "defaultAlerts": [{"kind": "before", "offsetMin": 10}],
+  "quietHours": {"start": "22:00", "end": "07:00"},
+  "use24h": null,
+  "firstDayOfWeek": 1,
+  "theme": "system",
+  "accent": "indigo",
+  "reduceMotion": null
+}
+```
+
+## Validation (client and server)
+- `title` 1–200 chars, trimmed; `notes` ≤ 10 000; `duration_min` 5–1440; `alerts` ≤ 5 with
+  `offsetMin` 0–1440; `subtasks` ≤ 50 per occurrence; `rrule` must parse and have `FREQ`; `tz_id`
+  must be a known IANA id; `color_key`/`icon_key` from the allowed sets.
+- Server enforces with CHECK constraints and a `validate_settings()` function; client with a Zod-like
+  Dart validator in `domain/validation`.
+
+## Indexes
+`occurrences (user_id, start_utc)`, `occurrences (user_id, series_id, original_start_utc) unique`,
+`occurrences (user_id, deleted_at)`, `subtasks (occurrence_id)`, `series (user_id)`,
+`calendar_links (user_id, external_event_id)`. All tables `(user_id, updated_at)` for sync pulls.
+
+## Export format
+JSON v1: `{version:1, exportedAt, profile, series[], occurrences[], subtasks[]}`; CSV per entity;
+ICS of occurrences with `start_utc` (VEVENT, RRULE for series). Import accepts JSON v1 only and runs in
+a transaction with a pre-import backup.

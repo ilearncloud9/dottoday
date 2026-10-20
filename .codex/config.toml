@@ -1,0 +1,7 @@
+# Codex CLI project config. AGENTS.md at the repo root is read automatically.
+model = "gpt-5-codex"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+network_access = true   # needed for `flutter pub get` and `supabase` CLI

@@ -1,0 +1,12 @@
+# root-level; app/ has its own
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.idea/
+.vscode/
+supabase/.branches
+supabase/.temp
+supabase/snippets
+.DS_Store
