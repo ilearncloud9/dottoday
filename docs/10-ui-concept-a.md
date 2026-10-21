@@ -12,7 +12,9 @@ A day is a **thread**: a vertical line that starts at Wake Up (sun cap) and ends
 
 ## 2. Tokens
 
-Implement as `lib/theme/tokens.dart` (primitives) + `DotTheme` `ThemeExtension` (semantic), per `04-architecture.md` and the design-system structure the kit already prescribes. No raw colours or radii outside `lib/theme/`.
+Implement as `app/lib/core/theme/tokens.dart` (primitives) + `DotTheme` `ThemeExtension` (semantic), per `04-architecture.md` and the design-system structure the kit already prescribes. No raw colours or radii outside `app/lib/core/theme/`.
+
+Theme lives in app/lib/core/theme/ (DotTheme as a ThemeExtension); no second theme folder.
 
 ### 2.1 Colour
 
