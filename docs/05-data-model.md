@@ -99,7 +99,7 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   `offsetMin` 0–1440; `subtasks` ≤ 50 per occurrence; `rrule` must parse and have `FREQ` (HOURLY or coarser — M1.2); `tz_id`
   must be a known IANA id; `color_key`/`icon_key` from the allowed sets.
 - Clarified in M1.1: `icon_key` is a lowercase snake_case token ≤ 48 chars (default `circle`) until
-  the picker set is fixed in M3.1; the UI draws `circle` for keys it does not know. `color_key` must be
+  the picker set is the 26 `TaskIcon`s (M3a.2; older keys map to the nearest icon); the UI draws a plain dot for `circle` and for keys it does not know. `color_key` must be
   one of the 9 Concept A task colour keys or a retired 12-palette key kept for sync
   (`task_color_keys.gen.dart`, ADR-0007, M3a.1); `settings.accent` is one of the 4 accents. Day boundaries are `HH:mm` with
   start < end (no wrap); quiet hours may wrap past midnight. `quietHours: null` means off and is the

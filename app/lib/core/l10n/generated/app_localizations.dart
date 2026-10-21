@@ -385,18 +385,6 @@ abstract class AppLocalizations {
   /// Block icon name (screen readers, picker).
   ///
   /// In en, this message translates to:
-  /// **'Work'**
-  String get iconWork;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Meeting'**
-  String get iconMeeting;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
   /// **'Call'**
   String get iconCall;
 
@@ -411,12 +399,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Code'**
   String get iconCode;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Study'**
-  String get iconStudy;
 
   /// Block icon name (screen readers, picker).
   ///
@@ -439,38 +421,8 @@ abstract class AppLocalizations {
   /// Block icon name (screen readers, picker).
   ///
   /// In en, this message translates to:
-  /// **'Walk'**
-  String get iconWalk;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Bike'**
-  String get iconBike;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
   /// **'Meal'**
   String get iconMeal;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Coffee'**
-  String get iconCoffee;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Sleep'**
-  String get iconSleep;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Medication'**
-  String get iconMedication;
 
   /// Block icon name (screen readers, picker).
   ///
@@ -483,30 +435,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Home'**
   String get iconHome;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Cleaning'**
-  String get iconClean;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Shopping'**
-  String get iconShopping;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Commute'**
-  String get iconCommute;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Travel'**
-  String get iconFlight;
 
   /// Block icon name (screen readers, picker).
   ///
@@ -525,6 +453,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Star'**
   String get iconStar;
+
+  /// Task icon name (list), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'List'**
+  String get iconList;
+
+  /// Task icon name (language), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get iconLanguage;
+
+  /// Task icon name (travel), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get iconTravel;
+
+  /// Task icon name (shopping cart), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping cart'**
+  String get iconCart;
+
+  /// Task icon name (tv), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'TV'**
+  String get iconTv;
+
+  /// Task icon name (shopping bag), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping bag'**
+  String get iconBag;
+
+  /// Task icon name (medication), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Medication'**
+  String get iconMeds;
+
+  /// Task icon name (water), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Water'**
+  String get iconWater;
+
+  /// Task icon name (car), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Car'**
+  String get iconCar;
+
+  /// Task icon name (money), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get iconMoney;
+
+  /// Task icon name (gift), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift'**
+  String get iconGift;
+
+  /// Task icon name (camera), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get iconCamera;
+
+  /// Task icon name (people), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'People'**
+  String get iconPeople;
+
+  /// Task icon name (document), read by screen readers and shown as the picker tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Document'**
+  String get iconDocument;
 
   /// Snackbar action reverting the last change (30 s).
   ///

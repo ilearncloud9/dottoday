@@ -71,11 +71,8 @@ class _AllDayChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            BlockIcon.fromKey(item.iconKey).icon,
-            size: DotSpace.l,
-            color: strong,
-          ),
+          if (TaskIcon.fromKey(item.iconKey).glyph case final glyph?)
+            DotIcon(glyph, size: DotSpace.l, color: strong),
           const SizedBox(width: DotSpace.xs),
           Text(item.title, style: t.styles.body.copyWith(color: strong)),
         ],

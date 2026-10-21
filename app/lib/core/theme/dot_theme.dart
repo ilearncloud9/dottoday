@@ -5,12 +5,14 @@ import 'package:dottoday/core/theme/dot_type.dart';
 import 'package:dottoday/core/theme/task_palette.dart';
 import 'package:flutter/material.dart';
 
-export 'block_icons.dart';
 export 'contrast.dart';
 export 'dot_colors.dart';
+export 'dot_glyphs.dart';
+export 'dot_icon.dart';
 export 'dot_metrics.dart';
 export 'dot_motion.dart';
 export 'dot_type.dart';
+export 'task_icons.dart';
 export 'task_palette.dart';
 
 /// Concept A design tokens as a [ThemeExtension] (docs/10-ui-concept-a.md

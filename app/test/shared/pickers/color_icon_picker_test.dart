@@ -10,9 +10,9 @@ import '../../support/test_app.dart';
 
 Widget _picker({
   TaskColor color = TaskColor.teal,
-  BlockIcon icon = BlockIcon.gym,
+  TaskIcon icon = TaskIcon.gym,
   ValueChanged<TaskColor>? onColor,
-  ValueChanged<BlockIcon>? onIcon,
+  ValueChanged<TaskIcon>? onIcon,
   ThemeMode mode = ThemeMode.light,
 }) => testApp(
   Scaffold(
@@ -48,28 +48,31 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(_picker());
-    expect(find.byIcon(Icons.check), findsOneWidget);
+    expect(
+      find.byWidgetPredicate((w) => w is DotIcon && w.glyph == DotGlyphs.check),
+      findsOneWidget,
+    );
   });
 
   testWidgets('taps report the choice', (tester) async {
     TaskColor? color;
-    BlockIcon? icon;
+    TaskIcon? icon;
     await tester.pumpWidget(
       _picker(onColor: (c) => color = c, onIcon: (i) => icon = i),
     );
     await tester.tap(find.bySemanticsLabel('Rose'));
-    await tester.tap(find.byTooltip('Coffee'));
+    await tester.tap(find.byTooltip('Camera'));
     expect(color, TaskColor.rose);
-    expect(icon, BlockIcon.coffee);
+    expect(icon, TaskIcon.camera);
   });
 
   testWidgets('names exist for every colour and icon', (tester) async {
     await tester.pumpWidget(testApp(const SizedBox()));
     final l10n = AppLocalizations.of(tester.element(find.byType(SizedBox)));
-    final colors = {for (final c in TaskColor.values) blockColorName(l10n, c)};
-    final icons = {for (final i in BlockIcon.values) blockIconName(l10n, i)};
+    final colors = {for (final c in TaskColor.values) taskColorName(l10n, c)};
+    final icons = {for (final i in TaskIcon.picker) taskIconName(l10n, i)};
     expect(colors, hasLength(TaskColor.values.length));
-    expect(icons, hasLength(BlockIcon.values.length));
+    expect(icons, hasLength(TaskIcon.picker.length));
   });
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {

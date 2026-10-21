@@ -170,12 +170,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get iconCircle => 'Plain';
 
   @override
-  String get iconWork => 'Work';
-
-  @override
-  String get iconMeeting => 'Meeting';
-
-  @override
   String get iconCall => 'Call';
 
   @override
@@ -183,9 +177,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get iconCode => 'Code';
-
-  @override
-  String get iconStudy => 'Study';
 
   @override
   String get iconBook => 'Reading';
@@ -197,40 +188,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get iconRun => 'Run';
 
   @override
-  String get iconWalk => 'Walk';
-
-  @override
-  String get iconBike => 'Bike';
-
-  @override
   String get iconMeal => 'Meal';
-
-  @override
-  String get iconCoffee => 'Coffee';
-
-  @override
-  String get iconSleep => 'Sleep';
-
-  @override
-  String get iconMedication => 'Medication';
 
   @override
   String get iconHeart => 'Health';
 
   @override
   String get iconHome => 'Home';
-
-  @override
-  String get iconClean => 'Cleaning';
-
-  @override
-  String get iconShopping => 'Shopping';
-
-  @override
-  String get iconCommute => 'Commute';
-
-  @override
-  String get iconFlight => 'Travel';
 
   @override
   String get iconMusic => 'Music';
@@ -240,6 +204,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get iconStar => 'Star';
+
+  @override
+  String get iconList => 'List';
+
+  @override
+  String get iconLanguage => 'Language';
+
+  @override
+  String get iconTravel => 'Travel';
+
+  @override
+  String get iconCart => 'Shopping cart';
+
+  @override
+  String get iconTv => 'TV';
+
+  @override
+  String get iconBag => 'Shopping bag';
+
+  @override
+  String get iconMeds => 'Medication';
+
+  @override
+  String get iconWater => 'Water';
+
+  @override
+  String get iconCar => 'Car';
+
+  @override
+  String get iconMoney => 'Money';
+
+  @override
+  String get iconGift => 'Gift';
+
+  @override
+  String get iconCamera => 'Camera';
+
+  @override
+  String get iconPeople => 'People';
+
+  @override
+  String get iconDocument => 'Document';
 
   @override
   String get undoAction => 'Undo';

@@ -210,14 +210,6 @@
   "@iconCircle": {
     "description": "Block icon name (screen readers, picker)."
   },
-  "iconWork": "Work",
-  "@iconWork": {
-    "description": "Block icon name (screen readers, picker)."
-  },
-  "iconMeeting": "Meeting",
-  "@iconMeeting": {
-    "description": "Block icon name (screen readers, picker)."
-  },
   "iconCall": "Call",
   "@iconCall": {
     "description": "Block icon name (screen readers, picker)."
@@ -228,10 +220,6 @@
   },
   "iconCode": "Code",
   "@iconCode": {
-    "description": "Block icon name (screen readers, picker)."
-  },
-  "iconStudy": "Study",
-  "@iconStudy": {
     "description": "Block icon name (screen readers, picker)."
   },
   "iconBook": "Reading",
@@ -246,28 +234,8 @@
   "@iconRun": {
     "description": "Block icon name (screen readers, picker)."
   },
-  "iconWalk": "Walk",
-  "@iconWalk": {
-    "description": "Block icon name (screen readers, picker)."
-  },
-  "iconBike": "Bike",
-  "@iconBike": {
-    "description": "Block icon name (screen readers, picker)."
-  },
   "iconMeal": "Meal",
   "@iconMeal": {
-    "description": "Block icon name (screen readers, picker)."
-  },
-  "iconCoffee": "Coffee",
-  "@iconCoffee": {
-    "description": "Block icon name (screen readers, picker)."
-  },
-  "iconSleep": "Sleep",
-  "@iconSleep": {
-    "description": "Block icon name (screen readers, picker)."
-  },
-  "iconMedication": "Medication",
-  "@iconMedication": {
     "description": "Block icon name (screen readers, picker)."
   },
   "iconHeart": "Health",
@@ -276,22 +244,6 @@
   },
   "iconHome": "Home",
   "@iconHome": {
-    "description": "Block icon name (screen readers, picker)."
-  },
-  "iconClean": "Cleaning",
-  "@iconClean": {
-    "description": "Block icon name (screen readers, picker)."
-  },
-  "iconShopping": "Shopping",
-  "@iconShopping": {
-    "description": "Block icon name (screen readers, picker)."
-  },
-  "iconCommute": "Commute",
-  "@iconCommute": {
-    "description": "Block icon name (screen readers, picker)."
-  },
-  "iconFlight": "Travel",
-  "@iconFlight": {
     "description": "Block icon name (screen readers, picker)."
   },
   "iconMusic": "Music",
@@ -305,6 +257,62 @@
   "iconStar": "Star",
   "@iconStar": {
     "description": "Block icon name (screen readers, picker)."
+  },
+  "iconList": "List",
+  "@iconList": {
+    "description": "Task icon name (list), read by screen readers and shown as the picker tooltip."
+  },
+  "iconLanguage": "Language",
+  "@iconLanguage": {
+    "description": "Task icon name (language), read by screen readers and shown as the picker tooltip."
+  },
+  "iconTravel": "Travel",
+  "@iconTravel": {
+    "description": "Task icon name (travel), read by screen readers and shown as the picker tooltip."
+  },
+  "iconCart": "Shopping cart",
+  "@iconCart": {
+    "description": "Task icon name (shopping cart), read by screen readers and shown as the picker tooltip."
+  },
+  "iconTv": "TV",
+  "@iconTv": {
+    "description": "Task icon name (tv), read by screen readers and shown as the picker tooltip."
+  },
+  "iconBag": "Shopping bag",
+  "@iconBag": {
+    "description": "Task icon name (shopping bag), read by screen readers and shown as the picker tooltip."
+  },
+  "iconMeds": "Medication",
+  "@iconMeds": {
+    "description": "Task icon name (medication), read by screen readers and shown as the picker tooltip."
+  },
+  "iconWater": "Water",
+  "@iconWater": {
+    "description": "Task icon name (water), read by screen readers and shown as the picker tooltip."
+  },
+  "iconCar": "Car",
+  "@iconCar": {
+    "description": "Task icon name (car), read by screen readers and shown as the picker tooltip."
+  },
+  "iconMoney": "Money",
+  "@iconMoney": {
+    "description": "Task icon name (money), read by screen readers and shown as the picker tooltip."
+  },
+  "iconGift": "Gift",
+  "@iconGift": {
+    "description": "Task icon name (gift), read by screen readers and shown as the picker tooltip."
+  },
+  "iconCamera": "Camera",
+  "@iconCamera": {
+    "description": "Task icon name (camera), read by screen readers and shown as the picker tooltip."
+  },
+  "iconPeople": "People",
+  "@iconPeople": {
+    "description": "Task icon name (people), read by screen readers and shown as the picker tooltip."
+  },
+  "iconDocument": "Document",
+  "@iconDocument": {
+    "description": "Task icon name (document), read by screen readers and shown as the picker tooltip."
   },
   "undoAction": "Undo",
   "@undoAction": {

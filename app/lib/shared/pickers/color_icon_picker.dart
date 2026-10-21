@@ -21,9 +21,9 @@ class ColorIconPicker extends StatelessWidget {
   });
 
   final TaskColor color;
-  final BlockIcon icon;
+  final TaskIcon icon;
   final ValueChanged<TaskColor> onColorChanged;
-  final ValueChanged<BlockIcon> onIconChanged;
+  final ValueChanged<TaskIcon> onIconChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -52,16 +52,20 @@ class ColorIconPicker extends StatelessWidget {
           spacing: DotSpace.xs,
           runSpacing: DotSpace.xs,
           children: [
-            for (final i in BlockIcon.values)
+            for (final i in TaskIcon.picker)
               IconButton(
                 isSelected: i == icon,
                 onPressed: () => onIconChanged(i),
-                tooltip: blockIconName(l10n, i),
+                tooltip: taskIconName(l10n, i),
                 color: t.tasks[color].ink,
                 style: IconButton.styleFrom(
                   backgroundColor: i == icon ? t.tasks[color].tint : null,
                 ),
-                icon: Icon(i.icon),
+                icon: DotIcon(
+                  i.glyph!,
+                  color: t.tasks[color].ink,
+                  active: i == icon,
+                ),
               ),
           ],
         ),
@@ -105,7 +109,7 @@ class _ColorSwatch extends StatelessWidget {
     return Semantics(
       button: true,
       selected: selected,
-      label: blockColorName(context.l10n, color),
+      label: taskColorName(context.l10n, color),
       child: InkResponse(
         onTap: onTap,
         radius: _swatch / 2,
@@ -120,9 +124,7 @@ class _ColorSwatch extends StatelessWidget {
               width: selected ? DotSpace.xs / 2 : DotSpace.hairline,
             ),
           ),
-          child: selected
-              ? ExcludeSemantics(child: Icon(Icons.check, color: swatch.ink))
-              : null,
+          child: selected ? DotIcon(DotGlyphs.check, color: swatch.ink) : null,
         ),
       ),
     );

@@ -76,7 +76,7 @@ class BlockTile extends StatelessWidget {
             facts: f,
             ink: ink,
             circle: IconCircle(
-              icon: BlockIcon.fromKey(block.iconKey).icon,
+              icon: TaskIcon.fromKey(block.iconKey),
               color: t.tasks[color].ink,
               done: f.done,
               label: f.done

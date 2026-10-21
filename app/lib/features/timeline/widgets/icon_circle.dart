@@ -14,7 +14,7 @@ class IconCircle extends StatelessWidget {
     super.key,
   });
 
-  final IconData icon;
+  final TaskIcon icon;
 
   /// The block's strong colour.
   final Color color;
@@ -37,11 +37,19 @@ class IconCircle extends StatelessWidget {
         shape: BoxShape.circle,
         color: done ? t.colors.success : color.withValues(alpha: 0.16),
       ),
-      child: Icon(
-        done ? Icons.check : icon,
-        size: diameter * 0.6,
-        color: done ? t.colors.raised : color,
-      ),
+      child: switch ((done, icon.glyph)) {
+        (true, _) => DotIcon(
+          DotGlyphs.check,
+          size: diameter * 0.6,
+          color: t.colors.raised,
+        ),
+        (false, final glyph?) => DotIcon(
+          glyph,
+          size: diameter * 0.6,
+          color: color,
+        ),
+        (false, null) => null,
+      },
     );
     final box = SizedBox(
       width: target,
