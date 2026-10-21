@@ -668,4 +668,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get copyDayNothing => 'That day has nothing to copy';
+
+  @override
+  String snackDone(String title) {
+    return '$title done';
+  }
+
+  @override
+  String snackNotDone(String title) {
+    return '$title not done';
+  }
+
+  @override
+  String snackExtended(String title, String time) {
+    return '$title now ends at $time';
+  }
+
+  @override
+  String snackShifted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Moved $count tasks',
+      one: 'Moved 1 task',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String snackShiftedPartial(int count, String pin) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Moved $count tasks · stopped at $pin (pinned)',
+      one: 'Moved 1 task · stopped at $pin (pinned)',
+      zero: 'Nothing moved: $pin is pinned',
+    );
+    return '$_temp0';
+  }
 }

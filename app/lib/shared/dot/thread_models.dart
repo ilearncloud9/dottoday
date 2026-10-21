@@ -21,6 +21,7 @@ final class ThreadTask {
     this.minutesLeft,
     this.subtasksDone = 0,
     this.subtasksTotal = 0,
+    this.overrunMinutes = 0,
   });
 
   /// Occurrence id, for callbacks.
@@ -45,6 +46,10 @@ final class ThreadTask {
   final int? minutesLeft;
   final int subtasksDone;
   final int subtasksTotal;
+
+  /// Live task only: how far it runs into the next task. "Shift the rest"
+  /// moves the later tasks by this much and is off when it is 0 (R-04).
+  final int overrunMinutes;
 
   bool get hasSubtasks => subtasksTotal > 0;
 }

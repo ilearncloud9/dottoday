@@ -1009,5 +1009,56 @@
   "copyDayNothing": "That day has nothing to copy",
   "@copyDayNothing": {
     "description": "Snackbar when the picked day has no one-off tasks."
+  },
+  "snackDone": "{title} done",
+  "@snackDone": {
+    "description": "Snackbar after marking a task done, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "snackNotDone": "{title} not done",
+  "@snackNotDone": {
+    "description": "Snackbar after un-marking a done task, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "snackExtended": "{title} now ends at {time}",
+  "@snackExtended": {
+    "description": "Snackbar after +15 min on the live task, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "snackShifted": "{count, plural, =1{Moved 1 task} other{Moved {count} tasks}}",
+  "@snackShifted": {
+    "description": "Snackbar after Shift the rest, with Undo.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackShiftedPartial": "{count, plural, =0{Nothing moved: {pin} is pinned} =1{Moved 1 task · stopped at {pin} (pinned)} other{Moved {count} tasks · stopped at {pin} (pinned)}}",
+  "@snackShiftedPartial": {
+    "description": "Snackbar when a pinned task stopped Shift the rest (R-17).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "pin": {
+        "type": "String"
+      }
+    }
   }
 }

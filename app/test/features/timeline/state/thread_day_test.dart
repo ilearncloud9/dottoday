@@ -125,6 +125,17 @@ void main() {
     },
   );
 
+  test('overrun: how far the live task runs into the next task to do', () {
+    final overlapping = [
+      ...day,
+      _o('review', 10, 30, 30),
+      _o('doneEarly', 10, 0, 15, status: OccurrenceStatus.done),
+    ];
+    final now = clock.nowUtc();
+    expect(_task(_entries(now, overlapping), 'deep').overrunMinutes, 30);
+    expect(_task(_entries(now, day), 'deep').overrunMinutes, 0);
+  });
+
   test('an empty day is one free gap between the caps', () {
     final e = _entries(_at(6), const []);
     expect(e, hasLength(3));

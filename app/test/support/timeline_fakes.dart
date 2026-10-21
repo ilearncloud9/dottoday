@@ -226,6 +226,7 @@ List<Override> timelineOverrides({
   FakeSubtaskRepository? subtasks,
   List<Series> series = const [],
   Profile? profile,
+  Stream<DateTime>? minuteTicks,
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
@@ -236,7 +237,7 @@ List<Override> timelineOverrides({
     seriesRepositoryProvider.overrideWithValue(FakeSeriesRepository(series)),
     undoServiceProvider.overrideWithValue(FakeUndoService(repo)),
     clockProvider.overrideWithValue(FakeClock(now)),
-    minuteTickProvider.overrideWith((ref) => Stream.value(now)),
+    minuteTickProvider.overrideWith((ref) => minuteTicks ?? Stream.value(now)),
     localProfileProvider.overrideWith((ref) async => p),
     settingsRepositoryProvider.overrideWithValue(FakeSettingsRepository(p)),
     occurrenceRepositoryProvider.overrideWithValue(repo),

@@ -1,18 +1,15 @@
-import 'dart:async';
-
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
-import 'package:dottoday/features/timeline/state/block_actions.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/thread_day.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
+import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/empty_day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/time_labels.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
-import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,6 +38,7 @@ class DayPage extends ConsumerWidget {
     );
     final blocks = data.blocks;
     final summary = daySummaryOf(blocks, shape);
+    final format = _format(context, data.day.location, data.settings.use24h);
     return DayCard(
       title: _title(context),
       isToday: date == today,
@@ -49,12 +47,14 @@ class DayPage extends ConsumerWidget {
         blocks: blocks,
         shape: shape,
         nowUtc: now,
-        format: _format(context, data.day.location, data.settings.use24h),
+        format: format,
         subtasks: subtasks ?? const {},
       ),
-      actions: ThreadActions(
-        onToggleDone: (id) =>
-            unawaited(toggleDone(ref, blocks.firstWhere((o) => o.id == id))),
+      actions: dayThreadActions(
+        context,
+        ref,
+        blocks: blocks,
+        timeText: format.time,
       ),
       footer: _footer(blocks, summary.total == 0),
     );

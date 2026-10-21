@@ -51,9 +51,16 @@ List<ThreadEntry> threadEntries({
   ]..sort((a, b) => a.startUtc!.compareTo(b.startUtc!));
   final out = <ThreadEntry>[ThreadCap.wake(format.time(shape.wakeUtc))];
   var cursor = shape.wakeUtc;
-  for (final o in sorted) {
+  for (final (i, o) in sorted.indexed) {
     _gap(out, cursor, o.startUtc!, nowUtc, format);
-    out.add(ThreadTaskEntry(_task(o, nowUtc, format, subtasks[o.id])));
+    final task = _task(o, nowUtc, format, subtasks[o.id]);
+    out.add(
+      ThreadTaskEntry(
+        task.state == DotState.live
+            ? _withOverrun(task, o, sorted.skip(i + 1))
+            : task,
+      ),
+    );
     if (o.endUtc!.isAfter(cursor)) cursor = o.endUtc!;
   }
   _gap(out, cursor, shape.bedUtc, nowUtc, format);
@@ -110,6 +117,37 @@ ThreadTask _task(
     minutesLeft: live ? (end.difference(now).inSeconds / 60).ceil() : null,
     subtasksDone: subtasks?.done ?? 0,
     subtasksTotal: subtasks?.total ?? 0,
+  );
+}
+
+/// [task] with how far [live] runs into the first later task that is
+/// still to do (done and skipped ones free their time).
+ThreadTask _withOverrun(
+  ThreadTask task,
+  Occurrence live,
+  Iterable<Occurrence> later,
+) {
+  final next = later
+      .where((o) => o.status == OccurrenceStatus.planned)
+      .firstOrNull;
+  if (next == null) return task;
+  final overrun = live.endUtc!.difference(next.startUtc!).inMinutes;
+  if (overrun <= 0) return task;
+  return ThreadTask(
+    id: task.id,
+    title: task.title,
+    color: task.color,
+    icon: task.icon,
+    state: task.state,
+    timeRange: task.timeRange,
+    duration: task.duration,
+    pinned: task.pinned,
+    recurring: task.recurring,
+    progress: task.progress,
+    minutesLeft: task.minutesLeft,
+    subtasksDone: task.subtasksDone,
+    subtasksTotal: task.subtasksTotal,
+    overrunMinutes: overrun,
   );
 }
 

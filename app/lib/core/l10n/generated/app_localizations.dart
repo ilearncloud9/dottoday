@@ -1089,6 +1089,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That day has nothing to copy'**
   String get copyDayNothing;
+
+  /// Snackbar after marking a task done, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} done'**
+  String snackDone(String title);
+
+  /// Snackbar after un-marking a done task, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} not done'**
+  String snackNotDone(String title);
+
+  /// Snackbar after +15 min on the live task, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} now ends at {time}'**
+  String snackExtended(String title, String time);
+
+  /// Snackbar after Shift the rest, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Moved 1 task} other{Moved {count} tasks}}'**
+  String snackShifted(int count);
+
+  /// Snackbar when a pinned task stopped Shift the rest (R-17).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing moved: {pin} is pinned} =1{Moved 1 task · stopped at {pin} (pinned)} other{Moved {count} tasks · stopped at {pin} (pinned)}}'**
+  String snackShiftedPartial(int count, String pin);
 }
 
 class _AppLocalizationsDelegate

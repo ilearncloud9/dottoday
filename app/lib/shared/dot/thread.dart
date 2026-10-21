@@ -68,7 +68,9 @@ class Thread extends StatelessWidget {
         onOpen: _bind(a.onOpen, task),
         onLongPress: _bind(a.onLongPress, task),
         onExtend: _bind(a.onExtend, task),
-        onShiftRest: _bind(a.onShiftRest, task),
+        onShiftRest: task.overrunMinutes > 0
+            ? _bind(a.onShiftRest, task)
+            : null,
       ),
       ThreadTaskEntry(:final task) => TaskRow(
         task: task,
