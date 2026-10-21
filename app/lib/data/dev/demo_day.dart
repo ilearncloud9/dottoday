@@ -47,17 +47,17 @@ _Block _b(
 /// and one crossing midnight (Night train).
 final List<_Block> _blocks = [
   _b('Morning run', 6, 45, 45, 'coral', 'run', done: true),
-  _b('Coffee & plan the day', 7, 30, 15, 'amber', 'coffee', done: true),
+  _b('Coffee & plan the day', 7, 30, 15, 'amber', 'list', done: true),
   _b('Deep work: roadmap', 9, 0, 120, 'indigo', 'code'),
-  _b('Design review', 10, 30, 45, 'violet', 'meeting'),
+  _b('Design review', 10, 30, 45, 'violet', 'people'),
   _b('Reply to email', 11, 30, 30, 'slate', 'mail'),
   _b('Lunch with Sam', 12, 30, 45, 'rose', 'meal', pinned: true),
-  _b('Spanish lesson', 14, 0, 60, 'teal', 'study'),
+  _b('Spanish lesson', 14, 0, 60, 'teal', 'language'),
   _b('Call the dentist', 15, 30, 15, 'rose', 'call'),
   _b('Gym', 17, 30, 60, 'mint', 'gym'),
   _b('Dinner', 19, 0, 45, 'mint', 'meal'),
   _b('Read', 20, 30, 30, 'violet', 'book'),
-  _b('Night train to Berlin', 23, 30, 75, 'sky', 'flight'),
+  _b('Night train to Berlin', 23, 30, 75, 'sky', 'travel'),
 ];
 
 const _twoAlerts = [
@@ -66,8 +66,8 @@ const _twoAlerts = [
 ];
 
 const _inbox = [
-  ('Buy a birthday gift', 'shopping'),
-  ('Book the car service', 'commute'),
+  ('Buy a birthday gift', 'gift'),
+  ('Book the car service', 'car'),
 ];
 
 const _deepWorkSubtasks = [
@@ -157,7 +157,7 @@ Series _standup(
     userId: userId,
     title: 'Team standup',
     colorKey: 'sky',
-    iconKey: 'meeting',
+    iconKey: 'people',
     durationMin: 15,
     rrule: 'FREQ=DAILY',
     dtstartLocal: '${d}T08:00',

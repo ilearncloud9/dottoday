@@ -1,10 +1,12 @@
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -92,5 +94,18 @@ void main() {
     expect(demoDayId(start, 3), isNot(demoDayId(start, 4)));
     final ids = demo().occurrences.map((o) => o.id);
     expect(ids.every(_v7.hasMatch), isTrue);
+  });
+
+  test('every demo colour and icon is a Concept A key (M3a.10)', () async {
+    expect(await h.writes.apply(demo()), isA<Ok<void, AppFailure>>());
+    final rows = await today();
+    for (final o in rows) {
+      expect(taskColorKeys, contains(o.colorKey), reason: o.title);
+      expect(
+        TaskIcon.picker.map((i) => i.key),
+        contains(o.iconKey),
+        reason: o.title,
+      );
+    }
   });
 }

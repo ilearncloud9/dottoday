@@ -841,5 +841,21 @@
         "type": "String"
       }
     }
+  },
+  "threadTimeRange": "{start} – {end}",
+  "@threadTimeRange": {
+    "description": "A task's time range on the thread, e.g. '7:30 – 8:00' (Main).",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "debugConceptPreview": "Concept A preview (debug)",
+  "@debugConceptPreview": {
+    "description": "Debug-build-only menu item that opens the new components on today's data."
   }
 }

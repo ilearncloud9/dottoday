@@ -560,4 +560,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String monthNowItem(String title) {
     return '$title · now';
   }
+
+  @override
+  String threadTimeRange(String start, String end) {
+    return '$start – $end';
+  }
+
+  @override
+  String get debugConceptPreview => 'Concept A preview (debug)';
 }

@@ -4,6 +4,7 @@ import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/dev/demo_day_loader.dart';
+import 'package:dottoday/features/timeline/dev/concept_preview_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +18,10 @@ List<PopupMenuEntry<void>> debugMenuItems(BuildContext context) {
     PopupMenuItem<void>(
       onTap: () => unawaited(_loadDemoDay(context)),
       child: Text(context.l10n.debugLoadDemoDay),
+    ),
+    PopupMenuItem<void>(
+      onTap: () => openConceptPreview(context),
+      child: Text(context.l10n.debugConceptPreview),
     ),
   ];
 }

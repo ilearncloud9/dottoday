@@ -1,0 +1,126 @@
+import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/shared/dot/task_dot.dart';
+import 'package:dottoday/shared/dot/thread.dart';
+
+/// Formats the display strings the thread needs, so [threadEntries] stays
+/// free of `BuildContext` (the screen passes l10n + 12/24 h).
+final class ThreadFormat {
+  const ThreadFormat({
+    required this.time,
+    required this.range,
+    required this.duration,
+  });
+
+  /// "7:30" in the profile zone and clock style.
+  final String Function(DateTime utc) time;
+
+  /// "7:30 – 8:00".
+  final String Function(String start, String end) range;
+
+  /// "2 h", "45 min".
+  final String Function(int minutes) duration;
+}
+
+/// Shortest gap the thread draws as free time; anything less is just the
+/// thread running between two dots.
+const minGapMinutes = 15;
+
+/// The day as thread entries (docs/10 §1, §6): Wake Up cap, tasks in start
+/// order with free gaps between them, Bedtime cap.
+///
+/// Each task's state comes from its status and [nowUtc]: done and skipped
+/// as stored; live while now is inside it; missed once it ended undone;
+/// upcoming otherwise. Gaps from now on are "add here" targets.
+///
+/// ```dart
+/// threadEntries(blocks: day, shape: shape, nowUtc: clock.nowUtc(), …);
+/// ```
+List<ThreadEntry> threadEntries({
+  required List<Occurrence> blocks,
+  required DayShape shape,
+  required DateTime nowUtc,
+  required ThreadFormat format,
+  Map<String, ({int done, int total})> subtasks = const {},
+}) {
+  final sorted = [
+    for (final o in blocks)
+      if (o.startUtc != null) o,
+  ]..sort((a, b) => a.startUtc!.compareTo(b.startUtc!));
+  final out = <ThreadEntry>[ThreadCap.wake(format.time(shape.wakeUtc))];
+  var cursor = shape.wakeUtc;
+  for (final o in sorted) {
+    _gap(out, cursor, o.startUtc!, nowUtc, format);
+    out.add(ThreadTaskEntry(_task(o, nowUtc, format, subtasks[o.id])));
+    if (o.endUtc!.isAfter(cursor)) cursor = o.endUtc!;
+  }
+  _gap(out, cursor, shape.bedUtc, nowUtc, format);
+  out.add(ThreadCap.bed(format.time(shape.bedUtc)));
+  return out;
+}
+
+void _gap(
+  List<ThreadEntry> out,
+  DateTime from,
+  DateTime to,
+  DateTime now,
+  ThreadFormat format,
+) {
+  final minutes = to.difference(from).inMinutes;
+  if (minutes < minGapMinutes) return;
+  final inside = !now.isBefore(from) && now.isBefore(to);
+  out.add(
+    ThreadGap(
+      minutes: minutes,
+      startLabel: format.time(from),
+      addable: to.isAfter(now),
+      nowFraction: inside
+          ? now.difference(from).inSeconds / to.difference(from).inSeconds
+          : null,
+    ),
+  );
+}
+
+ThreadTask _task(
+  Occurrence o,
+  DateTime now,
+  ThreadFormat format,
+  ({int done, int total})? subtasks,
+) {
+  final start = o.startUtc!;
+  final end = o.endUtc!;
+  final state = dotStateOf(o, now);
+  final live = state == DotState.live;
+  return ThreadTask(
+    id: o.id,
+    title: o.title,
+    color: TaskColor.fromKey(o.colorKey),
+    icon: TaskIcon.fromKey(o.iconKey),
+    state: state,
+    timeRange: format.range(format.time(start), format.time(end)),
+    duration: live ? format.duration(o.durationMin) : null,
+    pinned: o.pinned,
+    recurring: o.seriesId != null,
+    progress: live
+        ? now.difference(start).inSeconds / end.difference(start).inSeconds
+        : 0,
+    // Round up: "1 min left" until the task's last second.
+    minutesLeft: live ? (end.difference(now).inSeconds / 60).ceil() : null,
+    subtasksDone: subtasks?.done ?? 0,
+    subtasksTotal: subtasks?.total ?? 0,
+  );
+}
+
+/// The dot state of [o] at [now] (docs/10 §1, §3 `TaskDot`).
+DotState dotStateOf(Occurrence o, DateTime now) {
+  if (o.status == OccurrenceStatus.done) return DotState.done;
+  if (o.status == OccurrenceStatus.skipped) return DotState.skipped;
+  final start = o.startUtc;
+  final end = o.endUtc;
+  if (start == null || end == null) return DotState.upcoming;
+  if (!now.isBefore(end)) return DotState.missed;
+  if (!now.isBefore(start)) return DotState.live;
+  return DotState.upcoming;
+}

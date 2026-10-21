@@ -957,6 +957,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title} · now'**
   String monthNowItem(String title);
+
+  /// A task's time range on the thread, e.g. '7:30 – 8:00' (Main).
+  ///
+  /// In en, this message translates to:
+  /// **'{start} – {end}'**
+  String threadTimeRange(String start, String end);
+
+  /// Debug-build-only menu item that opens the new components on today's data.
+  ///
+  /// In en, this message translates to:
+  /// **'Concept A preview (debug)'**
+  String get debugConceptPreview;
 }
 
 class _AppLocalizationsDelegate
