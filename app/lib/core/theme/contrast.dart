@@ -12,6 +12,11 @@ double contrastRatio(Color a, Color b) {
   return (hi + 0.05) / (lo + 0.05);
 }
 
+/// What [inkFor] aims for: WCAG's 4.5:1 plus a margin, because Flutter's
+/// contrast guideline samples anti-aliased glyph pixels and reads a tone
+/// that is exactly 4.5:1 as 4.49.
+const double inkContrastTarget = 4.6;
+
 /// [color] mixed toward [toward] in 2 % steps until it reaches [minRatio]
 /// against every one of [backgrounds]; [color] itself when it already does.
 ///
@@ -23,7 +28,7 @@ Color inkFor(
   Color color, {
   required List<Color> backgrounds,
   required Color toward,
-  double minRatio = 4.5,
+  double minRatio = inkContrastTarget,
 }) {
   for (var step = 0; step <= 50; step++) {
     final ink = Color.lerp(color, toward, step / 50)!;

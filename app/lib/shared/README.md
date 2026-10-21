@@ -1,7 +1,9 @@
 # shared/
 
-Reusable, business-logic-free UI components: `AppSheet`, `TimeInput`, `DurationChips`,
-`ColorIconPicker`, `UndoSnackbar`, `SyncPill`. See docs/03-ux-spec.md §3.3–3.4.
+Reusable, business-logic-free UI components. The Concept A set (docs/10-ui-concept-a.md §3) lives
+in `dot/` (`TaskDot`, `Thread`, `TaskRow`, `LiveRow`, `DayDot`, `WeekStrip`, `DayCard`, `DayPager`,
+`MonthGrid`) and `navigation/` (`DotShell`: pill tab bar, Material bar, rail by width class). Older
+pieces: `AppSheet`, `TimeInput`, `DurationChips`, `ColorIconPicker`, `UndoSnackbar`, `SyncPill`.
 
 **May import:** `core/` (theme tokens, l10n).
 **Must not import:** `features/`, `data/`, `domain/` services. Components take values and

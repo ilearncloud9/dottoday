@@ -9,8 +9,13 @@ import 'support/test_app.dart';
 
 int _quickAdds = 0;
 
-Future<GoRouter> _pump(WidgetTester tester) async {
+/// Expanded (Mac/web) by default: the rail with every destination.
+Future<GoRouter> _pump(WidgetTester tester, {double width = 1280}) async {
   _quickAdds = 0;
+  tester.view
+    ..physicalSize = Size(width, 800)
+    ..devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
   final router = buildRouter(appScreens);
   addTearDown(router.dispose);
   await tester.pumpWidget(
@@ -88,10 +93,10 @@ void main() {
     expect(_quickAdds, 1);
   }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 
-  testWidgets('Quick Add FAB: labelled, ≥ 44 pt, invokes callback', (
+  testWidgets('add button: labelled, ≥ 44 pt, invokes Quick Add', (
     tester,
   ) async {
-    await _pump(tester);
+    await _pump(tester, width: 412);
     final fab = find.byType(FloatingActionButton);
     final size = tester.getSize(fab);
     expect(size.width, greaterThanOrEqualTo(44));
@@ -99,5 +104,11 @@ void main() {
     expect(find.byTooltip('Add task'), findsOneWidget);
     await tester.tap(fab);
     expect(_quickAdds, 1);
-  });
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('iPhone add dot invokes Quick Add', (tester) async {
+    await _pump(tester, width: 390);
+    await tester.tap(find.bySemanticsLabel('Add task'));
+    expect(_quickAdds, 1);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 }

@@ -3,12 +3,14 @@ import 'package:dottoday/core/theme/dot_metrics.dart';
 import 'package:dottoday/core/theme/dot_motion.dart';
 import 'package:dottoday/core/theme/dot_type.dart';
 import 'package:dottoday/core/theme/task_palette.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 export 'contrast.dart';
 export 'dot_colors.dart';
 export 'dot_glyphs.dart';
 export 'dot_icon.dart';
+export 'dot_idiom.dart';
 export 'dot_metrics.dart';
 export 'dot_motion.dart';
 export 'dot_type.dart';
@@ -51,17 +53,22 @@ final class DotTheme extends ThemeExtension<DotTheme> {
 
   /// Light [ThemeData] with [accent] (Settings › Look).
   ///
-  /// One instance per accent: `MaterialApp` animates between unequal
+  /// One instance per accent and platform: `MaterialApp` animates between unequal
   /// themes, so a fresh copy on every rebuild would re-run that animation.
   static ThemeData light([DotAccent accent = DotAccent.fallback]) =>
-      _light[accent] ??= _build(DotColors.light(accent));
+      _cache[(accent, Brightness.light, defaultTargetPlatform)] ??= _build(
+        DotColors.light(accent),
+      );
 
   /// Dark [ThemeData] with [accent] (Settings › Look); cached like [light].
   static ThemeData dark([DotAccent accent = DotAccent.fallback]) =>
-      _dark[accent] ??= _build(DotColors.dark(accent));
+      _cache[(accent, Brightness.dark, defaultTargetPlatform)] ??= _build(
+        DotColors.dark(accent),
+      );
 
-  static final _light = <DotAccent, ThemeData>{};
-  static final _dark = <DotAccent, ThemeData>{};
+  /// Keyed by platform too: ThemeData captures the target platform (and with
+  /// it the §4 chrome idiom) when it is built.
+  static final _cache = <(DotAccent, Brightness, TargetPlatform), ThemeData>{};
 
   @override
   DotTheme copyWith({
