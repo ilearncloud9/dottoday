@@ -706,4 +706,119 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String sheetMetaDay(String day, String range, String duration) {
+    return '$day · $range · $duration';
+  }
+
+  @override
+  String get sheetToday => 'Today';
+
+  @override
+  String get sheetTomorrow => 'Tomorrow';
+
+  @override
+  String get sheetInbox => 'Inbox';
+
+  @override
+  String get sheetDone => 'Done';
+
+  @override
+  String get sheetUndone => 'Not done';
+
+  @override
+  String get sheetExtend => '+15 min';
+
+  @override
+  String get sheetShift => 'Shift';
+
+  @override
+  String get sheetMove => 'Move';
+
+  @override
+  String get sheetEdit => 'Edit';
+
+  @override
+  String sheetSubtasks(int done, int total) {
+    return 'Subtasks · $done of $total';
+  }
+
+  @override
+  String get sheetSubtasksNone => 'Subtasks';
+
+  @override
+  String get sheetAddSubtask => '+ Add';
+
+  @override
+  String get sheetNewSubtask => 'New subtask';
+
+  @override
+  String get sheetAlerts => 'Alerts';
+
+  @override
+  String get sheetRepeat => 'Repeat';
+
+  @override
+  String get sheetLook => 'Colour and icon';
+
+  @override
+  String get sheetNever => 'Never';
+
+  @override
+  String get sheetNoAlerts => 'None';
+
+  @override
+  String get sheetNotFound => 'This task isn\'t here any more';
+
+  @override
+  String get alertAtStart => 'at start';
+
+  @override
+  String get alertAtEnd => 'at end';
+
+  @override
+  String alertBefore(int minutes) {
+    return '$minutes min before';
+  }
+
+  @override
+  String alertOverdue(int minutes) {
+    return '$minutes min after end';
+  }
+
+  @override
+  String alertJoin(String first, String rest) {
+    return '$first · $rest';
+  }
+
+  @override
+  String get repeatDaily => 'Daily';
+
+  @override
+  String get repeatWeekdays => 'Weekdays';
+
+  @override
+  String repeatWeekly(String days) {
+    return 'Weekly on $days';
+  }
+
+  @override
+  String get repeatMonthly => 'Monthly';
+
+  @override
+  String get repeatYearly => 'Yearly';
+
+  @override
+  String get repeatCustom => 'Custom';
+
+  @override
+  String listJoin(String first, String rest) {
+    return '$first, $rest';
+  }
+
+  @override
+  String sheetLeftSuffix(String left) {
+    return ' · $left';
+  }
 }

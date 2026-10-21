@@ -63,3 +63,20 @@ Future<Result<(UndoToken, ShiftReport), AppFailure>> shiftRest(
     Err(:final failure) => Err(failure),
   };
 }
+
+/// How far [live] runs into the next planned task (see `ThreadTask`).
+int overrunOf(Occurrence live, List<Occurrence> blocks) {
+  final next = blocks
+      .where(
+        (o) =>
+            o.status == OccurrenceStatus.planned &&
+            o.startUtc != null &&
+            o.startUtc!.isAfter(live.startUtc!),
+      )
+      .fold<Occurrence?>(
+        null,
+        (a, o) => a == null || o.startUtc!.isBefore(a.startUtc!) ? o : a,
+      );
+  if (next == null) return 0;
+  return live.endUtc!.difference(next.startUtc!).inMinutes;
+}

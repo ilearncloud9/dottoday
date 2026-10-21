@@ -1,5 +1,6 @@
 import 'package:dottoday/app_shell.dart';
 import 'package:dottoday/core/router/app_router.dart';
+import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,7 @@ final appScreens = RouteScreens(
   settings: (_) => const RoutePlaceholder('settings'),
   month: (_) => const RoutePlaceholder('month'),
   day: (_, date) => TodayScreen(date: date),
-  task: (_, id) => RoutePlaceholder('task', arg: id),
+  task: (_, id) => TaskScreen(id: id),
 );
 
 /// Blank screen standing in for an unbuilt feature.

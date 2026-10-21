@@ -1119,6 +1119,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{Nothing moved: {pin} is pinned} =1{Moved 1 task · stopped at {pin} (pinned)} other{Moved {count} tasks · stopped at {pin} (pinned)}}'**
   String snackShiftedPartial(int count, String pin);
+
+  /// Task sheet meta line, e.g. 'Today · 9:00 – 11:00 · 2 h' (A-ios-task-sheet).
+  ///
+  /// In en, this message translates to:
+  /// **'{day} · {range} · {duration}'**
+  String sheetMetaDay(String day, String range, String duration);
+
+  /// Day name in the task sheet meta for today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get sheetToday;
+
+  /// Day name in the task sheet meta for tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get sheetTomorrow;
+
+  /// Task sheet meta for an unscheduled task.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get sheetInbox;
+
+  /// Task sheet action: mark done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get sheetDone;
+
+  /// Task sheet action on a done task: mark not done.
+  ///
+  /// In en, this message translates to:
+  /// **'Not done'**
+  String get sheetUndone;
+
+  /// Task sheet action: 15 more minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'+15 min'**
+  String get sheetExtend;
+
+  /// Task sheet action: shift the later tasks by the overrun (R-04).
+  ///
+  /// In en, this message translates to:
+  /// **'Shift'**
+  String get sheetShift;
+
+  /// Task sheet action: pick the task up to move it.
+  ///
+  /// In en, this message translates to:
+  /// **'Move'**
+  String get sheetMove;
+
+  /// Task sheet action: open the editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get sheetEdit;
+
+  /// Task sheet subtasks heading (A-ios-task-sheet).
+  ///
+  /// In en, this message translates to:
+  /// **'Subtasks · {done} of {total}'**
+  String sheetSubtasks(int done, int total);
+
+  /// Task sheet subtasks heading with none yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtasks'**
+  String get sheetSubtasksNone;
+
+  /// Task sheet: add a subtask.
+  ///
+  /// In en, this message translates to:
+  /// **'+ Add'**
+  String get sheetAddSubtask;
+
+  /// Placeholder of the new-subtask field.
+  ///
+  /// In en, this message translates to:
+  /// **'New subtask'**
+  String get sheetNewSubtask;
+
+  /// Task sheet details row: alerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get sheetAlerts;
+
+  /// Task sheet details row: repeat rule.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get sheetRepeat;
+
+  /// Task sheet details row: colour and icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour and icon'**
+  String get sheetLook;
+
+  /// Repeat value when the task does not repeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get sheetNever;
+
+  /// Alerts value when there are no alerts.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get sheetNoAlerts;
+
+  /// Deep link or sheet for a missing, deleted or someone else's task.
+  ///
+  /// In en, this message translates to:
+  /// **'This task isn\'t here any more'**
+  String get sheetNotFound;
+
+  /// Alert summary: at the start.
+  ///
+  /// In en, this message translates to:
+  /// **'at start'**
+  String get alertAtStart;
+
+  /// Alert summary: at the end.
+  ///
+  /// In en, this message translates to:
+  /// **'at end'**
+  String get alertAtEnd;
+
+  /// Alert summary: minutes before the start.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min before'**
+  String alertBefore(int minutes);
+
+  /// Alert summary: overdue reminder after the end.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min after end'**
+  String alertOverdue(int minutes);
+
+  /// Joins alert summaries: '10 min before · at start'.
+  ///
+  /// In en, this message translates to:
+  /// **'{first} · {rest}'**
+  String alertJoin(String first, String rest);
+
+  /// Repeat summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get repeatDaily;
+
+  /// Repeat summary (A-ios-task-sheet).
+  ///
+  /// In en, this message translates to:
+  /// **'Weekdays'**
+  String get repeatWeekdays;
+
+  /// Repeat summary with the weekday names.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly on {days}'**
+  String repeatWeekly(String days);
+
+  /// Repeat summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get repeatMonthly;
+
+  /// Repeat summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get repeatYearly;
+
+  /// Repeat summary for any other rule.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get repeatCustom;
+
+  /// Joins list items, e.g. weekday names 'Mon, Wed'.
+  ///
+  /// In en, this message translates to:
+  /// **'{first}, {rest}'**
+  String listJoin(String first, String rest);
+
+  /// Appended to the task sheet meta for the live task: ' · 38 min left'.
+  ///
+  /// In en, this message translates to:
+  /// **' · {left}'**
+  String sheetLeftSuffix(String left);
 }
 
 class _AppLocalizationsDelegate

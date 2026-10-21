@@ -1060,5 +1060,192 @@
         "type": "String"
       }
     }
+  },
+  "sheetMetaDay": "{day} · {range} · {duration}",
+  "@sheetMetaDay": {
+    "description": "Task sheet meta line, e.g. 'Today · 9:00 – 11:00 · 2 h' (A-ios-task-sheet).",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "sheetToday": "Today",
+  "@sheetToday": {
+    "description": "Day name in the task sheet meta for today."
+  },
+  "sheetTomorrow": "Tomorrow",
+  "@sheetTomorrow": {
+    "description": "Day name in the task sheet meta for tomorrow."
+  },
+  "sheetInbox": "Inbox",
+  "@sheetInbox": {
+    "description": "Task sheet meta for an unscheduled task."
+  },
+  "sheetDone": "Done",
+  "@sheetDone": {
+    "description": "Task sheet action: mark done."
+  },
+  "sheetUndone": "Not done",
+  "@sheetUndone": {
+    "description": "Task sheet action on a done task: mark not done."
+  },
+  "sheetExtend": "+15 min",
+  "@sheetExtend": {
+    "description": "Task sheet action: 15 more minutes."
+  },
+  "sheetShift": "Shift",
+  "@sheetShift": {
+    "description": "Task sheet action: shift the later tasks by the overrun (R-04)."
+  },
+  "sheetMove": "Move",
+  "@sheetMove": {
+    "description": "Task sheet action: pick the task up to move it."
+  },
+  "sheetEdit": "Edit",
+  "@sheetEdit": {
+    "description": "Task sheet action: open the editor."
+  },
+  "sheetSubtasks": "Subtasks · {done} of {total}",
+  "@sheetSubtasks": {
+    "description": "Task sheet subtasks heading (A-ios-task-sheet).",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sheetSubtasksNone": "Subtasks",
+  "@sheetSubtasksNone": {
+    "description": "Task sheet subtasks heading with none yet."
+  },
+  "sheetAddSubtask": "+ Add",
+  "@sheetAddSubtask": {
+    "description": "Task sheet: add a subtask."
+  },
+  "sheetNewSubtask": "New subtask",
+  "@sheetNewSubtask": {
+    "description": "Placeholder of the new-subtask field."
+  },
+  "sheetAlerts": "Alerts",
+  "@sheetAlerts": {
+    "description": "Task sheet details row: alerts."
+  },
+  "sheetRepeat": "Repeat",
+  "@sheetRepeat": {
+    "description": "Task sheet details row: repeat rule."
+  },
+  "sheetLook": "Colour and icon",
+  "@sheetLook": {
+    "description": "Task sheet details row: colour and icon."
+  },
+  "sheetNever": "Never",
+  "@sheetNever": {
+    "description": "Repeat value when the task does not repeat."
+  },
+  "sheetNoAlerts": "None",
+  "@sheetNoAlerts": {
+    "description": "Alerts value when there are no alerts."
+  },
+  "sheetNotFound": "This task isn't here any more",
+  "@sheetNotFound": {
+    "description": "Deep link or sheet for a missing, deleted or someone else's task."
+  },
+  "alertAtStart": "at start",
+  "@alertAtStart": {
+    "description": "Alert summary: at the start."
+  },
+  "alertAtEnd": "at end",
+  "@alertAtEnd": {
+    "description": "Alert summary: at the end."
+  },
+  "alertBefore": "{minutes} min before",
+  "@alertBefore": {
+    "description": "Alert summary: minutes before the start.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "alertOverdue": "{minutes} min after end",
+  "@alertOverdue": {
+    "description": "Alert summary: overdue reminder after the end.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "alertJoin": "{first} · {rest}",
+  "@alertJoin": {
+    "description": "Joins alert summaries: '10 min before · at start'.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "rest": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatDaily": "Daily",
+  "@repeatDaily": {
+    "description": "Repeat summary."
+  },
+  "repeatWeekdays": "Weekdays",
+  "@repeatWeekdays": {
+    "description": "Repeat summary (A-ios-task-sheet)."
+  },
+  "repeatWeekly": "Weekly on {days}",
+  "@repeatWeekly": {
+    "description": "Repeat summary with the weekday names.",
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatMonthly": "Monthly",
+  "@repeatMonthly": {
+    "description": "Repeat summary."
+  },
+  "repeatYearly": "Yearly",
+  "@repeatYearly": {
+    "description": "Repeat summary."
+  },
+  "repeatCustom": "Custom",
+  "@repeatCustom": {
+    "description": "Repeat summary for any other rule."
+  },
+  "listJoin": "{first}, {rest}",
+  "@listJoin": {
+    "description": "Joins list items, e.g. weekday names 'Mon, Wed'.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "rest": {
+        "type": "String"
+      }
+    }
+  },
+  "sheetLeftSuffix": " · {left}",
+  "@sheetLeftSuffix": {
+    "description": "Appended to the task sheet meta for the live task: ' · 38 min left'.",
+    "placeholders": {
+      "left": {
+        "type": "String"
+      }
+    }
   }
 }

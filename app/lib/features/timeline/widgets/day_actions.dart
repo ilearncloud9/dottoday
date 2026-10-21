@@ -9,6 +9,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
+import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -28,28 +29,21 @@ ThreadActions dayThreadActions(
   final undo = ref.read(undoServiceProvider);
   Occurrence find(String id) => blocks.firstWhere((o) => o.id == id);
 
-  /// Undo snackbar for a write that worked, the failure message if not.
   void report<T>(
     Result<T, AppFailure> result,
     String Function(T value) message,
     UndoToken Function(T value) tokenOf,
-  ) {
-    switch (result) {
-      case Ok(:final value):
-        showUndoSnackbarOn(
-          messenger,
-          l10n,
-          message: message(value),
-          onUndo: () => unawaited(undo.undo(tokenOf(value))),
-        );
-      case Err(:final failure):
-        messenger.showSnackBar(
-          SnackBar(content: Text(failureMessage(l10n, failure))),
-        );
-    }
-  }
+  ) => reportUndoable(
+    messenger,
+    l10n,
+    undo,
+    result,
+    message: message,
+    tokenOf: tokenOf,
+  );
 
   return ThreadActions(
+    onOpen: (id) => showTaskSheet(context, id),
     onToggleDone: (id) async {
       final o = find(id);
       final wasDone = o.status == OccurrenceStatus.done;
@@ -71,7 +65,7 @@ ThreadActions dayThreadActions(
     },
     onShiftRest: (id) async {
       final live = find(id);
-      final overrun = _overrun(live, blocks);
+      final overrun = overrunOf(live, blocks);
       if (overrun <= 0) return;
       report(
         await shiftRest(ref, day: blocks, live: live, overrunMinutes: overrun),
@@ -88,19 +82,28 @@ ThreadActions dayThreadActions(
   );
 }
 
-/// How far [live] runs into the next planned task (see `ThreadTask`).
-int _overrun(Occurrence live, List<Occurrence> blocks) {
-  final next = blocks
-      .where(
-        (o) =>
-            o.status == OccurrenceStatus.planned &&
-            o.startUtc != null &&
-            o.startUtc!.isAfter(live.startUtc!),
-      )
-      .fold<Occurrence?>(
-        null,
-        (a, o) => a == null || o.startUtc!.isBefore(a.startUtc!) ? o : a,
+/// Shows an Undo snackbar for a write that worked, or the failure's
+/// message. Takes the messenger and undo service up front, so it works
+/// after the widget that started the write has gone.
+void reportUndoable<T>(
+  ScaffoldMessengerState messenger,
+  AppLocalizations l10n,
+  UndoService undo,
+  Result<T, AppFailure> result, {
+  required String Function(T value) message,
+  required UndoToken Function(T value) tokenOf,
+}) {
+  switch (result) {
+    case Ok(:final value):
+      showUndoSnackbarOn(
+        messenger,
+        l10n,
+        message: message(value),
+        onUndo: () => unawaited(undo.undo(tokenOf(value))),
       );
-  if (next == null) return 0;
-  return live.endUtc!.difference(next.startUtc!).inMinutes;
+    case Err(:final failure):
+      messenger.showSnackBar(
+        SnackBar(content: Text(failureMessage(l10n, failure))),
+      );
+  }
 }

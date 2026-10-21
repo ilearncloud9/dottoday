@@ -71,7 +71,11 @@ final class FakeOccurrenceRepository implements OccurrenceRepository {
   ]);
 
   @override
-  Future<Occurrence?> findById(String userId, String id) async => _rows[id];
+  Future<Occurrence?> findById(String userId, String id) async {
+    // Owner-scoped like the real repository (06 §9).
+    final row = _rows[id];
+    return row?.userId == userId ? row : null;
+  }
 
   @override
   Future<List<Occurrence>> findBySeries(String userId, String seriesId) async =>
@@ -104,23 +108,38 @@ final class FakeSubtaskRepository implements SubtaskRepository {
   FakeSubtaskRepository([Iterable<Subtask> rows = const []]) : rows = [...rows];
 
   final List<Subtask> rows;
+  final _changes = StreamController<void>.broadcast();
+
+  /// Inserts or replaces [subtasks] by id and notifies watchers.
+  void put(Iterable<Subtask> subtasks) {
+    for (final s in subtasks) {
+      rows
+        ..removeWhere((r) => r.id == s.id)
+        ..add(s);
+    }
+    _changes.add(null);
+  }
+
+  List<Subtask> _of(Set<String> ids) => [
+    for (final s in rows)
+      if (ids.contains(s.occurrenceId) && s.deletedAt == null) s,
+  ]..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
 
   @override
   Stream<List<Subtask>> watchForOccurrences(
     String userId,
     Set<String> occurrenceIds,
-  ) => Stream.value([
-    for (final s in rows)
-      if (occurrenceIds.contains(s.occurrenceId) && s.deletedAt == null) s,
-  ]);
+  ) async* {
+    yield _of(occurrenceIds);
+    yield* _changes.stream.map((_) => _of(occurrenceIds));
+  }
 
   @override
   Future<Subtask?> findById(String userId, String id) async =>
       rows.where((s) => s.id == id).firstOrNull;
 
   @override
-  Future<void> upsertAll(Iterable<Subtask> subtasks) async =>
-      rows.addAll(subtasks);
+  Future<void> upsertAll(Iterable<Subtask> subtasks) async => put(subtasks);
 }
 
 final class FakeSeriesRepository implements SeriesRepository {
@@ -148,9 +167,11 @@ final class FakeSeriesRepository implements SeriesRepository {
 /// Applies batches straight to the fake repository; undo restores the
 /// previous rows.
 final class FakeUndoService implements UndoService {
-  FakeUndoService(this.occurrences);
+  FakeUndoService(this.occurrences, [this.subtasks]);
 
   final FakeOccurrenceRepository occurrences;
+  final FakeSubtaskRepository? subtasks;
+  final _subtasksBefore = <String, List<Subtask>>{};
   final applied = <WriteBatch>[];
   final _before = <String, List<Occurrence>>{};
   var _n = 0;
@@ -162,14 +183,20 @@ final class FakeUndoService implements UndoService {
       for (final o in batch.occurrences)
         ?occurrences.rows.where((r) => r.id == o.id).firstOrNull,
     ];
+    _subtasksBefore[id] = [
+      for (final s in batch.subtasks)
+        ?subtasks?.rows.where((r) => r.id == s.id).firstOrNull,
+    ];
     applied.add(batch);
     occurrences.put(batch.occurrences);
+    subtasks?.put(batch.subtasks);
     return Ok(UndoToken(id: id, expiresAtUtc: DateTime.utc(2100)));
   }
 
   @override
   Future<Result<void, AppFailure>> undo(UndoToken token) async {
     occurrences.put(_before.remove(token.id) ?? const []);
+    subtasks?.put(_subtasksBefore.remove(token.id) ?? const []);
     return const Ok(null);
   }
 }
@@ -230,12 +257,11 @@ List<Override> timelineOverrides({
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
+  final subs = subtasks ?? FakeSubtaskRepository();
   return [
-    subtaskRepositoryProvider.overrideWithValue(
-      subtasks ?? FakeSubtaskRepository(),
-    ),
+    subtaskRepositoryProvider.overrideWithValue(subs),
     seriesRepositoryProvider.overrideWithValue(FakeSeriesRepository(series)),
-    undoServiceProvider.overrideWithValue(FakeUndoService(repo)),
+    undoServiceProvider.overrideWithValue(FakeUndoService(repo, subs)),
     clockProvider.overrideWithValue(FakeClock(now)),
     minuteTickProvider.overrideWith((ref) => minuteTicks ?? Stream.value(now)),
     localProfileProvider.overrideWith((ref) async => p),
