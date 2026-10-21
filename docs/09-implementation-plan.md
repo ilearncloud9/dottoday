@@ -35,7 +35,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [x] M1.5 `QuickAddParser` (en, de, fr, es; 12/24 h): tests from 08 §2. (R-06, R-07, R-20)
 - [x] M1.6 `NotificationPlanner`: desired-set computation; windowing (iOS 64 limit); quiet hours; tests. (R-10)
 - [x] M1.7 `ConflictResolver` + HLC implementation; tests for LWW, 60-s same-field conflict. (ADR-0002)
-- [ ] M1.8 Export/import model (JSON v1 schema, CSV, ICS writers) with round-trip tests. (R-11)
+- [x] M1.8 Export/import model (JSON v1 schema, CSV, ICS writers) with round-trip tests. (R-11)
 - [ ] M1.9 Coverage ≥ 90 % on `lib/domain`; `/ship-check`.
 
 ## Milestone 2 — Data layer (goal: encrypted local DB + repositories, no network yet)

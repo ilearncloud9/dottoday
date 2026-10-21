@@ -96,3 +96,12 @@ A nightly job purges older tombstones.
 JSON v1: `{version:1, exportedAt, profile, series[], occurrences[], subtasks[]}`; CSV per entity;
 ICS of occurrences with `start_utc` (VEVENT, RRULE for series). Import accepts JSON v1 only and runs in
 a transaction with a pre-import backup.
+
+Clarified in M1.8 (`domain/export/`): JSON v1 values use storage form (snake_case rows, UTC epoch ms)
+and include trash rows, so a restore keeps the trash; CSV and ICS are human reports of live rows only
+(CSV: RFC 4180, CRLF, ISO-8601 UTC instants, nested values as JSON, cells starting `= + - @ tab CR`
+prefixed with `'`; ICS: one VEVENT per one-off, one per series with `DTSTART;TZID=<IANA>` + `RRULE`,
+skipped/deleted instances as `EXDATE`, moved/renamed ones as `RECURRENCE-ID` overrides, no VTIMEZONE,
+inbox items omitted). Import rejects files > 25 MB, any version other than 1, wrong shapes, rows failing
+validation, duplicate ids, dangling `series_id`/`occurrence_id` and rows of more than one owner; it
+clears `calendar_link_id` (links are not exported) and the caller re-owns rows to the signed-in user.
