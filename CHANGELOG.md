@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ### Added
 - Project kit: agent instructions, specs, schema, implementation plan.
+- **Milestone M3a complete** (M3a.11): `/ship-check` passed 2026-10-21. `dart analyze --fatal-infos` and format clean; 967 tests; coverage `lib/domain` 97.9 %, `lib/shared` 98.7 %, overall 92.1 % (hand-written); first `integration_test` (cold start → demo day → Concept A preview) green on the iPhone 17 Pro simulator and the Android API 37 emulator; all four CI builds green; gitleaks/osv clean; no schema, dependency or web CSP changes. Fixed an order-dependent test (shared FakeClock) found by CI's random seed.
 - **Milestone 2 complete** (M2.8): `/ship-check` passed 2026-10-21 — analyze/format clean, 469 tests, `lib/domain` coverage 97.7 % (overall 88.2 %, hand-written), all four targets build in CI, web DB encryption verified in Chromium (368 709 bytes of browser storage scanned, 0 plaintext hits; second tab refused), gitleaks/osv-scanner clean.
 - **Milestone 1 complete** (M1.9): `/ship-check` passed 2026-10-21 locally — analyze/format clean, 389 tests, `lib/domain` coverage 98.3 % (overall 92.9 %), all four targets build (web, Android debug, macOS debug, iOS simulator); GitHub Actions could not run (account billing), so CI re-run is a follow-up.
 - **Milestone 0 complete** (M0.10): `/ship-check` passed 2026-10-21 — analyze/format clean, 111 tests, 83.2 % coverage (hand-written), 23 pgTAP RLS tests, all four targets build in CI, a11y guidelines + axe-core clean, gitleaks/osv-scanner clean.

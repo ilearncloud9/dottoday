@@ -50,7 +50,9 @@ ThreadTask _task(List<ThreadEntry> e, String id) => e
     .firstWhere((t) => t.id == id);
 
 void main() {
-  final clock = FakeClock(_at(10, 22));
+  // Fresh per test: tests run in random order (CI seed) and one moves it.
+  late FakeClock clock;
+  setUp(() => clock = FakeClock(_at(10, 22)));
   final day = [
     _o('deep', 9, 0, 120),
     _o('run', 7, 30, 30, status: OccurrenceStatus.done),
