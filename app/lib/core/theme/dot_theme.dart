@@ -50,12 +50,18 @@ final class DotTheme extends ThemeExtension<DotTheme> {
   }
 
   /// Light [ThemeData] with [accent] (Settings › Look).
+  ///
+  /// One instance per accent: `MaterialApp` animates between unequal
+  /// themes, so a fresh copy on every rebuild would re-run that animation.
   static ThemeData light([DotAccent accent = DotAccent.fallback]) =>
-      _build(DotColors.light(accent));
+      _light[accent] ??= _build(DotColors.light(accent));
 
-  /// Dark [ThemeData] with [accent] (Settings › Look).
+  /// Dark [ThemeData] with [accent] (Settings › Look); cached like [light].
   static ThemeData dark([DotAccent accent = DotAccent.fallback]) =>
-      _build(DotColors.dark(accent));
+      _dark[accent] ??= _build(DotColors.dark(accent));
+
+  static final _light = <DotAccent, ThemeData>{};
+  static final _dark = <DotAccent, ThemeData>{};
 
   @override
   DotTheme copyWith({

@@ -729,6 +729,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Marked not done'**
   String get undoMarkedNotDone;
+
+  /// Screen-reader label of an upcoming task's dot (docs/10 §5.4).
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, upcoming'**
+  String dotUpcoming(String title);
+
+  /// Screen-reader label of the live task's dot.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, live'**
+  String dotLive(String title);
+
+  /// Screen-reader label of the live task's dot with the time left.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, live, {minutes, plural, =1{1 minute left} other{{minutes} minutes left}}'**
+  String dotLiveLeft(String title, int minutes);
+
+  /// Screen-reader label of a done task's dot.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, done'**
+  String dotDone(String title);
+
+  /// Screen-reader label of a skipped task's dot.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, skipped'**
+  String dotSkipped(String title);
+
+  /// Screen-reader label of a missed task's dot.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, missed'**
+  String dotMissed(String title);
+
+  /// Screen-reader hint: what tapping a task's dot does.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark done'**
+  String get dotMarkDoneHint;
+
+  /// Screen-reader hint: tapping a done task's dot undoes it.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark not done'**
+  String get dotMarkNotDoneHint;
 }
 
 class _AppLocalizationsDelegate

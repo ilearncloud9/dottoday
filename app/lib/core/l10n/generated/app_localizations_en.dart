@@ -378,4 +378,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get undoMarkedNotDone => 'Marked not done';
+
+  @override
+  String dotUpcoming(String title) {
+    return '$title, upcoming';
+  }
+
+  @override
+  String dotLive(String title) {
+    return '$title, live';
+  }
+
+  @override
+  String dotLiveLeft(String title, int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutes minutes left',
+      one: '1 minute left',
+    );
+    return '$title, live, $_temp0';
+  }
+
+  @override
+  String dotDone(String title) {
+    return '$title, done';
+  }
+
+  @override
+  String dotSkipped(String title) {
+    return '$title, skipped';
+  }
+
+  @override
+  String dotMissed(String title) {
+    return '$title, missed';
+  }
+
+  @override
+  String get dotMarkDoneHint => 'Mark done';
+
+  @override
+  String get dotMarkNotDoneHint => 'Mark not done';
 }

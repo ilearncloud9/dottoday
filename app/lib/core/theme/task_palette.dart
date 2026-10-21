@@ -13,6 +13,12 @@ abstract final class TaskAlpha {
   /// Segment of a done task.
   static const done = 0.45;
 
+  /// Unfilled track of a live dot's ring.
+  static const track = 0.25;
+
+  /// Dashes and glyph of a skipped dot (`A-ios-future-month`).
+  static const faded = 0.7;
+
   /// All-day chip and selected-icon backgrounds (`Main`, `A-ios-add-what`),
   /// the same strength as the accent tint.
   static const tintLight = 0.12;

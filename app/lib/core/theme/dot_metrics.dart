@@ -50,6 +50,10 @@ abstract final class DotSize {
   static const double rowDot = 36;
   static const double liveDot = 42;
   static const double liveRing = 5;
+
+  /// Outline of an upcoming dot (2.5 at row size, 2 in pickers / Mac rows).
+  static const double dotOutline = 2.5;
+  static const double smallDotOutline = 2;
   static const double dayDot = 44;
   static const double dayDotWatch = 18;
   static const double macRowDot = 26;
