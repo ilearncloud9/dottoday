@@ -381,4 +381,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get undoMarkedNotDone => 'Marked not done';
+
+  @override
+  String undoMoved(String time) {
+    return 'Moved to $time';
+  }
+
+  @override
+  String undoMovedAfterPinned(String time) {
+    return 'Moved to $time, after a pinned block';
+  }
+
+  @override
+  String undoResized(String range) {
+    return 'Now $range';
+  }
+
+  @override
+  String get dragPinned => 'Pinned blocks stay put. Unpin it to move it.';
+
+  @override
+  String get resizeHandleStart => 'Change start time';
+
+  @override
+  String get resizeHandleEnd => 'Change end time';
 }

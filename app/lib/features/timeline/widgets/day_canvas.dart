@@ -1,6 +1,8 @@
 import 'package:dottoday/core/theme/app_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/layout/timeline_geometry.dart';
+import 'package:dottoday/features/timeline/widgets/block_gestures.dart';
+import 'package:dottoday/features/timeline/widgets/drag_overlay.dart';
 import 'package:dottoday/features/timeline/widgets/now_line.dart';
 import 'package:dottoday/features/timeline/widgets/time_labels.dart';
 import 'package:dottoday/features/timeline/widgets/timeline_block.dart';
@@ -16,6 +18,7 @@ final class DayCanvasActions {
     required this.onToggleBefore,
     required this.onToggleAfter,
     required this.onShowHidden,
+    required this.onTapEmpty,
   });
 
   final String beforeLabel;
@@ -24,6 +27,7 @@ final class DayCanvasActions {
   final VoidCallback onToggleBefore;
   final VoidCallback onToggleAfter;
   final ValueChanged<List<Occurrence>> onShowHidden;
+  final VoidCallback onTapEmpty;
 }
 
 /// The full-height day, building only the blocks inside `[from, to)`
@@ -39,8 +43,12 @@ class DayCanvas extends StatelessWidget {
     required this.from,
     required this.to,
     required this.actions,
+    this.canvasKey,
     super.key,
   });
+
+  /// Lets the drag coordinator map global pointer positions to canvas y.
+  final GlobalKey? canvasKey;
 
   final TimelineGeometry geometry;
   final double width;
@@ -55,33 +63,48 @@ class DayCanvas extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppTheme.of(context);
     final g = geometry;
-    return SizedBox(
-      height: g.height,
-      width: width,
-      child: Stack(
-        children: [
-          if (showNow) PastTint(day: g.day, scale: g.scale),
-          Positioned.fill(
-            child: RepaintBoundary(
-              child: CustomPaint(
-                painter: TimelineGridPainter(
-                  hourYs: [for (final h in g.hours) h.y],
-                  zones: g.zones,
-                  gutterWidth: gutter,
-                  textDirection: Directionality.of(context),
-                  lineColor: t.colors.outline,
-                  zoneColor: t.colors.surfaceSunken,
+    // A tap anywhere that no block, toggle or handle claims clears the
+    // selection (and its resize handles).
+    return GestureDetector(
+      key: canvasKey,
+      behavior: HitTestBehavior.opaque,
+      onTap: actions.onTapEmpty,
+      child: SizedBox(
+        height: g.height,
+        width: width,
+        child: Stack(
+          children: [
+            if (showNow) PastTint(day: g.day, scale: g.scale),
+            Positioned.fill(
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  painter: TimelineGridPainter(
+                    hourYs: [for (final h in g.hours) h.y],
+                    zones: g.zones,
+                    gutterWidth: gutter,
+                    textDirection: Directionality.of(context),
+                    lineColor: t.colors.outline,
+                    zoneColor: t.colors.surfaceSunken,
+                  ),
                 ),
               ),
             ),
-          ),
-          ..._hourLabels(context, t),
-          ..._zoneToggles(),
-          ..._blocks(),
-          ..._overflow(),
-          if (showNow)
-            NowLine(day: g.day, scale: g.scale, left: gutter, use24h: use24h),
-        ],
+            ..._hourLabels(context, t),
+            ..._zoneToggles(),
+            ..._blocks(),
+            ..._overflow(),
+            if (showNow)
+              NowLine(day: g.day, scale: g.scale, left: gutter, use24h: use24h),
+            Positioned.fill(
+              child: DragOverlay(
+                geometry: g,
+                gutter: gutter,
+                width: width,
+                use24h: use24h,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -152,11 +175,14 @@ class DayCanvas extends StatelessWidget {
         start: gutter + p.column * colWidth,
         width: colWidth - AppTimeline.blockGap,
         child: RepaintBoundary(
-          child: TimelineBlock(
+          child: BlockGestures(
             placement: p,
-            date: geometry.day.date,
-            location: geometry.day.location,
-            use24h: use24h,
+            child: TimelineBlock(
+              placement: p,
+              date: geometry.day.date,
+              location: geometry.day.location,
+              use24h: use24h,
+            ),
           ),
         ),
       );

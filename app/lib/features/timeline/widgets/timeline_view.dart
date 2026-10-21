@@ -1,15 +1,24 @@
+import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:dottoday/core/failures/failure_messages.dart';
+import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
+import 'package:dottoday/features/timeline/layout/drag_math.dart';
 import 'package:dottoday/features/timeline/layout/timeline_geometry.dart';
+import 'package:dottoday/features/timeline/state/drop_block.dart';
+import 'package:dottoday/features/timeline/state/timeline_interaction.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/all_day_strip.dart';
 import 'package:dottoday/features/timeline/widgets/day_canvas.dart';
+import 'package:dottoday/features/timeline/widgets/drag_coordinator.dart';
 import 'package:dottoday/features/timeline/widgets/hidden_blocks_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/time_labels.dart';
+import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,8 +39,20 @@ class TimelineView extends ConsumerStatefulWidget {
   ConsumerState<TimelineView> createState() => _TimelineViewState();
 }
 
-class _TimelineViewState extends ConsumerState<TimelineView> {
+class _TimelineViewState extends ConsumerState<TimelineView>
+    with SingleTickerProviderStateMixin {
   final _scroll = ScrollController();
+  final _canvasKey = GlobalKey();
+  final _viewportKey = GlobalKey();
+  late final DragCoordinator _drag = DragCoordinator(
+    ref: ref,
+    scroll: _scroll,
+    canvasKey: _canvasKey,
+    viewportKey: _viewportKey,
+    vsync: this,
+    onDrop: (s) => unawaited(_drop(s)),
+    onPinned: () => showPinnedHint(context),
+  );
   bool _scrolledInitially = false;
 
   /// The canvas built for the last lazy window. The sliver builder runs on
@@ -42,6 +63,7 @@ class _TimelineViewState extends ConsumerState<TimelineView> {
 
   @override
   void dispose() {
+    _drag.dispose();
     _scroll.dispose();
     super.dispose();
   }
@@ -86,10 +108,14 @@ class _TimelineViewState extends ConsumerState<TimelineView> {
     final gutter = AppTimeline.gutterWidth * timelineTextScale(context);
     _scrollToStart(g);
     _actionsNow = _actions(context, g, expanded, use24h);
+    _drag
+      ..geometry = g
+      ..snap = widget.data.settings.snapMinutes;
     // The all-day strip stays put above the scrolling day, so all-day items
     // are visible wherever the day is scrolled to.
     final day = LayoutBuilder(
       builder: (context, box) => CustomScrollView(
+        key: _viewportKey,
         controller: _scroll,
         slivers: [
           SliverLayoutBuilder(
@@ -105,11 +131,12 @@ class _TimelineViewState extends ConsumerState<TimelineView> {
         ],
       ),
     );
-    if (widget.data.allDay.isEmpty) return day;
+    final scoped = DragScope(coordinator: _drag, child: day);
+    if (widget.data.allDay.isEmpty) return scoped;
     return Column(
       children: [
         AllDayStrip(items: widget.data.allDay),
-        Expanded(child: day),
+        Expanded(child: scoped),
       ],
     );
   }
@@ -136,7 +163,39 @@ class _TimelineViewState extends ConsumerState<TimelineView> {
       from: w.$1,
       to: w.$2,
       actions: _actionsNow,
+      canvasKey: _canvasKey,
     );
+  }
+
+  Future<void> _drop(DragSession s) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    final use24h = use24hFor(context, widget.data.settings.use24h);
+    final day = widget.data.day;
+    final out = await dropBlock(ref, s, day, widget.data.blocks);
+    if (messenger == null || !mounted) return;
+    final o = out.moved;
+    final start = timeOfUtc(context, day.location, o.startUtc!, use24h: use24h);
+    final end = timeOfUtc(context, day.location, o.endUtc!, use24h: use24h);
+    switch (out.result) {
+      case Ok(:final value):
+        final message = s.mode != DragMode.move
+            ? l10n.undoResized(l10n.blockTimeRange(start, end))
+            : out.settled
+            ? l10n.undoMovedAfterPinned(start)
+            : l10n.undoMoved(start);
+        final undo = ref.read(undoServiceProvider);
+        showUndoSnackbarOn(
+          messenger,
+          l10n,
+          message: message,
+          onUndo: () => unawaited(undo.undo(value)),
+        );
+      case Err(:final failure):
+        messenger.showSnackBar(
+          SnackBar(content: Text(failureMessage(l10n, failure))),
+        );
+    }
   }
 
   /// The visible+cache range, widened to whole [AppTimeline.lazyBucket]s so
@@ -170,6 +229,8 @@ class _TimelineViewState extends ConsumerState<TimelineView> {
       expanded: expanded,
       onToggleBefore: notifier.toggleBefore,
       onToggleAfter: notifier.toggleAfter,
+      onTapEmpty: () =>
+          ref.read(timelineInteractionProvider.notifier).select(null),
       onShowHidden: (List<Occurrence> hidden) => showHiddenBlocks(
         context,
         hidden,

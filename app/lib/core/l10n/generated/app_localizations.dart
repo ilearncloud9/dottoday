@@ -735,6 +735,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Marked not done'**
   String get undoMarkedNotDone;
+
+  /// Undo snackbar after dragging a block.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved to {time}'**
+  String undoMoved(String time);
+
+  /// Undo snackbar when a drop would have overlapped a pinned block, so it settled after it (03 §3.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Moved to {time}, after a pinned block'**
+  String undoMovedAfterPinned(String time);
+
+  /// Undo snackbar after resizing a block.
+  ///
+  /// In en, this message translates to:
+  /// **'Now {range}'**
+  String undoResized(String range);
+
+  /// Shown when long-pressing a pinned block (R-17).
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned blocks stay put. Unpin it to move it.'**
+  String get dragPinned;
+
+  /// Screen-reader label of the top resize handle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change start time'**
+  String get resizeHandleStart;
+
+  /// Screen-reader label of the bottom resize handle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change end time'**
+  String get resizeHandleEnd;
 }
 
 class _AppLocalizationsDelegate

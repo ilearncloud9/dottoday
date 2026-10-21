@@ -89,6 +89,12 @@ Month view opens from the Today date header. The current date is always one tap 
 | Context menu | long-press done block / ⋯ | right-click |
 Drag uses a lifted ghost with shadow and shows the live snapped time in a floating label. If the drop
 would overlap a pinned block, the block settles after it and a toast explains.
+Clarified in M3.4: pinned blocks don't lift (long-press gives a heavy haptic and "Pinned blocks stay
+put"), since R-05/R-17 say pinned never moves; unpin first. A touch pick-up leaves the block
+selected (accent ring, 48 dp grips at both ends; dragging a grip resizes at once); a tap anywhere
+else clears it. With a mouse the top/bottom 8 px of a block resize (row-resize cursor), the rest
+moves. The floating label shows the snapped range; the original stays as a faint placeholder.
+Auto-scroll starts 64 px from the viewport edge and speeds up towards it.
 
 ### 3.3 Quick Add sheet
 Bottom sheet (mobile) / popover (desktop). One text field with live token chips (time, date, duration,

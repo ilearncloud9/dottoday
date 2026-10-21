@@ -520,5 +520,44 @@
   "undoMarkedNotDone": "Marked not done",
   "@undoMarkedNotDone": {
     "description": "Undo snackbar after un-completing a block."
+  },
+  "undoMoved": "Moved to {time}",
+  "@undoMoved": {
+    "description": "Undo snackbar after dragging a block.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "undoMovedAfterPinned": "Moved to {time}, after a pinned block",
+  "@undoMovedAfterPinned": {
+    "description": "Undo snackbar when a drop would have overlapped a pinned block, so it settled after it (03 §3.2).",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "undoResized": "Now {range}",
+  "@undoResized": {
+    "description": "Undo snackbar after resizing a block.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "dragPinned": "Pinned blocks stay put. Unpin it to move it.",
+  "@dragPinned": {
+    "description": "Shown when long-pressing a pinned block (R-17)."
+  },
+  "resizeHandleStart": "Change start time",
+  "@resizeHandleStart": {
+    "description": "Screen-reader label of the top resize handle."
+  },
+  "resizeHandleEnd": "Change end time",
+  "@resizeHandleEnd": {
+    "description": "Screen-reader label of the bottom resize handle."
   }
 }

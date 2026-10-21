@@ -126,6 +126,36 @@ void main() {
     );
   });
 
+  testWidgets('mid-drag: ghost, label, faded original', (tester) async {
+    await _pump(tester, size: const Size(420, 900));
+    final g = await tester.startGesture(
+      tester.getCenter(find.text('Spanish lesson')),
+    );
+    await tester.pump(const Duration(milliseconds: 300));
+    await g.moveBy(const Offset(0, 90 * 1.8));
+    await tester.pumpAndSettle();
+    await expectLater(
+      find.byType(TimelineScreen),
+      matchesGoldenFile('goldens/timeline_dragging.png'),
+    );
+    await g.up();
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('selected block shows resize handles', (tester) async {
+    await _pump(tester, size: const Size(420, 900));
+    final g = await tester.startGesture(
+      tester.getCenter(find.text('Spanish lesson')),
+    );
+    await tester.pump(const Duration(milliseconds: 300));
+    await g.up();
+    await tester.pumpAndSettle();
+    await expectLater(
+      find.byType(TimelineScreen),
+      matchesGoldenFile('goldens/timeline_selected.png'),
+    );
+  });
+
   for (final count in [30, 200]) {
     testWidgets('$count blocks', (tester) async {
       await _pump(tester, size: fullDay, rows: _many(count));

@@ -3,15 +3,18 @@ import 'dart:async';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/theme/app_theme.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/timeline/layout/block_facts.dart';
 import 'package:dottoday/features/timeline/layout/day_layout.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
+import 'package:dottoday/features/timeline/state/timeline_interaction.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/block_tile.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -55,12 +58,20 @@ class TimelineBlock extends ConsumerWidget {
       startsBefore: placement.startsBefore,
       endsAfter: placement.endsAfter,
     );
-    return BlockTile(
-      block: o,
-      location: location,
-      use24h: use24h,
-      facts: facts,
-      onToggleDone: () => unawaited(_toggle(context, ref)),
+    final lifted = ref.watch(
+      timelineInteractionProvider.select((s) => s.drag?.block.id == o.id),
+    );
+    // The original stays as a faint placeholder under the lifted ghost.
+    return AnimatedOpacity(
+      opacity: lifted ? 0.35 : 1,
+      duration: AppTheme.of(context).motion.fast,
+      child: BlockTile(
+        block: o,
+        location: location,
+        use24h: use24h,
+        facts: facts,
+        onToggleDone: () => unawaited(_toggle(context, ref)),
+      ),
     );
   }
 
@@ -70,6 +81,9 @@ class TimelineBlock extends ConsumerWidget {
     final messenger = ScaffoldMessenger.maybeOf(context);
     final undo = ref.read(undoServiceProvider);
     final wasDone = o.status == OccurrenceStatus.done;
+    // "Success on complete" (03 §1 Haptics); Flutter has no success type,
+    // medium is the closest across iOS and Android.
+    if (!wasDone) unawaited(HapticFeedback.mediumImpact());
     final result = await toggleDone(ref, o);
     if (messenger == null) return;
     switch (result) {

@@ -59,13 +59,13 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [x] M3.1a Debug-only "Load demo day" (owner request, before M3.2): `data/dev/demo_day.dart` builds a realistic day — 12 one-off blocks + a daily recurring series, one pinned, one overlapping pair, one crossing midnight, two done, two inbox items, subtasks on one block — with per-day stable UUID v7s so reloading resets instead of duplicating. Reachable only behind `kDebugMode` (menu entry lands with the M3.2 header); release builds must not contain it — verified 2026-10-21: `flutter build macos --release` App.framework has 0 hits for demo titles, the demo id pattern and the menu label (control string present). Also adds `LocalProfileService.ensure` (first-launch profile in the device zone), which M3.2 wires to app start.
 - [x] M3.2 Timeline canvas (first screen to open the DB: also wire app start/resume to ensure the local profile, `BackupService.runDailyIfDue`, `TrashService.purgeExpired` and `NotificationSync.resync`, M2.3–M2.5): hour gutter, lazy sliver blocks, now-line (1-min tick), past tint, outside-hours zones, all-day strip, overlap columns, full-24h golden test. (03 §3.1, R-14, R-15)
 - [x] M3.3 Block widget: anatomy + states (done/overdue/pinned/recurring/calendar/alerts); semantics label per 03 §4. Golden at 100/200 % text, light/dark. (R-12)
-- [ ] M3.4 Gestures: long-press pick-up, drag with snapping + ghost + floating time label + auto-scroll; edge resize handles; tap vs scroll disambiguation test; haptics; reduced-motion path. (03 §3.2, R-05)
+- [x] M3.4 Gestures: long-press pick-up, drag with snapping + ghost + floating time label + auto-scroll; edge resize handles; tap vs scroll disambiguation test; haptics; reduced-motion path. (03 §3.2, R-05)
 - [ ] M3.5 Shift-followers chip during drag; settings default `ask|always|never`; pinned and calendar rules; partial-shift toast. (R-04, R-17)
 - [ ] M3.6 "Running late" (+5/+15/+30) in header menu; Snooze on block context menu. (R-04)
 - [ ] M3.7 Multi-select (long-press then tap / Shift-click): move, delete, duplicate, change colour. (R-05)
 - [ ] M3.8 Gap affordance: long-press/double-click gap → Quick Add prefilled with time. "Insert here" draggable marker. (R-17)
 - [ ] M3.9 Day navigation: swipe/keys, date header → month picker, "Today" chip, Duplicate day, Export day. (03 §3.1)
-- [ ] M3.10 Keyboard map for desktop/web per 02 F1; focus ring; semantics widget tests; screen-reader manual pass on 2 platforms. (R-12)
+- [ ] M3.10 Keyboard map for desktop/web per 02 F1; focus ring; semantics widget tests; screen-reader manual pass on 2 platforms. Includes semantics custom actions on blocks (move ±15 min, change start/end) so drag and the M3.4 resize grips have a non-drag equivalent before the M4.2 editor (03 §4). (R-12)
 - [ ] M3.11 Empty/loading/error/offline states. (03 §3.8) Includes the `DatabaseUnavailable` recovery screen (M2.4): explain, move the unreadable file aside (never delete), start fresh, point to sign-in sync / import of an export.
 - [ ] M3.12 Perf: 200 blocks ≥ 55 fps profile run on Android mid-range; fix hot spots. (R-15)
 - [ ] M3.13 `/ship-check`.
