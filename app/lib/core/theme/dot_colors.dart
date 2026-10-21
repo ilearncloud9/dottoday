@@ -24,6 +24,7 @@ final class DotColors {
     required this.accent,
     required this.accentInk,
     required this.onAccent,
+    required this.accentFill,
     required this.accentTint,
     required this.success,
   });
@@ -62,6 +63,11 @@ final class DotColors {
   /// Text and icons on an [accent] fill.
   final Color onAccent;
 
+  /// Fill of buttons with text on them: [accent] deepened (light) or
+  /// brightened (dark) until [onAccent] text reaches 5:1. The spec's
+  /// white on #3B6CF6 is 4.50:1 on paper and renders at 4.31 (§7.4 wins).
+  final Color accentFill;
+
   /// Selected pills and tab indicators (12 % light, 22 % dark), opaque.
   final Color accentTint;
 
@@ -84,6 +90,7 @@ final class DotColors {
       accent: l(accent, other.accent),
       accentInk: l(accentInk, other.accentInk),
       onAccent: l(onAccent, other.onAccent),
+      accentFill: l(accentFill, other.accentFill),
       accentTint: l(accentTint, other.accentTint),
       success: l(success, other.success),
     );
@@ -120,6 +127,14 @@ DotColors _resolve(Brightness brightness, Color accent) {
     accent: accent,
     accentInk: inkFor(accent, backgrounds: inkBackgrounds, toward: text),
     onAccent: onAccent,
+    accentFill: inkFor(
+      accent,
+      backgrounds: [onAccent],
+      toward: onAccent == DotPrimitives.white ? text : surface,
+      // Bold white glyphs on a coloured fill anti-alias darker than the
+      // nominal colour; aim higher so the rendered text clears 4.5.
+      minRatio: 5,
+    ),
     accentTint: tint,
     success: DotPrimitives.green2F,
   );

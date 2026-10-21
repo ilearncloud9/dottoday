@@ -80,6 +80,8 @@ auto-scroll logic is reused in M3b.5.
 - The Search results use people/document icons that the original 24-icon set lacked → set expanded to 26 (owner, 2026-10-21; §3 updated).
 - The `A-mac-editor` Save button shows ⌘S; §6 says ⏎ saves → ⏎ saves when focus is not in Notes, and ⌘S always saves.
 - §5.3 Repeat editor: "this one or all future"; PRD F4 requires this / this and following / all → three scopes (PRD wins).
+- Week start: `Main` starts its strip on Sunday while `A-ios-settings` says "Week starts Monday" → the strip follows Settings › Week starts (M3b.1).
+- The Today overflow (⋯) shows on Android only in the renders → one ⋯ on every platform, beside the day dot (§4 lists no such idiom; it carries the debug menu now and Running late in M3f.5).
 - Palette: §2.1 has 9 task colours; 03 §1 / `palette.json` have 12 → 9 (M3a.1). The stored `color_key` stays text (no schema
   change); legacy keys map on read: tangerine→amber, lime→mint, magenta→rose.
 
@@ -99,7 +101,7 @@ auto-scroll logic is reused in M3b.5.
 
 ### M3b — Today, Month, Inbox and Task sheet on phones
 
-- [ ] M3b.1 Today T1: caption "WEDNESDAY 21 OCT ⌄" (opens month), greeting, `DayDot`, `WeekStrip`, all-day chips, `DayPager`; replace the old timeline canvas (delete its widgets in the same commit). Ref `Main`, `A-android-today`. Done: §7 + empty state "Nothing planned · pull the strip to plan or tap +".
+- [x] M3b.1 Today T1: caption "WEDNESDAY 21 OCT ⌄" (opens month), greeting, `DayDot`, `WeekStrip`, all-day chips, `DayPager`; replace the old timeline canvas (delete its widgets in the same commit). Ref `Main`, `A-android-today`. Done: §7 + empty state "Nothing planned · pull the strip to plan or tap +".
 - [ ] M3b.2 Month pull-open T2 (rubber-band drag on the strip handle, the caption chevron toggles it) + future-month planning T3 (month nav Nov · Dec · Jan, "Today" pill, pick a day → its card; empty day: "Add to this day", "Pull from inbox · N", "Copy a day…" = Duplicate day). Ref `A-ios-today-month`, `A-ios-future-month`. Done: §7 + reduced-motion path with no rubber band.
 - [ ] M3b.3 Completion and live state: tap dot = done (same-frame fill + strike + light haptic, Undo snackbar); live dot sweep and "N min left" every minute; LiveRow Done / +15 min / Shift the rest via `DaySchedulerService` (R-04). Ref `Main`. Done: §7 + tests with an injected Clock for minute ticks, undo and shift.
 - [ ] M3b.4 Task sheet T4 + phone editor E1 (Edit → full sheet with the E1 fields): identity row, Done · +15 · Shift · Move · Edit, subtasks ticked per occurrence (R-09), details rows (time, repeat, alerts, colour & icon → editor), autosave, nothing lost on dismiss; `/task/:id` deep link resolves through the repository for the current user only, otherwise "task not found". Ref `A-ios-task-sheet`, `A-mac-editor` (fields). Done: §7 + `subtask_occurrence_test` through the UI, a not-owned-ID test.

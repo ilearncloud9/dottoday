@@ -1,19 +1,19 @@
 import 'package:dottoday/app_shell.dart';
 import 'package:dottoday/core/router/app_router.dart';
-import 'package:dottoday/features/timeline/timeline_screen.dart';
+import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:flutter/material.dart';
 
 /// Composition-root wiring of routes to screens. Placeholders until each
 /// feature lands; they carry a key per route and no visible text (l10n M0.6).
 final appScreens = RouteScreens(
   shell: (context, shell) => AppShell(shell: shell),
-  today: (_) => const TimelineScreen(),
+  today: (_) => const TodayScreen(),
   inbox: (_) => const RoutePlaceholder('inbox'),
   week: (_) => const RoutePlaceholder('week'),
   search: (_) => const RoutePlaceholder('search'),
   settings: (_) => const RoutePlaceholder('settings'),
   month: (_) => const RoutePlaceholder('month'),
-  day: (_, date) => TimelineScreen(date: date),
+  day: (_, date) => TodayScreen(date: date),
   task: (_, id) => RoutePlaceholder('task', arg: id),
 );
 

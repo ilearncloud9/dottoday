@@ -1,10 +1,9 @@
 // Launch smoke test on a real device or simulator (docs/08 §1 integration,
 // M3a ship-check): cold start through bootstrap() with the encrypted DB,
-// the Concept A shell, the debug demo-day loader and the preview.
+// the Concept A shell, the debug demo-day loader and Today's day card.
 // Run: flutter test integration_test -d <device> --dart-define-from-file=.env
 import 'package:dottoday/bootstrap.dart';
-import 'package:dottoday/features/timeline/dev/concept_preview_screen.dart';
-import 'package:dottoday/features/timeline/timeline_screen.dart';
+import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 
@@ -30,7 +29,7 @@ Future<void> _pumpUntil(
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('cold start, demo day, Concept A preview', (tester) async {
+  testWidgets('cold start, demo day on Today', (tester) async {
     // bootstrap() installs the app's error handlers; hand them back to the
     // test binding so failures surface as test failures.
     final flutterOnError = FlutterError.onError;
@@ -38,7 +37,7 @@ void main() {
     await bootstrap();
     FlutterError.onError = flutterOnError;
     PlatformDispatcher.instance.onError = platformOnError;
-    await _pumpUntil(tester, find.byType(TimelineScreen));
+    await _pumpUntil(tester, find.byType(TodayScreen));
     expect(find.byType(DotShell), findsOneWidget);
     expect(find.text('Today'), findsWidgets);
     if (!kDebugMode) return; // The debug menu only exists in debug builds.
@@ -50,10 +49,6 @@ void main() {
     await tester.tap(find.text('Load demo day (debug)'));
     await _pumpUntil(tester, find.text('Demo day loaded'));
 
-    await tester.tap(find.byTooltip('More options'));
-    await _pumpUntil(tester, find.text('Concept A preview (debug)'));
-    await tester.tap(find.text('Concept A preview (debug)'));
-    await _pumpUntil(tester, find.byType(ConceptPreviewScreen));
     await _pumpUntil(tester, find.byType(DayCard));
     expect(find.textContaining('· Today'), findsOneWidget);
   });

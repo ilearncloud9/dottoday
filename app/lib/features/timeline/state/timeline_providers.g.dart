@@ -173,69 +173,6 @@ final class TimelineDataFamily extends $Family
   String toString() => r'timelineDataProvider';
 }
 
-/// Which collapsed outside-hours zones the user has opened this session.
-
-@ProviderFor(OutsideHours)
-final outsideHoursProvider = OutsideHoursProvider._();
-
-/// Which collapsed outside-hours zones the user has opened this session.
-final class OutsideHoursProvider
-    extends $NotifierProvider<OutsideHours, ({bool after, bool before})> {
-  /// Which collapsed outside-hours zones the user has opened this session.
-  OutsideHoursProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'outsideHoursProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$outsideHoursHash();
-
-  @$internal
-  @override
-  OutsideHours create() => OutsideHours();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(({bool after, bool before}) value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<({bool after, bool before})>(value),
-    );
-  }
-}
-
-String _$outsideHoursHash() => r'68b96e32dbf84713e3cf8ffd9c9348fc513584c2';
-
-/// Which collapsed outside-hours zones the user has opened this session.
-
-abstract class _$OutsideHours extends $Notifier<({bool after, bool before})> {
-  ({bool after, bool before}) build();
-  @$mustCallSuper
-  @override
-  WhenComplete runBuild() {
-    final ref =
-        this.ref
-            as $Ref<({bool after, bool before}), ({bool after, bool before})>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<
-                ({bool after, bool before}),
-                ({bool after, bool before})
-              >,
-              ({bool after, bool before}),
-              Object?,
-              Object?
-            >;
-    return element.handleCreate(ref, build);
-  }
-}
-
 /// Subtask progress per occurrence of [date], for the progress rings (R-09:
 /// counts are per occurrence, never per series).
 

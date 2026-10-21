@@ -116,33 +116,3 @@ enum WidthClass {
       ? medium
       : compact;
 }
-
-/// Geometry of the pre-Concept A hour-gutter canvas (docs/03 §3.1), kept
-/// only until M3b.1 replaces that canvas with `Thread`. Densities are at 100 % text and are
-/// multiplied by the text scale (up to 2×) so blocks grow with Dynamic Type.
-abstract final class AppTimeline {
-  /// Core hours: 108 px per hour, so a 30-minute block (54 px) clears the
-  /// 48 dp + gap minimum and back-to-back half hours stay in one column.
-  static const double pxPerMinute = 1.8;
-
-  /// Collapsed outside-hours zones: 24 px per hour.
-  static const double collapsedPxPerMinute = 0.4;
-
-  /// Width of the hour-label gutter at 100 % text.
-  static const double gutterWidth = 56;
-
-  /// Gap between side-by-side blocks and at the trailing edge.
-  static const double blockGap = 2;
-
-  /// Now-line stroke and its leading dot.
-  static const double nowLineWidth = 2;
-  static const double nowDot = 8;
-
-  /// Smallest drawn block: the 48 dp tap target (Android floor, also
-  /// ≥ 44 pt iOS) for its complete toggle, plus the gap below it.
-  static const double minBlockHeight = kMinInteractiveDimension + blockGap;
-
-  /// Visible-window granularity for the lazy canvas: blocks are rebuilt only
-  /// when scrolling crosses a bucket, not on every frame (R-15).
-  static const double lazyBucket = 512;
-}

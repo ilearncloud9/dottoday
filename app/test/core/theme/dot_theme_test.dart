@@ -71,6 +71,10 @@ void main() {
           }
           expect(contrastRatio(c.accentInk, tint), greaterThanOrEqualTo(4.5));
           expect(
+            contrastRatio(c.onAccent, c.accentFill),
+            greaterThanOrEqualTo(5),
+          );
+          expect(
             contrastRatio(c.onAccent, c.accent),
             greaterThanOrEqualTo(4.5),
           );

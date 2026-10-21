@@ -969,6 +969,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Concept A preview (debug)'**
   String get debugConceptPreview;
+
+  /// Today's page title when the profile has no name (Main).
+  ///
+  /// In en, this message translates to:
+  /// **'{part, select, morning{Good morning} afternoon{Good afternoon} other{Good evening}}'**
+  String todayGreeting(String part);
+
+  /// Today's page title with the user's name (Main: 'Good morning, Kody').
+  ///
+  /// In en, this message translates to:
+  /// **'{part, select, morning{Good morning, {name}} afternoon{Good afternoon, {name}} other{Good evening, {name}}}'**
+  String todayGreetingName(String part, String name);
+
+  /// Empty Today (docs/10 §5.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned · pull the strip to plan or tap +'**
+  String get todayEmpty;
+
+  /// Screen-reader label of the all-day chips row.
+  ///
+  /// In en, this message translates to:
+  /// **'All day'**
+  String get todayAllDay;
+
+  /// Screen-reader label of a week-strip day with tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'{day}, {done} of {total} done'**
+  String stripDayLabel(String day, int done, int total);
 }
 
 class _AppLocalizationsDelegate

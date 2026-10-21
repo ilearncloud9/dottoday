@@ -90,17 +90,6 @@ Stream<TimelineData> timelineData(Ref ref, DateTime date) async* {
   }
 }
 
-/// Which collapsed outside-hours zones the user has opened this session.
-@Riverpod(keepAlive: true)
-class OutsideHours extends _$OutsideHours {
-  @override
-  ({bool before, bool after}) build() => (before: false, after: false);
-
-  void toggleBefore() => state = (before: !state.before, after: state.after);
-
-  void toggleAfter() => state = (before: state.before, after: !state.after);
-}
-
 /// Subtask progress per occurrence of [date], for the progress rings (R-09:
 /// counts are per occurrence, never per series).
 @riverpod

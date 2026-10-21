@@ -164,7 +164,7 @@ ButtonStyle _pill(DotType type, DotColors c, {bool filled = false}) =>
         (s) => s.contains(WidgetState.disabled)
             ? c.outline
             : filled
-            ? c.accent
+            ? c.accentFill
             : c.raised,
       ),
       side: filled
