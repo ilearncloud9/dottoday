@@ -8,6 +8,7 @@ import 'dart:js_interop_unsafe';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/connection/connection.dart';
 import 'package:dottoday/data/db/database_key_store.dart';
+import 'package:dottoday/data/db/web/key_vault.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_search_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
@@ -29,7 +30,8 @@ Future<void> main() async {
 
 Future<String> _probe() async {
   final at = DateTime.utc(2026, 10, 21);
-  _report('PROBE-STEP opening');
+  await webDatabaseKey(create: true);
+  _report('PROBE-STEP key-ready');
   var db = openAppDatabase(const _UnusedKeys());
   await DriftSettingsRepository(
     db,
