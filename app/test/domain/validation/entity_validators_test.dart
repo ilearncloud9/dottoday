@@ -110,7 +110,12 @@ void main() {
     });
 
     test('rrule must parse and start with FREQ', () {
-      for (final rule in ['WEEKLY', 'BYDAY=MO;FREQ=WEEKLY', 'FREQ=SOMETIMES']) {
+      for (final rule in [
+        'WEEKLY',
+        'BYDAY=MO;FREQ=WEEKLY',
+        'FREQ=SOMETIMES',
+        'FREQ=MINUTELY;INTERVAL=30',
+      ]) {
         final s = seriesFixture().copyWith(rrule: rule);
         expect(
           _code(validateSeries(s)),

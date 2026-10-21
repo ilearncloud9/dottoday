@@ -104,8 +104,12 @@ ValidationFailure? checkRrule(String rrule) {
       _fail(ValidationField.recurrence, ValidationRule.invalidFormat);
   if (rrule.length > 512 || !rrule.startsWith('FREQ=')) return invalid;
   try {
-    RecurrenceRule.fromString('RRULE:$rrule');
-    return null;
+    final rule = RecurrenceRule.fromString('RRULE:$rrule');
+    // Sub-hourly rules have no task use case and would materialise
+    // thousands of rows per 90-day window (docs/05 "Validation").
+    final tooFrequent = rule.frequency == Frequency.secondly ||
+        rule.frequency == Frequency.minutely;
+    return tooFrequent ? invalid : null;
   } on FormatException {
     return invalid;
   }

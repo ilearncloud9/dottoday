@@ -76,7 +76,7 @@ A nightly job purges older tombstones.
 
 ## Validation (client and server)
 - `title` 1–200 chars, trimmed; `notes` ≤ 10 000; `duration_min` 5–1440; `alerts` ≤ 5 with
-  `offsetMin` 0–1440; `subtasks` ≤ 50 per occurrence; `rrule` must parse and have `FREQ`; `tz_id`
+  `offsetMin` 0–1440; `subtasks` ≤ 50 per occurrence; `rrule` must parse and have `FREQ` (HOURLY or coarser — M1.2); `tz_id`
   must be a known IANA id; `color_key`/`icon_key` from the allowed sets.
 - Clarified in M1.1: `icon_key` is a lowercase snake_case token ≤ 48 chars (default `circle`) until
   the picker set is fixed in M3.1; the UI draws `circle` for keys it does not know. `color_key` must be
