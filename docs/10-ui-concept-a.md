@@ -104,7 +104,7 @@ Web = the Mac layout at expanded width and the Android layout (Material) at comp
 | O1 | Welcome | the dot draws itself, "Your day, as a thread." one-line value prop, Get started / Sign in | no ref — compose from `DayDot` + `Thread` sample |
 | O2 | Day shape | "When does your day start and end?" two wheels Wake Up / Bedtime with the live sun→moon mini-thread; this is the one onboarding question that matters | no ref — reuse Settings › DAY SHAPE preview |
 | O3 | Habits (optional, skippable) | pick 3–5 starter tasks from suggestion chips (Morning run, Deep work, Lunch, …); they land on tomorrow's thread as upcoming dots | no ref — `ColourIconBlock` + suggestion rows from Add step 1 |
-| O4 | Reminders | explain the two notification types (task starts, Bedtime reminder), request permission with the system prompt | no ref |
+| O4 | Reminders | explain the two notification types (task starts, Bedtime reminder), request permission with the system prompt; optional row "Connect a calendar" (PRD F10) | no ref |
 | O5 | Account | Sign in with Apple / Google / email magic link, or "Continue without an account" (local only; sync later) | no ref — plain, raised card, accent primary |
 | O6 | Done | the user's first thread with their habits placed; "Open today" | no ref |
 Also: returning-user sign-in, magic-link "check your mail", account error, and a restore-from-sync progress state.

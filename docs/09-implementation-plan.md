@@ -159,16 +159,16 @@ auto-scroll logic is reused in M3b.5.
 
 Ref for all of M4: derived — §5.3/5.4 (§5.1 has no renders). The old M4 "Capture" tasks are delivered by M3b–M3f.
 
-**Open (owner decision before M4 starts):** PRD F10 says "3 screens max" and lists an optional calendar connect; §5.1 has six screens (O1–O6) and no calendar step. Recommendation: keep O1–O6, count only the input steps (O2, O3, O5) against F10's limit, add calendar connect as an optional row on O4, and update F10's wording.
+**Decided 2026-10-21 (owner), PRD F10 updated:** keep O1–O6. Only the three input screens (O2 day shape, O3 habits, O5 account) count against F10's limit, and calendar connect is an optional row on O4.
 
 - [ ] M4.1 O1 Welcome: the dot draws itself ("Your day, as a thread."), Get started / Sign in; reduced motion = static. Done: §7.
 - [ ] M4.2 O2 Day shape: "When does your day start and end?", Wake Up / Bedtime wheels + live mini-thread (the Settings DAY SHAPE component). Done: §7 + writes the profile through `SettingsRepository`.
 - [ ] M4.3 O3 Habits (skippable): pick 3–5 suggestion chips via `ColourIconBlock` + suggestion rows; they land on tomorrow's thread. Done: §7 + a test that they land on tomorrow, not today.
-- [ ] M4.4 O4 Reminders: explain task-start and Bedtime reminders, then the system permission prompt; denied → the M3f.8 state. Done: §7 + test both outcomes.
+- [ ] M4.4 O4 Reminders: explain task-start and Bedtime reminders, then the system permission prompt; optional "Connect a calendar" row (device calendar permission, M7.1 picks the calendars); denied → the M3f.8 state. Done: §7 + test both outcomes.
 - [ ] M4.5 O5 Account: Apple / Google / email magic link / "Continue without an account" (UI against the auth interface; real auth in M6.1). Done: §7.
 - [ ] M4.6 O6 Done: the first thread with the habits placed, "Open today". Done: §7.
 - [ ] M4.7 Auth states: returning-user sign-in, magic-link "check your mail", account error, restore-from-sync progress. Done: §7 + a widget test per state.
-- [ ] M4.8 Flow rules: every step skippable, "Continue without an account" path, < 90 s timed in an integration test, resumes if killed mid-flow. Done: integration test.
+- [ ] M4.8 Flow rules: at most 3 input screens (PRD F10), every step skippable, "Continue without an account" path, < 90 s timed in an integration test, resumes if killed mid-flow. Done: integration test.
 - [ ] M4.9 Integration test onboarding → quick add → drag with shift → recurrence edit scopes; add the Android-emulator `integration_test` CI job (08 §6). `/ship-check` + four-platform side-by-side diff.
 
 ## Milestone 5 — Notifications, widgets, platform polish

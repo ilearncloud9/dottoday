@@ -110,7 +110,7 @@ Everything here is **free tier** unless marked *Phase 2*.
 
 ## F10. Onboarding
 
-- 3 screens max: pick day start/end, add first 3 tasks via Quick Add, optional calendar connect, optional account. Skippable. Finishes in under 90 s.
+- At most 3 input screens: pick day start/end (O2), pick first tasks (O3, skippable; suggestion chips or Quick Add), account (O5, optional). Optional calendar connect is a row on the Reminders screen (O4). Welcome (O1), Reminders (O4) and Done (O6) ask for nothing beyond the permission prompt. Skippable. Finishes in under 90 s. Screens: `10-ui-concept-a.md` §5.1.
 
 ## F11. Feedback & changelog
 
