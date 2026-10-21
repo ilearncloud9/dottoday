@@ -777,6 +777,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mark not done'**
   String get dotMarkNotDoneHint;
+
+  /// Screen-reader label of a task row: title and time range.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, {range}'**
+  String rowLabel(String title, String range);
+
+  /// Appended to a row label when the task was missed.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}, missed'**
+  String rowMissed(String label);
+
+  /// Appended to a row label when the task is pinned.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}, pinned'**
+  String rowPinned(String label);
+
+  /// Appended to a row label when the task repeats.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}, repeats'**
+  String rowRepeats(String label);
+
+  /// Shown after a missed task's time range (A-mac-month).
+  ///
+  /// In en, this message translates to:
+  /// **'· missed'**
+  String get rowMissedMeta;
+
+  /// Sun cap at the top of the day's thread (Main).
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up · {time}'**
+  String threadWake(String time);
+
+  /// Moon cap at the end of the day's thread (Main).
+  ///
+  /// In en, this message translates to:
+  /// **'Bedtime · {time}'**
+  String threadBed(String time);
+
+  /// A free gap on the thread, e.g. '1 h free' (Main).
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} free'**
+  String threadFree(String duration);
+
+  /// A future free gap the user can tap or drop onto (Main).
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} free · add here'**
+  String threadAddHere(String duration);
+
+  /// Screen-reader label of a future free gap.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} free from {time}. Add a task here'**
+  String threadAddHereLabel(String duration, String time);
+
+  /// Subtask progress on the live row, e.g. '1 of 3'.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String liveSubtasks(int done, int total);
+
+  /// Time left on the live task (Main).
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes, plural, =1{1 min left} other{{minutes} min left}}'**
+  String liveMinutesLeft(int minutes);
+
+  /// Live row button: mark the current task done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get liveDone;
+
+  /// Live row button: extend the current task by 15 minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'+15 min'**
+  String get liveExtend;
+
+  /// Live row button: move every later task by the overrun (R-04).
+  ///
+  /// In en, this message translates to:
+  /// **'Shift the rest'**
+  String get liveShiftRest;
+
+  /// Compact duration as in the renders: '5 h 45'.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h {minutes}'**
+  String durationHoursMinutesShort(int hours, int minutes);
+
+  /// Live row meta: time range and length, e.g. '9:00 – 11:00 · 2 h'.
+  ///
+  /// In en, this message translates to:
+  /// **'{range} · {duration}'**
+  String liveMeta(String range, String duration);
+
+  /// Appends subtask progress ('1 of 3') to a row's screen-reader label.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}, {progress}'**
+  String rowWithSubtasks(String label, String progress);
 }
 
 class _AppLocalizationsDelegate

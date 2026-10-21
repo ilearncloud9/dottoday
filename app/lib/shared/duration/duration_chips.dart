@@ -12,6 +12,15 @@ String formatDuration(AppLocalizations l10n, int minutes) {
   return l10n.durationHoursMinutes(h, m);
 }
 
+/// Concept A's compact form: "45 min", "1 h", "5 h 45" (`Main`, docs/10 §7.5).
+String formatDurationShort(AppLocalizations l10n, int minutes) {
+  final h = minutes ~/ 60;
+  final m = minutes % 60;
+  if (h == 0) return l10n.durationMinutes(m);
+  if (m == 0) return l10n.durationHours(h);
+  return l10n.durationHoursMinutesShort(h, m);
+}
+
 /// Preset duration chips 15/30/45/60/90 plus "Custom", which reveals a typed
 /// field (5 min – 24 h) (docs/02 F2, R-16).
 ///

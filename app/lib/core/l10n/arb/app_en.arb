@@ -581,5 +581,165 @@
   "dotMarkNotDoneHint": "Mark not done",
   "@dotMarkNotDoneHint": {
     "description": "Screen-reader hint: tapping a done task's dot undoes it."
+  },
+  "rowLabel": "{title}, {range}",
+  "@rowLabel": {
+    "description": "Screen-reader label of a task row: title and time range.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "rowMissed": "{label}, missed",
+  "@rowMissed": {
+    "description": "Appended to a row label when the task was missed.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rowPinned": "{label}, pinned",
+  "@rowPinned": {
+    "description": "Appended to a row label when the task is pinned.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rowRepeats": "{label}, repeats",
+  "@rowRepeats": {
+    "description": "Appended to a row label when the task repeats.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "rowMissedMeta": "· missed",
+  "@rowMissedMeta": {
+    "description": "Shown after a missed task's time range (A-mac-month)."
+  },
+  "threadWake": "Wake Up · {time}",
+  "@threadWake": {
+    "description": "Sun cap at the top of the day's thread (Main).",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "threadBed": "Bedtime · {time}",
+  "@threadBed": {
+    "description": "Moon cap at the end of the day's thread (Main).",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "threadFree": "{duration} free",
+  "@threadFree": {
+    "description": "A free gap on the thread, e.g. '1 h free' (Main).",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "threadAddHere": "{duration} free · add here",
+  "@threadAddHere": {
+    "description": "A future free gap the user can tap or drop onto (Main).",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "threadAddHereLabel": "{duration} free from {time}. Add a task here",
+  "@threadAddHereLabel": {
+    "description": "Screen-reader label of a future free gap.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "liveSubtasks": "{done} of {total}",
+  "@liveSubtasks": {
+    "description": "Subtask progress on the live row, e.g. '1 of 3'.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "liveMinutesLeft": "{minutes, plural, =1{1 min left} other{{minutes} min left}}",
+  "@liveMinutesLeft": {
+    "description": "Time left on the live task (Main).",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "liveDone": "Done",
+  "@liveDone": {
+    "description": "Live row button: mark the current task done."
+  },
+  "liveExtend": "+15 min",
+  "@liveExtend": {
+    "description": "Live row button: extend the current task by 15 minutes."
+  },
+  "liveShiftRest": "Shift the rest",
+  "@liveShiftRest": {
+    "description": "Live row button: move every later task by the overrun (R-04)."
+  },
+  "durationHoursMinutesShort": "{hours} h {minutes}",
+  "@durationHoursMinutesShort": {
+    "description": "Compact duration as in the renders: '5 h 45'.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "liveMeta": "{range} · {duration}",
+  "@liveMeta": {
+    "description": "Live row meta: time range and length, e.g. '9:00 – 11:00 · 2 h'.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "rowWithSubtasks": "{label}, {progress}",
+  "@rowWithSubtasks": {
+    "description": "Appends subtask progress ('1 of 3') to a row's screen-reader label.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "progress": {
+        "type": "String"
+      }
+    }
   }
 }

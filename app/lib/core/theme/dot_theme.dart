@@ -95,31 +95,7 @@ ThemeData _build(DotColors c) {
   // raised surface and text, so their contrast is already tested.
   final inverse = c.isDark ? DotColors.light() : DotColors.dark();
   final type = DotType.withColors(text: c.text, muted: c.muted);
-  final scheme = ColorScheme(
-    brightness: c.brightness,
-    primary: c.accent,
-    onPrimary: c.onAccent,
-    primaryContainer: Color.alphaBlend(c.accentTint, c.raised),
-    onPrimaryContainer: c.accentInk,
-    secondary: c.accent,
-    onSecondary: c.onAccent,
-    // Concept A has no error hue (§2.1); errors are inline text (§5.4).
-    error: c.text,
-    onError: c.raised,
-    surface: c.surface,
-    onSurface: c.text,
-    onSurfaceVariant: c.muted,
-    surfaceContainerLowest: c.surface,
-    surfaceContainerLow: c.raised,
-    surfaceContainer: c.raised,
-    surfaceContainerHigh: c.raised,
-    surfaceContainerHighest: c.raised,
-    outline: c.outline,
-    outlineVariant: c.outline,
-    inverseSurface: inverse.raised,
-    onInverseSurface: inverse.text,
-    inversePrimary: inverse.accentInk,
-  );
+  final scheme = _scheme(c, inverse);
   return ThemeData(
     useMaterial3: true,
     brightness: c.brightness,
@@ -128,6 +104,11 @@ ThemeData _build(DotColors c) {
     fontFamily: DotType.fontFamily,
     textTheme: _textTheme(type),
     dividerColor: c.outline,
+    // Pill buttons on every platform (`Main`, `A-android-today`).
+    filledButtonTheme: FilledButtonThemeData(
+      style: _pill(type, c, filled: true),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(style: _pill(type, c)),
     bottomSheetTheme: const BottomSheetThemeData(
       showDragHandle: true,
       shape: RoundedRectangleBorder(
@@ -153,4 +134,61 @@ TextTheme _textTheme(DotType t) => TextTheme(
   labelLarge: t.button,
   labelMedium: t.rowMeta,
   labelSmall: t.tabLabel,
+);
+
+ButtonStyle _pill(DotType type, DotColors c, {bool filled = false}) =>
+    ButtonStyle(
+      shape: const WidgetStatePropertyAll(StadiumBorder()),
+      minimumSize: const WidgetStatePropertyAll(
+        Size(DotTouch.android, DotTouch.android),
+      ),
+      padding: const WidgetStatePropertyAll(
+        EdgeInsets.symmetric(horizontal: DotSpace.page),
+      ),
+      textStyle: WidgetStatePropertyAll(type.button),
+      foregroundColor: WidgetStateProperty.resolveWith(
+        (s) => s.contains(WidgetState.disabled)
+            ? c.muted
+            : filled
+            ? c.onAccent
+            : c.text,
+      ),
+      backgroundColor: WidgetStateProperty.resolveWith(
+        (s) => s.contains(WidgetState.disabled)
+            ? c.outline
+            : filled
+            ? c.accent
+            : c.raised,
+      ),
+      side: filled
+          ? null
+          : WidgetStatePropertyAll(
+              BorderSide(color: c.outline, width: DotSpace.hairline),
+            ),
+    );
+
+ColorScheme _scheme(DotColors c, DotColors inverse) => ColorScheme(
+  brightness: c.brightness,
+  primary: c.accent,
+  onPrimary: c.onAccent,
+  primaryContainer: Color.alphaBlend(c.accentTint, c.raised),
+  onPrimaryContainer: c.accentInk,
+  secondary: c.accent,
+  onSecondary: c.onAccent,
+  // Concept A has no error hue (§2.1); errors are inline text (§5.4).
+  error: c.text,
+  onError: c.raised,
+  surface: c.surface,
+  onSurface: c.text,
+  onSurfaceVariant: c.muted,
+  surfaceContainerLowest: c.surface,
+  surfaceContainerLow: c.raised,
+  surfaceContainer: c.raised,
+  surfaceContainerHigh: c.raised,
+  surfaceContainerHighest: c.raised,
+  outline: c.outline,
+  outlineVariant: c.outline,
+  inverseSurface: inverse.raised,
+  onInverseSurface: inverse.text,
+  inversePrimary: inverse.accentInk,
 );

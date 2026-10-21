@@ -420,4 +420,92 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dotMarkNotDoneHint => 'Mark not done';
+
+  @override
+  String rowLabel(String title, String range) {
+    return '$title, $range';
+  }
+
+  @override
+  String rowMissed(String label) {
+    return '$label, missed';
+  }
+
+  @override
+  String rowPinned(String label) {
+    return '$label, pinned';
+  }
+
+  @override
+  String rowRepeats(String label) {
+    return '$label, repeats';
+  }
+
+  @override
+  String get rowMissedMeta => '· missed';
+
+  @override
+  String threadWake(String time) {
+    return 'Wake Up · $time';
+  }
+
+  @override
+  String threadBed(String time) {
+    return 'Bedtime · $time';
+  }
+
+  @override
+  String threadFree(String duration) {
+    return '$duration free';
+  }
+
+  @override
+  String threadAddHere(String duration) {
+    return '$duration free · add here';
+  }
+
+  @override
+  String threadAddHereLabel(String duration, String time) {
+    return '$duration free from $time. Add a task here';
+  }
+
+  @override
+  String liveSubtasks(int done, int total) {
+    return '$done of $total';
+  }
+
+  @override
+  String liveMinutesLeft(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutes min left',
+      one: '1 min left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get liveDone => 'Done';
+
+  @override
+  String get liveExtend => '+15 min';
+
+  @override
+  String get liveShiftRest => 'Shift the rest';
+
+  @override
+  String durationHoursMinutesShort(int hours, int minutes) {
+    return '$hours h $minutes';
+  }
+
+  @override
+  String liveMeta(String range, String duration) {
+    return '$range · $duration';
+  }
+
+  @override
+  String rowWithSubtasks(String label, String progress) {
+    return '$label, $progress';
+  }
 }
