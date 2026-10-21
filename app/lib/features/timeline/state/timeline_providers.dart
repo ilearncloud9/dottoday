@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/layout/timeline_day.dart';
@@ -98,4 +99,44 @@ class OutsideHours extends _$OutsideHours {
   void toggleBefore() => state = (before: !state.before, after: state.after);
 
   void toggleAfter() => state = (before: state.before, after: !state.after);
+}
+
+/// Subtask progress per occurrence of [date], for the progress rings (R-09:
+/// counts are per occurrence, never per series).
+@riverpod
+Stream<Map<String, ({int done, int total})>> daySubtaskProgress(
+  Ref ref,
+  DateTime date,
+) async* {
+  final data = await ref.watch(timelineDataProvider(date).future);
+  final ids = {for (final o in data.blocks) o.id};
+  if (ids.isEmpty) {
+    yield const {};
+    return;
+  }
+  final rows = ref
+      .watch(subtaskRepositoryProvider)
+      .watchForOccurrences(data.userId, ids);
+  await for (final subtasks in rows) {
+    final out = <String, ({int done, int total})>{};
+    for (final s in subtasks) {
+      final p = out[s.occurrenceId] ?? (done: 0, total: 0);
+      out[s.occurrenceId] = (
+        done: p.done + (s.done ? 1 : 0),
+        total: p.total + 1,
+      );
+    }
+    yield out;
+  }
+}
+
+/// Alerts of each active series, inherited by occurrences without their
+/// own (`alerts` null, docs/05).
+@Riverpod(keepAlive: true)
+Stream<Map<String, List<Alert>>> seriesAlerts(Ref ref) async* {
+  final profile = await ref.watch(currentProfileProvider.future);
+  yield* ref
+      .watch(seriesRepositoryProvider)
+      .watchActive(profile.id)
+      .map((all) => {for (final s in all) s.id: s.alerts});
 }

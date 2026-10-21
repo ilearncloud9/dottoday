@@ -1,3 +1,4 @@
+import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
@@ -59,6 +60,11 @@ final List<_Block> _blocks = [
   _b('Night train to Berlin', 23, 30, 75, 'sky', 'flight'),
 ];
 
+const _twoAlerts = [
+  Alert(kind: AlertKind.before, offsetMin: 10),
+  Alert(kind: AlertKind.atStart),
+];
+
 const _inbox = [
   ('Buy a birthday gift', 'shopping'),
   ('Book the car service', 'commute'),
@@ -103,6 +109,8 @@ WriteBatch buildDemoDay({
         pinned: b.pinned,
         status: b.done ? OccurrenceStatus.done : OccurrenceStatus.planned,
         completedAtUtc: b.done ? nowUtc : null,
+        // Two alerts on the dentist call, to show the bell badge.
+        alerts: b.icon == 'call' ? _twoAlerts : null,
       ),
   ];
   final inbox = [

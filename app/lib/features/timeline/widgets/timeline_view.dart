@@ -56,7 +56,7 @@ class _TimelineViewState extends ConsumerState<TimelineView> {
       density: (
         pxPerMin: AppTimeline.pxPerMinute * s,
         collapsedPxPerMin: AppTimeline.collapsedPxPerMinute * s,
-        minBlockHeight: AppSpacing.minTouchTarget * s,
+        minBlockHeight: AppTimeline.minBlockHeight * s,
       ),
       expanded: expanded,
     );

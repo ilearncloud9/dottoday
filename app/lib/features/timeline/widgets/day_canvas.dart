@@ -1,9 +1,9 @@
 import 'package:dottoday/core/theme/app_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/layout/timeline_geometry.dart';
-import 'package:dottoday/features/timeline/widgets/block_tile.dart';
 import 'package:dottoday/features/timeline/widgets/now_line.dart';
 import 'package:dottoday/features/timeline/widgets/time_labels.dart';
+import 'package:dottoday/features/timeline/widgets/timeline_block.dart';
 import 'package:dottoday/features/timeline/widgets/timeline_grid.dart';
 import 'package:flutter/material.dart';
 
@@ -152,8 +152,9 @@ class DayCanvas extends StatelessWidget {
         start: gutter + p.column * colWidth,
         width: colWidth - AppTimeline.blockGap,
         child: RepaintBoundary(
-          child: BlockTile(
-            block: p.block,
+          child: TimelineBlock(
+            placement: p,
+            date: geometry.day.date,
             location: geometry.day.location,
             use24h: use24h,
           ),

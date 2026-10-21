@@ -645,6 +645,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Demo day loaded'**
   String get debugDemoDayLoaded;
+
+  /// Separator between parts of a screen-reader label.
+  ///
+  /// In en, this message translates to:
+  /// **', '**
+  String get semanticsSeparator;
+
+  /// Screen-reader state of a completed block.
+  ///
+  /// In en, this message translates to:
+  /// **'done'**
+  String get blockDone;
+
+  /// Screen-reader state of a past block that isn't done (never shaming, 03 §5).
+  ///
+  /// In en, this message translates to:
+  /// **'not done yet'**
+  String get blockNotDoneYet;
+
+  /// Subtask progress in a block's screen-reader label.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} subtasks done'**
+  String blockSubtasks(int done, int total);
+
+  /// Visible subtask progress next to the ring.
+  ///
+  /// In en, this message translates to:
+  /// **'{done}/{total}'**
+  String blockSubtasksShort(int done, int total);
+
+  /// Badge meaning in screen-reader label.
+  ///
+  /// In en, this message translates to:
+  /// **'recurring'**
+  String get blockRecurring;
+
+  /// Badge meaning in screen-reader label.
+  ///
+  /// In en, this message translates to:
+  /// **'pinned'**
+  String get blockPinned;
+
+  /// Badge meaning: imported calendar event.
+  ///
+  /// In en, this message translates to:
+  /// **'from your calendar'**
+  String get blockFromCalendar;
+
+  /// Alert count in a block's screen-reader label.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 alert} other{{count} alerts}}'**
+  String blockAlerts(int count);
+
+  /// Block began before this day.
+  ///
+  /// In en, this message translates to:
+  /// **'continues from the previous day'**
+  String get blockStartsBefore;
+
+  /// Block runs past midnight.
+  ///
+  /// In en, this message translates to:
+  /// **'continues into the next day'**
+  String get blockEndsAfter;
+
+  /// Button on a block's icon circle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark {title} done'**
+  String blockMarkDone(String title);
+
+  /// Button on a done block's icon circle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark {title} not done'**
+  String blockMarkNotDone(String title);
+
+  /// Undo snackbar after completing a block.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked done'**
+  String get undoMarkedDone;
+
+  /// Undo snackbar after un-completing a block.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked not done'**
+  String get undoMarkedNotDone;
 }
 
 class _AppLocalizationsDelegate

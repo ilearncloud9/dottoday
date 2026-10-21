@@ -235,3 +235,148 @@ abstract class _$OutsideHours extends $Notifier<({bool after, bool before})> {
     return element.handleCreate(ref, build);
   }
 }
+
+/// Subtask progress per occurrence of [date], for the progress rings (R-09:
+/// counts are per occurrence, never per series).
+
+@ProviderFor(daySubtaskProgress)
+final daySubtaskProgressProvider = DaySubtaskProgressFamily._();
+
+/// Subtask progress per occurrence of [date], for the progress rings (R-09:
+/// counts are per occurrence, never per series).
+
+final class DaySubtaskProgressProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Map<String, ({int done, int total})>>,
+          Map<String, ({int done, int total})>,
+          Stream<Map<String, ({int done, int total})>>
+        >
+    with
+        $FutureModifier<Map<String, ({int done, int total})>>,
+        $StreamProvider<Map<String, ({int done, int total})>> {
+  /// Subtask progress per occurrence of [date], for the progress rings (R-09:
+  /// counts are per occurrence, never per series).
+  DaySubtaskProgressProvider._({
+    required DaySubtaskProgressFamily super.from,
+    required DateTime super.argument,
+  }) : super(
+         retry: null,
+         name: r'daySubtaskProgressProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$daySubtaskProgressHash();
+
+  @override
+  String toString() {
+    return r'daySubtaskProgressProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $StreamProviderElement<Map<String, ({int done, int total})>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<Map<String, ({int done, int total})>> create(Ref ref) {
+    final argument = this.argument as DateTime;
+    return daySubtaskProgress(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DaySubtaskProgressProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$daySubtaskProgressHash() =>
+    r'9e827ab163b30adb94b6515218c957a3674d1248';
+
+/// Subtask progress per occurrence of [date], for the progress rings (R-09:
+/// counts are per occurrence, never per series).
+
+final class DaySubtaskProgressFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          Stream<Map<String, ({int done, int total})>>,
+          DateTime
+        > {
+  DaySubtaskProgressFamily._()
+    : super(
+        retry: null,
+        name: r'daySubtaskProgressProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Subtask progress per occurrence of [date], for the progress rings (R-09:
+  /// counts are per occurrence, never per series).
+
+  DaySubtaskProgressProvider call(DateTime date) =>
+      DaySubtaskProgressProvider._(argument: date, from: this);
+
+  @override
+  String toString() => r'daySubtaskProgressProvider';
+}
+
+/// Alerts of each active series, inherited by occurrences without their
+/// own (`alerts` null, docs/05).
+
+@ProviderFor(seriesAlerts)
+final seriesAlertsProvider = SeriesAlertsProvider._();
+
+/// Alerts of each active series, inherited by occurrences without their
+/// own (`alerts` null, docs/05).
+
+final class SeriesAlertsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Map<String, List<Alert>>>,
+          Map<String, List<Alert>>,
+          Stream<Map<String, List<Alert>>>
+        >
+    with
+        $FutureModifier<Map<String, List<Alert>>>,
+        $StreamProvider<Map<String, List<Alert>>> {
+  /// Alerts of each active series, inherited by occurrences without their
+  /// own (`alerts` null, docs/05).
+  SeriesAlertsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'seriesAlertsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$seriesAlertsHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<Map<String, List<Alert>>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<Map<String, List<Alert>>> create(Ref ref) {
+    return seriesAlerts(ref);
+  }
+}
+
+String _$seriesAlertsHash() => r'e20a7ac5b017378d27419e5c711af314dc87b951';

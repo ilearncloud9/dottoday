@@ -16,8 +16,22 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showUndoSnackbar(
   BuildContext context, {
   required String message,
   required VoidCallback onUndo,
+}) => showUndoSnackbarOn(
+  ScaffoldMessenger.of(context),
+  context.l10n,
+  message: message,
+  onUndo: onUndo,
+);
+
+/// [showUndoSnackbar] for callers that captured the messenger before an
+/// `await` (the BuildContext may be gone by then).
+ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showUndoSnackbarOn(
+  ScaffoldMessengerState messenger,
+  AppLocalizations l10n, {
+  required String message,
+  required VoidCallback onUndo,
 }) {
-  final messenger = ScaffoldMessenger.of(context)..hideCurrentSnackBar();
+  messenger.hideCurrentSnackBar();
   return messenger.showSnackBar(
     SnackBar(
       content: Text(message),
@@ -26,7 +40,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showUndoSnackbar(
       // Stay up for the whole window even with accessible navigation on,
       // which would otherwise keep an action snackbar open indefinitely.
       persist: false,
-      action: SnackBarAction(label: context.l10n.undoAction, onPressed: onUndo),
+      action: SnackBarAction(label: l10n.undoAction, onPressed: onUndo),
     ),
   );
 }

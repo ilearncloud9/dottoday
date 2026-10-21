@@ -1,13 +1,22 @@
 import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/failures/app_failure.dart';
+import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
+import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
+import 'package:dottoday/domain/repositories/subtask_repository.dart';
+import 'package:dottoday/domain/undo/undo_service.dart';
+import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -91,6 +100,80 @@ final class FakeSettingsRepository implements SettingsRepository {
   Future<void> upsert(Profile profile) async => this.profile = profile;
 }
 
+final class FakeSubtaskRepository implements SubtaskRepository {
+  FakeSubtaskRepository([Iterable<Subtask> rows = const []]) : rows = [...rows];
+
+  final List<Subtask> rows;
+
+  @override
+  Stream<List<Subtask>> watchForOccurrences(
+    String userId,
+    Set<String> occurrenceIds,
+  ) => Stream.value([
+    for (final s in rows)
+      if (occurrenceIds.contains(s.occurrenceId) && s.deletedAt == null) s,
+  ]);
+
+  @override
+  Future<Subtask?> findById(String userId, String id) async =>
+      rows.where((s) => s.id == id).firstOrNull;
+
+  @override
+  Future<void> upsertAll(Iterable<Subtask> subtasks) async =>
+      rows.addAll(subtasks);
+}
+
+final class FakeSeriesRepository implements SeriesRepository {
+  FakeSeriesRepository([this.series = const []]);
+
+  final List<Series> series;
+
+  @override
+  Stream<List<Series>> watchActive(String userId) => Stream.value(series);
+
+  @override
+  Future<Series?> findById(String userId, String id) async =>
+      series.where((s) => s.id == id).firstOrNull;
+
+  @override
+  Future<List<Series>> findNeedingMaterialisation(
+    String userId,
+    DateTime horizonUtc,
+  ) async => const [];
+
+  @override
+  Future<void> upsertAll(Iterable<Series> series) async {}
+}
+
+/// Applies batches straight to the fake repository; undo restores the
+/// previous rows.
+final class FakeUndoService implements UndoService {
+  FakeUndoService(this.occurrences);
+
+  final FakeOccurrenceRepository occurrences;
+  final applied = <WriteBatch>[];
+  final _before = <String, List<Occurrence>>{};
+  var _n = 0;
+
+  @override
+  Future<Result<UndoToken, AppFailure>> applyUndoable(WriteBatch batch) async {
+    final id = 'undo-${_n++}';
+    _before[id] = [
+      for (final o in batch.occurrences)
+        ?occurrences.rows.where((r) => r.id == o.id).firstOrNull,
+    ];
+    applied.add(batch);
+    occurrences.put(batch.occurrences);
+    return Ok(UndoToken(id: id, expiresAtUtc: DateTime.utc(2100)));
+  }
+
+  @override
+  Future<Result<void, AppFailure>> undo(UndoToken token) async {
+    occurrences.put(_before.remove(token.id) ?? const []);
+    return const Ok(null);
+  }
+}
+
 Profile testProfile({String tzId = 'Europe/Berlin', Settings? settings}) =>
     Profile(
       id: testUserId,
@@ -128,20 +211,34 @@ List<Occurrence> demoDayRows(DateTime date, {DateTime? now}) {
   return [...batch.occurrences, standup];
 }
 
+/// The demo day's subtasks (three on "Deep work", one done).
+List<Subtask> demoDaySubtasks(DateTime date) => buildDemoDay(
+  userId: testUserId,
+  location: tz.getLocation('Europe/Berlin'),
+  date: date,
+  nowUtc: DateTime.utc(2026, 10, 21, 11),
+).subtasks;
+
 /// Provider overrides for a timeline backed by in-memory fakes at [now].
 List<Override> timelineOverrides({
   required DateTime now,
   FakeOccurrenceRepository? occurrences,
+  FakeSubtaskRepository? subtasks,
+  List<Series> series = const [],
   Profile? profile,
 }) {
   final p = profile ?? testProfile();
+  final repo = occurrences ?? FakeOccurrenceRepository();
   return [
+    subtaskRepositoryProvider.overrideWithValue(
+      subtasks ?? FakeSubtaskRepository(),
+    ),
+    seriesRepositoryProvider.overrideWithValue(FakeSeriesRepository(series)),
+    undoServiceProvider.overrideWithValue(FakeUndoService(repo)),
     clockProvider.overrideWithValue(FakeClock(now)),
     minuteTickProvider.overrideWith((ref) => Stream.value(now)),
     localProfileProvider.overrideWith((ref) async => p),
     settingsRepositoryProvider.overrideWithValue(FakeSettingsRepository(p)),
-    occurrenceRepositoryProvider.overrideWithValue(
-      occurrences ?? FakeOccurrenceRepository(),
-    ),
+    occurrenceRepositoryProvider.overrideWithValue(repo),
   ];
 }

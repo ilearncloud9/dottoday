@@ -63,13 +63,15 @@ Month view opens from the Today date header. The current date is always one tap 
 - Outside-hours zones (clarified in M3.2): the time before the weekday's day start and after its
   day end is drawn at a quarter of the core density, with a "Before 07:00" / "After 22:00" toggle
   that expands it to full density for the session. Hour labels that would collide are skipped.
-  Density (96 px/h core) scales with the text size up to 2×; blocks are never shorter than 44 pt
-  × text scale, and overlap columns are computed on drawn heights so blocks never cover each other.
+  Density (108 px/h core) scales with the text size up to 2×; blocks are never shorter than the
+  48 dp complete-toggle target × text scale, and overlap columns are computed on drawn heights so blocks never cover each other.
 - Timeline: hour gutter left (mono labels), blocks right. Now-line with a dot in `accent`, animates once
   per minute. Past area tinted `surfaceSunken`. Gaps show a faint "+" on hover/long-press.
 - Block anatomy: colour fill, icon circle, title (1–2 lines), time range `08:00–08:45`, subtask progress
   ring, badges: pinned (lock), calendar (small source icon), recurring (↻), alerts (bell with count).
 - Done: fill desaturates, title strikethrough at 60 % opacity, checkmark in icon circle.
+  Clarified in M3.3: the done title uses `onSurfaceMuted` instead of 60 % opacity, because 60 % of
+  the block colour falls below the 4.5:1 text floor (§4 wins over the visual).
 - Overdue: thin `warning` left bar; no sound, no badge spam.
 - Empty day: illustration-free, a single line "Nothing planned. Add something or pull from your inbox", two buttons.
 

@@ -429,5 +429,96 @@
   "debugDemoDayLoaded": "Demo day loaded",
   "@debugDemoDayLoaded": {
     "description": "Confirmation after the debug demo day was written."
+  },
+  "semanticsSeparator": ", ",
+  "@semanticsSeparator": {
+    "description": "Separator between parts of a screen-reader label."
+  },
+  "blockDone": "done",
+  "@blockDone": {
+    "description": "Screen-reader state of a completed block."
+  },
+  "blockNotDoneYet": "not done yet",
+  "@blockNotDoneYet": {
+    "description": "Screen-reader state of a past block that isn't done (never shaming, 03 §5)."
+  },
+  "blockSubtasks": "{done} of {total} subtasks done",
+  "@blockSubtasks": {
+    "description": "Subtask progress in a block's screen-reader label.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "blockSubtasksShort": "{done}/{total}",
+  "@blockSubtasksShort": {
+    "description": "Visible subtask progress next to the ring.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "blockRecurring": "recurring",
+  "@blockRecurring": {
+    "description": "Badge meaning in screen-reader label."
+  },
+  "blockPinned": "pinned",
+  "@blockPinned": {
+    "description": "Badge meaning in screen-reader label."
+  },
+  "blockFromCalendar": "from your calendar",
+  "@blockFromCalendar": {
+    "description": "Badge meaning: imported calendar event."
+  },
+  "blockAlerts": "{count, plural, =1{1 alert} other{{count} alerts}}",
+  "@blockAlerts": {
+    "description": "Alert count in a block's screen-reader label.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "blockStartsBefore": "continues from the previous day",
+  "@blockStartsBefore": {
+    "description": "Block began before this day."
+  },
+  "blockEndsAfter": "continues into the next day",
+  "@blockEndsAfter": {
+    "description": "Block runs past midnight."
+  },
+  "blockMarkDone": "Mark {title} done",
+  "@blockMarkDone": {
+    "description": "Button on a block's icon circle.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "blockMarkNotDone": "Mark {title} not done",
+  "@blockMarkNotDone": {
+    "description": "Button on a done block's icon circle.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "undoMarkedDone": "Marked done",
+  "@undoMarkedDone": {
+    "description": "Undo snackbar after completing a block."
+  },
+  "undoMarkedNotDone": "Marked not done",
+  "@undoMarkedNotDone": {
+    "description": "Undo snackbar after un-completing a block."
   }
 }

@@ -320,4 +320,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get debugDemoDayLoaded => 'Demo day loaded';
+
+  @override
+  String get semanticsSeparator => ', ';
+
+  @override
+  String get blockDone => 'done';
+
+  @override
+  String get blockNotDoneYet => 'not done yet';
+
+  @override
+  String blockSubtasks(int done, int total) {
+    return '$done of $total subtasks done';
+  }
+
+  @override
+  String blockSubtasksShort(int done, int total) {
+    return '$done/$total';
+  }
+
+  @override
+  String get blockRecurring => 'recurring';
+
+  @override
+  String get blockPinned => 'pinned';
+
+  @override
+  String get blockFromCalendar => 'from your calendar';
+
+  @override
+  String blockAlerts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count alerts',
+      one: '1 alert',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get blockStartsBefore => 'continues from the previous day';
+
+  @override
+  String get blockEndsAfter => 'continues into the next day';
+
+  @override
+  String blockMarkDone(String title) {
+    return 'Mark $title done';
+  }
+
+  @override
+  String blockMarkNotDone(String title) {
+    return 'Mark $title not done';
+  }
+
+  @override
+  String get undoMarkedDone => 'Marked done';
+
+  @override
+  String get undoMarkedNotDone => 'Marked not done';
 }

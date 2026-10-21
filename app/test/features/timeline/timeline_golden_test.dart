@@ -33,6 +33,7 @@ Future<void> _pump(
       overrides: timelineOverrides(
         now: _now,
         occurrences: FakeOccurrenceRepository(rows ?? demoDayRows(_date)),
+        subtasks: FakeSubtaskRepository(demoDaySubtasks(_date)),
       ),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -79,7 +80,7 @@ void main() {
   });
 
   // Tall enough that the whole day, top to bottom, is in one image (R-14).
-  const fullDay = Size(420, 1900);
+  const fullDay = Size(420, 2150);
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     testWidgets('full day, demo, ${mode.name}', (tester) async {
@@ -92,7 +93,7 @@ void main() {
   }
 
   testWidgets('full day, demo, 200 % text', (tester) async {
-    await _pump(tester, size: const Size(420, 3700), textScale: 2);
+    await _pump(tester, size: const Size(420, 4200), textScale: 2);
     await expectLater(
       find.byType(TimelineScreen),
       matchesGoldenFile('goldens/timeline_full_day_200.png'),

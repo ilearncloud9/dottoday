@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/timeline_screen.dart';
 import 'package:dottoday/features/timeline/widgets/block_tile.dart';
@@ -65,7 +66,7 @@ void main() {
     await _pump(tester, size: const Size(420, 2000));
     expect(find.textContaining('October 21'), findsOneWidget);
     expect(
-      find.bySemanticsLabel('Design review, 10:30 to 11:15'),
+      find.bySemanticsLabel('Design review, 10:30 to 11:15, not done yet'),
       findsOneWidget,
     );
     expect(find.bySemanticsLabel('Now, 13:00'), findsOneWidget);
@@ -192,6 +193,62 @@ void main() {
     repo.put([demoDayRows(_date)[7]]); // 15:30
     await tester.pumpAndSettle();
     expect(find.text('Call the dentist'), findsOneWidget);
+  });
+
+  testWidgets('tapping the icon circle completes, and Undo reverts', (
+    tester,
+  ) async {
+    final repo = await _pump(tester, size: const Size(420, 2000));
+    await tester.tap(find.bySemanticsLabel('Mark Spanish lesson done'));
+    await tester.pumpAndSettle();
+    final lesson = repo.rows.firstWhere((o) => o.title == 'Spanish lesson');
+    expect(lesson.status, OccurrenceStatus.done);
+    expect(lesson.completedAtUtc, _now);
+    expect(find.text('Marked done'), findsOneWidget);
+    expect(find.bySemanticsLabel('Mark Spanish lesson not done'), findsOne);
+
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
+    final back = repo.rows.firstWhere((o) => o.title == 'Spanish lesson');
+    expect(back.status, OccurrenceStatus.planned);
+  });
+
+  testWidgets('labels carry state, progress and badges (03 §4)', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: timelineOverrides(
+          now: _now,
+          occurrences: FakeOccurrenceRepository(demoDayRows(_date)),
+          subtasks: FakeSubtaskRepository(demoDaySubtasks(_date)),
+        ),
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const TimelineScreen(),
+        ),
+      ),
+    );
+    tester.view.physicalSize = const Size(420, 2200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpAndSettle();
+    for (final label in [
+      'Morning run, 06:45 to 07:30, done',
+      'Team standup, 08:00 to 08:15, not done yet, recurring',
+      'Deep work: roadmap, 09:00 to 11:00, 1 of 3 subtasks done, '
+          'not done yet',
+      'Lunch with Sam, 12:30 to 13:15, pinned',
+      'Call the dentist, 15:30 to 15:45, 2 alerts',
+      'Night train to Berlin, 23:30 to 00:45, continues into the next day',
+    ]) {
+      expect(find.bySemanticsLabel(label), findsOneWidget, reason: label);
+    }
+    handle.dispose();
   });
 
   testWidgets('large text keeps the date and hides the pill text', (
