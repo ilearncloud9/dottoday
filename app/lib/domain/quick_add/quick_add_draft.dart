@@ -32,6 +32,7 @@ final class QuickAddToken {
 final class QuickAddDraft {
   const QuickAddDraft({
     required this.title,
+    this.text = '',
     this.tokens = const [],
     this.date,
     this.minuteOfDay,
@@ -42,6 +43,10 @@ final class QuickAddDraft {
   });
 
   final String title;
+
+  /// The whole line as typed, so nothing is lost when a token can't be
+  /// used (e.g. "every Monday" with no time, see `rowsFromDraft`).
+  final String text;
 
   /// Recognised spans in text order.
   final List<QuickAddToken> tokens;

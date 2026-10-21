@@ -1545,6 +1545,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 task moved to Trash} other{{count} tasks moved to Trash}}'**
   String snackManyDeleted(int count);
+
+  /// Inbox row: put the task on the timeline (round + button, swipe toward the start, screen-reader action).
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get inboxSchedule;
+
+  /// Inbox row: move the task to Trash (swipe toward the end, screen-reader action).
+  ///
+  /// In en, this message translates to:
+  /// **'Move to Trash'**
+  String get inboxTrash;
+
+  /// Screen-reader label of an inbox row.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, {length}'**
+  String inboxRowLabel(String title, String length);
+
+  /// Inbox header line, e.g. '5 unscheduled · 5 h 15 of work'.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 unscheduled} other{{count} unscheduled}} · {work} of work'**
+  String inboxSummary(int count, String work);
+
+  /// Screen-reader label of the dotted ring with the count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Inbox empty} =1{1 task in the Inbox} other{{count} tasks in the Inbox}}'**
+  String inboxRingLabel(int count);
+
+  /// Quick-add field hint in the Inbox: an example of what it understands (R-06).
+  ///
+  /// In en, this message translates to:
+  /// **'Call Mum tomorrow 3pm 20m'**
+  String get inboxAddHint;
+
+  /// Screen-reader label of the Inbox quick-add field.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a task'**
+  String get inboxAddLabel;
+
+  /// Inbox filter chip.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get inboxFilterAll;
+
+  /// Inbox filter chip: tasks shorter than 30 minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Under 30 min'**
+  String get inboxFilterUnder30;
+
+  /// Inbox filter chip: tasks that fit a free slot left today.
+  ///
+  /// In en, this message translates to:
+  /// **'Fits today'**
+  String get inboxFilterFits;
+
+  /// NextFreeSlot card in the Inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Next free slot today: {range} · fits {title}'**
+  String inboxNextSlot(String range, String title);
+
+  /// Button on the NextFreeSlot card: schedule the task in that slot.
+  ///
+  /// In en, this message translates to:
+  /// **'Place'**
+  String get inboxPlace;
+
+  /// Header of the completed group in the Inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed · {count}'**
+  String inboxCompleted(int count);
+
+  /// Empty Inbox (docs/10 §5.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox is clear'**
+  String get inboxEmpty;
+
+  /// Inbox filter shows no tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here fits this filter'**
+  String get inboxNoMatch;
+
+  /// Title of a Quick Add task typed with no words, only a time or length.
+  ///
+  /// In en, this message translates to:
+  /// **'New task'**
+  String get inboxUntitled;
+
+  /// Title of the schedule sheet for an inbox task.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule {title}'**
+  String inboxScheduleTitle(String title);
+
+  /// Schedule suggestion: a free slot today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today, {range}'**
+  String inboxScheduleToday(String range);
+
+  /// Schedule suggestion: the first free slot tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow, {range}'**
+  String inboxScheduleTomorrow(String range);
+
+  /// Schedule sheet when nothing fits.
+  ///
+  /// In en, this message translates to:
+  /// **'No free slot today or tomorrow. Make room on Today, or drag it in from the week.'**
+  String get inboxScheduleNone;
+
+  /// Snackbar after scheduling an inbox task, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} scheduled for {when}'**
+  String snackScheduled(String title, String when);
+
+  /// Snackbar after Quick Add in the Inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{title} added to the Inbox} other{{count} tasks added}}'**
+  String snackAddedInbox(int count, String title);
+
+  /// Snackbar after Quick Add made a timed task.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} added for {when}'**
+  String snackAddedTimed(String title, String when);
+
+  /// Snackbar after trashing an inbox task, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} moved to Trash'**
+  String snackTrashed(String title);
 }
 
 class _AppLocalizationsDelegate

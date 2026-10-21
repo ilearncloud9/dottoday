@@ -1013,4 +1013,120 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get inboxSchedule => 'Schedule';
+
+  @override
+  String get inboxTrash => 'Move to Trash';
+
+  @override
+  String inboxRowLabel(String title, String length) {
+    return '$title, $length';
+  }
+
+  @override
+  String inboxSummary(int count, String work) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count unscheduled',
+      one: '1 unscheduled',
+    );
+    return '$_temp0 · $work of work';
+  }
+
+  @override
+  String inboxRingLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks in the Inbox',
+      one: '1 task in the Inbox',
+      zero: 'Inbox empty',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxAddHint => 'Call Mum tomorrow 3pm 20m';
+
+  @override
+  String get inboxAddLabel => 'Add a task';
+
+  @override
+  String get inboxFilterAll => 'All';
+
+  @override
+  String get inboxFilterUnder30 => 'Under 30 min';
+
+  @override
+  String get inboxFilterFits => 'Fits today';
+
+  @override
+  String inboxNextSlot(String range, String title) {
+    return 'Next free slot today: $range · fits $title';
+  }
+
+  @override
+  String get inboxPlace => 'Place';
+
+  @override
+  String inboxCompleted(int count) {
+    return 'Completed · $count';
+  }
+
+  @override
+  String get inboxEmpty => 'Inbox is clear';
+
+  @override
+  String get inboxNoMatch => 'Nothing here fits this filter';
+
+  @override
+  String get inboxUntitled => 'New task';
+
+  @override
+  String inboxScheduleTitle(String title) {
+    return 'Schedule $title';
+  }
+
+  @override
+  String inboxScheduleToday(String range) {
+    return 'Today, $range';
+  }
+
+  @override
+  String inboxScheduleTomorrow(String range) {
+    return 'Tomorrow, $range';
+  }
+
+  @override
+  String get inboxScheduleNone =>
+      'No free slot today or tomorrow. Make room on Today, or drag it in from the week.';
+
+  @override
+  String snackScheduled(String title, String when) {
+    return '$title scheduled for $when';
+  }
+
+  @override
+  String snackAddedInbox(int count, String title) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks added',
+      one: '$title added to the Inbox',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String snackAddedTimed(String title, String when) {
+    return '$title added for $when';
+  }
+
+  @override
+  String snackTrashed(String title) {
+    return '$title moved to Trash';
+  }
 }

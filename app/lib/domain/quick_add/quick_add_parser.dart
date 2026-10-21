@@ -95,6 +95,7 @@ final class QuickAddParser {
     final isInbox = inbox ?? false;
     return QuickAddDraft(
       title: scan.title().replaceAll(_edgePunctuation, ''),
+      text: text.trim(),
       tokens: scan.tokens..sort((a, b) => a.start.compareTo(b.start)),
       date: date,
       minuteOfDay: minute,

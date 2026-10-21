@@ -4,7 +4,8 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/features/timeline/state/month_data.dart';
+import 'package:dottoday/data/inbox/inbox_providers.dart';
+import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/features/timeline/widgets/copy_day_sheet.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,9 @@ class EmptyDayActions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final inbox = ref.watch(inboxItemsProvider).value?.length ?? 0;
+    final inbox = openItems(
+      ref.watch(inboxItemsProvider).value ?? const [],
+    ).length;
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
         DotSize.liveDot + DotSpace.xl,

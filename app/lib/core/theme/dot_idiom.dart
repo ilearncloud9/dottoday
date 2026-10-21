@@ -1,3 +1,4 @@
+import 'package:dottoday/core/theme/dot_metrics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -20,3 +21,12 @@ enum DotIdiom {
       ? cupertino
       : material;
 }
+
+/// The chip outline for this idiom: pill on iPhone, 8 px corners elsewhere
+/// (§4). For `FilterChip.shape` and custom chips alike.
+OutlinedBorder dotChipShape(BuildContext context) =>
+    DotIdiom.of(context) == DotIdiom.cupertino
+    ? const StadiumBorder()
+    : RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(DotRadii.chipAndroid),
+      );

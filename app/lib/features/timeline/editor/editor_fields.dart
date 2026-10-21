@@ -5,7 +5,7 @@ import 'package:dottoday/features/timeline/state/task_text.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_picker_sheet.dart';
-import 'package:dottoday/features/timeline/widgets/time_labels.dart';
+import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:dottoday/shared/time_input/time_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

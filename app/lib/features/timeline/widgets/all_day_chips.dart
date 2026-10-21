@@ -52,13 +52,9 @@ class _Chip extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(minHeight: DotTouch.min),
       padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
-      decoration: BoxDecoration(
+      decoration: ShapeDecoration(
         color: swatch.tint,
-        borderRadius: BorderRadius.circular(
-          DotIdiom.of(context) == DotIdiom.material
-              ? DotRadii.chipAndroid
-              : DotRadii.pill,
-        ),
+        shape: dotChipShape(context),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

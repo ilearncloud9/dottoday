@@ -47,6 +47,10 @@ abstract final class DotRadii {
 
 /// Dot and thread sizes (docs/10 §2.3).
 abstract final class DotSize {
+  /// Widest a single list column grows on Mac/web before it centres
+  /// (Inbox, Search; §4 expanded).
+  static const double readableColumn = 640;
+
   static const double rowDot = 36;
   static const double liveDot = 42;
   static const double liveRing = 5;

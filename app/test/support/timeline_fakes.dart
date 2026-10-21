@@ -66,10 +66,15 @@ final class FakeOccurrenceRepository implements OccurrenceRepository {
   }
 
   @override
-  Stream<List<Occurrence>> watchInbox(String userId) => Stream.value([
+  Stream<List<Occurrence>> watchInbox(String userId) async* {
+    yield _inbox();
+    yield* _changes.stream.map((_) => _inbox());
+  }
+
+  List<Occurrence> _inbox() => [
     for (final o in _rows.values)
       if (o.startUtc == null && o.deletedAt == null) o,
-  ]);
+  ]..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
 
   @override
   Future<Occurrence?> findById(String userId, String id) async {

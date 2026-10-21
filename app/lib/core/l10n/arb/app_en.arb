@@ -1508,5 +1508,179 @@
         "type": "int"
       }
     }
+  },
+  "inboxSchedule": "Schedule",
+  "@inboxSchedule": {
+    "description": "Inbox row: put the task on the timeline (round + button, swipe toward the start, screen-reader action)."
+  },
+  "inboxTrash": "Move to Trash",
+  "@inboxTrash": {
+    "description": "Inbox row: move the task to Trash (swipe toward the end, screen-reader action)."
+  },
+  "inboxRowLabel": "{title}, {length}",
+  "@inboxRowLabel": {
+    "description": "Screen-reader label of an inbox row.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxSummary": "{count, plural, =1{1 unscheduled} other{{count} unscheduled}} · {work} of work",
+  "@inboxSummary": {
+    "description": "Inbox header line, e.g. '5 unscheduled · 5 h 15 of work'.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "work": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxRingLabel": "{count, plural, =0{Inbox empty} =1{1 task in the Inbox} other{{count} tasks in the Inbox}}",
+  "@inboxRingLabel": {
+    "description": "Screen-reader label of the dotted ring with the count.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxAddHint": "Call Mum tomorrow 3pm 20m",
+  "@inboxAddHint": {
+    "description": "Quick-add field hint in the Inbox: an example of what it understands (R-06)."
+  },
+  "inboxAddLabel": "Add a task",
+  "@inboxAddLabel": {
+    "description": "Screen-reader label of the Inbox quick-add field."
+  },
+  "inboxFilterAll": "All",
+  "@inboxFilterAll": {
+    "description": "Inbox filter chip."
+  },
+  "inboxFilterUnder30": "Under 30 min",
+  "@inboxFilterUnder30": {
+    "description": "Inbox filter chip: tasks shorter than 30 minutes."
+  },
+  "inboxFilterFits": "Fits today",
+  "@inboxFilterFits": {
+    "description": "Inbox filter chip: tasks that fit a free slot left today."
+  },
+  "inboxNextSlot": "Next free slot today: {range} · fits {title}",
+  "@inboxNextSlot": {
+    "description": "NextFreeSlot card in the Inbox.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxPlace": "Place",
+  "@inboxPlace": {
+    "description": "Button on the NextFreeSlot card: schedule the task in that slot."
+  },
+  "inboxCompleted": "Completed · {count}",
+  "@inboxCompleted": {
+    "description": "Header of the completed group in the Inbox.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxEmpty": "Inbox is clear",
+  "@inboxEmpty": {
+    "description": "Empty Inbox (docs/10 §5.4)."
+  },
+  "inboxNoMatch": "Nothing here fits this filter",
+  "@inboxNoMatch": {
+    "description": "Inbox filter shows no tasks."
+  },
+  "inboxUntitled": "New task",
+  "@inboxUntitled": {
+    "description": "Title of a Quick Add task typed with no words, only a time or length."
+  },
+  "inboxScheduleTitle": "Schedule {title}",
+  "@inboxScheduleTitle": {
+    "description": "Title of the schedule sheet for an inbox task.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxScheduleToday": "Today, {range}",
+  "@inboxScheduleToday": {
+    "description": "Schedule suggestion: a free slot today.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxScheduleTomorrow": "Tomorrow, {range}",
+  "@inboxScheduleTomorrow": {
+    "description": "Schedule suggestion: the first free slot tomorrow.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxScheduleNone": "No free slot today or tomorrow. Make room on Today, or drag it in from the week.",
+  "@inboxScheduleNone": {
+    "description": "Schedule sheet when nothing fits."
+  },
+  "snackScheduled": "{title} scheduled for {when}",
+  "@snackScheduled": {
+    "description": "Snackbar after scheduling an inbox task, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "snackAddedInbox": "{count, plural, =1{{title} added to the Inbox} other{{count} tasks added}}",
+  "@snackAddedInbox": {
+    "description": "Snackbar after Quick Add in the Inbox.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "snackAddedTimed": "{title} added for {when}",
+  "@snackAddedTimed": {
+    "description": "Snackbar after Quick Add made a timed task.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "snackTrashed": "{title} moved to Trash",
+  "@snackTrashed": {
+    "description": "Snackbar after trashing an inbox task, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
   }
 }

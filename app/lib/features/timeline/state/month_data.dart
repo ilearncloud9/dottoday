@@ -29,16 +29,6 @@ Stream<Map<DateTime, List<Occurrence>>> monthOccurrences(
   });
 }
 
-/// Live inbox items (docs/02 F3), e.g. for "Pull from inbox · 5".
-@riverpod
-Stream<List<Occurrence>> inboxItems(Ref ref) {
-  final profile = ref.watch(currentProfileProvider.future);
-  final repo = ref.watch(occurrenceRepositoryProvider);
-  return Stream.fromFuture(
-    profile,
-  ).asyncExpand((profile) => repo.watchInbox(profile.id));
-}
-
 /// [rows] grouped by the local calendar date of their start in [zone].
 Map<DateTime, List<Occurrence>> bucketByLocalDay(
   List<Occurrence> rows,
