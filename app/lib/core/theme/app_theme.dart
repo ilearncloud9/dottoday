@@ -8,6 +8,7 @@ export 'app_colors.dart';
 export 'app_motion.dart';
 export 'app_spacing.dart';
 export 'app_typography.dart';
+export 'block_icons.dart';
 export 'block_palette.dart';
 
 /// Dottoday design tokens as a [ThemeExtension] (docs/03-ux-spec.md §1).
@@ -76,6 +77,11 @@ final class AppTheme extends ThemeExtension<AppTheme> {
 }
 
 ThemeData _build(Brightness brightness, AppColors c, BlockPalette blocks) {
+  // Snackbars and tooltips sit on the inverse surface: the other mode's
+  // raised surface, text and accent, so their contrast is already tested.
+  final inverse = brightness == Brightness.light
+      ? AppColors.dark
+      : AppColors.light;
   final type = AppTypography.withColor(c.onSurface);
   final scheme = ColorScheme(
     brightness: brightness,
@@ -92,6 +98,9 @@ ThemeData _build(Brightness brightness, AppColors c, BlockPalette blocks) {
     surfaceContainer: c.surfaceRaised,
     outline: c.outline,
     outlineVariant: c.outline,
+    inverseSurface: inverse.surfaceRaised,
+    onInverseSurface: inverse.onSurface,
+    inversePrimary: inverse.accent,
   );
   return ThemeData(
     useMaterial3: true,

@@ -87,4 +87,184 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quickAddTooltip => 'Add task';
+
+  @override
+  String get sheetClose => 'Close';
+
+  @override
+  String get timeInputLabel => 'Time';
+
+  @override
+  String get timeInputHint => 'e.g. 9:30 or 2pm';
+
+  @override
+  String get timeInputInvalid => 'Type a time like 9:30 or 2pm';
+
+  @override
+  String get timeInputWheel => 'Pick time with a wheel';
+
+  @override
+  String get timeInputDone => 'Done';
+
+  @override
+  String get durationLabel => 'Duration';
+
+  @override
+  String durationMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String durationHours(int hours) {
+    return '$hours h';
+  }
+
+  @override
+  String durationHoursMinutes(int hours, int minutes) {
+    return '$hours h $minutes min';
+  }
+
+  @override
+  String get durationCustom => 'Custom';
+
+  @override
+  String get durationCustomHint => 'e.g. 40m or 1h30';
+
+  @override
+  String get durationCustomInvalid => 'Use 5 min to 24 h, like 40m or 1h30';
+
+  @override
+  String get colorPickerLabel => 'Colour';
+
+  @override
+  String get iconPickerLabel => 'Icon';
+
+  @override
+  String get colorCoral => 'Coral';
+
+  @override
+  String get colorTangerine => 'Tangerine';
+
+  @override
+  String get colorAmber => 'Amber';
+
+  @override
+  String get colorLime => 'Lime';
+
+  @override
+  String get colorMint => 'Mint';
+
+  @override
+  String get colorTeal => 'Teal';
+
+  @override
+  String get colorSky => 'Sky';
+
+  @override
+  String get colorIndigo => 'Indigo';
+
+  @override
+  String get colorViolet => 'Violet';
+
+  @override
+  String get colorMagenta => 'Magenta';
+
+  @override
+  String get colorRose => 'Rose';
+
+  @override
+  String get colorSlate => 'Slate';
+
+  @override
+  String get iconCircle => 'Plain';
+
+  @override
+  String get iconWork => 'Work';
+
+  @override
+  String get iconMeeting => 'Meeting';
+
+  @override
+  String get iconCall => 'Call';
+
+  @override
+  String get iconMail => 'Email';
+
+  @override
+  String get iconCode => 'Code';
+
+  @override
+  String get iconStudy => 'Study';
+
+  @override
+  String get iconBook => 'Reading';
+
+  @override
+  String get iconGym => 'Gym';
+
+  @override
+  String get iconRun => 'Run';
+
+  @override
+  String get iconWalk => 'Walk';
+
+  @override
+  String get iconBike => 'Bike';
+
+  @override
+  String get iconMeal => 'Meal';
+
+  @override
+  String get iconCoffee => 'Coffee';
+
+  @override
+  String get iconSleep => 'Sleep';
+
+  @override
+  String get iconMedication => 'Medication';
+
+  @override
+  String get iconHeart => 'Health';
+
+  @override
+  String get iconHome => 'Home';
+
+  @override
+  String get iconClean => 'Cleaning';
+
+  @override
+  String get iconShopping => 'Shopping';
+
+  @override
+  String get iconCommute => 'Commute';
+
+  @override
+  String get iconFlight => 'Travel';
+
+  @override
+  String get iconMusic => 'Music';
+
+  @override
+  String get iconPet => 'Pet';
+
+  @override
+  String get iconStar => 'Star';
+
+  @override
+  String get undoAction => 'Undo';
+
+  @override
+  String get syncLocalOnly => 'On this device';
+
+  @override
+  String get syncSynced => 'Synced';
+
+  @override
+  String get syncSyncing => 'Syncing';
+
+  @override
+  String get syncOffline => 'Offline';
+
+  @override
+  String get syncError => 'Sync problem';
 }

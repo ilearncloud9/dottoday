@@ -91,5 +91,255 @@
   "quickAddTooltip": "Add task",
   "@quickAddTooltip": {
     "description": "Tooltip and screen-reader label for the Quick Add button."
+  },
+  "sheetClose": "Close",
+  "@sheetClose": {
+    "description": "Button/label that closes a sheet or popover."
+  },
+  "timeInputLabel": "Time",
+  "@timeInputLabel": {
+    "description": "Label of the typed time field."
+  },
+  "timeInputHint": "e.g. 9:30 or 2pm",
+  "@timeInputHint": {
+    "description": "Hint inside the empty time field."
+  },
+  "timeInputInvalid": "Type a time like 9:30 or 2pm",
+  "@timeInputInvalid": {
+    "description": "Error under the time field when the text isn't a time; the previous time is kept."
+  },
+  "timeInputWheel": "Pick time with a wheel",
+  "@timeInputWheel": {
+    "description": "Button next to the time field opening a wheel picker."
+  },
+  "timeInputDone": "Done",
+  "@timeInputDone": {
+    "description": "Confirms the wheel time picker."
+  },
+  "durationLabel": "Duration",
+  "@durationLabel": {
+    "description": "Label of the duration chips row."
+  },
+  "durationMinutes": "{minutes} min",
+  "@durationMinutes": {
+    "description": "A duration under one hour.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "durationHours": "{hours} h",
+  "@durationHours": {
+    "description": "A whole number of hours.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "durationHoursMinutes": "{hours} h {minutes} min",
+  "@durationHoursMinutes": {
+    "description": "Hours and minutes.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "durationCustom": "Custom",
+  "@durationCustom": {
+    "description": "Chip that lets the user type their own duration."
+  },
+  "durationCustomHint": "e.g. 40m or 1h30",
+  "@durationCustomHint": {
+    "description": "Hint inside the custom duration field."
+  },
+  "durationCustomInvalid": "Use 5 min to 24 h, like 40m or 1h30",
+  "@durationCustomInvalid": {
+    "description": "Error when the typed custom duration is invalid."
+  },
+  "colorPickerLabel": "Colour",
+  "@colorPickerLabel": {
+    "description": "Heading of the block colour choices."
+  },
+  "iconPickerLabel": "Icon",
+  "@iconPickerLabel": {
+    "description": "Heading of the block icon choices."
+  },
+  "colorCoral": "Coral",
+  "@colorCoral": {
+    "description": "Block colour name (screen readers, picker)."
+  },
+  "colorTangerine": "Tangerine",
+  "@colorTangerine": {
+    "description": "Block colour name (screen readers, picker)."
+  },
+  "colorAmber": "Amber",
+  "@colorAmber": {
+    "description": "Block colour name (screen readers, picker)."
+  },
+  "colorLime": "Lime",
+  "@colorLime": {
+    "description": "Block colour name (screen readers, picker)."
+  },
+  "colorMint": "Mint",
+  "@colorMint": {
+    "description": "Block colour name (screen readers, picker)."
+  },
+  "colorTeal": "Teal",
+  "@colorTeal": {
+    "description": "Block colour name (screen readers, picker)."
+  },
+  "colorSky": "Sky",
+  "@colorSky": {
+    "description": "Block colour name (screen readers, picker)."
+  },
+  "colorIndigo": "Indigo",
+  "@colorIndigo": {
+    "description": "Block colour name (screen readers, picker)."
+  },
+  "colorViolet": "Violet",
+  "@colorViolet": {
+    "description": "Block colour name (screen readers, picker)."
+  },
+  "colorMagenta": "Magenta",
+  "@colorMagenta": {
+    "description": "Block colour name (screen readers, picker)."
+  },
+  "colorRose": "Rose",
+  "@colorRose": {
+    "description": "Block colour name (screen readers, picker)."
+  },
+  "colorSlate": "Slate",
+  "@colorSlate": {
+    "description": "Block colour name (screen readers, picker)."
+  },
+  "iconCircle": "Plain",
+  "@iconCircle": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconWork": "Work",
+  "@iconWork": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconMeeting": "Meeting",
+  "@iconMeeting": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconCall": "Call",
+  "@iconCall": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconMail": "Email",
+  "@iconMail": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconCode": "Code",
+  "@iconCode": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconStudy": "Study",
+  "@iconStudy": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconBook": "Reading",
+  "@iconBook": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconGym": "Gym",
+  "@iconGym": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconRun": "Run",
+  "@iconRun": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconWalk": "Walk",
+  "@iconWalk": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconBike": "Bike",
+  "@iconBike": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconMeal": "Meal",
+  "@iconMeal": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconCoffee": "Coffee",
+  "@iconCoffee": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconSleep": "Sleep",
+  "@iconSleep": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconMedication": "Medication",
+  "@iconMedication": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconHeart": "Health",
+  "@iconHeart": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconHome": "Home",
+  "@iconHome": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconClean": "Cleaning",
+  "@iconClean": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconShopping": "Shopping",
+  "@iconShopping": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconCommute": "Commute",
+  "@iconCommute": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconFlight": "Travel",
+  "@iconFlight": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconMusic": "Music",
+  "@iconMusic": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconPet": "Pet",
+  "@iconPet": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "iconStar": "Star",
+  "@iconStar": {
+    "description": "Block icon name (screen readers, picker)."
+  },
+  "undoAction": "Undo",
+  "@undoAction": {
+    "description": "Snackbar action reverting the last change (30 s)."
+  },
+  "syncLocalOnly": "On this device",
+  "@syncLocalOnly": {
+    "description": "Sync pill: no account, data stays on this device."
+  },
+  "syncSynced": "Synced",
+  "@syncSynced": {
+    "description": "Sync pill: everything is synced."
+  },
+  "syncSyncing": "Syncing",
+  "@syncSyncing": {
+    "description": "Sync pill: sync in progress."
+  },
+  "syncOffline": "Offline",
+  "@syncOffline": {
+    "description": "Sync pill: no connection; changes are kept locally."
+  },
+  "syncError": "Sync problem",
+  "@syncError": {
+    "description": "Sync pill: last sync failed; tap for details."
   }
 }

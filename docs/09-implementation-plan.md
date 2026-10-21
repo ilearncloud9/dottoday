@@ -55,7 +55,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 
 ## Milestone 3 — Timeline UI (goal: the home screen, complete and flawless, local only)
 
-- [ ] M3.1 Shared components: `AppSheet`, `TimeInput` (typed + optional wheel, 12/24 h, tests from 08 §2), `DurationChips`, `ColorIconPicker`, `UndoSnackbar`, `SyncPill` (static for now). (03 §3.3–3.4, R-16, R-20)
+- [x] M3.1 Shared components: `AppSheet`, `TimeInput` (typed + optional wheel, 12/24 h, tests from 08 §2), `DurationChips`, `ColorIconPicker`, `UndoSnackbar`, `SyncPill` (static for now). (03 §3.3–3.4, R-16, R-20)
 - [ ] M3.2 Timeline canvas (first screen to open the DB: also wire app start/resume to ensure the local profile, `BackupService.runDailyIfDue`, `TrashService.purgeExpired` and `NotificationSync.resync`, M2.3–M2.5): hour gutter, lazy sliver blocks, now-line (1-min tick), past tint, outside-hours zones, all-day strip, overlap columns, full-24h golden test. (03 §3.1, R-14, R-15)
 - [ ] M3.3 Block widget: anatomy + states (done/overdue/pinned/recurring/calendar/alerts); semantics label per 03 §4. Golden at 100/200 % text, light/dark. (R-12)
 - [ ] M3.4 Gestures: long-press pick-up, drag with snapping + ghost + floating time label + auto-scroll; edge resize handles; tap vs scroll disambiguation test; haptics; reduced-motion path. (03 §3.2, R-05)

@@ -231,6 +231,354 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add task'**
   String get quickAddTooltip;
+
+  /// Button/label that closes a sheet or popover.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get sheetClose;
+
+  /// Label of the typed time field.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get timeInputLabel;
+
+  /// Hint inside the empty time field.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 9:30 or 2pm'**
+  String get timeInputHint;
+
+  /// Error under the time field when the text isn't a time; the previous time is kept.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a time like 9:30 or 2pm'**
+  String get timeInputInvalid;
+
+  /// Button next to the time field opening a wheel picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick time with a wheel'**
+  String get timeInputWheel;
+
+  /// Confirms the wheel time picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get timeInputDone;
+
+  /// Label of the duration chips row.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get durationLabel;
+
+  /// A duration under one hour.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String durationMinutes(int minutes);
+
+  /// A whole number of hours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h'**
+  String durationHours(int hours);
+
+  /// Hours and minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h {minutes} min'**
+  String durationHoursMinutes(int hours, int minutes);
+
+  /// Chip that lets the user type their own duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get durationCustom;
+
+  /// Hint inside the custom duration field.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 40m or 1h30'**
+  String get durationCustomHint;
+
+  /// Error when the typed custom duration is invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Use 5 min to 24 h, like 40m or 1h30'**
+  String get durationCustomInvalid;
+
+  /// Heading of the block colour choices.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour'**
+  String get colorPickerLabel;
+
+  /// Heading of the block icon choices.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get iconPickerLabel;
+
+  /// Block colour name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Coral'**
+  String get colorCoral;
+
+  /// Block colour name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Tangerine'**
+  String get colorTangerine;
+
+  /// Block colour name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Amber'**
+  String get colorAmber;
+
+  /// Block colour name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Lime'**
+  String get colorLime;
+
+  /// Block colour name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Mint'**
+  String get colorMint;
+
+  /// Block colour name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get colorTeal;
+
+  /// Block colour name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Sky'**
+  String get colorSky;
+
+  /// Block colour name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Indigo'**
+  String get colorIndigo;
+
+  /// Block colour name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Violet'**
+  String get colorViolet;
+
+  /// Block colour name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Magenta'**
+  String get colorMagenta;
+
+  /// Block colour name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Rose'**
+  String get colorRose;
+
+  /// Block colour name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Slate'**
+  String get colorSlate;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Plain'**
+  String get iconCircle;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get iconWork;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Meeting'**
+  String get iconMeeting;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get iconCall;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get iconMail;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get iconCode;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Study'**
+  String get iconStudy;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get iconBook;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Gym'**
+  String get iconGym;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Run'**
+  String get iconRun;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Walk'**
+  String get iconWalk;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Bike'**
+  String get iconBike;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Meal'**
+  String get iconMeal;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Coffee'**
+  String get iconCoffee;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get iconSleep;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Medication'**
+  String get iconMedication;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get iconHeart;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get iconHome;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaning'**
+  String get iconClean;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get iconShopping;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Commute'**
+  String get iconCommute;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get iconFlight;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get iconMusic;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Pet'**
+  String get iconPet;
+
+  /// Block icon name (screen readers, picker).
+  ///
+  /// In en, this message translates to:
+  /// **'Star'**
+  String get iconStar;
+
+  /// Snackbar action reverting the last change (30 s).
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undoAction;
+
+  /// Sync pill: no account, data stays on this device.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device'**
+  String get syncLocalOnly;
+
+  /// Sync pill: everything is synced.
+  ///
+  /// In en, this message translates to:
+  /// **'Synced'**
+  String get syncSynced;
+
+  /// Sync pill: sync in progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing'**
+  String get syncSyncing;
+
+  /// Sync pill: no connection; changes are kept locally.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get syncOffline;
+
+  /// Sync pill: last sync failed; tap for details.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync problem'**
+  String get syncError;
 }
 
 class _AppLocalizationsDelegate

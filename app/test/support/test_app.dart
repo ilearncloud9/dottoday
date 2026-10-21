@@ -25,9 +25,12 @@ Widget testRouterApp(
 );
 
 /// [MaterialApp] with the real theme and l10n around [home].
-Widget testApp(Widget home) => MaterialApp(
-  theme: AppTheme.light(),
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
-  supportedLocales: AppLocalizations.supportedLocales,
-  home: home,
-);
+Widget testApp(Widget home, {ThemeMode themeMode = ThemeMode.light}) =>
+    MaterialApp(
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: themeMode,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: home,
+    );
