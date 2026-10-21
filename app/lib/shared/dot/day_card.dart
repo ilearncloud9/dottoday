@@ -54,27 +54,35 @@ class DayCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
         border: Border.all(color: c.outline, width: DotSpace.hairline),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(DotRadii.cardLarge),
+      // No rounded clip: an anti-aliased clip over a scrolling list costs
+      // the raster thread every frame (R-15). The list's own rectangular
+      // clip stops a radius short of the bottom, so rows never reach the
+      // rounded corners; the header covers the top ones.
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: DotRadii.cardLarge),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _Header(title: title, isToday: isToday, summary: summary),
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsetsDirectional.fromSTEB(
-                  0,
-                  DotSpace.xs,
-                  DotSpace.xs,
-                  DotSpace.l,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Thread(entries: entries, actions: actions),
-                    ?footer,
-                  ],
-                ),
+              // Lazy: only the rows on screen are built (R-15).
+              child: CustomScrollView(
+                slivers: [
+                  SliverPadding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                      0,
+                      DotSpace.xs,
+                      DotSpace.xs,
+                      0,
+                    ),
+                    sliver: SliverMainAxisGroup(
+                      slivers: [
+                        Thread.sliver(entries: entries, actions: actions),
+                        if (footer case final f?) SliverToBoxAdapter(child: f),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

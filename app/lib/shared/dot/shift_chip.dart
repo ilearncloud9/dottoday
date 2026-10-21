@@ -18,24 +18,28 @@ class ShiftChip extends StatelessWidget {
       top: padding.top + DotSpace.s,
       left: DotSpace.page,
       right: DotSpace.page,
-      child: Center(
-        child: ValueListenableBuilder<bool>(
-          valueListenable: on,
-          builder: (context, value, _) => DecoratedBox(
-            decoration: const ShapeDecoration(
-              shape: StadiumBorder(),
-              shadows: DotElevation.floating,
-            ),
-            child: FilterChip(
-              label: Text(context.l10n.shiftChipLabel),
-              // Off is a choice, not disabled: full-contrast text.
-              labelStyle: value
-                  ? null
-                  : TextStyle(color: DotTheme.of(context).colors.text),
-              selected: value,
-              onSelected: (v) => on.value = v,
-              backgroundColor: DotTheme.of(context).colors.raised,
-              shape: const StadiumBorder(),
+      // It sits on the root overlay, outside any page's Material.
+      child: Material(
+        type: MaterialType.transparency,
+        child: Center(
+          child: ValueListenableBuilder<bool>(
+            valueListenable: on,
+            builder: (context, value, _) => DecoratedBox(
+              decoration: const ShapeDecoration(
+                shape: StadiumBorder(),
+                shadows: DotElevation.floating,
+              ),
+              child: FilterChip(
+                label: Text(context.l10n.shiftChipLabel),
+                // Off is a choice, not disabled: full-contrast text.
+                labelStyle: value
+                    ? null
+                    : TextStyle(color: DotTheme.of(context).colors.text),
+                selected: value,
+                onSelected: (v) => on.value = v,
+                backgroundColor: DotTheme.of(context).colors.raised,
+                shape: const StadiumBorder(),
+              ),
             ),
           ),
         ),

@@ -57,7 +57,19 @@ class Thread extends StatefulWidget {
     this.actions = const ThreadActions(),
     this.dotSize = DotSize.rowDot,
     super.key,
-  });
+  }) : sliver = false;
+
+  /// The same thread as a sliver that builds only the rows on screen, for
+  /// long days in a `CustomScrollView` (R-15: 200 tasks at 60 fps).
+  const Thread.sliver({
+    required this.entries,
+    this.actions = const ThreadActions(),
+    this.dotSize = DotSize.rowDot,
+    super.key,
+  }) : sliver = true;
+
+  /// Whether this builds a sliver rather than a `Column`.
+  final bool sliver;
 
   final List<ThreadEntry> entries;
   final ThreadActions actions;
@@ -75,10 +87,15 @@ class _ThreadState extends State<Thread> {
 
   /// "Shift later tasks" for the current drag, shown in the overlay.
   final _shift = ValueNotifier<bool>(false);
-  final _chip = OverlayPortalController();
+
+  /// The chip while it shows. An entry rather than an `OverlayPortal`: a
+  /// portal is laid out with its slot, and a lazy list may not lay that
+  /// slot out once the drag scrolls it away.
+  OverlayEntry? _chip;
 
   @override
   void dispose() {
+    _settle();
     _hint.dispose();
     _shift.dispose();
     super.dispose();
@@ -88,27 +105,30 @@ class _ThreadState extends State<Thread> {
     final start = widget.actions.drag?.shiftByDefault;
     if (start == null) return;
     _shift.value = start;
-    _chip.show();
+    _settle();
+    final chip = OverlayEntry(builder: (_) => ShiftChip(on: _shift));
+    Overlay.of(context).insert(chip);
+    _chip = chip;
   }
 
   void _settle() {
-    if (_chip.isShowing) _chip.hide();
+    _chip?.remove();
+    _chip?.dispose();
+    _chip = null;
   }
 
   @override
   Widget build(BuildContext context) {
+    final entries = widget.entries;
+    if (widget.sliver) {
+      return SliverList.builder(
+        itemCount: entries.length,
+        itemBuilder: (_, i) => _entry(entries[i]),
+      );
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (final e in widget.entries) _entry(e),
-        // A sibling, not a wrapper: wrapping the rows would merge their
-        // semantics into one node (R-12).
-        OverlayPortal(
-          controller: _chip,
-          overlayChildBuilder: (_) => ShiftChip(on: _shift),
-          child: const SizedBox.shrink(),
-        ),
-      ],
+      children: [for (final e in entries) _entry(e)],
     );
   }
 
