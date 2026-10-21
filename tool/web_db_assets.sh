@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 # Puts the encrypted Drift web database runtime next to the web build inputs (M2.1, M2.9,
 # ADR-0003):
-#   app/web/drift_worker.js  compiled from app/web/drift_worker.dart (applies the DB key)
 #   app/web/sqlite3mc.wasm   SQLite3MultipleCiphers from the sqlite3.dart release matching the
 #                            locked sqlite3 version, verified against a pinned SHA-256
-# Both are gitignored. Run after `flutter pub get`, before `flutter build web`.
+# It is gitignored. Run after `flutter pub get`, before `flutter build web`.
 # Bumping sqlite3 in pubspec.lock fails here until its sqlite3mc.wasm digest is pinned below
 # (digest: `gh api repos/simolus3/sqlite3.dart/releases` → asset `digest`).
 set -euo pipefail
@@ -21,9 +20,6 @@ locked_version() {
   awk -v pkg="$1" '$1 == pkg":" {found=1} found && $1 == "version:" {gsub(/"/, "", $2); print $2; exit}' pubspec.lock
 }
 
-dart compile js -O4 --no-source-maps web/drift_worker.dart -o web/drift_worker.js
-rm -f web/drift_worker.js.deps
-
 version="$(locked_version sqlite3)"
 sha="$(wasm_sha256 "$version")"
 if [[ -z "$sha" ]]; then
@@ -34,4 +30,4 @@ url="https://github.com/simolus3/sqlite3.dart/releases/download/sqlite3-$version
 curl -fsSL --retry 3 -o web/sqlite3mc.wasm.tmp "$url"
 echo "$sha  web/sqlite3mc.wasm.tmp" | shasum -a 256 -c - >/dev/null
 mv web/sqlite3mc.wasm.tmp web/sqlite3mc.wasm
-echo "web DB assets: drift_worker.js, sqlite3mc.wasm ($version)"
+echo "web DB assets: sqlite3mc.wasm ($version)"

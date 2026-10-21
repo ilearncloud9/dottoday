@@ -10,7 +10,12 @@ void applyWebCipherKey(CommonDatabase db, String hexKey) {
   if (!isValidHexKey(hexKey)) {
     throw StateError('Database key must be 32 bytes of hex.');
   }
-  db.execute("PRAGMA hexkey = '$hexKey'");
+  try {
+    db.execute("PRAGMA hexkey = '$hexKey'");
+  } on SqliteException catch (e) {
+    // The exception text quotes the statement, i.e. the key: drop it.
+    throw StateError('Setting the database key failed (${e.resultCode}).');
+  }
   final cipher = db.select('PRAGMA cipher');
   if (cipher.isEmpty) throw StateError('sqlite3mc cipher support missing.');
   // Touch the schema so a wrong key fails here, not on a later query.

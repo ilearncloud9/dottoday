@@ -14,16 +14,17 @@ Move refresh token to an HttpOnly cookie via an Edge Function proxy; then drop l
 ## Amendment (2026-10-21, M2.9): how the Drift WASM data is encrypted
 - The web database runs on `sqlite3mc.wasm` (SQLite3MultipleCiphers, default ChaCha20-Poly1305)
   from the same sqlite3.dart release as the native SQLCipher build (ADR-0006), keyed with
-  `PRAGMA hexkey` on every connection — in the page and in our own drift worker
-  (`app/web/drift_worker.dart`, compiled by `tool/web_db_assets.sh`), because the stock worker
-  can't apply a key.
+  `PRAGMA hexkey`. It runs **in the page** over drift's IndexedDB file system, opened through
+  sqlite3mc's encrypting VFS (`multipleciphers-indexeddb`). drift's worker/OPFS modes can't be
+  used: they always open the plain default VFS, which rejects the key.
+- One tab at a time: a Web Lock per database; a second tab gets `DatabaseUnavailable`
+  (`openInAnotherTab`) instead of two in-memory copies overwriting each other in IndexedDB.
 - The 32-byte raw key exists in IndexedDB only sealed (AES-GCM) under a **non-extractable**
   WebCrypto key stored alongside it (`dottoday-keyvault`). Script can use it but never export it;
   copying the storage to another browser profile doesn't carry a usable key.
-- Rejected: a custom encrypting VFS (re-implements what sqlite3mc already does); wrapping each
-  OPFS block in WebCrypto from Dart (async crypto under SQLite's sync VFS needs the same worker
-  plumbing plus our own crypto).
+- Rejected: drift's OPFS worker with a custom worker entrypoint (opens the unwrapped VFS);
+  a custom encrypting VFS (re-implements sqlite3mc); unencrypted OPFS (06 §4).
+- Cost: no OPFS speed-up and single-tab use on web. Revisit if drift exposes the VFS name.
 - Verified in CI (`a11y-web` job): a probe build writes a task, then Playwright scans every OPFS
-  file and IndexedDB value for its plaintext title.
-- Residual risk unchanged: XSS in the page can unwrap the key and read data; native and web
-  formats differ (SQLCipher vs sqlite3mc), which only matters for raw-file copying, never done.
+  file and IndexedDB value for its plaintext title, and checks a second tab is refused.
+- Residual risk unchanged: XSS in the page can unwrap the key and read data.

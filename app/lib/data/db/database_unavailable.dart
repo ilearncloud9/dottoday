@@ -6,6 +6,9 @@ enum DatabaseUnavailableReason {
 
   /// The stored key does not decrypt the file.
   keyRejected,
+
+  /// Web only: another tab already has the database open (M2.9).
+  openInAnotherTab,
 }
 
 /// Thrown on first use of a database whose file can't be decrypted. The

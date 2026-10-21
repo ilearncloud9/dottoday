@@ -30,6 +30,4 @@ web/.well-known/
 test/**/failures/
 
 # Drift web runtime, produced by tool/web_db_assets.sh (M2.1, M2.9)
-web/drift_worker.js
-web/drift_worker.js.deps
 web/sqlite3mc.wasm

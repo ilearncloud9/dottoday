@@ -1,6 +1,7 @@
 // Checks the encrypted web database in a real browser (docs/09 M2.9, ADR-0003):
 // loads the probe build (app/tool/web_db_probe.dart), waits for its verdict, then scans
-// every OPFS file and IndexedDB value for the plaintext task title it wrote.
+// every OPFS file and IndexedDB value for the plaintext task title it wrote, and checks that a
+// second tab is refused.
 // Lives here to reuse this folder's lockfile-pinned Playwright.
 // Usage: node web_db_probe.mjs [baseUrl]
 import { chromium } from 'playwright';
@@ -83,7 +84,17 @@ const scan = await page.evaluate(async (needle) => {
   return { bytes, hits };
 }, secret);
 
+// A second tab must be refused while the first holds the database.
+const second = await browser.newPage();
+await second.goto(baseUrl);
+await second.waitForFunction(() => document.title.startsWith('PROBE:'), null, { timeout: 120_000 });
+const secondVerdict = await second.title();
+console.log(`second tab: ${secondVerdict}`);
 await browser.close();
+if (!secondVerdict.includes('openInAnotherTab')) {
+  console.error('::error::A second tab opened the database; the tab lock is not working.');
+  process.exit(1);
+}
 console.log(`scanned ${scan.bytes} bytes of browser storage; plaintext hits: ${scan.hits.length}`);
 // A database page is 4 KiB; less means the scan didn't see the database at all.
 if (scan.bytes < 4096) {
