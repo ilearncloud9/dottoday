@@ -29,6 +29,7 @@ Future<void> main() async {
 
 Future<String> _probe() async {
   final at = DateTime.utc(2026, 10, 21);
+  _report('PROBE-STEP opening');
   var db = openAppDatabase(const _UnusedKeys());
   await DriftSettingsRepository(
     db,
@@ -45,11 +46,13 @@ Future<String> _probe() async {
       updatedAt: at,
     ),
   ]);
+  _report('PROBE-STEP written');
   if ((await DriftSearchRepository(db).search('u', 'm29')).length != 1) {
     throw StateError('FTS5 search failed');
   }
   final cipher = await _cipher(db);
   await db.close();
+  _report('PROBE-STEP closed');
 
   // Reopen: the wrapped key must unwrap to the same key.
   db = openAppDatabase(const _UnusedKeys());

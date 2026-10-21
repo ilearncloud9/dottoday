@@ -16,7 +16,8 @@ void main() {
         '\\n    ${RegExp.escape(version)}\\) echo [0-9a-f]{64} ;;',
       ).hasMatch(script),
       isTrue,
-      reason: 'pin sqlite3mc.wasm for sqlite3 $version in tool/web_db_assets.sh',
+      reason:
+          'pin sqlite3mc.wasm for sqlite3 $version in tool/web_db_assets.sh',
     );
   });
 }

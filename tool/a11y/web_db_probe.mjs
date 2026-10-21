@@ -11,8 +11,18 @@ const secret = 'm29-probe-secret-title';
 const browser = await chromium.launch();
 const page = await browser.newPage();
 page.on('console', (m) => console.log(`[page] ${m.text()}`));
+page.on('pageerror', (e) => console.log(`[page error] ${e}`));
+page.on('requestfailed', (r) => console.log(`[request failed] ${r.url()} ${r.failure()?.errorText}`));
+page.on('worker', (w) => console.log(`[worker] ${w.url()}`));
 await page.goto(baseUrl);
-await page.waitForFunction(() => document.title.startsWith('PROBE:'), null, { timeout: 120_000 });
+try {
+  await page.waitForFunction(() => document.title.startsWith('PROBE:'), null, { timeout: 120_000 });
+} catch (e) {
+  // The probe writes PROBE-STEP markers; the last one shows where it stalled.
+  console.error(`::error::Probe gave no verdict; last title: ${await page.title()}`);
+  await browser.close();
+  process.exit(1);
+}
 const verdict = await page.title();
 console.log(verdict);
 if (!verdict.startsWith('PROBE:OK')) {
