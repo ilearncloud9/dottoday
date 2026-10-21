@@ -28,6 +28,19 @@ class SubtasksDao extends DatabaseAccessor<AppDatabase>
             ]))
           .watch();
 
+  /// Every subtask (deleted included) of [occurrenceIds].
+  Future<List<SubtaskRow>> findForOccurrences(
+    String userId,
+    Set<String> occurrenceIds,
+  ) =>
+      (select(subtasks)
+            ..where(
+              (s) =>
+                  s.userId.equals(userId) & s.occurrenceId.isIn(occurrenceIds),
+            )
+            ..orderBy([(s) => OrderingTerm(expression: s.id)]))
+          .get();
+
   Future<SubtaskRow?> findById(String userId, String id) => (select(
     subtasks,
   )..where((s) => s.userId.equals(userId) & s.id.equals(id))).getSingleOrNull();

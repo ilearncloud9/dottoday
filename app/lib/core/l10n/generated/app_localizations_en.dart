@@ -64,6 +64,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Dottoday can\'t see your calendars. You can allow access in system settings.';
 
   @override
+  String get failureUndoExpired =>
+      'It\'s too late to undo that. Deleted tasks stay in Trash for 30 days.';
+
+  @override
   String get failureUnexpected => 'Something went wrong. Try again.';
 
   @override

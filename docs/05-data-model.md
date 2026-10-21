@@ -67,6 +67,10 @@ the push outbox (rows deleted on ack); `sync_cursors (entity pk, since_utc)` hol
 
 ### `trash` is a view: rows where `deleted_at is not null and deleted_at > now() - 30 days`.
 A nightly job purges older tombstones.
+Locally (M2.5) the purge never removes a tombstone that is still `dirty` (the server hasn't seen the
+delete) or a series-instance tombstone with `original_start_utc` at or after `now − 1 day` (the
+Materialiser reads it as "skip this instance"). Trashing a task trashes its live subtasks with the
+same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in memory.
 
 ## Settings JSON (profiles.settings) — validated with a schema on both sides
 ```json

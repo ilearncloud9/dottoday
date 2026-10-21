@@ -118,6 +118,15 @@ final class PermissionFailure extends AppFailure {
   String get code => 'permission.${permission.name}';
 }
 
+/// The 30-second undo window passed (or the app restarted); the change
+/// stays, and deleted items can still be restored from Trash (M2.5).
+final class UndoExpiredFailure extends AppFailure {
+  const UndoExpiredFailure();
+
+  @override
+  String get code => 'undo.expired';
+}
+
 /// Anything not covered above. Log the cause by type before returning this.
 final class UnexpectedFailure extends AppFailure {
   const UnexpectedFailure();

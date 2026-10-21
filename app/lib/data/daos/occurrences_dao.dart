@@ -45,6 +45,17 @@ class OccurrencesDao extends DatabaseAccessor<AppDatabase>
     return query.watch();
   }
 
+  /// Rows deleted at or after [sinceMs], most recently deleted first.
+  Stream<List<OccurrenceRow>> watchTrash(String userId, int sinceMs) =>
+      (select(occurrences)
+            ..where(
+              (o) =>
+                  o.userId.equals(userId) &
+                  o.deletedAt.isBiggerOrEqualValue(sinceMs),
+            )
+            ..orderBy([(o) => OrderingTerm.desc(o.deletedAt), _byId]))
+          .watch();
+
   Future<OccurrenceRow?> findById(String userId, String id) => (select(
     occurrences,
   )..where((o) => o.userId.equals(userId) & o.id.equals(id))).getSingleOrNull();

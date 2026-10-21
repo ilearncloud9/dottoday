@@ -184,6 +184,12 @@ abstract class AppLocalizations {
   /// **'Dottoday can\'t see your calendars. You can allow access in system settings.'**
   String get failurePermissionCalendar;
 
+  /// Undo was tapped after its 30-second window.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s too late to undo that. Deleted tasks stay in Trash for 30 days.'**
+  String get failureUndoExpired;
+
   /// Fallback for unclassified failures.
   ///
   /// In en, this message translates to:

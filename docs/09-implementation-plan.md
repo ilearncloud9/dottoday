@@ -47,7 +47,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [x] M2.2 DAOs + repository implementations (`OccurrenceRepository`, `SeriesRepository`, `SubtaskRepository`, `SettingsRepository`) with reactive streams for day/inbox/week/month queries.
 - [x] M2.3 Write path: every mutation goes through a `WriteUseCase` that updates DB, appends `change_log`, triggers `Materialiser` (if series), `NotificationPlanner` diff, widget snapshot write. Tests.
 - [x] M2.4 `BackupService`: daily local JSON backup (keep 7), pre-migration backup; restore. Tests. (R-08, R-11) Lost key (M2.1): opening an existing file without its key, or with a key that doesn't decrypt it, throws a typed `DatabaseUnavailable`; no key is ever minted over an existing file. Local backups share the key, so recovery is via sync or a user export (M3.11 UI).
-- [ ] M2.5 Trash: soft delete, 30-day restore, purge; undo token API for UI (30 s). (R-11)
+- [x] M2.5 Trash: soft delete, 30-day restore, purge; undo token API for UI (30 s). (R-11)
 - [ ] M2.6 Search index (FTS5) over title/notes/subtasks incl. completed. (R-11)
 - [ ] M2.7 Performance test: 10 000 occurrences, day query < 16 ms, search < 50 ms. (R-15)
 - [ ] M2.9 Web at-rest encryption per ADR-0003 (found in M2.1: the web DB is Drift WASM/OPFS, unencrypted). Decide between `sqlite3mc.wasm` keyed by a raw key that is stored wrapped by a non-extractable WebCrypto key in IndexedDB, and a custom encrypting VFS; amend ADR-0003; test that OPFS bytes don't contain a task title.
@@ -56,7 +56,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 ## Milestone 3 — Timeline UI (goal: the home screen, complete and flawless, local only)
 
 - [ ] M3.1 Shared components: `AppSheet`, `TimeInput` (typed + optional wheel, 12/24 h, tests from 08 §2), `DurationChips`, `ColorIconPicker`, `UndoSnackbar`, `SyncPill` (static for now). (03 §3.3–3.4, R-16, R-20)
-- [ ] M3.2 Timeline canvas (first screen to open the DB: also wire app start/resume to ensure the local profile, `BackupService.runDailyIfDue` and `NotificationSync.resync`, M2.3/M2.4): hour gutter, lazy sliver blocks, now-line (1-min tick), past tint, outside-hours zones, all-day strip, overlap columns, full-24h golden test. (03 §3.1, R-14, R-15)
+- [ ] M3.2 Timeline canvas (first screen to open the DB: also wire app start/resume to ensure the local profile, `BackupService.runDailyIfDue`, `TrashService.purgeExpired` and `NotificationSync.resync`, M2.3–M2.5): hour gutter, lazy sliver blocks, now-line (1-min tick), past tint, outside-hours zones, all-day strip, overlap columns, full-24h golden test. (03 §3.1, R-14, R-15)
 - [ ] M3.3 Block widget: anatomy + states (done/overdue/pinned/recurring/calendar/alerts); semantics label per 03 §4. Golden at 100/200 % text, light/dark. (R-12)
 - [ ] M3.4 Gestures: long-press pick-up, drag with snapping + ghost + floating time label + auto-scroll; edge resize handles; tap vs scroll disambiguation test; haptics; reduced-motion path. (03 §3.2, R-05)
 - [ ] M3.5 Shift-followers chip during drag; settings default `ask|always|never`; pinned and calendar rules; partial-shift toast. (R-04, R-17)
@@ -74,7 +74,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [ ] M4.1 Quick Add sheet/popover with live token chips, duration chips, "Add"/"Add another", Enter/Shift+Enter, multi-line paste → N tasks confirmation. (03 §3.3, R-06, R-07)
 - [ ] M4.2 Task editor sheet with all fields from 02 F2; autosave; nothing lost on dismiss; typed confirmation for delete on desktop. (03 §3.4) Deep-linked `/task/:id`: resolve the ID via the repository scoped to the current user; not-found/not-owned → "task not found" state, never another user's data (07 shared; router only validates format, M0.5).
 - [ ] M4.3 Alerts editor: up to 5, kinds before/at start/at end/overdue, sound picker, defaults from settings. (R-03, R-10)
-- [ ] M4.4 Recurrence editor: presets + custom RRULE builder (every N, weekdays, nth weekday, end conditions); human-readable summary; edit-scope dialog (this / following / all). (R-01)
+- [ ] M4.4 Recurrence editor: presets + custom RRULE builder (every N, weekdays, nth weekday, end conditions); human-readable summary; edit-scope dialog (this / following / all). (R-01) Series edits/deletes need their own undo (M2.5 `UndoService` covers occurrences/subtasks only).
 - [ ] M4.5 Inbox screen: groups, swipe actions, reorder, bulk select, schedule suggestions sheet, drag to timeline (desktop) / to Today tab (mobile). (02 F3)
 - [ ] M4.6 Subtasks UI: inline add, reorder, per-occurrence completion with progress ring on block. (R-09)
 - [ ] M4.7 Week and Month views (free), Search screen. (02 F8, R-03, R-14)

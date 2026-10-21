@@ -16,6 +16,7 @@ List<AppFailure> _all() => [
     ConflictFailure(e),
   ],
   for (final p in AppPermission.values) PermissionFailure(p),
+  const UndoExpiredFailure(),
   const UnexpectedFailure(),
 ];
 
