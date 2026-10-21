@@ -6223,6 +6223,217 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
   }
 }
 
+class $LocalMetaTable extends LocalMeta
+    with TableInfo<$LocalMetaTable, LocalMetaRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalMetaTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  @override
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
+    'key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  @override
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+    'value',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [key, value];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'local_meta';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LocalMetaRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('key')) {
+      context.handle(
+        _keyMeta,
+        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_keyMeta);
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+        _valueMeta,
+        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_valueMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {key};
+  @override
+  LocalMetaRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalMetaRow(
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      value: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}value'],
+      )!,
+    );
+  }
+
+  @override
+  $LocalMetaTable createAlias(String alias) {
+    return $LocalMetaTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class LocalMetaRow extends DataClass implements Insertable<LocalMetaRow> {
+  final String key;
+  final String value;
+  const LocalMetaRow({required this.key, required this.value});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['key'] = Variable<String>(key);
+    map['value'] = Variable<String>(value);
+    return map;
+  }
+
+  LocalMetaCompanion toCompanion(bool nullToAbsent) {
+    return LocalMetaCompanion(key: Value(key), value: Value(value));
+  }
+
+  factory LocalMetaRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalMetaRow(
+      key: serializer.fromJson<String>(json['key']),
+      value: serializer.fromJson<String>(json['value']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'key': serializer.toJson<String>(key),
+      'value': serializer.toJson<String>(value),
+    };
+  }
+
+  LocalMetaRow copyWith({String? key, String? value}) =>
+      LocalMetaRow(key: key ?? this.key, value: value ?? this.value);
+  LocalMetaRow copyWithCompanion(LocalMetaCompanion data) {
+    return LocalMetaRow(
+      key: data.key.present ? data.key.value : this.key,
+      value: data.value.present ? data.value.value : this.value,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalMetaRow(')
+          ..write('key: $key, ')
+          ..write('value: $value')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(key, value);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalMetaRow &&
+          other.key == this.key &&
+          other.value == this.value);
+}
+
+class LocalMetaCompanion extends UpdateCompanion<LocalMetaRow> {
+  final Value<String> key;
+  final Value<String> value;
+  final Value<int> rowid;
+  const LocalMetaCompanion({
+    this.key = const Value.absent(),
+    this.value = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LocalMetaCompanion.insert({
+    required String key,
+    required String value,
+    this.rowid = const Value.absent(),
+  }) : key = Value(key),
+       value = Value(value);
+  static Insertable<LocalMetaRow> custom({
+    Expression<String>? key,
+    Expression<String>? value,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (key != null) 'key': key,
+      if (value != null) 'value': value,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LocalMetaCompanion copyWith({
+    Value<String>? key,
+    Value<String>? value,
+    Value<int>? rowid,
+  }) {
+    return LocalMetaCompanion(
+      key: key ?? this.key,
+      value: value ?? this.value,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<String>(value.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalMetaCompanion(')
+          ..write('key: $key, ')
+          ..write('value: $value, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -6237,6 +6448,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $ConflictsTable conflicts = $ConflictsTable(this);
   late final $ChangeLogTable changeLog = $ChangeLogTable(this);
   late final $SyncCursorsTable syncCursors = $SyncCursorsTable(this);
+  late final $LocalMetaTable localMeta = $LocalMetaTable(this);
   late final Index seriesUser = Index(
     'series_user',
     'CREATE INDEX series_user ON series (user_id)',
@@ -6319,6 +6531,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     conflicts,
     changeLog,
     syncCursors,
+    localMeta,
     seriesUser,
     seriesUserUpdated,
     seriesDirty,
@@ -11463,6 +11676,154 @@ typedef $$SyncCursorsTableProcessedTableManager =
       SyncCursorRow,
       PrefetchHooks Function()
     >;
+typedef $$LocalMetaTableCreateCompanionBuilder =
+    LocalMetaCompanion Function({
+      required String key,
+      required String value,
+      Value<int> rowid,
+    });
+typedef $$LocalMetaTableUpdateCompanionBuilder =
+    LocalMetaCompanion Function({
+      Value<String> key,
+      Value<String> value,
+      Value<int> rowid,
+    });
+
+class $$LocalMetaTableFilterComposer
+    extends Composer<_$AppDatabase, $LocalMetaTable> {
+  $$LocalMetaTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LocalMetaTableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalMetaTable> {
+  $$LocalMetaTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LocalMetaTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalMetaTable> {
+  $$LocalMetaTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get key =>
+      $composableBuilder(column: $table.key, builder: (column) => column);
+
+  GeneratedColumn<String> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+}
+
+class $$LocalMetaTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalMetaTable,
+          LocalMetaRow,
+          $$LocalMetaTableFilterComposer,
+          $$LocalMetaTableOrderingComposer,
+          $$LocalMetaTableAnnotationComposer,
+          $$LocalMetaTableCreateCompanionBuilder,
+          $$LocalMetaTableUpdateCompanionBuilder,
+          (
+            LocalMetaRow,
+            BaseReferences<_$AppDatabase, $LocalMetaTable, LocalMetaRow>,
+          ),
+          LocalMetaRow,
+          PrefetchHooks Function()
+        > {
+  $$LocalMetaTableTableManager(_$AppDatabase db, $LocalMetaTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalMetaTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LocalMetaTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LocalMetaTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> key = const Value.absent(),
+                Value<String> value = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalMetaCompanion(key: key, value: value, rowid: rowid),
+          createCompanionCallback:
+              ({
+                required String key,
+                required String value,
+                Value<int> rowid = const Value.absent(),
+              }) => LocalMetaCompanion.insert(
+                key: key,
+                value: value,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$LocalMetaTable, LocalMetaRow>(table),
+                  BaseReferences<_$AppDatabase, $LocalMetaTable, LocalMetaRow>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LocalMetaTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalMetaTable,
+      LocalMetaRow,
+      $$LocalMetaTableFilterComposer,
+      $$LocalMetaTableOrderingComposer,
+      $$LocalMetaTableAnnotationComposer,
+      $$LocalMetaTableCreateCompanionBuilder,
+      $$LocalMetaTableUpdateCompanionBuilder,
+      (
+        LocalMetaRow,
+        BaseReferences<_$AppDatabase, $LocalMetaTable, LocalMetaRow>,
+      ),
+      LocalMetaRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -11485,4 +11846,6 @@ class $AppDatabaseManager {
       $$ChangeLogTableTableManager(_db, _db.changeLog);
   $$SyncCursorsTableTableManager get syncCursors =>
       $$SyncCursorsTableTableManager(_db, _db.syncCursors);
+  $$LocalMetaTableTableManager get localMeta =>
+      $$LocalMetaTableTableManager(_db, _db.localMeta);
 }

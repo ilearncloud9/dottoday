@@ -8,7 +8,7 @@ import 'package:drift/drift.dart';
 part 'app_database.g.dart';
 
 /// The local source of truth (docs/04 §4): server tables mirrored with sync
-/// columns, plus the local-only `change_log` and `sync_cursors`.
+/// columns, plus the local-only `change_log`, `sync_cursors` and `local_meta`.
 ///
 /// Open it with `openAppDatabase` (connection/connection.dart) so the
 /// SQLCipher key is applied before any statement (06 §4, ADR-0006).
@@ -23,6 +23,7 @@ part 'app_database.g.dart';
     Conflicts,
     ChangeLog,
     SyncCursors,
+    LocalMeta,
   ],
 )
 class AppDatabase extends _$AppDatabase {

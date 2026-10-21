@@ -57,6 +57,7 @@ void main() {
       'conflicts',
       'change_log',
       'sync_cursors',
+      'local_meta',
     });
     expect(rows.every((r) => r.read<int>('strict') == 1), isTrue);
   });

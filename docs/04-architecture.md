@@ -57,6 +57,13 @@ Deletes are tombstones (30-day retention = Trash). Never hard-delete locally bec
 **Safety**: writes are local-first and immediate; sync failures only change the status pill; daily
 local backup (JSON, last 7) before any migration or bulk import.
 
+**Write path** (M2.3, `WriteUseCase`): one call per user action takes a `WriteBatch`, validates
+every row, then in one transaction upserts changed rows (unchanged rows are skipped), stamps
+`updatedAt`, sets `dirty`/`version + 1`, appends one `change_log` row per changed field (all rows of
+one entity share an HLC), materialises saved series, and persists the HLC node/last in `local_meta`.
+After the commit, notification resync and the widget snapshot run in a serial queue; a failure there
+is logged and never undoes the write (the next write or app start repairs it).
+
 **Widgets** read a lightweight JSON snapshot (`next 24 h`) written to the app-group container on every
 local write, so they are correct even if sync is down.
 

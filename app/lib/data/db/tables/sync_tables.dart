@@ -81,3 +81,17 @@ class SyncCursors extends Table {
   @override
   bool get isStrict => true;
 }
+
+/// Local-only key/value state that must survive restarts but is not user
+/// data: the HLC node id and last issued HLC (ADR-0002).
+@DataClassName('LocalMetaRow')
+class LocalMeta extends Table {
+  TextColumn get key => text()();
+  TextColumn get value => text()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {key};
+
+  @override
+  bool get isStrict => true;
+}

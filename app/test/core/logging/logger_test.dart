@@ -2,26 +2,20 @@ import 'package:dottoday/core/logging/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fake_clock.dart';
-
-final class _MemorySink implements LogSink {
-  final records = <LogRecord>[];
-
-  @override
-  void write(LogRecord record) => records.add(record);
-}
+import '../../support/memory_log_sink.dart';
 
 enum _Phase { push }
 
 const _id = '01929a3e-7c4b-7d2a-9f10-3b5c6d7e8f90';
 
 void main() {
-  late _MemorySink sink;
+  late MemoryLogSink sink;
   late FakeClock clock;
 
   Logger logger({bool strict = true}) => Logger(sink, clock, strict: strict);
 
   setUp(() {
-    sink = _MemorySink();
+    sink = MemoryLogSink();
     clock = FakeClock(DateTime.utc(2026, 10, 20, 8));
   });
 
