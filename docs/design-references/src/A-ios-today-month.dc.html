@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dottoday — Today with month open (iPhone, light)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3B6CF6}a:hover{color:#2B55CC}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #FAFAF8; color: #1A1A1C; font-family: Inter, system-ui, sans-serif; font-feature-settings: 'tnum' 1; display: flex; flex-direction: column; padding-bottom: 100px;">
+
+  <!-- Header -->
+  <div style="padding: 58px 20px 0 20px; display: flex; align-items: flex-start; justify-content: space-between;">
+    <div style="display: flex; flex-direction: column; gap: 2px;">
+      <button type="button" aria-label="Hide October" aria-expanded="true" style="display: inline-flex; align-items: center; gap: 4px; padding: 0; border: 0; background: transparent; font: 600 12px/16px Inter, system-ui, sans-serif; color: #6B6B70; text-transform: uppercase; letter-spacing: 0.06em;">Wednesday 21 Oct <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg></button>
+      <div style="font-size: 28px; line-height: 34px; font-weight: 700; letter-spacing: -0.02em;">Good morning, Kody</div>
+    </div>
+    <!-- The day dot: fills from wake to wind-down -->
+    <div style="width: 44px; height: 44px; border-radius: 50%; background: conic-gradient({{accent}} 0 46%, #E2E2DE 46% 100%); display: flex; align-items: center; justify-content: center;" role="img" aria-label="Day 46 percent through">
+      <div style="width: 32px; height: 32px; border-radius: 50%; background: #FAFAF8; display: flex; align-items: center; justify-content: center;">
+        <div style="width: 10px; height: 10px; border-radius: 50%; background: {{accent}};"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Month, pulled open: every day is a dot that fills with completion; tap a day to page the card to it -->
+  <div style="margin: 14px 12px 0 12px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr));">
+    <span style="text-align:center;font-size:11px;font-weight:600;color:#9A9AA0;">Sun</span><span style="text-align:center;font-size:11px;font-weight:600;color:#9A9AA0;">Mon</span><span style="text-align:center;font-size:11px;font-weight:600;color:#9A9AA0;">Tue</span><span style="text-align:center;font-size:11px;font-weight:600;color:#9A9AA0;">Wed</span><span style="text-align:center;font-size:11px;font-weight:600;color:#9A9AA0;">Thu</span><span style="text-align:center;font-size:11px;font-weight:600;color:#9A9AA0;">Fri</span><span style="text-align:center;font-size:11px;font-weight:600;color:#9A9AA0;">Sat</span>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">1</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">2</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">3</span><span style="width:6px;height:6px;border-radius:50%;background:conic-gradient({{accent}} 0 70%, #E2E2DE 70% 100%);"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">4</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">5</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">6</span><span style="width:6px;height:6px;border-radius:50%;background:conic-gradient({{accent}} 0 70%, #E2E2DE 70% 100%);"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">7</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">8</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">9</span><span style="width:6px;height:6px;border-radius:50%;background:conic-gradient({{accent}} 0 70%, #E2E2DE 70% 100%);"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">10</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">11</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">12</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">13</span><span style="width:6px;height:6px;border-radius:50%;background:conic-gradient({{accent}} 0 70%, #E2E2DE 70% 100%);"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">14</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">15</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">16</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">17</span><span style="width:6px;height:6px;border-radius:50%;background:conic-gradient({{accent}} 0 70%, #E2E2DE 70% 100%);"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">18</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">19</span><span style="width:6px;height:6px;border-radius:50%;background:conic-gradient({{accent}} 0 70%, #E2E2DE 70% 100%);"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#6B6B70;height:26px;display:flex;align-items:center;">20</span><span style="width:6px;height:6px;border-radius:50%;background:{{accent}};"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="width:26px;height:26px;border-radius:50%;background:{{accent}};color:#FFFFFF;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;">21</span><span style="width:6px;height:6px;border-radius:50%;background:conic-gradient({{accent}} 0 46%, #E2E2DE 46% 100%);"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#1A1A1C;height:26px;display:flex;align-items:center;">22</span><span style="width:6px;height:6px;border-radius:50%;box-sizing:border-box;border:1.5px solid #C9C9C4;"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#1A1A1C;height:26px;display:flex;align-items:center;">23</span><span style="width:6px;height:6px;border-radius:50%;box-sizing:border-box;border:1.5px solid #C9C9C4;"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#1A1A1C;height:26px;display:flex;align-items:center;">24</span><span style="width:6px;height:6px;border-radius:50%;box-sizing:border-box;border:1.5px solid #C9C9C4;"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#1A1A1C;height:26px;display:flex;align-items:center;">25</span><span style="width:6px;height:6px;border-radius:50%;box-sizing:border-box;border:1.5px solid #C9C9C4;"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#1A1A1C;height:26px;display:flex;align-items:center;">26</span><span style="width:6px;height:6px;border-radius:50%;box-sizing:border-box;border:1.5px solid #C9C9C4;"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#1A1A1C;height:26px;display:flex;align-items:center;">27</span><span style="width:6px;height:6px;border-radius:50%;box-sizing:border-box;border:1.5px solid #C9C9C4;"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#1A1A1C;height:26px;display:flex;align-items:center;">28</span><span style="width:6px;height:6px;border-radius:50%;box-sizing:border-box;border:1.5px solid #C9C9C4;"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#1A1A1C;height:26px;display:flex;align-items:center;">29</span><span style="width:6px;height:6px;border-radius:50%;box-sizing:border-box;border:1.5px solid #C9C9C4;"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#1A1A1C;height:26px;display:flex;align-items:center;">30</span><span style="width:6px;height:6px;border-radius:50%;box-sizing:border-box;border:1.5px solid #C9C9C4;"></span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;"><span style="font-size:13px;font-weight:500;color:#1A1A1C;height:26px;display:flex;align-items:center;">31</span><span style="width:6px;height:6px;border-radius:50%;box-sizing:border-box;border:1.5px solid #C9C9C4;"></span></div>
+  </div>
+  <div style="margin: 4px 20px 0 20px; display: flex; justify-content: space-between; font-size: 11px; font-weight: 500; color: #9A9AA0;"><span>October · 14 of 31 days planned</span><button type="button" style="border:0;background:transparent;padding:0;font:600 11px Inter,system-ui,sans-serif;color:#3B6CF6;">Today</button></div>
+
+  <!-- Pull down to open the month -->
+  <div style="display: flex; justify-content: center; margin-top: 6px;" aria-hidden="true"><div style="width: 36px; height: 4px; border-radius: 2px; background: #E2E2DE;"></div></div>
+
+  <!-- Day pager: today's card, yesterday and tomorrow peek at the edges -->
+  <div style="margin: 14px 0 0 0; flex: 1; display: flex; align-items: stretch; gap: 10px; min-height: 0;">
+    <div style="width: 22px; margin-left: -4px; border-radius: 0 18px 18px 0; background: #F1F1EE; box-shadow: 0 0 0 1px #E2E2DE;"></div>
+    <section aria-label="Wednesday 21" style="flex: 1; border-radius: 18px; background: #FFFFFF; box-shadow: 0 0 0 1px #E2E2DE, 0 4px 14px rgba(26,26,28,0.05); padding: 14px 12px 8px 0; display: flex; flex-direction: column; overflow: hidden;">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding-left: 16px; margin-bottom: 8px;">
+        <span style="font-size: 15px; font-weight: 700;">Wednesday <span style="color: {{accent}};">· Today</span></span>
+        <span style="font-size: 12px; font-weight: 500; color: #6B6B70;">2 of 7 · 5 h 45 planned</span>
+      </div>
+  <div style="flex: 1; display: flex; flex-direction: column; position: relative;">
+
+    <!-- Wake cap -->
+    <div style="display: flex; align-items: center; height: 24px;">
+      <div style="width: 72px; display: flex; justify-content: center;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D99A1F" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </div>
+      <span style="font-size: 12px; font-weight: 500; color: #6B6B70;">Wake Up · 7:00</span>
+    </div>
+
+    <!-- Row: done task -->
+    <div style="display: flex; height: 62px;">
+      <div style="width: 72px; position: relative; display: flex; justify-content: center;">
+        <div style="width: 6px; height: 100%; border-radius: 3px; background: #E5674F; opacity: 0.45;"></div>
+        <div style="position: absolute; top: 0; width: 36px; height: 36px; border-radius: 50%; background: #E5674F; display: flex; align-items: center; justify-content: center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+        </div>
+      </div>
+      <div style="flex: 1; display: flex; align-items: flex-start; justify-content: space-between; padding-top: 7px;">
+        <div style="display: flex; flex-direction: column; gap: 2px;">
+          <span style="font-size: 12px; font-weight: 500; color: #6B6B70;">7:30 – 8:00</span>
+          <span style="font-size: 16px; font-weight: 500; color: #6B6B70; text-decoration: line-through;">Morning run</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gap -->
+    <div style="display: flex; height: 34px; align-items: center;">
+      <div style="width: 72px; display: flex; justify-content: center; height: 100%;">
+        <div style="width: 0; height: 100%; border-left: 2px dotted #C9C9C4;"></div>
+      </div>
+      <span style="font-size: 12px; font-weight: 500; color: #9A9AA0;">1 h free</span>
+    </div>
+
+    <!-- Row: current task (live) -->
+    <div style="display: flex; height: 150px;">
+      <div style="width: 72px; position: relative; display: flex; justify-content: center;">
+        <div style="width: 6px; height: 100%; border-radius: 3px; background: linear-gradient(180deg, {{accent}} 0 68%, rgba(59,108,246,0.28) 68% 100%);"></div>
+        <div style="position: absolute; top: 0; width: 42px; height: 42px; border-radius: 50%; background: conic-gradient({{accent}} 0 68%, rgba(59,108,246,0.25) 68% 100%); display: flex; align-items: center; justify-content: center;">
+          <div style="width: 32px; height: 32px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B6CF6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"></path></svg>
+          </div>
+        </div>
+        <!-- now marker travelling on the thread -->
+        <div style="position: absolute; top: 102px; left: 28px; width: 16px; height: 16px; border-radius: 50%; background: {{accent}}; box-shadow: 0 0 0 4px rgba(59,108,246,0.18);"></div>
+      </div>
+      <div style="flex: 1; display: flex; align-items: flex-start; justify-content: space-between; padding-top: 7px;">
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+          <span style="font-size: 12px; font-weight: 500; color: #6B6B70;">9:00 – 11:00 · 2 h</span>
+          <span style="font-size: 17px; font-weight: 600; color: #1A1A1C; letter-spacing: -0.01em;">Deep work: roadmap</span>
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 2px;">
+            <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: #3B6CF6;">
+              <span style="width: 12px; height: 12px; border-radius: 50%; background: conic-gradient(#3B6CF6 0 33%, rgba(59,108,246,0.25) 33% 100%);"></span>1 of 3
+            </span>
+            <span style="font-size: 12px; font-weight: 500; color: #6B6B70;">38 min left</span>
+          </div>
+          <div style="margin-top: 8px; display: flex; gap: 8px;">
+            <button type="button" style="height: 32px; padding: 0 12px; border-radius: 999px; border: 0; background: {{accent}}; color: #FFFFFF; font: 600 13px Inter, system-ui, sans-serif;">Done</button>
+            <button type="button" style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #E2E2DE; background: #FFFFFF; color: #1A1A1C; font: 500 13px Inter, system-ui, sans-serif;">+15 min</button>
+          </div>
+        </div>
+        <button type="button" aria-label="Mark Deep work done" style="width: 28px; height: 28px; border-radius: 50%; box-sizing: border-box; border: 2px solid #3B6CF6; background: transparent; padding: 0; margin-top: 18px;"></button>
+      </div>
+    </div>
+
+    <div style="display: flex; height: 40px; mask-image: linear-gradient(180deg, #000 0%, transparent 100%); -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 100%);"><div style="width: 72px; display: flex; justify-content: center;"><div style="width: 6px; height: 100%; border-radius: 3px; background: rgba(107,107,112,0.28);"></div></div><div style="flex: 1; padding-top: 7px; font-size: 16px; font-weight: 500;">Reply to email</div></div>
+  </div>
+    </section>
+    <div style="width: 22px; margin-right: -4px; border-radius: 18px 0 0 18px; background: #F1F1EE; box-shadow: 0 0 0 1px #E2E2DE;"></div>
+  </div>
+  <div style="display: flex; justify-content: center; gap: 6px; margin-top: 10px;" aria-hidden="true">
+    <span style="width: 6px; height: 6px; border-radius: 50%; background: #C9C9C4;"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #C9C9C4;"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #C9C9C4;"></span><span style="width: 18px; height: 6px; border-radius: 3px; background: {{accent}};"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #C9C9C4;"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #C9C9C4;"></span><span style="width: 6px; height: 6px; border-radius: 50%; background: #C9C9C4;"></span>
+  </div>
+
+  <!-- Floating tab bar + the add dot -->
+  <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; align-items: center; gap: 10px;">
+    <nav aria-label="Main" style="flex: 1; height: 60px; border-radius: 30px; background: #FFFFFF; box-shadow: 0 8px 24px rgba(26,26,28,0.10), 0 0 0 1px #E2E2DE; display: flex; align-items: center; justify-content: space-around; padding: 0 6px;">
+      <a href="#today" aria-label="Today" style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 52px; height: 48px; justify-content: center; border-radius: 24px; background: rgba(59,108,246,0.12); color: #3B6CF6; text-decoration: none;">
+        <div style="width: 10px; height: 10px; border-radius: 50%; background: #3B6CF6;"></div><span style="font-size: 10px; font-weight: 600;">Today</span>
+      </a>
+      <a href="#inbox" aria-label="Inbox" style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 52px; height: 48px; justify-content: center; color: #6B6B70; text-decoration: none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l2-8h14l2 8"></path><path d="M3 13v6h18v-6h-5a4 4 0 0 1-8 0z"></path></svg><span style="font-size: 10px; font-weight: 500;">Inbox</span>
+      </a>
+      <a href="#search" aria-label="Search" style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 52px; height: 48px; justify-content: center; color: #6B6B70; text-decoration: none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><span style="font-size: 10px; font-weight: 500;">Search</span>
+      </a>
+      <a href="#settings" aria-label="Settings" style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 52px; height: 48px; justify-content: center; color: #6B6B70; text-decoration: none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg><span style="font-size: 10px; font-weight: 500;">Settings</span>
+      </a>
+    </nav>
+    <button type="button" aria-label="Quick add" style="width: 60px; height: 60px; border-radius: 50%; border: 0; background: {{accent}}; color: #FFFFFF; box-shadow: 0 8px 24px rgba(59,108,246,0.35); display: flex; align-items: center; justify-content: center; padding: 0;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+    </button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#3B6CF6","options":["#3B6CF6","#1F9E9E","#E5674F","#7A5AF8"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#3B6CF6' };
+  }
+}
+</script>
+</body>
+</html>
