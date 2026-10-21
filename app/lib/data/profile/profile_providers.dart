@@ -34,3 +34,15 @@ Future<Profile> localProfile(Ref ref) async {
     Err(:final failure) => throw failure,
   };
 }
+
+/// The local profile, re-emitting whenever it (or its settings) change.
+@Riverpod(keepAlive: true)
+Stream<Profile> currentProfile(Ref ref) async* {
+  final local = await ref.watch(localProfileProvider.future);
+  yield local;
+  yield* ref
+      .watch(settingsRepositoryProvider)
+      .watchProfile(local.id)
+      .where((p) => p != null)
+      .cast<Profile>();
+}

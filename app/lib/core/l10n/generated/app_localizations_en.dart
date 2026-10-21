@@ -267,4 +267,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get syncError => 'Sync problem';
+
+  @override
+  String timelineNow(String time) {
+    return 'Now, $time';
+  }
+
+  @override
+  String timelineBeforeHours(String time) {
+    return 'Before $time';
+  }
+
+  @override
+  String timelineAfterHours(String time) {
+    return 'After $time';
+  }
+
+  @override
+  String timelineMoreBlocks(int count) {
+    return '+$count';
+  }
+
+  @override
+  String timelineMoreBlocksLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more blocks',
+      one: '1 more block',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get timelineAllDay => 'All day';
+
+  @override
+  String blockTimeRange(String start, String end) {
+    return '$start–$end';
+  }
+
+  @override
+  String blockSemantics(String title, String start, String end) {
+    return '$title, $start to $end';
+  }
+
+  @override
+  String get timelineMenu => 'More options';
+
+  @override
+  String get debugLoadDemoDay => 'Load demo day (debug)';
+
+  @override
+  String get debugDemoDayLoaded => 'Demo day loaded';
 }

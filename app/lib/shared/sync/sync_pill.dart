@@ -10,9 +10,18 @@ enum SyncPillState { localOnly, synced, syncing, offline, error }
 /// its own icon and text, so colour is never the only signal. Static until
 /// the sync engine drives it (M6.3).
 class SyncPill extends StatelessWidget {
-  const SyncPill({required this.state, this.onTap, super.key});
+  const SyncPill({
+    required this.state,
+    this.onTap,
+    this.iconOnly = false,
+    super.key,
+  });
 
   final SyncPillState state;
+
+  /// Hide the visible text (kept as the semantics label) where space is
+  /// short, e.g. a phone header at large text sizes.
+  final bool iconOnly;
 
   /// Opens sync details; null renders a non-interactive pill.
   final VoidCallback? onTap;
@@ -29,12 +38,16 @@ class SyncPill extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: AppSpacing.l, color: color),
-          const SizedBox(width: AppSpacing.xs),
-          // Text stays muted: warning amber is below 4.5:1 on surface.
-          Text(
-            label,
-            style: t.typography.label.copyWith(color: t.colors.onSurfaceMuted),
-          ),
+          if (!iconOnly) ...[
+            const SizedBox(width: AppSpacing.xs),
+            // Text stays muted: warning amber is below 4.5:1 on surface.
+            Text(
+              label,
+              style: t.typography.label.copyWith(
+                color: t.colors.onSurfaceMuted,
+              ),
+            ),
+          ],
         ],
       ),
     );

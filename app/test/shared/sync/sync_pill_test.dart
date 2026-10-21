@@ -43,6 +43,18 @@ void main() {
     expect(icons, hasLength(SyncPillState.values.length));
   });
 
+  testWidgets('iconOnly hides the text but keeps the label', (tester) async {
+    await tester.pumpWidget(
+      testApp(
+        const Scaffold(
+          body: SyncPill(state: SyncPillState.synced, iconOnly: true),
+        ),
+      ),
+    );
+    expect(find.text('Synced'), findsNothing);
+    expect(find.bySemanticsLabel('Synced'), findsOneWidget);
+  });
+
   testWidgets('tappable when onTap is given', (tester) async {
     var taps = 0;
     await tester.pumpWidget(_pill(SyncPillState.error, onTap: () => taps++));

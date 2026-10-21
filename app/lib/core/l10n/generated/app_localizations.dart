@@ -579,6 +579,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sync problem'**
   String get syncError;
+
+  /// Screen-reader label of the now-line.
+  ///
+  /// In en, this message translates to:
+  /// **'Now, {time}'**
+  String timelineNow(String time);
+
+  /// Toggle on the collapsed zone before the user's day start.
+  ///
+  /// In en, this message translates to:
+  /// **'Before {time}'**
+  String timelineBeforeHours(String time);
+
+  /// Toggle on the collapsed zone after the user's day end.
+  ///
+  /// In en, this message translates to:
+  /// **'After {time}'**
+  String timelineAfterHours(String time);
+
+  /// Marker for overlapping blocks that don't fit in 3 columns.
+  ///
+  /// In en, this message translates to:
+  /// **'+{count}'**
+  String timelineMoreBlocks(int count);
+
+  /// Screen-reader label of the +n overlap marker.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 more block} other{{count} more blocks}}'**
+  String timelineMoreBlocksLabel(int count);
+
+  /// Heading of the all-day strip above the timeline.
+  ///
+  /// In en, this message translates to:
+  /// **'All day'**
+  String get timelineAllDay;
+
+  /// Block start and end time.
+  ///
+  /// In en, this message translates to:
+  /// **'{start}–{end}'**
+  String blockTimeRange(String start, String end);
+
+  /// Basic screen-reader label of a block (extended in M3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, {start} to {end}'**
+  String blockSemantics(String title, String start, String end);
+
+  /// Overflow menu in the timeline header.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get timelineMenu;
+
+  /// Debug-build-only menu item that fills today with sample blocks.
+  ///
+  /// In en, this message translates to:
+  /// **'Load demo day (debug)'**
+  String get debugLoadDemoDay;
+
+  /// Confirmation after the debug demo day was written.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo day loaded'**
+  String get debugDemoDayLoaded;
 }
 
 class _AppLocalizationsDelegate

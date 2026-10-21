@@ -341,5 +341,93 @@
   "syncError": "Sync problem",
   "@syncError": {
     "description": "Sync pill: last sync failed; tap for details."
+  },
+  "timelineNow": "Now, {time}",
+  "@timelineNow": {
+    "description": "Screen-reader label of the now-line.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineBeforeHours": "Before {time}",
+  "@timelineBeforeHours": {
+    "description": "Toggle on the collapsed zone before the user's day start.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineAfterHours": "After {time}",
+  "@timelineAfterHours": {
+    "description": "Toggle on the collapsed zone after the user's day end.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineMoreBlocks": "+{count}",
+  "@timelineMoreBlocks": {
+    "description": "Marker for overlapping blocks that don't fit in 3 columns.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineMoreBlocksLabel": "{count, plural, =1{1 more block} other{{count} more blocks}}",
+  "@timelineMoreBlocksLabel": {
+    "description": "Screen-reader label of the +n overlap marker.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timelineAllDay": "All day",
+  "@timelineAllDay": {
+    "description": "Heading of the all-day strip above the timeline."
+  },
+  "blockTimeRange": "{start}–{end}",
+  "@blockTimeRange": {
+    "description": "Block start and end time.",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "blockSemantics": "{title}, {start} to {end}",
+  "@blockSemantics": {
+    "description": "Basic screen-reader label of a block (extended in M3.3).",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "timelineMenu": "More options",
+  "@timelineMenu": {
+    "description": "Overflow menu in the timeline header."
+  },
+  "debugLoadDemoDay": "Load demo day (debug)",
+  "@debugLoadDemoDay": {
+    "description": "Debug-build-only menu item that fills today with sample blocks."
+  },
+  "debugDemoDayLoaded": "Demo day loaded",
+  "@debugDemoDayLoaded": {
+    "description": "Confirmation after the debug demo day was written."
   }
 }

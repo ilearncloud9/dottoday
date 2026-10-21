@@ -57,6 +57,14 @@ Month view opens from the Today date header. The current date is always one tap 
 - Header: date (tap → month), weekday, "Today" chip when away from today, sync pill, overflow menu
   (Running late, Plan inbox, Duplicate day, Export day).
 - Optional all-day strip (imported all-day events and dateless-but-dated tasks).
+  Clarified in M3.2: an item is all-day when it starts at the day's local midnight and lasts the
+  maximum 24 h (there is no separate flag). The strip is pinned above the scrolling timeline (capped
+  at a third of the screen, scrolling on its own) so all-day items stay visible at any scroll.
+- Outside-hours zones (clarified in M3.2): the time before the weekday's day start and after its
+  day end is drawn at a quarter of the core density, with a "Before 07:00" / "After 22:00" toggle
+  that expands it to full density for the session. Hour labels that would collide are skipped.
+  Density (96 px/h core) scales with the text size up to 2×; blocks are never shorter than 44 pt
+  × text scale, and overlap columns are computed on drawn heights so blocks never cover each other.
 - Timeline: hour gutter left (mono labels), blocks right. Now-line with a dot in `accent`, animates once
   per minute. Past area tinted `surfaceSunken`. Gaps show a faint "+" on hover/long-press.
 - Block anatomy: colour fill, icon circle, title (1–2 lines), time range `08:00–08:45`, subtask progress

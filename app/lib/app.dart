@@ -1,4 +1,5 @@
 import 'package:dottoday/app_commands.dart';
+import 'package:dottoday/app_lifecycle.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
@@ -22,9 +23,11 @@ class DottodayApp extends ConsumerWidget {
       darkTheme: AppTheme.dark(),
       routerConfig: router,
       // Above all routes so shortcuts work wherever focus is (M0.13).
-      builder: (context, child) => AppCommandScope(
-        handlers: appCommandHandlers(router),
-        child: child ?? const SizedBox.shrink(),
+      builder: (context, child) => AppLifecycleScope(
+        child: AppCommandScope(
+          handlers: appCommandHandlers(router),
+          child: child ?? const SizedBox.shrink(),
+        ),
       ),
     );
   }

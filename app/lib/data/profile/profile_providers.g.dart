@@ -134,3 +134,41 @@ final class LocalProfileProvider
 }
 
 String _$localProfileHash() => r'f2637855d0402658205a4ed4d1bbf82c5a654832';
+
+/// The local profile, re-emitting whenever it (or its settings) change.
+
+@ProviderFor(currentProfile)
+final currentProfileProvider = CurrentProfileProvider._();
+
+/// The local profile, re-emitting whenever it (or its settings) change.
+
+final class CurrentProfileProvider
+    extends $FunctionalProvider<AsyncValue<Profile>, Profile, Stream<Profile>>
+    with $FutureModifier<Profile>, $StreamProvider<Profile> {
+  /// The local profile, re-emitting whenever it (or its settings) change.
+  CurrentProfileProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currentProfileProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$currentProfileHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<Profile> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<Profile> create(Ref ref) {
+    return currentProfile(ref);
+  }
+}
+
+String _$currentProfileHash() => r'cf72fc349450f73915b747bffe0fd5a38a82798c';
