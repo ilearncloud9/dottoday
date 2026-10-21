@@ -1,11 +1,10 @@
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/features/timeline/state/day_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
-import 'package:dottoday/features/timeline/widgets/today_month.dart';
+import 'package:dottoday/features/timeline/widgets/day_picker_sheet.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,10 +21,11 @@ Future<void> showCopyDaySheet(
   final undo = container.read(undoServiceProvider);
   final today = await container.read(todayDateProvider.future);
   if (!context.mounted) return;
-  final source = await showModalBottomSheet<DateTime>(
-    context: context,
-    isScrollControlled: true,
-    builder: (sheet) => _Picker(today: today, target: target),
+  final source = await showDayPicker(
+    context,
+    title: l10n.copyDayTitle,
+    today: today,
+    initial: target,
   );
   if (source == null) return;
   final result = await copyDay(
@@ -47,43 +47,5 @@ Future<void> showCopyDaySheet(
       messenger.showSnackBar(
         SnackBar(content: Text(failureMessage(l10n, failure))),
       );
-  }
-}
-
-class _Picker extends StatefulWidget {
-  const _Picker({required this.today, required this.target});
-
-  final DateTime today;
-  final DateTime target;
-
-  @override
-  State<_Picker> createState() => _PickerState();
-}
-
-class _PickerState extends State<_Picker> {
-  late DateTime _month = DateTime(widget.today.year, widget.today.month);
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: DotSpace.l),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: DotSpace.s,
-          children: [
-            Text(context.l10n.copyDayTitle, style: t.styles.cardTitle),
-            TodayMonth(
-              month: _month,
-              shown: widget.target,
-              today: widget.today,
-              onMonth: (m) => setState(() => _month = m),
-              onSelect: (d) => Navigator.of(context).pop(d),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

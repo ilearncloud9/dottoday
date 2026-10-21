@@ -310,18 +310,6 @@ abstract class AppLocalizations {
   /// **'Use 5 min to 24 h, like 40m or 1h30'**
   String get durationCustomInvalid;
 
-  /// Heading of the block colour choices.
-  ///
-  /// In en, this message translates to:
-  /// **'Colour'**
-  String get colorPickerLabel;
-
-  /// Heading of the block icon choices.
-  ///
-  /// In en, this message translates to:
-  /// **'Icon'**
-  String get iconPickerLabel;
-
   /// Block colour name (screen readers, picker).
   ///
   /// In en, this message translates to:
@@ -1317,6 +1305,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **' · {left}'**
   String sheetLeftSuffix(String left);
+
+  /// Caption of the colour and icon block (shown uppercase).
+  ///
+  /// In en, this message translates to:
+  /// **'Colour and icon'**
+  String get colourIconCaption;
+
+  /// Opens the grid of all 26 task icons.
+  ///
+  /// In en, this message translates to:
+  /// **'All icons'**
+  String get colourIconMore;
+
+  /// Caption at the top of the task editor (A-mac-editor 'EDIT TASK').
+  ///
+  /// In en, this message translates to:
+  /// **'Edit task'**
+  String get editorCaption;
+
+  /// Placeholder of the editor's title field.
+  ///
+  /// In en, this message translates to:
+  /// **'What is it?'**
+  String get editorTitleHint;
+
+  /// Editor field: the day.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get editorWhen;
+
+  /// Editor field: the start time.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get editorStart;
+
+  /// Editor: the end time next to the start, e.g. '→ 11:00'.
+  ///
+  /// In en, this message translates to:
+  /// **'→ {time}'**
+  String editorEndsAt(String time);
+
+  /// Editor field: length.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get editorDuration;
+
+  /// Editor field: notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get editorNotes;
+
+  /// Placeholder of the notes field.
+  ///
+  /// In en, this message translates to:
+  /// **'Add notes'**
+  String get editorNotesHint;
+
+  /// Editor: save and close (changes also save as you type).
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get editorSave;
+
+  /// Editor: unschedule the task.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to inbox'**
+  String get editorMoveToInbox;
+
+  /// Editor: delete (with a confirmation).
+  ///
+  /// In en, this message translates to:
+  /// **'Delete task'**
+  String get editorDelete;
+
+  /// Confirmation title before deleting a task.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete “{title}”?'**
+  String editorDeleteConfirm(String title);
+
+  /// Confirmation body before deleting a task (R-11).
+  ///
+  /// In en, this message translates to:
+  /// **'It goes to Trash for 30 days. You can undo right after.'**
+  String get editorDeleteBody;
+
+  /// Cancel button in the delete confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get editorCancel;
+
+  /// Snackbar after deleting a task, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} deleted'**
+  String snackDeleted(String title);
+
+  /// Snackbar after moving a task to the inbox, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} moved to inbox'**
+  String snackMovedToInbox(String title);
+
+  /// Title of the day picker sheet in the editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a day'**
+  String get editorPickDay;
 }
 
 class _AppLocalizationsDelegate

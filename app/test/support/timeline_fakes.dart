@@ -15,6 +15,7 @@ import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
 import 'package:dottoday/domain/repositories/subtask_repository.dart';
+import 'package:dottoday/domain/trash/trash_service.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
@@ -258,14 +259,52 @@ List<Override> timelineOverrides({
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
   final subs = subtasks ?? FakeSubtaskRepository();
+  final undo = FakeUndoService(repo, subs);
   return [
     subtaskRepositoryProvider.overrideWithValue(subs),
     seriesRepositoryProvider.overrideWithValue(FakeSeriesRepository(series)),
-    undoServiceProvider.overrideWithValue(FakeUndoService(repo, subs)),
+    undoServiceProvider.overrideWithValue(undo),
+    trashServiceProvider.overrideWithValue(FakeTrashService(repo, undo)),
     clockProvider.overrideWithValue(FakeClock(now)),
     minuteTickProvider.overrideWith((ref) => minuteTicks ?? Stream.value(now)),
     localProfileProvider.overrideWith((ref) async => p),
     settingsRepositoryProvider.overrideWithValue(FakeSettingsRepository(p)),
     occurrenceRepositoryProvider.overrideWithValue(repo),
   ];
+}
+
+/// Trash over the fake repository: soft-deletes through [undo], so Undo
+/// brings the rows back (docs/05 `trash`).
+final class FakeTrashService implements TrashService {
+  FakeTrashService(this.occurrences, this.undo);
+
+  final FakeOccurrenceRepository occurrences;
+  final FakeUndoService undo;
+
+  @override
+  Future<Result<UndoToken, AppFailure>> trashOccurrences(
+    String userId,
+    Set<String> ids,
+  ) => undo.applyUndoable(
+    WriteBatch(
+      userId: userId,
+      occurrences: [
+        for (final o in occurrences.rows)
+          if (ids.contains(o.id)) o.copyWith(deletedAt: DateTime.utc(2026)),
+      ],
+    ),
+  );
+
+  @override
+  Stream<List<Occurrence>> watchTrash(String userId) => const Stream.empty();
+
+  @override
+  Future<Result<void, AppFailure>> restoreOccurrences(
+    String userId,
+    Set<String> ids,
+  ) async => const Ok(null);
+
+  @override
+  Future<Result<int, AppFailure>> purgeExpired(String userId) async =>
+      const Ok(0);
 }

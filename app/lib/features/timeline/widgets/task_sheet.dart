@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/timeline/editor/task_editor.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/thread_day.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
@@ -52,11 +53,11 @@ class TaskSheetBody extends ConsumerWidget {
         children: [
           _Identity(task: task),
           const SizedBox(height: DotSpace.l),
-          SheetActions(task: task),
+          SheetActions(task: task, onEdit: () => showTaskEditor(context, id)),
           const SizedBox(height: DotSpace.l),
           SheetSubtasks(task: task),
           const SizedBox(height: DotSpace.m),
-          SheetDetails(task: task),
+          SheetDetails(task: task, onEdit: () => showTaskEditor(context, id)),
         ],
       ),
       AsyncData(value: null) || AsyncError() => _NotFound(),

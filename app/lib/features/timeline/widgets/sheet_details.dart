@@ -17,12 +17,14 @@ class SheetDetails extends StatelessWidget {
     final c = DotTheme.of(context).colors;
     final locale = Localizations.localeOf(context).toLanguageTag();
     final o = task.occurrence;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: c.raised,
+    // Material, not a DecoratedBox: the rows' ink must paint on it.
+    return Material(
+      color: c.raised,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.card),
-        border: Border.all(color: c.outline),
+        side: BorderSide(color: c.outline),
       ),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           _DetailRow(

@@ -162,14 +162,6 @@
   "@durationCustomInvalid": {
     "description": "Error when the typed custom duration is invalid."
   },
-  "colorPickerLabel": "Colour",
-  "@colorPickerLabel": {
-    "description": "Heading of the block colour choices."
-  },
-  "iconPickerLabel": "Icon",
-  "@iconPickerLabel": {
-    "description": "Heading of the block icon choices."
-  },
   "colorCoral": "Coral",
   "@colorCoral": {
     "description": "Block colour name (screen readers, picker)."
@@ -1247,5 +1239,101 @@
         "type": "String"
       }
     }
+  },
+  "colourIconCaption": "Colour and icon",
+  "@colourIconCaption": {
+    "description": "Caption of the colour and icon block (shown uppercase)."
+  },
+  "colourIconMore": "All icons",
+  "@colourIconMore": {
+    "description": "Opens the grid of all 26 task icons."
+  },
+  "editorCaption": "Edit task",
+  "@editorCaption": {
+    "description": "Caption at the top of the task editor (A-mac-editor 'EDIT TASK')."
+  },
+  "editorTitleHint": "What is it?",
+  "@editorTitleHint": {
+    "description": "Placeholder of the editor's title field."
+  },
+  "editorWhen": "When",
+  "@editorWhen": {
+    "description": "Editor field: the day."
+  },
+  "editorStart": "Start",
+  "@editorStart": {
+    "description": "Editor field: the start time."
+  },
+  "editorEndsAt": "→ {time}",
+  "@editorEndsAt": {
+    "description": "Editor: the end time next to the start, e.g. '→ 11:00'.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "editorDuration": "Duration",
+  "@editorDuration": {
+    "description": "Editor field: length."
+  },
+  "editorNotes": "Notes",
+  "@editorNotes": {
+    "description": "Editor field: notes."
+  },
+  "editorNotesHint": "Add notes",
+  "@editorNotesHint": {
+    "description": "Placeholder of the notes field."
+  },
+  "editorSave": "Save",
+  "@editorSave": {
+    "description": "Editor: save and close (changes also save as you type)."
+  },
+  "editorMoveToInbox": "Move to inbox",
+  "@editorMoveToInbox": {
+    "description": "Editor: unschedule the task."
+  },
+  "editorDelete": "Delete task",
+  "@editorDelete": {
+    "description": "Editor: delete (with a confirmation)."
+  },
+  "editorDeleteConfirm": "Delete “{title}”?",
+  "@editorDeleteConfirm": {
+    "description": "Confirmation title before deleting a task.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "editorDeleteBody": "It goes to Trash for 30 days. You can undo right after.",
+  "@editorDeleteBody": {
+    "description": "Confirmation body before deleting a task (R-11)."
+  },
+  "editorCancel": "Cancel",
+  "@editorCancel": {
+    "description": "Cancel button in the delete confirmation."
+  },
+  "snackDeleted": "{title} deleted",
+  "@snackDeleted": {
+    "description": "Snackbar after deleting a task, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "snackMovedToInbox": "{title} moved to inbox",
+  "@snackMovedToInbox": {
+    "description": "Snackbar after moving a task to the inbox, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "editorPickDay": "Pick a day",
+  "@editorPickDay": {
+    "description": "Title of the day picker sheet in the editor."
   }
 }

@@ -134,12 +134,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get durationCustomInvalid => 'Use 5 min to 24 h, like 40m or 1h30';
 
   @override
-  String get colorPickerLabel => 'Colour';
-
-  @override
-  String get iconPickerLabel => 'Icon';
-
-  @override
   String get colorCoral => 'Coral';
 
   @override
@@ -821,4 +815,70 @@ class AppLocalizationsEn extends AppLocalizations {
   String sheetLeftSuffix(String left) {
     return ' · $left';
   }
+
+  @override
+  String get colourIconCaption => 'Colour and icon';
+
+  @override
+  String get colourIconMore => 'All icons';
+
+  @override
+  String get editorCaption => 'Edit task';
+
+  @override
+  String get editorTitleHint => 'What is it?';
+
+  @override
+  String get editorWhen => 'When';
+
+  @override
+  String get editorStart => 'Start';
+
+  @override
+  String editorEndsAt(String time) {
+    return '→ $time';
+  }
+
+  @override
+  String get editorDuration => 'Duration';
+
+  @override
+  String get editorNotes => 'Notes';
+
+  @override
+  String get editorNotesHint => 'Add notes';
+
+  @override
+  String get editorSave => 'Save';
+
+  @override
+  String get editorMoveToInbox => 'Move to inbox';
+
+  @override
+  String get editorDelete => 'Delete task';
+
+  @override
+  String editorDeleteConfirm(String title) {
+    return 'Delete “$title”?';
+  }
+
+  @override
+  String get editorDeleteBody =>
+      'It goes to Trash for 30 days. You can undo right after.';
+
+  @override
+  String get editorCancel => 'Cancel';
+
+  @override
+  String snackDeleted(String title) {
+    return '$title deleted';
+  }
+
+  @override
+  String snackMovedToInbox(String title) {
+    return '$title moved to inbox';
+  }
+
+  @override
+  String get editorPickDay => 'Pick a day';
 }
