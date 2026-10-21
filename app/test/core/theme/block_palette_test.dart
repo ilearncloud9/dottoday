@@ -25,7 +25,8 @@ Object? _paletteJson() => jsonDecode(File(gen.inputPath).readAsStringSync());
 
 void main() {
   test('the 12 names and order fixed in docs/03 §1', () {
-    const spec = 'coral tangerine amber lime mint teal '
+    const spec =
+        'coral tangerine amber lime mint teal '
         'sky indigo violet magenta rose slate';
     expect(BlockColor.values.map((c) => c.key), spec.split(' '));
   });

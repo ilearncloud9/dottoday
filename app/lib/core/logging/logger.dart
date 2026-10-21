@@ -23,7 +23,7 @@ export 'log_values.dart';
 /// ```
 final class Logger {
   Logger(this._sink, this._clock, {bool? strict})
-      : _strict = strict ?? _assertsEnabled;
+    : _strict = strict ?? _assertsEnabled;
 
   final LogSink _sink;
   final Clock _clock;
@@ -43,16 +43,14 @@ final class Logger {
     Map<String, Object> fields = const {},
     Object? error,
     StackTrace? stackTrace,
-  }) =>
-      _log(LogLevel.warn, event, fields, error, stackTrace);
+  }) => _log(LogLevel.warn, event, fields, error, stackTrace);
 
   void error(
     String event, {
     Map<String, Object> fields = const {},
     Object? error,
     StackTrace? stackTrace,
-  }) =>
-      _log(LogLevel.error, event, fields, error, stackTrace);
+  }) => _log(LogLevel.error, event, fields, error, stackTrace);
 
   void _log(
     LogLevel level,
@@ -75,8 +73,10 @@ final class Logger {
 
   String _checkEvent(String event) {
     if (isValidLogEvent(event)) return event;
-    _violation('Log event must be a dotted lowercase key (got length '
-        '${event.length}); put data in typed fields.');
+    _violation(
+      'Log event must be a dotted lowercase key (got length '
+      '${event.length}); put data in typed fields.',
+    );
     return 'log.invalid_event';
   }
 
@@ -105,8 +105,10 @@ final class Logger {
   }
 
   Object _rejectValue(String key, Object value) {
-    _violation('Log field "$key" has a ${value.runtimeType} value; '
-        'use LogId, Logger.redact or a non-string type.');
+    _violation(
+      'Log field "$key" has a ${value.runtimeType} value; '
+      'use LogId, Logger.redact or a non-string type.',
+    );
     return value is String ? redact(value).toString() : '<redacted>';
   }
 

@@ -44,8 +44,8 @@ class AdaptiveNavScaffold extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) =>
           constraints.maxWidth >= AppBreakpoints.navigationRail
-              ? _rail(context)
-              : _bar(context),
+          ? _rail(context)
+          : _bar(context),
     );
   }
 

@@ -35,13 +35,13 @@ void main() {
 
   test('PlannedNotification equality and toString', () {
     PlannedNotification n({bool silent = false}) => PlannedNotification(
-          id: 1,
-          occurrenceId: 'o',
-          alertIndex: 0,
-          fireAtUtc: DateTime.utc(2026),
-          kind: AlertKind.atStart,
-          silent: silent,
-        );
+      id: 1,
+      occurrenceId: 'o',
+      alertIndex: 0,
+      fireAtUtc: DateTime.utc(2026),
+      kind: AlertKind.atStart,
+      silent: silent,
+    );
     expect(n(), n());
     expect(n().hashCode, n().hashCode);
     expect(n(), isNot(n(silent: true)));

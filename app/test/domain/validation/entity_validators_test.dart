@@ -139,8 +139,9 @@ void main() {
           reason: bad,
         );
       }
-      final secs =
-          seriesFixture().copyWith(dtstartLocal: '2026-10-21T07:00:30');
+      final secs = seriesFixture().copyWith(
+        dtstartLocal: '2026-10-21T07:00:30',
+      );
       expect(_code(validateSeries(secs)), 'ok');
     });
 
@@ -203,11 +204,15 @@ void main() {
         'validation.settings.outOfRange',
       ),
       'quiet hours empty window': (
-        const Settings(quietHours: TimeWindow(start: '22:00', end: '22:00')),
+        const Settings(
+          quietHours: TimeWindow(start: '22:00', end: '22:00'),
+        ),
         'validation.settings.outOfRange',
       ),
       'quiet hours 24:00': (
-        const Settings(quietHours: TimeWindow(start: '22:00', end: '24:00')),
+        const Settings(
+          quietHours: TimeWindow(start: '22:00', end: '24:00'),
+        ),
         'validation.settings.invalidFormat',
       ),
       'default duration': (
@@ -235,8 +240,9 @@ void main() {
 
   group('validateProfile', () {
     test('accepts the fixture and trims the display name', () {
-      final r =
-          validateProfile(profileFixture().copyWith(displayName: ' Sam '));
+      final r = validateProfile(
+        profileFixture().copyWith(displayName: ' Sam '),
+      );
       expect(r.when(ok: (p) => p.displayName, err: (f) => f.code), 'Sam');
     });
 
@@ -256,9 +262,7 @@ void main() {
       );
       expect(
         _code(
-          validateProfile(
-            p.copyWith(settings: const Settings(snapMinutes: 3)),
-          ),
+          validateProfile(p.copyWith(settings: const Settings(snapMinutes: 3))),
         ),
         'validation.settings.outOfRange',
       );

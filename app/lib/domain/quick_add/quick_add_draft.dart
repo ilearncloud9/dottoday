@@ -67,7 +67,8 @@ final class QuickAddDraft {
   final DateTime? startUtc;
 
   @override
-  String toString() => 'QuickAddDraft(tokens: $tokens, date: $date, '
+  String toString() =>
+      'QuickAddDraft(tokens: $tokens, date: $date, '
       'minuteOfDay: $minuteOfDay, durationMin: $durationMin, rrule: $rrule, '
       'inbox: $inbox)';
 }

@@ -46,13 +46,13 @@ List<List<String>> _readCsv(String csv) {
 void main() {
   group('CSV', () {
     test('quoting round-trips commas, quotes and newlines', () {
-      final csv = toCsv([
-        'a',
-        'b',
-      ], [
-        ['x, "y"', 'two\nlines'],
-        [null, 3],
-      ]);
+      final csv = toCsv(
+        ['a', 'b'],
+        [
+          ['x, "y"', 'two\nlines'],
+          [null, 3],
+        ],
+      );
       expect(_readCsv(csv), [
         ['a', 'b'],
         ['x, "y"', 'two\nlines'],
@@ -63,16 +63,17 @@ void main() {
 
     test('formula injection is neutralised in text, not in numbers', () {
       final rows = _readCsv(
-        toCsv([
-          'v',
-        ], [
-          ['=1+1'],
-          ['+SUM(A1)'],
-          ['-cmd'],
-          ['@x'],
-          ['\tTab'],
-          [-5],
-        ]),
+        toCsv(
+          ['v'],
+          [
+            ['=1+1'],
+            ['+SUM(A1)'],
+            ['-cmd'],
+            ['@x'],
+            ['\tTab'],
+            [-5],
+          ],
+        ),
       );
       expect(rows.skip(1).map((r) => r.single), [
         "'=1+1",
@@ -84,28 +85,30 @@ void main() {
       ]);
     });
 
-    test('occurrences: snake_case header, ISO instants, JSON nested, no trash',
-        () {
-      final bundle = hostileBundle();
-      final deleted = bundle.occurrences.first.copyWith(
-        id: 'gone',
-        deletedAt: t1,
-      );
-      final rows = _readCsv(occurrencesCsv([...bundle.occurrences, deleted]));
-      final header = rows.first;
-      expect(header.take(3), ['id', 'user_id', 'series_id']);
-      final byId = {for (final r in rows.skip(1)) r[0]: r};
-      expect(byId.containsKey('gone'), isFalse);
-      final oneOff = byId[bundle.occurrences.first.id]!;
-      expect(oneOff[header.indexOf('start_utc')], '2026-10-21T08:00:00.000Z');
-      expect(oneOff[header.indexOf('alerts')], '[]');
-      expect(oneOff[header.indexOf('notes')], "'$hostileNotes".substring(1));
-      expect(oneOff[header.indexOf('status')], 'done');
-      expect(
-        byId[bundle.occurrences[2].id]![header.indexOf('title')],
-        "'-5 minus first",
-      );
-    });
+    test(
+      'occurrences: snake_case header, ISO instants, JSON nested, no trash',
+      () {
+        final bundle = hostileBundle();
+        final deleted = bundle.occurrences.first.copyWith(
+          id: 'gone',
+          deletedAt: t1,
+        );
+        final rows = _readCsv(occurrencesCsv([...bundle.occurrences, deleted]));
+        final header = rows.first;
+        expect(header.take(3), ['id', 'user_id', 'series_id']);
+        final byId = {for (final r in rows.skip(1)) r[0]: r};
+        expect(byId.containsKey('gone'), isFalse);
+        final oneOff = byId[bundle.occurrences.first.id]!;
+        expect(oneOff[header.indexOf('start_utc')], '2026-10-21T08:00:00.000Z');
+        expect(oneOff[header.indexOf('alerts')], '[]');
+        expect(oneOff[header.indexOf('notes')], "'$hostileNotes".substring(1));
+        expect(oneOff[header.indexOf('status')], 'done');
+        expect(
+          byId[bundle.occurrences[2].id]![header.indexOf('title')],
+          "'-5 minus first",
+        );
+      },
+    );
 
     test('series and subtasks', () {
       final b = hostileBundle();
@@ -160,19 +163,21 @@ void main() {
       expect(l, contains('DURATION:PT30M'));
     });
 
-    test('moved instance is a RECURRENCE-ID override; untouched ones are not',
-        () {
-      final l = lines(ics());
-      expect(l.where((x) => x.startsWith('RECURRENCE-ID')), [
-        'RECURRENCE-ID:20261021T050000Z',
-      ]);
-      expect(
-        l.where(
-          (x) => x.startsWith('UID:01928c3e-0000-7000-8000-0000000000a1'),
-        ),
-        hasLength(2),
-      );
-    });
+    test(
+      'moved instance is a RECURRENCE-ID override; untouched ones are not',
+      () {
+        final l = lines(ics());
+        expect(l.where((x) => x.startsWith('RECURRENCE-ID')), [
+          'RECURRENCE-ID:20261021T050000Z',
+        ]);
+        expect(
+          l.where(
+            (x) => x.startsWith('UID:01928c3e-0000-7000-8000-0000000000a1'),
+          ),
+          hasLength(2),
+        );
+      },
+    );
 
     test('one-off in UTC; inbox items left out', () {
       final l = lines(ics());
@@ -186,7 +191,9 @@ void main() {
       expect(
         l,
         contains(
-          r'DESCRIPTION:line 1\nline 2\n+SUM(A1)' '\t' r'@cmd\, end',
+          r'DESCRIPTION:line 1\nline 2\n+SUM(A1)'
+          '\t'
+          r'@cmd\, end',
         ),
       );
       expect(

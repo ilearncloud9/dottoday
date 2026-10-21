@@ -13,8 +13,9 @@ Future<GoRouter> _pump(WidgetTester tester) async {
   _quickAdds = 0;
   final router = buildRouter(appScreens);
   addTearDown(router.dispose);
-  await tester
-      .pumpWidget(testRouterApp(router, onQuickAdd: () => _quickAdds++));
+  await tester.pumpWidget(
+    testRouterApp(router, onQuickAdd: () => _quickAdds++),
+  );
   await tester.pumpAndSettle();
   return router;
 }
@@ -49,54 +50,47 @@ void main() {
     }
   });
 
-  testWidgets(
-    '⌘1-4 and ⌘N on macOS',
-    (tester) async {
-      await _pump(tester);
-      const meta = LogicalKeyboardKey.metaLeft;
-      await _chord(tester, meta, LogicalKeyboardKey.digit2);
-      expect(_route('inbox'), findsOneWidget);
-      await _chord(tester, meta, LogicalKeyboardKey.digit3);
-      expect(_route('week'), findsOneWidget);
-      await _chord(tester, meta, LogicalKeyboardKey.digit1);
-      expect(_route('today'), findsOneWidget);
-      await _chord(tester, meta, LogicalKeyboardKey.keyN);
-      expect(_quickAdds, 1);
-      await _chord(tester, meta, LogicalKeyboardKey.digit4);
-      expect(_route('month'), findsOneWidget);
-      // Ctrl is not the primary modifier on macOS.
-      await _chord(
-        tester,
-        LogicalKeyboardKey.controlLeft,
-        LogicalKeyboardKey.keyN,
-      );
-      expect(_quickAdds, 1);
-    },
-    variant: TargetPlatformVariant.only(TargetPlatform.macOS),
-  );
+  testWidgets('⌘1-4 and ⌘N on macOS', (tester) async {
+    await _pump(tester);
+    const meta = LogicalKeyboardKey.metaLeft;
+    await _chord(tester, meta, LogicalKeyboardKey.digit2);
+    expect(_route('inbox'), findsOneWidget);
+    await _chord(tester, meta, LogicalKeyboardKey.digit3);
+    expect(_route('week'), findsOneWidget);
+    await _chord(tester, meta, LogicalKeyboardKey.digit1);
+    expect(_route('today'), findsOneWidget);
+    await _chord(tester, meta, LogicalKeyboardKey.keyN);
+    expect(_quickAdds, 1);
+    await _chord(tester, meta, LogicalKeyboardKey.digit4);
+    expect(_route('month'), findsOneWidget);
+    // Ctrl is not the primary modifier on macOS.
+    await _chord(
+      tester,
+      LogicalKeyboardKey.controlLeft,
+      LogicalKeyboardKey.keyN,
+    );
+    expect(_quickAdds, 1);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
 
-  testWidgets(
-    'Ctrl shortcuts on Windows/Linux/Android',
-    (tester) async {
-      await _pump(tester);
-      await _chord(
-        tester,
-        LogicalKeyboardKey.controlLeft,
-        LogicalKeyboardKey.digit2,
-      );
-      expect(_route('inbox'), findsOneWidget);
-      await _chord(
-        tester,
-        LogicalKeyboardKey.controlLeft,
-        LogicalKeyboardKey.keyN,
-      );
-      expect(_quickAdds, 1);
-    },
-    variant: TargetPlatformVariant.only(TargetPlatform.windows),
-  );
+  testWidgets('Ctrl shortcuts on Windows/Linux/Android', (tester) async {
+    await _pump(tester);
+    await _chord(
+      tester,
+      LogicalKeyboardKey.controlLeft,
+      LogicalKeyboardKey.digit2,
+    );
+    expect(_route('inbox'), findsOneWidget);
+    await _chord(
+      tester,
+      LogicalKeyboardKey.controlLeft,
+      LogicalKeyboardKey.keyN,
+    );
+    expect(_quickAdds, 1);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 
-  testWidgets('Quick Add FAB: labelled, ≥ 44 pt, invokes callback',
-      (tester) async {
+  testWidgets('Quick Add FAB: labelled, ≥ 44 pt, invokes callback', (
+    tester,
+  ) async {
     await _pump(tester);
     final fab = find.byType(FloatingActionButton);
     final size = tester.getSize(fab);

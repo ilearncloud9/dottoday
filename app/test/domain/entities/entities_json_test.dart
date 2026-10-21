@@ -87,10 +87,11 @@ void main() {
     });
 
     test('alerts and settings JSON keep camelCase keys', () {
-      expect(
-        const Alert(kind: AlertKind.before, offsetMin: 10).toJson(),
-        {'kind': 'before', 'offsetMin': 10, 'sound': null},
-      );
+      expect(const Alert(kind: AlertKind.before, offsetMin: 10).toJson(), {
+        'kind': 'before',
+        'offsetMin': 10,
+        'sound': null,
+      });
       expect(const Settings().toJson()['snapMinutes'], 5);
     });
 

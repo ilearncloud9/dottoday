@@ -13,8 +13,9 @@ List<String> importViolations(String libPath, String source) {
   final self = Uri.parse('$_pkg$libPath');
   final from = libPath.split('/');
   final violations = <String>[];
-  for (final d
-      in parseDart(source).directives.whereType<NamespaceDirective>()) {
+  for (final d in parseDart(
+    source,
+  ).directives.whereType<NamespaceDirective>()) {
     final raw = d.uri.stringValue;
     if (raw == null) continue;
     final target = self.resolve(raw).toString();

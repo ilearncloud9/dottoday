@@ -80,15 +80,10 @@ void main() {
 
     testWidgets('zero durations when reduced motion is on', (tester) async {
       final t = await _resolve(tester, reduceMotion: true);
-      expect([
-        t.motion.fast,
-        t.motion.base,
-        t.motion.slow,
-      ], [
-        Duration.zero,
-        Duration.zero,
-        Duration.zero,
-      ]);
+      expect(
+        [t.motion.fast, t.motion.base, t.motion.slow],
+        [Duration.zero, Duration.zero, Duration.zero],
+      );
     });
 
     testWidgets('asserts when the extension is missing', (tester) async {

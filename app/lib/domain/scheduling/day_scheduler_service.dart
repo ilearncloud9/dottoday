@@ -51,12 +51,11 @@ final class DaySchedulerService {
     );
     final moved = _moveBy(sorted[index], delta);
     return _apply(
-        sorted,
-        {moved.id: moved, ...run.changed},
-        run.report,
-        [
-          moved.id,
-        ]);
+      sorted,
+      {moved.id: moved, ...run.changed},
+      run.report,
+      [moved.id],
+    );
   }
 
   /// Pushes every planned block starting at or after [nowUtc] by [deltaMin]
@@ -90,16 +89,15 @@ final class DaySchedulerService {
     required DateTime dayEndUtc,
     int snapMinutes = 5,
     int limit = 3,
-  }) =>
-      findSlots(
-        day,
-        durationMin,
-        fromUtc: fromUtc,
-        dayStartUtc: dayStartUtc,
-        dayEndUtc: dayEndUtc,
-        snapMinutes: snapMinutes,
-        limit: limit,
-      );
+  }) => findSlots(
+    day,
+    durationMin,
+    fromUtc: fromUtc,
+    dayStartUtc: dayStartUtc,
+    dayEndUtc: dayEndUtc,
+    snapMinutes: snapMinutes,
+    limit: limit,
+  );
 
   /// Adds [block] to the day according to [policy] (docs/04 §5).
   ///
@@ -133,8 +131,9 @@ final class DaySchedulerService {
     Occurrence block,
     bool includeCalendar,
   ) {
-    final followers =
-        others.where((o) => !o.startUtc!.isBefore(block.startUtc!)).toList();
+    final followers = others
+        .where((o) => !o.startUtc!.isBefore(block.startUtc!))
+        .toList();
     final first = followers
         .where((o) => o.pinned || _movable(o, includeCalendar))
         .firstOrNull;
@@ -230,12 +229,11 @@ final class DaySchedulerService {
     Map<String, Occurrence> changed,
     List<String> skipped,
     String? blockedById,
-  ) =>
-      ShiftReport(
-        movedIds: [...changed.keys],
-        blockedById: blockedById,
-        skippedIds: skipped,
-      );
+  ) => ShiftReport(
+    movedIds: [...changed.keys],
+    blockedById: blockedById,
+    skippedIds: skipped,
+  );
 
   ScheduleResult _apply(
     List<Occurrence> day,

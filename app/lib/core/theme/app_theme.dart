@@ -104,10 +104,10 @@ ThemeData _build(Brightness brightness, AppColors c, BlockPalette blocks) {
 }
 
 TextTheme _textTheme(AppTypography t) => TextTheme(
-      displaySmall: t.display,
-      titleLarge: t.title,
-      bodyLarge: t.body,
-      bodyMedium: t.body,
-      labelLarge: t.label,
-      labelMedium: t.label,
-    );
+  displaySmall: t.display,
+  titleLarge: t.title,
+  bodyLarge: t.body,
+  bodyMedium: t.body,
+  labelLarge: t.label,
+  labelMedium: t.label,
+);

@@ -15,10 +15,12 @@ _CalendarAccount _$CalendarAccountFromJson(Map<String, dynamic> json) =>
       externalAccountId: json['external_account_id'] as String?,
       writeBack: json['write_back'] as bool? ?? false,
       enabled: json['enabled'] as bool? ?? true,
-      createdAt: const UtcMillisConverter()
-          .fromJson((json['created_at'] as num).toInt()),
-      updatedAt: const UtcMillisConverter()
-          .fromJson((json['updated_at'] as num).toInt()),
+      createdAt: const UtcMillisConverter().fromJson(
+        (json['created_at'] as num).toInt(),
+      ),
+      updatedAt: const UtcMillisConverter().fromJson(
+        (json['updated_at'] as num).toInt(),
+      ),
     );
 
 Map<String, dynamic> _$CalendarAccountToJson(_CalendarAccount instance) =>
@@ -51,7 +53,9 @@ _CalendarLink _$CalendarLinkFromJson(Map<String, dynamic> json) =>
       externalEventId: json['external_event_id'] as String,
       etag: json['etag'] as String?,
       lastSyncedUtc: _$JsonConverterFromJson<int, DateTime>(
-          json['last_synced_utc'], const UtcMillisConverter().fromJson),
+        json['last_synced_utc'],
+        const UtcMillisConverter().fromJson,
+      ),
       readOnly: json['read_only'] as bool? ?? true,
     );
 
@@ -64,18 +68,18 @@ Map<String, dynamic> _$CalendarLinkToJson(_CalendarLink instance) =>
       'external_event_id': instance.externalEventId,
       'etag': instance.etag,
       'last_synced_utc': _$JsonConverterToJson<int, DateTime>(
-          instance.lastSyncedUtc, const UtcMillisConverter().toJson),
+        instance.lastSyncedUtc,
+        const UtcMillisConverter().toJson,
+      ),
       'read_only': instance.readOnly,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(
   Object? json,
   Value? Function(Json json) fromJson,
-) =>
-    json == null ? null : fromJson(json as Json);
+) => json == null ? null : fromJson(json as Json);
 
 Json? _$JsonConverterToJson<Json, Value>(
   Value? value,
   Json? Function(Value value) toJson,
-) =>
-    value == null ? null : toJson(value);
+) => value == null ? null : toJson(value);

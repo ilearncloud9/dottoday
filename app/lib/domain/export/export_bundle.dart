@@ -21,12 +21,13 @@ final class ExportBundle {
   /// `decodeExportJson` for validated, user-facing import.
   factory ExportBundle.fromJson(Map<String, Object?> json) {
     List<T> list<T>(String key, T Function(Map<String, Object?>) read) => [
-          for (final item in json[key]! as List<Object?>)
-            read(item! as Map<String, Object?>),
-        ];
+      for (final item in json[key]! as List<Object?>)
+        read(item! as Map<String, Object?>),
+    ];
     return ExportBundle(
-      exportedAt:
-          const UtcMillisConverter().fromJson(json['exportedAt']! as int),
+      exportedAt: const UtcMillisConverter().fromJson(
+        json['exportedAt']! as int,
+      ),
       profile: Profile.fromJson(json['profile']! as Map<String, Object?>),
       series: list('series', Series.fromJson),
       occurrences: list('occurrences', Occurrence.fromJson),
@@ -44,21 +45,21 @@ final class ExportBundle {
   final List<Subtask> subtasks;
 
   Map<String, Object?> toJson() => {
-        'version': version,
-        'exportedAt': const UtcMillisConverter().toJson(exportedAt),
-        'profile': profile.toJson(),
-        'series': [for (final s in series) s.toJson()],
-        'occurrences': [for (final o in occurrences) o.toJson()],
-        'subtasks': [for (final s in subtasks) s.toJson()],
-      };
+    'version': version,
+    'exportedAt': const UtcMillisConverter().toJson(exportedAt),
+    'profile': profile.toJson(),
+    'series': [for (final s in series) s.toJson()],
+    'occurrences': [for (final o in occurrences) o.toJson()],
+    'subtasks': [for (final s in subtasks) s.toJson()],
+  };
 
   /// The same data owned by [userId], so an import can never write rows for
   /// another account (06 §9, RLS would reject them anyway).
   ExportBundle reownedTo(String userId) => ExportBundle(
-        exportedAt: exportedAt,
-        profile: profile.copyWith(id: userId),
-        series: [for (final s in series) s.copyWith(userId: userId)],
-        occurrences: [for (final o in occurrences) o.copyWith(userId: userId)],
-        subtasks: [for (final s in subtasks) s.copyWith(userId: userId)],
-      );
+    exportedAt: exportedAt,
+    profile: profile.copyWith(id: userId),
+    series: [for (final s in series) s.copyWith(userId: userId)],
+    occurrences: [for (final o in occurrences) o.copyWith(userId: userId)],
+    subtasks: [for (final s in subtasks) s.copyWith(userId: userId)],
+  );
 }

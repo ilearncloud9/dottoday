@@ -87,10 +87,9 @@ void main() {
   });
 
   test('release mode sanitises instead of throwing', () {
-    logger(strict: false).info(
-      'title: Buy milk',
-      fields: {'title': 1, 'id': 'Buy milk'},
-    );
+    logger(
+      strict: false,
+    ).info('title: Buy milk', fields: {'title': 1, 'id': 'Buy milk'});
     final r = sink.records.single;
     expect(r.event, 'log.invalid_event');
     expect(r.fields, {'id': '<redacted len=8>'});

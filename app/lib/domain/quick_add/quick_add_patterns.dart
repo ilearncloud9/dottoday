@@ -40,18 +40,18 @@ int _int(String? digits) => digits == null ? 0 : int.parse(digits);
 /// Compiled Quick Add patterns for one language.
 final class QuickAddPatterns {
   QuickAddPatterns._(QuickAddLexicon lex)
-      : weekdayIndex = {
-          for (var i = 0; i < 7; i++)
-            for (final alias in lex.weekdays[i]) alias: i,
-        },
-        _lex = lex;
+    : weekdayIndex = {
+        for (var i = 0; i < 7; i++)
+          for (final alias in lex.weekdays[i]) alias: i,
+      },
+      _lex = lex;
 
   static final _cache = <QuickAddLanguage, QuickAddPatterns>{};
 
   static QuickAddPatterns of(QuickAddLanguage language) => _cache.putIfAbsent(
-        language,
-        () => QuickAddPatterns._(QuickAddLexicon.of(language)),
-      );
+    language,
+    () => QuickAddPatterns._(QuickAddLexicon.of(language)),
+  );
 
   final QuickAddLexicon _lex;
 
@@ -68,20 +68,26 @@ final class QuickAddPatterns {
   /// Rules yielding minutes after midnight.
   late final List<QuickAddRule<int>> time = [
     QuickAddRule(
-      _re('$_l$_timeConn(?:(?<noon>${_alt(_lex.noon)})|'
-          '(?<mid>${_alt(_lex.midnight)}))$_r'),
+      _re(
+        '$_l$_timeConn(?:(?<noon>${_alt(_lex.noon)})|'
+        '(?<mid>${_alt(_lex.midnight)}))$_r',
+      ),
       (m) => m.namedGroup('noon') != null ? 12 * 60 : 0,
     ),
     if (_lex.amPm)
       QuickAddRule(
-        _re('$_l$_timeConn(?<h>\\d{1,2})(?:[:.](?<m>\\d{2}))?\\s?'
-            '(?<ap>[ap])\\.?m\\.?(?![\\p{L}\\p{N}])'),
+        _re(
+          '$_l$_timeConn(?<h>\\d{1,2})(?:[:.](?<m>\\d{2}))?\\s?'
+          '(?<ap>[ap])\\.?m\\.?(?![\\p{L}\\p{N}])',
+        ),
         _amPm,
       ),
     if (_lex.hourSuffix.isNotEmpty)
       QuickAddRule(
-        _re('$_l$_timeConn(?<h>\\d{1,2})(?:[:.](?<m>\\d{2}))?\\s?'
-            '(?:${_alt(_lex.hourSuffix)})$_r'),
+        _re(
+          '$_l$_timeConn(?<h>\\d{1,2})(?:[:.](?<m>\\d{2}))?\\s?'
+          '(?:${_alt(_lex.hourSuffix)})$_r',
+        ),
         _twentyFourHour,
       ),
     if (_lex.hourLetterIsTime)
@@ -110,8 +116,10 @@ final class QuickAddPatterns {
   /// Rules yielding a [DateSpec].
   late final List<QuickAddRule<DateSpec>> date = [
     QuickAddRule(
-      _re('$_l$_dateConn(?:(?<d2>${_alt(_lex.dayAfterTomorrow)})|'
-          '(?<d1>${_alt(_lex.tomorrow)})|(?<d0>${_alt(_lex.today)}))$_r'),
+      _re(
+        '$_l$_dateConn(?:(?<d2>${_alt(_lex.dayAfterTomorrow)})|'
+        '(?<d1>${_alt(_lex.tomorrow)})|(?<d0>${_alt(_lex.today)}))$_r',
+      ),
       (m) => (
         daysAhead: m.namedGroup('d2') != null
             ? 2
@@ -121,11 +129,13 @@ final class QuickAddPatterns {
       ),
     ),
     QuickAddRule(
-      _re('$_l$_dateConn'
-          '${_lex.nextBefore.isEmpty ? '' : '(?:(?<nb>${_alt(_lex.nextBefore)})\\s+)?'}'
-          '(?<wd>$_weekdayAlt)'
-          '${_lex.nextAfter.isEmpty ? '' : '(?:\\s+(?<na>${_alt(_lex.nextAfter)}))?'}'
-          '$_r'),
+      _re(
+        '$_l$_dateConn'
+        '${_lex.nextBefore.isEmpty ? '' : '(?:(?<nb>${_alt(_lex.nextBefore)})\\s+)?'}'
+        '(?<wd>$_weekdayAlt)'
+        '${_lex.nextAfter.isEmpty ? '' : '(?:\\s+(?<na>${_alt(_lex.nextAfter)}))?'}'
+        '$_r',
+      ),
       (m) => (
         daysAhead: null,
         weekday: weekdayIndex[m.namedGroup('wd')!.toLowerCase()],
@@ -142,8 +152,10 @@ final class QuickAddPatterns {
   /// Rules yielding a duration in minutes (5–1440).
   late final List<QuickAddRule<int>> duration = [
     QuickAddRule(
-      _re('$_l$_durConn(?<h>\\d+(?:[.,]\\d+)?)\\s?(?:${_alt(_lex.hourUnits)})'
-          '(?:(?<hm>\\d{2})|\\s?(?<hm2>\\d{1,2})\\s?(?:$_minAlt))?$_r'),
+      _re(
+        '$_l$_durConn(?<h>\\d+(?:[.,]\\d+)?)\\s?(?:${_alt(_lex.hourUnits)})'
+        '(?:(?<hm>\\d{2})|\\s?(?<hm2>\\d{1,2})\\s?(?:$_minAlt))?$_r',
+      ),
       (m) => _minutes(
         double.parse(m.namedGroup('h')!.replaceAll(',', '.')) * 60 +
             _int(m.namedGroup('hm') ?? m.namedGroup('hm2')),
@@ -166,15 +178,19 @@ final class QuickAddPatterns {
   /// Rules yielding an RRULE body.
   late final List<QuickAddRule<String>> recurrence = [
     QuickAddRule(
-      _re('$_l(?:$_every)\\s+(?:(?<n>\\d{1,3})\\s+'
-          '${_lex.other.isEmpty ? '' : '|(?<o>${_alt(_lex.other)})\\s+'})?'
-          '(?:(?<d>${_alt(_lex.dayUnits)})|(?<w>${_alt(_lex.weekUnits)})|'
-          '(?<mo>${_alt(_lex.monthUnits)})|(?<y>${_alt(_lex.yearUnits)}))$_r'),
+      _re(
+        '$_l(?:$_every)\\s+(?:(?<n>\\d{1,3})\\s+'
+        '${_lex.other.isEmpty ? '' : '|(?<o>${_alt(_lex.other)})\\s+'})?'
+        '(?:(?<d>${_alt(_lex.dayUnits)})|(?<w>${_alt(_lex.weekUnits)})|'
+        '(?<mo>${_alt(_lex.monthUnits)})|(?<y>${_alt(_lex.yearUnits)}))$_r',
+      ),
       _unitRule,
     ),
     QuickAddRule(
-      _re('$_l(?:$_every)\\s+(?<list>(?:$_weekdayAlt)s?'
-          '(?:$_joiner(?:$_weekdayAlt)s?)*)$_r'),
+      _re(
+        '$_l(?:$_every)\\s+(?<list>(?:$_weekdayAlt)s?'
+        '(?:$_joiner(?:$_weekdayAlt)s?)*)$_r',
+      ),
       _listRule,
     ),
     QuickAddRule(
@@ -182,8 +198,10 @@ final class QuickAddPatterns {
       (_) => 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR',
     ),
     QuickAddRule(
-      _re('$_l(?:(?<d>${_alt(_lex.daily)})|(?<w>${_alt(_lex.weekly)})|'
-          '(?<mo>${_alt(_lex.monthly)})|(?<y>${_alt(_lex.yearly)}))$_r'),
+      _re(
+        '$_l(?:(?<d>${_alt(_lex.daily)})|(?<w>${_alt(_lex.weekly)})|'
+        '(?<mo>${_alt(_lex.monthly)})|(?<y>${_alt(_lex.yearly)}))$_r',
+      ),
       (m) => 'FREQ=${_freq(m)}',
     ),
   ];
@@ -215,8 +233,7 @@ final class QuickAddPatterns {
     final days = {
       for (final w in weekdayWord.allMatches(m.namedGroup('list')!))
         weekdayIndex[w.group(0)!.toLowerCase()]!,
-    }.toList()
-      ..sort();
+    }.toList()..sort();
     return 'FREQ=WEEKLY;BYDAY=${days.map((d) => _byDay[d]).join(',')}';
   }
 }

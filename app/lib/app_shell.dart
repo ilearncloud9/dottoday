@@ -34,9 +34,9 @@ class AppShell extends StatelessWidget {
 
   /// Re-selecting the current tab returns it to its root (go_router idiom).
   void _goTab(ShellTab tab) => shell.goBranch(
-        tab.index,
-        initialLocation: tab.index == shell.currentIndex,
-      );
+    tab.index,
+    initialLocation: tab.index == shell.currentIndex,
+  );
 }
 
 List<NavDestination> _destinations(AppLocalizations l10n) {
@@ -44,30 +44,30 @@ List<NavDestination> _destinations(AppLocalizations l10n) {
     for (final tab in ShellTab.values)
       switch (tab) {
         ShellTab.today => NavDestination(
-            icon: Icons.today_outlined,
-            selectedIcon: Icons.today,
-            label: l10n.navToday,
-          ),
+          icon: Icons.today_outlined,
+          selectedIcon: Icons.today,
+          label: l10n.navToday,
+        ),
         ShellTab.inbox => NavDestination(
-            icon: Icons.inbox_outlined,
-            selectedIcon: Icons.inbox,
-            label: l10n.navInbox,
-          ),
+          icon: Icons.inbox_outlined,
+          selectedIcon: Icons.inbox,
+          label: l10n.navInbox,
+        ),
         ShellTab.week => NavDestination(
-            icon: Icons.view_week_outlined,
-            selectedIcon: Icons.view_week,
-            label: l10n.navWeek,
-          ),
+          icon: Icons.view_week_outlined,
+          selectedIcon: Icons.view_week,
+          label: l10n.navWeek,
+        ),
         ShellTab.search => NavDestination(
-            icon: Icons.search_outlined,
-            selectedIcon: Icons.search,
-            label: l10n.navSearch,
-          ),
+          icon: Icons.search_outlined,
+          selectedIcon: Icons.search,
+          label: l10n.navSearch,
+        ),
         ShellTab.settings => NavDestination(
-            icon: Icons.settings_outlined,
-            selectedIcon: Icons.settings,
-            label: l10n.navSettings,
-          ),
+          icon: Icons.settings_outlined,
+          selectedIcon: Icons.settings,
+          label: l10n.navSettings,
+        ),
       },
   ];
 }

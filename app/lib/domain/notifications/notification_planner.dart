@@ -107,9 +107,7 @@ final class NotificationPlanner {
     Map<String, List<Alert>> seriesAlerts,
   ) {
     final alerts = o.alerts ?? seriesAlerts[o.seriesId] ?? const <Alert>[];
-    final all = [
-      for (final (i, a) in alerts.indexed) (i, a, _fireAt(o, a)),
-    ];
+    final all = [for (final (i, a) in alerts.indexed) (i, a, _fireAt(o, a))];
     final snooze = o.snoozedUntilUtc;
     if (snooze == null) return all;
     return [

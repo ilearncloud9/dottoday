@@ -18,16 +18,15 @@ QuickAddDraft _parse(
   String text, [
   QuickAddLanguage lang = QuickAddLanguage.en,
   List<QuickAddToken> ignored = const [],
-]) =>
-    switch (_parser.parse(text, _ctx(lang), ignored: ignored)) {
-      Ok(:final value) => value,
-      Err(:final failure) => fail(failure.code),
-    };
+]) => switch (_parser.parse(text, _ctx(lang), ignored: ignored)) {
+  Ok(:final value) => value,
+  Err(:final failure) => fail(failure.code),
+};
 
 String? _hhmm(QuickAddDraft d) => d.minuteOfDay == null
     ? null
     : '${(d.minuteOfDay! ~/ 60).toString().padLeft(2, '0')}:'
-        '${(d.minuteOfDay! % 60).toString().padLeft(2, '0')}';
+          '${(d.minuteOfDay! % 60).toString().padLeft(2, '0')}';
 
 String? _day(QuickAddDraft d) => d.date?.toIso8601String().substring(0, 10);
 
@@ -245,17 +244,17 @@ void main() {
   test('token offsets point at the typed text', () {
     const text = 'Gym at 7am for 45m';
     final d = _parse(text);
-    expect(
-      d.tokens.map((t) => text.substring(t.start, t.end)),
-      ['at 7am', 'for 45m'],
-    );
+    expect(d.tokens.map((t) => text.substring(t.start, t.end)), [
+      'at 7am',
+      'for 45m',
+    ]);
   });
 
   test('a removed chip goes back into the title', () {
     const text = 'Read Tomorrow 8pm';
-    final date = _parse(text).tokens.firstWhere(
-          (t) => t.kind == QuickAddTokenKind.date,
-        );
+    final date = _parse(
+      text,
+    ).tokens.firstWhere((t) => t.kind == QuickAddTokenKind.date);
     final d = _parse(text, QuickAddLanguage.en, [date]);
     expect(d.title, 'Read Tomorrow');
     expect(d.date, isNull);
@@ -270,7 +269,8 @@ void main() {
 
   group('parseMany (R-07)', () {
     test('one draft per non-empty line, bullets removed', () {
-      const paste = '- Buy milk\n\n* Call mom 5pm\r\n• Gym tomorrow\n'
+      const paste =
+          '- Buy milk\n\n* Call mom 5pm\r\n• Gym tomorrow\n'
           '1. Taxes\n[ ] Laundry\n   \n';
       final r = _parser.parseMany(paste, _ctx());
       final drafts = r.when(ok: (d) => d, err: (f) => fail(f.code));
@@ -304,10 +304,9 @@ void main() {
       tzId: 'Europe/Berlin',
       language: QuickAddLanguage.en,
     );
-    final d = _parser.parse('X tomorrow', late).when(
-          ok: (d) => d,
-          err: (f) => fail(f.code),
-        );
+    final d = _parser
+        .parse('X tomorrow', late)
+        .when(ok: (d) => d, err: (f) => fail(f.code));
     expect(_day(d), '2026-10-23');
   });
 }

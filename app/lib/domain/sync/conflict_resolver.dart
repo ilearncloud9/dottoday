@@ -88,12 +88,11 @@ final class ConflictResolver {
   Map<String, FieldResolution> resolveRow(
     Map<String, FieldChange> local,
     Map<String, FieldChange> remote,
-  ) =>
-      {
-        for (final field in local.keys)
-          if (remote[field] case final theirs?)
-            field: resolve(local[field]!, theirs),
-      };
+  ) => {
+    for (final field in local.keys)
+      if (remote[field] case final theirs?)
+        field: resolve(local[field]!, theirs),
+  };
 }
 
 /// Structural equality of decoded JSON values (lists in order, maps by key).

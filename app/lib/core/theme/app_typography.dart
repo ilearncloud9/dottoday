@@ -14,16 +14,19 @@ final class AppTypography {
   });
 
   factory AppTypography.withColor(Color color) => AppTypography(
-        display: _inter(28, 34, 600, color),
-        title: _inter(20, 26, 600, color),
-        body: _inter(16, 22, 400, color),
-        label: _inter(13, 18, 500, color),
-        // `mono 13` for times: Inter with tabular figures so digits align
-        // without bundling a second font (decision recorded in M0.4).
-        mono: _inter(13, 18, 400, color).copyWith(
-          fontFeatures: const [FontFeature.tabularFigures()],
-        ),
-      );
+    display: _inter(28, 34, 600, color),
+    title: _inter(20, 26, 600, color),
+    body: _inter(16, 22, 400, color),
+    label: _inter(13, 18, 500, color),
+    // `mono 13` for times: Inter with tabular figures so digits align
+    // without bundling a second font (decision recorded in M0.4).
+    mono: _inter(
+      13,
+      18,
+      400,
+      color,
+    ).copyWith(fontFeatures: const [FontFeature.tabularFigures()]),
+  );
 
   static const fontFamily = 'Inter';
 
@@ -35,12 +38,12 @@ final class AppTypography {
 
   /// Interpolates every style; used by theme animations.
   AppTypography lerp(AppTypography other, double t) => AppTypography(
-        display: TextStyle.lerp(display, other.display, t)!,
-        title: TextStyle.lerp(title, other.title, t)!,
-        body: TextStyle.lerp(body, other.body, t)!,
-        label: TextStyle.lerp(label, other.label, t)!,
-        mono: TextStyle.lerp(mono, other.mono, t)!,
-      );
+    display: TextStyle.lerp(display, other.display, t)!,
+    title: TextStyle.lerp(title, other.title, t)!,
+    body: TextStyle.lerp(body, other.body, t)!,
+    label: TextStyle.lerp(label, other.label, t)!,
+    mono: TextStyle.lerp(mono, other.mono, t)!,
+  );
 }
 
 TextStyle _inter(double size, double lineHeight, int weight, Color color) {

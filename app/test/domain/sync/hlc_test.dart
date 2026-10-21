@@ -44,10 +44,7 @@ void main() {
       for (var i = 0; i < 2000; i++) {
         final x = Hlc(rnd.nextInt(3) + 1761033600000, rnd.nextInt(3), node());
         final y = Hlc(rnd.nextInt(3) + 1761033600000, rnd.nextInt(3), node());
-        expect(
-          x.compareTo(y).sign,
-          x.toString().compareTo(y.toString()).sign,
-        );
+        expect(x.compareTo(y).sign, x.toString().compareTo(y.toString()).sign);
       }
     });
   });

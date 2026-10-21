@@ -16,14 +16,13 @@ FieldChange _change(
   required int atMs,
   String node = _phone,
   String field = 'title',
-}) =>
-    FieldChange(
-      entity: EntityKind.occurrence,
-      entityId: 'o1',
-      field: field,
-      value: value,
-      hlc: Hlc(_base + atMs, 0, node),
-    );
+}) => FieldChange(
+  entity: EntityKind.occurrence,
+  entityId: 'o1',
+  field: field,
+  value: value,
+  hlc: Hlc(_base + atMs, 0, node),
+);
 
 void main() {
   test('LWW: the newer edit wins when more than 60 s apart', () {
@@ -58,19 +57,25 @@ void main() {
 
   test('json values compare structurally', () {
     expect(
-      jsonEquals({
-        'k': [1, 2],
-      }, {
-        'k': [1, 2],
-      }),
+      jsonEquals(
+        {
+          'k': [1, 2],
+        },
+        {
+          'k': [1, 2],
+        },
+      ),
       isTrue,
     );
     expect(
-      jsonEquals({
-        'k': [1, 2],
-      }, {
-        'k': [2, 1],
-      }),
+      jsonEquals(
+        {
+          'k': [1, 2],
+        },
+        {
+          'k': [2, 1],
+        },
+      ),
       isFalse,
     );
     expect(jsonEquals({'a': 1}, {'b': 1}), isFalse);
@@ -86,8 +91,12 @@ void main() {
     };
     final remote = {
       'title': _change('Run', atMs: 0, node: _laptop),
-      'duration_min':
-          _change(45, atMs: 0, node: _laptop, field: 'duration_min'),
+      'duration_min': _change(
+        45,
+        atMs: 0,
+        node: _laptop,
+        field: 'duration_min',
+      ),
     };
     final r = _r.resolveRow(local, remote);
     expect(r.keys, ['title']);

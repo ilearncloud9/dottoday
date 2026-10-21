@@ -26,14 +26,13 @@ Occurrence _task(
   DateTime start, {
   List<Alert>? alerts = const [Alert(kind: AlertKind.before, offsetMin: 10)],
   int minutes = 30,
-}) =>
-    occurrenceFixture().copyWith(
-      id: id,
-      startUtc: start,
-      durationMin: minutes,
-      alerts: alerts,
-      tzId: 'UTC',
-    );
+}) => occurrenceFixture().copyWith(
+  id: id,
+  startUtc: start,
+  durationMin: minutes,
+  alerts: alerts,
+  tzId: 'UTC',
+);
 
 List<PlannedNotification> _plan(
   Iterable<Occurrence> tasks, {
@@ -41,13 +40,12 @@ List<PlannedNotification> _plan(
   Map<String, List<Alert>> seriesAlerts = const {},
   TimeWindow? quiet,
   String tzId = 'UTC',
-}) =>
-    (planner ?? _planner()).plan(
-      occurrences: tasks,
-      tzId: tzId,
-      seriesAlerts: seriesAlerts,
-      quietHours: quiet,
-    );
+}) => (planner ?? _planner()).plan(
+  occurrences: tasks,
+  tzId: tzId,
+  seriesAlerts: seriesAlerts,
+  quietHours: quiet,
+);
 
 /// Applies a diff to a fake OS pending set, as the scheduler will.
 Map<int, PlannedNotification> _apply(
@@ -78,12 +76,14 @@ void main() {
       ],
     );
     expect(
-        _plan([t]).map((n) => (n.alertIndex, n.fireAtUtc.toIso8601String())), [
-      (0, '2026-10-21T09:45:00.000Z'),
-      (1, '2026-10-21T10:00:00.000Z'),
-      (2, '2026-10-21T10:30:00.000Z'),
-      (3, '2026-10-21T10:35:00.000Z'),
-    ]);
+      _plan([t]).map((n) => (n.alertIndex, n.fireAtUtc.toIso8601String())),
+      [
+        (0, '2026-10-21T09:45:00.000Z'),
+        (1, '2026-10-21T10:00:00.000Z'),
+        (2, '2026-10-21T10:30:00.000Z'),
+        (3, '2026-10-21T10:35:00.000Z'),
+      ],
+    );
     expect(_plan([t]).map((n) => n.timeSensitive), [false, true, false, false]);
   });
 
@@ -133,10 +133,9 @@ void main() {
       a.copyWith(status: OccurrenceStatus.skipped),
       a.copyWith(startUtc: null),
     ]) {
-      expect(
-        NotificationPlanner.diff(_plan([gone]), os).cancel,
-        [notificationIdFor('a', 0)],
-      );
+      expect(NotificationPlanner.diff(_plan([gone]), os).cancel, [
+        notificationIdFor('a', 0),
+      ]);
     }
   });
 
@@ -148,11 +147,16 @@ void main() {
   });
 
   test('alerts: null inherits the series; [] means none', () {
-    final inherit = _task('i', _now.add(const Duration(hours: 1)), alerts: null)
-        .copyWith(seriesId: 's1');
-    final none =
-        _task('n', _now.add(const Duration(hours: 1)), alerts: const [])
-            .copyWith(seriesId: 's1');
+    final inherit = _task(
+      'i',
+      _now.add(const Duration(hours: 1)),
+      alerts: null,
+    ).copyWith(seriesId: 's1');
+    final none = _task(
+      'n',
+      _now.add(const Duration(hours: 1)),
+      alerts: const [],
+    ).copyWith(seriesId: 's1');
     final plan = _plan(
       [inherit, none],
       seriesAlerts: {
@@ -248,8 +252,10 @@ void main() {
     final rnd = Random(10);
     final tasks = {
       for (var i = 0; i < 15; i++)
-        'o$i':
-            _task('o$i', _now.add(Duration(minutes: 30 + rnd.nextInt(3000)))),
+        'o$i': _task(
+          'o$i',
+          _now.add(Duration(minutes: 30 + rnd.nextInt(3000))),
+        ),
     };
     var os = <int, PlannedNotification>{};
     for (var step = 0; step < 200; step++) {
@@ -257,19 +263,19 @@ void main() {
       final t = tasks[id]!;
       tasks[id] = switch (rnd.nextInt(5)) {
         0 => t.copyWith(
-            startUtc: _now.add(Duration(minutes: 20 + rnd.nextInt(5000))),
-          ),
+          startUtc: _now.add(Duration(minutes: 20 + rnd.nextInt(5000))),
+        ),
         1 => t.copyWith(status: OccurrenceStatus.done),
         2 => t.copyWith(status: OccurrenceStatus.planned),
         3 => t.copyWith(
-            alerts: [
-              for (var k = 0; k <= rnd.nextInt(5); k++)
-                Alert(
-                  kind: AlertKind.values[rnd.nextInt(4)],
-                  offsetMin: rnd.nextInt(120),
-                ),
-            ],
-          ),
+          alerts: [
+            for (var k = 0; k <= rnd.nextInt(5); k++)
+              Alert(
+                kind: AlertKind.values[rnd.nextInt(4)],
+                offsetMin: rnd.nextInt(120),
+              ),
+          ],
+        ),
         _ => t.copyWith(deletedAt: rnd.nextBool() ? _now : null),
       };
       final desired = _plan(tasks.values);

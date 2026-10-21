@@ -39,126 +39,54 @@ const _darkFillAlpha = 0.28;
 
 const _lightSwatches = <BlockSwatch>[
   // coral
-  BlockSwatch(
-    base: Color(0xFFF26B5B),
-    strong: Color(0xFFB23A2C),
-  ),
+  BlockSwatch(base: Color(0xFFF26B5B), strong: Color(0xFFB23A2C)),
   // tangerine
-  BlockSwatch(
-    base: Color(0xFFF5862E),
-    strong: Color(0xFF9E4C0A),
-  ),
+  BlockSwatch(base: Color(0xFFF5862E), strong: Color(0xFF9E4C0A)),
   // amber
-  BlockSwatch(
-    base: Color(0xFFF2B705),
-    strong: Color(0xFF8A6400),
-  ),
+  BlockSwatch(base: Color(0xFFF2B705), strong: Color(0xFF8A6400)),
   // lime
-  BlockSwatch(
-    base: Color(0xFF8CC63F),
-    strong: Color(0xFF436E10),
-  ),
+  BlockSwatch(base: Color(0xFF8CC63F), strong: Color(0xFF436E10)),
   // mint
-  BlockSwatch(
-    base: Color(0xFF3CC79A),
-    strong: Color(0xFF166E52),
-  ),
+  BlockSwatch(base: Color(0xFF3CC79A), strong: Color(0xFF166E52)),
   // teal
-  BlockSwatch(
-    base: Color(0xFF1FA5A8),
-    strong: Color(0xFF0F6E70),
-  ),
+  BlockSwatch(base: Color(0xFF1FA5A8), strong: Color(0xFF0F6E70)),
   // sky
-  BlockSwatch(
-    base: Color(0xFF3AA4F0),
-    strong: Color(0xFF1A68A8),
-  ),
+  BlockSwatch(base: Color(0xFF3AA4F0), strong: Color(0xFF1A68A8)),
   // indigo
-  BlockSwatch(
-    base: Color(0xFF5B63E8),
-    strong: Color(0xFF3A41B8),
-  ),
+  BlockSwatch(base: Color(0xFF5B63E8), strong: Color(0xFF3A41B8)),
   // violet
-  BlockSwatch(
-    base: Color(0xFF9461E8),
-    strong: Color(0xFF6A35BD),
-  ),
+  BlockSwatch(base: Color(0xFF9461E8), strong: Color(0xFF6A35BD)),
   // magenta
-  BlockSwatch(
-    base: Color(0xFFD94BC2),
-    strong: Color(0xFF9C2589),
-  ),
+  BlockSwatch(base: Color(0xFFD94BC2), strong: Color(0xFF9C2589)),
   // rose
-  BlockSwatch(
-    base: Color(0xFFEE5A86),
-    strong: Color(0xFFB02A55),
-  ),
+  BlockSwatch(base: Color(0xFFEE5A86), strong: Color(0xFFB02A55)),
   // slate
-  BlockSwatch(
-    base: Color(0xFF6E7A8A),
-    strong: Color(0xFF475260),
-  ),
+  BlockSwatch(base: Color(0xFF6E7A8A), strong: Color(0xFF475260)),
 ];
 
 const _darkSwatches = <BlockSwatch>[
   // coral
-  BlockSwatch(
-    base: Color(0xFFFF8A7A),
-    strong: Color(0xFFFFA99C),
-  ),
+  BlockSwatch(base: Color(0xFFFF8A7A), strong: Color(0xFFFFA99C)),
   // tangerine
-  BlockSwatch(
-    base: Color(0xFFFF9F52),
-    strong: Color(0xFFFFBB85),
-  ),
+  BlockSwatch(base: Color(0xFFFF9F52), strong: Color(0xFFFFBB85)),
   // amber
-  BlockSwatch(
-    base: Color(0xFFFFC933),
-    strong: Color(0xFFFFD966),
-  ),
+  BlockSwatch(base: Color(0xFFFFC933), strong: Color(0xFFFFD966)),
   // lime
-  BlockSwatch(
-    base: Color(0xFFA6DB5C),
-    strong: Color(0xFFC2EB8A),
-  ),
+  BlockSwatch(base: Color(0xFFA6DB5C), strong: Color(0xFFC2EB8A)),
   // mint
-  BlockSwatch(
-    base: Color(0xFF5EDDB0),
-    strong: Color(0xFF8DEBC9),
-  ),
+  BlockSwatch(base: Color(0xFF5EDDB0), strong: Color(0xFF8DEBC9)),
   // teal
-  BlockSwatch(
-    base: Color(0xFF3EC4C7),
-    strong: Color(0xFF7ADBDD),
-  ),
+  BlockSwatch(base: Color(0xFF3EC4C7), strong: Color(0xFF7ADBDD)),
   // sky
-  BlockSwatch(
-    base: Color(0xFF5CB8FF),
-    strong: Color(0xFF94D0FF),
-  ),
+  BlockSwatch(base: Color(0xFF5CB8FF), strong: Color(0xFF94D0FF)),
   // indigo
-  BlockSwatch(
-    base: Color(0xFF7F86FF),
-    strong: Color(0xFFAAB0FF),
-  ),
+  BlockSwatch(base: Color(0xFF7F86FF), strong: Color(0xFFAAB0FF)),
   // violet
-  BlockSwatch(
-    base: Color(0xFFAE85FF),
-    strong: Color(0xFFC9AEFF),
-  ),
+  BlockSwatch(base: Color(0xFFAE85FF), strong: Color(0xFFC9AEFF)),
   // magenta
-  BlockSwatch(
-    base: Color(0xFFEA6FD6),
-    strong: Color(0xFFF4A0E6),
-  ),
+  BlockSwatch(base: Color(0xFFEA6FD6), strong: Color(0xFFF4A0E6)),
   // rose
-  BlockSwatch(
-    base: Color(0xFFFF7FA3),
-    strong: Color(0xFFFFA8C1),
-  ),
+  BlockSwatch(base: Color(0xFFFF7FA3), strong: Color(0xFFFFA8C1)),
   // slate
-  BlockSwatch(
-    base: Color(0xFF93A0B0),
-    strong: Color(0xFFB8C2CE),
-  ),
+  BlockSwatch(base: Color(0xFF93A0B0), strong: Color(0xFFB8C2CE)),
 ];

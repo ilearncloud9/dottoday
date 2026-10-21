@@ -33,9 +33,9 @@ final class Materialiser {
     required Clock clock,
     required IdGenerator ids,
     RecurrenceExpander expander = const RecurrenceExpander(),
-  })  : _clock = clock,
-        _ids = ids,
-        _expander = expander;
+  }) : _clock = clock,
+       _ids = ids,
+       _expander = expander;
 
   /// How far ahead occurrences exist as rows (docs/05).
   static const horizon = Duration(days: 90);
@@ -64,8 +64,10 @@ final class Materialiser {
     }
     final taken = {
       for (final o in existing)
-        if (o case Occurrence(:final seriesId, originalStartUtc: final start?)
-            when seriesId == series.id)
+        if (o case Occurrence(
+          :final seriesId,
+          originalStartUtc: final start?,
+        ) when seriesId == series.id)
           start,
     };
     final starts = _expander.expand(
@@ -77,9 +79,7 @@ final class Materialiser {
     final occurrences = [for (final s in starts) _occurrence(series, s, now)];
     return MaterialisationPlan(
       occurrences: occurrences,
-      subtasks: [
-        for (final o in occurrences) ..._subtasks(series, o.id, now),
-      ],
+      subtasks: [for (final o in occurrences) ..._subtasks(series, o.id, now)],
       materialisedThroughUtc: through,
     );
   }

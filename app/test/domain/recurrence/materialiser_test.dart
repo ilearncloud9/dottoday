@@ -14,12 +14,12 @@ import '../fixtures.dart';
 final _now = DateTime.utc(2026, 10, 21, 12);
 
 Series _daily() => seriesFixture().copyWith(
-      rrule: 'FREQ=DAILY',
-      dtstartLocal: '2026-10-01T07:00',
-      tzId: 'UTC',
-      energy: Energy.medium,
-      pinned: true,
-    );
+  rrule: 'FREQ=DAILY',
+  dtstartLocal: '2026-10-01T07:00',
+  tzId: 'UTC',
+  energy: Energy.medium,
+  pinned: true,
+);
 
 Materialiser _materialiser([FakeClock? clock]) =>
     Materialiser(clock: clock ?? FakeClock(_now), ids: FakeIds());
@@ -47,14 +47,16 @@ void main() {
     expect(o.createdAt, _now);
   });
 
-  test('is idempotent: a second run with the first run\'s rows adds nothing',
-      () {
-    final m = _materialiser();
-    final first = m.plan(_daily(), const []);
-    final second = m.plan(_daily(), first.occurrences);
-    expect(second.isEmpty, isTrue);
-    expect(second.subtasks, isEmpty);
-  });
+  test(
+    'is idempotent: a second run with the first run\'s rows adds nothing',
+    () {
+      final m = _materialiser();
+      final first = m.plan(_daily(), const []);
+      final second = m.plan(_daily(), first.occurrences);
+      expect(second.isEmpty, isTrue);
+      expect(second.subtasks, isEmpty);
+    },
+  );
 
   test('next day only adds the newly reachable day', () {
     final clock = FakeClock(_now);
@@ -105,9 +107,7 @@ void main() {
   });
 
   test('series alerts are inherited, not copied', () {
-    final s = _daily().copyWith(
-      alerts: const [Alert(kind: AlertKind.atStart)],
-    );
+    final s = _daily().copyWith(alerts: const [Alert(kind: AlertKind.atStart)]);
     final plan = _materialiser().plan(s, const []);
     expect(plan.occurrences.every((o) => o.alerts == null), isTrue);
   });

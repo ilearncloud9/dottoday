@@ -20,8 +20,9 @@ List<int> uiStringLiteralLines(String source) {
   final lines = source.split('\n');
   return [
     for (final offset in visitor.offsets)
-      if (!_ignore
-          .hasMatch(lines[unit.lineInfo.getLocation(offset).lineNumber - 1]))
+      if (!_ignore.hasMatch(
+        lines[unit.lineInfo.getLocation(offset).lineNumber - 1],
+      ))
         unit.lineInfo.getLocation(offset).lineNumber,
   ];
 }

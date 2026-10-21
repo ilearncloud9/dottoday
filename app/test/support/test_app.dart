@@ -11,24 +11,23 @@ Widget testRouterApp(
   GoRouter router, {
   VoidCallback? onQuickAdd,
   ThemeMode themeMode = ThemeMode.light,
-}) =>
-    MaterialApp.router(
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
-      themeMode: themeMode,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      routerConfig: router,
-      builder: (context, child) => AppCommandScope(
-        handlers: appCommandHandlers(router, onQuickAdd: onQuickAdd),
-        child: child ?? const SizedBox.shrink(),
-      ),
-    );
+}) => MaterialApp.router(
+  theme: AppTheme.light(),
+  darkTheme: AppTheme.dark(),
+  themeMode: themeMode,
+  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  supportedLocales: AppLocalizations.supportedLocales,
+  routerConfig: router,
+  builder: (context, child) => AppCommandScope(
+    handlers: appCommandHandlers(router, onQuickAdd: onQuickAdd),
+    child: child ?? const SizedBox.shrink(),
+  ),
+);
 
 /// [MaterialApp] with the real theme and l10n around [home].
 Widget testApp(Widget home) => MaterialApp(
-      theme: AppTheme.light(),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: home,
-    );
+  theme: AppTheme.light(),
+  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  supportedLocales: AppLocalizations.supportedLocales,
+  home: home,
+);

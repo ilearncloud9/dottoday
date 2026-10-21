@@ -18,12 +18,13 @@ final class Env {
   /// Values are `const` (baked in at compile time), so changing `.env`
   /// needs a full restart, not hot reload.
   factory Env.fromEnvironment() => Env.fromMap(const {
-        'SUPABASE_URL': String.fromEnvironment('SUPABASE_URL'),
-        'SUPABASE_ANON_KEY': String.fromEnvironment('SUPABASE_ANON_KEY'),
-        'SENTRY_DSN': String.fromEnvironment('SENTRY_DSN'),
-        'WEB_PUSH_VAPID_PUBLIC_KEY':
-            String.fromEnvironment('WEB_PUSH_VAPID_PUBLIC_KEY'),
-      });
+    'SUPABASE_URL': String.fromEnvironment('SUPABASE_URL'),
+    'SUPABASE_ANON_KEY': String.fromEnvironment('SUPABASE_ANON_KEY'),
+    'SENTRY_DSN': String.fromEnvironment('SENTRY_DSN'),
+    'WEB_PUSH_VAPID_PUBLIC_KEY': String.fromEnvironment(
+      'WEB_PUSH_VAPID_PUBLIC_KEY',
+    ),
+  });
 
   /// Builds an [Env] from raw key/value pairs, failing fast on bad config.
   ///
@@ -72,7 +73,8 @@ final class EnvConfigError extends Error {
 }
 
 /// Exact fix, shown whenever a required define is missing (ADR-0005).
-const _hint = 'Run from app/: '
+const _hint =
+    'Run from app/: '
     'flutter run --dart-define-from-file=.env '
     '(copy .env.example to .env first). Release: '
     'flutter build <target> --dart-define-from-file=.env.prod. '
@@ -108,8 +110,9 @@ bool _isSecretKey(String key) {
   final parts = key.split('.');
   if (parts.length != 3) return false;
   try {
-    final payload =
-        utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
+    final payload = utf8.decode(
+      base64Url.decode(base64Url.normalize(parts[1])),
+    );
     final claims = jsonDecode(payload);
     return claims is Map<String, Object?> && claims['role'] == 'service_role';
   } on FormatException {

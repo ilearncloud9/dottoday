@@ -23,8 +23,9 @@ List<Occurrence> _day(Random rnd) {
   for (var i = 0; i < 2 + rnd.nextInt(11); i++) {
     minute += rnd.nextInt(4) * 15;
     final duration = 5 + rnd.nextInt(12) * 5;
-    final source =
-        rnd.nextInt(6) == 0 ? OccurrenceSource.calendar : OccurrenceSource.user;
+    final source = rnd.nextInt(6) == 0
+        ? OccurrenceSource.calendar
+        : OccurrenceSource.user;
     blocks.add(
       block(
         'b$i',
@@ -43,10 +44,10 @@ bool _overlap(Occurrence a, Occurrence b) =>
     a.startUtc!.isBefore(b.endUtc!) && b.startUtc!.isBefore(a.endUtc!);
 
 Set<(String, String)> _overlaps(List<Occurrence> day) => {
-      for (final a in day)
-        for (final b in day)
-          if (a.id.compareTo(b.id) < 0 && _overlap(a, b)) (a.id, b.id),
-    };
+  for (final a in day)
+    for (final b in day)
+      if (a.id.compareTo(b.id) < 0 && _overlap(a, b)) (a.id, b.id),
+};
 
 void _checkInvariants(
   List<Occurrence> before,
@@ -62,11 +63,12 @@ void _checkInvariants(
   final original = {for (final o in before) o.id: o};
   // Gaps between consecutive moved blocks are unchanged.
   for (var i = 1; i < moved.length; i++) {
-    final gapBefore = original[moved[i]]!
-        .startUtc!
-        .difference(original[moved[i - 1]]!.startUtc!);
-    final gapAfter =
-        after[moved[i]]!.startUtc!.difference(after[moved[i - 1]]!.startUtc!);
+    final gapBefore = original[moved[i]]!.startUtc!.difference(
+      original[moved[i - 1]]!.startUtc!,
+    );
+    final gapAfter = after[moved[i]]!.startUtc!.difference(
+      after[moved[i - 1]]!.startUtc!,
+    );
     expect(gapAfter, gapBefore, reason: 'gap changed');
   }
   // No moved block crosses a pinned block.
@@ -84,7 +86,7 @@ void _checkInvariants(
   final allowed = {
     if (result.report.partial)
       ...before.map((o) => o.id).where((id) => !moved.contains(id)),
-    if (result.report.blockedById case final id?) id,
+    ?result.report.blockedById,
     ...result.report.skippedIds,
     ...alsoAllowed,
   };
@@ -118,14 +120,10 @@ void main() {
       };
       _checkInvariants(day, r, exempt: moved.id, alsoAllowed: earlier);
       final order = r.report.movedIds;
-      expect(
-        order,
-        [
-          for (final o in r.day)
-            if (order.contains(o.id)) o.id,
-        ],
-        reason: 'relative order changed',
-      );
+      expect(order, [
+        for (final o in r.day)
+          if (order.contains(o.id)) o.id,
+      ], reason: 'relative order changed');
     }
   });
 
@@ -149,8 +147,11 @@ void main() {
     for (var run = 0; run < _runs; run++) {
       final day = _day(rnd);
       final start = at('06:00').add(Duration(minutes: rnd.nextInt(600)));
-      final fresh = block('new', '06:00', 5 + rnd.nextInt(12) * 5)
-          .copyWith(startUtc: start);
+      final fresh = block(
+        'new',
+        '06:00',
+        5 + rnd.nextInt(12) * 5,
+      ).copyWith(startUtc: start);
       final r = _s.insert(day, fresh, InsertPolicy.bump);
       // Blocks that began before the new one are never moved by bump.
       final earlier = {
@@ -163,7 +164,7 @@ void main() {
           ...day
               .map((o) => o.id)
               .where((id) => !r.report.movedIds.contains(id)),
-        if (r.report.blockedById case final id?) id,
+        ?r.report.blockedById,
         ...r.report.skippedIds,
         ...earlier,
       };
@@ -171,7 +172,8 @@ void main() {
         expect(
           allowed.contains(a) || allowed.contains(b),
           isTrue,
-          reason: 'overlap $a/$b: ${starts(r.day)} '
+          reason:
+              'overlap $a/$b: ${starts(r.day)} '
               '${r.day.map((o) => '${o.id}:${o.durationMin}${o.pinned ? 'P' : ''}${o.source.name[0]}').join(' ')} '
               'report ${r.report.movedIds} ${r.report.skippedIds} ${r.report.blockedById}',
         );

@@ -47,24 +47,19 @@ List<String> _event(
   String stamp, {
   String? uid,
   String? recurrenceId,
-}) =>
-    [
-      'BEGIN:VEVENT',
-      'UID:${uid ?? o.id}@dottoday',
-      'DTSTAMP:$stamp',
-      if (recurrenceId != null) 'RECURRENCE-ID:$recurrenceId',
-      'DTSTART:${_utc(o.startUtc!)}',
-      'DURATION:PT${o.durationMin}M',
-      'SUMMARY:${_text(o.title)}',
-      if (o.notes case final notes?) 'DESCRIPTION:${_text(notes)}',
-      'END:VEVENT',
-    ];
+}) => [
+  'BEGIN:VEVENT',
+  'UID:${uid ?? o.id}@dottoday',
+  'DTSTAMP:$stamp',
+  if (recurrenceId != null) 'RECURRENCE-ID:$recurrenceId',
+  'DTSTART:${_utc(o.startUtc!)}',
+  'DURATION:PT${o.durationMin}M',
+  'SUMMARY:${_text(o.title)}',
+  if (o.notes case final notes?) 'DESCRIPTION:${_text(notes)}',
+  'END:VEVENT',
+];
 
-List<String> _seriesEvents(
-  Series s,
-  List<Occurrence> instances,
-  String stamp,
-) {
+List<String> _seriesEvents(Series s, List<Occurrence> instances, String stamp) {
   final removed = [
     for (final o in instances)
       if (o.deletedAt != null || o.status == OccurrenceStatus.skipped)

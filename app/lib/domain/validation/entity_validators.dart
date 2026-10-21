@@ -131,11 +131,7 @@ Validated<CalendarAccount> validateCalendarAccount(CalendarAccount account) {
     a,
     firstFailure([
       checkRequiredText(ValidationField.label, a.label, max: 80),
-      checkOptionalText(
-        ValidationField.label,
-        a.externalAccountId,
-        max: 256,
-      ),
+      checkOptionalText(ValidationField.label, a.externalAccountId, max: 256),
     ]),
   );
 }
@@ -161,16 +157,15 @@ List<ValidationFailure?> _taskFields(
   String colorKey,
   String iconKey,
   int durationMin,
-) =>
-    [
-      checkRequiredText(ValidationField.title, title),
-      checkOptionalText(ValidationField.notes, notes, max: maxNotesLength),
-      checkColorKey(colorKey),
-      checkIconKey(iconKey),
-      checkRange(
-        ValidationField.duration,
-        durationMin,
-        minDurationMin,
-        maxDurationMin,
-      ),
-    ];
+) => [
+  checkRequiredText(ValidationField.title, title),
+  checkOptionalText(ValidationField.notes, notes, max: maxNotesLength),
+  checkColorKey(colorKey),
+  checkIconKey(iconKey),
+  checkRange(
+    ValidationField.duration,
+    durationMin,
+    minDurationMin,
+    maxDurationMin,
+  ),
+];

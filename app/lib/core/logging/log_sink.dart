@@ -39,12 +39,12 @@ final class LogRecord {
   final StackTrace? stackTrace;
 
   Map<String, Object?> toJson() => {
-        'level': level.name,
-        'event': event,
-        'time': timeUtc.toIso8601String(),
-        if (fields.isNotEmpty) 'fields': fields,
-        if (errorType != null) 'errorType': errorType,
-      };
+    'level': level.name,
+    'event': event,
+    'time': timeUtc.toIso8601String(),
+    if (fields.isNotEmpty) 'fields': fields,
+    if (errorType != null) 'errorType': errorType,
+  };
 }
 
 /// Destination for log records (console now; Sentry breadcrumbs in M6.7).

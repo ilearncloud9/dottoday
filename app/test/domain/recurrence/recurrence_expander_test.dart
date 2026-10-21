@@ -17,22 +17,20 @@ Series _series(
   String tzId = 'Europe/Berlin',
   int? count,
   DateTime? untilUtc,
-}) =>
-    seriesFixture().copyWith(
-      rrule: rrule,
-      dtstartLocal: dtstartLocal,
-      tzId: tzId,
-      count: count,
-      untilUtc: untilUtc,
-    );
+}) => seriesFixture().copyWith(
+  rrule: rrule,
+  dtstartLocal: dtstartLocal,
+  tzId: tzId,
+  count: count,
+  untilUtc: untilUtc,
+);
 
 List<DateTime> _expand(
   Series s,
   DateTime from,
   DateTime to, {
   Set<DateTime> exceptions = const {},
-}) =>
-    _expander.expand(s, fromUtc: from, toUtc: to, exceptionsUtc: exceptions);
+}) => _expander.expand(s, fromUtc: from, toUtc: to, exceptionsUtc: exceptions);
 
 /// Local wall-clock strings of [utc] instants in [tzId], for readable
 /// expectations.
@@ -49,8 +47,11 @@ void main() {
 
   test('weekly rule stays at 07:00 local across the October DST change', () {
     final s = _series('FREQ=WEEKLY;BYDAY=MO', '2026-10-19T07:00');
-    final got =
-        _expand(s, DateTime.utc(2026, 10, 19), DateTime.utc(2026, 11, 3));
+    final got = _expand(
+      s,
+      DateTime.utc(2026, 10, 19),
+      DateTime.utc(2026, 11, 3),
+    );
     expect(_local(got, 'Europe/Berlin'), [
       '2026-10-19T07:00',
       '2026-10-26T07:00',
@@ -94,8 +95,11 @@ void main() {
 
   test('DST spring-forward: 02:30 Europe/Berlin becomes 03:30 CEST', () {
     final s = _series('FREQ=DAILY', '2026-03-28T02:30');
-    final got =
-        _expand(s, DateTime.utc(2026, 3, 28), DateTime.utc(2026, 3, 31));
+    final got = _expand(
+      s,
+      DateTime.utc(2026, 3, 28),
+      DateTime.utc(2026, 3, 31),
+    );
     expect(_local(got, 'Europe/Berlin'), [
       '2026-03-28T02:30',
       '2026-03-29T03:30',
@@ -106,8 +110,11 @@ void main() {
 
   test('DST fall-back: the duplicated 02:30 fires once, at the first one', () {
     final s = _series('FREQ=DAILY', '2026-10-24T02:30');
-    final got =
-        _expand(s, DateTime.utc(2026, 10, 24), DateTime.utc(2026, 10, 27));
+    final got = _expand(
+      s,
+      DateTime.utc(2026, 10, 24),
+      DateTime.utc(2026, 10, 27),
+    );
     expect(got, [
       DateTime.utc(2026, 10, 24, 0, 30),
       DateTime.utc(2026, 10, 25, 0, 30), // 02:30 CEST, not 02:30 CET
@@ -122,14 +129,16 @@ void main() {
     final from = DateTime.utc(2026, 10);
     final to = DateTime.utc(2026, 11);
 
-    test('UTC UNTIL is an instant: 2026-10-03T12:00Z excludes 3 Oct 09:00 EDT',
-        () {
-      final got = _expand(ny('FREQ=DAILY;UNTIL=20261003T120000Z'), from, to);
-      expect(_local(got, 'America/New_York'), [
-        '2026-10-01T09:00',
-        '2026-10-02T09:00',
-      ]);
-    });
+    test(
+      'UTC UNTIL is an instant: 2026-10-03T12:00Z excludes 3 Oct 09:00 EDT',
+      () {
+        final got = _expand(ny('FREQ=DAILY;UNTIL=20261003T120000Z'), from, to);
+        expect(_local(got, 'America/New_York'), [
+          '2026-10-01T09:00',
+          '2026-10-02T09:00',
+        ]);
+      },
+    );
 
     test('floating UNTIL is wall-clock in the series zone', () {
       final got = _expand(ny('FREQ=DAILY;UNTIL=20261003T090000'), from, to);
@@ -143,8 +152,9 @@ void main() {
 
     test('series.untilUtc set from another zone narrows the rule', () {
       // 3 Oct 14:00 Berlin = 12:00Z, before 09:00 New York (13:00Z).
-      final s =
-          ny('FREQ=DAILY').copyWith(untilUtc: DateTime.utc(2026, 10, 3, 12));
+      final s = ny(
+        'FREQ=DAILY',
+      ).copyWith(untilUtc: DateTime.utc(2026, 10, 3, 12));
       expect(_expand(s, from, to).length, 2);
     });
   });
@@ -171,20 +181,28 @@ void main() {
       expect(_expand(s.copyWith(count: 2), from, to).length, 2);
     });
 
-    test('count is honoured when the window starts after the first instances',
-        () {
-      final got = _expand(s, DateTime.utc(2026, 10, 4), to);
-      expect(got.map((d) => d.day), [4, 5]);
-    });
+    test(
+      'count is honoured when the window starts after the first instances',
+      () {
+        final got = _expand(s, DateTime.utc(2026, 10, 4), to);
+        expect(got.map((d) => d.day), [4, 5]);
+      },
+    );
   });
 
   group('window', () {
-    final s =
-        _series('FREQ=DAILY', '2026-10-01T23:30', tzId: 'Pacific/Auckland');
+    final s = _series(
+      'FREQ=DAILY',
+      '2026-10-01T23:30',
+      tzId: 'Pacific/Auckland',
+    );
 
     test('is half-open [from, to) in UTC', () {
-      final first =
-          _expand(s, DateTime.utc(2026, 9), DateTime.utc(2026, 11)).first;
+      final first = _expand(
+        s,
+        DateTime.utc(2026, 9),
+        DateTime.utc(2026, 11),
+      ).first;
       expect(_expand(s, first, first.add(const Duration(days: 1))), [first]);
       expect(
         _expand(
@@ -208,8 +226,11 @@ void main() {
     });
 
     test('interval > 1 keeps its phase', () {
-      final every3 =
-          _series('FREQ=DAILY;INTERVAL=3', '2026-10-01T08:00', tzId: 'UTC');
+      final every3 = _series(
+        'FREQ=DAILY;INTERVAL=3',
+        '2026-10-01T08:00',
+        tzId: 'UTC',
+      );
       final got = _expand(
         every3,
         DateTime.utc(2026, 10, 5),

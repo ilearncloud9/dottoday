@@ -19,15 +19,15 @@ final class ClockProvider extends $FunctionalProvider<Clock, Clock, Clock>
     with $Provider<Clock> {
   /// App-wide [Clock]; tests override it with a fake.
   ClockProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'clockProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'clockProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$clockHash();

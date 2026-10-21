@@ -57,7 +57,8 @@ final class Hlc implements Comparable<Hlc> {
   int get hashCode => Object.hash(ms, counter, node);
 
   @override
-  String toString() => '${ms.toString().padLeft(13, '0')}-'
+  String toString() =>
+      '${ms.toString().padLeft(13, '0')}-'
       '${counter.toString().padLeft(4, '0')}-$node';
 }
 
@@ -67,13 +68,10 @@ final class Hlc implements Comparable<Hlc> {
 /// during pull, so local writes always sort after what this device knows.
 /// Persist [last] and pass it back on start so order survives restarts.
 final class HybridLogicalClock {
-  HybridLogicalClock({
-    required Clock clock,
-    required String nodeId,
-    Hlc? last,
-  })  : _clock = clock,
-        _node = nodeId,
-        _last = last ?? Hlc(0, 0, nodeId) {
+  HybridLogicalClock({required Clock clock, required String nodeId, Hlc? last})
+    : _clock = clock,
+      _node = nodeId,
+      _last = last ?? Hlc(0, 0, nodeId) {
     if (!Hlc.isValidNode(nodeId)) {
       throw ArgumentError.value(nodeId, 'nodeId', 'must be 16 lowercase hex');
     }
@@ -107,8 +105,9 @@ final class HybridLogicalClock {
     final ms = [wall, _last.ms, remoteMs].reduce((a, b) => a > b ? a : b);
     final int counter;
     if (ms == _last.ms && ms == remoteMs) {
-      final top =
-          _last.counter > remote.counter ? _last.counter : remote.counter;
+      final top = _last.counter > remote.counter
+          ? _last.counter
+          : remote.counter;
       counter = top + 1;
     } else if (ms == _last.ms) {
       counter = _last.counter + 1;

@@ -112,7 +112,8 @@ const defaultBlockColorKey = '$fallback';
 
 String _swatchList(String name, Iterable<(String, _Swatch)> swatches) {
   final body = swatches.map(
-    (s) => '  // ${s.$1}\n'
+    (s) =>
+        '  // ${s.$1}\n'
         '  BlockSwatch(base: ${s.$2.base}, strong: ${s.$2.strong},),',
   );
   return 'const $name = <BlockSwatch>[\n${body.join('\n')}\n];';
@@ -136,8 +137,8 @@ final _key = RegExp(r'^[a-z]+$');
 
 final class _Swatch {
   _Swatch.parse(Object? json, String where)
-      : base = _color(_map(json, where)['base'], '$where.base'),
-        strong = _color(_map(json, where)['strong'], '$where.strong');
+    : base = _color(_map(json, where)['base'], '$where.base'),
+      strong = _color(_map(json, where)['strong'], '$where.strong');
 
   final String base;
   final String strong;

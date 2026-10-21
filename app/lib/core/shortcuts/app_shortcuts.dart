@@ -51,7 +51,9 @@ abstract final class AppShortcuts {
           meta: meta,
           control: !meta,
           shift: combo.shift,
-        ): AppCommandIntent(command),
+        ): AppCommandIntent(
+          command,
+        ),
     };
   }
 }

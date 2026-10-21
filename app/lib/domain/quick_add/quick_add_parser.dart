@@ -68,8 +68,8 @@ final class QuickAddParser {
   }
 
   static Err<T, ValidationFailure> _tooLong<T>() => const Err(
-        ValidationFailure(ValidationField.quickAddText, ValidationRule.tooLong),
-      );
+    ValidationFailure(ValidationField.quickAddText, ValidationRule.tooLong),
+  );
 
   QuickAddDraft _parseLine(
     String raw,

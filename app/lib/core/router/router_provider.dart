@@ -7,5 +7,5 @@ part 'router_provider.g.dart';
 /// `buildRouter(appScreens)`; reading it without the override is a wiring bug.
 @Riverpod(keepAlive: true)
 GoRouter router(Ref ref) => throw UnimplementedError(
-      'routerProvider must be overridden in bootstrap().',
-    );
+  'routerProvider must be overridden in bootstrap().',
+);

@@ -8,11 +8,11 @@ List<Occurrence> scheduledBlocks(Iterable<Occurrence> day) =>
     sortedByStart(day.where((o) => o.startUtc != null && o.deletedAt == null));
 
 /// [blocks] ordered by start, ties by id. All must be scheduled.
-List<Occurrence> sortedByStart(Iterable<Occurrence> blocks) => blocks.toList()
-  ..sort((a, b) {
-    final byStart = a.startUtc!.compareTo(b.startUtc!);
-    return byStart != 0 ? byStart : a.id.compareTo(b.id);
-  });
+List<Occurrence> sortedByStart(Iterable<Occurrence> blocks) =>
+    blocks.toList()..sort((a, b) {
+      final byStart = a.startUtc!.compareTo(b.startUtc!);
+      return byStart != 0 ? byStart : a.id.compareTo(b.id);
+    });
 
 /// Whether [o] blocks its time slot: skipped blocks free their time; done
 /// blocks still occupied it.

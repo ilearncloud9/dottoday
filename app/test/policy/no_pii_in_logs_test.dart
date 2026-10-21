@@ -33,8 +33,9 @@ void f(Logger log) {
 
   test('lib/** has no PII-capable log calls', () {
     final offenders = [
-      for (final MapEntry(key: path, value: src)
-          in readLibSources('lib').entries)
+      for (final MapEntry(key: path, value: src) in readLibSources(
+        'lib',
+      ).entries)
         for (final line in piiLogViolationLines(src)) 'lib/$path:$line',
     ];
     expect(offenders, isEmpty, reason: 'docs/06 §8 no_pii_in_logs');

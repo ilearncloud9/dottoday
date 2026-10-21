@@ -46,18 +46,12 @@ final class PlannedNotification {
       other.silent == silent;
 
   @override
-  int get hashCode => Object.hash(
-        id,
-        occurrenceId,
-        alertIndex,
-        fireAtUtc,
-        kind,
-        sound,
-        silent,
-      );
+  int get hashCode =>
+      Object.hash(id, occurrenceId, alertIndex, fireAtUtc, kind, sound, silent);
 
   @override
-  String toString() => 'PlannedNotification($id, $occurrenceId#$alertIndex, '
+  String toString() =>
+      'PlannedNotification($id, $occurrenceId#$alertIndex, '
       '$fireAtUtc, ${kind.name}${silent ? ', silent' : ''})';
 }
 

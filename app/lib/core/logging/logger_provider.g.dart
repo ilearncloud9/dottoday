@@ -19,15 +19,15 @@ final class LoggerProvider extends $FunctionalProvider<Logger, Logger, Logger>
     with $Provider<Logger> {
   /// App-wide PII-safe [Logger].
   LoggerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'loggerProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'loggerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$loggerHash();

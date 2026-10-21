@@ -10,15 +10,14 @@ String _jwt(Map<String, Object> claims) {
 }
 
 Map<String, String> _valid([Map<String, String> overrides = const {}]) => {
-      'SUPABASE_URL': 'https://abc.supabase.co',
-      'SUPABASE_ANON_KEY': _jwt({'role': 'anon'}),
-      ...overrides,
-    };
+  'SUPABASE_URL': 'https://abc.supabase.co',
+  'SUPABASE_ANON_KEY': _jwt({'role': 'anon'}),
+  ...overrides,
+};
 
 Matcher _throwsEnv(String fragment) => throwsA(
-      isA<EnvConfigError>()
-          .having((e) => e.message, 'message', contains(fragment)),
-    );
+  isA<EnvConfigError>().having((e) => e.message, 'message', contains(fragment)),
+);
 
 void main() {
   group('Env.fromMap', () {
@@ -33,8 +32,9 @@ void main() {
     });
 
     test('allows http for local supabase', () {
-      final env =
-          Env.fromMap(_valid({'SUPABASE_URL': 'http://127.0.0.1:54321'}));
+      final env = Env.fromMap(
+        _valid({'SUPABASE_URL': 'http://127.0.0.1:54321'}),
+      );
 
       expect(env.supabaseUrl.port, 54321);
     });
@@ -85,8 +85,9 @@ void main() {
 
     test('accepts new-style publishable keys', () {
       expect(
-        Env.fromMap(_valid({'SUPABASE_ANON_KEY': 'sb_publishable_abc'}))
-            .supabaseAnonKey,
+        Env.fromMap(
+          _valid({'SUPABASE_ANON_KEY': 'sb_publishable_abc'}),
+        ).supabaseAnonKey,
         'sb_publishable_abc',
       );
     });

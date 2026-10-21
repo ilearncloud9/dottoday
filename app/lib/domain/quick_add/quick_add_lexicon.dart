@@ -87,11 +87,11 @@ final class QuickAddLexicon {
   final List<String> workdays;
 
   static QuickAddLexicon of(QuickAddLanguage language) => switch (language) {
-        QuickAddLanguage.en => _en,
-        QuickAddLanguage.de => _de,
-        QuickAddLanguage.fr => _fr,
-        QuickAddLanguage.es => _es,
-      };
+    QuickAddLanguage.en => _en,
+    QuickAddLanguage.de => _de,
+    QuickAddLanguage.fr => _fr,
+    QuickAddLanguage.es => _es,
+  };
 }
 
 const _en = QuickAddLexicon(

@@ -55,8 +55,9 @@ import 'package:flutter/material.dart';
 
   test('lib/** respects layer boundaries (CLAUDE.md §3)', () {
     final violations = [
-      for (final MapEntry(key: path, value: src)
-          in readLibSources('lib').entries)
+      for (final MapEntry(key: path, value: src) in readLibSources(
+        'lib',
+      ).entries)
         ...importViolations(path, src),
     ];
     expect(violations, isEmpty);

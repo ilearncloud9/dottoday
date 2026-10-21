@@ -22,15 +22,15 @@ final class EnvProvider extends $FunctionalProvider<Env, Env, Env>
   /// The loaded [Env]. Overridden in `bootstrap()`; reading it without the
   /// override is a wiring bug.
   EnvProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'envProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'envProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$envHash();

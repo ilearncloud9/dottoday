@@ -23,15 +23,15 @@ final class RouterProvider
   /// The app's [GoRouter]. Overridden in `bootstrap()` with
   /// `buildRouter(appScreens)`; reading it without the override is a wiring bug.
   RouterProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'routerProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'routerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$routerHash();

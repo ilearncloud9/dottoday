@@ -100,14 +100,17 @@ ValidationFailure? checkAlerts(List<Alert> alerts) {
 /// [rrule] is an RFC 5545 rule body without the `RRULE:` prefix and must
 /// parse with a `FREQ` part.
 ValidationFailure? checkRrule(String rrule) {
-  final invalid =
-      _fail(ValidationField.recurrence, ValidationRule.invalidFormat);
+  final invalid = _fail(
+    ValidationField.recurrence,
+    ValidationRule.invalidFormat,
+  );
   if (rrule.length > 512 || !rrule.startsWith('FREQ=')) return invalid;
   try {
     final rule = RecurrenceRule.fromString('RRULE:$rrule');
     // Sub-hourly rules have no task use case and would materialise
     // thousands of rows per 90-day window (docs/05 "Validation").
-    final tooFrequent = rule.frequency == Frequency.secondly ||
+    final tooFrequent =
+        rule.frequency == Frequency.secondly ||
         rule.frequency == Frequency.minutely;
     return tooFrequent ? invalid : null;
   } on FormatException {
@@ -119,8 +122,10 @@ final _localDateTime = RegExp(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$');
 
 /// Wall-clock ISO-8601 with no offset, e.g. `2026-10-21T08:30`.
 ValidationFailure? checkLocalDateTime(String value) {
-  final invalid =
-      _fail(ValidationField.startTime, ValidationRule.invalidFormat);
+  final invalid = _fail(
+    ValidationField.startTime,
+    ValidationRule.invalidFormat,
+  );
   if (!_localDateTime.hasMatch(value)) return invalid;
   final parsed = DateTime.tryParse(value);
   // Rejects rolled-over dates such as 2026-02-30 that DateTime would accept.
@@ -130,7 +135,8 @@ ValidationFailure? checkLocalDateTime(String value) {
 
 bool _sameDigits(DateTime parsed, String value) {
   String two(int n) => n.toString().padLeft(2, '0');
-  final prefix = '${parsed.year.toString().padLeft(4, '0')}-'
+  final prefix =
+      '${parsed.year.toString().padLeft(4, '0')}-'
       '${two(parsed.month)}-${two(parsed.day)}T${two(parsed.hour)}:'
       '${two(parsed.minute)}';
   return value.startsWith(prefix);

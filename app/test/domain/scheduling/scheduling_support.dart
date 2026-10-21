@@ -21,18 +21,18 @@ Occurrence block(
   OccurrenceSource source = OccurrenceSource.user,
   OccurrenceStatus status = OccurrenceStatus.planned,
   int travelMin = 0,
-}) =>
-    occurrenceFixture().copyWith(
-      id: id,
-      title: id,
-      startUtc: at(start),
-      durationMin: minutes,
-      pinned: pinned,
-      source: source,
-      status: status,
-      travelBufferMin: travelMin,
-    );
+}) => occurrenceFixture().copyWith(
+  id: id,
+  title: id,
+  startUtc: at(start),
+  durationMin: minutes,
+  pinned: pinned,
+  source: source,
+  status: status,
+  travelBufferMin: travelMin,
+);
 
 /// id → `HH:mm` start, in timeline order.
-Map<String, String> starts(List<Occurrence> day) =>
-    {for (final o in day) o.id: hhmm(o.startUtc!)};
+Map<String, String> starts(List<Occurrence> day) => {
+  for (final o in day) o.id: hhmm(o.startUtc!),
+};

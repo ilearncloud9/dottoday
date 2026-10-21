@@ -10,8 +10,9 @@ import '../support/test_app.dart';
 void main() {
   for (final size in [const Size(400, 800), const Size(1000, 700)]) {
     for (final mode in [ThemeMode.light, ThemeMode.dark]) {
-      testWidgets('shell meets a11y guidelines ($size, ${mode.name})',
-          (tester) async {
+      testWidgets('shell meets a11y guidelines ($size, ${mode.name})', (
+        tester,
+      ) async {
         tester.view.physicalSize = size;
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.reset);

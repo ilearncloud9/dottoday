@@ -67,24 +67,18 @@ void main() {
       'newer version': () => _mutate((j) => j['version'] = 2),
       'missing version': () => _mutate((j) => j.remove('version')),
       'missing table': () => _mutate((j) => j.remove('subtasks')),
-      'wrong type': () => _mutate(
-            (j) => _first(j, 'occurrences')['duration_min'] = 'long',
-          ),
-      'unknown enum': () => _mutate(
-            (j) => _first(j, 'occurrences')['status'] = 'archived',
-          ),
-      'dangling subtask': () => _mutate(
-            (j) => _first(j, 'subtasks')['occurrence_id'] = 'nope',
-          ),
-      'dangling series': () => _mutate(
-            (j) => _first(j, 'occurrences')['series_id'] = 'nope',
-          ),
-      'duplicate id': () => _mutate(
-            (j) => _rows(j, 'subtasks').add(_first(j, 'subtasks')),
-          ),
-      'rows of another user': () => _mutate(
-            (j) => _first(j, 'series')['user_id'] = 'someone-else',
-          ),
+      'wrong type': () =>
+          _mutate((j) => _first(j, 'occurrences')['duration_min'] = 'long'),
+      'unknown enum': () =>
+          _mutate((j) => _first(j, 'occurrences')['status'] = 'archived'),
+      'dangling subtask': () =>
+          _mutate((j) => _first(j, 'subtasks')['occurrence_id'] = 'nope'),
+      'dangling series': () =>
+          _mutate((j) => _first(j, 'occurrences')['series_id'] = 'nope'),
+      'duplicate id': () =>
+          _mutate((j) => _rows(j, 'subtasks').add(_first(j, 'subtasks'))),
+      'rows of another user': () =>
+          _mutate((j) => _first(j, 'series')['user_id'] = 'someone-else'),
     };
     for (final MapEntry(key: name, value: input) in cases.entries) {
       test(name, () {
@@ -119,8 +113,9 @@ void main() {
       _first(j, 'occurrences')['title'] = '  Padded  ';
       _first(j, 'occurrences')['calendar_link_id'] = 'link-1';
     });
-    final b =
-        decodeExportJson(text).when(ok: (b) => b, err: (f) => fail(f.code));
+    final b = decodeExportJson(
+      text,
+    ).when(ok: (b) => b, err: (f) => fail(f.code));
     expect(b.occurrences.first.title, 'Padded');
     expect(b.occurrences.first.calendarLinkId, isNull);
   });
@@ -140,12 +135,12 @@ void main() {
 
   test('profile settings survive the trip', () {
     final b = hostileBundle();
-    final back = decodeExportJson(encodeExportJson(b))
-        .when(ok: (b) => b, err: (f) => fail(f.code));
+    final back = decodeExportJson(
+      encodeExportJson(b),
+    ).when(ok: (b) => b, err: (f) => fail(f.code));
     expect(back.profile.settings.quietHours, Settings.suggestedQuietHours);
-    expect(
-      back.series.first.alerts,
-      const [Alert(kind: AlertKind.overdue, offsetMin: 15, sound: 'bell')],
-    );
+    expect(back.series.first.alerts, const [
+      Alert(kind: AlertKind.overdue, offsetMin: 15, sound: 'bell'),
+    ]);
   });
 }

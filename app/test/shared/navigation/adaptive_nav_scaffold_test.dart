@@ -39,10 +39,10 @@ Future<void> _size(WidgetTester tester, Size size) async {
 }
 
 Widget _longList() => ListView.builder(
-      itemCount: 40,
-      itemExtent: 48,
-      itemBuilder: (_, i) => SizedBox(key: ValueKey('row$i')),
-    );
+  itemCount: 40,
+  itemExtent: 48,
+  itemBuilder: (_, i) => SizedBox(key: ValueKey('row$i')),
+);
 
 void main() {
   testWidgets('compact width uses a bottom NavigationBar', (tester) async {
@@ -63,12 +63,14 @@ void main() {
   });
 
   for (final size in [const Size(400, 800), const Size(800, 600)]) {
-    testWidgets('tap selects and selected state is exposed ($size)',
-        (tester) async {
+    testWidgets('tap selects and selected state is exposed ($size)', (
+      tester,
+    ) async {
       await _size(tester, size);
       int? tapped;
-      await tester
-          .pumpWidget(_scaffold(selected: 1, onSelect: (i) => tapped = i));
+      await tester.pumpWidget(
+        _scaffold(selected: 1, onSelect: (i) => tapped = i),
+      );
       await tester.tap(find.text('Week'));
       expect(tapped, 2);
       expect(
@@ -85,14 +87,16 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('FAB never covers the end of a scrolled list ($size)',
-        (tester) async {
+    testWidgets('FAB never covers the end of a scrolled list ($size)', (
+      tester,
+    ) async {
       await _size(tester, size);
       await tester.pumpWidget(_scaffold(body: _longList()));
       await tester.drag(find.byType(ListView), const Offset(0, -5000));
       await tester.pumpAndSettle();
-      final lastBottom =
-          tester.getRect(find.byKey(const ValueKey('row39'))).bottom;
+      final lastBottom = tester
+          .getRect(find.byKey(const ValueKey('row39')))
+          .bottom;
       final fabTop = tester.getRect(find.byType(FloatingActionButton)).top;
       expect(lastBottom, lessThanOrEqualTo(fabTop));
     });

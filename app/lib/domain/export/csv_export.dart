@@ -66,16 +66,16 @@ String _tableCsv(List<Map<String, Object?>> rows) {
 }
 
 String seriesCsv(Iterable<Series> series) => _tableCsv([
-      for (final s in series)
-        if (s.deletedAt == null) s.toJson(),
-    ]);
+  for (final s in series)
+    if (s.deletedAt == null) s.toJson(),
+]);
 
 String occurrencesCsv(Iterable<Occurrence> occurrences) => _tableCsv([
-      for (final o in occurrences)
-        if (o.deletedAt == null) o.toJson(),
-    ]);
+  for (final o in occurrences)
+    if (o.deletedAt == null) o.toJson(),
+]);
 
 String subtasksCsv(Iterable<Subtask> subtasks) => _tableCsv([
-      for (final s in subtasks)
-        if (s.deletedAt == null) s.toJson(),
-    ]);
+  for (final s in subtasks)
+    if (s.deletedAt == null) s.toJson(),
+]);
