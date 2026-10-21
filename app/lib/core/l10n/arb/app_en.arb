@@ -1389,5 +1389,39 @@
         "type": "String"
       }
     }
+  },
+  "shiftChipLabel": "Shift later tasks",
+  "@shiftChipLabel": {
+    "description": "Toggle chip shown while dragging a task: when on, the tasks after it move along (R-04). Desktop: hold Alt to invert."
+  },
+  "snackMovedShifted": "{count, plural, =0{{title} moved to {time}} =1{{title} moved to {time} · 1 later task moved too} other{{title} moved to {time} · {count} later tasks moved too}}",
+  "@snackMovedShifted": {
+    "description": "Snackbar after a drop with Shift later tasks on, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackMovedShiftedPartial": "{title} moved to {time} · stopped at {pin} (pinned)",
+  "@snackMovedShiftedPartial": {
+    "description": "Snackbar when a pinned task stopped the later tasks from following a drop (R-17).",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      },
+      "pin": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -906,4 +906,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String snackResized(String title, String time) {
     return '$title now ends at $time';
   }
+
+  @override
+  String get shiftChipLabel => 'Shift later tasks';
+
+  @override
+  String snackMovedShifted(String title, String time, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$title moved to $time · $count later tasks moved too',
+      one: '$title moved to $time · 1 later task moved too',
+      zero: '$title moved to $time',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String snackMovedShiftedPartial(String title, String time, String pin) {
+    return '$title moved to $time · stopped at $pin (pinned)';
+  }
 }

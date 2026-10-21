@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
@@ -31,6 +32,7 @@ Future<void> _pump(
   DateTime? date,
   String? name = 'Kody',
   int firstDayOfWeek = 7,
+  Settings? settings,
   Stream<DateTime>? ticks,
 }) async {
   tester.view
@@ -38,7 +40,8 @@ Future<void> _pump(
     ..devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   final profile = testProfile(
-    settings: Settings(use24h: false, firstDayOfWeek: firstDayOfWeek),
+    settings:
+        settings ?? Settings(use24h: false, firstDayOfWeek: firstDayOfWeek),
   ).copyWith(displayName: name);
   await tester.pumpWidget(
     ProviderScope(
@@ -301,6 +304,33 @@ void main() {
       await tester.tap(find.text('Undo'));
       await tester.pumpAndSettle();
       expect(find.textContaining('8:00 AM – 8:15 AM'), findsOneWidget);
+    });
+
+    testWidgets('with Shift later tasks on, the rest follows up to the pin '
+        '(R-04, R-17)', (tester) async {
+      await _pump(
+        tester,
+        size: const Size(390, 1400),
+        settings: const Settings(
+          use24h: false,
+          firstDayOfWeek: 7,
+          shiftFollowers: ShiftFollowersPolicy.always,
+        ),
+      );
+      final g = await lift(tester, 'Team standup');
+      expect(find.text('Shift later tasks'), findsOneWidget);
+      await g.moveTo(tester.getCenter(find.text('45 min free')));
+      await tester.pump();
+      await g.up();
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('stopped at Lunch with Sam (pinned)'),
+        findsOneWidget,
+      );
+      expect(find.text('9:00 AM – 11:00 AM · 2 h'), findsNothing);
+      await tester.tap(find.text('Undo'));
+      await tester.pumpAndSettle();
+      expect(find.text('9:00 AM – 11:00 AM · 2 h'), findsOneWidget);
     });
 
     testWidgets('dropping on a week-strip day keeps the time', (tester) async {

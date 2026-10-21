@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,10 +16,13 @@ final class ThreadDrag {
     required this.onDrop,
     required this.hintFor,
     this.onResize,
+    this.shiftByDefault,
   });
 
-  /// Task [id] dropped on [gap], [fraction] (0–1) down it.
-  final void Function(String id, ThreadGap gap, double fraction) onDrop;
+  /// Task [id] dropped on [gap], [fraction] (0–1) down it; [shift] = the
+  /// later tasks follow (the chip, inverted while Alt is held).
+  final void Function(String id, ThreadGap gap, double fraction, bool shift)
+  onDrop;
 
   /// The floating label while task [id] hovers [gap] at [fraction]
   /// ("11:30"), or null off any gap.
@@ -26,6 +30,10 @@ final class ThreadDrag {
 
   /// Task [id]'s end moved by [steps] grip steps (+ longer, − shorter).
   final void Function(String id, int steps)? onResize;
+
+  /// Where the "Shift later tasks" chip starts each drag (Settings ›
+  /// Shift later tasks); null hides the chip (R-04).
+  final bool? shiftByDefault;
 }
 
 /// Long-press to lift a task row (250 ms, 03 §3.2): a lifted chip follows
@@ -36,11 +44,17 @@ class DraggableTaskRow extends StatefulWidget {
     required this.drag,
     required this.hint,
     required this.child,
+    this.onLift,
+    this.onSettle,
     super.key,
   });
 
   final ThreadTask task;
   final ThreadDrag drag;
+
+  /// The task was picked up / let go (shows and hides the shift chip).
+  final VoidCallback? onLift;
+  final VoidCallback? onSettle;
 
   /// The live drop-time label (feedback is built in the overlay, outside
   /// this subtree, so it is passed rather than inherited).
@@ -64,6 +78,7 @@ class _DraggableTaskRowState extends State<DraggableTaskRow> {
       feedback: _Lifted(task: widget.task, hint: widget.hint),
       childWhenDragging: Opacity(opacity: TaskAlpha.done, child: widget.child),
       onDragStarted: () {
+        widget.onLift?.call();
         final scrollable = Scrollable.maybeOf(context);
         _scroller = scrollable == null
             ? null
@@ -79,6 +94,7 @@ class _DraggableTaskRowState extends State<DraggableTaskRow> {
       onDragEnd: (_) {
         _scroller?.stopAutoScroll();
         widget.hint.value = null;
+        widget.onSettle?.call();
       },
       child: widget.child,
     );
@@ -148,6 +164,7 @@ class GapDropTarget extends StatelessWidget {
     required this.gap,
     required this.drag,
     required this.hint,
+    required this.shift,
     required this.child,
     super.key,
   });
@@ -155,6 +172,9 @@ class GapDropTarget extends StatelessWidget {
   final ThreadGap gap;
   final ThreadDrag drag;
   final ValueNotifier<String?> hint;
+
+  /// The chip's state for this drag.
+  final ValueListenable<bool> shift;
   final Widget child;
 
   @override
@@ -178,7 +198,9 @@ class GapDropTarget extends StatelessWidget {
       onAcceptWithDetails: (d) {
         hint.value = null;
         unawaited(HapticFeedback.mediumImpact());
-        drag.onDrop(d.data, gap, fractionOf(d.offset));
+        // Desktop: holding Alt inverts the chip (docs/03 §3.2).
+        final invert = HardwareKeyboard.instance.isAltPressed;
+        drag.onDrop(d.data, gap, fractionOf(d.offset), shift.value != invert);
       },
       builder: (context, candidates, _) => DecoratedBox(
         decoration: BoxDecoration(

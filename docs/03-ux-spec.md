@@ -94,6 +94,14 @@ Month view opens from the Today date header. The current date is always one tap 
 Drag uses a lifted ghost with shadow and shows the live snapped time in a floating label. If the drop
 would overlap a pinned block, the block settles after it and a toast explains.
 
+Shift followers, clarified in M3b.6: the chip ("Shift later tasks") sits at the top of the screen
+for the length of a drag and is toggled with a second finger or a click. Settings › Shift later
+tasks sets where it starts: `always` = on, `ask` = shown and off, `never` = no chip (Alt still
+inverts on desktop). On, a drop that keeps the task's place in the day carries everything after it
+by the same amount, gaps kept; a drop that jumps past other tasks only makes room at the new place
+(`bump`). Pinned tasks and, unless "include calendar events", calendar events stay; a pin stops
+the followers and the toast names it (R-04, R-17).
+
 ### 3.3 Quick Add sheet
 Bottom sheet (mobile) / popover (desktop). One text field with live token chips (time, date, duration,
 repeat). Row of duration chips. "More…" expands to the full editor inline (no new screen). Buttons:

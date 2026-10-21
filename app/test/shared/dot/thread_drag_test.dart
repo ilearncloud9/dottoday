@@ -4,6 +4,7 @@ import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/test_app.dart';
@@ -33,10 +34,15 @@ final _gap = ThreadGap(
 );
 
 class _Log {
+  _Log({this.shiftByDefault});
+
+  final bool? shiftByDefault;
   final drops = <String>[];
   final resizes = <String>[];
   ThreadDrag get drag => ThreadDrag(
-    onDrop: (id, gap, f) => drops.add('$id ${gap.startLabel}'),
+    shiftByDefault: shiftByDefault,
+    onDrop: (id, gap, f, shift) =>
+        drops.add('$id ${gap.startLabel}${shift ? ' shift' : ''}'),
     hintFor: (id, gap, f) => gap == null ? null : '→ ${gap.startLabel}',
     onResize: (id, steps) => resizes.add('$id $steps'),
   );
@@ -94,6 +100,56 @@ void main() {
     await tester.pumpAndSettle();
     expect(log.drops, ['write 9:30']);
     expect(tester.takeException(), isNull);
+  });
+
+  group('Shift later tasks chip (R-04)', () {
+    Future<TestGesture> lift(WidgetTester tester) async {
+      final g = await tester.startGesture(tester.getCenter(find.text('Write')));
+      await tester.pump(DotTouch.liftDelay + const Duration(milliseconds: 50));
+      await g.moveBy(const Offset(0, 4));
+      await tester.pump();
+      return g;
+    }
+
+    Future<void> dropOnGap(WidgetTester tester, TestGesture g) async {
+      await g.moveTo(tester.getCenter(find.textContaining('free')));
+      await tester.pump();
+      await g.up();
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('shows while dragging, starts from the setting, and a '
+        'second finger toggles it', (tester) async {
+      final log = _Log(shiftByDefault: false);
+      await tester.pumpWidget(_thread(log));
+      expect(find.text('Shift later tasks'), findsNothing);
+      final g = await lift(tester);
+      expect(find.text('Shift later tasks'), findsOneWidget);
+      await tester.tap(find.text('Shift later tasks'), pointer: 7);
+      await tester.pump();
+      await dropOnGap(tester, g);
+      expect(log.drops, ['write 9:30 shift']);
+      expect(find.text('Shift later tasks'), findsNothing);
+    });
+
+    testWidgets('"always" starts on; holding Alt inverts it', (tester) async {
+      final log = _Log(shiftByDefault: true);
+      await tester.pumpWidget(_thread(log));
+      await dropOnGap(tester, await lift(tester));
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.altLeft);
+      await dropOnGap(tester, await lift(tester));
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.altLeft);
+      expect(log.drops, ['write 9:30 shift', 'write 9:30']);
+    });
+
+    testWidgets('"never" shows no chip', (tester) async {
+      final log = _Log();
+      await tester.pumpWidget(_thread(log));
+      final g = await lift(tester);
+      expect(find.text('Shift later tasks'), findsNothing);
+      await dropOnGap(tester, g);
+      expect(log.drops, ['write 9:30']);
+    });
   });
 
   testWidgets('a pinned task does not lift', (tester) async {

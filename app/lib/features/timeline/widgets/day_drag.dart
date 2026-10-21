@@ -2,6 +2,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/drag_math.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
@@ -21,6 +22,8 @@ ThreadDrag dayThreadDrag(
   required tz.Location zone,
   required int snapMinutes,
   required String Function(DateTime utc) timeText,
+  ShiftFollowersPolicy shiftFollowers = ShiftFollowersPolicy.ask,
+  bool includeCalendar = false,
 }) {
   final d = _DayDrag(
     ref: ref,
@@ -30,8 +33,19 @@ ThreadDrag dayThreadDrag(
     zone: zone,
     snapMinutes: snapMinutes,
     timeText: timeText,
+    includeCalendar: includeCalendar,
   );
-  return ThreadDrag(hintFor: d.hint, onDrop: d.drop, onResize: d.resize);
+  return ThreadDrag(
+    hintFor: d.hint,
+    onDrop: d.drop,
+    onResize: d.resize,
+    // "ask" offers the chip, off; "never" hides it (docs/03 §3.2).
+    shiftByDefault: switch (shiftFollowers) {
+      ShiftFollowersPolicy.always => true,
+      ShiftFollowersPolicy.ask => false,
+      ShiftFollowersPolicy.never => null,
+    },
+  );
 }
 
 /// What [dayThreadDrag] needs, read once while the page is mounted.
@@ -44,6 +58,7 @@ final class _DayDrag {
     required this.zone,
     required this.snapMinutes,
     required this.timeText,
+    required this.includeCalendar,
   }) : undo = ref.read(undoServiceProvider);
 
   final WidgetRef ref;
@@ -54,6 +69,7 @@ final class _DayDrag {
   final tz.Location zone;
   final int snapMinutes;
   final String Function(DateTime utc) timeText;
+  final bool includeCalendar;
 
   Occurrence? _find(String id) => blocks.where((o) => o.id == id).firstOrNull;
 
@@ -76,13 +92,43 @@ final class _DayDrag {
     return start == null ? null : l10n.dragDropAt(timeText(start));
   }
 
-  Future<void> drop(String id, ThreadGap gap, double fraction) async {
+  Future<void> drop(
+    String id,
+    ThreadGap gap,
+    double fraction,
+    bool shift,
+  ) async {
     final o = _find(id);
     final start = _start(id, gap, fraction);
     if (o == null || start == null || start == o.startUtc) return;
-    _report(
-      await moveTask(ref, o, start),
-      l10n.snackMoved(o.title, timeText(start)),
+    final time = timeText(start);
+    if (!shift) {
+      return _report(
+        await moveTask(ref, o, start),
+        l10n.snackMoved(o.title, time),
+      );
+    }
+    final result = await moveWithFollowing(
+      ref,
+      day: blocks,
+      o: o,
+      startUtc: start,
+      includeCalendar: includeCalendar,
+    );
+    reportUndoable(
+      messenger,
+      l10n,
+      undo,
+      result,
+      message: (v) => switch (v.$2.blockedById) {
+        final pin? => l10n.snackMovedShiftedPartial(
+          o.title,
+          time,
+          _find(pin)!.title,
+        ),
+        null => l10n.snackMovedShifted(o.title, time, v.$2.movedIds.length - 1),
+      },
+      tokenOf: (v) => v.$1,
     );
   }
 

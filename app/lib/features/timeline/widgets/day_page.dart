@@ -63,6 +63,8 @@ class DayPage extends ConsumerWidget {
           zone: data.day.location,
           snapMinutes: data.settings.snapMinutes,
           timeText: format.time,
+          shiftFollowers: data.settings.shiftFollowers,
+          includeCalendar: data.settings.includeCalendarInShift,
         ),
       ),
       footer: _footer(blocks, summary.total == 0),

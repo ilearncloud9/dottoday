@@ -5,7 +5,10 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/scheduling/day_scheduler_service.dart';
 import 'package:dottoday/domain/scheduling/drag_math.dart';
+import 'package:dottoday/domain/scheduling/move_with_followers.dart';
+import 'package:dottoday/domain/scheduling/schedule_result.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +33,36 @@ Future<Result<UndoToken, AppFailure>> moveTask(
   Occurrence o,
   DateTime startUtc,
 ) => _write(ref, o.copyWith(startUtc: startUtc));
+
+/// Moves [o] to [startUtc] and lets the tasks after it follow ("Shift
+/// later tasks" on, R-04); see `moveWithFollowers` for the pin and
+/// calendar rules (R-17).
+Future<Result<(UndoToken, ShiftReport), AppFailure>> moveWithFollowing(
+  WidgetRef ref, {
+  required List<Occurrence> day,
+  required Occurrence o,
+  required DateTime startUtc,
+  required bool includeCalendar,
+}) async {
+  final result = const DaySchedulerService().moveWithFollowers(
+    day,
+    o.id,
+    startUtc,
+    includeCalendar: includeCalendar,
+  );
+  final now = ref.read(clockProvider).nowUtc();
+  final changed = [
+    for (final id in result.report.movedIds)
+      result.byId(id).copyWith(updatedAt: now),
+  ];
+  final applied = await ref
+      .read(undoServiceProvider)
+      .applyUndoable(WriteBatch(userId: o.userId, occurrences: changed));
+  return switch (applied) {
+    Ok(:final value) => Ok((value, result.report)),
+    Err(:final failure) => Err(failure),
+  };
+}
 
 /// Gives [o] [durationMin] (resize grip, R-05).
 Future<Result<UndoToken, AppFailure>> resizeTask(

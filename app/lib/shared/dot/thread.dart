@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/live_row.dart';
+import 'package:dottoday/shared/dot/shift_chip.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
@@ -61,17 +62,42 @@ class _ThreadState extends State<Thread> {
   /// The lifted chip's drop time while a task is dragged.
   final _hint = ValueNotifier<String?>(null);
 
+  /// "Shift later tasks" for the current drag, shown in the overlay.
+  final _shift = ValueNotifier<bool>(false);
+  final _chip = OverlayPortalController();
+
   @override
   void dispose() {
     _hint.dispose();
+    _shift.dispose();
     super.dispose();
+  }
+
+  void _lift() {
+    final start = widget.actions.drag?.shiftByDefault;
+    if (start == null) return;
+    _shift.value = start;
+    _chip.show();
+  }
+
+  void _settle() {
+    if (_chip.isShowing) _chip.hide();
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [for (final e in widget.entries) _entry(e)],
+      children: [
+        for (final e in widget.entries) _entry(e),
+        // A sibling, not a wrapper: wrapping the rows would merge their
+        // semantics into one node (R-12).
+        OverlayPortal(
+          controller: _chip,
+          overlayChildBuilder: (_) => ShiftChip(on: _shift),
+          child: const SizedBox.shrink(),
+        ),
+      ],
     );
   }
 
@@ -101,11 +127,19 @@ class _ThreadState extends State<Thread> {
     };
     if (drag == null) return row;
     return switch (e) {
-      ThreadGap() => GapDropTarget(gap: e, drag: drag, hint: _hint, child: row),
+      ThreadGap() => GapDropTarget(
+        gap: e,
+        drag: drag,
+        hint: _hint,
+        shift: _shift,
+        child: row,
+      ),
       ThreadTaskEntry(:final task) => DraggableTaskRow(
         task: task,
         drag: drag,
         hint: _hint,
+        onLift: _lift,
+        onSettle: _settle,
         child: row,
       ),
       ThreadCap() => row,

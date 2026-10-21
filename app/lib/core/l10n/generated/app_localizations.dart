@@ -1449,6 +1449,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title} now ends at {time}'**
   String snackResized(String title, String time);
+
+  /// Toggle chip shown while dragging a task: when on, the tasks after it move along (R-04). Desktop: hold Alt to invert.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift later tasks'**
+  String get shiftChipLabel;
+
+  /// Snackbar after a drop with Shift later tasks on, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{{title} moved to {time}} =1{{title} moved to {time} · 1 later task moved too} other{{title} moved to {time} · {count} later tasks moved too}}'**
+  String snackMovedShifted(String title, String time, int count);
+
+  /// Snackbar when a pinned task stopped the later tasks from following a drop (R-17).
+  ///
+  /// In en, this message translates to:
+  /// **'{title} moved to {time} · stopped at {pin} (pinned)'**
+  String snackMovedShiftedPartial(String title, String time, String pin);
 }
 
 class _AppLocalizationsDelegate
