@@ -10,3 +10,6 @@ supabase/.branches
 supabase/.temp
 supabase/snippets
 .DS_Store
+
+# Flutter DevTools per-developer settings
+app/devtools_options.yaml
