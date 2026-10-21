@@ -153,3 +153,13 @@ summaries, not individual decisions. Decide, record the reason in the commit bod
 - The same task failing its own checks three times.
 
 **Defaults when in doubt:** prefer the option that keeps the feature free, keeps platform parity, keeps data local-first, and adds a test. Prefer removing code over adding it. When two options are equal, pick the one with fewer new concepts.
+
+## 11. Design source of truth (Concept A)
+
+- The app's visual language is **Concept A, "the thread and the dot"**: `docs/10-ui-concept-a.md` (contract) + `docs/design-references/` (renders). ADR-0007 records the decision. Where `docs/03-ux-spec.md` §3 disagrees, `10-ui-concept-a.md` wins.
+- Before writing or changing any widget, read the relevant row of the screen inventory (`10-ui-concept-a.md` §5) and open its reference PNG. Build with the named components in §3; never invent a parallel component.
+- Tokens come only from `lib/theme/` (`DotTheme`); no raw colours, radii, durations or icons in features.
+- Layout adapts by width class (compact / medium / expanded), never by `Platform.isX`. Mac and web are the same layout at the same width; iPhone and Android differ only in the chrome listed in `10-ui-concept-a.md` §4.
+- Every UI task is done only when it meets `10-ui-concept-a.md` §7 (golden vs reference, both themes, three widths, a11y, l10n, screenshot sweep entry).
+- Screens with no reference render (onboarding O1–O6, secondary editors, system states) are still in scope: derive them from §5.3–5.4 and the components; add a golden for each and note it in `docs/design-references/README.md` under "derived".
+- Decide yourself (per §10): spacing within ±4 px of the render, icon paths, copy that is not in a render, state handling. Must ask: removing or merging a screen from the inventory, changing the nav set/order, changing a dot state's meaning, adding a third-party UI package.

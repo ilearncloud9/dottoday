@@ -53,6 +53,8 @@ Month view opens from the Today date header. The current date is always one tap 
 
 ## 3. Screens
 
+> Superseded by 10-ui-concept-a.md (ADR-0007); interaction rules in §4 onward still apply.
+
 ### 3.1 Today (timeline)
 - Header: date (tap → month), weekday, "Today" chip when away from today, sync pill, overflow menu
   (Running late, Plan inbox, Duplicate day, Export day).

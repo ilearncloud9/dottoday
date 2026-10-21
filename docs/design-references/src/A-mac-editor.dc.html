@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dottoday — Task editor (Mac)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3B6CF6}a:hover{color:#2B55CC}
+</style>
+</helmet>
+<div style="width:1280px;height:800px;box-sizing:border-box;position:relative;overflow:hidden;background:#FAFAF8;color:#1A1A1C;font-family:Inter,system-ui,sans-serif;font-feature-settings:'tnum' 1;display:flex;">
+
+  <div style="position:absolute;top:14px;left:14px;display:flex;gap:8px;" aria-hidden="true">
+    <div style="width:12px;height:12px;border-radius:50%;background:#FF5F57;"></div><div style="width:12px;height:12px;border-radius:50%;background:#FEBC2E;"></div><div style="width:12px;height:12px;border-radius:50%;background:#28C840;"></div>
+  </div>
+
+  <!-- Rail -->
+  <nav aria-label="Main" style="width:76px;padding:56px 0 20px 0;display:flex;flex-direction:column;align-items:center;gap:6px;border-right:1px solid #E2E2DE;">
+    <a href="#today" aria-label="Today" aria-current="page" style="width:56px;height:56px;border-radius:16px;background:rgba(59,108,246,0.12);color:#3B6CF6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;"><div style="width:12px;height:12px;border-radius:50%;background:#3B6CF6;"></div><span style="font-size:10px;font-weight:600;">Today</span></a>
+    <a href="A-mac-inbox.dc.html" aria-label="Inbox" style="width:56px;height:56px;border-radius:16px;color:#6B6B70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l2-8h14l2 8"></path><path d="M3 13v6h18v-6h-5a4 4 0 0 1-8 0z"></path></svg><span style="font-size:10px;font-weight:500;">Inbox</span></a>
+    <a href="A-mac-week.dc.html" aria-label="Week" style="width:56px;height:56px;border-radius:16px;color:#6B6B70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 4v16M12 4v16M19 4v16"></path></svg><span style="font-size:10px;font-weight:500;">Week</span></a>
+    <a href="#search" aria-label="Search" style="width:56px;height:56px;border-radius:16px;color:#6B6B70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><span style="font-size:10px;font-weight:500;">Search</span></a>
+    <div style="flex:1;"></div>
+    <a href="#settings" aria-label="Settings" style="width:56px;height:56px;border-radius:16px;color:#6B6B70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-decoration:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg><span style="font-size:10px;font-weight:500;">Settings</span></a>
+  </nav>
+
+  <!-- Today, beside the editor -->
+  <main style="flex:1;min-width:0;display:flex;flex-direction:column;padding:48px 32px 0 40px;">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <h1 style="margin:0;font-size:30px;line-height:36px;font-weight:700;letter-spacing:-0.02em;">Today</h1>
+        <span style="font-size:14px;font-weight:500;color:#6B6B70;">Wednesday, 21 October · 1 of 7 done</span>
+      </div>
+      <div style="width:44px;height:44px;border-radius:50%;background:conic-gradient({{accent}} 0 46%,#E2E2DE 46% 100%);display:flex;align-items:center;justify-content:center;" role="img" aria-label="Day 46 percent through"><div style="width:32px;height:32px;border-radius:50%;background:#FAFAF8;display:flex;align-items:center;justify-content:center;"><div style="width:10px;height:10px;border-radius:50%;background:{{accent}};"></div></div></div>
+    </div>
+
+    <div style="margin-top:26px;display:flex;flex-direction:column;">
+      <div style="display:flex;align-items:center;height:22px;"><div style="width:56px;display:flex;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D99A1F" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></div><span style="font-size:12px;font-weight:500;color:#6B6B70;">Wake Up · 7:00</span></div>
+
+      <div style="display:flex;height:56px;">
+        <div style="width:56px;position:relative;display:flex;justify-content:center;"><div style="width:6px;height:100%;border-radius:3px;background:#E5674F;opacity:0.45;"></div><div style="position:absolute;top:0;width:26px;height:26px;border-radius:50%;background:#E5674F;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></div></div>
+        <div style="flex:1;display:flex;gap:16px;padding-top:2px;"><span style="width:92px;font-size:12px;font-weight:500;color:#6B6B70;padding-top:3px;">7:30 – 8:00</span><span style="font-size:15px;font-weight:500;color:#6B6B70;text-decoration:line-through;">Morning run</span></div>
+      </div>
+      <div style="display:flex;height:30px;align-items:center;"><div style="width:56px;display:flex;justify-content:center;height:100%;"><div style="width:0;height:100%;border-left:2px dotted #C9C9C4;"></div></div><span style="margin-left:108px;font-size:12px;font-weight:500;color:#9A9AA0;">1 h free</span></div>
+
+      <!-- Selected row: being edited -->
+      <div style="display:flex;height:112px;border-radius:16px;background:#FFFFFF;box-shadow:0 0 0 2px {{accent}},0 4px 14px rgba(26,26,28,0.05);margin-right:8px;">
+        <div style="width:56px;position:relative;display:flex;justify-content:center;">
+          <div style="width:6px;height:100%;border-radius:3px;background:linear-gradient(180deg,{{accent}} 0 68%,rgba(59,108,246,0.28) 68% 100%);"></div>
+          <div style="position:absolute;top:0;width:32px;height:32px;border-radius:50%;background:conic-gradient({{accent}} 0 68%,rgba(59,108,246,0.25) 68% 100%);display:flex;align-items:center;justify-content:center;"><div style="width:24px;height:24px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3B6CF6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"></path></svg></div></div>
+          <div style="position:absolute;top:76px;left:21px;width:14px;height:14px;border-radius:50%;background:{{accent}};box-shadow:0 0 0 4px rgba(59,108,246,0.18);"></div>
+        </div>
+        <div style="flex:1;display:flex;gap:16px;padding:8px 12px 0 0;">
+          <span style="width:92px;font-size:12px;font-weight:500;color:#6B6B70;padding-top:3px;">9:00 – 11:00</span>
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+            <span style="font-size:16px;font-weight:600;letter-spacing:-0.01em;">Deep work: roadmap</span>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;font-weight:500;color:#6B6B70;"><span style="display:inline-flex;align-items:center;gap:5px;color:#3B6CF6;font-weight:600;"><span style="width:12px;height:12px;border-radius:50%;background:conic-gradient(#3B6CF6 0 33%,rgba(59,108,246,0.25) 33% 100%);"></span>1 of 3</span><span>38 min left</span><span style="padding:2px 8px;border-radius:6px;background:rgba(59,108,246,0.10);color:#3B6CF6;font-weight:600;">Editing</span></div>
+            <div style="margin-top:6px;display:flex;gap:8px;"><button type="button" style="height:30px;padding:0 12px;border-radius:999px;border:0;background:{{accent}};color:#FFFFFF;font:600 12px Inter,system-ui,sans-serif;">Done</button><button type="button" style="height:30px;padding:0 12px;border-radius:999px;border:1px solid #E2E2DE;background:#FFFFFF;color:#1A1A1C;font:500 12px Inter,system-ui,sans-serif;">+15 min</button></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;height:56px;">
+        <div style="width:56px;position:relative;display:flex;justify-content:center;"><div style="width:6px;height:100%;border-radius:3px;background:rgba(107,107,112,0.28);"></div><div style="position:absolute;top:0;width:26px;height:26px;border-radius:50%;box-sizing:border-box;border:2px solid #6B6B70;background:#FAFAF8;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6B6B70" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></div></div>
+        <div style="flex:1;display:flex;gap:16px;padding-top:2px;"><span style="width:92px;font-size:12px;font-weight:500;color:#6B6B70;padding-top:3px;">11:00 – 11:30</span><span style="font-size:15px;font-weight:500;">Reply to email</span></div>
+      </div>
+      <div style="display:flex;height:40px;align-items:center;"><div style="width:56px;display:flex;justify-content:center;height:100%;"><div style="width:0;height:100%;border-left:2px dotted #C9C9C4;"></div></div><button type="button" style="margin-left:108px;display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px 0 8px;border-radius:999px;border:1px dashed #C9C9C4;background:transparent;color:#6B6B70;font:500 12px Inter,system-ui,sans-serif;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>1 h free · add here</button></div>
+      <div style="display:flex;height:56px;">
+        <div style="width:56px;position:relative;display:flex;justify-content:center;"><div style="width:6px;height:100%;border-radius:3px;background:rgba(214,79,134,0.30);"></div><div style="position:absolute;top:0;width:26px;height:26px;border-radius:50%;box-sizing:border-box;border:2px solid #D64F86;background:#FAFAF8;"></div></div>
+        <div style="flex:1;display:flex;gap:16px;padding-top:2px;"><span style="width:92px;font-size:12px;font-weight:500;color:#6B6B70;padding-top:3px;display:inline-flex;gap:6px;align-items:center;">12:30 – 1:15 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6B6B70" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></span><span style="font-size:15px;font-weight:500;">Lunch with Sam</span></div>
+      </div>
+      <div style="display:flex;height:56px;">
+        <div style="width:56px;position:relative;display:flex;justify-content:center;"><div style="width:6px;height:100%;border-radius:3px;background:rgba(31,158,158,0.30);"></div><div style="position:absolute;top:0;width:26px;height:26px;border-radius:50%;box-sizing:border-box;border:2px solid #1F9E9E;background:#FAFAF8;"></div></div>
+        <div style="flex:1;display:flex;gap:16px;padding-top:2px;"><span style="width:92px;font-size:12px;font-weight:500;color:#6B6B70;padding-top:3px;">2:00 – 3:00</span><span style="font-size:15px;font-weight:500;">Spanish lesson</span></div>
+      </div>
+      <div style="display:flex;height:56px;mask-image:linear-gradient(180deg,#000 20%,transparent 100%);-webkit-mask-image:linear-gradient(180deg,#000 20%,transparent 100%);">
+        <div style="width:56px;position:relative;display:flex;justify-content:center;"><div style="width:0;height:100%;border-left:2px dotted #C9C9C4;"></div><div style="position:absolute;top:0;width:26px;height:26px;border-radius:50%;box-sizing:border-box;border:2px solid #D99A1F;background:#FAFAF8;"></div></div>
+        <div style="flex:1;display:flex;gap:16px;padding-top:2px;"><span style="width:92px;font-size:12px;font-weight:500;color:#6B6B70;padding-top:3px;">4:00 – 4:15</span><span style="font-size:15px;font-weight:500;">Call the dentist</span></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Right-hand editor panel -->
+  <aside aria-label="Edit task" style="width:440px;background:#FFFFFF;border-left:1px solid #E2E2DE;display:flex;flex-direction:column;padding:48px 32px 24px 32px;box-sizing:border-box;">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:12px;font-weight:600;color:#6B6B70;text-transform:uppercase;letter-spacing:0.04em;">Edit task</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:11px;font-weight:500;color:#9A9AA0;padding:2px 6px;border-radius:6px;background:#F1F1EE;">esc</span>
+        <button type="button" aria-label="Close editor" style="width:32px;height:32px;border-radius:50%;border:0;background:#F1F1EE;color:#6B6B70;display:flex;align-items:center;justify-content:center;padding:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+      </div>
+    </div>
+
+    <!-- Title + icon/colour -->
+    <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
+      <button type="button" aria-label="Change icon and colour" style="width:44px;height:44px;border-radius:50%;box-sizing:border-box;border:2px solid #3B6CF6;background:rgba(59,108,246,0.10);color:#3B6CF6;display:flex;align-items:center;justify-content:center;padding:0;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"></path></svg></button>
+      <label for="title" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Title</label>
+      <input id="title" type="text" value="Deep work: roadmap" style="flex:1;height:44px;border:0;border-bottom:2px solid {{accent}};outline:none;background:transparent;font:600 20px Inter,system-ui,sans-serif;color:#1A1A1C;letter-spacing:-0.01em;padding:0;">
+    </div>
+    <!-- Colour + icon (same block as Quick Add on iPhone/Android) -->
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+      <span style="font-size:11px;font-weight:600;color:#6B6B70;text-transform:uppercase;letter-spacing:0.04em;">Colour and icon</span>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;gap:6px;" role="radiogroup" aria-label="Colour">
+      <button type="button" aria-label="Coral" style="width:22px;height:22px;border-radius:50%;border:0;background:#E5674F;padding:0;"></button><button type="button" aria-label="Amber" style="width:22px;height:22px;border-radius:50%;border:0;background:#D99A1F;padding:0;"></button><button type="button" aria-label="Mint" style="width:22px;height:22px;border-radius:50%;border:0;background:#2FA37A;padding:0;"></button><button type="button" aria-label="Teal" style="width:22px;height:22px;border-radius:50%;border:0;background:#1F9E9E;padding:0;"></button><button type="button" aria-label="Sky" style="width:22px;height:22px;border-radius:50%;border:0;background:#2E8FD6;padding:0;"></button><button type="button" aria-label="Indigo, selected" aria-checked="true" style="width:22px;height:22px;border-radius:50%;border:0;background:#3B6CF6;padding:0;box-shadow:0 0 0 2px #FFFFFF,0 0 0 4px #3B6CF6;"></button><button type="button" aria-label="Violet" style="width:22px;height:22px;border-radius:50%;border:0;background:#7A5AF8;padding:0;"></button><button type="button" aria-label="Rose" style="width:22px;height:22px;border-radius:50%;border:0;background:#D64F86;padding:0;"></button><button type="button" aria-label="Slate" style="width:22px;height:22px;border-radius:50%;border:0;background:#6B6B70;padding:0;"></button>
+        </div>
+        <div style="display:flex;gap:2px;" role="radiogroup" aria-label="Icon"><button type="button" aria-label="Code, selected" aria-checked="true" style="width:34px;height:34px;border-radius:50%;border:0;background:rgba(59,108,246,0.14);color:#3B6CF6;display:flex;align-items:center;justify-content:center;padding:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"></path></svg></button><button type="button" aria-label="Run" style="width:34px;height:34px;border-radius:50%;border:0;background:transparent;color:#6B6B70;display:flex;align-items:center;justify-content:center;padding:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14l4-4 4 4 5-6 3 3"></path></svg></button><button type="button" aria-label="Mail" style="width:34px;height:34px;border-radius:50%;border:0;background:transparent;color:#6B6B70;display:flex;align-items:center;justify-content:center;padding:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v14H3zM3 7l9 6 9-6"></path></svg></button><button type="button" aria-label="More icons" style="width:34px;height:34px;border-radius:50%;border:0;background:transparent;color:#6B6B70;display:flex;align-items:center;justify-content:center;padding:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h.01M12 12h.01M19 12h.01"></path></svg></button></div>
+      </div>
+    </div>
+
+    <!-- When -->
+    <div style="margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="display:flex;flex-direction:column;gap:4px;"><span style="font-size:11px;font-weight:600;color:#6B6B70;text-transform:uppercase;letter-spacing:0.04em;">When</span><button type="button" style="height:36px;padding:0 12px;border-radius:10px;border:1px solid #E2E2DE;background:#FAFAF8;color:#1A1A1C;font:500 13px Inter,system-ui,sans-serif;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B6B70" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Today, Wed 21 Oct</button></div>
+      <div style="display:flex;flex-direction:column;gap:4px;"><span style="font-size:11px;font-weight:600;color:#6B6B70;text-transform:uppercase;letter-spacing:0.04em;">Start</span><button type="button" style="height:36px;padding:0 12px;border-radius:10px;border:1px solid #E2E2DE;background:#FAFAF8;color:#1A1A1C;font:500 13px Inter,system-ui,sans-serif;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B6B70" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>9:00 AM<span style="margin-left:auto;font-size:12px;color:#6B6B70;">→ 11:00</span></button></div>
+    </div>
+
+    <!-- Duration -->
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:6px;">
+      <span style="font-size:11px;font-weight:600;color:#6B6B70;text-transform:uppercase;letter-spacing:0.04em;">Duration</span>
+      <div style="display:flex;gap:6px;">
+        <button type="button" style="height:30px;padding:0 11px;border-radius:999px;border:1px solid #E2E2DE;background:#FFFFFF;color:#1A1A1C;font:500 12px Inter,system-ui,sans-serif;">15</button><button type="button" style="height:30px;padding:0 11px;border-radius:999px;border:1px solid #E2E2DE;background:#FFFFFF;color:#1A1A1C;font:500 12px Inter,system-ui,sans-serif;">30</button><button type="button" style="height:30px;padding:0 11px;border-radius:999px;border:1px solid #E2E2DE;background:#FFFFFF;color:#1A1A1C;font:500 12px Inter,system-ui,sans-serif;">45</button><button type="button" style="height:30px;padding:0 11px;border-radius:999px;border:1px solid #E2E2DE;background:#FFFFFF;color:#1A1A1C;font:500 12px Inter,system-ui,sans-serif;">60</button><button type="button" style="height:30px;padding:0 11px;border-radius:999px;border:1px solid #E2E2DE;background:#FFFFFF;color:#1A1A1C;font:500 12px Inter,system-ui,sans-serif;">90</button><button type="button" aria-pressed="true" style="height:30px;padding:0 11px;border-radius:999px;border:0;background:{{accent}};color:#FFFFFF;font:600 12px Inter,system-ui,sans-serif;">2 h</button>
+        <label for="dur" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Custom duration</label>
+        <input id="dur" type="text" placeholder="custom" style="width:64px;height:30px;box-sizing:border-box;border-radius:999px;border:1px dashed #C9C9C4;background:transparent;font:500 12px Inter,system-ui,sans-serif;color:#1A1A1C;padding:0 10px;outline:none;">
+      </div>
+    </div>
+
+    <!-- Repeat + alerts -->
+    <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="display:flex;flex-direction:column;gap:4px;"><span style="font-size:11px;font-weight:600;color:#6B6B70;text-transform:uppercase;letter-spacing:0.04em;">Repeat</span><button type="button" style="height:36px;padding:0 12px;border-radius:10px;border:1px solid #E2E2DE;background:#FAFAF8;color:#1A1A1C;font:500 13px Inter,system-ui,sans-serif;display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B6B70" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 2l4 4-4 4"></path><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><path d="M7 22l-4-4 4-4"></path><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>Weekdays<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9A9AA0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-left:auto;"><path d="M6 9l6 6 6-6"></path></svg></button></div>
+      <div style="display:flex;flex-direction:column;gap:4px;"><span style="font-size:11px;font-weight:600;color:#6B6B70;text-transform:uppercase;letter-spacing:0.04em;">Alerts</span><div style="display:flex;gap:6px;"><span style="height:36px;padding:0 10px;border-radius:10px;background:rgba(59,108,246,0.10);color:#3B6CF6;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"></path><path d="M10 21h4"></path></svg>At start</span><span style="height:36px;padding:0 10px;border-radius:10px;background:rgba(59,108,246,0.10);color:#3B6CF6;font-size:12px;font-weight:600;display:inline-flex;align-items:center;">10 min before</span><button type="button" aria-label="Add alert" style="width:36px;height:36px;border-radius:10px;border:1px dashed #C9C9C4;background:transparent;color:#6B6B70;display:flex;align-items:center;justify-content:center;padding:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button></div></div>
+    </div>
+
+    <!-- Subtasks: a mini thread of dots -->
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:6px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:11px;font-weight:600;color:#6B6B70;text-transform:uppercase;letter-spacing:0.04em;">Subtasks · 1 of 3</span><span style="width:12px;height:12px;border-radius:50%;background:conic-gradient(#3B6CF6 0 33%,rgba(59,108,246,0.25) 33% 100%);"></span></div>
+      <div style="display:flex;align-items:center;gap:10px;height:32px;"><button type="button" aria-label="Mark Collect Q4 asks undone" style="width:20px;height:20px;border-radius:50%;border:0;background:#3B6CF6;display:flex;align-items:center;justify-content:center;padding:0;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></button><span style="font-size:13px;font-weight:500;color:#6B6B70;text-decoration:line-through;">Collect Q4 asks from the team</span></div>
+      <div style="display:flex;align-items:center;gap:10px;height:32px;"><button type="button" aria-label="Mark Rank by effort done" style="width:20px;height:20px;border-radius:50%;box-sizing:border-box;border:2px solid #3B6CF6;background:transparent;padding:0;"></button><span style="font-size:13px;font-weight:500;">Rank by effort and impact</span><span style="margin-left:auto;font-size:11px;font-weight:600;color:#3B6CF6;">now</span></div>
+      <div style="display:flex;align-items:center;gap:10px;height:32px;"><button type="button" aria-label="Mark Draft one-pager done" style="width:20px;height:20px;border-radius:50%;box-sizing:border-box;border:2px solid #C9C9C4;background:transparent;padding:0;"></button><span style="font-size:13px;font-weight:500;">Draft the one-pager</span></div>
+      <div style="display:flex;align-items:center;gap:10px;height:32px;"><span style="width:20px;height:20px;border-radius:50%;box-sizing:border-box;border:2px dashed #C9C9C4;display:inline-block;"></span><label for="sub" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">New subtask</label><input id="sub" type="text" placeholder="Add a subtask" style="flex:1;border:0;outline:none;background:transparent;font:500 13px Inter,system-ui,sans-serif;color:#1A1A1C;"></div>
+    </div>
+
+    <!-- Notes -->
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px;flex:1;min-height:0;">
+      <label for="notes" style="font-size:11px;font-weight:600;color:#6B6B70;text-transform:uppercase;letter-spacing:0.04em;">Notes</label>
+      <textarea id="notes" style="flex:1;min-height:56px;resize:none;border-radius:10px;border:1px solid #E2E2DE;background:#FAFAF8;padding:10px 12px;font:400 13px/18px Inter,system-ui,sans-serif;color:#1A1A1C;outline:none;box-sizing:border-box;">Scope: Q1 only. Keep the one-pager under 400 words; link the metrics sheet.</textarea>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top:16px;display:flex;align-items:center;gap:10px;">
+      <button type="button" aria-label="Delete task" style="width:40px;height:40px;border-radius:50%;border:1px solid #E2E2DE;background:#FFFFFF;color:#6B6B70;display:flex;align-items:center;justify-content:center;padding:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button>
+      <button type="button" style="height:40px;padding:0 16px;border-radius:999px;border:1px solid #E2E2DE;background:#FFFFFF;color:#1A1A1C;font:500 13px Inter,system-ui,sans-serif;display:inline-flex;align-items:center;gap:8px;">Move to inbox</button>
+      <div style="flex:1;"></div>
+      <button type="button" style="height:40px;padding:0 18px;border-radius:999px;border:0;background:{{accent}};color:#FFFFFF;font:600 14px Inter,system-ui,sans-serif;display:inline-flex;align-items:center;gap:10px;">Save<span style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.85);padding:2px 6px;border-radius:6px;background:rgba(255,255,255,0.2);">⌘S</span></button>
+    </div>
+  </aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#3B6CF6","options":["#3B6CF6","#1F9E9E","#E5674F","#7A5AF8"]},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#3B6CF6' };
+  }
+}
+</script>
+</body>
+</html>
