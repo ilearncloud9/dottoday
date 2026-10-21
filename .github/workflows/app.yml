@@ -38,7 +38,7 @@ jobs:
           dart run build_runner build -d
           flutter gen-l10n
           git diff --exit-code -- . || { echo "::error::Generated files are stale. Run build_runner and gen-l10n, then commit."; exit 1; }
-      - run: dart format --set-exit-if-changed lib test
+      - run: dart format --set-exit-if-changed lib test tool
       # dart analyze (not flutter analyze) so the riverpod_lint analyzer plugin runs (M0.11).
       - run: dart analyze --fatal-infos
       - run: flutter test --exclude-tags golden --test-randomize-ordering-seed random

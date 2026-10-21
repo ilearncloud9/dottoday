@@ -1,12 +1,14 @@
 import 'package:dottoday/core/theme/app_colors.dart';
 import 'package:dottoday/core/theme/app_motion.dart';
 import 'package:dottoday/core/theme/app_typography.dart';
+import 'package:dottoday/core/theme/block_palette.dart';
 import 'package:flutter/material.dart';
 
 export 'app_colors.dart';
 export 'app_motion.dart';
 export 'app_spacing.dart';
 export 'app_typography.dart';
+export 'block_palette.dart';
 
 /// Dottoday design tokens as a [ThemeExtension] (docs/03-ux-spec.md §1).
 ///
@@ -20,11 +22,15 @@ final class AppTheme extends ThemeExtension<AppTheme> {
   const AppTheme({
     required this.colors,
     required this.typography,
+    required this.blocks,
     this.motion = AppMotion.standard,
   });
 
   final AppColors colors;
   final AppTypography typography;
+
+  /// User-selectable block colours for this brightness.
+  final BlockPalette blocks;
   final AppMotion motion;
 
   /// Tokens for [context], with [motion] zeroed when the OS reduced-motion
@@ -36,19 +42,23 @@ final class AppTheme extends ThemeExtension<AppTheme> {
     return theme!.copyWith(motion: AppMotion.resolve(reduceMotion: reduce));
   }
 
-  static ThemeData light() => _build(Brightness.light, AppColors.light);
+  static ThemeData light() =>
+      _build(Brightness.light, AppColors.light, BlockPalette.light);
 
-  static ThemeData dark() => _build(Brightness.dark, AppColors.dark);
+  static ThemeData dark() =>
+      _build(Brightness.dark, AppColors.dark, BlockPalette.dark);
 
   @override
   AppTheme copyWith({
     AppColors? colors,
     AppTypography? typography,
+    BlockPalette? blocks,
     AppMotion? motion,
   }) {
     return AppTheme(
       colors: colors ?? this.colors,
       typography: typography ?? this.typography,
+      blocks: blocks ?? this.blocks,
       motion: motion ?? this.motion,
     );
   }
@@ -59,12 +69,13 @@ final class AppTheme extends ThemeExtension<AppTheme> {
     return AppTheme(
       colors: colors.lerp(other.colors, t),
       typography: typography.lerp(other.typography, t),
+      blocks: blocks.lerp(other.blocks, t),
       motion: t < 0.5 ? motion : other.motion,
     );
   }
 }
 
-ThemeData _build(Brightness brightness, AppColors c) {
+ThemeData _build(Brightness brightness, AppColors c, BlockPalette blocks) {
   final type = AppTypography.withColor(c.onSurface);
   final scheme = ColorScheme(
     brightness: brightness,
@@ -88,7 +99,7 @@ ThemeData _build(Brightness brightness, AppColors c) {
     scaffoldBackgroundColor: c.surface,
     fontFamily: AppTypography.fontFamily,
     textTheme: _textTheme(type),
-    extensions: [AppTheme(colors: c, typography: type)],
+    extensions: [AppTheme(colors: c, typography: type, blocks: blocks)],
   );
 }
 

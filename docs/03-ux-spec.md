@@ -7,7 +7,8 @@ state (empty, loading, error, offline) designed.
 ## 1. Design tokens (implement in `lib/core/theme/`)
 
 ### Colour
-Semantic roles only in code; never raw hex outside `app_colors.dart`.
+Semantic roles only in code; never raw hex outside `app_colors.dart` and the generated
+`block_palette.g.dart`.
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
@@ -26,7 +27,9 @@ Semantic roles only in code; never raw hex outside `app_colors.dart`.
 Block palette (user-selectable, 12): coral, tangerine, amber, lime, mint, teal, sky, indigo, violet,
 magenta, rose, slate. Each has `base` (fill at 18 % alpha in light / 28 % in dark), `strong` (text/icon),
 and a 3:1 minimum contrast against surface for the strong variant. Keep palette JSON in
-`assets/design/palette.json` and generate Dart via build step.
+`assets/design/palette.json` and generate Dart via build step (`dart run tool/gen_block_palette.dart`;
+a test fails when the generated file is stale). Strong is additionally held to 4.5:1 on the
+composited block fill, since block titles are body text.
 
 ### Typography
 Inter (bundled) with platform fallback. Sizes scale with system text size up to 200 %.
