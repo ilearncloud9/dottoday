@@ -127,3 +127,29 @@ These exist because real users complained about the original app. Do not cut the
 - `/next-task` — pick the next unchecked plan item and start the workflow.
 - `/review` — self-review a diff against rules §4–§7.
 - `/ship-check` — run analyze/test/security checklist before closing a milestone.
+- `/run-milestone` — loop through every task in the current milestone autonomously, pausing only for §10 "must ask" items.
+
+## 10. Autonomy rules (for `/run-milestone`)
+
+You are expected to run task after task without asking. The owner reviews commits and milestone
+summaries, not individual decisions. Decide, record the reason in the commit body, move on.
+
+**Decide yourself (never pause for these):**
+- Scoping: splitting a task, deferring a sub-item to a later task with a plan note, adding a follow-up task.
+- Implementation choices the specs leave open (file layout inside a feature, widget structure, naming, test shape).
+- Dependency *version* bumps, pins with a `# reason:` comment, and removing an unused dependency.
+- Choosing between options when one is clearly consistent with CLAUDE.md §2–§4 and the ADRs — pick it and note the alternatives in one line.
+- Adding tests, lint rules, CI steps, or policy checks that make an existing rule enforceable.
+- Spec clarifications where the docs are silent: choose the option that best serves the R-xx the task cites, and write the choice into the relevant doc section so it stops being silent.
+- Anything reversible within one commit.
+
+**Must ask (stop the loop, recommend an option, wait):**
+- Adding a *new* dependency that is not already in `pubspec.yaml`, or replacing a core stack item from §2 (needs an ADR anyway).
+- Schema changes that drop or retype a column, or any `supabase db push` to the linked project.
+- Anything that touches the hosted Supabase project, store accounts, signing, OAuth consent screens, or costs money.
+- Deleting > 30 lines of non-generated code that is not being replaced in the same commit, or any destructive git operation.
+- A conflict between two specs that cannot be resolved by "the more specific doc wins" (PRD > UX spec > architecture > CLAUDE.md for product questions; CLAUDE.md > ADR > architecture for engineering questions).
+- A security checklist item (06 §9) that the task cannot satisfy.
+- The same task failing its own checks three times.
+
+**Defaults when in doubt:** prefer the option that keeps the feature free, keeps platform parity, keeps data local-first, and adds a test. Prefer removing code over adding it. When two options are equal, pick the one with fewer new concepts.
