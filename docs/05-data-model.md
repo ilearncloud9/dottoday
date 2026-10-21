@@ -78,6 +78,12 @@ A nightly job purges older tombstones.
 - `title` 1–200 chars, trimmed; `notes` ≤ 10 000; `duration_min` 5–1440; `alerts` ≤ 5 with
   `offsetMin` 0–1440; `subtasks` ≤ 50 per occurrence; `rrule` must parse and have `FREQ`; `tz_id`
   must be a known IANA id; `color_key`/`icon_key` from the allowed sets.
+- Clarified in M1.1: `icon_key` is a lowercase snake_case token ≤ 48 chars (default `circle`) until
+  the picker set is fixed in M3.1; the UI draws `circle` for keys it does not know. `color_key` must be
+  one of the 12 palette keys (`block_color_keys.gen.dart`). Day boundaries are `HH:mm` with
+  start < end (no wrap); quiet hours may wrap past midnight. `quietHours: null` means off and is the
+  default for new profiles (the example above shows the suggested window once enabled). Validation
+  checks `tz_id` against the bundled IANA database, which `bootstrap()` loads before `runApp`.
 - Server enforces with CHECK constraints and a `validate_settings()` function; client with a Zod-like
   Dart validator in `domain/validation`.
 

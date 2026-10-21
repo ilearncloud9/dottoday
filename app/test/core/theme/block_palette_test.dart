@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/domain/entities/block_color_keys.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -27,6 +28,11 @@ void main() {
     const spec = 'coral tangerine amber lime mint teal '
         'sky indigo violet magenta rose slate';
     expect(BlockColor.values.map((c) => c.key), spec.split(' '));
+  });
+
+  test('domain colour keys mirror BlockColor', () {
+    expect(blockColorKeys, BlockColor.values.map((c) => c.key));
+    expect(defaultBlockColorKey, BlockColor.fallback.key);
   });
 
   test('fill alpha is 18 % light, 28 % dark', () {
@@ -81,20 +87,26 @@ void main() {
   group('generator', () {
     // Freshness gate: block_palette.gen.dart must equal a fresh render of the
     // JSON, so an edited palette without a re-run fails CI.
-    test('committed output is up to date with palette.json', () async {
-      // Inside the package so `dart format` uses its language version
-      // (a system temp file gets the newer tall style).
-      final dir = await Directory('.dart_tool').createTemp('palette');
-      addTearDown(() => dir.delete(recursive: true));
-      final fresh = '${dir.path}/block_palette.gen.dart';
-      await gen.writeFormatted(gen.renderBlockPalette(_paletteJson()), fresh);
+    final outputs = {
+      gen.outputPath: gen.renderBlockPalette,
+      gen.keysOutputPath: gen.renderBlockColorKeys,
+    };
+    for (final MapEntry(key: path, value: render) in outputs.entries) {
+      test('$path is up to date with palette.json', () async {
+        // Inside the package so `dart format` uses its language version
+        // (a system temp file gets the newer tall style).
+        final dir = await Directory('.dart_tool').createTemp('palette');
+        addTearDown(() => dir.delete(recursive: true));
+        final fresh = '${dir.path}/out.dart';
+        await gen.writeFormatted(render(_paletteJson()), fresh);
 
-      expect(
-        File(fresh).readAsStringSync(),
-        File(gen.outputPath).readAsStringSync(),
-        reason: 'Run: dart run tool/gen_block_palette.dart',
-      );
-    });
+        expect(
+          File(fresh).readAsStringSync(),
+          File(path).readAsStringSync(),
+          reason: 'Run: dart run tool/gen_block_palette.dart',
+        );
+      });
+    }
 
     test('rejects malformed palettes', () {
       Map<String, Object?> doc() =>
@@ -112,10 +124,11 @@ void main() {
       final badAlpha = doc()..['fillAlpha'] = {'light': 1.2, 'dark': 0.28};
 
       for (final bad in [badHex, dupe, badDefault, badAlpha, null]) {
-        expect(
-          () => gen.renderBlockPalette(bad),
-          throwsFormatException,
-        );
+        expect(() => gen.renderBlockPalette(bad), throwsFormatException);
+        // fillAlpha is irrelevant to the key set.
+        if (bad != badAlpha) {
+          expect(() => gen.renderBlockColorKeys(bad), throwsFormatException);
+        }
       }
     });
   });

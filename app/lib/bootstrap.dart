@@ -10,6 +10,7 @@ import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timezone/data/latest.dart' as tz_data;
 
 /// Composition root: error handlers, config, then the app.
 ///
@@ -19,6 +20,8 @@ Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   final logger = Logger(const DeveloperLogSink(), const SystemClock());
   installErrorHandlers(logger);
+  // IANA zone data for TZDateTime arithmetic and tz_id validation (docs/05).
+  tz_data.initializeTimeZones();
 
   final env = Env.fromEnvironment();
 

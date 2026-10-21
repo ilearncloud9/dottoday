@@ -13,6 +13,9 @@ analyzer:
     missing_required_param: error
     missing_return: error
     todo: info
+    # freezed requires @JsonSerializable/@JsonKey on factory constructors and
+    # their parameters, which the analyzer flags as an invalid target.
+    invalid_annotation_target: ignore
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
