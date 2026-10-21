@@ -71,6 +71,17 @@ local write, so they are correct even if sync is down.
 - `suggestSlots(day, durationMin, prefs)`: next free gaps respecting boundaries and energy windows.
 All are property-tested (no overlaps created unless allowed; pinned never moves; order preserved).
 
+Clarified in M1.4 (`domain/scheduling/day_scheduler_service.dart`):
+- No shift ever carries a block onto or across a pinned block. `shiftFollowers` also stops when a
+  follower would land on the pin ahead (or, moving earlier, the pin before the group), and
+  `runningLate` stops at the first pin after now: a pin anchors the rest of the day. Both report
+  `partial` with the blocking pin for the toast.
+- `insert(bump)` only moves blocks starting at or after the new block; it pushes them by exactly the
+  overlap with the first movable follower (including its travel buffer).
+- `fitNextGap` and `suggestSlots` treat travel buffers as busy, skipped blocks as free, done blocks
+  as busy. `suggestSlots` snaps to the user's grid from the local day start and ignores energy
+  windows (energy-based planning is Phase 2, docs/02).
+
 ## 6. Notifications
 
 `NotificationPlanner` computes the desired set `{notificationId → (fireAtUtc, payload)}` for the next

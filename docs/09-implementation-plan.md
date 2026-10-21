@@ -31,7 +31,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [x] M1.1 Entities with freezed: `Series`, `Occurrence`, `Subtask`, `Alert`, `CalendarAccount`, `CalendarLink`, `Profile/Settings`. Validators per 05 "Validation". Unit tests. `color_key` allowed set: `BlockColor` (M1.0) lives in `core/theme` and imports Flutter, so expose the 12 keys to `domain` without a Flutter import (e.g. generate a pure `block_color_keys.g.dart` from the same JSON).
 - [x] M1.2 `RecurrenceExpander` (rrule + timezone): expand series → occurrences for a window; exceptions; tests listed in 08 §2 `recurrence_expander_test`. (ADR-0004, R-01, R-09)
 - [x] M1.3 `Materialiser`: idempotent 90-day materialisation; subtask instantiation from template per occurrence; `subtask_occurrence_test`. (R-09)
-- [ ] M1.4 `DaySchedulerService`: `shiftFollowers`, `insert(policy)`, `runningLate`, `suggestSlots`; property tests from 08 §2. (04 §5, R-04, R-05, R-17)
+- [x] M1.4 `DaySchedulerService`: `shiftFollowers`, `insert(policy)`, `runningLate`, `suggestSlots`; property tests from 08 §2. (04 §5, R-04, R-05, R-17)
 - [ ] M1.5 `QuickAddParser` (en, de, fr, es; 12/24 h): tests from 08 §2. (R-06, R-07, R-20)
 - [ ] M1.6 `NotificationPlanner`: desired-set computation; windowing (iOS 64 limit); quiet hours; tests. (R-10)
 - [ ] M1.7 `ConflictResolver` + HLC implementation; tests for LWW, 60-s same-field conflict. (ADR-0002)
