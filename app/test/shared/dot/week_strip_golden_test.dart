@@ -1,0 +1,49 @@
+// Goldens are baselined on macOS; CI runs them on a macOS runner (docs/09 M0.8).
+@Tags(['golden'])
+library;
+
+import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/day_dot.dart';
+import 'package:dottoday/shared/dot/week_strip.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
+
+import '../../support/dot_golden.dart';
+import '../../support/sample_day.dart';
+
+class _Specimen extends StatelessWidget {
+  const _Specimen();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(DotSpace.page),
+      child: Column(
+        spacing: DotSpace.l,
+        children: [
+          const Row(
+            spacing: DotSpace.l,
+            children: [
+              DayDot(progress: 0),
+              DayDot(progress: 0.4),
+              DayDot(progress: 1),
+              DayDot(progress: 0.4, size: DotSize.dayDotWatch),
+            ],
+          ),
+          WeekStrip(
+            days: mainWeek,
+            selected: 3,
+            onSelect: (_) {},
+            onPull: () {},
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+void main() {
+  setUpAll(loadAppFonts);
+  goldenMatrix('week_strip', height: 240, build: (_) => const _Specimen());
+}

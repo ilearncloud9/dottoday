@@ -885,6 +885,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{label}, {progress}'**
   String rowWithSubtasks(String label, String progress);
+
+  /// Screen-reader label of the day dot: share of Wake Up → Bedtime elapsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {percent} % through'**
+  String dayDotLabel(int percent);
+
+  /// Screen-reader label of the handle under the week strip.
+  ///
+  /// In en, this message translates to:
+  /// **'Show month'**
+  String get weekStripShowMonth;
+
+  /// Screen-reader label of the handle when the month is open.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide month'**
+  String get weekStripHideMonth;
 }
 
 class _AppLocalizationsDelegate

@@ -741,5 +741,22 @@
         "type": "String"
       }
     }
+  },
+  "dayDotLabel": "Day {percent} % through",
+  "@dayDotLabel": {
+    "description": "Screen-reader label of the day dot: share of Wake Up → Bedtime elapsed.",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "weekStripShowMonth": "Show month",
+  "@weekStripShowMonth": {
+    "description": "Screen-reader label of the handle under the week strip."
+  },
+  "weekStripHideMonth": "Hide month",
+  "@weekStripHideMonth": {
+    "description": "Screen-reader label of the handle when the month is open."
   }
 }

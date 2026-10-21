@@ -508,4 +508,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String rowWithSubtasks(String label, String progress) {
     return '$label, $progress';
   }
+
+  @override
+  String dayDotLabel(int percent) {
+    return 'Day $percent % through';
+  }
+
+  @override
+  String get weekStripShowMonth => 'Show month';
+
+  @override
+  String get weekStripHideMonth => 'Hide month';
 }
