@@ -6,6 +6,7 @@ import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/month_grid.dart';
+import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -123,9 +124,87 @@ void main() {
     await tester.tap(find.text('WED, OCT 21'));
     await tester.pumpAndSettle();
     expect(find.byType(MonthGrid), findsOneWidget);
+    expect(find.byType(WeekStrip), findsNothing);
     await tester.tap(find.bySemanticsLabel('Hide month').last);
     await tester.pumpAndSettle();
     expect(find.byType(MonthGrid), findsNothing);
+    await tester.drag(find.byType(PullHandle), const Offset(0, 120));
+    await tester.pumpAndSettle();
+    expect(find.byType(MonthGrid), findsOneWidget);
+  });
+
+  testWidgets('month: data dots, footer, Today link; nav to another month', (
+    tester,
+  ) async {
+    await _pump(tester, size: const Size(390, 1000));
+    await tester.tap(find.text('WED, OCT 21'));
+    await tester.pumpAndSettle();
+    expect(find.text('October · 1 of 31 days planned'), findsOneWidget);
+    expect(find.text('Sep · Oct · Nov'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel(RegExp(r'^Wednesday, October 21, \d+ of 13 done$')),
+      findsOneWidget,
+    );
+    await tester.tap(find.byTooltip('Next month'));
+    await tester.pumpAndSettle();
+    expect(find.text('November 2026'), findsOneWidget);
+    expect(find.text('Oct · Nov · Dec'), findsOneWidget);
+  });
+
+  testWidgets('a future free day: Today pill and the empty-day actions', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      date: DateTime(2026, 12, 14),
+      size: const Size(390, 1000),
+    );
+    expect(find.text('Today'), findsWidgets);
+    expect(find.text('Add to this day'), findsWidgets);
+    expect(find.text('Copy a day…'), findsWidgets);
+    await tester.tap(find.widgetWithText(OutlinedButton, 'Today'));
+    await tester.pumpAndSettle();
+    expect(find.text('WED, OCT 21'), findsOneWidget);
+  });
+
+  testWidgets('Copy a day copies the picked day’s one-offs, with Undo', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      date: DateTime(2026, 10, 24),
+      size: const Size(390, 1000),
+    );
+    final copy = find.text('Copy a day…').hitTestable();
+    await tester.ensureVisible(copy.first);
+    await tester.tap(copy.first);
+    await tester.pumpAndSettle();
+    expect(find.text('Copy which day?'), findsOneWidget);
+    await tester.tap(
+      find.descendant(of: find.byType(BottomSheet), matching: find.text('21')),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Copied 12 tasks'), findsOneWidget);
+    expect(find.text('Morning run'), findsWidgets);
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
+    expect(find.text('Add to this day'), findsWidgets);
+  });
+
+  testWidgets('reduced motion: the month opens without animating', (
+    tester,
+  ) async {
+    tester.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(disableAnimations: true);
+    addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+    await _pump(tester);
+    await tester.tap(find.text('WED, OCT 21'));
+    await tester.pump();
+    await tester.pump();
+    expect(find.byType(MonthGrid), findsOneWidget);
+    // No AnimatedSize at all: a zero-duration one asserts during layout.
+    expect(find.byType(AnimatedSize), findsNothing);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('an empty day says what to do', (tester) async {

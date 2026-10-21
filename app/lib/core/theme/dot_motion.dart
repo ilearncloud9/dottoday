@@ -11,6 +11,7 @@ final class DotMotion {
     required this.base,
     required this.slow,
     required this.curve,
+    required this.spring,
   });
 
   static const standard = DotMotion(
@@ -18,6 +19,7 @@ final class DotMotion {
     base: Duration(milliseconds: 200),
     slow: Duration(milliseconds: 240),
     curve: Curves.easeOut,
+    spring: Curves.easeOutBack,
   );
 
   /// All durations zero: animations jump straight to their end state.
@@ -26,6 +28,7 @@ final class DotMotion {
     base: Duration.zero,
     slow: Duration.zero,
     curve: Curves.linear,
+    spring: Curves.linear,
   );
 
   /// Returns [reduced] when the OS asks for reduced motion, else [standard].
@@ -39,4 +42,7 @@ final class DotMotion {
   final Duration base;
   final Duration slow;
   final Curve curve;
+
+  /// The month pull-open's rubber band (§2.4): a slight overshoot.
+  final Curve spring;
 }

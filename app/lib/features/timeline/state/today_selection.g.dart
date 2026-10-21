@@ -44,7 +44,7 @@ final class TodaySelectionProvider
   }
 }
 
-String _$todaySelectionHash() => r'faa68cde5d7751226821ca797819e7c87203e0b6';
+String _$todaySelectionHash() => r'd777a383787a0e5f3ce688fa9f4cf3651db82ee9';
 
 /// UI state of the Today screen, reset when the screen is left.
 

@@ -599,4 +599,73 @@ class AppLocalizationsEn extends AppLocalizations {
   String stripDayLabel(String day, int done, int total) {
     return '$day, $done of $total done';
   }
+
+  @override
+  String monthFooterPlanned(String month, int count, int days) {
+    return '$month · $count of $days days planned';
+  }
+
+  @override
+  String monthDaysPlanned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days planned',
+      one: '1 day planned',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get monthLegendPlanned => 'planned';
+
+  @override
+  String get monthLegendRepeats => 'repeats';
+
+  @override
+  String monthNav(String previous, String current, String next) {
+    return '$previous · $current · $next';
+  }
+
+  @override
+  String get monthPrevious => 'Previous month';
+
+  @override
+  String get monthNext => 'Next month';
+
+  @override
+  String get todayPill => 'Today';
+
+  @override
+  String monthCellLabel(String day, int done, int total) {
+    return '$day, $done of $total done';
+  }
+
+  @override
+  String get emptyAddToDay => 'Add to this day';
+
+  @override
+  String emptyPullInbox(int count) {
+    return 'Pull from inbox · $count';
+  }
+
+  @override
+  String get emptyCopyDay => 'Copy a day…';
+
+  @override
+  String get copyDayTitle => 'Copy which day?';
+
+  @override
+  String copyDayDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Copied $count tasks',
+      one: 'Copied 1 task',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get copyDayNothing => 'That day has nothing to copy';
 }

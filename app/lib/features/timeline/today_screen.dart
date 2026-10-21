@@ -8,6 +8,7 @@ import 'package:dottoday/features/timeline/widgets/today_header.dart';
 import 'package:dottoday/features/timeline/widgets/today_month.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/day_pager.dart';
+import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,6 +34,7 @@ class TodayScreen extends ConsumerWidget {
     if (today == null || profile == null) return Scaffold(key: key);
     final shown = view.day ?? date ?? today;
     final base = _day(today, -pagerReachDays);
+    final month = view.month ?? DateTime(shown.year, shown.month);
     void select(DateTime d) => ref
         .read(todaySelectionProvider.notifier)
         .select(d == today && date == null ? null : d);
@@ -41,16 +43,30 @@ class TodayScreen extends ConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
-            TodayHeader(date: shown, today: today, monthOpen: view.monthOpen),
-            TodayWeekStrip(
-              shown: shown,
+            TodayHeader(
+              date: shown,
               today: today,
-              firstDayOfWeek: profile.settings.firstDayOfWeek,
               monthOpen: view.monthOpen,
-              onSelect: select,
+              month: month,
+              onToday: () => select(today),
             ),
-            if (view.monthOpen)
-              TodayMonth(shown: shown, today: today, onSelect: select),
+            _MonthOrStrip(
+              open: view.monthOpen,
+              month: TodayMonth(
+                month: month,
+                shown: shown,
+                today: today,
+                onSelect: select,
+                onMonth: ref.read(todaySelectionProvider.notifier).showMonth,
+              ),
+              strip: TodayWeekStrip(
+                shown: shown,
+                today: today,
+                firstDayOfWeek: profile.settings.firstDayOfWeek,
+                monthOpen: view.monthOpen,
+                onSelect: select,
+              ),
+            ),
             AllDayChips(date: shown),
             const SizedBox(height: DotSpace.s),
             Expanded(
@@ -85,4 +101,45 @@ class TodayScreen extends ConsumerWidget {
     d.month,
     d.day,
   ).difference(DateTime.utc(base.year, base.month, base.day)).inDays;
+}
+
+/// The week strip, or the month pulled open in its place with the handle
+/// under it (`A-ios-today-month`). The swap springs open over the motion
+/// token's slow duration, and is instant under reduced motion (§2.4).
+class _MonthOrStrip extends ConsumerWidget {
+  const _MonthOrStrip({
+    required this.open,
+    required this.month,
+    required this.strip,
+  });
+
+  final bool open;
+  final Widget month;
+  final Widget strip;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final motion = DotTheme.of(context).motion;
+    final child = open
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              month,
+              PullHandle(
+                open: true,
+                onPull: ref.read(todaySelectionProvider.notifier).toggleMonth,
+              ),
+            ],
+          )
+        : strip;
+    // AnimatedSize with a zero duration re-dirties its own layout and
+    // asserts, so reduced motion skips it rather than zeroing it.
+    if (motion.isReduced) return child;
+    return AnimatedSize(
+      duration: motion.slow,
+      curve: motion.spring,
+      alignment: Alignment.topCenter,
+      child: child,
+    );
+  }
 }

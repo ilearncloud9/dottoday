@@ -999,6 +999,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{day}, {done} of {total} done'**
   String stripDayLabel(String day, int done, int total);
+
+  /// Footer under this month's grid (A-ios-today-month).
+  ///
+  /// In en, this message translates to:
+  /// **'{month} · {count} of {days} days planned'**
+  String monthFooterPlanned(String month, int count, int days);
+
+  /// Footer of another month's grid (A-ios-future-month).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day planned} other{{count} days planned}}'**
+  String monthDaysPlanned(int count);
+
+  /// Legend next to a filled dot: a one-off task is planned that day.
+  ///
+  /// In en, this message translates to:
+  /// **'planned'**
+  String get monthLegendPlanned;
+
+  /// Legend next to an outline dot: only repeating tasks that day.
+  ///
+  /// In en, this message translates to:
+  /// **'repeats'**
+  String get monthLegendRepeats;
+
+  /// Month navigation row, e.g. 'Nov · Dec · Jan'.
+  ///
+  /// In en, this message translates to:
+  /// **'{previous} · {current} · {next}'**
+  String monthNav(String previous, String current, String next);
+
+  /// Screen-reader label of the ‹ month button.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous month'**
+  String get monthPrevious;
+
+  /// Screen-reader label of the › month button.
+  ///
+  /// In en, this message translates to:
+  /// **'Next month'**
+  String get monthNext;
+
+  /// Pill that returns Today to the current date (A-ios-future-month).
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get todayPill;
+
+  /// Screen-reader label of a month day with tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'{day}, {done} of {total} done'**
+  String monthCellLabel(String day, int done, int total);
+
+  /// Empty future day: start Quick Add on this date (A-ios-future-month).
+  ///
+  /// In en, this message translates to:
+  /// **'Add to this day'**
+  String get emptyAddToDay;
+
+  /// Empty day: open the inbox to schedule from it.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull from inbox · {count}'**
+  String emptyPullInbox(int count);
+
+  /// Empty day: copy another day's tasks here (Duplicate day).
+  ///
+  /// In en, this message translates to:
+  /// **'Copy a day…'**
+  String get emptyCopyDay;
+
+  /// Title of the sheet that picks the day to copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy which day?'**
+  String get copyDayTitle;
+
+  /// Snackbar after copying a day, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Copied 1 task} other{Copied {count} tasks}}'**
+  String copyDayDone(int count);
+
+  /// Snackbar when the picked day has no one-off tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'That day has nothing to copy'**
+  String get copyDayNothing;
 }
 
 class _AppLocalizationsDelegate

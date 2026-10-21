@@ -87,14 +87,22 @@ final class TodayDateProvider
   }
 }
 
-String _$todayDateHash() => r'b8f272a4818cc95f20649f2827f9ce0026e87e6f';
+String _$todayDateHash() => r'196739fb7fb57c61ae77ad5a3776363cfc1d8d09';
 
 /// The live contents of [date] (year/month/day) for the local profile.
+///
+/// Stream providers here read their dependencies synchronously and return
+/// the stream: an `async*` body starts on first listen, by which time a
+/// pager page may already be disposed and its ref unusable (Riverpod 3).
 
 @ProviderFor(timelineData)
 final timelineDataProvider = TimelineDataFamily._();
 
 /// The live contents of [date] (year/month/day) for the local profile.
+///
+/// Stream providers here read their dependencies synchronously and return
+/// the stream: an `async*` body starts on first listen, by which time a
+/// pager page may already be disposed and its ref unusable (Riverpod 3).
 
 final class TimelineDataProvider
     extends
@@ -105,6 +113,10 @@ final class TimelineDataProvider
         >
     with $FutureModifier<TimelineData>, $StreamProvider<TimelineData> {
   /// The live contents of [date] (year/month/day) for the local profile.
+  ///
+  /// Stream providers here read their dependencies synchronously and return
+  /// the stream: an `async*` body starts on first listen, by which time a
+  /// pager page may already be disposed and its ref unusable (Riverpod 3).
   TimelineDataProvider._({
     required TimelineDataFamily super.from,
     required DateTime super.argument,
@@ -149,9 +161,13 @@ final class TimelineDataProvider
   }
 }
 
-String _$timelineDataHash() => r'f31d1251a3ff902d9037fb0863dd0883a7ee131b';
+String _$timelineDataHash() => r'b856e987e9a6de5dd11903fef316afd0a678a9b3';
 
 /// The live contents of [date] (year/month/day) for the local profile.
+///
+/// Stream providers here read their dependencies synchronously and return
+/// the stream: an `async*` body starts on first listen, by which time a
+/// pager page may already be disposed and its ref unusable (Riverpod 3).
 
 final class TimelineDataFamily extends $Family
     with $FunctionalFamilyOverride<Stream<TimelineData>, DateTime> {
@@ -165,6 +181,10 @@ final class TimelineDataFamily extends $Family
       );
 
   /// The live contents of [date] (year/month/day) for the local profile.
+  ///
+  /// Stream providers here read their dependencies synchronously and return
+  /// the stream: an `async*` body starts on first listen, by which time a
+  /// pager page may already be disposed and its ref unusable (Riverpod 3).
 
   TimelineDataProvider call(DateTime date) =>
       TimelineDataProvider._(argument: date, from: this);
@@ -239,7 +259,7 @@ final class DaySubtaskProgressProvider
 }
 
 String _$daySubtaskProgressHash() =>
-    r'9e827ab163b30adb94b6515218c957a3674d1248';
+    r'7e63ba2589346a74b8213a824fc6de8d47665000';
 
 /// Subtask progress per occurrence of [date], for the progress rings (R-09:
 /// counts are per occurrence, never per series).
@@ -316,4 +336,4 @@ final class SeriesAlertsProvider
   }
 }
 
-String _$seriesAlertsHash() => r'e20a7ac5b017378d27419e5c711af314dc87b951';
+String _$seriesAlertsHash() => r'a4ca9504e43bbad15604d4d8fe162ea74a89db67';

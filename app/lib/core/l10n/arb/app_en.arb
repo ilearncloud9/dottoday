@@ -901,5 +901,113 @@
         "type": "int"
       }
     }
+  },
+  "monthFooterPlanned": "{month} · {count} of {days} days planned",
+  "@monthFooterPlanned": {
+    "description": "Footer under this month's grid (A-ios-today-month).",
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "monthDaysPlanned": "{count, plural, =1{1 day planned} other{{count} days planned}}",
+  "@monthDaysPlanned": {
+    "description": "Footer of another month's grid (A-ios-future-month).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "monthLegendPlanned": "planned",
+  "@monthLegendPlanned": {
+    "description": "Legend next to a filled dot: a one-off task is planned that day."
+  },
+  "monthLegendRepeats": "repeats",
+  "@monthLegendRepeats": {
+    "description": "Legend next to an outline dot: only repeating tasks that day."
+  },
+  "monthNav": "{previous} · {current} · {next}",
+  "@monthNav": {
+    "description": "Month navigation row, e.g. 'Nov · Dec · Jan'.",
+    "placeholders": {
+      "previous": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      },
+      "next": {
+        "type": "String"
+      }
+    }
+  },
+  "monthPrevious": "Previous month",
+  "@monthPrevious": {
+    "description": "Screen-reader label of the ‹ month button."
+  },
+  "monthNext": "Next month",
+  "@monthNext": {
+    "description": "Screen-reader label of the › month button."
+  },
+  "todayPill": "Today",
+  "@todayPill": {
+    "description": "Pill that returns Today to the current date (A-ios-future-month)."
+  },
+  "monthCellLabel": "{day}, {done} of {total} done",
+  "@monthCellLabel": {
+    "description": "Screen-reader label of a month day with tasks.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "emptyAddToDay": "Add to this day",
+  "@emptyAddToDay": {
+    "description": "Empty future day: start Quick Add on this date (A-ios-future-month)."
+  },
+  "emptyPullInbox": "Pull from inbox · {count}",
+  "@emptyPullInbox": {
+    "description": "Empty day: open the inbox to schedule from it.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "emptyCopyDay": "Copy a day…",
+  "@emptyCopyDay": {
+    "description": "Empty day: copy another day's tasks here (Duplicate day)."
+  },
+  "copyDayTitle": "Copy which day?",
+  "@copyDayTitle": {
+    "description": "Title of the sheet that picks the day to copy."
+  },
+  "copyDayDone": "{count, plural, =1{Copied 1 task} other{Copied {count} tasks}}",
+  "@copyDayDone": {
+    "description": "Snackbar after copying a day, with Undo.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "copyDayNothing": "That day has nothing to copy",
+  "@copyDayNothing": {
+    "description": "Snackbar when the picked day has no one-off tasks."
   }
 }

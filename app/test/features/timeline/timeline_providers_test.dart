@@ -49,8 +49,9 @@ void main() {
       ],
     );
     c.listen(todayDateProvider, (_, _) {});
-    await tester.pump();
-    await tester.pump();
+    // The first minute tick re-runs the provider once before it settles.
+    await tester.pump(const Duration(milliseconds: 10));
+    await tester.pump(const Duration(milliseconds: 10));
     expect(c.read(todayDateProvider).value, DateTime(2026, 10, 21));
 
     clock.advance(const Duration(minutes: 1));

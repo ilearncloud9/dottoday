@@ -20,12 +20,20 @@ class TodayHeader extends ConsumerWidget {
     required this.date,
     required this.today,
     required this.monthOpen,
+    required this.month,
+    required this.onToday,
     super.key,
   });
 
   final DateTime date;
   final DateTime today;
   final bool monthOpen;
+
+  /// The month shown when [monthOpen].
+  final DateTime month;
+
+  /// Back to today (the pill shown away from it, `A-ios-future-month`).
+  final VoidCallback onToday;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -90,7 +98,10 @@ class TodayHeader extends ConsumerWidget {
               ],
             ),
           ),
-          _TodayDot(today: today),
+          if (date == today)
+            _TodayDot(today: today)
+          else
+            _TodayPill(onTap: onToday),
           if (kDebugMode)
             PopupMenuButton<void>(
               tooltip: l10n.timelineMenu,
@@ -103,6 +114,8 @@ class TodayHeader extends ConsumerWidget {
   }
 
   String _title(BuildContext context, WidgetRef ref, String locale) {
+    final otherMonth = month.year != today.year || month.month != today.month;
+    if (monthOpen && otherMonth) return DateFormat.yMMMM(locale).format(month);
     if (date != today) return DateFormat.EEEE(locale).format(date);
     final profile = ref.watch(currentProfileProvider).value;
     final now =
@@ -151,3 +164,29 @@ String dayPart(int hour) => hour < 12
     : hour < 17
     ? 'afternoon' // l10n-ignore: ICU select key
     : 'evening'; // l10n-ignore: ICU select key
+
+/// "● Today" (`A-ios-future-month`): one tap back to the current date
+/// (03 §2).
+class _TodayPill extends StatelessWidget {
+  const _TodayPill({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final c = t.colors;
+    return OutlinedButton.icon(
+      onPressed: onTap,
+      icon: Container(
+        width: DotSize.tabDot,
+        height: DotSize.tabDot,
+        decoration: BoxDecoration(shape: BoxShape.circle, color: c.accent),
+      ),
+      label: Text(
+        context.l10n.todayPill,
+        style: t.styles.button.copyWith(color: c.accentInk),
+      ),
+    );
+  }
+}

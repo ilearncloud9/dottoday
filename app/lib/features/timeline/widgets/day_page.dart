@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/thread_day.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
+import 'package:dottoday/features/timeline/widgets/empty_day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/time_labels.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/thread.dart';
@@ -54,7 +56,22 @@ class DayPage extends ConsumerWidget {
         onToggleDone: (id) =>
             unawaited(toggleDone(ref, blocks.firstWhere((o) => o.id == id))),
       ),
-      footer: summary.total == 0 ? const _Empty() : null,
+      footer: _footer(blocks, summary.total == 0),
+    );
+  }
+
+  /// A free day from today on offers its actions (`A-ios-future-month`);
+  /// an empty past day only says so.
+  Widget? _footer(List<Occurrence> blocks, bool empty) {
+    final oneOffs = blocks.any((o) => o.seriesId == null);
+    if (date.isBefore(today)) return empty ? const _Empty() : null;
+    if (oneOffs) return null;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (empty) const _Empty(),
+        EmptyDayActions(date: date),
+      ],
     );
   }
 

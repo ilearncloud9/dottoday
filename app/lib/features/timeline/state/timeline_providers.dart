@@ -37,9 +37,10 @@ Stream<DateTime> minuteTick(Ref ref) {
 /// Today's local calendar date in the profile's zone; changes at midnight.
 @riverpod
 Future<DateTime> todayDate(Ref ref) async {
-  final profile = await ref.watch(currentProfileProvider.future);
+  // Watch everything before the await: the ref may be disposed after it.
   final now =
       ref.watch(minuteTickProvider).value ?? ref.watch(clockProvider).nowUtc();
+  final profile = await ref.watch(currentProfileProvider.future);
   final local = tz.TZDateTime.from(now, tz.getLocation(profile.tzId));
   return DateTime(local.year, local.month, local.day);
 }
@@ -66,28 +67,34 @@ final class TimelineData {
 }
 
 /// The live contents of [date] (year/month/day) for the local profile.
+///
+/// Stream providers here read their dependencies synchronously and return
+/// the stream: an `async*` body starts on first listen, by which time a
+/// pager page may already be disposed and its ref unusable (Riverpod 3).
 @riverpod
-Stream<TimelineData> timelineData(Ref ref, DateTime date) async* {
-  final profile = await ref.watch(currentProfileProvider.future);
-  final day = TimelineDay.of(date, tz.getLocation(profile.tzId));
-  final rows = ref
-      .watch(occurrenceRepositoryProvider)
-      .watchRange(profile.id, day.startUtc, day.endUtc);
-  await for (final all in rows) {
-    yield TimelineData(
-      userId: profile.id,
-      day: day,
-      settings: profile.settings,
-      blocks: [
-        for (final o in all)
-          if (!day.isAllDay(o)) o,
-      ],
-      allDay: [
-        for (final o in all)
-          if (day.isAllDay(o)) o,
-      ],
-    );
-  }
+Stream<TimelineData> timelineData(Ref ref, DateTime date) {
+  final profile = ref.watch(currentProfileProvider.future);
+  final repo = ref.watch(occurrenceRepositoryProvider);
+  return Stream.fromFuture(profile).asyncExpand((profile) {
+    final day = TimelineDay.of(date, tz.getLocation(profile.tzId));
+    return repo
+        .watchRange(profile.id, day.startUtc, day.endUtc)
+        .map(
+          (all) => TimelineData(
+            userId: profile.id,
+            day: day,
+            settings: profile.settings,
+            blocks: [
+              for (final o in all)
+                if (!day.isAllDay(o)) o,
+            ],
+            allDay: [
+              for (final o in all)
+                if (day.isAllDay(o)) o,
+            ],
+          ),
+        );
+  });
 }
 
 /// Subtask progress per occurrence of [date], for the progress rings (R-09:
@@ -96,36 +103,35 @@ Stream<TimelineData> timelineData(Ref ref, DateTime date) async* {
 Stream<Map<String, ({int done, int total})>> daySubtaskProgress(
   Ref ref,
   DateTime date,
-) async* {
-  final data = await ref.watch(timelineDataProvider(date).future);
-  final ids = {for (final o in data.blocks) o.id};
-  if (ids.isEmpty) {
-    yield const {};
-    return;
-  }
-  final rows = ref
-      .watch(subtaskRepositoryProvider)
-      .watchForOccurrences(data.userId, ids);
-  await for (final subtasks in rows) {
-    final out = <String, ({int done, int total})>{};
-    for (final s in subtasks) {
-      final p = out[s.occurrenceId] ?? (done: 0, total: 0);
-      out[s.occurrenceId] = (
-        done: p.done + (s.done ? 1 : 0),
-        total: p.total + 1,
-      );
-    }
-    yield out;
-  }
+) {
+  final data = ref.watch(timelineDataProvider(date).future);
+  final repo = ref.watch(subtaskRepositoryProvider);
+  return Stream.fromFuture(data).asyncExpand((data) {
+    final ids = {for (final o in data.blocks) o.id};
+    if (ids.isEmpty) return Stream.value(const {});
+    return repo.watchForOccurrences(data.userId, ids).map((subtasks) {
+      final out = <String, ({int done, int total})>{};
+      for (final s in subtasks) {
+        final p = out[s.occurrenceId] ?? (done: 0, total: 0);
+        out[s.occurrenceId] = (
+          done: p.done + (s.done ? 1 : 0),
+          total: p.total + 1,
+        );
+      }
+      return out;
+    });
+  });
 }
 
 /// Alerts of each active series, inherited by occurrences without their
 /// own (`alerts` null, docs/05).
 @Riverpod(keepAlive: true)
-Stream<Map<String, List<Alert>>> seriesAlerts(Ref ref) async* {
-  final profile = await ref.watch(currentProfileProvider.future);
-  yield* ref
-      .watch(seriesRepositoryProvider)
-      .watchActive(profile.id)
-      .map((all) => {for (final s in all) s.id: s.alerts});
+Stream<Map<String, List<Alert>>> seriesAlerts(Ref ref) {
+  final profile = ref.watch(currentProfileProvider.future);
+  final repo = ref.watch(seriesRepositoryProvider);
+  return Stream.fromFuture(profile).asyncExpand(
+    (profile) => repo
+        .watchActive(profile.id)
+        .map((all) => {for (final s in all) s.id: s.alerts}),
+  );
 }
