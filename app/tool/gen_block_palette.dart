@@ -1,4 +1,4 @@
-// Generates lib/core/theme/block_palette.g.dart from
+// Generates lib/core/theme/block_palette.gen.dart from
 // assets/design/palette.json (docs/03-ux-spec.md §1, plan M1.0).
 //
 // Run from app/:  dart run tool/gen_block_palette.dart
@@ -7,7 +7,9 @@ import 'dart:convert';
 import 'dart:io';
 
 const inputPath = 'assets/design/palette.json';
-const outputPath = 'lib/core/theme/block_palette.g.dart';
+// Not `.g.dart`: `build_runner build -d` deletes `.g.dart` parts it did not
+// generate (CI codegen step).
+const outputPath = 'lib/core/theme/block_palette.gen.dart';
 
 Future<void> main() async {
   final json = jsonDecode(await File(inputPath).readAsString());

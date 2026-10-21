@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
-part 'block_palette.g.dart';
+part 'block_palette.gen.dart';
 
 /// One block colour in one mode (docs/03-ux-spec.md §1).
 @immutable

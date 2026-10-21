@@ -8,7 +8,7 @@ state (empty, loading, error, offline) designed.
 
 ### Colour
 Semantic roles only in code; never raw hex outside `app_colors.dart` and the generated
-`block_palette.g.dart`.
+`block_palette.gen.dart`.
 
 | Token | Light | Dark | Use |
 |---|---|---|---|

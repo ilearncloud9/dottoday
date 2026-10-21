@@ -79,14 +79,14 @@ void main() {
   });
 
   group('generator', () {
-    // Freshness gate: block_palette.g.dart must equal a fresh render of the
+    // Freshness gate: block_palette.gen.dart must equal a fresh render of the
     // JSON, so an edited palette without a re-run fails CI.
     test('committed output is up to date with palette.json', () async {
       // Inside the package so `dart format` uses its language version
       // (a system temp file gets the newer tall style).
       final dir = await Directory('.dart_tool').createTemp('palette');
       addTearDown(() => dir.delete(recursive: true));
-      final fresh = '${dir.path}/block_palette.g.dart';
+      final fresh = '${dir.path}/block_palette.gen.dart';
       await gen.writeFormatted(gen.renderBlockPalette(_paletteJson()), fresh);
 
       expect(
