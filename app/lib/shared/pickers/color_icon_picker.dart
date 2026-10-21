@@ -1,5 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/pickers/block_names.dart';
 import 'package:flutter/material.dart';
 
@@ -20,14 +20,14 @@ class ColorIconPicker extends StatelessWidget {
     super.key,
   });
 
-  final BlockColor color;
+  final TaskColor color;
   final BlockIcon icon;
-  final ValueChanged<BlockColor> onColorChanged;
+  final ValueChanged<TaskColor> onColorChanged;
   final ValueChanged<BlockIcon> onIconChanged;
 
   @override
   Widget build(BuildContext context) {
-    final t = AppTheme.of(context);
+    final t = DotTheme.of(context);
     final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -35,10 +35,10 @@ class ColorIconPicker extends StatelessWidget {
       children: [
         _Heading(l10n.colorPickerLabel),
         Wrap(
-          spacing: AppSpacing.s,
-          runSpacing: AppSpacing.s,
+          spacing: DotSpace.s,
+          runSpacing: DotSpace.s,
           children: [
-            for (final c in BlockColor.values)
+            for (final c in TaskColor.values)
               _ColorSwatch(
                 color: c,
                 selected: c == color,
@@ -46,22 +46,20 @@ class ColorIconPicker extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: AppSpacing.l),
+        const SizedBox(height: DotSpace.l),
         _Heading(l10n.iconPickerLabel),
         Wrap(
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
+          spacing: DotSpace.xs,
+          runSpacing: DotSpace.xs,
           children: [
             for (final i in BlockIcon.values)
               IconButton(
                 isSelected: i == icon,
                 onPressed: () => onIconChanged(i),
                 tooltip: blockIconName(l10n, i),
-                color: t.blocks[color].strong,
+                color: t.tasks[color].ink,
                 style: IconButton.styleFrom(
-                  backgroundColor: i == icon
-                      ? t.blocks.fill(color, t.colors.surfaceRaised)
-                      : null,
+                  backgroundColor: i == icon ? t.tasks[color].tint : null,
                 ),
                 icon: Icon(i.icon),
               ),
@@ -80,10 +78,10 @@ class _Heading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.only(bottom: AppSpacing.s),
+      padding: const EdgeInsetsDirectional.only(bottom: DotSpace.s),
       child: Semantics(
         header: true,
-        child: Text(text, style: AppTheme.of(context).typography.label),
+        child: Text(text, style: DotTheme.of(context).styles.rowMeta),
       ),
     );
   }
@@ -96,14 +94,14 @@ class _ColorSwatch extends StatelessWidget {
     required this.onTap,
   });
 
-  final BlockColor color;
+  final TaskColor color;
   final bool selected;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final t = AppTheme.of(context);
-    final swatch = t.blocks[color];
+    final t = DotTheme.of(context);
+    final swatch = t.tasks[color];
     return Semantics(
       button: true,
       selected: selected,
@@ -116,14 +114,14 @@ class _ColorSwatch extends StatelessWidget {
           height: _swatch,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: t.blocks.fill(color, t.colors.surfaceRaised),
+            color: t.tasks[color].tint,
             border: Border.all(
-              color: swatch.strong,
-              width: selected ? AppSpacing.xs / 2 : AppSpacing.hairline,
+              color: swatch.ink,
+              width: selected ? DotSpace.xs / 2 : DotSpace.hairline,
             ),
           ),
           child: selected
-              ? ExcludeSemantics(child: Icon(Icons.check, color: swatch.strong))
+              ? ExcludeSemantics(child: Icon(Icons.check, color: swatch.ink))
               : null,
         ),
       ),

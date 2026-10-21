@@ -3,7 +3,7 @@
 library;
 
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/timeline_screen.dart';
 import 'package:flutter/material.dart';
@@ -37,8 +37,8 @@ Future<void> _pump(
       ),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.light(),
-        darkTheme: AppTheme.dark(),
+        theme: DotTheme.light(),
+        darkTheme: DotTheme.dark(),
         themeMode: mode,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,

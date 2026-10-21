@@ -1,6 +1,6 @@
 import 'package:dottoday/domain/entities/alert.dart';
-import 'package:dottoday/domain/entities/block_color_keys.gen.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
 import 'package:dottoday/domain/entities/utc_millis_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -38,7 +38,7 @@ abstract class Settings with _$Settings {
     bool? use24h,
     @Default(1) int firstDayOfWeek,
     @Default(ThemePreference.system) ThemePreference theme,
-    @Default(defaultBlockColorKey) String accent,
+    @Default(defaultAccentKey) String accent,
     bool? reduceMotion,
   }) = _Settings;
 

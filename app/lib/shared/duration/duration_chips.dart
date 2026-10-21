@@ -1,5 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/time/duration_text.dart';
 import 'package:flutter/material.dart';
 
@@ -59,8 +59,8 @@ class _DurationChipsState extends State<DurationChips> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Wrap(
-          spacing: AppSpacing.s,
-          runSpacing: AppSpacing.s,
+          spacing: DotSpace.s,
+          runSpacing: DotSpace.s,
           children: [
             for (final m in durationPresetsMin)
               ChoiceChip(
@@ -81,7 +81,7 @@ class _DurationChipsState extends State<DurationChips> {
         ),
         if (_customOpen)
           Padding(
-            padding: const EdgeInsetsDirectional.only(top: AppSpacing.m),
+            padding: const EdgeInsetsDirectional.only(top: DotSpace.m),
             child: TextField(
               autofocus: true,
               keyboardType: TextInputType.text,

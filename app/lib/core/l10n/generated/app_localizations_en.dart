@@ -143,13 +143,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get colorCoral => 'Coral';
 
   @override
-  String get colorTangerine => 'Tangerine';
-
-  @override
   String get colorAmber => 'Amber';
-
-  @override
-  String get colorLime => 'Lime';
 
   @override
   String get colorMint => 'Mint';
@@ -165,9 +159,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get colorViolet => 'Violet';
-
-  @override
-  String get colorMagenta => 'Magenta';
 
   @override
   String get colorRose => 'Rose';

@@ -71,6 +71,13 @@ void main() {
       expect(_code(validateOccurrence(fine)), 'ok');
     });
 
+    test('retired 12-colour keys still validate (ADR-0007 sync)', () {
+      for (final key in ['tangerine', 'lime', 'magenta']) {
+        final o = occurrenceFixture().copyWith(colorKey: key);
+        expect(_code(validateOccurrence(o)), 'ok', reason: key);
+      }
+    });
+
     test('tz_id must be a known IANA zone', () {
       final o = occurrenceFixture().copyWith(tzId: 'Mars/Olympus');
       expect(_code(validateOccurrence(o)), 'validation.timeZone.invalidFormat');
@@ -225,6 +232,11 @@ void main() {
       ),
       'accent': (
         const Settings(accent: 'gold'),
+        'validation.color.invalidFormat',
+      ),
+      // A task colour, but not one of the four accents (docs/10 §2.1).
+      'accent not in Settings › Look': (
+        const Settings(accent: 'amber'),
         'validation.color.invalidFormat',
       ),
     };

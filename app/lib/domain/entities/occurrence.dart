@@ -1,7 +1,7 @@
 import 'package:dottoday/domain/entities/alert.dart';
-import 'package:dottoday/domain/entities/block_color_keys.gen.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/icon_keys.dart';
+import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
 import 'package:dottoday/domain/entities/utc_millis_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -24,7 +24,7 @@ abstract class Occurrence with _$Occurrence {
     @UtcMillisConverter() DateTime? originalStartUtc,
     required String title,
     String? notes,
-    @Default(defaultBlockColorKey) String colorKey,
+    @Default(defaultTaskColorKey) String colorKey,
     @Default(defaultIconKey) String iconKey,
     @UtcMillisConverter() DateTime? startUtc,
     required String tzId,

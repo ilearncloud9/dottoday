@@ -1,7 +1,7 @@
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/timeline_header.dart';
 import 'package:dottoday/features/timeline/widgets/timeline_view.dart';
@@ -48,7 +48,7 @@ class _Body extends ConsumerWidget {
       AsyncData(:final value) => TimelineView(data: value, isToday: isToday),
       AsyncError(:final error) => Center(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.l),
+          padding: const EdgeInsets.all(DotSpace.l),
           child: Text(
             error is AppFailure
                 ? failureMessage(context.l10n, error)

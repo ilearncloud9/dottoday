@@ -3,7 +3,7 @@
 library;
 
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/layout/block_facts.dart';
@@ -79,14 +79,14 @@ class _Specimen extends StatelessWidget {
     final utc = tz.getLocation('UTC');
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(AppSpacing.s),
+        padding: const EdgeInsets.all(DotSpace.s),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             for (final (_, make, facts) in _states)
               for (final height in [110.0, 50.0])
                 Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.s),
+                  padding: const EdgeInsets.only(bottom: DotSpace.s),
                   child: SizedBox(
                     height: height * MediaQuery.textScalerOf(context).scale(1),
                     child: BlockTile(
@@ -119,8 +119,8 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             debugShowCheckedModeBanner: false,
-            theme: AppTheme.light(),
-            darkTheme: AppTheme.dark(),
+            theme: DotTheme.light(),
+            darkTheme: DotTheme.dark(),
             themeMode: mode,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,

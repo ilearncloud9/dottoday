@@ -1,4 +1,4 @@
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/layout/timeline_geometry.dart';
 import 'package:dottoday/features/timeline/widgets/now_line.dart';
@@ -53,7 +53,7 @@ class DayCanvas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppTheme.of(context);
+    final t = DotTheme.of(context);
     final g = geometry;
     return SizedBox(
       height: g.height,
@@ -70,7 +70,7 @@ class DayCanvas extends StatelessWidget {
                   gutterWidth: gutter,
                   textDirection: Directionality.of(context),
                   lineColor: t.colors.outline,
-                  zoneColor: t.colors.surfaceSunken,
+                  zoneColor: t.colors.outline,
                 ),
               ),
             ),
@@ -86,8 +86,8 @@ class DayCanvas extends StatelessWidget {
     );
   }
 
-  Iterable<Widget> _hourLabels(BuildContext context, AppTheme t) sync* {
-    final style = t.typography.mono.copyWith(color: t.colors.onSurfaceMuted);
+  Iterable<Widget> _hourLabels(BuildContext context, DotTheme t) sync* {
+    final style = t.styles.rowMeta.copyWith(color: t.colors.muted);
     final lineHeight = MediaQuery.textScalerOf(
       context,
     ).scale(style.fontSize! * style.height!);
@@ -101,7 +101,7 @@ class DayCanvas extends StatelessWidget {
       yield PositionedDirectional(
         top: h.y,
         start: 0,
-        width: gutter - AppSpacing.xs,
+        width: gutter - DotSpace.xs,
         child: ExcludeSemantics(
           child: Text(
             hourLabel(context, h.mark.label, use24h: use24h),
@@ -165,7 +165,7 @@ class DayCanvas extends StatelessWidget {
 
   Iterable<Widget> _overflow() sync* {
     for (final m in geometry.layout.overflow) {
-      if (m.top > to || m.top + AppSpacing.minTouchTarget < from) continue;
+      if (m.top > to || m.top + DotTouch.min < from) continue;
       yield PositionedDirectional(
         top: m.top,
         end: AppTimeline.blockGap,

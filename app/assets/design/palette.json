@@ -1,142 +1,24 @@
 {
-  "$comment": "Block palette, docs/03-ux-spec.md §1. Order is the picker order. Edit here, then run: dart run tool/gen_block_palette.dart",
+  "$comment": "Task colours and accents, docs/10-ui-concept-a.md §2.1. Order is the picker order. Edit here, then run: dart run tool/gen_task_palette.dart",
   "default": "indigo",
-  "fillAlpha": {
-    "light": 0.18,
-    "dark": 0.28
-  },
   "colors": [
-    {
-      "key": "coral",
-      "light": {
-        "base": "#F26B5B",
-        "strong": "#B23A2C"
-      },
-      "dark": {
-        "base": "#FF8A7A",
-        "strong": "#FFA99C"
-      }
-    },
-    {
-      "key": "tangerine",
-      "light": {
-        "base": "#F5862E",
-        "strong": "#9E4C0A"
-      },
-      "dark": {
-        "base": "#FF9F52",
-        "strong": "#FFBB85"
-      }
-    },
-    {
-      "key": "amber",
-      "light": {
-        "base": "#F2B705",
-        "strong": "#8A6400"
-      },
-      "dark": {
-        "base": "#FFC933",
-        "strong": "#FFD966"
-      }
-    },
-    {
-      "key": "lime",
-      "light": {
-        "base": "#8CC63F",
-        "strong": "#436E10"
-      },
-      "dark": {
-        "base": "#A6DB5C",
-        "strong": "#C2EB8A"
-      }
-    },
-    {
-      "key": "mint",
-      "light": {
-        "base": "#3CC79A",
-        "strong": "#166E52"
-      },
-      "dark": {
-        "base": "#5EDDB0",
-        "strong": "#8DEBC9"
-      }
-    },
-    {
-      "key": "teal",
-      "light": {
-        "base": "#1FA5A8",
-        "strong": "#0F6E70"
-      },
-      "dark": {
-        "base": "#3EC4C7",
-        "strong": "#7ADBDD"
-      }
-    },
-    {
-      "key": "sky",
-      "light": {
-        "base": "#3AA4F0",
-        "strong": "#1A68A8"
-      },
-      "dark": {
-        "base": "#5CB8FF",
-        "strong": "#94D0FF"
-      }
-    },
-    {
-      "key": "indigo",
-      "light": {
-        "base": "#5B63E8",
-        "strong": "#3A41B8"
-      },
-      "dark": {
-        "base": "#7F86FF",
-        "strong": "#AAB0FF"
-      }
-    },
-    {
-      "key": "violet",
-      "light": {
-        "base": "#9461E8",
-        "strong": "#6A35BD"
-      },
-      "dark": {
-        "base": "#AE85FF",
-        "strong": "#C9AEFF"
-      }
-    },
-    {
-      "key": "magenta",
-      "light": {
-        "base": "#D94BC2",
-        "strong": "#9C2589"
-      },
-      "dark": {
-        "base": "#EA6FD6",
-        "strong": "#F4A0E6"
-      }
-    },
-    {
-      "key": "rose",
-      "light": {
-        "base": "#EE5A86",
-        "strong": "#B02A55"
-      },
-      "dark": {
-        "base": "#FF7FA3",
-        "strong": "#FFA8C1"
-      }
-    },
-    {
-      "key": "slate",
-      "light": {
-        "base": "#6E7A8A",
-        "strong": "#475260"
-      },
-      "dark": {
-        "base": "#93A0B0",
-        "strong": "#B8C2CE"
-      }
-    }
+    { "key": "coral", "hex": "#E5674F" },
+    { "key": "amber", "hex": "#D99A1F" },
+    { "key": "mint", "hex": "#2FA37A" },
+    { "key": "teal", "hex": "#1F9E9E" },
+    { "key": "sky", "hex": "#2E8FD6" },
+    { "key": "indigo", "hex": "#3B6CF6" },
+    { "key": "violet", "hex": "#7A5AF8" },
+    { "key": "rose", "hex": "#D64F86" },
+    { "key": "slate", "hex": "#6B6B70" }
+  ],
+  "$legacyComment": "Keys from the 12-colour palette (docs/03 §1, M1.0) that may still be stored; they render as the mapped colour and are never written by the app (ADR-0007).",
+  "legacy": { "tangerine": "amber", "lime": "mint", "magenta": "rose" },
+  "defaultAccent": "indigo",
+  "accents": [
+    { "key": "indigo", "light": "#3B6CF6", "dark": "#7FA0FF" },
+    { "key": "teal", "light": "#1F9E9E", "dark": "#4CC9C9" },
+    { "key": "coral", "light": "#E5674F", "dark": "#FF8A73" },
+    { "key": "violet", "light": "#7A5AF8", "dark": "#A58BFF" }
   ]
 }

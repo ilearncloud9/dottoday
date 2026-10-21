@@ -1,4 +1,4 @@
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 
 /// The block's icon circle (docs/03 §3.1). Doubles as the complete toggle
@@ -26,9 +26,9 @@ class IconCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppTheme.of(context);
+    final t = DotTheme.of(context);
     final scaler = MediaQuery.textScalerOf(context);
-    final diameter = scaler.scale(AppSpacing.xl + AppSpacing.xs);
+    final diameter = scaler.scale(DotSpace.xl + DotSpace.xs);
     final target = scaler.scale(kMinInteractiveDimension);
     final circle = Container(
       width: diameter,
@@ -40,7 +40,7 @@ class IconCircle extends StatelessWidget {
       child: Icon(
         done ? Icons.check : icon,
         size: diameter * 0.6,
-        color: done ? t.colors.surfaceRaised : color,
+        color: done ? t.colors.raised : color,
       ),
     );
     final box = SizedBox(

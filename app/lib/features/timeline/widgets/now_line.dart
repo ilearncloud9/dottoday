@@ -1,5 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/layout/time_scale.dart';
 import 'package:dottoday/features/timeline/layout/timeline_day.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
@@ -33,14 +33,14 @@ class PastTint extends ConsumerWidget {
         ? scale.height
         : nowY(ref, day, scale) ?? 0.0;
     return AnimatedPositioned(
-      duration: AppTheme.of(context).motion.base,
-      curve: AppTheme.of(context).motion.curve,
+      duration: DotTheme.of(context).motion.base,
+      curve: DotTheme.of(context).motion.curve,
       top: 0,
       left: 0,
       right: 0,
       height: y,
       child: ExcludeSemantics(
-        child: ColoredBox(color: AppTheme.of(context).colors.surfaceSunken),
+        child: ColoredBox(color: DotTheme.of(context).colors.outline),
       ),
     );
   }
@@ -68,7 +68,7 @@ class NowLine extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final y = nowY(ref, day, scale);
     if (y == null) return const Positioned(child: SizedBox.shrink());
-    final t = AppTheme.of(context);
+    final t = DotTheme.of(context);
     final now = ref.watch(minuteTickProvider).value!;
     final label = context.l10n.timelineNow(
       timeOfUtc(context, day.location, now, use24h: use24h),

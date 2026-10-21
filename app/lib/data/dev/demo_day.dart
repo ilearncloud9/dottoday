@@ -51,12 +51,12 @@ final List<_Block> _blocks = [
   _b('Deep work: roadmap', 9, 0, 120, 'indigo', 'code'),
   _b('Design review', 10, 30, 45, 'violet', 'meeting'),
   _b('Reply to email', 11, 30, 30, 'slate', 'mail'),
-  _b('Lunch with Sam', 12, 30, 45, 'tangerine', 'meal', pinned: true),
+  _b('Lunch with Sam', 12, 30, 45, 'rose', 'meal', pinned: true),
   _b('Spanish lesson', 14, 0, 60, 'teal', 'study'),
   _b('Call the dentist', 15, 30, 15, 'rose', 'call'),
-  _b('Gym', 17, 30, 60, 'lime', 'gym'),
+  _b('Gym', 17, 30, 60, 'mint', 'gym'),
   _b('Dinner', 19, 0, 45, 'mint', 'meal'),
-  _b('Read', 20, 30, 30, 'magenta', 'book'),
+  _b('Read', 20, 30, 30, 'violet', 'book'),
   _b('Night train to Berlin', 23, 30, 75, 'sky', 'flight'),
 ];
 

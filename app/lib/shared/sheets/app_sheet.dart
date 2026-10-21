@@ -1,12 +1,12 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 
 /// Widest an [AppSheet] popover gets on large screens.
 const double appSheetMaxWidth = 560;
 
 /// Shows [builder]'s content as a bottom sheet on compact widths and as a
-/// centred popover from [AppBreakpoints.navigationRail] up (docs/03 §3.3,
+/// centred popover from [WidthClass.mediumFrom] up (docs/03 §3.3,
 /// §6). Chosen by available width, never by platform.
 ///
 /// Both dismiss with a swipe/tap outside/Esc and return [T] when popped
@@ -24,9 +24,8 @@ Future<T?> showAppSheet<T>({
   required WidgetBuilder builder,
   String? title,
 }) {
-  final colors = AppTheme.of(context).colors;
-  final wide =
-      MediaQuery.sizeOf(context).width >= AppBreakpoints.navigationRail;
+  final colors = DotTheme.of(context).colors;
+  final wide = MediaQuery.sizeOf(context).width >= WidthClass.mediumFrom;
   final sheet = AppSheet(
     title: title,
     child: Builder(builder: builder),
@@ -35,9 +34,9 @@ Future<T?> showAppSheet<T>({
     return showDialog<T>(
       context: context,
       builder: (_) => Dialog(
-        backgroundColor: colors.surfaceRaised,
+        backgroundColor: colors.raised,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(AppRadii.sheet)),
+          borderRadius: BorderRadius.all(Radius.circular(DotRadii.sheet)),
         ),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: appSheetMaxWidth),
@@ -51,9 +50,9 @@ Future<T?> showAppSheet<T>({
     isScrollControlled: true,
     useSafeArea: true,
     showDragHandle: true,
-    backgroundColor: colors.surfaceRaised,
+    backgroundColor: colors.raised,
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.sheet)),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(DotRadii.sheet)),
     ),
     builder: (_) => sheet,
   );
@@ -69,16 +68,16 @@ class AppSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppTheme.of(context);
+    final t = DotTheme.of(context);
     final insets = MediaQuery.viewInsetsOf(context).bottom;
     return Padding(
       padding: EdgeInsetsDirectional.only(bottom: insets),
       child: SingleChildScrollView(
         padding: const EdgeInsetsDirectional.fromSTEB(
-          AppSpacing.l,
-          AppSpacing.s,
-          AppSpacing.l,
-          AppSpacing.xl,
+          DotSpace.l,
+          DotSpace.s,
+          DotSpace.l,
+          DotSpace.xl,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -97,18 +96,18 @@ class _TitleRow extends StatelessWidget {
   const _TitleRow({required this.title, required this.style});
 
   final String title;
-  final AppTheme style;
+  final DotTheme style;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.only(bottom: AppSpacing.m),
+      padding: const EdgeInsetsDirectional.only(bottom: DotSpace.m),
       child: Row(
         children: [
           Expanded(
             child: Semantics(
               header: true,
-              child: Text(title, style: style.typography.title),
+              child: Text(title, style: style.styles.cardTitle),
             ),
           ),
           IconButton(

@@ -1,5 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/widgets/debug_menu.dart';
 import 'package:dottoday/shared/sync/sync_pill.dart';
 import 'package:flutter/foundation.dart';
@@ -23,12 +23,12 @@ class TimelineHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppTheme.of(context);
+    final t = DotTheme.of(context);
     return AppBar(
       toolbarHeight: preferredSize.height,
       backgroundColor: t.colors.surface,
       surfaceTintColor: t.colors.surface,
-      titleSpacing: AppSpacing.l,
+      titleSpacing: DotSpace.l,
       title: _Title(date: date),
       actions: [
         SyncPill(
@@ -36,7 +36,7 @@ class TimelineHeader extends StatelessWidget implements PreferredSizeWidget {
           // On a phone at large text the date needs the room.
           iconOnly:
               textScale > 1.3 &&
-              MediaQuery.sizeOf(context).width < AppBreakpoints.navigationRail,
+              MediaQuery.sizeOf(context).width < WidthClass.mediumFrom,
         ),
         // Only debug builds have items so far; the const false branch
         // compiles the menu (and the demo loader) out of release.
@@ -45,7 +45,7 @@ class TimelineHeader extends StatelessWidget implements PreferredSizeWidget {
             tooltip: context.l10n.timelineMenu,
             itemBuilder: debugMenuItems,
           ),
-        const SizedBox(width: AppSpacing.xs),
+        const SizedBox(width: DotSpace.xs),
       ],
     );
   }
@@ -58,7 +58,7 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppTheme.of(context);
+    final t = DotTheme.of(context);
     final locale = Localizations.localeOf(context).toLanguageTag();
     return Semantics(
       header: true,
@@ -66,12 +66,12 @@ class _Title extends StatelessWidget {
         maxLines: 2,
         TextSpan(
           text: DateFormat.MMMMd(locale).format(date),
-          style: t.typography.title,
+          style: t.styles.cardTitle,
           children: [
             const TextSpan(text: '\n'), // l10n-ignore: line break
             TextSpan(
               text: DateFormat.EEEE(locale).format(date),
-              style: t.typography.body.copyWith(color: t.colors.onSurfaceMuted),
+              style: t.styles.body.copyWith(color: t.colors.muted),
             ),
           ],
         ),

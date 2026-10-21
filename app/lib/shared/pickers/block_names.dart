@@ -1,21 +1,18 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 
 /// Localised name of a block colour, for screen readers and the picker.
-String blockColorName(AppLocalizations l10n, BlockColor color) =>
+String blockColorName(AppLocalizations l10n, TaskColor color) =>
     switch (color) {
-      BlockColor.coral => l10n.colorCoral,
-      BlockColor.tangerine => l10n.colorTangerine,
-      BlockColor.amber => l10n.colorAmber,
-      BlockColor.lime => l10n.colorLime,
-      BlockColor.mint => l10n.colorMint,
-      BlockColor.teal => l10n.colorTeal,
-      BlockColor.sky => l10n.colorSky,
-      BlockColor.indigo => l10n.colorIndigo,
-      BlockColor.violet => l10n.colorViolet,
-      BlockColor.magenta => l10n.colorMagenta,
-      BlockColor.rose => l10n.colorRose,
-      BlockColor.slate => l10n.colorSlate,
+      TaskColor.coral => l10n.colorCoral,
+      TaskColor.amber => l10n.colorAmber,
+      TaskColor.mint => l10n.colorMint,
+      TaskColor.teal => l10n.colorTeal,
+      TaskColor.sky => l10n.colorSky,
+      TaskColor.indigo => l10n.colorIndigo,
+      TaskColor.violet => l10n.colorViolet,
+      TaskColor.rose => l10n.colorRose,
+      TaskColor.slate => l10n.colorSlate,
     };
 
 /// Localised name of a block icon, for screen readers and the picker.

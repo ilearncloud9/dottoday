@@ -1,5 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/shared/time_input/time_wheel.dart';
 import 'package:flutter/material.dart';
@@ -124,12 +124,12 @@ class _TimeInputState extends State<TimeInput> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final t = AppTheme.of(context);
+    final t = DotTheme.of(context);
     return TextField(
       controller: _controller,
       focusNode: _focus,
-      style: t.typography.body.copyWith(
-        fontFeatures: t.typography.mono.fontFeatures,
+      style: t.styles.body.copyWith(
+        fontFeatures: t.styles.rowMeta.fontFeatures,
       ),
       keyboardType: TextInputType.datetime,
       textInputAction: TextInputAction.done,

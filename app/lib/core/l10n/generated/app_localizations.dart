@@ -331,20 +331,8 @@ abstract class AppLocalizations {
   /// Block colour name (screen readers, picker).
   ///
   /// In en, this message translates to:
-  /// **'Tangerine'**
-  String get colorTangerine;
-
-  /// Block colour name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
   /// **'Amber'**
   String get colorAmber;
-
-  /// Block colour name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Lime'**
-  String get colorLime;
 
   /// Block colour name (screen readers, picker).
   ///
@@ -375,12 +363,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Violet'**
   String get colorViolet;
-
-  /// Block colour name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Magenta'**
-  String get colorMagenta;
 
   /// Block colour name (screen readers, picker).
   ///

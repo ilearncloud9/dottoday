@@ -1,5 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/pickers/block_names.dart';
 import 'package:dottoday/shared/pickers/color_icon_picker.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +9,9 @@ import '../../support/a11y.dart';
 import '../../support/test_app.dart';
 
 Widget _picker({
-  BlockColor color = BlockColor.teal,
+  TaskColor color = TaskColor.teal,
   BlockIcon icon = BlockIcon.gym,
-  ValueChanged<BlockColor>? onColor,
+  ValueChanged<TaskColor>? onColor,
   ValueChanged<BlockIcon>? onIcon,
   ThemeMode mode = ThemeMode.light,
 }) => testApp(
@@ -52,23 +52,23 @@ void main() {
   });
 
   testWidgets('taps report the choice', (tester) async {
-    BlockColor? color;
+    TaskColor? color;
     BlockIcon? icon;
     await tester.pumpWidget(
       _picker(onColor: (c) => color = c, onIcon: (i) => icon = i),
     );
     await tester.tap(find.bySemanticsLabel('Rose'));
     await tester.tap(find.byTooltip('Coffee'));
-    expect(color, BlockColor.rose);
+    expect(color, TaskColor.rose);
     expect(icon, BlockIcon.coffee);
   });
 
   testWidgets('names exist for every colour and icon', (tester) async {
     await tester.pumpWidget(testApp(const SizedBox()));
     final l10n = AppLocalizations.of(tester.element(find.byType(SizedBox)));
-    final colors = {for (final c in BlockColor.values) blockColorName(l10n, c)};
+    final colors = {for (final c in TaskColor.values) blockColorName(l10n, c)};
     final icons = {for (final i in BlockIcon.values) blockIconName(l10n, i)};
-    expect(colors, hasLength(BlockColor.values.length));
+    expect(colors, hasLength(TaskColor.values.length));
     expect(icons, hasLength(BlockIcon.values.length));
   });
 

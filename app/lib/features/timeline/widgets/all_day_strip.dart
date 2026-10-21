@@ -1,5 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +12,7 @@ class AllDayStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppTheme.of(context);
+    final t = DotTheme.of(context);
     // Capped so a day full of all-day items never pushes the timeline
     // off screen; the strip scrolls on its own beyond that.
     return ConstrainedBox(
@@ -22,10 +22,10 @@ class AllDayStrip extends StatelessWidget {
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(
-            AppSpacing.l,
-            AppSpacing.s,
-            AppSpacing.l,
-            AppSpacing.s,
+            DotSpace.l,
+            DotSpace.s,
+            DotSpace.l,
+            DotSpace.s,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,15 +34,13 @@ class AllDayStrip extends StatelessWidget {
                 header: true,
                 child: Text(
                   context.l10n.timelineAllDay,
-                  style: t.typography.label.copyWith(
-                    color: t.colors.onSurfaceMuted,
-                  ),
+                  style: t.styles.rowMeta.copyWith(color: t.colors.muted),
                 ),
               ),
-              const SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: DotSpace.xs),
               Wrap(
-                spacing: AppSpacing.s,
-                runSpacing: AppSpacing.s,
+                spacing: DotSpace.s,
+                runSpacing: DotSpace.s,
                 children: [for (final o in items) _AllDayChip(item: o)],
               ),
             ],
@@ -60,26 +58,26 @@ class _AllDayChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppTheme.of(context);
-    final color = BlockColor.fromKey(item.colorKey);
-    final strong = t.blocks[color].strong;
+    final t = DotTheme.of(context);
+    final color = TaskColor.fromKey(item.colorKey);
+    final strong = t.tasks[color].ink;
     return Container(
-      constraints: const BoxConstraints(minHeight: AppSpacing.minTouchTarget),
-      padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.m),
+      constraints: const BoxConstraints(minHeight: DotTouch.min),
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: DotSpace.m),
       decoration: BoxDecoration(
-        color: t.blocks.fill(color, t.colors.surface),
-        borderRadius: BorderRadius.circular(AppRadii.block),
+        color: t.tasks[color].tint,
+        borderRadius: BorderRadius.circular(DotRadii.card),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             BlockIcon.fromKey(item.iconKey).icon,
-            size: AppSpacing.l,
+            size: DotSpace.l,
             color: strong,
           ),
-          const SizedBox(width: AppSpacing.xs),
-          Text(item.title, style: t.typography.body.copyWith(color: strong)),
+          const SizedBox(width: DotSpace.xs),
+          Text(item.title, style: t.styles.body.copyWith(color: strong)),
         ],
       ),
     );

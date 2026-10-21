@@ -53,7 +53,7 @@ import 'package:sqlite3/sqlite3.dart';
 import 'package:dottoday/domain/repos.dart';
 import 'package:dottoday/data/db.dart';
 import 'package:dottoday/shared/app_sheet.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 ''';
       expect(

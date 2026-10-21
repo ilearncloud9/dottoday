@@ -1,7 +1,7 @@
 import 'package:dottoday/app_commands.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -25,8 +25,8 @@ Widget _routerApp(
   VoidCallback? onQuickAdd,
   ThemeMode themeMode,
 ) => MaterialApp.router(
-  theme: AppTheme.light(),
-  darkTheme: AppTheme.dark(),
+  theme: DotTheme.light(),
+  darkTheme: DotTheme.dark(),
   themeMode: themeMode,
   localizationsDelegates: AppLocalizations.localizationsDelegates,
   supportedLocales: AppLocalizations.supportedLocales,
@@ -40,8 +40,8 @@ Widget _routerApp(
 /// [MaterialApp] with the real theme and l10n around [home].
 Widget testApp(Widget home, {ThemeMode themeMode = ThemeMode.light}) =>
     MaterialApp(
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
+      theme: DotTheme.light(),
+      darkTheme: DotTheme.dark(),
       themeMode: themeMode,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

@@ -511,7 +511,7 @@ return $default(_that.dayBoundaries,_that.snapMinutes,_that.shiftFollowers,_that
 
 @JsonSerializable(explicitToJson: true)
 class _Settings extends Settings {
-  const _Settings({ Map<Weekday, TimeWindow> dayBoundaries = const <Weekday, TimeWindow>{}, this.snapMinutes = 5, this.shiftFollowers = ShiftFollowersPolicy.ask, this.includeCalendarInShift = false, this.defaultDurationMin = 30,  List<Alert> defaultAlerts = const <Alert>[Alert(kind: AlertKind.before, offsetMin: 10)], this.quietHours, this.use24h, this.firstDayOfWeek = 1, this.theme = ThemePreference.system, this.accent = defaultBlockColorKey, this.reduceMotion}): _dayBoundaries = dayBoundaries,_defaultAlerts = defaultAlerts,super._();
+  const _Settings({ Map<Weekday, TimeWindow> dayBoundaries = const <Weekday, TimeWindow>{}, this.snapMinutes = 5, this.shiftFollowers = ShiftFollowersPolicy.ask, this.includeCalendarInShift = false, this.defaultDurationMin = 30,  List<Alert> defaultAlerts = const <Alert>[Alert(kind: AlertKind.before, offsetMin: 10)], this.quietHours, this.use24h, this.firstDayOfWeek = 1, this.theme = ThemePreference.system, this.accent = defaultAccentKey, this.reduceMotion}): _dayBoundaries = dayBoundaries,_defaultAlerts = defaultAlerts,super._();
   factory _Settings.fromJson(Map<String, dynamic> json) => _$SettingsFromJson(json);
 
  final  Map<Weekday, TimeWindow> _dayBoundaries;

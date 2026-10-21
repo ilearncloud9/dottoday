@@ -1,5 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/layout/block_facts.dart';
 import 'package:flutter/material.dart';
 
@@ -13,13 +13,13 @@ class BlockBadges extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppTheme.of(context);
-    final size = MediaQuery.textScalerOf(context).scale(AppSpacing.m + 2);
-    final style = t.typography.mono.copyWith(color: color);
+    final t = DotTheme.of(context);
+    final size = MediaQuery.textScalerOf(context).scale(DotSpace.m + 2);
+    final style = t.styles.rowMeta.copyWith(color: color);
     Widget icon(IconData data) => Icon(data, size: size, color: color);
     return ExcludeSemantics(
       child: Wrap(
-        spacing: AppSpacing.xs,
+        spacing: DotSpace.xs,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           if (facts.hasSubtasks) ...[
@@ -27,7 +27,7 @@ class BlockBadges extends StatelessWidget {
               dimension: size,
               child: CircularProgressIndicator(
                 value: facts.subtasksDone / facts.subtasksTotal,
-                strokeWidth: AppSpacing.xs / 2,
+                strokeWidth: DotSpace.xs / 2,
                 color: color,
                 backgroundColor: color.withValues(alpha: 0.25),
               ),

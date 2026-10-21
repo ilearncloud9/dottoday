@@ -1,7 +1,7 @@
 import 'package:dottoday/domain/entities/alert.dart';
-import 'package:dottoday/domain/entities/block_color_keys.gen.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/icon_keys.dart';
+import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
 import 'package:dottoday/domain/entities/utc_millis_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -22,7 +22,7 @@ abstract class Series with _$Series {
     required String userId,
     required String title,
     String? notes,
-    @Default(defaultBlockColorKey) String colorKey,
+    @Default(defaultTaskColorKey) String colorKey,
     @Default(defaultIconKey) String iconKey,
     required int durationMin,
     required String rrule,

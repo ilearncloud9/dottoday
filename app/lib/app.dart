@@ -3,7 +3,7 @@ import 'package:dottoday/app_lifecycle.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,8 +19,8 @@ class DottodayApp extends ConsumerWidget {
       onGenerateTitle: (context) => context.l10n.appTitle,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
+      theme: DotTheme.light(),
+      darkTheme: DotTheme.dark(),
       routerConfig: router,
       // Above all routes so shortcuts work wherever focus is (M0.13).
       builder: (context, child) => AppLifecycleScope(

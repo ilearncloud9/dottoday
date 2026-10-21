@@ -1,8 +1,8 @@
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/domain/entities/alert.dart';
-import 'package:dottoday/domain/entities/block_color_keys.gen.dart';
 import 'package:dottoday/domain/entities/icon_keys.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -58,7 +58,15 @@ ValidationFailure? checkOptionalText(
   return null;
 }
 
-ValidationFailure? checkColorKey(String key) => blockColorKeys.contains(key)
+/// Current keys plus the retired 12-colour ones, which older devices may
+/// still sync (ADR-0007); the UI never writes a legacy key.
+ValidationFailure? checkColorKey(String key) =>
+    taskColorKeys.contains(key) || legacyTaskColorKeys.contains(key)
+    ? null
+    : _fail(ValidationField.color, ValidationRule.invalidFormat);
+
+/// One of the four accents in Settings › Look (docs/10 §2.1).
+ValidationFailure? checkAccentKey(String key) => accentKeys.contains(key)
     ? null
     : _fail(ValidationField.color, ValidationRule.invalidFormat);
 

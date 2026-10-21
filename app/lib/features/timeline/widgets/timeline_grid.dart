@@ -1,5 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 
 /// Static background: outside-hours zones and hour hairlines. Pure value
@@ -33,7 +33,7 @@ class TimelineGridPainter extends CustomPainter {
     }
     final line = Paint()
       ..color = lineColor
-      ..strokeWidth = AppSpacing.hairline;
+      ..strokeWidth = DotSpace.hairline;
     final rtl = textDirection == TextDirection.rtl;
     final x0 = rtl ? 0.0 : gutterWidth;
     final x1 = rtl ? size.width - gutterWidth : size.width;
@@ -76,15 +76,15 @@ class ZoneToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppTheme.of(context);
+    final t = DotTheme.of(context);
     return Semantics(
       expanded: expanded,
       child: TextButton.icon(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          foregroundColor: t.colors.onSurfaceMuted,
-          minimumSize: const Size(0, AppSpacing.minTouchTarget),
-          textStyle: t.typography.label,
+          foregroundColor: t.colors.muted,
+          minimumSize: const Size(0, DotTouch.min),
+          textStyle: t.styles.rowMeta,
         ),
         icon: Icon(expanded ? Icons.unfold_less : Icons.unfold_more),
         label: Text(label),
@@ -103,7 +103,7 @@ class OverflowChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final t = AppTheme.of(context);
+    final t = DotTheme.of(context);
     return Semantics(
       label: l10n.timelineMoreBlocksLabel(count),
       button: true,
@@ -112,10 +112,10 @@ class OverflowChip extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          backgroundColor: t.colors.surfaceRaised,
-          foregroundColor: t.colors.onSurface,
-          minimumSize: const Size.square(AppSpacing.minTouchTarget),
-          textStyle: t.typography.label,
+          backgroundColor: t.colors.raised,
+          foregroundColor: t.colors.text,
+          minimumSize: const Size.square(DotTouch.min),
+          textStyle: t.styles.rowMeta,
         ),
         child: Text(l10n.timelineMoreBlocks(count)),
       ),

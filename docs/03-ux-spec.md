@@ -6,6 +6,8 @@ state (empty, loading, error, offline) designed.
 
 ## 1. Design tokens (implement in `lib/core/theme/`)
 
+> Superseded by `10-ui-concept-a.md` §2 (ADR-0007, M3a.1): `DotTheme`, 9 task colours, 4 accents.
+
 ### Colour
 Semantic roles only in code; never raw hex outside `app_colors.dart` and the generated
 `block_palette.gen.dart`.

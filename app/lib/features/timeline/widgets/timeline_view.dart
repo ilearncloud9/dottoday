@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/features/timeline/layout/timeline_geometry.dart';

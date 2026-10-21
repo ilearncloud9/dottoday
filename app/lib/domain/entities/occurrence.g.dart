@@ -16,7 +16,7 @@ _Occurrence _$OccurrenceFromJson(Map<String, dynamic> json) => _Occurrence(
   ),
   title: json['title'] as String,
   notes: json['notes'] as String?,
-  colorKey: json['color_key'] as String? ?? defaultBlockColorKey,
+  colorKey: json['color_key'] as String? ?? defaultTaskColorKey,
   iconKey: json['icon_key'] as String? ?? defaultIconKey,
   startUtc: _$JsonConverterFromJson<int, DateTime>(
     json['start_utc'],

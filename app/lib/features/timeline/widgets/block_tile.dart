@@ -1,5 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/layout/block_facts.dart';
 import 'package:dottoday/features/timeline/widgets/block_badges.dart';
@@ -41,11 +41,11 @@ class BlockTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppTheme.of(context);
+    final t = DotTheme.of(context);
     final f = facts ?? BlockFacts.of(block, nowUtc: null);
-    final color = BlockColor.fromKey(block.colorKey);
-    final fill = t.blocks.fill(color, t.colors.surface);
-    final ink = f.done ? t.colors.onSurfaceMuted : t.blocks[color].strong;
+    final color = TaskColor.fromKey(block.colorKey);
+    final fill = t.tasks[color].tint;
+    final ink = f.done ? t.colors.muted : t.tasks[color].ink;
     final start = timeOfUtc(context, location, block.startUtc!, use24h: use24h);
     final end = timeOfUtc(context, location, block.endUtc!, use24h: use24h);
     final l10n = context.l10n;
@@ -61,14 +61,11 @@ class BlockTile extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           // "Fill desaturates": blend most of the way to the sunken grey.
-          color: f.done ? Color.lerp(fill, t.colors.surfaceSunken, 0.75) : fill,
-          borderRadius: BorderRadius.circular(AppRadii.block),
+          color: f.done ? Color.lerp(fill, t.colors.outline, 0.75) : fill,
+          borderRadius: BorderRadius.circular(DotRadii.card),
           border: f.overdue
               ? BorderDirectional(
-                  start: BorderSide(
-                    color: t.colors.warning,
-                    width: _overdueBar,
-                  ),
+                  start: BorderSide(color: t.colors.muted, width: _overdueBar),
                 )
               : null,
         ),
@@ -80,7 +77,7 @@ class BlockTile extends StatelessWidget {
             ink: ink,
             circle: IconCircle(
               icon: BlockIcon.fromKey(block.iconKey).icon,
-              color: t.blocks[color].strong,
+              color: t.tasks[color].ink,
               done: f.done,
               label: f.done
                   ? l10n.blockMarkNotDone(block.title)
@@ -100,31 +97,29 @@ class BlockTile extends StatelessWidget {
   /// Title lines that fit above the time line in [height], 0–2; 0 means
   /// a single row (title · time). Measured at the current text scale so
   /// nothing overflows at 200 % (03 §4).
-  int _titleLines(BuildContext context, AppTheme t, double height) {
+  int _titleLines(BuildContext context, DotTheme t, double height) {
     if (height.isInfinite) return 2; // unconstrained, e.g. in a list
     final scaler = MediaQuery.textScalerOf(context);
     double line(TextStyle s) => scaler.scale(s.fontSize!) * s.height!;
-    final room = height - AppSpacing.s - line(t.typography.mono);
-    return (room / line(t.typography.body)).floor().clamp(0, 2);
+    final room = height - DotSpace.s - line(t.styles.rowMeta);
+    return (room / line(t.styles.body)).floor().clamp(0, 2);
   }
 
   /// Whether, below two title lines and the time, there is room for a
   /// separate badge line (else badges share the time's line).
-  bool _hasBadgeLine(BuildContext context, AppTheme t, double height) {
+  bool _hasBadgeLine(BuildContext context, DotTheme t, double height) {
     if (height.isInfinite) return true;
     final scaler = MediaQuery.textScalerOf(context);
     double line(TextStyle s) => scaler.scale(s.fontSize!) * s.height!;
     final needed =
-        AppSpacing.s +
-        line(t.typography.body) * 2 +
-        line(t.typography.mono) * 2;
+        DotSpace.s + line(t.styles.body) * 2 + line(t.styles.rowMeta) * 2;
     return height >= needed;
   }
 
   /// Narrower single-row tiles show the title only (the time is still in
   /// the semantics label), so the title is never squeezed out by the time.
   double _rowTimeWidth(BuildContext context) =>
-      MediaQuery.textScalerOf(context).scale(AppSpacing.xxl * 5);
+      MediaQuery.textScalerOf(context).scale(DotSpace.xxl * 5);
 }
 
 class _BlockContent extends StatelessWidget {
@@ -157,14 +152,14 @@ class _BlockContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppTheme.of(context);
+    final t = DotTheme.of(context);
     final tall = titleLines > 0;
     final titleText = ExcludeSemantics(
       child: Text(
         title,
         maxLines: tall ? titleLines : 1,
         overflow: TextOverflow.ellipsis,
-        style: t.typography.body.copyWith(
+        style: t.styles.body.copyWith(
           color: ink,
           decoration: facts.done ? TextDecoration.lineThrough : null,
           decorationColor: ink,
@@ -178,7 +173,7 @@ class _BlockContent extends StatelessWidget {
         softWrap: false,
         // Narrow overlap columns can't fit the range; fade it at the edge.
         overflow: TextOverflow.fade,
-        style: t.typography.mono.copyWith(color: ink),
+        style: t.styles.rowMeta.copyWith(color: ink),
       ),
     );
     final badges = hasBadges(facts)
@@ -193,9 +188,9 @@ class _BlockContent extends StatelessWidget {
         Expanded(
           child: Padding(
             padding: const EdgeInsetsDirectional.only(
-              end: AppSpacing.s,
-              top: AppSpacing.xs,
-              bottom: AppSpacing.xs,
+              end: DotSpace.s,
+              top: DotSpace.xs,
+              bottom: DotSpace.xs,
             ),
             child: tall
                 ? _tall(titleText, time, badges)
@@ -224,7 +219,7 @@ class _BlockContent extends StatelessWidget {
             children: [
               Flexible(child: time),
               if (badges != null) ...[
-                const SizedBox(width: AppSpacing.s),
+                const SizedBox(width: DotSpace.s),
                 Expanded(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -250,9 +245,9 @@ class _BlockContent extends StatelessWidget {
   Widget _row(Widget title, Widget time, Widget? badges) => Row(
     children: [
       Expanded(child: title),
-      if (wide) ...[const SizedBox(width: AppSpacing.s), time],
+      if (wide) ...[const SizedBox(width: DotSpace.s), time],
       if (wide && badges != null) ...[
-        const SizedBox(width: AppSpacing.s),
+        const SizedBox(width: DotSpace.s),
         badges,
       ],
     ],

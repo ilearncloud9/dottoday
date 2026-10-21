@@ -1,10 +1,10 @@
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Our touch-target floor from docs/03 §1 (44 × 44 pt), read from the token.
 const _minTouchTarget = MinimumTapTargetGuideline(
-  size: Size.square(AppSpacing.minTouchTarget),
+  size: Size.square(DotTouch.min),
   link: 'docs/03-ux-spec.md §1 "Touch targets ≥ 44×44 pt"',
 );
 

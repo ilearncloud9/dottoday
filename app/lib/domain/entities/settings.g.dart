@@ -43,7 +43,7 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   theme:
       $enumDecodeNullable(_$ThemePreferenceEnumMap, json['theme']) ??
       ThemePreference.system,
-  accent: json['accent'] as String? ?? defaultBlockColorKey,
+  accent: json['accent'] as String? ?? defaultAccentKey,
   reduceMotion: json['reduceMotion'] as bool?,
 );
 

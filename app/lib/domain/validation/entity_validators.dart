@@ -103,7 +103,7 @@ Validated<Settings> validateSettings(Settings s) {
       checkAlerts(s.defaultAlerts),
       if (s.quietHours case final quiet?) checkTimeWindow(quiet),
       checkRange(ValidationField.settings, s.firstDayOfWeek, 1, 7),
-      checkColorKey(s.accent),
+      checkAccentKey(s.accent),
     ]),
   );
 }

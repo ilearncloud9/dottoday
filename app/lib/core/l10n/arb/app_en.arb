@@ -174,16 +174,8 @@
   "@colorCoral": {
     "description": "Block colour name (screen readers, picker)."
   },
-  "colorTangerine": "Tangerine",
-  "@colorTangerine": {
-    "description": "Block colour name (screen readers, picker)."
-  },
   "colorAmber": "Amber",
   "@colorAmber": {
-    "description": "Block colour name (screen readers, picker)."
-  },
-  "colorLime": "Lime",
-  "@colorLime": {
     "description": "Block colour name (screen readers, picker)."
   },
   "colorMint": "Mint",
@@ -204,10 +196,6 @@
   },
   "colorViolet": "Violet",
   "@colorViolet": {
-    "description": "Block colour name (screen readers, picker)."
-  },
-  "colorMagenta": "Magenta",
-  "@colorMagenta": {
     "description": "Block colour name (screen readers, picker)."
   },
   "colorRose": "Rose",

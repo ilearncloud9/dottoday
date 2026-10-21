@@ -1,5 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/timeline_screen.dart';
@@ -32,8 +32,8 @@ Future<FakeOccurrenceRepository> _pump(
     ProviderScope(
       overrides: timelineOverrides(now: _now, occurrences: repo),
       child: MaterialApp(
-        theme: AppTheme.light(),
-        darkTheme: AppTheme.dark(),
+        theme: DotTheme.light(),
+        darkTheme: DotTheme.dark(),
         themeMode: mode,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -226,7 +226,7 @@ void main() {
           subtasks: FakeSubtaskRepository(demoDaySubtasks(_date)),
         ),
         child: MaterialApp(
-          theme: AppTheme.light(),
+          theme: DotTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const TimelineScreen(),

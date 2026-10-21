@@ -11,7 +11,7 @@ _Series _$SeriesFromJson(Map<String, dynamic> json) => _Series(
   userId: json['user_id'] as String,
   title: json['title'] as String,
   notes: json['notes'] as String?,
-  colorKey: json['color_key'] as String? ?? defaultBlockColorKey,
+  colorKey: json['color_key'] as String? ?? defaultTaskColorKey,
   iconKey: json['icon_key'] as String? ?? defaultIconKey,
   durationMin: (json['duration_min'] as num).toInt(),
   rrule: json['rrule'] as String,

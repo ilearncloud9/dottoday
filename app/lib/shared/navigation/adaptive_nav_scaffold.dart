@@ -1,4 +1,4 @@
-import 'package:dottoday/core/theme/app_theme.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 
 /// One top-level destination for [AdaptiveNavScaffold].
@@ -16,11 +16,11 @@ final class NavDestination {
   final String label;
 }
 
-/// Bottom [NavigationBar] below [AppBreakpoints.navigationRail], a
+/// Bottom [NavigationBar] below [WidthClass.mediumFrom], a
 /// [NavigationRail] from there up (docs/03 §2). Chosen by available width,
 /// never by platform.
 ///
-/// When a [fab] is given, [body] gets [AppSpacing.fabClearance] of extra
+/// When a [fab] is given, [body] gets [DotSpace.fabClearance] of extra
 /// bottom padding via `MediaQuery`, which scroll views apply automatically,
 /// so the end of a list is never covered by the button.
 class AdaptiveNavScaffold extends StatelessWidget {
@@ -43,7 +43,7 @@ class AdaptiveNavScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) =>
-          constraints.maxWidth >= AppBreakpoints.navigationRail
+          constraints.maxWidth >= WidthClass.mediumFrom
           ? _rail(context)
           : _bar(context),
     );
@@ -92,8 +92,8 @@ class AdaptiveNavScaffold extends StatelessWidget {
             ),
           ),
           const VerticalDivider(
-            width: AppSpacing.hairline,
-            thickness: AppSpacing.hairline,
+            width: DotSpace.hairline,
+            thickness: DotSpace.hairline,
           ),
           Expanded(child: _content(context)),
         ],
@@ -111,7 +111,7 @@ class AdaptiveNavScaffold extends StatelessWidget {
         return MediaQuery(
           data: mq.copyWith(
             padding: mq.padding.copyWith(
-              bottom: mq.padding.bottom + AppSpacing.fabClearance,
+              bottom: mq.padding.bottom + DotSpace.fabClearance,
             ),
           ),
           child: body,
