@@ -3,6 +3,323 @@
 part of 'app_database.dart';
 
 // ignore_for_file: type=lint
+class SearchIndex extends Table
+    with
+        TableInfo<SearchIndex, SearchIndexData>,
+        VirtualTableInfo<SearchIndex, SearchIndexData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  SearchIndex(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: '',
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: '',
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: '',
+  );
+  static const VerificationMeta _subtasksMeta = const VerificationMeta(
+    'subtasks',
+  );
+  late final GeneratedColumn<String> subtasks = GeneratedColumn<String>(
+    'subtasks',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: '',
+  );
+  @override
+  List<GeneratedColumn> get $columns => [userId, title, notes, subtasks];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'search_index';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SearchIndexData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_notesMeta);
+    }
+    if (data.containsKey('subtasks')) {
+      context.handle(
+        _subtasksMeta,
+        subtasks.isAcceptableOrUnknown(data['subtasks']!, _subtasksMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_subtasksMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  SearchIndexData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SearchIndexData(
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      )!,
+      subtasks: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}subtasks'],
+      )!,
+    );
+  }
+
+  @override
+  SearchIndex createAlias(String alias) {
+    return SearchIndex(attachedDatabase, alias);
+  }
+
+  @override
+  bool get dontWriteConstraints => true;
+  @override
+  String get moduleAndArgs =>
+      'fts5(user_id UNINDEXED, title, notes, subtasks, tokenize = \'unicode61 remove_diacritics 2\')';
+}
+
+class SearchIndexData extends DataClass implements Insertable<SearchIndexData> {
+  final String userId;
+  final String title;
+  final String notes;
+  final String subtasks;
+  const SearchIndexData({
+    required this.userId,
+    required this.title,
+    required this.notes,
+    required this.subtasks,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_id'] = Variable<String>(userId);
+    map['title'] = Variable<String>(title);
+    map['notes'] = Variable<String>(notes);
+    map['subtasks'] = Variable<String>(subtasks);
+    return map;
+  }
+
+  SearchIndexCompanion toCompanion(bool nullToAbsent) {
+    return SearchIndexCompanion(
+      userId: Value(userId),
+      title: Value(title),
+      notes: Value(notes),
+      subtasks: Value(subtasks),
+    );
+  }
+
+  factory SearchIndexData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SearchIndexData(
+      userId: serializer.fromJson<String>(json['user_id']),
+      title: serializer.fromJson<String>(json['title']),
+      notes: serializer.fromJson<String>(json['notes']),
+      subtasks: serializer.fromJson<String>(json['subtasks']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'user_id': serializer.toJson<String>(userId),
+      'title': serializer.toJson<String>(title),
+      'notes': serializer.toJson<String>(notes),
+      'subtasks': serializer.toJson<String>(subtasks),
+    };
+  }
+
+  SearchIndexData copyWith({
+    String? userId,
+    String? title,
+    String? notes,
+    String? subtasks,
+  }) => SearchIndexData(
+    userId: userId ?? this.userId,
+    title: title ?? this.title,
+    notes: notes ?? this.notes,
+    subtasks: subtasks ?? this.subtasks,
+  );
+  SearchIndexData copyWithCompanion(SearchIndexCompanion data) {
+    return SearchIndexData(
+      userId: data.userId.present ? data.userId.value : this.userId,
+      title: data.title.present ? data.title.value : this.title,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      subtasks: data.subtasks.present ? data.subtasks.value : this.subtasks,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SearchIndexData(')
+          ..write('userId: $userId, ')
+          ..write('title: $title, ')
+          ..write('notes: $notes, ')
+          ..write('subtasks: $subtasks')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(userId, title, notes, subtasks);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SearchIndexData &&
+          other.userId == this.userId &&
+          other.title == this.title &&
+          other.notes == this.notes &&
+          other.subtasks == this.subtasks);
+}
+
+class SearchIndexCompanion extends UpdateCompanion<SearchIndexData> {
+  final Value<String> userId;
+  final Value<String> title;
+  final Value<String> notes;
+  final Value<String> subtasks;
+  final Value<int> rowid;
+  const SearchIndexCompanion({
+    this.userId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.subtasks = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SearchIndexCompanion.insert({
+    required String userId,
+    required String title,
+    required String notes,
+    required String subtasks,
+    this.rowid = const Value.absent(),
+  }) : userId = Value(userId),
+       title = Value(title),
+       notes = Value(notes),
+       subtasks = Value(subtasks);
+  static Insertable<SearchIndexData> custom({
+    Expression<String>? userId,
+    Expression<String>? title,
+    Expression<String>? notes,
+    Expression<String>? subtasks,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userId != null) 'user_id': userId,
+      if (title != null) 'title': title,
+      if (notes != null) 'notes': notes,
+      if (subtasks != null) 'subtasks': subtasks,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SearchIndexCompanion copyWith({
+    Value<String>? userId,
+    Value<String>? title,
+    Value<String>? notes,
+    Value<String>? subtasks,
+    Value<int>? rowid,
+  }) {
+    return SearchIndexCompanion(
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      notes: notes ?? this.notes,
+      subtasks: subtasks ?? this.subtasks,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (subtasks.present) {
+      map['subtasks'] = Variable<String>(subtasks.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SearchIndexCompanion(')
+          ..write('userId: $userId, ')
+          ..write('title: $title, ')
+          ..write('notes: $notes, ')
+          ..write('subtasks: $subtasks, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ProfilesTable extends Profiles
     with TableInfo<$ProfilesTable, ProfileRow> {
   @override
@@ -6437,6 +6754,7 @@ class LocalMetaCompanion extends UpdateCompanion<LocalMetaRow> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
+  late final SearchIndex searchIndex = SearchIndex(this);
   late final $ProfilesTable profiles = $ProfilesTable(this);
   late final $SeriesTableTable seriesTable = $SeriesTableTable(this);
   late final $CalendarAccountsTable calendarAccounts = $CalendarAccountsTable(
@@ -6445,33 +6763,29 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $CalendarLinksTable calendarLinks = $CalendarLinksTable(this);
   late final $OccurrencesTable occurrences = $OccurrencesTable(this);
   late final $SubtasksTable subtasks = $SubtasksTable(this);
-  late final $ConflictsTable conflicts = $ConflictsTable(this);
-  late final $ChangeLogTable changeLog = $ChangeLogTable(this);
-  late final $SyncCursorsTable syncCursors = $SyncCursorsTable(this);
-  late final $LocalMetaTable localMeta = $LocalMetaTable(this);
-  late final Index seriesUser = Index(
-    'series_user',
-    'CREATE INDEX series_user ON series (user_id)',
+  late final Trigger searchOccurrenceInsert = Trigger(
+    'CREATE TRIGGER search_occurrence_insert AFTER INSERT ON occurrences WHEN new.deleted_at IS NULL BEGIN INSERT INTO search_index ("rowid", user_id, title, notes, subtasks) VALUES (new."rowid", new.user_id, new.title, coalesce(new.notes, \'\'), (SELECT coalesce(group_concat(title, \' \'), \'\') FROM subtasks WHERE occurrence_id = new.id AND deleted_at IS NULL));END',
+    'search_occurrence_insert',
   );
-  late final Index seriesUserUpdated = Index(
-    'series_user_updated',
-    'CREATE INDEX series_user_updated ON series (user_id, updated_at)',
+  late final Trigger searchOccurrenceUpdate = Trigger(
+    'CREATE TRIGGER search_occurrence_update AFTER UPDATE OF title, notes, deleted_at, user_id ON occurrences BEGIN DELETE FROM search_index WHERE "rowid" = old."rowid";INSERT INTO search_index ("rowid", user_id, title, notes, subtasks) SELECT new."rowid", new.user_id, new.title, coalesce(new.notes, \'\'), (SELECT coalesce(group_concat(title, \' \'), \'\') FROM subtasks WHERE occurrence_id = new.id AND deleted_at IS NULL) WHERE new.deleted_at IS NULL;END',
+    'search_occurrence_update',
   );
-  late final Index seriesDirty = Index(
-    'series_dirty',
-    'CREATE INDEX series_dirty ON series (dirty) WHERE dirty = 1',
+  late final Trigger searchOccurrenceDelete = Trigger(
+    'CREATE TRIGGER search_occurrence_delete AFTER DELETE ON occurrences BEGIN DELETE FROM search_index WHERE "rowid" = old."rowid";END',
+    'search_occurrence_delete',
   );
-  late final Index calendarAccountsUserUpdated = Index(
-    'calendar_accounts_user_updated',
-    'CREATE INDEX calendar_accounts_user_updated ON calendar_accounts (user_id, updated_at)',
+  late final Trigger searchSubtaskInsert = Trigger(
+    'CREATE TRIGGER search_subtask_insert AFTER INSERT ON subtasks BEGIN UPDATE search_index SET subtasks = (SELECT coalesce(group_concat(title, \' \'), \'\') FROM subtasks WHERE occurrence_id = new.occurrence_id AND deleted_at IS NULL) WHERE "rowid" = (SELECT "rowid" FROM occurrences WHERE id = new.occurrence_id);END',
+    'search_subtask_insert',
   );
-  late final Index calendarLinksUserEvent = Index(
-    'calendar_links_user_event',
-    'CREATE INDEX calendar_links_user_event ON calendar_links (user_id, external_event_id)',
+  late final Trigger searchSubtaskUpdate = Trigger(
+    'CREATE TRIGGER search_subtask_update AFTER UPDATE OF title, deleted_at ON subtasks BEGIN UPDATE search_index SET subtasks = (SELECT coalesce(group_concat(title, \' \'), \'\') FROM subtasks WHERE occurrence_id = new.occurrence_id AND deleted_at IS NULL) WHERE "rowid" = (SELECT "rowid" FROM occurrences WHERE id = new.occurrence_id);END',
+    'search_subtask_update',
   );
-  late final Index calendarLinksAccountEvent = Index(
-    'calendar_links_account_event',
-    'CREATE UNIQUE INDEX calendar_links_account_event ON calendar_links (user_id, account_id, external_event_id)',
+  late final Trigger searchSubtaskDelete = Trigger(
+    'CREATE TRIGGER search_subtask_delete AFTER DELETE ON subtasks BEGIN UPDATE search_index SET subtasks = (SELECT coalesce(group_concat(title, \' \'), \'\') FROM subtasks WHERE occurrence_id = old.occurrence_id AND deleted_at IS NULL) WHERE "rowid" = (SELECT "rowid" FROM occurrences WHERE id = old.occurrence_id);END',
+    'search_subtask_delete',
   );
   late final Index occurrencesUserStart = Index(
     'occurrences_user_start',
@@ -6509,6 +6823,34 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'subtasks_dirty',
     'CREATE INDEX subtasks_dirty ON subtasks (dirty) WHERE dirty = 1',
   );
+  late final Index seriesUser = Index(
+    'series_user',
+    'CREATE INDEX series_user ON series (user_id)',
+  );
+  late final Index seriesUserUpdated = Index(
+    'series_user_updated',
+    'CREATE INDEX series_user_updated ON series (user_id, updated_at)',
+  );
+  late final Index seriesDirty = Index(
+    'series_dirty',
+    'CREATE INDEX series_dirty ON series (dirty) WHERE dirty = 1',
+  );
+  late final Index calendarAccountsUserUpdated = Index(
+    'calendar_accounts_user_updated',
+    'CREATE INDEX calendar_accounts_user_updated ON calendar_accounts (user_id, updated_at)',
+  );
+  late final Index calendarLinksUserEvent = Index(
+    'calendar_links_user_event',
+    'CREATE INDEX calendar_links_user_event ON calendar_links (user_id, external_event_id)',
+  );
+  late final Index calendarLinksAccountEvent = Index(
+    'calendar_links_account_event',
+    'CREATE UNIQUE INDEX calendar_links_account_event ON calendar_links (user_id, account_id, external_event_id)',
+  );
+  late final $ConflictsTable conflicts = $ConflictsTable(this);
+  late final $ChangeLogTable changeLog = $ChangeLogTable(this);
+  late final $SyncCursorsTable syncCursors = $SyncCursorsTable(this);
+  late final $LocalMetaTable localMeta = $LocalMetaTable(this);
   late final Index conflictsOpen = Index(
     'conflicts_open',
     'CREATE INDEX conflicts_open ON conflicts (user_id) WHERE resolved_at IS NULL',
@@ -6522,22 +6864,19 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
+    searchIndex,
     profiles,
     seriesTable,
     calendarAccounts,
     calendarLinks,
     occurrences,
     subtasks,
-    conflicts,
-    changeLog,
-    syncCursors,
-    localMeta,
-    seriesUser,
-    seriesUserUpdated,
-    seriesDirty,
-    calendarAccountsUserUpdated,
-    calendarLinksUserEvent,
-    calendarLinksAccountEvent,
+    searchOccurrenceInsert,
+    searchOccurrenceUpdate,
+    searchOccurrenceDelete,
+    searchSubtaskInsert,
+    searchSubtaskUpdate,
+    searchSubtaskDelete,
     occurrencesUserStart,
     occurrencesUserUpdated,
     occurrencesSeriesOriginal,
@@ -6547,6 +6886,16 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     subtasksOccurrence,
     subtasksUserUpdated,
     subtasksDirty,
+    seriesUser,
+    seriesUserUpdated,
+    seriesDirty,
+    calendarAccountsUserUpdated,
+    calendarLinksUserEvent,
+    calendarLinksAccountEvent,
+    conflicts,
+    changeLog,
+    syncCursors,
+    localMeta,
     conflictsOpen,
     changeLogEntity,
   ];
@@ -6652,6 +7001,51 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
+        'occurrences',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('search_index', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'occurrences',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [
+        TableUpdate('search_index', kind: UpdateKind.delete),
+        TableUpdate('search_index', kind: UpdateKind.insert),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'occurrences',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('search_index', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'subtasks',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('search_index', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'subtasks',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('search_index', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'subtasks',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('search_index', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
         'profiles',
         limitUpdateKind: UpdateKind.delete,
       ),
@@ -6667,6 +7061,195 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   ]);
 }
 
+typedef $SearchIndexCreateCompanionBuilder =
+    SearchIndexCompanion Function({
+      required String userId,
+      required String title,
+      required String notes,
+      required String subtasks,
+      Value<int> rowid,
+    });
+typedef $SearchIndexUpdateCompanionBuilder =
+    SearchIndexCompanion Function({
+      Value<String> userId,
+      Value<String> title,
+      Value<String> notes,
+      Value<String> subtasks,
+      Value<int> rowid,
+    });
+
+class $SearchIndexFilterComposer extends Composer<_$AppDatabase, SearchIndex> {
+  $SearchIndexFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get subtasks => $composableBuilder(
+    column: $table.subtasks,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $SearchIndexOrderingComposer
+    extends Composer<_$AppDatabase, SearchIndex> {
+  $SearchIndexOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get subtasks => $composableBuilder(
+    column: $table.subtasks,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $SearchIndexAnnotationComposer
+    extends Composer<_$AppDatabase, SearchIndex> {
+  $SearchIndexAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<String> get subtasks =>
+      $composableBuilder(column: $table.subtasks, builder: (column) => column);
+}
+
+class $SearchIndexTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          SearchIndex,
+          SearchIndexData,
+          $SearchIndexFilterComposer,
+          $SearchIndexOrderingComposer,
+          $SearchIndexAnnotationComposer,
+          $SearchIndexCreateCompanionBuilder,
+          $SearchIndexUpdateCompanionBuilder,
+          (
+            SearchIndexData,
+            BaseReferences<_$AppDatabase, SearchIndex, SearchIndexData>,
+          ),
+          SearchIndexData,
+          PrefetchHooks Function()
+        > {
+  $SearchIndexTableManager(_$AppDatabase db, SearchIndex table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $SearchIndexFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $SearchIndexOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $SearchIndexAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> userId = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> notes = const Value.absent(),
+                Value<String> subtasks = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SearchIndexCompanion(
+                userId: userId,
+                title: title,
+                notes: notes,
+                subtasks: subtasks,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userId,
+                required String title,
+                required String notes,
+                required String subtasks,
+                Value<int> rowid = const Value.absent(),
+              }) => SearchIndexCompanion.insert(
+                userId: userId,
+                title: title,
+                notes: notes,
+                subtasks: subtasks,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<SearchIndex, SearchIndexData>(table),
+                  BaseReferences<_$AppDatabase, SearchIndex, SearchIndexData>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $SearchIndexProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      SearchIndex,
+      SearchIndexData,
+      $SearchIndexFilterComposer,
+      $SearchIndexOrderingComposer,
+      $SearchIndexAnnotationComposer,
+      $SearchIndexCreateCompanionBuilder,
+      $SearchIndexUpdateCompanionBuilder,
+      (
+        SearchIndexData,
+        BaseReferences<_$AppDatabase, SearchIndex, SearchIndexData>,
+      ),
+      SearchIndexData,
+      PrefetchHooks Function()
+    >;
 typedef $$ProfilesTableCreateCompanionBuilder =
     ProfilesCompanion Function({
       required int createdAt,
@@ -11828,6 +12411,8 @@ typedef $$LocalMetaTableProcessedTableManager =
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
+  $SearchIndexTableManager get searchIndex =>
+      $SearchIndexTableManager(_db, _db.searchIndex);
   $$ProfilesTableTableManager get profiles =>
       $$ProfilesTableTableManager(_db, _db.profiles);
   $$SeriesTableTableTableManager get seriesTable =>

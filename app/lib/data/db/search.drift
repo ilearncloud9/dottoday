@@ -1,0 +1,62 @@
+import 'tables/occurrences.dart';
+
+-- Full-text search over tasks (docs/09 M2.6, R-11): one document per
+-- occurrence, rowid = occurrences.rowid. Live (not deleted) rows only;
+-- done tasks stay searchable ("completed history"). Triggers keep it in
+-- step with every writer, including sync pulls.
+CREATE VIRTUAL TABLE search_index USING fts5(
+  user_id UNINDEXED,
+  title,
+  notes,
+  subtasks,
+  tokenize = 'unicode61 remove_diacritics 2'
+);
+
+CREATE TRIGGER search_occurrence_insert AFTER INSERT ON occurrences
+WHEN new.deleted_at IS NULL
+BEGIN
+  INSERT INTO search_index (rowid, user_id, title, notes, subtasks)
+  VALUES (new.rowid, new.user_id, new.title, coalesce(new.notes, ''),
+    (SELECT coalesce(group_concat(title, ' '), '') FROM subtasks
+      WHERE occurrence_id = new.id AND deleted_at IS NULL));
+END;
+
+CREATE TRIGGER search_occurrence_update AFTER UPDATE OF title, notes, deleted_at, user_id ON occurrences
+BEGIN
+  DELETE FROM search_index WHERE rowid = old.rowid;
+  INSERT INTO search_index (rowid, user_id, title, notes, subtasks)
+  SELECT new.rowid, new.user_id, new.title, coalesce(new.notes, ''),
+    (SELECT coalesce(group_concat(title, ' '), '') FROM subtasks
+      WHERE occurrence_id = new.id AND deleted_at IS NULL)
+  WHERE new.deleted_at IS NULL;
+END;
+
+CREATE TRIGGER search_occurrence_delete AFTER DELETE ON occurrences
+BEGIN
+  DELETE FROM search_index WHERE rowid = old.rowid;
+END;
+
+-- Any subtask change rewrites its occurrence's document.
+CREATE TRIGGER search_subtask_insert AFTER INSERT ON subtasks
+BEGIN
+  UPDATE search_index SET subtasks =
+    (SELECT coalesce(group_concat(title, ' '), '') FROM subtasks
+      WHERE occurrence_id = new.occurrence_id AND deleted_at IS NULL)
+  WHERE rowid = (SELECT rowid FROM occurrences WHERE id = new.occurrence_id);
+END;
+
+CREATE TRIGGER search_subtask_update AFTER UPDATE OF title, deleted_at ON subtasks
+BEGIN
+  UPDATE search_index SET subtasks =
+    (SELECT coalesce(group_concat(title, ' '), '') FROM subtasks
+      WHERE occurrence_id = new.occurrence_id AND deleted_at IS NULL)
+  WHERE rowid = (SELECT rowid FROM occurrences WHERE id = new.occurrence_id);
+END;
+
+CREATE TRIGGER search_subtask_delete AFTER DELETE ON subtasks
+BEGIN
+  UPDATE search_index SET subtasks =
+    (SELECT coalesce(group_concat(title, ' '), '') FROM subtasks
+      WHERE occurrence_id = old.occurrence_id AND deleted_at IS NULL)
+  WHERE rowid = (SELECT rowid FROM occurrences WHERE id = old.occurrence_id);
+END;

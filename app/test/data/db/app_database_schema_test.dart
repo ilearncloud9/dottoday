@@ -44,7 +44,9 @@ void main() {
     final rows = await db
         .customSelect(
           "SELECT name, strict FROM pragma_table_list WHERE schema = 'main' "
-          "AND type = 'table' AND name NOT LIKE 'sqlite_%'",
+          "AND type = 'table' AND name NOT LIKE 'sqlite_%' "
+          // FTS5 virtual table and its shadow tables can't be STRICT.
+          "AND name NOT LIKE 'search_index%'",
         )
         .get();
     expect(rows.map((r) => r.read<String>('name')).toSet(), {

@@ -1,0 +1,13 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          # search.drift declares an FTS5 table (M2.6); matches the linked
+          # SQLCipher build (ADR-0006).
+          sql:
+            dialect: sqlite
+            options:
+              version: "3.45"
+              modules:
+                - fts5

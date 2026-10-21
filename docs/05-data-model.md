@@ -62,6 +62,10 @@ the push outbox (rows deleted on ack); `sync_cursors (entity pk, since_utc)` hol
   `jsonb` columns are `TEXT` with `CHECK (json_valid(…))`; booleans are `INTEGER` 0/1.
 - Before sign-in the single local `profiles.id` is a client UUID v7. Every `user_id` references it
   with `ON UPDATE CASCADE`, so first sync (M6.4) re-owns all rows by updating one id.
+- Search (M2.6): FTS5 `search_index` (`app/lib/data/db/search.drift`), one document per live
+  occurrence (`rowid` = occurrence rowid; title, notes, live subtask titles; `unicode61` with
+  diacritics removed), maintained by triggers on `occurrences`/`subtasks`. Done tasks stay indexed;
+  Trash doesn't. Queries are built by `ftsQuery` (quoted prefix terms, ≤ 8, ≤ 200 chars).
 - Local adds the docs §Indexes set plus partial indexes on `dirty = 1` (push) and the inbox
   (`start_utc IS NULL`). The local unique key is `(user_id, series_id, original_start_utc)`.
 

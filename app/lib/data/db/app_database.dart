@@ -25,6 +25,7 @@ part 'app_database.g.dart';
     SyncCursors,
     LocalMeta,
   ],
+  include: {'search.drift'},
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
