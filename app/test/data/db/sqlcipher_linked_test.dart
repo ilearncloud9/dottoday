@@ -7,7 +7,7 @@ import 'package:sqlite3/sqlite3.dart';
 void main() {
   test('linked SQLite is SQLCipher', () {
     final db = sqlite3.openInMemory();
-    addTearDown(db.dispose);
+    addTearDown(db.close);
     final rows = db.select('PRAGMA cipher_version');
     expect(rows, isNotEmpty);
     expect(rows.first.values.first, isA<String>());

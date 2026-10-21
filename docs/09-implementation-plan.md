@@ -43,13 +43,14 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 ## Milestone 2 — Data layer (goal: encrypted local DB + repositories, no network yet)
 
 - [x] M2.0 Raise the Dart SDK floor to `^3.8.0` (json_serializable 6.13 warns below it; unlocks null-aware elements). Expect a repo-wide `dart format` change to the tall style in its own commit.
-- [ ] M2.1 Drift schema mirroring 05 + sync columns + `change_log`, `sync_cursors`; SQLCipher key from secure storage; web WASM/OPFS variant behind the same interface. (06 §4, ADR-0003) **Decide first:** `drift`/`drift_dev` ≥ 2.32 require `sqlite3` 3.x, which builds SQLite via native-assets hooks and changes how SQLCipher is bundled (affects `sqlcipher_flutter_libs`, CLAUDE.md §2). Both are capped `<2.32` in `pubspec.yaml` until this is decided (M0.11). Also: `sqlcipher_flutter_libs` is end-of-life (`0.7.0+eol`), and `drift_flutter` pulls in `sqlite3_flutter_libs`, which clashes with `sqlcipher_flutter_libs` on Apple platforms (duplicate `Sqlite3FlutterLibsPlugin` → macOS build fails; found in M0.11).
+- [x] M2.1 Drift schema mirroring 05 + sync columns + `change_log`, `sync_cursors`; SQLCipher key from secure storage; web WASM/OPFS variant behind the same interface. (06 §4, ADR-0003) **Decide first:** `drift`/`drift_dev` ≥ 2.32 require `sqlite3` 3.x, which builds SQLite via native-assets hooks and changes how SQLCipher is bundled (affects `sqlcipher_flutter_libs`, CLAUDE.md §2). Both are capped `<2.32` in `pubspec.yaml` until this is decided (M0.11). Also: `sqlcipher_flutter_libs` is end-of-life (`0.7.0+eol`), and `drift_flutter` pulls in `sqlite3_flutter_libs`, which clashes with `sqlcipher_flutter_libs` on Apple platforms (duplicate `Sqlite3FlutterLibsPlugin` → macOS build fails; found in M0.11).
 - [ ] M2.2 DAOs + repository implementations (`OccurrenceRepository`, `SeriesRepository`, `SubtaskRepository`, `SettingsRepository`) with reactive streams for day/inbox/week/month queries.
 - [ ] M2.3 Write path: every mutation goes through a `WriteUseCase` that updates DB, appends `change_log`, triggers `Materialiser` (if series), `NotificationPlanner` diff, widget snapshot write. Tests.
-- [ ] M2.4 `BackupService`: daily local JSON backup (keep 7), pre-migration backup; restore. Tests. (R-08, R-11)
+- [ ] M2.4 `BackupService`: daily local JSON backup (keep 7), pre-migration backup; restore. Tests. (R-08, R-11) Include the lost-key path: if the keychain key is missing/rejected for an existing DB file (`configureCipherConnection` throws), keep the old file, open a fresh DB and offer restore from the latest JSON backup — never delete the unreadable file (M2.1).
 - [ ] M2.5 Trash: soft delete, 30-day restore, purge; undo token API for UI (30 s). (R-11)
 - [ ] M2.6 Search index (FTS5) over title/notes/subtasks incl. completed. (R-11)
 - [ ] M2.7 Performance test: 10 000 occurrences, day query < 16 ms, search < 50 ms. (R-15)
+- [ ] M2.9 Web at-rest encryption per ADR-0003 (found in M2.1: the web DB is Drift WASM/OPFS, unencrypted). Decide between `sqlite3mc.wasm` keyed by a raw key that is stored wrapped by a non-extractable WebCrypto key in IndexedDB, and a custom encrypting VFS; amend ADR-0003; test that OPFS bytes don't contain a task title.
 - [ ] M2.8 `/ship-check`.
 
 ## Milestone 3 — Timeline UI (goal: the home screen, complete and flawless, local only)

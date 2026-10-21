@@ -28,3 +28,7 @@ web/.well-known/
 .flutter-plugins-dependencies
 # golden diff output
 test/**/failures/
+
+# Drift web runtime, produced by tool/web_db_assets.sh (M2.1)
+web/drift_worker.js
+web/sqlite3.wasm

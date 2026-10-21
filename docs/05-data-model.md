@@ -51,7 +51,19 @@ read_only bool`. Joined to `occurrences.calendar_link_id`.
 `id, user_id, entity, entity_id, field, mine jsonb, theirs jsonb, created_at, resolved_at?`
 
 ### `change_log` (local only) and `sync_cursors` (local only)
-See architecture §4.
+See architecture §4. `change_log (seq autoincrement, entity, entity_id, field, value json, hlc)` is
+the push outbox (rows deleted on ack); `sync_cursors (entity pk, since_utc)` holds the highest server
+`updated_at` pulled per table.
+
+### Local schema (Drift, `app/lib/data/db`, M2.1)
+- Same tables and checks as the server, `STRICT`, plus `dirty` / `version` on the tables pushed via `sync_push` (profiles, series, occurrences,
+  subtasks). Calendar tables have none: they sync through their provider (M7).
+- Instants are `INTEGER` UTC epoch ms (not Drift `DateTime`); enums are `TEXT` with `CHECK (… IN …)`;
+  `jsonb` columns are `TEXT` with `CHECK (json_valid(…))`; booleans are `INTEGER` 0/1.
+- Before sign-in the single local `profiles.id` is a client UUID v7. Every `user_id` references it
+  with `ON UPDATE CASCADE`, so first sync (M6.4) re-owns all rows by updating one id.
+- Local adds the docs §Indexes set plus partial indexes on `dirty = 1` (push) and the inbox
+  (`start_utc IS NULL`). The local unique key is `(user_id, series_id, original_start_utc)`.
 
 ### `trash` is a view: rows where `deleted_at is not null and deleted_at > now() - 30 days`.
 A nightly job purges older tombstones.

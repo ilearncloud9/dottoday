@@ -3,12 +3,15 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'source_scan.dart';
 
 const _pkg = 'package:dottoday/';
+const _storagePackages = ['package:drift/', 'package:sqlite3/'];
 
 /// Layer-boundary violations for the file at [libPath] (relative to `lib/`,
 /// e.g. `features/inbox/x.dart`) with contents [source] (CLAUDE.md §3).
 ///
 /// Forbidden: `features/X` → `features/Y`; `domain/` → Flutter (`package:
-/// flutter/`, `dart:ui`); `shared/` → `features/`; `core/` → `features/`.
+/// flutter/`, `dart:ui`); `shared/` → `features/`; `core/` → `features/`;
+/// `package:drift`/`package:sqlite3` outside `data/` (rows never leave the
+/// data layer, docs/04 §2).
 List<String> importViolations(String libPath, String source) {
   final self = Uri.parse('$_pkg$libPath');
   final from = libPath.split('/');
@@ -27,6 +30,9 @@ List<String> importViolations(String libPath, String source) {
 
 String? _violation(List<String> from, String target) {
   final layer = from.first;
+  if (layer != 'data' && _storagePackages.any(target.startsWith)) {
+    return 'only data/ may use drift/sqlite3';
+  }
   if (layer == 'domain' &&
       (target.startsWith('package:flutter/') || target == 'dart:ui')) {
     return 'domain must stay pure Dart';

@@ -38,6 +38,16 @@ import 'package:dottoday/core/clock/clock.dart';
       expect(importViolations('core/x.dart', exp), hasLength(1));
     });
 
+    test('drift/sqlite3 outside data', () {
+      const src = '''
+import 'package:drift/drift.dart';
+import 'package:sqlite3/sqlite3.dart';
+''';
+      expect(importViolations('domain/x.dart', src), hasLength(2));
+      expect(importViolations('features/inbox/x.dart', src), hasLength(2));
+      expect(importViolations('data/db/x.dart', src), isEmpty);
+    });
+
     test('allowed edges', () {
       const src = '''
 import 'package:dottoday/domain/repos.dart';
