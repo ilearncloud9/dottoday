@@ -758,5 +758,45 @@
   "weekStripHideMonth": "Hide month",
   "@weekStripHideMonth": {
     "description": "Screen-reader label of the handle when the month is open."
+  },
+  "dayCardTodaySuffix": " · Today",
+  "@dayCardTodaySuffix": {
+    "description": "Appended to the day card title on today (Main: 'Wednesday · Today')."
+  },
+  "dayCardSummary": "{done} of {total} · {planned} planned",
+  "@dayCardSummary": {
+    "description": "Day card numbers, e.g. '2 of 7 · 5 h 45 planned' (Main).",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "planned": {
+        "type": "String"
+      }
+    }
+  },
+  "dayCardNothing": "Nothing planned · {free} free",
+  "@dayCardNothing": {
+    "description": "Day card numbers for an empty day (A-ios-future-month).",
+    "placeholders": {
+      "free": {
+        "type": "String"
+      }
+    }
+  },
+  "dayPagerPosition": "Day {position} of {count}",
+  "@dayPagerPosition": {
+    "description": "Screen-reader label of the day pager's page dots.",
+    "placeholders": {
+      "position": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

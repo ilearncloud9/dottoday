@@ -903,6 +903,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hide month'**
   String get weekStripHideMonth;
+
+  /// Appended to the day card title on today (Main: 'Wednesday · Today').
+  ///
+  /// In en, this message translates to:
+  /// **' · Today'**
+  String get dayCardTodaySuffix;
+
+  /// Day card numbers, e.g. '2 of 7 · 5 h 45 planned' (Main).
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} · {planned} planned'**
+  String dayCardSummary(int done, int total, String planned);
+
+  /// Day card numbers for an empty day (A-ios-future-month).
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned · {free} free'**
+  String dayCardNothing(String free);
+
+  /// Screen-reader label of the day pager's page dots.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {position} of {count}'**
+  String dayPagerPosition(int position, int count);
 }
 
 class _AppLocalizationsDelegate

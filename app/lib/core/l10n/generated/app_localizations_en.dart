@@ -519,4 +519,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get weekStripHideMonth => 'Hide month';
+
+  @override
+  String get dayCardTodaySuffix => ' · Today';
+
+  @override
+  String dayCardSummary(int done, int total, String planned) {
+    return '$done of $total · $planned planned';
+  }
+
+  @override
+  String dayCardNothing(String free) {
+    return 'Nothing planned · $free free';
+  }
+
+  @override
+  String dayPagerPosition(int position, int count) {
+    return 'Day $position of $count';
+  }
 }
