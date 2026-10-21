@@ -61,8 +61,9 @@ class _Form extends ConsumerStatefulWidget {
 }
 
 class _FormState extends ConsumerState<_Form> {
-  /// How long typing pauses before a save.
-  static const _debounce = Duration(milliseconds: 600);
+  /// How long typing pauses before a save. Behaviour, not motion, so it is
+  /// not a DotMotion token.
+  static const _debounce = Duration(milliseconds: 600); // style-ignore: save
 
   late Occurrence _draft = widget.task.occurrence;
   late final _title = TextEditingController(text: _draft.title);
