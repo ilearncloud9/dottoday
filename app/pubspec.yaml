@@ -4,8 +4,8 @@ publish_to: "none"
 version: 0.1.0+1
 
 environment:
-  sdk: ">=3.5.0 <4.0.0"
-  flutter: ">=3.24.0"
+  sdk: ^3.8.0
+  flutter: ">=3.32.0"  # ships Dart 3.8
 
 # Versions are floors; `flutter pub get` pins them in pubspec.lock (commit the lockfile).
 # Agents: run `flutter pub outdated` and bump deliberately; justify any new dependency.

@@ -12,7 +12,7 @@ Future<int> _buildsAfterFailure(ProviderContainer container) async {
   });
   // Don't await `.future`: while retrying it stays pending until retries run
   // out. Count builds over a fixed window instead.
-  container.listen(failing, (_, __) {});
+  container.listen(failing, (_, _) {});
   // Riverpod's default first retry is ~200 ms; wait well past it.
   await Future<void>.delayed(const Duration(milliseconds: 800));
   return builds;
@@ -26,9 +26,11 @@ void main() {
     expect(builds, 1);
   });
 
-  test('sanity: without it Riverpod retries (so the test above is real)',
-      () async {
-    final builds = await _buildsAfterFailure(ProviderContainer.test());
-    expect(builds, greaterThan(1));
-  });
+  test(
+    'sanity: without it Riverpod retries (so the test above is real)',
+    () async {
+      final builds = await _buildsAfterFailure(ProviderContainer.test());
+      expect(builds, greaterThan(1));
+    },
+  );
 }
