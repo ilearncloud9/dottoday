@@ -10,3 +10,20 @@ Strict CSP (no inline scripts, 'self' only), PKCE, 1-hour access tokens with rot
 
 ## Follow-up (v1.1)
 Move refresh token to an HttpOnly cookie via an Edge Function proxy; then drop localStorage session entirely.
+
+## Amendment (2026-10-21, M2.9): how the Drift WASM data is encrypted
+- The web database runs on `sqlite3mc.wasm` (SQLite3MultipleCiphers, default ChaCha20-Poly1305)
+  from the same sqlite3.dart release as the native SQLCipher build (ADR-0006), keyed with
+  `PRAGMA hexkey` on every connection — in the page and in our own drift worker
+  (`app/web/drift_worker.dart`, compiled by `tool/web_db_assets.sh`), because the stock worker
+  can't apply a key.
+- The 32-byte raw key exists in IndexedDB only sealed (AES-GCM) under a **non-extractable**
+  WebCrypto key stored alongside it (`dottoday-keyvault`). Script can use it but never export it;
+  copying the storage to another browser profile doesn't carry a usable key.
+- Rejected: a custom encrypting VFS (re-implements what sqlite3mc already does); wrapping each
+  OPFS block in WebCrypto from Dart (async crypto under SQLite's sync VFS needs the same worker
+  plumbing plus our own crypto).
+- Verified in CI (`a11y-web` job): a probe build writes a task, then Playwright scans every OPFS
+  file and IndexedDB value for its plaintext title.
+- Residual risk unchanged: XSS in the page can unwrap the key and read data; native and web
+  formats differ (SQLCipher vs sqlite3mc), which only matters for raw-file copying, never done.

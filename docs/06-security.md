@@ -32,7 +32,7 @@ sensitive personal data.
 
 ## 4. Data at rest
 - Device: SQLCipher (AES-256) with a 32-byte random key in Keychain/Keystore. Backups encrypted with the same key; export files are plaintext **by user action only**, with a warning.
-- Web: Drift WASM over OPFS; data blobs wrapped with a WebCrypto AES-GCM key held in IndexedDB (non-extractable). Accept that web at-rest protection is weaker; document in privacy page.
+- Web: Drift WASM over OPFS on `sqlite3mc.wasm`; the raw DB key is stored in IndexedDB sealed by a non-extractable WebCrypto AES-GCM key (ADR-0003 amendment, M2.9). Accept that web at-rest protection is weaker (page script can unwrap it); document in privacy page.
 - Server: Postgres encryption at rest (Supabase default); Vault for tokens; daily backups with PITR on paid tier.
 
 ## 5. Data in transit

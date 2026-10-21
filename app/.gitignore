@@ -29,6 +29,7 @@ web/.well-known/
 # golden diff output
 test/**/failures/
 
-# Drift web runtime, produced by tool/web_db_assets.sh (M2.1)
+# Drift web runtime, produced by tool/web_db_assets.sh (M2.1, M2.9)
 web/drift_worker.js
-web/sqlite3.wasm
+web/drift_worker.js.deps
+web/sqlite3mc.wasm

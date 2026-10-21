@@ -1,4 +1,4 @@
-import 'package:dottoday/data/db/database_key_store.dart';
+import 'package:dottoday/data/db/hex_key.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 /// Keys and tunes one native connection. Must run before any other

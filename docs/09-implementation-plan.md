@@ -50,7 +50,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [x] M2.5 Trash: soft delete, 30-day restore, purge; undo token API for UI (30 s). (R-11)
 - [x] M2.6 Search index (FTS5) over title/notes/subtasks incl. completed. (R-11)
 - [x] M2.7 Performance test: 10 000 occurrences, day query < 16 ms, search < 50 ms. (R-15)
-- [ ] M2.9 Web at-rest encryption per ADR-0003 (found in M2.1: the web DB is Drift WASM/OPFS, unencrypted). Decide between `sqlite3mc.wasm` keyed by a raw key that is stored wrapped by a non-extractable WebCrypto key in IndexedDB, and a custom encrypting VFS; amend ADR-0003; test that OPFS bytes don't contain a task title.
+- [x] M2.9 Web at-rest encryption per ADR-0003 (found in M2.1: the web DB is Drift WASM/OPFS, unencrypted). Decide between `sqlite3mc.wasm` keyed by a raw key that is stored wrapped by a non-extractable WebCrypto key in IndexedDB, and a custom encrypting VFS; amend ADR-0003; test that OPFS bytes don't contain a task title.
 - [ ] M2.8 `/ship-check`.
 
 ## Milestone 3 — Timeline UI (goal: the home screen, complete and flawless, local only)

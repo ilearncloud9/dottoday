@@ -1,6 +1,9 @@
 import 'dart:math';
 
+import 'package:dottoday/data/db/hex_key.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+export 'package:dottoday/data/db/hex_key.dart';
 
 /// Source of the 32-byte SQLCipher key (06 §4: random, Keychain/Keystore).
 abstract interface class DatabaseKeyStore {
@@ -49,9 +52,3 @@ final class SecureDatabaseKeyStore implements DatabaseKeyStore {
     (_) => _random.nextInt(256).toRadixString(16).padLeft(2, '0'),
   ).join();
 }
-
-final _hexKey = RegExp(r'^[0-9a-f]{64}$');
-
-/// Whether [key] is exactly 32 bytes of lowercase hex. Only such keys are
-/// ever interpolated into `PRAGMA key`, which cannot take bound parameters.
-bool isValidHexKey(String key) => _hexKey.hasMatch(key);

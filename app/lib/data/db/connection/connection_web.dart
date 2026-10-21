@@ -1,5 +1,7 @@
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/database_key_store.dart';
+import 'package:dottoday/data/db/web/key_vault.dart';
+import 'package:dottoday/data/db/web/web_cipher.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/wasm.dart';
 
@@ -7,23 +9,26 @@ import 'package:drift/wasm.dart';
 AppDatabase openAppDatabase(DatabaseKeyStore keys) =>
     AppDatabase(openEncryptedExecutor(keys, 'dottoday'));
 
-/// A WASM executor for the browser database [name].
+/// An encrypted WASM executor for the browser database [name] (M2.9).
 ///
-/// Not encrypted yet: wrapping data with the WebCrypto key is M2.9, so
-/// [keys] is unused, and so is [schemaVersion] (pre-migration snapshots are
-/// native-only until then). `web/sqlite3.wasm` is fetched by
-/// `tool/web_db_assets.sh`; `web/drift_worker.js` ships with drift.
+/// Uses `sqlite3mc.wasm` keyed from the IndexedDB key vault, both here
+/// (when drift opens the database in the page) and in the custom
+/// `drift_worker.js`. [keys] (native keychain) and [schemaVersion]
+/// (pre-migration snapshots, native-only) are unused on the web. Assets come
+/// from `tool/web_db_assets.sh`.
 QueryExecutor openEncryptedExecutor(
   DatabaseKeyStore keys,
   String name, {
   int? schemaVersion,
 }) => DatabaseConnection.delayed(
   Future(() async {
+    // Created here, before the worker starts, which only reads it.
+    final key = await webDatabaseKey(create: true);
     final result = await WasmDatabase.open(
       databaseName: name,
-      sqlite3Uri: Uri.parse('sqlite3.wasm'),
+      sqlite3Uri: Uri.parse('sqlite3mc.wasm'),
       driftWorkerUri: Uri.parse('drift_worker.js'),
-      localSetup: (raw) => raw.execute('PRAGMA foreign_keys = ON'),
+      localSetup: (db) => applyWebCipherKey(db, key),
     );
     return result.resolvedExecutor;
   }),

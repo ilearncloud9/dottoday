@@ -100,7 +100,8 @@ jobs:
       - run: ${{ matrix.cmd }} --dart-define-from-file=.env.example
 
   a11y-web:
-    # axe-core over the web build's semantics DOM (docs/08 §3, R-12). ~2 min, so every push.
+    # axe-core over the web build's semantics DOM (docs/08 §3, R-12), plus the encrypted web
+    # database probe (M2.9). ~3 min, so every push.
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -121,3 +122,11 @@ jobs:
           (cd build/web && python3 -m http.server 8080 >/dev/null 2>&1 &)
           sleep 2
           node ../tool/a11y/axe_audit.mjs http://127.0.0.1:8080/
+      # Encrypted web DB in a real browser: probe writes a task, then storage is scanned
+      # for its plaintext title (docs/09 M2.9, ADR-0003).
+      - run: flutter build web -t tool/web_db_probe.dart -o "$PWD/build/web_db_probe" --dart-define-from-file=.env.example
+      - name: Web database is encrypted at rest
+        run: |
+          (cd build/web_db_probe && python3 -m http.server 8081 >/dev/null 2>&1 &)
+          sleep 2
+          node ../tool/a11y/web_db_probe.mjs http://127.0.0.1:8081/
