@@ -37,7 +37,7 @@ void main() {
   goldenMatrix(
     'task_editor',
     height: 1300,
-    widths: const {'compact', 'medium'},
+    widths: const {'compact', 'medium', 'expanded'},
     build: (_) => _editor(),
   );
 }

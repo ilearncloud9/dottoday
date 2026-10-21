@@ -37,7 +37,7 @@ void main() {
   goldenMatrix(
     'task_sheet',
     height: 760,
-    widths: const {'compact', 'medium'},
+    widths: const {'compact', 'medium', 'expanded'},
     build: (_) => _sheet(),
   );
 }
