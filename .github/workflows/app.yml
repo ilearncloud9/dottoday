@@ -3,9 +3,9 @@ name: app
 
 on:
   push:
-    paths: ["app/**", ".github/workflows/app.yml"]
+    paths: ["app/**", "tool/a11y/**", ".github/workflows/app.yml"]
   pull_request:
-    paths: ["app/**", ".github/workflows/app.yml"]
+    paths: ["app/**", "tool/a11y/**", ".github/workflows/app.yml"]
 
 permissions:
   contents: read
@@ -96,3 +96,25 @@ jobs:
           cache: true
       - run: flutter pub get
       - run: ${{ matrix.cmd }} --dart-define-from-file=.env.example
+
+  a11y-web:
+    # axe-core over the web build's semantics DOM (docs/08 §3, R-12). ~2 min, so every push.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter build web --dart-define-from-file=.env.example
+      - name: Install audit tooling (lockfile-pinned)
+        working-directory: tool/a11y
+        run: npm ci --no-audit --no-fund && npx playwright install --with-deps chromium
+      - name: axe-core scan (compact + expanded)
+        run: |
+          (cd build/web && python3 -m http.server 8080 >/dev/null 2>&1 &)
+          sleep 2
+          node ../tool/a11y/axe_audit.mjs http://127.0.0.1:8080/

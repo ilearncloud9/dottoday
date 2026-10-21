@@ -7,9 +7,15 @@ import 'package:go_router/go_router.dart';
 
 /// [MaterialApp.router] wired like `DottodayApp` (theme, l10n, app-wide
 /// [AppCommandScope]), for widget tests.
-Widget testRouterApp(GoRouter router, {VoidCallback? onQuickAdd}) =>
+Widget testRouterApp(
+  GoRouter router, {
+  VoidCallback? onQuickAdd,
+  ThemeMode themeMode = ThemeMode.light,
+}) =>
     MaterialApp.router(
       theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: themeMode,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: router,

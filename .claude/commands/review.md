@@ -7,6 +7,9 @@ Check, in order, and report findings with file:line:
 3. Duplication: any new helper that already exists under `lib/core/utils` or `lib/shared`.
 4. Security: input validated, no secrets, no PII in logs, RLS policy present for any new table, no raw SQL string concatenation.
 5. Accessibility: Semantics labels, touch targets ≥44pt, text scaling, focus order, reduced motion.
+   Every new or changed screen has a widget test that calls `await expectA11yGuidelines(tester);`
+   (`test/support/a11y.dart`) for each state it renders — light + dark, compact + expanded. Missing
+   call = BLOCKER.
 6. i18n: no hardcoded user-facing strings.
 7. Tests: domain logic unit-tested, screens widget-tested, timeline changes golden-tested.
 8. Style: file ≤300 lines, functions ≤40 lines, naming per CLAUDE.md §4, comments explain why.
