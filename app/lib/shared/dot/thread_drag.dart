@@ -46,6 +46,7 @@ class DraggableTaskRow extends StatefulWidget {
     required this.child,
     this.onLift,
     this.onSettle,
+    this.onHold,
     super.key,
   });
 
@@ -55,6 +56,10 @@ class DraggableTaskRow extends StatefulWidget {
   /// The task was picked up / let go (shows and hides the shift chip).
   final VoidCallback? onLift;
   final VoidCallback? onSettle;
+
+  /// Long-pressed and let go without moving: select it (docs/03 §3.2
+  /// "long-press then tap others").
+  final VoidCallback? onHold;
 
   /// The live drop-time label (feedback is built in the overlay, outside
   /// this subtree, so it is passed rather than inherited).
@@ -68,6 +73,9 @@ class DraggableTaskRow extends StatefulWidget {
 class _DraggableTaskRowState extends State<DraggableTaskRow> {
   EdgeDraggingAutoScroller? _scroller;
 
+  /// How far the finger has travelled since the lift.
+  double _travel = 0;
+
   @override
   Widget build(BuildContext context) {
     if (!widget.task.movable) return widget.child;
@@ -78,23 +86,28 @@ class _DraggableTaskRowState extends State<DraggableTaskRow> {
       feedback: _Lifted(task: widget.task, hint: widget.hint),
       childWhenDragging: Opacity(opacity: TaskAlpha.done, child: widget.child),
       onDragStarted: () {
+        _travel = 0;
         widget.onLift?.call();
         final scrollable = Scrollable.maybeOf(context);
         _scroller = scrollable == null
             ? null
             : EdgeDraggingAutoScroller(scrollable, velocityScalar: 20);
       },
-      onDragUpdate: (d) => _scroller?.startAutoScrollIfNecessary(
-        Rect.fromCenter(
-          center: d.globalPosition,
-          width: 1,
-          height: DotTouch.android,
-        ),
-      ),
-      onDragEnd: (_) {
+      onDragUpdate: (d) {
+        _travel += d.delta.distance;
+        _scroller?.startAutoScrollIfNecessary(
+          Rect.fromCenter(
+            center: d.globalPosition,
+            width: 1,
+            height: DotTouch.android,
+          ),
+        );
+      },
+      onDragEnd: (d) {
         _scroller?.stopAutoScroll();
         widget.hint.value = null;
         widget.onSettle?.call();
+        if (!d.wasAccepted && _travel < kTouchSlop) widget.onHold?.call();
       },
       child: widget.child,
     );

@@ -175,6 +175,7 @@ final class FakeUndoService implements UndoService {
   final _subtasksBefore = <String, List<Subtask>>{};
   final applied = <WriteBatch>[];
   final _before = <String, List<Occurrence>>{};
+  final _batchIds = Map<WriteBatch, String>.identity();
   var _n = 0;
 
   @override
@@ -189,6 +190,7 @@ final class FakeUndoService implements UndoService {
         ?subtasks?.rows.where((r) => r.id == s.id).firstOrNull,
     ];
     applied.add(batch);
+    _batchIds[batch] = id;
     occurrences.put(batch.occurrences);
     subtasks?.put(batch.subtasks);
     return Ok(UndoToken(id: id, expiresAtUtc: DateTime.utc(2100)));
@@ -196,7 +198,18 @@ final class FakeUndoService implements UndoService {
 
   @override
   Future<Result<void, AppFailure>> undo(UndoToken token) async {
-    occurrences.put(_before.remove(token.id) ?? const []);
+    final before = _before.remove(token.id) ?? const [];
+    final batch = applied.firstWhere(
+      (b) => b.occurrences.isNotEmpty && _batchIds[b] == token.id,
+      orElse: () => const WriteBatch(userId: testUserId),
+    );
+    // Like the real service: rows the batch created are soft-deleted.
+    final known = {for (final o in before) o.id};
+    occurrences.put([
+      ...before,
+      for (final o in batch.occurrences)
+        if (!known.contains(o.id)) o.copyWith(deletedAt: DateTime.utc(2100)),
+    ]);
     subtasks?.put(_subtasksBefore.remove(token.id) ?? const []);
     return const Ok(null);
   }

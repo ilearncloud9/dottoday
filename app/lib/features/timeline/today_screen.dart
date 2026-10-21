@@ -1,9 +1,11 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/widgets/all_day_chips.dart';
 import 'package:dottoday/features/timeline/widgets/day_page.dart';
+import 'package:dottoday/features/timeline/widgets/selection_bar.dart';
 import 'package:dottoday/features/timeline/widgets/today_header.dart';
 import 'package:dottoday/features/timeline/widgets/today_month.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
@@ -38,52 +40,78 @@ class TodayScreen extends ConsumerWidget {
     void select(DateTime d) => ref
         .read(todaySelectionProvider.notifier)
         .select(d == today && date == null ? null : d);
-    return Scaffold(
-      key: key,
-      body: SafeArea(
-        child: Column(
-          children: [
-            TodayHeader(
-              date: shown,
-              today: today,
-              monthOpen: view.monthOpen,
-              month: month,
-              onToday: () => select(today),
-            ),
-            _MonthOrStrip(
-              open: view.monthOpen,
-              month: TodayMonth(
-                month: month,
-                shown: shown,
-                today: today,
-                onSelect: select,
-                onMonth: ref.read(todaySelectionProvider.notifier).showMonth,
+    ref.listen(
+      taskSelectionProvider,
+      (before, now) => announceSelection(context, before, now),
+    );
+    final selecting = ref.watch(
+      taskSelectionProvider.select((p) => p.ids.isNotEmpty),
+    );
+    return PopScope(
+      // Back ends selecting before it leaves the screen (R-05).
+      canPop: !selecting,
+      onPopInvokedWithResult: (popped, _) {
+        if (!popped) ref.read(taskSelectionProvider.notifier).clear();
+      },
+      child: Scaffold(
+        key: key,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  TodayHeader(
+                    date: shown,
+                    today: today,
+                    monthOpen: view.monthOpen,
+                    month: month,
+                    onToday: () => select(today),
+                  ),
+                  _MonthOrStrip(
+                    open: view.monthOpen,
+                    month: TodayMonth(
+                      month: month,
+                      shown: shown,
+                      today: today,
+                      onSelect: select,
+                      onMonth: ref
+                          .read(todaySelectionProvider.notifier)
+                          .showMonth,
+                    ),
+                    strip: TodayWeekStrip(
+                      shown: shown,
+                      today: today,
+                      firstDayOfWeek: profile.settings.firstDayOfWeek,
+                      monthOpen: view.monthOpen,
+                      onSelect: select,
+                    ),
+                  ),
+                  AllDayChips(date: shown),
+                  const SizedBox(height: DotSpace.s),
+                  Expanded(
+                    child: DayPager(
+                      itemCount: pagerReachDays * 2 + 1,
+                      initialIndex: _index(base, shown),
+                      onChanged: (i) => select(_day(base, i)),
+                      dotIndexOf: (i) =>
+                          (_day(base, i).weekday -
+                              profile.settings.firstDayOfWeek) %
+                          7,
+                      itemBuilder: (context, i) {
+                        final d = _day(base, i);
+                        return DayPage(date: d, today: today);
+                      },
+                    ),
+                  ),
+                ],
               ),
-              strip: TodayWeekStrip(
-                shown: shown,
-                today: today,
-                firstDayOfWeek: profile.settings.firstDayOfWeek,
-                monthOpen: view.monthOpen,
-                onSelect: select,
-              ),
-            ),
-            AllDayChips(date: shown),
-            const SizedBox(height: DotSpace.s),
-            Expanded(
-              child: DayPager(
-                itemCount: pagerReachDays * 2 + 1,
-                initialIndex: _index(base, shown),
-                onChanged: (i) => select(_day(base, i)),
-                dotIndexOf: (i) =>
-                    (_day(base, i).weekday - profile.settings.firstDayOfWeek) %
-                    7,
-                itemBuilder: (context, i) {
-                  final d = _day(base, i);
-                  return DayPage(date: d, today: today);
-                },
-              ),
-            ),
-          ],
+              if (selecting)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SelectionBar(today: today),
+                ),
+            ],
+          ),
         ),
       ),
     );

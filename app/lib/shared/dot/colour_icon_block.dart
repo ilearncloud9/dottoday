@@ -54,7 +54,7 @@ class ColourIconBlock extends StatelessWidget {
           child: Row(
             children: [
               for (final c in TaskColor.values)
-                _ColourDot(
+                ColourDot(
                   colour: c,
                   selected: c == color,
                   onTap: () => onColor(c),
@@ -83,11 +83,13 @@ class ColourIconBlock extends StatelessWidget {
   }
 }
 
-class _ColourDot extends StatelessWidget {
-  const _ColourDot({
+/// One task colour as a 44 pt choice: ring and check when [selected].
+class ColourDot extends StatelessWidget {
+  const ColourDot({
     required this.colour,
     required this.selected,
     required this.onTap,
+    super.key,
   });
 
   final TaskColor colour;

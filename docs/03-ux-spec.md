@@ -94,6 +94,13 @@ Month view opens from the Today date header. The current date is always one tap 
 Drag uses a lifted ghost with shadow and shows the live snapped time in a floating label. If the drop
 would overlap a pinned block, the block settles after it and a toast explains.
 
+Multi-select, clarified in M3b.7: long-press and let go without moving picks a task (moving drags it
+instead); then a tap toggles any task on that day, and a ring with a check shows each state. Desktop
+adds Shift/⌘/Ctrl-click; screen readers get a "Select" action on every task. A bar at the bottom says
+"N selected" (announced on each change) with Move (to a day, same times; pinned stay), Duplicate (same
+times, as new one-offs), Colour and Delete (asks first, Trash). Each is one Undo. Back or Escape ends
+selecting; picking on another day starts over there.
+
 Shift followers, clarified in M3b.6: the chip ("Shift later tasks") sits at the top of the screen
 for the length of a drag and is toggled with a second finger or a click. Settings › Shift later
 tasks sets where it starts: `always` = on, `ask` = shown and off, `never` = no chip (Alt still

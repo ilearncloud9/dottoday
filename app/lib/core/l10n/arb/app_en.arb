@@ -1423,5 +1423,90 @@
         "type": "String"
       }
     }
+  },
+  "selectAction": "Select",
+  "@selectAction": {
+    "description": "Screen-reader action on a task row that starts multi-select (R-12)."
+  },
+  "selectionCount": "{count, plural, =1{1 selected} other{{count} selected}}",
+  "@selectionCount": {
+    "description": "Title of the multi-select bar; also announced when it changes.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectionClose": "Done selecting",
+  "@selectionClose": {
+    "description": "Closes multi-select."
+  },
+  "selectionMove": "Move",
+  "@selectionMove": {
+    "description": "Multi-select: move the selected tasks to another day."
+  },
+  "selectionMoveTitle": "Move to",
+  "@selectionMoveTitle": {
+    "description": "Title of the day picker for moving selected tasks."
+  },
+  "selectionDuplicate": "Duplicate",
+  "@selectionDuplicate": {
+    "description": "Multi-select: copy the selected tasks."
+  },
+  "selectionColour": "Colour",
+  "@selectionColour": {
+    "description": "Multi-select: change the colour of the selected tasks."
+  },
+  "selectionDelete": "Delete",
+  "@selectionDelete": {
+    "description": "Multi-select: move the selected tasks to Trash."
+  },
+  "selectionDeleteConfirm": "{count, plural, =1{Delete 1 task?} other{Delete {count} tasks?}}",
+  "@selectionDeleteConfirm": {
+    "description": "Confirmation before deleting selected tasks.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackManyMoved": "{count, plural, =1{1 task moved to {day}} other{{count} tasks moved to {day}}}",
+  "@snackManyMoved": {
+    "description": "Snackbar after moving selected tasks, with Undo.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "snackManyDuplicated": "{count, plural, =1{1 task duplicated} other{{count} tasks duplicated}}",
+  "@snackManyDuplicated": {
+    "description": "Snackbar after duplicating selected tasks, with Undo.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackManyRecoloured": "{count, plural, =1{1 task recoloured} other{{count} tasks recoloured}}",
+  "@snackManyRecoloured": {
+    "description": "Snackbar after recolouring selected tasks, with Undo.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackManyDeleted": "{count, plural, =1{1 task moved to Trash} other{{count} tasks moved to Trash}}",
+  "@snackManyDeleted": {
+    "description": "Snackbar after deleting selected tasks, with Undo.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

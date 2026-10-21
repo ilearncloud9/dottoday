@@ -3,6 +3,7 @@
 library;
 
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,17 @@ import '../../support/dot_golden.dart';
 import '../../support/timeline_fakes.dart';
 
 /// Today at 09:22 in Berlin on the demo day (T1, `Main`).
-Widget _today({TodayView? view, DateTime? date}) => ProviderScope(
+Widget _today({
+  TodayView? view,
+  DateTime? date,
+  Set<String>? picked,
+}) => ProviderScope(
   overrides: [
     if (view != null) todaySelectionProvider.overrideWith(() => _Fixed(view)),
+    if (picked != null)
+      taskSelectionProvider.overrideWith(
+        () => _Picked((day: DateTime(2026, 10, 21), ids: picked)),
+      ),
     ...timelineOverrides(
       now: DateTime.utc(2026, 10, 21, 7, 22),
       occurrences: FakeOccurrenceRepository(
@@ -42,12 +51,35 @@ final class _Fixed extends TodaySelection {
   TodayView build() => view;
 }
 
+/// Multi-select pinned to [picked].
+final class _Picked extends TaskSelection {
+  _Picked(this.picked);
+
+  final Picked picked;
+
+  @override
+  Picked build() => picked;
+}
+
+/// Ids of the demo day's tasks called [titles].
+Set<String> _ids(List<String> titles) => {
+  for (final o in demoDayRows(DateTime(2026, 10, 21)))
+    if (titles.contains(o.title)) o.id,
+};
+
 void main() {
   setUpAll(() async {
     tz_data.initializeTimeZones();
     await loadAppFonts();
   });
   goldenMatrix('today', height: 844, build: (_) => _today());
+  // Multi-select (docs/03 §3.2, R-05): two picked, the bar at the bottom.
+  goldenMatrix(
+    'today_selecting',
+    height: 844,
+    widths: const {'compact', 'expanded'},
+    build: (_) => _today(picked: _ids(['Team standup', 'Deep work: roadmap'])),
+  );
   // T2: the month pulled open over today (`A-ios-today-month`).
   goldenMatrix(
     'today_month_open',

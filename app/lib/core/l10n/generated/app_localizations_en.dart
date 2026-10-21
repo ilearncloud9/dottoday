@@ -926,4 +926,91 @@ class AppLocalizationsEn extends AppLocalizations {
   String snackMovedShiftedPartial(String title, String time, String pin) {
     return '$title moved to $time · stopped at $pin (pinned)';
   }
+
+  @override
+  String get selectAction => 'Select';
+
+  @override
+  String selectionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count selected',
+      one: '1 selected',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get selectionClose => 'Done selecting';
+
+  @override
+  String get selectionMove => 'Move';
+
+  @override
+  String get selectionMoveTitle => 'Move to';
+
+  @override
+  String get selectionDuplicate => 'Duplicate';
+
+  @override
+  String get selectionColour => 'Colour';
+
+  @override
+  String get selectionDelete => 'Delete';
+
+  @override
+  String selectionDeleteConfirm(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Delete $count tasks?',
+      one: 'Delete 1 task?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String snackManyMoved(int count, String day) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks moved to $day',
+      one: '1 task moved to $day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String snackManyDuplicated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks duplicated',
+      one: '1 task duplicated',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String snackManyRecoloured(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks recoloured',
+      one: '1 task recoloured',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String snackManyDeleted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks moved to Trash',
+      one: '1 task moved to Trash',
+    );
+    return '$_temp0';
+  }
 }

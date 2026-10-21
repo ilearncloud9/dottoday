@@ -1467,6 +1467,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title} moved to {time} · stopped at {pin} (pinned)'**
   String snackMovedShiftedPartial(String title, String time, String pin);
+
+  /// Screen-reader action on a task row that starts multi-select (R-12).
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get selectAction;
+
+  /// Title of the multi-select bar; also announced when it changes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 selected} other{{count} selected}}'**
+  String selectionCount(int count);
+
+  /// Closes multi-select.
+  ///
+  /// In en, this message translates to:
+  /// **'Done selecting'**
+  String get selectionClose;
+
+  /// Multi-select: move the selected tasks to another day.
+  ///
+  /// In en, this message translates to:
+  /// **'Move'**
+  String get selectionMove;
+
+  /// Title of the day picker for moving selected tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to'**
+  String get selectionMoveTitle;
+
+  /// Multi-select: copy the selected tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate'**
+  String get selectionDuplicate;
+
+  /// Multi-select: change the colour of the selected tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour'**
+  String get selectionColour;
+
+  /// Multi-select: move the selected tasks to Trash.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get selectionDelete;
+
+  /// Confirmation before deleting selected tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Delete 1 task?} other{Delete {count} tasks?}}'**
+  String selectionDeleteConfirm(int count);
+
+  /// Snackbar after moving selected tasks, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task moved to {day}} other{{count} tasks moved to {day}}}'**
+  String snackManyMoved(int count, String day);
+
+  /// Snackbar after duplicating selected tasks, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task duplicated} other{{count} tasks duplicated}}'**
+  String snackManyDuplicated(int count);
+
+  /// Snackbar after recolouring selected tasks, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task recoloured} other{{count} tasks recoloured}}'**
+  String snackManyRecoloured(int count);
+
+  /// Snackbar after deleting selected tasks, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task moved to Trash} other{{count} tasks moved to Trash}}'**
+  String snackManyDeleted(int count);
 }
 
 class _AppLocalizationsDelegate

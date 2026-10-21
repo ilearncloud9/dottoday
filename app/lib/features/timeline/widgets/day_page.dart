@@ -4,6 +4,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
+import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/thread_day.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
@@ -40,6 +41,7 @@ class DayPage extends ConsumerWidget {
     final blocks = data.blocks;
     final summary = daySummaryOf(blocks, shape);
     final format = _format(context, data.day.location, data.settings.use24h);
+    final picked = ref.watch(taskSelectionProvider);
     return DayCard(
       title: _title(context),
       isToday: date == today,
@@ -66,6 +68,9 @@ class DayPage extends ConsumerWidget {
           shiftFollowers: data.settings.shiftFollowers,
           includeCalendar: data.settings.includeCalendarInShift,
         ),
+        selectedIds: picked.day == date ? picked.ids : const {},
+        onSelect: (id) =>
+            ref.read(taskSelectionProvider.notifier).toggle(date, id),
       ),
       footer: _footer(blocks, summary.total == 0),
     );
