@@ -4,10 +4,12 @@ import 'package:dottoday/shared/dot/live_row.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
+import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 
+export 'thread_drag.dart' show ThreadDrag;
 export 'thread_models.dart';
 
 /// Callbacks a [Thread] reports with the task's id.
@@ -16,26 +18,28 @@ final class ThreadActions {
   const ThreadActions({
     this.onToggleDone,
     this.onOpen,
-    this.onLongPress,
     this.onExtend,
     this.onShiftRest,
     this.onAddHere,
+    this.drag,
   });
 
   final ValueChanged<String>? onToggleDone;
   final ValueChanged<String>? onOpen;
-  final ValueChanged<String>? onLongPress;
   final ValueChanged<String>? onExtend;
   final ValueChanged<String>? onShiftRest;
 
   /// A future gap was tapped; reports the gap.
   final ValueChanged<ThreadGap>? onAddHere;
+
+  /// Long-press drag onto gaps and resize grips (R-05); null = no drag.
+  final ThreadDrag? drag;
 }
 
 /// The day as a vertical thread (docs/10 §1, §3 `Thread`): sun cap, task
 /// rows, free gaps, moon cap. A `Column`, so callers put it in a scroll
 /// view or a sliver; it never scrolls itself.
-class Thread extends StatelessWidget {
+class Thread extends StatefulWidget {
   const Thread({
     required this.entries,
     this.actions = const ThreadActions(),
@@ -50,36 +54,68 @@ class Thread extends StatelessWidget {
   final double dotSize;
 
   @override
+  State<Thread> createState() => _ThreadState();
+}
+
+class _ThreadState extends State<Thread> {
+  /// The lifted chip's drop time while a task is dragged.
+  final _hint = ValueNotifier<String?>(null);
+
+  @override
+  void dispose() {
+    _hint.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [for (final e in entries) _entry(e)],
+      children: [for (final e in widget.entries) _entry(e)],
     );
   }
 
   Widget _entry(ThreadEntry e) {
-    final a = actions;
-    return switch (e) {
+    final a = widget.actions;
+    final drag = a.drag;
+    final row = switch (e) {
       ThreadCap() => _Cap(cap: e),
       ThreadGap() => _Gap(gap: e, onAdd: a.onAddHere),
       ThreadTaskEntry(:final task) when task.state == DotState.live => LiveRow(
         task: task,
         onToggleDone: _bind(a.onToggleDone, task),
         onOpen: _bind(a.onOpen, task),
-        onLongPress: _bind(a.onLongPress, task),
         onExtend: _bind(a.onExtend, task),
         onShiftRest: task.overrunMinutes > 0
             ? _bind(a.onShiftRest, task)
             : null,
+        onResize: _resize(drag, task),
       ),
       ThreadTaskEntry(:final task) => TaskRow(
         task: task,
-        dotSize: dotSize,
+        dotSize: widget.dotSize,
         onToggleDone: _bind(a.onToggleDone, task),
         onOpen: _bind(a.onOpen, task),
-        onLongPress: _bind(a.onLongPress, task),
+        onResize: _resize(drag, task),
       ),
     };
+    if (drag == null) return row;
+    return switch (e) {
+      ThreadGap() => GapDropTarget(gap: e, drag: drag, hint: _hint, child: row),
+      ThreadTaskEntry(:final task) => DraggableTaskRow(
+        task: task,
+        drag: drag,
+        hint: _hint,
+        child: row,
+      ),
+      ThreadCap() => row,
+    };
+  }
+
+  static ValueChanged<int>? _resize(ThreadDrag? drag, ThreadTask task) {
+    final onResize = drag?.onResize;
+    if (onResize == null || !task.movable) return null;
+    return (steps) => onResize(task.id, steps);
   }
 
   static VoidCallback? _bind(ValueChanged<String>? f, ThreadTask task) =>

@@ -4,6 +4,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
+import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,7 @@ class LiveRow extends StatelessWidget {
     required this.task,
     this.onToggleDone,
     this.onOpen,
-    this.onLongPress,
+    this.onResize,
     this.onExtend,
     this.onShiftRest,
     super.key,
@@ -24,7 +25,9 @@ class LiveRow extends StatelessWidget {
   final ThreadTask task;
   final VoidCallback? onToggleDone;
   final VoidCallback? onOpen;
-  final VoidCallback? onLongPress;
+
+  /// Resize grip at the segment end (R-05).
+  final ValueChanged<int>? onResize;
 
   /// +15 min.
   final VoidCallback? onExtend;
@@ -48,13 +51,19 @@ class LiveRow extends StatelessWidget {
         width: DotSize.dotOutline,
         onTap: onToggleDone,
       ),
+      grip: onResize == null
+          ? null
+          : ResizeGrip(
+              onSteps: onResize!,
+              label: context.l10n.resizeLabel(task.title),
+            ),
       child: Padding(
         padding: const EdgeInsets.only(bottom: DotSpace.xl),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: DotSpace.m,
           children: [
-            _Summary(task: task, onOpen: onOpen, onLongPress: onLongPress),
+            _Summary(task: task, onOpen: onOpen),
             _Actions(
               onDone: onToggleDone,
               onExtend: onExtend,
@@ -68,11 +77,10 @@ class LiveRow extends StatelessWidget {
 }
 
 class _Summary extends StatelessWidget {
-  const _Summary({required this.task, this.onOpen, this.onLongPress});
+  const _Summary({required this.task, this.onOpen});
 
   final ThreadTask task;
   final VoidCallback? onOpen;
-  final VoidCallback? onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +102,6 @@ class _Summary extends StatelessWidget {
       excludeSemantics: true,
       child: InkWell(
         onTap: onOpen,
-        onLongPress: onLongPress,
         borderRadius: BorderRadius.circular(DotRadii.card),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

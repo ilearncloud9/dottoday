@@ -1419,6 +1419,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pick a day'**
   String get editorPickDay;
+
+  /// Screen-reader label of a task's resize grip; increase / decrease change the length.
+  ///
+  /// In en, this message translates to:
+  /// **'Change how long {title} takes'**
+  String resizeLabel(String title);
+
+  /// Floating label while dragging a task over a free gap.
+  ///
+  /// In en, this message translates to:
+  /// **'→ {time}'**
+  String dragDropAt(String time);
+
+  /// Snackbar after dropping a task on a free gap, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} moved to {time}'**
+  String snackMoved(String title, String time);
+
+  /// Snackbar after dropping a task on a week-strip day, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} moved to {day}'**
+  String snackMovedDay(String title, String day);
+
+  /// Snackbar after resizing a task, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} now ends at {time}'**
+  String snackResized(String title, String time);
 }
 
 class _AppLocalizationsDelegate

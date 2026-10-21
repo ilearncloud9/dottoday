@@ -1,9 +1,15 @@
+import 'dart:async';
+
+import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
+import 'package:dottoday/features/timeline/state/drag_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
+import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -40,6 +46,32 @@ class TodayWeekStrip extends ConsumerWidget {
       monthOpen: monthOpen,
       onSelect: (i) => onSelect(week[i]),
       onPull: ref.read(todaySelectionProvider.notifier).toggleMonth,
+      onDropTask: (id, i) => unawaited(_drop(context, ref, id, week[i])),
+    );
+  }
+
+  /// Moves the dropped task to [date] at the same time, with Undo.
+  Future<void> _drop(
+    BuildContext context,
+    WidgetRef ref,
+    String id,
+    DateTime date,
+  ) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
+    final undo = ref.read(undoServiceProvider);
+    final day = DateFormat.MMMMEEEEd(
+      Localizations.localeOf(context).toLanguageTag(),
+    ).format(date);
+    final result = await moveToDay(ref, id, date);
+    if (result case Ok(value: null)) return;
+    reportUndoable(
+      messenger,
+      l10n,
+      undo,
+      result,
+      message: (v) => l10n.snackMovedDay(v!.$1.title, day),
+      tokenOf: (v) => v!.$2,
     );
   }
 

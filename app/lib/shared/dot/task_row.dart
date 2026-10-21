@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
+import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,7 @@ class TaskRow extends StatelessWidget {
     required this.task,
     this.onToggleDone,
     this.onOpen,
-    this.onLongPress,
+    this.onResize,
     this.dotSize = DotSize.rowDot,
     super.key,
   });
@@ -29,8 +30,8 @@ class TaskRow extends StatelessWidget {
   /// Tap on the row: the task sheet (§6).
   final VoidCallback? onOpen;
 
-  /// Long-press: pick up to drag (§6, M3b.5).
-  final VoidCallback? onLongPress;
+  /// Resize grip at the segment end (R-05); null hides it.
+  final ValueChanged<int>? onResize;
   final double dotSize;
 
   @override
@@ -43,6 +44,12 @@ class TaskRow extends StatelessWidget {
         dotSize: dotSize,
       ),
       dot: taskRowDot(context, task, dotSize, onToggleDone),
+      grip: onResize == null
+          ? null
+          : ResizeGrip(
+              onSteps: onResize!,
+              label: context.l10n.resizeLabel(task.title),
+            ),
       trailing: task.state == DotState.done
           ? null
           : DoneCircle(color: t.colors.hairline, onTap: onToggleDone),
@@ -52,7 +59,6 @@ class TaskRow extends StatelessWidget {
         excludeSemantics: true,
         child: InkWell(
           onTap: onOpen,
-          onLongPress: onLongPress,
           borderRadius: BorderRadius.circular(DotRadii.card),
           child: Padding(
             padding: const EdgeInsets.only(bottom: DotSpace.xl),
@@ -194,6 +200,7 @@ class ThreadRowFrame extends StatelessWidget {
     required this.child,
     this.dot,
     this.trailing,
+    this.grip,
     super.key,
   });
 
@@ -201,6 +208,9 @@ class ThreadRowFrame extends StatelessWidget {
   final Widget child;
   final Widget? dot;
   final Widget? trailing;
+
+  /// Resize grip at the bottom of the axis, over the segment's end.
+  final Widget? grip;
 
   @override
   Widget build(BuildContext context) {
@@ -233,6 +243,12 @@ class ThreadRowFrame extends StatelessWidget {
             ?trailing,
           ],
         ),
+        if (grip case final g?)
+          PositionedDirectional(
+            start: (threadAxisWidth - DotTouch.min) / 2,
+            bottom: 0,
+            child: g,
+          ),
       ],
     );
   }

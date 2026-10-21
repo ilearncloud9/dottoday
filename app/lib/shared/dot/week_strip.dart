@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// How much of a day got done, for the 8 px dots of the strip and month.
 @immutable
@@ -51,6 +53,7 @@ class WeekStrip extends StatelessWidget {
     required this.selected,
     this.onSelect,
     this.onPull,
+    this.onDropTask,
     this.monthOpen = false,
     super.key,
   }) : assert(days.length == 7, 'a week has 7 days'); // l10n-ignore: assert
@@ -64,6 +67,10 @@ class WeekStrip extends StatelessWidget {
   /// Tap or drag down on the handle (§2.4 "month pull-open").
   final VoidCallback? onPull;
 
+  /// A dragged task (its id) was let go on day [int]: phones' "week
+  /// overview, read + drag" (PRD F8, R-05). Null = not a drop target.
+  final void Function(String id, int index)? onDropTask;
+
   /// Whether the month is open, for the handle's label.
   final bool monthOpen;
 
@@ -74,27 +81,47 @@ class WeekStrip extends StatelessWidget {
       children: [
         Row(
           children: [
-            for (final (i, d) in days.indexed)
-              Expanded(
-                child: _Column(
-                  day: d,
-                  selected: i == selected,
-                  onTap: onSelect == null ? null : () => onSelect!(i),
-                ),
-              ),
+            for (final (i, d) in days.indexed) Expanded(child: _target(i, d)),
           ],
         ),
         PullHandle(open: monthOpen, onPull: onPull),
       ],
     );
   }
+
+  Widget _target(int i, StripDay d) {
+    Widget column({bool hovered = false}) => _Column(
+      day: d,
+      selected: i == selected,
+      hovered: hovered,
+      onTap: onSelect == null ? null : () => onSelect!(i),
+    );
+    final onDrop = onDropTask;
+    if (onDrop == null) return column();
+    return DragTarget<String>(
+      onAcceptWithDetails: (details) {
+        unawaited(HapticFeedback.mediumImpact());
+        onDrop(details.data, i);
+      },
+      builder: (context, candidates, _) =>
+          column(hovered: candidates.isNotEmpty),
+    );
+  }
 }
 
 class _Column extends StatelessWidget {
-  const _Column({required this.day, required this.selected, this.onTap});
+  const _Column({
+    required this.day,
+    required this.selected,
+    this.hovered = false,
+    this.onTap,
+  });
 
   final StripDay day;
   final bool selected;
+
+  /// A dragged task hovers this day.
+  final bool hovered;
   final VoidCallback? onTap;
 
   @override
@@ -122,7 +149,12 @@ class _Column extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: DotSpace.xxs),
           padding: const EdgeInsets.symmetric(vertical: DotSpace.s),
           constraints: const BoxConstraints(minHeight: DotTouch.android),
-          decoration: selected
+          decoration: hovered
+              ? BoxDecoration(
+                  color: c.accentTint,
+                  borderRadius: BorderRadius.circular(DotRadii.card),
+                )
+              : selected
               ? BoxDecoration(
                   color: c.raised,
                   borderRadius: BorderRadius.circular(DotRadii.card),

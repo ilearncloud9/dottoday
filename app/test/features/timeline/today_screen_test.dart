@@ -25,6 +25,7 @@ final _now = DateTime.utc(2026, 10, 21, 7, 22);
 Future<void> _pump(
   WidgetTester tester, {
   List<Occurrence>? rows,
+  FakeOccurrenceRepository? repo,
   Size size = const Size(390, 844),
   ThemeMode mode = ThemeMode.light,
   DateTime? date,
@@ -43,7 +44,8 @@ Future<void> _pump(
     ProviderScope(
       overrides: timelineOverrides(
         now: _now,
-        occurrences: FakeOccurrenceRepository(rows ?? demoDayRows(_date)),
+        occurrences:
+            repo ?? FakeOccurrenceRepository(rows ?? demoDayRows(_date)),
         profile: profile,
         minuteTicks: ticks,
       ),
@@ -274,6 +276,59 @@ void main() {
         find.widgetWithText(OutlinedButton, 'Shift the rest'),
       );
       expect(shift.onPressed, isNull);
+    });
+  });
+
+  group('drag (R-05)', () {
+    Future<TestGesture> lift(WidgetTester tester, String title) async {
+      final g = await tester.startGesture(tester.getCenter(find.text(title)));
+      await tester.pump(DotTouch.liftDelay + const Duration(milliseconds: 50));
+      return g;
+    }
+
+    testWidgets('dropping on a free gap moves the task, with Undo', (
+      tester,
+    ) async {
+      await _pump(tester, size: const Size(390, 1400));
+      final g = await lift(tester, 'Team standup');
+      await g.moveTo(tester.getCenter(find.text('45 min free')));
+      await tester.pump();
+      expect(find.textContaining('→ '), findsOneWidget);
+      await g.up();
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Team standup moved to'), findsOneWidget);
+      expect(find.textContaining('8:15 AM – 8:30 AM'), findsOneWidget);
+      await tester.tap(find.text('Undo'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('8:00 AM – 8:15 AM'), findsOneWidget);
+    });
+
+    testWidgets('dropping on a week-strip day keeps the time', (tester) async {
+      final repo = FakeOccurrenceRepository(demoDayRows(_date));
+      await _pump(tester, repo: repo, size: const Size(390, 1400));
+      final g = await lift(tester, 'Team standup');
+      await g.moveTo(tester.getCenter(find.text('Thu')));
+      await tester.pump();
+      await g.up();
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Team standup moved to Thursday, October 22'),
+        findsOneWidget,
+      );
+      final moved = repo.rows.singleWhere((o) => o.title == 'Team standup');
+      // 08:00 Berlin on Thursday 22 October.
+      expect(moved.startUtc, DateTime.utc(2026, 10, 22, 6));
+    });
+
+    testWidgets('the grip lengthens a task by the snap step', (tester) async {
+      final handle = tester.ensureSemantics();
+      await _pump(tester, size: const Size(390, 1400));
+      tester.semantics.increase(
+        find.semantics.byLabel('Change how long Team standup takes'),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Team standup now ends at 8:20 AM'), findsOneWidget);
+      handle.dispose();
     });
   });
 

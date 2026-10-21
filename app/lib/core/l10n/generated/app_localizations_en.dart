@@ -881,4 +881,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editorPickDay => 'Pick a day';
+
+  @override
+  String resizeLabel(String title) {
+    return 'Change how long $title takes';
+  }
+
+  @override
+  String dragDropAt(String time) {
+    return '→ $time';
+  }
+
+  @override
+  String snackMoved(String title, String time) {
+    return '$title moved to $time';
+  }
+
+  @override
+  String snackMovedDay(String title, String day) {
+    return '$title moved to $day';
+  }
+
+  @override
+  String snackResized(String title, String time) {
+    return '$title now ends at $time';
+  }
 }

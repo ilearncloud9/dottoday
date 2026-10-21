@@ -23,6 +23,7 @@ ThreadActions dayThreadActions(
   WidgetRef ref, {
   required List<Occurrence> blocks,
   required String Function(DateTime utc) timeText,
+  ThreadDrag? drag,
 }) {
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
@@ -43,6 +44,7 @@ ThreadActions dayThreadActions(
   );
 
   return ThreadActions(
+    drag: drag,
     onOpen: (id) => showTaskSheet(context, id),
     onToggleDone: (id) async {
       final o = find(id);

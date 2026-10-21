@@ -83,6 +83,7 @@ void _gap(
       minutes: minutes,
       startLabel: format.time(from),
       addable: to.isAfter(now),
+      startUtc: from,
       nowFraction: inside
           ? now.difference(from).inSeconds / to.difference(from).inSeconds
           : null,
@@ -117,6 +118,7 @@ ThreadTask _task(
     minutesLeft: live ? (end.difference(now).inSeconds / 60).ceil() : null,
     subtasksDone: subtasks?.done ?? 0,
     subtasksTotal: subtasks?.total ?? 0,
+    movable: !o.pinned && o.status != OccurrenceStatus.done,
   );
 }
 
@@ -148,6 +150,7 @@ ThreadTask _withOverrun(
     subtasksDone: task.subtasksDone,
     subtasksTotal: task.subtasksTotal,
     overrunMinutes: overrun,
+    movable: task.movable,
   );
 }
 

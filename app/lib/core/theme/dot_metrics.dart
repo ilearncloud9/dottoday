@@ -81,6 +81,12 @@ abstract final class DotSize {
 abstract final class DotTouch {
   static const double min = 44;
   static const double android = kMinInteractiveDimension;
+
+  /// Hold this long to pick a task up (03 §3.2 "long-press 250 ms").
+  static const liftDelay = Duration(milliseconds: 250);
+
+  /// Vertical drag per resize step on a segment's grip.
+  static const double resizeStep = 12;
 }
 
 /// Shadow of floating elements: tab bar, FAB, menus (docs/10 §2.3).

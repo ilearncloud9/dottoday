@@ -1335,5 +1335,59 @@
   "editorPickDay": "Pick a day",
   "@editorPickDay": {
     "description": "Title of the day picker sheet in the editor."
+  },
+  "resizeLabel": "Change how long {title} takes",
+  "@resizeLabel": {
+    "description": "Screen-reader label of a task's resize grip; increase / decrease change the length.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "dragDropAt": "→ {time}",
+  "@dragDropAt": {
+    "description": "Floating label while dragging a task over a free gap.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "snackMoved": "{title} moved to {time}",
+  "@snackMoved": {
+    "description": "Snackbar after dropping a task on a free gap, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "snackMovedDay": "{title} moved to {day}",
+  "@snackMovedDay": {
+    "description": "Snackbar after dropping a task on a week-strip day, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "snackResized": "{title} now ends at {time}",
+  "@snackResized": {
+    "description": "Snackbar after resizing a task, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
   }
 }

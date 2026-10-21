@@ -22,6 +22,7 @@ final class ThreadTask {
     this.subtasksDone = 0,
     this.subtasksTotal = 0,
     this.overrunMinutes = 0,
+    this.movable = true,
   });
 
   /// Occurrence id, for callbacks.
@@ -50,6 +51,9 @@ final class ThreadTask {
   /// Live task only: how far it runs into the next task. "Shift the rest"
   /// moves the later tasks by this much and is off when it is 0 (R-04).
   final int overrunMinutes;
+
+  /// Long-press picks it up to drag (§6). Pinned tasks stay put (R-17).
+  final bool movable;
 
   bool get hasSubtasks => subtasksTotal > 0;
 }
@@ -84,6 +88,7 @@ final class ThreadGap extends ThreadEntry {
     required this.startLabel,
     this.addable = false,
     this.nowFraction,
+    this.startUtc,
   });
 
   final int minutes;
@@ -96,4 +101,7 @@ final class ThreadGap extends ThreadEntry {
 
   /// Where the now-marker sits in this gap (0–1), if now is inside it.
   final double? nowFraction;
+
+  /// The instant the gap opens, for drops (feature-supplied).
+  final DateTime? startUtc;
 }

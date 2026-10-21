@@ -7,6 +7,7 @@ import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/thread_day.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/features/timeline/widgets/day_drag.dart';
 import 'package:dottoday/features/timeline/widgets/empty_day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/time_labels.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
@@ -55,6 +56,14 @@ class DayPage extends ConsumerWidget {
         ref,
         blocks: blocks,
         timeText: format.time,
+        drag: dayThreadDrag(
+          context,
+          ref,
+          blocks: blocks,
+          zone: data.day.location,
+          snapMinutes: data.settings.snapMinutes,
+          timeText: format.time,
+        ),
       ),
       footer: _footer(blocks, summary.total == 0),
     );
