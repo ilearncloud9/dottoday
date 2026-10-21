@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ### Added
 - Project kit: agent instructions, specs, schema, implementation plan.
+- **Milestone 1 complete** (M1.9): `/ship-check` passed 2026-10-21 locally — analyze/format clean, 389 tests, `lib/domain` coverage 98.3 % (overall 92.9 %), all four targets build (web, Android debug, macOS debug, iOS simulator); GitHub Actions could not run (account billing), so CI re-run is a follow-up.
 - **Milestone 0 complete** (M0.10): `/ship-check` passed 2026-10-21 — analyze/format clean, 111 tests, 83.2 % coverage (hand-written), 23 pgTAP RLS tests, all four targets build in CI, a11y guidelines + axe-core clean, gitleaks/osv-scanner clean.
 - M0.1: Flutter project scaffold (iOS, Android, macOS, Web) with blank shell app, smoke test, Inter font, placeholder assets and committed `pubspec.lock`; `intl` bumped to ^0.20.3 and `analyzer` pinned <7.4 so codegen compiles.
 - M0.2: Feature-first folder layout (`core`, `data`, `domain`, `features/*`, `shared`, `integration_test`) with boundary READMEs.

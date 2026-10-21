@@ -36,10 +36,13 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [x] M1.6 `NotificationPlanner`: desired-set computation; windowing (iOS 64 limit); quiet hours; tests. (R-10)
 - [x] M1.7 `ConflictResolver` + HLC implementation; tests for LWW, 60-s same-field conflict. (ADR-0002)
 - [x] M1.8 Export/import model (JSON v1 schema, CSV, ICS writers) with round-trip tests. (R-11)
-- [ ] M1.9 Coverage ≥ 90 % on `lib/domain`; `/ship-check`.
+- [x] M1.9 Coverage ≥ 90 % on `lib/domain`; `/ship-check`.
+- Follow-ups from the M1 ship-check: re-run the `app` and `security` CI workflows on `main` once GitHub
+  Actions billing is restored (M1.3–M1.9 were verified locally only, see CHANGELOG); M2.0 below.
 
 ## Milestone 2 — Data layer (goal: encrypted local DB + repositories, no network yet)
 
+- [ ] M2.0 Raise the Dart SDK floor to `^3.8.0` (json_serializable 6.13 warns below it; unlocks null-aware elements). Expect a repo-wide `dart format` change to the tall style in its own commit.
 - [ ] M2.1 Drift schema mirroring 05 + sync columns + `change_log`, `sync_cursors`; SQLCipher key from secure storage; web WASM/OPFS variant behind the same interface. (06 §4, ADR-0003) **Decide first:** `drift`/`drift_dev` ≥ 2.32 require `sqlite3` 3.x, which builds SQLite via native-assets hooks and changes how SQLCipher is bundled (affects `sqlcipher_flutter_libs`, CLAUDE.md §2). Both are capped `<2.32` in `pubspec.yaml` until this is decided (M0.11). Also: `sqlcipher_flutter_libs` is end-of-life (`0.7.0+eol`), and `drift_flutter` pulls in `sqlite3_flutter_libs`, which clashes with `sqlcipher_flutter_libs` on Apple platforms (duplicate `Sqlite3FlutterLibsPlugin` → macOS build fails; found in M0.11).
 - [ ] M2.2 DAOs + repository implementations (`OccurrenceRepository`, `SeriesRepository`, `SubtaskRepository`, `SettingsRepository`) with reactive streams for day/inbox/week/month queries.
 - [ ] M2.3 Write path: every mutation goes through a `WriteUseCase` that updates DB, appends `change_log`, triggers `Materialiser` (if series), `NotificationPlanner` diff, widget snapshot write. Tests.
