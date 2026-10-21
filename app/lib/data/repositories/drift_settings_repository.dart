@@ -1,13 +1,10 @@
 import 'package:dottoday/data/daos/profiles_dao.dart';
 import 'package:dottoday/data/db/app_database.dart';
-import 'package:dottoday/data/mappers/row_codec.dart';
+import 'package:dottoday/data/mappers/entity_mappers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
 
-const _codec = RowCodec(jsonColumns: {'settings'});
-
-Profile? _toEntity(ProfileRow? row) =>
-    row == null ? null : Profile.fromJson(_codec.decode(row));
+Profile? _toEntity(ProfileRow? row) => row == null ? null : profileFromRow(row);
 
 /// [SettingsRepository] over the local Drift database.
 final class DriftSettingsRepository implements SettingsRepository {
@@ -25,5 +22,5 @@ final class DriftSettingsRepository implements SettingsRepository {
 
   @override
   Future<void> upsert(Profile profile) =>
-      _dao.upsert(_codec.encode<ProfileRow>(profile.toJson()));
+      _dao.upsert(profileCodec.encode<ProfileRow>(profile.toJson()));
 }

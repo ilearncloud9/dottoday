@@ -29,8 +29,11 @@ part 'app_database.g.dart';
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
+  /// Bump with every migration step (persistence-drift: forward-only).
+  static const latestSchemaVersion = 1;
+
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => latestSchemaVersion;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(

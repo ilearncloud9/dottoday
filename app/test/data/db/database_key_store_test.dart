@@ -41,10 +41,17 @@ void main() {
     ).called(1);
   });
 
+  test('readHexKey never creates a key', () async {
+    final store = SecureDatabaseKeyStore(storage);
+    expect(await store.readHexKey(), isNull);
+    expect(saved, isEmpty);
+  });
+
   test('never overwrites a malformed stored key', () async {
     saved[SecureDatabaseKeyStore.entryName] = 'garbage';
     final store = SecureDatabaseKeyStore(storage);
     await expectLater(store.obtainHexKey(), throwsStateError);
+    await expectLater(store.readHexKey(), throwsStateError);
     expect(saved[SecureDatabaseKeyStore.entryName], 'garbage');
   });
 }

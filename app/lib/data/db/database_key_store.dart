@@ -5,8 +5,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 /// Source of the 32-byte SQLCipher key (06 §4: random, Keychain/Keystore).
 abstract interface class DatabaseKeyStore {
   /// Returns the key as 64 lowercase hex chars, creating and persisting it
-  /// on first use.
+  /// on first use. Call only when no encrypted file exists yet.
   Future<String> obtainHexKey();
+
+  /// The stored key, or null if none exists. Never creates one: a new key
+  /// would silently orphan an existing encrypted file.
+  Future<String?> readHexKey();
 }
 
 /// [DatabaseKeyStore] backed by `flutter_secure_storage`.
@@ -22,16 +26,22 @@ final class SecureDatabaseKeyStore implements DatabaseKeyStore {
 
   @override
   Future<String> obtainHexKey() async {
-    final existing = await _storage.read(key: entryName);
-    if (existing != null) {
-      // Never replace a stored key: a new one would orphan the encrypted
-      // file. A corrupt key is surfaced so restore-from-backup can run.
-      if (isValidHexKey(existing)) return existing;
-      throw StateError('Stored database key is malformed.');
-    }
+    final existing = await readHexKey();
+    if (existing != null) return existing;
     final created = _generate();
     await _storage.write(key: entryName, value: created);
     return created;
+  }
+
+  @override
+  Future<String?> readHexKey() async {
+    final stored = await _storage.read(key: entryName);
+    // Never replace a stored key, even a corrupt one: a new key would orphan
+    // the encrypted file. Surface it instead (DatabaseUnavailable).
+    if (stored != null && !isValidHexKey(stored)) {
+      throw StateError('Stored database key is malformed.');
+    }
+    return stored;
   }
 
   String _generate() => List.generate(

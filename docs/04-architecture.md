@@ -64,6 +64,14 @@ one entity share an HLC), materialises saved series, and persists the HLC node/l
 After the commit, notification resync and the widget snapshot run in a serial queue; a failure there
 is logged and never undoes the write (the next write or app start repairs it).
 
+**Backups** (M2.4): JSON v1 bundles (the export format) in a separate SQLCipher file
+`dottoday-backups.db` with the same key — daily (keep 7, at most one per 24 h), plus pre-import and
+pre-restore (keep 5 each). Restore/import go through the write path: missing rows are soft-deleted,
+so the change syncs and is undoable via the pre-restore backup. Schema migrations take an encrypted
+`VACUUM INTO` snapshot of the old file (`dottoday.db.pre-v<N>`, keep 2) instead, because new code
+can't read an old schema as JSON. Web stores backups in a second WASM database (unencrypted until
+M2.9) and skips migration snapshots until then.
+
 **Widgets** read a lightweight JSON snapshot (`next 24 h`) written to the app-group container on every
 local write, so they are correct even if sync is down.
 

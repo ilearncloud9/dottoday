@@ -46,7 +46,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [x] M2.1 Drift schema mirroring 05 + sync columns + `change_log`, `sync_cursors`; SQLCipher key from secure storage; web WASM/OPFS variant behind the same interface. (06 §4, ADR-0003) **Decide first:** `drift`/`drift_dev` ≥ 2.32 require `sqlite3` 3.x, which builds SQLite via native-assets hooks and changes how SQLCipher is bundled (affects `sqlcipher_flutter_libs`, CLAUDE.md §2). Both are capped `<2.32` in `pubspec.yaml` until this is decided (M0.11). Also: `sqlcipher_flutter_libs` is end-of-life (`0.7.0+eol`), and `drift_flutter` pulls in `sqlite3_flutter_libs`, which clashes with `sqlcipher_flutter_libs` on Apple platforms (duplicate `Sqlite3FlutterLibsPlugin` → macOS build fails; found in M0.11).
 - [x] M2.2 DAOs + repository implementations (`OccurrenceRepository`, `SeriesRepository`, `SubtaskRepository`, `SettingsRepository`) with reactive streams for day/inbox/week/month queries.
 - [x] M2.3 Write path: every mutation goes through a `WriteUseCase` that updates DB, appends `change_log`, triggers `Materialiser` (if series), `NotificationPlanner` diff, widget snapshot write. Tests.
-- [ ] M2.4 `BackupService`: daily local JSON backup (keep 7), pre-migration backup; restore. Tests. (R-08, R-11) Include the lost-key path: if the keychain key is missing/rejected for an existing DB file (`configureCipherConnection` throws), keep the old file, open a fresh DB and offer restore from the latest JSON backup — never delete the unreadable file (M2.1).
+- [x] M2.4 `BackupService`: daily local JSON backup (keep 7), pre-migration backup; restore. Tests. (R-08, R-11) Lost key (M2.1): opening an existing file without its key, or with a key that doesn't decrypt it, throws a typed `DatabaseUnavailable`; no key is ever minted over an existing file. Local backups share the key, so recovery is via sync or a user export (M3.11 UI).
 - [ ] M2.5 Trash: soft delete, 30-day restore, purge; undo token API for UI (30 s). (R-11)
 - [ ] M2.6 Search index (FTS5) over title/notes/subtasks incl. completed. (R-11)
 - [ ] M2.7 Performance test: 10 000 occurrences, day query < 16 ms, search < 50 ms. (R-15)
@@ -56,7 +56,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 ## Milestone 3 — Timeline UI (goal: the home screen, complete and flawless, local only)
 
 - [ ] M3.1 Shared components: `AppSheet`, `TimeInput` (typed + optional wheel, 12/24 h, tests from 08 §2), `DurationChips`, `ColorIconPicker`, `UndoSnackbar`, `SyncPill` (static for now). (03 §3.3–3.4, R-16, R-20)
-- [ ] M3.2 Timeline canvas: hour gutter, lazy sliver blocks, now-line (1-min tick), past tint, outside-hours zones, all-day strip, overlap columns, full-24h golden test. (03 §3.1, R-14, R-15)
+- [ ] M3.2 Timeline canvas (first screen to open the DB: also wire app start/resume to ensure the local profile, `BackupService.runDailyIfDue` and `NotificationSync.resync`, M2.3/M2.4): hour gutter, lazy sliver blocks, now-line (1-min tick), past tint, outside-hours zones, all-day strip, overlap columns, full-24h golden test. (03 §3.1, R-14, R-15)
 - [ ] M3.3 Block widget: anatomy + states (done/overdue/pinned/recurring/calendar/alerts); semantics label per 03 §4. Golden at 100/200 % text, light/dark. (R-12)
 - [ ] M3.4 Gestures: long-press pick-up, drag with snapping + ghost + floating time label + auto-scroll; edge resize handles; tap vs scroll disambiguation test; haptics; reduced-motion path. (03 §3.2, R-05)
 - [ ] M3.5 Shift-followers chip during drag; settings default `ask|always|never`; pinned and calendar rules; partial-shift toast. (R-04, R-17)
@@ -65,7 +65,7 @@ Legend: `[ ]` todo · `[x]` done · `[~]` in progress (only one at a time).
 - [ ] M3.8 Gap affordance: long-press/double-click gap → Quick Add prefilled with time. "Insert here" draggable marker. (R-17)
 - [ ] M3.9 Day navigation: swipe/keys, date header → month picker, "Today" chip, Duplicate day, Export day. (03 §3.1)
 - [ ] M3.10 Keyboard map for desktop/web per 02 F1; focus ring; semantics widget tests; screen-reader manual pass on 2 platforms. (R-12)
-- [ ] M3.11 Empty/loading/error/offline states. (03 §3.8)
+- [ ] M3.11 Empty/loading/error/offline states. (03 §3.8) Includes the `DatabaseUnavailable` recovery screen (M2.4): explain, move the unreadable file aside (never delete), start fresh, point to sign-in sync / import of an export.
 - [ ] M3.12 Perf: 200 blocks ≥ 55 fps profile run on Android mid-range; fix hot spots. (R-15)
 - [ ] M3.13 `/ship-check`.
 

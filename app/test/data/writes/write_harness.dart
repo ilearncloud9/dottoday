@@ -53,7 +53,7 @@ final class WriteHarness {
   WriteHarness(DateTime now, {AppDatabase? db})
     : clock = FakeClock(now),
       db = db ?? AppDatabase(NativeDatabase.memory()) {
-    final logger = Logger(logs, clock);
+    logger = Logger(logs, clock);
     final occurrences = DriftOccurrenceRepository(this.db);
     effects = AfterWriteEffects(
       notifications: NotificationSync(
@@ -83,6 +83,7 @@ final class WriteHarness {
   final FakeClock clock;
   final AppDatabase db;
   final logs = MemoryLogSink();
+  late final Logger logger;
   final gateway = FakeGateway();
   final sink = FakeSink();
   late final AfterWriteEffects effects;
