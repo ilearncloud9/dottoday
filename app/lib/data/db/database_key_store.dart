@@ -14,14 +14,15 @@ final class SecureDatabaseKeyStore implements DatabaseKeyStore {
   SecureDatabaseKeyStore(this._storage, {Random? random})
     : _random = random ?? Random.secure();
 
-  static const storageKey = 'db_cipher_key_v1';
+  /// Secure-storage entry name (a name, not a secret).
+  static const entryName = 'db-cipher-v1';
 
   final FlutterSecureStorage _storage;
   final Random _random;
 
   @override
   Future<String> obtainHexKey() async {
-    final existing = await _storage.read(key: storageKey);
+    final existing = await _storage.read(key: entryName);
     if (existing != null) {
       // Never replace a stored key: a new one would orphan the encrypted
       // file. A corrupt key is surfaced so restore-from-backup can run.
@@ -29,7 +30,7 @@ final class SecureDatabaseKeyStore implements DatabaseKeyStore {
       throw StateError('Stored database key is malformed.');
     }
     final created = _generate();
-    await _storage.write(key: storageKey, value: created);
+    await _storage.write(key: entryName, value: created);
     return created;
   }
 

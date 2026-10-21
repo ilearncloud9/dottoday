@@ -42,9 +42,9 @@ void main() {
   });
 
   test('never overwrites a malformed stored key', () async {
-    saved[SecureDatabaseKeyStore.storageKey] = 'garbage';
+    saved[SecureDatabaseKeyStore.entryName] = 'garbage';
     final store = SecureDatabaseKeyStore(storage);
     await expectLater(store.obtainHexKey(), throwsStateError);
-    expect(saved[SecureDatabaseKeyStore.storageKey], 'garbage');
+    expect(saved[SecureDatabaseKeyStore.entryName], 'garbage');
   });
 }
