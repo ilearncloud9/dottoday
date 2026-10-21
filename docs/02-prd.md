@@ -37,6 +37,12 @@ Everything here is **free tier** unless marked *Phase 2*.
 **AC**
 - Quick Add field is reachable from any screen (FAB on mobile, ⌘/Ctrl+N on desktop/web).
 - Parser handles: times (7am, 19:00, noon), relative days (today, tomorrow, Friday, next Mon), durations (45m, 1.5h, 2 hours), "every day/week/Mon,Wed" → recurrence prefill, "@inbox" → no time. Unparsed text stays as title. Parsed tokens are highlighted and removable with one tap. Unit-tested in en, de, fr, es with 24-h/12-h locales. (R-06, R-20)
+  Clarified in M1.5 (`domain/quick_add/`): a time with no date means *today*, even if already past (the
+  date never jumps on its own, R-20); "Friday" is the next Friday on or after today, "next Friday" strictly
+  after; `HH:MM` and `7pm` parse in every language and the 12/24-h setting only changes chip display;
+  French `15h`/`15h30` is a clock time (durations use `min`/`heures`); one token per kind, later ones stay
+  title; two-letter German weekday abbreviations and es `mar` are not recognised (everyday words);
+  input over 10 000 chars is rejected (06 §7).
 - Time entry is always typeable; wheel/picker optional. One shared `TimeInput` component. (R-20)
 - Duration chips 15/30/45/60/90 + custom; range 5 min–24 h. (R-16)
 - "Add another" keeps the sheet open; multi-line paste → one task per non-empty line. (R-07)
