@@ -19,7 +19,9 @@ class PillTabShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      body: ChromeClearance(bottom: height + _margin * 2, child: body),
+      // extendBody already adds the floating bar's height to the body's
+      // bottom padding, which scroll views honour; no extra clearance.
+      body: body,
       bottomNavigationBar: SafeArea(
         minimum: const EdgeInsets.fromLTRB(_margin, 0, _margin, _margin),
         child: Row(

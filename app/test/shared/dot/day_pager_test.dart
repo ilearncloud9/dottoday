@@ -73,6 +73,25 @@ void main() {
     expect(find.bySemanticsLabel('Day 5 of 7'), findsOneWidget);
   });
 
+  testWidgets('a new index (week strip tap) slides the pager there', (
+    tester,
+  ) async {
+    Widget pager(int index) => testApp(
+      Scaffold(
+        body: DayPager(
+          itemCount: 7,
+          initialIndex: index,
+          itemBuilder: (context, i) => Text(_days[i]),
+        ),
+      ),
+    );
+    await tester.pumpWidget(pager(3));
+    await tester.pumpWidget(pager(5));
+    await tester.pumpAndSettle();
+    expect(find.bySemanticsLabel('Day 6 of 7'), findsOneWidget);
+    expect(find.text('Friday'), findsOneWidget);
+  });
+
   testWidgets('an empty day says so', (tester) async {
     await tester.pumpWidget(
       testApp(

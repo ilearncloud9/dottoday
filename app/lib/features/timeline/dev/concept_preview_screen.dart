@@ -17,12 +17,19 @@ import 'package:intl/intl.dart';
 // M3a build can be tried on a device before Today is rebuilt in M3b.1.
 // Reached only from the kDebugMode header menu; release builds drop it.
 
-/// Opens the preview over the current route.
-void openConceptPreview(BuildContext context) => unawaited(
-  Navigator.of(
-    context,
-  ).push(MaterialPageRoute<void>(builder: (_) => const ConceptPreviewScreen())),
-);
+/// Opens the preview over the current route. Called from a popup menu item,
+/// which pops its menu right after `onTap`, so push after this frame;
+/// pushing now would be the route that pop removes.
+void openConceptPreview(BuildContext context) {
+  final navigator = Navigator.of(context);
+  WidgetsBinding.instance.addPostFrameCallback(
+    (_) => unawaited(
+      navigator.push(
+        MaterialPageRoute<void>(builder: (_) => const ConceptPreviewScreen()),
+      ),
+    ),
+  );
+}
 
 /// Header, week strip and day pager of `Main`, fed by this week's data.
 class ConceptPreviewScreen extends ConsumerStatefulWidget {
@@ -45,8 +52,9 @@ class _PreviewState extends ConsumerState<ConceptPreviewScreen> {
     final week = [for (var i = 0; i < 7; i++) sunday.add(Duration(days: i))];
     final page = _page ?? today.weekday % 7;
     return Scaffold(
+      // SafeArea applies the shell's bottom clearance, so the page dots sit
+      // above the floating tab bar as in `Main`.
       body: SafeArea(
-        bottom: false,
         child: Column(
           children: [
             _Header(date: week[page], today: today),

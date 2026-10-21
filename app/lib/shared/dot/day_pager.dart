@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +8,8 @@ import 'package:flutter/material.dart';
 /// neighbours peek 22 px, page physics snap, seven page dots below.
 ///
 /// Opens on [initialIndex] (the feature passes today's index, §6 "Today
-/// always opens on the current date").
+/// always opens on the current date"). A new [initialIndex] later (a tap on
+/// the week strip) slides the pager there.
 class DayPager extends StatefulWidget {
   const DayPager({
     required this.itemCount,
@@ -38,6 +41,24 @@ class _DayPagerState extends State<DayPager> {
   PageController? _controller;
   double? _width;
   late int _page = widget.initialIndex;
+
+  @override
+  void didUpdateWidget(DayPager old) {
+    super.didUpdateWidget(old);
+    final target = widget.initialIndex;
+    if (target == old.initialIndex || target == _page) return;
+    _page = target;
+    final c = _controller;
+    if (c == null || !c.hasClients) return;
+    final motion = DotTheme.of(context).motion;
+    if (motion.isReduced) {
+      c.jumpToPage(target);
+    } else {
+      unawaited(
+        c.animateToPage(target, duration: motion.slow, curve: motion.curve),
+      );
+    }
+  }
 
   @override
   void dispose() {

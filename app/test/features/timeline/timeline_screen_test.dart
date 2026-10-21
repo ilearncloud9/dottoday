@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/features/timeline/dev/concept_preview_screen.dart';
 import 'package:dottoday/features/timeline/timeline_screen.dart';
 import 'package:dottoday/features/timeline/widgets/block_tile.dart';
 import 'package:flutter/material.dart';
@@ -272,4 +273,15 @@ void main() {
       }
     }
   }
+
+  testWidgets('debug menu opens the Concept A preview (M3a.10)', (
+    tester,
+  ) async {
+    await _pump(tester, size: const Size(420, 900));
+    await tester.tap(find.byTooltip('More options'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Concept A preview (debug)'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ConceptPreviewScreen), findsOneWidget);
+  });
 }
