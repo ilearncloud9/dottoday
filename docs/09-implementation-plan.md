@@ -113,8 +113,7 @@ auto-scroll logic is reused in M3b.5.
 - [x] M3b.7 Multi-select: long-press, then tap others: move, delete, duplicate, change colour; selection count announced (R-05). Ref derived — §5.3/5.4. Done: §7 + semantics test for the selection mode. Notes: gesture split and bar written into 03 §3.2; one day at a time.
 - [x] M3b.8 Inbox I1: header with dotted ring count, "5 unscheduled · 5 h 15 of work", quick-add field (parser, R-06), filter chips All / Under 30 min / Fits today, `InboxRow` (swipe left = schedule, right = trash with Undo), `NextFreeSlot` + Place, Completed · N group. Ref `A-ios-inbox`, `A-android-inbox`. Done: §7 + empty state "Inbox is clear"; swipe alternatives reachable without gestures (R-12). Notes: Schedule offers two free slots today and the first tomorrow ("Pick a time…" arrives with M3c.2); a long-press / right-click menu and screen-reader actions stand in for both swipes; a timed Quick Add line goes straight to its day; "every …" with a time makes a series (no Undo yet: series undo lands with M3f.1), without a time it stays an inbox item with its full text.
 - [x] M3b.9 Perf: 200 tasks on the thread ≥ 55 fps in a profile run on a mid-range Android; day query stays < 16 ms (R-15). Done: profile trace attached to the commit body. Notes: the thread is now a lazy sliver (`Thread.sliver` in `DayCard`) and the card drops its anti-aliased clip. Profile runs of `integration_test/thread_perf_test.dart` (200 tasks + a 200-tile baseline, 8 flings): **macOS (Apple silicon, Impeller/Metal)** 475 frames, 0 missed, build 1.05 ms avg / 2.4 p90, raster 1.1 ms avg / 2.1 p99 — on par with the baseline. **Android emulator API 37** (emulated GPU): build 0.8 ms avg; raster ~21 ms vs ~7 ms for plain tiles, the emulator's GPU, not representative. Day query: `db_performance_test` 200-block day p95 < 16 ms (M2.7). Platform exception: no physical mid-range Android was available → M3b.9b.
-- [ ] M3b.9b Physical mid-range Android profile run of `thread_perf_test` (≥ 55 fps); needs a device from the owner. Done: numbers in the plan.
-- [ ] M3b.10 `/ship-check` + four-platform side-by-side diff against the §4 idiom list.
+- [x] M3b.10 `/ship-check` + four-platform side-by-side diff against the §4 idiom list. Done 2026-10-22: analyze/format clean; 1,093 tests; coverage domain 98.0 %, overall 92.5 %; launch integration test green on the iPhone 17 Pro simulator and Android API 37 emulator; security §9 walked (no schema, dependency or CSP change; gitleaks/osv green in CI; destructive actions confirmed or undoable; deep links owner-scoped); all four CI builds green. Sweep: goldens for every M3b screen × light/dark × compact/expanded + `integration_test/sweep_test.dart` on iPhone, Android, Mac (`tool/mac_sweep.sh`) and web; only §4 idioms differ. Sheet: https://claude.ai/artifact/VW9pGgqFyCKNpcGyNzqrzR. Open: physical Android perf → M5.9b.
 
 ### M3c — Add flow
 
@@ -190,6 +189,7 @@ Ref for all of M4: derived — §5.3/5.4 (§5.1 has no renders). The old M4 "Cap
 - [ ] M5.7 Web: PWA manifest, offline page, CSP headers, keyboard-first audit, responsive 360 px. (07 Web, 06 §8)
 - [ ] M5.8 App lock (biometric/passcode), blur in switcher, FLAG_SECURE. (06 §2)
 - [ ] M5.9 Time-zone change banner (keep vs shift). (07 shared)
+- [ ] M5.9b Physical mid-range Android profile run of `thread_perf_test` (≥ 55 fps); needs a device from the owner (moved from M3b.9b when M3b closed). Done: numbers in the plan.
 - [ ] M5.10 `/ship-check` incl. accessibility manual pass on all four.
 
 ## Milestone 6 — Accounts & sync

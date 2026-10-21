@@ -38,6 +38,24 @@ Future<void> _rest(WidgetTester tester) async {
   }
 }
 
+/// Saves a screenshot. integration_test can't capture on macOS, so there
+/// the test announces the shot and holds still while
+/// `tool/mac_sweep.sh` captures the window.
+Future<void> _shot(
+  IntegrationTestWidgetsFlutterBinding binding,
+  WidgetTester tester,
+  String name,
+) async {
+  if (kIsWeb || !Platform.isMacOS) {
+    await binding.takeScreenshot(name);
+    return;
+  }
+  debugPrint('SWEEP_SHOT $name');
+  for (var i = 0; i < 40; i++) {
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+}
+
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -58,10 +76,10 @@ void main() {
     await _pumpUntil(tester, find.byType(DayCard));
     await tester.pump(const Duration(seconds: 5)); // the snackbar leaves
     await _rest(tester);
-    await binding.takeScreenshot('${_tag}_today');
+    await _shot(binding, tester, '${_tag}_today');
 
     await tester.tap(find.text('Inbox').last);
     await _rest(tester);
-    await binding.takeScreenshot('${_tag}_inbox');
+    await _shot(binding, tester, '${_tag}_inbox');
   });
 }
