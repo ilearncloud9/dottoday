@@ -20,6 +20,15 @@ collation) in the same order as `(ms, counter, node)`; the node id is the determ
 `sync_push` rejects malformed HLCs and any HLC whose `ms` is more than 5 minutes ahead of server
 time (docs/06 §1 "Sync tampering").
 
+### Client clock rules (amended 2026-10-21, M1.7)
+`domain/sync/hlc.dart`: `now()` for local writes, `receive()` for every pulled HLC (standard HLC
+merge). If the counter would pass `9999` within one millisecond, the clock borrows the next
+millisecond (keeps the fixed width; at most 1 ms drift). A remote HLC more than 5 min ahead of the
+device clock is still compared for LWW but does not advance the local clock, mirroring the server's
+5-min bound. `domain/sync/conflict_resolver.dart`: same field, different values, HLC `ms` less than
+60 s apart → `Conflict` (server value applied, conflict row recorded); otherwise higher HLC wins; equal
+values never conflict.
+
 ## Alternatives
 Firestore (weaker relational model, lock-in), PowerSync/ElectricSQL (extra service to run; revisit if conflict volume is high), full CRDT (overkill for single-user data).
 
