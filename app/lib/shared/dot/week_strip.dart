@@ -24,6 +24,7 @@ final class StripDay {
     required this.label,
     required this.completion,
     this.isToday = false,
+    this.isPast = false,
   });
 
   /// "Wed".
@@ -36,6 +37,9 @@ final class StripDay {
   final String label;
   final Completion completion;
   final bool isToday;
+
+  /// Past dates read muted (`Main`).
+  final bool isPast;
 }
 
 /// Seven days with their completion dots (docs/10 §3 `WeekStrip`, `Main`):
@@ -97,11 +101,14 @@ class _Column extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final c = t.colors;
-    final label = t.styles.rowTitle.copyWith(
-      color: day.isToday ? c.accentInk : c.muted,
+    final label = t.styles.stripWeekday.copyWith(
+      color: day.isToday ? c.accentInk : null,
     );
-    // Only the weekday turns accent on today; the date stays text (`Main`).
-    final date = t.styles.stripDate;
+    // Only the weekday turns accent on today; the date stays text, muted
+    // for days already gone (`Main`).
+    final date = t.styles.stripDate.copyWith(
+      color: day.isPast ? c.muted : null,
+    );
     return Semantics(
       button: onTap != null,
       selected: selected,

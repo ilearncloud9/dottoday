@@ -132,7 +132,7 @@ class _Progress extends StatelessWidget {
               SubtaskRing(done: task.subtasksDone, total: task.subtasksTotal),
               Text(
                 l10n.liveSubtasks(task.subtasksDone, task.subtasksTotal),
-                style: t.styles.rowTitle.copyWith(
+                style: t.styles.stripWeekday.copyWith(
                   color: t.colors.accentInk,
                   fontWeight: FontWeight.w600,
                 ),
@@ -140,10 +140,7 @@ class _Progress extends StatelessWidget {
             ],
           ),
         if (task.minutesLeft case final left?)
-          Text(
-            l10n.liveMinutesLeft(left),
-            style: t.styles.rowTitle.copyWith(color: t.colors.muted),
-          ),
+          Text(l10n.liveMinutesLeft(left), style: t.styles.stripWeekday),
       ],
     );
   }

@@ -21,6 +21,7 @@ final class DotType {
     required this.tabLabelActive,
     required this.stripDate,
     required this.monthDate,
+    required this.stripWeekday,
   });
 
   /// Roles in [text], with [muted] for captions and meta.
@@ -35,11 +36,12 @@ final class DotType {
         liveRowTitle: _inter(17, 22, 600, text),
         rowMeta: _inter(12, 16, 500, muted),
         body: _inter(16, 22, 400, text),
-        button: _inter(15, 20, 600, text),
+        button: _inter(14, 18, 600, text),
         tabLabel: _inter(10, 12, 500, muted),
         tabLabelActive: _inter(10, 12, 600, text),
-        stripDate: _inter(24, 30, 600, text),
-        monthDate: _inter(20, 26, 500, text),
+        stripDate: _inter(18, 22, 600, text),
+        stripWeekday: _inter(13, 16, 500, muted),
+        monthDate: _inter(15, 20, 500, text),
       );
 
   static const fontFamily = 'Inter';
@@ -71,19 +73,22 @@ final class DotType {
   /// Sheet and settings text that is not a row title (16/400).
   final TextStyle body;
 
-  /// Button and chip labels (15/600).
+  /// Button and chip labels (14/600, measured against `Main`).
   final TextStyle button;
 
   /// Tab bar (10/500, 10/600 active; Android 12 via [androidTab]).
   final TextStyle tabLabel;
   final TextStyle tabLabelActive;
 
-  /// Week-strip and month dates. Not in the §2.2 table; measured from
-  /// `Main` (≈ 24/600).
+  /// Week-strip dates. Not in the §2.2 table; measured on the reference
+  /// sheet against `Main` (≈ 18/600).
   final TextStyle stripDate;
 
-  /// Month-grid dates (measured from `A-ios-today-month`, ≈ 20/500).
+  /// Month-grid dates (measured against `A-ios-today-month`, ≈ 15/500).
   final TextStyle monthDate;
+
+  /// Week-strip weekday names (≈ 13/500 muted, `Main`).
+  final TextStyle stripWeekday;
 
   /// Android's 12 px tab labels (§2.2).
   TextStyle androidTab(TextStyle tab) => tab.copyWith(fontSize: 12);
@@ -106,6 +111,7 @@ final class DotType {
       tabLabelActive: l(tabLabelActive, other.tabLabelActive),
       stripDate: l(stripDate, other.stripDate),
       monthDate: l(monthDate, other.monthDate),
+      stripWeekday: l(stripWeekday, other.stripWeekday),
     );
   }
 }

@@ -39,3 +39,32 @@ TestFlight + Play internal track + web staging. Collect: crash-free rate, sync e
 - [ ] Security checklist (06 §9) signed off.
 - [ ] Crash-free ≥ 99.5 % over the last beta build.
 - [ ] CHANGELOG and in-app "What's new" updated.
+
+## 7. Design-review matrix (Concept A, docs/10 §7)
+Every UI component and screen has goldens for each cell of: light / dark × compact 390 / medium 700 /
+expanded 1280 × 1× / 2× (`test/support/dot_golden.dart` `goldenMatrix`). Components that exist only
+from a width class up (Mac/web Week, Month) list their widths; chrome idioms (iPhone pill bar vs
+Material bar) run as separate entries. Goldens are verified on the macOS CI runner and never blessed
+in CI.
+
+The **reference sheet** puts each golden beside the matching crop of its render in
+`docs/design-references/png/`, at the same pixels per point
+(`test/reference_sheet/reference_entries.dart`). Run
+`REFERENCE_SHEET=1 flutter test --tags reference-sheet`; CI uploads it as the `reference-sheet`
+artifact. It is a review aid, not a pass/fail gate: pixel-equality with HTML renders is not
+achievable (different text engines), so differences are judged against the docs/10 contract,
+with spacing allowed within ±4 px (CLAUDE.md §11).
+
+Sweep entries (add a row per screen as it lands):
+
+| Component / screen | Golden test | Reference |
+|---|---|---|
+| Tokens | `test/core/theme/dot_theme_golden_test.dart` | §2 |
+| DotIcons | `test/core/theme/dot_icons_golden_test.dart` | §3 icon set |
+| TaskDot | `test/shared/dot/task_dot_golden_test.dart` | `Main` |
+| Thread / TaskRow / LiveRow | `test/shared/dot/thread_golden_test.dart` | `Main`, `A-android-today` |
+| DayDot / WeekStrip | `test/shared/dot/week_strip_golden_test.dart` | `Main` |
+| DayCard / DayPager | `test/shared/dot/day_card_golden_test.dart` | `Main`, `A-android-today` |
+| MonthGrid | `test/shared/dot/month_grid_golden_test.dart` | `A-ios-today-month`, `A-ios-future-month`, `A-mac-month` |
+| Shells | `test/shared/navigation/dot_shell_golden_test.dart` | `Main`, `A-android-today`, `A-mac-today-alt1-spread` |
+

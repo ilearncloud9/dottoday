@@ -58,7 +58,9 @@ class MonthGrid extends StatelessWidget {
                     textAlign: style == MonthCellStyle.compact
                         ? TextAlign.center
                         : TextAlign.start,
-                    style: t.styles.rowTitle.copyWith(color: t.colors.muted),
+                    style: style == MonthCellStyle.compact
+                        ? t.styles.stripWeekday
+                        : t.styles.rowTitle.copyWith(color: t.colors.muted),
                   ),
                 ),
             ],

@@ -20,7 +20,7 @@ class CompactMonthCell extends StatelessWidget {
   final bool selected;
   final VoidCallback? onTap;
 
-  static const double _selection = DotSize.dayDot - DotSpace.xxs;
+  static const double _selection = DotSize.rowDot;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,6 @@ class CompactMonthCell extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: DotTouch.android),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            spacing: DotSpace.xxs,
             children: [
               Container(
                 width: _selection,
@@ -54,7 +53,6 @@ class CompactMonthCell extends StatelessWidget {
                 child: Text(day.date, style: date),
               ),
               SizedBox(height: DotSize.weekDot + DotSpace.xs, child: _dots()),
-              const SizedBox(height: DotSpace.s),
             ],
           ),
         ),

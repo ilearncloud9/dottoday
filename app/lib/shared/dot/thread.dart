@@ -107,7 +107,8 @@ class _Cap extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: DotSpace.s),
         child: Text(
           bed ? l10n.threadBed(cap.time) : l10n.threadWake(cap.time),
-          style: t.styles.body.copyWith(color: t.colors.muted),
+          // Caps and gaps read at the weekday size in `Main` (≈ 13 muted).
+          style: t.styles.stripWeekday,
         ),
       ),
     );
@@ -125,7 +126,7 @@ class _Gap extends StatelessWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final duration = formatDurationShort(l10n, gap.minutes);
-    final style = t.styles.body.copyWith(color: t.colors.muted);
+    final style = t.styles.stripWeekday;
     return ThreadRowFrame(
       piece: FreePiece(nowFraction: gap.nowFraction),
       child: Padding(

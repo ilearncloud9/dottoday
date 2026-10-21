@@ -150,7 +150,7 @@ ButtonStyle _pill(DotType type, DotColors c, {bool filled = false}) =>
         Size(DotTouch.android, DotTouch.android),
       ),
       padding: const WidgetStatePropertyAll(
-        EdgeInsets.symmetric(horizontal: DotSpace.page),
+        EdgeInsets.symmetric(horizontal: DotSpace.l),
       ),
       textStyle: WidgetStatePropertyAll(type.button),
       foregroundColor: WidgetStateProperty.resolveWith(

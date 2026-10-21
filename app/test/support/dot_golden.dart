@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// One cell of the design-review golden matrix (docs/10 §7, 08 §7).
@@ -43,10 +44,15 @@ void goldenMatrix(
             goldenApp(build(cell), theme: theme, platform: platform),
           );
           await tester.pumpAndSettle();
-          await expectLater(
-            find.byType(GoldenFrame),
-            matchesGoldenFile('goldens/$file'),
+          // matchesGoldenFile on a finder always captures at ratio 1, so
+          // render the frame's boundary at this cell's ratio ourselves.
+          final boundary = tester.renderObject<RenderRepaintBoundary>(
+            find.byKey(GoldenFrame.boundaryKey),
           );
+          final image = await tester.runAsync(
+            () => boundary.toImage(pixelRatio: ratio),
+          );
+          await expectLater(image, matchesGoldenFile('goldens/$file'));
         });
       }
     }
@@ -76,7 +82,12 @@ class GoldenFrame extends StatelessWidget {
 
   final Widget child;
 
+  /// The boundary the matrix captures.
+  static const boundaryKey = ValueKey('golden-frame');
+
   @override
-  Widget build(BuildContext context) =>
-      Material(color: DotTheme.of(context).colors.surface, child: child);
+  Widget build(BuildContext context) => RepaintBoundary(
+    key: boundaryKey,
+    child: Material(color: DotTheme.of(context).colors.surface, child: child),
+  );
 }

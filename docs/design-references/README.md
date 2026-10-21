@@ -31,3 +31,15 @@ Rendered at 2× from the design canvas (version 124, 2026-10-21). `png/` is what
 | `png/Watch.png` | Apple Watch · Now: current dot with ring, next task, Done / +15 |
 
 Screens without a reference (onboarding, repeat/alert editors, sync, empty/error states…) are specified in `../10-ui-concept-a.md` §5.3–5.4 and are built from the same components.
+
+## Derived
+
+Screens and components built without a render (CLAUDE.md §11). Each has goldens in the
+design-review matrix (`docs/08-testing-qa.md` §7).
+
+| Item | Derived from | Golden |
+|---|---|---|
+| `TaskDot` skipped (dashed) and missed states | §3 `TaskDot`, `A-ios-future-month` | `task_dot_*` |
+| Thread "missed" meta and skipped rows | §3 `TaskRow`, `A-mac-month` | `thread_*` |
+| Medium-width rail (600–840) | §4 | `shell_rail_*_medium_*` |
+
