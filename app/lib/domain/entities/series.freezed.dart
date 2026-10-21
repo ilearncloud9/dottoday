@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'series.dart';
@@ -9,6 +9,7 @@ part of 'series.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $SeriesCopyWith<Series> get copyWith => _$SeriesCopyWithImpl<Series>(this as Ser
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Series&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.title, title) || other.title == title)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.colorKey, colorKey) || other.colorKey == colorKey)&&(identical(other.iconKey, iconKey) || other.iconKey == iconKey)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin)&&(identical(other.rrule, rrule) || other.rrule == rrule)&&(identical(other.dtstartLocal, dtstartLocal) || other.dtstartLocal == dtstartLocal)&&(identical(other.tzId, tzId) || other.tzId == tzId)&&(identical(other.untilUtc, untilUtc) || other.untilUtc == untilUtc)&&(identical(other.count, count) || other.count == count)&&(identical(other.pinned, pinned) || other.pinned == pinned)&&(identical(other.travelBufferMin, travelBufferMin) || other.travelBufferMin == travelBufferMin)&&(identical(other.energy, energy) || other.energy == energy)&&const DeepCollectionEquality().equals(other.alerts, alerts)&&const DeepCollectionEquality().equals(other.subtaskTemplate, subtaskTemplate)&&(identical(other.materialisedThroughUtc, materialisedThroughUtc) || other.materialisedThroughUtc == materialisedThroughUtc)&&(identical(other.archivedAt, archivedAt) || other.archivedAt == archivedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
+  final _this = this as Series;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Series&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.colorKey, _this.colorKey) || other.colorKey == _this.colorKey)&&(identical(other.iconKey, _this.iconKey) || other.iconKey == _this.iconKey)&&(identical(other.durationMin, _this.durationMin) || other.durationMin == _this.durationMin)&&(identical(other.rrule, _this.rrule) || other.rrule == _this.rrule)&&(identical(other.dtstartLocal, _this.dtstartLocal) || other.dtstartLocal == _this.dtstartLocal)&&(identical(other.tzId, _this.tzId) || other.tzId == _this.tzId)&&(identical(other.untilUtc, _this.untilUtc) || other.untilUtc == _this.untilUtc)&&(identical(other.count, _this.count) || other.count == _this.count)&&(identical(other.pinned, _this.pinned) || other.pinned == _this.pinned)&&(identical(other.travelBufferMin, _this.travelBufferMin) || other.travelBufferMin == _this.travelBufferMin)&&(identical(other.energy, _this.energy) || other.energy == _this.energy)&&const DeepCollectionEquality().equals(other.alerts, _this.alerts)&&const DeepCollectionEquality().equals(other.subtaskTemplate, _this.subtaskTemplate)&&(identical(other.materialisedThroughUtc, _this.materialisedThroughUtc) || other.materialisedThroughUtc == _this.materialisedThroughUtc)&&(identical(other.archivedAt, _this.archivedAt) || other.archivedAt == _this.archivedAt)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,userId,title,notes,colorKey,iconKey,durationMin,rrule,dtstartLocal,tzId,untilUtc,count,pinned,travelBufferMin,energy,const DeepCollectionEquality().hash(alerts),const DeepCollectionEquality().hash(subtaskTemplate),materialisedThroughUtc,archivedAt,createdAt,updatedAt,deletedAt]);
+int get hashCode {
+  final _this = this as Series;
+  return Object.hashAll([runtimeType,_this.id,_this.userId,_this.title,_this.notes,_this.colorKey,_this.iconKey,_this.durationMin,_this.rrule,_this.dtstartLocal,_this.tzId,_this.untilUtc,_this.count,_this.pinned,_this.travelBufferMin,_this.energy,const DeepCollectionEquality().hash(_this.alerts),const DeepCollectionEquality().hash(_this.subtaskTemplate),_this.materialisedThroughUtc,_this.archivedAt,_this.createdAt,_this.updatedAt,_this.deletedAt]);
+}
 
 @override
 String toString() {
-  return 'Series(id: $id, userId: $userId, title: $title, notes: $notes, colorKey: $colorKey, iconKey: $iconKey, durationMin: $durationMin, rrule: $rrule, dtstartLocal: $dtstartLocal, tzId: $tzId, untilUtc: $untilUtc, count: $count, pinned: $pinned, travelBufferMin: $travelBufferMin, energy: $energy, alerts: $alerts, subtaskTemplate: $subtaskTemplate, materialisedThroughUtc: $materialisedThroughUtc, archivedAt: $archivedAt, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt)';
+  final _this = this as Series;
+  return 'Series(id: ${_this.id}, userId: ${_this.userId}, title: ${_this.title}, notes: ${_this.notes}, colorKey: ${_this.colorKey}, iconKey: ${_this.iconKey}, durationMin: ${_this.durationMin}, rrule: ${_this.rrule}, dtstartLocal: ${_this.dtstartLocal}, tzId: ${_this.tzId}, untilUtc: ${_this.untilUtc}, count: ${_this.count}, pinned: ${_this.pinned}, travelBufferMin: ${_this.travelBufferMin}, energy: ${_this.energy}, alerts: ${_this.alerts}, subtaskTemplate: ${_this.subtaskTemplate}, materialisedThroughUtc: ${_this.materialisedThroughUtc}, archivedAt: ${_this.archivedAt}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, deletedAt: ${_this.deletedAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$SeriesCopyWithImpl<$Res>
 /// Create a copy of Series
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? title = null,Object? notes = freezed,Object? colorKey = null,Object? iconKey = null,Object? durationMin = null,Object? rrule = null,Object? dtstartLocal = null,Object? tzId = null,Object? untilUtc = freezed,Object? count = freezed,Object? pinned = null,Object? travelBufferMin = null,Object? energy = freezed,Object? alerts = null,Object? subtaskTemplate = null,Object? materialisedThroughUtc = freezed,Object? archivedAt = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Series(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -230,7 +236,7 @@ return $default(_that.id,_that.userId,_that.title,_that.notes,_that.colorKey,_th
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _Series implements Series {
-  const _Series({required this.id, required this.userId, required this.title, this.notes, this.colorKey = defaultBlockColorKey, this.iconKey = defaultIconKey, required this.durationMin, required this.rrule, required this.dtstartLocal, required this.tzId, @UtcMillisConverter() this.untilUtc, this.count, this.pinned = false, this.travelBufferMin = 0, this.energy, final  List<Alert> alerts = const <Alert>[], final  List<SubtaskTemplateItem> subtaskTemplate = const <SubtaskTemplateItem>[], @UtcMillisConverter() this.materialisedThroughUtc, @UtcMillisConverter() this.archivedAt, @UtcMillisConverter() required this.createdAt, @UtcMillisConverter() required this.updatedAt, @UtcMillisConverter() this.deletedAt}): _alerts = alerts,_subtaskTemplate = subtaskTemplate;
+  const _Series({required this.id, required this.userId, required this.title, this.notes, this.colorKey = defaultBlockColorKey, this.iconKey = defaultIconKey, required this.durationMin, required this.rrule, required this.dtstartLocal, required this.tzId, @UtcMillisConverter() this.untilUtc, this.count, this.pinned = false, this.travelBufferMin = 0, this.energy,  List<Alert> alerts = const <Alert>[],  List<SubtaskTemplateItem> subtaskTemplate = const <SubtaskTemplateItem>[], @UtcMillisConverter() this.materialisedThroughUtc, @UtcMillisConverter() this.archivedAt, @UtcMillisConverter() required this.createdAt, @UtcMillisConverter() required this.updatedAt, @UtcMillisConverter() this.deletedAt}): _alerts = alerts,_subtaskTemplate = subtaskTemplate;
   factory _Series.fromJson(Map<String, dynamic> json) => _$SeriesFromJson(json);
 
 @override final  String id;
@@ -281,16 +287,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Series&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.title, title) || other.title == title)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.colorKey, colorKey) || other.colorKey == colorKey)&&(identical(other.iconKey, iconKey) || other.iconKey == iconKey)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin)&&(identical(other.rrule, rrule) || other.rrule == rrule)&&(identical(other.dtstartLocal, dtstartLocal) || other.dtstartLocal == dtstartLocal)&&(identical(other.tzId, tzId) || other.tzId == tzId)&&(identical(other.untilUtc, untilUtc) || other.untilUtc == untilUtc)&&(identical(other.count, count) || other.count == count)&&(identical(other.pinned, pinned) || other.pinned == pinned)&&(identical(other.travelBufferMin, travelBufferMin) || other.travelBufferMin == travelBufferMin)&&(identical(other.energy, energy) || other.energy == energy)&&const DeepCollectionEquality().equals(other._alerts, _alerts)&&const DeepCollectionEquality().equals(other._subtaskTemplate, _subtaskTemplate)&&(identical(other.materialisedThroughUtc, materialisedThroughUtc) || other.materialisedThroughUtc == materialisedThroughUtc)&&(identical(other.archivedAt, archivedAt) || other.archivedAt == archivedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Series&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.title, title) || other.title == title)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.colorKey, colorKey) || other.colorKey == colorKey)&&(identical(other.iconKey, iconKey) || other.iconKey == iconKey)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin)&&(identical(other.rrule, rrule) || other.rrule == rrule)&&(identical(other.dtstartLocal, dtstartLocal) || other.dtstartLocal == dtstartLocal)&&(identical(other.tzId, tzId) || other.tzId == tzId)&&(identical(other.untilUtc, untilUtc) || other.untilUtc == untilUtc)&&(identical(other.count, count) || other.count == count)&&(identical(other.pinned, pinned) || other.pinned == pinned)&&(identical(other.travelBufferMin, travelBufferMin) || other.travelBufferMin == travelBufferMin)&&(identical(other.energy, energy) || other.energy == energy)&&const DeepCollectionEquality().equals(other.alerts, _alerts)&&const DeepCollectionEquality().equals(other.subtaskTemplate, _subtaskTemplate)&&(identical(other.materialisedThroughUtc, materialisedThroughUtc) || other.materialisedThroughUtc == materialisedThroughUtc)&&(identical(other.archivedAt, archivedAt) || other.archivedAt == archivedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,userId,title,notes,colorKey,iconKey,durationMin,rrule,dtstartLocal,tzId,untilUtc,count,pinned,travelBufferMin,energy,const DeepCollectionEquality().hash(_alerts),const DeepCollectionEquality().hash(_subtaskTemplate),materialisedThroughUtc,archivedAt,createdAt,updatedAt,deletedAt]);
+int get hashCode {
+    return Object.hashAll([runtimeType,id,userId,title,notes,colorKey,iconKey,durationMin,rrule,dtstartLocal,tzId,untilUtc,count,pinned,travelBufferMin,energy,const DeepCollectionEquality().hash(_alerts),const DeepCollectionEquality().hash(_subtaskTemplate),materialisedThroughUtc,archivedAt,createdAt,updatedAt,deletedAt]);
+}
 
 @override
 String toString() {
-  return 'Series(id: $id, userId: $userId, title: $title, notes: $notes, colorKey: $colorKey, iconKey: $iconKey, durationMin: $durationMin, rrule: $rrule, dtstartLocal: $dtstartLocal, tzId: $tzId, untilUtc: $untilUtc, count: $count, pinned: $pinned, travelBufferMin: $travelBufferMin, energy: $energy, alerts: $alerts, subtaskTemplate: $subtaskTemplate, materialisedThroughUtc: $materialisedThroughUtc, archivedAt: $archivedAt, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt)';
+    return 'Series(id: $id, userId: $userId, title: $title, notes: $notes, colorKey: $colorKey, iconKey: $iconKey, durationMin: $durationMin, rrule: $rrule, dtstartLocal: $dtstartLocal, tzId: $tzId, untilUtc: $untilUtc, count: $count, pinned: $pinned, travelBufferMin: $travelBufferMin, energy: $energy, alerts: $alerts, subtaskTemplate: $subtaskTemplate, materialisedThroughUtc: $materialisedThroughUtc, archivedAt: $archivedAt, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt)';
 }
 
 

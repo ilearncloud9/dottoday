@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'alert.dart';
@@ -9,6 +9,7 @@ part of 'alert.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $AlertCopyWith<Alert> get copyWith => _$AlertCopyWithImpl<Alert>(this as Alert, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Alert&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.offsetMin, offsetMin) || other.offsetMin == offsetMin)&&(identical(other.sound, sound) || other.sound == sound));
+  final _this = this as Alert;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Alert&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&(identical(other.offsetMin, _this.offsetMin) || other.offsetMin == _this.offsetMin)&&(identical(other.sound, _this.sound) || other.sound == _this.sound));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,kind,offsetMin,sound);
+int get hashCode {
+  final _this = this as Alert;
+  return Object.hash(runtimeType,_this.kind,_this.offsetMin,_this.sound);
+}
 
 @override
 String toString() {
-  return 'Alert(kind: $kind, offsetMin: $offsetMin, sound: $sound)';
+  final _this = this as Alert;
+  return 'Alert(kind: ${_this.kind}, offsetMin: ${_this.offsetMin}, sound: ${_this.sound})';
 }
 
 
@@ -66,7 +72,7 @@ class _$AlertCopyWithImpl<$Res>
 /// Create a copy of Alert
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? kind = null,Object? offsetMin = null,Object? sound = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Alert(
 kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
 as AlertKind,offsetMin: null == offsetMin ? _self.offsetMin : offsetMin // ignore: cast_nullable_to_non_nullable
 as int,sound: freezed == sound ? _self.sound : sound // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Alert&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.offsetMin, offsetMin) || other.offsetMin == offsetMin)&&(identical(other.sound, sound) || other.sound == sound));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Alert&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.offsetMin, offsetMin) || other.offsetMin == offsetMin)&&(identical(other.sound, sound) || other.sound == sound));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,kind,offsetMin,sound);
+int get hashCode {
+    return Object.hash(runtimeType,kind,offsetMin,sound);
+}
 
 @override
 String toString() {
-  return 'Alert(kind: $kind, offsetMin: $offsetMin, sound: $sound)';
+    return 'Alert(kind: $kind, offsetMin: $offsetMin, sound: $sound)';
 }
 
 
@@ -297,16 +305,21 @@ $SubtaskTemplateItemCopyWith<SubtaskTemplateItem> get copyWith => _$SubtaskTempl
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SubtaskTemplateItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
+  final _this = this as SubtaskTemplateItem;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SubtaskTemplateItem&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.sortOrder, _this.sortOrder) || other.sortOrder == _this.sortOrder));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,sortOrder);
+int get hashCode {
+  final _this = this as SubtaskTemplateItem;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.sortOrder);
+}
 
 @override
 String toString() {
-  return 'SubtaskTemplateItem(id: $id, title: $title, sortOrder: $sortOrder)';
+  final _this = this as SubtaskTemplateItem;
+  return 'SubtaskTemplateItem(id: ${_this.id}, title: ${_this.title}, sortOrder: ${_this.sortOrder})';
 }
 
 
@@ -335,7 +348,7 @@ class _$SubtaskTemplateItemCopyWithImpl<$Res>
 /// Create a copy of SubtaskTemplateItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? sortOrder = null,}) {
-  return _then(_self.copyWith(
+  return _then(SubtaskTemplateItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
@@ -500,16 +513,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SubtaskTemplateItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SubtaskTemplateItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,sortOrder);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,sortOrder);
+}
 
 @override
 String toString() {
-  return 'SubtaskTemplateItem(id: $id, title: $title, sortOrder: $sortOrder)';
+    return 'SubtaskTemplateItem(id: $id, title: $title, sortOrder: $sortOrder)';
 }
 
 

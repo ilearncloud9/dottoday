@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'settings.dart';
@@ -9,6 +9,7 @@ part of 'settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $TimeWindowCopyWith<TimeWindow> get copyWith => _$TimeWindowCopyWithImpl<TimeWin
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TimeWindow&&(identical(other.start, start) || other.start == start)&&(identical(other.end, end) || other.end == end));
+  final _this = this as TimeWindow;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TimeWindow&&(identical(other.start, _this.start) || other.start == _this.start)&&(identical(other.end, _this.end) || other.end == _this.end));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,start,end);
+int get hashCode {
+  final _this = this as TimeWindow;
+  return Object.hash(runtimeType,_this.start,_this.end);
+}
 
 @override
 String toString() {
-  return 'TimeWindow(start: $start, end: $end)';
+  final _this = this as TimeWindow;
+  return 'TimeWindow(start: ${_this.start}, end: ${_this.end})';
 }
 
 
@@ -66,7 +72,7 @@ class _$TimeWindowCopyWithImpl<$Res>
 /// Create a copy of TimeWindow
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? start = null,Object? end = null,}) {
-  return _then(_self.copyWith(
+  return _then(TimeWindow(
 start: null == start ? _self.start : start // ignore: cast_nullable_to_non_nullable
 as String,end: null == end ? _self.end : end // ignore: cast_nullable_to_non_nullable
 as String,
@@ -229,16 +235,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TimeWindow&&(identical(other.start, start) || other.start == start)&&(identical(other.end, end) || other.end == end));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TimeWindow&&(identical(other.start, start) || other.start == start)&&(identical(other.end, end) || other.end == end));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,start,end);
+int get hashCode {
+    return Object.hash(runtimeType,start,end);
+}
 
 @override
 String toString() {
-  return 'TimeWindow(start: $start, end: $end)';
+    return 'TimeWindow(start: $start, end: $end)';
 }
 
 
@@ -294,16 +302,21 @@ $SettingsCopyWith<Settings> get copyWith => _$SettingsCopyWithImpl<Settings>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Settings&&const DeepCollectionEquality().equals(other.dayBoundaries, dayBoundaries)&&(identical(other.snapMinutes, snapMinutes) || other.snapMinutes == snapMinutes)&&(identical(other.shiftFollowers, shiftFollowers) || other.shiftFollowers == shiftFollowers)&&(identical(other.includeCalendarInShift, includeCalendarInShift) || other.includeCalendarInShift == includeCalendarInShift)&&(identical(other.defaultDurationMin, defaultDurationMin) || other.defaultDurationMin == defaultDurationMin)&&const DeepCollectionEquality().equals(other.defaultAlerts, defaultAlerts)&&(identical(other.quietHours, quietHours) || other.quietHours == quietHours)&&(identical(other.use24h, use24h) || other.use24h == use24h)&&(identical(other.firstDayOfWeek, firstDayOfWeek) || other.firstDayOfWeek == firstDayOfWeek)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.accent, accent) || other.accent == accent)&&(identical(other.reduceMotion, reduceMotion) || other.reduceMotion == reduceMotion));
+  final _this = this as Settings;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Settings&&const DeepCollectionEquality().equals(other.dayBoundaries, _this.dayBoundaries)&&(identical(other.snapMinutes, _this.snapMinutes) || other.snapMinutes == _this.snapMinutes)&&(identical(other.shiftFollowers, _this.shiftFollowers) || other.shiftFollowers == _this.shiftFollowers)&&(identical(other.includeCalendarInShift, _this.includeCalendarInShift) || other.includeCalendarInShift == _this.includeCalendarInShift)&&(identical(other.defaultDurationMin, _this.defaultDurationMin) || other.defaultDurationMin == _this.defaultDurationMin)&&const DeepCollectionEquality().equals(other.defaultAlerts, _this.defaultAlerts)&&(identical(other.quietHours, _this.quietHours) || other.quietHours == _this.quietHours)&&(identical(other.use24h, _this.use24h) || other.use24h == _this.use24h)&&(identical(other.firstDayOfWeek, _this.firstDayOfWeek) || other.firstDayOfWeek == _this.firstDayOfWeek)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.accent, _this.accent) || other.accent == _this.accent)&&(identical(other.reduceMotion, _this.reduceMotion) || other.reduceMotion == _this.reduceMotion));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(dayBoundaries),snapMinutes,shiftFollowers,includeCalendarInShift,defaultDurationMin,const DeepCollectionEquality().hash(defaultAlerts),quietHours,use24h,firstDayOfWeek,theme,accent,reduceMotion);
+int get hashCode {
+  final _this = this as Settings;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.dayBoundaries),_this.snapMinutes,_this.shiftFollowers,_this.includeCalendarInShift,_this.defaultDurationMin,const DeepCollectionEquality().hash(_this.defaultAlerts),_this.quietHours,_this.use24h,_this.firstDayOfWeek,_this.theme,_this.accent,_this.reduceMotion);
+}
 
 @override
 String toString() {
-  return 'Settings(dayBoundaries: $dayBoundaries, snapMinutes: $snapMinutes, shiftFollowers: $shiftFollowers, includeCalendarInShift: $includeCalendarInShift, defaultDurationMin: $defaultDurationMin, defaultAlerts: $defaultAlerts, quietHours: $quietHours, use24h: $use24h, firstDayOfWeek: $firstDayOfWeek, theme: $theme, accent: $accent, reduceMotion: $reduceMotion)';
+  final _this = this as Settings;
+  return 'Settings(dayBoundaries: ${_this.dayBoundaries}, snapMinutes: ${_this.snapMinutes}, shiftFollowers: ${_this.shiftFollowers}, includeCalendarInShift: ${_this.includeCalendarInShift}, defaultDurationMin: ${_this.defaultDurationMin}, defaultAlerts: ${_this.defaultAlerts}, quietHours: ${_this.quietHours}, use24h: ${_this.use24h}, firstDayOfWeek: ${_this.firstDayOfWeek}, theme: ${_this.theme}, accent: ${_this.accent}, reduceMotion: ${_this.reduceMotion})';
 }
 
 
@@ -332,7 +345,7 @@ class _$SettingsCopyWithImpl<$Res>
 /// Create a copy of Settings
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? dayBoundaries = null,Object? snapMinutes = null,Object? shiftFollowers = null,Object? includeCalendarInShift = null,Object? defaultDurationMin = null,Object? defaultAlerts = null,Object? quietHours = freezed,Object? use24h = freezed,Object? firstDayOfWeek = null,Object? theme = null,Object? accent = null,Object? reduceMotion = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Settings(
 dayBoundaries: null == dayBoundaries ? _self.dayBoundaries : dayBoundaries // ignore: cast_nullable_to_non_nullable
 as Map<Weekday, TimeWindow>,snapMinutes: null == snapMinutes ? _self.snapMinutes : snapMinutes // ignore: cast_nullable_to_non_nullable
 as int,shiftFollowers: null == shiftFollowers ? _self.shiftFollowers : shiftFollowers // ignore: cast_nullable_to_non_nullable
@@ -498,7 +511,7 @@ return $default(_that.dayBoundaries,_that.snapMinutes,_that.shiftFollowers,_that
 
 @JsonSerializable(explicitToJson: true)
 class _Settings extends Settings {
-  const _Settings({final  Map<Weekday, TimeWindow> dayBoundaries = const <Weekday, TimeWindow>{}, this.snapMinutes = 5, this.shiftFollowers = ShiftFollowersPolicy.ask, this.includeCalendarInShift = false, this.defaultDurationMin = 30, final  List<Alert> defaultAlerts = const <Alert>[Alert(kind: AlertKind.before, offsetMin: 10)], this.quietHours, this.use24h, this.firstDayOfWeek = 1, this.theme = ThemePreference.system, this.accent = defaultBlockColorKey, this.reduceMotion}): _dayBoundaries = dayBoundaries,_defaultAlerts = defaultAlerts,super._();
+  const _Settings({ Map<Weekday, TimeWindow> dayBoundaries = const <Weekday, TimeWindow>{}, this.snapMinutes = 5, this.shiftFollowers = ShiftFollowersPolicy.ask, this.includeCalendarInShift = false, this.defaultDurationMin = 30,  List<Alert> defaultAlerts = const <Alert>[Alert(kind: AlertKind.before, offsetMin: 10)], this.quietHours, this.use24h, this.firstDayOfWeek = 1, this.theme = ThemePreference.system, this.accent = defaultBlockColorKey, this.reduceMotion}): _dayBoundaries = dayBoundaries,_defaultAlerts = defaultAlerts,super._();
   factory _Settings.fromJson(Map<String, dynamic> json) => _$SettingsFromJson(json);
 
  final  Map<Weekday, TimeWindow> _dayBoundaries;
@@ -539,16 +552,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Settings&&const DeepCollectionEquality().equals(other._dayBoundaries, _dayBoundaries)&&(identical(other.snapMinutes, snapMinutes) || other.snapMinutes == snapMinutes)&&(identical(other.shiftFollowers, shiftFollowers) || other.shiftFollowers == shiftFollowers)&&(identical(other.includeCalendarInShift, includeCalendarInShift) || other.includeCalendarInShift == includeCalendarInShift)&&(identical(other.defaultDurationMin, defaultDurationMin) || other.defaultDurationMin == defaultDurationMin)&&const DeepCollectionEquality().equals(other._defaultAlerts, _defaultAlerts)&&(identical(other.quietHours, quietHours) || other.quietHours == quietHours)&&(identical(other.use24h, use24h) || other.use24h == use24h)&&(identical(other.firstDayOfWeek, firstDayOfWeek) || other.firstDayOfWeek == firstDayOfWeek)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.accent, accent) || other.accent == accent)&&(identical(other.reduceMotion, reduceMotion) || other.reduceMotion == reduceMotion));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Settings&&const DeepCollectionEquality().equals(other.dayBoundaries, _dayBoundaries)&&(identical(other.snapMinutes, snapMinutes) || other.snapMinutes == snapMinutes)&&(identical(other.shiftFollowers, shiftFollowers) || other.shiftFollowers == shiftFollowers)&&(identical(other.includeCalendarInShift, includeCalendarInShift) || other.includeCalendarInShift == includeCalendarInShift)&&(identical(other.defaultDurationMin, defaultDurationMin) || other.defaultDurationMin == defaultDurationMin)&&const DeepCollectionEquality().equals(other.defaultAlerts, _defaultAlerts)&&(identical(other.quietHours, quietHours) || other.quietHours == quietHours)&&(identical(other.use24h, use24h) || other.use24h == use24h)&&(identical(other.firstDayOfWeek, firstDayOfWeek) || other.firstDayOfWeek == firstDayOfWeek)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.accent, accent) || other.accent == accent)&&(identical(other.reduceMotion, reduceMotion) || other.reduceMotion == reduceMotion));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_dayBoundaries),snapMinutes,shiftFollowers,includeCalendarInShift,defaultDurationMin,const DeepCollectionEquality().hash(_defaultAlerts),quietHours,use24h,firstDayOfWeek,theme,accent,reduceMotion);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_dayBoundaries),snapMinutes,shiftFollowers,includeCalendarInShift,defaultDurationMin,const DeepCollectionEquality().hash(_defaultAlerts),quietHours,use24h,firstDayOfWeek,theme,accent,reduceMotion);
+}
 
 @override
 String toString() {
-  return 'Settings(dayBoundaries: $dayBoundaries, snapMinutes: $snapMinutes, shiftFollowers: $shiftFollowers, includeCalendarInShift: $includeCalendarInShift, defaultDurationMin: $defaultDurationMin, defaultAlerts: $defaultAlerts, quietHours: $quietHours, use24h: $use24h, firstDayOfWeek: $firstDayOfWeek, theme: $theme, accent: $accent, reduceMotion: $reduceMotion)';
+    return 'Settings(dayBoundaries: $dayBoundaries, snapMinutes: $snapMinutes, shiftFollowers: $shiftFollowers, includeCalendarInShift: $includeCalendarInShift, defaultDurationMin: $defaultDurationMin, defaultAlerts: $defaultAlerts, quietHours: $quietHours, use24h: $use24h, firstDayOfWeek: $firstDayOfWeek, theme: $theme, accent: $accent, reduceMotion: $reduceMotion)';
 }
 
 
@@ -626,16 +641,21 @@ $ProfileCopyWith<Profile> get copyWith => _$ProfileCopyWithImpl<Profile>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Profile&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.tzId, tzId) || other.tzId == tzId)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.settings, settings) || other.settings == settings)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as Profile;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Profile&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.tzId, _this.tzId) || other.tzId == _this.tzId)&&(identical(other.locale, _this.locale) || other.locale == _this.locale)&&(identical(other.settings, _this.settings) || other.settings == _this.settings)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,displayName,tzId,locale,settings,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as Profile;
+  return Object.hash(runtimeType,_this.id,_this.displayName,_this.tzId,_this.locale,_this.settings,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'Profile(id: $id, displayName: $displayName, tzId: $tzId, locale: $locale, settings: $settings, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as Profile;
+  return 'Profile(id: ${_this.id}, displayName: ${_this.displayName}, tzId: ${_this.tzId}, locale: ${_this.locale}, settings: ${_this.settings}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -664,7 +684,7 @@ class _$ProfileCopyWithImpl<$Res>
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? displayName = freezed,Object? tzId = null,Object? locale = null,Object? settings = null,Object? createdAt = null,Object? updatedAt = null,}) {
-  return _then(_self.copyWith(
+  return _then(Profile(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,displayName: freezed == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String?,tzId: null == tzId ? _self.tzId : tzId // ignore: cast_nullable_to_non_nullable
@@ -846,16 +866,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Profile&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.tzId, tzId) || other.tzId == tzId)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.settings, settings) || other.settings == settings)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Profile&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.tzId, tzId) || other.tzId == tzId)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.settings, settings) || other.settings == settings)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,displayName,tzId,locale,settings,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,displayName,tzId,locale,settings,createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'Profile(id: $id, displayName: $displayName, tzId: $tzId, locale: $locale, settings: $settings, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Profile(id: $id, displayName: $displayName, tzId: $tzId, locale: $locale, settings: $settings, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 

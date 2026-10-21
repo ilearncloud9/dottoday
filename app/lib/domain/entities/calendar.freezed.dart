@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'calendar.dart';
@@ -9,6 +9,7 @@ part of 'calendar.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $CalendarAccountCopyWith<CalendarAccount> get copyWith => _$CalendarAccountCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarAccount&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.label, label) || other.label == label)&&(identical(other.externalAccountId, externalAccountId) || other.externalAccountId == externalAccountId)&&(identical(other.writeBack, writeBack) || other.writeBack == writeBack)&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as CalendarAccount;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarAccount&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.provider, _this.provider) || other.provider == _this.provider)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.externalAccountId, _this.externalAccountId) || other.externalAccountId == _this.externalAccountId)&&(identical(other.writeBack, _this.writeBack) || other.writeBack == _this.writeBack)&&(identical(other.enabled, _this.enabled) || other.enabled == _this.enabled)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,provider,label,externalAccountId,writeBack,enabled,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as CalendarAccount;
+  return Object.hash(runtimeType,_this.id,_this.userId,_this.provider,_this.label,_this.externalAccountId,_this.writeBack,_this.enabled,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'CalendarAccount(id: $id, userId: $userId, provider: $provider, label: $label, externalAccountId: $externalAccountId, writeBack: $writeBack, enabled: $enabled, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as CalendarAccount;
+  return 'CalendarAccount(id: ${_this.id}, userId: ${_this.userId}, provider: ${_this.provider}, label: ${_this.label}, externalAccountId: ${_this.externalAccountId}, writeBack: ${_this.writeBack}, enabled: ${_this.enabled}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$CalendarAccountCopyWithImpl<$Res>
 /// Create a copy of CalendarAccount
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? provider = null,Object? label = null,Object? externalAccountId = freezed,Object? writeBack = null,Object? enabled = null,Object? createdAt = null,Object? updatedAt = null,}) {
-  return _then(_self.copyWith(
+  return _then(CalendarAccount(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,provider: null == provider ? _self.provider : provider // ignore: cast_nullable_to_non_nullable
@@ -243,16 +249,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarAccount&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.label, label) || other.label == label)&&(identical(other.externalAccountId, externalAccountId) || other.externalAccountId == externalAccountId)&&(identical(other.writeBack, writeBack) || other.writeBack == writeBack)&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarAccount&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.label, label) || other.label == label)&&(identical(other.externalAccountId, externalAccountId) || other.externalAccountId == externalAccountId)&&(identical(other.writeBack, writeBack) || other.writeBack == writeBack)&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,provider,label,externalAccountId,writeBack,enabled,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,userId,provider,label,externalAccountId,writeBack,enabled,createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'CalendarAccount(id: $id, userId: $userId, provider: $provider, label: $label, externalAccountId: $externalAccountId, writeBack: $writeBack, enabled: $enabled, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'CalendarAccount(id: $id, userId: $userId, provider: $provider, label: $label, externalAccountId: $externalAccountId, writeBack: $writeBack, enabled: $enabled, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -315,16 +323,21 @@ $CalendarLinkCopyWith<CalendarLink> get copyWith => _$CalendarLinkCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarLink&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.externalCalendarId, externalCalendarId) || other.externalCalendarId == externalCalendarId)&&(identical(other.externalEventId, externalEventId) || other.externalEventId == externalEventId)&&(identical(other.etag, etag) || other.etag == etag)&&(identical(other.lastSyncedUtc, lastSyncedUtc) || other.lastSyncedUtc == lastSyncedUtc)&&(identical(other.readOnly, readOnly) || other.readOnly == readOnly));
+  final _this = this as CalendarLink;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarLink&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.externalCalendarId, _this.externalCalendarId) || other.externalCalendarId == _this.externalCalendarId)&&(identical(other.externalEventId, _this.externalEventId) || other.externalEventId == _this.externalEventId)&&(identical(other.etag, _this.etag) || other.etag == _this.etag)&&(identical(other.lastSyncedUtc, _this.lastSyncedUtc) || other.lastSyncedUtc == _this.lastSyncedUtc)&&(identical(other.readOnly, _this.readOnly) || other.readOnly == _this.readOnly));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,accountId,externalCalendarId,externalEventId,etag,lastSyncedUtc,readOnly);
+int get hashCode {
+  final _this = this as CalendarLink;
+  return Object.hash(runtimeType,_this.id,_this.userId,_this.accountId,_this.externalCalendarId,_this.externalEventId,_this.etag,_this.lastSyncedUtc,_this.readOnly);
+}
 
 @override
 String toString() {
-  return 'CalendarLink(id: $id, userId: $userId, accountId: $accountId, externalCalendarId: $externalCalendarId, externalEventId: $externalEventId, etag: $etag, lastSyncedUtc: $lastSyncedUtc, readOnly: $readOnly)';
+  final _this = this as CalendarLink;
+  return 'CalendarLink(id: ${_this.id}, userId: ${_this.userId}, accountId: ${_this.accountId}, externalCalendarId: ${_this.externalCalendarId}, externalEventId: ${_this.externalEventId}, etag: ${_this.etag}, lastSyncedUtc: ${_this.lastSyncedUtc}, readOnly: ${_this.readOnly})';
 }
 
 
@@ -353,7 +366,7 @@ class _$CalendarLinkCopyWithImpl<$Res>
 /// Create a copy of CalendarLink
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? accountId = null,Object? externalCalendarId = null,Object? externalEventId = null,Object? etag = freezed,Object? lastSyncedUtc = freezed,Object? readOnly = null,}) {
-  return _then(_self.copyWith(
+  return _then(CalendarLink(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
@@ -528,16 +541,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarLink&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.externalCalendarId, externalCalendarId) || other.externalCalendarId == externalCalendarId)&&(identical(other.externalEventId, externalEventId) || other.externalEventId == externalEventId)&&(identical(other.etag, etag) || other.etag == etag)&&(identical(other.lastSyncedUtc, lastSyncedUtc) || other.lastSyncedUtc == lastSyncedUtc)&&(identical(other.readOnly, readOnly) || other.readOnly == readOnly));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarLink&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.externalCalendarId, externalCalendarId) || other.externalCalendarId == externalCalendarId)&&(identical(other.externalEventId, externalEventId) || other.externalEventId == externalEventId)&&(identical(other.etag, etag) || other.etag == etag)&&(identical(other.lastSyncedUtc, lastSyncedUtc) || other.lastSyncedUtc == lastSyncedUtc)&&(identical(other.readOnly, readOnly) || other.readOnly == readOnly));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,accountId,externalCalendarId,externalEventId,etag,lastSyncedUtc,readOnly);
+int get hashCode {
+    return Object.hash(runtimeType,id,userId,accountId,externalCalendarId,externalEventId,etag,lastSyncedUtc,readOnly);
+}
 
 @override
 String toString() {
-  return 'CalendarLink(id: $id, userId: $userId, accountId: $accountId, externalCalendarId: $externalCalendarId, externalEventId: $externalEventId, etag: $etag, lastSyncedUtc: $lastSyncedUtc, readOnly: $readOnly)';
+    return 'CalendarLink(id: $id, userId: $userId, accountId: $accountId, externalCalendarId: $externalCalendarId, externalEventId: $externalEventId, etag: $etag, lastSyncedUtc: $lastSyncedUtc, readOnly: $readOnly)';
 }
 
 

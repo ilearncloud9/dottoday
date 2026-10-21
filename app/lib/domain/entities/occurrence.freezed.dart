@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'occurrence.dart';
@@ -9,6 +9,7 @@ part of 'occurrence.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $OccurrenceCopyWith<Occurrence> get copyWith => _$OccurrenceCopyWithImpl<Occurre
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Occurrence&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.seriesId, seriesId) || other.seriesId == seriesId)&&(identical(other.originalStartUtc, originalStartUtc) || other.originalStartUtc == originalStartUtc)&&(identical(other.title, title) || other.title == title)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.colorKey, colorKey) || other.colorKey == colorKey)&&(identical(other.iconKey, iconKey) || other.iconKey == iconKey)&&(identical(other.startUtc, startUtc) || other.startUtc == startUtc)&&(identical(other.tzId, tzId) || other.tzId == tzId)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin)&&(identical(other.pinned, pinned) || other.pinned == pinned)&&(identical(other.travelBufferMin, travelBufferMin) || other.travelBufferMin == travelBufferMin)&&(identical(other.energy, energy) || other.energy == energy)&&const DeepCollectionEquality().equals(other.alerts, alerts)&&(identical(other.status, status) || other.status == status)&&(identical(other.completedAtUtc, completedAtUtc) || other.completedAtUtc == completedAtUtc)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.source, source) || other.source == source)&&(identical(other.calendarLinkId, calendarLinkId) || other.calendarLinkId == calendarLinkId)&&(identical(other.snoozedUntilUtc, snoozedUntilUtc) || other.snoozedUntilUtc == snoozedUntilUtc)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
+  final _this = this as Occurrence;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Occurrence&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.seriesId, _this.seriesId) || other.seriesId == _this.seriesId)&&(identical(other.originalStartUtc, _this.originalStartUtc) || other.originalStartUtc == _this.originalStartUtc)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.colorKey, _this.colorKey) || other.colorKey == _this.colorKey)&&(identical(other.iconKey, _this.iconKey) || other.iconKey == _this.iconKey)&&(identical(other.startUtc, _this.startUtc) || other.startUtc == _this.startUtc)&&(identical(other.tzId, _this.tzId) || other.tzId == _this.tzId)&&(identical(other.durationMin, _this.durationMin) || other.durationMin == _this.durationMin)&&(identical(other.pinned, _this.pinned) || other.pinned == _this.pinned)&&(identical(other.travelBufferMin, _this.travelBufferMin) || other.travelBufferMin == _this.travelBufferMin)&&(identical(other.energy, _this.energy) || other.energy == _this.energy)&&const DeepCollectionEquality().equals(other.alerts, _this.alerts)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.completedAtUtc, _this.completedAtUtc) || other.completedAtUtc == _this.completedAtUtc)&&(identical(other.sortOrder, _this.sortOrder) || other.sortOrder == _this.sortOrder)&&(identical(other.source, _this.source) || other.source == _this.source)&&(identical(other.calendarLinkId, _this.calendarLinkId) || other.calendarLinkId == _this.calendarLinkId)&&(identical(other.snoozedUntilUtc, _this.snoozedUntilUtc) || other.snoozedUntilUtc == _this.snoozedUntilUtc)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,userId,seriesId,originalStartUtc,title,notes,colorKey,iconKey,startUtc,tzId,durationMin,pinned,travelBufferMin,energy,const DeepCollectionEquality().hash(alerts),status,completedAtUtc,sortOrder,source,calendarLinkId,snoozedUntilUtc,createdAt,updatedAt,deletedAt]);
+int get hashCode {
+  final _this = this as Occurrence;
+  return Object.hashAll([runtimeType,_this.id,_this.userId,_this.seriesId,_this.originalStartUtc,_this.title,_this.notes,_this.colorKey,_this.iconKey,_this.startUtc,_this.tzId,_this.durationMin,_this.pinned,_this.travelBufferMin,_this.energy,const DeepCollectionEquality().hash(_this.alerts),_this.status,_this.completedAtUtc,_this.sortOrder,_this.source,_this.calendarLinkId,_this.snoozedUntilUtc,_this.createdAt,_this.updatedAt,_this.deletedAt]);
+}
 
 @override
 String toString() {
-  return 'Occurrence(id: $id, userId: $userId, seriesId: $seriesId, originalStartUtc: $originalStartUtc, title: $title, notes: $notes, colorKey: $colorKey, iconKey: $iconKey, startUtc: $startUtc, tzId: $tzId, durationMin: $durationMin, pinned: $pinned, travelBufferMin: $travelBufferMin, energy: $energy, alerts: $alerts, status: $status, completedAtUtc: $completedAtUtc, sortOrder: $sortOrder, source: $source, calendarLinkId: $calendarLinkId, snoozedUntilUtc: $snoozedUntilUtc, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt)';
+  final _this = this as Occurrence;
+  return 'Occurrence(id: ${_this.id}, userId: ${_this.userId}, seriesId: ${_this.seriesId}, originalStartUtc: ${_this.originalStartUtc}, title: ${_this.title}, notes: ${_this.notes}, colorKey: ${_this.colorKey}, iconKey: ${_this.iconKey}, startUtc: ${_this.startUtc}, tzId: ${_this.tzId}, durationMin: ${_this.durationMin}, pinned: ${_this.pinned}, travelBufferMin: ${_this.travelBufferMin}, energy: ${_this.energy}, alerts: ${_this.alerts}, status: ${_this.status}, completedAtUtc: ${_this.completedAtUtc}, sortOrder: ${_this.sortOrder}, source: ${_this.source}, calendarLinkId: ${_this.calendarLinkId}, snoozedUntilUtc: ${_this.snoozedUntilUtc}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, deletedAt: ${_this.deletedAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$OccurrenceCopyWithImpl<$Res>
 /// Create a copy of Occurrence
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? seriesId = freezed,Object? originalStartUtc = freezed,Object? title = null,Object? notes = freezed,Object? colorKey = null,Object? iconKey = null,Object? startUtc = freezed,Object? tzId = null,Object? durationMin = null,Object? pinned = null,Object? travelBufferMin = null,Object? energy = freezed,Object? alerts = freezed,Object? status = null,Object? completedAtUtc = freezed,Object? sortOrder = null,Object? source = null,Object? calendarLinkId = freezed,Object? snoozedUntilUtc = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Occurrence(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,seriesId: freezed == seriesId ? _self.seriesId : seriesId // ignore: cast_nullable_to_non_nullable
@@ -232,7 +238,7 @@ return $default(_that.id,_that.userId,_that.seriesId,_that.originalStartUtc,_tha
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _Occurrence extends Occurrence {
-  const _Occurrence({required this.id, required this.userId, this.seriesId, @UtcMillisConverter() this.originalStartUtc, required this.title, this.notes, this.colorKey = defaultBlockColorKey, this.iconKey = defaultIconKey, @UtcMillisConverter() this.startUtc, required this.tzId, required this.durationMin, this.pinned = false, this.travelBufferMin = 0, this.energy, final  List<Alert>? alerts, this.status = OccurrenceStatus.planned, @UtcMillisConverter() this.completedAtUtc, this.sortOrder = 0, this.source = OccurrenceSource.user, this.calendarLinkId, @UtcMillisConverter() this.snoozedUntilUtc, @UtcMillisConverter() required this.createdAt, @UtcMillisConverter() required this.updatedAt, @UtcMillisConverter() this.deletedAt}): _alerts = alerts,super._();
+  const _Occurrence({required this.id, required this.userId, this.seriesId, @UtcMillisConverter() this.originalStartUtc, required this.title, this.notes, this.colorKey = defaultBlockColorKey, this.iconKey = defaultIconKey, @UtcMillisConverter() this.startUtc, required this.tzId, required this.durationMin, this.pinned = false, this.travelBufferMin = 0, this.energy,  List<Alert>? alerts, this.status = OccurrenceStatus.planned, @UtcMillisConverter() this.completedAtUtc, this.sortOrder = 0, this.source = OccurrenceSource.user, this.calendarLinkId, @UtcMillisConverter() this.snoozedUntilUtc, @UtcMillisConverter() required this.createdAt, @UtcMillisConverter() required this.updatedAt, @UtcMillisConverter() this.deletedAt}): _alerts = alerts,super._();
   factory _Occurrence.fromJson(Map<String, dynamic> json) => _$OccurrenceFromJson(json);
 
 @override final  String id;
@@ -281,16 +287,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Occurrence&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.seriesId, seriesId) || other.seriesId == seriesId)&&(identical(other.originalStartUtc, originalStartUtc) || other.originalStartUtc == originalStartUtc)&&(identical(other.title, title) || other.title == title)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.colorKey, colorKey) || other.colorKey == colorKey)&&(identical(other.iconKey, iconKey) || other.iconKey == iconKey)&&(identical(other.startUtc, startUtc) || other.startUtc == startUtc)&&(identical(other.tzId, tzId) || other.tzId == tzId)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin)&&(identical(other.pinned, pinned) || other.pinned == pinned)&&(identical(other.travelBufferMin, travelBufferMin) || other.travelBufferMin == travelBufferMin)&&(identical(other.energy, energy) || other.energy == energy)&&const DeepCollectionEquality().equals(other._alerts, _alerts)&&(identical(other.status, status) || other.status == status)&&(identical(other.completedAtUtc, completedAtUtc) || other.completedAtUtc == completedAtUtc)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.source, source) || other.source == source)&&(identical(other.calendarLinkId, calendarLinkId) || other.calendarLinkId == calendarLinkId)&&(identical(other.snoozedUntilUtc, snoozedUntilUtc) || other.snoozedUntilUtc == snoozedUntilUtc)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Occurrence&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.seriesId, seriesId) || other.seriesId == seriesId)&&(identical(other.originalStartUtc, originalStartUtc) || other.originalStartUtc == originalStartUtc)&&(identical(other.title, title) || other.title == title)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.colorKey, colorKey) || other.colorKey == colorKey)&&(identical(other.iconKey, iconKey) || other.iconKey == iconKey)&&(identical(other.startUtc, startUtc) || other.startUtc == startUtc)&&(identical(other.tzId, tzId) || other.tzId == tzId)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin)&&(identical(other.pinned, pinned) || other.pinned == pinned)&&(identical(other.travelBufferMin, travelBufferMin) || other.travelBufferMin == travelBufferMin)&&(identical(other.energy, energy) || other.energy == energy)&&const DeepCollectionEquality().equals(other.alerts, _alerts)&&(identical(other.status, status) || other.status == status)&&(identical(other.completedAtUtc, completedAtUtc) || other.completedAtUtc == completedAtUtc)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.source, source) || other.source == source)&&(identical(other.calendarLinkId, calendarLinkId) || other.calendarLinkId == calendarLinkId)&&(identical(other.snoozedUntilUtc, snoozedUntilUtc) || other.snoozedUntilUtc == snoozedUntilUtc)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,userId,seriesId,originalStartUtc,title,notes,colorKey,iconKey,startUtc,tzId,durationMin,pinned,travelBufferMin,energy,const DeepCollectionEquality().hash(_alerts),status,completedAtUtc,sortOrder,source,calendarLinkId,snoozedUntilUtc,createdAt,updatedAt,deletedAt]);
+int get hashCode {
+    return Object.hashAll([runtimeType,id,userId,seriesId,originalStartUtc,title,notes,colorKey,iconKey,startUtc,tzId,durationMin,pinned,travelBufferMin,energy,const DeepCollectionEquality().hash(_alerts),status,completedAtUtc,sortOrder,source,calendarLinkId,snoozedUntilUtc,createdAt,updatedAt,deletedAt]);
+}
 
 @override
 String toString() {
-  return 'Occurrence(id: $id, userId: $userId, seriesId: $seriesId, originalStartUtc: $originalStartUtc, title: $title, notes: $notes, colorKey: $colorKey, iconKey: $iconKey, startUtc: $startUtc, tzId: $tzId, durationMin: $durationMin, pinned: $pinned, travelBufferMin: $travelBufferMin, energy: $energy, alerts: $alerts, status: $status, completedAtUtc: $completedAtUtc, sortOrder: $sortOrder, source: $source, calendarLinkId: $calendarLinkId, snoozedUntilUtc: $snoozedUntilUtc, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt)';
+    return 'Occurrence(id: $id, userId: $userId, seriesId: $seriesId, originalStartUtc: $originalStartUtc, title: $title, notes: $notes, colorKey: $colorKey, iconKey: $iconKey, startUtc: $startUtc, tzId: $tzId, durationMin: $durationMin, pinned: $pinned, travelBufferMin: $travelBufferMin, energy: $energy, alerts: $alerts, status: $status, completedAtUtc: $completedAtUtc, sortOrder: $sortOrder, source: $source, calendarLinkId: $calendarLinkId, snoozedUntilUtc: $snoozedUntilUtc, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt)';
 }
 
 

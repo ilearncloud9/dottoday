@@ -20,7 +20,7 @@ Never start coding from memory of the product. Always open the spec for the feat
 | UI | Flutter 3.x stable, Dart 3.x, Material 3 with custom theme (see UX spec) |
 | State | Riverpod 3 (code-gen, `riverpod_annotation`/`riverpod_generator`; `riverpod_lint` native analyzer plugin — run `dart analyze`). Root `ProviderScope` disables auto-retry; providers opt in |
 | Navigation | `go_router` |
-| Local DB | Drift (SQLite) via `sqlcipher_flutter_libs` for encryption at rest |
+| Local DB | Drift (SQLite) with SQLCipher linked by the `sqlite3` build hook (`source: sqlcipher`, ADR-0006) for encryption at rest |
 | Backend | Supabase (Postgres, Auth, Realtime) — schema in `supabase/migrations` |
 | Sync | Offline-first, local DB is source of truth, see `docs/04-architecture.md` §4 |
 | Models | `freezed` + `json_serializable` |

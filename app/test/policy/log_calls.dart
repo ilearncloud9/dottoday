@@ -36,7 +36,7 @@ class _Visitor extends RecursiveAstVisitor<void> {
     super.visitMethodInvocation(node);
   }
 
-  bool _isLiteralEvent(List<Expression> args) {
+  bool _isLiteralEvent(List<Argument> args) {
     final first = args.isEmpty ? null : args.first;
     return first is SimpleStringLiteral && isValidLogEvent(first.value);
   }
