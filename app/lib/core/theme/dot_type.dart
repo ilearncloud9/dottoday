@@ -20,6 +20,7 @@ final class DotType {
     required this.tabLabel,
     required this.tabLabelActive,
     required this.stripDate,
+    required this.monthDate,
   });
 
   /// Roles in [text], with [muted] for captions and meta.
@@ -38,6 +39,7 @@ final class DotType {
         tabLabel: _inter(10, 12, 500, muted),
         tabLabelActive: _inter(10, 12, 600, text),
         stripDate: _inter(24, 30, 600, text),
+        monthDate: _inter(20, 26, 500, text),
       );
 
   static const fontFamily = 'Inter';
@@ -80,6 +82,9 @@ final class DotType {
   /// `Main` (≈ 24/600).
   final TextStyle stripDate;
 
+  /// Month-grid dates (measured from `A-ios-today-month`, ≈ 20/500).
+  final TextStyle monthDate;
+
   /// Android's 12 px tab labels (§2.2).
   TextStyle androidTab(TextStyle tab) => tab.copyWith(fontSize: 12);
 
@@ -100,6 +105,7 @@ final class DotType {
       tabLabel: l(tabLabel, other.tabLabel),
       tabLabelActive: l(tabLabelActive, other.tabLabelActive),
       stripDate: l(stripDate, other.stripDate),
+      monthDate: l(monthDate, other.monthDate),
     );
   }
 }

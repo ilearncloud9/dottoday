@@ -12,7 +12,9 @@ const goldenWidths = {'compact': 390.0, 'medium': 700.0, 'expanded': 1280.0};
 
 /// Every component golden runs in light and dark × the three width classes
 /// × 1× and 2× (docs/10 §7.1, §7.3). [build] gets the cell so it can lay
-/// out per width; [height] is the logical canvas height.
+/// out per width; [height] is the logical canvas height. Components that
+/// exist only from a width class up (§4: Mac/web Week, Month) pass
+/// [widths].
 ///
 /// ```dart
 /// goldenMatrix('task_dot', height: 120, build: (_) => const _Specimen());
@@ -22,9 +24,11 @@ void goldenMatrix(
   required double height,
   required Widget Function(GoldenCell cell) build,
   TargetPlatform platform = TargetPlatform.iOS,
+  Set<String> widths = const {'compact', 'medium', 'expanded'},
 }) {
   for (final theme in ['light', 'dark']) {
     for (final MapEntry(key: widthName, value: width) in goldenWidths.entries) {
+      if (!widths.contains(widthName)) continue;
       for (final ratio in [1.0, 2.0]) {
         final cell = (theme: theme, width: width, ratio: ratio);
         final file = '${name}_${theme}_${widthName}_${ratio.toInt()}x.png';

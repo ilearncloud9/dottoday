@@ -927,6 +927,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Day {position} of {count}'**
   String dayPagerPosition(int position, int count);
+
+  /// Expanded month cell: tasks not shown (A-mac-month).
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} more'**
+  String monthMore(int count);
+
+  /// Footer of a past month cell (A-mac-month).
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done'**
+  String monthDoneOf(int done, int total);
+
+  /// Footer of a future month cell with few tasks (A-mac-month).
+  ///
+  /// In en, this message translates to:
+  /// **'Light day'**
+  String get monthLightDay;
+
+  /// A missed task in a month cell.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} · missed'**
+  String monthMissedItem(String title);
+
+  /// The live task in today's month cell.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} · now'**
+  String monthNowItem(String title);
 }
 
 class _AppLocalizationsDelegate

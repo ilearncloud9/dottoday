@@ -537,4 +537,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String dayPagerPosition(int position, int count) {
     return 'Day $position of $count';
   }
+
+  @override
+  String monthMore(int count) {
+    return '+$count more';
+  }
+
+  @override
+  String monthDoneOf(int done, int total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String get monthLightDay => 'Light day';
+
+  @override
+  String monthMissedItem(String title) {
+    return '$title · missed';
+  }
+
+  @override
+  String monthNowItem(String title) {
+    return '$title · now';
+  }
 }

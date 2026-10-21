@@ -798,5 +798,48 @@
         "type": "int"
       }
     }
+  },
+  "monthMore": "+{count} more",
+  "@monthMore": {
+    "description": "Expanded month cell: tasks not shown (A-mac-month).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "monthDoneOf": "{done} of {total} done",
+  "@monthDoneOf": {
+    "description": "Footer of a past month cell (A-mac-month).",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "monthLightDay": "Light day",
+  "@monthLightDay": {
+    "description": "Footer of a future month cell with few tasks (A-mac-month)."
+  },
+  "monthMissedItem": "{title} · missed",
+  "@monthMissedItem": {
+    "description": "A missed task in a month cell.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "monthNowItem": "{title} · now",
+  "@monthNowItem": {
+    "description": "The live task in today's month cell.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
   }
 }
