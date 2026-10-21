@@ -12,7 +12,9 @@ A day is a **thread**: a vertical line that starts at Wake Up (sun cap) and ends
 
 ## 2. Tokens
 
-Implement as `lib/theme/tokens.dart` (primitives) + `DotTheme` `ThemeExtension` (semantic), per `04-architecture.md` and the design-system structure the kit already prescribes. No raw colours or radii outside `lib/theme/`.
+Implement as `app/lib/core/theme/tokens.dart` (primitives) + `DotTheme` `ThemeExtension` (semantic), per `04-architecture.md` and the design-system structure the kit already prescribes. No raw colours or radii outside `app/lib/core/theme/`.
+
+Theme lives in app/lib/core/theme/ (DotTheme as a ThemeExtension); no second theme folder.
 
 ### 2.1 Colour
 
@@ -80,7 +82,7 @@ Durations 180–240 ms, standard ease-out; all animation collapses to 0 under re
 | `CapacityRing` | 36–40 px conic: planned/15 h, hours inside | Mac Week |
 | `WeekSummaryStrip` | Busiest · Lightest · Free · unplanned · Done chips | Mac Week |
 
-Icon set: stroke 2 (2.4 when active), round caps, 24-unit grid, from a single `DotIcons` font or SVG set. Nav icons are fixed (§3 table); task icons are the picker's 24-icon set (code, run, mail, call, meal, book, list, language, heart, travel, cart, home, tv, bag, music, meds, water, pet, gym, car, money, gift, camera, star).
+Icon set: stroke 2 (2.4 when active), round caps, 24-unit grid, from a single `DotIcons` font or SVG set. Nav icons are fixed (§3 table); task icons are the picker's 26-icon set (code, run, mail, call, meal, book, list, language, heart, travel, cart, home, tv, bag, music, meds, water, pet, gym, car, money, gift, camera, star, people, document).
 
 ## 4. Shells per platform (adaptive by width class, never by `Platform.isX` for layout)
 
@@ -104,7 +106,7 @@ Web = the Mac layout at expanded width and the Android layout (Material) at comp
 | O1 | Welcome | the dot draws itself, "Your day, as a thread." one-line value prop, Get started / Sign in | no ref — compose from `DayDot` + `Thread` sample |
 | O2 | Day shape | "When does your day start and end?" two wheels Wake Up / Bedtime with the live sun→moon mini-thread; this is the one onboarding question that matters | no ref — reuse Settings › DAY SHAPE preview |
 | O3 | Habits (optional, skippable) | pick 3–5 starter tasks from suggestion chips (Morning run, Deep work, Lunch, …); they land on tomorrow's thread as upcoming dots | no ref — `ColourIconBlock` + suggestion rows from Add step 1 |
-| O4 | Reminders | explain the two notification types (task starts, Bedtime reminder), request permission with the system prompt | no ref |
+| O4 | Reminders | explain the two notification types (task starts, Bedtime reminder), request permission with the system prompt; optional row "Connect a calendar" (PRD F10) | no ref |
 | O5 | Account | Sign in with Apple / Google / email magic link, or "Continue without an account" (local only; sync later) | no ref — plain, raised card, accent primary |
 | O6 | Done | the user's first thread with their habits placed; "Open today" | no ref |
 Also: returning-user sign-in, magic-link "check your mail", account error, and a restore-from-sync progress state.
@@ -130,7 +132,7 @@ Also: returning-user sign-in, magic-link "check your mail", account error, and a
 | WA1 | Watch "Now" | `Watch` (Watch is a companion: Now, Next, Done / +15; no editing) |
 
 ### 5.3 Secondary (no refs — derive)
-Repeat editor (never / daily / weekdays / weekly on … / monthly / custom; end date; "this one or all future" on edit and delete); Alerts editor (at start, N min before, Bedtime reminder); Subtask editor (reorder, rename); Colour & icon full picker (sheet with the 24 icons in a grid); Change day picker (the month grid in a sheet); Time zone picker; "Running late" sheet (shift the rest / skip / shorten); Day review at Bedtime ("3 of 7 done · move the rest to tomorrow?"); Inbox swipe confirmations and Undo snackbar; Completed group expanded; Search empty and no-results; Settings sub-pages (Calendars import list, Export, Help, Privacy, About); Account page (sign in/out, delete account with confirm); Sync status sheet (last synced, conflicts: local vs remote with "keep mine / keep theirs"); offline banner; permission-denied states for notifications; Mac/web keyboard shortcut sheet (⌘/).
+Repeat editor (never / daily / weekdays / weekly on … / monthly / custom; end date; "this one or all future" on edit and delete); Alerts editor (at start, N min before, Bedtime reminder); Subtask editor (reorder, rename); Colour & icon full picker (sheet with the 26 icons in a grid); Change day picker (the month grid in a sheet); Time zone picker; "Running late" sheet (shift the rest / skip / shorten); Day review at Bedtime ("3 of 7 done · move the rest to tomorrow?"); Inbox swipe confirmations and Undo snackbar; Completed group expanded; Search empty and no-results; Settings sub-pages (Calendars import list, Export, Help, Privacy, About); Account page (sign in/out, delete account with confirm); Sync status sheet (last synced, conflicts: local vs remote with "keep mine / keep theirs"); offline banner; permission-denied states for notifications; Mac/web keyboard shortcut sheet (⌘/).
 
 ### 5.4 System states — every list/screen must implement
 Loading (skeleton dots on a dotted thread, never a spinner for > 300 ms), empty (Today: "Nothing planned · pull the strip to plan or tap +"; Inbox: "Inbox is clear"), error (inline, actionable, never a raw exception), offline (banner, everything still editable), reduced motion, large text (200 %: rows grow, nothing truncates to ellipsis without a tooltip/sheet), RTL (all geometry Directional), dark/light, VoiceOver/TalkBack (every dot has a label with state: "Deep work, live, 38 minutes left").
