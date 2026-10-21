@@ -2,7 +2,6 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/a11y.dart';
@@ -95,7 +94,7 @@ void main() {
     await tester.pumpWidget(_dot());
     final node = tester.getSemantics(find.byType(TaskDot));
     expect(node.label, 'Deep work, upcoming');
-    expect(node.hasFlag(SemanticsFlag.isButton), isFalse);
+    expect(node.flagsCollection.isButton, isFalse);
     handle.dispose();
   });
 
