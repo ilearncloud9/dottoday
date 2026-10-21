@@ -10,7 +10,10 @@ const baseUrl = process.argv[2] ?? 'http://127.0.0.1:8081/';
 const secret = 'm29-probe-secret-title';
 
 const browser = await chromium.launch();
-const page = await browser.newPage();
+// One context = one storage partition, like two tabs of one browser profile. Separate
+// browser.newPage() calls would each get their own storage and Web Locks.
+const context = await browser.newContext();
+const page = await context.newPage();
 page.on('console', (m) => console.log(`[page] ${m.text()}`));
 page.on('pageerror', (e) => console.log(`[page error] ${e}`));
 page.on('requestfailed', (r) => console.log(`[request failed] ${r.url()} ${r.failure()?.errorText}`));
@@ -84,24 +87,24 @@ const scan = await page.evaluate(async (needle) => {
   return { bytes, hits };
 }, secret);
 
-// A second tab must be refused while the first holds the database.
-const second = await browser.newPage();
+// Report every result before deciding, so a failed run still shows them all.
+const failures = [];
+console.log(`plaintext scan: ${scan.bytes} bytes of browser storage, ${scan.hits.length} plaintext hits`);
+for (const hit of scan.hits) console.log(`  plaintext hit: ${hit}`);
+// A database page is 4 KiB; less means the scan didn't see the database at all.
+if (scan.bytes < 4096) failures.push('Scan found no database storage; the check would pass vacuously.');
+if (scan.hits.length > 0) failures.push(`Plaintext task title in browser storage: ${scan.hits.join(', ')}`);
+
+// A second tab of the same profile must be refused while the first holds the database.
+const second = await context.newPage();
 await second.goto(baseUrl);
 await second.waitForFunction(() => document.title.startsWith('PROBE:'), null, { timeout: 120_000 });
 const secondVerdict = await second.title();
 console.log(`second tab: ${secondVerdict}`);
-await browser.close();
 if (!secondVerdict.includes('openInAnotherTab')) {
-  console.error('::error::A second tab opened the database; the tab lock is not working.');
-  process.exit(1);
+  failures.push('A second tab opened the database; the tab lock is not working.');
 }
-console.log(`scanned ${scan.bytes} bytes of browser storage; plaintext hits: ${scan.hits.length}`);
-// A database page is 4 KiB; less means the scan didn't see the database at all.
-if (scan.bytes < 4096) {
-  console.error('::error::Scan found no database storage; the check would pass vacuously.');
-  process.exit(1);
-}
-if (scan.hits.length > 0) {
-  console.error(`::error::Plaintext task title in browser storage: ${scan.hits.join(', ')}`);
-  process.exit(1);
-}
+
+await browser.close();
+for (const f of failures) console.error(`::error::${f}`);
+process.exit(failures.length > 0 ? 1 : 0);
