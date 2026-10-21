@@ -78,6 +78,11 @@ Everything here is **free tier** unless marked *Phase 2*.
 - Per task up to 5 alerts: at start, N minutes before (1–1440), at end, when overdue by N minutes. (R-03, R-10)
 - Default alert set configurable in settings. Quiet hours. Per-weekday day start summary ("Your day: 6 blocks, first at 08:00") optional.
 - Scheduling is idempotent: notification IDs derive from `occurrenceId + alertIndex`; re-scheduling after edits cancels stale IDs first. Property test: no occurrence ever has >1 pending notification per alert. (R-10)
+- Clarified in M1.6 (`domain/notifications/`): alerts inside quiet hours are still delivered, but silently
+  (no sound/banner, not time-sensitive), so nothing is lost; done/skipped/deleted/inbox tasks never alert;
+  a snooze replaces every alert before the snooze time with one reminder (slot 5, after the 5 alert
+  slots); the planner keeps the earliest 64 on iOS and plans 7 days ahead. Payloads carry the occurrence
+  ID only (06 §1).
 - Actions on the notification: Done, Snooze 10 min (shifts followers per setting), Open. (R-04)
 - Custom sound from a bundled set; respects system Focus/DND. (R-10)
 - Web: Web Push via service worker when granted; fallback to in-app banner.
