@@ -4381,5 +4381,66 @@
   "onboardingDayShapeBody": "Your tasks live between these two. You can change them, or give each weekday its own, in Settings.",
   "@onboardingDayShapeBody": {
     "description": "Onboarding O2 explanation."
+  },
+  "onboardingHabitsTitle": "What fills your days?",
+  "@onboardingHabitsTitle": {
+    "description": "Onboarding O3 question."
+  },
+  "onboardingHabitsBody": "Pick up to five. They go on tomorrow's thread at times that fit your day; change them any time.",
+  "@onboardingHabitsBody": {
+    "description": "Onboarding O3 explanation."
+  },
+  "onboardingHabitsAdd": "{count, plural, =1{Add 1 to tomorrow} other{Add {count} to tomorrow}}",
+  "@onboardingHabitsAdd": {
+    "description": "Onboarding O3 primary button with habits picked.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingHabitsMax": "Five is plenty to start with.",
+  "@onboardingHabitsMax": {
+    "description": "Onboarding O3: shown when five are picked."
+  },
+  "starterMorningRun": "Morning run",
+  "@starterMorningRun": {
+    "description": "Onboarding starter habit."
+  },
+  "starterDeepWork": "Deep work",
+  "@starterDeepWork": {
+    "description": "Onboarding starter habit."
+  },
+  "starterLunch": "Lunch",
+  "@starterLunch": {
+    "description": "Onboarding starter habit."
+  },
+  "starterWalk": "Walk",
+  "@starterWalk": {
+    "description": "Onboarding starter habit."
+  },
+  "starterGym": "Gym",
+  "@starterGym": {
+    "description": "Onboarding starter habit."
+  },
+  "starterRead": "Read",
+  "@starterRead": {
+    "description": "Onboarding starter habit."
+  },
+  "starterPlanTomorrow": "Plan tomorrow",
+  "@starterPlanTomorrow": {
+    "description": "Onboarding starter habit."
+  },
+  "onboardingHabitMeta": "{time} · {length}",
+  "@onboardingHabitMeta": {
+    "description": "Onboarding O3 row: '7:30 AM · 30 min'.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
   }
 }

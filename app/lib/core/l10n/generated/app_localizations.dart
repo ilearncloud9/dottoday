@@ -4431,6 +4431,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your tasks live between these two. You can change them, or give each weekday its own, in Settings.'**
   String get onboardingDayShapeBody;
+
+  /// Onboarding O3 question.
+  ///
+  /// In en, this message translates to:
+  /// **'What fills your days?'**
+  String get onboardingHabitsTitle;
+
+  /// Onboarding O3 explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick up to five. They go on tomorrow\'s thread at times that fit your day; change them any time.'**
+  String get onboardingHabitsBody;
+
+  /// Onboarding O3 primary button with habits picked.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Add 1 to tomorrow} other{Add {count} to tomorrow}}'**
+  String onboardingHabitsAdd(int count);
+
+  /// Onboarding O3: shown when five are picked.
+  ///
+  /// In en, this message translates to:
+  /// **'Five is plenty to start with.'**
+  String get onboardingHabitsMax;
+
+  /// Onboarding starter habit.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning run'**
+  String get starterMorningRun;
+
+  /// Onboarding starter habit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep work'**
+  String get starterDeepWork;
+
+  /// Onboarding starter habit.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch'**
+  String get starterLunch;
+
+  /// Onboarding starter habit.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk'**
+  String get starterWalk;
+
+  /// Onboarding starter habit.
+  ///
+  /// In en, this message translates to:
+  /// **'Gym'**
+  String get starterGym;
+
+  /// Onboarding starter habit.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get starterRead;
+
+  /// Onboarding starter habit.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan tomorrow'**
+  String get starterPlanTomorrow;
+
+  /// Onboarding O3 row: '7:30 AM · 30 min'.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} · {length}'**
+  String onboardingHabitMeta(String time, String length);
 }
 
 class _AppLocalizationsDelegate

@@ -3004,4 +3004,51 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onboardingDayShapeBody =>
       'Your tasks live between these two. You can change them, or give each weekday its own, in Settings.';
+
+  @override
+  String get onboardingHabitsTitle => 'What fills your days?';
+
+  @override
+  String get onboardingHabitsBody =>
+      'Pick up to five. They go on tomorrow\'s thread at times that fit your day; change them any time.';
+
+  @override
+  String onboardingHabitsAdd(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Add $count to tomorrow',
+      one: 'Add 1 to tomorrow',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get onboardingHabitsMax => 'Five is plenty to start with.';
+
+  @override
+  String get starterMorningRun => 'Morning run';
+
+  @override
+  String get starterDeepWork => 'Deep work';
+
+  @override
+  String get starterLunch => 'Lunch';
+
+  @override
+  String get starterWalk => 'Walk';
+
+  @override
+  String get starterGym => 'Gym';
+
+  @override
+  String get starterRead => 'Read';
+
+  @override
+  String get starterPlanTomorrow => 'Plan tomorrow';
+
+  @override
+  String onboardingHabitMeta(String time, String length) {
+    return '$time · $length';
+  }
 }
