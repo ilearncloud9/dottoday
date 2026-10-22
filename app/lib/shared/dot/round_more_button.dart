@@ -8,8 +8,13 @@ class RoundMoreButton extends StatelessWidget {
     required this.tooltip,
     required this.onTap,
     this.open = false,
+    this.focusNode,
     super.key,
   });
+
+  /// For a menu anchored here (`MenuAnchor.childFocusNode`), so arrow
+  /// keys move from the button into its menu.
+  final FocusNode? focusNode;
 
   final String tooltip;
   final VoidCallback onTap;
@@ -19,6 +24,7 @@ class RoundMoreButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     return IconButton(
+      focusNode: focusNode,
       onPressed: onTap,
       tooltip: tooltip,
       style: IconButton.styleFrom(

@@ -91,6 +91,11 @@ abstract final class DotGlyphs {
   static const sort = DotGlyph('M3 6h18M6 12h12M10 18h4');
   static const undo = DotGlyph('M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-4');
 
+  /// A row of dots: a week of days ("Pick from the week").
+  static const dottedRow = DotGlyph(
+    'M4 12h.01M8 12h.01M12 12h.01M16 12h.01M20 12h.01',
+  );
+
   /// A ring of dots: free time ("Free until 19:30 · no overlap").
   static const freeRing = DotGlyph(
     'M12 4h.01M17.66 6.34h.01M20 12h.01M17.66 17.66h.01M12 20h.01'

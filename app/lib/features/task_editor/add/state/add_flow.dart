@@ -8,6 +8,7 @@ import 'package:dottoday/domain/quick_add/quick_add_lexicon.dart';
 import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -200,3 +201,8 @@ List<({QuickAddToken token, String text})> tokenTexts(QuickAddDraft draft) => [
   for (final t in draft.tokens)
     (token: t, text: draft.text.substring(t.start, t.end)),
 ];
+
+/// The draft as it is now: Enter can arrive before the frame that rebuilt
+/// the callbacks with the last keystroke.
+AddDraft currentDraft(WidgetRef ref, AddRequest request, AddFlowState shown) =>
+    ref.read(addFlowProvider(request)).value?.draft ?? shown.draft;

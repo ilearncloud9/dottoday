@@ -1311,4 +1311,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addMoreDuration => 'More lengths';
+
+  @override
+  String get timeMenuChangeDay => 'Change day';
+
+  @override
+  String get timeMenuPickWeek => 'Pick from the week';
+
+  @override
+  String get timeMenuAllDay => 'Make it all-day';
+
+  @override
+  String get timeMenuTimed => 'Give it a time';
+
+  @override
+  String get timeMenuInbox => 'Send to Inbox';
+
+  @override
+  String get timeMenuZone => 'Time zone';
+
+  @override
+  String get timeMenuType => 'Type a time';
+
+  @override
+  String get zoneSearch => 'Search a city or zone';
+
+  @override
+  String get weekPrevious => 'Previous week';
+
+  @override
+  String get weekNext => 'Next week';
+
+  @override
+  String get addAllDay => 'All day';
+
+  @override
+  String get addLandsOnEdit => 'Edit';
+
+  @override
+  String addLandsOnAllDay(String day) {
+    return 'Lands on $day · all day';
+  }
 }

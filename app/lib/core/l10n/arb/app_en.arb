@@ -2004,5 +2004,62 @@
   "addMoreDuration": "More lengths",
   "@addMoreDuration": {
     "description": "Tooltip of the ⋯ beside DURATION in Add: opens the Duration sheet."
+  },
+  "timeMenuChangeDay": "Change day",
+  "@timeMenuChangeDay": {
+    "description": "Time ⋯ menu item; also the month picker's title."
+  },
+  "timeMenuPickWeek": "Pick from the week",
+  "@timeMenuPickWeek": {
+    "description": "Time ⋯ menu item; also the week picker's title."
+  },
+  "timeMenuAllDay": "Make it all-day",
+  "@timeMenuAllDay": {
+    "description": "Time ⋯ menu item."
+  },
+  "timeMenuTimed": "Give it a time",
+  "@timeMenuTimed": {
+    "description": "Time ⋯ menu item when the task is all-day: back to a time."
+  },
+  "timeMenuInbox": "Send to Inbox",
+  "@timeMenuInbox": {
+    "description": "Time ⋯ menu item: save without a time."
+  },
+  "timeMenuZone": "Time zone",
+  "@timeMenuZone": {
+    "description": "Time ⋯ menu item; also the zone picker's title."
+  },
+  "timeMenuType": "Type a time",
+  "@timeMenuType": {
+    "description": "Time ⋯ menu item: the typed TimeInput."
+  },
+  "zoneSearch": "Search a city or zone",
+  "@zoneSearch": {
+    "description": "Label of the time-zone search field."
+  },
+  "weekPrevious": "Previous week",
+  "@weekPrevious": {
+    "description": "Week picker: go back a week."
+  },
+  "weekNext": "Next week",
+  "@weekNext": {
+    "description": "Week picker: go forward a week."
+  },
+  "addAllDay": "All day",
+  "@addAllDay": {
+    "description": "Add step 2: an all-day task has no time."
+  },
+  "addLandsOnEdit": "Edit",
+  "@addLandsOnEdit": {
+    "description": "Lands-on row: change the day."
+  },
+  "addLandsOnAllDay": "Lands on {day} · all day",
+  "@addLandsOnAllDay": {
+    "description": "Lands-on row for an all-day task. {day} is shown bold.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
   }
 }

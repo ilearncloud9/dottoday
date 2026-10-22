@@ -140,4 +140,18 @@ const sheetEntries = <SheetEntry>[
     reference: 'A-android-add-duration.png',
     crop: Rect.fromLTRB(0, 830, 824, 1830),
   ),
+  SheetEntry(
+    name: 'Add A4 Time menu · light',
+    golden:
+        'test/features/task_editor/goldens/add_time_menu_light_compact_2x.png',
+    reference: 'A-ios-add-time-menu.png',
+    crop: Rect.fromLTRB(0, 288, 780, 1688),
+  ),
+  SheetEntry(
+    name: 'Add A4 Time menu · Android dark',
+    golden:
+        'test/features/task_editor/goldens/add_time_menu_android_dark_compact_2x.png',
+    reference: 'A-android-add-time-menu.png',
+    crop: Rect.fromLTRB(0, 310, 824, 1830),
+  ),
 ];

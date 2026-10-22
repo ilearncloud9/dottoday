@@ -1,26 +1,16 @@
 import 'dart:async';
 
-import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
-import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
-import 'package:dottoday/domain/quick_add/add_draft.dart';
-import 'package:dottoday/domain/scheduling/inbox_plan.dart';
-import 'package:dottoday/domain/time/duration_presets.dart';
 import 'package:dottoday/features/task_editor/add/add_save.dart';
+import 'package:dottoday/features/task_editor/add/add_when_host.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_header.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_what_step.dart';
-import 'package:dottoday/features/task_editor/add/widgets/add_when_step.dart';
-import 'package:dottoday/shared/dot/round_more_button.dart';
-import 'package:dottoday/shared/duration/duration_preview.dart';
-import 'package:dottoday/shared/duration/duration_sheet.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 /// Opens Add (docs/10 §3 `AddFlow`) from the add button or ⌘N: a sheet on
 /// phones, a popover from medium width (the Mac/web editor panel is
@@ -55,18 +45,13 @@ class AddFlowSheet extends ConsumerWidget {
         Expanded(
           child: switch (state.step) {
             AddStep.what => _What(request: request, state: state),
-            AddStep.when => _When(request: request, state: state),
+            AddStep.when => AddWhenHost(request: request, state: state),
           },
         ),
       ],
     );
   }
 }
-
-/// The draft as it is now: Enter can arrive before the frame that rebuilt
-/// the callbacks with the last keystroke.
-AddDraft _current(WidgetRef ref, AddRequest request, AddFlowState shown) =>
-    ref.read(addFlowProvider(request)).value?.draft ?? shown.draft;
 
 class _What extends ConsumerWidget {
   const _What({required this.request, required this.state});
@@ -81,7 +66,11 @@ class _What extends ConsumerWidget {
     // Warm and alive for Continue's first-free-slot lookup.
     ref.watch(dayRoomProvider(state.draft.day));
     void save({bool toInbox = false}) => unawaited(
-      saveFromSheet(context, _current(ref, request, state), toInbox: toInbox),
+      saveFromSheet(
+        context,
+        currentDraft(ref, request, state),
+        toInbox: toInbox,
+      ),
     );
     return AddWhatStep(
       state: state,
@@ -101,7 +90,7 @@ class _What extends ConsumerWidget {
   /// (docs/10 §6 "Add never asks for what it can infer").
   Future<void> _continue(WidgetRef ref) async {
     final notifier = ref.read(addFlowProvider(request).notifier);
-    final draft = _current(ref, request, state);
+    final draft = currentDraft(ref, request, state);
     if (draft.startMinute == null) {
       final room = await ref.read(dayRoomProvider(draft.day).future);
       final slot = room.slotsFor(draft.length).firstOrNull;
@@ -112,77 +101,5 @@ class _What extends ConsumerWidget {
       notifier.edit((d) => d.withStartUtc(from, snap: room.snapMinutes));
     }
     notifier.goTo(AddStep.when);
-  }
-}
-
-class _When extends ConsumerWidget {
-  const _When({required this.request, required this.state});
-
-  final AddRequest request;
-  final AddFlowState state;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final notifier = ref.read(addFlowProvider(request).notifier);
-    final settings = ref.watch(currentProfileProvider).value?.settings;
-    final room = ref.watch(dayRoomProvider(state.draft.day)).value;
-    if (room == null || state.draft.startUtc == null) {
-      return const SizedBox.shrink();
-    }
-    return AddWhenStep(
-      state: state,
-      room: room,
-      presets: settings?.durationPresets ?? defaultDurationPresets,
-      use24h: use24hFor(context, settings?.use24h),
-      snapMinutes: settings?.snapMinutes ?? 5,
-      onStart: (m) => notifier.edit((d) => d.withStartMinute(m)),
-      onDuration: (m) => notifier.edit((d) => d.withDuration(m)),
-      onAdd: () =>
-          unawaited(saveFromSheet(context, _current(ref, request, state))),
-      onAnother: () => unawaited(_another(context, ref)),
-      durationMenu: RoundMoreButton(
-        tooltip: context.l10n.addMoreDuration,
-        onTap: () => unawaited(_duration(context, ref, room)),
-      ),
-    );
-  }
-
-  /// The Duration sheet (A3) for the draft; presets save as they change.
-  Future<void> _duration(
-    BuildContext context,
-    WidgetRef ref,
-    DayRoom room,
-  ) async {
-    final container = ProviderScope.containerOf(context);
-    final draft = _current(ref, request, state);
-    final settings = ref.read(currentProfileProvider).value?.settings;
-    final text = DayTimeText(
-      context,
-      tz.getLocation(draft.tzId),
-      draft.day,
-      use24h: use24hFor(context, settings?.use24h),
-    );
-    final minutes = await showDurationSheet(
-      context,
-      initial: draft.length,
-      color: TaskColor.fromKey(draft.color),
-      icon: TaskIcon.fromKey(draft.icon),
-      presets: settings?.durationPresets ?? defaultDurationPresets,
-      onPresets: (p) => unawaited(
-        updateSettings(container, (s) => s.copyWith(durationPresets: p)),
-      ),
-      preview: (m) => durationPreview(context, room, draft.startUtc!, m, text),
-    );
-    if (minutes == null) return;
-    ref
-        .read(addFlowProvider(request).notifier)
-        .edit((d) => d.withDuration(minutes));
-  }
-
-  Future<void> _another(BuildContext context, WidgetRef ref) async {
-    final notifier = ref.read(addFlowProvider(request).notifier);
-    final draft = _current(ref, request, state);
-    final saved = await saveFromSheet(context, draft, close: false);
-    if (saved) notifier.another(draft);
   }
 }

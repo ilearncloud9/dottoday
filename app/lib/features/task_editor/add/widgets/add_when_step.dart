@@ -28,6 +28,7 @@ class AddWhenStep extends StatelessWidget {
     required this.onDuration,
     required this.onAdd,
     required this.onAnother,
+    this.onEditDay,
     this.timeMenu,
     this.durationMenu,
     super.key,
@@ -44,6 +45,9 @@ class AddWhenStep extends StatelessWidget {
   final ValueChanged<int> onDuration;
   final VoidCallback onAdd;
   final VoidCallback onAnother;
+
+  /// "Edit" on the Lands-on row: change the day.
+  final VoidCallback? onEditDay;
 
   /// The ⋯ beside TIME (M3c.4) and DURATION (M3c.3).
   final Widget? timeMenu;
@@ -63,19 +67,24 @@ class AddWhenStep extends StatelessWidget {
   Widget _fields(BuildContext context) {
     final draft = state.draft;
     final zone = tz.getLocation(draft.tzId);
-    final range = DayTimeText(
-      context,
-      zone,
-      draft.day,
-      use24h: use24h,
-    ).range(draft.startMinute ?? 0, draft.length);
-    final fit = fitAt(
-      room.blocks,
-      draft.startUtc!,
-      draft.length,
-      dayEndUtc: room.endUtc,
-    );
     final l10n = context.l10n;
+    // All-day items take no time on the thread (the all-day strip).
+    final range = draft.allDay
+        ? l10n.addAllDay
+        : DayTimeText(
+            context,
+            zone,
+            draft.day,
+            use24h: use24h,
+          ).range(draft.startMinute ?? 0, draft.length);
+    final fit = draft.allDay
+        ? SlotFit(overlaps: const [], freeUntilUtc: room.endUtc)
+        : fitAt(
+            room.blocks,
+            draft.startUtc!,
+            draft.length,
+            dayEndUtc: room.endUtc,
+          );
     return ListView(
       padding: const EdgeInsets.symmetric(
         horizontal: DotSpace.page,
@@ -86,21 +95,25 @@ class AddWhenStep extends StatelessWidget {
         const SizedBox(height: DotSpace.xl),
         AddCaption(l10n.addTimeCaption, trailing: timeMenu),
         const SizedBox(height: DotSpace.s),
-        ..._time(context, zone, fit),
-        const SizedBox(height: DotSpace.xl),
-        AddCaption(l10n.addDurationCaption, trailing: durationMenu),
-        const SizedBox(height: DotSpace.s),
-        DurationRow(
-          presets: presets,
-          value: draft.length,
-          onChanged: onDuration,
-        ),
-        const SizedBox(height: DotSpace.l),
+        if (!draft.allDay) ...[
+          ..._time(context, zone, fit),
+          const SizedBox(height: DotSpace.xl),
+          AddCaption(l10n.addDurationCaption, trailing: durationMenu),
+          const SizedBox(height: DotSpace.s),
+          DurationRow(
+            presets: presets,
+            value: draft.length,
+            onChanged: onDuration,
+          ),
+          const SizedBox(height: DotSpace.l),
+        ],
         LandsOn(
           colour: TaskColor.fromKey(draft.color),
           day: relativeDayName(context, draft.day, draft.today),
           range: range,
           fit: fit,
+          onEdit: onEditDay,
+          allDay: draft.allDay,
         ),
       ],
     );
@@ -141,11 +154,16 @@ class AddWhenStep extends StatelessWidget {
             children: [
               Text(title, style: t.styles.topBarTitle),
               Text(
-                l10n.addWhenSummary(
-                  relativeDayName(context, draft.day, draft.today),
-                  range,
-                  formatDurationShort(l10n, draft.length),
-                ),
+                draft.allDay
+                    ? l10n.alertJoin(
+                        relativeDayName(context, draft.day, draft.today),
+                        range,
+                      )
+                    : l10n.addWhenSummary(
+                        relativeDayName(context, draft.day, draft.today),
+                        range,
+                        formatDurationShort(l10n, draft.length),
+                      ),
                 style: t.styles.body.copyWith(color: t.colors.muted),
               ),
             ],

@@ -1953,6 +1953,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More lengths'**
   String get addMoreDuration;
+
+  /// Time ⋯ menu item; also the month picker's title.
+  ///
+  /// In en, this message translates to:
+  /// **'Change day'**
+  String get timeMenuChangeDay;
+
+  /// Time ⋯ menu item; also the week picker's title.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick from the week'**
+  String get timeMenuPickWeek;
+
+  /// Time ⋯ menu item.
+  ///
+  /// In en, this message translates to:
+  /// **'Make it all-day'**
+  String get timeMenuAllDay;
+
+  /// Time ⋯ menu item when the task is all-day: back to a time.
+  ///
+  /// In en, this message translates to:
+  /// **'Give it a time'**
+  String get timeMenuTimed;
+
+  /// Time ⋯ menu item: save without a time.
+  ///
+  /// In en, this message translates to:
+  /// **'Send to Inbox'**
+  String get timeMenuInbox;
+
+  /// Time ⋯ menu item; also the zone picker's title.
+  ///
+  /// In en, this message translates to:
+  /// **'Time zone'**
+  String get timeMenuZone;
+
+  /// Time ⋯ menu item: the typed TimeInput.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a time'**
+  String get timeMenuType;
+
+  /// Label of the time-zone search field.
+  ///
+  /// In en, this message translates to:
+  /// **'Search a city or zone'**
+  String get zoneSearch;
+
+  /// Week picker: go back a week.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous week'**
+  String get weekPrevious;
+
+  /// Week picker: go forward a week.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week'**
+  String get weekNext;
+
+  /// Add step 2: an all-day task has no time.
+  ///
+  /// In en, this message translates to:
+  /// **'All day'**
+  String get addAllDay;
+
+  /// Lands-on row: change the day.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get addLandsOnEdit;
+
+  /// Lands-on row for an all-day task. {day} is shown bold.
+  ///
+  /// In en, this message translates to:
+  /// **'Lands on {day} · all day'**
+  String addLandsOnAllDay(String day);
 }
 
 class _AppLocalizationsDelegate

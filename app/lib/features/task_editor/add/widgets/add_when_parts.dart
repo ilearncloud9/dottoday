@@ -34,10 +34,16 @@ class LandsOn extends StatelessWidget {
     required this.day,
     required this.range,
     required this.fit,
+    this.onEdit,
+    this.allDay = false,
     super.key,
   });
 
+  /// "Lands on Today · all day": no time, no slot.
+  final bool allDay;
+
   final TaskColor colour;
+  final VoidCallback? onEdit;
   final String day;
   final String range;
   final SlotFit fit;
@@ -49,7 +55,9 @@ class LandsOn extends StatelessWidget {
     final suffix = fit.isFree
         ? l10n.addSlotFree
         : l10n.addSlotBusy(fit.overlaps.first.title);
-    final full = l10n.alertJoin(l10n.addLandsOn(day, range), suffix);
+    final full = allDay
+        ? l10n.addLandsOnAllDay(day)
+        : l10n.alertJoin(l10n.addLandsOn(day, range), suffix);
     final style = t.styles.body.copyWith(color: t.colors.muted);
     return Container(
       padding: const EdgeInsets.all(DotSpace.l),
@@ -70,6 +78,8 @@ class LandsOn extends StatelessWidget {
             ),
           ),
           Expanded(child: _sentence(t, full, style)),
+          if (onEdit case final edit?)
+            TextButton(onPressed: edit, child: Text(l10n.addLandsOnEdit)),
         ],
       ),
     );

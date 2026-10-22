@@ -181,6 +181,28 @@ void main() {
     act: toDuration,
     build: (cell) => addSheet(cell, when, nested: true),
   );
+  // A4 (`A-ios-add-time-menu`): the TIME ⋯ menu open.
+  Future<void> toMenu(WidgetTester tester) async {
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('More time options'));
+  }
+
+  goldenMatrix(
+    'add_time_menu',
+    height: 844,
+    widths: const {'compact'},
+    act: toMenu,
+    build: (cell) => addSheet(cell, when, nested: true),
+  );
+  goldenMatrix(
+    'add_time_menu_android',
+    height: 915,
+    platform: TargetPlatform.android,
+    widths: const {'compact'},
+    act: toMenu,
+    build: (cell) => addSheet(cell, when, nested: true),
+  );
   // A new user: no habits yet, so no Suggestions; the helper shows.
   goldenMatrix(
     'add_what_blank',
