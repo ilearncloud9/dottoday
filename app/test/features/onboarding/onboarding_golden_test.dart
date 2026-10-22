@@ -12,6 +12,7 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/dot_golden.dart';
+import '../../support/first_thread_rows.dart';
 import '../../support/onboarding_fakes.dart';
 import '../../support/timeline_fakes.dart';
 
@@ -20,6 +21,9 @@ import '../../support/timeline_fakes.dart';
 List<Override> _at(OnboardingStep step) => [
   ...timelineOverrides(
     now: DateTime.utc(2026, 10, 21, 9),
+    occurrences: FakeOccurrenceRepository(
+      step == OnboardingStep.done ? firstThreadRows() : const [],
+    ),
     profile: testProfile(),
   ),
   onboardingProvider.overrideWith(
@@ -38,6 +42,7 @@ void main() {
     OnboardingStep.habits,
     OnboardingStep.reminders,
     OnboardingStep.account,
+    OnboardingStep.done,
   ]) {
     goldenMatrix(
       'onboarding_${step.name}',

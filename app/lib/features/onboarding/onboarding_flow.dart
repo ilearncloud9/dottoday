@@ -6,6 +6,7 @@ import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/onboarding/steps/account_step.dart';
 import 'package:dottoday/features/onboarding/steps/day_shape_step.dart';
+import 'package:dottoday/features/onboarding/steps/done_step.dart';
 import 'package:dottoday/features/onboarding/steps/habits_step.dart';
 import 'package:dottoday/features/onboarding/steps/reminders_step.dart';
 import 'package:dottoday/features/onboarding/steps/welcome_step.dart';
@@ -59,8 +60,7 @@ class OnboardingFlow extends ConsumerWidget {
     OnboardingStep.habits => HabitsStep(onNext: () => go(step.next)),
     OnboardingStep.reminders => RemindersStep(onNext: () => go(step.next)),
     OnboardingStep.account => AccountStep(onNext: () => go(step.next)),
-    // O6 lands with M4.6; until then it just finishes.
-    OnboardingStep.done => _Next(onTap: () => unawaited(finish())),
+    OnboardingStep.done => DoneStep(onFinish: finish),
   };
 }
 
@@ -124,19 +124,4 @@ class _TopBar extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Continue, for a step that isn't built yet.
-class _Next extends StatelessWidget {
-  const _Next({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) => Center(
-    child: FilledButton(
-      onPressed: onTap,
-      child: Text(context.l10n.onboardingContinue),
-    ),
-  );
 }

@@ -4486,5 +4486,25 @@
   "onboardingWithoutAccount": "Continue without an account",
   "@onboardingWithoutAccount": {
     "description": "Onboarding O5 primary button: local only."
+  },
+  "onboardingDoneTitle": "Your first thread",
+  "@onboardingDoneTitle": {
+    "description": "Onboarding O6 heading."
+  },
+  "onboardingDoneBody": "Tomorrow, from Wake Up to Bedtime. Add to it, drag things around, or start with today.",
+  "@onboardingDoneBody": {
+    "description": "Onboarding O6 explanation."
+  },
+  "onboardingDoneEmpty": "Tomorrow, from Wake Up to Bedtime, is all yours. Add the first task whenever you like.",
+  "@onboardingDoneEmpty": {
+    "description": "Onboarding O6 when no habits were picked."
+  },
+  "onboardingOpenToday": "Open today",
+  "@onboardingOpenToday": {
+    "description": "Onboarding O6 primary button: finishes onboarding."
+  },
+  "onboardingTomorrow": "Tomorrow",
+  "@onboardingTomorrow": {
+    "description": "Onboarding O6: the day card's title."
   }
 }

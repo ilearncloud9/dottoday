@@ -3088,4 +3088,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingWithoutAccount => 'Continue without an account';
+
+  @override
+  String get onboardingDoneTitle => 'Your first thread';
+
+  @override
+  String get onboardingDoneBody =>
+      'Tomorrow, from Wake Up to Bedtime. Add to it, drag things around, or start with today.';
+
+  @override
+  String get onboardingDoneEmpty =>
+      'Tomorrow, from Wake Up to Bedtime, is all yours. Add the first task whenever you like.';
+
+  @override
+  String get onboardingOpenToday => 'Open today';
+
+  @override
+  String get onboardingTomorrow => 'Tomorrow';
 }

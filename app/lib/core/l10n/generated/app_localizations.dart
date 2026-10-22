@@ -4569,6 +4569,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue without an account'**
   String get onboardingWithoutAccount;
+
+  /// Onboarding O6 heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first thread'**
+  String get onboardingDoneTitle;
+
+  /// Onboarding O6 explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow, from Wake Up to Bedtime. Add to it, drag things around, or start with today.'**
+  String get onboardingDoneBody;
+
+  /// Onboarding O6 when no habits were picked.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow, from Wake Up to Bedtime, is all yours. Add the first task whenever you like.'**
+  String get onboardingDoneEmpty;
+
+  /// Onboarding O6 primary button: finishes onboarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Open today'**
+  String get onboardingOpenToday;
+
+  /// Onboarding O6: the day card's title.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get onboardingTomorrow;
 }
 
 class _AppLocalizationsDelegate
