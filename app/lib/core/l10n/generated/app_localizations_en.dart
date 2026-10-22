@@ -1949,4 +1949,77 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editorEscKey => 'esc';
+
+  @override
+  String get shortcutsTitle => 'Keyboard shortcuts';
+
+  @override
+  String get shortcutsEverywhere => 'Everywhere';
+
+  @override
+  String get shortcutsTodaySection => 'Today';
+
+  @override
+  String get shortcutsWeekMonth => 'Week and Month';
+
+  @override
+  String get shortcutsInbox => 'Inbox';
+
+  @override
+  String get shortcutsEditor => 'Editing a task';
+
+  @override
+  String get shortcutAdd => 'Add a task';
+
+  @override
+  String get shortcutGoToday => 'Go to Today';
+
+  @override
+  String get shortcutGoInbox => 'Go to Inbox';
+
+  @override
+  String get shortcutGoWeek => 'Go to Week';
+
+  @override
+  String get shortcutGoMonth => 'Go to Month';
+
+  @override
+  String get shortcutShowKeys => 'Show these shortcuts';
+
+  @override
+  String get shortcutPrevDay => 'Previous day';
+
+  @override
+  String get shortcutNextDay => 'Next day';
+
+  @override
+  String get shortcutBackToday => 'Back to today';
+
+  @override
+  String get shortcutDoneLive => 'Mark the current task done';
+
+  @override
+  String get shortcutPrevPeriod => 'Previous week or month';
+
+  @override
+  String get shortcutNextPeriod => 'Next week or month';
+
+  @override
+  String get shortcutThisPeriod => 'This week or month';
+
+  @override
+  String get shortcutPlaceFirst =>
+      'Place the selected task in its first free slot';
+
+  @override
+  String get shortcutAutoPlan => 'Auto-plan the week';
+
+  @override
+  String get shortcutSave => 'Save and close';
+
+  @override
+  String get shortcutDone => 'Mark done';
+
+  @override
+  String get shortcutClose => 'Close';
 }

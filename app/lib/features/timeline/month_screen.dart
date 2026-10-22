@@ -59,6 +59,8 @@ class MonthScreen extends ConsumerWidget {
           },
           child: Focus(
             autofocus: true,
+            // Catches keys only; adds nothing for screen readers.
+            includeSemantics: false,
             child: _Page(
               month: month,
               today: today,

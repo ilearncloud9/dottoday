@@ -13,6 +13,7 @@ import 'package:go_router/go_router.dart';
 Map<AppCommand, VoidCallback> appCommandHandlers(
   GoRouter router, {
   VoidCallback? onQuickAdd,
+  VoidCallback? onShortcuts,
 }) {
   return {
     AppCommand.goToday: () => router.go(AppRoutes.today),
@@ -21,5 +22,7 @@ Map<AppCommand, VoidCallback> appCommandHandlers(
     AppCommand.goMonth: () => unawaited(router.push<void>(AppRoutes.month)),
     // The Add sheet (M3c) is a feature, so the composition root passes it.
     AppCommand.quickAdd: onQuickAdd ?? () {},
+    // The ⌘/ sheet needs l10n, so the composition root passes it too.
+    AppCommand.showShortcuts: onShortcuts ?? () {},
   };
 }

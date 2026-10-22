@@ -122,7 +122,12 @@ class WeekView extends ConsumerWidget {
         AppShortcuts.activator(p, LogicalKeyboardKey.arrowRight): onNext,
         AppShortcuts.activator(p, LogicalKeyboardKey.keyT): onToday,
       },
-      child: Focus(autofocus: true, child: child),
+      child: Focus(
+        autofocus: true,
+        // Catches keys only; adds nothing for screen readers.
+        includeSemantics: false,
+        child: child,
+      ),
     );
   }
 

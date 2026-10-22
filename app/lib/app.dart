@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/app_commands.dart';
 import 'package:dottoday/app_lifecycle.dart';
+import 'package:dottoday/app_shortcut_groups.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
@@ -10,6 +11,7 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/inbox/schedule_from_anywhere.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
+import 'package:dottoday/shared/sheets/shortcut_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -45,6 +47,7 @@ class DottodayApp extends ConsumerWidget {
           handlers: appCommandHandlers(
             router,
             onQuickAdd: () => openQuickAdd(router),
+            onShortcuts: () => _shortcuts(router),
           ),
           child: Actions(
             actions: {
@@ -83,6 +86,14 @@ void openQuickAdd(GoRouter router, {DateTime? startUtc, DateTime? day}) {
       router.routerDelegate.navigatorKey.currentState?.overlay?.context;
   if (context == null) return;
   unawaited(showAddFlow(context, startUtc: startUtc, day: day));
+}
+
+/// ⌘/: every binding, on the root overlay (M3e.6).
+void _shortcuts(GoRouter router) {
+  final context =
+      router.routerDelegate.navigatorKey.currentState?.overlay?.context;
+  if (context == null) return;
+  unawaited(showShortcutSheet(context, appShortcutGroups(context.l10n)));
 }
 
 /// Search's "+ Schedule": the Inbox flow on the root overlay.

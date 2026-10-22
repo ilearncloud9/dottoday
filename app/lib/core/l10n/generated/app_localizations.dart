@@ -2925,6 +2925,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'esc'**
   String get editorEscKey;
+
+  /// Title of the ⌘/ shortcut sheet (Mac/web).
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard shortcuts'**
+  String get shortcutsTitle;
+
+  /// Shortcut sheet section.
+  ///
+  /// In en, this message translates to:
+  /// **'Everywhere'**
+  String get shortcutsEverywhere;
+
+  /// Shortcut sheet section.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get shortcutsTodaySection;
+
+  /// Shortcut sheet section.
+  ///
+  /// In en, this message translates to:
+  /// **'Week and Month'**
+  String get shortcutsWeekMonth;
+
+  /// Shortcut sheet section.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get shortcutsInbox;
+
+  /// Shortcut sheet section.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing a task'**
+  String get shortcutsEditor;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a task'**
+  String get shortcutAdd;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Today'**
+  String get shortcutGoToday;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Inbox'**
+  String get shortcutGoInbox;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Week'**
+  String get shortcutGoWeek;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Month'**
+  String get shortcutGoMonth;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Show these shortcuts'**
+  String get shortcutShowKeys;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous day'**
+  String get shortcutPrevDay;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Next day'**
+  String get shortcutNextDay;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to today'**
+  String get shortcutBackToday;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the current task done'**
+  String get shortcutDoneLive;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous week or month'**
+  String get shortcutPrevPeriod;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week or month'**
+  String get shortcutNextPeriod;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'This week or month'**
+  String get shortcutThisPeriod;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Place the selected task in its first free slot'**
+  String get shortcutPlaceFirst;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-plan the week'**
+  String get shortcutAutoPlan;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and close'**
+  String get shortcutSave;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark done'**
+  String get shortcutDone;
+
+  /// Shortcut sheet action.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get shortcutClose;
 }
 
 class _AppLocalizationsDelegate

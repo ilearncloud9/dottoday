@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 /// Every keyboard-invokable command in the app. Later milestones add values
 /// here (and a row in [AppShortcuts]) instead of defining their own bindings.
-enum AppCommand { goToday, goInbox, goWeek, goMonth, quickAdd }
+enum AppCommand { goToday, goInbox, goWeek, goMonth, quickAdd, showShortcuts }
 
 /// A key plus modifiers, relative to the platform's primary modifier
 /// (⌘ on Apple platforms, Ctrl elsewhere).
@@ -52,6 +52,7 @@ abstract final class AppShortcuts {
     AppCommand.goWeek: KeyCombo(LogicalKeyboardKey.digit3),
     AppCommand.goMonth: KeyCombo(LogicalKeyboardKey.digit4),
     AppCommand.quickAdd: KeyCombo(LogicalKeyboardKey.keyN),
+    AppCommand.showShortcuts: KeyCombo(LogicalKeyboardKey.slash),
   };
 
   /// Whether ⌘ (meta) is the primary modifier on [platform]. Web reports the

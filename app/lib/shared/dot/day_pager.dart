@@ -114,6 +114,7 @@ class _PageDots extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     return Semantics(
+      container: true,
       label: context.l10n.dayPagerPosition(active + 1, 7),
       excludeSemantics: true,
       child: Padding(

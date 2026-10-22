@@ -89,6 +89,7 @@ class TodayHeader extends ConsumerWidget {
                   ),
                 ),
                 Semantics(
+                  container: true,
                   header: true,
                   child: Text(
                     _title(context, ref, locale),

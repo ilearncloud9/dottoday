@@ -50,6 +50,7 @@ class SpreadHeader extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Semantics(
+                  container: true,
                   header: true,
                   child: Text(
                     dayTitle(context, ref, date: date, today: today),

@@ -73,6 +73,8 @@ class WideInbox extends ConsumerWidget {
       },
       child: Focus(
         autofocus: true,
+        // Catches keys only; adds nothing for screen readers.
+        includeSemantics: false,
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(
             DotSpace.xxl + DotSpace.s,

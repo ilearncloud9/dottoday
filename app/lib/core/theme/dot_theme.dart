@@ -111,6 +111,13 @@ ThemeData _build(DotColors c) {
     fontFamily: DotType.fontFamily,
     textTheme: _textTheme(type),
     dividerColor: c.outline,
+    // Keyboard focus is visible everywhere (M3e.6, R-12): ink rows, cards
+    // and chips take an accent wash; buttons also get a ring (below).
+    focusColor: c.accent.withValues(alpha: _focusWash),
+    iconButtonTheme: IconButtonThemeData(
+      // Null at rest: each icon button keeps its own outline (or none).
+      style: ButtonStyle(side: _focusRing(c)),
+    ),
     // Pill buttons on every platform (`Main`, `A-android-today`).
     filledButtonTheme: FilledButtonThemeData(
       style: _pill(type, c, filled: true),
@@ -176,11 +183,25 @@ ButtonStyle _pill(DotType type, DotColors c, {bool filled = false}) =>
             ? c.accentFill
             : c.raised,
       ),
-      side: filled
-          ? null
-          : WidgetStatePropertyAll(
-              BorderSide(color: c.outline, width: DotSpace.hairline),
-            ),
+      side: _focusRing(
+        c,
+        rest: filled
+            ? BorderSide.none
+            : BorderSide(color: c.outline, width: DotSpace.hairline),
+      ),
+    );
+
+/// How strongly a focused ink row is washed with the accent.
+const _focusWash = 0.22;
+
+/// [rest] (null: the button's default), or a 2 px ring in the text colour
+/// while keyboard-focused: it reads on the accent fill, on raised surfaces
+/// and in both themes.
+WidgetStateProperty<BorderSide?> _focusRing(DotColors c, {BorderSide? rest}) =>
+    WidgetStateProperty.resolveWith(
+      (s) => s.contains(WidgetState.focused)
+          ? BorderSide(color: c.text, width: DotSize.smallDotOutline)
+          : rest,
     );
 
 ColorScheme _scheme(DotColors c, DotColors inverse) => ColorScheme(

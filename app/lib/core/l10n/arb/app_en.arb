@@ -3023,5 +3023,101 @@
   "editorEscKey": "esc",
   "@editorEscKey": {
     "description": "Key cap beside × on the Mac/web editor panel."
+  },
+  "shortcutsTitle": "Keyboard shortcuts",
+  "@shortcutsTitle": {
+    "description": "Title of the ⌘/ shortcut sheet (Mac/web)."
+  },
+  "shortcutsEverywhere": "Everywhere",
+  "@shortcutsEverywhere": {
+    "description": "Shortcut sheet section."
+  },
+  "shortcutsTodaySection": "Today",
+  "@shortcutsTodaySection": {
+    "description": "Shortcut sheet section."
+  },
+  "shortcutsWeekMonth": "Week and Month",
+  "@shortcutsWeekMonth": {
+    "description": "Shortcut sheet section."
+  },
+  "shortcutsInbox": "Inbox",
+  "@shortcutsInbox": {
+    "description": "Shortcut sheet section."
+  },
+  "shortcutsEditor": "Editing a task",
+  "@shortcutsEditor": {
+    "description": "Shortcut sheet section."
+  },
+  "shortcutAdd": "Add a task",
+  "@shortcutAdd": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutGoToday": "Go to Today",
+  "@shortcutGoToday": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutGoInbox": "Go to Inbox",
+  "@shortcutGoInbox": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutGoWeek": "Go to Week",
+  "@shortcutGoWeek": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutGoMonth": "Go to Month",
+  "@shortcutGoMonth": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutShowKeys": "Show these shortcuts",
+  "@shortcutShowKeys": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutPrevDay": "Previous day",
+  "@shortcutPrevDay": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutNextDay": "Next day",
+  "@shortcutNextDay": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutBackToday": "Back to today",
+  "@shortcutBackToday": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutDoneLive": "Mark the current task done",
+  "@shortcutDoneLive": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutPrevPeriod": "Previous week or month",
+  "@shortcutPrevPeriod": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutNextPeriod": "Next week or month",
+  "@shortcutNextPeriod": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutThisPeriod": "This week or month",
+  "@shortcutThisPeriod": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutPlaceFirst": "Place the selected task in its first free slot",
+  "@shortcutPlaceFirst": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutAutoPlan": "Auto-plan the week",
+  "@shortcutAutoPlan": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutSave": "Save and close",
+  "@shortcutSave": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutDone": "Mark done",
+  "@shortcutDone": {
+    "description": "Shortcut sheet action."
+  },
+  "shortcutClose": "Close",
+  "@shortcutClose": {
+    "description": "Shortcut sheet action."
   }
 }

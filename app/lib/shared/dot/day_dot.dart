@@ -22,6 +22,8 @@ class DayDot extends StatelessWidget {
     final t = DotTheme.of(context);
     final share = progress.clamp(0.0, 1.0);
     return Semantics(
+      // Its own node: never merged into the header beside it.
+      container: true,
       label: context.l10n.dayDotLabel((share * 100).round()),
       excludeSemantics: true,
       child: TweenAnimationBuilder<double>(

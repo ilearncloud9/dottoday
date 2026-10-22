@@ -7,6 +7,7 @@ import 'package:dottoday/features/timeline/widgets/all_day_chips.dart';
 import 'package:dottoday/features/timeline/widgets/day_page.dart';
 import 'package:dottoday/features/timeline/widgets/selection_bar.dart';
 import 'package:dottoday/features/timeline/widgets/today_header.dart';
+import 'package:dottoday/features/timeline/widgets/today_keys.dart';
 import 'package:dottoday/features/timeline/widgets/today_month.dart';
 import 'package:dottoday/features/timeline/widgets/today_spread.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
@@ -54,29 +55,38 @@ class TodayScreen extends ConsumerWidget {
       onPopInvokedWithResult: (popped, _) {
         if (!popped) ref.read(taskSelectionProvider.notifier).clear();
       },
-      child: Scaffold(
-        key: key,
-        body: SafeArea(
-          child: Stack(
-            children: [
-              LayoutBuilder(
-                builder: (context, box) =>
-                    WidthClass.of(box.maxWidth) == WidthClass.expanded
-                    ? TodaySpread(shown: shown, today: today, onSelect: select)
-                    : _TodayCompact(
-                        shown: shown,
-                        today: today,
-                        month: month,
-                        firstDayOfWeek: profile.settings.firstDayOfWeek,
-                        onSelect: select,
-                      ),
-              ),
-              if (selecting)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SelectionBar(today: today),
+      child: TodayKeys(
+        shown: shown,
+        today: today,
+        onSelect: select,
+        child: Scaffold(
+          key: key,
+          body: SafeArea(
+            child: Stack(
+              children: [
+                LayoutBuilder(
+                  builder: (context, box) =>
+                      WidthClass.of(box.maxWidth) == WidthClass.expanded
+                      ? TodaySpread(
+                          shown: shown,
+                          today: today,
+                          onSelect: select,
+                        )
+                      : _TodayCompact(
+                          shown: shown,
+                          today: today,
+                          month: month,
+                          firstDayOfWeek: profile.settings.firstDayOfWeek,
+                          onSelect: select,
+                        ),
                 ),
-            ],
+                if (selecting)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SelectionBar(today: today),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
