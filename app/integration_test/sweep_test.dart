@@ -9,13 +9,15 @@ import 'dart:io';
 
 import 'package:dottoday/bootstrap.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/features/inbox/widgets/inbox_add_field.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_when_step.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -98,6 +100,7 @@ void main() {
 
     await _addFlow(binding, tester);
     await _searchAndSettings(binding, tester);
+    await _m3f(binding, tester);
   });
 }
 
@@ -212,4 +215,81 @@ Future<void> _searchAndSettings(
   await _pumpUntil(tester, find.text('DAY SHAPE'));
   await _rest(tester);
   await _shot(binding, tester, '${_tag}_settings');
+}
+
+/// M3f: Settings › Account, the Sync sheet, Running late, Inbox selecting.
+Future<void> _m3f(
+  IntegrationTestWidgetsFlutterBinding binding,
+  WidgetTester tester,
+) async {
+  Future<void> closeSheets() async {
+    Navigator.of(
+      tester.element(find.byType(Scaffold).first),
+      rootNavigator: true,
+    ).popUntil((r) => r.isFirst);
+    await _rest(tester);
+  }
+
+  // Settings is open: the header opens Account.
+  await tester.tap(
+    find.textContaining(RegExp('on this device', caseSensitive: false)).first,
+  );
+  await _pumpUntil(tester, find.text('PROFILE'));
+  await _rest(tester);
+  await _shot(binding, tester, '${_tag}_settings_account');
+  await tester.tap(find.byTooltip('Back to Settings'));
+  await _pumpUntil(tester, find.text('DAY SHAPE'));
+
+  await tester.scrollUntilVisible(
+    find.text('Sync'),
+    300,
+    scrollable: find.byType(Scrollable).first,
+  );
+  await tester.tap(find.text('Sync'));
+  await _pumpUntil(tester, find.text('Sign in…'));
+  await _rest(tester);
+  await _shot(binding, tester, '${_tag}_sync');
+  await closeSheets();
+
+  await tester.tap(find.text('Today').last);
+  await _pumpUntil(tester, find.byType(DayCard));
+  final button = find.widgetWithText(OutlinedButton, 'Running late');
+  if (tester.any(button)) {
+    await tester.tap(button);
+  } else {
+    await tester.tap(find.byTooltip('More options'));
+    await _pumpUntil(tester, find.text('Running late…'));
+    await tester.tap(find.text('Running late…'));
+  }
+  await _pumpUntil(tester, find.text('Shift the rest'));
+  await _rest(tester);
+  await _shot(binding, tester, '${_tag}_running_late');
+  await closeSheets();
+
+  await tester.tap(find.text('Inbox').last);
+  await _rest(tester);
+  // A row of its own: earlier runs may have planned the demo Inbox away.
+  final field = find.descendant(
+    of: find.byType(InboxAddField),
+    matching: find.byType(EditableText),
+  );
+  await tester.enterText(field.first, 'Sweep pick 20m');
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await _pumpUntil(tester, find.text('Sweep pick'));
+  // The "added" snackbar and a short window (the Mac's 600 px) can put
+  // the menu where a tap misses it.
+  ScaffoldMessenger.of(
+    tester.element(find.byType(Scaffold).first),
+  ).removeCurrentSnackBar();
+  await tester.ensureVisible(find.text('Sweep pick').first);
+  await _rest(tester);
+  // Right-click opens the row menu everywhere (a hold drags on Mac/web).
+  await tester.tap(find.text('Sweep pick').first, buttons: kSecondaryButton);
+  await _pumpUntil(tester, find.text('Select'));
+  await tester.tap(find.text('Select'));
+  await _pumpUntil(tester, find.text('1 selected'));
+  await _rest(tester);
+  await _shot(binding, tester, '${_tag}_inbox_selecting');
+  await tester.tap(find.byTooltip('Done selecting'));
+  await _rest(tester);
 }

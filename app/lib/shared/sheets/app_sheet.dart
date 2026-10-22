@@ -69,6 +69,9 @@ Future<T?> showAppSheet<T>({
   }
   return showModalBottomSheet<T>(
     context: context,
+    // Above the iPhone's floating tab bar, from any tab (found in the
+    // M3f.10 sweep: Running late opened under it).
+    useRootNavigator: true,
     isScrollControlled: true,
     useSafeArea: true,
     showDragHandle: true,
