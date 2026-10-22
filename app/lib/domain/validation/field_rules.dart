@@ -46,6 +46,26 @@ ValidationFailure? checkRequiredText(
   return null;
 }
 
+/// The longest address mail allows (RFC 5321).
+const maxEmailLength = 254;
+
+final _email = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+/// A sign-in email ([value] already trimmed): required, at most 254
+/// characters, one @ with a dotted domain. Deliverability is the mail
+/// server's to judge (docs/09 M4.7).
+ValidationFailure? checkEmail(String value) {
+  final field = ValidationField.email;
+  if (value.isEmpty) return _fail(field, ValidationRule.required);
+  if (value.length > maxEmailLength) {
+    return _fail(field, ValidationRule.tooLong);
+  }
+  if (!_email.hasMatch(value)) {
+    return _fail(field, ValidationRule.invalidFormat);
+  }
+  return null;
+}
+
 /// Optional text of at most [max] characters.
 ValidationFailure? checkOptionalText(
   ValidationField field,

@@ -4599,6 +4599,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tomorrow'**
   String get onboardingTomorrow;
+
+  /// Onboarding O5 for a returning user.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get onboardingWelcomeBackTitle;
+
+  /// Onboarding O5 for a returning user.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to bring your tasks to this device.'**
+  String get onboardingWelcomeBackBody;
+
+  /// Sign-in email field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get accountEmailLabel;
+
+  /// Sign in by email: send the magic link.
+  ///
+  /// In en, this message translates to:
+  /// **'Send me a link'**
+  String get accountSendLink;
+
+  /// Sign in by email: back to Apple / Google / email.
+  ///
+  /// In en, this message translates to:
+  /// **'Other ways to sign in'**
+  String get accountOtherWays;
+
+  /// Sign-in email field error.
+  ///
+  /// In en, this message translates to:
+  /// **'That doesn\'t look like an email address.'**
+  String get accountEmailInvalid;
+
+  /// Magic link sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your mail'**
+  String get accountCheckMailTitle;
+
+  /// Magic link sent: where.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a sign-in link to {email}. Open it on this device to carry on.'**
+  String accountCheckMailBody(String email);
+
+  /// Magic link sent: resend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send it again'**
+  String get accountResend;
+
+  /// Magic link sent: back to the email field.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a different email'**
+  String get accountOtherEmail;
+
+  /// Sign-in error heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t sign in'**
+  String get accountErrorTitle;
+
+  /// Restore from sync after sign-in.
+  ///
+  /// In en, this message translates to:
+  /// **'Bringing your tasks to this device…'**
+  String get accountRestoring;
+
+  /// Restore progress count.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String accountRestoreCount(int done, int total);
 }
 
 class _AppLocalizationsDelegate

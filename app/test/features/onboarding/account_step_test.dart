@@ -8,37 +8,27 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
+import '../../support/account_fakes.dart';
 import '../../support/onboarding_harness.dart';
 
-// O5 Account (docs/09 M4.5): sign in, or carry on without an account.
-
-/// Accounts on; [signIn] answers [result].
-final class _Accounts implements AccountService {
-  _Accounts(this.result);
-
-  final Result<void, AppFailure> result;
-  final asked = <SignInMethod>[];
-
-  @override
-  bool get available => true;
-
-  @override
-  Stream<Account> watch() => Stream.value(const LocalOnly());
-
-  @override
-  Future<Result<void, AppFailure>> signIn(SignInMethod method) async {
-    asked.add(method);
-    return result;
-  }
-
-  @override
-  Future<Result<void, AppFailure>> signOut() async => const Ok(null);
-
-  @override
-  Future<Result<void, AppFailure>> deleteAccount() async => const Ok(null);
-}
+// O5 Account and its states (docs/09 M4.5, M4.7).
 
 const _step = OnboardingProgress(step: OnboardingStep.account);
+
+Future<FakeAccountService> _pump(
+  WidgetTester tester, {
+  Result<void, AppFailure> result = const Ok(null),
+  OnboardingProgress progress = _step,
+}) async {
+  final accounts = FakeAccountService(result: result);
+  addTearDown(accounts.restore.close);
+  await pumpOnboarding(
+    tester,
+    progress: progress,
+    extra: [accountServiceProvider.overrideWithValue(accounts)],
+  );
+  return accounts;
+}
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
@@ -58,30 +48,71 @@ void main() {
     expect(stepOf(c), OnboardingStep.done);
   });
 
-  testWidgets('signed in with Apple: on', (tester) async {
-    final accounts = _Accounts(const Ok(null));
-    final c = await pumpOnboarding(
+  testWidgets('returning: "Welcome back"', (tester) async {
+    await _pump(
       tester,
-      progress: _step,
-      extra: [accountServiceProvider.overrideWithValue(accounts)],
+      progress: const OnboardingProgress(
+        step: OnboardingStep.account,
+        returning: true,
+      ),
     );
-    await tester.tap(find.text('Continue with Apple'));
-    await tester.pumpAndSettle();
-    expect(accounts.asked, [SignInMethod.apple]);
-    expect(stepOf(c), OnboardingStep.done);
+    expect(find.text('Welcome back'), findsOneWidget);
   });
 
-  testWidgets('a failed sign-in stays and says why', (tester) async {
-    final accounts = _Accounts(const Err(AuthFailure()));
-    final c = await pumpOnboarding(
-      tester,
-      progress: _step,
-      extra: [accountServiceProvider.overrideWithValue(accounts)],
+  testWidgets('Apple, then the restore with its count, then on', (
+    tester,
+  ) async {
+    final accounts = await _pump(tester);
+    await tester.tap(find.text('Continue with Apple'));
+    await tester.pumpAndSettle();
+    expect(accounts.calls, ['signIn:apple']);
+    accounts.restore.add(const RestoreProgress(done: 120, total: 300));
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('Bringing your tasks to this device…'), findsOneWidget);
+    expect(find.text('120 of 300'), findsOneWidget);
+    expect(find.byType(LinearProgressIndicator), findsOneWidget);
+    accounts.restore.add(const RestoreProgress(done: 300, total: 300));
+    await tester.pumpAndSettle();
+    expect(find.text('Your first thread'), findsOneWidget);
+  });
+
+  testWidgets('email: a bad address, then the link, then check mail', (
+    tester,
+  ) async {
+    final accounts = await _pump(tester);
+    await tester.tap(find.text('Continue with email'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'kody');
+    await tester.tap(find.text('Send me a link'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text("That doesn't look like an email address."),
+      findsOneWidget,
     );
+    expect(accounts.calls, isEmpty);
+    await tester.enterText(find.byType(TextField), ' kody@example.com ');
+    await tester.tap(find.text('Send me a link'));
+    await tester.pumpAndSettle();
+    expect(accounts.calls, ['link:kody@example.com']);
+    expect(find.text('Check your mail'), findsOneWidget);
+    expect(find.textContaining('kody@example.com'), findsOneWidget);
+    await tester.tap(find.text('Send it again'));
+    await tester.pumpAndSettle();
+    expect(accounts.calls, hasLength(2));
+  });
+
+  testWidgets('an error says why; Try again asks again', (tester) async {
+    final accounts = await _pump(tester, result: const Err(AuthFailure()));
     await tester.tap(find.text('Continue with Google'));
     await tester.pumpAndSettle();
-    expect(stepOf(c), OnboardingStep.account);
+    expect(find.text("Couldn't sign in"), findsOneWidget);
     expect(find.textContaining('Sign in again'), findsOneWidget);
+    accounts.result = const Ok(null);
+    await tester.tap(find.text('Try again'));
+    await tester.pumpAndSettle();
+    expect(accounts.calls, ['signIn:google', 'signIn:google']);
+    expect(find.text("Couldn't sign in"), findsNothing);
   });
 
   testWidgets('meets a11y guidelines (R-12)', (tester) async {

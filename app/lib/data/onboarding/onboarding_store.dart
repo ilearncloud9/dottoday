@@ -24,8 +24,14 @@ class Onboarding extends _$Onboarding {
     return OnboardingProgress.fromJson(jsonDecode(row.value));
   }
 
-  /// Moves to [step] and remembers it (resume after a kill).
-  Future<void> go(OnboardingStep step) => _save(OnboardingProgress(step: step));
+  /// Moves to [step] and remembers it (resume after a kill); [returning]
+  /// marks the "I already have an account" path, kept until changed.
+  Future<void> go(OnboardingStep step, {bool? returning}) => _save(
+    OnboardingProgress(
+      step: step,
+      returning: returning ?? state.value?.returning ?? false,
+    ),
+  );
 
   /// "Open today": onboarding never shows again on this device.
   Future<void> finish() => _save(

@@ -33,9 +33,26 @@ abstract interface class AccountService {
 
   Future<Result<void, AppFailure>> signIn(SignInMethod method);
 
+  /// Emails a sign-in link to [email] (already checked, `checkEmail`).
+  Future<Result<void, AppFailure>> sendMagicLink(String email);
+
+  /// While a signed-in device brings the account's tasks down (a
+  /// returning user, docs/09 M4.7): how far it is; null when not.
+  Stream<RestoreProgress?> watchRestore();
+
   Future<Result<void, AppFailure>> signOut();
 
   /// Deletes the account and its synced data (docs/06 §6); the device keeps
   /// its local copy.
   Future<Result<void, AppFailure>> deleteAccount();
+}
+
+/// "Bringing your tasks… 120 of 300".
+final class RestoreProgress {
+  const RestoreProgress({required this.done, required this.total});
+
+  final int done;
+  final int total;
+
+  bool get finished => done >= total;
 }

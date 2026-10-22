@@ -21,6 +21,13 @@ final class LocalOnlyAccountService implements AccountService {
       const Err(AuthFailure());
 
   @override
+  Future<Result<void, AppFailure>> sendMagicLink(String email) async =>
+      const Err(AuthFailure());
+
+  @override
+  Stream<RestoreProgress?> watchRestore() => Stream.value(null);
+
+  @override
   Future<Result<void, AppFailure>> signOut() async => const Err(AuthFailure());
 
   @override

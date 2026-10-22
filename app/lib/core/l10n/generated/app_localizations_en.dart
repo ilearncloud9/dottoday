@@ -3105,4 +3105,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingTomorrow => 'Tomorrow';
+
+  @override
+  String get onboardingWelcomeBackTitle => 'Welcome back';
+
+  @override
+  String get onboardingWelcomeBackBody =>
+      'Sign in to bring your tasks to this device.';
+
+  @override
+  String get accountEmailLabel => 'Email';
+
+  @override
+  String get accountSendLink => 'Send me a link';
+
+  @override
+  String get accountOtherWays => 'Other ways to sign in';
+
+  @override
+  String get accountEmailInvalid => 'That doesn\'t look like an email address.';
+
+  @override
+  String get accountCheckMailTitle => 'Check your mail';
+
+  @override
+  String accountCheckMailBody(String email) {
+    return 'We sent a sign-in link to $email. Open it on this device to carry on.';
+  }
+
+  @override
+  String get accountResend => 'Send it again';
+
+  @override
+  String get accountOtherEmail => 'Use a different email';
+
+  @override
+  String get accountErrorTitle => 'Couldn\'t sign in';
+
+  @override
+  String get accountRestoring => 'Bringing your tasks to this device…';
+
+  @override
+  String accountRestoreCount(int done, int total) {
+    return '$done of $total';
+  }
 }

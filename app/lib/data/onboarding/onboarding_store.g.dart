@@ -39,7 +39,7 @@ final class OnboardingProvider
   Onboarding create() => Onboarding();
 }
 
-String _$onboardingHash() => r'2dc6d5c54d02ba569f0ef31dadb0f652725876ae';
+String _$onboardingHash() => r'99d7f2f620876b150ab4f85a0cfc1b726348da38';
 
 /// This device's onboarding (docs/09 M4): in `local_meta`, never synced —
 /// a new device asks again (O5's sign-in then brings the data).

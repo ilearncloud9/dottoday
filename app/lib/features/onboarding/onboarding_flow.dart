@@ -20,10 +20,12 @@ class OnboardingFlow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final step =
-        ref.watch(onboardingProvider).value?.step ?? OnboardingStep.welcome;
+    final progress = ref.watch(onboardingProvider).value;
+    final step = progress?.step ?? OnboardingStep.welcome;
+    final returning = progress?.returning ?? false;
     final store = ref.read(onboardingProvider.notifier);
-    void go(OnboardingStep s) => unawaited(store.go(s));
+    void go(OnboardingStep s, {bool? returning}) =>
+        unawaited(store.go(s, returning: returning));
     return Scaffold(
       body: SafeArea(
         child: Align(
@@ -38,7 +40,7 @@ class OnboardingFlow extends ConsumerWidget {
                   onBack: () => go(step.previous),
                   onSkip: () => go(step.next),
                 ),
-                Expanded(child: _body(step, go, store.finish)),
+                Expanded(child: _body(step, go, store.finish, returning)),
               ],
             ),
           ),
@@ -49,8 +51,9 @@ class OnboardingFlow extends ConsumerWidget {
 
   Widget _body(
     OnboardingStep step,
-    void Function(OnboardingStep) go,
+    void Function(OnboardingStep, {bool? returning}) go,
     Future<void> Function() finish,
+    bool returning,
   ) => switch (step) {
     OnboardingStep.welcome => WelcomeStep(
       onStart: () => go(OnboardingStep.dayShape),
@@ -59,7 +62,10 @@ class OnboardingFlow extends ConsumerWidget {
     OnboardingStep.dayShape => DayShapeStep(onNext: () => go(step.next)),
     OnboardingStep.habits => HabitsStep(onNext: () => go(step.next)),
     OnboardingStep.reminders => RemindersStep(onNext: () => go(step.next)),
-    OnboardingStep.account => AccountStep(onNext: () => go(step.next)),
+    OnboardingStep.account => AccountStep(
+      returning: returning,
+      onNext: () => go(step.next),
+    ),
     OnboardingStep.done => DoneStep(onFinish: finish),
   };
 }
@@ -80,7 +86,6 @@ class _TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final total = OnboardingStep.values.length;
     if (step == OnboardingStep.welcome) {
       return const SizedBox(height: DotTouch.android);
     }
@@ -93,33 +98,43 @@ class _TopBar extends StatelessWidget {
             onPressed: onBack,
             icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.text),
           ),
-          Expanded(
-            child: Semantics(
-              label: l10n.onboardingStepOf(step.index + 1, total),
-              excludeSemantics: true,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: DotSpace.xs,
-                children: [
-                  for (var i = 0; i < total; i++)
-                    Container(
-                      width: DotSize.weekDot,
-                      height: DotSize.weekDot,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: i <= step.index
-                            ? t.colors.accent
-                            : t.colors.outline,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
+          Expanded(child: _Dots(step: step)),
           if (step != OnboardingStep.done)
             TextButton(onPressed: onSkip, child: Text(l10n.onboardingSkip))
           else
             const SizedBox(width: DotTouch.android),
+        ],
+      ),
+    );
+  }
+}
+
+/// "Step 2 of 6" as dots, the ones done in accent.
+class _Dots extends StatelessWidget {
+  const _Dots({required this.step});
+
+  final OnboardingStep step;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final total = OnboardingStep.values.length;
+    return Semantics(
+      label: context.l10n.onboardingStepOf(step.index + 1, total),
+      excludeSemantics: true,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: DotSpace.xs,
+        children: [
+          for (var i = 0; i < total; i++)
+            Container(
+              width: DotSize.weekDot,
+              height: DotSize.weekDot,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: i <= step.index ? t.colors.accent : t.colors.outline,
+              ),
+            ),
         ],
       ),
     );

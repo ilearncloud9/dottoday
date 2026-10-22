@@ -39,32 +39,39 @@ class DayShapeStep extends ConsumerWidget {
       body: l10n.onboardingDayShapeBody,
       primary: l10n.onboardingContinue,
       onPrimary: onNext,
-      children: [
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: t.colors.raised,
-            borderRadius: BorderRadius.circular(DotRadii.card),
-            border: Border.all(color: t.colors.hairline),
-          ),
-          child: DayShapeSlider(
-            wakeMinute: windowMinutes(common.start),
-            bedMinute: windowMinutes(common.end),
-            timeText: at,
-            awakeText: (m) => l10n.settingsAwake(formatDurationShort(l10n, m)),
-            wakeLabel: l10n.settingsWakeUp,
-            bedLabel: l10n.settingsBedtime,
-            onChanged: (wake, bed) => unawaited(
-              updateSettings(
-                ProviderScope.containerOf(context, listen: false),
-                (s) => withCommonWindow(
-                  s,
-                  TimeWindow(start: windowTime(wake), end: windowTime(bed)),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
+      children: [_card(context, t, l10n, at, common)],
     );
   }
+
+  /// The slider in a raised card; each move is saved at once.
+  Widget _card(
+    BuildContext context,
+    DotTheme t,
+    AppLocalizations l10n,
+    String Function(int m) at,
+    TimeWindow common,
+  ) => DecoratedBox(
+    decoration: BoxDecoration(
+      color: t.colors.raised,
+      borderRadius: BorderRadius.circular(DotRadii.card),
+      border: Border.all(color: t.colors.hairline),
+    ),
+    child: DayShapeSlider(
+      wakeMinute: windowMinutes(common.start),
+      bedMinute: windowMinutes(common.end),
+      timeText: at,
+      awakeText: (m) => l10n.settingsAwake(formatDurationShort(l10n, m)),
+      wakeLabel: l10n.settingsWakeUp,
+      bedLabel: l10n.settingsBedtime,
+      onChanged: (wake, bed) => unawaited(
+        updateSettings(
+          ProviderScope.containerOf(context, listen: false),
+          (s) => withCommonWindow(
+            s,
+            TimeWindow(start: windowTime(wake), end: windowTime(bed)),
+          ),
+        ),
+      ),
+    ),
+  );
 }

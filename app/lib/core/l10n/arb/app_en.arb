@@ -4506,5 +4506,70 @@
   "onboardingTomorrow": "Tomorrow",
   "@onboardingTomorrow": {
     "description": "Onboarding O6: the day card's title."
+  },
+  "onboardingWelcomeBackTitle": "Welcome back",
+  "@onboardingWelcomeBackTitle": {
+    "description": "Onboarding O5 for a returning user."
+  },
+  "onboardingWelcomeBackBody": "Sign in to bring your tasks to this device.",
+  "@onboardingWelcomeBackBody": {
+    "description": "Onboarding O5 for a returning user."
+  },
+  "accountEmailLabel": "Email",
+  "@accountEmailLabel": {
+    "description": "Sign-in email field label."
+  },
+  "accountSendLink": "Send me a link",
+  "@accountSendLink": {
+    "description": "Sign in by email: send the magic link."
+  },
+  "accountOtherWays": "Other ways to sign in",
+  "@accountOtherWays": {
+    "description": "Sign in by email: back to Apple / Google / email."
+  },
+  "accountEmailInvalid": "That doesn't look like an email address.",
+  "@accountEmailInvalid": {
+    "description": "Sign-in email field error."
+  },
+  "accountCheckMailTitle": "Check your mail",
+  "@accountCheckMailTitle": {
+    "description": "Magic link sent."
+  },
+  "accountCheckMailBody": "We sent a sign-in link to {email}. Open it on this device to carry on.",
+  "@accountCheckMailBody": {
+    "description": "Magic link sent: where.",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountResend": "Send it again",
+  "@accountResend": {
+    "description": "Magic link sent: resend."
+  },
+  "accountOtherEmail": "Use a different email",
+  "@accountOtherEmail": {
+    "description": "Magic link sent: back to the email field."
+  },
+  "accountErrorTitle": "Couldn't sign in",
+  "@accountErrorTitle": {
+    "description": "Sign-in error heading."
+  },
+  "accountRestoring": "Bringing your tasks to this device…",
+  "@accountRestoring": {
+    "description": "Restore from sync after sign-in."
+  },
+  "accountRestoreCount": "{done} of {total}",
+  "@accountRestoreCount": {
+    "description": "Restore progress count.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
   }
 }

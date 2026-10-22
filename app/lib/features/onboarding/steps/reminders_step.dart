@@ -53,38 +53,46 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
       secondary: _denied ? null : l10n.onboardingNotNow,
       onSecondary: widget.onNext,
       children: [
-        SettingsGroup(
-          caption: l10n.settingsReminders,
-          children: [
-            SettingsRow(
-              glyph: DotGlyphs.bell,
-              tint: t.colors.accentInk,
-              title: l10n.onboardingTaskStarts,
-              subtitle: l10n.onboardingTaskStartsDetail,
-            ),
-            SettingsRow(
-              glyph: DotGlyphs.moon,
-              tint: t.tasks[TaskColor.violet].ink,
-              title: l10n.onboardingBedtime,
-              subtitle: l10n.onboardingBedtimeDetail,
-              toggle: bedtime,
-              onToggle: (on) => unawaited(
-                updateSettings(
-                  ProviderScope.containerOf(context, listen: false),
-                  (s) => s.copyWith(bedtimeReminder: on),
-                ),
-              ),
-            ),
-            SettingsRow(
-              glyph: DotGlyphs.calendar,
-              tint: t.colors.muted,
-              title: l10n.calendarsConnect,
-              subtitle: l10n.calendarsComingSoon,
-            ),
-          ],
-        ),
+        _rows(context, t, l10n, bedtime),
         if (_denied) PermissionNotice(onOpenSettings: permission.openSettings),
       ],
     );
   }
+
+  /// Before each task, At Bedtime (its switch), Connect a calendar (off).
+  Widget _rows(
+    BuildContext context,
+    DotTheme t,
+    AppLocalizations l10n,
+    bool bedtime,
+  ) => SettingsGroup(
+    caption: l10n.settingsReminders,
+    children: [
+      SettingsRow(
+        glyph: DotGlyphs.bell,
+        tint: t.colors.accentInk,
+        title: l10n.onboardingTaskStarts,
+        subtitle: l10n.onboardingTaskStartsDetail,
+      ),
+      SettingsRow(
+        glyph: DotGlyphs.moon,
+        tint: t.tasks[TaskColor.violet].ink,
+        title: l10n.onboardingBedtime,
+        subtitle: l10n.onboardingBedtimeDetail,
+        toggle: bedtime,
+        onToggle: (on) => unawaited(
+          updateSettings(
+            ProviderScope.containerOf(context, listen: false),
+            (s) => s.copyWith(bedtimeReminder: on),
+          ),
+        ),
+      ),
+      SettingsRow(
+        glyph: DotGlyphs.calendar,
+        tint: t.colors.muted,
+        title: l10n.calendarsConnect,
+        subtitle: l10n.calendarsComingSoon,
+      ),
+    ],
+  );
 }

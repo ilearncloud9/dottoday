@@ -1,5 +1,3 @@
-import 'package:dottoday/core/failures/app_failure.dart';
-import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/domain/auth/account.dart';
@@ -8,39 +6,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
+import '../../support/account_fakes.dart';
 import 'settings_harness.dart';
 
 // Settings sub-pages (docs/09 M3f.7): Account, Calendars, Export, Help,
 // Privacy, About.
-
-/// Accounts on, signed in, recording what was asked.
-final class _SignedInService implements AccountService {
-  final calls = <String>[];
-
-  @override
-  bool get available => true;
-
-  @override
-  Stream<Account> watch() => Stream.value(
-    const SignedIn(email: 'kody@example.com', method: SignInMethod.email),
-  );
-
-  @override
-  Future<Result<void, AppFailure>> signIn(SignInMethod method) async =>
-      const Ok(null);
-
-  @override
-  Future<Result<void, AppFailure>> signOut() async {
-    calls.add('signOut');
-    return const Ok(null);
-  }
-
-  @override
-  Future<Result<void, AppFailure>> deleteAccount() async {
-    calls.add('delete');
-    return const Ok(null);
-  }
-}
 
 Future<void> _tap(WidgetTester tester, String text) async {
   await tester.ensureVisible(find.text(text).first);
@@ -88,7 +58,12 @@ void main() {
     });
 
     testWidgets('signed in: Delete needs the typed word', (tester) async {
-      final service = _SignedInService();
+      final service = FakeAccountService(
+        account: const SignedIn(
+          email: 'kody@example.com',
+          method: SignInMethod.email,
+        ),
+      );
       await pumpSettings(
         tester,
         location: '/settings/account',

@@ -19,14 +19,26 @@ enum OnboardingStep {
 /// the last skip) is tapped; otherwise [step] is where it resumes, so a
 /// flow killed half-way picks up there (docs/09 M4.8).
 final class OnboardingProgress {
-  const OnboardingProgress({required this.step, this.finished = false});
+  const OnboardingProgress({
+    required this.step,
+    this.finished = false,
+    this.returning = false,
+  });
 
   static const start = OnboardingProgress(step: OnboardingStep.welcome);
 
   final OnboardingStep step;
   final bool finished;
 
-  Map<String, Object> toJson() => {'step': step.name, 'finished': finished};
+  /// Came in through "I already have an account" (O1): O5 says "Welcome
+  /// back" and leads with signing in.
+  final bool returning;
+
+  Map<String, Object> toJson() => {
+    'step': step.name,
+    'finished': finished,
+    'returning': returning,
+  };
 
   /// Reads what [toJson] wrote; anything unexpected starts over.
   static OnboardingProgress fromJson(Object? json) {
@@ -37,6 +49,7 @@ final class OnboardingProgress {
     return OnboardingProgress(
       step: step ?? OnboardingStep.welcome,
       finished: json['finished'] == true,
+      returning: json['returning'] == true,
     );
   }
 }

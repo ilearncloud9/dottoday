@@ -2,15 +2,18 @@
 @Tags(['golden'])
 library;
 
+import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
+import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/onboarding/onboarding_gate.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
+import '../../support/account_fakes.dart';
 import '../../support/dot_golden.dart';
 import '../../support/first_thread_rows.dart';
 import '../../support/onboarding_fakes.dart';
@@ -52,4 +55,38 @@ void main() {
       build: (_) => const OnboardingGate(child: SizedBox.shrink()),
     );
   }
+  // M4.7 states, with accounts on.
+  final accounts = FakeAccountService();
+  goldenMatrix(
+    'onboarding_check_mail',
+    height: 844,
+    widths: widths,
+    overrides: [
+      ..._at(OnboardingStep.account),
+      accountServiceProvider.overrideWithValue(accounts),
+    ],
+    act: (tester) async {
+      await tester.tap(find.text('Continue with email'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'kody@example.com');
+      await tester.tap(find.text('Send me a link'));
+    },
+    build: (_) => const OnboardingGate(child: SizedBox.shrink()),
+  );
+  goldenMatrix(
+    'onboarding_restoring',
+    height: 844,
+    widths: widths,
+    overrides: [
+      ..._at(OnboardingStep.account),
+      accountServiceProvider.overrideWithValue(accounts),
+    ],
+    act: (tester) async {
+      await tester.tap(find.text('Continue with Apple'));
+      await tester.pumpAndSettle();
+      accounts.restore.add(const RestoreProgress(done: 120, total: 300));
+      await tester.pump();
+    },
+    build: (_) => const OnboardingGate(child: SizedBox.shrink()),
+  );
 }
