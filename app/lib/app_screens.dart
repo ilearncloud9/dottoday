@@ -8,7 +8,6 @@ import 'package:dottoday/features/timeline/month_screen.dart';
 import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/features/timeline/week_screen.dart';
-import 'package:flutter/material.dart';
 
 /// Composition-root wiring of routes to screens. Today and Week get the
 /// Inbox sidebar here, so no feature imports another (M3e.2).
