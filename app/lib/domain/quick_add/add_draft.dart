@@ -11,7 +11,8 @@ import 'package:timezone/timezone.dart' as tz;
 ///
 /// Each value comes from the most deliberate source that set it: a choice
 /// made on step 2 (or the colour row), then what was typed ("Go shopping
-/// 5pm 1h", R-06), then the picked [habit], then the defaults. So typing
+/// 5pm 1h", R-06), then where Add was opened (an "add here" gap or a day,
+/// R-17), then the picked [habit], then the defaults. So typing
 /// never overwrites a time the user picked, and clearing the typed time
 /// falls back to the habit's usual one (docs/10 §6 "Add never asks for
 /// what it can infer").
@@ -34,6 +35,8 @@ final class AddDraft {
     this.minuteOfDay,
     this.durationMin,
     this.allDay = false,
+    this.openedDate,
+    this.openedMinute,
   });
 
   /// Local calendar date of today (y/m/d).
@@ -59,6 +62,10 @@ final class AddDraft {
   /// Time ⋯ › Make it all-day: local midnight for 24 h (M3c.4).
   final bool allDay;
 
+  /// Where Add was opened (a gap, "Add to this day"): below what is typed.
+  final DateTime? openedDate;
+  final int? openedMinute;
+
   /// Title without the recognised tokens.
   String get title => typed.title.trim();
 
@@ -66,11 +73,19 @@ final class AddDraft {
   String get icon => iconKey ?? habit?.iconKey ?? defaultIconKey;
 
   /// The local day it lands on.
-  DateTime get day => date ?? typed.date ?? today;
+  DateTime get day => date ?? _typedDay ?? openedDate ?? today;
+
+  /// The parser's date is UTC-flagged (fields only); compare as a local
+  /// date like [today].
+  DateTime? get _typedDay => switch (typed.date) {
+    final d? => DateTime(d.year, d.month, d.day),
+    null => null,
+  };
 
   /// Local start, minutes after midnight; null means no time yet.
-  int? get startMinute =>
-      allDay ? 0 : minuteOfDay ?? typed.minuteOfDay ?? habit?.minuteOfDay;
+  int? get startMinute => allDay
+      ? 0
+      : minuteOfDay ?? typed.minuteOfDay ?? openedMinute ?? habit?.minuteOfDay;
 
   int get length => allDay
       ? Duration.minutesPerDay
@@ -110,14 +125,34 @@ final class AddDraft {
   /// next multiple of [snap] minutes (a free slot or "now" on the grid).
   AddDraft withStartUtc(DateTime utc, {int snap = 5}) {
     final local = tz.TZDateTime.from(utc, tz.getLocation(tzId));
-    final raw = local.hour * 60 + local.minute + (local.second > 0 ? 1 : 0);
-    final snapped = (raw + snap - 1) ~/ snap * snap;
     return _copy(
       date: () => DateTime(local.year, local.month, local.day),
-      minuteOfDay: () => snapped.clamp(0, Duration.minutesPerDay - snap),
+      minuteOfDay: () => _snapUp(local, snap),
       allDay: false,
     );
   }
+
+  /// [local]'s minute of day rounded up to [snap], within the day.
+  static int _snapUp(DateTime local, int snap) {
+    final raw = local.hour * 60 + local.minute + (local.second > 0 ? 1 : 0);
+    final snapped = (raw + snap - 1) ~/ snap * snap;
+    return snapped.clamp(0, Duration.minutesPerDay - snap);
+  }
+
+  /// Opened at [utc] (an "add here" gap): its local day and minute,
+  /// rounded up to [snap], as defaults that typing overrides.
+  AddDraft openedAt(DateTime utc, {int snap = 5}) {
+    final local = tz.TZDateTime.from(utc, tz.getLocation(tzId));
+    final at = _snapUp(local, snap);
+    return _copy(
+      openedDate: () => DateTime(local.year, local.month, local.day),
+      openedMinute: () => at,
+    );
+  }
+
+  /// Opened on [value] ("Add to this day"), a default typing overrides.
+  AddDraft openedOn(DateTime value) =>
+      _copy(openedDate: () => DateTime(value.year, value.month, value.day));
 
   AddDraft withDuration(int minutes) =>
       _copy(durationMin: () => minutes, allDay: false);
@@ -169,6 +204,8 @@ final class AddDraft {
     int? Function()? durationMin,
     String? tzId,
     bool? allDay,
+    DateTime? Function()? openedDate,
+    int? Function()? openedMinute,
   }) => AddDraft(
     today: today,
     tzId: tzId ?? this.tzId,
@@ -181,5 +218,7 @@ final class AddDraft {
     minuteOfDay: minuteOfDay == null ? this.minuteOfDay : minuteOfDay(),
     durationMin: durationMin == null ? this.durationMin : durationMin(),
     allDay: allDay ?? this.allDay,
+    openedDate: openedDate == null ? this.openedDate : openedDate(),
+    openedMinute: openedMinute == null ? this.openedMinute : openedMinute(),
   );
 }

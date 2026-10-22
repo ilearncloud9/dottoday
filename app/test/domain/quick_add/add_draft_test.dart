@@ -103,6 +103,29 @@ void main() {
     expect(late.startMinute, 1435);
   });
 
+  test('where Add opened is a default: typing wins over it (R-17)', () {
+    final gap = _draft().openedAt(DateTime.utc(2026, 10, 21, 6, 13));
+    expect((gap.day, gap.startMinute), (DateTime(2026, 10, 21), 8 * 60 + 15));
+    final typed = gap.withTyped(_parse('Go shopping 5pm'));
+    expect(typed.startMinute, 17 * 60);
+    final tomorrow = gap.withTyped(_parse('Run tomorrow'));
+    expect(tomorrow.day, DateTime(2026, 10, 22));
+    expect(tomorrow.startMinute, 8 * 60 + 15);
+    final habit = HabitSuggestion(
+      title: 'Run',
+      minuteOfDay: 6 * 60,
+      durationMin: 30,
+      colorKey: 'mint',
+      iconKey: 'run',
+      uses: 2,
+      lastUsedUtc: DateTime.utc(2026, 10, 1),
+    );
+    expect(gap.withHabit(habit).startMinute, 8 * 60 + 15);
+    final day = _draft().openedOn(DateTime(2026, 10, 24, 9));
+    expect(day.day, DateTime(2026, 10, 24));
+    expect(day.withTyped(_parse('Hike today')).day, DateTime(2026, 10, 21));
+  });
+
   test('another zone moves the instant, not the wall clock', () {
     final d = _draft().withTyped(_parse('Call 5pm')).withZone('Europe/London');
     expect(d.startUtc, DateTime.utc(2026, 10, 21, 16));

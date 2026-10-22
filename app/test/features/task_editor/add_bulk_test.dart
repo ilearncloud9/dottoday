@@ -88,6 +88,17 @@ void main() {
     expect(find.text('12:05 PM – 12:35 PM'), findsOneWidget);
   });
 
+  testWidgets('a time typed after "add here" wins over the gap', (
+    tester,
+  ) async {
+    await pumpAddHost(tester, startUtc: DateTime.utc(2026, 10, 21, 6, 15));
+    await tester.enterText(addTitle, 'Go shopping 5pm tomorrow');
+    await tester.pump();
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Tomorrow · 5:00 PM'), findsOneWidget);
+  });
+
   testWidgets('"Add to this day": Add opens on that day', (tester) async {
     await pumpAddHost(tester, day: DateTime(2026, 10, 24));
     await tester.enterText(addTitle, 'Hike');

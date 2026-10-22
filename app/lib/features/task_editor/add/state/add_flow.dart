@@ -124,9 +124,9 @@ class AddFlow extends _$AddFlow {
       tzId: profile.tzId,
       defaultDurationMin: profile.settings.defaultDurationMin,
     );
-    if (request.day case final day?) draft = draft.withDay(day);
+    if (request.day case final day?) draft = draft.openedOn(day);
     if (request.startUtc case final start?) {
-      draft = draft.withStartUtc(start, snap: profile.settings.snapMinutes);
+      draft = draft.openedAt(start, snap: profile.settings.snapMinutes);
     }
     final initial = AddFlowState(draft: draft, text: '', language: language);
     return _typed(initial, request.text);
