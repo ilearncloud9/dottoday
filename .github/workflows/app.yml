@@ -149,6 +149,8 @@ jobs:
           api-level: 34
           arch: x86_64
           target: google_apis
+          # A common phone, not the bare default (a 320 × 640 dp screen).
+          profile: pixel_6
           disable-animations: true
           working-directory: app
           script: >-

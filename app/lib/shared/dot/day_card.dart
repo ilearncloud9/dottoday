@@ -77,6 +77,7 @@ class DayCard extends StatelessWidget {
         footer: footer,
       );
     }
+    final header = _Header(title: title, isToday: isToday, summary: summary);
     return DecoratedBox(
       decoration: BoxDecoration(
         color: c.raised,
@@ -89,37 +90,52 @@ class DayCard extends StatelessWidget {
       // rounded corners; the header covers the top ones.
       child: Padding(
         padding: const EdgeInsets.only(bottom: DotRadii.cardLarge),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _Header(title: title, isToday: isToday, summary: summary),
-            Expanded(
-              // Lazy: only the rows on screen are built (R-15).
-              child: CustomScrollView(
-                slivers: [
-                  SliverPadding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(
-                      0,
-                      DotSpace.xs,
-                      DotSpace.xs,
-                      0,
-                    ),
-                    sliver: SliverMainAxisGroup(
-                      slivers: [
-                        Thread.sliver(entries: entries, actions: actions),
-                        if (footer case final f?) SliverToBoxAdapter(child: f),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+        child: LayoutBuilder(builder: (_, box) => _body(box, header)),
       ),
     );
   }
+
+  /// Header over the scrolling thread; in a very short card (a small phone
+  /// with a prompt above it) the header scrolls with it instead of
+  /// overflowing (M4.9).
+  Widget _body(BoxConstraints box, Widget header) {
+    if (box.maxHeight < _shortCard) {
+      return CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(child: header),
+          _thread(),
+        ],
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        header,
+        // Lazy: only the rows on screen are built (R-15).
+        Expanded(child: CustomScrollView(slivers: [_thread()])),
+      ],
+    );
+  }
+
+  /// The day's thread (and footer), with the card's insets.
+  Widget _thread() => SliverPadding(
+    padding: const EdgeInsetsDirectional.fromSTEB(
+      0,
+      DotSpace.xs,
+      DotSpace.xs,
+      0,
+    ),
+    sliver: SliverMainAxisGroup(
+      slivers: [
+        Thread.sliver(entries: entries, actions: actions),
+        if (footer case final f?) SliverToBoxAdapter(child: f),
+      ],
+    ),
+  );
 }
+
+/// Below this height the header scrolls with the thread.
+const _shortCard = 160.0;
 
 class _Header extends StatelessWidget {
   const _Header({

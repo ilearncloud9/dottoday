@@ -16,7 +16,10 @@ Future<void> passOnboarding(
     for (final label in ['Get started', 'Skip', 'Open today', 'Continue']) {
       final button = find.text(label);
       if (tester.any(button)) {
-        await tester.tap(button.first);
+        // A small screen puts O6's button below the card: scroll to it.
+        await tester.ensureVisible(button.first);
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.tap(button.first, warnIfMissed: false);
         break;
       }
     }
