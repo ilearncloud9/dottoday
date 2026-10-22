@@ -4312,5 +4312,22 @@
   "stateReadFailed": "Couldn't read your tasks on this device.",
   "@stateReadFailed": {
     "description": "Inline error when a screen could not load from the local database."
+  },
+  "inboxSelect": "Select",
+  "@inboxSelect": {
+    "description": "Inbox row menu and screen-reader action: start picking several tasks."
+  },
+  "inboxPlanThese": "Plan these",
+  "@inboxPlanThese": {
+    "description": "Inbox selection bar: place the picked tasks where they first fit this week."
+  },
+  "inboxSelectedLabel": "{title}, selected",
+  "@inboxSelectedLabel": {
+    "description": "Screen reader: an inbox row that is picked.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
   }
 }

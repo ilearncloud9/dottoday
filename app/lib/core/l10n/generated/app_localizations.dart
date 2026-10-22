@@ -4347,6 +4347,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t read your tasks on this device.'**
   String get stateReadFailed;
+
+  /// Inbox row menu and screen-reader action: start picking several tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get inboxSelect;
+
+  /// Inbox selection bar: place the picked tasks where they first fit this week.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan these'**
+  String get inboxPlanThese;
+
+  /// Screen reader: an inbox row that is picked.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, selected'**
+  String inboxSelectedLabel(String title);
 }
 
 class _AppLocalizationsDelegate

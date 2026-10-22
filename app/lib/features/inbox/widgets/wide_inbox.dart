@@ -14,6 +14,7 @@ import 'package:dottoday/features/inbox/widgets/inbox_add_field.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_commands.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_filters.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_fit.dart';
+import 'package:dottoday/features/inbox/widgets/inbox_list.dart';
 import 'package:dottoday/features/inbox/widgets/wide_inbox_header.dart';
 import 'package:dottoday/shared/dot/inbox_row.dart';
 import 'package:dottoday/shared/dot/pointer_draggable.dart';
@@ -92,7 +93,7 @@ class WideInbox extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: DotSpace.xl,
                   children: [
-                    Expanded(child: _list(context, shown, fitOf)),
+                    Expanded(child: _list(context, ref, shown, fitOf)),
                     SizedBox(width: _panelWidth, child: panel(shown)),
                   ],
                 ),
@@ -106,6 +107,7 @@ class WideInbox extends ConsumerWidget {
 
   Widget _list(
     BuildContext context,
+    WidgetRef ref,
     List<Occurrence> shown,
     Map<String, WeekFit?> fitOf,
   ) {
@@ -119,12 +121,16 @@ class WideInbox extends ConsumerWidget {
         const SizedBox(height: DotSpace.m),
         const InboxFilters(),
         const SizedBox(height: DotSpace.m),
-        for (final o in shown)
-          Padding(
-            key: ValueKey(o.id),
-            padding: const EdgeInsets.only(bottom: DotSpace.s),
-            child: _row(context, o, fitOf[o.id]),
-          ),
+        InboxList(
+          shown: shown,
+          // The user's own order: "Sort: added", unfiltered (M3f.9c).
+          canReorder:
+              ref.watch(inboxSortChoiceProvider) == InboxSort.added &&
+              ref.watch(inboxFilterChoiceProvider) == InboxFilter.all,
+          commands: commands,
+          row: (o, s) => _row(context, o, fitOf[o.id], s),
+          after: (_) => const SizedBox(height: DotSpace.s),
+        ),
         if (done.isNotEmpty) ...[
           const SizedBox(height: DotSpace.l),
           CompletedGroup(
@@ -138,7 +144,12 @@ class WideInbox extends ConsumerWidget {
   }
 
   /// A row: drag it onto a gap, or ⌘⏎ to place it where it first fits.
-  Widget _row(BuildContext context, Occurrence o, WeekFit? fit) {
+  Widget _row(
+    BuildContext context,
+    Occurrence o,
+    WeekFit? fit,
+    InboxRowState s,
+  ) {
     final l10n = context.l10n;
     final created = tz.TZDateTime.from(o.createdAt, zone);
     void place() {
@@ -155,10 +166,19 @@ class WideInbox extends ConsumerWidget {
       icon: TaskIcon.fromKey(o.iconKey),
       onSchedule: () => unawaited(commands.schedule(o)),
       onTrash: () => unawaited(commands.trash(o)),
-      onOpen: () => ProviderScope.containerOf(
-        context,
-      ).read(editingTaskProvider.notifier).open(o.id),
+      onOpen: s.selected != null
+          ? s.toggle
+          : () => ProviderScope.containerOf(
+              context,
+            ).read(editingTaskProvider.notifier).open(o.id),
+      selected: s.selected,
+      onSelect: s.toggle,
+      reorderIndex: s.reorderIndex,
+      onMoveUp: s.moveUp,
+      onMoveDown: s.moveDown,
     );
+    // While picking, rows don't drag onto the thread.
+    if (s.selected != null) return row;
     return CallbackShortcuts(
       bindings: {
         AppShortcuts.activator(defaultTargetPlatform, LogicalKeyboardKey.enter):

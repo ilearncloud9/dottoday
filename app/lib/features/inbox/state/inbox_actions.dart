@@ -85,3 +85,31 @@ Future<Result<UndoToken, AppFailure>> trashItems(
 ) => ref.read(trashServiceProvider).trashOccurrences(done.first.userId, {
   for (final o in done) o.id,
 });
+
+/// Writes the Inbox's new order (see `reorderInbox`).
+Future<Result<UndoToken, AppFailure>> reorderItems(
+  ProviderContainer ref,
+  List<Occurrence> changed,
+) => _writeAll(ref, changed);
+
+/// Gives every one of [items] [colorKey] (the selection bar's Colour).
+Future<Result<UndoToken, AppFailure>> recolourItems(
+  ProviderContainer ref,
+  List<Occurrence> items,
+  String colorKey,
+) => _writeAll(ref, [for (final o in items) o.copyWith(colorKey: colorKey)]);
+
+Future<Result<UndoToken, AppFailure>> _writeAll(
+  ProviderContainer ref,
+  List<Occurrence> rows,
+) {
+  final now = ref.read(clockProvider).nowUtc();
+  return ref
+      .read(undoServiceProvider)
+      .applyUndoable(
+        WriteBatch(
+          userId: rows.first.userId,
+          occurrences: [for (final o in rows) o.copyWith(updatedAt: now)],
+        ),
+      );
+}

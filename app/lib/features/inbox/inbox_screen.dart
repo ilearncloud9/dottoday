@@ -19,6 +19,9 @@ import 'package:dottoday/features/inbox/widgets/inbox_commands.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_filters.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_fit.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_header.dart';
+import 'package:dottoday/features/inbox/widgets/inbox_list.dart';
+import 'package:dottoday/features/inbox/widgets/inbox_selection_bar.dart';
+import 'package:dottoday/features/inbox/widgets/swipe_hint.dart';
 import 'package:dottoday/features/inbox/widgets/wide_inbox.dart';
 import 'package:dottoday/shared/dot/inbox_row.dart';
 import 'package:dottoday/shared/dot/next_free_slot.dart';
@@ -88,6 +91,13 @@ class InboxScreen extends ConsumerWidget {
     );
     return Scaffold(
       key: _key,
+      bottomNavigationBar: SafeArea(
+        child: InboxSelectionBar(
+          items: items,
+          today: today,
+          commands: commands,
+        ),
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, box) =>
@@ -190,22 +200,31 @@ class _Body extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-        for (final o in shown) ...[
-          InboxRow(
-            key: ValueKey(o.id),
+        InboxList(
+          shown: shown,
+          // The user's own order: the stored one, unfiltered (M3f.9c).
+          canReorder: filter == InboxFilter.all,
+          commands: commands,
+          row: (o, s) => InboxRow(
             title: o.title,
             meta: formatDurationShort(l10n, o.durationMin),
             color: TaskColor.fromKey(o.colorKey),
             icon: TaskIcon.fromKey(o.iconKey),
             onSchedule: () => unawaited(commands.schedule(o)),
             onTrash: () => unawaited(commands.trash(o)),
-            onOpen: () => unawaited(context.push(AppRoutes.task(o.id))),
+            onOpen: s.selected == null
+                ? () => unawaited(context.push(AppRoutes.task(o.id)))
+                : s.toggle,
+            selected: s.selected,
+            onSelect: s.toggle,
+            reorderIndex: s.reorderIndex,
+            onMoveUp: s.moveUp,
+            onMoveDown: s.moveDown,
           ),
-          if (o == shown.first)
-            const _SwipeHint()
-          else
-            const SizedBox(height: DotSpace.s),
-        ],
+          after: (i) => i == 0
+              ? const InboxSwipeHint()
+              : const SizedBox(height: DotSpace.s),
+        ),
         if (next != null) ...[
           const SizedBox(height: DotSpace.s),
           NextFreeSlot(
@@ -237,46 +256,4 @@ class _Body extends StatelessWidget {
       ),
     ],
   ];
-}
-
-/// "← Schedule · Move to Trash →" under the first row, so the swipes are
-/// discoverable (`A-ios-inbox`). Arrows follow the reading direction.
-class _SwipeHint extends StatelessWidget {
-  const _SwipeHint();
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    final rtl = Directionality.of(context) == TextDirection.rtl;
-    final style = t.styles.rowMeta;
-    final arrow = DotSize.rowIcon - DotSpace.xs;
-    return ExcludeSemantics(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: DotSpace.l,
-          vertical: DotSpace.s,
-        ),
-        child: Row(
-          children: [
-            DotIcon(
-              rtl ? DotGlyphs.arrowRight : DotGlyphs.arrowLeft,
-              color: t.colors.muted,
-              size: arrow,
-            ),
-            const SizedBox(width: DotSpace.xs),
-            Text(l10n.inboxSchedule, style: style),
-            const Spacer(),
-            Text(l10n.inboxTrash, style: style),
-            const SizedBox(width: DotSpace.xs),
-            DotIcon(
-              rtl ? DotGlyphs.arrowLeft : DotGlyphs.arrowRight,
-              color: t.colors.muted,
-              size: arrow,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

@@ -7,11 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 
+part 'inbox_row_parts.dart';
+
 /// An unscheduled task (docs/10 §3 `InboxRow`, `A-ios-inbox`): outlined
 /// dot, length, title and a round "+" that schedules it. Swipe toward the
 /// start schedules, toward the end trashes; screen readers get both as
 /// actions, and a long-press or right-click opens the same choices, so
-/// nothing needs a swipe (R-12).
+/// nothing needs a swipe (R-12). The menu's Select starts picking several
+/// ([selected] then shows a check instead of "+"); [reorderIndex] adds a
+/// drag handle, with Move up / Move down for keyboards and screen readers
+/// (docs/09 M3f.9c).
 class InboxRow extends StatelessWidget {
   const InboxRow({
     required this.title,
@@ -24,8 +29,25 @@ class InboxRow extends StatelessWidget {
     this.fit,
     this.titleFirst = false,
     this.swipe = true,
+    this.selected,
+    this.onSelect,
+    this.reorderIndex,
+    this.onMoveUp,
+    this.onMoveDown,
     super.key,
   });
+
+  /// Null when not selecting; otherwise whether this row is picked (a tap
+  /// — [onOpen] — then toggles it).
+  final bool? selected;
+
+  /// "Select": start picking several, with this row.
+  final VoidCallback? onSelect;
+
+  /// Its place in a reorderable list; null hides the handle.
+  final int? reorderIndex;
+  final VoidCallback? onMoveUp;
+  final VoidCallback? onMoveDown;
 
   final String title;
 
@@ -53,19 +75,18 @@ class InboxRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final t = DotTheme.of(context);
+    final selecting = selected != null;
     return Semantics(
       container: true,
       button: onOpen != null,
+      selected: selected,
       label: switch (fit) {
         final f? => l10n.inboxRowFitLabel(l10n.inboxRowLabel(title, meta), f),
         null => l10n.inboxRowLabel(title, meta),
       },
       onTap: onOpen,
-      customSemanticsActions: {
-        CustomSemanticsAction(label: l10n.inboxSchedule): onSchedule,
-        CustomSemanticsAction(label: l10n.inboxTrash): onTrash,
-      },
-      child: swipe
+      customSemanticsActions: _actions(l10n),
+      child: swipe && !selecting
           ? Dismissible(
               key: ValueKey(
                 title.hashCode ^ meta.hashCode ^ identityHashCode(this),
@@ -95,6 +116,16 @@ class InboxRow extends StatelessWidget {
     );
   }
 
+  /// Everything a swipe, the menu or the handle does, for screen readers.
+  Map<CustomSemanticsAction, VoidCallback> _actions(AppLocalizations l10n) => {
+    CustomSemanticsAction(label: l10n.inboxSchedule): onSchedule,
+    CustomSemanticsAction(label: l10n.inboxTrash): onTrash,
+    if (selected == null)
+      CustomSemanticsAction(label: l10n.inboxSelect): ?onSelect,
+    CustomSemanticsAction(label: l10n.subtaskMoveUp): ?onMoveUp,
+    CustomSemanticsAction(label: l10n.subtaskMoveDown): ?onMoveDown,
+  };
+
   Future<void> _menu(BuildContext context, Offset at) async {
     final l10n = context.l10n;
     final picked = await showMenu<VoidCallback>(
@@ -103,6 +134,8 @@ class InboxRow extends StatelessWidget {
       items: [
         PopupMenuItem(value: onSchedule, child: Text(l10n.inboxSchedule)),
         PopupMenuItem(value: onTrash, child: Text(l10n.inboxTrash)),
+        if (onSelect case final select? when selected == null)
+          PopupMenuItem(value: select, child: Text(l10n.inboxSelect)),
       ],
     );
     picked?.call();
@@ -127,7 +160,10 @@ class _Card extends StatelessWidget {
         color: c.raised,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DotRadii.card),
-          side: BorderSide(color: c.hairline),
+          side: BorderSide(
+            color: row.selected == true ? c.accent : c.hairline,
+            width: row.selected == true ? DotSize.smallDotOutline : 1,
+          ),
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -147,23 +183,7 @@ class _Card extends StatelessWidget {
                     label: row.title,
                   ),
                 ),
-                Expanded(
-                  // The row's container carries the label.
-                  child: ExcludeSemantics(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: row.titleFirst
-                          ? [
-                              Text(row.title, style: t.styles.rowTitle),
-                              Text(row.meta, style: t.styles.rowMeta),
-                            ]
-                          : [
-                              Text(row.meta, style: t.styles.rowMeta),
-                              Text(row.title, style: t.styles.rowTitle),
-                            ],
-                    ),
-                  ),
-                ),
+                Expanded(child: _Texts(row: row)),
                 if (row.fit case final fit?)
                   ExcludeSemantics(
                     child: Text(
@@ -171,48 +191,10 @@ class _Card extends StatelessWidget {
                       style: t.styles.body.copyWith(color: c.muted),
                     ),
                   ),
-                IconButton.filledTonal(
-                  tooltip: context.l10n.inboxSchedule,
-                  onPressed: row.onSchedule,
-                  style: IconButton.styleFrom(
-                    backgroundColor: c.accentTint,
-                    minimumSize: const Size.square(DotTouch.android),
-                  ),
-                  icon: DotIcon(DotGlyphs.add, color: c.accentInk),
-                ),
+                _Trailing(row: row),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SwipeLabel extends StatelessWidget {
-  const _SwipeLabel({
-    required this.text,
-    required this.color,
-    required this.alignment,
-  });
-
-  final String text;
-  final Color color;
-  final AlignmentGeometry alignment;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(DotRadii.card),
-      ),
-      child: Align(
-        alignment: alignment,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: DotSpace.xl),
-          child: Text(text, style: t.styles.button),
         ),
       ),
     );

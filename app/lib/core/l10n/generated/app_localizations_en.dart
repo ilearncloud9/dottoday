@@ -2956,4 +2956,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stateReadFailed => 'Couldn\'t read your tasks on this device.';
+
+  @override
+  String get inboxSelect => 'Select';
+
+  @override
+  String get inboxPlanThese => 'Plan these';
+
+  @override
+  String inboxSelectedLabel(String title) {
+    return '$title, selected';
+  }
 }

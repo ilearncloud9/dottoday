@@ -7,6 +7,7 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/inbox/inbox_screen.dart';
 import 'package:dottoday/features/inbox/inbox_sidebar.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -61,6 +62,21 @@ void main() {
         200,
         scrollable: find.byType(Scrollable).first,
       );
+    },
+    build: (_) => _inbox(sampleInbox()),
+  );
+  // M3f.9c: two picked, the selection bar.
+  goldenMatrix(
+    'inbox_selecting',
+    height: 844,
+    widths: const {'compact', 'expanded'},
+    act: (tester) async {
+      // Right-click: on Mac/web a touch hold drags the row instead.
+      await tester.tap(find.text('Do taxes'), buttons: kSecondaryButton);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Select'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Call Mum'));
     },
     build: (_) => _inbox(sampleInbox()),
   );

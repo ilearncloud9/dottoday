@@ -4,9 +4,11 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/quick_add/quick_add_actions.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/scheduling/inbox_order.dart';
 import 'package:dottoday/domain/scheduling/schedule_result.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/features/inbox/state/inbox_actions.dart';
@@ -136,6 +138,33 @@ final class InboxCommands {
   Future<void> clearDone(List<Occurrence> done) async => _report(
     await trashItems(_container, done),
     _l10n.snackClearedCompleted(done.length),
+    (t) => t,
+  );
+
+  /// Drag or Move up / down (M3f.9c): the shown list's new order.
+  Future<void> reorder(List<Occurrence> shown, int from, int to) async {
+    final changed = reorderInbox(shown, from, to);
+    if (changed.isEmpty) return;
+    final result = await reorderItems(_container, changed);
+    if (result case Err(:final failure)) {
+      _messenger.showSnackBar(
+        SnackBar(content: Text(failureMessage(_l10n, failure))),
+      );
+    }
+  }
+
+  /// Selection bar › Colour.
+  Future<void> recolour(List<Occurrence> items, TaskColor colour) async =>
+      _report(
+        await recolourItems(_container, items, colour.key),
+        _l10n.snackManyRecoloured(items.length),
+        (t) => t,
+      );
+
+  /// Selection bar › Delete (after its confirm).
+  Future<void> trashMany(List<Occurrence> items) async => _report(
+    await trashItems(_container, items),
+    _l10n.snackManyDeleted(items.length),
     (t) => t,
   );
 

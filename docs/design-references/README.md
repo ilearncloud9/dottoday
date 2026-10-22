@@ -69,3 +69,4 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Sync sheet (no account; state, last synced, pending, Sync now, conflict cards with Keep mine / Keep theirs), the sync banner (offline / conflicts), the notifications-off notice (Settings, Alerts editor) | §5.3 "Sync status sheet", §5.4 offline / permission-denied | `sync_sheet_*`, `sync_banner_offline_*`, `settings_notifications_off_*` |
 | Recovery screens: can't open your tasks (Start fresh → kept at … → Continue), open in another tab (Use it here), moved to another tab | §5.4 system states, 06 §4 | `recovery_*` |
 | Loading skeleton (dots on a dotted thread) and inline error with Try again, on every screen | §5.4 loading / error | `state_loading_*`, `state_error_*`; `screen_states_test` |
+| Inbox reorder handles (own order) and selecting (checks, Plan these / Colour / Delete bar) | PRD F3, §3 `InboxRow`, the M3b.7 bar | `inbox_*`, `inbox_selecting_*` |

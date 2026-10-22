@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/schedule/planned_colors.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
@@ -12,8 +11,8 @@ import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/features/timeline/state/selection_actions.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
-import 'package:dottoday/shared/dot/colour_icon_block.dart';
 import 'package:dottoday/shared/pickers/day_pickers.dart';
+import 'package:dottoday/shared/selection/selection_bar_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -95,10 +94,7 @@ final class SelectionCommands {
   VoidCallback? get recolour => rows.isEmpty
       ? null
       : () => unawaited(() async {
-          final colour = await showModalBottomSheet<TaskColor>(
-            context: _context,
-            builder: (_) => const _ColourSheet(),
-          );
+          final colour = await showColourChoice(_context);
           if (colour == null) return;
           _finish(
             recolourAll(container, rows, colour.key),
@@ -109,59 +105,11 @@ final class SelectionCommands {
   VoidCallback? get delete => rows.isEmpty
       ? null
       : () => unawaited(() async {
-          final sure = await showDialog<bool>(
-            context: _context,
-            builder: (dialog) => AlertDialog(
-              title: Text(_l10n.selectionDeleteConfirm(rows.length)),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(dialog).pop(false),
-                  child: Text(_l10n.editorCancel),
-                ),
-                FilledButton(
-                  onPressed: () => Navigator.of(dialog).pop(true),
-                  child: Text(_l10n.selectionDelete),
-                ),
-              ],
-            ),
-          );
-          if (sure != true) return;
+          final sure = await confirmDeleteMany(_context, rows.length);
+          if (!sure) return;
           _finish(
             trashAll(container, rows),
             _l10n.snackManyDeleted(rows.length),
           );
         }());
-}
-
-/// The nine task colours in a sheet; returns the one tapped.
-class _ColourSheet extends StatelessWidget {
-  const _ColourSheet();
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(DotSpace.page),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: DotSpace.m,
-          children: [
-            Text(context.l10n.selectionColour, style: t.styles.cardTitle),
-            Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                for (final c in TaskColor.values)
-                  ColourDot(
-                    colour: c,
-                    selected: false,
-                    onTap: () => Navigator.of(context).pop(c),
-                  ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
