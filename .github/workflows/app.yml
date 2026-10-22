@@ -107,6 +107,14 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
+      # Local Mac builds sign with the owner's Personal Team so the Keychain
+      # trusts each rebuild (ADR-0006 key store); CI has no certificate, so
+      # it builds ad-hoc ("Sign to Run Locally") as before.
+      - if: matrix.target == 'macos'
+        run: >-
+          sed -i '' -e '/DEVELOPMENT_TEAM = /d'
+          -e 's/"Apple Development"/"-"/'
+          macos/Runner.xcodeproj/project.pbxproj
       - if: matrix.target == 'web'
         run: ../tool/web_db_assets.sh
       - run: ${{ matrix.cmd }} --dart-define-from-file=.env.example
