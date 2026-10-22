@@ -8,6 +8,10 @@ enum OnboardingStep {
   account,
   done;
 
+  /// Whether this step asks the user for something (PRD F10 allows at
+  /// most three such screens; the permission prompt doesn't count).
+  bool get asksForInput => const {dayShape, habits, account}.contains(this);
+
   /// The step after this one; [done] stays.
   OnboardingStep get next => values[(index + 1).clamp(0, done.index)];
 
