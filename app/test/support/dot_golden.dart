@@ -10,8 +10,15 @@ import 'package:flutter_test/flutter_test.dart';
 typedef GoldenCell = ({String theme, double width, double ratio});
 
 /// Representative widths of the three width classes (docs/10 §4): iPhone
-/// (390), a narrow window (700) and the Mac/web renders (1280).
-const goldenWidths = {'compact': 390.0, 'medium': 700.0, 'expanded': 1280.0};
+/// (390), a narrow window (700) and the Mac/web renders (1280), plus the
+/// narrowest expanded window (840), which only layouts that change inside
+/// the expanded class ask for (M3e).
+const goldenWidths = {
+  'compact': 390.0,
+  'medium': 700.0,
+  'expanded': 1280.0,
+  'expanded_min': 840.0,
+};
 
 /// Every component golden runs in light and dark × the three width classes
 /// × 1× and 2× (docs/10 §7.1, §7.3). [build] gets the cell so it can lay

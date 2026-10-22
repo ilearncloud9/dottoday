@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/round_more_button.dart';
+import 'package:dottoday/shared/menus/dot_menu_style.dart';
 import 'package:flutter/material.dart';
 
 /// Width of the menu (`A-ios-add-time-menu`): its end lines up with the
@@ -60,9 +61,6 @@ class _TimeMenuState extends State<TimeMenu> {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final radius = DotIdiom.of(context) == DotIdiom.cupertino
-        ? DotRadii.sheet
-        : DotRadii.card;
     final w = widget;
     return MenuAnchor(
       childFocusNode: _anchor,
@@ -75,20 +73,7 @@ class _TimeMenuState extends State<TimeMenu> {
         -(_menuWidth - DotTouch.android),
         DotSpace.xs,
       ),
-      style: MenuStyle(
-        backgroundColor: WidgetStatePropertyAll(t.colors.raised),
-        // The outline carries the edge; a raised M3 shadow read as a grey
-        // band against the sheet (§2.3 hairline outline instead).
-        elevation: const WidgetStatePropertyAll(0),
-        surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
-        shadowColor: WidgetStatePropertyAll(DotElevation.floating.first.color),
-        shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius),
-            side: BorderSide(color: t.colors.outline),
-          ),
-        ),
-      ),
+      style: dotMenuStyle(context),
       menuChildren: [
         _item(
           t,

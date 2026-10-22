@@ -99,9 +99,9 @@ class TodayHeader extends ConsumerWidget {
             ),
           ),
           if (date == today)
-            _TodayDot(today: today)
+            TodayDot(today: today)
           else
-            _TodayPill(onTap: onToday),
+            TodayPill(onTap: onToday),
           if (kDebugMode)
             PopupMenuButton<void>(
               tooltip: l10n.timelineMenu,
@@ -116,24 +116,35 @@ class TodayHeader extends ConsumerWidget {
   String _title(BuildContext context, WidgetRef ref, String locale) {
     final otherMonth = month.year != today.year || month.month != today.month;
     if (monthOpen && otherMonth) return DateFormat.yMMMM(locale).format(month);
-    if (date != today) return DateFormat.EEEE(locale).format(date);
-    final profile = ref.watch(currentProfileProvider).value;
-    final now =
-        ref.watch(minuteTickProvider).value ??
-        ref.watch(clockProvider).nowUtc();
-    final zone = profile == null ? tz.UTC : tz.getLocation(profile.tzId);
-    final part = dayPart(tz.TZDateTime.from(now, zone).hour);
-    final name = profile?.displayName?.trim() ?? '';
-    final l10n = context.l10n;
-    return name.isEmpty
-        ? l10n.todayGreeting(part)
-        : l10n.todayGreetingName(part, name);
+    return dayTitle(context, ref, date: date, today: today);
   }
 }
 
+/// "Good morning, Kody" on today, else the weekday (Today headers on every
+/// width).
+String dayTitle(
+  BuildContext context,
+  WidgetRef ref, {
+  required DateTime date,
+  required DateTime today,
+}) {
+  final locale = Localizations.localeOf(context).toLanguageTag();
+  if (date != today) return DateFormat.EEEE(locale).format(date);
+  final profile = ref.watch(currentProfileProvider).value;
+  final now =
+      ref.watch(minuteTickProvider).value ?? ref.watch(clockProvider).nowUtc();
+  final zone = profile == null ? tz.UTC : tz.getLocation(profile.tzId);
+  final part = dayPart(tz.TZDateTime.from(now, zone).hour);
+  final name = profile?.displayName?.trim() ?? '';
+  final l10n = context.l10n;
+  return name.isEmpty
+      ? l10n.todayGreeting(part)
+      : l10n.todayGreetingName(part, name);
+}
+
 /// The day dot: how far today is through Wake Up → Bedtime.
-class _TodayDot extends ConsumerWidget {
-  const _TodayDot({required this.today});
+class TodayDot extends ConsumerWidget {
+  const TodayDot({required this.today, super.key});
 
   final DateTime today;
 
@@ -167,8 +178,8 @@ String dayPart(int hour) => hour < 12
 
 /// "● Today" (`A-ios-future-month`): one tap back to the current date
 /// (03 §2).
-class _TodayPill extends StatelessWidget {
-  const _TodayPill({required this.onTap});
+class TodayPill extends StatelessWidget {
+  const TodayPill({required this.onTap, super.key});
 
   final VoidCallback onTap;
 

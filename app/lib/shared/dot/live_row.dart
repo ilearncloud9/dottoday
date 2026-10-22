@@ -59,28 +59,49 @@ class LiveRow extends StatelessWidget {
             ),
       child: Padding(
         padding: const EdgeInsets.only(bottom: DotSpace.xl),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: DotSpace.m,
-          children: [
-            _Summary(task: task, onOpen: onOpen),
-            _Actions(
-              onDone: onToggleDone,
-              onExtend: onExtend,
-              onShiftRest: onShiftRest,
-            ),
-          ],
-        ),
+        child: LayoutBuilder(builder: (context, box) => _body(box.maxWidth)),
       ),
+    );
+  }
+
+  /// Wide (the Mac spread's card): the time in its own column, as on
+  /// [TaskRow]; else above the title.
+  Widget _body(double width) {
+    final wide = width >= DotSize.wideRowFrom;
+    final column = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: DotSpace.m,
+      children: [
+        _Summary(task: task, onOpen: onOpen, showMeta: !wide),
+        _Actions(
+          onDone: onToggleDone,
+          onExtend: onExtend,
+          onShiftRest: onShiftRest,
+        ),
+      ],
+    );
+    if (!wide) return column;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: DotSize.wideRowMeta,
+          child: _WideMeta(task: task),
+        ),
+        Expanded(child: column),
+      ],
     );
   }
 }
 
 class _Summary extends StatelessWidget {
-  const _Summary({required this.task, this.onOpen});
+  const _Summary({required this.task, this.onOpen, this.showMeta = true});
 
   final ThreadTask task;
   final VoidCallback? onOpen;
+
+  /// The time line above the title; off when [LiveRow] shows it beside.
+  final bool showMeta;
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +128,7 @@ class _Summary extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: DotSpace.xxs,
           children: [
-            Text(meta, style: t.styles.rowMeta),
+            if (showMeta) Text(meta, style: t.styles.rowMeta),
             Text(task.title, style: t.styles.liveRowTitle),
             _Progress(task: task),
           ],
@@ -115,6 +136,18 @@ class _Summary extends StatelessWidget {
       ),
     );
   }
+}
+
+/// The time range in the wide layout's own column (read with the title).
+class _WideMeta extends StatelessWidget {
+  const _WideMeta({required this.task});
+
+  final ThreadTask task;
+
+  @override
+  Widget build(BuildContext context) => ExcludeSemantics(
+    child: Text(task.timeRange, style: DotTheme.of(context).styles.rowMeta),
+  );
 }
 
 /// "◔ 1 of 3   38 min left" under the live title.

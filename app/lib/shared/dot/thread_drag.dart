@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/pointer_draggable.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -36,7 +37,7 @@ final class ThreadDrag {
   final bool? shiftByDefault;
 }
 
-/// Long-press to lift a task row (250 ms, 03 §3.2): a lifted chip follows
+/// Long-press to lift a task row (250 ms, 03 §3.2; a mouse lifts at once): a lifted chip follows
 /// the finger with the snapped drop time; the list scrolls near its edges.
 class DraggableTaskRow extends StatefulWidget {
   const DraggableTaskRow({
@@ -79,36 +80,36 @@ class _DraggableTaskRowState extends State<DraggableTaskRow> {
   @override
   Widget build(BuildContext context) {
     if (!widget.task.movable) return widget.child;
-    return LongPressDraggable<String>(
+    return HoldOrMouseDraggable<String>(
       data: widget.task.id,
-      delay: DotTouch.liftDelay,
-      hapticFeedbackOnStart: true,
       feedback: _Lifted(task: widget.task, hint: widget.hint),
       childWhenDragging: Opacity(opacity: TaskAlpha.done, child: widget.child),
-      onDragStarted: () {
-        _travel = 0;
-        widget.onLift?.call();
-        final scrollable = Scrollable.maybeOf(context);
-        _scroller = scrollable == null
-            ? null
-            : EdgeDraggingAutoScroller(scrollable, velocityScalar: 20);
-      },
-      onDragUpdate: (d) {
-        _travel += d.delta.distance;
-        _scroller?.startAutoScrollIfNecessary(
-          Rect.fromCenter(
-            center: d.globalPosition,
-            width: 1,
-            height: DotTouch.android,
-          ),
-        );
-      },
-      onDragEnd: (d) {
-        _scroller?.stopAutoScroll();
-        widget.hint.value = null;
-        widget.onSettle?.call();
-        if (!d.wasAccepted && _travel < kTouchSlop) widget.onHold?.call();
-      },
+      callbacks: DragCallbacks(
+        onDragStarted: () {
+          _travel = 0;
+          widget.onLift?.call();
+          final scrollable = Scrollable.maybeOf(context);
+          _scroller = scrollable == null
+              ? null
+              : EdgeDraggingAutoScroller(scrollable, velocityScalar: 20);
+        },
+        onDragUpdate: (d) {
+          _travel += d.delta.distance;
+          _scroller?.startAutoScrollIfNecessary(
+            Rect.fromCenter(
+              center: d.globalPosition,
+              width: 1,
+              height: DotTouch.android,
+            ),
+          );
+        },
+        onDragEnd: (d) {
+          _scroller?.stopAutoScroll();
+          widget.hint.value = null;
+          widget.onSettle?.call();
+          if (!d.wasAccepted && _travel < kTouchSlop) widget.onHold?.call();
+        },
+      ),
       child: widget.child,
     );
   }

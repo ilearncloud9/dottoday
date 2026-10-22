@@ -51,6 +51,20 @@ abstract final class DotSize {
   /// (Inbox, Search; §4 expanded).
   static const double readableColumn = 640;
 
+  /// A row whose text gets this much width or more puts its time beside
+  /// the title, in a column of [wideRowMeta] (the Mac spread's Today card,
+  /// `A-mac-today-alt1-spread`: ~310 px of text). The time column is wider
+  /// than the render's 107 px so a 12-hour "10:30 AM – 11:15 AM" fits on
+  /// one line. The largest iPhone leaves ~266 px: phones keep the stacked
+  /// row.
+  static const double wideRowFrom = 300;
+  static const double wideRowMeta = 144;
+
+  /// Today card's share of the Mac spread against each side day (render:
+  /// 700 px card between ~430 px days).
+  static const int spreadCardFlex = 8;
+  static const int spreadSideFlex = 5;
+
   static const double rowDot = 36;
   static const double liveDot = 42;
   static const double liveRing = 5;
