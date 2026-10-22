@@ -9,6 +9,7 @@ import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -291,6 +292,26 @@ List<Occurrence> demoDayRows(DateTime date, {DateTime? now}) {
   );
   return [...batch.occurrences, standup];
 }
+
+/// A week of demo days, Sun 18 – Sat 24 Oct 2026 (the Week board, M3e.3):
+/// each day keeps some of the demo day's timed tasks so the loads differ;
+/// days before the 21st are done.
+List<Occurrence> demoWeekRows() => [
+  for (var i = 0; i < 7; i++)
+    ...() {
+      final date = DateTime(2026, 10, 18 + i);
+      final timed = [
+        for (final o in demoDayRows(date))
+          if (o.startUtc != null) o,
+      ]..sort((a, b) => a.startUtc!.compareTo(b.startUtc!));
+      return [
+        for (final o in timed.take(3 + (i * 3) % 7))
+          o.copyWith(
+            status: i < 3 ? OccurrenceStatus.done : OccurrenceStatus.planned,
+          ),
+      ];
+    }(),
+];
 
 /// The demo day's subtasks (three on "Deep work", one done).
 List<Subtask> demoDaySubtasks(DateTime date) => buildDemoDay(

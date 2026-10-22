@@ -1850,4 +1850,87 @@ class AppLocalizationsEn extends AppLocalizations {
   String inboxScheduleDay(String day, String range) {
     return '$day, $range';
   }
+
+  @override
+  String capacityRingLabel(String planned, String awake) {
+    return '$planned planned of $awake awake';
+  }
+
+  @override
+  String weekBusiest(String day, String planned) {
+    return 'Busiest · $day · $planned';
+  }
+
+  @override
+  String weekLightest(String day, String planned) {
+    return 'Lightest · $day · $planned';
+  }
+
+  @override
+  String weekFree(String free) {
+    return 'Free · $free unplanned';
+  }
+
+  @override
+  String weekDone(int done, int total) {
+    return 'Done · $done of $total';
+  }
+
+  @override
+  String get weekBusiestTag => 'Busiest';
+
+  @override
+  String get weekLightestTag => 'Lightest';
+
+  @override
+  String get weekTitle => 'This week';
+
+  @override
+  String weekSubtitle(String range, int done, int total, String planned) {
+    return '$range · $done of $total done · $planned planned';
+  }
+
+  @override
+  String weekDayFree(String free) {
+    return '$free free';
+  }
+
+  @override
+  String weekTodayDay(String day) {
+    return '$day · today';
+  }
+
+  @override
+  String get weekViewWeek => 'Week';
+
+  @override
+  String get weekViewMonth => 'Month';
+
+  @override
+  String get weekToday => 'Today';
+
+  @override
+  String weekDropHere(String free) {
+    return 'Drop a task here · $free';
+  }
+
+  @override
+  String weekDropAt(String day, String range) {
+    return '$day · $range';
+  }
+
+  @override
+  String weekCardLeft(int minutes) {
+    return '$minutes min left';
+  }
+
+  @override
+  String weekCardSkipped(String range) {
+    return '$range · skipped';
+  }
+
+  @override
+  String weekRange(String start, String end) {
+    return '$start – $end';
+  }
 }

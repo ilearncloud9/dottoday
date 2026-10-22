@@ -21,8 +21,9 @@ import 'package:timezone/timezone.dart' as tz;
 
 /// [child] with the Inbox as a 300 px sidebar at the expanded width (docs/10
 /// §4 "Inbox as a 300 px sidebar on Today", `A-mac-week-alt3-board`):
-/// drag a row onto a free gap to plan it (M3e.2). Narrower windows get
-/// [child] alone. Composed at the app root, so no feature imports another.
+/// drag a row onto a free gap to plan it (M3e.2). It shows once [child]
+/// keeps the expanded width beside it (a window of ~1 140 px with the
+/// rail); narrower windows get [child] alone. Composed at the app root, so no feature imports another.
 class InboxSidebarFrame extends StatelessWidget {
   const InboxSidebarFrame({required this.child, super.key});
 
@@ -33,7 +34,9 @@ class InboxSidebarFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, box) {
-      if (WidthClass.of(box.maxWidth) != WidthClass.expanded) return child;
+      // Only when what is beside it stays expanded: a narrower Today would
+      // fall back to the pager, a narrower Week would scroll sideways.
+      if (box.maxWidth - width < WidthClass.expandedFrom) return child;
       final c = DotTheme.of(context).colors;
       return Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,

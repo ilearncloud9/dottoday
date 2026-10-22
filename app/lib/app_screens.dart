@@ -6,6 +6,7 @@ import 'package:dottoday/features/search/search_screen.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
+import 'package:dottoday/features/timeline/week_screen.dart';
 import 'package:flutter/material.dart';
 
 /// Composition-root wiring of routes to screens. Placeholders until each
@@ -14,7 +15,7 @@ final appScreens = RouteScreens(
   shell: (context, shell) => AppShell(shell: shell),
   today: (_) => const InboxSidebarFrame(child: TodayScreen()),
   inbox: (_) => const InboxScreen(),
-  week: (_) => const RoutePlaceholder('week'),
+  week: (_) => const InboxSidebarFrame(child: WeekScreen()),
   search: (_) => const SearchScreen(),
   settings: (_) => const SettingsScreen(),
   month: (_) => const RoutePlaceholder('month'),

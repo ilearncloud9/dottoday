@@ -2820,5 +2820,173 @@
         "type": "String"
       }
     }
+  },
+  "capacityRingLabel": "{planned} planned of {awake} awake",
+  "@capacityRingLabel": {
+    "description": "Screen-reader label of a Week day's capacity ring.",
+    "placeholders": {
+      "planned": {
+        "type": "String"
+      },
+      "awake": {
+        "type": "String"
+      }
+    }
+  },
+  "weekBusiest": "Busiest · {day} · {planned}",
+  "@weekBusiest": {
+    "description": "Week summary chip, e.g. 'Busiest · Thu · 7 h 30'.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "planned": {
+        "type": "String"
+      }
+    }
+  },
+  "weekLightest": "Lightest · {day} · {planned}",
+  "@weekLightest": {
+    "description": "Week summary chip, e.g. 'Lightest · Sat · 2 h 30'.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "planned": {
+        "type": "String"
+      }
+    }
+  },
+  "weekFree": "Free · {free} unplanned",
+  "@weekFree": {
+    "description": "Week summary chip: free waking time this week.",
+    "placeholders": {
+      "free": {
+        "type": "String"
+      }
+    }
+  },
+  "weekDone": "Done · {done} of {total}",
+  "@weekDone": {
+    "description": "Week summary chip.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "weekBusiestTag": "Busiest",
+  "@weekBusiestTag": {
+    "description": "Tag under the busiest day's column on the Week board."
+  },
+  "weekLightestTag": "Lightest",
+  "@weekLightestTag": {
+    "description": "Tag under the lightest day's column on the Week board."
+  },
+  "weekTitle": "This week",
+  "@weekTitle": {
+    "description": "Week board title for the current week."
+  },
+  "weekSubtitle": "{range} · {done} of {total} done · {planned} planned",
+  "@weekSubtitle": {
+    "description": "Under the Week title: '18 – 24 October · 13 of 29 done · 36 h 15 planned'.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      },
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "planned": {
+        "type": "String"
+      }
+    }
+  },
+  "weekDayFree": "{free} free",
+  "@weekDayFree": {
+    "description": "Under a Week column's date: '10 h 30 free'.",
+    "placeholders": {
+      "free": {
+        "type": "String"
+      }
+    }
+  },
+  "weekTodayDay": "{day} · today",
+  "@weekTodayDay": {
+    "description": "Today's Week column heading: 'Wed · today'.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "weekViewWeek": "Week",
+  "@weekViewWeek": {
+    "description": "Week/Month switch on the Week board."
+  },
+  "weekViewMonth": "Month",
+  "@weekViewMonth": {
+    "description": "Week/Month switch on the Week board."
+  },
+  "weekToday": "Today",
+  "@weekToday": {
+    "description": "Button back to this week on the Week board."
+  },
+  "weekDropHere": "Drop a task here · {free}",
+  "@weekDropHere": {
+    "description": "Dashed target at the end of a future day on the Week board.",
+    "placeholders": {
+      "free": {
+        "type": "String"
+      }
+    }
+  },
+  "weekDropAt": "{day} · {range}",
+  "@weekDropAt": {
+    "description": "Floating label while dragging over the Week board: 'Sat · 10:00 – 11:30'.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "weekCardLeft": "{minutes} min left",
+  "@weekCardLeft": {
+    "description": "Live card on the Week board.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "weekCardSkipped": "{range} · skipped",
+  "@weekCardSkipped": {
+    "description": "Skipped card on the Week board.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "weekRange": "{start} – {end}",
+  "@weekRange": {
+    "description": "A week range: \"October 18 – 24\" or \"Oct 28 – Nov 3\".",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
   }
 }

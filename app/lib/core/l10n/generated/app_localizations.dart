@@ -2787,6 +2787,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{day}, {range}'**
   String inboxScheduleDay(String day, String range);
+
+  /// Screen-reader label of a Week day's capacity ring.
+  ///
+  /// In en, this message translates to:
+  /// **'{planned} planned of {awake} awake'**
+  String capacityRingLabel(String planned, String awake);
+
+  /// Week summary chip, e.g. 'Busiest · Thu · 7 h 30'.
+  ///
+  /// In en, this message translates to:
+  /// **'Busiest · {day} · {planned}'**
+  String weekBusiest(String day, String planned);
+
+  /// Week summary chip, e.g. 'Lightest · Sat · 2 h 30'.
+  ///
+  /// In en, this message translates to:
+  /// **'Lightest · {day} · {planned}'**
+  String weekLightest(String day, String planned);
+
+  /// Week summary chip: free waking time this week.
+  ///
+  /// In en, this message translates to:
+  /// **'Free · {free} unplanned'**
+  String weekFree(String free);
+
+  /// Week summary chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Done · {done} of {total}'**
+  String weekDone(int done, int total);
+
+  /// Tag under the busiest day's column on the Week board.
+  ///
+  /// In en, this message translates to:
+  /// **'Busiest'**
+  String get weekBusiestTag;
+
+  /// Tag under the lightest day's column on the Week board.
+  ///
+  /// In en, this message translates to:
+  /// **'Lightest'**
+  String get weekLightestTag;
+
+  /// Week board title for the current week.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get weekTitle;
+
+  /// Under the Week title: '18 – 24 October · 13 of 29 done · 36 h 15 planned'.
+  ///
+  /// In en, this message translates to:
+  /// **'{range} · {done} of {total} done · {planned} planned'**
+  String weekSubtitle(String range, int done, int total, String planned);
+
+  /// Under a Week column's date: '10 h 30 free'.
+  ///
+  /// In en, this message translates to:
+  /// **'{free} free'**
+  String weekDayFree(String free);
+
+  /// Today's Week column heading: 'Wed · today'.
+  ///
+  /// In en, this message translates to:
+  /// **'{day} · today'**
+  String weekTodayDay(String day);
+
+  /// Week/Month switch on the Week board.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get weekViewWeek;
+
+  /// Week/Month switch on the Week board.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get weekViewMonth;
+
+  /// Button back to this week on the Week board.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get weekToday;
+
+  /// Dashed target at the end of a future day on the Week board.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop a task here · {free}'**
+  String weekDropHere(String free);
+
+  /// Floating label while dragging over the Week board: 'Sat · 10:00 – 11:30'.
+  ///
+  /// In en, this message translates to:
+  /// **'{day} · {range}'**
+  String weekDropAt(String day, String range);
+
+  /// Live card on the Week board.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min left'**
+  String weekCardLeft(int minutes);
+
+  /// Skipped card on the Week board.
+  ///
+  /// In en, this message translates to:
+  /// **'{range} · skipped'**
+  String weekCardSkipped(String range);
+
+  /// A week range: "October 18 – 24" or "Oct 28 – Nov 3".
+  ///
+  /// In en, this message translates to:
+  /// **'{start} – {end}'**
+  String weekRange(String start, String end);
 }
 
 class _AppLocalizationsDelegate
