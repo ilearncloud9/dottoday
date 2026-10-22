@@ -4,8 +4,10 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/recurrence/series_actions.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
 import 'package:dottoday/domain/recurrence/series_edit.dart';
@@ -14,6 +16,7 @@ import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/shared/pickers/alerts/alerts_editor.dart';
 import 'package:dottoday/shared/pickers/repeat/repeat_editor.dart';
 import 'package:dottoday/shared/pickers/repeat/repeat_text.dart';
 import 'package:dottoday/shared/pickers/repeat/scope_sheet.dart';
@@ -95,6 +98,51 @@ Future<void> pickRepeat(
           ),
   );
 }
+
+/// The Alerts row (M3f.2, R-10): the editor, then the alerts on this row
+/// ([onOwn], saved with the other edits) or, for a repeating task, on the
+/// instances the user picks. The Bedtime switch writes Settings at once.
+Future<void> pickAlerts(
+  BuildContext context, {
+  required TaskView task,
+  required Occurrence draft,
+  required ValueChanged<List<Alert>> onOwn,
+}) async {
+  final container = ProviderScope.containerOf(context);
+  final l10n = context.l10n;
+  final messenger = ScaffoldMessenger.of(context);
+  final settings = container.read(currentProfileProvider).value?.settings;
+  final picked = await showAlertsEditor(
+    context,
+    initial: task.alerts,
+    bedtime: settings?.bedtimeReminder ?? false,
+    onBedtime: (on) => unawaited(
+      updateSettings(container, (s) => s.copyWith(bedtimeReminder: on)),
+    ),
+  );
+  if (picked == null || _same(picked, task.alerts) || !context.mounted) return;
+  final series = task.series;
+  if (series == null) return onOwn(picked);
+  final scope = await showScopeSheet(context, delete: false);
+  if (scope == null) return;
+  if (scope == EditScope.thisOne) return onOwn(picked);
+  _report(
+    messenger,
+    l10n,
+    container.read(undoServiceProvider),
+    await editSeries(
+      container,
+      series: series,
+      target: draft,
+      change: SeriesChange(alerts: picked),
+      scope: scope,
+    ),
+    l10n.snackAlertsSaved(draft.title),
+  );
+}
+
+bool _same(List<Alert> a, List<Alert> b) =>
+    a.length == b.length && a.indexed.every((e) => b[e.$1] == e.$2);
 
 /// Save on a repeating task whose shared fields changed: which ones it
 /// applies to. True when written (or nothing to ask), false if cancelled.

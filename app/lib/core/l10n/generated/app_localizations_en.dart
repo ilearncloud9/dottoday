@@ -2253,4 +2253,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String snackRepeatStopped(String title) {
     return '$title no longer repeats';
   }
+
+  @override
+  String get alertsTitle => 'Alerts';
+
+  @override
+  String get alertsAdd => 'Add an alert';
+
+  @override
+  String get alertsMax => 'Up to 5 alerts';
+
+  @override
+  String alertsRemove(String alert) {
+    return 'Remove $alert';
+  }
+
+  @override
+  String get alertsBedtime => 'Bedtime reminder';
+
+  @override
+  String get alertsBedtimeDetail =>
+      'Every evening, with tomorrow\'s first task';
+
+  @override
+  String get alertsDone => 'Done';
+
+  @override
+  String snackAlertsSaved(String title) {
+    return '$title alerts updated';
+  }
 }

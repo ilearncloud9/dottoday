@@ -28,6 +28,7 @@ Future<Result<AddedTask, AppFailure>> saveDraft(
     nowUtc: ref.read(clockProvider).nowUtc(),
     untitled: untitled,
     toInbox: toInbox,
+    alerts: profile.settings.defaultAlerts,
   );
   final batch = WriteBatch(
     userId: profile.id,

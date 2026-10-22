@@ -1,4 +1,5 @@
 import 'package:dottoday/core/ids/id_generator.dart';
+import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
@@ -17,7 +18,8 @@ typedef DraftRows = ({Series? series, Occurrence? occurrence});
 ///   the title rather than silently dropping the rule.
 ///
 /// The length is the draft's, else [defaultDurationMin]; an empty title
-/// becomes [untitled].
+/// becomes [untitled]. [alerts] are Settings › Reminders' defaults, copied
+/// onto the new task (docs/09 M3f.2, R-10).
 ///
 /// ```dart
 /// rowsFromDraft(parse('Gym 7am every day'), ...).series!.rrule; // FREQ=DAILY
@@ -29,6 +31,7 @@ DraftRows rowsFromDraft(
   required DateTime nowUtc,
   required int defaultDurationMin,
   required String untitled,
+  List<Alert> alerts = const [],
   IdGenerator ids = const UuidV7Generator(),
 }) {
   final duration = draft.durationMin ?? defaultDurationMin;
@@ -46,6 +49,7 @@ DraftRows rowsFromDraft(
         rrule: rrule,
         dtstartLocal: _isoLocal(local),
         tzId: tzId,
+        alerts: alerts,
         createdAt: nowUtc,
         updatedAt: nowUtc,
       ),
@@ -62,6 +66,7 @@ DraftRows rowsFromDraft(
       startUtc: start,
       tzId: tzId,
       durationMin: duration,
+      alerts: alerts,
       createdAt: nowUtc,
       updatedAt: nowUtc,
     ),

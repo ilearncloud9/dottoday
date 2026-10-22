@@ -258,10 +258,10 @@ final class SeriesEditor {
   ) {
     final minute = change.startMinute;
     final start = o.startUtc;
-    if (minute == null || start == null) return change.fields(o);
+    if (minute == null || start == null) return change.fields(o, own: true);
     final wall = utcToWallClock(zone, start);
     return change
-        .fields(o)
+        .fields(o, own: true)
         .copyWith(
           startUtc: wallClockToUtc(
             zone,

@@ -1,6 +1,8 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/domain/entities/alert.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -168,5 +170,45 @@ void main() {
     expect(_row(thu.id).deletedAt, isNull);
     expect(_seriesRepo().series.single.untilUtc, isNotNull);
     expect(find.byType(TaskEditor), findsNothing);
+  });
+
+  testWidgets('alerts on a one-off stay on its row (M3f.2)', (tester) async {
+    final day = demoDayRows(DateTime(2026, 10, 21));
+    _repo = FakeOccurrenceRepository(day);
+    final deep = day.firstWhere((o) => o.title == 'Deep work: roadmap');
+    await _pump(tester, deep.id);
+    await tester.tap(_inEditor(find.text('Alerts')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ActionChip, 'at start'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Done').last);
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 1));
+    expect(
+      _row(deep.id).alerts,
+      contains(const Alert(kind: AlertKind.atStart)),
+    );
+  });
+
+  testWidgets('alerts for all runs go on the series; runs inherit', (
+    tester,
+  ) async {
+    final runs = _runs();
+    _repo = FakeOccurrenceRepository(runs);
+    final thu = runs.firstWhere((o) => o.startUtc!.day == 22);
+    await _pump(tester, thu.id);
+    await tester.tap(_inEditor(find.text('Alerts')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ActionChip, '30 min before'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Done').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('All'));
+    await tester.pumpAndSettle();
+    expect(_seriesRepo().series.single.alerts, const [
+      Alert(kind: AlertKind.before, offsetMin: 30),
+    ]);
+    final sat = runs.firstWhere((o) => o.startUtc!.day == 24);
+    expect(_row(sat.id).alerts, isNull, reason: 'inherits the series');
   });
 }

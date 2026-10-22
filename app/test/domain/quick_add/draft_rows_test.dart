@@ -1,5 +1,7 @@
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
+import 'package:dottoday/domain/entities/alert.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/quick_add/draft_rows.dart';
 import 'package:dottoday/domain/quick_add/quick_add_lexicon.dart';
 import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
@@ -15,7 +17,7 @@ final class _Ids implements IdGenerator {
 // 10:00 Berlin, Wednesday 21 October 2026.
 final _now = DateTime.utc(2026, 10, 21, 8);
 
-DraftRows _rows(String line) {
+DraftRows _rows(String line, {List<Alert> alerts = const []}) {
   final ctx = QuickAddContext(
     nowUtc: _now,
     tzId: 'Europe/Berlin',
@@ -32,6 +34,7 @@ DraftRows _rows(String line) {
     nowUtc: _now,
     defaultDurationMin: 30,
     untitled: 'New task',
+    alerts: alerts,
     ids: _Ids(),
   );
 }
@@ -72,5 +75,11 @@ void main() {
 
   test('an empty title gets the fallback', () {
     expect(_rows('3pm').occurrence!.title, 'New task');
+  });
+
+  test('new tasks carry the default alerts (M3f.2, R-10)', () {
+    const ten = [Alert(kind: AlertKind.before, offsetMin: 10)];
+    expect(_rows('Call Mum 3pm', alerts: ten).occurrence!.alerts, ten);
+    expect(_rows('Gym 7am every day', alerts: ten).series!.alerts, ten);
   });
 }

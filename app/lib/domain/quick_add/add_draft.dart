@@ -1,4 +1,5 @@
 import 'package:dottoday/core/ids/id_generator.dart';
+import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/icon_keys.dart';
 import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
 import 'package:dottoday/domain/quick_add/draft_rows.dart';
@@ -169,6 +170,7 @@ final class AddDraft {
     required DateTime nowUtc,
     required String untitled,
     bool toInbox = false,
+    List<Alert> alerts = const [],
     IdGenerator ids = const UuidV7Generator(),
   }) {
     final start = toInbox || inbox ? null : startUtc;
@@ -186,6 +188,7 @@ final class AddDraft {
       nowUtc: nowUtc,
       defaultDurationMin: defaultDurationMin,
       untitled: untitled,
+      alerts: alerts,
       ids: ids,
     );
     return (

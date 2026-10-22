@@ -1,3 +1,4 @@
+import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
@@ -16,6 +17,7 @@ final class SeriesChange {
     this.pinned,
     this.startMinute,
     this.rule,
+    this.alerts,
   });
 
   final String? title;
@@ -26,6 +28,10 @@ final class SeriesChange {
   final bool? pinned;
   final int? startMinute;
   final RepeatRule? rule;
+
+  /// New alerts (M3f.2): the series takes them and later rows inherit;
+  /// "this one" keeps them on the row.
+  final List<Alert>? alerts;
 
   /// The fields [after] changes from [before] (the instance as it was
   /// opened); the time of day as minutes in [zone].
@@ -59,13 +65,16 @@ final class SeriesChange {
       durationMin == null &&
       pinned == null &&
       startMinute == null &&
-      rule == null;
+      rule == null &&
+      alerts == null;
 
   /// A new time or rule moves instances: the series is split.
   bool get moves => startMinute != null || rule != null;
 
-  /// [o] with the field changes (not the time).
-  Occurrence fields(Occurrence o) => o.copyWith(
+  /// [o] with the field changes (not the time). New alerts become the
+  /// row's own when [own] (this one), else it inherits the series'.
+  Occurrence fields(Occurrence o, {bool own = false}) => o.copyWith(
+    alerts: alerts == null ? o.alerts : (own ? alerts : null),
     title: title ?? o.title,
     notes: notes ?? o.notes,
     colorKey: colorKey ?? o.colorKey,
@@ -76,6 +85,7 @@ final class SeriesChange {
 
   /// [s]'s template with the field changes.
   Series template(Series s) => s.copyWith(
+    alerts: alerts ?? s.alerts,
     title: title ?? s.title,
     notes: notes ?? s.notes,
     colorKey: colorKey ?? s.colorKey,

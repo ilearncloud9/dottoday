@@ -2,21 +2,13 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/recurrence/repeat_summary.dart';
+import 'package:dottoday/shared/pickers/alerts/alerts_editor.dart';
 import 'package:intl/intl.dart';
 
 /// "10 min before · at start" (A-ios-task-sheet), or "None".
 String alertsText(AppLocalizations l10n, List<Alert> alerts) {
   if (alerts.isEmpty) return l10n.sheetNoAlerts;
-  final parts = [
-    for (final a in alerts)
-      switch (a.kind) {
-        AlertKind.before => l10n.alertBefore(a.offsetMin),
-        AlertKind.atStart => l10n.alertAtStart,
-        AlertKind.atEnd => l10n.alertAtEnd,
-        AlertKind.overdue => l10n.alertOverdue(a.offsetMin),
-      },
-  ];
-  return parts.reduce(l10n.alertJoin);
+  return [for (final a in alerts) alertLabel(l10n, a)].reduce(l10n.alertJoin);
 }
 
 /// "Weekdays", "Weekly on Mon, Wed", or "Never" without a rule.

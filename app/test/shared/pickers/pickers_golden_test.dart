@@ -4,8 +4,10 @@ library;
 
 import 'dart:async';
 
+import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
+import 'package:dottoday/shared/pickers/alerts/alerts_editor.dart';
 import 'package:dottoday/shared/pickers/day_pickers.dart';
 import 'package:dottoday/shared/pickers/repeat/repeat_editor.dart';
 import 'package:dottoday/shared/pickers/repeat/scope_sheet.dart';
@@ -99,5 +101,25 @@ void main() {
     widths: widths,
     act: _open,
     build: (_) => _opener((c) => unawaited(showScopeSheet(c, delete: false))),
+  );
+  // M3f.2: the Alerts editor with two alerts and the Bedtime switch.
+  goldenMatrix(
+    'picker_alerts',
+    height: 700,
+    widths: widths,
+    act: _open,
+    build: (_) => _opener(
+      (c) => unawaited(
+        showAlertsEditor(
+          c,
+          initial: const [
+            Alert(kind: AlertKind.before, offsetMin: 10),
+            Alert(kind: AlertKind.atStart),
+          ],
+          bedtime: true,
+          onBedtime: (_) {},
+        ),
+      ),
+    ),
   );
 }

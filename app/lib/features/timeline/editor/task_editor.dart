@@ -260,6 +260,14 @@ class _FormState extends ConsumerState<_Form> {
         RepeatAlertRows(
           task: widget.task,
           onRepeat: _draft.startUtc == null ? null : () => unawaited(_repeat()),
+          onAlerts: () => unawaited(
+            pickAlerts(
+              context,
+              task: widget.task,
+              draft: _draft,
+              onOwn: (a) => _change((o) => o.copyWith(alerts: a)),
+            ),
+          ),
         ),
         const SizedBox(height: DotSpace.l),
         SheetSubtasks(task: widget.task),

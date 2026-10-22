@@ -3309,6 +3309,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title} no longer repeats'**
   String snackRepeatStopped(String title);
+
+  /// Title of the Alerts editor sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get alertsTitle;
+
+  /// Caption over the alert choices.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an alert'**
+  String get alertsAdd;
+
+  /// Shown when a task has 5 alerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 5 alerts'**
+  String get alertsMax;
+
+  /// Tooltip of × on an alert row.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {alert}'**
+  String alertsRemove(String alert);
+
+  /// Switch in the Alerts editor (applies to every day).
+  ///
+  /// In en, this message translates to:
+  /// **'Bedtime reminder'**
+  String get alertsBedtime;
+
+  /// Under the Bedtime reminder switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Every evening, with tomorrow\'s first task'**
+  String get alertsBedtimeDetail;
+
+  /// Closes the Alerts editor and applies the alerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get alertsDone;
+
+  /// After a scoped alerts change.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} alerts updated'**
+  String snackAlertsSaved(String title);
 }
 
 class _AppLocalizationsDelegate

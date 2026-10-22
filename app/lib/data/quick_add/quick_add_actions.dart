@@ -54,6 +54,7 @@ Future<Result<Added, AppFailure>> addFromText(
         nowUtc: now,
         defaultDurationMin: profile.settings.defaultDurationMin,
         untitled: untitled,
+        alerts: profile.settings.defaultAlerts,
       ),
   ];
   final batch = WriteBatch(

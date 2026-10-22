@@ -3398,5 +3398,47 @@
         "type": "String"
       }
     }
+  },
+  "alertsTitle": "Alerts",
+  "@alertsTitle": {
+    "description": "Title of the Alerts editor sheet."
+  },
+  "alertsAdd": "Add an alert",
+  "@alertsAdd": {
+    "description": "Caption over the alert choices."
+  },
+  "alertsMax": "Up to 5 alerts",
+  "@alertsMax": {
+    "description": "Shown when a task has 5 alerts."
+  },
+  "alertsRemove": "Remove {alert}",
+  "@alertsRemove": {
+    "description": "Tooltip of × on an alert row.",
+    "placeholders": {
+      "alert": {
+        "type": "String"
+      }
+    }
+  },
+  "alertsBedtime": "Bedtime reminder",
+  "@alertsBedtime": {
+    "description": "Switch in the Alerts editor (applies to every day)."
+  },
+  "alertsBedtimeDetail": "Every evening, with tomorrow's first task",
+  "@alertsBedtimeDetail": {
+    "description": "Under the Bedtime reminder switch."
+  },
+  "alertsDone": "Done",
+  "@alertsDone": {
+    "description": "Closes the Alerts editor and applies the alerts."
+  },
+  "snackAlertsSaved": "{title} alerts updated",
+  "@snackAlertsSaved": {
+    "description": "After a scoped alerts change.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
   }
 }
