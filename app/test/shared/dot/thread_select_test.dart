@@ -65,7 +65,9 @@ void main() {
     final log = <String>[];
     await tester.pumpWidget(_thread(const {'a'}, log));
     await tester.tap(find.text('Call'));
-    await tester.tap(find.byType(DoneCircle).first, warnIfMissed: false);
+    // The row's far end, where an upcoming row's done circle would be.
+    final row = tester.getRect(find.byType(TaskRow).first);
+    await tester.tapAt(row.centerRight - const Offset(DotSpace.l, 0));
     expect(log, ['select b', 'select a']);
   });
 

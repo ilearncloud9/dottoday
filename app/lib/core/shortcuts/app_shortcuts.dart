@@ -59,6 +59,26 @@ abstract final class AppShortcuts {
   static bool usesMeta(TargetPlatform platform) =>
       platform == TargetPlatform.macOS || platform == TargetPlatform.iOS;
 
+  /// The primary modifier (+ Shift) with [key] on [platform].
+  static SingleActivator activator(
+    TargetPlatform platform,
+    LogicalKeyboardKey key, {
+    bool shift = false,
+  }) {
+    final meta = usesMeta(platform);
+    return SingleActivator(key, meta: meta, control: !meta, shift: shift);
+  }
+
+  /// How a binding reads in a hint: "⇧⌘P" with ⌘, "Ctrl+Shift+P" without
+  /// ([key] is the key's own label, e.g. "P" or "↩").
+  static String label(
+    TargetPlatform platform,
+    String key, {
+    bool shift = false,
+  }) => usesMeta(platform)
+      ? '${shift ? '⇧' : ''}⌘$key'
+      : 'Ctrl+${shift ? 'Shift+' : ''}$key';
+
   /// [table] as activators for a `Shortcuts` widget on [platform].
   static Map<ShortcutActivator, Intent> bindings(TargetPlatform platform) {
     final meta = usesMeta(platform);

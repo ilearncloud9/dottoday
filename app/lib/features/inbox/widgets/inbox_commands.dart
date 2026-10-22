@@ -107,6 +107,24 @@ final class InboxCommands {
     _report(result, _l10n.snackScheduled(item.title, choice.label), (t) => t);
   }
 
+  /// Auto-plan the week: every [placed] item at its slot in one write;
+  /// the snackbar says how many are [left] in the Inbox.
+  Future<void> placeAll(
+    List<({Occurrence item, Slot slot})> placed, {
+    required int left,
+  }) async {
+    if (placed.isEmpty) {
+      _messenger.showSnackBar(
+        SnackBar(content: Text(_l10n.snackAutoPlanned(0))),
+      );
+      return;
+    }
+    final message = left == 0
+        ? _l10n.snackAutoPlanned(placed.length)
+        : _l10n.snackAutoPlannedPartial(placed.length, left);
+    _report(await scheduleItems(_container, placed), message, (t) => t);
+  }
+
   Future<void> trash(Occurrence item) async => _report(
     await trashItem(_container, item),
     _l10n.snackTrashed(item.title),

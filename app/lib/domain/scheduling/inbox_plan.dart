@@ -24,6 +24,15 @@ final class DayRoom {
   final DateTime endUtc;
   final int snapMinutes;
 
+  /// This room with [o] booked too (auto-plan places one after another).
+  DayRoom withBlock(Occurrence o) => DayRoom(
+    blocks: [...blocks, o],
+    fromUtc: fromUtc,
+    startUtc: startUtc,
+    endUtc: endUtc,
+    snapMinutes: snapMinutes,
+  );
+
   /// The first free slots for [minutes], earliest first.
   List<Slot> slotsFor(int minutes, {int limit = 1}) => findSlots(
     blocks,

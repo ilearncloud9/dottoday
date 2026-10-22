@@ -5,6 +5,8 @@ library;
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/inbox/inbox_screen.dart';
+import 'package:dottoday/features/inbox/inbox_sidebar.dart';
+import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -36,6 +38,16 @@ void main() {
     },
     build: (_) => _inbox(sampleInbox(), nested: true),
   );
+  // M3e.2: Today with the 300 px Inbox sidebar (`A-mac-week-alt3-board`).
+  goldenMatrix(
+    'today_inbox_sidebar',
+    height: 800,
+    widths: const {'expanded'},
+    build: (_) => _inbox(
+      sampleInbox(),
+      screen: const InboxSidebarFrame(child: TodayScreen()),
+    ),
+  );
   // §5.4 empty state: "Inbox is clear".
   goldenMatrix(
     'inbox_empty',
@@ -45,7 +57,11 @@ void main() {
   );
 }
 
-Widget _inbox(List<Occurrence> items, {bool nested = false}) => ProviderScope(
+Widget _inbox(
+  List<Occurrence> items, {
+  bool nested = false,
+  Widget screen = const InboxScreen(),
+}) => ProviderScope(
   overrides: timelineOverrides(
     now: DateTime.utc(2026, 10, 21, 9),
     occurrences: FakeOccurrenceRepository([
@@ -60,5 +76,5 @@ Widget _inbox(List<Occurrence> items, {bool nested = false}) => ProviderScope(
           onGenerateRoute: (_) =>
               MaterialPageRoute<void>(builder: (_) => const InboxScreen()),
         )
-      : const InboxScreen(),
+      : screen,
 );

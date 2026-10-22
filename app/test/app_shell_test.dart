@@ -53,7 +53,8 @@ void main() {
       ('Settings', 'settings'),
       ('Today', 'today'),
     ]) {
-      await tester.tap(find.text(label));
+      // The rail's item (Today's Inbox sidebar has an "Inbox" heading too).
+      await tester.tap(find.text(label).first);
       await tester.pumpAndSettle();
       expect(_route(route), findsOneWidget, reason: label);
     }

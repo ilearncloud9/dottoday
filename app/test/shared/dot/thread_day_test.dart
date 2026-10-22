@@ -1,13 +1,13 @@
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
-import 'package:dottoday/features/timeline/state/thread_day.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread.dart';
+import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../domain/fixtures.dart';
-import '../../../support/fake_clock.dart';
+import '../../domain/fixtures.dart';
+import '../../support/fake_clock.dart';
 
 DateTime _at(int h, [int m = 0]) => DateTime.utc(2026, 10, 21, h, m);
 

@@ -73,11 +73,13 @@ class LiveRow extends StatelessWidget {
       spacing: DotSpace.m,
       children: [
         _Summary(task: task, onOpen: onOpen, showMeta: !wide),
-        _Actions(
-          onDone: onToggleDone,
-          onExtend: onExtend,
-          onShiftRest: onShiftRest,
-        ),
+        // A read-only thread (the Inbox's Drop onto today) wires none.
+        if (onToggleDone != null || onExtend != null)
+          _Actions(
+            onDone: onToggleDone,
+            onExtend: onExtend,
+            onShiftRest: onShiftRest,
+          ),
       ],
     );
     if (!wide) return column;

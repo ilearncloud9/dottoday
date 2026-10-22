@@ -2667,6 +2667,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing planned'**
   String get spreadNothing;
+
+  /// A free gap on the Inbox's Drop onto today panel naming the inbox task that fits it.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} free · {title} fits'**
+  String threadFreeFits(String duration, String title);
+
+  /// Inbox row on Mac/web: the first slot today.
+  ///
+  /// In en, this message translates to:
+  /// **'Fits today {time}'**
+  String inboxFitsToday(String time);
+
+  /// Inbox row on Mac/web: the first slot later this week, e.g. 'Fits Thu 12:00'.
+  ///
+  /// In en, this message translates to:
+  /// **'Fits {day} {time}'**
+  String inboxFitsDay(String day, String time);
+
+  /// Inbox row on Mac/web when nothing this week fits it.
+  ///
+  /// In en, this message translates to:
+  /// **'No room this week'**
+  String get inboxFitsNone;
+
+  /// Inbox row meta on Mac/web, e.g. '60 min · added Monday'.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} · added {when}'**
+  String inboxAddedMeta(String duration, String when);
+
+  /// 'added today' in the Inbox row meta.
+  ///
+  /// In en, this message translates to:
+  /// **'today'**
+  String get inboxAddedToday;
+
+  /// 'added yesterday' in the Inbox row meta.
+  ///
+  /// In en, this message translates to:
+  /// **'yesterday'**
+  String get inboxAddedYesterday;
+
+  /// The Inbox sort button, e.g. 'Sort: duration'.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort: {order}'**
+  String inboxSortLabel(String order);
+
+  /// Inbox sort order: as added.
+  ///
+  /// In en, this message translates to:
+  /// **'added'**
+  String get inboxSortAdded;
+
+  /// Inbox sort order: shortest first.
+  ///
+  /// In en, this message translates to:
+  /// **'duration'**
+  String get inboxSortDuration;
+
+  /// Inbox sort order: soonest fitting slot first.
+  ///
+  /// In en, this message translates to:
+  /// **'first fit'**
+  String get inboxSortFit;
+
+  /// Inbox button that places every task in the week's free time.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-plan the week'**
+  String get inboxAutoPlan;
+
+  /// After Auto-plan the week.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing fits this week} =1{1 task planned this week} other{{count} tasks planned this week}}'**
+  String snackAutoPlanned(int count);
+
+  /// After Auto-plan the week when some did not fit.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task planned} other{{count} tasks planned}} · {left} still in the Inbox'**
+  String snackAutoPlannedPartial(int count, int left);
+
+  /// Title of the Inbox's today panel on Mac/web.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop onto today'**
+  String get inboxDropToday;
+
+  /// Free time left today in the Drop onto today panel.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} free'**
+  String inboxDropTodayFree(String duration);
+
+  /// Footer of the Drop onto today panel.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag a task onto a dotted gap, or press {keys} on a row to place it in the first fitting slot.'**
+  String inboxDropHint(String keys);
+
+  /// Inbox sidebar header count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} unscheduled'**
+  String inboxUnscheduledCount(int count);
+
+  /// Screen-reader label of an Inbox row with its fit: "Go for a run, 60 min, Fits today 11:30".
+  ///
+  /// In en, this message translates to:
+  /// **'{row}, {fit}'**
+  String inboxRowFitLabel(String row, String fit);
+
+  /// Where a task was placed later this week, e.g. "Thu, 12:00 – 1:30 PM".
+  ///
+  /// In en, this message translates to:
+  /// **'{day}, {range}'**
+  String inboxScheduleDay(String day, String range);
 }
 
 class _AppLocalizationsDelegate

@@ -1,60 +1,22 @@
-import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
-import 'package:dottoday/domain/entities/settings.dart';
-import 'package:dottoday/features/inbox/inbox_screen.dart';
 import 'package:dottoday/shared/dot/thread_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
+import '../../support/inbox_harness.dart';
 import '../../support/sample_inbox.dart';
 import '../../support/timeline_fakes.dart';
-
-/// 11:00 in Berlin on the demo day: Design review ends 11:15 and Lunch
-/// starts 11:30, so the next free slot fits only the 15-min call.
-final _now = DateTime.utc(2026, 10, 21, 9);
 
 Future<FakeOccurrenceRepository> _pump(
   WidgetTester tester, {
   List<Occurrence>? inbox,
   Size size = const Size(390, 1200),
   ThemeMode mode = ThemeMode.light,
-}) async {
-  tester.view
-    ..physicalSize = size
-    ..devicePixelRatio = 1;
-  addTearDown(tester.view.reset);
-  final repo = FakeOccurrenceRepository([
-    // The demo day's timed tasks; its own inbox items would crowd these.
-    for (final o in demoDayRows(DateTime(2026, 10, 21)))
-      if (o.startUtc != null) o,
-    ...inbox ?? sampleInbox(),
-  ]);
-  await tester.pumpWidget(
-    ProviderScope(
-      overrides: timelineOverrides(
-        now: _now,
-        occurrences: repo,
-        profile: testProfile(settings: const Settings(use24h: false)),
-      ),
-      child: MaterialApp(
-        theme: DotTheme.light(),
-        darkTheme: DotTheme.dark(),
-        themeMode: mode,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: const InboxScreen(),
-      ),
-    ),
-  );
-  await tester.pumpAndSettle();
-  return repo;
-}
+}) => pumpInbox(tester, inbox: inbox, size: size, mode: mode);
 
 Occurrence _row(FakeOccurrenceRepository repo, String title) =>
     repo.rows.singleWhere((o) => o.title == title);

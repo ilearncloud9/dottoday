@@ -1,17 +1,18 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
-import 'package:dottoday/features/timeline/state/thread_day.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/day_drag.dart';
 import 'package:dottoday/features/timeline/widgets/empty_day_actions.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/thread.dart';
+import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
@@ -112,8 +113,12 @@ class DayPage extends ConsumerWidget {
     );
   }
 
-  /// A task from a nearby day, dropped on this one (the spread's columns).
+  /// A task from a nearby day (the spread's columns) or the Inbox sidebar
+  /// (M3e.2), dropped on this one.
   Occurrence? _elsewhere(WidgetRef ref, String id) {
+    final inbox = ref.read(inboxItemsProvider).value;
+    final fromInbox = inbox?.where((o) => o.id == id).firstOrNull;
+    if (fromInbox != null) return fromInbox;
     for (var d = -_dragReachDays; d <= _dragReachDays; d++) {
       if (d == 0) continue;
       final day = DateTime(date.year, date.month, date.day + d);

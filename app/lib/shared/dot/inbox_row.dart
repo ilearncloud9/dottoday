@@ -21,13 +21,28 @@ class InboxRow extends StatelessWidget {
     required this.onSchedule,
     required this.onTrash,
     this.onOpen,
+    this.fit,
+    this.titleFirst = false,
+    this.swipe = true,
     super.key,
   });
 
   final String title;
 
-  /// "60 min".
+  /// "60 min" (or "60 min · added Monday" on Mac/web).
   final String meta;
+
+  /// "Fits today 11:30" before the "+" (`A-mac-inbox`); null hides it.
+  final String? fit;
+
+  /// Title above the meta (`A-mac-inbox`'s page); the phone rows and the
+  /// sidebar put the length first.
+  final bool titleFirst;
+
+  /// Swipe to schedule / trash. Off where a mouse drags rows onto the
+  /// thread (Mac/web), so the two gestures never compete; the "+", the
+  /// right-click menu and the screen-reader actions remain.
+  final bool swipe;
   final TaskColor color;
   final TaskIcon icon;
   final VoidCallback onSchedule;
@@ -41,33 +56,42 @@ class InboxRow extends StatelessWidget {
     return Semantics(
       container: true,
       button: onOpen != null,
-      label: l10n.inboxRowLabel(title, meta),
+      label: switch (fit) {
+        final f? => l10n.inboxRowFitLabel(l10n.inboxRowLabel(title, meta), f),
+        null => l10n.inboxRowLabel(title, meta),
+      },
       onTap: onOpen,
       customSemanticsActions: {
         CustomSemanticsAction(label: l10n.inboxSchedule): onSchedule,
         CustomSemanticsAction(label: l10n.inboxTrash): onTrash,
       },
-      child: Dismissible(
-        key: ValueKey(title.hashCode ^ meta.hashCode ^ identityHashCode(this)),
-        // The row leaves when the write lands, not on the swipe itself.
-        confirmDismiss: (direction) async {
-          unawaited(HapticFeedback.mediumImpact());
-          direction == DismissDirection.endToStart ? onSchedule() : onTrash();
-          return false;
-        },
-        background: _SwipeLabel(
-          text: l10n.inboxTrash,
-          // Coral, the palette's warm colour, marks the destructive side.
-          color: t.tasks[TaskColor.coral].tint,
-          alignment: AlignmentDirectional.centerStart,
-        ),
-        secondaryBackground: _SwipeLabel(
-          text: l10n.inboxSchedule,
-          color: t.colors.accentTint,
-          alignment: AlignmentDirectional.centerEnd,
-        ),
-        child: _Card(row: this),
-      ),
+      child: swipe
+          ? Dismissible(
+              key: ValueKey(
+                title.hashCode ^ meta.hashCode ^ identityHashCode(this),
+              ),
+              // The row leaves when the write lands, not on the swipe itself.
+              confirmDismiss: (direction) async {
+                unawaited(HapticFeedback.mediumImpact());
+                direction == DismissDirection.endToStart
+                    ? onSchedule()
+                    : onTrash();
+                return false;
+              },
+              background: _SwipeLabel(
+                text: l10n.inboxTrash,
+                // Coral, the palette's warm colour, marks the destructive side.
+                color: t.tasks[TaskColor.coral].tint,
+                alignment: AlignmentDirectional.centerStart,
+              ),
+              secondaryBackground: _SwipeLabel(
+                text: l10n.inboxSchedule,
+                color: t.colors.accentTint,
+                alignment: AlignmentDirectional.centerEnd,
+              ),
+              child: _Card(row: this),
+            )
+          : _Card(row: this),
     );
   }
 
@@ -128,13 +152,25 @@ class _Card extends StatelessWidget {
                   child: ExcludeSemantics(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(row.meta, style: t.styles.rowMeta),
-                        Text(row.title, style: t.styles.rowTitle),
-                      ],
+                      children: row.titleFirst
+                          ? [
+                              Text(row.title, style: t.styles.rowTitle),
+                              Text(row.meta, style: t.styles.rowMeta),
+                            ]
+                          : [
+                              Text(row.meta, style: t.styles.rowMeta),
+                              Text(row.title, style: t.styles.rowTitle),
+                            ],
                     ),
                   ),
                 ),
+                if (row.fit case final fit?)
+                  ExcludeSemantics(
+                    child: Text(
+                      fit,
+                      style: t.styles.body.copyWith(color: c.muted),
+                    ),
+                  ),
                 IconButton.filledTonal(
                   tooltip: context.l10n.inboxSchedule,
                   onPressed: row.onSchedule,

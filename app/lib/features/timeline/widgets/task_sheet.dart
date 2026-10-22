@@ -5,13 +5,13 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
-import 'package:dottoday/features/timeline/state/thread_day.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_actions.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_details.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_meta.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_subtasks.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
+import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -1753,4 +1753,101 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get spreadNothing => 'Nothing planned';
+
+  @override
+  String threadFreeFits(String duration, String title) {
+    return '$duration free · $title fits';
+  }
+
+  @override
+  String inboxFitsToday(String time) {
+    return 'Fits today $time';
+  }
+
+  @override
+  String inboxFitsDay(String day, String time) {
+    return 'Fits $day $time';
+  }
+
+  @override
+  String get inboxFitsNone => 'No room this week';
+
+  @override
+  String inboxAddedMeta(String duration, String when) {
+    return '$duration · added $when';
+  }
+
+  @override
+  String get inboxAddedToday => 'today';
+
+  @override
+  String get inboxAddedYesterday => 'yesterday';
+
+  @override
+  String inboxSortLabel(String order) {
+    return 'Sort: $order';
+  }
+
+  @override
+  String get inboxSortAdded => 'added';
+
+  @override
+  String get inboxSortDuration => 'duration';
+
+  @override
+  String get inboxSortFit => 'first fit';
+
+  @override
+  String get inboxAutoPlan => 'Auto-plan the week';
+
+  @override
+  String snackAutoPlanned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks planned this week',
+      one: '1 task planned this week',
+      zero: 'Nothing fits this week',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String snackAutoPlannedPartial(int count, int left) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks planned',
+      one: '1 task planned',
+    );
+    return '$_temp0 · $left still in the Inbox';
+  }
+
+  @override
+  String get inboxDropToday => 'Drop onto today';
+
+  @override
+  String inboxDropTodayFree(String duration) {
+    return '$duration free';
+  }
+
+  @override
+  String inboxDropHint(String keys) {
+    return 'Drag a task onto a dotted gap, or press $keys on a row to place it in the first fitting slot.';
+  }
+
+  @override
+  String inboxUnscheduledCount(int count) {
+    return '$count unscheduled';
+  }
+
+  @override
+  String inboxRowFitLabel(String row, String fit) {
+    return '$row, $fit';
+  }
+
+  @override
+  String inboxScheduleDay(String day, String range) {
+    return '$day, $range';
+  }
 }

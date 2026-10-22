@@ -2662,5 +2662,163 @@
   "spreadNothing": "Nothing planned",
   "@spreadNothing": {
     "description": "Side-day summary on the Mac/web spread when the day has no tasks."
+  },
+  "threadFreeFits": "{duration} free · {title} fits",
+  "@threadFreeFits": {
+    "description": "A free gap on the Inbox's Drop onto today panel naming the inbox task that fits it.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxFitsToday": "Fits today {time}",
+  "@inboxFitsToday": {
+    "description": "Inbox row on Mac/web: the first slot today.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxFitsDay": "Fits {day} {time}",
+  "@inboxFitsDay": {
+    "description": "Inbox row on Mac/web: the first slot later this week, e.g. 'Fits Thu 12:00'.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxFitsNone": "No room this week",
+  "@inboxFitsNone": {
+    "description": "Inbox row on Mac/web when nothing this week fits it."
+  },
+  "inboxAddedMeta": "{duration} · added {when}",
+  "@inboxAddedMeta": {
+    "description": "Inbox row meta on Mac/web, e.g. '60 min · added Monday'.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxAddedToday": "today",
+  "@inboxAddedToday": {
+    "description": "'added today' in the Inbox row meta."
+  },
+  "inboxAddedYesterday": "yesterday",
+  "@inboxAddedYesterday": {
+    "description": "'added yesterday' in the Inbox row meta."
+  },
+  "inboxSortLabel": "Sort: {order}",
+  "@inboxSortLabel": {
+    "description": "The Inbox sort button, e.g. 'Sort: duration'.",
+    "placeholders": {
+      "order": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxSortAdded": "added",
+  "@inboxSortAdded": {
+    "description": "Inbox sort order: as added."
+  },
+  "inboxSortDuration": "duration",
+  "@inboxSortDuration": {
+    "description": "Inbox sort order: shortest first."
+  },
+  "inboxSortFit": "first fit",
+  "@inboxSortFit": {
+    "description": "Inbox sort order: soonest fitting slot first."
+  },
+  "inboxAutoPlan": "Auto-plan the week",
+  "@inboxAutoPlan": {
+    "description": "Inbox button that places every task in the week's free time."
+  },
+  "snackAutoPlanned": "{count, plural, =0{Nothing fits this week} =1{1 task planned this week} other{{count} tasks planned this week}}",
+  "@snackAutoPlanned": {
+    "description": "After Auto-plan the week.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackAutoPlannedPartial": "{count, plural, =1{1 task planned} other{{count} tasks planned}} · {left} still in the Inbox",
+  "@snackAutoPlannedPartial": {
+    "description": "After Auto-plan the week when some did not fit.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxDropToday": "Drop onto today",
+  "@inboxDropToday": {
+    "description": "Title of the Inbox's today panel on Mac/web."
+  },
+  "inboxDropTodayFree": "{duration} free",
+  "@inboxDropTodayFree": {
+    "description": "Free time left today in the Drop onto today panel.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxDropHint": "Drag a task onto a dotted gap, or press {keys} on a row to place it in the first fitting slot.",
+  "@inboxDropHint": {
+    "description": "Footer of the Drop onto today panel.",
+    "placeholders": {
+      "keys": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxUnscheduledCount": "{count} unscheduled",
+  "@inboxUnscheduledCount": {
+    "description": "Inbox sidebar header count.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxRowFitLabel": "{row}, {fit}",
+  "@inboxRowFitLabel": {
+    "description": "Screen-reader label of an Inbox row with its fit: \"Go for a run, 60 min, Fits today 11:30\".",
+    "placeholders": {
+      "row": {
+        "type": "String"
+      },
+      "fit": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxScheduleDay": "{day}, {range}",
+  "@inboxScheduleDay": {
+    "description": "Where a task was placed later this week, e.g. \"Thu, 12:00 – 1:30 PM\".",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      }
+    }
   }
 }

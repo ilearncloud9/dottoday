@@ -55,7 +55,8 @@ class TaskRow extends StatelessWidget {
               onSteps: onResize!,
               label: context.l10n.resizeLabel(task.title),
             ),
-      trailing: task.state == DotState.done || !doneCircle
+      trailing:
+          task.state == DotState.done || !doneCircle || onToggleDone == null
           ? null
           : DoneCircle(color: t.colors.hairline, onTap: onToggleDone),
       child: Semantics(

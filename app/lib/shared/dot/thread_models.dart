@@ -90,6 +90,7 @@ final class ThreadGap extends ThreadEntry {
     this.nowFraction,
     this.startUtc,
     this.labelled = true,
+    this.fits,
   });
 
   final int minutes;
@@ -109,4 +110,19 @@ final class ThreadGap extends ThreadEntry {
   /// Settings › Show free time: off, the gap keeps its dotted line but no
   /// "N h free · add here" label (still a drop target).
   final bool labelled;
+
+  /// The title of an inbox task that fits here ("1 h free · Go for a run
+  /// fits", `A-mac-inbox`'s Drop onto today).
+  final String? fits;
+
+  /// This gap naming [title] as what fits it.
+  ThreadGap fitting(String title) => ThreadGap(
+    minutes: minutes,
+    startLabel: startLabel,
+    addable: addable,
+    nowFraction: nowFraction,
+    startUtc: startUtc,
+    labelled: labelled,
+    fits: title,
+  );
 }

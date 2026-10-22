@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/clock/minute_tick.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
@@ -11,12 +13,16 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/features/inbox/state/inbox_state.dart';
 import 'package:dottoday/features/inbox/widgets/completed_group.dart';
+import 'package:dottoday/features/inbox/widgets/drop_today_panel.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_add_field.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_commands.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_filters.dart';
+import 'package:dottoday/features/inbox/widgets/inbox_fit.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_header.dart';
+import 'package:dottoday/features/inbox/widgets/wide_inbox.dart';
 import 'package:dottoday/shared/dot/inbox_row.dart';
 import 'package:dottoday/shared/dot/next_free_slot.dart';
+import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +38,7 @@ class InboxScreen extends ConsumerWidget {
 
   static const _key = ValueKey('route:inbox');
 
-  /// A readable column on wide windows (Mac/web get the sidebar in M3e).
+  /// A readable column on medium windows; expanded is [WideInbox].
   static const _maxWidth = DotSize.readableColumn;
 
   @override
@@ -54,22 +60,71 @@ class InboxScreen extends ConsumerWidget {
       rangeText: (s) =>
           context.l10n.threadTimeRange(time(s.startUtc), time(s.endUtc)),
     );
+    final narrow = Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: _maxWidth),
+        child: _Body(
+          items: items,
+          room: room,
+          filter: ref.watch(inboxFilterChoiceProvider),
+          commands: commands,
+        ),
+      ),
+    );
     return Scaffold(
       key: _key,
       body: SafeArea(
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: _maxWidth),
-            child: _Body(
-              items: items,
-              room: room,
-              filter: ref.watch(inboxFilterChoiceProvider),
-              commands: commands,
-            ),
-          ),
+        child: LayoutBuilder(
+          builder: (context, box) =>
+              WidthClass.of(box.maxWidth) == WidthClass.expanded
+              ? _wide(context, ref, items, today, zone, time, commands)
+              : narrow,
         ),
       ),
+    );
+  }
+
+  /// Mac/web (M3e.2): the list with fits beside "Drop onto today".
+  Widget _wide(
+    BuildContext context,
+    WidgetRef ref,
+    List<Occurrence> items,
+    DateTime today,
+    tz.Location zone,
+    String Function(DateTime utc) time,
+    InboxCommands commands,
+  ) {
+    final l10n = context.l10n;
+    final rooms = ref.watch(inboxWeekRoomsProvider(today)).value;
+    final now =
+        ref.watch(minuteTickProvider).value ??
+        ref.watch(clockProvider).nowUtc();
+    return WideInbox(
+      items: items,
+      rooms: rooms,
+      zone: zone,
+      commands: commands,
+      fits: InboxFitText(
+        context,
+        today: today,
+        timeText: time,
+        rangeText: commands.rangeText,
+      ),
+      panel: (shown) => rooms == null
+          ? const SizedBox.shrink()
+          : DropTodayPanel(
+              room: rooms.first,
+              items: shown,
+              zone: zone,
+              nowUtc: now,
+              commands: commands,
+              format: ThreadFormat(
+                time: time,
+                range: l10n.threadTimeRange,
+                duration: (m) => formatDurationShort(l10n, m),
+              ),
+            ),
     );
   }
 }

@@ -100,11 +100,14 @@ class GapRow extends StatelessWidget {
       ),
       GapStyle.pill => _AddHere(
         // Wide screens plan from the Inbox sidebar by dragging (M3e.2).
-        label:
-            WidthClass.of(MediaQuery.sizeOf(context).width) ==
-                WidthClass.expanded
-            ? l10n.threadDropInbox(duration)
-            : l10n.threadAddHere(duration),
+        label: switch (gap.fits) {
+          final title? => l10n.threadFreeFits(duration, title),
+          null
+              when WidthClass.of(MediaQuery.sizeOf(context).width) ==
+                  WidthClass.expanded =>
+            l10n.threadDropInbox(duration),
+          null => l10n.threadAddHere(duration),
+        },
         semantics: l10n.threadAddHereLabel(duration, gap.startLabel),
         style: text,
         onTap: tap,

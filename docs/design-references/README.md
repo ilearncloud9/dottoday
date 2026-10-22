@@ -54,3 +54,4 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Search empty (hint + recent) and no results (with Show all) | §5.3 "Search empty and no-results" | `search_empty_*`, `search_no_results_*` |
 | Settings › Different days (per-weekday sliders), Send feedback sheet, Trash sheet | §5.3, PRD F1/F8/F11 | `settings_weekdays_*`, `settings_feedback_*` |
 | Spread side day with nothing planned ("Nothing planned"), Running late menu (+5 / +15 / +30), the spread at 840 px | §3 `DayCard`, PRD F1, `A-mac-today-alt1-spread` | `today_spread_*` |
+| Inbox Sort menu (added / duration / first fit), "No room this week", the Inbox sidebar's empty list | §3 `InboxRow`, `A-mac-inbox` | `inbox_*_expanded_*`, `today_inbox_sidebar_*` |

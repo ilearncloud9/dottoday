@@ -107,3 +107,150 @@ final class InboxTodayProvider
 }
 
 String _$inboxTodayHash() => r'd795312bfcd6daf82eb76b5f427c12441175b486';
+
+/// The Mac/web Sort menu (`A-mac-inbox`); resets when the Inbox is left.
+
+@ProviderFor(InboxSortChoice)
+final inboxSortChoiceProvider = InboxSortChoiceProvider._();
+
+/// The Mac/web Sort menu (`A-mac-inbox`); resets when the Inbox is left.
+final class InboxSortChoiceProvider
+    extends $NotifierProvider<InboxSortChoice, InboxSort> {
+  /// The Mac/web Sort menu (`A-mac-inbox`); resets when the Inbox is left.
+  InboxSortChoiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'inboxSortChoiceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$inboxSortChoiceHash();
+
+  @$internal
+  @override
+  InboxSortChoice create() => InboxSortChoice();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(InboxSort value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<InboxSort>(value),
+    );
+  }
+}
+
+String _$inboxSortChoiceHash() => r'18c21d3738ec3b9a13d85166032e08714309527e';
+
+/// The Mac/web Sort menu (`A-mac-inbox`); resets when the Inbox is left.
+
+abstract class _$InboxSortChoice extends $Notifier<InboxSort> {
+  InboxSort build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<InboxSort, InboxSort>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<InboxSort, InboxSort>,
+              InboxSort,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
+/// The room left on [today] (from now) and the six days after it, live,
+/// for "Fits Thu 12:00" and Auto-plan the week (M3e.2).
+
+@ProviderFor(inboxWeekRooms)
+final inboxWeekRoomsProvider = InboxWeekRoomsFamily._();
+
+/// The room left on [today] (from now) and the six days after it, live,
+/// for "Fits Thu 12:00" and Auto-plan the week (M3e.2).
+
+final class InboxWeekRoomsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<DayRoom>>,
+          List<DayRoom>,
+          FutureOr<List<DayRoom>>
+        >
+    with $FutureModifier<List<DayRoom>>, $FutureProvider<List<DayRoom>> {
+  /// The room left on [today] (from now) and the six days after it, live,
+  /// for "Fits Thu 12:00" and Auto-plan the week (M3e.2).
+  InboxWeekRoomsProvider._({
+    required InboxWeekRoomsFamily super.from,
+    required DateTime super.argument,
+  }) : super(
+         retry: null,
+         name: r'inboxWeekRoomsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$inboxWeekRoomsHash();
+
+  @override
+  String toString() {
+    return r'inboxWeekRoomsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<DayRoom>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<DayRoom>> create(Ref ref) {
+    final argument = this.argument as DateTime;
+    return inboxWeekRooms(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is InboxWeekRoomsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$inboxWeekRoomsHash() => r'fe5567975504baddcbaf7d93b5b01ddf0d80d449';
+
+/// The room left on [today] (from now) and the six days after it, live,
+/// for "Fits Thu 12:00" and Auto-plan the week (M3e.2).
+
+final class InboxWeekRoomsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<DayRoom>>, DateTime> {
+  InboxWeekRoomsFamily._()
+    : super(
+        retry: null,
+        name: r'inboxWeekRoomsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// The room left on [today] (from now) and the six days after it, live,
+  /// for "Fits Thu 12:00" and Auto-plan the week (M3e.2).
+
+  InboxWeekRoomsProvider call(DateTime today) =>
+      InboxWeekRoomsProvider._(argument: today, from: this);
+
+  @override
+  String toString() => r'inboxWeekRoomsProvider';
+}
