@@ -21,6 +21,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 void showTaskSheet(BuildContext context, String id) => unawaited(
   showModalBottomSheet<void>(
     context: context,
+    // Above the iPhone's floating tab bar (M4.9: it covered Save).
+    useRootNavigator: true,
     isScrollControlled: true,
     builder: (_) => DraggableScrollableSheet(
       expand: false,

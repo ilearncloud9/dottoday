@@ -35,6 +35,8 @@ Future<ScheduleChoice?> showScheduleSheet(
   required String Function(Slot slot) rangeText,
 }) => showModalBottomSheet<ScheduleChoice>(
   context: context,
+  // Above the iPhone's floating tab bar (M4.9: it covered Save).
+  useRootNavigator: true,
   builder: (_) =>
       _ScheduleSheet(item: item, today: today, rangeText: rangeText),
 );

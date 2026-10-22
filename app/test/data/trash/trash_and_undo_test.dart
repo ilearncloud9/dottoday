@@ -1,6 +1,7 @@
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
+import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/data/trash/drift_trash_service.dart';
 import 'package:dottoday/data/undo/in_memory_undo_service.dart';
@@ -23,6 +24,7 @@ void main() {
   late WriteHarness h;
   late DriftOccurrenceRepository occurrences;
   late DriftSubtaskRepository subtasks;
+  late DriftSeriesRepository series;
   late InMemoryUndoService undo;
   late DriftTrashService trash;
 
@@ -34,10 +36,12 @@ void main() {
     h = WriteHarness(DateTime.utc(2026, 10, 21, 6));
     occurrences = DriftOccurrenceRepository(h.db);
     subtasks = DriftSubtaskRepository(h.db);
+    series = DriftSeriesRepository(h.db);
     undo = InMemoryUndoService(
       writes: h.writes,
       occurrences: occurrences,
       subtasks: subtasks,
+      series: series,
       clock: h.clock,
       ids: FakeIds('undo'),
     );
@@ -104,10 +108,10 @@ void main() {
       expect(await deletedAt('copy'), isNotNull);
     });
 
-    test('series edits are not undoable here (M4.4)', () {
+    test('profile writes are not undoable here', () {
       expect(
         () => undo.applyUndoable(
-          WriteBatch(userId: userId, series: [seriesFixture()]),
+          WriteBatch(userId: userId, profile: profileFixture()),
         ),
         throwsArgumentError,
       );
@@ -164,6 +168,44 @@ void main() {
       expect(await trash.watchTrash(userId).first, isEmpty);
       _ok(await trash.restoreOccurrences(userId, {task.id}));
       expect(await deletedAt(task.id), isNotNull);
+    });
+  });
+
+  // Repeat edits through the real undo service (M3f.1; found by the M4.9
+  // device journey: it used to refuse series).
+  group('series', () {
+    Future<List<String>> liveOf(String id) async => [
+      for (final o in await occurrences.findBySeries(userId, id))
+        if (o.deletedAt == null) o.id,
+    ];
+
+    test('a new series and what it planned go on Undo', () async {
+      final s = seriesFixture();
+      final token = _ok(
+        await undo.applyUndoable(WriteBatch(userId: userId, series: [s])),
+      );
+      expect(await liveOf(s.id), isNotEmpty);
+      _ok(await undo.undo(token));
+      expect((await series.findById(userId, s.id))!.deletedAt, isNotNull);
+      expect(await liveOf(s.id), isEmpty);
+    });
+
+    test('an edited series comes back as it was', () async {
+      final s = seriesFixture();
+      await h.writes.apply(WriteBatch(userId: userId, series: [s]));
+      final planned = await liveOf(s.id);
+      final token = _ok(
+        await undo.applyUndoable(
+          WriteBatch(
+            userId: userId,
+            series: [s.copyWith(title: 'Long run', rrule: 'FREQ=WEEKLY')],
+          ),
+        ),
+      );
+      _ok(await undo.undo(token));
+      final back = (await series.findById(userId, s.id))!;
+      expect((back.title, back.rrule), (s.title, s.rrule));
+      expect(await liveOf(s.id), unorderedEquals(planned));
     });
   });
 }

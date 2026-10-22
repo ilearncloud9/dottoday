@@ -18,6 +18,7 @@ UndoService undoService(Ref ref) => InMemoryUndoService(
   writes: ref.watch(writeUseCaseProvider),
   occurrences: ref.watch(occurrenceRepositoryProvider),
   subtasks: ref.watch(subtaskRepositoryProvider),
+  series: ref.watch(seriesRepositoryProvider),
   clock: ref.watch(clockProvider),
   ids: const UuidV7Generator(),
 );

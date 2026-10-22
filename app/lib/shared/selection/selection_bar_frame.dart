@@ -146,6 +146,8 @@ class ColourSwatchIcon extends StatelessWidget {
 Future<TaskColor?> showColourChoice(BuildContext context) =>
     showModalBottomSheet<TaskColor>(
       context: context,
+      // Above the iPhone's floating tab bar (M4.9: it covered Save).
+      useRootNavigator: true,
       builder: (_) => const _ColourSheet(),
     );
 
