@@ -5,7 +5,8 @@ tags:
   golden:
     # Pixel goldens are baselined on macOS; run on a macOS runner (docs/09 M0.8).
   perf:
-    # Database latency budgets (docs/09 M2.7, R-15). Runs in the default suite.
+    # Database latency budgets (docs/09 M2.7, R-15). CI runs them in their own
+    # step with --concurrency=1 so other test files don't skew the timings.
   reference-sheet:
     # Writes build/reference_sheet/ for design review (docs/10 §7, M3a.9).
     # Skipped unless REFERENCE_SHEET is set; never a pass/fail gate.
