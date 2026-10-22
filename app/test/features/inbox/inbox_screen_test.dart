@@ -1,3 +1,4 @@
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/shared/dot/thread_picker.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,28 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Renew passport'), findsOneWidget);
     handle.dispose();
+  });
+
+  testWidgets('Completed group: not done and Clear, with Undo (M3f.6)', (
+    tester,
+  ) async {
+    // Tall enough that Clear sits above the first Undo snackbar.
+    final repo = await _pump(tester, size: const Size(390, 2000));
+    await tester.tap(find.text('Completed · 2'));
+    await tester.pumpAndSettle();
+    expect(find.text('Done Wed, Oct 21'), findsNWidgets(2));
+    await tester.tap(find.byTooltip('Mark “Renew passport” not done'));
+    await tester.pumpAndSettle();
+    expect(_row(repo, 'Renew passport').status, OccurrenceStatus.planned);
+    expect(find.text('“Renew passport” is back in the Inbox'), findsOneWidget);
+    expect(find.text('Completed · 1'), findsOneWidget);
+    await tester.tap(find.text('Clear completed'));
+    await tester.pumpAndSettle();
+    expect(_row(repo, 'Buy stamps').deletedAt, isNotNull);
+    expect(find.text('1 completed task moved to Trash'), findsOneWidget);
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
+    expect(_row(repo, 'Buy stamps').deletedAt, isNull);
   });
 
   testWidgets('empty: "Inbox is clear"', (tester) async {

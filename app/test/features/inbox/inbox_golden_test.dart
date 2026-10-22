@@ -48,6 +48,22 @@ void main() {
       screen: const InboxSidebarFrame(child: TodayScreen()),
     ),
   );
+  // M3f.6: the Completed group open (done day, not-done button, Clear).
+  goldenMatrix(
+    'inbox_completed_open',
+    height: 1100,
+    widths: const {'compact', 'expanded'},
+    act: (tester) async {
+      await tester.tap(find.text('Completed · 2'));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('Clear completed'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+    },
+    build: (_) => _inbox(sampleInbox()),
+  );
   // §5.4 empty state: "Inbox is clear".
   goldenMatrix(
     'inbox_empty',

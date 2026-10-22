@@ -16,6 +16,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 Future<void> showCopyDaySheet(
   BuildContext context, {
   required DateTime target,
+}) =>
+    _copy(context, fixed: target, title: context.l10n.copyDayTitle, into: true);
+
+/// Picks the day to copy [source] onto, then copies it with Undo (Today's
+/// ⋯ › Duplicate day…, 03 §3.1, docs/09 M3f.6).
+Future<void> showDuplicateDaySheet(
+  BuildContext context, {
+  required DateTime source,
+}) => _copy(
+  context,
+  fixed: source,
+  title: context.l10n.duplicateDayTitle,
+  into: false,
+);
+
+/// [fixed] is the target when [into], else the source; the other day is
+/// picked.
+Future<void> _copy(
+  BuildContext context, {
+  required DateTime fixed,
+  required String title,
+  required bool into,
 }) async {
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
@@ -23,19 +45,20 @@ Future<void> showCopyDaySheet(
   final undo = container.read(undoServiceProvider);
   final today = await container.read(todayDateProvider.future);
   if (!context.mounted) return;
-  final source = await showMonthDayPicker(
+  final picked = await showMonthDayPicker(
     context,
     plannedFor: (m) => plannedColors(container, m),
     firstDayOfWeek: _weekStart(container),
-    title: l10n.copyDayTitle,
+    title: title,
     today: today,
-    initial: target,
+    initial: fixed,
   );
-  if (source == null) return;
+  if (picked == null || picked == fixed) return;
+  final source = into ? picked : fixed;
   final result = await copyDay(
     container,
     source: await occurrencesOn(container, source),
-    target: target,
+    target: into ? fixed : picked,
   );
   switch (result) {
     case Ok(value: null):

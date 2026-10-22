@@ -64,3 +64,4 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Subtask rows in the editor (rename dialog, ×, drag handle, "now", Use this list every time); full colour & icon picker | §5.3 "Subtask editor", "Colour & icon full picker", R-09 | `task_editor_*`; widget tests |
 | Running late sheet (+5 / +15 / +30; shift the rest with the pinned task named, skip, shorten), Today's ⋯ (Running late…, Review the day) | §5.3 "Running late sheet", PRD F1, R-04 | `today_running_late_*` |
 | Day review card at Bedtime ("2 of 13 done · Send the rest to the Inbox?", Not now) and the running-late nudge card | §5.3 "Day review at Bedtime" | `today_day_review_*`, `today_late_nudge_*` |
+| Inbox Completed group open (done day, ↺ not done, Clear completed); the day ⋯ with Duplicate day… and Copy day as text | §5.3 "Completed group expanded", 03 §3.1 | `inbox_completed_open_*`; `day_menu_test` |

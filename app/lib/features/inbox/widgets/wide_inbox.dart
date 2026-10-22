@@ -127,7 +127,11 @@ class WideInbox extends ConsumerWidget {
           ),
         if (done.isNotEmpty) ...[
           const SizedBox(height: DotSpace.l),
-          CompletedGroup(items: done),
+          CompletedGroup(
+            items: done,
+            onNotDone: (o) => unawaited(commands.notDone(o)),
+            onClear: () => unawaited(commands.clearDone(done)),
+          ),
         ],
       ],
     );

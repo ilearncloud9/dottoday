@@ -2,6 +2,7 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/schedule_result.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
@@ -55,3 +56,32 @@ Future<Result<UndoToken, AppFailure>> trashItem(
   ProviderContainer ref,
   Occurrence o,
 ) => ref.read(trashServiceProvider).trashOccurrences(o.userId, {o.id});
+
+/// Puts completed inbox item [o] back in the Inbox, not done (Completed
+/// group, docs/09 M3f.6).
+Future<Result<UndoToken, AppFailure>> markNotDone(
+  ProviderContainer ref,
+  Occurrence o,
+) => ref
+    .read(undoServiceProvider)
+    .applyUndoable(
+      WriteBatch(
+        userId: o.userId,
+        occurrences: [
+          o.copyWith(
+            status: OccurrenceStatus.planned,
+            completedAtUtc: null,
+            updatedAt: ref.read(clockProvider).nowUtc(),
+          ),
+        ],
+      ),
+    );
+
+/// Moves every completed item in [done] to Trash ("Clear completed",
+/// R-11): one Undo brings them all back.
+Future<Result<UndoToken, AppFailure>> trashItems(
+  ProviderContainer ref,
+  List<Occurrence> done,
+) => ref.read(trashServiceProvider).trashOccurrences(done.first.userId, {
+  for (final o in done) o.id,
+});

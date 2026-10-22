@@ -3734,5 +3734,61 @@
   "lateNudgeAction": "Catch up",
   "@lateNudgeAction": {
     "description": "Running-late nudge button: opens the Running late sheet."
+  },
+  "todayMenuDuplicate": "Duplicate day…",
+  "@todayMenuDuplicate": {
+    "description": "Day ⋯ menu: copy this day's one-off tasks to another day."
+  },
+  "todayMenuCopyText": "Copy day as text",
+  "@todayMenuCopyText": {
+    "description": "Day ⋯ menu: put this day's tasks on the clipboard as plain text."
+  },
+  "duplicateDayTitle": "Copy to which day?",
+  "@duplicateDayTitle": {
+    "description": "Duplicate day: the month picker's title."
+  },
+  "snackDayCopied": "Day copied as text",
+  "@snackDayCopied": {
+    "description": "Snackbar after Copy day as text."
+  },
+  "inboxDoneOn": "Done {date}",
+  "@inboxDoneOn": {
+    "description": "Completed group: when an inbox task was done, e.g. 'Done Tue, Oct 20'.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxNotDone": "Mark “{title}” not done",
+  "@inboxNotDone": {
+    "description": "Completed group: button tooltip that puts a done task back in the Inbox.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxClearCompleted": "Clear completed",
+  "@inboxClearCompleted": {
+    "description": "Completed group: move every completed inbox task to Trash."
+  },
+  "snackBackInInbox": "“{title}” is back in the Inbox",
+  "@snackBackInInbox": {
+    "description": "Snackbar after marking a completed inbox task not done, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "snackClearedCompleted": "{count, plural, =1{1 completed task moved to Trash} other{{count} completed tasks moved to Trash}}",
+  "@snackClearedCompleted": {
+    "description": "Snackbar after Clear completed, with Undo.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

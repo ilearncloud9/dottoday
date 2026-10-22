@@ -208,13 +208,21 @@ class _Body extends StatelessWidget {
             ),
           ),
         ],
-        if (done.isNotEmpty) ...[
-          const SizedBox(height: DotSpace.l),
-          CompletedGroup(items: done),
-        ],
+        ..._completed(done),
       ],
     );
   }
+
+  List<Widget> _completed(List<Occurrence> done) => [
+    if (done.isNotEmpty) ...[
+      const SizedBox(height: DotSpace.l),
+      CompletedGroup(
+        items: done,
+        onNotDone: (o) => unawaited(commands.notDone(o)),
+        onClear: () => unawaited(commands.clearDone(done)),
+      ),
+    ],
+  ];
 }
 
 /// "← Schedule · Move to Trash →" under the first row, so the swipes are

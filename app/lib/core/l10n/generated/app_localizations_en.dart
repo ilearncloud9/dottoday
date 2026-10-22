@@ -2493,4 +2493,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lateNudgeAction => 'Catch up';
+
+  @override
+  String get todayMenuDuplicate => 'Duplicate day…';
+
+  @override
+  String get todayMenuCopyText => 'Copy day as text';
+
+  @override
+  String get duplicateDayTitle => 'Copy to which day?';
+
+  @override
+  String get snackDayCopied => 'Day copied as text';
+
+  @override
+  String inboxDoneOn(String date) {
+    return 'Done $date';
+  }
+
+  @override
+  String inboxNotDone(String title) {
+    return 'Mark “$title” not done';
+  }
+
+  @override
+  String get inboxClearCompleted => 'Clear completed';
+
+  @override
+  String snackBackInInbox(String title) {
+    return '“$title” is back in the Inbox';
+  }
+
+  @override
+  String snackClearedCompleted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count completed tasks moved to Trash',
+      one: '1 completed task moved to Trash',
+    );
+    return '$_temp0';
+  }
 }

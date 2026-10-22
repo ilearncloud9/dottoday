@@ -125,6 +125,20 @@ final class InboxCommands {
     _report(await scheduleItems(_container, placed), message, (t) => t);
   }
 
+  /// Completed group: [item] back in the Inbox, not done.
+  Future<void> notDone(Occurrence item) async => _report(
+    await markNotDone(_container, item),
+    _l10n.snackBackInInbox(item.title),
+    (t) => t,
+  );
+
+  /// Completed group: every one of [done] to Trash.
+  Future<void> clearDone(List<Occurrence> done) async => _report(
+    await trashItems(_container, done),
+    _l10n.snackClearedCompleted(done.length),
+    (t) => t,
+  );
+
   Future<void> trash(Occurrence item) async => _report(
     await trashItem(_container, item),
     _l10n.snackTrashed(item.title),

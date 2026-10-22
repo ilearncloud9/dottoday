@@ -3609,6 +3609,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Catch up'**
   String get lateNudgeAction;
+
+  /// Day ⋯ menu: copy this day's one-off tasks to another day.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate day…'**
+  String get todayMenuDuplicate;
+
+  /// Day ⋯ menu: put this day's tasks on the clipboard as plain text.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy day as text'**
+  String get todayMenuCopyText;
+
+  /// Duplicate day: the month picker's title.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy to which day?'**
+  String get duplicateDayTitle;
+
+  /// Snackbar after Copy day as text.
+  ///
+  /// In en, this message translates to:
+  /// **'Day copied as text'**
+  String get snackDayCopied;
+
+  /// Completed group: when an inbox task was done, e.g. 'Done Tue, Oct 20'.
+  ///
+  /// In en, this message translates to:
+  /// **'Done {date}'**
+  String inboxDoneOn(String date);
+
+  /// Completed group: button tooltip that puts a done task back in the Inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark “{title}” not done'**
+  String inboxNotDone(String title);
+
+  /// Completed group: move every completed inbox task to Trash.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear completed'**
+  String get inboxClearCompleted;
+
+  /// Snackbar after marking a completed inbox task not done, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” is back in the Inbox'**
+  String snackBackInInbox(String title);
+
+  /// Snackbar after Clear completed, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 completed task moved to Trash} other{{count} completed tasks moved to Trash}}'**
+  String snackClearedCompleted(int count);
 }
 
 class _AppLocalizationsDelegate

@@ -23,6 +23,7 @@ List<Occurrence> sampleInbox() {
     durationMin: minutes,
     sortOrder: n.toDouble(),
     status: done ? OccurrenceStatus.done : OccurrenceStatus.planned,
+    completedAtUtc: done ? at : null,
     createdAt: at,
     updatedAt: at,
   );
