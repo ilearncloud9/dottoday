@@ -1,16 +1,20 @@
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
+import 'package:dottoday/features/settings/pages/settings_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../support/timeline_fakes.dart';
 
@@ -41,6 +45,9 @@ Future<SettingsHarness> pumpSettings(
   ThemeMode mode = ThemeMode.light,
   TargetPlatform platform = TargetPlatform.iOS,
   List<Occurrence> rows = const [],
+  String location = AppRoutes.settings,
+  List<Override> overrides = const [],
+  List<String> recentSearches = const [],
 }) async {
   tester.view
     ..physicalSize = size
@@ -54,6 +61,7 @@ Future<SettingsHarness> pumpSettings(
         now: DateTime.utc(2026, 10, 21, 9),
         occurrences: occurrences,
         profile: testProfile(settings: settings).copyWith(displayName: 'Kody'),
+        recentSearches: recentSearches,
       ),
       linkLauncherProvider.overrideWithValue(links),
       appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),
@@ -63,19 +71,39 @@ Future<SettingsHarness> pumpSettings(
           supabaseAnonKey: 'anon',
         ),
       ),
+      ...overrides,
     ],
   );
   addTearDown(container.dispose);
+  // Settings and its sub-pages (M3f.7), as the app routes them.
+  final router = GoRouter(
+    initialLocation: location,
+    routes: [
+      GoRoute(
+        path: AppRoutes.settings,
+        builder: (_, _) => const SettingsScreen(),
+        routes: [
+          GoRoute(
+            path: ':page',
+            builder: (_, state) => settingsPageFor(
+              SettingsPage.byName(state.pathParameters['page']!)!,
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
+  addTearDown(router.dispose);
   await tester.pumpWidget(
     UncontrolledProviderScope(
       container: container,
-      child: MaterialApp(
+      child: MaterialApp.router(
+        routerConfig: router,
         theme: DotTheme.light().copyWith(platform: platform),
         darkTheme: DotTheme.dark().copyWith(platform: platform),
         themeMode: mode,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const SettingsScreen(),
       ),
     ),
   );

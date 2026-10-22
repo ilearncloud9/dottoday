@@ -24,6 +24,9 @@ void main() {
       'dottoday:///task/$_v7': '/task/$_v7',
       'dottoday://day/2026-10-20': '/day/2026-10-20',
       'dottoday://inbox': '/inbox',
+      '/settings/account': '/settings/account',
+      '/settings/privacy/': '/settings/privacy',
+      'dottoday://settings/help': '/settings/help',
     };
     cases.forEach((input, expected) {
       test(input, () => expect(_guard(input), expected));
@@ -52,6 +55,9 @@ void main() {
       'dottoday://user:pw@task/$_v7',
       'dottoday://task:80/$_v7',
       'otherapp://today',
+      '/settings/admin',
+      '/settings/Account',
+      '/settings/help/x',
     ];
     for (final input in cases) {
       test(input, () => expect(_guard(input), isNull));

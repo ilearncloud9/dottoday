@@ -2534,4 +2534,219 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get settingsAccount => 'Account';
+
+  @override
+  String get settingsCalendars => 'Calendars';
+
+  @override
+  String get settingsCalendarsDetail => 'Events on your timeline';
+
+  @override
+  String get settingsExport => 'Export';
+
+  @override
+  String get settingsExportDetail => 'Your data, free to take';
+
+  @override
+  String get settingsHelp => 'Help';
+
+  @override
+  String get settingsPrivacy => 'Privacy';
+
+  @override
+  String get settingsAboutApp => 'About Dottoday';
+
+  @override
+  String get settingsBack => 'Back to Settings';
+
+  @override
+  String get accountProfile => 'Profile';
+
+  @override
+  String get accountName => 'Name';
+
+  @override
+  String get accountNameNone => 'Not set';
+
+  @override
+  String get accountNameTitle => 'Your name';
+
+  @override
+  String get accountNameSave => 'Save';
+
+  @override
+  String get accountSync => 'Sync';
+
+  @override
+  String get accountLocalBody =>
+      'Everything is on this device. Sign in to sync across your devices and keep a copy safe.';
+
+  @override
+  String get accountApple => 'Continue with Apple';
+
+  @override
+  String get accountGoogle => 'Continue with Google';
+
+  @override
+  String get accountEmail => 'Continue with email';
+
+  @override
+  String get accountComingSoon =>
+      'Sign-in arrives with sync in a later update. Until then, nothing leaves this device.';
+
+  @override
+  String accountSignedInAs(String email) {
+    return 'Signed in as $email';
+  }
+
+  @override
+  String get accountSignOut => 'Sign out';
+
+  @override
+  String get accountDelete => 'Delete account';
+
+  @override
+  String get accountDeleteTitle => 'Delete your account?';
+
+  @override
+  String accountDeleteBody(String word) {
+    return 'This deletes your account and everything synced to it. Tasks on this device stay. Type $word to confirm.';
+  }
+
+  @override
+  String get accountDeleteWord => 'DELETE';
+
+  @override
+  String get calendarsIntro =>
+      'See your calendar events on the timeline, read-only. Free, always.';
+
+  @override
+  String get calendarsConnected => 'Connected';
+
+  @override
+  String get calendarsNone => 'No calendars connected yet';
+
+  @override
+  String get calendarsConnect => 'Connect a calendar';
+
+  @override
+  String get calendarsComingSoon =>
+      'Calendar import arrives in a later update.';
+
+  @override
+  String get calendarsShifting => 'When the day shifts';
+
+  @override
+  String get calendarsMoveEvents => 'Move calendar events too';
+
+  @override
+  String get calendarsMoveEventsDetail =>
+      'Off: events stay put when you shift the rest';
+
+  @override
+  String get exportIntro =>
+      'Your tasks are yours. Export is free, always, with or without an account.';
+
+  @override
+  String get exportFormats => 'Formats';
+
+  @override
+  String get exportJson => 'Everything (JSON)';
+
+  @override
+  String get exportJsonDetail => 'A full copy you can restore';
+
+  @override
+  String get exportCsv => 'Tasks (CSV)';
+
+  @override
+  String get exportCsvDetail => 'Opens in any spreadsheet';
+
+  @override
+  String get exportIcs => 'Calendar (.ics)';
+
+  @override
+  String get exportIcsDetail => 'For other calendar apps';
+
+  @override
+  String get exportComingSoon =>
+      'File export arrives in a later update. For now, a day\'s ⋯ › Copy day as text copies it.';
+
+  @override
+  String get helpIntro => 'Quick answers. Anything else? Send feedback below.';
+
+  @override
+  String get helpMoveQ => 'How do I move a task?';
+
+  @override
+  String get helpMoveA =>
+      'Drag it along the thread, or drag its edges to change how long it is. Long-press to pick several.';
+
+  @override
+  String get helpLateQ => 'I\'m running late. Can everything move?';
+
+  @override
+  String get helpLateA =>
+      'Yes: ⋯ › Running late pushes the rest of today by 5, 15 or 30 minutes, stopping at pinned tasks. You can also skip or shorten the task at hand.';
+
+  @override
+  String get helpRepeatQ => 'How do repeating tasks work?';
+
+  @override
+  String get helpRepeatA =>
+      'Open a task › Repeat. Ticks and subtasks belong to each day, so the next one starts fresh.';
+
+  @override
+  String get helpPasteQ => 'Can I add many tasks at once?';
+
+  @override
+  String get helpPasteA =>
+      'Paste a list into Add or the Inbox field: each line becomes a task.';
+
+  @override
+  String get helpKeysQ => 'Are there keyboard shortcuts?';
+
+  @override
+  String get helpKeysA =>
+      'On a Mac or in a browser, press ⌘/ (Ctrl+/ elsewhere) to see them all.';
+
+  @override
+  String get privacyLocalTitle => 'On your device';
+
+  @override
+  String get privacyLocalBody =>
+      'Tasks are stored encrypted on this device, and the app works fully offline.';
+
+  @override
+  String get privacyTrackTitle => 'No tracking';
+
+  @override
+  String get privacyTrackBody =>
+      'No ads, no analytics, no third-party trackers.';
+
+  @override
+  String get privacySyncTitle => 'When you sign in';
+
+  @override
+  String get privacySyncBody =>
+      'Sync sends your tasks over an encrypted connection to your own account, and nowhere else.';
+
+  @override
+  String get privacySearchTitle => 'Searches';
+
+  @override
+  String get privacySearchBody =>
+      'Recent searches stay on this device and are never synced or exported.';
+
+  @override
+  String get privacyClearSearches => 'Clear recent searches';
+
+  @override
+  String get snackSearchesCleared => 'Recent searches cleared';
+
+  @override
+  String get aboutLicences => 'Open-source licences';
 }

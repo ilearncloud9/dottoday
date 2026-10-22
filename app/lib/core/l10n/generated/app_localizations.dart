@@ -3663,6 +3663,396 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 completed task moved to Trash} other{{count} completed tasks moved to Trash}}'**
   String snackClearedCompleted(int count);
+
+  /// Settings › DATA... row and page title: the account page.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get settingsAccount;
+
+  /// Settings › DATA row and page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendars'**
+  String get settingsCalendars;
+
+  /// Settings › Calendars row subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Events on your timeline'**
+  String get settingsCalendarsDetail;
+
+  /// Settings › DATA row and page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get settingsExport;
+
+  /// Settings › Export row subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data, free to take'**
+  String get settingsExportDetail;
+
+  /// Settings › ABOUT row and page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Help'**
+  String get settingsHelp;
+
+  /// Settings › ABOUT row and page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get settingsPrivacy;
+
+  /// Settings › ABOUT row and page title.
+  ///
+  /// In en, this message translates to:
+  /// **'About Dottoday'**
+  String get settingsAboutApp;
+
+  /// Settings sub-page back button tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Settings'**
+  String get settingsBack;
+
+  /// Account page group caption.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get accountProfile;
+
+  /// Account page: the display name row.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get accountName;
+
+  /// Account page: no display name yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get accountNameNone;
+
+  /// Rename dialog title on the Account page.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get accountNameTitle;
+
+  /// Rename dialog button on the Account page.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get accountNameSave;
+
+  /// Account page group caption.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get accountSync;
+
+  /// Account page, signed out.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything is on this device. Sign in to sync across your devices and keep a copy safe.'**
+  String get accountLocalBody;
+
+  /// Account page sign-in button.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get accountApple;
+
+  /// Account page sign-in button.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get accountGoogle;
+
+  /// Account page sign-in button (magic link).
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with email'**
+  String get accountEmail;
+
+  /// Account page caption while accounts are not available.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in arrives with sync in a later update. Until then, nothing leaves this device.'**
+  String get accountComingSoon;
+
+  /// Account page, signed in.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {email}'**
+  String accountSignedInAs(String email);
+
+  /// Account page button.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get accountSignOut;
+
+  /// Account page destructive button and the confirm dialog's button.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get accountDelete;
+
+  /// Delete account confirm dialog title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your account?'**
+  String get accountDeleteTitle;
+
+  /// Delete account confirm dialog body.
+  ///
+  /// In en, this message translates to:
+  /// **'This deletes your account and everything synced to it. Tasks on this device stay. Type {word} to confirm.'**
+  String accountDeleteBody(String word);
+
+  /// The word typed to confirm account deletion.
+  ///
+  /// In en, this message translates to:
+  /// **'DELETE'**
+  String get accountDeleteWord;
+
+  /// Calendars page intro.
+  ///
+  /// In en, this message translates to:
+  /// **'See your calendar events on the timeline, read-only. Free, always.'**
+  String get calendarsIntro;
+
+  /// Calendars page group caption.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get calendarsConnected;
+
+  /// Calendars page: empty list.
+  ///
+  /// In en, this message translates to:
+  /// **'No calendars connected yet'**
+  String get calendarsNone;
+
+  /// Calendars page button.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect a calendar'**
+  String get calendarsConnect;
+
+  /// Calendars page caption while import is not available.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar import arrives in a later update.'**
+  String get calendarsComingSoon;
+
+  /// Calendars page group caption.
+  ///
+  /// In en, this message translates to:
+  /// **'When the day shifts'**
+  String get calendarsShifting;
+
+  /// Calendars page toggle (includeCalendarInShift).
+  ///
+  /// In en, this message translates to:
+  /// **'Move calendar events too'**
+  String get calendarsMoveEvents;
+
+  /// Calendars page toggle subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Off: events stay put when you shift the rest'**
+  String get calendarsMoveEventsDetail;
+
+  /// Export page intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tasks are yours. Export is free, always, with or without an account.'**
+  String get exportIntro;
+
+  /// Export page group caption.
+  ///
+  /// In en, this message translates to:
+  /// **'Formats'**
+  String get exportFormats;
+
+  /// Export format row.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything (JSON)'**
+  String get exportJson;
+
+  /// Export format row subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A full copy you can restore'**
+  String get exportJsonDetail;
+
+  /// Export format row.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks (CSV)'**
+  String get exportCsv;
+
+  /// Export format row subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens in any spreadsheet'**
+  String get exportCsvDetail;
+
+  /// Export format row.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar (.ics)'**
+  String get exportIcs;
+
+  /// Export format row subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'For other calendar apps'**
+  String get exportIcsDetail;
+
+  /// Export page caption while file export is not available.
+  ///
+  /// In en, this message translates to:
+  /// **'File export arrives in a later update. For now, a day\'s ⋯ › Copy day as text copies it.'**
+  String get exportComingSoon;
+
+  /// Help page intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick answers. Anything else? Send feedback below.'**
+  String get helpIntro;
+
+  /// Help question.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I move a task?'**
+  String get helpMoveQ;
+
+  /// Help answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag it along the thread, or drag its edges to change how long it is. Long-press to pick several.'**
+  String get helpMoveA;
+
+  /// Help question.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m running late. Can everything move?'**
+  String get helpLateQ;
+
+  /// Help answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes: ⋯ › Running late pushes the rest of today by 5, 15 or 30 minutes, stopping at pinned tasks. You can also skip or shorten the task at hand.'**
+  String get helpLateA;
+
+  /// Help question.
+  ///
+  /// In en, this message translates to:
+  /// **'How do repeating tasks work?'**
+  String get helpRepeatQ;
+
+  /// Help answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a task › Repeat. Ticks and subtasks belong to each day, so the next one starts fresh.'**
+  String get helpRepeatA;
+
+  /// Help question.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I add many tasks at once?'**
+  String get helpPasteQ;
+
+  /// Help answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a list into Add or the Inbox field: each line becomes a task.'**
+  String get helpPasteA;
+
+  /// Help question.
+  ///
+  /// In en, this message translates to:
+  /// **'Are there keyboard shortcuts?'**
+  String get helpKeysQ;
+
+  /// Help answer.
+  ///
+  /// In en, this message translates to:
+  /// **'On a Mac or in a browser, press ⌘/ (Ctrl+/ elsewhere) to see them all.'**
+  String get helpKeysA;
+
+  /// Privacy page heading.
+  ///
+  /// In en, this message translates to:
+  /// **'On your device'**
+  String get privacyLocalTitle;
+
+  /// Privacy page text.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks are stored encrypted on this device, and the app works fully offline.'**
+  String get privacyLocalBody;
+
+  /// Privacy page heading.
+  ///
+  /// In en, this message translates to:
+  /// **'No tracking'**
+  String get privacyTrackTitle;
+
+  /// Privacy page text.
+  ///
+  /// In en, this message translates to:
+  /// **'No ads, no analytics, no third-party trackers.'**
+  String get privacyTrackBody;
+
+  /// Privacy page heading.
+  ///
+  /// In en, this message translates to:
+  /// **'When you sign in'**
+  String get privacySyncTitle;
+
+  /// Privacy page text.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync sends your tasks over an encrypted connection to your own account, and nowhere else.'**
+  String get privacySyncBody;
+
+  /// Privacy page heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Searches'**
+  String get privacySearchTitle;
+
+  /// Privacy page text.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent searches stay on this device and are never synced or exported.'**
+  String get privacySearchBody;
+
+  /// Privacy page button.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear recent searches'**
+  String get privacyClearSearches;
+
+  /// Snackbar after Clear recent searches.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent searches cleared'**
+  String get snackSearchesCleared;
+
+  /// About page row: the licence page.
+  ///
+  /// In en, this message translates to:
+  /// **'Open-source licences'**
+  String get aboutLicences;
 }
 
 class _AppLocalizationsDelegate

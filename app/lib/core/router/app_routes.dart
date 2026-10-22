@@ -20,6 +20,23 @@ abstract final class AppRoutes {
 
   /// Location for the task with [id] (a UUID v7).
   static String task(String id) => '/task/$id';
+
+  /// Location for a Settings sub-page (docs/09 M3f.7).
+  static String settingsPage(SettingsPage page) => '$settings/${page.name}';
+}
+
+/// Settings sub-pages, each at `/settings/<name>` (docs/09 M3f.7).
+enum SettingsPage {
+  account,
+  calendars,
+  export,
+  help,
+  privacy,
+  about;
+
+  /// The page called [name], or null (an unknown deep link).
+  static SettingsPage? byName(String name) =>
+      values.where((p) => p.name == name).firstOrNull;
 }
 
 final _datePattern = RegExp(r'^(\d{4})-(\d{2})-(\d{2})$');

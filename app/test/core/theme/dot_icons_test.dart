@@ -41,6 +41,10 @@ final _glyphs = <String, DotGlyph>{
   'dottedLine': DotGlyphs.dottedLine,
   'sort': DotGlyphs.sort,
   'undo': DotGlyphs.undo,
+  'person': DotGlyphs.person,
+  'share': DotGlyphs.share,
+  'help': DotGlyphs.help,
+  'info': DotGlyphs.info,
 };
 
 void main() {

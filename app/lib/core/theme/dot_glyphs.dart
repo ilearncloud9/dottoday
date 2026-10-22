@@ -81,6 +81,15 @@ abstract final class DotGlyphs {
   static final keyboard = DotGlyph(
     '${_r(2, 5, 20, 14, 2)}M6 9h.01M10 9h.01M14 9h.01M18 9h.01M7 15h10',
   );
+  // Settings sub-pages (M3f.7): account, export, help, about.
+  static final person = DotGlyph('${_c(12, 8, 4)}M4 21a8 8 0 0 1 16 0');
+  static const share = DotGlyph(
+    'M12 15V3M7 8l5-5 5 5M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4',
+  );
+  static final help = DotGlyph(
+    '${_c(12, 12, 9)}M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01',
+  );
+  static final info = DotGlyph('${_c(12, 12, 9)}M12 11v6M12 7h.01');
   static const trash = DotGlyph(
     'M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6'
     'M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2',

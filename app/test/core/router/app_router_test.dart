@@ -49,6 +49,9 @@ void main() {
       'route:day:2026-10-20T00:00:00.000Z',
     );
     await _goAndExpect(tester, router, '/task/$_v7', 'route:task:$_v7');
+    router.go('/settings/privacy');
+    await tester.pumpAndSettle();
+    expect(find.text('Privacy'), findsOneWidget, reason: 'M3f.7 sub-page');
   });
 
   testWidgets('off-allow-list locations land on /today', (tester) async {

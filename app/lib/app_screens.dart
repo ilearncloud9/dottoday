@@ -3,6 +3,7 @@ import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/features/inbox/inbox_screen.dart';
 import 'package:dottoday/features/inbox/inbox_sidebar.dart';
 import 'package:dottoday/features/search/search_screen.dart';
+import 'package:dottoday/features/settings/pages/settings_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
 import 'package:dottoday/features/timeline/task_screen.dart';
@@ -18,6 +19,7 @@ final appScreens = RouteScreens(
   week: (_) => const InboxSidebarFrame(child: WeekScreen()),
   search: (_) => const SearchScreen(),
   settings: (_) => const SettingsScreen(),
+  settingsPage: (_, page) => settingsPageFor(page),
   month: (_) => const MonthScreen(),
   day: (_, date) => InboxSidebarFrame(child: TodayScreen(date: date)),
   task: (_, id) => TaskScreen(id: id),

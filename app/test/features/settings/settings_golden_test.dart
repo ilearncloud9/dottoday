@@ -6,6 +6,10 @@ import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/features/settings/pages/about_page.dart';
+import 'package:dottoday/features/settings/pages/account_page.dart';
+import 'package:dottoday/features/settings/pages/data_pages.dart';
+import 'package:dottoday/features/settings/pages/info_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -91,4 +95,21 @@ void main() {
     overrides: _overrides,
     build: (_) => _settings(),
   );
+  // M3f.7 sub-pages (derived, §5.3).
+  for (final (name, page) in [
+    ('account', const AccountPage()),
+    ('calendars', const CalendarsPage()),
+    ('export', const ExportPage()),
+    ('help', const HelpPage()),
+    ('privacy', const PrivacyPage()),
+    ('about', const AboutPage()),
+  ]) {
+    goldenMatrix(
+      'settings_page_$name',
+      height: 844,
+      widths: const {'compact', 'expanded'},
+      overrides: _overrides,
+      build: (_) => page,
+    );
+  }
 }

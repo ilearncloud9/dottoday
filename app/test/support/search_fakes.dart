@@ -54,4 +54,7 @@ final class FakeRecentSearches extends RecentSearches {
   @override
   Future<void> remember(String query) async =>
       state = AsyncData(withRecent(state.value ?? initial, query));
+
+  @override
+  Future<void> clear() async => state = const AsyncData([]);
 }

@@ -27,6 +27,7 @@ final class RouteScreens {
     required this.week,
     required this.search,
     required this.settings,
+    required this.settingsPage,
     required this.month,
     required this.day,
     required this.task,
@@ -39,6 +40,9 @@ final class RouteScreens {
   final WidgetBuilder week;
   final WidgetBuilder search;
   final WidgetBuilder settings;
+
+  /// A Settings sub-page, inside the Settings tab (M3f.7).
+  final Widget Function(BuildContext, SettingsPage page) settingsPage;
   final WidgetBuilder month;
   final Widget Function(BuildContext, DateTime date) day;
   final Widget Function(BuildContext, String taskId) task;
@@ -54,10 +58,7 @@ GoRouter buildRouter(RouteScreens screens) {
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => screens.shell(context, shell),
-        branches: [
-          for (final tab in ShellTab.values)
-            _branch(tab.path, _tabScreen(screens, tab)),
-        ],
+        branches: _branches(screens),
       ),
       GoRoute(
         path: AppRoutes.month,
@@ -80,6 +81,26 @@ GoRouter buildRouter(RouteScreens screens) {
   );
 }
 
+/// One branch per tab; Settings has its sub-pages (M3f.7) under it.
+List<StatefulShellBranch> _branches(RouteScreens screens) => [
+  for (final tab in ShellTab.values)
+    _branch(
+      tab.path,
+      _tabScreen(screens, tab),
+      children: [
+        if (tab == ShellTab.settings)
+          GoRoute(
+            path: ':page',
+            // Redirect already allow-listed the page name.
+            builder: (context, state) => screens.settingsPage(
+              context,
+              SettingsPage.byName(state.pathParameters['page']!)!,
+            ),
+          ),
+      ],
+    ),
+];
+
 WidgetBuilder _tabScreen(RouteScreens screens, ShellTab tab) {
   return switch (tab) {
     ShellTab.today => screens.today,
@@ -96,8 +117,18 @@ String? _redirect(Uri uri) {
   return allowed == uri.toString() ? null : allowed;
 }
 
-StatefulShellBranch _branch(String path, WidgetBuilder builder) {
+StatefulShellBranch _branch(
+  String path,
+  WidgetBuilder builder, {
+  List<RouteBase> children = const [],
+}) {
   return StatefulShellBranch(
-    routes: [GoRoute(path: path, builder: (context, _) => builder(context))],
+    routes: [
+      GoRoute(
+        path: path,
+        builder: (context, _) => builder(context),
+        routes: children,
+      ),
+    ],
   );
 }

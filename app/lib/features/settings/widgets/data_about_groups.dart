@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/feedback/feedback_mail.dart';
@@ -11,8 +12,13 @@ import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-/// DATA: Trash (R-11). Calendars and Export join with their pages (M3f.7).
+/// Opens a Settings sub-page inside the Settings tab (M3f.7).
+void _open(BuildContext context, SettingsPage page) =>
+    unawaited(context.push(AppRoutes.settingsPage(page)));
+
+/// DATA: Calendars, Export (pages, M3f.7) and Trash (R-11).
 class DataGroup extends StatelessWidget {
   const DataGroup({super.key});
 
@@ -23,6 +29,20 @@ class DataGroup extends StatelessWidget {
     return SettingsGroup(
       caption: l10n.settingsData,
       children: [
+        SettingsRow(
+          glyph: DotGlyphs.calendar,
+          tint: t.tasks[TaskColor.sky].ink,
+          title: l10n.settingsCalendars,
+          subtitle: l10n.settingsCalendarsDetail,
+          onTap: () => _open(context, SettingsPage.calendars),
+        ),
+        SettingsRow(
+          glyph: DotGlyphs.share,
+          tint: t.tasks[TaskColor.mint].ink,
+          title: l10n.settingsExport,
+          subtitle: l10n.settingsExportDetail,
+          onTap: () => _open(context, SettingsPage.export),
+        ),
         SettingsRow(
           glyph: DotGlyphs.trash,
           tint: t.colors.muted,
@@ -35,7 +55,8 @@ class DataGroup extends StatelessWidget {
   }
 }
 
-/// ABOUT: Version, What's new, Send feedback (PRD F11, R-19).
+/// ABOUT: Help, Privacy, About Dottoday (version, What's new, licences;
+/// pages, M3f.7) and Send feedback (PRD F11, R-19).
 class AboutGroup extends ConsumerWidget {
   const AboutGroup({super.key});
 
@@ -48,41 +69,43 @@ class AboutGroup extends ConsumerWidget {
       caption: l10n.settingsAbout,
       children: [
         SettingsRow(
-          glyph: DotGlyphs.today,
+          glyph: DotGlyphs.help,
           tint: t.colors.accentInk,
-          title: l10n.settingsVersion,
-          value: version,
+          title: l10n.settingsHelp,
+          onTap: () => _open(context, SettingsPage.help),
         ),
         SettingsRow(
-          glyph: DotGlyphs.bolt,
+          glyph: DotGlyphs.lock,
+          tint: t.tasks[TaskColor.teal].ink,
+          title: l10n.settingsPrivacy,
+          onTap: () => _open(context, SettingsPage.privacy),
+        ),
+        SettingsRow(
+          glyph: DotGlyphs.today,
           tint: t.tasks[TaskColor.amber].ink,
-          title: l10n.settingsWhatsNew,
-          onTap: () => unawaited(
-            showAppSheet<void>(
-              context: context,
-              title: l10n.settingsWhatsNew,
-              builder: (_) =>
-                  Text(l10n.settingsWhatsNewBody, style: t.styles.body),
-            ),
-          ),
+          title: l10n.settingsAboutApp,
+          value: version,
+          onTap: () => _open(context, SettingsPage.about),
         ),
         SettingsRow(
           glyph: DotGlyphs.edit,
           tint: t.tasks[TaskColor.mint].ink,
           title: l10n.settingsFeedback,
-          onTap: () => unawaited(_feedback(context, version)),
+          onTap: () => unawaited(showFeedbackSheet(context, version)),
         ),
       ],
     );
   }
-
-  Future<void> _feedback(BuildContext context, String? version) =>
-      showAppSheet<void>(
-        context: context,
-        title: context.l10n.settingsFeedback,
-        builder: (_) => _Feedback(version: version ?? ''),
-      );
 }
+
+/// Send feedback (PRD F11, R-19): what is sent, the diagnostics opt-in,
+/// Write email. From Settings › ABOUT and Help.
+Future<void> showFeedbackSheet(BuildContext context, String? version) =>
+    showAppSheet<void>(
+      context: context,
+      title: context.l10n.settingsFeedback,
+      builder: (_) => _Feedback(version: version ?? ''),
+    );
 
 /// The feedback sheet: what is sent, the diagnostics opt-in, Write email.
 class _Feedback extends ConsumerStatefulWidget {

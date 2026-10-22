@@ -3790,5 +3790,275 @@
         "type": "int"
       }
     }
+  },
+  "settingsAccount": "Account",
+  "@settingsAccount": {
+    "description": "Settings header tap target and page title: the account page."
+  },
+  "settingsCalendars": "Calendars",
+  "@settingsCalendars": {
+    "description": "Settings › DATA row and page title."
+  },
+  "settingsCalendarsDetail": "Events on your timeline",
+  "@settingsCalendarsDetail": {
+    "description": "Settings › Calendars row subtitle."
+  },
+  "settingsExport": "Export",
+  "@settingsExport": {
+    "description": "Settings › DATA row and page title."
+  },
+  "settingsExportDetail": "Your data, free to take",
+  "@settingsExportDetail": {
+    "description": "Settings › Export row subtitle."
+  },
+  "settingsHelp": "Help",
+  "@settingsHelp": {
+    "description": "Settings › ABOUT row and page title."
+  },
+  "settingsPrivacy": "Privacy",
+  "@settingsPrivacy": {
+    "description": "Settings › ABOUT row and page title."
+  },
+  "settingsAboutApp": "About Dottoday",
+  "@settingsAboutApp": {
+    "description": "Settings › ABOUT row and page title."
+  },
+  "settingsBack": "Back to Settings",
+  "@settingsBack": {
+    "description": "Settings sub-page back button tooltip."
+  },
+  "accountProfile": "Profile",
+  "@accountProfile": {
+    "description": "Account page group caption."
+  },
+  "accountName": "Name",
+  "@accountName": {
+    "description": "Account page: the display name row."
+  },
+  "accountNameNone": "Not set",
+  "@accountNameNone": {
+    "description": "Account page: no display name yet."
+  },
+  "accountNameTitle": "Your name",
+  "@accountNameTitle": {
+    "description": "Rename dialog title on the Account page."
+  },
+  "accountNameSave": "Save",
+  "@accountNameSave": {
+    "description": "Rename dialog button on the Account page."
+  },
+  "accountSync": "Sync",
+  "@accountSync": {
+    "description": "Account page group caption."
+  },
+  "accountLocalBody": "Everything is on this device. Sign in to sync across your devices and keep a copy safe.",
+  "@accountLocalBody": {
+    "description": "Account page, signed out."
+  },
+  "accountApple": "Continue with Apple",
+  "@accountApple": {
+    "description": "Account page sign-in button."
+  },
+  "accountGoogle": "Continue with Google",
+  "@accountGoogle": {
+    "description": "Account page sign-in button."
+  },
+  "accountEmail": "Continue with email",
+  "@accountEmail": {
+    "description": "Account page sign-in button (magic link)."
+  },
+  "accountComingSoon": "Sign-in arrives with sync in a later update. Until then, nothing leaves this device.",
+  "@accountComingSoon": {
+    "description": "Account page caption while accounts are not available."
+  },
+  "accountSignedInAs": "Signed in as {email}",
+  "@accountSignedInAs": {
+    "description": "Account page, signed in.",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountSignOut": "Sign out",
+  "@accountSignOut": {
+    "description": "Account page button."
+  },
+  "accountDelete": "Delete account",
+  "@accountDelete": {
+    "description": "Account page destructive button and the confirm dialog's button."
+  },
+  "accountDeleteTitle": "Delete your account?",
+  "@accountDeleteTitle": {
+    "description": "Delete account confirm dialog title."
+  },
+  "accountDeleteBody": "This deletes your account and everything synced to it. Tasks on this device stay. Type {word} to confirm.",
+  "@accountDeleteBody": {
+    "description": "Delete account confirm dialog body.",
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "accountDeleteWord": "DELETE",
+  "@accountDeleteWord": {
+    "description": "The word typed to confirm account deletion."
+  },
+  "calendarsIntro": "See your calendar events on the timeline, read-only. Free, always.",
+  "@calendarsIntro": {
+    "description": "Calendars page intro."
+  },
+  "calendarsConnected": "Connected",
+  "@calendarsConnected": {
+    "description": "Calendars page group caption."
+  },
+  "calendarsNone": "No calendars connected yet",
+  "@calendarsNone": {
+    "description": "Calendars page: empty list."
+  },
+  "calendarsConnect": "Connect a calendar",
+  "@calendarsConnect": {
+    "description": "Calendars page button."
+  },
+  "calendarsComingSoon": "Calendar import arrives in a later update.",
+  "@calendarsComingSoon": {
+    "description": "Calendars page caption while import is not available."
+  },
+  "calendarsShifting": "When the day shifts",
+  "@calendarsShifting": {
+    "description": "Calendars page group caption."
+  },
+  "calendarsMoveEvents": "Move calendar events too",
+  "@calendarsMoveEvents": {
+    "description": "Calendars page toggle (includeCalendarInShift)."
+  },
+  "calendarsMoveEventsDetail": "Off: events stay put when you shift the rest",
+  "@calendarsMoveEventsDetail": {
+    "description": "Calendars page toggle subtitle."
+  },
+  "exportIntro": "Your tasks are yours. Export is free, always, with or without an account.",
+  "@exportIntro": {
+    "description": "Export page intro."
+  },
+  "exportFormats": "Formats",
+  "@exportFormats": {
+    "description": "Export page group caption."
+  },
+  "exportJson": "Everything (JSON)",
+  "@exportJson": {
+    "description": "Export format row."
+  },
+  "exportJsonDetail": "A full copy you can restore",
+  "@exportJsonDetail": {
+    "description": "Export format row subtitle."
+  },
+  "exportCsv": "Tasks (CSV)",
+  "@exportCsv": {
+    "description": "Export format row."
+  },
+  "exportCsvDetail": "Opens in any spreadsheet",
+  "@exportCsvDetail": {
+    "description": "Export format row subtitle."
+  },
+  "exportIcs": "Calendar (.ics)",
+  "@exportIcs": {
+    "description": "Export format row."
+  },
+  "exportIcsDetail": "For other calendar apps",
+  "@exportIcsDetail": {
+    "description": "Export format row subtitle."
+  },
+  "exportComingSoon": "File export arrives in a later update. For now, a day's ⋯ › Copy day as text copies it.",
+  "@exportComingSoon": {
+    "description": "Export page caption while file export is not available."
+  },
+  "helpIntro": "Quick answers. Anything else? Send feedback below.",
+  "@helpIntro": {
+    "description": "Help page intro."
+  },
+  "helpMoveQ": "How do I move a task?",
+  "@helpMoveQ": {
+    "description": "Help question."
+  },
+  "helpMoveA": "Drag it along the thread, or drag its edges to change how long it is. Long-press to pick several.",
+  "@helpMoveA": {
+    "description": "Help answer."
+  },
+  "helpLateQ": "I'm running late. Can everything move?",
+  "@helpLateQ": {
+    "description": "Help question."
+  },
+  "helpLateA": "Yes: ⋯ › Running late pushes the rest of today by 5, 15 or 30 minutes, stopping at pinned tasks. You can also skip or shorten the task at hand.",
+  "@helpLateA": {
+    "description": "Help answer."
+  },
+  "helpRepeatQ": "How do repeating tasks work?",
+  "@helpRepeatQ": {
+    "description": "Help question."
+  },
+  "helpRepeatA": "Open a task › Repeat. Ticks and subtasks belong to each day, so the next one starts fresh.",
+  "@helpRepeatA": {
+    "description": "Help answer."
+  },
+  "helpPasteQ": "Can I add many tasks at once?",
+  "@helpPasteQ": {
+    "description": "Help question."
+  },
+  "helpPasteA": "Paste a list into Add or the Inbox field: each line becomes a task.",
+  "@helpPasteA": {
+    "description": "Help answer."
+  },
+  "helpKeysQ": "Are there keyboard shortcuts?",
+  "@helpKeysQ": {
+    "description": "Help question."
+  },
+  "helpKeysA": "On a Mac or in a browser, press ⌘/ (Ctrl+/ elsewhere) to see them all.",
+  "@helpKeysA": {
+    "description": "Help answer."
+  },
+  "privacyLocalTitle": "On your device",
+  "@privacyLocalTitle": {
+    "description": "Privacy page heading."
+  },
+  "privacyLocalBody": "Tasks are stored encrypted on this device, and the app works fully offline.",
+  "@privacyLocalBody": {
+    "description": "Privacy page text."
+  },
+  "privacyTrackTitle": "No tracking",
+  "@privacyTrackTitle": {
+    "description": "Privacy page heading."
+  },
+  "privacyTrackBody": "No ads, no analytics, no third-party trackers.",
+  "@privacyTrackBody": {
+    "description": "Privacy page text."
+  },
+  "privacySyncTitle": "When you sign in",
+  "@privacySyncTitle": {
+    "description": "Privacy page heading."
+  },
+  "privacySyncBody": "Sync sends your tasks over an encrypted connection to your own account, and nowhere else.",
+  "@privacySyncBody": {
+    "description": "Privacy page text."
+  },
+  "privacySearchTitle": "Searches",
+  "@privacySearchTitle": {
+    "description": "Privacy page heading."
+  },
+  "privacySearchBody": "Recent searches stay on this device and are never synced or exported.",
+  "@privacySearchBody": {
+    "description": "Privacy page text."
+  },
+  "privacyClearSearches": "Clear recent searches",
+  "@privacyClearSearches": {
+    "description": "Privacy page button."
+  },
+  "snackSearchesCleared": "Recent searches cleared",
+  "@snackSearchesCleared": {
+    "description": "Snackbar after Clear recent searches."
+  },
+  "aboutLicences": "Open-source licences",
+  "@aboutLicences": {
+    "description": "About page row: the licence page."
   }
 }

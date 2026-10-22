@@ -35,6 +35,10 @@ String? allowListedLocation(Uri uri) {
   return switch (segments) {
     [] => AppRoutes.today,
     [final name] => _staticRoutes[name],
+    ['settings', final page] => switch (SettingsPage.byName(page)) {
+      final p? => AppRoutes.settingsPage(p),
+      null => null,
+    },
     ['day', final date] when parseRouteDate(date) != null => '/day/$date',
     ['task', final id] when _uuidV7.hasMatch(id) => AppRoutes.task(id),
     _ => null,

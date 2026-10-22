@@ -38,4 +38,10 @@ class RecentSearches extends _$RecentSearches {
           LocalMetaCompanion.insert(key: _key, value: jsonEncode(next)),
         );
   }
+
+  /// Forgets every recent search (Settings › Privacy, docs/09 M3f.7).
+  Future<void> clear() async {
+    state = const AsyncData([]);
+    await (_db.delete(_db.localMeta)..where((m) => m.key.equals(_key))).go();
+  }
 }
