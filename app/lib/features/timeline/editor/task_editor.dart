@@ -8,7 +8,6 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
-import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/features/timeline/editor/editor_duration.dart';
@@ -241,16 +240,8 @@ class _FormState extends ConsumerState<_Form> {
             startUtc: start,
             endUtc: _draft.endUtc!,
             zone: zone,
-            onDay: (day) => _change(
-              (o) => o.copyWith(
-                startUtc: ClockTime.ofUtc(zone, start).onDate(zone, day),
-              ),
-            ),
-            onTime: (time) => _change(
-              (o) => o.copyWith(
-                startUtc: time.onDate(zone, tz.TZDateTime.from(start, zone)),
-              ),
-            ),
+            onWhen: (start, id) =>
+                _change((o) => o.copyWith(startUtc: start, tzId: id)),
           ),
         EditorDuration(
           task: _draft,

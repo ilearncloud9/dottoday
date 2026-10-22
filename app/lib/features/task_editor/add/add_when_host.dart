@@ -4,6 +4,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
+import 'package:dottoday/data/schedule/planned_colors.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
 import 'package:dottoday/domain/quick_add/add_draft.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
@@ -119,6 +120,7 @@ class AddWhenHost extends ConsumerWidget {
     final draft = currentDraft(ref, request, state);
     final day = await showMonthDayPicker(
       context,
+      plannedFor: (m) => plannedColors(ProviderScope.containerOf(context), m),
       initial: draft.day,
       today: draft.today,
       firstDayOfWeek: _weekStart(ref),

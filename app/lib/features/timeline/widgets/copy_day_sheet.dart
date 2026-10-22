@@ -1,11 +1,13 @@
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/schedule/planned_colors.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/features/timeline/state/day_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
-import 'package:dottoday/features/timeline/widgets/day_picker_sheet.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
+import 'package:dottoday/shared/pickers/day_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,8 +23,10 @@ Future<void> showCopyDaySheet(
   final undo = container.read(undoServiceProvider);
   final today = await container.read(todayDateProvider.future);
   if (!context.mounted) return;
-  final source = await showDayPicker(
+  final source = await showMonthDayPicker(
     context,
+    plannedFor: (m) => plannedColors(container, m),
+    firstDayOfWeek: _weekStart(container),
     title: l10n.copyDayTitle,
     today: today,
     initial: target,
@@ -49,3 +53,6 @@ Future<void> showCopyDaySheet(
       );
   }
 }
+
+int _weekStart(ProviderContainer c) =>
+    c.read(currentProfileProvider).value?.settings.firstDayOfWeek ?? 1;

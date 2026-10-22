@@ -3517,5 +3517,14 @@
   "subtaskRenameSave": "Rename",
   "@subtaskRenameSave": {
     "description": "Confirms the new subtask name."
+  },
+  "editorZone": "Time zone · {city}",
+  "@editorZone": {
+    "description": "Editor: the task's time zone under START; tap to pick another (keeps the wall clock).",
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -4,6 +4,7 @@ library;
 
 import 'dart:async';
 
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
@@ -40,6 +41,7 @@ void main() {
     await loadAppFonts();
   });
   const widths = {'compact', 'expanded'};
+  // M3f.4: each day's planned colours (past days too, for Copy a day).
   goldenMatrix(
     'picker_change_day',
     height: 700,
@@ -47,7 +49,21 @@ void main() {
     act: _open,
     build: (_) => _opener(
       (c) => unawaited(
-        showMonthDayPicker(c, initial: DateTime(2026, 10, 23), today: _today),
+        showMonthDayPicker(
+          c,
+          initial: DateTime(2026, 10, 23),
+          today: _today,
+          plannedFor: (_) => Stream.value({
+            DateTime(2026, 10, 19): const [TaskColor.sky, TaskColor.mint],
+            DateTime(2026, 10, 21): const [
+              TaskColor.coral,
+              TaskColor.sky,
+              TaskColor.amber,
+            ],
+            DateTime(2026, 10, 22): const [TaskColor.violet],
+            DateTime(2026, 10, 26): const [TaskColor.mint],
+          }),
+        ),
       ),
     ),
   );

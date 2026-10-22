@@ -2331,4 +2331,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subtaskRenameSave => 'Rename';
+
+  @override
+  String editorZone(String city) {
+    return 'Time zone · $city';
+  }
 }

@@ -3435,6 +3435,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rename'**
   String get subtaskRenameSave;
+
+  /// Editor: the task's time zone under START; tap to pick another (keeps the wall clock).
+  ///
+  /// In en, this message translates to:
+  /// **'Time zone · {city}'**
+  String editorZone(String city);
 }
 
 class _AppLocalizationsDelegate

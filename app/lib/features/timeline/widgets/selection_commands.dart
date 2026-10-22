@@ -4,14 +4,16 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/schedule/planned_colors.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/features/timeline/state/selection_actions.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
-import 'package:dottoday/features/timeline/widgets/day_picker_sheet.dart';
 import 'package:dottoday/shared/dot/colour_icon_block.dart';
+import 'package:dottoday/shared/pickers/day_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -59,8 +61,16 @@ final class SelectionCommands {
   VoidCallback? get move => rows.isEmpty
       ? null
       : () => unawaited(() async {
-          final to = await showDayPicker(
+          final to = await showMonthDayPicker(
             _context,
+            plannedFor: (m) => plannedColors(container, m),
+            firstDayOfWeek:
+                container
+                    .read(currentProfileProvider)
+                    .value
+                    ?.settings
+                    .firstDayOfWeek ??
+                1,
             title: _l10n.selectionMoveTitle,
             today: today,
             initial: day,

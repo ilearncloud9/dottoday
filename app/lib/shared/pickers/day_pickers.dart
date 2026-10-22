@@ -13,20 +13,30 @@ DateTime startOfWeek(DateTime day, int firstDayOfWeek) {
   return DateTime(day.year, day.month, day.day - back);
 }
 
+/// Each day's planned colours for a month (`MonthGrid` dots), live.
+typedef PlannedColors =
+    Stream<Map<DateTime, List<TaskColor>>> Function(DateTime month);
+
 /// "Change day" (docs/10 §5.3): a month in a sheet; tap a day. Returns
-/// the local date, or null. Plain cells: days are picked, not reviewed.
+/// the local date, or null. Days are picked, not reviewed: with
+/// [plannedFor] (docs/09 M3f.4) each day shows the colours of what is
+/// on it (past days too, for "Copy a day…"), so a free day or the day
+/// to copy is easy to spot. [title] defaults to "Change day".
 Future<DateTime?> showMonthDayPicker(
   BuildContext context, {
   required DateTime initial,
   required DateTime today,
   int firstDayOfWeek = 1,
+  String? title,
+  PlannedColors? plannedFor,
 }) => showAppSheet<DateTime>(
   context: context,
-  title: context.l10n.timeMenuChangeDay,
+  title: title ?? context.l10n.timeMenuChangeDay,
   builder: (_) => _MonthPicker(
     initial: initial,
     today: today,
     firstDayOfWeek: firstDayOfWeek,
+    plannedFor: plannedFor,
   ),
 );
 
@@ -35,22 +45,35 @@ class _MonthPicker extends StatefulWidget {
     required this.initial,
     required this.today,
     required this.firstDayOfWeek,
+    this.plannedFor,
   });
 
   final DateTime initial;
   final DateTime today;
   final int firstDayOfWeek;
+  final PlannedColors? plannedFor;
 
   @override
   State<_MonthPicker> createState() => _MonthPickerState();
 }
 
-/// A leaf: only the month on show.
+/// A leaf: the month on show and its dots.
 class _MonthPickerState extends State<_MonthPicker> {
   late DateTime _month = DateTime(widget.initial.year, widget.initial.month);
+  late Stream<Map<DateTime, List<TaskColor>>>? _planned = widget.plannedFor
+      ?.call(_month);
 
   @override
   Widget build(BuildContext context) {
+    final planned = _planned;
+    if (planned == null) return _body(context, const {});
+    return StreamBuilder(
+      stream: planned,
+      builder: (context, snap) => _body(context, snap.data ?? const {}),
+    );
+  }
+
+  Widget _body(BuildContext context, Map<DateTime, List<TaskColor>> dots) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toLanguageTag();
@@ -61,7 +84,7 @@ class _MonthPickerState extends State<_MonthPicker> {
     final days = [
       for (var i = 0; i < lead; i++) null,
       for (var d = 1; d <= length; d++)
-        _cell(DateTime(_month.year, _month.month, d), locale),
+        _cell(DateTime(_month.year, _month.month, d), locale, dots),
     ];
     final initialHere =
         widget.initial.year == _month.year &&
@@ -70,27 +93,7 @@ class _MonthPickerState extends State<_MonthPicker> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            IconButton(
-              tooltip: l10n.monthPrevious,
-              onPressed: () => _shift(-1),
-              icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.text),
-            ),
-            Expanded(
-              child: Text(
-                DateFormat.yMMMM(locale).format(_month),
-                textAlign: TextAlign.center,
-                style: t.styles.cardTitle,
-              ),
-            ),
-            IconButton(
-              tooltip: l10n.monthNext,
-              onPressed: () => _shift(1),
-              icon: DotIcon(DotGlyphs.chevronRight, color: t.colors.text),
-            ),
-          ],
-        ),
+        _header(t, l10n, locale),
         MonthGrid(
           weekdays: [
             for (var i = 0; i < 7; i++)
@@ -108,14 +111,43 @@ class _MonthPickerState extends State<_MonthPicker> {
     );
   }
 
-  void _shift(int months) =>
-      setState(() => _month = DateTime(_month.year, _month.month + months));
+  Widget _header(DotTheme t, AppLocalizations l10n, String locale) => Row(
+    children: [
+      IconButton(
+        tooltip: l10n.monthPrevious,
+        onPressed: () => _shift(-1),
+        icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.text),
+      ),
+      Expanded(
+        child: Text(
+          DateFormat.yMMMM(locale).format(_month),
+          textAlign: TextAlign.center,
+          style: t.styles.cardTitle,
+        ),
+      ),
+      IconButton(
+        tooltip: l10n.monthNext,
+        onPressed: () => _shift(1),
+        icon: DotIcon(DotGlyphs.chevronRight, color: t.colors.text),
+      ),
+    ],
+  );
 
-  MonthDay _cell(DateTime day, String locale) => MonthDay(
+  void _shift(int months) => setState(() {
+    _month = DateTime(_month.year, _month.month + months);
+    _planned = widget.plannedFor?.call(_month);
+  });
+
+  MonthDay _cell(
+    DateTime day,
+    String locale,
+    Map<DateTime, List<TaskColor>> dots,
+  ) => MonthDay(
     date: DateFormat.d(locale).format(day),
     label: DateFormat.MMMMEEEEd(locale).format(day),
     isPast: day.isBefore(widget.today),
     isToday: day == widget.today,
+    planned: dots[day] ?? const [],
   );
 }
 
