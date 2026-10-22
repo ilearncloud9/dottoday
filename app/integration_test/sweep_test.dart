@@ -9,6 +9,8 @@ import 'dart:io';
 
 import 'package:dottoday/bootstrap.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/data/onboarding/onboarding_store.dart';
+import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_add_field.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_when_step.dart';
@@ -18,10 +20,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-
-import 'pass_onboarding.dart';
 
 const _tag = String.fromEnvironment('SWEEP_TAG', defaultValue: 'device');
 
@@ -80,7 +81,7 @@ void main() {
     if (!kIsWeb && Platform.isAndroid) {
       await binding.convertFlutterSurfaceToImage();
     }
-    await passOnboarding(tester);
+    await _onboarding(binding, tester);
     await _pumpUntil(tester, find.byType(TodayScreen));
     // A rebuilt (ad-hoc signed) Mac app is a new app to the Keychain, so
     // the first database open can wait on its password prompt.
@@ -297,4 +298,46 @@ Future<void> _m3f(
   await _shot(binding, tester, '${_tag}_inbox_selecting');
   await tester.tap(find.byTooltip('Done selecting'));
   await _rest(tester);
+}
+
+/// O1–O6 (M4), from the start each run: a shot per step, Lunch picked on
+/// O3, no permission asked, no account.
+Future<void> _onboarding(
+  IntegrationTestWidgetsFlutterBinding binding,
+  WidgetTester tester,
+) async {
+  // A rebuilt Mac app can wait on the Keychain before the database opens.
+  await _pumpUntil(
+    tester,
+    find.byType(MaterialApp),
+    timeout: const Duration(minutes: 3),
+  );
+  await _rest(tester);
+  final container = ProviderScope.containerOf(
+    tester.element(find.byType(MaterialApp).first),
+  );
+  await container
+      .read(onboardingProvider.notifier)
+      .go(OnboardingStep.welcome, returning: false);
+  Future<void> step(String shot, String button, {String? pick}) async {
+    await _pumpUntil(tester, find.text(button));
+    await _rest(tester);
+    if (pick != null) {
+      await tester.tap(find.text(pick));
+      await _rest(tester);
+    }
+    await _shot(binding, tester, '${_tag}_$shot');
+    final target = find.text(pick == null ? button : 'Add 1 to tomorrow');
+    await tester.ensureVisible(target.first);
+    await _rest(tester);
+    await tester.tap(target.first);
+    await _rest(tester);
+  }
+
+  await step('onboarding_welcome', 'Get started');
+  await step('onboarding_day_shape', 'Continue');
+  await step('onboarding_habits', 'Continue', pick: 'Lunch');
+  await step('onboarding_reminders', 'Not now');
+  await step('onboarding_account', 'Continue without an account');
+  await step('onboarding_done', 'Open today');
 }
