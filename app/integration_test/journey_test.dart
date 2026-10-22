@@ -131,7 +131,10 @@ void main() {
     await _until(tester, find.text('Shift later tasks'));
     await tester.tap(find.text('Shift later tasks'));
     await tester.pump();
-    await lift.moveTo(tester.getCenter(onToday(find.text('45 min free'))));
+    // A gap still ahead reads "45 min free · add here", a past one doesn't.
+    await lift.moveTo(
+      tester.getCenter(onToday(find.textContaining('45 min free')).first),
+    );
     await tester.pump();
     await lift.up();
     // "… moved to 8:15 AM · 1 later task moved too" or "… stopped at …".

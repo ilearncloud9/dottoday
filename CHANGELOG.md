@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- Fixed: on a phone after Bedtime, typing in Add could squeeze Today's day card behind the keyboard until it overflowed; Today now stays put under a keyboard.
 - M5.0: `dottoday://task/<id>`, `/day/<date>`, `/inbox` … links open the app at that place on iPhone, Android and Mac, also from a cold start; anything off the allow-list opens Today.
 - M4 carry-overs: the Mac window opens at 1280×800 and can't be made smaller than 960×640; release gates now require a feedback address and a manual ⌘/ check in desktop Chrome.
 - Project kit: agent instructions, specs, schema, implementation plan.

@@ -75,6 +75,10 @@ class TodayScreen extends ConsumerWidget {
         onSelect: select,
         child: Scaffold(
           key: key,
+          // Today has no text field; a keyboard over it belongs to a sheet
+          // (Add, Type a time) that lifts itself. Resizing would squeeze the
+          // day card behind it to nothing (found after Bedtime, M5.0).
+          resizeToAvoidBottomInset: false,
           body: SafeArea(
             child: Stack(
               children: [

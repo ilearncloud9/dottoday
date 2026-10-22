@@ -43,6 +43,36 @@ Widget _pager({
 );
 
 void main() {
+  testWidgets('a squeezed pager drops its dots instead of overflowing', (
+    tester,
+  ) async {
+    for (final height in [30.0, 80.0, 200.0]) {
+      await tester.pumpWidget(
+        testApp(
+          Scaffold(
+            body: Align(
+              alignment: Alignment.topCenter,
+              child: SizedBox(
+                height: height,
+                child: DayPager(
+                  itemCount: 7,
+                  initialIndex: 3,
+                  itemBuilder: (_, i) => const SizedBox.expand(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull, reason: '$height');
+      expect(
+        find.bySemanticsLabel(RegExp('Day 4 of 7')),
+        height >= 140 ? findsOneWidget : findsNothing,
+        reason: '$height',
+      );
+    }
+  });
+
   testWidgets('opens on today with its header numbers', (tester) async {
     await tester.pumpWidget(_pager());
     expect(find.text('Wednesday · Today'), findsOneWidget);

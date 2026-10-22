@@ -81,6 +81,12 @@ class _DayPagerState extends State<DayPager> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, box) => _pager(box.maxHeight));
+  }
+
+  /// The pages over their dots; a pager squeezed below [_dotsMinHeight]
+  /// keeps only the pages rather than overflow.
+  Widget _pager(double height) {
     return Column(
       children: [
         Expanded(
@@ -99,11 +105,15 @@ class _DayPagerState extends State<DayPager> {
             ),
           ),
         ),
-        _PageDots(active: widget.dotIndexOf(_page)),
+        if (height >= _dotsMinHeight)
+          _PageDots(active: widget.dotIndexOf(_page)),
       ],
     );
   }
 }
+
+/// The dots need ~46 px; below three times that the card matters more.
+const _dotsMinHeight = 140.0;
 
 class _PageDots extends StatelessWidget {
   const _PageDots({required this.active});
