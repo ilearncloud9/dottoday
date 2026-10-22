@@ -9,12 +9,12 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
+import 'package:dottoday/features/timeline/editor/editor_duration.dart';
 import 'package:dottoday/features/timeline/editor/editor_fields.dart';
 import 'package:dottoday/features/timeline/editor/editor_footer.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_subtasks.dart';
 import 'package:dottoday/shared/dot/colour_icon_block.dart';
-import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -156,9 +156,8 @@ class _FormState extends ConsumerState<_Form> {
               ),
             ),
           ),
-        EditorCaption(l10n.editorDuration),
-        DurationChips(
-          value: _draft.durationMin,
+        EditorDuration(
+          task: _draft,
           onChanged: (m) => _change((o) => o.copyWith(durationMin: m)),
         ),
         const SizedBox(height: DotSpace.l),

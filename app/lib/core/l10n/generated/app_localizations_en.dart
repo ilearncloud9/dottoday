@@ -1242,4 +1242,73 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inboxPickTime => 'Pick a time…';
+
+  @override
+  String get durationSheetTitle => 'Duration';
+
+  @override
+  String get durationTypeLabel => 'Or type a length';
+
+  @override
+  String durationEnds(String time) {
+    return 'ends $time';
+  }
+
+  @override
+  String durationFitsBefore(String title, String time) {
+    return 'Still fits before $title at $time';
+  }
+
+  @override
+  String durationFitsBedtime(String time) {
+    return 'Fits before Bedtime at $time';
+  }
+
+  @override
+  String durationRunsInto(String title, String time) {
+    return 'Runs into $title at $time';
+  }
+
+  @override
+  String durationPastBedtime(String time) {
+    return 'Runs past Bedtime at $time';
+  }
+
+  @override
+  String get durationPresets => 'Presets';
+
+  @override
+  String get durationReset => 'Reset';
+
+  @override
+  String get durationAddPreset => 'preset';
+
+  @override
+  String get durationAddPresetLabel => 'Keep this length as a preset';
+
+  @override
+  String durationRemovePreset(String length) {
+    return 'Remove the $length preset';
+  }
+
+  @override
+  String durationPresetMinutes(int minutes) {
+    return '${minutes}m';
+  }
+
+  @override
+  String durationPresetHours(int hours) {
+    return '${hours}h';
+  }
+
+  @override
+  String durationPresetHoursMinutes(int hours, int minutes) {
+    return '${hours}h ${minutes}m';
+  }
+
+  @override
+  String get addMoreTime => 'More time options';
+
+  @override
+  String get addMoreDuration => 'More lengths';
 }

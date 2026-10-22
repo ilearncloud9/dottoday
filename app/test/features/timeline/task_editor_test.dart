@@ -83,7 +83,7 @@ void main() {
   testWidgets('colour, icon and duration save', (tester) async {
     await _pump(tester);
     await tester.tap(_editor(find.bySemanticsLabel('Coral')));
-    await tester.tap(_editor(find.text('45 min')));
+    await tester.tap(_editor(find.text('45')));
     await tester.pump(const Duration(milliseconds: 700));
     await tester.pumpAndSettle();
     expect(_saved().colorKey, 'coral');

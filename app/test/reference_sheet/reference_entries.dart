@@ -126,4 +126,18 @@ const sheetEntries = <SheetEntry>[
     reference: 'A-android-add-when.png',
     crop: Rect.fromLTRB(0, 310, 824, 1830),
   ),
+  SheetEntry(
+    name: 'Add A3 Duration sheet · light',
+    golden:
+        'test/features/task_editor/goldens/add_duration_light_compact_2x.png',
+    reference: 'A-ios-add-duration.png',
+    crop: Rect.fromLTRB(0, 760, 780, 1688),
+  ),
+  SheetEntry(
+    name: 'Add A3 Duration sheet · Android dark',
+    golden:
+        'test/features/task_editor/goldens/add_duration_android_dark_compact_2x.png',
+    reference: 'A-android-add-duration.png',
+    crop: Rect.fromLTRB(0, 830, 824, 1830),
+  ),
 ];

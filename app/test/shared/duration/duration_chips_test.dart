@@ -1,3 +1,5 @@
+import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/domain/time/duration_presets.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -5,68 +7,78 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../support/a11y.dart';
 import '../../support/test_app.dart';
 
-Widget _chips(int value, List<int> out, {ThemeMode mode = ThemeMode.light}) =>
-    testApp(
-      Scaffold(
+Widget _row(
+  int value,
+  List<int> out, {
+  ThemeMode mode = ThemeMode.light,
+  double scale = 1,
+}) => testApp(
+  Builder(
+    builder: (context) => MediaQuery(
+      data: MediaQuery.of(
+        context,
+      ).copyWith(textScaler: TextScaler.linear(scale)),
+      child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16),
-          child: DurationChips(value: value, onChanged: out.add),
+          child: DurationRow(
+            presets: defaultDurationPresets,
+            value: value,
+            onChanged: out.add,
+          ),
         ),
       ),
-      themeMode: mode,
-    );
+    ),
+  ),
+  themeMode: mode,
+);
 
 void main() {
-  testWidgets('shows presets with localised labels', (tester) async {
-    await tester.pumpWidget(_chips(30, []));
-    for (final label in ['15 min', '30 min', '45 min', '1 h', '1 h 30 min']) {
+  testWidgets('short labels, one row; the full length is read out', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(_row(90, []));
+    for (final label in ['15', '30', '45', '1h', '1.5h', '2h']) {
       expect(find.text(label), findsOneWidget);
     }
-    final selected = tester.widget<ChoiceChip>(
-      find.widgetWithText(ChoiceChip, '30 min'),
+    expect(find.byType(Row), findsWidgets);
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('1 h 30')),
+      matchesSemantics(
+        label: '1 h 30',
+        isButton: true,
+        isSelected: true,
+        hasSelectedState: true,
+      ),
     );
-    expect(selected.selected, isTrue);
+    handle.dispose();
   });
 
-  testWidgets('tapping a preset emits it', (tester) async {
+  testWidgets('tapping a chip emits its minutes', (tester) async {
     final out = <int>[];
-    await tester.pumpWidget(_chips(30, out));
-    await tester.tap(find.text('1 h'));
-    expect(out, [60]);
+    await tester.pumpWidget(_row(30, out));
+    await tester.tap(find.text('45'));
+    expect(out, [45]);
   });
 
-  testWidgets('custom accepts typed durations within 5 min – 24 h', (
+  testWidgets('at 200 % text the chips wrap instead of clipping', (
     tester,
   ) async {
-    final out = <int>[];
-    await tester.pumpWidget(_chips(30, out));
-    await tester.tap(find.text('Custom'));
-    await tester.pump();
-    await tester.enterText(find.byType(TextField), '1h40');
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pump();
-    expect(out, [100]);
-
-    await tester.enterText(find.byType(TextField), '3');
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pump();
-    expect(out, [100]);
-    expect(find.text('Use 5 min to 24 h, like 40m or 1h30'), findsOneWidget);
+    await tester.pumpWidget(_row(30, [], scale: 2));
+    expect(find.byType(Wrap), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
-  testWidgets('a non-preset value selects the custom chip with its length', (
-    tester,
-  ) async {
-    await tester.pumpWidget(_chips(100, []));
-    final custom = tester.widget<ChoiceChip>(
-      find.widgetWithText(ChoiceChip, '1 h 40 min'),
-    );
-    expect(custom.selected, isTrue);
+  test('presetLabel and formatDurationShort', () {
+    final l10n = lookupAppLocalizations(const Locale('en'));
+    expect(formatDurationShort(l10n, 90), '1 h 30');
+    expect(formatDuration(l10n, 90), '1 h 30 min');
   });
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     testWidgets('meets a11y guidelines ($mode)', (tester) async {
-      await tester.pumpWidget(_chips(30, [], mode: mode));
+      await tester.pumpWidget(_row(60, [], mode: mode));
       await expectA11yGuidelines(tester);
     });
   }

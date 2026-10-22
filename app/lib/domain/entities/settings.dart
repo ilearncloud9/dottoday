@@ -2,6 +2,7 @@ import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
 import 'package:dottoday/domain/entities/utc_millis_converter.dart';
+import 'package:dottoday/domain/time/duration_presets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'settings.freezed.dart';
@@ -32,6 +33,7 @@ abstract class Settings with _$Settings {
     @Default(ShiftFollowersPolicy.ask) ShiftFollowersPolicy shiftFollowers,
     @Default(false) bool includeCalendarInShift,
     @Default(30) int defaultDurationMin,
+    @Default(defaultDurationPresets) List<int> durationPresets,
     @Default(<Alert>[Alert(kind: AlertKind.before, offsetMin: 10)])
     List<Alert> defaultAlerts,
     TimeWindow? quietHours,

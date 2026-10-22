@@ -84,6 +84,7 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   "shiftFollowers": "ask",
   "includeCalendarInShift": false,
   "defaultDurationMin": 30,
+  "durationPresets": [15, 30, 45, 60, 90, 120],
   "defaultAlerts": [{"kind": "before", "offsetMin": 10}],
   "quietHours": {"start": "22:00", "end": "07:00"},
   "use24h": null,
@@ -105,6 +106,9 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   start < end (no wrap); quiet hours may wrap past midnight. `quietHours: null` means off and is the
   default for new profiles (the example above shows the suggested window once enabled). Validation
   checks `tz_id` against the bundled IANA database, which `bootstrap()` loads before `runApp`.
+- Clarified in M3c.3: `durationPresets` are the Add flow's duration chips — 1–12 distinct lengths of
+  5–1440 min, sorted; absent means the default list. Checked by the client validator; the server's
+  `validate_settings()` ignores keys it doesn't know, so older rows stay valid.
 - Server enforces with CHECK constraints and a `validate_settings()` function; client with a Zod-like
   Dart validator in `domain/validation`.
 

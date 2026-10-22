@@ -6,7 +6,11 @@ import 'package:dottoday/domain/validation/field_rules.dart';
 /// "Free until 19:30 · no overlap" or an overlap warning, docs/10 §6 "the
 /// ThreadPicker never lets the user pick a time blind").
 final class SlotFit {
-  const SlotFit({required this.overlaps, required this.freeUntilUtc});
+  const SlotFit({
+    required this.overlaps,
+    required this.freeUntilUtc,
+    this.next,
+  });
 
   /// Tasks the proposed time collides with (travel buffers included), in
   /// timeline order.
@@ -15,6 +19,10 @@ final class SlotFit {
   /// When the next task (or Bedtime) begins after the proposed start; the
   /// room the slot has.
   final DateTime freeUntilUtc;
+
+  /// The task that ends the room at [freeUntilUtc]; null when Bedtime
+  /// (or nothing) does.
+  final Occurrence? next;
 
   bool get isFree => overlaps.isEmpty;
 }
@@ -42,6 +50,7 @@ SlotFit fitAt(
         o.id != ignoreId && occupiesTime(o) && o.durationMin < maxDurationMin,
   );
   final overlaps = <Occurrence>[];
+  Occurrence? nextTask;
   DateTime? next;
   for (final o in busy) {
     final from = footprintStart(o);
@@ -49,6 +58,7 @@ SlotFit fitAt(
     if (from.isBefore(end) && to.isAfter(startUtc)) overlaps.add(o);
     if (!from.isBefore(startUtc) && (next == null || from.isBefore(next))) {
       next = from;
+      nextTask = o;
     }
   }
   final bedtime = dayEndUtc.isAfter(startUtc) ? dayEndUtc : null;
@@ -56,5 +66,9 @@ SlotFit fitAt(
   final until = bounds.isEmpty
       ? end
       : bounds.reduce((a, b) => a.isBefore(b) ? a : b);
-  return SlotFit(overlaps: overlaps, freeUntilUtc: until);
+  return SlotFit(
+    overlaps: overlaps,
+    freeUntilUtc: until,
+    next: next != null && until == next ? nextTask : null,
+  );
 }

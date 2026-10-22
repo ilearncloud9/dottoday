@@ -1882,5 +1882,127 @@
   "inboxPickTime": "Pick a time…",
   "@inboxPickTime": {
     "description": "Inbox schedule sheet: choose any time on the thread."
+  },
+  "durationSheetTitle": "Duration",
+  "@durationSheetTitle": {
+    "description": "Title of the Duration sheet (A-ios-add-duration)."
+  },
+  "durationTypeLabel": "Or type a length",
+  "@durationTypeLabel": {
+    "description": "Typed alternative to the duration wheel."
+  },
+  "durationEnds": "ends {time}",
+  "@durationEnds": {
+    "description": "Duration sheet preview: when the task ends.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "durationFitsBefore": "Still fits before {title} at {time}",
+  "@durationFitsBefore": {
+    "description": "Duration sheet preview: the task ends before the next one.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "durationFitsBedtime": "Fits before Bedtime at {time}",
+  "@durationFitsBedtime": {
+    "description": "Duration sheet preview: nothing follows until Bedtime.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "durationRunsInto": "Runs into {title} at {time}",
+  "@durationRunsInto": {
+    "description": "Duration sheet preview: the task overlaps the next one.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "durationPastBedtime": "Runs past Bedtime at {time}",
+  "@durationPastBedtime": {
+    "description": "Duration sheet preview: the task ends after Bedtime.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "durationPresets": "Presets",
+  "@durationPresets": {
+    "description": "Duration sheet section caption (shown uppercase)."
+  },
+  "durationReset": "Reset",
+  "@durationReset": {
+    "description": "Duration sheet: restore the default presets."
+  },
+  "durationAddPreset": "preset",
+  "@durationAddPreset": {
+    "description": "The dashed '+ preset' chip (the + is an icon)."
+  },
+  "durationAddPresetLabel": "Keep this length as a preset",
+  "@durationAddPresetLabel": {
+    "description": "Screen-reader label of the '+ preset' chip."
+  },
+  "durationRemovePreset": "Remove the {length} preset",
+  "@durationRemovePreset": {
+    "description": "Tooltip of a preset chip's ×.",
+    "placeholders": {
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "durationPresetMinutes": "{minutes}m",
+  "@durationPresetMinutes": {
+    "description": "A preset chip under an hour: '15m'.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "durationPresetHours": "{hours}h",
+  "@durationPresetHours": {
+    "description": "A preset chip of whole hours: '2h'.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "durationPresetHoursMinutes": "{hours}h {minutes}m",
+  "@durationPresetHoursMinutes": {
+    "description": "A preset chip: '1h 30m'.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "addMoreTime": "More time options",
+  "@addMoreTime": {
+    "description": "Tooltip of the ⋯ beside TIME in Add."
+  },
+  "addMoreDuration": "More lengths",
+  "@addMoreDuration": {
+    "description": "Tooltip of the ⋯ beside DURATION in Add: opens the Duration sheet."
   }
 }

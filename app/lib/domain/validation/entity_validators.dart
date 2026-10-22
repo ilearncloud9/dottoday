@@ -5,6 +5,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/time/duration_presets.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
 
 /// Outcome of validating an entity: the normalised entity or the first
@@ -100,6 +101,11 @@ Validated<Settings> validateSettings(Settings s) {
         minDurationMin,
         maxDurationMin,
       ),
+      if (!validPresets(s.durationPresets))
+        const ValidationFailure(
+          ValidationField.duration,
+          ValidationRule.outOfRange,
+        ),
       checkAlerts(s.defaultAlerts),
       if (s.quietHours case final quiet?) checkTimeWindow(quiet),
       checkRange(ValidationField.settings, s.firstDayOfWeek, 1, 7),

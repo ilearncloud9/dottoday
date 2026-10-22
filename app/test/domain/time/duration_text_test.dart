@@ -1,3 +1,4 @@
+import 'package:dottoday/domain/time/duration_presets.dart';
 import 'package:dottoday/domain/time/duration_text.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -28,7 +29,7 @@ void main() {
     test('"$input" → $want', () => expect(parseDurationText(input), want));
   }
 
-  test('presets are within range and ascending', () {
-    expect(durationPresetsMin, [15, 30, 45, 60, 90]);
+  test('default presets are valid', () {
+    expect(validPresets(defaultDurationPresets), isTrue);
   });
 }

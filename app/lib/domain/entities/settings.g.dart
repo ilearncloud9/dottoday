@@ -30,6 +30,11 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
       ShiftFollowersPolicy.ask,
   includeCalendarInShift: json['includeCalendarInShift'] as bool? ?? false,
   defaultDurationMin: (json['defaultDurationMin'] as num?)?.toInt() ?? 30,
+  durationPresets:
+      (json['durationPresets'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList() ??
+      defaultDurationPresets,
   defaultAlerts:
       (json['defaultAlerts'] as List<dynamic>?)
           ?.map((e) => Alert.fromJson(e as Map<String, dynamic>))
@@ -55,6 +60,7 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'shiftFollowers': _$ShiftFollowersPolicyEnumMap[instance.shiftFollowers]!,
   'includeCalendarInShift': instance.includeCalendarInShift,
   'defaultDurationMin': instance.defaultDurationMin,
+  'durationPresets': instance.durationPresets,
   'defaultAlerts': instance.defaultAlerts.map((e) => e.toJson()).toList(),
   'quietHours': instance.quietHours?.toJson(),
   'use24h': instance.use24h,

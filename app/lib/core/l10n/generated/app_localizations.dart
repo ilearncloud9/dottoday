@@ -1851,6 +1851,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pick a time…'**
   String get inboxPickTime;
+
+  /// Title of the Duration sheet (A-ios-add-duration).
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get durationSheetTitle;
+
+  /// Typed alternative to the duration wheel.
+  ///
+  /// In en, this message translates to:
+  /// **'Or type a length'**
+  String get durationTypeLabel;
+
+  /// Duration sheet preview: when the task ends.
+  ///
+  /// In en, this message translates to:
+  /// **'ends {time}'**
+  String durationEnds(String time);
+
+  /// Duration sheet preview: the task ends before the next one.
+  ///
+  /// In en, this message translates to:
+  /// **'Still fits before {title} at {time}'**
+  String durationFitsBefore(String title, String time);
+
+  /// Duration sheet preview: nothing follows until Bedtime.
+  ///
+  /// In en, this message translates to:
+  /// **'Fits before Bedtime at {time}'**
+  String durationFitsBedtime(String time);
+
+  /// Duration sheet preview: the task overlaps the next one.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs into {title} at {time}'**
+  String durationRunsInto(String title, String time);
+
+  /// Duration sheet preview: the task ends after Bedtime.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs past Bedtime at {time}'**
+  String durationPastBedtime(String time);
+
+  /// Duration sheet section caption (shown uppercase).
+  ///
+  /// In en, this message translates to:
+  /// **'Presets'**
+  String get durationPresets;
+
+  /// Duration sheet: restore the default presets.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get durationReset;
+
+  /// The dashed '+ preset' chip (the + is an icon).
+  ///
+  /// In en, this message translates to:
+  /// **'preset'**
+  String get durationAddPreset;
+
+  /// Screen-reader label of the '+ preset' chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep this length as a preset'**
+  String get durationAddPresetLabel;
+
+  /// Tooltip of a preset chip's ×.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the {length} preset'**
+  String durationRemovePreset(String length);
+
+  /// A preset chip under an hour: '15m'.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m'**
+  String durationPresetMinutes(int minutes);
+
+  /// A preset chip of whole hours: '2h'.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h'**
+  String durationPresetHours(int hours);
+
+  /// A preset chip: '1h 30m'.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h {minutes}m'**
+  String durationPresetHoursMinutes(int hours, int minutes);
+
+  /// Tooltip of the ⋯ beside TIME in Add.
+  ///
+  /// In en, this message translates to:
+  /// **'More time options'**
+  String get addMoreTime;
+
+  /// Tooltip of the ⋯ beside DURATION in Add: opens the Duration sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'More lengths'**
+  String get addMoreDuration;
 }
 
 class _AppLocalizationsDelegate

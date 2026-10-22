@@ -90,10 +90,9 @@ final class AddFlowState {
 class AddFlow extends _$AddFlow {
   @override
   Future<AddFlowState> build(AddRequest request) async {
-    // Listen before any await: both are auto-dispose, and a read alone
-    // would let them go before their first value. Habits re-match the
-    // title when they arrive or change (the first emission races the
-    // draft).
+    // Listen before any await: a provider that is only read can be dropped
+    // before its first value (Riverpod 3). Habits re-match the title when
+    // they arrive or change (the first emission races the draft).
     ref
       ..listen(currentProfileProvider, (_, _) {})
       ..listen(habitsProvider, (_, next) {

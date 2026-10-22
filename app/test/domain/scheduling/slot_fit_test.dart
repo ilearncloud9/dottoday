@@ -36,6 +36,7 @@ void main() {
     final fit = fitAt(day, _at(17), 60, dayEndUtc: bed);
     expect(fit.isFree, isTrue);
     expect(fit.freeUntilUtc, _at(18, 30)); // review's travel buffer
+    expect(fit.next?.id, 'review');
   });
 
   test('overlaps are listed in order; a touching end is not one', () {
@@ -50,7 +51,9 @@ void main() {
   });
 
   test('after the last task: free until Bedtime', () {
-    expect(fitAt(day, _at(20), 30, dayEndUtc: bed).freeUntilUtc, bed);
+    final fit = fitAt(day, _at(20), 30, dayEndUtc: bed);
+    expect(fit.freeUntilUtc, bed);
+    expect(fit.next, isNull);
   });
 
   test('Bedtime before the next task bounds the room', () {

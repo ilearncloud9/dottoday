@@ -125,6 +125,24 @@ void main() {
     expect(find.text('8:30 PM – 9:00 PM'), findsOneWidget);
   });
 
+  testWidgets('DURATION ⋯ opens the Duration sheet; its pick applies', (
+    tester,
+  ) async {
+    await pumpAddHost(tester);
+    await _toWhen(tester, 'Go shopping 5pm 1h');
+    await tester.tap(find.byTooltip('More lengths'));
+    await tester.pumpAndSettle();
+    expect(find.text('ends 6:00 PM'), findsOneWidget);
+    // Gym starts at 5:30: an hour runs into it.
+    expect(find.text('Runs into Gym at 5:30 PM'), findsOneWidget);
+    await tester.tap(find.text('15m'));
+    await tester.pump();
+    expect(find.text('Still fits before Gym at 5:30 PM'), findsOneWidget);
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect(find.text('Today · 5:00 PM – 5:15 PM · 15 min'), findsOneWidget);
+  });
+
   testWidgets('Back returns to What with the title kept', (tester) async {
     await pumpAddHost(tester);
     await _toWhen(tester, 'Pack 8pm');

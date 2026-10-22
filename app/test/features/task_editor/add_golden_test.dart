@@ -68,7 +68,7 @@ List<Occurrence> _today() {
 
 /// The sheet as it sits over Today: raised, 28 pt top corners; a centred
 /// popover from medium width (`showAppSheet`).
-Widget addSheet(GoldenCell cell, AddRequest request) {
+Widget addSheet(GoldenCell cell, AddRequest request, {bool nested = false}) {
   final sheet = Builder(
     builder: (context) {
       final c = DotTheme.of(context).colors;
@@ -90,7 +90,19 @@ Widget addSheet(GoldenCell cell, AddRequest request) {
       occurrences: FakeOccurrenceRepository([..._habits(), ..._today()]),
       profile: testProfile(settings: const Settings(use24h: false)),
     ),
-    child: cell.width < WidthClass.mediumFrom
+    child: nested
+        ? Navigator(
+            onGenerateRoute: (_) => MaterialPageRoute<void>(
+              builder: (_) => Material(
+                color: Colors.transparent,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 80),
+                  child: sheet,
+                ),
+              ),
+            ),
+          )
+        : cell.width < WidthClass.mediumFrom
         ? Padding(padding: const EdgeInsets.only(top: 80), child: sheet)
         : Center(
             child: ConstrainedBox(
@@ -142,6 +154,32 @@ void main() {
     widths: const {'compact'},
     act: toWhen,
     build: (cell) => addSheet(cell, when),
+  );
+  // A3 (`A-ios-add-duration`): DURATION ⋯ at 1 h 30 from step 2.
+  Future<void> toDuration(WidgetTester tester) async {
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('1.5h'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('More lengths'));
+  }
+
+  // Compact: the sheet opens on a nested navigator inside the frame (the
+  // expanded popover uses the root navigator, outside the capture).
+  goldenMatrix(
+    'add_duration',
+    height: 844,
+    widths: const {'compact'},
+    act: toDuration,
+    build: (cell) => addSheet(cell, when, nested: true),
+  );
+  goldenMatrix(
+    'add_duration_android',
+    height: 915,
+    platform: TargetPlatform.android,
+    widths: const {'compact'},
+    act: toDuration,
+    build: (cell) => addSheet(cell, when, nested: true),
   );
   // A new user: no habits yet, so no Suggestions; the helper shows.
   goldenMatrix(

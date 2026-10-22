@@ -76,4 +76,5 @@ Sweep entries (add a row per screen as it lands):
 | Add A1 What (+ Android idiom, no-habits) | `test/features/task_editor/add_golden_test.dart` | `A-ios-add-what`, `A-android-add-what` |
 | Add A2 When + ThreadPicker (+ Android idiom) | `test/features/task_editor/add_golden_test.dart` | `A-ios-add-when`, `A-android-add-when` |
 | Inbox · Pick a time | `test/features/inbox/inbox_golden_test.dart` | derived |
+| Add A3 Duration sheet (+ Android idiom) | `test/features/task_editor/add_golden_test.dart` | `A-ios-add-duration`, `A-android-add-duration` |
 

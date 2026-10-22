@@ -1,18 +1,26 @@
 import 'dart:async';
 
+import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
 import 'package:dottoday/domain/quick_add/add_draft.dart';
-import 'package:dottoday/domain/time/duration_text.dart';
+import 'package:dottoday/domain/scheduling/inbox_plan.dart';
+import 'package:dottoday/domain/time/duration_presets.dart';
 import 'package:dottoday/features/task_editor/add/add_save.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_header.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_what_step.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_when_step.dart';
+import 'package:dottoday/shared/dot/round_more_button.dart';
+import 'package:dottoday/shared/duration/duration_preview.dart';
+import 'package:dottoday/shared/duration/duration_sheet.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 /// Opens Add (docs/10 §3 `AddFlow`) from the add button or ⌘N: a sheet on
 /// phones, a popover from medium width (the Mac/web editor panel is
@@ -124,7 +132,7 @@ class _When extends ConsumerWidget {
     return AddWhenStep(
       state: state,
       room: room,
-      presets: addDurationPresetsMin,
+      presets: settings?.durationPresets ?? defaultDurationPresets,
       use24h: use24hFor(context, settings?.use24h),
       snapMinutes: settings?.snapMinutes ?? 5,
       onStart: (m) => notifier.edit((d) => d.withStartMinute(m)),
@@ -132,7 +140,43 @@ class _When extends ConsumerWidget {
       onAdd: () =>
           unawaited(saveFromSheet(context, _current(ref, request, state))),
       onAnother: () => unawaited(_another(context, ref)),
+      durationMenu: RoundMoreButton(
+        tooltip: context.l10n.addMoreDuration,
+        onTap: () => unawaited(_duration(context, ref, room)),
+      ),
     );
+  }
+
+  /// The Duration sheet (A3) for the draft; presets save as they change.
+  Future<void> _duration(
+    BuildContext context,
+    WidgetRef ref,
+    DayRoom room,
+  ) async {
+    final container = ProviderScope.containerOf(context);
+    final draft = _current(ref, request, state);
+    final settings = ref.read(currentProfileProvider).value?.settings;
+    final text = DayTimeText(
+      context,
+      tz.getLocation(draft.tzId),
+      draft.day,
+      use24h: use24hFor(context, settings?.use24h),
+    );
+    final minutes = await showDurationSheet(
+      context,
+      initial: draft.length,
+      color: TaskColor.fromKey(draft.color),
+      icon: TaskIcon.fromKey(draft.icon),
+      presets: settings?.durationPresets ?? defaultDurationPresets,
+      onPresets: (p) => unawaited(
+        updateSettings(container, (s) => s.copyWith(durationPresets: p)),
+      ),
+      preview: (m) => durationPreview(context, room, draft.startUtc!, m, text),
+    );
+    if (minutes == null) return;
+    ref
+        .read(addFlowProvider(request).notifier)
+        .edit((d) => d.withDuration(minutes));
   }
 
   Future<void> _another(BuildContext context, WidgetRef ref) async {
