@@ -1180,4 +1180,66 @@ class AppLocalizationsEn extends AppLocalizations {
   String addWhenOnDay(String day, String time) {
     return '$day, $time';
   }
+
+  @override
+  String get pickerLabel => 'Start time';
+
+  @override
+  String addWhenSummary(String day, String range, String length) {
+    return '$day · $range · $length';
+  }
+
+  @override
+  String get addTimeCaption => 'Time';
+
+  @override
+  String get addDurationCaption => 'Duration';
+
+  @override
+  String addFreeUntil(String time) {
+    return 'Free until $time · no overlap';
+  }
+
+  @override
+  String addOverlaps(int count, String title, int others) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Overlaps $title and $others more',
+      one: 'Overlaps $title',
+    );
+    return '$_temp0 · you can still add it';
+  }
+
+  @override
+  String addLandsOn(String day, String range) {
+    return 'Lands on $day at $range';
+  }
+
+  @override
+  String get addSlotFree => 'the slot is free';
+
+  @override
+  String addSlotBusy(String title) {
+    return 'overlaps $title';
+  }
+
+  @override
+  String get addAdd => 'Add';
+
+  @override
+  String get addAnother => 'Add another';
+
+  @override
+  String durationChipMinutes(int minutes) {
+    return '$minutes';
+  }
+
+  @override
+  String durationChipHours(String hours) {
+    return '${hours}h';
+  }
+
+  @override
+  String get inboxPickTime => 'Pick a time…';
 }

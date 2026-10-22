@@ -3,6 +3,9 @@ import 'package:dottoday/domain/validation/field_rules.dart';
 /// The preset durations offered as chips (docs/02 F2 "15/30/45/60/90").
 const durationPresetsMin = [15, 30, 45, 60, 90];
 
+/// The Add flow's chips (`A-ios-add-when`: 15 30 45 1h 1.5h 2h).
+const addDurationPresetsMin = [15, 30, 45, 60, 90, 120];
+
 /// Parses a typed custom duration into minutes, or null if it isn't one or
 /// falls outside [minDurationMin]–[maxDurationMin].
 ///

@@ -90,17 +90,21 @@ final class AddFlowState {
 class AddFlow extends _$AddFlow {
   @override
   Future<AddFlowState> build(AddRequest request) async {
+    // Listen before any await: both are auto-dispose, and a read alone
+    // would let them go before their first value. Habits re-match the
+    // title when they arrive or change (the first emission races the
+    // draft).
+    ref
+      ..listen(currentProfileProvider, (_, _) {})
+      ..listen(habitsProvider, (_, next) {
+        if (next.hasValue) _rematch();
+      });
     final now = ref.read(clockProvider).nowUtc();
     final profile = await ref.read(currentProfileProvider.future);
     final local = tz.TZDateTime.from(now, tz.getLocation(profile.tzId));
     final language =
         QuickAddLanguage.values.asNameMap()[request.languageCode] ??
         QuickAddLanguage.en;
-    // Keep habits live for the sheet's life, and re-match the title when
-    // they arrive or change (the first emission races the draft).
-    ref.listen(habitsProvider, (_, next) {
-      if (next.hasValue) _rematch();
-    });
     await ref.read(habitsProvider.future);
     final initial = AddFlowState(
       draft: AddDraft(
@@ -131,6 +135,29 @@ class AddFlow extends _$AddFlow {
     final s = _now;
     if (s == null) return;
     state = AsyncData(s.copyWith(draft: change(s.draft)));
+  }
+
+  /// After "Add another": a blank step 1 on the same day, starting where
+  /// [saved] ends (R-07 "Add another keeps the sheet open").
+  void another(AddDraft saved) {
+    final s = _now;
+    if (s == null) return;
+    final end = saved.startMinute == null
+        ? null
+        : saved.startMinute! + saved.length;
+    state = AsyncData(
+      AddFlowState(
+        draft: AddDraft(
+          today: saved.today,
+          tzId: saved.tzId,
+          defaultDurationMin: saved.defaultDurationMin,
+          date: saved.day,
+          minuteOfDay: end != null && end < Duration.minutesPerDay ? end : null,
+        ),
+        text: '',
+        language: s.language,
+      ),
+    );
   }
 
   void goTo(AddStep step) {

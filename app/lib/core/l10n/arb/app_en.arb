@@ -1776,5 +1776,111 @@
         "type": "String"
       }
     }
+  },
+  "pickerLabel": "Start time",
+  "@pickerLabel": {
+    "description": "Screen-reader label of the ThreadPicker slider; its value reads the time range."
+  },
+  "addWhenSummary": "{day} · {range} · {length}",
+  "@addWhenSummary": {
+    "description": "Add step 2 subtitle under the title: 'Today · 5:00 – 6:00 PM · 1 h'.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "addTimeCaption": "Time",
+  "@addTimeCaption": {
+    "description": "Add step 2 section caption (shown uppercase)."
+  },
+  "addDurationCaption": "Duration",
+  "@addDurationCaption": {
+    "description": "Add step 2 section caption (shown uppercase)."
+  },
+  "addFreeUntil": "Free until {time} · no overlap",
+  "@addFreeUntil": {
+    "description": "Under the ThreadPicker when the slot is free.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "addOverlaps": "{count, plural, =1{Overlaps {title}} other{Overlaps {title} and {others} more}} · you can still add it",
+  "@addOverlaps": {
+    "description": "Under the ThreadPicker when the slot collides with tasks.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      },
+      "others": {
+        "type": "int"
+      }
+    }
+  },
+  "addLandsOn": "Lands on {day} at {range}",
+  "@addLandsOn": {
+    "description": "Lands-on row: where the task goes. {day} is shown bold.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "addSlotFree": "the slot is free",
+  "@addSlotFree": {
+    "description": "Lands-on row suffix when nothing overlaps."
+  },
+  "addSlotBusy": "overlaps {title}",
+  "@addSlotBusy": {
+    "description": "Lands-on row suffix when the slot is taken.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "addAdd": "Add",
+  "@addAdd": {
+    "description": "Add step 2 primary button."
+  },
+  "addAnother": "Add another",
+  "@addAnother": {
+    "description": "Add step 2: add this task and start the next one."
+  },
+  "durationChipMinutes": "{minutes}",
+  "@durationChipMinutes": {
+    "description": "Duration chip under an hour: just the minutes ('15').",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "durationChipHours": "{hours}h",
+  "@durationChipHours": {
+    "description": "Duration chip of an hour or more: '1h', '1.5h' (hours formatted for the locale).",
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "inboxPickTime": "Pick a time…",
+  "@inboxPickTime": {
+    "description": "Inbox schedule sheet: choose any time on the thread."
   }
 }

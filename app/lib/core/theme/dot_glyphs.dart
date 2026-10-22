@@ -90,6 +90,17 @@ abstract final class DotGlyphs {
   static const dottedLine = DotGlyph('M12 4h.01M12 9h.01M12 14h.01M12 19h.01');
   static const sort = DotGlyph('M3 6h18M6 12h12M10 18h4');
   static const undo = DotGlyph('M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-4');
+
+  /// A ring of dots: free time ("Free until 19:30 · no overlap").
+  static const freeRing = DotGlyph(
+    'M12 4h.01M17.66 6.34h.01M20 12h.01M17.66 17.66h.01M12 20h.01'
+    'M6.34 17.66h.01M4 12h.01M6.34 6.34h.01',
+  );
+
+  /// Triangle with "!": an overlap or a conflict to look at.
+  static const warning = DotGlyph(
+    'M12 3.5L2.5 20h19L12 3.5zM12 10v4M12 17h.01',
+  );
 }
 
 /// An 8-tooth gear outline around the centre hole: alternating 7.2 / 9.5

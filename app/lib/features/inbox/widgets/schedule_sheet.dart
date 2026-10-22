@@ -1,23 +1,39 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/scheduling/day_room_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/schedule_result.dart';
-import 'package:dottoday/features/inbox/state/inbox_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A suggested place for an inbox task, ready to show.
 typedef SlotChoice = ({Slot slot, String label});
 
+/// What the schedule sheet resolved to.
+sealed class ScheduleChoice {
+  const ScheduleChoice();
+}
+
+/// One of the suggested slots.
+final class SlotPicked extends ScheduleChoice {
+  const SlotPicked(this.choice);
+
+  final SlotChoice choice;
+}
+
+/// "Pick a time…": choose on the thread instead.
+final class PickTime extends ScheduleChoice {
+  const PickTime();
+}
+
 /// "Schedule Go for a run": up to two free slots today and the first one
-/// tomorrow (docs/02 F3 "smart suggestions"). Returns the picked one.
-/// Picking any time arrives with the When step (M3c.2).
-Future<SlotChoice?> showScheduleSheet(
+/// tomorrow (docs/02 F3 "smart suggestions"), then "Pick a time…".
+Future<ScheduleChoice?> showScheduleSheet(
   BuildContext context, {
   required Occurrence item,
   required DateTime today,
   required String Function(Slot slot) rangeText,
-}) => showModalBottomSheet<SlotChoice>(
+}) => showModalBottomSheet<ScheduleChoice>(
   context: context,
   builder: (_) =>
       _ScheduleSheet(item: item, today: today, rangeText: rangeText),
@@ -73,8 +89,14 @@ class _ScheduleSheet extends ConsumerWidget {
                 minTileHeight: DotTouch.android,
                 leading: DotIcon(DotGlyphs.add, color: t.colors.accentInk),
                 title: Text(c.label, style: t.styles.body),
-                onTap: () => Navigator.of(context).pop(c),
+                onTap: () => Navigator.of(context).pop(SlotPicked(c)),
               ),
+            ListTile(
+              minTileHeight: DotTouch.android,
+              leading: DotIcon(DotGlyphs.dottedLine, color: t.colors.accentInk),
+              title: Text(l10n.inboxPickTime, style: t.styles.body),
+              onTap: () => Navigator.of(context).pop(const PickTime()),
+            ),
           ],
         ),
       ),

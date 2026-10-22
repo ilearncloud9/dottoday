@@ -113,4 +113,17 @@ const sheetEntries = <SheetEntry>[
     reference: 'A-android-add-what.png',
     crop: Rect.fromLTRB(0, 310, 824, 1830),
   ),
+  SheetEntry(
+    name: 'Add A2 When + ThreadPicker · light',
+    golden: 'test/features/task_editor/goldens/add_when_light_compact_2x.png',
+    reference: 'A-ios-add-when.png',
+    crop: Rect.fromLTRB(0, 288, 780, 1688),
+  ),
+  SheetEntry(
+    name: 'Add A2 When · Android dark',
+    golden:
+        'test/features/task_editor/goldens/add_when_android_dark_compact_2x.png',
+    reference: 'A-android-add-when.png',
+    crop: Rect.fromLTRB(0, 310, 824, 1830),
+  ),
 ];

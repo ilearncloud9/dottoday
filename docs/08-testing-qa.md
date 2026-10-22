@@ -74,4 +74,6 @@ Sweep entries (add a row per screen as it lands):
 | Phone editor E1 | `test/features/timeline/task_editor_golden_test.dart` | `A-mac-editor` (fields) |
 | Inbox I1 + empty | `test/features/inbox/inbox_golden_test.dart` | `A-ios-inbox`, `A-android-inbox` |
 | Add A1 What (+ Android idiom, no-habits) | `test/features/task_editor/add_golden_test.dart` | `A-ios-add-what`, `A-android-add-what` |
+| Add A2 When + ThreadPicker (+ Android idiom) | `test/features/task_editor/add_golden_test.dart` | `A-ios-add-when`, `A-android-add-when` |
+| Inbox · Pick a time | `test/features/inbox/inbox_golden_test.dart` | derived |
 

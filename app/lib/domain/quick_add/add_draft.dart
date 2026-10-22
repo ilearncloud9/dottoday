@@ -106,6 +106,19 @@ final class AddDraft {
   AddDraft withStartMinute(int value) =>
       _copy(minuteOfDay: () => value, allDay: false);
 
+  /// Starts at [utc]'s local wall clock on its day, rounded up to the
+  /// next multiple of [snap] minutes (a free slot or "now" on the grid).
+  AddDraft withStartUtc(DateTime utc, {int snap = 5}) {
+    final local = tz.TZDateTime.from(utc, tz.getLocation(tzId));
+    final raw = local.hour * 60 + local.minute + (local.second > 0 ? 1 : 0);
+    final snapped = (raw + snap - 1) ~/ snap * snap;
+    return _copy(
+      date: () => DateTime(local.year, local.month, local.day),
+      minuteOfDay: () => snapped.clamp(0, Duration.minutesPerDay - snap),
+      allDay: false,
+    );
+  }
+
   AddDraft withDuration(int minutes) =>
       _copy(durationMin: () => minutes, allDay: false);
 

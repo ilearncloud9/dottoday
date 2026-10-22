@@ -29,7 +29,10 @@ class AddHeader extends StatelessWidget {
               child: TextButton.icon(
                 onPressed: onBack,
                 icon: DotIcon(back, color: t.colors.accentInk),
-                label: Text(l10n.addBack, style: t.styles.body),
+                label: Text(
+                  l10n.addBack,
+                  style: t.styles.body.copyWith(color: t.colors.accentInk),
+                ),
               ),
             ),
           _StepDots(current: step.index, total: AddStep.values.length),

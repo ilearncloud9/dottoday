@@ -43,6 +43,29 @@ List<Occurrence> _habits() {
   ];
 }
 
+/// Today around the afternoon of `A-ios-add-when`: a call at 4:15 and
+/// Spanish review at 7:30, so 5–6 PM is free until 7:30.
+List<Occurrence> _today() {
+  Occurrence o(String id, String title, String c, String i, int h, int m) =>
+      Occurrence(
+        id: '01928c3e-0000-7000-8000-0000000009$id',
+        userId: testUserId,
+        title: title,
+        colorKey: c,
+        iconKey: i,
+        startUtc: DateTime.utc(2026, 10, 21, h, m),
+        tzId: 'Europe/Berlin',
+        durationMin: 30,
+        createdAt: DateTime.utc(2026, 10),
+        updatedAt: DateTime.utc(2026, 10),
+      );
+  return [
+    o('01', 'Tidy desk', 'teal', 'document', 12, 45),
+    o('02', 'Call Mum', 'amber', 'call', 14, 15),
+    o('03', 'Spanish review', 'teal', 'language', 17, 30),
+  ];
+}
+
 /// The sheet as it sits over Today: raised, 28 pt top corners; a centred
 /// popover from medium width (`showAppSheet`).
 Widget addSheet(GoldenCell cell, AddRequest request) {
@@ -64,7 +87,7 @@ Widget addSheet(GoldenCell cell, AddRequest request) {
   return ProviderScope(
     overrides: timelineOverrides(
       now: DateTime.utc(2026, 10, 21, 9),
-      occurrences: FakeOccurrenceRepository(_habits()),
+      occurrences: FakeOccurrenceRepository([..._habits(), ..._today()]),
       profile: testProfile(settings: const Settings(use24h: false)),
     ),
     child: cell.width < WidthClass.mediumFrom
@@ -102,6 +125,23 @@ void main() {
     platform: TargetPlatform.android,
     widths: const {'compact'},
     build: (cell) => addSheet(cell, shopping),
+  );
+  // A2 (`A-ios-add-when`): Continue from "Go shopping 5pm".
+  const when = AddRequest(languageCode: 'en', text: 'Go shopping 5pm');
+  Future<void> toWhen(WidgetTester tester) => tester.tap(find.text('Continue'));
+  goldenMatrix(
+    'add_when',
+    height: 844,
+    act: toWhen,
+    build: (cell) => addSheet(cell, when),
+  );
+  goldenMatrix(
+    'add_when_android',
+    height: 915,
+    platform: TargetPlatform.android,
+    widths: const {'compact'},
+    act: toWhen,
+    build: (cell) => addSheet(cell, when),
   );
   // A new user: no habits yet, so no Suggestions; the helper shows.
   goldenMatrix(

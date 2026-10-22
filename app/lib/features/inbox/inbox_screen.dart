@@ -5,6 +5,7 @@ import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/scheduling/day_room_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';

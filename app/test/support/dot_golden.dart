@@ -15,7 +15,7 @@ const goldenWidths = {'compact': 390.0, 'medium': 700.0, 'expanded': 1280.0};
 /// × 1× and 2× (docs/10 §7.1, §7.3). [build] gets the cell so it can lay
 /// out per width; [height] is the logical canvas height. Components that
 /// exist only from a width class up (§4: Mac/web Week, Month) pass
-/// [widths].
+/// [widths]. [act] drives the UI into the captured state (a tap, a step).
 ///
 /// ```dart
 /// goldenMatrix('task_dot', height: 120, build: (_) => const _Specimen());
@@ -26,6 +26,7 @@ void goldenMatrix(
   required Widget Function(GoldenCell cell) build,
   TargetPlatform platform = TargetPlatform.iOS,
   Set<String> widths = const {'compact', 'medium', 'expanded'},
+  Future<void> Function(WidgetTester tester)? act,
 }) {
   for (final theme in ['light', 'dark']) {
     for (final MapEntry(key: widthName, value: width) in goldenWidths.entries) {
@@ -44,6 +45,10 @@ void goldenMatrix(
             goldenApp(build(cell), theme: theme, platform: platform),
           );
           await tester.pumpAndSettle();
+          if (act != null) {
+            await act(tester);
+            await tester.pumpAndSettle();
+          }
           // matchesGoldenFile on a finder always captures at ratio 1, so
           // render the frame's boundary at this cell's ratio ourselves.
           final boundary = tester.renderObject<RenderRepaintBoundary>(

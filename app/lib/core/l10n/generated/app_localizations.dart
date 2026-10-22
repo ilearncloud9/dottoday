@@ -1767,6 +1767,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{day}, {time}'**
   String addWhenOnDay(String day, String time);
+
+  /// Screen-reader label of the ThreadPicker slider; its value reads the time range.
+  ///
+  /// In en, this message translates to:
+  /// **'Start time'**
+  String get pickerLabel;
+
+  /// Add step 2 subtitle under the title: 'Today · 5:00 – 6:00 PM · 1 h'.
+  ///
+  /// In en, this message translates to:
+  /// **'{day} · {range} · {length}'**
+  String addWhenSummary(String day, String range, String length);
+
+  /// Add step 2 section caption (shown uppercase).
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get addTimeCaption;
+
+  /// Add step 2 section caption (shown uppercase).
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get addDurationCaption;
+
+  /// Under the ThreadPicker when the slot is free.
+  ///
+  /// In en, this message translates to:
+  /// **'Free until {time} · no overlap'**
+  String addFreeUntil(String time);
+
+  /// Under the ThreadPicker when the slot collides with tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Overlaps {title}} other{Overlaps {title} and {others} more}} · you can still add it'**
+  String addOverlaps(int count, String title, int others);
+
+  /// Lands-on row: where the task goes. {day} is shown bold.
+  ///
+  /// In en, this message translates to:
+  /// **'Lands on {day} at {range}'**
+  String addLandsOn(String day, String range);
+
+  /// Lands-on row suffix when nothing overlaps.
+  ///
+  /// In en, this message translates to:
+  /// **'the slot is free'**
+  String get addSlotFree;
+
+  /// Lands-on row suffix when the slot is taken.
+  ///
+  /// In en, this message translates to:
+  /// **'overlaps {title}'**
+  String addSlotBusy(String title);
+
+  /// Add step 2 primary button.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addAdd;
+
+  /// Add step 2: add this task and start the next one.
+  ///
+  /// In en, this message translates to:
+  /// **'Add another'**
+  String get addAnother;
+
+  /// Duration chip under an hour: just the minutes ('15').
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}'**
+  String durationChipMinutes(int minutes);
+
+  /// Duration chip of an hour or more: '1h', '1.5h' (hours formatted for the locale).
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h'**
+  String durationChipHours(String hours);
+
+  /// Inbox schedule sheet: choose any time on the thread.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a time…'**
+  String get inboxPickTime;
 }
 
 class _AppLocalizationsDelegate

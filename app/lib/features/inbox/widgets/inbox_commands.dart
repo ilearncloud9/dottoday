@@ -9,6 +9,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/schedule_result.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/features/inbox/state/inbox_actions.dart';
+import 'package:dottoday/features/inbox/widgets/pick_time_sheet.dart';
 import 'package:dottoday/features/inbox/widgets/schedule_sheet.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,17 @@ final class InboxCommands {
       today: today,
       rangeText: rangeText,
     );
-    if (choice != null) await place(item, choice);
+    final picked = switch (choice) {
+      SlotPicked(:final choice) => choice,
+      PickTime() when _context.mounted => await showPickTimeSheet(
+        _context,
+        item: item,
+        today: today,
+        rangeText: rangeText,
+      ),
+      _ => null,
+    };
+    if (picked != null) await place(item, picked);
   }
 
   /// Puts [item] in [choice]'s slot; the snackbar repeats its label

@@ -6,7 +6,6 @@ import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// "Today · 9:00 – 11:00 · 2 h · 38 min left" (`A-ios-task-sheet`).
@@ -66,14 +65,6 @@ class SheetMeta extends ConsumerWidget {
     tz.Location zone,
     DateTime? today,
   ) {
-    final day = _localDay(utc, zone);
-    final l10n = context.l10n;
-    if (day == today) return l10n.sheetToday;
-    if (today != null &&
-        day == DateTime(today.year, today.month, today.day + 1)) {
-      return l10n.sheetTomorrow;
-    }
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    return DateFormat.MMMEd(locale).format(day);
+    return relativeDayName(context, _localDay(utc, zone), today);
   }
 }

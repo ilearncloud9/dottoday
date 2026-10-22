@@ -3,8 +3,10 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/inbox/inbox_screen.dart';
+import 'package:dottoday/shared/dot/thread_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -145,6 +147,56 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Call Mum'), findsOneWidget);
   });
+
+  testWidgets('"Pick a time…" places it anywhere on the thread (M3c.2)', (
+    tester,
+  ) async {
+    final repo = await _pump(tester);
+    await tester.tap(find.byTooltip('Schedule').at(1)); // Call Mum, 15 min
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Pick a time…'));
+    await tester.pumpAndSettle();
+    // Today's first free 15 minutes after 11:00: 11:15, after Design review.
+    expect(find.text('11:15 AM – 11:30 AM'), findsOneWidget);
+    expect(find.text('Free until 11:30 AM · no overlap'), findsOneWidget);
+    await tester.tap(find.text('Tomorrow'));
+    await tester.pumpAndSettle();
+    expect(find.text('7:00 AM – 7:15 AM'), findsOneWidget);
+    await tester.tap(find.byType(ThreadPicker));
+    for (var i = 0; i < 3; i++) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    }
+    await tester.pump();
+    await tester.tap(
+      find.descendant(
+        of: find.byType(BottomSheet),
+        matching: find.text('Place'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(_row(repo, 'Call Mum').startUtc, DateTime.utc(2026, 10, 22, 5, 15));
+    expect(
+      find.text('Call Mum scheduled for Tomorrow, 7:15 AM – 7:30 AM'),
+      findsOneWidget,
+    );
+  });
+
+  for (final mode in [ThemeMode.light, ThemeMode.dark]) {
+    for (final (name, size) in [
+      ('compact', const Size(390, 1200)),
+      ('expanded', const Size(1280, 1000)),
+    ]) {
+      testWidgets('Pick a time a11y ${mode.name} $name', (tester) async {
+        await _pump(tester, mode: mode, size: size);
+        await tester.tap(find.byTooltip('Schedule').at(1));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Pick a time…'));
+        await tester.pumpAndSettle();
+        expect(find.byType(ThreadPicker), findsOneWidget);
+        await expectA11yGuidelines(tester);
+      });
+    }
+  }
 
   testWidgets('Place puts the fitting task in the next free slot', (
     tester,

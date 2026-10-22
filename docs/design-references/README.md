@@ -43,3 +43,4 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Thread "missed" meta and skipped rows | §3 `TaskRow`, `A-mac-month` | `thread_*` |
 | Medium-width rail (600–840) | §4 | `shell_rail_*_medium_*` |
 | Add A1 with no habits yet (no Suggestions, helper line) | §5.2 A1, `A-ios-add-what` | `add_what_blank_*` |
+| Inbox schedule sheet › "Pick a time…" (Today / Tomorrow on a `ThreadPicker`, Place) | §3 `ThreadPicker`, `A-ios-add-when` | `inbox_pick_time_*` |

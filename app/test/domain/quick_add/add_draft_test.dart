@@ -95,6 +95,14 @@ void main() {
     expect(d.withStartMinute(600).allDay, isFalse);
   });
 
+  test('withStartUtc: local day and minute, rounded up to the grid', () {
+    final d = _draft().withStartUtc(DateTime.utc(2026, 10, 22, 7, 2), snap: 15);
+    expect(d.day, DateTime(2026, 10, 22));
+    expect(d.startMinute, 9 * 60 + 15);
+    final late = _draft().withStartUtc(DateTime.utc(2026, 10, 21, 21, 58));
+    expect(late.startMinute, 1435);
+  });
+
   test('another zone moves the instant, not the wall clock', () {
     final d = _draft().withTyped(_parse('Call 5pm')).withZone('Europe/London');
     expect(d.startUtc, DateTime.utc(2026, 10, 21, 16));
