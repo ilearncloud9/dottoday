@@ -1943,4 +1943,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String monthStatsBusiest(String stats, String day) {
     return '$stats · busiest day $day';
   }
+
+  @override
+  String get editorClose => 'Close';
+
+  @override
+  String get editorEscKey => 'esc';
 }

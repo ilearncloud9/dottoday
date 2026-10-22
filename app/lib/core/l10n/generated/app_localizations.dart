@@ -2913,6 +2913,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{stats} · busiest day {day}'**
   String monthStatsBusiest(String stats, String day);
+
+  /// Tooltip of × on the Mac/web editor panel.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get editorClose;
+
+  /// Key cap beside × on the Mac/web editor panel.
+  ///
+  /// In en, this message translates to:
+  /// **'esc'**
+  String get editorEscKey;
 }
 
 class _AppLocalizationsDelegate

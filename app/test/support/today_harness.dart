@@ -29,6 +29,7 @@ Future<void> pumpToday(
   Settings? settings,
   Stream<DateTime>? ticks,
   ValueChanged<AddTaskIntent>? onAddTask,
+  Widget Function(Widget today)? wrap,
 }) async {
   tester.view
     ..physicalSize = size
@@ -63,7 +64,7 @@ Future<void> pumpToday(
           },
           child: child!,
         ),
-        home: TodayScreen(date: date),
+        home: (wrap ?? (w) => w)(TodayScreen(date: date)),
       ),
     ),
   );

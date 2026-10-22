@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/enums.dart';
@@ -22,7 +22,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// The Mac/web Inbox (docs/10 §5.2 I1 expanded, `A-mac-inbox`, M3e.2):
@@ -150,7 +149,9 @@ class WideInbox extends ConsumerWidget {
       icon: TaskIcon.fromKey(o.iconKey),
       onSchedule: () => unawaited(commands.schedule(o)),
       onTrash: () => unawaited(commands.trash(o)),
-      onOpen: () => unawaited(context.push(AppRoutes.task(o.id))),
+      onOpen: () => ProviderScope.containerOf(
+        context,
+      ).read(editingTaskProvider.notifier).open(o.id),
     );
     return CallbackShortcuts(
       bindings: {

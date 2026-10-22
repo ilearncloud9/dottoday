@@ -2,7 +2,9 @@
 @Tags(['golden'])
 library;
 
+import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
@@ -20,8 +22,11 @@ Widget _today({
   TodayView? view,
   DateTime? date,
   Set<String>? picked,
+  String? editing,
 }) => ProviderScope(
   overrides: [
+    if (editing != null)
+      editingTaskProvider.overrideWith(() => _Editing(editing)),
     if (view != null) todaySelectionProvider.overrideWith(() => _Fixed(view)),
     if (picked != null)
       taskSelectionProvider.overrideWith(
@@ -38,7 +43,9 @@ Widget _today({
       ).copyWith(displayName: 'Kody'),
     ),
   ],
-  child: TodayScreen(date: date),
+  child: editing == null
+      ? TodayScreen(date: date)
+      : EditorPanelFrame(child: TodayScreen(date: date)),
 );
 
 /// A selection pinned to [view] (month open / another month).
@@ -49,6 +56,16 @@ final class _Fixed extends TodaySelection {
 
   @override
   TodayView build() => view;
+}
+
+/// The editor panel open on [id].
+final class _Editing extends EditingTask {
+  _Editing(this.id);
+
+  final String id;
+
+  @override
+  String? build() => id;
 }
 
 /// Multi-select pinned to [picked].
@@ -84,6 +101,13 @@ void main() {
     height: 800,
     widths: const {'expanded', 'expanded_min'},
     build: (_) => _today(),
+  );
+  // E1 as the Mac/web panel (`A-mac-editor`, M3e.5).
+  goldenMatrix(
+    'today_editor_panel',
+    height: 1000,
+    widths: const {'expanded'},
+    build: (_) => _today(editing: _ids(['Deep work: roadmap']).single),
   );
   // Multi-select (docs/03 §3.2, R-05): two picked, the bar at the bottom.
   goldenMatrix(

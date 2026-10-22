@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
@@ -26,7 +26,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -213,7 +212,7 @@ class WeekView extends ConsumerWidget {
         ),
       ),
       onDrop: (id, start) => unawaited(_move(context, ref, id, start, time)),
-      onOpen: (id) => unawaited(context.push(AppRoutes.task(id))),
+      onOpen: (id) => ref.read(editingTaskProvider.notifier).open(id),
       onAdd: () => Actions.maybeInvoke(context, AddTaskIntent(day: date)),
     );
   }

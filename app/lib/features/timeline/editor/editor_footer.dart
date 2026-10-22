@@ -13,9 +13,13 @@ class EditorFooter extends ConsumerWidget {
   const EditorFooter({
     required this.task,
     required this.onSave,
+    required this.onLeft,
     required this.beforeLeave,
     super.key,
   });
+
+  /// After Delete or Move to inbox: the task is gone from here.
+  final VoidCallback onLeft;
 
   /// The draft as it stands.
   final Occurrence task;
@@ -55,7 +59,6 @@ class EditorFooter extends ConsumerWidget {
   Future<void> _delete(BuildContext context, WidgetRef ref) async {
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
-    final navigator = Navigator.of(context);
     final undo = ref.read(undoServiceProvider);
     final trash = ref.read(trashServiceProvider);
     final sure = await showDialog<bool>(
@@ -78,7 +81,7 @@ class EditorFooter extends ConsumerWidget {
     if (sure != true) return;
     beforeLeave();
     final result = await trash.trashOccurrences(task.userId, {task.id});
-    navigator.popUntil((r) => r.isFirst);
+    onLeft();
     reportUndoable(
       messenger,
       l10n,
@@ -92,7 +95,6 @@ class EditorFooter extends ConsumerWidget {
   Future<void> _toInbox(BuildContext context, WidgetRef ref) async {
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
-    final navigator = Navigator.of(context);
     final undo = ref.read(undoServiceProvider);
     final now = ref.read(clockProvider).nowUtc();
     beforeLeave();
@@ -100,7 +102,7 @@ class EditorFooter extends ConsumerWidget {
     final result = await undo.applyUndoable(
       WriteBatch(userId: task.userId, occurrences: [row]),
     );
-    navigator.popUntil((r) => r.isFirst);
+    onLeft();
     reportUndoable(
       messenger,
       l10n,

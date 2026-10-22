@@ -3015,5 +3015,13 @@
         "type": "String"
       }
     }
+  },
+  "editorClose": "Close",
+  "@editorClose": {
+    "description": "Tooltip of × on the Mac/web editor panel."
+  },
+  "editorEscKey": "esc",
+  "@editorEscKey": {
+    "description": "Key cap beside × on the Mac/web editor panel."
   }
 }

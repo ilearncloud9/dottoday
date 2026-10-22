@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -16,7 +16,6 @@ import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// [child] with the Inbox as a 300 px sidebar at the expanded width (docs/10
@@ -105,7 +104,9 @@ class _Sidebar extends ConsumerWidget {
           icon: TaskIcon.fromKey(o.iconKey),
           onSchedule: () => unawaited(commands.schedule(o)),
           onTrash: () => unawaited(commands.trash(o)),
-          onOpen: () => unawaited(context.push(AppRoutes.task(o.id))),
+          onOpen: () => ProviderScope.containerOf(
+            context,
+          ).read(editingTaskProvider.notifier).open(o.id),
         ),
       );
 }

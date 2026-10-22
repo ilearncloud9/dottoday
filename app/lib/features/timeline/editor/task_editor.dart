@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
@@ -15,7 +17,9 @@ import 'package:dottoday/features/timeline/editor/editor_footer.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_subtasks.dart';
 import 'package:dottoday/shared/dot/colour_icon_block.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -35,15 +39,37 @@ void showTaskEditor(BuildContext context, String id) => unawaited(
 /// the last one is flushed when the editor closes, so dismissing never
 /// loses an edit (03 §3.4 "nothing lost on dismiss").
 class TaskEditor extends ConsumerWidget {
-  const TaskEditor({required this.id, super.key});
+  const TaskEditor({
+    required this.id,
+    this.onClose,
+    this.caption = true,
+    this.autofocus = false,
+    super.key,
+  });
 
   final String id;
+
+  /// Focus the title on open (the panel, `A-mac-editor`), so the keys
+  /// (⏎, ⌘S, ⌘D) work at once.
+  final bool autofocus;
+
+  /// Leaves the editor after Save, Delete or Move to inbox: the phone
+  /// sheet pops (the default); the Mac/web panel closes itself.
+  final VoidCallback? onClose;
+
+  /// "EDIT TASK" above the title; the panel shows it in its own header.
+  final bool caption;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final view = ref.watch(taskViewProvider(id));
     return switch (view) {
-      AsyncData(value: final task?) => _Form(task: task),
+      AsyncData(value: final task?) => _Form(
+        task: task,
+        onClose: onClose,
+        caption: caption,
+        autofocus: autofocus,
+      ),
       AsyncData(value: null) ||
       AsyncError() => Center(child: Text(context.l10n.sheetNotFound)),
       _ => const SizedBox.shrink(),
@@ -52,9 +78,19 @@ class TaskEditor extends ConsumerWidget {
 }
 
 class _Form extends ConsumerStatefulWidget {
-  const _Form({required this.task});
+  const _Form({
+    required this.task,
+    required this.onClose,
+    required this.caption,
+    required this.autofocus,
+  });
 
   final TaskView task;
+  final bool autofocus;
+
+  /// Null: the phone sheet, which pops.
+  final VoidCallback? onClose;
+  final bool caption;
 
   @override
   ConsumerState<_Form> createState() => _FormState();
@@ -111,8 +147,38 @@ class _FormState extends ConsumerState<_Form> {
     );
   }
 
+  /// Save (⏎ in the title, ⌘S): write now and leave.
+  void _save() {
+    _flush();
+    final close = widget.onClose;
+    close == null ? Navigator.of(context).pop() : close();
+  }
+
+  /// ⌘D: done, or planned again, written with the other edits.
+  void _toggleDone() => _change(
+    (o) => o.copyWith(
+      status: o.status == OccurrenceStatus.done
+          ? OccurrenceStatus.planned
+          : OccurrenceStatus.done,
+      completedAtUtc: o.status == OccurrenceStatus.done
+          ? null
+          : _clock.nowUtc(),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
+    final p = defaultTargetPlatform;
+    return CallbackShortcuts(
+      bindings: {
+        AppShortcuts.activator(p, LogicalKeyboardKey.keyS): _save,
+        AppShortcuts.activator(p, LogicalKeyboardKey.keyD): _toggleDone,
+      },
+      child: _fields(context),
+    );
+  }
+
+  Widget _fields(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final zone = tz.getLocation(_draft.tzId);
@@ -124,12 +190,16 @@ class _FormState extends ConsumerState<_Form> {
         DotSpace.xl,
       ),
       children: [
-        Text(l10n.editorCaption.toUpperCase(), style: t.styles.caption),
+        if (widget.caption)
+          Text(l10n.editorCaption.toUpperCase(), style: t.styles.caption),
         TextField(
           controller: _title,
+          autofocus: widget.autofocus,
           style: t.styles.topBarTitle,
           decoration: InputDecoration(hintText: l10n.editorTitleHint),
           textCapitalization: TextCapitalization.sentences,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) => _save(),
           onChanged: (v) => _change((o) => o.copyWith(title: v)),
         ),
         const SizedBox(height: DotSpace.l),
@@ -176,10 +246,12 @@ class _FormState extends ConsumerState<_Form> {
         const SizedBox(height: DotSpace.xl),
         EditorFooter(
           task: _draft,
-          onSave: () {
-            _flush();
-            Navigator.of(context).pop();
-          },
+          onSave: _save,
+          // The sheet goes back to the page: the task sheet below it would
+          // show a task that has gone.
+          onLeft:
+              widget.onClose ??
+              () => Navigator.of(context).popUntil((r) => r.isFirst),
           beforeLeave: () => _dirty = false,
         ),
       ],

@@ -57,3 +57,4 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Inbox Sort menu (added / duration / first fit), "No room this week", the Inbox sidebar's empty list | §3 `InboxRow`, `A-mac-inbox` | `inbox_*_expanded_*`, `today_inbox_sidebar_*` |
 | Week at 840 px (controls under the title, sideways scroll), drag preview pill, the board's "Drop a task here" on an empty day | §3 `CapacityRing`/`WeekSummaryStrip`, `A-mac-week-alt3-board` | `week_*` |
 | Month at 840 px, an empty month (no badges, no numbers) | §3 `MonthGrid`, `A-mac-month` | `month_*` |
+| Editor panel header ("EDIT TASK", esc, ×) | §3 `AddFlow` → `TaskEditor`, `A-mac-editor` | `today_editor_panel_*` |

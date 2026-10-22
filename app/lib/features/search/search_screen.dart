@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
@@ -128,7 +129,12 @@ class SearchScreen extends ConsumerWidget {
 
   void _open(BuildContext context, Occurrence o, VoidCallback remember) {
     remember();
-    unawaited(context.push(AppRoutes.task(o.id)));
+    // The Mac/web panel at the expanded width, else the task page.
+    openTask(
+      context,
+      o.id,
+      otherwise: () => unawaited(context.push(AppRoutes.task(o.id))),
+    );
   }
 
   void _schedule(BuildContext context, Occurrence o, VoidCallback remember) {
