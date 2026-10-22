@@ -1,5 +1,15 @@
 import 'package:dottoday/domain/entities/enums.dart';
 
+/// What a planned notification is for.
+enum NotificationPurpose {
+  /// An alert of a task.
+  task,
+
+  /// Settings › Bedtime reminder: once a day at Bedtime, with tomorrow's
+  /// first task (M3d.3, R-10).
+  bedtime,
+}
+
 /// One notification the OS should hold (docs/04 §6).
 ///
 /// Deliberately carries no title or notes: the payload is the occurrence ID
@@ -13,13 +23,20 @@ final class PlannedNotification {
     required this.kind,
     this.sound,
     this.silent = false,
+    this.purpose = NotificationPurpose.task,
   });
 
   /// Index used for the snooze reminder, after the ≤ 5 alert slots.
   static const snoozeIndex = 5;
 
+  /// Index of the Bedtime reminder.
+  static const bedtimeIndex = 6;
+
   /// Stable OS notification ID; see `notificationIdFor`.
   final int id;
+
+  /// The task alerted; for a Bedtime reminder, tomorrow's first task, or
+  /// empty when tomorrow has none.
   final String occurrenceId;
 
   /// Position in the occurrence's alert list, or [snoozeIndex].
@@ -30,9 +47,13 @@ final class PlannedNotification {
 
   /// Delivered without sound or banner because it falls in quiet hours.
   final bool silent;
+  final NotificationPurpose purpose;
 
   /// Whether iOS should use the time-sensitive interruption level (07 iOS).
-  bool get timeSensitive => kind == AlertKind.atStart && !silent;
+  bool get timeSensitive =>
+      purpose == NotificationPurpose.task &&
+      kind == AlertKind.atStart &&
+      !silent;
 
   @override
   bool operator ==(Object other) =>
@@ -43,11 +64,20 @@ final class PlannedNotification {
       other.fireAtUtc == fireAtUtc &&
       other.kind == kind &&
       other.sound == sound &&
-      other.silent == silent;
+      other.silent == silent &&
+      other.purpose == purpose;
 
   @override
-  int get hashCode =>
-      Object.hash(id, occurrenceId, alertIndex, fireAtUtc, kind, sound, silent);
+  int get hashCode => Object.hash(
+    id,
+    occurrenceId,
+    alertIndex,
+    fireAtUtc,
+    kind,
+    sound,
+    silent,
+    purpose,
+  );
 
   @override
   String toString() =>

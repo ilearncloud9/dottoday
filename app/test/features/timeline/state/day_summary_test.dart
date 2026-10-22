@@ -11,15 +11,18 @@ void main() {
     wakeUtc: DateTime.utc(2026, 10, 21, 5),
     bedUtc: DateTime.utc(2026, 10, 21, 20),
   );
+  DateTime at(int h) => DateTime.utc(2026, 10, 21, h);
   final blocks = [
     occurrenceFixture().copyWith(
       id: 'a',
+      startUtc: at(6),
       durationMin: 60,
       status: OccurrenceStatus.done,
     ),
-    occurrenceFixture().copyWith(id: 'b', durationMin: 120),
+    occurrenceFixture().copyWith(id: 'b', startUtc: at(8), durationMin: 120),
     occurrenceFixture().copyWith(
       id: 'c',
+      startUtc: at(12),
       durationMin: 45,
       status: OccurrenceStatus.skipped,
     ),
@@ -34,8 +37,22 @@ void main() {
   });
 
   test('free time never goes below zero', () {
-    final busy = [occurrenceFixture().copyWith(durationMin: 1000)];
+    final busy = [
+      occurrenceFixture().copyWith(startUtc: at(5), durationMin: 1000),
+    ];
     expect(daySummaryOf(busy, shape).freeMinutes, 0);
+  });
+
+  test('free time counts overlaps once and ignores time outside the day', () {
+    final day = [
+      occurrenceFixture().copyWith(id: 'x', startUtc: at(9), durationMin: 120),
+      occurrenceFixture().copyWith(id: 'y', startUtc: at(10), durationMin: 120),
+      // 19:00–21:00Z: only the hour before Bedtime (20:00Z) counts.
+      occurrenceFixture().copyWith(id: 'z', startUtc: at(19), durationMin: 120),
+    ];
+    final s = daySummaryOf(day, shape);
+    expect(s.plannedMinutes, 360);
+    expect(s.freeMinutes, 900 - 180 - 60);
   });
 
   test('completion: share once begun, outline ahead or when empty', () {

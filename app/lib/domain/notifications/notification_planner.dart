@@ -5,6 +5,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_id.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
+import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/domain/time/wall_clock.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -32,7 +33,9 @@ final class NotificationPlanner {
   /// Keep only the earliest this many (null = no limit).
   final int? maxPending;
 
-  /// The desired pending set, earliest first.
+  /// The desired pending set, earliest first. With [bedtimeFrom] whose
+  /// `bedtimeReminder` is on, one Bedtime reminder per day is added (see
+  /// [bedtimeReminders]).
   ///
   /// Only planned, scheduled, live occurrences alert. An occurrence with
   /// `alerts == null` inherits [seriesAlerts] for its series. Alerts in
@@ -44,6 +47,7 @@ final class NotificationPlanner {
     required String tzId,
     Map<String, List<Alert>> seriesAlerts = const {},
     TimeWindow? quietHours,
+    Settings? bedtimeFrom,
   }) {
     final now = _clock.nowUtc();
     final end = now.add(horizon);
@@ -69,12 +73,85 @@ final class NotificationPlanner {
         );
       }
     }
+    if (bedtimeFrom case final settings? when settings.bedtimeReminder) {
+      planned.addAll(
+        bedtimeReminders(
+          settings: settings,
+          location: location,
+          occurrences: live,
+          fromUtc: now,
+          toUtc: end,
+          used: usedIds,
+        ),
+      );
+    }
     planned.sort((a, b) {
       final byTime = a.fireAtUtc.compareTo(b.fireAtUtc);
       return byTime != 0 ? byTime : a.id.compareTo(b.id);
     });
     final limit = maxPending;
     return limit == null ? planned : planned.take(limit).toList();
+  }
+
+  /// One reminder at each day's Bedtime in `(fromUtc, toUtc]`, on that
+  /// weekday's own window (Settings › DAY SHAPE, per weekday), with the
+  /// id of the next day's first planned task. Ids are stable per local
+  /// date, so re-planning replaces rather than duplicates (R-10).
+  ///
+  /// ```dart
+  /// bedtimeReminders(settings: s, location: berlin, occurrences: rows,
+  ///     fromUtc: now, toUtc: now.add(week), used: {}).length; // 7
+  /// ```
+  static List<PlannedNotification> bedtimeReminders({
+    required Settings settings,
+    required tz.Location location,
+    required Iterable<Occurrence> occurrences,
+    required DateTime fromUtc,
+    required DateTime toUtc,
+    required Set<int> used,
+  }) {
+    final out = <PlannedNotification>[];
+    final first = utcToWallClock(location, fromUtc);
+    for (var d = 0; ; d++) {
+      final date = DateTime(first.year, first.month, first.day + d);
+      final shape = DayShape.on(
+        location,
+        date,
+        settings.boundaryFor(Weekday.values[date.weekday - 1]),
+      );
+      final at = shape.bedUtc;
+      if (at.isAfter(toUtc)) break;
+      if (!at.isAfter(fromUtc)) continue;
+      final key = 'bedtime:${date.year}-${date.month}-${date.day}';
+      out.add(
+        PlannedNotification(
+          id: _uniqueId(used, key, PlannedNotification.bedtimeIndex),
+          occurrenceId: _firstTomorrow(occurrences, location, date)?.id ?? '',
+          alertIndex: PlannedNotification.bedtimeIndex,
+          fireAtUtc: at,
+          kind: AlertKind.atEnd,
+          silent: _inQuietHours(location, at, settings.quietHours),
+          purpose: NotificationPurpose.bedtime,
+        ),
+      );
+    }
+    return out;
+  }
+
+  /// The earliest planned task on the day after [date].
+  static Occurrence? _firstTomorrow(
+    Iterable<Occurrence> occurrences,
+    tz.Location location,
+    DateTime date,
+  ) {
+    final next = DateTime(date.year, date.month, date.day + 1);
+    Occurrence? best;
+    for (final o in occurrences) {
+      final l = utcToWallClock(location, o.startUtc!);
+      if (DateTime(l.year, l.month, l.day) != next) continue;
+      if (best == null || o.startUtc!.isBefore(best.startUtc!)) best = o;
+    }
+    return best;
   }
 
   /// Operations that turn [pending] (the OS set, by ID) into [desired]:

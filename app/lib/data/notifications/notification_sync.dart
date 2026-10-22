@@ -56,6 +56,7 @@ final class NotificationSync {
         for (final s in series) s.id: s.alerts,
       },
       quietHours: profile.settings.quietHours,
+      bedtimeFrom: profile.settings,
     );
     final diff = NotificationPlanner.diff(desired, await _gateway.pending());
     if (diff.cancel.isEmpty && diff.schedule.isEmpty) return;

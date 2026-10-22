@@ -1,5 +1,6 @@
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -61,7 +62,7 @@ void main() {
       );
       await h.writes.apply(WriteBatch(userId: userId, occurrences: [o]));
       await h.effects.idle;
-      expect(h.gateway.pendingSet.values.single.occurrenceId, o.id);
+      expect(_taskAlerts(h).single.occurrenceId, o.id);
       expect(h.sink.written.last.blocks.single.id, o.id);
 
       // Same desired set again: nothing re-scheduled (R-10).
@@ -83,7 +84,7 @@ void main() {
         ),
       );
       await h.effects.idle;
-      expect(h.gateway.pendingSet, isEmpty);
+      expect(_taskAlerts(h), isEmpty);
     });
 
     test('a failing effect is logged and does not block the next', () async {
@@ -111,7 +112,14 @@ void main() {
         ),
       );
       await h.effects.idle;
-      expect(h.gateway.pendingSet, hasLength(1));
+      expect(_taskAlerts(h), hasLength(1));
     });
   });
 }
+
+/// Task alerts only: the Bedtime reminder (on by default, M3d.3) is
+/// planned alongside them.
+List<PlannedNotification> _taskAlerts(WriteHarness h) => [
+  for (final n in h.gateway.pendingSet.values)
+    if (n.purpose == NotificationPurpose.task) n,
+];

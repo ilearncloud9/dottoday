@@ -1,12 +1,14 @@
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/scheduling/day_capacity.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
 
 /// "2 of 7 · 5 h 45 planned" for a day's timed [blocks] (docs/10 §3
 /// `DayCard`). Skipped tasks count as neither planned nor to do; free time
-/// is what is left of the waking day.
+/// is what no task occupies between Wake Up and Bedtime (overlaps counted
+/// once, tasks outside the waking day ignored — domain `capacityOf`).
 DaySummary daySummaryOf(List<Occurrence> blocks, DayShape shape) {
   final active = [
     for (final o in blocks)
@@ -17,7 +19,7 @@ DaySummary daySummaryOf(List<Occurrence> blocks, DayShape shape) {
     done: active.where((o) => o.status == OccurrenceStatus.done).length,
     total: active.length,
     plannedMinutes: planned,
-    freeMinutes: (shape.awakeMinutes - planned).clamp(0, shape.awakeMinutes),
+    freeMinutes: capacityOf(active, shape).freeMinutes,
   );
 }
 
