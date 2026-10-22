@@ -8,6 +8,7 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -18,7 +19,9 @@ import 'package:dottoday/domain/repositories/settings_repository.dart';
 import 'package:dottoday/domain/repositories/subtask_repository.dart';
 import 'package:dottoday/domain/trash/trash_service.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
+import 'package:dottoday/domain/validation/entity_validators.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
+import 'package:dottoday/domain/writes/write_use_case.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -101,15 +104,45 @@ final class FakeSettingsRepository implements SettingsRepository {
   FakeSettingsRepository(this.profile);
 
   Profile profile;
+  final _changes = StreamController<void>.broadcast();
 
   @override
-  Stream<Profile?> watchProfile(String userId) => Stream.value(profile);
+  Stream<Profile?> watchProfile(String userId) async* {
+    yield profile;
+    yield* _changes.stream.map((_) => profile);
+  }
 
   @override
   Future<Profile?> findLocalProfile() async => profile;
 
   @override
-  Future<void> upsert(Profile profile) async => this.profile = profile;
+  Future<void> upsert(Profile profile) async {
+    this.profile = profile;
+    _changes.add(null);
+  }
+}
+
+/// The write path over the fakes: validates settings like the real one
+/// (refusing an invalid batch whole), then stores profile and occurrences.
+final class FakeWriteUseCase implements WriteUseCase {
+  FakeWriteUseCase(this.settings, this.occurrences);
+
+  final FakeSettingsRepository settings;
+  final FakeOccurrenceRepository occurrences;
+  final applied = <WriteBatch>[];
+
+  @override
+  Future<Result<void, AppFailure>> apply(WriteBatch batch) async {
+    if (batch.profile case final p?) {
+      if (validateSettings(p.settings) case Err(:final failure)) {
+        return Err(failure);
+      }
+    }
+    applied.add(batch);
+    if (batch.profile case final p?) await settings.upsert(p);
+    occurrences.put(batch.occurrences);
+    return const Ok(null);
+  }
 }
 
 final class FakeSubtaskRepository implements SubtaskRepository {
@@ -281,7 +314,11 @@ List<Override> timelineOverrides({
   final repo = occurrences ?? FakeOccurrenceRepository();
   final subs = subtasks ?? FakeSubtaskRepository();
   final undo = FakeUndoService(repo, subs);
+  final settingsRepo = FakeSettingsRepository(p);
   return [
+    writeUseCaseProvider.overrideWithValue(
+      FakeWriteUseCase(settingsRepo, repo),
+    ),
     subtaskRepositoryProvider.overrideWithValue(subs),
     seriesRepositoryProvider.overrideWithValue(FakeSeriesRepository(series)),
     undoServiceProvider.overrideWithValue(undo),
@@ -289,7 +326,7 @@ List<Override> timelineOverrides({
     clockProvider.overrideWithValue(FakeClock(now)),
     minuteTickProvider.overrideWith((ref) => minuteTicks ?? Stream.value(now)),
     localProfileProvider.overrideWith((ref) async => p),
-    settingsRepositoryProvider.overrideWithValue(FakeSettingsRepository(p)),
+    settingsRepositoryProvider.overrideWithValue(settingsRepo),
     occurrenceRepositoryProvider.overrideWithValue(repo),
     searchRepositoryProvider.overrideWithValue(FakeSearchRepository(repo)),
     recentSearchesProvider.overrideWith(
@@ -321,13 +358,26 @@ final class FakeTrashService implements TrashService {
   );
 
   @override
-  Stream<List<Occurrence>> watchTrash(String userId) => const Stream.empty();
+  Stream<List<Occurrence>> watchTrash(String userId) => occurrences
+      .watchInbox(userId)
+      .map(
+        (_) => [
+          for (final o in occurrences.rows)
+            if (o.deletedAt != null && o.userId == userId) o,
+        ],
+      );
 
   @override
   Future<Result<void, AppFailure>> restoreOccurrences(
     String userId,
     Set<String> ids,
-  ) async => const Ok(null);
+  ) async {
+    occurrences.put([
+      for (final o in occurrences.rows)
+        if (ids.contains(o.id)) o.copyWith(deletedAt: null),
+    ]);
+    return const Ok(null);
+  }
 
   @override
   Future<Result<int, AppFailure>> purgeExpired(String userId) async =>

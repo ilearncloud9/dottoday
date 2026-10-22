@@ -52,6 +52,7 @@ class DayPage extends ConsumerWidget {
         nowUtc: now,
         format: format,
         subtasks: subtasks ?? const {},
+        showFreeTime: data.settings.showFreeTime,
       ),
       actions: dayThreadActions(
         context,

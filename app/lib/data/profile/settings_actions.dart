@@ -39,3 +39,17 @@ Future<Result<void, AppFailure>> updateSettings(
       .read(writeUseCaseProvider)
       .apply(WriteBatch(userId: next.id, profile: next));
 }
+
+/// Applies [change] to the local profile itself (name, language).
+Future<Result<void, AppFailure>> updateProfile(
+  ProviderContainer ref,
+  Profile Function(Profile profile) change,
+) async {
+  final profile = await readProfile(ref);
+  final next = change(
+    profile,
+  ).copyWith(id: profile.id, updatedAt: ref.read(clockProvider).nowUtc());
+  return ref
+      .read(writeUseCaseProvider)
+      .apply(WriteBatch(userId: next.id, profile: next));
+}

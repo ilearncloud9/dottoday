@@ -2211,6 +2211,372 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{weekday} {date}'**
   String searchDayLabel(String weekday, String date);
+
+  /// Settings header subtitle without an account (sync arrives in M6).
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · on this device'**
+  String settingsLocalOnly(String name);
+
+  /// Settings header subtitle without a name or account.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device'**
+  String get settingsLocalOnlyNoName;
+
+  /// Screen-reader label of the Settings avatar.
+  ///
+  /// In en, this message translates to:
+  /// **'Account: {name}'**
+  String settingsAvatarLabel(String name);
+
+  /// Settings group caption (shown uppercase).
+  ///
+  /// In en, this message translates to:
+  /// **'Day shape'**
+  String get settingsDayShape;
+
+  /// DAY SHAPE: length of the waking day, '15 h awake'.
+  ///
+  /// In en, this message translates to:
+  /// **'{length} awake'**
+  String settingsAwake(String length);
+
+  /// Settings row; also the DAY SHAPE handle's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up'**
+  String get settingsWakeUp;
+
+  /// Settings row; also the DAY SHAPE handle's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Bedtime'**
+  String get settingsBedtime;
+
+  /// Settings row: per-weekday Wake Up / Bedtime.
+  ///
+  /// In en, this message translates to:
+  /// **'Different days'**
+  String get settingsPerWeekday;
+
+  /// Per-weekday row value when no day differs.
+  ///
+  /// In en, this message translates to:
+  /// **'Same every day'**
+  String get settingsSameEveryDay;
+
+  /// Per-weekday row value: the days that differ, 'Sat, Sun'.
+  ///
+  /// In en, this message translates to:
+  /// **'{days}'**
+  String settingsCustomDays(String days);
+
+  /// Per-weekday sheet: reset this day to the everyday times.
+  ///
+  /// In en, this message translates to:
+  /// **'Same as every day'**
+  String get settingsUseEveryday;
+
+  /// Settings row.
+  ///
+  /// In en, this message translates to:
+  /// **'Week starts'**
+  String get settingsWeekStarts;
+
+  /// Settings row.
+  ///
+  /// In en, this message translates to:
+  /// **'Time format'**
+  String get settingsTimeFormat;
+
+  /// Time format option: follow the OS.
+  ///
+  /// In en, this message translates to:
+  /// **'Like this device ({example})'**
+  String settingsTimeSystem(String example);
+
+  /// Time format option.
+  ///
+  /// In en, this message translates to:
+  /// **'12 h'**
+  String get settingsTime12;
+
+  /// Time format option.
+  ///
+  /// In en, this message translates to:
+  /// **'24 h'**
+  String get settingsTime24;
+
+  /// Settings group caption.
+  ///
+  /// In en, this message translates to:
+  /// **'Planning'**
+  String get settingsPlanning;
+
+  /// Settings row.
+  ///
+  /// In en, this message translates to:
+  /// **'Default duration'**
+  String get settingsDefaultDuration;
+
+  /// Settings row: drag/resize step.
+  ///
+  /// In en, this message translates to:
+  /// **'Snap to'**
+  String get settingsSnap;
+
+  /// Snap value.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String settingsSnapValue(int minutes);
+
+  /// Settings row: default of the drag chip (M3b.6).
+  ///
+  /// In en, this message translates to:
+  /// **'Shift later tasks'**
+  String get settingsShiftLater;
+
+  /// Shift option: chip shown, off.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask each time'**
+  String get settingsShiftAsk;
+
+  /// Shift option: chip on.
+  ///
+  /// In en, this message translates to:
+  /// **'Always'**
+  String get settingsShiftAlways;
+
+  /// Shift option: no chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get settingsShiftNever;
+
+  /// Settings switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Show free time'**
+  String get settingsShowFree;
+
+  /// Subtitle of Show free time.
+  ///
+  /// In en, this message translates to:
+  /// **'Dotted gaps on the thread'**
+  String get settingsShowFreeDetail;
+
+  /// Settings switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Running-late nudge'**
+  String get settingsLateNudge;
+
+  /// Subtitle of Running-late nudge.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer to shift the rest of the day'**
+  String get settingsLateNudgeDetail;
+
+  /// Settings switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Roll unfinished to tomorrow'**
+  String get settingsRoll;
+
+  /// Subtitle of Roll unfinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Otherwise they return to the Inbox'**
+  String get settingsRollDetail;
+
+  /// Settings group caption.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get settingsReminders;
+
+  /// Settings row: the default alert.
+  ///
+  /// In en, this message translates to:
+  /// **'Task starts'**
+  String get settingsTaskStarts;
+
+  /// Task starts option.
+  ///
+  /// In en, this message translates to:
+  /// **'No alert'**
+  String get settingsAlertNone;
+
+  /// Task starts option.
+  ///
+  /// In en, this message translates to:
+  /// **'When it starts'**
+  String get settingsAlertAtStart;
+
+  /// Task starts option.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min before'**
+  String settingsAlertBefore(int minutes);
+
+  /// Settings switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Bedtime reminder'**
+  String get settingsBedtimeReminder;
+
+  /// Subtitle of Bedtime reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'At {time}, with tomorrow\'s first task'**
+  String settingsBedtimeReminderDetail(String time);
+
+  /// Settings group caption.
+  ///
+  /// In en, this message translates to:
+  /// **'Look'**
+  String get settingsLook;
+
+  /// Settings row.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settingsTheme;
+
+  /// Theme option.
+  ///
+  /// In en, this message translates to:
+  /// **'Like this device'**
+  String get settingsThemeSystem;
+
+  /// Theme option.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get settingsThemeLight;
+
+  /// Theme option.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get settingsThemeDark;
+
+  /// Settings row: accent colour.
+  ///
+  /// In en, this message translates to:
+  /// **'Accent'**
+  String get settingsAccent;
+
+  /// Settings row.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// Settings group caption.
+  ///
+  /// In en, this message translates to:
+  /// **'Data'**
+  String get settingsData;
+
+  /// Settings row; also the Trash sheet's title.
+  ///
+  /// In en, this message translates to:
+  /// **'Trash'**
+  String get settingsTrash;
+
+  /// Subtitle of Trash.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted tasks stay 30 days'**
+  String get settingsTrashDetail;
+
+  /// Trash sheet with nothing in it.
+  ///
+  /// In en, this message translates to:
+  /// **'Trash is empty'**
+  String get settingsTrashEmpty;
+
+  /// Trash: put a task back.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get settingsRestore;
+
+  /// Snackbar after restoring from Trash.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} restored'**
+  String settingsRestored(String title);
+
+  /// Settings group caption.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settingsAbout;
+
+  /// Settings row.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get settingsVersion;
+
+  /// Settings row; also the sheet's title.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new'**
+  String get settingsWhatsNew;
+
+  /// What's new sheet body for this version.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a task in two taps, with suggestions from your habits. Pick a time on your day\'s thread and see what it overlaps. Keep your own duration presets. Paste a list to add several tasks at once. Search everything you\'ve planned, done tasks too.'**
+  String get settingsWhatsNewBody;
+
+  /// Settings row; also the sheet's title.
+  ///
+  /// In en, this message translates to:
+  /// **'Send feedback'**
+  String get settingsFeedback;
+
+  /// Feedback sheet intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens an email draft. Nothing about your tasks is included.'**
+  String get settingsFeedbackIntro;
+
+  /// Feedback switch: diagnostics opt-in.
+  ///
+  /// In en, this message translates to:
+  /// **'Add app version and device type'**
+  String get settingsFeedbackDiagnostics;
+
+  /// Feedback sheet primary button.
+  ///
+  /// In en, this message translates to:
+  /// **'Write email'**
+  String get settingsFeedbackWrite;
+
+  /// Subject of the feedback email.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday feedback'**
+  String get settingsFeedbackSubject;
+
+  /// Snackbar when the mail draft can't open.
+  ///
+  /// In en, this message translates to:
+  /// **'No mail app is set up on this device.'**
+  String get settingsFeedbackNoMail;
+
+  /// Screen-reader label of an accent swatch.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} accent'**
+  String settingsAccentLabel(String name);
 }
 
 class _AppLocalizationsDelegate

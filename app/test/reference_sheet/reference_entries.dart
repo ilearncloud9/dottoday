@@ -166,4 +166,17 @@ const sheetEntries = <SheetEntry>[
     reference: 'A-android-search.png',
     crop: Rect.fromLTRB(0, 0, 824, 1830),
   ),
+  SheetEntry(
+    name: 'Settings P1 · light',
+    golden: 'test/features/settings/goldens/settings_light_compact_2x.png',
+    reference: 'A-ios-settings.png',
+    crop: Rect.fromLTRB(0, 0, 780, 1688),
+  ),
+  SheetEntry(
+    name: 'Settings P1 · Android dark',
+    golden:
+        'test/features/settings/goldens/settings_android_dark_compact_2x.png',
+    reference: 'A-android-settings.png',
+    crop: Rect.fromLTRB(0, 0, 824, 1830),
+  ),
 ];

@@ -44,6 +44,7 @@ List<ThreadEntry> threadEntries({
   required DateTime nowUtc,
   required ThreadFormat format,
   Map<String, ({int done, int total})> subtasks = const {},
+  bool showFreeTime = true,
 }) {
   final sorted = [
     for (final o in blocks)
@@ -52,7 +53,7 @@ List<ThreadEntry> threadEntries({
   final out = <ThreadEntry>[ThreadCap.wake(format.time(shape.wakeUtc))];
   var cursor = shape.wakeUtc;
   for (final (i, o) in sorted.indexed) {
-    _gap(out, cursor, o.startUtc!, nowUtc, format);
+    _gap(out, cursor, o.startUtc!, nowUtc, format, showFreeTime);
     final task = _task(o, nowUtc, format, subtasks[o.id]);
     out.add(
       ThreadTaskEntry(
@@ -63,7 +64,7 @@ List<ThreadEntry> threadEntries({
     );
     if (o.endUtc!.isAfter(cursor)) cursor = o.endUtc!;
   }
-  _gap(out, cursor, shape.bedUtc, nowUtc, format);
+  _gap(out, cursor, shape.bedUtc, nowUtc, format, showFreeTime);
   out.add(ThreadCap.bed(format.time(shape.bedUtc)));
   return out;
 }
@@ -74,6 +75,7 @@ void _gap(
   DateTime to,
   DateTime now,
   ThreadFormat format,
+  bool labelled,
 ) {
   final minutes = to.difference(from).inMinutes;
   if (minutes < minGapMinutes) return;
@@ -84,6 +86,7 @@ void _gap(
       startLabel: format.time(from),
       addable: to.isAfter(now),
       startUtc: from,
+      labelled: labelled,
       nowFraction: inside
           ? now.difference(from).inSeconds / to.difference(from).inSeconds
           : null,

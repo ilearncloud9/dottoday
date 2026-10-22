@@ -1,5 +1,6 @@
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread.dart';
+import 'package:dottoday/shared/dot/thread_pieces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -128,4 +129,24 @@ void main() {
       await expectA11yGuidelines(tester);
     });
   }
+
+  testWidgets('Settings › Show free time off: no gap label (M3d.2)', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      testApp(
+        const Material(
+          child: GapRow(
+            gap: ThreadGap(
+              minutes: 60,
+              startLabel: '11:30',
+              addable: true,
+              labelled: false,
+            ),
+          ),
+        ),
+      ),
+    );
+    expect(find.textContaining('free'), findsNothing);
+  });
 }

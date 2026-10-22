@@ -91,7 +91,11 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   "firstDayOfWeek": 1,
   "theme": "system",
   "accent": "indigo",
-  "reduceMotion": null
+  "reduceMotion": null,
+  "showFreeTime": true,
+  "runningLateNudge": true,
+  "rollUnfinished": false,
+  "bedtimeReminder": true
 }
 ```
 
@@ -109,6 +113,10 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
 - Clarified in M3c.3: `durationPresets` are the Add flow's duration chips — 1–12 distinct lengths of
   5–1440 min, sorted; absent means the default list. Checked by the client validator; the server's
   `validate_settings()` ignores keys it doesn't know, so older rows stay valid.
+- Clarified in M3d.2: `showFreeTime` (the "N free · add here" gaps on the thread), `runningLateNudge`
+  (M3f.5 offers to shift the rest), `rollUnfinished` (Day review moves unfinished tasks to tomorrow
+  instead of the Inbox, M3f.5) and `bedtimeReminder` (M3d.3/M5) are plain booleans; absent keys take
+  the defaults above, so older rows stay valid and the server check is unchanged.
 - Server enforces with CHECK constraints and a `validate_settings()` function; client with a Zod-like
   Dart validator in `domain/validation`.
 

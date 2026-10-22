@@ -2250,5 +2250,299 @@
         "type": "String"
       }
     }
+  },
+  "settingsLocalOnly": "{name} · on this device",
+  "@settingsLocalOnly": {
+    "description": "Settings header subtitle without an account (sync arrives in M6).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLocalOnlyNoName": "On this device",
+  "@settingsLocalOnlyNoName": {
+    "description": "Settings header subtitle without a name or account."
+  },
+  "settingsAvatarLabel": "Account: {name}",
+  "@settingsAvatarLabel": {
+    "description": "Screen-reader label of the Settings avatar.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDayShape": "Day shape",
+  "@settingsDayShape": {
+    "description": "Settings group caption (shown uppercase)."
+  },
+  "settingsAwake": "{length} awake",
+  "@settingsAwake": {
+    "description": "DAY SHAPE: length of the waking day, '15 h awake'.",
+    "placeholders": {
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsWakeUp": "Wake Up",
+  "@settingsWakeUp": {
+    "description": "Settings row; also the DAY SHAPE handle's name."
+  },
+  "settingsBedtime": "Bedtime",
+  "@settingsBedtime": {
+    "description": "Settings row; also the DAY SHAPE handle's name."
+  },
+  "settingsPerWeekday": "Different days",
+  "@settingsPerWeekday": {
+    "description": "Settings row: per-weekday Wake Up / Bedtime."
+  },
+  "settingsSameEveryDay": "Same every day",
+  "@settingsSameEveryDay": {
+    "description": "Per-weekday row value when no day differs."
+  },
+  "settingsCustomDays": "{days}",
+  "@settingsCustomDays": {
+    "description": "Per-weekday row value: the days that differ, 'Sat, Sun'.",
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUseEveryday": "Same as every day",
+  "@settingsUseEveryday": {
+    "description": "Per-weekday sheet: reset this day to the everyday times."
+  },
+  "settingsWeekStarts": "Week starts",
+  "@settingsWeekStarts": {
+    "description": "Settings row."
+  },
+  "settingsTimeFormat": "Time format",
+  "@settingsTimeFormat": {
+    "description": "Settings row."
+  },
+  "settingsTimeSystem": "Like this device ({example})",
+  "@settingsTimeSystem": {
+    "description": "Time format option: follow the OS.",
+    "placeholders": {
+      "example": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTime12": "12 h",
+  "@settingsTime12": {
+    "description": "Time format option."
+  },
+  "settingsTime24": "24 h",
+  "@settingsTime24": {
+    "description": "Time format option."
+  },
+  "settingsPlanning": "Planning",
+  "@settingsPlanning": {
+    "description": "Settings group caption."
+  },
+  "settingsDefaultDuration": "Default duration",
+  "@settingsDefaultDuration": {
+    "description": "Settings row."
+  },
+  "settingsSnap": "Snap to",
+  "@settingsSnap": {
+    "description": "Settings row: drag/resize step."
+  },
+  "settingsSnapValue": "{minutes} min",
+  "@settingsSnapValue": {
+    "description": "Snap value.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsShiftLater": "Shift later tasks",
+  "@settingsShiftLater": {
+    "description": "Settings row: default of the drag chip (M3b.6)."
+  },
+  "settingsShiftAsk": "Ask each time",
+  "@settingsShiftAsk": {
+    "description": "Shift option: chip shown, off."
+  },
+  "settingsShiftAlways": "Always",
+  "@settingsShiftAlways": {
+    "description": "Shift option: chip on."
+  },
+  "settingsShiftNever": "Never",
+  "@settingsShiftNever": {
+    "description": "Shift option: no chip."
+  },
+  "settingsShowFree": "Show free time",
+  "@settingsShowFree": {
+    "description": "Settings switch."
+  },
+  "settingsShowFreeDetail": "Dotted gaps on the thread",
+  "@settingsShowFreeDetail": {
+    "description": "Subtitle of Show free time."
+  },
+  "settingsLateNudge": "Running-late nudge",
+  "@settingsLateNudge": {
+    "description": "Settings switch."
+  },
+  "settingsLateNudgeDetail": "Offer to shift the rest of the day",
+  "@settingsLateNudgeDetail": {
+    "description": "Subtitle of Running-late nudge."
+  },
+  "settingsRoll": "Roll unfinished to tomorrow",
+  "@settingsRoll": {
+    "description": "Settings switch."
+  },
+  "settingsRollDetail": "Otherwise they return to the Inbox",
+  "@settingsRollDetail": {
+    "description": "Subtitle of Roll unfinished."
+  },
+  "settingsReminders": "Reminders",
+  "@settingsReminders": {
+    "description": "Settings group caption."
+  },
+  "settingsTaskStarts": "Task starts",
+  "@settingsTaskStarts": {
+    "description": "Settings row: the default alert."
+  },
+  "settingsAlertNone": "No alert",
+  "@settingsAlertNone": {
+    "description": "Task starts option."
+  },
+  "settingsAlertAtStart": "When it starts",
+  "@settingsAlertAtStart": {
+    "description": "Task starts option."
+  },
+  "settingsAlertBefore": "{minutes} min before",
+  "@settingsAlertBefore": {
+    "description": "Task starts option.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsBedtimeReminder": "Bedtime reminder",
+  "@settingsBedtimeReminder": {
+    "description": "Settings switch."
+  },
+  "settingsBedtimeReminderDetail": "At {time}, with tomorrow's first task",
+  "@settingsBedtimeReminderDetail": {
+    "description": "Subtitle of Bedtime reminder.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLook": "Look",
+  "@settingsLook": {
+    "description": "Settings group caption."
+  },
+  "settingsTheme": "Theme",
+  "@settingsTheme": {
+    "description": "Settings row."
+  },
+  "settingsThemeSystem": "Like this device",
+  "@settingsThemeSystem": {
+    "description": "Theme option."
+  },
+  "settingsThemeLight": "Light",
+  "@settingsThemeLight": {
+    "description": "Theme option."
+  },
+  "settingsThemeDark": "Dark",
+  "@settingsThemeDark": {
+    "description": "Theme option."
+  },
+  "settingsAccent": "Accent",
+  "@settingsAccent": {
+    "description": "Settings row: accent colour."
+  },
+  "settingsLanguage": "Language",
+  "@settingsLanguage": {
+    "description": "Settings row."
+  },
+  "settingsData": "Data",
+  "@settingsData": {
+    "description": "Settings group caption."
+  },
+  "settingsTrash": "Trash",
+  "@settingsTrash": {
+    "description": "Settings row; also the Trash sheet's title."
+  },
+  "settingsTrashDetail": "Deleted tasks stay 30 days",
+  "@settingsTrashDetail": {
+    "description": "Subtitle of Trash."
+  },
+  "settingsTrashEmpty": "Trash is empty",
+  "@settingsTrashEmpty": {
+    "description": "Trash sheet with nothing in it."
+  },
+  "settingsRestore": "Restore",
+  "@settingsRestore": {
+    "description": "Trash: put a task back."
+  },
+  "settingsRestored": "{title} restored",
+  "@settingsRestored": {
+    "description": "Snackbar after restoring from Trash.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAbout": "About",
+  "@settingsAbout": {
+    "description": "Settings group caption."
+  },
+  "settingsVersion": "Version",
+  "@settingsVersion": {
+    "description": "Settings row."
+  },
+  "settingsWhatsNew": "What's new",
+  "@settingsWhatsNew": {
+    "description": "Settings row; also the sheet's title."
+  },
+  "settingsWhatsNewBody": "Add a task in two taps, with suggestions from your habits. Pick a time on your day's thread and see what it overlaps. Keep your own duration presets. Paste a list to add several tasks at once. Search everything you've planned, done tasks too.",
+  "@settingsWhatsNewBody": {
+    "description": "What's new sheet body for this version."
+  },
+  "settingsFeedback": "Send feedback",
+  "@settingsFeedback": {
+    "description": "Settings row; also the sheet's title."
+  },
+  "settingsFeedbackIntro": "Opens an email draft. Nothing about your tasks is included.",
+  "@settingsFeedbackIntro": {
+    "description": "Feedback sheet intro."
+  },
+  "settingsFeedbackDiagnostics": "Add app version and device type",
+  "@settingsFeedbackDiagnostics": {
+    "description": "Feedback switch: diagnostics opt-in."
+  },
+  "settingsFeedbackWrite": "Write email",
+  "@settingsFeedbackWrite": {
+    "description": "Feedback sheet primary button."
+  },
+  "settingsFeedbackSubject": "Dottoday feedback",
+  "@settingsFeedbackSubject": {
+    "description": "Subject of the feedback email."
+  },
+  "settingsFeedbackNoMail": "No mail app is set up on this device.",
+  "@settingsFeedbackNoMail": {
+    "description": "Snackbar when the mail draft can't open."
+  },
+  "settingsAccentLabel": "{name} accent",
+  "@settingsAccentLabel": {
+    "description": "Screen-reader label of an accent swatch.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

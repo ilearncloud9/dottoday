@@ -52,3 +52,4 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Type a time sheet (`TimeInput` + Done) | §5.3, R-20 | `picker_type_time_*` |
 | Duration sheet's "Or type a length" field | §3 `DurationSheet`, R-16 | `add_duration_*` |
 | Search empty (hint + recent) and no results (with Show all) | §5.3 "Search empty and no-results" | `search_empty_*`, `search_no_results_*` |
+| Settings › Different days (per-weekday sliders), Send feedback sheet, Trash sheet | §5.3, PRD F1/F8/F11 | `settings_weekdays_*`, `settings_feedback_*` |

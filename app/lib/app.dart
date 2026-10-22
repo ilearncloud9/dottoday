@@ -6,6 +6,8 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/inbox/schedule_from_anywhere.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +21,23 @@ class DottodayApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    // Settings › Look and Language apply at once (03 §3.7).
+    final profile = ref.watch(currentProfileProvider).value;
+    final settings = profile?.settings;
+    final accent = DotAccent.fromKey(settings?.accent);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (context) => context.l10n.appTitle,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: DotTheme.light(),
-      darkTheme: DotTheme.dark(),
+      locale: appLocale(profile?.locale),
+      theme: DotTheme.light(accent),
+      darkTheme: DotTheme.dark(accent),
+      themeMode: switch (settings?.theme) {
+        ThemePreference.light => ThemeMode.light,
+        ThemePreference.dark => ThemeMode.dark,
+        ThemePreference.system || null => ThemeMode.system,
+      },
       routerConfig: router,
       // Above all routes so shortcuts work wherever focus is (M0.13).
       builder: (context, child) => AppLifecycleScope(
@@ -50,6 +62,16 @@ class DottodayApp extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// The app's language for a stored `profiles.locale`: a supported one,
+/// else the device's (null).
+Locale? appLocale(String? code) {
+  if (code == null) return null;
+  final match = AppLocalizations.supportedLocales.where(
+    (l) => l.languageCode == code,
+  );
+  return match.firstOrNull;
 }
 
 /// Add from anywhere (the add button and ⌘N share this, docs/02 F2). The

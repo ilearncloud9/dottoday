@@ -1,0 +1,272 @@
+import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/entities/alert.dart';
+import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/shared/dot/day_shape_slider.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:timezone/data/latest.dart' as tz_data;
+
+import '../../support/a11y.dart';
+import '../../support/timeline_fakes.dart';
+import 'settings_harness.dart';
+
+Future<void> _tapRow(WidgetTester tester, String title) async {
+  final row = find.text(title).first;
+  await tester.ensureVisible(row);
+  await tester.pumpAndSettle();
+  await tester.tap(row);
+  await tester.pumpAndSettle();
+}
+
+/// Switch.adaptive draws a Cupertino switch on iPhone (§4 switch idiom).
+Finder _cupertinoSwitches() => find.byType(CupertinoSwitch);
+
+void main() {
+  setUpAll(tz_data.initializeTimeZones);
+
+  testWidgets('header, groups and current values', (tester) async {
+    await pumpSettings(tester);
+    for (final text in [
+      'Settings',
+      'Kody · on this device',
+      'DAY SHAPE',
+      '15 h awake',
+      'Monday',
+      '24 h',
+      'PLANNING',
+      '30 min',
+      '5 min',
+      'Ask each time',
+      'REMINDERS',
+      '10 min before',
+      'At 22:00, with tomorrow\'s first task',
+      'LOOK',
+      'Like this device',
+      'English',
+      'DATA',
+      'ABOUT',
+      '0.1.0 (1)',
+    ]) {
+      expect(find.text(text), findsWidgets, reason: text);
+    }
+    // Wake Up / Bedtime under the handles and on their rows.
+    expect(find.text('07:00'), findsNWidgets(2));
+    expect(find.text('22:00'), findsNWidgets(2));
+  });
+
+  testWidgets('switches write at once; the platform idiom draws them', (
+    tester,
+  ) async {
+    final h = await pumpSettings(tester);
+    expect(_cupertinoSwitches(), findsNWidgets(4));
+    await _tapRow(tester, 'Show free time');
+    expect((await storedSettings(h)).showFreeTime, isFalse);
+    await _tapRow(tester, 'Roll unfinished to tomorrow');
+    expect((await storedSettings(h)).rollUnfinished, isTrue);
+  });
+
+  testWidgets('Android draws Material switches', (tester) async {
+    await pumpSettings(tester, platform: TargetPlatform.android);
+    expect(_cupertinoSwitches(), findsNothing);
+    expect(find.byType(Switch), findsNWidgets(4));
+  });
+
+  testWidgets('choices: week start, time format, shift, snap, alert, theme', (
+    tester,
+  ) async {
+    final h = await pumpSettings(tester);
+    Future<void> choose(String row, String option) async {
+      await _tapRow(tester, row);
+      await tester.tap(find.text(option).last);
+      await tester.pumpAndSettle();
+    }
+
+    await choose('Week starts', 'Sunday');
+    await choose('Time format', '12 h');
+    await choose('Shift later tasks', 'Never');
+    await choose('Snap to', '15 min');
+    await choose('Task starts', 'No alert');
+    await choose('Theme', 'Dark');
+    final s = await storedSettings(h);
+    expect(s.firstDayOfWeek, 7);
+    expect(s.use24h, isFalse);
+    expect(s.shiftFollowers, ShiftFollowersPolicy.never);
+    expect(s.snapMinutes, 15);
+    expect(s.defaultAlerts, isEmpty);
+    expect(s.theme, ThemePreference.dark);
+  });
+
+  testWidgets('dismissing the time-format sheet changes nothing', (
+    tester,
+  ) async {
+    final h = await pumpSettings(tester);
+    await _tapRow(tester, 'Time format');
+    await tester.tapAt(const Offset(10, 10));
+    await tester.pumpAndSettle();
+    expect((await storedSettings(h)).use24h, isTrue);
+  });
+
+  testWidgets('Task starts "When it starts" stores an at-start alert', (
+    tester,
+  ) async {
+    final h = await pumpSettings(tester);
+    await _tapRow(tester, 'Task starts');
+    await tester.tap(find.text('When it starts'));
+    await tester.pumpAndSettle();
+    expect((await storedSettings(h)).defaultAlerts, [
+      const Alert(kind: AlertKind.atStart),
+    ]);
+  });
+
+  testWidgets('Wake Up typed moves every weekday (R-20)', (tester) async {
+    final h = await pumpSettings(tester);
+    await _tapRow(tester, 'Wake Up');
+    await tester.enterText(find.byType(TextField).last, '630');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    final s = await storedSettings(h);
+    for (final d in Weekday.values) {
+      expect(s.boundaryFor(d).start, '06:30');
+    }
+    expect(find.text('15 h 30 awake'), findsOneWidget);
+  });
+
+  testWidgets('slider: the screen reader steps a handle; a drag is one write', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    final h = await pumpSettings(tester);
+    tester.semantics.increase(find.semantics.byLabel('Wake Up'));
+    await tester.pumpAndSettle();
+    expect((await storedSettings(h)).boundaryFor(Weekday.mon).start, '07:15');
+    final writes = h.container.read(writeUseCaseProvider) as FakeWriteUseCase;
+    final before = writes.applied.length;
+    await tester.drag(
+      find
+          .descendant(
+            of: find.byType(DayShapeSlider),
+            matching: find.byType(GestureDetector),
+          )
+          .first,
+      const Offset(-80, 0),
+    );
+    await tester.pumpAndSettle();
+    expect(writes.applied.length, before + 1);
+    handle.dispose();
+  });
+
+  testWidgets('Different days: a custom Saturday shows on the row', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    final h = await pumpSettings(tester);
+    await _tapRow(tester, 'Different days');
+    // The sheet's seven Bedtime handles, Monday first (week starts Monday).
+    final bedtimes = find.semantics.byPredicate((n) => n.label == 'Bedtime');
+    expect(bedtimes.evaluate(), hasLength(7));
+    tester.semantics.increase(bedtimes.at(5));
+    await tester.pumpAndSettle();
+    final s = await storedSettings(h);
+    expect(s.boundaryFor(Weekday.sat).end, '22:15');
+    expect(s.boundaryFor(Weekday.mon).end, '22:00');
+    expect(find.text('Same as every day'), findsOneWidget);
+    await tester.tap(find.text('Same as every day'));
+    await tester.pumpAndSettle();
+    expect((await storedSettings(h)).boundaryFor(Weekday.sat).end, '22:00');
+    handle.dispose();
+  });
+
+  testWidgets('accent swatch and language', (tester) async {
+    final h = await pumpSettings(tester);
+    final teal = find.bySemanticsLabel('Teal accent');
+    await tester.ensureVisible(teal);
+    await tester.tap(teal);
+    await tester.pumpAndSettle();
+    expect((await storedSettings(h)).accent, 'teal');
+    await _tapRow(tester, 'Language');
+    await tester.tap(find.text('English').last);
+    await tester.pumpAndSettle();
+    expect((await storedProfile(h)).locale, 'en');
+  });
+
+  testWidgets('feedback: a mail draft, diagnostics only when opted in', (
+    tester,
+  ) async {
+    final h = await pumpSettings(tester);
+    await _tapRow(tester, 'Send feedback');
+    expect(
+      find.text('Opens an email draft. Nothing about your tasks is included.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Write email'));
+    await tester.pumpAndSettle();
+    final plain = h.links.opened.single;
+    expect(plain.scheme, 'mailto');
+    expect(plain.query, contains('0.1.0'));
+    expect(plain.query, isNot(contains('body')));
+    await _tapRow(tester, 'Send feedback');
+    await tester.tap(find.text('Add app version and device type'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Write email'));
+    await tester.pumpAndSettle();
+    expect(
+      Uri.decodeComponent(h.links.opened.last.query),
+      contains('Platform'),
+    );
+  });
+
+  testWidgets('no mail app: says so', (tester) async {
+    final h = await pumpSettings(tester);
+    h.links.handled = false;
+    await _tapRow(tester, 'Send feedback');
+    await tester.tap(find.text('Write email'));
+    await tester.pumpAndSettle();
+    expect(find.text('No mail app is set up on this device.'), findsOneWidget);
+  });
+
+  testWidgets('Trash lists deleted tasks; Restore brings one back', (
+    tester,
+  ) async {
+    final gone = Occurrence(
+      id: '0199f0c0-0000-7000-8000-000000000001',
+      userId: testUserId,
+      title: 'Old plan',
+      tzId: 'Europe/Berlin',
+      durationMin: 30,
+      createdAt: DateTime.utc(2026, 10),
+      updatedAt: DateTime.utc(2026, 10),
+      deletedAt: DateTime.utc(2026, 10, 20),
+    );
+    final h = await pumpSettings(tester, rows: [gone]);
+    await _tapRow(tester, 'Trash');
+    expect(find.text('Old plan'), findsOneWidget);
+    await tester.tap(find.text('Restore'));
+    await tester.pumpAndSettle();
+    expect(h.occurrences.rows.single.deletedAt, isNull);
+    expect(find.text('Old plan restored'), findsOneWidget);
+  });
+
+  for (final mode in [ThemeMode.light, ThemeMode.dark]) {
+    for (final (name, size) in [
+      ('compact', const Size(390, 2600)),
+      ('expanded', const Size(1280, 2600)),
+    ]) {
+      testWidgets('a11y ${mode.name} $name', (tester) async {
+        await pumpSettings(tester, size: size, mode: mode);
+        await expectA11yGuidelines(tester);
+      });
+    }
+  }
+
+  testWidgets('200 % text: nothing overflows', (tester) async {
+    await pumpSettings(tester);
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
+}

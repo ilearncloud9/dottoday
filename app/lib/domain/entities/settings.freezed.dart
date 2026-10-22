@@ -289,7 +289,7 @@ as String,
 /// @nodoc
 mixin _$Settings {
 
- Map<Weekday, TimeWindow> get dayBoundaries; int get snapMinutes; ShiftFollowersPolicy get shiftFollowers; bool get includeCalendarInShift; int get defaultDurationMin; List<int> get durationPresets; List<Alert> get defaultAlerts; TimeWindow? get quietHours; bool? get use24h; int get firstDayOfWeek; ThemePreference get theme; String get accent; bool? get reduceMotion;
+ Map<Weekday, TimeWindow> get dayBoundaries; int get snapMinutes; ShiftFollowersPolicy get shiftFollowers; bool get includeCalendarInShift; int get defaultDurationMin; List<int> get durationPresets; List<Alert> get defaultAlerts; TimeWindow? get quietHours; bool? get use24h; int get firstDayOfWeek; ThemePreference get theme; String get accent; bool? get reduceMotion; bool get showFreeTime; bool get runningLateNudge; bool get rollUnfinished; bool get bedtimeReminder;
 /// Create a copy of Settings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -303,20 +303,20 @@ $SettingsCopyWith<Settings> get copyWith => _$SettingsCopyWithImpl<Settings>(thi
 @override
 bool operator ==(Object other) {
   final _this = this as Settings;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Settings&&const DeepCollectionEquality().equals(other.dayBoundaries, _this.dayBoundaries)&&(identical(other.snapMinutes, _this.snapMinutes) || other.snapMinutes == _this.snapMinutes)&&(identical(other.shiftFollowers, _this.shiftFollowers) || other.shiftFollowers == _this.shiftFollowers)&&(identical(other.includeCalendarInShift, _this.includeCalendarInShift) || other.includeCalendarInShift == _this.includeCalendarInShift)&&(identical(other.defaultDurationMin, _this.defaultDurationMin) || other.defaultDurationMin == _this.defaultDurationMin)&&const DeepCollectionEquality().equals(other.durationPresets, _this.durationPresets)&&const DeepCollectionEquality().equals(other.defaultAlerts, _this.defaultAlerts)&&(identical(other.quietHours, _this.quietHours) || other.quietHours == _this.quietHours)&&(identical(other.use24h, _this.use24h) || other.use24h == _this.use24h)&&(identical(other.firstDayOfWeek, _this.firstDayOfWeek) || other.firstDayOfWeek == _this.firstDayOfWeek)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.accent, _this.accent) || other.accent == _this.accent)&&(identical(other.reduceMotion, _this.reduceMotion) || other.reduceMotion == _this.reduceMotion));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Settings&&const DeepCollectionEquality().equals(other.dayBoundaries, _this.dayBoundaries)&&(identical(other.snapMinutes, _this.snapMinutes) || other.snapMinutes == _this.snapMinutes)&&(identical(other.shiftFollowers, _this.shiftFollowers) || other.shiftFollowers == _this.shiftFollowers)&&(identical(other.includeCalendarInShift, _this.includeCalendarInShift) || other.includeCalendarInShift == _this.includeCalendarInShift)&&(identical(other.defaultDurationMin, _this.defaultDurationMin) || other.defaultDurationMin == _this.defaultDurationMin)&&const DeepCollectionEquality().equals(other.durationPresets, _this.durationPresets)&&const DeepCollectionEquality().equals(other.defaultAlerts, _this.defaultAlerts)&&(identical(other.quietHours, _this.quietHours) || other.quietHours == _this.quietHours)&&(identical(other.use24h, _this.use24h) || other.use24h == _this.use24h)&&(identical(other.firstDayOfWeek, _this.firstDayOfWeek) || other.firstDayOfWeek == _this.firstDayOfWeek)&&(identical(other.theme, _this.theme) || other.theme == _this.theme)&&(identical(other.accent, _this.accent) || other.accent == _this.accent)&&(identical(other.reduceMotion, _this.reduceMotion) || other.reduceMotion == _this.reduceMotion)&&(identical(other.showFreeTime, _this.showFreeTime) || other.showFreeTime == _this.showFreeTime)&&(identical(other.runningLateNudge, _this.runningLateNudge) || other.runningLateNudge == _this.runningLateNudge)&&(identical(other.rollUnfinished, _this.rollUnfinished) || other.rollUnfinished == _this.rollUnfinished)&&(identical(other.bedtimeReminder, _this.bedtimeReminder) || other.bedtimeReminder == _this.bedtimeReminder));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Settings;
-  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.dayBoundaries),_this.snapMinutes,_this.shiftFollowers,_this.includeCalendarInShift,_this.defaultDurationMin,const DeepCollectionEquality().hash(_this.durationPresets),const DeepCollectionEquality().hash(_this.defaultAlerts),_this.quietHours,_this.use24h,_this.firstDayOfWeek,_this.theme,_this.accent,_this.reduceMotion);
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.dayBoundaries),_this.snapMinutes,_this.shiftFollowers,_this.includeCalendarInShift,_this.defaultDurationMin,const DeepCollectionEquality().hash(_this.durationPresets),const DeepCollectionEquality().hash(_this.defaultAlerts),_this.quietHours,_this.use24h,_this.firstDayOfWeek,_this.theme,_this.accent,_this.reduceMotion,_this.showFreeTime,_this.runningLateNudge,_this.rollUnfinished,_this.bedtimeReminder);
 }
 
 @override
 String toString() {
   final _this = this as Settings;
-  return 'Settings(dayBoundaries: ${_this.dayBoundaries}, snapMinutes: ${_this.snapMinutes}, shiftFollowers: ${_this.shiftFollowers}, includeCalendarInShift: ${_this.includeCalendarInShift}, defaultDurationMin: ${_this.defaultDurationMin}, durationPresets: ${_this.durationPresets}, defaultAlerts: ${_this.defaultAlerts}, quietHours: ${_this.quietHours}, use24h: ${_this.use24h}, firstDayOfWeek: ${_this.firstDayOfWeek}, theme: ${_this.theme}, accent: ${_this.accent}, reduceMotion: ${_this.reduceMotion})';
+  return 'Settings(dayBoundaries: ${_this.dayBoundaries}, snapMinutes: ${_this.snapMinutes}, shiftFollowers: ${_this.shiftFollowers}, includeCalendarInShift: ${_this.includeCalendarInShift}, defaultDurationMin: ${_this.defaultDurationMin}, durationPresets: ${_this.durationPresets}, defaultAlerts: ${_this.defaultAlerts}, quietHours: ${_this.quietHours}, use24h: ${_this.use24h}, firstDayOfWeek: ${_this.firstDayOfWeek}, theme: ${_this.theme}, accent: ${_this.accent}, reduceMotion: ${_this.reduceMotion}, showFreeTime: ${_this.showFreeTime}, runningLateNudge: ${_this.runningLateNudge}, rollUnfinished: ${_this.rollUnfinished}, bedtimeReminder: ${_this.bedtimeReminder})';
 }
 
 
@@ -327,7 +327,7 @@ abstract mixin class $SettingsCopyWith<$Res>  {
   factory $SettingsCopyWith(Settings value, $Res Function(Settings) _then) = _$SettingsCopyWithImpl;
 @useResult
 $Res call({
- Map<Weekday, TimeWindow> dayBoundaries, int snapMinutes, ShiftFollowersPolicy shiftFollowers, bool includeCalendarInShift, int defaultDurationMin, List<int> durationPresets, List<Alert> defaultAlerts, TimeWindow? quietHours, bool? use24h, int firstDayOfWeek, ThemePreference theme, String accent, bool? reduceMotion
+ Map<Weekday, TimeWindow> dayBoundaries, int snapMinutes, ShiftFollowersPolicy shiftFollowers, bool includeCalendarInShift, int defaultDurationMin, List<int> durationPresets, List<Alert> defaultAlerts, TimeWindow? quietHours, bool? use24h, int firstDayOfWeek, ThemePreference theme, String accent, bool? reduceMotion, bool showFreeTime, bool runningLateNudge, bool rollUnfinished, bool bedtimeReminder
 });
 
 
@@ -344,7 +344,7 @@ class _$SettingsCopyWithImpl<$Res>
 
 /// Create a copy of Settings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? dayBoundaries = null,Object? snapMinutes = null,Object? shiftFollowers = null,Object? includeCalendarInShift = null,Object? defaultDurationMin = null,Object? durationPresets = null,Object? defaultAlerts = null,Object? quietHours = freezed,Object? use24h = freezed,Object? firstDayOfWeek = null,Object? theme = null,Object? accent = null,Object? reduceMotion = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? dayBoundaries = null,Object? snapMinutes = null,Object? shiftFollowers = null,Object? includeCalendarInShift = null,Object? defaultDurationMin = null,Object? durationPresets = null,Object? defaultAlerts = null,Object? quietHours = freezed,Object? use24h = freezed,Object? firstDayOfWeek = null,Object? theme = null,Object? accent = null,Object? reduceMotion = freezed,Object? showFreeTime = null,Object? runningLateNudge = null,Object? rollUnfinished = null,Object? bedtimeReminder = null,}) {
   return _then(Settings(
 dayBoundaries: null == dayBoundaries ? _self.dayBoundaries : dayBoundaries // ignore: cast_nullable_to_non_nullable
 as Map<Weekday, TimeWindow>,snapMinutes: null == snapMinutes ? _self.snapMinutes : snapMinutes // ignore: cast_nullable_to_non_nullable
@@ -359,7 +359,11 @@ as bool?,firstDayOfWeek: null == firstDayOfWeek ? _self.firstDayOfWeek : firstDa
 as int,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
 as ThemePreference,accent: null == accent ? _self.accent : accent // ignore: cast_nullable_to_non_nullable
 as String,reduceMotion: freezed == reduceMotion ? _self.reduceMotion : reduceMotion // ignore: cast_nullable_to_non_nullable
-as bool?,
+as bool?,showFreeTime: null == showFreeTime ? _self.showFreeTime : showFreeTime // ignore: cast_nullable_to_non_nullable
+as bool,runningLateNudge: null == runningLateNudge ? _self.runningLateNudge : runningLateNudge // ignore: cast_nullable_to_non_nullable
+as bool,rollUnfinished: null == rollUnfinished ? _self.rollUnfinished : rollUnfinished // ignore: cast_nullable_to_non_nullable
+as bool,bedtimeReminder: null == bedtimeReminder ? _self.bedtimeReminder : bedtimeReminder // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of Settings
@@ -456,10 +460,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Map<Weekday, TimeWindow> dayBoundaries,  int snapMinutes,  ShiftFollowersPolicy shiftFollowers,  bool includeCalendarInShift,  int defaultDurationMin,  List<int> durationPresets,  List<Alert> defaultAlerts,  TimeWindow? quietHours,  bool? use24h,  int firstDayOfWeek,  ThemePreference theme,  String accent,  bool? reduceMotion)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Map<Weekday, TimeWindow> dayBoundaries,  int snapMinutes,  ShiftFollowersPolicy shiftFollowers,  bool includeCalendarInShift,  int defaultDurationMin,  List<int> durationPresets,  List<Alert> defaultAlerts,  TimeWindow? quietHours,  bool? use24h,  int firstDayOfWeek,  ThemePreference theme,  String accent,  bool? reduceMotion,  bool showFreeTime,  bool runningLateNudge,  bool rollUnfinished,  bool bedtimeReminder)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Settings() when $default != null:
-return $default(_that.dayBoundaries,_that.snapMinutes,_that.shiftFollowers,_that.includeCalendarInShift,_that.defaultDurationMin,_that.durationPresets,_that.defaultAlerts,_that.quietHours,_that.use24h,_that.firstDayOfWeek,_that.theme,_that.accent,_that.reduceMotion);case _:
+return $default(_that.dayBoundaries,_that.snapMinutes,_that.shiftFollowers,_that.includeCalendarInShift,_that.defaultDurationMin,_that.durationPresets,_that.defaultAlerts,_that.quietHours,_that.use24h,_that.firstDayOfWeek,_that.theme,_that.accent,_that.reduceMotion,_that.showFreeTime,_that.runningLateNudge,_that.rollUnfinished,_that.bedtimeReminder);case _:
   return orElse();
 
 }
@@ -477,10 +481,10 @@ return $default(_that.dayBoundaries,_that.snapMinutes,_that.shiftFollowers,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Map<Weekday, TimeWindow> dayBoundaries,  int snapMinutes,  ShiftFollowersPolicy shiftFollowers,  bool includeCalendarInShift,  int defaultDurationMin,  List<int> durationPresets,  List<Alert> defaultAlerts,  TimeWindow? quietHours,  bool? use24h,  int firstDayOfWeek,  ThemePreference theme,  String accent,  bool? reduceMotion)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Map<Weekday, TimeWindow> dayBoundaries,  int snapMinutes,  ShiftFollowersPolicy shiftFollowers,  bool includeCalendarInShift,  int defaultDurationMin,  List<int> durationPresets,  List<Alert> defaultAlerts,  TimeWindow? quietHours,  bool? use24h,  int firstDayOfWeek,  ThemePreference theme,  String accent,  bool? reduceMotion,  bool showFreeTime,  bool runningLateNudge,  bool rollUnfinished,  bool bedtimeReminder)  $default,) {final _that = this;
 switch (_that) {
 case _Settings():
-return $default(_that.dayBoundaries,_that.snapMinutes,_that.shiftFollowers,_that.includeCalendarInShift,_that.defaultDurationMin,_that.durationPresets,_that.defaultAlerts,_that.quietHours,_that.use24h,_that.firstDayOfWeek,_that.theme,_that.accent,_that.reduceMotion);case _:
+return $default(_that.dayBoundaries,_that.snapMinutes,_that.shiftFollowers,_that.includeCalendarInShift,_that.defaultDurationMin,_that.durationPresets,_that.defaultAlerts,_that.quietHours,_that.use24h,_that.firstDayOfWeek,_that.theme,_that.accent,_that.reduceMotion,_that.showFreeTime,_that.runningLateNudge,_that.rollUnfinished,_that.bedtimeReminder);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -497,10 +501,10 @@ return $default(_that.dayBoundaries,_that.snapMinutes,_that.shiftFollowers,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Map<Weekday, TimeWindow> dayBoundaries,  int snapMinutes,  ShiftFollowersPolicy shiftFollowers,  bool includeCalendarInShift,  int defaultDurationMin,  List<int> durationPresets,  List<Alert> defaultAlerts,  TimeWindow? quietHours,  bool? use24h,  int firstDayOfWeek,  ThemePreference theme,  String accent,  bool? reduceMotion)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Map<Weekday, TimeWindow> dayBoundaries,  int snapMinutes,  ShiftFollowersPolicy shiftFollowers,  bool includeCalendarInShift,  int defaultDurationMin,  List<int> durationPresets,  List<Alert> defaultAlerts,  TimeWindow? quietHours,  bool? use24h,  int firstDayOfWeek,  ThemePreference theme,  String accent,  bool? reduceMotion,  bool showFreeTime,  bool runningLateNudge,  bool rollUnfinished,  bool bedtimeReminder)?  $default,) {final _that = this;
 switch (_that) {
 case _Settings() when $default != null:
-return $default(_that.dayBoundaries,_that.snapMinutes,_that.shiftFollowers,_that.includeCalendarInShift,_that.defaultDurationMin,_that.durationPresets,_that.defaultAlerts,_that.quietHours,_that.use24h,_that.firstDayOfWeek,_that.theme,_that.accent,_that.reduceMotion);case _:
+return $default(_that.dayBoundaries,_that.snapMinutes,_that.shiftFollowers,_that.includeCalendarInShift,_that.defaultDurationMin,_that.durationPresets,_that.defaultAlerts,_that.quietHours,_that.use24h,_that.firstDayOfWeek,_that.theme,_that.accent,_that.reduceMotion,_that.showFreeTime,_that.runningLateNudge,_that.rollUnfinished,_that.bedtimeReminder);case _:
   return null;
 
 }
@@ -512,7 +516,7 @@ return $default(_that.dayBoundaries,_that.snapMinutes,_that.shiftFollowers,_that
 
 @JsonSerializable(explicitToJson: true)
 class _Settings extends Settings {
-  const _Settings({ Map<Weekday, TimeWindow> dayBoundaries = const <Weekday, TimeWindow>{}, this.snapMinutes = 5, this.shiftFollowers = ShiftFollowersPolicy.ask, this.includeCalendarInShift = false, this.defaultDurationMin = 30,  List<int> durationPresets = defaultDurationPresets,  List<Alert> defaultAlerts = const <Alert>[Alert(kind: AlertKind.before, offsetMin: 10)], this.quietHours, this.use24h, this.firstDayOfWeek = 1, this.theme = ThemePreference.system, this.accent = defaultAccentKey, this.reduceMotion}): _dayBoundaries = dayBoundaries,_durationPresets = durationPresets,_defaultAlerts = defaultAlerts,super._();
+  const _Settings({ Map<Weekday, TimeWindow> dayBoundaries = const <Weekday, TimeWindow>{}, this.snapMinutes = 5, this.shiftFollowers = ShiftFollowersPolicy.ask, this.includeCalendarInShift = false, this.defaultDurationMin = 30,  List<int> durationPresets = defaultDurationPresets,  List<Alert> defaultAlerts = const <Alert>[Alert(kind: AlertKind.before, offsetMin: 10)], this.quietHours, this.use24h, this.firstDayOfWeek = 1, this.theme = ThemePreference.system, this.accent = defaultAccentKey, this.reduceMotion, this.showFreeTime = true, this.runningLateNudge = true, this.rollUnfinished = false, this.bedtimeReminder = true}): _dayBoundaries = dayBoundaries,_durationPresets = durationPresets,_defaultAlerts = defaultAlerts,super._();
   factory _Settings.fromJson(Map<String, dynamic> json) => _$SettingsFromJson(json);
 
  final  Map<Weekday, TimeWindow> _dayBoundaries;
@@ -546,6 +550,10 @@ class _Settings extends Settings {
 @override@JsonKey() final  ThemePreference theme;
 @override@JsonKey() final  String accent;
 @override final  bool? reduceMotion;
+@override@JsonKey() final  bool showFreeTime;
+@override@JsonKey() final  bool runningLateNudge;
+@override@JsonKey() final  bool rollUnfinished;
+@override@JsonKey() final  bool bedtimeReminder;
 
 /// Create a copy of Settings
 /// with the given fields replaced by the non-null parameter values.
@@ -560,18 +568,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Settings&&const DeepCollectionEquality().equals(other.dayBoundaries, _dayBoundaries)&&(identical(other.snapMinutes, snapMinutes) || other.snapMinutes == snapMinutes)&&(identical(other.shiftFollowers, shiftFollowers) || other.shiftFollowers == shiftFollowers)&&(identical(other.includeCalendarInShift, includeCalendarInShift) || other.includeCalendarInShift == includeCalendarInShift)&&(identical(other.defaultDurationMin, defaultDurationMin) || other.defaultDurationMin == defaultDurationMin)&&const DeepCollectionEquality().equals(other.durationPresets, _durationPresets)&&const DeepCollectionEquality().equals(other.defaultAlerts, _defaultAlerts)&&(identical(other.quietHours, quietHours) || other.quietHours == quietHours)&&(identical(other.use24h, use24h) || other.use24h == use24h)&&(identical(other.firstDayOfWeek, firstDayOfWeek) || other.firstDayOfWeek == firstDayOfWeek)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.accent, accent) || other.accent == accent)&&(identical(other.reduceMotion, reduceMotion) || other.reduceMotion == reduceMotion));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Settings&&const DeepCollectionEquality().equals(other.dayBoundaries, _dayBoundaries)&&(identical(other.snapMinutes, snapMinutes) || other.snapMinutes == snapMinutes)&&(identical(other.shiftFollowers, shiftFollowers) || other.shiftFollowers == shiftFollowers)&&(identical(other.includeCalendarInShift, includeCalendarInShift) || other.includeCalendarInShift == includeCalendarInShift)&&(identical(other.defaultDurationMin, defaultDurationMin) || other.defaultDurationMin == defaultDurationMin)&&const DeepCollectionEquality().equals(other.durationPresets, _durationPresets)&&const DeepCollectionEquality().equals(other.defaultAlerts, _defaultAlerts)&&(identical(other.quietHours, quietHours) || other.quietHours == quietHours)&&(identical(other.use24h, use24h) || other.use24h == use24h)&&(identical(other.firstDayOfWeek, firstDayOfWeek) || other.firstDayOfWeek == firstDayOfWeek)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.accent, accent) || other.accent == accent)&&(identical(other.reduceMotion, reduceMotion) || other.reduceMotion == reduceMotion)&&(identical(other.showFreeTime, showFreeTime) || other.showFreeTime == showFreeTime)&&(identical(other.runningLateNudge, runningLateNudge) || other.runningLateNudge == runningLateNudge)&&(identical(other.rollUnfinished, rollUnfinished) || other.rollUnfinished == rollUnfinished)&&(identical(other.bedtimeReminder, bedtimeReminder) || other.bedtimeReminder == bedtimeReminder));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_dayBoundaries),snapMinutes,shiftFollowers,includeCalendarInShift,defaultDurationMin,const DeepCollectionEquality().hash(_durationPresets),const DeepCollectionEquality().hash(_defaultAlerts),quietHours,use24h,firstDayOfWeek,theme,accent,reduceMotion);
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_dayBoundaries),snapMinutes,shiftFollowers,includeCalendarInShift,defaultDurationMin,const DeepCollectionEquality().hash(_durationPresets),const DeepCollectionEquality().hash(_defaultAlerts),quietHours,use24h,firstDayOfWeek,theme,accent,reduceMotion,showFreeTime,runningLateNudge,rollUnfinished,bedtimeReminder);
 }
 
 @override
 String toString() {
-    return 'Settings(dayBoundaries: $dayBoundaries, snapMinutes: $snapMinutes, shiftFollowers: $shiftFollowers, includeCalendarInShift: $includeCalendarInShift, defaultDurationMin: $defaultDurationMin, durationPresets: $durationPresets, defaultAlerts: $defaultAlerts, quietHours: $quietHours, use24h: $use24h, firstDayOfWeek: $firstDayOfWeek, theme: $theme, accent: $accent, reduceMotion: $reduceMotion)';
+    return 'Settings(dayBoundaries: $dayBoundaries, snapMinutes: $snapMinutes, shiftFollowers: $shiftFollowers, includeCalendarInShift: $includeCalendarInShift, defaultDurationMin: $defaultDurationMin, durationPresets: $durationPresets, defaultAlerts: $defaultAlerts, quietHours: $quietHours, use24h: $use24h, firstDayOfWeek: $firstDayOfWeek, theme: $theme, accent: $accent, reduceMotion: $reduceMotion, showFreeTime: $showFreeTime, runningLateNudge: $runningLateNudge, rollUnfinished: $rollUnfinished, bedtimeReminder: $bedtimeReminder)';
 }
 
 
@@ -582,7 +590,7 @@ abstract mixin class _$SettingsCopyWith<$Res> implements $SettingsCopyWith<$Res>
   factory _$SettingsCopyWith(_Settings value, $Res Function(_Settings) _then) = __$SettingsCopyWithImpl;
 @override @useResult
 $Res call({
- Map<Weekday, TimeWindow> dayBoundaries, int snapMinutes, ShiftFollowersPolicy shiftFollowers, bool includeCalendarInShift, int defaultDurationMin, List<int> durationPresets, List<Alert> defaultAlerts, TimeWindow? quietHours, bool? use24h, int firstDayOfWeek, ThemePreference theme, String accent, bool? reduceMotion
+ Map<Weekday, TimeWindow> dayBoundaries, int snapMinutes, ShiftFollowersPolicy shiftFollowers, bool includeCalendarInShift, int defaultDurationMin, List<int> durationPresets, List<Alert> defaultAlerts, TimeWindow? quietHours, bool? use24h, int firstDayOfWeek, ThemePreference theme, String accent, bool? reduceMotion, bool showFreeTime, bool runningLateNudge, bool rollUnfinished, bool bedtimeReminder
 });
 
 
@@ -599,7 +607,7 @@ class __$SettingsCopyWithImpl<$Res>
 
 /// Create a copy of Settings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? dayBoundaries = null,Object? snapMinutes = null,Object? shiftFollowers = null,Object? includeCalendarInShift = null,Object? defaultDurationMin = null,Object? durationPresets = null,Object? defaultAlerts = null,Object? quietHours = freezed,Object? use24h = freezed,Object? firstDayOfWeek = null,Object? theme = null,Object? accent = null,Object? reduceMotion = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? dayBoundaries = null,Object? snapMinutes = null,Object? shiftFollowers = null,Object? includeCalendarInShift = null,Object? defaultDurationMin = null,Object? durationPresets = null,Object? defaultAlerts = null,Object? quietHours = freezed,Object? use24h = freezed,Object? firstDayOfWeek = null,Object? theme = null,Object? accent = null,Object? reduceMotion = freezed,Object? showFreeTime = null,Object? runningLateNudge = null,Object? rollUnfinished = null,Object? bedtimeReminder = null,}) {
   return _then(_Settings(
 dayBoundaries: null == dayBoundaries ? _self._dayBoundaries : dayBoundaries // ignore: cast_nullable_to_non_nullable
 as Map<Weekday, TimeWindow>,snapMinutes: null == snapMinutes ? _self.snapMinutes : snapMinutes // ignore: cast_nullable_to_non_nullable
@@ -614,7 +622,11 @@ as bool?,firstDayOfWeek: null == firstDayOfWeek ? _self.firstDayOfWeek : firstDa
 as int,theme: null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
 as ThemePreference,accent: null == accent ? _self.accent : accent // ignore: cast_nullable_to_non_nullable
 as String,reduceMotion: freezed == reduceMotion ? _self.reduceMotion : reduceMotion // ignore: cast_nullable_to_non_nullable
-as bool?,
+as bool?,showFreeTime: null == showFreeTime ? _self.showFreeTime : showFreeTime // ignore: cast_nullable_to_non_nullable
+as bool,runningLateNudge: null == runningLateNudge ? _self.runningLateNudge : runningLateNudge // ignore: cast_nullable_to_non_nullable
+as bool,rollUnfinished: null == rollUnfinished ? _self.rollUnfinished : rollUnfinished // ignore: cast_nullable_to_non_nullable
+as bool,bedtimeReminder: null == bedtimeReminder ? _self.bedtimeReminder : bedtimeReminder // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

@@ -50,6 +50,10 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
       ThemePreference.system,
   accent: json['accent'] as String? ?? defaultAccentKey,
   reduceMotion: json['reduceMotion'] as bool?,
+  showFreeTime: json['showFreeTime'] as bool? ?? true,
+  runningLateNudge: json['runningLateNudge'] as bool? ?? true,
+  rollUnfinished: json['rollUnfinished'] as bool? ?? false,
+  bedtimeReminder: json['bedtimeReminder'] as bool? ?? true,
 );
 
 Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
@@ -68,6 +72,10 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'theme': _$ThemePreferenceEnumMap[instance.theme]!,
   'accent': instance.accent,
   'reduceMotion': instance.reduceMotion,
+  'showFreeTime': instance.showFreeTime,
+  'runningLateNudge': instance.runningLateNudge,
+  'rollUnfinished': instance.rollUnfinished,
+  'bedtimeReminder': instance.bedtimeReminder,
 };
 
 const _$WeekdayEnumMap = {

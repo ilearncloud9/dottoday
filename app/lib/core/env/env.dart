@@ -4,13 +4,15 @@ import 'dart:convert';
 /// (ADR-0005): `app/.env` for debug, `app/.env.prod` for release.
 ///
 /// Only public values belong here (docs/06-security.md §1): the Supabase URL
-/// and **anon** key, plus optional Sentry DSN and Web Push VAPID public key.
+/// and **anon** key, plus optional Sentry DSN, Web Push VAPID public key and
+/// feedback address.
 final class Env {
   const Env({
     required this.supabaseUrl,
     required this.supabaseAnonKey,
     this.sentryDsn,
     this.webPushVapidPublicKey,
+    this.feedbackEmail,
   });
 
   /// Reads the compile-time defines and validates them via [Env.fromMap].
@@ -24,6 +26,7 @@ final class Env {
     'WEB_PUSH_VAPID_PUBLIC_KEY': String.fromEnvironment(
       'WEB_PUSH_VAPID_PUBLIC_KEY',
     ),
+    'FEEDBACK_EMAIL': String.fromEnvironment('FEEDBACK_EMAIL'),
   });
 
   /// Builds an [Env] from raw key/value pairs, failing fast on bad config.
@@ -48,6 +51,7 @@ final class Env {
       supabaseAnonKey: anonKey,
       sentryDsn: _optional(raw, 'SENTRY_DSN'),
       webPushVapidPublicKey: _optional(raw, 'WEB_PUSH_VAPID_PUBLIC_KEY'),
+      feedbackEmail: _optional(raw, 'FEEDBACK_EMAIL'),
     );
   }
 
@@ -55,6 +59,10 @@ final class Env {
   final String supabaseAnonKey;
   final String? sentryDsn;
   final String? webPushVapidPublicKey;
+
+  /// Where Settings › Send feedback addresses its draft (PRD F11); unset,
+  /// the draft has no recipient and the user picks one.
+  final String? feedbackEmail;
 }
 
 /// Startup configuration bug: the app cannot run, so this is an [Error], not

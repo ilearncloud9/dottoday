@@ -57,7 +57,9 @@ class GapRow extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: DotSpace.l),
         child: Align(
           alignment: AlignmentDirectional.centerStart,
-          child: gap.addable
+          child: !gap.labelled
+              ? const SizedBox(height: DotSpace.s)
+              : gap.addable
               ? _AddHere(
                   label: l10n.threadAddHere(duration),
                   semantics: l10n.threadAddHereLabel(duration, gap.startLabel),

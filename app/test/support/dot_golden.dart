@@ -2,6 +2,8 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// One cell of the design-review golden matrix (docs/10 §7, 08 §7).
@@ -15,7 +17,9 @@ const goldenWidths = {'compact': 390.0, 'medium': 700.0, 'expanded': 1280.0};
 /// × 1× and 2× (docs/10 §7.1, §7.3). [build] gets the cell so it can lay
 /// out per width; [height] is the logical canvas height. Components that
 /// exist only from a width class up (§4: Mac/web Week, Month) pass
-/// [widths]. [act] drives the UI into the captured state (a tap, a step).
+/// [widths]. [act] drives the UI into the captured state (a tap, a step);
+/// [overrides] put a `ProviderScope` above the app for screens whose sheets
+/// read providers.
 ///
 /// ```dart
 /// goldenMatrix('task_dot', height: 120, build: (_) => const _Specimen());
@@ -27,6 +31,7 @@ void goldenMatrix(
   TargetPlatform platform = TargetPlatform.iOS,
   Set<String> widths = const {'compact', 'medium', 'expanded'},
   Future<void> Function(WidgetTester tester)? act,
+  List<Override>? overrides,
 }) {
   for (final theme in ['light', 'dark']) {
     for (final MapEntry(key: widthName, value: width) in goldenWidths.entries) {
@@ -41,8 +46,13 @@ void goldenMatrix(
             ..physicalSize = Size(width, height) * ratio
             ..devicePixelRatio = ratio;
           addTearDown(tester.view.reset);
+          final app = goldenApp(build(cell), theme: theme, platform: platform);
+          // Overrides scope the whole app, so sheets opened on the root
+          // navigator by `act` see the same providers.
           await tester.pumpWidget(
-            goldenApp(build(cell), theme: theme, platform: platform),
+            overrides == null
+                ? app
+                : ProviderScope(overrides: overrides, child: app),
           );
           await tester.pumpAndSettle();
           if (act != null) {

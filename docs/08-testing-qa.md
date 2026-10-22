@@ -86,4 +86,5 @@ Sweep entries (add a row per screen as it lands):
 | A4 sub-pickers: Change day, week, time zone | `test/shared/pickers/pickers_golden_test.dart` | derived |
 | A4 Type a time | `test/features/task_editor/type_time_golden_test.dart` | derived |
 | Search S1 + empty + no results (+ Android idiom) | `test/features/search/search_golden_test.dart` | `A-ios-search`, `A-android-search`; empty/no-results derived |
+| Settings P1 (+ Android idiom, lower half), Different days, Send feedback | `test/features/settings/settings_golden_test.dart` | `A-ios-settings`, `A-android-settings`; sheets derived |
 

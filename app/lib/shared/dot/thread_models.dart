@@ -89,6 +89,7 @@ final class ThreadGap extends ThreadEntry {
     this.addable = false,
     this.nowFraction,
     this.startUtc,
+    this.labelled = true,
   });
 
   final int minutes;
@@ -104,4 +105,8 @@ final class ThreadGap extends ThreadEntry {
 
   /// The instant the gap opens, for drops (feature-supplied).
   final DateTime? startUtc;
+
+  /// Settings › Show free time: off, the gap keeps its dotted line but no
+  /// "N h free · add here" label (still a drop target).
+  final bool labelled;
 }

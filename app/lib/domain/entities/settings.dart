@@ -42,6 +42,11 @@ abstract class Settings with _$Settings {
     @Default(ThemePreference.system) ThemePreference theme,
     @Default(defaultAccentKey) String accent,
     bool? reduceMotion,
+    // Settings › Planning / Reminders (M3d.2, `A-ios-settings`).
+    @Default(true) bool showFreeTime,
+    @Default(true) bool runningLateNudge,
+    @Default(false) bool rollUnfinished,
+    @Default(true) bool bedtimeReminder,
   }) = _Settings;
 
   const Settings._();

@@ -1474,4 +1474,209 @@ class AppLocalizationsEn extends AppLocalizations {
   String searchDayLabel(String weekday, String date) {
     return '$weekday $date';
   }
+
+  @override
+  String settingsLocalOnly(String name) {
+    return '$name · on this device';
+  }
+
+  @override
+  String get settingsLocalOnlyNoName => 'On this device';
+
+  @override
+  String settingsAvatarLabel(String name) {
+    return 'Account: $name';
+  }
+
+  @override
+  String get settingsDayShape => 'Day shape';
+
+  @override
+  String settingsAwake(String length) {
+    return '$length awake';
+  }
+
+  @override
+  String get settingsWakeUp => 'Wake Up';
+
+  @override
+  String get settingsBedtime => 'Bedtime';
+
+  @override
+  String get settingsPerWeekday => 'Different days';
+
+  @override
+  String get settingsSameEveryDay => 'Same every day';
+
+  @override
+  String settingsCustomDays(String days) {
+    return '$days';
+  }
+
+  @override
+  String get settingsUseEveryday => 'Same as every day';
+
+  @override
+  String get settingsWeekStarts => 'Week starts';
+
+  @override
+  String get settingsTimeFormat => 'Time format';
+
+  @override
+  String settingsTimeSystem(String example) {
+    return 'Like this device ($example)';
+  }
+
+  @override
+  String get settingsTime12 => '12 h';
+
+  @override
+  String get settingsTime24 => '24 h';
+
+  @override
+  String get settingsPlanning => 'Planning';
+
+  @override
+  String get settingsDefaultDuration => 'Default duration';
+
+  @override
+  String get settingsSnap => 'Snap to';
+
+  @override
+  String settingsSnapValue(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get settingsShiftLater => 'Shift later tasks';
+
+  @override
+  String get settingsShiftAsk => 'Ask each time';
+
+  @override
+  String get settingsShiftAlways => 'Always';
+
+  @override
+  String get settingsShiftNever => 'Never';
+
+  @override
+  String get settingsShowFree => 'Show free time';
+
+  @override
+  String get settingsShowFreeDetail => 'Dotted gaps on the thread';
+
+  @override
+  String get settingsLateNudge => 'Running-late nudge';
+
+  @override
+  String get settingsLateNudgeDetail => 'Offer to shift the rest of the day';
+
+  @override
+  String get settingsRoll => 'Roll unfinished to tomorrow';
+
+  @override
+  String get settingsRollDetail => 'Otherwise they return to the Inbox';
+
+  @override
+  String get settingsReminders => 'Reminders';
+
+  @override
+  String get settingsTaskStarts => 'Task starts';
+
+  @override
+  String get settingsAlertNone => 'No alert';
+
+  @override
+  String get settingsAlertAtStart => 'When it starts';
+
+  @override
+  String settingsAlertBefore(int minutes) {
+    return '$minutes min before';
+  }
+
+  @override
+  String get settingsBedtimeReminder => 'Bedtime reminder';
+
+  @override
+  String settingsBedtimeReminderDetail(String time) {
+    return 'At $time, with tomorrow\'s first task';
+  }
+
+  @override
+  String get settingsLook => 'Look';
+
+  @override
+  String get settingsTheme => 'Theme';
+
+  @override
+  String get settingsThemeSystem => 'Like this device';
+
+  @override
+  String get settingsThemeLight => 'Light';
+
+  @override
+  String get settingsThemeDark => 'Dark';
+
+  @override
+  String get settingsAccent => 'Accent';
+
+  @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String get settingsData => 'Data';
+
+  @override
+  String get settingsTrash => 'Trash';
+
+  @override
+  String get settingsTrashDetail => 'Deleted tasks stay 30 days';
+
+  @override
+  String get settingsTrashEmpty => 'Trash is empty';
+
+  @override
+  String get settingsRestore => 'Restore';
+
+  @override
+  String settingsRestored(String title) {
+    return '$title restored';
+  }
+
+  @override
+  String get settingsAbout => 'About';
+
+  @override
+  String get settingsVersion => 'Version';
+
+  @override
+  String get settingsWhatsNew => 'What\'s new';
+
+  @override
+  String get settingsWhatsNewBody =>
+      'Add a task in two taps, with suggestions from your habits. Pick a time on your day\'s thread and see what it overlaps. Keep your own duration presets. Paste a list to add several tasks at once. Search everything you\'ve planned, done tasks too.';
+
+  @override
+  String get settingsFeedback => 'Send feedback';
+
+  @override
+  String get settingsFeedbackIntro =>
+      'Opens an email draft. Nothing about your tasks is included.';
+
+  @override
+  String get settingsFeedbackDiagnostics => 'Add app version and device type';
+
+  @override
+  String get settingsFeedbackWrite => 'Write email';
+
+  @override
+  String get settingsFeedbackSubject => 'Dottoday feedback';
+
+  @override
+  String get settingsFeedbackNoMail => 'No mail app is set up on this device.';
+
+  @override
+  String settingsAccentLabel(String name) {
+    return '$name accent';
+  }
 }
