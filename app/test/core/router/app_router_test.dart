@@ -1,6 +1,7 @@
 import 'package:dottoday/app_screens.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -66,4 +67,33 @@ void main() {
       );
     }
   });
+
+  // M5.0: iOS and Android hand the router the whole link, scheme and all;
+  // macOS's DeepLinkBridge does the same.
+  testWidgets('a pushed dottoday:// link opens its screen', (tester) async {
+    final router = await _pump(tester);
+    for (final (link, key) in [
+      ('dottoday://task/$_v7', 'route:task:$_v7'),
+      ('dottoday://inbox', 'route:inbox'),
+      ('dottoday://day/2026-10-20', 'route:day:2026-10-20T00:00:00.000Z'),
+      ('dottoday://task/not-an-id', 'route:today'),
+      ('https://evil.example/task/$_v7', 'route:today'),
+    ]) {
+      await _pushRoute(tester, link);
+      expect(find.byKey(ValueKey(key)), findsOneWidget, reason: link);
+    }
+    expect(router.routeInformationProvider.value.uri.path, '/today');
+  });
+}
+
+Future<void> _pushRoute(WidgetTester tester, String location) async {
+  final message = const JSONMethodCodec().encodeMethodCall(
+    MethodCall('pushRouteInformation', {'location': location, 'state': null}),
+  );
+  await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+    SystemChannels.navigation.name,
+    message,
+    (_) {},
+  );
+  await tester.pumpAndSettle();
 }

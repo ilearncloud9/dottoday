@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M5.0: `dottoday://task/<id>`, `/day/<date>`, `/inbox` … links open the app at that place on iPhone, Android and Mac, also from a cold start; anything off the allow-list opens Today.
 - M4 carry-overs: the Mac window opens at 1280×800 and can't be made smaller than 960×640; release gates now require a feedback address and a manual ⌘/ check in desktop Chrome.
 - Project kit: agent instructions, specs, schema, implementation plan.
 - **Milestone M4 complete** (M4.9): `/ship-check` passed 2026-10-22. Analyze/format clean; 1,965 tests; coverage `lib/domain` 96.9 %, overall 94.0 %; launch, onboarding and first-day journey integration tests green on the iPhone simulator and Android emulator, and now in CI on an Android emulator; no schema, dependency or CSP changes. First run is a six-step onboarding (at most three questions, all skippable, under 90 s, resumes if closed) ending on your first thread. Fixed on the way: repeat edits for following/all could fail and now undo; iPhone sheets sat under the tab bar.

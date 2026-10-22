@@ -13,6 +13,7 @@ class MainFlutterWindow: NSWindow {
     self.center()
 
     RegisterGeneratedPlugins(registry: flutterViewController)
+    (NSApp.delegate as? AppDelegate)?.attachDeepLinks(to: flutterViewController)
 
     super.awakeFromNib()
   }

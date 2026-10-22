@@ -12,5 +12,33 @@ import UIKit
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "DeepLinkBridge") {
+      DeepLinkBridge.shared.attach(to: registrar.messenger())
+    }
+  }
+}
+
+/// Launch links waiting for Dart on `dottoday/deep_links`
+/// (lib/core/router/native_deep_links.dart, docs/09 M5.0).
+final class DeepLinkBridge {
+  static let shared = DeepLinkBridge()
+  private var pending: [String] = []
+  private var channel: FlutterMethodChannel?
+
+  func queue(_ url: URL) {
+    pending.append(url.absoluteString)
+  }
+
+  func attach(to messenger: FlutterBinaryMessenger) {
+    let channel = FlutterMethodChannel(name: "dottoday/deep_links", binaryMessenger: messenger)
+    channel.setMethodCallHandler { [weak self] call, result in
+      guard let self, call.method == "takePending" else {
+        result(FlutterMethodNotImplemented)
+        return
+      }
+      result(self.pending)
+      self.pending.removeAll()
+    }
+    self.channel = channel
   }
 }
