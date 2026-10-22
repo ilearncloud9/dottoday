@@ -15,9 +15,9 @@ class AddHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final back = DotIdiom.of(context) == DotIdiom.cupertino
-        ? DotGlyphs.chevronLeft
-        : DotGlyphs.arrowLeft;
+    // One back glyph on every platform: §4 doesn't list it as an idiom
+    // (the renders differ; the doc wins).
+    const back = DotGlyphs.chevronLeft;
     return SizedBox(
       height: DotTouch.android,
       child: Stack(

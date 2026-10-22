@@ -1,3 +1,4 @@
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -90,5 +91,32 @@ void main() {
         await expectA11yGuidelines(tester);
       });
     }
+  }
+
+  for (final (name, size) in [
+    ('compact', const Size(390, 844)),
+    ('wide', const Size(1280, 800)),
+  ]) {
+    testWidgets('an open sheet follows a light → dark switch ($name)', (
+      tester,
+    ) async {
+      await _size(tester, size);
+      await tester.pumpWidget(_host((_) {}, mode: ThemeMode.light));
+      await tester.tap(find.text('open'));
+      await tester.pumpAndSettle();
+      await tester.pumpWidget(_host((_) {}, mode: ThemeMode.dark));
+      await tester.pumpAndSettle();
+      final dark = DotTheme.dark().extension<DotTheme>()!.colors.raised;
+      final surface = tester
+          .widgetList<Material>(
+            find.ancestor(
+              of: find.text('seven'),
+              matching: find.byType(Material),
+            ),
+          )
+          .map((m) => m.color)
+          .whereType<Color>();
+      expect(surface, contains(dark));
+    });
   }
 }

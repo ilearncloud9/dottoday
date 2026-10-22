@@ -37,7 +37,6 @@ Future<T?> showAppSheet<T>({
   String? title,
   bool fullHeight = false,
 }) {
-  final colors = DotTheme.of(context).colors;
   final size = MediaQuery.sizeOf(context);
   final wide = size.width >= WidthClass.mediumFrom;
   final Widget sheet = switch ((fullHeight, wide)) {
@@ -58,7 +57,6 @@ Future<T?> showAppSheet<T>({
     return showDialog<T>(
       context: context,
       builder: (_) => Dialog(
-        backgroundColor: colors.raised,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(DotRadii.sheet)),
         ),
@@ -74,7 +72,6 @@ Future<T?> showAppSheet<T>({
     isScrollControlled: true,
     useSafeArea: true,
     showDragHandle: true,
-    backgroundColor: colors.raised,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(DotRadii.sheet)),
     ),

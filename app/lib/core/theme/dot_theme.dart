@@ -116,13 +116,22 @@ ThemeData _build(DotColors c) {
       style: _pill(type, c, filled: true),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(style: _pill(type, c)),
-    bottomSheetTheme: const BottomSheetThemeData(
+    // Sheets and dialogs take the raised surface from the theme, not from
+    // the caller, so an open sheet follows a light/dark switch (M3c.6).
+    bottomSheetTheme: BottomSheetThemeData(
       showDragHandle: true,
-      shape: RoundedRectangleBorder(
+      backgroundColor: c.raised,
+      modalBackgroundColor: c.raised,
+      surfaceTintColor: Colors.transparent,
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(DotRadii.sheet),
         ),
       ),
+    ),
+    dialogTheme: DialogThemeData(
+      backgroundColor: c.raised,
+      surfaceTintColor: Colors.transparent,
     ),
     extensions: [
       DotTheme(colors: c, styles: type, tasks: TaskPalette.resolve(c)),
