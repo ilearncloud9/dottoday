@@ -6,6 +6,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/inbox/schedule_from_anywhere.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,6 +40,9 @@ class DottodayApp extends ConsumerWidget {
                 onInvoke: (i) =>
                     openQuickAdd(router, startUtc: i.startUtc, day: i.day),
               ),
+              ScheduleTaskIntent: CallbackAction<ScheduleTaskIntent>(
+                onInvoke: (i) => _schedule(router, i.occurrenceId),
+              ),
             },
             child: child ?? const SizedBox.shrink(),
           ),
@@ -57,4 +61,12 @@ void openQuickAdd(GoRouter router, {DateTime? startUtc, DateTime? day}) {
       router.routerDelegate.navigatorKey.currentState?.overlay?.context;
   if (context == null) return;
   unawaited(showAddFlow(context, startUtc: startUtc, day: day));
+}
+
+/// Search's "+ Schedule": the Inbox flow on the root overlay.
+void _schedule(GoRouter router, String id) {
+  final context =
+      router.routerDelegate.navigatorKey.currentState?.overlay?.context;
+  if (context == null) return;
+  unawaited(scheduleFromAnywhere(context, id));
 }

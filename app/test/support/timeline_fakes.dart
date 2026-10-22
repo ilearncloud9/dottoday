@@ -6,6 +6,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
@@ -23,6 +24,7 @@ import 'package:flutter_riverpod/misc.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import 'fake_clock.dart';
+import 'search_fakes.dart';
 
 const testUserId = '01928c3e-0000-7000-8000-000000000001';
 
@@ -273,6 +275,7 @@ List<Override> timelineOverrides({
   List<Series> series = const [],
   Profile? profile,
   Stream<DateTime>? minuteTicks,
+  List<String> recentSearches = const [],
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
@@ -288,6 +291,10 @@ List<Override> timelineOverrides({
     localProfileProvider.overrideWith((ref) async => p),
     settingsRepositoryProvider.overrideWithValue(FakeSettingsRepository(p)),
     occurrenceRepositoryProvider.overrideWithValue(repo),
+    searchRepositoryProvider.overrideWithValue(FakeSearchRepository(repo)),
+    recentSearchesProvider.overrideWith(
+      () => FakeRecentSearches(recentSearches),
+    ),
   ];
 }
 

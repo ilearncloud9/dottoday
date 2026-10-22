@@ -1,9 +1,8 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/shared/dot/thread.dart';
+import 'package:dottoday/shared/dot/count_ring.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 /// "Inbox", "5 unscheduled · 5 h 15 of work" and the dotted ring holding
 /// the count (docs/10 §1 "the Inbox is a dotted ring holding loose dots",
@@ -36,25 +35,7 @@ class InboxHeader extends StatelessWidget {
             ],
           ),
         ),
-        Semantics(
-          container: true,
-          label: l10n.inboxRingLabel(count),
-          excludeSemantics: true,
-          child: CustomPaint(
-            painter: DashedPillPainter(color: t.colors.outline),
-            child: SizedBox.square(
-              dimension: DotSize.liveDot + DotSpace.m,
-              child: Center(
-                child: Text(
-                  NumberFormat.decimalPattern(
-                    Localizations.localeOf(context).toLanguageTag(),
-                  ).format(count),
-                  style: t.styles.cardTitle,
-                ),
-              ),
-            ),
-          ),
-        ),
+        CountRing(count: count, label: l10n.inboxRingLabel(count)),
       ],
     );
   }

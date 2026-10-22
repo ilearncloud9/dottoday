@@ -11,4 +11,8 @@ abstract interface class SearchRepository {
     String query, {
     int limit = 50,
   });
+
+  /// [search], re-emitting whenever matching rows change (a result done,
+  /// scheduled or deleted while Search is open).
+  Stream<List<Occurrence>> watch(String userId, String query, {int limit = 50});
 }

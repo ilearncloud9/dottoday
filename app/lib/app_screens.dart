@@ -1,6 +1,7 @@
 import 'package:dottoday/app_shell.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/features/inbox/inbox_screen.dart';
+import 'package:dottoday/features/search/search_screen.dart';
 import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ final appScreens = RouteScreens(
   today: (_) => const TodayScreen(),
   inbox: (_) => const InboxScreen(),
   week: (_) => const RoutePlaceholder('week'),
-  search: (_) => const RoutePlaceholder('search'),
+  search: (_) => const SearchScreen(),
   settings: (_) => const RoutePlaceholder('settings'),
   month: (_) => const RoutePlaceholder('month'),
   day: (_, date) => TodayScreen(date: date),

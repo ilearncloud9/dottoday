@@ -17,28 +17,45 @@ final class DriftSearchRepository implements SearchRepository {
     String query, {
     int limit = 50,
   }) async {
-    final match = ftsQuery(query);
-    if (match == null) return const [];
-    // Title hits outrank notes and subtasks (bm25 column weights).
-    final rows = await _db
-        .customSelect(
-          'SELECT o.* FROM search_index s '
-          'JOIN occurrences o ON o.rowid = s.rowid '
-          'WHERE search_index MATCH ? AND s.user_id = ? '
-          'ORDER BY bm25(search_index, 0.0, 10.0, 2.0, 2.0), '
-          'o.start_utc DESC, o.id '
-          'LIMIT ?',
-          variables: [
-            Variable<String>(match),
-            Variable<String>(userId),
-            Variable<int>(limit),
-          ],
-          readsFrom: {_db.occurrences, _db.searchIndex},
-        )
-        .get();
-    return [
-      for (final r in rows)
-        occurrenceFromRow(await _db.occurrences.mapFromRow(r)),
-    ];
+    final select = _select(userId, query, limit);
+    if (select == null) return const [];
+    return _map(await select.get());
   }
+
+  @override
+  Stream<List<Occurrence>> watch(
+    String userId,
+    String query, {
+    int limit = 50,
+  }) {
+    final select = _select(userId, query, limit);
+    if (select == null) return Stream.value(const []);
+    return select.watch().asyncMap(_map);
+  }
+
+  Selectable<QueryRow>? _select(String userId, String query, int limit) {
+    final match = ftsQuery(query);
+    if (match == null) return null;
+    // Title hits outrank notes and subtasks (bm25 column weights). Trash
+    // stays out (R-11).
+    return _db.customSelect(
+      'SELECT o.* FROM search_index s '
+      'JOIN occurrences o ON o.rowid = s.rowid '
+      'WHERE search_index MATCH ? AND s.user_id = ? '
+      'ORDER BY bm25(search_index, 0.0, 10.0, 2.0, 2.0), '
+      'o.start_utc DESC, o.id '
+      'LIMIT ?',
+      variables: [
+        Variable<String>(match),
+        Variable<String>(userId),
+        Variable<int>(limit),
+      ],
+      readsFrom: {_db.occurrences, _db.searchIndex},
+    );
+  }
+
+  Future<List<Occurrence>> _map(List<QueryRow> rows) async => [
+    for (final r in rows)
+      occurrenceFromRow(await _db.occurrences.mapFromRow(r)),
+  ];
 }

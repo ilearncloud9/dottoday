@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:timezone/data/latest.dart' as tz_data;
 
 import 'support/test_app.dart';
 
@@ -39,6 +40,9 @@ Future<void> _chord(
 Finder _route(String name) => find.byKey(ValueKey('route:$name'));
 
 void main() {
+  // bootstrap() loads it in the app; real screens (Search) need it.
+  setUpAll(tz_data.initializeTimeZones);
+
   testWidgets('tabs switch branches; labels come from l10n', (tester) async {
     await _pump(tester);
     expect(_route('today'), findsOneWidget);

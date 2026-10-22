@@ -154,4 +154,16 @@ const sheetEntries = <SheetEntry>[
     reference: 'A-android-add-time-menu.png',
     crop: Rect.fromLTRB(0, 310, 824, 1830),
   ),
+  SheetEntry(
+    name: 'Search S1 · light',
+    golden: 'test/features/search/goldens/search_light_compact_2x.png',
+    reference: 'A-ios-search.png',
+    crop: Rect.fromLTRB(0, 0, 780, 1688),
+  ),
+  SheetEntry(
+    name: 'Search S1 · Android dark',
+    golden: 'test/features/search/goldens/search_android_dark_compact_2x.png',
+    reference: 'A-android-search.png',
+    crop: Rect.fromLTRB(0, 0, 824, 1830),
+  ),
 ];

@@ -1365,4 +1365,113 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pasteKeep => 'Keep as one';
+
+  @override
+  String get searchSubtitle => 'Everything you\'ve planned';
+
+  @override
+  String get searchFieldLabel => 'Search titles, notes and subtasks';
+
+  @override
+  String get searchClear => 'Clear search';
+
+  @override
+  String searchRingLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count results',
+      one: '1 result',
+      zero: 'No results',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchFilterAll => 'All';
+
+  @override
+  String get searchFilterToday => 'Today';
+
+  @override
+  String get searchFilterWeek => 'This week';
+
+  @override
+  String get searchFilterInbox => 'Inbox';
+
+  @override
+  String get searchFilterDone => 'Done';
+
+  @override
+  String get searchFilterColour => 'Colour';
+
+  @override
+  String get searchFilterIcon => 'Icon';
+
+  @override
+  String get searchPickColour => 'Show one colour';
+
+  @override
+  String get searchPickIcon => 'Show one icon';
+
+  @override
+  String searchGroupToday(String weekday) {
+    return '$weekday · Today';
+  }
+
+  @override
+  String get searchGroupInbox => 'Inbox';
+
+  @override
+  String searchMetaDay(String day, String range) {
+    return '$day · $range';
+  }
+
+  @override
+  String searchMetaDone(String when) {
+    return '$when · Done';
+  }
+
+  @override
+  String searchMetaMissed(String when) {
+    return '$when · missed';
+  }
+
+  @override
+  String searchMetaInbox(String length) {
+    return 'Inbox · $length';
+  }
+
+  @override
+  String searchRowLabel(String title, String meta) {
+    return '$title, $meta';
+  }
+
+  @override
+  String get searchRecent => 'Recent';
+
+  @override
+  String searchRecentLabel(String query) {
+    return 'Search for $query again';
+  }
+
+  @override
+  String get searchEmpty =>
+      'Find anything you\'ve planned: titles, notes and subtasks, done ones too.';
+
+  @override
+  String searchNoResults(String query) {
+    return 'No matches for “$query”';
+  }
+
+  @override
+  String get searchNoResultsHint => 'Try fewer words, or another filter.';
+
+  @override
+  String get searchShowAll => 'Show all';
+
+  @override
+  String searchDayLabel(String weekday, String date) {
+    return '$weekday $date';
+  }
 }

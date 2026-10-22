@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/clock/minute_tick.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/alert.dart';
@@ -10,29 +11,9 @@ import 'package:dottoday/features/timeline/layout/timeline_day.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+export 'package:dottoday/core/clock/minute_tick.dart' show minuteTickProvider;
+
 part 'timeline_providers.g.dart';
-
-/// "Now", emitted immediately and then on every minute boundary, so the
-/// now-line moves once per minute (docs/03 §3.1) without a busy timer.
-@Riverpod(keepAlive: true)
-Stream<DateTime> minuteTick(Ref ref) {
-  final clock = ref.watch(clockProvider);
-  final controller = StreamController<DateTime>();
-  Timer? timer;
-  void tick() {
-    final now = clock.nowUtc();
-    controller.add(now);
-    final untilNext = 60000 - now.millisecondsSinceEpoch % 60000;
-    timer = Timer(Duration(milliseconds: untilNext), tick);
-  }
-
-  tick();
-  ref.onDispose(() {
-    timer?.cancel();
-    unawaited(controller.close());
-  });
-  return controller.stream;
-}
 
 /// Today's local calendar date in the profile's zone; changes at midnight.
 @riverpod

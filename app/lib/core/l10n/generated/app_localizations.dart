@@ -2049,6 +2049,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keep as one'**
   String get pasteKeep;
+
+  /// Search header subtitle (A-ios-search).
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you\'ve planned'**
+  String get searchSubtitle;
+
+  /// Search field hint and screen-reader label.
+  ///
+  /// In en, this message translates to:
+  /// **'Search titles, notes and subtasks'**
+  String get searchFieldLabel;
+
+  /// Tooltip of the × in the search field.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get searchClear;
+
+  /// Screen-reader label of the count ring in the Search header.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No results} =1{1 result} other{{count} results}}'**
+  String searchRingLabel(int count);
+
+  /// Search filter chip.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get searchFilterAll;
+
+  /// Search filter chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get searchFilterToday;
+
+  /// Search filter chip.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get searchFilterWeek;
+
+  /// Search filter chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get searchFilterInbox;
+
+  /// Search filter chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get searchFilterDone;
+
+  /// Search filter chip: pick one task colour.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour'**
+  String get searchFilterColour;
+
+  /// Search filter chip: pick one icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get searchFilterIcon;
+
+  /// Title of the colour filter sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Show one colour'**
+  String get searchPickColour;
+
+  /// Title of the icon filter sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Show one icon'**
+  String get searchPickIcon;
+
+  /// Results heading for today (shown uppercase; 'Today' in the accent).
+  ///
+  /// In en, this message translates to:
+  /// **'{weekday} · Today'**
+  String searchGroupToday(String weekday);
+
+  /// Results heading for inbox tasks (shown uppercase).
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get searchGroupInbox;
+
+  /// A result on another day: 'Fri 23 · 2:00 – 3:00'.
+  ///
+  /// In en, this message translates to:
+  /// **'{day} · {range}'**
+  String searchMetaDay(String day, String range);
+
+  /// A done result: 'Mon 19 · 9:00 – 12:00 · Done'.
+  ///
+  /// In en, this message translates to:
+  /// **'{when} · Done'**
+  String searchMetaDone(String when);
+
+  /// A past result not done.
+  ///
+  /// In en, this message translates to:
+  /// **'{when} · missed'**
+  String searchMetaMissed(String when);
+
+  /// An inbox result: 'Inbox · 45 min'.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox · {length}'**
+  String searchMetaInbox(String length);
+
+  /// Screen-reader label of a result row.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, {meta}'**
+  String searchRowLabel(String title, String meta);
+
+  /// Recent searches caption (shown uppercase).
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get searchRecent;
+
+  /// Screen-reader label of a recent-search chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for {query} again'**
+  String searchRecentLabel(String query);
+
+  /// Search with nothing typed and no recent searches.
+  ///
+  /// In en, this message translates to:
+  /// **'Find anything you\'ve planned: titles, notes and subtasks, done ones too.'**
+  String get searchEmpty;
+
+  /// Search with no results.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches for “{query}”'**
+  String searchNoResults(String query);
+
+  /// Under the no-results line.
+  ///
+  /// In en, this message translates to:
+  /// **'Try fewer words, or another filter.'**
+  String get searchNoResultsHint;
+
+  /// No results under a filter: go back to All.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all'**
+  String get searchShowAll;
+
+  /// A day without the month: 'Monday 19', 'Fri 23'.
+  ///
+  /// In en, this message translates to:
+  /// **'{weekday} {date}'**
+  String searchDayLabel(String weekday, String date);
 }
 
 class _AppLocalizationsDelegate

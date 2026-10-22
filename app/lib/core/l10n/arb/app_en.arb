@@ -2083,5 +2083,172 @@
   "pasteKeep": "Keep as one",
   "@pasteKeep": {
     "description": "Button: join the pasted lines into one task."
+  },
+  "searchSubtitle": "Everything you've planned",
+  "@searchSubtitle": {
+    "description": "Search header subtitle (A-ios-search)."
+  },
+  "searchFieldLabel": "Search titles, notes and subtasks",
+  "@searchFieldLabel": {
+    "description": "Search field hint and screen-reader label."
+  },
+  "searchClear": "Clear search",
+  "@searchClear": {
+    "description": "Tooltip of the × in the search field."
+  },
+  "searchRingLabel": "{count, plural, =0{No results} =1{1 result} other{{count} results}}",
+  "@searchRingLabel": {
+    "description": "Screen-reader label of the count ring in the Search header.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchFilterAll": "All",
+  "@searchFilterAll": {
+    "description": "Search filter chip."
+  },
+  "searchFilterToday": "Today",
+  "@searchFilterToday": {
+    "description": "Search filter chip."
+  },
+  "searchFilterWeek": "This week",
+  "@searchFilterWeek": {
+    "description": "Search filter chip."
+  },
+  "searchFilterInbox": "Inbox",
+  "@searchFilterInbox": {
+    "description": "Search filter chip."
+  },
+  "searchFilterDone": "Done",
+  "@searchFilterDone": {
+    "description": "Search filter chip."
+  },
+  "searchFilterColour": "Colour",
+  "@searchFilterColour": {
+    "description": "Search filter chip: pick one task colour."
+  },
+  "searchFilterIcon": "Icon",
+  "@searchFilterIcon": {
+    "description": "Search filter chip: pick one icon."
+  },
+  "searchPickColour": "Show one colour",
+  "@searchPickColour": {
+    "description": "Title of the colour filter sheet."
+  },
+  "searchPickIcon": "Show one icon",
+  "@searchPickIcon": {
+    "description": "Title of the icon filter sheet."
+  },
+  "searchGroupToday": "{weekday} · Today",
+  "@searchGroupToday": {
+    "description": "Results heading for today (shown uppercase; 'Today' in the accent).",
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "searchGroupInbox": "Inbox",
+  "@searchGroupInbox": {
+    "description": "Results heading for inbox tasks (shown uppercase)."
+  },
+  "searchMetaDay": "{day} · {range}",
+  "@searchMetaDay": {
+    "description": "A result on another day: 'Fri 23 · 2:00 – 3:00'.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "searchMetaDone": "{when} · Done",
+  "@searchMetaDone": {
+    "description": "A done result: 'Mon 19 · 9:00 – 12:00 · Done'.",
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "searchMetaMissed": "{when} · missed",
+  "@searchMetaMissed": {
+    "description": "A past result not done.",
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "searchMetaInbox": "Inbox · {length}",
+  "@searchMetaInbox": {
+    "description": "An inbox result: 'Inbox · 45 min'.",
+    "placeholders": {
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "searchRowLabel": "{title}, {meta}",
+  "@searchRowLabel": {
+    "description": "Screen-reader label of a result row.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "meta": {
+        "type": "String"
+      }
+    }
+  },
+  "searchRecent": "Recent",
+  "@searchRecent": {
+    "description": "Recent searches caption (shown uppercase)."
+  },
+  "searchRecentLabel": "Search for {query} again",
+  "@searchRecentLabel": {
+    "description": "Screen-reader label of a recent-search chip.",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "searchEmpty": "Find anything you've planned: titles, notes and subtasks, done ones too.",
+  "@searchEmpty": {
+    "description": "Search with nothing typed and no recent searches."
+  },
+  "searchNoResults": "No matches for “{query}”",
+  "@searchNoResults": {
+    "description": "Search with no results.",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "searchNoResultsHint": "Try fewer words, or another filter.",
+  "@searchNoResultsHint": {
+    "description": "Under the no-results line."
+  },
+  "searchShowAll": "Show all",
+  "@searchShowAll": {
+    "description": "No results under a filter: go back to All."
+  },
+  "searchDayLabel": "{weekday} {date}",
+  "@searchDayLabel": {
+    "description": "A day without the month: 'Monday 19', 'Fri 23'.",
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
   }
 }

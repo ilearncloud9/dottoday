@@ -3,6 +3,7 @@ import 'package:dottoday/core/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/test_app.dart';
 
@@ -27,6 +28,9 @@ Future<void> _goAndExpect(
 }
 
 void main() {
+  // bootstrap() loads it in the app; real screens (Search) need it.
+  setUpAll(tz_data.initializeTimeZones);
+
   testWidgets('starts on /today', (tester) async {
     await _pump(tester);
     expect(find.byKey(const ValueKey('route:today')), findsOneWidget);

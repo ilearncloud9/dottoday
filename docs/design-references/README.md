@@ -51,3 +51,4 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Time zone picker (search over IANA Region/City ids) | §5.3 "Time zone picker" | `picker_zone_*` |
 | Type a time sheet (`TimeInput` + Done) | §5.3, R-20 | `picker_type_time_*` |
 | Duration sheet's "Or type a length" field | §3 `DurationSheet`, R-16 | `add_duration_*` |
+| Search empty (hint + recent) and no results (with Show all) | §5.3 "Search empty and no-results" | `search_empty_*`, `search_no_results_*` |

@@ -85,4 +85,5 @@ Sweep entries (add a row per screen as it lands):
 | Add · paste "Add N tasks?" | `test/features/task_editor/add_golden_test.dart` | derived |
 | A4 sub-pickers: Change day, week, time zone | `test/shared/pickers/pickers_golden_test.dart` | derived |
 | A4 Type a time | `test/features/task_editor/type_time_golden_test.dart` | derived |
+| Search S1 + empty + no results (+ Android idiom) | `test/features/search/search_golden_test.dart` | `A-ios-search`, `A-android-search`; empty/no-results derived |
 

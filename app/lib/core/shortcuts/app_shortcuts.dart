@@ -32,6 +32,14 @@ final class AddTaskIntent extends Intent {
   final DateTime? day;
 }
 
+/// Schedule the inbox task [occurrenceId] (Search's "+ Schedule", M3d.1):
+/// the Inbox's suggestions and "Pick a time…", handled at the app root.
+final class ScheduleTaskIntent extends Intent {
+  const ScheduleTaskIntent(this.occurrenceId);
+
+  final String occurrenceId;
+}
+
 /// The single table of keyboard bindings (docs/07 macOS menu, 02 F2).
 ///
 /// ```dart

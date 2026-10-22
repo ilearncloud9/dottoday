@@ -6,13 +6,17 @@ import 'dart:math';
 
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/connection/cipher_setup.dart';
+import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_search_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
+import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/features/search/state/search_state.dart';
 import 'package:drift/native.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../domain/fixtures.dart';
@@ -72,6 +76,38 @@ void main() {
     print('search p95: one term ${one}ms, two terms ${two}ms');
     expect(one, lessThan(50));
     expect(two, lessThan(50));
+  });
+
+  test('search through the provider p95 < 50 ms (M3d.1)', () async {
+    final container = ProviderContainer(
+      overrides: [
+        searchRepositoryProvider.overrideWithValue(DriftSearchRepository(db)),
+        settingsRepositoryProvider.overrideWithValue(
+          DriftSettingsRepository(db),
+        ),
+        localProfileProvider.overrideWith((ref) async => profileFixture()),
+      ],
+    );
+    addTearDown(container.dispose);
+    // What the Search screen does on each keystroke: a fresh query read
+    // through the live provider (FTS + row mapping + stream setup).
+    var n = 0;
+    Future<int> run() async {
+      final query = (n++).isEven ? 'groc' : 'call rev';
+      final sub = container.listen(searchHitsProvider(query), (_, _) {});
+      try {
+        return (await container.read(searchHitsProvider(query).future)).length;
+      } finally {
+        sub.close();
+        container.invalidate(searchHitsProvider(query));
+      }
+    }
+
+    expect(await run(), greaterThan(0));
+    final p95 = await _p95(run);
+    // ignore: avoid_print
+    print('search via provider p95: ${p95}ms');
+    expect(p95, lessThan(50));
   });
 
   test('inbox query p95 < 16 ms', () async {
