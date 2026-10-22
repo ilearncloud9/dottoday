@@ -36,6 +36,7 @@ void main() {
     OnboardingStep.welcome,
     OnboardingStep.dayShape,
     OnboardingStep.habits,
+    OnboardingStep.reminders,
   ]) {
     goldenMatrix(
       'onboarding_${step.name}',

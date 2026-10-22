@@ -3051,4 +3051,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String onboardingHabitMeta(String time, String length) {
     return '$time · $length';
   }
+
+  @override
+  String get onboardingRemindersTitle => 'Want a nudge?';
+
+  @override
+  String get onboardingRemindersBody =>
+      'Dottoday can remind you just before a task starts, and at Bedtime show you tomorrow\'s first task.';
+
+  @override
+  String get onboardingTaskStarts => 'Before each task';
+
+  @override
+  String get onboardingTaskStartsDetail =>
+      'How early is up to you, in Settings';
+
+  @override
+  String get onboardingBedtime => 'At Bedtime';
+
+  @override
+  String get onboardingBedtimeDetail =>
+      'Tomorrow\'s first task, so the morning has no surprises';
+
+  @override
+  String get onboardingAllow => 'Allow notifications';
+
+  @override
+  String get onboardingNotNow => 'Not now';
 }

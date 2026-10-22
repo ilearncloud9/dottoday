@@ -4442,5 +4442,37 @@
         "type": "String"
       }
     }
+  },
+  "onboardingRemindersTitle": "Want a nudge?",
+  "@onboardingRemindersTitle": {
+    "description": "Onboarding O4 question."
+  },
+  "onboardingRemindersBody": "Dottoday can remind you just before a task starts, and at Bedtime show you tomorrow's first task.",
+  "@onboardingRemindersBody": {
+    "description": "Onboarding O4 explanation."
+  },
+  "onboardingTaskStarts": "Before each task",
+  "@onboardingTaskStarts": {
+    "description": "Onboarding O4: the task-start reminder."
+  },
+  "onboardingTaskStartsDetail": "How early is up to you, in Settings",
+  "@onboardingTaskStartsDetail": {
+    "description": "Onboarding O4: under the task-start reminder."
+  },
+  "onboardingBedtime": "At Bedtime",
+  "@onboardingBedtime": {
+    "description": "Onboarding O4: the Bedtime reminder switch."
+  },
+  "onboardingBedtimeDetail": "Tomorrow's first task, so the morning has no surprises",
+  "@onboardingBedtimeDetail": {
+    "description": "Onboarding O4: under the Bedtime switch."
+  },
+  "onboardingAllow": "Allow notifications",
+  "@onboardingAllow": {
+    "description": "Onboarding O4: asks the system for permission."
+  },
+  "onboardingNotNow": "Not now",
+  "@onboardingNotNow": {
+    "description": "Onboarding O4: go on without asking."
   }
 }

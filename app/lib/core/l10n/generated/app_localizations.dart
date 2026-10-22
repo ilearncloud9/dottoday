@@ -4503,6 +4503,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{time} · {length}'**
   String onboardingHabitMeta(String time, String length);
+
+  /// Onboarding O4 question.
+  ///
+  /// In en, this message translates to:
+  /// **'Want a nudge?'**
+  String get onboardingRemindersTitle;
+
+  /// Onboarding O4 explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday can remind you just before a task starts, and at Bedtime show you tomorrow\'s first task.'**
+  String get onboardingRemindersBody;
+
+  /// Onboarding O4: the task-start reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Before each task'**
+  String get onboardingTaskStarts;
+
+  /// Onboarding O4: under the task-start reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'How early is up to you, in Settings'**
+  String get onboardingTaskStartsDetail;
+
+  /// Onboarding O4: the Bedtime reminder switch.
+  ///
+  /// In en, this message translates to:
+  /// **'At Bedtime'**
+  String get onboardingBedtime;
+
+  /// Onboarding O4: under the Bedtime switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow\'s first task, so the morning has no surprises'**
+  String get onboardingBedtimeDetail;
+
+  /// Onboarding O4: asks the system for permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow notifications'**
+  String get onboardingAllow;
+
+  /// Onboarding O4: go on without asking.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get onboardingNotNow;
 }
 
 class _AppLocalizationsDelegate
