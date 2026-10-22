@@ -3357,6 +3357,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title} alerts updated'**
   String snackAlertsSaved(String title);
+
+  /// Tooltip of × on a subtask row.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {title}'**
+  String subtaskRemove(String title);
+
+  /// Screen-reader label of a subtask's drag handle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder {title}'**
+  String subtaskReorder(String title);
+
+  /// Screen-reader action on a subtask.
+  ///
+  /// In en, this message translates to:
+  /// **'Move up'**
+  String get subtaskMoveUp;
+
+  /// Screen-reader action on a subtask.
+  ///
+  /// In en, this message translates to:
+  /// **'Move down'**
+  String get subtaskMoveDown;
+
+  /// Screen-reader hint: tap a subtask's title to rename it.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename {title}'**
+  String subtaskRename(String title);
+
+  /// Beside the next subtask of the task running now.
+  ///
+  /// In en, this message translates to:
+  /// **'now'**
+  String get subtaskNow;
+
+  /// Makes this day's subtasks the list for every repeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this list every time'**
+  String get subtaskEveryTime;
+
+  /// After removing a subtask.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} removed'**
+  String snackSubtaskRemoved(String title);
+
+  /// After 'Use this list every time'.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} will have this list every time'**
+  String snackListEveryTime(String title);
+
+  /// Title of the full colour and icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour and icon'**
+  String get colourIconTitle;
+
+  /// Closes the colour and icon picker keeping the colour.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get colourIconDone;
+
+  /// Title of the rename dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename subtask'**
+  String get subtaskRenameTitle;
+
+  /// Confirms the new subtask name.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get subtaskRenameSave;
 }
 
 class _AppLocalizationsDelegate

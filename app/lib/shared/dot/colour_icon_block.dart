@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/pickers/block_names.dart';
+import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
 
 /// "COLOUR AND ICON" (docs/10 §3 `ColourIconBlock`, `A-ios-add-what`,
@@ -74,12 +75,17 @@ class ColourIconBlock extends StatelessWidget {
     );
   }
 
+  /// The full picker (docs/10 §5.3 "Colour & icon full picker"): every
+  /// colour and all 26 icons in one sheet — a popover on wide windows.
   Future<void> _pickIcon(BuildContext context) async {
-    final picked = await showModalBottomSheet<TaskIcon>(
+    final picked = await showAppSheet<({TaskColor color, TaskIcon icon})>(
       context: context,
-      builder: (_) => _IconGrid(colour: color, selected: icon),
+      title: context.l10n.colourIconTitle,
+      builder: (_) => _FullPicker(colour: color, icon: icon),
     );
-    if (picked != null) onIcon(picked);
+    if (picked == null) return;
+    if (picked.color != color) onColor(picked.color);
+    if (picked.icon != icon) onIcon(picked.icon);
   }
 }
 
@@ -208,44 +214,56 @@ class _More extends StatelessWidget {
   }
 }
 
-/// All 26 icons in a grid (docs/10 §5.3 "Colour & icon full picker").
-class _IconGrid extends StatelessWidget {
-  const _IconGrid({required this.colour, required this.selected});
+/// Every colour, then all 26 icons tinted in it; an icon picks both.
+class _FullPicker extends StatefulWidget {
+  const _FullPicker({required this.colour, required this.icon});
 
   final TaskColor colour;
-  final TaskIcon selected;
+  final TaskIcon icon;
 
   @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          DotSpace.page,
-          0,
-          DotSpace.page,
-          DotSpace.l,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: DotSpace.m,
-          children: [
-            Text(context.l10n.colourIconMore, style: t.styles.cardTitle),
-            Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                for (final i in TaskIcon.picker)
-                  _IconChoice(
-                    icon: i,
-                    colour: colour,
-                    selected: i == selected,
-                    onTap: () => Navigator.of(context).pop(i),
-                  ),
-              ],
+  State<_FullPicker> createState() => _FullPickerState();
+}
+
+/// A leaf: the colour while choosing.
+class _FullPickerState extends State<_FullPicker> {
+  late var _colour = widget.colour;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    spacing: DotSpace.m,
+    children: [
+      Wrap(
+        alignment: WrapAlignment.center,
+        children: [
+          for (final c in TaskColor.values)
+            ColourDot(
+              colour: c,
+              selected: c == _colour,
+              onTap: () => setState(() => _colour = c),
             ),
-          ],
-        ),
+        ],
       ),
-    );
-  }
+      Wrap(
+        alignment: WrapAlignment.center,
+        children: [
+          for (final i in TaskIcon.picker)
+            _IconChoice(
+              icon: i,
+              colour: _colour,
+              selected: i == widget.icon,
+              onTap: () => Navigator.of(context).pop((color: _colour, icon: i)),
+            ),
+        ],
+      ),
+      // A colour alone is a choice too.
+      FilledButton(
+        onPressed: () =>
+            Navigator.of(context).pop((color: _colour, icon: widget.icon)),
+        child: Text(context.l10n.colourIconDone),
+      ),
+    ],
+  );
 }

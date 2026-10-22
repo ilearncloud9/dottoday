@@ -37,6 +37,9 @@ abstract final class DotGlyphs {
   static const add = DotGlyph('M12 5v14M5 12h14');
   static const minus = DotGlyph('M5 12h14');
 
+  /// Two bars: a row's drag handle (reorder).
+  static const dragHandle = DotGlyph('M5 9h14M5 15h14');
+
   // Interface.
   static const check = DotGlyph('M5 12.5l4.5 4.5L19 7.5');
   static const chevronDown = DotGlyph('M6 9l6 6 6-6');

@@ -54,6 +54,39 @@ void main() {
     expect(icons, [TaskIcon.cart, TaskIcon.camera]);
   });
 
+  testWidgets('the full picker takes a colour and an icon together '
+      '(M3f.3)', (tester) async {
+    final colors = <TaskColor>[];
+    final icons = <TaskIcon>[];
+    await tester.pumpWidget(_block(onColor: colors.add, onIcon: icons.add));
+    await tester.ensureVisible(find.byTooltip('All icons'));
+    await tester.tap(find.byTooltip('All icons'));
+    await tester.pumpAndSettle();
+    expect(find.text('Colour and icon'), findsOneWidget);
+    // The sheet's own colours come after the block's.
+    await tester.tap(find.bySemanticsLabel('Mint').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('Gym'));
+    await tester.pumpAndSettle();
+    expect(colors, [TaskColor.mint]);
+    expect(icons, [TaskIcon.gym]);
+  });
+
+  testWidgets('a colour alone: Done keeps it', (tester) async {
+    final colors = <TaskColor>[];
+    final icons = <TaskIcon>[];
+    await tester.pumpWidget(_block(onColor: colors.add, onIcon: icons.add));
+    await tester.ensureVisible(find.byTooltip('All icons'));
+    await tester.tap(find.byTooltip('All icons'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('Sky').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect(colors, [TaskColor.sky]);
+    expect(icons, isEmpty);
+  });
+
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     testWidgets('meets a11y guidelines (${mode.name})', (tester) async {
       await tester.pumpWidget(_block(mode: mode));

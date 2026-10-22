@@ -3440,5 +3440,82 @@
         "type": "String"
       }
     }
+  },
+  "subtaskRemove": "Remove {title}",
+  "@subtaskRemove": {
+    "description": "Tooltip of × on a subtask row.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "subtaskReorder": "Reorder {title}",
+  "@subtaskReorder": {
+    "description": "Screen-reader label of a subtask's drag handle.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "subtaskMoveUp": "Move up",
+  "@subtaskMoveUp": {
+    "description": "Screen-reader action on a subtask."
+  },
+  "subtaskMoveDown": "Move down",
+  "@subtaskMoveDown": {
+    "description": "Screen-reader action on a subtask."
+  },
+  "subtaskRename": "Rename {title}",
+  "@subtaskRename": {
+    "description": "Screen-reader hint: tap a subtask's title to rename it.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "subtaskNow": "now",
+  "@subtaskNow": {
+    "description": "Beside the next subtask of the task running now."
+  },
+  "subtaskEveryTime": "Use this list every time",
+  "@subtaskEveryTime": {
+    "description": "Makes this day's subtasks the list for every repeat."
+  },
+  "snackSubtaskRemoved": "{title} removed",
+  "@snackSubtaskRemoved": {
+    "description": "After removing a subtask.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "snackListEveryTime": "{title} will have this list every time",
+  "@snackListEveryTime": {
+    "description": "After 'Use this list every time'.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "colourIconTitle": "Colour and icon",
+  "@colourIconTitle": {
+    "description": "Title of the full colour and icon picker."
+  },
+  "colourIconDone": "Done",
+  "@colourIconDone": {
+    "description": "Closes the colour and icon picker keeping the colour."
+  },
+  "subtaskRenameTitle": "Rename subtask",
+  "@subtaskRenameTitle": {
+    "description": "Title of the rename dialog."
+  },
+  "subtaskRenameSave": "Rename",
+  "@subtaskRenameSave": {
+    "description": "Confirms the new subtask name."
   }
 }

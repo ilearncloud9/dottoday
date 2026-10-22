@@ -2282,4 +2282,53 @@ class AppLocalizationsEn extends AppLocalizations {
   String snackAlertsSaved(String title) {
     return '$title alerts updated';
   }
+
+  @override
+  String subtaskRemove(String title) {
+    return 'Remove $title';
+  }
+
+  @override
+  String subtaskReorder(String title) {
+    return 'Reorder $title';
+  }
+
+  @override
+  String get subtaskMoveUp => 'Move up';
+
+  @override
+  String get subtaskMoveDown => 'Move down';
+
+  @override
+  String subtaskRename(String title) {
+    return 'Rename $title';
+  }
+
+  @override
+  String get subtaskNow => 'now';
+
+  @override
+  String get subtaskEveryTime => 'Use this list every time';
+
+  @override
+  String snackSubtaskRemoved(String title) {
+    return '$title removed';
+  }
+
+  @override
+  String snackListEveryTime(String title) {
+    return '$title will have this list every time';
+  }
+
+  @override
+  String get colourIconTitle => 'Colour and icon';
+
+  @override
+  String get colourIconDone => 'Done';
+
+  @override
+  String get subtaskRenameTitle => 'Rename subtask';
+
+  @override
+  String get subtaskRenameSave => 'Rename';
 }

@@ -1,22 +1,36 @@
 import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/failures/app_failure.dart';
+import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/recurrence/series_actions.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
+import 'package:dottoday/features/timeline/state/timeline_providers.dart';
+import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/features/timeline/widgets/subtask_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// "Subtasks · 1 of 3", each ticked on this occurrence only (R-09), and an
-/// inline field to add one.
+/// "Subtasks · 1 of 3" (docs/09 M3f.3, R-09): each ticked on this day only;
+/// tap a title to rename it, × to remove, drag (or Move up / down) to
+/// reorder, a field to add one; a repeating task can make this day's list
+/// its list for every time.
 class SheetSubtasks extends ConsumerStatefulWidget {
-  const SheetSubtasks({required this.task, super.key});
+  const SheetSubtasks({required this.task, this.editing = false, super.key});
 
   final TaskView task;
+
+  /// The editor's list: rename, remove, reorder, every-time. The task
+  /// sheet's list ticks on tap.
+  final bool editing;
 
   @override
   ConsumerState<SheetSubtasks> createState() => _SubtasksState();
@@ -32,61 +46,92 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
     super.dispose();
   }
 
+  List<Subtask> get _list =>
+      [...widget.task.subtasks]
+        ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+
   @override
   Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    final subtasks = widget.task.subtasks;
-    final done = subtasks.where((s) => s.done).length;
+    final list = _list;
+    final next = _running() ? list.where((s) => !s.done).firstOrNull : null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
+        _Header(
+          done: list.where((s) => s.done).length,
+          total: list.length,
+          onAdd: () => setState(() => _adding = true),
+        ),
+        ReorderableListView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          buildDefaultDragHandles: false,
+          onReorderItem: (from, to) => unawaited(_move(list, from, to)),
           children: [
-            Expanded(
-              child: Semantics(
-                header: true,
-                child: Text(
-                  subtasks.isEmpty
-                      ? l10n.sheetSubtasksNone
-                      : l10n.sheetSubtasks(done, subtasks.length),
-                  style: t.styles.rowTitle.copyWith(color: t.colors.muted),
-                ),
+            for (final (i, s) in list.indexed)
+              SubtaskRow(
+                key: ValueKey(s.id),
+                subtask: s,
+                index: i,
+                now: s == next,
+                editing: widget.editing,
+                onTick: () => unawaited(_write([s.copyWith(done: !s.done)])),
+                onRename: (t) => unawaited(_write([s.copyWith(title: t)])),
+                onRemove: () => unawaited(_remove(s)),
+                onUp: i == 0 ? null : () => unawaited(_move(list, i, i - 1)),
+                onDown: i == list.length - 1
+                    ? null
+                    : () => unawaited(_move(list, i, i + 1)),
               ),
-            ),
-            TextButton(
-              onPressed: () => setState(() => _adding = true),
-              child: Text(
-                l10n.sheetAddSubtask,
-                style: t.styles.button.copyWith(color: t.colors.accentInk),
-              ),
-            ),
           ],
         ),
-        for (final s in subtasks)
-          CheckboxListTile(
-            value: s.done,
-            onChanged: (_) => unawaited(_write([s.copyWith(done: !s.done)])),
-            controlAffinity: ListTileControlAffinity.leading,
-            contentPadding: EdgeInsets.zero,
-            title: Text(
-              s.title,
-              style: t.styles.body.copyWith(
-                color: s.done ? t.colors.muted : null,
-                decoration: s.done ? TextDecoration.lineThrough : null,
-              ),
+        if (_adding) _newField(context),
+        if (widget.editing && widget.task.series != null && list.isNotEmpty)
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton(
+              onPressed: () => unawaited(_everyTime()),
+              child: Text(context.l10n.subtaskEveryTime),
             ),
-          ),
-        if (_adding)
-          TextField(
-            controller: _field,
-            autofocus: true,
-            textInputAction: TextInputAction.done,
-            decoration: InputDecoration(hintText: l10n.sheetNewSubtask),
-            onSubmitted: _add,
           ),
       ],
     );
+  }
+
+  Widget _newField(BuildContext context) => TextField(
+    controller: _field,
+    autofocus: true,
+    textInputAction: TextInputAction.done,
+    decoration: InputDecoration(hintText: context.l10n.sheetNewSubtask),
+    onSubmitted: _add,
+  );
+
+  /// Whether the task is running now (the "now" tag).
+  bool _running() {
+    final o = widget.task.occurrence;
+    final now =
+        ref.watch(minuteTickProvider).value ??
+        ref.watch(clockProvider).nowUtc();
+    final start = o.startUtc;
+    return o.status == OccurrenceStatus.planned &&
+        start != null &&
+        !start.isAfter(now) &&
+        o.endUtc!.isAfter(now);
+  }
+
+  /// Moves row [from] to position [to] of the list without it.
+  Future<void> _move(List<Subtask> list, int from, int to) async {
+    final rest = [...list]..removeAt(from);
+    final at = to;
+    final before = at == 0 ? null : rest[at - 1].sortOrder;
+    final after = at >= rest.length ? null : rest[at].sortOrder;
+    final order = switch ((before, after)) {
+      (null, null) => 1.0,
+      (null, final a?) => a - 1,
+      (final b?, null) => b + 1,
+      (final b?, final a?) => (a + b) / 2,
+    };
+    await _write([list[from].copyWith(sortOrder: order)]);
   }
 
   Future<void> _add(String text) async {
@@ -96,7 +141,7 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
     if (title.isEmpty) return;
     final o = widget.task.occurrence;
     final now = ref.read(clockProvider).nowUtc();
-    final last = widget.task.subtasks.lastOrNull?.sortOrder ?? 0;
+    final last = _list.lastOrNull?.sortOrder ?? 0;
     await _write([
       Subtask(
         id: const UuidV7Generator().newId(),
@@ -110,9 +155,43 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
     ]);
   }
 
-  Future<void> _write(List<Subtask> subtasks) async {
+  Future<void> _remove(Subtask s) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
     final now = ref.read(clockProvider).nowUtc();
-    await ref
+    reportUndoable(
+      messenger,
+      l10n,
+      ref.read(undoServiceProvider),
+      await _write([s.copyWith(deletedAt: now)]),
+      message: (_) => l10n.snackSubtaskRemoved(s.title),
+      tokenOf: (t) => t,
+    );
+  }
+
+  Future<void> _everyTime() async {
+    final series = widget.task.series;
+    if (series == null) return;
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    reportUndoable(
+      messenger,
+      l10n,
+      ref.read(undoServiceProvider),
+      await useListEveryTime(
+        ProviderScope.containerOf(context),
+        series: series,
+        source: widget.task.occurrence,
+        subtasks: _list,
+      ),
+      message: (_) => l10n.snackListEveryTime(widget.task.occurrence.title),
+      tokenOf: (t) => t,
+    );
+  }
+
+  Future<Result<UndoToken, AppFailure>> _write(List<Subtask> subtasks) {
+    final now = ref.read(clockProvider).nowUtc();
+    return ref
         .read(undoServiceProvider)
         .applyUndoable(
           WriteBatch(
@@ -120,5 +199,42 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
             subtasks: [for (final s in subtasks) s.copyWith(updatedAt: now)],
           ),
         );
+  }
+}
+
+/// "Subtasks · 1 of 3" and "+ Add".
+class _Header extends StatelessWidget {
+  const _Header({required this.done, required this.total, required this.onAdd});
+
+  final int done;
+  final int total;
+  final VoidCallback onAdd;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    return Row(
+      children: [
+        Expanded(
+          child: Semantics(
+            header: true,
+            child: Text(
+              total == 0
+                  ? l10n.sheetSubtasksNone
+                  : l10n.sheetSubtasks(done, total),
+              style: t.styles.rowTitle.copyWith(color: t.colors.muted),
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: onAdd,
+          child: Text(
+            l10n.sheetAddSubtask,
+            style: t.styles.button.copyWith(color: t.colors.accentInk),
+          ),
+        ),
+      ],
+    );
   }
 }

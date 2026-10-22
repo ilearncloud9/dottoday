@@ -4,10 +4,13 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
 import 'package:dottoday/domain/recurrence/series_edit.dart';
+import 'package:dottoday/domain/recurrence/subtask_template.dart';
 import 'package:dottoday/domain/time/wall_clock.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
@@ -157,4 +160,51 @@ Series _seriesFrom(Occurrence o, RepeatRule rule, String id, DateTime now) {
 String _local(DateTime d) {
   String two(int v) => v.toString().padLeft(2, '0');
   return '${d.year}-${two(d.month)}-${two(d.day)}T${two(d.hour)}:${two(d.minute)}:00';
+}
+
+/// "Use this list every time" (docs/09 M3f.3, R-09): [subtasks] (one
+/// day's list) become [series]' template, and every later planned day
+/// with nothing ticked gets it fresh — one batch, one Undo.
+Future<Result<UndoToken, AppFailure>> useListEveryTime(
+  ProviderContainer ref, {
+  required Series series,
+  required Occurrence source,
+  required List<Subtask> subtasks,
+  IdGenerator ids = const UuidV7Generator(),
+}) async {
+  final now = ref.read(clockProvider).nowUtc();
+  final template = templateOf(subtasks, ids);
+  final later = [
+    for (final o in await _rows(ref, series))
+      if (o.id != source.id &&
+          o.deletedAt == null &&
+          o.status == OccurrenceStatus.planned &&
+          (o.startUtc?.isAfter(now) ?? false))
+        o,
+  ];
+  final existing = await ref
+      .read(subtaskRepositoryProvider)
+      .watchForOccurrences(series.userId, {for (final o in later) o.id})
+      .first;
+  final days = {
+    for (final o in later)
+      o: [
+        for (final s in existing)
+          if (s.occurrenceId == o.id) s,
+      ],
+  };
+  return ref
+      .read(undoServiceProvider)
+      .applyUndoable(
+        WriteBatch(
+          userId: series.userId,
+          series: [series.copyWith(subtaskTemplate: template, updatedAt: now)],
+          subtasks: applyTemplate(
+            template: template,
+            days: days,
+            nowUtc: now,
+            ids: ids,
+          ),
+        ),
+      );
 }

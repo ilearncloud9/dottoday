@@ -1,19 +1,15 @@
-import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
-import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/recurrence/materialiser.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
-import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
+import '../../support/editor_harness.dart';
 import '../../support/fake_clock.dart';
 import '../../support/fake_ids.dart';
 import '../../support/timeline_fakes.dart';
@@ -42,40 +38,12 @@ List<Occurrence> _runs() => Materialiser(
 ).plan(_series, const []).occurrences;
 
 Future<void> _pump(WidgetTester tester, String id) async {
-  tester.view
-    ..physicalSize = const Size(390, 2400)
-    ..devicePixelRatio = 1;
-  addTearDown(tester.view.reset);
-  _container = ProviderContainer(
-    overrides: timelineOverrides(
-      now: DateTime.utc(2026, 10, 21, 7, 22),
-      occurrences: _repo,
-      series: [_series],
-      profile: testProfile(settings: const Settings(use24h: false)),
-    ),
-  );
-  addTearDown(_container.dispose);
-  await tester.pumpWidget(
-    UncontrolledProviderScope(
-      container: _container,
-      child: MaterialApp(
-        theme: DotTheme.light(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: TaskScreen(id: id),
-      ),
-    ),
-  );
-  await tester.pumpAndSettle();
-  await tester.tap(find.text('Edit'));
-  await tester.pumpAndSettle();
+  _container = await pumpEditor(tester, id: id, repo: _repo, series: [_series]);
 }
 
-Finder _inEditor(Finder f) =>
-    find.descendant(of: find.byType(TaskEditor), matching: f);
+Finder _inEditor(Finder f) => inEditor(f);
 
-FakeSeriesRepository _seriesRepo() =>
-    _container.read(seriesRepositoryProvider) as FakeSeriesRepository;
+FakeSeriesRepository _seriesRepo() => seriesStore(_container);
 
 Occurrence _row(String id) => _repo.rows.firstWhere((o) => o.id == id);
 

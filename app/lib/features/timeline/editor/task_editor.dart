@@ -270,7 +270,7 @@ class _FormState extends ConsumerState<_Form> {
           ),
         ),
         const SizedBox(height: DotSpace.l),
-        SheetSubtasks(task: widget.task),
+        SheetSubtasks(task: widget.task, editing: true),
         EditorCaption(l10n.editorNotes),
         TextField(
           controller: _notes,
