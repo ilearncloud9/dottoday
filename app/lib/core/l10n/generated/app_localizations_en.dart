@@ -1933,4 +1933,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String weekRange(String start, String end) {
     return '$start – $end';
   }
+
+  @override
+  String monthStats(int done, int missed, int ahead) {
+    return '$done done · $missed missed · $ahead ahead';
+  }
+
+  @override
+  String monthStatsBusiest(String stats, String day) {
+    return '$stats · busiest day $day';
+  }
 }

@@ -2901,6 +2901,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{start} – {end}'**
   String weekRange(String start, String end);
+
+  /// Mac/web Month header numbers.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} done · {missed} missed · {ahead} ahead'**
+  String monthStats(int done, int missed, int ahead);
+
+  /// Mac/web Month header with the busiest day: '… · busiest day Tue 13'.
+  ///
+  /// In en, this message translates to:
+  /// **'{stats} · busiest day {day}'**
+  String monthStatsBusiest(String stats, String day);
 }
 
 class _AppLocalizationsDelegate

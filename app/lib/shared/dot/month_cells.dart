@@ -185,7 +185,8 @@ class _CellHeader extends StatelessWidget {
             style: date.copyWith(color: day.isPast ? c.muted : c.text),
           ),
         const Spacer(),
-        if (day.isPast || day.isToday)
+        // A day with nothing planned has nothing to complete: no badge.
+        if ((day.isPast || day.isToday) && day.completion != null)
           _Badge(completion: day.completion, today: day.isToday),
       ],
     );

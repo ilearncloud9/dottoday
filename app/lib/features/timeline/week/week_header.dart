@@ -52,23 +52,13 @@ class WeekHeader extends StatelessWidget {
         formatDurationShort(l10n, summary.plannedMinutes),
       ),
     );
-    final controls = Wrap(
-      spacing: DotSpace.m,
-      runSpacing: DotSpace.s,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        SegmentedButton<bool>(
-          segments: [
-            ButtonSegment(value: true, label: Text(l10n.weekViewWeek)),
-            ButtonSegment(value: false, label: Text(l10n.weekViewMonth)),
-          ],
-          selected: const {true},
-          showSelectedIcon: false,
-          onSelectionChanged: (s) => s.first ? null : onMonth(),
-        ),
-        _Nav(onPrevious: onPrevious, onToday: onToday, onNext: onNext),
-        if (thisWeek) TodayDot(today: today),
-      ],
+    final controls = PeriodControls(
+      week: true,
+      onSwitch: onMonth,
+      onPrevious: onPrevious,
+      onToday: onToday,
+      onNext: onNext,
+      today: thisWeek ? today : null,
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,13 +144,74 @@ class _Title extends StatelessWidget {
   }
 }
 
+/// Week | Month, ‹ Today › with their keys, and the day dot while the
+/// period holds today (`A-mac-week-alt3-board`, `A-mac-month`).
+class PeriodControls extends StatelessWidget {
+  const PeriodControls({
+    required this.week,
+    required this.onSwitch,
+    required this.onPrevious,
+    required this.onToday,
+    required this.onNext,
+    this.today,
+    super.key,
+  });
+
+  /// Which of Week | Month is selected.
+  final bool week;
+
+  /// The other one was picked.
+  final VoidCallback onSwitch;
+  final VoidCallback onPrevious;
+  final VoidCallback onToday;
+  final VoidCallback onNext;
+
+  /// Shows the day dot (the period holds today).
+  final DateTime? today;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Wrap(
+      spacing: DotSpace.m,
+      runSpacing: DotSpace.s,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        SegmentedButton<bool>(
+          segments: [
+            ButtonSegment(value: true, label: Text(l10n.weekViewWeek)),
+            ButtonSegment(value: false, label: Text(l10n.weekViewMonth)),
+          ],
+          selected: {week},
+          showSelectedIcon: false,
+          onSelectionChanged: (s) => s.first == week ? null : onSwitch(),
+        ),
+        _Nav(
+          onPrevious: onPrevious,
+          onToday: onToday,
+          onNext: onNext,
+          previous: week ? l10n.weekPrevious : l10n.monthPrevious,
+          next: week ? l10n.weekNext : l10n.monthNext,
+        ),
+        if (today case final d?) TodayDot(today: d),
+      ],
+    );
+  }
+}
+
 /// ‹ ⌘←   Today ⌘T   ⌘→ ›
 class _Nav extends StatelessWidget {
   const _Nav({
     required this.onPrevious,
     required this.onToday,
     required this.onNext,
+    required this.previous,
+    required this.next,
   });
+
+  /// Tooltips: "Previous week" / "Next month" …
+  final String previous;
+  final String next;
 
   final VoidCallback onPrevious;
   final VoidCallback onToday;
@@ -178,7 +229,7 @@ class _Nav extends StatelessWidget {
       spacing: DotSpace.s,
       children: [
         Tooltip(
-          message: l10n.weekPrevious,
+          message: previous,
           child: OutlinedButton.icon(
             onPressed: onPrevious,
             icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.text),
@@ -194,7 +245,7 @@ class _Nav extends StatelessWidget {
           ),
         ),
         Tooltip(
-          message: l10n.weekNext,
+          message: next,
           child: OutlinedButton.icon(
             onPressed: onNext,
             iconAlignment: IconAlignment.end,

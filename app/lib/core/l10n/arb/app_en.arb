@@ -2988,5 +2988,32 @@
         "type": "String"
       }
     }
+  },
+  "monthStats": "{done} done · {missed} missed · {ahead} ahead",
+  "@monthStats": {
+    "description": "Mac/web Month header numbers.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "missed": {
+        "type": "int"
+      },
+      "ahead": {
+        "type": "int"
+      }
+    }
+  },
+  "monthStatsBusiest": "{stats} · busiest day {day}",
+  "@monthStatsBusiest": {
+    "description": "Mac/web Month header with the busiest day: '… · busiest day Tue 13'.",
+    "placeholders": {
+      "stats": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
   }
 }
