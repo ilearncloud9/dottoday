@@ -21,7 +21,8 @@ void main() {
   goldenMatrix(
     'month',
     height: 1100,
-    widths: const {'expanded', 'expanded_min'},
+    // Compact: the route opens at any width; there it is the phones' month.
+    widths: const {'compact', 'expanded', 'expanded_min'},
     build: (_) => ProviderScope(
       overrides: timelineOverrides(
         now: DateTime.utc(2026, 10, 21, 7, 22),

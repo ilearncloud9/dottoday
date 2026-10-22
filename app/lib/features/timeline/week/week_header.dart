@@ -224,9 +224,10 @@ class _Nav extends StatelessWidget {
     final p = defaultTargetPlatform;
     Widget keys(String key) =>
         Text(AppShortcuts.label(p, key), style: t.styles.rowMeta);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    // Wraps on a narrow window ("Ctrl+←" is longer than "⌘←").
+    return Wrap(
       spacing: DotSpace.s,
+      runSpacing: DotSpace.s,
       children: [
         Tooltip(
           message: previous,

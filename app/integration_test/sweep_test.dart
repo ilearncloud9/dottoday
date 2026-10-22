@@ -104,17 +104,32 @@ void main() {
 /// Scrolls step 2's list until [finder] is built and on screen: in a short
 /// window (the Mac's default) the lazy list drops what is off screen.
 Future<void> _reveal(WidgetTester tester, Finder finder) async {
+  // The step's own list, not the time picker scrolling inside it (that
+  // would move the task's start).
   final list = find
       .descendant(
-        of: find.byType(AddWhenStep),
+        of: find
+            .descendant(
+              of: find.byType(AddWhenStep),
+              matching: find.byType(ListView),
+            )
+            .first,
         matching: find.byType(Scrollable),
       )
       .first;
-  for (final delta in [200.0, -200.0]) {
+  // Jump the list rather than drag it: a drag at its centre lands on the
+  // time picker and would move the task.
+  final position = tester.state<ScrollableState>(list).position;
+  for (final to in [position.minScrollExtent, position.maxScrollExtent]) {
     if (tester.any(finder)) break;
-    await tester
-        .scrollUntilVisible(finder, delta, scrollable: list, maxScrolls: 10)
-        .catchError((Object _) {});
+    position.jumpTo(to);
+    await _rest(tester);
+  }
+  if (!tester.any(finder)) {
+    final texts = [
+      for (final e in find.byType(Text).evaluate()) (e.widget as Text).data,
+    ];
+    fail('could not reveal $finder; on screen: $texts');
   }
   await tester.ensureVisible(finder);
   await _rest(tester);
@@ -155,7 +170,9 @@ Future<void> _addFlow(
   await _pumpUntil(tester, find.text('PRESETS'));
   await _rest(tester);
   await _shot(binding, tester, '${_tag}_add_duration');
-  await tester.tap(find.text('Done'));
+  // The sheet's own Done: the topmost one (a device that kept earlier runs'
+  // tasks may show a live row's Done behind it).
+  await tester.tap(find.text('Done').last);
   await _rest(tester);
 
   await _reveal(tester, find.byTooltip('More time options'));

@@ -102,21 +102,12 @@ class _Page extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toLanguageTag();
-    final cells = expandedMonthCells(
-      month: month,
-      firstDayOfWeek: firstDayOfWeek,
-      today: today,
-      nowUtc: nowUtc,
-      byDay: byDay,
-      dateText: (d) => DateFormat.d(locale).format(d),
-      label: (d, c) {
-        final name = DateFormat.MMMMEEEEd(locale).format(d);
-        return c.total == 0 ? name : l10n.monthCellLabel(name, c.done, c.total);
-      },
-    );
+    // Cards of what each day held from the expanded width; below it (the
+    // route opens at any width) the phones' compact month, which fits.
+    final wide =
+        WidthClass.of(MediaQuery.sizeOf(context).width) == WidthClass.expanded;
+    final cells = _cells(context, locale, wide: wide);
     final lead = cells.indexWhere((c) => c != null);
     final start = weekStart(DateTime(month.year, month.month), firstDayOfWeek);
     return ListView(
@@ -127,34 +118,10 @@ class _Page extends StatelessWidget {
         DotSpace.xl,
       ),
       children: [
-        Wrap(
-          spacing: DotSpace.m,
-          runSpacing: DotSpace.m,
-          alignment: WrapAlignment.spaceBetween,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Semantics(
-                  header: true,
-                  child: Text(
-                    DateFormat.yMMMM(locale).format(month),
-                    style: t.styles.pageTitle,
-                  ),
-                ),
-                Text(
-                  _stats(context, locale),
-                  style: t.styles.body.copyWith(color: t.colors.muted),
-                ),
-              ],
-            ),
-            controls,
-          ],
-        ),
+        _header(context, locale),
         const SizedBox(height: DotSpace.l),
         MonthGrid(
-          style: MonthCellStyle.expanded,
+          style: wide ? MonthCellStyle.expanded : MonthCellStyle.compact,
           weekdays: [
             for (var i = 0; i < 7; i++)
               DateFormat.E(locale).format(start.add(Duration(days: i))),
@@ -164,6 +131,69 @@ class _Page extends StatelessWidget {
             AppRoutes.day(DateTime(month.year, month.month, i - lead + 1)),
           ),
         ),
+      ],
+    );
+  }
+
+  List<MonthDay?> _cells(
+    BuildContext context,
+    String locale, {
+    required bool wide,
+  }) {
+    final l10n = context.l10n;
+    String label(DateTime d, ({int done, int total}) c) {
+      final name = DateFormat.MMMMEEEEd(locale).format(d);
+      return c.total == 0 ? name : l10n.monthCellLabel(name, c.done, c.total);
+    }
+
+    String date(DateTime d) => DateFormat.d(locale).format(d);
+    return wide
+        ? expandedMonthCells(
+            month: month,
+            firstDayOfWeek: firstDayOfWeek,
+            today: today,
+            nowUtc: nowUtc,
+            byDay: byDay,
+            dateText: date,
+            label: label,
+          )
+        : compactMonthCells(
+            month: month,
+            firstDayOfWeek: firstDayOfWeek,
+            today: today,
+            byDay: byDay,
+            dateText: date,
+            label: label,
+          );
+  }
+
+  /// "October 2026", its numbers, and the controls.
+  Widget _header(BuildContext context, String locale) {
+    final t = DotTheme.of(context);
+    return Wrap(
+      spacing: DotSpace.m,
+      runSpacing: DotSpace.m,
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Semantics(
+              container: true,
+              header: true,
+              child: Text(
+                DateFormat.yMMMM(locale).format(month),
+                style: t.styles.pageTitle,
+              ),
+            ),
+            Text(
+              _stats(context, locale),
+              style: t.styles.body.copyWith(color: t.colors.muted),
+            ),
+          ],
+        ),
+        controls,
       ],
     );
   }
