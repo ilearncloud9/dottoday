@@ -24,6 +24,7 @@ import 'package:dottoday/shared/dot/inbox_row.dart';
 import 'package:dottoday/shared/dot/next_free_slot.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,14 +42,27 @@ class InboxScreen extends ConsumerWidget {
   /// A readable column on medium windows; expanded is [WideInbox].
   static const _maxWidth = DotSize.readableColumn;
 
+  /// What the Inbox needs before it can draw (docs/09 M3f.9b).
+  static List<AsyncValue<Object?>> _inputs(WidgetRef ref) => [
+    ref.watch(inboxItemsProvider),
+    ref.watch(inboxTodayProvider),
+    ref.watch(currentProfileProvider),
+  ];
+
+  /// Try again (docs/09 M3f.9b).
+  static void _retry(WidgetRef ref) => ref
+    ..invalidate(inboxItemsProvider)
+    ..invalidate(inboxTodayProvider)
+    ..invalidate(currentProfileProvider);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final items = ref.watch(inboxItemsProvider).value;
-    final today = ref.watch(inboxTodayProvider).value;
-    final profile = ref.watch(currentProfileProvider).value;
-    if (items == null || today == null || profile == null) {
-      return const Scaffold(key: _key);
+    if (waitFor(_key, _inputs(ref), onRetry: () => _retry(ref)) case final w?) {
+      return w;
     }
+    final items = ref.watch(inboxItemsProvider).requireValue;
+    final today = ref.watch(inboxTodayProvider).requireValue;
+    final profile = ref.watch(currentProfileProvider).requireValue;
     final room = ref.watch(dayRoomProvider(today)).value;
     final zone = tz.getLocation(profile.tzId);
     final use24h = use24hFor(context, profile.settings.use24h);

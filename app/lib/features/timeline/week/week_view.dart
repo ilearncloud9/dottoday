@@ -93,21 +93,31 @@ class WeekView extends ConsumerWidget {
           DotSpace.xl,
           0,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: DotSpace.l,
-          children: [
-            WeekHeader(
-              days: days,
-              today: today,
-              summary: summary,
-              onPrevious: onPrevious,
-              onNext: onNext,
-              onToday: onToday,
-              onMonth: onMonth,
-            ),
-            Expanded(child: board),
-          ],
+        child: LayoutBuilder(
+          builder: (context, box) => Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: DotSpace.l,
+            children: [
+              // At large text the header may be taller than the window:
+              // it gets half and scrolls itself, the board keeps the rest
+              // (M3f.9b).
+              ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: box.maxHeight / 2),
+                child: SingleChildScrollView(
+                  child: WeekHeader(
+                    days: days,
+                    today: today,
+                    summary: summary,
+                    onPrevious: onPrevious,
+                    onNext: onNext,
+                    onToday: onToday,
+                    onMonth: onMonth,
+                  ),
+                ),
+              ),
+              Expanded(child: board),
+            ],
+          ),
         ),
       ),
     );

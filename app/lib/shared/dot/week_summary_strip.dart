@@ -35,7 +35,8 @@ class WeekSummaryStrip extends StatelessWidget {
                 spacing: DotSpace.s,
                 children: [
                   DotIcon(c.glyph, color: t.colors.text, size: DotSize.rowIcon),
-                  Text(c.text, style: t.styles.body),
+                  // Wraps inside the chip at large text (M3f.9b).
+                  Flexible(child: Text(c.text, style: t.styles.body)),
                 ],
               ),
             ),

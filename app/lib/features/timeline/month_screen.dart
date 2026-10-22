@@ -13,6 +13,7 @@ import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/week/week_header.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/month_grid.dart';
+import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,13 +31,19 @@ class MonthScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final today = ref.watch(todayDateProvider).value;
-    final profile = ref.watch(currentProfileProvider).value;
-    if (today == null || profile == null) return const Scaffold(key: _key);
+    if (waitFor(_key, _base(ref), onRetry: () => _retry(ref)) case final w?) {
+      return w;
+    }
+    final today = ref.watch(todayDateProvider).requireValue;
+    final profile = ref.watch(currentProfileProvider).requireValue;
     final month =
         ref.watch(monthSelectionProvider) ?? DateTime(today.year, today.month);
-    final byDay = ref.watch(monthOccurrencesProvider(month)).value;
-    if (byDay == null) return const Scaffold(key: _key);
+    final byDayAsync = ref.watch(monthOccurrencesProvider(month));
+    if (waitFor(_key, [byDayAsync], onRetry: () => _retry(ref, month: month))
+        case final w?) {
+      return w;
+    }
+    final byDay = byDayAsync.requireValue;
     final now =
         ref.watch(minuteTickProvider).value ??
         ref.watch(clockProvider).nowUtc();
@@ -209,4 +216,18 @@ class _Page extends StatelessWidget {
       DateFormat.MMMEd(locale).format(busiest),
     );
   }
+}
+
+/// What Month needs before the month itself (docs/09 M3f.9b).
+List<AsyncValue<Object?>> _base(WidgetRef ref) => [
+  ref.watch(todayDateProvider),
+  ref.watch(currentProfileProvider),
+];
+
+/// Try again (docs/09 M3f.9b): reload what the month needs.
+void _retry(WidgetRef ref, {DateTime? month}) {
+  ref
+    ..invalidate(todayDateProvider)
+    ..invalidate(currentProfileProvider);
+  if (month != null) ref.invalidate(monthOccurrencesProvider(month));
 }

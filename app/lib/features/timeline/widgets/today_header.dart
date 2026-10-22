@@ -72,8 +72,10 @@ class TodayHeader extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         spacing: DotSpace.xs,
                         children: [
-                          ExcludeSemantics(
-                            child: Text(caption, style: t.styles.caption),
+                          Flexible(
+                            child: ExcludeSemantics(
+                              child: Text(caption, style: t.styles.caption),
+                            ),
                           ),
                           DotIcon(
                             monthOpen

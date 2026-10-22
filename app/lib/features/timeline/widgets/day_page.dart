@@ -14,6 +14,7 @@ import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,7 +42,7 @@ class DayPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final data = ref.watch(timelineDataProvider(date)).value;
-    if (data == null) return const SizedBox.shrink();
+    if (data == null) return _waiting(ref);
     final subtasks = ref.watch(daySubtaskProgressProvider(date)).value;
     final now =
         ref.watch(minuteTickProvider).value ??
@@ -81,6 +82,13 @@ class DayPage extends ConsumerWidget {
       footer: _footer(blocks, summary.total == 0),
     );
   }
+
+  /// Skeleton or Try again while the day loads (docs/09 M3f.9b).
+  Widget _waiting(WidgetRef ref) =>
+      screenState([
+        ref.watch(timelineDataProvider(date)),
+      ], onRetry: () => ref.invalidate(timelineDataProvider(date))) ??
+      const LoadingThread();
 
   /// Taps, drag, resize and selection for this day's thread.
   ThreadActions _actions(

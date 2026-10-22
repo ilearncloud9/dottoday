@@ -10,6 +10,7 @@ import 'package:dottoday/features/settings/widgets/data_about_groups.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
 import 'package:dottoday/features/settings/widgets/planning_group.dart';
 import 'package:dottoday/features/settings/widgets/reminders_look_groups.dart';
+import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -25,8 +26,15 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profile = ref.watch(currentProfileProvider).value;
-    if (profile == null) return const Scaffold(key: _key);
+    final profileAsync = ref.watch(currentProfileProvider);
+    final profile = profileAsync.value;
+    if (profile == null) {
+      return StateScaffold(
+        key: _key,
+        inputs: [profileAsync],
+        onRetry: () => ref.invalidate(currentProfileProvider),
+      );
+    }
     final s = profile.settings;
     return Scaffold(
       key: _key,

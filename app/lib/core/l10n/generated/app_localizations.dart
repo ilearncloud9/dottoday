@@ -4341,6 +4341,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try again'**
   String get stateRetry;
+
+  /// Inline error when a screen could not load from the local database.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t read your tasks on this device.'**
+  String get stateReadFailed;
 }
 
 class _AppLocalizationsDelegate

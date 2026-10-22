@@ -4308,5 +4308,9 @@
   "stateRetry": "Try again",
   "@stateRetry": {
     "description": "Inline error button."
+  },
+  "stateReadFailed": "Couldn't read your tasks on this device.",
+  "@stateReadFailed": {
+    "description": "Inline error when a screen could not load from the local database."
   }
 }

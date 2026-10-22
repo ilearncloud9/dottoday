@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
@@ -12,6 +13,7 @@ import 'package:dottoday/features/timeline/widgets/sheet_meta.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_subtasks.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
+import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -60,8 +62,15 @@ class TaskSheetBody extends ConsumerWidget {
           SheetDetails(task: task, onEdit: () => showTaskEditor(context, id)),
         ],
       ),
-      AsyncData(value: null) || AsyncError() => _NotFound(),
-      _ => const SizedBox.shrink(),
+      AsyncData(value: null) ||
+      AsyncError(error: NotFoundFailure()) => _NotFound(),
+      // Loading or failed (docs/09 M3f.9b); an id that isn't here stays
+      // "not here" above.
+      _ =>
+        screenState([
+              view,
+            ], onRetry: () => ref.invalidate(taskViewProvider(id))) ??
+            const LoadingThread(),
     };
   }
 }

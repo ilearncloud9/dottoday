@@ -30,42 +30,58 @@ class WideInboxHeader extends ConsumerWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final work = inboxWork(items);
-    return Row(
+    // A Wrap: at large text the actions go under the title (M3f.9b).
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
       spacing: DotSpace.m,
+      runSpacing: DotSpace.s,
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Semantics(
-                header: true,
-                child: Text(l10n.navInbox, style: t.styles.pageTitle),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Semantics(
+              header: true,
+              child: Text(l10n.navInbox, style: t.styles.pageTitle),
+            ),
+            Text(
+              l10n.inboxSummary(
+                work.count,
+                formatDurationShort(l10n, work.minutes),
               ),
-              Text(
-                l10n.inboxSummary(
-                  work.count,
-                  formatDurationShort(l10n, work.minutes),
-                ),
-                style: t.styles.body.copyWith(color: t.colors.muted),
-              ),
-            ],
-          ),
+              style: t.styles.body.copyWith(color: t.colors.muted),
+            ),
+          ],
         ),
-        const _SortButton(),
-        FilledButton(
-          onPressed: onAutoPlan,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: DotSpace.s,
-            children: [
-              Text(l10n.inboxAutoPlan),
-              _KeyHint(
-                AppShortcuts.label(defaultTargetPlatform, _key, shift: true),
+        Wrap(
+          spacing: DotSpace.m,
+          runSpacing: DotSpace.s,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            const _SortButton(),
+            FilledButton(
+              onPressed: onAutoPlan,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: DotSpace.s,
+                children: [
+                  Flexible(child: Text(l10n.inboxAutoPlan)),
+                  _KeyHint(
+                    AppShortcuts.label(
+                      defaultTargetPlatform,
+                      _key,
+                      shift: true,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            CountRing(
+              count: work.count,
+              label: l10n.inboxRingLabel(work.count),
+            ),
+          ],
         ),
-        CountRing(count: work.count, label: l10n.inboxRingLabel(work.count)),
       ],
     );
   }

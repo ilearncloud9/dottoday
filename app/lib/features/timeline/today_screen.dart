@@ -14,6 +14,7 @@ import 'package:dottoday/features/timeline/widgets/today_spread.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/day_pager.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
+import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,15 +30,27 @@ class TodayScreen extends ConsumerWidget {
 
   final DateTime? date;
 
+  /// What Today needs before it can draw (docs/09 M3f.9b).
+  static List<AsyncValue<Object?>> _inputs(WidgetRef ref) => [
+    ref.watch(todayDateProvider),
+    ref.watch(currentProfileProvider),
+  ];
+
+  static void _retry(WidgetRef ref) => ref
+    ..invalidate(todayDateProvider)
+    ..invalidate(currentProfileProvider);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final today = ref.watch(todayDateProvider).value;
-    final profile = ref.watch(currentProfileProvider).value;
     final view = ref.watch(todaySelectionProvider);
     final key = ValueKey(
       date == null ? 'route:today' : 'route:day:${date!.toIso8601String()}',
     );
-    if (today == null || profile == null) return Scaffold(key: key);
+    if (waitFor(key, _inputs(ref), onRetry: () => _retry(ref)) case final w?) {
+      return w;
+    }
+    final today = ref.watch(todayDateProvider).requireValue;
+    final profile = ref.watch(currentProfileProvider).requireValue;
     final shown = view.day ?? date ?? today;
     final month = view.month ?? DateTime(shown.year, shown.month);
     void select(DateTime d) => ref

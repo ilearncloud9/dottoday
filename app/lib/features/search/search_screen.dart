@@ -5,6 +5,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/search/search_results.dart';
@@ -14,6 +15,7 @@ import 'package:dottoday/features/search/widgets/search_field.dart';
 import 'package:dottoday/features/search/widgets/search_filters.dart';
 import 'package:dottoday/features/search/widgets/search_results.dart';
 import 'package:dottoday/shared/dot/count_ring.dart';
+import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -95,6 +97,13 @@ class SearchScreen extends ConsumerWidget {
   }
 
   /// Results (or no results), then recent searches, then the empty hint.
+  Widget _waiting(WidgetRef ref, String query) =>
+      screenState([
+        ref.watch(currentProfileProvider),
+        ref.watch(searchHitsProvider(query)),
+      ], onRetry: () => ref.invalidate(searchHitsProvider(query))) ??
+      const LoadingThread();
+
   List<Widget> _results(
     BuildContext context,
     WidgetRef ref,
@@ -105,6 +114,9 @@ class SearchScreen extends ConsumerWidget {
     final notifier = ref.read(searchInputStateProvider.notifier);
     final query = input.text.trim();
     return [
+      // Loading or failed while the hits come (docs/09 M3f.9b).
+      if (query.isNotEmpty && view == null)
+        SliverToBoxAdapter(child: _waiting(ref, query)),
       if (query.isNotEmpty && view != null)
         if (view.count == 0)
           SliverToBoxAdapter(

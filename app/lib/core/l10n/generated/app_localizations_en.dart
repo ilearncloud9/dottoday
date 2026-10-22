@@ -2953,4 +2953,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stateRetry => 'Try again';
+
+  @override
+  String get stateReadFailed => 'Couldn\'t read your tasks on this device.';
 }
