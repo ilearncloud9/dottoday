@@ -2997,4 +2997,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingDotLabel => 'The day dot, drawing itself';
+
+  @override
+  String get onboardingDayShapeTitle => 'When does your day start and end?';
+
+  @override
+  String get onboardingDayShapeBody =>
+      'Your tasks live between these two. You can change them, or give each weekday its own, in Settings.';
 }

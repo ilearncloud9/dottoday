@@ -32,7 +32,7 @@ void main() {
   tz_data.initializeTimeZones();
   setUpAll(loadAppFonts);
   const widths = {'compact', 'expanded'};
-  for (final step in [OnboardingStep.welcome]) {
+  for (final step in [OnboardingStep.welcome, OnboardingStep.dayShape]) {
     goldenMatrix(
       'onboarding_${step.name}',
       height: 844,

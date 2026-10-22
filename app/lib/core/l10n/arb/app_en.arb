@@ -4373,5 +4373,13 @@
   "onboardingDotLabel": "The day dot, drawing itself",
   "@onboardingDotLabel": {
     "description": "Onboarding O1: label of the animated day dot."
+  },
+  "onboardingDayShapeTitle": "When does your day start and end?",
+  "@onboardingDayShapeTitle": {
+    "description": "Onboarding O2 question."
+  },
+  "onboardingDayShapeBody": "Your tasks live between these two. You can change them, or give each weekday its own, in Settings.",
+  "@onboardingDayShapeBody": {
+    "description": "Onboarding O2 explanation."
   }
 }

@@ -4419,6 +4419,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The day dot, drawing itself'**
   String get onboardingDotLabel;
+
+  /// Onboarding O2 question.
+  ///
+  /// In en, this message translates to:
+  /// **'When does your day start and end?'**
+  String get onboardingDayShapeTitle;
+
+  /// Onboarding O2 explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tasks live between these two. You can change them, or give each weekday its own, in Settings.'**
+  String get onboardingDayShapeBody;
 }
 
 class _AppLocalizationsDelegate
