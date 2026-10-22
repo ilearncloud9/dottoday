@@ -3119,5 +3119,284 @@
   "shortcutClose": "Close",
   "@shortcutClose": {
     "description": "Shortcut sheet action."
+  },
+  "repeatTitle": "Repeat",
+  "@repeatTitle": {
+    "description": "Title of the Repeat editor sheet."
+  },
+  "repeatEveryDays": "{count, plural, =1{Every day} other{Every {count} days}}",
+  "@repeatEveryDays": {
+    "description": "Repeat summary.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repeatEveryWeekday": "Every weekday",
+  "@repeatEveryWeekday": {
+    "description": "Repeat summary and choice: Monday to Friday."
+  },
+  "repeatEveryWeeks": "{count, plural, =1{Every week} other{Every {count} weeks}}",
+  "@repeatEveryWeeks": {
+    "description": "Repeat summary without days.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repeatEveryWeeksOn": "{count, plural, =1{Every week on {days}} other{Every {count} weeks on {days}}}",
+  "@repeatEveryWeeksOn": {
+    "description": "Repeat summary: 'Every week on Mon, Fri'.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatEveryMonthsOnDay": "{count, plural, =1{Every month on day {day}} other{Every {count} months on day {day}}}",
+  "@repeatEveryMonthsOnDay": {
+    "description": "Repeat summary by date.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "repeatEveryMonthsOnNth": "{count, plural, =1{Every month on the {nth} {weekday}} other{Every {count} months on the {nth} {weekday}}}",
+  "@repeatEveryMonthsOnNth": {
+    "description": "Repeat summary by weekday: 'Every month on the third Wednesday'.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "nth": {
+        "type": "String"
+      },
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatNth": "{n, select, 1{first} 2{second} 3{third} 4{fourth} other{last}}",
+  "@repeatNth": {
+    "description": "Which weekday of the month; 'other' is the last one.",
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatEveryYears": "{count, plural, =1{Every year} other{Every {count} years}}",
+  "@repeatEveryYears": {
+    "description": "Repeat summary.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repeatTimes": "{summary} · {count, plural, =1{once} other{{count} times}}",
+  "@repeatTimes": {
+    "description": "Repeat summary with a count end.",
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repeatUntil": "{summary} · until {date}",
+  "@repeatUntil": {
+    "description": "Repeat summary with an end date.",
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatChoiceDaily": "Every day",
+  "@repeatChoiceDaily": {
+    "description": "Repeat editor choice."
+  },
+  "repeatChoiceWeekly": "Every week",
+  "@repeatChoiceWeekly": {
+    "description": "Repeat editor choice; weekday chips appear under it."
+  },
+  "repeatChoiceMonthly": "Every month",
+  "@repeatChoiceMonthly": {
+    "description": "Repeat editor choice."
+  },
+  "repeatChoiceYearly": "Every year",
+  "@repeatChoiceYearly": {
+    "description": "Repeat editor choice."
+  },
+  "repeatChoiceCustom": "Custom",
+  "@repeatChoiceCustom": {
+    "description": "Repeat editor choice: every N days, weeks or months."
+  },
+  "repeatOnDay": "On day {day}",
+  "@repeatOnDay": {
+    "description": "Monthly repeat by date.",
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "repeatOnNth": "On the {nth} {weekday}",
+  "@repeatOnNth": {
+    "description": "Monthly repeat by weekday.",
+    "placeholders": {
+      "nth": {
+        "type": "String"
+      },
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatEvery": "Every",
+  "@repeatEvery": {
+    "description": "Before the custom interval number."
+  },
+  "repeatUnitDays": "{count, plural, =1{day} other{days}}",
+  "@repeatUnitDays": {
+    "description": "Custom repeat unit.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repeatUnitWeeks": "{count, plural, =1{week} other{weeks}}",
+  "@repeatUnitWeeks": {
+    "description": "Custom repeat unit.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repeatUnitMonths": "{count, plural, =1{month} other{months}}",
+  "@repeatUnitMonths": {
+    "description": "Custom repeat unit.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repeatIntervalLess": "Fewer",
+  "@repeatIntervalLess": {
+    "description": "Screen-reader label of − on the custom interval."
+  },
+  "repeatIntervalMore": "More",
+  "@repeatIntervalMore": {
+    "description": "Screen-reader label of + on the custom interval."
+  },
+  "repeatEnds": "Ends",
+  "@repeatEnds": {
+    "description": "Caption of the end choice in the Repeat editor."
+  },
+  "repeatEndsNever": "Never",
+  "@repeatEndsNever": {
+    "description": "Repeat end choice."
+  },
+  "repeatEndsAfter": "After",
+  "@repeatEndsAfter": {
+    "description": "Repeat end choice: after N times."
+  },
+  "repeatEndsOn": "On a date",
+  "@repeatEndsOn": {
+    "description": "Repeat end choice."
+  },
+  "repeatEndsAfterCount": "{count, plural, =1{1 time} other{{count} times}}",
+  "@repeatEndsAfterCount": {
+    "description": "The count of an 'After' end.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repeatDone": "Done",
+  "@repeatDone": {
+    "description": "Closes the Repeat editor and applies the rule."
+  },
+  "scopeTitleEdit": "Change which?",
+  "@scopeTitleEdit": {
+    "description": "Title of the edit-scope sheet for a repeating task."
+  },
+  "scopeTitleDelete": "Delete which?",
+  "@scopeTitleDelete": {
+    "description": "Title of the delete-scope sheet for a repeating task."
+  },
+  "scopeThis": "This one",
+  "@scopeThis": {
+    "description": "Scope: only this occurrence."
+  },
+  "scopeFollowing": "This and following",
+  "@scopeFollowing": {
+    "description": "Scope: this occurrence and every later one."
+  },
+  "scopeAll": "All",
+  "@scopeAll": {
+    "description": "Scope: the whole series from now on (history stays)."
+  },
+  "scopeAllDetail": "Past ones stay as they were",
+  "@scopeAllDetail": {
+    "description": "Under 'All' in the scope sheet."
+  },
+  "snackSeriesChanged": "{title} changed",
+  "@snackSeriesChanged": {
+    "description": "After a scoped edit of a repeating task.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "snackSeriesDeleted": "{title} deleted",
+  "@snackSeriesDeleted": {
+    "description": "After a scoped delete of a repeating task.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "snackRepeatSet": "{title} repeats {summary}",
+  "@snackRepeatSet": {
+    "description": "After choosing a repeat rule.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "snackRepeatStopped": "{title} no longer repeats",
+  "@snackRepeatStopped": {
+    "description": "After choosing Never on a repeating task.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
   }
 }

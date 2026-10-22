@@ -185,16 +185,26 @@ final class FakeSubtaskRepository implements SubtaskRepository {
 }
 
 final class FakeSeriesRepository implements SeriesRepository {
-  FakeSeriesRepository([this.series = const []]);
+  FakeSeriesRepository([Iterable<Series> series = const []])
+    : _rows = {for (final s in series) s.id: s};
 
-  final List<Series> series;
+  final Map<String, Series> _rows;
+
+  /// Every stored series, written ones included (M3f.1 scopes).
+  List<Series> get series => _rows.values.toList();
+
+  /// Stores [rows] as a write would (no materialisation).
+  void put(Iterable<Series> rows) {
+    for (final s in rows) {
+      _rows[s.id] = s;
+    }
+  }
 
   @override
   Stream<List<Series>> watchActive(String userId) => Stream.value(series);
 
   @override
-  Future<Series?> findById(String userId, String id) async =>
-      series.where((s) => s.id == id).firstOrNull;
+  Future<Series?> findById(String userId, String id) async => _rows[id];
 
   @override
   Future<List<Series>> findNeedingMaterialisation(
@@ -209,10 +219,12 @@ final class FakeSeriesRepository implements SeriesRepository {
 /// Applies batches straight to the fake repository; undo restores the
 /// previous rows.
 final class FakeUndoService implements UndoService {
-  FakeUndoService(this.occurrences, [this.subtasks]);
+  FakeUndoService(this.occurrences, [this.subtasks, this.series]);
 
   final FakeOccurrenceRepository occurrences;
   final FakeSubtaskRepository? subtasks;
+  final FakeSeriesRepository? series;
+  final _seriesBefore = <String, List<Series>>{};
   final _subtasksBefore = <String, List<Subtask>>{};
   final applied = <WriteBatch>[];
   final _before = <String, List<Occurrence>>{};
@@ -230,8 +242,10 @@ final class FakeUndoService implements UndoService {
       for (final s in batch.subtasks)
         ?subtasks?.rows.where((r) => r.id == s.id).firstOrNull,
     ];
+    _seriesBefore[id] = [for (final s in batch.series) ?series?._rows[s.id]];
     applied.add(batch);
     _batchIds[batch] = id;
+    series?.put(batch.series);
     occurrences.put(batch.occurrences);
     subtasks?.put(batch.subtasks);
     return Ok(UndoToken(id: id, expiresAtUtc: DateTime.utc(2100)));
@@ -239,6 +253,15 @@ final class FakeUndoService implements UndoService {
 
   @override
   Future<Result<void, AppFailure>> undo(UndoToken token) async {
+    final seriesBefore = _seriesBefore.remove(token.id) ?? const <Series>[];
+    final made = applied
+        .where((b) => _batchIds[b] == token.id)
+        .expand((b) => b.series)
+        .where((s) => seriesBefore.every((o) => o.id != s.id));
+    series?.put([
+      ...seriesBefore,
+      for (final s in made) s.copyWith(deletedAt: DateTime.utc(2026)),
+    ]);
     final before = _before.remove(token.id) ?? const [];
     final batch = applied.firstWhere(
       (b) => b.occurrences.isNotEmpty && _batchIds[b] == token.id,
@@ -334,14 +357,15 @@ List<Override> timelineOverrides({
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
   final subs = subtasks ?? FakeSubtaskRepository();
-  final undo = FakeUndoService(repo, subs);
+  final seriesRepo = FakeSeriesRepository(series);
+  final undo = FakeUndoService(repo, subs, seriesRepo);
   final settingsRepo = FakeSettingsRepository(p);
   return [
     writeUseCaseProvider.overrideWithValue(
       FakeWriteUseCase(settingsRepo, repo),
     ),
     subtaskRepositoryProvider.overrideWithValue(subs),
-    seriesRepositoryProvider.overrideWithValue(FakeSeriesRepository(series)),
+    seriesRepositoryProvider.overrideWithValue(seriesRepo),
     undoServiceProvider.overrideWithValue(undo),
     trashServiceProvider.overrideWithValue(FakeTrashService(repo, undo)),
     clockProvider.overrideWithValue(FakeClock(now)),

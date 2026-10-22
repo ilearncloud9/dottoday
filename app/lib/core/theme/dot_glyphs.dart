@@ -35,6 +35,7 @@ abstract final class DotGlyphs {
   static final search = DotGlyph('${_c(11, 11, 7)}M20.5 20.5l-4.6-4.6');
   static final settings = DotGlyph('${_c(12, 12, 3)}$_gear');
   static const add = DotGlyph('M12 5v14M5 12h14');
+  static const minus = DotGlyph('M5 12h14');
 
   // Interface.
   static const check = DotGlyph('M5 12.5l4.5 4.5L19 7.5');

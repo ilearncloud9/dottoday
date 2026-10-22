@@ -110,16 +110,33 @@ class WhenFields extends ConsumerWidget {
 /// Repeat and Alerts as read-only rows until their editors land (M3f.1,
 /// M3f.2).
 class RepeatAlertRows extends StatelessWidget {
-  const RepeatAlertRows({required this.task, super.key});
+  const RepeatAlertRows({
+    required this.task,
+    this.onRepeat,
+    this.onAlerts,
+    super.key,
+  });
 
   final TaskView task;
+
+  /// Opens the Repeat editor (M3f.1); null keeps the row read-only.
+  final VoidCallback? onRepeat;
+
+  /// Opens the Alerts editor (M3f.2).
+  final VoidCallback? onAlerts;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toLanguageTag();
-    Widget row(DotGlyph glyph, String label, String value) => ListTile(
+    Widget row(
+      DotGlyph glyph,
+      String label,
+      String value, [
+      VoidCallback? onTap,
+    ]) => ListTile(
+      onTap: onTap,
       contentPadding: EdgeInsets.zero,
       minTileHeight: DotTouch.android,
       leading: DotIcon(glyph, color: t.colors.muted),
@@ -135,8 +152,14 @@ class RepeatAlertRows extends StatelessWidget {
           DotGlyphs.repeat,
           l10n.sheetRepeat,
           repeatText(l10n, locale, task.series?.rrule),
+          onRepeat,
         ),
-        row(DotGlyphs.bell, l10n.sheetAlerts, alertsText(l10n, task.alerts)),
+        row(
+          DotGlyphs.bell,
+          l10n.sheetAlerts,
+          alertsText(l10n, task.alerts),
+          onAlerts,
+        ),
       ],
     );
   }

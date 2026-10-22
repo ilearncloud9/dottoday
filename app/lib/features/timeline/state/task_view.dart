@@ -45,18 +45,28 @@ Stream<TaskView?> taskView(Ref ref, String id) {
       yield null;
       return;
     }
-    final series = first.seriesId == null
-        ? null
-        : await seriesRepo.findById(profile.id, first.seriesId!);
-    yield* _watch(occurrences, profile.id, first).switchMap(
-      (o) => o == null
-          ? Stream.value(null)
-          : subtasks
-                .watchForOccurrences(profile.id, {o.id})
-                .map(
-                  (s) => TaskView(occurrence: o, subtasks: s, series: series),
-                ),
-    );
+    // The series is read again with each change to the row: a repeat
+    // edit moves the row to a new series or changes its rule (M3f.1).
+    yield* _watch(occurrences, profile.id, first)
+        .asyncMap(
+          (o) async => (
+            o,
+            o?.seriesId == null
+                ? null
+                : await seriesRepo.findById(profile.id, o!.seriesId!),
+          ),
+        )
+        .switchMap(
+          (pair) => switch (pair) {
+            (null, _) => Stream<TaskView?>.value(null),
+            (final o?, final series) =>
+              subtasks
+                  .watchForOccurrences(profile.id, {o.id})
+                  .map(
+                    (s) => TaskView(occurrence: o, subtasks: s, series: series),
+                  ),
+          },
+        );
   });
 }
 

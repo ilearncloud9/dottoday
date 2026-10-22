@@ -2022,4 +2022,235 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shortcutClose => 'Close';
+
+  @override
+  String get repeatTitle => 'Repeat';
+
+  @override
+  String repeatEveryDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Every $count days',
+      one: 'Every day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get repeatEveryWeekday => 'Every weekday';
+
+  @override
+  String repeatEveryWeeks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Every $count weeks',
+      one: 'Every week',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String repeatEveryWeeksOn(int count, String days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Every $count weeks on $days',
+      one: 'Every week on $days',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String repeatEveryMonthsOnDay(int count, int day) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Every $count months on day $day',
+      one: 'Every month on day $day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String repeatEveryMonthsOnNth(int count, String nth, String weekday) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Every $count months on the $nth $weekday',
+      one: 'Every month on the $nth $weekday',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String repeatNth(String n) {
+    String _temp0 = intl.Intl.selectLogic(n, {
+      '1': 'first',
+      '2': 'second',
+      '3': 'third',
+      '4': 'fourth',
+      'other': 'last',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String repeatEveryYears(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Every $count years',
+      one: 'Every year',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String repeatTimes(String summary, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count times',
+      one: 'once',
+    );
+    return '$summary · $_temp0';
+  }
+
+  @override
+  String repeatUntil(String summary, String date) {
+    return '$summary · until $date';
+  }
+
+  @override
+  String get repeatChoiceDaily => 'Every day';
+
+  @override
+  String get repeatChoiceWeekly => 'Every week';
+
+  @override
+  String get repeatChoiceMonthly => 'Every month';
+
+  @override
+  String get repeatChoiceYearly => 'Every year';
+
+  @override
+  String get repeatChoiceCustom => 'Custom';
+
+  @override
+  String repeatOnDay(int day) {
+    return 'On day $day';
+  }
+
+  @override
+  String repeatOnNth(String nth, String weekday) {
+    return 'On the $nth $weekday';
+  }
+
+  @override
+  String get repeatEvery => 'Every';
+
+  @override
+  String repeatUnitDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'days',
+      one: 'day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String repeatUnitWeeks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'weeks',
+      one: 'week',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String repeatUnitMonths(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'months',
+      one: 'month',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get repeatIntervalLess => 'Fewer';
+
+  @override
+  String get repeatIntervalMore => 'More';
+
+  @override
+  String get repeatEnds => 'Ends';
+
+  @override
+  String get repeatEndsNever => 'Never';
+
+  @override
+  String get repeatEndsAfter => 'After';
+
+  @override
+  String get repeatEndsOn => 'On a date';
+
+  @override
+  String repeatEndsAfterCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count times',
+      one: '1 time',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get repeatDone => 'Done';
+
+  @override
+  String get scopeTitleEdit => 'Change which?';
+
+  @override
+  String get scopeTitleDelete => 'Delete which?';
+
+  @override
+  String get scopeThis => 'This one';
+
+  @override
+  String get scopeFollowing => 'This and following';
+
+  @override
+  String get scopeAll => 'All';
+
+  @override
+  String get scopeAllDetail => 'Past ones stay as they were';
+
+  @override
+  String snackSeriesChanged(String title) {
+    return '$title changed';
+  }
+
+  @override
+  String snackSeriesDeleted(String title) {
+    return '$title deleted';
+  }
+
+  @override
+  String snackRepeatSet(String title, String summary) {
+    return '$title repeats $summary';
+  }
+
+  @override
+  String snackRepeatStopped(String title) {
+    return '$title no longer repeats';
+  }
 }

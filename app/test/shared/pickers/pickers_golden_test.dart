@@ -4,7 +4,11 @@ library;
 
 import 'dart:async';
 
+import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/recurrence/repeat_rule.dart';
 import 'package:dottoday/shared/pickers/day_pickers.dart';
+import 'package:dottoday/shared/pickers/repeat/repeat_editor.dart';
+import 'package:dottoday/shared/pickers/repeat/scope_sheet.dart';
 import 'package:dottoday/shared/pickers/zone_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -65,5 +69,35 @@ void main() {
     },
     build: (_) =>
         _opener((c) => unawaited(showZonePicker(c, current: 'Europe/Berlin'))),
+  );
+  // M3f.1: the Repeat editor (every 2 weeks on Mon and Wed, 10 times)
+  // and the scope sheet.
+  goldenMatrix(
+    'picker_repeat',
+    height: 900,
+    widths: widths,
+    act: _open,
+    build: (_) => _opener(
+      (c) => unawaited(
+        showRepeatEditor(
+          c,
+          initial: const RepeatRule(
+            frequency: RepeatFrequency.weekly,
+            interval: 2,
+            days: {Weekday.mon, Weekday.wed},
+            end: EndsAfter(10),
+          ),
+          start: _today,
+          today: _today,
+        ),
+      ),
+    ),
+  );
+  goldenMatrix(
+    'picker_scope',
+    height: 500,
+    widths: widths,
+    act: _open,
+    build: (_) => _opener((c) => unawaited(showScopeSheet(c, delete: false))),
   );
 }

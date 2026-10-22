@@ -3069,6 +3069,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Close'**
   String get shortcutClose;
+
+  /// Title of the Repeat editor sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get repeatTitle;
+
+  /// Repeat summary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Every day} other{Every {count} days}}'**
+  String repeatEveryDays(int count);
+
+  /// Repeat summary and choice: Monday to Friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Every weekday'**
+  String get repeatEveryWeekday;
+
+  /// Repeat summary without days.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Every week} other{Every {count} weeks}}'**
+  String repeatEveryWeeks(int count);
+
+  /// Repeat summary: 'Every week on Mon, Fri'.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Every week on {days}} other{Every {count} weeks on {days}}}'**
+  String repeatEveryWeeksOn(int count, String days);
+
+  /// Repeat summary by date.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Every month on day {day}} other{Every {count} months on day {day}}}'**
+  String repeatEveryMonthsOnDay(int count, int day);
+
+  /// Repeat summary by weekday: 'Every month on the third Wednesday'.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Every month on the {nth} {weekday}} other{Every {count} months on the {nth} {weekday}}}'**
+  String repeatEveryMonthsOnNth(int count, String nth, String weekday);
+
+  /// Which weekday of the month; 'other' is the last one.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, select, 1{first} 2{second} 3{third} 4{fourth} other{last}}'**
+  String repeatNth(String n);
+
+  /// Repeat summary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Every year} other{Every {count} years}}'**
+  String repeatEveryYears(int count);
+
+  /// Repeat summary with a count end.
+  ///
+  /// In en, this message translates to:
+  /// **'{summary} · {count, plural, =1{once} other{{count} times}}'**
+  String repeatTimes(String summary, int count);
+
+  /// Repeat summary with an end date.
+  ///
+  /// In en, this message translates to:
+  /// **'{summary} · until {date}'**
+  String repeatUntil(String summary, String date);
+
+  /// Repeat editor choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get repeatChoiceDaily;
+
+  /// Repeat editor choice; weekday chips appear under it.
+  ///
+  /// In en, this message translates to:
+  /// **'Every week'**
+  String get repeatChoiceWeekly;
+
+  /// Repeat editor choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Every month'**
+  String get repeatChoiceMonthly;
+
+  /// Repeat editor choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Every year'**
+  String get repeatChoiceYearly;
+
+  /// Repeat editor choice: every N days, weeks or months.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get repeatChoiceCustom;
+
+  /// Monthly repeat by date.
+  ///
+  /// In en, this message translates to:
+  /// **'On day {day}'**
+  String repeatOnDay(int day);
+
+  /// Monthly repeat by weekday.
+  ///
+  /// In en, this message translates to:
+  /// **'On the {nth} {weekday}'**
+  String repeatOnNth(String nth, String weekday);
+
+  /// Before the custom interval number.
+  ///
+  /// In en, this message translates to:
+  /// **'Every'**
+  String get repeatEvery;
+
+  /// Custom repeat unit.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{day} other{days}}'**
+  String repeatUnitDays(int count);
+
+  /// Custom repeat unit.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{week} other{weeks}}'**
+  String repeatUnitWeeks(int count);
+
+  /// Custom repeat unit.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{month} other{months}}'**
+  String repeatUnitMonths(int count);
+
+  /// Screen-reader label of − on the custom interval.
+  ///
+  /// In en, this message translates to:
+  /// **'Fewer'**
+  String get repeatIntervalLess;
+
+  /// Screen-reader label of + on the custom interval.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get repeatIntervalMore;
+
+  /// Caption of the end choice in the Repeat editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends'**
+  String get repeatEnds;
+
+  /// Repeat end choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get repeatEndsNever;
+
+  /// Repeat end choice: after N times.
+  ///
+  /// In en, this message translates to:
+  /// **'After'**
+  String get repeatEndsAfter;
+
+  /// Repeat end choice.
+  ///
+  /// In en, this message translates to:
+  /// **'On a date'**
+  String get repeatEndsOn;
+
+  /// The count of an 'After' end.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 time} other{{count} times}}'**
+  String repeatEndsAfterCount(int count);
+
+  /// Closes the Repeat editor and applies the rule.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get repeatDone;
+
+  /// Title of the edit-scope sheet for a repeating task.
+  ///
+  /// In en, this message translates to:
+  /// **'Change which?'**
+  String get scopeTitleEdit;
+
+  /// Title of the delete-scope sheet for a repeating task.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete which?'**
+  String get scopeTitleDelete;
+
+  /// Scope: only this occurrence.
+  ///
+  /// In en, this message translates to:
+  /// **'This one'**
+  String get scopeThis;
+
+  /// Scope: this occurrence and every later one.
+  ///
+  /// In en, this message translates to:
+  /// **'This and following'**
+  String get scopeFollowing;
+
+  /// Scope: the whole series from now on (history stays).
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get scopeAll;
+
+  /// Under 'All' in the scope sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Past ones stay as they were'**
+  String get scopeAllDetail;
+
+  /// After a scoped edit of a repeating task.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} changed'**
+  String snackSeriesChanged(String title);
+
+  /// After a scoped delete of a repeating task.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} deleted'**
+  String snackSeriesDeleted(String title);
+
+  /// After choosing a repeat rule.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} repeats {summary}'**
+  String snackRepeatSet(String title, String summary);
+
+  /// After choosing Never on a repeating task.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} no longer repeats'**
+  String snackRepeatStopped(String title);
 }
 
 class _AppLocalizationsDelegate

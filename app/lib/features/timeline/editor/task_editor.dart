@@ -14,6 +14,7 @@ import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/features/timeline/editor/editor_duration.dart';
 import 'package:dottoday/features/timeline/editor/editor_fields.dart';
 import 'package:dottoday/features/timeline/editor/editor_footer.dart';
+import 'package:dottoday/features/timeline/editor/editor_series.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_subtasks.dart';
 import 'package:dottoday/shared/dot/colour_icon_block.dart';
@@ -102,6 +103,10 @@ class _FormState extends ConsumerState<_Form> {
   static const _debounce = Duration(milliseconds: 600); // style-ignore: save
 
   late Occurrence _draft = widget.task.occurrence;
+
+  /// As opened: the scope question compares the draft with it (M3f.1).
+  /// Set in initState: a lazy read would see the autosaved row.
+  late final Occurrence _opened;
   late final _title = TextEditingController(text: _draft.title);
   late final _notes = TextEditingController(text: _draft.notes ?? '');
   // Read up front: the last flush runs in dispose, where ref is off limits.
@@ -113,6 +118,7 @@ class _FormState extends ConsumerState<_Form> {
   @override
   void initState() {
     super.initState();
+    _opened = widget.task.occurrence;
     _undo = ref.read(undoServiceProvider);
     _clock = ref.read(clockProvider);
   }
@@ -133,7 +139,9 @@ class _FormState extends ConsumerState<_Form> {
   }
 
   /// Writes the draft if it changed. An empty title keeps the old one.
-  void _flush() {
+  void _flush() => unawaited(_flushNow());
+
+  Future<void> _flushNow() async {
     _timer?.cancel();
     if (!_dirty) return;
     _dirty = false;
@@ -142,16 +150,34 @@ class _FormState extends ConsumerState<_Form> {
       title: title.isEmpty ? widget.task.occurrence.title : title,
       updatedAt: _clock.nowUtc(),
     );
-    unawaited(
-      _undo.applyUndoable(WriteBatch(userId: row.userId, occurrences: [row])),
+    await _undo.applyUndoable(
+      WriteBatch(userId: row.userId, occurrences: [row]),
     );
   }
 
-  /// Save (⏎ in the title, ⌘S): write now and leave.
-  void _save() {
-    _flush();
+  /// Save (⏎ in the title, ⌘S): write now, ask which instances of a
+  /// repeating task it applies to, and leave (M3f.1).
+  void _save() => unawaited(_saveNow());
+
+  Future<void> _saveNow() async {
+    await _flushNow();
+    if (!mounted) return;
+    final saved = await saveScoped(
+      context,
+      task: widget.task,
+      opened: _opened,
+      draft: _draft,
+    );
+    if (!saved || !mounted) return;
     final close = widget.onClose;
     close == null ? Navigator.of(context).pop() : close();
+  }
+
+  /// The Repeat row: what is typed is saved first.
+  Future<void> _repeat() async {
+    await _flushNow();
+    if (!mounted) return;
+    await pickRepeat(context, task: widget.task, draft: _draft);
   }
 
   /// ⌘D: done, or planned again, written with the other edits.
@@ -231,7 +257,10 @@ class _FormState extends ConsumerState<_Form> {
           onChanged: (m) => _change((o) => o.copyWith(durationMin: m)),
         ),
         const SizedBox(height: DotSpace.l),
-        RepeatAlertRows(task: widget.task),
+        RepeatAlertRows(
+          task: widget.task,
+          onRepeat: _draft.startUtc == null ? null : () => unawaited(_repeat()),
+        ),
         const SizedBox(height: DotSpace.l),
         SheetSubtasks(task: widget.task),
         EditorCaption(l10n.editorNotes),
@@ -247,6 +276,9 @@ class _FormState extends ConsumerState<_Form> {
         EditorFooter(
           task: _draft,
           onSave: _save,
+          scopedDelete: widget.task.series == null
+              ? null
+              : () => deleteScoped(context, task: widget.task, target: _draft),
           // The sheet goes back to the page: the task sheet below it would
           // show a task that has gone.
           onLeft:
