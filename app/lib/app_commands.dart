@@ -19,7 +19,7 @@ Map<AppCommand, VoidCallback> appCommandHandlers(
     AppCommand.goInbox: () => router.go(AppRoutes.inbox),
     AppCommand.goWeek: () => router.go(AppRoutes.week),
     AppCommand.goMonth: () => unawaited(router.push<void>(AppRoutes.month)),
-    // Quick Add sheet lands in M4.1; until then the command is a no-op.
+    // The Add sheet (M3c) is a feature, so the composition root passes it.
     AppCommand.quickAdd: onQuickAdd ?? () {},
   };
 }

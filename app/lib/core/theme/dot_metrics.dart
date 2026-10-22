@@ -59,6 +59,10 @@ abstract final class DotSize {
   static const double dotOutline = 2.5;
   static const double smallDotOutline = 2;
   static const double dayDot = 44;
+
+  /// The identity dot on Add step 1 (`A-ios-add-what`); step 2 uses
+  /// [dayDot].
+  static const double addDot = 64;
   static const double dayDotWatch = 18;
   static const double macRowDot = 26;
   static const double pickerDot = 22;

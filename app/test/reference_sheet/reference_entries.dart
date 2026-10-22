@@ -100,4 +100,17 @@ const sheetEntries = <SheetEntry>[
     reference: 'A-mac-today-alt1-spread.png',
     crop: Rect.fromLTRB(0, 0, 400, 1600),
   ),
+  SheetEntry(
+    name: 'Add A1 What · light',
+    golden: 'test/features/task_editor/goldens/add_what_light_compact_2x.png',
+    reference: 'A-ios-add-what.png',
+    crop: Rect.fromLTRB(0, 288, 780, 1688),
+  ),
+  SheetEntry(
+    name: 'Add A1 What · Android dark',
+    golden:
+        'test/features/task_editor/goldens/add_what_android_dark_compact_2x.png',
+    reference: 'A-android-add-what.png',
+    crop: Rect.fromLTRB(0, 310, 824, 1830),
+  ),
 ];

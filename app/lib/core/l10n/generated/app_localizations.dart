@@ -1689,6 +1689,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title} moved to Trash'**
   String snackTrashed(String title);
+
+  /// Screen-reader label of the Add title field (A-android-add-what).
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get addTitleLabel;
+
+  /// Helper under the Add title field (A-ios-add-what); the example should parse in this language.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a time too: ‘Go shopping 5pm 1h’'**
+  String get addTypeTimeHint;
+
+  /// Tooltip of the × on a recognised Quick Add token chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove “{token}”'**
+  String addRemoveToken(String token);
+
+  /// Add step 1 section caption (shown uppercase).
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get addSuggestions;
+
+  /// Muted note beside the Suggestions caption.
+  ///
+  /// In en, this message translates to:
+  /// **'from your habits'**
+  String get addFromHabits;
+
+  /// Suggestion row meta: the habit's usual time range and length.
+  ///
+  /// In en, this message translates to:
+  /// **'usually {range} · {length}'**
+  String addHabitUsual(String range, String length);
+
+  /// Suggestion row meta for a habit never put on a time.
+  ///
+  /// In en, this message translates to:
+  /// **'no set time · {length}'**
+  String addHabitNoTime(String length);
+
+  /// Screen-reader label of a suggestion row.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, {meta}'**
+  String addHabitLabel(String title, String meta);
+
+  /// Add step 1 primary button.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get addContinue;
+
+  /// Add step 1 secondary button: save without a time.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Inbox instead'**
+  String get addToInbox;
+
+  /// Screen-reader label of the Add step dots.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String addStepOf(int step, int total);
+
+  /// Add step 2: back to step 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get addBack;
+
+  /// When a task added for another day lands, in the Added snackbar: day then time.
+  ///
+  /// In en, this message translates to:
+  /// **'{day}, {time}'**
+  String addWhenOnDay(String day, String time);
 }
 
 class _AppLocalizationsDelegate

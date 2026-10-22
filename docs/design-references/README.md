@@ -42,4 +42,4 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | `TaskDot` skipped (dashed) and missed states | §3 `TaskDot`, `A-ios-future-month` | `task_dot_*` |
 | Thread "missed" meta and skipped rows | §3 `TaskRow`, `A-mac-month` | `thread_*` |
 | Medium-width rail (600–840) | §4 | `shell_rail_*_medium_*` |
-
+| Add A1 with no habits yet (no Suggestions, helper line) | §5.2 A1, `A-ios-add-what` | `add_what_blank_*` |

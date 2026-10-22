@@ -67,4 +67,11 @@ Sweep entries (add a row per screen as it lands):
 | DayCard / DayPager | `test/shared/dot/day_card_golden_test.dart` | `Main`, `A-android-today` |
 | MonthGrid | `test/shared/dot/month_grid_golden_test.dart` | `A-ios-today-month`, `A-ios-future-month`, `A-mac-month` |
 | Shells | `test/shared/navigation/dot_shell_golden_test.dart` | `Main`, `A-android-today`, `A-mac-today-alt1-spread` |
+| ColourIconBlock | `test/shared/dot/colour_icon_block_golden_test.dart` | `A-ios-add-what` |
+| Shift chip | `test/shared/dot/shift_chip_golden_test.dart` | derived |
+| Today T1/T2/T3, selecting | `test/features/timeline/today_golden_test.dart` | `Main`, `A-ios-today-month`, `A-ios-future-month` |
+| Task sheet T4 | `test/features/timeline/task_sheet_golden_test.dart` | `A-ios-task-sheet` |
+| Phone editor E1 | `test/features/timeline/task_editor_golden_test.dart` | `A-mac-editor` (fields) |
+| Inbox I1 + empty | `test/features/inbox/inbox_golden_test.dart` | `A-ios-inbox`, `A-android-inbox` |
+| Add A1 What (+ Android idiom, no-habits) | `test/features/task_editor/add_golden_test.dart` | `A-ios-add-what`, `A-android-add-what` |
 

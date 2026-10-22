@@ -4,6 +4,7 @@ import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'timeline_fakes.dart';
@@ -15,8 +16,10 @@ Widget testRouterApp(
   GoRouter router, {
   VoidCallback? onQuickAdd,
   ThemeMode themeMode = ThemeMode.light,
+  List<Override>? overrides,
 }) => ProviderScope(
-  overrides: timelineOverrides(now: DateTime.utc(2026, 10, 21, 11)),
+  overrides:
+      overrides ?? timelineOverrides(now: DateTime.utc(2026, 10, 21, 11)),
   child: _routerApp(router, onQuickAdd, themeMode),
 );
 

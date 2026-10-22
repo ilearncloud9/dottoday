@@ -1682,5 +1682,99 @@
         "type": "String"
       }
     }
+  },
+  "addTitleLabel": "Title",
+  "@addTitleLabel": {
+    "description": "Screen-reader label of the Add title field (A-android-add-what)."
+  },
+  "addTypeTimeHint": "Type a time too: ‘Go shopping 5pm 1h’",
+  "@addTypeTimeHint": {
+    "description": "Helper under the Add title field (A-ios-add-what); the example should parse in this language."
+  },
+  "addRemoveToken": "Remove “{token}”",
+  "@addRemoveToken": {
+    "description": "Tooltip of the × on a recognised Quick Add token chip.",
+    "placeholders": {
+      "token": {
+        "type": "String"
+      }
+    }
+  },
+  "addSuggestions": "Suggestions",
+  "@addSuggestions": {
+    "description": "Add step 1 section caption (shown uppercase)."
+  },
+  "addFromHabits": "from your habits",
+  "@addFromHabits": {
+    "description": "Muted note beside the Suggestions caption."
+  },
+  "addHabitUsual": "usually {range} · {length}",
+  "@addHabitUsual": {
+    "description": "Suggestion row meta: the habit's usual time range and length.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "addHabitNoTime": "no set time · {length}",
+  "@addHabitNoTime": {
+    "description": "Suggestion row meta for a habit never put on a time.",
+    "placeholders": {
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "addHabitLabel": "{title}, {meta}",
+  "@addHabitLabel": {
+    "description": "Screen-reader label of a suggestion row.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "meta": {
+        "type": "String"
+      }
+    }
+  },
+  "addContinue": "Continue",
+  "@addContinue": {
+    "description": "Add step 1 primary button."
+  },
+  "addToInbox": "Add to Inbox instead",
+  "@addToInbox": {
+    "description": "Add step 1 secondary button: save without a time."
+  },
+  "addStepOf": "Step {step} of {total}",
+  "@addStepOf": {
+    "description": "Screen-reader label of the Add step dots.",
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "addBack": "Back",
+  "@addBack": {
+    "description": "Add step 2: back to step 1."
+  },
+  "addWhenOnDay": "{day}, {time}",
+  "@addWhenOnDay": {
+    "description": "When a task added for another day lands, in the Added snackbar: day then time.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -1129,4 +1129,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String snackTrashed(String title) {
     return '$title moved to Trash';
   }
+
+  @override
+  String get addTitleLabel => 'Title';
+
+  @override
+  String get addTypeTimeHint => 'Type a time too: ‘Go shopping 5pm 1h’';
+
+  @override
+  String addRemoveToken(String token) {
+    return 'Remove “$token”';
+  }
+
+  @override
+  String get addSuggestions => 'Suggestions';
+
+  @override
+  String get addFromHabits => 'from your habits';
+
+  @override
+  String addHabitUsual(String range, String length) {
+    return 'usually $range · $length';
+  }
+
+  @override
+  String addHabitNoTime(String length) {
+    return 'no set time · $length';
+  }
+
+  @override
+  String addHabitLabel(String title, String meta) {
+    return '$title, $meta';
+  }
+
+  @override
+  String get addContinue => 'Continue';
+
+  @override
+  String get addToInbox => 'Add to Inbox instead';
+
+  @override
+  String addStepOf(int step, int total) {
+    return 'Step $step of $total';
+  }
+
+  @override
+  String get addBack => 'Back';
+
+  @override
+  String addWhenOnDay(String day, String time) {
+    return '$day, $time';
+  }
 }

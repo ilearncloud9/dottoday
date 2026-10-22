@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
@@ -5,12 +7,22 @@ import 'package:flutter/material.dart';
 /// Widest an [AppSheet] popover gets on large screens.
 const double appSheetMaxWidth = 560;
 
+/// Tallest a full-height popover gets on large screens.
+const double appSheetMaxHeight = 760;
+
+/// Share of the screen a full-height sheet covers (the editor's 94 %).
+const double _fullHeightShare = 0.94;
+
 /// Shows [builder]'s content as a bottom sheet on compact widths and as a
 /// centred popover from [WidthClass.mediumFrom] up (docs/03 §3.3,
 /// §6). Chosen by available width, never by platform.
 ///
 /// Both dismiss with a swipe/tap outside/Esc and return [T] when popped
 /// with a value.
+///
+/// [fullHeight] hands [builder] the whole sheet (94 % of the screen, or a
+/// tall popover) with no [AppSheet] frame, for flows that pin their own
+/// buttons to the bottom (Add, M3c).
 ///
 /// ```dart
 /// final picked = await showAppSheet<int>(
@@ -23,13 +35,25 @@ Future<T?> showAppSheet<T>({
   required BuildContext context,
   required WidgetBuilder builder,
   String? title,
+  bool fullHeight = false,
 }) {
   final colors = DotTheme.of(context).colors;
-  final wide = MediaQuery.sizeOf(context).width >= WidthClass.mediumFrom;
-  final sheet = AppSheet(
-    title: title,
-    child: Builder(builder: builder),
-  );
+  final size = MediaQuery.sizeOf(context);
+  final wide = size.width >= WidthClass.mediumFrom;
+  final Widget sheet = switch ((fullHeight, wide)) {
+    (false, _) => AppSheet(
+      title: title,
+      child: Builder(builder: builder),
+    ),
+    (true, false) => FractionallySizedBox(
+      heightFactor: _fullHeightShare,
+      child: Builder(builder: builder),
+    ),
+    (true, true) => SizedBox(
+      height: math.min(appSheetMaxHeight, size.height * _fullHeightShare),
+      child: Builder(builder: builder),
+    ),
+  };
   if (wide) {
     return showDialog<T>(
       context: context,

@@ -77,3 +77,18 @@ final class QuickAddDraft {
       'minuteOfDay: $minuteOfDay, durationMin: $durationMin, rrule: $rrule, '
       'inbox: $inbox)';
 }
+
+/// [draft]'s text without [token]'s span, spaces tidied: what the field
+/// holds after the token's chip is removed (docs/02 F2 "removable with one
+/// tap").
+///
+/// ```dart
+/// textWithout(parse('Read 9pm 45m'), timeToken); // 'Read 45m'
+/// ```
+String textWithout(QuickAddDraft draft, QuickAddToken token) {
+  final text = draft.text;
+  if (token.start < 0 || token.end > text.length) return text;
+  return (text.substring(0, token.start) + text.substring(token.end))
+      .replaceAll(RegExp(' {2,}'), ' ')
+      .trim();
+}
