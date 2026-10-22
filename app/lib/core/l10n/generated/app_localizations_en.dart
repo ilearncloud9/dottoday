@@ -3078,4 +3078,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingNotNow => 'Not now';
+
+  @override
+  String get onboardingAccountTitle => 'Keep your tasks in sync?';
+
+  @override
+  String get onboardingAccountBody =>
+      'Sign in to use Dottoday on all your devices with a copy kept safe. Or don\'t: everything works on this device without an account.';
+
+  @override
+  String get onboardingWithoutAccount => 'Continue without an account';
 }

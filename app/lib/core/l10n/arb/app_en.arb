@@ -4474,5 +4474,17 @@
   "onboardingNotNow": "Not now",
   "@onboardingNotNow": {
     "description": "Onboarding O4: go on without asking."
+  },
+  "onboardingAccountTitle": "Keep your tasks in sync?",
+  "@onboardingAccountTitle": {
+    "description": "Onboarding O5 question."
+  },
+  "onboardingAccountBody": "Sign in to use Dottoday on all your devices with a copy kept safe. Or don't: everything works on this device without an account.",
+  "@onboardingAccountBody": {
+    "description": "Onboarding O5 explanation."
+  },
+  "onboardingWithoutAccount": "Continue without an account",
+  "@onboardingWithoutAccount": {
+    "description": "Onboarding O5 primary button: local only."
   }
 }

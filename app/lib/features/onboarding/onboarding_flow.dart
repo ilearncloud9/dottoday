@@ -4,6 +4,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
+import 'package:dottoday/features/onboarding/steps/account_step.dart';
 import 'package:dottoday/features/onboarding/steps/day_shape_step.dart';
 import 'package:dottoday/features/onboarding/steps/habits_step.dart';
 import 'package:dottoday/features/onboarding/steps/reminders_step.dart';
@@ -57,9 +58,9 @@ class OnboardingFlow extends ConsumerWidget {
     OnboardingStep.dayShape => DayShapeStep(onNext: () => go(step.next)),
     OnboardingStep.habits => HabitsStep(onNext: () => go(step.next)),
     OnboardingStep.reminders => RemindersStep(onNext: () => go(step.next)),
-    // Steps still to come (M4.2–M4.6) just move on, so nobody is stuck.
+    OnboardingStep.account => AccountStep(onNext: () => go(step.next)),
+    // O6 lands with M4.6; until then it just finishes.
     OnboardingStep.done => _Next(onTap: () => unawaited(finish())),
-    _ => _Next(onTap: () => go(step.next)),
   };
 }
 

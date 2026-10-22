@@ -4551,6 +4551,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not now'**
   String get onboardingNotNow;
+
+  /// Onboarding O5 question.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your tasks in sync?'**
+  String get onboardingAccountTitle;
+
+  /// Onboarding O5 explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to use Dottoday on all your devices with a copy kept safe. Or don\'t: everything works on this device without an account.'**
+  String get onboardingAccountBody;
+
+  /// Onboarding O5 primary button: local only.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue without an account'**
+  String get onboardingWithoutAccount;
 }
 
 class _AppLocalizationsDelegate
