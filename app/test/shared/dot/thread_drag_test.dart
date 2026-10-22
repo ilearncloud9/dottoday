@@ -125,7 +125,9 @@ void main() {
       expect(find.text('Shift later tasks'), findsNothing);
       final g = await lift(tester);
       expect(find.text('Shift later tasks'), findsOneWidget);
-      await tester.tap(find.text('Shift later tasks'), pointer: 7);
+      // A fresh pointer id: a fixed one collided with the held drag's
+      // under some test orders.
+      await tester.tap(find.text('Shift later tasks'));
       await tester.pump();
       await dropOnGap(tester, g);
       expect(log.drops, ['write 9:30 shift']);
