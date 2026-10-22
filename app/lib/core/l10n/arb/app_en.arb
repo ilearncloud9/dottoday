@@ -2323,7 +2323,7 @@
   "@settingsTimeFormat": {
     "description": "Settings row."
   },
-  "settingsTimeSystem": "Like this device ({example})",
+  "settingsTimeSystem": "Device ({example})",
   "@settingsTimeSystem": {
     "description": "Time format option: follow the OS.",
     "placeholders": {

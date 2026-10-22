@@ -1,5 +1,5 @@
-// Design sweep on a device (docs/08 §7, M3b.10, M3c.6): Today, Inbox and
-// the Add flow (A1–A4, paste) with the demo day, saved by test_driver/screenshot_driver.dart. Debug builds only
+// Design sweep on a device (docs/08 §7, M3b.10, M3c.6, M3d.4): Today, Inbox,
+// the Add flow (A1–A4, paste), Search and Settings with the demo day, saved by test_driver/screenshot_driver.dart. Debug builds only
 // (the demo day lives in the debug menu). Run:
 //   flutter drive -d <device> --dart-define-from-file=.env.example \
 //     --dart-define=SWEEP_TAG=ios \
@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:dottoday/bootstrap.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
+import 'package:dottoday/features/task_editor/add/widgets/add_when_step.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:flutter/foundation.dart';
@@ -20,8 +21,12 @@ import 'package:integration_test/integration_test.dart';
 
 const _tag = String.fromEnvironment('SWEEP_TAG', defaultValue: 'device');
 
-Future<void> _pumpUntil(WidgetTester tester, Finder finder) async {
-  final end = DateTime.now().add(const Duration(seconds: 20));
+Future<void> _pumpUntil(
+  WidgetTester tester,
+  Finder finder, {
+  Duration timeout = const Duration(seconds: 20),
+}) async {
+  final end = DateTime.now().add(timeout);
   while (DateTime.now().isBefore(end)) {
     await tester.pump(const Duration(milliseconds: 200));
     if (tester.any(finder)) return;
@@ -72,7 +77,13 @@ void main() {
       await binding.convertFlutterSurfaceToImage();
     }
     await _pumpUntil(tester, find.byType(TodayScreen));
-    await _pumpUntil(tester, find.byTooltip('More options'));
+    // A rebuilt (ad-hoc signed) Mac app is a new app to the Keychain, so
+    // the first database open can wait on its password prompt.
+    await _pumpUntil(
+      tester,
+      find.byTooltip('More options'),
+      timeout: const Duration(minutes: 3),
+    );
     await tester.tap(find.byTooltip('More options'));
     await _pumpUntil(tester, find.text('Load demo day (debug)'));
     await tester.tap(find.text('Load demo day (debug)'));
@@ -86,7 +97,27 @@ void main() {
     await _shot(binding, tester, '${_tag}_inbox');
 
     await _addFlow(binding, tester);
+    await _searchAndSettings(binding, tester);
   });
+}
+
+/// Scrolls step 2's list until [finder] is built and on screen: in a short
+/// window (the Mac's default) the lazy list drops what is off screen.
+Future<void> _reveal(WidgetTester tester, Finder finder) async {
+  final list = find
+      .descendant(
+        of: find.byType(AddWhenStep),
+        matching: find.byType(Scrollable),
+      )
+      .first;
+  for (final delta in [200.0, -200.0]) {
+    if (tester.any(finder)) break;
+    await tester
+        .scrollUntilVisible(finder, delta, scrollable: list, maxScrolls: 10)
+        .catchError((Object _) {});
+  }
+  await tester.ensureVisible(finder);
+  await _rest(tester);
 }
 
 /// A1–A4 and the paste confirmation. Add opens through the app's own
@@ -119,6 +150,7 @@ Future<void> _addFlow(
   await _rest(tester);
   await _shot(binding, tester, '${_tag}_add_when');
 
+  await _reveal(tester, find.byTooltip('More lengths'));
   await tester.tap(find.byTooltip('More lengths'));
   await _pumpUntil(tester, find.text('PRESETS'));
   await _rest(tester);
@@ -126,6 +158,7 @@ Future<void> _addFlow(
   await tester.tap(find.text('Done'));
   await _rest(tester);
 
+  await _reveal(tester, find.byTooltip('More time options'));
   await tester.tap(find.byTooltip('More time options'));
   await _pumpUntil(tester, find.text('Pick from the week'));
   await _rest(tester);
@@ -138,4 +171,28 @@ Future<void> _addFlow(
   await tester.enterText(title(), '- Milk\n- Eggs 7pm\n- Call Mum tomorrow');
   await _rest(tester);
   await _shot(binding, tester, '${_tag}_add_paste');
+}
+
+/// S1 with results and P1 (M3d). Add is closed first.
+Future<void> _searchAndSettings(
+  IntegrationTestWidgetsFlutterBinding binding,
+  WidgetTester tester,
+) async {
+  Navigator.of(
+    tester.element(find.byType(EditableText).first),
+    rootNavigator: true,
+  ).popUntil((r) => r.isFirst);
+  await _rest(tester);
+
+  await tester.tap(find.text('Search').last);
+  await _pumpUntil(tester, find.byType(EditableText));
+  await tester.enterText(find.byType(EditableText).first, 'work');
+  await _rest(tester);
+  await tester.pump(const Duration(seconds: 1));
+  await _shot(binding, tester, '${_tag}_search');
+
+  await tester.tap(find.text('Settings').last);
+  await _pumpUntil(tester, find.text('DAY SHAPE'));
+  await _rest(tester);
+  await _shot(binding, tester, '${_tag}_settings');
 }

@@ -2293,7 +2293,7 @@ abstract class AppLocalizations {
   /// Time format option: follow the OS.
   ///
   /// In en, this message translates to:
-  /// **'Like this device ({example})'**
+  /// **'Device ({example})'**
   String settingsTimeSystem(String example);
 
   /// Time format option.

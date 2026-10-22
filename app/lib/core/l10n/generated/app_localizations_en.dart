@@ -1524,7 +1524,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String settingsTimeSystem(String example) {
-    return 'Like this device ($example)';
+    return 'Device ($example)';
   }
 
   @override
