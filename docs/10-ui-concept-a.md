@@ -92,7 +92,7 @@ Icon set: stroke 2 (2.4 when active), round caps, 24-unit grid, from a single `D
 | medium (600–840) — tablets, narrow windows | `NavigationRail` left, content as compact but wider cards |
 | expanded (≥ 840) — Mac, web, large tablets | left rail Today · Inbox · Week · Search · Settings; Inbox as a 300 px sidebar on Today; Today = three-day spread (Yesterday \| Today \| Tomorrow, today as the card); Week = capacity board; Month = grid; editing in a right-hand `TaskEditor` panel, no sheets |
 
-Platform idioms that may differ (and only these): bar shape and height, sheet handle, switch style, chip radius (iOS pill / M3 8 px), FAB shape, keyboard shortcuts on Mac/web (⌘N add, ⌘T today, ⌘←/→ day, ⌘D done, esc close). Everything else — dot states, thread geometry, copy, order of controls, colours — is identical.
+Platform idioms that may differ (and only these): bar shape and height, sheet handle, switch style, chip radius (iOS pill / M3 8 px), FAB shape, menu corners (iOS popover 28 px / M3 menu 16 px, e.g. the A4 Time ⋯ menu; added after M3c), keyboard shortcuts on Mac/web (⌘N add, ⌘T today, ⌘←/→ day, ⌘D done, esc close). Everything else — dot states, thread geometry, copy, order of controls, colours — is identical.
 
 Web = the Mac layout at expanded width and the Android layout (Material) at compact width; it must look like the same app at both.
 

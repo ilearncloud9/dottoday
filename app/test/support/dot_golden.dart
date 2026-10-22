@@ -77,7 +77,10 @@ Widget goldenApp(
     theme: data.copyWith(platform: platform),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
-    home: GoldenFrame(child: child),
+    // The frame wraps the root navigator, so sheets, popovers and menus
+    // opened by a golden's `act` are captured too (M3c follow-up).
+    builder: (context, navigator) => GoldenFrame(child: navigator!),
+    home: child,
   );
 }
 

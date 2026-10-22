@@ -55,6 +55,10 @@ artifact. It is a review aid, not a pass/fail gate: pixel-equality with HTML ren
 achievable (different text engines), so differences are judged against the docs/10 contract,
 with spacing allowed within ±4 px (CLAUDE.md §11).
 
+Since the M3c follow-up the golden frame wraps the root navigator, so a golden's `act` can open a
+sheet, popover or menu and it is captured at every width. Browser-only widget tests (`@TestOn('browser')`,
+tag `web`) run in CI with `flutter test --platform chrome --tags web`.
+
 Sweep entries (add a row per screen as it lands):
 
 | Component / screen | Golden test | Reference |
@@ -79,4 +83,6 @@ Sweep entries (add a row per screen as it lands):
 | Add A3 Duration sheet (+ Android idiom) | `test/features/task_editor/add_golden_test.dart` | `A-ios-add-duration`, `A-android-add-duration` |
 | Add A4 Time ⋯ menu (+ Android idiom) | `test/features/task_editor/add_golden_test.dart` | `A-ios-add-time-menu`, `A-android-add-time-menu` |
 | Add · paste "Add N tasks?" | `test/features/task_editor/add_golden_test.dart` | derived |
+| A4 sub-pickers: Change day, week, time zone | `test/shared/pickers/pickers_golden_test.dart` | derived |
+| A4 Type a time | `test/features/task_editor/type_time_golden_test.dart` | derived |
 

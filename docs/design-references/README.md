@@ -45,3 +45,9 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Add A1 with no habits yet (no Suggestions, helper line) | §5.2 A1, `A-ios-add-what` | `add_what_blank_*` |
 | Inbox schedule sheet › "Pick a time…" (Today / Tomorrow on a `ThreadPicker`, Place) | §3 `ThreadPicker`, `A-ios-add-when` | `inbox_pick_time_*` |
 | Paste confirmation "Add N tasks?" (Add title and Inbox field) | 03 §3.3, §5.4 | `add_paste_*` |
+| Add A2 all-day state (picker and chips hidden, "Lands on Today · all day") | §3 `AddFlow`, `A-ios-add-time-menu` | `add_time_menu_*` (menu); behaviour in `add_time_menu_test` |
+| Change day picker (plain month in a sheet; M3f.4 adds planned dots) | §5.3 "Change day picker", `MonthGrid` | `picker_change_day_*` |
+| Pick from the week (`WeekStrip` with ‹ ›) | §5.3, `A-ios-add-time-menu` | `picker_week_*` |
+| Time zone picker (search over IANA Region/City ids) | §5.3 "Time zone picker" | `picker_zone_*` |
+| Type a time sheet (`TimeInput` + Done) | §5.3, R-20 | `picker_type_time_*` |
+| Duration sheet's "Or type a length" field | §3 `DurationSheet`, R-16 | `add_duration_*` |

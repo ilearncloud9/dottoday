@@ -1,4 +1,7 @@
 tags:
+  web:
+    # Browser-only widget tests (paste in Chrome, M3c follow-up). Run with
+    # `flutter test --platform chrome --tags web`.
   golden:
     # Pixel goldens are baselined on macOS; run on a macOS runner (docs/09 M0.8).
   perf:

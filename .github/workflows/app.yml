@@ -42,6 +42,8 @@ jobs:
       # dart analyze (not flutter analyze) so the riverpod_lint analyzer plugin runs (M0.11).
       - run: dart analyze --fatal-infos
       - run: flutter test --exclude-tags golden --test-randomize-ordering-seed random
+      # Browser-only widget tests (paste in Chrome); the runner ships Chrome.
+      - run: flutter test --platform chrome --tags web
 
   goldens:
     # Goldens are baselined on macOS; Linux font rendering differs (M0.4).
