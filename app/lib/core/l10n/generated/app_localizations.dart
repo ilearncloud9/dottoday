@@ -4365,6 +4365,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title}, selected'**
   String inboxSelectedLabel(String title);
+
+  /// Onboarding O1 headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Your day, as a thread.'**
+  String get onboardingWelcomeTitle;
+
+  /// Onboarding O1: the one-line value proposition.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan your day as dots on a line, see where the time goes, and move it all when the day moves.'**
+  String get onboardingWelcomeBody;
+
+  /// Onboarding O1 primary button.
+  ///
+  /// In en, this message translates to:
+  /// **'Get started'**
+  String get onboardingGetStarted;
+
+  /// Onboarding O1: go to sign-in (O5).
+  ///
+  /// In en, this message translates to:
+  /// **'I already have an account'**
+  String get onboardingSignIn;
+
+  /// Onboarding: skip this step.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onboardingSkip;
+
+  /// Onboarding: the previous step (tooltip).
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get onboardingBack;
+
+  /// Onboarding: next step.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get onboardingContinue;
+
+  /// Onboarding progress, read by screen readers.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String onboardingStepOf(int step, int total);
+
+  /// Onboarding O1: label of the animated day dot.
+  ///
+  /// In en, this message translates to:
+  /// **'The day dot, drawing itself'**
+  String get onboardingDotLabel;
 }
 
 class _AppLocalizationsDelegate

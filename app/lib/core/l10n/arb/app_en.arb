@@ -4329,5 +4329,49 @@
         "type": "String"
       }
     }
+  },
+  "onboardingWelcomeTitle": "Your day, as a thread.",
+  "@onboardingWelcomeTitle": {
+    "description": "Onboarding O1 headline."
+  },
+  "onboardingWelcomeBody": "Plan your day as dots on a line, see where the time goes, and move it all when the day moves.",
+  "@onboardingWelcomeBody": {
+    "description": "Onboarding O1: the one-line value proposition."
+  },
+  "onboardingGetStarted": "Get started",
+  "@onboardingGetStarted": {
+    "description": "Onboarding O1 primary button."
+  },
+  "onboardingSignIn": "I already have an account",
+  "@onboardingSignIn": {
+    "description": "Onboarding O1: go to sign-in (O5)."
+  },
+  "onboardingSkip": "Skip",
+  "@onboardingSkip": {
+    "description": "Onboarding: skip this step."
+  },
+  "onboardingBack": "Back",
+  "@onboardingBack": {
+    "description": "Onboarding: the previous step (tooltip)."
+  },
+  "onboardingContinue": "Continue",
+  "@onboardingContinue": {
+    "description": "Onboarding: next step."
+  },
+  "onboardingStepOf": "Step {step} of {total}",
+  "@onboardingStepOf": {
+    "description": "Onboarding progress, read by screen readers.",
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingDotLabel": "The day dot, drawing itself",
+  "@onboardingDotLabel": {
+    "description": "Onboarding O1: label of the animated day dot."
   }
 }

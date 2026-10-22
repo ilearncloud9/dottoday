@@ -13,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
+import 'support/onboarding_fakes.dart';
 import 'support/timeline_fakes.dart';
 
 // The core flow by keyboard only on the Mac/web layout (docs/09 M3e.6,
@@ -51,6 +52,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          onboarded,
           routerProvider.overrideWithValue(router),
           ...timelineOverrides(
             now: DateTime.utc(2026, 10, 21, 7, 22),

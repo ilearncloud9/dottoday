@@ -6,13 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'support/onboarding_fakes.dart';
+
 void main() {
   testWidgets('app boots to /today', (tester) async {
     final router = buildRouter(appScreens);
     addTearDown(router.dispose);
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [routerProvider.overrideWithValue(router)],
+        overrides: [routerProvider.overrideWithValue(router), onboarded],
         child: const DottodayApp(),
       ),
     );

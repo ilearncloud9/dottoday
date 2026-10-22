@@ -1,0 +1,27 @@
+import 'package:dottoday/data/onboarding/onboarding_store.dart';
+import 'package:dottoday/features/onboarding/onboarding_flow.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+/// First run on this device (docs/09 M4, PRD F10): the onboarding flow in
+/// front of [child] (the app) until it is finished or skipped through.
+/// Above the app's navigator, so the flow has a navigator of its own for
+/// tooltips, sheets and dialogs.
+class OnboardingGate extends ConsumerWidget {
+  const OnboardingGate({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) =>
+      switch (ref.watch(onboardingProvider)) {
+        AsyncData(value: final p) when !p.finished => Navigator(
+          onGenerateRoute: (_) =>
+              MaterialPageRoute<void>(builder: (_) => const OnboardingFlow()),
+        ),
+        // Finished; or the record can't be read, which must not lock
+        // anyone out of their tasks.
+        AsyncData() || AsyncError() => child,
+        _ => const ColoredBox(color: Colors.transparent),
+      };
+}

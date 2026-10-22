@@ -8,8 +8,11 @@ import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+
+import 'pass_onboarding.dart';
 
 /// Pumps frames until [finder] matches or [timeout] passes. The minute
 /// ticker keeps a timer alive, so pumpAndSettle would never return.
@@ -23,7 +26,11 @@ Future<void> _pumpUntil(
     await tester.pump(const Duration(milliseconds: 200));
     if (tester.any(finder)) return;
   }
-  fail('timed out waiting for $finder');
+  // Say what is on screen, so a platform-specific miss is diagnosable.
+  final texts = [
+    for (final e in find.byType(Text).evaluate()) (e.widget as Text).data,
+  ];
+  fail('timed out waiting for $finder; on screen: $texts');
 }
 
 void main() {
@@ -37,6 +44,7 @@ void main() {
     await bootstrap();
     FlutterError.onError = flutterOnError;
     PlatformDispatcher.instance.onError = platformOnError;
+    await passOnboarding(tester);
     await _pumpUntil(tester, find.byType(TodayScreen));
     expect(find.byType(DotShell), findsOneWidget);
     expect(find.text('Today'), findsWidgets);
@@ -46,6 +54,8 @@ void main() {
     await _pumpUntil(tester, find.byTooltip('More options'));
     await tester.tap(find.byTooltip('More options'));
     await _pumpUntil(tester, find.text('Load demo day (debug)'));
+    // Let the menu finish opening: mid-animation its items don't take taps.
+    await tester.pump(const Duration(milliseconds: 600));
     await tester.tap(find.text('Load demo day (debug)'));
     await _pumpUntil(tester, find.text('Demo day loaded'));
 

@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
+import 'support/onboarding_fakes.dart';
 import 'support/timeline_fakes.dart';
 
 // Search and Settings in the main pane (docs/09 M3e.7): beside the rail
@@ -25,6 +26,7 @@ Future<void> _pump(WidgetTester tester, double width, String route) async {
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
+        onboarded,
         routerProvider.overrideWithValue(router),
         ...timelineOverrides(
           now: DateTime.utc(2026, 10, 21, 9),

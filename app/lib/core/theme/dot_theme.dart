@@ -123,6 +123,11 @@ ThemeData _build(DotColors c) {
       style: _pill(type, c, filled: true),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(style: _pill(type, c)),
+    // Text buttons in the accent's ink, which keeps 4.5:1 on the page as
+    // well as on cards (the raw accent is 4.3:1 on the page; M4.1, R-12).
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(foregroundColor: c.accentInk),
+    ),
     // Sheets and dialogs take the raised surface from the theme, not from
     // the caller, so an open sheet follows a light/dark switch (M3c.6).
     bottomSheetTheme: BottomSheetThemeData(

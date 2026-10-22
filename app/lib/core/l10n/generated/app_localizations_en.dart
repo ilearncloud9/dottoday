@@ -2967,4 +2967,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String inboxSelectedLabel(String title) {
     return '$title, selected';
   }
+
+  @override
+  String get onboardingWelcomeTitle => 'Your day, as a thread.';
+
+  @override
+  String get onboardingWelcomeBody =>
+      'Plan your day as dots on a line, see where the time goes, and move it all when the day moves.';
+
+  @override
+  String get onboardingGetStarted => 'Get started';
+
+  @override
+  String get onboardingSignIn => 'I already have an account';
+
+  @override
+  String get onboardingSkip => 'Skip';
+
+  @override
+  String get onboardingBack => 'Back';
+
+  @override
+  String get onboardingContinue => 'Continue';
+
+  @override
+  String onboardingStepOf(int step, int total) {
+    return 'Step $step of $total';
+  }
+
+  @override
+  String get onboardingDotLabel => 'The day dot, drawing itself';
 }

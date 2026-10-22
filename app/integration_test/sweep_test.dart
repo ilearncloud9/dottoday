@@ -21,6 +21,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+import 'pass_onboarding.dart';
+
 const _tag = String.fromEnvironment('SWEEP_TAG', defaultValue: 'device');
 
 Future<void> _pumpUntil(
@@ -78,6 +80,7 @@ void main() {
     if (!kIsWeb && Platform.isAndroid) {
       await binding.convertFlutterSurfaceToImage();
     }
+    await passOnboarding(tester);
     await _pumpUntil(tester, find.byType(TodayScreen));
     // A rebuilt (ad-hoc signed) Mac app is a new app to the Keychain, so
     // the first database open can wait on its password prompt.
@@ -88,6 +91,8 @@ void main() {
     );
     await tester.tap(find.byTooltip('More options'));
     await _pumpUntil(tester, find.text('Load demo day (debug)'));
+    // Let the menu finish opening: mid-animation its items don't take taps.
+    await tester.pump(const Duration(milliseconds: 600));
     await tester.tap(find.text('Load demo day (debug)'));
     await _pumpUntil(tester, find.byType(DayCard));
     await tester.pump(const Duration(seconds: 5)); // the snackbar leaves
