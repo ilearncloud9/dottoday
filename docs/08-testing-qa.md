@@ -39,6 +39,8 @@ TestFlight + Play internal track + web staging. Collect: crash-free rate, sync e
 - [ ] Security checklist (06 §9) signed off.
 - [ ] Crash-free ≥ 99.5 % over the last beta build.
 - [ ] CHANGELOG and in-app "What's new" updated.
+- [ ] Feedback address set: `FEEDBACK_EMAIL` in `.env.prod` points at a monitored inbox (Settings › Send feedback has no recipient while it is blank).
+- [ ] Manual: ⌘/ (Ctrl+/ on Windows/Linux) opens the shortcut list in real desktop Chrome (the browser may claim the key; widget tests can't prove it).
 
 ## 7. Design-review matrix (Concept A, docs/10 §7)
 Every UI component and screen has goldens for each cell of: light / dark × compact 390 / medium 700 /
