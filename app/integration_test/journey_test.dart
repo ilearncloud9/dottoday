@@ -117,7 +117,14 @@ void main() {
       matching: f,
     );
     final standup = onToday(find.text('Team standup'));
-    await tester.ensureVisible(standup);
+    // The card builds the rows in view and opens at "now": scroll it up
+    // to the morning (on a device whose clock is past 8:00 it isn't built).
+    await tester.scrollUntilVisible(
+      standup,
+      -200,
+      scrollable: onToday(find.byType(Scrollable)).first,
+      maxScrolls: 100,
+    );
     await _rest(tester);
     final lift = await tester.startGesture(tester.getCenter(standup));
     await tester.pump(DotTouch.liftDelay + const Duration(milliseconds: 100));
@@ -131,7 +138,13 @@ void main() {
     await _until(tester, find.textContaining('Team standup moved to'));
 
     // A repeating task changed for every day (R-01, M3f.1).
-    await _tap(tester, onToday(find.text('Team standup')));
+    await tester.scrollUntilVisible(
+      standup,
+      -200,
+      scrollable: onToday(find.byType(Scrollable)).first,
+      maxScrolls: 100,
+    );
+    await _tap(tester, standup);
     await _tap(tester, find.text('Edit'));
     final field = find.descendant(
       of: find.byType(TaskEditor),
