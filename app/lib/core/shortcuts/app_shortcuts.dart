@@ -40,6 +40,12 @@ final class ScheduleTaskIntent extends Intent {
   final String occurrenceId;
 }
 
+/// Open the Sync sheet (Settings › DATA › Sync, docs/09 M3f.8), handled at
+/// the app root so Settings needn't import the sync feature.
+final class ShowSyncIntent extends Intent {
+  const ShowSyncIntent();
+}
+
 /// The single table of keyboard bindings (docs/07 macOS menu, 02 F2).
 ///
 /// ```dart

@@ -10,6 +10,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/inbox/schedule_from_anywhere.dart';
+import 'package:dottoday/features/sync_status/sync_sheet.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/shared/sheets/shortcut_sheet.dart';
 import 'package:flutter/material.dart';
@@ -50,15 +51,7 @@ class DottodayApp extends ConsumerWidget {
             onShortcuts: () => _shortcuts(router),
           ),
           child: Actions(
-            actions: {
-              AddTaskIntent: CallbackAction<AddTaskIntent>(
-                onInvoke: (i) =>
-                    openQuickAdd(router, startUtc: i.startUtc, day: i.day),
-              ),
-              ScheduleTaskIntent: CallbackAction<ScheduleTaskIntent>(
-                onInvoke: (i) => _schedule(router, i.occurrenceId),
-              ),
-            },
+            actions: _intents(router),
             child: child ?? const SizedBox.shrink(),
           ),
         ),
@@ -66,6 +59,19 @@ class DottodayApp extends ConsumerWidget {
     );
   }
 }
+
+/// What the root does for features' intents (no feature imports another).
+Map<Type, Action<Intent>> _intents(GoRouter router) => {
+  AddTaskIntent: CallbackAction<AddTaskIntent>(
+    onInvoke: (i) => openQuickAdd(router, startUtc: i.startUtc, day: i.day),
+  ),
+  ScheduleTaskIntent: CallbackAction<ScheduleTaskIntent>(
+    onInvoke: (i) => _schedule(router, i.occurrenceId),
+  ),
+  ShowSyncIntent: CallbackAction<ShowSyncIntent>(
+    onInvoke: (_) => _sync(router),
+  ),
+};
 
 /// The app's language for a stored `profiles.locale`: a supported one,
 /// else the device's (null).
@@ -102,4 +108,12 @@ void _schedule(GoRouter router, String id) {
       router.routerDelegate.navigatorKey.currentState?.overlay?.context;
   if (context == null) return;
   unawaited(scheduleFromAnywhere(context, id));
+}
+
+/// Settings › Sync: the Sync sheet on the root overlay (M3f.8).
+void _sync(GoRouter router) {
+  final context =
+      router.routerDelegate.navigatorKey.currentState?.overlay?.context;
+  if (context == null) return;
+  unawaited(showSyncSheet(context));
 }

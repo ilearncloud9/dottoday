@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/shared/feedback/permission_notice.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
@@ -38,19 +39,33 @@ Future<List<Alert>?> showAlertsEditor(
   required List<Alert> initial,
   bool bedtime = false,
   ValueChanged<bool>? onBedtime,
+  Future<bool> Function()? deniedOpenSettings,
 }) => showAppSheet<List<Alert>>(
   context: context,
   title: context.l10n.alertsTitle,
-  builder: (_) =>
-      _Alerts(initial: initial, bedtime: bedtime, onBedtime: onBedtime),
+  builder: (_) => _Alerts(
+    initial: initial,
+    bedtime: bedtime,
+    onBedtime: onBedtime,
+    deniedOpenSettings: deniedOpenSettings,
+  ),
 );
 
 class _Alerts extends StatefulWidget {
-  const _Alerts({required this.initial, required this.bedtime, this.onBedtime});
+  const _Alerts({
+    required this.initial,
+    required this.bedtime,
+    this.onBedtime,
+    this.deniedOpenSettings,
+  });
 
   final List<Alert> initial;
   final bool bedtime;
   final ValueChanged<bool>? onBedtime;
+
+  /// Set while notifications are denied (M3f.8): the notice on top, whose
+  /// button calls it.
+  final Future<bool> Function()? deniedOpenSettings;
 
   @override
   State<_Alerts> createState() => _AlertsState();
@@ -90,6 +105,8 @@ class _AlertsState extends State<_Alerts> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
       children: [
+        if (widget.deniedOpenSettings case final open?)
+          PermissionNotice(onOpenSettings: open),
         if (_alerts.isEmpty) Text(l10n.sheetNoAlerts, style: t.styles.body),
         for (final a in _alerts)
           ListTile(

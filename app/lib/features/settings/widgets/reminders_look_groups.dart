@@ -1,29 +1,58 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/l10n/language_names.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
+import 'package:dottoday/shared/feedback/permission_notice.dart';
 import 'package:dottoday/shared/pickers/block_names.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The default alert offsets offered (minutes before; 0 = at start).
 const _alertChoices = [null, 0, 5, 10, 15, 30];
 
 /// REMINDERS (`A-ios-settings`): Task starts (the default alert, R-10) and
 /// the Bedtime reminder.
-class RemindersGroup extends StatelessWidget {
+class RemindersGroup extends ConsumerWidget {
   const RemindersGroup({required this.settings, super.key});
 
   final Settings settings;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final denied =
+        ref.watch(notificationPermissionStateProvider).value ==
+        PermissionState.denied;
+    final group = _group(context);
+    if (!denied) return group;
+    // Notifications are off: say so above the rows (M3f.8, 03 §3.8).
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: DotSpace.s,
+      children: [
+        PermissionNotice(
+          onOpenSettings: () async {
+            final opened = await ref
+                .read(notificationPermissionProvider)
+                .openSettings();
+            ref.invalidate(notificationPermissionStateProvider);
+            return opened;
+          },
+        ),
+        group,
+      ],
+    );
+  }
+
+  Widget _group(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     String label(int? m) => switch (m) {

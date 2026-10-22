@@ -42,7 +42,7 @@ final class RecentSearchesProvider
   RecentSearches create() => RecentSearches();
 }
 
-String _$recentSearchesHash() => r'14723123ddb2872dec5329ca2a81169589b6b858';
+String _$recentSearchesHash() => r'1697352b15d6954aecf80eafaf9de1369530ff2e';
 
 /// Search › RECENT (`A-ios-search`): the last five queries, on this device
 /// only (`local_meta`, never synced or exported — search terms can be

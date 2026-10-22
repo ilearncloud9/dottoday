@@ -4,8 +4,10 @@ library;
 
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/features/settings/pages/about_page.dart';
 import 'package:dottoday/features/settings/pages/account_page.dart';
 import 'package:dottoday/features/settings/pages/data_pages.dart';
@@ -112,4 +114,33 @@ void main() {
       build: (_) => page,
     );
   }
+  // M3f.8: notifications denied, above REMINDERS.
+  goldenMatrix(
+    'settings_notifications_off',
+    height: 900,
+    widths: const {'compact', 'expanded'},
+    act: (t) => t.scrollUntilVisible(
+      find.text('Notifications are off'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    ),
+    overrides: [
+      ..._overrides,
+      notificationPermissionProvider.overrideWithValue(const _Denied()),
+    ],
+    build: (_) => _settings(),
+  );
+}
+
+final class _Denied implements NotificationPermission {
+  const _Denied();
+
+  @override
+  Future<PermissionState> status() async => PermissionState.denied;
+
+  @override
+  Future<PermissionState> request() async => PermissionState.denied;
+
+  @override
+  Future<bool> openSettings() async => false;
 }

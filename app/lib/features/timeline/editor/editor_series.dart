@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/recurrence/series_actions.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
 import 'package:dottoday/domain/recurrence/series_edit.dart';
 import 'package:dottoday/domain/time/wall_clock.dart';
@@ -112,9 +114,13 @@ Future<void> pickAlerts(
   final l10n = context.l10n;
   final messenger = ScaffoldMessenger.of(context);
   final settings = container.read(currentProfileProvider).value?.settings;
+  final permission = container.read(notificationPermissionProvider);
+  final denied = await permission.status() == PermissionState.denied;
+  if (!context.mounted) return;
   final picked = await showAlertsEditor(
     context,
     initial: task.alerts,
+    deniedOpenSettings: denied ? permission.openSettings : null,
     bedtime: settings?.bedtimeReminder ?? false,
     onBedtime: (on) => unawaited(
       updateSettings(container, (s) => s.copyWith(bedtimeReminder: on)),

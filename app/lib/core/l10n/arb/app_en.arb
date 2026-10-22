@@ -4060,5 +4060,176 @@
   "aboutLicences": "Open-source licences",
   "@aboutLicences": {
     "description": "About page row: the licence page."
+  },
+  "settingsSync": "Sync",
+  "@settingsSync": {
+    "description": "Settings › DATA row: opens the Sync sheet."
+  },
+  "syncTitle": "Sync",
+  "@syncTitle": {
+    "description": "Sync sheet title."
+  },
+  "syncLocalOnlyBody": "Your tasks are on this device only. Sign in to sync them across your devices.",
+  "@syncLocalOnlyBody": {
+    "description": "Sync sheet, no account."
+  },
+  "syncSignIn": "Sign in…",
+  "@syncSignIn": {
+    "description": "Sync sheet, no account: opens Settings › Account."
+  },
+  "syncJustNow": "Last synced just now",
+  "@syncJustNow": {
+    "description": "Sync sheet: synced under a minute ago."
+  },
+  "syncMinutesAgo": "{minutes, plural, =1{Last synced 1 min ago} other{Last synced {minutes} min ago}}",
+  "@syncMinutesAgo": {
+    "description": "Sync sheet: synced minutes ago.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "syncAt": "Last synced {when}",
+  "@syncAt": {
+    "description": "Sync sheet: synced earlier, e.g. 'Tue, Oct 20, 9:41 PM'.",
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "syncNever": "Not synced yet",
+  "@syncNever": {
+    "description": "Sync sheet: never synced."
+  },
+  "syncPending": "{count, plural, =0{Nothing waiting to sync} =1{1 change waiting to sync} other{{count} changes waiting to sync}}",
+  "@syncPending": {
+    "description": "Sync sheet: local changes not yet pushed.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncNow": "Sync now",
+  "@syncNow": {
+    "description": "Sync sheet button."
+  },
+  "syncStateSynced": "Up to date",
+  "@syncStateSynced": {
+    "description": "Sync sheet state line."
+  },
+  "syncStateSyncing": "Syncing…",
+  "@syncStateSyncing": {
+    "description": "Sync sheet state line."
+  },
+  "syncStateOffline": "Offline. Changes are saved here and sync when you're back.",
+  "@syncStateOffline": {
+    "description": "Sync sheet state line."
+  },
+  "syncStateError": "Couldn't sync. Your changes are safe here; it will try again.",
+  "@syncStateError": {
+    "description": "Sync sheet state line."
+  },
+  "syncConflicts": "Changed on two devices",
+  "@syncConflicts": {
+    "description": "Sync sheet: the conflicts section caption."
+  },
+  "syncConflictHint": "The other device's change is in use until you choose.",
+  "@syncConflictHint": {
+    "description": "Sync sheet: under the conflicts caption."
+  },
+  "syncConflictField": "{field, select, title{Title} start{Time} duration{Length} notes{Notes} colour{Colour} status{Done or not} other{A detail}}",
+  "@syncConflictField": {
+    "description": "Sync sheet: which field of the task differs.",
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "syncMine": "This device: {value}",
+  "@syncMine": {
+    "description": "Sync sheet: this device's value.",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "syncTheirs": "Other device: {value}",
+  "@syncTheirs": {
+    "description": "Sync sheet: the other device's value.",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "syncKeepMine": "Keep mine",
+  "@syncKeepMine": {
+    "description": "Sync sheet conflict button."
+  },
+  "syncKeepTheirs": "Keep theirs",
+  "@syncKeepTheirs": {
+    "description": "Sync sheet conflict button."
+  },
+  "bannerOffline": "Offline · everything still works here",
+  "@bannerOffline": {
+    "description": "Banner above every screen while offline (signed in)."
+  },
+  "bannerConflicts": "{count, plural, =1{1 change needs you} other{{count} changes need you}}",
+  "@bannerConflicts": {
+    "description": "Banner above every screen when sync has conflicts.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bannerReview": "Review",
+  "@bannerReview": {
+    "description": "Banner button: opens the Sync sheet."
+  },
+  "notifDeniedTitle": "Notifications are off",
+  "@notifDeniedTitle": {
+    "description": "Notification permission denied notice title."
+  },
+  "notifDeniedBody": "Dottoday can't remind you until notifications are allowed in your device settings.",
+  "@notifDeniedBody": {
+    "description": "Notification permission denied notice text."
+  },
+  "notifOpenSettings": "Open settings",
+  "@notifOpenSettings": {
+    "description": "Notification permission denied notice button."
+  },
+  "notifSettingsPath": "Open your device's Settings › Notifications › Dottoday and allow notifications.",
+  "@notifSettingsPath": {
+    "description": "Snackbar when the app can't open system settings itself."
+  },
+  "syncSummary": "{last} · {pending}",
+  "@syncSummary": {
+    "description": "Sync sheet: 'Last synced 4 min ago · 2 changes waiting to sync'.",
+    "placeholders": {
+      "last": {
+        "type": "String"
+      },
+      "pending": {
+        "type": "String"
+      }
+    }
+  },
+  "syncConflictHeading": "{title} · {field}",
+  "@syncConflictHeading": {
+    "description": "Sync sheet conflict card heading: the task and the detail that differs.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "field": {
+        "type": "String"
+      }
+    }
   }
 }

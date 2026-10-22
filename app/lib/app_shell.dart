@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/sync_status/sync_banner.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,13 @@ class AppShell extends StatelessWidget {
       ),
       addLabel: l10n.quickAddTooltip,
       // The Mac/web editor panel opens beside every tab (M3e.5).
-      body: EditorPanelFrame(child: shell),
+      body: Column(
+        children: [
+          // Offline / conflicts, above every screen (M3f.8).
+          const SyncBanner(),
+          Expanded(child: EditorPanelFrame(child: shell)),
+        ],
+      ),
     );
   }
 

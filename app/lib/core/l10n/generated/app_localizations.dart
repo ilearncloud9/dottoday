@@ -3664,7 +3664,7 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 completed task moved to Trash} other{{count} completed tasks moved to Trash}}'**
   String snackClearedCompleted(int count);
 
-  /// Settings › DATA... row and page title: the account page.
+  /// Settings header tap target and page title: the account page.
   ///
   /// In en, this message translates to:
   /// **'Account'**
@@ -4053,6 +4053,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open-source licences'**
   String get aboutLicences;
+
+  /// Settings › DATA row: opens the Sync sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get settingsSync;
+
+  /// Sync sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get syncTitle;
+
+  /// Sync sheet, no account.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tasks are on this device only. Sign in to sync them across your devices.'**
+  String get syncLocalOnlyBody;
+
+  /// Sync sheet, no account: opens Settings › Account.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in…'**
+  String get syncSignIn;
+
+  /// Sync sheet: synced under a minute ago.
+  ///
+  /// In en, this message translates to:
+  /// **'Last synced just now'**
+  String get syncJustNow;
+
+  /// Sync sheet: synced minutes ago.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes, plural, =1{Last synced 1 min ago} other{Last synced {minutes} min ago}}'**
+  String syncMinutesAgo(int minutes);
+
+  /// Sync sheet: synced earlier, e.g. 'Tue, Oct 20, 9:41 PM'.
+  ///
+  /// In en, this message translates to:
+  /// **'Last synced {when}'**
+  String syncAt(String when);
+
+  /// Sync sheet: never synced.
+  ///
+  /// In en, this message translates to:
+  /// **'Not synced yet'**
+  String get syncNever;
+
+  /// Sync sheet: local changes not yet pushed.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing waiting to sync} =1{1 change waiting to sync} other{{count} changes waiting to sync}}'**
+  String syncPending(int count);
+
+  /// Sync sheet button.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync now'**
+  String get syncNow;
+
+  /// Sync sheet state line.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to date'**
+  String get syncStateSynced;
+
+  /// Sync sheet state line.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing…'**
+  String get syncStateSyncing;
+
+  /// Sync sheet state line.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline. Changes are saved here and sync when you\'re back.'**
+  String get syncStateOffline;
+
+  /// Sync sheet state line.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t sync. Your changes are safe here; it will try again.'**
+  String get syncStateError;
+
+  /// Sync sheet: the conflicts section caption.
+  ///
+  /// In en, this message translates to:
+  /// **'Changed on two devices'**
+  String get syncConflicts;
+
+  /// Sync sheet: under the conflicts caption.
+  ///
+  /// In en, this message translates to:
+  /// **'The other device\'s change is in use until you choose.'**
+  String get syncConflictHint;
+
+  /// Sync sheet: which field of the task differs.
+  ///
+  /// In en, this message translates to:
+  /// **'{field, select, title{Title} start{Time} duration{Length} notes{Notes} colour{Colour} status{Done or not} other{A detail}}'**
+  String syncConflictField(String field);
+
+  /// Sync sheet: this device's value.
+  ///
+  /// In en, this message translates to:
+  /// **'This device: {value}'**
+  String syncMine(String value);
+
+  /// Sync sheet: the other device's value.
+  ///
+  /// In en, this message translates to:
+  /// **'Other device: {value}'**
+  String syncTheirs(String value);
+
+  /// Sync sheet conflict button.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep mine'**
+  String get syncKeepMine;
+
+  /// Sync sheet conflict button.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep theirs'**
+  String get syncKeepTheirs;
+
+  /// Banner above every screen while offline (signed in).
+  ///
+  /// In en, this message translates to:
+  /// **'Offline · everything still works here'**
+  String get bannerOffline;
+
+  /// Banner above every screen when sync has conflicts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change needs you} other{{count} changes need you}}'**
+  String bannerConflicts(int count);
+
+  /// Banner button: opens the Sync sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get bannerReview;
+
+  /// Notification permission denied notice title.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are off'**
+  String get notifDeniedTitle;
+
+  /// Notification permission denied notice text.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday can\'t remind you until notifications are allowed in your device settings.'**
+  String get notifDeniedBody;
+
+  /// Notification permission denied notice button.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get notifOpenSettings;
+
+  /// Snackbar when the app can't open system settings itself.
+  ///
+  /// In en, this message translates to:
+  /// **'Open your device\'s Settings › Notifications › Dottoday and allow notifications.'**
+  String get notifSettingsPath;
+
+  /// Sync sheet: 'Last synced 4 min ago · 2 changes waiting to sync'.
+  ///
+  /// In en, this message translates to:
+  /// **'{last} · {pending}'**
+  String syncSummary(String last, String pending);
+
+  /// Sync sheet conflict card heading: the task and the detail that differs.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} · {field}'**
+  String syncConflictHeading(String title, String field);
 }
 
 class _AppLocalizationsDelegate

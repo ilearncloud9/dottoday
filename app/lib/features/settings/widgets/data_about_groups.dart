@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/feedback/feedback_mail.dart';
+import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/settings/widgets/trash_sheet.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
@@ -18,17 +21,27 @@ import 'package:go_router/go_router.dart';
 void _open(BuildContext context, SettingsPage page) =>
     unawaited(context.push(AppRoutes.settingsPage(page)));
 
-/// DATA: Calendars, Export (pages, M3f.7) and Trash (R-11).
-class DataGroup extends StatelessWidget {
+/// DATA: Sync (the sheet, M3f.8), Calendars, Export (pages, M3f.7) and
+/// Trash (R-11).
+class DataGroup extends ConsumerWidget {
   const DataGroup({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
+    final sync = ref.watch(syncStatusProvider).value ?? SyncStatus.localOnly;
     return SettingsGroup(
       caption: l10n.settingsData,
       children: [
+        SettingsRow(
+          glyph: DotGlyphs.repeat,
+          tint: t.colors.accentInk,
+          title: l10n.settingsSync,
+          value: _syncValue(l10n, sync),
+          // The sheet belongs to the sync feature; the app root opens it.
+          onTap: () => Actions.maybeInvoke(context, const ShowSyncIntent()),
+        ),
         SettingsRow(
           glyph: DotGlyphs.calendar,
           tint: t.tasks[TaskColor.sky].ink,
@@ -53,6 +66,18 @@ class DataGroup extends StatelessWidget {
       ],
     );
   }
+}
+
+/// The Sync row's value: conflicts first, else the state.
+String _syncValue(AppLocalizations l10n, SyncStatus s) {
+  if (s.conflicts.isNotEmpty) return l10n.bannerConflicts(s.conflicts.length);
+  return switch (s.state) {
+    SyncState.localOnly => l10n.syncLocalOnly,
+    SyncState.synced => l10n.syncSynced,
+    SyncState.syncing => l10n.syncSyncing,
+    SyncState.offline => l10n.syncOffline,
+    SyncState.error => l10n.syncError,
+  };
 }
 
 /// ABOUT: Help, Privacy, About Dottoday (version, What's new, licences;

@@ -2749,4 +2749,146 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutLicences => 'Open-source licences';
+
+  @override
+  String get settingsSync => 'Sync';
+
+  @override
+  String get syncTitle => 'Sync';
+
+  @override
+  String get syncLocalOnlyBody =>
+      'Your tasks are on this device only. Sign in to sync them across your devices.';
+
+  @override
+  String get syncSignIn => 'Sign in…';
+
+  @override
+  String get syncJustNow => 'Last synced just now';
+
+  @override
+  String syncMinutesAgo(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: 'Last synced $minutes min ago',
+      one: 'Last synced 1 min ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String syncAt(String when) {
+    return 'Last synced $when';
+  }
+
+  @override
+  String get syncNever => 'Not synced yet';
+
+  @override
+  String syncPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes waiting to sync',
+      one: '1 change waiting to sync',
+      zero: 'Nothing waiting to sync',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncNow => 'Sync now';
+
+  @override
+  String get syncStateSynced => 'Up to date';
+
+  @override
+  String get syncStateSyncing => 'Syncing…';
+
+  @override
+  String get syncStateOffline =>
+      'Offline. Changes are saved here and sync when you\'re back.';
+
+  @override
+  String get syncStateError =>
+      'Couldn\'t sync. Your changes are safe here; it will try again.';
+
+  @override
+  String get syncConflicts => 'Changed on two devices';
+
+  @override
+  String get syncConflictHint =>
+      'The other device\'s change is in use until you choose.';
+
+  @override
+  String syncConflictField(String field) {
+    String _temp0 = intl.Intl.selectLogic(field, {
+      'title': 'Title',
+      'start': 'Time',
+      'duration': 'Length',
+      'notes': 'Notes',
+      'colour': 'Colour',
+      'status': 'Done or not',
+      'other': 'A detail',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String syncMine(String value) {
+    return 'This device: $value';
+  }
+
+  @override
+  String syncTheirs(String value) {
+    return 'Other device: $value';
+  }
+
+  @override
+  String get syncKeepMine => 'Keep mine';
+
+  @override
+  String get syncKeepTheirs => 'Keep theirs';
+
+  @override
+  String get bannerOffline => 'Offline · everything still works here';
+
+  @override
+  String bannerConflicts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes need you',
+      one: '1 change needs you',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bannerReview => 'Review';
+
+  @override
+  String get notifDeniedTitle => 'Notifications are off';
+
+  @override
+  String get notifDeniedBody =>
+      'Dottoday can\'t remind you until notifications are allowed in your device settings.';
+
+  @override
+  String get notifOpenSettings => 'Open settings';
+
+  @override
+  String get notifSettingsPath =>
+      'Open your device\'s Settings › Notifications › Dottoday and allow notifications.';
+
+  @override
+  String syncSummary(String last, String pending) {
+    return '$last · $pending';
+  }
+
+  @override
+  String syncConflictHeading(String title, String field) {
+    return '$title · $field';
+  }
 }
