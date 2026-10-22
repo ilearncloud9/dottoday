@@ -3526,5 +3526,213 @@
         "type": "String"
       }
     }
+  },
+  "todayMenuLate": "Running late…",
+  "@todayMenuLate": {
+    "description": "Today ⋯ menu: opens the Running late sheet."
+  },
+  "todayMenuReview": "Review the day",
+  "@todayMenuReview": {
+    "description": "Today ⋯ menu: opens the Day review."
+  },
+  "lateAmount": "How late",
+  "@lateAmount": {
+    "description": "Running late sheet: label of the +5/+15/+30 choice."
+  },
+  "lateShiftRest": "Shift the rest",
+  "@lateShiftRest": {
+    "description": "Running late sheet: push every remaining task later."
+  },
+  "lateShiftPreview": "{count, plural, =0{Nothing left to move} =1{1 task moves {minutes} min later} other{{count} tasks move {minutes} min later}}",
+  "@lateShiftPreview": {
+    "description": "Running late sheet: what Shift the rest will do.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "lateShiftPreviewPartial": "{count, plural, =1{1 task moves {minutes} min later} other{{count} tasks move {minutes} min later}} · {pinned} stays put",
+  "@lateShiftPreviewPartial": {
+    "description": "Running late sheet: Shift the rest stops at a pinned task.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      },
+      "pinned": {
+        "type": "String"
+      }
+    }
+  },
+  "lateSkip": "Skip “{title}”",
+  "@lateSkip": {
+    "description": "Running late sheet: skip the current or next task.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "lateSkipDetail": "Frees its time; nothing else moves",
+  "@lateSkipDetail": {
+    "description": "Running late sheet: under Skip."
+  },
+  "lateShorten": "Shorten “{title}”",
+  "@lateShorten": {
+    "description": "Running late sheet: start the current or next task later, same end.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "lateShortenDetail": "Starts {minutes} min later, still ends at {end}",
+  "@lateShortenDetail": {
+    "description": "Running late sheet: under Shorten.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "lateShortenTooShort": "Too short to lose {minutes} min",
+  "@lateShortenTooShort": {
+    "description": "Running late sheet: Shorten is off because the task is too short.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "lateNothingLeft": "Nothing left today",
+  "@lateNothingLeft": {
+    "description": "Running late sheet: no task left to skip or shorten."
+  },
+  "snackSkippedTask": "“{title}” skipped",
+  "@snackSkippedTask": {
+    "description": "Snackbar after Skip, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "snackShortened": "“{title}” starts {minutes} min later",
+  "@snackShortened": {
+    "description": "Snackbar after Shorten, with Undo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewTitle": "Day review",
+  "@reviewTitle": {
+    "description": "Day review sheet title and prompt heading."
+  },
+  "reviewSummary": "{done} of {total} done",
+  "@reviewSummary": {
+    "description": "Day review: the day's count.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewAskTomorrow": "Move the rest to tomorrow?",
+  "@reviewAskTomorrow": {
+    "description": "Day review question when Roll unfinished to tomorrow is on."
+  },
+  "reviewAskInbox": "Send the rest to the Inbox?",
+  "@reviewAskInbox": {
+    "description": "Day review question when Roll unfinished to tomorrow is off."
+  },
+  "reviewMoveTomorrow": "{count, plural, =1{Move 1 to tomorrow} other{Move {count} to tomorrow}}",
+  "@reviewMoveTomorrow": {
+    "description": "Day review button.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewSendInbox": "{count, plural, =1{Send 1 to Inbox} other{Send {count} to Inbox}}",
+  "@reviewSendInbox": {
+    "description": "Day review button.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewStaying": "{count, plural, =1{1 more stays: it repeats or comes from a calendar} other{{count} more stay: they repeat or come from a calendar}}",
+  "@reviewStaying": {
+    "description": "Day review: unfinished tasks that are not moved.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewAllDone": "Nothing left to move",
+  "@reviewAllDone": {
+    "description": "Day review when every one-off task is done."
+  },
+  "snackRolled": "{count, plural, =1{1 task moved to tomorrow} other{{count} tasks moved to tomorrow}}",
+  "@snackRolled": {
+    "description": "Snackbar after the Day review, with Undo.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackSentToInbox": "{count, plural, =1{1 task sent to the Inbox} other{{count} tasks sent to the Inbox}}",
+  "@snackSentToInbox": {
+    "description": "Snackbar after the Day review, with Undo.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "promptNotNow": "Not now",
+  "@promptNotNow": {
+    "description": "Today prompt: put the prompt away for today."
+  },
+  "lateNudgeTitle": "Running late?",
+  "@lateNudgeTitle": {
+    "description": "Today prompt when a task ended unticked (running-late nudge)."
+  },
+  "lateNudgeDetail": "“{title}” ended {minutes} min ago",
+  "@lateNudgeDetail": {
+    "description": "Running-late nudge detail.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "lateNudgeAction": "Catch up",
+  "@lateNudgeAction": {
+    "description": "Running-late nudge button: opens the Running late sheet."
   }
 }

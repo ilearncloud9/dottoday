@@ -5,9 +5,8 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
-import 'package:dottoday/features/timeline/widgets/debug_menu.dart';
+import 'package:dottoday/features/timeline/widgets/today_menu.dart';
 import 'package:dottoday/shared/dot/day_dot.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -103,12 +102,7 @@ class TodayHeader extends ConsumerWidget {
             TodayDot(today: today)
           else
             TodayPill(onTap: onToday),
-          if (kDebugMode)
-            PopupMenuButton<void>(
-              tooltip: l10n.timelineMenu,
-              icon: DotIcon(DotGlyphs.more, color: t.colors.text),
-              itemBuilder: debugMenuItems,
-            ),
+          TodayMenu(date: date, today: today),
         ],
       ),
     );

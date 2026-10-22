@@ -3441,6 +3441,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time zone · {city}'**
   String editorZone(String city);
+
+  /// Today ⋯ menu: opens the Running late sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Running late…'**
+  String get todayMenuLate;
+
+  /// Today ⋯ menu: opens the Day review.
+  ///
+  /// In en, this message translates to:
+  /// **'Review the day'**
+  String get todayMenuReview;
+
+  /// Running late sheet: label of the +5/+15/+30 choice.
+  ///
+  /// In en, this message translates to:
+  /// **'How late'**
+  String get lateAmount;
+
+  /// Running late sheet: push every remaining task later.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift the rest'**
+  String get lateShiftRest;
+
+  /// Running late sheet: what Shift the rest will do.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing left to move} =1{1 task moves {minutes} min later} other{{count} tasks move {minutes} min later}}'**
+  String lateShiftPreview(int count, int minutes);
+
+  /// Running late sheet: Shift the rest stops at a pinned task.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task moves {minutes} min later} other{{count} tasks move {minutes} min later}} · {pinned} stays put'**
+  String lateShiftPreviewPartial(int count, int minutes, String pinned);
+
+  /// Running late sheet: skip the current or next task.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip “{title}”'**
+  String lateSkip(String title);
+
+  /// Running late sheet: under Skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Frees its time; nothing else moves'**
+  String get lateSkipDetail;
+
+  /// Running late sheet: start the current or next task later, same end.
+  ///
+  /// In en, this message translates to:
+  /// **'Shorten “{title}”'**
+  String lateShorten(String title);
+
+  /// Running late sheet: under Shorten.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts {minutes} min later, still ends at {end}'**
+  String lateShortenDetail(int minutes, String end);
+
+  /// Running late sheet: Shorten is off because the task is too short.
+  ///
+  /// In en, this message translates to:
+  /// **'Too short to lose {minutes} min'**
+  String lateShortenTooShort(int minutes);
+
+  /// Running late sheet: no task left to skip or shorten.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing left today'**
+  String get lateNothingLeft;
+
+  /// Snackbar after Skip, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” skipped'**
+  String snackSkippedTask(String title);
+
+  /// Snackbar after Shorten, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” starts {minutes} min later'**
+  String snackShortened(String title, int minutes);
+
+  /// Day review sheet title and prompt heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Day review'**
+  String get reviewTitle;
+
+  /// Day review: the day's count.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done'**
+  String reviewSummary(int done, int total);
+
+  /// Day review question when Roll unfinished to tomorrow is on.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the rest to tomorrow?'**
+  String get reviewAskTomorrow;
+
+  /// Day review question when Roll unfinished to tomorrow is off.
+  ///
+  /// In en, this message translates to:
+  /// **'Send the rest to the Inbox?'**
+  String get reviewAskInbox;
+
+  /// Day review button.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Move 1 to tomorrow} other{Move {count} to tomorrow}}'**
+  String reviewMoveTomorrow(int count);
+
+  /// Day review button.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Send 1 to Inbox} other{Send {count} to Inbox}}'**
+  String reviewSendInbox(int count);
+
+  /// Day review: unfinished tasks that are not moved.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 more stays: it repeats or comes from a calendar} other{{count} more stay: they repeat or come from a calendar}}'**
+  String reviewStaying(int count);
+
+  /// Day review when every one-off task is done.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing left to move'**
+  String get reviewAllDone;
+
+  /// Snackbar after the Day review, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task moved to tomorrow} other{{count} tasks moved to tomorrow}}'**
+  String snackRolled(int count);
+
+  /// Snackbar after the Day review, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task sent to the Inbox} other{{count} tasks sent to the Inbox}}'**
+  String snackSentToInbox(int count);
+
+  /// Today prompt: put the prompt away for today.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get promptNotNow;
+
+  /// Today prompt when a task ended unticked (running-late nudge).
+  ///
+  /// In en, this message translates to:
+  /// **'Running late?'**
+  String get lateNudgeTitle;
+
+  /// Running-late nudge detail.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” ended {minutes} min ago'**
+  String lateNudgeDetail(String title, int minutes);
+
+  /// Running-late nudge button: opens the Running late sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Catch up'**
+  String get lateNudgeAction;
 }
 
 class _AppLocalizationsDelegate

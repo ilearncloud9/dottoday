@@ -9,6 +9,7 @@ import 'package:dottoday/features/timeline/widgets/selection_bar.dart';
 import 'package:dottoday/features/timeline/widgets/today_header.dart';
 import 'package:dottoday/features/timeline/widgets/today_keys.dart';
 import 'package:dottoday/features/timeline/widgets/today_month.dart';
+import 'package:dottoday/features/timeline/widgets/today_prompt.dart';
 import 'package:dottoday/features/timeline/widgets/today_spread.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/day_pager.dart';
@@ -142,6 +143,7 @@ class _TodayCompact extends ConsumerWidget {
           ),
         ),
         AllDayChips(date: shown),
+        TodayPrompt(date: shown, today: today),
         const SizedBox(height: DotSpace.s),
         Expanded(
           child: DayPager(

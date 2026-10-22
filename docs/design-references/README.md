@@ -48,12 +48,12 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Add A2 all-day state (picker and chips hidden, "Lands on Today · all day") | §3 `AddFlow`, `A-ios-add-time-menu` | `add_time_menu_*` (menu); behaviour in `add_time_menu_test` |
 | Change day picker (month in a sheet with each day's planned dots, M3f.4) | §5.3 "Change day picker", `MonthGrid` | `picker_change_day_*` |
 | Pick from the week (`WeekStrip` with ‹ ›) | §5.3, `A-ios-add-time-menu` | `picker_week_*` |
-| Time zone picker (search over IANA Region/City ids) | §5.3 "Time zone picker" | `picker_zone_*` |
+| Time zone picker (search over IANA Region/City ids); the editor's "Time zone · City" row (M3f.4) | §5.3 "Time zone picker" | `picker_zone_*`, `task_editor_*` |
 | Type a time sheet (`TimeInput` + Done) | §5.3, R-20 | `picker_type_time_*` |
 | Duration sheet's "Or type a length" field | §3 `DurationSheet`, R-16 | `add_duration_*` |
 | Search empty (hint + recent) and no results (with Show all) | §5.3 "Search empty and no-results" | `search_empty_*`, `search_no_results_*` |
 | Settings › Different days (per-weekday sliders), Send feedback sheet, Trash sheet | §5.3, PRD F1/F8/F11 | `settings_weekdays_*`, `settings_feedback_*` |
-| Spread side day with nothing planned ("Nothing planned"), Running late menu (+5 / +15 / +30), the spread at 840 px | §3 `DayCard`, PRD F1, `A-mac-today-alt1-spread` | `today_spread_*` |
+| Spread side day with nothing planned ("Nothing planned"), the spread at 840 px | §3 `DayCard`, PRD F1, `A-mac-today-alt1-spread` | `today_spread_*` |
 | Inbox Sort menu (added / duration / first fit), "No room this week", the Inbox sidebar's empty list | §3 `InboxRow`, `A-mac-inbox` | `inbox_*_expanded_*`, `today_inbox_sidebar_*` |
 | Week at 840 px (controls under the title, sideways scroll), drag preview pill, the board's "Drop a task here" on an empty day | §3 `CapacityRing`/`WeekSummaryStrip`, `A-mac-week-alt3-board` | `week_*` |
 | Month at 840 px, an empty month (no badges, no numbers) | §3 `MonthGrid`, `A-mac-month` | `month_*` |
@@ -62,3 +62,5 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Repeat editor (choices, weekday chips, custom interval, ends) and the "Change which? / Delete which?" scope sheet | §5.3 "Repeat editor", R-01 | `picker_repeat_*`, `picker_scope_*` |
 | Alerts editor (task alerts, add choices, five at most, Bedtime switch) | §5.3 "Alerts editor", R-10 | `picker_alerts_*` |
 | Subtask rows in the editor (rename dialog, ×, drag handle, "now", Use this list every time); full colour & icon picker | §5.3 "Subtask editor", "Colour & icon full picker", R-09 | `task_editor_*`; widget tests |
+| Running late sheet (+5 / +15 / +30; shift the rest with the pinned task named, skip, shorten), Today's ⋯ (Running late…, Review the day) | §5.3 "Running late sheet", PRD F1, R-04 | `today_running_late_*` |
+| Day review card at Bedtime ("2 of 13 done · Send the rest to the Inbox?", Not now) and the running-late nudge card | §5.3 "Day review at Bedtime" | `today_day_review_*`, `today_late_nudge_*` |

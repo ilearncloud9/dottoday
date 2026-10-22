@@ -2336,4 +2336,161 @@ class AppLocalizationsEn extends AppLocalizations {
   String editorZone(String city) {
     return 'Time zone · $city';
   }
+
+  @override
+  String get todayMenuLate => 'Running late…';
+
+  @override
+  String get todayMenuReview => 'Review the day';
+
+  @override
+  String get lateAmount => 'How late';
+
+  @override
+  String get lateShiftRest => 'Shift the rest';
+
+  @override
+  String lateShiftPreview(int count, int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks move $minutes min later',
+      one: '1 task moves $minutes min later',
+      zero: 'Nothing left to move',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String lateShiftPreviewPartial(int count, int minutes, String pinned) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks move $minutes min later',
+      one: '1 task moves $minutes min later',
+    );
+    return '$_temp0 · $pinned stays put';
+  }
+
+  @override
+  String lateSkip(String title) {
+    return 'Skip “$title”';
+  }
+
+  @override
+  String get lateSkipDetail => 'Frees its time; nothing else moves';
+
+  @override
+  String lateShorten(String title) {
+    return 'Shorten “$title”';
+  }
+
+  @override
+  String lateShortenDetail(int minutes, String end) {
+    return 'Starts $minutes min later, still ends at $end';
+  }
+
+  @override
+  String lateShortenTooShort(int minutes) {
+    return 'Too short to lose $minutes min';
+  }
+
+  @override
+  String get lateNothingLeft => 'Nothing left today';
+
+  @override
+  String snackSkippedTask(String title) {
+    return '“$title” skipped';
+  }
+
+  @override
+  String snackShortened(String title, int minutes) {
+    return '“$title” starts $minutes min later';
+  }
+
+  @override
+  String get reviewTitle => 'Day review';
+
+  @override
+  String reviewSummary(int done, int total) {
+    return '$done of $total done';
+  }
+
+  @override
+  String get reviewAskTomorrow => 'Move the rest to tomorrow?';
+
+  @override
+  String get reviewAskInbox => 'Send the rest to the Inbox?';
+
+  @override
+  String reviewMoveTomorrow(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Move $count to tomorrow',
+      one: 'Move 1 to tomorrow',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewSendInbox(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Send $count to Inbox',
+      one: 'Send 1 to Inbox',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewStaying(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more stay: they repeat or come from a calendar',
+      one: '1 more stays: it repeats or comes from a calendar',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewAllDone => 'Nothing left to move';
+
+  @override
+  String snackRolled(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks moved to tomorrow',
+      one: '1 task moved to tomorrow',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String snackSentToInbox(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks sent to the Inbox',
+      one: '1 task sent to the Inbox',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get promptNotNow => 'Not now';
+
+  @override
+  String get lateNudgeTitle => 'Running late?';
+
+  @override
+  String lateNudgeDetail(String title, int minutes) {
+    return '“$title” ended $minutes min ago';
+  }
+
+  @override
+  String get lateNudgeAction => 'Catch up';
 }

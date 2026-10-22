@@ -64,8 +64,11 @@ void main() {
     expect(find.text('10:30 AM – 11:15 AM'), findsOneWidget);
     await tester.tap(find.text('Running late'));
     await tester.pumpAndSettle();
-    // The menu's item, not the live row's own "+15 min".
-    await tester.tap(find.widgetWithText(MenuItemButton, '+15 min'));
+    // The sheet's chip (M3f.5), not the live row's own "+15 min".
+    await tester.tap(find.widgetWithText(ChoiceChip, '+15 min'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining(RegExp('move.? 15 min later')), findsOneWidget);
+    await tester.tap(find.text('Shift the rest').last); // the sheet's
     await tester.pumpAndSettle();
     expect(find.textContaining('moved 15 min later'), findsOneWidget);
     expect(find.text('10:45 AM – 11:30 AM'), findsOneWidget);

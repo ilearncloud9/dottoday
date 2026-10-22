@@ -54,14 +54,15 @@ Future<Result<(UndoToken, ShiftReport), AppFailure>> shiftRest(
     live.endUtc!.subtract(Duration(minutes: overrunMinutes)),
     overrunMinutes,
   );
-  return _applyShift(ref, live.userId, result);
+  return _applyShift(ref.read(undoServiceProvider), live.userId, result);
 }
 
 /// Pushes what is left of [day] from [nowUtc] [minutes] later ("Running
 /// late +5/+15/+30", docs/02 F1, R-04), up to the first pinned task. Null
-/// when nothing is left to move.
+/// when nothing is left to move. Takes a container: the Running late
+/// sheet has closed by the time this runs.
 Future<Result<(UndoToken, ShiftReport), AppFailure>>? runLate(
-  WidgetRef ref, {
+  ProviderContainer container, {
   required List<Occurrence> day,
   required DateTime nowUtc,
   required int minutes,
@@ -74,19 +75,23 @@ Future<Result<(UndoToken, ShiftReport), AppFailure>>? runLate(
     includeCalendar: includeCalendar,
   );
   if (result.report.movedIds.isEmpty) return null;
-  return _applyShift(ref, day.first.userId, result);
+  return _applyShift(
+    container.read(undoServiceProvider),
+    day.first.userId,
+    result,
+  );
 }
 
 /// Writes [result]'s moved tasks as one undoable batch.
 Future<Result<(UndoToken, ShiftReport), AppFailure>> _applyShift(
-  WidgetRef ref,
+  UndoService undo,
   String userId,
   ScheduleResult result,
 ) async {
   final changed = [for (final id in result.report.movedIds) result.byId(id)];
-  final applied = await ref
-      .read(undoServiceProvider)
-      .applyUndoable(WriteBatch(userId: userId, occurrences: changed));
+  final applied = await undo.applyUndoable(
+    WriteBatch(userId: userId, occurrences: changed),
+  );
   return switch (applied) {
     Ok(:final value) => Ok((value, result.report)),
     Err(:final failure) => Err(failure),
