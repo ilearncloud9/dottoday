@@ -2031,6 +2031,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Lands on {day} · all day'**
   String addLandsOnAllDay(String day);
+
+  /// Inline question after pasting a list into Add or the Inbox field (R-07).
+  ///
+  /// In en, this message translates to:
+  /// **'Add {count} tasks?'**
+  String pasteAsk(int count);
+
+  /// Button: add every pasted line as its own task.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {count}'**
+  String pasteAdd(int count);
+
+  /// Button: join the pasted lines into one task.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep as one'**
+  String get pasteKeep;
 }
 
 class _AppLocalizationsDelegate

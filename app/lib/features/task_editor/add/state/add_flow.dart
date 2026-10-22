@@ -39,7 +39,12 @@ Stream<List<HabitSuggestion>> habits(Ref ref) {
 /// Where Add opens: blank (the add button, ⌘N) or prefilled.
 @immutable
 final class AddRequest {
-  const AddRequest({required this.languageCode, this.text = ''});
+  const AddRequest({
+    required this.languageCode,
+    this.text = '',
+    this.startUtc,
+    this.day,
+  });
 
   /// The UI language, which Quick Add parses in (as the Inbox field does).
   final String languageCode;
@@ -47,14 +52,22 @@ final class AddRequest {
   /// Text the title starts with.
   final String text;
 
+  /// A start to begin from (an "add here" gap, R-17).
+  final DateTime? startUtc;
+
+  /// A local date to begin on ("Add to this day").
+  final DateTime? day;
+
   @override
   bool operator ==(Object other) =>
       other is AddRequest &&
       other.languageCode == languageCode &&
-      other.text == text;
+      other.text == text &&
+      other.startUtc == startUtc &&
+      other.day == day;
 
   @override
-  int get hashCode => Object.hash(languageCode, text);
+  int get hashCode => Object.hash(languageCode, text, startUtc, day);
 }
 
 /// The two steps (docs/10 §3 `AddFlow`): What, then When.
@@ -106,15 +119,16 @@ class AddFlow extends _$AddFlow {
         QuickAddLanguage.values.asNameMap()[request.languageCode] ??
         QuickAddLanguage.en;
     await ref.read(habitsProvider.future);
-    final initial = AddFlowState(
-      draft: AddDraft(
-        today: DateTime(local.year, local.month, local.day),
-        tzId: profile.tzId,
-        defaultDurationMin: profile.settings.defaultDurationMin,
-      ),
-      text: '',
-      language: language,
+    var draft = AddDraft(
+      today: DateTime(local.year, local.month, local.day),
+      tzId: profile.tzId,
+      defaultDurationMin: profile.settings.defaultDurationMin,
     );
+    if (request.day case final day?) draft = draft.withDay(day);
+    if (request.startUtc case final start?) {
+      draft = draft.withStartUtc(start, snap: profile.settings.snapMinutes);
+    }
+    final initial = AddFlowState(draft: draft, text: '', language: language);
     return _typed(initial, request.text);
   }
 

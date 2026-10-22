@@ -5,8 +5,10 @@ import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/quick_add/quick_add_actions.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/quick_add/add_draft.dart';
+import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/features/task_editor/add/state/add_actions.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
@@ -45,6 +47,62 @@ Future<bool> saveFromSheet(
   return result is Ok;
 }
 
+/// Adds every line of a pasted list (R-07) — timed lines on their day,
+/// the rest in the Inbox, one Undo — then closes the sheet.
+Future<void> addManyFromSheet(
+  BuildContext context,
+  String text, {
+  required String languageCode,
+}) async {
+  final container = ProviderScope.containerOf(context);
+  final messenger = ScaffoldMessenger.of(context);
+  final l10n = context.l10n;
+  Navigator.of(context).pop();
+  final result = await addFromText(
+    container,
+    text,
+    languageCode: languageCode,
+    untitled: l10n.inboxUntitled,
+  );
+  switch (result) {
+    case Ok(:final value):
+      final first = value.rows.firstOrNull;
+      final title = first?.occurrence?.title ?? first?.series?.title ?? '';
+      _announce(
+        container,
+        messenger,
+        l10n,
+        l10n.snackAddedInbox(value.rows.length, title),
+        value.token,
+      );
+    case Err(:final failure):
+      messenger.showSnackBar(
+        SnackBar(content: Text(failureMessage(l10n, failure))),
+      );
+  }
+}
+
+/// [message], with Undo when there is a [token] (a new series has none yet).
+void _announce(
+  ProviderContainer container,
+  ScaffoldMessengerState messenger,
+  AppLocalizations l10n,
+  String message,
+  UndoToken? token,
+) {
+  if (token == null) {
+    messenger.showSnackBar(SnackBar(content: Text(message)));
+    return;
+  }
+  final undo = container.read(undoServiceProvider);
+  showUndoSnackbarOn(
+    messenger,
+    l10n,
+    message: message,
+    onUndo: () => unawaited(undo.undo(token)),
+  );
+}
+
 /// "Pay rent added for 5:00 PM" with Undo, or the failure.
 void _confirm(
   ProviderContainer container,
@@ -60,18 +118,7 @@ void _confirm(
       final message = (o?.isInbox ?? false) || when == null
           ? l10n.snackAddedInbox(1, title)
           : l10n.snackAddedTimed(title, when);
-      final token = value.token;
-      if (token == null) {
-        messenger.showSnackBar(SnackBar(content: Text(message)));
-        return;
-      }
-      final undo = container.read(undoServiceProvider);
-      showUndoSnackbarOn(
-        messenger,
-        l10n,
-        message: message,
-        onUndo: () => unawaited(undo.undo(token)),
-      );
+      _announce(container, messenger, l10n, message, value.token);
     case Err(:final failure):
       messenger.showSnackBar(
         SnackBar(content: Text(failureMessage(l10n, failure))),

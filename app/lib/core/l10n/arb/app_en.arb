@@ -2061,5 +2061,27 @@
         "type": "String"
       }
     }
+  },
+  "pasteAsk": "Add {count} tasks?",
+  "@pasteAsk": {
+    "description": "Inline question after pasting a list into Add or the Inbox field (R-07).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pasteAdd": "Add {count}",
+  "@pasteAdd": {
+    "description": "Button: add every pasted line as its own task.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pasteKeep": "Keep as one",
+  "@pasteKeep": {
+    "description": "Button: join the pasted lines into one task."
   }
 }

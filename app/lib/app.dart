@@ -33,7 +33,15 @@ class DottodayApp extends ConsumerWidget {
             router,
             onQuickAdd: () => openQuickAdd(router),
           ),
-          child: child ?? const SizedBox.shrink(),
+          child: Actions(
+            actions: {
+              AddTaskIntent: CallbackAction<AddTaskIntent>(
+                onInvoke: (i) =>
+                    openQuickAdd(router, startUtc: i.startUtc, day: i.day),
+              ),
+            },
+            child: child ?? const SizedBox.shrink(),
+          ),
         ),
       ),
     );
@@ -42,9 +50,11 @@ class DottodayApp extends ConsumerWidget {
 
 /// Add from anywhere (the add button and ⌘N share this, docs/02 F2). The
 /// root navigator's overlay sits below `MaterialApp`, so the sheet gets
-/// theme, l10n and the root `ScaffoldMessenger`.
-void openQuickAdd(GoRouter router) {
+/// theme, l10n and the root `ScaffoldMessenger`. [startUtc] / [day]
+/// prefill the time or the day (an "add here" gap, "Add to this day").
+void openQuickAdd(GoRouter router, {DateTime? startUtc, DateTime? day}) {
   final context =
       router.routerDelegate.navigatorKey.currentState?.overlay?.context;
-  if (context != null) unawaited(showAddFlow(context));
+  if (context == null) return;
+  unawaited(showAddFlow(context, startUtc: startUtc, day: day));
 }

@@ -1,7 +1,7 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
-import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/quick_add/add_draft.dart';
@@ -22,7 +22,7 @@ Future<Result<AddedTask, AppFailure>> saveDraft(
   required String untitled,
   bool toInbox = false,
 }) async {
-  final profile = await ref.read(currentProfileProvider.future);
+  final profile = await readProfile(ref);
   final rows = draft.toRows(
     userId: profile.id,
     nowUtc: ref.read(clockProvider).nowUtc(),

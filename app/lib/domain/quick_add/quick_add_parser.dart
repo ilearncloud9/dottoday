@@ -60,12 +60,26 @@ final class QuickAddParser {
   ) {
     if (text.length > maxInputLength) return _tooLong();
     return Ok([
-      for (final line in text.split(RegExp(r'\r\n|\r|\n')))
-        if (line.replaceFirst(_bullet, '').trim() case final clean
-            when clean.isNotEmpty)
-          _parseLine(clean, context, const []),
+      for (final line in lines(text)) _parseLine(line, context, const []),
     ]);
   }
+
+  /// A pasted list as one task: its [lines] joined by spaces ("Keep as
+  /// one").
+  static String joinLines(String text) => lines(text).join(' ');
+
+  /// The tasks a paste holds: its non-empty lines, list bullets removed.
+  /// Two or more asks "Add N tasks?" first (03 §3.3, R-07).
+  ///
+  /// ```dart
+  /// QuickAddParser.lines('- Milk\n\n2. Eggs'); // ['Milk', 'Eggs']
+  /// ```
+  static List<String> lines(String text) => [
+    for (final line in text.split(RegExp(r'\r\n|\r|\n')))
+      if (line.replaceFirst(_bullet, '').trim() case final clean
+          when clean.isNotEmpty)
+        clean,
+  ];
 
   static Err<T, ValidationFailure> _tooLong<T>() => const Err(
     ValidationFailure(ValidationField.quickAddText, ValidationRule.tooLong),

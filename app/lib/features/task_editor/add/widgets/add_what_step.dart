@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
@@ -24,6 +25,8 @@ class AddWhatStep extends StatelessWidget {
     required this.onColor,
     required this.onIcon,
     required this.onSubmit,
+    required this.onAnother,
+    required this.onAddMany,
     required this.onContinue,
     required this.onInbox,
     super.key,
@@ -41,8 +44,14 @@ class AddWhatStep extends StatelessWidget {
 
   /// Enter in the title: add with what is known.
   final VoidCallback onSubmit;
-  final VoidCallback onContinue;
-  final VoidCallback onInbox;
+
+  /// Shift+Enter: add and start the next.
+  final VoidCallback onAnother;
+
+  /// A pasted list confirmed.
+  final VoidCallback onAddMany;
+  final VoidCallback? onContinue;
+  final VoidCallback? onInbox;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +59,11 @@ class AddWhatStep extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(child: _fields(context)),
-        _Footer(onContinue: onContinue, onInbox: onInbox),
+        // A pasted list is answered above first.
+        if (QuickAddParser.lines(state.text).length > 1)
+          const _Footer(onContinue: null, onInbox: null)
+        else
+          _Footer(onContinue: onContinue, onInbox: onInbox),
       ],
     );
   }
@@ -112,6 +125,8 @@ class AddWhatStep extends StatelessWidget {
     typed: state.draft.typed,
     onChanged: onType,
     onSubmit: onSubmit,
+    onAnother: onAnother,
+    onAddMany: onAddMany,
   );
 
   /// Icons of the top habits, then the defaults, for the quick row.
@@ -128,8 +143,8 @@ class AddWhatStep extends StatelessWidget {
 class _Footer extends StatelessWidget {
   const _Footer({required this.onContinue, required this.onInbox});
 
-  final VoidCallback onContinue;
-  final VoidCallback onInbox;
+  final VoidCallback? onContinue;
+  final VoidCallback? onInbox;
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +164,10 @@ class _Footer extends StatelessWidget {
           FilledButton.icon(
             onPressed: onContinue,
             iconAlignment: IconAlignment.end,
-            icon: DotIcon(DotGlyphs.arrowRight, color: t.colors.onAccent),
+            icon: DotIcon(
+              DotGlyphs.arrowRight,
+              color: onContinue == null ? t.colors.muted : t.colors.onAccent,
+            ),
             label: Text(l10n.addContinue),
           ),
           TextButton(onPressed: onInbox, child: Text(l10n.addToInbox)),

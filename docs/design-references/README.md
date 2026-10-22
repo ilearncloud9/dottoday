@@ -44,3 +44,4 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Medium-width rail (600–840) | §4 | `shell_rail_*_medium_*` |
 | Add A1 with no habits yet (no Suggestions, helper line) | §5.2 A1, `A-ios-add-what` | `add_what_blank_*` |
 | Inbox schedule sheet › "Pick a time…" (Today / Tomorrow on a `ThreadPicker`, Place) | §3 `ThreadPicker`, `A-ios-add-when` | `inbox_pick_time_*` |
+| Paste confirmation "Add N tasks?" (Add title and Inbox field) | 03 §3.3, §5.4 | `add_paste_*` |

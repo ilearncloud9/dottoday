@@ -267,6 +267,11 @@ void main() {
     expect(_hhmm(d), '07:00');
   });
 
+  test('lines / joinLines: bullets and blanks gone', () {
+    expect(QuickAddParser.lines('- Milk\n\n2. Eggs\r\n'), ['Milk', 'Eggs']);
+    expect(QuickAddParser.joinLines('- Milk\n- Eggs'), 'Milk Eggs');
+  });
+
   group('parseMany (R-07)', () {
     test('one draft per non-empty line, bullets removed', () {
       const paste =

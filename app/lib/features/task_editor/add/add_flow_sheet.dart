@@ -14,11 +14,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Opens Add (docs/10 §3 `AddFlow`) from the add button or ⌘N: a sheet on
 /// phones, a popover from medium width (the Mac/web editor panel is
-/// M3e.5). [text] prefills the title.
-Future<void> showAddFlow(BuildContext context, {String text = ''}) {
+/// M3e.5). [text] prefills the title, [startUtc] the time and [day] the
+/// day.
+Future<void> showAddFlow(
+  BuildContext context, {
+  String text = '',
+  DateTime? startUtc,
+  DateTime? day,
+}) {
   final request = AddRequest(
     languageCode: Localizations.localeOf(context).languageCode,
     text: text,
+    startUtc: startUtc,
+    day: day,
   );
   return showAppSheet<void>(
     context: context,
@@ -81,9 +89,25 @@ class _What extends ConsumerWidget {
       onColor: (c) => notifier.edit((d) => d.withColor(c.key)),
       onIcon: (i) => notifier.edit((d) => d.withIcon(i.key)),
       onSubmit: save,
+      onAnother: () => unawaited(_another(context, ref)),
+      onAddMany: () => unawaited(
+        addManyFromSheet(
+          context,
+          ref.read(addFlowProvider(request)).value?.text ?? state.text,
+          languageCode: request.languageCode,
+        ),
+      ),
       onContinue: () => unawaited(_continue(ref)),
       onInbox: () => save(toInbox: true),
     );
+  }
+
+  /// Shift+Enter: add this one, keep the sheet, start the next where it
+  /// ends.
+  Future<void> _another(BuildContext context, WidgetRef ref) async {
+    final draft = currentDraft(ref, request, state);
+    final saved = await saveFromSheet(context, draft, close: false);
+    if (saved) ref.read(addFlowProvider(request).notifier).another(draft);
   }
 
   /// To When; with no time yet, start in the first free slot of the day

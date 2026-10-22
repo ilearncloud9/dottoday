@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -50,6 +52,18 @@ ThreadActions dayThreadActions(
     selectedIds: selectedIds,
     onSelect: onSelect,
     onOpen: (id) => showTaskSheet(context, id),
+    // "N h free · add here" opens Add at the gap, or now if the gap has
+    // begun (R-17).
+    onAddHere: (gap) {
+      final now = ref.read(clockProvider).nowUtc();
+      final from = gap.startUtc;
+      Actions.maybeInvoke(
+        context,
+        AddTaskIntent(
+          startUtc: from == null || from.isBefore(now) ? now : from,
+        ),
+      );
+    },
     onToggleDone: (id) async {
       final o = find(id);
       final wasDone = o.status == OccurrenceStatus.done;

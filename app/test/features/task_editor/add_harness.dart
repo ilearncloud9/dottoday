@@ -32,6 +32,8 @@ Future<FakeOccurrenceRepository> pumpAddHost(
   double textScale = 1,
   List<Occurrence>? rows,
   String text = '',
+  DateTime? startUtc,
+  DateTime? day,
 }) async {
   tester.view
     ..physicalSize = size
@@ -55,7 +57,12 @@ Future<FakeOccurrenceRepository> pumpAddHost(
             builder: (context) => Scaffold(
               body: Center(
                 child: TextButton(
-                  onPressed: () => showAddFlow(context, text: text),
+                  onPressed: () => showAddFlow(
+                    context,
+                    text: text,
+                    startUtc: startUtc,
+                    day: day,
+                  ),
                   child: const Text('open'),
                 ),
               ),

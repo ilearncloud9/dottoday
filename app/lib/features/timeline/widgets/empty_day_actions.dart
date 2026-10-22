@@ -40,11 +40,8 @@ class EmptyDayActions extends ConsumerWidget {
             dashed: true,
             glyph: DotGlyphs.add,
             label: l10n.emptyAddToDay,
-            // Quick Add takes the date in M3c; until then it opens empty.
-            onTap: () => Actions.maybeInvoke(
-              context,
-              const AppCommandIntent(AppCommand.quickAdd),
-            ),
+            // Add opens on this day (M3c.5).
+            onTap: () => Actions.maybeInvoke(context, AddTaskIntent(day: date)),
           ),
           if (inbox > 0)
             _Action(

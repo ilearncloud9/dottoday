@@ -2,12 +2,16 @@ import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
+import 'package:dottoday/shared/feedback/paste_confirm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// The Inbox quick-add field (`A-ios-inbox`): one line per task, natural
 /// language ("Call Mum tomorrow 3pm 20m", R-06); a pasted list becomes
-/// several tasks (R-07). Enter adds; Shift+Enter starts a new line.
+/// several tasks (R-07) after an inline "Add N tasks?" — the same as Add's
+/// title (03 §3.3, aligned in M3c.5). Enter adds (or confirms the list);
+/// Shift+Enter starts a new line.
 class InboxAddField extends StatefulWidget {
   const InboxAddField({required this.onSubmit, super.key});
 
@@ -35,7 +39,30 @@ class _InboxAddFieldState extends State<InboxAddField> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      _field(context),
+      ValueListenableBuilder(
+        valueListenable: _text,
+        builder: (context, value, _) {
+          final lines = QuickAddParser.lines(value.text);
+          if (lines.length < 2) return const SizedBox.shrink();
+          return Padding(
+            padding: const EdgeInsets.only(top: DotSpace.s),
+            child: PasteConfirm(
+              count: lines.length,
+              onAdd: () => unawaited(_submit()),
+              onKeepOne: () =>
+                  _text.text = QuickAddParser.joinLines(value.text),
+            ),
+          );
+        },
+      ),
+    ],
+  );
+
+  Widget _field(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     return CallbackShortcuts(

@@ -8,6 +8,16 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// The local profile as stored now, for actions outside the widget tree.
+///
+/// Reads the row, not `currentProfileProvider`: a stream that is only
+/// read (never listened to) can be dropped before its first value, and a
+/// re-created one starts from the launch-time profile.
+Future<Profile> readProfile(ProviderContainer ref) async {
+  final stored = await ref.read(settingsRepositoryProvider).findLocalProfile();
+  return stored ?? await ref.read<Future<Profile>>(localProfileProvider.future);
+}
+
 /// Applies [change] to the local profile's settings through the write path
 /// (validated, change-logged, synced later; docs/09 M2.3). Settings apply
 /// at once (03 §3.7), so there is no Undo.
@@ -19,11 +29,8 @@ Future<Result<void, AppFailure>> updateSettings(
   ProviderContainer ref,
   Settings Function(Settings settings) change,
 ) async {
-  // The stored row, not a stream's last value: two quick edits must not
-  // start from the same stale settings.
-  final stored = await ref.read(settingsRepositoryProvider).findLocalProfile();
-  final Profile profile =
-      stored ?? await ref.read<Future<Profile>>(localProfileProvider.future);
+  // Two quick edits must not start from the same stale settings.
+  final profile = await readProfile(ref);
   final next = profile.copyWith(
     settings: change(profile.settings),
     updatedAt: ref.read(clockProvider).nowUtc(),

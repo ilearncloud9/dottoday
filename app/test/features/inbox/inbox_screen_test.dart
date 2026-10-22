@@ -119,6 +119,20 @@ void main() {
     expect(_row(repo, 'Call Dad').startUtc, DateTime.utc(2026, 10, 22, 13));
   });
 
+  testWidgets('a pasted list asks first, like Add (M3c.5)', (tester) async {
+    final repo = await _pump(tester);
+    await tester.enterText(find.byType(TextField), 'Milk\nEggs');
+    await tester.pump();
+    expect(find.text('Add 2 tasks?'), findsOneWidget);
+    await tester.tap(find.text('Add 2'));
+    await tester.pumpAndSettle();
+    expect(find.text('2 tasks added'), findsOneWidget);
+    expect(
+      repo.rows.where((o) => ['Milk', 'Eggs'].contains(o.title)),
+      hasLength(2),
+    );
+  });
+
   testWidgets('a pasted list adds one task per line (R-07)', (tester) async {
     final repo = await _pump(tester);
     await tester.enterText(find.byType(TextField), '- Milk\n- Eggs\n- Bread');

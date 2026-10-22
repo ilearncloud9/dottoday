@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/month_grid.dart';
@@ -257,4 +258,37 @@ void main() {
       });
     }
   }
+
+  group('add here (M3c.5, R-17)', () {
+    testWidgets('a free gap opens Add at its start', (tester) async {
+      final asked = <AddTaskIntent>[];
+      // Tall enough that the lazy thread builds the 11:15 gap.
+      await pumpToday(
+        tester,
+        size: const Size(390, 1600),
+        onAddTask: asked.add,
+      );
+      // Design review ends 11:15, Reply to email starts 11:30.
+      final gap = find.text('15 min free · add here').hitTestable();
+      await tester.ensureVisible(gap.first);
+      await tester.tap(gap.first);
+      await tester.pump();
+      expect(asked.single.startUtc, DateTime.utc(2026, 10, 21, 9, 15));
+    });
+
+    testWidgets('"Add to this day" opens Add on that day', (tester) async {
+      final asked = <AddTaskIntent>[];
+      await pumpToday(
+        tester,
+        date: DateTime(2026, 10, 24),
+        size: const Size(390, 1000),
+        onAddTask: asked.add,
+      );
+      final add = find.text('Add to this day').hitTestable();
+      await tester.ensureVisible(add.first);
+      await tester.tap(add.first);
+      await tester.pump();
+      expect(asked.single.day, DateTime(2026, 10, 24));
+    });
+  });
 }

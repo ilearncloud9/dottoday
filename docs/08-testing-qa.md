@@ -78,4 +78,5 @@ Sweep entries (add a row per screen as it lands):
 | Inbox · Pick a time | `test/features/inbox/inbox_golden_test.dart` | derived |
 | Add A3 Duration sheet (+ Android idiom) | `test/features/task_editor/add_golden_test.dart` | `A-ios-add-duration`, `A-android-add-duration` |
 | Add A4 Time ⋯ menu (+ Android idiom) | `test/features/task_editor/add_golden_test.dart` | `A-ios-add-time-menu`, `A-android-add-time-menu` |
+| Add · paste "Add N tasks?" | `test/features/task_editor/add_golden_test.dart` | derived |
 

@@ -22,6 +22,16 @@ final class AppCommandIntent extends Intent {
   final AppCommand command;
 }
 
+/// Open Add prefilled: an "add here" gap ([startUtc]) or "Add to this
+/// day" ([day], a local date). Handled above all routes, so a feature can
+/// open Add without importing it (docs/09 M3c.5, R-17).
+final class AddTaskIntent extends Intent {
+  const AddTaskIntent({this.startUtc, this.day});
+
+  final DateTime? startUtc;
+  final DateTime? day;
+}
+
 /// The single table of keyboard bindings (docs/07 macOS menu, 02 F2).
 ///
 /// ```dart

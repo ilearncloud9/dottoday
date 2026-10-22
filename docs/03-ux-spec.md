@@ -114,6 +114,9 @@ Bottom sheet (mobile) / popover (desktop). One text field with live token chips 
 repeat). Row of duration chips. "More…" expands to the full editor inline (no new screen). Buttons:
 Add · Add another. Enter adds; Shift+Enter adds and keeps open. Pasting multi-line text shows "Add 5
 tasks?" confirmation inline.
+Clarified in M3c.5: the Inbox field asks the same way (Enter confirms; there Shift+Enter types a new
+line). "Add 5" writes timed lines to their day and the rest to the Inbox, with one Undo; "Keep as one"
+joins the lines.
 
 ### 3.4 Task editor
 Full-height sheet. Sections in order: Title & icon/colour row · When (date, time input, duration,

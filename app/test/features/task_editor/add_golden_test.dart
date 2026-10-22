@@ -203,6 +203,19 @@ void main() {
     act: toMenu,
     build: (cell) => addSheet(cell, when, nested: true),
   );
+  // Paste (derived, M3c.5): "Add 3 tasks?" under the title.
+  goldenMatrix(
+    'add_paste',
+    height: 640,
+    widths: const {'compact', 'expanded'},
+    build: (cell) => addSheet(
+      cell,
+      const AddRequest(
+        languageCode: 'en',
+        text: '- Milk\n- Eggs 7pm\n- Call Mum tomorrow',
+      ),
+    ),
+  );
   // A new user: no habits yet, so no Suggestions; the helper shows.
   goldenMatrix(
     'add_what_blank',

@@ -1,4 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -27,6 +28,7 @@ Future<void> pumpToday(
   int firstDayOfWeek = 7,
   Settings? settings,
   Stream<DateTime>? ticks,
+  ValueChanged<AddTaskIntent>? onAddTask,
 }) async {
   tester.view
     ..physicalSize = size
@@ -52,6 +54,15 @@ Future<void> pumpToday(
         themeMode: mode,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
+        // The app root handles AddTaskIntent (M3c.5); tests may listen.
+        builder: (context, child) => Actions(
+          actions: {
+            AddTaskIntent: CallbackAction<AddTaskIntent>(
+              onInvoke: (i) => onAddTask?.call(i),
+            ),
+          },
+          child: child!,
+        ),
         home: TodayScreen(date: date),
       ),
     ),

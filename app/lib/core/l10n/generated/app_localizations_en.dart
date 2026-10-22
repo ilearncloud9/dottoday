@@ -1352,4 +1352,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String addLandsOnAllDay(String day) {
     return 'Lands on $day · all day';
   }
+
+  @override
+  String pasteAsk(int count) {
+    return 'Add $count tasks?';
+  }
+
+  @override
+  String pasteAdd(int count) {
+    return 'Add $count';
+  }
+
+  @override
+  String get pasteKeep => 'Keep as one';
 }
