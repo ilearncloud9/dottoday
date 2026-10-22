@@ -57,7 +57,7 @@ with spacing allowed within ±4 px (CLAUDE.md §11).
 
 Since the M3c follow-up the golden frame wraps the root navigator, so a golden's `act` can open a
 sheet, popover or menu and it is captured at every width. Browser-only widget tests (`@TestOn('browser')`,
-tag `web`) run in CI with `flutter test --platform chrome --tags web`.
+tag `web`) run in CI with `flutter test --platform chrome --tags web test/web`.
 
 Sweep entries (add a row per screen as it lands):
 

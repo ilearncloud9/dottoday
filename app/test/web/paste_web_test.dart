@@ -1,4 +1,4 @@
-// Runs in Chrome: flutter test --platform chrome --tags web (CI: checks).
+// Runs in Chrome: flutter test --platform chrome --tags web test/web (CI: checks).
 @TestOn('browser')
 @Tags(['web'])
 library;
