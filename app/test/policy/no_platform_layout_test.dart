@@ -16,5 +16,18 @@ void main() {
       ];
       expect(offences, isEmpty);
     });
+
+    // Web and Mac are one layout (docs/10 §4, M3e.8): only the idiom and
+    // the feedback mail's platform line may know which one runs.
+    test('$dir reads kIsWeb only where it names the platform', () {
+      const allowed = {'features/settings/widgets/data_about_groups.dart'};
+      final offences = [
+        for (final MapEntry(key: path, value: source) in readLibSources(
+          dir,
+        ).entries)
+          if (source.contains('kIsWeb') && !allowed.contains(path)) path,
+      ];
+      expect(offences, isEmpty);
+    });
   }
 }
