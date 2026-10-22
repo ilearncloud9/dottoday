@@ -1,7 +1,11 @@
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
+
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/database_key_store.dart';
 import 'package:dottoday/data/db/database_unavailable.dart';
 import 'package:dottoday/data/db/web/cipher_sqlite3.dart';
+import 'package:dottoday/data/db/web/db_generation.dart';
 import 'package:dottoday/data/db/web/key_vault.dart';
 import 'package:dottoday/data/db/web/tab_lock.dart';
 import 'package:dottoday/data/db/web/web_cipher.dart';
@@ -9,9 +13,31 @@ import 'package:drift/drift.dart';
 import 'package:drift/wasm.dart';
 import 'package:sqlite3/wasm.dart';
 
-/// Opens the web database (ADR-0003, M2.9).
+/// Opens the web database (ADR-0003, M2.9), this generation's (M3f.9).
 AppDatabase openAppDatabase(DatabaseKeyStore keys) =>
-    AppDatabase(openEncryptedExecutor(keys, 'dottoday'));
+    AppDatabase(openEncryptedExecutor(keys, webDatabaseName()));
+
+/// "Start fresh": the next generation; the unreadable one stays in
+/// IndexedDB. Returns its name.
+Future<String?> moveDatabaseAside() async => nextWebDatabase();
+
+/// When another tab says "Use it here": [close] the database, then let go.
+void onHandOffRequest(Future<void> Function() close) {
+  final name = webDatabaseName();
+  onLetGoRequest(name, () async {
+    await close();
+    releaseTabLock(name);
+  });
+}
+
+/// "Use it here": asks the tab that has the database to let go, then
+/// reloads this page so every screen starts clean with it (screens that
+/// already failed to open it would otherwise keep their error).
+Future<bool> askOtherTabToLetGo() async {
+  if (!await askToLetGo(webDatabaseName())) return false;
+  (globalContext['location']! as JSObject).callMethod('reload'.toJS);
+  return true;
+}
 
 /// An encrypted executor for the browser database [name] (M2.9).
 ///

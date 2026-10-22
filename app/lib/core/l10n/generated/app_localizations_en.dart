@@ -2891,4 +2891,66 @@ class AppLocalizationsEn extends AppLocalizations {
   String syncConflictHeading(String title, String field) {
     return '$title · $field';
   }
+
+  @override
+  String get recoveryLockedTitle => 'Dottoday can\'t open your tasks';
+
+  @override
+  String get recoveryLockedBody =>
+      'Your tasks on this device are locked with a key that is missing or has changed. This can happen after restoring a device or clearing its keychain.';
+
+  @override
+  String get recoveryFreshBody =>
+      'Start fresh keeps the old file aside (it is never deleted) and opens an empty planner. Your tasks come back when you sign in to sync, or by importing an export.';
+
+  @override
+  String get recoveryStartFresh => 'Start fresh';
+
+  @override
+  String get recoveryConfirm =>
+      'Start with an empty planner? The old file stays on this device.';
+
+  @override
+  String get recoveryConfirmYes => 'Yes, start fresh';
+
+  @override
+  String recoveryKept(String where) {
+    return 'Your old file is kept at $where';
+  }
+
+  @override
+  String get recoveryTabTitle => 'Dottoday is open in another tab';
+
+  @override
+  String get recoveryTabBody =>
+      'To keep your tasks safe, only one tab can use them at a time.';
+
+  @override
+  String get recoveryUseHere => 'Use it here';
+
+  @override
+  String get recoveryMovedTitle => 'Dottoday moved to another tab';
+
+  @override
+  String get recoveryMovedBody =>
+      'You chose to use Dottoday in another tab. Your tasks are saved.';
+
+  @override
+  String get recoveryNoAnswer =>
+      'The other tab didn\'t answer. Close it and try again.';
+
+  @override
+  String get recoveryContinue => 'Continue';
+
+  @override
+  String get stateLoading => 'Loading';
+
+  @override
+  String get stateErrorTitle => 'This didn\'t load';
+
+  @override
+  String get stateErrorSafe => 'Your tasks are safe on this device.';
+
+  @override
+  String get stateRetry => 'Try again';
 }

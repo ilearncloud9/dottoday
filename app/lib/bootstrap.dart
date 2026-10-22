@@ -1,5 +1,6 @@
 import 'package:dottoday/app.dart';
 import 'package:dottoday/app_screens.dart';
+import 'package:dottoday/core/app/app_restart.dart';
 import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
@@ -25,14 +26,19 @@ Future<void> bootstrap() async {
 
   final env = Env.fromEnvironment();
 
+  // The root scope is AppRestart's UncontrolledProviderScope (M3f.9), which
+  // the lint doesn't see through.
+  // ignore: riverpod_lint/missing_provider_scope
   runApp(
-    ProviderScope(
-      retry: noProviderRetry,
-      overrides: [
-        envProvider.overrideWithValue(env),
-        loggerProvider.overrideWithValue(logger),
-        routerProvider.overrideWithValue(buildRouter(appScreens)),
-      ],
+    AppRestart(
+      create: () => ProviderContainer(
+        retry: noProviderRetry,
+        overrides: [
+          envProvider.overrideWithValue(env),
+          loggerProvider.overrideWithValue(logger),
+          routerProvider.overrideWithValue(buildRouter(appScreens)),
+        ],
+      ),
       child: const DottodayApp(),
     ),
   );

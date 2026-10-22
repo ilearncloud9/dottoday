@@ -12,3 +12,9 @@ QueryExecutor openEncryptedExecutor(
   String name, {
   int? schemaVersion,
 }) => throw UnsupportedError('No database backend for this platform.');
+
+Future<String?> moveDatabaseAside() async => null;
+
+void onHandOffRequest(Future<void> Function() close) {}
+
+Future<bool> askOtherTabToLetGo() async => false;

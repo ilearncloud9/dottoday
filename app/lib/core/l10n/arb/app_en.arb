@@ -4231,5 +4231,82 @@
         "type": "String"
       }
     }
+  },
+  "recoveryLockedTitle": "Dottoday can't open your tasks",
+  "@recoveryLockedTitle": {
+    "description": "Recovery screen title: the database key is missing or wrong."
+  },
+  "recoveryLockedBody": "Your tasks on this device are locked with a key that is missing or has changed. This can happen after restoring a device or clearing its keychain.",
+  "@recoveryLockedBody": {
+    "description": "Recovery screen: why."
+  },
+  "recoveryFreshBody": "Start fresh keeps the old file aside (it is never deleted) and opens an empty planner. Your tasks come back when you sign in to sync, or by importing an export.",
+  "@recoveryFreshBody": {
+    "description": "Recovery screen: what Start fresh does."
+  },
+  "recoveryStartFresh": "Start fresh",
+  "@recoveryStartFresh": {
+    "description": "Recovery screen button."
+  },
+  "recoveryConfirm": "Start with an empty planner? The old file stays on this device.",
+  "@recoveryConfirm": {
+    "description": "Recovery screen: inline confirmation after the first tap."
+  },
+  "recoveryConfirmYes": "Yes, start fresh",
+  "@recoveryConfirmYes": {
+    "description": "Recovery screen: confirm button."
+  },
+  "recoveryKept": "Your old file is kept at {where}",
+  "@recoveryKept": {
+    "description": "Snackbar after Start fresh.",
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "recoveryTabTitle": "Dottoday is open in another tab",
+  "@recoveryTabTitle": {
+    "description": "Web: the database is in use in another tab."
+  },
+  "recoveryTabBody": "To keep your tasks safe, only one tab can use them at a time.",
+  "@recoveryTabBody": {
+    "description": "Web: why only one tab."
+  },
+  "recoveryUseHere": "Use it here",
+  "@recoveryUseHere": {
+    "description": "Web: ask the other tab to let go and open here."
+  },
+  "recoveryMovedTitle": "Dottoday moved to another tab",
+  "@recoveryMovedTitle": {
+    "description": "Web: this tab handed the database to another tab."
+  },
+  "recoveryMovedBody": "You chose to use Dottoday in another tab. Your tasks are saved.",
+  "@recoveryMovedBody": {
+    "description": "Web: after handing over."
+  },
+  "recoveryNoAnswer": "The other tab didn't answer. Close it and try again.",
+  "@recoveryNoAnswer": {
+    "description": "Web: Use it here timed out."
+  },
+  "recoveryContinue": "Continue",
+  "@recoveryContinue": {
+    "description": "Recovery screen: after Start fresh, open the new empty planner."
+  },
+  "stateLoading": "Loading",
+  "@stateLoading": {
+    "description": "Screen reader label of the skeleton shown while a screen loads."
+  },
+  "stateErrorTitle": "This didn't load",
+  "@stateErrorTitle": {
+    "description": "Inline error on a screen whose data failed to load."
+  },
+  "stateErrorSafe": "Your tasks are safe on this device.",
+  "@stateErrorSafe": {
+    "description": "Inline error: reassurance under the reason."
+  },
+  "stateRetry": "Try again",
+  "@stateRetry": {
+    "description": "Inline error button."
   }
 }

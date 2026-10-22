@@ -4233,6 +4233,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title} · {field}'**
   String syncConflictHeading(String title, String field);
+
+  /// Recovery screen title: the database key is missing or wrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday can\'t open your tasks'**
+  String get recoveryLockedTitle;
+
+  /// Recovery screen: why.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tasks on this device are locked with a key that is missing or has changed. This can happen after restoring a device or clearing its keychain.'**
+  String get recoveryLockedBody;
+
+  /// Recovery screen: what Start fresh does.
+  ///
+  /// In en, this message translates to:
+  /// **'Start fresh keeps the old file aside (it is never deleted) and opens an empty planner. Your tasks come back when you sign in to sync, or by importing an export.'**
+  String get recoveryFreshBody;
+
+  /// Recovery screen button.
+  ///
+  /// In en, this message translates to:
+  /// **'Start fresh'**
+  String get recoveryStartFresh;
+
+  /// Recovery screen: inline confirmation after the first tap.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with an empty planner? The old file stays on this device.'**
+  String get recoveryConfirm;
+
+  /// Recovery screen: confirm button.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, start fresh'**
+  String get recoveryConfirmYes;
+
+  /// Snackbar after Start fresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Your old file is kept at {where}'**
+  String recoveryKept(String where);
+
+  /// Web: the database is in use in another tab.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday is open in another tab'**
+  String get recoveryTabTitle;
+
+  /// Web: why only one tab.
+  ///
+  /// In en, this message translates to:
+  /// **'To keep your tasks safe, only one tab can use them at a time.'**
+  String get recoveryTabBody;
+
+  /// Web: ask the other tab to let go and open here.
+  ///
+  /// In en, this message translates to:
+  /// **'Use it here'**
+  String get recoveryUseHere;
+
+  /// Web: this tab handed the database to another tab.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday moved to another tab'**
+  String get recoveryMovedTitle;
+
+  /// Web: after handing over.
+  ///
+  /// In en, this message translates to:
+  /// **'You chose to use Dottoday in another tab. Your tasks are saved.'**
+  String get recoveryMovedBody;
+
+  /// Web: Use it here timed out.
+  ///
+  /// In en, this message translates to:
+  /// **'The other tab didn\'t answer. Close it and try again.'**
+  String get recoveryNoAnswer;
+
+  /// Recovery screen: after Start fresh, open the new empty planner.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get recoveryContinue;
+
+  /// Screen reader label of the skeleton shown while a screen loads.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading'**
+  String get stateLoading;
+
+  /// Inline error on a screen whose data failed to load.
+  ///
+  /// In en, this message translates to:
+  /// **'This didn\'t load'**
+  String get stateErrorTitle;
+
+  /// Inline error: reassurance under the reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tasks are safe on this device.'**
+  String get stateErrorSafe;
+
+  /// Inline error button.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get stateRetry;
 }
 
 class _AppLocalizationsDelegate

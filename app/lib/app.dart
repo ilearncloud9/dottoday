@@ -10,6 +10,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/inbox/schedule_from_anywhere.dart';
+import 'package:dottoday/features/recovery/database_recovery.dart';
 import 'package:dottoday/features/sync_status/sync_sheet.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/shared/sheets/shortcut_sheet.dart';
@@ -52,7 +53,8 @@ class DottodayApp extends ConsumerWidget {
           ),
           child: Actions(
             actions: _intents(router),
-            child: child ?? const SizedBox.shrink(),
+            // An unreadable database replaces every screen (M3f.9).
+            child: DatabaseGate(child: child ?? const SizedBox.shrink()),
           ),
         ),
       ),
