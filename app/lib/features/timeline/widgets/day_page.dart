@@ -11,6 +11,7 @@ import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/day_drag.dart';
 import 'package:dottoday/features/timeline/widgets/empty_day_actions.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
+import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +19,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// One page of the Today pager: [date]'s thread on a [DayCard] (`Main`).
+/// One page of the Today pager: [date]'s thread on a [DayCard] (`Main`);
+/// with [side], a day beside the card on the Mac/web spread (M3e.1).
 class DayPage extends ConsumerWidget {
-  const DayPage({required this.date, required this.today, super.key});
+  const DayPage({
+    required this.date,
+    required this.today,
+    this.side,
+    super.key,
+  });
 
   final DateTime date;
   final DateTime today;
+  final SideDay? side;
+
+  /// How far a drop looks for a task dragged in from another day: the
+  /// spread shows three days, so two days either way.
+  static const _dragReachDays = 2;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,41 +53,79 @@ class DayPage extends ConsumerWidget {
     final blocks = data.blocks;
     final summary = daySummaryOf(blocks, shape);
     final format = _format(context, data.day.location, data.settings.use24h);
-    final picked = ref.watch(taskSelectionProvider);
+    final entries = threadEntries(
+      blocks: blocks,
+      shape: shape,
+      nowUtc: now,
+      format: format,
+      subtasks: subtasks ?? const {},
+      showFreeTime: data.settings.showFreeTime,
+    );
+    final actions = _actions(context, ref, data, format.time);
+    if (side case final s?) {
+      return DayCard.side(
+        title: DateFormat.EEEE(_locale(context)).format(date),
+        side: s,
+        summary: summary,
+        entries: entries,
+        actions: actions,
+      );
+    }
     return DayCard(
       title: _title(context),
       isToday: date == today,
       summary: summary,
-      entries: threadEntries(
-        blocks: blocks,
-        shape: shape,
-        nowUtc: now,
-        format: format,
-        subtasks: subtasks ?? const {},
-        showFreeTime: data.settings.showFreeTime,
-      ),
-      actions: dayThreadActions(
-        context,
-        ref,
-        blocks: blocks,
-        timeText: format.time,
-        drag: dayThreadDrag(
-          context,
-          ref,
-          blocks: blocks,
-          zone: data.day.location,
-          snapMinutes: data.settings.snapMinutes,
-          timeText: format.time,
-          shiftFollowers: data.settings.shiftFollowers,
-          includeCalendar: data.settings.includeCalendarInShift,
-        ),
-        selectedIds: picked.day == date ? picked.ids : const {},
-        onSelect: (id) =>
-            ref.read(taskSelectionProvider.notifier).toggle(date, id),
-      ),
+      entries: entries,
+      actions: actions,
       footer: _footer(blocks, summary.total == 0),
     );
   }
+
+  /// Taps, drag, resize and selection for this day's thread.
+  ThreadActions _actions(
+    BuildContext context,
+    WidgetRef ref,
+    TimelineData data,
+    String Function(DateTime utc) time,
+  ) {
+    final picked = ref.watch(taskSelectionProvider);
+    final s = data.settings;
+    return dayThreadActions(
+      context,
+      ref,
+      blocks: data.blocks,
+      timeText: time,
+      drag: dayThreadDrag(
+        context,
+        ref,
+        blocks: data.blocks,
+        zone: data.day.location,
+        snapMinutes: s.snapMinutes,
+        timeText: time,
+        shiftFollowers: s.shiftFollowers,
+        includeCalendar: s.includeCalendarInShift,
+        elsewhere: (id) => _elsewhere(ref, id),
+      ),
+      selectedIds: picked.day == date ? picked.ids : const {},
+      onSelect: (id) =>
+          ref.read(taskSelectionProvider.notifier).toggle(date, id),
+    );
+  }
+
+  /// A task from a nearby day, dropped on this one (the spread's columns).
+  Occurrence? _elsewhere(WidgetRef ref, String id) {
+    for (var d = -_dragReachDays; d <= _dragReachDays; d++) {
+      if (d == 0) continue;
+      final day = DateTime(date.year, date.month, date.day + d);
+      final blocks = ref.read(timelineDataProvider(day)).value?.blocks;
+      final hit = blocks?.where((o) => o.id == id).firstOrNull;
+      if (hit != null) return hit;
+    }
+    return null;
+  }
+
+  static String _locale(BuildContext context) =>
+      Localizations.localeOf(context).toLanguageTag();
 
   /// A free day from today on offers its actions (`A-ios-future-month`);
   /// an empty past day only says so.
@@ -95,7 +145,7 @@ class DayPage extends ConsumerWidget {
   /// "Wednesday" in the week around today, "Monday, December 14" further
   /// out (`A-ios-future-month`).
   String _title(BuildContext context) {
-    final locale = Localizations.localeOf(context).toLanguageTag();
+    final locale = _locale(context);
     final days = date.difference(today).inDays.abs();
     return days < 7
         ? DateFormat.EEEE(locale).format(date)

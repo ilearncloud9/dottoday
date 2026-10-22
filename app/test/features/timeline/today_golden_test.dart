@@ -72,7 +72,19 @@ void main() {
     tz_data.initializeTimeZones();
     await loadAppFonts();
   });
-  goldenMatrix('today', height: 844, build: (_) => _today());
+  goldenMatrix(
+    'today',
+    height: 844,
+    widths: const {'compact', 'medium'},
+    build: (_) => _today(),
+  );
+  // T5: the Mac/web three-day spread (`A-mac-today-alt1-spread`, M3e.1).
+  goldenMatrix(
+    'today_spread',
+    height: 800,
+    widths: const {'expanded', 'expanded_min'},
+    build: (_) => _today(),
+  );
   // Multi-select (docs/03 §3.2, R-05): two picked, the bar at the bottom.
   goldenMatrix(
     'today_selecting',
@@ -80,11 +92,12 @@ void main() {
     widths: const {'compact', 'expanded'},
     build: (_) => _today(picked: _ids(['Team standup', 'Deep work: roadmap'])),
   );
-  // T2: the month pulled open over today (`A-ios-today-month`).
+  // T2: the month pulled open over today (`A-ios-today-month`). The
+  // spread has no pull-open; Mac/web Month is its own page (M3e.4).
   goldenMatrix(
     'today_month_open',
     height: 1000,
-    widths: const {'compact', 'medium', 'expanded'},
+    widths: const {'compact', 'medium'},
     build: (_) => _today(view: (day: null, monthOpen: true, month: null)),
   );
   // T3: planning a future month, a free day picked (`A-ios-future-month`).

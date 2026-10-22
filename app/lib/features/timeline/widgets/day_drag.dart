@@ -15,6 +15,8 @@ import 'package:timezone/timezone.dart' as tz;
 
 /// Drag and resize for a day's [blocks] (docs/10 §6, R-05): drops snap to
 /// [snapMinutes] on the wall clock in [zone]; each write has Undo.
+/// [elsewhere] finds a task dragged in from another day (the Mac/web
+/// spread's columns, M3e.1); it moves alone, without shifting this day.
 ThreadDrag dayThreadDrag(
   BuildContext context,
   WidgetRef ref, {
@@ -24,6 +26,7 @@ ThreadDrag dayThreadDrag(
   required String Function(DateTime utc) timeText,
   ShiftFollowersPolicy shiftFollowers = ShiftFollowersPolicy.ask,
   bool includeCalendar = false,
+  Occurrence? Function(String id)? elsewhere,
 }) {
   final d = _DayDrag(
     ref: ref,
@@ -34,6 +37,7 @@ ThreadDrag dayThreadDrag(
     snapMinutes: snapMinutes,
     timeText: timeText,
     includeCalendar: includeCalendar,
+    elsewhere: elsewhere,
   );
   return ThreadDrag(
     hintFor: d.hint,
@@ -59,6 +63,7 @@ final class _DayDrag {
     required this.snapMinutes,
     required this.timeText,
     required this.includeCalendar,
+    this.elsewhere,
   }) : undo = ref.read(undoServiceProvider);
 
   final WidgetRef ref;
@@ -70,8 +75,11 @@ final class _DayDrag {
   final int snapMinutes;
   final String Function(DateTime utc) timeText;
   final bool includeCalendar;
+  final Occurrence? Function(String id)? elsewhere;
 
-  Occurrence? _find(String id) => blocks.where((o) => o.id == id).firstOrNull;
+  Occurrence? _own(String id) => blocks.where((o) => o.id == id).firstOrNull;
+
+  Occurrence? _find(String id) => _own(id) ?? elsewhere?.call(id);
 
   DateTime? _start(String id, ThreadGap gap, double fraction) {
     final o = _find(id);
@@ -102,7 +110,7 @@ final class _DayDrag {
     final start = _start(id, gap, fraction);
     if (o == null || start == null || start == o.startUtc) return;
     final time = timeText(start);
-    if (!shift) {
+    if (!shift || _own(id) == null) {
       return _report(
         await moveTask(ref, o, start),
         l10n.snackMoved(o.title, time),

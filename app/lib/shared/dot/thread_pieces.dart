@@ -38,35 +38,117 @@ class CapRow extends StatelessWidget {
   }
 }
 
+/// How a future gap reads (docs/10 §3 `Thread`).
+enum GapStyle {
+  /// "+ 1 h free · add here" (`Main`); on the wide Mac/web card "+ 1 h
+  /// free · drop an inbox task here" (`A-mac-today-alt1-spread`).
+  pill,
+
+  /// "1 h 30 free", as in the spread's side days.
+  plain,
+
+  /// The dashed "+ drop here to plan" box closing a future side day.
+  dropBox,
+}
+
 /// Free time between tasks; future gaps offer "add here".
 class GapRow extends StatelessWidget {
-  const GapRow({required this.gap, this.onAdd, super.key});
+  const GapRow({
+    required this.gap,
+    this.onAdd,
+    this.style = GapStyle.pill,
+    this.dayLabel = '',
+    super.key,
+  });
 
   final ThreadGap gap;
   final ValueChanged<ThreadGap>? onAdd;
+  final GapStyle style;
+
+  /// The day, for the drop box's screen-reader label.
+  final String dayLabel;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    final duration = formatDurationShort(l10n, gap.minutes);
-    final style = t.styles.stripWeekday;
     return ThreadRowFrame(
       piece: FreePiece(nowFraction: gap.nowFraction),
       child: Padding(
         padding: const EdgeInsets.only(bottom: DotSpace.l),
         child: Align(
           alignment: AlignmentDirectional.centerStart,
-          child: !gap.labelled
-              ? const SizedBox(height: DotSpace.s)
-              : gap.addable
-              ? _AddHere(
-                  label: l10n.threadAddHere(duration),
-                  semantics: l10n.threadAddHereLabel(duration, gap.startLabel),
-                  style: style,
-                  onTap: onAdd == null ? null : () => onAdd!(gap),
-                )
-              : Text(l10n.threadFree(duration), style: style),
+          child: _label(context, t.styles.stripWeekday),
+        ),
+      ),
+    );
+  }
+
+  Widget _label(BuildContext context, TextStyle text) {
+    final l10n = context.l10n;
+    final duration = formatDurationShort(l10n, gap.minutes);
+    if (!gap.labelled) return const SizedBox(height: DotSpace.s);
+    final plain = Text(l10n.threadFree(duration), style: text);
+    if (!gap.addable) return plain;
+    final tap = onAdd == null ? null : () => onAdd!(gap);
+    return switch (style) {
+      GapStyle.plain => plain,
+      GapStyle.dropBox => _DropBox(
+        label: l10n.spreadDropToPlan,
+        semantics: l10n.spreadDropToPlanLabel(dayLabel),
+        style: text,
+        onTap: tap,
+      ),
+      GapStyle.pill => _AddHere(
+        // Wide screens plan from the Inbox sidebar by dragging (M3e.2).
+        label:
+            WidthClass.of(MediaQuery.sizeOf(context).width) ==
+                WidthClass.expanded
+            ? l10n.threadDropInbox(duration)
+            : l10n.threadAddHere(duration),
+        semantics: l10n.threadAddHereLabel(duration, gap.startLabel),
+        style: text,
+        onTap: tap,
+      ),
+    };
+  }
+}
+
+/// "+ drop here to plan" (`A-mac-today-alt1-spread`, tomorrow's column).
+class _DropBox extends StatelessWidget {
+  const _DropBox({
+    required this.label,
+    required this.semantics,
+    required this.style,
+    this.onTap,
+  });
+
+  final String label;
+  final String semantics;
+  final TextStyle style;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = DotTheme.of(context).colors;
+    return Semantics(
+      button: true,
+      label: semantics,
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(DotRadii.card),
+        child: CustomPaint(
+          painter: DashedPillPainter(color: c.hairline, radius: DotRadii.card),
+          child: Padding(
+            padding: const EdgeInsets.all(DotSpace.l),
+            child: Column(
+              spacing: DotSpace.xs,
+              children: [
+                DotIcon(DotGlyphs.add, color: c.muted, size: DotSize.rowIcon),
+                Text(label, style: style, textAlign: TextAlign.center),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -119,17 +201,19 @@ class _AddHere extends StatelessWidget {
   }
 }
 
-/// A dashed stadium outline: free-time drop targets and "+ preset".
+/// A dashed stadium outline: free-time drop targets and "+ preset"; with
+/// [radius], a dashed rounded box ("drop here to plan").
 final class DashedPillPainter extends CustomPainter {
-  const DashedPillPainter({required this.color});
+  const DashedPillPainter({required this.color, this.radius});
 
   final Color color;
+  final double? radius;
 
   @override
   void paint(Canvas canvas, Size size) {
     final rrect = RRect.fromRectAndRadius(
       (Offset.zero & size).deflate(DotSpace.hairline),
-      Radius.circular(size.height / 2),
+      Radius.circular(radius ?? size.height / 2),
     );
     final paint = Paint()
       ..style = PaintingStyle.stroke
@@ -144,5 +228,6 @@ final class DashedPillPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(DashedPillPainter old) => old.color != color;
+  bool shouldRepaint(DashedPillPainter old) =>
+      old.color != color || old.radius != radius;
 }

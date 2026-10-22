@@ -2544,5 +2544,123 @@
         "type": "String"
       }
     }
+  },
+  "dayCardYesterdaySuffix": " · Yesterday",
+  "@dayCardYesterdaySuffix": {
+    "description": "After the weekday on the spread's previous-day column (Mac/web Today)."
+  },
+  "dayCardTomorrowSuffix": " · Tomorrow",
+  "@dayCardTomorrowSuffix": {
+    "description": "After the weekday on the spread's next-day column (Mac/web Today)."
+  },
+  "spreadDoneOf": "{done} of {total}",
+  "@spreadDoneOf": {
+    "description": "Side-day summary of a past day on the Mac/web spread, e.g. '7 of 7'.",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "spreadPlanned": "{count} planned",
+  "@spreadPlanned": {
+    "description": "Side-day summary of a future day on the Mac/web spread, e.g. '4 planned'.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "spreadSubtitle": "{date} · {done} of {total} done",
+  "@spreadSubtitle": {
+    "description": "Under the greeting on the Mac/web spread: 'Wednesday, 21 October · 2 of 7 done'.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "spreadPreviousDay": "Previous day",
+  "@spreadPreviousDay": {
+    "description": "Tooltip of the ‹ button on the Mac/web spread."
+  },
+  "spreadNextDay": "Next day",
+  "@spreadNextDay": {
+    "description": "Tooltip of the › button on the Mac/web spread."
+  },
+  "spreadDropToPlan": "drop here to plan",
+  "@spreadDropToPlan": {
+    "description": "Dashed drop target at the end of a future day on the Mac/web spread."
+  },
+  "spreadDropToPlanLabel": "Drop a task here to plan it on {day}",
+  "@spreadDropToPlanLabel": {
+    "description": "Screen-reader label of the spread's drop target.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "threadDropInbox": "{duration} free · drop an inbox task here",
+  "@threadDropInbox": {
+    "description": "A future free gap on the wide Mac/web Today card.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "runningLate": "Running late",
+  "@runningLate": {
+    "description": "Button on the Mac/web Today header that pushes the rest of today later (R-04)."
+  },
+  "runningLateBy": "+{minutes} min",
+  "@runningLateBy": {
+    "description": "Running-late menu item: push the rest of today by this many minutes.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "snackRunningLate": "{count, plural, =0{Nothing left to move} =1{1 task moved {minutes} min later} other{{count} tasks moved {minutes} min later}}",
+  "@snackRunningLate": {
+    "description": "After Running late.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "snackRunningLatePartial": "{count, plural, =1{1 task moved {minutes} min later} other{{count} tasks moved {minutes} min later}} · {pinned} stays put",
+  "@snackRunningLatePartial": {
+    "description": "After Running late when a pinned task stops the shift.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      },
+      "pinned": {
+        "type": "String"
+      }
+    }
+  },
+  "spreadNothing": "Nothing planned",
+  "@spreadNothing": {
+    "description": "Side-day summary on the Mac/web spread when the day has no tasks."
   }
 }

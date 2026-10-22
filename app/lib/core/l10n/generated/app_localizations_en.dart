@@ -1679,4 +1679,78 @@ class AppLocalizationsEn extends AppLocalizations {
   String settingsAccentLabel(String name) {
     return '$name accent';
   }
+
+  @override
+  String get dayCardYesterdaySuffix => ' · Yesterday';
+
+  @override
+  String get dayCardTomorrowSuffix => ' · Tomorrow';
+
+  @override
+  String spreadDoneOf(int done, int total) {
+    return '$done of $total';
+  }
+
+  @override
+  String spreadPlanned(int count) {
+    return '$count planned';
+  }
+
+  @override
+  String spreadSubtitle(String date, int done, int total) {
+    return '$date · $done of $total done';
+  }
+
+  @override
+  String get spreadPreviousDay => 'Previous day';
+
+  @override
+  String get spreadNextDay => 'Next day';
+
+  @override
+  String get spreadDropToPlan => 'drop here to plan';
+
+  @override
+  String spreadDropToPlanLabel(String day) {
+    return 'Drop a task here to plan it on $day';
+  }
+
+  @override
+  String threadDropInbox(String duration) {
+    return '$duration free · drop an inbox task here';
+  }
+
+  @override
+  String get runningLate => 'Running late';
+
+  @override
+  String runningLateBy(int minutes) {
+    return '+$minutes min';
+  }
+
+  @override
+  String snackRunningLate(int count, int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks moved $minutes min later',
+      one: '1 task moved $minutes min later',
+      zero: 'Nothing left to move',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String snackRunningLatePartial(int count, int minutes, String pinned) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks moved $minutes min later',
+      one: '1 task moved $minutes min later',
+    );
+    return '$_temp0 · $pinned stays put';
+  }
+
+  @override
+  String get spreadNothing => 'Nothing planned';
 }

@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 
 export 'thread_drag.dart' show ThreadDrag;
 export 'thread_models.dart';
-export 'thread_pieces.dart' show DashedPillPainter;
+export 'thread_pieces.dart' show DashedPillPainter, GapStyle;
 
 /// Callbacks a [Thread] reports with the task's id.
 @immutable
@@ -55,7 +55,8 @@ class Thread extends StatefulWidget {
   const Thread({
     required this.entries,
     this.actions = const ThreadActions(),
-    this.dotSize = DotSize.rowDot,
+    this.side = false,
+    this.dayLabel = '',
     super.key,
   }) : sliver = false;
 
@@ -64,7 +65,8 @@ class Thread extends StatefulWidget {
   const Thread.sliver({
     required this.entries,
     this.actions = const ThreadActions(),
-    this.dotSize = DotSize.rowDot,
+    this.side = false,
+    this.dayLabel = '',
     super.key,
   }) : sliver = true;
 
@@ -74,8 +76,13 @@ class Thread extends StatefulWidget {
   final List<ThreadEntry> entries;
   final ThreadActions actions;
 
-  /// [DotSize.rowDot], or [DotSize.macRowDot] in the Mac spread's side days.
-  final double dotSize;
+  /// A side day of the Mac/web spread: [DotSize.macRowDot] rows without
+  /// the done circle, gaps that read "1 h 30 free", and the last future
+  /// one as the "drop here to plan" box (`A-mac-today-alt1-spread`).
+  final bool side;
+
+  /// The day, for the drop box's screen-reader label.
+  final String dayLabel;
 
   @override
   State<Thread> createState() => _ThreadState();
@@ -120,19 +127,24 @@ class _ThreadState extends State<Thread> {
   @override
   Widget build(BuildContext context) {
     final entries = widget.entries;
+    final box = widget.side
+        ? entries.lastIndexWhere((e) => e is ThreadGap && e.addable)
+        : -1;
     if (widget.sliver) {
       return SliverList.builder(
         itemCount: entries.length,
-        itemBuilder: (_, i) => _entry(entries[i]),
+        itemBuilder: (_, i) => _entry(entries[i], dropBox: i == box),
       );
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [for (final e in entries) _entry(e)],
+      children: [
+        for (final (i, e) in entries.indexed) _entry(e, dropBox: i == box),
+      ],
     );
   }
 
-  Widget _entry(ThreadEntry e) {
+  Widget _entry(ThreadEntry e, {required bool dropBox}) {
     final a = widget.actions;
     final drag = a.drag;
     return switch (e) {
@@ -142,12 +154,23 @@ class _ThreadState extends State<Thread> {
         drag: drag,
         hint: _hint,
         shift: _shift,
-        child: GapRow(gap: e, onAdd: a.onAddHere),
+        child: _gap(e, dropBox: dropBox),
       ),
-      ThreadGap() => GapRow(gap: e, onAdd: a.onAddHere),
+      ThreadGap() => _gap(e, dropBox: dropBox),
       ThreadTaskEntry(:final task) => _task(task),
     };
   }
+
+  Widget _gap(ThreadGap gap, {required bool dropBox}) => GapRow(
+    gap: gap,
+    onAdd: widget.actions.onAddHere,
+    dayLabel: widget.dayLabel,
+    style: dropBox
+        ? GapStyle.dropBox
+        : widget.side
+        ? GapStyle.plain
+        : GapStyle.pill,
+  );
 
   /// A task row with selection and drag around it, as far as enabled.
   Widget _task(ThreadTask task) {
@@ -167,7 +190,8 @@ class _ThreadState extends State<Thread> {
           )
         : TaskRow(
             task: task,
-            dotSize: widget.dotSize,
+            dotSize: widget.side ? DotSize.macRowDot : DotSize.rowDot,
+            doneCircle: !widget.side,
             onToggleDone: _bind(a.onToggleDone, task),
             onOpen: _open(task),
             onResize: _resize(drag, task),

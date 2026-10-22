@@ -2577,6 +2577,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} accent'**
   String settingsAccentLabel(String name);
+
+  /// After the weekday on the spread's previous-day column (Mac/web Today).
+  ///
+  /// In en, this message translates to:
+  /// **' · Yesterday'**
+  String get dayCardYesterdaySuffix;
+
+  /// After the weekday on the spread's next-day column (Mac/web Today).
+  ///
+  /// In en, this message translates to:
+  /// **' · Tomorrow'**
+  String get dayCardTomorrowSuffix;
+
+  /// Side-day summary of a past day on the Mac/web spread, e.g. '7 of 7'.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String spreadDoneOf(int done, int total);
+
+  /// Side-day summary of a future day on the Mac/web spread, e.g. '4 planned'.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} planned'**
+  String spreadPlanned(int count);
+
+  /// Under the greeting on the Mac/web spread: 'Wednesday, 21 October · 2 of 7 done'.
+  ///
+  /// In en, this message translates to:
+  /// **'{date} · {done} of {total} done'**
+  String spreadSubtitle(String date, int done, int total);
+
+  /// Tooltip of the ‹ button on the Mac/web spread.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous day'**
+  String get spreadPreviousDay;
+
+  /// Tooltip of the › button on the Mac/web spread.
+  ///
+  /// In en, this message translates to:
+  /// **'Next day'**
+  String get spreadNextDay;
+
+  /// Dashed drop target at the end of a future day on the Mac/web spread.
+  ///
+  /// In en, this message translates to:
+  /// **'drop here to plan'**
+  String get spreadDropToPlan;
+
+  /// Screen-reader label of the spread's drop target.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop a task here to plan it on {day}'**
+  String spreadDropToPlanLabel(String day);
+
+  /// A future free gap on the wide Mac/web Today card.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} free · drop an inbox task here'**
+  String threadDropInbox(String duration);
+
+  /// Button on the Mac/web Today header that pushes the rest of today later (R-04).
+  ///
+  /// In en, this message translates to:
+  /// **'Running late'**
+  String get runningLate;
+
+  /// Running-late menu item: push the rest of today by this many minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'+{minutes} min'**
+  String runningLateBy(int minutes);
+
+  /// After Running late.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing left to move} =1{1 task moved {minutes} min later} other{{count} tasks moved {minutes} min later}}'**
+  String snackRunningLate(int count, int minutes);
+
+  /// After Running late when a pinned task stops the shift.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task moved {minutes} min later} other{{count} tasks moved {minutes} min later}} · {pinned} stays put'**
+  String snackRunningLatePartial(int count, int minutes, String pinned);
+
+  /// Side-day summary on the Mac/web spread when the day has no tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned'**
+  String get spreadNothing;
 }
 
 class _AppLocalizationsDelegate

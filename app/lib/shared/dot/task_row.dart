@@ -19,10 +19,15 @@ class TaskRow extends StatelessWidget {
     this.onOpen,
     this.onResize,
     this.dotSize = DotSize.rowDot,
+    this.doneCircle = true,
     super.key,
   });
 
   final ThreadTask task;
+
+  /// The round done circle at the end; the spread's side days have none
+  /// (`A-mac-today-alt1-spread`), the dot still toggles.
+  final bool doneCircle;
 
   /// Tap on the dot or the done circle (§6 "Tap a dot = mark done").
   final VoidCallback? onToggleDone;
@@ -50,7 +55,7 @@ class TaskRow extends StatelessWidget {
               onSteps: onResize!,
               label: context.l10n.resizeLabel(task.title),
             ),
-      trailing: task.state == DotState.done
+      trailing: task.state == DotState.done || !doneCircle
           ? null
           : DoneCircle(color: t.colors.hairline, onTap: onToggleDone),
       child: Semantics(
@@ -118,35 +123,41 @@ class _Text extends StatelessWidget {
     final l10n = context.l10n;
     final done = task.state == DotState.done;
     final muted = t.colors.muted;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    final meta = Wrap(
+      spacing: DotSpace.xs,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Wrap(
-          spacing: DotSpace.xs,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Text(task.timeRange, style: t.styles.rowMeta),
-            if (task.state == DotState.missed)
-              Text(l10n.rowMissedMeta, style: t.styles.rowMeta),
-            if (task.pinned)
-              DotIcon(DotGlyphs.lock, color: muted, size: DotSize.weekDot * 2),
-            if (task.recurring)
-              DotIcon(
-                DotGlyphs.repeat,
-                color: muted,
-                size: DotSize.weekDot * 2,
-              ),
-          ],
-        ),
-        Text(
-          task.title,
-          style: t.styles.rowTitle.copyWith(
-            color: done || task.state == DotState.skipped ? muted : null,
-            decoration: done ? TextDecoration.lineThrough : null,
-            decorationColor: muted,
-          ),
-        ),
+        Text(task.timeRange, style: t.styles.rowMeta),
+        if (task.state == DotState.missed)
+          Text(l10n.rowMissedMeta, style: t.styles.rowMeta),
+        if (task.pinned)
+          DotIcon(DotGlyphs.lock, color: muted, size: DotSize.weekDot * 2),
+        if (task.recurring)
+          DotIcon(DotGlyphs.repeat, color: muted, size: DotSize.weekDot * 2),
       ],
+    );
+    final title = Text(
+      task.title,
+      style: t.styles.rowTitle.copyWith(
+        color: done || task.state == DotState.skipped ? muted : null,
+        decoration: done ? TextDecoration.lineThrough : null,
+        decorationColor: muted,
+      ),
+    );
+    // Wide (the Mac spread's card): time beside the title; else above it.
+    return LayoutBuilder(
+      builder: (context, box) => box.maxWidth >= DotSize.wideRowFrom
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(width: DotSize.wideRowMeta, child: meta),
+                Expanded(child: title),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [meta, title],
+            ),
     );
   }
 }

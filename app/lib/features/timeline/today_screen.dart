@@ -8,6 +8,7 @@ import 'package:dottoday/features/timeline/widgets/day_page.dart';
 import 'package:dottoday/features/timeline/widgets/selection_bar.dart';
 import 'package:dottoday/features/timeline/widgets/today_header.dart';
 import 'package:dottoday/features/timeline/widgets/today_month.dart';
+import 'package:dottoday/features/timeline/widgets/today_spread.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/day_pager.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
@@ -18,7 +19,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 const pagerReachDays = 365;
 
 /// Today (docs/10 §5.2 T1, `Main`): greeting header with the day dot, the
-/// week strip and its month pull-open, all-day chips, and the day pager.
+/// week strip and its month pull-open, all-day chips, and the day pager;
+/// at the expanded width the three-day spread (T5, M3e.1).
 /// [date] opens another day (`/day/:date`); otherwise it follows today.
 class TodayScreen extends ConsumerWidget {
   const TodayScreen({this.date, super.key});
@@ -35,7 +37,6 @@ class TodayScreen extends ConsumerWidget {
     );
     if (today == null || profile == null) return Scaffold(key: key);
     final shown = view.day ?? date ?? today;
-    final base = _day(today, -pagerReachDays);
     final month = view.month ?? DateTime(shown.year, shown.month);
     void select(DateTime d) => ref
         .read(todaySelectionProvider.notifier)
@@ -58,52 +59,17 @@ class TodayScreen extends ConsumerWidget {
         body: SafeArea(
           child: Stack(
             children: [
-              Column(
-                children: [
-                  TodayHeader(
-                    date: shown,
-                    today: today,
-                    monthOpen: view.monthOpen,
-                    month: month,
-                    onToday: () => select(today),
-                  ),
-                  _MonthOrStrip(
-                    open: view.monthOpen,
-                    month: TodayMonth(
-                      month: month,
-                      shown: shown,
-                      today: today,
-                      onSelect: select,
-                      onMonth: ref
-                          .read(todaySelectionProvider.notifier)
-                          .showMonth,
-                    ),
-                    strip: TodayWeekStrip(
-                      shown: shown,
-                      today: today,
-                      firstDayOfWeek: profile.settings.firstDayOfWeek,
-                      monthOpen: view.monthOpen,
-                      onSelect: select,
-                    ),
-                  ),
-                  AllDayChips(date: shown),
-                  const SizedBox(height: DotSpace.s),
-                  Expanded(
-                    child: DayPager(
-                      itemCount: pagerReachDays * 2 + 1,
-                      initialIndex: _index(base, shown),
-                      onChanged: (i) => select(_day(base, i)),
-                      dotIndexOf: (i) =>
-                          (_day(base, i).weekday -
-                              profile.settings.firstDayOfWeek) %
-                          7,
-                      itemBuilder: (context, i) {
-                        final d = _day(base, i);
-                        return DayPage(date: d, today: today);
-                      },
-                    ),
-                  ),
-                ],
+              LayoutBuilder(
+                builder: (context, box) =>
+                    WidthClass.of(box.maxWidth) == WidthClass.expanded
+                    ? TodaySpread(shown: shown, today: today, onSelect: select)
+                    : _TodayCompact(
+                        shown: shown,
+                        today: today,
+                        month: month,
+                        firstDayOfWeek: profile.settings.firstDayOfWeek,
+                        onSelect: select,
+                      ),
               ),
               if (selecting)
                 Align(
@@ -114,6 +80,70 @@ class TodayScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Phones and medium widths: header, week strip (or month), all-day
+/// chips and the day pager (`Main`).
+class _TodayCompact extends ConsumerWidget {
+  const _TodayCompact({
+    required this.shown,
+    required this.today,
+    required this.month,
+    required this.firstDayOfWeek,
+    required this.onSelect,
+  });
+
+  final DateTime shown;
+  final DateTime today;
+  final DateTime month;
+  final int firstDayOfWeek;
+  final ValueChanged<DateTime> onSelect;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final view = ref.watch(todaySelectionProvider);
+    final base = _day(today, -pagerReachDays);
+    return Column(
+      children: [
+        TodayHeader(
+          date: shown,
+          today: today,
+          monthOpen: view.monthOpen,
+          month: month,
+          onToday: () => onSelect(today),
+        ),
+        _MonthOrStrip(
+          open: view.monthOpen,
+          month: TodayMonth(
+            month: month,
+            shown: shown,
+            today: today,
+            onSelect: onSelect,
+            onMonth: ref.read(todaySelectionProvider.notifier).showMonth,
+          ),
+          strip: TodayWeekStrip(
+            shown: shown,
+            today: today,
+            firstDayOfWeek: firstDayOfWeek,
+            monthOpen: view.monthOpen,
+            onSelect: onSelect,
+          ),
+        ),
+        AllDayChips(date: shown),
+        const SizedBox(height: DotSpace.s),
+        Expanded(
+          child: DayPager(
+            itemCount: pagerReachDays * 2 + 1,
+            initialIndex: _index(base, shown),
+            onChanged: (i) => onSelect(_day(base, i)),
+            dotIndexOf: (i) => (_day(base, i).weekday - firstDayOfWeek) % 7,
+            itemBuilder: (context, i) =>
+                DayPage(date: _day(base, i), today: today),
+          ),
+        ),
+      ],
     );
   }
 

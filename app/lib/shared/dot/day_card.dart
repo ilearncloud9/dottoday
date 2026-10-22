@@ -1,8 +1,11 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/day_card_side.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
+
+export 'day_card_side.dart' show SideDay;
 
 /// Header numbers of a [DayCard]: "2 of 7 · 5 h 45 planned", or "Nothing
 /// planned · 15 h free" for an empty day (`A-ios-future-month`).
@@ -33,7 +36,20 @@ class DayCard extends StatelessWidget {
     this.actions = const ThreadActions(),
     this.footer,
     super.key,
-  });
+  }) : side = null;
+
+  /// A side day of the Mac/web spread (`A-mac-today-alt1-spread`): no
+  /// raised card, a muted "Tuesday · Yesterday" header with "● 7 of 7" or
+  /// "○ 4 planned", and the [Thread]'s side rows.
+  const DayCard.side({
+    required this.title,
+    required this.summary,
+    required this.entries,
+    required SideDay this.side,
+    this.actions = const ThreadActions(),
+    this.footer,
+    super.key,
+  }) : isToday = false;
 
   /// "Wednesday", or "Monday 14 Dec" away from this week.
   final String title;
@@ -45,9 +61,22 @@ class DayCard extends StatelessWidget {
   /// Below the thread, e.g. the empty-day actions of `A-ios-future-month`.
   final Widget? footer;
 
+  /// Set on [DayCard.side].
+  final SideDay? side;
+
   @override
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
+    if (side case final day?) {
+      return SideDayColumn(
+        title: title,
+        side: day,
+        summary: summary,
+        entries: entries,
+        actions: actions,
+        footer: footer,
+      );
+    }
     return DecoratedBox(
       decoration: BoxDecoration(
         color: c.raised,
