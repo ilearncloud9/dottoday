@@ -3221,4 +3221,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inAppAlertLater => 'Later';
+
+  @override
+  String get widgetNextUp => 'Next up';
+
+  @override
+  String get widgetNow => 'Now';
+
+  @override
+  String widgetUntil(String time) {
+    return 'until $time';
+  }
+
+  @override
+  String get widgetNothingNext => 'Nothing else today';
+
+  @override
+  String get widgetToday => 'Today';
+
+  @override
+  String widgetInboxCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count in Inbox',
+      one: '1 in Inbox',
+      zero: 'Inbox is clear',
+    );
+    return '$_temp0';
+  }
 }

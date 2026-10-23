@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget picker names (docs/09 M5.4). Widget content is localised by the
+     app's snapshot; these join the de/fr/es translation pass in M8.3. -->
+<resources>
+    <string name="widget_next_up_label">Next up</string>
+    <string name="widget_next_up_description">The task under way, or the next one.</string>
+    <string name="widget_today_label">Today</string>
+    <string name="widget_today_description">What is left of your day, as dots.</string>
+    <string name="widget_inbox_label">Inbox</string>
+    <string name="widget_inbox_description">How many tasks wait for a time.</string>
+</resources>

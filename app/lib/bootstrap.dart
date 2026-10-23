@@ -17,6 +17,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 /// Composition root: error handlers, config, then the app.
@@ -29,6 +30,9 @@ Future<void> bootstrap() async {
   installErrorHandlers(logger);
   // IANA zone data for TZDateTime arithmetic and tz_id validation (docs/05).
   tz_data.initializeTimeZones();
+  // Date symbols for every locale: notification and widget text is
+  // formatted outside the widget tree (M5.1, M5.4).
+  await initializeDateFormatting();
 
   final env = Env.fromEnvironment();
 

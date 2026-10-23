@@ -40,6 +40,40 @@
             </intent-filter>
             <meta-data android:name="flutter_deeplinking_enabled" android:value="true"/>
         </activity>
+        <!-- Home-screen widgets (docs/02 F9, docs/09 M5.4), Glance via home_widget. -->
+        <receiver
+            android:name=".widgets.NextUpWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_next_up_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/next_up_widget_info"/>
+        </receiver>
+        <receiver
+            android:name=".widgets.TodayWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_today_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/today_widget_info"/>
+        </receiver>
+        <receiver
+            android:name=".widgets.InboxWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_inbox_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/inbox_widget_info"/>
+        </receiver>
         <!-- flutter_local_notifications: post scheduled alerts, keep them
              across reboots and app updates, and route action taps. -->
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver"/>

@@ -64,6 +64,13 @@ service-role caller (cron), forwards ciphertext with `TTL: 3600`, drops subscrip
 reports gone (404/410) and logs counts only. `push_subscriptions` stores the endpoint only; the
 browser's `p256dh`/`auth` keys stay in the browser.
 
+### Home-screen widgets (M5.4)
+Widgets can't open the encrypted database, so the app writes the next 24 h (titles, times, colours,
+IDs) and the Inbox count to the platform's widget store: the iOS app-group `UserDefaults`
+(Data Protection: available after first unlock) and Android's app-private `SharedPreferences`. It is
+the same text the widget shows on the home screen; notes and subtasks are never included, and the
+snapshot is overwritten on every write.
+
 ## 9. Security checklist (run at every `/ship-check`)
 - [ ] New/changed tables have RLS enabled and policies tested (pgTAP tests pass).
 - [ ] No secret, token, or private key in the diff (`gitleaks` clean).

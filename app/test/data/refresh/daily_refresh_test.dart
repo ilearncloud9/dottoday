@@ -3,6 +3,7 @@ import 'package:dottoday/data/refresh/daily_refresh.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
+import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
 import 'package:dottoday/domain/notifications/notification_planner.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,6 +36,11 @@ void main() {
         occurrences: DriftOccurrenceRepository(h.db),
         series: DriftSeriesRepository(h.db),
         settings: DriftSettingsRepository(h.db),
+      ),
+      widgets: WidgetSnapshotWriter(
+        clock: h.clock,
+        occurrences: DriftOccurrenceRepository(h.db),
+        sink: h.sink,
       ),
       logger: h.logger,
     );
@@ -75,10 +81,15 @@ void main() {
     expect((await h.changeLog()).length, log);
   });
 
-  test('nothing due still re-plans notifications', () async {
-    final applied = h.gateway.applied.length;
-    h.gateway.pendingSet.clear();
-    await refresh.run(userId);
-    expect(h.gateway.applied.length, greaterThan(applied));
-  });
+  test(
+    'nothing due still re-plans notifications and redraws widgets',
+    () async {
+      final applied = h.gateway.applied.length;
+      final drawn = h.sink.written.length;
+      h.gateway.pendingSet.clear();
+      await refresh.run(userId);
+      expect(h.gateway.applied.length, greaterThan(applied));
+      expect(h.sink.written.length, drawn + 1);
+    },
+  );
 }

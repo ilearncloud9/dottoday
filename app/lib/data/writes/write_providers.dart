@@ -7,6 +7,7 @@ import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/notifications/os_notification_gateway.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/widgets/home_widget_sink.dart';
 import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
 import 'package:dottoday/data/writes/drift_write_use_case.dart';
@@ -32,10 +33,13 @@ NotificationGateway notificationGateway(Ref ref) {
   );
 }
 
-/// Home-screen widget snapshot target; replaced in M5.4.
+/// Home-screen widget snapshot target (M5.4): iOS and Android widgets;
+/// nothing elsewhere.
 @Riverpod(keepAlive: true)
 WidgetSnapshotSink widgetSnapshotSink(Ref ref) =>
-    const UnwiredWidgetSnapshotSink();
+    HomeWidgetSnapshotSink.supported
+    ? HomeWidgetSnapshotSink(profile: () => latestProfile(ref))
+    : const UnwiredWidgetSnapshotSink();
 
 @Riverpod(keepAlive: true)
 NotificationSync notificationSync(Ref ref) => NotificationSync(
@@ -48,13 +52,16 @@ NotificationSync notificationSync(Ref ref) => NotificationSync(
 );
 
 @Riverpod(keepAlive: true)
+WidgetSnapshotWriter widgetSnapshotWriter(Ref ref) => WidgetSnapshotWriter(
+  clock: ref.watch(clockProvider),
+  occurrences: ref.watch(occurrenceRepositoryProvider),
+  sink: ref.watch(widgetSnapshotSinkProvider),
+);
+
+@Riverpod(keepAlive: true)
 AfterWriteEffects afterWriteEffects(Ref ref) => AfterWriteEffects(
   notifications: ref.watch(notificationSyncProvider),
-  snapshot: WidgetSnapshotWriter(
-    clock: ref.watch(clockProvider),
-    occurrences: ref.watch(occurrenceRepositoryProvider),
-    sink: ref.watch(widgetSnapshotSinkProvider),
-  ),
+  snapshot: ref.watch(widgetSnapshotWriterProvider),
   logger: ref.watch(loggerProvider),
 );
 

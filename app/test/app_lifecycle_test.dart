@@ -5,10 +5,12 @@ import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
+import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/daily_refresh.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/notifications/notification_gateway.dart';
@@ -85,6 +87,11 @@ void main() {
         FakeOccurrenceRepository(),
       ),
       notifications: sync,
+      widgets: WidgetSnapshotWriter(
+        clock: clock,
+        occurrences: FakeOccurrenceRepository(),
+        sink: const UnwiredWidgetSnapshotSink(),
+      ),
       logger: Logger(logs, clock),
     );
     when(

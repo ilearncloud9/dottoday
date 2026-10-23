@@ -8,6 +8,7 @@ import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:workmanager/workmanager.dart';
 
@@ -40,6 +41,9 @@ void backgroundRefreshDispatcher() {
     WidgetsFlutterBinding.ensureInitialized();
     DartPluginRegistrant.ensureInitialized();
     tz_data.initializeTimeZones();
+    // No widget tree here, so no Localizations to load date symbols for
+    // notification and widget text.
+    await initializeDateFormatting();
     final logger = Logger(const DeveloperLogSink(), const SystemClock());
     final container = ProviderContainer(
       overrides: [loggerProvider.overrideWithValue(logger)],

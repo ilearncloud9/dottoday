@@ -4665,5 +4665,39 @@
   "inAppAlertLater": "Later",
   "@inAppAlertLater": {
     "description": "Dismisses the in-app reminder banner."
+  },
+  "widgetNextUp": "Next up",
+  "@widgetNextUp": {
+    "description": "Home-screen widget caption above the next task."
+  },
+  "widgetNow": "Now",
+  "@widgetNow": {
+    "description": "Home-screen widget: the task under way."
+  },
+  "widgetUntil": "until {time}",
+  "@widgetUntil": {
+    "description": "Home-screen widget: when the task under way ends.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "widgetNothingNext": "Nothing else today",
+  "@widgetNothingNext": {
+    "description": "Home-screen widget when no task is left."
+  },
+  "widgetToday": "Today",
+  "@widgetToday": {
+    "description": "Home-screen widget title for the day's thread."
+  },
+  "widgetInboxCount": "{count, plural, =0{Inbox is clear} =1{1 in Inbox} other{{count} in Inbox}}",
+  "@widgetInboxCount": {
+    "description": "Home-screen widget: how many tasks wait in the Inbox.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

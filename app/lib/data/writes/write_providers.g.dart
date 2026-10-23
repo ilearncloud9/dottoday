@@ -64,12 +64,14 @@ final class NotificationGatewayProvider
 String _$notificationGatewayHash() =>
     r'2ed6d11ff874122b02b95ef7fe908614b85b3a7e';
 
-/// Home-screen widget snapshot target; replaced in M5.4.
+/// Home-screen widget snapshot target (M5.4): iOS and Android widgets;
+/// nothing elsewhere.
 
 @ProviderFor(widgetSnapshotSink)
 final widgetSnapshotSinkProvider = WidgetSnapshotSinkProvider._();
 
-/// Home-screen widget snapshot target; replaced in M5.4.
+/// Home-screen widget snapshot target (M5.4): iOS and Android widgets;
+/// nothing elsewhere.
 
 final class WidgetSnapshotSinkProvider
     extends
@@ -79,7 +81,8 @@ final class WidgetSnapshotSinkProvider
           WidgetSnapshotSink
         >
     with $Provider<WidgetSnapshotSink> {
-  /// Home-screen widget snapshot target; replaced in M5.4.
+  /// Home-screen widget snapshot target (M5.4): iOS and Android widgets;
+  /// nothing elsewhere.
   WidgetSnapshotSinkProvider._()
     : super(
         from: null,
@@ -115,7 +118,7 @@ final class WidgetSnapshotSinkProvider
 }
 
 String _$widgetSnapshotSinkHash() =>
-    r'7e61b5f03388e413d85d362d418f37a8e17181da';
+    r'226e9979410786aa36ae59fc0db5c2318667a241';
 
 @ProviderFor(notificationSync)
 final notificationSyncProvider = NotificationSyncProvider._();
@@ -163,6 +166,54 @@ final class NotificationSyncProvider
 
 String _$notificationSyncHash() => r'19a04226f2610c9877c6e13a64b331582d64c250';
 
+@ProviderFor(widgetSnapshotWriter)
+final widgetSnapshotWriterProvider = WidgetSnapshotWriterProvider._();
+
+final class WidgetSnapshotWriterProvider
+    extends
+        $FunctionalProvider<
+          WidgetSnapshotWriter,
+          WidgetSnapshotWriter,
+          WidgetSnapshotWriter
+        >
+    with $Provider<WidgetSnapshotWriter> {
+  WidgetSnapshotWriterProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'widgetSnapshotWriterProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$widgetSnapshotWriterHash();
+
+  @$internal
+  @override
+  $ProviderElement<WidgetSnapshotWriter> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  WidgetSnapshotWriter create(Ref ref) {
+    return widgetSnapshotWriter(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(WidgetSnapshotWriter value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WidgetSnapshotWriter>(value),
+    );
+  }
+}
+
+String _$widgetSnapshotWriterHash() =>
+    r'eace0e52516193bd15d764424b882407f953d5d9';
+
 @ProviderFor(afterWriteEffects)
 final afterWriteEffectsProvider = AfterWriteEffectsProvider._();
 
@@ -208,7 +259,7 @@ final class AfterWriteEffectsProvider
   }
 }
 
-String _$afterWriteEffectsHash() => r'309e17b1f68d058571e05455b0025169f35f5d3d';
+String _$afterWriteEffectsHash() => r'e357b5071a1c02cf53eff43218819c935f3829e9';
 
 /// The single write path (docs/09 M2.3).
 

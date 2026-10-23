@@ -1,5 +1,7 @@
 plugins {
     id("com.android.application")
+    // Glance widgets are Compose (M5.4).
+    id("org.jetbrains.kotlin.plugin.compose")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -14,6 +16,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         // Required by flutter_local_notifications for scheduled alerts on older Android (R-10).
         isCoreLibraryDesugaringEnabled = true
+    }
+
+    buildFeatures {
+        compose = true
     }
 
     defaultConfig {

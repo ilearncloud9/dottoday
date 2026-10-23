@@ -48,4 +48,4 @@ final class DailyRefreshProvider
   }
 }
 
-String _$dailyRefreshHash() => r'619327beee66e0a9e5859a8c43f0c69d215b0d81';
+String _$dailyRefreshHash() => r'eefb7d7d0a521d67ffb98d7fee2fecc6b38fd8b0';

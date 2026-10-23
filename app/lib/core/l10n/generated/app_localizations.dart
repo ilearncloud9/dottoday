@@ -4779,6 +4779,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Later'**
   String get inAppAlertLater;
+
+  /// Home-screen widget caption above the next task.
+  ///
+  /// In en, this message translates to:
+  /// **'Next up'**
+  String get widgetNextUp;
+
+  /// Home-screen widget: the task under way.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get widgetNow;
+
+  /// Home-screen widget: when the task under way ends.
+  ///
+  /// In en, this message translates to:
+  /// **'until {time}'**
+  String widgetUntil(String time);
+
+  /// Home-screen widget when no task is left.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing else today'**
+  String get widgetNothingNext;
+
+  /// Home-screen widget title for the day's thread.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get widgetToday;
+
+  /// Home-screen widget: how many tasks wait in the Inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Inbox is clear} =1{1 in Inbox} other{{count} in Inbox}}'**
+  String widgetInboxCount(int count);
 }
 
 class _AppLocalizationsDelegate
