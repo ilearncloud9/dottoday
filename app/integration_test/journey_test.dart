@@ -13,6 +13,7 @@ import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
+import 'package:dottoday/features/timeline/widgets/today_header.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -102,6 +103,13 @@ void main() {
     await _tap(tester, find.text('Continue'));
     await _tap(tester, find.text('Add'));
     await _until(tester, find.textContaining('Journey check'));
+    // Late in the evening "9:30pm" is tomorrow's and Today follows the new
+    // task there; come back to today, where the standup is.
+    await tester.pump(const Duration(seconds: 1));
+    if (tester.any(find.byType(TodayPill))) {
+      await _tap(tester, find.byType(TodayPill));
+      await _rest(tester);
+    }
 
     // Drag with "Shift later tasks" (R-04, R-05): lift, a second finger
     // on the chip, drop on the gap after.
