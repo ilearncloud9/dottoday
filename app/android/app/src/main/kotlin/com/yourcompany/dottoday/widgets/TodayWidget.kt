@@ -8,6 +8,7 @@ import androidx.glance.GlanceModifier
 import androidx.glance.LocalSize
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
@@ -23,7 +24,6 @@ import androidx.glance.layout.width
 import androidx.glance.text.Text
 import es.antonborri.home_widget.HomeWidgetGlanceState
 import es.antonborri.home_widget.HomeWidgetGlanceStateDefinition
-import es.antonborri.home_widget.HomeWidgetGlanceWidgetReceiver
 
 /** "Today timeline" (medium/large): what is left of the day as dots (02 F9). */
 class TodayWidget : GlanceAppWidget() {
@@ -73,6 +73,12 @@ private fun Today(context: Context, snapshot: WidgetSnapshot, now: Long) {
     }
 }
 
-class TodayWidgetReceiver : HomeWidgetGlanceWidgetReceiver<TodayWidget>() {
-    override val glanceAppWidget = TodayWidget()
+/**
+ * Glance's own receiver, not home_widget's: that one runs `runBlocking` on
+ * the main thread in onUpdate, which deadlocks with Glance on a cold
+ * process (an ANR found in M5.5). The snapshot is still read live from
+ * home_widget's prefs in composition.
+ */
+class TodayWidgetReceiver : GlanceAppWidgetReceiver() {
+    override val glanceAppWidget: GlanceAppWidget = TodayWidget()
 }
