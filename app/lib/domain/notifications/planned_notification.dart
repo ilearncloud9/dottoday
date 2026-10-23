@@ -23,6 +23,7 @@ final class PlannedNotification {
     required this.kind,
     this.sound,
     this.silent = false,
+    this.loud = false,
     this.purpose = NotificationPurpose.task,
   });
 
@@ -47,6 +48,10 @@ final class PlannedNotification {
 
   /// Delivered without sound or banner because it falls in quiet hours.
   final bool silent;
+
+  /// Rings like an alarm: the day's first dot-start or a routine start
+  /// (11 A0, `loudStartIds`). Never silent, even in quiet hours.
+  final bool loud;
   final NotificationPurpose purpose;
 
   /// Whether iOS should use the time-sensitive interruption level (07 iOS).
@@ -65,6 +70,7 @@ final class PlannedNotification {
       other.kind == kind &&
       other.sound == sound &&
       other.silent == silent &&
+      other.loud == loud &&
       other.purpose == purpose;
 
   @override
@@ -76,13 +82,15 @@ final class PlannedNotification {
     kind,
     sound,
     silent,
+    loud,
     purpose,
   );
 
   @override
   String toString() =>
       'PlannedNotification($id, $occurrenceId#$alertIndex, '
-      '$fireAtUtc, ${kind.name}${silent ? ', silent' : ''})';
+      '$fireAtUtc, ${kind.name}${silent ? ', silent' : ''}'
+      '${loud ? ', loud' : ''})';
 }
 
 /// What the scheduler must change to turn the OS pending set into the

@@ -101,6 +101,10 @@ Everything here is **free tier** unless marked *Phase 2*.
   the first dot of the day and routine-start dots are alarm-loud by default; onboarding includes a test
   alarm; Settings › Reminders has a notification-health panel reading the real OS state (permission,
   exact alarms, battery exemption, Focus/DND, device clock).
+  Clarified in M6.5.3 (`domain/notifications/alarm_policy.dart`): "first dot of the day" is the earliest
+  scheduled task starting on that local day, whatever its state — if it is already done or skipped, no
+  later dot becomes that day's alarm; only the at-start alert rings loud (not "before"/end/snooze);
+  days follow the user's current zone, so travel re-plans them.
 
 ## F7. Sync, accounts, backup
 

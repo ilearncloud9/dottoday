@@ -3,6 +3,7 @@ import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/notifications/alarm_policy.dart';
 import 'package:dottoday/domain/notifications/notification_id.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
@@ -42,12 +43,16 @@ final class NotificationPlanner {
   /// [quietHours] (wall clock in [tzId]) are kept but [silent], so nothing
   /// is lost. A future `snoozedUntilUtc` replaces every alert before it with
   /// one reminder at that time.
+  ///
+  /// The at-start alert of each day's first dot and of [routineStartIds]
+  /// is [PlannedNotification.loud] and ignores quiet hours (11 A0).
   List<PlannedNotification> plan({
     required Iterable<Occurrence> occurrences,
     required String tzId,
     Map<String, List<Alert>> seriesAlerts = const {},
     TimeWindow? quietHours,
     Settings? bedtimeFrom,
+    Set<String> routineStartIds = const {},
   }) {
     final now = _clock.nowUtc();
     final end = now.add(horizon);
@@ -57,9 +62,18 @@ final class NotificationPlanner {
     // Sorted by id so collision probing (below) is deterministic.
     final live = occurrences.where(_alerts).toList()
       ..sort((a, b) => a.id.compareTo(b.id));
+    final loud = loudStartIds(
+      occurrences,
+      location,
+      routineStartIds: routineStartIds,
+    );
     for (final o in live) {
       for (final (index, alert, fireAt) in _fireTimes(o, seriesAlerts)) {
         if (!fireAt.isAfter(now) || fireAt.isAfter(end)) continue;
+        final isLoud =
+            alert.kind == AlertKind.atStart &&
+            index != PlannedNotification.snoozeIndex &&
+            loud.contains(o.id);
         planned.add(
           PlannedNotification(
             id: _uniqueId(usedIds, o.id, index),
@@ -68,7 +82,8 @@ final class NotificationPlanner {
             fireAtUtc: fireAt,
             kind: alert.kind,
             sound: alert.sound,
-            silent: _inQuietHours(location, fireAt, quietHours),
+            silent: !isLoud && _inQuietHours(location, fireAt, quietHours),
+            loud: isLoud,
           ),
         );
       }
