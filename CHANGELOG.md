@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M6.5.2: Ticking a task done also notes when you finished it (from the app, the keyboard or the notification); un-ticking forgets that again, and a duplicated day starts fresh.
 - M6.5.1: Groundwork for seeing how your day really went: a task can remember when you actually started and finished it, and each step of a task can have its own length; both sync and are in your exports.
 - M6.0: The database schema is live on the hosted Supabase project and its access rules pass the same 32 checks there as locally (`tool/hosted_rls_test.sh`).
 - M6 complete (sync & accounts), apart from pushing the database schema to the hosted project, which is the owner's step: sign in with email, Apple or Google; your tasks sync between devices offline-first with a visible status; conflicts ask instead of losing anything; delete account; private crash reports.

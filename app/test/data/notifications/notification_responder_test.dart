@@ -56,6 +56,7 @@ void main() {
     final gym = repo.rows.firstWhere((o) => o.id == gymId());
     expect(gym.status, OccurrenceStatus.done);
     expect(gym.completedAtUtc, now);
+    expect(gym.actualEndUtc, now, reason: 'Done from a notification ends it');
     expect(writes.applied.single.occurrences, hasLength(1));
     expect(opened, isEmpty);
   });

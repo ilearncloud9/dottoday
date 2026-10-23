@@ -6,6 +6,7 @@ import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/data/trash/drift_trash_service.dart';
 import 'package:dottoday/data/undo/in_memory_undo_service.dart';
+import 'package:dottoday/domain/scheduling/task_progress.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -219,5 +220,24 @@ void main() {
       expect((back.title, back.rrule), (s.title, s.rrule));
       expect(await liveOf(s.id), unorderedEquals(planned));
     });
+  });
+
+  test('undoing Done clears the actual end again (M6.5.2, 11 B1)', () async {
+    final token = _ok(
+      await undo.applyUndoable(
+        WriteBatch(
+          userId: userId,
+          occurrences: [markDone(task, DateTime.utc(2026, 10, 21, 7))],
+        ),
+      ),
+    );
+    expect(
+      (await occurrences.findById(userId, task.id))!.actualEndUtc,
+      isNotNull,
+    );
+    _ok(await undo.undo(token));
+    final back = (await occurrences.findById(userId, task.id))!;
+    expect(back.actualEndUtc, isNull);
+    expect(back.status, task.status);
   });
 }

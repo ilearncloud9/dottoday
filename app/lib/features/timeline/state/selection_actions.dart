@@ -3,9 +3,9 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
-import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/drag_math.dart';
+import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,14 +53,14 @@ Future<Result<UndoToken, AppFailure>> duplicateAll(
   final now = ref.read(clockProvider).nowUtc();
   return _write(ref, [
     for (final o in rows)
-      o.copyWith(
-        id: ids.newId(),
-        seriesId: null,
-        originalStartUtc: null,
-        status: OccurrenceStatus.planned,
-        completedAtUtc: null,
-        createdAt: now,
-      ),
+      progress
+          .withoutProgress(o)
+          .copyWith(
+            id: ids.newId(),
+            seriesId: null,
+            originalStartUtc: null,
+            createdAt: now,
+          ),
   ]);
 }
 

@@ -9,8 +9,8 @@ import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
-import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/features/timeline/editor/editor_duration.dart';
@@ -184,16 +184,7 @@ class _FormState extends ConsumerState<_Form> {
   }
 
   /// ⌘D: done, or planned again, written with the other edits.
-  void _toggleDone() => _change(
-    (o) => o.copyWith(
-      status: o.status == OccurrenceStatus.done
-          ? OccurrenceStatus.planned
-          : OccurrenceStatus.done,
-      completedAtUtc: o.status == OccurrenceStatus.done
-          ? null
-          : _clock.nowUtc(),
-    ),
-  );
+  void _toggleDone() => _change((o) => progress.toggleDone(o, _clock.nowUtc()));
 
   @override
   Widget build(BuildContext context) {

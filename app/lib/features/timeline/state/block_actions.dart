@@ -6,6 +6,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/day_scheduler_service.dart';
 import 'package:dottoday/domain/scheduling/schedule_result.dart';
+import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,11 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// write path (docs/02 F1 "check a block done", R-11 undo). Completion is
 /// on this occurrence only, never its series (R-09).
 Future<Result<UndoToken, AppFailure>> toggleDone(WidgetRef ref, Occurrence o) {
-  final done = o.status == OccurrenceStatus.done;
-  final changed = o.copyWith(
-    status: done ? OccurrenceStatus.planned : OccurrenceStatus.done,
-    completedAtUtc: done ? null : ref.read(clockProvider).nowUtc(),
-  );
+  final changed = progress.toggleDone(o, ref.read(clockProvider).nowUtc());
   return ref
       .read(undoServiceProvider)
       .applyUndoable(WriteBatch(userId: o.userId, occurrences: [changed]));

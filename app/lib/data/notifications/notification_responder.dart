@@ -3,10 +3,10 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
-import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
+import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
 
@@ -58,7 +58,7 @@ final class NotificationResponder {
     }
     final now = _clock.nowUtc();
     final changed = action == NotificationAction.done
-        ? task.copyWith(status: OccurrenceStatus.done, completedAtUtc: now)
+        ? progress.markDone(task, now)
         : task.copyWith(
             snoozedUntilUtc: now.add(
               const Duration(minutes: NotificationAction.snoozeMinutes),

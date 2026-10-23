@@ -38,6 +38,8 @@ List<Occurrence> duplicateDay({
         tzId: location.name,
         status: OccurrenceStatus.planned,
         completedAtUtc: null,
+        actualStartUtc: null,
+        actualEndUtc: null,
         snoozedUntilUtc: null,
         calendarLinkId: null,
         createdAt: nowUtc,

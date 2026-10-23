@@ -2,9 +2,9 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
-import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/schedule_result.dart';
+import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,11 +68,9 @@ Future<Result<UndoToken, AppFailure>> markNotDone(
       WriteBatch(
         userId: o.userId,
         occurrences: [
-          o.copyWith(
-            status: OccurrenceStatus.planned,
-            completedAtUtc: null,
-            updatedAt: ref.read(clockProvider).nowUtc(),
-          ),
+          progress
+              .markNotDone(o)
+              .copyWith(updatedAt: ref.read(clockProvider).nowUtc()),
         ],
       ),
     );
