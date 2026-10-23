@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M6.5.7: If your device's clock is more than 5 minutes off, the Sync sheet says so ("Your clock is 7 min fast — reminders may be early"); a fast clock's changes wait for the clock to be right instead of sync stopping, and changes from your other devices keep arriving.
 - M6.5.6: Signed in, the daily background refresh on iPhone and Android now also syncs, so a day you planned on your Mac is on your phone, reminders included, before you wake up.
 - M6.5.5: On Android the first task of the day rings like an alarm on its own "Start of your day" channel and lights up the screen (without showing your tasks on the lock screen); reminders are set again if you change the clock or time zone while Dottoday is closed.
 - M6.5.4: On iPhone and Mac the first task of the day rings with Dottoday's own alarm chime; on iPhone, release builds let task starts break through Focus (once the paid Apple account is set up).

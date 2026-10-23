@@ -8,6 +8,55 @@ part of 'sync_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// This device's clock against the server's, from fresh access tokens
+/// (M6.5.7); null without a Supabase client.
+
+@ProviderFor(serverClock)
+final serverClockProvider = ServerClockProvider._();
+
+/// This device's clock against the server's, from fresh access tokens
+/// (M6.5.7); null without a Supabase client.
+
+final class ServerClockProvider
+    extends $FunctionalProvider<ServerClock?, ServerClock?, ServerClock?>
+    with $Provider<ServerClock?> {
+  /// This device's clock against the server's, from fresh access tokens
+  /// (M6.5.7); null without a Supabase client.
+  ServerClockProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'serverClockProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$serverClockHash();
+
+  @$internal
+  @override
+  $ProviderElement<ServerClock?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ServerClock? create(Ref ref) {
+    return serverClock(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ServerClock? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ServerClock?>(value),
+    );
+  }
+}
+
+String _$serverClockHash() => r'8ba246abcc7e2197cdb7cc27ba069a1a90505aae';
+
 /// Sync for the signed-in account (docs/09 M6.2): the engine over
 /// Supabase, idle while signed out.
 
@@ -55,7 +104,7 @@ final class SyncServiceProvider
   }
 }
 
-String _$syncServiceHash() => r'6cb9fe2b617b9b22321814619474267d5dc0d691';
+String _$syncServiceHash() => r'f01cfaac8065643abb648834fcfed123965ffafc';
 
 /// Sync as it stands, live.
 

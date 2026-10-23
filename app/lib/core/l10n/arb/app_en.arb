@@ -4870,6 +4870,18 @@
   "@syncLineSyncing": {"description": "Status line while syncing."},
   "syncLineOffline": "Offline · changes saved here",
   "@syncLineOffline": {"description": "Status line when the device is offline; nothing is lost."},
+  "clockFast": "{minutes, plural, =1{Your clock is 1 min fast} other{Your clock is {minutes} min fast}} — reminders may be early",
+  "@clockFast": {
+    "description": "Sync sheet and notification health: the device clock is more than 5 min ahead of the server (docs/09 M6.5.7).",
+    "placeholders": {"minutes": {"type": "int"}}
+  },
+  "clockSlow": "{minutes, plural, =1{Your clock is 1 min slow} other{Your clock is {minutes} min slow}} — reminders may arrive after their time",
+  "@clockSlow": {
+    "description": "Sync sheet and notification health: the device clock is more than 5 min behind the server. No-shame copy: never 'late'.",
+    "placeholders": {"minutes": {"type": "int"}}
+  },
+  "syncClockWaiting": "Changes from this device wait until the clock is right; changes from your other devices still arrive.",
+  "@syncClockWaiting": {"description": "Sync sheet, under clockFast: pushes are deferred while the clock is fast (M6.5.7)."},
   "syncLinePaused": "Sync paused · tap Sync for why",
   "@syncLinePaused": {"description": "Status line after a server error (details in the Sync sheet)."},
   "settingsSynced": "{name} · synced {ago}",

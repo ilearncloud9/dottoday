@@ -74,6 +74,7 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Travel banner "You're now in … — keep times or shift?"; on phones a two-action strip puts its actions under the text (also the in-app reminder) | §5.4 strip, 07 travelling (M5.9) | `zone_banner_*`, `in_app_alert_banner_*` |
 | Account page signed in (Sign out, Sign out everywhere, Delete account with "Export my data first"), the email steps on Account and O5 (address → "Check your mail"), O5 "Welcome back" | §5.3 "Account page", §5.1 O5, 06 §2/§6 (M6.1, M6.5) | `settings_page_account_signed_in_*`, `onboarding_*` |
 | Sync status as text: "Kody · synced just now" under Settings (as `A-ios-settings`), "● Synced · just now" at the foot of the Inbox sidebar (as `A-mac-week-alt3-board`), with syncing / offline / paused / needs-you states | the two renders' text, §5.4 (M6.3) | `settings_synced_*`, `sync_status_line_*` |
+| Sync sheet clock line: "Your clock is 7 min fast — reminders may be early" and, when fast, "Changes from this device wait until the clock is right…" (also the slow wording) | §5.3 "Sync status sheet", 11 A0 (M6.5.7) | `sync_sheet_clock_fast_*` |
 
 ## Set B (Concept A+, standout features)
 

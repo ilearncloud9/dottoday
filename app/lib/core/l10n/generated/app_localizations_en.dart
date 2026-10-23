@@ -3427,6 +3427,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncLineOffline => 'Offline · changes saved here';
 
   @override
+  String clockFast(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: 'Your clock is $minutes min fast',
+      one: 'Your clock is 1 min fast',
+    );
+    return '$_temp0 — reminders may be early';
+  }
+
+  @override
+  String clockSlow(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: 'Your clock is $minutes min slow',
+      one: 'Your clock is 1 min slow',
+    );
+    return '$_temp0 — reminders may arrive after their time';
+  }
+
+  @override
+  String get syncClockWaiting =>
+      'Changes from this device wait until the clock is right; changes from your other devices still arrive.';
+
+  @override
   String get syncLinePaused => 'Sync paused · tap Sync for why';
 
   @override

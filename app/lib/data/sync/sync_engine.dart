@@ -9,11 +9,14 @@ import 'package:dottoday/data/sync/server_columns.dart';
 import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
 import 'package:dottoday/data/sync/synced_rows.dart';
+import 'package:dottoday/domain/sync/clock_skew.dart';
 import 'package:dottoday/domain/sync/hlc.dart';
 import 'package:drift/drift.dart';
 
 /// What one run did (for the status and tests).
-typedef SyncRun = ({int pulled, int pushed, int conflicts});
+/// What a round did. [skew] is set when the device clock is more than
+/// 5 min off; when it is fast, [pushed] is 0 and the outbox waits (M6.5.7).
+typedef SyncRun = ({int pulled, int pushed, int conflicts, ClockSkew? skew});
 
 /// Offline-first sync (docs/04 §4, ADR-0002, R-08): pull what changed on
 /// the server since the last cursor, merge it field by field into the
@@ -31,12 +34,14 @@ final class SyncEngine {
     required Clock clock,
     IdGenerator ids = const UuidV7Generator(),
     int pageSize = 500,
+    Duration? Function()? clockOffset,
   }) : _db = db,
        _gateway = gateway,
        _hlc = hlc,
        _clock = clock,
        _ids = ids,
        _pageSize = pageSize,
+       _clockOffset = clockOffset,
        _outbox = Outbox(db),
        _rows = SyncedRows(db);
 
@@ -46,6 +51,9 @@ final class SyncEngine {
   final Clock _clock;
   final IdGenerator _ids;
   final int _pageSize;
+
+  /// Device minus server time, when known (`ServerClock`).
+  final Duration? Function()? _clockOffset;
   final Outbox _outbox;
   final SyncedRows _rows;
 
@@ -83,13 +91,20 @@ final class SyncEngine {
       pulled += rows;
       conflicts += found;
     }
+    final skew = ClockSkew.of(_clockOffset?.call());
+    // A fast clock's versions are more than 5 min in the future, which
+    // sync_push refuses (ADR-0002): keep them until the clock is right
+    // instead of failing the round (rejected: "Sync paused").
+    if (skew?.fast ?? false) {
+      return (pulled: pulled, pushed: 0, conflicts: conflicts, skew: skew);
+    }
     var pushed = 0;
     for (final batch in await _outbox.batches(size: _pageSize)) {
       if (batch.changes.isNotEmpty) await _gateway.push(batch.changes);
       await _outbox.acknowledge(batch);
       pushed += batch.changes.length;
     }
-    return (pulled: pulled, pushed: pushed, conflicts: conflicts);
+    return (pulled: pulled, pushed: pushed, conflicts: conflicts, skew: skew);
   }
 
   /// Pages through [entity] from its cursor; returns (rows, conflicts).

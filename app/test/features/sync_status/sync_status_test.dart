@@ -4,6 +4,7 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
+import 'package:dottoday/domain/sync/clock_skew.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/sync_status/sync_banner.dart';
 import 'package:dottoday/features/sync_status/sync_sheet.dart';
@@ -96,6 +97,48 @@ void main() {
     await tester.tap(find.text('Sync now'));
     await tester.pumpAndSettle();
     expect(sync.synced, 1);
+  });
+
+  testWidgets('a fast clock: says so, and that changes wait (M6.5.7)', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      SyncStatus(
+        state: SyncState.synced,
+        lastSyncedUtc: _now,
+        pending: 3,
+        clockSkew: ClockSkew.of(const Duration(minutes: 7)),
+      ),
+    );
+    await _open(tester);
+    expect(
+      find.text('Your clock is 7 min fast — reminders may be early'),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining('wait until the clock is right'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('a slow clock: says so; nothing waits', (tester) async {
+    await _pump(
+      tester,
+      SyncStatus(
+        state: SyncState.synced,
+        lastSyncedUtc: _now,
+        clockSkew: ClockSkew.of(const Duration(minutes: -6)),
+      ),
+    );
+    await _open(tester);
+    expect(
+      find.text(
+        'Your clock is 6 min slow — reminders may arrive after their time',
+      ),
+      findsOneWidget,
+    );
+    expect(find.textContaining('wait until the clock is right'), findsNothing);
   });
 
   testWidgets('a conflict: banner → Review → Keep mine (R-08)', (tester) async {

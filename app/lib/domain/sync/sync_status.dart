@@ -1,6 +1,7 @@
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/domain/auth/account.dart';
+import 'package:dottoday/domain/sync/clock_skew.dart';
 
 /// Where sync stands (docs/02 F7, R-08): the pill, the banner and the Sync
 /// sheet read this.
@@ -38,6 +39,7 @@ final class SyncStatus {
     this.lastSyncedUtc,
     this.pending = 0,
     this.conflicts = const [],
+    this.clockSkew,
   });
 
   /// No account: nothing to sync, nothing to show.
@@ -49,6 +51,10 @@ final class SyncStatus {
   /// Local changes not yet pushed.
   final int pending;
   final List<SyncConflict> conflicts;
+
+  /// Set when this device's clock is more than 5 min off the server's
+  /// (M6.5.7): pulls go on; a fast clock's pushes wait until it is right.
+  final ClockSkew? clockSkew;
 }
 
 /// The sync engine as the UI sees it (docs/04 §4); the real one arrives in

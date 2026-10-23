@@ -7,6 +7,7 @@ import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
 import 'package:dottoday/domain/auth/account.dart';
+import 'package:dottoday/domain/sync/clock_skew.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 
 /// Reads the open conflicts and acts on them (the database side).
@@ -141,6 +142,7 @@ final class EngineSyncService implements SyncService {
         lastSyncedUtc: _status.lastSyncedUtc,
         pending: n,
         conflicts: _status.conflicts,
+        clockSkew: _status.clockSkew,
       );
       _state.add(_status);
       if (n > 0) _later();
@@ -180,6 +182,7 @@ final class EngineSyncService implements SyncService {
     try {
       final run = await _engine.run(account, onProgress: _progress);
       if (_account != account) return;
+      _skew = run.skew;
       _emit(_with(state: SyncState.synced, lastSyncedUtc: _clock.nowUtc()));
       if (run.pulled > 0) _onPulled?.call(account);
     } on SyncGatewayException catch (e, s) {
@@ -222,7 +225,11 @@ final class EngineSyncService implements SyncService {
     lastSyncedUtc: lastSyncedUtc ?? _status.lastSyncedUtc,
     pending: _status.pending,
     conflicts: conflicts ?? _status.conflicts,
+    clockSkew: _skew,
   );
+
+  /// From the last finished round (M6.5.7).
+  ClockSkew? _skew;
 
   /// The current value, then every change. Subscribes at once, unlike an
   /// `async*` that waits at its first `yield`: Riverpod pauses listeners

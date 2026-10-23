@@ -5092,6 +5092,24 @@ abstract class AppLocalizations {
   /// **'Offline · changes saved here'**
   String get syncLineOffline;
 
+  /// Sync sheet and notification health: the device clock is more than 5 min ahead of the server (docs/09 M6.5.7).
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes, plural, =1{Your clock is 1 min fast} other{Your clock is {minutes} min fast}} — reminders may be early'**
+  String clockFast(int minutes);
+
+  /// Sync sheet and notification health: the device clock is more than 5 min behind the server. No-shame copy: never 'late'.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes, plural, =1{Your clock is 1 min slow} other{Your clock is {minutes} min slow}} — reminders may arrive after their time'**
+  String clockSlow(int minutes);
+
+  /// Sync sheet, under clockFast: pushes are deferred while the clock is fast (M6.5.7).
+  ///
+  /// In en, this message translates to:
+  /// **'Changes from this device wait until the clock is right; changes from your other devices still arrive.'**
+  String get syncClockWaiting;
+
   /// Status line after a server error (details in the Sync sheet).
   ///
   /// In en, this message translates to:

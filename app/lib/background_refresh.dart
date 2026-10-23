@@ -13,6 +13,7 @@ import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:dottoday/data/sync/background_sync.dart';
 import 'package:dottoday/data/sync/supabase_sync_gateway.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
+import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -96,6 +97,7 @@ BackgroundSync _oneShotSync(Ref ref, SupabaseClient client, Logger logger) =>
         gateway: SupabaseSyncGateway(client),
         hlc: ref.watch(sharedHlcProvider),
         clock: ref.watch(clockProvider),
+        clockOffset: () => ref.read(serverClockProvider)?.offset,
       ),
       accountId: () => client.auth.currentUser?.id,
       logger: logger,

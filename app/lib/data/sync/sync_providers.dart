@@ -10,6 +10,7 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/sync/account_adoption.dart';
 import 'package:dottoday/data/sync/drift_conflict_store.dart';
 import 'package:dottoday/data/sync/engine_sync_service.dart';
+import 'package:dottoday/data/sync/server_clock.dart';
 import 'package:dottoday/data/sync/supabase_sync_gateway.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
@@ -42,6 +43,17 @@ final class LocalOnlySyncService implements SyncService {
       Stream.value(const RestoreProgress(done: 0, total: 0));
 }
 
+/// This device's clock against the server's, from fresh access tokens
+/// (M6.5.7); null without a Supabase client.
+@Riverpod(keepAlive: true)
+ServerClock? serverClock(Ref ref) {
+  final client = ref.watch(supabaseClientProvider);
+  if (client == null) return null;
+  final server = ServerClock(ref.watch(clockProvider))..watch(client.auth);
+  ref.onDispose(() => unawaited(server.dispose()));
+  return server;
+}
+
 /// Sync for the signed-in account (docs/09 M6.2): the engine over
 /// Supabase, idle while signed out.
 @Riverpod(keepAlive: true)
@@ -57,6 +69,7 @@ SyncService syncService(Ref ref) {
       gateway: gateway,
       hlc: ref.watch(sharedHlcProvider),
       clock: clock,
+      clockOffset: () => ref.read(serverClockProvider)?.offset,
     ),
     accounts: _accountIds(client),
     adopt: (id) async {

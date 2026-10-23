@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
+import 'package:dottoday/domain/sync/clock_skew.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/sync_status/sync_banner.dart';
 import 'package:dottoday/features/sync_status/sync_sheet.dart';
@@ -72,6 +73,21 @@ void main() {
     widths: widths,
     act: _open,
     overrides: _with(_conflicted),
+    build: _page,
+  );
+  goldenMatrix(
+    'sync_sheet_clock_fast',
+    height: 560,
+    widths: widths,
+    act: _open,
+    overrides: _with(
+      SyncStatus(
+        state: SyncState.synced,
+        lastSyncedUtc: _now,
+        pending: 3,
+        clockSkew: ClockSkew.of(const Duration(minutes: 7)),
+      ),
+    ),
     build: _page,
   );
   goldenMatrix(

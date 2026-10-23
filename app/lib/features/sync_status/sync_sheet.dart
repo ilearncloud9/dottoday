@@ -11,6 +11,7 @@ import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/sync_status/conflict_card.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/sync/clock_skew_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -48,6 +49,10 @@ class _SyncBody extends ConsumerWidget {
           ),
           style: t.styles.rowMeta,
         ),
+        if (status.clockSkew case final skew?) ...[
+          Text(clockSkewText(l10n, skew), style: t.styles.body),
+          if (skew.fast) Text(l10n.syncClockWaiting, style: t.styles.rowMeta),
+        ],
         _syncNowButton(context, ref, status.state),
         if (status.conflicts.isNotEmpty) ...[
           const SizedBox(height: DotSpace.s),
