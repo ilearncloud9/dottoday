@@ -3,11 +3,13 @@ import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
 import 'package:dottoday/features/settings/pages/settings_pages.dart';
@@ -51,6 +53,7 @@ Future<SettingsHarness> pumpSettings(
   List<Override> overrides = const [],
   List<String> recentSearches = const [],
   NotificationPermission? permission,
+  ExactAlarms exactAlarms = const AlwaysExactAlarms(),
 }) async {
   tester.view
     ..physicalSize = size
@@ -67,6 +70,7 @@ Future<SettingsHarness> pumpSettings(
         recentSearches: recentSearches,
         notificationPermission:
             permission ?? const UnwiredNotificationPermission(),
+        exactAlarms: exactAlarms,
       ),
       linkLauncherProvider.overrideWithValue(links),
       appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),

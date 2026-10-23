@@ -3,6 +3,7 @@ import 'package:dottoday/core/theme/dot_metrics.dart';
 import 'package:dottoday/core/theme/dot_motion.dart';
 import 'package:dottoday/core/theme/dot_type.dart';
 import 'package:dottoday/core/theme/task_palette.dart';
+import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -109,6 +110,15 @@ ThemeData _build(DotColors c) {
     colorScheme: scheme,
     scaffoldBackgroundColor: c.surface,
     fontFamily: DotType.fontFamily,
+    // Android's predictive back previews the page underneath (07 Android,
+    // M5.6); the other platforms keep their defaults.
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+      },
+    ),
     textTheme: _textTheme(type),
     dividerColor: c.outline,
     // Keyboard focus is visible everywhere (M3e.6, R-12): ink rows, cards

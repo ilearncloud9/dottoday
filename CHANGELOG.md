@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M5.6: Android: the back gesture previews where it goes, the app draws edge to edge, and if Android won't allow exact timing Settings says reminders may be a few minutes late and takes you to the switch.
 - Fixed: editing a repeating task could lose what you'd changed when the app refreshed in the background, so Save didn't ask "this one or all" and the editor lost focus; the task sheet and onboarding no longer blank out on a refresh either. On Android, home-screen widgets could freeze the app right after an install or restart.
 - M5.5: On the Mac, a full menu bar (File, Edit, View, Go, Window) and "Next up" in the menu bar with what's left of today; the app is called Dottoday everywhere; it runs on Intel Macs too.
 - Fixed: on Android the daily background refresh could start while the app was opening its database and make the app fail to load ("database is locked"); the second opener now waits, and the first background run is 12 h after launch.

@@ -4751,5 +4751,17 @@
   "menuNextDay": "Next Day",
   "@menuNextDay": {
     "description": "Mac Go menu: the day after on Today."
+  },
+  "exactTitle": "Reminders may come a few minutes late",
+  "@exactTitle": {
+    "description": "Settings › Reminders notice when Android doesn't allow exact alarms."
+  },
+  "exactBody": "To save battery, Android can hold reminders back. Allow exact timing so each one arrives when your task starts.",
+  "@exactBody": {
+    "description": "Rationale for the exact-alarm permission (docs/07 Android)."
+  },
+  "exactAllow": "Allow exact timing",
+  "@exactAllow": {
+    "description": "Opens Android's Alarms & reminders screen."
   }
 }

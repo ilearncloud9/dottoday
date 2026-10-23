@@ -4,6 +4,7 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
+import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -16,6 +17,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
@@ -361,6 +363,7 @@ List<Override> timelineOverrides({
   List<String> recentSearches = const [],
   NotificationPermission notificationPermission =
       const UnwiredNotificationPermission(),
+  ExactAlarms exactAlarms = const AlwaysExactAlarms(),
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
@@ -387,6 +390,7 @@ List<Override> timelineOverrides({
     ),
     // No OS plugin under `flutter test` (M5.1).
     notificationPermissionProvider.overrideWithValue(notificationPermission),
+    exactAlarmsProvider.overrideWithValue(exactAlarms),
     notificationGatewayProvider.overrideWithValue(
       const UnwiredNotificationGateway(),
     ),

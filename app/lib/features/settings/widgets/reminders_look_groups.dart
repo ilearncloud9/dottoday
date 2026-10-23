@@ -32,6 +32,23 @@ class RemindersGroup extends ConsumerWidget {
         ref.watch(notificationPermissionStateProvider).value ==
         PermissionState.denied;
     final group = _group(context);
+    final exact = ref.watch(exactAlarmsAllowedProvider).value ?? true;
+    if (!denied && !exact) {
+      // Reminders still come, maybe late: say why and offer the fix (M5.6).
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: DotSpace.s,
+        children: [
+          ExactAlarmNotice(
+            onAllow: () async {
+              await ref.read(exactAlarmsProvider).request();
+              ref.invalidate(exactAlarmsAllowedProvider);
+            },
+          ),
+          group,
+        ],
+      );
+    }
     if (!denied) return group;
     // Notifications are off: say so above the rows (M3f.8, 03 §3.8).
     return Column(

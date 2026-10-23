@@ -4,9 +4,11 @@ library;
 
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
+import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/features/settings/pages/about_page.dart';
 import 'package:dottoday/features/settings/pages/account_page.dart';
@@ -26,6 +28,7 @@ final _overrides = _overridesWith();
 
 List<Override> _overridesWith({
   NotificationPermission permission = const UnwiredNotificationPermission(),
+  ExactAlarms exactAlarms = const AlwaysExactAlarms(),
 }) => [
   ...timelineOverrides(
     now: DateTime.utc(2026, 10, 21, 9),
@@ -33,6 +36,7 @@ List<Override> _overridesWith({
       settings: const Settings(use24h: true),
     ).copyWith(displayName: 'Kody'),
     notificationPermission: permission,
+    exactAlarms: exactAlarms,
   ),
   appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),
   envProvider.overrideWithValue(
@@ -133,6 +137,29 @@ void main() {
     overrides: _overridesWith(permission: const _Denied()),
     build: (_) => _settings(),
   );
+  // Android without "Alarms & reminders" (M5.6, derived).
+  goldenMatrix(
+    'settings_exact_alarm',
+    height: 900,
+    widths: const {'compact', 'expanded'},
+    act: (t) => t.scrollUntilVisible(
+      find.text('Reminders may come a few minutes late'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    ),
+    overrides: _overridesWith(exactAlarms: const _Inexact()),
+    build: (_) => _settings(),
+  );
+}
+
+final class _Inexact implements ExactAlarms {
+  const _Inexact();
+
+  @override
+  Future<bool> allowed() async => false;
+
+  @override
+  Future<void> request() async {}
 }
 
 final class _Denied implements NotificationPermission {

@@ -52,6 +52,43 @@ class PermissionNotice extends StatelessWidget {
   }
 }
 
+/// "Reminders may come a few minutes late" (docs/07 Android, M5.6): exact
+/// alarms aren't allowed, so reminders fall back to inexact timing. One
+/// button opens the system screen; the caller re-checks afterwards.
+class ExactAlarmNotice extends StatelessWidget {
+  const ExactAlarmNotice({required this.onAllow, super.key});
+
+  final VoidCallback onAllow;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    return Semantics(
+      container: true,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: t.colors.raised,
+          borderRadius: BorderRadius.circular(DotRadii.card),
+          border: Border.all(color: t.colors.hairline),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(DotSpace.m),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: DotSpace.xs,
+            children: [
+              _Heading(text: l10n.exactTitle),
+              Text(l10n.exactBody, style: t.styles.body),
+              TextButton(onPressed: onAllow, child: Text(l10n.exactAllow)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// 🔔 and "Notifications are off".
 class _Heading extends StatelessWidget {
   const _Heading({required this.text});

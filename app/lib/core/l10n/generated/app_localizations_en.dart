@@ -3289,4 +3289,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get menuNextDay => 'Next Day';
+
+  @override
+  String get exactTitle => 'Reminders may come a few minutes late';
+
+  @override
+  String get exactBody =>
+      'To save battery, Android can hold reminders back. Allow exact timing so each one arrives when your task starts.';
+
+  @override
+  String get exactAllow => 'Allow exact timing';
 }

@@ -4893,6 +4893,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Next Day'**
   String get menuNextDay;
+
+  /// Settings › Reminders notice when Android doesn't allow exact alarms.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders may come a few minutes late'**
+  String get exactTitle;
+
+  /// Rationale for the exact-alarm permission (docs/07 Android).
+  ///
+  /// In en, this message translates to:
+  /// **'To save battery, Android can hold reminders back. Allow exact timing so each one arrives when your task starts.'**
+  String get exactBody;
+
+  /// Opens Android's Alarms & reminders screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow exact timing'**
+  String get exactAllow;
 }
 
 class _AppLocalizationsDelegate

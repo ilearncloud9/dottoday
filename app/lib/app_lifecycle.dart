@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
@@ -64,7 +65,12 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) unawaited(runHousekeeping(ref));
+    if (state != AppLifecycleState.resumed) return;
+    // Back from the system settings: what the OS allows may have changed.
+    ref
+      ..invalidate(notificationPermissionStateProvider)
+      ..invalidate(exactAlarmsAllowedProvider);
+    unawaited(runHousekeeping(ref));
   }
 
   @override

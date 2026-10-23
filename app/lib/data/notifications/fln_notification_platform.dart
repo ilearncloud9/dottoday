@@ -17,8 +17,8 @@ final class FlnNotificationPlatform implements NotificationPlatform {
   final AppLocalizations _l10n;
   final Clock _clock;
 
-  /// Exact alarms when Android allows them; inexact otherwise (M5.6 adds
-  /// the rationale for asking).
+  /// Exact alarms when Android allows them; inexact otherwise, which
+  /// Settings explains (M5.6).
   var _exact = false;
 
   static const _category = 'task';
@@ -75,10 +75,21 @@ final class FlnNotificationPlatform implements NotificationPlatform {
   }
 
   @override
-  Future<List<(int, String?)>> pending() async => [
-    for (final r in await _plugin.pendingNotificationRequests())
-      (r.id, r.payload),
-  ];
+  Future<List<(int, String?)>> pending() async {
+    // The user can allow or revoke exact alarms at any time (M5.6). When it
+    // changes, every pending alert is posted again in the new mode: the
+    // empty pending set makes the next diff schedule them all.
+    final exact = await _android?.canScheduleExactNotifications() ?? false;
+    if (exact != _exact) {
+      _exact = exact;
+      await _plugin.cancelAll();
+      return const [];
+    }
+    return [
+      for (final r in await _plugin.pendingNotificationRequests())
+        (r.id, r.payload),
+    ];
+  }
 
   @override
   Future<void> cancel(int id) => _plugin.cancel(id);

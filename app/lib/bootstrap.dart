@@ -14,6 +14,7 @@ import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/native_deep_links.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -37,6 +38,11 @@ Future<void> bootstrap() async {
   final env = Env.fromEnvironment();
 
   _scheduleBackgroundRefresh(logger);
+  // Android draws under transparent system bars (07 Android, M5.6); screens
+  // keep their content out of them with SafeArea.
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+    unawaited(SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge));
+  }
 
   // The root scope is AppRestart's UncontrolledProviderScope (M3f.9), which
   // the lint doesn't see through.
