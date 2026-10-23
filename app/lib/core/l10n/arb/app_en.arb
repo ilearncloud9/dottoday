@@ -4649,5 +4649,21 @@
   "notifChannelSummaryDetail": "The nightly look at tomorrow",
   "@notifChannelSummaryDetail": {
     "description": "Android channel description."
+  },
+  "inAppAlertText": "{title} · {detail}",
+  "@inAppAlertText": {
+    "description": "In-app reminder banner: the task title and when.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "inAppAlertLater": "Later",
+  "@inAppAlertLater": {
+    "description": "Dismisses the in-app reminder banner."
   }
 }

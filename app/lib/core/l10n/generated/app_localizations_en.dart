@@ -3213,4 +3213,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notifChannelSummaryDetail => 'The nightly look at tomorrow';
+
+  @override
+  String inAppAlertText(String title, String detail) {
+    return '$title · $detail';
+  }
+
+  @override
+  String get inAppAlertLater => 'Later';
 }

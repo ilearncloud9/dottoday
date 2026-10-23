@@ -4767,6 +4767,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The nightly look at tomorrow'**
   String get notifChannelSummaryDetail;
+
+  /// In-app reminder banner: the task title and when.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} · {detail}'**
+  String inAppAlertText(String title, String detail);
+
+  /// Dismisses the in-app reminder banner.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get inAppAlertLater;
 }
 
 class _AppLocalizationsDelegate

@@ -1,14 +1,15 @@
 import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/notifications/fln_notification_permission.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
+import 'package:dottoday/data/notifications/web_notification_permission.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'permission_providers.g.dart';
 
-/// The web until web push (M5.3): nothing is posted, so nothing is
-/// denied either.
+/// Nothing is posted, so nothing is denied either: tests and any build
+/// without an OS scheduler.
 final class UnwiredNotificationPermission implements NotificationPermission {
   const UnwiredNotificationPermission();
 
@@ -22,11 +23,11 @@ final class UnwiredNotificationPermission implements NotificationPermission {
   Future<bool> openSettings() async => false;
 }
 
-/// The OS permission on iOS, Android and macOS (M5.1); the web's arrives
-/// with web push (M5.3).
+/// The OS permission on iOS, Android and macOS (M5.1), the browser's on
+/// the web (M5.3).
 @Riverpod(keepAlive: true)
 NotificationPermission notificationPermission(Ref ref) => kIsWeb
-    ? const UnwiredNotificationPermission()
+    ? const WebNotificationPermission()
     : FlnNotificationPermission(
         ref.watch(localNotificationsPluginProvider),
         ref.watch(appDatabaseProvider),

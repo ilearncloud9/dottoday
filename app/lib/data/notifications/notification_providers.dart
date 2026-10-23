@@ -3,8 +3,11 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/data/notifications/fln_notification_platform.dart';
+import 'package:dottoday/data/notifications/in_app_alerts.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/data/notifications/notification_responder.dart';
+import 'package:dottoday/data/notifications/timer_notification_platform.dart';
+import 'package:dottoday/data/notifications/web/browser_notifications_any.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
@@ -21,15 +24,28 @@ part 'notification_providers.g.dart';
 FlutterLocalNotificationsPlugin localNotificationsPlugin(Ref ref) =>
     FlutterLocalNotificationsPlugin();
 
-/// The OS scheduler: iOS, Android and macOS; null on the web until web
-/// push (M5.3).
+/// The scheduler under the gateway: the OS on iOS, Android and macOS; on
+/// the web, timers while the tab is open, posting through the service
+/// worker or the in-app banner (M5.3).
 @Riverpod(keepAlive: true)
-Future<NotificationPlatform?> notificationPlatform(Ref ref) async {
-  if (kIsWeb) return null;
+Future<NotificationPlatform> notificationPlatform(Ref ref) async {
   final profile = await ref.watch(localProfileProvider.future);
+  final l10n = lookupAppLocalizations(Locale(profile.locale));
+  if (kIsWeb) {
+    return TimerNotificationPlatform(
+      clock: ref.watch(clockProvider),
+      show: (n) => showBrowserNotification(
+        n,
+        doneLabel: l10n.notifActionDone,
+        openLabel: l10n.notifActionOpen,
+      ),
+      onInApp: ref.read(inAppAlertsProvider.notifier).add,
+      taps: browserNotificationTaps(),
+    );
+  }
   return FlnNotificationPlatform(
     ref.watch(localNotificationsPluginProvider),
-    lookupAppLocalizations(Locale(profile.locale)),
+    l10n,
     ref.watch(clockProvider),
   );
 }
@@ -55,12 +71,11 @@ NotificationResponder notificationResponder(Ref ref) => NotificationResponder(
 );
 
 /// Initialises the platform once (channels, actions, the tap handler) and
-/// handles the tap that launched the app; null on the web. The gateway
-/// waits on this before touching the OS.
+/// handles the tap that launched the app. The gateway waits on this before
+/// touching the OS.
 @Riverpod(keepAlive: true)
-Future<NotificationPlatform?> notificationsStarted(Ref ref) async {
+Future<NotificationPlatform> notificationsStarted(Ref ref) async {
   final platform = await ref.watch(notificationPlatformProvider.future);
-  if (platform == null) return null;
   final responder = ref.read(notificationResponderProvider);
   await platform.initialize((tap) => responder.handle(tap));
   final launch = await platform.launchTap();

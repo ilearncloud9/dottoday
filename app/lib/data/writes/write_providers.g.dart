@@ -8,14 +8,14 @@ part of 'write_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// OS notification scheduler (M5.1): the OS on iOS, Android and macOS;
-/// unwired on the web until web push (M5.3).
+/// The notification scheduler (M5.1, M5.3): the OS on iOS, Android and
+/// macOS, timers + service worker on the web.
 
 @ProviderFor(notificationGateway)
 final notificationGatewayProvider = NotificationGatewayProvider._();
 
-/// OS notification scheduler (M5.1): the OS on iOS, Android and macOS;
-/// unwired on the web until web push (M5.3).
+/// The notification scheduler (M5.1, M5.3): the OS on iOS, Android and
+/// macOS, timers + service worker on the web.
 
 final class NotificationGatewayProvider
     extends
@@ -25,8 +25,8 @@ final class NotificationGatewayProvider
           NotificationGateway
         >
     with $Provider<NotificationGateway> {
-  /// OS notification scheduler (M5.1): the OS on iOS, Android and macOS;
-  /// unwired on the web until web push (M5.3).
+  /// The notification scheduler (M5.1, M5.3): the OS on iOS, Android and
+  /// macOS, timers + service worker on the web.
   NotificationGatewayProvider._()
     : super(
         from: null,
@@ -62,7 +62,7 @@ final class NotificationGatewayProvider
 }
 
 String _$notificationGatewayHash() =>
-    r'404d3d1b2c336bb4ad52d9bcec5c5d894850639f';
+    r'2ed6d11ff874122b02b95ef7fe908614b85b3a7e';
 
 /// Home-screen widget snapshot target; replaced in M5.4.
 

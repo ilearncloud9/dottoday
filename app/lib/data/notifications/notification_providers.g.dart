@@ -63,27 +63,30 @@ final class LocalNotificationsPluginProvider
 String _$localNotificationsPluginHash() =>
     r'c1cef212231ef607c2087a0d83df4ad9637c1af6';
 
-/// The OS scheduler: iOS, Android and macOS; null on the web until web
-/// push (M5.3).
+/// The scheduler under the gateway: the OS on iOS, Android and macOS; on
+/// the web, timers while the tab is open, posting through the service
+/// worker or the in-app banner (M5.3).
 
 @ProviderFor(notificationPlatform)
 final notificationPlatformProvider = NotificationPlatformProvider._();
 
-/// The OS scheduler: iOS, Android and macOS; null on the web until web
-/// push (M5.3).
+/// The scheduler under the gateway: the OS on iOS, Android and macOS; on
+/// the web, timers while the tab is open, posting through the service
+/// worker or the in-app banner (M5.3).
 
 final class NotificationPlatformProvider
     extends
         $FunctionalProvider<
-          AsyncValue<NotificationPlatform?>,
-          NotificationPlatform?,
-          FutureOr<NotificationPlatform?>
+          AsyncValue<NotificationPlatform>,
+          NotificationPlatform,
+          FutureOr<NotificationPlatform>
         >
     with
-        $FutureModifier<NotificationPlatform?>,
-        $FutureProvider<NotificationPlatform?> {
-  /// The OS scheduler: iOS, Android and macOS; null on the web until web
-  /// push (M5.3).
+        $FutureModifier<NotificationPlatform>,
+        $FutureProvider<NotificationPlatform> {
+  /// The scheduler under the gateway: the OS on iOS, Android and macOS; on
+  /// the web, timers while the tab is open, posting through the service
+  /// worker or the in-app banner (M5.3).
   NotificationPlatformProvider._()
     : super(
         from: null,
@@ -100,18 +103,18 @@ final class NotificationPlatformProvider
 
   @$internal
   @override
-  $FutureProviderElement<NotificationPlatform?> $createElement(
+  $FutureProviderElement<NotificationPlatform> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<NotificationPlatform?> create(Ref ref) {
+  FutureOr<NotificationPlatform> create(Ref ref) {
     return notificationPlatform(ref);
   }
 }
 
 String _$notificationPlatformHash() =>
-    r'43af8648dce20ea2a9004c7d3425f6c9790c0c18';
+    r'd19015d52799054e3469658f26e260588ae54292';
 
 @ProviderFor(notificationResponder)
 final notificationResponderProvider = NotificationResponderProvider._();
@@ -162,29 +165,29 @@ String _$notificationResponderHash() =>
     r'16ef0bc1027896656c9d77133d715fe1cecab948';
 
 /// Initialises the platform once (channels, actions, the tap handler) and
-/// handles the tap that launched the app; null on the web. The gateway
-/// waits on this before touching the OS.
+/// handles the tap that launched the app. The gateway waits on this before
+/// touching the OS.
 
 @ProviderFor(notificationsStarted)
 final notificationsStartedProvider = NotificationsStartedProvider._();
 
 /// Initialises the platform once (channels, actions, the tap handler) and
-/// handles the tap that launched the app; null on the web. The gateway
-/// waits on this before touching the OS.
+/// handles the tap that launched the app. The gateway waits on this before
+/// touching the OS.
 
 final class NotificationsStartedProvider
     extends
         $FunctionalProvider<
-          AsyncValue<NotificationPlatform?>,
-          NotificationPlatform?,
-          FutureOr<NotificationPlatform?>
+          AsyncValue<NotificationPlatform>,
+          NotificationPlatform,
+          FutureOr<NotificationPlatform>
         >
     with
-        $FutureModifier<NotificationPlatform?>,
-        $FutureProvider<NotificationPlatform?> {
+        $FutureModifier<NotificationPlatform>,
+        $FutureProvider<NotificationPlatform> {
   /// Initialises the platform once (channels, actions, the tap handler) and
-  /// handles the tap that launched the app; null on the web. The gateway
-  /// waits on this before touching the OS.
+  /// handles the tap that launched the app. The gateway waits on this before
+  /// touching the OS.
   NotificationsStartedProvider._()
     : super(
         from: null,
@@ -201,15 +204,15 @@ final class NotificationsStartedProvider
 
   @$internal
   @override
-  $FutureProviderElement<NotificationPlatform?> $createElement(
+  $FutureProviderElement<NotificationPlatform> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<NotificationPlatform?> create(Ref ref) {
+  FutureOr<NotificationPlatform> create(Ref ref) {
     return notificationsStarted(ref);
   }
 }
 
 String _$notificationsStartedHash() =>
-    r'4891beac5d59240f34e4a8cf2656065abf2083c2';
+    r'6bb50a63b24f41186d941ccb04715632b2abfa64';

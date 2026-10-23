@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/notifications/in_app_alert_banner.dart';
 import 'package:dottoday/features/sync_status/sync_banner.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
@@ -32,7 +33,9 @@ class AppShell extends StatelessWidget {
       // The Mac/web editor panel opens beside every tab (M3e.5).
       body: Column(
         children: [
-          // Offline / conflicts, above every screen (M3f.8).
+          // A reminder the OS couldn't show (web, M5.3), then offline /
+          // conflicts (M3f.8), above every screen.
+          const InAppAlertBanner(),
           const SyncBanner(),
           Expanded(child: EditorPanelFrame(child: shell)),
         ],
