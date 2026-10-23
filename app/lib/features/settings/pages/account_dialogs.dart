@@ -60,7 +60,7 @@ Future<DeleteChoice> confirmDeleteAccount(BuildContext context) async {
 }
 
 /// Not something a person types: the extra action's result.
-const _exportFirst = '\u0000export';
+const _exportFirst = '\u0000export'; // l10n-ignore: a sentinel, never shown
 
 /// A dialog with one field; with [mustMatch], the action stays off until
 /// the field holds it. Owns its controller for the dialog's life.
