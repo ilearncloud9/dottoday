@@ -1,3 +1,7 @@
+// Goldens are baselined on macOS; CI runs them on a macOS runner (docs/09 M0.8).
+@Tags(['golden'])
+library;
+
 import 'package:dottoday/features/timeline/widgets/zone_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

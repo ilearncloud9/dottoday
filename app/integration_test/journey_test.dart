@@ -16,6 +16,7 @@ import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/features/timeline/widgets/today_header.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
+import 'package:dottoday/shared/dot/day_pager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -137,17 +138,33 @@ void main() {
 
     // Drag with "Shift later tasks" (R-04, R-05): lift, a second finger
     // on the chip, drop on the gap after.
-    // Today's card only: the pager keeps the next days built, and the
-    // standup repeats on them too.
-    Finder onToday(Finder f) => find.descendant(
-      of: find
-          .ancestor(
-            of: find.textContaining('· Today'),
-            matching: find.byType(DayCard),
+    // On tomorrow's card: the demo day repeats there and all of it is
+    // ahead at any hour (today's 8:00 standup is "missed" from 8:15 and
+    // won't take the drop; found at 08:27, M5.10). One card only: the
+    // pager keeps the days around it built and the standup repeats.
+    await tester.fling(
+      find
+          .descendant(
+            of: find.byType(DayPager),
+            matching: find.byType(PageView),
           )
           .first,
-      matching: f,
+      const Offset(-300, 0),
+      1500,
     );
+    await _until(tester, find.byType(TodayPill));
+    await _rest(tester);
+    // The card in the middle of the screen is the one now shown.
+    final cards = find.byType(DayCard);
+    final middle =
+        tester.view.physicalSize.width / tester.view.devicePixelRatio / 2;
+    final shown = cards.at(
+      [
+        for (var i = 0; i < cards.evaluate().length; i++)
+          (tester.getCenter(cards.at(i)).dx - middle).abs(),
+      ].indexed.reduce((a, b) => a.$2 <= b.$2 ? a : b).$1,
+    );
+    Finder onToday(Finder f) => find.descendant(of: shown, matching: f);
     final standup = onToday(find.text('Team standup'));
     // The card builds the rows in view and opens at "now": scroll it up
     // to the morning (on a device whose clock is past 8:00 it isn't built).
@@ -158,10 +175,19 @@ void main() {
     await _until(tester, find.text('Shift later tasks'));
     await tester.tap(find.text('Shift later tasks'));
     await tester.pump();
-    // A gap still ahead reads "45 min free · add here", a past one doesn't.
-    await lift.moveTo(
-      tester.getCenter(onToday(find.textContaining('45 min free')).first),
-    );
+    // Drop on the first gap below the standup: which labels show depends
+    // on the time of day ("45 min free · add here" only while ahead; found
+    // at 08:10, M5.10), so any "… free", else a little further down.
+    final from = tester.getCenter(standup);
+    final gaps = onToday(find.textContaining(' free'));
+    final below = [
+      for (var i = 0; i < gaps.evaluate().length; i++)
+        tester.getCenter(gaps.at(i)),
+    ].where((c) => c.dy > from.dy + 10).toList();
+    final gap = below.isEmpty
+        ? from + const Offset(0, 120)
+        : below.reduce((a, b) => a.dy < b.dy ? a : b);
+    await lift.moveTo(gap);
     await tester.pump();
     await lift.up();
     // "… moved to 8:15 AM · 1 later task moved too" or "… stopped at …".
@@ -178,7 +204,25 @@ void main() {
       matching: find.widgetWithText(TextField, 'Team standup'),
     );
     await _until(tester, titleField);
-    await tester.enterText(titleField, 'Team sync');
+    // On CI's slower emulator a lone enterText left the field as it was
+    // (typed="Team standup|8:15 AM", M5.10): focus it by a tap first and
+    // type until it holds the text.
+    final titleText = find
+        .descendant(
+          of: find.byType(TaskEditor),
+          matching: find.byType(EditableText),
+        )
+        .first;
+    for (var i = 0; i < 3; i++) {
+      await tester.tap(titleText);
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.enterText(titleText, 'Team sync');
+      await tester.pump(const Duration(milliseconds: 300));
+      if (tester.widget<EditableText>(titleText).controller.text ==
+          'Team sync') {
+        break;
+      }
+    }
     // Autosaved (debounced) before Save compares it with the opened row.
     final editorId = tester.widget<TaskEditor>(find.byType(TaskEditor)).id;
     final editorScope = ProviderScope.containerOf(
