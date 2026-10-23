@@ -34,6 +34,20 @@ void showTaskSheet(BuildContext context, String id) => unawaited(
   ),
 );
 
+/// Opens the phone editor for [id] (docs/10 §5.2 E1: "on phones the task
+/// sheet's Edit opens the same fields as a full sheet").
+void showTaskEditor(BuildContext context, String id) => unawaited(
+  showModalBottomSheet<void>(
+    context: context,
+    // Above the iPhone's floating tab bar (M4.9: it covered Save).
+    useRootNavigator: true,
+    isScrollControlled: true,
+    useSafeArea: true,
+    builder: (_) =>
+        FractionallySizedBox(heightFactor: 0.94, child: TaskEditor(id: id)),
+  ),
+);
+
 /// What the sheet (and the `/task/:id` page) shows for task [id]: the
 /// identity row, action tiles, subtasks and details, or "not here".
 class TaskSheetBody extends ConsumerWidget {

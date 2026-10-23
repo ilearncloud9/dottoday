@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/logging/logger.dart';
+import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
@@ -22,20 +25,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
-
-/// Opens the phone editor for [id] (docs/10 §5.2 E1: "on phones the task
-/// sheet's Edit opens the same fields as a full sheet").
-void showTaskEditor(BuildContext context, String id) => unawaited(
-  showModalBottomSheet<void>(
-    context: context,
-    // Above the iPhone's floating tab bar (M4.9: it covered Save).
-    useRootNavigator: true,
-    isScrollControlled: true,
-    useSafeArea: true,
-    builder: (_) =>
-        FractionallySizedBox(heightFactor: 0.94, child: TaskEditor(id: id)),
-  ),
-);
 
 /// The E1 fields for task [id]. Changes save as you type (debounced) and
 /// the last one is flushed when the editor closes, so dismissing never
@@ -116,6 +105,7 @@ class _FormState extends ConsumerState<_Form> {
   // Read up front: the last flush runs in dispose, where ref is off limits.
   late final UndoService _undo;
   late final Clock _clock;
+  late final Logger _logger;
   Timer? _timer;
   var _dirty = false;
 
@@ -125,6 +115,7 @@ class _FormState extends ConsumerState<_Form> {
     _opened = widget.task.occurrence;
     _undo = ref.read(undoServiceProvider);
     _clock = ref.read(clockProvider);
+    _logger = ref.read(loggerProvider);
   }
 
   @override
@@ -154,9 +145,17 @@ class _FormState extends ConsumerState<_Form> {
       title: title.isEmpty ? widget.task.occurrence.title : title,
       updatedAt: _clock.nowUtc(),
     );
-    await _undo.applyUndoable(
+    final written = await _undo.applyUndoable(
       WriteBatch(userId: row.userId, occurrences: [row]),
     );
+    // Not silent: a refused autosave is why Save finds nothing to ask.
+    if (written case Err(:final failure)) {
+      _logger.warn(
+        'editor.autosave_failed', // l10n-ignore: a log event
+        fields: {'id': row.id}, // l10n-ignore: a log field
+        error: failure,
+      );
+    }
   }
 
   /// Save (⏎ in the title, ⌘S): write now, ask which instances of a

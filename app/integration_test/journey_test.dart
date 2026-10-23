@@ -192,6 +192,7 @@ void main() {
     final view = editorScope.read(taskViewProvider(editorId)).value;
     debugPrint(
       'JOURNEY before Save: row="${view?.occurrence.title}" '
+      'typed="${tester.widgetList<EditableText>(find.descendant(of: find.byType(TaskEditor), matching: find.byType(EditableText))).map((e) => e.controller.text).join('|')}" '
       'series=${view?.occurrence.seriesId} seriesLoaded=${view?.series != null}',
     );
     // The editor's list builds what is in view: scroll down to Save.
