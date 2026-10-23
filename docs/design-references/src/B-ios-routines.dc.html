@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dottoday — Routines, thread fragments (iPhone)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3B6CF6}a:hover{color:#2B55CC}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #FAFAF8; color: #1A1A1C; font-family: Inter, system-ui, sans-serif; font-feature-settings: 'tnum' 1; display: flex; flex-direction: column; padding-bottom: 100px;">
+
+  <!-- Header (Inbox style) -->
+  <div style="padding: 58px 20px 0 20px; display: flex; align-items: flex-start; justify-content: space-between;">
+    <div style="display: flex; flex-direction: column; gap: 2px;">
+      <div style="font-size: 28px; line-height: 34px; font-weight: 700; letter-spacing: -0.02em;">Routines</div>
+      <div style="font-size: 13px; line-height: 18px; font-weight: 500; color: #6B6B70;">Reusable slices of thread</div>
+    </div>
+    <div style="width: 44px; height: 44px; border-radius: 50%; box-sizing: border-box; border: 2px dotted {{accent}}; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: {{accent}};" role="img" aria-label="3 routines, 3 free">3</div>
+  </div>
+
+  <!-- Routine cards -->
+  <div style="margin: 18px 16px 0 16px; display: flex; flex-direction: column; gap: 12px;">
+
+    <!-- Card: Morning -->
+    <article aria-label="Morning routine, 4 steps, 1 hour 15, starts at Wake Up" style="height: 150px; box-sizing: border-box; border-radius: 18px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(26,26,28,0.06), 0 0 0 1px #E2E2DE; padding: 14px 14px 14px 12px; display: flex; gap: 12px;">
+      <!-- mini thread -->
+      <div style="width: 40px; position: relative; flex-shrink: 0;" aria-hidden="true">
+        <div style="position: absolute; left: 19px; top: 0; bottom: 0; width: 0; border-left: 2px dotted #C9C9C4;"></div>
+        <div style="position: absolute; left: 11px; top: 0; width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid #2FA37A; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#2FA37A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="2"></circle><path d="M12 6v8M6 10l6 4 6-4M12 14l-4 8M12 14l4 8"></path></svg></div>
+        <div style="position: absolute; left: 18px; top: 18px; width: 4px; height: 10px; border-radius: 2px; background: #2FA37A; opacity: 0.6;"></div>
+        <div style="position: absolute; left: 11px; top: 30px; width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid #E5674F; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#E5674F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14l4-4 4 4 5-6 3 3"></path></svg></div>
+        <div style="position: absolute; left: 18px; top: 48px; width: 4px; height: 14px; border-radius: 2px; background: #E5674F; opacity: 0.6;"></div>
+        <div style="position: absolute; left: 11px; top: 64px; width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid #2E8FD6; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#2E8FD6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16M4 4h4v4M8 12l2 2M12 8l2 2"></path></svg></div>
+        <div style="position: absolute; left: 18px; top: 82px; width: 4px; height: 10px; border-radius: 2px; background: #2E8FD6; opacity: 0.6;"></div>
+        <div style="position: absolute; left: 11px; top: 94px; width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid #D99A1F; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#D99A1F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M6 12a6 6 0 0 1 12 0M4 16h16"></path></svg></div>
+        <div style="position: absolute; left: 18px; top: 112px; width: 4px; height: 10px; border-radius: 2px; background: #D99A1F; opacity: 0.6;"></div>
+      </div>
+      <!-- body -->
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 17px; font-weight: 600; letter-spacing: -0.01em;">Morning</span>
+        <span style="font-size: 12px; font-weight: 500; color: #6B6B70;">4 steps · 1 h 15 · starts at Wake Up</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;" aria-label="Steps">
+          <span style="padding: 3px 7px; border-radius: 999px; background: rgba(47,163,122,0.14); color: #1F7A58; font-size: 11px; font-weight: 600;">Wake up stretch</span>
+          <span style="padding: 3px 7px; border-radius: 999px; background: rgba(229,103,79,0.14); color: #B8452F; font-size: 11px; font-weight: 600;">Run</span>
+          <span style="padding: 3px 7px; border-radius: 999px; background: rgba(46,143,214,0.14); color: #1F6EA8; font-size: 11px; font-weight: 600;">Shower</span>
+          <span style="padding: 3px 7px; border-radius: 999px; background: rgba(217,154,31,0.16); color: #9A6B0E; font-size: 11px; font-weight: 600;">Breakfast</span>
+        </div>
+        <div style="flex: 1;"></div>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" aria-label="Drop Morning on today" style="height: 30px; padding: 0 12px; border-radius: 999px; border: 0; background: {{accent}}; color: #FFFFFF; font: 600 12px Inter, system-ui, sans-serif;">Drop on today</button>
+          <button type="button" aria-label="Edit Morning" style="height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid #E2E2DE; background: transparent; color: #1A1A1C; font: 500 12px Inter, system-ui, sans-serif;">Edit</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Card: Shutdown -->
+    <article aria-label="Shutdown routine, 3 steps, 40 minutes, ends at Bedtime" style="height: 150px; box-sizing: border-box; border-radius: 18px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(26,26,28,0.06), 0 0 0 1px #E2E2DE; padding: 14px 14px 14px 12px; display: flex; gap: 12px;">
+      <div style="width: 40px; position: relative; flex-shrink: 0;" aria-hidden="true">
+        <div style="position: absolute; left: 19px; top: 0; bottom: 0; width: 0; border-left: 2px dotted #C9C9C4;"></div>
+        <div style="position: absolute; left: 11px; top: 12px; width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid #6B6B70; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#6B6B70" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"></path><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"></path></svg></div>
+        <div style="position: absolute; left: 18px; top: 30px; width: 4px; height: 10px; border-radius: 2px; background: #6B6B70; opacity: 0.6;"></div>
+        <div style="position: absolute; left: 11px; top: 42px; width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid {{accent}}; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg></div>
+        <div style="position: absolute; left: 18px; top: 60px; width: 4px; height: 10px; border-radius: 2px; background: {{accent}}; opacity: 0.6;"></div>
+        <div style="position: absolute; left: 11px; top: 72px; width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid #7A5AF8; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#7A5AF8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V6a2 2 0 0 1 2-2h12v15"></path><path d="M4 19a2 2 0 0 0 2 2h12"></path></svg></div>
+        <div style="position: absolute; left: 18px; top: 90px; width: 4px; height: 14px; border-radius: 2px; background: #7A5AF8; opacity: 0.6;"></div>
+        <svg style="position: absolute; left: 13px; top: 108px;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A5AF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"></path></svg>
+      </div>
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 17px; font-weight: 600; letter-spacing: -0.01em;">Shutdown</span>
+        <span style="font-size: 12px; font-weight: 500; color: #6B6B70;">3 steps · 40 min · ends at Bedtime</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;" aria-label="Steps">
+          <span style="padding: 3px 7px; border-radius: 999px; background: rgba(107,107,112,0.14); color: #4F4F54; font-size: 11px; font-weight: 600;">Review today</span>
+          <span style="padding: 3px 7px; border-radius: 999px; background: rgba(59,108,246,0.12); color: {{accent}}; font-size: 11px; font-weight: 600;">Plan tomorrow</span>
+          <span style="padding: 3px 7px; border-radius: 999px; background: rgba(122,90,248,0.14); color: #5B3FD0; font-size: 11px; font-weight: 600;">Read</span>
+        </div>
+        <div style="flex: 1;"></div>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" aria-label="Drop Shutdown on today" style="height: 30px; padding: 0 12px; border-radius: 999px; border: 0; background: {{accent}}; color: #FFFFFF; font: 600 12px Inter, system-ui, sans-serif;">Drop on today</button>
+          <button type="button" aria-label="Edit Shutdown" style="height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid #E2E2DE; background: transparent; color: #1A1A1C; font: 500 12px Inter, system-ui, sans-serif;">Edit</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Card: Gym day -->
+    <article aria-label="Gym day routine, 3 steps, 1 hour 15, starts at 5:30 PM" style="height: 150px; box-sizing: border-box; border-radius: 18px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(26,26,28,0.06), 0 0 0 1px #E2E2DE; padding: 14px 14px 14px 12px; display: flex; gap: 12px;">
+      <div style="width: 40px; position: relative; flex-shrink: 0;" aria-hidden="true">
+        <div style="position: absolute; left: 19px; top: 0; bottom: 0; width: 0; border-left: 2px dotted #C9C9C4;"></div>
+        <div style="position: absolute; left: 11px; top: 0; width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid #D99A1F; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#D99A1F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><path d="M3 6h18M16 10a4 4 0 0 1-8 0"></path></svg></div>
+        <div style="position: absolute; left: 18px; top: 18px; width: 4px; height: 6px; border-radius: 2px; background: #D99A1F; opacity: 0.6;"></div>
+        <div style="position: absolute; left: 11px; top: 26px; width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid #2FA37A; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#2FA37A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3M19 12h3M5 8v8M19 8v8M8 6v12M16 6v12M8 12h8"></path></svg></div>
+        <div style="position: absolute; left: 18px; top: 44px; width: 4px; height: 48px; border-radius: 2px; background: #2FA37A; opacity: 0.6;"></div>
+        <div style="position: absolute; left: 11px; top: 94px; width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid #D64F86; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#D64F86" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6M10 2v4l-4 5v9a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-9l-4-5V2"></path></svg></div>
+        <div style="position: absolute; left: 18px; top: 112px; width: 4px; height: 6px; border-radius: 2px; background: #D64F86; opacity: 0.6;"></div>
+      </div>
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 17px; font-weight: 600; letter-spacing: -0.01em;">Gym day</span>
+        <span style="font-size: 12px; font-weight: 500; color: #6B6B70;">3 steps · 1 h 15 · starts at 5:30 PM</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;" aria-label="Steps">
+          <span style="padding: 3px 7px; border-radius: 999px; background: rgba(217,154,31,0.16); color: #9A6B0E; font-size: 11px; font-weight: 600;">Pack bag</span>
+          <span style="padding: 3px 7px; border-radius: 999px; background: rgba(47,163,122,0.14); color: #1F7A58; font-size: 11px; font-weight: 600;">Gym</span>
+          <span style="padding: 3px 7px; border-radius: 999px; background: rgba(214,79,134,0.14); color: #A8336A; font-size: 11px; font-weight: 600;">Protein</span>
+        </div>
+        <div style="flex: 1;"></div>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" aria-label="Drop Gym day on today" style="height: 30px; padding: 0 12px; border-radius: 999px; border: 0; background: {{accent}}; color: #FFFFFF; font: 600 12px Inter, system-ui, sans-serif;">Drop on today</button>
+          <button type="button" aria-label="Edit Gym day" style="height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid #E2E2DE; background: transparent; color: #1A1A1C; font: 500 12px Inter, system-ui, sans-serif;">Edit</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- New routine -->
+    <button type="button" aria-label="New routine, or save a selection from any day" style="height: 48px; border-radius: 18px; border: 1px dashed #C9C9C4; background: transparent; color: #6B6B70; font: 500 13px Inter, system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 14px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+      New routine <span style="color: #9A9AA0;">· or save a selection from any day</span>
+    </button>
+
+    <div style="display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; font-weight: 500; color: #9A9AA0;">
+      <span style="width: 10px; height: 10px; border-radius: 50%; box-sizing: border-box; border: 1.5px dotted #9A9AA0;" aria-hidden="true"></span>
+      Routine-start dots ring loud, like an alarm
+    </div>
+  </div>
+
+  <!-- Floating tab bar + the add dot (no tab active: routines open from Add › Suggestions and Settings) -->
+  <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; align-items: center; gap: 10px;">
+    <nav aria-label="Main" style="flex: 1; height: 60px; border-radius: 30px; background: #FFFFFF; box-shadow: 0 8px 24px rgba(26,26,28,0.10), 0 0 0 1px #E2E2DE; display: flex; align-items: center; justify-content: space-around; padding: 0 6px;">
+      <a href="#today" aria-label="Today" style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 52px; height: 48px; justify-content: center; color: #6B6B70; text-decoration: none;">
+        <div style="width: 10px; height: 10px; border-radius: 50%; box-sizing: border-box; border: 2px solid #6B6B70;"></div><span style="font-size: 10px; font-weight: 500;">Today</span>
+      </a>
+      <a href="#inbox" aria-label="Inbox" style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 52px; height: 48px; justify-content: center; color: #6B6B70; text-decoration: none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l2-8h14l2 8"></path><path d="M3 13v6h18v-6h-5a4 4 0 0 1-8 0z"></path></svg><span style="font-size: 10px; font-weight: 500;">Inbox</span>
+      </a>
+      <a href="#search" aria-label="Search" style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 52px; height: 48px; justify-content: center; color: #6B6B70; text-decoration: none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><span style="font-size: 10px; font-weight: 500;">Search</span>
+      </a>
+      <a href="#settings" aria-label="Settings" style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 52px; height: 48px; justify-content: center; color: #6B6B70; text-decoration: none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg><span style="font-size: 10px; font-weight: 500;">Settings</span>
+      </a>
+    </nav>
+    <button type="button" aria-label="Quick add" style="width: 60px; height: 60px; border-radius: 50%; border: 0; background: {{accent}}; color: #FFFFFF; box-shadow: 0 8px 24px rgba(59,108,246,0.35); display: flex; align-items: center; justify-content: center; padding: 0;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+    </button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#3B6CF6","options":["#3B6CF6","#1F9E9E","#E5674F","#7A5AF8"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#3B6CF6' };
+  }
+}
+</script>
+</body>
+</html>

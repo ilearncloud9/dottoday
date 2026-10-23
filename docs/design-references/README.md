@@ -74,3 +74,20 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Travel banner "You're now in … — keep times or shift?"; on phones a two-action strip puts its actions under the text (also the in-app reminder) | §5.4 strip, 07 travelling (M5.9) | `zone_banner_*`, `in_app_alert_banner_*` |
 | Account page signed in (Sign out, Sign out everywhere, Delete account with "Export my data first"), the email steps on Account and O5 (address → "Check your mail"), O5 "Welcome back" | §5.3 "Account page", §5.1 O5, 06 §2/§6 (M6.1, M6.5) | `settings_page_account_signed_in_*`, `onboarding_*` |
 | Sync status as text: "Kody · synced just now" under Settings (as `A-ios-settings`), "● Synced · just now" at the foot of the Inbox sidebar (as `A-mac-week-alt3-board`), with syncing / offline / paused / needs-you states | the two renders' text, §5.4 (M6.3) | `settings_synced_*`, `sync_status_line_*` |
+
+## Set B (Concept A+, standout features)
+
+Rendered at 2× from the canvas (version 128, 2026-10-23). iPhone 390×844 only; Android and Mac/web derive per `10-ui-concept-a.md` §4 (same geometry, states and copy; only the allowed chrome differs). Spec: `docs/11-standout-roadmap.md`.
+
+| File | Shows | Roadmap item |
+|---|---|---|
+| `png/B-ios-live-activity.png` | lock screen with the Dynamic Island expanded state, the Live Activity card (mini thread, Done / +15 intents) and a time-sensitive dot-start notification | A0, A1 |
+| `png/B-ios-focus.png` | Focus the dot: 160 px ring, current subtask with its own timer, step list, chime + Focus toggles, Done / +15 / Next step | A3, B2 model |
+| `png/B-ios-break-it-down.png` | Break it down proposal: steps as a mini thread with per-step durations, depth 2 sub-steps, total, Accept / Discard, "nothing saved until you accept" | B1, B3 proposal |
+| `png/B-ios-rebalance.png` | Rebalance proposal: ghost current thread vs proposed thread, per-change chips (shifted / pinned / shrunk / moved to tomorrow), per-row undo, three rule toggles, Accept plan | C1, B3 proposal |
+| `png/B-ios-reality-thread.png` | Today with Plan / Reality toggle: planned ghost lane + actual lane, "started 12 min late · took 34 min", "usually 2 h 20", insight card | C3, B1 timestamps |
+| `png/B-ios-routines.png` | Routines list: mini thread per routine, steps as chips, Drop on today / Edit, "save a selection from any day" | C2 |
+| `png/B-ios-week-review.png` | Sunday review, chosen design "seven dots": one dot per day sized by hours planned, ring split into that day's tasks (done solid / not done faint), done count in the centre, tap a day to pop out its thread; chips, one sentence, carry-forward, share image | D1, B5 snapshot |
+| `png/B-ios-low-energy.png` | Low-energy mode: one next dot, no counts, "Later" pile as dots, propose-to-tomorrow, nudges off | D2 |
+
+Derived (no render; build from the spec and components): Smallest step reminder/row (B2), Unstick row (B3), notification-health panel and "send me a test alarm" step (A0), Android ongoing notification (A1, mirror of the Live Activity card in M3 style), interactive widgets and Control Center controls (A1), Mac menu-bar dot (A1), thread journal (D3), body-double dot in the Today header (E1), brain-dump sheet (B4, reuse Add step 1 + ProposalSheet).
