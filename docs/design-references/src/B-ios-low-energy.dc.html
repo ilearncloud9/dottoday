@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dottoday — Low-energy mode (iPhone)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3B6CF6}a:hover{color:#2B55CC}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #FAFAF8; color: #1A1A1C; font-family: Inter, system-ui, sans-serif; font-feature-settings: 'tnum' 1; display: flex; flex-direction: column; padding-bottom: 100px;">
+
+  <!-- Header, softened -->
+  <div style="padding: 58px 20px 0 20px; display: flex; align-items: flex-start; justify-content: space-between;">
+    <div style="display: flex; flex-direction: column; gap: 2px;">
+      <button type="button" aria-label="Show October" aria-expanded="false" style="display: inline-flex; align-items: center; gap: 5px; padding: 0; border: 0; background: transparent; font: 600 12px/16px Inter, system-ui, sans-serif; color: #6B6B70; text-transform: uppercase; letter-spacing: 0.06em;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7A5AF8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"></path></svg>
+        Wed 21 Oct · Low-energy
+      </button>
+      <div style="font-size: 28px; line-height: 34px; font-weight: 700; letter-spacing: -0.02em;">Take it easy, Kody</div>
+    </div>
+    <!-- Right of the header: the quiet mode pill above the day dot (kept) -->
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; margin-top: -2px;">
+      <div style="display: flex; align-items: center; gap: 8px; height: 28px; padding: 0 6px 0 10px; border-radius: 999px; background: #F1F1EE; box-shadow: 0 0 0 1px #E2E2DE; font-size: 12px; font-weight: 600; color: #6B6B70; white-space: nowrap;">
+        <span id="s-low">Low-energy · on</span>
+        <button type="button" role="switch" aria-checked="true" aria-labelledby="s-low" style="width: 30px; height: 18px; border-radius: 9px; border: 0; padding: 0; background: {{accent}}; position: relative; flex-shrink: 0;"><span style="position: absolute; top: 2px; left: 14px; width: 14px; height: 14px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 2px rgba(26,26,28,0.25);"></span></button>
+      </div>
+      <div style="width: 44px; height: 44px; border-radius: 50%; background: conic-gradient({{accent}} 0 46%, #E2E2DE 46% 100%); display: flex; align-items: center; justify-content: center;" role="img" aria-label="Day 46 percent through">
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #FAFAF8; display: flex; align-items: center; justify-content: center;">
+          <div style="width: 10px; height: 10px; border-radius: 50%; background: {{accent}};"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEXT DOT: the one thing -->
+  <section aria-label="Next: Deep work, roadmap" style="margin: 26px 20px 0 20px; height: 300px; box-sizing: border-box; border-radius: 22px; background: #FFFFFF; box-shadow: 0 0 0 1px #E2E2DE, 0 4px 14px rgba(26,26,28,0.05); padding: 22px 20px 18px 20px; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+    <div style="width: 96px; height: 96px; border-radius: 50%; background: conic-gradient({{accent}} 0 68%, rgba(59,108,246,0.22) 68% 100%); display: flex; align-items: center; justify-content: center;" role="img" aria-label="Live, 68 percent through">
+      <div style="width: 78px; height: 78px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3B6CF6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6"></path></svg>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;">
+      <div style="font-size: 22px; line-height: 28px; font-weight: 700; letter-spacing: -0.02em;">Deep work: roadmap</div>
+      <div style="font-size: 14px; line-height: 20px; font-weight: 500; color: #6B6B70;">until 11:00 · 38 min left</div>
+    </div>
+    <div style="width: 100%; display: flex; flex-direction: column; gap: 4px;">
+      <button type="button" aria-label="Mark Deep work done" style="width: 100%; height: 48px; border-radius: 999px; border: 0; background: {{accent}}; color: #FFFFFF; font: 600 16px Inter, system-ui, sans-serif;">Done</button>
+      <button type="button" aria-label="Not today, move Deep work to tomorrow" style="width: 100%; height: 36px; border-radius: 999px; border: 0; background: transparent; color: #6B6B70; font: 500 14px Inter, system-ui, sans-serif;">Not today</button>
+    </div>
+  </section>
+
+  <!-- LATER: collapsed pile, dots only -->
+  <section aria-label="Later, 5 tasks" style="margin: 14px 20px 0 20px; border-radius: 18px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(26,26,28,0.06), 0 0 0 1px #E2E2DE; padding: 12px 14px 14px 14px;">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B70;">Later · 5</span>
+      <button type="button" aria-label="Expand Later" aria-expanded="false" style="width: 24px; height: 24px; border: 0; padding: 0; background: transparent; color: #9A9AA0; display: flex; align-items: center; justify-content: center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+      <div role="img" aria-label="Reply to email" style="width: 32px; height: 32px; border-radius: 50%; box-sizing: border-box; border: 2px solid #6B6B70; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6B6B70" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></div><div role="img" aria-label="Lunch with Sam" style="width: 32px; height: 32px; border-radius: 50%; box-sizing: border-box; border: 2px solid #D64F86; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D64F86" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8M11 3v8M9 11v10M17 3c-2 0-3 2-3 5v4h3"></path><path d="M17 12v9"></path></svg></div><div role="img" aria-label="Spanish lesson" style="width: 32px; height: 32px; border-radius: 50%; box-sizing: border-box; border: 2px solid #1F9E9E; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F9E9E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V6a2 2 0 0 1 2-2h12v15"></path><path d="M4 19a2 2 0 0 0 2 2h12"></path></svg></div><div role="img" aria-label="Weekly notes" style="width: 32px; height: 32px; border-radius: 50%; box-sizing: border-box; border: 2px solid #D99A1F; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D99A1F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"></path></svg></div><div role="img" aria-label="Plan Friday" style="width: 32px; height: 32px; border-radius: 50%; box-sizing: border-box; border: 2px solid #2E8FD6; background: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2E8FD6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg></div>
+    </div>
+  </section>
+
+  <!-- Rebalance, offered once -->
+  <div style="margin: 14px 20px 0 20px; border-radius: 18px; border: 1px dashed #C9C9C4; padding: 12px 10px 12px 14px; display: flex; align-items: center; gap: 10px;">
+    <span style="flex: 1; font-size: 14px; line-height: 19px; font-weight: 500; color: #1A1A1C;">Move everything optional to tomorrow?</span>
+    <button type="button" aria-label="Propose, open Rebalance" style="height: 32px; padding: 0 14px; border-radius: 999px; border: 0; background: {{accent}}; color: #FFFFFF; font: 600 13px Inter, system-ui, sans-serif; flex-shrink: 0;">Propose</button>
+  </div>
+
+  <div style="margin: 18px 20px 0 20px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; line-height: 16px; font-weight: 500; color: #9A9AA0;">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0v5l2 3H4l2-3z"></path><path d="M10 20a2 2 0 0 0 4 0"></path><path d="M3 3l18 18"></path></svg>
+    Nudges are off until tomorrow's Wake Up
+  </div>
+
+  <!-- Floating tab bar + the add dot -->
+  <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; align-items: center; gap: 10px;">
+    <nav aria-label="Main" style="flex: 1; height: 60px; border-radius: 30px; background: #FFFFFF; box-shadow: 0 8px 24px rgba(26,26,28,0.10), 0 0 0 1px #E2E2DE; display: flex; align-items: center; justify-content: space-around; padding: 0 6px;">
+      <a href="#today" aria-label="Today" style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 52px; height: 48px; justify-content: center; border-radius: 24px; background: rgba(59,108,246,0.12); color: #3B6CF6; text-decoration: none;">
+        <div style="width: 10px; height: 10px; border-radius: 50%; background: #3B6CF6;"></div><span style="font-size: 10px; font-weight: 600;">Today</span>
+      </a>
+      <a href="#inbox" aria-label="Inbox" style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 52px; height: 48px; justify-content: center; color: #6B6B70; text-decoration: none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l2-8h14l2 8"></path><path d="M3 13v6h18v-6h-5a4 4 0 0 1-8 0z"></path></svg><span style="font-size: 10px; font-weight: 500;">Inbox</span>
+      </a>
+      <a href="#search" aria-label="Search" style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 52px; height: 48px; justify-content: center; color: #6B6B70; text-decoration: none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><span style="font-size: 10px; font-weight: 500;">Search</span>
+      </a>
+      <a href="#settings" aria-label="Settings" style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 52px; height: 48px; justify-content: center; color: #6B6B70; text-decoration: none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg><span style="font-size: 10px; font-weight: 500;">Settings</span>
+      </a>
+    </nav>
+    <button type="button" aria-label="Quick add" style="width: 60px; height: 60px; border-radius: 50%; border: 0; background: {{accent}}; color: #FFFFFF; box-shadow: 0 8px 24px rgba(59,108,246,0.35); display: flex; align-items: center; justify-content: center; padding: 0;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+    </button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#3B6CF6","options":["#3B6CF6","#1F9E9E","#E5674F","#7A5AF8"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#3B6CF6' };
+  }
+}
+</script>
+</body>
+</html>

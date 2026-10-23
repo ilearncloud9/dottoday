@@ -48,6 +48,9 @@ Everything here is **free tier** unless marked *Phase 2*.
 - "Add another" keeps the sheet open; multi-line paste → one task per non-empty line. (R-07)
 - Editor fields: title (required, ≤ 200 chars), notes (markdown-lite, links tappable, ≤ 10 000 chars), start, duration, colour, icon, subtasks (≤ 50), alerts (≤ 5), recurrence, pinned, travel-time buffer (0–180 min), energy level (optional, low/med/high). (R-02, R-17)
 - Saving is optimistic; the sheet closes immediately.
+- Subtasks gain an optional duration each and an order; a task's duration may be the sum of its steps.
+  Occurrences record actual start and actual end timestamps when the user starts/completes them
+  (`11-standout-roadmap.md` B1, B2).
 
 ## F3. Inbox
 
@@ -93,6 +96,11 @@ Everything here is **free tier** unless marked *Phase 2*.
   A renamed task's pending alerts are re-posted (the payload keeps a short hash of the shown text).
 - Custom sound from a bundled set; respects system Focus/DND. (R-10)
 - Web: Web Push via service worker when granted; fallback to in-app banner.
+- Delivery guarantees (`11-standout-roadmap.md` A0, milestone M6.5): dot-start notifications use the
+  time-sensitive interruption level on iOS and a dedicated alarm channel with exact alarms on Android;
+  the first dot of the day and routine-start dots are alarm-loud by default; onboarding includes a test
+  alarm; Settings › Reminders has a notification-health panel reading the real OS state (permission,
+  exact alarms, battery exemption, Focus/DND, device clock).
 
 ## F7. Sync, accounts, backup
 
@@ -113,19 +121,38 @@ Everything here is **free tier** unless marked *Phase 2*.
 ## F9. Home-screen widgets & watch (mobile/desktop)
 
 - iOS/Android widgets: "Next up" (small), "Today timeline" (medium/large), "Inbox count". macOS: menu-bar "next up". Data comes from the local DB via an app-group/shared file; refresh on every write. (R-08)
+- iOS Live Activity / Dynamic Island and an Android ongoing notification for the live dot; interactive
+  widget actions; Control Center / Action button controls. All surfaces read the day snapshot and call
+  the five App Intents only; none talk to Supabase (`11-standout-roadmap.md` A1, B5, B6).
 - Apple Watch complication and glance: Phase 2 (not blocking v1), but data layer designed for it.
+  Watch rule (ADR-0010): the watch never authenticates — no account, network or token on the wrist; the
+  phone pushes the day snapshot; check-offs and +15 queue on the watch; native app (Swift / Compose).
 
 ## F10. Onboarding
 
-- At most 3 input screens: pick day start/end (O2), pick first tasks (O3, skippable; suggestion chips or Quick Add), account (O5, optional). Optional calendar connect is a row on the Reminders screen (O4). Welcome (O1), Reminders (O4) and Done (O6) ask for nothing beyond the permission prompt. Skippable. Finishes in under 90 s. Screens: `10-ui-concept-a.md` §5.1.
+- At most 3 input screens: pick day start/end (O2), pick first tasks (O3, skippable; suggestion chips or Quick Add), account (O5, optional). Optional calendar connect is a row on the Reminders screen (O4). Welcome (O1), Reminders (O4) and Done (O6) ask for nothing beyond the permission prompt. O4 Reminders gains "Send me a test alarm" (`11-standout-roadmap.md` A0). Skippable. Finishes in under 90 s. Screens: `10-ui-concept-a.md` §5.1.
 
 ## F11. Feedback & changelog
 
 - Settings → Send feedback (opens mail composer with app version, platform, redacted diagnostics opt-in). In-app "What's new" after updates. (R-19)
 
-## Phase 2 (spec later; do not build in v1)
+## Beyond v1 — standout roadmap and Phase 2
 
-- AI planning (natural-language brain dump → scheduled day, editable before accepting, "add all", conversation history retained).
-- Habit streaks and analytics, energy-based planning.
-- Pro tier (themes, icon packs, AI, analytics). Core stays free. (R-18)
-- Shared schedules, watch app, Shortcuts/Intents, Siri/Assistant.
+The milestones after v1's core (M7 calendars, M8 export/l10n/device QA) come from `11-standout-roadmap.md`:
+
+| Milestone | Contents |
+|---|---|
+| M6.5 Delivery guarantees (before M7) | A0 alarms that fire, notification health, test alarm, background sync; B1 actual timestamps; B2 subtask durations |
+| M9 See time | A1 Live Activity, ongoing notification, interactive widgets, controls, menu bar; B5 day snapshot; B6 App Intents |
+| M10 Start | B4 ThinkingService (on-device first), B3 ProposalSheet, B1 Break it down, B2 Smallest step, B3 Unstick, A3 Focus |
+| M11 Control | C1 Rebalance proposal, C3 Reality thread, C2 Routines, C4 energy suggestions (behind a switch) |
+| M12 Reflect + capture | D1 weekly review + share, D2 low-energy mode, D3 thread journal, B6 capture anywhere, B4 brain-dump |
+
+Phase 2 (ideas, not committed — the owner decides later): F1 Windows/Linux, F2 integrations (Reminders,
+Google Tasks, Todoist, Notion), E1 body double, A2 wallpaper / watch face, the watch app (F3, ADR-0010),
+B5 paper plan, shared/household threads.
+
+Pricing principle: core free forever (R-18). The free/Pro split in `11-standout-roadmap.md` is a **draft
+for the owner's review**; until it is signed off every feature is built ungated, and the only pricing
+code is one `entitlements` service with a single `isPro` flag, true in all builds — no paywall, purchase
+flow or store products.

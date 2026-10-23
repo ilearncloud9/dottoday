@@ -163,3 +163,9 @@ summaries, not individual decisions. Decide, record the reason in the commit bod
 - Every UI task is done only when it meets `10-ui-concept-a.md` §7 (golden vs reference, both themes, three widths, a11y, l10n, screenshot sweep entry).
 - Screens with no reference render (onboarding O1–O6, secondary editors, system states) are still in scope: derive them from §5.3–5.4 and the components; add a golden for each and note it in `docs/design-references/README.md` under "derived".
 - Decide yourself (per §10): spacing within ±4 px of the render, icon paths, copy that is not in a render, state handling. Must ask: removing or merging a screen from the inventory, changing the nav set/order, changing a dot state's meaning, adding a third-party UI package.
+- The standout roadmap is `docs/11-standout-roadmap.md` (ADR-0009, ADR-0010), with set B renders in `docs/design-references/` (README section "set B"). It extends `10-ui-concept-a.md`; §3–§7 of that document still govern every screen.
+- Build the shared blocks (B1–B6 in `11-standout-roadmap.md` §0) before the features that use them; never fork a second proposal sheet, model service or snapshot format.
+- Proposal rule: any model- or rule-generated change (break down, rebalance, brain-dump, routine drop) is rendered by `ProposalSheet` and written only on Accept. A test proving nothing is written before Accept is part of done for each flow.
+- Surface rule: widgets, Live Activity, ongoing notification, menu bar, controls and the watch read `DaySnapshot` and call the five App Intents only; none talk to Supabase.
+- No-shame rule: no streaks, no red for incomplete, no "late/missed/failed" in user-facing copy; a string audit is part of done for D1–D3.
+- Must-ask additions: adding a native target (Live Activity extension, widget extension, watch app), any cloud model endpoint, anything that sends task text off-device.
