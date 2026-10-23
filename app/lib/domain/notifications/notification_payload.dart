@@ -29,6 +29,7 @@ String encodeNotificationPayload(
   'k': n.kind.name,
   's': ?n.sound,
   if (n.silent) 'q': true,
+  if (n.loud) 'l': true,
   if (n.purpose != NotificationPurpose.task) 'p': n.purpose.name,
 });
 
@@ -52,6 +53,7 @@ PlannedNotification? decodeNotificationPayload(int id, String? raw) {
       kind: AlertKind.values.byName(map['k']! as String),
       sound: map['s'] as String?,
       silent: map['q'] == true,
+      loud: map['l'] == true,
       purpose: NotificationPurpose.values.byName(
         (map['p'] as String?) ?? NotificationPurpose.task.name,
       ),

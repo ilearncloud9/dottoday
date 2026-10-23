@@ -1,14 +1,24 @@
 import 'dart:ui';
 
 import 'package:dottoday/core/clock/clock.dart';
+import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
+import 'package:dottoday/data/auth/account_providers.dart';
+import 'package:dottoday/data/auth/supabase_start.dart';
+import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
+import 'package:dottoday/data/sync/background_sync.dart';
+import 'package:dottoday/data/sync/supabase_sync_gateway.dart';
+import 'package:dottoday/data/sync/sync_engine.dart';
+import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:workmanager/workmanager.dart';
 
@@ -42,7 +52,8 @@ Future<void> scheduleBackgroundRefresh() async {
 }
 
 /// The background isolate's entry point: a small composition root with
-/// the same database and providers as the app, then one [DailyRefresh].
+/// the same database and providers as the app, then one [DailyRefresh] —
+/// which here also syncs once when signed in (M6.5.6).
 @pragma('vm:entry-point')
 void backgroundRefreshDispatcher() {
   Workmanager().executeTask((task, _) async {
@@ -53,8 +64,17 @@ void backgroundRefreshDispatcher() {
     // notification and widget text.
     await initializeDateFormatting();
     final logger = Logger(const DeveloperLogSink(), const SystemClock());
+    // Restores the session from the Keychain/Keystore vault, as the app
+    // does; null (no config, or it can't start) keeps the job local.
+    final client = await startSupabase(Env.fromEnvironment(), logger);
     final container = ProviderContainer(
-      overrides: [loggerProvider.overrideWithValue(logger)],
+      overrides: [
+        loggerProvider.overrideWithValue(logger),
+        supabaseClientProvider.overrideWithValue(client),
+        backgroundSyncProvider.overrideWith(
+          (ref) => client == null ? null : _oneShotSync(ref, client, logger),
+        ),
+      ],
     );
     try {
       final profile = await container.read(localProfileProvider.future);
@@ -64,6 +84,19 @@ void backgroundRefreshDispatcher() {
       return false;
     } finally {
       container.dispose();
+      if (client != null) await Supabase.instance.dispose();
     }
   });
 }
+
+BackgroundSync _oneShotSync(Ref ref, SupabaseClient client, Logger logger) =>
+    BackgroundSync(
+      engine: SyncEngine(
+        db: ref.watch(appDatabaseProvider),
+        gateway: SupabaseSyncGateway(client),
+        hlc: ref.watch(sharedHlcProvider),
+        clock: ref.watch(clockProvider),
+      ),
+      accountId: () => client.auth.currentUser?.id,
+      logger: logger,
+    );

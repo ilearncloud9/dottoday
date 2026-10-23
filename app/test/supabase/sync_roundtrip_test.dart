@@ -4,6 +4,7 @@ library;
 import 'package:dottoday/core/router/auth_callback.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/sync/account_adoption.dart';
+import 'package:dottoday/data/sync/background_sync.dart';
 import 'package:dottoday/data/sync/supabase_sync_gateway.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/domain/entities/alert.dart';
@@ -156,7 +157,13 @@ void main() {
       ),
     );
     await b.engine.run(b.account);
-    await a.engine.run(a.account);
+    // a picks it up the way the OS background job does (M6.5.6).
+    final job = BackgroundSync(
+      engine: a.engine,
+      accountId: () => a.account,
+      logger: a.h.logger,
+    );
+    expect(await job.run(a.account), isTrue);
     final back = await (a.h.db.select(
       a.h.db.occurrences,
     )..where((o) => o.id.equals(task.id))).getSingle();

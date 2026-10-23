@@ -25,6 +25,15 @@ void main() {
         silent: true,
         purpose: NotificationPurpose.bedtime,
       ),
+      // Loud (M6.5.3) must survive too, or every re-plan re-posts it.
+      PlannedNotification(
+        id: 8,
+        occurrenceId: 'first',
+        alertIndex: 0,
+        fireAtUtc: DateTime.utc(2026, 10, 24, 6),
+        kind: AlertKind.atStart,
+        loud: true,
+      ),
     ];
     for (final n in variants) {
       expect(decodeNotificationPayload(n.id, encodeNotificationPayload(n)), n);
