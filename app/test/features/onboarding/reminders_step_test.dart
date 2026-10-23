@@ -1,4 +1,3 @@
-import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
@@ -37,11 +36,7 @@ void main() {
 
   testWidgets('allowed: on to the account step', (tester) async {
     final os = _Answers(PermissionState.granted);
-    final c = await pumpOnboarding(
-      tester,
-      progress: _step,
-      extra: [notificationPermissionProvider.overrideWithValue(os)],
-    );
+    final c = await pumpOnboarding(tester, progress: _step, permission: os);
     await tester.ensureVisible(find.text('Allow notifications'));
     await tester.tap(find.text('Allow notifications'));
     await tester.pumpAndSettle();
@@ -51,11 +46,7 @@ void main() {
 
   testWidgets('denied: the notice, then Continue', (tester) async {
     final os = _Answers(PermissionState.denied);
-    final c = await pumpOnboarding(
-      tester,
-      progress: _step,
-      extra: [notificationPermissionProvider.overrideWithValue(os)],
-    );
+    final c = await pumpOnboarding(tester, progress: _step, permission: os);
     await tester.ensureVisible(find.text('Allow notifications'));
     await tester.tap(find.text('Allow notifications'));
     await tester.pumpAndSettle();
@@ -69,11 +60,7 @@ void main() {
 
   testWidgets('Not now asks nothing; the Bedtime switch saves', (tester) async {
     final os = _Answers(PermissionState.granted);
-    final c = await pumpOnboarding(
-      tester,
-      progress: _step,
-      extra: [notificationPermissionProvider.overrideWithValue(os)],
-    );
+    final c = await pumpOnboarding(tester, progress: _step, permission: os);
     await tester.tap(find.text('At Bedtime'));
     await tester.pumpAndSettle();
     final stored = await c.read(settingsRepositoryProvider).findLocalProfile();

@@ -1,4 +1,3 @@
-import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/shared/pickers/alerts/alerts_editor.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -36,10 +35,7 @@ void main() {
     tester,
   ) async {
     final denied = _Denied(opens: false);
-    await pumpSettings(
-      tester,
-      overrides: [notificationPermissionProvider.overrideWithValue(denied)],
-    );
+    await pumpSettings(tester, permission: denied);
     expect(find.text('Notifications are off'), findsOneWidget);
     await tester.ensureVisible(find.text('Open settings'));
     await tester.tap(find.text('Open settings'));

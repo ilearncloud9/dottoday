@@ -8,9 +8,14 @@ part of 'permission_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// The OS permission on iOS, Android and macOS (M5.1); the web's arrives
+/// with web push (M5.3).
 
 @ProviderFor(notificationPermission)
 final notificationPermissionProvider = NotificationPermissionProvider._();
+
+/// The OS permission on iOS, Android and macOS (M5.1); the web's arrives
+/// with web push (M5.3).
 
 final class NotificationPermissionProvider
     extends
@@ -20,6 +25,8 @@ final class NotificationPermissionProvider
           NotificationPermission
         >
     with $Provider<NotificationPermission> {
+  /// The OS permission on iOS, Android and macOS (M5.1); the web's arrives
+  /// with web push (M5.3).
   NotificationPermissionProvider._()
     : super(
         from: null,
@@ -55,7 +62,7 @@ final class NotificationPermissionProvider
 }
 
 String _$notificationPermissionHash() =>
-    r'2c153a49344495b0b13b5e2630130fc24475eda4';
+    r'b03e3a21e2df0ee999cd9d139a63e5561038b2ad';
 
 /// The permission now; re-read with `ref.invalidate` (on resume, after
 /// Open settings).

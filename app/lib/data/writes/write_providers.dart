@@ -2,7 +2,9 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
+import 'package:dottoday/data/notifications/os_notification_gateway.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
@@ -13,14 +15,27 @@ import 'package:dottoday/domain/notifications/notification_planner.dart';
 import 'package:dottoday/domain/recurrence/materialiser.dart';
 import 'package:dottoday/domain/widgets/widget_snapshot.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'write_providers.g.dart';
 
-/// OS notification scheduler; replaced per platform in M5.1/M5.3.
+/// OS notification scheduler (M5.1): the OS on iOS, Android and macOS;
+/// unwired on the web until web push (M5.3).
 @Riverpod(keepAlive: true)
-NotificationGateway notificationGateway(Ref ref) =>
-    const UnwiredNotificationGateway();
+NotificationGateway notificationGateway(Ref ref) {
+  if (kIsWeb) return const UnwiredNotificationGateway();
+  return OsNotificationGateway(
+    // Read lazily: starting the platform wires the tap handler, which
+    // writes through this provider's own dependants.
+    platform: () async {
+      final started = await ref.read(notificationsStartedProvider.future);
+      return started!;
+    },
+    occurrences: ref.watch(occurrenceRepositoryProvider),
+    profile: () => latestProfile(ref),
+  );
+}
 
 /// Home-screen widget snapshot target; replaced in M5.4.
 @Riverpod(keepAlive: true)

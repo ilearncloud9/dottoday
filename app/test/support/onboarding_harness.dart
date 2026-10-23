@@ -1,6 +1,8 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
+import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/onboarding/onboarding_gate.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ Future<ProviderContainer> pumpOnboarding(
   List<Override> extra = const [],
   FakeOccurrenceRepository? repo,
   Size size = const Size(390, 844),
+  NotificationPermission? permission,
 }) async {
   tester.view
     ..physicalSize = size
@@ -30,6 +33,8 @@ Future<ProviderContainer> pumpOnboarding(
         now: DateTime.utc(2026, 10, 21, 9),
         occurrences: repo,
         profile: testProfile(),
+        notificationPermission:
+            permission ?? const UnwiredNotificationPermission(),
       ),
       onboardingProvider.overrideWith(() => FakeOnboarding(progress)),
       ...extra,

@@ -4,6 +4,8 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
+import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
@@ -14,6 +16,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
@@ -353,6 +356,8 @@ List<Override> timelineOverrides({
   Profile? profile,
   Stream<DateTime>? minuteTicks,
   List<String> recentSearches = const [],
+  NotificationPermission notificationPermission =
+      const UnwiredNotificationPermission(),
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
@@ -376,6 +381,11 @@ List<Override> timelineOverrides({
     searchRepositoryProvider.overrideWithValue(FakeSearchRepository(repo)),
     recentSearchesProvider.overrideWith(
       () => FakeRecentSearches(recentSearches),
+    ),
+    // No OS plugin under `flutter test` (M5.1).
+    notificationPermissionProvider.overrideWithValue(notificationPermission),
+    notificationGatewayProvider.overrideWithValue(
+      const UnwiredNotificationGateway(),
     ),
   ];
 }

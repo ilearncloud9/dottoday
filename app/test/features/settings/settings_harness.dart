@@ -3,10 +3,12 @@ import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
 import 'package:dottoday/features/settings/pages/settings_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
@@ -48,6 +50,7 @@ Future<SettingsHarness> pumpSettings(
   String location = AppRoutes.settings,
   List<Override> overrides = const [],
   List<String> recentSearches = const [],
+  NotificationPermission? permission,
 }) async {
   tester.view
     ..physicalSize = size
@@ -62,6 +65,8 @@ Future<SettingsHarness> pumpSettings(
         occurrences: occurrences,
         profile: testProfile(settings: settings).copyWith(displayName: 'Kody'),
         recentSearches: recentSearches,
+        notificationPermission:
+            permission ?? const UnwiredNotificationPermission(),
       ),
       linkLauncherProvider.overrideWithValue(links),
       appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),

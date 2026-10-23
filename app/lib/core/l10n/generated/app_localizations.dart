@@ -4513,7 +4513,7 @@ abstract class AppLocalizations {
   /// Onboarding O4 explanation.
   ///
   /// In en, this message translates to:
-  /// **'Dottoday can remind you just before a task starts, and at Bedtime show you tomorrow\'s first task.'**
+  /// **'Dottoday reminds you when a task starts and before bedtime. You can change this any time in Settings.'**
   String get onboardingRemindersBody;
 
   /// Onboarding O4: the task-start reminder.
@@ -4677,6 +4677,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{done} of {total}'**
   String accountRestoreCount(int done, int total);
+
+  /// Body of an alert some minutes before a task.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts in {minutes, plural, =1{1 minute} other{{minutes} minutes}}'**
+  String notifStartsIn(int minutes);
+
+  /// Body of an alert at a task's start.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting now'**
+  String get notifStartsNow;
+
+  /// Body of an alert at a task's end.
+  ///
+  /// In en, this message translates to:
+  /// **'Ending now'**
+  String get notifEndsNow;
+
+  /// Body of an overdue alert.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended {minutes, plural, =1{1 minute} other{{minutes} minutes}} ago. Done?'**
+  String notifOverdue(int minutes);
+
+  /// Body of the reminder a Snooze sets.
+  ///
+  /// In en, this message translates to:
+  /// **'Snoozed reminder'**
+  String get notifSnoozed;
+
+  /// Title of the Bedtime reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Bedtime'**
+  String get notifBedtimeTitle;
+
+  /// Bedtime reminder body.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow starts with {title} at {time}.'**
+  String notifBedtimeFirst(String title, String time);
+
+  /// Bedtime reminder body when tomorrow is empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned for tomorrow yet.'**
+  String get notifBedtimeFree;
+
+  /// Notification action: mark the task done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get notifActionDone;
+
+  /// Notification action: remind again in 10 minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze 10 min'**
+  String get notifActionSnooze;
+
+  /// Notification action: open the task.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get notifActionOpen;
+
+  /// Android notification channel name.
+  ///
+  /// In en, this message translates to:
+  /// **'Task alerts'**
+  String get notifChannelAlerts;
+
+  /// Android channel description.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders before, at and after your tasks'**
+  String get notifChannelAlertsDetail;
+
+  /// Android notification channel name.
+  ///
+  /// In en, this message translates to:
+  /// **'Bedtime'**
+  String get notifChannelSummary;
+
+  /// Android channel description.
+  ///
+  /// In en, this message translates to:
+  /// **'The nightly look at tomorrow'**
+  String get notifChannelSummaryDetail;
 }
 
 class _AppLocalizationsDelegate

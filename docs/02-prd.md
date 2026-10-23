@@ -84,6 +84,13 @@ Everything here is **free tier** unless marked *Phase 2*.
   slots); the planner keeps the earliest 64 on iOS and plans 7 days ahead. Payloads carry the occurrence
   ID only (06 §1).
 - Actions on the notification: Done, Snooze 10 min (shifts followers per setting), Open. (R-04)
+- Clarified in M5.1: the actions bring Dottoday forward and are handled in the app (one database
+  connection, no background isolate); Done ticks that occurrence only (R-09). Snooze re-reminds in 10
+  minutes and moves nothing: a notification can't ask "shift the rest?", so shifting later tasks is
+  offered in the app (Running late nudge/sheet) under the shift-followers setting. Tapping the body = Open.
+- Notification text is the task title over when ("Starts in 10 minutes", "Starting now", "Ending now",
+  "Ended 15 minutes ago. Done?", "Snoozed reminder"); Bedtime reads "Tomorrow starts with … at …".
+  A renamed task's pending alerts are re-posted (the payload keeps a short hash of the shown text).
 - Custom sound from a bundled set; respects system Focus/DND. (R-10)
 - Web: Web Push via service worker when granted; fallback to in-app banner.
 

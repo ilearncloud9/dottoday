@@ -3057,7 +3057,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingRemindersBody =>
-      'Dottoday can remind you just before a task starts, and at Bedtime show you tomorrow\'s first task.';
+      'Dottoday reminds you when a task starts and before bedtime. You can change this any time in Settings.';
 
   @override
   String get onboardingTaskStarts => 'Before each task';
@@ -3149,4 +3149,68 @@ class AppLocalizationsEn extends AppLocalizations {
   String accountRestoreCount(int done, int total) {
     return '$done of $total';
   }
+
+  @override
+  String notifStartsIn(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutes minutes',
+      one: '1 minute',
+    );
+    return 'Starts in $_temp0';
+  }
+
+  @override
+  String get notifStartsNow => 'Starting now';
+
+  @override
+  String get notifEndsNow => 'Ending now';
+
+  @override
+  String notifOverdue(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutes minutes',
+      one: '1 minute',
+    );
+    return 'Ended $_temp0 ago. Done?';
+  }
+
+  @override
+  String get notifSnoozed => 'Snoozed reminder';
+
+  @override
+  String get notifBedtimeTitle => 'Bedtime';
+
+  @override
+  String notifBedtimeFirst(String title, String time) {
+    return 'Tomorrow starts with $title at $time.';
+  }
+
+  @override
+  String get notifBedtimeFree => 'Nothing planned for tomorrow yet.';
+
+  @override
+  String get notifActionDone => 'Done';
+
+  @override
+  String get notifActionSnooze => 'Snooze 10 min';
+
+  @override
+  String get notifActionOpen => 'Open';
+
+  @override
+  String get notifChannelAlerts => 'Task alerts';
+
+  @override
+  String get notifChannelAlertsDetail =>
+      'Reminders before, at and after your tasks';
+
+  @override
+  String get notifChannelSummary => 'Bedtime';
+
+  @override
+  String get notifChannelSummaryDetail => 'The nightly look at tomorrow';
 }

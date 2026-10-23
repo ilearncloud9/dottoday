@@ -4447,7 +4447,7 @@
   "@onboardingRemindersTitle": {
     "description": "Onboarding O4 question."
   },
-  "onboardingRemindersBody": "Dottoday can remind you just before a task starts, and at Bedtime show you tomorrow's first task.",
+  "onboardingRemindersBody": "Dottoday reminds you when a task starts and before bedtime. You can change this any time in Settings.",
   "@onboardingRemindersBody": {
     "description": "Onboarding O4 explanation."
   },
@@ -4571,5 +4571,83 @@
         "type": "int"
       }
     }
+  },
+  "notifStartsIn": "Starts in {minutes, plural, =1{1 minute} other{{minutes} minutes}}",
+  "@notifStartsIn": {
+    "description": "Body of an alert some minutes before a task.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "notifStartsNow": "Starting now",
+  "@notifStartsNow": {
+    "description": "Body of an alert at a task's start."
+  },
+  "notifEndsNow": "Ending now",
+  "@notifEndsNow": {
+    "description": "Body of an alert at a task's end."
+  },
+  "notifOverdue": "Ended {minutes, plural, =1{1 minute} other{{minutes} minutes}} ago. Done?",
+  "@notifOverdue": {
+    "description": "Body of an overdue alert.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "notifSnoozed": "Snoozed reminder",
+  "@notifSnoozed": {
+    "description": "Body of the reminder a Snooze sets."
+  },
+  "notifBedtimeTitle": "Bedtime",
+  "@notifBedtimeTitle": {
+    "description": "Title of the Bedtime reminder."
+  },
+  "notifBedtimeFirst": "Tomorrow starts with {title} at {time}.",
+  "@notifBedtimeFirst": {
+    "description": "Bedtime reminder body.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "notifBedtimeFree": "Nothing planned for tomorrow yet.",
+  "@notifBedtimeFree": {
+    "description": "Bedtime reminder body when tomorrow is empty."
+  },
+  "notifActionDone": "Done",
+  "@notifActionDone": {
+    "description": "Notification action: mark the task done."
+  },
+  "notifActionSnooze": "Snooze 10 min",
+  "@notifActionSnooze": {
+    "description": "Notification action: remind again in 10 minutes."
+  },
+  "notifActionOpen": "Open",
+  "@notifActionOpen": {
+    "description": "Notification action: open the task."
+  },
+  "notifChannelAlerts": "Task alerts",
+  "@notifChannelAlerts": {
+    "description": "Android notification channel name."
+  },
+  "notifChannelAlertsDetail": "Reminders before, at and after your tasks",
+  "@notifChannelAlertsDetail": {
+    "description": "Android channel description."
+  },
+  "notifChannelSummary": "Bedtime",
+  "@notifChannelSummary": {
+    "description": "Android notification channel name."
+  },
+  "notifChannelSummaryDetail": "The nightly look at tomorrow",
+  "@notifChannelSummaryDetail": {
+    "description": "Android channel description."
   }
 }

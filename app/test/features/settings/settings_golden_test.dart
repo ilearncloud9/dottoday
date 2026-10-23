@@ -14,6 +14,7 @@ import 'package:dottoday/features/settings/pages/data_pages.dart';
 import 'package:dottoday/features/settings/pages/info_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -21,12 +22,17 @@ import 'package:timezone/data/latest.dart' as tz_data;
 import '../../support/dot_golden.dart';
 import '../../support/timeline_fakes.dart';
 
-final _overrides = [
+final _overrides = _overridesWith();
+
+List<Override> _overridesWith({
+  NotificationPermission permission = const UnwiredNotificationPermission(),
+}) => [
   ...timelineOverrides(
     now: DateTime.utc(2026, 10, 21, 9),
     profile: testProfile(
       settings: const Settings(use24h: true),
     ).copyWith(displayName: 'Kody'),
+    notificationPermission: permission,
   ),
   appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),
   envProvider.overrideWithValue(
@@ -124,10 +130,7 @@ void main() {
       200,
       scrollable: find.byType(Scrollable).first,
     ),
-    overrides: [
-      ..._overrides,
-      notificationPermissionProvider.overrideWithValue(const _Denied()),
-    ],
+    overrides: _overridesWith(permission: const _Denied()),
     build: (_) => _settings(),
   );
 }
