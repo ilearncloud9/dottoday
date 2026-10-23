@@ -4,12 +4,16 @@ library;
 
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
+import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
+import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
+import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
+import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/settings/pages/about_page.dart';
 import 'package:dottoday/features/settings/pages/account_page.dart';
 import 'package:dottoday/features/settings/pages/data_pages.dart';
@@ -21,7 +25,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
+import '../../support/account_fakes.dart';
 import '../../support/dot_golden.dart';
+import '../../support/sync_fakes.dart';
 import '../../support/timeline_fakes.dart';
 
 final _overrides = _overridesWith();
@@ -29,7 +35,9 @@ final _overrides = _overridesWith();
 List<Override> _overridesWith({
   NotificationPermission permission = const UnwiredNotificationPermission(),
   ExactAlarms exactAlarms = const AlwaysExactAlarms(),
+  List<Override> extra = const [],
 }) => [
+  ...extra,
   ...timelineOverrides(
     now: DateTime.utc(2026, 10, 21, 9),
     profile: testProfile(
@@ -124,6 +132,43 @@ void main() {
       build: (_) => page,
     );
   }
+  // M6.3: signed in and synced — `A-ios-settings` "Kody · synced just now".
+  goldenMatrix(
+    'settings_synced',
+    height: 300,
+    overrides: _overridesWith(
+      extra: [
+        syncServiceProvider.overrideWithValue(
+          FakeSyncService(
+            SyncStatus(
+              state: SyncState.synced,
+              lastSyncedUtc: DateTime.utc(2026, 10, 21, 9),
+            ),
+          ),
+        ),
+      ],
+    ),
+    build: (_) => _settings(),
+  );
+  // M6.1/M6.5: Account signed in (Sign out, Sign out everywhere, Delete).
+  goldenMatrix(
+    'settings_page_account_signed_in',
+    height: 600,
+    widths: const {'compact', 'expanded'},
+    overrides: _overridesWith(
+      extra: [
+        accountServiceProvider.overrideWithValue(
+          FakeAccountService(
+            account: const SignedIn(
+              email: 'kody@example.com',
+              method: SignInMethod.email,
+            ),
+          ),
+        ),
+      ],
+    ),
+    build: (_) => const AccountPage(),
+  );
   // M3f.8: notifications denied, above REMINDERS.
   goldenMatrix(
     'settings_notifications_off',

@@ -14,3 +14,9 @@ abstract interface class AuthVault {
 
 /// This platform's vault.
 AuthVault platformAuthVault() => platform.authVault();
+
+/// A fresh install starts signed out on every platform (docs/09 M6.8):
+/// the Keychain keeps items after the app is deleted, Android's store and
+/// the browser's don't. A marker in app storage (gone with the app) tells.
+Future<void> forgetSessionAfterReinstall(AuthVault vault, List<String> keys) =>
+    platform.forgetAfterReinstall(vault, keys);

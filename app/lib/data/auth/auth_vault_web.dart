@@ -30,3 +30,6 @@ final class _SealedVault implements AuthVault {
   Future<void> delete(String key) async =>
       _storage.callMethod('removeItem'.toJS, key.toJS);
 }
+
+/// The browser's storage goes with the site's data: nothing to forget.
+Future<void> forgetAfterReinstall(AuthVault vault, List<String> keys) async {}

@@ -14,6 +14,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 Future<SupabaseClient?> startSupabase(Env env, Logger logger) async {
   try {
     final vault = platformAuthVault();
+    await forgetSessionAfterReinstall(vault, const [sessionVaultKey]);
     final supabase = await Supabase.initialize(
       url: env.supabaseUrl.toString(),
       // The anon key: publishable, never the service role (06 §1).

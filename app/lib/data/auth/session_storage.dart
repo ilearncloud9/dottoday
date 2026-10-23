@@ -1,7 +1,9 @@
 import 'package:dottoday/data/auth/auth_vault.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-const _sessionKey = 'dottoday.auth.session';
+/// Where the session lives in the vault.
+const sessionVaultKey = 'dottoday.auth.session';
+const _sessionKey = sessionVaultKey;
 
 /// The persisted Supabase session, kept in the [AuthVault] (docs/06 §2).
 final class VaultSessionStorage extends LocalStorage {
