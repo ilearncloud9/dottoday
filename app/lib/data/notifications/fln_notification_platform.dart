@@ -34,7 +34,11 @@ final class FlnNotificationPlatform implements NotificationPlatform {
   static const _channelIds = {
     NotificationChannelKind.alerts: 'alerts',
     NotificationChannelKind.summary: 'summary',
+    NotificationChannelKind.alarms: 'alarms',
   };
+
+  /// `res/raw/dot_alarm.m4a`, the same chime as [alarmSoundFile].
+  static const _alarmSound = RawResourceAndroidNotificationSound('dot_alarm');
 
   @override
   Future<void> initialize(void Function(NotificationTap) onTap) async {
@@ -147,10 +151,21 @@ final class FlnNotificationPlatform implements NotificationPlatform {
         channel.name,
         channelDescription: channel.description,
         importance: channel.importance,
-        priority: n.channel == NotificationChannelKind.alerts
-            ? Priority.high
-            : Priority.defaultPriority,
-        category: AndroidNotificationCategory.reminder,
+        priority: switch (n.channel) {
+          NotificationChannelKind.alarms => Priority.max,
+          NotificationChannelKind.alerts => Priority.high,
+          NotificationChannelKind.summary => Priority.defaultPriority,
+        },
+        category: n.loud
+            ? AndroidNotificationCategory.alarm
+            : AndroidNotificationCategory.reminder,
+        // Wakes the screen like an alarm; MainActivity deliberately has no
+        // showWhenLocked, so no task list appears over the lock screen.
+        fullScreenIntent: n.loud,
+        sound: n.loud ? _alarmSound : null,
+        audioAttributesUsage: n.loud
+            ? AudioAttributesUsage.alarm
+            : AudioAttributesUsage.notification,
         silent: n.silent,
         actions: n.withActions
             ? [
@@ -180,6 +195,14 @@ final class FlnNotificationPlatform implements NotificationPlatform {
           _channelIds[kind]!,
           _l10n.notifChannelSummary,
           description: _l10n.notifChannelSummaryDetail,
+        ),
+        NotificationChannelKind.alarms => AndroidNotificationChannel(
+          _channelIds[kind]!,
+          _l10n.notifChannelAlarms,
+          description: _l10n.notifChannelAlarmsDetail,
+          importance: Importance.max,
+          sound: _alarmSound,
+          audioAttributesUsage: AudioAttributesUsage.alarm,
         ),
       };
 

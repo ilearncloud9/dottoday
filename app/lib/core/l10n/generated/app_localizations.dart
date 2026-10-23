@@ -4768,6 +4768,18 @@ abstract class AppLocalizations {
   /// **'Reminders before, at and after your tasks'**
   String get notifChannelAlertsDetail;
 
+  /// Android notification channel name for alarm-loud dot-starts: the day's first task and routine starts (docs/09 M6.5.5).
+  ///
+  /// In en, this message translates to:
+  /// **'Start of your day'**
+  String get notifChannelAlarms;
+
+  /// Android channel description for the alarm channel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rings like an alarm for the first task of your day and when a routine starts'**
+  String get notifChannelAlarmsDetail;
+
   /// Android notification channel name.
   ///
   /// In en, this message translates to:

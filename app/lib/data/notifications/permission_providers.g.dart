@@ -200,3 +200,97 @@ final class ExactAlarmsAllowedProvider
 
 String _$exactAlarmsAllowedHash() =>
     r'73e8dc8fadea490d2c39abfe044bf5fd1b5c21ad';
+
+/// Battery optimisation (M6.5.5): Android only.
+
+@ProviderFor(batteryOptimization)
+final batteryOptimizationProvider = BatteryOptimizationProvider._();
+
+/// Battery optimisation (M6.5.5): Android only.
+
+final class BatteryOptimizationProvider
+    extends
+        $FunctionalProvider<
+          BatteryOptimization,
+          BatteryOptimization,
+          BatteryOptimization
+        >
+    with $Provider<BatteryOptimization> {
+  /// Battery optimisation (M6.5.5): Android only.
+  BatteryOptimizationProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'batteryOptimizationProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$batteryOptimizationHash();
+
+  @$internal
+  @override
+  $ProviderElement<BatteryOptimization> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  BatteryOptimization create(Ref ref) {
+    return batteryOptimization(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BatteryOptimization value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BatteryOptimization>(value),
+    );
+  }
+}
+
+String _$batteryOptimizationHash() =>
+    r'78a5944b7723286f6da7b156ecb96697a13158c7';
+
+/// Whether battery optimisation applies now; re-read with `ref.invalidate`
+/// (on launch and resume, after the system screen).
+
+@ProviderFor(batteryRestricted)
+final batteryRestrictedProvider = BatteryRestrictedProvider._();
+
+/// Whether battery optimisation applies now; re-read with `ref.invalidate`
+/// (on launch and resume, after the system screen).
+
+final class BatteryRestrictedProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
+  /// Whether battery optimisation applies now; re-read with `ref.invalidate`
+  /// (on launch and resume, after the system screen).
+  BatteryRestrictedProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'batteryRestrictedProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$batteryRestrictedHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<bool> create(Ref ref) {
+    return batteryRestricted(ref);
+  }
+}
+
+String _$batteryRestrictedHash() => r'02a91a394bd47217a4973c60dae1311158a56e6b';

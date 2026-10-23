@@ -20,7 +20,9 @@ OsNotification _n({bool silent = false, bool ts = false, bool loud = false}) =>
       body: 'Starts at 11:00 · 30 min',
       fireAtUtc: _now.add(const Duration(hours: 1)),
       payload: '{}',
-      channel: NotificationChannelKind.alerts,
+      channel: loud
+          ? NotificationChannelKind.alarms
+          : NotificationChannelKind.alerts,
       silent: silent,
       timeSensitive: ts,
       loud: loud,
@@ -36,7 +38,7 @@ void main() {
     registerFallbackValue(AndroidScheduleMode.inexactAllowWhileIdle);
   });
 
-  Future<DarwinNotificationDetails> posted(OsNotification n) async {
+  Future<NotificationDetails> details(OsNotification n) async {
     final plugin = _Plugin();
     when(
       () => plugin.zonedSchedule(
@@ -74,8 +76,27 @@ void main() {
             ).captured.single
             as NotificationDetails;
     expect(details.macOS, same(details.iOS));
-    return details.iOS!;
+    return details;
   }
+
+  Future<DarwinNotificationDetails> posted(OsNotification n) async =>
+      (await details(n)).iOS!;
+
+  test('Android: a loud dot rings on the alarm channel, full-screen', () async {
+    final a = (await details(_n(ts: true, loud: true))).android!;
+    expect(a.channelId, 'alarms');
+    expect(a.fullScreenIntent, isTrue);
+    expect(a.category, AndroidNotificationCategory.alarm);
+    expect(a.audioAttributesUsage, AudioAttributesUsage.alarm);
+    expect(a.priority, Priority.max);
+  });
+
+  test('Android: other alerts stay on the reminder channel', () async {
+    final a = (await details(_n(ts: true))).android!;
+    expect(a.channelId, 'alerts');
+    expect(a.fullScreenIntent, isFalse);
+    expect(a.category, AndroidNotificationCategory.reminder);
+  });
 
   test('a dot-start is time-sensitive with the default sound', () async {
     final d = await posted(_n(ts: true));

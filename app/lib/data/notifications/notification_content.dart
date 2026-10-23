@@ -46,6 +46,8 @@ OsNotification? composeNotification(
     ),
     channel: planned.purpose == NotificationPurpose.bedtime
         ? NotificationChannelKind.summary
+        : planned.loud
+        ? NotificationChannelKind.alarms
         : NotificationChannelKind.alerts,
     silent: planned.silent,
     timeSensitive: planned.timeSensitive,

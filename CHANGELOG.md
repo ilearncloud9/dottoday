@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M6.5.5: On Android the first task of the day rings like an alarm on its own "Start of your day" channel and lights up the screen (without showing your tasks on the lock screen); reminders are set again if you change the clock or time zone while Dottoday is closed.
 - M6.5.4: On iPhone and Mac the first task of the day rings with Dottoday's own alarm chime; on iPhone, release builds let task starts break through Focus (once the paid Apple account is set up).
 - M6.5.3: The first task of each day now counts as an alarm, even in quiet hours; other reminders stay normal (and quiet in quiet hours). How loud it really rings comes with the next steps.
 - M6.5.2: Ticking a task done also notes when you finished it (from the app, the keyboard or the notification); un-ticking forgets that again, and a duplicated day starts fresh.

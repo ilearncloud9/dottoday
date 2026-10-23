@@ -58,4 +58,7 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+    // Compile-only: TimeChangeReceiver enqueues the workmanager plugin's
+    // worker; the library itself ships with the plugin (same version, M6.5.5).
+    compileOnly("androidx.work:work-runtime:2.11.2")
 }

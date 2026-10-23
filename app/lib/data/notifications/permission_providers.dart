@@ -1,8 +1,10 @@
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/notifications/channel_battery_optimization.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/fln_notification_permission.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/web_notification_permission.dart';
+import 'package:dottoday/domain/notifications/battery_optimization.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:flutter/foundation.dart';
@@ -53,3 +55,16 @@ ExactAlarms exactAlarms(Ref ref) =>
 @riverpod
 Future<bool> exactAlarmsAllowed(Ref ref) =>
     ref.watch(exactAlarmsProvider).allowed();
+
+/// Battery optimisation (M6.5.5): Android only.
+@Riverpod(keepAlive: true)
+BatteryOptimization batteryOptimization(Ref ref) =>
+    !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+    ? const ChannelBatteryOptimization()
+    : const NoBatteryOptimization();
+
+/// Whether battery optimisation applies now; re-read with `ref.invalidate`
+/// (on launch and resume, after the system screen).
+@riverpod
+Future<bool> batteryRestricted(Ref ref) =>
+    ref.watch(batteryOptimizationProvider).restricted();

@@ -16,6 +16,11 @@ import 'package:workmanager/workmanager.dart';
 /// `BGTaskSchedulerPermittedIdentifiers` and AppDelegate.swift).
 const backgroundRefreshTask = 'dottoday.refresh';
 
+/// Android's one-off re-arm after a clock or zone change
+/// (`TimeChangeReceiver.kt`, M6.5.5). The dispatcher runs the same refresh
+/// for every task name.
+const rearmTask = 'dottoday.rearm';
+
 /// Asks iOS (BGAppRefresh) and Android (WorkManager) to run the daily
 /// refresh about once a day, also when Dottoday isn't open (docs/07,
 /// docs/09 M5.2). macOS and the web refresh on start, resume and a timer.

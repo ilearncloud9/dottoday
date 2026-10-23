@@ -3215,6 +3215,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Reminders before, at and after your tasks';
 
   @override
+  String get notifChannelAlarms => 'Start of your day';
+
+  @override
+  String get notifChannelAlarmsDetail =>
+      'Rings like an alarm for the first task of your day and when a routine starts';
+
+  @override
   String get notifChannelSummary => 'Bedtime';
 
   @override

@@ -4650,6 +4650,14 @@
   "@notifChannelAlertsDetail": {
     "description": "Android channel description."
   },
+  "notifChannelAlarms": "Start of your day",
+  "@notifChannelAlarms": {
+    "description": "Android notification channel name for alarm-loud dot-starts: the day's first task and routine starts (docs/09 M6.5.5)."
+  },
+  "notifChannelAlarmsDetail": "Rings like an alarm for the first task of your day and when a routine starts",
+  "@notifChannelAlarmsDetail": {
+    "description": "Android channel description for the alarm channel."
+  },
   "notifChannelSummary": "Bedtime",
   "@notifChannelSummary": {
     "description": "Android notification channel name."

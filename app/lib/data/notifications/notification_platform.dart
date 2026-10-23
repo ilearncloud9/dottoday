@@ -1,6 +1,12 @@
 /// Which Android channel (docs/07 Android) a notification posts on; Apple
 /// platforms ignore it.
-enum NotificationChannelKind { alerts, summary }
+enum NotificationChannelKind {
+  alerts,
+  summary,
+
+  /// Loud dot-starts (11 A0): alarm audio, full-screen intent.
+  alarms,
+}
 
 /// The bundled alarm chime, copied into `Library/Sounds` on Apple platforms
 /// (`installAlarmSound`), where notification sounds are looked up.
