@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M5.3b: Groundwork for web reminders that arrive with the tab closed (once signed in): each reminder is encrypted in your browser before it is uploaded, so the server never sees what it says.
 - M5.3a: On the web, reminders arrive while Dottoday is open — as browser notifications with Done and Open, or, if notifications aren't allowed, as a strip at the top of the app with Done and Later.
 - M5.2: Repeating tasks keep coming and reminders stay planned even if you don't open Dottoday for a while — a daily refresh runs in the background on iPhone and Android, and every few hours on a Mac or browser window left open. Fixed: a repeat used to stop 90 days after it was last edited.
 - M5.1: Reminders now really arrive on iPhone, Android and Mac — each one once (checked: 20 of 20, no duplicates), with Done, Snooze 10 min and Open on the notification. Renaming or moving a task updates its reminders; ticking it clears them.

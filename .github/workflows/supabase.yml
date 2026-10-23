@@ -27,3 +27,9 @@ jobs:
       - run: supabase start -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
       - run: supabase db reset
       - run: supabase test db
+      # send-push's pure logic (VAPID JWT, delivery outcomes), docs/09 M5.3b.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+      - run: node --experimental-strip-types --test functions/send-push/push_test.ts
+        working-directory: supabase

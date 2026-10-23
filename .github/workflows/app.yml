@@ -47,6 +47,8 @@ jobs:
       - run: flutter test --tags perf --concurrency=1
       # Browser-only widget tests (paste in Chrome); the runner ships Chrome.
       - run: flutter test --platform chrome --tags web test/web
+      # web/push_crypto.js against RFC 8291 Appendix A (docs/09 M5.3b).
+      - run: node --test tool/push_crypto_test.mjs
 
   goldens:
     # Goldens are baselined on macOS; Linux font rendering differs (M0.4).

@@ -54,6 +54,16 @@ TLS 1.2+ only; certificate pinning not used (Supabase rotates); HSTS on web.
 - Web: CSP `default-src 'self'; connect-src <supabase>; img-src 'self' data:; script-src 'self' 'wasm-unsafe-eval'`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, service worker scope limited.
 - Logging never includes task content; `Logger.redact()` enforced via lint rule (`avoid_print` + custom lint `no_pii_in_logs`).
 
+### Web push (M5.3b)
+Reminder text never reaches our server or the browser vendor's push service in the clear: the app
+encrypts each push body in the browser to that browser's own subscription keys (RFC 8291,
+`web/push_crypto.js`) and uploads only the ciphertext, the fire time and the ID-only plan
+(`scheduled_pushes`, RLS: own rows on own subscriptions; ≤ 500 pending per subscription). The
+`send-push` Edge Function holds the VAPID private key (function secret), accepts only the
+service-role caller (cron), forwards ciphertext with `TTL: 3600`, drops subscriptions the push service
+reports gone (404/410) and logs counts only. `push_subscriptions` stores the endpoint only; the
+browser's `p256dh`/`auth` keys stay in the browser.
+
 ## 9. Security checklist (run at every `/ship-check`)
 - [ ] New/changed tables have RLS enabled and policies tested (pgTAP tests pass).
 - [ ] No secret, token, or private key in the diff (`gitleaks` clean).
