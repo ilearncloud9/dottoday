@@ -128,7 +128,8 @@ jobs:
   integration-android:
     # The device tests on an Android emulator (docs/08 §6, docs/09 M4.9): cold launch,
     # onboarding (timed, resumes after a kill) and the first-day journey (quick add, drag
-    # with Shift later tasks, a repeat edited for all days). Debug builds (demo day).
+    # with Shift later tasks, a repeat edited for all days), then a dot-start delivered
+    # once with the app killed (M6.5.10). Debug builds (demo day).
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
@@ -156,9 +157,11 @@ jobs:
           profile: pixel_6
           disable-animations: true
           working-directory: app
+          # Then a dot-start must fire with the app killed (M6.5.10, 11 A0).
           script: >-
             flutter test integration_test/app_launch_test.dart integration_test/onboarding_test.dart
             integration_test/journey_test.dart -d emulator-5554 --dart-define-from-file=.env.example
+            && DEFINES=.env.example tool/killed_app_check.sh android emulator-5554
 
   a11y-web:
     # axe-core over the web build's semantics DOM (docs/08 §3, R-12), plus the encrypted web
