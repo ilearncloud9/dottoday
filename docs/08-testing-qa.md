@@ -41,6 +41,7 @@ TestFlight + Play internal track + web staging. Collect: crash-free rate, sync e
 - [ ] CHANGELOG and in-app "What's new" updated.
 - [ ] Feedback address set: `FEEDBACK_EMAIL` in `.env.prod` points at a monitored inbox (Settings › Send feedback has no recipient while it is blank).
 - [ ] Manual (desktop Chrome, notifications allowed): a reminder posts as a system notification through `sw.js`; its Done ticks the task and Open shows it, also when the tab was closed (the built-in test browser blocks service workers).
+- [ ] Manual (Mac): View › Enter Full Screen — the rail and Today lay out with no title bar; the menu-bar "Next up" stays.
 - [ ] Manual: ⌘/ (Ctrl+/ on Windows/Linux) opens the shortcut list in real desktop Chrome (the browser may claim the key; widget tests can't prove it).
 
 ## 7. Design-review matrix (Concept A, docs/10 §7)

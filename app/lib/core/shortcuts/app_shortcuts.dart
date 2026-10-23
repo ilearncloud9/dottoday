@@ -40,6 +40,25 @@ final class ScheduleTaskIntent extends Intent {
   final String occurrenceId;
 }
 
+/// Move the day Today shows by [days] (Go › Previous/Next day, M5.5); the
+/// screen that shows days handles it, others ignore it.
+final class ShowDayIntent extends Intent {
+  const ShowDayIntent(this.days);
+
+  final int days;
+}
+
+/// Show today on Today (Go › Today, M5.5).
+final class ShowTodayIntent extends Intent {
+  const ShowTodayIntent();
+}
+
+/// Undo the last undoable change (Edit › Undo, M5.5); text fields keep ⌘Z
+/// for their own typing.
+final class UndoLastIntent extends Intent {
+  const UndoLastIntent();
+}
+
 /// Open the Sync sheet (Settings › DATA › Sync, docs/09 M3f.8), handled at
 /// the app root so Settings needn't import the sync feature.
 final class ShowSyncIntent extends Intent {

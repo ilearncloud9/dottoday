@@ -46,11 +46,22 @@ class TodayKeys extends ConsumerWidget {
         AppShortcuts.activator(p, LogicalKeyboardKey.keyD): () =>
             unawaited(_doneLive(context, ref)),
       },
-      child: Focus(
-        autofocus: true,
-        // Catches keys only; adds nothing for screen readers.
-        includeSemantics: false,
-        child: child,
+      // The Mac Go menu sends the same moves as intents (M5.5).
+      child: Actions(
+        actions: {
+          ShowDayIntent: CallbackAction<ShowDayIntent>(
+            onInvoke: (i) => onSelect(plus(i.days)),
+          ),
+          ShowTodayIntent: CallbackAction<ShowTodayIntent>(
+            onInvoke: (_) => onSelect(today),
+          ),
+        },
+        child: Focus(
+          autofocus: true,
+          // Catches keys only; adds nothing for screen readers.
+          includeSemantics: false,
+          child: child,
+        ),
       ),
     );
   }

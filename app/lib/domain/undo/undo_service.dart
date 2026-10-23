@@ -33,4 +33,8 @@ abstract interface class UndoService {
   /// created rows go to Trash. Fails with [UndoExpiredFailure] after
   /// [window] or if already used.
   Future<Result<void, AppFailure>> undo(UndoToken token);
+
+  /// The newest token still redeemable now, if any: what Edit › Undo
+  /// reverts on the Mac (docs/07 macOS, M5.5).
+  UndoToken? get latest;
 }

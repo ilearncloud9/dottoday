@@ -4815,6 +4815,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{Inbox is clear} =1{1 in Inbox} other{{count} in Inbox}}'**
   String widgetInboxCount(int count);
+
+  /// Mac menu bar: File menu.
+  ///
+  /// In en, this message translates to:
+  /// **'File'**
+  String get menuFile;
+
+  /// Mac menu bar: Edit menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get menuEdit;
+
+  /// Mac menu bar: View menu.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get menuView;
+
+  /// Mac menu bar: Go menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Go'**
+  String get menuGo;
+
+  /// Mac menu bar: Window menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Window'**
+  String get menuWindow;
+
+  /// Mac app menu: opens Settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings…'**
+  String get menuSettings;
+
+  /// Mac File menu: opens Add.
+  ///
+  /// In en, this message translates to:
+  /// **'New Task'**
+  String get menuNewTask;
+
+  /// Mac File menu: opens Settings › Export.
+  ///
+  /// In en, this message translates to:
+  /// **'Export…'**
+  String get menuExport;
+
+  /// Mac Edit menu: undoes the last change.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get menuUndo;
+
+  /// Mac View menu: the month view.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get menuMonth;
+
+  /// Mac View menu: lists every shortcut.
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard Shortcuts'**
+  String get menuShortcuts;
+
+  /// Mac Go menu: the day before on Today.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous Day'**
+  String get menuPreviousDay;
+
+  /// Mac Go menu: the day after on Today.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Day'**
+  String get menuNextDay;
 }
 
 class _AppLocalizationsDelegate

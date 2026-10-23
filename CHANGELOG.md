@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M5.5: On the Mac, a full menu bar (File, Edit, View, Go, Window) and "Next up" in the menu bar with what's left of today; the app is called Dottoday everywhere; it runs on Intel Macs too.
 - Fixed: on Android the daily background refresh could start while the app was opening its database and make the app fail to load ("database is locked"); the second opener now waits, and the first background run is 12 h after launch.
 - M5.4: Home-screen widgets on iPhone and Android — Next up (also on the iPhone Lock Screen), Today and Inbox — that move on as tasks start and end and open the task you tap.
 - M5.3b: Groundwork for web reminders that arrive with the tab closed (once signed in): each reminder is encrypted in your browser before it is uploaded, so the server never sees what it says.

@@ -251,8 +251,11 @@ final class FakeUndoService implements UndoService {
     series?.put(batch.series);
     occurrences.put(batch.occurrences);
     subtasks?.put(batch.subtasks);
-    return Ok(UndoToken(id: id, expiresAtUtc: DateTime.utc(2100)));
+    return Ok(latest = UndoToken(id: id, expiresAtUtc: DateTime.utc(2100)));
   }
+
+  @override
+  UndoToken? latest;
 
   @override
   Future<Result<void, AppFailure>> undo(UndoToken token) async {

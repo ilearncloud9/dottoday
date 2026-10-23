@@ -40,6 +40,14 @@ final class InMemoryUndoService implements UndoService {
   final Clock _clock;
   final IdGenerator _ids;
   final _pending = <String, _Before>{};
+  UndoToken? _latest;
+
+  @override
+  UndoToken? get latest {
+    final t = _latest;
+    if (t == null || !_pending.containsKey(t.id)) return null;
+    return _clock.nowUtc().isBefore(t.expiresAtUtc) ? t : null;
+  }
 
   @override
   Future<Result<UndoToken, AppFailure>> applyUndoable(WriteBatch batch) async {
@@ -59,6 +67,7 @@ final class InMemoryUndoService implements UndoService {
       expiresAtUtc: _clock.nowUtc().add(UndoService.window),
     );
     _pending[token.id] = before..expiresAtUtc = token.expiresAtUtc;
+    _latest = token;
     return Ok(token);
   }
 

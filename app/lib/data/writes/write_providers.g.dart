@@ -64,14 +64,14 @@ final class NotificationGatewayProvider
 String _$notificationGatewayHash() =>
     r'2ed6d11ff874122b02b95ef7fe908614b85b3a7e';
 
-/// Home-screen widget snapshot target (M5.4): iOS and Android widgets;
-/// nothing elsewhere.
+/// Where the widget snapshot goes (M5.4, M5.5): home-screen widgets on
+/// iOS and Android, the menu-bar "Next up" on the Mac, nothing on the web.
 
 @ProviderFor(widgetSnapshotSink)
 final widgetSnapshotSinkProvider = WidgetSnapshotSinkProvider._();
 
-/// Home-screen widget snapshot target (M5.4): iOS and Android widgets;
-/// nothing elsewhere.
+/// Where the widget snapshot goes (M5.4, M5.5): home-screen widgets on
+/// iOS and Android, the menu-bar "Next up" on the Mac, nothing on the web.
 
 final class WidgetSnapshotSinkProvider
     extends
@@ -81,8 +81,8 @@ final class WidgetSnapshotSinkProvider
           WidgetSnapshotSink
         >
     with $Provider<WidgetSnapshotSink> {
-  /// Home-screen widget snapshot target (M5.4): iOS and Android widgets;
-  /// nothing elsewhere.
+  /// Where the widget snapshot goes (M5.4, M5.5): home-screen widgets on
+  /// iOS and Android, the menu-bar "Next up" on the Mac, nothing on the web.
   WidgetSnapshotSinkProvider._()
     : super(
         from: null,
@@ -118,7 +118,7 @@ final class WidgetSnapshotSinkProvider
 }
 
 String _$widgetSnapshotSinkHash() =>
-    r'226e9979410786aa36ae59fc0db5c2318667a241';
+    r'0c403a4200f623c11395c3f07b0dbf467a8f6c20';
 
 @ProviderFor(notificationSync)
 final notificationSyncProvider = NotificationSyncProvider._();

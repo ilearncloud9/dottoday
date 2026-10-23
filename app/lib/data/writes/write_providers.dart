@@ -8,6 +8,7 @@ import 'package:dottoday/data/notifications/os_notification_gateway.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/widgets/home_widget_sink.dart';
+import 'package:dottoday/data/widgets/mac_status_item_sink.dart';
 import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
 import 'package:dottoday/data/writes/drift_write_use_case.dart';
@@ -33,13 +34,18 @@ NotificationGateway notificationGateway(Ref ref) {
   );
 }
 
-/// Home-screen widget snapshot target (M5.4): iOS and Android widgets;
-/// nothing elsewhere.
+/// Where the widget snapshot goes (M5.4, M5.5): home-screen widgets on
+/// iOS and Android, the menu-bar "Next up" on the Mac, nothing on the web.
 @Riverpod(keepAlive: true)
-WidgetSnapshotSink widgetSnapshotSink(Ref ref) =>
-    HomeWidgetSnapshotSink.supported
-    ? HomeWidgetSnapshotSink(profile: () => latestProfile(ref))
-    : const UnwiredWidgetSnapshotSink();
+WidgetSnapshotSink widgetSnapshotSink(Ref ref) {
+  if (HomeWidgetSnapshotSink.supported) {
+    return HomeWidgetSnapshotSink(profile: () => latestProfile(ref));
+  }
+  if (MacStatusItemSink.supported) {
+    return MacStatusItemSink(profile: () => latestProfile(ref));
+  }
+  return const UnwiredWidgetSnapshotSink();
+}
 
 @Riverpod(keepAlive: true)
 NotificationSync notificationSync(Ref ref) => NotificationSync(

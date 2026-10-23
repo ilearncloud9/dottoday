@@ -3250,4 +3250,43 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get menuFile => 'File';
+
+  @override
+  String get menuEdit => 'Edit';
+
+  @override
+  String get menuView => 'View';
+
+  @override
+  String get menuGo => 'Go';
+
+  @override
+  String get menuWindow => 'Window';
+
+  @override
+  String get menuSettings => 'Settings…';
+
+  @override
+  String get menuNewTask => 'New Task';
+
+  @override
+  String get menuExport => 'Export…';
+
+  @override
+  String get menuUndo => 'Undo';
+
+  @override
+  String get menuMonth => 'Month';
+
+  @override
+  String get menuShortcuts => 'Keyboard Shortcuts';
+
+  @override
+  String get menuPreviousDay => 'Previous Day';
+
+  @override
+  String get menuNextDay => 'Next Day';
 }

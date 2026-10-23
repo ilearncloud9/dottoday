@@ -4699,5 +4699,57 @@
         "type": "int"
       }
     }
+  },
+  "menuFile": "File",
+  "@menuFile": {
+    "description": "Mac menu bar: File menu."
+  },
+  "menuEdit": "Edit",
+  "@menuEdit": {
+    "description": "Mac menu bar: Edit menu."
+  },
+  "menuView": "View",
+  "@menuView": {
+    "description": "Mac menu bar: View menu."
+  },
+  "menuGo": "Go",
+  "@menuGo": {
+    "description": "Mac menu bar: Go menu."
+  },
+  "menuWindow": "Window",
+  "@menuWindow": {
+    "description": "Mac menu bar: Window menu."
+  },
+  "menuSettings": "Settings…",
+  "@menuSettings": {
+    "description": "Mac app menu: opens Settings."
+  },
+  "menuNewTask": "New Task",
+  "@menuNewTask": {
+    "description": "Mac File menu: opens Add."
+  },
+  "menuExport": "Export…",
+  "@menuExport": {
+    "description": "Mac File menu: opens Settings › Export."
+  },
+  "menuUndo": "Undo",
+  "@menuUndo": {
+    "description": "Mac Edit menu: undoes the last change."
+  },
+  "menuMonth": "Month",
+  "@menuMonth": {
+    "description": "Mac View menu: the month view."
+  },
+  "menuShortcuts": "Keyboard Shortcuts",
+  "@menuShortcuts": {
+    "description": "Mac View menu: lists every shortcut."
+  },
+  "menuPreviousDay": "Previous Day",
+  "@menuPreviousDay": {
+    "description": "Mac Go menu: the day before on Today."
+  },
+  "menuNextDay": "Next Day",
+  "@menuNextDay": {
+    "description": "Mac Go menu: the day after on Today."
   }
 }

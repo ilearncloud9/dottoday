@@ -10,7 +10,7 @@ winid() {
   swift - <<'SWIFT'
 import CoreGraphics
 let list = CGWindowListCopyWindowInfo([.optionOnScreenOnly], kCGNullWindowID) as! [[String: Any]]
-for w in list where (w[kCGWindowOwnerName as String] as? String) == "dottoday"
+for w in list where (w[kCGWindowOwnerName as String] as? String)?.lowercased() == "dottoday"
   && (w[kCGWindowLayer as String] as? Int) == 0 {
   print(w[kCGWindowNumber as String]!); break
 }
