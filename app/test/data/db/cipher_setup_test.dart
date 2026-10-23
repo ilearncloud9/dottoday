@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:dottoday/data/db/connection/cipher_setup.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -22,6 +23,33 @@ void main() {
     configureCipherConnection(db, key);
     return db;
   }
+
+  // The app and the background refresh can open the file together (M5.2):
+  // a second open while the first holds the lock waits instead of failing
+  // with "database is locked" (CI, M5.4).
+  test('a second open waits for a lock instead of failing', () async {
+    // As on a first launch: the file is still in rollback-journal mode, so
+    // an exclusive lock keeps every other connection out.
+    final first = sqlite3.open(path)
+      ..execute("PRAGMA key = \"x'$_key'\"")
+      ..execute('CREATE TABLE t (v INTEGER)');
+    addTearDown(first.close);
+    first.execute('BEGIN EXCLUSIVE');
+    final file = path;
+    final key = _key;
+    final second = Isolate.run(() {
+      final db = sqlite3.open(file);
+      configureCipherConnection(db, key);
+      final n = db.select('SELECT count(*) AS n FROM t').single['n'] as int;
+      db.close();
+      return n;
+    });
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    first
+      ..execute('INSERT INTO t VALUES (1)')
+      ..execute('COMMIT');
+    expect(await second, 1);
+  });
 
   test('file is encrypted and reopens with the same key', () {
     open(_key)

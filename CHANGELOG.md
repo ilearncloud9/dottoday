@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- Fixed: on Android the daily background refresh could start while the app was opening its database and make the app fail to load ("database is locked"); the second opener now waits, and the first background run is 12 h after launch.
 - M5.4: Home-screen widgets on iPhone and Android — Next up (also on the iPhone Lock Screen), Today and Inbox — that move on as tasks start and end and open the task you tap.
 - M5.3b: Groundwork for web reminders that arrive with the tab closed (once signed in): each reminder is encrypted in your browser before it is uploaded, so the server never sees what it says.
 - M5.3a: On the web, reminders arrive while Dottoday is open — as browser notifications with Done and Open, or, if notifications aren't allowed, as a strip at the top of the app with Done and Later.

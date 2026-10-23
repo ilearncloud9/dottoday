@@ -29,6 +29,9 @@ Future<void> scheduleBackgroundRefresh() async {
     backgroundRefreshTask,
     backgroundRefreshTask,
     frequency: const Duration(hours: 24),
+    // Not at once: the app has just refreshed on start, and a worker opening
+    // the database during start-up only contends for it (M5.4 CI).
+    initialDelay: const Duration(hours: 12),
     existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
   );
 }
