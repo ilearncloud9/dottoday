@@ -6,6 +6,7 @@ import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
+import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -73,6 +74,8 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
       ..invalidate(exactAlarmsAllowedProvider)
       ..invalidate(currentDeviceZoneProvider);
     unawaited(runHousekeeping(ref));
+    // Back in the foreground: catch up with other devices (docs/04 §4).
+    unawaited(ref.read(syncServiceProvider).syncNow());
   }
 
   @override

@@ -58,6 +58,7 @@ void main() {
       'subtasks',
       'conflicts',
       'change_log',
+      'field_seen',
       'sync_cursors',
       'local_meta',
     });

@@ -95,3 +95,20 @@ class LocalMeta extends Table {
   @override
   bool get isStrict => true;
 }
+
+/// Local-only: the server's HLC per field as last pulled (docs/09 M6.2).
+/// A pending local edit conflicts only with a server version this device
+/// had not seen yet; one it had seen is the base the edit was made on.
+@DataClassName('FieldSeenRow')
+class FieldSeen extends Table {
+  TextColumn get entity => text()();
+  TextColumn get entityId => text()();
+  TextColumn get field => text()();
+  TextColumn get hlc => text()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {entity, entityId, field};
+
+  @override
+  bool get isStrict => true;
+}

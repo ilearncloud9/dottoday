@@ -7,7 +7,7 @@ import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
-import 'package:dottoday/data/sync/hlc_store.dart';
+import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
 import 'package:dottoday/data/writes/entity_writers.dart';
 import 'package:dottoday/data/writes/row_writer.dart';
@@ -16,7 +16,6 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/recurrence/materialiser.dart';
-import 'package:dottoday/domain/sync/hlc.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
 
@@ -28,12 +27,13 @@ final class DriftWriteUseCase implements WriteUseCase {
     required Materialiser materialiser,
     required AfterWriteEffects effects,
     required Logger logger,
+    SharedHlc? hlc,
   }) : _db = db,
        _clock = clock,
        _materialiser = materialiser,
        _effects = effects,
        _logger = logger,
-       _hlcStore = HlcStore(db),
+       _hlc = hlc ?? SharedHlc(db, clock),
        _occurrences = DriftOccurrenceRepository(db),
        _series = DriftSeriesRepository(db),
        _subtasks = DriftSubtaskRepository(db),
@@ -44,12 +44,11 @@ final class DriftWriteUseCase implements WriteUseCase {
   final Materialiser _materialiser;
   final AfterWriteEffects _effects;
   final Logger _logger;
-  final HlcStore _hlcStore;
+  final SharedHlc _hlc;
   final DriftOccurrenceRepository _occurrences;
   final DriftSeriesRepository _series;
   final DriftSubtaskRepository _subtasks;
   final DriftSettingsRepository _profiles;
-  HybridLogicalClock? _hlc;
 
   @override
   Future<Result<void, AppFailure>> apply(WriteBatch batch) async {
@@ -75,7 +74,7 @@ final class DriftWriteUseCase implements WriteUseCase {
   }
 
   Future<void> _write(WriteBatch b) async {
-    final hlc = _hlc ??= await _hlcStore.load(_clock);
+    final hlc = await _hlc.clock();
     final now = _clock.nowUtc();
     Future<void> rows<E>(EntityWriter<E> writer, Iterable<E> items) =>
         writeRows(_db, writer, items, now: now, nextHlc: hlc.now);
@@ -92,7 +91,7 @@ final class DriftWriteUseCase implements WriteUseCase {
       ...b.subtasks,
       ...m.subtasks,
     ]);
-    await _hlcStore.save(hlc.last);
+    await _hlc.save();
   }
 
   /// Plans missing occurrences for every saved series. Rows of the series in

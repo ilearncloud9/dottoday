@@ -4,6 +4,7 @@ import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
+import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
 import 'package:dottoday/data/writes/drift_write_use_case.dart';
@@ -70,12 +71,14 @@ final class WriteHarness {
       ),
       logger: logger,
     );
+    hlc = SharedHlc(this.db, clock);
     writes = DriftWriteUseCase(
       db: this.db,
       clock: clock,
       materialiser: Materialiser(clock: clock),
       effects: effects,
       logger: logger,
+      hlc: hlc,
     );
   }
 
@@ -87,6 +90,7 @@ final class WriteHarness {
   final sink = FakeSink();
   late final AfterWriteEffects effects;
   late final DriftWriteUseCase writes;
+  late final SharedHlc hlc;
 
   /// Lets queued after-commit effects finish before closing the database.
   Future<void> dispose() async {

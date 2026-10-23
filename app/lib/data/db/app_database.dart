@@ -8,7 +8,8 @@ import 'package:drift/drift.dart';
 part 'app_database.g.dart';
 
 /// The local source of truth (docs/04 §4): server tables mirrored with sync
-/// columns, plus the local-only `change_log`, `sync_cursors` and `local_meta`.
+/// columns, plus the local-only `change_log`, `sync_cursors`, `field_seen`
+/// and `local_meta`.
 ///
 /// Open it with `openAppDatabase` (connection/connection.dart) so the
 /// SQLCipher key is applied before any statement (06 §4, ADR-0006).
@@ -23,6 +24,7 @@ part 'app_database.g.dart';
     Conflicts,
     ChangeLog,
     SyncCursors,
+    FieldSeen,
     LocalMeta,
   ],
   include: {'search.drift'},
@@ -31,7 +33,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 1;
+  static const latestSchemaVersion = 2;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -39,6 +41,10 @@ class AppDatabase extends _$AppDatabase {
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) => m.createAll(),
+    onUpgrade: (m, from, to) async {
+      // 2 (M6.2): the server versions last pulled, for conflict checks.
+      if (from < 2) await m.createTable(fieldSeen);
+    },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without
       // it SQLite silently ignores every FK action declared above.

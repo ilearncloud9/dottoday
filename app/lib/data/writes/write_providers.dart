@@ -6,6 +6,7 @@ import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/notifications/os_notification_gateway.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/widgets/home_widget_sink.dart';
 import 'package:dottoday/data/widgets/mac_status_item_sink.dart';
 import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
@@ -70,6 +71,11 @@ AfterWriteEffects afterWriteEffects(Ref ref) => AfterWriteEffects(
   logger: ref.watch(loggerProvider),
 );
 
+/// This device's one HLC, shared by the write path and sync (M6.2).
+@Riverpod(keepAlive: true)
+SharedHlc sharedHlc(Ref ref) =>
+    SharedHlc(ref.watch(appDatabaseProvider), ref.watch(clockProvider));
+
 /// The single write path (docs/09 M2.3).
 @Riverpod(keepAlive: true)
 WriteUseCase writeUseCase(Ref ref) => DriftWriteUseCase(
@@ -78,4 +84,5 @@ WriteUseCase writeUseCase(Ref ref) => DriftWriteUseCase(
   materialiser: Materialiser(clock: ref.watch(clockProvider)),
   effects: ref.watch(afterWriteEffectsProvider),
   logger: ref.watch(loggerProvider),
+  hlc: ref.watch(sharedHlcProvider),
 );

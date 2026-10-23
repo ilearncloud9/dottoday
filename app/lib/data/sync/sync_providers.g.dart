@@ -8,13 +8,20 @@ part of 'sync_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Sync for the signed-in account (docs/09 M6.2): the engine over
+/// Supabase, idle while signed out.
 
 @ProviderFor(syncService)
 final syncServiceProvider = SyncServiceProvider._();
 
+/// Sync for the signed-in account (docs/09 M6.2): the engine over
+/// Supabase, idle while signed out.
+
 final class SyncServiceProvider
     extends $FunctionalProvider<SyncService, SyncService, SyncService>
     with $Provider<SyncService> {
+  /// Sync for the signed-in account (docs/09 M6.2): the engine over
+  /// Supabase, idle while signed out.
   SyncServiceProvider._()
     : super(
         from: null,
@@ -48,7 +55,7 @@ final class SyncServiceProvider
   }
 }
 
-String _$syncServiceHash() => r'6b9dbd24e0ed5dfdef56128f09cb8a41aee7cfa5';
+String _$syncServiceHash() => r'3dee19cba301f55004a69a78981ef738bcc7f95f';
 
 /// Sync as it stands, live.
 

@@ -6540,6 +6540,318 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
   }
 }
 
+class $FieldSeenTable extends FieldSeen
+    with TableInfo<$FieldSeenTable, FieldSeenRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FieldSeenTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _entityMeta = const VerificationMeta('entity');
+  @override
+  late final GeneratedColumn<String> entity = GeneratedColumn<String>(
+    'entity',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _entityIdMeta = const VerificationMeta(
+    'entityId',
+  );
+  @override
+  late final GeneratedColumn<String> entityId = GeneratedColumn<String>(
+    'entity_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fieldMeta = const VerificationMeta('field');
+  @override
+  late final GeneratedColumn<String> field = GeneratedColumn<String>(
+    'field',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _hlcMeta = const VerificationMeta('hlc');
+  @override
+  late final GeneratedColumn<String> hlc = GeneratedColumn<String>(
+    'hlc',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [entity, entityId, field, hlc];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'field_seen';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<FieldSeenRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('entity')) {
+      context.handle(
+        _entityMeta,
+        entity.isAcceptableOrUnknown(data['entity']!, _entityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityMeta);
+    }
+    if (data.containsKey('entity_id')) {
+      context.handle(
+        _entityIdMeta,
+        entityId.isAcceptableOrUnknown(data['entity_id']!, _entityIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityIdMeta);
+    }
+    if (data.containsKey('field')) {
+      context.handle(
+        _fieldMeta,
+        field.isAcceptableOrUnknown(data['field']!, _fieldMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fieldMeta);
+    }
+    if (data.containsKey('hlc')) {
+      context.handle(
+        _hlcMeta,
+        hlc.isAcceptableOrUnknown(data['hlc']!, _hlcMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_hlcMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {entity, entityId, field};
+  @override
+  FieldSeenRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FieldSeenRow(
+      entity: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity'],
+      )!,
+      entityId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity_id'],
+      )!,
+      field: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field'],
+      )!,
+      hlc: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}hlc'],
+      )!,
+    );
+  }
+
+  @override
+  $FieldSeenTable createAlias(String alias) {
+    return $FieldSeenTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class FieldSeenRow extends DataClass implements Insertable<FieldSeenRow> {
+  final String entity;
+  final String entityId;
+  final String field;
+  final String hlc;
+  const FieldSeenRow({
+    required this.entity,
+    required this.entityId,
+    required this.field,
+    required this.hlc,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['entity'] = Variable<String>(entity);
+    map['entity_id'] = Variable<String>(entityId);
+    map['field'] = Variable<String>(field);
+    map['hlc'] = Variable<String>(hlc);
+    return map;
+  }
+
+  FieldSeenCompanion toCompanion(bool nullToAbsent) {
+    return FieldSeenCompanion(
+      entity: Value(entity),
+      entityId: Value(entityId),
+      field: Value(field),
+      hlc: Value(hlc),
+    );
+  }
+
+  factory FieldSeenRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FieldSeenRow(
+      entity: serializer.fromJson<String>(json['entity']),
+      entityId: serializer.fromJson<String>(json['entityId']),
+      field: serializer.fromJson<String>(json['field']),
+      hlc: serializer.fromJson<String>(json['hlc']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'entity': serializer.toJson<String>(entity),
+      'entityId': serializer.toJson<String>(entityId),
+      'field': serializer.toJson<String>(field),
+      'hlc': serializer.toJson<String>(hlc),
+    };
+  }
+
+  FieldSeenRow copyWith({
+    String? entity,
+    String? entityId,
+    String? field,
+    String? hlc,
+  }) => FieldSeenRow(
+    entity: entity ?? this.entity,
+    entityId: entityId ?? this.entityId,
+    field: field ?? this.field,
+    hlc: hlc ?? this.hlc,
+  );
+  FieldSeenRow copyWithCompanion(FieldSeenCompanion data) {
+    return FieldSeenRow(
+      entity: data.entity.present ? data.entity.value : this.entity,
+      entityId: data.entityId.present ? data.entityId.value : this.entityId,
+      field: data.field.present ? data.field.value : this.field,
+      hlc: data.hlc.present ? data.hlc.value : this.hlc,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FieldSeenRow(')
+          ..write('entity: $entity, ')
+          ..write('entityId: $entityId, ')
+          ..write('field: $field, ')
+          ..write('hlc: $hlc')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(entity, entityId, field, hlc);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FieldSeenRow &&
+          other.entity == this.entity &&
+          other.entityId == this.entityId &&
+          other.field == this.field &&
+          other.hlc == this.hlc);
+}
+
+class FieldSeenCompanion extends UpdateCompanion<FieldSeenRow> {
+  final Value<String> entity;
+  final Value<String> entityId;
+  final Value<String> field;
+  final Value<String> hlc;
+  final Value<int> rowid;
+  const FieldSeenCompanion({
+    this.entity = const Value.absent(),
+    this.entityId = const Value.absent(),
+    this.field = const Value.absent(),
+    this.hlc = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  FieldSeenCompanion.insert({
+    required String entity,
+    required String entityId,
+    required String field,
+    required String hlc,
+    this.rowid = const Value.absent(),
+  }) : entity = Value(entity),
+       entityId = Value(entityId),
+       field = Value(field),
+       hlc = Value(hlc);
+  static Insertable<FieldSeenRow> custom({
+    Expression<String>? entity,
+    Expression<String>? entityId,
+    Expression<String>? field,
+    Expression<String>? hlc,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (entity != null) 'entity': entity,
+      if (entityId != null) 'entity_id': entityId,
+      if (field != null) 'field': field,
+      if (hlc != null) 'hlc': hlc,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  FieldSeenCompanion copyWith({
+    Value<String>? entity,
+    Value<String>? entityId,
+    Value<String>? field,
+    Value<String>? hlc,
+    Value<int>? rowid,
+  }) {
+    return FieldSeenCompanion(
+      entity: entity ?? this.entity,
+      entityId: entityId ?? this.entityId,
+      field: field ?? this.field,
+      hlc: hlc ?? this.hlc,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (entity.present) {
+      map['entity'] = Variable<String>(entity.value);
+    }
+    if (entityId.present) {
+      map['entity_id'] = Variable<String>(entityId.value);
+    }
+    if (field.present) {
+      map['field'] = Variable<String>(field.value);
+    }
+    if (hlc.present) {
+      map['hlc'] = Variable<String>(hlc.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FieldSeenCompanion(')
+          ..write('entity: $entity, ')
+          ..write('entityId: $entityId, ')
+          ..write('field: $field, ')
+          ..write('hlc: $hlc, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $LocalMetaTable extends LocalMeta
     with TableInfo<$LocalMetaTable, LocalMetaRow> {
   @override
@@ -6850,6 +7162,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $ConflictsTable conflicts = $ConflictsTable(this);
   late final $ChangeLogTable changeLog = $ChangeLogTable(this);
   late final $SyncCursorsTable syncCursors = $SyncCursorsTable(this);
+  late final $FieldSeenTable fieldSeen = $FieldSeenTable(this);
   late final $LocalMetaTable localMeta = $LocalMetaTable(this);
   late final Index conflictsOpen = Index(
     'conflicts_open',
@@ -6895,6 +7208,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     conflicts,
     changeLog,
     syncCursors,
+    fieldSeen,
     localMeta,
     conflictsOpen,
     changeLogEntity,
@@ -12259,6 +12573,196 @@ typedef $$SyncCursorsTableProcessedTableManager =
       SyncCursorRow,
       PrefetchHooks Function()
     >;
+typedef $$FieldSeenTableCreateCompanionBuilder =
+    FieldSeenCompanion Function({
+      required String entity,
+      required String entityId,
+      required String field,
+      required String hlc,
+      Value<int> rowid,
+    });
+typedef $$FieldSeenTableUpdateCompanionBuilder =
+    FieldSeenCompanion Function({
+      Value<String> entity,
+      Value<String> entityId,
+      Value<String> field,
+      Value<String> hlc,
+      Value<int> rowid,
+    });
+
+class $$FieldSeenTableFilterComposer
+    extends Composer<_$AppDatabase, $FieldSeenTable> {
+  $$FieldSeenTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entityId => $composableBuilder(
+    column: $table.entityId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get field => $composableBuilder(
+    column: $table.field,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get hlc => $composableBuilder(
+    column: $table.hlc,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$FieldSeenTableOrderingComposer
+    extends Composer<_$AppDatabase, $FieldSeenTable> {
+  $$FieldSeenTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entityId => $composableBuilder(
+    column: $table.entityId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get field => $composableBuilder(
+    column: $table.field,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get hlc => $composableBuilder(
+    column: $table.hlc,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$FieldSeenTableAnnotationComposer
+    extends Composer<_$AppDatabase, $FieldSeenTable> {
+  $$FieldSeenTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get entity =>
+      $composableBuilder(column: $table.entity, builder: (column) => column);
+
+  GeneratedColumn<String> get entityId =>
+      $composableBuilder(column: $table.entityId, builder: (column) => column);
+
+  GeneratedColumn<String> get field =>
+      $composableBuilder(column: $table.field, builder: (column) => column);
+
+  GeneratedColumn<String> get hlc =>
+      $composableBuilder(column: $table.hlc, builder: (column) => column);
+}
+
+class $$FieldSeenTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $FieldSeenTable,
+          FieldSeenRow,
+          $$FieldSeenTableFilterComposer,
+          $$FieldSeenTableOrderingComposer,
+          $$FieldSeenTableAnnotationComposer,
+          $$FieldSeenTableCreateCompanionBuilder,
+          $$FieldSeenTableUpdateCompanionBuilder,
+          (
+            FieldSeenRow,
+            BaseReferences<_$AppDatabase, $FieldSeenTable, FieldSeenRow>,
+          ),
+          FieldSeenRow,
+          PrefetchHooks Function()
+        > {
+  $$FieldSeenTableTableManager(_$AppDatabase db, $FieldSeenTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$FieldSeenTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$FieldSeenTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$FieldSeenTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> entity = const Value.absent(),
+                Value<String> entityId = const Value.absent(),
+                Value<String> field = const Value.absent(),
+                Value<String> hlc = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => FieldSeenCompanion(
+                entity: entity,
+                entityId: entityId,
+                field: field,
+                hlc: hlc,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String entity,
+                required String entityId,
+                required String field,
+                required String hlc,
+                Value<int> rowid = const Value.absent(),
+              }) => FieldSeenCompanion.insert(
+                entity: entity,
+                entityId: entityId,
+                field: field,
+                hlc: hlc,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$FieldSeenTable, FieldSeenRow>(table),
+                  BaseReferences<_$AppDatabase, $FieldSeenTable, FieldSeenRow>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$FieldSeenTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $FieldSeenTable,
+      FieldSeenRow,
+      $$FieldSeenTableFilterComposer,
+      $$FieldSeenTableOrderingComposer,
+      $$FieldSeenTableAnnotationComposer,
+      $$FieldSeenTableCreateCompanionBuilder,
+      $$FieldSeenTableUpdateCompanionBuilder,
+      (
+        FieldSeenRow,
+        BaseReferences<_$AppDatabase, $FieldSeenTable, FieldSeenRow>,
+      ),
+      FieldSeenRow,
+      PrefetchHooks Function()
+    >;
 typedef $$LocalMetaTableCreateCompanionBuilder =
     LocalMetaCompanion Function({
       required String key,
@@ -12431,6 +12935,8 @@ class $AppDatabaseManager {
       $$ChangeLogTableTableManager(_db, _db.changeLog);
   $$SyncCursorsTableTableManager get syncCursors =>
       $$SyncCursorsTableTableManager(_db, _db.syncCursors);
+  $$FieldSeenTableTableManager get fieldSeen =>
+      $$FieldSeenTableTableManager(_db, _db.fieldSeen);
   $$LocalMetaTableTableManager get localMeta =>
       $$LocalMetaTableTableManager(_db, _db.localMeta);
 }

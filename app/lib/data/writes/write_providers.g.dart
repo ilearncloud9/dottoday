@@ -261,6 +261,52 @@ final class AfterWriteEffectsProvider
 
 String _$afterWriteEffectsHash() => r'e357b5071a1c02cf53eff43218819c935f3829e9';
 
+/// This device's one HLC, shared by the write path and sync (M6.2).
+
+@ProviderFor(sharedHlc)
+final sharedHlcProvider = SharedHlcProvider._();
+
+/// This device's one HLC, shared by the write path and sync (M6.2).
+
+final class SharedHlcProvider
+    extends $FunctionalProvider<SharedHlc, SharedHlc, SharedHlc>
+    with $Provider<SharedHlc> {
+  /// This device's one HLC, shared by the write path and sync (M6.2).
+  SharedHlcProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'sharedHlcProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$sharedHlcHash();
+
+  @$internal
+  @override
+  $ProviderElement<SharedHlc> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SharedHlc create(Ref ref) {
+    return sharedHlc(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SharedHlc value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SharedHlc>(value),
+    );
+  }
+}
+
+String _$sharedHlcHash() => r'bde61acbe169c4d817e4ed158596b4ced9ba1784';
+
 /// The single write path (docs/09 M2.3).
 
 @ProviderFor(writeUseCase)
@@ -305,4 +351,4 @@ final class WriteUseCaseProvider
   }
 }
 
-String _$writeUseCaseHash() => r'2df2267a43a0a32d2bdaf8c5e2ccce34b7492ec7';
+String _$writeUseCaseHash() => r'8fd52b9178d807874125f0f01fcd83489c3a2452';

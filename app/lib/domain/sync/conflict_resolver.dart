@@ -76,6 +76,11 @@ final class ConflictResolver {
       throw ArgumentError('resolve() needs two changes of the same field');
     }
     if (jsonEquals(local.value, remote.value)) return TakeRemote(remote);
+    // One device's edits are in sequence, never a conflict: the server may
+    // hold this device's own earlier write (found by the engine, M6.2).
+    if (local.hlc.node == remote.hlc.node) {
+      return local.hlc > remote.hlc ? KeepLocal(local) : TakeRemote(remote);
+    }
     final gap = (local.hlc.ms - remote.hlc.ms).abs();
     if (gap < window.inMilliseconds) {
       return Conflict(mine: local, theirs: remote);

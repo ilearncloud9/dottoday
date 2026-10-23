@@ -29,6 +29,23 @@ device clock is still compared for LWW but does not advance the local clock, mir
 60 s apart → `Conflict` (server value applied, conflict row recorded); otherwise higher HLC wins; equal
 values never conflict.
 
+### Engine rules (amended 2026-10-23, M6.2)
+- **Pull, then push.** A run pulls every entity since its cursor (rows with `updated_at` ≥ cursor,
+  oldest first, pages of 500), merges, then pushes the outbox. Pushing first would let `sync_push`'s
+  last-writer-wins overwrite a same-field edit before it could be seen as a conflict.
+- **Merge per field.** A field with no pending local write takes the server value. A pending one is
+  compared with the server's field HLC (`field_versions`): if that is the version the device last
+  pulled (local `field_seen`), the edit was made on top of it and simply goes up; otherwise the
+  resolver decides. One device's own edits never conflict (same HLC node: later wins), because a
+  device re-pulls its own last rows.
+- **Repeats** materialise with deterministic ids (`instanceId(series, originalStart)`), so two devices
+  extending one repeat write one row instead of colliding on `(series_id, original_start_utc)`.
+- **One clock**: the write path and the engine share the device HLC; every pulled HLC is received.
+- **Account adoption**: on sign-in the device profile is re-keyed to the account id (FKs cascade),
+  outbox profile rows follow, cursors reset; the whole local history then goes up.
+- Pulled rows are written without outbox rows; device-only columns (`calendar_link_id` until M7) keep
+  their local value; instants cross as ISO on the server and epoch ms locally.
+
 ## Alternatives
 Firestore (weaker relational model, lock-in), PowerSync/ElectricSQL (extra service to run; revisit if conflict volume is high), full CRDT (overkill for single-user data).
 

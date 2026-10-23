@@ -49,6 +49,15 @@ void main() {
     expect(conflict.applied.value, 'Run');
   });
 
+  // The server may hold this device's own earlier write (M6.2): one
+  // device's edits are in sequence, the later one wins, no conflict.
+  test('two edits from one device within 60 s: the later wins', () {
+    final first = _change('Run', atMs: 0);
+    final second = _change('Gym', atMs: 20000);
+    expect(_r.resolve(second, first), isA<KeepLocal>());
+    expect(_r.resolve(first, second), isA<TakeRemote>());
+  });
+
   test('same value is never a conflict', () {
     final mine = _change(['a', 1], atMs: 1000);
     final theirs = _change(['a', 1], atMs: 0, node: _laptop);
