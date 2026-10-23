@@ -8,9 +8,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 /// R-15 (docs/09 M3b.9): a 200-task day scrolls at ≥ 55 fps. Run in
-/// profile mode on a device:
-///   flutter drive --profile --driver=test_driver/integration_test.dart \
+/// profile mode on a physical device (Flutter has no profile mode on
+/// emulators or simulators; M5.9b), with `--no-dds` so the test can reach
+/// the VM service for its timeline:
+///   flutter drive --profile --no-dds --driver=test_driver/integration_test.dart \
 ///     --target=integration_test/thread_perf_test.dart
+/// Not in `tool/device_tests.sh`: under `flutter test` it fails before
+/// measuring, and debug numbers say nothing about frame time.
 /// Frame build/raster times land in build/integration_response_data.json.
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();

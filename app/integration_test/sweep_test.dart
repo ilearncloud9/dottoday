@@ -25,6 +25,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:integration_test/integration_test.dart';
 
+import 'support/o4.dart';
+
 const _tag = String.fromEnvironment('SWEEP_TAG', defaultValue: 'device');
 
 Future<void> _pumpUntil(
@@ -52,15 +54,16 @@ Future<void> _rest(WidgetTester tester) async {
   }
 }
 
-/// Saves a screenshot. integration_test can't capture on macOS, so there
-/// the test announces the shot and holds still while
-/// `tool/mac_sweep.sh` captures the window.
+/// Saves a screenshot. integration_test can't capture on macOS, and on the
+/// iOS simulator its capture comes back blank (found in M6.5.12), so there
+/// the test announces the shot and holds still while the host captures it
+/// (`tool/mac_sweep.sh`; `tool/device_tests.sh` with `simctl io`).
 Future<void> _shot(
   IntegrationTestWidgetsFlutterBinding binding,
   WidgetTester tester,
   String name,
 ) async {
-  if (kIsWeb || !Platform.isMacOS) {
+  if (kIsWeb || Platform.isAndroid) {
     await binding.takeScreenshot(name);
     return;
   }
@@ -333,6 +336,9 @@ Future<void> _onboarding(
   final container = ProviderScope.containerOf(
     tester.element(find.byType(MaterialApp).first),
   );
+  // Let the saved progress load first, or it overwrites the reset
+  // (a race on devices with stored data, M6.5.12).
+  await container.read(onboardingProvider.future);
   await container
       .read(onboardingProvider.notifier)
       .go(OnboardingStep.welcome, returning: false);
@@ -357,10 +363,12 @@ Future<void> _onboarding(
   // Already allowed on this device → the test alarm and Continue (M6.5.9).
   await _pumpUntil(tester, find.text('Want a nudge?'));
   await _rest(tester);
-  await step(
-    'onboarding_reminders',
-    tester.any(find.text('Not now')) ? 'Not now' : 'Continue',
-  );
+  await leaveRemindersStep(tester, (label) async {
+    await tester.ensureVisible(find.text(label).first);
+    await _rest(tester);
+    await tester.tap(find.text(label).first);
+    await _rest(tester);
+  }, before: () => _shot(binding, tester, '${_tag}_onboarding_reminders'));
   await step('onboarding_account', 'Continue without an account');
   await step('onboarding_done', 'Open today');
 }

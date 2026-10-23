@@ -30,6 +30,9 @@ Scenarios: fresh install; upgrade with data; offline for a day then sync; two de
 ## 5. Beta
 TestFlight + Play internal track + web staging. Collect: crash-free rate, sync error rate, notification delivery (self-reported "did it fire?" prompt once), feedback form.
 
+## 5b. Running device tests (M6.5.12)
+Always through `app/tool/device_tests.sh android|ios [device] [test …]` (and `tool/killed_app_check.sh` for the killed-app check), never a bare `flutter test integration_test`: each test is built with its own entry, installed as an update, every permission is answered up front (Android `pm grant` POST_NOTIFICATIONS + `appops` SCHEDULE_EXACT_ALARM; iOS provisional authorisation, which never prompts — `integration_test/support/no_dialog_notifications.dart`), then run with `flutter drive --use-application-binary`. A run over 15 minutes fails with TIMEOUT; every run's full log is in `app/build/device_logs/<platform>_<test>.log`. Why: `flutter test` reinstalls (new uid, grants lost) and force-stops the app, and a system dialog can stall a run for an hour (found in M6.5.12). `thread_perf` is excluded: it needs `flutter drive --profile --no-dds` on physical hardware (M5.9b).
+
 ## 6. Release gates (all must pass)
 
 Grouped by who does them. Collected from the M5/M6 readiness notes in `09-implementation-plan.md` and the roadmap (M6.5–M12). Status is reported at every milestone close and in full at M12.6.

@@ -15,6 +15,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+import 'support/o4.dart';
+
 Future<void> _pumpUntil(
   WidgetTester tester,
   Finder finder, {
@@ -55,6 +57,9 @@ void main() {
     PlatformDispatcher.instance.onError = platformOnError;
     await _pumpUntil(tester, find.byType(MaterialApp));
     // A device that finished onboarding before starts it again here.
+    // Let the saved progress load first, or it overwrites the reset
+    // (a race on devices with stored data, M6.5.12).
+    await _container(tester).read(onboardingProvider.future);
     await _container(tester)
         .read(onboardingProvider.notifier)
         .go(OnboardingStep.welcome, returning: false);
@@ -70,13 +75,8 @@ void main() {
 
     await _tap(tester, 'Lunch');
     await _tap(tester, 'Add 1 to tomorrow');
-    // O4: "Not now" on a first install; once notifications are allowed on
-    // this device it offers the test alarm and Continue (M6.5.9).
     await _pumpUntil(tester, find.text('Want a nudge?'));
-    await _tap(
-      tester,
-      tester.any(find.text('Not now')) ? 'Not now' : 'Continue',
-    );
+    await leaveRemindersStep(tester, (label) => _tap(tester, label)); // O4
     await _tap(tester, 'Continue without an account'); // O5
     await _tap(tester, 'Open today'); // O6
     await _pumpUntil(tester, find.byType(TodayScreen));

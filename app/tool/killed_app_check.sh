@@ -23,19 +23,39 @@ device="${2:-}"
 title="Killed-app check"
 app_id="com.yourcompany.dottoday"
 adb="${ANDROID_HOME:-$HOME/Library/Android/sdk}/platform-tools/adb"
+a() { "$adb" ${device:+-s "$device"} "$@"; }
 
 run_phase_one() {
-  local log
-  log=$(mktemp)
-  flutter drive --driver=test_driver/integration_test.dart \
-    --target=integration_test/killed_app_schedule_test.dart --keep-app-running \
-    ${device:+-d "$device"} --dart-define-from-file="${DEFINES:-.env}" >"$log" 2>&1 || {
+  local log="build/device_logs/${mode}_killed_app.log" binary
+  local target=integration_test/killed_app_schedule_test.dart
+  mkdir -p build/device_logs
+  : >"$log"
+  # Install as an update, then grant (no dialog ever, M6.5.12), then drive
+  # that binary so nothing reinstalls.
+  if [[ "$mode" == ios ]]; then
+    flutter build ios --simulator --debug -t "$target" \
+      --dart-define-from-file="${DEFINES:-.env}" >>"$log" 2>&1 || { cat "$log"; return 1; }
+    binary=build/ios/iphonesimulator/Runner.app
+    xcrun simctl install "${device:-booted}" "$binary" >>"$log" 2>&1
+  else
+    flutter build apk --debug -t "$target" \
+      --dart-define-from-file="${DEFINES:-.env}" >>"$log" 2>&1 || { cat "$log"; return 1; }
+    binary=build/app/outputs/flutter-apk/app-debug.apk
+    a install -r "$binary" >>"$log" 2>&1
+    a shell pm grant "$app_id" android.permission.POST_NOTIFICATIONS >>"$log" 2>&1
+    a shell appops set "$app_id" SCHEDULE_EXACT_ALARM allow >>"$log" 2>&1
+  fi
+  # 15 min hard limit, as in tool/device_tests.sh: never hang.
+  perl -e 'alarm shift; exec @ARGV or die "exec: $!"' 900 \
+    flutter drive --driver=test_driver/integration_test.dart --target="$target" \
+    --keep-app-running --use-application-binary="$binary" \
+    ${device:+-d "$device"} --dart-define-from-file="${DEFINES:-.env}" >>"$log" 2>&1 || {
     cat "$log"
     return 1
   }
   # The OS notification id phase 1 scheduled: only that one counts.
   scheduled_id=$(grep -o "KILLED_APP scheduled id=[0-9]*" "$log" | grep -o "[0-9]*$")
-  echo "KILLED_APP scheduled id=$scheduled_id"
+  echo "KILLED_APP scheduled id=$scheduled_id log=$log"
 }
 
 # Notifications Android shows now with the id phase 1 scheduled.
@@ -45,21 +65,23 @@ android_delivered() {
   grep -c "pkg=$app_id .* id=$scheduled_id " <<<"$out" || true
 }
 
-# Banners SpringBoard posted for the app since [start] (bash 3.2 can't
-# parse a multi-line $(… | …) inside `case`, hence a function).
+# Banners SpringBoard posted since [start] for the request phase 1
+# scheduled — by id, so a Bedtime reminder in the window doesn't count.
+# SpringBoard names requests by a short id ("FFEF-4D1A"); the line that
+# loads the request maps it to our identifier. (bash 3.2 can't parse a
+# multi-line $(… | …) inside `case`, hence a function.)
 ios_delivered() {
-  local out
+  local out request
   out=$(xcrun simctl spawn "$1" log show --start "$2" --style compact \
     --predicate 'process == "SpringBoard"')
-  grep "Posting notification id" <<<"$out" | grep -c "section: $app_id;" || true
+  request=$(grep "identifier: $scheduled_id," <<<"$out" |
+    grep -o "request [0-9A-F]\{4\}-[0-9A-F]\{4\}" | head -1 | cut -d' ' -f2)
+  [[ -z "$request" ]] && { echo 0; return; }
+  grep "Posting notification id: $request;" <<<"$out" | grep -c "section: $app_id;" || true
 }
 
 case "$mode" in
   android | android-reboot)
-    a() { "$adb" ${device:+-s "$device"} "$@"; }
-    a shell pm grant "$app_id" android.permission.POST_NOTIFICATIONS || true
-    a shell appops set "$app_id" SCHEDULE_EXACT_ALARM allow || true
-    a shell cmd notification dismiss-all >/dev/null 2>&1 || true
     run_phase_one
     a shell input keyevent KEYCODE_HOME
     sleep 2
@@ -84,7 +106,8 @@ case "$mode" in
     ;;
   ios)
     udid="${device:-booted}"
-    xcrun simctl privacy "$udid" grant notifications "$app_id" 2>/dev/null || true
+    # No dialog: the test takes provisional authorisation (simctl privacy
+    # has no notifications service).
     start=$(date +"%Y-%m-%d %H:%M:%S") # local: what log show reads
     run_phase_one
     xcrun simctl terminate "$udid" "$app_id" || true

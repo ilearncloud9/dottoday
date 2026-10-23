@@ -10,14 +10,12 @@
 import 'package:dottoday/bootstrap.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
-import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
-import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:flutter/foundation.dart';
@@ -26,6 +24,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'pass_onboarding.dart';
+import 'support/no_dialog_notifications.dart';
 
 /// The title the host script looks for (`KILLED_APP_TITLE` there).
 const killedAppTitle = 'Killed-app check';
@@ -43,10 +42,12 @@ void main() {
     final c = ProviderScope.containerOf(
       tester.element(find.byType(TodayScreen)),
     );
-    final permission = c.read(notificationPermissionProvider);
-    var state = await permission.status();
-    if (state != PermissionState.granted) state = await permission.request();
-    expect(state, PermissionState.granted, reason: 'grant notifications');
+    // Granted by the harness (Android) or provisionally (iOS): never a
+    // system dialog, which would stall the run (M6.5.12).
+    await ensureNotificationsWithoutDialog(
+      c.read(localNotificationsPluginProvider),
+      needExact: true,
+    );
 
     final profile = await c.read(localProfileProvider.future);
     final plugin = c.read(localNotificationsPluginProvider);
