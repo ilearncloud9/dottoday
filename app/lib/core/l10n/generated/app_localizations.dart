@@ -5037,6 +5037,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tasks shifted to {city} time'**
   String zoneShiftedSnack(String city);
+
+  /// How long since the last sync: under a minute (M6.3).
+  ///
+  /// In en, this message translates to:
+  /// **'just now'**
+  String get syncAgoJustNow;
+
+  /// How long since the last sync, in minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes, plural, =1{1 min ago} other{{minutes} min ago}}'**
+  String syncAgoMinutes(int minutes);
+
+  /// How long since the last sync, in hours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours, plural, =1{1 h ago} other{{hours} h ago}}'**
+  String syncAgoHours(int hours);
+
+  /// Status line under the Inbox sidebar (A-mac-week-alt3-board).
+  ///
+  /// In en, this message translates to:
+  /// **'Synced · {ago}'**
+  String syncLineSynced(String ago);
+
+  /// Status line while syncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing…'**
+  String get syncLineSyncing;
+
+  /// Status line when the device is offline; nothing is lost.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline · changes saved here'**
+  String get syncLineOffline;
+
+  /// Status line after a server error (details in the Sync sheet).
+  ///
+  /// In en, this message translates to:
+  /// **'Sync paused · tap Sync for why'**
+  String get syncLinePaused;
+
+  /// Settings header when signed in and synced (A-ios-settings: Kody · synced just now).
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · synced {ago}'**
+  String settingsSynced(String name, String ago);
+
+  /// Settings header, signed in, no name.
+  ///
+  /// In en, this message translates to:
+  /// **'Synced {ago}'**
+  String settingsSyncedNoName(String ago);
+
+  /// Settings header, signed in, a sync state other than synced.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · {status}'**
+  String settingsNameAndStatus(String name, String status);
 }
 
 class _AppLocalizationsDelegate

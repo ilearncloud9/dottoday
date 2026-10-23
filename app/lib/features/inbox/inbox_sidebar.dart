@@ -1,18 +1,22 @@
 import 'dart:async';
 
+import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
+import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/inbox/state/inbox_state.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_add_field.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_commands.dart';
 import 'package:dottoday/features/inbox/widgets/wide_inbox.dart';
 import 'package:dottoday/shared/dot/inbox_row.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/sync/sync_status_line.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,18 +80,34 @@ class _Sidebar extends ConsumerWidget {
       rangeText: (s) => l10n.threadTimeRange(time(s.startUtc), time(s.endUtc)),
     );
     final open = openItems(items).toList();
-    return ListView(
-      padding: const EdgeInsets.all(DotSpace.l),
+    final sync = ref.watch(syncStatusProvider).value ?? SyncStatus.localOnly;
+    return Column(
       children: [
-        _Header(count: open.length),
-        const SizedBox(height: DotSpace.m),
-        InboxAddField(onSubmit: commands.add),
-        const SizedBox(height: DotSpace.m),
-        for (final o in open)
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.all(DotSpace.l),
+            children: [
+              _Header(count: open.length),
+              const SizedBox(height: DotSpace.m),
+              InboxAddField(onSubmit: commands.add),
+              const SizedBox(height: DotSpace.m),
+              for (final o in open)
+                Padding(
+                  key: ValueKey(o.id),
+                  padding: const EdgeInsets.only(bottom: DotSpace.s),
+                  child: _row(context, o, commands),
+                ),
+            ],
+          ),
+        ),
+        // "Synced · just now" at the foot (`A-mac-week-alt3-board`, M6.3).
+        if (sync.state != SyncState.localOnly)
           Padding(
-            key: ValueKey(o.id),
-            padding: const EdgeInsets.only(bottom: DotSpace.s),
-            child: _row(context, o, commands),
+            padding: const EdgeInsets.all(DotSpace.l),
+            child: SyncStatusLine(
+              status: sync,
+              now: ref.watch(clockProvider).nowUtc(),
+            ),
           ),
       ],
     );

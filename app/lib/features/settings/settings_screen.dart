@@ -1,16 +1,20 @@
 import 'dart:async';
 
+import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
+import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/settings/widgets/data_about_groups.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
 import 'package:dottoday/features/settings/widgets/planning_group.dart';
 import 'package:dottoday/features/settings/widgets/reminders_look_groups.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
+import 'package:dottoday/shared/sync/sync_status_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -51,7 +55,13 @@ class SettingsScreen extends ConsumerWidget {
                 DotSpace.fabClearance,
               ),
               children: [
-                _Header(profile: profile),
+                _Header(
+                  profile: profile,
+                  sync:
+                      ref.watch(syncStatusProvider).value ??
+                      SyncStatus.localOnly,
+                  now: ref.watch(clockProvider).nowUtc(),
+                ),
                 for (final group in _groups(context, profile.locale, s)) ...[
                   const SizedBox(height: DotSpace.xl),
                   group,
@@ -83,13 +93,15 @@ class SettingsScreen extends ConsumerWidget {
   ];
 }
 
-/// "Settings", "Kody · on this device", and the initial in a circle
-/// (`A-ios-settings`; "synced just now" when accounts arrive, M6). The
+/// "Settings", "Kody · on this device" — or "Kody · synced just now" when
+/// signed in (`A-ios-settings`, M6.3) — and the initial in a circle. The
 /// name and avatar open Settings › Account (M3f.7).
 class _Header extends StatelessWidget {
-  const _Header({required this.profile});
+  const _Header({required this.profile, required this.sync, required this.now});
 
   final Profile profile;
+  final SyncStatus sync;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +115,26 @@ class _Header extends StatelessWidget {
           unawaited(context.push(AppRoutes.settingsPage(SettingsPage.account))),
       child: _row(t, l10n, name ?? '', hasName: hasName),
     );
+  }
+
+  String _subtitle(
+    AppLocalizations l10n,
+    String name, {
+    required bool hasName,
+  }) {
+    if (sync.state == SyncState.synced && sync.conflicts.isEmpty) {
+      final ago = syncAgo(l10n, sync.lastSyncedUtc, now);
+      return hasName
+          ? l10n.settingsSynced(name, ago)
+          : l10n.settingsSyncedNoName(ago);
+    }
+    final line = syncLineText(l10n, sync, now);
+    if (line == null) {
+      return hasName
+          ? l10n.settingsLocalOnly(name)
+          : l10n.settingsLocalOnlyNoName;
+    }
+    return hasName ? l10n.settingsNameAndStatus(name, line) : line;
   }
 
   Widget _row(
@@ -123,9 +155,7 @@ class _Header extends StatelessWidget {
                 child: Text(l10n.navSettings, style: t.styles.pageTitle),
               ),
               Text(
-                hasName
-                    ? l10n.settingsLocalOnly(name)
-                    : l10n.settingsLocalOnlyNoName,
+                _subtitle(l10n, name, hasName: hasName),
                 style: t.styles.body.copyWith(color: t.colors.muted),
               ),
             ],

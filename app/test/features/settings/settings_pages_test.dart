@@ -1,6 +1,8 @@
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
+import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
+import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,6 +10,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
 import '../../support/account_fakes.dart';
+import '../../support/sync_fakes.dart';
 import 'settings_harness.dart';
 
 // Settings sub-pages (docs/09 M3f.7): Account, Calendars, Export, Help,
@@ -86,6 +89,23 @@ void main() {
       expect(service.calls, ['delete', 'signOut']);
       await _tap(tester, 'Sign out everywhere');
       expect(service.calls.last, 'signOutEverywhere');
+    });
+
+    // M6.3: the header says how sync stands (`A-ios-settings`).
+    testWidgets('the header: "Kody · synced just now" once signed in', (
+      tester,
+    ) async {
+      final sync = FakeSyncService(
+        SyncStatus(
+          state: SyncState.synced,
+          lastSyncedUtc: DateTime.utc(2026, 10, 21, 9),
+        ),
+      );
+      await pumpSettings(
+        tester,
+        overrides: [syncServiceProvider.overrideWithValue(sync)],
+      );
+      expect(find.text('Kody · synced just now'), findsOneWidget);
     });
 
     // M6.1: email asks for the address here too, then "Check your mail".

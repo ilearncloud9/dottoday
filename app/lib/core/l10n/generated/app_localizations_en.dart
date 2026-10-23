@@ -3379,4 +3379,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String zoneShiftedSnack(String city) {
     return 'Tasks shifted to $city time';
   }
+
+  @override
+  String get syncAgoJustNow => 'just now';
+
+  @override
+  String syncAgoMinutes(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutes min ago',
+      one: '1 min ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String syncAgoHours(int hours) {
+    String _temp0 = intl.Intl.pluralLogic(
+      hours,
+      locale: localeName,
+      other: '$hours h ago',
+      one: '1 h ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String syncLineSynced(String ago) {
+    return 'Synced · $ago';
+  }
+
+  @override
+  String get syncLineSyncing => 'Syncing…';
+
+  @override
+  String get syncLineOffline => 'Offline · changes saved here';
+
+  @override
+  String get syncLinePaused => 'Sync paused · tap Sync for why';
+
+  @override
+  String settingsSynced(String name, String ago) {
+    return '$name · synced $ago';
+  }
+
+  @override
+  String settingsSyncedNoName(String ago) {
+    return 'Synced $ago';
+  }
+
+  @override
+  String settingsNameAndStatus(String name, String status) {
+    return '$name · $status';
+  }
 }
