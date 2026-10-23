@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Writes the web Content-Security-Policy and security headers for one
 # deployment (docs/06 §8, docs/09 M5.7) into a built app:
-#   tool/web_csp.sh <supabase-url> [build/web]
+#   tool/web_csp.sh <supabase-url> [build/web] [sentry-dsn]
 # - a <meta http-equiv> CSP in index.html (works on any static host), and
 # - _headers (Netlify / Cloudflare Pages format) with the same CSP plus the
 #   headers a meta tag can't carry (frame-ancestors, HSTS, framing, referrer).
@@ -10,6 +10,11 @@
 set -euo pipefail
 supabase="${1:?usage: web_csp.sh <supabase-url> [build-dir]}"
 dir="${2:-build/web}"
+# With a Sentry DSN (M6.7), its ingest host may receive crash reports.
+sentry=""
+if [ -n "${3:-}" ]; then
+  sentry="$(python3 -c 'import sys,urllib.parse as u; p=u.urlparse(sys.argv[1]); print(f"{p.scheme}://{p.hostname}")' "$3")"
+fi
 supabase="${supabase%/}"
 ws="${supabase/https:/wss:}"
 ws="${ws/http:/ws:}"
@@ -17,7 +22,7 @@ ws="${ws/http:/ws:}"
 # style-src 'unsafe-inline': Flutter's engine sets inline styles on its DOM.
 # fonts.gstatic.com: Flutter's glyph fallback (emoji, CJK in task titles);
 # only font files are fetched, nothing about the user is sent.
-csp="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' ${supabase} ${ws} https://fonts.gstatic.com; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
+csp="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' ${supabase} ${ws} https://fonts.gstatic.com${sentry:+ $sentry}; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
 python3 - "$dir/index.html" "$csp" <<'PY'
 import sys
 path, csp = sys.argv[1], sys.argv[2]

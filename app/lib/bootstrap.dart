@@ -16,6 +16,7 @@ import 'package:dottoday/core/router/native_deep_links.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/auth/supabase_start.dart';
+import 'package:dottoday/data/observability/sentry_reporting.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -30,7 +31,8 @@ import 'package:timezone/data/latest.dart' as tz_data;
 /// defines are missing or invalid (docs/09 M0.3, ADR-0005).
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final logger = Logger(const DeveloperLogSink(), const SystemClock());
+  final sinks = FanOutLogSink([const DeveloperLogSink()]);
+  final logger = Logger(sinks, const SystemClock());
   installErrorHandlers(logger);
   // IANA zone data for TZDateTime arithmetic and tz_id validation (docs/05).
   tz_data.initializeTimeZones();
@@ -39,6 +41,14 @@ Future<void> bootstrap() async {
   await initializeDateFormatting();
 
   final env = Env.fromEnvironment();
+
+  // Crash reports (M6.7) through the same PII-checked Logger. Sentry's own
+  // error handlers are replaced by ours again, so every error takes the
+  // one path: type and event, never the message.
+  if (await startSentry(env)) {
+    sinks.add(SentryLogSink());
+    installErrorHandlers(logger);
+  }
 
   _scheduleBackgroundRefresh(logger);
   // Android draws under transparent system bars (07 Android, M5.6); screens

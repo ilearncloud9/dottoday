@@ -47,7 +47,8 @@ final class LogRecord {
   };
 }
 
-/// Destination for log records (console now; Sentry breadcrumbs in M6.7).
+/// Destination for log records: the console, and Sentry when set up
+/// (M6.7).
 abstract interface class LogSink {
   void write(LogRecord record);
 }
@@ -65,5 +66,22 @@ final class DeveloperLogSink implements LogSink {
       time: record.timeUtc,
       stackTrace: record.stackTrace,
     );
+  }
+}
+
+/// Writes every record to each of its sinks; more can join later (Sentry
+/// starts after the first errors may already be logged, M6.7).
+final class FanOutLogSink implements LogSink {
+  FanOutLogSink(List<LogSink> sinks) : _sinks = [...sinks];
+
+  final List<LogSink> _sinks;
+
+  void add(LogSink sink) => _sinks.add(sink);
+
+  @override
+  void write(LogRecord record) {
+    for (final s in _sinks) {
+      s.write(record);
+    }
   }
 }
