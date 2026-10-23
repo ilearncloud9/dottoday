@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- Fixed: after signing in during onboarding, Settings and the Inbox kept saying "On this device" although sync was running; they now show "Synced · just now" straight away.
 - Fixed: on iPhone and Mac, deleting and reinstalling Dottoday left you signed in (the Keychain outlives the app); a fresh install now starts signed out, as on Android and the web.
 - M6.7: Crash reports (once a Sentry project is set up) say where something broke and what kind of error it was — never your task titles, notes, email or device name.
 - M6.6: Checked with two devices on one account: edits made offline on both come together without loss; only the same detail changed on both within a minute asks you which to keep. Fixed: onboarding could offer to sign in to a device that was already signed in.

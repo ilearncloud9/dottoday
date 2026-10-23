@@ -81,6 +81,21 @@ void main() {
     expect(server.table('occurrences'), hasLength(1));
   });
 
+  // Signing in during onboarding: the app under the flow is offstage and
+  // Riverpod pauses its listeners. What changed meanwhile must arrive on
+  // resume, not leave Settings on "On this device".
+  test('a paused listener gets the latest status on resume', () async {
+    final seen = <SyncState>[];
+    final sub = service.watch().listen((s) => seen.add(s.state))..pause();
+    accounts.add(_account);
+    await pumpEventQueue(times: 50);
+    sub.resume();
+    await pumpEventQueue();
+    await sub.cancel();
+    expect(seen.first, SyncState.localOnly);
+    expect(seen.last, SyncState.synced);
+  });
+
   test('offline: the status says so; Sync now reports it', () async {
     accounts.add(_account);
     await settled();

@@ -75,16 +75,11 @@ final class EngineSyncService implements SyncService {
   var _again = false;
 
   @override
-  Stream<SyncStatus> watch() async* {
-    yield _status;
-    yield* _state.stream;
-  }
+  Stream<SyncStatus> watch() => _replaying(() => _status, _state.stream);
 
   @override
-  Stream<RestoreProgress> watchRestore() async* {
-    if (_lastRestore case final p?) yield p;
-    yield* _restore.stream;
-  }
+  Stream<RestoreProgress> watchRestore() =>
+      _replaying(() => _lastRestore, _restore.stream);
 
   @override
   Future<Result<void, AppFailure>> syncNow() async {
@@ -228,6 +223,19 @@ final class EngineSyncService implements SyncService {
     pending: _status.pending,
     conflicts: conflicts ?? _status.conflicts,
   );
+
+  /// The current value, then every change. Subscribes at once, unlike an
+  /// `async*` that waits at its first `yield`: Riverpod pauses listeners
+  /// under the onboarding flow, and a change made meanwhile (signing in
+  /// there) must still arrive on resume, not be lost on the broadcast.
+  static Stream<T> _replaying<T extends Object>(
+    T? Function() current,
+    Stream<T> changes,
+  ) => Stream.multi((out) {
+    if (current() case final value?) out.add(value);
+    final sub = changes.listen(out.add);
+    out.onCancel = sub.cancel;
+  });
 
   void _emit(SyncStatus s) {
     _status = s;

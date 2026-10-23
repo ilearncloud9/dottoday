@@ -30,11 +30,12 @@ final class AuthCallbackInbox {
     }
   }
 
-  /// Every callback, the waiting ones first.
-  Stream<Uri> take() async* {
-    final waiting = [..._pending];
+  /// Every callback, the waiting ones first. Listens at once, so no link
+  /// falls between handing over the waiting ones and listening.
+  Stream<Uri> take() => Stream.multi((out) {
+    final sub = _links.stream.listen(out.add);
+    _pending.forEach(out.add);
     _pending.clear();
-    yield* Stream.fromIterable(waiting);
-    yield* _links.stream;
-  }
+    out.onCancel = sub.cancel;
+  });
 }

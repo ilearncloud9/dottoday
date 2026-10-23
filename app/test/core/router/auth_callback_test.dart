@@ -22,4 +22,15 @@ void main() {
     await sub.cancel();
     expect(got, [first, second]);
   });
+
+  test('a link right after listening is not lost', () async {
+    final inbox = AuthCallbackInbox();
+    final link = Uri.parse('$authCallbackLink?code=3');
+    final got = <Uri>[];
+    final sub = inbox.take().listen(got.add);
+    inbox.deliver(link);
+    await pumpEventQueue();
+    await sub.cancel();
+    expect(got, [link]);
+  });
 }
