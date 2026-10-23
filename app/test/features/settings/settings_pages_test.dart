@@ -1,6 +1,7 @@
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/domain/auth/account.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -104,6 +105,17 @@ void main() {
     await _tap(tester, 'Clear recent searches');
     expect(find.text('Recent searches cleared'), findsOneWidget);
     expect(h.container.read(recentSearchesProvider).value, isEmpty);
+  });
+
+  // A platform without a device check (the web): the lock group says what
+  // protects the tasks instead of a switch (07 Web, M5.8).
+  testWidgets('Privacy: no lock switch without a device check', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    await pumpSettings(tester, location: '/settings/privacy');
+    expect(find.text("Uses your computer's lock"), findsOneWidget);
+    expect(find.text('Lock Dottoday'), findsNothing);
+    debugDefaultTargetPlatformOverride = null;
   });
 
   testWidgets('Help opens an answer; About opens the licences', (tester) async {

@@ -5,6 +5,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
+import 'package:dottoday/features/settings/widgets/app_lock_group.dart';
 import 'package:dottoday/features/settings/widgets/data_about_groups.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,6 +79,8 @@ class PrivacyPage extends ConsumerWidget {
     return SettingsPageFrame(
       title: l10n.settingsPrivacy,
       children: [
+        // This device's lock (M5.8), above what the page explains.
+        const AppLockGroup(),
         _Section(l10n.privacyLocalTitle, l10n.privacyLocalBody),
         _Section(l10n.privacyTrackTitle, l10n.privacyTrackBody),
         _Section(l10n.privacySyncTitle, l10n.privacySyncBody),

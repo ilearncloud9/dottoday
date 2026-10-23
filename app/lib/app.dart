@@ -11,6 +11,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/inbox/schedule_from_anywhere.dart';
+import 'package:dottoday/features/lock/lock_gate.dart';
 import 'package:dottoday/features/onboarding/onboarding_gate.dart';
 import 'package:dottoday/features/recovery/database_recovery.dart';
 import 'package:dottoday/features/sync_status/sync_sheet.dart';
@@ -67,9 +68,12 @@ class DottodayApp extends ConsumerWidget {
                   actions: _intents(router),
                   // An unreadable database replaces every screen (M3f.9).
                   child: DatabaseGate(
-                    // First run on this device (M4).
-                    child: OnboardingGate(
-                      child: child ?? const SizedBox.shrink(),
+                    // The optional app lock over everything else (M5.8).
+                    child: LockGate(
+                      // First run on this device (M4).
+                      child: OnboardingGate(
+                        child: child ?? const SizedBox.shrink(),
+                      ),
                     ),
                   ),
                 ),

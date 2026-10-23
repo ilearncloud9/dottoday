@@ -3309,4 +3309,50 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get installAction => 'Install';
+
+  @override
+  String get lockCaption => 'APP LOCK';
+
+  @override
+  String get lockToggle => 'Lock Dottoday';
+
+  @override
+  String get lockToggleDetail => 'Ask for your face, fingerprint or passcode';
+
+  @override
+  String get lockWebTitle => 'Uses your computer\'s lock';
+
+  @override
+  String get lockWebDetail =>
+      'In a browser, Dottoday is as locked as your computer. Lock your screen when you step away; tasks stay encrypted in this browser.';
+
+  @override
+  String get lockAfter => 'Lock after';
+
+  @override
+  String get lockAfterNow => 'Right away';
+
+  @override
+  String lockAfterMinutes(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutes minutes',
+      one: '1 minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lockReason => 'Unlock Dottoday';
+
+  @override
+  String get lockTitle => 'Dottoday is locked';
+
+  @override
+  String get lockUnlock => 'Unlock';
+
+  @override
+  String get lockUnavailable =>
+      'This device has no passcode, so Dottoday can\'t lock.';
 }

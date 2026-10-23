@@ -10,6 +10,7 @@ import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
+import 'package:dottoday/data/security/app_lock_store.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
@@ -23,12 +24,14 @@ import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
 import 'package:dottoday/domain/repositories/subtask_repository.dart';
+import 'package:dottoday/domain/security/app_lock.dart';
 import 'package:dottoday/domain/trash/trash_service.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/validation/entity_validators.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -391,6 +394,7 @@ List<Override> timelineOverrides({
     // No OS plugin under `flutter test` (M5.1).
     notificationPermissionProvider.overrideWithValue(notificationPermission),
     exactAlarmsProvider.overrideWithValue(exactAlarms),
+    appLockSettingProvider.overrideWith(FakeAppLockSetting.new),
     notificationGatewayProvider.overrideWithValue(
       const UnwiredNotificationGateway(),
     ),
@@ -444,4 +448,16 @@ final class FakeTrashService implements TrashService {
   @override
   Future<Result<int, AppFailure>> purgeExpired(String userId) async =>
       const Ok(0);
+}
+
+/// The app lock, off and in memory (M5.8).
+final class FakeAppLockSetting extends AppLockSetting {
+  @override
+  Future<AppLockSettings> build() async => const AppLockSettings();
+
+  @override
+  Future<bool> save(AppLockSettings settings, {required String reason}) async {
+    state = AsyncData(settings);
+    return true;
+  }
 }

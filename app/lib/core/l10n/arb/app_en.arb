@@ -4775,5 +4775,58 @@
   "installAction": "Install",
   "@installAction": {
     "description": "Web banner button that installs the app."
+  },
+  "lockCaption": "APP LOCK",
+  "@lockCaption": {
+    "description": "Settings › Privacy group caption."
+  },
+  "lockToggle": "Lock Dottoday",
+  "@lockToggle": {
+    "description": "Settings switch for the app lock."
+  },
+  "lockToggleDetail": "Ask for your face, fingerprint or passcode",
+  "@lockToggleDetail": {
+    "description": "Under the app-lock switch."
+  },
+  "lockWebTitle": "Uses your computer's lock",
+  "@lockWebTitle": {
+    "description": "Web fallback for app lock (07 Web): a browser can't ask for a face or fingerprint."
+  },
+  "lockWebDetail": "In a browser, Dottoday is as locked as your computer. Lock your screen when you step away; tasks stay encrypted in this browser.",
+  "@lockWebDetail": {
+    "description": "Under the web app-lock row."
+  },
+  "lockAfter": "Lock after",
+  "@lockAfter": {
+    "description": "Settings row: how long before it locks again."
+  },
+  "lockAfterNow": "Right away",
+  "@lockAfterNow": {
+    "description": "Lock-after choice: as soon as the app is left."
+  },
+  "lockAfterMinutes": "{minutes, plural, =1{1 minute} other{{minutes} minutes}}",
+  "@lockAfterMinutes": {
+    "description": "Lock-after choice.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "lockReason": "Unlock Dottoday",
+  "@lockReason": {
+    "description": "Shown by the OS in the face/fingerprint/passcode prompt."
+  },
+  "lockTitle": "Dottoday is locked",
+  "@lockTitle": {
+    "description": "The lock screen."
+  },
+  "lockUnlock": "Unlock",
+  "@lockUnlock": {
+    "description": "Lock screen button."
+  },
+  "lockUnavailable": "This device has no passcode, so Dottoday can't lock.",
+  "@lockUnavailable": {
+    "description": "Snackbar when turning the lock on fails."
   }
 }

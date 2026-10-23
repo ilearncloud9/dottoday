@@ -4929,6 +4929,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Install'**
   String get installAction;
+
+  /// Settings › Privacy group caption.
+  ///
+  /// In en, this message translates to:
+  /// **'APP LOCK'**
+  String get lockCaption;
+
+  /// Settings switch for the app lock.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock Dottoday'**
+  String get lockToggle;
+
+  /// Under the app-lock switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask for your face, fingerprint or passcode'**
+  String get lockToggleDetail;
+
+  /// Web fallback for app lock (07 Web): a browser can't ask for a face or fingerprint.
+  ///
+  /// In en, this message translates to:
+  /// **'Uses your computer\'s lock'**
+  String get lockWebTitle;
+
+  /// Under the web app-lock row.
+  ///
+  /// In en, this message translates to:
+  /// **'In a browser, Dottoday is as locked as your computer. Lock your screen when you step away; tasks stay encrypted in this browser.'**
+  String get lockWebDetail;
+
+  /// Settings row: how long before it locks again.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock after'**
+  String get lockAfter;
+
+  /// Lock-after choice: as soon as the app is left.
+  ///
+  /// In en, this message translates to:
+  /// **'Right away'**
+  String get lockAfterNow;
+
+  /// Lock-after choice.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes, plural, =1{1 minute} other{{minutes} minutes}}'**
+  String lockAfterMinutes(int minutes);
+
+  /// Shown by the OS in the face/fingerprint/passcode prompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Dottoday'**
+  String get lockReason;
+
+  /// The lock screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday is locked'**
+  String get lockTitle;
+
+  /// Lock screen button.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get lockUnlock;
+
+  /// Snackbar when turning the lock on fails.
+  ///
+  /// In en, this message translates to:
+  /// **'This device has no passcode, so Dottoday can\'t lock.'**
+  String get lockUnavailable;
 }
 
 class _AppLocalizationsDelegate

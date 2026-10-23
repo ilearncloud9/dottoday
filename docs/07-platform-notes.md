@@ -38,6 +38,7 @@ specified here — never "not available on X".
 - Install prompt after 2nd visit; offline page; manifest with maskable icon.
 - Calendar: Google/Microsoft via backend OAuth only; Apple via CalDAV (app-specific password) Phase 2.
 - CSP and headers per security §8; deploy behind HTTPS with HSTS.
+- App lock (M5.8): a page has no device check it can rely on (WebAuthn needs an account and a server), so Settings › Privacy shows "Uses your computer's lock" instead of the switch; the database stays encrypted in the browser (06 §3).
 
 ## Shared concerns
 - Deep links / universal links: `dottoday://task/<id>`, `/day/2026-10-20`, `/inbox`. Routes allow-listed; IDs resolved under the current user only.
