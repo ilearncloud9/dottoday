@@ -62,7 +62,7 @@ final class NotificationGatewayProvider
 }
 
 String _$notificationGatewayHash() =>
-    r'02b350fbac2f1689f53ba86615f9ef4c3618bbbe';
+    r'404d3d1b2c336bb4ad52d9bcec5c5d894850639f';
 
 /// Home-screen widget snapshot target; replaced in M5.4.
 

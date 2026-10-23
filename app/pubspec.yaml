@@ -45,6 +45,7 @@ dependencies:
   timezone: ^0.9.4
   url_launcher: ^6.3.0
   uuid: ^4.5.0
+  workmanager: ^0.10.10
 
 dev_dependencies:
   # Policy tests (test/policy) parse source with package:analyzer directly.

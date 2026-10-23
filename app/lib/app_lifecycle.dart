@@ -4,14 +4,15 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
-import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Housekeeping on app start and on every resume (docs/09 M3.2, M2.3–M2.5):
 /// ensure the local profile, take the daily backup if due, purge expired
-/// Trash and re-sync OS notifications. Each step is idempotent and runs
+/// Trash, then the daily refresh: roll repeats forward and re-plan OS
+/// notifications (M5.2). Each step is idempotent and runs
 /// after the first frame, so it never delays the UI; failures are logged
 /// and the next start/resume repairs them.
 Future<void> runHousekeeping(WidgetRef ref) async {
@@ -28,7 +29,7 @@ Future<void> runHousekeeping(WidgetRef ref) async {
     if (purge case Err(:final failure)) {
       logger.warn('housekeeping.purge_failed', error: failure);
     }
-    await ref.read(notificationSyncProvider).resync(profile.id);
+    await ref.read(dailyRefreshProvider).run(profile.id);
   } on Object catch (e, st) {
     logger.error('housekeeping.failed', error: e, stackTrace: st);
   }
@@ -46,10 +47,16 @@ class AppLifecycleScope extends ConsumerStatefulWidget {
 
 class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
     with WidgetsBindingObserver {
+  /// A Mac or browser window can stay open for days without a resume, so
+  /// housekeeping also runs on this timer (M5.2).
+  static const _period = Duration(hours: 6);
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _timer = Timer.periodic(_period, (_) => unawaited(runHousekeeping(ref)));
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => unawaited(runHousekeeping(ref)),
     );
@@ -62,6 +69,7 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
 
   @override
   void dispose() {
+    _timer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

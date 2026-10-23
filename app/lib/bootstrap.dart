@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/app.dart';
 import 'package:dottoday/app_screens.dart';
+import 'package:dottoday/background_refresh.dart';
 import 'package:dottoday/core/app/app_restart.dart';
 import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/env/env.dart';
@@ -31,6 +32,8 @@ Future<void> bootstrap() async {
 
   final env = Env.fromEnvironment();
 
+  _scheduleBackgroundRefresh(logger);
+
   // The root scope is AppRestart's UncontrolledProviderScope (M3f.9), which
   // the lint doesn't see through.
   // ignore: riverpod_lint/missing_provider_scope
@@ -52,6 +55,15 @@ Future<void> bootstrap() async {
     ),
   );
 }
+
+/// Registers the OS daily refresh (M5.2); a failure only means the next
+/// start or resume refreshes instead.
+void _scheduleBackgroundRefresh(Logger logger) => unawaited(
+  scheduleBackgroundRefresh().catchError(
+    (Object e, StackTrace s) =>
+        logger.warn('refresh.schedule_failed', error: e, stackTrace: s),
+  ),
+);
 
 /// Apple platforms hand launch links over a bridge (M5.0); a restart
 /// re-targets it at the new router.

@@ -6,6 +6,8 @@ import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/refresh/daily_refresh.dart';
+import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
@@ -52,6 +54,7 @@ void main() {
   late _Gateway gateway;
   late NotificationSync sync;
   late MemoryLogSink logs;
+  late DailyRefresh refresh;
 
   setUpAll(tz_data.initializeTimeZones);
 
@@ -61,6 +64,9 @@ void main() {
     gateway = _Gateway();
     final series = _Series();
     when(() => series.watchActive(any())).thenAnswer((_) => Stream.value([]));
+    when(
+      () => series.findNeedingMaterialisation(any(), any()),
+    ).thenAnswer((_) async => []);
     final clock = FakeClock(DateTime.utc(2026, 10, 21));
     sync = NotificationSync(
       clock: clock,
@@ -71,6 +77,16 @@ void main() {
       settings: FakeSettingsRepository(testProfile()),
     );
     logs = MemoryLogSink();
+    refresh = DailyRefresh(
+      clock: clock,
+      series: series,
+      writes: FakeWriteUseCase(
+        FakeSettingsRepository(testProfile()),
+        FakeOccurrenceRepository(),
+      ),
+      notifications: sync,
+      logger: Logger(logs, clock),
+    );
     when(
       () => backup.runDailyIfDue(any()),
     ).thenAnswer((_) async => const Ok(true));
@@ -84,6 +100,7 @@ void main() {
         backupServiceProvider.overrideWithValue(backup),
         trashServiceProvider.overrideWithValue(trash),
         notificationSyncProvider.overrideWithValue(sync),
+        dailyRefreshProvider.overrideWithValue(refresh),
         loggerProvider.overrideWithValue(
           Logger(logs, FakeClock(DateTime.utc(2026))),
         ),
@@ -105,6 +122,15 @@ void main() {
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
     await tester.pumpAndSettle();
     verify(() => backup.runDailyIfDue(testUserId)).called(1);
+    expect(gateway.resyncs, 2);
+  });
+
+  testWidgets('runs again every 6 hours while open (M5.2)', (tester) async {
+    await pump(tester);
+    await tester.pumpAndSettle();
+    expect(gateway.resyncs, 1);
+    await tester.pump(const Duration(hours: 6));
+    await tester.pumpAndSettle();
     expect(gateway.resyncs, 2);
   });
 

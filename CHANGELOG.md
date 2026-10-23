@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M5.2: Repeating tasks keep coming and reminders stay planned even if you don't open Dottoday for a while — a daily refresh runs in the background on iPhone and Android, and every few hours on a Mac or browser window left open. Fixed: a repeat used to stop 90 days after it was last edited.
 - M5.1: Reminders now really arrive on iPhone, Android and Mac — each one once (checked: 20 of 20, no duplicates), with Done, Snooze 10 min and Open on the notification. Renaming or moving a task updates its reminders; ticking it clears them.
 - Fixed: on a phone after Bedtime, typing in Add could squeeze Today's day card behind the keyboard until it overflowed; Today now stays put under a keyboard.
 - M5.0: `dottoday://task/<id>`, `/day/<date>`, `/inbox` … links open the app at that place on iPhone, Android and Mac, also from a cold start; anything off the allow-list opens Today.
