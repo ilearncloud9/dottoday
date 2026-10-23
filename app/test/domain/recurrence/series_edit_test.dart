@@ -32,7 +32,6 @@ Series _series({String rrule = 'FREQ=DAILY', int? count}) =>
 List<Occurrence> _rows(Series s) {
   final plan = Materialiser(
     clock: FakeClock(DateTime.utc(2026, 10, 19, 12)),
-    ids: FakeIds('row'),
   ).plan(s, const []);
   return [
     for (final o in plan.occurrences)
@@ -138,7 +137,6 @@ void main() {
     // Saving re-materialises: nothing new inside the moved rows' range.
     final plan = Materialiser(
       clock: FakeClock(_now),
-      ids: FakeIds('m'),
     ).plan(next, _merge(rows, w));
     final lastMoved = w.occurrences
         .map((o) => o.originalStartUtc!)

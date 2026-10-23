@@ -15,7 +15,6 @@ import 'package:dottoday/domain/widgets/widget_snapshot.dart';
 import 'package:drift/native.dart';
 
 import '../../support/fake_clock.dart';
-import '../../support/fake_ids.dart';
 import '../../support/memory_log_sink.dart';
 
 /// Records what the OS would hold; [failNext] simulates a plugin error.
@@ -74,7 +73,7 @@ final class WriteHarness {
     writes = DriftWriteUseCase(
       db: this.db,
       clock: clock,
-      materialiser: Materialiser(clock: clock, ids: FakeIds('m')),
+      materialiser: Materialiser(clock: clock),
       effects: effects,
       logger: logger,
     );

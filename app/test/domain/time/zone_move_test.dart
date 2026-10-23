@@ -88,7 +88,6 @@ void main() {
     );
     final rows = Materialiser(
       clock: FakeClock(DateTime.utc(2026, 10, 19, 12)),
-      ids: FakeIds('row'),
     ).plan(s, const []).occurrences;
     final b = _plan(
       ZoneMoveChoice.keepTimes,
@@ -112,7 +111,7 @@ void main() {
     expect(thu.tzId, _ny);
     expect(moved.where((o) => o.deletedAt != null), isEmpty);
     // Materialising the new series over the moved rows adds nothing new.
-    final again = Materialiser(clock: FakeClock(_now), ids: FakeIds('x'))
+    final again = Materialiser(clock: FakeClock(_now))
         .plan(next.copyWith(materialisedThroughUtc: null), moved)
         .occurrences
         .where((o) => o.startUtc!.isBefore(moved.last.startUtc!));

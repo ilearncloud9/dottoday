@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/fake_clock.dart';
-import '../../support/fake_ids.dart';
 import '../fixtures.dart';
 
 // docs/08 §2: completing subtasks on today's occurrence never affects
@@ -25,7 +24,6 @@ void main() {
   );
   final materialiser = Materialiser(
     clock: FakeClock(DateTime.utc(2026, 10, 21, 6)),
-    ids: FakeIds(),
   );
   final plan = materialiser.plan(series, const []);
   final today = plan.occurrences[0];
@@ -58,7 +56,6 @@ void main() {
   test('the next day\'s run never resets or duplicates subtasks', () {
     final nextDay = Materialiser(
       clock: FakeClock(DateTime.utc(2026, 10, 22, 6)),
-      ids: FakeIds('next'),
     );
     final next = nextDay.plan(series, plan.occurrences);
     final newIds = next.occurrences.map((o) => o.id).toSet();
@@ -73,7 +70,6 @@ void main() {
     );
     final later = Materialiser(
       clock: FakeClock(DateTime.utc(2026, 10, 22, 6)),
-      ids: FakeIds('later'),
     ).plan(edited, plan.occurrences);
     expect(later.occurrences, hasLength(1));
     expect(later.subtasks.map((s) => s.title).toSet(), {'Swim'});

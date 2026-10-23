@@ -7,7 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/fake_clock.dart';
-import '../../support/fake_ids.dart';
 import '../fixtures.dart';
 
 // Daily 07:00 UTC, now = 2026-10-21 12:00Z.
@@ -22,7 +21,7 @@ Series _daily() => seriesFixture().copyWith(
 );
 
 Materialiser _materialiser([FakeClock? clock]) =>
-    Materialiser(clock: clock ?? FakeClock(_now), ids: FakeIds());
+    Materialiser(clock: clock ?? FakeClock(_now));
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);

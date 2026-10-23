@@ -12,7 +12,6 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/editor_harness.dart';
 import '../../support/fake_clock.dart';
-import '../../support/fake_ids.dart';
 import '../../support/timeline_fakes.dart';
 
 // The editor's repeat and scope steps (docs/09 M3f.1, R-01). Wed 21 Oct,
@@ -35,7 +34,6 @@ late ProviderContainer _container;
 
 List<Occurrence> _runs() => Materialiser(
   clock: FakeClock(DateTime.utc(2026, 10, 19, 12)),
-  ids: FakeIds('run'),
 ).plan(_series, const []).occurrences;
 
 Future<void> _pump(WidgetTester tester, String id) async {

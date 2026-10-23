@@ -1,5 +1,4 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
-import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
@@ -76,10 +75,7 @@ AfterWriteEffects afterWriteEffects(Ref ref) => AfterWriteEffects(
 WriteUseCase writeUseCase(Ref ref) => DriftWriteUseCase(
   db: ref.watch(appDatabaseProvider),
   clock: ref.watch(clockProvider),
-  materialiser: Materialiser(
-    clock: ref.watch(clockProvider),
-    ids: const UuidV7Generator(),
-  ),
+  materialiser: Materialiser(clock: ref.watch(clockProvider)),
   effects: ref.watch(afterWriteEffectsProvider),
   logger: ref.watch(loggerProvider),
 );

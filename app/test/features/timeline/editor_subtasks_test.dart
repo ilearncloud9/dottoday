@@ -8,7 +8,6 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/editor_harness.dart';
 import '../../support/fake_clock.dart';
-import '../../support/fake_ids.dart';
 import '../../support/timeline_fakes.dart';
 
 // The editor's subtasks (docs/09 M3f.3, R-09): rename, remove, reorder,
@@ -98,7 +97,6 @@ void main() {
     );
     final runs = Materialiser(
       clock: FakeClock(DateTime.utc(2026, 10, 21, 7)),
-      ids: FakeIds('r'),
     ).plan(series, const []).occurrences;
     final today = runs.first;
     _subs = FakeSubtaskRepository([

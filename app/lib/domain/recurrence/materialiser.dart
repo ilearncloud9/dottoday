@@ -1,8 +1,8 @@
 import 'package:dottoday/core/clock/clock.dart';
-import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/recurrence/instance_ids.dart';
 import 'package:dottoday/domain/recurrence/recurrence_expander.dart';
 
 /// Rows to insert for one series, plus the new high-water mark to store in
@@ -31,10 +31,8 @@ final class MaterialisationPlan {
 final class Materialiser {
   const Materialiser({
     required Clock clock,
-    required IdGenerator ids,
     RecurrenceExpander expander = const RecurrenceExpander(),
   }) : _clock = clock,
-       _ids = ids,
        _expander = expander;
 
   /// How far ahead occurrences exist as rows (docs/05).
@@ -44,7 +42,6 @@ final class Materialiser {
   static const _lookBack = Duration(days: 1);
 
   final Clock _clock;
-  final IdGenerator _ids;
   final RecurrenceExpander _expander;
 
   /// Plans the rows missing for [series] in `[now - 1 day, now + 90 days)`.
@@ -79,14 +76,15 @@ final class Materialiser {
     final occurrences = [for (final s in starts) _occurrence(series, s, now)];
     return MaterialisationPlan(
       occurrences: occurrences,
-      subtasks: [for (final o in occurrences) ..._subtasks(series, o.id, now)],
+      subtasks: [for (final o in occurrences) ..._subtasks(series, o, now)],
       materialisedThroughUtc: through,
     );
   }
 
   Occurrence _occurrence(Series s, DateTime startUtc, DateTime now) {
     return Occurrence(
-      id: _ids.newId(),
+      // Same id on every device (sync, M6.2).
+      id: instanceId(s.id, startUtc),
       userId: s.userId,
       seriesId: s.id,
       originalStartUtc: startUtc,
@@ -106,14 +104,14 @@ final class Materialiser {
     );
   }
 
-  Iterable<Subtask> _subtasks(Series s, String occurrenceId, DateTime now) {
-    return s.subtaskTemplate.map(
-      (item) => Subtask(
-        id: _ids.newId(),
+  Iterable<Subtask> _subtasks(Series s, Occurrence o, DateTime now) {
+    return s.subtaskTemplate.indexed.map(
+      (e) => Subtask(
+        id: templateSubtaskId(o.id, e.$1, o.originalStartUtc!),
         userId: s.userId,
-        occurrenceId: occurrenceId,
-        title: item.title,
-        sortOrder: item.sortOrder,
+        occurrenceId: o.id,
+        title: e.$2.title,
+        sortOrder: e.$2.sortOrder,
         createdAt: now,
         updatedAt: now,
       ),
