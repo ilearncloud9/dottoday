@@ -152,6 +152,44 @@ void main() {
     ]);
   });
 
+  group('delete account (M6.5)', () {
+    SupabaseAccountService withRemote(Future<void> Function() remote) =>
+        SupabaseAccountService(
+          auth,
+          redirectTo: _redirect,
+          callbacks: const Stream.empty(),
+          logger: Logger(logs, FakeClock(DateTime.utc(2026, 10, 23))),
+          deleteRemote: remote,
+        );
+
+    test('the function runs, then this device signs out', () async {
+      when(
+        () => auth.signOut(scope: any(named: 'scope')),
+      ).thenAnswer((_) async {});
+      var called = 0;
+      final s = withRemote(() async => called++);
+      expect(await s.deleteAccount(), isA<Ok<void, AppFailure>>());
+      expect(called, 1);
+      verify(() => auth.signOut(scope: SignOutScope.local)).called(1);
+      await s.dispose();
+    });
+
+    test('the server refuses: an error, still signed in', () async {
+      final s = withRemote(() => throw const FunctionException(status: 500));
+      final r = await s.deleteAccount();
+      expect(
+        (r as Err).failure,
+        const NetworkFailure(NetworkFailureKind.server),
+      );
+      verifyNever(() => auth.signOut(scope: any(named: 'scope')));
+      await s.dispose();
+    });
+
+    test('without the function wired: refused', () async {
+      expect(await service.deleteAccount(), isA<Err<void, AppFailure>>());
+    });
+  });
+
   test('a callback link is exchanged for the session', () async {
     when(() => auth.getSessionFromUrl(any())).thenAnswer(
       (_) async => AuthSessionUrlResponse(

@@ -61,7 +61,7 @@ SyncService syncService(Ref ref) {
     accounts: _accountIds(client),
     adopt: (id) async {
       // Rows now belong to the account: the profile is read again.
-      if (await adoptAccount(db, id) != null) {
+      if (await adoptAccount(db, id, ref.read(sharedHlcProvider)) != null) {
         ref.invalidate(localProfileProvider);
       }
     },

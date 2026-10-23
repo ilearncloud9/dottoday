@@ -36,7 +36,12 @@ Future<void> renameProfile(BuildContext context, String current) async {
 
 /// "Delete your account?": true only once the confirm word is typed
 /// (docs/06 §6: deleting is never one tap).
-Future<bool> confirmDeleteAccount(BuildContext context) async {
+/// What the delete-account dialog came back with.
+enum DeleteChoice { delete, exportFirst, cancel }
+
+/// "Delete account?" with the typed word (06 §6), and "Export my data
+/// first" (docs/09 M6.5) for keeping a copy before it goes.
+Future<DeleteChoice> confirmDeleteAccount(BuildContext context) async {
   final l10n = context.l10n;
   final typed = await showDialog<String>(
     context: context,
@@ -45,10 +50,17 @@ Future<bool> confirmDeleteAccount(BuildContext context) async {
       body: l10n.accountDeleteBody(l10n.accountDeleteWord),
       action: l10n.accountDelete,
       mustMatch: l10n.accountDeleteWord,
+      extra: (l10n.accountDeleteExportFirst, _exportFirst),
     ),
   );
-  return typed?.trim() == l10n.accountDeleteWord;
+  if (typed == _exportFirst) return DeleteChoice.exportFirst;
+  return typed?.trim() == l10n.accountDeleteWord
+      ? DeleteChoice.delete
+      : DeleteChoice.cancel;
 }
+
+/// Not something a person types: the extra action's result.
+const _exportFirst = '\u0000export';
 
 /// A dialog with one field; with [mustMatch], the action stays off until
 /// the field holds it. Owns its controller for the dialog's life.
@@ -59,6 +71,7 @@ class _TextDialog extends StatefulWidget {
     this.initial = '',
     this.body,
     this.mustMatch,
+    this.extra,
   });
 
   final String title;
@@ -66,6 +79,9 @@ class _TextDialog extends StatefulWidget {
   final String initial;
   final String? body;
   final String? mustMatch;
+
+  /// A third action: (label, what the dialog returns).
+  final (String, String)? extra;
 
   @override
   State<_TextDialog> createState() => _TextDialogState();
@@ -108,6 +124,11 @@ class _TextDialogState extends State<_TextDialog> {
         ],
       ),
       actions: [
+        if (widget.extra case (final label, final value))
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(value),
+            child: Text(label),
+          ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(l10n.editorCancel),

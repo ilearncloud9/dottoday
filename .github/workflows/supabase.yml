@@ -31,7 +31,7 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "22"
-      - run: node --experimental-strip-types --test functions/send-push/push_test.ts
+      - run: node --experimental-strip-types --test functions/send-push/push_test.ts functions/delete-account/deletion_test.ts
         working-directory: supabase
 
   # The app's Supabase code against a local stack (docs/09 M6.1): the email
@@ -44,7 +44,8 @@ jobs:
       - uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
         with:
           version: 2.121.0
-      - run: supabase start -x storage-api,imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+      # Edge runtime on: the client tests call delete-account (M6.5).
+      - run: supabase start -x storage-api,imgproxy,postgres-meta,studio,logflare,vector,supavisor
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
@@ -55,6 +56,9 @@ jobs:
       - name: flutter test --tags supabase
         working-directory: app
         run: |
-          eval "$(supabase status -o env | grep -E '^(API_URL|ANON_KEY|MAILPIT_URL)=')"
-          SUPABASE_URL="$API_URL" SUPABASE_ANON_KEY="$ANON_KEY" MAILPIT_URL="$MAILPIT_URL" \
+          # The local stack's demo keys; the service-role one only checks that
+          # deleted rows are gone (test-only, 06 §1).
+          eval "$(supabase status -o env | grep -E '^(API_URL|ANON_KEY|SERVICE_ROLE_KEY|MAILPIT_URL)=')"
+          SUPABASE_URL="$API_URL" SUPABASE_ANON_KEY="$ANON_KEY" \
+          SUPABASE_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" MAILPIT_URL="$MAILPIT_URL" \
             flutter test --tags supabase --concurrency=1

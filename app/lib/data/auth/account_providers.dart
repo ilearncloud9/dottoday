@@ -67,6 +67,7 @@ AccountService accountService(Ref ref) {
     callbacks: ref.watch(authCallbackInboxProvider).take(),
     logger: ref.watch(loggerProvider),
     restore: () => ref.read(syncServiceProvider).watchRestore(),
+    deleteRemote: () => client.functions.invoke('delete-account'),
   );
   ref.onDispose(() => unawaited(service.dispose()));
   return service;

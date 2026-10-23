@@ -37,10 +37,19 @@ final class SyncDevice {
         profile: profileFixture().copyWith(id: 'device-local'),
       ),
     );
-    await adoptAccount(h.db, server.userId);
+    await adoptAccount(h.db, server.userId, h.hlc);
   }
 
   Future<SyncRun> sync() => engine.run(server.userId);
+
+  /// An engine on [device]'s database against another [server].
+  static SyncEngine engineFor(SyncDevice device, FakeSyncServer server) =>
+      SyncEngine(
+        db: device.h.db,
+        gateway: server.forDevice(),
+        hlc: device.h.hlc,
+        clock: device.h.clock,
+      );
 
   Future<void> write(List<Occurrence> rows) async {
     final r = await h.writes.apply(

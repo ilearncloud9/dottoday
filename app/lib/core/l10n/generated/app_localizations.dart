@@ -3814,6 +3814,12 @@ abstract class AppLocalizations {
   /// **'Delete your account?'**
   String get accountDeleteTitle;
 
+  /// Delete account dialog: opens Settings › Export before deleting (06 §6, M6.5).
+  ///
+  /// In en, this message translates to:
+  /// **'Export my data first'**
+  String get accountDeleteExportFirst;
+
   /// Delete account confirm dialog body.
   ///
   /// In en, this message translates to:

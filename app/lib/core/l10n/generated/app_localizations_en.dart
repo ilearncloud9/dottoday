@@ -2615,6 +2615,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountDeleteTitle => 'Delete your account?';
 
   @override
+  String get accountDeleteExportFirst => 'Export my data first';
+
+  @override
   String accountDeleteBody(String word) {
     return 'This deletes your account and everything synced to it. Tasks on this device stay. Type $word to confirm.';
   }

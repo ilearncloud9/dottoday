@@ -7,14 +7,39 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 final localUrl =
     Platform.environment['SUPABASE_URL'] ?? 'http://127.0.0.1:54321';
 final localAnonKey =
-    Platform.environment['SUPABASE_ANON_KEY'] ?? _anonFromCli();
+    Platform.environment['SUPABASE_ANON_KEY'] ?? _fromCli('ANON_KEY');
+
+/// The local stack's service-role key, for checks a user can't make (that
+/// rows are gone). Test-only: the app never holds it (06 §1).
+final localServiceKey =
+    Platform.environment['SUPABASE_SERVICE_ROLE_KEY'] ??
+    _fromCli('SERVICE_ROLE_KEY');
 final _mailpit =
     Platform.environment['MAILPIT_URL'] ?? 'http://127.0.0.1:54324';
 
-String _anonFromCli() {
+String _fromCli(String key) {
   final out = Process.runSync('supabase', ['status', '-o', 'json']);
   final status = jsonDecode(out.stdout as String) as Map<String, dynamic>;
-  return status['ANON_KEY'] as String;
+  return status[key] as String;
+}
+
+/// Rows of [table] owned by [userId], as the server holds them.
+Future<List<Object?>> adminRows(String table, String userId) async {
+  final http = HttpClient();
+  try {
+    final idColumn = table == 'profiles' ? 'id' : 'user_id';
+    final request = await http.getUrl(
+      Uri.parse('$localUrl/rest/v1/$table?$idColumn=eq.$userId&select=id'),
+    );
+    request.headers
+      ..set('apikey', localServiceKey)
+      ..set('Authorization', 'Bearer $localServiceKey');
+    final response = await request.close();
+    return jsonDecode(await response.transform(utf8.decoder).join())
+        as List<Object?>;
+  } finally {
+    http.close();
+  }
 }
 
 /// A client like the app's: PKCE, the verifier in memory.

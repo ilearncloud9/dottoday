@@ -89,6 +89,11 @@ void main() {
       expect(service.calls, ['delete', 'signOut']);
       await _tap(tester, 'Sign out everywhere');
       expect(service.calls.last, 'signOutEverywhere');
+      // M6.5: a copy first, if wanted.
+      await _tap(tester, 'Delete account');
+      await _tap(tester, 'Export my data first');
+      expect(find.text('Export'), findsWidgets);
+      expect(service.calls.where((c) => c == 'delete'), hasLength(1));
     });
 
     // M6.3: the header says how sync stands (`A-ios-settings`).

@@ -3896,6 +3896,10 @@
   "@accountDeleteTitle": {
     "description": "Delete account confirm dialog title."
   },
+  "accountDeleteExportFirst": "Export my data first",
+  "@accountDeleteExportFirst": {
+    "description": "Delete account dialog: opens Settings › Export before deleting (06 §6, M6.5)."
+  },
   "accountDeleteBody": "This deletes your account and everything synced to it. Tasks on this device stay. Type {word} to confirm.",
   "@accountDeleteBody": {
     "description": "Delete account confirm dialog body.",

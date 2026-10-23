@@ -22,9 +22,11 @@ final class SupabaseAccountService implements AccountService {
     required Stream<Uri> callbacks,
     required Logger logger,
     Stream<RestoreProgress> Function()? restore,
+    Future<void> Function()? deleteRemote,
     OpenOAuth? openOAuth,
   }) : _logger = logger,
        _restore = restore,
+       _deleteRemote = deleteRemote,
        _openOAuth =
            openOAuth ??
            ((provider, redirect) =>
@@ -36,6 +38,9 @@ final class SupabaseAccountService implements AccountService {
   final Logger _logger;
   final OpenOAuth _openOAuth;
   final Stream<RestoreProgress> Function()? _restore;
+
+  /// Calls the `delete-account` Edge Function (M6.5); throws if it fails.
+  final Future<void> Function()? _deleteRemote;
   late final StreamSubscription<Uri> _callbacks;
 
   /// Where the sign-in page sends the code: `dottoday://auth-callback` in
@@ -85,10 +90,34 @@ final class SupabaseAccountService implements AccountService {
         );
       });
 
-  /// The server side arrives with M6.5 (Edge Function + email).
+  /// Deletes the account and everything synced to it (06 §6, M6.5): the
+  /// `delete-account` function removes the user, every row follows, and a
+  /// confirmation is mailed. This device keeps its copy and is signed out.
   @override
-  Future<Result<void, AppFailure>> deleteAccount() async =>
-      const Err(AuthFailure());
+  Future<Result<void, AppFailure>> deleteAccount() async {
+    final remote = _deleteRemote;
+    if (remote == null) return const Err(AuthFailure());
+    try {
+      await remote();
+    } on FunctionException catch (e, s) {
+      _logger.warn('auth.delete_refused', error: e, stackTrace: s);
+      return const Err(NetworkFailure(NetworkFailureKind.server));
+    } on Exception catch (e, s) {
+      _logger.warn('auth.delete_unreachable', error: e, stackTrace: s);
+      return const Err(NetworkFailure(NetworkFailureKind.offline));
+    }
+    try {
+      await _auth.signOut(scope: SignOutScope.local);
+    } on Exception catch (e) {
+      // The user no longer exists, so the server may refuse; the local
+      // session is cleared either way.
+      _logger.info(
+        'auth.delete_sign_out_refused',
+        fields: {'auth': e is AuthException},
+      );
+    }
+    return const Ok(null);
+  }
 
   /// Stops listening for callbacks (the provider's dispose).
   Future<void> dispose() => _callbacks.cancel();

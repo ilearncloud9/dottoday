@@ -45,7 +45,7 @@ final class _Device {
         ),
       ),
     );
-    await adoptAccount(h.db, account);
+    await adoptAccount(h.db, account, h.hlc);
   }
 }
 

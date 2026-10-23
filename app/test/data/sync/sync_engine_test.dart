@@ -190,7 +190,7 @@ void main() {
         occurrences: [occurrenceFixture().copyWith(userId: 'device-local')],
       ),
     );
-    expect(await adoptAccount(c.h.db, _account), 'device-local');
+    expect(await adoptAccount(c.h.db, _account, c.h.hlc), 'device-local');
     expect((await c.h.db.select(c.h.db.profiles).get()).single.id, _account);
     final row = (await c.h.db.select(c.h.db.occurrences).get()).single;
     expect(row.userId, _account);
@@ -203,7 +203,26 @@ void main() {
     await c.sync();
     expect(server.table('occurrences'), hasLength(1));
     expect(server.table('profiles').keys, [_account]);
-    expect(await adoptAccount(c.h.db, _account), isNull, reason: 'once');
+    expect(
+      await adoptAccount(c.h.db, _account, c.h.hlc),
+      isNull,
+      reason: 'once',
+    );
+  });
+
+  // M6.5: the account this device synced with was deleted (or another
+  // signs in): its server has none of the rows, the outbox was emptied.
+  test('another account: everything on the device goes up again', () async {
+    await a.write([_task('Dentist')]);
+    await a.sync();
+    expect(await a.outboxSize(), 0);
+    const other = '01928c3e-0000-7000-8000-0000000000ee';
+    final next = FakeSyncServer(other);
+    expect(await adoptAccount(a.h.db, other, a.h.hlc), _account);
+    expect(await a.outboxSize(), greaterThan(0));
+    await SyncDevice.engineFor(a, next).run(other);
+    expect(next.table('occurrences').keys, [occurrenceFixture().id]);
+    expect(next.table('profiles').keys, [other]);
   });
 
   test('pages: more rows than a page all arrive', () async {

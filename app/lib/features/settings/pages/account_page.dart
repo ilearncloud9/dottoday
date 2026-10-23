@@ -4,6 +4,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -15,6 +16,7 @@ import 'package:dottoday/shared/account/sign_in_parts.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// Settings › Account (docs/09 M3f.7; wired in M6.1 / M6.5): the name,
 /// then signed out — the sign-in choices, off until accounts arrive — or
@@ -217,8 +219,16 @@ class _SignedIn extends ConsumerWidget {
   }
 
   Future<void> _delete(BuildContext context, AccountService service) async {
-    if (!await confirmDeleteAccount(context) || !context.mounted) return;
-    await _run(context, service.deleteAccount());
+    final choice = await confirmDeleteAccount(context);
+    if (!context.mounted) return;
+    switch (choice) {
+      case DeleteChoice.delete:
+        await _run(context, service.deleteAccount());
+      case DeleteChoice.exportFirst:
+        await context.push(AppRoutes.settingsPage(SettingsPage.export));
+      case DeleteChoice.cancel:
+        return;
+    }
   }
 }
 
