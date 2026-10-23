@@ -5110,6 +5110,162 @@ abstract class AppLocalizations {
   /// **'Changes from this device wait until the clock is right; changes from your other devices still arrive.'**
   String get syncClockWaiting;
 
+  /// Settings › Reminders page and row: what decides whether reminders get through (docs/09 M6.5.8).
+  ///
+  /// In en, this message translates to:
+  /// **'Notification health'**
+  String get healthTitle;
+
+  /// Caption over the notification health rows.
+  ///
+  /// In en, this message translates to:
+  /// **'This device'**
+  String get healthCaption;
+
+  /// Notification health intro.
+  ///
+  /// In en, this message translates to:
+  /// **'What decides whether your reminders get through on this device, read from its settings right now.'**
+  String get healthIntro;
+
+  /// Settings row value: no problem found.
+  ///
+  /// In en, this message translates to:
+  /// **'All good'**
+  String get healthAllGood;
+
+  /// Health row: permission granted.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are on'**
+  String get healthPermissionOk;
+
+  /// Health row: permission not granted.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are off'**
+  String get healthPermissionOff;
+
+  /// Health row detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday can\'t remind you until you allow them.'**
+  String get healthPermissionOffDetail;
+
+  /// Android: exact alarms allowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders arrive on the minute'**
+  String get healthExactOk;
+
+  /// Android: exact alarms not allowed. No-shame: never 'late'.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders may come a few minutes after their time'**
+  String get healthExactOff;
+
+  /// Health row detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow “Alarms & reminders” for Dottoday to have them on the minute.'**
+  String get healthExactOffDetail;
+
+  /// Android: battery optimisation off for the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery saving leaves Dottoday alone'**
+  String get healthBatteryOk;
+
+  /// Android: battery optimisation applies.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery saving can hold reminders back'**
+  String get healthBatteryOff;
+
+  /// Health row detail; the button opens the system list.
+  ///
+  /// In en, this message translates to:
+  /// **'In the list, choose Dottoday and “Don\'t optimise”.'**
+  String get healthBatteryOffDetail;
+
+  /// Android: DND off.
+  ///
+  /// In en, this message translates to:
+  /// **'Do Not Disturb is off'**
+  String get healthDndOff;
+
+  /// Android: DND on (information, not a problem).
+  ///
+  /// In en, this message translates to:
+  /// **'Do Not Disturb is on'**
+  String get healthDndOn;
+
+  /// Health row detail.
+  ///
+  /// In en, this message translates to:
+  /// **'The first task of your day still rings; other reminders arrive quietly.'**
+  String get healthDndOnDetail;
+
+  /// iPhone/Mac: Focus row title.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get healthFocus;
+
+  /// iPhone/Mac: what Focus does to task starts (Focus state can't be read).
+  ///
+  /// In en, this message translates to:
+  /// **'Task starts are time-sensitive, so a Focus that allows time-sensitive notifications lets them through.'**
+  String get healthFocusDetail;
+
+  /// Web: push is set up.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders arrive with the tab closed'**
+  String get healthPushOk;
+
+  /// Web: no push yet (information).
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders arrive while Dottoday is open'**
+  String get healthPushOff;
+
+  /// Web health row detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in and allow notifications so they also arrive with the tab closed.'**
+  String get healthPushOffDetail;
+
+  /// Health row: device clock within 5 minutes of the server.
+  ///
+  /// In en, this message translates to:
+  /// **'Your clock is right'**
+  String get healthClockOk;
+
+  /// Health row detail under clockFast/clockSlow.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on “Set automatically” in your date and time settings.'**
+  String get healthClockOffDetail;
+
+  /// Health row button: ask for the permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get healthFixAllow;
+
+  /// Health row button: open the system settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get healthFixOpen;
+
+  /// Settings row value: how many health rows need fixing.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 thing to fix} other{{count} things to fix}}'**
+  String healthToFix(int count);
+
   /// Status line after a server error (details in the Sync sheet).
   ///
   /// In en, this message translates to:

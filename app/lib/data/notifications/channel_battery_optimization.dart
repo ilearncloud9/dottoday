@@ -22,4 +22,13 @@ final class ChannelBatteryOptimization implements BatteryOptimization {
 
   @override
   Future<void> openSettings() => _channel.invokeMethod<void>('openSettings');
+
+  @override
+  Future<bool> doNotDisturb() async {
+    try {
+      return await _channel.invokeMethod<bool>('isDndOn') ?? false;
+    } on MissingPluginException {
+      return false;
+    }
+  }
 }

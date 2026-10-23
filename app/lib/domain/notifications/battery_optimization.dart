@@ -8,6 +8,10 @@ abstract interface class BatteryOptimization {
 
   /// Opens the system's battery-optimisation list.
   Future<void> openSettings();
+
+  /// Whether Do Not Disturb is on (Android; read on the same channel,
+  /// M6.5.8). Alarms still ring through it; other reminders are quiet.
+  Future<bool> doNotDisturb();
 }
 
 /// Platforms without the setting (iOS, macOS, the web, tests).
@@ -19,4 +23,7 @@ final class NoBatteryOptimization implements BatteryOptimization {
 
   @override
   Future<void> openSettings() async {}
+
+  @override
+  Future<bool> doNotDisturb() async => false;
 }

@@ -3453,6 +3453,101 @@ class AppLocalizationsEn extends AppLocalizations {
       'Changes from this device wait until the clock is right; changes from your other devices still arrive.';
 
   @override
+  String get healthTitle => 'Notification health';
+
+  @override
+  String get healthCaption => 'This device';
+
+  @override
+  String get healthIntro =>
+      'What decides whether your reminders get through on this device, read from its settings right now.';
+
+  @override
+  String get healthAllGood => 'All good';
+
+  @override
+  String get healthPermissionOk => 'Notifications are on';
+
+  @override
+  String get healthPermissionOff => 'Notifications are off';
+
+  @override
+  String get healthPermissionOffDetail =>
+      'Dottoday can\'t remind you until you allow them.';
+
+  @override
+  String get healthExactOk => 'Reminders arrive on the minute';
+
+  @override
+  String get healthExactOff =>
+      'Reminders may come a few minutes after their time';
+
+  @override
+  String get healthExactOffDetail =>
+      'Allow “Alarms & reminders” for Dottoday to have them on the minute.';
+
+  @override
+  String get healthBatteryOk => 'Battery saving leaves Dottoday alone';
+
+  @override
+  String get healthBatteryOff => 'Battery saving can hold reminders back';
+
+  @override
+  String get healthBatteryOffDetail =>
+      'In the list, choose Dottoday and “Don\'t optimise”.';
+
+  @override
+  String get healthDndOff => 'Do Not Disturb is off';
+
+  @override
+  String get healthDndOn => 'Do Not Disturb is on';
+
+  @override
+  String get healthDndOnDetail =>
+      'The first task of your day still rings; other reminders arrive quietly.';
+
+  @override
+  String get healthFocus => 'Focus';
+
+  @override
+  String get healthFocusDetail =>
+      'Task starts are time-sensitive, so a Focus that allows time-sensitive notifications lets them through.';
+
+  @override
+  String get healthPushOk => 'Reminders arrive with the tab closed';
+
+  @override
+  String get healthPushOff => 'Reminders arrive while Dottoday is open';
+
+  @override
+  String get healthPushOffDetail =>
+      'Sign in and allow notifications so they also arrive with the tab closed.';
+
+  @override
+  String get healthClockOk => 'Your clock is right';
+
+  @override
+  String get healthClockOffDetail =>
+      'Turn on “Set automatically” in your date and time settings.';
+
+  @override
+  String get healthFixAllow => 'Allow';
+
+  @override
+  String get healthFixOpen => 'Open settings';
+
+  @override
+  String healthToFix(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things to fix',
+      one: '1 thing to fix',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get syncLinePaused => 'Sync paused · tap Sync for why';
 
   @override

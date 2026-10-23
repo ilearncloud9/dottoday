@@ -8,6 +8,7 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
+import 'package:dottoday/features/settings/widgets/health_summary_row.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
 import 'package:dottoday/shared/feedback/permission_notice.dart';
 import 'package:dottoday/shared/pickers/block_names.dart';
@@ -115,6 +116,7 @@ class RemindersGroup extends ConsumerWidget {
           onToggle: (v) =>
               changeSettings(context, (s) => s.copyWith(bedtimeReminder: v)),
         ),
+        const HealthSummaryRow(),
       ],
     );
   }

@@ -28,6 +28,9 @@ abstract final class AppRoutes {
 /// Settings sub-pages, each at `/settings/<name>` (docs/09 M3f.7).
 enum SettingsPage {
   account,
+
+  /// Reminders › Notification health (M6.5.8).
+  notifications,
   calendars,
   export,
   help,

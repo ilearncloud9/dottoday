@@ -18,6 +18,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/notifications/battery_optimization.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
@@ -414,6 +415,11 @@ List<Override> timelineOverrides({
     // No OS plugin under `flutter test` (M5.1).
     notificationPermissionProvider.overrideWithValue(notificationPermission),
     exactAlarmsProvider.overrideWithValue(exactAlarms),
+    // No platform channel in widget tests (its reply would arrive outside
+    // fake time): battery optimisation and DND read as off (M6.5.8).
+    batteryOptimizationProvider.overrideWithValue(
+      const NoBatteryOptimization(),
+    ),
     appLockSettingProvider.overrideWith(FakeAppLockSetting.new),
     notificationGatewayProvider.overrideWithValue(
       const UnwiredNotificationGateway(),

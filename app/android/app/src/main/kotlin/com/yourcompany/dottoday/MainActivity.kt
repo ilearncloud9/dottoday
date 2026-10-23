@@ -1,5 +1,6 @@
 package com.yourcompany.dottoday
 
+import android.app.NotificationManager
 import android.content.Intent
 import android.os.PowerManager
 import android.provider.Settings
@@ -39,6 +40,13 @@ class MainActivity : FlutterFragmentActivity() {
                     "openSettings" -> {
                         startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
                         result.success(null)
+                    }
+                    // Do Not Disturb (M6.5.8): needs no permission to read.
+                    "isDndOn" -> {
+                        val notes = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                        result.success(
+                            notes.currentInterruptionFilter != NotificationManager.INTERRUPTION_FILTER_ALL,
+                        )
                     }
                     else -> result.notImplemented()
                 }
