@@ -15,13 +15,15 @@ class OnboardingGate extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) =>
       switch (ref.watch(onboardingProvider)) {
-        AsyncData(value: final p) when !p.finished => Navigator(
+        // AsyncValue, not AsyncData: a reload keeps the previous progress
+        // instead of blanking the app or the flow (M5.5).
+        AsyncValue(value: final p?) when !p.finished => Navigator(
           onGenerateRoute: (_) =>
               MaterialPageRoute<void>(builder: (_) => const OnboardingFlow()),
         ),
         // Finished; or the record can't be read, which must not lock
         // anyone out of their tasks.
-        AsyncData() || AsyncError() => child,
+        AsyncValue(hasValue: true) || AsyncError() => child,
         _ => const ColoredBox(color: Colors.transparent),
       };
 }

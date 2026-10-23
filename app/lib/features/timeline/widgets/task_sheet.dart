@@ -45,8 +45,9 @@ class TaskSheetBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final view = ref.watch(taskViewProvider(id));
+    // A reload keeps the previous task, so the sheet doesn't jump (M5.5).
     return switch (view) {
-      AsyncData(value: final task?) => ListView(
+      AsyncValue(hasValue: true, value: final TaskView task) => ListView(
         controller: scrollController,
         padding: const EdgeInsets.fromLTRB(
           DotSpace.page,

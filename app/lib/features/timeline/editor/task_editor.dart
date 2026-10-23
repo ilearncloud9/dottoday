@@ -65,8 +65,11 @@ class TaskEditor extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final view = ref.watch(taskViewProvider(id));
+    // A reload (a dependency changed) keeps the previous task: matching
+    // AsyncData alone would unmount the form mid-edit, losing focus and
+    // the "as opened" row Save compares with (found by CI, M5.5).
     return switch (view) {
-      AsyncData(value: final task?) => _Form(
+      AsyncValue(hasValue: true, value: final TaskView task) => _Form(
         task: task,
         onClose: onClose,
         caption: caption,

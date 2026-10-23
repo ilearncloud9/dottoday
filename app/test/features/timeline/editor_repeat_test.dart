@@ -1,3 +1,4 @@
+import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -119,6 +120,32 @@ void main() {
     expect(_row(sat.id).title, 'Long run');
     final mon = runs.firstWhere((o) => o.startUtc!.day == 19);
     expect(_row(mon.id).title, 'Morning run', reason: 'history stays');
+  });
+
+  // Found by CI's journey test (M5.5): a reload of the task view while the
+  // editor was open remounted the form from the autosaved row, so Save
+  // saw no change and never asked.
+  testWidgets('a reload mid-edit keeps the form; Save still asks', (
+    tester,
+  ) async {
+    final runs = _runs();
+    _repo = FakeOccurrenceRepository(runs);
+    final thu = runs.firstWhere((o) => o.startUtc!.day == 22);
+    await _pump(tester, thu.id);
+    final field = _inEditor(find.byType(EditableText)).first;
+    final state = tester.state(find.byType(TaskEditor).first);
+    await tester.enterText(field, 'Long run');
+    await tester.pump(const Duration(seconds: 1)); // autosave
+    // A dependency changes: the view reloads (AsyncLoading with the
+    // previous task), as when the profile stream emits.
+    _container.invalidate(currentProfileProvider);
+    await tester.pump();
+    expect(_inEditor(find.byType(EditableText)), findsWidgets);
+    expect(tester.state(find.byType(TaskEditor).first), same(state));
+    await tester.pumpAndSettle();
+    await tester.tap(_inEditor(find.text('Save')));
+    await tester.pumpAndSettle();
+    expect(find.text('Change which?'), findsOneWidget);
   });
 
   testWidgets('Delete asks which; this and following ends the series', (
