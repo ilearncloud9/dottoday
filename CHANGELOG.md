@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M6.0: The database schema is live on the hosted Supabase project and its access rules pass the same 32 checks there as locally (`tool/hosted_rls_test.sh`).
 - M6 complete (sync & accounts), apart from pushing the database schema to the hosted project, which is the owner's step: sign in with email, Apple or Google; your tasks sync between devices offline-first with a visible status; conflicts ask instead of losing anything; delete account; private crash reports.
 - Fixed: after signing in during onboarding, Settings and the Inbox kept saying "On this device" although sync was running; they now show "Synced · just now" straight away.
 - Fixed: on iPhone and Mac, deleting and reinstalling Dottoday left you signed in (the Keychain outlives the app); a fresh install now starts signed out, as on Android and the web.
