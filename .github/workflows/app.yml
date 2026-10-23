@@ -174,6 +174,8 @@ jobs:
       - run: flutter pub get
       - run: ../tool/web_db_assets.sh
       - run: flutter build web --dart-define-from-file=.env.example
+      # The deployed CSP and headers (06 §8, M5.7): everything below runs under it.
+      - run: tool/web_csp.sh https://your-project.supabase.co
       - name: Install audit tooling (lockfile-pinned)
         working-directory: tool/a11y
         run: npm ci --no-audit --no-fund && npx playwright install --with-deps chromium
@@ -182,9 +184,14 @@ jobs:
           (cd build/web && python3 -m http.server 8080 >/dev/null 2>&1 &)
           sleep 2
           node ../tool/a11y/axe_audit.mjs http://127.0.0.1:8080/
+      # No CSP violations, the service worker controls the page, and the app
+      # opens offline after one visit (docs/07 Web, M5.7).
+      - name: PWA, CSP and offline
+        run: node ../tool/a11y/pwa_check.mjs http://127.0.0.1:8080/
       # Encrypted web DB in a real browser: probe writes a task, then storage is scanned
       # for its plaintext title (docs/09 M2.9, ADR-0003).
       - run: flutter build web -t tool/web_db_probe.dart -o "$PWD/build/web_db_probe" --dart-define-from-file=.env.example
+      - run: tool/web_csp.sh https://your-project.supabase.co build/web_db_probe
       - name: Web database is encrypted at rest
         run: |
           (cd build/web_db_probe && python3 -m http.server 8081 >/dev/null 2>&1 &)

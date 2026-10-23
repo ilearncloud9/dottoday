@@ -3299,4 +3299,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exactAllow => 'Allow exact timing';
+
+  @override
+  String get skipToContent => 'Skip to content';
+
+  @override
+  String get installText =>
+      'Install Dottoday: opens like an app and works offline';
+
+  @override
+  String get installAction => 'Install';
 }

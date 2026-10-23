@@ -51,7 +51,7 @@ TLS 1.2+ only; certificate pinning not used (Supabase rotates); HSTS on web.
 ## 8. Platform hardening
 - iOS/macOS: App Transport Security default, Keychain `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`, `NSFaceIDUsageDescription`, no `UIFileSharingEnabled`.
 - Android: `android:allowBackup="false"` (we do our own backups), network security config (cleartext off), `FLAG_SECURE` when app lock is on, Play Integrity not required v1.
-- Web: CSP `default-src 'self'; connect-src <supabase>; img-src 'self' data:; script-src 'self' 'wasm-unsafe-eval'`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, service worker scope limited.
+- Web: CSP `default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' <supabase> <supabase wss> https://fonts.gstatic.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, HSTS, nosniff, Permissions-Policy, service worker scope limited. Generated per deployment by `app/tool/web_csp.sh` (M5.7). Why the extras: `'unsafe-inline'` for styles only (Flutter's engine sets inline styles; no inline scripts anywhere), `fonts.gstatic.com` for Flutter's glyph fallback (font files only, nothing about the user is sent); CanvasKit is served from the site, not the CDN.
 - Logging never includes task content; `Logger.redact()` enforced via lint rule (`avoid_print` + custom lint `no_pii_in_logs`).
 
 ### Web push (M5.3b)

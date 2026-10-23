@@ -4763,5 +4763,17 @@
   "exactAllow": "Allow exact timing",
   "@exactAllow": {
     "description": "Opens Android's Alarms & reminders screen."
+  },
+  "skipToContent": "Skip to content",
+  "@skipToContent": {
+    "description": "Keyboard link that skips the navigation (web/Mac)."
+  },
+  "installText": "Install Dottoday: opens like an app and works offline",
+  "@installText": {
+    "description": "Web banner offering to install the app (after the 2nd visit)."
+  },
+  "installAction": "Install",
+  "@installAction": {
+    "description": "Web banner button that installs the app."
   }
 }

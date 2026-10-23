@@ -4911,6 +4911,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Allow exact timing'**
   String get exactAllow;
+
+  /// Keyboard link that skips the navigation (web/Mac).
+  ///
+  /// In en, this message translates to:
+  /// **'Skip to content'**
+  String get skipToContent;
+
+  /// Web banner offering to install the app (after the 2nd visit).
+  ///
+  /// In en, this message translates to:
+  /// **'Install Dottoday: opens like an app and works offline'**
+  String get installText;
+
+  /// Web banner button that installs the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Install'**
+  String get installAction;
 }
 
 class _AppLocalizationsDelegate

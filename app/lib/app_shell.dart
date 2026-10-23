@@ -3,9 +3,11 @@ import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/notifications/in_app_alert_banner.dart';
+import 'package:dottoday/features/onboarding/install_banner.dart';
 import 'package:dottoday/features/sync_status/sync_banner.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
+import 'package:dottoday/shared/navigation/skip_link.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,6 +23,18 @@ class AppShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    // Keyboard users jump past the navigation (07 Web, M5.7).
+    return SkipLink(
+      label: l10n.skipToContent,
+      builder: (content) => _shell(context, l10n, content),
+    );
+  }
+
+  Widget _shell(
+    BuildContext context,
+    AppLocalizations l10n,
+    FocusNode content,
+  ) {
     return DotShell(
       destinations: shellDestinations(l10n),
       selected: shell.currentIndex,
@@ -37,7 +51,14 @@ class AppShell extends StatelessWidget {
           // conflicts (M3f.8), above every screen.
           const InAppAlertBanner(),
           const SyncBanner(),
-          Expanded(child: EditorPanelFrame(child: shell)),
+          // The web's install offer, from the 2nd visit (M5.7).
+          const InstallBanner(),
+          Expanded(
+            child: Focus(
+              focusNode: content,
+              child: EditorPanelFrame(child: shell),
+            ),
+          ),
         ],
       ),
     );

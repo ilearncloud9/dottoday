@@ -1,12 +1,55 @@
 'use strict';
-// Dottoday's service worker (docs/07 Web, docs/09 M5.3): shows reminders,
-// routes taps on them back to the app, and receives web push.
+// Dottoday's service worker (docs/07 Web, docs/09 M5.3, M5.7): keeps the
+// app working offline, shows reminders, routes taps on them back to the
+// app, and receives web push.
 // Payloads carry IDs only (06 §1); text arrives encrypted end to end.
 
 let queued = [];
 
-self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));
+// Offline (docs/07 Web, docs/09 M5.7): the app is local-first, so once its
+// files are cached it opens and works without a network. Same-origin GETs
+// go to the network first (always fresh when online) and are cached as
+// they come; offline they come from the cache, and a page with nothing
+// cached yet gets offline.html.
+const SHELL = 'dottoday-shell-v1';
+const OFFLINE = 'offline.html';
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(caches.open(SHELL).then((c) => c.addAll([OFFLINE, 'offline.css'])).then(() => self.skipWaiting()));
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    for (const name of await caches.keys()) {
+      if (name.startsWith('dottoday-') && name !== SHELL) await caches.delete(name);
+    }
+    await self.clients.claim();
+  })());
+});
+
+self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  const url = new URL(request.url);
+  if (request.method !== 'GET' || url.origin !== self.location.origin) return;
+  if (request.headers.has('range')) return;
+  event.respondWith((async () => {
+    const cache = await caches.open(SHELL);
+    try {
+      const response = await fetch(request);
+      if (response.ok && response.type === 'basic') {
+        await cache.put(request, response.clone());
+      }
+      return response;
+    } catch (_) {
+      const cached = await cache.match(request, { ignoreSearch: request.mode === 'navigate' });
+      if (cached) return cached;
+      if (request.mode === 'navigate') {
+        return (await cache.match('./')) || (await cache.match(OFFLINE));
+      }
+      return Response.error();
+    }
+  })());
+});
 
 // A tap or an action button: focus the app (or open it) and tell it.
 self.addEventListener('notificationclick', (event) => {
