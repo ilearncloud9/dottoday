@@ -171,13 +171,29 @@ void main() {
     await _scrollTo(tester, standup, onToday(find.byType(Scrollable)).first);
     await _tap(tester, standup);
     await _tap(tester, find.text('Edit'));
-    final field = find.descendant(
+    // The title by its text, not "the first field": CI typed into another
+    // one (field read "8:15 AM", nothing to ask, M5.7).
+    final titleField = find.descendant(
       of: find.byType(TaskEditor),
-      matching: find.byType(EditableText),
+      matching: find.widgetWithText(TextField, 'Team standup'),
     );
-    await _until(tester, field);
-    await tester.enterText(field.first, 'Team sync');
-    await tester.pump(const Duration(seconds: 1));
+    await _until(tester, titleField);
+    await tester.enterText(titleField, 'Team sync');
+    // Autosaved (debounced) before Save compares it with the opened row.
+    final editorId = tester.widget<TaskEditor>(find.byType(TaskEditor)).id;
+    final editorScope = ProviderScope.containerOf(
+      tester.element(find.byType(TaskEditor)),
+    );
+    for (var i = 0; i < 50; i++) {
+      await tester.pump(const Duration(milliseconds: 200));
+      final row = editorScope.read(taskViewProvider(editorId)).value;
+      if (row?.occurrence.title == 'Team sync') break;
+    }
+    final view = editorScope.read(taskViewProvider(editorId)).value;
+    debugPrint(
+      'JOURNEY before Save: row="${view?.occurrence.title}" '
+      'series=${view?.occurrence.seriesId} seriesLoaded=${view?.series != null}',
+    );
     // The editor's list builds what is in view: scroll down to Save.
     await tester.scrollUntilVisible(
       find.text('Save'),
@@ -188,17 +204,6 @@ void main() {
             matching: find.byType(Scrollable),
           )
           .first,
-    );
-    // What Save will compare (CI-only failures, M5.6/M5.7): the typed
-    // title, the task's series and whether it loads.
-    final editorId = tester.widget<TaskEditor>(find.byType(TaskEditor)).id;
-    final view = ProviderScope.containerOf(
-      tester.element(find.byType(TaskEditor)),
-    ).read(taskViewProvider(editorId)).value;
-    debugPrint(
-      'JOURNEY before Save: field="${tester.widget<EditableText>(field.first).controller.text}" '
-      'row="${view?.occurrence.title}" series=${view?.occurrence.seriesId} '
-      'seriesLoaded=${view?.series != null}',
     );
     await _tap(tester, find.text('Save'));
     await _until(tester, find.text('Change which?'));
