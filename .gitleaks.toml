@@ -7,4 +7,7 @@ description = "Placeholders and test fixtures, not secrets"
 paths = [
   '''app/\.env\.example$''',
   '''app/pubspec\.lock$''',
+  # RFC 8291 Appendix A published test vector (keys and auth secret are
+  # from the RFC, not ours), M5.3b.
+  '''app/tool/push_crypto_test\.mjs$''',
 ]
