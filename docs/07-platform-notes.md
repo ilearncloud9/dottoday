@@ -44,4 +44,4 @@ specified here — never "not available on X".
 - Deep links / universal links: `dottoday://task/<id>`, `/day/2026-10-20`, `/inbox`. Routes allow-listed; IDs resolved under the current user only.
 - Localisation: en (source), de, fr, es at v1; dates via `intl` with user locale; 12/24 h follows system unless overridden.
 - Text scaling tested at 100/150/200 %.
-- Time zone changes while travelling: a banner "You're now in Europe/Berlin — keep times or shift?" (default keep wall-clock for user tasks; calendar events follow their own zone).
+- Time zone changes while travelling: a banner "You're now in Europe/Berlin — keep times or shift?" (default keep wall-clock for user tasks; calendar events follow their own zone). Clarified in M5.9: the banner shows until one is picked (no "not now"); only planned tasks that haven't started move; repeats are split at their next instance so past ones keep their history; both choices are undoable.

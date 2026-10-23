@@ -6,6 +6,7 @@ import 'package:dottoday/features/notifications/in_app_alert_banner.dart';
 import 'package:dottoday/features/onboarding/install_banner.dart';
 import 'package:dottoday/features/sync_status/sync_banner.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
+import 'package:dottoday/features/timeline/widgets/zone_banner.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/skip_link.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,8 @@ class AppShell extends StatelessWidget {
           // conflicts (M3f.8), above every screen.
           const InAppAlertBanner(),
           const SyncBanner(),
+          // The device moved zone: keep times or shift (M5.9).
+          const ZoneBanner(),
           // The web's install offer, from the 2nd visit (M5.7).
           const InstallBanner(),
           Expanded(

@@ -15,6 +15,14 @@ part 'profile_providers.g.dart';
 Future<String> deviceTimeZone(Ref ref) async =>
     (await FlutterTimezone.getLocalTimezone()).identifier;
 
+/// The device's zone now, re-read when the app comes back (M5.9): it
+/// differs from the profile's after a flight until the person picks
+/// keep or shift. [deviceTimeZone] stays the launch value, so the profile
+/// isn't rebuilt on every resume.
+@Riverpod(keepAlive: true)
+Future<String> currentDeviceZone(Ref ref) async =>
+    (await FlutterTimezone.getLocalTimezone()).identifier;
+
 @Riverpod(keepAlive: true)
 LocalProfileService localProfileService(Ref ref) => LocalProfileService(
   settings: ref.watch(settingsRepositoryProvider),

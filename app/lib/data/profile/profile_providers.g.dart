@@ -46,6 +46,53 @@ final class DeviceTimeZoneProvider
 
 String _$deviceTimeZoneHash() => r'da8435051f5a230e8226ec34f24cb12af69bacea';
 
+/// The device's zone now, re-read when the app comes back (M5.9): it
+/// differs from the profile's after a flight until the person picks
+/// keep or shift. [deviceTimeZone] stays the launch value, so the profile
+/// isn't rebuilt on every resume.
+
+@ProviderFor(currentDeviceZone)
+final currentDeviceZoneProvider = CurrentDeviceZoneProvider._();
+
+/// The device's zone now, re-read when the app comes back (M5.9): it
+/// differs from the profile's after a flight until the person picks
+/// keep or shift. [deviceTimeZone] stays the launch value, so the profile
+/// isn't rebuilt on every resume.
+
+final class CurrentDeviceZoneProvider
+    extends $FunctionalProvider<AsyncValue<String>, String, FutureOr<String>>
+    with $FutureModifier<String>, $FutureProvider<String> {
+  /// The device's zone now, re-read when the app comes back (M5.9): it
+  /// differs from the profile's after a flight until the person picks
+  /// keep or shift. [deviceTimeZone] stays the launch value, so the profile
+  /// isn't rebuilt on every resume.
+  CurrentDeviceZoneProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currentDeviceZoneProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$currentDeviceZoneHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<String> create(Ref ref) {
+    return currentDeviceZone(ref);
+  }
+}
+
+String _$currentDeviceZoneHash() => r'9bce61968295679ef763f415e8a1e5869737c6fb';
+
 @ProviderFor(localProfileService)
 final localProfileServiceProvider = LocalProfileServiceProvider._();
 

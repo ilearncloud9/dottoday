@@ -3355,4 +3355,25 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get lockUnavailable =>
       'This device has no passcode, so Dottoday can\'t lock.';
+
+  @override
+  String zoneBannerText(String city) {
+    return 'You\'re now in $city — keep times or shift?';
+  }
+
+  @override
+  String get zoneKeep => 'Keep times';
+
+  @override
+  String get zoneShift => 'Shift';
+
+  @override
+  String zoneKeptSnack(String city) {
+    return 'Tasks kept at their times in $city';
+  }
+
+  @override
+  String zoneShiftedSnack(String city) {
+    return 'Tasks shifted to $city time';
+  }
 }

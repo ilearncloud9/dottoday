@@ -78,7 +78,7 @@ final class AppLockSettingProvider
   AppLockSetting create() => AppLockSetting();
 }
 
-String _$appLockSettingHash() => r'7b7bc44cac4e09fbb8bad966c3f4e95424218644';
+String _$appLockSettingHash() => r'1e43fddbcb16fd53d7f8bbe0944a68ce651945d5';
 
 /// The app-lock setting, kept in `local_meta` on this device only.
 
@@ -138,7 +138,7 @@ final class AppLockedProvider extends $NotifierProvider<AppLocked, bool> {
   }
 }
 
-String _$appLockedHash() => r'6bc31547fc4f70cb708ea2f8a111d5509c9e8680';
+String _$appLockedHash() => r'33ce68b08113d67dc9145ea9fe506763defe3cd1';
 
 /// Whether the app is locked now: at start when the lock is on, and again
 /// on return after the chosen delay (docs/06 §2, M5.8).

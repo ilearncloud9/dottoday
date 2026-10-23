@@ -39,23 +39,42 @@ class BannerStrip extends StatelessWidget {
               DotSpace.s,
               DotSpace.xs,
             ),
-            child: Row(
-              spacing: DotSpace.s,
-              children: [
-                DotIcon(glyph, color: t.colors.muted, size: DotSize.rowIcon),
-                Expanded(
-                  child: Text(
-                    text,
-                    style: emphasis ? t.styles.rowTitle : t.styles.rowMeta,
-                  ),
-                ),
-                for (final (label, onPressed) in actions)
-                  TextButton(onPressed: onPressed, child: Text(label)),
-              ],
-            ),
+            // The window's width class, like every other layout choice.
+            child: _layout(t, MediaQuery.sizeOf(context).width),
           ),
         ),
       ),
+    );
+  }
+
+  /// One row; on a phone two actions go under the text, which would
+  /// otherwise wrap into a narrow column beside them (M5.9).
+  Widget _layout(DotTheme t, double width) {
+    final glyphAndText = [
+      DotIcon(glyph, color: t.colors.muted, size: DotSize.rowIcon),
+      Expanded(
+        child: Text(
+          text,
+          style: emphasis ? t.styles.rowTitle : t.styles.rowMeta,
+        ),
+      ),
+    ];
+    final buttons = [
+      for (final (label, onPressed) in actions)
+        TextButton(onPressed: onPressed, child: Text(label)),
+    ];
+    if (actions.length < 2 || WidthClass.of(width) != WidthClass.compact) {
+      return Row(spacing: DotSpace.s, children: [...glyphAndText, ...buttons]);
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsetsDirectional.only(top: DotSpace.xs),
+          child: Row(spacing: DotSpace.s, children: glyphAndText),
+        ),
+        Wrap(alignment: WrapAlignment.end, children: buttons),
+      ],
     );
   }
 }

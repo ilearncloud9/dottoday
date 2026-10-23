@@ -227,11 +227,20 @@ final class FakeSeriesRepository implements SeriesRepository {
 /// Applies batches straight to the fake repository; undo restores the
 /// previous rows.
 final class FakeUndoService implements UndoService {
-  FakeUndoService(this.occurrences, [this.subtasks, this.series]);
+  FakeUndoService(
+    this.occurrences, [
+    this.subtasks,
+    this.series,
+    this.settings,
+  ]);
 
   final FakeOccurrenceRepository occurrences;
   final FakeSubtaskRepository? subtasks;
   final FakeSeriesRepository? series;
+
+  /// Takes a batch's profile (the travel banner, M5.9).
+  final FakeSettingsRepository? settings;
+  final _profileBefore = <String, Profile>{};
   final _seriesBefore = <String, List<Series>>{};
   final _subtasksBefore = <String, List<Subtask>>{};
   final applied = <WriteBatch>[];
@@ -251,6 +260,11 @@ final class FakeUndoService implements UndoService {
         ?subtasks?.rows.where((r) => r.id == s.id).firstOrNull,
     ];
     _seriesBefore[id] = [for (final s in batch.series) ?series?._rows[s.id]];
+    final settings = this.settings;
+    if (batch.profile != null && settings != null) {
+      _profileBefore[id] = settings.profile;
+      await settings.upsert(batch.profile!);
+    }
     applied.add(batch);
     _batchIds[batch] = id;
     series?.put(batch.series);
@@ -286,6 +300,9 @@ final class FakeUndoService implements UndoService {
         if (!known.contains(o.id)) o.copyWith(deletedAt: DateTime.utc(2100)),
     ]);
     subtasks?.put(_subtasksBefore.remove(token.id) ?? const []);
+    if (_profileBefore.remove(token.id) case final p?) {
+      await settings?.upsert(p);
+    }
     return const Ok(null);
   }
 }
@@ -367,13 +384,14 @@ List<Override> timelineOverrides({
   NotificationPermission notificationPermission =
       const UnwiredNotificationPermission(),
   ExactAlarms exactAlarms = const AlwaysExactAlarms(),
+  String? deviceZone,
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
   final subs = subtasks ?? FakeSubtaskRepository();
   final seriesRepo = FakeSeriesRepository(series);
-  final undo = FakeUndoService(repo, subs, seriesRepo);
   final settingsRepo = FakeSettingsRepository(p);
+  final undo = FakeUndoService(repo, subs, seriesRepo, settingsRepo);
   return [
     writeUseCaseProvider.overrideWithValue(
       FakeWriteUseCase(settingsRepo, repo),
@@ -385,6 +403,8 @@ List<Override> timelineOverrides({
     clockProvider.overrideWithValue(FakeClock(now)),
     minuteTickProvider.overrideWith((ref) => minuteTicks ?? Stream.value(now)),
     localProfileProvider.overrideWith((ref) async => p),
+    // Where the device is; the profile's own zone unless a test travels.
+    currentDeviceZoneProvider.overrideWith((ref) async => deviceZone ?? p.tzId),
     settingsRepositoryProvider.overrideWithValue(settingsRepo),
     occurrenceRepositoryProvider.overrideWithValue(repo),
     searchRepositoryProvider.overrideWithValue(FakeSearchRepository(repo)),

@@ -5001,6 +5001,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This device has no passcode, so Dottoday can\'t lock.'**
   String get lockUnavailable;
+
+  /// Travel banner (07, M5.9) when the device's zone differs from the planning zone.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re now in {city} — keep times or shift?'**
+  String zoneBannerText(String city);
+
+  /// Travel banner: 9:00 stays 9:00 in the new zone (the default).
+  ///
+  /// In en, this message translates to:
+  /// **'Keep times'**
+  String get zoneKeep;
+
+  /// Travel banner: tasks keep their moment, so clock times move.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift'**
+  String get zoneShift;
+
+  /// After Keep times.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks kept at their times in {city}'**
+  String zoneKeptSnack(String city);
+
+  /// After Shift.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks shifted to {city} time'**
+  String zoneShiftedSnack(String city);
 }
 
 class _AppLocalizationsDelegate

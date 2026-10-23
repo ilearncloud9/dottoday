@@ -2,6 +2,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
+import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/data/trash/drift_trash_service.dart';
 import 'package:dottoday/data/undo/in_memory_undo_service.dart';
@@ -42,6 +43,7 @@ void main() {
       occurrences: occurrences,
       subtasks: subtasks,
       series: series,
+      settings: DriftSettingsRepository(h.db),
       clock: h.clock,
       ids: FakeIds('undo'),
     );
@@ -83,6 +85,25 @@ void main() {
       expect(_err(await undo.undo(token)), isA<UndoExpiredFailure>());
     });
 
+    // The travel banner moves the profile's zone with the tasks (M5.9).
+    test('puts a batch\'s profile back', () async {
+      final settings = DriftSettingsRepository(h.db);
+      final before = (await settings.findLocalProfile())!;
+      final token = _ok(
+        await undo.applyUndoable(
+          WriteBatch(
+            userId: userId,
+            profile: before.copyWith(tzId: 'America/New_York'),
+            occurrences: [task.copyWith(startUtc: t1)],
+          ),
+        ),
+      );
+      expect((await settings.findLocalProfile())!.tzId, 'America/New_York');
+      _ok(await undo.undo(token));
+      expect((await settings.findLocalProfile())!.tzId, before.tzId);
+      expect((await occurrences.findById(userId, task.id))!.startUtc, t0);
+    });
+
     test('expires after 30 s', () async {
       final token = _ok(
         await undo.applyUndoable(
@@ -106,15 +127,6 @@ void main() {
       );
       _ok(await undo.undo(token));
       expect(await deletedAt('copy'), isNotNull);
-    });
-
-    test('profile writes are not undoable here', () {
-      expect(
-        () => undo.applyUndoable(
-          WriteBatch(userId: userId, profile: profileFixture()),
-        ),
-        throwsArgumentError,
-      );
     });
   });
 

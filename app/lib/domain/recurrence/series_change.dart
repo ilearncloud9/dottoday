@@ -18,6 +18,7 @@ final class SeriesChange {
     this.startMinute,
     this.rule,
     this.alerts,
+    this.tzId,
   });
 
   final String? title;
@@ -32,6 +33,10 @@ final class SeriesChange {
   /// New alerts (M3f.2): the series takes them and later rows inherit;
   /// "this one" keeps them on the row.
   final List<Alert>? alerts;
+
+  /// A new zone (M5.9, travel "keep times"): later instances keep their
+  /// clock time in it. Moves instances, so the series is split.
+  final String? tzId;
 
   /// The fields [after] changes from [before] (the instance as it was
   /// opened); the time of day as minutes in [zone].
@@ -66,10 +71,11 @@ final class SeriesChange {
       pinned == null &&
       startMinute == null &&
       rule == null &&
-      alerts == null;
+      alerts == null &&
+      tzId == null;
 
   /// A new time or rule moves instances: the series is split.
-  bool get moves => startMinute != null || rule != null;
+  bool get moves => startMinute != null || rule != null || tzId != null;
 
   /// [o] with the field changes (not the time). New alerts become the
   /// row's own when [own] (this one), else it inherits the series'.
@@ -81,6 +87,7 @@ final class SeriesChange {
     iconKey: iconKey ?? o.iconKey,
     durationMin: durationMin ?? o.durationMin,
     pinned: pinned ?? o.pinned,
+    tzId: tzId ?? o.tzId,
   );
 
   /// [s]'s template with the field changes.
@@ -92,6 +99,7 @@ final class SeriesChange {
     iconKey: iconKey ?? s.iconKey,
     durationMin: durationMin ?? s.durationMin,
     pinned: pinned ?? s.pinned,
+    tzId: tzId ?? s.tzId,
   );
 
   static int _minuteOf(DateTime wall) => wall.hour * 60 + wall.minute;

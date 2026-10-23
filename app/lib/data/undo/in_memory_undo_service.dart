@@ -4,9 +4,11 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
+import 'package:dottoday/domain/repositories/settings_repository.dart';
 import 'package:dottoday/domain/repositories/subtask_repository.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
@@ -17,16 +19,19 @@ import 'package:dottoday/domain/writes/write_use_case.dart';
 /// A batch that saves series (repeat edits, M3f.1) also remembers every
 /// occurrence those series had: saving a series materialises rows the
 /// batch didn't list, and Undo must take those away too (docs/09 M4.9 —
-/// found on a device; profile writes are still not undoable).
+/// found on a device). A batch's profile (the travel banner, M5.9) is
+/// put back as it was too.
 final class InMemoryUndoService implements UndoService {
   InMemoryUndoService({
     required WriteUseCase writes,
     required OccurrenceRepository occurrences,
     required SubtaskRepository subtasks,
     required SeriesRepository series,
+    required SettingsRepository settings,
     required Clock clock,
     required IdGenerator ids,
   }) : _writes = writes,
+       _settings = settings,
        _occurrences = occurrences,
        _subtasks = subtasks,
        _series = series,
@@ -37,6 +42,7 @@ final class InMemoryUndoService implements UndoService {
   final OccurrenceRepository _occurrences;
   final SubtaskRepository _subtasks;
   final SeriesRepository _series;
+  final SettingsRepository _settings;
   final Clock _clock;
   final IdGenerator _ids;
   final _pending = <String, _Before>{};
@@ -51,13 +57,6 @@ final class InMemoryUndoService implements UndoService {
 
   @override
   Future<Result<UndoToken, AppFailure>> applyUndoable(WriteBatch batch) async {
-    if (batch.profile != null) {
-      throw ArgumentError.value(
-        batch,
-        'batch',
-        'profile writes are not undoable',
-      );
-    }
     final before = await _before(batch);
     final written = await _writes.apply(batch);
     if (written case Err(:final failure)) return Err(failure);
@@ -88,6 +87,7 @@ final class InMemoryUndoService implements UndoService {
     return _writes.apply(
       WriteBatch(
         userId: u,
+        profile: before.profile,
         series: [
           for (final MapEntry(:key, :value) in before.series.entries)
             ?(value ??
@@ -125,9 +125,13 @@ final class InMemoryUndoService implements UndoService {
         occurrences.putIfAbsent(o.id, () => o);
       }
     }
-    return _Before(u, occurrences, {
-      for (final s in batch.subtasks) s.id: await _subtasks.findById(u, s.id),
-    }, series);
+    return _Before(
+      u,
+      occurrences,
+      {for (final s in batch.subtasks) s.id: await _subtasks.findById(u, s.id)},
+      series,
+      batch.profile == null ? null : await _settings.findLocalProfile(),
+    );
   }
 
   void _dropExpired() {
@@ -138,11 +142,20 @@ final class InMemoryUndoService implements UndoService {
 
 /// Rows as they were before an undoable write; null = created by it.
 final class _Before {
-  _Before(this.userId, this.occurrences, this.subtasks, this.series);
+  _Before(
+    this.userId,
+    this.occurrences,
+    this.subtasks,
+    this.series,
+    this.profile,
+  );
 
   final String userId;
   final Map<String, Occurrence?> occurrences;
   final Map<String, Subtask?> subtasks;
   final Map<String, Series?> series;
+
+  /// The profile as it was, when the batch wrote one.
+  final Profile? profile;
   late DateTime expiresAtUtc;
 }

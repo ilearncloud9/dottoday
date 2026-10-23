@@ -70,3 +70,5 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Recovery screens: can't open your tasks (Start fresh → kept at … → Continue), open in another tab (Use it here), moved to another tab | §5.4 system states, 06 §4 | `recovery_*` |
 | Loading skeleton (dots on a dotted thread) and inline error with Try again, on every screen | §5.4 loading / error | `state_loading_*`, `state_error_*`; `screen_states_test` |
 | Inbox reorder handles (own order) and selecting (checks, Plan these / Colour / Delete bar) | PRD F3, §3 `InboxRow`, the M3b.7 bar | `inbox_*`, `inbox_selecting_*` |
+| App lock screen (thread dot, "Dottoday is locked", Unlock) and the APP LOCK group on Privacy | §5.4 system states, 06 §2 (M5.8) | `lock_screen_*`, `settings_page_privacy_*` |
+| Travel banner "You're now in … — keep times or shift?"; on phones a two-action strip puts its actions under the text (also the in-app reminder) | §5.4 strip, 07 travelling (M5.9) | `zone_banner_*`, `in_app_alert_banner_*` |

@@ -115,15 +115,18 @@ final class SeriesEditor {
     DateTime now,
   ) {
     final next = _successor(series, change, pivot, zone, now);
+    // A new zone (M5.9): instances fall on dates in it, rows on dates in
+    // the old one; the same date pairs them.
+    final nextZone = tz.getLocation(next.tzId);
     final later = _from(rows, pivot).toList();
     final last = later.fold(pivot, (m, o) => _key(o).isAfter(m) ? _key(o) : m);
     final byDay = {
       for (final utc in _expander.expand(
         next,
-        fromUtc: pivot,
+        fromUtc: pivot.subtract(const Duration(days: 1)),
         toUtc: last.add(const Duration(days: 2)),
       ))
-        _day(zone, utc): utc,
+        _day(nextZone, utc): utc,
     };
     final out = <Occurrence>[];
     for (final o in later) {

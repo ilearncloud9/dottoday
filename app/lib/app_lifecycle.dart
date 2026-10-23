@@ -66,10 +66,12 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state != AppLifecycleState.resumed) return;
-    // Back from the system settings: what the OS allows may have changed.
+    // Back from the system settings: what the OS allows may have changed;
+    // back from a flight: the zone may have (M5.9).
     ref
       ..invalidate(notificationPermissionStateProvider)
-      ..invalidate(exactAlarmsAllowedProvider);
+      ..invalidate(exactAlarmsAllowedProvider)
+      ..invalidate(currentDeviceZoneProvider);
     unawaited(runHousekeeping(ref));
   }
 
