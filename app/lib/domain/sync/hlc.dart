@@ -97,6 +97,21 @@ final class HybridLogicalClock {
     return _last;
   }
 
+  /// An HLC for a local event that sorts after both [last] and [other],
+  /// even past [maxDrift]: [other] is a version the server accepted (so
+  /// within its own 5-minute bound), and a first sync must outrank it
+  /// whatever this device's clock says (docs/09 M6.4).
+  ///
+  /// ```dart
+  /// hlc.outrank(serverVersion) > serverVersion; // true
+  /// ```
+  Hlc outrank(Hlc other) {
+    final mine = now();
+    if (mine > other) return mine;
+    _last = _bump(other.ms, other.counter + 1);
+    return _last;
+  }
+
   /// Merges a [remote] HLC seen in pulled data and returns the new [last].
   Hlc receive(Hlc remote) {
     final wall = _wallMs();

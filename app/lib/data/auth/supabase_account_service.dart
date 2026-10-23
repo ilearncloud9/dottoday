@@ -21,8 +21,10 @@ final class SupabaseAccountService implements AccountService {
     required this.redirectTo,
     required Stream<Uri> callbacks,
     required Logger logger,
+    Stream<RestoreProgress> Function()? restore,
     OpenOAuth? openOAuth,
   }) : _logger = logger,
+       _restore = restore,
        _openOAuth =
            openOAuth ??
            ((provider, redirect) =>
@@ -33,6 +35,7 @@ final class SupabaseAccountService implements AccountService {
   final GoTrueClient _auth;
   final Logger _logger;
   final OpenOAuth _openOAuth;
+  final Stream<RestoreProgress> Function()? _restore;
   late final StreamSubscription<Uri> _callbacks;
 
   /// Where the sign-in page sends the code: `dottoday://auth-callback` in
@@ -69,9 +72,10 @@ final class SupabaseAccountService implements AccountService {
         await _auth.signInWithOtp(email: email, emailRedirectTo: redirectTo);
       });
 
-  /// Until the first sync arrives (M6.4) there is nothing to restore.
+  /// The first sync bringing the account's tasks down (M6.4).
   @override
-  Stream<RestoreProgress?> watchRestore() => Stream.value(null);
+  Stream<RestoreProgress?> watchRestore() =>
+      _restore?.call() ?? Stream.value(null);
 
   @override
   Future<Result<void, AppFailure>> signOut({bool everywhere = false}) =>

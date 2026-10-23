@@ -1,5 +1,6 @@
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/domain/auth/account.dart';
 
 /// Where sync stands (docs/02 F7, R-08): the pill, the banner and the Sync
 /// sheet read this.
@@ -60,4 +61,9 @@ abstract interface class SyncService {
 
   /// Keeps [choice] for conflict [id]; the other value is dropped.
   Future<Result<void, AppFailure>> resolve(String id, ConflictChoice choice);
+
+  /// An account's first sync bringing its rows down ("Bringing your
+  /// tasks… 120 of 300", docs/09 M6.4); finished after every run, so the
+  /// screen never waits on a device that is offline.
+  Stream<RestoreProgress> watchRestore();
 }

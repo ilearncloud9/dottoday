@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M6.4: Signing in after using Dottoday without an account keeps everything you made on this device; signing in on a new device brings your tasks and settings down ("Bringing your tasks… 120 of 300") instead of replacing your settings with the new device's defaults.
 - M6.3: Settings shows "Kody · synced just now" once you're signed in, and the Inbox sidebar ends with "● Synced · just now" (or syncing, offline, paused, or how many changes need you); the Sync sheet now shows real status and resolves conflicts.
 - M6.2: Sync: signed in, your tasks, repeats and settings go to your account and arrive on your other devices — on opening the app, every few minutes, shortly after a change and when another device changes something. Offline it waits and nothing is lost; if two devices change the same thing within a minute, the Sync sheet asks which to keep.
 - M6.1: Accounts: sign in with an email link (Apple and Google once their consoles are set up), from onboarding or Settings › Account; the session is kept in the Keychain/Keystore (sealed in the browser), and "Sign out everywhere" ends every device's session. The app stays fully usable without an account. Fixed: a sign-in link opened during onboarding was ignored on iPhone; "I already have an account" now says "Welcome back".

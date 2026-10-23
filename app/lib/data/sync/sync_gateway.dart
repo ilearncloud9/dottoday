@@ -53,6 +53,10 @@ abstract interface class SyncGateway {
     required int limit,
   });
 
+  /// How many rows of [entity] [pull] would bring from [sinceUtc] (for
+  /// "Bringing your tasks… 120 of 300"). Throws [SyncGatewayException].
+  Future<int> count(String entity, DateTime sinceUtc);
+
   /// The server's HLC per field of the rows [ids] of [entity]: the clock
   /// each field was last written with. Throws [SyncGatewayException].
   Future<Map<String, Map<String, String>>> fieldVersions(

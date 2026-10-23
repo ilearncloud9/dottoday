@@ -38,6 +38,14 @@ final class SupabaseSyncGateway implements SyncGateway {
   });
 
   @override
+  Future<int> count(String entity, DateTime sinceUtc) => _guard(
+    () => _client
+        .from(entity)
+        .count()
+        .gte('updated_at', sinceUtc.toUtc().toIso8601String()),
+  );
+
+  @override
   Future<Map<String, Map<String, String>>> fieldVersions(
     String entity,
     List<String> ids,

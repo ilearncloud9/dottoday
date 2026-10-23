@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 
 /// A sync engine that reports [status] and records what it is asked.
@@ -37,4 +38,8 @@ final class FakeSyncService implements SyncService {
     _status.add(_last);
     return const Ok(null);
   }
+
+  @override
+  Stream<RestoreProgress> watchRestore() =>
+      Stream.value(const RestoreProgress(done: 0, total: 0));
 }

@@ -43,6 +43,8 @@ values never conflict.
 - **One clock**: the write path and the engine share the device HLC; every pulled HLC is received.
 - **Account adoption**: on sign-in the device profile is re-keyed to the account id (FKs cascade),
   outbox profile rows follow, cursors reset; the whole local history then goes up.
+- **First sync** for an account: local wins (re-stamped past a newer server clock); the device
+  profile's first-launch defaults yield to an existing account profile (M6.4, 04 §4).
 - Pulled rows are written without outbox rows; device-only columns (`calendar_link_id` until M7) keep
   their local value; instants cross as ISO on the server and epoch ms locally.
 

@@ -9,6 +9,7 @@ import 'package:dottoday/data/sync/server_columns.dart';
 import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
 import 'package:dottoday/data/sync/synced_rows.dart';
+import 'package:dottoday/domain/sync/hlc.dart';
 import 'package:drift/drift.dart';
 
 /// What one run did (for the status and tests).
@@ -52,13 +53,33 @@ final class SyncEngine {
   Outbox get outbox => _outbox;
 
   /// One full round for [userId] (the signed-in account, already adopted).
+  /// [onProgress] hears (done, total) while an account's first sync brings
+  /// its rows down ("Bringing your tasks… 120 of 300", M6.4).
   /// Throws [SyncGatewayException] when the server can't be reached or
   /// refuses; what was done before stays done.
-  Future<SyncRun> run(String userId) async {
+  Future<SyncRun> run(
+    String userId, {
+    void Function(int done, int total)? onProgress,
+  }) async {
+    final first = !await _hasCursor('profiles');
+    if (first) await _yieldDefaultProfile(userId);
+    var total = 0;
+    if (first && onProgress != null) {
+      for (final entity in syncedEntities) {
+        total += await _gateway.count(entity, _epoch);
+      }
+      onProgress(0, total);
+    }
     var pulled = 0;
     var conflicts = 0;
     for (final entity in syncedEntities) {
-      final (rows, found) = await _pull(userId, entity);
+      final (rows, found) = await _pull(
+        userId,
+        entity,
+        progress: first && onProgress != null
+            ? (n) => onProgress((pulled + n).clamp(0, total), total)
+            : null,
+      );
       pulled += rows;
       conflicts += found;
     }
@@ -72,7 +93,14 @@ final class SyncEngine {
   }
 
   /// Pages through [entity] from its cursor; returns (rows, conflicts).
-  Future<(int, int)> _pull(String userId, String entity) async {
+  /// The first pull of an entity for an account lets local writes win
+  /// (docs/09 M6.4: what was made here before signing in stays).
+  Future<(int, int)> _pull(
+    String userId,
+    String entity, {
+    void Function(int pulledSoFar)? progress,
+  }) async {
+    final localWins = !await _hasCursor(entity);
     var since = await _cursor(entity);
     var rows = 0;
     var conflicts = 0;
@@ -95,17 +123,22 @@ final class SyncEngine {
             pending[id] ?? const {},
             versions[id] ?? const {},
             seen[id] ?? const {},
+            localWins: localWins,
           );
           await _remember(entity, id, versions[id] ?? const {});
         }
         await _saveCursor(entity, last);
       });
       rows += page.length;
+      progress?.call(rows);
       // A full page whose rows all share the cursor's instant can't move
       // it; stop rather than read the same page again.
       if (page.length < _pageSize || !last.isAfter(since)) break;
       since = last;
     }
+    // Visited, even if the server had nothing: the next pull of it is no
+    // longer this account's first.
+    if (localWins && rows == 0) await _saveCursor(entity, since);
     return (rows, conflicts);
   }
 
@@ -115,8 +148,9 @@ final class SyncEngine {
     Map<String, Object?> remote,
     Map<String, PendingField> pending,
     Map<String, String> versions,
-    Map<String, String> seen,
-  ) async {
+    Map<String, String> seen, {
+    required bool localWins,
+  }) async {
     final id = remote['id']! as String;
     final local = await _rows.find(entity, userId, id);
     final merged = mergeRemote(
@@ -126,10 +160,20 @@ final class SyncEngine {
       pending: pending,
       versions: versions,
       seen: seen,
+      localWins: localWins,
     );
     await _rows.put(entity, merged.row);
     if (merged.settled.isNotEmpty) {
       await _outbox.drop(entity, id, merged.settled);
+    }
+    if (merged.restamp.isNotEmpty) {
+      final clock = await _hlc.clock();
+      final newest = [
+        for (final f in merged.restamp) ?Hlc.tryParse(versions[f] ?? ''),
+      ].reduce((a, b) => a > b ? a : b);
+      final hlc = clock.outrank(newest).toString();
+      await _outbox.restamp(entity, id, merged.restamp, hlc);
+      await _hlc.save();
     }
     final now = _clock.nowUtc().millisecondsSinceEpoch;
     for (final c in merged.conflicts) {
@@ -155,6 +199,31 @@ final class SyncEngine {
     );
     return merged.conflicts.length;
   }
+
+  /// A returning account on a new device (docs/09 M6.4): the profile this
+  /// device made on first launch holds defaults, not choices. Where another
+  /// device already wrote the account's profile, those initial values give
+  /// way (they share the clock of the profile's `created_at`); anything
+  /// changed here since still wins.
+  Future<void> _yieldDefaultProfile(String userId) async {
+    final server = (await _gateway.fieldVersions('profiles', [userId]))[userId];
+    if (server == null || server.isEmpty) return;
+    final pending = (await _outbox.pendingFor('profiles', [userId]))[userId];
+    final creation = pending?['created_at']?.hlc;
+    if (pending == null || creation == null) return;
+    await _outbox.drop('profiles', userId, [
+      for (final MapEntry(key: field, value: p) in pending.entries)
+        if (p.hlc == creation && server.containsKey(field)) field,
+    ]);
+  }
+
+  Future<bool> _hasCursor(String entity) async =>
+      await (_db.select(
+        _db.syncCursors,
+      )..where((c) => c.entity.equals(entity))).getSingleOrNull() !=
+      null;
+
+  static final _epoch = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
 
   /// The server versions this device last pulled for [ids].
   Future<Map<String, Map<String, String>>> _seen(

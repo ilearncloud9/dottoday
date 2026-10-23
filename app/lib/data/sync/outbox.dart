@@ -62,6 +62,22 @@ final class Outbox {
           ))
           .go();
 
+  /// Gives the pending writes of [fields] of row [id] the clock [hlc]: a
+  /// first sync keeps them over a newer server copy (docs/09 M6.4).
+  Future<void> restamp(
+    String entity,
+    String id,
+    Iterable<String> fields,
+    String hlc,
+  ) =>
+      (_db.update(_db.changeLog)..where(
+            (c) =>
+                c.entity.equals(entity) &
+                c.entityId.equals(id) &
+                c.field.isIn(fields.toList()),
+          ))
+          .write(ChangeLogCompanion(hlc: Value(hlc)));
+
   /// Everything waiting, as push batches of at most [size] changes: one
   /// change per entity version, parents before children (series before
   /// their occurrences, occurrences before subtasks), oldest first.

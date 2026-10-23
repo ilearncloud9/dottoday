@@ -54,6 +54,11 @@ on the user's rows + a periodic `since` pull as a safety net (every 5 min foregr
 60 s, record a `conflict` row and show "keep mine / keep theirs" in Sync details; default keeps server.
 Deletes are tombstones (30-day retention = Trash). Never hard-delete locally because of a server error.
 
+**First sync for an account** (M6.4): local wins — pending local writes stand and, if the server
+holds a newer clock, are re-stamped to outrank it. Exception: the profile's first-launch defaults
+(written with the profile's `created_at`) yield to a profile another device already wrote, so a
+returning user keeps their settings; later local edits still win.
+
 **Safety**: writes are local-first and immediate; sync failures only change the status pill; daily
 local backup (JSON, last 7) before any migration or bulk import.
 

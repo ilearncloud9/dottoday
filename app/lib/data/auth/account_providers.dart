@@ -5,6 +5,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/router/auth_callback.dart';
 import 'package:dottoday/data/auth/supabase_account_service.dart';
+import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -65,6 +66,7 @@ AccountService accountService(Ref ref) {
         : authCallbackLink,
     callbacks: ref.watch(authCallbackInboxProvider).take(),
     logger: ref.watch(loggerProvider),
+    restore: () => ref.read(syncServiceProvider).watchRestore(),
   );
   ref.onDispose(() => unawaited(service.dispose()));
   return service;

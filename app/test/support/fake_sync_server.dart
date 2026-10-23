@@ -109,6 +109,10 @@ final class _DeviceGateway implements SyncGateway {
   }
 
   @override
+  Future<int> count(String entity, DateTime sinceUtc) async =>
+      (await pull(entity, sinceUtc, limit: 1 << 30)).length;
+
+  @override
   Future<Map<String, Map<String, String>>> fieldVersions(
     String entity,
     List<String> ids,

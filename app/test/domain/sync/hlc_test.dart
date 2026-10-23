@@ -50,6 +50,21 @@ void main() {
   });
 
   group('HybridLogicalClock', () {
+    // A first sync keeps a local edit over a newer server copy (M6.4), even
+    // with this device's clock an hour behind.
+    test('outrank: after the other clock, own node, monotonic', () {
+      final hlc = HybridLogicalClock(clock: FakeClock(_t0), nodeId: _a);
+      final server = Hlc(_t0.millisecondsSinceEpoch + 3600000, 7, _b);
+      final mine = hlc.outrank(server);
+      expect(mine > server, isTrue);
+      expect(mine.node, _a);
+      expect((mine.ms, mine.counter), (server.ms, 8));
+      expect(hlc.now() > mine, isTrue);
+      // Already ahead: just the next tick.
+      final older = Hlc(_t0.millisecondsSinceEpoch - 1000, 0, _b);
+      expect(hlc.outrank(older) > mine, isTrue);
+    });
+
     test('now() follows the wall clock and resets the counter', () {
       final clock = FakeClock(_t0);
       final hlc = HybridLogicalClock(clock: clock, nodeId: _a);

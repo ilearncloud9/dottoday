@@ -6,6 +6,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
+import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 
 /// Reads the open conflicts and acts on them (the database side).
@@ -60,6 +61,8 @@ final class EngineSyncService implements SyncService {
   final Duration _settle;
 
   final _state = StreamController<SyncStatus>.broadcast();
+  final _restore = StreamController<RestoreProgress>.broadcast();
+  RestoreProgress? _lastRestore;
   late final StreamSubscription<String?> _accountSub;
   StreamSubscription<void>? _remoteSub;
   StreamSubscription<int>? _outboxSub;
@@ -75,6 +78,12 @@ final class EngineSyncService implements SyncService {
   Stream<SyncStatus> watch() async* {
     yield _status;
     yield* _state.stream;
+  }
+
+  @override
+  Stream<RestoreProgress> watchRestore() async* {
+    if (_lastRestore case final p?) yield p;
+    yield* _restore.stream;
   }
 
   @override
@@ -111,6 +120,7 @@ final class EngineSyncService implements SyncService {
     await _accountSub.cancel();
     await _stop();
     await _state.close();
+    await _restore.close();
   }
 
   Future<void> _signedIn(String? id) async {
@@ -173,7 +183,7 @@ final class EngineSyncService implements SyncService {
     _running = true;
     _emit(_with(state: SyncState.syncing));
     try {
-      final run = await _engine.run(account);
+      final run = await _engine.run(account, onProgress: _progress);
       if (_account != account) return;
       _emit(_with(state: SyncState.synced, lastSyncedUtc: _clock.nowUtc()));
       if (run.pulled > 0) _onPulled?.call(account);
@@ -192,12 +202,20 @@ final class EngineSyncService implements SyncService {
       _logger.error('sync.failed', error: e, stackTrace: s);
       _emit(_with(state: SyncState.error));
     } finally {
+      // Whatever happened, nobody waits on this run any more.
+      _progress(1, 1);
       _running = false;
       if (_again) {
         _again = false;
         unawaited(_run());
       }
     }
+  }
+
+  void _progress(int done, int total) {
+    final p = RestoreProgress(done: done, total: total);
+    _lastRestore = p;
+    if (!_restore.isClosed) _restore.add(p);
   }
 
   SyncStatus _with({

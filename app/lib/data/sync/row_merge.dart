@@ -13,6 +13,7 @@ typedef MergedRow = ({
   Map<String, Object?> row,
   Set<String> settled,
   List<MergeConflict> conflicts,
+  Set<String> restamp,
 });
 
 /// Merges a pulled [remote] row into the [local] one, field by field
@@ -26,6 +27,9 @@ typedef MergedRow = ({
 /// a minute and different → a conflict, server value applied.
 /// [MergedRow.settled] are the pending fields the server now decides.
 /// Device-only fields (not in [pushableColumns]) keep the local value.
+/// [localWins] (an account's first sync, docs/09 M6.4): pending local
+/// writes stand whatever the server holds; [MergedRow.restamp] are those
+/// the server holds a newer clock for, so the push must outrank it.
 ///
 /// ```dart
 /// mergeRemote(entity: 'occurrences', local: l, remote: r,
@@ -38,11 +42,13 @@ MergedRow mergeRemote({
   required Map<String, PendingField> pending,
   required Map<String, String> versions,
   Map<String, String> seen = const {},
+  bool localWins = false,
   ConflictResolver resolver = const ConflictResolver(),
 }) {
   final row = {...?local};
   final settled = <String>{};
   final conflicts = <MergeConflict>[];
+  final restamp = <String>{};
   final synced = pushableColumns[entity] ?? const <String>{};
   for (final MapEntry(key: field, value: theirs) in remote.entries) {
     final deviceOnly = !synced.contains(field) && !_identity.contains(field);
@@ -56,7 +62,14 @@ MergedRow mergeRemote({
     }
     // The server never had this field from a device, or hasn't changed it
     // since this device last looked: the local edit stands.
-    if (serverHlc == null ||
+    if (localWins &&
+        serverHlc != null &&
+        localHlc != null &&
+        serverHlc > localHlc) {
+      restamp.add(field);
+    }
+    if (localWins ||
+        serverHlc == null ||
         localHlc == null ||
         versions[field] == seen[field]) {
       continue;
@@ -85,7 +98,7 @@ MergedRow mergeRemote({
         conflicts.add((field: field, mine: mine.value, theirs: theirs));
     }
   }
-  return (row: row, settled: settled, conflicts: conflicts);
+  return (row: row, settled: settled, conflicts: conflicts, restamp: restamp);
 }
 
 const _identity = {'id', 'user_id', 'updated_at'};

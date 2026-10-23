@@ -13,6 +13,7 @@ import 'package:dottoday/data/sync/engine_sync_service.dart';
 import 'package:dottoday/data/sync/supabase_sync_gateway.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -35,6 +36,10 @@ final class LocalOnlySyncService implements SyncService {
     String id,
     ConflictChoice choice,
   ) async => const Err(AuthFailure());
+
+  @override
+  Stream<RestoreProgress> watchRestore() =>
+      Stream.value(const RestoreProgress(done: 0, total: 0));
 }
 
 /// Sync for the signed-in account (docs/09 M6.2): the engine over

@@ -110,8 +110,16 @@ void main() {
     expect(up.pushed, greaterThan(1));
     expect(await a.h.db.select(a.h.db.changeLog).get(), isEmpty);
 
-    final down = await b.engine.run(b.account);
+    final progress = <(int, int)>[];
+    final down = await b.engine.run(
+      b.account,
+      onProgress: (d, t) => progress.add((d, t)),
+    );
     expect(down.pulled, greaterThan(1));
+    // "Bringing your tasks… n of m" from the server's own count.
+    expect(progress.first, (0, progress.first.$2));
+    expect(progress.first.$2, greaterThan(1));
+    expect(progress.last.$1, progress.last.$2);
     final got = await b.h.db.select(b.h.db.occurrences).get();
     final mine = await DriftOccurrenceRepository(
       b.h.db,
