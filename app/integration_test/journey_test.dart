@@ -50,6 +50,29 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
   await _rest(tester);
 }
 
+/// Scrolls [scrollable] until [finder] is built: up first (the card opens
+/// at "now"), then down (it may sit at the top of the day).
+Future<void> _scrollTo(
+  WidgetTester tester,
+  Finder finder,
+  Finder scrollable,
+) async {
+  for (final delta in [-200.0, 200.0]) {
+    if (tester.any(finder)) break;
+    try {
+      await tester.scrollUntilVisible(
+        finder,
+        delta,
+        scrollable: scrollable,
+        maxScrolls: 60,
+      );
+    } on StateError {
+      // Not that way: the edge was reached first.
+    }
+  }
+  expect(finder, findsWidgets);
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -127,12 +150,7 @@ void main() {
     final standup = onToday(find.text('Team standup'));
     // The card builds the rows in view and opens at "now": scroll it up
     // to the morning (on a device whose clock is past 8:00 it isn't built).
-    await tester.scrollUntilVisible(
-      standup,
-      -200,
-      scrollable: onToday(find.byType(Scrollable)).first,
-      maxScrolls: 100,
-    );
+    await _scrollTo(tester, standup, onToday(find.byType(Scrollable)).first);
     await _rest(tester);
     final lift = await tester.startGesture(tester.getCenter(standup));
     await tester.pump(DotTouch.liftDelay + const Duration(milliseconds: 100));
@@ -149,12 +167,7 @@ void main() {
     await _until(tester, find.textContaining('Team standup moved to'));
 
     // A repeating task changed for every day (R-01, M3f.1).
-    await tester.scrollUntilVisible(
-      standup,
-      -200,
-      scrollable: onToday(find.byType(Scrollable)).first,
-      maxScrolls: 100,
-    );
+    await _scrollTo(tester, standup, onToday(find.byType(Scrollable)).first);
     await _tap(tester, standup);
     await _tap(tester, find.text('Edit'));
     final field = find.descendant(
