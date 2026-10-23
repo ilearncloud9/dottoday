@@ -51,6 +51,23 @@ self.addEventListener('fetch', (event) => {
   })());
 });
 
+// The files a first visit loaded before this worker existed (see
+// register_sw.js). Same-origin only; one that fails is skipped.
+self.addEventListener('message', (event) => {
+  if (!event.data || event.data.type !== 'dottoday-cache') return;
+  const urls = (event.data.urls || []).filter((u) => new URL(u, self.location.href).origin === self.location.origin);
+  event.waitUntil((async () => {
+    const cache = await caches.open(SHELL);
+    await Promise.all(urls.map(async (u) => {
+      if (await cache.match(u)) return;
+      try {
+        const response = await fetch(u);
+        if (response.ok && response.type === 'basic') await cache.put(u, response);
+      } catch (_) { /* offline already: nothing to add */ }
+    }));
+  })());
+});
+
 // A tap or an action button: focus the app (or open it) and tell it.
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();

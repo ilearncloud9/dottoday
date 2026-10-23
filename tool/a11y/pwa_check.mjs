@@ -37,7 +37,13 @@ async function flutterShown(page) {
   }
   const controlled = await page.evaluate(() => !!navigator.serviceWorker.controller);
   controlled ? ok('service worker controls the page') : fail('service worker does not control the page');
-  await page.waitForTimeout(3000); // let the shell finish caching
+  // The page hands the worker what it loaded (register_sw.js); wait for it.
+  // A poll, not waitForFunction: that takes a returned Promise as truthy.
+  const cached = () => page.evaluate(async () => {
+    const c = await caches.open('dottoday-shell-v1');
+    return !!(await c.match('main.dart.js')) && !!(await c.match('./'));
+  });
+  for (let i = 0; i < 60 && !(await cached()); i++) await page.waitForTimeout(500);
   violations.length === 0 ? ok('no CSP violations') : fail(`CSP violations: ${violations.slice(0, 3).join(' | ')}`);
   await context.setOffline(true);
   await page.reload();
