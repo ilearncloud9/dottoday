@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M6.6: Checked with two devices on one account: edits made offline on both come together without loss; only the same detail changed on both within a minute asks you which to keep. Fixed: onboarding could offer to sign in to a device that was already signed in.
 - M6.5: Delete account really deletes: your account and everything synced to it go at once and you get an email confirming it (once the mail service is set up); tasks on your device stay. The dialog offers to export your data first. Signing into another account later sends this device's tasks there.
 - M6.4: Signing in after using Dottoday without an account keeps everything you made on this device; signing in on a new device brings your tasks and settings down ("Bringing your tasks… 120 of 300") instead of replacing your settings with the new device's defaults.
 - M6.3: Settings shows "Kody · synced just now" once you're signed in, and the Inbox sidebar ends with "● Synced · just now" (or syncing, offline, paused, or how many changes need you); the Sync sheet now shows real status and resolves conflicts.

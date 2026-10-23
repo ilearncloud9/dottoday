@@ -60,6 +60,25 @@ void main() {
     expect(find.text('Welcome back'), findsOneWidget);
   });
 
+  testWidgets('already signed in: no sign-in choices, on to the restore', (
+    tester,
+  ) async {
+    final accounts = FakeAccountService(
+      account: const SignedIn(
+        email: 'kody@example.com',
+        method: SignInMethod.email,
+      ),
+    );
+    addTearDown(accounts.restore.close);
+    addTearDown(accounts.accounts.close);
+    await pumpOnboarding(
+      tester,
+      progress: _step,
+      extra: [accountServiceProvider.overrideWithValue(accounts)],
+    );
+    expect(find.text('Continue with Apple'), findsNothing);
+  });
+
   testWidgets('Apple, then the restore with its count, then on', (
     tester,
   ) async {

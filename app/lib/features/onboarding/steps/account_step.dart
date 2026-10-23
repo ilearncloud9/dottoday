@@ -37,7 +37,11 @@ class AccountStep extends ConsumerStatefulWidget {
 
 /// A leaf: the phase, the request in flight, the last error and retry.
 class _AccountStepState extends ConsumerState<AccountStep> {
-  var _phase = _Phase.choose;
+  // Already signed in (back to O5 after signing in, or a restart mid-way):
+  // straight to bringing the tasks down, then on (M6.6).
+  late var _phase = ref.read(accountProvider).value is SignedIn
+      ? _Phase.restoring
+      : _Phase.choose;
   var _busy = false;
   String? _error;
   String _email = '';
