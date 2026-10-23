@@ -77,7 +77,7 @@ void main() {
       'Morning run, done',
       'Lunch with Sam, 12:30 – 1:15, pinned',
       'Spanish lesson, 2:00 – 3:00, repeats',
-      'Call the dentist, 4:00 – 4:15, missed',
+      'Call the dentist, 4:00 – 4:15, not done',
       'Spanish review, skipped',
       '1 h free from 11:30. Add a task here',
     ]) {

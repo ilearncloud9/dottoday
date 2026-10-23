@@ -59,7 +59,7 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpWidget(_grid(style: MonthCellStyle.expanded));
     expect(find.text('Deep work · now'), findsOneWidget);
-    expect(find.textContaining('· missed'), findsWidgets);
+    expect(find.textContaining('· not done'), findsWidgets);
     expect(find.textContaining(' done'), findsWidgets);
     final struck = tester
         .widgetList<Text>(find.text('Run'))

@@ -60,7 +60,7 @@
   "@failurePermissionCalendar": {
     "description": "Calendar permission denied."
   },
-  "failureUndoExpired": "It's too late to undo that. Deleted tasks stay in Trash for 30 days.",
+  "failureUndoExpired": "That can't be undone any more. Deleted tasks stay in Trash for 30 days.",
   "@failureUndoExpired": {
     "description": "Undo was tapped after its 30-second window."
   },
@@ -557,7 +557,7 @@
       }
     }
   },
-  "dotMissed": "{title}, missed",
+  "dotMissed": "{title}, not done",
   "@dotMissed": {
     "description": "Screen-reader label of a missed task's dot.",
     "placeholders": {
@@ -586,7 +586,7 @@
       }
     }
   },
-  "rowMissed": "{label}, missed",
+  "rowMissed": "{label}, not done",
   "@rowMissed": {
     "description": "Appended to a row label when the task was missed.",
     "placeholders": {
@@ -613,7 +613,7 @@
       }
     }
   },
-  "rowMissedMeta": "· missed",
+  "rowMissedMeta": "· not done",
   "@rowMissedMeta": {
     "description": "Shown after a missed task's time range (A-mac-month)."
   },
@@ -816,7 +816,7 @@
   "@monthLightDay": {
     "description": "Footer of a future month cell with few tasks (A-mac-month)."
   },
-  "monthMissedItem": "{title} · missed",
+  "monthMissedItem": "{title} · not done",
   "@monthMissedItem": {
     "description": "A missed task in a month cell.",
     "placeholders": {
@@ -2175,7 +2175,7 @@
       }
     }
   },
-  "searchMetaMissed": "{when} · missed",
+  "searchMetaMissed": "{when} · not done",
   "@searchMetaMissed": {
     "description": "A past result not done.",
     "placeholders": {
@@ -2989,7 +2989,7 @@
       }
     }
   },
-  "monthStats": "{done} done · {missed} missed · {ahead} ahead",
+  "monthStats": "{done} done · {missed} not done · {ahead} ahead",
   "@monthStats": {
     "description": "Mac/web Month header numbers.",
     "placeholders": {
@@ -3715,7 +3715,7 @@
   "@promptNotNow": {
     "description": "Today prompt: put the prompt away for today."
   },
-  "lateNudgeTitle": "Running late?",
+  "lateNudgeTitle": "Need more time?",
   "@lateNudgeTitle": {
     "description": "Today prompt when a task ended unticked (running-late nudge)."
   },
@@ -4768,7 +4768,7 @@
   "@menuNextDay": {
     "description": "Mac Go menu: the day after on Today."
   },
-  "exactTitle": "Reminders may come a few minutes late",
+  "exactTitle": "Reminders may come a few minutes after their time",
   "@exactTitle": {
     "description": "Settings › Reminders notice when Android doesn't allow exact alarms."
   },

@@ -167,13 +167,13 @@ void main() {
   group('done, live and shift (M3b.3)', () {
     testWidgets('a dot marks done with Undo', (tester) async {
       await pumpToday(tester);
-      await tester.tap(find.bySemanticsLabel('Team standup, missed'));
+      await tester.tap(find.bySemanticsLabel('Team standup, not done'));
       await tester.pumpAndSettle();
       expect(find.text('Team standup done'), findsOneWidget);
       expect(find.bySemanticsLabel('Team standup, done'), findsOneWidget);
       await tester.tap(find.text('Undo'));
       await tester.pumpAndSettle();
-      expect(find.bySemanticsLabel('Team standup, missed'), findsOneWidget);
+      expect(find.bySemanticsLabel('Team standup, not done'), findsOneWidget);
     });
 
     testWidgets('minutes left follow the minute tick', (tester) async {
@@ -240,7 +240,7 @@ void main() {
 
   testWidgets('tapping a dot marks the task done', (tester) async {
     await pumpToday(tester);
-    await tester.tap(find.bySemanticsLabel('Team standup, missed'));
+    await tester.tap(find.bySemanticsLabel('Team standup, not done'));
     await tester.pumpAndSettle();
     expect(find.bySemanticsLabel('Team standup, done'), findsOneWidget);
   });

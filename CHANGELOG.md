@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M6.5.11: Kinder words: tasks you didn't get to read "not done" instead of "missed", and the nudge asks "Need more time?". Everything stays free while pricing is decided.
 - M6.5.10: Checked that a task's start alert arrives with Dottoday closed: once on Android (also after a restart) and once on iPhone; the Android check now runs on every CI build.
 - M6.5.9: "Send me a test alarm" in onboarding (once notifications are allowed) and in Notification health: Dottoday sends one alarm in 60 seconds, counts down, and asks whether it rang; if it didn't, it shows you where to look.
 - M6.5.8: Settings › Reminders › Notification health shows what decides whether your reminders get through on this device — notifications allowed, exact timing and battery saving on Android, Do Not Disturb, Focus, your clock — in plain words, with a button to fix each problem.

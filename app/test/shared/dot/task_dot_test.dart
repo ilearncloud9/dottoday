@@ -44,7 +44,7 @@ void main() {
     DotState.live: 'Deep work, live, 38 minutes left',
     DotState.done: 'Deep work, done',
     DotState.skipped: 'Deep work, skipped',
-    DotState.missed: 'Deep work, missed',
+    DotState.missed: 'Deep work, not done',
   };
   for (final MapEntry(key: state, value: label) in labels.entries) {
     testWidgets('${state.name}: label carries the state (§5.4)', (

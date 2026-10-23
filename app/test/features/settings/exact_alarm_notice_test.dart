@@ -30,17 +30,26 @@ void main() {
   ) async {
     final gate = _Gated();
     await pumpSettings(tester, exactAlarms: gate);
-    expect(find.text('Reminders may come a few minutes late'), findsOneWidget);
+    expect(
+      find.text('Reminders may come a few minutes after their time'),
+      findsOneWidget,
+    );
     await expectA11yGuidelines(tester);
     await tester.ensureVisible(find.text('Allow exact timing'));
     await tester.tap(find.text('Allow exact timing'));
     await tester.pumpAndSettle();
     expect(gate.requests, 1);
-    expect(find.text('Reminders may come a few minutes late'), findsNothing);
+    expect(
+      find.text('Reminders may come a few minutes after their time'),
+      findsNothing,
+    );
   });
 
   testWidgets('nothing to say where exact timing is allowed', (tester) async {
     await pumpSettings(tester);
-    expect(find.text('Reminders may come a few minutes late'), findsNothing);
+    expect(
+      find.text('Reminders may come a few minutes after their time'),
+      findsNothing,
+    );
   });
 }

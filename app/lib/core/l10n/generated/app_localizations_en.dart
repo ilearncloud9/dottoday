@@ -65,7 +65,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failureUndoExpired =>
-      'It\'s too late to undo that. Deleted tasks stay in Trash for 30 days.';
+      'That can\'t be undone any more. Deleted tasks stay in Trash for 30 days.';
 
   @override
   String get failureUnexpected => 'Something went wrong. Try again.';
@@ -406,7 +406,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String dotMissed(String title) {
-    return '$title, missed';
+    return '$title, not done';
   }
 
   @override
@@ -422,7 +422,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String rowMissed(String label) {
-    return '$label, missed';
+    return '$label, not done';
   }
 
   @override
@@ -436,7 +436,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get rowMissedMeta => '· missed';
+  String get rowMissedMeta => '· not done';
 
   @override
   String threadWake(String time) {
@@ -547,7 +547,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String monthMissedItem(String title) {
-    return '$title · missed';
+    return '$title · not done';
   }
 
   @override
@@ -1434,7 +1434,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String searchMetaMissed(String when) {
-    return '$when · missed';
+    return '$when · not done';
   }
 
   @override
@@ -1936,7 +1936,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String monthStats(int done, int missed, int ahead) {
-    return '$done done · $missed missed · $ahead ahead';
+    return '$done done · $missed not done · $ahead ahead';
   }
 
   @override
@@ -2484,7 +2484,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get promptNotNow => 'Not now';
 
   @override
-  String get lateNudgeTitle => 'Running late?';
+  String get lateNudgeTitle => 'Need more time?';
 
   @override
   String lateNudgeDetail(String title, int minutes) {
@@ -3304,7 +3304,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuNextDay => 'Next Day';
 
   @override
-  String get exactTitle => 'Reminders may come a few minutes late';
+  String get exactTitle => 'Reminders may come a few minutes after their time';
 
   @override
   String get exactBody =>

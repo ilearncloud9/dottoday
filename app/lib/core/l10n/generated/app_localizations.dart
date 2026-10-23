@@ -187,7 +187,7 @@ abstract class AppLocalizations {
   /// Undo was tapped after its 30-second window.
   ///
   /// In en, this message translates to:
-  /// **'It\'s too late to undo that. Deleted tasks stay in Trash for 30 days.'**
+  /// **'That can\'t be undone any more. Deleted tasks stay in Trash for 30 days.'**
   String get failureUndoExpired;
 
   /// Fallback for unclassified failures.
@@ -751,7 +751,7 @@ abstract class AppLocalizations {
   /// Screen-reader label of a missed task's dot.
   ///
   /// In en, this message translates to:
-  /// **'{title}, missed'**
+  /// **'{title}, not done'**
   String dotMissed(String title);
 
   /// Screen-reader hint: what tapping a task's dot does.
@@ -775,7 +775,7 @@ abstract class AppLocalizations {
   /// Appended to a row label when the task was missed.
   ///
   /// In en, this message translates to:
-  /// **'{label}, missed'**
+  /// **'{label}, not done'**
   String rowMissed(String label);
 
   /// Appended to a row label when the task is pinned.
@@ -793,7 +793,7 @@ abstract class AppLocalizations {
   /// Shown after a missed task's time range (A-mac-month).
   ///
   /// In en, this message translates to:
-  /// **'· missed'**
+  /// **'· not done'**
   String get rowMissedMeta;
 
   /// Sun cap at the top of the day's thread (Main).
@@ -937,7 +937,7 @@ abstract class AppLocalizations {
   /// A missed task in a month cell.
   ///
   /// In en, this message translates to:
-  /// **'{title} · missed'**
+  /// **'{title} · not done'**
   String monthMissedItem(String title);
 
   /// The live task in today's month cell.
@@ -2155,7 +2155,7 @@ abstract class AppLocalizations {
   /// A past result not done.
   ///
   /// In en, this message translates to:
-  /// **'{when} · missed'**
+  /// **'{when} · not done'**
   String searchMetaMissed(String when);
 
   /// An inbox result: 'Inbox · 45 min'.
@@ -2905,7 +2905,7 @@ abstract class AppLocalizations {
   /// Mac/web Month header numbers.
   ///
   /// In en, this message translates to:
-  /// **'{done} done · {missed} missed · {ahead} ahead'**
+  /// **'{done} done · {missed} not done · {ahead} ahead'**
   String monthStats(int done, int missed, int ahead);
 
   /// Mac/web Month header with the busiest day: '… · busiest day Tue 13'.
@@ -3595,7 +3595,7 @@ abstract class AppLocalizations {
   /// Today prompt when a task ended unticked (running-late nudge).
   ///
   /// In en, this message translates to:
-  /// **'Running late?'**
+  /// **'Need more time?'**
   String get lateNudgeTitle;
 
   /// Running-late nudge detail.
@@ -4921,7 +4921,7 @@ abstract class AppLocalizations {
   /// Settings › Reminders notice when Android doesn't allow exact alarms.
   ///
   /// In en, this message translates to:
-  /// **'Reminders may come a few minutes late'**
+  /// **'Reminders may come a few minutes after their time'**
   String get exactTitle;
 
   /// Rationale for the exact-alarm permission (docs/07 Android).

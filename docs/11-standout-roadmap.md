@@ -90,6 +90,8 @@ The one-line position after this roadmap ships: **"Your day as a thread. Always 
 
 ## D. No shame — reflection without streaks
 
+Enforced by `app/test/policy/no_shame_copy_test.dart` over every English string (M6.5.11): no late / missed / failed / streak / overdue / behind, and no error red in features or shared UI. The one exception (owner, 2026-10-23) is the **Running late** action — the button, its menu item and sheet, the help answer about it and the setting naming its nudge — because it is the user's own words for their action. Everything the app says *about* the user is reworded: "missed" → "not done" (dot states unchanged), "started 12 min late" → "started 12 min after plan", "ran over by 25 min" → "took 25 min longer", the nudge "Running late?" → "Need more time?".
+
 ### D1 · Bedtime review — basic **built** (M3f); **new**: weekly picture, no-streak principle, shareable image
 - Daily: unchanged mechanics; copy audited against the principle: counts and moves, never red, never "missed streak". Writes the B5 snapshot.
 - Weekly (Sunday at Bedtime or on demand): the week as **seven dots** — one per day, size = hours planned, ring split into that day's tasks in their colours (done solid, not done faint), done count in the centre, tap a day to pop out its thread — with Busiest/Lightest chips and one sentence. **No streaks anywhere in the product.**

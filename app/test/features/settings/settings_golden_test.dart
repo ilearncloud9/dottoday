@@ -188,7 +188,7 @@ void main() {
     height: 900,
     widths: const {'compact', 'expanded'},
     act: (t) => t.scrollUntilVisible(
-      find.text('Reminders may come a few minutes late'),
+      find.text('Reminders may come a few minutes after their time'),
       200,
       scrollable: find.byType(Scrollable).first,
     ),
