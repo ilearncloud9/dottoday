@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M6.5.4: On iPhone and Mac the first task of the day rings with Dottoday's own alarm chime; on iPhone, release builds let task starts break through Focus (once the paid Apple account is set up).
 - M6.5.3: The first task of each day now counts as an alarm, even in quiet hours; other reminders stay normal (and quiet in quiet hours). How loud it really rings comes with the next steps.
 - M6.5.2: Ticking a task done also notes when you finished it (from the app, the keyboard or the notification); un-ticking forgets that again, and a duplicated day starts fresh.
 - M6.5.1: Groundwork for seeing how your day really went: a task can remember when you actually started and finished it, and each step of a task can have its own length; both sync and are in your exports.

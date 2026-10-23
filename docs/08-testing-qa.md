@@ -44,6 +44,7 @@ Grouped by who does them. Collected from the M5/M6 readiness notes in `09-implem
 - [ ] **`.env.prod` values**: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SENTRY_DSN` (Sentry project), `FEEDBACK_EMAIL` (a monitored inbox), `WEB_PUSH_VAPID_PUBLIC_KEY`.
 - [ ] **App icons** and store assets (screenshots from the sweep can seed them).
 - [ ] Verify **time-sensitive delivery on a real iPhone** (locked phone, app killed, Focus on) — M6.5.4.
+- [ ] With the paid team: add `com.apple.developer.usernotifications.time-sensitive` to `macos/Runner/Release.entitlements` (left out because the Personal Team can't provision it and a local Mac Release build fails without a profile) and flip the macOS case in `test/policy/time_sensitive_entitlement_test.dart` — M6.5.4.
 - [ ] **Live Activity on a real iPhone** (lock screen + Dynamic Island, Done / +15 work) — M9.3.
 - [ ] The test alarm from onboarding rings on your own iPhone and Android phone with the app killed (M6.5.9).
 - [ ] Hardware passes needing your devices: VoiceOver on an iPhone and a Mac, TalkBack on an Android phone, through onboarding, Today, Add, the task sheet, Settings › Privacy, the travel banner, Focus and the proposal sheets (the simulator has no VoiceOver; `adb` swipes don't drive TalkBack); the manual QA matrix (§4) on physical devices (M8.5).

@@ -2,6 +2,10 @@
 /// platforms ignore it.
 enum NotificationChannelKind { alerts, summary }
 
+/// The bundled alarm chime, copied into `Library/Sounds` on Apple platforms
+/// (`installAlarmSound`), where notification sounds are looked up.
+const alarmSoundFile = 'dot_alarm.caf';
+
 /// One notification, composed and ready for the OS.
 final class OsNotification {
   const OsNotification({
@@ -13,6 +17,7 @@ final class OsNotification {
     required this.channel,
     this.silent = false,
     this.timeSensitive = false,
+    this.loud = false,
     this.withActions = true,
   });
 
@@ -28,6 +33,11 @@ final class OsNotification {
 
   /// iOS time-sensitive interruption level (docs/07 iOS).
   final bool timeSensitive;
+
+  /// Rings like an alarm: the day's first dot or a routine start (11 A0).
+  /// Apple platforms play [alarmSoundFile]; Android posts on the alarm
+  /// channel.
+  final bool loud;
 
   /// Done / Snooze / Open (task alerts); Bedtime has none.
   final bool withActions;

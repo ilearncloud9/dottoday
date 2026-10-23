@@ -11,11 +11,20 @@ import 'package:timezone/timezone.dart' as tz;
 /// Done / Snooze / Open bring the app forward and are handled in the main
 /// isolate, where the one database connection lives (docs/02 F6).
 final class FlnNotificationPlatform implements NotificationPlatform {
-  FlnNotificationPlatform(this._plugin, this._l10n, this._clock);
+  FlnNotificationPlatform(
+    this._plugin,
+    this._l10n,
+    this._clock, {
+    Future<void> Function()? prepare,
+  }) : _prepare = prepare;
 
   final FlutterLocalNotificationsPlugin _plugin;
   final AppLocalizations _l10n;
   final Clock _clock;
+
+  /// Runs before anything is scheduled: on Apple platforms, installs the
+  /// alarm chime (`installAlarmSound`).
+  final Future<void> Function()? _prepare;
 
   /// Exact alarms when Android allows them; inexact otherwise, which
   /// Settings explains (M5.6).
@@ -29,6 +38,7 @@ final class FlnNotificationPlatform implements NotificationPlatform {
 
   @override
   Future<void> initialize(void Function(NotificationTap) onTap) async {
+    await _prepare?.call();
     final darwin = DarwinInitializationSettings(
       // Asked from onboarding O4 / Settings, never at launch (docs/03).
       requestAlertPermission: false,
@@ -124,6 +134,7 @@ final class FlnNotificationPlatform implements NotificationPlatform {
       categoryIdentifier: n.withActions ? _category : null,
       presentBanner: !n.silent,
       presentSound: !n.silent,
+      sound: n.loud ? alarmSoundFile : null,
       interruptionLevel: n.silent
           ? InterruptionLevel.passive
           : n.timeSensitive

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Widget snapshot shared between the app and its widgets (docs/09 M5.4).
+	     Needs the paid Apple Developer account to sign for a device. -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.yourcompany.dottoday</string>
+	</array>
+	<!-- Dot-starts break through Focus (docs/09 M6.5.4, 11 A0). Release only:
+	     the Personal Team can't provision it, so Debug/Profile keep
+	     Runner.entitlements; test/policy/time_sensitive_entitlement_test.dart
+	     holds both sides. -->
+	<key>com.apple.developer.usernotifications.time-sensitive</key>
+	<true/>
+</dict>
+</plist>

@@ -49,6 +49,7 @@ OsNotification? composeNotification(
         : NotificationChannelKind.alerts,
     silent: planned.silent,
     timeSensitive: planned.timeSensitive,
+    loud: planned.loud,
     withActions: planned.purpose == NotificationPurpose.task,
   );
 }

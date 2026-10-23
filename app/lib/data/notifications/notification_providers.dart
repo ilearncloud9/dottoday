@@ -4,6 +4,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
+import 'package:dottoday/data/notifications/alarm_sound.dart';
 import 'package:dottoday/data/notifications/fln_notification_platform.dart';
 import 'package:dottoday/data/notifications/in_app_alerts.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
@@ -55,10 +56,15 @@ Future<NotificationPlatform> notificationPlatform(Ref ref) async {
       logger: ref.watch(loggerProvider),
     );
   }
+  final apple =
+      defaultTargetPlatform == TargetPlatform.iOS ||
+      defaultTargetPlatform == TargetPlatform.macOS;
+  final logger = ref.watch(loggerProvider);
   return FlnNotificationPlatform(
     ref.watch(localNotificationsPluginProvider),
     l10n,
     ref.watch(clockProvider),
+    prepare: apple ? () => installAlarmSound(logger: logger) : null,
   );
 }
 
