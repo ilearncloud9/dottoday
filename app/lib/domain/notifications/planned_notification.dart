@@ -8,6 +8,10 @@ enum NotificationPurpose {
   /// Settings › Bedtime reminder: once a day at Bedtime, with tomorrow's
   /// first task (M3d.3, R-10).
   bedtime,
+
+  /// "Send me a test alarm" (11 A0, docs/09 M6.5.9): one loud alert in 60 s
+  /// so the user can check it gets through.
+  testAlarm,
 }
 
 /// One notification the OS should hold (docs/04 §6).
@@ -33,6 +37,9 @@ final class PlannedNotification {
   /// Index of the Bedtime reminder.
   static const bedtimeIndex = 6;
 
+  /// Index of the test alarm (M6.5.9).
+  static const testAlarmIndex = 7;
+
   /// Stable OS notification ID; see `notificationIdFor`.
   final int id;
 
@@ -56,9 +63,10 @@ final class PlannedNotification {
 
   /// Whether iOS should use the time-sensitive interruption level (07 iOS).
   bool get timeSensitive =>
-      purpose == NotificationPurpose.task &&
-      kind == AlertKind.atStart &&
-      !silent;
+      purpose == NotificationPurpose.testAlarm ||
+      (purpose == NotificationPurpose.task &&
+          kind == AlertKind.atStart &&
+          !silent);
 
   @override
   bool operator ==(Object other) =>

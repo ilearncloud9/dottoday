@@ -25,7 +25,10 @@ OsNotification? composeNotification(
   final l10n = _l10n(profile.locale);
   final String title;
   final String body;
-  if (planned.purpose == NotificationPurpose.bedtime) {
+  if (planned.purpose == NotificationPurpose.testAlarm) {
+    title = l10n.testAlarmTitle;
+    body = l10n.testAlarmBody;
+  } else if (planned.purpose == NotificationPurpose.bedtime) {
     title = l10n.notifBedtimeTitle;
     body = task?.startUtc == null
         ? l10n.notifBedtimeFree

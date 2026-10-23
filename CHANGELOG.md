@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M6.5.9: "Send me a test alarm" in onboarding (once notifications are allowed) and in Notification health: Dottoday sends one alarm in 60 seconds, counts down, and asks whether it rang; if it didn't, it shows you where to look.
 - M6.5.8: Settings › Reminders › Notification health shows what decides whether your reminders get through on this device — notifications allowed, exact timing and battery saving on Android, Do Not Disturb, Focus, your clock — in plain words, with a button to fix each problem.
 - M6.5.7: If your device's clock is more than 5 minutes off, the Sync sheet says so ("Your clock is 7 min fast — reminders may be early"); a fast clock's changes wait for the clock to be right instead of sync stopping, and changes from your other devices keep arriving.
 - M6.5.6: Signed in, the daily background refresh on iPhone and Android now also syncs, so a day you planned on your Mac is on your phone, reminders included, before you wake up.

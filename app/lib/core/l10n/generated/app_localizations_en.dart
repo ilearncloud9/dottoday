@@ -3548,6 +3548,55 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get testAlarmTitle => 'Test alarm';
+
+  @override
+  String get testAlarmBody => 'It got through. Your reminders will too.';
+
+  @override
+  String get testAlarmCaption => 'Check it works';
+
+  @override
+  String get testAlarmRow => 'Send me a test alarm';
+
+  @override
+  String get testAlarmRowDetail => 'Check that a reminder really reaches you';
+
+  @override
+  String get testAlarmExplain =>
+      'Dottoday will send one test alarm in 60 seconds so you can check it gets through.';
+
+  @override
+  String get testAlarmSend => 'Send';
+
+  @override
+  String get testAlarmCancel => 'Cancel';
+
+  @override
+  String get testAlarmAsk => 'Did it ring?';
+
+  @override
+  String get testAlarmYes => 'Yes';
+
+  @override
+  String get testAlarmNo => 'No';
+
+  @override
+  String get testAlarmGood => 'It got through. Your reminders will too.';
+
+  @override
+  String get testAlarmLookHere => 'The checks above show what\'s in the way.';
+
+  @override
+  String get testAlarmLookLater =>
+      'You\'ll find what\'s in the way in Settings › Reminders › Notification health.';
+
+  @override
+  String testAlarmCountdown(int seconds) {
+    return 'Ringing in $seconds s…';
+  }
+
+  @override
   String get syncLinePaused => 'Sync paused · tap Sync for why';
 
   @override

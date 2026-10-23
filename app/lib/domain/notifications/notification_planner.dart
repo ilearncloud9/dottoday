@@ -45,7 +45,8 @@ final class NotificationPlanner {
   /// one reminder at that time.
   ///
   /// The at-start alert of each day's first dot and of [routineStartIds]
-  /// is [PlannedNotification.loud] and ignores quiet hours (11 A0).
+  /// is [PlannedNotification.loud] and ignores quiet hours (11 A0). A
+  /// future [testAlarmAtUtc] adds the test alarm (M6.5.9).
   List<PlannedNotification> plan({
     required Iterable<Occurrence> occurrences,
     required String tzId,
@@ -53,6 +54,7 @@ final class NotificationPlanner {
     TimeWindow? quietHours,
     Settings? bedtimeFrom,
     Set<String> routineStartIds = const {},
+    DateTime? testAlarmAtUtc,
   }) {
     final now = _clock.nowUtc();
     final end = now.add(horizon);
@@ -99,6 +101,9 @@ final class NotificationPlanner {
           used: usedIds,
         ),
       );
+    }
+    if (testAlarmAtUtc case final at? when at.isAfter(now)) {
+      planned.add(testAlarm(at, usedIds));
     }
     planned.sort((a, b) {
       final byTime = a.fireAtUtc.compareTo(b.fireAtUtc);
@@ -152,6 +157,19 @@ final class NotificationPlanner {
     }
     return out;
   }
+
+  /// The one test alarm at [atUtc] (M6.5.9): loud, never silent, in its
+  /// own slot so it can't collide with a task's alert.
+  static PlannedNotification testAlarm(DateTime atUtc, Set<int> used) =>
+      PlannedNotification(
+        id: _uniqueId(used, 'test-alarm', PlannedNotification.testAlarmIndex),
+        occurrenceId: '',
+        alertIndex: PlannedNotification.testAlarmIndex,
+        fireAtUtc: atUtc,
+        kind: AlertKind.atStart,
+        loud: true,
+        purpose: NotificationPurpose.testAlarm,
+      );
 
   /// The earliest planned task on the day after [date].
   static Occurrence? _firstTomorrow(

@@ -6,6 +6,8 @@ import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/domain/notifications/notification_health.dart';
 import 'package:dottoday/domain/sync/clock_skew.dart';
 import 'package:dottoday/features/settings/pages/notification_health_page.dart';
+import 'package:dottoday/shared/notifications/test_alarm_card.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 
@@ -58,6 +60,23 @@ void main() {
         notificationHealthChecksProvider.overrideWith((ref) async => checks),
       ],
       build: (_) => const NotificationHealthPage(),
+    );
+  }
+  // The test alarm's waiting and asking steps (M6.5.9, derived).
+  for (final step in [TestAlarmStep.waiting, TestAlarmStep.ask]) {
+    goldenMatrix(
+      'settings_test_alarm_${step.name}',
+      height: 300,
+      build: (_) => Padding(
+        padding: const EdgeInsets.all(16),
+        child: TestAlarmCard(
+          initial: step,
+          onSend: () async => DateTime.utc(2026),
+          onCancel: () async {},
+          now: () => DateTime.utc(2026, 10, 23, 9),
+          afterNo: '',
+        ),
+      ),
     );
   }
 }

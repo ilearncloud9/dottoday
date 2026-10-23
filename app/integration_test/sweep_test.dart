@@ -354,7 +354,13 @@ Future<void> _onboarding(
   await step('onboarding_welcome', 'Get started');
   await step('onboarding_day_shape', 'Continue');
   await step('onboarding_habits', 'Continue', pick: 'Lunch');
-  await step('onboarding_reminders', 'Not now');
+  // Already allowed on this device → the test alarm and Continue (M6.5.9).
+  await _pumpUntil(tester, find.text('Want a nudge?'));
+  await _rest(tester);
+  await step(
+    'onboarding_reminders',
+    tester.any(find.text('Not now')) ? 'Not now' : 'Continue',
+  );
   await step('onboarding_account', 'Continue without an account');
   await step('onboarding_done', 'Open today');
 }

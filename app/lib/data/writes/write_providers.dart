@@ -5,6 +5,7 @@ import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/notifications/os_notification_gateway.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
+import 'package:dottoday/data/notifications/test_alarm.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/widgets/home_widget_sink.dart';
@@ -55,6 +56,7 @@ NotificationSync notificationSync(Ref ref) => NotificationSync(
   occurrences: ref.watch(occurrenceRepositoryProvider),
   series: ref.watch(seriesRepositoryProvider),
   settings: ref.watch(settingsRepositoryProvider),
+  testAlarmAt: () => TestAlarmStore(ref.read(appDatabaseProvider)).at(),
 );
 
 @Riverpod(keepAlive: true)

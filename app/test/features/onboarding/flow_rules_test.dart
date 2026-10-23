@@ -50,7 +50,9 @@ void main() {
     await tap('Get started');
     await tap('Continue');
     await tap('Continue');
-    await tap('Not now');
+    // Notifications are already allowed in the fakes: O4 offers the test
+    // alarm and Continue (M6.5.9).
+    await tap('Continue');
     await tap('Continue without an account');
     await tap('Open today');
     expect(find.text('the app'), findsOneWidget);

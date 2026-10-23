@@ -70,7 +70,13 @@ void main() {
 
     await _tap(tester, 'Lunch');
     await _tap(tester, 'Add 1 to tomorrow');
-    await _tap(tester, 'Not now'); // O4
+    // O4: "Not now" on a first install; once notifications are allowed on
+    // this device it offers the test alarm and Continue (M6.5.9).
+    await _pumpUntil(tester, find.text('Want a nudge?'));
+    await _tap(
+      tester,
+      tester.any(find.text('Not now')) ? 'Not now' : 'Continue',
+    );
     await _tap(tester, 'Continue without an account'); // O5
     await _tap(tester, 'Open today'); // O6
     await _pumpUntil(tester, find.byType(TodayScreen));

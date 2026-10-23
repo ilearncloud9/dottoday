@@ -34,13 +34,21 @@ const _step = OnboardingProgress(step: OnboardingStep.reminders);
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  testWidgets('allowed: on to the account step', (tester) async {
+  testWidgets('allowed: the test alarm is offered, Continue goes on', (
+    tester,
+  ) async {
     final os = _Answers(PermissionState.granted);
     final c = await pumpOnboarding(tester, progress: _step, permission: os);
     await tester.ensureVisible(find.text('Allow notifications'));
     await tester.tap(find.text('Allow notifications'));
     await tester.pumpAndSettle();
     expect(os.asked, 1);
+    // M6.5.9: stays to offer the test alarm (skippable).
+    expect(stepOf(c), OnboardingStep.reminders);
+    expect(find.text('Send me a test alarm'), findsOneWidget);
+    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Continue'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
+    await tester.pumpAndSettle();
     expect(stepOf(c), OnboardingStep.account);
   });
 

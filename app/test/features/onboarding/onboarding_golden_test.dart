@@ -3,8 +3,10 @@
 library;
 
 import 'package:dottoday/data/auth/account_providers.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/auth/account.dart';
+import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/onboarding/onboarding_gate.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +23,27 @@ import '../../support/timeline_fakes.dart';
 
 // Onboarding O1–O6 (derived, docs/10 §5.1, docs/09 M4).
 
-List<Override> _at(OnboardingStep step) => [
+/// A first run: nobody has been asked about notifications yet.
+final class _NotAsked implements NotificationPermission {
+  const _NotAsked();
+
+  @override
+  Future<PermissionState> status() async => PermissionState.notAsked;
+
+  @override
+  Future<PermissionState> request() async => PermissionState.granted;
+
+  @override
+  Future<bool> openSettings() async => false;
+}
+
+List<Override> _at(
+  OnboardingStep step, {
+  NotificationPermission permission = const _NotAsked(),
+}) => [
   ...timelineOverrides(
     now: DateTime.utc(2026, 10, 21, 9),
+    notificationPermission: permission,
     occurrences: FakeOccurrenceRepository(
       step == OnboardingStep.done ? firstThreadRows() : const [],
     ),
@@ -55,6 +75,22 @@ void main() {
       build: (_) => const OnboardingGate(child: SizedBox.shrink()),
     );
   }
+  // O4 once notifications are allowed: the test alarm (M6.5.9).
+  goldenMatrix(
+    'onboarding_reminders_allowed',
+    height: 844,
+    widths: widths,
+    overrides: _at(
+      OnboardingStep.reminders,
+      permission: const UnwiredNotificationPermission(),
+    ),
+    act: (tester) async {
+      await tester.ensureVisible(find.text('Send me a test alarm'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Send me a test alarm'));
+    },
+    build: (_) => const OnboardingGate(child: SizedBox.shrink()),
+  );
   // M4.7 states, with accounts on.
   final accounts = FakeAccountService();
   goldenMatrix(

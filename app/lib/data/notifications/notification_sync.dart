@@ -18,12 +18,14 @@ final class NotificationSync {
     required OccurrenceRepository occurrences,
     required SeriesRepository series,
     required SettingsRepository settings,
+    Future<DateTime?> Function()? testAlarmAt,
   }) : _clock = clock,
        _planner = planner,
        _gateway = gateway,
        _occurrences = occurrences,
        _series = series,
-       _settings = settings;
+       _settings = settings,
+       _testAlarmAt = testAlarmAt;
 
   // Alert offsets are <= 1 day (maxAlertOffsetMin) and blocks <= 1 day long,
   // so every fire time in the horizon belongs to a block in this margin.
@@ -35,6 +37,9 @@ final class NotificationSync {
   final OccurrenceRepository _occurrences;
   final SeriesRepository _series;
   final SettingsRepository _settings;
+
+  /// The requested test alarm (M6.5.9), planned like any reminder.
+  final Future<DateTime?> Function()? _testAlarmAt;
 
   /// Re-plans [userId]'s notifications and applies the delta to the OS.
   Future<void> resync(String userId) async {
@@ -57,6 +62,7 @@ final class NotificationSync {
       },
       quietHours: profile.settings.quietHours,
       bedtimeFrom: profile.settings,
+      testAlarmAtUtc: await _testAlarmAt?.call(),
     );
     final diff = NotificationPlanner.diff(desired, await _gateway.pending());
     if (diff.cancel.isEmpty && diff.schedule.isEmpty) return;

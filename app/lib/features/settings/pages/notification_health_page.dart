@@ -1,12 +1,15 @@
 import 'dart:async';
 
+import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
+import 'package:dottoday/data/notifications/test_alarm.dart';
 import 'package:dottoday/domain/notifications/notification_health.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
+import 'package:dottoday/shared/notifications/test_alarm_card.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sync/clock_skew_text.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +35,12 @@ class NotificationHealthPage extends ConsumerWidget {
             caption: l10n.healthCaption,
             children: [for (final c in checks) HealthRow(check: c)],
           ),
+        TestAlarmCard(
+          onSend: ref.read(testAlarmProvider.notifier).send,
+          onCancel: ref.read(testAlarmProvider.notifier).cancel,
+          now: ref.read(clockProvider).nowUtc,
+          afterNo: l10n.testAlarmLookHere,
+        ),
       ],
     );
   }

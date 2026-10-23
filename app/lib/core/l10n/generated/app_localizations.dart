@@ -5266,6 +5266,96 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 thing to fix} other{{count} things to fix}}'**
   String healthToFix(int count);
 
+  /// The test alarm's notification title (docs/09 M6.5.9).
+  ///
+  /// In en, this message translates to:
+  /// **'Test alarm'**
+  String get testAlarmTitle;
+
+  /// The test alarm's notification body.
+  ///
+  /// In en, this message translates to:
+  /// **'It got through. Your reminders will too.'**
+  String get testAlarmBody;
+
+  /// Caption over the test alarm row (O4, Notification health).
+  ///
+  /// In en, this message translates to:
+  /// **'Check it works'**
+  String get testAlarmCaption;
+
+  /// O4 and Notification health: the test alarm row.
+  ///
+  /// In en, this message translates to:
+  /// **'Send me a test alarm'**
+  String get testAlarmRow;
+
+  /// Under the test alarm row.
+  ///
+  /// In en, this message translates to:
+  /// **'Check that a reminder really reaches you'**
+  String get testAlarmRowDetail;
+
+  /// Owner's copy, shown before the test alarm is scheduled (2026-10-23).
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday will send one test alarm in 60 seconds so you can check it gets through.'**
+  String get testAlarmExplain;
+
+  /// Schedules the test alarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get testAlarmSend;
+
+  /// Cancels the test alarm before it rings.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get testAlarmCancel;
+
+  /// After the countdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Did it ring?'**
+  String get testAlarmAsk;
+
+  /// It rang.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get testAlarmYes;
+
+  /// It didn't ring.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get testAlarmNo;
+
+  /// After Yes.
+  ///
+  /// In en, this message translates to:
+  /// **'It got through. Your reminders will too.'**
+  String get testAlarmGood;
+
+  /// After No, on the Notification health page.
+  ///
+  /// In en, this message translates to:
+  /// **'The checks above show what\'s in the way.'**
+  String get testAlarmLookHere;
+
+  /// After No, during onboarding.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll find what\'s in the way in Settings › Reminders › Notification health.'**
+  String get testAlarmLookLater;
+
+  /// Countdown while waiting for the test alarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Ringing in {seconds} s…'**
+  String testAlarmCountdown(int seconds);
+
   /// Status line after a server error (details in the Sync sheet).
   ///
   /// In en, this message translates to:

@@ -131,6 +131,29 @@ void main() {
     expect(_loud(_plan(tasks, routines: {'routine'})), {'first', 'routine'});
   });
 
+  test('the test alarm: loud, its own slot, only while ahead (M6.5.9)', () {
+    final at = DateTime.utc(2026, 10, 21, 5, 1);
+    final planned =
+        NotificationPlanner(
+          clock: FakeClock(DateTime.utc(2026, 10, 21, 5)),
+        ).plan(
+          occurrences: [_task('first', DateTime.utc(2026, 10, 21, 5, 1))],
+          tzId: 'UTC',
+          quietHours: const TimeWindow(start: '00:00', end: '23:59'),
+          testAlarmAtUtc: at,
+        );
+    final test = planned.singleWhere(
+      (n) => n.purpose == NotificationPurpose.testAlarm,
+    );
+    expect((test.loud, test.silent, test.timeSensitive), (true, false, true));
+    expect(test.fireAtUtc, at);
+    expect(planned.map((n) => n.id).toSet(), hasLength(planned.length));
+    final later = NotificationPlanner(
+      clock: FakeClock(at.add(const Duration(seconds: 1))),
+    ).plan(occurrences: const [], tzId: 'UTC', testAlarmAtUtc: at);
+    expect(later, isEmpty, reason: 'once it is due it is never re-posted');
+  });
+
   test('property: one loud per day and one pending per alert, DST week', () {
     final rnd = Random(653);
     final berlin = tz.getLocation('Europe/Berlin');
