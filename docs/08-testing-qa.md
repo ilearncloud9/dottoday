@@ -43,6 +43,8 @@ TestFlight + Play internal track + web staging. Collect: crash-free rate, sync e
 - [ ] Manual (desktop Chrome, notifications allowed): a reminder posts as a system notification through `sw.js`; its Done ticks the task and Open shows it, also when the tab was closed (the built-in test browser blocks service workers).
 - [ ] Manual (Mac): View › Enter Full Screen — the rail and Today lay out with no title bar; the menu-bar "Next up" stays.
 - [ ] Manual: ⌘/ (Ctrl+/ on Windows/Linux) opens the shortcut list in real desktop Chrome (the browser may claim the key; widget tests can't prove it).
+- [ ] Manual (real desktop Chrome): on a fresh load the first Tab shows "Skip to content" and Enter moves focus past the rail (the embedded test browser doesn't hand keys to the page until it is clicked; widget tests cover the order).
+- [ ] Manual screen-reader pass on hardware: VoiceOver on an iPhone and a Mac, TalkBack on an Android phone, through onboarding, Today, Add, the task sheet, Settings › Privacy (app lock) and the travel banner (the simulator has no VoiceOver, turning it on for the Mac is the owner's setting, and `adb` swipes don't drive TalkBack; M5.10 checked labels, roles and 48 dp targets from the accessibility trees instead).
 
 ## 7. Design-review matrix (Concept A, docs/10 §7)
 Every UI component and screen has goldens for each cell of: light / dark × compact 390 / medium 700 /

@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:integration_test/integration_test.dart';
 
 const _tag = String.fromEnvironment('SWEEP_TAG', defaultValue: 'device');
@@ -246,11 +247,25 @@ Future<void> _m3f(
   await tester.tap(find.byTooltip('Back to Settings'));
   await _pumpUntil(tester, find.text('DAY SHAPE'));
 
+  // M5.8: Privacy with APP LOCK (the web's row says it uses the computer's
+  // lock). By route, there and back, so Settings keeps its scroll.
+  final router = GoRouter.of(tester.element(find.byType(Scaffold).first));
+  router.go('/settings/privacy');
+  await _pumpUntil(tester, find.text('APP LOCK'));
+  await _rest(tester);
+  await _shot(binding, tester, '${_tag}_settings_privacy');
+  router.go('/settings');
+  await _pumpUntil(tester, find.text('DAY SHAPE'));
+  await _rest(tester);
+
   await tester.scrollUntilVisible(
     find.text('Sync'),
     300,
     scrollable: find.byType(Scrollable).first,
   );
+  // Built below the window's edge on the Mac: bring it in first.
+  await tester.ensureVisible(find.text('Sync'));
+  await _rest(tester);
   await tester.tap(find.text('Sync'));
   await _pumpUntil(tester, find.text('Sign in…'));
   await _rest(tester);
@@ -272,7 +287,9 @@ Future<void> _m3f(
   await _shot(binding, tester, '${_tag}_running_late');
   await closeSheets();
 
-  await tester.tap(find.text('Inbox').last);
+  // The Inbox page by route: at the Mac's 1280 px the rail's Inbox is
+  // the sidebar on Today, whose rows don't select (M5.10).
+  GoRouter.of(tester.element(find.byType(Scaffold).first)).go('/inbox');
   await _rest(tester);
   // A row of its own: earlier runs may have planned the demo Inbox away.
   final field = find.descendant(
