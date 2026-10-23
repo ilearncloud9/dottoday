@@ -12,6 +12,7 @@ import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
+import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/features/timeline/widgets/today_header.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
@@ -187,6 +188,17 @@ void main() {
             matching: find.byType(Scrollable),
           )
           .first,
+    );
+    // What Save will compare (CI-only failures, M5.6/M5.7): the typed
+    // title, the task's series and whether it loads.
+    final editorId = tester.widget<TaskEditor>(find.byType(TaskEditor)).id;
+    final view = ProviderScope.containerOf(
+      tester.element(find.byType(TaskEditor)),
+    ).read(taskViewProvider(editorId)).value;
+    debugPrint(
+      'JOURNEY before Save: field="${tester.widget<EditableText>(field.first).controller.text}" '
+      'row="${view?.occurrence.title}" series=${view?.occurrence.seriesId} '
+      'seriesLoaded=${view?.series != null}',
     );
     await _tap(tester, find.text('Save'));
     await _until(tester, find.text('Change which?'));
