@@ -1,4 +1,5 @@
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/router/auth_callback.dart';
 import 'package:dottoday/core/router/deep_link_guard.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -49,11 +50,15 @@ final class RouteScreens {
 }
 
 /// Builds the app router. Every location passes [allowListedLocation];
-/// anything off the allow-list lands on `/today`.
-GoRouter buildRouter(RouteScreens screens) {
+/// anything off the allow-list lands on `/today`. A sign-in callback goes
+/// to [onAuthCallback] and shows Settings › Account (M6.1).
+GoRouter buildRouter(
+  RouteScreens screens, {
+  void Function(Uri link)? onAuthCallback,
+}) {
   return GoRouter(
     initialLocation: AppRoutes.today,
-    redirect: (context, state) => _redirect(state.uri),
+    redirect: (context, state) => _redirect(state.uri, onAuthCallback),
     errorBuilder: (context, state) => screens.today(context),
     routes: [
       StatefulShellRoute.indexedStack(
@@ -111,7 +116,11 @@ WidgetBuilder _tabScreen(RouteScreens screens, ShellTab tab) {
   };
 }
 
-String? _redirect(Uri uri) {
+String? _redirect(Uri uri, void Function(Uri link)? onAuthCallback) {
+  if (isAuthCallback(uri)) {
+    onAuthCallback?.call(uri);
+    return AppRoutes.settingsPage(SettingsPage.account);
+  }
   final allowed = allowListedLocation(uri);
   if (allowed == null) return AppRoutes.today;
   return allowed == uri.toString() ? null : allowed;

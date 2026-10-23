@@ -40,7 +40,9 @@ abstract interface class AccountService {
   /// returning user, docs/09 M4.7): how far it is; null when not.
   Stream<RestoreProgress?> watchRestore();
 
-  Future<Result<void, AppFailure>> signOut();
+  /// Signs this device out; [everywhere] also ends the account's sessions
+  /// on every other device (docs/06 §2 "Sign out everywhere").
+  Future<Result<void, AppFailure>> signOut({bool everywhere = false});
 
   /// Deletes the account and its synced data (docs/06 §6); the device keeps
   /// its local copy.

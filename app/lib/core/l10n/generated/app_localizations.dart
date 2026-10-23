@@ -3796,6 +3796,12 @@ abstract class AppLocalizations {
   /// **'Sign out'**
   String get accountSignOut;
 
+  /// Account page: ends the account's sessions on every device (06 §2).
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out everywhere'**
+  String get accountSignOutEverywhere;
+
   /// Account page destructive button and the confirm dialog's button.
   ///
   /// In en, this message translates to:

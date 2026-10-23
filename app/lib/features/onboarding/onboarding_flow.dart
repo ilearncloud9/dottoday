@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
@@ -40,13 +42,21 @@ class OnboardingFlow extends ConsumerWidget {
                   onBack: () => go(step.previous),
                   onSkip: () => go(step.next),
                 ),
-                Expanded(child: _body(step, go, store.finish, returning)),
+                Expanded(child: _body(step, go, () => _finish(ref), returning)),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  /// "Open today": done, and Today it is, wherever a link sent the app
+  /// meanwhile (a sign-in callback shows Account, M6.1).
+  Future<void> _finish(WidgetRef ref) async {
+    final router = ref.read(routerProvider);
+    await ref.read(onboardingProvider.notifier).finish();
+    router.go(AppRoutes.today);
   }
 
   Widget _body(
@@ -56,8 +66,9 @@ class OnboardingFlow extends ConsumerWidget {
     bool returning,
   ) => switch (step) {
     OnboardingStep.welcome => WelcomeStep(
-      onStart: () => go(OnboardingStep.dayShape),
-      onSignIn: () => go(OnboardingStep.account),
+      onStart: () => go(OnboardingStep.dayShape, returning: false),
+      // "Welcome back" on O5 (M4.7; the flag was never set, found M6.1).
+      onSignIn: () => go(OnboardingStep.account, returning: true),
     ),
     OnboardingStep.dayShape => DayShapeStep(onNext: () => go(step.next)),
     OnboardingStep.habits => HabitsStep(onNext: () => go(step.next)),

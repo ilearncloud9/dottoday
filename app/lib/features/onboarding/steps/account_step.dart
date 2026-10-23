@@ -7,8 +7,8 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
-import 'package:dottoday/features/onboarding/steps/account_parts.dart';
 import 'package:dottoday/features/onboarding/steps/step_frame.dart';
+import 'package:dottoday/shared/account/sign_in_parts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,8 +21,10 @@ enum _Phase { choose, email, checkMail, restoring }
 /// "Check your mail". A failure shows why with Try again. After signing
 /// in, a returning user's tasks come down ("Bringing your tasks… 120 of
 /// 300") before moving on. [returning] (O1's "I already have an
-/// account") says "Welcome back". Built on `AccountService`; until
-/// accounts arrive (M6.1) the sign-in buttons are off and say so.
+/// account") says "Welcome back". Built on `AccountService`; without a
+/// server the sign-in buttons are off and say so. It moves on when the
+/// account is signed in, not when a sign-in page opens: closing Apple's
+/// or Google's page, or a link opened later, mustn't skip ahead (M6.1).
 class AccountStep extends ConsumerStatefulWidget {
   const AccountStep({required this.onNext, this.returning = false, super.key});
 
@@ -65,7 +67,10 @@ class _AccountStepState extends ConsumerState<AccountStep> {
     }
   }
 
-  void _signedIn() => setState(() => _phase = _Phase.restoring);
+  void _signedIn() => setState(() {
+    _phase = _Phase.restoring;
+    _error = null;
+  });
 
   void _send(String email) {
     final trimmed = email.trim();
@@ -85,6 +90,9 @@ class _AccountStepState extends ConsumerState<AccountStep> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    ref.listen(accountProvider, (_, next) {
+      if (next.value is SignedIn && _phase != _Phase.restoring) _signedIn();
+    });
     return StepFrame(
       title: widget.returning
           ? l10n.onboardingWelcomeBackTitle
@@ -117,7 +125,8 @@ class _AccountStepState extends ConsumerState<AccountStep> {
                 _phase = _Phase.email;
                 _error = null;
               })
-            : unawaited(_run(() => _service.signIn(m), _signedIn)),
+            // The page opened; the account stream says when it's done.
+            : unawaited(_run(() => _service.signIn(m), () {})),
       ),
     ],
     _Phase.email => [

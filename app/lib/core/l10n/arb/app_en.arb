@@ -3884,6 +3884,10 @@
   "@accountSignOut": {
     "description": "Account page button."
   },
+  "accountSignOutEverywhere": "Sign out everywhere",
+  "@accountSignOutEverywhere": {
+    "description": "Account page: ends the account's sessions on every device (06 §2)."
+  },
   "accountDelete": "Delete account",
   "@accountDelete": {
     "description": "Account page destructive button and the confirm dialog's button."

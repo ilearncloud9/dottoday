@@ -5,7 +5,8 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/auth/account.dart';
 import 'package:flutter/material.dart';
 
-// The pieces of O5 Account (docs/09 M4.5 / M4.7).
+// The sign-in pieces of O5 Account (docs/09 M4.5 / M4.7) and Settings ›
+// Account (M6.1): UI with callbacks, no state of their own beyond a field.
 
 /// Apple / Google / email; off (with why) until accounts are available.
 class SignInChoices extends StatelessWidget {

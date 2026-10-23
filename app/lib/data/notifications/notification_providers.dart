@@ -1,11 +1,15 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/router/router_provider.dart';
+import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/notifications/fln_notification_platform.dart';
 import 'package:dottoday/data/notifications/in_app_alerts.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/data/notifications/notification_responder.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
+import 'package:dottoday/data/notifications/push/web_push_wiring.dart';
 import 'package:dottoday/data/notifications/timer_notification_platform.dart';
 import 'package:dottoday/data/notifications/web/browser_notifications_any.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -32,7 +36,7 @@ Future<NotificationPlatform> notificationPlatform(Ref ref) async {
   final profile = await ref.watch(localProfileProvider.future);
   final l10n = lookupAppLocalizations(Locale(profile.locale));
   if (kIsWeb) {
-    return TimerNotificationPlatform(
+    final tab = TimerNotificationPlatform(
       clock: ref.watch(clockProvider),
       show: (n) => showBrowserNotification(
         n,
@@ -41,6 +45,14 @@ Future<NotificationPlatform> notificationPlatform(Ref ref) async {
       ),
       onInApp: ref.read(inAppAlertsProvider.notifier).add,
       taps: browserNotificationTaps(),
+    );
+    return withServerPush(
+      tab,
+      client: ref.watch(supabaseClientProvider),
+      vapidPublicKey: ref.watch(envProvider).webPushVapidPublicKey,
+      permission: ref.watch(notificationPermissionProvider),
+      l10n: l10n,
+      logger: ref.watch(loggerProvider),
     );
   }
   return FlnNotificationPlatform(

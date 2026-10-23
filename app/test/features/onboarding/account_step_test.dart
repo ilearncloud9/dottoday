@@ -22,6 +22,7 @@ Future<FakeAccountService> _pump(
 }) async {
   final accounts = FakeAccountService(result: result);
   addTearDown(accounts.restore.close);
+  addTearDown(accounts.accounts.close);
   await pumpOnboarding(
     tester,
     progress: progress,
@@ -66,6 +67,12 @@ void main() {
     await tester.tap(find.text('Continue with Apple'));
     await tester.pumpAndSettle();
     expect(accounts.calls, ['signIn:apple']);
+    // The page opening isn't signing in (M6.1): still choosing.
+    expect(find.text('Bringing your tasks to this device…'), findsNothing);
+    accounts.accounts.add(
+      const SignedIn(email: 'kody@example.com', method: SignInMethod.apple),
+    );
+    await tester.pumpAndSettle();
     accounts.restore.add(const RestoreProgress(done: 120, total: 300));
     await tester.pump();
     await tester.pump();

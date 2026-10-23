@@ -84,6 +84,11 @@ void main() {
     act: (tester) async {
       await tester.tap(find.text('Continue with Apple'));
       await tester.pumpAndSettle();
+      // Signed in once the provider's page is done (M6.1).
+      accounts.accounts.add(
+        const SignedIn(email: 'kody@example.com', method: SignInMethod.apple),
+      );
+      await tester.pumpAndSettle();
       accounts.restore.add(const RestoreProgress(done: 120, total: 300));
       await tester.pump();
     },

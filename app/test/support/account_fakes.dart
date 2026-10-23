@@ -23,8 +23,16 @@ final class FakeAccountService implements AccountService {
   @override
   bool get available => true;
 
+  /// Push a later account (a sign-in finishing in the browser).
+  // Closed by the tests that push accounts (addTearDown).
+  // ignore: close_sinks
+  final accounts = StreamController<Account>.broadcast();
+
   @override
-  Stream<Account> watch() => Stream.value(account);
+  Stream<Account> watch() async* {
+    yield account;
+    yield* accounts.stream;
+  }
 
   @override
   Future<Result<void, AppFailure>> signIn(SignInMethod method) async {
@@ -42,8 +50,8 @@ final class FakeAccountService implements AccountService {
   Stream<RestoreProgress?> watchRestore() => restore.stream;
 
   @override
-  Future<Result<void, AppFailure>> signOut() async {
-    calls.add('signOut');
+  Future<Result<void, AppFailure>> signOut({bool everywhere = false}) async {
+    calls.add(everywhere ? 'signOutEverywhere' : 'signOut');
     return result;
   }
 

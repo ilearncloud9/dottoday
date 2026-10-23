@@ -3,9 +3,9 @@ name: supabase
 
 on:
   push:
-    paths: ["supabase/**", ".github/workflows/supabase.yml"]
+    paths: ["supabase/**", ".github/workflows/supabase.yml", "app/lib/data/**", "app/test/supabase/**"]
   pull_request:
-    paths: ["supabase/**", ".github/workflows/supabase.yml"]
+    paths: ["supabase/**", ".github/workflows/supabase.yml", "app/lib/data/**", "app/test/supabase/**"]
 
 permissions:
   contents: read
@@ -33,3 +33,28 @@ jobs:
           node-version: "22"
       - run: node --experimental-strip-types --test functions/send-push/push_test.ts
         working-directory: supabase
+
+  # The app's Supabase code against a local stack (docs/09 M6.1): the email
+  # sign-in through Mailpit, the PKCE callback, the stores under RLS.
+  client:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
+        with:
+          version: 2.121.0
+      - run: supabase start -x storage-api,imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: "3.47.7"
+          cache: true
+      - run: flutter pub get
+        working-directory: app
+      - name: flutter test --tags supabase
+        working-directory: app
+        run: |
+          eval "$(supabase status -o env | grep -E '^(API_URL|ANON_KEY|MAILPIT_URL)=')"
+          SUPABASE_URL="$API_URL" SUPABASE_ANON_KEY="$ANON_KEY" MAILPIT_URL="$MAILPIT_URL" \
+            flutter test --tags supabase --concurrency=1

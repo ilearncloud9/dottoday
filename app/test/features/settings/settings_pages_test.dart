@@ -84,6 +84,31 @@ void main() {
       expect(service.calls, ['delete']);
       await _tap(tester, 'Sign out');
       expect(service.calls, ['delete', 'signOut']);
+      await _tap(tester, 'Sign out everywhere');
+      expect(service.calls.last, 'signOutEverywhere');
+    });
+
+    // M6.1: email asks for the address here too, then "Check your mail".
+    testWidgets('signed out with a server: email, the link, check mail', (
+      tester,
+    ) async {
+      final service = FakeAccountService();
+      addTearDown(service.restore.close);
+      addTearDown(service.accounts.close);
+      await pumpSettings(
+        tester,
+        location: '/settings/account',
+        overrides: [accountServiceProvider.overrideWithValue(service)],
+      );
+      await _tap(tester, 'Continue with email');
+      await tester.enterText(find.byType(TextField), 'not-an-address');
+      await _tap(tester, 'Send me a link');
+      expect(service.calls, isEmpty);
+      await tester.enterText(find.byType(TextField), 'kody@example.com');
+      await _tap(tester, 'Send me a link');
+      expect(service.calls, ['link:kody@example.com']);
+      expect(find.text('Check your mail'), findsOneWidget);
+      await expectA11yGuidelines(tester);
     });
   });
 

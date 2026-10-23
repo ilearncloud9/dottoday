@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M6.1: Accounts: sign in with an email link (Apple and Google once their consoles are set up), from onboarding or Settings › Account; the session is kept in the Keychain/Keystore (sealed in the browser), and "Sign out everywhere" ends every device's session. The app stays fully usable without an account. Fixed: a sign-in link opened during onboarding was ignored on iPhone; "I already have an account" now says "Welcome back".
 - **Milestone M5 complete** (M5.10): `/ship-check` passed 2026-10-23. Analyze/format clean; 2,079 tests; coverage `lib/domain` 96.8 %, overall 92.0 %; all CI jobs green incl. the Android integration job; integration tests green on the iPhone simulator and Android emulator; RLS tests green. Reminders that really arrive (also on the web), a daily background refresh, home-screen widgets, deep links, a Mac menu bar and "Next up", Android and web polish, app lock, and keep-or-shift when you travel. Physical-device performance moves to M8.5.
 - M5.9: Travelling: when your phone or computer changes time zone, Dottoday asks "You're now in New York — keep times or shift?". Keep times leaves 9:00 at 9:00 there (repeats too); Shift keeps each task at the same moment. Either can be undone.
 - Fixed: on the web, a first visit didn't keep the app's files, so it only opened offline from the second visit on; now one visit is enough.

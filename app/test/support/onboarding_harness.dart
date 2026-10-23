@@ -1,4 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
 import 'onboarding_fakes.dart';
 import 'timeline_fakes.dart';
@@ -37,6 +39,12 @@ Future<ProviderContainer> pumpOnboarding(
             permission ?? const UnwiredNotificationPermission(),
       ),
       onboardingProvider.overrideWith(() => FakeOnboarding(progress)),
+      // "Open today" goes to /today (M6.1); this app has no routes of its own.
+      routerProvider.overrideWithValue(
+        GoRouter(
+          routes: [GoRoute(path: '/', builder: (_, _) => const SizedBox())],
+        ),
+      ),
       ...extra,
     ],
   );

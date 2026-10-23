@@ -16,6 +16,9 @@ void main() {
     expect(find.text('Your day, as a thread.'), findsOneWidget);
     expect(find.byType(DayDot), findsOneWidget);
     expect(find.text('the app'), findsNothing);
+    // Still mounted, hidden: its router takes links that arrive during
+    // onboarding, such as the sign-in link from the mail (M6.1).
+    expect(find.text('the app', skipOffstage: false), findsOneWidget);
   });
 
   testWidgets('finished: the app', (tester) async {

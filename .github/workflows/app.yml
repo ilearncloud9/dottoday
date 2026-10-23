@@ -41,7 +41,8 @@ jobs:
       - run: dart format --set-exit-if-changed lib test tool
       # dart analyze (not flutter analyze) so the riverpod_lint analyzer plugin runs (M0.11).
       - run: dart analyze --fatal-infos
-      - run: flutter test --exclude-tags golden,perf --test-randomize-ordering-seed random
+      # `supabase` tests need a local stack: the supabase workflow runs them.
+      - run: flutter test --exclude-tags golden,perf,supabase --test-randomize-ordering-seed random
       # Latency budgets alone, one file at a time: run beside the suite they
       # timed other tests' work and failed at random (M3d.4, 18.9 vs 16 ms).
       - run: flutter test --tags perf --concurrency=1

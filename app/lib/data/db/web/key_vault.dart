@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
@@ -91,4 +92,71 @@ Future<String> _unwrap(JSObject record) async {
     for (final b in raw.toDart.asUint8List())
       b.toRadixString(16).padLeft(2, '0'),
   ].join();
+}
+
+const _sessionEntry = 'session-cipher-v1';
+
+/// Seals [plain] (the auth session, ADR-0003) under its own non-extractable
+/// AES-GCM key in the vault: base64 of iv + ciphertext. Script in the page
+/// can still use the key; storage copied elsewhere can't be read.
+Future<String> webSeal(String plain) async {
+  final key = await _sessionKey();
+  final iv = crypto.getRandomValues(JSUint8Array.withLength(12));
+  final sealed = await crypto.subtle
+      .encrypt(_aesGcm(iv), key, utf8.encode(plain).toJS)
+      .toDart;
+  return base64.encode([...iv.toDart, ...sealed.toDart.asUint8List()]);
+}
+
+/// Opens what [webSeal] made; null when it can't (another key, damaged).
+Future<String?> webUnseal(String sealed) async {
+  try {
+    final bytes = base64.decode(sealed);
+    final key = await _sessionKey();
+    final plain = await crypto.subtle
+        .decrypt(
+          _aesGcm(bytes.sublist(0, 12).toJS),
+          key,
+          bytes.sublist(12).buffer.toJS,
+        )
+        .toDart;
+    return utf8.decode(plain.toDart.asUint8List());
+  } on Object {
+    return null;
+  }
+}
+
+Future<JSObject> _sessionKey() async {
+  final db = await _open();
+  try {
+    final get = db
+        .transaction(_store, 'readonly')
+        .objectStore(_store)
+        .get(_sessionEntry);
+    final existing = await idbResult(get);
+    if (existing != null) return existing as JSObject;
+    final key = await crypto.subtle
+        .generateKey(_aesGcm(), false, ['encrypt'.toJS, 'decrypt'.toJS].toJS)
+        .toDart;
+    try {
+      await idbResult(
+        db
+            .transaction(_store, 'readwrite')
+            .objectStore(_store)
+            .add(key, _sessionEntry),
+      );
+    } on StateError {
+      // Another tab stored one first: use theirs.
+      return (await idbResult(
+            db
+                .transaction(_store, 'readonly')
+                .objectStore(_store)
+                .get(_sessionEntry),
+          ))!
+          as JSObject;
+    }
+    return key;
+  } finally {
+    db.close();
+  }
 }

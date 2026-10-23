@@ -84,6 +84,23 @@ void main() {
     }
     expect(router.routeInformationProvider.value.uri.path, '/today');
   });
+
+  // M6.1: the sign-in page's callback is handed over, never routed; the
+  // allow-list still refuses any other query.
+  testWidgets('a sign-in callback goes to the account, shows Account', (
+    tester,
+  ) async {
+    final got = <Uri>[];
+    final router = buildRouter(appScreens, onAuthCallback: got.add);
+    addTearDown(router.dispose);
+    await tester.pumpWidget(testRouterApp(router));
+    await _pushRoute(tester, 'dottoday://auth-callback?code=abc');
+    expect(got.single.queryParameters['code'], 'abc');
+    expect(router.routeInformationProvider.value.uri.path, '/settings/account');
+    await _pushRoute(tester, 'dottoday://inbox?code=abc');
+    expect(got, hasLength(1));
+    expect(find.byKey(const ValueKey('route:today')), findsOneWidget);
+  });
 }
 
 Future<void> _pushRoute(WidgetTester tester, String location) async {

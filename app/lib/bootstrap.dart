@@ -11,8 +11,11 @@ import 'package:dottoday/core/logging/error_handlers.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/router/app_router.dart';
+import 'package:dottoday/core/router/auth_callback.dart';
 import 'package:dottoday/core/router/native_deep_links.dart';
 import 'package:dottoday/core/router/router_provider.dart';
+import 'package:dottoday/data/auth/account_providers.dart';
+import 'package:dottoday/data/auth/supabase_start.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -44,13 +47,22 @@ Future<void> bootstrap() async {
     unawaited(SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge));
   }
 
+  // Accounts and sync (M6.1); null keeps the app on this device.
+  final supabase = await startSupabase(env, logger);
+  // One inbox across restarts: a sign-in link may arrive before the
+  // account service exists.
+  final callbacks = AuthCallbackInbox();
+
   // The root scope is AppRestart's UncontrolledProviderScope (M3f.9), which
   // the lint doesn't see through.
   // ignore: riverpod_lint/missing_provider_scope
   runApp(
     AppRestart(
       create: () {
-        final router = buildRouter(appScreens);
+        final router = buildRouter(
+          appScreens,
+          onAuthCallback: callbacks.deliver,
+        );
         _listenForNativeLinks(router, logger);
         return ProviderContainer(
           retry: noProviderRetry,
@@ -58,6 +70,8 @@ Future<void> bootstrap() async {
             envProvider.overrideWithValue(env),
             loggerProvider.overrideWithValue(logger),
             routerProvider.overrideWithValue(router),
+            supabaseClientProvider.overrideWithValue(supabase),
+            authCallbackInboxProvider.overrideWithValue(callbacks),
           ],
         );
       },
