@@ -22,6 +22,10 @@ ExportBundle hostileBundle() {
     alerts: const [
       Alert(kind: AlertKind.overdue, offsetMin: 15, sound: 'bell'),
     ],
+    durationFromSteps: true,
+    subtaskTemplate: const [
+      SubtaskTemplateItem(id: 't1', title: 'Stretch', durationMin: 2),
+    ],
   );
   final instance = occurrenceFixture().copyWith(
     id: '01928c3e-0000-7000-8000-0000000000b2',
@@ -36,6 +40,10 @@ ExportBundle hostileBundle() {
     status: OccurrenceStatus.done,
     completedAtUtc: t1,
     alerts: const [],
+    // B1/B2 (M6.5.1).
+    actualStartUtc: DateTime.utc(2026, 10, 21, 7, 42),
+    actualEndUtc: DateTime.utc(2026, 10, 21, 8, 16),
+    durationFromSteps: true,
   );
   final inbox = occurrenceFixture().copyWith(
     id: '01928c3e-0000-7000-8000-0000000000b3',
@@ -54,7 +62,11 @@ ExportBundle hostileBundle() {
     series: [series],
     occurrences: [oneOff, instance, inbox],
     subtasks: [
-      subtaskFixture().copyWith(title: hostileTitle, done: true),
+      subtaskFixture().copyWith(
+        title: hostileTitle,
+        done: true,
+        durationMin: 1,
+      ),
       subtaskFixture().copyWith(
         id: '01928c3e-0000-7000-8000-0000000000c2',
         occurrenceId: instance.id,

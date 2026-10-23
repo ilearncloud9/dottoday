@@ -1079,6 +1079,21 @@ class $SeriesTableTable extends SeriesTable
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _durationFromStepsMeta = const VerificationMeta(
+    'durationFromSteps',
+  );
+  @override
+  late final GeneratedColumn<bool> durationFromSteps = GeneratedColumn<bool>(
+    'duration_from_steps',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("duration_from_steps" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _energyMeta = const VerificationMeta('energy');
   @override
   late final GeneratedColumn<int> energy = GeneratedColumn<int>(
@@ -1162,6 +1177,7 @@ class $SeriesTableTable extends SeriesTable
     count,
     pinned,
     travelBufferMin,
+    durationFromSteps,
     energy,
     alerts,
     subtaskTemplate,
@@ -1313,6 +1329,15 @@ class $SeriesTableTable extends SeriesTable
         ),
       );
     }
+    if (data.containsKey('duration_from_steps')) {
+      context.handle(
+        _durationFromStepsMeta,
+        durationFromSteps.isAcceptableOrUnknown(
+          data['duration_from_steps']!,
+          _durationFromStepsMeta,
+        ),
+      );
+    }
     if (data.containsKey('energy')) {
       context.handle(
         _energyMeta,
@@ -1436,6 +1461,10 @@ class $SeriesTableTable extends SeriesTable
         DriftSqlType.int,
         data['${effectivePrefix}travel_buffer_min'],
       )!,
+      durationFromSteps: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}duration_from_steps'],
+      )!,
       energy: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}energy'],
@@ -1493,6 +1522,9 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
   final int? count;
   final bool pinned;
   final int travelBufferMin;
+
+  /// Schema 3 (M6.5.1, 11 B2).
+  final bool durationFromSteps;
   final int? energy;
   final String alerts;
   final String subtaskTemplate;
@@ -1518,6 +1550,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
     this.count,
     required this.pinned,
     required this.travelBufferMin,
+    required this.durationFromSteps,
     this.energy,
     required this.alerts,
     required this.subtaskTemplate,
@@ -1552,6 +1585,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
     }
     map['pinned'] = Variable<bool>(pinned);
     map['travel_buffer_min'] = Variable<int>(travelBufferMin);
+    map['duration_from_steps'] = Variable<bool>(durationFromSteps);
     if (!nullToAbsent || energy != null) {
       map['energy'] = Variable<int>(energy);
     }
@@ -1595,6 +1629,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
           : Value(count),
       pinned: Value(pinned),
       travelBufferMin: Value(travelBufferMin),
+      durationFromSteps: Value(durationFromSteps),
       energy: energy == null && nullToAbsent
           ? const Value.absent()
           : Value(energy),
@@ -1636,6 +1671,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
       count: serializer.fromJson<int?>(json['count']),
       pinned: serializer.fromJson<bool>(json['pinned']),
       travelBufferMin: serializer.fromJson<int>(json['travelBufferMin']),
+      durationFromSteps: serializer.fromJson<bool>(json['durationFromSteps']),
       energy: serializer.fromJson<int?>(json['energy']),
       alerts: serializer.fromJson<String>(json['alerts']),
       subtaskTemplate: serializer.fromJson<String>(json['subtaskTemplate']),
@@ -1668,6 +1704,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
       'count': serializer.toJson<int?>(count),
       'pinned': serializer.toJson<bool>(pinned),
       'travelBufferMin': serializer.toJson<int>(travelBufferMin),
+      'durationFromSteps': serializer.toJson<bool>(durationFromSteps),
       'energy': serializer.toJson<int?>(energy),
       'alerts': serializer.toJson<String>(alerts),
       'subtaskTemplate': serializer.toJson<String>(subtaskTemplate),
@@ -1696,6 +1733,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
     Value<int?> count = const Value.absent(),
     bool? pinned,
     int? travelBufferMin,
+    bool? durationFromSteps,
     Value<int?> energy = const Value.absent(),
     String? alerts,
     String? subtaskTemplate,
@@ -1721,6 +1759,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
     count: count.present ? count.value : this.count,
     pinned: pinned ?? this.pinned,
     travelBufferMin: travelBufferMin ?? this.travelBufferMin,
+    durationFromSteps: durationFromSteps ?? this.durationFromSteps,
     energy: energy.present ? energy.value : this.energy,
     alerts: alerts ?? this.alerts,
     subtaskTemplate: subtaskTemplate ?? this.subtaskTemplate,
@@ -1756,6 +1795,9 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
       travelBufferMin: data.travelBufferMin.present
           ? data.travelBufferMin.value
           : this.travelBufferMin,
+      durationFromSteps: data.durationFromSteps.present
+          ? data.durationFromSteps.value
+          : this.durationFromSteps,
       energy: data.energy.present ? data.energy.value : this.energy,
       alerts: data.alerts.present ? data.alerts.value : this.alerts,
       subtaskTemplate: data.subtaskTemplate.present
@@ -1792,6 +1834,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
           ..write('count: $count, ')
           ..write('pinned: $pinned, ')
           ..write('travelBufferMin: $travelBufferMin, ')
+          ..write('durationFromSteps: $durationFromSteps, ')
           ..write('energy: $energy, ')
           ..write('alerts: $alerts, ')
           ..write('subtaskTemplate: $subtaskTemplate, ')
@@ -1822,6 +1865,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
     count,
     pinned,
     travelBufferMin,
+    durationFromSteps,
     energy,
     alerts,
     subtaskTemplate,
@@ -1851,6 +1895,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
           other.count == this.count &&
           other.pinned == this.pinned &&
           other.travelBufferMin == this.travelBufferMin &&
+          other.durationFromSteps == this.durationFromSteps &&
           other.energy == this.energy &&
           other.alerts == this.alerts &&
           other.subtaskTemplate == this.subtaskTemplate &&
@@ -1878,6 +1923,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
   final Value<int?> count;
   final Value<bool> pinned;
   final Value<int> travelBufferMin;
+  final Value<bool> durationFromSteps;
   final Value<int?> energy;
   final Value<String> alerts;
   final Value<String> subtaskTemplate;
@@ -1904,6 +1950,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
     this.count = const Value.absent(),
     this.pinned = const Value.absent(),
     this.travelBufferMin = const Value.absent(),
+    this.durationFromSteps = const Value.absent(),
     this.energy = const Value.absent(),
     this.alerts = const Value.absent(),
     this.subtaskTemplate = const Value.absent(),
@@ -1931,6 +1978,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
     this.count = const Value.absent(),
     this.pinned = const Value.absent(),
     this.travelBufferMin = const Value.absent(),
+    this.durationFromSteps = const Value.absent(),
     this.energy = const Value.absent(),
     this.alerts = const Value.absent(),
     this.subtaskTemplate = const Value.absent(),
@@ -1966,6 +2014,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
     Expression<int>? count,
     Expression<bool>? pinned,
     Expression<int>? travelBufferMin,
+    Expression<bool>? durationFromSteps,
     Expression<int>? energy,
     Expression<String>? alerts,
     Expression<String>? subtaskTemplate,
@@ -1993,6 +2042,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
       if (count != null) 'count': count,
       if (pinned != null) 'pinned': pinned,
       if (travelBufferMin != null) 'travel_buffer_min': travelBufferMin,
+      if (durationFromSteps != null) 'duration_from_steps': durationFromSteps,
       if (energy != null) 'energy': energy,
       if (alerts != null) 'alerts': alerts,
       if (subtaskTemplate != null) 'subtask_template': subtaskTemplate,
@@ -2023,6 +2073,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
     Value<int?>? count,
     Value<bool>? pinned,
     Value<int>? travelBufferMin,
+    Value<bool>? durationFromSteps,
     Value<int?>? energy,
     Value<String>? alerts,
     Value<String>? subtaskTemplate,
@@ -2050,6 +2101,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
       count: count ?? this.count,
       pinned: pinned ?? this.pinned,
       travelBufferMin: travelBufferMin ?? this.travelBufferMin,
+      durationFromSteps: durationFromSteps ?? this.durationFromSteps,
       energy: energy ?? this.energy,
       alerts: alerts ?? this.alerts,
       subtaskTemplate: subtaskTemplate ?? this.subtaskTemplate,
@@ -2118,6 +2170,9 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
     if (travelBufferMin.present) {
       map['travel_buffer_min'] = Variable<int>(travelBufferMin.value);
     }
+    if (durationFromSteps.present) {
+      map['duration_from_steps'] = Variable<bool>(durationFromSteps.value);
+    }
     if (energy.present) {
       map['energy'] = Variable<int>(energy.value);
     }
@@ -2165,6 +2220,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
           ..write('count: $count, ')
           ..write('pinned: $pinned, ')
           ..write('travelBufferMin: $travelBufferMin, ')
+          ..write('durationFromSteps: $durationFromSteps, ')
           ..write('energy: $energy, ')
           ..write('alerts: $alerts, ')
           ..write('subtaskTemplate: $subtaskTemplate, ')
@@ -3574,6 +3630,43 @@ class $OccurrencesTable extends Occurrences
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _actualStartUtcMeta = const VerificationMeta(
+    'actualStartUtc',
+  );
+  @override
+  late final GeneratedColumn<int> actualStartUtc = GeneratedColumn<int>(
+    'actual_start_utc',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _actualEndUtcMeta = const VerificationMeta(
+    'actualEndUtc',
+  );
+  @override
+  late final GeneratedColumn<int> actualEndUtc = GeneratedColumn<int>(
+    'actual_end_utc',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _durationFromStepsMeta = const VerificationMeta(
+    'durationFromSteps',
+  );
+  @override
+  late final GeneratedColumn<bool> durationFromSteps = GeneratedColumn<bool>(
+    'duration_from_steps',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("duration_from_steps" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _deletedAtMeta = const VerificationMeta(
     'deletedAt',
   );
@@ -3612,6 +3705,9 @@ class $OccurrencesTable extends Occurrences
     source,
     calendarLinkId,
     snoozedUntilUtc,
+    actualStartUtc,
+    actualEndUtc,
+    durationFromSteps,
     deletedAt,
   ];
   @override
@@ -3805,6 +3901,33 @@ class $OccurrencesTable extends Occurrences
         ),
       );
     }
+    if (data.containsKey('actual_start_utc')) {
+      context.handle(
+        _actualStartUtcMeta,
+        actualStartUtc.isAcceptableOrUnknown(
+          data['actual_start_utc']!,
+          _actualStartUtcMeta,
+        ),
+      );
+    }
+    if (data.containsKey('actual_end_utc')) {
+      context.handle(
+        _actualEndUtcMeta,
+        actualEndUtc.isAcceptableOrUnknown(
+          data['actual_end_utc']!,
+          _actualEndUtcMeta,
+        ),
+      );
+    }
+    if (data.containsKey('duration_from_steps')) {
+      context.handle(
+        _durationFromStepsMeta,
+        durationFromSteps.isAcceptableOrUnknown(
+          data['duration_from_steps']!,
+          _durationFromStepsMeta,
+        ),
+      );
+    }
     if (data.containsKey('deleted_at')) {
       context.handle(
         _deletedAtMeta,
@@ -3920,6 +4043,18 @@ class $OccurrencesTable extends Occurrences
         DriftSqlType.int,
         data['${effectivePrefix}snoozed_until_utc'],
       ),
+      actualStartUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}actual_start_utc'],
+      ),
+      actualEndUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}actual_end_utc'],
+      ),
+      durationFromSteps: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}duration_from_steps'],
+      )!,
       deletedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}deleted_at'],
@@ -3966,6 +4101,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   final String source;
   final String? calendarLinkId;
   final int? snoozedUntilUtc;
+  final int? actualStartUtc;
+  final int? actualEndUtc;
+  final bool durationFromSteps;
   final int? deletedAt;
   const OccurrenceRow({
     required this.createdAt,
@@ -3993,6 +4131,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     required this.source,
     this.calendarLinkId,
     this.snoozedUntilUtc,
+    this.actualStartUtc,
+    this.actualEndUtc,
+    required this.durationFromSteps,
     this.deletedAt,
   });
   @override
@@ -4041,6 +4182,13 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     if (!nullToAbsent || snoozedUntilUtc != null) {
       map['snoozed_until_utc'] = Variable<int>(snoozedUntilUtc);
     }
+    if (!nullToAbsent || actualStartUtc != null) {
+      map['actual_start_utc'] = Variable<int>(actualStartUtc);
+    }
+    if (!nullToAbsent || actualEndUtc != null) {
+      map['actual_end_utc'] = Variable<int>(actualEndUtc);
+    }
+    map['duration_from_steps'] = Variable<bool>(durationFromSteps);
     if (!nullToAbsent || deletedAt != null) {
       map['deleted_at'] = Variable<int>(deletedAt);
     }
@@ -4092,6 +4240,13 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       snoozedUntilUtc: snoozedUntilUtc == null && nullToAbsent
           ? const Value.absent()
           : Value(snoozedUntilUtc),
+      actualStartUtc: actualStartUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actualStartUtc),
+      actualEndUtc: actualEndUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actualEndUtc),
+      durationFromSteps: Value(durationFromSteps),
       deletedAt: deletedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(deletedAt),
@@ -4129,6 +4284,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       source: serializer.fromJson<String>(json['source']),
       calendarLinkId: serializer.fromJson<String?>(json['calendarLinkId']),
       snoozedUntilUtc: serializer.fromJson<int?>(json['snoozedUntilUtc']),
+      actualStartUtc: serializer.fromJson<int?>(json['actualStartUtc']),
+      actualEndUtc: serializer.fromJson<int?>(json['actualEndUtc']),
+      durationFromSteps: serializer.fromJson<bool>(json['durationFromSteps']),
       deletedAt: serializer.fromJson<int?>(json['deletedAt']),
     );
   }
@@ -4161,6 +4319,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       'source': serializer.toJson<String>(source),
       'calendarLinkId': serializer.toJson<String?>(calendarLinkId),
       'snoozedUntilUtc': serializer.toJson<int?>(snoozedUntilUtc),
+      'actualStartUtc': serializer.toJson<int?>(actualStartUtc),
+      'actualEndUtc': serializer.toJson<int?>(actualEndUtc),
+      'durationFromSteps': serializer.toJson<bool>(durationFromSteps),
       'deletedAt': serializer.toJson<int?>(deletedAt),
     };
   }
@@ -4191,6 +4352,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     String? source,
     Value<String?> calendarLinkId = const Value.absent(),
     Value<int?> snoozedUntilUtc = const Value.absent(),
+    Value<int?> actualStartUtc = const Value.absent(),
+    Value<int?> actualEndUtc = const Value.absent(),
+    bool? durationFromSteps,
     Value<int?> deletedAt = const Value.absent(),
   }) => OccurrenceRow(
     createdAt: createdAt ?? this.createdAt,
@@ -4226,6 +4390,11 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     snoozedUntilUtc: snoozedUntilUtc.present
         ? snoozedUntilUtc.value
         : this.snoozedUntilUtc,
+    actualStartUtc: actualStartUtc.present
+        ? actualStartUtc.value
+        : this.actualStartUtc,
+    actualEndUtc: actualEndUtc.present ? actualEndUtc.value : this.actualEndUtc,
+    durationFromSteps: durationFromSteps ?? this.durationFromSteps,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   OccurrenceRow copyWithCompanion(OccurrencesCompanion data) {
@@ -4267,6 +4436,15 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       snoozedUntilUtc: data.snoozedUntilUtc.present
           ? data.snoozedUntilUtc.value
           : this.snoozedUntilUtc,
+      actualStartUtc: data.actualStartUtc.present
+          ? data.actualStartUtc.value
+          : this.actualStartUtc,
+      actualEndUtc: data.actualEndUtc.present
+          ? data.actualEndUtc.value
+          : this.actualEndUtc,
+      durationFromSteps: data.durationFromSteps.present
+          ? data.durationFromSteps.value
+          : this.durationFromSteps,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
@@ -4299,6 +4477,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           ..write('source: $source, ')
           ..write('calendarLinkId: $calendarLinkId, ')
           ..write('snoozedUntilUtc: $snoozedUntilUtc, ')
+          ..write('actualStartUtc: $actualStartUtc, ')
+          ..write('actualEndUtc: $actualEndUtc, ')
+          ..write('durationFromSteps: $durationFromSteps, ')
           ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
@@ -4331,6 +4512,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     source,
     calendarLinkId,
     snoozedUntilUtc,
+    actualStartUtc,
+    actualEndUtc,
+    durationFromSteps,
     deletedAt,
   ]);
   @override
@@ -4362,6 +4546,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           other.source == this.source &&
           other.calendarLinkId == this.calendarLinkId &&
           other.snoozedUntilUtc == this.snoozedUntilUtc &&
+          other.actualStartUtc == this.actualStartUtc &&
+          other.actualEndUtc == this.actualEndUtc &&
+          other.durationFromSteps == this.durationFromSteps &&
           other.deletedAt == this.deletedAt);
 }
 
@@ -4391,6 +4578,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   final Value<String> source;
   final Value<String?> calendarLinkId;
   final Value<int?> snoozedUntilUtc;
+  final Value<int?> actualStartUtc;
+  final Value<int?> actualEndUtc;
+  final Value<bool> durationFromSteps;
   final Value<int?> deletedAt;
   final Value<int> rowid;
   const OccurrencesCompanion({
@@ -4419,6 +4609,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     this.source = const Value.absent(),
     this.calendarLinkId = const Value.absent(),
     this.snoozedUntilUtc = const Value.absent(),
+    this.actualStartUtc = const Value.absent(),
+    this.actualEndUtc = const Value.absent(),
+    this.durationFromSteps = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -4448,6 +4641,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     this.source = const Value.absent(),
     this.calendarLinkId = const Value.absent(),
     this.snoozedUntilUtc = const Value.absent(),
+    this.actualStartUtc = const Value.absent(),
+    this.actualEndUtc = const Value.absent(),
+    this.durationFromSteps = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : createdAt = Value(createdAt),
@@ -4483,6 +4679,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     Expression<String>? source,
     Expression<String>? calendarLinkId,
     Expression<int>? snoozedUntilUtc,
+    Expression<int>? actualStartUtc,
+    Expression<int>? actualEndUtc,
+    Expression<bool>? durationFromSteps,
     Expression<int>? deletedAt,
     Expression<int>? rowid,
   }) {
@@ -4512,6 +4711,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
       if (source != null) 'source': source,
       if (calendarLinkId != null) 'calendar_link_id': calendarLinkId,
       if (snoozedUntilUtc != null) 'snoozed_until_utc': snoozedUntilUtc,
+      if (actualStartUtc != null) 'actual_start_utc': actualStartUtc,
+      if (actualEndUtc != null) 'actual_end_utc': actualEndUtc,
+      if (durationFromSteps != null) 'duration_from_steps': durationFromSteps,
       if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -4543,6 +4745,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     Value<String>? source,
     Value<String?>? calendarLinkId,
     Value<int?>? snoozedUntilUtc,
+    Value<int?>? actualStartUtc,
+    Value<int?>? actualEndUtc,
+    Value<bool>? durationFromSteps,
     Value<int?>? deletedAt,
     Value<int>? rowid,
   }) {
@@ -4572,6 +4777,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
       source: source ?? this.source,
       calendarLinkId: calendarLinkId ?? this.calendarLinkId,
       snoozedUntilUtc: snoozedUntilUtc ?? this.snoozedUntilUtc,
+      actualStartUtc: actualStartUtc ?? this.actualStartUtc,
+      actualEndUtc: actualEndUtc ?? this.actualEndUtc,
+      durationFromSteps: durationFromSteps ?? this.durationFromSteps,
       deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
@@ -4655,6 +4863,15 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     if (snoozedUntilUtc.present) {
       map['snoozed_until_utc'] = Variable<int>(snoozedUntilUtc.value);
     }
+    if (actualStartUtc.present) {
+      map['actual_start_utc'] = Variable<int>(actualStartUtc.value);
+    }
+    if (actualEndUtc.present) {
+      map['actual_end_utc'] = Variable<int>(actualEndUtc.value);
+    }
+    if (durationFromSteps.present) {
+      map['duration_from_steps'] = Variable<bool>(durationFromSteps.value);
+    }
     if (deletedAt.present) {
       map['deleted_at'] = Variable<int>(deletedAt.value);
     }
@@ -4692,6 +4909,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
           ..write('source: $source, ')
           ..write('calendarLinkId: $calendarLinkId, ')
           ..write('snoozedUntilUtc: $snoozedUntilUtc, ')
+          ..write('actualStartUtc: $actualStartUtc, ')
+          ..write('actualEndUtc: $actualEndUtc, ')
+          ..write('durationFromSteps: $durationFromSteps, ')
           ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -4821,6 +5041,20 @@ class $SubtasksTable extends Subtasks
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _durationMinMeta = const VerificationMeta(
+    'durationMin',
+  );
+  @override
+  late final GeneratedColumn<int> durationMin = GeneratedColumn<int>(
+    'duration_min',
+    aliasedName,
+    true,
+    check: () => const CustomExpression<bool>(
+      'duration_min IS NULL OR duration_min BETWEEN 1 AND 1440',
+    ),
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _deletedAtMeta = const VerificationMeta(
     'deletedAt',
   );
@@ -4844,6 +5078,7 @@ class $SubtasksTable extends Subtasks
     title,
     done,
     sortOrder,
+    durationMin,
     deletedAt,
   ];
   @override
@@ -4930,6 +5165,15 @@ class $SubtasksTable extends Subtasks
         sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta),
       );
     }
+    if (data.containsKey('duration_min')) {
+      context.handle(
+        _durationMinMeta,
+        durationMin.isAcceptableOrUnknown(
+          data['duration_min']!,
+          _durationMinMeta,
+        ),
+      );
+    }
     if (data.containsKey('deleted_at')) {
       context.handle(
         _deletedAtMeta,
@@ -4985,6 +5229,10 @@ class $SubtasksTable extends Subtasks
         DriftSqlType.double,
         data['${effectivePrefix}sort_order'],
       )!,
+      durationMin: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration_min'],
+      ),
       deletedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}deleted_at'],
@@ -5012,6 +5260,9 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
   final String title;
   final bool done;
   final double sortOrder;
+
+  /// Schema 3 (M6.5.1, 11 B2): optional step length, 1–1440 min.
+  final int? durationMin;
   final int? deletedAt;
   const SubtaskRow({
     required this.createdAt,
@@ -5024,6 +5275,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
     required this.title,
     required this.done,
     required this.sortOrder,
+    this.durationMin,
     this.deletedAt,
   });
   @override
@@ -5039,6 +5291,9 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
     map['title'] = Variable<String>(title);
     map['done'] = Variable<bool>(done);
     map['sort_order'] = Variable<double>(sortOrder);
+    if (!nullToAbsent || durationMin != null) {
+      map['duration_min'] = Variable<int>(durationMin);
+    }
     if (!nullToAbsent || deletedAt != null) {
       map['deleted_at'] = Variable<int>(deletedAt);
     }
@@ -5057,6 +5312,9 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
       title: Value(title),
       done: Value(done),
       sortOrder: Value(sortOrder),
+      durationMin: durationMin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(durationMin),
       deletedAt: deletedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(deletedAt),
@@ -5079,6 +5337,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
       title: serializer.fromJson<String>(json['title']),
       done: serializer.fromJson<bool>(json['done']),
       sortOrder: serializer.fromJson<double>(json['sortOrder']),
+      durationMin: serializer.fromJson<int?>(json['durationMin']),
       deletedAt: serializer.fromJson<int?>(json['deletedAt']),
     );
   }
@@ -5096,6 +5355,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
       'title': serializer.toJson<String>(title),
       'done': serializer.toJson<bool>(done),
       'sortOrder': serializer.toJson<double>(sortOrder),
+      'durationMin': serializer.toJson<int?>(durationMin),
       'deletedAt': serializer.toJson<int?>(deletedAt),
     };
   }
@@ -5111,6 +5371,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
     String? title,
     bool? done,
     double? sortOrder,
+    Value<int?> durationMin = const Value.absent(),
     Value<int?> deletedAt = const Value.absent(),
   }) => SubtaskRow(
     createdAt: createdAt ?? this.createdAt,
@@ -5123,6 +5384,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
     title: title ?? this.title,
     done: done ?? this.done,
     sortOrder: sortOrder ?? this.sortOrder,
+    durationMin: durationMin.present ? durationMin.value : this.durationMin,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   SubtaskRow copyWithCompanion(SubtasksCompanion data) {
@@ -5139,6 +5401,9 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
       title: data.title.present ? data.title.value : this.title,
       done: data.done.present ? data.done.value : this.done,
       sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
+      durationMin: data.durationMin.present
+          ? data.durationMin.value
+          : this.durationMin,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
@@ -5156,6 +5421,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
           ..write('title: $title, ')
           ..write('done: $done, ')
           ..write('sortOrder: $sortOrder, ')
+          ..write('durationMin: $durationMin, ')
           ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
@@ -5173,6 +5439,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
     title,
     done,
     sortOrder,
+    durationMin,
     deletedAt,
   );
   @override
@@ -5189,6 +5456,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
           other.title == this.title &&
           other.done == this.done &&
           other.sortOrder == this.sortOrder &&
+          other.durationMin == this.durationMin &&
           other.deletedAt == this.deletedAt);
 }
 
@@ -5203,6 +5471,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
   final Value<String> title;
   final Value<bool> done;
   final Value<double> sortOrder;
+  final Value<int?> durationMin;
   final Value<int?> deletedAt;
   final Value<int> rowid;
   const SubtasksCompanion({
@@ -5216,6 +5485,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
     this.title = const Value.absent(),
     this.done = const Value.absent(),
     this.sortOrder = const Value.absent(),
+    this.durationMin = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -5230,6 +5500,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
     required String title,
     this.done = const Value.absent(),
     this.sortOrder = const Value.absent(),
+    this.durationMin = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : createdAt = Value(createdAt),
@@ -5249,6 +5520,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
     Expression<String>? title,
     Expression<bool>? done,
     Expression<double>? sortOrder,
+    Expression<int>? durationMin,
     Expression<int>? deletedAt,
     Expression<int>? rowid,
   }) {
@@ -5263,6 +5535,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
       if (title != null) 'title': title,
       if (done != null) 'done': done,
       if (sortOrder != null) 'sort_order': sortOrder,
+      if (durationMin != null) 'duration_min': durationMin,
       if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -5279,6 +5552,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
     Value<String>? title,
     Value<bool>? done,
     Value<double>? sortOrder,
+    Value<int?>? durationMin,
     Value<int?>? deletedAt,
     Value<int>? rowid,
   }) {
@@ -5293,6 +5567,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
       title: title ?? this.title,
       done: done ?? this.done,
       sortOrder: sortOrder ?? this.sortOrder,
+      durationMin: durationMin ?? this.durationMin,
       deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
@@ -5331,6 +5606,9 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
     if (sortOrder.present) {
       map['sort_order'] = Variable<double>(sortOrder.value);
     }
+    if (durationMin.present) {
+      map['duration_min'] = Variable<int>(durationMin.value);
+    }
     if (deletedAt.present) {
       map['deleted_at'] = Variable<int>(deletedAt.value);
     }
@@ -5353,6 +5631,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
           ..write('title: $title, ')
           ..write('done: $done, ')
           ..write('sortOrder: $sortOrder, ')
+          ..write('durationMin: $durationMin, ')
           ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -8441,6 +8720,7 @@ typedef $$SeriesTableTableCreateCompanionBuilder =
       Value<int?> count,
       Value<bool> pinned,
       Value<int> travelBufferMin,
+      Value<bool> durationFromSteps,
       Value<int?> energy,
       Value<String> alerts,
       Value<String> subtaskTemplate,
@@ -8469,6 +8749,7 @@ typedef $$SeriesTableTableUpdateCompanionBuilder =
       Value<int?> count,
       Value<bool> pinned,
       Value<int> travelBufferMin,
+      Value<bool> durationFromSteps,
       Value<int?> energy,
       Value<String> alerts,
       Value<String> subtaskTemplate,
@@ -8609,6 +8890,11 @@ class $$SeriesTableTableFilterComposer
 
   ColumnFilters<int> get travelBufferMin => $composableBuilder(
     column: $table.travelBufferMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get durationFromSteps => $composableBuilder(
+    column: $table.durationFromSteps,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -8785,6 +9071,11 @@ class $$SeriesTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get durationFromSteps => $composableBuilder(
+    column: $table.durationFromSteps,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get energy => $composableBuilder(
     column: $table.energy,
     builder: (column) => ColumnOrderings(column),
@@ -8902,6 +9193,11 @@ class $$SeriesTableTableAnnotationComposer
 
   GeneratedColumn<int> get travelBufferMin => $composableBuilder(
     column: $table.travelBufferMin,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get durationFromSteps => $composableBuilder(
+    column: $table.durationFromSteps,
     builder: (column) => column,
   );
 
@@ -9024,6 +9320,7 @@ class $$SeriesTableTableTableManager
                 Value<int?> count = const Value.absent(),
                 Value<bool> pinned = const Value.absent(),
                 Value<int> travelBufferMin = const Value.absent(),
+                Value<bool> durationFromSteps = const Value.absent(),
                 Value<int?> energy = const Value.absent(),
                 Value<String> alerts = const Value.absent(),
                 Value<String> subtaskTemplate = const Value.absent(),
@@ -9050,6 +9347,7 @@ class $$SeriesTableTableTableManager
                 count: count,
                 pinned: pinned,
                 travelBufferMin: travelBufferMin,
+                durationFromSteps: durationFromSteps,
                 energy: energy,
                 alerts: alerts,
                 subtaskTemplate: subtaskTemplate,
@@ -9078,6 +9376,7 @@ class $$SeriesTableTableTableManager
                 Value<int?> count = const Value.absent(),
                 Value<bool> pinned = const Value.absent(),
                 Value<int> travelBufferMin = const Value.absent(),
+                Value<bool> durationFromSteps = const Value.absent(),
                 Value<int?> energy = const Value.absent(),
                 Value<String> alerts = const Value.absent(),
                 Value<String> subtaskTemplate = const Value.absent(),
@@ -9104,6 +9403,7 @@ class $$SeriesTableTableTableManager
                 count: count,
                 pinned: pinned,
                 travelBufferMin: travelBufferMin,
+                durationFromSteps: durationFromSteps,
                 energy: energy,
                 alerts: alerts,
                 subtaskTemplate: subtaskTemplate,
@@ -10303,6 +10603,9 @@ typedef $$OccurrencesTableCreateCompanionBuilder =
       Value<String> source,
       Value<String?> calendarLinkId,
       Value<int?> snoozedUntilUtc,
+      Value<int?> actualStartUtc,
+      Value<int?> actualEndUtc,
+      Value<bool> durationFromSteps,
       Value<int?> deletedAt,
       Value<int> rowid,
     });
@@ -10333,6 +10636,9 @@ typedef $$OccurrencesTableUpdateCompanionBuilder =
       Value<String> source,
       Value<String?> calendarLinkId,
       Value<int?> snoozedUntilUtc,
+      Value<int?> actualStartUtc,
+      Value<int?> actualEndUtc,
+      Value<bool> durationFromSteps,
       Value<int?> deletedAt,
       Value<int> rowid,
     });
@@ -10528,6 +10834,21 @@ class $$OccurrencesTableFilterComposer
 
   ColumnFilters<int> get snoozedUntilUtc => $composableBuilder(
     column: $table.snoozedUntilUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get actualStartUtc => $composableBuilder(
+    column: $table.actualStartUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get actualEndUtc => $composableBuilder(
+    column: $table.actualEndUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get durationFromSteps => $composableBuilder(
+    column: $table.durationFromSteps,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10750,6 +11071,21 @@ class $$OccurrencesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get actualStartUtc => $composableBuilder(
+    column: $table.actualStartUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get actualEndUtc => $composableBuilder(
+    column: $table.actualEndUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get durationFromSteps => $composableBuilder(
+    column: $table.durationFromSteps,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get deletedAt => $composableBuilder(
     column: $table.deletedAt,
     builder: (column) => ColumnOrderings(column),
@@ -10910,6 +11246,21 @@ class $$OccurrencesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get actualStartUtc => $composableBuilder(
+    column: $table.actualStartUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get actualEndUtc => $composableBuilder(
+    column: $table.actualEndUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get durationFromSteps => $composableBuilder(
+    column: $table.durationFromSteps,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get deletedAt =>
       $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
@@ -11066,6 +11417,9 @@ class $$OccurrencesTableTableManager
                 Value<String> source = const Value.absent(),
                 Value<String?> calendarLinkId = const Value.absent(),
                 Value<int?> snoozedUntilUtc = const Value.absent(),
+                Value<int?> actualStartUtc = const Value.absent(),
+                Value<int?> actualEndUtc = const Value.absent(),
+                Value<bool> durationFromSteps = const Value.absent(),
                 Value<int?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => OccurrencesCompanion(
@@ -11094,6 +11448,9 @@ class $$OccurrencesTableTableManager
                 source: source,
                 calendarLinkId: calendarLinkId,
                 snoozedUntilUtc: snoozedUntilUtc,
+                actualStartUtc: actualStartUtc,
+                actualEndUtc: actualEndUtc,
+                durationFromSteps: durationFromSteps,
                 deletedAt: deletedAt,
                 rowid: rowid,
               ),
@@ -11124,6 +11481,9 @@ class $$OccurrencesTableTableManager
                 Value<String> source = const Value.absent(),
                 Value<String?> calendarLinkId = const Value.absent(),
                 Value<int?> snoozedUntilUtc = const Value.absent(),
+                Value<int?> actualStartUtc = const Value.absent(),
+                Value<int?> actualEndUtc = const Value.absent(),
+                Value<bool> durationFromSteps = const Value.absent(),
                 Value<int?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => OccurrencesCompanion.insert(
@@ -11152,6 +11512,9 @@ class $$OccurrencesTableTableManager
                 source: source,
                 calendarLinkId: calendarLinkId,
                 snoozedUntilUtc: snoozedUntilUtc,
+                actualStartUtc: actualStartUtc,
+                actualEndUtc: actualEndUtc,
+                durationFromSteps: durationFromSteps,
                 deletedAt: deletedAt,
                 rowid: rowid,
               ),
@@ -11299,6 +11662,7 @@ typedef $$SubtasksTableCreateCompanionBuilder =
       required String title,
       Value<bool> done,
       Value<double> sortOrder,
+      Value<int?> durationMin,
       Value<int?> deletedAt,
       Value<int> rowid,
     });
@@ -11314,6 +11678,7 @@ typedef $$SubtasksTableUpdateCompanionBuilder =
       Value<String> title,
       Value<bool> done,
       Value<double> sortOrder,
+      Value<int?> durationMin,
       Value<int?> deletedAt,
       Value<int> rowid,
     });
@@ -11403,6 +11768,11 @@ class $$SubtasksTableFilterComposer
 
   ColumnFilters<double> get sortOrder => $composableBuilder(
     column: $table.sortOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get durationMin => $composableBuilder(
+    column: $table.durationMin,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -11507,6 +11877,11 @@ class $$SubtasksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get durationMin => $composableBuilder(
+    column: $table.durationMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get deletedAt => $composableBuilder(
     column: $table.deletedAt,
     builder: (column) => ColumnOrderings(column),
@@ -11591,6 +11966,11 @@ class $$SubtasksTableAnnotationComposer
 
   GeneratedColumn<double> get sortOrder =>
       $composableBuilder(column: $table.sortOrder, builder: (column) => column);
+
+  GeneratedColumn<int> get durationMin => $composableBuilder(
+    column: $table.durationMin,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get deletedAt =>
       $composableBuilder(column: $table.deletedAt, builder: (column) => column);
@@ -11680,6 +12060,7 @@ class $$SubtasksTableTableManager
                 Value<String> title = const Value.absent(),
                 Value<bool> done = const Value.absent(),
                 Value<double> sortOrder = const Value.absent(),
+                Value<int?> durationMin = const Value.absent(),
                 Value<int?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SubtasksCompanion(
@@ -11693,6 +12074,7 @@ class $$SubtasksTableTableManager
                 title: title,
                 done: done,
                 sortOrder: sortOrder,
+                durationMin: durationMin,
                 deletedAt: deletedAt,
                 rowid: rowid,
               ),
@@ -11708,6 +12090,7 @@ class $$SubtasksTableTableManager
                 required String title,
                 Value<bool> done = const Value.absent(),
                 Value<double> sortOrder = const Value.absent(),
+                Value<int?> durationMin = const Value.absent(),
                 Value<int?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SubtasksCompanion.insert(
@@ -11721,6 +12104,7 @@ class $$SubtasksTableTableManager
                 title: title,
                 done: done,
                 sortOrder: sortOrder,
+                durationMin: durationMin,
                 deletedAt: deletedAt,
                 rowid: rowid,
               ),

@@ -14,14 +14,19 @@ One per auth user. `id (= auth.users.id)`, `display_name`, `tz_id`, `locale`, `s
 `id, user_id, title, notes, color_key, icon_key, duration_min, rrule text, dtstart_local text
 (ISO without zone), tz_id, until_utc?, count?, pinned bool, travel_buffer_min int, energy smallint?,
 alerts jsonb [ {offsetMin:int, kind:'before'|'at_start'|'at_end'|'overdue', sound?} ],
-subtask_template jsonb [ {id, title, sortOrder} ], archived_at?, created_at, updated_at, deleted_at?`
+subtask_template jsonb [ {id, title, sortOrder, durationMin?} ], duration_from_steps bool, archived_at?, created_at, updated_at, deleted_at?`
 
 ### `occurrences`  (every block on the timeline, scheduled or not)
 `id, user_id, series_id? (null = one-off), original_start_utc? (for series exceptions),
 title, notes, color_key, icon_key, start_utc? (null = inbox), tz_id, duration_min, pinned,
 travel_buffer_min, energy?, alerts jsonb (overrides series when non-null), status
 ('planned'|'done'|'skipped'), completed_at_utc?, sort_order (inbox ordering), source
-('user'|'calendar'), calendar_link_id?, snoozed_until_utc?, created_at, updated_at, deleted_at?`
+('user'|'calendar'), calendar_link_id?, snoozed_until_utc?, actual_start_utc?, actual_end_utc?,
+duration_from_steps bool, created_at, updated_at, deleted_at?`
+
+`actual_start_utc` / `actual_end_utc` (M6.5.1, `11-standout-roadmap.md` B1) record when the user really
+started (first tap of the live dot, Start, opening Focus) and finished (Done); never inferred from the
+clock. `duration_from_steps` (B2): the length follows the sum of the subtasks' durations.
 
 Rules
 - A series row never appears on the timeline itself; the client materialises occurrences 90 days
@@ -33,7 +38,8 @@ Rules
 - Completion is **per occurrence** (R-09). Subtask state too (below).
 
 ### `subtasks`
-`id, user_id, occurrence_id, title, done bool, sort_order, created_at, updated_at, deleted_at?`
+`id, user_id, occurrence_id, title, done bool, sort_order, duration_min? (1–1440, B2), created_at,
+updated_at, deleted_at?` — `sort_order` is the step order B2 asks for (no separate `sort_index`).
 Created from `series.subtask_template` when an occurrence is materialised; never shared across
 occurrences.
 
@@ -101,7 +107,7 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
 
 ## Validation (client and server)
 - `title` 1–200 chars, trimmed; `notes` ≤ 10 000; `duration_min` 5–1440; `alerts` ≤ 5 with
-  `offsetMin` 0–1440; `subtasks` ≤ 50 per occurrence; `rrule` must parse and have `FREQ` (HOURLY or coarser — M1.2); `tz_id`
+  `offsetMin` 0–1440; `subtasks` ≤ 50 per occurrence; a subtask's or template step's `duration_min` is null or 1–1440; `rrule` must parse and have `FREQ` (HOURLY or coarser — M1.2); `tz_id`
   must be a known IANA id; `color_key`/`icon_key` from the allowed sets.
 - Clarified in M1.1: `icon_key` is a lowercase snake_case token ≤ 48 chars (default `circle`) until
   the picker set is the 26 `TaskIcon`s (M3a.2; older keys map to the nearest icon); the UI draws a plain dot for `circle` and for keys it does not know. `color_key` must be

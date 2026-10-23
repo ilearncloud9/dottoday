@@ -63,6 +63,12 @@ class Occurrences extends Table with TimestampColumns, SyncColumns {
     onDelete: KeyAction.setNull,
   )();
   IntColumn get snoozedUntilUtc => integer().nullable()();
+
+  // Schema 3 (M6.5.1, 11 B1/B2). Added by ALTER TABLE, so no table CHECK.
+  IntColumn get actualStartUtc => integer().nullable()();
+  IntColumn get actualEndUtc => integer().nullable()();
+  BoolColumn get durationFromSteps =>
+      boolean().withDefault(const Constant(false))();
   IntColumn get deletedAt => integer().nullable()();
 
   @override
@@ -111,6 +117,13 @@ class Subtasks extends Table with TimestampColumns, SyncColumns {
   TextColumn get title => text()();
   BoolColumn get done => boolean().withDefault(const Constant(false))();
   RealColumn get sortOrder => real().withDefault(const Constant(0))();
+
+  /// Schema 3 (M6.5.1, 11 B2): optional step length, 1–1440 min.
+  IntColumn get durationMin => integer().nullable().check(
+    const CustomExpression<bool>(
+      'duration_min IS NULL OR duration_min BETWEEN 1 AND 1440',
+    ),
+  )();
   IntColumn get deletedAt => integer().nullable()();
 
   @override

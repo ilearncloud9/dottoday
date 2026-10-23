@@ -24,6 +24,7 @@ _Series _$SeriesFromJson(Map<String, dynamic> json) => _Series(
   count: (json['count'] as num?)?.toInt(),
   pinned: json['pinned'] as bool? ?? false,
   travelBufferMin: (json['travel_buffer_min'] as num?)?.toInt() ?? 0,
+  durationFromSteps: json['duration_from_steps'] as bool? ?? false,
   energy: $enumDecodeNullable(_$EnergyEnumMap, json['energy']),
   alerts:
       (json['alerts'] as List<dynamic>?)
@@ -73,6 +74,7 @@ Map<String, dynamic> _$SeriesToJson(_Series instance) => <String, dynamic>{
   'count': instance.count,
   'pinned': instance.pinned,
   'travel_buffer_min': instance.travelBufferMin,
+  'duration_from_steps': instance.durationFromSteps,
   'energy': _$EnergyEnumMap[instance.energy],
   'alerts': instance.alerts.map((e) => e.toJson()).toList(),
   'subtask_template': instance.subtaskTemplate.map((e) => e.toJson()).toList(),

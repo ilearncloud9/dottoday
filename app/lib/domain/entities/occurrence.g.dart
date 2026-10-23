@@ -46,6 +46,15 @@ _Occurrence _$OccurrenceFromJson(Map<String, dynamic> json) => _Occurrence(
     json['snoozed_until_utc'],
     const UtcMillisConverter().fromJson,
   ),
+  actualStartUtc: _$JsonConverterFromJson<int, DateTime>(
+    json['actual_start_utc'],
+    const UtcMillisConverter().fromJson,
+  ),
+  actualEndUtc: _$JsonConverterFromJson<int, DateTime>(
+    json['actual_end_utc'],
+    const UtcMillisConverter().fromJson,
+  ),
+  durationFromSteps: json['duration_from_steps'] as bool? ?? false,
   createdAt: const UtcMillisConverter().fromJson(
     (json['created_at'] as num).toInt(),
   ),
@@ -93,6 +102,15 @@ Map<String, dynamic> _$OccurrenceToJson(_Occurrence instance) =>
         instance.snoozedUntilUtc,
         const UtcMillisConverter().toJson,
       ),
+      'actual_start_utc': _$JsonConverterToJson<int, DateTime>(
+        instance.actualStartUtc,
+        const UtcMillisConverter().toJson,
+      ),
+      'actual_end_utc': _$JsonConverterToJson<int, DateTime>(
+        instance.actualEndUtc,
+        const UtcMillisConverter().toJson,
+      ),
+      'duration_from_steps': instance.durationFromSteps,
       'created_at': const UtcMillisConverter().toJson(instance.createdAt),
       'updated_at': const UtcMillisConverter().toJson(instance.updatedAt),
       'deleted_at': _$JsonConverterToJson<int, DateTime>(

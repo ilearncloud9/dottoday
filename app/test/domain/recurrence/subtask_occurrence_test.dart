@@ -18,7 +18,12 @@ void main() {
     dtstartLocal: '2026-10-21T07:00',
     tzId: 'UTC',
     subtaskTemplate: const [
-      SubtaskTemplateItem(id: 't1', title: 'Stretch', sortOrder: 1),
+      SubtaskTemplateItem(
+        id: 't1',
+        title: 'Stretch',
+        sortOrder: 1,
+        durationMin: 2,
+      ),
       SubtaskTemplateItem(id: 't2', title: 'Run', sortOrder: 2),
     ],
   );
@@ -39,6 +44,8 @@ void main() {
       'Run',
     ]);
     expect(of(plan.subtasks, today.id).map((s) => s.sortOrder), [1, 2]);
+    // Step durations travel with the template (M6.5.1, 11 B2).
+    expect(of(plan.subtasks, today.id).map((s) => s.durationMin), [2, null]);
     final ids = plan.subtasks.map((s) => s.id).toSet();
     expect(ids.length, plan.subtasks.length, reason: 'never shared');
     expect(plan.subtasks.every((s) => !s.done), isTrue);

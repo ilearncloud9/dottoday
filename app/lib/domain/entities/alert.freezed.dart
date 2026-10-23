@@ -292,7 +292,8 @@ as String?,
 /// @nodoc
 mixin _$SubtaskTemplateItem {
 
- String get id; String get title; double get sortOrder;
+ String get id; String get title; double get sortOrder;/// Optional step length in minutes, copied to each occurrence (11 B2).
+ int? get durationMin;
 /// Create a copy of SubtaskTemplateItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -306,20 +307,20 @@ $SubtaskTemplateItemCopyWith<SubtaskTemplateItem> get copyWith => _$SubtaskTempl
 @override
 bool operator ==(Object other) {
   final _this = this as SubtaskTemplateItem;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SubtaskTemplateItem&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.sortOrder, _this.sortOrder) || other.sortOrder == _this.sortOrder));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SubtaskTemplateItem&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.sortOrder, _this.sortOrder) || other.sortOrder == _this.sortOrder)&&(identical(other.durationMin, _this.durationMin) || other.durationMin == _this.durationMin));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as SubtaskTemplateItem;
-  return Object.hash(runtimeType,_this.id,_this.title,_this.sortOrder);
+  return Object.hash(runtimeType,_this.id,_this.title,_this.sortOrder,_this.durationMin);
 }
 
 @override
 String toString() {
   final _this = this as SubtaskTemplateItem;
-  return 'SubtaskTemplateItem(id: ${_this.id}, title: ${_this.title}, sortOrder: ${_this.sortOrder})';
+  return 'SubtaskTemplateItem(id: ${_this.id}, title: ${_this.title}, sortOrder: ${_this.sortOrder}, durationMin: ${_this.durationMin})';
 }
 
 
@@ -330,7 +331,7 @@ abstract mixin class $SubtaskTemplateItemCopyWith<$Res>  {
   factory $SubtaskTemplateItemCopyWith(SubtaskTemplateItem value, $Res Function(SubtaskTemplateItem) _then) = _$SubtaskTemplateItemCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, double sortOrder
+ String id, String title, double sortOrder, int? durationMin
 });
 
 
@@ -347,12 +348,13 @@ class _$SubtaskTemplateItemCopyWithImpl<$Res>
 
 /// Create a copy of SubtaskTemplateItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? sortOrder = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? sortOrder = null,Object? durationMin = freezed,}) {
   return _then(SubtaskTemplateItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
-as double,
+as double,durationMin: freezed == durationMin ? _self.durationMin : durationMin // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -437,10 +439,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  double sortOrder)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  double sortOrder,  int? durationMin)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SubtaskTemplateItem() when $default != null:
-return $default(_that.id,_that.title,_that.sortOrder);case _:
+return $default(_that.id,_that.title,_that.sortOrder,_that.durationMin);case _:
   return orElse();
 
 }
@@ -458,10 +460,10 @@ return $default(_that.id,_that.title,_that.sortOrder);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  double sortOrder)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  double sortOrder,  int? durationMin)  $default,) {final _that = this;
 switch (_that) {
 case _SubtaskTemplateItem():
-return $default(_that.id,_that.title,_that.sortOrder);case _:
+return $default(_that.id,_that.title,_that.sortOrder,_that.durationMin);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -478,10 +480,10 @@ return $default(_that.id,_that.title,_that.sortOrder);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  double sortOrder)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  double sortOrder,  int? durationMin)?  $default,) {final _that = this;
 switch (_that) {
 case _SubtaskTemplateItem() when $default != null:
-return $default(_that.id,_that.title,_that.sortOrder);case _:
+return $default(_that.id,_that.title,_that.sortOrder,_that.durationMin);case _:
   return null;
 
 }
@@ -493,12 +495,14 @@ return $default(_that.id,_that.title,_that.sortOrder);case _:
 @JsonSerializable()
 
 class _SubtaskTemplateItem implements SubtaskTemplateItem {
-  const _SubtaskTemplateItem({required this.id, required this.title, this.sortOrder = 0});
+  const _SubtaskTemplateItem({required this.id, required this.title, this.sortOrder = 0, this.durationMin});
   factory _SubtaskTemplateItem.fromJson(Map<String, dynamic> json) => _$SubtaskTemplateItemFromJson(json);
 
 @override final  String id;
 @override final  String title;
 @override@JsonKey() final  double sortOrder;
+/// Optional step length in minutes, copied to each occurrence (11 B2).
+@override final  int? durationMin;
 
 /// Create a copy of SubtaskTemplateItem
 /// with the given fields replaced by the non-null parameter values.
@@ -513,18 +517,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SubtaskTemplateItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SubtaskTemplateItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,title,sortOrder);
+    return Object.hash(runtimeType,id,title,sortOrder,durationMin);
 }
 
 @override
 String toString() {
-    return 'SubtaskTemplateItem(id: $id, title: $title, sortOrder: $sortOrder)';
+    return 'SubtaskTemplateItem(id: $id, title: $title, sortOrder: $sortOrder, durationMin: $durationMin)';
 }
 
 
@@ -535,7 +539,7 @@ abstract mixin class _$SubtaskTemplateItemCopyWith<$Res> implements $SubtaskTemp
   factory _$SubtaskTemplateItemCopyWith(_SubtaskTemplateItem value, $Res Function(_SubtaskTemplateItem) _then) = __$SubtaskTemplateItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, double sortOrder
+ String id, String title, double sortOrder, int? durationMin
 });
 
 
@@ -552,12 +556,13 @@ class __$SubtaskTemplateItemCopyWithImpl<$Res>
 
 /// Create a copy of SubtaskTemplateItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? sortOrder = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? sortOrder = null,Object? durationMin = freezed,}) {
   return _then(_SubtaskTemplateItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
-as double,
+as double,durationMin: freezed == durationMin ? _self.durationMin : durationMin // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

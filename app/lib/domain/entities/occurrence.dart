@@ -39,6 +39,14 @@ abstract class Occurrence with _$Occurrence {
     @Default(OccurrenceSource.user) OccurrenceSource source,
     String? calendarLinkId,
     @UtcMillisConverter() DateTime? snoozedUntilUtc,
+
+    /// When the user really started / finished it (11 B1). Set only by an
+    /// explicit start (live dot, Start, Focus) or Done — never inferred.
+    @UtcMillisConverter() DateTime? actualStartUtc,
+    @UtcMillisConverter() DateTime? actualEndUtc,
+
+    /// Whether [durationMin] follows the sum of the subtasks' durations (B2).
+    @Default(false) bool durationFromSteps,
     @UtcMillisConverter() required DateTime createdAt,
     @UtcMillisConverter() required DateTime updatedAt,
     @UtcMillisConverter() DateTime? deletedAt,

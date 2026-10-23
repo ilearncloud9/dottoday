@@ -95,12 +95,20 @@ void main() {
       alerts: const [Alert(kind: AlertKind.before, offsetMin: 10)],
       status: OccurrenceStatus.planned,
       sortOrder: 1.5,
+      // B1/B2 (M6.5.1) cross too.
+      actualStartUtc: now.subtract(const Duration(minutes: 3)),
+      actualEndUtc: now.subtract(const Duration(minutes: 1)),
+      durationFromSteps: true,
     );
     final series = seriesFixture().copyWith(
       id: '01928c3e-0000-7000-9000-${now.millisecondsSinceEpoch.toString().padLeft(12, '0').substring(0, 12)}',
       userId: a.account,
       dtstartLocal: '2026-10-23T07:00:00',
       tzId: 'Europe/Berlin',
+      durationFromSteps: true,
+      subtaskTemplate: const [
+        SubtaskTemplateItem(id: 't1', title: 'Warm up', durationMin: 2),
+      ],
     );
     await a.h.writes.apply(
       WriteBatch(userId: a.account, occurrences: [task], series: [series]),

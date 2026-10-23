@@ -28,6 +28,9 @@ abstract class SubtaskTemplateItem with _$SubtaskTemplateItem {
     required String id,
     required String title,
     @Default(0) double sortOrder,
+
+    /// Optional step length in minutes, copied to each occurrence (11 B2).
+    int? durationMin,
   }) = _SubtaskTemplateItem;
 
   factory SubtaskTemplateItem.fromJson(Map<String, Object?> json) =>

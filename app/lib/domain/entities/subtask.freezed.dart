@@ -16,7 +16,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Subtask {
 
- String get id; String get userId; String get occurrenceId; String get title; bool get done; double get sortOrder;@UtcMillisConverter() DateTime get createdAt;@UtcMillisConverter() DateTime get updatedAt;@UtcMillisConverter() DateTime? get deletedAt;
+ String get id; String get userId; String get occurrenceId; String get title; bool get done; double get sortOrder;/// Optional length of this step in minutes, 1–1440 (11 B2).
+ int? get durationMin;@UtcMillisConverter() DateTime get createdAt;@UtcMillisConverter() DateTime get updatedAt;@UtcMillisConverter() DateTime? get deletedAt;
 /// Create a copy of Subtask
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +31,20 @@ $SubtaskCopyWith<Subtask> get copyWith => _$SubtaskCopyWithImpl<Subtask>(this as
 @override
 bool operator ==(Object other) {
   final _this = this as Subtask;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Subtask&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.occurrenceId, _this.occurrenceId) || other.occurrenceId == _this.occurrenceId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.done, _this.done) || other.done == _this.done)&&(identical(other.sortOrder, _this.sortOrder) || other.sortOrder == _this.sortOrder)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Subtask&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.occurrenceId, _this.occurrenceId) || other.occurrenceId == _this.occurrenceId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.done, _this.done) || other.done == _this.done)&&(identical(other.sortOrder, _this.sortOrder) || other.sortOrder == _this.sortOrder)&&(identical(other.durationMin, _this.durationMin) || other.durationMin == _this.durationMin)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.deletedAt, _this.deletedAt) || other.deletedAt == _this.deletedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Subtask;
-  return Object.hash(runtimeType,_this.id,_this.userId,_this.occurrenceId,_this.title,_this.done,_this.sortOrder,_this.createdAt,_this.updatedAt,_this.deletedAt);
+  return Object.hash(runtimeType,_this.id,_this.userId,_this.occurrenceId,_this.title,_this.done,_this.sortOrder,_this.durationMin,_this.createdAt,_this.updatedAt,_this.deletedAt);
 }
 
 @override
 String toString() {
   final _this = this as Subtask;
-  return 'Subtask(id: ${_this.id}, userId: ${_this.userId}, occurrenceId: ${_this.occurrenceId}, title: ${_this.title}, done: ${_this.done}, sortOrder: ${_this.sortOrder}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, deletedAt: ${_this.deletedAt})';
+  return 'Subtask(id: ${_this.id}, userId: ${_this.userId}, occurrenceId: ${_this.occurrenceId}, title: ${_this.title}, done: ${_this.done}, sortOrder: ${_this.sortOrder}, durationMin: ${_this.durationMin}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, deletedAt: ${_this.deletedAt})';
 }
 
 
@@ -54,7 +55,7 @@ abstract mixin class $SubtaskCopyWith<$Res>  {
   factory $SubtaskCopyWith(Subtask value, $Res Function(Subtask) _then) = _$SubtaskCopyWithImpl;
 @useResult
 $Res call({
- String id, String userId, String occurrenceId, String title, bool done, double sortOrder,@UtcMillisConverter() DateTime createdAt,@UtcMillisConverter() DateTime updatedAt,@UtcMillisConverter() DateTime? deletedAt
+ String id, String userId, String occurrenceId, String title, bool done, double sortOrder, int? durationMin,@UtcMillisConverter() DateTime createdAt,@UtcMillisConverter() DateTime updatedAt,@UtcMillisConverter() DateTime? deletedAt
 });
 
 
@@ -71,7 +72,7 @@ class _$SubtaskCopyWithImpl<$Res>
 
 /// Create a copy of Subtask
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? occurrenceId = null,Object? title = null,Object? done = null,Object? sortOrder = null,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? occurrenceId = null,Object? title = null,Object? done = null,Object? sortOrder = null,Object? durationMin = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(Subtask(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -79,7 +80,8 @@ as String,occurrenceId: null == occurrenceId ? _self.occurrenceId : occurrenceId
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,done: null == done ? _self.done : done // ignore: cast_nullable_to_non_nullable
 as bool,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
-as double,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as double,durationMin: freezed == durationMin ? _self.durationMin : durationMin // ignore: cast_nullable_to_non_nullable
+as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -167,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  String occurrenceId,  String title,  bool done,  double sortOrder, @UtcMillisConverter()  DateTime createdAt, @UtcMillisConverter()  DateTime updatedAt, @UtcMillisConverter()  DateTime? deletedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  String occurrenceId,  String title,  bool done,  double sortOrder,  int? durationMin, @UtcMillisConverter()  DateTime createdAt, @UtcMillisConverter()  DateTime updatedAt, @UtcMillisConverter()  DateTime? deletedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Subtask() when $default != null:
-return $default(_that.id,_that.userId,_that.occurrenceId,_that.title,_that.done,_that.sortOrder,_that.createdAt,_that.updatedAt,_that.deletedAt);case _:
+return $default(_that.id,_that.userId,_that.occurrenceId,_that.title,_that.done,_that.sortOrder,_that.durationMin,_that.createdAt,_that.updatedAt,_that.deletedAt);case _:
   return orElse();
 
 }
@@ -188,10 +190,10 @@ return $default(_that.id,_that.userId,_that.occurrenceId,_that.title,_that.done,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  String occurrenceId,  String title,  bool done,  double sortOrder, @UtcMillisConverter()  DateTime createdAt, @UtcMillisConverter()  DateTime updatedAt, @UtcMillisConverter()  DateTime? deletedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  String occurrenceId,  String title,  bool done,  double sortOrder,  int? durationMin, @UtcMillisConverter()  DateTime createdAt, @UtcMillisConverter()  DateTime updatedAt, @UtcMillisConverter()  DateTime? deletedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Subtask():
-return $default(_that.id,_that.userId,_that.occurrenceId,_that.title,_that.done,_that.sortOrder,_that.createdAt,_that.updatedAt,_that.deletedAt);case _:
+return $default(_that.id,_that.userId,_that.occurrenceId,_that.title,_that.done,_that.sortOrder,_that.durationMin,_that.createdAt,_that.updatedAt,_that.deletedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +210,10 @@ return $default(_that.id,_that.userId,_that.occurrenceId,_that.title,_that.done,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  String occurrenceId,  String title,  bool done,  double sortOrder, @UtcMillisConverter()  DateTime createdAt, @UtcMillisConverter()  DateTime updatedAt, @UtcMillisConverter()  DateTime? deletedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  String occurrenceId,  String title,  bool done,  double sortOrder,  int? durationMin, @UtcMillisConverter()  DateTime createdAt, @UtcMillisConverter()  DateTime updatedAt, @UtcMillisConverter()  DateTime? deletedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Subtask() when $default != null:
-return $default(_that.id,_that.userId,_that.occurrenceId,_that.title,_that.done,_that.sortOrder,_that.createdAt,_that.updatedAt,_that.deletedAt);case _:
+return $default(_that.id,_that.userId,_that.occurrenceId,_that.title,_that.done,_that.sortOrder,_that.durationMin,_that.createdAt,_that.updatedAt,_that.deletedAt);case _:
   return null;
 
 }
@@ -223,7 +225,7 @@ return $default(_that.id,_that.userId,_that.occurrenceId,_that.title,_that.done,
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _Subtask implements Subtask {
-  const _Subtask({required this.id, required this.userId, required this.occurrenceId, required this.title, this.done = false, this.sortOrder = 0, @UtcMillisConverter() required this.createdAt, @UtcMillisConverter() required this.updatedAt, @UtcMillisConverter() this.deletedAt});
+  const _Subtask({required this.id, required this.userId, required this.occurrenceId, required this.title, this.done = false, this.sortOrder = 0, this.durationMin, @UtcMillisConverter() required this.createdAt, @UtcMillisConverter() required this.updatedAt, @UtcMillisConverter() this.deletedAt});
   factory _Subtask.fromJson(Map<String, dynamic> json) => _$SubtaskFromJson(json);
 
 @override final  String id;
@@ -232,6 +234,8 @@ class _Subtask implements Subtask {
 @override final  String title;
 @override@JsonKey() final  bool done;
 @override@JsonKey() final  double sortOrder;
+/// Optional length of this step in minutes, 1–1440 (11 B2).
+@override final  int? durationMin;
 @override@UtcMillisConverter() final  DateTime createdAt;
 @override@UtcMillisConverter() final  DateTime updatedAt;
 @override@UtcMillisConverter() final  DateTime? deletedAt;
@@ -249,18 +253,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Subtask&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.occurrenceId, occurrenceId) || other.occurrenceId == occurrenceId)&&(identical(other.title, title) || other.title == title)&&(identical(other.done, done) || other.done == done)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Subtask&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.occurrenceId, occurrenceId) || other.occurrenceId == occurrenceId)&&(identical(other.title, title) || other.title == title)&&(identical(other.done, done) || other.done == done)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,userId,occurrenceId,title,done,sortOrder,createdAt,updatedAt,deletedAt);
+    return Object.hash(runtimeType,id,userId,occurrenceId,title,done,sortOrder,durationMin,createdAt,updatedAt,deletedAt);
 }
 
 @override
 String toString() {
-    return 'Subtask(id: $id, userId: $userId, occurrenceId: $occurrenceId, title: $title, done: $done, sortOrder: $sortOrder, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt)';
+    return 'Subtask(id: $id, userId: $userId, occurrenceId: $occurrenceId, title: $title, done: $done, sortOrder: $sortOrder, durationMin: $durationMin, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt)';
 }
 
 
@@ -271,7 +275,7 @@ abstract mixin class _$SubtaskCopyWith<$Res> implements $SubtaskCopyWith<$Res> {
   factory _$SubtaskCopyWith(_Subtask value, $Res Function(_Subtask) _then) = __$SubtaskCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String userId, String occurrenceId, String title, bool done, double sortOrder,@UtcMillisConverter() DateTime createdAt,@UtcMillisConverter() DateTime updatedAt,@UtcMillisConverter() DateTime? deletedAt
+ String id, String userId, String occurrenceId, String title, bool done, double sortOrder, int? durationMin,@UtcMillisConverter() DateTime createdAt,@UtcMillisConverter() DateTime updatedAt,@UtcMillisConverter() DateTime? deletedAt
 });
 
 
@@ -288,7 +292,7 @@ class __$SubtaskCopyWithImpl<$Res>
 
 /// Create a copy of Subtask
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? occurrenceId = null,Object? title = null,Object? done = null,Object? sortOrder = null,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? occurrenceId = null,Object? title = null,Object? done = null,Object? sortOrder = null,Object? durationMin = freezed,Object? createdAt = null,Object? updatedAt = null,Object? deletedAt = freezed,}) {
   return _then(_Subtask(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -296,7 +300,8 @@ as String,occurrenceId: null == occurrenceId ? _self.occurrenceId : occurrenceId
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,done: null == done ? _self.done : done // ignore: cast_nullable_to_non_nullable
 as bool,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
-as double,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as double,durationMin: freezed == durationMin ? _self.durationMin : durationMin // ignore: cast_nullable_to_non_nullable
+as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,

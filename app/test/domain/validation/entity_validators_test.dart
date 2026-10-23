@@ -186,6 +186,26 @@ void main() {
     expect(checkSubtaskCount(51)?.code, 'validation.subtasks.tooLarge');
   });
 
+  test('step durations are optional, 1–1440 min (M6.5.1, 11 B2)', () {
+    for (final ok in [null, 1, 1440]) {
+      final s = subtaskFixture().copyWith(durationMin: ok);
+      expect(
+        validateSubtask(s).when(ok: (_) => 'ok', err: (f) => f.code),
+        'ok',
+      );
+    }
+    for (final bad in [0, 1441]) {
+      final s = subtaskFixture().copyWith(durationMin: bad);
+      expect(_code(validateSubtask(s)), 'validation.duration.outOfRange');
+    }
+    final template = seriesFixture().copyWith(
+      subtaskTemplate: const [
+        SubtaskTemplateItem(id: 't', title: 'Step', durationMin: 0),
+      ],
+    );
+    expect(_code(validateSeries(template)), 'validation.duration.outOfRange');
+  });
+
   group('validateSettings', () {
     test('defaults are valid', () {
       expect(_code(validateSettings(const Settings())), 'ok');

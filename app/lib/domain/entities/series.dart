@@ -32,6 +32,9 @@ abstract class Series with _$Series {
     int? count,
     @Default(false) bool pinned,
     @Default(0) int travelBufferMin,
+
+    /// Whether [durationMin] follows the template steps' sum (11 B2).
+    @Default(false) bool durationFromSteps,
     Energy? energy,
     @Default(<Alert>[]) List<Alert> alerts,
     @Default(<SubtaskTemplateItem>[]) List<SubtaskTemplateItem> subtaskTemplate,

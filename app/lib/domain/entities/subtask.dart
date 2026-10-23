@@ -17,6 +17,9 @@ abstract class Subtask with _$Subtask {
     required String title,
     @Default(false) bool done,
     @Default(0) double sortOrder,
+
+    /// Optional length of this step in minutes, 1–1440 (11 B2).
+    int? durationMin,
     @UtcMillisConverter() required DateTime createdAt,
     @UtcMillisConverter() required DateTime updatedAt,
     @UtcMillisConverter() DateTime? deletedAt,

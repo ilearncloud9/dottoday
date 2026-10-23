@@ -112,6 +112,7 @@ final class Materialiser {
         occurrenceId: o.id,
         title: e.$2.title,
         sortOrder: e.$2.sortOrder,
+        durationMin: e.$2.durationMin,
         createdAt: now,
         updatedAt: now,
       ),

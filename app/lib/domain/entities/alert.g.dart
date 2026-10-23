@@ -30,6 +30,7 @@ _SubtaskTemplateItem _$SubtaskTemplateItemFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       title: json['title'] as String,
       sortOrder: (json['sortOrder'] as num?)?.toDouble() ?? 0,
+      durationMin: (json['durationMin'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$SubtaskTemplateItemToJson(
@@ -38,4 +39,5 @@ Map<String, dynamic> _$SubtaskTemplateItemToJson(
   'id': instance.id,
   'title': instance.title,
   'sortOrder': instance.sortOrder,
+  'durationMin': instance.durationMin,
 };

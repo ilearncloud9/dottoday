@@ -32,6 +32,10 @@ class SeriesTable extends Table with TimestampColumns, SyncColumns {
   IntColumn get count => integer().nullable()();
   BoolColumn get pinned => boolean().withDefault(const Constant(false))();
   IntColumn get travelBufferMin => integer().withDefault(const Constant(0))();
+
+  /// Schema 3 (M6.5.1, 11 B2).
+  BoolColumn get durationFromSteps =>
+      boolean().withDefault(const Constant(false))();
   IntColumn get energy => integer().nullable()();
   TextColumn get alerts => text().withDefault(const Constant('[]'))();
   TextColumn get subtaskTemplate => text().withDefault(const Constant('[]'))();

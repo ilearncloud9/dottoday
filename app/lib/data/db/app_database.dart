@@ -33,7 +33,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 2;
+  static const latestSchemaVersion = 3;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -44,6 +44,14 @@ class AppDatabase extends _$AppDatabase {
     onUpgrade: (m, from, to) async {
       // 2 (M6.2): the server versions last pulled, for conflict checks.
       if (from < 2) await m.createTable(fieldSeen);
+      // 3 (M6.5.1): actual start/end and step durations (11 B1/B2).
+      if (from < 3) {
+        await m.addColumn(occurrences, occurrences.actualStartUtc);
+        await m.addColumn(occurrences, occurrences.actualEndUtc);
+        await m.addColumn(occurrences, occurrences.durationFromSteps);
+        await m.addColumn(seriesTable, seriesTable.durationFromSteps);
+        await m.addColumn(subtasks, subtasks.durationMin);
+      }
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without

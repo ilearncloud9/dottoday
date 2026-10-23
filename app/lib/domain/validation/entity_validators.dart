@@ -46,8 +46,10 @@ Validated<Series> validateSeries(Series series) {
         ),
       checkAlerts(s.alerts),
       checkSubtaskCount(s.subtaskTemplate.length),
-      for (final item in s.subtaskTemplate)
+      for (final item in s.subtaskTemplate) ...[
         checkRequiredText(ValidationField.title, item.title.trim()),
+        _checkStepDuration(item.durationMin),
+      ],
     ]),
   );
 }
@@ -75,8 +77,19 @@ Validated<Occurrence> validateOccurrence(Occurrence occurrence) {
 /// Validates a subtask, trimming its title.
 Validated<Subtask> validateSubtask(Subtask subtask) {
   final s = subtask.copyWith(title: subtask.title.trim());
-  return _result(s, checkRequiredText(ValidationField.title, s.title));
+  return _result(
+    s,
+    firstFailure([
+      checkRequiredText(ValidationField.title, s.title),
+      _checkStepDuration(s.durationMin),
+    ]),
+  );
 }
+
+/// A step may be shorter than a task (1 min, 11 B2) but never over a day.
+ValidationFailure? _checkStepDuration(int? minutes) => minutes == null
+    ? null
+    : checkRange(ValidationField.duration, minutes, 1, maxDurationMin);
 
 /// Validates the subtask count of one occurrence (≤ 50, docs/05).
 ValidationFailure? checkSubtaskCount(int count) => count > maxSubtasks
