@@ -64,7 +64,7 @@ void main() {
     await _pump(tester);
     expect(find.text('October 2026'), findsOneWidget);
     expect(
-      find.textContaining(RegExp(r'^\d+ done · \d+ missed · \d+ ahead')),
+      find.textContaining(RegExp(r'^\d+ done · \d+ not done · \d+ ahead')),
       findsOneWidget,
     );
     expect(find.textContaining('busiest day Tue, Oct 20'), findsOneWidget);

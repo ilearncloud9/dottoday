@@ -5,6 +5,7 @@ import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/notification_responder.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
+import 'package:dottoday/domain/notifications/notification_planner.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/features/notifications/in_app_alert_banner.dart';
 import 'package:flutter/material.dart';
@@ -114,6 +115,34 @@ void main() {
       repo.rows.firstWhere((o) => o.title == 'Gym').status,
       OccurrenceStatus.planned,
     );
+    expect(opened, isEmpty);
+  });
+
+  testWidgets('the test alarm has one OK, nothing to open (M6.5.9)', (
+    tester,
+  ) async {
+    await pump(tester);
+    container
+        .read(inAppAlertsProvider.notifier)
+        .add(
+          OsNotification(
+            id: 12,
+            title: 'Test alarm',
+            body: 'It got through. Your reminders will too.',
+            fireAtUtc: _now,
+            payload: encodeNotificationPayload(
+              NotificationPlanner.testAlarm(_now, {}),
+            ),
+            channel: NotificationChannelKind.alarms,
+            withActions: false,
+          ),
+        );
+    await tester.pump();
+    expect(find.text('Open'), findsNothing);
+    expect(find.text('Later'), findsNothing);
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Test alarm'), findsNothing);
     expect(opened, isEmpty);
   });
 }

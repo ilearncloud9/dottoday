@@ -149,7 +149,7 @@ void main() {
 
     testWidgets('offers to catch up', (tester) async {
       await _pump(tester, at: late);
-      expect(find.text('RUNNING LATE?'), findsOneWidget);
+      expect(find.text('NEED MORE TIME?'), findsOneWidget);
       expect(find.text('“Design review” ended 30 min ago'), findsOneWidget);
       await tester.tap(find.text('Catch up'));
       await tester.pumpAndSettle();
@@ -162,7 +162,7 @@ void main() {
         at: late,
         settings: const Settings(use24h: false, runningLateNudge: false),
       );
-      expect(find.text('RUNNING LATE?'), findsNothing);
+      expect(find.text('NEED MORE TIME?'), findsNothing);
     });
   });
 

@@ -4940,6 +4940,8 @@
   "@testAlarmBody": {"description": "The test alarm's notification body."},
   "testAlarmCaption": "Check it works",
   "@testAlarmCaption": {"description": "Caption over the test alarm row (O4, Notification health)."},
+  "inAppAlertOk": "OK",
+  "@inAppAlertOk": {"description": "In-app strip: the only action on the test alarm (dismisses it, M6.5.9)."},
   "testAlarmRow": "Send me a test alarm",
   "@testAlarmRow": {"description": "O4 and Notification health: the test alarm row."},
   "testAlarmRowDetail": "Check that a reminder really reaches you",

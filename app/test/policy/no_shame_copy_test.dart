@@ -18,6 +18,10 @@ final _judging = RegExp(
 /// The owner's one exception (2026-10-23): "Running late" is the user's
 /// own action — the button, its menu item and sheet, the help answer about
 /// it and the setting that names its nudge — not the app judging them.
+/// The text a user reads: ICU placeholder names (`{missed}`) are code.
+String _withoutPlaceholders(String icu) =>
+    icu.replaceAll(RegExp(r'\{\w+'), '{');
+
 const _runningLateAction = {
   'runningLate',
   'todayMenuLate',
@@ -37,7 +41,7 @@ void main() {
         if (!key.startsWith('@') &&
             value is String &&
             !_runningLateAction.contains(key) &&
-            _judging.hasMatch(value))
+            _judging.hasMatch(_withoutPlaceholders(value)))
           '$key: $value',
     ];
     expect(offending, isEmpty);

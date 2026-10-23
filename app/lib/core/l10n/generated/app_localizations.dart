@@ -5284,6 +5284,12 @@ abstract class AppLocalizations {
   /// **'Check it works'**
   String get testAlarmCaption;
 
+  /// In-app strip: the only action on the test alarm (dismisses it, M6.5.9).
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get inAppAlertOk;
+
   /// O4 and Notification health: the test alarm row.
   ///
   /// In en, this message translates to:

@@ -3557,6 +3557,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get testAlarmCaption => 'Check it works';
 
   @override
+  String get inAppAlertOk => 'OK';
+
+  @override
   String get testAlarmRow => 'Send me a test alarm';
 
   @override

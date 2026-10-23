@@ -6,6 +6,7 @@ import 'package:dottoday/data/notifications/in_app_alerts.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
+import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/shared/feedback/banner_strip.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,6 +40,18 @@ class InAppAlertBanner extends ConsumerWidget {
       );
     }
 
+    // The test alarm has nothing to open or do later: one OK (M6.5.9).
+    final testAlarm =
+        decodeNotificationPayload(n.id, n.payload)?.purpose ==
+        NotificationPurpose.testAlarm;
+    if (testAlarm) {
+      return BannerStrip(
+        glyph: DotGlyphs.bell,
+        emphasis: true,
+        text: l10n.inAppAlertText(n.title, n.body),
+        actions: [(l10n.inAppAlertOk, () => act(null))],
+      );
+    }
     final primary = n.withActions
         ? NotificationAction.done
         : NotificationAction.open;
