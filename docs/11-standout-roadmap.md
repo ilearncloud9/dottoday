@@ -44,7 +44,7 @@ The one-line position after this roadmap ships: **"Your day as a thread. Always 
 - Lock-screen wallpaper (iOS via Shortcuts automation + a generated image; Android via live wallpaper service) that fills from Wake Up to Bedtime; Watch face complication (large) same. Pure B5 consumer. Phase 2 after A1.
 
 ### A3 · Focus — **new** (merges "Focus the dot" and OS focus integration)
-- One tap on the live dot (or `StartFocus`) opens a full-screen **Focus** view: the ring at 120 px, title, current subtask with its own timer (B2), optional interval chime (every N min, off by default), Done / +15 / Next step. Nothing else on screen. The Live Activity (A1) continues when the user leaves.
+- One tap on the live dot (or `StartFocus`) opens a full-screen **Focus** view: the ring at 160 px (as `B-ios-focus.png`), title, current subtask with its own timer (B2), optional interval chime (every N min, off by default), Done / +15 / Next step. Nothing else on screen. The Live Activity (A1) continues when the user leaves.
 - OS integration: a dot flagged **deep work** turns on iOS Focus / Android DND via intents when it goes live and off when it ends. **Constraint:** a deep-work dot must never silence the next dot's start — dot starts are time-sensitive (A0) and break through.
 - Render: `B-ios-focus.png`.
 

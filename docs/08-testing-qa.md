@@ -31,20 +31,38 @@ Scenarios: fresh install; upgrade with data; offline for a day then sync; two de
 TestFlight + Play internal track + web staging. Collect: crash-free rate, sync error rate, notification delivery (self-reported "did it fire?" prompt once), feedback form.
 
 ## 6. Release gates (all must pass)
-- [ ] CI green: analyze, format, unit, widget, golden, integration (Android), RLS.
+
+Grouped by who does them. Collected from the M5/M6 readiness notes in `09-implementation-plan.md` and the roadmap (M6.5–M12). Status is reported at every milestone close and in full at M12.6.
+
+### 6.1 Owner (accounts, money, consoles, hardware)
+- [ ] **Apple paid developer account** (Personal Team today): unlocks the App Group (widgets and Live Activity on a device, `DaySnapshot` sharing), the time-sensitive entitlement in Release, associated domains, TestFlight. Mac signing team JBHAWSBYLG.
+- [ ] **Bundle IDs** registered on that account (app, `DottodayWidgets` extension, App Group id) and Play application id.
+- [ ] **Google Play Console**: app created, internal track; declarations for `SCHEDULE_EXACT_ALARM` (M5.6) and `USE_FULL_SCREEN_INTENT` (M6.5.5); data-safety form.
+- [ ] **Supabase project** (`pmwgtwosihtcvfrzvobu`): schema pushed — 0001–0003 done 2026-10-23 (M6.0), later migrations (0004 M6.5.1, 0005 M10.7, routines M11.4) need the owner's go per push; deploy Edge Functions `delete-account`, `send-push`; secrets `RESEND_API_KEY`, `ACCOUNT_MAIL_FROM`, VAPID keys; the push cron (`supabase/snippets/`); Auth redirect URLs.
+- [ ] **OAuth consoles**: Apple Services ID + key for Sign in with Apple; Google OAuth client; both redirect URLs (M6.1). Google/Microsoft calendar OAuth clients (M7.4).
+- [ ] **Domain**: web hosting with the CSP headers (M5.7), `apple-app-site-association` / `assetlinks.json` (templates in `app/tool/well_known/`), privacy policy page.
+- [ ] **`.env.prod` values**: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SENTRY_DSN` (Sentry project), `FEEDBACK_EMAIL` (a monitored inbox), `WEB_PUSH_VAPID_PUBLIC_KEY`.
+- [ ] **App icons** and store assets (screenshots from the sweep can seed them).
+- [ ] Verify **time-sensitive delivery on a real iPhone** (locked phone, app killed, Focus on) — M6.5.4.
+- [ ] **Live Activity on a real iPhone** (lock screen + Dynamic Island, Done / +15 work) — M9.3.
+- [ ] The test alarm from onboarding rings on your own iPhone and Android phone with the app killed (M6.5.9).
+- [ ] Hardware passes needing your devices: VoiceOver on an iPhone and a Mac, TalkBack on an Android phone, through onboarding, Today, Add, the task sheet, Settings › Privacy, the travel banner, Focus and the proposal sheets (the simulator has no VoiceOver; `adb` swipes don't drive TalkBack); the manual QA matrix (§4) on physical devices (M8.5).
+- [ ] Beta: crash-free ≥ 99.5 % over the last TestFlight / Play internal build (needs the accounts above).
+
+### 6.2 Agent (everything else)
+- [ ] CI green: analyze, format, unit, widget, golden, integration (Android), RLS, policy tests (no-shame, surface contract, single notification import, manifest permissions, Release-only time-sensitive entitlement).
+- [ ] RLS tests green against the hosted project after each owner push (`tool/hosted_rls_test.sh`).
 - [ ] Platform parity checklist (`docs/parity-checklist.md` generated from PRD feature list) all ✓ on iOS, Android, macOS, Web.
-- [ ] Accessibility manual pass on all four.
+- [ ] Accessibility automated pass on all four (08 §3) and labels/roles/targets from the accessibility trees on simulators.
 - [ ] Offline day scenario and two-device conflict scenario pass.
-- [ ] Notification exactness test: 20 scheduled alerts, 20 fired, 0 duplicates, on iOS and Android.
+- [ ] Notification exactness: 20 scheduled alerts, 20 fired, 0 duplicates, on the iOS simulator and Android emulator; a dot-start fires with the app killed (M6.5.10).
+- [ ] Every proposal flow has its nothing-written-before-Accept test (M10–M12).
 - [ ] Security checklist (06 §9) signed off.
-- [ ] Crash-free ≥ 99.5 % over the last beta build.
 - [ ] CHANGELOG and in-app "What's new" updated.
-- [ ] Feedback address set: `FEEDBACK_EMAIL` in `.env.prod` points at a monitored inbox (Settings › Send feedback has no recipient while it is blank).
-- [ ] Manual (desktop Chrome, notifications allowed): a reminder posts as a system notification through `sw.js`; its Done ticks the task and Open shows it, also when the tab was closed (the built-in test browser blocks service workers).
-- [ ] Manual (Mac): View › Enter Full Screen — the rail and Today lay out with no title bar; the menu-bar "Next up" stays.
-- [ ] Manual: ⌘/ (Ctrl+/ on Windows/Linux) opens the shortcut list in real desktop Chrome (the browser may claim the key; widget tests can't prove it).
-- [ ] Manual (real desktop Chrome): on a fresh load the first Tab shows "Skip to content" and Enter moves focus past the rail (the embedded test browser doesn't hand keys to the page until it is clicked; widget tests cover the order).
-- [ ] Manual screen-reader pass on hardware: VoiceOver on an iPhone and a Mac, TalkBack on an Android phone, through onboarding, Today, Add, the task sheet, Settings › Privacy (app lock) and the travel banner (the simulator has no VoiceOver, turning it on for the Mac is the owner's setting, and `adb` swipes don't drive TalkBack; M5.10 checked labels, roles and 48 dp targets from the accessibility trees instead).
+- [ ] Manual (desktop Chrome, notifications allowed): a reminder posts as a system notification through `sw.js`; its Done ticks the task and Open shows it, also when the tab was closed (the built-in test browser blocks service workers — run in real Chrome).
+- [ ] Manual (Mac): View › Enter Full Screen — the rail and Today lay out with no title bar; the menu-bar dot stays.
+- [ ] Manual: ⌘/ (Ctrl+/ on Windows/Linux) opens the shortcut list in real desktop Chrome.
+- [ ] Manual (real desktop Chrome): on a fresh load the first Tab shows "Skip to content" and Enter moves focus past the rail.
 
 ## 7. Design-review matrix (Concept A, docs/10 §7)
 Every UI component and screen has goldens for each cell of: light / dark × compact 390 / medium 700 /
