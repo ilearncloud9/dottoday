@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- **Milestone M6.5 complete** (M6.5.12): `/ship-check` passed 2026-10-23. Reminders that arrive: the first task of the day rings like an alarm (its own chime on iPhone, Mac and Android), Android re-arms after clock and time-zone changes, the background refresh also syncs, a fast clock no longer stops sync, Settings › Reminders › Notification health says what could block a reminder, and you can send yourself a test alarm. Checked on devices: 20 of 20 alerts fired with no duplicates on Android and iPhone, and a task's alert arrives with the app closed (also after an Android restart). The database change is live on the hosted project.
 - M6.5.11: Kinder words: tasks you didn't get to read "not done" instead of "missed", and the nudge asks "Need more time?". Everything stays free while pricing is decided.
 - M6.5.10: Checked that a task's start alert arrives with Dottoday closed: once on Android (also after a restart) and once on iPhone; the Android check now runs on every CI build.
 - M6.5.9: "Send me a test alarm" in onboarding (once notifications are allowed) and in Notification health: Dottoday sends one alarm in 60 seconds, counts down, and asks whether it rang; if it didn't, it shows you where to look.
