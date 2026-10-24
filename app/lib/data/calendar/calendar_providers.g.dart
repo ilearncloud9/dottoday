@@ -62,7 +62,7 @@ final class DeviceCalendarGatewayProvider
 }
 
 String _$deviceCalendarGatewayHash() =>
-    r'be187bb7e2e03f864e1d8ccfbd21cf136c0f104f';
+    r'945c5b8076879c30c731897099b47f138794fedc';
 
 @ProviderFor(calendarSourceRepository)
 final calendarSourceRepositoryProvider = CalendarSourceRepositoryProvider._();
@@ -254,7 +254,7 @@ final class CalendarChoiceListProvider
 }
 
 String _$calendarChoiceListHash() =>
-    r'fe77b877ef87aee108ad32ad5d6c379d74b60a45';
+    r'e129523b518596800902fbc15db74e5c8ced2865';
 
 /// What Settings and onboarding do with device calendars.
 
