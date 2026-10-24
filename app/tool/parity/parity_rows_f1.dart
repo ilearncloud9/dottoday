@@ -90,7 +90,7 @@ const f1Rows = <String, ParityRow>{
     all: ci,
     ios: jIos,
     android: jAnd,
-    web: Cell(Status.manual, '⌘/Ctrl+←/→ in real Chrome (08 §6.2)'),
+    web: Cell(Status.manual, '⌘/Ctrl+←/→ in real Chrome (08 §6.1 E)'),
     note:
         'Days step with ⌘/Ctrl+←/→ (07 macOS, 10 §4), not bare arrows; the '
         'Mac Go menu does the same. In a browser ⌘← may be Back — checked by hand.',
@@ -198,7 +198,7 @@ const f1Rows = <String, ParityRow>{
       'test/core/shortcuts/app_shortcuts_test.dart',
     ],
     all: ci,
-    web: Cell(Status.manual, '↑↓/⌘↑↓/Delete in real Chrome (08 §6.2)'),
+    web: Cell(Status.manual, '↑↓/⌘↑↓/Delete in real Chrome (08 §6.1 E)'),
     ios: Cell(
       Status.na,
       'desktop/web keys (PRD); hardware keyboards get the same',

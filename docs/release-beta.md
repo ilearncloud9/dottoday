@@ -159,7 +159,7 @@ Xcode-installed device build:
    Configuration › Redirect URLs and to `CALENDAR_RETURN_ORIGINS`.
 4. Smoke test on the staging URL (agent can do this once it exists): first
    load works offline after one visit, Today/Inbox/Settings, sign-in link,
-   reminders in real Chrome (08 §6.2 web rows), response headers match
+   reminders in real Chrome (08 §6.1 E), response headers match
    `_headers`.
 
 ## 6. Upload log

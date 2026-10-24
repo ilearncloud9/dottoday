@@ -22,7 +22,7 @@ ticked in 08 §6.1) before a tag.
 | ✓ CI | Automated tests below cover it on this target (shared Dart code runs the same on all four; all four targets build in CI) |
 | ✓ device | Also run on a simulator, emulator, the Mac or Chrome — the note says when |
 | ◐ owner | Needs the owner: accounts, consoles or physical hardware (08 §6.1) |
-| ◐ manual | Needs a person at the screen; an open check in 08 §6.2 |
+| ◐ manual | Needs a person at the screen; a person check in 08 §6.1 E |
 | → later | Not built yet by plan; the note names the task |
 | — n/a | Not on this target by spec |
 | ✗ gap | Missing with no recorded decision; the note names the plan task that closes it |

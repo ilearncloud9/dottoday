@@ -28,7 +28,7 @@ enum Status {
   /// Needs the owner: accounts, consoles or physical hardware (08 §6.1).
   owner('◐ owner'),
 
-  /// Needs a person at the screen; an open agent check in 08 §6.2.
+  /// Needs a person at the screen; a person check in 08 §6.1 E.
   manual('◐ manual'),
 
   /// Not built yet by plan: the note names the plan task.

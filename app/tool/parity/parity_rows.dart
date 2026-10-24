@@ -75,7 +75,7 @@ const _f7Rows = <String, ParityRow>{
       'test/features/settings/export_page_test.dart',
       'test/data/export/folder_writer_test.dart',
     ],
-    all: Cell(Status.manual, 'system sheets reach the person (08 §6.2 M8.1)'),
+    all: Cell(Status.manual, 'system sheets reach the person (08 §6.1 E)'),
     note:
         'Share sheet on phones, save panel on the Mac, downloads on web (M8.1); '
         'logic is CI-tested, the system sheets need a person.',
@@ -179,7 +179,7 @@ const _f8Rows = <String, ParityRow>{
       'test/data/feedback/diagnostics_reader_test.dart',
       'test/features/settings/whats_new_banner_test.dart',
     ],
-    all: Cell(Status.manual, 'composer opens (08 §6.2 M8.2)'),
+    all: Cell(Status.manual, 'composer opens (08 §6.1 E)'),
     note: 'Recipient is an owner gate (08 §6.1 Feedback address).',
   ),
 };

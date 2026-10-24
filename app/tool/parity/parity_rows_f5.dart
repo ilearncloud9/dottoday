@@ -155,7 +155,7 @@ const f6Rows = <String, ParityRow>{
       'test/data/notifications/in_app_alerts_test.dart',
       'test/data/notifications/sound_player_test.dart',
     ],
-    all: Cell(Status.manual, 'hear each sound and its preview (08 §6.2)'),
+    all: Cell(Status.manual, 'hear each sound and its preview (08 §6.1 E)'),
     note:
         'M8.4d: Dot, Chime, Bell, Ripple (tool/gen_sounds.dart) or the '
         'system sound; Android one channel per sound; the web plays it in '
@@ -169,7 +169,10 @@ const f6Rows = <String, ParityRow>{
       'supabase/tests/0003_web_push.sql',
     ],
     all: Cell(Status.na, 'web-only bullet'),
-    web: Cell(Status.manual, 'sw.js in real Chrome (08 §6.2); VAPID (08 §6.1)'),
+    web: Cell(
+      Status.manual,
+      'sw.js in real Chrome (08 §6.1 E); VAPID (08 §6.1)',
+    ),
   ),
   'F6.8': ParityRow(
     tests: [

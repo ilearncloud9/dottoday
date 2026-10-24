@@ -44,7 +44,7 @@ const f2Rows = <String, ParityRow>{
     macos: jMac,
     web: Cell(
       Status.manual,
-      '⌘/Ctrl+N in real Chrome (08 §6.2); rail + always works',
+      '⌘/Ctrl+N in real Chrome (08 §6.1 E); rail + always works',
     ),
   ),
   'F2.5': ParityRow(
