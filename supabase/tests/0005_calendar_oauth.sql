@@ -59,7 +59,7 @@ select is((select count(*) from public.calendar_accounts), 0::bigint, 'B sees no
 -- Disconnecting removes the token with the row.
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-00000000000a","role":"authenticated"}';
 delete from public.calendar_accounts;
-reset role;
+set local role postgres;
 select is((select count(*) from vault.secrets where name like 'calendar_account:%'), 0::bigint,
   'disconnecting deletes the token');
 
