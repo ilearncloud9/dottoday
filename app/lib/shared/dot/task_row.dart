@@ -110,6 +110,7 @@ String taskRowLabel(AppLocalizations l10n, ThreadTask task) {
   if (task.state == DotState.missed) label = l10n.rowMissed(label);
   if (task.pinned) label = l10n.rowPinned(label);
   if (task.recurring) label = l10n.rowRepeats(label);
+  if (task.travel case final travel?) label = l10n.rowTravel(label, travel);
   return label;
 }
 
@@ -135,6 +136,8 @@ class _Text extends StatelessWidget {
           DotIcon(DotGlyphs.lock, color: muted, size: DotSize.weekDot * 2),
         if (task.recurring)
           DotIcon(DotGlyphs.repeat, color: muted, size: DotSize.weekDot * 2),
+        if (task.travel case final travel?)
+          Text(l10n.rowTravelMeta(travel), style: t.styles.rowMeta),
       ],
     );
     final title = Text(

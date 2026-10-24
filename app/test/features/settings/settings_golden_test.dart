@@ -5,6 +5,7 @@ library;
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
+import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
@@ -30,6 +31,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/account_fakes.dart';
 import '../../support/calendar_fakes.dart';
+import '../../support/cloud_calendar_fakes.dart';
 import '../../support/dot_golden.dart';
 import '../../support/sync_fakes.dart';
 import '../../support/timeline_fakes.dart';
@@ -157,6 +159,29 @@ void main() {
       build: (_) => const CalendarsPage(),
     );
   }
+  // M7.4 (derived, §5.3): a Google account on a device with no calendars
+  // of its own (the web): its calendars, Disconnect, Connect rows.
+  goldenMatrix(
+    'settings_page_calendars_google',
+    height: 1100,
+    widths: const {'compact', 'expanded'},
+    overrides: _overridesWith(
+      extra: [
+        cloudCalendarsProvider.overrideWithValue(
+          FakeCloudCalendars(list: [sampleCloudAccount]),
+        ),
+        accountProvider.overrideWith(
+          (ref) => Stream.value(
+            const SignedIn(
+              email: 'kody@example.com',
+              method: SignInMethod.email,
+            ),
+          ),
+        ),
+      ],
+    ),
+    build: (_) => const CalendarsPage(),
+  );
   // M6.3: signed in and synced — `A-ios-settings` "Kody · synced just now".
   goldenMatrix(
     'settings_synced',

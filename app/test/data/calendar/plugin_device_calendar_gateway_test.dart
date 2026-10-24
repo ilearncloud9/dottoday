@@ -176,4 +176,111 @@ void main() {
     // Only web links are kept (06 §7).
     expect(odd.url, isNull);
   });
+
+  group('write-back (M7.3)', () {
+    final seven = DateTime.utc(2026, 10, 23, 7);
+    Map<String, Object?> call({Map<String, Object?>? recurrence}) => {
+      'calendarId': 'work',
+      'eventId': '42',
+      'eventTitle': 'Call',
+      'eventDescription': 'Agenda',
+      'eventStartDate': seven.millisecondsSinceEpoch,
+      'eventEndDate': seven
+          .add(const Duration(hours: 1))
+          .millisecondsSinceEpoch,
+      'eventStartTimeZone': 'Europe/Berlin',
+      'eventEndTimeZone': 'Europe/Berlin',
+      'eventAllDay': false,
+      'reminders': [
+        {'minutes': 10},
+      ],
+      'recurrenceRule': ?recurrence,
+    };
+
+    test('reads one event and says whether it repeats', () async {
+      granted = true;
+      reply = (c) => jsonEncode([
+        call(recurrence: {'recurrenceFrequency': 1}),
+      ]);
+      final result = await gateway.event('work', '42');
+      expect(calls.last.arguments, containsPair('eventIds', ['42']));
+      final event = (result as Ok<ExternalEvent?, AppFailure>).value!;
+      expect(event.repeating, isTrue);
+      expect(event.startUtc, seven);
+    });
+
+    test('changes start, end and title; the rest goes back as read', () async {
+      granted = true;
+      Map<Object?, Object?>? saved;
+      reply = (c) {
+        if (c.method != 'createOrUpdateEvent') return jsonEncode([call()]);
+        saved = c.arguments as Map<Object?, Object?>;
+        return '42';
+      };
+      final later = seven.add(const Duration(hours: 2));
+      final result = await gateway.updateEvent(
+        EventUpdate(
+          calendarId: 'work',
+          eventId: '42',
+          startUtc: later,
+          endUtc: later.add(const Duration(minutes: 30)),
+          title: 'Call + demo',
+        ),
+      );
+      expect(result, EventWriteResult.written);
+      expect(saved!['eventId'], '42');
+      expect(saved!['eventStartDate'], later.millisecondsSinceEpoch);
+      expect(
+        saved!['eventEndDate'],
+        later.add(const Duration(minutes: 30)).millisecondsSinceEpoch,
+      );
+      expect(saved!['eventTitle'], 'Call + demo');
+      expect(saved!['eventDescription'], 'Agenda');
+      expect(saved!['eventStartTimeZone'], 'Europe/Berlin');
+      expect(saved!['reminders'], hasLength(1));
+    });
+
+    test('a repeating event is refused; nothing is saved', () async {
+      granted = true;
+      reply = (_) => jsonEncode([
+        call(recurrence: {'recurrenceFrequency': 1}),
+      ]);
+      final result = await gateway.updateEvent(
+        EventUpdate(
+          calendarId: 'work',
+          eventId: '42',
+          startUtc: seven,
+          endUtc: seven.add(const Duration(hours: 1)),
+        ),
+      );
+      expect(result, EventWriteResult.notWritable);
+      expect(
+        calls.map((c) => c.method),
+        isNot(contains('createOrUpdateEvent')),
+      );
+    });
+
+    test('Android: a non-numeric id never reaches the plugin query', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+      granted = true;
+      final result = await gateway.event('work', '1) OR (1=1');
+      expect((result as Ok<ExternalEvent?, AppFailure>).value, isNull);
+      expect(calls.map((c) => c.method), isNot(contains('retrieveEvents')));
+    });
+
+    test('gone, or no permission', () async {
+      granted = true;
+      reply = (_) => jsonEncode(<Object>[]);
+      final update = EventUpdate(
+        calendarId: 'work',
+        eventId: '42',
+        startUtc: seven,
+        endUtc: seven.add(const Duration(hours: 1)),
+      );
+      expect(await gateway.updateEvent(update), EventWriteResult.gone);
+      granted = false;
+      expect(await gateway.updateEvent(update), EventWriteResult.failed);
+    });
+  });
 }

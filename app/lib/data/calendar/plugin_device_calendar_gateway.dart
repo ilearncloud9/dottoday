@@ -11,7 +11,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:url_launcher/url_launcher.dart';
 
 /// Device calendars through `device_calendar` (docs/04 §7): EventKit on
-/// iOS, CalendarContract on Android. macOS lands in M7.1b.
+/// iOS, CalendarContract on Android (macOS has its own EventKit bridge, M7.1b).
 ///
 /// The plugin only says yes or no, so whether Dottoday has asked on this
 /// device is kept in `local_meta`, as for notifications (M5.1): no + asked
@@ -110,6 +110,82 @@ final class PluginDeviceCalendarGateway implements DeviceCalendarGateway {
     return Ok([for (final e in data) ?_event(calendarId, e, zone)]);
   }
 
+  @override
+  Future<Result<ExternalEvent?, AppFailure>> event(
+    String calendarId,
+    String eventId,
+  ) async {
+    if (!await _granted()) {
+      return const Err(PermissionFailure(AppPermission.calendar));
+    }
+    final found = await _raw(calendarId, eventId);
+    switch (found) {
+      case Err(:final failure):
+        return Err(failure);
+      case Ok(:final value):
+        if (value == null) return const Ok(null);
+        return Ok(_event(calendarId, value, await _allDayZone()));
+    }
+  }
+
+  /// Read, change and save the whole event: the plugin writes every field
+  /// it is given, so the rest (notes, alarms, attendees) goes back as it
+  /// was read. Only timed, non-repeating events (docs/09 M7.3).
+  @override
+  Future<EventWriteResult> updateEvent(EventUpdate update) async {
+    if (!await _granted()) return EventWriteResult.failed;
+    final dc.Event? e;
+    switch (await _raw(update.calendarId, update.eventId)) {
+      case Err():
+        return EventWriteResult.failed;
+      case Ok(:final value):
+        e = value;
+    }
+    if (e == null) return EventWriteResult.gone;
+    final (start, end) = (e.start, e.end);
+    if (e.recurrenceRule != null ||
+        (e.allDay ?? false) ||
+        start == null ||
+        end == null) {
+      return EventWriteResult.notWritable;
+    }
+    e
+      ..start = tz.TZDateTime.from(update.startUtc, start.location)
+      ..end = tz.TZDateTime.from(update.endUtc, end.location)
+      ..title = update.title ?? e.title;
+    final saved = await _plugin.createOrUpdateEvent(e);
+    if (saved != null && saved.isSuccess) return EventWriteResult.written;
+    final errors = saved?.errors ?? const <dc.ResultError>[];
+    _logger.warn(
+      'calendar.write_failed',
+      fields: {'code': errors.isEmpty ? 0 : errors.first.errorCode},
+    );
+    return EventWriteResult.failed;
+  }
+
+  /// The plugin's event [eventId], or null when the calendar no longer
+  /// has it.
+  Future<Result<dc.Event?, AppFailure>> _raw(
+    String calendarId,
+    String eventId,
+  ) async {
+    // The Android plugin puts ids into its query unquoted: only the
+    // numeric ids CalendarContract hands out may reach it (06 §7).
+    if (defaultTargetPlatform == TargetPlatform.android &&
+        !_numeric.hasMatch(eventId)) {
+      return const Ok(null);
+    }
+    final result = await _plugin.retrieveEvents(
+      calendarId,
+      dc.RetrieveEventsParams(eventIds: [eventId]),
+    );
+    final data = result.data;
+    if (result.hasErrors || data == null) return _failed(_Read.event, result);
+    return Ok(data.where((e) => e.eventId == eventId).firstOrNull);
+  }
+
+  static final _numeric = RegExp(r'^\d+$');
+
   /// Where an all-day event's dates are read. EventKit stores them as the
   /// device's local midnights with no zone (the plugin then reads them as
   /// UTC); the plugin hands Android's back as UTC midnights.
@@ -139,6 +215,7 @@ final class PluginDeviceCalendarGateway implements DeviceCalendarGateway {
       location: e.location,
       description: e.description,
       url: _link(e.url),
+      repeating: e.recurrenceRule != null,
     );
   }
 
@@ -190,4 +267,4 @@ final class PluginDeviceCalendarGateway implements DeviceCalendarGateway {
 }
 
 /// What failed to read, as a loggable enum (no raw strings in logs).
-enum _Read { calendars, events }
+enum _Read { calendars, events, event }

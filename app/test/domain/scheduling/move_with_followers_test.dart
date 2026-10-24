@@ -85,6 +85,21 @@ void main() {
         )['e'],
         '10:45',
       );
+      // A read-only or repeating event stays even when included (M7.6).
+      expect(
+        starts(
+          _s
+              .moveWithFollowers(
+                day,
+                'b',
+                at('09:15'),
+                includeCalendar: true,
+                readOnlyIds: {'e'},
+              )
+              .day,
+        )['e'],
+        '10:30',
+      );
     });
   });
 }

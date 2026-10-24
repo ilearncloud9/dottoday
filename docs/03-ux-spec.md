@@ -109,6 +109,16 @@ by the same amount, gaps kept; a drop that jumps past other tasks only makes roo
 (`bump`). Pinned tasks and, unless "include calendar events", calendar events stay; a pin stops
 the followers and the toast names it (R-04, R-17).
 
+Calendar events in a shift, clarified in M7.6: while "Shift later tasks" is on, a second chip,
+"Calendar events too", sits beside it when the day has an event a shift could carry; Settings ›
+Calendars › Move calendar events too sets where it starts (Running late follows the setting). On,
+an imported event moves with the rest only when its calendar would take the change back: a one-off,
+timed event in a calendar that isn't read-only. Repeating events, events of read-only (shared)
+calendars and all-day items never move in a shift — they stay in place like a calendar event with
+the chip off (overlap allowed, not a stop). A moved event is then an ordinary edit: with Send changes
+back on for its calendar it goes back after the usual 2 s (clashes use the M7.3 banner); with it off
+it moves in Dottoday only, as a single drag would.
+
 ### 3.3 Quick Add sheet
 Bottom sheet (mobile) / popover (desktop). One text field with live token chips (time, date, duration,
 repeat). Row of duration chips. "More…" expands to the full editor inline (no new screen). Buttons:

@@ -22,6 +22,7 @@ extension MoveWithFollowers on DaySchedulerService {
     String movedId,
     DateTime startUtc, {
     bool includeCalendar = false,
+    Set<String> readOnlyIds = const {},
   }) {
     final sorted = scheduledBlocks(day);
     final moved = sorted.firstWhere((o) => o.id == movedId);
@@ -39,6 +40,7 @@ extension MoveWithFollowers on DaySchedulerService {
         movedId,
         startUtc.difference(from).inMinutes,
         includeCalendar: includeCalendar,
+        readOnlyIds: readOnlyIds,
       );
     }
     final placed = moved.copyWith(startUtc: startUtc);
@@ -47,6 +49,7 @@ extension MoveWithFollowers on DaySchedulerService {
       placed,
       InsertPolicy.bump,
       includeCalendar: includeCalendar,
+      readOnlyIds: readOnlyIds,
     );
     return ScheduleResult(
       r.day,

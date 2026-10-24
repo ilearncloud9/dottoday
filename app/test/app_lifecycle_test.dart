@@ -4,16 +4,23 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
+import 'package:dottoday/data/calendar/calendar_providers.dart';
+import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
+import 'package:dottoday/data/calendar/write_back_providers.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/daily_refresh.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
+import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
+import 'package:dottoday/domain/calendar/calendar_import.dart';
+import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/notifications/notification_gateway.dart';
+import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/notifications/notification_planner.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
@@ -24,6 +31,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
+import 'support/calendar_fakes.dart';
 import 'support/fake_clock.dart';
 import 'support/memory_log_sink.dart';
 import 'support/timeline_fakes.dart';
@@ -100,9 +108,25 @@ void main() {
     when(() => trash.purgeExpired(any())).thenAnswer((_) async => const Ok(0));
   });
 
-  Future<void> pump(WidgetTester tester) => tester.pumpWidget(
+  Future<void> pump(
+    WidgetTester tester, {
+    DeviceCalendarGateway calendars = const NoDeviceCalendarGateway(),
+    CalendarImport? import,
+  }) => tester.pumpWidget(
     ProviderScope(
       overrides: [
+        deviceCalendarGatewayProvider.overrideWithValue(calendars),
+        calendarSourceRepositoryProvider.overrideWithValue(
+          FakeCalendarSourceRepository(),
+        ),
+        writeBackControllerProvider.overrideWith(IdleWriteBackController.new),
+        calendarImporterProvider.overrideWithValue(
+          import ?? FakeCalendarImport(),
+        ),
+        settingsRepositoryProvider.overrideWithValue(
+          FakeSettingsRepository(testProfile()),
+        ),
+        currentDeviceZoneProvider.overrideWith((ref) async => 'Europe/Berlin'),
         localProfileProvider.overrideWith((ref) async => testProfile()),
         backupServiceProvider.overrideWithValue(backup),
         trashServiceProvider.overrideWithValue(trash),
@@ -130,6 +154,28 @@ void main() {
     await tester.pumpAndSettle();
     verify(() => backup.runDailyIfDue(testUserId)).called(1);
     expect(gateway.resyncs, 2);
+  });
+
+  testWidgets('brings calendar events in on start and resume (M7.2)', (
+    tester,
+  ) async {
+    final import = FakeCalendarImport();
+    await pump(
+      tester,
+      calendars: FakeDeviceCalendarGateway(
+        state: PermissionState.granted,
+        list: sampleCalendars,
+      ),
+      import: import,
+    );
+    await tester.pumpAndSettle();
+    expect(import.runs, hasLength(1));
+    expect(import.runs.single.map((c) => c.calendar.id), contains('work'));
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+    expect(import.runs, hasLength(2));
   });
 
   testWidgets('runs again every 6 hours while open (M5.2)', (tester) async {

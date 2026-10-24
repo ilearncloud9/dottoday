@@ -27,10 +27,13 @@ void main() {
     await tester.tap(find.widgetWithText(OutlinedButton, 'Connect a calendar'));
     await tester.pumpAndSettle();
     expect(os.asked, 1);
-    // Allowed: the device's calendars, grouped by account, all on.
-    for (final name in ['Home', 'Work', 'Holidays', 'Gym']) {
-      expect(find.text(name), findsOneWidget, reason: name);
+    // Allowed: the device's calendars, grouped by account, all on; the
+    // writable ones again under "Send changes back" (M7.3).
+    for (final name in ['Home', 'Work', 'Gym']) {
+      expect(find.text(name), findsNWidgets(2), reason: name);
     }
+    expect(find.text('Holidays'), findsOneWidget);
+    expect(find.text('SEND CHANGES BACK'), findsOneWidget);
     expect(find.text('ICLOUD'), findsOneWidget);
     expect(find.text('Read-only'), findsOneWidget);
     expect(find.text('Connect a calendar'), findsNothing);
@@ -42,26 +45,71 @@ void main() {
       list: sampleCalendars,
     );
     final sources = FakeCalendarSourceRepository();
+    final import = FakeCalendarImport();
     await pumpSettings(
       tester,
       location: _page,
       calendarGateway: os,
       calendarSources: sources,
+      calendarImport: import,
     );
-    await tester.tap(find.text('Work'));
+    await tester.tap(find.text('Work').first);
     await tester.pumpAndSettle();
     expect(sources.rows.single.externalAccountId, 'work');
     expect(sources.rows.single.enabled, isFalse);
+    // The events follow the switch at once (M7.2): Work's leave.
+    final enabled = {
+      for (final c in import.runs.last)
+        if (c.enabled) c.calendar.id,
+    };
+    expect(enabled, {'home', 'holidays', 'gym'});
     final work = tester.widget<DotSwitch>(
       find.descendant(
         of: find.ancestor(
-          of: find.text('Work'),
+          of: find.text('Work').first,
           matching: find.byType(SettingsRow),
         ),
         matching: find.byType(DotSwitch),
       ),
     );
     expect(work.value, isFalse);
+    // Off: nothing to send back to it either.
+    expect(find.text('Work'), findsOneWidget);
+  });
+
+  testWidgets('write-back is opt-in per writable calendar (M7.3)', (
+    tester,
+  ) async {
+    final os = FakeDeviceCalendarGateway(
+      state: PermissionState.granted,
+      list: sampleCalendars,
+    );
+    final sources = FakeCalendarSourceRepository();
+    await pumpSettings(
+      tester,
+      location: _page,
+      calendarGateway: os,
+      calendarSources: sources,
+    );
+    DotSwitch sendsTo(String name) => tester.widget<DotSwitch>(
+      find.descendant(
+        of: find.ancestor(
+          of: find.text(name).last,
+          matching: find.byType(SettingsRow),
+        ),
+        matching: find.byType(DotSwitch),
+      ),
+    );
+    expect(sendsTo('Work').value, isFalse, reason: 'off until chosen');
+    await tester.ensureVisible(find.text('Work').last);
+    await tester.tap(find.text('Work').last);
+    await tester.pumpAndSettle();
+    final work = sources.rows.single;
+    expect(work.externalAccountId, 'work');
+    expect(work.writeBack, isTrue);
+    expect(work.enabled, isTrue, reason: 'still shown');
+    expect(sendsTo('Work').value, isTrue);
+    expect(find.textContaining('earlier ones too'), findsOneWidget);
   });
 
   testWidgets('denied: the notice, and Open settings', (tester) async {
@@ -101,7 +149,7 @@ void main() {
     os.failure = null;
     await tester.tap(find.text('Try again'));
     await tester.pumpAndSettle();
-    expect(find.text('Home'), findsOneWidget);
+    expect(find.text('Home'), findsWidgets);
   });
 
   testWidgets('allowed, no calendars on the device', (tester) async {
@@ -110,13 +158,13 @@ void main() {
     expect(find.text('No calendars on this device'), findsOneWidget);
   });
 
-  testWidgets('no device calendars here (web, macOS until M7.1b)', (
+  testWidgets('no device calendars and no sync here: nothing connected', (
     tester,
   ) async {
     await pumpSettings(tester, location: _page);
-    expect(find.text('Calendar import arrives in a later update.'), findsOne);
-    final connect = tester.widget<OutlinedButton>(find.byType(OutlinedButton));
-    expect(connect.onPressed, isNull);
+    expect(find.text('No calendars connected yet'), findsOne);
+    expect(find.byType(OutlinedButton), findsNothing);
+    expect(find.text('Connect Google Calendar'), findsNothing);
   });
 
   // Every state, both themes, compact and expanded (R-12).

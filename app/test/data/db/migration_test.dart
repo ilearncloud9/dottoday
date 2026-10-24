@@ -6,8 +6,51 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Forward-only migrations (persistence-drift). 1 → 2 (M6.2): field_seen;
-// 2 → 3 (M6.5.1): actual start/end and step durations (11 B1/B2).
+// 2 → 3 (M6.5.1): actual start/end and step durations (11 B1/B2);
+// 3 → 4 (M7.5): calendar_links.location (R-17).
 void main() {
+  test('a version 3 file gains the link place and keeps its rows', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig4');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+
+    final v3 = AppDatabase(NativeDatabase(file));
+    await v3.customStatement(
+      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+      "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+    );
+    await v3.customStatement(
+      'INSERT INTO calendar_accounts (id, user_id, provider, label, '
+      "created_at, updated_at) VALUES ('a', 'u', 'apple_device', 'Work', 0, 0)",
+    );
+    await v3.customStatement(
+      'INSERT INTO calendar_links (id, user_id, account_id, '
+      'external_calendar_id, external_event_id) '
+      "VALUES ('l1', 'u', 'a', 'work', 'E1@0')",
+    );
+    await _dropSchema4Columns(v3);
+    await v3.customStatement('PRAGMA user_version = 3');
+    await v3.close();
+
+    final v4 = AppDatabase(NativeDatabase(file));
+    addTearDown(v4.close);
+    final row = await v4.select(v4.calendarLinks).getSingle();
+    expect(row.externalEventId, 'E1@0');
+    expect(row.location, isNull);
+    await v4.customStatement(
+      "UPDATE calendar_links SET location = 'Main St 4' WHERE id = 'l1'",
+    );
+    await expectLater(
+      v4.customStatement(
+        "UPDATE calendar_links SET location = '${'x' * 201}' WHERE id = 'l1'",
+      ),
+      throwsA(isA<SqliteException>()),
+      reason: 'the added column keeps its CHECK',
+    );
+    final version = await v4.customSelect('PRAGMA user_version').getSingle();
+    expect(version.read<int>('user_version'), AppDatabase.latestSchemaVersion);
+  });
+
   test('a version 2 file gains the B1/B2 columns and keeps its rows', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig3');
     addTearDown(() => dir.delete(recursive: true));
@@ -24,6 +67,7 @@ void main() {
       "created_at, updated_at) VALUES ('o1', 'u', 'Run', 'UTC', 30, 0, 0)",
     );
     await _dropSchema3Columns(v2);
+    await _dropSchema4Columns(v2);
     await v2.customStatement('PRAGMA user_version = 2');
     await v2.close();
 
@@ -63,6 +107,7 @@ void main() {
     );
     await v1.customStatement('DROP TABLE field_seen');
     await _dropSchema3Columns(v1);
+    await _dropSchema4Columns(v1);
     await v1.customStatement('PRAGMA user_version = 1');
     await v1.close();
 
@@ -100,3 +145,7 @@ Future<void> _dropSchema3Columns(AppDatabase db) async {
     await db.customStatement('ALTER TABLE $table DROP COLUMN $column');
   }
 }
+
+/// Today's schema minus what version 4 added.
+Future<void> _dropSchema4Columns(AppDatabase db) =>
+    db.customStatement('ALTER TABLE calendar_links DROP COLUMN location');

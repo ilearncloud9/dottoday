@@ -43,12 +43,14 @@ Future<Result<(UndoToken, ShiftReport), AppFailure>> moveWithFollowing(
   required Occurrence o,
   required DateTime startUtc,
   required bool includeCalendar,
+  Set<String> readOnlyIds = const {},
 }) async {
   final result = const DaySchedulerService().moveWithFollowers(
     day,
     o.id,
     startUtc,
     includeCalendar: includeCalendar,
+    readOnlyIds: readOnlyIds,
   );
   final now = ref.read(clockProvider).nowUtc();
   final changed = [

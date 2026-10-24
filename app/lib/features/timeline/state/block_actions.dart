@@ -64,12 +64,14 @@ Future<Result<(UndoToken, ShiftReport), AppFailure>>? runLate(
   required DateTime nowUtc,
   required int minutes,
   bool includeCalendar = false,
+  Set<String> readOnlyIds = const {},
 }) {
   final result = const DaySchedulerService().runningLate(
     day,
     nowUtc,
     minutes,
     includeCalendar: includeCalendar,
+    readOnlyIds: readOnlyIds,
   );
   if (result.report.movedIds.isEmpty) return null;
   return _applyShift(
@@ -111,3 +113,19 @@ int overrunOf(Occurrence live, List<Occurrence> blocks) {
   if (next == null) return 0;
   return live.endUtc!.difference(next.startUtc!).inMinutes;
 }
+
+/// Gives [o] [minutes] of travel time before it (docs/09 M7.5, R-17),
+/// through the undoable write path; 0 removes it. The block itself stays
+/// put: the buffer takes the time before its start.
+Future<Result<UndoToken, AppFailure>> setTravelTime(
+  WidgetRef ref,
+  Occurrence o,
+  int minutes,
+) => ref
+    .read(undoServiceProvider)
+    .applyUndoable(
+      WriteBatch(
+        userId: o.userId,
+        occurrences: [o.copyWith(travelBufferMin: minutes)],
+      ),
+    );

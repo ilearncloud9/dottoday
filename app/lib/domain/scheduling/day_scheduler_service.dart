@@ -17,7 +17,8 @@ final class DaySchedulerService {
   /// Moves [movedId] by [deltaMin] and shifts every block after it by the
   /// same amount, preserving gaps.
   ///
-  /// Calendar events stay put unless [includeCalendar]. Shifting stops at the
+  /// Calendar events stay put unless [includeCalendar], and those in
+  /// [readOnlyIds] always do (see [movableBlock]). Shifting stops at the
   /// first pinned block after the moved one, or earlier if a block would be
   /// pushed onto a pin, and the report is `partial`; the moved block itself
   /// moves even if pinned, because the user dragged it.
@@ -30,6 +31,7 @@ final class DaySchedulerService {
     String movedId,
     int deltaMin, {
     bool includeCalendar = false,
+    Set<String> readOnlyIds = const {},
   }) {
     final sorted = scheduledBlocks(day);
     final index = sorted.indexWhere((o) => o.id == movedId);
@@ -45,7 +47,7 @@ final class DaySchedulerService {
     final run = _shift(
       sorted.skip(index + 1),
       delta,
-      includeCalendar: includeCalendar,
+      movable: (o) => movableBlock(o, includeCalendar, readOnlyIds),
       stopAtPinned: true,
       floor: floor,
     );
@@ -61,19 +63,20 @@ final class DaySchedulerService {
   /// Pushes every planned block starting at or after [nowUtc] by [deltaMin]
   /// ("Running late +5/+15/+30", R-04), up to the first pinned block: a pin
   /// anchors the rest of the day, so the report is `partial` there (R-17).
-  /// Done and skipped blocks and (unless [includeCalendar]) calendar events
-  /// stay put.
+  /// Done and skipped blocks and calendar events [movableBlock] keeps stay
+  /// put.
   ScheduleResult runningLate(
     List<Occurrence> day,
     DateTime nowUtc,
     int deltaMin, {
     bool includeCalendar = false,
+    Set<String> readOnlyIds = const {},
   }) {
     final sorted = scheduledBlocks(day);
     final run = _shift(
       sorted.where((o) => !o.startUtc!.isBefore(nowUtc)),
       Duration(minutes: deltaMin),
-      includeCalendar: includeCalendar,
+      movable: (o) => movableBlock(o, includeCalendar, readOnlyIds),
       stopAtPinned: true,
       skipFinished: true,
     );
@@ -111,6 +114,7 @@ final class DaySchedulerService {
     Occurrence block,
     InsertPolicy policy, {
     bool includeCalendar = false,
+    Set<String> readOnlyIds = const {},
   }) {
     final others = scheduledBlocks(day.where((o) => o.id != block.id));
     final start = block.startUtc;
@@ -122,21 +126,23 @@ final class DaySchedulerService {
         final placed = block.copyWith(startUtc: _firstFit(others, block));
         return _apply([...others, placed], const {}, const ShiftReport());
       case InsertPolicy.bump:
-        return _bump(others, block, includeCalendar);
+        return _bump(
+          others,
+          block,
+          (o) => movableBlock(o, includeCalendar, readOnlyIds),
+        );
     }
   }
 
   ScheduleResult _bump(
     List<Occurrence> others,
     Occurrence block,
-    bool includeCalendar,
+    bool Function(Occurrence) movable,
   ) {
     final followers = others
         .where((o) => !o.startUtc!.isBefore(block.startUtc!))
         .toList();
-    final first = followers
-        .where((o) => o.pinned || _movable(o, includeCalendar))
-        .firstOrNull;
+    final first = followers.where((o) => o.pinned || movable(o)).firstOrNull;
     // Calendar events before the first movable follower stay put; report
     // them so the UI can flag the overlap.
     final passed = [
@@ -154,7 +160,7 @@ final class DaySchedulerService {
     final run = _shift(
       followers,
       overlap,
-      includeCalendar: includeCalendar,
+      movable: movable,
       stopAtPinned: true,
     );
     return _apply(day, run.changed, run.report);
@@ -186,7 +192,7 @@ final class DaySchedulerService {
   _Run _shift(
     Iterable<Occurrence> candidates,
     Duration delta, {
-    required bool includeCalendar,
+    required bool Function(Occurrence) movable,
     required bool stopAtPinned,
     bool skipFinished = false,
     Occurrence? floor,
@@ -198,7 +204,7 @@ final class DaySchedulerService {
     final skipped = <String>[];
     for (final o in pinAt < 0 ? list : list.take(pinAt)) {
       final finished = skipFinished && o.status != OccurrenceStatus.planned;
-      if (o.pinned || finished || !_movable(o, includeCalendar)) {
+      if (o.pinned || finished || !movable(o)) {
         skipped.add(o.id);
         continue;
       }
@@ -262,8 +268,23 @@ final class _Run {
   final ShiftReport report;
 }
 
-bool _movable(Occurrence o, bool includeCalendar) =>
-    includeCalendar || o.source != OccurrenceSource.calendar;
+/// Whether a shift may carry [o]: a person's own task always (pins and
+/// finished tasks are the scheduler's other rules); an imported calendar
+/// event only with [includeCalendar] ("Move calendar events too", docs/03
+/// §3.2) and never when it is in [readOnlyIds] — the events whose calendar
+/// won't take the change back (read-only calendars, repeating and all-day
+/// events; docs/09 M7.6, R-04, R-17).
+///
+/// ```dart
+/// movableBlock(standup, true, {standup.id}); // false: repeating stays
+/// ```
+bool movableBlock(
+  Occurrence o,
+  bool includeCalendar,
+  Set<String> readOnlyIds,
+) =>
+    o.source != OccurrenceSource.calendar ||
+    (includeCalendar && !readOnlyIds.contains(o.id));
 
 Occurrence _moveBy(Occurrence o, Duration delta) =>
     o.copyWith(startUtc: o.startUtc!.add(delta));

@@ -13,7 +13,7 @@ void main() {
   setUpAll(loadAppFonts);
   goldenMatrix(
     'shift_chip',
-    height: 128,
+    height: 192,
     widths: const {'compact'},
     build: (_) => Column(
       children: [
@@ -22,6 +22,18 @@ void main() {
             height: 64,
             child: Stack(children: [ShiftChip(on: ValueNotifier(on))]),
           ),
+        // With "Calendar events too" beside it (docs/09 M7.6).
+        SizedBox(
+          height: 64,
+          child: Stack(
+            children: [
+              ShiftChip(
+                on: ValueNotifier(true),
+                calendar: ValueNotifier(false),
+              ),
+            ],
+          ),
+        ),
       ],
     ),
   );

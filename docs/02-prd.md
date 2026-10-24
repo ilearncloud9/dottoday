@@ -76,9 +76,46 @@ Everything here is **free tier** unless marked *Phase 2*.
   calendar's colour. A multi-day all-day event shows in the strip on each of its days; tapping a strip
   item opens it to edit.
 - Imported events are first-class blocks: draggable, resizable, can have subtasks/notes stored locally (never written to the external calendar unless the user enables write-back for that calendar). (R-02, R-09)
+  Clarified in M7.2: events from yesterday to 90 days ahead come in on start, on resume, every
+  6 hours and right after a calendar is switched or connected. An event's description and link
+  become its notes. Subtasks, notes, moves and renames made in Dottoday stay on this device (each
+  device imports its own calendars) and stay put until the calendar changes that same thing; notes
+  edited here are never overwritten. An event deleted from its calendar disappears here too —
+  into Trash if it had subtasks, notes or a tick. Deleting an imported event in Dottoday hides it
+  (it doesn't come back). Imported events don't remind in Dottoday unless you add alerts (the
+  calendar app reminds already).
 - Write-back (optional per calendar): move/resize/rename syncs to the source calendar; failures surface as a non-blocking banner with retry.
+  Clarified in M7.3: Settings › Calendars › Send changes back, one switch per writable calendar,
+  off until chosen; turning it on also sends moves made before. Only timed, non-repeating events
+  write back (repeating instances and all-day items change here only, and the editor says so).
+  Notes and subtasks never go back. A change made in the calendar meanwhile is combined with the
+  one made here field by field; the same field changed in both places asks once (banner: Keep
+  mine / Use calendar's). An event gone from the calendar keeps the edit here until the next
+  import removes it.
 - Travel time: if the event has a location and the user enables it, a buffer block is suggested before it. (R-17)
+  Clarified in M7.5: Settings › Calendars › Travel time › "Suggest travel time" (off until chosen)
+  and one length for every event (5 min–2 h, default 15). No route or maps service is asked: that
+  would send the place off the device, so the suggestion is a rule on the device (rejected: a
+  routing API — a cloud endpoint and a new dependency; learning a length per place — more concepts,
+  follow-up if asked). An imported, timed event with a place that hasn't started and has no travel
+  time shows a card in its sheet: "At Main St 4. Keep 15 min before it for getting there?" · Add 15
+  min before / Not now (put away for this session). Nothing is written until Add (proposal rule; a
+  one-change confirm until `ProposalSheet`, M10.2); Add is undoable and sets the event's travel
+  buffer, which the thread shows as "· 15 min travel" on the row and takes out of the free gap
+  before it; the sheet lists it as Travel time, and the editor's Travel time row (every scheduled
+  task, None–2 h) changes or removes it. A move or a re-import keeps it. Rejected: a separate
+  "Travel" task before the event (a second block to keep in step with the event when it moves).
 - Links in event descriptions open in the browser. (R-02)
+  Clarified in M7.2: the task sheet and editor list the web links (http/https, up to 5) found in
+  the notes under LINKS; a tap opens the browser. Links typed into a task's notes work the same.
+  Clarified in M7.4: Google and Microsoft calendars are connected in Settings › Calendars after
+  signing in, on every platform including the web. Connected once, they show on every device the
+  person signs in on, each calendar with its own switch on each device. Subtasks and notes on their
+  events stay on the device where they were added, as for device calendars. Moves, resizes and renames
+  go back when Send changes back is on for that calendar, also for one instance of a repeating event,
+  and never for a meeting someone else organises. Disconnecting asks first. The events then leave
+  the timeline (into Trash when they carry subtasks or notes). An account Dottoday can no longer reach
+  shows Reconnect, and its events stay as they were.
 
 ## F6. Notifications & alerts
 

@@ -911,6 +911,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shiftChipLabel => 'Shift later tasks';
 
   @override
+  String get shiftChipCalendar => 'Calendar events too';
+
+  @override
   String snackMovedShifted(String title, String time, int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -2639,8 +2642,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get calendarsConnect => 'Connect a calendar';
 
   @override
-  String get calendarsComingSoon =>
-      'Calendar import arrives in a later update.';
+  String get calendarsOnlineInSettings =>
+      'Connect Google or Microsoft in Settings › Calendars.';
+
+  @override
+  String get calendarsOnline => 'Google and Microsoft';
+
+  @override
+  String get calendarsOnlineIntro =>
+      'Connected once, they show on every device you sign in on. If a calendar is also on this device, switch one of the two off.';
+
+  @override
+  String get calendarsOnlineSignIn => 'Sign in to connect Google or Microsoft';
+
+  @override
+  String get calendarsConnectGoogle => 'Connect Google Calendar';
+
+  @override
+  String get calendarsConnectMicrosoft => 'Connect Microsoft Outlook';
+
+  @override
+  String get calendarsReconnect => 'Reconnect';
+
+  @override
+  String get calendarsReconnectDetail =>
+      'Dottoday can\'t reach this account until you reconnect it';
+
+  @override
+  String get calendarsUnreachable => 'Couldn\'t reach this account just now';
+
+  @override
+  String get calendarsDisconnect => 'Disconnect';
+
+  @override
+  String calendarsDisconnectTitle(String account) {
+    return 'Disconnect $account?';
+  }
+
+  @override
+  String get calendarsDisconnectBody =>
+      'Its events leave your timeline on every device. Events with your subtasks or notes go to Trash.';
 
   @override
   String get calendarsShifting => 'When the day shifts';
@@ -2650,7 +2691,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calendarsMoveEventsDetail =>
-      'Off: events stay put when you shift the rest';
+      'When you shift the rest. Shared and repeating events stay put.';
 
   @override
   String get calendarsAsk =>
@@ -3644,4 +3685,106 @@ class AppLocalizationsEn extends AppLocalizations {
   String settingsNameAndStatus(String name, String status) {
     return '$name · $status';
   }
+
+  @override
+  String get calendarEventUntitled => 'Untitled event';
+
+  @override
+  String get taskLinks => 'Links';
+
+  @override
+  String taskLinkOpen(String host) {
+    return 'Open $host in the browser';
+  }
+
+  @override
+  String get taskLinkFailed => 'Couldn\'t open that link';
+
+  @override
+  String get calendarsWriteBack => 'Send changes back';
+
+  @override
+  String get calendarsWriteBackDetail =>
+      'Moves, resizes and renames you make here go to the calendar, earlier ones too. Repeating and all-day events change here only.';
+
+  @override
+  String bannerWriteBackPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes haven\'t reached your calendar yet',
+      one: '1 change hasn\'t reached your calendar yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bannerWriteBackClash(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count events changed in your calendar too',
+      one: 'This event changed in your calendar too',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bannerUseCalendars => 'Use calendar\'s';
+
+  @override
+  String taskCalendarSends(String calendar) {
+    return 'Changes go back to $calendar';
+  }
+
+  @override
+  String taskCalendarStays(String calendar) {
+    return 'From $calendar · changes stay in Dottoday';
+  }
+
+  @override
+  String get travelTitle => 'Travel time';
+
+  @override
+  String travelSuggestDetail(String place, String duration) {
+    return 'At $place. Keep $duration before it for getting there?';
+  }
+
+  @override
+  String travelSuggestAdd(String duration) {
+    return 'Add $duration before';
+  }
+
+  @override
+  String travelAdded(String title) {
+    return 'Travel time added before “$title”';
+  }
+
+  @override
+  String get travelNone => 'None';
+
+  @override
+  String travelBefore(String duration) {
+    return '$duration before';
+  }
+
+  @override
+  String rowTravelMeta(String duration) {
+    return '· $duration travel';
+  }
+
+  @override
+  String rowTravel(String label, String duration) {
+    return '$label, $duration travel time before';
+  }
+
+  @override
+  String get calendarsTravel => 'Travel time';
+
+  @override
+  String get calendarsTravelSuggest => 'Suggest travel time';
+
+  @override
+  String get calendarsTravelSuggestDetail =>
+      'Before events with a place. Worked out on this device; no maps are asked';
 }

@@ -4,6 +4,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/scheduling/day_scheduler_service.dart';
 import 'package:dottoday/domain/scheduling/drag_math.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/features/timeline/state/drag_actions.dart';
@@ -17,6 +18,10 @@ import 'package:timezone/timezone.dart' as tz;
 /// [snapMinutes] on the wall clock in [zone]; each write has Undo.
 /// [elsewhere] finds a task dragged in from another day (the Mac/web
 /// spread's columns, M3e.1); it moves alone, without shifting this day.
+/// [readOnlyIds] are the imported events a shift never carries (null while
+/// unknown: then none moves); [includeCalendar] starts the "Calendar
+/// events too" chip, shown only when the day has an event it could carry
+/// (docs/09 M7.6).
 ThreadDrag dayThreadDrag(
   BuildContext context,
   WidgetRef ref, {
@@ -26,8 +31,17 @@ ThreadDrag dayThreadDrag(
   required String Function(DateTime utc) timeText,
   ShiftFollowersPolicy shiftFollowers = ShiftFollowersPolicy.ask,
   bool includeCalendar = false,
+  Set<String>? readOnlyIds,
   Occurrence? Function(String id)? elsewhere,
 }) {
+  final fixed = readOnlyIds;
+  final carriable =
+      fixed != null &&
+      blocks.any(
+        (o) =>
+            o.source == OccurrenceSource.calendar &&
+            movableBlock(o, true, fixed),
+      );
   final d = _DayDrag(
     ref: ref,
     messenger: ScaffoldMessenger.of(context),
@@ -36,7 +50,7 @@ ThreadDrag dayThreadDrag(
     zone: zone,
     snapMinutes: snapMinutes,
     timeText: timeText,
-    includeCalendar: includeCalendar,
+    readOnlyIds: fixed ?? const {},
     elsewhere: elsewhere,
   );
   return ThreadDrag(
@@ -49,6 +63,7 @@ ThreadDrag dayThreadDrag(
       ShiftFollowersPolicy.ask => false,
       ShiftFollowersPolicy.never => null,
     },
+    calendarByDefault: carriable ? includeCalendar : null,
   );
 }
 
@@ -62,7 +77,7 @@ final class _DayDrag {
     required this.zone,
     required this.snapMinutes,
     required this.timeText,
-    required this.includeCalendar,
+    required this.readOnlyIds,
     this.elsewhere,
   }) : undo = ref.read(undoServiceProvider);
 
@@ -74,7 +89,7 @@ final class _DayDrag {
   final tz.Location zone;
   final int snapMinutes;
   final String Function(DateTime utc) timeText;
-  final bool includeCalendar;
+  final Set<String> readOnlyIds;
   final Occurrence? Function(String id)? elsewhere;
 
   Occurrence? _own(String id) => blocks.where((o) => o.id == id).firstOrNull;
@@ -104,13 +119,13 @@ final class _DayDrag {
     String id,
     ThreadGap gap,
     double fraction,
-    bool shift,
+    DropShift shift,
   ) async {
     final o = _find(id);
     final start = _start(id, gap, fraction);
     if (o == null || start == null || start == o.startUtc) return;
     final time = timeText(start);
-    if (!shift || _own(id) == null) {
+    if (!shift.followers || _own(id) == null) {
       return _report(
         await moveTask(ref, o, start),
         l10n.snackMoved(o.title, time),
@@ -121,7 +136,8 @@ final class _DayDrag {
       day: blocks,
       o: o,
       startUtc: start,
-      includeCalendar: includeCalendar,
+      includeCalendar: shift.calendar,
+      readOnlyIds: readOnlyIds,
     );
     reportUndoable(
       messenger,

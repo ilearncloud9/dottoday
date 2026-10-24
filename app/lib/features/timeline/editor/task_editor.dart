@@ -17,7 +17,10 @@ import 'package:dottoday/features/timeline/editor/editor_duration.dart';
 import 'package:dottoday/features/timeline/editor/editor_fields.dart';
 import 'package:dottoday/features/timeline/editor/editor_footer.dart';
 import 'package:dottoday/features/timeline/editor/editor_series.dart';
+import 'package:dottoday/features/timeline/editor/editor_travel.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
+import 'package:dottoday/features/timeline/widgets/calendar_write_line.dart';
+import 'package:dottoday/features/timeline/widgets/note_links.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_subtasks.dart';
 import 'package:dottoday/shared/dot/colour_icon_block.dart';
 import 'package:flutter/foundation.dart';
@@ -183,6 +186,12 @@ class _FormState extends ConsumerState<_Form> {
     await pickRepeat(context, task: widget.task, draft: _draft);
   }
 
+  /// The Travel time row (M7.5, R-17).
+  Future<void> _travel() async {
+    final m = await pickTravelTime(context, current: _draft.travelBufferMin);
+    if (m != null && mounted) _change((o) => o.copyWith(travelBufferMin: m));
+  }
+
   /// ⌘D: done, or planned again, written with the other edits.
   void _toggleDone() => _change((o) => progress.toggleDone(o, _clock.nowUtc()));
 
@@ -246,6 +255,8 @@ class _FormState extends ConsumerState<_Form> {
         RepeatAlertRows(
           task: widget.task,
           onRepeat: _draft.startUtc == null ? null : () => unawaited(_repeat()),
+          travelMin: _draft.travelBufferMin,
+          onTravel: _draft.startUtc == null ? null : () => unawaited(_travel()),
           onAlerts: () => unawaited(
             pickAlerts(
               context,
@@ -266,6 +277,8 @@ class _FormState extends ConsumerState<_Form> {
           onChanged: (v) =>
               _change((o) => o.copyWith(notes: v.isEmpty ? null : v)),
         ),
+        NoteLinks(notes: _draft.notes),
+        CalendarWriteLine(linkId: _draft.calendarLinkId),
         const SizedBox(height: DotSpace.xl),
         EditorFooter(
           task: _draft,

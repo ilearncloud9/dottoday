@@ -1,6 +1,7 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
@@ -113,6 +114,7 @@ class DayPage extends ConsumerWidget {
         timeText: time,
         shiftFollowers: s.shiftFollowers,
         includeCalendar: s.includeCalendarInShift,
+        readOnlyIds: ref.watch(readOnlyCalendarIdsProvider).value,
         elsewhere: (id) => _elsewhere(ref, id),
       ),
       selectedIds: picked.day == date ? picked.ids : const {},

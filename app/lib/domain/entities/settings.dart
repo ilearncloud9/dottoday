@@ -47,6 +47,10 @@ abstract class Settings with _$Settings {
     @Default(true) bool runningLateNudge,
     @Default(false) bool rollUnfinished,
     @Default(true) bool bedtimeReminder,
+    // Settings › Calendars › Travel time (M7.5, R-17): off until chosen
+    // (docs/02 F5 "if the user enables it").
+    @Default(false) bool suggestTravelTime,
+    @Default(15) int travelTimeMin,
   }) = _Settings;
 
   const Settings._();
@@ -56,6 +60,10 @@ abstract class Settings with _$Settings {
 
   /// Allowed `snapMinutes` (mirrors `validate_settings()` in 0001_init.sql).
   static const snapChoices = {1, 5, 10, 15};
+
+  /// Allowed `travelTimeMin`, the buffer suggested before an event with a
+  /// place (M7.5); all within the 0–180 travel buffer range (docs/02).
+  static const travelChoices = [5, 10, 15, 20, 30, 45, 60, 90, 120];
 
   /// Suggested window when the user turns quiet hours on.
   static const suggestedQuietHours = TimeWindow(start: '22:00', end: '07:00');

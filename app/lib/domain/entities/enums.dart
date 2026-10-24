@@ -24,7 +24,16 @@ enum CalendarProvider {
   androidDevice,
   google,
   microsoft,
-  caldav,
+  caldav;
+
+  /// The stored name (`calendar_accounts.provider`, docs/05).
+  String get wire => switch (this) {
+    appleDevice => 'apple_device',
+    androidDevice => 'android_device',
+    google => 'google',
+    microsoft => 'microsoft',
+    caldav => 'caldav',
+  };
 }
 
 /// Optional energy level of a task (docs/02 F2). Stored as 1–3.

@@ -5,6 +5,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/day_scheduler_service.dart';
@@ -42,6 +43,9 @@ Future<void> showRunningLateSheet(BuildContext context, DateTime today) async {
   final (choice, minutes) = picked;
   final now = container.read(clockProvider).nowUtc();
   final target = lateTarget(data.blocks, now);
+  // Read-only and repeating events never move (docs/09 M7.6); unknown yet
+  // means no calendar event moves.
+  final fixed = container.read(readOnlyCalendarIdsProvider).value;
   final report = _Report(messenger, l10n, container.read(undoServiceProvider));
   switch (choice) {
     case _Late.shift:
@@ -50,7 +54,8 @@ Future<void> showRunningLateSheet(BuildContext context, DateTime today) async {
         day: data.blocks,
         nowUtc: now,
         minutes: minutes,
-        includeCalendar: data.settings.includeCalendarInShift,
+        includeCalendar: fixed != null && data.settings.includeCalendarInShift,
+        readOnlyIds: fixed ?? const {},
       );
       if (run != null) report.shift(await run, data.blocks, minutes);
     case _Late.skip:
@@ -180,12 +185,15 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
 
   Widget _shiftTile(BuildContext context, TimelineData data, DateTime now) {
     final l10n = context.l10n;
+    final fixed = ref.watch(readOnlyCalendarIdsProvider).value;
     final report = const DaySchedulerService()
         .runningLate(
           data.blocks,
           now,
           _minutes,
-          includeCalendar: data.settings.includeCalendarInShift,
+          includeCalendar:
+              fixed != null && data.settings.includeCalendarInShift,
+          readOnlyIds: fixed ?? const {},
         )
         .report;
     final moved = report.movedIds.length;

@@ -310,7 +310,8 @@ as DateTime,
 /// @nodoc
 mixin _$CalendarLink {
 
- String get id; String get userId; String get accountId; String get externalCalendarId; String get externalEventId; String? get etag;@UtcMillisConverter() DateTime? get lastSyncedUtc; bool get readOnly;
+ String get id; String get userId; String get accountId; String get externalCalendarId; String get externalEventId; String? get etag;@UtcMillisConverter() DateTime? get lastSyncedUtc; bool get readOnly;/// The event's place, device-only like the link itself (M7.5, R-17).
+ String? get location;
 /// Create a copy of CalendarLink
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -324,20 +325,20 @@ $CalendarLinkCopyWith<CalendarLink> get copyWith => _$CalendarLinkCopyWithImpl<C
 @override
 bool operator ==(Object other) {
   final _this = this as CalendarLink;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarLink&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.externalCalendarId, _this.externalCalendarId) || other.externalCalendarId == _this.externalCalendarId)&&(identical(other.externalEventId, _this.externalEventId) || other.externalEventId == _this.externalEventId)&&(identical(other.etag, _this.etag) || other.etag == _this.etag)&&(identical(other.lastSyncedUtc, _this.lastSyncedUtc) || other.lastSyncedUtc == _this.lastSyncedUtc)&&(identical(other.readOnly, _this.readOnly) || other.readOnly == _this.readOnly));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarLink&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.externalCalendarId, _this.externalCalendarId) || other.externalCalendarId == _this.externalCalendarId)&&(identical(other.externalEventId, _this.externalEventId) || other.externalEventId == _this.externalEventId)&&(identical(other.etag, _this.etag) || other.etag == _this.etag)&&(identical(other.lastSyncedUtc, _this.lastSyncedUtc) || other.lastSyncedUtc == _this.lastSyncedUtc)&&(identical(other.readOnly, _this.readOnly) || other.readOnly == _this.readOnly)&&(identical(other.location, _this.location) || other.location == _this.location));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as CalendarLink;
-  return Object.hash(runtimeType,_this.id,_this.userId,_this.accountId,_this.externalCalendarId,_this.externalEventId,_this.etag,_this.lastSyncedUtc,_this.readOnly);
+  return Object.hash(runtimeType,_this.id,_this.userId,_this.accountId,_this.externalCalendarId,_this.externalEventId,_this.etag,_this.lastSyncedUtc,_this.readOnly,_this.location);
 }
 
 @override
 String toString() {
   final _this = this as CalendarLink;
-  return 'CalendarLink(id: ${_this.id}, userId: ${_this.userId}, accountId: ${_this.accountId}, externalCalendarId: ${_this.externalCalendarId}, externalEventId: ${_this.externalEventId}, etag: ${_this.etag}, lastSyncedUtc: ${_this.lastSyncedUtc}, readOnly: ${_this.readOnly})';
+  return 'CalendarLink(id: ${_this.id}, userId: ${_this.userId}, accountId: ${_this.accountId}, externalCalendarId: ${_this.externalCalendarId}, externalEventId: ${_this.externalEventId}, etag: ${_this.etag}, lastSyncedUtc: ${_this.lastSyncedUtc}, readOnly: ${_this.readOnly}, location: ${_this.location})';
 }
 
 
@@ -348,7 +349,7 @@ abstract mixin class $CalendarLinkCopyWith<$Res>  {
   factory $CalendarLinkCopyWith(CalendarLink value, $Res Function(CalendarLink) _then) = _$CalendarLinkCopyWithImpl;
 @useResult
 $Res call({
- String id, String userId, String accountId, String externalCalendarId, String externalEventId, String? etag,@UtcMillisConverter() DateTime? lastSyncedUtc, bool readOnly
+ String id, String userId, String accountId, String externalCalendarId, String externalEventId, String? etag,@UtcMillisConverter() DateTime? lastSyncedUtc, bool readOnly, String? location
 });
 
 
@@ -365,7 +366,7 @@ class _$CalendarLinkCopyWithImpl<$Res>
 
 /// Create a copy of CalendarLink
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? accountId = null,Object? externalCalendarId = null,Object? externalEventId = null,Object? etag = freezed,Object? lastSyncedUtc = freezed,Object? readOnly = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? accountId = null,Object? externalCalendarId = null,Object? externalEventId = null,Object? etag = freezed,Object? lastSyncedUtc = freezed,Object? readOnly = null,Object? location = freezed,}) {
   return _then(CalendarLink(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -375,7 +376,8 @@ as String,externalEventId: null == externalEventId ? _self.externalEventId : ext
 as String,etag: freezed == etag ? _self.etag : etag // ignore: cast_nullable_to_non_nullable
 as String?,lastSyncedUtc: freezed == lastSyncedUtc ? _self.lastSyncedUtc : lastSyncedUtc // ignore: cast_nullable_to_non_nullable
 as DateTime?,readOnly: null == readOnly ? _self.readOnly : readOnly // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -460,10 +462,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  String accountId,  String externalCalendarId,  String externalEventId,  String? etag, @UtcMillisConverter()  DateTime? lastSyncedUtc,  bool readOnly)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  String accountId,  String externalCalendarId,  String externalEventId,  String? etag, @UtcMillisConverter()  DateTime? lastSyncedUtc,  bool readOnly,  String? location)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CalendarLink() when $default != null:
-return $default(_that.id,_that.userId,_that.accountId,_that.externalCalendarId,_that.externalEventId,_that.etag,_that.lastSyncedUtc,_that.readOnly);case _:
+return $default(_that.id,_that.userId,_that.accountId,_that.externalCalendarId,_that.externalEventId,_that.etag,_that.lastSyncedUtc,_that.readOnly,_that.location);case _:
   return orElse();
 
 }
@@ -481,10 +483,10 @@ return $default(_that.id,_that.userId,_that.accountId,_that.externalCalendarId,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  String accountId,  String externalCalendarId,  String externalEventId,  String? etag, @UtcMillisConverter()  DateTime? lastSyncedUtc,  bool readOnly)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  String accountId,  String externalCalendarId,  String externalEventId,  String? etag, @UtcMillisConverter()  DateTime? lastSyncedUtc,  bool readOnly,  String? location)  $default,) {final _that = this;
 switch (_that) {
 case _CalendarLink():
-return $default(_that.id,_that.userId,_that.accountId,_that.externalCalendarId,_that.externalEventId,_that.etag,_that.lastSyncedUtc,_that.readOnly);case _:
+return $default(_that.id,_that.userId,_that.accountId,_that.externalCalendarId,_that.externalEventId,_that.etag,_that.lastSyncedUtc,_that.readOnly,_that.location);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -501,10 +503,10 @@ return $default(_that.id,_that.userId,_that.accountId,_that.externalCalendarId,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  String accountId,  String externalCalendarId,  String externalEventId,  String? etag, @UtcMillisConverter()  DateTime? lastSyncedUtc,  bool readOnly)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  String accountId,  String externalCalendarId,  String externalEventId,  String? etag, @UtcMillisConverter()  DateTime? lastSyncedUtc,  bool readOnly,  String? location)?  $default,) {final _that = this;
 switch (_that) {
 case _CalendarLink() when $default != null:
-return $default(_that.id,_that.userId,_that.accountId,_that.externalCalendarId,_that.externalEventId,_that.etag,_that.lastSyncedUtc,_that.readOnly);case _:
+return $default(_that.id,_that.userId,_that.accountId,_that.externalCalendarId,_that.externalEventId,_that.etag,_that.lastSyncedUtc,_that.readOnly,_that.location);case _:
   return null;
 
 }
@@ -516,7 +518,7 @@ return $default(_that.id,_that.userId,_that.accountId,_that.externalCalendarId,_
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _CalendarLink implements CalendarLink {
-  const _CalendarLink({required this.id, required this.userId, required this.accountId, required this.externalCalendarId, required this.externalEventId, this.etag, @UtcMillisConverter() this.lastSyncedUtc, this.readOnly = true});
+  const _CalendarLink({required this.id, required this.userId, required this.accountId, required this.externalCalendarId, required this.externalEventId, this.etag, @UtcMillisConverter() this.lastSyncedUtc, this.readOnly = true, this.location});
   factory _CalendarLink.fromJson(Map<String, dynamic> json) => _$CalendarLinkFromJson(json);
 
 @override final  String id;
@@ -527,6 +529,8 @@ class _CalendarLink implements CalendarLink {
 @override final  String? etag;
 @override@UtcMillisConverter() final  DateTime? lastSyncedUtc;
 @override@JsonKey() final  bool readOnly;
+/// The event's place, device-only like the link itself (M7.5, R-17).
+@override final  String? location;
 
 /// Create a copy of CalendarLink
 /// with the given fields replaced by the non-null parameter values.
@@ -541,18 +545,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarLink&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.externalCalendarId, externalCalendarId) || other.externalCalendarId == externalCalendarId)&&(identical(other.externalEventId, externalEventId) || other.externalEventId == externalEventId)&&(identical(other.etag, etag) || other.etag == etag)&&(identical(other.lastSyncedUtc, lastSyncedUtc) || other.lastSyncedUtc == lastSyncedUtc)&&(identical(other.readOnly, readOnly) || other.readOnly == readOnly));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarLink&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.externalCalendarId, externalCalendarId) || other.externalCalendarId == externalCalendarId)&&(identical(other.externalEventId, externalEventId) || other.externalEventId == externalEventId)&&(identical(other.etag, etag) || other.etag == etag)&&(identical(other.lastSyncedUtc, lastSyncedUtc) || other.lastSyncedUtc == lastSyncedUtc)&&(identical(other.readOnly, readOnly) || other.readOnly == readOnly)&&(identical(other.location, location) || other.location == location));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,userId,accountId,externalCalendarId,externalEventId,etag,lastSyncedUtc,readOnly);
+    return Object.hash(runtimeType,id,userId,accountId,externalCalendarId,externalEventId,etag,lastSyncedUtc,readOnly,location);
 }
 
 @override
 String toString() {
-    return 'CalendarLink(id: $id, userId: $userId, accountId: $accountId, externalCalendarId: $externalCalendarId, externalEventId: $externalEventId, etag: $etag, lastSyncedUtc: $lastSyncedUtc, readOnly: $readOnly)';
+    return 'CalendarLink(id: $id, userId: $userId, accountId: $accountId, externalCalendarId: $externalCalendarId, externalEventId: $externalEventId, etag: $etag, lastSyncedUtc: $lastSyncedUtc, readOnly: $readOnly, location: $location)';
 }
 
 
@@ -563,7 +567,7 @@ abstract mixin class _$CalendarLinkCopyWith<$Res> implements $CalendarLinkCopyWi
   factory _$CalendarLinkCopyWith(_CalendarLink value, $Res Function(_CalendarLink) _then) = __$CalendarLinkCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String userId, String accountId, String externalCalendarId, String externalEventId, String? etag,@UtcMillisConverter() DateTime? lastSyncedUtc, bool readOnly
+ String id, String userId, String accountId, String externalCalendarId, String externalEventId, String? etag,@UtcMillisConverter() DateTime? lastSyncedUtc, bool readOnly, String? location
 });
 
 
@@ -580,7 +584,7 @@ class __$CalendarLinkCopyWithImpl<$Res>
 
 /// Create a copy of CalendarLink
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? accountId = null,Object? externalCalendarId = null,Object? externalEventId = null,Object? etag = freezed,Object? lastSyncedUtc = freezed,Object? readOnly = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? accountId = null,Object? externalCalendarId = null,Object? externalEventId = null,Object? etag = freezed,Object? lastSyncedUtc = freezed,Object? readOnly = null,Object? location = freezed,}) {
   return _then(_CalendarLink(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -590,7 +594,8 @@ as String,externalEventId: null == externalEventId ? _self.externalEventId : ext
 as String,etag: freezed == etag ? _self.etag : etag // ignore: cast_nullable_to_non_nullable
 as String?,lastSyncedUtc: freezed == lastSyncedUtc ? _self.lastSyncedUtc : lastSyncedUtc // ignore: cast_nullable_to_non_nullable
 as DateTime?,readOnly: null == readOnly ? _self.readOnly : readOnly // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

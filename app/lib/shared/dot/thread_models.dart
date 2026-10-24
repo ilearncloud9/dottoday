@@ -23,6 +23,7 @@ final class ThreadTask {
     this.subtasksTotal = 0,
     this.overrunMinutes = 0,
     this.movable = true,
+    this.travel,
   });
 
   /// Occurrence id, for callbacks.
@@ -54,6 +55,9 @@ final class ThreadTask {
 
   /// Long-press picks it up to drag (§6). Pinned tasks stay put (R-17).
   final bool movable;
+
+  /// "15 min": the travel time held before it (R-17), or null for none.
+  final String? travel;
 
   bool get hasSubtasks => subtasksTotal > 0;
 }
@@ -125,4 +129,17 @@ final class ThreadGap extends ThreadEntry {
     labelled: labelled,
     fits: title,
   );
+}
+
+/// What the shift chips said when a task was let go (docs/03 §3.2).
+@immutable
+final class DropShift {
+  const DropShift({this.followers = false, this.calendar = false});
+
+  /// The later tasks follow ("Shift later tasks", inverted by Alt).
+  final bool followers;
+
+  /// Calendar events among them move too ("Calendar events too"); only
+  /// meaningful with [followers].
+  final bool calendar;
 }
