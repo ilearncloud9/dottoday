@@ -7,6 +7,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
+import 'package:dottoday/features/timeline/widgets/note_links.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_actions.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_details.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_meta.dart';
@@ -75,6 +76,7 @@ class TaskSheetBody extends ConsumerWidget {
           SheetActions(task: task, onEdit: () => showTaskEditor(context, id)),
           const SizedBox(height: DotSpace.l),
           SheetSubtasks(task: task),
+          NoteLinks(notes: task.occurrence.notes),
           const SizedBox(height: DotSpace.m),
           SheetDetails(task: task, onEdit: () => showTaskEditor(context, id)),
         ],

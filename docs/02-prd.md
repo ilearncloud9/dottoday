@@ -76,9 +76,19 @@ Everything here is **free tier** unless marked *Phase 2*.
   calendar's colour. A multi-day all-day event shows in the strip on each of its days; tapping a strip
   item opens it to edit.
 - Imported events are first-class blocks: draggable, resizable, can have subtasks/notes stored locally (never written to the external calendar unless the user enables write-back for that calendar). (R-02, R-09)
+  Clarified in M7.2: events from yesterday to 90 days ahead come in on start, on resume, every
+  6 hours and right after a calendar is switched or connected. An event's description and link
+  become its notes. Subtasks, notes, moves and renames made in Dottoday stay on this device (each
+  device imports its own calendars) and stay put until the calendar changes that same thing; notes
+  edited here are never overwritten. An event deleted from its calendar disappears here too —
+  into Trash if it had subtasks, notes or a tick. Deleting an imported event in Dottoday hides it
+  (it doesn't come back). Imported events don't remind in Dottoday unless you add alerts (the
+  calendar app reminds already).
 - Write-back (optional per calendar): move/resize/rename syncs to the source calendar; failures surface as a non-blocking banner with retry.
 - Travel time: if the event has a location and the user enables it, a buffer block is suggested before it. (R-17)
 - Links in event descriptions open in the browser. (R-02)
+  Clarified in M7.2: the task sheet and editor list the web links (http/https, up to 5) found in
+  the notes under LINKS; a tap opens the browser. Links typed into a task's notes work the same.
 
 ## F6. Notifications & alerts
 

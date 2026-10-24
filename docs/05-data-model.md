@@ -56,6 +56,21 @@ opt-in. A calendar with no row is on. These rows never sync (device ids mean not
 ### `calendar_links`
 `id, user_id, account_id, external_calendar_id, external_event_id, etag, last_synced_utc,
 read_only bool`. Joined to `occurrences.calendar_link_id`.
+Device calendars (M7.2): one **local** link per imported item. `external_event_id` is
+`<event id>@<epoch ms>` — the instance's start, or for an all-day event the UTC midnight of each
+day it covers (one item per day) — because EventKit gives every instance of a repeating event the
+same id. `etag` holds the import fingerprint `v1;<start ms>;<duration min>;<title hash>;<notes
+hash>` (12-hex SHA-256 prefixes, never the text): a re-import changes only what changed in the
+calendar since, so a local move or rename stays until the calendar changes that same field, and
+notes edited in Dottoday are never replaced. `last_synced_utc` = when calendar changes were last
+applied. Imported occurrences (`source = 'calendar'`) and their subtasks are **device-only**: the
+write path upserts them without `change_log` rows and `requeueAll` skips them (each device imports
+its own calendars, so a synced copy would show twice elsewhere; M7.4's cloud calendars revisit
+this). An event gone from the calendar (or a calendar switched off or removed) removes its
+occurrence outright when nothing of the person's is on it, else soft-deletes it detached
+(`calendar_link_id` null) so Trash keeps the subtasks/notes; an imported occurrence the person
+deleted keeps its link, so the event is not brought back. Imported events carry no Dottoday alerts
+(`alerts` null; the calendar app reminds) until the person adds some.
 
 ### `conflicts`
 `id, user_id, entity, entity_id, field, mine jsonb, theirs jsonb, created_at, resolved_at?`

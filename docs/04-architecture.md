@@ -120,6 +120,12 @@ cross-device option): Google/Microsoft OAuth handled by Supabase Edge Functions 
 encrypted server-side; the function fetches events and upserts into `calendar_events` for the user;
 the client subscribes like any table. External events map to `Occurrence` rows with `source =
 calendar` and `externalId`; local-only fields (subtasks, notes) live on the occurrence.
+Device calendars (M7.2, `CalendarImporter` in `data/calendar/`, pure `planCalendarImport` in
+`domain/calendar/`): on start, resume, the 6-hourly housekeeping, connecting and every switch, the
+switched-on calendars' events from yesterday to 90 days ahead are reconciled with the stored links
+in one transaction (links, occurrences validated like the write path, removals), then the usual
+after-write effects run. Nothing is read without the permission, and a calendar that fails to read
+keeps its imports (R-08). Details in docs/05 `calendar_links`.
 
 ## 8. Platform channels / plugins
 

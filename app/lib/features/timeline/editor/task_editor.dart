@@ -18,6 +18,7 @@ import 'package:dottoday/features/timeline/editor/editor_fields.dart';
 import 'package:dottoday/features/timeline/editor/editor_footer.dart';
 import 'package:dottoday/features/timeline/editor/editor_series.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
+import 'package:dottoday/features/timeline/widgets/note_links.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_subtasks.dart';
 import 'package:dottoday/shared/dot/colour_icon_block.dart';
 import 'package:flutter/foundation.dart';
@@ -266,6 +267,7 @@ class _FormState extends ConsumerState<_Form> {
           onChanged: (v) =>
               _change((o) => o.copyWith(notes: v.isEmpty ? null : v)),
         ),
+        NoteLinks(notes: _draft.notes),
         const SizedBox(height: DotSpace.xl),
         EditorFooter(
           task: _draft,

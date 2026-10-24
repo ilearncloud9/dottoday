@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
+import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/calendar/calendar_importer.dart';
 import 'package:dottoday/data/calendar/channel_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/drift_calendar_source_repository.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
@@ -11,6 +15,8 @@ import 'package:dottoday/data/calendar/plugin_device_calendar_gateway.dart';
 import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/calendar/calendar_import.dart';
 import 'package:dottoday/domain/calendar/calendar_import_rules.dart';
 import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
@@ -18,7 +24,9 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 part 'calendar_providers.g.dart';
 
@@ -50,6 +58,18 @@ CalendarSourceRepository calendarSourceRepository(Ref ref) =>
       clock: ref.watch(clockProvider),
       ids: const UuidV7Generator(),
     );
+
+/// Device-calendar events → occurrences (docs/09 M7.2).
+@Riverpod(keepAlive: true)
+CalendarImport calendarImporter(Ref ref) => CalendarImporter(
+  db: ref.watch(appDatabaseProvider),
+  gateway: ref.watch(deviceCalendarGatewayProvider),
+  sources: ref.watch(calendarSourceRepositoryProvider),
+  effects: ref.watch(afterWriteEffectsProvider),
+  clock: ref.watch(clockProvider),
+  ids: const UuidV7Generator(),
+  logger: ref.watch(loggerProvider),
+);
 
 /// The calendar permission now; re-read with `ref.invalidate` (on resume,
 /// after asking).
@@ -99,10 +119,17 @@ final class CalendarActions {
   final Ref _ref;
 
   /// Shows the OS prompt (the "Connect a calendar" button and O4 row) and
-  /// returns the answer; the page and the list follow.
+  /// returns the answer; the page and the list follow, and once allowed
+  /// the events come in.
   Future<PermissionState> connect() async {
     try {
-      return await _ref.read(deviceCalendarGatewayProvider).request();
+      final answer = await _ref.read(deviceCalendarGatewayProvider).request();
+      if (answer == PermissionState.granted) {
+        _ref.invalidate(calendarPermissionStateProvider);
+        // In the background: the prompt's answer shows at once.
+        unawaited(importEvents());
+      }
+      return answer;
     } on Exception catch (e, s) {
       // Nothing was granted; the page re-reads the state below.
       _ref
@@ -121,13 +148,11 @@ final class CalendarActions {
     required bool on,
   }) async {
     try {
-      // The stored row, not the profile stream (see `readProfile`).
-      final profile =
-          await _ref.read(settingsRepositoryProvider).findLocalProfile() ??
-          await _ref.read<Future<Profile>>(localProfileProvider.future);
+      final profile = await _profile();
       await _ref
           .read(calendarSourceRepositoryProvider)
           .setEnabled(profile.id, calendar, enabled: on);
+      unawaited(importEvents());
       return const Ok(null);
     } on Exception catch (e, s) {
       _ref
@@ -136,4 +161,42 @@ final class CalendarActions {
       return const Err(StorageFailure());
     }
   }
+
+  /// Brings the switched-on calendars' events in now (start, resume, a
+  /// switch, connecting). Failures are logged; the next run repairs them.
+  Future<void> importEvents() async {
+    if (!_ref.read(deviceCalendarGatewayProvider).available) return;
+    final logger = _ref.read(loggerProvider);
+    final choices = _ref.listen(calendarChoiceListProvider.future, (_, _) {});
+    try {
+      final profile = await _profile();
+      final list = await choices.read();
+      final zone = await _ref.read(currentDeviceZoneProvider.future);
+      final result = await _ref
+          .read(calendarImporterProvider)
+          .run(
+            userId: profile.id,
+            choices: list,
+            location: tz.getLocation(zone),
+            untitled: lookupAppLocalizations(
+              Locale(profile.locale),
+            ).calendarEventUntitled,
+          );
+      if (result case Err(:final failure)) {
+        logger.warn('calendar.import_refused', error: failure);
+      }
+    } on Object catch (e, s) {
+      // A calendar that can't be listed, or an unknown zone: nothing was
+      // written; the next start or resume tries again.
+      logger.warn('calendar.import_skipped', error: e, stackTrace: s);
+    } finally {
+      choices.close();
+    }
+  }
+
+  /// The stored row, not the profile stream (see `readProfile`): sign-in
+  /// re-keys it.
+  Future<Profile> _profile() async =>
+      await _ref.read(settingsRepositoryProvider).findLocalProfile() ??
+      await _ref.read<Future<Profile>>(localProfileProvider.future);
 }

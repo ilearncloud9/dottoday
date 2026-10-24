@@ -3644,4 +3644,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String settingsNameAndStatus(String name, String status) {
     return '$name · $status';
   }
+
+  @override
+  String get calendarEventUntitled => 'Untitled event';
+
+  @override
+  String get taskLinks => 'Links';
+
+  @override
+  String taskLinkOpen(String host) {
+    return 'Open $host in the browser';
+  }
+
+  @override
+  String get taskLinkFailed => 'Couldn\'t open that link';
 }

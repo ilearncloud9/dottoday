@@ -1,5 +1,7 @@
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/entities/calendar.dart';
+import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -103,3 +105,10 @@ List<CalendarChoice> calendarChoices(
       ),
   ];
 }
+
+/// Whether [o] stays on this device, never synced: an import from this
+/// device's calendars, with its subtasks (docs/05 "Device calendars").
+/// Every device imports its own calendars, so a synced copy would show
+/// twice on the others (docs/09 M7.2). M7.4's cloud calendars revisit
+/// this once their events come from the server.
+bool isDeviceOnly(Occurrence o) => o.source == OccurrenceSource.calendar;

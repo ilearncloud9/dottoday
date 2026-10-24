@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/domain/calendar/calendar_import.dart';
 import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/entities/calendar.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 /// Device calendars without the OS: [state] now, [answer] to the prompt.
 final class FakeDeviceCalendarGateway implements DeviceCalendarGateway {
@@ -16,7 +18,8 @@ final class FakeDeviceCalendarGateway implements DeviceCalendarGateway {
     this.list = const [],
     this.failure,
     this.settingsOpen = false,
-  });
+    Map<String, List<ExternalEvent>>? events,
+  }) : eventsByCalendar = events ?? {};
 
   PermissionState state;
   final PermissionState answer;
@@ -25,6 +28,11 @@ final class FakeDeviceCalendarGateway implements DeviceCalendarGateway {
   /// Returned by [calendars] instead of [list] while set.
   AppFailure? failure;
   final bool settingsOpen;
+
+  /// Each calendar's events; a calendar in [failingCalendars] can't be
+  /// read.
+  final Map<String, List<ExternalEvent>> eventsByCalendar;
+  final failingCalendars = <String>{};
   var asked = 0;
   var openedSettings = 0;
 
@@ -58,7 +66,15 @@ final class FakeDeviceCalendarGateway implements DeviceCalendarGateway {
     String calendarId,
     DateTime fromUtc,
     DateTime toUtc,
-  ) async => const Ok([]);
+  ) async {
+    if (failingCalendars.contains(calendarId)) {
+      return const Err(StorageFailure());
+    }
+    return Ok([
+      for (final e in eventsByCalendar[calendarId] ?? const <ExternalEvent>[])
+        if (e.startUtc.isBefore(toUtc) && e.endUtc.isAfter(fromUtc)) e,
+    ]);
+  }
 }
 
 /// [CalendarSourceRepository] in memory.
@@ -94,6 +110,14 @@ final class FakeCalendarSourceRepository implements CalendarSourceRepository {
       );
     _changes.add([...rows]);
   }
+
+  @override
+  Future<CalendarAccount> ensure(String userId, DeviceCalendar calendar) async {
+    final found = rows.where((r) => r.externalAccountId == calendar.id);
+    if (found.isNotEmpty) return found.first;
+    await setEnabled(userId, calendar, enabled: true);
+    return rows.last;
+  }
 }
 
 /// iCloud Home (red) and Work (blue), a read-only Holidays, and a Gmail
@@ -125,3 +149,19 @@ const sampleCalendars = [
     colorArgb: 0xFF34C759,
   ),
 ];
+
+/// Records each import instead of writing occurrences.
+final class FakeCalendarImport implements CalendarImport {
+  final runs = <List<CalendarChoice>>[];
+
+  @override
+  Future<Result<void, AppFailure>> run({
+    required String userId,
+    required List<CalendarChoice> choices,
+    required tz.Location location,
+    required String untitled,
+  }) async {
+    runs.add(choices);
+    return const Ok(null);
+  }
+}

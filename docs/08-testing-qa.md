@@ -68,6 +68,7 @@ Grouped by who does them. Collected from the M5/M6 readiness notes in `09-implem
 - [ ] Manual: ⌘/ (Ctrl+/ on Windows/Linux) opens the shortcut list in real desktop Chrome.
 - [ ] Manual (iOS simulator and Android emulator, at M7.7): Settings › Calendars › Connect shows the system prompt with the usage text; allowed lists the device's calendars; denied shows "Calendar access is off" and Open settings lands on Dottoday's page (iOS) — M7.1.
 - [ ] Manual (this Mac, needs a person at the system prompt): Settings › Calendars › Connect shows the macOS prompt with the usage text; allowed lists the Mac's calendars by account with colours, and `flutter test integration_test/mac_calendar_bridge_test.dart -d macos` then also reads a week of events; denied shows the notice and Open settings lands on Privacy & Security › Calendars — M7.1b. (Run on 2026-10-24: bridge answers, status `notAsked`; the allow/deny path is this gate.)
+- [ ] Manual (iOS simulator, Android emulator and this Mac, at M7.7, calendars allowed): an event in the device's Calendar app appears on Today in its calendar's colour within a resume; a repeating event shows on each day; moving it in Calendar moves it here and keeps a subtask added here; deleting it there removes it here (or puts it in Trash when it has a subtask); switching its calendar off removes its events; a link in its notes opens the browser — M7.2.
 - [ ] Manual (real desktop Chrome): on a fresh load the first Tab shows "Skip to content" and Enter moves focus past the rail.
 
 ## 7. Design-review matrix (Concept A, docs/10 §7)
@@ -105,6 +106,7 @@ Sweep entries (add a row per screen as it lands):
 | Shift chip | `test/shared/dot/shift_chip_golden_test.dart` | derived |
 | Today T1/T2/T3, selecting | `test/features/timeline/today_golden_test.dart` | `Main`, `A-ios-today-month`, `A-ios-future-month` |
 | Task sheet T4 | `test/features/timeline/task_sheet_golden_test.dart` | `A-ios-task-sheet` |
+| Task sheet · LINKS (imported event) | `test/features/timeline/task_sheet_links_golden_test.dart` | derived |
 | Phone editor E1 | `test/features/timeline/task_editor_golden_test.dart` | `A-mac-editor` (fields) |
 | Inbox I1 + empty | `test/features/inbox/inbox_golden_test.dart` | `A-ios-inbox`, `A-android-inbox` |
 | Add A1 What (+ Android idiom, no-habits) | `test/features/task_editor/add_golden_test.dart` | `A-ios-add-what`, `A-android-add-what` |

@@ -42,16 +42,24 @@ void main() {
       list: sampleCalendars,
     );
     final sources = FakeCalendarSourceRepository();
+    final import = FakeCalendarImport();
     await pumpSettings(
       tester,
       location: _page,
       calendarGateway: os,
       calendarSources: sources,
+      calendarImport: import,
     );
     await tester.tap(find.text('Work'));
     await tester.pumpAndSettle();
     expect(sources.rows.single.externalAccountId, 'work');
     expect(sources.rows.single.enabled, isFalse);
+    // The events follow the switch at once (M7.2): Work's leave.
+    final enabled = {
+      for (final c in import.runs.last)
+        if (c.enabled) c.calendar.id,
+    };
+    expect(enabled, {'home', 'holidays', 'gym'});
     final work = tester.widget<DotSwitch>(
       find.descendant(
         of: find.ancestor(

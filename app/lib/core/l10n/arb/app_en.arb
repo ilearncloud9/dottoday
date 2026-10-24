@@ -5005,5 +5005,13 @@
   "settingsSyncedNoName": "Synced {ago}",
   "@settingsSyncedNoName": {"description": "Settings header, signed in, no name.", "placeholders": {"ago": {"type": "String"}}},
   "settingsNameAndStatus": "{name} · {status}",
-  "@settingsNameAndStatus": {"description": "Settings header, signed in, a sync state other than synced.", "placeholders": {"name": {"type": "String"}, "status": {"type": "String"}}}
+  "@settingsNameAndStatus": {"description": "Settings header, signed in, a sync state other than synced.", "placeholders": {"name": {"type": "String"}, "status": {"type": "String"}}},
+  "calendarEventUntitled": "Untitled event",
+  "@calendarEventUntitled": {"description": "Title of an imported calendar event that has none (M7.2)."},
+  "taskLinks": "Links",
+  "@taskLinks": {"description": "Task sheet and editor: caption over the web links found in the notes (R-02)."},
+  "taskLinkOpen": "Open {host} in the browser",
+  "@taskLinkOpen": {"description": "Screen-reader hint of a link row in the task sheet.", "placeholders": {"host": {"type": "String"}}},
+  "taskLinkFailed": "Couldn't open that link",
+  "@taskLinkFailed": {"description": "Snackbar when the browser couldn't be opened for a link."}
 }

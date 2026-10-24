@@ -15,6 +15,7 @@ import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/security/app_lock_store.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/calendar/calendar_import.dart';
 import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/entities/enums.dart';
@@ -393,6 +394,7 @@ List<Override> timelineOverrides({
   String? deviceZone,
   DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
   CalendarSourceRepository? calendarSources,
+  CalendarImport? calendarImport,
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
@@ -435,6 +437,9 @@ List<Override> timelineOverrides({
     deviceCalendarGatewayProvider.overrideWithValue(calendarGateway),
     calendarSourceRepositoryProvider.overrideWithValue(
       calendarSources ?? FakeCalendarSourceRepository(),
+    ),
+    calendarImporterProvider.overrideWithValue(
+      calendarImport ?? FakeCalendarImport(),
     ),
   ];
 }

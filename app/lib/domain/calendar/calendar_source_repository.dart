@@ -16,4 +16,9 @@ abstract interface class CalendarSourceRepository {
     DeviceCalendar calendar, {
     required bool enabled,
   });
+
+  /// The row of [calendar] for [userId], created (on) when it has none:
+  /// an imported event's `calendar_links.account_id` needs one
+  /// (docs/09 M7.2).
+  Future<CalendarAccount> ensure(String userId, DeviceCalendar calendar);
 }

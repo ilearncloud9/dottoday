@@ -48,27 +48,43 @@ final class DriftCalendarSourceRepository implements CalendarSourceRepository {
     DeviceCalendar calendar, {
     required bool enabled,
   }) => _db.transaction(() async {
-    final now = _clock.nowUtc();
-    final wire = _wire(provider);
-    final existing = await _dao.findExternal(userId, wire, calendar.id);
-    final account = existing == null
-        ? CalendarAccount(
-            id: _ids.newId(),
-            userId: userId,
-            provider: provider,
-            label: _label(calendar.name),
-            externalAccountId: calendar.id,
-            enabled: enabled,
-            createdAt: now,
-            updatedAt: now,
-          )
-        : _fromRow(existing).copyWith(
-            label: _label(calendar.name),
-            enabled: enabled,
-            updatedAt: now,
-          );
+    final existing = await _find(userId, calendar);
+    final account = (existing ?? _create(userId, calendar)).copyWith(
+      label: _label(calendar.name),
+      enabled: enabled,
+      updatedAt: _clock.nowUtc(),
+    );
     await _dao.upsert(_codec.encode<CalendarAccountRow>(account.toJson()));
   });
+
+  @override
+  Future<CalendarAccount> ensure(String userId, DeviceCalendar calendar) =>
+      _db.transaction(() async {
+        final existing = await _find(userId, calendar);
+        if (existing != null) return existing;
+        final account = _create(userId, calendar);
+        await _dao.upsert(_codec.encode<CalendarAccountRow>(account.toJson()));
+        return account;
+      });
+
+  Future<CalendarAccount?> _find(String userId, DeviceCalendar calendar) async {
+    final row = await _dao.findExternal(userId, _wire(provider), calendar.id);
+    return row == null ? null : _fromRow(row);
+  }
+
+  /// A new row for [calendar]: on, as a never-switched calendar is.
+  CalendarAccount _create(String userId, DeviceCalendar calendar) {
+    final now = _clock.nowUtc();
+    return CalendarAccount(
+      id: _ids.newId(),
+      userId: userId,
+      provider: provider,
+      label: _label(calendar.name),
+      externalAccountId: calendar.id,
+      createdAt: now,
+      updatedAt: now,
+    );
+  }
 
   static CalendarAccount _fromRow(CalendarAccountRow row) =>
       CalendarAccount.fromJson(_codec.decode(row));

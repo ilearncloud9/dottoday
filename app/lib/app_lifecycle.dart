@@ -16,7 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Housekeeping on app start and on every resume (docs/09 M3.2, M2.3–M2.5):
 /// ensure the local profile, take the daily backup if due, purge expired
 /// Trash, then the daily refresh: roll repeats forward and re-plan OS
-/// notifications (M5.2). Each step is idempotent and runs
+/// notifications (M5.2), then bring device-calendar events in (M7.2). Each step is idempotent and runs
 /// after the first frame, so it never delays the UI; failures are logged
 /// and the next start/resume repairs them.
 Future<void> runHousekeeping(WidgetRef ref) async {
@@ -34,6 +34,7 @@ Future<void> runHousekeeping(WidgetRef ref) async {
       logger.warn('housekeeping.purge_failed', error: failure);
     }
     await ref.read(dailyRefreshProvider).run(profile.id);
+    await ref.read(calendarActionsProvider).importEvents();
   } on Object catch (e, st) {
     logger.error('housekeeping.failed', error: e, stackTrace: st);
   }

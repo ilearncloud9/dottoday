@@ -9,6 +9,7 @@ import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
+import 'package:dottoday/domain/calendar/calendar_import.dart';
 import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -60,6 +61,7 @@ Future<SettingsHarness> pumpSettings(
   ExactAlarms exactAlarms = const AlwaysExactAlarms(),
   DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
   CalendarSourceRepository? calendarSources,
+  CalendarImport? calendarImport,
 }) async {
   tester.view
     ..physicalSize = size
@@ -81,6 +83,7 @@ Future<SettingsHarness> pumpSettings(
         exactAlarms: exactAlarms,
         calendarGateway: calendarGateway,
         calendarSources: calendarSources,
+        calendarImport: calendarImport,
       ),
       linkLauncherProvider.overrideWithValue(links),
       appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),

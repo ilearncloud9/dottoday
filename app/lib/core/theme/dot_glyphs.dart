@@ -86,6 +86,11 @@ abstract final class DotGlyphs {
   static const share = DotGlyph(
     'M12 15V3M7 8l5-5 5 5M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4',
   );
+  // Links in a task's notes (M7.2, R-02).
+  static const link = DotGlyph(
+    'M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'
+    'M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71',
+  );
   static final help = DotGlyph(
     '${_c(12, 12, 9)}M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01',
   );

@@ -5433,6 +5433,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} · {status}'**
   String settingsNameAndStatus(String name, String status);
+
+  /// Title of an imported calendar event that has none (M7.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled event'**
+  String get calendarEventUntitled;
+
+  /// Task sheet and editor: caption over the web links found in the notes (R-02).
+  ///
+  /// In en, this message translates to:
+  /// **'Links'**
+  String get taskLinks;
+
+  /// Screen-reader hint of a link row in the task sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Open {host} in the browser'**
+  String taskLinkOpen(String host);
+
+  /// Snackbar when the browser couldn't be opened for a link.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open that link'**
+  String get taskLinkFailed;
 }
 
 class _AppLocalizationsDelegate
