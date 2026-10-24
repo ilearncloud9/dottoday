@@ -71,6 +71,15 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
 - [F2.7] Duration chips 15/30/45/60/90 + custom; range 5 min–24 h. (R-16)
 - [F2.8] "Add another" keeps the sheet open; multi-line paste → one task per non-empty line. (R-07)
 - [F2.9] Editor fields: title (required, ≤ 200 chars), notes (markdown-lite, links tappable, ≤ 10 000 chars), start, duration, colour, icon, subtasks (≤ 50), alerts (≤ 5), recurrence, pinned, travel-time buffer (0–180 min), energy level (optional, low/med/high). (R-02, R-17)
+  Clarified in M8.4c: energy is three chips (Low · Medium · High) under ENERGY in the editor; tapping
+  the picked chip clears it (no fourth "None" chip). An edit of a repeating task's energy asks the
+  series scope like any other field. Markdown-lite is `**bold**`/`__bold__`, `*italic*`/`_italic_`,
+  `- `/`* `/`• ` bullets, `1. ` numbered items, `[label](https://…)` and bare web links; headings,
+  code and anything else stay as typed. The editor keeps the source (a helper line names the syntax);
+  the task sheet renders it under NOTES. Links are drawn as links inline, and the LINKS rows below
+  stay what a tap opens (44 pt rows a screen reader lists, R-12); a line that is only a listed link is
+  not repeated. In-repo renderer, no package (rejected: a markdown package — a new dependency for
+  four constructs; a WYSIWYG field — a new concept on four platforms).
 - [F2.10] Saving is optimistic; the sheet closes immediately.
 - [F2.11] Subtasks gain an optional duration each and an order; a task's duration may be the sum of its steps.
   Occurrences record actual start and actual end timestamps when the user starts/completes them
@@ -79,8 +88,21 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
 ## F3. Inbox
 
 - [F3.1] Unscheduled tasks live in the inbox; drag from inbox onto the timeline, or tap → "Schedule" with smart suggestions (next free gap today, tomorrow morning, pick time).
+  Clarified in M8.4c: dragging an Inbox task onto the thread is the expanded (≥ 840 px) path, where
+  the Inbox sidebar sits beside Today. On compact and medium widths the Schedule sheet is the path:
+  `+` or a swipe left opens it, and "Pick time" places the task by dragging it on that day's
+  thread (`ThreadPicker`). Rejected: a cross-tab drag on phones — Inbox and Today are separate tabs,
+  so the drag would have to switch tabs mid-gesture, and a row's long-press (menu) and handle
+  (reorder, F3.2) already own the gestures.
 - [F3.2] Inbox supports reorder, swipe-to-schedule, swipe-to-trash, bulk select.
 - [F3.3] An inbox badge shows count; an optional "plan your inbox" nudge appears once per day at day start (dismissible, off by default).
+  Clarified in M8.4c: the badge is the open Inbox count on the Inbox tab / rail item on every width,
+  in the accent (never red), "99+" past 99, and the tab's screen-reader name carries it ("Inbox, 3
+  tasks"). The nudge is a card on Today above the thread (Settings › Planning › "Plan-your-inbox
+  nudge", off by default): it shows from Wake Up to Bedtime while the Inbox holds open tasks, unless a
+  more pressing prompt (Day review, Running late) is up; Plan opens the Inbox, and Plan or Not now
+  puts it away until the next day on this device. Rejected: a local notification at Wake Up — it
+  would spend the iOS 64-pending budget (07) on a suggestion, and the reminder settings are M8.4d's.
 
 ## F4. Recurrence
 
@@ -186,6 +208,13 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
 - [F8.1] Today (timeline), Inbox, Week overview (compact, read + drag), Month (dots per day, tap to open day) — all free. (R-03, R-14)
 - [F8.2] Search across titles/notes/subtasks including completed history. (R-11)
 - [F8.3] Settings: day boundaries, snapping, shift-followers default, alerts default, theme (system/light/dark), accent colour, 12/24 h, first day of week, language, calendars, account, export, trash, feedback, changelog, about. (R-19)
+  Clarified in M8.4c: the accent colour is one of Concept A's four (`10-ui-concept-a.md` §2) on every
+  platform; there is no Android Material You (wallpaper) accent. The design contract is the more
+  specific doc (ADR-0007), its four accents are paired light/dark values checked for contrast, and
+  colours are not among the idioms platforms may vary (§4); an Android-only option would also break
+  R-13 parity. Rejected: `dynamic_color` (a new dependency the design-system rules exclude) and a
+  platform channel snapping the system accent to the nearest of the four (a fifth, Android-only
+  concept with no iOS/web equivalent).
 
 ## F9. Home-screen widgets & watch (mobile/desktop)
 

@@ -145,6 +145,7 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   "runningLateNudge": true,
   "rollUnfinished": false,
   "bedtimeReminder": true,
+  "inboxNudge": false,
   "suggestTravelTime": false,
   "travelTimeMin": 15
 }
@@ -171,6 +172,9 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   (M3f.5 offers to shift the rest), `rollUnfinished` (Day review moves unfinished tasks to tomorrow
   instead of the Inbox, M3f.5) and `bedtimeReminder` (M3d.3/M5) are plain booleans; absent keys take
   the defaults above, so older rows stay valid and the server check is unchanged.
+- Clarified in M8.4c: `inboxNudge` (PRD F3.3, the once-a-day "Plan your inbox" card on Today) is a
+  plain boolean, off by default; the day it was last put away is per device in `local_meta`
+  (`inbox_nudge_day`, never synced — a nudge is a suggestion, like the Day review's "Not now").
 - Server enforces with CHECK constraints and a `validate_settings()` function; client with a Zod-like
   Dart validator in `domain/validation`.
 

@@ -25,13 +25,13 @@ ticked in 08 §6.1) before a tag.
 
 | Status | iPhone | Android | macOS | Web |
 |---|---|---|---|---|
-| ✓ CI | 33 | 33 | 38 | 47 |
+| ✓ CI | 35 | 35 | 40 | 49 |
 | ✓ device | 19 | 21 | 11 | 0 |
 | ◐ owner | 4 | 2 | 8 | 5 |
 | ◐ manual | 2 | 2 | 2 | 6 |
 | → later | 2 | 2 | 2 | 3 |
 | — n/a | 3 | 3 | 2 | 1 |
-| ✗ gap | 4 | 4 | 4 | 5 |
+| ✗ gap | 2 | 2 | 2 | 3 |
 
 ## F1. Timeline (day view) — the home screen
 
@@ -67,7 +67,7 @@ ticked in 08 §6.1) before a tag.
 | F2.6 | Time entry is always typeable | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/shared/time_input/time_input_test.dart` |
 | F2.7 | Duration chips 15/30/45/60/90 + custom | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/shared/duration/duration_chips_test.dart`<br>`test/shared/duration/duration_sheet_test.dart`<br>`test/domain/time/duration_presets_test.dart` |
 | F2.8 | "Add another" keeps the sheet open | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/task_editor/add_when_test.dart`<br>`test/features/task_editor/add_bulk_test.dart` |
-| F2.9 | Editor fields: title (required, ≤ 200 chars), notes (markdown-lite, links tappable, ≤ 10 000 chars), start,… | ✗ gap<br>energy, markdown-lite — M8.4c | ✗ gap<br>energy, markdown-lite — M8.4c | ✗ gap<br>energy, markdown-lite — M8.4c | ✗ gap<br>energy, markdown-lite — M8.4c | `test/features/timeline/task_editor_test.dart`<br>`test/domain/validation/entity_validators_test.dart`<br>`test/features/timeline/note_links_test.dart` |
+| F2.9 | Editor fields: title (required, ≤ 200 chars), notes (markdown-lite, links tappable, ≤ 10 000 chars), start,… | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/timeline/task_editor_test.dart`<br>`test/domain/validation/entity_validators_test.dart`<br>`test/features/timeline/note_links_test.dart`<br>`test/features/timeline/note_text_test.dart`<br>`test/core/utils/markdown_lite_test.dart`<br>`test/domain/recurrence/series_edit_test.dart` |
 | F2.10 | Saving is optimistic; the sheet closes immediately | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/task_editor/add_what_test.dart`<br>`test/features/timeline/task_editor_test.dart` |
 | F2.11 | Subtasks gain an optional duration each and an order | → later<br>step lengths M10.3; actual start M10.5 | → later<br>step lengths M10.3; actual start M10.5 | → later<br>step lengths M10.3; actual start M10.5 | → later<br>step lengths M10.3; actual start M10.5 | `test/domain/scheduling/task_progress_test.dart`<br>`test/features/timeline/editor_subtasks_test.dart`<br>`test/data/db/migration_test.dart` |
 ## F3. Inbox
@@ -76,7 +76,7 @@ ticked in 08 §6.1) before a tag.
 |---|---|---|---|---|---|---|
 | F3.1 | Unscheduled tasks live in the inbox | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/inbox/inbox_screen_test.dart`<br>`test/features/inbox/wide_inbox_test.dart` |
 | F3.2 | Inbox supports reorder, swipe-to-schedule, swipe-to-trash, bulk select | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/inbox/inbox_screen_test.dart`<br>`test/features/inbox/inbox_reorder_select_test.dart`<br>`test/domain/scheduling/inbox_order_test.dart` |
-| F3.3 | An inbox badge shows count | ✗ gap<br>nav badge + plan-your-inbox nudge — M8.4c | ✗ gap<br>nav badge + plan-your-inbox nudge — M8.4c | ✗ gap<br>nav badge + plan-your-inbox nudge — M8.4c | ✗ gap<br>nav badge + plan-your-inbox nudge — M8.4c | `test/features/inbox/inbox_screen_test.dart`<br>`test/domain/widgets/widget_snapshot_test.dart` |
+| F3.3 | An inbox badge shows count | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/inbox/inbox_screen_test.dart`<br>`test/domain/widgets/widget_snapshot_test.dart`<br>`test/shared/navigation/dot_shell_test.dart`<br>`test/domain/scheduling/inbox_nudge_test.dart`<br>`test/features/timeline/inbox_nudge_card_test.dart`<br>`test/data/inbox/inbox_nudge_seen_test.dart` |
 ## F4. Recurrence
 
 | ID | Feature | iPhone | Android | macOS | Web | Automated evidence |
@@ -165,11 +165,11 @@ ticked in 08 §6.1) before a tag.
 - **F2.2** A real clipboard paste on a phone is in the 08 §6.1 hardware pass.
 - **F2.3** Sheet below 840 px, side panel above — by width, not platform.
 - **F2.7** Presets are editable, default 15 30 45 1 h 1.5 h 2 h (M3c.3).
-- **F2.9** Built with the PRD limits: title, notes (links tap), start, duration, colour, icon, subtasks, alerts, repeat, travel buffer, pinned (M8.4b). Missing on all four: energy level (column exists), markdown-lite.
+- **F2.9** Built with the PRD limits: title, notes (links tap), start, duration, colour, icon, subtasks, alerts, repeat, travel buffer, pinned (M8.4b); energy chips and markdown-lite notes rendered in the sheet (M8.4c).
 - **F2.11** Data done (M6.5.1), order and reorder (M3f.3), actual end on Done (M6.5.2); the editor for step lengths and the starts come with M10.
-- **F3.1** Schedule sheet with suggestions everywhere; drag onto Today from the wide sidebar (≥ 840 px, M3e.2). Phone drag: decided in M8.4c.
+- **F3.1** Schedule sheet with suggestions everywhere; drag onto Today from the wide sidebar (≥ 840 px, M3e.2). Compact/medium place by dragging on the Schedule sheet's thread (PRD F3.1, M8.4c).
 - **F3.2** Wide: +, right-click and screen-reader actions replace swipes (M3e.2).
-- **F3.3** The count shows in the Inbox header and the Inbox widget (iPhone, Android) only; no tab/rail badge, no nudge.
+- **F3.3** Count on the Inbox tab/rail at every width, in the header and the Inbox widget; the plan-your-inbox card on Today, off by default (M8.4c).
 - **F4.5** New York spring/fall cases added in M8.4 (Berlin existed).
 - **F4.6** Mac and web refresh on start, resume and every 6 h while open (M5.2, M6.5.6); web offline via the service worker (CI pwa_check).
 - **F5.1** Device calendars on iPhone/Android (EventKit, CalendarContract) and the Mac (EventKit channel, M7.1b); Google/Microsoft on all four through the backend (owner gate: OAuth clients); Apple on web via CalDAV is Phase 2 (07 Web).
@@ -185,7 +185,7 @@ ticked in 08 §6.1) before a tag.
 - **F7.5** Share sheet on phones, save panel on the Mac, downloads on web (M8.1); logic is CI-tested, the system sheets need a person.
 - **F7.7** Confirmation email needs `delete-account` deployed with mail secrets (08 §6.1 Supabase project).
 - **F8.1** Week board from 840 px; phones use the week strip + Month (10 §5.2 W1).
-- **F8.3** Web shows "Uses your computer's lock" instead of App lock (07 Web). 07 Android's dynamic-colour accent is decided in M8.4c.
+- **F8.3** Web shows "Uses your computer's lock" instead of App lock (07 Web). Four Concept A accents on every target; no Android dynamic accent (PRD F8.3, M8.4c).
 - **F10.1** Real OS permission prompts are in the 08 §6.1 hardware pass.
 - **F11.1** Recipient is an owner gate (08 §6.1 Feedback address).
 

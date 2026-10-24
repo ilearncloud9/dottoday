@@ -18,7 +18,8 @@ specified here — never "not available on X".
   fall back to inexact if denied and tell the user; full-screen intents not used.
 - Widgets: Glance via `home_widget`; update via `WorkManager` + on write.
 - Calendar: `CalendarContract` read/write with runtime permission.
-- Predictive back, edge-to-edge, Material You dynamic colour as optional accent.
+- Predictive back, edge-to-edge. No Material You dynamic accent: the accent is one of Concept A's
+  four on every platform (PRD F8.3, decided in M8.4c).
 - Doze: use `WorkManager` periodic job (≥15 min) for materialisation; never rely on foreground service.
 
 ## macOS (min macOS 12)
