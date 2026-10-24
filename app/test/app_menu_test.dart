@@ -39,7 +39,10 @@ void main() {
   late FakeUndoService undo;
   late FakeOccurrenceRepository repo;
 
-  Future<void> pump(WidgetTester tester) async {
+  Future<void> pump(
+    WidgetTester tester, {
+    Widget child = const SizedBox(),
+  }) async {
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
       SystemChannels.menu,
       (call) async {
@@ -82,7 +85,7 @@ void main() {
                 for (final c in AppCommand.values)
                   c: () => calls[c] = (calls[c] ?? 0) + 1,
               },
-              child: const SizedBox(),
+              child: child,
             ),
           ),
         ),
@@ -125,7 +128,13 @@ void main() {
       );
     }
     // … but keys a text field needs are not.
-    for (final label in ['Undo', 'Previous Day', 'Next Day']) {
+    for (final label in [
+      'Undo',
+      'Redo',
+      'Delete',
+      'Previous Day',
+      'Next Day',
+    ]) {
       expect(
         items[label]!.containsKey('shortcutTrigger'),
         isFalse,
@@ -153,6 +162,92 @@ void main() {
     await select(tester, 'Undo');
     await tester.pumpAndSettle();
     expect(repo.rows.firstWhere((o) => o.id == gym.id).title, 'Gym');
+  }, variant: _mac);
+
+  // M8.6b: Redo and Delete beside Undo, in that order.
+  testWidgets('Edit lists Undo, Redo and Delete', (tester) async {
+    await pump(tester);
+    final edit = sent.cast<Map<Object?, Object?>>().firstWhere(
+      (m) => m['label'] == 'Edit',
+    );
+    expect(
+      _flatten(edit['children']! as List<Object?>).keys,
+      containsAllInOrder(['Undo', 'Redo', 'Delete']),
+    );
+  }, variant: _mac);
+
+  testWidgets('Edit › Redo makes the undone change again', (tester) async {
+    await pump(tester);
+    final gym = repo.rows.firstWhere((o) => o.title == 'Gym');
+    await undo.applyUndoable(
+      WriteBatch(
+        userId: gym.userId,
+        occurrences: [gym.copyWith(title: 'X')],
+      ),
+    );
+    String title() => repo.rows.firstWhere((o) => o.id == gym.id).title;
+    await select(tester, 'Redo');
+    expect(title(), 'X', reason: 'nothing undone yet');
+    await select(tester, 'Undo');
+    expect(title(), 'Gym');
+    await select(tester, 'Redo');
+    await tester.pumpAndSettle();
+    expect(title(), 'X');
+  }, variant: _mac);
+
+  testWidgets('Edit › Delete sends Trash to what has focus', (tester) async {
+    var trashed = 0;
+    await pump(
+      tester,
+      child: Actions(
+        actions: {
+          TrashTaskIntent: CallbackAction<TrashTaskIntent>(
+            onInvoke: (_) => trashed++,
+          ),
+        },
+        child: const Focus(autofocus: true, child: SizedBox()),
+      ),
+    );
+    await tester.pump();
+    await select(tester, 'Delete');
+    expect(trashed, 1);
+  }, variant: _mac);
+
+  // The menu has no key equivalents for these, and in a field it acts on
+  // the field, as native Edit menus do.
+  testWidgets('in a text field, Edit acts on the field', (tester) async {
+    var trashed = 0;
+    final text = TextEditingController(text: 'Gym bag');
+    addTearDown(text.dispose);
+    await pump(
+      tester,
+      child: Material(
+        child: Actions(
+          actions: {
+            TrashTaskIntent: CallbackAction<TrashTaskIntent>(
+              onInvoke: (_) => trashed++,
+            ),
+          },
+          child: TextField(controller: text, autofocus: true),
+        ),
+      ),
+    );
+    final gym = repo.rows.firstWhere((o) => o.title == 'Gym');
+    await undo.applyUndoable(
+      WriteBatch(
+        userId: gym.userId,
+        occurrences: [gym.copyWith(title: 'X')],
+      ),
+    );
+    await tester.pump();
+    text.selection = const TextSelection.collapsed(offset: 7);
+    await select(tester, 'Delete');
+    expect((text.text, trashed), ('Gym bag', 0));
+    text.selection = const TextSelection(baseOffset: 3, extentOffset: 7);
+    await select(tester, 'Delete');
+    expect((text.text, trashed), ('Gym', 0));
+    await select(tester, 'Undo');
+    expect(repo.rows.firstWhere((o) => o.id == gym.id).title, 'X');
   }, variant: _mac);
 
   testWidgets('no menu bar off the Mac', (tester) async {

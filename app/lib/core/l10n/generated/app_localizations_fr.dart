@@ -3516,6 +3516,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get menuNextDay => 'Jour suivant';
 
   @override
+  String get menuRedo => 'Rétablir';
+
+  @override
+  String get menuDelete => 'Supprimer';
+
+  @override
+  String get shortcutUndo => 'Annuler la dernière modification';
+
+  @override
+  String get shortcutRedo => 'Rétablir ce qui a été annulé';
+
+  @override
   String get exactTitle =>
       'Les rappels peuvent arriver quelques minutes après l\'heure';
 

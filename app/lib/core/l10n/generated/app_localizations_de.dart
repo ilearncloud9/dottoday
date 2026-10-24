@@ -3517,6 +3517,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get menuNextDay => 'Nächster Tag';
 
   @override
+  String get menuRedo => 'Wiederholen';
+
+  @override
+  String get menuDelete => 'Löschen';
+
+  @override
+  String get shortcutUndo => 'Letzte Änderung widerrufen';
+
+  @override
+  String get shortcutRedo => 'Widerrufenes wiederholen';
+
+  @override
   String get exactTitle =>
       'Erinnerungen kommen eventuell ein paar Minuten nach ihrer Zeit';
 

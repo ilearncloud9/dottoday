@@ -20,6 +20,8 @@ List<ShortcutGroup> appShortcutGroups(AppLocalizations l10n) {
         (keys: k('2'), action: l10n.shortcutGoInbox),
         (keys: k('3'), action: l10n.shortcutGoWeek),
         (keys: k('4'), action: l10n.shortcutGoMonth),
+        (keys: k('Z'), action: l10n.shortcutUndo),
+        (keys: k('Z', shift: true), action: l10n.shortcutRedo),
         (keys: k('/'), action: l10n.shortcutShowKeys),
       ],
     ),

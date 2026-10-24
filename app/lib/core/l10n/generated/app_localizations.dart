@@ -5250,6 +5250,30 @@ abstract class AppLocalizations {
   /// **'Next Day'**
   String get menuNextDay;
 
+  /// Mac Edit menu: makes the change the last Undo reverted again.
+  ///
+  /// In en, this message translates to:
+  /// **'Redo'**
+  String get menuRedo;
+
+  /// Mac Edit menu: moves the picked tasks on Today to Trash (with Undo); in a text field, deletes the selected text.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get menuDelete;
+
+  /// Keyboard shortcut sheet, everywhere: ⌘Z / Ctrl+Z outside a text field (docs/09 M8.6b).
+  ///
+  /// In en, this message translates to:
+  /// **'Undo the last change'**
+  String get shortcutUndo;
+
+  /// Keyboard shortcut sheet, everywhere: ⇧⌘Z / Ctrl+Shift+Z outside a text field (docs/09 M8.6b).
+  ///
+  /// In en, this message translates to:
+  /// **'Redo what was undone'**
+  String get shortcutRedo;
+
   /// Settings › Reminders notice when Android doesn't allow exact alarms.
   ///
   /// In en, this message translates to:

@@ -17,9 +17,7 @@ import 'package:dottoday/features/recovery/database_recovery.dart';
 import 'package:dottoday/features/sync_status/sync_sheet.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/shared/sheets/shortcut_sheet.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -62,9 +60,8 @@ class DottodayApp extends ConsumerWidget {
             handlers: handlers,
             child: AppCommandScope(
               handlers: handlers,
-              child: _undoKey(
-                ref,
-                Actions(
+              child: UndoKeys(
+                child: Actions(
                   actions: _intents(router),
                   // An unreadable database replaces every screen (M3f.9).
                   child: DatabaseGate(
@@ -85,23 +82,6 @@ class DottodayApp extends ConsumerWidget {
     );
   }
 }
-
-/// ⌘Z / Ctrl+Z undoes the last change (Edit › Undo, M5.5) when no text
-/// field has focus: a focused field handles the key itself and stops it.
-Widget _undoKey(WidgetRef ref, Widget child) => Shortcuts(
-  shortcuts: {
-    AppShortcuts.activator(defaultTargetPlatform, LogicalKeyboardKey.keyZ):
-        const UndoLastIntent(),
-  },
-  child: Actions(
-    actions: {
-      UndoLastIntent: CallbackAction<UndoLastIntent>(
-        onInvoke: (_) => unawaited(undoLast(ref)),
-      ),
-    },
-    child: child,
-  ),
-);
 
 /// What the root does for features' intents (no feature imports another).
 Map<Type, Action<Intent>> _intents(GoRouter router) => {

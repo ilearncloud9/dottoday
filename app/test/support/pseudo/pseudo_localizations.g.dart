@@ -2750,6 +2750,18 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get menuNextDay => pseudo(super.menuNextDay);
 
   @override
+  String get menuRedo => pseudo(super.menuRedo);
+
+  @override
+  String get menuDelete => pseudo(super.menuDelete);
+
+  @override
+  String get shortcutUndo => pseudo(super.shortcutUndo);
+
+  @override
+  String get shortcutRedo => pseudo(super.shortcutRedo);
+
+  @override
   String get exactTitle => pseudo(super.exactTitle);
 
   @override

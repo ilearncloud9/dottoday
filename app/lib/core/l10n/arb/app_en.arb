@@ -5020,6 +5020,18 @@
   "@menuNextDay": {
     "description": "Mac Go menu: the day after on Today."
   },
+  "menuRedo": "Redo",
+  "@menuRedo": {
+    "description": "Mac Edit menu: makes the change the last Undo reverted again."
+  },
+  "menuDelete": "Delete",
+  "@menuDelete": {
+    "description": "Mac Edit menu: moves the picked tasks on Today to Trash (with Undo); in a text field, deletes the selected text."
+  },
+  "shortcutUndo": "Undo the last change",
+  "@shortcutUndo": {"description": "Keyboard shortcut sheet, everywhere: ⌘Z / Ctrl+Z outside a text field (docs/09 M8.6b)."},
+  "shortcutRedo": "Redo what was undone",
+  "@shortcutRedo": {"description": "Keyboard shortcut sheet, everywhere: ⇧⌘Z / Ctrl+Shift+Z outside a text field (docs/09 M8.6b)."},
   "exactTitle": "Reminders may come a few minutes after their time",
   "@exactTitle": {
     "description": "Settings › Reminders notice when Android doesn't allow exact alarms."

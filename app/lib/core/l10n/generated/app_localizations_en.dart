@@ -3500,6 +3500,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuNextDay => 'Next Day';
 
   @override
+  String get menuRedo => 'Redo';
+
+  @override
+  String get menuDelete => 'Delete';
+
+  @override
+  String get shortcutUndo => 'Undo the last change';
+
+  @override
+  String get shortcutRedo => 'Redo what was undone';
+
+  @override
   String get exactTitle => 'Reminders may come a few minutes after their time';
 
   @override

@@ -32,11 +32,6 @@ final class NudgeTaskIntent extends Intent {
   final int minutes;
 }
 
-/// Move the picked tasks to Trash, with Undo.
-final class TrashTaskIntent extends Intent {
-  const TrashTaskIntent();
-}
-
 /// Open the one picked task.
 final class OpenTaskIntent extends Intent {
   const OpenTaskIntent();
@@ -127,7 +122,8 @@ class TaskKeys extends ConsumerWidget {
   }
 }
 
-/// An action that is off (so the key passes on) when [enabled] says so.
+/// An action that is off (so the key passes on) when [enabled] says so,
+/// or while a text field has focus (M8.6b: ⌫ and Space are typing there).
 final class _KeyAction<T extends Intent> extends Action<T> {
   _KeyAction(this.enabled, this.run);
 
@@ -135,7 +131,7 @@ final class _KeyAction<T extends Intent> extends Action<T> {
   final void Function(T intent) run;
 
   @override
-  bool isEnabled(T intent) => enabled();
+  bool isEnabled(T intent) => focusedTextField() == null && enabled();
 
   @override
   Object? invoke(T intent) {

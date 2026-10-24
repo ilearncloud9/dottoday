@@ -26,7 +26,7 @@ specified here — never "not available on X".
 - Doze: use `WorkManager` periodic job (≥15 min) for materialisation; never rely on foreground service.
 
 ## macOS (min macOS 12)
-- Menu bar: File (New task ⌘N, Export), Edit (Undo ⌘Z, Redo ⇧⌘Z, Delete), View (Today ⌘1, Inbox ⌘2, Week ⌘3, Month ⌘4), Go (Previous/Next day ⌘←/→, Today ⌘T).
+- Menu bar: File (New task ⌘N, Export), Edit (Undo ⌘Z, Redo ⇧⌘Z, Delete), View (Today ⌘1, Inbox ⌘2, Week ⌘3, Month ⌘4), Go (Previous/Next day ⌘←/→, Today ⌘T). Edit's items carry no native key equivalents (a field needs ⌘Z, ⇧⌘Z and ⌫); with a text field focused they act on the field (its undo/redo; Delete removes a selection, never a single letter), otherwise Undo/Redo are the app-level undo (one level of redo, 30 s, ended by any new change) and Delete moves the tasks picked on Today to Trash with Undo. The same ⌘Z / ⇧⌘Z (Ctrl+Z / Ctrl+Shift+Z) work on the web and Windows/Linux outside fields (M8.6b).
 - Menu-bar extra "Next up" (NSStatusItem) via a small Swift plugin; optional.
 - Notifications via UNUserNotificationCenter. "Next up" is the menu-bar item (M5.4/M5.5 decision, PRD F9), not a WidgetKit widget; it becomes the day dot in M9.6.
 - Sandbox entitlements: calendars, network client, user-selected file read/write (export).

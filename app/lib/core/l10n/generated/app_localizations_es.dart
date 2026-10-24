@@ -3510,6 +3510,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get menuNextDay => 'Día siguiente';
 
   @override
+  String get menuRedo => 'Rehacer';
+
+  @override
+  String get menuDelete => 'Eliminar';
+
+  @override
+  String get shortcutUndo => 'Deshacer el último cambio';
+
+  @override
+  String get shortcutRedo => 'Rehacer lo deshecho';
+
+  @override
   String get exactTitle =>
       'Los recordatorios pueden llegar unos minutos después de su hora';
 
