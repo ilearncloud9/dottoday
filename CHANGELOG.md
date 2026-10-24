@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M8.5b: Nothing you type is lost when a save fails (for example with no free space). Add closes as before, but if the task couldn't be saved it opens again with everything you entered, says "Couldn't save on this device" and offers Try again; a pasted list comes back the same way, and Add another keeps the sheet. The editor stays open on a failed Save with the same message, a new subtask stays in its field, and an edit that fails after you close the editor gets Try again in a message at the bottom.
 - M8.5: Release QA on the iPhone simulator, the Android emulator, the Mac and Chrome, with every result written down (docs/08 §4.1): 1 000 tasks, low storage, permissions turned off, time-zone changes, export and feedback hand-offs, reminder sounds. The beta builds are ready to upload, with a step-by-step guide (docs/release-beta.md); the uploads to TestFlight, Google Play and a web staging site are for the owner.
 - Fixed on the Mac: reminder sounds (Dot, Chime, Bell, Ripple) were silent in the Sound picker and reminders fell back to the system sound, including the first task's alarm chime. The sounds now come with the app.
 - Fixed: after opening Dottoday's data with an older version of the app (a beta tester going back a build, or an old copy on a Mac), the newer version could no longer open it. It now picks up where it left off, with nothing lost.

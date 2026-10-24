@@ -95,6 +95,8 @@ const f2Rows = <String, ParityRow>{
     tests: [
       'test/features/task_editor/add_what_test.dart',
       'test/features/timeline/task_editor_test.dart',
+      'test/features/task_editor/add_save_failure_test.dart',
+      'test/features/timeline/editor_save_failure_test.dart',
     ],
     all: ci,
   ),

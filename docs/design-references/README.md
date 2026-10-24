@@ -85,6 +85,7 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Sync sheet clock line: "Your clock is 7 min fast — reminders may be early" and, when fast, "Changes from this device wait until the clock is right…" (also the slow wording) | §5.3 "Sync status sheet", 11 A0 (M6.5.7) | `sync_sheet_clock_fast_*` |
 | Settings › Reminders › Notification health (THIS DEVICE rows: permission, exact alarms, battery, Do Not Disturb, Focus, web push, clock — each with its plain-words line and one fix), and the REMINDERS row "Notification health · All good / 1 thing to fix" | `SettingsGroup` rows, 11 A0 (M6.5.8) | `settings_health_{all_good,permission_off,android_off,clock_off}_*`, `settings_notifications_off_*` |
 | "Send me a test alarm" (CHECK IT WORKS group on O4 once notifications are allowed, and under Notification health): the owner's explanation with Send / Cancel, "Ringing in 42 s…", "Did it ring?" Yes / No and the line after each | 11 A0, §5.1 O4 (M6.5.9) | `onboarding_reminders_allowed_*`, `settings_test_alarm_{waiting,ask}_*`, `settings_health_*` |
+| Save failed (M8.5b, R-08): a strip above Add's fields (and the editor's) — warning glyph, "Couldn't save on this device. Try again.", Try again — while the draft stays | `BannerStrip`, §5.4 | `add_save_failed_*`; `add_save_failure_test`, `editor_save_failure_test` |
 
 ## Set B (Concept A+, standout features)
 

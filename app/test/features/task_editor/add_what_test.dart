@@ -1,5 +1,6 @@
 import 'package:dottoday/app.dart';
 import 'package:dottoday/app_screens.dart';
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -53,6 +54,7 @@ List<Occurrence> _history() => [
 Future<FakeOccurrenceRepository> _pumpApp(
   WidgetTester tester, {
   String location = AppRoutes.today,
+  WriteFault? writeFault,
 }) async {
   tester.view
     ..physicalSize = const Size(390, 844)
@@ -69,6 +71,7 @@ Future<FakeOccurrenceRepository> _pumpApp(
         now: _now,
         occurrences: repo,
         profile: testProfile(settings: const Settings(use24h: false)),
+        writeFault: writeFault,
       ),
     ),
   );
@@ -140,6 +143,26 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
       await tester.pumpAndSettle();
       expect(find.text('Continue'), findsOneWidget);
+    });
+
+    testWidgets('a failed save reopens Add over the shell (M8.5b, R-08)', (
+      tester,
+    ) async {
+      final fault = WriteFault()..failure = const StorageFailure();
+      final repo = await _pumpApp(tester, writeFault: fault);
+      await tester.tap(_addButton);
+      await tester.pumpAndSettle();
+      await tester.enterText(_title, 'Call Mum 3pm');
+      await tester.pump();
+      await tester.tap(find.text('Add to Inbox instead'));
+      await tester.pumpAndSettle();
+      expect(_added(repo, 'Call Mum'), isNull);
+      expect(find.widgetWithText(TextField, 'Call Mum 3pm'), findsOneWidget);
+      fault.failure = null;
+      await tester.tap(find.text('Try again'));
+      await tester.pumpAndSettle();
+      expect(_added(repo, 'Call Mum')!.isInbox, isTrue);
+      expect(find.byType(BottomSheet), findsNothing);
     });
   });
 

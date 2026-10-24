@@ -152,17 +152,25 @@ final class FakeSettingsRepository implements SettingsRepository {
   }
 }
 
+/// Makes every write through the fakes fail while [failure] is set (a
+/// full disk, M8.5b); clear it to let the next one land.
+final class WriteFault {
+  AppFailure? failure;
+}
+
 /// The write path over the fakes: validates settings like the real one
 /// (refusing an invalid batch whole), then stores profile and occurrences.
 final class FakeWriteUseCase implements WriteUseCase {
-  FakeWriteUseCase(this.settings, this.occurrences);
+  FakeWriteUseCase(this.settings, this.occurrences, [this.fault]);
 
   final FakeSettingsRepository settings;
   final FakeOccurrenceRepository occurrences;
+  final WriteFault? fault;
   final applied = <WriteBatch>[];
 
   @override
   Future<Result<void, AppFailure>> apply(WriteBatch batch) async {
+    if (fault?.failure case final f?) return Err(f);
     if (batch.profile case final p?) {
       if (validateSettings(p.settings) case Err(:final failure)) {
         return Err(failure);
@@ -253,9 +261,13 @@ final class FakeUndoService implements UndoService {
     this.subtasks,
     this.series,
     this.settings,
+    this.fault,
   ]);
 
   final FakeOccurrenceRepository occurrences;
+
+  /// Fails [applyUndoable] while set.
+  final WriteFault? fault;
   final FakeSubtaskRepository? subtasks;
   final FakeSeriesRepository? series;
 
@@ -271,6 +283,7 @@ final class FakeUndoService implements UndoService {
 
   @override
   Future<Result<UndoToken, AppFailure>> applyUndoable(WriteBatch batch) async {
+    if (fault?.failure case final f?) return Err(f);
     final id = 'undo-${_n++}';
     _before[id] = [
       for (final o in batch.occurrences)
@@ -417,16 +430,23 @@ List<Override> timelineOverrides({
   ExportService? exports,
   String whatsNewSeen = '0.1.0',
   DiagnosticsReader diagnostics = const FakeDiagnosticsReader(),
+  WriteFault? writeFault,
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
   final subs = subtasks ?? FakeSubtaskRepository();
   final seriesRepo = FakeSeriesRepository(series);
   final settingsRepo = FakeSettingsRepository(p);
-  final undo = FakeUndoService(repo, subs, seriesRepo, settingsRepo);
+  final undo = FakeUndoService(
+    repo,
+    subs,
+    seriesRepo,
+    settingsRepo,
+    writeFault,
+  );
   return [
     writeUseCaseProvider.overrideWithValue(
-      FakeWriteUseCase(settingsRepo, repo),
+      FakeWriteUseCase(settingsRepo, repo, writeFault),
     ),
     subtaskRepositoryProvider.overrideWithValue(subs),
     seriesRepositoryProvider.overrideWithValue(seriesRepo),

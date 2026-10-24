@@ -2,17 +2,14 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/clock/clock_provider.dart';
-import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
-import 'package:dottoday/domain/undo/undo_service.dart';
-import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/features/timeline/editor/editor_duration.dart';
 import 'package:dottoday/features/timeline/editor/editor_energy.dart';
 import 'package:dottoday/features/timeline/editor/editor_fields.dart';
@@ -20,10 +17,12 @@ import 'package:dottoday/features/timeline/editor/editor_footer.dart';
 import 'package:dottoday/features/timeline/editor/editor_notes.dart';
 import 'package:dottoday/features/timeline/editor/editor_series.dart';
 import 'package:dottoday/features/timeline/editor/editor_travel.dart';
+import 'package:dottoday/features/timeline/editor/editor_writer.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/widgets/calendar_write_line.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_subtasks.dart';
 import 'package:dottoday/shared/dot/colour_icon_block.dart';
+import 'package:dottoday/shared/feedback/save_failure.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -105,20 +104,29 @@ class _FormState extends ConsumerState<_Form> {
   /// Set in initState: a lazy read would see the autosaved row.
   late final Occurrence _opened;
   late final _title = TextEditingController(text: _draft.title);
-  // Read up front: the last flush runs in dispose, where ref is off limits.
-  late final UndoService _undo;
+  late final EditorWriter _writer;
   late final Clock _clock;
-  late final Logger _logger;
   Timer? _timer;
   var _dirty = false;
+
+  /// A failed write: shown with Try again; Save waits for one (R-08).
+  AppFailure? _failure;
 
   @override
   void initState() {
     super.initState();
     _opened = widget.task.occurrence;
-    _undo = ref.read(undoServiceProvider);
+    _writer = EditorWriter(
+      undo: ref.read(undoServiceProvider),
+      logger: ref.read(loggerProvider),
+    );
     _clock = ref.read(clockProvider);
-    _logger = ref.read(loggerProvider);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _writer.attach(context);
   }
 
   @override
@@ -135,38 +143,30 @@ class _FormState extends ConsumerState<_Form> {
     _timer = Timer(_debounce, _flush);
   }
 
-  /// Writes the draft if it changed. An empty title keeps the old one.
   void _flush() => unawaited(_flushNow());
 
-  Future<void> _flushNow() async {
+  /// Writes the draft if it changed; whether everything typed is written.
+  Future<bool> _flushNow() async {
     _timer?.cancel();
-    if (!_dirty) return;
+    if (!_dirty) return true;
     _dirty = false;
-    final title = _draft.title.trim();
-    final row = _draft.copyWith(
-      title: title.isEmpty ? widget.task.occurrence.title : title,
-      updatedAt: _clock.nowUtc(),
+    final failure = await _writer.write(
+      _draft,
+      keepTitle: widget.task.occurrence.title,
+      nowUtc: _clock.nowUtc(),
+      closed: () => !mounted,
     );
-    final written = await _undo.applyUndoable(
-      WriteBatch(userId: row.userId, occurrences: [row]),
-    );
-    // Not silent: a refused autosave is why Save finds nothing to ask.
-    if (written case Err(:final failure)) {
-      _logger.warn(
-        'editor.autosave_failed', // l10n-ignore: a log event
-        fields: {'id': row.id}, // l10n-ignore: a log field
-        error: failure,
-      );
-    }
+    if (failure != null) _dirty = true; // the next flush tries again
+    if (mounted) setState(() => _failure = failure);
+    return failure == null;
   }
 
-  /// Save (⏎ in the title, ⌘S): write now, ask which instances of a
-  /// repeating task it applies to, and leave (M3f.1).
+  /// Save (⏎, ⌘S): write now, ask which instances of a repeating task it
+  /// applies to (M3f.1), and leave — unless the write failed.
   void _save() => unawaited(_saveNow());
 
   Future<void> _saveNow() async {
-    await _flushNow();
-    if (!mounted) return;
+    if (!await _flushNow() || !mounted) return;
     final saved = await saveScoped(
       context,
       task: widget.task,
@@ -180,8 +180,7 @@ class _FormState extends ConsumerState<_Form> {
 
   /// The Repeat row: what is typed is saved first.
   Future<void> _repeat() async {
-    await _flushNow();
-    if (!mounted) return;
+    if (!await _flushNow() || !mounted) return;
     await pickRepeat(context, task: widget.task, draft: _draft);
   }
 
@@ -202,7 +201,11 @@ class _FormState extends ConsumerState<_Form> {
         AppShortcuts.activator(p, LogicalKeyboardKey.keyS): _save,
         AppShortcuts.activator(p, LogicalKeyboardKey.keyD): _toggleDone,
       },
-      child: _fields(context),
+      child: SaveFailureFrame(
+        failure: _failure,
+        onRetry: _save,
+        child: _fields(context),
+      ),
     );
   }
 

@@ -49,9 +49,12 @@ class AddWhenHost extends ConsumerWidget {
       snapMinutes: settings?.snapMinutes ?? 5,
       onStart: (m) => notifier.edit((d) => d.withStartMinute(m)),
       onDuration: (m) => notifier.edit((d) => d.withDuration(m)),
-      onAdd: () =>
-          unawaited(saveFromSheet(context, currentDraft(ref, request, state))),
-      onAnother: () => unawaited(_another(context, ref)),
+      onAdd: () => unawaited(
+        saveFromSheet(context, request, currentDraft(ref, request, state)),
+      ),
+      onAnother: () => unawaited(
+        addAnother(context, request, currentDraft(ref, request, state)),
+      ),
       onEditDay: () => unawaited(_changeDay(context, ref)),
       timeMenu: TimeMenu(
         dayText: relativeDayName(context, state.draft.day, state.draft.today),
@@ -63,6 +66,7 @@ class AddWhenHost extends ConsumerWidget {
         onInbox: () => unawaited(
           saveFromSheet(
             context,
+            request,
             currentDraft(ref, request, state),
             toInbox: true,
           ),
@@ -107,13 +111,6 @@ class AddWhenHost extends ConsumerWidget {
     ref
         .read(addFlowProvider(request).notifier)
         .edit((d) => d.withDuration(minutes));
-  }
-
-  Future<void> _another(BuildContext context, WidgetRef ref) async {
-    final notifier = ref.read(addFlowProvider(request).notifier);
-    final draft = currentDraft(ref, request, state);
-    final saved = await saveFromSheet(context, draft, close: false);
-    if (saved) notifier.another(draft);
   }
 
   Future<void> _changeDay(BuildContext context, WidgetRef ref) async {

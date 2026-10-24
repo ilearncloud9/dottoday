@@ -80,7 +80,7 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
   stay what a tap opens (44 pt rows a screen reader lists, R-12); a line that is only a listed link is
   not repeated. In-repo renderer, no package (rejected: a markdown package — a new dependency for
   four constructs; a WYSIWYG field — a new concept on four platforms).
-- [F2.10] Saving is optimistic; the sheet closes immediately.
+- [F2.10] Saving is optimistic; the sheet closes immediately. If the write fails (a full disk), nothing typed is lost (R-08): Add reopens as it was — title, time, colour, a pasted list — with the failure and Try again; Add another keeps the sheet. The editor stays open on a failed Save with the same strip, and a new subtask stays in its field. (M8.5b; rejected: holding the sheet open until the write lands, which breaks "closes immediately".)
 - [F2.11] Subtasks gain an optional duration each and an order; a task's duration may be the sum of its steps.
   Occurrences record actual start and actual end timestamps when the user starts/completes them
   (`11-standout-roadmap.md` B1, B2).

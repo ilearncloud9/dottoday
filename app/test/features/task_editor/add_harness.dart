@@ -34,6 +34,7 @@ Future<FakeOccurrenceRepository> pumpAddHost(
   String text = '',
   DateTime? startUtc,
   DateTime? day,
+  WriteFault? writeFault,
 }) async {
   tester.view
     ..physicalSize = size
@@ -46,6 +47,7 @@ Future<FakeOccurrenceRepository> pumpAddHost(
         now: addNow,
         occurrences: repo,
         profile: testProfile(settings: const Settings(use24h: false)),
+        writeFault: writeFault,
       ),
       child: MediaQuery(
         data: MediaQueryData(
