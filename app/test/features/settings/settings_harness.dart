@@ -5,10 +5,13 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
+import 'package:dottoday/data/export/export_service.dart';
+import 'package:dottoday/data/export/file_gateway.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
+import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/calendar/calendar_import.dart';
 import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
@@ -63,6 +66,9 @@ Future<SettingsHarness> pumpSettings(
   CalendarSourceRepository? calendarSources,
   CalendarImport? calendarImport,
   CalendarImport? cloudCalendarImport,
+  BackupService? backups,
+  FileGateway? files,
+  ExportService? exports,
 }) async {
   tester.view
     ..physicalSize = size
@@ -86,6 +92,9 @@ Future<SettingsHarness> pumpSettings(
         calendarSources: calendarSources,
         calendarImport: calendarImport,
         cloudCalendarImport: cloudCalendarImport,
+        backups: backups,
+        files: files,
+        exports: exports,
       ),
       linkLauncherProvider.overrideWithValue(links),
       appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),

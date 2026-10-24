@@ -23,7 +23,9 @@ const _badFile = ValidationFailure(
 /// that is not a v1 bundle (other or newer versions, wrong shapes); rows
 /// failing the entity validators; duplicate ids; and occurrences/subtasks
 /// pointing at rows missing from the file. Valid rows come back normalised
-/// (titles trimmed, `calendar_link_id` cleared). The caller backs up first
+/// (titles trimmed, `calendar_link_id` cleared), and imported calendar
+/// events are dropped ([ExportBundle.withoutImported]) — files written
+/// before M8.1 may still hold them. The caller backs up first
 /// and imports in one transaction (M2.4).
 Result<ExportBundle, ValidationFailure> decodeExportJson(String text) {
   if (text.length > maxImportBytes ||
@@ -49,7 +51,7 @@ Result<ExportBundle, ValidationFailure> decodeExportJson(String text) {
     // Unknown enum value.
     return const Err(_badFile);
   }
-  return _validated(bundle);
+  return _validated(bundle.withoutImported());
 }
 
 Result<ExportBundle, ValidationFailure> _validated(ExportBundle b) {

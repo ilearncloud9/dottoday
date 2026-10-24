@@ -3,12 +3,16 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
 import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/write_back_providers.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
+import 'package:dottoday/data/export/export_providers.dart';
+import 'package:dottoday/data/export/export_service.dart';
+import 'package:dottoday/data/export/file_gateway.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
@@ -18,6 +22,7 @@ import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/security/app_lock_store.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/calendar/calendar_import.dart';
 import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
@@ -45,6 +50,7 @@ import 'package:flutter_riverpod/misc.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import 'calendar_fakes.dart';
+import 'export_fakes.dart';
 import 'fake_clock.dart';
 import 'search_fakes.dart';
 
@@ -401,6 +407,9 @@ List<Override> timelineOverrides({
   CalendarImport? cloudCalendarImport,
   IdleWriteBackController Function()? writeBack,
   Set<String> readOnlyCalendarIds = const {},
+  BackupService? backups,
+  FileGateway? files,
+  ExportService? exports,
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
@@ -454,6 +463,10 @@ List<Override> timelineOverrides({
     readOnlyCalendarIdsProvider.overrideWith(
       (ref) => Stream.value(readOnlyCalendarIds),
     ),
+    // No backups file, share sheet or file picker in tests (M8.1).
+    backupServiceProvider.overrideWithValue(backups ?? FakeBackupService()),
+    fileGatewayProvider.overrideWithValue(files ?? FakeFileGateway()),
+    exportServiceProvider.overrideWithValue(exports ?? FakeExportService()),
     // A factory: each container needs its own notifier.
     writeBackControllerProvider.overrideWith(
       writeBack ?? IdleWriteBackController.new,

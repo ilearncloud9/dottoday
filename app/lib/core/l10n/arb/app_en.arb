@@ -4062,9 +4062,110 @@
   "@exportIcsDetail": {
     "description": "Export format row subtitle."
   },
-  "exportComingSoon": "File export arrives in a later update. For now, a day's ⋯ › Copy day as text copies it.",
-  "@exportComingSoon": {
-    "description": "Export page caption while file export is not available."
+  "exportPlain": "Export files aren't encrypted: anyone who has the file can read your tasks. Imported calendar events stay in their calendar and aren't included.",
+  "@exportPlain": {
+    "description": "Export page warning shown before any export (06 §2: plaintext by user action only)."
+  },
+  "exportDone": "Exported",
+  "@exportDone": {
+    "description": "Snackbar after an export file was shared, saved or downloaded."
+  },
+  "exportHandOffFailed": "Couldn't save or share the file. Nothing was changed.",
+  "@exportHandOffFailed": {
+    "description": "Snackbar when the share sheet or save dialog failed."
+  },
+  "exportRestore": "Restore",
+  "@exportRestore": {
+    "description": "Export page group caption for importing a backup."
+  },
+  "exportImport": "Import a backup…",
+  "@exportImport": {
+    "description": "Row that opens the file picker for a JSON backup."
+  },
+  "exportImportDetail": "A JSON file exported from Dottoday",
+  "@exportImportDetail": {
+    "description": "Subtitle of the import row."
+  },
+  "exportImportTitle": "Replace your tasks with this backup?",
+  "@exportImportTitle": {
+    "description": "Import confirmation title."
+  },
+  "exportImportBody": "This file from {date} has {count, plural, =0{no tasks} =1{1 task} other{{count} tasks}}. Anything here that isn't in it moves to Trash. A backup of what's here now is taken first.",
+  "@exportImportBody": {
+    "description": "Import confirmation body; names the replace policy.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exportImportAction": "Replace",
+  "@exportImportAction": {
+    "description": "Import confirmation action."
+  },
+  "exportCancel": "Cancel",
+  "@exportCancel": {
+    "description": "Cancels an import or restore."
+  },
+  "exportImported": "Backup imported",
+  "@exportImported": {
+    "description": "Snackbar after an import; offers Undo."
+  },
+  "exportNotBackup": "This isn't a Dottoday backup, or it comes from a newer version of Dottoday. Nothing was changed.",
+  "@exportNotBackup": {
+    "description": "Import refused: wrong or newer file."
+  },
+  "exportTooLarge": "This file is over 25 MB, too large to import. Nothing was changed.",
+  "@exportTooLarge": {
+    "description": "Import refused: file too large."
+  },
+  "exportBackups": "On this device",
+  "@exportBackups": {
+    "description": "Export page group caption for local backups."
+  },
+  "exportBackupsNote": "Dottoday keeps a backup each day (the last 7) and one before every import or restore, encrypted, on this device only.",
+  "@exportBackupsNote": {
+    "description": "Explains local backups."
+  },
+  "exportBackupsNone": "No backups yet. The first is taken the next time Dottoday opens.",
+  "@exportBackupsNone": {
+    "description": "Shown when there are no local backups."
+  },
+  "exportBackupDaily": "Daily backup",
+  "@exportBackupDaily": {
+    "description": "Local backup row: the daily one."
+  },
+  "exportBackupPreImport": "Before an import",
+  "@exportBackupPreImport": {
+    "description": "Local backup row: taken before an import."
+  },
+  "exportBackupPreRestore": "Before a restore",
+  "@exportBackupPreRestore": {
+    "description": "Local backup row: taken before a restore."
+  },
+  "exportRestoreTitle": "Go back to this backup?",
+  "@exportRestoreTitle": {
+    "description": "Restore confirmation title."
+  },
+  "exportRestoreBody": "Your tasks go back to how they were on {date}. Anything newer moves to Trash. A backup of what's here now is taken first.",
+  "@exportRestoreBody": {
+    "description": "Restore confirmation body; names the replace policy.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "exportRestoreAction": "Restore",
+  "@exportRestoreAction": {
+    "description": "Restore confirmation action."
+  },
+  "exportRestored": "Backup restored",
+  "@exportRestored": {
+    "description": "Snackbar after restoring a local backup; offers Undo."
   },
   "helpIntro": "Quick answers. Anything else? Send feedback below.",
   "@helpIntro": {

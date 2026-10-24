@@ -192,3 +192,23 @@ skipped/deleted instances as `EXDATE`, moved/renamed ones as `RECURRENCE-ID` ove
 inbox items omitted). Import rejects files > 25 MB, any version other than 1, wrong shapes, rows failing
 validation, duplicate ids, dangling `series_id`/`occurrence_id` and rows of more than one owner; it
 clears `calendar_link_id` (links are not exported) and the caller re-owns rows to the signed-in user.
+
+Clarified in M8.1: imported calendar events (`source = 'calendar'`) and their subtasks are **never in
+a backup or an export** (JSON, CSV or ICS), and an import drops any an older file still holds. They
+are device-only and keyed to this device's calendars (`calendar_links`, not exported), so a copy in a
+file could only come back unlinked beside the importer's fresh one; the calendar stays their source
+and each device re-imports them. The current state a restore compares against is read the same way,
+so a restore or import never moves this device's imports to Trash either: they keep their links and
+the next import pairs them as before. Rejected: exporting the link keys so the importer re-pairs
+restored rows (links are per device and per calendar account — an EventKit id from another device
+pairs with nothing — and it would put calendar ids into user files). Cost: subtasks or notes added to
+an imported event stay on the device that has the event (as ADR-0011 already says for sync). Files:
+`dottoday-backup-<yyyy-MM-dd>.json`, `dottoday-<yyyy-MM-dd>.ics`, `dottoday-{tasks,repeats,subtasks}-
+<yyyy-MM-dd>.csv` (empty tables left out), dated in the profile's zone, never named after content.
+Restore/import policy is **replace**, said in the confirmation in those words ("Anything here that
+isn't in it moves to Trash"): it runs through the write path in one transaction after a pre-import
+(or pre-restore) backup, and Undo restores that backup. Rejected: a staging database swapped in by
+rename (the data-export skill's default) — the restore must flow through the write path so it is
+change-logged and syncs to the person's other devices like any edit, and one transaction already
+leaves nothing half-applied; and a payload checksum in the envelope (v1 stays as it is: a truncated
+or edited file already fails JSON parsing or row validation, and a newer `version` is refused).

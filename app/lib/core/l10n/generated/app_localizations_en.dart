@@ -2747,8 +2747,90 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exportIcsDetail => 'For other calendar apps';
 
   @override
-  String get exportComingSoon =>
-      'File export arrives in a later update. For now, a day\'s ⋯ › Copy day as text copies it.';
+  String get exportPlain =>
+      'Export files aren\'t encrypted: anyone who has the file can read your tasks. Imported calendar events stay in their calendar and aren\'t included.';
+
+  @override
+  String get exportDone => 'Exported';
+
+  @override
+  String get exportHandOffFailed =>
+      'Couldn\'t save or share the file. Nothing was changed.';
+
+  @override
+  String get exportRestore => 'Restore';
+
+  @override
+  String get exportImport => 'Import a backup…';
+
+  @override
+  String get exportImportDetail => 'A JSON file exported from Dottoday';
+
+  @override
+  String get exportImportTitle => 'Replace your tasks with this backup?';
+
+  @override
+  String exportImportBody(String date, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks',
+      one: '1 task',
+      zero: 'no tasks',
+    );
+    return 'This file from $date has $_temp0. Anything here that isn\'t in it moves to Trash. A backup of what\'s here now is taken first.';
+  }
+
+  @override
+  String get exportImportAction => 'Replace';
+
+  @override
+  String get exportCancel => 'Cancel';
+
+  @override
+  String get exportImported => 'Backup imported';
+
+  @override
+  String get exportNotBackup =>
+      'This isn\'t a Dottoday backup, or it comes from a newer version of Dottoday. Nothing was changed.';
+
+  @override
+  String get exportTooLarge =>
+      'This file is over 25 MB, too large to import. Nothing was changed.';
+
+  @override
+  String get exportBackups => 'On this device';
+
+  @override
+  String get exportBackupsNote =>
+      'Dottoday keeps a backup each day (the last 7) and one before every import or restore, encrypted, on this device only.';
+
+  @override
+  String get exportBackupsNone =>
+      'No backups yet. The first is taken the next time Dottoday opens.';
+
+  @override
+  String get exportBackupDaily => 'Daily backup';
+
+  @override
+  String get exportBackupPreImport => 'Before an import';
+
+  @override
+  String get exportBackupPreRestore => 'Before a restore';
+
+  @override
+  String get exportRestoreTitle => 'Go back to this backup?';
+
+  @override
+  String exportRestoreBody(String date) {
+    return 'Your tasks go back to how they were on $date. Anything newer moves to Trash. A backup of what\'s here now is taken first.';
+  }
+
+  @override
+  String get exportRestoreAction => 'Restore';
+
+  @override
+  String get exportRestored => 'Backup restored';
 
   @override
   String get helpIntro => 'Quick answers. Anything else? Send feedback below.';

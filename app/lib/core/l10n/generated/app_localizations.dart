@@ -4048,11 +4048,143 @@ abstract class AppLocalizations {
   /// **'For other calendar apps'**
   String get exportIcsDetail;
 
-  /// Export page caption while file export is not available.
+  /// Export page warning shown before any export (06 §2: plaintext by user action only).
   ///
   /// In en, this message translates to:
-  /// **'File export arrives in a later update. For now, a day\'s ⋯ › Copy day as text copies it.'**
-  String get exportComingSoon;
+  /// **'Export files aren\'t encrypted: anyone who has the file can read your tasks. Imported calendar events stay in their calendar and aren\'t included.'**
+  String get exportPlain;
+
+  /// Snackbar after an export file was shared, saved or downloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Exported'**
+  String get exportDone;
+
+  /// Snackbar when the share sheet or save dialog failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save or share the file. Nothing was changed.'**
+  String get exportHandOffFailed;
+
+  /// Export page group caption for importing a backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get exportRestore;
+
+  /// Row that opens the file picker for a JSON backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Import a backup…'**
+  String get exportImport;
+
+  /// Subtitle of the import row.
+  ///
+  /// In en, this message translates to:
+  /// **'A JSON file exported from Dottoday'**
+  String get exportImportDetail;
+
+  /// Import confirmation title.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace your tasks with this backup?'**
+  String get exportImportTitle;
+
+  /// Import confirmation body; names the replace policy.
+  ///
+  /// In en, this message translates to:
+  /// **'This file from {date} has {count, plural, =0{no tasks} =1{1 task} other{{count} tasks}}. Anything here that isn\'t in it moves to Trash. A backup of what\'s here now is taken first.'**
+  String exportImportBody(String date, int count);
+
+  /// Import confirmation action.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get exportImportAction;
+
+  /// Cancels an import or restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get exportCancel;
+
+  /// Snackbar after an import; offers Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup imported'**
+  String get exportImported;
+
+  /// Import refused: wrong or newer file.
+  ///
+  /// In en, this message translates to:
+  /// **'This isn\'t a Dottoday backup, or it comes from a newer version of Dottoday. Nothing was changed.'**
+  String get exportNotBackup;
+
+  /// Import refused: file too large.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is over 25 MB, too large to import. Nothing was changed.'**
+  String get exportTooLarge;
+
+  /// Export page group caption for local backups.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device'**
+  String get exportBackups;
+
+  /// Explains local backups.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday keeps a backup each day (the last 7) and one before every import or restore, encrypted, on this device only.'**
+  String get exportBackupsNote;
+
+  /// Shown when there are no local backups.
+  ///
+  /// In en, this message translates to:
+  /// **'No backups yet. The first is taken the next time Dottoday opens.'**
+  String get exportBackupsNone;
+
+  /// Local backup row: the daily one.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily backup'**
+  String get exportBackupDaily;
+
+  /// Local backup row: taken before an import.
+  ///
+  /// In en, this message translates to:
+  /// **'Before an import'**
+  String get exportBackupPreImport;
+
+  /// Local backup row: taken before a restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Before a restore'**
+  String get exportBackupPreRestore;
+
+  /// Restore confirmation title.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back to this backup?'**
+  String get exportRestoreTitle;
+
+  /// Restore confirmation body; names the replace policy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tasks go back to how they were on {date}. Anything newer moves to Trash. A backup of what\'s here now is taken first.'**
+  String exportRestoreBody(String date);
+
+  /// Restore confirmation action.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get exportRestoreAction;
+
+  /// Snackbar after restoring a local backup; offers Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup restored'**
+  String get exportRestored;
 
   /// Help page intro.
   ///

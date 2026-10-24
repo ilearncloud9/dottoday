@@ -94,3 +94,50 @@ final class BackupServiceProvider
 }
 
 String _$backupServiceHash() => r'436a9c0e5bd4400998acee6deb2bd726c9e5d901';
+
+/// The backups on this device, newest first (Settings › Export). Invalidate
+/// after taking or restoring one.
+
+@ProviderFor(backupList)
+final backupListProvider = BackupListProvider._();
+
+/// The backups on this device, newest first (Settings › Export). Invalidate
+/// after taking or restoring one.
+
+final class BackupListProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<BackupInfo>>,
+          List<BackupInfo>,
+          FutureOr<List<BackupInfo>>
+        >
+    with $FutureModifier<List<BackupInfo>>, $FutureProvider<List<BackupInfo>> {
+  /// The backups on this device, newest first (Settings › Export). Invalidate
+  /// after taking or restoring one.
+  BackupListProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'backupListProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$backupListHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<BackupInfo>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<BackupInfo>> create(Ref ref) {
+    return backupList(ref);
+  }
+}
+
+String _$backupListHash() => r'8f23b37014c5b28f31b332befe5cd0b21859668f';

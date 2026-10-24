@@ -143,4 +143,49 @@ void main() {
       Alert(kind: AlertKind.overdue, offsetMin: 15, sound: 'bell'),
     ]);
   });
+
+  group('imported calendar events (M8.1)', () {
+    ExportBundle withImport() {
+      final b = hostileBundle();
+      final event = b.occurrences.first.copyWith(
+        id: '01928c3e-0000-7000-8000-0000000000e1',
+        source: OccurrenceSource.calendar,
+        seriesId: null,
+      );
+      final note = b.subtasks.first.copyWith(
+        id: '01928c3e-0000-7000-8000-0000000000e2',
+        occurrenceId: event.id,
+      );
+      return ExportBundle(
+        exportedAt: b.exportedAt,
+        profile: b.profile,
+        series: b.series,
+        occurrences: [...b.occurrences, event],
+        subtasks: [...b.subtasks, note],
+      );
+    }
+
+    test('withoutImported drops them and their subtasks only', () {
+      final b = withImport().withoutImported();
+      expect(b.occurrences.map((o) => o.id), [
+        for (final o in hostileBundle().occurrences) o.id,
+      ]);
+      expect(b.subtasks, hasLength(hostileBundle().subtasks.length));
+    });
+
+    test('a file written before M8.1 imports without them', () {
+      final text = encodeExportJson(withImport());
+      final b = decodeExportJson(
+        text,
+      ).when(ok: (b) => b, err: (f) => fail(f.code));
+      expect(
+        b.occurrences.any((o) => o.source == OccurrenceSource.calendar),
+        isFalse,
+      );
+      expect(
+        b.subtasks.map((s) => s.id),
+        isNot(contains('01928c3e-0000-7000-8000-0000000000e2')),
+      );
+    });
+  });
 }
