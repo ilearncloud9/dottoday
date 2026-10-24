@@ -46,14 +46,16 @@ class AppDatabase extends _$AppDatabase {
       if (from < 2) await m.createTable(fieldSeen);
       // 3 (M6.5.1): actual start/end and step durations (11 B1/B2).
       if (from < 3) {
-        await m.addColumn(occurrences, occurrences.actualStartUtc);
-        await m.addColumn(occurrences, occurrences.actualEndUtc);
-        await m.addColumn(occurrences, occurrences.durationFromSteps);
-        await m.addColumn(seriesTable, seriesTable.durationFromSteps);
-        await m.addColumn(subtasks, subtasks.durationMin);
+        await _addColumnOnce(m, occurrences, occurrences.actualStartUtc);
+        await _addColumnOnce(m, occurrences, occurrences.actualEndUtc);
+        await _addColumnOnce(m, occurrences, occurrences.durationFromSteps);
+        await _addColumnOnce(m, seriesTable, seriesTable.durationFromSteps);
+        await _addColumnOnce(m, subtasks, subtasks.durationMin);
       }
       // 4 (M7.5): an imported event's place, for travel time (R-17).
-      if (from < 4) await m.addColumn(calendarLinks, calendarLinks.location);
+      if (from < 4) {
+        await _addColumnOnce(m, calendarLinks, calendarLinks.location);
+      }
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without
@@ -61,4 +63,22 @@ class AppDatabase extends _$AppDatabase {
       await customStatement('PRAGMA foreign_keys = ON');
     },
   );
+
+  /// Adds [column] unless [table] already has it. Opening a file with an
+  /// older build lowers `user_version` but keeps the newer columns (drift
+  /// runs no down-steps), so the next upgrade would stop at "duplicate
+  /// column" and the app couldn't open its data. TestFlight lets testers
+  /// install an older build; found on the Mac in M8.5 (08 §4).
+  Future<void> _addColumnOnce(
+    Migrator m,
+    TableInfo<Table, Object?> table,
+    GeneratedColumn<Object> column,
+  ) async {
+    final info = await customSelect(
+      'SELECT name FROM pragma_table_info(?)',
+      variables: [Variable.withString(table.actualTableName)],
+    ).get();
+    if (info.any((r) => r.read<String>('name') == column.name)) return;
+    await m.addColumn(table, column);
+  }
 }

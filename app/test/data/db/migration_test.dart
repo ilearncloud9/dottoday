@@ -7,7 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 // Forward-only migrations (persistence-drift). 1 → 2 (M6.2): field_seen;
 // 2 → 3 (M6.5.1): actual start/end and step durations (11 B1/B2);
-// 3 → 4 (M7.5): calendar_links.location (R-17).
+// 3 → 4 (M7.5): calendar_links.location (R-17). Steps are idempotent, so
+// a file an older build opened (user_version lowered) upgrades again (M8.5).
 void main() {
   test('a version 3 file gains the link place and keeps its rows', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig4');
@@ -91,6 +92,34 @@ void main() {
       reason: 'the added column keeps its CHECK',
     );
     final version = await v3.customSelect('PRAGMA user_version').getSingle();
+    expect(version.read<int>('user_version'), AppDatabase.latestSchemaVersion);
+  });
+
+  // An older build opened the file (TestFlight lets testers pick one):
+  // drift lowered user_version but the newer columns stayed. The next
+  // upgrade must open it, not stop at "duplicate column" (found in M8.5).
+  test('a file an older build opened upgrades again', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-downgrade');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+
+    final latest = AppDatabase(NativeDatabase(file));
+    await latest.customStatement(
+      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+      "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+    );
+    await latest.customStatement(
+      'INSERT INTO occurrences (id, user_id, title, tz_id, duration_min, '
+      "created_at, updated_at) VALUES ('o1', 'u', 'Run', 'UTC', 30, 0, 0)",
+    );
+    await latest.customStatement('PRAGMA user_version = 2');
+    await latest.close();
+
+    final again = AppDatabase(NativeDatabase(file));
+    addTearDown(again.close);
+    final row = await again.select(again.occurrences).getSingle();
+    expect(row.title, 'Run');
+    final version = await again.customSelect('PRAGMA user_version').getSingle();
     expect(version.read<int>('user_version'), AppDatabase.latestSchemaVersion);
   });
 
