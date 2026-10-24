@@ -5,6 +5,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/calendar_write_back.dart';
+import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/device_calendar_writer.dart';
 import 'package:dottoday/data/daos/calendar_links_dao.dart';
 import 'package:dottoday/data/db/database_providers.dart';
@@ -18,16 +19,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'write_back_providers.g.dart';
 
 /// Write-back to calendars (docs/09 M7.3): the device writer for device
-/// calendars; Google and Microsoft writers plug in here in M7.4.
+/// calendars; Google and Microsoft through `calendar-sync`, conditional on
+/// the event's HTTP etag (M7.4).
 @Riverpod(keepAlive: true)
 CalendarWriteBack calendarWriteBack(Ref ref) {
   final device = DeviceCalendarWriter(ref.watch(deviceCalendarGatewayProvider));
+  final cloud = ref.watch(cloudCalendarsProvider);
   return CalendarWriteBack(
     db: ref.watch(appDatabaseProvider),
     writerFor: (provider) => switch (provider) {
       CalendarProvider.appleDevice || CalendarProvider.androidDevice => device,
-      CalendarProvider.google ||
-      CalendarProvider.microsoft ||
+      CalendarProvider.google || CalendarProvider.microsoft => cloud,
       CalendarProvider.caldav => null,
     },
     effects: ref.watch(afterWriteEffectsProvider),

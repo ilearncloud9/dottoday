@@ -158,11 +158,13 @@ void main() {
     expect(find.text('No calendars on this device'), findsOneWidget);
   });
 
-  testWidgets('no device calendars here (web)', (tester) async {
+  testWidgets('no device calendars and no sync here: nothing connected', (
+    tester,
+  ) async {
     await pumpSettings(tester, location: _page);
-    expect(find.text('Calendar import arrives in a later update.'), findsOne);
-    final connect = tester.widget<OutlinedButton>(find.byType(OutlinedButton));
-    expect(connect.onPressed, isNull);
+    expect(find.text('No calendars connected yet'), findsOne);
+    expect(find.byType(OutlinedButton), findsNothing);
+    expect(find.text('Connect Google Calendar'), findsNothing);
   });
 
   // Every state, both themes, compact and expanded (R-12).

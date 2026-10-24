@@ -65,4 +65,21 @@ void main() {
     await repo.setEnabled(userId, work, enabled: true);
     expect(await repo.watchDevice('someone-else').first, isEmpty);
   });
+
+  test('a connected calendar keeps its own provider (M7.4)', () async {
+    const google = DeviceCalendar(
+      id: '0192f000-0000-7000-8000-000000000001/primary',
+      name: 'Kody',
+      provider: CalendarProvider.google,
+    );
+    await repo.setWriteBack(userId, google, writeBack: true);
+    await repo.setEnabled(userId, work, enabled: false);
+    final cloud = await repo.watchCloud(userId).first;
+    expect(cloud.single.provider, CalendarProvider.google);
+    expect(cloud.single.externalAccountId, google.id);
+    expect(cloud.single.writeBack, isTrue);
+    final device = await repo.watchDevice(userId).first;
+    expect(device.single.externalAccountId, 'cal-work');
+    expect((await repo.ensure(userId, google)).id, cloud.single.id);
+  });
 }

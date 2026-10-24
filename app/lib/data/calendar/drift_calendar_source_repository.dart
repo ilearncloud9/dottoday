@@ -13,12 +13,17 @@ const _codec = RowCodec();
 /// Wire names of the device providers (docs/05 `calendar_accounts`).
 const _deviceProviders = {'apple_device', 'android_device'};
 
+/// Wire names of the connected-account providers (M7.4).
+const _cloudProviders = {'google', 'microsoft'};
+
 /// The longest `label` the table accepts (docs/05 "Validation").
 const _maxLabel = 80;
 
 /// [CalendarSourceRepository] over `calendar_accounts`. Rows are local only
 /// (never pushed, docs/05), so they are written here rather than through
-/// the sync write path.
+/// the sync write path. A connected Google/Microsoft calendar gets the
+/// same kind of row, keyed by its account-qualified id (M7.4): its switch
+/// is this device's, like a device calendar's.
 final class DriftCalendarSourceRepository implements CalendarSourceRepository {
   DriftCalendarSourceRepository(
     AppDatabase db, {
@@ -30,7 +35,8 @@ final class DriftCalendarSourceRepository implements CalendarSourceRepository {
        _clock = clock,
        _ids = ids;
 
-  /// This device's calendar store: Apple's or Android's.
+  /// This device's calendar store: Apple's or Android's (a calendar with
+  /// its own [DeviceCalendar.provider] keeps that one).
   final CalendarProvider provider;
   final AppDatabase _db;
   final CalendarAccountsDao _dao;
@@ -40,6 +46,11 @@ final class DriftCalendarSourceRepository implements CalendarSourceRepository {
   @override
   Stream<List<CalendarAccount>> watchDevice(String userId) => _dao
       .watchByProviders(userId, _deviceProviders)
+      .map((rows) => [for (final r in rows) _fromRow(r)]);
+
+  @override
+  Stream<List<CalendarAccount>> watchCloud(String userId) => _dao
+      .watchByProviders(userId, _cloudProviders)
       .map((rows) => [for (final r in rows) _fromRow(r)]);
 
   @override
@@ -82,7 +93,11 @@ final class DriftCalendarSourceRepository implements CalendarSourceRepository {
       });
 
   Future<CalendarAccount?> _find(String userId, DeviceCalendar calendar) async {
-    final row = await _dao.findExternal(userId, _wire(provider), calendar.id);
+    final row = await _dao.findExternal(
+      userId,
+      _providerOf(calendar).wire,
+      calendar.id,
+    );
     return row == null ? null : _fromRow(row);
   }
 
@@ -92,7 +107,7 @@ final class DriftCalendarSourceRepository implements CalendarSourceRepository {
     return CalendarAccount(
       id: _ids.newId(),
       userId: userId,
-      provider: provider,
+      provider: _providerOf(calendar),
       label: _label(calendar.name),
       externalAccountId: calendar.id,
       createdAt: now,
@@ -103,13 +118,8 @@ final class DriftCalendarSourceRepository implements CalendarSourceRepository {
   static CalendarAccount _fromRow(CalendarAccountRow row) =>
       CalendarAccount.fromJson(_codec.decode(row));
 
-  static String _wire(CalendarProvider p) => switch (p) {
-    CalendarProvider.appleDevice => 'apple_device',
-    CalendarProvider.androidDevice => 'android_device',
-    CalendarProvider.google => 'google',
-    CalendarProvider.microsoft => 'microsoft',
-    CalendarProvider.caldav => 'caldav',
-  };
+  CalendarProvider _providerOf(DeviceCalendar calendar) =>
+      calendar.provider ?? provider;
 
   static String _label(String name) =>
       name.length <= _maxLabel ? name : name.substring(0, _maxLabel);

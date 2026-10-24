@@ -3929,9 +3929,58 @@
   "@calendarsConnect": {
     "description": "Calendars page button."
   },
-  "calendarsComingSoon": "Calendar import arrives in a later update.",
-  "@calendarsComingSoon": {
-    "description": "Calendars page caption while import is not available."
+  "calendarsOnlineInSettings": "Connect Google or Microsoft in Settings › Calendars.",
+  "@calendarsOnlineInSettings": {
+    "description": "Onboarding O4 where the device has no calendars of its own (web): where online calendars are connected (M7.4)."
+  },
+  "calendarsOnline": "Google and Microsoft",
+  "@calendarsOnline": {
+    "description": "Calendars page group caption for connected online accounts (M7.4)."
+  },
+  "calendarsOnlineIntro": "Connected once, they show on every device you sign in on. If a calendar is also on this device, switch one of the two off.",
+  "@calendarsOnlineIntro": {
+    "description": "Calendars page: how online calendars behave across devices (M7.4)."
+  },
+  "calendarsOnlineSignIn": "Sign in to connect Google or Microsoft",
+  "@calendarsOnlineSignIn": {
+    "description": "Calendars page row while signed out; opens Settings › Account (M7.4)."
+  },
+  "calendarsConnectGoogle": "Connect Google Calendar",
+  "@calendarsConnectGoogle": {
+    "description": "Calendars page row: opens Google's sign-in page (M7.4)."
+  },
+  "calendarsConnectMicrosoft": "Connect Microsoft Outlook",
+  "@calendarsConnectMicrosoft": {
+    "description": "Calendars page row: opens Microsoft's sign-in page (M7.4)."
+  },
+  "calendarsReconnect": "Reconnect",
+  "@calendarsReconnect": {
+    "description": "Calendars page row for an account whose access was revoked or expired (M7.4)."
+  },
+  "calendarsReconnectDetail": "Dottoday can't reach this account until you reconnect it",
+  "@calendarsReconnectDetail": {
+    "description": "Calendars page: subtitle of the Reconnect row (M7.4)."
+  },
+  "calendarsUnreachable": "Couldn't reach this account just now",
+  "@calendarsUnreachable": {
+    "description": "Calendars page: an account the provider didn't answer for; it is tried again later (M7.4)."
+  },
+  "calendarsDisconnect": "Disconnect",
+  "@calendarsDisconnect": {
+    "description": "Calendars page row and confirm button: removes a connected account (M7.4)."
+  },
+  "calendarsDisconnectTitle": "Disconnect {account}?",
+  "@calendarsDisconnectTitle": {
+    "description": "Confirm dialog title before removing a connected calendar account (M7.4).",
+    "placeholders": {
+      "account": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarsDisconnectBody": "Its events leave your timeline on every device. Events with your subtasks or notes go to Trash.",
+  "@calendarsDisconnectBody": {
+    "description": "Confirm dialog body before removing a connected calendar account (M7.4)."
   },
   "calendarsShifting": "When the day shifts",
   "@calendarsShifting": {

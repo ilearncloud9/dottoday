@@ -115,7 +115,10 @@ void main() {
 
   testWidgets('no device calendars here: the row is off', (tester) async {
     await pumpOnboarding(tester, progress: _step);
-    expect(find.text('Calendar import arrives in a later update.'), findsOne);
+    expect(
+      find.text('Connect Google or Microsoft in Settings › Calendars.'),
+      findsOne,
+    );
   });
 
   testWidgets('meets a11y guidelines (R-12)', (tester) async {

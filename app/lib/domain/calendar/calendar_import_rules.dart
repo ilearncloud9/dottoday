@@ -108,9 +108,9 @@ List<CalendarChoice> calendarChoices(
   ];
 }
 
-/// Whether [o] stays on this device, never synced: an import from this
-/// device's calendars, with its subtasks (docs/05 "Device calendars").
-/// Every device imports its own calendars, so a synced copy would show
-/// twice on the others (docs/09 M7.2). M7.4's cloud calendars revisit
-/// this once their events come from the server.
+/// Whether [o] stays on this device, never synced: an imported event,
+/// with its subtasks (docs/05 "Device calendars"). Every device imports
+/// its own calendars, so a synced copy would show twice on the others
+/// (docs/09 M7.2). Google/Microsoft events too: every signed-in device
+/// imports the connected account itself (M7.4, ADR-0011).
 bool isDeviceOnly(Occurrence o) => o.source == OccurrenceSource.calendar;

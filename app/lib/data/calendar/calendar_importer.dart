@@ -24,22 +24,29 @@ import 'package:timezone/timezone.dart' as tz;
 const _codec = RowCodec();
 
 /// Wire names of the device providers (docs/05 `calendar_accounts`).
-const _deviceProviders = {'apple_device', 'android_device'};
+const deviceProviderWires = {'apple_device', 'android_device'};
 
-/// Brings the switched-on device calendars' events onto the timeline as
+/// Wire names of the connected-account providers (docs/09 M7.4).
+const cloudProviderWires = {'google', 'microsoft'};
+
+/// Brings the switched-on calendars' events onto the timeline as
 /// occurrences (`source = calendar`, one `calendar_links` row each;
 /// docs/02 F5, docs/09 M7.2, R-02). Runs on start, resume and after a
 /// calendar is switched; each run is idempotent and runs one at a time.
+/// One importer per source: this device's calendars, or the connected
+/// Google/Microsoft accounts (M7.4); each reconciles only the links of
+/// its own [providers], so one never removes the other's events.
 final class CalendarImporter implements CalendarImport {
   CalendarImporter({
     required AppDatabase db,
-    required DeviceCalendarGateway gateway,
+    required CalendarEventReader gateway,
     required CalendarSourceRepository sources,
     required AfterWriteEffects effects,
     required Clock clock,
     required IdGenerator ids,
     required Logger logger,
     Future<Set<String>> Function(String userId)? heldLinks,
+    this.providers = deviceProviderWires,
   }) : _db = db,
        _heldLinks = heldLinks,
        _links = CalendarLinksDao(db),
@@ -55,9 +62,11 @@ final class CalendarImporter implements CalendarImport {
   /// (docs/05 "Rules"), so the timeline reads the same offline.
   static const horizonDays = 90;
 
+  /// The `calendar_accounts.provider` wire names this importer owns.
+  final Set<String> providers;
   final AppDatabase _db;
   final CalendarLinksDao _links;
-  final DeviceCalendarGateway _gateway;
+  final CalendarEventReader _gateway;
   final CalendarSourceRepository _sources;
   final DriftOccurrenceRepository _occurrences;
   final AfterWriteEffects _effects;
@@ -164,7 +173,7 @@ final class CalendarImporter implements CalendarImport {
   Future<List<LinkedOccurrence>> _existing(String userId) async {
     final withSubtasks = await _links.withSubtasks(userId);
     return [
-      for (final (link, row) in await _links.linked(userId, _deviceProviders))
+      for (final (link, row) in await _links.linked(userId, providers))
         LinkedOccurrence(
           link: CalendarLink.fromJson(_codec.decode(link)),
           occurrence: row == null ? null : occurrenceFromRow(row),

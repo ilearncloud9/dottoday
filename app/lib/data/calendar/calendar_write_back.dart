@@ -18,9 +18,14 @@ import 'package:dottoday/domain/writes/write_batch.dart';
 
 const _codec = RowCodec();
 
-/// Wire names of the providers write-back can reach today (device
-/// calendars, M7.3; Google/Microsoft join in M7.4).
-const writeBackProviders = {'apple_device', 'android_device'};
+/// Wire names of the providers write-back can reach: device calendars
+/// (M7.3) and connected Google/Microsoft accounts (M7.4).
+const writeBackProviders = {
+  'apple_device',
+  'android_device',
+  'google',
+  'microsoft',
+};
 
 /// One imported item moved, resized or renamed here and not yet in its
 /// calendar (docs/09 M7.3).

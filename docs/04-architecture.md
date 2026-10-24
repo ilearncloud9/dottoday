@@ -115,10 +115,13 @@ iOS/Android: `device_calendar` for read, plus write-back when permission is gran
 `device_calendar` has no macOS implementation, so a small EventKit bridge in
 `macos/Runner/CalendarBridge.swift` (method channel `dottoday/calendars`: `status`, `request`,
 `calendars`, `events`, and for write-back `event`, `update`) implements the same `DeviceCalendarGateway` (M7.1b); EventKit reports
-"not asked" itself and sends all-day events as `yyyy-MM-dd` dates. Web (and as a
-cross-device option): Google/Microsoft OAuth handled by Supabase Edge Functions storing refresh tokens
-encrypted server-side; the function fetches events and upserts into `calendar_events` for the user;
-the client subscribes like any table. External events map to `Occurrence` rows with `source =
+"not asked" itself and sends all-day events as `yyyy-MM-dd` dates. Google/Microsoft on every
+platform, the web included (M7.4, ADR-0011): `calendar-oauth` runs the OAuth code flow (PKCE,
+single-use state) and puts the refresh token in Supabase Vault; `calendar-sync` reads calendars and
+events **on request** for the caller's own accounts and writes back with `If-Match`, storing no
+calendar content. In the app, `FunctionCloudCalendars` (`data/calendar/`) is one more
+`CalendarEventReader` and the `CalendarWriter` for those providers; a second `CalendarImporter`
+owns only the `google`/`microsoft` links. External events map to `Occurrence` rows with `source =
 calendar` and `externalId`; local-only fields (subtasks, notes) live on the occurrence.
 Device calendars (M7.2, `CalendarImporter` in `data/calendar/`, pure `planCalendarImport` in
 `domain/calendar/`): on start, resume, the 6-hourly housekeeping, connecting and every switch, the
@@ -129,7 +132,8 @@ keeps its imports (R-08). Details in docs/05 `calendar_links`.
 Write-back (M7.3, `CalendarWriteBack` in `data/calendar/`, pure `mergeWriteBack` in
 `domain/calendar/`): per provider a `CalendarWriter` (`read` → event + opaque version; `write` only
 if still at that version). Device calendars use `DeviceCalendarWriter` (version = fingerprint, checked
-right before the write); M7.4 adds Google/Microsoft writers whose version is the HTTP etag. Pending =
+right before the write); Google/Microsoft go through `calendar-sync`, whose version is the HTTP
+etag (412 → changed, M7.4). Pending =
 an imported occurrence of a write-back calendar whose start, length or title differs from its link's
 fingerprint; `WriteBackController` sends them shortly after an edit and before each import, merges
 field by field against the fingerprint (clash on the same field → the banner asks), then stores the

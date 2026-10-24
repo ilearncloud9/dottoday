@@ -2639,8 +2639,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get calendarsConnect => 'Connect a calendar';
 
   @override
-  String get calendarsComingSoon =>
-      'Calendar import arrives in a later update.';
+  String get calendarsOnlineInSettings =>
+      'Connect Google or Microsoft in Settings › Calendars.';
+
+  @override
+  String get calendarsOnline => 'Google and Microsoft';
+
+  @override
+  String get calendarsOnlineIntro =>
+      'Connected once, they show on every device you sign in on. If a calendar is also on this device, switch one of the two off.';
+
+  @override
+  String get calendarsOnlineSignIn => 'Sign in to connect Google or Microsoft';
+
+  @override
+  String get calendarsConnectGoogle => 'Connect Google Calendar';
+
+  @override
+  String get calendarsConnectMicrosoft => 'Connect Microsoft Outlook';
+
+  @override
+  String get calendarsReconnect => 'Reconnect';
+
+  @override
+  String get calendarsReconnectDetail =>
+      'Dottoday can\'t reach this account until you reconnect it';
+
+  @override
+  String get calendarsUnreachable => 'Couldn\'t reach this account just now';
+
+  @override
+  String get calendarsDisconnect => 'Disconnect';
+
+  @override
+  String calendarsDisconnectTitle(String account) {
+    return 'Disconnect $account?';
+  }
+
+  @override
+  String get calendarsDisconnectBody =>
+      'Its events leave your timeline on every device. Events with your subtasks or notes go to Trash.';
 
   @override
   String get calendarsShifting => 'When the day shifts';

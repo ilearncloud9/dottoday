@@ -236,4 +236,67 @@ void main() {
       expect(queued.where((c) => c.entity == 'occurrences'), isEmpty);
     },
   );
+
+  test('connected accounts import beside the device, never over it '
+      '(M7.4)', () async {
+    await run();
+    const google = DeviceCalendar(
+      id: '0192f000-0000-7000-8000-000000000001/primary',
+      name: 'Kody',
+      provider: CalendarProvider.google,
+    );
+    final reader = FakeDeviceCalendarGateway(
+      state: PermissionState.granted,
+      list: const [google],
+      events: {
+        google.id: [
+          ExternalEvent(
+            id: 'g1_20261021T100000Z',
+            calendarId: google.id,
+            title: 'Review',
+            startUtc: nine.add(const Duration(hours: 3)),
+            endUtc: nine.add(const Duration(hours: 4)),
+          ),
+        ],
+      },
+    );
+    final cloud = CalendarImporter(
+      db: h.db,
+      gateway: reader,
+      sources: sources,
+      effects: h.effects,
+      clock: h.clock,
+      ids: FakeIds('cloud'),
+      logger: h.logger,
+      providers: cloudProviderWires,
+    );
+    Future<void> runCloud(List<DeviceCalendar> calendars) async {
+      final rows = await sources.watchCloud(userId).first;
+      await cloud.run(
+        userId: userId,
+        choices: calendarChoices(calendars, rows, const {'sky': 0xFF2E8FD6}),
+        location: berlin,
+        untitled: 'Untitled event',
+      );
+    }
+
+    await runCloud(const [google]);
+    expect(
+      (await imported()).map((o) => o.title),
+      containsAll(['Standup', 'Offsite', 'Review']),
+    );
+    expect(
+      (await sources.watchCloud(userId).first).single.provider,
+      CalendarProvider.google,
+    );
+    expect(await h.changeLog(), isEmpty, reason: 'device-only, like device');
+    // Disconnected: only the account's events leave; the device's stay,
+    // and the device import leaves the account's alone.
+    await run();
+    expect((await imported()).map((o) => o.title), contains('Review'));
+    await runCloud(const []);
+    final titles = (await imported()).map((o) => o.title);
+    expect(titles, isNot(contains('Review')));
+    expect(titles, contains('Standup'));
+  });
 }

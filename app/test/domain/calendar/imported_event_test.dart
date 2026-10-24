@@ -127,4 +127,22 @@ void main() {
     expect(ImportFingerprint.parse('provider-etag'), isNull);
     expect(ImportFingerprint.parse(null), isNull);
   });
+
+  test('an event someone else organises never writes back (M7.4)', () {
+    final mine = items(_event()).single;
+    final theirs = importedItems(
+      ExternalEvent(
+        id: 'G1',
+        calendarId: 'acc/primary',
+        title: 'Their meeting',
+        startUtc: DateTime.utc(2026, 10, 21, 7),
+        endUtc: DateTime.utc(2026, 10, 21, 8),
+        editable: false,
+      ),
+      berlin,
+      untitled: 'Untitled event',
+    ).single;
+    expect(mine.writable, isTrue);
+    expect(theirs.writable, isFalse);
+  });
 }

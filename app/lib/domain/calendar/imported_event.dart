@@ -48,8 +48,9 @@ final class ImportedItem {
   final int durationMin;
 
   /// Whether a change made here can go back to the event (M7.3): only a
-  /// timed, non-repeating one. An all-day item is one day of an event
-  /// that may span several; a repeating instance shares its series' id.
+  /// timed, non-repeating, editable one. An all-day item is one day of an
+  /// event that may span several; a repeating instance shares its series'
+  /// id on the device (Google/Microsoft address each instance, M7.4).
   final bool writable;
 
   /// `calendar_links.external_event_id`: `<eventId>@<keyMs>`.
@@ -111,7 +112,7 @@ List<ImportedItem> importedItems(
       notes: notes,
       startUtc: event.startUtc,
       durationMin: importedDurationMin(event.startUtc, event.endUtc),
-      writable: !event.repeating,
+      writable: !event.repeating && event.editable,
     ),
   ];
 }

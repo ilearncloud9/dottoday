@@ -52,6 +52,15 @@ Device calendars (M7.1): one **local** row per device calendar the person has sw
 Calendars — `provider` `apple_device` / `android_device`, `external_account_id` = the device's calendar
 id, `label` = its name (clipped to 80), `enabled` = the switch, `write_back` = M7.3's per-calendar
 opt-in (off until chosen; never for a read-only calendar). A calendar with no row is on. These rows never sync (device ids mean nothing elsewhere).
+Google/Microsoft (M7.4, ADR-0011): on the **server**, one row per connected account (`provider`
+`google` / `microsoft`, `external_account_id` = the provider's stable account id: Google `sub`,
+Microsoft `oid`; `label` = its email), unique per `(user_id, provider, external_account_id)`, created
+only by `calendar-oauth` (clients may read and delete their own rows, nothing else; deleting one
+deletes its Vault token by trigger). On the **device**, each of its calendars gets a local row like a
+device calendar's: `provider` google/microsoft, `external_account_id` = `<server account id>/<provider
+calendar id>`, so the switches and write-back opt-ins are per device. `calendar_oauth_states` (server
+only, no client access): a connect in progress, with its PKCE verifier and where the browser goes
+back; single use, 10 minutes.
 
 ### `calendar_links`
 `id, user_id, account_id, external_calendar_id, external_event_id, etag, last_synced_utc,
@@ -65,8 +74,11 @@ calendar since, so a local move or rename stays until the calendar changes that 
 notes edited in Dottoday are never replaced. `last_synced_utc` = when calendar changes were last
 applied. Imported occurrences (`source = 'calendar'`) and their subtasks are **device-only**: the
 write path upserts them without `change_log` rows and `requeueAll` skips them (each device imports
-its own calendars, so a synced copy would show twice elsewhere; M7.4's cloud calendars revisit
-this). An event gone from the calendar (or a calendar switched off or removed) removes its
+its own calendars, so a synced copy would show twice elsewhere). Google/Microsoft imports (M7.4) are
+device-only too: every signed-in device imports the connected account itself, so all show the same
+events, and subtasks and notes stay where they were made (ADR-0011). Their links key each instance
+by the provider's own instance id (a repeating event's instances differ there), so an instance can
+be written back. An event gone from the calendar (or a calendar switched off or removed) removes its
 occurrence outright when nothing of the person's is on it, else soft-deletes it detached
 (`calendar_link_id` null) so Trash keeps the subtasks/notes; an imported occurrence the person
 deleted keeps its link, so the event is not brought back. Imported events carry no Dottoday alerts

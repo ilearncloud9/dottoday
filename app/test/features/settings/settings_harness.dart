@@ -33,7 +33,7 @@ final class FakeLinkLauncher implements LinkLauncher {
   bool handled = true;
 
   @override
-  Future<bool> open(Uri uri) async {
+  Future<bool> open(Uri uri, {bool sameWindow = false}) async {
     opened.add(uri);
     return handled;
   }
@@ -62,6 +62,7 @@ Future<SettingsHarness> pumpSettings(
   DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
   CalendarSourceRepository? calendarSources,
   CalendarImport? calendarImport,
+  CalendarImport? cloudCalendarImport,
 }) async {
   tester.view
     ..physicalSize = size
@@ -84,6 +85,7 @@ Future<SettingsHarness> pumpSettings(
         calendarGateway: calendarGateway,
         calendarSources: calendarSources,
         calendarImport: calendarImport,
+        cloudCalendarImport: cloudCalendarImport,
       ),
       linkLauncherProvider.overrideWithValue(links),
       appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),

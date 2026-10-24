@@ -4,6 +4,7 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
+import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/write_back_providers.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
@@ -396,6 +397,7 @@ List<Override> timelineOverrides({
   DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
   CalendarSourceRepository? calendarSources,
   CalendarImport? calendarImport,
+  CalendarImport? cloudCalendarImport,
   IdleWriteBackController Function()? writeBack,
 }) {
   final p = profile ?? testProfile();
@@ -442,6 +444,9 @@ List<Override> timelineOverrides({
     ),
     calendarImporterProvider.overrideWithValue(
       calendarImport ?? FakeCalendarImport(),
+    ),
+    cloudCalendarImporterProvider.overrideWithValue(
+      cloudCalendarImport ?? FakeCalendarImport(),
     ),
     // A factory: each container needs its own notifier.
     writeBackControllerProvider.overrideWith(

@@ -9,6 +9,7 @@ import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_importer.dart';
 import 'package:dottoday/data/calendar/channel_device_calendar_gateway.dart';
+import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/drift_calendar_source_repository.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/plugin_device_calendar_gateway.dart';
@@ -20,6 +21,7 @@ import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/calendar/calendar_import.dart';
 import 'package:dottoday/domain/calendar/calendar_import_rules.dart';
 import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
+import 'package:dottoday/domain/calendar/cloud_calendar.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -107,11 +109,13 @@ Stream<List<CalendarChoice>> calendarChoiceList(Ref ref) async* {
   yield* ref
       .watch(calendarSourceRepositoryProvider)
       .watchDevice(profile.id)
-      .map((rows) => calendarChoices(calendars, rows, _palette));
+      .map((rows) => calendarChoices(calendars, rows, calendarPalette));
 }
 
 /// The task colours as ARGB, for [inheritColorKey].
-final _palette = {for (final c in TaskColor.values) c.key: c.color.toARGB32()};
+final calendarPalette = {
+  for (final c in TaskColor.values) c.key: c.color.toARGB32(),
+};
 
 /// What Settings and onboarding do with device calendars.
 @Riverpod(keepAlive: true)
@@ -188,30 +192,79 @@ final class CalendarActions {
   }
 
   /// Brings the switched-on calendars' events in now (start, resume, a
-  /// switch, connecting). Failures are logged; the next run repairs them.
+  /// switch, connecting): this device's, then the connected Google and
+  /// Microsoft accounts' (M7.4). Failures are logged; the next run repairs
+  /// them.
   Future<void> importEvents() async {
-    if (!_ref.read(deviceCalendarGatewayProvider).available) return;
+    final device = _ref.read(deviceCalendarGatewayProvider).available;
+    final cloud = _ref.read(cloudCalendarsProvider).available;
+    if (!device && !cloud) return;
     final logger = _ref.read(loggerProvider);
-    final choices = _ref.listen(calendarChoiceListProvider.future, (_, _) {});
     try {
       // Edits on their way to a calendar go first, so the import reads
-      // the calendar with them in.
+      // the calendars with them in.
       final writeBack = _ref.read(writeBackControllerProvider.notifier)
         ..start();
       await writeBack.flush();
+    } on Object catch (e, s) {
+      logger.warn('calendar.write_back_flush_failed', error: e, stackTrace: s);
+    }
+    if (device) {
+      await _importFrom(
+        _ref.read(calendarImporterProvider),
+        calendarChoiceListProvider.future,
+      );
+    }
+    if (cloud && await _cloudReadable()) {
+      await _importFrom(
+        _ref.read(cloudCalendarImporterProvider),
+        cloudCalendarChoiceListProvider.future,
+      );
+    }
+  }
+
+  /// Whether every connected account can be read now. One that can't
+  /// (revoked, provider down) holds the whole cloud import, since its
+  /// calendars would otherwise look removed (R-08).
+  Future<bool> _cloudReadable() async {
+    if (await _ref.read(cloudCalendarsProvider).status() !=
+        PermissionState.granted) {
+      return false;
+    }
+    final accounts = _ref.listen(cloudAccountsProvider.future, (_, _) {});
+    try {
+      final list = await accounts.read();
+      final ok = list.every((a) => a.status == CloudAccountStatus.ok);
+      if (!ok) _ref.read(loggerProvider).warn('calendar.cloud_import_held');
+      return ok;
+    } on Object catch (e, s) {
+      _ref
+          .read(loggerProvider)
+          .warn('calendar.cloud_import_skipped', error: e, stackTrace: s);
+      return false;
+    } finally {
+      accounts.close();
+    }
+  }
+
+  Future<void> _importFrom(
+    CalendarImport importer,
+    ProviderListenable<Future<List<CalendarChoice>>> choicesOf,
+  ) async {
+    final logger = _ref.read(loggerProvider);
+    final choices = _ref.listen(choicesOf, (_, _) {});
+    try {
       final profile = await _profile();
       final list = await choices.read();
       final zone = await _ref.read(currentDeviceZoneProvider.future);
-      final result = await _ref
-          .read(calendarImporterProvider)
-          .run(
-            userId: profile.id,
-            choices: list,
-            location: tz.getLocation(zone),
-            untitled: lookupAppLocalizations(
-              Locale(profile.locale),
-            ).calendarEventUntitled,
-          );
+      final result = await importer.run(
+        userId: profile.id,
+        choices: list,
+        location: tz.getLocation(zone),
+        untitled: lookupAppLocalizations(
+          Locale(profile.locale),
+        ).calendarEventUntitled,
+      );
       if (result case Err(:final failure)) {
         logger.warn('calendar.import_refused', error: failure);
       }

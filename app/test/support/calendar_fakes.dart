@@ -125,9 +125,20 @@ final class FakeCalendarSourceRepository implements CalendarSourceRepository {
   final _changes = StreamController<List<CalendarAccount>>.broadcast();
 
   @override
-  Stream<List<CalendarAccount>> watchDevice(String userId) async* {
-    yield [...rows];
-    yield* _changes.stream;
+  Stream<List<CalendarAccount>> watchDevice(String userId) =>
+      _watch((r) => !_cloud.contains(r.provider));
+
+  @override
+  Stream<List<CalendarAccount>> watchCloud(String userId) =>
+      _watch((r) => _cloud.contains(r.provider));
+
+  static const _cloud = {CalendarProvider.google, CalendarProvider.microsoft};
+
+  Stream<List<CalendarAccount>> _watch(
+    bool Function(CalendarAccount) where,
+  ) async* {
+    yield rows.where(where).toList();
+    yield* _changes.stream.map((all) => all.where(where).toList());
   }
 
   @override
@@ -145,7 +156,7 @@ final class FakeCalendarSourceRepository implements CalendarSourceRepository {
         CalendarAccount(
           id: 'acc-${calendar.id}',
           userId: userId,
-          provider: CalendarProvider.appleDevice,
+          provider: calendar.provider ?? CalendarProvider.appleDevice,
           label: calendar.name,
           externalAccountId: calendar.id,
           enabled: enabled,

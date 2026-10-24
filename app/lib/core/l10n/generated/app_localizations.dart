@@ -3856,11 +3856,77 @@ abstract class AppLocalizations {
   /// **'Connect a calendar'**
   String get calendarsConnect;
 
-  /// Calendars page caption while import is not available.
+  /// Onboarding O4 where the device has no calendars of its own (web): where online calendars are connected (M7.4).
   ///
   /// In en, this message translates to:
-  /// **'Calendar import arrives in a later update.'**
-  String get calendarsComingSoon;
+  /// **'Connect Google or Microsoft in Settings › Calendars.'**
+  String get calendarsOnlineInSettings;
+
+  /// Calendars page group caption for connected online accounts (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Google and Microsoft'**
+  String get calendarsOnline;
+
+  /// Calendars page: how online calendars behave across devices (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Connected once, they show on every device you sign in on. If a calendar is also on this device, switch one of the two off.'**
+  String get calendarsOnlineIntro;
+
+  /// Calendars page row while signed out; opens Settings › Account (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to connect Google or Microsoft'**
+  String get calendarsOnlineSignIn;
+
+  /// Calendars page row: opens Google's sign-in page (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Google Calendar'**
+  String get calendarsConnectGoogle;
+
+  /// Calendars page row: opens Microsoft's sign-in page (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Microsoft Outlook'**
+  String get calendarsConnectMicrosoft;
+
+  /// Calendars page row for an account whose access was revoked or expired (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect'**
+  String get calendarsReconnect;
+
+  /// Calendars page: subtitle of the Reconnect row (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday can\'t reach this account until you reconnect it'**
+  String get calendarsReconnectDetail;
+
+  /// Calendars page: an account the provider didn't answer for; it is tried again later (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach this account just now'**
+  String get calendarsUnreachable;
+
+  /// Calendars page row and confirm button: removes a connected account (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get calendarsDisconnect;
+
+  /// Confirm dialog title before removing a connected calendar account (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect {account}?'**
+  String calendarsDisconnectTitle(String account);
+
+  /// Confirm dialog body before removing a connected calendar account (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Its events leave your timeline on every device. Events with your subtasks or notes go to Trash.'**
+  String get calendarsDisconnectBody;
 
   /// Calendars page group caption.
   ///

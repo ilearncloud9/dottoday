@@ -27,7 +27,7 @@ sensitive personal data.
 ## 3. Authorisation (Supabase RLS)
 - Every table: `enable row level security`, policies for select/insert/update/delete scoped to `auth.uid()`.
 - `profiles.id` is `auth.users.id`; insert via trigger on signup.
-- `calendar_accounts` tokens are in Vault; Edge Functions use the service role but filter by the invoking user's JWT.
+- `calendar_accounts` tokens are in Vault; Edge Functions use the service role but filter by the invoking user's JWT. M7.4: clients may only read and delete their own `calendar_accounts` rows (only `calendar-oauth` creates them); the Vault functions (`calendar_token_get/put`, `calendar_account_connect`, `calendar_oauth_take_state`) are executable by `service_role` only; `calendar_oauth_states` has no client grants; deleting an account row deletes its token (trigger). pgTAP: `supabase/tests/0005_calendar_oauth.sql`.
 - `sync_push` RPC is `security invoker`; validates payload shapes; caps batch size (500 rows).
 
 ## 4. Data at rest
@@ -45,7 +45,7 @@ TLS 1.2+ only; certificate pinning not used (Supabase rotates); HSTS on web.
 - Children: 13+ age gate in onboarding copy.
 
 ## 7. Input validation
-- Every external input validated at the boundary: Quick Add text (length, control chars stripped), import JSON (schema + size ≤ 25 MB), calendar events (field lengths: titles cleaned of control characters and clipped to 200, notes to 10 000, ids that don't fit their column skipped, never cut; event links kept only when http(s) — M7.1/M7.2; write-back sends only start, end and a title already validated as a task title, and an Android event id must be numeric before it reaches the plugin's query — M7.3), deep links (allow-listed routes only), notification payloads (ID lookups only).
+- Every external input validated at the boundary: Quick Add text (length, control chars stripped), import JSON (schema + size ≤ 25 MB), calendar events (field lengths: titles cleaned of control characters and clipped to 200, notes to 10 000, ids that don't fit their column skipped, never cut; event links kept only when http(s) — M7.1/M7.2; write-back sends only start, end and a title already validated as a task title, and an Android event id must be numeric before it reaches the plugin's query — M7.3; Google/Microsoft answers are type-checked field by field in the app, malformed events skipped, the sign-in URL opened only when https; `calendar-sync` checks every calendar id against the caller's own accounts, a window ≤ 100 days, ids ≤ 256/512, titles ≤ 200 and a non-empty etag; `calendar-oauth` sends the browser back only to `dottoday://settings/calendars` or an origin in `CALENDAR_RETURN_ORIGINS` — M7.4), deep links (allow-listed routes only), notification payloads (ID lookups only).
 - Server CHECK constraints mirror client rules (see data model).
 
 ## 8. Platform hardening

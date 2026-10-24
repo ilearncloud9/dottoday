@@ -300,7 +300,7 @@ final class CalendarChoiceListProvider
 }
 
 String _$calendarChoiceListHash() =>
-    r'e129523b518596800902fbc15db74e5c8ced2865';
+    r'f59dd0e95cd33cf4ff5c659efdf64db0ecd5185b';
 
 /// What Settings and onboarding do with device calendars.
 

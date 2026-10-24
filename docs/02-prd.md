@@ -96,6 +96,14 @@ Everything here is **free tier** unless marked *Phase 2*.
 - Links in event descriptions open in the browser. (R-02)
   Clarified in M7.2: the task sheet and editor list the web links (http/https, up to 5) found in
   the notes under LINKS; a tap opens the browser. Links typed into a task's notes work the same.
+  Clarified in M7.4: Google and Microsoft calendars are connected in Settings › Calendars after
+  signing in, on every platform including the web. Connected once, they show on every device the
+  person signs in on, each calendar with its own switch on each device. Subtasks and notes on their
+  events stay on the device where they were added, as for device calendars. Moves, resizes and renames
+  go back when Send changes back is on for that calendar, also for one instance of a repeating event,
+  and never for a meeting someone else organises. Disconnecting asks first. The events then leave
+  the timeline (into Trash when they carry subtasks or notes). An account Dottoday can no longer reach
+  shows Reconnect, and its events stay as they were.
 
 ## F6. Notifications & alerts
 

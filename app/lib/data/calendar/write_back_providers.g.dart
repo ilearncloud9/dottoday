@@ -9,13 +9,15 @@ part of 'write_back_providers.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Write-back to calendars (docs/09 M7.3): the device writer for device
-/// calendars; Google and Microsoft writers plug in here in M7.4.
+/// calendars; Google and Microsoft through `calendar-sync`, conditional on
+/// the event's HTTP etag (M7.4).
 
 @ProviderFor(calendarWriteBack)
 final calendarWriteBackProvider = CalendarWriteBackProvider._();
 
 /// Write-back to calendars (docs/09 M7.3): the device writer for device
-/// calendars; Google and Microsoft writers plug in here in M7.4.
+/// calendars; Google and Microsoft through `calendar-sync`, conditional on
+/// the event's HTTP etag (M7.4).
 
 final class CalendarWriteBackProvider
     extends
@@ -26,7 +28,8 @@ final class CalendarWriteBackProvider
         >
     with $Provider<CalendarWriteBack> {
   /// Write-back to calendars (docs/09 M7.3): the device writer for device
-  /// calendars; Google and Microsoft writers plug in here in M7.4.
+  /// calendars; Google and Microsoft through `calendar-sync`, conditional on
+  /// the event's HTTP etag (M7.4).
   CalendarWriteBackProvider._()
     : super(
         from: null,
@@ -61,7 +64,7 @@ final class CalendarWriteBackProvider
   }
 }
 
-String _$calendarWriteBackHash() => r'511a0bb9d5aaa22e7891916c56360168d9177d6f';
+String _$calendarWriteBackHash() => r'8ebde0dbac6994d4774cd95b2c12d1bd24f56e6c';
 
 /// The write-back status of the imported event linked by [linkId]; null
 /// when the link is gone.
