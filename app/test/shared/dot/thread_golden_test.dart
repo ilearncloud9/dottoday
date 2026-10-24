@@ -89,6 +89,32 @@ const _travel = <ThreadEntry>[
   ThreadCap.bed('22:00'),
 ];
 
+ThreadTask _night(String id, String title, String range) => ThreadTask(
+  id: id,
+  title: title,
+  color: TaskColor.indigo,
+  icon: TaskIcon.travel,
+  state: DotState.upcoming,
+  timeRange: range,
+);
+
+/// Outside hours (derived, docs/02 F1.15): a folded zone above the sun
+/// cap, an unfolded one below the moon cap.
+final _outside = <ThreadEntry>[
+  ThreadOutside(
+    tasks: [_night('flight', 'Early flight', '5:00 – 6:30')],
+    bedtime: false,
+  ),
+  const ThreadCap.wake('7:00'),
+  const ThreadGap(minutes: 900, startLabel: '7:00', addable: true),
+  const ThreadCap.bed('22:00'),
+  ThreadOutside(
+    tasks: [_night('train', 'Night train', '23:30 – 0:45')],
+    bedtime: true,
+    open: true,
+  ),
+];
+
 void main() {
   setUpAll(loadAppFonts);
   goldenMatrix(
@@ -107,5 +133,6 @@ void main() {
     height: 400,
     build: (_) => _Card([mainThread.first, mainThread[3], mainThread.last]),
   );
+  goldenMatrix('thread_outside', height: 420, build: (_) => _Card(_outside));
   goldenMatrix('thread_thirty', height: 2400, build: (_) => _Card(_thirty));
 }

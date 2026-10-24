@@ -122,6 +122,57 @@ void main() {
     handle.dispose();
   });
 
+  testWidgets('outside hours: folded, then unfolded by a tap (F1.15)', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    final opened = <String>[];
+    await tester.pumpWidget(
+      testApp(
+        Scaffold(
+          body: Thread(
+            entries: [
+              const ThreadCap.wake('7:00'),
+              const ThreadCap.bed('22:00'),
+              ThreadOutside(
+                bedtime: true,
+                tasks: [
+                  for (final id in ['a', 'b'])
+                    ThreadTask(
+                      id: id,
+                      title: 'Late $id',
+                      color: TaskColor.indigo,
+                      icon: TaskIcon.travel,
+                      state: DotState.upcoming,
+                      timeRange: '23:00 – 23:30',
+                    ),
+                ],
+              ),
+            ],
+            actions: ThreadActions(onOpen: opened.add),
+          ),
+        ),
+      ),
+    );
+    expect(find.text('2 tasks after Bedtime'), findsOneWidget);
+    expect(find.text('Late a'), findsNothing);
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('2 tasks after Bedtime')),
+      matchesSemantics(
+        label: '2 tasks after Bedtime',
+        isButton: true,
+        hasExpandedState: true,
+        hasTapAction: true,
+      ),
+    );
+    await tester.tap(find.text('2 tasks after Bedtime'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Late b'));
+    expect(opened, ['b']);
+    await expectA11yGuidelines(tester);
+    handle.dispose();
+  });
+
   testWidgets('done titles are struck through', (tester) async {
     await tester.pumpWidget(_thread());
     final style = tester.widget<Text>(find.text('Morning run')).style!;

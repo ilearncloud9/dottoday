@@ -3936,4 +3936,26 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get pinDetail => 'Reste en place quand les autres tâches se décalent';
+
+  @override
+  String threadOutsideBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tâches avant le réveil',
+      one: '1 tâche avant le réveil',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String threadOutsideAfter(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tâches après le coucher',
+      one: '1 tâche après le coucher',
+    );
+    return '$_temp0';
+  }
 }

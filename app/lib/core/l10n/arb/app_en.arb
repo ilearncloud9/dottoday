@@ -5259,5 +5259,9 @@
   "pinTitle": "Pinned",
   "@pinTitle": {"description": "Task sheet and editor toggle (docs/02 F1.5, F2.9): a pinned task is never moved by shifts, Running late or drags of other tasks."},
   "pinDetail": "Stays put when other tasks shift",
-  "@pinDetail": {"description": "Subtitle of the Pinned toggle in the task sheet and editor."}
+  "@pinDetail": {"description": "Subtitle of the Pinned toggle in the task sheet and editor."},
+  "threadOutsideBefore": "{count, plural, =1{1 task before Wake Up} other{{count} tasks before Wake Up}}",
+  "@threadOutsideBefore": {"description": "Folded 'outside hours' row above the Wake Up cap (docs/02 F1.15): tasks that end by Wake Up. Tapping unfolds them.", "placeholders": {"count": {"type": "int"}}},
+  "threadOutsideAfter": "{count, plural, =1{1 task after Bedtime} other{{count} tasks after Bedtime}}",
+  "@threadOutsideAfter": {"description": "Folded 'outside hours' row below the Bedtime cap (docs/02 F1.15): tasks that start at Bedtime or later. Tapping unfolds them.", "placeholders": {"count": {"type": "int"}}}
 }

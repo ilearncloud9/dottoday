@@ -3927,4 +3927,26 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get pinDetail => 'Se queda en su sitio cuando otras tareas se mueven';
+
+  @override
+  String threadOutsideBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tareas antes de despertar',
+      one: '1 tarea antes de despertar',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String threadOutsideAfter(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tareas después de la hora de dormir',
+      one: '1 tarea después de la hora de dormir',
+    );
+    return '$_temp0';
+  }
 }

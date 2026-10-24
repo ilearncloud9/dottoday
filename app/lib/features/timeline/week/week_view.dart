@@ -240,8 +240,8 @@ class WeekView extends ConsumerWidget {
     String Function(DateTime utc) time,
   ) {
     final l10n = context.l10n;
-    return [
-      for (final e in threadEntries(
+    return threadTasks(
+      threadEntries(
         blocks: d.blocks,
         shape: shape,
         nowUtc: nowUtc,
@@ -250,9 +250,8 @@ class WeekView extends ConsumerWidget {
           range: l10n.threadTimeRange,
           duration: (m) => formatDurationShort(l10n, m),
         ),
-      ))
-        if (e case ThreadTaskEntry(:final task)) task,
-    ];
+      ),
+    ).toList();
   }
 
   /// A task of this week or the Inbox.

@@ -169,11 +169,14 @@ const f1Rows = <String, ParityRow>{
     tests: [
       'test/domain/time/day_boundaries_test.dart',
       'test/data/scheduling/day_room_providers_test.dart',
+      'test/shared/dot/thread_day_test.dart',
+      'test/shared/dot/thread_test.dart',
+      'test/shared/dot/thread_golden_test.dart',
     ],
-    all: Cell(Status.gap, 'outside-hours zone + test — M8.4b'),
+    all: ci,
     note:
-        'Per-weekday Wake Up/Bedtime work (M3d.3); a task outside them '
-        'renders inline but has no test and no collapsed zone.',
+        'Per-weekday Wake Up/Bedtime (M3d.3); tasks before Wake Up / after '
+        'Bedtime fold into a row beyond the cap that unfolds on tap (M8.4b).',
   ),
   'F1.16': ParityRow(
     tests: [

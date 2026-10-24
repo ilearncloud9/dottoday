@@ -90,6 +90,40 @@ final class ThreadTaskEntry extends ThreadEntry {
   final ThreadTask task;
 }
 
+/// Tasks wholly before Wake Up or from Bedtime on, folded into one row
+/// above the sun cap or below the moon cap (docs/02 F1.15, R-17): they
+/// still render, without stretching the day's shape.
+final class ThreadOutside extends ThreadEntry {
+  const ThreadOutside({
+    required this.tasks,
+    required this.bedtime,
+    this.open = false,
+  });
+
+  /// In start order.
+  final List<ThreadTask> tasks;
+
+  /// After Bedtime (below the moon cap); false: before Wake Up.
+  final bool bedtime;
+
+  /// Starts unfolded: it holds the live task, which never hides.
+  final bool open;
+}
+
+/// Every task of [entries], folded ones included, in thread order.
+Iterable<ThreadTask> threadTasks(List<ThreadEntry> entries) sync* {
+  for (final e in entries) {
+    switch (e) {
+      case ThreadTaskEntry(:final task):
+        yield task;
+      case ThreadOutside(:final tasks):
+        yield* tasks;
+      case ThreadCap() || ThreadGap():
+        break;
+    }
+  }
+}
+
 /// Free time between tasks (docs/10 §6 "Free gaps are drop targets").
 final class ThreadGap extends ThreadEntry {
   const ThreadGap({

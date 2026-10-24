@@ -3935,4 +3935,26 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get pinDetail =>
       'Bleibt stehen, wenn sich andere Aufgaben verschieben';
+
+  @override
+  String threadOutsideBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Aufgaben vor dem Aufstehen',
+      one: '1 Aufgabe vor dem Aufstehen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String threadOutsideAfter(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Aufgaben nach der Schlafenszeit',
+      one: '1 Aufgabe nach der Schlafenszeit',
+    );
+    return '$_temp0';
+  }
 }

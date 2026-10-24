@@ -956,5 +956,7 @@
   "calendarsTravelSuggestDetail": "Vor Terminen mit Ort. Auf diesem Gerät berechnet, ohne Kartenabfrage",
   "rowFromCalendar": "{label}, aus deinem Kalender",
   "pinTitle": "Angeheftet",
-  "pinDetail": "Bleibt stehen, wenn sich andere Aufgaben verschieben"
+  "pinDetail": "Bleibt stehen, wenn sich andere Aufgaben verschieben",
+  "threadOutsideBefore": "{count, plural, =1{1 Aufgabe vor dem Aufstehen} other{{count} Aufgaben vor dem Aufstehen}}",
+  "threadOutsideAfter": "{count, plural, =1{1 Aufgabe nach der Schlafenszeit} other{{count} Aufgaben nach der Schlafenszeit}}"
 }

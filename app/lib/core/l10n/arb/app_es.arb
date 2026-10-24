@@ -956,5 +956,7 @@
   "calendarsTravelSuggestDetail": "Antes de eventos con lugar. Se calcula en este dispositivo; no se consulta ningún mapa",
   "rowFromCalendar": "{label}, de tu calendario",
   "pinTitle": "Fijada",
-  "pinDetail": "Se queda en su sitio cuando otras tareas se mueven"
+  "pinDetail": "Se queda en su sitio cuando otras tareas se mueven",
+  "threadOutsideBefore": "{count, plural, =1{1 tarea antes de despertar} other{{count} tareas antes de despertar}}",
+  "threadOutsideAfter": "{count, plural, =1{1 tarea después de la hora de dormir} other{{count} tareas después de la hora de dormir}}"
 }

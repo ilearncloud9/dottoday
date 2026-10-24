@@ -3912,4 +3912,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pinDetail => 'Stays put when other tasks shift';
+
+  @override
+  String threadOutsideBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks before Wake Up',
+      one: '1 task before Wake Up',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String threadOutsideAfter(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks after Bedtime',
+      one: '1 task after Bedtime',
+    );
+    return '$_temp0';
+  }
 }

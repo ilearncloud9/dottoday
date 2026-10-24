@@ -72,6 +72,7 @@ void main() {
           ThreadCap(:final bedtime) => bedtime ? 'bed' : 'wake',
           ThreadGap(:final minutes) => 'gap$minutes',
           ThreadTaskEntry(:final task) => task.id,
+          ThreadOutside(:final tasks) => 'outside${tasks.length}',
         },
     ];
     expect(order, [
@@ -99,6 +100,63 @@ void main() {
     expect(_task(e, 'mail').state, DotState.upcoming);
     expect(_task(e, 'review').state, DotState.skipped);
     expect(_task(e, 'lunch').recurring, isTrue);
+  });
+
+  group('outside hours (F1.15)', () {
+    List<String> shape(List<ThreadEntry> e) => [
+      for (final x in e)
+        switch (x) {
+          ThreadCap(:final bedtime) => bedtime ? 'bed' : 'wake',
+          ThreadGap() => 'gap',
+          ThreadTaskEntry(:final task) => task.id,
+          ThreadOutside(:final bedtime, :final tasks) =>
+            '${bedtime ? 'after' : 'before'}:${tasks.map((t) => t.id).join(',')}',
+        },
+    ];
+
+    test('tasks before Wake Up and after Bedtime fold beyond the caps', () {
+      final e = _entries(clock.nowUtc(), [
+        _o('early', 5, 30, 30),
+        _o('dawn', 6, 0, 60),
+        _o('mail', 11, 0, 30),
+        _o('late', 22, 0, 30),
+        _o('night', 23, 30, 30),
+      ]);
+      expect(shape(e), [
+        'before:early,dawn',
+        'wake',
+        'gap',
+        'mail',
+        'gap',
+        'bed',
+        'after:late,night',
+      ]);
+      // They still render: every task is in the thread.
+      expect(threadTasks(e).map((t) => t.id), [
+        'early',
+        'dawn',
+        'mail',
+        'late',
+        'night',
+      ]);
+      expect(e.whereType<ThreadOutside>().every((z) => !z.open), isTrue);
+    });
+
+    test('a task across a cap stays inline', () {
+      final e = _entries(clock.nowUtc(), [
+        _o('wakeup', 6, 30, 60),
+        _o('film', 21, 30, 60),
+      ]);
+      expect(shape(e), ['wake', 'wakeup', 'gap', 'film', 'bed']);
+    });
+
+    test('the zone holding the live task starts unfolded', () {
+      clock.now = _at(6, 10);
+      final e = _entries(clock.nowUtc(), [_o('dawn', 6, 0, 60)]);
+      final zone = e.whereType<ThreadOutside>().single;
+      expect(zone.open, isTrue);
+      expect(zone.tasks.single.state, DotState.live);
+    });
   });
 
   test('an imported calendar event carries the calendar badge (F1.10)', () {

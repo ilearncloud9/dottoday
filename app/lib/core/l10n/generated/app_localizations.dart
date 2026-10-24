@@ -5843,6 +5843,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stays put when other tasks shift'**
   String get pinDetail;
+
+  /// Folded 'outside hours' row above the Wake Up cap (docs/02 F1.15): tasks that end by Wake Up. Tapping unfolds them.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task before Wake Up} other{{count} tasks before Wake Up}}'**
+  String threadOutsideBefore(int count);
+
+  /// Folded 'outside hours' row below the Bedtime cap (docs/02 F1.15): tasks that start at Bedtime or later. Tapping unfolds them.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task after Bedtime} other{{count} tasks after Bedtime}}'**
+  String threadOutsideAfter(int count);
 }
 
 class _AppLocalizationsDelegate

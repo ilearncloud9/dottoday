@@ -6,6 +6,7 @@ import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
+import 'package:dottoday/shared/dot/thread_outside.dart';
 import 'package:dottoday/shared/dot/thread_pieces.dart';
 import 'package:dottoday/shared/dot/thread_select.dart';
 import 'package:flutter/material.dart';
@@ -169,6 +170,7 @@ class _ThreadState extends State<Thread> {
       ),
       ThreadGap() => _gap(e, dropBox: dropBox),
       ThreadTaskEntry(:final task) => _task(task),
+      ThreadOutside() => OutsideRow(zone: e, taskRow: _task),
     };
   }
 

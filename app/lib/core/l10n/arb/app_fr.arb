@@ -956,5 +956,7 @@
   "calendarsTravelSuggestDetail": "Avant les événements avec un lieu. Calculé sur cet appareil, sans service de cartes",
   "rowFromCalendar": "{label}, de votre calendrier",
   "pinTitle": "Épinglée",
-  "pinDetail": "Reste en place quand les autres tâches se décalent"
+  "pinDetail": "Reste en place quand les autres tâches se décalent",
+  "threadOutsideBefore": "{count, plural, =1{1 tâche avant le réveil} other{{count} tâches avant le réveil}}",
+  "threadOutsideAfter": "{count, plural, =1{1 tâche après le coucher} other{{count} tâches après le coucher}}"
 }

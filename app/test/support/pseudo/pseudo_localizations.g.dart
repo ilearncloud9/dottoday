@@ -3060,4 +3060,12 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get pinDetail => pseudo(super.pinDetail);
+
+  @override
+  String threadOutsideBefore(int count) =>
+      pseudo(super.threadOutsideBefore(count));
+
+  @override
+  String threadOutsideAfter(int count) =>
+      pseudo(super.threadOutsideAfter(count));
 }

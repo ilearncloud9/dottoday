@@ -28,6 +28,11 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
 - [F1.13] Overlaps allowed; overlapping blocks render side-by-side (max 3 columns, then "+n").
 - [F1.14] Timeline builds lazily; 200 blocks in a day scroll at ≥ 55 fps on a Pixel 6a / iPhone 12 class device. (R-15)
 - [F1.15] Day boundaries: per-weekday start/end; blocks outside boundaries still render in a collapsed "outside hours" zone. (R-17)
+  Clarified in M8.4b: built on the thread as `ThreadOutside` — tasks that end by Wake Up fold into one
+  row above the sun cap ("2 tasks before Wake Up"), tasks that start at Bedtime or later into one below
+  the moon cap ("1 task after Bedtime"); a tap unfolds them into ordinary rows (open, done, drag,
+  select). A task across a cap stays inline; a zone holding the live task starts unfolded. The Week
+  board still shows every task.
 - [F1.16] Full 24 h renders — golden test for the bottom of the day. (R-14)
   Clarified in M8.4b: the latest Bedtime is 23:55 (the Day shape slider's last step; `24:00` is not a
   valid window end, `checkTimeWindow`), so "the bottom of the day" is Bedtime 23:55 with a 23:30 task:
