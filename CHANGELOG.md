@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M8.5: Release QA on the iPhone simulator, the Android emulator, the Mac and Chrome, with every result written down (docs/08 §4.1): 1 000 tasks, low storage, permissions turned off, time-zone changes, export and feedback hand-offs, reminder sounds. The beta builds are ready to upload, with a step-by-step guide (docs/release-beta.md); the uploads to TestFlight, Google Play and a web staging site are for the owner.
 - Fixed on the Mac: reminder sounds (Dot, Chime, Bell, Ripple) were silent in the Sound picker and reminders fell back to the system sound, including the first task's alarm chime. The sounds now come with the app.
 - Fixed: after opening Dottoday's data with an older version of the app (a beta tester going back a build, or an old copy on a Mac), the newer version could no longer open it. It now picks up where it left off, with nothing lost.
 - M8.4d: Reminder gaps closed on every platform. Settings › Reminders › Task starts now holds a set of up to five alerts that new tasks start with. Quiet hours (off unless you switch them on) let reminders arrive silently overnight — the first task of the day still rings. Pick weekdays for a day-start summary at Wake Up: "Your day: 6 blocks, first at 08:00". Choose a reminder sound — Dot, Chime, Bell or Ripple, made for Dottoday — and hear it as you tap. On the web, the reminder strip inside the app offers Snooze 10 min and plays your sound.
