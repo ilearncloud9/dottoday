@@ -188,6 +188,10 @@ jobs:
           (cd build/web && python3 -m http.server 8080 >/dev/null 2>&1 &)
           sleep 2
           node ../tool/a11y/axe_audit.mjs http://127.0.0.1:8080/
+      # Keyboard: first Tab = Skip to content, Enter skips the rail, Ctrl+/
+      # opens the shortcut list (docs/08 §6.2, M8.7).
+      - name: Keyboard checks
+        run: node ../tool/a11y/keyboard_check.mjs http://127.0.0.1:8080/
       # No CSP violations, the service worker controls the page, and the app
       # opens offline after one visit (docs/07 Web, M5.7).
       - name: PWA, CSP and offline

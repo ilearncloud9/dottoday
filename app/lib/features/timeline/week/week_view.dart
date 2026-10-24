@@ -136,6 +136,8 @@ class WeekView extends ConsumerWidget {
         autofocus: true,
         // Catches keys only; adds nothing for screen readers.
         includeSemantics: false,
+        // No Tab stop: Tab from here starts at Skip to content (SkipLink).
+        skipTraversal: true,
         child: child,
       ),
     );
