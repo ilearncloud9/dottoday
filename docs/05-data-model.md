@@ -146,6 +146,8 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   "rollUnfinished": false,
   "bedtimeReminder": true,
   "inboxNudge": false,
+  "daySummaryDays": [],
+  "reminderSound": null,
   "suggestTravelTime": false,
   "travelTimeMin": 15
 }
@@ -175,6 +177,11 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
 - Clarified in M8.4c: `inboxNudge` (PRD F3.3, the once-a-day "Plan your inbox" card on Today) is a
   plain boolean, off by default; the day it was last put away is per device in `local_meta`
   (`inbox_nudge_day`, never synced — a nudge is a suggestion, like the Day review's "Not now").
+- Clarified in M8.4d: `daySummaryDays` (weekday keys with a day-start summary; empty = off) and
+  `reminderSound` (a bundled sound key, `dot`/`chime`/`bell`/`ripple`; null = the system sound).
+  Absent keys take the defaults; the server ignores both. `reminderSound` isn't rejected when
+  unknown (a newer device may know more sounds): the app resolves it against its own set before it
+  names a file, so a stored string never reaches a file name.
 - Server enforces with CHECK constraints and a `validate_settings()` function; client with a Zod-like
   Dart validator in `domain/validation`.
 

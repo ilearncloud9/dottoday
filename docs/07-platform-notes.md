@@ -6,7 +6,8 @@ specified here — never "not available on X".
 ## iOS (min iOS 16)
 - Notifications: request permission in onboarding step 2 with a pre-prompt; use time-sensitive
   interruption level for "at start" alerts; actions Done/Snooze/Open; limit 64 pending → planner
-  schedules the next 7 days only and refreshes on open/background fetch.
+  schedules the next 7 days only, keeps the nearest 50 (macOS too, M8.4d) and refreshes on
+  open/background fetch. Reminder sounds are WAV files copied to `Library/Sounds` at start.
 - Widgets: WidgetKit via `home_widget`, timelines refreshed on each write (`WidgetCenter.reloadAllTimelines`), Lock Screen widget "Next up".
 - Calendar: EventKit full access (`NSCalendarsFullAccessUsageDescription`) for write-back; read-only otherwise.
 - Sign in with Apple required when Google sign-in is offered.
@@ -15,7 +16,9 @@ specified here — never "not available on X".
 
 ## Android (min API 26)
 - Notifications: channels (Alerts, Summary, Sync); `SCHEDULE_EXACT_ALARM` requested with rationale;
-  fall back to inexact if denied and tell the user; full-screen intents not used.
+  fall back to inexact if denied and tell the user; full-screen intents only for the alarm-loud
+  dots (M6.5.5). A channel's sound is fixed, so each bundled reminder sound has its own
+  `alerts_<sound>` channel (M8.4d); `res/raw/keep.xml` keeps the sounds through resource shrinking.
 - Widgets: Glance via `home_widget`; update via `WorkManager` + on write.
 - Calendar: `CalendarContract` read/write with runtime permission.
 - Predictive back, edge-to-edge. No Material You dynamic accent: the accent is one of Concept A's
@@ -36,6 +39,8 @@ specified here — never "not available on X".
 - Renderer: CanvasKit for desktop widths, HTML renderer under 600 px (set via `--web-renderer auto`), test both.
 - Storage: drift WASM + OPFS; fallback to IndexedDB on Safari < 17.
 - Push: service worker + VAPID keys; Supabase Edge Function sends; if denied, in-app banners while open.
+  The in-app strip offers Done and Snooze 10 min and plays the picked reminder sound (a browser
+  notification can't carry one; M8.4d).
 - Keyboard-first: all timeline operations have shortcuts; focus visible; skip-to-content link.
 - Install prompt after 2nd visit; offline page; manifest with maskable icon.
 - Calendar: Google/Microsoft via backend OAuth only; Apple via CalDAV (app-specific password) Phase 2.

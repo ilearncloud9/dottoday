@@ -103,11 +103,14 @@ const f6Rows = <String, ParityRow>{
     tests: [
       'test/domain/notifications/notification_planner_test.dart',
       'test/domain/notifications/bedtime_reminder_test.dart',
+      'test/domain/notifications/day_summary_test.dart',
+      'test/features/settings/settings_screen_test.dart',
     ],
-    all: Cell(Status.gap, 'alert set, quiet hours, day summary — M8.4d'),
+    all: ci,
     note:
-        'One default alert only; quiet hours exist in the planner with no '
-        'Settings control; no per-weekday day-start summary (Bedtime exists).',
+        'M8.4d: default set (up to 5) in the Alerts editor; Quiet hours '
+        '(loud first dot still rings); day-start summary per weekday at Wake '
+        'Up, skipped on an empty day; Apple keeps the nearest 50 pending.',
   ),
   'F6.3': ParityRow(
     tests: [
@@ -132,10 +135,10 @@ const f6Rows = <String, ParityRow>{
     ],
     all: ci,
     macos: macNotify,
-    web: Cell(Status.gap, 'no Snooze on web — M8.4d'),
     note:
         'Web system notifications carry Done and Open (Chrome shows two '
-        'actions, M5.3a); the in-app banner offers Done and Later.',
+        'actions, M5.3a); the in-app strip offers Done and Snooze 10 min '
+        '(M8.4d).',
   ),
   'F6.5': ParityRow(
     tests: [
@@ -145,11 +148,19 @@ const f6Rows = <String, ParityRow>{
     all: ci,
   ),
   'F6.6': ParityRow(
-    tests: ['test/data/notifications/alarm_sound_test.dart'],
-    all: Cell(Status.gap, 'no sound set or picker — M8.4d'),
+    tests: [
+      'test/data/notifications/alarm_sound_test.dart',
+      'test/data/notifications/reminder_sounds_test.dart',
+      'test/data/notifications/fln_notification_platform_test.dart',
+      'test/data/notifications/in_app_alerts_test.dart',
+      'test/data/notifications/sound_player_test.dart',
+    ],
+    all: Cell(Status.manual, 'hear each sound and its preview (08 §6.2)'),
     note:
-        'One bundled chime plays for loud dots (M6.5.4/5); Focus/DND respected '
-        '(time-sensitive on Apple, health panel M6.5.8).',
+        'M8.4d: Dot, Chime, Bell, Ripple (tool/gen_sounds.dart) or the '
+        'system sound; Android one channel per sound; the web plays it in '
+        'the in-app strip. Loud dots keep their chime (M6.5.4/5); Focus/DND '
+        'respected (time-sensitive on Apple, health panel M6.5.8).',
   ),
   'F6.7': ParityRow(
     tests: [
