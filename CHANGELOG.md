@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M8.4: A platform parity checklist (`docs/parity-checklist.md`): every feature in the product spec, on iPhone, Android, Mac and web, with what proves it works there; CI keeps it in step with the spec. Fixed on the Mac: after Dottoday restarted itself to recover its database, the menu bar could come back empty.
 - M8.3b: The questions your phone or Mac asks for Dottoday — calendar access, Face ID — now come in German, French and Spanish too, in your device's language. On Android 13 and later, Dottoday appears under Settings › Apps › Language with its four languages.
 - M8.3: Dottoday speaks German, French and Spanish: every screen, notification, widget and menu. A new install starts in your device's language (Settings › Language changes it). Example inputs like "Mama morgen 15 Uhr anrufen 20 min" work as typed, and the same kind words hold in every language. Every later change has to ship in all four languages, and the screens are checked with longer pseudo text at phone, tablet and desktop widths so nothing gets cut off.
 - M8.2: Send feedback, What's new and a changelog. Settings › Send feedback opens a draft in your mail app that you send yourself; Add diagnostics shows exactly what it adds first — versions, device type, sync state and how many tasks you have, never what they say. Settings › About › What's new lists what changed in each version, and after an update a strip says once that there is something new.

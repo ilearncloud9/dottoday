@@ -11,7 +11,7 @@ specified here — never "not available on X".
 - Calendar: EventKit full access (`NSCalendarsFullAccessUsageDescription`) for write-back; read-only otherwise.
 - Sign in with Apple required when Google sign-in is offered.
 - Background: `BGAppRefreshTask` to re-materialise occurrences and re-plan notifications daily.
-- Live Activities for the current block: Phase 2.
+- Live Activity / Dynamic Island for the live dot: M9.3 (was Phase 2; moved by the standout roadmap, ADR-0009).
 
 ## Android (min API 26)
 - Notifications: channels (Alerts, Summary, Sync); `SCHEDULE_EXACT_ALARM` requested with rationale;
@@ -24,7 +24,7 @@ specified here — never "not available on X".
 ## macOS (min macOS 12)
 - Menu bar: File (New task ⌘N, Export), Edit (Undo ⌘Z, Redo ⇧⌘Z, Delete), View (Today ⌘1, Inbox ⌘2, Week ⌘3, Month ⌘4), Go (Previous/Next day ⌘←/→, Today ⌘T).
 - Menu-bar extra "Next up" (NSStatusItem) via a small Swift plugin; optional.
-- Notifications via UNUserNotificationCenter; widgets via WidgetKit (share app group with iOS).
+- Notifications via UNUserNotificationCenter. "Next up" is the menu-bar item (M5.4/M5.5 decision, PRD F9), not a WidgetKit widget; it becomes the day dot in M9.6.
 - Sandbox entitlements: calendars, network client, user-selected file read/write (export).
 - Calendar: `device_calendar` has no macOS support; EventKit goes through a small method channel in the Runner (M7.1b), same `DeviceCalendarGateway` as iOS.
 - Window opens at 1280×800, min 960×640 (owner, after the M4 sweep); remembers size/position; supports multiple windows (Today + Inbox) in Phase 2.
