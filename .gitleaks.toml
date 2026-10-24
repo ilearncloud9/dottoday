@@ -6,6 +6,8 @@ useDefault = true
 description = "Placeholders and test fixtures, not secrets"
 paths = [
   '''app/\.env\.example$''',
+  # Edge Function secret placeholders (M7.4): values start with "placeholder".
+  '''supabase/functions/\.env\.example$''',
   '''app/pubspec\.lock$''',
   # RFC 8291 Appendix A published test vector (keys and auth secret are
   # from the RFC, not ours), M5.3b.
