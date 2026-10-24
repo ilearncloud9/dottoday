@@ -64,12 +64,14 @@ Future<Result<(UndoToken, ShiftReport), AppFailure>>? runLate(
   required DateTime nowUtc,
   required int minutes,
   bool includeCalendar = false,
+  Set<String> readOnlyIds = const {},
 }) {
   final result = const DaySchedulerService().runningLate(
     day,
     nowUtc,
     minutes,
     includeCalendar: includeCalendar,
+    readOnlyIds: readOnlyIds,
   );
   if (result.report.movedIds.isEmpty) return null;
   return _applyShift(

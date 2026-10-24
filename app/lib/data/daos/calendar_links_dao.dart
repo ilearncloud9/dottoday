@@ -104,6 +104,19 @@ class CalendarLinksDao extends DatabaseAccessor<AppDatabase>
     return {for (final r in rows) r.read<String>('id')};
   }
 
+  /// Ids of [userId]'s live imported occurrences whose calendar won't take
+  /// a change back: the link is read-only (read-only calendar, repeating or
+  /// all-day event) or gone. A shift never moves them (docs/09 M7.6).
+  /// Watchable, so the timeline follows imports and permission changes.
+  Selectable<String> readOnlyImportIds(String userId) => customSelect(
+    'SELECT o.id AS id FROM occurrences o '
+    'LEFT JOIN calendar_links l ON l.id = o.calendar_link_id '
+    "WHERE o.user_id = ? AND o.source = 'calendar' AND o.deleted_at IS NULL "
+    'AND (l.id IS NULL OR l.read_only = 1)',
+    variables: [Variable<String>(userId)],
+    readsFrom: {occurrences, calendarLinks},
+  ).map((r) => r.read<String>('id'));
+
   Future<void> upsertAll(Iterable<Insertable<CalendarLinkRow>> rows) =>
       batch((b) => b.insertAllOnConflictUpdate(calendarLinks, rows.toList()));
 

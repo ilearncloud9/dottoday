@@ -1456,6 +1456,12 @@ abstract class AppLocalizations {
   /// **'Shift later tasks'**
   String get shiftChipLabel;
 
+  /// Second toggle chip beside 'Shift later tasks' while dragging, shown when the day has calendar events a shift could move: on, they move with the later tasks (docs/09 M7.6). Starts from Settings › Calendars › Move calendar events too.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar events too'**
+  String get shiftChipCalendar;
+
   /// Snackbar after a drop with Shift later tasks on, with Undo.
   ///
   /// In en, this message translates to:
@@ -3943,7 +3949,7 @@ abstract class AppLocalizations {
   /// Calendars page toggle subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Off: events stay put when you shift the rest'**
+  /// **'When you shift the rest. Shared and repeating events stay put.'**
   String get calendarsMoveEventsDetail;
 
   /// Calendars page: explains the permission prompt before Connect.

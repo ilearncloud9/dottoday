@@ -1394,6 +1394,10 @@
   "@shiftChipLabel": {
     "description": "Toggle chip shown while dragging a task: when on, the tasks after it move along (R-04). Desktop: hold Alt to invert."
   },
+  "shiftChipCalendar": "Calendar events too",
+  "@shiftChipCalendar": {
+    "description": "Second toggle chip beside 'Shift later tasks' while dragging, shown when the day has calendar events a shift could move: on, they move with the later tasks (docs/09 M7.6). Starts from Settings › Calendars › Move calendar events too."
+  },
   "snackMovedShifted": "{count, plural, =0{{title} moved to {time}} =1{{title} moved to {time} · 1 later task moved too} other{{title} moved to {time} · {count} later tasks moved too}}",
   "@snackMovedShifted": {
     "description": "Snackbar after a drop with Shift later tasks on, with Undo.",
@@ -3990,7 +3994,7 @@
   "@calendarsMoveEvents": {
     "description": "Calendars page toggle (includeCalendarInShift)."
   },
-  "calendarsMoveEventsDetail": "Off: events stay put when you shift the rest",
+  "calendarsMoveEventsDetail": "When you shift the rest. Shared and repeating events stay put.",
   "@calendarsMoveEventsDetail": {
     "description": "Calendars page toggle subtitle."
   },

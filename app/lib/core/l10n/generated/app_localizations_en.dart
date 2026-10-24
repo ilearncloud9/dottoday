@@ -911,6 +911,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shiftChipLabel => 'Shift later tasks';
 
   @override
+  String get shiftChipCalendar => 'Calendar events too';
+
+  @override
   String snackMovedShifted(String title, String time, int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -2688,7 +2691,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calendarsMoveEventsDetail =>
-      'Off: events stay put when you shift the rest';
+      'When you shift the rest. Shared and repeating events stay put.';
 
   @override
   String get calendarsAsk =>

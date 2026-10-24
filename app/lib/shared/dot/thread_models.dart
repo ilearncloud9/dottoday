@@ -130,3 +130,16 @@ final class ThreadGap extends ThreadEntry {
     fits: title,
   );
 }
+
+/// What the shift chips said when a task was let go (docs/03 §3.2).
+@immutable
+final class DropShift {
+  const DropShift({this.followers = false, this.calendar = false});
+
+  /// The later tasks follow ("Shift later tasks", inverted by Alt).
+  final bool followers;
+
+  /// Calendar events among them move too ("Calendar events too"); only
+  /// meaningful with [followers].
+  final bool calendar;
+}

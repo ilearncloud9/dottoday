@@ -55,6 +55,51 @@ void main() {
       expect(starts(incl.day)['meet'], '10:15');
     });
 
+    test('included, read-only and repeating events still stay (M7.6)', () {
+      final day = [
+        block('a', '09:00', 30),
+        block('mine', '10:00', 30, source: OccurrenceSource.calendar),
+        block('standup', '10:30', 15, source: OccurrenceSource.calendar),
+        block('b', '11:00', 30),
+      ];
+      final r = _s.shiftFollowers(
+        day,
+        'a',
+        15,
+        includeCalendar: true,
+        readOnlyIds: {'standup'},
+      );
+      expect(starts(r.day), {
+        'a': '09:15',
+        'mine': '10:15',
+        'standup': '10:30',
+        'b': '11:15',
+      });
+      expect(r.report.skippedIds, ['standup']);
+      // The ids only matter when calendar events are included at all.
+      final off = _s.shiftFollowers(day, 'a', 15, readOnlyIds: {'standup'});
+      expect(starts(off.day)['mine'], '10:00');
+      final late = _s.runningLate(
+        day,
+        at('09:45'),
+        15,
+        includeCalendar: true,
+        readOnlyIds: {'standup'},
+      );
+      expect(starts(late.day)['standup'], '10:30');
+      expect(starts(late.day)['mine'], '10:15');
+    });
+
+    test('movableBlock: own tasks always, imports only when included and '
+        'not read-only', () {
+      final own = block('t', '09:00', 30);
+      final ev = block('e', '09:00', 30, source: OccurrenceSource.calendar);
+      expect(movableBlock(own, false, {'t'}), isTrue);
+      expect(movableBlock(ev, false, const {}), isFalse);
+      expect(movableBlock(ev, true, const {}), isTrue);
+      expect(movableBlock(ev, true, {'e'}), isFalse);
+    });
+
     test('a follower is never pushed onto or across a pin', () {
       final day = [
         block('a', '09:00', 30),
