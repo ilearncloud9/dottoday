@@ -81,11 +81,12 @@ const f2Rows = <String, ParityRow>{
       'test/domain/validation/entity_validators_test.dart',
       'test/features/timeline/note_links_test.dart',
     ],
-    all: Cell(Status.gap, 'energy, pinned, markdown-lite — M8.4c'),
+    all: Cell(Status.gap, 'energy, markdown-lite — M8.4c'),
     note:
         'Built with the PRD limits: title, notes (links tap), start, duration, '
-        'colour, icon, subtasks, alerts, repeat, travel buffer. Missing on all '
-        'four: energy level (column exists), pinned (M8.4b), markdown-lite.',
+        'colour, icon, subtasks, alerts, repeat, travel buffer, pinned '
+        '(M8.4b). Missing on all four: energy level (column exists), '
+        'markdown-lite.',
   ),
   'F2.10': ParityRow(
     tests: [

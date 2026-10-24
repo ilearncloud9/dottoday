@@ -3906,4 +3906,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String rowFromCalendar(String label) {
     return '$label, from your calendar';
   }
+
+  @override
+  String get pinTitle => 'Pinned';
+
+  @override
+  String get pinDetail => 'Stays put when other tasks shift';
 }

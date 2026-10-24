@@ -90,6 +90,17 @@ void main() {
     expect(_saved().durationMin, 45);
   });
 
+  testWidgets('the Pinned switch saves with the other edits (F2.9)', (
+    tester,
+  ) async {
+    await _pump(tester);
+    await tester.ensureVisible(_editor(find.text('Pinned')));
+    await tester.tap(_editor(find.text('Pinned')));
+    await tester.pump(const Duration(milliseconds: 700));
+    await tester.pumpAndSettle();
+    expect(_saved().pinned, isTrue);
+  });
+
   testWidgets('Move to inbox unschedules it, with Undo', (tester) async {
     await _pump(tester);
     await tester.tap(_editor(find.text('Move to inbox')));

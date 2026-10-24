@@ -954,5 +954,7 @@
   "calendarsTravel": "Wegzeit",
   "calendarsTravelSuggest": "Wegzeit vorschlagen",
   "calendarsTravelSuggestDetail": "Vor Terminen mit Ort. Auf diesem Gerät berechnet, ohne Kartenabfrage",
-  "rowFromCalendar": "{label}, aus deinem Kalender"
+  "rowFromCalendar": "{label}, aus deinem Kalender",
+  "pinTitle": "Angeheftet",
+  "pinDetail": "Bleibt stehen, wenn sich andere Aufgaben verschieben"
 }

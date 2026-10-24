@@ -3054,4 +3054,10 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String rowFromCalendar(String label) => pseudo(super.rowFromCalendar(label));
+
+  @override
+  String get pinTitle => pseudo(super.pinTitle);
+
+  @override
+  String get pinDetail => pseudo(super.pinDetail);
 }

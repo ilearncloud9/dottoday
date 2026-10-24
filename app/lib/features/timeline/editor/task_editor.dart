@@ -257,6 +257,8 @@ class _FormState extends ConsumerState<_Form> {
           onRepeat: _draft.startUtc == null ? null : () => unawaited(_repeat()),
           travelMin: _draft.travelBufferMin,
           onTravel: _draft.startUtc == null ? null : () => unawaited(_travel()),
+          pinned: _draft.pinned,
+          onPinned: (v) => _change((o) => o.copyWith(pinned: v)),
           onAlerts: () => unawaited(
             pickAlerts(
               context,
@@ -286,8 +288,7 @@ class _FormState extends ConsumerState<_Form> {
           scopedDelete: widget.task.series == null
               ? null
               : () => deleteScoped(context, task: widget.task, target: _draft),
-          // The sheet goes back to the page: the task sheet below it would
-          // show a task that has gone.
+          // Back to the page: the sheet below would show a task now gone.
           onLeft:
               widget.onClose ??
               () => Navigator.of(context).popUntil((r) => r.isFirst),

@@ -954,5 +954,7 @@
   "calendarsTravel": "Tiempo de trayecto",
   "calendarsTravelSuggest": "Sugerir tiempo de trayecto",
   "calendarsTravelSuggestDetail": "Antes de eventos con lugar. Se calcula en este dispositivo; no se consulta ningún mapa",
-  "rowFromCalendar": "{label}, de tu calendario"
+  "rowFromCalendar": "{label}, de tu calendario",
+  "pinTitle": "Fijada",
+  "pinDetail": "Se queda en su sitio cuando otras tareas se mueven"
 }

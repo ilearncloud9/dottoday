@@ -5831,6 +5831,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{label}, from your calendar'**
   String rowFromCalendar(String label);
+
+  /// Task sheet and editor toggle (docs/02 F1.5, F2.9): a pinned task is never moved by shifts, Running late or drags of other tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned'**
+  String get pinTitle;
+
+  /// Subtitle of the Pinned toggle in the task sheet and editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Stays put when other tasks shift'**
+  String get pinDetail;
 }
 
 class _AppLocalizationsDelegate

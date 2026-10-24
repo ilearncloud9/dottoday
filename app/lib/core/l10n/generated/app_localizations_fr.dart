@@ -3930,4 +3930,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String rowFromCalendar(String label) {
     return '$label, de votre calendrier';
   }
+
+  @override
+  String get pinTitle => 'Épinglée';
+
+  @override
+  String get pinDetail => 'Reste en place quand les autres tâches se décalent';
 }

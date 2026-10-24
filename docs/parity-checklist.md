@@ -25,13 +25,13 @@ ticked in 08 §6.1) before a tag.
 
 | Status | iPhone | Android | macOS | Web |
 |---|---|---|---|---|
-| ✓ CI | 29 | 29 | 38 | 43 |
+| ✓ CI | 30 | 30 | 39 | 44 |
 | ✓ device | 19 | 21 | 6 | 0 |
 | ◐ owner | 4 | 2 | 8 | 5 |
 | ◐ manual | 2 | 2 | 2 | 5 |
 | → later | 2 | 2 | 2 | 3 |
 | — n/a | 3 | 3 | 2 | 1 |
-| ✗ gap | 8 | 8 | 9 | 10 |
+| ✗ gap | 7 | 7 | 8 | 9 |
 
 ## F1. Timeline (day view) — the home screen
 
@@ -41,7 +41,7 @@ ticked in 08 §6.1) before a tag.
 | F1.2 | Drag a block to a new time, or drag its top/bottom edge to change duration | ✓ device<br>journey · iPhone 17 Pro sim, M8.4 | ✓ device<br>journey · API 37 emulator, M8.4; CI API 34 | ✓ CI<br>expanded journey variant: M8.4b | ✓ CI | `test/shared/dot/thread_drag_test.dart`<br>`test/features/timeline/today_drag_test.dart`<br>`test/domain/scheduling/drag_math_test.dart` |
 | F1.3 | Move one block and choose whether everything after it shifts too | ✓ device<br>journey · iPhone 17 Pro sim, M8.4 | ✓ device<br>journey · API 37 emulator, M8.4; CI API 34 | ✓ CI<br>expanded journey variant: M8.4b | ✓ CI | `test/features/timeline/today_drag_test.dart`<br>`test/domain/scheduling/move_with_followers_test.dart`<br>`test/shared/dot/thread_drag_test.dart` |
 | F1.4 | Tap "Running late" and push all remaining unpinned blocks by +5/+15/+30 min | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/timeline/running_late_sheet_test.dart`<br>`test/domain/scheduling/running_late_test.dart`<br>`test/features/timeline/today_spread_test.dart` |
-| F1.5 | Pin a block so nothing ever moves it | ✗ gap<br>no pin control — M8.4b | ✗ gap<br>no pin control — M8.4b | ✗ gap<br>no pin control — M8.4b | ✗ gap<br>no pin control — M8.4b | `test/domain/scheduling/day_scheduler_test.dart`<br>`test/shared/dot/thread_drag_test.dart` |
+| F1.5 | Pin a block so nothing ever moves it | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/domain/scheduling/day_scheduler_test.dart`<br>`test/shared/dot/thread_drag_test.dart`<br>`test/features/timeline/task_sheet_test.dart`<br>`test/features/timeline/task_editor_test.dart` |
 | F1.6 | Long-press to multi-select blocks and move/delete/duplicate them together | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/timeline/today_select_test.dart`<br>`test/shared/dot/thread_select_test.dart` |
 | F1.7 | See free gaps and can tap a gap to add a task there | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/timeline/today_screen_test.dart`<br>`test/shared/dot/thread_day_test.dart` |
 | F1.8 | Swipe left/right (or ←/→ keys) to move between days | ✓ device<br>journey · iPhone 17 Pro sim, M8.4 | ✓ device<br>journey · API 37 emulator, M8.4; CI API 34 | ✓ CI | ◐ manual<br>⌘/Ctrl+←/→ in real Chrome (08 §6.2) | `test/features/timeline/today_screen_test.dart`<br>`test/features/timeline/today_keys_test.dart`<br>`test/shared/dot/day_pager_test.dart`<br>`test/app_menu_test.dart` |
@@ -67,7 +67,7 @@ ticked in 08 §6.1) before a tag.
 | F2.6 | Time entry is always typeable | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/shared/time_input/time_input_test.dart` |
 | F2.7 | Duration chips 15/30/45/60/90 + custom | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/shared/duration/duration_chips_test.dart`<br>`test/shared/duration/duration_sheet_test.dart`<br>`test/domain/time/duration_presets_test.dart` |
 | F2.8 | "Add another" keeps the sheet open | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/task_editor/add_when_test.dart`<br>`test/features/task_editor/add_bulk_test.dart` |
-| F2.9 | Editor fields: title (required, ≤ 200 chars), notes (markdown-lite, links tappable, ≤ 10 000 chars), start,… | ✗ gap<br>energy, pinned, markdown-lite — M8.4c | ✗ gap<br>energy, pinned, markdown-lite — M8.4c | ✗ gap<br>energy, pinned, markdown-lite — M8.4c | ✗ gap<br>energy, pinned, markdown-lite — M8.4c | `test/features/timeline/task_editor_test.dart`<br>`test/domain/validation/entity_validators_test.dart`<br>`test/features/timeline/note_links_test.dart` |
+| F2.9 | Editor fields: title (required, ≤ 200 chars), notes (markdown-lite, links tappable, ≤ 10 000 chars), start,… | ✗ gap<br>energy, markdown-lite — M8.4c | ✗ gap<br>energy, markdown-lite — M8.4c | ✗ gap<br>energy, markdown-lite — M8.4c | ✗ gap<br>energy, markdown-lite — M8.4c | `test/features/timeline/task_editor_test.dart`<br>`test/domain/validation/entity_validators_test.dart`<br>`test/features/timeline/note_links_test.dart` |
 | F2.10 | Saving is optimistic; the sheet closes immediately | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/task_editor/add_what_test.dart`<br>`test/features/timeline/task_editor_test.dart` |
 | F2.11 | Subtasks gain an optional duration each and an order | → later<br>step lengths M10.3; actual start M10.5 | → later<br>step lengths M10.3; actual start M10.5 | → later<br>step lengths M10.3; actual start M10.5 | → later<br>step lengths M10.3; actual start M10.5 | `test/domain/scheduling/task_progress_test.dart`<br>`test/features/timeline/editor_subtasks_test.dart`<br>`test/data/db/migration_test.dart` |
 ## F3. Inbox
@@ -150,7 +150,7 @@ ticked in 08 §6.1) before a tag.
 - **F1.1** Concept A thread (ADR-0007): Wake Up → Bedtime with the now dot; the three-day spread from 840 px; Mac and web pixel-identical at 1280.
 - **F1.2** Resize is the end grip only (M3b.5); the start moves with the task. Touch holds 250 ms, a mouse lifts at once (`today_spread_test`).
 - **F1.3** Touch: second finger toggles the chip (device runs); desktop: Alt.
-- **F1.5** Pins are honoured everywhere (scheduler, drag, Running late) but no screen lets a person pin or unpin a task.
+- **F1.5** Pinned switch in the task sheet (this occurrence) and the editor (Save asks about the series), M8.4b; pins are honoured by the scheduler, drag and Running late.
 - **F1.6** One day at a time (M3b.7); desktop adds Shift/⌘/Ctrl-click.
 - **F1.8** Days step with ⌘/Ctrl+←/→ (07 macOS, 10 §4), not bare arrows; the Mac Go menu does the same. In a browser ⌘← may be Back — checked by hand.
 - **F1.9** The done haptic is felt only on a phone (08 §6.1 hardware pass).
@@ -164,7 +164,7 @@ ticked in 08 §6.1) before a tag.
 - **F2.2** A real clipboard paste on a phone is in the 08 §6.1 hardware pass.
 - **F2.3** Sheet below 840 px, side panel above — by width, not platform.
 - **F2.7** Presets are editable, default 15 30 45 1 h 1.5 h 2 h (M3c.3).
-- **F2.9** Built with the PRD limits: title, notes (links tap), start, duration, colour, icon, subtasks, alerts, repeat, travel buffer. Missing on all four: energy level (column exists), pinned (M8.4b), markdown-lite.
+- **F2.9** Built with the PRD limits: title, notes (links tap), start, duration, colour, icon, subtasks, alerts, repeat, travel buffer, pinned (M8.4b). Missing on all four: energy level (column exists), markdown-lite.
 - **F2.11** Data done (M6.5.1), order and reorder (M3f.3), actual end on Done (M6.5.2); the editor for step lengths and the starts come with M10.
 - **F3.1** Schedule sheet with suggestions everywhere; drag onto Today from the wide sidebar (≥ 840 px, M3e.2). Phone drag: decided in M8.4c.
 - **F3.2** Wide: +, right-click and screen-reader actions replace swipes (M3e.2).

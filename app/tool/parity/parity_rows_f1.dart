@@ -56,11 +56,14 @@ const f1Rows = <String, ParityRow>{
     tests: [
       'test/domain/scheduling/day_scheduler_test.dart',
       'test/shared/dot/thread_drag_test.dart',
+      'test/features/timeline/task_sheet_test.dart',
+      'test/features/timeline/task_editor_test.dart',
     ],
-    all: Cell(Status.gap, 'no pin control — M8.4b'),
+    all: ci,
     note:
-        'Pins are honoured everywhere (scheduler, drag, Running late) but no '
-        'screen lets a person pin or unpin a task.',
+        'Pinned switch in the task sheet (this occurrence) and the editor '
+        '(Save asks about the series), M8.4b; pins are honoured by the '
+        'scheduler, drag and Running late.',
   ),
   'F1.6': ParityRow(
     tests: [

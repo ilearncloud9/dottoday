@@ -3928,4 +3928,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String rowFromCalendar(String label) {
     return '$label, aus deinem Kalender';
   }
+
+  @override
+  String get pinTitle => 'Angeheftet';
+
+  @override
+  String get pinDetail =>
+      'Bleibt stehen, wenn sich andere Aufgaben verschieben';
 }

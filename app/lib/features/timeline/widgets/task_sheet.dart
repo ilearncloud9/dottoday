@@ -5,6 +5,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
+import 'package:dottoday/features/timeline/state/block_actions.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/note_links.dart';
@@ -80,7 +81,13 @@ class TaskSheetBody extends ConsumerWidget {
           SheetSubtasks(task: task),
           NoteLinks(notes: task.occurrence.notes),
           const SizedBox(height: DotSpace.m),
-          SheetDetails(task: task, onEdit: () => showTaskEditor(context, id)),
+          SheetDetails(
+            task: task,
+            onEdit: () => showTaskEditor(context, id),
+            onPinned: pinnable(task.occurrence)
+                ? (on) => unawaited(setPinned(ref, task.occurrence, pinned: on))
+                : null,
+          ),
         ],
       ),
       AsyncData(value: null) ||
