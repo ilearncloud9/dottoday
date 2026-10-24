@@ -1,7 +1,9 @@
+import 'package:dottoday/data/feedback/diagnostics_reader.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/feedback/feedback_diagnostics.dart';
 import 'package:dottoday/shared/dot/day_shape_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -198,10 +200,8 @@ void main() {
   ) async {
     final h = await pumpSettings(tester);
     await _tapRow(tester, 'Send feedback');
-    expect(
-      find.text('Opens an email draft. Nothing about your tasks is included.'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('Nothing your tasks say'), findsOneWidget);
+    expect(find.textContaining('diagnostics.json'), findsNothing);
     await tester.tap(find.text('Write email'));
     await tester.pumpAndSettle();
     final plain = h.links.opened.single;
@@ -209,14 +209,34 @@ void main() {
     expect(plain.query, contains('0.1.0'));
     expect(plain.query, isNot(contains('body')));
     await _tapRow(tester, 'Send feedback');
-    await tester.tap(find.text('Add app version and device type'));
+    await tester.tap(find.text('Add diagnostics'));
     await tester.pumpAndSettle();
+    // Exactly what will be added, before anything leaves the device.
+    expect(find.text('Added to the end of your email:'), findsOneWidget);
+    expect(find.textContaining('"tasks": 12'), findsOneWidget);
+    await expectA11yGuidelines(tester);
     await tester.tap(find.text('Write email'));
     await tester.pumpAndSettle();
+    final body = Uri.decodeComponent(h.links.opened.last.query);
+    expect(body, contains('--- diagnostics.json ---'));
+    expect(body, contains('"device": "0a1b2c3d4e5f6071"'));
+    expect(body, contains('"platform": "android"'));
+  });
+
+  testWidgets('feedback: unreadable diagnostics are named; the email goes', (
+    tester,
+  ) async {
+    final h = await pumpSettings(tester, diagnostics: _FailingReader());
+    await _tapRow(tester, 'Send feedback');
+    await tester.tap(find.text('Add diagnostics'));
+    await tester.pumpAndSettle();
     expect(
-      Uri.decodeComponent(h.links.opened.last.query),
-      contains('Platform'),
+      find.textContaining("Couldn't read the diagnostics"),
+      findsOneWidget,
     );
+    await tester.tap(find.text('Write email'));
+    await tester.pumpAndSettle();
+    expect(h.links.opened.single.query, isNot(contains('body')));
   });
 
   testWidgets('no mail app: says so', (tester) async {
@@ -259,6 +279,30 @@ void main() {
         await pumpSettings(tester, size: size, mode: mode);
         await expectA11yGuidelines(tester);
       });
+      testWidgets('a11y feedback + diagnostics ${mode.name} $name', (
+        tester,
+      ) async {
+        await pumpSettings(tester, size: size, mode: mode);
+        await _tapRow(tester, 'Send feedback');
+        await tester.tap(find.text('Add diagnostics'));
+        await tester.pumpAndSettle();
+        await expectA11yGuidelines(tester);
+      });
+      testWidgets('a11y changelog ${mode.name} $name, 200 % text', (
+        tester,
+      ) async {
+        await pumpSettings(
+          tester,
+          size: size,
+          mode: mode,
+          location: '/settings/changelog',
+        );
+        await expectA11yGuidelines(tester);
+        tester.platformDispatcher.textScaleFactorTestValue = 2;
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+      });
     }
   }
 
@@ -269,4 +313,11 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
   });
+}
+
+/// A database read that fails.
+final class _FailingReader implements DiagnosticsReader {
+  @override
+  Future<({DiagnosticCounts counts, String? deviceId})> read() =>
+      Future.error(Exception('db'));
 }

@@ -13,13 +13,17 @@ import 'package:dottoday/data/dev/demo_day.dart';
 import 'package:dottoday/data/export/export_providers.dart';
 import 'package:dottoday/data/export/export_service.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
+import 'package:dottoday/data/feedback/diagnostics_reader.dart';
+import 'package:dottoday/data/feedback/feedback_providers.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/release/whats_new_seen.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/security/app_lock_store.dart';
+import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
@@ -31,6 +35,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/feedback/feedback_diagnostics.dart';
 import 'package:dottoday/domain/notifications/battery_optimization.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
@@ -410,6 +415,8 @@ List<Override> timelineOverrides({
   BackupService? backups,
   FileGateway? files,
   ExportService? exports,
+  String whatsNewSeen = '0.1.0',
+  DiagnosticsReader diagnostics = const FakeDiagnosticsReader(),
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
@@ -445,6 +452,10 @@ List<Override> timelineOverrides({
       const NoBatteryOptimization(),
     ),
     appLockSettingProvider.overrideWith(FakeAppLockSetting.new),
+    // No database or package info here (M8.2): up to date, counts fixed.
+    appVersionNameProvider.overrideWith((ref) async => '0.1.0'),
+    whatsNewSeenProvider.overrideWith(() => FakeWhatsNewSeen(whatsNewSeen)),
+    diagnosticsReaderProvider.overrideWithValue(diagnostics),
     notificationGatewayProvider.overrideWithValue(
       const UnwiredNotificationGateway(),
     ),
@@ -524,6 +535,33 @@ final class FakeTrashService implements TrashService {
 }
 
 /// The app lock, off and in memory (M5.8).
+/// What's new as last seen; [seen] starts at the running version.
+final class FakeWhatsNewSeen extends WhatsNewSeen {
+  FakeWhatsNewSeen([this.initial = '0.1.0']);
+
+  final String initial;
+
+  @override
+  Future<String> build() async => initial;
+
+  @override
+  Future<void> markSeen(String version) async {
+    await future;
+    state = AsyncData(version);
+  }
+}
+
+/// Fixed diagnostics counts and node id.
+final class FakeDiagnosticsReader implements DiagnosticsReader {
+  const FakeDiagnosticsReader();
+
+  @override
+  Future<({DiagnosticCounts counts, String? deviceId})> read() async => (
+    counts: const DiagnosticCounts(tasks: 12, inbox: 3, done: 4, repeats: 2),
+    deviceId: '0a1b2c3d4e5f6071',
+  );
+}
+
 final class FakeAppLockSetting extends AppLockSetting {
   @override
   Future<AppLockSettings> build() async => const AppLockSettings();

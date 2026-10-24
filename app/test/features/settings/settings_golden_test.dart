@@ -20,6 +20,7 @@ import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/settings/pages/about_page.dart';
 import 'package:dottoday/features/settings/pages/account_page.dart';
 import 'package:dottoday/features/settings/pages/calendars_page.dart';
+import 'package:dottoday/features/settings/pages/changelog_page.dart';
 import 'package:dottoday/features/settings/pages/data_pages.dart';
 import 'package:dottoday/features/settings/pages/info_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
@@ -123,6 +124,19 @@ void main() {
     overrides: _overrides,
     build: (_) => _settings(),
   );
+  // M8.2 (derived, §5.3): the diagnostics opt-in shows what it adds.
+  goldenMatrix(
+    'settings_feedback_diagnostics',
+    height: 900,
+    widths: const {'compact', 'expanded'},
+    act: (t) async {
+      await _open(t, 'Send feedback');
+      await t.pumpAndSettle();
+      await t.tap(find.text('Add diagnostics'));
+    },
+    overrides: _overrides,
+    build: (_) => _settings(),
+  );
   // M3f.7 sub-pages (derived, §5.3).
   for (final (name, page) in [
     ('account', const AccountPage()),
@@ -131,6 +145,7 @@ void main() {
     ('help', const HelpPage()),
     ('privacy', const PrivacyPage()),
     ('about', const AboutPage()),
+    ('changelog', const ChangelogPage()),
   ]) {
     goldenMatrix(
       'settings_page_$name',

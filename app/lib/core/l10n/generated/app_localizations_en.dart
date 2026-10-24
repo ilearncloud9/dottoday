@@ -1656,18 +1656,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsWhatsNew => 'What\'s new';
 
   @override
-  String get settingsWhatsNewBody =>
-      'Add a task in two taps, with suggestions from your habits. Pick a time on your day\'s thread and see what it overlaps. Keep your own duration presets. Paste a list to add several tasks at once. Search everything you\'ve planned, done tasks too.';
+  String changelogVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String changelogInstalled(String version) {
+    return 'Version $version · on this device';
+  }
+
+  @override
+  String get changelogIntro => 'What changed in each version of Dottoday.';
+
+  @override
+  String get releaseNotes010 =>
+      'Plan your day on one thread: drag a task to move it, drag its edge to change how long it takes, and shift everything after it in one go.\nAdd a task in two taps, type times in plain words, or paste a list to add several at once.\nRepeating tasks, reminders with lead times, and your calendars on the timeline — all free.\nSync between iPhone, Android, Mac and the web, with a status you can see and nothing lost.\nExport everything as JSON, CSV or a calendar file, and bring a backup back.\nSend feedback from Settings, and read what\'s new here after each update.';
+
+  @override
+  String whatsNewBanner(String version) {
+    return 'Dottoday $version is here';
+  }
+
+  @override
+  String get whatsNewOpen => 'See what\'s new';
 
   @override
   String get settingsFeedback => 'Send feedback';
 
   @override
   String get settingsFeedbackIntro =>
-      'Opens an email draft. Nothing about your tasks is included.';
+      'Opens a draft in your mail app, and you send it from there. Nothing your tasks say is included.';
 
   @override
-  String get settingsFeedbackDiagnostics => 'Add app version and device type';
+  String get settingsFeedbackDiagnostics => 'Add diagnostics';
+
+  @override
+  String get settingsFeedbackDiagnosticsHint =>
+      'App version, device type, sync state and how many tasks you have — never what they say.';
+
+  @override
+  String get settingsFeedbackDiagnosticsFailed =>
+      'Couldn\'t read the diagnostics, so the email goes without them.';
+
+  @override
+  String get settingsFeedbackPreview => 'Added to the end of your email:';
 
   @override
   String get settingsFeedbackWrite => 'Write email';

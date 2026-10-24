@@ -51,7 +51,7 @@ final class Env {
       supabaseAnonKey: anonKey,
       sentryDsn: _optional(raw, 'SENTRY_DSN'),
       webPushVapidPublicKey: _optional(raw, 'WEB_PUSH_VAPID_PUBLIC_KEY'),
-      feedbackEmail: _optional(raw, 'FEEDBACK_EMAIL'),
+      feedbackEmail: _feedbackEmail(_optional(raw, 'FEEDBACK_EMAIL')),
     );
   }
 
@@ -60,8 +60,10 @@ final class Env {
   final String? sentryDsn;
   final String? webPushVapidPublicKey;
 
-  /// Where Settings › Send feedback addresses its draft (PRD F11); unset,
-  /// the draft has no recipient and the user picks one.
+  /// Where Settings › Send feedback addresses its draft (PRD F11); unset
+  /// or the `.invalid` placeholder from `.env.example`, the draft has no
+  /// recipient and the user picks one (the real inbox is an owner release
+  /// gate, docs/08 §6.1).
   final String? feedbackEmail;
 }
 
@@ -97,6 +99,20 @@ String _required(Map<String, String> raw, String key) {
 String? _optional(Map<String, String> raw, String key) {
   final value = raw[key]?.trim() ?? '';
   return value.isEmpty ? null : value;
+}
+
+final _email = RegExp(r'^[^@\s?&#/:]+@[^@\s?&#/:]+\.[^@\s?&#/:]+$');
+
+/// A plain address, or null for the `.invalid` placeholder (RFC 2606):
+/// mailing it would bounce.
+String? _feedbackEmail(String? value) {
+  if (value == null) return null;
+  if (!_email.hasMatch(value)) {
+    throw EnvConfigError(
+      'FEEDBACK_EMAIL must be a plain email address (name@domain). $_hint',
+    );
+  }
+  return value.toLowerCase().endsWith('.invalid') ? null : value;
 }
 
 Uri _parseSupabaseUrl(String value) {

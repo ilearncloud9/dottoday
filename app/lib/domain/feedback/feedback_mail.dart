@@ -1,5 +1,7 @@
-/// The feedback draft (PRD F11): subject with the app version, and — only
-/// when the user opts in — a diagnostics block of version and platform.
+/// The feedback draft (PRD F11, R-19): subject with the app version, and —
+/// only when the user opts in — the `diagnostics.json` block in the body
+/// (`FeedbackDiagnostics.toText`). A `mailto:` link can't attach a file, so
+/// the block goes in the body, where the person sees it before sending.
 /// Never task content (06 §5).
 ///
 /// ```dart
@@ -16,7 +18,8 @@ Uri feedbackMailto({
   path: recipient ?? '',
   query: _encode({
     'subject': '$subject ($version, $platform)',
-    if (diagnostics != null) 'body': '\n\n---\n$diagnostics',
+    if (diagnostics != null)
+      'body': '\n\n--- diagnostics.json ---\n$diagnostics',
   }),
 );
 
@@ -29,9 +32,3 @@ String _encode(Map<String, String> params) => params.entries
 /// (`iOS`, `android`, `macOS` …).
 String feedbackPlatform({required bool web, required String target}) =>
     web ? 'web' : target;
-
-/// The opt-in diagnostics block: version and platform only.
-String feedbackDiagnostics({
-  required String version,
-  required String platform,
-}) => 'Version $version\nPlatform $platform';

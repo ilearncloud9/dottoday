@@ -152,7 +152,10 @@ merged fingerprint. The import leaves pending links alone.
 ## 9. Observability
 
 Sentry for crashes/perf (scrubbed: no titles/notes), structured logs, a `diagnostics.json` the user
-can attach to feedback (IDs, counts, versions only).
+can attach to feedback (IDs, counts, versions only). Built by `feedbackDiagnosticsProvider`
+(`data/feedback`) from one aggregate query (`count(*)` and the sync node id — no text column is
+selected) plus versions and sync state; it travels in the feedback email's body, since `mailto:`
+can't attach files (M8.2).
 
 ## 10. Build & CI
 

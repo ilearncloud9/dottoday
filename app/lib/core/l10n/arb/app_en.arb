@@ -2510,23 +2510,73 @@
   },
   "settingsWhatsNew": "What's new",
   "@settingsWhatsNew": {
-    "description": "Settings row; also the sheet's title."
+    "description": "About row; also the title of the changelog page (every release's notes)."
   },
-  "settingsWhatsNewBody": "Add a task in two taps, with suggestions from your habits. Pick a time on your day's thread and see what it overlaps. Keep your own duration presets. Paste a list to add several tasks at once. Search everything you've planned, done tasks too.",
-  "@settingsWhatsNewBody": {
-    "description": "What's new sheet body for this version."
+  "changelogVersion": "Version {version}",
+  "@changelogVersion": {
+    "description": "Changelog page: caption over one release's notes.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "0.1.0"
+      }
+    }
+  },
+  "changelogInstalled": "Version {version} · on this device",
+  "@changelogInstalled": {
+    "description": "Changelog page: caption over the installed release's notes.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "0.1.0"
+      }
+    }
+  },
+  "changelogIntro": "What changed in each version of Dottoday.",
+  "@changelogIntro": {
+    "description": "Changelog page intro."
+  },
+  "releaseNotes010": "Plan your day on one thread: drag a task to move it, drag its edge to change how long it takes, and shift everything after it in one go.\nAdd a task in two taps, type times in plain words, or paste a list to add several at once.\nRepeating tasks, reminders with lead times, and your calendars on the timeline — all free.\nSync between iPhone, Android, Mac and the web, with a status you can see and nothing lost.\nExport everything as JSON, CSV or a calendar file, and bring a backup back.\nSend feedback from Settings, and read what's new here after each update.",
+  "@releaseNotes010": {
+    "description": "Changelog notes for version 0.1.0; one item per line (each line becomes a bullet)."
+  },
+  "whatsNewBanner": "Dottoday {version} is here",
+  "@whatsNewBanner": {
+    "description": "Banner after an update that brought release notes.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "0.2.0"
+      }
+    }
+  },
+  "whatsNewOpen": "See what's new",
+  "@whatsNewOpen": {
+    "description": "Banner action: open the changelog page."
   },
   "settingsFeedback": "Send feedback",
   "@settingsFeedback": {
     "description": "Settings row; also the sheet's title."
   },
-  "settingsFeedbackIntro": "Opens an email draft. Nothing about your tasks is included.",
+  "settingsFeedbackIntro": "Opens a draft in your mail app, and you send it from there. Nothing your tasks say is included.",
   "@settingsFeedbackIntro": {
     "description": "Feedback sheet intro."
   },
-  "settingsFeedbackDiagnostics": "Add app version and device type",
+  "settingsFeedbackDiagnostics": "Add diagnostics",
   "@settingsFeedbackDiagnostics": {
     "description": "Feedback switch: diagnostics opt-in."
+  },
+  "settingsFeedbackDiagnosticsHint": "App version, device type, sync state and how many tasks you have — never what they say.",
+  "@settingsFeedbackDiagnosticsHint": {
+    "description": "Feedback switch subtitle: what the diagnostics contain."
+  },
+  "settingsFeedbackDiagnosticsFailed": "Couldn't read the diagnostics, so the email goes without them.",
+  "@settingsFeedbackDiagnosticsFailed": {
+    "description": "Feedback sheet: the diagnostics couldn't be gathered."
+  },
+  "settingsFeedbackPreview": "Added to the end of your email:",
+  "@settingsFeedbackPreview": {
+    "description": "Feedback sheet: caption over the diagnostics shown before sending."
   },
   "settingsFeedbackWrite": "Write email",
   "@settingsFeedbackWrite": {

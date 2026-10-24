@@ -7,6 +7,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/export/export_service.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
+import 'package:dottoday/data/feedback/diagnostics_reader.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
@@ -69,6 +70,8 @@ Future<SettingsHarness> pumpSettings(
   BackupService? backups,
   FileGateway? files,
   ExportService? exports,
+  String whatsNewSeen = '0.1.0',
+  DiagnosticsReader? diagnostics,
 }) async {
   tester.view
     ..physicalSize = size
@@ -95,6 +98,8 @@ Future<SettingsHarness> pumpSettings(
         backups: backups,
         files: files,
         exports: exports,
+        whatsNewSeen: whatsNewSeen,
+        diagnostics: diagnostics ?? const FakeDiagnosticsReader(),
       ),
       linkLauncherProvider.overrideWithValue(links),
       appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),

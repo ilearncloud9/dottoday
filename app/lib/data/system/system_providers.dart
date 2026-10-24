@@ -30,3 +30,8 @@ Future<String> appVersion(Ref ref) async {
   final info = await PackageInfo.fromPlatform();
   return '${info.version} (${info.buildNumber})';
 }
+
+/// "0.1.0": the marketing version alone, for What's new (M8.2).
+@Riverpod(keepAlive: true)
+Future<String> appVersionName(Ref ref) async =>
+    (await PackageInfo.fromPlatform()).version;

@@ -23,9 +23,12 @@ void main() {
       version: '0.1.0',
       platform: 'web',
       recipient: 'team@example.com',
-      diagnostics: 'Version 0.1.0\nPlatform web',
+      diagnostics: '{"platform": "web"}',
     );
     expect(uri.path, 'team@example.com');
-    expect(Uri.decodeComponent(uri.query), contains('Platform web'));
+    final query = Uri.decodeComponent(uri.query);
+    expect(query, contains('--- diagnostics.json ---\n{"platform": "web"}'));
+    // Spaces as %20, never + (RFC 6068).
+    expect(uri.query, isNot(contains('+')));
   });
 }

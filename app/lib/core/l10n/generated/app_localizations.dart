@@ -2530,17 +2530,47 @@ abstract class AppLocalizations {
   /// **'Version'**
   String get settingsVersion;
 
-  /// Settings row; also the sheet's title.
+  /// About row; also the title of the changelog page (every release's notes).
   ///
   /// In en, this message translates to:
   /// **'What\'s new'**
   String get settingsWhatsNew;
 
-  /// What's new sheet body for this version.
+  /// Changelog page: caption over one release's notes.
   ///
   /// In en, this message translates to:
-  /// **'Add a task in two taps, with suggestions from your habits. Pick a time on your day\'s thread and see what it overlaps. Keep your own duration presets. Paste a list to add several tasks at once. Search everything you\'ve planned, done tasks too.'**
-  String get settingsWhatsNewBody;
+  /// **'Version {version}'**
+  String changelogVersion(String version);
+
+  /// Changelog page: caption over the installed release's notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} · on this device'**
+  String changelogInstalled(String version);
+
+  /// Changelog page intro.
+  ///
+  /// In en, this message translates to:
+  /// **'What changed in each version of Dottoday.'**
+  String get changelogIntro;
+
+  /// Changelog notes for version 0.1.0; one item per line (each line becomes a bullet).
+  ///
+  /// In en, this message translates to:
+  /// **'Plan your day on one thread: drag a task to move it, drag its edge to change how long it takes, and shift everything after it in one go.\nAdd a task in two taps, type times in plain words, or paste a list to add several at once.\nRepeating tasks, reminders with lead times, and your calendars on the timeline — all free.\nSync between iPhone, Android, Mac and the web, with a status you can see and nothing lost.\nExport everything as JSON, CSV or a calendar file, and bring a backup back.\nSend feedback from Settings, and read what\'s new here after each update.'**
+  String get releaseNotes010;
+
+  /// Banner after an update that brought release notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday {version} is here'**
+  String whatsNewBanner(String version);
+
+  /// Banner action: open the changelog page.
+  ///
+  /// In en, this message translates to:
+  /// **'See what\'s new'**
+  String get whatsNewOpen;
 
   /// Settings row; also the sheet's title.
   ///
@@ -2551,14 +2581,32 @@ abstract class AppLocalizations {
   /// Feedback sheet intro.
   ///
   /// In en, this message translates to:
-  /// **'Opens an email draft. Nothing about your tasks is included.'**
+  /// **'Opens a draft in your mail app, and you send it from there. Nothing your tasks say is included.'**
   String get settingsFeedbackIntro;
 
   /// Feedback switch: diagnostics opt-in.
   ///
   /// In en, this message translates to:
-  /// **'Add app version and device type'**
+  /// **'Add diagnostics'**
   String get settingsFeedbackDiagnostics;
+
+  /// Feedback switch subtitle: what the diagnostics contain.
+  ///
+  /// In en, this message translates to:
+  /// **'App version, device type, sync state and how many tasks you have — never what they say.'**
+  String get settingsFeedbackDiagnosticsHint;
+
+  /// Feedback sheet: the diagnostics couldn't be gathered.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t read the diagnostics, so the email goes without them.'**
+  String get settingsFeedbackDiagnosticsFailed;
+
+  /// Feedback sheet: caption over the diagnostics shown before sending.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to the end of your email:'**
+  String get settingsFeedbackPreview;
 
   /// Feedback sheet primary button.
   ///

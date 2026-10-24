@@ -108,5 +108,29 @@ void main() {
         expect(e.toString(), isNot(contains('leak')));
       }
     });
+
+    test('the .invalid feedback placeholder reads as unset', () {
+      expect(
+        Env.fromMap(
+          _valid({'FEEDBACK_EMAIL': 'feedback@dottoday.invalid'}),
+        ).feedbackEmail,
+        isNull,
+      );
+      expect(
+        Env.fromMap(
+          _valid({'FEEDBACK_EMAIL': 'hi@dottoday.app'}),
+        ).feedbackEmail,
+        'hi@dottoday.app',
+      );
+    });
+
+    test('a feedback address that is not plain is refused', () {
+      for (final bad in ['nobody', 'a@b.c?cc=x@y.z', 'a b@c.de']) {
+        expect(
+          () => Env.fromMap(_valid({'FEEDBACK_EMAIL': bad})),
+          _throwsEnv('FEEDBACK_EMAIL'),
+        );
+      }
+    });
   });
 }

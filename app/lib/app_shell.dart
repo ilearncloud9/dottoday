@@ -5,6 +5,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/calendar_import/write_back_banner.dart';
 import 'package:dottoday/features/notifications/in_app_alert_banner.dart';
 import 'package:dottoday/features/onboarding/install_banner.dart';
+import 'package:dottoday/features/settings/whats_new_banner.dart';
 import 'package:dottoday/features/sync_status/sync_banner.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/features/timeline/widgets/zone_banner.dart';
@@ -59,6 +60,8 @@ class AppShell extends StatelessWidget {
           const ZoneBanner(),
           // The web's install offer, from the 2nd visit (M5.7).
           const InstallBanner(),
+          // Once after an update with release notes (M8.2, R-19).
+          const WhatsNewBanner(),
           Expanded(
             child: Focus(
               focusNode: content,

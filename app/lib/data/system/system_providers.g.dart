@@ -87,3 +87,41 @@ final class AppVersionProvider
 }
 
 String _$appVersionHash() => r'ff1eb5d2af994c051622516f93f238f401bb6abc';
+
+/// "0.1.0": the marketing version alone, for What's new (M8.2).
+
+@ProviderFor(appVersionName)
+final appVersionNameProvider = AppVersionNameProvider._();
+
+/// "0.1.0": the marketing version alone, for What's new (M8.2).
+
+final class AppVersionNameProvider
+    extends $FunctionalProvider<AsyncValue<String>, String, FutureOr<String>>
+    with $FutureModifier<String>, $FutureProvider<String> {
+  /// "0.1.0": the marketing version alone, for What's new (M8.2).
+  AppVersionNameProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appVersionNameProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appVersionNameHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<String> create(Ref ref) {
+    return appVersionName(ref);
+  }
+}
+
+String _$appVersionNameHash() => r'05281ee299cba590adc8401f5a6bd7f208bd9d7d';
