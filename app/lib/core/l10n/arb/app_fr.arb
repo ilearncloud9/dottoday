@@ -958,5 +958,13 @@
   "pinTitle": "Épinglée",
   "pinDetail": "Reste en place quand les autres tâches se décalent",
   "threadOutsideBefore": "{count, plural, =1{1 tâche avant le réveil} other{{count} tâches avant le réveil}}",
-  "threadOutsideAfter": "{count, plural, =1{1 tâche après le coucher} other{{count} tâches après le coucher}}"
+  "threadOutsideAfter": "{count, plural, =1{1 tâche après le coucher} other{{count} tâches après le coucher}}",
+  "shortcutPickTask": "Sélectionner la tâche précédente ou suivante",
+  "shortcutNudgeTask": "Avancer ou retarder les tâches sélectionnées de 5 min",
+  "shortcutNudgeTaskMore": "Avancer ou retarder les tâches sélectionnées de 15 min",
+  "shortcutTrashTask": "Mettre les tâches sélectionnées à la corbeille",
+  "shortcutOpenTask": "Ouvrir la tâche sélectionnée",
+  "shortcutDoneTask": "Marquer la tâche sélectionnée comme faite",
+  "shortcutKeyDelete": "Suppr",
+  "shortcutKeySpace": "Espace"
 }

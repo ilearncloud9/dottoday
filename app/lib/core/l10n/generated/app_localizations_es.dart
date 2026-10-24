@@ -3949,4 +3949,31 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get shortcutPickTask => 'Seleccionar la tarea anterior o siguiente';
+
+  @override
+  String get shortcutNudgeTask =>
+      'Mover las tareas seleccionadas 5 min antes o después';
+
+  @override
+  String get shortcutNudgeTaskMore =>
+      'Mover las tareas seleccionadas 15 min antes o después';
+
+  @override
+  String get shortcutTrashTask =>
+      'Mover las tareas seleccionadas a la papelera';
+
+  @override
+  String get shortcutOpenTask => 'Abrir la tarea seleccionada';
+
+  @override
+  String get shortcutDoneTask => 'Marcar la tarea seleccionada como hecha';
+
+  @override
+  String get shortcutKeyDelete => 'Supr';
+
+  @override
+  String get shortcutKeySpace => 'Espacio';
 }

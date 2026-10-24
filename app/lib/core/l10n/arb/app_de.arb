@@ -958,5 +958,13 @@
   "pinTitle": "Angeheftet",
   "pinDetail": "Bleibt stehen, wenn sich andere Aufgaben verschieben",
   "threadOutsideBefore": "{count, plural, =1{1 Aufgabe vor dem Aufstehen} other{{count} Aufgaben vor dem Aufstehen}}",
-  "threadOutsideAfter": "{count, plural, =1{1 Aufgabe nach der Schlafenszeit} other{{count} Aufgaben nach der Schlafenszeit}}"
+  "threadOutsideAfter": "{count, plural, =1{1 Aufgabe nach der Schlafenszeit} other{{count} Aufgaben nach der Schlafenszeit}}",
+  "shortcutPickTask": "Vorherige oder nächste Aufgabe auswählen",
+  "shortcutNudgeTask": "Ausgewählte Aufgaben 5 Min. früher oder später",
+  "shortcutNudgeTaskMore": "Ausgewählte Aufgaben 15 Min. früher oder später",
+  "shortcutTrashTask": "Ausgewählte Aufgaben in den Papierkorb",
+  "shortcutOpenTask": "Ausgewählte Aufgabe öffnen",
+  "shortcutDoneTask": "Ausgewählte Aufgabe erledigen",
+  "shortcutKeyDelete": "Entf",
+  "shortcutKeySpace": "Leertaste"
 }

@@ -5855,6 +5855,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 task after Bedtime} other{{count} tasks after Bedtime}}'**
   String threadOutsideAfter(int count);
+
+  /// Keyboard shortcut sheet, Today: ↑ / ↓ pick a task along the day (docs/02 F1.17).
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the previous or next task'**
+  String get shortcutPickTask;
+
+  /// Keyboard shortcut sheet, Today: ⌘/Ctrl+↑ / ↓ (docs/02 F1.17).
+  ///
+  /// In en, this message translates to:
+  /// **'Move the picked tasks 5 min earlier or later'**
+  String get shortcutNudgeTask;
+
+  /// Keyboard shortcut sheet, Today: Shift+⌘/Ctrl+↑ / ↓ (docs/02 F1.17).
+  ///
+  /// In en, this message translates to:
+  /// **'Move the picked tasks 15 min earlier or later'**
+  String get shortcutNudgeTaskMore;
+
+  /// Keyboard shortcut sheet, Today: Delete / Backspace, with Undo (docs/02 F1.17).
+  ///
+  /// In en, this message translates to:
+  /// **'Move the picked tasks to Trash'**
+  String get shortcutTrashTask;
+
+  /// Keyboard shortcut sheet, Today: Return opens the one picked task (docs/02 F1.17).
+  ///
+  /// In en, this message translates to:
+  /// **'Open the picked task'**
+  String get shortcutOpenTask;
+
+  /// Keyboard shortcut sheet, Today: Space completes the one picked task (docs/02 F1.17).
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the picked task done'**
+  String get shortcutDoneTask;
+
+  /// Name of the Delete key as printed on keyboards, in the shortcut sheet (Backspace works too).
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get shortcutKeyDelete;
+
+  /// Name of the Space bar in the shortcut sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Space'**
+  String get shortcutKeySpace;
 }
 
 class _AppLocalizationsDelegate

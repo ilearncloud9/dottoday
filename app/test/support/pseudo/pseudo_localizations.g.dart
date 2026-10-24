@@ -3068,4 +3068,28 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String threadOutsideAfter(int count) =>
       pseudo(super.threadOutsideAfter(count));
+
+  @override
+  String get shortcutPickTask => pseudo(super.shortcutPickTask);
+
+  @override
+  String get shortcutNudgeTask => pseudo(super.shortcutNudgeTask);
+
+  @override
+  String get shortcutNudgeTaskMore => pseudo(super.shortcutNudgeTaskMore);
+
+  @override
+  String get shortcutTrashTask => pseudo(super.shortcutTrashTask);
+
+  @override
+  String get shortcutOpenTask => pseudo(super.shortcutOpenTask);
+
+  @override
+  String get shortcutDoneTask => pseudo(super.shortcutDoneTask);
+
+  @override
+  String get shortcutKeyDelete => pseudo(super.shortcutKeyDelete);
+
+  @override
+  String get shortcutKeySpace => pseudo(super.shortcutKeySpace);
 }

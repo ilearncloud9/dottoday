@@ -958,5 +958,13 @@
   "pinTitle": "Fijada",
   "pinDetail": "Se queda en su sitio cuando otras tareas se mueven",
   "threadOutsideBefore": "{count, plural, =1{1 tarea antes de despertar} other{{count} tareas antes de despertar}}",
-  "threadOutsideAfter": "{count, plural, =1{1 tarea después de la hora de dormir} other{{count} tareas después de la hora de dormir}}"
+  "threadOutsideAfter": "{count, plural, =1{1 tarea después de la hora de dormir} other{{count} tareas después de la hora de dormir}}",
+  "shortcutPickTask": "Seleccionar la tarea anterior o siguiente",
+  "shortcutNudgeTask": "Mover las tareas seleccionadas 5 min antes o después",
+  "shortcutNudgeTaskMore": "Mover las tareas seleccionadas 15 min antes o después",
+  "shortcutTrashTask": "Mover las tareas seleccionadas a la papelera",
+  "shortcutOpenTask": "Abrir la tarea seleccionada",
+  "shortcutDoneTask": "Marcar la tarea seleccionada como hecha",
+  "shortcutKeyDelete": "Supr",
+  "shortcutKeySpace": "Espacio"
 }

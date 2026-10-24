@@ -5263,5 +5263,21 @@
   "threadOutsideBefore": "{count, plural, =1{1 task before Wake Up} other{{count} tasks before Wake Up}}",
   "@threadOutsideBefore": {"description": "Folded 'outside hours' row above the Wake Up cap (docs/02 F1.15): tasks that end by Wake Up. Tapping unfolds them.", "placeholders": {"count": {"type": "int"}}},
   "threadOutsideAfter": "{count, plural, =1{1 task after Bedtime} other{{count} tasks after Bedtime}}",
-  "@threadOutsideAfter": {"description": "Folded 'outside hours' row below the Bedtime cap (docs/02 F1.15): tasks that start at Bedtime or later. Tapping unfolds them.", "placeholders": {"count": {"type": "int"}}}
+  "@threadOutsideAfter": {"description": "Folded 'outside hours' row below the Bedtime cap (docs/02 F1.15): tasks that start at Bedtime or later. Tapping unfolds them.", "placeholders": {"count": {"type": "int"}}},
+  "shortcutPickTask": "Pick the previous or next task",
+  "@shortcutPickTask": {"description": "Keyboard shortcut sheet, Today: ↑ / ↓ pick a task along the day (docs/02 F1.17)."},
+  "shortcutNudgeTask": "Move the picked tasks 5 min earlier or later",
+  "@shortcutNudgeTask": {"description": "Keyboard shortcut sheet, Today: ⌘/Ctrl+↑ / ↓ (docs/02 F1.17)."},
+  "shortcutNudgeTaskMore": "Move the picked tasks 15 min earlier or later",
+  "@shortcutNudgeTaskMore": {"description": "Keyboard shortcut sheet, Today: Shift+⌘/Ctrl+↑ / ↓ (docs/02 F1.17)."},
+  "shortcutTrashTask": "Move the picked tasks to Trash",
+  "@shortcutTrashTask": {"description": "Keyboard shortcut sheet, Today: Delete / Backspace, with Undo (docs/02 F1.17)."},
+  "shortcutOpenTask": "Open the picked task",
+  "@shortcutOpenTask": {"description": "Keyboard shortcut sheet, Today: Return opens the one picked task (docs/02 F1.17)."},
+  "shortcutDoneTask": "Mark the picked task done",
+  "@shortcutDoneTask": {"description": "Keyboard shortcut sheet, Today: Space completes the one picked task (docs/02 F1.17)."},
+  "shortcutKeyDelete": "Delete",
+  "@shortcutKeyDelete": {"description": "Name of the Delete key as printed on keyboards, in the shortcut sheet (Backspace works too)."},
+  "shortcutKeySpace": "Space",
+  "@shortcutKeySpace": {"description": "Name of the Space bar in the shortcut sheet."}
 }

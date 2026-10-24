@@ -44,6 +44,11 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
   valid window end, `checkTimeWindow`), so "the bottom of the day" is Bedtime 23:55 with a 23:30 task:
   `today_bottom_golden_test` scrolls the thread to its end at compact and expanded widths.
 - [F1.17] Keyboard (desktop/web): ↑↓ select, Enter open, Space complete, ⌘/Ctrl+↑↓ move 5 min, Shift for 15, Delete → trash with undo.
+  Clarified in M8.4b: the ↑↓ pick *is* the multi-select (`TaskSelection`, R-05) — one task at a time,
+  in start order on the shown day, so the selection bar shows and ⌘/Ctrl+↑↓ and Delete act on every
+  picked task (one undoable batch; pinned tasks stay, R-17). Delete/⌫ trashes without a confirm (Undo
+  is the safety, F1.18); Esc drops the pick; ↩ and Space act only with exactly one pick, otherwise the
+  focused control keeps them. A picked row scrolls into view and unfolds its outside-hours zone.
 - [F1.18] Undo snackbar (30 s) for every move/delete/complete. (R-11)
 
 ## F2. Quick Add & Task Editor

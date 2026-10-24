@@ -170,7 +170,11 @@ class _ThreadState extends State<Thread> {
       ),
       ThreadGap() => _gap(e, dropBox: dropBox),
       ThreadTaskEntry(:final task) => _task(task),
-      ThreadOutside() => OutsideRow(zone: e, taskRow: _task),
+      ThreadOutside(:final tasks) => OutsideRow(
+        zone: e,
+        taskRow: _task,
+        reveal: tasks.any((t) => a.selectedIds.contains(t.id)),
+      ),
     };
   }
 

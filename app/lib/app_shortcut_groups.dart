@@ -30,6 +30,15 @@ List<ShortcutGroup> appShortcutGroups(AppLocalizations l10n) {
         (keys: k('→'), action: l10n.shortcutNextDay),
         (keys: k('T'), action: l10n.shortcutBackToday),
         (keys: k('D'), action: l10n.shortcutDoneLive),
+        (keys: '↑ ↓', action: l10n.shortcutPickTask),
+        (keys: '${k('↑')} ${k('↓')}', action: l10n.shortcutNudgeTask),
+        (
+          keys: '${k('↑', shift: true)} ${k('↓', shift: true)}',
+          action: l10n.shortcutNudgeTaskMore,
+        ),
+        (keys: l10n.shortcutKeyDelete, action: l10n.shortcutTrashTask),
+        (keys: '↩', action: l10n.shortcutOpenTask),
+        (keys: l10n.shortcutKeySpace, action: l10n.shortcutDoneTask),
       ],
     ),
     (

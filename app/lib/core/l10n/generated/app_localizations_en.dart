@@ -3934,4 +3934,30 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get shortcutPickTask => 'Pick the previous or next task';
+
+  @override
+  String get shortcutNudgeTask =>
+      'Move the picked tasks 5 min earlier or later';
+
+  @override
+  String get shortcutNudgeTaskMore =>
+      'Move the picked tasks 15 min earlier or later';
+
+  @override
+  String get shortcutTrashTask => 'Move the picked tasks to Trash';
+
+  @override
+  String get shortcutOpenTask => 'Open the picked task';
+
+  @override
+  String get shortcutDoneTask => 'Mark the picked task done';
+
+  @override
+  String get shortcutKeyDelete => 'Delete';
+
+  @override
+  String get shortcutKeySpace => 'Space';
 }

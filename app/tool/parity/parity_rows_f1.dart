@@ -197,7 +197,8 @@ const f1Rows = <String, ParityRow>{
       'test/features/timeline/today_keys_test.dart',
       'test/core/shortcuts/app_shortcuts_test.dart',
     ],
-    all: Cell(Status.gap, '↑↓ select, ⌘↑↓ move, Delete — M8.4b'),
+    all: ci,
+    web: Cell(Status.manual, '↑↓/⌘↑↓/Delete in real Chrome (08 §6.2)'),
     ios: Cell(
       Status.na,
       'desktop/web keys (PRD); hardware keyboards get the same',
@@ -207,9 +208,9 @@ const f1Rows = <String, ParityRow>{
       'desktop/web keys (PRD); hardware keyboards get the same',
     ),
     note:
-        'Built: Tab/Enter open, Enter/Space done, ⌘/Ctrl+D, ⌘/Ctrl+←/→/T, Esc '
-        '(M3e.6). Missing on Mac and web: ↑↓ select, ⌘/Ctrl+↑↓ move 5 (Shift '
-        '15), Delete → Trash with Undo.',
+        'Tab/Enter open, Enter/Space done, ⌘/Ctrl+D, ⌘/Ctrl+←/→/T, Esc '
+        '(M3e.6); ↑↓ pick, ⌘/Ctrl+↑↓ move 5 (Shift 15), Delete → Trash with '
+        'Undo, ↩ open, Space done on the pick (M8.4b, the multi-select model).',
   ),
   'F1.18': ParityRow(
     tests: [

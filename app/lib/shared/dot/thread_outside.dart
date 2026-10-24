@@ -10,9 +10,18 @@ import 'package:flutter/material.dart';
 /// moon cap, that unfolds into the tasks' own rows. Folded by default so
 /// the day keeps its shape; unfolded when it holds the live task.
 class OutsideRow extends StatefulWidget {
-  const OutsideRow({required this.zone, required this.taskRow, super.key});
+  const OutsideRow({
+    required this.zone,
+    required this.taskRow,
+    this.reveal = false,
+    super.key,
+  });
 
   final ThreadOutside zone;
+
+  /// One of its tasks is picked (multi-select or the keyboard's ↑↓):
+  /// unfold so the pick shows.
+  final bool reveal;
 
   /// Builds a task's row as the thread does (open, done, drag, select).
   final Widget Function(ThreadTask task) taskRow;
@@ -22,13 +31,14 @@ class OutsideRow extends StatefulWidget {
 }
 
 class _OutsideRowState extends State<OutsideRow> {
-  late bool _open = widget.zone.open;
+  late bool _open = widget.zone.open || widget.reveal;
 
   @override
   void didUpdateWidget(OutsideRow old) {
     super.didUpdateWidget(old);
     // The live task never hides: a zone it moves into unfolds.
     if (widget.zone.open && !old.zone.open) _open = true;
+    if (widget.reveal && !old.reveal) _open = true;
   }
 
   @override
