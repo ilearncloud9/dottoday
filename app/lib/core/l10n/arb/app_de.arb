@@ -966,5 +966,16 @@
   "shortcutOpenTask": "Ausgewählte Aufgabe öffnen",
   "shortcutDoneTask": "Ausgewählte Aufgabe erledigen",
   "shortcutKeyDelete": "Entf",
-  "shortcutKeySpace": "Leertaste"
+  "shortcutKeySpace": "Leertaste",
+  "editorEnergy": "Energie",
+  "energyLow": "Niedrig",
+  "energyMedium": "Mittel",
+  "energyHigh": "Hoch",
+  "editorNotesFormat": "**fett**, *kursiv*, - Listen und Links funktionieren hier",
+  "navInboxBadge": "{count, plural, =1{Eingang, 1 Aufgabe} other{Eingang, {count} Aufgaben}}",
+  "inboxNudgeTitle": "Plane deinen Eingang",
+  "inboxNudgeDetail": "{count, plural, =1{1 Aufgabe wartet im Eingang. Ein guter Moment, ihr eine Zeit zu geben?} other{{count} Aufgaben warten im Eingang. Ein guter Moment, ihnen eine Zeit zu geben?}}",
+  "inboxNudgeAction": "Planen",
+  "settingsInboxNudge": "Hinweis: Eingang planen",
+  "settingsInboxNudgeDetail": "Einmal am Tag ab dem Aufstehen, wenn im Eingang Aufgaben liegen"
 }

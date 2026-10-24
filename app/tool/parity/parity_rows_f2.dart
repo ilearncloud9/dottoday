@@ -80,13 +80,16 @@ const f2Rows = <String, ParityRow>{
       'test/features/timeline/task_editor_test.dart',
       'test/domain/validation/entity_validators_test.dart',
       'test/features/timeline/note_links_test.dart',
+      'test/features/timeline/note_text_test.dart',
+      'test/core/utils/markdown_lite_test.dart',
+      'test/domain/recurrence/series_edit_test.dart',
     ],
-    all: Cell(Status.gap, 'energy, markdown-lite — M8.4c'),
+    all: ci,
     note:
         'Built with the PRD limits: title, notes (links tap), start, duration, '
         'colour, icon, subtasks, alerts, repeat, travel buffer, pinned '
-        '(M8.4b). Missing on all four: energy level (column exists), '
-        'markdown-lite.',
+        '(M8.4b); energy chips and markdown-lite notes rendered in the sheet '
+        '(M8.4c).',
   ),
   'F2.10': ParityRow(
     tests: [
@@ -114,7 +117,8 @@ const f2Rows = <String, ParityRow>{
     all: ci,
     note:
         'Schedule sheet with suggestions everywhere; drag onto Today from the '
-        'wide sidebar (≥ 840 px, M3e.2). Phone drag: decided in M8.4c.',
+        'wide sidebar (≥ 840 px, M3e.2). Compact/medium place by dragging on '
+        "the Schedule sheet's thread (PRD F3.1, M8.4c).",
   ),
   'F3.2': ParityRow(
     tests: [
@@ -130,11 +134,16 @@ const f2Rows = <String, ParityRow>{
     tests: [
       'test/features/inbox/inbox_screen_test.dart',
       'test/domain/widgets/widget_snapshot_test.dart',
+      'test/shared/navigation/dot_shell_test.dart',
+      'test/domain/scheduling/inbox_nudge_test.dart',
+      'test/features/timeline/inbox_nudge_card_test.dart',
+      'test/data/inbox/inbox_nudge_seen_test.dart',
     ],
-    all: Cell(Status.gap, 'nav badge + plan-your-inbox nudge — M8.4c'),
+    all: ci,
     note:
-        'The count shows in the Inbox header and the Inbox widget (iPhone, '
-        'Android) only; no tab/rail badge, no nudge.',
+        'Count on the Inbox tab/rail at every width, in the header and the '
+        'Inbox widget; the plan-your-inbox card on Today, off by default '
+        '(M8.4c).',
   ),
   'F4.1': ParityRow(
     tests: [

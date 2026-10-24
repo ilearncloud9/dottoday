@@ -1,4 +1,5 @@
 import 'package:dottoday/domain/entities/alert.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
@@ -15,6 +16,7 @@ final class SeriesChange {
     this.iconKey,
     this.durationMin,
     this.pinned,
+    this.energy,
     this.startMinute,
     this.rule,
     this.alerts,
@@ -27,6 +29,10 @@ final class SeriesChange {
   final String? iconKey;
   final int? durationMin;
   final bool? pinned;
+
+  /// A new energy level (F2.9), wrapped so "cleared" (`(to: null)`) differs
+  /// from "unchanged" (null).
+  final ({Energy? to})? energy;
   final int? startMinute;
   final RepeatRule? rule;
 
@@ -57,6 +63,7 @@ final class SeriesChange {
       iconKey: diff<String>(before.iconKey, after.iconKey),
       durationMin: diff<int>(before.durationMin, after.durationMin),
       pinned: diff<bool>(before.pinned, after.pinned),
+      energy: before.energy == after.energy ? null : (to: after.energy),
       startMinute: diff<int>(minute(before), minute(after)),
     );
   }
@@ -69,6 +76,7 @@ final class SeriesChange {
       iconKey == null &&
       durationMin == null &&
       pinned == null &&
+      energy == null &&
       startMinute == null &&
       rule == null &&
       alerts == null &&
@@ -87,6 +95,10 @@ final class SeriesChange {
     iconKey: iconKey ?? o.iconKey,
     durationMin: durationMin ?? o.durationMin,
     pinned: pinned ?? o.pinned,
+    energy: switch (energy) {
+      (:final to) => to,
+      null => o.energy,
+    },
     tzId: tzId ?? o.tzId,
   );
 
@@ -99,6 +111,10 @@ final class SeriesChange {
     iconKey: iconKey ?? s.iconKey,
     durationMin: durationMin ?? s.durationMin,
     pinned: pinned ?? s.pinned,
+    energy: switch (energy) {
+      (:final to) => to,
+      null => s.energy,
+    },
     tzId: tzId ?? s.tzId,
   );
 

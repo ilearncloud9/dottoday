@@ -257,4 +257,20 @@ void main() {
     expect(c.moves, isTrue);
     expect(SeriesChange.between(o, o, berlin).isEmpty, isTrue);
   });
+
+  test('energy: set, cleared and unchanged are told apart (F2.9)', () {
+    final berlin = tz.getLocation('Europe/Berlin');
+    final s = _series().copyWith(energy: Energy.low);
+    final o = _rows(s).first;
+    final high = o.copyWith(energy: Energy.high);
+    final set = SeriesChange.between(o, high, berlin);
+    expect(set.energy, (to: Energy.high));
+    expect(set.moves, isFalse);
+    expect(set.template(s).energy, Energy.high);
+    final cleared = SeriesChange.between(o, o.copyWith(energy: null), berlin);
+    expect(cleared.isEmpty, isFalse);
+    expect(cleared.template(s).energy, isNull);
+    expect(cleared.fields(high).energy, isNull);
+    expect(const SeriesChange(title: 'x').fields(high).energy, Energy.high);
+  });
 }

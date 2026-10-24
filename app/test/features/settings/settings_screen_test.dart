@@ -62,9 +62,13 @@ void main() {
     tester,
   ) async {
     final h = await pumpSettings(tester);
-    expect(_cupertinoSwitches(), findsNWidgets(4));
+    expect(_cupertinoSwitches(), findsNWidgets(5));
     await _tapRow(tester, 'Show free time');
     expect((await storedSettings(h)).showFreeTime, isFalse);
+    // F3.3: the plan-your-inbox nudge starts off.
+    expect((await storedSettings(h)).inboxNudge, isFalse);
+    await _tapRow(tester, 'Plan-your-inbox nudge');
+    expect((await storedSettings(h)).inboxNudge, isTrue);
     await _tapRow(tester, 'Roll unfinished to tomorrow');
     expect((await storedSettings(h)).rollUnfinished, isTrue);
   });
@@ -72,7 +76,7 @@ void main() {
   testWidgets('Android draws Material switches', (tester) async {
     await pumpSettings(tester, platform: TargetPlatform.android);
     expect(_cupertinoSwitches(), findsNothing);
-    expect(find.byType(Switch), findsNWidgets(4));
+    expect(find.byType(Switch), findsNWidgets(5));
   });
 
   testWidgets('choices: week start, time format, shift, snap, alert, theme', (

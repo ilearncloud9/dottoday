@@ -12,6 +12,7 @@ import '../../support/test_app.dart';
 
 Widget _shell({
   int selected = 0,
+  int inbox = 0,
   ValueChanged<int>? onSelect,
   VoidCallback? onAdd,
   Widget? body,
@@ -19,7 +20,7 @@ Widget _shell({
 }) => testApp(
   Builder(
     builder: (context) => DotShell(
-      destinations: shellDestinations(context.l10n),
+      destinations: shellDestinations(context.l10n, inbox: inbox),
       selected: selected,
       onSelect: onSelect ?? (_) {},
       onAdd: onAdd ?? () {},
@@ -109,6 +110,52 @@ void main() {
     expect(find.byTooltip('Add task'), findsNothing);
   }, variant: TargetPlatformVariant.all());
 
+  group('Inbox badge (F3.3)', () {
+    for (final (name, width, platform) in [
+      ('iPhone compact', 390.0, TargetPlatform.iOS),
+      ('medium', 700.0, TargetPlatform.android),
+      ('expanded', 1280.0, TargetPlatform.macOS),
+    ]) {
+      testWidgets('$name: the count on the Inbox, said with the tab', (
+        tester,
+      ) async {
+        final semantics = tester.ensureSemantics();
+        await _size(tester, width);
+        await tester.pumpWidget(_shell(inbox: 3));
+        expect(find.byType(Badge), findsOneWidget);
+        expect(find.text('3'), findsOneWidget);
+        expect(find.bySemanticsLabel('Inbox, 3 tasks'), findsOneWidget);
+        semantics.dispose();
+      }, variant: TargetPlatformVariant.only(platform));
+    }
+
+    testWidgets('none when the Inbox is clear; 99+ past 99', (tester) async {
+      await _size(tester, 390);
+      await tester.pumpWidget(_shell());
+      expect(find.byType(Badge), findsNothing);
+      await tester.pumpWidget(_shell(inbox: 140));
+      expect(find.text('99+'), findsOneWidget);
+    });
+
+    testWidgets('Android: the Material bar shows and says it too', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await _size(tester, 412);
+      await tester.pumpWidget(_shell(inbox: 2));
+      expect(
+        find.descendant(
+          of: find.byType(NavigationBar),
+          matching: find.byType(Badge),
+        ),
+        findsOneWidget,
+      );
+      // NavigationBar merges the icon's badge text with the label.
+      expect(find.bySemanticsLabel(RegExp(r'2\s+Inbox')), findsOneWidget);
+      semantics.dispose();
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+  });
+
   testWidgets('taps map back to the full destination list', (tester) async {
     await _size(tester, 390);
     final taps = <int>[];
@@ -161,9 +208,12 @@ void main() {
     ) async {
       await _size(tester, width);
       for (final mode in [ThemeMode.light, ThemeMode.dark]) {
-        await tester.pumpWidget(_shell(mode: mode));
-        await tester.pumpAndSettle();
-        await expectA11yGuidelines(tester);
+        // With the Inbox badge too (F3.3): its contrast and the tab's name.
+        for (final inbox in [0, 12]) {
+          await tester.pumpWidget(_shell(mode: mode, inbox: inbox));
+          await tester.pumpAndSettle();
+          await expectA11yGuidelines(tester);
+        }
       }
     }, variant: TargetPlatformVariant.only(platform));
   }

@@ -47,6 +47,8 @@ abstract class Settings with _$Settings {
     @Default(true) bool runningLateNudge,
     @Default(false) bool rollUnfinished,
     @Default(true) bool bedtimeReminder,
+    // The once-a-day "Plan your inbox" card (docs/02 F3.3): off by default.
+    @Default(false) bool inboxNudge,
     // Settings › Calendars › Travel time (M7.5, R-17): off until chosen
     // (docs/02 F5 "if the user enables it").
     @Default(false) bool suggestTravelTime,

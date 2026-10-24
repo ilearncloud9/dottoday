@@ -133,7 +133,8 @@ const _f8Rows = <String, ParityRow>{
     all: ci,
     note:
         'Web shows "Uses your computer\'s lock" instead of App lock (07 Web). '
-        '07 Android\'s dynamic-colour accent is decided in M8.4c.',
+        'Four Concept A accents on every target; no Android dynamic accent '
+        '(PRD F8.3, M8.4c).',
   ),
   'F9.1': ParityRow(
     tests: [

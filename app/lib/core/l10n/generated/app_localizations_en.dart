@@ -3960,4 +3960,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shortcutKeySpace => 'Space';
+
+  @override
+  String get editorEnergy => 'Energy';
+
+  @override
+  String get energyLow => 'Low';
+
+  @override
+  String get energyMedium => 'Medium';
+
+  @override
+  String get energyHigh => 'High';
+
+  @override
+  String get editorNotesFormat =>
+      '**bold**, *italic*, - lists and links work here';
+
+  @override
+  String navInboxBadge(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Inbox, $count tasks',
+      one: 'Inbox, 1 task',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxNudgeTitle => 'Plan your inbox';
+
+  @override
+  String inboxNudgeDetail(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tasks are waiting in your Inbox. A good moment to give them a time?',
+      one: '1 task is waiting in your Inbox. A good moment to give it a time?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxNudgeAction => 'Plan';
+
+  @override
+  String get settingsInboxNudge => 'Plan-your-inbox nudge';
+
+  @override
+  String get settingsInboxNudgeDetail =>
+      'Once a day from Wake Up, when the Inbox holds tasks';
 }

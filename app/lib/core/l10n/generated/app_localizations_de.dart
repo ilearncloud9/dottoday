@@ -3983,4 +3983,57 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shortcutKeySpace => 'Leertaste';
+
+  @override
+  String get editorEnergy => 'Energie';
+
+  @override
+  String get energyLow => 'Niedrig';
+
+  @override
+  String get energyMedium => 'Mittel';
+
+  @override
+  String get energyHigh => 'Hoch';
+
+  @override
+  String get editorNotesFormat =>
+      '**fett**, *kursiv*, - Listen und Links funktionieren hier';
+
+  @override
+  String navInboxBadge(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Eingang, $count Aufgaben',
+      one: 'Eingang, 1 Aufgabe',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxNudgeTitle => 'Plane deinen Eingang';
+
+  @override
+  String inboxNudgeDetail(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count Aufgaben warten im Eingang. Ein guter Moment, ihnen eine Zeit zu geben?',
+      one:
+          '1 Aufgabe wartet im Eingang. Ein guter Moment, ihr eine Zeit zu geben?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxNudgeAction => 'Planen';
+
+  @override
+  String get settingsInboxNudge => 'Hinweis: Eingang planen';
+
+  @override
+  String get settingsInboxNudgeDetail =>
+      'Einmal am Tag ab dem Aufstehen, wenn im Eingang Aufgaben liegen';
 }

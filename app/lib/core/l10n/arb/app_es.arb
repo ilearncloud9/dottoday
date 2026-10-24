@@ -966,5 +966,16 @@
   "shortcutOpenTask": "Abrir la tarea seleccionada",
   "shortcutDoneTask": "Marcar la tarea seleccionada como hecha",
   "shortcutKeyDelete": "Supr",
-  "shortcutKeySpace": "Espacio"
+  "shortcutKeySpace": "Espacio",
+  "editorEnergy": "Energía",
+  "energyLow": "Baja",
+  "energyMedium": "Media",
+  "energyHigh": "Alta",
+  "editorNotesFormat": "**negrita**, *cursiva*, - listas y enlaces funcionan aquí",
+  "navInboxBadge": "{count, plural, =1{Bandeja de entrada, 1 tarea} other{Bandeja de entrada, {count} tareas}}",
+  "inboxNudgeTitle": "Planifica tu bandeja",
+  "inboxNudgeDetail": "{count, plural, =1{1 tarea espera en tu bandeja. ¿Un buen momento para darle una hora?} other{{count} tareas esperan en tu bandeja. ¿Un buen momento para darles una hora?}}",
+  "inboxNudgeAction": "Planificar",
+  "settingsInboxNudge": "Aviso: planificar la bandeja",
+  "settingsInboxNudgeDetail": "Una vez al día desde que te levantas, si la bandeja tiene tareas"
 }

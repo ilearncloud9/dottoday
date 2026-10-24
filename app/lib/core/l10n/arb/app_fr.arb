@@ -966,5 +966,16 @@
   "shortcutOpenTask": "Ouvrir la tâche sélectionnée",
   "shortcutDoneTask": "Marquer la tâche sélectionnée comme faite",
   "shortcutKeyDelete": "Suppr",
-  "shortcutKeySpace": "Espace"
+  "shortcutKeySpace": "Espace",
+  "editorEnergy": "Énergie",
+  "energyLow": "Faible",
+  "energyMedium": "Moyenne",
+  "energyHigh": "Élevée",
+  "editorNotesFormat": "**gras**, *italique*, - listes et liens fonctionnent ici",
+  "navInboxBadge": "{count, plural, =1{Boîte de réception, 1 tâche} other{Boîte de réception, {count} tâches}}",
+  "inboxNudgeTitle": "Planifiez votre boîte",
+  "inboxNudgeDetail": "{count, plural, =1{1 tâche attend dans votre boîte. Un bon moment pour lui donner une heure ?} other{{count} tâches attendent dans votre boîte. Un bon moment pour leur donner une heure ?}}",
+  "inboxNudgeAction": "Planifier",
+  "settingsInboxNudge": "Rappel : planifier la boîte",
+  "settingsInboxNudgeDetail": "Une fois par jour dès le réveil, si la boîte contient des tâches"
 }

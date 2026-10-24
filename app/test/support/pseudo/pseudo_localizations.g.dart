@@ -3092,4 +3092,37 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get shortcutKeySpace => pseudo(super.shortcutKeySpace);
+
+  @override
+  String get editorEnergy => pseudo(super.editorEnergy);
+
+  @override
+  String get energyLow => pseudo(super.energyLow);
+
+  @override
+  String get energyMedium => pseudo(super.energyMedium);
+
+  @override
+  String get energyHigh => pseudo(super.energyHigh);
+
+  @override
+  String get editorNotesFormat => pseudo(super.editorNotesFormat);
+
+  @override
+  String navInboxBadge(int count) => pseudo(super.navInboxBadge(count));
+
+  @override
+  String get inboxNudgeTitle => pseudo(super.inboxNudgeTitle);
+
+  @override
+  String inboxNudgeDetail(int count) => pseudo(super.inboxNudgeDetail(count));
+
+  @override
+  String get inboxNudgeAction => pseudo(super.inboxNudgeAction);
+
+  @override
+  String get settingsInboxNudge => pseudo(super.settingsInboxNudge);
+
+  @override
+  String get settingsInboxNudgeDetail => pseudo(super.settingsInboxNudgeDetail);
 }

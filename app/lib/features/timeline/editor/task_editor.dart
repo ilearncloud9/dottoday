@@ -14,13 +14,14 @@ import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/features/timeline/editor/editor_duration.dart';
+import 'package:dottoday/features/timeline/editor/editor_energy.dart';
 import 'package:dottoday/features/timeline/editor/editor_fields.dart';
 import 'package:dottoday/features/timeline/editor/editor_footer.dart';
+import 'package:dottoday/features/timeline/editor/editor_notes.dart';
 import 'package:dottoday/features/timeline/editor/editor_series.dart';
 import 'package:dottoday/features/timeline/editor/editor_travel.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/widgets/calendar_write_line.dart';
-import 'package:dottoday/features/timeline/widgets/note_links.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_subtasks.dart';
 import 'package:dottoday/shared/dot/colour_icon_block.dart';
 import 'package:flutter/foundation.dart';
@@ -104,7 +105,6 @@ class _FormState extends ConsumerState<_Form> {
   /// Set in initState: a lazy read would see the autosaved row.
   late final Occurrence _opened;
   late final _title = TextEditingController(text: _draft.title);
-  late final _notes = TextEditingController(text: _draft.notes ?? '');
   // Read up front: the last flush runs in dispose, where ref is off limits.
   late final UndoService _undo;
   late final Clock _clock;
@@ -125,7 +125,6 @@ class _FormState extends ConsumerState<_Form> {
   void dispose() {
     _flush();
     _title.dispose();
-    _notes.dispose();
     super.dispose();
   }
 
@@ -270,16 +269,14 @@ class _FormState extends ConsumerState<_Form> {
         ),
         const SizedBox(height: DotSpace.l),
         SheetSubtasks(task: widget.task, editing: true),
-        EditorCaption(l10n.editorNotes),
-        TextField(
-          controller: _notes,
-          minLines: 3,
-          maxLines: 8,
-          decoration: InputDecoration(hintText: l10n.editorNotesHint),
-          onChanged: (v) =>
-              _change((o) => o.copyWith(notes: v.isEmpty ? null : v)),
+        EditorEnergy(
+          energy: _draft.energy,
+          onChanged: (e) => _change((o) => o.copyWith(energy: e)),
         ),
-        NoteLinks(notes: _draft.notes),
+        EditorNotes(
+          notes: _draft.notes,
+          onChanged: (v) => _change((o) => o.copyWith(notes: v)),
+        ),
         CalendarWriteLine(linkId: _draft.calendarLinkId),
         const SizedBox(height: DotSpace.xl),
         EditorFooter(

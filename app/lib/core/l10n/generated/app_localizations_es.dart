@@ -3976,4 +3976,57 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get shortcutKeySpace => 'Espacio';
+
+  @override
+  String get editorEnergy => 'Energía';
+
+  @override
+  String get energyLow => 'Baja';
+
+  @override
+  String get energyMedium => 'Media';
+
+  @override
+  String get energyHigh => 'Alta';
+
+  @override
+  String get editorNotesFormat =>
+      '**negrita**, *cursiva*, - listas y enlaces funcionan aquí';
+
+  @override
+  String navInboxBadge(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Bandeja de entrada, $count tareas',
+      one: 'Bandeja de entrada, 1 tarea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxNudgeTitle => 'Planifica tu bandeja';
+
+  @override
+  String inboxNudgeDetail(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tareas esperan en tu bandeja. ¿Un buen momento para darles una hora?',
+      one:
+          '1 tarea espera en tu bandeja. ¿Un buen momento para darle una hora?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxNudgeAction => 'Planificar';
+
+  @override
+  String get settingsInboxNudge => 'Aviso: planificar la bandeja';
+
+  @override
+  String get settingsInboxNudgeDetail =>
+      'Una vez al día desde que te levantas, si la bandeja tiene tareas';
 }

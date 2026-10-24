@@ -5903,6 +5903,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Space'**
   String get shortcutKeySpace;
+
+  /// Editor field: the optional energy level a task needs (low/medium/high).
+  ///
+  /// In en, this message translates to:
+  /// **'Energy'**
+  String get editorEnergy;
+
+  /// Energy level chip: low.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get energyLow;
+
+  /// Energy level chip: medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get energyMedium;
+
+  /// Energy level chip: high.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get energyHigh;
+
+  /// Helper under the notes field: the markdown-lite syntax it understands. Keep the ** * - markers as typed.
+  ///
+  /// In en, this message translates to:
+  /// **'**bold**, *italic*, - lists and links work here'**
+  String get editorNotesFormat;
+
+  /// Screen-reader name of the Inbox tab when it shows a count badge.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Inbox, 1 task} other{Inbox, {count} tasks}}'**
+  String navInboxBadge(int count);
+
+  /// Caption of the once-a-day card on Today inviting the person to give Inbox tasks a time. Friendly, never judging.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan your inbox'**
+  String get inboxNudgeTitle;
+
+  /// Body of the plan-your-inbox card. Friendly, never judging.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task is waiting in your Inbox. A good moment to give it a time?} other{{count} tasks are waiting in your Inbox. A good moment to give them a time?}}'**
+  String inboxNudgeDetail(int count);
+
+  /// Plan-your-inbox card: opens the Inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get inboxNudgeAction;
+
+  /// Settings › Planning switch: the once-a-day card on Today.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan-your-inbox nudge'**
+  String get settingsInboxNudge;
+
+  /// Detail under the plan-your-inbox switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Once a day from Wake Up, when the Inbox holds tasks'**
+  String get settingsInboxNudgeDetail;
 }
 
 class _AppLocalizationsDelegate

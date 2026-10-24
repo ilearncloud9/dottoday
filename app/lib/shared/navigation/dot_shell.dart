@@ -11,6 +11,8 @@ final class ShellDestination {
     required this.glyph,
     required this.label,
     this.expandedOnly = false,
+    this.badge,
+    this.badgeLabel,
   });
 
   /// [DotGlyphs.today] is drawn as the Today dot (filled when selected).
@@ -21,6 +23,16 @@ final class ShellDestination {
 
   /// Week: on the Mac/web rail only; phones use the strip + month (§4).
   final bool expandedOnly;
+
+  /// A count on the icon (the Inbox, docs/02 F3.3); null or 0 shows none.
+  final int? badge;
+
+  /// What a screen reader says for the destination with its [badge]
+  /// ("Inbox, 3 tasks"); null reads [label].
+  final String? badgeLabel;
+
+  /// The screen-reader name: [badgeLabel] while a badge shows.
+  String get semanticLabel => (badge ?? 0) > 0 ? badgeLabel ?? label : label;
 }
 
 /// The app shell by width class (docs/10 §4), never by platform:
@@ -138,8 +150,28 @@ class ShellIcon extends StatelessWidget {
   final bool active;
   final Color color;
 
+  /// More than this reads "99+": a count, not an inventory.
+  static const _maxBadge = 99;
+
   @override
   Widget build(BuildContext context) {
+    final count = destination.badge ?? 0;
+    final icon = _icon();
+    if (count <= 0) return icon;
+    final t = DotTheme.of(context);
+    // Accent, never red: a count of loose tasks is not an alarm (§11
+    // no-shame). The tab's own label carries it for screen readers.
+    return Badge.count(
+      count: count,
+      maxCount: _maxBadge,
+      backgroundColor: t.colors.accent,
+      textColor: t.colors.onAccent,
+      textStyle: t.styles.tabLabelActive,
+      child: icon,
+    );
+  }
+
+  Widget _icon() {
     if (destination.glyph != DotGlyphs.today) {
       return DotIcon(destination.glyph, color: color, active: active);
     }

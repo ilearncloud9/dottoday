@@ -3985,4 +3985,57 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shortcutKeySpace => 'Espace';
+
+  @override
+  String get editorEnergy => 'Énergie';
+
+  @override
+  String get energyLow => 'Faible';
+
+  @override
+  String get energyMedium => 'Moyenne';
+
+  @override
+  String get energyHigh => 'Élevée';
+
+  @override
+  String get editorNotesFormat =>
+      '**gras**, *italique*, - listes et liens fonctionnent ici';
+
+  @override
+  String navInboxBadge(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Boîte de réception, $count tâches',
+      one: 'Boîte de réception, 1 tâche',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxNudgeTitle => 'Planifiez votre boîte';
+
+  @override
+  String inboxNudgeDetail(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tâches attendent dans votre boîte. Un bon moment pour leur donner une heure ?',
+      one:
+          '1 tâche attend dans votre boîte. Un bon moment pour lui donner une heure ?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxNudgeAction => 'Planifier';
+
+  @override
+  String get settingsInboxNudge => 'Rappel : planifier la boîte';
+
+  @override
+  String get settingsInboxNudgeDetail =>
+      'Une fois par jour dès le réveil, si la boîte contient des tâches';
 }
