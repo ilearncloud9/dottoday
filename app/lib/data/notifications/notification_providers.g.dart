@@ -160,7 +160,7 @@ final class NotificationPlatformProvider
 }
 
 String _$notificationPlatformHash() =>
-    r'b0f22b14e6c79c55e390f0911d897ae7e55f4482';
+    r'8fe31cffa4971b37b35ca5f0edc71a982c8726fe';
 
 @ProviderFor(notificationResponder)
 final notificationResponderProvider = NotificationResponderProvider._();
