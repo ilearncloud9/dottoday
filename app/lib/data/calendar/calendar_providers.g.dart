@@ -253,7 +253,7 @@ final class DeviceCalendarsProvider
   }
 }
 
-String _$deviceCalendarsHash() => r'8e74cf8e0bcb3976d53aa1e489ca2d7c13584fb6';
+String _$deviceCalendarsHash() => r'8f48463587f1edd3be8d8d8de0cb558693466d19';
 
 /// Each device calendar with its switch and inherited colour.
 
@@ -300,7 +300,7 @@ final class CalendarChoiceListProvider
 }
 
 String _$calendarChoiceListHash() =>
-    r'f59dd0e95cd33cf4ff5c659efdf64db0ecd5185b';
+    r'39a09e89891e8d2a06b3a1f7632424f50cdd3e1c';
 
 /// What Settings and onboarding do with device calendars.
 

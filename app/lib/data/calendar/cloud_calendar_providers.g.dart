@@ -104,7 +104,7 @@ final class CloudAccountsProvider
   }
 }
 
-String _$cloudAccountsHash() => r'f430d7fbe80841f7ed86107e1fd4f8a82711b3da';
+String _$cloudAccountsHash() => r'fac0cb299ebbdcb372c23e64d459a8d3d87244aa';
 
 /// Each connected calendar with its switch and inherited colour, as for
 /// device calendars (the switches are this device's).
@@ -154,7 +154,7 @@ final class CloudCalendarChoiceListProvider
 }
 
 String _$cloudCalendarChoiceListHash() =>
-    r'6160c8f7271fd76d1f0947eca19b95066e0ee210';
+    r'3d25f3df535440b9337d7d5a64477a1756d87c36';
 
 /// Connected-account events → occurrences, like device calendars' but
 /// owning only the Google/Microsoft links (docs/09 M7.4).

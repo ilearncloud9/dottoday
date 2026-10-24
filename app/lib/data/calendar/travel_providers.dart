@@ -10,8 +10,9 @@ part 'travel_providers.g.dart';
 /// place or once the link is gone. Read on this device only.
 @riverpod
 Stream<String?> calendarEventLocation(Ref ref, String linkId) async* {
+  final dao = CalendarLinksDao(ref.watch(appDatabaseProvider));
   final profile = await ref.watch(currentProfileProvider.future);
-  yield* CalendarLinksDao(ref.watch(appDatabaseProvider))
+  yield* dao
       .linkWithAccount(profile.id, linkId)
       .watchSingleOrNull()
       .map((row) => row?.$1.location)

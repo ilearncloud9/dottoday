@@ -57,10 +57,9 @@ Stream<CalendarWriteStatus?> calendarWriteStatus(
   Ref ref,
   String linkId,
 ) async* {
+  final dao = CalendarLinksDao(ref.watch(appDatabaseProvider));
   final profile = await ref.watch(currentProfileProvider.future);
-  yield* CalendarLinksDao(
-    ref.watch(appDatabaseProvider),
-  ).linkWithAccount(profile.id, linkId).watchSingleOrNull().map((row) {
+  yield* dao.linkWithAccount(profile.id, linkId).watchSingleOrNull().map((row) {
     if (row == null) return null;
     final (link, account) = row;
     return CalendarWriteStatus(

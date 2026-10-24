@@ -132,7 +132,7 @@ final class CalendarWriteStatusProvider
 }
 
 String _$calendarWriteStatusHash() =>
-    r'329bb119b0b61d90008ec900b614d1e3225e7739';
+    r'93f169019a274592e174824d2ce864eedb43362f';
 
 /// The write-back status of the imported event linked by [linkId]; null
 /// when the link is gone.

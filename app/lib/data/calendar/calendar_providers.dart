@@ -88,9 +88,13 @@ Future<PermissionState> calendarPermissionState(Ref ref) =>
 /// when they can't be read (shown by the page's error state).
 @riverpod
 Future<List<DeviceCalendar>> deviceCalendars(Ref ref) async {
+  // Every watch before the first await: the permission is re-read on each
+  // resume, and a watch after the gap would hit a disposed ref (found on
+  // the Android emulator at M7.7).
+  final gateway = ref.watch(deviceCalendarGatewayProvider);
   final permission = await ref.watch(calendarPermissionStateProvider.future);
   if (permission != PermissionState.granted) return const [];
-  final result = await ref.watch(deviceCalendarGatewayProvider).calendars();
+  final result = await gateway.calendars();
   return switch (result) {
     Ok(:final value) => value,
     Err(:final failure) => throw failure,
@@ -100,14 +104,17 @@ Future<List<DeviceCalendar>> deviceCalendars(Ref ref) async {
 /// Each device calendar with its switch and inherited colour.
 @riverpod
 Stream<List<CalendarChoice>> calendarChoiceList(Ref ref) async* {
-  final calendars = await ref.watch(deviceCalendarsProvider.future);
+  // Every watch before the first await (see [deviceCalendars]).
+  final calendarsFuture = ref.watch(deviceCalendarsProvider.future);
+  final profileFuture = ref.watch(currentProfileProvider.future)..ignore();
+  final sources = ref.watch(calendarSourceRepositoryProvider);
+  final calendars = await calendarsFuture;
   if (calendars.isEmpty) {
     yield const [];
     return;
   }
-  final profile = await ref.watch(currentProfileProvider.future);
-  yield* ref
-      .watch(calendarSourceRepositoryProvider)
+  final profile = await profileFuture;
+  yield* sources
       .watchDevice(profile.id)
       .map((rows) => calendarChoices(calendars, rows, calendarPalette));
 }

@@ -49,9 +49,11 @@ CloudCalendars cloudCalendars(Ref ref) {
 /// failure when they can't be listed (the page's error state).
 @riverpod
 Future<List<CloudAccount>> cloudAccounts(Ref ref) async {
+  // Every watch before the first await (see `deviceCalendars`).
+  final cloud = ref.watch(cloudCalendarsProvider);
   final account = await ref.watch(accountProvider.future);
   if (account is! SignedIn) return const [];
-  final result = await ref.watch(cloudCalendarsProvider).accounts();
+  final result = await cloud.accounts();
   return switch (result) {
     Ok(:final value) => value,
     Err(:final failure) => throw failure,
@@ -62,15 +64,18 @@ Future<List<CloudAccount>> cloudAccounts(Ref ref) async {
 /// device calendars (the switches are this device's).
 @riverpod
 Stream<List<CalendarChoice>> cloudCalendarChoiceList(Ref ref) async* {
-  final accounts = await ref.watch(cloudAccountsProvider.future);
+  // Every watch before the first await (see `deviceCalendars`).
+  final accountsFuture = ref.watch(cloudAccountsProvider.future);
+  final profileFuture = ref.watch(currentProfileProvider.future)..ignore();
+  final sources = ref.watch(calendarSourceRepositoryProvider);
+  final accounts = await accountsFuture;
   final calendars = [for (final a in accounts) ...a.calendars];
   if (calendars.isEmpty) {
     yield const [];
     return;
   }
-  final profile = await ref.watch(currentProfileProvider.future);
-  yield* ref
-      .watch(calendarSourceRepositoryProvider)
+  final profile = await profileFuture;
+  yield* sources
       .watchCloud(profile.id)
       .map((rows) => calendarChoices(calendars, rows, calendarPalette));
 }
