@@ -2948,6 +2948,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get privacyClearSearches => 'Letzte Suchen löschen';
 
   @override
+  String get privacyCrashTitle => 'Absturzberichte';
+
+  @override
+  String get privacyCrashBody =>
+      'Stürzt die App ab, sendet sie die Art des Fehlers und die Stelle in der App. Nie deine Aufgaben, Notizen oder dein Konto.';
+
+  @override
+  String get privacyPolicyOpen => 'Datenschutzerklärung lesen';
+
+  @override
   String get snackSearchesCleared => 'Letzte Suchen gelöscht';
 
   @override
@@ -3179,6 +3189,9 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get onboardingWelcomeBody =>
       'Plane deinen Tag als Punkte auf einer Linie, sieh, wohin die Zeit geht, und verschieb alles, wenn sich der Tag verschiebt.';
+
+  @override
+  String get onboardingAgeNote => 'Dottoday ist für Menschen ab 13 Jahren.';
 
   @override
   String get onboardingGetStarted => 'Los geht’s';

@@ -4297,6 +4297,18 @@
   "@privacyClearSearches": {
     "description": "Privacy page button."
   },
+  "privacyCrashTitle": "Crash reports",
+  "@privacyCrashTitle": {
+    "description": "Privacy page heading, shown only when crash reporting is configured."
+  },
+  "privacyCrashBody": "If the app crashes, it sends the kind of error and where in the app it happened. Never your tasks, notes or account.",
+  "@privacyCrashBody": {
+    "description": "Privacy page paragraph under 'Crash reports' (docs/06 §6)."
+  },
+  "privacyPolicyOpen": "Read the privacy policy",
+  "@privacyPolicyOpen": {
+    "description": "Privacy page button: opens the full privacy policy in the browser."
+  },
   "snackSearchesCleared": "Recent searches cleared",
   "@snackSearchesCleared": {
     "description": "Snackbar after Clear recent searches."
@@ -4581,6 +4593,10 @@
   "onboardingWelcomeBody": "Plan your day as dots on a line, see where the time goes, and move it all when the day moves.",
   "@onboardingWelcomeBody": {
     "description": "Onboarding O1: the one-line value proposition."
+  },
+  "onboardingAgeNote": "Dottoday is for people aged 13 and over.",
+  "@onboardingAgeNote": {
+    "description": "Welcome step, under the buttons: the age gate (docs/06 §6). Wording under owner/legal review (docs/store/age-rating.md)."
   },
   "onboardingGetStarted": "Get started",
   "@onboardingGetStarted": {

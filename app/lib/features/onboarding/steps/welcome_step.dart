@@ -4,7 +4,8 @@ import 'package:dottoday/shared/dot/day_dot.dart';
 import 'package:flutter/material.dart';
 
 /// O1 Welcome (docs/10 §5.1, docs/09 M4.1): the day dot draws itself,
-/// "Your day, as a thread.", Get started / I already have an account.
+/// "Your day, as a thread.", Get started / I already have an account, and
+/// the 13+ age note (docs/06 §6, M8.6).
 /// With reduced motion the dot is simply full (the theme's motion is 0).
 class WelcomeStep extends StatelessWidget {
   const WelcomeStep({required this.onStart, required this.onSignIn, super.key});
@@ -46,6 +47,11 @@ class WelcomeStep extends StatelessWidget {
             child: Text(l10n.onboardingGetStarted),
           ),
           TextButton(onPressed: onSignIn, child: Text(l10n.onboardingSignIn)),
+          Text(
+            l10n.onboardingAgeNote,
+            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );

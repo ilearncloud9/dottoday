@@ -132,5 +132,21 @@ void main() {
         );
       }
     });
+
+    test('the privacy policy URL is optional and https only', () {
+      expect(Env.fromMap(_valid({})).privacyPolicyUrl, isNull);
+      expect(
+        Env.fromMap(
+          _valid({'PRIVACY_POLICY_URL': 'https://dottoday.app/privacy.html'}),
+        ).privacyPolicyUrl,
+        Uri.parse('https://dottoday.app/privacy.html'),
+      );
+      for (final bad in ['http://dottoday.app/p', 'javascript:alert(1)', 'p']) {
+        expect(
+          () => Env.fromMap(_valid({'PRIVACY_POLICY_URL': bad})),
+          _throwsEnv('PRIVACY_POLICY_URL'),
+        );
+      }
+    });
   });
 }

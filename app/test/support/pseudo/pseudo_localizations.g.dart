@@ -2291,6 +2291,15 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get privacyClearSearches => pseudo(super.privacyClearSearches);
 
   @override
+  String get privacyCrashTitle => pseudo(super.privacyCrashTitle);
+
+  @override
+  String get privacyCrashBody => pseudo(super.privacyCrashBody);
+
+  @override
+  String get privacyPolicyOpen => pseudo(super.privacyPolicyOpen);
+
+  @override
   String get snackSearchesCleared => pseudo(super.snackSearchesCleared);
 
   @override
@@ -2461,6 +2470,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get onboardingWelcomeBody => pseudo(super.onboardingWelcomeBody);
+
+  @override
+  String get onboardingAgeNote => pseudo(super.onboardingAgeNote);
 
   @override
   String get onboardingGetStarted => pseudo(super.onboardingGetStarted);

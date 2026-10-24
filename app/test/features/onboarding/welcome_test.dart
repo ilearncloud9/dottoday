@@ -14,6 +14,11 @@ void main() {
   testWidgets('first run: the welcome, not the app', (tester) async {
     await pumpOnboarding(tester);
     expect(find.text('Your day, as a thread.'), findsOneWidget);
+    // The age gate is copy on the welcome (docs/06 §6, M8.6).
+    expect(
+      find.text('Dottoday is for people aged 13 and over.'),
+      findsOneWidget,
+    );
     expect(find.byType(DayDot), findsOneWidget);
     expect(find.text('the app'), findsNothing);
     // Still mounted, hidden: its router takes links that arrive during

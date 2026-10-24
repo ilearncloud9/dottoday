@@ -4362,6 +4362,24 @@ abstract class AppLocalizations {
   /// **'Clear recent searches'**
   String get privacyClearSearches;
 
+  /// Privacy page heading, shown only when crash reporting is configured.
+  ///
+  /// In en, this message translates to:
+  /// **'Crash reports'**
+  String get privacyCrashTitle;
+
+  /// Privacy page paragraph under 'Crash reports' (docs/06 §6).
+  ///
+  /// In en, this message translates to:
+  /// **'If the app crashes, it sends the kind of error and where in the app it happened. Never your tasks, notes or account.'**
+  String get privacyCrashBody;
+
+  /// Privacy page button: opens the full privacy policy in the browser.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the privacy policy'**
+  String get privacyPolicyOpen;
+
   /// Snackbar after Clear recent searches.
   ///
   /// In en, this message translates to:
@@ -4697,6 +4715,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Plan your day as dots on a line, see where the time goes, and move it all when the day moves.'**
   String get onboardingWelcomeBody;
+
+  /// Welcome step, under the buttons: the age gate (docs/06 §6). Wording under owner/legal review (docs/store/age-rating.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday is for people aged 13 and over.'**
+  String get onboardingAgeNote;
 
   /// Onboarding O1 primary button.
   ///

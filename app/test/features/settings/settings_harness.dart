@@ -72,6 +72,7 @@ Future<SettingsHarness> pumpSettings(
   ExportService? exports,
   String whatsNewSeen = '0.1.0',
   DiagnosticsReader? diagnostics,
+  Env? env,
 }) async {
   tester.view
     ..physicalSize = size
@@ -104,10 +105,11 @@ Future<SettingsHarness> pumpSettings(
       linkLauncherProvider.overrideWithValue(links),
       appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),
       envProvider.overrideWithValue(
-        Env(
-          supabaseUrl: Uri.parse('https://example.supabase.co'),
-          supabaseAnonKey: 'anon',
-        ),
+        env ??
+            Env(
+              supabaseUrl: Uri.parse('https://example.supabase.co'),
+              supabaseAnonKey: 'anon',
+            ),
       ),
       ...overrides,
     ],

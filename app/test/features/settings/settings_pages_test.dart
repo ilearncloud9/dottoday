@@ -1,3 +1,4 @@
+import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/release/whats_new_seen.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
@@ -169,6 +170,30 @@ void main() {
     await _tap(tester, 'Clear recent searches');
     expect(find.text('Recent searches cleared'), findsOneWidget);
     expect(h.container.read(recentSearchesProvider).value, isEmpty);
+  });
+
+  testWidgets('Privacy: crash reports and the policy only when configured', (
+    tester,
+  ) async {
+    await pumpSettings(tester, location: '/settings/privacy');
+    expect(find.text('Crash reports'), findsNothing);
+    expect(find.text('Read the privacy policy'), findsNothing);
+    final policy = Uri.parse('https://dottoday.example/privacy.html');
+    final h = await pumpSettings(
+      tester,
+      location: '/settings/privacy',
+      env: Env(
+        supabaseUrl: Uri.parse('https://example.supabase.co'),
+        supabaseAnonKey: 'anon',
+        sentryDsn: 'https://key@sentry.example/1',
+        privacyPolicyUrl: policy,
+      ),
+    );
+    expect(find.text('Crash reports'), findsOneWidget);
+    expect(find.textContaining('Never your tasks'), findsOneWidget);
+    await _tap(tester, 'Read the privacy policy');
+    expect(h.links.opened, [policy]);
+    await expectA11yGuidelines(tester);
   });
 
   // A platform without a device check (the web): the lock group says what

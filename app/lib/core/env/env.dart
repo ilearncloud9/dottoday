@@ -5,7 +5,7 @@ import 'dart:convert';
 ///
 /// Only public values belong here (docs/06-security.md §1): the Supabase URL
 /// and **anon** key, plus optional Sentry DSN, Web Push VAPID public key and
-/// feedback address.
+/// feedback address and privacy policy URL.
 final class Env {
   const Env({
     required this.supabaseUrl,
@@ -13,6 +13,7 @@ final class Env {
     this.sentryDsn,
     this.webPushVapidPublicKey,
     this.feedbackEmail,
+    this.privacyPolicyUrl,
   });
 
   /// Reads the compile-time defines and validates them via [Env.fromMap].
@@ -27,6 +28,7 @@ final class Env {
       'WEB_PUSH_VAPID_PUBLIC_KEY',
     ),
     'FEEDBACK_EMAIL': String.fromEnvironment('FEEDBACK_EMAIL'),
+    'PRIVACY_POLICY_URL': String.fromEnvironment('PRIVACY_POLICY_URL'),
   });
 
   /// Builds an [Env] from raw key/value pairs, failing fast on bad config.
@@ -52,6 +54,7 @@ final class Env {
       sentryDsn: _optional(raw, 'SENTRY_DSN'),
       webPushVapidPublicKey: _optional(raw, 'WEB_PUSH_VAPID_PUBLIC_KEY'),
       feedbackEmail: _feedbackEmail(_optional(raw, 'FEEDBACK_EMAIL')),
+      privacyPolicyUrl: _privacyPolicyUrl(_optional(raw, 'PRIVACY_POLICY_URL')),
     );
   }
 
@@ -65,6 +68,11 @@ final class Env {
   /// recipient and the user picks one (the real inbox is an owner release
   /// gate, docs/08 §6.1).
   final String? feedbackEmail;
+
+  /// The published privacy policy (`web/privacy.html` on the product
+  /// domain), opened from Settings › Privacy; unset, the page shows no link
+  /// (publishing it is an owner release gate, docs/08 §6.1, M8.6).
+  final Uri? privacyPolicyUrl;
 }
 
 /// Startup configuration bug: the app cannot run, so this is an [Error], not
@@ -113,6 +121,18 @@ String? _feedbackEmail(String? value) {
     );
   }
   return value.toLowerCase().endsWith('.invalid') ? null : value;
+}
+
+/// An absolute https URL: the app opens it in the browser.
+Uri? _privacyPolicyUrl(String? value) {
+  if (value == null) return null;
+  final uri = Uri.tryParse(value);
+  if (uri == null || uri.scheme != 'https' || !uri.hasAuthority) {
+    throw EnvConfigError(
+      'PRIVACY_POLICY_URL must be an absolute https URL. $_hint',
+    );
+  }
+  return uri;
 }
 
 Uri _parseSupabaseUrl(String value) {
