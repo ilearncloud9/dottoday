@@ -13,7 +13,8 @@ import 'package:url_launcher/url_launcher.dart';
 /// Unlike the plugin, EventKit reports "not asked" itself, so nothing is
 /// kept in `local_meta` here. All-day events arrive as calendar dates
 /// (`yyyy-MM-dd`, read natively in the device's calendar), so no zone
-/// guessing happens on this side.
+/// guessing happens on this side. Write-back (M7.3) changes one event's
+/// start, end and title in place.
 final class ChannelDeviceCalendarGateway implements DeviceCalendarGateway {
   ChannelDeviceCalendarGateway(
     this._logger, {
@@ -73,6 +74,54 @@ final class ChannelDeviceCalendarGateway implements DeviceCalendarGateway {
     });
     if (rows == null) return const Err(UnexpectedFailure());
     return Ok([for (final r in rows) ?_event(calendarId, r)]);
+  }
+
+  @override
+  Future<Result<ExternalEvent?, AppFailure>> event(
+    String calendarId,
+    String eventId,
+  ) async {
+    if (await status() != PermissionState.granted) {
+      return const Err(PermissionFailure(AppPermission.calendar));
+    }
+    try {
+      final row = await _channel.invokeMapMethod<Object?, Object?>('event', {
+        'calendarId': calendarId,
+        'eventId': eventId,
+      });
+      return Ok(row == null ? null : _event(calendarId, row));
+    } on PlatformException catch (e, s) {
+      _logger.warn(
+        'calendar.read_failed',
+        fields: {'what': _Read.event},
+        error: e,
+        stackTrace: s,
+      );
+      return const Err(UnexpectedFailure());
+    }
+  }
+
+  /// The bridge answers with an [EventWriteResult] name; it changes only
+  /// start, end and title, on that one event (docs/09 M7.3).
+  @override
+  Future<EventWriteResult> updateEvent(EventUpdate update) async {
+    try {
+      final raw = await _channel.invokeMethod<String>('update', {
+        'calendarId': update.calendarId,
+        'eventId': update.eventId,
+        'startMs': update.startUtc.millisecondsSinceEpoch,
+        'endMs': update.endUtc.millisecondsSinceEpoch,
+        'title': ?update.title,
+      });
+      return EventWriteResult.values.asNameMap()[raw] ??
+          EventWriteResult.failed;
+    } on PlatformException catch (e, s) {
+      _logger.warn('calendar.write_failed', error: e, stackTrace: s);
+      return EventWriteResult.failed;
+    } on MissingPluginException catch (e, s) {
+      _logger.warn('calendar.write_failed', error: e, stackTrace: s);
+      return EventWriteResult.failed;
+    }
   }
 
   Future<PermissionState> _permission(String method) async {
@@ -144,6 +193,7 @@ final class ChannelDeviceCalendarGateway implements DeviceCalendarGateway {
       location: r['location'] as String?,
       description: r['notes'] as String?,
       url: _link(r['url']),
+      repeating: r['repeating'] == true,
     );
   }
 
@@ -168,4 +218,4 @@ final class ChannelDeviceCalendarGateway implements DeviceCalendarGateway {
 }
 
 /// What failed to read, as a loggable enum (no raw strings in logs).
-enum _Read { calendars, events }
+enum _Read { calendars, events, event }

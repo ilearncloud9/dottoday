@@ -20,8 +20,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Settings › Calendars (docs/02 F5, docs/09 M7.1, R-02): connect the
 /// device calendars (explain, then the OS prompt; denied → explain + a
-/// way to Settings), one switch per calendar in its inherited colour, and
-/// whether shifting the day moves calendar events too.
+/// way to Settings), one switch per calendar in its inherited colour,
+/// which of them get changes sent back (M7.3), and whether shifting the
+/// day moves calendar events too.
 class CalendarsPage extends ConsumerWidget {
   const CalendarsPage({super.key});
 
@@ -117,6 +118,10 @@ class _CalendarList extends ConsumerWidget {
       (groups[account] ??= []).add(c);
     }
     final actions = ref.read(calendarActionsProvider);
+    final writable = [
+      for (final c in list)
+        if (c.enabled && !c.calendar.readOnly) c,
+    ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.l,
@@ -128,26 +133,37 @@ class _CalendarList extends ConsumerWidget {
               for (final c in rows)
                 _CalendarRow(
                   choice: c,
-                  onToggle: (on) => _toggle(context, actions, c, on),
+                  onToggle: (on) =>
+                      _save(context, actions.setEnabled(c.calendar, on: on)),
                 ),
             ],
           ),
+        if (writable.isNotEmpty) ...[
+          SettingsGroup(
+            caption: l10n.calendarsWriteBack,
+            children: [
+              for (final c in writable)
+                _CalendarRow(
+                  choice: c,
+                  toggle: c.writeBack,
+                  onToggle: (on) =>
+                      _save(context, actions.setWriteBack(c.calendar, on: on)),
+                ),
+            ],
+          ),
+          PageText(l10n.calendarsWriteBackDetail),
+        ],
       ],
     );
   }
 }
 
-/// Stores the switch at once; a failed write says so.
-void _toggle(
-  BuildContext context,
-  CalendarActions actions,
-  CalendarChoice choice,
-  bool on,
-) {
+/// Stores a switch at once; a failed write says so.
+void _save(BuildContext context, Future<Result<void, AppFailure>> saving) {
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
   unawaited(
-    actions.setEnabled(choice.calendar, on: on).then((result) {
+    saving.then((result) {
       if (result case Err(:final failure)) {
         messenger.showSnackBar(
           SnackBar(content: Text(failureMessage(l10n, failure))),
@@ -157,12 +173,18 @@ void _toggle(
   );
 }
 
-/// One calendar: its name in its inherited colour, and the switch.
+/// One calendar: its name in its inherited colour, and a switch (shown
+/// in, by default; [toggle] for another one, like write-back).
 class _CalendarRow extends StatelessWidget {
-  const _CalendarRow({required this.choice, required this.onToggle});
+  const _CalendarRow({
+    required this.choice,
+    required this.onToggle,
+    this.toggle,
+  });
 
   final CalendarChoice choice;
   final ValueChanged<bool> onToggle;
+  final bool? toggle;
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +195,7 @@ class _CalendarRow extends StatelessWidget {
       tint: t.tasks[TaskColor.fromKey(choice.colorKey)].ink,
       title: calendar.name,
       subtitle: calendar.readOnly ? context.l10n.calendarsReadOnly : null,
-      toggle: choice.enabled,
+      toggle: toggle ?? choice.enabled,
       onToggle: onToggle,
     );
   }

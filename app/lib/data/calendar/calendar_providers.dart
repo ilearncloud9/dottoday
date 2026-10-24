@@ -12,6 +12,7 @@ import 'package:dottoday/data/calendar/channel_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/drift_calendar_source_repository.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/plugin_device_calendar_gateway.dart';
+import 'package:dottoday/data/calendar/write_back_providers.dart';
 import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
@@ -69,6 +70,10 @@ CalendarImport calendarImporter(Ref ref) => CalendarImporter(
   clock: ref.watch(clockProvider),
   ids: const UuidV7Generator(),
   logger: ref.watch(loggerProvider),
+  heldLinks: (userId) async => {
+    for (final p in await ref.read(calendarWriteBackProvider).pending(userId))
+      p.link.id,
+  },
 );
 
 /// The calendar permission now; re-read with `ref.invalidate` (on resume,
@@ -162,6 +167,26 @@ final class CalendarActions {
     }
   }
 
+  /// Turns write-back for [calendar] on or off (M7.3). Turning it on
+  /// sends the moves, resizes and renames already made here too.
+  Future<Result<void, AppFailure>> setWriteBack(
+    DeviceCalendar calendar, {
+    required bool on,
+  }) async {
+    try {
+      final profile = await _profile();
+      await _ref
+          .read(calendarSourceRepositoryProvider)
+          .setWriteBack(profile.id, calendar, writeBack: on);
+      return const Ok(null);
+    } on Exception catch (e, s) {
+      _ref
+          .read(loggerProvider)
+          .warn('calendar.write_back_switch_failed', error: e, stackTrace: s);
+      return const Err(StorageFailure());
+    }
+  }
+
   /// Brings the switched-on calendars' events in now (start, resume, a
   /// switch, connecting). Failures are logged; the next run repairs them.
   Future<void> importEvents() async {
@@ -169,6 +194,11 @@ final class CalendarActions {
     final logger = _ref.read(loggerProvider);
     final choices = _ref.listen(calendarChoiceListProvider.future, (_, _) {});
     try {
+      // Edits on their way to a calendar go first, so the import reads
+      // the calendar with them in.
+      final writeBack = _ref.read(writeBackControllerProvider.notifier)
+        ..start();
+      await writeBack.flush();
       final profile = await _profile();
       final list = await choices.read();
       final zone = await _ref.read(currentDeviceZoneProvider.future);

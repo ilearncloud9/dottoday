@@ -39,7 +39,9 @@ final class CalendarImporter implements CalendarImport {
     required Clock clock,
     required IdGenerator ids,
     required Logger logger,
+    Future<Set<String>> Function(String userId)? heldLinks,
   }) : _db = db,
+       _heldLinks = heldLinks,
        _links = CalendarLinksDao(db),
        _gateway = gateway,
        _sources = sources,
@@ -62,6 +64,10 @@ final class CalendarImporter implements CalendarImport {
   final Clock _clock;
   final IdGenerator _ids;
   final Logger _logger;
+
+  /// Links with an edit still on its way to the calendar (write-back,
+  /// M7.3): the import leaves them to write-back's merge.
+  final Future<Set<String>> Function(String userId)? _heldLinks;
   Future<void> _queue = Future.value();
 
   /// From yesterday to [horizonDays] ahead, in the device zone. Nothing
@@ -109,6 +115,7 @@ final class CalendarImporter implements CalendarImport {
         now: now,
         newId: _ids.newId,
         untouchedAccountIds: untouched,
+        heldLinkIds: await _heldLinks?.call(userId) ?? const {},
       );
       return await _apply(userId, plan);
     } on Exception catch (e, st) {

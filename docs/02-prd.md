@@ -85,6 +85,13 @@ Everything here is **free tier** unless marked *Phase 2*.
   (it doesn't come back). Imported events don't remind in Dottoday unless you add alerts (the
   calendar app reminds already).
 - Write-back (optional per calendar): move/resize/rename syncs to the source calendar; failures surface as a non-blocking banner with retry.
+  Clarified in M7.3: Settings › Calendars › Send changes back, one switch per writable calendar,
+  off until chosen; turning it on also sends moves made before. Only timed, non-repeating events
+  write back (repeating instances and all-day items change here only, and the editor says so).
+  Notes and subtasks never go back. A change made in the calendar meanwhile is combined with the
+  one made here field by field; the same field changed in both places asks once (banner: Keep
+  mine / Use calendar's). An event gone from the calendar keeps the edit here until the next
+  import removes it.
 - Travel time: if the event has a location and the user enables it, a buffer block is suggested before it. (R-17)
 - Links in event descriptions open in the browser. (R-02)
   Clarified in M7.2: the task sheet and editor list the web links (http/https, up to 5) found in

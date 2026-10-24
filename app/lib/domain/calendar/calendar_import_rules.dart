@@ -85,12 +85,13 @@ DateTime allDayStartUtc(DateTime date, tz.Location location) =>
 /// inherited colour, grouped by account, then by name. A calendar the
 /// person never switched is on: connecting means "show my calendars"
 /// (R-02), and one added to the device later comes in the same way.
+/// Write-back is off until chosen, and never on for a read-only one.
 List<CalendarChoice> calendarChoices(
   List<DeviceCalendar> calendars,
   List<CalendarAccount> rows,
   Map<String, int> palette,
 ) {
-  final enabled = {for (final r in rows) ?r.externalAccountId: r.enabled};
+  final byId = {for (final r in rows) ?r.externalAccountId: r};
   final sorted = [...calendars]
     ..sort((a, b) {
       final byAccount = (a.accountName ?? '').compareTo(b.accountName ?? '');
@@ -100,8 +101,9 @@ List<CalendarChoice> calendarChoices(
     for (final c in sorted)
       CalendarChoice(
         calendar: c,
-        enabled: enabled[c.id] ?? true,
+        enabled: byId[c.id]?.enabled ?? true,
         colorKey: inheritColorKey(c.colorArgb, palette),
+        writeBack: !c.readOnly && (byId[c.id]?.writeBack ?? false),
       ),
   ];
 }

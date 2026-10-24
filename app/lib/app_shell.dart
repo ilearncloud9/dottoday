@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/calendar_import/write_back_banner.dart';
 import 'package:dottoday/features/notifications/in_app_alert_banner.dart';
 import 'package:dottoday/features/onboarding/install_banner.dart';
 import 'package:dottoday/features/sync_status/sync_banner.dart';
@@ -52,6 +53,8 @@ class AppShell extends StatelessWidget {
           // conflicts (M3f.8), above every screen.
           const InAppAlertBanner(),
           const SyncBanner(),
+          // Edits that didn't reach their calendar (M7.3).
+          const WriteBackBanner(),
           // The device moved zone: keep times or shift (M5.9).
           const ZoneBanner(),
           // The web's install offer, from the 2nd visit (M5.7).

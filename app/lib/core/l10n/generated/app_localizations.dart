@@ -5457,6 +5457,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t open that link'**
   String get taskLinkFailed;
+
+  /// Calendars page: caption of the per-calendar write-back switches (M7.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Send changes back'**
+  String get calendarsWriteBack;
+
+  /// Calendars page: what turning write-back on does (M7.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Moves, resizes and renames you make here go to the calendar, earlier ones too. Repeating and all-day events change here only.'**
+  String get calendarsWriteBackDetail;
+
+  /// Banner when edits of imported events couldn't be written to their calendar (M7.3); action: Try again.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change hasn\'t reached your calendar yet} other{{count} changes haven\'t reached your calendar yet}}'**
+  String bannerWriteBackPending(int count);
+
+  /// Banner when an imported event was changed both here and in its calendar (M7.3); actions: Keep mine / Use calendar's.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{This event changed in your calendar too} other{{count} events changed in your calendar too}}'**
+  String bannerWriteBackClash(int count);
+
+  /// Write-back clash banner: take the calendar's version (M7.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Use calendar\'s'**
+  String get bannerUseCalendars;
+
+  /// Editor, imported event: write-back is on for its calendar (M7.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Changes go back to {calendar}'**
+  String taskCalendarSends(String calendar);
+
+  /// Editor, imported event: changes are not written to its calendar (write-back off, read-only, repeating or all-day; M7.3).
+  ///
+  /// In en, this message translates to:
+  /// **'From {calendar} · changes stay in Dottoday'**
+  String taskCalendarStays(String calendar);
 }
 
 class _AppLocalizationsDelegate

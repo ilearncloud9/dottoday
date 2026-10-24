@@ -39,6 +39,59 @@ class CalendarLinksDao extends DatabaseAccessor<AppDatabase>
     ];
   }
 
+  /// [userId]'s live imported occurrences that may send changes back
+  /// (docs/09 M7.3): a writable link of a switched-on calendar of
+  /// [providers] with write-back on. Watchable, so an edit here starts a
+  /// write-back.
+  Selectable<(CalendarLinkRow, OccurrenceRow, CalendarAccountRow)>
+  writeBackCandidates(String userId, Set<String> providers) {
+    final query =
+        select(calendarLinks).join([
+          innerJoin(
+            calendarAccounts,
+            calendarAccounts.id.equalsExp(calendarLinks.accountId),
+          ),
+          innerJoin(
+            occurrences,
+            occurrences.calendarLinkId.equalsExp(calendarLinks.id),
+          ),
+        ])..where(
+          calendarLinks.userId.equals(userId) &
+              calendarLinks.readOnly.equals(false) &
+              calendarAccounts.provider.isIn(providers) &
+              calendarAccounts.writeBack.equals(true) &
+              calendarAccounts.enabled.equals(true) &
+              occurrences.deletedAt.isNull(),
+        );
+    return query.map(
+      (r) => (
+        r.readTable(calendarLinks),
+        r.readTable(occurrences),
+        r.readTable(calendarAccounts),
+      ),
+    );
+  }
+
+  /// Link [linkId] of [userId] with its calendar row, watchable (the
+  /// editor's write-back line, M7.3).
+  Selectable<(CalendarLinkRow, CalendarAccountRow)> linkWithAccount(
+    String userId,
+    String linkId,
+  ) {
+    final query =
+        select(calendarLinks).join([
+          innerJoin(
+            calendarAccounts,
+            calendarAccounts.id.equalsExp(calendarLinks.accountId),
+          ),
+        ])..where(
+          calendarLinks.userId.equals(userId) & calendarLinks.id.equals(linkId),
+        );
+    return query.map(
+      (r) => (r.readTable(calendarLinks), r.readTable(calendarAccounts)),
+    );
+  }
+
   /// Ids of [userId]'s imported occurrences that have live subtasks.
   Future<Set<String>> withSubtasks(String userId) async {
     final rows = await customSelect(
@@ -53,6 +106,9 @@ class CalendarLinksDao extends DatabaseAccessor<AppDatabase>
 
   Future<void> upsertAll(Iterable<Insertable<CalendarLinkRow>> rows) =>
       batch((b) => b.insertAllOnConflictUpdate(calendarLinks, rows.toList()));
+
+  Future<void> upsertLink(Insertable<CalendarLinkRow> row) =>
+      into(calendarLinks).insertOnConflictUpdate(row);
 
   Future<void> deleteLinks(String userId, Set<String> ids) => (delete(
     calendarLinks,

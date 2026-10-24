@@ -17,6 +17,14 @@ abstract interface class CalendarSourceRepository {
     required bool enabled,
   });
 
+  /// Turns write-back for [calendar] on or off for [userId] (M7.3),
+  /// creating its row (on) the first time.
+  Future<void> setWriteBack(
+    String userId,
+    DeviceCalendar calendar, {
+    required bool writeBack,
+  });
+
   /// The row of [calendar] for [userId], created (on) when it has none:
   /// an imported event's `calendar_links.account_id` needs one
   /// (docs/09 M7.2).

@@ -32,6 +32,7 @@ final class ImportedItem {
     required this.notes,
     required this.startUtc,
     required this.durationMin,
+    this.writable = true,
   });
 
   /// The provider's event id. EventKit gives every instance of a repeating
@@ -45,6 +46,11 @@ final class ImportedItem {
   final String? notes;
   final DateTime startUtc;
   final int durationMin;
+
+  /// Whether a change made here can go back to the event (M7.3): only a
+  /// timed, non-repeating one. An all-day item is one day of an event
+  /// that may span several; a repeating instance shares its series' id.
+  final bool writable;
 
   /// `calendar_links.external_event_id`: `<eventId>@<keyMs>`.
   String get key => importKey(eventId, keyMs);
@@ -81,7 +87,7 @@ List<ImportedItem> importedItems(
       event.id.length > maxExternalEventIdLength - _keySuffix) {
     return const [];
   }
-  final title = _title(event.title, untitled);
+  final title = importedTitle(event.title, untitled);
   final notes = importedNotes(event.description, event.url);
   if (event.allDay) {
     return [
@@ -93,10 +99,10 @@ List<ImportedItem> importedItems(
           notes: notes,
           startUtc: allDayStartUtc(date, location),
           durationMin: maxDurationMin,
+          writable: false,
         ),
     ];
   }
-  final minutes = event.endUtc.difference(event.startUtc).inMinutes;
   return [
     ImportedItem(
       eventId: event.id,
@@ -104,14 +110,20 @@ List<ImportedItem> importedItems(
       title: title,
       notes: notes,
       startUtc: event.startUtc,
-      // Longer than a day shows its first 24 h; a zero-length reminder
-      // gets the shortest block.
-      durationMin: minutes.clamp(minDurationMin, maxDurationMin),
+      durationMin: importedDurationMin(event.startUtc, event.endUtc),
+      writable: !event.repeating,
     ),
   ];
 }
 
-String _title(String raw, String untitled) {
+/// How long a timed event's block is: longer than a day shows its first
+/// 24 h; a zero-length reminder gets the shortest block.
+int importedDurationMin(DateTime startUtc, DateTime endUtc) =>
+    endUtc.difference(startUtc).inMinutes.clamp(minDurationMin, maxDurationMin);
+
+/// [raw] as a block title: control characters out, clipped to 200, empty
+/// → [untitled] (06 §7).
+String importedTitle(String raw, String untitled) {
   final clean = raw.replaceAll(_titleControl, ' ').trim();
   if (clean.isEmpty) return untitled;
   return clean.length <= maxTitleLength

@@ -83,6 +83,9 @@ final class CalendarImportPlan {
 ///   anywhere for a calendar now off or gone, is removed — except links
 ///   of [untouchedAccountIds] (calendars that couldn't be read: an error
 ///   never deletes anything, R-08).
+/// - [heldLinkIds] (edits here still on their way to the calendar,
+///   M7.3) still match their items, so nothing is duplicated, but are
+///   neither changed nor removed: write-back merges them.
 CalendarImportPlan planCalendarImport({
   required String userId,
   required List<ImportSource> sources,
@@ -93,8 +96,15 @@ CalendarImportPlan planCalendarImport({
   required DateTime now,
   required String Function() newId,
   Set<String> untouchedAccountIds = const {},
+  Set<String> heldLinkIds = const {},
 }) {
-  final out = _PlanBuilder(userId: userId, tzId: tzId, now: now, newId: newId);
+  final out = _PlanBuilder(
+    userId: userId,
+    tzId: tzId,
+    now: now,
+    newId: newId,
+    held: heldLinkIds,
+  );
   final bySource = {for (final s in sources) s.accountId: s};
   final inWindow = <String, List<LinkedOccurrence>>{};
   bool within(int ms) =>
@@ -132,7 +142,7 @@ void _reconcile(
   final unmatched = <ImportedItem>[];
   for (final item in items) {
     final link = byKey.remove(item.key);
-    link == null ? unmatched.add(item) : out.update(link, item);
+    link == null ? unmatched.add(item) : out.update(source, link, item);
   }
   // Moved in the calendar: one item and one link left for the event.
   final leftByEvent = <String, List<LinkedOccurrence>>{};
@@ -147,7 +157,7 @@ void _reconcile(
   for (final MapEntry(key: event, value: news) in newByEvent.entries) {
     final left = leftByEvent[event];
     if (news.length == 1 && left != null && left.length == 1) {
-      out.update(left.single, news.single);
+      out.update(source, left.single, news.single);
       byKey.remove(left.single.link.externalEventId);
     } else {
       for (final i in news) {
@@ -164,12 +174,14 @@ final class _PlanBuilder {
     required this.tzId,
     required this.now,
     required this.newId,
+    required this.held,
   });
 
   final String userId;
   final String tzId;
   final DateTime now;
   final String Function() newId;
+  final Set<String> held;
   final _links = <CalendarLink>[];
   final _occurrences = <Occurrence>[];
   final _removeOccurrences = <String>{};
@@ -184,7 +196,7 @@ final class _PlanBuilder {
       externalEventId: item.key,
       etag: ImportFingerprint.of(item).encode(),
       lastSyncedUtc: now,
-      readOnly: source.calendar.readOnly,
+      readOnly: source.calendar.readOnly || !item.writable,
     );
     _links.add(link);
     _occurrences.add(
@@ -206,12 +218,27 @@ final class _PlanBuilder {
   }
 
   /// Applies what changed in the calendar since the last import.
-  void update(LinkedOccurrence existing, ImportedItem item) {
-    final etag = ImportFingerprint.of(item).encode();
+  void update(
+    ImportSource source,
+    LinkedOccurrence existing,
+    ImportedItem item,
+  ) {
     final link = existing.link;
-    if (link.etag == etag && link.externalEventId == item.key) return;
+    if (held.contains(link.id)) return;
+    final etag = ImportFingerprint.of(item).encode();
+    final readOnly = source.calendar.readOnly || !item.writable;
+    if (link.etag == etag &&
+        link.externalEventId == item.key &&
+        link.readOnly == readOnly) {
+      return;
+    }
     _links.add(
-      link.copyWith(externalEventId: item.key, etag: etag, lastSyncedUtc: now),
+      link.copyWith(
+        externalEventId: item.key,
+        etag: etag,
+        lastSyncedUtc: now,
+        readOnly: readOnly,
+      ),
     );
     final o = existing.occurrence;
     if (existing._hidden || o == null) return;
@@ -220,6 +247,7 @@ final class _PlanBuilder {
   }
 
   void remove(LinkedOccurrence existing) {
+    if (held.contains(existing.link.id)) return;
     _removeLinks.add(existing.link.id);
     final o = existing.occurrence;
     if (existing._hidden || o == null) return;

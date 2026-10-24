@@ -58,6 +58,20 @@ final class DriftCalendarSourceRepository implements CalendarSourceRepository {
   });
 
   @override
+  Future<void> setWriteBack(
+    String userId,
+    DeviceCalendar calendar, {
+    required bool writeBack,
+  }) => _db.transaction(() async {
+    final existing = await _find(userId, calendar);
+    final account = (existing ?? _create(userId, calendar)).copyWith(
+      writeBack: writeBack,
+      updatedAt: _clock.nowUtc(),
+    );
+    await _dao.upsert(_codec.encode<CalendarAccountRow>(account.toJson()));
+  });
+
+  @override
   Future<CalendarAccount> ensure(String userId, DeviceCalendar calendar) =>
       _db.transaction(() async {
         final existing = await _find(userId, calendar);

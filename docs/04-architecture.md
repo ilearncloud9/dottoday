@@ -114,7 +114,7 @@ write and on app start/resume. Web uses a service worker + server-sent push for 
 iOS/Android: `device_calendar` for read, plus write-back when permission is granted. macOS:
 `device_calendar` has no macOS implementation, so a small EventKit bridge in
 `macos/Runner/CalendarBridge.swift` (method channel `dottoday/calendars`: `status`, `request`,
-`calendars`, `events`) implements the same `DeviceCalendarGateway` (M7.1b); EventKit reports
+`calendars`, `events`, and for write-back `event`, `update`) implements the same `DeviceCalendarGateway` (M7.1b); EventKit reports
 "not asked" itself and sends all-day events as `yyyy-MM-dd` dates. Web (and as a
 cross-device option): Google/Microsoft OAuth handled by Supabase Edge Functions storing refresh tokens
 encrypted server-side; the function fetches events and upserts into `calendar_events` for the user;
@@ -126,6 +126,14 @@ switched-on calendars' events from yesterday to 90 days ahead are reconciled wit
 in one transaction (links, occurrences validated like the write path, removals), then the usual
 after-write effects run. Nothing is read without the permission, and a calendar that fails to read
 keeps its imports (R-08). Details in docs/05 `calendar_links`.
+Write-back (M7.3, `CalendarWriteBack` in `data/calendar/`, pure `mergeWriteBack` in
+`domain/calendar/`): per provider a `CalendarWriter` (`read` → event + opaque version; `write` only
+if still at that version). Device calendars use `DeviceCalendarWriter` (version = fingerprint, checked
+right before the write); M7.4 adds Google/Microsoft writers whose version is the HTTP etag. Pending =
+an imported occurrence of a write-back calendar whose start, length or title differs from its link's
+fingerprint; `WriteBackController` sends them shortly after an edit and before each import, merges
+field by field against the fingerprint (clash on the same field → the banner asks), then stores the
+merged fingerprint. The import leaves pending links alone.
 
 ## 8. Platform channels / plugins
 

@@ -51,6 +51,7 @@ void main() {
     List<ImportSource> sources,
     List<LinkedOccurrence> existing, {
     Set<String> untouched = const {},
+    Set<String> held = const {},
   }) => planCalendarImport(
     userId: _user,
     sources: sources,
@@ -61,6 +62,7 @@ void main() {
     now: _now,
     newId: () => 'new-${++n}',
     untouchedAccountIds: untouched,
+    heldLinkIds: held,
   );
 
   /// What [first] stored, as the next run reads it back.
@@ -291,5 +293,68 @@ void main() {
     final again = plan([source(week.skip(1).toList())], stored(p));
     expect(again.removeOccurrenceIds, hasLength(1));
     expect(again.occurrences, isEmpty);
+  });
+
+  group('write-back (M7.3)', () {
+    test('only timed, non-repeating events in writable calendars', () {
+      final weekly = ExternalEvent(
+        id: 'R1',
+        calendarId: 'work',
+        title: 'Weekly',
+        startUtc: nine,
+        endUtc: nine.add(const Duration(minutes: 30)),
+        repeating: true,
+      );
+      final offsite = ExternalEvent(
+        id: 'A1',
+        calendarId: 'work',
+        title: 'Offsite',
+        startUtc: DateTime.utc(2026, 10, 22),
+        endUtc: DateTime.utc(2026, 10, 23),
+        allDay: true,
+      );
+      final p = plan([
+        source([_event('E1', nine), weekly, offsite]),
+      ], const []);
+      final readOnly = {
+        for (final l in p.links) l.externalEventId.split('@').first: l.readOnly,
+      };
+      expect(readOnly, {'E1': false, 'R1': true, 'A1': true});
+    });
+
+    test('an older link of a now-repeating event turns read-only', () {
+      final first = plan([
+        source([_event('E1', nine)]),
+      ], const []);
+      final repeating = ExternalEvent(
+        id: 'E1',
+        calendarId: 'work',
+        title: 'Standup',
+        startUtc: nine,
+        endUtc: nine.add(const Duration(minutes: 30)),
+        repeating: true,
+      );
+      final p = plan([
+        source([repeating]),
+      ], stored(first));
+      expect(p.links.single.readOnly, isTrue);
+      expect(p.occurrences, isEmpty, reason: 'nothing else changed');
+    });
+
+    test('a held link is neither changed, removed nor duplicated', () {
+      final first = plan([
+        source([_event('E1', nine), _event('E2', nine)]),
+      ], const []);
+      final held = {for (final l in first.links) l.id};
+      // E1 renamed in the calendar, E2 gone: both wait for write-back.
+      final p = plan(
+        [
+          source([_event('E1', nine, title: 'Sync')]),
+        ],
+        stored(first),
+        held: held,
+      );
+      expect(p.isEmpty, isTrue);
+    });
   });
 }

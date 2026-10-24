@@ -45,7 +45,7 @@ TLS 1.2+ only; certificate pinning not used (Supabase rotates); HSTS on web.
 - Children: 13+ age gate in onboarding copy.
 
 ## 7. Input validation
-- Every external input validated at the boundary: Quick Add text (length, control chars stripped), import JSON (schema + size ≤ 25 MB), calendar events (field lengths: titles cleaned of control characters and clipped to 200, notes to 10 000, ids that don't fit their column skipped, never cut; event links kept only when http(s) — M7.1/M7.2), deep links (allow-listed routes only), notification payloads (ID lookups only).
+- Every external input validated at the boundary: Quick Add text (length, control chars stripped), import JSON (schema + size ≤ 25 MB), calendar events (field lengths: titles cleaned of control characters and clipped to 200, notes to 10 000, ids that don't fit their column skipped, never cut; event links kept only when http(s) — M7.1/M7.2; write-back sends only start, end and a title already validated as a task title, and an Android event id must be numeric before it reaches the plugin's query — M7.3), deep links (allow-listed routes only), notification payloads (ID lookups only).
 - Server CHECK constraints mirror client rules (see data model).
 
 ## 8. Platform hardening

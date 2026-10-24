@@ -3658,4 +3658,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get taskLinkFailed => 'Couldn\'t open that link';
+
+  @override
+  String get calendarsWriteBack => 'Send changes back';
+
+  @override
+  String get calendarsWriteBackDetail =>
+      'Moves, resizes and renames you make here go to the calendar, earlier ones too. Repeating and all-day events change here only.';
+
+  @override
+  String bannerWriteBackPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes haven\'t reached your calendar yet',
+      one: '1 change hasn\'t reached your calendar yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bannerWriteBackClash(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count events changed in your calendar too',
+      one: 'This event changed in your calendar too',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bannerUseCalendars => 'Use calendar\'s';
+
+  @override
+  String taskCalendarSends(String calendar) {
+    return 'Changes go back to $calendar';
+  }
+
+  @override
+  String taskCalendarStays(String calendar) {
+    return 'From $calendar · changes stay in Dottoday';
+  }
 }

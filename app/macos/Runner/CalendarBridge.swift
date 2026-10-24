@@ -4,8 +4,9 @@ import FlutterMacOS
 
 /// Mac device calendars for the app over `dottoday/calendars`
 /// (lib/data/calendar/channel_device_calendar_gateway.dart, docs/09 M7.1b):
-/// `device_calendar` has no macOS implementation. Read-only for now; write
-/// back is M7.3. Titles and notes are never logged (CLAUDE.md §4).
+/// `device_calendar` has no macOS implementation. Write-back (M7.3) changes
+/// one timed, non-repeating event's start, end and title in place. Titles
+/// and notes are never logged (CLAUDE.md §4).
 final class CalendarBridge {
   private let store = EKEventStore()
   private var channel: FlutterMethodChannel?
@@ -19,6 +20,8 @@ final class CalendarBridge {
       case "request": self.request(result)
       case "calendars": result(self.calendars())
       case "events": self.events(call.arguments as? [String: Any], result)
+      case "event": result(self.event(call.arguments as? [String: Any]))
+      case "update": result(self.update(call.arguments as? [String: Any]))
       default: result(FlutterMethodNotImplemented)
       }
     }
@@ -81,6 +84,49 @@ final class CalendarBridge {
     }
   }
 
+  /// One event of one calendar by id, or nil when it is gone.
+  private func event(_ args: [String: Any]?) -> Any? {
+    guard Self.permission() == "granted" else { return Self.denied }
+    guard let calendarId = args?["calendarId"] as? String,
+      let eventId = args?["eventId"] as? String
+    else { return Self.badArgs }
+    guard let e = find(calendarId, eventId) else { return nil }
+    return Self.row(e)
+  }
+
+  /// "written" / "gone" / "notWritable", as Dart's `EventWriteResult`.
+  /// Only start, end and (when sent) title change; span `.thisEvent`,
+  /// and repeating events are refused, so a series is never touched.
+  private func update(_ args: [String: Any]?) -> Any {
+    guard Self.permission() == "granted" else { return Self.denied }
+    guard let calendarId = args?["calendarId"] as? String,
+      let eventId = args?["eventId"] as? String,
+      let start = (args?["startMs"] as? NSNumber)?.doubleValue,
+      let end = (args?["endMs"] as? NSNumber)?.doubleValue, end > start
+    else { return Self.badArgs }
+    guard let e = find(calendarId, eventId) else { return "gone" }
+    guard e.calendar.allowsContentModifications, !e.isAllDay, !e.hasRecurrenceRules else {
+      return "notWritable"
+    }
+    e.startDate = Date(timeIntervalSince1970: start / 1000)
+    e.endDate = Date(timeIntervalSince1970: end / 1000)
+    if let title = args?["title"] as? String { e.title = title }
+    do {
+      try store.save(e, span: .thisEvent, commit: true)
+      return "written"
+    } catch {
+      store.reset()
+      return FlutterError(code: "write_failed", message: nil, details: nil)
+    }
+  }
+
+  private func find(_ calendarId: String, _ eventId: String) -> EKEvent? {
+    guard let e = store.event(withIdentifier: eventId),
+      e.calendar?.calendarIdentifier == calendarId
+    else { return nil }
+    return e
+  }
+
   /// One event. All-day ones carry their dates in this Mac's calendar
   /// (EventKit keeps them as floating local days), timed ones instants.
   private static func row(_ e: EKEvent) -> [String: Any?]? {
@@ -89,7 +135,7 @@ final class CalendarBridge {
     }
     var row: [String: Any?] = [
       "id": id, "title": e.title, "allDay": e.isAllDay, "location": e.location,
-      "notes": e.notes, "url": e.url?.absoluteString,
+      "notes": e.notes, "url": e.url?.absoluteString, "repeating": e.hasRecurrenceRules,
     ]
     if e.isAllDay {
       row["startDay"] = day(start)
@@ -114,4 +160,5 @@ final class CalendarBridge {
   }
 
   private static let denied = FlutterError(code: "denied", message: nil, details: nil)
+  private static let badArgs = FlutterError(code: "bad_args", message: nil, details: nil)
 }

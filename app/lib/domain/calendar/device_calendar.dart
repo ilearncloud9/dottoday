@@ -56,6 +56,7 @@ final class ExternalEvent {
     this.location,
     this.description,
     this.url,
+    this.repeating = false,
   });
 
   final String id;
@@ -67,6 +68,43 @@ final class ExternalEvent {
   final String? location;
   final String? description;
   final Uri? url;
+
+  /// Whether it is an instance of a repeating event. The device stores
+  /// can only change the whole series through the plugin, so such an
+  /// instance is never written back (docs/09 M7.3).
+  final bool repeating;
+}
+
+/// A move, resize or rename of one event sent to its calendar (docs/09
+/// M7.3). A null [title] leaves the calendar's own title as it is.
+final class EventUpdate {
+  const EventUpdate({
+    required this.calendarId,
+    required this.eventId,
+    required this.startUtc,
+    required this.endUtc,
+    this.title,
+  });
+
+  final String calendarId;
+  final String eventId;
+  final DateTime startUtc;
+  final DateTime endUtc;
+  final String? title;
+}
+
+/// What a device calendar did with an [EventUpdate].
+enum EventWriteResult {
+  written,
+
+  /// The event is no longer in the calendar.
+  gone,
+
+  /// The calendar or the event can't take changes (read only, repeating).
+  notWritable,
+
+  /// Anything else: no permission, the store refused; worth a retry.
+  failed,
 }
 
 /// The device calendars (docs/04 §7): the OS permission, the list, and
@@ -92,6 +130,17 @@ abstract interface class DeviceCalendarGateway {
     DateTime fromUtc,
     DateTime toUtc,
   );
+
+  /// The event [eventId] of [calendarId] as the calendar has it now, or
+  /// null when it is gone (write-back's conflict check, M7.3).
+  Future<Result<ExternalEvent?, AppFailure>> event(
+    String calendarId,
+    String eventId,
+  );
+
+  /// Changes the start, end and (when given) title of one event, leaving
+  /// everything else on it as it is (M7.3).
+  Future<EventWriteResult> updateEvent(EventUpdate update);
 }
 
 /// A device calendar as Settings › Calendars lists it: whether its events
@@ -101,9 +150,13 @@ final class CalendarChoice {
     required this.calendar,
     required this.enabled,
     required this.colorKey,
+    this.writeBack = false,
   });
 
   final DeviceCalendar calendar;
   final bool enabled;
   final String colorKey;
+
+  /// Whether moves, resizes and renames go back to it (opt-in, M7.3).
+  final bool writeBack;
 }

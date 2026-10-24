@@ -51,7 +51,7 @@ by `calendar_accounts.id`, accessible only from Edge Functions.
 Device calendars (M7.1): one **local** row per device calendar the person has switched in Settings ›
 Calendars — `provider` `apple_device` / `android_device`, `external_account_id` = the device's calendar
 id, `label` = its name (clipped to 80), `enabled` = the switch, `write_back` = M7.3's per-calendar
-opt-in. A calendar with no row is on. These rows never sync (device ids mean nothing elsewhere).
+opt-in (off until chosen; never for a read-only calendar). A calendar with no row is on. These rows never sync (device ids mean nothing elsewhere).
 
 ### `calendar_links`
 `id, user_id, account_id, external_calendar_id, external_event_id, etag, last_synced_utc,
@@ -71,6 +71,12 @@ occurrence outright when nothing of the person's is on it, else soft-deletes it 
 (`calendar_link_id` null) so Trash keeps the subtasks/notes; an imported occurrence the person
 deleted keeps its link, so the event is not brought back. Imported events carry no Dottoday alerts
 (`alerts` null; the calendar app reminds) until the person adds some.
+Write-back (M7.3): `read_only` is true when nothing may go back to the event — the calendar is
+read-only, or the item is all-day or an instance of a repeating event (refreshed by every import;
+also set when a write finds the event gone or no longer writable). The `etag` fingerprint is the
+base of write-back's three-way merge: after a successful write it holds the merged start, length and
+title (notes hash unchanged, notes never go back) and `external_event_id` the moved instance's key,
+so the next import sees nothing new.
 
 ### `conflicts`
 `id, user_id, entity, entity_id, field, mine jsonb, theirs jsonb, created_at, resolved_at?`
