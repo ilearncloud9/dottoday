@@ -106,7 +106,9 @@ bring_to_front() {
 # A test asks for a screenshot with `DEVICE_SHOT <name>` (saved as
 # build/device_shots/<platform>_<name>.png) and for calendar access back
 # with `DEVICE_GRANT calendar`; `DEVICE_FRONT app` brings the app back; `DEVICE_AWAY <name>` (before a
-# tap that leaves the app) waits, shoots and brings it back.
+# tap that leaves the app) waits, shoots and brings it back; `DEVICE_BACK
+# <name>` (before a tap that opens a system sheet) waits, shoots and presses
+# Back on Android.
 shoot() {
   local out="build/device_shots/${platform}_$1.png"
   mkdir -p build/device_shots
@@ -174,13 +176,25 @@ run_one() {
     ${device:+-d "$device"} --dart-define-from-file="$defines" >>"$log" 2>&1 &
   local drive=$! done_marks="" mark
   while kill -0 "$drive" 2>/dev/null; do
-    for mark in $(grep -oE 'DEVICE_(SHOT|GRANT|FRONT|AWAY) [a-z0-9_]+' "$log" | tr ' ' ':'); do
+    for mark in $(grep -oE 'DEVICE_(SHOT|GRANT|FRONT|AWAY|BACK) [a-z0-9_]+' "$log" | tr ' ' ':'); do
       case " $done_marks " in *" $mark "*) continue ;; esac
       done_marks="$done_marks $mark"
       case "$mark" in
         DEVICE_SHOT:*) shoot "${mark#DEVICE_SHOT:}" ;;
         DEVICE_GRANT:calendar) calendar_access grant >>"$log" 2>&1 ;;
         DEVICE_FRONT:*) bring_to_front >>"$log" 2>&1 ;;
+        DEVICE_BACK:*)
+          # A system sheet over the app (Android's share chooser, the mail
+          # app): shoot it, then Back — `am start` would re-create the
+          # activity there and restart the test (found in M8.5).
+          sleep 5
+          shoot "${mark#DEVICE_BACK:}"
+          if [[ "$platform" == android ]]; then
+            a shell input keyevent KEYCODE_BACK >>"$log" 2>&1
+          else
+            bring_to_front >>"$log" 2>&1
+          fi
+          ;;
         DEVICE_AWAY:*)
           # The test is about to send the app away (browser, Settings);
           # iOS suspends it there, so the script shoots and brings it back.

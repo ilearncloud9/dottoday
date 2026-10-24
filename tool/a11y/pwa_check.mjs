@@ -27,6 +27,11 @@ async function flutterShown(page) {
   const context = await browser.newContext();
   const page = await context.newPage();
   const violations = [];
+  // flutter-view attaches before main() runs, so it alone can't tell a
+  // started app from one that threw on start (found in M8.5: a build whose
+  // env failed to load still "opened offline").
+  const pageErrors = [];
+  page.on('pageerror', (e) => pageErrors.push(e.message));
   page.on('console', (m) => { if (/Content Security Policy|Refused to/.test(m.text())) violations.push(m.text()); });
   await page.goto(baseUrl);
   if (!(await flutterShown(page))) fail('app did not start online');
@@ -48,6 +53,8 @@ async function flutterShown(page) {
   await context.setOffline(true);
   await page.reload();
   (await flutterShown(page)) ? ok('opens offline after one visit') : fail('does not open offline after one visit');
+  await page.waitForTimeout(3000);
+  pageErrors.length === 0 ? ok('no uncaught errors') : fail(`uncaught errors: ${pageErrors.slice(0, 3).join(' | ')}`);
   await context.close();
 }
 
