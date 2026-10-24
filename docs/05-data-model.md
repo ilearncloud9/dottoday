@@ -48,6 +48,10 @@ occurrences.
 external_account_id, write_back bool, enabled bool, created_at, updated_at`
 OAuth refresh tokens are **not** in this table — they live in `vault.secrets` (Supabase Vault), keyed
 by `calendar_accounts.id`, accessible only from Edge Functions.
+Device calendars (M7.1): one **local** row per device calendar the person has switched in Settings ›
+Calendars — `provider` `apple_device` / `android_device`, `external_account_id` = the device's calendar
+id, `label` = its name (clipped to 80), `enabled` = the switch, `write_back` = M7.3's per-calendar
+opt-in. A calendar with no row is on. These rows never sync (device ids mean nothing elsewhere).
 
 ### `calendar_links`
 `id, user_id, account_id, external_calendar_id, external_event_id, etag, last_synced_utc,

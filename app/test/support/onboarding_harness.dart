@@ -1,8 +1,10 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
+import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/onboarding/onboarding_gate.dart';
@@ -24,6 +26,7 @@ Future<ProviderContainer> pumpOnboarding(
   FakeOccurrenceRepository? repo,
   Size size = const Size(390, 844),
   NotificationPermission? permission,
+  DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
 }) async {
   tester.view
     ..physicalSize = size
@@ -37,6 +40,7 @@ Future<ProviderContainer> pumpOnboarding(
         profile: testProfile(),
         notificationPermission:
             permission ?? const UnwiredNotificationPermission(),
+        calendarGateway: calendarGateway,
       ),
       onboardingProvider.overrideWith(() => FakeOnboarding(progress)),
       // "Open today" goes to /today (M6.1); this app has no routes of its own.

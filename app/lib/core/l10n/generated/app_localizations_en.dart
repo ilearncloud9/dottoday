@@ -2627,7 +2627,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calendarsIntro =>
-      'See your calendar events on the timeline, read-only. Free, always.';
+      'Your calendar events on the timeline, next to your tasks. Free, always.';
 
   @override
   String get calendarsConnected => 'Connected';
@@ -2651,6 +2651,34 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get calendarsMoveEventsDetail =>
       'Off: events stay put when you shift the rest';
+
+  @override
+  String get calendarsAsk =>
+      'Dottoday asks your device once to see your calendars. Then you choose which ones come in.';
+
+  @override
+  String get calendarsOnDevice => 'On this device';
+
+  @override
+  String get calendarsNoneOnDevice => 'No calendars on this device';
+
+  @override
+  String get calendarsReadOnly => 'Read-only';
+
+  @override
+  String get calendarsPickInSettings =>
+      'Connected · choose calendars in Settings';
+
+  @override
+  String get calendarDeniedTitle => 'Calendar access is off';
+
+  @override
+  String get calendarDeniedBody =>
+      'Dottoday can\'t show your events until calendar access is allowed in your device settings.';
+
+  @override
+  String get calendarSettingsPath =>
+      'Open your device\'s Settings, find Dottoday and allow access to Calendars.';
 
   @override
   String get exportIntro =>

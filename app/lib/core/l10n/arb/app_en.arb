@@ -3913,7 +3913,7 @@
   "@accountDeleteWord": {
     "description": "The word typed to confirm account deletion."
   },
-  "calendarsIntro": "See your calendar events on the timeline, read-only. Free, always.",
+  "calendarsIntro": "Your calendar events on the timeline, next to your tasks. Free, always.",
   "@calendarsIntro": {
     "description": "Calendars page intro."
   },
@@ -3944,6 +3944,38 @@
   "calendarsMoveEventsDetail": "Off: events stay put when you shift the rest",
   "@calendarsMoveEventsDetail": {
     "description": "Calendars page toggle subtitle."
+  },
+  "calendarsAsk": "Dottoday asks your device once to see your calendars. Then you choose which ones come in.",
+  "@calendarsAsk": {
+    "description": "Calendars page: explains the permission prompt before Connect."
+  },
+  "calendarsOnDevice": "On this device",
+  "@calendarsOnDevice": {
+    "description": "Calendars page group caption for calendars without an account name."
+  },
+  "calendarsNoneOnDevice": "No calendars on this device",
+  "@calendarsNoneOnDevice": {
+    "description": "Calendars page: permission granted but the device has no calendars."
+  },
+  "calendarsReadOnly": "Read-only",
+  "@calendarsReadOnly": {
+    "description": "Calendars page: subtitle part for a calendar Dottoday can't write to."
+  },
+  "calendarsPickInSettings": "Connected · choose calendars in Settings",
+  "@calendarsPickInSettings": {
+    "description": "Onboarding O4: the Connect a calendar row once access is allowed."
+  },
+  "calendarDeniedTitle": "Calendar access is off",
+  "@calendarDeniedTitle": {
+    "description": "Permission-denied notice title for calendars."
+  },
+  "calendarDeniedBody": "Dottoday can't show your events until calendar access is allowed in your device settings.",
+  "@calendarDeniedBody": {
+    "description": "Permission-denied notice body for calendars."
+  },
+  "calendarSettingsPath": "Open your device's Settings, find Dottoday and allow access to Calendars.",
+  "@calendarSettingsPath": {
+    "description": "Shown when the app can't open the system settings itself."
   },
   "exportIntro": "Your tasks are yours. Export is free, always, with or without an account.",
   "@exportIntro": {

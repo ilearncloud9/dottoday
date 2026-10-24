@@ -3835,7 +3835,7 @@ abstract class AppLocalizations {
   /// Calendars page intro.
   ///
   /// In en, this message translates to:
-  /// **'See your calendar events on the timeline, read-only. Free, always.'**
+  /// **'Your calendar events on the timeline, next to your tasks. Free, always.'**
   String get calendarsIntro;
 
   /// Calendars page group caption.
@@ -3879,6 +3879,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Off: events stay put when you shift the rest'**
   String get calendarsMoveEventsDetail;
+
+  /// Calendars page: explains the permission prompt before Connect.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday asks your device once to see your calendars. Then you choose which ones come in.'**
+  String get calendarsAsk;
+
+  /// Calendars page group caption for calendars without an account name.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device'**
+  String get calendarsOnDevice;
+
+  /// Calendars page: permission granted but the device has no calendars.
+  ///
+  /// In en, this message translates to:
+  /// **'No calendars on this device'**
+  String get calendarsNoneOnDevice;
+
+  /// Calendars page: subtitle part for a calendar Dottoday can't write to.
+  ///
+  /// In en, this message translates to:
+  /// **'Read-only'**
+  String get calendarsReadOnly;
+
+  /// Onboarding O4: the Connect a calendar row once access is allowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected · choose calendars in Settings'**
+  String get calendarsPickInSettings;
+
+  /// Permission-denied notice title for calendars.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar access is off'**
+  String get calendarDeniedTitle;
+
+  /// Permission-denied notice body for calendars.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday can\'t show your events until calendar access is allowed in your device settings.'**
+  String get calendarDeniedBody;
+
+  /// Shown when the app can't open the system settings itself.
+  ///
+  /// In en, this message translates to:
+  /// **'Open your device\'s Settings, find Dottoday and allow access to Calendars.'**
+  String get calendarSettingsPath;
 
   /// Export page intro.
   ///

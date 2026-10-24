@@ -26,6 +26,7 @@ specified here — never "not available on X".
 - Menu-bar extra "Next up" (NSStatusItem) via a small Swift plugin; optional.
 - Notifications via UNUserNotificationCenter; widgets via WidgetKit (share app group with iOS).
 - Sandbox entitlements: calendars, network client, user-selected file read/write (export).
+- Calendar: `device_calendar` has no macOS support; EventKit goes through a small method channel in the Runner (M7.1b), same `DeviceCalendarGateway` as iOS.
 - Window opens at 1280×800, min 960×640 (owner, after the M4 sweep); remembers size/position; supports multiple windows (Today + Inbox) in Phase 2.
 - Menu keys that text fields also use (⌘Z, ⌘←/⌘→) have no native key equivalent; Flutter handles them (M5.5).
 - Crash-free target 99.5 % (R-13); run on Intel and Apple Silicon in CI.

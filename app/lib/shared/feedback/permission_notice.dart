@@ -1,22 +1,29 @@
 import 'dart:async';
 
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 
-/// "Notifications are off" (docs/03 §3.8 permission-denied: explain + a
-/// way to system settings; docs/09 M3f.8, R-10). [onOpenSettings] returns
-/// false where the app can't open them, and the notice then says where
-/// to go instead.
+/// "Notifications are off" / "Calendar access is off" (docs/03 §3.8
+/// permission-denied: explain + a way to system settings; docs/09 M3f.8
+/// and M7.1, R-10, R-02). [onOpenSettings] returns false where the app
+/// can't open them, and the notice then says where to go instead.
 class PermissionNotice extends StatelessWidget {
-  const PermissionNotice({required this.onOpenSettings, super.key});
+  const PermissionNotice({
+    required this.onOpenSettings,
+    this.permission = AppPermission.notifications,
+    super.key,
+  });
 
   final Future<bool> Function() onOpenSettings;
+  final AppPermission permission;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
+    final calendar = permission == AppPermission.calendar;
     return Semantics(
       container: true,
       child: DecoratedBox(
@@ -31,8 +38,16 @@ class PermissionNotice extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: DotSpace.xs,
             children: [
-              _Heading(text: l10n.notifDeniedTitle),
-              Text(l10n.notifDeniedBody, style: t.styles.body),
+              _Heading(
+                glyph: calendar ? DotGlyphs.calendar : DotGlyphs.bell,
+                text: calendar
+                    ? l10n.calendarDeniedTitle
+                    : l10n.notifDeniedTitle,
+              ),
+              Text(
+                calendar ? l10n.calendarDeniedBody : l10n.notifDeniedBody,
+                style: t.styles.body,
+              ),
               TextButton(
                 onPressed: () => unawaited(_open(context)),
                 child: Text(l10n.notifOpenSettings),
@@ -46,7 +61,9 @@ class PermissionNotice extends StatelessWidget {
 
   Future<void> _open(BuildContext context) async {
     final messenger = ScaffoldMessenger.of(context);
-    final path = context.l10n.notifSettingsPath;
+    final path = permission == AppPermission.calendar
+        ? context.l10n.calendarSettingsPath
+        : context.l10n.notifSettingsPath;
     if (await onOpenSettings()) return;
     messenger.showSnackBar(SnackBar(content: Text(path)));
   }
@@ -78,7 +95,7 @@ class ExactAlarmNotice extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: DotSpace.xs,
             children: [
-              _Heading(text: l10n.exactTitle),
+              _Heading(glyph: DotGlyphs.bell, text: l10n.exactTitle),
               Text(l10n.exactBody, style: t.styles.body),
               TextButton(onPressed: onAllow, child: Text(l10n.exactAllow)),
             ],
@@ -91,8 +108,9 @@ class ExactAlarmNotice extends StatelessWidget {
 
 /// 🔔 and "Notifications are off".
 class _Heading extends StatelessWidget {
-  const _Heading({required this.text});
+  const _Heading({required this.glyph, required this.text});
 
+  final DotGlyph glyph;
   final String text;
 
   @override
@@ -101,7 +119,7 @@ class _Heading extends StatelessWidget {
     return Row(
       spacing: DotSpace.s,
       children: [
-        DotIcon(DotGlyphs.bell, color: t.colors.muted),
+        DotIcon(glyph, color: t.colors.muted),
         Expanded(
           child: Semantics(
             header: true,

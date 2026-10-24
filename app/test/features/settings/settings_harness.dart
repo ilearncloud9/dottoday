@@ -1,12 +1,16 @@
+import 'package:dottoday/bootstrap.dart';
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
+import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
+import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
@@ -54,6 +58,8 @@ Future<SettingsHarness> pumpSettings(
   List<String> recentSearches = const [],
   NotificationPermission? permission,
   ExactAlarms exactAlarms = const AlwaysExactAlarms(),
+  DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
+  CalendarSourceRepository? calendarSources,
 }) async {
   tester.view
     ..physicalSize = size
@@ -62,6 +68,8 @@ Future<SettingsHarness> pumpSettings(
   final links = FakeLinkLauncher();
   final occurrences = FakeOccurrenceRepository(rows);
   final container = ProviderContainer(
+    // As the app's root scope: a failed provider shows its error state.
+    retry: noProviderRetry,
     overrides: [
       ...timelineOverrides(
         now: DateTime.utc(2026, 10, 21, 9),
@@ -71,6 +79,8 @@ Future<SettingsHarness> pumpSettings(
         notificationPermission:
             permission ?? const UnwiredNotificationPermission(),
         exactAlarms: exactAlarms,
+        calendarGateway: calendarGateway,
+        calendarSources: calendarSources,
       ),
       linkLauncherProvider.overrideWithValue(links),
       appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),

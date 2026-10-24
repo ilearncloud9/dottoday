@@ -66,6 +66,7 @@ Grouped by who does them. Collected from the M5/M6 readiness notes in `09-implem
 - [ ] Manual (desktop Chrome, notifications allowed): a reminder posts as a system notification through `sw.js`; its Done ticks the task and Open shows it, also when the tab was closed (the built-in test browser blocks service workers — run in real Chrome).
 - [ ] Manual (Mac): View › Enter Full Screen — the rail and Today lay out with no title bar; the menu-bar dot stays.
 - [ ] Manual: ⌘/ (Ctrl+/ on Windows/Linux) opens the shortcut list in real desktop Chrome.
+- [ ] Manual (iOS simulator and Android emulator, at M7.7): Settings › Calendars › Connect shows the system prompt with the usage text; allowed lists the device's calendars; denied shows "Calendar access is off" and Open settings lands on Dottoday's page (iOS) — M7.1.
 - [ ] Manual (real desktop Chrome): on a fresh load the first Tab shows "Skip to content" and Enter moves focus past the rail.
 
 ## 7. Design-review matrix (Concept A, docs/10 §7)

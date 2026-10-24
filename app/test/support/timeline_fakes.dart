@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/data/calendar/calendar_providers.dart';
+import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
@@ -13,6 +15,8 @@ import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/security/app_lock_store.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
+import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
@@ -36,6 +40,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import 'calendar_fakes.dart';
 import 'fake_clock.dart';
 import 'search_fakes.dart';
 
@@ -386,6 +391,8 @@ List<Override> timelineOverrides({
       const UnwiredNotificationPermission(),
   ExactAlarms exactAlarms = const AlwaysExactAlarms(),
   String? deviceZone,
+  DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
+  CalendarSourceRepository? calendarSources,
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
@@ -423,6 +430,11 @@ List<Override> timelineOverrides({
     appLockSettingProvider.overrideWith(FakeAppLockSetting.new),
     notificationGatewayProvider.overrideWithValue(
       const UnwiredNotificationGateway(),
+    ),
+    // No calendar plugin under `flutter test` (M7.1).
+    deviceCalendarGatewayProvider.overrideWithValue(calendarGateway),
+    calendarSourceRepositoryProvider.overrideWithValue(
+      calendarSources ?? FakeCalendarSourceRepository(),
     ),
   ];
 }

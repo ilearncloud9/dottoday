@@ -16,6 +16,7 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/account_fakes.dart';
+import '../../support/calendar_fakes.dart';
 import '../../support/dot_golden.dart';
 import '../../support/first_thread_rows.dart';
 import '../../support/onboarding_fakes.dart';
@@ -44,6 +45,8 @@ List<Override> _at(
   ...timelineOverrides(
     now: DateTime.utc(2026, 10, 21, 9),
     notificationPermission: permission,
+    // A phone with device calendars, not asked yet (O4's row, M7.1).
+    calendarGateway: FakeDeviceCalendarGateway(),
     occurrences: FakeOccurrenceRepository(
       step == OnboardingStep.done ? firstThreadRows() : const [],
     ),

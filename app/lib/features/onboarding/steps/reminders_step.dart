@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/notifications/test_alarm.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -18,8 +20,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// O4 Reminders (docs/10 §5.1, docs/09 M4.4): the two kinds (before each
 /// task; at Bedtime, with its switch), then Allow notifications (the
 /// system prompt) or Not now. Denied → the M3f.8 notice, and on. Allowed
-/// → "Send me a test alarm" (M6.5.9, skippable) and Continue. The
-/// "Connect a calendar" row arrives with calendar import (M7.1).
+/// → "Send me a test alarm" (M6.5.9, skippable) and Continue. "Connect a
+/// calendar" asks for the device calendars (M7.1); which ones come in is
+/// chosen in Settings › Calendars.
 class RemindersStep extends ConsumerStatefulWidget {
   const RemindersStep({required this.onNext, super.key});
 
@@ -76,11 +79,12 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
             afterNo: l10n.testAlarmLookLater,
           ),
         if (_denied) PermissionNotice(onOpenSettings: permission.openSettings),
+        const _ConnectCalendar(),
       ],
     );
   }
 
-  /// Before each task, At Bedtime (its switch), Connect a calendar (off).
+  /// Before each task, At Bedtime (its switch).
   Widget _rows(
     BuildContext context,
     DotTheme t,
@@ -108,12 +112,47 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
           ),
         ),
       ),
-      SettingsRow(
-        glyph: DotGlyphs.calendar,
-        tint: t.colors.muted,
-        title: l10n.calendarsConnect,
-        subtitle: l10n.calendarsComingSoon,
-      ),
     ],
   );
+}
+
+/// The optional "Connect a calendar" row (docs/10 §5.1 O4, PRD F5): the
+/// OS prompt on tap; allowed → connected, choose in Settings; denied →
+/// the calendar notice. Off where there are no device calendars yet.
+class _ConnectCalendar extends ConsumerWidget {
+  const _ConnectCalendar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    final gateway = ref.watch(deviceCalendarGatewayProvider);
+    final state = ref.watch(calendarPermissionStateProvider).value;
+    final connected = state == PermissionState.granted;
+    final row = SettingsRow(
+      glyph: DotGlyphs.calendar,
+      tint: gateway.available ? t.colors.accentInk : t.colors.muted,
+      title: l10n.calendarsConnect,
+      subtitle: !gateway.available
+          ? l10n.calendarsComingSoon
+          : connected
+          ? l10n.calendarsPickInSettings
+          : null,
+      onTap: gateway.available && !connected
+          ? () => unawaited(ref.read(calendarActionsProvider).connect())
+          : null,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: DotSpace.m,
+      children: [
+        SettingsGroup(caption: l10n.settingsCalendars, children: [row]),
+        if (gateway.available && state == PermissionState.denied)
+          PermissionNotice(
+            permission: AppPermission.calendar,
+            onOpenSettings: gateway.openSettings,
+          ),
+      ],
+    );
+  }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
+import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -72,6 +73,7 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
     // back from a flight: the zone may have (M5.9).
     ref
       ..invalidate(notificationPermissionStateProvider)
+      ..invalidate(calendarPermissionStateProvider)
       ..invalidate(exactAlarmsAllowedProvider)
       ..invalidate(powerStateProvider)
       ..invalidate(currentDeviceZoneProvider);

@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
+import '../../support/calendar_fakes.dart';
 import '../../support/onboarding_harness.dart';
 
 // O4 Reminders (docs/09 M4.4): both answers to the system prompt.
@@ -79,6 +80,42 @@ void main() {
     await tester.pumpAndSettle();
     expect(os.asked, 0);
     expect(stepOf(c), OnboardingStep.account);
+  });
+
+  testWidgets('Connect a calendar: allowed → connected, choose in Settings', (
+    tester,
+  ) async {
+    final os = FakeDeviceCalendarGateway(list: sampleCalendars);
+    final c = await pumpOnboarding(
+      tester,
+      progress: _step,
+      calendarGateway: os,
+    );
+    await tester.ensureVisible(find.text('Connect a calendar'));
+    await tester.tap(find.text('Connect a calendar'));
+    await tester.pumpAndSettle();
+    expect(os.asked, 1);
+    expect(find.text('Connected · choose calendars in Settings'), findsOne);
+    await expectA11yGuidelines(tester);
+    // Optional: the step stays until Continue.
+    expect(stepOf(c), OnboardingStep.reminders);
+  });
+
+  testWidgets('Connect a calendar: denied → the calendar notice', (
+    tester,
+  ) async {
+    final os = FakeDeviceCalendarGateway(answer: PermissionState.denied);
+    await pumpOnboarding(tester, progress: _step, calendarGateway: os);
+    await tester.ensureVisible(find.text('Connect a calendar'));
+    await tester.tap(find.text('Connect a calendar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Calendar access is off'), findsOneWidget);
+    await expectA11yGuidelines(tester);
+  });
+
+  testWidgets('no device calendars here: the row is off', (tester) async {
+    await pumpOnboarding(tester, progress: _step);
+    expect(find.text('Calendar import arrives in a later update.'), findsOne);
   });
 
   testWidgets('meets a11y guidelines (R-12)', (tester) async {

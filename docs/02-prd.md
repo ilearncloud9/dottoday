@@ -71,6 +71,10 @@ Everything here is **free tier** unless marked *Phase 2*.
 
 - Connect Apple Calendar (iOS/macOS via EventKit), Google Calendar, Microsoft 365 (OAuth via backend), device calendars on Android. (R-02)
 - Per-calendar toggle, colour inheritance, all-day events shown in a header strip (editable). (R-02)
+  Clarified in M7.1: connecting turns every calendar on (switch off the ones you don't want; a
+  calendar added to the device later comes in too). An event takes the task colour nearest to its
+  calendar's colour. A multi-day all-day event shows in the strip on each of its days; tapping a strip
+  item opens it to edit.
 - Imported events are first-class blocks: draggable, resizable, can have subtasks/notes stored locally (never written to the external calendar unless the user enables write-back for that calendar). (R-02, R-09)
 - Write-back (optional per calendar): move/resize/rename syncs to the source calendar; failures surface as a non-blocking banner with retry.
 - Travel time: if the event has a location and the user enables it, a buffer block is suggested before it. (R-17)

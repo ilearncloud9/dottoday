@@ -7,6 +7,10 @@
     <!-- Loud dot-starts wake the screen like an alarm (docs/09 M6.5.5);
          Play Console declaration on the owner's release gates. -->
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
+    <!-- Device calendars (M7.1, docs/07 Android): read to show events;
+         write for opt-in write-back (M7.3). The plugin asks for both at once. -->
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
     <application
         android:label="Dottoday"
         android:name="${applicationName}"

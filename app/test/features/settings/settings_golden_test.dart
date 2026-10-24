@@ -5,17 +5,20 @@ library;
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
+import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
+import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/settings/pages/about_page.dart';
 import 'package:dottoday/features/settings/pages/account_page.dart';
+import 'package:dottoday/features/settings/pages/calendars_page.dart';
 import 'package:dottoday/features/settings/pages/data_pages.dart';
 import 'package:dottoday/features/settings/pages/info_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
@@ -26,6 +29,7 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/account_fakes.dart';
+import '../../support/calendar_fakes.dart';
 import '../../support/dot_golden.dart';
 import '../../support/sync_fakes.dart';
 import '../../support/timeline_fakes.dart';
@@ -35,6 +39,7 @@ final _overrides = _overridesWith();
 List<Override> _overridesWith({
   NotificationPermission permission = const UnwiredNotificationPermission(),
   ExactAlarms exactAlarms = const AlwaysExactAlarms(),
+  DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
   List<Override> extra = const [],
 }) => [
   ...extra,
@@ -45,6 +50,7 @@ List<Override> _overridesWith({
     ).copyWith(displayName: 'Kody'),
     notificationPermission: permission,
     exactAlarms: exactAlarms,
+    calendarGateway: calendarGateway,
   ),
   appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),
   envProvider.overrideWithValue(
@@ -130,6 +136,25 @@ void main() {
       widths: const {'compact', 'expanded'},
       overrides: _overrides,
       build: (_) => page,
+    );
+  }
+  // M7.1: device calendars allowed (grouped, inherited colours) and denied.
+  for (final (name, gateway) in [
+    (
+      'connected',
+      FakeDeviceCalendarGateway(
+        state: PermissionState.granted,
+        list: sampleCalendars,
+      ),
+    ),
+    ('denied', FakeDeviceCalendarGateway(state: PermissionState.denied)),
+  ]) {
+    goldenMatrix(
+      'settings_page_calendars_$name',
+      height: 844,
+      widths: const {'compact', 'expanded'},
+      overrides: _overridesWith(calendarGateway: gateway),
+      build: (_) => const CalendarsPage(),
     );
   }
   // M6.3: signed in and synced — `A-ios-settings` "Kody · synced just now".
