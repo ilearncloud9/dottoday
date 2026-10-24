@@ -273,4 +273,20 @@ void main() {
     expect(cleared.fields(high).energy, isNull);
     expect(const SeriesChange(title: 'x').fields(high).energy, Energy.high);
   });
+
+  test('notes: emptied notes reach the series, unchanged keep them', () {
+    final berlin = tz.getLocation('Europe/Berlin');
+    final s = _series().copyWith(notes: 'Bring towel');
+    final o = _rows(s).first.copyWith(notes: 'Bring towel');
+    final cleared = SeriesChange.between(o, o.copyWith(notes: null), berlin);
+    expect(cleared.notes, (to: null));
+    expect(cleared.isEmpty, isFalse);
+    expect(cleared.moves, isFalse);
+    expect(cleared.template(s).notes, isNull);
+    expect(cleared.fields(o).notes, isNull);
+    final set = SeriesChange.between(o, o.copyWith(notes: 'Goggles'), berlin);
+    expect(set.template(s).notes, 'Goggles');
+    expect(const SeriesChange(title: 'x').template(s).notes, 'Bring towel');
+    expect(SeriesChange.between(o, o, berlin).notes, isNull);
+  });
 }

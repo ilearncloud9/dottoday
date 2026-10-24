@@ -24,7 +24,10 @@ final class SeriesChange {
   });
 
   final String? title;
-  final String? notes;
+
+  /// New notes, wrapped like [energy] so emptied notes (`(to: null)`)
+  /// reach the series instead of reading as "unchanged".
+  final ({String? to})? notes;
   final String? colorKey;
   final String? iconKey;
   final int? durationMin;
@@ -58,7 +61,7 @@ final class SeriesChange {
     T? diff<T extends Object>(T? a, T? b) => a == b ? null : b;
     return SeriesChange(
       title: diff<String>(before.title, after.title),
-      notes: diff<String>(before.notes, after.notes),
+      notes: before.notes == after.notes ? null : (to: after.notes),
       colorKey: diff<String>(before.colorKey, after.colorKey),
       iconKey: diff<String>(before.iconKey, after.iconKey),
       durationMin: diff<int>(before.durationMin, after.durationMin),
@@ -90,7 +93,10 @@ final class SeriesChange {
   Occurrence fields(Occurrence o, {bool own = false}) => o.copyWith(
     alerts: alerts == null ? o.alerts : (own ? alerts : null),
     title: title ?? o.title,
-    notes: notes ?? o.notes,
+    notes: switch (notes) {
+      (:final to) => to,
+      null => o.notes,
+    },
     colorKey: colorKey ?? o.colorKey,
     iconKey: iconKey ?? o.iconKey,
     durationMin: durationMin ?? o.durationMin,
@@ -106,7 +112,10 @@ final class SeriesChange {
   Series template(Series s) => s.copyWith(
     alerts: alerts ?? s.alerts,
     title: title ?? s.title,
-    notes: notes ?? s.notes,
+    notes: switch (notes) {
+      (:final to) => to,
+      null => s.notes,
+    },
     colorKey: colorKey ?? s.colorKey,
     iconKey: iconKey ?? s.iconKey,
     durationMin: durationMin ?? s.durationMin,
