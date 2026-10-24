@@ -1,4 +1,3 @@
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/series.dart';
@@ -8,6 +7,7 @@ import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'test_l10n.dart';
 
 import 'timeline_fakes.dart';
 
@@ -40,8 +40,9 @@ Future<ProviderContainer> pumpEditor(
       container: container,
       child: MaterialApp(
         theme: DotTheme.light(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: testL10nDelegates,
+        supportedLocales: testL10nLocales,
+        locale: testL10nLocale,
         home: TaskScreen(id: id),
       ),
     ),

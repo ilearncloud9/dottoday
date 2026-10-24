@@ -1,4 +1,3 @@
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
@@ -15,6 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 import 'onboarding_fakes.dart';
+import 'test_l10n.dart';
 import 'timeline_fakes.dart';
 
 /// The onboarding gate at [progress] in front of a stand-in app ("the
@@ -58,8 +58,9 @@ Future<ProviderContainer> pumpOnboarding(
       container: container,
       child: MaterialApp(
         theme: DotTheme.light(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: testL10nDelegates,
+        supportedLocales: testL10nLocales,
+        locale: testL10nLocale,
         builder: (_, child) => OnboardingGate(child: child!),
         home: const Scaffold(
           body: Text('the app'), // l10n-ignore: test fixture

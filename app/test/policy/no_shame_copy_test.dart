@@ -7,13 +7,33 @@ import 'source_scan.dart';
 
 // No-shame rule (CLAUDE.md §11, 11-standout-roadmap D, docs/09 M6.5.11):
 // no streaks, no "late / missed / failed" said about the user, no red for
-// what isn't done. Every English string is checked; new strings must pass.
+// what isn't done. Every string in every language is checked; new strings
+// must pass (docs/09 M8.3 added de/fr/es).
 
 /// Words that judge (word boundaries: "later" and "latest" pass).
 final _judging = RegExp(
   r'\b(late|missed|miss|failed|fail|failure|streaks?|overdue|behind)\b',
   caseSensitive: false,
 );
+
+/// The same judgement in the translations (stems: "verpasst" and
+/// "verspätet" both hit). "tarde" is Spanish for afternoon, so it is not
+/// listed; "retraso" only appears in the Running-late strings.
+final _judgingByLocale = {
+  'de': RegExp(
+    r'(verpass|versäum|überfällig|verspät|fehlgeschlagen|gescheitert|'
+    r'misserfolg|rückstand|strähne)',
+    caseSensitive: false,
+  ),
+  'fr': RegExp(
+    r'(manqué|raté|en retard|échou|échec|dépassé|\bséries?\b)',
+    caseSensitive: false,
+  ),
+  'es': RegExp(
+    r'(perdid|fallid|fallar|atrasad|retras|vencid|racha|fracas)',
+    caseSensitive: false,
+  ),
+};
 
 /// The owner's one exception (2026-10-23): "Running late" is the user's
 /// own action — the button, its menu item and sheet, the help answer about
@@ -46,6 +66,26 @@ void main() {
     ];
     expect(offending, isEmpty);
   });
+
+  for (final MapEntry(key: locale, value: judging)
+      in _judgingByLocale.entries) {
+    test('no $locale string judges the user', () {
+      final arb =
+          jsonDecode(
+                File('lib/core/l10n/arb/app_$locale.arb').readAsStringSync(),
+              )
+              as Map<String, Object?>;
+      final offending = [
+        for (final MapEntry(:key, :value) in arb.entries)
+          if (!key.startsWith('@') &&
+              value is String &&
+              !_runningLateAction.contains(key) &&
+              judging.hasMatch(_withoutPlaceholders(value)))
+            '$key: $value',
+      ];
+      expect(offending, isEmpty);
+    });
+  }
 
   test('the exception list only names strings that exist', () {
     final arb = File('lib/core/l10n/arb/app_en.arb').readAsStringSync();

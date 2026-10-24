@@ -1,7 +1,6 @@
 import 'package:dottoday/bootstrap.dart';
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
@@ -28,6 +27,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import '../../support/test_l10n.dart';
 
 import '../../support/timeline_fakes.dart';
 
@@ -140,8 +140,9 @@ Future<SettingsHarness> pumpSettings(
         theme: DotTheme.light().copyWith(platform: platform),
         darkTheme: DotTheme.dark().copyWith(platform: platform),
         themeMode: mode,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: testL10nDelegates,
+        supportedLocales: testL10nLocales,
+        locale: testL10nLocale,
       ),
     ),
   );

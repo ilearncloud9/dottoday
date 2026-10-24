@@ -1,4 +1,3 @@
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'sample_inbox.dart';
+import 'test_l10n.dart';
 import 'timeline_fakes.dart';
 
 /// 11:00 in Berlin on the demo day: Design review ends 11:15 and Lunch
@@ -44,8 +44,9 @@ Future<FakeOccurrenceRepository> pumpInbox(
         theme: DotTheme.light(),
         darkTheme: DotTheme.dark(),
         themeMode: mode,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: testL10nDelegates,
+        supportedLocales: testL10nLocales,
+        locale: testL10nLocale,
         home: home,
       ),
     ),

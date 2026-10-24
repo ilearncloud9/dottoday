@@ -165,6 +165,29 @@ to system settings).
 Short, plain, friendly, never shaming ("Not done yet" not "You missed this"). Sentence case. No
 exclamation marks in system copy. All strings in ARB files; placeholders typed.
 
+### 5.1 Languages (M8.3)
+The app ships in English (template `app_en.arb`), German, French and Spanish; every key exists in
+all four (CI: `l10n_parity_test`). A new profile starts in the device's first preferred language the
+app speaks, else English; Settings › Language changes it. Address: de "du", fr "vous", es "tú".
+The no-shame rule holds in every language: undone things are "nicht erledigt" / "pas fait" /
+"sin hacer"; never verpasst/überfällig/verspätet, manqué/raté/en retard/échec, perdido/atrasado/
+vencido/fallido (except the user's own "Running late" action). Errors say "Konnte nicht…" /
+"Impossible de…" / "No se pudo…". Example inputs in hints must parse in that language's Quick Add
+(`quick_add_hints_test`). ICU selectors and placeholder names are never translated.
+
+| en | de | fr | es |
+|---|---|---|---|
+| Today · Inbox · Week · Month | Heute · Eingang · Woche · Monat | Aujourd'hui · Boîte de réception · Semaine · Mois | Hoy · Bandeja de entrada · Semana · Mes |
+| task · subtask | Aufgabe · Unteraufgabe | tâche · sous-tâche | tarea · subtarea |
+| thread · dot | Faden · Punkt | fil · point | hilo · punto |
+| Wake Up · Bedtime | Aufstehen · Schlafenszeit | Réveil · Coucher | Despertar · Hora de dormir |
+| Done · not done · skipped | Erledigt · nicht erledigt · übersprungen | Fait · pas fait · passée | Hecho · sin hacer · omitida |
+| alert · reminder | Hinweis · Erinnerung | alerte · rappel | aviso · recordatorio |
+| Shift the rest · Move | Rest verschieben · Verlegen | Décaler la suite · Déplacer | Desplazar el resto · Mover |
+| Running late | Ich bin spät dran | Je suis en retard | Voy con retraso |
+| Trash · Sync · Settings | Papierkorb · Sync · Einstellungen | Corbeille · Synchronisation · Réglages | Papelera · Sincronización · Ajustes |
+| Travel time · Snooze | Wegzeit · Schlummern | Temps de trajet · Reporter | Tiempo de trayecto · Posponer |
+
 ## 6. Platform adaptation
 Shared layout, native affordances: iOS/macOS use cupertino-style sheets and context menus; Android
 Material 3 with predictive back; macOS menu bar (File/Edit/View with shortcuts) and window min size

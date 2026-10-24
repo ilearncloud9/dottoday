@@ -18,6 +18,8 @@
 - `time_input_test`: AM/PM edge (12:00 AM/PM), typing "930" → 09:30, locale separators, never changes the date (R-20).
 - `subtask_occurrence_test`: completing subtasks on today's occurrence never affects tomorrow's (R-09).
 - `export_import_test`: round trip equals original; import rejects oversize and bad schema; backup taken before import.
+- `l10n_parity_test` (M8.3): de/fr/es carry every en key and no others, keep placeholders, select cases and line breaks, and differ from English unless the key is listed as the same word; iOS/macOS `CFBundleLocalizations` list every language. `no_shame_copy_test` checks every language.
+- `locale_sweep_test` (M8.3): every main screen in a pseudo-locale (accented, vowels doubled, ⟦ ⟧ — about a third longer) at 360 / 700 / 1280, and in de/fr/es at its narrowest width, with the bundled Inter font: no overflow, and no more text cut short than English at the same size. `quick_add_hints_test`: each language's example inputs parse.
 
 ## 3. Accessibility QA (each milestone)
 - Automated: semantics tests; `flutter_a11y` style checks; axe-core on web build.

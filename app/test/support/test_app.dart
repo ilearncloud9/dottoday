@@ -1,11 +1,11 @@
 import 'package:dottoday/app_commands.dart';
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:go_router/go_router.dart';
+import 'test_l10n.dart';
 
 import 'timeline_fakes.dart';
 
@@ -31,8 +31,9 @@ Widget _routerApp(
   theme: DotTheme.light(),
   darkTheme: DotTheme.dark(),
   themeMode: themeMode,
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
-  supportedLocales: AppLocalizations.supportedLocales,
+  localizationsDelegates: testL10nDelegates,
+  supportedLocales: testL10nLocales,
+  locale: testL10nLocale,
   routerConfig: router,
   builder: (context, child) => AppCommandScope(
     handlers: appCommandHandlers(router, onQuickAdd: onQuickAdd),
@@ -46,7 +47,8 @@ Widget testApp(Widget home, {ThemeMode themeMode = ThemeMode.light}) =>
       theme: DotTheme.light(),
       darkTheme: DotTheme.dark(),
       themeMode: themeMode,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: testL10nDelegates,
+      supportedLocales: testL10nLocales,
+      locale: testL10nLocale,
       home: home,
     );
