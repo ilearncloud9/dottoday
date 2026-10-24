@@ -67,6 +67,7 @@ Grouped by who does them. Collected from the M5/M6 readiness notes in `09-implem
 - [ ] Manual (Mac): View › Enter Full Screen — the rail and Today lay out with no title bar; the menu-bar dot stays.
 - [ ] Manual: ⌘/ (Ctrl+/ on Windows/Linux) opens the shortcut list in real desktop Chrome.
 - [ ] Manual (iOS simulator and Android emulator, at M7.7): Settings › Calendars › Connect shows the system prompt with the usage text; allowed lists the device's calendars; denied shows "Calendar access is off" and Open settings lands on Dottoday's page (iOS) — M7.1.
+- [ ] Manual (this Mac, needs a person at the system prompt): Settings › Calendars › Connect shows the macOS prompt with the usage text; allowed lists the Mac's calendars by account with colours, and `flutter test integration_test/mac_calendar_bridge_test.dart -d macos` then also reads a week of events; denied shows the notice and Open settings lands on Privacy & Security › Calendars — M7.1b. (Run on 2026-10-24: bridge answers, status `notAsked`; the allow/deny path is this gate.)
 - [ ] Manual (real desktop Chrome): on a fresh load the first Tab shows "Skip to content" and Enter moves focus past the rail.
 
 ## 7. Design-review matrix (Concept A, docs/10 §7)

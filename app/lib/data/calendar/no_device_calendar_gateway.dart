@@ -4,8 +4,8 @@ import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 
 /// No device calendars here: the web (Google/Microsoft through the
-/// backend, M7.4) and, until its EventKit bridge (M7.1b), macOS. Settings
-/// says import arrives later; nothing is ever asked.
+/// backend, M7.4) and desktop platforms without a bridge. Settings says
+/// import arrives later; nothing is ever asked.
 final class NoDeviceCalendarGateway implements DeviceCalendarGateway {
   const NoDeviceCalendarGateway();
 

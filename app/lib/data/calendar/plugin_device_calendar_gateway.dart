@@ -11,7 +11,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:url_launcher/url_launcher.dart';
 
 /// Device calendars through `device_calendar` (docs/04 §7): EventKit on
-/// iOS, CalendarContract on Android. macOS lands in M7.1b.
+/// iOS, CalendarContract on Android (macOS has its own EventKit bridge, M7.1b).
 ///
 /// The plugin only says yes or no, so whether Dottoday has asked on this
 /// device is kept in `local_meta`, as for notifications (M5.1): no + asked
