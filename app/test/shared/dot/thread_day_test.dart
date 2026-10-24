@@ -102,6 +102,22 @@ void main() {
     expect(_task(e, 'lunch').recurring, isTrue);
   });
 
+  test('overlapping tasks: start order, no gap, live overrun (F1.13)', () {
+    // Recorded in PRD F1.13: the thread lists overlaps one under the other
+    // in start order; the live one carries how far it runs into the next.
+    final e = _entries(clock.nowUtc(), [
+      _o('read', 10, 30, 30),
+      _o('deep', 9, 0, 120),
+      _o('call', 10, 45, 30),
+    ]);
+    final rows = [
+      for (final x in e.skipWhile((x) => x is! ThreadTaskEntry))
+        if (x is ThreadTaskEntry) x.task.id else if (x is ThreadGap) 'gap',
+    ];
+    expect(rows.take(3), ['deep', 'read', 'call']);
+    expect(_task(e, 'deep').overrunMinutes, 30);
+  });
+
   group('outside hours (F1.15)', () {
     List<String> shape(List<ThreadEntry> e) => [
       for (final x in e)

@@ -25,13 +25,13 @@ ticked in 08 §6.1) before a tag.
 
 | Status | iPhone | Android | macOS | Web |
 |---|---|---|---|---|
-| ✓ CI | 32 | 32 | 41 | 46 |
+| ✓ CI | 33 | 33 | 42 | 47 |
 | ✓ device | 19 | 21 | 6 | 0 |
 | ◐ owner | 4 | 2 | 8 | 5 |
 | ◐ manual | 2 | 2 | 2 | 5 |
 | → later | 2 | 2 | 2 | 3 |
 | — n/a | 3 | 3 | 2 | 1 |
-| ✗ gap | 5 | 5 | 6 | 7 |
+| ✗ gap | 4 | 4 | 5 | 6 |
 
 ## F1. Timeline (day view) — the home screen
 
@@ -49,7 +49,7 @@ ticked in 08 §6.1) before a tag.
 | F1.10 | Blocks render start–end time, title, icon, colour, subtask progress (3/5), and a calendar badge for importe… | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/shared/dot/thread_day_test.dart`<br>`test/shared/dot/thread_test.dart`<br>`test/shared/dot/thread_golden_test.dart` |
 | F1.11 | Drag: long-press 250 ms to pick up (haptic), snap to configured increment (default 5 min), live ghost previ… | ✓ device<br>journey · iPhone 17 Pro sim, M8.4 | ✓ device<br>journey · API 37 emulator, M8.4; CI API 34 | ✓ CI | ✓ CI | `test/shared/dot/thread_drag_test.dart`<br>`test/domain/scheduling/drag_math_test.dart`<br>`test/features/timeline/today_spread_test.dart` |
 | F1.12 | Shift-followers: default from settings (`shiftFollowers: ask / always / never`), with an in-gesture toggle… | ✓ device<br>calendar_write_back · sim, M7.7 | ✓ device<br>calendar_write_back · emulator, M7.7 | ◐ owner<br>Calendars on this Mac (08 §6.1) | ✓ CI | `test/shared/dot/thread_drag_test.dart`<br>`test/features/timeline/today_drag_test.dart`<br>`test/data/calendar/calendar_shift_test.dart` |
-| F1.13 | Overlaps allowed; overlapping blocks render side-by-side (max 3 columns, then "+n") | ✗ gap<br>columns or a recorded decision — M8.4b | ✗ gap<br>columns or a recorded decision — M8.4b | ✗ gap<br>columns or a recorded decision — M8.4b | ✗ gap<br>columns or a recorded decision — M8.4b | `test/shared/dot/thread_day_test.dart`<br>`test/features/timeline/layout/week_layout_test.dart` |
+| F1.13 | Overlaps allowed; overlapping blocks render side-by-side (max 3 columns, then "+n") | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/shared/dot/thread_day_test.dart`<br>`test/shared/dot/thread_test.dart`<br>`test/features/timeline/layout/week_layout_test.dart` |
 | F1.14 | Timeline builds lazily | ◐ owner<br>iPhone 12-class profile run (08 §6.1) | ◐ owner<br>Pixel 6a profile run, M5.9b (08 §6.1) | ✓ device<br>profile run 0 missed frames, M3b.9 | ✓ CI | `test/data/perf/db_performance_test.dart`<br>`integration_test/thread_perf_test.dart` |
 | F1.15 | Day boundaries: per-weekday start/end; blocks outside boundaries still render in a collapsed "outside hours… | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/domain/time/day_boundaries_test.dart`<br>`test/data/scheduling/day_room_providers_test.dart`<br>`test/shared/dot/thread_day_test.dart`<br>`test/shared/dot/thread_test.dart`<br>`test/shared/dot/thread_golden_test.dart` |
 | F1.16 | Full 24 h renders — golden test for the bottom of the day | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/timeline/today_bottom_golden_test.dart`<br>`test/shared/dot/thread_golden_test.dart`<br>`test/features/timeline/layout/timeline_day_test.dart` |
@@ -157,7 +157,7 @@ ticked in 08 §6.1) before a tag.
 - **F1.10** Time, title, icon and colour show on every row; subtask progress on the live row and the sheet (10 §3); an imported event carries the calendar glyph in its meta and "from your calendar" in its label (M8.4b).
 - **F1.11** Lift haptic needs a physical phone (08 §6.1 hardware pass); edge auto-scroll is Flutter's `EdgeDraggingAutoScroller`.
 - **F1.12** Web calendar events come from Google/Microsoft (F5.1).
-- **F1.13** Overlaps are allowed; the thread lists them in start order with the overrun line, the Week board stacks them. No side-by-side columns.
+- **F1.13** Recorded in PRD F1.13 (M8.4b): the thread lists overlaps in start order with the live overrun (Shift the rest); the Week board stacks them. No side-by-side columns on the one-axis thread.
 - **F1.14** `thread_perf_test` needs `flutter drive --profile` on hardware (M5.9b); the thread is a sliver (lazy) on every target.
 - **F1.15** Per-weekday Wake Up/Bedtime (M3d.3); tasks before Wake Up / after Bedtime fold into a row beyond the cap that unfolds on tap (M8.4b).
 - **F1.16** Bedtime 23:55 (the latest) with a 23:30 task, scrolled to the end, on the phone pager and the Mac/web spread (M8.4b).

@@ -145,12 +145,14 @@ const f1Rows = <String, ParityRow>{
   'F1.13': ParityRow(
     tests: [
       'test/shared/dot/thread_day_test.dart',
+      'test/shared/dot/thread_test.dart',
       'test/features/timeline/layout/week_layout_test.dart',
     ],
-    all: Cell(Status.gap, 'columns or a recorded decision — M8.4b'),
+    all: ci,
     note:
-        'Overlaps are allowed; the thread lists them in start order with the '
-        'overrun line, the Week board stacks them. No side-by-side columns.',
+        'Recorded in PRD F1.13 (M8.4b): the thread lists overlaps in start '
+        'order with the live overrun (Shift the rest); the Week board stacks '
+        'them. No side-by-side columns on the one-axis thread.',
   ),
   'F1.14': ParityRow(
     tests: [

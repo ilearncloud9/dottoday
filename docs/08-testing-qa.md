@@ -4,7 +4,7 @@
 - **Unit (domain)**: target ≥ 90 % line coverage. Recurrence, scheduler, parser, notification planner, conflict resolver, validators. Property-based tests with `glados` or hand-rolled generators for scheduler invariants.
 - **Repository/sync**: in-memory Drift + fake Supabase gateway; test push/pull/conflict/tombstone paths and "server error never deletes local".
 - **Widget**: every screen's states (empty/loading/error/offline); semantics tests (labels exist, focus order, tap targets ≥ 44).
-- **Golden**: timeline at 100 %/200 % text scale, light/dark, 0/1/30/200 blocks, bottom-of-day rendering (R-14), overlap columns.
+- **Golden**: timeline at 100 %/200 % text scale, light/dark, 0/1/30/200 blocks, bottom-of-day rendering (R-14), overlapping tasks in start order (PRD F1.13, M8.4b: the thread replaces overlap columns).
 - **Integration** (`integration_test`): onboarding → quick add → drag with shift-followers → recurrence edit scopes → offline edit → reconnect sync → export/import round-trip.
 - **RLS** (pgTAP in `supabase/tests`): user A cannot read/write/delete user B's rows for each table; `sync_push` ignores spoofed `user_id`.
 - **Performance**: `flutter drive --profile` timeline scroll with 200 blocks; frame build < 16 ms p95 on a mid-range Android.

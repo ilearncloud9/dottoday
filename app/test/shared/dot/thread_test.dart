@@ -173,6 +173,38 @@ void main() {
     handle.dispose();
   });
 
+  testWidgets('overlapping rows stack in start order, never covered', (
+    tester,
+  ) async {
+    ThreadTask row(String id, String range) => ThreadTask(
+      id: id,
+      title: id,
+      color: TaskColor.violet,
+      icon: TaskIcon.music,
+      state: DotState.upcoming,
+      timeRange: range,
+    );
+    await tester.pumpWidget(
+      testApp(
+        Scaffold(
+          body: Thread(
+            entries: [
+              const ThreadCap.wake('7:00'),
+              ThreadTaskEntry(row('Concert', '20:00 – 22:00')),
+              ThreadTaskEntry(row('Read', '20:30 – 21:00')),
+              const ThreadCap.bed('23:00'),
+            ],
+          ),
+        ),
+      ),
+    );
+    final concert = tester.getRect(find.byType(TaskRow).first);
+    final read = tester.getRect(find.byType(TaskRow).last);
+    expect(read.top, greaterThanOrEqualTo(concert.bottom));
+    expect(find.text('Concert').hitTestable(), findsOneWidget);
+    expect(find.text('Read').hitTestable(), findsOneWidget);
+  });
+
   testWidgets('done titles are struck through', (tester) async {
     await tester.pumpWidget(_thread());
     final style = tester.widget<Text>(find.text('Morning run')).style!;

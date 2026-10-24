@@ -26,6 +26,12 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
 - [F1.11] Drag: long-press 250 ms to pick up (haptic), snap to configured increment (default 5 min), live ghost preview, auto-scroll near edges. Vertical scroll never starts a drag. (R-05)
 - [F1.12] Shift-followers: default from settings (`shiftFollowers: ask | always | never`), with an in-gesture toggle chip. Pinned blocks and imported calendar events are never shifted unless the user chooses "include calendar events". (R-04, R-17)
 - [F1.13] Overlaps allowed; overlapping blocks render side-by-side (max 3 columns, then "+n").
+  Clarified in M8.4b (replaces the columns on the thread): Concept A's thread is one axis
+  (`10-ui-concept-a.md` §1, ADR-0007), so overlapping tasks render one under the other in start order,
+  each a full row (never covered, each its own tap target); the live task's overrun into the next is
+  what "Shift the rest" offers to clear (R-04), and the `ThreadPicker` warns before an overlap is made.
+  The Mac/web Week board stacks overlaps in its day columns. Rejected: side-by-side columns (two
+  parallel threads break the single axis and halve the row width on a phone).
 - [F1.14] Timeline builds lazily; 200 blocks in a day scroll at ≥ 55 fps on a Pixel 6a / iPhone 12 class device. (R-15)
 - [F1.15] Day boundaries: per-weekday start/end; blocks outside boundaries still render in a collapsed "outside hours" zone. (R-17)
   Clarified in M8.4b: built on the thread as `ThreadOutside` — tasks that end by Wake Up fold into one
