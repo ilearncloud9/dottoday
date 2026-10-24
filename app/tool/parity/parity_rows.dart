@@ -7,13 +7,12 @@ import 'parity_rows_f5.dart';
 
 /// The first-day journey (`integration_test/journey_test.dart`): onboarding,
 /// quick add, drag with Shift later tasks, a repeat edited for all days.
-const jIos = Cell(Status.device, 'journey · iPhone 17 Pro sim, M8.4');
+const jIos = Cell(Status.device, 'journey · iPhone 17 Pro sim, M8.4b');
 const jAnd = Cell(Status.device, 'journey · API 37 emulator, M8.4; CI API 34');
 
-/// The Mac runs onboarding/app_launch/deep_link; the journey is phone
-/// shaped (it flings the pager, which the ≥ 840 px spread doesn't have), so
-/// the Mac row rests on CI tests until its expanded variant (M8.4b).
-const jMac = Cell(Status.auto, 'expanded journey variant: M8.4b');
+/// The Mac runs the journey's expanded variant: the three-day spread, a
+/// mouse drag with Alt for "Shift later tasks", the editor panel (M8.4b).
+const jMac = Cell(Status.device, 'journey (spread) · macOS, M8.4b');
 
 /// Every row, keyed by PRD ID.
 const parityRows = <String, ParityRow>{
