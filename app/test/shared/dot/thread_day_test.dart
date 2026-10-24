@@ -101,6 +101,18 @@ void main() {
     expect(_task(e, 'lunch').recurring, isTrue);
   });
 
+  test('an imported calendar event carries the calendar badge (F1.10)', () {
+    final event = _o(
+      'standup',
+      15,
+      0,
+      15,
+    ).copyWith(source: OccurrenceSource.calendar);
+    final e = _entries(clock.nowUtc(), [...day, event]);
+    expect(_task(e, 'standup').imported, isTrue);
+    expect(_task(e, 'mail').imported, isFalse);
+  });
+
   test('the live task carries progress, minutes left, subtasks', () {
     final deep = _task(_entries(clock.nowUtc(), day), 'deep');
     expect(deep.progress, closeTo(82 / 120, 1e-9));

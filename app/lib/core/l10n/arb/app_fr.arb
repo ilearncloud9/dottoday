@@ -953,5 +953,6 @@
   "rowTravel": "{label}, {duration} de trajet avant",
   "calendarsTravel": "Temps de trajet",
   "calendarsTravelSuggest": "Suggérer un temps de trajet",
-  "calendarsTravelSuggestDetail": "Avant les événements avec un lieu. Calculé sur cet appareil, sans service de cartes"
+  "calendarsTravelSuggestDetail": "Avant les événements avec un lieu. Calculé sur cet appareil, sans service de cartes",
+  "rowFromCalendar": "{label}, de votre calendrier"
 }

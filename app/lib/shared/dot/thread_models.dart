@@ -17,6 +17,7 @@ final class ThreadTask {
     this.duration,
     this.pinned = false,
     this.recurring = false,
+    this.imported = false,
     this.progress = 0,
     this.minutesLeft,
     this.subtasksDone = 0,
@@ -40,6 +41,10 @@ final class ThreadTask {
   final String? duration;
   final bool pinned;
   final bool recurring;
+
+  /// An imported calendar event: the row carries the calendar badge
+  /// (docs/02 F1.10, R-16).
+  final bool imported;
 
   /// 0–1 elapsed share of a live task.
   final double progress;

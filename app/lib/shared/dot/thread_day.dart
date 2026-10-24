@@ -116,6 +116,7 @@ ThreadTask _task(
     duration: live ? format.duration(o.durationMin) : null,
     pinned: o.pinned,
     recurring: o.seriesId != null,
+    imported: o.source == OccurrenceSource.calendar,
     progress: live
         ? now.difference(start).inSeconds / end.difference(start).inSeconds
         : 0,
@@ -151,6 +152,7 @@ ThreadTask _withOverrun(
     duration: task.duration,
     pinned: task.pinned,
     recurring: task.recurring,
+    imported: task.imported,
     progress: task.progress,
     minutesLeft: task.minutesLeft,
     subtasksDone: task.subtasksDone,

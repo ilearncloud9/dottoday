@@ -5825,6 +5825,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Before events with a place. Worked out on this device; no maps are asked'**
   String get calendarsTravelSuggestDetail;
+
+  /// Appended to a row label when the row is an imported calendar event (docs/02 F1.10): the screen-reader side of the calendar badge.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}, from your calendar'**
+  String rowFromCalendar(String label);
 }
 
 class _AppLocalizationsDelegate

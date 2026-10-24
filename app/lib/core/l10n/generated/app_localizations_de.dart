@@ -3923,4 +3923,9 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get calendarsTravelSuggestDetail =>
       'Vor Terminen mit Ort. Auf diesem Gerät berechnet, ohne Kartenabfrage';
+
+  @override
+  String rowFromCalendar(String label) {
+    return '$label, aus deinem Kalender';
+  }
 }

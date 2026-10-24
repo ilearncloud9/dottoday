@@ -1,3 +1,5 @@
+import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/dot/thread_pieces.dart';
@@ -85,6 +87,38 @@ void main() {
     }
     // The done circle duplicates the dot's toggle and stays silent.
     expect(find.bySemanticsLabel(RegExp('circle')), findsNothing);
+    handle.dispose();
+  });
+
+  testWidgets('an imported event shows the calendar badge (F1.10)', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(
+      testApp(
+        const Material(
+          child: TaskRow(
+            task: ThreadTask(
+              id: 'standup',
+              title: 'Team standup',
+              color: TaskColor.slate,
+              icon: TaskIcon.people,
+              state: DotState.upcoming,
+              timeRange: '3:00 – 3:15',
+              imported: true,
+            ),
+          ),
+        ),
+      ),
+    );
+    final badge = find.byWidgetPredicate(
+      (w) => w is DotIcon && w.glyph == DotGlyphs.calendar,
+    );
+    expect(badge, findsOneWidget);
+    expect(
+      find.bySemanticsLabel('Team standup, 3:00 – 3:15, from your calendar'),
+      findsOneWidget,
+    );
     handle.dispose();
   });
 

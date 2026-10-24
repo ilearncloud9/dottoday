@@ -3916,4 +3916,9 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get calendarsTravelSuggestDetail =>
       'Antes de eventos con lugar. Se calcula en este dispositivo; no se consulta ningún mapa';
+
+  @override
+  String rowFromCalendar(String label) {
+    return '$label, de tu calendario';
+  }
 }

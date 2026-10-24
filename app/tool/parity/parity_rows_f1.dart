@@ -104,12 +104,15 @@ const f1Rows = <String, ParityRow>{
   'F1.10': ParityRow(
     tests: [
       'test/shared/dot/thread_day_test.dart',
+      'test/shared/dot/thread_test.dart',
       'test/shared/dot/thread_golden_test.dart',
     ],
-    all: Cell(Status.gap, 'no calendar badge on rows — M8.4b'),
+    all: ci,
     note:
         'Time, title, icon and colour show on every row; subtask progress on '
-        'the live row and the sheet (10 §3); imported events have no badge.',
+        'the live row and the sheet (10 §3); an imported event carries the '
+        'calendar glyph in its meta and "from your calendar" in its label '
+        '(M8.4b).',
   ),
   'F1.11': ParityRow(
     tests: [

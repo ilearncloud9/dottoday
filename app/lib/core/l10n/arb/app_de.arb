@@ -953,5 +953,6 @@
   "rowTravel": "{label}, {duration} Wegzeit davor",
   "calendarsTravel": "Wegzeit",
   "calendarsTravelSuggest": "Wegzeit vorschlagen",
-  "calendarsTravelSuggestDetail": "Vor Terminen mit Ort. Auf diesem Gerät berechnet, ohne Kartenabfrage"
+  "calendarsTravelSuggestDetail": "Vor Terminen mit Ort. Auf diesem Gerät berechnet, ohne Kartenabfrage",
+  "rowFromCalendar": "{label}, aus deinem Kalender"
 }

@@ -5253,5 +5253,7 @@
   "calendarsTravelSuggest": "Suggest travel time",
   "@calendarsTravelSuggest": {"description": "Calendars page toggle: suggest a travel buffer before events that have a place."},
   "calendarsTravelSuggestDetail": "Before events with a place. Worked out on this device; no maps are asked",
-  "@calendarsTravelSuggestDetail": {"description": "Calendars page toggle subtitle: the suggestion is a fixed length, no route lookup, the place stays on the device."}
+  "@calendarsTravelSuggestDetail": {"description": "Calendars page toggle subtitle: the suggestion is a fixed length, no route lookup, the place stays on the device."},
+  "rowFromCalendar": "{label}, from your calendar",
+  "@rowFromCalendar": {"description": "Appended to a row label when the row is an imported calendar event (docs/02 F1.10): the screen-reader side of the calendar badge.", "placeholders": {"label": {"type": "String"}}}
 }

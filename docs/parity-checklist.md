@@ -25,13 +25,13 @@ ticked in 08 §6.1) before a tag.
 
 | Status | iPhone | Android | macOS | Web |
 |---|---|---|---|---|
-| ✓ CI | 28 | 28 | 37 | 42 |
+| ✓ CI | 29 | 29 | 38 | 43 |
 | ✓ device | 19 | 21 | 6 | 0 |
 | ◐ owner | 4 | 2 | 8 | 5 |
 | ◐ manual | 2 | 2 | 2 | 5 |
 | → later | 2 | 2 | 2 | 3 |
 | — n/a | 3 | 3 | 2 | 1 |
-| ✗ gap | 9 | 9 | 10 | 11 |
+| ✗ gap | 8 | 8 | 9 | 10 |
 
 ## F1. Timeline (day view) — the home screen
 
@@ -46,7 +46,7 @@ ticked in 08 §6.1) before a tag.
 | F1.7 | See free gaps and can tap a gap to add a task there | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/timeline/today_screen_test.dart`<br>`test/shared/dot/thread_day_test.dart` |
 | F1.8 | Swipe left/right (or ←/→ keys) to move between days | ✓ device<br>journey · iPhone 17 Pro sim, M8.4 | ✓ device<br>journey · API 37 emulator, M8.4; CI API 34 | ✓ CI | ◐ manual<br>⌘/Ctrl+←/→ in real Chrome (08 §6.2) | `test/features/timeline/today_screen_test.dart`<br>`test/features/timeline/today_keys_test.dart`<br>`test/shared/dot/day_pager_test.dart`<br>`test/app_menu_test.dart` |
 | F1.9 | Can check a block done from the timeline | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/timeline/today_screen_test.dart`<br>`test/shared/dot/task_dot_test.dart`<br>`test/policy/no_shame_copy_test.dart` |
-| F1.10 | Blocks render start–end time, title, icon, colour, subtask progress (3/5), and a calendar badge for importe… | ✗ gap<br>no calendar badge on rows — M8.4b | ✗ gap<br>no calendar badge on rows — M8.4b | ✗ gap<br>no calendar badge on rows — M8.4b | ✗ gap<br>no calendar badge on rows — M8.4b | `test/shared/dot/thread_day_test.dart`<br>`test/shared/dot/thread_golden_test.dart` |
+| F1.10 | Blocks render start–end time, title, icon, colour, subtask progress (3/5), and a calendar badge for importe… | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/shared/dot/thread_day_test.dart`<br>`test/shared/dot/thread_test.dart`<br>`test/shared/dot/thread_golden_test.dart` |
 | F1.11 | Drag: long-press 250 ms to pick up (haptic), snap to configured increment (default 5 min), live ghost previ… | ✓ device<br>journey · iPhone 17 Pro sim, M8.4 | ✓ device<br>journey · API 37 emulator, M8.4; CI API 34 | ✓ CI | ✓ CI | `test/shared/dot/thread_drag_test.dart`<br>`test/domain/scheduling/drag_math_test.dart`<br>`test/features/timeline/today_spread_test.dart` |
 | F1.12 | Shift-followers: default from settings (`shiftFollowers: ask / always / never`), with an in-gesture toggle… | ✓ device<br>calendar_write_back · sim, M7.7 | ✓ device<br>calendar_write_back · emulator, M7.7 | ◐ owner<br>Calendars on this Mac (08 §6.1) | ✓ CI | `test/shared/dot/thread_drag_test.dart`<br>`test/features/timeline/today_drag_test.dart`<br>`test/data/calendar/calendar_shift_test.dart` |
 | F1.13 | Overlaps allowed; overlapping blocks render side-by-side (max 3 columns, then "+n") | ✗ gap<br>columns or a recorded decision — M8.4b | ✗ gap<br>columns or a recorded decision — M8.4b | ✗ gap<br>columns or a recorded decision — M8.4b | ✗ gap<br>columns or a recorded decision — M8.4b | `test/shared/dot/thread_day_test.dart`<br>`test/features/timeline/layout/week_layout_test.dart` |
@@ -154,7 +154,7 @@ ticked in 08 §6.1) before a tag.
 - **F1.6** One day at a time (M3b.7); desktop adds Shift/⌘/Ctrl-click.
 - **F1.8** Days step with ⌘/Ctrl+←/→ (07 macOS, 10 §4), not bare arrows; the Mac Go menu does the same. In a browser ⌘← may be Back — checked by hand.
 - **F1.9** The done haptic is felt only on a phone (08 §6.1 hardware pass).
-- **F1.10** Time, title, icon and colour show on every row; subtask progress on the live row and the sheet (10 §3); imported events have no badge.
+- **F1.10** Time, title, icon and colour show on every row; subtask progress on the live row and the sheet (10 §3); an imported event carries the calendar glyph in its meta and "from your calendar" in its label (M8.4b).
 - **F1.11** Lift haptic needs a physical phone (08 §6.1 hardware pass); edge auto-scroll is Flutter's `EdgeDraggingAutoScroller`.
 - **F1.12** Web calendar events come from Google/Microsoft (F5.1).
 - **F1.13** Overlaps are allowed; the thread lists them in start order with the overrun line, the Week board stacks them. No side-by-side columns.

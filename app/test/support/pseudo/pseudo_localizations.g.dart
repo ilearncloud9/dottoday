@@ -3051,4 +3051,7 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String get calendarsTravelSuggestDetail =>
       pseudo(super.calendarsTravelSuggestDetail);
+
+  @override
+  String rowFromCalendar(String label) => pseudo(super.rowFromCalendar(label));
 }
