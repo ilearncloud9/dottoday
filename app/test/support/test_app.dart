@@ -1,4 +1,6 @@
 import 'package:dottoday/app_commands.dart';
+import 'package:dottoday/core/env/env.dart';
+import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,17 @@ Widget testRouterApp(
   List<Override>? overrides,
 }) => ProviderScope(
   overrides:
-      overrides ?? timelineOverrides(now: DateTime.utc(2026, 10, 21, 11)),
+      overrides ??
+      [
+        ...timelineOverrides(now: DateTime.utc(2026, 10, 21, 11)),
+        // Settings › Privacy reads it (M8.6); bootstrap() sets it in the app.
+        envProvider.overrideWithValue(
+          Env(
+            supabaseUrl: Uri.parse('https://example.supabase.co'),
+            supabaseAnonKey: 'anon',
+          ),
+        ),
+      ],
   child: _routerApp(router, onQuickAdd, themeMode),
 );
 
