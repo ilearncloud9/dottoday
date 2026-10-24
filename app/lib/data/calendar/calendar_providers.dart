@@ -4,6 +4,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/calendar/channel_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/drift_calendar_source_repository.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/plugin_device_calendar_gateway.dart';
@@ -21,21 +22,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'calendar_providers.g.dart';
 
-bool get _hasPluginCalendars =>
-    !kIsWeb &&
-    (defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.android);
-
-/// The device calendars on iOS and Android (M7.1); none on the web and,
-/// until M7.1b, macOS.
+/// The device calendars: `device_calendar` on iOS and Android (M7.1), the
+/// EventKit channel on macOS (M7.1b); none on the web (M7.4).
 @Riverpod(keepAlive: true)
-DeviceCalendarGateway deviceCalendarGateway(Ref ref) => _hasPluginCalendars
-    ? PluginDeviceCalendarGateway(
-        ref.watch(appDatabaseProvider),
-        ref.watch(loggerProvider),
-        deviceZone: () => ref.read(currentDeviceZoneProvider.future),
-      )
-    : const NoDeviceCalendarGateway();
+DeviceCalendarGateway deviceCalendarGateway(Ref ref) {
+  if (kIsWeb) return const NoDeviceCalendarGateway();
+  return switch (defaultTargetPlatform) {
+    TargetPlatform.iOS || TargetPlatform.android => PluginDeviceCalendarGateway(
+      ref.watch(appDatabaseProvider),
+      ref.watch(loggerProvider),
+      deviceZone: () => ref.read(currentDeviceZoneProvider.future),
+    ),
+    TargetPlatform.macOS => ChannelDeviceCalendarGateway(
+      ref.watch(loggerProvider),
+    ),
+    _ => const NoDeviceCalendarGateway(),
+  };
+}
 
 @Riverpod(keepAlive: true)
 CalendarSourceRepository calendarSourceRepository(Ref ref) =>

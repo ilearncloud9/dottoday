@@ -110,9 +110,7 @@ void main() {
     expect(find.text('No calendars on this device'), findsOneWidget);
   });
 
-  testWidgets('no device calendars here (web, macOS until M7.1b)', (
-    tester,
-  ) async {
+  testWidgets('no device calendars here (web)', (tester) async {
     await pumpSettings(tester, location: _page);
     expect(find.text('Calendar import arrives in a later update.'), findsOne);
     final connect = tester.widget<OutlinedButton>(find.byType(OutlinedButton));
