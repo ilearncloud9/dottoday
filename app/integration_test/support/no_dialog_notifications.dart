@@ -8,7 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 /// Android: `tool/device_tests.sh` grants POST_NOTIFICATIONS and exact
 /// alarms with adb before the test; missing grants fail at once with the
 /// reason. iOS: provisional authorisation, which iOS gives without a
-/// prompt (the simulator has no `simctl privacy` service for it);
+/// prompt (the simulator has no `simctl privacy` service for it), and so
+/// does macOS;
 /// provisional alerts are delivered quietly, which is all a count needs.
 /// [needExact]: alerts must fire on the minute (exactness, killed app).
 Future<void> ensureNotificationsWithoutDialog(
@@ -43,14 +44,31 @@ Future<void> ensureNotificationsWithoutDialog(
       .resolvePlatformSpecificImplementation<
         IOSFlutterLocalNotificationsPlugin
       >();
-  if (ios == null) return;
   bool usable(NotificationsEnabledOptions? o) =>
       (o?.isEnabled ?? false) || (o?.isProvisionalEnabled ?? false);
-  if (usable(await ios.checkPermissions())) return;
-  await ios.requestPermissions(alert: true, sound: true, provisional: true);
+  if (ios != null) {
+    if (usable(await ios.checkPermissions())) return;
+    await ios.requestPermissions(alert: true, sound: true, provisional: true);
+    expect(
+      usable(await ios.checkPermissions()),
+      isTrue,
+      reason: 'iOS refused provisional notifications (were they turned off?)',
+    );
+    return;
+  }
+  // macOS has provisional authorisation too (10.14+): quiet delivery to
+  // Notification Center without a prompt, so the Mac can run the count
+  // (parity checklist, M8.4).
+  final mac = plugin
+      .resolvePlatformSpecificImplementation<
+        MacOSFlutterLocalNotificationsPlugin
+      >();
+  if (mac == null) return;
+  if (usable(await mac.checkPermissions())) return;
+  await mac.requestPermissions(alert: true, sound: true, provisional: true);
   expect(
-    usable(await ios.checkPermissions()),
+    usable(await mac.checkPermissions()),
     isTrue,
-    reason: 'iOS refused provisional notifications (were they turned off?)',
+    reason: 'macOS refused provisional notifications (were they turned off?)',
   );
 }
