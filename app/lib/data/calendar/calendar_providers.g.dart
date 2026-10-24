@@ -156,7 +156,7 @@ final class CalendarImporterProvider
   }
 }
 
-String _$calendarImporterHash() => r'26196a9c622b14dacd8122fd7a05b366b1c64758';
+String _$calendarImporterHash() => r'31ff4c79f2a03d90d4700b6da5b656133a1bb0fa';
 
 /// The calendar permission now; re-read with `ref.invalidate` (on resume,
 /// after asking).
