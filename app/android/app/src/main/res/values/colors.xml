@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Concept A tokens (docs/10 §2.1) for the launcher icon and launch screen;
+     tool/gen_app_icons.dart and test/tool/app_icons_test.dart keep them in step. -->
+<resources>
+    <color name="ic_launcher_background">#3B6CF6</color>
+    <color name="launch_background">#FAFAF8</color>
+</resources>
