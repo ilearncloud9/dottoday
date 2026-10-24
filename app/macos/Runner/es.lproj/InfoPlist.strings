@@ -1,0 +1,6 @@
+/* OS permission prompts in this language (docs/09 M8.3b). Every
+   *UsageDescription key in Runner/Info.plist needs a line here —
+   test/policy/os_strings_test.dart fails CI otherwise. */
+
+"NSCalendarsFullAccessUsageDescription" = "Dottoday muestra los eventos de tu calendario en tu línea de tiempo, junto a tus tareas.";
+"NSCalendarsUsageDescription" = "Dottoday muestra los eventos de tu calendario en tu línea de tiempo, junto a tus tareas.";

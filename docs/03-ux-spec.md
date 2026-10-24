@@ -175,6 +175,17 @@ vencido/fallido (except the user's own "Running late" action). Errors say "Konnt
 "Impossible de…" / "No se pudo…". Example inputs in hints must parse in that language's Quick Add
 (`quick_add_hints_test`). ICU selectors and placeholder names are never translated.
 
+OS-rendered strings (M8.3b): the permission prompts iOS and macOS draw (calendar, Face ID) come
+from `Runner/<lang>.lproj/InfoPlist.strings`, one line per `*UsageDescription` key in Info.plist
+(CI: `os_strings_test`). The OS shows them in the device's language, not the app's — so a German
+phone gets the German prompt even if Settings › Language is English. Android 13+ lists the same four
+languages under Settings › Apps › Dottoday › Language (`res/xml/locales_config.xml`); picking one
+there sets the language Android reports to the app, which a new profile starts in. After that,
+Settings › Language in Dottoday is the one that counts: the system per-app choice does not override
+it (decided in M8.3b — rejected: following every system locale change, which can't tell a per-app
+pick from a phone-wide change and would undo an explicit in-app choice; a two-way sync through
+Android's `LocaleManager` needs a platform channel and is not worth a new concept yet).
+
 | en | de | fr | es |
 |---|---|---|---|
 | Today · Inbox · Week · Month | Heute · Eingang · Woche · Monat | Aujourd'hui · Boîte de réception · Semaine · Mois | Hoy · Bandeja de entrada · Semana · Mes |
