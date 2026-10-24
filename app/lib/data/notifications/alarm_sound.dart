@@ -14,8 +14,9 @@ List<String> get bundledSoundFiles => [
 ];
 
 /// Copies the bundled sounds to `<container>/Library/Sounds`, where iOS
-/// and macOS look up a notification's sound by file name (docs/09
-/// M6.5.4, 11 A0). Idempotent: an identical file is left alone. A failure
+/// looks up a notification's sound by file name (docs/09 M6.5.4, 11 A0).
+/// Not on macOS: the sandbox can't write there, so the Mac app bundles them
+/// (`tool/xcode_add_sounds.rb`, M8.5). Idempotent: an identical file is left alone. A failure
 /// is logged and that sound falls back to the default one — never a reason
 /// not to deliver.
 Future<void> installAlarmSound({

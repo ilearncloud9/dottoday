@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- Fixed on the Mac: reminder sounds (Dot, Chime, Bell, Ripple) were silent in the Sound picker and reminders fell back to the system sound, including the first task's alarm chime. The sounds now come with the app.
 - Fixed: after opening Dottoday's data with an older version of the app (a beta tester going back a build, or an old copy on a Mac), the newer version could no longer open it. It now picks up where it left off, with nothing lost.
 - M8.4d: Reminder gaps closed on every platform. Settings › Reminders › Task starts now holds a set of up to five alerts that new tasks start with. Quiet hours (off unless you switch them on) let reminders arrive silently overnight — the first task of the day still rings. Pick weekdays for a day-start summary at Wake Up: "Your day: 6 blocks, first at 08:00". Choose a reminder sound — Dot, Chime, Bell or Ripple, made for Dottoday — and hear it as you tap. On the web, the reminder strip inside the app offers Snooze 10 min and plays your sound.
 - Fixed: clearing the notes of a repeating task and choosing "this and later" or "all" now clears them on the other tasks too (they used to keep the old notes).

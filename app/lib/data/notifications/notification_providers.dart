@@ -66,15 +66,16 @@ Future<NotificationPlatform> notificationPlatform(Ref ref) async {
       logger: ref.watch(loggerProvider),
     );
   }
-  final apple =
-      defaultTargetPlatform == TargetPlatform.iOS ||
-      defaultTargetPlatform == TargetPlatform.macOS;
+  // iOS only: the sandboxed Mac app can't write its Library/Sounds (a link
+  // to ~/Library/Sounds), so macOS bundles the sounds instead (M8.5,
+  // tool/xcode_add_sounds.rb).
+  final ios = defaultTargetPlatform == TargetPlatform.iOS;
   final logger = ref.watch(loggerProvider);
   return FlnNotificationPlatform(
     ref.watch(localNotificationsPluginProvider),
     l10n,
     ref.watch(clockProvider),
-    prepare: apple ? () => installAlarmSound(logger: logger) : null,
+    prepare: ios ? () => installAlarmSound(logger: logger) : null,
   );
 }
 

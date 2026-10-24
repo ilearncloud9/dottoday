@@ -10,12 +10,14 @@ enum NotificationChannelKind {
   alarms,
 }
 
-/// The bundled alarm chime, copied into `Library/Sounds` on Apple platforms
-/// (`installAlarmSound`), where notification sounds are looked up.
+/// The bundled alarm chime: copied into `Library/Sounds` on iOS
+/// (`installAlarmSound`), in the app bundle's Resources on macOS
+/// (`tool/xcode_add_sounds.rb`) — where notification sounds are looked up.
 const alarmSoundFile = 'dot_alarm.caf';
 
 /// [sound]'s file: a Flutter asset in `assets/sounds/` (copied to
-/// `Library/Sounds` on Apple platforms, played by the web's in-app strip)
+/// `Library/Sounds` on iOS, bundled as a resource on macOS, played by the
+/// web's in-app strip)
 /// and, without the extension, an Android raw resource (`tool/gen_sounds.dart`).
 String reminderSoundFile(ReminderSound sound) => 'reminder_${sound.name}.wav';
 

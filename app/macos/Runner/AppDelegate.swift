@@ -205,9 +205,10 @@ final class NextUpStatusItem: NSObject {
 }
 
 /// Reminder sound previews on `dottoday/sound` (lib/data/notifications/sound/
-/// sound_player.dart, docs/09 M8.4d): plays a bundled sound the app copied
-/// to Library/Sounds, as a system sound, so the silent switch applies.
-/// Only the generated reminder file names are accepted.
+/// sound_player.dart, docs/09 M8.4d): plays a sound from the app bundle's
+/// Resources (tool/xcode_add_sounds.rb; the sandbox can't write the
+/// container's Library/Sounds, M8.5) as a system sound. Only the generated
+/// reminder file names are accepted.
 final class SoundBridge {
   static let shared = SoundBridge()
   private var channel: FlutterMethodChannel?
@@ -225,10 +226,11 @@ final class SoundBridge {
   }
 
   private static func play(_ name: String) -> FlutterError? {
-    guard name.range(of: "^reminder_[a-z]+\\.wav$", options: .regularExpression) != nil,
-      let library = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first
+    guard name.range(of: "^reminder_[a-z]+\\.wav$", options: .regularExpression) != nil
     else { return FlutterError(code: "bad_sound", message: nil, details: nil) }
-    let url = library.appendingPathComponent("Sounds").appendingPathComponent(name)
+    guard let url = Bundle.main.url(forResource: name, withExtension: nil) else {
+      return FlutterError(code: "no_sound", message: nil, details: nil)
+    }
     var id: SystemSoundID = 0
     guard AudioServicesCreateSystemSoundID(url as CFURL, &id) == kAudioServicesNoError else {
       return FlutterError(code: "no_sound", message: nil, details: nil)
