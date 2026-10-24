@@ -177,10 +177,14 @@ const f1Rows = <String, ParityRow>{
   ),
   'F1.16': ParityRow(
     tests: [
+      'test/features/timeline/today_bottom_golden_test.dart',
       'test/shared/dot/thread_golden_test.dart',
       'test/features/timeline/layout/timeline_day_test.dart',
     ],
-    all: Cell(Status.gap, 'bottom-of-day golden — M8.4b'),
+    all: ci,
+    note:
+        'Bedtime 23:55 (the latest) with a 23:30 task, scrolled to the end, '
+        'on the phone pager and the Mac/web spread (M8.4b).',
   ),
   'F1.17': ParityRow(
     tests: [

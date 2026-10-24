@@ -29,6 +29,9 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
 - [F1.14] Timeline builds lazily; 200 blocks in a day scroll at ≥ 55 fps on a Pixel 6a / iPhone 12 class device. (R-15)
 - [F1.15] Day boundaries: per-weekday start/end; blocks outside boundaries still render in a collapsed "outside hours" zone. (R-17)
 - [F1.16] Full 24 h renders — golden test for the bottom of the day. (R-14)
+  Clarified in M8.4b: the latest Bedtime is 23:55 (the Day shape slider's last step; `24:00` is not a
+  valid window end, `checkTimeWindow`), so "the bottom of the day" is Bedtime 23:55 with a 23:30 task:
+  `today_bottom_golden_test` scrolls the thread to its end at compact and expanded widths.
 - [F1.17] Keyboard (desktop/web): ↑↓ select, Enter open, Space complete, ⌘/Ctrl+↑↓ move 5 min, Shift for 15, Delete → trash with undo.
 - [F1.18] Undo snackbar (30 s) for every move/delete/complete. (R-11)
 
