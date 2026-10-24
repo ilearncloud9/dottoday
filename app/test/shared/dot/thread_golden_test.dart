@@ -71,8 +71,31 @@ final _thirty = <ThreadEntry>[
     ),
 ];
 
+/// A row with travel time before it (derived, docs/09 M7.5, R-17).
+const _travel = <ThreadEntry>[
+  ThreadCap.wake('7:00'),
+  ThreadGap(minutes: 300, startLabel: '7:00', addable: true),
+  ThreadTaskEntry(
+    ThreadTask(
+      id: 'dentist',
+      title: 'Dentist',
+      color: TaskColor.teal,
+      icon: TaskIcon.meds,
+      state: DotState.upcoming,
+      timeRange: '12:30 – 13:15',
+      travel: '30 min',
+    ),
+  ),
+  ThreadCap.bed('22:00'),
+];
+
 void main() {
   setUpAll(loadAppFonts);
+  goldenMatrix(
+    'thread_travel',
+    height: 420,
+    build: (_) => const _Card(_travel),
+  );
   goldenMatrix(
     'thread_main',
     height: 1100,

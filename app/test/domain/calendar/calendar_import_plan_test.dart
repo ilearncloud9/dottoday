@@ -17,14 +17,19 @@ final _now = DateTime.utc(2026, 10, 21, 6);
 final _from = DateTime.utc(2026, 10, 19, 22);
 final _to = _from.add(const Duration(days: 91));
 
-ExternalEvent _event(String id, DateTime start, {String title = 'Standup'}) =>
-    ExternalEvent(
-      id: id,
-      calendarId: 'work',
-      title: title,
-      startUtc: start,
-      endUtc: start.add(const Duration(minutes: 30)),
-    );
+ExternalEvent _event(
+  String id,
+  DateTime start, {
+  String title = 'Standup',
+  String? location,
+}) => ExternalEvent(
+  id: id,
+  calendarId: 'work',
+  title: title,
+  startUtc: start,
+  endUtc: start.add(const Duration(minutes: 30)),
+  location: location,
+);
 
 void main() {
   late tz.Location berlin;
@@ -94,6 +99,54 @@ void main() {
     expect(o.startUtc, nine);
     expect(o.durationMin, 30);
     expect(o.alerts, isNull, reason: 'the calendar app reminds itself');
+  });
+
+  group('the place (M7.5, R-17)', () {
+    test('a new event keeps its place on the link', () {
+      final p = plan([
+        source([_event('E1', nine, location: ' Main St 4\n')]),
+      ], const []);
+      expect(p.links.single.location, 'Main St 4');
+    });
+
+    test('a place changed in the calendar updates only the link', () {
+      final first = plan([
+        source([_event('E1', nine, location: 'Main St 4')]),
+      ], const []);
+      final mine = stored(first);
+      final withTravel = [
+        LinkedOccurrence(
+          link: mine.single.link,
+          occurrence: mine.single.occurrence!.copyWith(travelBufferMin: 15),
+        ),
+      ];
+      final p = plan([
+        source([_event('E1', nine, location: 'Park Ave 9')]),
+      ], withTravel);
+      expect(p.links.single.location, 'Park Ave 9');
+      expect(p.occurrences, isEmpty, reason: 'the travel time stays');
+    });
+
+    test('a move keeps the travel time accepted here', () {
+      final first = plan([
+        source([_event('E1', nine, location: 'Main St 4')]),
+      ], const []);
+      final mine = stored(first).single;
+      final later = nine.add(const Duration(hours: 1));
+      final p = plan(
+        [
+          source([_event('E1', later, location: 'Main St 4')]),
+        ],
+        [
+          LinkedOccurrence(
+            link: mine.link,
+            occurrence: mine.occurrence!.copyWith(travelBufferMin: 15),
+          ),
+        ],
+      );
+      expect(p.occurrences.single.startUtc, later);
+      expect(p.occurrences.single.travelBufferMin, 15);
+    });
   });
 
   test('running again with nothing changed writes nothing', () {

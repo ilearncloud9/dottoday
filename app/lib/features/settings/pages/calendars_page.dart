@@ -13,6 +13,7 @@ import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/widgets/calendar_rows.dart';
 import 'package:dottoday/features/settings/widgets/cloud_calendars_group.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
+import 'package:dottoday/features/settings/widgets/travel_time_group.dart';
 import 'package:dottoday/shared/feedback/permission_notice.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
@@ -23,8 +24,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// device calendars (explain, then the OS prompt; denied → explain + a
 /// way to Settings), one switch per calendar in its inherited colour,
 /// Google and Microsoft accounts (M7.4, every platform), which calendars
-/// get changes sent back (M7.3), and whether shifting the day moves
-/// calendar events too.
+/// get changes sent back (M7.3), whether shifting the day moves
+/// calendar events too, and travel time before events with a place (M7.5).
 class CalendarsPage extends ConsumerWidget {
   const CalendarsPage({super.key});
 
@@ -58,6 +59,7 @@ class CalendarsPage extends ConsumerWidget {
               ),
             ],
           ),
+        if (settings != null) TravelTimeGroup(settings: settings),
       ],
     );
   }

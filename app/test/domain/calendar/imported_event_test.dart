@@ -40,6 +40,13 @@ void main() {
   List<ImportedItem> items(ExternalEvent e) =>
       importedItems(e, berlin, untitled: 'Untitled event');
 
+  test('a place is cleaned and clipped, blank is none (M7.5, 06 §7)', () {
+    expect(importedLocation(null), isNull);
+    expect(importedLocation(' \t\n'), isNull);
+    expect(importedLocation('Main\u0000St 4 '), 'Main St 4');
+    expect(importedLocation('x' * 300), hasLength(maxLocationLength));
+  });
+
   test('a timed event is one item keyed on its id and start', () {
     final [item] = items(_event());
     expect(

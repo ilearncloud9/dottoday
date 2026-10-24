@@ -12,6 +12,7 @@ import 'package:dottoday/features/timeline/widgets/sheet_actions.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_details.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_meta.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_subtasks.dart';
+import 'package:dottoday/features/timeline/widgets/travel_suggestion.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
@@ -75,6 +76,7 @@ class TaskSheetBody extends ConsumerWidget {
           const SizedBox(height: DotSpace.l),
           SheetActions(task: task, onEdit: () => showTaskEditor(context, id)),
           const SizedBox(height: DotSpace.l),
+          TravelSuggestionCard(task: task),
           SheetSubtasks(task: task),
           NoteLinks(notes: task.occurrence.notes),
           const SizedBox(height: DotSpace.m),

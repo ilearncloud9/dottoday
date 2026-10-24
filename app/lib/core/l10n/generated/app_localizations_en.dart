@@ -3738,4 +3738,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String taskCalendarStays(String calendar) {
     return 'From $calendar · changes stay in Dottoday';
   }
+
+  @override
+  String get travelTitle => 'Travel time';
+
+  @override
+  String travelSuggestDetail(String place, String duration) {
+    return 'At $place. Keep $duration before it for getting there?';
+  }
+
+  @override
+  String travelSuggestAdd(String duration) {
+    return 'Add $duration before';
+  }
+
+  @override
+  String travelAdded(String title) {
+    return 'Travel time added before “$title”';
+  }
+
+  @override
+  String get travelNone => 'None';
+
+  @override
+  String travelBefore(String duration) {
+    return '$duration before';
+  }
+
+  @override
+  String rowTravelMeta(String duration) {
+    return '· $duration travel';
+  }
+
+  @override
+  String rowTravel(String label, String duration) {
+    return '$label, $duration travel time before';
+  }
+
+  @override
+  String get calendarsTravel => 'Travel time';
+
+  @override
+  String get calendarsTravelSuggest => 'Suggest travel time';
+
+  @override
+  String get calendarsTravelSuggestDetail =>
+      'Before events with a place. Worked out on this device; no maps are asked';
 }

@@ -33,6 +33,7 @@ final class ImportedItem {
     required this.startUtc,
     required this.durationMin,
     this.writable = true,
+    this.location,
   });
 
   /// The provider's event id. EventKit gives every instance of a repeating
@@ -52,6 +53,10 @@ final class ImportedItem {
   /// event that may span several; a repeating instance shares its series'
   /// id on the device (Google/Microsoft address each instance, M7.4).
   final bool writable;
+
+  /// Where the event happens, cleaned for storage ([importedLocation]);
+  /// null when it has no place. Travel time is suggested from it (R-17).
+  final String? location;
 
   /// `calendar_links.external_event_id`: `<eventId>@<keyMs>`.
   String get key => importKey(eventId, keyMs);
@@ -90,6 +95,7 @@ List<ImportedItem> importedItems(
   }
   final title = importedTitle(event.title, untitled);
   final notes = importedNotes(event.description, event.url);
+  final place = importedLocation(event.location);
   if (event.allDay) {
     return [
       for (final date in allDayDates(event))
@@ -101,6 +107,7 @@ List<ImportedItem> importedItems(
           startUtc: allDayStartUtc(date, location),
           durationMin: maxDurationMin,
           writable: false,
+          location: place,
         ),
     ];
   }
@@ -113,6 +120,7 @@ List<ImportedItem> importedItems(
       startUtc: event.startUtc,
       durationMin: importedDurationMin(event.startUtc, event.endUtc),
       writable: !event.repeating && event.editable,
+      location: place,
     ),
   ];
 }
@@ -130,6 +138,20 @@ String importedTitle(String raw, String untitled) {
   return clean.length <= maxTitleLength
       ? clean
       : clean.substring(0, maxTitleLength).trimRight();
+}
+
+/// The longest `calendar_links.location` (docs/05, the table's CHECK).
+const maxLocationLength = 200;
+
+/// [raw] as an event's place: control characters out, clipped to
+/// [maxLocationLength], blank → null (06 §7). A place is PII, like a
+/// title: it is stored on this device only and never logged.
+String? importedLocation(String? raw) {
+  final clean = (raw ?? '').replaceAll(_titleControl, ' ').trim();
+  if (clean.isEmpty) return null;
+  return clean.length <= maxLocationLength
+      ? clean
+      : clean.substring(0, maxLocationLength).trimRight();
 }
 
 /// What an event brings as notes: its description, then its link when the

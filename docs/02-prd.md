@@ -93,6 +93,18 @@ Everything here is **free tier** unless marked *Phase 2*.
   mine / Use calendar's). An event gone from the calendar keeps the edit here until the next
   import removes it.
 - Travel time: if the event has a location and the user enables it, a buffer block is suggested before it. (R-17)
+  Clarified in M7.5: Settings › Calendars › Travel time › "Suggest travel time" (off until chosen)
+  and one length for every event (5 min–2 h, default 15). No route or maps service is asked: that
+  would send the place off the device, so the suggestion is a rule on the device (rejected: a
+  routing API — a cloud endpoint and a new dependency; learning a length per place — more concepts,
+  follow-up if asked). An imported, timed event with a place that hasn't started and has no travel
+  time shows a card in its sheet: "At Main St 4. Keep 15 min before it for getting there?" · Add 15
+  min before / Not now (put away for this session). Nothing is written until Add (proposal rule; a
+  one-change confirm until `ProposalSheet`, M10.2); Add is undoable and sets the event's travel
+  buffer, which the thread shows as "· 15 min travel" on the row and takes out of the free gap
+  before it; the sheet lists it as Travel time, and the editor's Travel time row (every scheduled
+  task, None–2 h) changes or removes it. A move or a re-import keeps it. Rejected: a separate
+  "Travel" task before the event (a second block to keep in step with the event when it moves).
 - Links in event descriptions open in the browser. (R-02)
   Clarified in M7.2: the task sheet and editor list the web links (http/https, up to 5) found in
   the notes under LINKS; a tap opens the browser. Links typed into a task's notes work the same.

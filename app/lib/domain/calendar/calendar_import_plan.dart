@@ -197,6 +197,7 @@ final class _PlanBuilder {
       etag: ImportFingerprint.of(item).encode(),
       lastSyncedUtc: now,
       readOnly: source.calendar.readOnly || !item.writable,
+      location: item.location,
     );
     _links.add(link);
     _occurrences.add(
@@ -229,7 +230,8 @@ final class _PlanBuilder {
     final readOnly = source.calendar.readOnly || !item.writable;
     if (link.etag == etag &&
         link.externalEventId == item.key &&
-        link.readOnly == readOnly) {
+        link.readOnly == readOnly &&
+        link.location == item.location) {
       return;
     }
     _links.add(
@@ -238,6 +240,7 @@ final class _PlanBuilder {
         etag: etag,
         lastSyncedUtc: now,
         readOnly: readOnly,
+        location: item.location,
       ),
     );
     final o = existing.occurrence;

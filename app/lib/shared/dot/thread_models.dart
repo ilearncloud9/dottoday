@@ -23,6 +23,7 @@ final class ThreadTask {
     this.subtasksTotal = 0,
     this.overrunMinutes = 0,
     this.movable = true,
+    this.travel,
   });
 
   /// Occurrence id, for callbacks.
@@ -54,6 +55,9 @@ final class ThreadTask {
 
   /// Long-press picks it up to drag (§6). Pinned tasks stay put (R-17).
   final bool movable;
+
+  /// "15 min": the travel time held before it (R-17), or null for none.
+  final String? travel;
 
   bool get hasSubtasks => subtasksTotal > 0;
 }

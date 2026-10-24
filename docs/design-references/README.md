@@ -59,6 +59,7 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Month at 840 px, an empty month (no badges, no numbers) | §3 `MonthGrid`, `A-mac-month` | `month_*` |
 | Editor panel header ("EDIT TASK", esc, ×) | §3 `AddFlow` → `TaskEditor`, `A-mac-editor` | `today_editor_panel_*` |
 | Task sheet and editor LINKS (the notes' web links, each a tappable row, M7.2) | §3 `TaskSheet`, `A-ios-task-sheet` | `task_sheet_links_*` |
+| Task sheet TRAVEL TIME suggestion (an imported event's place, Add N min before · Not now, M7.5) | §3 `TaskSheet`, §5.4 card, `A-ios-task-sheet` | `task_sheet_travel_*` |
 | Keyboard shortcut sheet (⌘/), focus ring on buttons | §5.3 "Mac/web keyboard shortcut sheet" | widget tests (`app_shortcut_groups_test`, `focus_ring_test`); golden at the M3e.9 sweep |
 | Repeat editor (choices, weekday chips, custom interval, ends) and the "Change which? / Delete which?" scope sheet | §5.3 "Repeat editor", R-01 | `picker_repeat_*`, `picker_scope_*` |
 | Alerts editor (task alerts, add choices, five at most, Bedtime switch) | §5.3 "Alerts editor", R-10 | `picker_alerts_*` |

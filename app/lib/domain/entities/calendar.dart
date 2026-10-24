@@ -40,6 +40,9 @@ abstract class CalendarLink with _$CalendarLink {
     String? etag,
     @UtcMillisConverter() DateTime? lastSyncedUtc,
     @Default(true) bool readOnly,
+
+    /// The event's place, device-only like the link itself (M7.5, R-17).
+    String? location,
   }) = _CalendarLink;
 
   factory CalendarLink.fromJson(Map<String, Object?> json) =>

@@ -89,6 +89,12 @@ also set when a write finds the event gone or no longer writable). The `etag` fi
 base of write-back's three-way merge: after a successful write it holds the merged start, length and
 title (notes hash unchanged, notes never go back) and `external_event_id` the moved instance's key,
 so the next import sees nothing new.
+Travel time (M7.5, local schema 4): `location` (nullable, ≤ 200 chars, control characters
+removed, blank → null) is the event's place as its calendar gave it (device `location`, Google
+`location`, Microsoft `location.displayName`), refreshed by every import. Device-only like the link
+itself: the server's `calendar_links` has no such column and never receives one (links don't sync),
+so no Supabase migration. It is PII like a title — never logged, never sent anywhere. It feeds only
+the travel time suggestion; an accepted suggestion is the occurrence's `travel_buffer_min`.
 
 ### `conflicts`
 `id, user_id, entity, entity_id, field, mine jsonb, theirs jsonb, created_at, resolved_at?`
@@ -138,7 +144,9 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   "showFreeTime": true,
   "runningLateNudge": true,
   "rollUnfinished": false,
-  "bedtimeReminder": true
+  "bedtimeReminder": true,
+  "suggestTravelTime": false,
+  "travelTimeMin": 15
 }
 ```
 
@@ -156,6 +164,9 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
 - Clarified in M3c.3: `durationPresets` are the Add flow's duration chips — 1–12 distinct lengths of
   5–1440 min, sorted; absent means the default list. Checked by the client validator; the server's
   `validate_settings()` ignores keys it doesn't know, so older rows stay valid.
+- Clarified in M7.5: `suggestTravelTime` (off until chosen) and `travelTimeMin`, one of 5, 10, 15,
+  20, 30, 45, 60, 90, 120 (`Settings.travelChoices`, checked by the client validator; the server
+  ignores both keys, as for `durationPresets`).
 - Clarified in M3d.2: `showFreeTime` (the "N free · add here" gaps on the thread), `runningLateNudge`
   (M3f.5 offers to shift the rest), `rollUnfinished` (Day review moves unfinished tasks to tomorrow
   instead of the Inbox, M3f.5) and `bedtimeReminder` (M3d.3/M5) are plain booleans; absent keys take

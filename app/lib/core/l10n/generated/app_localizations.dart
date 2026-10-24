@@ -5565,6 +5565,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'From {calendar} · changes stay in Dottoday'**
   String taskCalendarStays(String calendar);
+
+  /// Travel time before a task (M7.5, R-17): the task sheet card caption, the sheet and editor row, the Settings row and its picker title.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel time'**
+  String get travelTitle;
+
+  /// Task sheet, an imported event with a place: the travel time suggestion (M7.5). Nothing is written until Add.
+  ///
+  /// In en, this message translates to:
+  /// **'At {place}. Keep {duration} before it for getting there?'**
+  String travelSuggestDetail(String place, String duration);
+
+  /// Task sheet travel suggestion: accept, writes the travel time.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {duration} before'**
+  String travelSuggestAdd(String duration);
+
+  /// Snackbar after accepting a travel time suggestion (with Undo).
+  ///
+  /// In en, this message translates to:
+  /// **'Travel time added before “{title}”'**
+  String travelAdded(String title);
+
+  /// Travel time picker and row: no travel time.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get travelNone;
+
+  /// Travel time row value, e.g. '15 min before'.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} before'**
+  String travelBefore(String duration);
+
+  /// Timeline row meta after the time range when the task has travel time before it, e.g. '15 min travel'.
+  ///
+  /// In en, this message translates to:
+  /// **'· {duration} travel'**
+  String rowTravelMeta(String duration);
+
+  /// Screen-reader row label with travel time.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}, {duration} travel time before'**
+  String rowTravel(String label, String duration);
+
+  /// Calendars page group caption (M7.5).
+  ///
+  /// In en, this message translates to:
+  /// **'Travel time'**
+  String get calendarsTravel;
+
+  /// Calendars page toggle: suggest a travel buffer before events that have a place.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest travel time'**
+  String get calendarsTravelSuggest;
+
+  /// Calendars page toggle subtitle: the suggestion is a fixed length, no route lookup, the place stays on the device.
+  ///
+  /// In en, this message translates to:
+  /// **'Before events with a place. Worked out on this device; no maps are asked'**
+  String get calendarsTravelSuggestDetail;
 }
 
 class _AppLocalizationsDelegate
