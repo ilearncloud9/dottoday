@@ -10,6 +10,9 @@ tags:
   reference-sheet:
     # Writes build/reference_sheet/ for design review (docs/10 §7, M3a.9).
     # Skipped unless REFERENCE_SHEET is set; never a pass/fail gate.
+  store-screenshots:
+    # Writes ../docs/store/screenshots/ (docs/09 M8.6). Skipped unless
+    # STORE_SCREENSHOTS is set; never a pass/fail gate.
   supabase:
     # Against a local Supabase stack (`supabase start`, docs/09 M6.1): the
     # supabase workflow runs them; the unit job excludes them. Reads

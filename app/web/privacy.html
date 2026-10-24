@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="How Dottoday handles your data: what stays on your device, what sync sends, and your rights.">
+  <title>Dottoday · Privacy policy</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="privacy.css">
+</head>
+<body>
+  <!-- Privacy policy (docs/09 M8.6, docs/06 §6). Served with the web build at
+       /privacy.html; the store consoles and PRIVACY_POLICY_URL point here.
+       Written from what the code does (docs/store/privacy-labels.md §1); if
+       that changes, update both in the same commit. -->
+  <main>
+    <header>
+      <img src="icons/Icon-192.png" alt="">
+      <h1>Privacy policy</h1>
+    </header>
+    <p class="meta">Dottoday · Version 0.1 · Last updated: [OWNER: date of publication]</p>
+
+    <p class="draft" id="draft"><strong>Draft for owner and legal review.</strong> Everything in [brackets] must be filled in, and this notice removed, before the page is published (docs/08 §6.1).</p>
+
+    <section class="summary" aria-labelledby="short">
+      <h2 id="short">In short</h2>
+      <ul>
+        <li>Dottoday works fully on your device, encrypted, with no account.</li>
+        <li>If you sign in, your tasks sync to your own account so they appear on your other devices. Nobody else can read them.</li>
+        <li>No ads, no analytics, no trackers. We never sell or share your data.</li>
+        <li>Your calendars stay on your device. Google and Microsoft calendars pass through our server without being stored.</li>
+        <li>You can export everything and delete your account at any time.</li>
+      </ul>
+    </section>
+
+    <h2 id="who">Who we are</h2>
+    <p>Dottoday is made by [OWNER: legal name of the person or company, postal address, country]. We are the controller of the data described here. Contact: <a href="mailto:[OWNER: privacy contact address]">[OWNER: privacy contact address]</a>.</p>
+
+    <h2 id="device">On your device</h2>
+    <p>Your tasks, notes, subtasks, settings, local backups and recent searches are stored in a database on your device, encrypted with a key kept in the system's secure storage (Keychain on Apple devices, Keystore on Android). On the web the database is kept in your browser's storage; a browser cannot protect it as strongly as a phone or computer can, so use the web app only on a computer you trust.</p>
+    <p>Recent searches never leave the device. Exports are files you create and share yourself; they are not encrypted, and the app says so before you save one.</p>
+
+    <h2 id="account">When you sign in</h2>
+    <p>An account is optional. If you create one (with an email link, Sign in with Apple or Google), we store:</p>
+    <ul>
+      <li>your email address (with Sign in with Apple this may be a private relay address) and a random account id;</li>
+      <li>the display name you choose, if any;</li>
+      <li>your tasks and their details: titles, notes, times, colours, icons, repeat rules, reminders, subtasks, energy level and your app settings.</li>
+    </ul>
+    <p>We use this only to sign you in and keep your devices in sync. It travels over an encrypted connection (TLS) and is stored in a database where each row can be read only by its owner. Like any server, ours keeps short technical logs (for example IP addresses at sign-in) for security.</p>
+
+    <h2 id="calendars">Calendars</h2>
+    <p><strong>Calendars on your device</strong> (Apple Calendar, Android calendars, macOS Calendar): Dottoday reads them on the device after you allow it. Their events are never sent to us and are never synced. If you turn on "Send changes back", edits go from the app to the calendar on the same device.</p>
+    <p><strong>Google Calendar and Outlook / Microsoft 365</strong>: when you connect one, the provider gives our server a token that lets it read your calendars and events and, if you turn on "Send changes back", change the start, end and title of events. The token is kept in an encrypted vault that only our server functions can open; the app never sees it. Events pass through our server to your device each time it refreshes and are not stored there. We keep the email address of the connected account to label it. Disconnecting deletes the token.</p>
+    <p>Dottoday's use of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+
+    <h2 id="notifications">Reminders</h2>
+    <p>On iPhone, iPad, Android and Mac, reminders are scheduled on the device. A reminder shows the task's title and time, never its notes; you can hide reminder content on the lock screen in your system settings. On the web, if you turn on notifications, the reminder text is encrypted in your browser before it is uploaded, so our server and your browser's push service only see unreadable data, the time and a task id.</p>
+
+    <h2 id="crashes">Crash reports</h2>
+    <p>If the app crashes or hits an error, it may send a report to Sentry, our crash-reporting service: the kind of error, where in the app's code it happened, the app version, your operating system and device model, and a random id for this installation. Reports never include your tasks, notes, searches, email address or account. We use them only to fix bugs. [OWNER: confirm Sentry is configured to not store IP addresses, see docs/08 §6.1.]</p>
+
+    <h2 id="feedback">Feedback</h2>
+    <p>Settings › Send feedback opens an email in your own mail app. If you send it, we receive your email address and what you wrote. If you leave "Add diagnostics" on, the email also contains the app version, platform, how many tasks are on the device and a random device id — never task text. You can read the block before you send it.</p>
+
+    <h2 id="processors">Who processes your data</h2>
+    <p>We do not sell, rent or share your data. These services process it on our behalf, only to run Dottoday:</p>
+    <div class="table">
+      <table>
+        <thead><tr><th scope="col">Service</th><th scope="col">What for</th><th scope="col">Data</th><th scope="col">Location</th></tr></thead>
+        <tbody>
+          <tr><td>Supabase</td><td>Accounts, sync, calendar connections, web push</td><td>Account, tasks, calendar tokens, push data</td><td>[OWNER: project region]</td></tr>
+          <tr><td>Sentry (Functional Software, Inc.)</td><td>Crash reports</td><td>Crash reports as described above</td><td>[OWNER: EU or US]</td></tr>
+          <tr><td>Resend</td><td>Sending the account-deletion confirmation email</td><td>Email address</td><td>[OWNER: region]</td></tr>
+          <tr><td>Apple, Google</td><td>Sign in with Apple / Google, if you use them</td><td>As set by your Apple or Google account</td><td>Their own terms</td></tr>
+          <tr><td>Google, Microsoft</td><td>Calendar access, if you connect it</td><td>Calendar events, as described above</td><td>Their own terms</td></tr>
+          <tr><td>Google Fonts (web only)</td><td>Font files for characters the app's font lacks</td><td>Your IP address, as with any web request</td><td>Google's terms</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>[OWNER/LEGAL: transfers outside the EU/EEA and the safeguards used, for example Standard Contractual Clauses.]</p>
+
+    <h2 id="retention">How long we keep it</h2>
+    <ul>
+      <li>Account data and synced tasks: until you delete them or your account. Deleted tasks stay in Trash for 30 days so you can bring them back.</li>
+      <li>Calendar tokens: until you disconnect the calendar or delete your account.</li>
+      <li>Crash reports: [OWNER: Sentry retention, 90 days by default].</li>
+      <li>Server backups: [OWNER: Supabase backup retention for the plan].</li>
+      <li>Feedback emails: [OWNER: retention].</li>
+    </ul>
+
+    <h2 id="delete">Delete your account</h2>
+    <p>In the app: <strong>Settings › Account › Delete account</strong>. This deletes your account and everything stored with it on our servers within 24 hours, and we email you when it is done. Tasks on your devices stay there until you remove the app. You can export your data first from the same screen.</p>
+    <p>If you can no longer use the app, email <a href="mailto:[OWNER: privacy contact address]">[OWNER: privacy contact address]</a> from your account's address and we will delete it for you.</p>
+
+    <h2 id="rights">Your rights</h2>
+    <p>You can access and take a copy of your data (Settings › Export), correct it in the app, delete it, and object to or restrict how we use it. Where we rely on your consent (signing in, connecting a calendar, crash reports [OWNER/LEGAL: legal basis per purpose]), you can withdraw it at any time. If you are in the EU, EEA or UK you can also complain to your data protection authority. To exercise any right, write to us at the address above.</p>
+
+    <h2 id="children">Children</h2>
+    <p>Dottoday is for people aged 13 and over. We do not knowingly collect data from children under 13. If you believe a child has created an account, contact us and we will delete it. [OWNER/LEGAL: review the age for EU users, docs/store/age-rating.md.]</p>
+
+    <h2 id="security">Security</h2>
+    <p>Data is encrypted on your device and in transit, server access is limited to each account's own rows, and calendar tokens are kept in an encrypted vault. No system is perfectly secure; if we learn of a breach that affects you, we will tell you as the law requires.</p>
+
+    <h2 id="changes">Changes</h2>
+    <p>If this policy changes, we update the date at the top and, for important changes, tell you in the app's "What's new".</p>
+  </main>
+</body>
+</html>

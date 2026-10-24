@@ -1,0 +1,20 @@
+/* privacy.html (docs/09 M8.6): Concept A tokens, light and dark, like
+   offline.css. No inline styles, so the CSP can stay strict. */
+:root { color-scheme: light dark; --surface: #FAFAF8; --raised: #FFFFFF; --text: #1A1A1C; --muted: #6B6B70; --outline: #E2E2DE; --accent: #3B6CF6; }
+@media (prefers-color-scheme: dark) { :root { --surface: #121214; --raised: #1C1C20; --text: #F2F2F0; --muted: #9A9AA0; --outline: #2C2C32; --accent: #7FA0FF; } }
+body { margin: 0; background: var(--surface); color: var(--text); font: 16px/1.6 -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 42rem; margin: 0 auto; padding: 2rem 1rem 4rem; }
+header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+header img { width: 2.5rem; height: 2.5rem; border-radius: 0.6rem; }
+h1 { font-size: 1.75rem; line-height: 1.2; margin: 0; letter-spacing: -0.02em; }
+h2 { font-size: 1.15rem; margin: 2.25rem 0 0.5rem; }
+p, li { color: var(--text); }
+.meta { color: var(--muted); margin-top: 0; }
+.draft { border: 2px dashed var(--accent); border-radius: 1rem; padding: 0.75rem 1rem; background: var(--raised); }
+.summary { border: 1px solid var(--outline); border-radius: 1rem; padding: 0.5rem 1.25rem; background: var(--raised); }
+table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+th, td { text-align: start; vertical-align: top; padding: 0.5rem; border-bottom: 1px solid var(--outline); }
+th { color: var(--muted); font-weight: 600; }
+.table { overflow-x: auto; }
+a { color: var(--accent); font-weight: 600; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }

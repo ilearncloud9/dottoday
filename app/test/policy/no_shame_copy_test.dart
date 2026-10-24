@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'source_scan.dart';
+import 'store_listing_test.dart' show readListing, storeLocales;
 
 // No-shame rule (CLAUDE.md §11, 11-standout-roadmap D, docs/09 M6.5.11):
 // no streaks, no "late / missed / failed" said about the user, no red for
@@ -82,6 +83,18 @@ void main() {
               !_runningLateAction.contains(key) &&
               judging.hasMatch(_withoutPlaceholders(value)))
             '$key: $value',
+      ];
+      expect(offending, isEmpty);
+    });
+  }
+
+  // The store listings speak for the app too (docs/store, M8.6).
+  for (final locale in storeLocales) {
+    test('the $locale store listing judges no one', () {
+      final judging = _judgingByLocale[locale] ?? _judging;
+      final offending = [
+        for (final MapEntry(:key, :value) in readListing(locale).entries)
+          if (judging.hasMatch(value) || _judging.hasMatch(value)) key,
       ];
       expect(offending, isEmpty);
     });
