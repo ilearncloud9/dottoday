@@ -91,6 +91,14 @@ void main() {
   group('type, shape and size tokens (docs/10 §2.2–2.3)', () {
     final t = DotType.withColors(text: Colors.black, muted: Colors.grey);
 
+    // Material's desktop default (compact, shrink-wrapped) took Mac/web
+    // buttons under the 44 pt floor (03 §1; found on the Mac in M8.7).
+    test('targets keep full size on every platform', () {
+      final theme = DotTheme.light();
+      expect(theme.visualDensity, VisualDensity.standard);
+      expect(theme.materialTapTargetSize, MaterialTapTargetSize.padded);
+    });
+
     test('type roles', () {
       expect(
         [t.pageTitle.fontSize, t.pageTitle.fontWeight],
