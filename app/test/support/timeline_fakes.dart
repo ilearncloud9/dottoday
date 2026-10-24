@@ -284,6 +284,7 @@ final class FakeUndoService implements UndoService {
   @override
   Future<Result<UndoToken, AppFailure>> applyUndoable(WriteBatch batch) async {
     if (fault?.failure case final f?) return Err(f);
+    redoable = _redoBatch = null;
     final id = 'undo-${_n++}';
     _before[id] = [
       for (final o in batch.occurrences)
@@ -311,7 +312,25 @@ final class FakeUndoService implements UndoService {
   UndoToken? latest;
 
   @override
+  UndoToken? redoable;
+  WriteBatch? _redoBatch;
+
+  /// Like the real service: re-applying the undone batch, as a new token.
+  @override
+  Future<Result<UndoToken, AppFailure>> redo(UndoToken token) async {
+    final batch = _redoBatch;
+    if (token != redoable || batch == null) {
+      return const Err(UndoExpiredFailure());
+    }
+    return applyUndoable(batch);
+  }
+
+  @override
   Future<Result<void, AppFailure>> undo(UndoToken token) async {
+    _redoBatch = applied.where((b) => _batchIds[b] == token.id).firstOrNull;
+    redoable = _redoBatch == null
+        ? null
+        : UndoToken(id: 'redo-${_n++}', expiresAtUtc: DateTime.utc(2100));
     final seriesBefore = _seriesBefore.remove(token.id) ?? const <Series>[];
     final made = applied
         .where((b) => _batchIds[b] == token.id)
