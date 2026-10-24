@@ -1,9 +1,13 @@
 import 'package:dottoday/data/feedback/diagnostics_reader.dart';
+import 'package:dottoday/data/notifications/notification_providers.dart';
+import 'package:dottoday/data/notifications/sound/sound_player.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/feedback/feedback_diagnostics.dart';
+import 'package:dottoday/domain/notifications/reminder_sound.dart';
 import 'package:dottoday/shared/dot/day_shape_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +28,13 @@ Future<void> _tapRow(WidgetTester tester, String title) async {
 
 /// Switch.adaptive draws a Cupertino switch on iPhone (§4 switch idiom).
 Finder _cupertinoSwitches() => find.byType(CupertinoSwitch);
+
+final class _FakePlayer implements SoundPlayer {
+  final played = <ReminderSound>[];
+
+  @override
+  Future<void> play(ReminderSound sound) async => played.add(sound);
+}
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
@@ -62,7 +73,7 @@ void main() {
     tester,
   ) async {
     final h = await pumpSettings(tester);
-    expect(_cupertinoSwitches(), findsNWidgets(5));
+    expect(_cupertinoSwitches(), findsNWidgets(6));
     await _tapRow(tester, 'Show free time');
     expect((await storedSettings(h)).showFreeTime, isFalse);
     // F3.3: the plan-your-inbox nudge starts off.
@@ -76,10 +87,10 @@ void main() {
   testWidgets('Android draws Material switches', (tester) async {
     await pumpSettings(tester, platform: TargetPlatform.android);
     expect(_cupertinoSwitches(), findsNothing);
-    expect(find.byType(Switch), findsNWidgets(5));
+    expect(find.byType(Switch), findsNWidgets(6));
   });
 
-  testWidgets('choices: week start, time format, shift, snap, alert, theme', (
+  testWidgets('choices: week start, time format, shift, snap, theme', (
     tester,
   ) async {
     final h = await pumpSettings(tester);
@@ -93,14 +104,12 @@ void main() {
     await choose('Time format', '12 h');
     await choose('Shift later tasks', 'Never');
     await choose('Snap to', '15 min');
-    await choose('Task starts', 'No alert');
     await choose('Theme', 'Dark');
     final s = await storedSettings(h);
     expect(s.firstDayOfWeek, 7);
     expect(s.use24h, isFalse);
     expect(s.shiftFollowers, ShiftFollowersPolicy.never);
     expect(s.snapMinutes, 15);
-    expect(s.defaultAlerts, isEmpty);
     expect(s.theme, ThemePreference.dark);
   });
 
@@ -114,16 +123,91 @@ void main() {
     expect((await storedSettings(h)).use24h, isTrue);
   });
 
-  testWidgets('Task starts "When it starts" stores an at-start alert', (
+  testWidgets('Task starts edits the default alert set (F6.2)', (tester) async {
+    final h = await pumpSettings(tester);
+    await _tapRow(tester, 'Task starts');
+    await tester.tap(find.text('at start'));
+    await tester.tap(find.text('at end'));
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect((await storedSettings(h)).defaultAlerts, [
+      const Alert(kind: AlertKind.before, offsetMin: 10),
+      const Alert(kind: AlertKind.atStart),
+      const Alert(kind: AlertKind.atEnd),
+    ]);
+    expect(find.text('10 min before +2'), findsOneWidget);
+    await _tapRow(tester, 'Task starts');
+    for (final a in ['10 min before', 'at start', 'at end']) {
+      await tester.tap(find.byTooltip('Remove $a'));
+      await tester.pump();
+    }
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect((await storedSettings(h)).defaultAlerts, isEmpty);
+    expect(find.text('No alert'), findsOneWidget);
+  });
+
+  testWidgets('Quiet hours: on with the suggested window, then From', (
     tester,
   ) async {
     final h = await pumpSettings(tester);
-    await _tapRow(tester, 'Task starts');
-    await tester.tap(find.text('When it starts'));
+    expect((await storedSettings(h)).quietHours, isNull);
+    expect(find.text('From'), findsNothing);
+    await _tapRow(tester, 'Quiet hours');
+    expect((await storedSettings(h)).quietHours, Settings.suggestedQuietHours);
+    expect(find.textContaining('22:00–07:00'), findsOneWidget);
+    await _tapRow(tester, 'From');
+    await tester.enterText(find.byType(TextField).last, '2330');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+    await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
-    expect((await storedSettings(h)).defaultAlerts, [
-      const Alert(kind: AlertKind.atStart),
-    ]);
+    expect(
+      (await storedSettings(h)).quietHours,
+      const TimeWindow(start: '23:30', end: '07:00'),
+    );
+    await _tapRow(tester, 'Quiet hours');
+    expect((await storedSettings(h)).quietHours, isNull);
+  });
+
+  testWidgets('Day-start summary: per weekday, off by default (F6.2)', (
+    tester,
+  ) async {
+    final h = await pumpSettings(tester);
+    expect(find.text('Off'), findsOneWidget);
+    await _tapRow(tester, 'Day-start summary');
+    await tester.tap(find.text('Monday').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Friday').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect((await storedSettings(h)).daySummaryDays, {
+      Weekday.mon,
+      Weekday.fri,
+    });
+    expect(find.text('Mon, Fri'), findsOneWidget);
+  });
+
+  testWidgets('Sound: a tap picks and plays it (F6.6)', (tester) async {
+    final player = _FakePlayer();
+    final h = await pumpSettings(
+      tester,
+      overrides: [soundPlayerProvider.overrideWithValue(player)],
+    );
+    expect(find.text('System sound'), findsOneWidget);
+    await _tapRow(tester, 'Sound');
+    await tester.tap(find.text('Chime'));
+    await tester.pumpAndSettle();
+    expect((await storedSettings(h)).reminderSound, 'chime');
+    expect(player.played, [ReminderSound.chime]);
+    await tester.tap(find.text('System sound').last);
+    await tester.pumpAndSettle();
+    expect((await storedSettings(h)).reminderSound, isNull);
+    expect(player.played, [ReminderSound.chime], reason: 'nothing to play');
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect(find.text('System sound'), findsOneWidget);
   });
 
   testWidgets('Wake Up typed moves every weekday (R-20)', (tester) async {

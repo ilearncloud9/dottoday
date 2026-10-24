@@ -5969,6 +5969,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Once a day from Wake Up, when the Inbox holds tasks'**
   String get settingsInboxNudgeDetail;
+
+  /// Task starts value when the default set has more than one alert: the first alert, then how many more.
+  ///
+  /// In en, this message translates to:
+  /// **'{first} +{count}'**
+  String settingsAlertsMore(String first, int count);
+
+  /// Settings › Reminders row and sheet title: the sound of task reminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound'**
+  String get settingsSound;
+
+  /// Sound choice: the device's own notification sound.
+  ///
+  /// In en, this message translates to:
+  /// **'System sound'**
+  String get settingsSoundSystem;
+
+  /// Line at the top of the Sound sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'For task reminders. Tap one to hear it. The first task of the day keeps its alarm.'**
+  String get settingsSoundDetail;
+
+  /// Name of a bundled reminder sound: one soft ping.
+  ///
+  /// In en, this message translates to:
+  /// **'Dot'**
+  String get soundDot;
+
+  /// Name of a bundled reminder sound: two rising notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Chime'**
+  String get soundChime;
+
+  /// Name of a bundled reminder sound: a small bell.
+  ///
+  /// In en, this message translates to:
+  /// **'Bell'**
+  String get soundBell;
+
+  /// Name of a bundled reminder sound: three quick notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Ripple'**
+  String get soundRipple;
+
+  /// Settings › Reminders switch: quiet hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet hours'**
+  String get settingsQuietHours;
+
+  /// Quiet hours subtitle while off.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders arrive silently at night'**
+  String get settingsQuietHoursOff;
+
+  /// Quiet hours subtitle while on, with the window.
+  ///
+  /// In en, this message translates to:
+  /// **'{from}–{until}: reminders arrive silently. The first task of the day still rings.'**
+  String settingsQuietHoursOn(String from, String until);
+
+  /// Quiet hours start row.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get settingsQuietFrom;
+
+  /// Quiet hours end row.
+  ///
+  /// In en, this message translates to:
+  /// **'Until'**
+  String get settingsQuietUntil;
+
+  /// Settings › Reminders row and sheet title: the day-start summary notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Day-start summary'**
+  String get settingsDaySummary;
+
+  /// Day-start summary value when no weekday has it.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get settingsDaySummaryOff;
+
+  /// Line at the top of the Day-start summary sheet: what it says and when.
+  ///
+  /// In en, this message translates to:
+  /// **'At Wake Up on the days you choose: “Your day: 6 blocks, first at 08:00”.'**
+  String get settingsDaySummaryDetail;
+
+  /// Title of the day-start summary notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Your day'**
+  String get notifDaySummaryTitle;
+
+  /// Body of the day-start summary notification: how many blocks today and when the first starts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 block, at {time}} other{{count} blocks, first at {time}}}'**
+  String notifDaySummaryBody(int count, String time);
+
+  /// Android notification channel name for task alerts with one bundled sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Task alerts · {sound}'**
+  String notifChannelAlertsSound(String sound);
 }
 
 class _AppLocalizationsDelegate

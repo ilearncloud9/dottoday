@@ -122,6 +122,18 @@ void main() {
       expect(Settings.fromJson(_wire(off.toJson())).quietHours, isNull);
     });
 
+    test('summary days and sound round-trip; absent = off (M8.4d)', () {
+      expect(const Settings().daySummaryDays, isEmpty);
+      expect(const Settings().reminderSound, isNull);
+      const on = Settings(
+        daySummaryDays: {Weekday.mon, Weekday.sat},
+        reminderSound: 'bell',
+      );
+      final json = _wire(on.toJson());
+      expect(json['daySummaryDays'], unorderedEquals(['mon', 'sat']));
+      expect(Settings.fromJson(json), on);
+    });
+
     test('boundaryFor falls back to 07:00–22:00', () {
       const s = Settings(
         dayBoundaries: {Weekday.sat: TimeWindow(start: '09:00', end: '23:00')},

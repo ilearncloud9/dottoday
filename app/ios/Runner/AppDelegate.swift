@@ -1,3 +1,4 @@
+import AudioToolbox
 import Flutter
 import UIKit
 import UserNotifications
@@ -28,6 +29,9 @@ import workmanager_apple
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "DeepLinkBridge") {
       DeepLinkBridge.shared.attach(to: registrar.messenger())
     }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "SoundBridge") {
+      SoundBridge.shared.attach(to: registrar.messenger())
+    }
   }
 }
 
@@ -53,5 +57,39 @@ final class DeepLinkBridge {
       self.pending.removeAll()
     }
     self.channel = channel
+  }
+}
+
+/// Reminder sound previews on `dottoday/sound` (lib/data/notifications/sound/
+/// sound_player.dart, docs/09 M8.4d): plays a bundled sound the app copied
+/// to Library/Sounds, as a system sound, so the silent switch applies.
+/// Only the generated reminder file names are accepted.
+final class SoundBridge {
+  static let shared = SoundBridge()
+  private var channel: FlutterMethodChannel?
+
+  func attach(to messenger: FlutterBinaryMessenger) {
+    let channel = FlutterMethodChannel(name: "dottoday/sound", binaryMessenger: messenger)
+    channel.setMethodCallHandler { call, result in
+      guard call.method == "play", let name = call.arguments as? String else {
+        result(FlutterMethodNotImplemented)
+        return
+      }
+      result(SoundBridge.play(name))
+    }
+    self.channel = channel
+  }
+
+  private static func play(_ name: String) -> FlutterError? {
+    guard name.range(of: "^reminder_[a-z]+\\.wav$", options: .regularExpression) != nil,
+      let library = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first
+    else { return FlutterError(code: "bad_sound", message: nil, details: nil) }
+    let url = library.appendingPathComponent("Sounds").appendingPathComponent(name)
+    var id: SystemSoundID = 0
+    guard AudioServicesCreateSystemSoundID(url as CFURL, &id) == kAudioServicesNoError else {
+      return FlutterError(code: "no_sound", message: nil, details: nil)
+    }
+    AudioServicesPlaySystemSoundWithCompletion(id) { AudioServicesDisposeSystemSoundID(id) }
+    return nil
   }
 }

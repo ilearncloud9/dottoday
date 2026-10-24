@@ -11,6 +11,7 @@ import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/data/notifications/notification_responder.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/notifications/push/web_push_wiring.dart';
+import 'package:dottoday/data/notifications/sound/sound_player.dart';
 import 'package:dottoday/data/notifications/timer_notification_platform.dart';
 import 'package:dottoday/data/notifications/web/browser_notifications_any.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -29,6 +30,11 @@ part 'notification_providers.g.dart';
 FlutterLocalNotificationsPlugin localNotificationsPlugin(Ref ref) =>
     FlutterLocalNotificationsPlugin();
 
+/// Plays a bundled reminder sound in the app (picker preview, web strip).
+@Riverpod(keepAlive: true)
+SoundPlayer soundPlayer(Ref ref) =>
+    platformSoundPlayer(ref.watch(loggerProvider));
+
 /// The scheduler under the gateway: the OS on iOS, Android and macOS; on
 /// the web, timers while the tab is open, posting through the service
 /// worker or the in-app banner (M5.3).
@@ -44,7 +50,11 @@ Future<NotificationPlatform> notificationPlatform(Ref ref) async {
         doneLabel: l10n.notifActionDone,
         openLabel: l10n.notifActionOpen,
       ),
-      onInApp: ref.read(inAppAlertsProvider.notifier).add,
+      onInApp: (n) => deliverInApp(
+        n,
+        add: ref.read(inAppAlertsProvider.notifier).add,
+        player: ref.read(soundPlayerProvider),
+      ),
       taps: browserNotificationTaps(),
     );
     return withServerPush(

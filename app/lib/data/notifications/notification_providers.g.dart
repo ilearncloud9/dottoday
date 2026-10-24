@@ -63,6 +63,52 @@ final class LocalNotificationsPluginProvider
 String _$localNotificationsPluginHash() =>
     r'c1cef212231ef607c2087a0d83df4ad9637c1af6';
 
+/// Plays a bundled reminder sound in the app (picker preview, web strip).
+
+@ProviderFor(soundPlayer)
+final soundPlayerProvider = SoundPlayerProvider._();
+
+/// Plays a bundled reminder sound in the app (picker preview, web strip).
+
+final class SoundPlayerProvider
+    extends $FunctionalProvider<SoundPlayer, SoundPlayer, SoundPlayer>
+    with $Provider<SoundPlayer> {
+  /// Plays a bundled reminder sound in the app (picker preview, web strip).
+  SoundPlayerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'soundPlayerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$soundPlayerHash();
+
+  @$internal
+  @override
+  $ProviderElement<SoundPlayer> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SoundPlayer create(Ref ref) {
+    return soundPlayer(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SoundPlayer value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SoundPlayer>(value),
+    );
+  }
+}
+
+String _$soundPlayerHash() => r'b81ef35325558f2c9231bd4c47bce2925f9566cf';
+
 /// The scheduler under the gateway: the OS on iOS, Android and macOS; on
 /// the web, timers while the tab is open, posting through the service
 /// worker or the in-app banner (M5.3).
@@ -114,7 +160,7 @@ final class NotificationPlatformProvider
 }
 
 String _$notificationPlatformHash() =>
-    r'aba6e4370e3e6de99ec7792805d530f62144ea86';
+    r'b0f22b14e6c79c55e390f0911d897ae7e55f4482';
 
 @ProviderFor(notificationResponder)
 final notificationResponderProvider = NotificationResponderProvider._();

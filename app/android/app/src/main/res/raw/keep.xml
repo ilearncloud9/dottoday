@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Notification sounds are looked up by name (FlnNotificationPlatform), so
+     release resource shrinking would drop them as unused (docs/09 M8.4d). -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@raw/dot_alarm,@raw/reminder_*" />

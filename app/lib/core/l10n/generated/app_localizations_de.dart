@@ -4036,4 +4036,77 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get settingsInboxNudgeDetail =>
       'Einmal am Tag ab dem Aufstehen, wenn im Eingang Aufgaben liegen';
+
+  @override
+  String settingsAlertsMore(String first, int count) {
+    return '$first +$count';
+  }
+
+  @override
+  String get settingsSound => 'Ton';
+
+  @override
+  String get settingsSoundSystem => 'Systemton';
+
+  @override
+  String get settingsSoundDetail =>
+      'Für Erinnerungen an Aufgaben. Tippe auf einen, um ihn zu hören. Die erste Aufgabe des Tages behält ihren Wecker.';
+
+  @override
+  String get soundDot => 'Punkt';
+
+  @override
+  String get soundChime => 'Klang';
+
+  @override
+  String get soundBell => 'Glocke';
+
+  @override
+  String get soundRipple => 'Welle';
+
+  @override
+  String get settingsQuietHours => 'Ruhezeit';
+
+  @override
+  String get settingsQuietHoursOff => 'Erinnerungen kommen nachts lautlos';
+
+  @override
+  String settingsQuietHoursOn(String from, String until) {
+    return '$from–$until: Erinnerungen kommen lautlos. Die erste Aufgabe des Tages klingelt trotzdem.';
+  }
+
+  @override
+  String get settingsQuietFrom => 'Von';
+
+  @override
+  String get settingsQuietUntil => 'Bis';
+
+  @override
+  String get settingsDaySummary => 'Tagesüberblick am Morgen';
+
+  @override
+  String get settingsDaySummaryOff => 'Aus';
+
+  @override
+  String get settingsDaySummaryDetail =>
+      'Beim Aufstehen an den gewählten Tagen: „Dein Tag: 6 Blöcke, der erste um 08:00“.';
+
+  @override
+  String get notifDaySummaryTitle => 'Dein Tag';
+
+  @override
+  String notifDaySummaryBody(int count, String time) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Blöcke, der erste um $time',
+      one: '1 Block, um $time',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notifChannelAlertsSound(String sound) {
+    return 'Aufgabenhinweise · $sound';
+  }
 }

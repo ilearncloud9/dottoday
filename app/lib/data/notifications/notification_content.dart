@@ -9,6 +9,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
+import 'package:dottoday/domain/notifications/reminder_sound.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -33,6 +34,14 @@ OsNotification? composeNotification(
     body = task?.startUtc == null
         ? l10n.notifBedtimeFree
         : l10n.notifBedtimeFirst(task!.title, _time(task.startUtc!, profile));
+  } else if (planned.purpose == NotificationPurpose.daySummary) {
+    // The first block gone since planning: the next resync re-counts.
+    if (task?.startUtc == null) return null;
+    title = l10n.notifDaySummaryTitle;
+    body = l10n.notifDaySummaryBody(
+      planned.blocks ?? 1,
+      _time(task!.startUtc!, profile),
+    );
   } else {
     if (task == null) return null;
     title = task.title;
@@ -47,7 +56,9 @@ OsNotification? composeNotification(
       planned,
       contentHash: notificationContentHash(title, body),
     ),
-    channel: planned.purpose == NotificationPurpose.bedtime
+    channel:
+        planned.purpose != NotificationPurpose.task &&
+            planned.purpose != NotificationPurpose.testAlarm
         ? NotificationChannelKind.summary
         : planned.loud
         ? NotificationChannelKind.alarms
@@ -56,6 +67,10 @@ OsNotification? composeNotification(
     timeSensitive: planned.timeSensitive,
     loud: planned.loud,
     withActions: planned.purpose == NotificationPurpose.task,
+    // The picked sound is for task reminders; loud dots keep the alarm.
+    sound: planned.purpose == NotificationPurpose.task && !planned.loud
+        ? ReminderSound.fromKey(planned.sound)
+        : null,
   );
 }
 

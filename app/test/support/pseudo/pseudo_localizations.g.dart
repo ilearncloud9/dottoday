@@ -3125,4 +3125,65 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get settingsInboxNudgeDetail => pseudo(super.settingsInboxNudgeDetail);
+
+  @override
+  String settingsAlertsMore(String first, int count) =>
+      pseudo(super.settingsAlertsMore(first, count));
+
+  @override
+  String get settingsSound => pseudo(super.settingsSound);
+
+  @override
+  String get settingsSoundSystem => pseudo(super.settingsSoundSystem);
+
+  @override
+  String get settingsSoundDetail => pseudo(super.settingsSoundDetail);
+
+  @override
+  String get soundDot => pseudo(super.soundDot);
+
+  @override
+  String get soundChime => pseudo(super.soundChime);
+
+  @override
+  String get soundBell => pseudo(super.soundBell);
+
+  @override
+  String get soundRipple => pseudo(super.soundRipple);
+
+  @override
+  String get settingsQuietHours => pseudo(super.settingsQuietHours);
+
+  @override
+  String get settingsQuietHoursOff => pseudo(super.settingsQuietHoursOff);
+
+  @override
+  String settingsQuietHoursOn(String from, String until) =>
+      pseudo(super.settingsQuietHoursOn(from, until));
+
+  @override
+  String get settingsQuietFrom => pseudo(super.settingsQuietFrom);
+
+  @override
+  String get settingsQuietUntil => pseudo(super.settingsQuietUntil);
+
+  @override
+  String get settingsDaySummary => pseudo(super.settingsDaySummary);
+
+  @override
+  String get settingsDaySummaryOff => pseudo(super.settingsDaySummaryOff);
+
+  @override
+  String get settingsDaySummaryDetail => pseudo(super.settingsDaySummaryDetail);
+
+  @override
+  String get notifDaySummaryTitle => pseudo(super.notifDaySummaryTitle);
+
+  @override
+  String notifDaySummaryBody(int count, String time) =>
+      pseudo(super.notifDaySummaryBody(count, time));
+
+  @override
+  String notifChannelAlertsSound(String sound) =>
+      pseudo(super.notifChannelAlertsSound(sound));
 }

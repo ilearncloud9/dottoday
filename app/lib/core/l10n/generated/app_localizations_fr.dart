@@ -4038,4 +4038,77 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingsInboxNudgeDetail =>
       'Une fois par jour dès le réveil, si la boîte contient des tâches';
+
+  @override
+  String settingsAlertsMore(String first, int count) {
+    return '$first +$count';
+  }
+
+  @override
+  String get settingsSound => 'Son';
+
+  @override
+  String get settingsSoundSystem => 'Son du système';
+
+  @override
+  String get settingsSoundDetail =>
+      'Pour les rappels de tâches. Touchez-en un pour l\'écouter. La première tâche de la journée garde son alarme.';
+
+  @override
+  String get soundDot => 'Point';
+
+  @override
+  String get soundChime => 'Carillon';
+
+  @override
+  String get soundBell => 'Cloche';
+
+  @override
+  String get soundRipple => 'Ondée';
+
+  @override
+  String get settingsQuietHours => 'Heures calmes';
+
+  @override
+  String get settingsQuietHoursOff => 'Les rappels arrivent en silence la nuit';
+
+  @override
+  String settingsQuietHoursOn(String from, String until) {
+    return '$from–$until : les rappels arrivent en silence. La première tâche de la journée sonne quand même.';
+  }
+
+  @override
+  String get settingsQuietFrom => 'De';
+
+  @override
+  String get settingsQuietUntil => 'À';
+
+  @override
+  String get settingsDaySummary => 'Résumé du matin';
+
+  @override
+  String get settingsDaySummaryOff => 'Désactivé';
+
+  @override
+  String get settingsDaySummaryDetail =>
+      'Au réveil les jours choisis : « Votre journée : 6 blocs, le premier à 08:00 ».';
+
+  @override
+  String get notifDaySummaryTitle => 'Votre journée';
+
+  @override
+  String notifDaySummaryBody(int count, String time) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count blocs, le premier à $time',
+      one: '1 bloc, à $time',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notifChannelAlertsSound(String sound) {
+    return 'Alertes de tâches · $sound';
+  }
 }

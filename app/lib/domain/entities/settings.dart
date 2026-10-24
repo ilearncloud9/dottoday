@@ -37,6 +37,11 @@ abstract class Settings with _$Settings {
     @Default(<Alert>[Alert(kind: AlertKind.before, offsetMin: 10)])
     List<Alert> defaultAlerts,
     TimeWindow? quietHours,
+    // Settings › Reminders (docs/02 F6.2, F6.6, M8.4d): the weekdays with a
+    // day-start summary at Wake Up (none = off) and the sound of task
+    // reminders (a `ReminderSound` key; null = the system sound).
+    @Default(<Weekday>{}) Set<Weekday> daySummaryDays,
+    String? reminderSound,
     bool? use24h,
     @Default(1) int firstDayOfWeek,
     @Default(ThemePreference.system) ThemePreference theme,

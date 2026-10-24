@@ -2,6 +2,9 @@ package com.yourcompany.dottoday
 
 import android.app.NotificationManager
 import android.content.Intent
+import android.media.AudioAttributes
+import android.media.AudioManager
+import android.media.MediaPlayer
 import android.os.PowerManager
 import android.provider.Settings
 import android.view.WindowManager
@@ -15,7 +18,8 @@ import io.flutter.plugin.common.MethodChannel
  * lock is on: no screenshots, and a blank card in Recents. `dottoday/power`
  * reads and opens the battery-optimisation setting for the notification
  * health panel (docs/09 M6.5.5); it never asks for the restricted
- * REQUEST_IGNORE_BATTERY_OPTIMIZATIONS permission.
+ * REQUEST_IGNORE_BATTERY_OPTIMIZATIONS permission. `dottoday/sound` plays
+ * a bundled reminder sound once for the Sound picker's preview (M8.4d).
  */
 class MainActivity : FlutterFragmentActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -51,5 +55,38 @@ class MainActivity : FlutterFragmentActivity() {
                     else -> result.notImplemented()
                 }
             }
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dottoday/sound")
+            .setMethodCallHandler { call, result ->
+                val name = call.arguments as? String
+                if (call.method != "play" || name == null) {
+                    return@setMethodCallHandler result.notImplemented()
+                }
+                if (!soundName.matches(name)) {
+                    return@setMethodCallHandler result.error("bad_sound", null, null)
+                }
+                playSound(name.substringBefore('.'))
+                result.success(null)
+            }
+    }
+
+    /** Plays raw resource [resource] once as a notification sound (DND applies). */
+    private fun playSound(resource: String) {
+        // keep.xml keeps the reminder sounds, which are only named at run time.
+        @Suppress("DiscouragedApi")
+        val id = resources.getIdentifier(resource, "raw", packageName)
+        if (id == 0) return
+        val attributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+        val audio = getSystemService(AUDIO_SERVICE) as AudioManager
+        val player = MediaPlayer.create(this, id, attributes, audio.generateAudioSessionId())
+            ?: return
+        player.setOnCompletionListener { it.release() }
+        player.start()
+    }
+
+    private companion object {
+        val soundName = Regex("^reminder_[a-z]+\\.wav$")
     }
 }

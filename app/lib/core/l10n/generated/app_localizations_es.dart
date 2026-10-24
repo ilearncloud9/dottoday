@@ -4029,4 +4029,78 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get settingsInboxNudgeDetail =>
       'Una vez al día desde que te levantas, si la bandeja tiene tareas';
+
+  @override
+  String settingsAlertsMore(String first, int count) {
+    return '$first +$count';
+  }
+
+  @override
+  String get settingsSound => 'Sonido';
+
+  @override
+  String get settingsSoundSystem => 'Sonido del sistema';
+
+  @override
+  String get settingsSoundDetail =>
+      'Para los recordatorios de tareas. Toca uno para oírlo. La primera tarea del día mantiene su alarma.';
+
+  @override
+  String get soundDot => 'Punto';
+
+  @override
+  String get soundChime => 'Campanilla';
+
+  @override
+  String get soundBell => 'Campana';
+
+  @override
+  String get soundRipple => 'Onda';
+
+  @override
+  String get settingsQuietHours => 'Horas de silencio';
+
+  @override
+  String get settingsQuietHoursOff =>
+      'Los recordatorios llegan en silencio por la noche';
+
+  @override
+  String settingsQuietHoursOn(String from, String until) {
+    return '$from–$until: los recordatorios llegan en silencio. La primera tarea del día sigue sonando.';
+  }
+
+  @override
+  String get settingsQuietFrom => 'Desde';
+
+  @override
+  String get settingsQuietUntil => 'Hasta';
+
+  @override
+  String get settingsDaySummary => 'Resumen del día';
+
+  @override
+  String get settingsDaySummaryOff => 'Desactivado';
+
+  @override
+  String get settingsDaySummaryDetail =>
+      'Al despertar los días que elijas: «Tu día: 6 bloques, el primero a las 08:00».';
+
+  @override
+  String get notifDaySummaryTitle => 'Tu día';
+
+  @override
+  String notifDaySummaryBody(int count, String time) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bloques, el primero a las $time',
+      one: '1 bloque, a las $time',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notifChannelAlertsSound(String sound) {
+    return 'Avisos de tareas · $sound';
+  }
 }

@@ -87,4 +87,25 @@ void main() {
     expect(opened, ['/today', '/today']);
     expect(writes.applied, isEmpty);
   });
+
+  test('the day-start summary opens Today, not its first task', () async {
+    await responder.handle(
+      NotificationTap(
+        id: 10,
+        payload: encodeNotificationPayload(
+          PlannedNotification(
+            id: 10,
+            occurrenceId: gymId(),
+            alertIndex: PlannedNotification.daySummaryIndex,
+            fireAtUtc: now,
+            kind: AlertKind.atStart,
+            purpose: NotificationPurpose.daySummary,
+            blocks: 4,
+          ),
+        ),
+      ),
+    );
+    expect(opened, ['/today']);
+    expect(writes.applied, isEmpty);
+  });
 }

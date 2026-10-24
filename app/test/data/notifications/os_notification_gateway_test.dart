@@ -45,7 +45,7 @@ void main() {
     tzId: 'Europe/Berlin',
     seriesAlerts: const {},
     quietHours: null,
-    bedtimeFrom: null,
+    daily: null,
   );
 
   Future<void> resync() async =>

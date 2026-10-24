@@ -4012,4 +4012,77 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsInboxNudgeDetail =>
       'Once a day from Wake Up, when the Inbox holds tasks';
+
+  @override
+  String settingsAlertsMore(String first, int count) {
+    return '$first +$count';
+  }
+
+  @override
+  String get settingsSound => 'Sound';
+
+  @override
+  String get settingsSoundSystem => 'System sound';
+
+  @override
+  String get settingsSoundDetail =>
+      'For task reminders. Tap one to hear it. The first task of the day keeps its alarm.';
+
+  @override
+  String get soundDot => 'Dot';
+
+  @override
+  String get soundChime => 'Chime';
+
+  @override
+  String get soundBell => 'Bell';
+
+  @override
+  String get soundRipple => 'Ripple';
+
+  @override
+  String get settingsQuietHours => 'Quiet hours';
+
+  @override
+  String get settingsQuietHoursOff => 'Reminders arrive silently at night';
+
+  @override
+  String settingsQuietHoursOn(String from, String until) {
+    return '$from–$until: reminders arrive silently. The first task of the day still rings.';
+  }
+
+  @override
+  String get settingsQuietFrom => 'From';
+
+  @override
+  String get settingsQuietUntil => 'Until';
+
+  @override
+  String get settingsDaySummary => 'Day-start summary';
+
+  @override
+  String get settingsDaySummaryOff => 'Off';
+
+  @override
+  String get settingsDaySummaryDetail =>
+      'At Wake Up on the days you choose: “Your day: 6 blocks, first at 08:00”.';
+
+  @override
+  String get notifDaySummaryTitle => 'Your day';
+
+  @override
+  String notifDaySummaryBody(int count, String time) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count blocks, first at $time',
+      one: '1 block, at $time',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notifChannelAlertsSound(String sound) {
+    return 'Task alerts · $sound';
+  }
 }

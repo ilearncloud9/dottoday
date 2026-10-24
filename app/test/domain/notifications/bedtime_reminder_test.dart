@@ -24,7 +24,7 @@ List<PlannedNotification> _bedtimes(
       occurrences: tasks,
       tzId: 'Europe/Berlin',
       quietHours: settings.quietHours,
-      bedtimeFrom: settings,
+      daily: settings,
     )
     .where((n) => n.purpose == NotificationPurpose.bedtime)
     .toList();

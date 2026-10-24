@@ -104,17 +104,54 @@ void main() {
     expect(find.text('Gym · Starts in 10 minutes'), findsNothing);
   });
 
-  testWidgets('Later only dismisses', (tester) async {
+  testWidgets('Snooze 10 min re-reminds, nothing else (F6.4, M8.4d)', (
+    tester,
+  ) async {
     await pump(tester);
     container.read(inAppAlertsProvider.notifier).add(gymAlert(repo));
     await tester.pump();
-    await tester.tap(find.text('Later'));
+    expect(find.text('Later'), findsNothing);
+    await tester.tap(find.text('Snooze 10 min'));
     await tester.pumpAndSettle();
     expect(find.text('Gym · Starts in 10 minutes'), findsNothing);
-    expect(
-      repo.rows.firstWhere((o) => o.title == 'Gym').status,
-      OccurrenceStatus.planned,
-    );
+    final gym = repo.rows.firstWhere((o) => o.title == 'Gym');
+    expect(gym.snoozedUntilUtc, _now.add(const Duration(minutes: 10)));
+    expect(gym.status, OccurrenceStatus.planned);
+    expect(opened, isEmpty);
+  });
+
+  testWidgets('Bedtime has Open and Later; Later only dismisses', (
+    tester,
+  ) async {
+    await pump(tester);
+    container
+        .read(inAppAlertsProvider.notifier)
+        .add(
+          OsNotification(
+            id: 13,
+            title: 'Bedtime',
+            body: 'Nothing planned for tomorrow yet.',
+            fireAtUtc: _now,
+            payload: encodeNotificationPayload(
+              PlannedNotification(
+                id: 13,
+                occurrenceId: '',
+                alertIndex: PlannedNotification.bedtimeIndex,
+                fireAtUtc: _now,
+                kind: AlertKind.atEnd,
+                purpose: NotificationPurpose.bedtime,
+              ),
+            ),
+            channel: NotificationChannelKind.summary,
+            withActions: false,
+          ),
+        );
+    await tester.pump();
+    expect(find.text('Open'), findsOneWidget);
+    expect(find.text('Snooze 10 min'), findsNothing);
+    await tester.tap(find.text('Later'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Bedtime'), findsNothing);
     expect(opened, isEmpty);
   });
 

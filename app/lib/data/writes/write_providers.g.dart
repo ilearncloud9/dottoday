@@ -164,7 +164,7 @@ final class NotificationSyncProvider
   }
 }
 
-String _$notificationSyncHash() => r'0ee8c45b1679c5a859ca01e19403743c8433bb03';
+String _$notificationSyncHash() => r'281790121b5d1826fbbc74db7f69ad9450d96d4e';
 
 @ProviderFor(widgetSnapshotWriter)
 final widgetSnapshotWriterProvider = WidgetSnapshotWriterProvider._();

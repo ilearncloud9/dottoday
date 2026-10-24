@@ -54,7 +54,7 @@ typedef SettingsHarness = ({
 Future<SettingsHarness> pumpSettings(
   WidgetTester tester, {
   Settings settings = const Settings(use24h: true),
-  Size size = const Size(390, 2600),
+  Size size = const Size(390, 3000),
   ThemeMode mode = ThemeMode.light,
   TargetPlatform platform = TargetPlatform.iOS,
   List<Occurrence> rows = const [],
