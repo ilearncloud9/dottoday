@@ -8,14 +8,14 @@ part of 'calendar_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The device calendars on iOS and Android (M7.1); none on the web and,
-/// until M7.1b, macOS.
+/// The device calendars: `device_calendar` on iOS and Android (M7.1), the
+/// EventKit channel on macOS (M7.1b); none on the web (M7.4).
 
 @ProviderFor(deviceCalendarGateway)
 final deviceCalendarGatewayProvider = DeviceCalendarGatewayProvider._();
 
-/// The device calendars on iOS and Android (M7.1); none on the web and,
-/// until M7.1b, macOS.
+/// The device calendars: `device_calendar` on iOS and Android (M7.1), the
+/// EventKit channel on macOS (M7.1b); none on the web (M7.4).
 
 final class DeviceCalendarGatewayProvider
     extends
@@ -25,8 +25,8 @@ final class DeviceCalendarGatewayProvider
           DeviceCalendarGateway
         >
     with $Provider<DeviceCalendarGateway> {
-  /// The device calendars on iOS and Android (M7.1); none on the web and,
-  /// until M7.1b, macOS.
+  /// The device calendars: `device_calendar` on iOS and Android (M7.1), the
+  /// EventKit channel on macOS (M7.1b); none on the web (M7.4).
   DeviceCalendarGatewayProvider._()
     : super(
         from: null,
@@ -62,7 +62,7 @@ final class DeviceCalendarGatewayProvider
 }
 
 String _$deviceCalendarGatewayHash() =>
-    r'945c5b8076879c30c731897099b47f138794fedc';
+    r'2acf05f5504656d1a4bdebf86ee16511e141424a';
 
 @ProviderFor(calendarSourceRepository)
 final calendarSourceRepositoryProvider = CalendarSourceRepositoryProvider._();

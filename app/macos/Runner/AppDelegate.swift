@@ -8,6 +8,7 @@ class AppDelegate: FlutterAppDelegate {
   private var linkChannel: FlutterMethodChannel?
   private var dartListening = false
   private var statusChannel: FlutterMethodChannel?
+  private let calendars = CalendarBridge()
   private lazy var nextUp = NextUpStatusItem { [weak self] link in
     NSApp.activate(ignoringOtherApps: true)
     self?.deliver(link)
@@ -51,6 +52,9 @@ class AppDelegate: FlutterAppDelegate {
       result(nil)
     }
     statusChannel = status
+
+    // Device calendars (docs/09 M7.1b): EventKit, read-only.
+    calendars.attach(to: controller.engine.binaryMessenger)
   }
 
   /// Sends [link] to the router, or keeps it until Dart listens.

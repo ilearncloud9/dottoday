@@ -111,7 +111,11 @@ write and on app start/resume. Web uses a service worker + server-sent push for 
 
 ## 7. Calendar integration
 
-Mobile/macOS: `device_calendar` for read, plus write-back when permission is granted. Web (and as a
+iOS/Android: `device_calendar` for read, plus write-back when permission is granted. macOS:
+`device_calendar` has no macOS implementation, so a small EventKit bridge in
+`macos/Runner/CalendarBridge.swift` (method channel `dottoday/calendars`: `status`, `request`,
+`calendars`, `events`) implements the same `DeviceCalendarGateway` (M7.1b); EventKit reports
+"not asked" itself and sends all-day events as `yyyy-MM-dd` dates. Web (and as a
 cross-device option): Google/Microsoft OAuth handled by Supabase Edge Functions storing refresh tokens
 encrypted server-side; the function fetches events and upserts into `calendar_events` for the user;
 the client subscribes like any table. External events map to `Occurrence` rows with `source =
