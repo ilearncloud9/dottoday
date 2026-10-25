@@ -71,6 +71,7 @@ The one-line position after this roadmap ships: **"Your day as a thread. Always 
 
 ### B6 · Capture anywhere — Siri/Shortcuts PRD Phase 2 + **new**
 - Share sheet (link / email / message → Inbox task with source attached), Action button / Control Center "Add", Watch dictation (queues locally, F3 rule), private **email-to-Inbox** address (Pro). All through `AddTask` (B6) and the existing parser.
+- As built (docs/09 M12.4): Android share intent, iOS and Mac share extensions and the web's paste all reach the same rule — the title from the subject or first line, the whole text (with the link) as the note, always the Inbox. No new dependency; email-to-Inbox and watch dictation are Phase 2.
 
 ## C. Stay in control — the day adapts, the user decides
 

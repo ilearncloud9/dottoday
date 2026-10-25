@@ -69,4 +69,26 @@ void main() {
       expect(row(inbox).isInbox, isTrue);
     });
   }
+
+  test(
+    'web paste: a line with a link is titled and keeps it (M12.4)',
+    () async {
+      final repo = FakeOccurrenceRepository();
+      final container = ProviderContainer(
+        overrides: timelineOverrides(now: _now, occurrences: repo),
+      );
+      addTearDown(container.dispose);
+      await addFromText(
+        container,
+        'Read https://blog.example/post\nhttps://www.example.com/x',
+        languageCode: 'en',
+        untitled: 'New task',
+      );
+      final byTitle = {for (final o in repo.rows) o.title: o};
+      expect(byTitle.keys, containsAll(['Read', 'example.com/x']));
+      expect(byTitle['Read']!.notes, 'Read https://blog.example/post');
+      expect(byTitle['example.com/x']!.notes, 'https://www.example.com/x');
+      expect(byTitle['Read']!.isInbox, isTrue);
+    },
+  );
 }

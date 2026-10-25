@@ -65,6 +65,9 @@ class AppDelegate: FlutterAppDelegate {
 
     // On-device model, Foundation Models (docs/09 M10.1).
     ThinkingBridge.register(controller.engine.binaryMessenger)
+
+    // The share extension's queue (docs/09 M12.4).
+    IntentQueueBridge.shared.attach(to: controller.engine.binaryMessenger)
   }
 
   /// Sends [link] to the router, or keeps it until Dart listens.

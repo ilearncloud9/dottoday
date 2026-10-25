@@ -12,6 +12,7 @@ import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/snapshot/web_snapshot_sink.dart';
 import 'package:dottoday/data/widgets/home_widget_sink.dart';
+import 'package:dottoday/data/widgets/mac_status_item_sink.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/intents/action_queue_store.dart';
 import 'package:dottoday/domain/intents/dot_intents.dart';
@@ -32,10 +33,15 @@ DotIntents dotIntents(Ref ref) => DotIntents(
   untitled: (language) => _l10n(language).inboxUntitled,
 );
 
-/// Where this platform's surfaces queue actions (docs/09 M9.2).
+/// Where this platform's surfaces queue actions (docs/09 M9.2). On the
+/// Mac only the share extension does (M12.4), through the same channel
+/// and with no `home_widget` fallback.
 @Riverpod(keepAlive: true)
 ActionQueueStore actionQueueStore(Ref ref) {
   if (HomeWidgetSink.supported) return const NativeActionQueueStore();
+  if (MacStatusItemSink.supported) {
+    return const NativeActionQueueStore(fallback: NoActionQueueStore());
+  }
   if (WebSnapshotSink.supported) return const WebActionQueueStore();
   return const NoActionQueueStore();
 }

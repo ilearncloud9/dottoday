@@ -1,4 +1,6 @@
 import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
+import 'package:dottoday/domain/quick_add/shared_capture.dart';
+import 'package:dottoday/domain/validation/field_rules.dart';
 
 /// The four B6 intents that change data (docs/11 §0). `WhatsNext` only
 /// reads the day snapshot, so it never enters the queue. Every action is
@@ -10,10 +12,14 @@ sealed class DotAction {
 
 /// Adds a task from one line of Quick Add text ("Gym 7am"); the queued
 /// action's id becomes the new task's id, so a replay finds it and stops.
+/// Something shared from another app (M12.4, 11 B6) arrives with [note]
+/// holding the source and [inbox] on: it waits in the Inbox to be planned.
 final class AddTask extends DotAction {
-  const AddTask(this.text);
+  const AddTask(this.text, {this.note, this.inbox = false});
 
   final String text;
+  final String? note;
+  final bool inbox;
 }
 
 /// Ticks one occurrence; done twice is still done.
@@ -61,12 +67,20 @@ final class QueuedAction {
 
 /// JSON of one queue entry, as Swift, Kotlin and the service worker write
 /// it: `{"id", "at_ms", "kind": "add_task"|"mark_done"|"add_fifteen"|
-/// "start_focus", "occurrence_id", "planned_end_ms", "text"}`.
+/// "start_focus", "occurrence_id", "planned_end_ms", "text", "note",
+/// "inbox"}`. A share extension or share intent writes `"shared": true`
+/// with the raw `"text"` and an optional `"subject"` instead; the app makes
+/// the title and note from them ([sharedCapture], M12.4).
 Map<String, Object?> encodeQueuedAction(QueuedAction a) => {
   'id': a.id,
   'at_ms': a.createdAtUtc.millisecondsSinceEpoch,
   ...switch (a.action) {
-    AddTask(:final text) => {'kind': 'add_task', 'text': text},
+    AddTask(:final text, :final note, :final inbox) => {
+      'kind': 'add_task',
+      'text': text,
+      'note': ?note,
+      if (inbox) 'inbox': true,
+    },
     MarkDone(:final occurrenceId) => {
       'kind': 'mark_done',
       'occurrence_id': occurrenceId,
@@ -103,11 +117,17 @@ QueuedAction? decodeQueuedAction(Object? json) {
 DotAction? _action(Map<String, Object?> json) {
   final occurrence = _id(json['occurrence_id']);
   switch (json['kind']) {
+    case 'add_task' when json['shared'] == true:
+      return _shared(json['text'], json['subject']);
     case 'add_task':
       final text = json['text'];
+      final note = json['note'];
       if (text is! String || text.trim().isEmpty) return null;
       if (text.length > QuickAddParser.maxInputLength) return null;
-      return AddTask(text);
+      if (note != null && (note is! String || note.length > maxNotesLength)) {
+        return null;
+      }
+      return AddTask(text, note: note as String?, inbox: json['inbox'] == true);
     case 'mark_done' when occurrence != null:
       return MarkDone(occurrence);
     case 'start_focus' when occurrence != null:
@@ -121,6 +141,19 @@ DotAction? _action(Map<String, Object?> json) {
       );
   }
   return null;
+}
+
+/// A share (M12.4): raw text up to a note's length, the app's subject.
+AddTask? _shared(Object? text, Object? subject) {
+  if (text is! String || text.trim().isEmpty) return null;
+  if (text.length > maxNotesLength) return null;
+  final c = sharedCapture(
+    text,
+    subject: subject is String && subject.length <= maxTitleLength
+        ? subject
+        : null,
+  );
+  return AddTask(c.title, note: c.note, inbox: true);
 }
 
 // Ids are UUIDs everywhere (CLAUDE.md §2); anything else may be content.

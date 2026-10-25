@@ -16,5 +16,11 @@
 	<!-- Device calendars through EventKit (docs/09 M7.1b). -->
 	<key>com.apple.security.personal-information.calendars</key>
 	<true/>
+	<!-- The share extension's action queue (docs/09 M12.4); team-prefixed,
+	     so no provisioning profile is needed. -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>$(TeamIdentifierPrefix)app.dottoday.planner</string>
+	</array>
 </dict>
 </plist>

@@ -8,6 +8,7 @@ import 'package:dottoday/domain/quick_add/draft_rows.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
 import 'package:dottoday/domain/quick_add/quick_add_lexicon.dart';
 import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
+import 'package:dottoday/domain/quick_add/shared_capture.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,16 +46,22 @@ Future<Result<Added, AppFailure>> addFromText(
     case Err(:final failure):
       return Err(failure);
   }
+  // A line with a link is titled like a share and keeps it as its note
+  // (the web's capture path, 11 B6, M12.4).
+  final captured = [for (final d in drafts) capturedDraft(d)];
   final rows = [
-    for (final d in drafts)
-      rowsFromDraft(
-        d,
-        userId: profile.id,
-        tzId: profile.tzId,
-        nowUtc: now,
-        defaultDurationMin: profile.settings.defaultDurationMin,
-        untitled: untitled,
-        alerts: profile.settings.defaultAlerts,
+    for (final (d, note) in captured)
+      _withNote(
+        rowsFromDraft(
+          d,
+          userId: profile.id,
+          tzId: profile.tzId,
+          nowUtc: now,
+          defaultDurationMin: profile.settings.defaultDurationMin,
+          untitled: untitled,
+          alerts: profile.settings.defaultAlerts,
+        ),
+        note,
       ),
   ];
   final batch = WriteBatch(
@@ -75,3 +82,10 @@ Future<Result<Added, AppFailure>> addFromText(
     Err(:final failure) => Err(failure),
   };
 }
+
+DraftRows _withNote(DraftRows rows, String? note) => note == null
+    ? rows
+    : (
+        series: rows.series?.copyWith(notes: note),
+        occurrence: rows.occurrence?.copyWith(notes: note),
+      );

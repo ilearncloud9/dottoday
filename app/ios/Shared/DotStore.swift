@@ -6,7 +6,14 @@ import Foundation
 /// the snapshot optimistically until the app drains the queue. None of
 /// them talks to the network (CLAUDE.md §11 surface rule).
 enum DotStore {
-  static let appGroup = "group.app.dottoday.planner"
+  #if os(macOS)
+    /// The Mac's group is team-prefixed, which needs no provisioning
+    /// profile; Info.plist's `DotAppGroup` names it (docs/09 M12.4).
+    static let appGroup =
+      Bundle.main.object(forInfoDictionaryKey: "DotAppGroup") as? String ?? "app.dottoday.planner"
+  #else
+    static let appGroup = "group.app.dottoday.planner"
+  #endif
   static let snapshotKey = "snapshot"
   static let queueKey = "action_queue"
 
@@ -87,6 +94,43 @@ struct DotQueue {
     if let plannedEnd { entry["planned_end_ms"] = Int64(plannedEnd.timeIntervalSince1970 * 1000) }
     if let text { entry["text"] = text }
     return entry
+  }
+}
+
+/// "Share → Dottoday" (docs/11 B6, docs/09 M12.4): what a share extension
+/// queues — the raw text (with the shared link appended when the text
+/// doesn't hold it) and the sharing app's subject, marked `shared`; the app
+/// makes the Inbox task's title and note (lib/domain/quick_add/
+/// shared_capture.dart). Posts `queueChanged` so a running app drains.
+enum ShareQueue {
+  /// A task note's and a title's limits (docs/05 "Validation").
+  static let maxText = 10000
+  static let maxSubject = 200
+
+  /// The entry, or nil when there is nothing to add.
+  static func entry(text: String, link: String?, subject: String?, now: Date = Date())
+    -> [String: Any]?
+  {
+    var body = text.trimmingCharacters(in: .whitespacesAndNewlines)
+    if let link, !link.isEmpty, !body.contains(link) {
+      body = body.isEmpty ? link : body + "\n" + link
+    }
+    guard !body.isEmpty else { return nil }
+    var entry = DotQueue.entry(.addTask, text: String(body.prefix(maxText)), now: now)
+    entry["shared"] = true
+    let named = subject?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    if !named.isEmpty { entry["subject"] = String(named.prefix(maxSubject)) }
+    return entry
+  }
+
+  static func append(text: String, link: String?, subject: String?) {
+    guard let entry = entry(text: text, link: link, subject: subject),
+      let defaults = DotStore.shared
+    else { return }
+    DotQueue(defaults: defaults).append(entry)
+    CFNotificationCenterPostNotification(
+      CFNotificationCenterGetDarwinNotifyCenter(),
+      CFNotificationName(DotStore.queueChanged as CFString), nil, nil, true)
   }
 }
 

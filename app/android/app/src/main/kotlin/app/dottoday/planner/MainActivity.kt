@@ -5,12 +5,14 @@ import android.content.Intent
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
 import android.view.WindowManager
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import app.dottoday.planner.intents.IntentQueueBridge
+import app.dottoday.planner.intents.ShareIntake
 import app.dottoday.planner.intents.OngoingDot
 import app.dottoday.planner.focus.DeepWork
 import app.dottoday.planner.thinking.ThinkingBridge
@@ -28,9 +30,22 @@ import io.flutter.plugin.common.MethodChannel
  * (M9.2c, [IntentQueueBridge]); `dottoday/ongoing` shows the live dot as an
  * ongoing notification (M9.4, [OngoingDot]); `dottoday/thinking` reaches
  * Gemini Nano on the device (M10.1, [ThinkingBridge]); `dottoday/deep_work`
- * is Focus's Do Not Disturb, alarms only (M10.5, [DeepWork]).
+ * is Focus's Do Not Disturb, alarms only (M10.5, [DeepWork]). A shared
+ * text or link is queued as an Inbox task (M12.4, [ShareIntake]).
  */
 class MainActivity : FlutterFragmentActivity() {
+    // Share → Dottoday (M12.4): queued before Flutter reads the intent,
+    // which then opens the Inbox.
+    override fun onCreate(savedInstanceState: Bundle?) {
+        ShareIntake.accept(this, intent)
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        ShareIntake.accept(this, intent)
+        super.onNewIntent(intent)
+    }
+
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
         IntentQueueBridge.detach()
         super.cleanUpFlutterEngine(flutterEngine)
