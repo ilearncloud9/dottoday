@@ -25,11 +25,11 @@ ticked in 08 §6.1) before a tag.
 
 | Status | iPhone | Android | macOS | Web |
 |---|---|---|---|---|
-| ✓ CI | 36 | 36 | 41 | 51 |
+| ✓ CI | 37 | 37 | 42 | 52 |
 | ✓ device | 20 | 22 | 12 | 2 |
 | ◐ owner | 4 | 2 | 8 | 5 |
 | ◐ manual | 3 | 3 | 3 | 7 |
-| → later | 1 | 1 | 1 | 1 |
+| → later | 0 | 0 | 0 | 0 |
 | — n/a | 3 | 3 | 2 | 1 |
 | ✗ gap | 0 | 0 | 0 | 0 |
 
@@ -69,7 +69,7 @@ ticked in 08 §6.1) before a tag.
 | F2.8 | "Add another" keeps the sheet open | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/task_editor/add_when_test.dart`<br>`test/features/task_editor/add_bulk_test.dart` |
 | F2.9 | Editor fields: title (required, ≤ 200 chars), notes (markdown-lite, links tappable, ≤ 10 000 chars), start,… | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/timeline/task_editor_test.dart`<br>`test/domain/validation/entity_validators_test.dart`<br>`test/features/timeline/note_links_test.dart`<br>`test/features/timeline/note_text_test.dart`<br>`test/core/utils/markdown_lite_test.dart`<br>`test/domain/recurrence/series_edit_test.dart` |
 | F2.10 | Saving is optimistic; the sheet closes immediately. If the write fails (a full disk), nothing typed is lost… | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/task_editor/add_what_test.dart`<br>`test/features/timeline/task_editor_test.dart`<br>`test/features/task_editor/add_save_failure_test.dart`<br>`test/features/timeline/editor_save_failure_test.dart` |
-| F2.11 | Subtasks gain an optional duration each and an order | → later<br>step lengths M10.3; actual start M10.5 | → later<br>step lengths M10.3; actual start M10.5 | → later<br>step lengths M10.3; actual start M10.5 | → later<br>step lengths M10.3; actual start M10.5 | `test/domain/scheduling/task_progress_test.dart`<br>`test/features/timeline/editor_subtasks_test.dart`<br>`test/data/db/migration_test.dart` |
+| F2.11 | Subtasks gain an optional duration each and an order | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/domain/scheduling/task_progress_test.dart`<br>`test/features/timeline/editor_subtasks_test.dart`<br>`test/data/db/migration_test.dart`<br>`test/domain/scheduling/step_lengths_test.dart`<br>`test/features/timeline/editor_step_lengths_test.dart`<br>`test/features/focus/focus_view_test.dart` |
 ## F3. Inbox
 
 | ID | Feature | iPhone | Android | macOS | Web | Automated evidence |
@@ -166,7 +166,7 @@ ticked in 08 §6.1) before a tag.
 - **F2.3** Sheet below 840 px, side panel above — by width, not platform.
 - **F2.7** Presets are editable, default 15 30 45 1 h 1.5 h 2 h (M3c.3).
 - **F2.9** Built with the PRD limits: title, notes (links tap), start, duration, colour, icon, subtasks, alerts, repeat, travel buffer, pinned (M8.4b); energy chips and markdown-lite notes rendered in the sheet (M8.4c).
-- **F2.11** Data done (M6.5.1), order and reorder (M3f.3), actual end on Done (M6.5.2); the editor for step lengths and the starts come with M10.
+- **F2.11** Data (M6.5.1), order and reorder (M3f.3), actual end on Done (M6.5.2), step lengths and "Length = sum of steps" in the editor (M10.3), actual start on opening Focus (M10.5).
 - **F3.1** Schedule sheet with suggestions everywhere; drag onto Today from the wide sidebar (≥ 840 px, M3e.2). Compact/medium place by dragging on the Schedule sheet's thread (PRD F3.1, M8.4c).
 - **F3.2** Wide: +, right-click and screen-reader actions replace swipes (M3e.2).
 - **F3.3** Count on the Inbox tab/rail at every width, in the header and the Inbox widget; the plan-your-inbox card on Today, off by default (M8.4c).
