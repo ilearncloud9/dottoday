@@ -109,13 +109,8 @@ void main() {
       }
     });
 
-    test('the .invalid feedback placeholder reads as unset', () {
-      expect(
-        Env.fromMap(
-          _valid({'FEEDBACK_EMAIL': 'feedback@dottoday.invalid'}),
-        ).feedbackEmail,
-        isNull,
-      );
+    test('the feedback address defaults to the product inbox', () {
+      expect(Env.fromMap(_valid()).feedbackEmail, 'feedback@dottoday.app');
       expect(
         Env.fromMap(
           _valid({'FEEDBACK_EMAIL': 'hi@dottoday.app'}),

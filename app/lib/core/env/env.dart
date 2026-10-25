@@ -4,15 +4,15 @@ import 'dart:convert';
 /// (ADR-0005): `app/.env` for debug, `app/.env.prod` for release.
 ///
 /// Only public values belong here (docs/06-security.md §1): the Supabase URL
-/// and **anon** key, plus optional Sentry DSN, Web Push VAPID public key and
-/// feedback address and privacy policy URL.
+/// and **anon** key, plus optional Sentry DSN, Web Push VAPID public key,
+/// feedback address override and privacy policy URL.
 final class Env {
   const Env({
     required this.supabaseUrl,
     required this.supabaseAnonKey,
     this.sentryDsn,
     this.webPushVapidPublicKey,
-    this.feedbackEmail,
+    this.feedbackEmail = defaultFeedbackEmail,
     this.privacyPolicyUrl,
   });
 
@@ -53,7 +53,9 @@ final class Env {
       supabaseAnonKey: anonKey,
       sentryDsn: _optional(raw, 'SENTRY_DSN'),
       webPushVapidPublicKey: _optional(raw, 'WEB_PUSH_VAPID_PUBLIC_KEY'),
-      feedbackEmail: _feedbackEmail(_optional(raw, 'FEEDBACK_EMAIL')),
+      feedbackEmail:
+          _feedbackEmail(_optional(raw, 'FEEDBACK_EMAIL')) ??
+          defaultFeedbackEmail,
       privacyPolicyUrl: _privacyPolicyUrl(_optional(raw, 'PRIVACY_POLICY_URL')),
     );
   }
@@ -63,11 +65,14 @@ final class Env {
   final String? sentryDsn;
   final String? webPushVapidPublicKey;
 
-  /// Where Settings › Send feedback addresses its draft (PRD F11); unset
-  /// or the `.invalid` placeholder from `.env.example`, the draft has no
-  /// recipient and the user picks one (the real inbox is an owner release
-  /// gate, docs/08 §6.1).
-  final String? feedbackEmail;
+  /// The product's monitored feedback inbox: public, so it is compiled in and
+  /// needs no `.env` (PRD F11).
+  static const defaultFeedbackEmail = 'feedback@dottoday.app';
+
+  /// Where Settings › Send feedback addresses its draft (PRD F11):
+  /// `FEEDBACK_EMAIL` when set (a staging inbox, say), else
+  /// [defaultFeedbackEmail].
+  final String feedbackEmail;
 
   /// The published privacy policy (`web/privacy.html` on the product
   /// domain), opened from Settings › Privacy; unset, the page shows no link
@@ -111,8 +116,7 @@ String? _optional(Map<String, String> raw, String key) {
 
 final _email = RegExp(r'^[^@\s?&#/:]+@[^@\s?&#/:]+\.[^@\s?&#/:]+$');
 
-/// A plain address, or null for the `.invalid` placeholder (RFC 2606):
-/// mailing it would bounce.
+/// A plain address, or null when unset.
 String? _feedbackEmail(String? value) {
   if (value == null) return null;
   if (!_email.hasMatch(value)) {
@@ -120,7 +124,7 @@ String? _feedbackEmail(String? value) {
       'FEEDBACK_EMAIL must be a plain email address (name@domain). $_hint',
     );
   }
-  return value.toLowerCase().endsWith('.invalid') ? null : value;
+  return value;
 }
 
 /// An absolute https URL: the app opens it in the browser.

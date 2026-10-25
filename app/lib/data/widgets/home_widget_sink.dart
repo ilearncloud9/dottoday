@@ -17,16 +17,16 @@ final class HomeWidgetSnapshotSink implements WidgetSnapshotSink {
   final Future<Profile> Function() _profile;
 
   /// Shared with the WidgetKit extension (both entitlements files).
-  static const appGroupId = 'group.com.yourcompany.dottoday';
+  static const appGroupId = 'group.app.dottoday.planner';
 
   /// The key the native widgets read.
   static const dataKey = 'snapshot';
 
   /// (iOS kind, Android receiver) per widget.
   static const widgets = [
-    ('NextUpWidget', 'com.yourcompany.dottoday.widgets.NextUpWidgetReceiver'),
-    ('TodayWidget', 'com.yourcompany.dottoday.widgets.TodayWidgetReceiver'),
-    ('InboxWidget', 'com.yourcompany.dottoday.widgets.InboxWidgetReceiver'),
+    ('NextUpWidget', 'app.dottoday.planner.widgets.NextUpWidgetReceiver'),
+    ('TodayWidget', 'app.dottoday.planner.widgets.TodayWidgetReceiver'),
+    ('InboxWidget', 'app.dottoday.planner.widgets.InboxWidgetReceiver'),
   ];
 
   static bool get supported =>

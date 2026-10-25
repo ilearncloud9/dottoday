@@ -10,16 +10,13 @@ All commands run in `app/` unless noted.
 
 ## 0. Before the first upload (OWNER, once)
 
-1. **Pick the real identifiers.** The app still uses the template
-   `com.yourcompany.dottoday` (Android `applicationId`/`namespace`, iOS and
-   macOS `PRODUCT_BUNDLE_IDENTIFIER`, the widget extension
-   `com.yourcompany.dottoday.widgets`, the App Group
-   `group.com.yourcompany.dottoday`, `app_id` in `tool/device_tests.sh` and
-   `tool/killed_app_check.sh`). The template id is not unique to Dottoday:
-   on this Mac its sandbox container already held another app's file. Store ids are permanent after the first
-   upload, so choose them first (for example `app.dottoday` /
-   `app.dottoday.widgets` / `group.app.dottoday`) and ask the agent to rename
-   everywhere in one commit; the device suites then re-run.
+1. **Identifiers are final** (2026-10-25): `app.dottoday.planner` (Android
+   `applicationId`/`namespace`, iOS and macOS `PRODUCT_BUNDLE_IDENTIFIER`),
+   the widget extension `app.dottoday.planner.widgets`, the App Group
+   `group.app.dottoday.planner`, the scheme `dottoday://`, the domain
+   `dottoday.app`. Store ids are permanent after the first upload. A build
+   with the new id is a new app on a device: earlier test installs keep
+   their data under the old id, so delete them before the device suites.
 2. **Apple Developer Program** (paid) — the Personal Team can't upload to
    TestFlight or provision the App Group. Register the app id, the widget
    extension id and the App Group in Certificates, Identifiers & Profiles;
@@ -29,8 +26,8 @@ All commands run in `app/` unless noted.
    the declarations listed in 08 §6.1 (exact alarms, full-screen intent,
    data safety).
 4. **`.env.prod`** — the hosted `SUPABASE_URL` and `SUPABASE_ANON_KEY` are in
-   (2026-10-24); `SENTRY_DSN`, `FEEDBACK_EMAIL` and
-   `WEB_PUSH_VAPID_PUBLIC_KEY` are still empty: crash-free rate (the beta's
+   (2026-10-24); `SENTRY_DSN` and `WEB_PUSH_VAPID_PUBLIC_KEY` are still
+   empty (the feedback inbox `feedback@dottoday.app` is compiled in): crash-free rate (the beta's
    main number) needs `SENTRY_DSN`.
 5. Hosted Supabase: the Edge Function deploys, secrets and Auth redirect URLs
    in 08 §6.1, or sign-in, account deletion and web push won't work for

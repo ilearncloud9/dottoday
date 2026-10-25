@@ -30,7 +30,7 @@ void main() {
     expect(_manifest, contains('android.intent.action.TIMEZONE_CHANGED'));
     expect(_manifest, contains('android.intent.action.TIME_SET'));
     final receiver = File(
-      'android/app/src/main/kotlin/com/yourcompany/dottoday/alarms/'
+      'android/app/src/main/kotlin/app/dottoday/planner/alarms/'
       'TimeChangeReceiver.kt',
     ).readAsStringSync();
     expect(receiver, contains('const val TASK = "$rearmTask"'));

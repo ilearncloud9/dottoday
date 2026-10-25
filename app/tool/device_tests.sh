@@ -40,7 +40,7 @@ if [[ ${#tests[@]} -eq 0 ]]; then
 fi
 defines="${DEFINES:-.env}"
 limit=$((15 * 60))
-app_id="com.yourcompany.dottoday"
+app_id="app.dottoday.planner"
 adb="${ANDROID_HOME:-$HOME/Library/Android/sdk}/platform-tools/adb"
 logs="build/device_logs"
 mkdir -p "$logs"

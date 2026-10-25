@@ -1,4 +1,4 @@
-package com.yourcompany.dottoday
+package app.dottoday.planner
 
 import android.app.NotificationManager
 import android.content.Intent

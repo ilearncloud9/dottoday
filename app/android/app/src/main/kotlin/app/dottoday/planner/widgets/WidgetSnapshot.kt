@@ -1,4 +1,4 @@
-package com.yourcompany.dottoday.widgets
+package app.dottoday.planner.widgets
 
 import android.content.SharedPreferences
 import org.json.JSONObject

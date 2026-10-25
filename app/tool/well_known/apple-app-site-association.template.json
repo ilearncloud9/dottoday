@@ -2,7 +2,7 @@
   "applinks": {
     "details": [
       {
-        "appIDs": ["<PAID_TEAM_ID>.<BUNDLE_ID>"],
+        "appIDs": ["<PAID_TEAM_ID>.app.dottoday.planner"],
         "components": [
           { "/": "/task/*" },
           { "/": "/day/*" },

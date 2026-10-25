@@ -4,7 +4,8 @@ This folder holds the seeds; the agent runs `flutter create` here in Milestone 0
 
 ```
 cd app
-flutter create --org com.yourcompany --project-name dottoday --platforms ios,android,macos,web .
+flutter create --org app.dottoday --project-name dottoday --platforms ios,android,macos,web .
+# then set the final ids by hand: app.dottoday.planner (docs/release-beta.md §0)
 # then restore pubspec.yaml, analysis_options.yaml, .gitignore from git (flutter create overwrites them)
 git checkout -- pubspec.yaml analysis_options.yaml .gitignore
 flutter pub get
