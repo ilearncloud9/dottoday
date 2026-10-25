@@ -6635,6 +6635,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Plan accepted'**
   String get rebalanceAccepted;
+
+  /// Today prompt caption when an imported event moved later and now collides with the plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar changed'**
+  String get calendarMovedTitle;
+
+  /// Today prompt after the calendar moved an event later today.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} moved to {time} · Rebalance?'**
+  String calendarMovedDetail(String title, String time);
+
+  /// Button: open the Rebalance proposal for a calendar move.
+  ///
+  /// In en, this message translates to:
+  /// **'Rebalance'**
+  String get calendarMovedAction;
+
+  /// Rebalance subtitle after the calendar moved an event.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} moved to {time} · here\'s a plan'**
+  String rebalanceMoved(String title, String time);
 }
 
 class _AppLocalizationsDelegate

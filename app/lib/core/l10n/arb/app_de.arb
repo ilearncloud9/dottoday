@@ -1088,5 +1088,9 @@
   "rebalanceRanOver": "{title} hat {duration} überzogen · hier ein Plan",
   "rebalanceLate": "Der Rest des Tages {duration} später · hier ein Plan",
   "rebalanceRunsOver": "{title} dauert {duration} länger · hier ein Plan",
-  "rebalanceAccepted": "Plan übernommen"
+  "rebalanceAccepted": "Plan übernommen",
+  "calendarMovedTitle": "Kalender geändert",
+  "calendarMovedDetail": "{title} auf {time} verschoben · neu planen?",
+  "calendarMovedAction": "Neu planen",
+  "rebalanceMoved": "{title} auf {time} verschoben · hier ein Plan"
 }

@@ -30,7 +30,9 @@ const rebalanceFollowers = 2;
 
 /// Opens the Rebalance proposal for [today]: a delay of [deltaMin] at
 /// [fromUtc], explained by [subtitle]. Tomorrow's day is read so a task
-/// pushed past Bedtime lands in its first free slot.
+/// pushed past Bedtime lands in its first free slot. [keep] never moves
+/// (the event a calendar move is about, M11.1b); [title] heads the sheet
+/// (default "Running late").
 Future<void> openRebalance(
   ProviderContainer container,
   AppLocalizations l10n, {
@@ -38,6 +40,8 @@ Future<void> openRebalance(
   required DateTime fromUtc,
   required int deltaMin,
   required String subtitle,
+  Set<String> keep = const {},
+  String? title,
 }) async {
   final data = await _day(container, today);
   final later = await _day(
@@ -65,7 +69,7 @@ Future<void> openRebalance(
       tomorrow: next,
       // Unknown read-only calendars yet: no event moves (docs/09 M7.6).
       includeCalendar: fixed != null && data.settings.includeCalendarInShift,
-      readOnlyIds: fixed ?? const {},
+      readOnlyIds: {...?fixed, ...keep},
     ),
     wakeUtc: shape.wakeUtc,
     bedUtc: shape.bedUtc,
@@ -73,7 +77,14 @@ Future<void> openRebalance(
   );
   container
       .read(activeProposalProvider.notifier)
-      .open(rebalanceRequest(l10n, subtitle: subtitle, compute: compute));
+      .open(
+        rebalanceRequest(
+          l10n,
+          title: title,
+          subtitle: subtitle,
+          compute: compute,
+        ),
+      );
 }
 
 /// Rebalance's sheet (`B-ios-rebalance`) for the plan [compute] makes
@@ -82,9 +93,10 @@ ProposalRequest rebalanceRequest(
   AppLocalizations l10n, {
   required String subtitle,
   required Proposal Function(RebalanceOptions options) compute,
+  String? title,
 }) => ProposalRequest(
   proposal: compute(const RebalanceOptions()),
-  title: l10n.runningLate,
+  title: title ?? l10n.runningLate,
   subtitle: subtitle,
   acceptLabel: l10n.rebalanceAccept,
   acceptedMessage: l10n.rebalanceAccepted,

@@ -5844,5 +5844,13 @@
   "rebalanceAccepted": "Plan accepted",
   "@rebalanceAccepted": {
     "description": "Snackbar with Undo after Rebalance's Accept."
-  }
+  },
+  "calendarMovedTitle": "Calendar changed",
+  "@calendarMovedTitle": {"description": "Today prompt caption when an imported event moved later and now collides with the plan."},
+  "calendarMovedDetail": "{title} moved to {time} · Rebalance?",
+  "@calendarMovedDetail": {"description": "Today prompt after the calendar moved an event later today.", "placeholders": {"title": {"type": "String"}, "time": {"type": "String", "example": "10:30"}}},
+  "calendarMovedAction": "Rebalance",
+  "@calendarMovedAction": {"description": "Button: open the Rebalance proposal for a calendar move."},
+  "rebalanceMoved": "{title} moved to {time} · here's a plan",
+  "@rebalanceMoved": {"description": "Rebalance subtitle after the calendar moved an event.", "placeholders": {"title": {"type": "String"}, "time": {"type": "String", "example": "10:30"}}}
 }

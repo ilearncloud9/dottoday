@@ -4447,4 +4447,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rebalanceAccepted => 'Plan accepted';
+
+  @override
+  String get calendarMovedTitle => 'Calendar changed';
+
+  @override
+  String calendarMovedDetail(String title, String time) {
+    return '$title moved to $time · Rebalance?';
+  }
+
+  @override
+  String get calendarMovedAction => 'Rebalance';
+
+  @override
+  String rebalanceMoved(String title, String time) {
+    return '$title moved to $time · here\'s a plan';
+  }
 }

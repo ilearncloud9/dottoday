@@ -41,6 +41,32 @@ final class LinkedOccurrence {
   bool get _hidden => occurrence == null || occurrence!.deletedAt != null;
 }
 
+/// An imported event whose start the calendar changed (docs/09 M11.1b):
+/// Today offers Rebalance for it. Only planned, visible occurrences.
+final class CalendarMove {
+  const CalendarMove({
+    required this.occurrenceId,
+    required this.title,
+    required this.fromUtc,
+    required this.toUtc,
+    required this.durationMin,
+  });
+
+  final String occurrenceId;
+  final String title;
+
+  /// Its start here before the import, and the calendar's new start.
+  final DateTime fromUtc;
+  final DateTime toUtc;
+  final int durationMin;
+
+  /// How far it moved: positive when later.
+  int get deltaMin => toUtc.difference(fromUtc).inMinutes;
+
+  /// Its end before the move: what followed it starts from here.
+  DateTime get oldEndUtc => fromUtc.add(Duration(minutes: durationMin));
+}
+
 /// What one import writes (docs/09 M7.2). Applied in one transaction:
 /// [links] first (occurrences reference them), then [occurrences] through
 /// the write path, then the deletes.
@@ -50,6 +76,7 @@ final class CalendarImportPlan {
     this.occurrences = const [],
     this.removeOccurrenceIds = const {},
     this.removeLinkIds = const {},
+    this.moved = const [],
   });
 
   /// New and changed links.
@@ -63,6 +90,9 @@ final class CalendarImportPlan {
   /// copy of the calendar, removed outright (never synced, docs/05).
   final Set<String> removeOccurrenceIds;
   final Set<String> removeLinkIds;
+
+  /// Events the calendar moved (M11.1b); not written, reported.
+  final List<CalendarMove> moved;
 
   bool get isEmpty =>
       links.isEmpty &&
@@ -186,6 +216,7 @@ final class _PlanBuilder {
   final _occurrences = <Occurrence>[];
   final _removeOccurrences = <String>{};
   final _removeLinks = <String>{};
+  final _moved = <CalendarMove>[];
 
   void add(ImportSource source, ImportedItem item) {
     final link = CalendarLink(
@@ -246,7 +277,24 @@ final class _PlanBuilder {
     final o = existing.occurrence;
     if (existing._hidden || o == null) return;
     final changed = _changed(o, ImportFingerprint.parse(link.etag), item);
-    if (changed != o) _occurrences.add(changed.copyWith(updatedAt: now));
+    if (changed == o) return;
+    _occurrences.add(changed.copyWith(updatedAt: now));
+    final from = o.startUtc;
+    final to = changed.startUtc;
+    if (from != null &&
+        to != null &&
+        from != to &&
+        o.status == OccurrenceStatus.planned) {
+      _moved.add(
+        CalendarMove(
+          occurrenceId: o.id,
+          title: changed.title,
+          fromUtc: from,
+          toUtc: to,
+          durationMin: o.durationMin,
+        ),
+      );
+    }
   }
 
   void remove(LinkedOccurrence existing) {
@@ -274,6 +322,7 @@ final class _PlanBuilder {
     occurrences: _occurrences,
     removeOccurrenceIds: _removeOccurrences,
     removeLinkIds: _removeLinks,
+    moved: _moved,
   );
 }
 

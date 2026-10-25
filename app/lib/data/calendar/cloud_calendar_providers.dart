@@ -7,6 +7,7 @@ import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/calendar/calendar_importer.dart';
+import 'package:dottoday/data/calendar/calendar_moves.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/edge_functions.dart';
 import 'package:dottoday/data/calendar/function_cloud_calendars.dart';
@@ -96,6 +97,7 @@ CalendarImport cloudCalendarImporter(Ref ref) => CalendarImporter(
     for (final p in await ref.read(calendarWriteBackProvider).pending(userId))
       p.link.id,
   },
+  onMoved: (moved) => ref.read(calendarMovesProvider.notifier).add(moved),
 );
 
 @Riverpod(keepAlive: true)

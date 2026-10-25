@@ -1088,5 +1088,9 @@
   "rebalanceRanOver": "{title} a débordé de {duration} · voici un plan",
   "rebalanceLate": "La suite de la journée {duration} plus tard · voici un plan",
   "rebalanceRunsOver": "{title} dépasse de {duration} · voici un plan",
-  "rebalanceAccepted": "Plan accepté"
+  "rebalanceAccepted": "Plan accepté",
+  "calendarMovedTitle": "Agenda modifié",
+  "calendarMovedDetail": "{title} déplacé à {time} · rééquilibrer ?",
+  "calendarMovedAction": "Rééquilibrer",
+  "rebalanceMoved": "{title} déplacé à {time} · voici un plan"
 }

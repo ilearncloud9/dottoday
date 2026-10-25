@@ -2,13 +2,16 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/data/calendar/calendar_moves.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/scheduling/calendar_move_prompt.dart';
 import 'package:dottoday/domain/scheduling/day_review.dart';
 import 'package:dottoday/domain/scheduling/running_late.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_prompts.dart';
+import 'package:dottoday/features/timeline/widgets/calendar_moved_prompt.dart';
 import 'package:dottoday/features/timeline/widgets/day_review.dart';
 import 'package:dottoday/features/timeline/widgets/inbox_nudge_card.dart';
 import 'package:dottoday/features/timeline/widgets/prompt_card.dart';
@@ -22,7 +25,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// nudge" on, "Running late?" once a task ended unticked; otherwise, with
 /// the "Plan your inbox" nudge on, that card (F3.3, [InboxNudgeCard]).
 /// "Not now" puts it away for the day (this session). Nothing on other
-/// days. A task over [rebalanceOverrunMin] past its end opens Rebalance.
+/// days. A task over [rebalanceOverrunMin] past its end opens Rebalance;
+/// before the nudge, an event the calendar moved into the plan offers it
+/// ([CalendarMovedPrompt], M11.1b).
 class TodayPrompt extends ConsumerWidget {
   const TodayPrompt({required this.date, required this.today, super.key});
 
@@ -51,6 +56,12 @@ class TodayPrompt extends ConsumerWidget {
           reviewOf(data.blocks).hasRest;
       return show ? _review(context, notNow) : const SizedBox.shrink();
     }
+    final move = moveToRebalance(
+      ref.watch(calendarMovesProvider).values,
+      data.blocks,
+      now,
+    );
+    if (move != null) return CalendarMovedPrompt(move: move, data: data);
     final missed = missedTask(data.blocks, now);
     if (!data.settings.runningLateNudge ||
         missed == null ||

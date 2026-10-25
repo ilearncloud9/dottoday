@@ -3487,4 +3487,18 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get rebalanceAccepted => pseudo(super.rebalanceAccepted);
+
+  @override
+  String get calendarMovedTitle => pseudo(super.calendarMovedTitle);
+
+  @override
+  String calendarMovedDetail(String title, String time) =>
+      pseudo(super.calendarMovedDetail(title, time));
+
+  @override
+  String get calendarMovedAction => pseudo(super.calendarMovedAction);
+
+  @override
+  String rebalanceMoved(String title, String time) =>
+      pseudo(super.rebalanceMoved(title, time));
 }
