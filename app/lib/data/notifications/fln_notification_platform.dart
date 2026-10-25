@@ -54,7 +54,7 @@ final class FlnNotificationPlatform implements NotificationPlatform {
         DarwinNotificationCategory(
           _category,
           actions: [
-            for (final a in NotificationAction.values)
+            for (final a in NotificationAction.osActions)
               DarwinNotificationAction.plain(
                 a.name,
                 _label(a),
@@ -182,7 +182,7 @@ final class FlnNotificationPlatform implements NotificationPlatform {
         silent: n.silent,
         actions: n.withActions
             ? [
-                for (final a in NotificationAction.values)
+                for (final a in NotificationAction.osActions)
                   AndroidNotificationAction(
                     a.name,
                     _label(a),
@@ -235,6 +235,7 @@ final class FlnNotificationPlatform implements NotificationPlatform {
     NotificationAction.done => _l10n.notifActionDone,
     NotificationAction.snooze => _l10n.notifActionSnooze,
     NotificationAction.open => _l10n.notifActionOpen,
+    NotificationAction.plus15 => _l10n.liveExtend,
   };
 
   static NotificationTap _tap(NotificationResponse r) =>

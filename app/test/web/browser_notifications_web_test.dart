@@ -26,7 +26,7 @@ void main() {
         channel: NotificationChannelKind.alerts,
       ),
       doneLabel: 'Done',
-      openLabel: 'Open',
+      plusLabel: '+15 min',
     );
     expect(shown, isFalse);
   });

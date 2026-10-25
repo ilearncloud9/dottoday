@@ -8,7 +8,10 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/live_activity/web_live_dot.dart';
+import 'package:dottoday/data/live_activity/web_live_dot_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/pwa/tab_live_dot.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/inbox/schedule_from_anywhere.dart';
 import 'package:dottoday/features/lock/lock_gate.dart';
@@ -17,6 +20,7 @@ import 'package:dottoday/features/recovery/database_recovery.dart';
 import 'package:dottoday/features/sync_status/sync_sheet.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/shared/sheets/shortcut_sheet.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -32,9 +36,15 @@ class DottodayApp extends ConsumerWidget {
     final profile = ref.watch(currentProfileProvider).value;
     final settings = profile?.settings;
     final accent = DotAccent.fromKey(settings?.accent);
+    // The browser tab follows the live dot (M9.7): title here, favicon and
+    // badge by the listener.
+    final tab = kIsWeb ? ref.watch(webLiveDotStateProvider) : WebLiveDot.none;
+    if (kIsWeb) {
+      ref.listen(webLiveDotStateProvider, (_, d) => applyTabLiveDot(d));
+    }
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      onGenerateTitle: (context) => context.l10n.appTitle,
+      onGenerateTitle: (context) => tab.title ?? context.l10n.appTitle,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: appLocale(profile?.locale),

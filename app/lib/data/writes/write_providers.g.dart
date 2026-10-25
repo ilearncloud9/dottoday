@@ -118,7 +118,7 @@ final class DaySnapshotSinkProvider
   }
 }
 
-String _$daySnapshotSinkHash() => r'15f77b84864036f08dceab01811fc715231e71b9';
+String _$daySnapshotSinkHash() => r'790822a256733040a33ee21e29a0cc28f4dc0740';
 
 @ProviderFor(notificationSync)
 final notificationSyncProvider = NotificationSyncProvider._();

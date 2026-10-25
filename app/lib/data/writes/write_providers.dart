@@ -2,6 +2,7 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/live_activity/live_activity_sink.dart';
+import 'package:dottoday/data/live_activity/web_live_dot_providers.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/notifications/os_notification_gateway.dart';
@@ -61,7 +62,10 @@ DaySnapshotSink daySnapshotSink(Ref ref) {
     return MacStatusItemSink(profile: () => latestProfile(ref));
   }
   if (WebSnapshotSink.supported) {
-    return WebSnapshotSink(profile: () => latestProfile(ref));
+    return WebSnapshotSink(
+      profile: () => latestProfile(ref),
+      onWrite: (s) => ref.read(lastDaySnapshotProvider.notifier).set(s),
+    );
   }
   return const UnwiredDaySnapshotSink();
 }

@@ -48,7 +48,7 @@ Future<NotificationPlatform> notificationPlatform(Ref ref) async {
       show: (n) => showBrowserNotification(
         n,
         doneLabel: l10n.notifActionDone,
-        openLabel: l10n.notifActionOpen,
+        plusLabel: l10n.liveExtend,
       ),
       onInApp: (n) => deliverInApp(
         n,

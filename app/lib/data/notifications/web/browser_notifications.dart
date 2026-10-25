@@ -62,12 +62,12 @@ Future<PermissionState> requestBrowserPermission() async {
   return browserPermission();
 }
 
-/// Posts [n] through the service worker now, with Done and Open (Chrome
-/// shows at most two actions); false without permission or a worker.
+/// Posts [n] through the service worker now, with Done and +15 (Chrome
+/// shows at most two actions; a tap opens the task, M9.7); false without permission or a worker.
 Future<bool> showBrowserNotification(
   OsNotification n, {
   required String doneLabel,
-  required String openLabel,
+  required String plusLabel,
 }) async {
   final worker = _serviceWorker;
   if (worker == null || browserPermission() != PermissionState.granted) {
@@ -84,7 +84,7 @@ Future<bool> showBrowserNotification(
             'actions': [
               if (n.withActions) ...[
                 {'action': NotificationAction.done.name, 'title': doneLabel},
-                {'action': NotificationAction.open.name, 'title': openLabel},
+                {'action': NotificationAction.plus15.name, 'title': plusLabel},
               ],
             ],
           }.jsify()!

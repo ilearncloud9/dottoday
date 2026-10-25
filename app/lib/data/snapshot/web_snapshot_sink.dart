@@ -15,15 +15,22 @@ import 'package:flutter/foundation.dart';
 /// plaintext (06 §4, ADR-0003), and the worker needs only ids and times —
 /// a notification brings its own text.
 final class WebSnapshotSink implements DaySnapshotSink {
-  WebSnapshotSink({required Future<Profile> Function() profile})
-    : _profile = profile;
+  WebSnapshotSink({
+    required Future<Profile> Function() profile,
+    void Function(DaySnapshot)? onWrite,
+  }) : _profile = profile,
+       _onWrite = onWrite;
 
   final Future<Profile> Function() _profile;
+
+  /// The full snapshot, titles and all, for the tab (M9.7) — in memory only.
+  final void Function(DaySnapshot)? _onWrite;
 
   static bool get supported => kIsWeb;
 
   @override
   Future<void> write(DaySnapshot snapshot) async {
+    _onWrite?.call(snapshot);
     final profile = await _profile();
     final json = snapshotStoreJson(
       snapshot,

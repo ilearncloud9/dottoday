@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - An action from a widget or the Live Activity made while the app was catching up on earlier ones could be lost; it now always gets through.
 
 ### Added
+- M9.7: On the web, the browser tab shows the task under way — "● 38 min left · Deep work" and a filling ring as its icon — and an installed Dottoday shows your Inbox count on its icon where the browser supports it. Web reminders now offer Done and +15 min.
 - M9.6: On the Mac, the menu-bar item is now the day dot — a ring that fills from Wake Up to Bedtime — next to what's on now. Click it for What's next, with Done and +15 min right there.
 - M9.5: Tick the next task straight from the Next up widget. iPhone: Add task and Start focus controls for Control Center, the Lock Screen and the Action button, and Siri phrases for all five quick actions in English, German, French and Spanish. Android: Add task and Start focus tiles in Quick Settings.
 - M9.4: On Android, the task under way shows as an ongoing notification with a countdown, today's progress, and Done and +15 min — they work even when Dottoday isn't running, and the notification leaves on Done or half an hour after the planned end.
