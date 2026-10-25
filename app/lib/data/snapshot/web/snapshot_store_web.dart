@@ -33,25 +33,30 @@ extension type _ResponseInit._(JSObject _) implements JSObject {
   external factory _ResponseInit({JSObject headers});
 }
 
-String get _url => Uri.base.resolve(snapshotPath).toString();
+String _url(String path) => Uri.base.resolve(path).toString();
 
 /// Stores [json] for the service worker; nothing without Cache Storage
 /// (an insecure origin has none, and no service worker either).
-Future<void> storeSnapshot(String json) async {
+Future<void> storeSnapshot(String json) => store(snapshotPath, json);
+
+/// What [storeSnapshot] last wrote, from Cache Storage.
+Future<String?> readStoredSnapshot() => readStored(snapshotPath);
+
+/// Writes [json] at [path] in the shared cache.
+Future<void> store(String path, String json) async {
   final caches = _caches;
   if (caches == null) return;
   final cache = await caches.open(snapshotCache).toDart;
   final headers = {'content-type': 'application/json'}.jsify()! as JSObject;
-  await cache
-      .put(_url, _Response(json, _ResponseInit(headers: headers)))
-      .toDart;
+  final response = _Response(json, _ResponseInit(headers: headers));
+  await cache.put(_url(path), response).toDart;
 }
 
-/// What [storeSnapshot] last wrote, from Cache Storage.
-Future<String?> readStoredSnapshot() async {
+/// The text at [path] in the shared cache, or null.
+Future<String?> readStored(String path) async {
   final caches = _caches;
   if (caches == null) return null;
   final cache = await caches.open(snapshotCache).toDart;
-  final hit = await cache.match(_url).toDart;
+  final hit = await cache.match(_url(path)).toDart;
   return hit == null ? null : (await hit.text().toDart).toDart;
 }

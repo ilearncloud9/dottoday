@@ -44,6 +44,22 @@ void main() {
     });
   }
 
+  test('the service worker writes the same names and path', () {
+    final js = File('web/action_queue.js').readAsStringSync();
+    for (final name in ['mark_done', 'add_fifteen']) {
+      expect(js, contains("'$name'"), reason: name);
+    }
+    for (final key in ['occurrence_id', 'planned_end_ms', 'at_ms']) {
+      expect(js, matches(RegExp('\\b$key\\b')), reason: key);
+    }
+    final dart = File(
+      'lib/data/snapshot/web/snapshot_store_web.dart',
+    ).readAsStringSync();
+    expect(js, contains("PATH = '__snapshot/actions.json'"));
+    expect(dart, contains("queuePath = '__snapshot/actions.json'"));
+    expect(js, contains("CACHE = 'dottoday-day-snapshot'"));
+  });
+
   test('the queue key matches the Dart stores', () {
     expect(
       File('lib/data/intents/action_queue_json.dart').readAsStringSync(),

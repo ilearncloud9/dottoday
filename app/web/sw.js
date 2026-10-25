@@ -4,6 +4,8 @@
 // app, and receives web push.
 // Payloads carry IDs only (06 §1); text arrives encrypted end to end.
 
+importScripts('action_queue.js');
+
 let queued = [];
 
 // Offline (docs/07 Web, docs/09 M5.7): the app is local-first, so once its
@@ -85,7 +87,8 @@ self.addEventListener('message', (event) => {
   })());
 });
 
-// A tap or an action button: focus the app (or open it) and tell it.
+// A tap or an action button: focus the app (or open it) and tell it; with
+// no tab open, Done is queued instead (action_queue.js).
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const data = event.notification.data || {};
@@ -100,6 +103,13 @@ self.addEventListener('notificationclick', (event) => {
     if (windows.length > 0) {
       await windows[0].focus();
       windows[0].postMessage(message);
+      return;
+    }
+    // Done (and +15) need no tab: queue for the next one (M9.2d).
+    const entry = self.dottodayActionQueue.fromNotification(
+      message.action, message.payload, await readSnapshot(), Date.now());
+    if (entry) {
+      await self.dottodayActionQueue.append(caches, self.registration.scope, entry);
       return;
     }
     // Delivered when the opened page says it is listening.
