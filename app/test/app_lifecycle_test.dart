@@ -9,6 +9,8 @@ import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/write_back_providers.dart';
+import 'package:dottoday/data/intents/intent_providers.dart';
+import 'package:dottoday/data/intents/no_action_queue_store.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -139,6 +141,7 @@ void main() {
         trashServiceProvider.overrideWithValue(trash),
         notificationSyncProvider.overrideWithValue(sync),
         dailyRefreshProvider.overrideWithValue(refresh),
+        actionQueueStoreProvider.overrideWithValue(const NoActionQueueStore()),
         bedtimeSnapshotProvider.overrideWithValue(
           BedtimeSnapshot(
             clock: FakeClock(DateTime.utc(2026, 10, 21)),

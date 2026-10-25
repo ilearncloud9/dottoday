@@ -8,6 +8,9 @@ import 'dart:js_interop';
 const snapshotCache = 'dottoday-day-snapshot';
 const snapshotPath = '__snapshot/day.json';
 
+/// The action queue the service worker appends to (M9.2).
+const queuePath = '__snapshot/actions.json';
+
 @JS('caches')
 external _CacheStorage? get _caches;
 

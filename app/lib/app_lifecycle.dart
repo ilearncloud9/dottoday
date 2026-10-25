@@ -5,6 +5,7 @@ import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
+import 'package:dottoday/data/intents/intent_providers.dart';
 import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -17,7 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Housekeeping on app start and on every resume (docs/09 M3.2, M2.3–M2.5):
 /// ensure the local profile, take the daily backup if due, purge expired
-/// Trash, then the daily refresh: roll repeats forward and re-plan OS
+/// Trash, apply queued intents (M9.2), then the daily refresh: roll repeats forward and re-plan OS
 /// notifications (M5.2), arm the Bedtime snapshot (M9.1), then bring
 /// calendar events in (device M7.2,
 /// Google/Microsoft M7.4). Each step is idempotent and runs
@@ -37,11 +38,25 @@ Future<void> runHousekeeping(WidgetRef ref) async {
     if (purge case Err(:final failure)) {
       logger.warn('housekeeping.purge_failed', error: failure);
     }
+    // What widgets, controls and notifications queued while the app was
+    // closed, before the refresh redraws everything (M9.2).
+    await _drainQueue(ref);
     await ref.read(dailyRefreshProvider).run(profile.id);
     await ref.read(bedtimeSnapshotProvider).arm(profile.id);
     await ref.read(calendarActionsProvider).importEvents();
   } on Object catch (e, st) {
     logger.error('housekeeping.failed', error: e, stackTrace: st);
+  }
+}
+
+// A queue that can't be read must not hold up the refresh.
+Future<void> _drainQueue(WidgetRef ref) async {
+  try {
+    await ref.read(actionQueueDrainerProvider).drain();
+  } on Object catch (e, st) {
+    ref
+        .read(loggerProvider)
+        .error('intent.drain_failed', error: e, stackTrace: st);
   }
 }
 
