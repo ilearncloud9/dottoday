@@ -34,6 +34,7 @@ final class OsNotification {
     this.timeSensitive = false,
     this.loud = false,
     this.withActions = true,
+    this.startAction = false,
     this.sound,
   });
 
@@ -57,6 +58,9 @@ final class OsNotification {
 
   /// Done / Snooze / Open (task alerts); Bedtime has none.
   final bool withActions;
+
+  /// Smallest step (M10.6): the one Start button instead of the task's.
+  final bool startAction;
 
   /// A bundled sound (F6.6); null plays the system sound. Never set with
   /// [loud], which has its own chime.

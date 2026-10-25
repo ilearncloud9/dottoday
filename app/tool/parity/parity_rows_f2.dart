@@ -105,11 +105,15 @@ const f2Rows = <String, ParityRow>{
       'test/domain/scheduling/task_progress_test.dart',
       'test/features/timeline/editor_subtasks_test.dart',
       'test/data/db/migration_test.dart',
+      'test/domain/scheduling/step_lengths_test.dart',
+      'test/features/timeline/editor_step_lengths_test.dart',
+      'test/features/focus/focus_view_test.dart',
     ],
-    all: Cell(Status.later, 'step lengths M10.3; actual start M10.5'),
+    all: ci,
     note:
-        'Data done (M6.5.1), order and reorder (M3f.3), actual end on Done '
-        '(M6.5.2); the editor for step lengths and the starts come with M10.',
+        'Data (M6.5.1), order and reorder (M3f.3), actual end on Done '
+        '(M6.5.2), step lengths and "Length = sum of steps" in the editor '
+        '(M10.3), actual start on opening Focus (M10.5).',
   ),
   'F3.1': ParityRow(
     tests: [

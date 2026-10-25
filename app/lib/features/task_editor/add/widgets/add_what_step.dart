@@ -29,6 +29,7 @@ class AddWhatStep extends StatelessWidget {
     required this.onAddMany,
     required this.onContinue,
     required this.onInbox,
+    this.onBreakDown,
     super.key,
   });
 
@@ -52,6 +53,9 @@ class AddWhatStep extends StatelessWidget {
   final VoidCallback onAddMany;
   final VoidCallback? onContinue;
   final VoidCallback? onInbox;
+
+  /// "Break it down" (11 B1, M10.4); null hides it until there is a title.
+  final VoidCallback? onBreakDown;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +101,9 @@ class AddWhatStep extends StatelessWidget {
             Expanded(child: _title()),
           ],
         ),
-        const SizedBox(height: DotSpace.xl),
+        if (onBreakDown case final breakDown?)
+          _BreakDownRow(steps: draft.steps.length, onTap: breakDown),
+        const SizedBox(height: DotSpace.l),
         _look(colour, icon),
         if (shown.isNotEmpty) ...[
           const SizedBox(height: DotSpace.xl),
@@ -137,6 +143,47 @@ class AddWhatStep extends StatelessWidget {
     TaskIcon.cart,
     TaskIcon.heart,
   }.toList();
+}
+
+/// "Break it down" under the title, and once steps were accepted, how
+/// many there are ("3 steps · saved with the task").
+class _BreakDownRow extends StatelessWidget {
+  const _BreakDownRow({required this.steps, required this.onTap});
+
+  final int steps;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(
+        start: DotSize.addDot + DotSpace.l,
+        top: DotSpace.s,
+      ),
+      child: Wrap(
+        spacing: DotSpace.s,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          TextButton.icon(
+            onPressed: onTap,
+            icon: DotIcon(
+              DotGlyphs.sort,
+              color: t.colors.accentInk,
+              size: DotSize.rowIcon,
+            ),
+            label: Text(l10n.breakdownAction),
+          ),
+          if (steps > 0)
+            Text(
+              l10n.breakdownStepsOnDraft(steps),
+              style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 /// Continue and "Add to Inbox instead", pinned under the fields.

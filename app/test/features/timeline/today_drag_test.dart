@@ -23,7 +23,10 @@ void main() {
     testWidgets('dropping on a free gap moves the task, with Undo', (
       tester,
     ) async {
-      await pumpToday(tester, size: const Size(390, 1400));
+      final repo = FakeOccurrenceRepository(
+        demoDayRows(DateTime(2026, 10, 21)),
+      );
+      await pumpToday(tester, size: const Size(390, 1400), repo: repo);
       final g = await lift(tester, 'Team standup');
       await g.moveTo(tester.getCenter(find.text('45 min free')));
       await tester.pump();
@@ -32,6 +35,11 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.textContaining('Team standup moved to'), findsOneWidget);
       expect(find.textContaining('8:15 AM – 8:30 AM'), findsOneWidget);
+      // A drag is a move: Unstick counts it (M10.7).
+      expect(
+        repo.rows.firstWhere((o) => o.title == 'Team standup').moveCount,
+        1,
+      );
       await tester.tap(find.text('Undo'));
       await tester.pumpAndSettle();
       expect(find.textContaining('8:00 AM – 8:15 AM'), findsOneWidget);

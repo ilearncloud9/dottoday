@@ -4130,4 +4130,287 @@ class AppLocalizationsEn extends AppLocalizations {
   String liveActivityCountLabel(int done, int total) {
     return '$done of $total done today';
   }
+
+  @override
+  String get privacyThinkingTitle => 'Help with thinking';
+
+  @override
+  String get privacyThinkingBody =>
+      'Break it down and suggestions are worked out on this device: Apple Intelligence on iPhone and Mac, Gemini Nano on Android, the browser\'s built-in model in Chrome. Where none is available, Dottoday uses your own history and simple rules. What you type is never sent to a server; what was asked and answered stays on this device.';
+
+  @override
+  String get privacyThinkingOnDevice =>
+      'On this device now: the built-in model.';
+
+  @override
+  String get privacyThinkingRules =>
+      'On this device now: your history and simple rules.';
+
+  @override
+  String get privacyClearThinking => 'Clear thinking history';
+
+  @override
+  String get snackThinkingCleared => 'Thinking history cleared';
+
+  @override
+  String get proposalAccept => 'Accept';
+
+  @override
+  String get proposalDiscard => 'Discard';
+
+  @override
+  String get proposalNothingSaved => 'Nothing is saved until you accept';
+
+  @override
+  String get proposalLegendNow => 'now';
+
+  @override
+  String get proposalLegendProposed => 'proposed';
+
+  @override
+  String proposalShiftedLater(String duration) {
+    return 'shifted +$duration';
+  }
+
+  @override
+  String proposalShiftedEarlier(String duration) {
+    return 'shifted −$duration';
+  }
+
+  @override
+  String proposalShrunk(String duration) {
+    return 'shrunk to $duration';
+  }
+
+  @override
+  String proposalGrown(String duration) {
+    return 'grown to $duration';
+  }
+
+  @override
+  String proposalMovedTo(String when) {
+    return 'moved to $when';
+  }
+
+  @override
+  String get proposalMovedToInbox => 'moved to Inbox';
+
+  @override
+  String get proposalAdded => 'new';
+
+  @override
+  String get proposalUntouched => 'pinned · untouched';
+
+  @override
+  String proposalSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count steps',
+      one: '1 step',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proposalNothing => 'Nothing to change';
+
+  @override
+  String proposalKeep(String title) {
+    return 'Keep $title as it is';
+  }
+
+  @override
+  String proposalDayTime(String day, String time) {
+    return '$day $time';
+  }
+
+  @override
+  String get stepLengthAdd => '+ time';
+
+  @override
+  String stepLengthHint(String title) {
+    return 'Change how long $title takes';
+  }
+
+  @override
+  String get stepLengthTitle => 'How long is this step?';
+
+  @override
+  String get stepLengthNone => 'No time';
+
+  @override
+  String get editorStepsSum => 'Length = sum of steps';
+
+  @override
+  String editorStepsSumTotal(String duration) {
+    return 'Steps add up to $duration';
+  }
+
+  @override
+  String get editorStepsSumEmpty => 'Give a step a time to use this';
+
+  @override
+  String get breakdownAction => 'Break it down';
+
+  @override
+  String get breakdownOnDevice => 'on-device';
+
+  @override
+  String get breakdownUsual => 'your usual';
+
+  @override
+  String breakdownStepHint(int number) {
+    return 'Step $number';
+  }
+
+  @override
+  String get breakdownAddStep => 'Add a step';
+
+  @override
+  String breakdownDepth(int depth, int max) {
+    return 'depth $depth of $max';
+  }
+
+  @override
+  String get breakdownSplit => 'Break this down';
+
+  @override
+  String get breakdownRemove => 'Remove step';
+
+  @override
+  String breakdownShow(String title) {
+    return 'More for $title';
+  }
+
+  @override
+  String breakdownTotal(String duration) {
+    return 'Total $duration · the dot grows to fit';
+  }
+
+  @override
+  String get breakdownSmallest =>
+      'You\'ll be asked for the first step only if this stays unstarted (Smallest step)';
+
+  @override
+  String breakdownWasNow(String before, String after) {
+    return 'was $before → now $after';
+  }
+
+  @override
+  String breakdownJoin(String parent, String step) {
+    return '$parent · $step';
+  }
+
+  @override
+  String breakdownAccepted(String title) {
+    return 'Steps added to $title';
+  }
+
+  @override
+  String breakdownStepsOnDraft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count steps',
+      one: '1 step',
+    );
+    return '$_temp0 · saved with the task';
+  }
+
+  @override
+  String get focusTitle => 'Focus';
+
+  @override
+  String get focusBack => 'Today';
+
+  @override
+  String focusRange(String range, String length) {
+    return '$range · $length';
+  }
+
+  @override
+  String focusStep(int number, int total) {
+    return 'Step $number of $total';
+  }
+
+  @override
+  String get focusAllSteps => 'Every step done';
+
+  @override
+  String get focusChime => 'Chime every 15 min';
+
+  @override
+  String get focusDeepWork => 'Deep work · Focus on';
+
+  @override
+  String get focusDeepWorkAccess => 'Allow Dottoday to turn on Do Not Disturb';
+
+  @override
+  String get focusShortcutsTitle => 'Turn on Focus with Shortcuts';
+
+  @override
+  String get focusShortcutsBody =>
+      'iPhone and Mac don\'t let apps switch Focus. In Shortcuts, make a shortcut with Dottoday\'s Start focus and Set Focus, and run it from the Action button, Control Center or Siri.';
+
+  @override
+  String get focusShortcutsOpen => 'Open Shortcuts';
+
+  @override
+  String get focusDeepWorkWeb =>
+      'Use your computer\'s Do Not Disturb; the browser can\'t change it';
+
+  @override
+  String get focusNextStep => 'Next step';
+
+  @override
+  String get focusBreakThrough =>
+      'Dot starts still break through Focus (time-sensitive)';
+
+  @override
+  String get focusMore => 'More';
+
+  @override
+  String get focusOpenTask => 'Task details';
+
+  @override
+  String focusDoneMessage(String title) {
+    return '$title done';
+  }
+
+  @override
+  String focusExtendedMessage(String title) {
+    return '$title · 15 min more';
+  }
+
+  @override
+  String get focusOpenHint => 'Open Focus';
+
+  @override
+  String smallestStepTitle(String step, String length) {
+    return 'Just $step · $length?';
+  }
+
+  @override
+  String smallestStepTitleShort(String step) {
+    return 'Just $step?';
+  }
+
+  @override
+  String get smallestStepStart => 'Start';
+
+  @override
+  String get unstickPrompt =>
+      'What\'s the very first thing you\'d physically do?';
+
+  @override
+  String get unstickHint => 'e.g. Open the folder';
+
+  @override
+  String get unstickSave => 'Make it step 1';
+
+  @override
+  String unstickSaved(String title) {
+    return 'Step 1 added to $title';
+  }
 }

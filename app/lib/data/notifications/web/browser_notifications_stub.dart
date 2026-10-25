@@ -14,6 +14,7 @@ Future<bool> showBrowserNotification(
   OsNotification n, {
   required String doneLabel,
   required String plusLabel,
+  String? startLabel,
 }) async => false;
 
 Stream<NotificationTap> browserNotificationTaps() => const Stream.empty();

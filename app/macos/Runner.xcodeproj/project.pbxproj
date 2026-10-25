@@ -36,6 +36,7 @@
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		363F237EE592EEA9E0BDD04B /* DayDotImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5FC895D2C19BB4E7D48BE6 /* DayDotImageTests.swift */; };
 		4D7A1B2C2E8F000100C0FFEE /* CalendarBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7A1B2D2E8F000100C0FFEE /* CalendarBridge.swift */; };
+		5A38B0F6448DE1214CE36867 /* ThinkingBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = E31060CD99B889FD8CFFD316 /* ThinkingBridge.swift */; };
 		643C5081A4CFF74881AE4155 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA239FDEC478DDF4AD1FE316 /* Pods_Runner.framework */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
 		8631BC7729DF682FD5AE78B6 /* reminder_chime.wav in Resources */ = {isa = PBXBuildFile; fileRef = ED4611A732A87659D6435421 /* reminder_chime.wav */; };
@@ -106,6 +107,7 @@
 		A68E47B0C2DB38F5AAB52FBE /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		AC70431C64A481189B369B74 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		CED2D9A80665A5D3FC657E97 /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E31060CD99B889FD8CFFD316 /* ThinkingBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ThinkingBridge.swift; path = ../../ios/Runner/ThinkingBridge.swift; sourceTree = "<group>"; };
 		E8EE2A12D3D79EA3BF70835B /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		EA239FDEC478DDF4AD1FE316 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED4611A732A87659D6435421 /* reminder_chime.wav */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_chime.wav; path = ../assets/sounds/reminder_chime.wav; sourceTree = SOURCE_ROOT; };
@@ -210,6 +212,7 @@
 				9E4000C80151F405B50FE812 /* InfoPlist.strings */,
 				6B585971458A3DA5EDEF1F67 /* Sounds */,
 				A4C8C4A884C19DCEE1DA1932 /* DayDotStatusItem.swift */,
+				E31060CD99B889FD8CFFD316 /* ThinkingBridge.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -499,6 +502,7 @@
 				4D7A1B2C2E8F000100C0FFEE /* CalendarBridge.swift in Sources */,
 				335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */,
 				110C4778699B875E748E943B /* DayDotStatusItem.swift in Sources */,
+				5A38B0F6448DE1214CE36867 /* ThinkingBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

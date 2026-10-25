@@ -1,5 +1,6 @@
 import 'package:dottoday/app_shell.dart';
 import 'package:dottoday/core/router/app_router.dart';
+import 'package:dottoday/features/focus/focus_screen.dart';
 import 'package:dottoday/features/inbox/inbox_screen.dart';
 import 'package:dottoday/features/inbox/inbox_sidebar.dart';
 import 'package:dottoday/features/search/search_screen.dart';
@@ -23,4 +24,5 @@ final appScreens = RouteScreens(
   month: (_) => const MonthScreen(),
   day: (_, date) => InboxSidebarFrame(child: TodayScreen(date: date)),
   task: (_, id) => TaskScreen(id: id),
+  focus: (_, id) => FocusScreen(id: id),
 );

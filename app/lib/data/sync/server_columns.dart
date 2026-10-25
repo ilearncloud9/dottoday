@@ -58,6 +58,7 @@ const pushableColumns = <String, Set<String>>{
     'actual_start_utc',
     'actual_end_utc',
     'duration_from_steps',
+    'move_count',
     'created_at',
     'deleted_at',
   },

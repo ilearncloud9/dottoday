@@ -4149,4 +4149,287 @@ class AppLocalizationsEs extends AppLocalizations {
   String liveActivityCountLabel(int done, int total) {
     return '$done de $total hechas hoy';
   }
+
+  @override
+  String get privacyThinkingTitle => 'Ayuda para pensar';
+
+  @override
+  String get privacyThinkingBody =>
+      '«Dividir en pasos» y las sugerencias se calculan en este dispositivo: Apple Intelligence en iPhone y Mac, Gemini Nano en Android, el modelo integrado de Chrome. Si no hay ninguno, Dottoday usa tu propio historial y reglas sencillas. Lo que escribes nunca se envía a un servidor; preguntas y respuestas se quedan en este dispositivo.';
+
+  @override
+  String get privacyThinkingOnDevice =>
+      'En este dispositivo ahora: el modelo integrado.';
+
+  @override
+  String get privacyThinkingRules =>
+      'En este dispositivo ahora: tu historial y reglas sencillas.';
+
+  @override
+  String get privacyClearThinking => 'Borrar historial de ideas';
+
+  @override
+  String get snackThinkingCleared => 'Historial de ideas borrado';
+
+  @override
+  String get proposalAccept => 'Aceptar';
+
+  @override
+  String get proposalDiscard => 'Descartar';
+
+  @override
+  String get proposalNothingSaved => 'No se guarda nada hasta que aceptes';
+
+  @override
+  String get proposalLegendNow => 'ahora';
+
+  @override
+  String get proposalLegendProposed => 'propuesto';
+
+  @override
+  String proposalShiftedLater(String duration) {
+    return 'movido +$duration';
+  }
+
+  @override
+  String proposalShiftedEarlier(String duration) {
+    return 'movido −$duration';
+  }
+
+  @override
+  String proposalShrunk(String duration) {
+    return 'acortado a $duration';
+  }
+
+  @override
+  String proposalGrown(String duration) {
+    return 'alargado a $duration';
+  }
+
+  @override
+  String proposalMovedTo(String when) {
+    return 'movido a $when';
+  }
+
+  @override
+  String get proposalMovedToInbox => 'movido a la bandeja de entrada';
+
+  @override
+  String get proposalAdded => 'nuevo';
+
+  @override
+  String get proposalUntouched => 'fijado · sin cambios';
+
+  @override
+  String proposalSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pasos',
+      one: '1 paso',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proposalNothing => 'Nada que cambiar';
+
+  @override
+  String proposalKeep(String title) {
+    return 'Dejar $title como está';
+  }
+
+  @override
+  String proposalDayTime(String day, String time) {
+    return '$day a las $time';
+  }
+
+  @override
+  String get stepLengthAdd => '+ tiempo';
+
+  @override
+  String stepLengthHint(String title) {
+    return 'Cambiar cuánto dura $title';
+  }
+
+  @override
+  String get stepLengthTitle => '¿Cuánto dura este paso?';
+
+  @override
+  String get stepLengthNone => 'Sin tiempo';
+
+  @override
+  String get editorStepsSum => 'Duración = suma de los pasos';
+
+  @override
+  String editorStepsSumTotal(String duration) {
+    return 'Los pasos suman $duration';
+  }
+
+  @override
+  String get editorStepsSumEmpty => 'Da tiempo a un paso para usarlo';
+
+  @override
+  String get breakdownAction => 'Dividir en pasos';
+
+  @override
+  String get breakdownOnDevice => 'en el dispositivo';
+
+  @override
+  String get breakdownUsual => 'lo habitual';
+
+  @override
+  String breakdownStepHint(int number) {
+    return 'Paso $number';
+  }
+
+  @override
+  String get breakdownAddStep => 'Añadir un paso';
+
+  @override
+  String breakdownDepth(int depth, int max) {
+    return 'nivel $depth de $max';
+  }
+
+  @override
+  String get breakdownSplit => 'Dividir este paso';
+
+  @override
+  String get breakdownRemove => 'Quitar el paso';
+
+  @override
+  String breakdownShow(String title) {
+    return 'Más de $title';
+  }
+
+  @override
+  String breakdownTotal(String duration) {
+    return 'Total $duration · el punto se ajusta';
+  }
+
+  @override
+  String get breakdownSmallest =>
+      'Si no empieza, solo te preguntaremos por el primer paso (Paso más pequeño)';
+
+  @override
+  String breakdownWasNow(String before, String after) {
+    return 'antes $before → ahora $after';
+  }
+
+  @override
+  String breakdownJoin(String parent, String step) {
+    return '$parent · $step';
+  }
+
+  @override
+  String breakdownAccepted(String title) {
+    return 'Pasos añadidos a $title';
+  }
+
+  @override
+  String breakdownStepsOnDraft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pasos',
+      one: '1 paso',
+    );
+    return '$_temp0 · se guardan con la tarea';
+  }
+
+  @override
+  String get focusTitle => 'Foco';
+
+  @override
+  String get focusBack => 'Hoy';
+
+  @override
+  String focusRange(String range, String length) {
+    return '$range · $length';
+  }
+
+  @override
+  String focusStep(int number, int total) {
+    return 'Paso $number de $total';
+  }
+
+  @override
+  String get focusAllSteps => 'Todos los pasos hechos';
+
+  @override
+  String get focusChime => 'Aviso cada 15 min';
+
+  @override
+  String get focusDeepWork => 'Trabajo profundo · Foco activado';
+
+  @override
+  String get focusDeepWorkAccess => 'Permite que Dottoday active No molestar';
+
+  @override
+  String get focusShortcutsTitle =>
+      'Activa un modo de concentración con Atajos';
+
+  @override
+  String get focusShortcutsBody =>
+      'El iPhone y el Mac no dejan que las apps cambien el modo de concentración. En Atajos, crea un atajo con «Empezar a concentrarte» de Dottoday y «Activar modo de concentración», y ejecútalo desde el botón de acción, el centro de control o Siri.';
+
+  @override
+  String get focusShortcutsOpen => 'Abrir Atajos';
+
+  @override
+  String get focusDeepWorkWeb =>
+      'Usa No molestar del ordenador; el navegador no puede cambiarlo';
+
+  @override
+  String get focusNextStep => 'Siguiente paso';
+
+  @override
+  String get focusBreakThrough =>
+      'Los inicios de puntos siguen llegando (urgentes)';
+
+  @override
+  String get focusMore => 'Más';
+
+  @override
+  String get focusOpenTask => 'Detalles de la tarea';
+
+  @override
+  String focusDoneMessage(String title) {
+    return '$title hecho';
+  }
+
+  @override
+  String focusExtendedMessage(String title) {
+    return '$title · 15 min más';
+  }
+
+  @override
+  String get focusOpenHint => 'Abrir foco';
+
+  @override
+  String smallestStepTitle(String step, String length) {
+    return '¿Solo $step · $length?';
+  }
+
+  @override
+  String smallestStepTitleShort(String step) {
+    return '¿Solo $step?';
+  }
+
+  @override
+  String get smallestStepStart => 'Empezar';
+
+  @override
+  String get unstickPrompt => '¿Qué es lo primerísimo que harías, físicamente?';
+
+  @override
+  String get unstickHint => 'p. ej. Abrir la carpeta';
+
+  @override
+  String get unstickSave => 'Convertir en el paso 1';
+
+  @override
+  String unstickSaved(String title) {
+    return 'Paso 1 añadido a $title';
+  }
 }

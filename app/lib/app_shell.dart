@@ -5,8 +5,10 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/features/calendar_import/write_back_banner.dart';
+import 'package:dottoday/features/focus/focus_screen.dart';
 import 'package:dottoday/features/notifications/in_app_alert_banner.dart';
 import 'package:dottoday/features/onboarding/install_banner.dart';
+import 'package:dottoday/features/proposals/proposal_host.dart';
 import 'package:dottoday/features/settings/whats_new_banner.dart';
 import 'package:dottoday/features/sync_status/sync_banner.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
@@ -71,7 +73,11 @@ class AppShell extends ConsumerWidget {
           Expanded(
             child: Focus(
               focusNode: content,
-              child: EditorPanelFrame(child: shell),
+              // Proposals (M10.2): a sheet on phones, the panel when wide.
+              child: ProposalHost(
+                // Focus on Mac/web takes the content area (M10.5).
+                child: EditorPanelFrame(child: FocusFrame(child: shell)),
+              ),
             ),
           ),
         ],

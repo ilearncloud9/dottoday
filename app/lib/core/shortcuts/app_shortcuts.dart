@@ -32,6 +32,15 @@ final class AddTaskIntent extends Intent {
   final DateTime? day;
 }
 
+/// Break the saved task [occurrenceId] into steps (11 B1, docs/09 M10.4):
+/// the task sheet and the Mac/web editor panel ask, the root opens the
+/// proposal (no feature imports another).
+final class BreakDownIntent extends Intent {
+  const BreakDownIntent(this.occurrenceId);
+
+  final String occurrenceId;
+}
+
 /// Schedule the inbox task [occurrenceId] (Search's "+ Schedule", M3d.1):
 /// the Inbox's suggestions and "Pick a time…", handled at the app root.
 final class ScheduleTaskIntent extends Intent {

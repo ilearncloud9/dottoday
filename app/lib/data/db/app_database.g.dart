@@ -3722,6 +3722,18 @@ class $OccurrencesTable extends Occurrences
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _moveCountMeta = const VerificationMeta(
+    'moveCount',
+  );
+  @override
+  late final GeneratedColumn<int> moveCount = GeneratedColumn<int>(
+    'move_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _deletedAtMeta = const VerificationMeta(
     'deletedAt',
   );
@@ -3763,6 +3775,7 @@ class $OccurrencesTable extends Occurrences
     actualStartUtc,
     actualEndUtc,
     durationFromSteps,
+    moveCount,
     deletedAt,
   ];
   @override
@@ -3983,6 +3996,12 @@ class $OccurrencesTable extends Occurrences
         ),
       );
     }
+    if (data.containsKey('move_count')) {
+      context.handle(
+        _moveCountMeta,
+        moveCount.isAcceptableOrUnknown(data['move_count']!, _moveCountMeta),
+      );
+    }
     if (data.containsKey('deleted_at')) {
       context.handle(
         _deletedAtMeta,
@@ -4110,6 +4129,10 @@ class $OccurrencesTable extends Occurrences
         DriftSqlType.bool,
         data['${effectivePrefix}duration_from_steps'],
       )!,
+      moveCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}move_count'],
+      )!,
       deletedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}deleted_at'],
@@ -4159,6 +4182,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   final int? actualStartUtc;
   final int? actualEndUtc;
   final bool durationFromSteps;
+  final int moveCount;
   final int? deletedAt;
   const OccurrenceRow({
     required this.createdAt,
@@ -4189,6 +4213,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     this.actualStartUtc,
     this.actualEndUtc,
     required this.durationFromSteps,
+    required this.moveCount,
     this.deletedAt,
   });
   @override
@@ -4244,6 +4269,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       map['actual_end_utc'] = Variable<int>(actualEndUtc);
     }
     map['duration_from_steps'] = Variable<bool>(durationFromSteps);
+    map['move_count'] = Variable<int>(moveCount);
     if (!nullToAbsent || deletedAt != null) {
       map['deleted_at'] = Variable<int>(deletedAt);
     }
@@ -4302,6 +4328,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           ? const Value.absent()
           : Value(actualEndUtc),
       durationFromSteps: Value(durationFromSteps),
+      moveCount: Value(moveCount),
       deletedAt: deletedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(deletedAt),
@@ -4342,6 +4369,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       actualStartUtc: serializer.fromJson<int?>(json['actualStartUtc']),
       actualEndUtc: serializer.fromJson<int?>(json['actualEndUtc']),
       durationFromSteps: serializer.fromJson<bool>(json['durationFromSteps']),
+      moveCount: serializer.fromJson<int>(json['moveCount']),
       deletedAt: serializer.fromJson<int?>(json['deletedAt']),
     );
   }
@@ -4377,6 +4405,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       'actualStartUtc': serializer.toJson<int?>(actualStartUtc),
       'actualEndUtc': serializer.toJson<int?>(actualEndUtc),
       'durationFromSteps': serializer.toJson<bool>(durationFromSteps),
+      'moveCount': serializer.toJson<int>(moveCount),
       'deletedAt': serializer.toJson<int?>(deletedAt),
     };
   }
@@ -4410,6 +4439,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     Value<int?> actualStartUtc = const Value.absent(),
     Value<int?> actualEndUtc = const Value.absent(),
     bool? durationFromSteps,
+    int? moveCount,
     Value<int?> deletedAt = const Value.absent(),
   }) => OccurrenceRow(
     createdAt: createdAt ?? this.createdAt,
@@ -4450,6 +4480,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
         : this.actualStartUtc,
     actualEndUtc: actualEndUtc.present ? actualEndUtc.value : this.actualEndUtc,
     durationFromSteps: durationFromSteps ?? this.durationFromSteps,
+    moveCount: moveCount ?? this.moveCount,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   OccurrenceRow copyWithCompanion(OccurrencesCompanion data) {
@@ -4500,6 +4531,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       durationFromSteps: data.durationFromSteps.present
           ? data.durationFromSteps.value
           : this.durationFromSteps,
+      moveCount: data.moveCount.present ? data.moveCount.value : this.moveCount,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
@@ -4535,6 +4567,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           ..write('actualStartUtc: $actualStartUtc, ')
           ..write('actualEndUtc: $actualEndUtc, ')
           ..write('durationFromSteps: $durationFromSteps, ')
+          ..write('moveCount: $moveCount, ')
           ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
@@ -4570,6 +4603,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     actualStartUtc,
     actualEndUtc,
     durationFromSteps,
+    moveCount,
     deletedAt,
   ]);
   @override
@@ -4604,6 +4638,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           other.actualStartUtc == this.actualStartUtc &&
           other.actualEndUtc == this.actualEndUtc &&
           other.durationFromSteps == this.durationFromSteps &&
+          other.moveCount == this.moveCount &&
           other.deletedAt == this.deletedAt);
 }
 
@@ -4636,6 +4671,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   final Value<int?> actualStartUtc;
   final Value<int?> actualEndUtc;
   final Value<bool> durationFromSteps;
+  final Value<int> moveCount;
   final Value<int?> deletedAt;
   final Value<int> rowid;
   const OccurrencesCompanion({
@@ -4667,6 +4703,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     this.actualStartUtc = const Value.absent(),
     this.actualEndUtc = const Value.absent(),
     this.durationFromSteps = const Value.absent(),
+    this.moveCount = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -4699,6 +4736,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     this.actualStartUtc = const Value.absent(),
     this.actualEndUtc = const Value.absent(),
     this.durationFromSteps = const Value.absent(),
+    this.moveCount = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : createdAt = Value(createdAt),
@@ -4737,6 +4775,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     Expression<int>? actualStartUtc,
     Expression<int>? actualEndUtc,
     Expression<bool>? durationFromSteps,
+    Expression<int>? moveCount,
     Expression<int>? deletedAt,
     Expression<int>? rowid,
   }) {
@@ -4769,6 +4808,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
       if (actualStartUtc != null) 'actual_start_utc': actualStartUtc,
       if (actualEndUtc != null) 'actual_end_utc': actualEndUtc,
       if (durationFromSteps != null) 'duration_from_steps': durationFromSteps,
+      if (moveCount != null) 'move_count': moveCount,
       if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -4803,6 +4843,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     Value<int?>? actualStartUtc,
     Value<int?>? actualEndUtc,
     Value<bool>? durationFromSteps,
+    Value<int>? moveCount,
     Value<int?>? deletedAt,
     Value<int>? rowid,
   }) {
@@ -4835,6 +4876,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
       actualStartUtc: actualStartUtc ?? this.actualStartUtc,
       actualEndUtc: actualEndUtc ?? this.actualEndUtc,
       durationFromSteps: durationFromSteps ?? this.durationFromSteps,
+      moveCount: moveCount ?? this.moveCount,
       deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
@@ -4927,6 +4969,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     if (durationFromSteps.present) {
       map['duration_from_steps'] = Variable<bool>(durationFromSteps.value);
     }
+    if (moveCount.present) {
+      map['move_count'] = Variable<int>(moveCount.value);
+    }
     if (deletedAt.present) {
       map['deleted_at'] = Variable<int>(deletedAt.value);
     }
@@ -4967,6 +5012,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
           ..write('actualStartUtc: $actualStartUtc, ')
           ..write('actualEndUtc: $actualEndUtc, ')
           ..write('durationFromSteps: $durationFromSteps, ')
+          ..write('moveCount: $moveCount, ')
           ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -10680,6 +10726,7 @@ typedef $$OccurrencesTableCreateCompanionBuilder =
       Value<int?> actualStartUtc,
       Value<int?> actualEndUtc,
       Value<bool> durationFromSteps,
+      Value<int> moveCount,
       Value<int?> deletedAt,
       Value<int> rowid,
     });
@@ -10713,6 +10760,7 @@ typedef $$OccurrencesTableUpdateCompanionBuilder =
       Value<int?> actualStartUtc,
       Value<int?> actualEndUtc,
       Value<bool> durationFromSteps,
+      Value<int> moveCount,
       Value<int?> deletedAt,
       Value<int> rowid,
     });
@@ -10923,6 +10971,11 @@ class $$OccurrencesTableFilterComposer
 
   ColumnFilters<bool> get durationFromSteps => $composableBuilder(
     column: $table.durationFromSteps,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get moveCount => $composableBuilder(
+    column: $table.moveCount,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -11160,6 +11213,11 @@ class $$OccurrencesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get moveCount => $composableBuilder(
+    column: $table.moveCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get deletedAt => $composableBuilder(
     column: $table.deletedAt,
     builder: (column) => ColumnOrderings(column),
@@ -11335,6 +11393,9 @@ class $$OccurrencesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get moveCount =>
+      $composableBuilder(column: $table.moveCount, builder: (column) => column);
+
   GeneratedColumn<int> get deletedAt =>
       $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
@@ -11494,6 +11555,7 @@ class $$OccurrencesTableTableManager
                 Value<int?> actualStartUtc = const Value.absent(),
                 Value<int?> actualEndUtc = const Value.absent(),
                 Value<bool> durationFromSteps = const Value.absent(),
+                Value<int> moveCount = const Value.absent(),
                 Value<int?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => OccurrencesCompanion(
@@ -11525,6 +11587,7 @@ class $$OccurrencesTableTableManager
                 actualStartUtc: actualStartUtc,
                 actualEndUtc: actualEndUtc,
                 durationFromSteps: durationFromSteps,
+                moveCount: moveCount,
                 deletedAt: deletedAt,
                 rowid: rowid,
               ),
@@ -11558,6 +11621,7 @@ class $$OccurrencesTableTableManager
                 Value<int?> actualStartUtc = const Value.absent(),
                 Value<int?> actualEndUtc = const Value.absent(),
                 Value<bool> durationFromSteps = const Value.absent(),
+                Value<int> moveCount = const Value.absent(),
                 Value<int?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => OccurrencesCompanion.insert(
@@ -11589,6 +11653,7 @@ class $$OccurrencesTableTableManager
                 actualStartUtc: actualStartUtc,
                 actualEndUtc: actualEndUtc,
                 durationFromSteps: durationFromSteps,
+                moveCount: moveCount,
                 deletedAt: deletedAt,
                 rowid: rowid,
               ),

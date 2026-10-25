@@ -4,6 +4,7 @@ import 'package:dottoday/app_commands.dart';
 import 'package:dottoday/app_lifecycle.dart';
 import 'package:dottoday/app_menu.dart';
 import 'package:dottoday/app_shortcut_groups.dart';
+import 'package:dottoday/core/editing/focus_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
@@ -11,7 +12,9 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/live_activity/web_live_dot.dart';
 import 'package:dottoday/data/live_activity/web_live_dot_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/pwa/tab_live_dot.dart';
+import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/inbox/schedule_from_anywhere.dart';
 import 'package:dottoday/features/lock/lock_gate.dart';
@@ -19,6 +22,7 @@ import 'package:dottoday/features/onboarding/onboarding_gate.dart';
 import 'package:dottoday/features/recovery/database_recovery.dart';
 import 'package:dottoday/features/sync_status/sync_sheet.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
+import 'package:dottoday/features/task_editor/breakdown/breakdown_flow.dart';
 import 'package:dottoday/shared/sheets/shortcut_sheet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +46,10 @@ class DottodayApp extends ConsumerWidget {
     if (kIsWeb) {
       ref.listen(webLiveDotStateProvider, (_, d) => applyTabLiveDot(d));
     }
+    // Start focus from a control, tile or Siri (M10.5).
+    ref.listen(focusRequestProvider, (_, r) {
+      if (r != null) _openFocus(router, r.id);
+    });
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (context) => tab.title ?? context.l10n.appTitle,
@@ -104,7 +112,37 @@ Map<Type, Action<Intent>> _intents(GoRouter router) => {
   ShowSyncIntent: CallbackAction<ShowSyncIntent>(
     onInvoke: (_) => _sync(router),
   ),
+  BreakDownIntent: CallbackAction<BreakDownIntent>(
+    onInvoke: (i) => unawaited(_breakDown(router, i.occurrenceId)),
+  ),
 };
+
+/// Focus on [id] from the root overlay; at a cold start the navigator may
+/// not be up yet, so once more after the first frame.
+void _openFocus(GoRouter router, String id, {bool retry = true}) {
+  final context =
+      router.routerDelegate.navigatorKey.currentState?.overlay?.context;
+  if (context != null) return openFocus(context, id);
+  if (!retry) return;
+  WidgetsBinding.instance.addPostFrameCallback(
+    (_) => _openFocus(router, id, retry: false),
+  );
+}
+
+/// Break it down for a saved task (M10.4), on the root overlay so the
+/// proposal opens above any sheet.
+Future<void> _breakDown(GoRouter router, String id) async {
+  final context =
+      router.routerDelegate.navigatorKey.currentState?.overlay?.context;
+  if (context == null) return;
+  final c = ProviderScope.containerOf(context, listen: false);
+  final profile = await readProfile(c);
+  final task = await c
+      .read(occurrenceRepositoryProvider)
+      .findById(profile.id, id);
+  if (task == null || task.deletedAt != null || !context.mounted) return;
+  await breakDown(context, BreakdownTarget.task(task));
+}
 
 /// The app's language for a stored `profiles.locale`: a supported one,
 /// else the device's (null).

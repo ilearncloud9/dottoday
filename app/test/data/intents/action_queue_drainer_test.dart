@@ -179,4 +179,46 @@ void main() {
       contains('intent.queue_unreadable'),
     );
   });
+
+  test(
+    'a fresh Start focus opens Focus; a stale or missing one does not',
+    () async {
+      final asked = <String>[];
+      final focusing = ActionQueueDrainer(
+        store: store,
+        intents: DotIntents(
+          clock: h.clock,
+          writes: h.writes,
+          occurrences: occurrences,
+          series: DriftSeriesRepository(h.db),
+          profile: () async => profileFixture(),
+          snapshot: () => throw UnimplementedError(),
+          untitled: (_) => 'Untitled',
+        ),
+        logger: h.logger,
+        now: h.clock.nowUtc,
+        onFocus: asked.add,
+      );
+      Map<String, Object?> at(String id, DotAction a, Duration ago) =>
+          encodeQueuedAction(
+            QueuedAction(id: id, createdAtUtc: _now.subtract(ago), action: a),
+          );
+      store
+        ..append(at(_a1, StartFocus(base.id), const Duration(seconds: 5)))
+        ..append(at(_a2, StartFocus(base.id), const Duration(hours: 2)))
+        ..append(
+          at(
+            _late,
+            const StartFocus('01928c3e-0000-7000-8000-0000000000ff'),
+            Duration.zero,
+          ),
+        );
+      await focusing.drain();
+      expect(asked, [base.id]);
+      expect(
+        (await occurrences.findById(userId, base.id))!.actualStartUtc,
+        isNotNull,
+      );
+    },
+  );
 }

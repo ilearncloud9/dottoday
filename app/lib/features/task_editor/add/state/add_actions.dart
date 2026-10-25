@@ -30,10 +30,15 @@ Future<Result<AddedTask, AppFailure>> saveDraft(
     toInbox: toInbox,
     alerts: profile.settings.defaultAlerts,
   );
+  final occurrence = rows.occurrence;
   final batch = WriteBatch(
     userId: profile.id,
     series: [?rows.series],
-    occurrences: [?rows.occurrence],
+    occurrences: [?occurrence],
+    // Break it down's steps (M10.4); a series carries them as its list.
+    subtasks: occurrence == null
+        ? const []
+        : draft.stepRows(occurrence, nowUtc: occurrence.createdAt),
   );
   if (rows.series != null) {
     final written = await ref.read(writeUseCaseProvider).apply(batch);

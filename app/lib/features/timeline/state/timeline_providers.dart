@@ -7,6 +7,8 @@ import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/scheduling/start_nudge.dart';
 import 'package:dottoday/features/timeline/layout/timeline_day.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -100,6 +102,28 @@ Stream<Map<String, ({int done, int total})>> daySubtaskProgress(
         );
       }
       return out;
+    });
+  });
+}
+
+/// The first step still to do of each task on [date] whose steps aren't
+/// started (Smallest step, 11 B2, docs/09 M10.6), by occurrence id.
+@riverpod
+Stream<Map<String, Subtask>> dayFirstSteps(Ref ref, DateTime date) {
+  final data = ref.watch(timelineDataProvider(date).future);
+  final repo = ref.watch(subtaskRepositoryProvider);
+  return Stream.fromFuture(data).asyncExpand((data) {
+    final ids = {for (final o in data.blocks) o.id};
+    if (ids.isEmpty) return Stream.value(const {});
+    return repo.watchForOccurrences(data.userId, ids).map((subtasks) {
+      final byTask = <String, List<Subtask>>{};
+      for (final s in subtasks) {
+        (byTask[s.occurrenceId] ??= []).add(s);
+      }
+      return {
+        for (final MapEntry(:key, :value) in byTask.entries)
+          if (stepsNotStarted(value)) key: ?smallestStep(value),
+      };
     });
   });
 }

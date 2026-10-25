@@ -37,6 +37,7 @@ NotificationGateway notificationGateway(Ref ref) {
     platform: () => ref.read(notificationsStartedProvider.future),
     occurrences: ref.watch(occurrenceRepositoryProvider),
     profile: () => latestProfile(ref),
+    subtasks: ref.watch(subtaskRepositoryProvider),
   );
 }
 
@@ -85,6 +86,7 @@ NotificationSync notificationSync(Ref ref) => NotificationSync(
   series: ref.watch(seriesRepositoryProvider),
   settings: ref.watch(settingsRepositoryProvider),
   testAlarmAt: () => TestAlarmStore(ref.read(appDatabaseProvider)).at(),
+  subtasks: ref.watch(subtaskRepositoryProvider),
 );
 
 @Riverpod(keepAlive: true)

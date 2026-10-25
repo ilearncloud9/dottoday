@@ -243,3 +243,31 @@ class RepeatAlertRows extends StatelessWidget {
     );
   }
 }
+
+/// The editor's title: large, sentence case, ⏎ saves.
+class EditorTitleField extends StatelessWidget {
+  const EditorTitleField({
+    required this.controller,
+    required this.onSubmitted,
+    required this.onChanged,
+    this.autofocus = false,
+    super.key,
+  });
+
+  final TextEditingController controller;
+  final bool autofocus;
+  final VoidCallback onSubmitted;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) => TextField(
+    controller: controller,
+    autofocus: autofocus,
+    style: DotTheme.of(context).styles.topBarTitle,
+    decoration: InputDecoration(hintText: context.l10n.editorTitleHint),
+    textCapitalization: TextCapitalization.sentences,
+    textInputAction: TextInputAction.done,
+    onSubmitted: (_) => onSubmitted(),
+    onChanged: onChanged,
+  );
+}

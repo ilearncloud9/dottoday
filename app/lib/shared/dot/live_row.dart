@@ -6,6 +6,7 @@ import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
+import 'package:dottoday/shared/dot/unstick_line.dart';
 import 'package:flutter/material.dart';
 
 /// The current task, expanded (docs/10 §3 `LiveRow`, `Main`): conic dot,
@@ -16,6 +17,8 @@ class LiveRow extends StatelessWidget {
     required this.task,
     this.onToggleDone,
     this.onOpen,
+    this.onFocus,
+    this.onUnstick,
     this.onResize,
     this.onExtend,
     this.onShiftRest,
@@ -25,6 +28,12 @@ class LiveRow extends StatelessWidget {
   final ThreadTask task;
   final VoidCallback? onToggleDone;
   final VoidCallback? onOpen;
+
+  /// One tap on the live dot (11 A3, docs/09 M10.5); null: the dot ticks.
+  final VoidCallback? onFocus;
+
+  /// The Unstick answer (11 B3, M10.7); null hides the row.
+  final ValueChanged<String>? onUnstick;
 
   /// Resize grip at the segment end (R-05).
   final ValueChanged<int>? onResize;
@@ -45,7 +54,13 @@ class LiveRow extends StatelessWidget {
         dotSize: DotSize.liveDot,
         progress: task.progress,
       ),
-      dot: taskRowDot(context, task, DotSize.liveDot, onToggleDone),
+      dot: taskRowDot(
+        context,
+        task,
+        DotSize.liveDot,
+        onToggleDone,
+        onFocus: onFocus,
+      ),
       trailing: DoneCircle(
         color: t.colors.accent,
         width: DotSize.dotOutline,
@@ -73,6 +88,10 @@ class LiveRow extends StatelessWidget {
       spacing: DotSpace.m,
       children: [
         _Summary(task: task, onOpen: onOpen, showMeta: !wide),
+        // Smallest step (M10.6): only the first step, and Start.
+        if (task.smallestStep case final text?)
+          SmallestStepLine(text: text, onStart: onFocus),
+        if (onUnstick case final answer?) UnstickLine(onAnswer: answer),
         // A read-only thread (the Inbox's Drop onto today) wires none.
         if (onToggleDone != null || onExtend != null)
           _Actions(

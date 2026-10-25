@@ -43,9 +43,13 @@ class _Card extends StatelessWidget {
 
 void _noop(Object? _) {}
 
+void _noAnswer(String _, String _) {}
+
 const _actions = ThreadActions(
   onToggleDone: _noop,
   onOpen: _noop,
+  onFocus: _noop,
+  onUnstick: _noAnswer,
   onExtend: _noop,
   onShiftRest: _noop,
   onAddHere: _noop,
@@ -84,6 +88,46 @@ const _travel = <ThreadEntry>[
       state: DotState.upcoming,
       timeRange: '12:30 – 13:15',
       travel: '30 min',
+    ),
+  ),
+  ThreadCap.bed('22:00'),
+];
+
+/// Smallest step (docs/09 M10.6, derived from 11 §B2): the live dot,
+/// unstarted 10 min in, asks for its first step only.
+const _smallest = <ThreadEntry>[
+  ThreadCap.wake('7:00'),
+  ThreadTaskEntry(
+    ThreadTask(
+      id: 'taxes',
+      title: 'Do taxes',
+      color: TaskColor.amber,
+      icon: TaskIcon.list,
+      state: DotState.live,
+      timeRange: '16:00 – 17:40',
+      duration: '1 h 40',
+      progress: 0.12,
+      minutesLeft: 88,
+      subtasksTotal: 5,
+      smallestStep: 'Just Gather documents · 10 min?',
+    ),
+  ),
+  ThreadCap.bed('22:00'),
+];
+
+/// Unstick (docs/09 M10.7, derived from 11 §B3): a task moved three times
+/// with no steps asks, quietly, for its very first one.
+const _unstick = <ThreadEntry>[
+  ThreadCap.wake('7:00'),
+  ThreadTaskEntry(
+    ThreadTask(
+      id: 'taxes',
+      title: 'Do taxes',
+      color: TaskColor.amber,
+      icon: TaskIcon.list,
+      state: DotState.upcoming,
+      timeRange: '16:00 – 17:30',
+      unstick: true,
     ),
   ),
   ThreadCap.bed('22:00'),
@@ -128,6 +172,16 @@ void main() {
     build: (_) => const _Card(mainThread),
   );
   goldenMatrix('thread_empty', height: 260, build: (_) => const _Card(_empty));
+  goldenMatrix(
+    'thread_unstick',
+    height: 420,
+    build: (_) => const _Card(_unstick),
+  );
+  goldenMatrix(
+    'thread_smallest_step',
+    height: 420,
+    build: (_) => const _Card(_smallest),
+  );
   goldenMatrix(
     'thread_one',
     height: 400,

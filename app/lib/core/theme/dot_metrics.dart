@@ -51,6 +51,10 @@ abstract final class DotSize {
   /// (Inbox, Search; §4 expanded).
   static const double readableColumn = 640;
 
+  /// The right-hand panel at the expanded width: the task editor
+  /// (`A-mac-editor`: 640 of 2000 px at 1280) and proposals (docs/10 §4).
+  static const double sidePanel = 420;
+
   /// A row whose text gets this much width or more puts its time beside
   /// the title, in a column of [wideRowMeta] (the Mac spread's Today card,
   /// `A-mac-today-alt1-spread`: ~310 px of text). The time column is wider
@@ -77,6 +81,12 @@ abstract final class DotSize {
   /// The identity dot on Add step 1 (`A-ios-add-what`); step 2 uses
   /// [dayDot].
   static const double addDot = 64;
+
+  /// Focus's ring (`B-ios-focus`: 160 px; the roadmap's 120 corrected,
+  /// docs/09 M10.5), its stroke and the glyph inside.
+  static const double focusRing = 160;
+  static const double focusRingStroke = 22;
+  static const double focusGlyph = 48;
   static const double dayDotWatch = 18;
   static const double macRowDot = 26;
   static const double pickerDot = 22;

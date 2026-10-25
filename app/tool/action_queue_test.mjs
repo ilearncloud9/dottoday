@@ -35,6 +35,12 @@ test('+15 carries the end the snapshot shows; unknown dots queue nothing', () =>
   assert.equal(q.fromNotification('plus15', payload, { blocks: [] }, now), null);
 });
 
+test("Smallest step's Start queues start_focus (the app opens Focus)", () => {
+  const entry = q.fromNotification('start', payload, null, now, fixed());
+  assert.equal(entry.kind, 'start_focus');
+  assert.equal(entry.occurrence_id, occurrence);
+});
+
 test('open, snooze and broken payloads are not queued', () => {
   assert.equal(q.fromNotification('open', payload, null, now), null);
   assert.equal(q.fromNotification('snooze', payload, null, now), null);

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/editing/editing_task.dart';
+import 'package:dottoday/core/editing/focus_task.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
@@ -54,6 +55,16 @@ ThreadActions dayThreadActions(
     onSelect: onSelect,
     onOpen: (id) =>
         openTask(context, id, otherwise: () => showTaskSheet(context, id)),
+    onFocus: (id) => openFocus(context, id),
+    // Unstick (M10.7): the answer is step 1; the move count starts over.
+    onUnstick: (id, answer) async {
+      final o = find(id);
+      report(
+        await answerUnstick(ref, o, answer),
+        (_) => l10n.unstickSaved(o.title),
+        (token) => token,
+      );
+    },
     // "N h free · add here" opens Add at the gap, or now if the gap has
     // begun (R-17).
     onAddHere: (gap) {

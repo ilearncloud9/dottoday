@@ -4,6 +4,7 @@ import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
+import 'package:dottoday/shared/dot/unstick_line.dart';
 import 'package:flutter/material.dart';
 
 /// A task on the thread (docs/10 §3 `TaskRow`): dot + segment on the axis,
@@ -19,6 +20,8 @@ class TaskRow extends StatelessWidget {
     this.onToggleDone,
     this.onOpen,
     this.onResize,
+    this.onStart,
+    this.onUnstick,
     this.dotSize = DotSize.rowDot,
     this.doneCircle = true,
     super.key,
@@ -38,6 +41,12 @@ class TaskRow extends StatelessWidget {
 
   /// Resize grip at the segment end (R-05); null hides it.
   final ValueChanged<int>? onResize;
+
+  /// Smallest step's Start (M10.6), under the title while it asks.
+  final VoidCallback? onStart;
+
+  /// The Unstick answer (11 B3, M10.7); null hides the row.
+  final ValueChanged<String>? onUnstick;
   final double dotSize;
 
   @override
@@ -60,19 +69,65 @@ class TaskRow extends StatelessWidget {
           task.state == DotState.done || !doneCircle || onToggleDone == null
           ? null
           : DoneCircle(color: t.colors.hairline, onTap: onToggleDone),
-      child: Semantics(
-        button: onOpen != null,
-        label: taskRowLabel(context.l10n, task),
-        excludeSemantics: true,
-        child: InkWell(
-          onTap: onOpen,
-          borderRadius: BorderRadius.circular(DotRadii.card),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: DotSpace.xl),
-            child: _Text(task: task),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Semantics(
+            button: onOpen != null,
+            label: taskRowLabel(context.l10n, task),
+            excludeSemantics: true,
+            child: InkWell(
+              onTap: onOpen,
+              borderRadius: BorderRadius.circular(DotRadii.card),
+              child: Padding(
+                padding: EdgeInsets.only(
+                  bottom: task.smallestStep == null && onUnstick == null
+                      ? DotSpace.xl
+                      : DotSpace.xs,
+                ),
+                child: _Text(task: task),
+              ),
+            ),
           ),
-        ),
+          if (task.smallestStep case final text?)
+            Padding(
+              padding: const EdgeInsets.only(bottom: DotSpace.l),
+              child: SmallestStepLine(text: text, onStart: onStart),
+            ),
+          if (onUnstick case final answer?)
+            Padding(
+              padding: const EdgeInsets.only(bottom: DotSpace.l),
+              child: UnstickLine(onAnswer: answer),
+            ),
+        ],
       ),
+    );
+  }
+}
+
+/// "Just Gather documents · 10 min?" and Start (11 B2, docs/09 M10.6): a
+/// quiet line in the accent, never a warning colour (11 §D no shame).
+class SmallestStepLine extends StatelessWidget {
+  const SmallestStepLine({required this.text, this.onStart, super.key});
+
+  final String text;
+  final VoidCallback? onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    return Wrap(
+      spacing: DotSpace.s,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        Text(text, style: t.styles.rowMeta.copyWith(color: t.colors.accentInk)),
+        if (onStart != null)
+          FilledButton.tonal(
+            onPressed: onStart,
+            style: FilledButton.styleFrom(shape: dotChipShape(context)),
+            child: Text(context.l10n.smallestStepStart),
+          ),
+      ],
     );
   }
 }
@@ -82,8 +137,9 @@ Widget taskRowDot(
   BuildContext context,
   ThreadTask task,
   double size,
-  VoidCallback? onToggleDone,
-) {
+  VoidCallback? onToggleDone, {
+  VoidCallback? onFocus,
+}) {
   final l10n = context.l10n;
   return TaskDot(
     color: task.color,
@@ -97,8 +153,11 @@ Widget taskRowDot(
       state: task.state,
       minutesLeft: task.minutesLeft,
     ),
-    onTap: onToggleDone,
-    tapHint: task.state == DotState.done
+    // The live dot opens Focus (11 A3); other dots tick.
+    onTap: onFocus ?? onToggleDone,
+    tapHint: onFocus != null
+        ? l10n.focusOpenHint
+        : task.state == DotState.done
         ? l10n.dotMarkNotDoneHint
         : l10n.dotMarkDoneHint,
   );

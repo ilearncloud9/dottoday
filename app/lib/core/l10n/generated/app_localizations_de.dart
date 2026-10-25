@@ -4154,4 +4154,290 @@ class AppLocalizationsDe extends AppLocalizations {
   String liveActivityCountLabel(int done, int total) {
     return '$done von $total heute erledigt';
   }
+
+  @override
+  String get privacyThinkingTitle => 'Hilfe beim Planen';
+
+  @override
+  String get privacyThinkingBody =>
+      '„In Schritte teilen“ und Vorschläge entstehen auf diesem Gerät: Apple Intelligence auf iPhone und Mac, Gemini Nano auf Android, das eingebaute Modell in Chrome. Wo keins verfügbar ist, nutzt Dottoday deinen eigenen Verlauf und einfache Regeln. Was du eingibst, wird nie an einen Server gesendet; Fragen und Antworten bleiben auf diesem Gerät.';
+
+  @override
+  String get privacyThinkingOnDevice =>
+      'Auf diesem Gerät gerade: das eingebaute Modell.';
+
+  @override
+  String get privacyThinkingRules =>
+      'Auf diesem Gerät gerade: dein Verlauf und einfache Regeln.';
+
+  @override
+  String get privacyClearThinking => 'Planungsverlauf löschen';
+
+  @override
+  String get snackThinkingCleared => 'Planungsverlauf gelöscht';
+
+  @override
+  String get proposalAccept => 'Übernehmen';
+
+  @override
+  String get proposalDiscard => 'Verwerfen';
+
+  @override
+  String get proposalNothingSaved =>
+      'Nichts wird gespeichert, bevor du übernimmst';
+
+  @override
+  String get proposalLegendNow => 'jetzt';
+
+  @override
+  String get proposalLegendProposed => 'Vorschlag';
+
+  @override
+  String proposalShiftedLater(String duration) {
+    return 'verschoben +$duration';
+  }
+
+  @override
+  String proposalShiftedEarlier(String duration) {
+    return 'verschoben −$duration';
+  }
+
+  @override
+  String proposalShrunk(String duration) {
+    return 'gekürzt auf $duration';
+  }
+
+  @override
+  String proposalGrown(String duration) {
+    return 'verlängert auf $duration';
+  }
+
+  @override
+  String proposalMovedTo(String when) {
+    return 'verschoben auf $when';
+  }
+
+  @override
+  String get proposalMovedToInbox => 'in den Eingang verschoben';
+
+  @override
+  String get proposalAdded => 'neu';
+
+  @override
+  String get proposalUntouched => 'fixiert · unverändert';
+
+  @override
+  String proposalSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Schritte',
+      one: '1 Schritt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proposalNothing => 'Nichts zu ändern';
+
+  @override
+  String proposalKeep(String title) {
+    return '$title so lassen';
+  }
+
+  @override
+  String proposalDayTime(String day, String time) {
+    return '$day $time';
+  }
+
+  @override
+  String get stepLengthAdd => '+ Zeit';
+
+  @override
+  String stepLengthHint(String title) {
+    return 'Ändern, wie lange $title dauert';
+  }
+
+  @override
+  String get stepLengthTitle => 'Wie lange dauert dieser Schritt?';
+
+  @override
+  String get stepLengthNone => 'Keine Zeit';
+
+  @override
+  String get editorStepsSum => 'Dauer = Summe der Schritte';
+
+  @override
+  String editorStepsSumTotal(String duration) {
+    return 'Die Schritte ergeben $duration';
+  }
+
+  @override
+  String get editorStepsSumEmpty =>
+      'Gib einem Schritt eine Zeit, um das zu nutzen';
+
+  @override
+  String get breakdownAction => 'In Schritte teilen';
+
+  @override
+  String get breakdownOnDevice => 'auf dem Gerät';
+
+  @override
+  String get breakdownUsual => 'wie üblich';
+
+  @override
+  String breakdownStepHint(int number) {
+    return 'Schritt $number';
+  }
+
+  @override
+  String get breakdownAddStep => 'Schritt hinzufügen';
+
+  @override
+  String breakdownDepth(int depth, int max) {
+    return 'Ebene $depth von $max';
+  }
+
+  @override
+  String get breakdownSplit => 'Diesen Schritt teilen';
+
+  @override
+  String get breakdownRemove => 'Schritt entfernen';
+
+  @override
+  String breakdownShow(String title) {
+    return 'Mehr zu $title';
+  }
+
+  @override
+  String breakdownTotal(String duration) {
+    return 'Gesamt $duration · der Punkt wächst mit';
+  }
+
+  @override
+  String get breakdownSmallest =>
+      'Bleibt das liegen, fragen wir nur nach dem ersten Schritt (Kleinster Schritt)';
+
+  @override
+  String breakdownWasNow(String before, String after) {
+    return 'vorher $before → jetzt $after';
+  }
+
+  @override
+  String breakdownJoin(String parent, String step) {
+    return '$parent · $step';
+  }
+
+  @override
+  String breakdownAccepted(String title) {
+    return 'Schritte zu $title hinzugefügt';
+  }
+
+  @override
+  String breakdownStepsOnDraft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Schritte',
+      one: '1 Schritt',
+    );
+    return '$_temp0 · wird mit der Aufgabe gespeichert';
+  }
+
+  @override
+  String get focusTitle => 'Fokus';
+
+  @override
+  String get focusBack => 'Heute';
+
+  @override
+  String focusRange(String range, String length) {
+    return '$range · $length';
+  }
+
+  @override
+  String focusStep(int number, int total) {
+    return 'Schritt $number von $total';
+  }
+
+  @override
+  String get focusAllSteps => 'Alle Schritte erledigt';
+
+  @override
+  String get focusChime => 'Alle 15 Min. ein Ton';
+
+  @override
+  String get focusDeepWork => 'Konzentriert · Fokus an';
+
+  @override
+  String get focusDeepWorkAccess =>
+      'Erlaube Dottoday, „Nicht stören“ einzuschalten';
+
+  @override
+  String get focusShortcutsTitle => 'Fokus mit Kurzbefehlen einschalten';
+
+  @override
+  String get focusShortcutsBody =>
+      'iPhone und Mac lassen Apps den Fokus nicht wechseln. Erstelle in Kurzbefehle einen Kurzbefehl mit „Fokus starten“ von Dottoday und „Fokus festlegen“ und starte ihn über die Aktionstaste, das Kontrollzentrum oder Siri.';
+
+  @override
+  String get focusShortcutsOpen => 'Kurzbefehle öffnen';
+
+  @override
+  String get focusDeepWorkWeb =>
+      'Nutze „Nicht stören“ deines Computers; der Browser kann es nicht ändern';
+
+  @override
+  String get focusNextStep => 'Nächster Schritt';
+
+  @override
+  String get focusBreakThrough =>
+      'Punkt-Starts kommen trotz Fokus durch (zeitkritisch)';
+
+  @override
+  String get focusMore => 'Mehr';
+
+  @override
+  String get focusOpenTask => 'Aufgabendetails';
+
+  @override
+  String focusDoneMessage(String title) {
+    return '$title erledigt';
+  }
+
+  @override
+  String focusExtendedMessage(String title) {
+    return '$title · 15 Min. mehr';
+  }
+
+  @override
+  String get focusOpenHint => 'Fokus öffnen';
+
+  @override
+  String smallestStepTitle(String step, String length) {
+    return 'Nur $step · $length?';
+  }
+
+  @override
+  String smallestStepTitleShort(String step) {
+    return 'Nur $step?';
+  }
+
+  @override
+  String get smallestStepStart => 'Starten';
+
+  @override
+  String get unstickPrompt =>
+      'Was wäre das allererste, was du ganz konkret tun würdest?';
+
+  @override
+  String get unstickHint => 'z. B. Ordner öffnen';
+
+  @override
+  String get unstickSave => 'Als Schritt 1 speichern';
+
+  @override
+  String unstickSaved(String title) {
+    return 'Schritt 1 zu $title hinzugefügt';
+  }
 }

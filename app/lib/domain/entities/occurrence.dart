@@ -47,6 +47,10 @@ abstract class Occurrence with _$Occurrence {
 
     /// Whether [durationMin] follows the sum of the subtasks' durations (B2).
     @Default(false) bool durationFromSteps,
+
+    /// Times this task was moved — drag, Running late, Rebalance, never an
+    /// edit (11 B3 Unstick); each instance of a repeat counts its own.
+    @Default(0) int moveCount,
     @UtcMillisConverter() required DateTime createdAt,
     @UtcMillisConverter() required DateTime updatedAt,
     @UtcMillisConverter() DateTime? deletedAt,

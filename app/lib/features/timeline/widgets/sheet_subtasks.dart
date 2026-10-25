@@ -6,6 +6,7 @@ import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/recurrence/series_actions.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
@@ -21,9 +22,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// "Subtasks · 1 of 3" (docs/09 M3f.3, R-09): each ticked on this day only;
-/// tap a title to rename it, × to remove, drag (or Move up / down) to
-/// reorder, a field to add one; a repeating task can make this day's list
-/// its list for every time.
+/// tap a title to rename it, give it a length (M10.3), × to remove, drag
+/// (or Move up / down) to reorder, a field to add one; a repeating task
+/// can make this day's list its list for every time.
 class SheetSubtasks extends ConsumerStatefulWidget {
   const SheetSubtasks({required this.task, this.editing = false, super.key});
 
@@ -65,6 +66,12 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
           done: list.where((s) => s.done).length,
           total: list.length,
           onAdd: () => setState(() => _adding = true),
+          onBreakDown: _offerBreakDown(context)
+              ? () => Actions.maybeInvoke(
+                  context,
+                  BreakDownIntent(widget.task.occurrence.id),
+                )
+              : null,
         ),
         ReorderableListView(
           shrinkWrap: true,
@@ -81,6 +88,9 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
                 editing: widget.editing,
                 onTick: () => unawaited(_write([s.copyWith(done: !s.done)])),
                 onRename: (t) => unawaited(_write([s.copyWith(title: t)])),
+                onLength: widget.editing
+                    ? (m) => unawaited(_write([s.copyWith(durationMin: m)]))
+                    : null,
                 onRemove: () => unawaited(_remove(s)),
                 onUp: i == 0 ? null : () => unawaited(_move(list, i, i - 1)),
                 onDown: i == list.length - 1
@@ -115,6 +125,13 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
     ),
     onSubmitted: _add,
   );
+
+  /// "Break it down" (11 B1, M10.4) on the task sheet and in the Mac/web
+  /// panel, which steps aside for the proposal and reopens fresh — not in
+  /// the phone editor, whose open draft would miss the new length.
+  bool _offerBreakDown(BuildContext context) =>
+      !widget.editing ||
+      WidthClass.of(MediaQuery.sizeOf(context).width) == WidthClass.expanded;
 
   /// Whether the task is running now (the "now" tag).
   bool _running() {
@@ -228,11 +245,17 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
 
 /// "Subtasks · 1 of 3" and "+ Add".
 class _Header extends StatelessWidget {
-  const _Header({required this.done, required this.total, required this.onAdd});
+  const _Header({
+    required this.done,
+    required this.total,
+    required this.onAdd,
+    required this.onBreakDown,
+  });
 
   final int done;
   final int total;
   final VoidCallback onAdd;
+  final VoidCallback? onBreakDown;
 
   @override
   Widget build(BuildContext context) {
@@ -251,6 +274,14 @@ class _Header extends StatelessWidget {
             ),
           ),
         ),
+        if (onBreakDown case final breakDown?)
+          TextButton(
+            onPressed: breakDown,
+            child: Text(
+              l10n.breakdownAction,
+              style: t.styles.button.copyWith(color: t.colors.accentInk),
+            ),
+          ),
         TextButton(
           onPressed: onAdd,
           child: Text(

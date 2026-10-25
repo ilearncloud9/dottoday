@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
+import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/features/task_editor/add/add_save.dart';
 import 'package:dottoday/features/task_editor/add/add_when_host.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_header.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_what_step.dart';
+import 'package:dottoday/features/task_editor/breakdown/breakdown_flow.dart';
 import 'package:dottoday/shared/feedback/save_failure.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
@@ -126,6 +128,32 @@ class _What extends ConsumerWidget {
       ),
       onContinue: () => unawaited(_continue(ref)),
       onInbox: () => save(toInbox: true),
+      onBreakDown: state.draft.title.isEmpty
+          ? null
+          : () => unawaited(_breakDown(context, ref)),
+    );
+  }
+
+  /// Break it down (M10.4): accepted steps join the draft, and its length
+  /// grows to their sum; both are written with the task on Save.
+  Future<void> _breakDown(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(addFlowProvider(request).notifier);
+    final draft = currentDraft(ref, request, state);
+    return breakDown(
+      context,
+      BreakdownTarget(
+        title: draft.title,
+        durationMin: draft.length,
+        colorKey: draft.color,
+        iconKey: draft.icon,
+        onDraftAccepted: (steps) => notifier.edit((d) {
+          final next = d.withSteps(steps);
+          final total = next.stepsTotal;
+          return total == null
+              ? next
+              : next.withDuration(total.clamp(minDurationMin, maxDurationMin));
+        }),
+      ),
     );
   }
 

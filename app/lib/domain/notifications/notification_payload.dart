@@ -91,7 +91,10 @@ enum NotificationAction {
 
   /// Give the task 15 more minutes (the web's reminders, docs/09 M9.7:
   /// Chrome shows two actions, so there Done and +15; a tap opens).
-  plus15;
+  plus15,
+
+  /// Smallest step's one button (M10.6): start the task, in Focus.
+  start;
 
   /// Minutes a Snooze waits (docs/02 F6 "Snooze 10 min").
   static const snoozeMinutes = 10;

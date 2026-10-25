@@ -117,4 +117,10 @@ void main() {
     expect(opened, ['/today']);
     expect(writes.applied, isEmpty);
   });
+
+  test('Start (Smallest step) opens Focus and writes nothing itself', () async {
+    await responder.handle(tap(gymId(), 'start'));
+    expect(opened, ['/focus/${gymId()}']);
+    expect(writes.applied, isEmpty, reason: 'Focus records the start');
+  });
 }

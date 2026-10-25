@@ -9,6 +9,7 @@ import 'package:dottoday/domain/scheduling/day_scheduler_service.dart';
 import 'package:dottoday/domain/scheduling/drag_math.dart';
 import 'package:dottoday/domain/scheduling/move_with_followers.dart';
 import 'package:dottoday/domain/scheduling/schedule_result.dart';
+import 'package:dottoday/domain/scheduling/unstick.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,7 +33,7 @@ Future<Result<UndoToken, AppFailure>> moveTask(
   WidgetRef ref,
   Occurrence o,
   DateTime startUtc,
-) => _write(ref, o.copyWith(startUtc: startUtc));
+) => _write(ref, countMove(o, o.copyWith(startUtc: startUtc)));
 
 /// Moves [o] to [startUtc] and lets the tasks after it follow ("Shift
 /// later tasks" on, R-04); see `moveWithFollowers` for the pin and
@@ -53,10 +54,11 @@ Future<Result<(UndoToken, ShiftReport), AppFailure>> moveWithFollowing(
     readOnlyIds: readOnlyIds,
   );
   final now = ref.read(clockProvider).nowUtc();
-  final changed = [
+  // Every task the drop moved counts a move (Unstick, M10.7).
+  final changed = countMoves(day, [
     for (final id in result.report.movedIds)
       result.byId(id).copyWith(updatedAt: now),
-  ];
+  ]);
   final applied = await ref
       .read(undoServiceProvider)
       .applyUndoable(WriteBatch(userId: o.userId, occurrences: changed));
@@ -88,7 +90,10 @@ Future<Result<(Occurrence, UndoToken)?, AppFailure>> moveToDay(
   final start = o?.startUtc;
   if (o == null || start == null || o.pinned) return const Ok(null);
   final zone = tz.getLocation(o.tzId);
-  final moved = o.copyWith(startUtc: sameTimeOn(zone, start, date));
+  final moved = countMove(
+    o,
+    o.copyWith(startUtc: sameTimeOn(zone, start, date)),
+  );
   final result = await _write(ref, moved);
   return switch (result) {
     Ok(:final value) => Ok((moved, value)),

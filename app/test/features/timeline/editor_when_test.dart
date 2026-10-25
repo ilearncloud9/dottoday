@@ -40,6 +40,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.pump(const Duration(seconds: 1));
     expect(_deep().startUtc, start.add(const Duration(days: 2)));
+    expect(_deep().moveCount, 0, reason: 'an edit is not a move (M10.7)');
   });
 
   testWidgets('Time zone keeps the wall clock and moves the instant', (

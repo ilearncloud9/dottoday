@@ -247,6 +247,97 @@ final class DaySubtaskProgressFamily extends $Family
   String toString() => r'daySubtaskProgressProvider';
 }
 
+/// The first step still to do of each task on [date] whose steps aren't
+/// started (Smallest step, 11 B2, docs/09 M10.6), by occurrence id.
+
+@ProviderFor(dayFirstSteps)
+final dayFirstStepsProvider = DayFirstStepsFamily._();
+
+/// The first step still to do of each task on [date] whose steps aren't
+/// started (Smallest step, 11 B2, docs/09 M10.6), by occurrence id.
+
+final class DayFirstStepsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Map<String, Subtask>>,
+          Map<String, Subtask>,
+          Stream<Map<String, Subtask>>
+        >
+    with
+        $FutureModifier<Map<String, Subtask>>,
+        $StreamProvider<Map<String, Subtask>> {
+  /// The first step still to do of each task on [date] whose steps aren't
+  /// started (Smallest step, 11 B2, docs/09 M10.6), by occurrence id.
+  DayFirstStepsProvider._({
+    required DayFirstStepsFamily super.from,
+    required DateTime super.argument,
+  }) : super(
+         retry: null,
+         name: r'dayFirstStepsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$dayFirstStepsHash();
+
+  @override
+  String toString() {
+    return r'dayFirstStepsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $StreamProviderElement<Map<String, Subtask>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<Map<String, Subtask>> create(Ref ref) {
+    final argument = this.argument as DateTime;
+    return dayFirstSteps(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DayFirstStepsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$dayFirstStepsHash() => r'f1e100cd790242e00abeb0e458e4d2789733e7a1';
+
+/// The first step still to do of each task on [date] whose steps aren't
+/// started (Smallest step, 11 B2, docs/09 M10.6), by occurrence id.
+
+final class DayFirstStepsFamily extends $Family
+    with $FunctionalFamilyOverride<Stream<Map<String, Subtask>>, DateTime> {
+  DayFirstStepsFamily._()
+    : super(
+        retry: null,
+        name: r'dayFirstStepsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// The first step still to do of each task on [date] whose steps aren't
+  /// started (Smallest step, 11 B2, docs/09 M10.6), by occurrence id.
+
+  DayFirstStepsProvider call(DateTime date) =>
+      DayFirstStepsProvider._(argument: date, from: this);
+
+  @override
+  String toString() => r'dayFirstStepsProvider';
+}
+
 /// Alerts of each active series, inherited by occurrences without their
 /// own (`alerts` null, docs/05).
 

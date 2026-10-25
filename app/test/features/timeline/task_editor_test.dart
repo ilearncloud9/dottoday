@@ -56,6 +56,19 @@ Occurrence _saved() => _repo.rows.firstWhere((o) => o.id == _deep.id);
 Finder _editor(Finder f) =>
     find.descendant(of: find.byType(TaskEditor), matching: f);
 
+/// Scrolls the editor's list until [f] is whole on screen (the footer
+/// sits below the fold once the task has steps, M10.3).
+Future<void> _reveal(WidgetTester tester, Finder f) async {
+  await tester.ensureVisible(
+    find.descendant(
+      of: find.byType(TaskEditor),
+      matching: f,
+      skipOffstage: false,
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
@@ -130,6 +143,7 @@ void main() {
 
   testWidgets('Move to inbox unschedules it, with Undo', (tester) async {
     await _pump(tester);
+    await _reveal(tester, find.text('Move to inbox', skipOffstage: false));
     await tester.tap(_editor(find.text('Move to inbox')));
     await tester.pumpAndSettle();
     expect(_saved().startUtc, isNull);
@@ -140,6 +154,7 @@ void main() {
     tester,
   ) async {
     await _pump(tester);
+    await _reveal(tester, find.byTooltip('Delete task', skipOffstage: false));
     await tester.tap(_editor(find.byTooltip('Delete task')));
     await tester.pumpAndSettle();
     expect(find.text('Delete “Deep work: roadmap”?'), findsOneWidget);

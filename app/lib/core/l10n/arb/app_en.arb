@@ -5375,5 +5375,435 @@
   "liveActivityCount": "{done} of {total}",
   "@liveActivityCount": {"description": "Live Activity: today's tasks done so far, next to a small pie, e.g. '1 of 3'.", "placeholders": {"done": {"type": "int"}, "total": {"type": "int"}}},
   "liveActivityCountLabel": "{done} of {total} done today",
-  "@liveActivityCountLabel": {"description": "Screen-reader label for liveActivityCount.", "placeholders": {"done": {"type": "int"}, "total": {"type": "int"}}}
+  "@liveActivityCountLabel": {"description": "Screen-reader label for liveActivityCount.", "placeholders": {"done": {"type": "int"}, "total": {"type": "int"}}},
+  "privacyThinkingTitle": "Help with thinking",
+  "@privacyThinkingTitle": {
+    "description": "Privacy page heading: where Break it down and other suggestions are worked out (docs/09 M10.1, ADR-0009)."
+  },
+  "privacyThinkingBody": "Break it down and suggestions are worked out on this device: Apple Intelligence on iPhone and Mac, Gemini Nano on Android, the browser's built-in model in Chrome. Where none is available, Dottoday uses your own history and simple rules. What you type is never sent to a server; what was asked and answered stays on this device.",
+  "@privacyThinkingBody": {
+    "description": "Privacy page text: the on-device model paths and the rules fallback; no server."
+  },
+  "privacyThinkingOnDevice": "On this device now: the built-in model.",
+  "@privacyThinkingOnDevice": {
+    "description": "Privacy page line: an on-device model is ready on this device now."
+  },
+  "privacyThinkingRules": "On this device now: your history and simple rules.",
+  "@privacyThinkingRules": {
+    "description": "Privacy page line: no on-device model here, so history and rules answer."
+  },
+  "privacyClearThinking": "Clear thinking history",
+  "@privacyClearThinking": {
+    "description": "Privacy page button: forgets saved breakdowns and the local log of what was asked and answered."
+  },
+  "snackThinkingCleared": "Thinking history cleared",
+  "@snackThinkingCleared": {
+    "description": "Snackbar after Clear thinking history."
+  },
+  "proposalAccept": "Accept",
+  "@proposalAccept": {
+    "description": "Proposal sheet primary button (11 B3, B-ios-break-it-down)."
+  },
+  "proposalDiscard": "Discard",
+  "@proposalDiscard": {
+    "description": "Proposal sheet secondary button: closes without writing anything."
+  },
+  "proposalNothingSaved": "Nothing is saved until you accept",
+  "@proposalNothingSaved": {
+    "description": "Proposal sheet footer under Discard (11 B3)."
+  },
+  "proposalLegendNow": "now",
+  "@proposalLegendNow": {
+    "description": "Proposal change list legend: the faded dots are the day as it is (B-ios-rebalance)."
+  },
+  "proposalLegendProposed": "proposed",
+  "@proposalLegendProposed": {
+    "description": "Proposal change list legend: the outlined dots are the proposed day."
+  },
+  "proposalShiftedLater": "shifted +{duration}",
+  "@proposalShiftedLater": {
+    "description": "Change chip: the task starts later by {duration} (e.g. '25 min').",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalShiftedEarlier": "shifted −{duration}",
+  "@proposalShiftedEarlier": {
+    "description": "Change chip: the task starts earlier by {duration}.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalShrunk": "shrunk to {duration}",
+  "@proposalShrunk": {
+    "description": "Change chip: the task is shorter, now {duration}.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalGrown": "grown to {duration}",
+  "@proposalGrown": {
+    "description": "Change chip: the task is longer, now {duration}.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalMovedTo": "moved to {when}",
+  "@proposalMovedTo": {
+    "description": "Change chip: the task moves to another day, e.g. 'tomorrow 9:00'.",
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalMovedToInbox": "moved to Inbox",
+  "@proposalMovedToInbox": {
+    "description": "Change chip: the task goes back to the Inbox."
+  },
+  "proposalAdded": "new",
+  "@proposalAdded": {
+    "description": "Change chip: a new task the proposal adds."
+  },
+  "proposalUntouched": "pinned · untouched",
+  "@proposalUntouched": {
+    "description": "Change chip: a pinned task that stays where it is."
+  },
+  "proposalSteps": "{count, plural, =1{1 step} other{{count} steps}}",
+  "@proposalSteps": {
+    "description": "Change chip: the task gains {count} steps (Break it down).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalNothing": "Nothing to change",
+  "@proposalNothing": {
+    "description": "Proposal change list when every line was removed or nothing needs to change."
+  },
+  "proposalKeep": "Keep {title} as it is",
+  "@proposalKeep": {
+    "description": "Screen-reader label of the × on a change line: drops that change, the task stays as it is.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDayTime": "{day} {time}",
+  "@proposalDayTime": {
+    "description": "A day and a time in a change chip, e.g. 'tomorrow 9:00' in 'moved to tomorrow 9:00'.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "stepLengthAdd": "+ time",
+  "@stepLengthAdd": {
+    "description": "Step row chip when the step has no length yet (11 B2, M10.3)."
+  },
+  "stepLengthHint": "Change how long {title} takes",
+  "@stepLengthHint": {
+    "description": "Screen-reader hint of a step's length chip.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "stepLengthTitle": "How long is this step?",
+  "@stepLengthTitle": {
+    "description": "Title of the sheet that picks a step's length."
+  },
+  "stepLengthNone": "No time",
+  "@stepLengthNone": {
+    "description": "Option in the step length sheet: the step has no length."
+  },
+  "editorStepsSum": "Length = sum of steps",
+  "@editorStepsSum": {
+    "description": "Editor switch under DURATION: the task's length follows the sum of its steps (11 B2)."
+  },
+  "editorStepsSumTotal": "Steps add up to {duration}",
+  "@editorStepsSumTotal": {
+    "description": "Under the switch: what the steps add up to.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "editorStepsSumEmpty": "Give a step a time to use this",
+  "@editorStepsSumEmpty": {
+    "description": "Under the switch when no step has a length yet."
+  },
+  "breakdownAction": "Break it down",
+  "@breakdownAction": {
+    "description": "Button in Add step 1 and the task sheet that opens Break it down (11 B1, M10.4)."
+  },
+  "breakdownOnDevice": "on-device",
+  "@breakdownOnDevice": {
+    "description": "Origin chip: the steps came from the on-device model (B-ios-break-it-down)."
+  },
+  "breakdownUsual": "your usual",
+  "@breakdownUsual": {
+    "description": "Origin chip: the steps are the user's usual breakdown for this title."
+  },
+  "breakdownStepHint": "Step {number}",
+  "@breakdownStepHint": {
+    "description": "Hint in an empty step's title field.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "breakdownAddStep": "Add a step",
+  "@breakdownAddStep": {
+    "description": "Dashed button under the steps: adds an empty step."
+  },
+  "breakdownDepth": "depth {depth} of {max}",
+  "@breakdownDepth": {
+    "description": "Caption under sub-steps: how deep they are, of at most 3.",
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "breakdownSplit": "Break this down",
+  "@breakdownSplit": {
+    "description": "Under an expanded step: split it into sub-steps."
+  },
+  "breakdownRemove": "Remove step",
+  "@breakdownRemove": {
+    "description": "Under an expanded step: removes it from the proposal."
+  },
+  "breakdownShow": "More for {title}",
+  "@breakdownShow": {
+    "description": "Screen-reader label of a step's chevron: shows its sub-steps and actions.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "breakdownTotal": "Total {duration} · the dot grows to fit",
+  "@breakdownTotal": {
+    "description": "Under the steps: their total and that the task grows to fit.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "breakdownSmallest": "You'll be asked for the first step only if this stays unstarted (Smallest step)",
+  "@breakdownSmallest": {
+    "description": "Note under the total: Smallest step will ask only for the first step if the task stays unstarted (11 B2)."
+  },
+  "breakdownWasNow": "was {before} → now {after}",
+  "@breakdownWasNow": {
+    "description": "Task row in Break it down: its length before and after the steps.",
+    "placeholders": {
+      "before": {
+        "type": "String"
+      },
+      "after": {
+        "type": "String"
+      }
+    }
+  },
+  "breakdownJoin": "{parent} · {step}",
+  "@breakdownJoin": {
+    "description": "A sub-step's title as it is saved: its parent step, then itself (steps are a flat list).",
+    "placeholders": {
+      "parent": {
+        "type": "String"
+      },
+      "step": {
+        "type": "String"
+      }
+    }
+  },
+  "breakdownAccepted": "Steps added to {title}",
+  "@breakdownAccepted": {
+    "description": "Undo snackbar after accepting a breakdown.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "breakdownStepsOnDraft": "{count, plural, =1{1 step} other{{count} steps}} · saved with the task",
+  "@breakdownStepsOnDraft": {
+    "description": "Add step 1 line once steps were accepted (they are saved with the task).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "focusTitle": "Focus",
+  "@focusTitle": {
+    "description": "Focus screen's top bar title, shown in capitals (B-ios-focus, 11 A3)."
+  },
+  "focusBack": "Today",
+  "@focusBack": {
+    "description": "Focus screen's back link to Today."
+  },
+  "focusRange": "{range} · {length}",
+  "@focusRange": {
+    "description": "Under the ring: the dot's planned time and length, e.g. '9:00 – 11:00 · 2 h'.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "focusStep": "Step {number} of {total}",
+  "@focusStep": {
+    "description": "Step card label, shown in capitals: which step of how many.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "focusAllSteps": "Every step done",
+  "@focusAllSteps": {
+    "description": "Step card when every step is ticked."
+  },
+  "focusChime": "Chime every 15 min",
+  "@focusChime": {
+    "description": "Focus toggle: a soft sound every 15 minutes while Focus is open (off by default)."
+  },
+  "focusDeepWork": "Deep work · Focus on",
+  "@focusDeepWork": {
+    "description": "Focus toggle: quiet the device while this dot runs (B-ios-focus 'Deep work · Focus on')."
+  },
+  "focusDeepWorkAccess": "Allow Dottoday to turn on Do Not Disturb",
+  "@focusDeepWorkAccess": {
+    "description": "Under the Deep work toggle on Android when Dottoday may not change Do Not Disturb yet."
+  },
+  "focusShortcutsTitle": "Turn on Focus with Shortcuts",
+  "@focusShortcutsTitle": {
+    "description": "Sheet title when Deep work is tapped on iPhone or Mac."
+  },
+  "focusShortcutsBody": "iPhone and Mac don't let apps switch Focus. In Shortcuts, make a shortcut with Dottoday's Start focus and Set Focus, and run it from the Action button, Control Center or Siri.",
+  "@focusShortcutsBody": {
+    "description": "Sheet text: apps can't switch Focus on Apple devices; how to do it with a shortcut."
+  },
+  "focusShortcutsOpen": "Open Shortcuts",
+  "@focusShortcutsOpen": {
+    "description": "Button in the Shortcuts sheet."
+  },
+  "focusDeepWorkWeb": "Use your computer's Do Not Disturb; the browser can't change it",
+  "@focusDeepWorkWeb": {
+    "description": "Under the Deep work row on the web: the browser can't change it."
+  },
+  "focusNextStep": "Next step",
+  "@focusNextStep": {
+    "description": "Focus button: ticks the current step and moves to the next."
+  },
+  "focusBreakThrough": "Dot starts still break through Focus (time-sensitive)",
+  "@focusBreakThrough": {
+    "description": "Focus footer: the next dot's start still comes through."
+  },
+  "focusMore": "More",
+  "@focusMore": {
+    "description": "Focus top bar ⋯ menu tooltip."
+  },
+  "focusOpenTask": "Task details",
+  "@focusOpenTask": {
+    "description": "Focus ⋯ menu item: opens the task's details."
+  },
+  "focusDoneMessage": "{title} done",
+  "@focusDoneMessage": {
+    "description": "Undo snackbar after Done in Focus.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "focusExtendedMessage": "{title} · 15 min more",
+  "@focusExtendedMessage": {
+    "description": "Undo snackbar after +15 min in Focus.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "focusOpenHint": "Open Focus",
+  "@focusOpenHint": {
+    "description": "Screen-reader hint on the live dot: one tap opens Focus."
+  },
+  "smallestStepTitle": "Just {step} · {length}?",
+  "@smallestStepTitle": {
+    "description": "Smallest step reminder and row (11 B2, M10.6): only the first step, with its length.",
+    "placeholders": {
+      "step": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "smallestStepTitleShort": "Just {step}?",
+  "@smallestStepTitleShort": {
+    "description": "Smallest step reminder and row when the first step has no length.",
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
+  },
+  "smallestStepStart": "Start",
+  "@smallestStepStart": {
+    "description": "Smallest step's one button (reminder and row): starts the task in Focus."
+  },
+  "unstickPrompt": "What's the very first thing you'd physically do?",
+  "@unstickPrompt": {
+    "description": "Unstick row under a task moved 3 times with no steps (11 B3, M10.7). Never a modal."
+  },
+  "unstickHint": "e.g. Open the folder",
+  "@unstickHint": {
+    "description": "Hint in the Unstick row's one-line field."
+  },
+  "unstickSave": "Make it step 1",
+  "@unstickSave": {
+    "description": "Screen-reader label of the Unstick row's send button: the answer becomes step 1."
+  },
+  "unstickSaved": "Step 1 added to {title}",
+  "@unstickSaved": {
+    "description": "Undo snackbar after the Unstick answer became step 1.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  }
 }

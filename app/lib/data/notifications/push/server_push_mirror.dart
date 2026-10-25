@@ -40,6 +40,7 @@ final class ServerPushMirror implements NotificationPlatform {
     required PushEncrypt encrypt,
     required String doneLabel,
     required String plusLabel,
+    String? startLabel,
     required Logger logger,
   }) : _inner = inner,
        _target = target,
@@ -47,6 +48,7 @@ final class ServerPushMirror implements NotificationPlatform {
        _encrypt = encrypt,
        _doneLabel = doneLabel,
        _plusLabel = plusLabel,
+       _startLabel = startLabel,
        _logger = logger;
 
   final NotificationPlatform _inner;
@@ -55,6 +57,9 @@ final class ServerPushMirror implements NotificationPlatform {
   final PushEncrypt _encrypt;
   final String _doneLabel;
   final String _plusLabel;
+
+  /// Smallest step's Start (M10.6).
+  final String? _startLabel;
   final Logger _logger;
 
   @override
@@ -106,6 +111,8 @@ final class ServerPushMirror implements NotificationPlatform {
           {'action': NotificationAction.done.name, 'title': _doneLabel},
           {'action': NotificationAction.plus15.name, 'title': _plusLabel},
         ],
+        if (n.startAction && _startLabel != null)
+          {'action': NotificationAction.start.name, 'title': _startLabel},
       ],
     }),
   );

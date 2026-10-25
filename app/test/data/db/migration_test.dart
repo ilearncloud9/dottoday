@@ -7,9 +7,36 @@ import 'package:flutter_test/flutter_test.dart';
 
 // Forward-only migrations (persistence-drift). 1 → 2 (M6.2): field_seen;
 // 2 → 3 (M6.5.1): actual start/end and step durations (11 B1/B2);
-// 3 → 4 (M7.5): calendar_links.location (R-17). Steps are idempotent, so
+// 3 → 4 (M7.5): calendar_links.location (R-17); 4 → 5 (M10.7):
+// occurrences.move_count (Unstick, 11 B3). Steps are idempotent, so
 // a file an older build opened (user_version lowered) upgrades again (M8.5).
 void main() {
+  test('a version 4 file gains the move count at 0 and keeps its rows', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig5');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+
+    final v4 = AppDatabase(NativeDatabase(file));
+    await v4.customStatement(
+      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+      "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+    );
+    await v4.customStatement('ALTER TABLE occurrences DROP COLUMN move_count');
+    await v4.customStatement(
+      'INSERT INTO occurrences (id, user_id, title, tz_id, duration_min, '
+      "created_at, updated_at) VALUES ('o1', 'u', 'Do taxes', 'UTC', 30, 0, 0)",
+    );
+    await v4.customStatement('PRAGMA user_version = 4');
+    await v4.close();
+
+    final v5 = AppDatabase(NativeDatabase(file));
+    addTearDown(v5.close);
+    final row = await v5.select(v5.occurrences).getSingle();
+    expect((row.title, row.moveCount), ('Do taxes', 0));
+    final version = await v5.customSelect('PRAGMA user_version').getSingle();
+    expect(version.read<int>('user_version'), AppDatabase.latestSchemaVersion);
+  });
+
   test('a version 3 file gains the link place and keeps its rows', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig4');
     addTearDown(() => dir.delete(recursive: true));

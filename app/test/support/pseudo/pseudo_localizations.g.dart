@@ -3225,4 +3225,236 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String liveActivityCountLabel(int done, int total) =>
       pseudo(super.liveActivityCountLabel(done, total));
+
+  @override
+  String get privacyThinkingTitle => pseudo(super.privacyThinkingTitle);
+
+  @override
+  String get privacyThinkingBody => pseudo(super.privacyThinkingBody);
+
+  @override
+  String get privacyThinkingOnDevice => pseudo(super.privacyThinkingOnDevice);
+
+  @override
+  String get privacyThinkingRules => pseudo(super.privacyThinkingRules);
+
+  @override
+  String get privacyClearThinking => pseudo(super.privacyClearThinking);
+
+  @override
+  String get snackThinkingCleared => pseudo(super.snackThinkingCleared);
+
+  @override
+  String get proposalAccept => pseudo(super.proposalAccept);
+
+  @override
+  String get proposalDiscard => pseudo(super.proposalDiscard);
+
+  @override
+  String get proposalNothingSaved => pseudo(super.proposalNothingSaved);
+
+  @override
+  String get proposalLegendNow => pseudo(super.proposalLegendNow);
+
+  @override
+  String get proposalLegendProposed => pseudo(super.proposalLegendProposed);
+
+  @override
+  String proposalShiftedLater(String duration) =>
+      pseudo(super.proposalShiftedLater(duration));
+
+  @override
+  String proposalShiftedEarlier(String duration) =>
+      pseudo(super.proposalShiftedEarlier(duration));
+
+  @override
+  String proposalShrunk(String duration) =>
+      pseudo(super.proposalShrunk(duration));
+
+  @override
+  String proposalGrown(String duration) =>
+      pseudo(super.proposalGrown(duration));
+
+  @override
+  String proposalMovedTo(String when) => pseudo(super.proposalMovedTo(when));
+
+  @override
+  String get proposalMovedToInbox => pseudo(super.proposalMovedToInbox);
+
+  @override
+  String get proposalAdded => pseudo(super.proposalAdded);
+
+  @override
+  String get proposalUntouched => pseudo(super.proposalUntouched);
+
+  @override
+  String proposalSteps(int count) => pseudo(super.proposalSteps(count));
+
+  @override
+  String get proposalNothing => pseudo(super.proposalNothing);
+
+  @override
+  String proposalKeep(String title) => pseudo(super.proposalKeep(title));
+
+  @override
+  String proposalDayTime(String day, String time) =>
+      pseudo(super.proposalDayTime(day, time));
+
+  @override
+  String get stepLengthAdd => pseudo(super.stepLengthAdd);
+
+  @override
+  String stepLengthHint(String title) => pseudo(super.stepLengthHint(title));
+
+  @override
+  String get stepLengthTitle => pseudo(super.stepLengthTitle);
+
+  @override
+  String get stepLengthNone => pseudo(super.stepLengthNone);
+
+  @override
+  String get editorStepsSum => pseudo(super.editorStepsSum);
+
+  @override
+  String editorStepsSumTotal(String duration) =>
+      pseudo(super.editorStepsSumTotal(duration));
+
+  @override
+  String get editorStepsSumEmpty => pseudo(super.editorStepsSumEmpty);
+
+  @override
+  String get breakdownAction => pseudo(super.breakdownAction);
+
+  @override
+  String get breakdownOnDevice => pseudo(super.breakdownOnDevice);
+
+  @override
+  String get breakdownUsual => pseudo(super.breakdownUsual);
+
+  @override
+  String breakdownStepHint(int number) =>
+      pseudo(super.breakdownStepHint(number));
+
+  @override
+  String get breakdownAddStep => pseudo(super.breakdownAddStep);
+
+  @override
+  String breakdownDepth(int depth, int max) =>
+      pseudo(super.breakdownDepth(depth, max));
+
+  @override
+  String get breakdownSplit => pseudo(super.breakdownSplit);
+
+  @override
+  String get breakdownRemove => pseudo(super.breakdownRemove);
+
+  @override
+  String breakdownShow(String title) => pseudo(super.breakdownShow(title));
+
+  @override
+  String breakdownTotal(String duration) =>
+      pseudo(super.breakdownTotal(duration));
+
+  @override
+  String get breakdownSmallest => pseudo(super.breakdownSmallest);
+
+  @override
+  String breakdownWasNow(String before, String after) =>
+      pseudo(super.breakdownWasNow(before, after));
+
+  @override
+  String breakdownJoin(String parent, String step) =>
+      pseudo(super.breakdownJoin(parent, step));
+
+  @override
+  String breakdownAccepted(String title) =>
+      pseudo(super.breakdownAccepted(title));
+
+  @override
+  String breakdownStepsOnDraft(int count) =>
+      pseudo(super.breakdownStepsOnDraft(count));
+
+  @override
+  String get focusTitle => pseudo(super.focusTitle);
+
+  @override
+  String get focusBack => pseudo(super.focusBack);
+
+  @override
+  String focusRange(String range, String length) =>
+      pseudo(super.focusRange(range, length));
+
+  @override
+  String focusStep(int number, int total) =>
+      pseudo(super.focusStep(number, total));
+
+  @override
+  String get focusAllSteps => pseudo(super.focusAllSteps);
+
+  @override
+  String get focusChime => pseudo(super.focusChime);
+
+  @override
+  String get focusDeepWork => pseudo(super.focusDeepWork);
+
+  @override
+  String get focusDeepWorkAccess => pseudo(super.focusDeepWorkAccess);
+
+  @override
+  String get focusShortcutsTitle => pseudo(super.focusShortcutsTitle);
+
+  @override
+  String get focusShortcutsBody => pseudo(super.focusShortcutsBody);
+
+  @override
+  String get focusShortcutsOpen => pseudo(super.focusShortcutsOpen);
+
+  @override
+  String get focusDeepWorkWeb => pseudo(super.focusDeepWorkWeb);
+
+  @override
+  String get focusNextStep => pseudo(super.focusNextStep);
+
+  @override
+  String get focusBreakThrough => pseudo(super.focusBreakThrough);
+
+  @override
+  String get focusMore => pseudo(super.focusMore);
+
+  @override
+  String get focusOpenTask => pseudo(super.focusOpenTask);
+
+  @override
+  String focusDoneMessage(String title) =>
+      pseudo(super.focusDoneMessage(title));
+
+  @override
+  String focusExtendedMessage(String title) =>
+      pseudo(super.focusExtendedMessage(title));
+
+  @override
+  String get focusOpenHint => pseudo(super.focusOpenHint);
+
+  @override
+  String smallestStepTitle(String step, String length) =>
+      pseudo(super.smallestStepTitle(step, length));
+
+  @override
+  String smallestStepTitleShort(String step) =>
+      pseudo(super.smallestStepTitleShort(step));
+
+  @override
+  String get smallestStepStart => pseudo(super.smallestStepStart);
+
+  @override
+  String get unstickPrompt => pseudo(super.unstickPrompt);
+
+  @override
+  String get unstickHint => pseudo(super.unstickHint);
+
+  @override
+  String get unstickSave => pseudo(super.unstickSave);
+
+  @override
+  String unstickSaved(String title) => pseudo(super.unstickSaved(title));
 }

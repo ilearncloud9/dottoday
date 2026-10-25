@@ -32,6 +32,7 @@ final class RouteScreens {
     required this.month,
     required this.day,
     required this.task,
+    required this.focus,
   });
 
   /// Wraps the five tab branches (nav bar/rail lands in M0.13).
@@ -47,6 +48,9 @@ final class RouteScreens {
   final WidgetBuilder month;
   final Widget Function(BuildContext, DateTime date) day;
   final Widget Function(BuildContext, String taskId) task;
+
+  /// Focus on a dot, full screen (M10.5).
+  final Widget Function(BuildContext, String taskId) focus;
 }
 
 /// Builds the app router. Every location passes [allowListedLocation];
@@ -83,6 +87,11 @@ GoRouter buildRouter(
         path: AppRoutes.taskPattern,
         builder: (context, state) =>
             screens.task(context, state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: AppRoutes.focusPattern,
+        builder: (context, state) =>
+            screens.focus(context, state.pathParameters['id']!),
       ),
     ],
   );

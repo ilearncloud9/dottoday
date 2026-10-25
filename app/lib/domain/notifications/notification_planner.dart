@@ -6,6 +6,7 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/alarm_policy.dart';
 import 'package:dottoday/domain/notifications/day_reminders.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
+import 'package:dottoday/domain/scheduling/start_nudge.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Computes the notifications that should be pending right now (docs/04 §6,
@@ -50,7 +51,9 @@ final class NotificationPlanner {
   ///
   /// The at-start alert of each day's first dot and of [routineStartIds]
   /// is [PlannedNotification.loud] and ignores quiet hours (11 A0). A
-  /// future [testAlarmAtUtc] adds the test alarm (M6.5.9).
+  /// future [testAlarmAtUtc] adds the test alarm (M6.5.9). Each occurrence
+  /// with a step in [firstSteps] gets one Smallest step reminder at
+  /// [noStartAt] (M10.6); a real start, Done or a move re-plans it away.
   List<PlannedNotification> plan({
     required Iterable<Occurrence> occurrences,
     required String tzId,
@@ -60,6 +63,7 @@ final class NotificationPlanner {
     String? defaultSound,
     Set<String> routineStartIds = const {},
     DateTime? testAlarmAtUtc,
+    Set<String> withSteps = const {},
   }) {
     final now = _clock.nowUtc();
     final end = now.add(horizon);
@@ -95,6 +99,9 @@ final class NotificationPlanner {
         );
       }
     }
+    planned.addAll(
+      _smallestSteps(live, withSteps, now, end, location, quietHours, usedIds),
+    );
     if (daily case final settings?) {
       if (settings.bedtimeReminder) {
         planned.addAll(
@@ -128,6 +135,34 @@ final class NotificationPlanner {
     });
     final limit = maxPending;
     return limit == null ? planned : planned.take(limit).toList();
+  }
+
+  /// One Smallest step reminder per occurrence in [withSteps] (11 B2),
+  /// at [noStartAt]: the shared "not started yet" trigger.
+  static Iterable<PlannedNotification> _smallestSteps(
+    List<Occurrence> live,
+    Set<String> withSteps,
+    DateTime now,
+    DateTime end,
+    tz.Location location,
+    TimeWindow? quietHours,
+    Set<int> used,
+  ) sync* {
+    for (final o in live) {
+      if (!withSteps.contains(o.id)) continue;
+      final at = noStartAt(o);
+      if (at == null || !at.isAfter(now) || at.isAfter(end)) continue;
+      const index = PlannedNotification.smallestStepIndex;
+      yield PlannedNotification(
+        id: uniqueNotificationId(used, o.id, index),
+        occurrenceId: o.id,
+        alertIndex: index,
+        fireAtUtc: at,
+        kind: AlertKind.atStart,
+        silent: inQuietHours(location, at, quietHours),
+        purpose: NotificationPurpose.smallestStep,
+      );
+    }
   }
 
   /// The one test alarm at [atUtc] (M6.5.9): loud, never silent, in its

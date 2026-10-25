@@ -25,11 +25,20 @@ final class ThreadTask {
     this.overrunMinutes = 0,
     this.movable = true,
     this.travel,
+    this.smallestStep,
+    this.unstick = false,
   });
 
   /// Occurrence id, for callbacks.
   final String id;
   final String title;
+
+  /// "Just Gather documents · 10 min?" once Smallest step asks (11 B2,
+  /// docs/09 M10.6); null otherwise.
+  final String? smallestStep;
+
+  /// Moved three times with no steps: the Unstick row shows (11 B3).
+  final bool unstick;
   final TaskColor color;
   final TaskIcon icon;
   final DotState state;

@@ -7,6 +7,7 @@ import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/notifications/reminder_sound.dart';
@@ -22,6 +23,7 @@ OsNotification? composeNotification(
   PlannedNotification planned, {
   required Occurrence? task,
   required Profile profile,
+  Subtask? step,
 }) {
   final l10n = _l10n(profile.locale);
   final String title;
@@ -42,6 +44,11 @@ OsNotification? composeNotification(
       planned.blocks ?? 1,
       _time(task!.startUtc!, profile),
     );
+  } else if (planned.purpose == NotificationPurpose.smallestStep) {
+    // Started, or every step done, since planning: the next resync drops it.
+    if (task == null || step == null) return null;
+    title = smallestStepText(l10n, step);
+    body = task.title;
   } else {
     if (task == null) return null;
     title = task.title;
@@ -56,9 +63,10 @@ OsNotification? composeNotification(
       planned,
       contentHash: notificationContentHash(title, body),
     ),
-    channel:
-        planned.purpose != NotificationPurpose.task &&
-            planned.purpose != NotificationPurpose.testAlarm
+    channel: planned.purpose == NotificationPurpose.smallestStep
+        ? NotificationChannelKind.alerts
+        : planned.purpose != NotificationPurpose.task &&
+              planned.purpose != NotificationPurpose.testAlarm
         ? NotificationChannelKind.summary
         : planned.loud
         ? NotificationChannelKind.alarms
@@ -67,11 +75,24 @@ OsNotification? composeNotification(
     timeSensitive: planned.timeSensitive,
     loud: planned.loud,
     withActions: planned.purpose == NotificationPurpose.task,
+    startAction: planned.purpose == NotificationPurpose.smallestStep,
     // The picked sound is for task reminders; loud dots keep the alarm.
     sound: planned.purpose == NotificationPurpose.task && !planned.loud
         ? ReminderSound.fromKey(planned.sound)
         : null,
   );
+}
+
+/// "Just Gather documents · 10 min?" (11 B2): the first step only.
+String smallestStepText(AppLocalizations l10n, Subtask step) {
+  final minutes = step.durationMin;
+  if (minutes == null) return l10n.smallestStepTitleShort(step.title);
+  final length = minutes < 60
+      ? l10n.durationMinutes(minutes)
+      : minutes % 60 == 0
+      ? l10n.durationHours(minutes ~/ 60)
+      : l10n.durationHoursMinutesShort(minutes ~/ 60, minutes % 60);
+  return l10n.smallestStepTitle(step.title, length);
 }
 
 /// A short fingerprint of the shown text, so an edit re-posts (R-10).

@@ -30,6 +30,8 @@
     if (typeof occurrenceId !== 'string' || occurrenceId === '') return null;
     const base = { id: uuidV7(nowMs, random), at_ms: nowMs, occurrence_id: occurrenceId.toLowerCase() };
     if (action === 'done') return { ...base, kind: 'mark_done' };
+    // Smallest step's Start (M10.6): the app opens Focus when it drains.
+    if (action === 'start') return { ...base, kind: 'start_focus' };
     if (action === 'plus15') {
       const block = ((snapshot && snapshot.blocks) || []).find((b) => b.id === occurrenceId);
       if (!block || typeof block.end_ms !== 'number') return null;

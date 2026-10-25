@@ -6155,6 +6155,432 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{done} of {total} done today'**
   String liveActivityCountLabel(int done, int total);
+
+  /// Privacy page heading: where Break it down and other suggestions are worked out (docs/09 M10.1, ADR-0009).
+  ///
+  /// In en, this message translates to:
+  /// **'Help with thinking'**
+  String get privacyThinkingTitle;
+
+  /// Privacy page text: the on-device model paths and the rules fallback; no server.
+  ///
+  /// In en, this message translates to:
+  /// **'Break it down and suggestions are worked out on this device: Apple Intelligence on iPhone and Mac, Gemini Nano on Android, the browser\'s built-in model in Chrome. Where none is available, Dottoday uses your own history and simple rules. What you type is never sent to a server; what was asked and answered stays on this device.'**
+  String get privacyThinkingBody;
+
+  /// Privacy page line: an on-device model is ready on this device now.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device now: the built-in model.'**
+  String get privacyThinkingOnDevice;
+
+  /// Privacy page line: no on-device model here, so history and rules answer.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device now: your history and simple rules.'**
+  String get privacyThinkingRules;
+
+  /// Privacy page button: forgets saved breakdowns and the local log of what was asked and answered.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear thinking history'**
+  String get privacyClearThinking;
+
+  /// Snackbar after Clear thinking history.
+  ///
+  /// In en, this message translates to:
+  /// **'Thinking history cleared'**
+  String get snackThinkingCleared;
+
+  /// Proposal sheet primary button (11 B3, B-ios-break-it-down).
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get proposalAccept;
+
+  /// Proposal sheet secondary button: closes without writing anything.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get proposalDiscard;
+
+  /// Proposal sheet footer under Discard (11 B3).
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is saved until you accept'**
+  String get proposalNothingSaved;
+
+  /// Proposal change list legend: the faded dots are the day as it is (B-ios-rebalance).
+  ///
+  /// In en, this message translates to:
+  /// **'now'**
+  String get proposalLegendNow;
+
+  /// Proposal change list legend: the outlined dots are the proposed day.
+  ///
+  /// In en, this message translates to:
+  /// **'proposed'**
+  String get proposalLegendProposed;
+
+  /// Change chip: the task starts later by {duration} (e.g. '25 min').
+  ///
+  /// In en, this message translates to:
+  /// **'shifted +{duration}'**
+  String proposalShiftedLater(String duration);
+
+  /// Change chip: the task starts earlier by {duration}.
+  ///
+  /// In en, this message translates to:
+  /// **'shifted −{duration}'**
+  String proposalShiftedEarlier(String duration);
+
+  /// Change chip: the task is shorter, now {duration}.
+  ///
+  /// In en, this message translates to:
+  /// **'shrunk to {duration}'**
+  String proposalShrunk(String duration);
+
+  /// Change chip: the task is longer, now {duration}.
+  ///
+  /// In en, this message translates to:
+  /// **'grown to {duration}'**
+  String proposalGrown(String duration);
+
+  /// Change chip: the task moves to another day, e.g. 'tomorrow 9:00'.
+  ///
+  /// In en, this message translates to:
+  /// **'moved to {when}'**
+  String proposalMovedTo(String when);
+
+  /// Change chip: the task goes back to the Inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'moved to Inbox'**
+  String get proposalMovedToInbox;
+
+  /// Change chip: a new task the proposal adds.
+  ///
+  /// In en, this message translates to:
+  /// **'new'**
+  String get proposalAdded;
+
+  /// Change chip: a pinned task that stays where it is.
+  ///
+  /// In en, this message translates to:
+  /// **'pinned · untouched'**
+  String get proposalUntouched;
+
+  /// Change chip: the task gains {count} steps (Break it down).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 step} other{{count} steps}}'**
+  String proposalSteps(int count);
+
+  /// Proposal change list when every line was removed or nothing needs to change.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to change'**
+  String get proposalNothing;
+
+  /// Screen-reader label of the × on a change line: drops that change, the task stays as it is.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep {title} as it is'**
+  String proposalKeep(String title);
+
+  /// A day and a time in a change chip, e.g. 'tomorrow 9:00' in 'moved to tomorrow 9:00'.
+  ///
+  /// In en, this message translates to:
+  /// **'{day} {time}'**
+  String proposalDayTime(String day, String time);
+
+  /// Step row chip when the step has no length yet (11 B2, M10.3).
+  ///
+  /// In en, this message translates to:
+  /// **'+ time'**
+  String get stepLengthAdd;
+
+  /// Screen-reader hint of a step's length chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Change how long {title} takes'**
+  String stepLengthHint(String title);
+
+  /// Title of the sheet that picks a step's length.
+  ///
+  /// In en, this message translates to:
+  /// **'How long is this step?'**
+  String get stepLengthTitle;
+
+  /// Option in the step length sheet: the step has no length.
+  ///
+  /// In en, this message translates to:
+  /// **'No time'**
+  String get stepLengthNone;
+
+  /// Editor switch under DURATION: the task's length follows the sum of its steps (11 B2).
+  ///
+  /// In en, this message translates to:
+  /// **'Length = sum of steps'**
+  String get editorStepsSum;
+
+  /// Under the switch: what the steps add up to.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps add up to {duration}'**
+  String editorStepsSumTotal(String duration);
+
+  /// Under the switch when no step has a length yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Give a step a time to use this'**
+  String get editorStepsSumEmpty;
+
+  /// Button in Add step 1 and the task sheet that opens Break it down (11 B1, M10.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Break it down'**
+  String get breakdownAction;
+
+  /// Origin chip: the steps came from the on-device model (B-ios-break-it-down).
+  ///
+  /// In en, this message translates to:
+  /// **'on-device'**
+  String get breakdownOnDevice;
+
+  /// Origin chip: the steps are the user's usual breakdown for this title.
+  ///
+  /// In en, this message translates to:
+  /// **'your usual'**
+  String get breakdownUsual;
+
+  /// Hint in an empty step's title field.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {number}'**
+  String breakdownStepHint(int number);
+
+  /// Dashed button under the steps: adds an empty step.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a step'**
+  String get breakdownAddStep;
+
+  /// Caption under sub-steps: how deep they are, of at most 3.
+  ///
+  /// In en, this message translates to:
+  /// **'depth {depth} of {max}'**
+  String breakdownDepth(int depth, int max);
+
+  /// Under an expanded step: split it into sub-steps.
+  ///
+  /// In en, this message translates to:
+  /// **'Break this down'**
+  String get breakdownSplit;
+
+  /// Under an expanded step: removes it from the proposal.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove step'**
+  String get breakdownRemove;
+
+  /// Screen-reader label of a step's chevron: shows its sub-steps and actions.
+  ///
+  /// In en, this message translates to:
+  /// **'More for {title}'**
+  String breakdownShow(String title);
+
+  /// Under the steps: their total and that the task grows to fit.
+  ///
+  /// In en, this message translates to:
+  /// **'Total {duration} · the dot grows to fit'**
+  String breakdownTotal(String duration);
+
+  /// Note under the total: Smallest step will ask only for the first step if the task stays unstarted (11 B2).
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll be asked for the first step only if this stays unstarted (Smallest step)'**
+  String get breakdownSmallest;
+
+  /// Task row in Break it down: its length before and after the steps.
+  ///
+  /// In en, this message translates to:
+  /// **'was {before} → now {after}'**
+  String breakdownWasNow(String before, String after);
+
+  /// A sub-step's title as it is saved: its parent step, then itself (steps are a flat list).
+  ///
+  /// In en, this message translates to:
+  /// **'{parent} · {step}'**
+  String breakdownJoin(String parent, String step);
+
+  /// Undo snackbar after accepting a breakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps added to {title}'**
+  String breakdownAccepted(String title);
+
+  /// Add step 1 line once steps were accepted (they are saved with the task).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 step} other{{count} steps}} · saved with the task'**
+  String breakdownStepsOnDraft(int count);
+
+  /// Focus screen's top bar title, shown in capitals (B-ios-focus, 11 A3).
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get focusTitle;
+
+  /// Focus screen's back link to Today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get focusBack;
+
+  /// Under the ring: the dot's planned time and length, e.g. '9:00 – 11:00 · 2 h'.
+  ///
+  /// In en, this message translates to:
+  /// **'{range} · {length}'**
+  String focusRange(String range, String length);
+
+  /// Step card label, shown in capitals: which step of how many.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {number} of {total}'**
+  String focusStep(int number, int total);
+
+  /// Step card when every step is ticked.
+  ///
+  /// In en, this message translates to:
+  /// **'Every step done'**
+  String get focusAllSteps;
+
+  /// Focus toggle: a soft sound every 15 minutes while Focus is open (off by default).
+  ///
+  /// In en, this message translates to:
+  /// **'Chime every 15 min'**
+  String get focusChime;
+
+  /// Focus toggle: quiet the device while this dot runs (B-ios-focus 'Deep work · Focus on').
+  ///
+  /// In en, this message translates to:
+  /// **'Deep work · Focus on'**
+  String get focusDeepWork;
+
+  /// Under the Deep work toggle on Android when Dottoday may not change Do Not Disturb yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Dottoday to turn on Do Not Disturb'**
+  String get focusDeepWorkAccess;
+
+  /// Sheet title when Deep work is tapped on iPhone or Mac.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Focus with Shortcuts'**
+  String get focusShortcutsTitle;
+
+  /// Sheet text: apps can't switch Focus on Apple devices; how to do it with a shortcut.
+  ///
+  /// In en, this message translates to:
+  /// **'iPhone and Mac don\'t let apps switch Focus. In Shortcuts, make a shortcut with Dottoday\'s Start focus and Set Focus, and run it from the Action button, Control Center or Siri.'**
+  String get focusShortcutsBody;
+
+  /// Button in the Shortcuts sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Shortcuts'**
+  String get focusShortcutsOpen;
+
+  /// Under the Deep work row on the web: the browser can't change it.
+  ///
+  /// In en, this message translates to:
+  /// **'Use your computer\'s Do Not Disturb; the browser can\'t change it'**
+  String get focusDeepWorkWeb;
+
+  /// Focus button: ticks the current step and moves to the next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next step'**
+  String get focusNextStep;
+
+  /// Focus footer: the next dot's start still comes through.
+  ///
+  /// In en, this message translates to:
+  /// **'Dot starts still break through Focus (time-sensitive)'**
+  String get focusBreakThrough;
+
+  /// Focus top bar ⋯ menu tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get focusMore;
+
+  /// Focus ⋯ menu item: opens the task's details.
+  ///
+  /// In en, this message translates to:
+  /// **'Task details'**
+  String get focusOpenTask;
+
+  /// Undo snackbar after Done in Focus.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} done'**
+  String focusDoneMessage(String title);
+
+  /// Undo snackbar after +15 min in Focus.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} · 15 min more'**
+  String focusExtendedMessage(String title);
+
+  /// Screen-reader hint on the live dot: one tap opens Focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Focus'**
+  String get focusOpenHint;
+
+  /// Smallest step reminder and row (11 B2, M10.6): only the first step, with its length.
+  ///
+  /// In en, this message translates to:
+  /// **'Just {step} · {length}?'**
+  String smallestStepTitle(String step, String length);
+
+  /// Smallest step reminder and row when the first step has no length.
+  ///
+  /// In en, this message translates to:
+  /// **'Just {step}?'**
+  String smallestStepTitleShort(String step);
+
+  /// Smallest step's one button (reminder and row): starts the task in Focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get smallestStepStart;
+
+  /// Unstick row under a task moved 3 times with no steps (11 B3, M10.7). Never a modal.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s the very first thing you\'d physically do?'**
+  String get unstickPrompt;
+
+  /// Hint in the Unstick row's one-line field.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Open the folder'**
+  String get unstickHint;
+
+  /// Screen-reader label of the Unstick row's send button: the answer becomes step 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Make it step 1'**
+  String get unstickSave;
+
+  /// Undo snackbar after the Unstick answer became step 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 1 added to {title}'**
+  String unstickSaved(String title);
 }
 
 class _AppLocalizationsDelegate
