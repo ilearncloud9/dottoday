@@ -4249,4 +4249,72 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editorStepsSumEmpty => 'Give a step a time to use this';
+
+  @override
+  String get breakdownAction => 'Break it down';
+
+  @override
+  String get breakdownOnDevice => 'on-device';
+
+  @override
+  String get breakdownUsual => 'your usual';
+
+  @override
+  String breakdownStepHint(int number) {
+    return 'Step $number';
+  }
+
+  @override
+  String get breakdownAddStep => 'Add a step';
+
+  @override
+  String breakdownDepth(int depth, int max) {
+    return 'depth $depth of $max';
+  }
+
+  @override
+  String get breakdownSplit => 'Break this down';
+
+  @override
+  String get breakdownRemove => 'Remove step';
+
+  @override
+  String breakdownShow(String title) {
+    return 'More for $title';
+  }
+
+  @override
+  String breakdownTotal(String duration) {
+    return 'Total $duration · the dot grows to fit';
+  }
+
+  @override
+  String get breakdownSmallest =>
+      'You\'ll be asked for the first step only if this stays unstarted (Smallest step)';
+
+  @override
+  String breakdownWasNow(String before, String after) {
+    return 'was $before → now $after';
+  }
+
+  @override
+  String breakdownJoin(String parent, String step) {
+    return '$parent · $step';
+  }
+
+  @override
+  String breakdownAccepted(String title) {
+    return 'Steps added to $title';
+  }
+
+  @override
+  String breakdownStepsOnDraft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count steps',
+      one: '1 step',
+    );
+    return '$_temp0 · saved with the task';
+  }
 }

@@ -1,11 +1,15 @@
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/icon_keys.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
 import 'package:dottoday/domain/quick_add/draft_rows.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
+import 'package:dottoday/domain/thinking/thinking_proposals.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
+import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// The task the Add flow is building (docs/10 §3 `AddFlow`, M3c).
@@ -38,6 +42,7 @@ final class AddDraft {
     this.allDay = false,
     this.openedDate,
     this.openedMinute,
+    this.steps = const [],
   });
 
   /// Local calendar date of today (y/m/d).
@@ -66,6 +71,10 @@ final class AddDraft {
   /// Where Add was opened (a gap, "Add to this day"): below what is typed.
   final DateTime? openedDate;
   final int? openedMinute;
+
+  /// Steps from Break it down (11 B1, docs/09 M10.4), written with the
+  /// task on Save: its subtasks, or a repeating task's step list.
+  final List<ProposedStep> steps;
 
   /// Title without the recognised tokens.
   String get title => typed.title.trim();
@@ -162,6 +171,41 @@ final class AddDraft {
 
   AddDraft withAllDay({required bool value}) => _copy(allDay: value);
 
+  AddDraft withSteps(List<ProposedStep> value) => _copy(steps: value);
+
+  /// Whether the length is the steps' sum ("the dot grows to fit"); a
+  /// length picked afterwards differs, and wins (M10.3).
+  bool get followsSteps {
+    final total = stepsTotal;
+    return total != null &&
+        total.clamp(minDurationMin, maxDurationMin) == length;
+  }
+
+  /// Sum of the steps that have a length; null when none has one.
+  int? get stepsTotal {
+    final lengths = [for (final s in steps) ?s.durationMin];
+    return lengths.isEmpty ? null : lengths.fold<int>(0, (a, b) => a + b);
+  }
+
+  /// The steps as [o]'s subtasks, in order.
+  List<Subtask> stepRows(
+    Occurrence o, {
+    required DateTime nowUtc,
+    IdGenerator ids = const UuidV7Generator(),
+  }) => [
+    for (final (i, s) in steps.indexed)
+      Subtask(
+        id: ids.newId(),
+        userId: o.userId,
+        occurrenceId: o.id,
+        title: s.title,
+        durationMin: s.durationMin,
+        sortOrder: i + 1,
+        createdAt: nowUtc,
+        updatedAt: nowUtc,
+      ),
+  ];
+
   /// Rows to write: a series for a timed "every …", else one occurrence;
   /// with no time (or [toInbox]) an inbox item (docs/02 F2). The colour
   /// and icon apply to either.
@@ -191,9 +235,27 @@ final class AddDraft {
       alerts: alerts,
       ids: ids,
     );
+    final follows = followsSteps;
     return (
-      series: rows.series?.copyWith(colorKey: color, iconKey: icon),
-      occurrence: rows.occurrence?.copyWith(colorKey: color, iconKey: icon),
+      series: rows.series?.copyWith(
+        colorKey: color,
+        iconKey: icon,
+        durationFromSteps: follows,
+        subtaskTemplate: [
+          for (final (i, s) in steps.indexed)
+            SubtaskTemplateItem(
+              id: ids.newId(),
+              title: s.title,
+              sortOrder: i + 1.0,
+              durationMin: s.durationMin,
+            ),
+        ],
+      ),
+      occurrence: rows.occurrence?.copyWith(
+        colorKey: color,
+        iconKey: icon,
+        durationFromSteps: follows,
+      ),
     );
   }
 
@@ -209,6 +271,7 @@ final class AddDraft {
     bool? allDay,
     DateTime? Function()? openedDate,
     int? Function()? openedMinute,
+    List<ProposedStep>? steps,
   }) => AddDraft(
     today: today,
     tzId: tzId ?? this.tzId,
@@ -223,5 +286,6 @@ final class AddDraft {
     allDay: allDay ?? this.allDay,
     openedDate: openedDate == null ? this.openedDate : openedDate(),
     openedMinute: openedMinute == null ? this.openedMinute : openedMinute(),
+    steps: steps ?? this.steps,
   );
 }

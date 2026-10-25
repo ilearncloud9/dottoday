@@ -3321,4 +3321,56 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get editorStepsSumEmpty => pseudo(super.editorStepsSumEmpty);
+
+  @override
+  String get breakdownAction => pseudo(super.breakdownAction);
+
+  @override
+  String get breakdownOnDevice => pseudo(super.breakdownOnDevice);
+
+  @override
+  String get breakdownUsual => pseudo(super.breakdownUsual);
+
+  @override
+  String breakdownStepHint(int number) =>
+      pseudo(super.breakdownStepHint(number));
+
+  @override
+  String get breakdownAddStep => pseudo(super.breakdownAddStep);
+
+  @override
+  String breakdownDepth(int depth, int max) =>
+      pseudo(super.breakdownDepth(depth, max));
+
+  @override
+  String get breakdownSplit => pseudo(super.breakdownSplit);
+
+  @override
+  String get breakdownRemove => pseudo(super.breakdownRemove);
+
+  @override
+  String breakdownShow(String title) => pseudo(super.breakdownShow(title));
+
+  @override
+  String breakdownTotal(String duration) =>
+      pseudo(super.breakdownTotal(duration));
+
+  @override
+  String get breakdownSmallest => pseudo(super.breakdownSmallest);
+
+  @override
+  String breakdownWasNow(String before, String after) =>
+      pseudo(super.breakdownWasNow(before, after));
+
+  @override
+  String breakdownJoin(String parent, String step) =>
+      pseudo(super.breakdownJoin(parent, step));
+
+  @override
+  String breakdownAccepted(String title) =>
+      pseudo(super.breakdownAccepted(title));
+
+  @override
+  String breakdownStepsOnDraft(int count) =>
+      pseudo(super.breakdownStepsOnDraft(count));
 }

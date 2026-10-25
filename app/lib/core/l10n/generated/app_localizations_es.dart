@@ -4268,4 +4268,72 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get editorStepsSumEmpty => 'Da tiempo a un paso para usarlo';
+
+  @override
+  String get breakdownAction => 'Dividir en pasos';
+
+  @override
+  String get breakdownOnDevice => 'en el dispositivo';
+
+  @override
+  String get breakdownUsual => 'lo habitual';
+
+  @override
+  String breakdownStepHint(int number) {
+    return 'Paso $number';
+  }
+
+  @override
+  String get breakdownAddStep => 'Añadir un paso';
+
+  @override
+  String breakdownDepth(int depth, int max) {
+    return 'nivel $depth de $max';
+  }
+
+  @override
+  String get breakdownSplit => 'Dividir este paso';
+
+  @override
+  String get breakdownRemove => 'Quitar el paso';
+
+  @override
+  String breakdownShow(String title) {
+    return 'Más de $title';
+  }
+
+  @override
+  String breakdownTotal(String duration) {
+    return 'Total $duration · el punto se ajusta';
+  }
+
+  @override
+  String get breakdownSmallest =>
+      'Si no empieza, solo te preguntaremos por el primer paso (Paso más pequeño)';
+
+  @override
+  String breakdownWasNow(String before, String after) {
+    return 'antes $before → ahora $after';
+  }
+
+  @override
+  String breakdownJoin(String parent, String step) {
+    return '$parent · $step';
+  }
+
+  @override
+  String breakdownAccepted(String title) {
+    return 'Pasos añadidos a $title';
+  }
+
+  @override
+  String breakdownStepsOnDraft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pasos',
+      one: '1 paso',
+    );
+    return '$_temp0 · se guardan con la tarea';
+  }
 }

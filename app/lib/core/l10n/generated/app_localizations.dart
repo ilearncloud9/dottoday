@@ -6335,6 +6335,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Give a step a time to use this'**
   String get editorStepsSumEmpty;
+
+  /// Button in Add step 1 and the task sheet that opens Break it down (11 B1, M10.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Break it down'**
+  String get breakdownAction;
+
+  /// Origin chip: the steps came from the on-device model (B-ios-break-it-down).
+  ///
+  /// In en, this message translates to:
+  /// **'on-device'**
+  String get breakdownOnDevice;
+
+  /// Origin chip: the steps are the user's usual breakdown for this title.
+  ///
+  /// In en, this message translates to:
+  /// **'your usual'**
+  String get breakdownUsual;
+
+  /// Hint in an empty step's title field.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {number}'**
+  String breakdownStepHint(int number);
+
+  /// Dashed button under the steps: adds an empty step.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a step'**
+  String get breakdownAddStep;
+
+  /// Caption under sub-steps: how deep they are, of at most 3.
+  ///
+  /// In en, this message translates to:
+  /// **'depth {depth} of {max}'**
+  String breakdownDepth(int depth, int max);
+
+  /// Under an expanded step: split it into sub-steps.
+  ///
+  /// In en, this message translates to:
+  /// **'Break this down'**
+  String get breakdownSplit;
+
+  /// Under an expanded step: removes it from the proposal.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove step'**
+  String get breakdownRemove;
+
+  /// Screen-reader label of a step's chevron: shows its sub-steps and actions.
+  ///
+  /// In en, this message translates to:
+  /// **'More for {title}'**
+  String breakdownShow(String title);
+
+  /// Under the steps: their total and that the task grows to fit.
+  ///
+  /// In en, this message translates to:
+  /// **'Total {duration} · the dot grows to fit'**
+  String breakdownTotal(String duration);
+
+  /// Note under the total: Smallest step will ask only for the first step if the task stays unstarted (11 B2).
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll be asked for the first step only if this stays unstarted (Smallest step)'**
+  String get breakdownSmallest;
+
+  /// Task row in Break it down: its length before and after the steps.
+  ///
+  /// In en, this message translates to:
+  /// **'was {before} → now {after}'**
+  String breakdownWasNow(String before, String after);
+
+  /// A sub-step's title as it is saved: its parent step, then itself (steps are a flat list).
+  ///
+  /// In en, this message translates to:
+  /// **'{parent} · {step}'**
+  String breakdownJoin(String parent, String step);
+
+  /// Undo snackbar after accepting a breakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps added to {title}'**
+  String breakdownAccepted(String title);
+
+  /// Add step 1 line once steps were accepted (they are saved with the task).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 step} other{{count} steps}} · saved with the task'**
+  String breakdownStepsOnDraft(int count);
 }
 
 class _AppLocalizationsDelegate

@@ -24,6 +24,8 @@ class ProposalSheet extends StatelessWidget {
     this.originLabel,
     this.acceptLabel,
     this.options = const [],
+    this.lead,
+    this.below,
     this.failure,
     this.busy = false,
     super.key,
@@ -35,6 +37,12 @@ class ProposalSheet extends StatelessWidget {
   /// "on-device", "Your usual"; null hides the chip.
   final String? originLabel;
   final Widget body;
+
+  /// Above the card: what the proposal is about (the task's row).
+  final Widget? lead;
+
+  /// Under the card, before the options: a total, a note.
+  final Widget? below;
 
   /// Toggle chips under the card ("Shift followers", `B-ios-rebalance`).
   final List<Widget> options;
@@ -74,6 +82,7 @@ class ProposalSheet extends StatelessWidget {
               children: [
                 if (subtitle case final s?)
                   Text(s, style: t.styles.body.copyWith(color: t.colors.muted)),
+                ?lead,
                 DecoratedBox(
                   decoration: BoxDecoration(
                     color: t.colors.raised,
@@ -87,6 +96,7 @@ class ProposalSheet extends StatelessWidget {
                     child: body,
                   ),
                 ),
+                ?below,
                 if (options.isNotEmpty)
                   Wrap(
                     spacing: DotSpace.s,

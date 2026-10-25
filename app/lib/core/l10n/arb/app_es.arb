@@ -1038,5 +1038,20 @@
   "stepLengthNone": "Sin tiempo",
   "editorStepsSum": "Duración = suma de los pasos",
   "editorStepsSumTotal": "Los pasos suman {duration}",
-  "editorStepsSumEmpty": "Da tiempo a un paso para usarlo"
+  "editorStepsSumEmpty": "Da tiempo a un paso para usarlo",
+  "breakdownAction": "Dividir en pasos",
+  "breakdownOnDevice": "en el dispositivo",
+  "breakdownUsual": "lo habitual",
+  "breakdownStepHint": "Paso {number}",
+  "breakdownAddStep": "Añadir un paso",
+  "breakdownDepth": "nivel {depth} de {max}",
+  "breakdownSplit": "Dividir este paso",
+  "breakdownRemove": "Quitar el paso",
+  "breakdownShow": "Más de {title}",
+  "breakdownTotal": "Total {duration} · el punto se ajusta",
+  "breakdownSmallest": "Si no empieza, solo te preguntaremos por el primer paso (Paso más pequeño)",
+  "breakdownWasNow": "antes {before} → ahora {after}",
+  "breakdownJoin": "{parent} · {step}",
+  "breakdownAccepted": "Pasos añadidos a {title}",
+  "breakdownStepsOnDraft": "{count, plural, =1{1 paso} other{{count} pasos}} · se guardan con la tarea"
 }

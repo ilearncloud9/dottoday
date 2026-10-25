@@ -29,11 +29,14 @@ class _ProposalHostState extends ConsumerState<ProposalHost> {
   @override
   Widget build(BuildContext context) {
     ref.listen(activeProposalProvider, (previous, next) {
-      if (previous != null || next == null || _sheetUp || _expanded) return;
+      if (previous != null || next == null || _sheetUp) return;
+      if (_expanded && !next.overSheet) return;
       unawaited(_showSheet());
     });
-    final open = ref.watch(activeProposalProvider) != null;
-    if (!open || !_expanded) return widget.child;
+    final request = ref.watch(activeProposalProvider);
+    if (request == null || !_expanded || request.overSheet) {
+      return widget.child;
+    }
     return _Panel(child: widget.child);
   }
 

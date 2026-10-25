@@ -5548,5 +5548,114 @@
   "editorStepsSumEmpty": "Give a step a time to use this",
   "@editorStepsSumEmpty": {
     "description": "Under the switch when no step has a length yet."
+  },
+  "breakdownAction": "Break it down",
+  "@breakdownAction": {
+    "description": "Button in Add step 1 and the task sheet that opens Break it down (11 B1, M10.4)."
+  },
+  "breakdownOnDevice": "on-device",
+  "@breakdownOnDevice": {
+    "description": "Origin chip: the steps came from the on-device model (B-ios-break-it-down)."
+  },
+  "breakdownUsual": "your usual",
+  "@breakdownUsual": {
+    "description": "Origin chip: the steps are the user's usual breakdown for this title."
+  },
+  "breakdownStepHint": "Step {number}",
+  "@breakdownStepHint": {
+    "description": "Hint in an empty step's title field.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "breakdownAddStep": "Add a step",
+  "@breakdownAddStep": {
+    "description": "Dashed button under the steps: adds an empty step."
+  },
+  "breakdownDepth": "depth {depth} of {max}",
+  "@breakdownDepth": {
+    "description": "Caption under sub-steps: how deep they are, of at most 3.",
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "breakdownSplit": "Break this down",
+  "@breakdownSplit": {
+    "description": "Under an expanded step: split it into sub-steps."
+  },
+  "breakdownRemove": "Remove step",
+  "@breakdownRemove": {
+    "description": "Under an expanded step: removes it from the proposal."
+  },
+  "breakdownShow": "More for {title}",
+  "@breakdownShow": {
+    "description": "Screen-reader label of a step's chevron: shows its sub-steps and actions.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "breakdownTotal": "Total {duration} · the dot grows to fit",
+  "@breakdownTotal": {
+    "description": "Under the steps: their total and that the task grows to fit.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "breakdownSmallest": "You'll be asked for the first step only if this stays unstarted (Smallest step)",
+  "@breakdownSmallest": {
+    "description": "Note under the total: Smallest step will ask only for the first step if the task stays unstarted (11 B2)."
+  },
+  "breakdownWasNow": "was {before} → now {after}",
+  "@breakdownWasNow": {
+    "description": "Task row in Break it down: its length before and after the steps.",
+    "placeholders": {
+      "before": {
+        "type": "String"
+      },
+      "after": {
+        "type": "String"
+      }
+    }
+  },
+  "breakdownJoin": "{parent} · {step}",
+  "@breakdownJoin": {
+    "description": "A sub-step's title as it is saved: its parent step, then itself (steps are a flat list).",
+    "placeholders": {
+      "parent": {
+        "type": "String"
+      },
+      "step": {
+        "type": "String"
+      }
+    }
+  },
+  "breakdownAccepted": "Steps added to {title}",
+  "@breakdownAccepted": {
+    "description": "Undo snackbar after accepting a breakdown.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "breakdownStepsOnDraft": "{count, plural, =1{1 step} other{{count} steps}} · saved with the task",
+  "@breakdownStepsOnDraft": {
+    "description": "Add step 1 line once steps were accepted (they are saved with the task).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

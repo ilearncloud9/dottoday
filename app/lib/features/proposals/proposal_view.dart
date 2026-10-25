@@ -50,7 +50,9 @@ class ProposalView extends ConsumerWidget {
       failure: request.failure,
       busy: request.busy,
       body: body,
-      onAccept: proposal.isEmpty
+      lead: request.lead?.call(context, proposal),
+      below: request.below?.call(context, proposal),
+      onAccept: (request.draftOnly ? proposal.edits.isEmpty : proposal.isEmpty)
           ? null
           : () => unawaited(_accept(context, ref, request)),
       onDiscard: () {
@@ -66,6 +68,11 @@ class ProposalView extends ConsumerWidget {
     ProposalRequest request,
   ) async {
     final active = ref.read(activeProposalProvider.notifier);
+    if (request.draftOnly) {
+      active.close();
+      onClosed?.call();
+      return request.onAccepted?.call(request.proposal);
+    }
     if (!active.beginAccept()) return;
     final messenger = ScaffoldMessenger.of(context);
     final l10n = context.l10n;

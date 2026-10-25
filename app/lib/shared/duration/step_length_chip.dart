@@ -26,8 +26,9 @@ class StepLengthChip extends StatelessWidget {
   /// The step's title, for the screen reader's hint.
   final String title;
 
-  /// The picked length; null for "No time".
-  final ValueChanged<int?> onChanged;
+  /// The picked length; null for "No time". Null itself: read-only (a
+  /// step whose length is its sub-steps' sum).
+  final ValueChanged<int?>? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class StepLengthChip extends StatelessWidget {
     return Semantics(
       onTapHint: l10n.stepLengthHint(title),
       child: OutlinedButton(
-        onPressed: () => unawaited(_pick(context)),
+        onPressed: onChanged == null ? null : () => unawaited(_pick(context)),
         style: OutlinedButton.styleFrom(
           shape: dotChipShape(context),
           side: BorderSide(color: t.colors.outline),
@@ -70,6 +71,6 @@ class StepLengthChip extends StatelessWidget {
       ],
     );
     if (picked == null || picked == (minutes ?? 0)) return;
-    onChanged(picked == 0 ? null : picked);
+    onChanged?.call(picked == 0 ? null : picked);
   }
 }

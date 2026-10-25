@@ -14,6 +14,11 @@ typedef ProposalBodyBuilder =
       ValueChanged<Proposal> update,
     );
 
+/// Draws a read-only part of the sheet from the current proposal (the
+/// task's identity row above the card, the total below it).
+typedef ProposalPartBuilder =
+    Widget Function(BuildContext context, Proposal proposal);
+
 /// What a flow asks `ProposalSheet` to show (11 §0 B3). Texts arrive
 /// localised; [body] defaults to the now/proposed change list.
 @immutable
@@ -26,9 +31,13 @@ final class ProposalRequest {
     this.originLabel,
     this.acceptLabel,
     this.body,
+    this.lead,
+    this.below,
     this.onAccepted,
     this.failure,
     this.busy = false,
+    this.draftOnly = false,
+    this.overSheet = false,
   });
 
   final Proposal proposal;
@@ -44,6 +53,21 @@ final class ProposalRequest {
   /// The Undo snackbar's text after Accept.
   final String acceptedMessage;
   final ProposalBodyBuilder? body;
+
+  /// Above the card (`B-ios-break-it-down`: the task being broken down).
+  final ProposalPartBuilder? lead;
+
+  /// Under the card ("Total 1 h 40 · the dot grows to fit").
+  final ProposalPartBuilder? below;
+
+  /// Accept hands the proposal back to an unsaved draft (Add step 1),
+  /// which writes it with the task on Save: no write and no Undo here,
+  /// and Accept needs an edit rather than rows.
+  final bool draftOnly;
+
+  /// Opened from a sheet or popover (Add): shown above it as a sheet or
+  /// popover at every width, never in the panel the popover covers.
+  final bool overSheet;
 
   /// After the write committed, with the proposal as accepted (e.g. to
   /// remember "My usual breakdown").
@@ -67,9 +91,13 @@ final class ProposalRequest {
     originLabel: originLabel,
     acceptLabel: acceptLabel,
     body: body,
+    lead: lead,
+    below: below,
     onAccepted: onAccepted,
     failure: failure,
     busy: busy,
+    draftOnly: draftOnly,
+    overSheet: overSheet,
   );
 }
 

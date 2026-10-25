@@ -11,7 +11,9 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/live_activity/web_live_dot.dart';
 import 'package:dottoday/data/live_activity/web_live_dot_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/pwa/tab_live_dot.dart';
+import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/inbox/schedule_from_anywhere.dart';
 import 'package:dottoday/features/lock/lock_gate.dart';
@@ -19,6 +21,7 @@ import 'package:dottoday/features/onboarding/onboarding_gate.dart';
 import 'package:dottoday/features/recovery/database_recovery.dart';
 import 'package:dottoday/features/sync_status/sync_sheet.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
+import 'package:dottoday/features/task_editor/breakdown/breakdown_flow.dart';
 import 'package:dottoday/shared/sheets/shortcut_sheet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +107,25 @@ Map<Type, Action<Intent>> _intents(GoRouter router) => {
   ShowSyncIntent: CallbackAction<ShowSyncIntent>(
     onInvoke: (_) => _sync(router),
   ),
+  BreakDownIntent: CallbackAction<BreakDownIntent>(
+    onInvoke: (i) => unawaited(_breakDown(router, i.occurrenceId)),
+  ),
 };
+
+/// Break it down for a saved task (M10.4), on the root overlay so the
+/// proposal opens above any sheet.
+Future<void> _breakDown(GoRouter router, String id) async {
+  final context =
+      router.routerDelegate.navigatorKey.currentState?.overlay?.context;
+  if (context == null) return;
+  final c = ProviderScope.containerOf(context, listen: false);
+  final profile = await readProfile(c);
+  final task = await c
+      .read(occurrenceRepositoryProvider)
+      .findById(profile.id, id);
+  if (task == null || task.deletedAt != null || !context.mounted) return;
+  await breakDown(context, BreakdownTarget.task(task));
+}
 
 /// The app's language for a stored `profiles.locale`: a supported one,
 /// else the device's (null).

@@ -4277,4 +4277,72 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get editorStepsSumEmpty =>
       'Donnez une durée à une étape pour l\'utiliser';
+
+  @override
+  String get breakdownAction => 'Découper';
+
+  @override
+  String get breakdownOnDevice => 'sur l\'appareil';
+
+  @override
+  String get breakdownUsual => 'comme d\'habitude';
+
+  @override
+  String breakdownStepHint(int number) {
+    return 'Étape $number';
+  }
+
+  @override
+  String get breakdownAddStep => 'Ajouter une étape';
+
+  @override
+  String breakdownDepth(int depth, int max) {
+    return 'niveau $depth sur $max';
+  }
+
+  @override
+  String get breakdownSplit => 'Découper cette étape';
+
+  @override
+  String get breakdownRemove => 'Retirer l\'étape';
+
+  @override
+  String breakdownShow(String title) {
+    return 'Plus pour $title';
+  }
+
+  @override
+  String breakdownTotal(String duration) {
+    return 'Total $duration · le point s\'adapte';
+  }
+
+  @override
+  String get breakdownSmallest =>
+      'Si rien ne démarre, on ne vous proposera que la première étape (Plus petit pas)';
+
+  @override
+  String breakdownWasNow(String before, String after) {
+    return 'avant $before → maintenant $after';
+  }
+
+  @override
+  String breakdownJoin(String parent, String step) {
+    return '$parent · $step';
+  }
+
+  @override
+  String breakdownAccepted(String title) {
+    return 'Étapes ajoutées à $title';
+  }
+
+  @override
+  String breakdownStepsOnDraft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count étapes',
+      one: '1 étape',
+    );
+    return '$_temp0 · enregistrées avec la tâche';
+  }
 }

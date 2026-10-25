@@ -4275,4 +4275,72 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get editorStepsSumEmpty =>
       'Gib einem Schritt eine Zeit, um das zu nutzen';
+
+  @override
+  String get breakdownAction => 'In Schritte teilen';
+
+  @override
+  String get breakdownOnDevice => 'auf dem Gerät';
+
+  @override
+  String get breakdownUsual => 'wie üblich';
+
+  @override
+  String breakdownStepHint(int number) {
+    return 'Schritt $number';
+  }
+
+  @override
+  String get breakdownAddStep => 'Schritt hinzufügen';
+
+  @override
+  String breakdownDepth(int depth, int max) {
+    return 'Ebene $depth von $max';
+  }
+
+  @override
+  String get breakdownSplit => 'Diesen Schritt teilen';
+
+  @override
+  String get breakdownRemove => 'Schritt entfernen';
+
+  @override
+  String breakdownShow(String title) {
+    return 'Mehr zu $title';
+  }
+
+  @override
+  String breakdownTotal(String duration) {
+    return 'Gesamt $duration · der Punkt wächst mit';
+  }
+
+  @override
+  String get breakdownSmallest =>
+      'Bleibt das liegen, fragen wir nur nach dem ersten Schritt (Kleinster Schritt)';
+
+  @override
+  String breakdownWasNow(String before, String after) {
+    return 'vorher $before → jetzt $after';
+  }
+
+  @override
+  String breakdownJoin(String parent, String step) {
+    return '$parent · $step';
+  }
+
+  @override
+  String breakdownAccepted(String title) {
+    return 'Schritte zu $title hinzugefügt';
+  }
+
+  @override
+  String breakdownStepsOnDraft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Schritte',
+      one: '1 Schritt',
+    );
+    return '$_temp0 · wird mit der Aufgabe gespeichert';
+  }
 }

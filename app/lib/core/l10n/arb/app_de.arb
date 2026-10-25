@@ -1038,5 +1038,20 @@
   "stepLengthNone": "Keine Zeit",
   "editorStepsSum": "Dauer = Summe der Schritte",
   "editorStepsSumTotal": "Die Schritte ergeben {duration}",
-  "editorStepsSumEmpty": "Gib einem Schritt eine Zeit, um das zu nutzen"
+  "editorStepsSumEmpty": "Gib einem Schritt eine Zeit, um das zu nutzen",
+  "breakdownAction": "In Schritte teilen",
+  "breakdownOnDevice": "auf dem Gerät",
+  "breakdownUsual": "wie üblich",
+  "breakdownStepHint": "Schritt {number}",
+  "breakdownAddStep": "Schritt hinzufügen",
+  "breakdownDepth": "Ebene {depth} von {max}",
+  "breakdownSplit": "Diesen Schritt teilen",
+  "breakdownRemove": "Schritt entfernen",
+  "breakdownShow": "Mehr zu {title}",
+  "breakdownTotal": "Gesamt {duration} · der Punkt wächst mit",
+  "breakdownSmallest": "Bleibt das liegen, fragen wir nur nach dem ersten Schritt (Kleinster Schritt)",
+  "breakdownWasNow": "vorher {before} → jetzt {after}",
+  "breakdownJoin": "{parent} · {step}",
+  "breakdownAccepted": "Schritte zu {title} hinzugefügt",
+  "breakdownStepsOnDraft": "{count, plural, =1{1 Schritt} other{{count} Schritte}} · wird mit der Aufgabe gespeichert"
 }

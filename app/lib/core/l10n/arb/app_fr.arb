@@ -1038,5 +1038,20 @@
   "stepLengthNone": "Sans durée",
   "editorStepsSum": "Durée = somme des étapes",
   "editorStepsSumTotal": "Les étapes font {duration}",
-  "editorStepsSumEmpty": "Donnez une durée à une étape pour l'utiliser"
+  "editorStepsSumEmpty": "Donnez une durée à une étape pour l'utiliser",
+  "breakdownAction": "Découper",
+  "breakdownOnDevice": "sur l'appareil",
+  "breakdownUsual": "comme d'habitude",
+  "breakdownStepHint": "Étape {number}",
+  "breakdownAddStep": "Ajouter une étape",
+  "breakdownDepth": "niveau {depth} sur {max}",
+  "breakdownSplit": "Découper cette étape",
+  "breakdownRemove": "Retirer l'étape",
+  "breakdownShow": "Plus pour {title}",
+  "breakdownTotal": "Total {duration} · le point s'adapte",
+  "breakdownSmallest": "Si rien ne démarre, on ne vous proposera que la première étape (Plus petit pas)",
+  "breakdownWasNow": "avant {before} → maintenant {after}",
+  "breakdownJoin": "{parent} · {step}",
+  "breakdownAccepted": "Étapes ajoutées à {title}",
+  "breakdownStepsOnDraft": "{count, plural, =1{1 étape} other{{count} étapes}} · enregistrées avec la tâche"
 }
