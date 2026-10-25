@@ -5399,5 +5399,116 @@
   "snackThinkingCleared": "Thinking history cleared",
   "@snackThinkingCleared": {
     "description": "Snackbar after Clear thinking history."
+  },
+  "proposalAccept": "Accept",
+  "@proposalAccept": {
+    "description": "Proposal sheet primary button (11 B3, B-ios-break-it-down)."
+  },
+  "proposalDiscard": "Discard",
+  "@proposalDiscard": {
+    "description": "Proposal sheet secondary button: closes without writing anything."
+  },
+  "proposalNothingSaved": "Nothing is saved until you accept",
+  "@proposalNothingSaved": {
+    "description": "Proposal sheet footer under Discard (11 B3)."
+  },
+  "proposalLegendNow": "now",
+  "@proposalLegendNow": {
+    "description": "Proposal change list legend: the faded dots are the day as it is (B-ios-rebalance)."
+  },
+  "proposalLegendProposed": "proposed",
+  "@proposalLegendProposed": {
+    "description": "Proposal change list legend: the outlined dots are the proposed day."
+  },
+  "proposalShiftedLater": "shifted +{duration}",
+  "@proposalShiftedLater": {
+    "description": "Change chip: the task starts later by {duration} (e.g. '25 min').",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalShiftedEarlier": "shifted −{duration}",
+  "@proposalShiftedEarlier": {
+    "description": "Change chip: the task starts earlier by {duration}.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalShrunk": "shrunk to {duration}",
+  "@proposalShrunk": {
+    "description": "Change chip: the task is shorter, now {duration}.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalGrown": "grown to {duration}",
+  "@proposalGrown": {
+    "description": "Change chip: the task is longer, now {duration}.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalMovedTo": "moved to {when}",
+  "@proposalMovedTo": {
+    "description": "Change chip: the task moves to another day, e.g. 'tomorrow 9:00'.",
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalMovedToInbox": "moved to Inbox",
+  "@proposalMovedToInbox": {
+    "description": "Change chip: the task goes back to the Inbox."
+  },
+  "proposalAdded": "new",
+  "@proposalAdded": {
+    "description": "Change chip: a new task the proposal adds."
+  },
+  "proposalUntouched": "pinned · untouched",
+  "@proposalUntouched": {
+    "description": "Change chip: a pinned task that stays where it is."
+  },
+  "proposalSteps": "{count, plural, =1{1 step} other{{count} steps}}",
+  "@proposalSteps": {
+    "description": "Change chip: the task gains {count} steps (Break it down).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalNothing": "Nothing to change",
+  "@proposalNothing": {
+    "description": "Proposal change list when every line was removed or nothing needs to change."
+  },
+  "proposalKeep": "Keep {title} as it is",
+  "@proposalKeep": {
+    "description": "Screen-reader label of the × on a change line: drops that change, the task stays as it is.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDayTime": "{day} {time}",
+  "@proposalDayTime": {
+    "description": "A day and a time in a change chip, e.g. 'tomorrow 9:00' in 'moved to tomorrow 9:00'.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
   }
 }

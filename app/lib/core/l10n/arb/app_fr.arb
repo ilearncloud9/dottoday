@@ -1014,5 +1014,22 @@
   "privacyThinkingOnDevice": "Sur cet appareil maintenant : le modèle intégré.",
   "privacyThinkingRules": "Sur cet appareil maintenant : votre historique et des règles simples.",
   "privacyClearThinking": "Effacer l'historique de réflexion",
-  "snackThinkingCleared": "Historique de réflexion effacé"
+  "snackThinkingCleared": "Historique de réflexion effacé",
+  "proposalAccept": "Accepter",
+  "proposalDiscard": "Ignorer",
+  "proposalNothingSaved": "Rien n'est enregistré avant d'accepter",
+  "proposalLegendNow": "maintenant",
+  "proposalLegendProposed": "proposé",
+  "proposalShiftedLater": "décalé de +{duration}",
+  "proposalShiftedEarlier": "décalé de −{duration}",
+  "proposalShrunk": "réduit à {duration}",
+  "proposalGrown": "allongé à {duration}",
+  "proposalMovedTo": "déplacé à {when}",
+  "proposalMovedToInbox": "déplacé dans la boîte de réception",
+  "proposalAdded": "nouveau",
+  "proposalUntouched": "épinglé · inchangé",
+  "proposalSteps": "{count, plural, =1{1 étape} other{{count} étapes}}",
+  "proposalNothing": "Rien à changer",
+  "proposalKeep": "Garder {title} tel quel",
+  "proposalDayTime": "{day} à {time}"
 }

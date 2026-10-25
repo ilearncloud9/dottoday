@@ -1,3 +1,4 @@
+import 'package:dottoday/core/editing/active_proposal.dart';
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
@@ -8,7 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// [child] with the task editor as a right-hand panel while a task is
 /// open (docs/10 §4 "editing in a right-hand TaskEditor panel, no
-/// sheets", `A-mac-editor`, M3e.5). Expanded width only; the panel is
+/// sheets", `A-mac-editor`, M3e.5). Expanded width only, and not while a
+/// proposal holds the panel (M10.2); the panel is
 /// keyed by the task, so switching tasks saves the one before.
 class EditorPanelFrame extends ConsumerWidget {
   const EditorPanelFrame({required this.child, super.key});
@@ -16,16 +18,19 @@ class EditorPanelFrame extends ConsumerWidget {
   final Widget child;
 
   /// `A-mac-editor`: 640 of 2000 px at 1280.
-  static const double width = 420;
+  static const double width = DotSize.sidePanel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final id = ref.watch(editingTaskProvider);
+    // A proposal takes the panel while it is open (M10.2); the task comes
+    // back after Accept or Discard.
+    final proposing = ref.watch(activeProposalProvider) != null;
     // The window's class, as `openTask` decides: a task opened here
     // always shows.
     final expanded =
         WidthClass.of(MediaQuery.sizeOf(context).width) == WidthClass.expanded;
-    if (id == null || !expanded) return child;
+    if (id == null || !expanded || proposing) return child;
     final c = DotTheme.of(context).colors;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,

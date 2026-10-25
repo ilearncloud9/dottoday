@@ -1014,5 +1014,22 @@
   "privacyThinkingOnDevice": "Auf diesem Gerät gerade: das eingebaute Modell.",
   "privacyThinkingRules": "Auf diesem Gerät gerade: dein Verlauf und einfache Regeln.",
   "privacyClearThinking": "Planungsverlauf löschen",
-  "snackThinkingCleared": "Planungsverlauf gelöscht"
+  "snackThinkingCleared": "Planungsverlauf gelöscht",
+  "proposalAccept": "Übernehmen",
+  "proposalDiscard": "Verwerfen",
+  "proposalNothingSaved": "Nichts wird gespeichert, bevor du übernimmst",
+  "proposalLegendNow": "jetzt",
+  "proposalLegendProposed": "Vorschlag",
+  "proposalShiftedLater": "verschoben +{duration}",
+  "proposalShiftedEarlier": "verschoben −{duration}",
+  "proposalShrunk": "gekürzt auf {duration}",
+  "proposalGrown": "verlängert auf {duration}",
+  "proposalMovedTo": "verschoben auf {when}",
+  "proposalMovedToInbox": "in den Eingang verschoben",
+  "proposalAdded": "neu",
+  "proposalUntouched": "fixiert · unverändert",
+  "proposalSteps": "{count, plural, =1{1 Schritt} other{{count} Schritte}}",
+  "proposalNothing": "Nichts zu ändern",
+  "proposalKeep": "{title} so lassen",
+  "proposalDayTime": "{day} {time}"
 }

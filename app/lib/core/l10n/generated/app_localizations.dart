@@ -6191,6 +6191,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Thinking history cleared'**
   String get snackThinkingCleared;
+
+  /// Proposal sheet primary button (11 B3, B-ios-break-it-down).
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get proposalAccept;
+
+  /// Proposal sheet secondary button: closes without writing anything.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get proposalDiscard;
+
+  /// Proposal sheet footer under Discard (11 B3).
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is saved until you accept'**
+  String get proposalNothingSaved;
+
+  /// Proposal change list legend: the faded dots are the day as it is (B-ios-rebalance).
+  ///
+  /// In en, this message translates to:
+  /// **'now'**
+  String get proposalLegendNow;
+
+  /// Proposal change list legend: the outlined dots are the proposed day.
+  ///
+  /// In en, this message translates to:
+  /// **'proposed'**
+  String get proposalLegendProposed;
+
+  /// Change chip: the task starts later by {duration} (e.g. '25 min').
+  ///
+  /// In en, this message translates to:
+  /// **'shifted +{duration}'**
+  String proposalShiftedLater(String duration);
+
+  /// Change chip: the task starts earlier by {duration}.
+  ///
+  /// In en, this message translates to:
+  /// **'shifted −{duration}'**
+  String proposalShiftedEarlier(String duration);
+
+  /// Change chip: the task is shorter, now {duration}.
+  ///
+  /// In en, this message translates to:
+  /// **'shrunk to {duration}'**
+  String proposalShrunk(String duration);
+
+  /// Change chip: the task is longer, now {duration}.
+  ///
+  /// In en, this message translates to:
+  /// **'grown to {duration}'**
+  String proposalGrown(String duration);
+
+  /// Change chip: the task moves to another day, e.g. 'tomorrow 9:00'.
+  ///
+  /// In en, this message translates to:
+  /// **'moved to {when}'**
+  String proposalMovedTo(String when);
+
+  /// Change chip: the task goes back to the Inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'moved to Inbox'**
+  String get proposalMovedToInbox;
+
+  /// Change chip: a new task the proposal adds.
+  ///
+  /// In en, this message translates to:
+  /// **'new'**
+  String get proposalAdded;
+
+  /// Change chip: a pinned task that stays where it is.
+  ///
+  /// In en, this message translates to:
+  /// **'pinned · untouched'**
+  String get proposalUntouched;
+
+  /// Change chip: the task gains {count} steps (Break it down).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 step} other{{count} steps}}'**
+  String proposalSteps(int count);
+
+  /// Proposal change list when every line was removed or nothing needs to change.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to change'**
+  String get proposalNothing;
+
+  /// Screen-reader label of the × on a change line: drops that change, the task stays as it is.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep {title} as it is'**
+  String proposalKeep(String title);
+
+  /// A day and a time in a change chip, e.g. 'tomorrow 9:00' in 'moved to tomorrow 9:00'.
+  ///
+  /// In en, this message translates to:
+  /// **'{day} {time}'**
+  String proposalDayTime(String day, String time);
 }
 
 class _AppLocalizationsDelegate

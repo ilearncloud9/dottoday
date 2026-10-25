@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M10.2: Suggested changes to your day now open in one place first: what moves is shown over your day as it is, each change can be dropped with ×, and nothing is saved until you tap Accept — after which Undo is there for 30 seconds. On a Mac or a wide window it opens beside your day instead of over it.
 - M10.1: The thinking help behind Break it down, brain-dump and length suggestions now runs on your device — Apple Intelligence on iPhone and Mac, Gemini Nano on supported Android phones, Chrome's built-in model on the web — and falls back to your own history and simple rules where there is none. Nothing you type goes to a server; Settings › Privacy explains it and can clear what was kept.
 
 ### Fixed

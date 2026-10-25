@@ -4175,4 +4175,78 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get snackThinkingCleared => 'Planungsverlauf gelöscht';
+
+  @override
+  String get proposalAccept => 'Übernehmen';
+
+  @override
+  String get proposalDiscard => 'Verwerfen';
+
+  @override
+  String get proposalNothingSaved =>
+      'Nichts wird gespeichert, bevor du übernimmst';
+
+  @override
+  String get proposalLegendNow => 'jetzt';
+
+  @override
+  String get proposalLegendProposed => 'Vorschlag';
+
+  @override
+  String proposalShiftedLater(String duration) {
+    return 'verschoben +$duration';
+  }
+
+  @override
+  String proposalShiftedEarlier(String duration) {
+    return 'verschoben −$duration';
+  }
+
+  @override
+  String proposalShrunk(String duration) {
+    return 'gekürzt auf $duration';
+  }
+
+  @override
+  String proposalGrown(String duration) {
+    return 'verlängert auf $duration';
+  }
+
+  @override
+  String proposalMovedTo(String when) {
+    return 'verschoben auf $when';
+  }
+
+  @override
+  String get proposalMovedToInbox => 'in den Eingang verschoben';
+
+  @override
+  String get proposalAdded => 'neu';
+
+  @override
+  String get proposalUntouched => 'fixiert · unverändert';
+
+  @override
+  String proposalSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Schritte',
+      one: '1 Schritt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proposalNothing => 'Nichts zu ändern';
+
+  @override
+  String proposalKeep(String title) {
+    return '$title so lassen';
+  }
+
+  @override
+  String proposalDayTime(String day, String time) {
+    return '$day $time';
+  }
 }

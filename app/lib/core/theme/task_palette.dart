@@ -19,6 +19,10 @@ abstract final class TaskAlpha {
   /// Dashes and glyph of a skipped dot (`A-ios-future-month`).
   static const faded = 0.7;
 
+  /// The current thread under a proposal (11 §0 B3: "ghost segments at
+  /// 35 % alpha"; `B-ios-rebalance`).
+  static const ghost = 0.35;
+
   /// All-day chip and selected-icon backgrounds (`Main`, `A-ios-add-what`),
   /// the same strength as the accent tint.
   static const tintLight = 0.12;

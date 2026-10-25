@@ -3243,4 +3243,60 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get snackThinkingCleared => pseudo(super.snackThinkingCleared);
+
+  @override
+  String get proposalAccept => pseudo(super.proposalAccept);
+
+  @override
+  String get proposalDiscard => pseudo(super.proposalDiscard);
+
+  @override
+  String get proposalNothingSaved => pseudo(super.proposalNothingSaved);
+
+  @override
+  String get proposalLegendNow => pseudo(super.proposalLegendNow);
+
+  @override
+  String get proposalLegendProposed => pseudo(super.proposalLegendProposed);
+
+  @override
+  String proposalShiftedLater(String duration) =>
+      pseudo(super.proposalShiftedLater(duration));
+
+  @override
+  String proposalShiftedEarlier(String duration) =>
+      pseudo(super.proposalShiftedEarlier(duration));
+
+  @override
+  String proposalShrunk(String duration) =>
+      pseudo(super.proposalShrunk(duration));
+
+  @override
+  String proposalGrown(String duration) =>
+      pseudo(super.proposalGrown(duration));
+
+  @override
+  String proposalMovedTo(String when) => pseudo(super.proposalMovedTo(when));
+
+  @override
+  String get proposalMovedToInbox => pseudo(super.proposalMovedToInbox);
+
+  @override
+  String get proposalAdded => pseudo(super.proposalAdded);
+
+  @override
+  String get proposalUntouched => pseudo(super.proposalUntouched);
+
+  @override
+  String proposalSteps(int count) => pseudo(super.proposalSteps(count));
+
+  @override
+  String get proposalNothing => pseudo(super.proposalNothing);
+
+  @override
+  String proposalKeep(String title) => pseudo(super.proposalKeep(title));
+
+  @override
+  String proposalDayTime(String day, String time) =>
+      pseudo(super.proposalDayTime(day, time));
 }
