@@ -4,6 +4,7 @@ import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/intents/dot_action.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
@@ -12,8 +13,9 @@ import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
 
 /// Carries out what the user chose on a notification (docs/02 F6): Done
-/// ticks this occurrence, Snooze reminds again in 10 minutes, Open (or a
-/// plain tap) shows the task. Writes go through the write path, which then
+/// ticks this occurrence, Snooze reminds again in 10 minutes, +15 (the
+/// web's, M9.7) gives it 15 more minutes, Open (or a plain tap) shows the
+/// task. Writes go through the write path, which then
 /// re-plans the notifications, so a ticked task's later alerts disappear.
 ///
 /// Snooze only re-reminds: a notification can't ask "shift the rest?", so
@@ -61,13 +63,18 @@ final class NotificationResponder {
       return _open(AppRoutes.today);
     }
     final now = _clock.nowUtc();
-    final changed = action == NotificationAction.done
-        ? progress.markDone(task, now)
-        : task.copyWith(
-            snoozedUntilUtc: now.add(
-              const Duration(minutes: NotificationAction.snoozeMinutes),
-            ),
-          );
+    final changed = switch (action) {
+      NotificationAction.done => progress.markDone(task, now),
+      // The web's +15 (M9.7): 15 more minutes, as the live row's +15.
+      NotificationAction.plus15 => task.copyWith(
+        durationMin: task.durationMin + AddFifteen.minutes,
+      ),
+      _ => task.copyWith(
+        snoozedUntilUtc: now.add(
+          const Duration(minutes: NotificationAction.snoozeMinutes),
+        ),
+      ),
+    };
     final result = await _writes.apply(
       WriteBatch(userId: profile.id, occurrences: [changed]),
     );

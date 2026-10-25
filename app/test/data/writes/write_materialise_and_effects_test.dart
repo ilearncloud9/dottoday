@@ -63,7 +63,7 @@ void main() {
       await h.writes.apply(WriteBatch(userId: userId, occurrences: [o]));
       await h.effects.idle;
       expect(_taskAlerts(h).single.occurrenceId, o.id);
-      expect(h.sink.written.last.blocks.single.id, o.id);
+      expect(h.sink.written.last.dots.single.id, o.id);
 
       // Same desired set again: nothing re-scheduled (R-10).
       final applies = h.gateway.applied.length;
@@ -102,7 +102,7 @@ void main() {
         h.logs.records.map((r) => r.event),
         contains('notifications.resync_failed'),
       );
-      expect(h.sink.written.last.blocks.single.id, o.id);
+      expect(h.sink.written.last.dots.single.id, o.id);
 
       // The next write repairs the OS set.
       await h.writes.apply(

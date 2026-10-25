@@ -49,7 +49,7 @@ jobs:
       # Browser-only widget tests (paste in Chrome); the runner ships Chrome.
       - run: flutter test --platform chrome --tags web test/web
       # web/push_crypto.js against RFC 8291 Appendix A (docs/09 M5.3b).
-      - run: node --test tool/push_crypto_test.mjs
+      - run: node --test tool/push_crypto_test.mjs tool/action_queue_test.mjs
 
   goldens:
     # Goldens are baselined on macOS; Linux font rendering differs (M0.4).
@@ -124,6 +124,20 @@ jobs:
       - if: matrix.target == 'web'
         run: ../tool/web_db_assets.sh
       - run: ${{ matrix.cmd }} --dart-define-from-file=.env.example
+      # The menu-bar day dot's goldens and rules (docs/09 M9.6).
+      - if: matrix.target == 'macos'
+        name: Swift unit tests (macOS RunnerTests)
+        run: >-
+          xcodebuild test -workspace macos/Runner.xcworkspace -scheme Runner
+          -destination 'platform=macOS' -only-testing:RunnerTests -quiet
+      # The Swift half of the B6 intents (docs/09 M9.2): queue entries and the
+      # optimistic snapshot patch, in RunnerTests on a simulator.
+      - if: matrix.target == 'ios'
+        name: Swift unit tests (RunnerTests)
+        run: >-
+          xcodebuild test -workspace ios/Runner.xcworkspace -scheme Runner
+          -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+          -only-testing:RunnerTests CODE_SIGNING_ALLOWED=NO -quiet
 
   integration-android:
     # The device tests on an Android emulator (docs/08 §6, docs/09 M4.9): cold launch,
@@ -192,6 +206,9 @@ jobs:
       # opens the shortcut list (docs/08 §6.2, M8.7).
       - name: Keyboard checks
         run: node ../tool/a11y/keyboard_check.mjs http://127.0.0.1:8080/
+      # The live dot on the tab (docs/09 M9.7): title and favicon ring.
+      - name: Web live dot
+        run: node ../tool/a11y/web_live_dot_check.mjs http://127.0.0.1:8080/
       # No CSP violations, the service worker controls the page, and the app
       # opens offline after one visit (docs/07 Web, M5.7).
       - name: PWA, CSP and offline

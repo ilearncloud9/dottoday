@@ -37,6 +37,18 @@ Map<String, String> _usage(File plist) => {
     m.group(1)!: m.group(2)!,
 };
 
+/// AppShortcuts.strings keys are whole English phrases, not identifiers.
+Map<String, String> _phrases(String lang) => {
+  for (final m
+      in RegExp(
+        r'^"((?:[^"\\]|\\.)*)"\s*=\s*"((?:[^"\\]|\\.)*)";',
+        multiLine: true,
+      ).allMatches(
+        File('ios/Runner/$lang.lproj/AppShortcuts.strings').readAsStringSync(),
+      ))
+    m.group(1)!: m.group(2)!,
+};
+
 Map<String, String> _strings(File file) => {
   for (final m in _stringsLine.allMatches(file.readAsStringSync()))
     m.group(1)!: m.group(2)!,
@@ -80,6 +92,53 @@ void main() {
       });
     });
   }
+
+  // App Intents titles, parameters and dialogs (docs/09 M9.2): iOS and
+  // Siri show them, so they speak every app language too.
+  group('ios/Shared Localizable.strings', () {
+    final english = _strings(File('ios/Shared/en.lproj/Localizable.strings'));
+    test('English has the intent strings', () {
+      expect(english.keys, contains('intentAddTaskTitle'));
+    });
+    for (final lang in _translations) {
+      test('$lang has every key, translated', () {
+        final file = File('ios/Shared/$lang.lproj/Localizable.strings');
+        final strings = _strings(file);
+        expect(strings.keys.toSet(), english.keys.toSet(), reason: file.path);
+        for (final MapEntry(:key, :value) in strings.entries) {
+          expect(value.trim(), isNotEmpty, reason: '${file.path} $key');
+        }
+      });
+    }
+    test('the app and the widget extension bundle them', () {
+      final project = File(
+        'ios/Runner.xcodeproj/project.pbxproj',
+      ).readAsStringSync();
+      expect(
+        'Localizable.strings in Resources */ = {isa = PBXBuildFile'.allMatches(
+          project,
+        ),
+        hasLength(2),
+      );
+      for (final lang in ['en', ..._translations]) {
+        expect(project, contains('path = $lang.lproj/Localizable.strings;'));
+      }
+    });
+  });
+
+  // Siri / Shortcuts phrases (docs/09 M9.5): every language has every
+  // phrase, and each keeps the app-name slot Siri needs.
+  test('AppShortcuts.strings: every phrase in every language', () {
+    final english = _phrases('en');
+    expect(english, hasLength(5));
+    for (final lang in _translations) {
+      final phrases = _phrases(lang);
+      expect(phrases.keys.toSet(), english.keys.toSet(), reason: lang);
+      for (final value in phrases.values) {
+        expect(value, contains(r'${applicationName}'), reason: lang);
+      }
+    }
+  });
 
   test('Android 13+ offers every language per app', () {
     final manifest = File(

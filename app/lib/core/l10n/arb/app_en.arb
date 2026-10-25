@@ -5367,5 +5367,13 @@
   "notifDaySummaryBody": "{count, plural, =1{1 block, at {time}} other{{count} blocks, first at {time}}}",
   "@notifDaySummaryBody": {"description": "Body of the day-start summary notification: how many blocks today and when the first starts.", "placeholders": {"count": {"type": "int"}, "time": {"type": "String"}}},
   "notifChannelAlertsSound": "Task alerts · {sound}",
-  "@notifChannelAlertsSound": {"description": "Android notification channel name for task alerts with one bundled sound.", "placeholders": {"sound": {"type": "String"}}}
+  "@notifChannelAlertsSound": {"description": "Android notification channel name for task alerts with one bundled sound.", "placeholders": {"sound": {"type": "String"}}},
+  "liveActivityLeft": "{time} left",
+  "@liveActivityLeft": {"description": "Live Activity / ongoing notification: time left of the task under way; {time} is a live countdown the system draws (e.g. 37:59).", "placeholders": {"time": {"type": "String"}}},
+  "liveActivityStartsIn": "starts in {time}",
+  "@liveActivityStartsIn": {"description": "Live Activity / ongoing notification: the next task, starting within the hour; {time} is a live countdown.", "placeholders": {"time": {"type": "String"}}},
+  "liveActivityCount": "{done} of {total}",
+  "@liveActivityCount": {"description": "Live Activity: today's tasks done so far, next to a small pie, e.g. '1 of 3'.", "placeholders": {"done": {"type": "int"}, "total": {"type": "int"}}},
+  "liveActivityCountLabel": "{done} of {total} done today",
+  "@liveActivityCountLabel": {"description": "Screen-reader label for liveActivityCount.", "placeholders": {"done": {"type": "int"}, "total": {"type": "int"}}}
 }

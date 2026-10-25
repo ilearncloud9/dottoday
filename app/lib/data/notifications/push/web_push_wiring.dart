@@ -50,7 +50,7 @@ NotificationPlatform withServerPush(
     store: store,
     encrypt: encryptForPush,
     doneLabel: l10n.notifActionDone,
-    openLabel: l10n.notifActionOpen,
+    plusLabel: l10n.liveExtend,
     logger: logger,
   );
 }

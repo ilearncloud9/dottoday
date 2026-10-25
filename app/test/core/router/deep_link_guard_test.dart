@@ -27,6 +27,7 @@ void main() {
       '/settings/account': '/settings/account',
       '/settings/privacy/': '/settings/privacy',
       'dottoday://settings/help': '/settings/help',
+      'dottoday://add': '/add',
     };
     cases.forEach((input, expected) {
       test(input, () => expect(_guard(input), expected));

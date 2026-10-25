@@ -39,14 +39,14 @@ final class ServerPushMirror implements NotificationPlatform {
     required PushStore store,
     required PushEncrypt encrypt,
     required String doneLabel,
-    required String openLabel,
+    required String plusLabel,
     required Logger logger,
   }) : _inner = inner,
        _target = target,
        _store = store,
        _encrypt = encrypt,
        _doneLabel = doneLabel,
-       _openLabel = openLabel,
+       _plusLabel = plusLabel,
        _logger = logger;
 
   final NotificationPlatform _inner;
@@ -54,7 +54,7 @@ final class ServerPushMirror implements NotificationPlatform {
   final PushStore _store;
   final PushEncrypt _encrypt;
   final String _doneLabel;
-  final String _openLabel;
+  final String _plusLabel;
   final Logger _logger;
 
   @override
@@ -104,7 +104,7 @@ final class ServerPushMirror implements NotificationPlatform {
       'actions': [
         if (n.withActions) ...[
           {'action': NotificationAction.done.name, 'title': _doneLabel},
-          {'action': NotificationAction.open.name, 'title': _openLabel},
+          {'action': NotificationAction.plus15.name, 'title': _plusLabel},
         ],
       ],
     }),

@@ -14,6 +14,7 @@ const _staticRoutes = {
   'month': AppRoutes.month,
   'search': AppRoutes.search,
   'settings': AppRoutes.settings,
+  'add': AppRoutes.add,
 };
 
 /// Maps an incoming location or deep link to its canonical in-app location,

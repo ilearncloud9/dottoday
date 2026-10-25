@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Static shortcuts for the two B6 intents that need no task (docs/09 M9.2c):
+     Add task opens Quick Add over Today, What's next opens Today. Both go
+     through the router's allow-list (deep_link_guard.dart). -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="add_task"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_add_task">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="app.dottoday.planner"
+            android:targetClass="app.dottoday.planner.MainActivity"
+            android:data="dottoday://add"/>
+    </shortcut>
+    <shortcut
+        android:shortcutId="whats_next"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_whats_next">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="app.dottoday.planner"
+            android:targetClass="app.dottoday.planner.MainActivity"
+            android:data="dottoday://today"/>
+    </shortcut>
+</shortcuts>

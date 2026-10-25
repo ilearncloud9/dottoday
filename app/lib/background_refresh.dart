@@ -8,6 +8,7 @@ import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/auth/supabase_start.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/intents/intent_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:dottoday/data/sync/background_sync.dart';
@@ -79,6 +80,8 @@ void backgroundRefreshDispatcher() {
     );
     try {
       final profile = await container.read(localProfileProvider.future);
+      // Actions surfaces queued since the app last ran (M9.2).
+      await container.read(actionQueueDrainerProvider).drain();
       return await container.read(dailyRefreshProvider).run(profile.id);
     } on Object catch (e, st) {
       logger.error('refresh.background_failed', error: e, stackTrace: st);

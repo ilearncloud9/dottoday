@@ -48,7 +48,7 @@ final class DailyRefreshProvider
   }
 }
 
-String _$dailyRefreshHash() => r'121299a7aba760bd60bde77d8148e6b9a78f5457';
+String _$dailyRefreshHash() => r'd10e92f82a6c35a2e7efbffcfe214b582799d523';
 
 /// The background job's one-shot sync (M6.5.6). Null in the app, which
 /// syncs through `EngineSyncService`; `backgroundRefreshDispatcher`

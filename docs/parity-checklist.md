@@ -26,10 +26,10 @@ ticked in 08 §6.1) before a tag.
 | Status | iPhone | Android | macOS | Web |
 |---|---|---|---|---|
 | ✓ CI | 36 | 36 | 41 | 51 |
-| ✓ device | 19 | 21 | 11 | 0 |
+| ✓ device | 20 | 22 | 12 | 2 |
 | ◐ owner | 4 | 2 | 8 | 5 |
 | ◐ manual | 3 | 3 | 3 | 7 |
-| → later | 2 | 2 | 2 | 3 |
+| → later | 1 | 1 | 1 | 1 |
 | — n/a | 3 | 3 | 2 | 1 |
 | ✗ gap | 0 | 0 | 0 | 0 |
 
@@ -76,7 +76,7 @@ ticked in 08 §6.1) before a tag.
 |---|---|---|---|---|---|---|
 | F3.1 | Unscheduled tasks live in the inbox | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/inbox/inbox_screen_test.dart`<br>`test/features/inbox/wide_inbox_test.dart` |
 | F3.2 | Inbox supports reorder, swipe-to-schedule, swipe-to-trash, bulk select | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/inbox/inbox_screen_test.dart`<br>`test/features/inbox/inbox_reorder_select_test.dart`<br>`test/domain/scheduling/inbox_order_test.dart` |
-| F3.3 | An inbox badge shows count | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/inbox/inbox_screen_test.dart`<br>`test/domain/widgets/widget_snapshot_test.dart`<br>`test/shared/navigation/dot_shell_test.dart`<br>`test/domain/scheduling/inbox_nudge_test.dart`<br>`test/features/timeline/inbox_nudge_card_test.dart`<br>`test/data/inbox/inbox_nudge_seen_test.dart` |
+| F3.3 | An inbox badge shows count | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/inbox/inbox_screen_test.dart`<br>`test/domain/snapshot/day_snapshot_test.dart`<br>`test/shared/navigation/dot_shell_test.dart`<br>`test/domain/scheduling/inbox_nudge_test.dart`<br>`test/features/timeline/inbox_nudge_card_test.dart`<br>`test/data/inbox/inbox_nudge_seen_test.dart` |
 ## F4. Recurrence
 
 | ID | Feature | iPhone | Android | macOS | Web | Automated evidence |
@@ -131,8 +131,8 @@ ticked in 08 §6.1) before a tag.
 
 | ID | Feature | iPhone | Android | macOS | Web | Automated evidence |
 |---|---|---|---|---|---|---|
-| F9.1 | IOS/Android widgets: "Next up" (small), "Today timeline" (medium/large), "Inbox count". macOS: menu-bar "ne… | ✓ device<br>Next up on the sim, M5.4; device needs App Group (08 §6.1) | ✓ device<br>all three widgets · emulator, M5.4 | ✓ device<br>menu-bar Next up, M5.5 | → later<br>tab title, favicon, Badging API — M9.7 | `test/domain/widgets/widget_snapshot_test.dart`<br>`test/data/widgets/widget_display_test.dart`<br>`test/policy/surface_contract_test.dart` |
-| F9.2 | IOS Live Activity / Dynamic Island and an Android ongoing notification for the live dot | → later<br>M9.3–M9.5 | → later<br>M9.3–M9.5 | → later<br>menu-bar dot M9.6 | → later<br>web live dot M9.7 | `test/policy/surface_contract_test.dart` |
+| F9.1 | IOS/Android widgets: "Next up" (small), "Today timeline" (medium/large), "Inbox count". macOS: menu-bar "ne… | ✓ device<br>Next up on the sim, M5.4; device needs App Group (08 §6.1) | ✓ device<br>all three widgets · emulator, M5.4 | ✓ device<br>menu-bar Next up, M5.5 | ✓ device<br>tab title, favicon ring, Badging API · Chromium, M9.7 | `test/domain/snapshot/day_snapshot_test.dart`<br>`test/data/snapshot/snapshot_store_json_test.dart`<br>`test/policy/surface_contract_test.dart` |
+| F9.2 | IOS Live Activity / Dynamic Island and an Android ongoing notification for the live dot | ✓ device<br>Live Activity + island, widget ✓, controls · iPhone 17 Pro sim, M9.3–M9.8; device: 08 §6.1 E | ✓ device<br>ongoing notification, widget ✓, tiles · API 37 emulator, killed-app Done, M9.4–M9.8 | ✓ device<br>menu-bar day dot, Done / +15 · macOS, M9.6 | ✓ device<br>tab live dot, Done / +15 reminders · Chromium, M9.7 | `test/policy/surface_contract_test.dart`<br>`test/domain/live_activity/live_dot_plan_test.dart`<br>`test/data/live_activity/live_activity_test.dart`<br>`test/data/surfaces/surface_consistency_test.dart`<br>`test/data/widgets/mac_menu_actions_test.dart`<br>`test/data/live_activity/web_live_dot_test.dart`<br>`integration_test/surface_consistency_test.dart` |
 | F9.3 | Apple Watch complication and glance | — n/a<br>Phase 2 (ADR-0010) | — n/a<br>Phase 2 (ADR-0010) | — n/a<br>Phase 2 (ADR-0010) | — n/a<br>Phase 2 (ADR-0010) |  |
 ## F10. Onboarding
 
@@ -187,7 +187,7 @@ ticked in 08 §6.1) before a tag.
 - **F8.1** Week board from 840 px; phones use the week strip + Month (10 §5.2 W1).
 - **F8.3** Web shows "Uses your computer's lock" instead of App lock (07 Web). Four Concept A accents on every target; no Android dynamic accent (PRD F8.3, M8.4c).
 - **F10.1** Real OS permission prompts are in the 08 §6.1 hardware pass.
-- **F11.1** Recipient is an owner gate (08 §6.1 Feedback address).
+- **F11.1** Recipient feedback@dottoday.app, compiled in (chore/final-ids).
 
 ## Device and browser runs
 

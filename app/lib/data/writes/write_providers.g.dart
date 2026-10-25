@@ -65,60 +65,60 @@ String _$notificationGatewayHash() =>
     r'2ed6d11ff874122b02b95ef7fe908614b85b3a7e';
 
 /// Where the widget snapshot goes (M5.4, M5.5): home-screen widgets on
-/// iOS and Android, the menu-bar "Next up" on the Mac, nothing on the web.
+/// iOS and Android (plus the Live Activity / ongoing notification, M9.3,
+/// M9.4), the menu-bar "Next up"
+/// on the Mac, Cache Storage on the web.
 
-@ProviderFor(widgetSnapshotSink)
-final widgetSnapshotSinkProvider = WidgetSnapshotSinkProvider._();
+@ProviderFor(daySnapshotSink)
+final daySnapshotSinkProvider = DaySnapshotSinkProvider._();
 
 /// Where the widget snapshot goes (M5.4, M5.5): home-screen widgets on
-/// iOS and Android, the menu-bar "Next up" on the Mac, nothing on the web.
+/// iOS and Android (plus the Live Activity / ongoing notification, M9.3,
+/// M9.4), the menu-bar "Next up"
+/// on the Mac, Cache Storage on the web.
 
-final class WidgetSnapshotSinkProvider
+final class DaySnapshotSinkProvider
     extends
-        $FunctionalProvider<
-          WidgetSnapshotSink,
-          WidgetSnapshotSink,
-          WidgetSnapshotSink
-        >
-    with $Provider<WidgetSnapshotSink> {
+        $FunctionalProvider<DaySnapshotSink, DaySnapshotSink, DaySnapshotSink>
+    with $Provider<DaySnapshotSink> {
   /// Where the widget snapshot goes (M5.4, M5.5): home-screen widgets on
-  /// iOS and Android, the menu-bar "Next up" on the Mac, nothing on the web.
-  WidgetSnapshotSinkProvider._()
+  /// iOS and Android (plus the Live Activity / ongoing notification, M9.3,
+  /// M9.4), the menu-bar "Next up"
+  /// on the Mac, Cache Storage on the web.
+  DaySnapshotSinkProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'widgetSnapshotSinkProvider',
+        name: r'daySnapshotSinkProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$widgetSnapshotSinkHash();
+  String debugGetCreateSourceHash() => _$daySnapshotSinkHash();
 
   @$internal
   @override
-  $ProviderElement<WidgetSnapshotSink> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  $ProviderElement<DaySnapshotSink> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
-  WidgetSnapshotSink create(Ref ref) {
-    return widgetSnapshotSink(ref);
+  DaySnapshotSink create(Ref ref) {
+    return daySnapshotSink(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(WidgetSnapshotSink value) {
+  Override overrideWithValue(DaySnapshotSink value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<WidgetSnapshotSink>(value),
+      providerOverride: $SyncValueProvider<DaySnapshotSink>(value),
     );
   }
 }
 
-String _$widgetSnapshotSinkHash() =>
-    r'0c403a4200f623c11395c3f07b0dbf467a8f6c20';
+String _$daySnapshotSinkHash() => r'790822a256733040a33ee21e29a0cc28f4dc0740';
 
 @ProviderFor(notificationSync)
 final notificationSyncProvider = NotificationSyncProvider._();
@@ -166,53 +166,52 @@ final class NotificationSyncProvider
 
 String _$notificationSyncHash() => r'281790121b5d1826fbbc74db7f69ad9450d96d4e';
 
-@ProviderFor(widgetSnapshotWriter)
-final widgetSnapshotWriterProvider = WidgetSnapshotWriterProvider._();
+@ProviderFor(daySnapshotWriter)
+final daySnapshotWriterProvider = DaySnapshotWriterProvider._();
 
-final class WidgetSnapshotWriterProvider
+final class DaySnapshotWriterProvider
     extends
         $FunctionalProvider<
-          WidgetSnapshotWriter,
-          WidgetSnapshotWriter,
-          WidgetSnapshotWriter
+          DaySnapshotWriter,
+          DaySnapshotWriter,
+          DaySnapshotWriter
         >
-    with $Provider<WidgetSnapshotWriter> {
-  WidgetSnapshotWriterProvider._()
+    with $Provider<DaySnapshotWriter> {
+  DaySnapshotWriterProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'widgetSnapshotWriterProvider',
+        name: r'daySnapshotWriterProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$widgetSnapshotWriterHash();
+  String debugGetCreateSourceHash() => _$daySnapshotWriterHash();
 
   @$internal
   @override
-  $ProviderElement<WidgetSnapshotWriter> $createElement(
+  $ProviderElement<DaySnapshotWriter> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
   @override
-  WidgetSnapshotWriter create(Ref ref) {
-    return widgetSnapshotWriter(ref);
+  DaySnapshotWriter create(Ref ref) {
+    return daySnapshotWriter(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(WidgetSnapshotWriter value) {
+  Override overrideWithValue(DaySnapshotWriter value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<WidgetSnapshotWriter>(value),
+      providerOverride: $SyncValueProvider<DaySnapshotWriter>(value),
     );
   }
 }
 
-String _$widgetSnapshotWriterHash() =>
-    r'eace0e52516193bd15d764424b882407f953d5d9';
+String _$daySnapshotWriterHash() => r'1628328c28d23ec3111ee549de45c09977c32b51';
 
 @ProviderFor(afterWriteEffects)
 final afterWriteEffectsProvider = AfterWriteEffectsProvider._();
@@ -259,7 +258,7 @@ final class AfterWriteEffectsProvider
   }
 }
 
-String _$afterWriteEffectsHash() => r'e357b5071a1c02cf53eff43218819c935f3829e9';
+String _$afterWriteEffectsHash() => r'4c4fd62c1aadd1768336b44d35d0c26f4d5842d5';
 
 /// This device's one HLC, shared by the write path and sync (M6.2).
 

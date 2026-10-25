@@ -4137,4 +4137,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String notifChannelAlertsSound(String sound) {
     return 'Alertes de tâches · $sound';
   }
+
+  @override
+  String liveActivityLeft(String time) {
+    return 'encore $time';
+  }
+
+  @override
+  String liveActivityStartsIn(String time) {
+    return 'commence dans $time';
+  }
+
+  @override
+  String liveActivityCount(int done, int total) {
+    return '$done sur $total';
+  }
+
+  @override
+  String liveActivityCountLabel(int done, int total) {
+    return '$done sur $total faites aujourd\'hui';
+  }
 }

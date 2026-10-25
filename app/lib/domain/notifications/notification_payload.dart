@@ -87,10 +87,20 @@ enum NotificationAction {
   snooze,
 
   /// Open the task (also a plain tap on the notification).
-  open;
+  open,
+
+  /// Give the task 15 more minutes (the web's reminders, docs/09 M9.7:
+  /// Chrome shows two actions, so there Done and +15; a tap opens).
+  plus15;
 
   /// Minutes a Snooze waits (docs/02 F6 "Snooze 10 min").
   static const snoozeMinutes = 10;
+
+  /// The buttons iOS, Android and macOS reminders carry.
+  static const osActions = [done, snooze, open];
+
+  /// The two the web's reminders carry.
+  static const webActions = [done, plus15];
 
   /// The action for an OS action id; null or unknown is a plain tap.
   static NotificationAction fromId(String? id) =>

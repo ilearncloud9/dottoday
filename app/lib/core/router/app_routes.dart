@@ -12,6 +12,10 @@ abstract final class AppRoutes {
   static const search = '/search';
   static const settings = '/settings';
 
+  /// Not a screen: opens Quick Add over Today (`dottoday://add`, the
+  /// Add task shortcut and controls, docs/09 M9.2c).
+  static const add = '/add';
+
   static const dayPattern = '/day/:date';
   static const taskPattern = '/task/:id';
 

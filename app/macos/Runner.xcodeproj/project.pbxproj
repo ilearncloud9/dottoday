@@ -23,6 +23,7 @@
 /* Begin PBXBuildFile section */
 		03F1E0399EF22D8F046CC29F /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5320F194139FE4ED14609713 /* Pods_RunnerTests.framework */; };
 		08531D7F0C6F481D2F260AF4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E4000C80151F405B50FE812 /* InfoPlist.strings */; };
+		110C4778699B875E748E943B /* DayDotStatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C8C4A884C19DCEE1DA1932 /* DayDotStatusItem.swift */; };
 		1B776BC7A13CFEA1B21178A9 /* reminder_ripple.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9D991EE80A7FB2385F8E8814 /* reminder_ripple.wav */; };
 		1E2D096E1AF1B5F1049802D7 /* dot_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = 77A73470F6BA6972F7A10282 /* dot_alarm.caf */; };
 		27578FB588600BA5455274BC /* reminder_bell.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0B37EB83162C9A757CEB554D /* reminder_bell.wav */; };
@@ -33,6 +34,7 @@
 		33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F22044A3C60003C045 /* Assets.xcassets */; };
 		33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F42044A3C60003C045 /* MainMenu.xib */; };
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
+		363F237EE592EEA9E0BDD04B /* DayDotImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5FC895D2C19BB4E7D48BE6 /* DayDotImageTests.swift */; };
 		4D7A1B2C2E8F000100C0FFEE /* CalendarBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7A1B2D2E8F000100C0FFEE /* CalendarBridge.swift */; };
 		643C5081A4CFF74881AE4155 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA239FDEC478DDF4AD1FE316 /* Pods_Runner.framework */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
@@ -100,12 +102,14 @@
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		9D991EE80A7FB2385F8E8814 /* reminder_ripple.wav */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_ripple.wav; path = ../assets/sounds/reminder_ripple.wav; sourceTree = SOURCE_ROOT; };
 		A1AE07484F8F561832403D18 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		A4C8C4A884C19DCEE1DA1932 /* DayDotStatusItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DayDotStatusItem.swift; sourceTree = "<group>"; };
 		A68E47B0C2DB38F5AAB52FBE /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		AC70431C64A481189B369B74 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		CED2D9A80665A5D3FC657E97 /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E8EE2A12D3D79EA3BF70835B /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		EA239FDEC478DDF4AD1FE316 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED4611A732A87659D6435421 /* reminder_chime.wav */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_chime.wav; path = ../assets/sounds/reminder_chime.wav; sourceTree = SOURCE_ROOT; };
+		EE5FC895D2C19BB4E7D48BE6 /* DayDotImageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DayDotImageTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				331C80D7294CF71000263BE5 /* RunnerTests.swift */,
+				EE5FC895D2C19BB4E7D48BE6 /* DayDotImageTests.swift */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -204,6 +209,7 @@
 				33BA886A226E78AF003329D5 /* Configs */,
 				9E4000C80151F405B50FE812 /* InfoPlist.strings */,
 				6B585971458A3DA5EDEF1F67 /* Sounds */,
+				A4C8C4A884C19DCEE1DA1932 /* DayDotStatusItem.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -480,6 +486,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				331C80D8294CF71000263BE5 /* RunnerTests.swift in Sources */,
+				363F237EE592EEA9E0BDD04B /* DayDotImageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -491,6 +498,7 @@
 				33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */,
 				4D7A1B2C2E8F000100C0FFEE /* CalendarBridge.swift in Sources */,
 				335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */,
+				110C4778699B875E748E943B /* DayDotStatusItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -101,6 +101,21 @@ void main() {
     expect(got, hasLength(1));
     expect(find.byKey(const ValueKey('route:today')), findsOneWidget);
   });
+
+  // M9.2c: the Add task shortcut opens Quick Add over Today; `/add` is
+  // never a screen of its own.
+  testWidgets('dottoday://add shows Today and asks for Quick Add', (
+    tester,
+  ) async {
+    var adds = 0;
+    final router = buildRouter(appScreens, onAdd: () => adds++);
+    addTearDown(router.dispose);
+    await tester.pumpWidget(testRouterApp(router));
+    await _pushRoute(tester, 'dottoday://add');
+    expect(adds, 1);
+    expect(router.routeInformationProvider.value.uri.path, '/today');
+    expect(find.byKey(const ValueKey('route:today')), findsOneWidget);
+  });
 }
 
 Future<void> _pushRoute(WidgetTester tester, String location) async {

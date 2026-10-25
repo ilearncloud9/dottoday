@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ## [Unreleased]
 
+### Fixed
+- +15 from a widget, the lock screen or a notification could be ignored for a task created a moment earlier; it now always applies.
+- An action from a widget or the Live Activity made while the app was catching up on earlier ones could be lost; it now always gets through.
+
+### Added
+- M9.8: Every place outside the app — widgets, lock screen, Dynamic Island, the Android notification, the Mac menu bar and the browser tab — now shows the same task within a second of any change, checked on every build and on iPhone and Android.
+- M9.7: On the web, the browser tab shows the task under way — "● 38 min left · Deep work" and a filling ring as its icon — and an installed Dottoday shows your Inbox count on its icon where the browser supports it. Web reminders now offer Done and +15 min.
+- M9.6: On the Mac, the menu-bar item is now the day dot — a ring that fills from Wake Up to Bedtime — next to what's on now. Click it for What's next, with Done and +15 min right there.
+- M9.5: Tick the next task straight from the Next up widget. iPhone: Add task and Start focus controls for Control Center, the Lock Screen and the Action button, and Siri phrases for all five quick actions in English, German, French and Spanish. Android: Add task and Start focus tiles in Quick Settings.
+- M9.4: On Android, the task under way shows as an ongoing notification with a countdown, today's progress, and Done and +15 min — they work even when Dottoday isn't running, and the notification leaves on Done or half an hour after the planned end.
+- M9.3: On iPhone, the task under way (or the next one, within the hour) shows on the lock screen and in the Dynamic Island: its ring, "38:00 left", how many of today's tasks are done, and Done and +15 min buttons that work without opening the app. It ends when you tap Done, or half an hour after the planned end.
+- M9.2d: On the web, pressing Done on a reminder works even with no Dottoday tab open — the task is ticked the next time you open it, instead of a new tab popping up.
+- M9.2c: On Android, long-press the Dottoday icon for Add task and What's next. Widget names in the widget picker now appear in German, French and Spanish too.
+- M9.2b: On iPhone, Shortcuts and Siri can add a task to Dottoday and tell you what's on now or next, in your language; widgets and the Live Activity get Done, +15 and Start buttons to build on, which show the change straight away and reach the app the next time it runs.
+- M9.2a: The five quick actions every surface will use — add a task, what's next, done, +15 minutes, start — work the same everywhere. When a widget or a notification acts while Dottoday is closed, the app catches up the moment it opens, in the order you tapped, never twice, and quietly skips a task you have since deleted.
+- M9.1: One record of your day for every place outside the app — widgets, the Mac menu bar and the web's background worker now read the same day snapshot, with today's Wake Up to Bedtime, what's on now and the next two dots, and when you really started and finished. It is rewritten within a second of any change, at Bedtime and whenever a surface asks.
+
 ### Changed
 - Final app ids: `app.dottoday.planner` on iOS, macOS and Android, App Group `group.app.dottoday.planner`, domain `dottoday.app`; the Mac's About shows "© 2026 Dottoday". Send feedback now addresses feedback@dottoday.app. A build with the new id installs as a new app next to earlier test builds.
 

@@ -60,7 +60,7 @@ void main() {
     encrypt: (plain, p256dh, auth) async =>
         Uint8List.fromList(plain.reversed.toList()),
     doneLabel: 'Done',
-    openLabel: 'Open',
+    plusLabel: '+15 min',
     logger: Logger(logs, FakeClock(when)),
   );
 
@@ -100,7 +100,7 @@ void main() {
       'silent': false,
       'actions': [
         {'action': 'done', 'title': 'Done'},
-        {'action': 'open', 'title': 'Open'},
+        {'action': 'plus15', 'title': '+15 min'},
       ],
     });
     await m.cancel(7);

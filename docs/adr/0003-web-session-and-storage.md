@@ -25,6 +25,7 @@ Move refresh token to an HttpOnly cookie via an Edge Function proxy; then drop l
 - Rejected: drift's OPFS worker with a custom worker entrypoint (opens the unwrapped VFS);
   a custom encrypting VFS (re-implements sqlite3mc); unencrypted OPFS (06 §4).
 - Cost: no OPFS speed-up and single-tab use on web. Revisit if drift exposes the VFS name.
-- Verified in CI (`a11y-web` job): a probe build writes a task, then Playwright scans every OPFS
-  file and IndexedDB value for its plaintext title, and checks a second tab is refused.
+- Verified in CI (`a11y-web` job): a probe build writes a task (and, since M9.1, the day
+  snapshot's web copy), then Playwright scans every OPFS file, IndexedDB value, Cache Storage
+  entry and `localStorage` value for its plaintext title, and checks a second tab is refused.
 - Residual risk unchanged: XSS in the page can unwrap the key and read data.

@@ -1,0 +1,6 @@
+/* Siri / Shortcuts phrases (docs/09 M9.5); keys are the English phrases in Runner/DotShortcuts.swift. */
+"Add a task in ${applicationName}" = "Aufgabe in ${applicationName} hinzufügen";
+"What's next in ${applicationName}" = "Was kommt als Nächstes in ${applicationName}";
+"Mark my task done in ${applicationName}" = "Meine Aufgabe in ${applicationName} erledigen";
+"Give my task 15 more minutes in ${applicationName}" = "Meiner Aufgabe in ${applicationName} 15 Minuten mehr geben";
+"Start focus in ${applicationName}" = "Fokus in ${applicationName} starten";

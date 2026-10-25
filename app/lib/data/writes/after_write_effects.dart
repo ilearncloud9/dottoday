@@ -1,6 +1,6 @@
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
-import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
+import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
 
 /// Post-commit side effects of a write: notification resync and widget
 /// snapshot. Runs one at a time in commit order, so two quick writes can't
@@ -10,14 +10,14 @@ import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
 final class AfterWriteEffects {
   AfterWriteEffects({
     required NotificationSync notifications,
-    required WidgetSnapshotWriter snapshot,
+    required DaySnapshotWriter snapshot,
     required Logger logger,
   }) : _notifications = notifications,
        _snapshot = snapshot,
        _logger = logger;
 
   final NotificationSync _notifications;
-  final WidgetSnapshotWriter _snapshot;
+  final DaySnapshotWriter _snapshot;
   final Logger _logger;
   Future<void> _tail = Future.value();
 
@@ -40,7 +40,7 @@ final class AfterWriteEffects {
     try {
       await _snapshot.write(userId);
     } on Object catch (e, st) {
-      _logger.error('widget_snapshot.write_failed', error: e, stackTrace: st);
+      _logger.error('day_snapshot.write_failed', error: e, stackTrace: st);
     }
   }
 }

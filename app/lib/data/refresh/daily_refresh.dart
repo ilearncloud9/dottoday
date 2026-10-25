@@ -2,8 +2,8 @@ import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
+import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
 import 'package:dottoday/data/sync/background_sync.dart';
-import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
 import 'package:dottoday/domain/recurrence/materialiser.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
@@ -23,7 +23,7 @@ final class DailyRefresh {
     required SeriesRepository series,
     required WriteUseCase writes,
     required NotificationSync notifications,
-    required WidgetSnapshotWriter widgets,
+    required DaySnapshotWriter widgets,
     required Logger logger,
     BackgroundSync? sync,
   }) : _clock = clock,
@@ -42,7 +42,7 @@ final class DailyRefresh {
   final SeriesRepository _series;
   final WriteUseCase _writes;
   final NotificationSync _notifications;
-  final WidgetSnapshotWriter _widgets;
+  final DaySnapshotWriter _widgets;
   final Logger _logger;
 
   /// The background job's sync (M6.5.6); null in the foreground, where

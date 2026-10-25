@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Launcher shortcuts for the B6 intents (docs/09 M9.2c). -->
+<resources>
+    <string name="shortcut_add_task">Añadir tarea</string>
+    <string name="shortcut_whats_next">Qué sigue</string>
+    <string name="tile_start_focus">Empezar a concentrarte</string>
+</resources>

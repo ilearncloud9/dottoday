@@ -70,6 +70,15 @@ void main() {
     expect(gym.status, OccurrenceStatus.planned);
   });
 
+  test('+15 (the web, M9.7) gives the task 15 more minutes', () async {
+    final before = repo.rows.firstWhere((o) => o.id == gymId());
+    await responder.handle(tap(gymId(), 'plus15'));
+    final gym = repo.rows.firstWhere((o) => o.id == gymId());
+    expect(gym.durationMin, before.durationMin + 15);
+    expect(gym.startUtc, before.startUtc);
+    expect(opened, isEmpty);
+  });
+
   test('Open and a plain tap show the task', () async {
     await responder.handle(tap(gymId(), 'open'));
     await responder.handle(tap(gymId(), null));

@@ -4,6 +4,8 @@
 // app, and receives web push.
 // Payloads carry IDs only (06 §1); text arrives encrypted end to end.
 
+importScripts('action_queue.js');
+
 let queued = [];
 
 // Offline (docs/07 Web, docs/09 M5.7): the app is local-first, so once its
@@ -14,6 +16,23 @@ let queued = [];
 const SHELL = 'dottoday-shell-v1';
 const OFFLINE = 'offline.html';
 
+// The day snapshot (docs/09 M9.1, B5), written by the app after every change
+// (lib/data/snapshot/web/snapshot_store_web.dart: same cache and URL). Kept
+// on activate: it is data, not a cached file.
+const SNAPSHOT = 'dottoday-day-snapshot';
+const SNAPSHOT_PATH = '__snapshot/day.json';
+
+async function readSnapshot() {
+  try {
+    const cache = await caches.open(SNAPSHOT);
+    const hit = await cache.match(new URL(SNAPSHOT_PATH, self.registration.scope).href);
+    const snapshot = hit ? await hit.json() : null;
+    return snapshot && snapshot.v === 1 ? snapshot : null;
+  } catch (_) {
+    return null;
+  }
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(SHELL).then((c) => c.addAll([OFFLINE, 'offline.css'])).then(() => self.skipWaiting()));
 });
@@ -21,7 +40,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     for (const name of await caches.keys()) {
-      if (name.startsWith('dottoday-') && name !== SHELL) await caches.delete(name);
+      if (name.startsWith('dottoday-') && name !== SHELL && name !== SNAPSHOT) await caches.delete(name);
     }
     await self.clients.claim();
   })());
@@ -68,7 +87,8 @@ self.addEventListener('message', (event) => {
   })());
 });
 
-// A tap or an action button: focus the app (or open it) and tell it.
+// A tap or an action button: focus the app (or open it) and tell it; with
+// no tab open, Done is queued instead (action_queue.js).
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const data = event.notification.data || {};
@@ -83,6 +103,13 @@ self.addEventListener('notificationclick', (event) => {
     if (windows.length > 0) {
       await windows[0].focus();
       windows[0].postMessage(message);
+      return;
+    }
+    // Done (and +15) need no tab: queue for the next one (M9.2d).
+    const entry = self.dottodayActionQueue.fromNotification(
+      message.action, message.payload, await readSnapshot(), Date.now());
+    if (entry) {
+      await self.dottodayActionQueue.append(caches, self.registration.scope, entry);
       return;
     }
     // Delivered when the opened page says it is listening.

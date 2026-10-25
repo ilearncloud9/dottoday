@@ -13,7 +13,7 @@ Future<PermissionState> requestBrowserPermission() async =>
 Future<bool> showBrowserNotification(
   OsNotification n, {
   required String doneLabel,
-  required String openLabel,
+  required String plusLabel,
 }) async => false;
 
 Stream<NotificationTap> browserNotificationTaps() => const Stream.empty();

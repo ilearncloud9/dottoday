@@ -51,14 +51,16 @@ final class RouteScreens {
 
 /// Builds the app router. Every location passes [allowListedLocation];
 /// anything off the allow-list lands on `/today`. A sign-in callback goes
-/// to [onAuthCallback] and shows Settings › Account (M6.1).
+/// to [onAuthCallback] and shows Settings › Account (M6.1). `/add` shows
+/// Today and calls [onAdd] to open Quick Add over it (M9.2c).
 GoRouter buildRouter(
   RouteScreens screens, {
   void Function(Uri link)? onAuthCallback,
+  void Function()? onAdd,
 }) {
   return GoRouter(
     initialLocation: AppRoutes.today,
-    redirect: (context, state) => _redirect(state.uri, onAuthCallback),
+    redirect: (context, state) => _redirect(state.uri, onAuthCallback, onAdd),
     errorBuilder: (context, state) => screens.today(context),
     routes: [
       StatefulShellRoute.indexedStack(
@@ -116,13 +118,21 @@ WidgetBuilder _tabScreen(RouteScreens screens, ShellTab tab) {
   };
 }
 
-String? _redirect(Uri uri, void Function(Uri link)? onAuthCallback) {
+String? _redirect(
+  Uri uri,
+  void Function(Uri link)? onAuthCallback,
+  void Function()? onAdd,
+) {
   if (isAuthCallback(uri)) {
     onAuthCallback?.call(uri);
     return AppRoutes.settingsPage(SettingsPage.account);
   }
   final allowed = allowListedLocation(uri);
   if (allowed == null) return AppRoutes.today;
+  if (allowed == AppRoutes.add) {
+    onAdd?.call();
+    return AppRoutes.today;
+  }
   return allowed == uri.toString() ? null : allowed;
 }
 

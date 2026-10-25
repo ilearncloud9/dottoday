@@ -10,6 +10,8 @@ import android.provider.Settings
 import android.view.WindowManager
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
+import app.dottoday.planner.intents.IntentQueueBridge
+import app.dottoday.planner.intents.OngoingDot
 import io.flutter.plugin.common.MethodChannel
 
 /**
@@ -20,10 +22,38 @@ import io.flutter.plugin.common.MethodChannel
  * health panel (docs/09 M6.5.5); it never asks for the restricted
  * REQUEST_IGNORE_BATTERY_OPTIMIZATIONS permission. `dottoday/sound` plays
  * a bundled reminder sound once for the Sound picker's preview (M8.4d).
+ * `dottoday/intents` says when a widget or notification queued an action
+ * (M9.2c, [IntentQueueBridge]); `dottoday/ongoing` shows the live dot as an
+ * ongoing notification (M9.4, [OngoingDot]).
  */
 class MainActivity : FlutterFragmentActivity() {
+    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        IntentQueueBridge.detach()
+        super.cleanUpFlutterEngine(flutterEngine)
+    }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        IntentQueueBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dottoday/ongoing")
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "sync" -> {
+                        OngoingDot.sync(this, call.arguments as? String)
+                        result.success(null)
+                    }
+                    // The device test (integration_test/ongoing_dot_test.dart):
+                    // what is posted, and the notification's own action intents.
+                    "activeId" -> result.success(OngoingDot.activeId(this))
+                    // The consistency gate (M9.8): what the notification shows.
+                    "activeContent" -> result.success(OngoingDot.activeContent(this))
+                    "perform" -> {
+                        OngoingDot.press(this, call.argument<String>("action") ?: "")
+                        result.success(null)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dottoday/secure")
             .setMethodCallHandler { call, result ->
                 if (call.method != "set") return@setMethodCallHandler result.notImplemented()

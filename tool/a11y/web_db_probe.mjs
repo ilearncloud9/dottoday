@@ -1,7 +1,8 @@
 // Checks the encrypted web database in a real browser (docs/09 M2.9, ADR-0003):
 // loads the probe build (app/tool/web_db_probe.dart), waits for its verdict, then scans
-// every OPFS file and IndexedDB value for the plaintext task title it wrote, and checks that a
-// second tab is refused.
+// every OPFS file, IndexedDB value, Cache Storage entry (the day snapshot, M9.1) and
+// localStorage value for the plaintext task title it wrote, and checks that a second tab is
+// refused.
 // Lives here to reuse this folder's lockfile-pinned Playwright.
 // Usage: node web_db_probe.mjs [baseUrl]
 import { chromium } from 'playwright';
@@ -83,6 +84,17 @@ const scan = await page.evaluate(async (needle) => {
       for (const [i, v] of values.entries()) await scanValue(v, `idb:${name}/${store}[${i}]`);
     }
     db.close();
+  }
+  for (const name of await caches.keys()) {
+    const cache = await caches.open(name);
+    for (const req of await cache.keys()) {
+      const res = await cache.match(req);
+      check(new Uint8Array(await res.arrayBuffer()), `cache:${name}${new URL(req.url).pathname}`);
+    }
+  }
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    check(new TextEncoder().encode(localStorage.getItem(key)), `localStorage:${key}`);
   }
   return { bytes, hits };
 }, secret);

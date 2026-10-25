@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dottoday/app_lifecycle.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
@@ -7,14 +9,18 @@ import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/write_back_providers.dart';
+import 'package:dottoday/data/intents/intent_providers.dart';
+import 'package:dottoday/data/intents/no_action_queue_store.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/daily_refresh.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/snapshot/bedtime_snapshot.dart';
+import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
+import 'package:dottoday/data/snapshot/snapshot_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
-import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/calendar/calendar_import.dart';
@@ -64,6 +70,7 @@ void main() {
   late _Gateway gateway;
   late NotificationSync sync;
   late MemoryLogSink logs;
+  late DaySnapshotWriter snapshots;
   late DailyRefresh refresh;
 
   setUpAll(tz_data.initializeTimeZones);
@@ -87,6 +94,12 @@ void main() {
       settings: FakeSettingsRepository(testProfile()),
     );
     logs = MemoryLogSink();
+    snapshots = DaySnapshotWriter(
+      clock: clock,
+      occurrences: FakeOccurrenceRepository(),
+      profile: () async => testProfile(),
+      sink: const UnwiredDaySnapshotSink(),
+    );
     refresh = DailyRefresh(
       clock: clock,
       series: series,
@@ -95,11 +108,7 @@ void main() {
         FakeOccurrenceRepository(),
       ),
       notifications: sync,
-      widgets: WidgetSnapshotWriter(
-        clock: clock,
-        occurrences: FakeOccurrenceRepository(),
-        sink: const UnwiredWidgetSnapshotSink(),
-      ),
+      widgets: snapshots,
       logger: Logger(logs, clock),
     );
     when(
@@ -132,6 +141,16 @@ void main() {
         trashServiceProvider.overrideWithValue(trash),
         notificationSyncProvider.overrideWithValue(sync),
         dailyRefreshProvider.overrideWithValue(refresh),
+        actionQueueStoreProvider.overrideWithValue(const NoActionQueueStore()),
+        bedtimeSnapshotProvider.overrideWithValue(
+          BedtimeSnapshot(
+            clock: FakeClock(DateTime.utc(2026, 10, 21)),
+            writer: snapshots,
+            logger: Logger(logs, FakeClock(DateTime.utc(2026))),
+            // Bedtime is hours away; the lifecycle only arms it.
+            timer: (_, _) => _IdleTimer(),
+          ),
+        ),
         loggerProvider.overrideWithValue(
           Logger(logs, FakeClock(DateTime.utc(2026))),
         ),
@@ -208,4 +227,15 @@ void main() {
     await tester.pumpAndSettle();
     expect(logs.records.map((r) => r.event), contains('housekeeping.failed'));
   });
+}
+
+final class _IdleTimer implements Timer {
+  @override
+  void cancel() {}
+
+  @override
+  bool get isActive => false;
+
+  @override
+  int get tick => 0;
 }

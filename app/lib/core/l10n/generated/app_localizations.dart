@@ -6131,6 +6131,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Task alerts · {sound}'**
   String notifChannelAlertsSound(String sound);
+
+  /// Live Activity / ongoing notification: time left of the task under way; {time} is a live countdown the system draws (e.g. 37:59).
+  ///
+  /// In en, this message translates to:
+  /// **'{time} left'**
+  String liveActivityLeft(String time);
+
+  /// Live Activity / ongoing notification: the next task, starting within the hour; {time} is a live countdown.
+  ///
+  /// In en, this message translates to:
+  /// **'starts in {time}'**
+  String liveActivityStartsIn(String time);
+
+  /// Live Activity: today's tasks done so far, next to a small pie, e.g. '1 of 3'.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String liveActivityCount(int done, int total);
+
+  /// Screen-reader label for liveActivityCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} done today'**
+  String liveActivityCountLabel(int done, int total);
 }
 
 class _AppLocalizationsDelegate
