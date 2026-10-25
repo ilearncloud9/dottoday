@@ -4224,4 +4224,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String proposalDayTime(String day, String time) {
     return '$day $time';
   }
+
+  @override
+  String get stepLengthAdd => '+ time';
+
+  @override
+  String stepLengthHint(String title) {
+    return 'Change how long $title takes';
+  }
+
+  @override
+  String get stepLengthTitle => 'How long is this step?';
+
+  @override
+  String get stepLengthNone => 'No time';
+
+  @override
+  String get editorStepsSum => 'Length = sum of steps';
+
+  @override
+  String editorStepsSumTotal(String duration) {
+    return 'Steps add up to $duration';
+  }
+
+  @override
+  String get editorStepsSumEmpty => 'Give a step a time to use this';
 }

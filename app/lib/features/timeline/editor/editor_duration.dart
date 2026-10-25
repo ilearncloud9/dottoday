@@ -6,7 +6,9 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
+import 'package:dottoday/domain/scheduling/step_lengths.dart';
 import 'package:dottoday/domain/time/duration_presets.dart';
 import 'package:dottoday/shared/dot/round_more_button.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
@@ -19,16 +21,41 @@ import 'package:timezone/timezone.dart' as tz;
 
 /// E1's DURATION (`A-mac-editor`, restyled in M3c.3 as the Add flow's
 /// pills): the user's presets, and ⋯ for the Duration sheet with its
-/// live preview on the task's day.
+/// live preview on the task's day. With steps, "Length = sum of steps"
+/// (11 B2, M10.3); a picked length turns it off (the typed override).
 class EditorDuration extends ConsumerWidget {
   const EditorDuration({
     required this.task,
     required this.onChanged,
+    this.stepsSum,
+    this.hasSteps = false,
+    this.onFollowSteps,
     super.key,
   });
 
+  /// The editor's row for [task] and its [steps]: a picked length
+  /// overrides, the switch follows the steps; both go through [edit].
+  factory EditorDuration.withSteps({
+    required Occurrence task,
+    required List<Subtask> steps,
+    required void Function(Occurrence Function(Occurrence)) edit,
+  }) => EditorDuration(
+    task: task,
+    onChanged: (m) => edit((o) => overrideLength(o, m)),
+    hasSteps: steps.any((s) => s.deletedAt == null),
+    stepsSum: stepsTotal(steps),
+    onFollowSteps: (on) => edit((o) => setFollowSteps(o, steps, on)),
+  );
+
   final Occurrence task;
   final ValueChanged<int> onChanged;
+
+  /// What the steps add up to; null when none has a length.
+  final int? stepsSum;
+
+  /// Whether the task has steps: the switch shows only then.
+  final bool hasSteps;
+  final ValueChanged<bool>? onFollowSteps;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -67,7 +94,26 @@ class EditorDuration extends ConsumerWidget {
           value: task.durationMin,
           onChanged: onChanged,
         ),
+        if (hasSteps && onFollowSteps != null) _followSteps(context),
       ],
+    );
+  }
+
+  Widget _followSteps(BuildContext context) {
+    final l10n = context.l10n;
+    final total = stepsSum;
+    return SwitchListTile.adaptive(
+      contentPadding: EdgeInsets.zero,
+      value: task.durationFromSteps,
+      onChanged: total == null && !task.durationFromSteps
+          ? null
+          : onFollowSteps,
+      title: Text(l10n.editorStepsSum),
+      subtitle: Text(
+        total == null
+            ? l10n.editorStepsSumEmpty
+            : l10n.editorStepsSumTotal(formatDurationShort(l10n, total)),
+      ),
     );
   }
 

@@ -79,3 +79,37 @@ final class EditorWriter {
     showSaveFailureSnack(messenger, l10n, failure, onRetry: retry);
   }
 }
+
+/// The editor's debounced autosave (03 §3.4 "nothing lost on dismiss"):
+/// [touch] after each change, [flush] to write now. A failed write stays
+/// [dirty], so the next flush tries again.
+final class DraftAutosave {
+  DraftAutosave(this._write);
+
+  /// How long typing pauses before a save. Behaviour, not motion, so it is
+  /// not a DotMotion token.
+  static const debounce = Duration(milliseconds: 600); // style-ignore: save
+
+  final Future<AppFailure?> Function() _write;
+  Timer? _timer;
+
+  /// Whether a change waits to be written.
+  bool dirty = false;
+
+  /// A change happened: [onDue] runs once typing pauses for [debounce].
+  void touch(VoidCallback onDue) {
+    dirty = true;
+    _timer?.cancel();
+    _timer = Timer(debounce, onDue);
+  }
+
+  /// Writes now if [dirty]; the failure, or null when all is written.
+  Future<AppFailure?> flush() async {
+    _timer?.cancel();
+    if (!dirty) return null;
+    dirty = false;
+    final failure = await _write();
+    if (failure != null) dirty = true;
+    return failure;
+  }
+}

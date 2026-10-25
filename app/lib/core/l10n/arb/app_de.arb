@@ -1031,5 +1031,12 @@
   "proposalSteps": "{count, plural, =1{1 Schritt} other{{count} Schritte}}",
   "proposalNothing": "Nichts zu ändern",
   "proposalKeep": "{title} so lassen",
-  "proposalDayTime": "{day} {time}"
+  "proposalDayTime": "{day} {time}",
+  "stepLengthAdd": "+ Zeit",
+  "stepLengthHint": "Ändern, wie lange {title} dauert",
+  "stepLengthTitle": "Wie lange dauert dieser Schritt?",
+  "stepLengthNone": "Keine Zeit",
+  "editorStepsSum": "Dauer = Summe der Schritte",
+  "editorStepsSumTotal": "Die Schritte ergeben {duration}",
+  "editorStepsSumEmpty": "Gib einem Schritt eine Zeit, um das zu nutzen"
 }

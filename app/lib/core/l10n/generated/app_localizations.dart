@@ -6293,6 +6293,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{day} {time}'**
   String proposalDayTime(String day, String time);
+
+  /// Step row chip when the step has no length yet (11 B2, M10.3).
+  ///
+  /// In en, this message translates to:
+  /// **'+ time'**
+  String get stepLengthAdd;
+
+  /// Screen-reader hint of a step's length chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Change how long {title} takes'**
+  String stepLengthHint(String title);
+
+  /// Title of the sheet that picks a step's length.
+  ///
+  /// In en, this message translates to:
+  /// **'How long is this step?'**
+  String get stepLengthTitle;
+
+  /// Option in the step length sheet: the step has no length.
+  ///
+  /// In en, this message translates to:
+  /// **'No time'**
+  String get stepLengthNone;
+
+  /// Editor switch under DURATION: the task's length follows the sum of its steps (11 B2).
+  ///
+  /// In en, this message translates to:
+  /// **'Length = sum of steps'**
+  String get editorStepsSum;
+
+  /// Under the switch: what the steps add up to.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps add up to {duration}'**
+  String editorStepsSumTotal(String duration);
+
+  /// Under the switch when no step has a length yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Give a step a time to use this'**
+  String get editorStepsSumEmpty;
 }
 
 class _AppLocalizationsDelegate

@@ -1031,5 +1031,12 @@
   "proposalSteps": "{count, plural, =1{1 étape} other{{count} étapes}}",
   "proposalNothing": "Rien à changer",
   "proposalKeep": "Garder {title} tel quel",
-  "proposalDayTime": "{day} à {time}"
+  "proposalDayTime": "{day} à {time}",
+  "stepLengthAdd": "+ durée",
+  "stepLengthHint": "Modifier la durée de {title}",
+  "stepLengthTitle": "Combien de temps pour cette étape ?",
+  "stepLengthNone": "Sans durée",
+  "editorStepsSum": "Durée = somme des étapes",
+  "editorStepsSumTotal": "Les étapes font {duration}",
+  "editorStepsSumEmpty": "Donnez une durée à une étape pour l'utiliser"
 }

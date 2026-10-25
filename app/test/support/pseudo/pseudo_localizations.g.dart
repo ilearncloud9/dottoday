@@ -3299,4 +3299,26 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String proposalDayTime(String day, String time) =>
       pseudo(super.proposalDayTime(day, time));
+
+  @override
+  String get stepLengthAdd => pseudo(super.stepLengthAdd);
+
+  @override
+  String stepLengthHint(String title) => pseudo(super.stepLengthHint(title));
+
+  @override
+  String get stepLengthTitle => pseudo(super.stepLengthTitle);
+
+  @override
+  String get stepLengthNone => pseudo(super.stepLengthNone);
+
+  @override
+  String get editorStepsSum => pseudo(super.editorStepsSum);
+
+  @override
+  String editorStepsSumTotal(String duration) =>
+      pseudo(super.editorStepsSumTotal(duration));
+
+  @override
+  String get editorStepsSumEmpty => pseudo(super.editorStepsSumEmpty);
 }

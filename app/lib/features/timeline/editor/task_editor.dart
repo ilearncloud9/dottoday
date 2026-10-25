@@ -9,6 +9,7 @@ import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/scheduling/step_lengths.dart';
 import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
 import 'package:dottoday/features/timeline/editor/editor_duration.dart';
 import 'package:dottoday/features/timeline/editor/editor_energy.dart';
@@ -94,10 +95,6 @@ class _Form extends ConsumerStatefulWidget {
 }
 
 class _FormState extends ConsumerState<_Form> {
-  /// How long typing pauses before a save. Behaviour, not motion, so it is
-  /// not a DotMotion token.
-  static const _debounce = Duration(milliseconds: 600); // style-ignore: save
-
   late Occurrence _draft = widget.task.occurrence;
 
   /// As opened: the scope question compares the draft with it (M3f.1).
@@ -106,8 +103,14 @@ class _FormState extends ConsumerState<_Form> {
   late final _title = TextEditingController(text: _draft.title);
   late final EditorWriter _writer;
   late final Clock _clock;
-  Timer? _timer;
-  var _dirty = false;
+  late final _autosave = DraftAutosave(
+    () => _writer.write(
+      _draft,
+      keepTitle: widget.task.occurrence.title,
+      nowUtc: _clock.nowUtc(),
+      closed: () => !mounted,
+    ),
+  );
 
   /// A failed write: shown with Try again; Save waits for one (R-08).
   AppFailure? _failure;
@@ -121,6 +124,16 @@ class _FormState extends ConsumerState<_Form> {
       logger: ref.read(loggerProvider),
     );
     _clock = ref.read(clockProvider);
+  }
+
+  // A step's length changed below: follow it (M10.3).
+  @override
+  void didUpdateWidget(covariant _Form old) {
+    super.didUpdateWidget(old);
+    final next = followSteps(_draft, widget.task.subtasks);
+    if (next.durationMin == _draft.durationMin) return;
+    _draft = next; // build follows didUpdateWidget
+    _autosave.touch(_flush);
   }
 
   @override
@@ -138,25 +151,15 @@ class _FormState extends ConsumerState<_Form> {
 
   void _change(Occurrence Function(Occurrence) edit) {
     setState(() => _draft = edit(_draft));
-    _dirty = true;
-    _timer?.cancel();
-    _timer = Timer(_debounce, _flush);
+    _autosave.touch(_flush);
   }
 
   void _flush() => unawaited(_flushNow());
 
   /// Writes the draft if it changed; whether everything typed is written.
   Future<bool> _flushNow() async {
-    _timer?.cancel();
-    if (!_dirty) return true;
-    _dirty = false;
-    final failure = await _writer.write(
-      _draft,
-      keepTitle: widget.task.occurrence.title,
-      nowUtc: _clock.nowUtc(),
-      closed: () => !mounted,
-    );
-    if (failure != null) _dirty = true; // the next flush tries again
+    if (!_autosave.dirty) return true;
+    final failure = await _autosave.flush();
     if (mounted) setState(() => _failure = failure);
     return failure == null;
   }
@@ -223,14 +226,10 @@ class _FormState extends ConsumerState<_Form> {
       children: [
         if (widget.caption)
           Text(l10n.editorCaption.toUpperCase(), style: t.styles.caption),
-        TextField(
+        EditorTitleField(
           controller: _title,
           autofocus: widget.autofocus,
-          style: t.styles.topBarTitle,
-          decoration: InputDecoration(hintText: l10n.editorTitleHint),
-          textCapitalization: TextCapitalization.sentences,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) => _save(),
+          onSubmitted: _save,
           onChanged: (v) => _change((o) => o.copyWith(title: v)),
         ),
         const SizedBox(height: DotSpace.l),
@@ -249,9 +248,10 @@ class _FormState extends ConsumerState<_Form> {
             onWhen: (start, id) =>
                 _change((o) => o.copyWith(startUtc: start, tzId: id)),
           ),
-        EditorDuration(
+        EditorDuration.withSteps(
           task: _draft,
-          onChanged: (m) => _change((o) => o.copyWith(durationMin: m)),
+          steps: widget.task.subtasks,
+          edit: _change,
         ),
         const SizedBox(height: DotSpace.l),
         RepeatAlertRows(
@@ -292,7 +292,7 @@ class _FormState extends ConsumerState<_Form> {
           onLeft:
               widget.onClose ??
               () => Navigator.of(context).popUntil((r) => r.isFirst),
-          beforeLeave: () => _dirty = false,
+          beforeLeave: () => _autosave.dirty = false,
         ),
       ],
     );

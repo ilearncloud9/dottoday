@@ -21,9 +21,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// "Subtasks · 1 of 3" (docs/09 M3f.3, R-09): each ticked on this day only;
-/// tap a title to rename it, × to remove, drag (or Move up / down) to
-/// reorder, a field to add one; a repeating task can make this day's list
-/// its list for every time.
+/// tap a title to rename it, give it a length (M10.3), × to remove, drag
+/// (or Move up / down) to reorder, a field to add one; a repeating task
+/// can make this day's list its list for every time.
 class SheetSubtasks extends ConsumerStatefulWidget {
   const SheetSubtasks({required this.task, this.editing = false, super.key});
 
@@ -81,6 +81,9 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
                 editing: widget.editing,
                 onTick: () => unawaited(_write([s.copyWith(done: !s.done)])),
                 onRename: (t) => unawaited(_write([s.copyWith(title: t)])),
+                onLength: widget.editing
+                    ? (m) => unawaited(_write([s.copyWith(durationMin: m)]))
+                    : null,
                 onRemove: () => unawaited(_remove(s)),
                 onUp: i == 0 ? null : () => unawaited(_move(list, i, i - 1)),
                 onDown: i == list.length - 1

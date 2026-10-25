@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/shared/duration/step_length_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 
 /// One subtask (docs/09 M3f.3, R-09): the tick (this day only), the title
 /// — tap to rename it — a "now" tag on the next one while the task
-/// runs, × to remove, and a drag handle (reorder; screen readers and
+/// runs, its length chip (M10.3), × to remove, and a drag handle (reorder; screen readers and
 /// keyboards get Move up / Move down).
 class SubtaskRow extends StatefulWidget {
   const SubtaskRow({
@@ -20,6 +21,7 @@ class SubtaskRow extends StatefulWidget {
     required this.onRemove,
     this.onUp,
     this.onDown,
+    this.onLength,
     this.editing = true,
     super.key,
   });
@@ -40,6 +42,9 @@ class SubtaskRow extends StatefulWidget {
   final VoidCallback onRemove;
   final VoidCallback? onUp;
   final VoidCallback? onDown;
+
+  /// The editor's length chip (11 B2, M10.3); null hides it.
+  final ValueChanged<int?>? onLength;
 
   @override
   State<SubtaskRow> createState() => _SubtaskRowState();
@@ -86,6 +91,12 @@ class _SubtaskRowState extends State<SubtaskRow> {
               style: t.styles.rowMeta.copyWith(color: t.colors.accentInk),
             ),
           if (widget.editing) ...[
+            if (widget.onLength case final onLength?)
+              StepLengthChip(
+                minutes: s.durationMin,
+                title: s.title,
+                onChanged: onLength,
+              ),
             IconButton(
               tooltip: l10n.subtaskRemove(s.title),
               onPressed: widget.onRemove,
