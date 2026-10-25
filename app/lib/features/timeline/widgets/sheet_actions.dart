@@ -6,6 +6,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
+import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
@@ -94,14 +95,17 @@ class SheetActions extends ConsumerWidget {
     final messenger = ScaffoldMessenger.of(context);
     final l10n = context.l10n;
     final undo = ref.read(undoServiceProvider);
-    return () async => reportUndoable(
-      messenger,
-      l10n,
-      undo,
-      await shiftRest(ref, day: day.blocks, live: o, overrunMinutes: overrun),
-      message: (v) => l10n.snackShifted(v.$2.movedIds.length),
-      tokenOf: (v) => v.$1,
-    );
+    return () async {
+      if (rebalanceShiftRest(context, day.blocks, o, overrun)) return;
+      reportUndoable(
+        messenger,
+        l10n,
+        undo,
+        await shiftRest(ref, day: day.blocks, live: o, overrunMinutes: overrun),
+        message: (v) => l10n.snackShifted(v.$2.movedIds.length),
+        tokenOf: (v) => v.$1,
+      );
+    };
   }
 }
 

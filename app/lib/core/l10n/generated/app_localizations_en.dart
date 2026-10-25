@@ -4413,4 +4413,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String unstickSaved(String title) {
     return 'Step 1 added to $title';
   }
+
+  @override
+  String get rebalanceAccept => 'Accept plan';
+
+  @override
+  String get rebalanceFootnote =>
+      'Nothing moves until you accept · Undo for 30 s after';
+
+  @override
+  String get rebalanceShiftFollowers => 'Shift followers';
+
+  @override
+  String get rebalanceAllowShrink => 'Allow shrinking optional';
+
+  @override
+  String get rebalancePastBedtime => 'Push past bedtime';
+
+  @override
+  String rebalanceRanOver(String title, String duration) {
+    return '$title ran over by $duration · here\'s a plan';
+  }
+
+  @override
+  String rebalanceLate(String duration) {
+    return 'The rest of today, $duration later · here\'s a plan';
+  }
+
+  @override
+  String rebalanceRunsOver(String title, String duration) {
+    return '$title runs $duration over · here\'s a plan';
+  }
+
+  @override
+  String get rebalanceAccepted => 'Plan accepted';
 }

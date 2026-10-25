@@ -1079,5 +1079,14 @@
   "unstickPrompt": "¿Qué es lo primerísimo que harías, físicamente?",
   "unstickHint": "p. ej. Abrir la carpeta",
   "unstickSave": "Convertir en el paso 1",
-  "unstickSaved": "Paso 1 añadido a {title}"
+  "unstickSaved": "Paso 1 añadido a {title}",
+  "rebalanceAccept": "Aceptar plan",
+  "rebalanceFootnote": "Nada se mueve hasta que aceptes · Deshacer durante 30 s después",
+  "rebalanceShiftFollowers": "Desplazar lo siguiente",
+  "rebalanceAllowShrink": "Permitir acortar lo opcional",
+  "rebalancePastBedtime": "Pasar de la hora de dormir",
+  "rebalanceRanOver": "{title} se pasó {duration} · aquí hay un plan",
+  "rebalanceLate": "El resto del día {duration} más tarde · aquí hay un plan",
+  "rebalanceRunsOver": "{title} se alarga {duration} · aquí hay un plan",
+  "rebalanceAccepted": "Plan aceptado"
 }

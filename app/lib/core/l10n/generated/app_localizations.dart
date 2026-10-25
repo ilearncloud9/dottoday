@@ -6581,6 +6581,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Step 1 added to {title}'**
   String unstickSaved(String title);
+
+  /// Rebalance proposal's Accept (B-ios-rebalance).
+  ///
+  /// In en, this message translates to:
+  /// **'Accept plan'**
+  String get rebalanceAccept;
+
+  /// Under Rebalance's buttons.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing moves until you accept · Undo for 30 s after'**
+  String get rebalanceFootnote;
+
+  /// Rebalance rule chip: later tasks keep their gaps and move by the delay.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift followers'**
+  String get rebalanceShiftFollowers;
+
+  /// Rebalance rule chip: optional tasks may get shorter.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow shrinking optional'**
+  String get rebalanceAllowShrink;
+
+  /// Rebalance rule chip: let the day run past Bedtime instead of moving tasks to tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Push past bedtime'**
+  String get rebalancePastBedtime;
+
+  /// Rebalance subtitle after a task overran its end.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} ran over by {duration} · here\'s a plan'**
+  String rebalanceRanOver(String title, String duration);
+
+  /// Rebalance subtitle from Running late.
+  ///
+  /// In en, this message translates to:
+  /// **'The rest of today, {duration} later · here\'s a plan'**
+  String rebalanceLate(String duration);
+
+  /// Rebalance subtitle from Shift the rest on a task under way.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} runs {duration} over · here\'s a plan'**
+  String rebalanceRunsOver(String title, String duration);
+
+  /// Snackbar with Undo after Rebalance's Accept.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan accepted'**
+  String get rebalanceAccepted;
 }
 
 class _AppLocalizationsDelegate

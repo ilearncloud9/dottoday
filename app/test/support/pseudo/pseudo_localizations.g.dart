@@ -3457,4 +3457,34 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String unstickSaved(String title) => pseudo(super.unstickSaved(title));
+
+  @override
+  String get rebalanceAccept => pseudo(super.rebalanceAccept);
+
+  @override
+  String get rebalanceFootnote => pseudo(super.rebalanceFootnote);
+
+  @override
+  String get rebalanceShiftFollowers => pseudo(super.rebalanceShiftFollowers);
+
+  @override
+  String get rebalanceAllowShrink => pseudo(super.rebalanceAllowShrink);
+
+  @override
+  String get rebalancePastBedtime => pseudo(super.rebalancePastBedtime);
+
+  @override
+  String rebalanceRanOver(String title, String duration) =>
+      pseudo(super.rebalanceRanOver(title, duration));
+
+  @override
+  String rebalanceLate(String duration) =>
+      pseudo(super.rebalanceLate(duration));
+
+  @override
+  String rebalanceRunsOver(String title, String duration) =>
+      pseudo(super.rebalanceRunsOver(title, duration));
+
+  @override
+  String get rebalanceAccepted => pseudo(super.rebalanceAccepted);
 }

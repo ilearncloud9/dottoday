@@ -76,16 +76,5 @@ DaySnapshot _snapshot(Occurrence task, DateTime nowUtc) => DaySnapshot(
 );
 
 /// The task as a snapshot dot; none for an Inbox task (no start).
-SnapshotDot? _dot(Occurrence o) {
-  final start = o.startUtc;
-  if (start == null) return null;
-  return SnapshotDot(
-    id: o.id,
-    title: o.title,
-    startUtc: start,
-    durationMin: o.durationMin,
-    colorKey: o.colorKey,
-    iconKey: o.iconKey,
-    done: false,
-  );
-}
+SnapshotDot? _dot(Occurrence o) =>
+    o.startUtc == null ? null : SnapshotDot.fromOccurrence(o);

@@ -5805,5 +5805,44 @@
         "type": "String"
       }
     }
+  },
+  "rebalanceAccept": "Accept plan",
+  "@rebalanceAccept": {
+    "description": "Rebalance proposal's Accept (B-ios-rebalance)."
+  },
+  "rebalanceFootnote": "Nothing moves until you accept · Undo for 30 s after",
+  "@rebalanceFootnote": {
+    "description": "Under Rebalance's buttons."
+  },
+  "rebalanceShiftFollowers": "Shift followers",
+  "@rebalanceShiftFollowers": {
+    "description": "Rebalance rule chip: later tasks keep their gaps and move by the delay."
+  },
+  "rebalanceAllowShrink": "Allow shrinking optional",
+  "@rebalanceAllowShrink": {
+    "description": "Rebalance rule chip: optional tasks may get shorter."
+  },
+  "rebalancePastBedtime": "Push past bedtime",
+  "@rebalancePastBedtime": {
+    "description": "Rebalance rule chip: let the day run past Bedtime instead of moving tasks to tomorrow."
+  },
+  "rebalanceRanOver": "{title} ran over by {duration} · here's a plan",
+  "@rebalanceRanOver": {
+    "description": "Rebalance subtitle after a task overran its end.",
+    "placeholders": {"title": {"type": "String"}, "duration": {"type": "String", "example": "25 min"}}
+  },
+  "rebalanceLate": "The rest of today, {duration} later · here's a plan",
+  "@rebalanceLate": {
+    "description": "Rebalance subtitle from Running late.",
+    "placeholders": {"duration": {"type": "String", "example": "15 min"}}
+  },
+  "rebalanceRunsOver": "{title} runs {duration} over · here's a plan",
+  "@rebalanceRunsOver": {
+    "description": "Rebalance subtitle from Shift the rest on a task under way.",
+    "placeholders": {"title": {"type": "String"}, "duration": {"type": "String", "example": "20 min"}}
+  },
+  "rebalanceAccepted": "Plan accepted",
+  "@rebalanceAccepted": {
+    "description": "Snackbar with Undo after Rebalance's Accept."
   }
 }

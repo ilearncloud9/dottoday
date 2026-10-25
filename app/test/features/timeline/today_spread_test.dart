@@ -1,4 +1,5 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/proposals/proposal_host.dart';
 import 'package:dottoday/features/timeline/widgets/today_spread.dart';
 import 'package:dottoday/shared/dot/day_pager.dart';
 import 'package:flutter/gestures.dart';
@@ -57,10 +58,14 @@ void main() {
     expect(find.text('Monday'), findsOneWidget);
   });
 
-  testWidgets('Running late +15 pushes the rest of today, with Undo (R-04)', (
+  testWidgets('Running late +15: a plan, then the rest of today, with Undo', (
     tester,
   ) async {
-    await pumpToday(tester, size: const Size(1280, 1600));
+    await pumpToday(
+      tester,
+      size: const Size(1280, 1600),
+      wrap: (today) => ProposalHost(child: today),
+    );
     expect(find.text('10:30 AM – 11:15 AM'), findsOneWidget);
     await tester.tap(find.text('Running late'));
     await tester.pumpAndSettle();
@@ -70,7 +75,11 @@ void main() {
     expect(find.textContaining(RegExp('move.? 15 min later')), findsOneWidget);
     await tester.tap(find.text('Shift the rest').last); // the sheet's
     await tester.pumpAndSettle();
-    expect(find.textContaining('moved 15 min later'), findsOneWidget);
+    // Rebalance in the right-hand panel (M11.1): nothing moved yet.
+    expect(find.text('10:30 AM – 11:15 AM'), findsWidgets);
+    await tester.tap(find.text('Accept plan'));
+    await tester.pumpAndSettle();
+    expect(find.text('Plan accepted'), findsOneWidget);
     expect(find.text('10:45 AM – 11:30 AM'), findsOneWidget);
     // The live task started before now and stays put.
     expect(find.text('9:00 AM – 11:00 AM'), findsOneWidget);

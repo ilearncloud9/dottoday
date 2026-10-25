@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M11.1: Rebalance. When you're running late, a task ran more than ten minutes over, or "Shift the rest" would move more than two tasks, Dottoday shows a plan first: what shifts, what gets a little shorter, what moves to tomorrow, and the pinned tasks it worked around. Switch Shift followers, Allow shrinking optional and Push past bedtime to see a different plan, drop any line with ×, then Accept plan — Undo stays for 30 seconds. Nothing moves until you accept.
 - M11.0: The Week view now shows Smallest step and Unstick on a task's card too — tap the line to start in Focus, or to give a stuck task its very first step.
 - M10.7: Unstick. When a task with no steps has been moved three times, a quiet line under it asks "What's the very first thing you'd physically do?" — type it, and it becomes step 1. It never pops up, and never after the first move.
 - M10.6: Smallest step. If a task with steps hasn't started ten minutes after its time, its row and a gentle reminder ask only for the first one — "Just gather documents · 10 min?" — with a Start button that opens Focus. It goes away once you start, tick a step, finish or move the task, and never asks twice.

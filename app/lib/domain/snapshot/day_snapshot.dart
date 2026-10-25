@@ -16,6 +16,19 @@ final class SnapshotDot {
     this.actualEndUtc,
   });
 
+  /// Timed occurrence [o] as a dot (it must have a start).
+  factory SnapshotDot.fromOccurrence(Occurrence o) => SnapshotDot(
+    id: o.id,
+    title: o.title,
+    startUtc: o.startUtc!,
+    durationMin: o.durationMin,
+    colorKey: o.colorKey,
+    iconKey: o.iconKey,
+    done: o.status == OccurrenceStatus.done,
+    actualStartUtc: o.actualStartUtc,
+    actualEndUtc: o.actualEndUtc,
+  );
+
   /// The occurrence id: what the five intents (B6) act on.
   final String id;
   final String title;
@@ -204,17 +217,7 @@ final class DaySnapshot {
     return !start.isBefore(shape.wakeUtc) && start.isBefore(shape.bedUtc);
   }
 
-  static SnapshotDot _dot(Occurrence o) => SnapshotDot(
-    id: o.id,
-    title: o.title,
-    startUtc: o.startUtc!,
-    durationMin: o.durationMin,
-    colorKey: o.colorKey,
-    iconKey: o.iconKey,
-    done: o.status == OccurrenceStatus.done,
-    actualStartUtc: o.actualStartUtc,
-    actualEndUtc: o.actualEndUtc,
-  );
+  static SnapshotDot _dot(Occurrence o) => SnapshotDot.fromOccurrence(o);
 
   static int _byStart(SnapshotDot a, SnapshotDot b) {
     final byStart = a.startUtc.compareTo(b.startUtc);

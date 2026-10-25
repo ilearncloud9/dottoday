@@ -1079,5 +1079,14 @@
   "unstickPrompt": "Was wäre das allererste, was du ganz konkret tun würdest?",
   "unstickHint": "z. B. Ordner öffnen",
   "unstickSave": "Als Schritt 1 speichern",
-  "unstickSaved": "Schritt 1 zu {title} hinzugefügt"
+  "unstickSaved": "Schritt 1 zu {title} hinzugefügt",
+  "rebalanceAccept": "Plan übernehmen",
+  "rebalanceFootnote": "Nichts wird verschoben, bis du zustimmst · danach 30 s Rückgängig",
+  "rebalanceShiftFollowers": "Folgende verschieben",
+  "rebalanceAllowShrink": "Optionale kürzen erlauben",
+  "rebalancePastBedtime": "Über Schlafenszeit hinaus",
+  "rebalanceRanOver": "{title} hat {duration} überzogen · hier ein Plan",
+  "rebalanceLate": "Der Rest des Tages {duration} später · hier ein Plan",
+  "rebalanceRunsOver": "{title} dauert {duration} länger · hier ein Plan",
+  "rebalanceAccepted": "Plan übernommen"
 }
