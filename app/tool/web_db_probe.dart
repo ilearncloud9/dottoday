@@ -22,8 +22,10 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
-/// Must never appear in browser storage bytes.
-const secretTitle = 'm29-probe-secret-title';
+/// Must never appear in browser storage bytes. Built at run time, reversed
+/// in the source, so the compiled `main.dart.js` — which the service worker
+/// may cache before the scan — never holds it (a CI flake in M10).
+final secretTitle = 'eltit-terces-eborp-92m'.split('').reversed.join();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
