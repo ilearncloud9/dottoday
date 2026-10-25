@@ -3501,4 +3501,29 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String rebalanceMoved(String title, String time) =>
       pseudo(super.rebalanceMoved(title, time));
+
+  @override
+  String realityMetaJoin(String text) => pseudo(super.realityMetaJoin(text));
+
+  @override
+  String realityPlanned(String time) => pseudo(super.realityPlanned(time));
+
+  @override
+  String get realityNotStarted => pseudo(super.realityNotStarted);
+
+  @override
+  String realityTook(String duration) => pseudo(super.realityTook(duration));
+
+  @override
+  String realityRunning(String duration) =>
+      pseudo(super.realityRunning(duration));
+
+  @override
+  String get realityNow => pseudo(super.realityNow);
+
+  @override
+  String get realityPlan => pseudo(super.realityPlan);
+
+  @override
+  String get realityReality => pseudo(super.realityReality);
 }

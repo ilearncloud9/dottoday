@@ -4463,4 +4463,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String rebalanceMoved(String title, String time) {
     return '$title moved to $time · here\'s a plan';
   }
+
+  @override
+  String realityMetaJoin(String text) {
+    return '· $text';
+  }
+
+  @override
+  String realityPlanned(String time) {
+    return 'planned $time';
+  }
+
+  @override
+  String get realityNotStarted => 'not started yet';
+
+  @override
+  String realityTook(String duration) {
+    return 'took $duration';
+  }
+
+  @override
+  String realityRunning(String duration) {
+    return '$duration in';
+  }
+
+  @override
+  String get realityNow => 'now';
+
+  @override
+  String get realityPlan => 'Plan';
+
+  @override
+  String get realityReality => 'Reality';
 }

@@ -5852,5 +5852,21 @@
   "calendarMovedAction": "Rebalance",
   "@calendarMovedAction": {"description": "Button: open the Rebalance proposal for a calendar move."},
   "rebalanceMoved": "{title} moved to {time} · here's a plan",
-  "@rebalanceMoved": {"description": "Rebalance subtitle after the calendar moved an event.", "placeholders": {"title": {"type": "String"}, "time": {"type": "String", "example": "10:30"}}}
+  "@rebalanceMoved": {"description": "Rebalance subtitle after the calendar moved an event.", "placeholders": {"title": {"type": "String"}, "time": {"type": "String", "example": "10:30"}}},
+  "realityMetaJoin": "· {text}",
+  "@realityMetaJoin": {"description": "Reality thread: what follows a row's real times, e.g. '· planned 7:30'.", "placeholders": {"text": {"type": "String", "example": "planned 7:30"}}},
+  "realityPlanned": "planned {time}",
+  "@realityPlanned": {"description": "Reality thread: when the plan had a task, after its real times. Never judgemental (no 'late').", "placeholders": {"time": {"type": "String", "example": "7:30"}}},
+  "realityNotStarted": "not started yet",
+  "@realityNotStarted": {"description": "Reality thread: a task with no real start yet."},
+  "realityTook": "took {duration}",
+  "@realityTook": {"description": "Reality thread: how long a finished task really took.", "placeholders": {"duration": {"type": "String", "example": "34 min"}}},
+  "realityRunning": "{duration} in",
+  "@realityRunning": {"description": "Reality thread: how long the task under way has run.", "placeholders": {"duration": {"type": "String", "example": "1 h 14"}}},
+  "realityNow": "now",
+  "@realityNow": {"description": "Reality thread: the open end of the task under way, e.g. '9:10 – now'."},
+  "realityPlan": "Plan",
+  "@realityPlan": {"description": "Day card toggle: the planned thread."},
+  "realityReality": "Reality",
+  "@realityReality": {"description": "Day card toggle: what really happened (actual start and end times)."}
 }

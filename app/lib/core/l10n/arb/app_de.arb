@@ -1092,5 +1092,13 @@
   "calendarMovedTitle": "Kalender geändert",
   "calendarMovedDetail": "{title} auf {time} verschoben · neu planen?",
   "calendarMovedAction": "Neu planen",
-  "rebalanceMoved": "{title} auf {time} verschoben · hier ein Plan"
+  "rebalanceMoved": "{title} auf {time} verschoben · hier ein Plan",
+  "realityMetaJoin": "· {text}",
+  "realityPlanned": "geplant {time}",
+  "realityNotStarted": "noch nicht begonnen",
+  "realityTook": "dauerte {duration}",
+  "realityRunning": "seit {duration}",
+  "realityNow": "jetzt",
+  "realityPlan": "Plan",
+  "realityReality": "Wirklich"
 }

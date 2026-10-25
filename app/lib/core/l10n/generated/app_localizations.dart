@@ -6659,6 +6659,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title} moved to {time} · here\'s a plan'**
   String rebalanceMoved(String title, String time);
+
+  /// Reality thread: what follows a row's real times, e.g. '· planned 7:30'.
+  ///
+  /// In en, this message translates to:
+  /// **'· {text}'**
+  String realityMetaJoin(String text);
+
+  /// Reality thread: when the plan had a task, after its real times. Never judgemental (no 'late').
+  ///
+  /// In en, this message translates to:
+  /// **'planned {time}'**
+  String realityPlanned(String time);
+
+  /// Reality thread: a task with no real start yet.
+  ///
+  /// In en, this message translates to:
+  /// **'not started yet'**
+  String get realityNotStarted;
+
+  /// Reality thread: how long a finished task really took.
+  ///
+  /// In en, this message translates to:
+  /// **'took {duration}'**
+  String realityTook(String duration);
+
+  /// Reality thread: how long the task under way has run.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} in'**
+  String realityRunning(String duration);
+
+  /// Reality thread: the open end of the task under way, e.g. '9:10 – now'.
+  ///
+  /// In en, this message translates to:
+  /// **'now'**
+  String get realityNow;
+
+  /// Day card toggle: the planned thread.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get realityPlan;
+
+  /// Day card toggle: what really happened (actual start and end times).
+  ///
+  /// In en, this message translates to:
+  /// **'Reality'**
+  String get realityReality;
 }
 
 class _AppLocalizationsDelegate

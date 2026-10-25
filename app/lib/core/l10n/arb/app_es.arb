@@ -1092,5 +1092,13 @@
   "calendarMovedTitle": "Calendario cambiado",
   "calendarMovedDetail": "{title} pasó a las {time} · ¿reajustar?",
   "calendarMovedAction": "Reajustar",
-  "rebalanceMoved": "{title} pasó a las {time} · aquí hay un plan"
+  "rebalanceMoved": "{title} pasó a las {time} · aquí hay un plan",
+  "realityMetaJoin": "· {text}",
+  "realityPlanned": "previsto {time}",
+  "realityNotStarted": "aún sin empezar",
+  "realityTook": "duró {duration}",
+  "realityRunning": "{duration} en curso",
+  "realityNow": "ahora",
+  "realityPlan": "Plan",
+  "realityReality": "Real"
 }

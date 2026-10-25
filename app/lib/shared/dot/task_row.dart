@@ -57,6 +57,7 @@ class TaskRow extends StatelessWidget {
         color: task.color.color,
         state: task.state,
         dotSize: dotSize,
+        ghost: task.reality?.ghost,
       ),
       dot: taskRowDot(context, task, dotSize, onToggleDone),
       grip: onResize == null
@@ -190,8 +191,10 @@ class _Text extends StatelessWidget {
       spacing: DotSpace.xs,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Text(task.timeRange, style: t.styles.rowMeta),
-        if (task.state == DotState.missed)
+        Text(task.reality?.range ?? task.timeRange, style: t.styles.rowMeta),
+        if (task.reality?.meta case final m?)
+          Text(l10n.realityMetaJoin(m), style: _plan(t)),
+        if (task.state == DotState.missed && task.reality == null)
           Text(l10n.rowMissedMeta, style: t.styles.rowMeta),
         if (task.pinned)
           DotIcon(DotGlyphs.lock, color: muted, size: DotSize.weekDot * 2),
@@ -211,6 +214,10 @@ class _Text extends StatelessWidget {
         decorationColor: muted,
       ),
     );
+    final note = switch (task.reality?.note) {
+      final n? => Text(n, style: _plan(t)),
+      null => null,
+    };
     // Wide (the Mac spread's card): time beside the title; else above it.
     return LayoutBuilder(
       builder: (context, box) => box.maxWidth >= DotSize.wideRowFrom
@@ -218,15 +225,24 @@ class _Text extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(width: DotSize.wideRowMeta, child: meta),
-                Expanded(child: title),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [title, ?note],
+                  ),
+                ),
               ],
             )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [meta, title],
+              children: [meta, title, ?note],
             ),
     );
   }
+
+  /// The plan's words on the Reality thread: quieter than the times.
+  static TextStyle _plan(DotTheme t) =>
+      t.styles.rowMeta.copyWith(color: t.colors.muted);
 }
 
 /// The round done circle at a row's end (`Main`): a second, larger target
@@ -306,6 +322,9 @@ class ThreadRowFrame extends StatelessWidget {
               hairline: c.hairline,
               accent: c.accent,
               accentTint: Color.alphaBlend(c.accentTint, c.raised),
+              ghostSide: Directionality.of(context) == TextDirection.rtl
+                  ? 1
+                  : -1,
             ),
           ),
         ),

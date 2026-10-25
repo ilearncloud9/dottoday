@@ -53,6 +53,7 @@ class LiveRow extends StatelessWidget {
         state: task.state,
         dotSize: DotSize.liveDot,
         progress: task.progress,
+        ghost: task.reality?.ghost,
       ),
       dot: taskRowDot(
         context,
@@ -128,9 +129,10 @@ class _Summary extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final meta = switch (task.duration) {
-      final d? => l10n.liveMeta(task.timeRange, d),
-      null => task.timeRange,
+    final meta = switch ((task.reality, task.duration)) {
+      (final r?, _) => _realityMeta(l10n, task, r),
+      (null, final d?) => l10n.liveMeta(task.timeRange, d),
+      (null, null) => task.timeRange,
     };
     final rowLabel = taskRowLabel(l10n, task);
     return Semantics(
@@ -159,6 +161,15 @@ class _Summary extends StatelessWidget {
   }
 }
 
+/// "9:10 – now · planned 9:00 – 11:00" on the Reality thread (11 C3).
+String _realityMeta(AppLocalizations l10n, ThreadTask task, ThreadReality r) {
+  final range = r.range ?? task.timeRange;
+  return switch (r.meta) {
+    final m? => l10n.liveMeta(range, m),
+    null => range,
+  };
+}
+
 /// The time range in the wide layout's own column (read with the title).
 class _WideMeta extends StatelessWidget {
   const _WideMeta({required this.task});
@@ -167,7 +178,10 @@ class _WideMeta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ExcludeSemantics(
-    child: Text(task.timeRange, style: DotTheme.of(context).styles.rowMeta),
+    child: Text(switch (task.reality) {
+      final r? => _realityMeta(context.l10n, task, r),
+      null => task.timeRange,
+    }, style: DotTheme.of(context).styles.rowMeta),
   );
 }
 
@@ -200,7 +214,10 @@ class _Progress extends StatelessWidget {
               ),
             ],
           ),
-        if (task.minutesLeft case final left?)
+        // The Reality thread says how long it has run instead (11 C3).
+        if (task.reality?.note case final ran?)
+          Text(ran, style: t.styles.stripWeekday)
+        else if (task.minutesLeft case final left?)
           Text(l10n.liveMinutesLeft(left), style: t.styles.stripWeekday),
       ],
     );

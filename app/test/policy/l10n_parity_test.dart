@@ -15,6 +15,8 @@ const _translations = ['de', 'fr', 'es'];
 /// only when the English word is the right word in that language.
 const _sameAsEnglish = {
   'de': {
+    'realityMetaJoin',
+    'realityPlan',
     'appTitle',
     'durationMinutes',
     'durationHoursMinutes',
@@ -38,6 +40,8 @@ const _sameAsEnglish = {
     'taskLinks',
   },
   'fr': {
+    'realityMetaJoin',
+    'realityPlan',
     'appTitle',
     'durationMinutes',
     'durationHoursMinutes',
@@ -62,6 +66,8 @@ const _sameAsEnglish = {
     'inAppAlertOk',
   },
   'es': {
+    'realityMetaJoin',
+    'realityPlan',
     'appTitle',
     'durationMinutes',
     'durationHoursMinutes',

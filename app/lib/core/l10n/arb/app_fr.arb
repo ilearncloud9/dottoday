@@ -1092,5 +1092,13 @@
   "calendarMovedTitle": "Agenda modifié",
   "calendarMovedDetail": "{title} déplacé à {time} · rééquilibrer ?",
   "calendarMovedAction": "Rééquilibrer",
-  "rebalanceMoved": "{title} déplacé à {time} · voici un plan"
+  "rebalanceMoved": "{title} déplacé à {time} · voici un plan",
+  "realityMetaJoin": "· {text}",
+  "realityPlanned": "prévu {time}",
+  "realityNotStarted": "pas encore commencé",
+  "realityTook": "a pris {duration}",
+  "realityRunning": "depuis {duration}",
+  "realityNow": "maintenant",
+  "realityPlan": "Plan",
+  "realityReality": "Réel"
 }
