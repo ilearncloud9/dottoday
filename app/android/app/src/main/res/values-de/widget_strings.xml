@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget picker names (docs/09 M5.4, translated in M9.2c). -->
+<resources>
+    <string name="widget_next_up_label">Als Nächstes</string>
+    <string name="widget_next_up_description">Die laufende Aufgabe oder die nächste.</string>
+    <string name="widget_today_label">Heute</string>
+    <string name="widget_today_description">Was von deinem Tag übrig ist, als Punkte.</string>
+    <string name="widget_inbox_label">Eingang</string>
+    <string name="widget_inbox_description">Wie viele Aufgaben auf eine Uhrzeit warten.</string>
+</resources>

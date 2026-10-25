@@ -69,9 +69,14 @@ Future<void> bootstrap() async {
   runApp(
     AppRestart(
       create: () {
-        final router = buildRouter(
+        late final GoRouter router;
+        router = buildRouter(
           appScreens,
           onAuthCallback: callbacks.deliver,
+          // After the frame that shows Today, so the sheet has a navigator.
+          onAdd: () => WidgetsBinding.instance.addPostFrameCallback(
+            (_) => openQuickAdd(router),
+          ),
         );
         _listenForNativeLinks(router, logger);
         return ProviderContainer(

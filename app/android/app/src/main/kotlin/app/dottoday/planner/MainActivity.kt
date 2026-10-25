@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.view.WindowManager
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
+import app.dottoday.planner.intents.IntentQueueBridge
 import io.flutter.plugin.common.MethodChannel
 
 /**
@@ -20,10 +21,18 @@ import io.flutter.plugin.common.MethodChannel
  * health panel (docs/09 M6.5.5); it never asks for the restricted
  * REQUEST_IGNORE_BATTERY_OPTIMIZATIONS permission. `dottoday/sound` plays
  * a bundled reminder sound once for the Sound picker's preview (M8.4d).
+ * `dottoday/intents` says when a widget or notification queued an action
+ * (M9.2c, [IntentQueueBridge]).
  */
 class MainActivity : FlutterFragmentActivity() {
+    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        IntentQueueBridge.detach()
+        super.cleanUpFlutterEngine(flutterEngine)
+    }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        IntentQueueBridge.attach(flutterEngine.dartExecutor.binaryMessenger)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dottoday/secure")
             .setMethodCallHandler { call, result ->
                 if (call.method != "set") return@setMethodCallHandler result.notImplemented()

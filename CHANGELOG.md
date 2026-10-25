@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M9.2c: On Android, long-press the Dottoday icon for Add task and What's next. Widget names in the widget picker now appear in German, French and Spanish too.
 - M9.2b: On iPhone, Shortcuts and Siri can add a task to Dottoday and tell you what's on now or next, in your language; widgets and the Live Activity get Done, +15 and Start buttons to build on, which show the change straight away and reach the app the next time it runs.
 - M9.2a: The five quick actions every surface will use — add a task, what's next, done, +15 minutes, start — work the same everywhere. When a widget or a notification acts while Dottoday is closed, the app catches up the moment it opens, in the order you tapped, never twice, and quietly skips a task you have since deleted.
 - M9.1: One record of your day for every place outside the app — widgets, the Mac menu bar and the web's background worker now read the same day snapshot, with today's Wake Up to Bedtime, what's on now and the next two dots, and when you really started and finished. It is rewritten within a second of any change, at Bedtime and whenever a surface asks.

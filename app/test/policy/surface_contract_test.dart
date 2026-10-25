@@ -12,6 +12,7 @@ const _surfaceDirs = [
   'ios/DottodayWidgets',
   'ios/Shared',
   'android/app/src/main/kotlin/app/dottoday/planner/widgets',
+  'android/app/src/main/kotlin/app/dottoday/planner/intents',
   'lib/data/snapshot',
   'lib/data/widgets',
   'lib/features/widgets_home',

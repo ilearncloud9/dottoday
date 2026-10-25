@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget picker names (docs/09 M5.4, translated in M9.2c). -->
+<resources>
+    <string name="widget_next_up_label">A continuación</string>
+    <string name="widget_next_up_description">La tarea en curso o la siguiente.</string>
+    <string name="widget_today_label">Hoy</string>
+    <string name="widget_today_description">Lo que queda de tu día, en puntos.</string>
+    <string name="widget_inbox_label">Bandeja de entrada</string>
+    <string name="widget_inbox_description">Cuántas tareas esperan una hora.</string>
+</resources>

@@ -48,7 +48,12 @@
                 <data android:scheme="dottoday"/>
             </intent-filter>
             <meta-data android:name="flutter_deeplinking_enabled" android:value="true"/>
+            <!-- Long-press shortcuts: Add task, What's next (B6, docs/09 M9.2c). -->
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts"/>
         </activity>
+        <!-- Done / +15 / Start from widgets and notifications, queued for the
+             app (B6, docs/09 M9.2c). Only this app's PendingIntents reach it. -->
+        <receiver android:exported="false" android:name=".intents.DotActionReceiver"/>
         <!-- Home-screen widgets (docs/02 F9, docs/09 M5.4), Glance via home_widget. -->
         <receiver
             android:name=".widgets.NextUpWidgetReceiver"

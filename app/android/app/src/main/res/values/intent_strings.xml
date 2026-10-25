@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Launcher shortcuts for the B6 intents (docs/09 M9.2c). -->
+<resources>
+    <string name="shortcut_add_task">Add task</string>
+    <string name="shortcut_whats_next">What\'s next</string>
+</resources>
