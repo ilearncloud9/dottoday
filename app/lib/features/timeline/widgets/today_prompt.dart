@@ -9,6 +9,7 @@ import 'package:dottoday/domain/scheduling/calendar_move_prompt.dart';
 import 'package:dottoday/domain/scheduling/day_review.dart';
 import 'package:dottoday/domain/scheduling/running_late.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
 import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
 import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
@@ -40,6 +41,8 @@ class TodayPrompt extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (date != today) return const SizedBox.shrink();
+    // Low-energy mode: every nudge is off until Wake Up (11 D2, M12.2).
+    if (watchLowEnergy(ref)) return const SizedBox.shrink();
     final data = ref.watch(timelineDataProvider(today)).value;
     if (data == null) return const SizedBox.shrink();
     final dismissed = ref.watch(dismissedPromptsProvider);

@@ -1,16 +1,19 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_view.dart';
 import 'package:dottoday/features/timeline/widgets/all_day_chips.dart';
 import 'package:dottoday/features/timeline/widgets/day_page.dart';
 import 'package:dottoday/features/timeline/widgets/spread_header.dart';
 import 'package:dottoday/features/timeline/widgets/today_prompt.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Mac/web Today (docs/10 §5.2 T5, `A-mac-today-alt1-spread`): the day
 /// before, [shown] on its card and the day after, with ‹ › to step a day.
 /// Tasks drag between the columns (M3e.1).
-class TodaySpread extends StatelessWidget {
+class TodaySpread extends ConsumerWidget {
   const TodaySpread({
     required this.shown,
     required this.today,
@@ -26,20 +29,25 @@ class TodaySpread extends StatelessWidget {
       DateTime(shown.year, shown.month, shown.day + days);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final low = shown == today && watchLowEnergy(ref);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SpreadHeader(date: shown, today: today, onToday: () => onSelect(today)),
         AllDayChips(date: shown),
         TodayPrompt(date: shown, today: today),
-        Expanded(child: _columns(context)),
+        Expanded(child: _columns(context, low: low)),
       ],
     );
   }
 
-  /// ‹, the day before, [shown] on its card, the day after, ›.
-  Widget _columns(BuildContext context) {
+  /// ‹, the day before, [shown] on its card, the day after, ›. In
+  /// low-energy mode (M12.2) the card holds today's next dot and the side
+  /// days are dimmed.
+  Widget _columns(BuildContext context, {required bool low}) {
+    Widget side(Widget day) =>
+        low ? Opacity(opacity: TaskAlpha.ghost, child: day) : day;
     final l10n = context.l10n;
     final before = _plus(-1);
     final after = _plus(1);
@@ -53,24 +61,30 @@ class TodaySpread extends StatelessWidget {
         ),
         Expanded(
           flex: DotSize.spreadSideFlex,
-          child: DayPage(
-            key: ValueKey(before),
-            date: before,
-            today: today,
-            side: _side(context, before),
+          child: side(
+            DayPage(
+              key: ValueKey(before),
+              date: before,
+              today: today,
+              side: _side(context, before),
+            ),
           ),
         ),
         Expanded(
           flex: DotSize.spreadCardFlex,
-          child: DayPage(key: ValueKey(shown), date: shown, today: today),
+          child: low
+              ? LowEnergyView(today: today)
+              : DayPage(key: ValueKey(shown), date: shown, today: today),
         ),
         Expanded(
           flex: DotSize.spreadSideFlex,
-          child: DayPage(
-            key: ValueKey(after),
-            date: after,
-            today: today,
-            side: _side(context, after),
+          child: side(
+            DayPage(
+              key: ValueKey(after),
+              date: after,
+              today: today,
+              side: _side(context, after),
+            ),
           ),
         ),
         _Step(

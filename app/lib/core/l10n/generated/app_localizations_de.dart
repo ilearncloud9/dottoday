@@ -4869,4 +4869,96 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get weekPromptAction => 'Woche ansehen';
+
+  @override
+  String get lowEnergyMode => 'Energiesparmodus';
+
+  @override
+  String get lowEnergyTurnOff => 'Energiesparmodus ausschalten';
+
+  @override
+  String get settingsLowEnergyDetail =>
+      'Heute zeigt nur das Nächste, und Hinweise pausieren bis zu deinem nächsten Aufwachen';
+
+  @override
+  String lowEnergyCaption(String date) {
+    return '$date · Energiesparmodus';
+  }
+
+  @override
+  String get lowEnergyGreeting => 'Mach langsam';
+
+  @override
+  String lowEnergyGreetingName(String name) {
+    return 'Mach langsam, $name';
+  }
+
+  @override
+  String get lowEnergyOn => 'Energiesparmodus · an';
+
+  @override
+  String lowEnergyUntil(String time, String left) {
+    return 'bis $time · noch $left';
+  }
+
+  @override
+  String lowEnergyAt(String time) {
+    return 'um $time';
+  }
+
+  @override
+  String get lowEnergyNotToday => 'Heute nicht';
+
+  @override
+  String lowEnergyMovedTomorrow(String title) {
+    return '$title auf morgen verschoben';
+  }
+
+  @override
+  String lowEnergySkipped(String title) {
+    return '$title heute ausgelassen';
+  }
+
+  @override
+  String lowEnergyLater(int count) {
+    return 'Später · $count';
+  }
+
+  @override
+  String get lowEnergyShowLater => 'Spätere zeigen';
+
+  @override
+  String get lowEnergyHideLater => 'Spätere ausblenden';
+
+  @override
+  String get lowEnergyPropose => 'Alles Optionale auf morgen legen?';
+
+  @override
+  String get lowEnergyProposeAction => 'Vorschlagen';
+
+  @override
+  String get lowEnergyNudgesOff => 'Hinweise sind bis zum Aufwachen morgen aus';
+
+  @override
+  String get lowEnergyNothing => 'Heute nichts mehr. Erhol dich gut.';
+
+  @override
+  String get lowEnergyProposalTitle => 'Morgen';
+
+  @override
+  String lowEnergyProposalSubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count optionale Aufgaben, jede in die erste freie Zeit morgen',
+      one: '1 optionale Aufgabe, in die erste freie Zeit morgen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lowEnergyProposalAccept => 'Verschieben';
+
+  @override
+  String get lowEnergyProposalAccepted => 'Auf morgen verschoben';
 }

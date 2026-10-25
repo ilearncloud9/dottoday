@@ -4840,4 +4840,96 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get weekPromptAction => 'See the week';
+
+  @override
+  String get lowEnergyMode => 'Low-energy mode';
+
+  @override
+  String get lowEnergyTurnOff => 'Turn off low-energy mode';
+
+  @override
+  String get settingsLowEnergyDetail =>
+      'Today shows only what\'s next and nudges pause, until your next Wake Up';
+
+  @override
+  String lowEnergyCaption(String date) {
+    return '$date · Low-energy';
+  }
+
+  @override
+  String get lowEnergyGreeting => 'Take it easy';
+
+  @override
+  String lowEnergyGreetingName(String name) {
+    return 'Take it easy, $name';
+  }
+
+  @override
+  String get lowEnergyOn => 'Low-energy · on';
+
+  @override
+  String lowEnergyUntil(String time, String left) {
+    return 'until $time · $left left';
+  }
+
+  @override
+  String lowEnergyAt(String time) {
+    return 'at $time';
+  }
+
+  @override
+  String get lowEnergyNotToday => 'Not today';
+
+  @override
+  String lowEnergyMovedTomorrow(String title) {
+    return '$title moved to tomorrow';
+  }
+
+  @override
+  String lowEnergySkipped(String title) {
+    return '$title skipped for today';
+  }
+
+  @override
+  String lowEnergyLater(int count) {
+    return 'Later · $count';
+  }
+
+  @override
+  String get lowEnergyShowLater => 'Show what\'s later';
+
+  @override
+  String get lowEnergyHideLater => 'Hide what\'s later';
+
+  @override
+  String get lowEnergyPropose => 'Move everything optional to tomorrow?';
+
+  @override
+  String get lowEnergyProposeAction => 'Propose';
+
+  @override
+  String get lowEnergyNudgesOff => 'Nudges are off until tomorrow\'s Wake Up';
+
+  @override
+  String get lowEnergyNothing => 'Nothing else today. Rest well.';
+
+  @override
+  String get lowEnergyProposalTitle => 'Tomorrow';
+
+  @override
+  String lowEnergyProposalSubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count optional tasks, each in tomorrow\'s first free time',
+      one: '1 optional task, in tomorrow\'s first free time',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lowEnergyProposalAccept => 'Move them';
+
+  @override
+  String get lowEnergyProposalAccepted => 'Moved to tomorrow';
 }

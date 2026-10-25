@@ -61,6 +61,18 @@ final _screens = <String, _Screen>{
   ], false),
   'Month': _screen((t, s) => _pumpBoard(t, s, const MonthScreen())),
   'Settings': _screen((t, s) => pumpSettings(t, size: s)),
+  // Low-energy mode (M12.2): Today with only the next dot.
+  'Today · low-energy': _screen(
+    (t, s) => pumpToday(
+      t,
+      size: s,
+      settings: Settings(
+        use24h: false,
+        firstDayOfWeek: 7,
+        lowEnergyUntil: DateTime.utc(2026, 10, 22, 5),
+      ),
+    ),
+  ),
   // The weekly review (M12.1): a sheet on phones, a popover when wider.
   'This week': _screen(
     (t, s) => _pumpBoard(

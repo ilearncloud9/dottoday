@@ -4864,4 +4864,98 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get weekPromptAction => 'Ver la semana';
+
+  @override
+  String get lowEnergyMode => 'Modo baja energía';
+
+  @override
+  String get lowEnergyTurnOff => 'Desactivar el modo baja energía';
+
+  @override
+  String get settingsLowEnergyDetail =>
+      'Hoy solo muestra lo siguiente y los avisos se pausan hasta tu próximo despertar';
+
+  @override
+  String lowEnergyCaption(String date) {
+    return '$date · Baja energía';
+  }
+
+  @override
+  String get lowEnergyGreeting => 'Tómatelo con calma';
+
+  @override
+  String lowEnergyGreetingName(String name) {
+    return 'Tómatelo con calma, $name';
+  }
+
+  @override
+  String get lowEnergyOn => 'Baja energía · activado';
+
+  @override
+  String lowEnergyUntil(String time, String left) {
+    return 'hasta las $time · quedan $left';
+  }
+
+  @override
+  String lowEnergyAt(String time) {
+    return 'a las $time';
+  }
+
+  @override
+  String get lowEnergyNotToday => 'Hoy no';
+
+  @override
+  String lowEnergyMovedTomorrow(String title) {
+    return '$title pasada a mañana';
+  }
+
+  @override
+  String lowEnergySkipped(String title) {
+    return '$title omitida por hoy';
+  }
+
+  @override
+  String lowEnergyLater(int count) {
+    return 'Más tarde · $count';
+  }
+
+  @override
+  String get lowEnergyShowLater => 'Mostrar lo de más tarde';
+
+  @override
+  String get lowEnergyHideLater => 'Ocultar lo de más tarde';
+
+  @override
+  String get lowEnergyPropose => '¿Pasar todo lo opcional a mañana?';
+
+  @override
+  String get lowEnergyProposeAction => 'Proponer';
+
+  @override
+  String get lowEnergyNudgesOff =>
+      'Los avisos están apagados hasta el despertar de mañana';
+
+  @override
+  String get lowEnergyNothing => 'Nada más por hoy. Descansa.';
+
+  @override
+  String get lowEnergyProposalTitle => 'Mañana';
+
+  @override
+  String lowEnergyProposalSubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tareas opcionales, cada una en el primer hueco libre de mañana',
+      one: '1 tarea opcional, en el primer hueco libre de mañana',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lowEnergyProposalAccept => 'Moverlas';
+
+  @override
+  String get lowEnergyProposalAccepted => 'Pasadas a mañana';
 }

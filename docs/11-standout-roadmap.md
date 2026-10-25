@@ -102,6 +102,7 @@ Enforced by `app/test/policy/no_shame_copy_test.dart` over every English string 
 
 ### D2 · Low-energy mode — **new**
 - One switch in the Today header menu and in Settings: Today collapses to the next dot and a "later" pile, counts and "N planned" hidden, all nudges off, Rebalance offers "move everything optional to tomorrow" once. Turns itself off at the next Wake Up. Render: `B-ios-low-energy.png`.
+- As built (docs/09 M12.2): stored as `lowEnergyUntil` (the next Wake Up) in the synced settings, so it ends by itself everywhere. "Nudges off" = no notification but the alarm-loud ones (A0) until then and no Today prompts. Optional = the user's own one-off task, unpinned, not started, not high energy. Not today on the next dot is the user's own move (tomorrow, or skip for a repeat), with Undo.
 
 ### D3 · Thread journal — **new**
 - Every past day kept as a B5 snapshot: scroll back by day, search ("when did I last run?"), export a year strip (the month grid's completion dots, 12 rows). Lives under Search › "Past days". Pro.

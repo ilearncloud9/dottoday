@@ -4875,4 +4875,98 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get weekPromptAction => 'Voir la semaine';
+
+  @override
+  String get lowEnergyMode => 'Mode basse énergie';
+
+  @override
+  String get lowEnergyTurnOff => 'Désactiver le mode basse énergie';
+
+  @override
+  String get settingsLowEnergyDetail =>
+      'Aujourd\'hui n\'affiche que la suite et les rappels font une pause, jusqu\'à ton prochain réveil';
+
+  @override
+  String lowEnergyCaption(String date) {
+    return '$date · Basse énergie';
+  }
+
+  @override
+  String get lowEnergyGreeting => 'Vas-y doucement';
+
+  @override
+  String lowEnergyGreetingName(String name) {
+    return 'Vas-y doucement, $name';
+  }
+
+  @override
+  String get lowEnergyOn => 'Basse énergie · activé';
+
+  @override
+  String lowEnergyUntil(String time, String left) {
+    return 'jusqu\'à $time · encore $left';
+  }
+
+  @override
+  String lowEnergyAt(String time) {
+    return 'à $time';
+  }
+
+  @override
+  String get lowEnergyNotToday => 'Pas aujourd\'hui';
+
+  @override
+  String lowEnergyMovedTomorrow(String title) {
+    return '$title déplacée à demain';
+  }
+
+  @override
+  String lowEnergySkipped(String title) {
+    return '$title passée pour aujourd\'hui';
+  }
+
+  @override
+  String lowEnergyLater(int count) {
+    return 'Plus tard · $count';
+  }
+
+  @override
+  String get lowEnergyShowLater => 'Afficher la suite';
+
+  @override
+  String get lowEnergyHideLater => 'Masquer la suite';
+
+  @override
+  String get lowEnergyPropose => 'Tout l\'optionnel à demain ?';
+
+  @override
+  String get lowEnergyProposeAction => 'Proposer';
+
+  @override
+  String get lowEnergyNudgesOff =>
+      'Les rappels sont coupés jusqu\'au réveil de demain';
+
+  @override
+  String get lowEnergyNothing => 'Plus rien aujourd\'hui. Repose-toi bien.';
+
+  @override
+  String get lowEnergyProposalTitle => 'Demain';
+
+  @override
+  String lowEnergyProposalSubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tâches optionnelles, chacune dans le premier temps libre de demain',
+      one: '1 tâche optionnelle, dans le premier temps libre de demain',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lowEnergyProposalAccept => 'Les déplacer';
+
+  @override
+  String get lowEnergyProposalAccepted => 'Déplacées à demain';
 }

@@ -2,6 +2,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/day_blocks.dart';
 import 'package:dottoday/domain/scheduling/day_scheduler_service.dart';
+import 'package:dottoday/domain/scheduling/low_energy.dart';
 import 'package:dottoday/domain/scheduling/slot_finder.dart';
 
 // Rebalance (11 C1, docs/09 M11.1): the rule pass behind the proposal.
@@ -78,15 +79,10 @@ final class RebalancePlan {
 const rebalanceMinMinutes = 15;
 const _keepShare = 0.75;
 
-/// Whether Rebalance may shorten [o]: an optional task — the user's own,
-/// unpinned, not started, and not marked high energy (11 C1; the specs
-/// have no "optional" field, docs/09 M11.1).
+/// Whether Rebalance may shorten [o]: an optional task ([isOptional])
+/// longer than [rebalanceMinMinutes] (11 C1, docs/09 M11.1).
 bool shrinkable(Occurrence o) =>
-    o.source == OccurrenceSource.user &&
-    !o.pinned &&
-    o.actualStartUtc == null &&
-    o.energy != Energy.high &&
-    o.durationMin > rebalanceMinMinutes;
+    isOptional(o) && o.durationMin > rebalanceMinMinutes;
 
 /// The length [o] may be shrunk to: three quarters, rounded up to 5 min,
 /// never under [rebalanceMinMinutes].

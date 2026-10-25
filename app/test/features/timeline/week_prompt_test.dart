@@ -25,7 +25,9 @@ Future<void> _pump(WidgetTester tester, DateTime today, DateTime now) async {
         profile: testProfile(settings: const Settings(firstDayOfWeek: 1)),
       ),
       child: testApp(
-        Scaffold(body: TodayPrompt(date: today, today: today)),
+        Scaffold(
+          body: TodayPrompt(date: today, today: today),
+        ),
       ),
     ),
   );

@@ -62,6 +62,9 @@ abstract class Settings with _$Settings {
     // the default — off until enough high-energy tasks were finished, then
     // on; true/false is the user's choice.
     bool? energySuggestions,
+    // Low-energy mode (11 D2, M12.2): on until this instant — the next
+    // Wake Up when it was switched on — so it ends by itself everywhere.
+    @UtcMillisConverter() DateTime? lowEnergyUntil,
   }) = _Settings;
 
   const Settings._();

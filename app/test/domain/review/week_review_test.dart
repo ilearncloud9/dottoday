@@ -118,7 +118,8 @@ void main() {
 
     test('everything done, with no real times', () {
       final rows = [
-        for (final o in [_at(0, 8), _at(1, 9)]) o.copyWith(actualStartUtc: null),
+        for (final o in [_at(0, 8), _at(1, 9)])
+          o.copyWith(actualStartUtc: null),
       ];
       expect(
         WeekReview.of(_days(rows, reviewSunday), berlin).pace,

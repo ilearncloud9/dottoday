@@ -7211,6 +7211,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See the week'**
   String get weekPromptAction;
+
+  /// Low-energy mode (11 D2): Today ⋯ item and Settings › Planning switch title.
+  ///
+  /// In en, this message translates to:
+  /// **'Low-energy mode'**
+  String get lowEnergyMode;
+
+  /// Today ⋯ item while low-energy mode is on.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off low-energy mode'**
+  String get lowEnergyTurnOff;
+
+  /// Under the Low-energy mode switch in Settings › Planning.
+  ///
+  /// In en, this message translates to:
+  /// **'Today shows only what\'s next and nudges pause, until your next Wake Up'**
+  String get settingsLowEnergyDetail;
+
+  /// Today header caption in low-energy mode (shown upper-case on phones).
+  ///
+  /// In en, this message translates to:
+  /// **'{date} · Low-energy'**
+  String lowEnergyCaption(String date);
+
+  /// Today title in low-energy mode, no name set.
+  ///
+  /// In en, this message translates to:
+  /// **'Take it easy'**
+  String get lowEnergyGreeting;
+
+  /// Today title in low-energy mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Take it easy, {name}'**
+  String lowEnergyGreetingName(String name);
+
+  /// Today header switch while low-energy mode is on; turning it off ends the mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Low-energy · on'**
+  String get lowEnergyOn;
+
+  /// Low-energy next dot, while it runs.
+  ///
+  /// In en, this message translates to:
+  /// **'until {time} · {left} left'**
+  String lowEnergyUntil(String time, String left);
+
+  /// Low-energy next dot, before it starts.
+  ///
+  /// In en, this message translates to:
+  /// **'at {time}'**
+  String lowEnergyAt(String time);
+
+  /// Low-energy next dot: a one-off moves to tomorrow, a repeat or event is skipped today (with Undo).
+  ///
+  /// In en, this message translates to:
+  /// **'Not today'**
+  String get lowEnergyNotToday;
+
+  /// Undo snackbar after Not today moved a task.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} moved to tomorrow'**
+  String lowEnergyMovedTomorrow(String title);
+
+  /// Undo snackbar after Not today skipped a repeat or event.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} skipped for today'**
+  String lowEnergySkipped(String title);
+
+  /// Low-energy: caption of the pile of today's later tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Later · {count}'**
+  String lowEnergyLater(int count);
+
+  /// Tooltip: open the Later pile.
+  ///
+  /// In en, this message translates to:
+  /// **'Show what\'s later'**
+  String get lowEnergyShowLater;
+
+  /// Tooltip: close the Later pile.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide what\'s later'**
+  String get lowEnergyHideLater;
+
+  /// Low-energy: offered once a day; opens a proposal.
+  ///
+  /// In en, this message translates to:
+  /// **'Move everything optional to tomorrow?'**
+  String get lowEnergyPropose;
+
+  /// Low-energy: open the proposal moving optional tasks to tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Propose'**
+  String get lowEnergyProposeAction;
+
+  /// Low-energy footer. Alarm-loud first dots still ring.
+  ///
+  /// In en, this message translates to:
+  /// **'Nudges are off until tomorrow\'s Wake Up'**
+  String get lowEnergyNudgesOff;
+
+  /// Low-energy: nothing left planned today.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing else today. Rest well.'**
+  String get lowEnergyNothing;
+
+  /// Proposal title: optional tasks moved to tomorrow (low-energy).
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get lowEnergyProposalTitle;
+
+  /// Proposal subtitle (low-energy).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 optional task, in tomorrow\'s first free time} other{{count} optional tasks, each in tomorrow\'s first free time}}'**
+  String lowEnergyProposalSubtitle(int count);
+
+  /// Proposal accept button (low-energy).
+  ///
+  /// In en, this message translates to:
+  /// **'Move them'**
+  String get lowEnergyProposalAccept;
+
+  /// Undo snackbar after the low-energy proposal was accepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved to tomorrow'**
+  String get lowEnergyProposalAccepted;
 }
 
 class _AppLocalizationsDelegate

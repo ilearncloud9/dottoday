@@ -55,9 +55,7 @@ final class ProposalHarness {
     appDatabaseProvider.overrideWithValue(base.db),
     clockProvider.overrideWithValue(base.clock),
     writeUseCaseProvider.overrideWithValue(writes),
-    currentProfileProvider.overrideWith(
-      (ref) => Stream.value(profile),
-    ),
+    currentProfileProvider.overrideWith((ref) => Stream.value(profile)),
   ];
 
   Future<void> seed(WidgetTester tester, WriteBatch batch) async {

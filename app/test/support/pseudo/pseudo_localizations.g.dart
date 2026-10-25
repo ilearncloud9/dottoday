@@ -3796,4 +3796,79 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get weekPromptAction => pseudo(super.weekPromptAction);
+
+  @override
+  String get lowEnergyMode => pseudo(super.lowEnergyMode);
+
+  @override
+  String get lowEnergyTurnOff => pseudo(super.lowEnergyTurnOff);
+
+  @override
+  String get settingsLowEnergyDetail => pseudo(super.settingsLowEnergyDetail);
+
+  @override
+  String lowEnergyCaption(String date) => pseudo(super.lowEnergyCaption(date));
+
+  @override
+  String get lowEnergyGreeting => pseudo(super.lowEnergyGreeting);
+
+  @override
+  String lowEnergyGreetingName(String name) =>
+      pseudo(super.lowEnergyGreetingName(name));
+
+  @override
+  String get lowEnergyOn => pseudo(super.lowEnergyOn);
+
+  @override
+  String lowEnergyUntil(String time, String left) =>
+      pseudo(super.lowEnergyUntil(time, left));
+
+  @override
+  String lowEnergyAt(String time) => pseudo(super.lowEnergyAt(time));
+
+  @override
+  String get lowEnergyNotToday => pseudo(super.lowEnergyNotToday);
+
+  @override
+  String lowEnergyMovedTomorrow(String title) =>
+      pseudo(super.lowEnergyMovedTomorrow(title));
+
+  @override
+  String lowEnergySkipped(String title) =>
+      pseudo(super.lowEnergySkipped(title));
+
+  @override
+  String lowEnergyLater(int count) => pseudo(super.lowEnergyLater(count));
+
+  @override
+  String get lowEnergyShowLater => pseudo(super.lowEnergyShowLater);
+
+  @override
+  String get lowEnergyHideLater => pseudo(super.lowEnergyHideLater);
+
+  @override
+  String get lowEnergyPropose => pseudo(super.lowEnergyPropose);
+
+  @override
+  String get lowEnergyProposeAction => pseudo(super.lowEnergyProposeAction);
+
+  @override
+  String get lowEnergyNudgesOff => pseudo(super.lowEnergyNudgesOff);
+
+  @override
+  String get lowEnergyNothing => pseudo(super.lowEnergyNothing);
+
+  @override
+  String get lowEnergyProposalTitle => pseudo(super.lowEnergyProposalTitle);
+
+  @override
+  String lowEnergyProposalSubtitle(int count) =>
+      pseudo(super.lowEnergyProposalSubtitle(count));
+
+  @override
+  String get lowEnergyProposalAccept => pseudo(super.lowEnergyProposalAccept);
+
+  @override
+  String get lowEnergyProposalAccepted =>
+      pseudo(super.lowEnergyProposalAccepted);
 }
