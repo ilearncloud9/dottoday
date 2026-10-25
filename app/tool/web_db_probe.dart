@@ -22,10 +22,10 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
-/// Must never appear in browser storage bytes. Built at run time, reversed
-/// in the source, so the compiled `main.dart.js` — which the service worker
-/// may cache before the scan — never holds it (a CI flake in M10).
-final secretTitle = 'eltit-terces-eborp-92m'.split('').reversed.join();
+/// Must never appear in browser storage bytes. Joined at run time, so the
+/// compiled `main.dart.js` — which the service worker may cache before
+/// the scan — never holds it whole (a CI flake in M10).
+final probeTitle = ['m29', 'probe', 'secret', 'title'].join('-');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,7 +48,7 @@ Future<String> _probe() async {
     Occurrence(
       id: 'o',
       userId: 'u',
-      title: secretTitle,
+      title: probeTitle,
       tzId: 'UTC',
       durationMin: 30,
       startUtc: at,
@@ -74,7 +74,7 @@ Future<String> _probe() async {
   db = openAppDatabase(const _UnusedKeys());
   final again = await DriftOccurrenceRepository(db).findById('u', 'o');
   await db.close();
-  if (again?.title != secretTitle) throw StateError('reopen failed');
+  if (again?.title != probeTitle) throw StateError('reopen failed');
   return 'cipher=$cipher';
 }
 
