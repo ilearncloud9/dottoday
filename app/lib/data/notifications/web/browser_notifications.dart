@@ -68,6 +68,7 @@ Future<bool> showBrowserNotification(
   OsNotification n, {
   required String doneLabel,
   required String plusLabel,
+  String? startLabel,
 }) async {
   final worker = _serviceWorker;
   if (worker == null || browserPermission() != PermissionState.granted) {
@@ -86,6 +87,8 @@ Future<bool> showBrowserNotification(
                 {'action': NotificationAction.done.name, 'title': doneLabel},
                 {'action': NotificationAction.plus15.name, 'title': plusLabel},
               ],
+              if (n.startAction && startLabel != null)
+                {'action': NotificationAction.start.name, 'title': startLabel},
             ],
           }.jsify()!
           as JSObject;

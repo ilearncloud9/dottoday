@@ -1072,5 +1072,8 @@
   "focusOpenTask": "Détails de la tâche",
   "focusDoneMessage": "{title} fait",
   "focusExtendedMessage": "{title} · 15 min de plus",
-  "focusOpenHint": "Ouvrir la concentration"
+  "focusOpenHint": "Ouvrir la concentration",
+  "smallestStepTitle": "Juste {step} · {length} ?",
+  "smallestStepTitleShort": "Juste {step} ?",
+  "smallestStepStart": "Commencer"
 }

@@ -6539,6 +6539,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open Focus'**
   String get focusOpenHint;
+
+  /// Smallest step reminder and row (11 B2, M10.6): only the first step, with its length.
+  ///
+  /// In en, this message translates to:
+  /// **'Just {step} · {length}?'**
+  String smallestStepTitle(String step, String length);
+
+  /// Smallest step reminder and row when the first step has no length.
+  ///
+  /// In en, this message translates to:
+  /// **'Just {step}?'**
+  String smallestStepTitleShort(String step);
+
+  /// Smallest step's one button (reminder and row): starts the task in Focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get smallestStepStart;
 }
 
 class _AppLocalizationsDelegate

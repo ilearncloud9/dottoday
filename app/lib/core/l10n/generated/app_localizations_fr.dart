@@ -4414,4 +4414,17 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get focusOpenHint => 'Ouvrir la concentration';
+
+  @override
+  String smallestStepTitle(String step, String length) {
+    return 'Juste $step · $length ?';
+  }
+
+  @override
+  String smallestStepTitleShort(String step) {
+    return 'Juste $step ?';
+  }
+
+  @override
+  String get smallestStepStart => 'Commencer';
 }

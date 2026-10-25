@@ -4385,4 +4385,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get focusOpenHint => 'Open Focus';
+
+  @override
+  String smallestStepTitle(String step, String length) {
+    return 'Just $step · $length?';
+  }
+
+  @override
+  String smallestStepTitleShort(String step) {
+    return 'Just $step?';
+  }
+
+  @override
+  String get smallestStepStart => 'Start';
 }

@@ -16,6 +16,10 @@ enum NotificationPurpose {
   /// Settings › Reminders › Day-start summary: "Your day: 6 blocks, first
   /// at 08:00" at Wake Up on the chosen weekdays (docs/02 F6.2, M8.4d).
   daySummary,
+
+  /// Smallest step (11 B2, docs/09 M10.6): planned start + 10 min with no
+  /// real start and steps to do — "Just `step` · 2 min?" with Start.
+  smallestStep,
 }
 
 /// One notification the OS should hold (docs/04 §6).
@@ -47,6 +51,9 @@ final class PlannedNotification {
 
   /// Index of the day-start summary (M8.4d).
   static const daySummaryIndex = 8;
+
+  /// Index of the Smallest step reminder (M10.6): one per occurrence.
+  static const smallestStepIndex = 9;
 
   /// Stable OS notification ID; see `notificationIdFor`.
   final int id;

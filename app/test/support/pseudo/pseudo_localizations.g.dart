@@ -3434,4 +3434,15 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get focusOpenHint => pseudo(super.focusOpenHint);
+
+  @override
+  String smallestStepTitle(String step, String length) =>
+      pseudo(super.smallestStepTitle(step, length));
+
+  @override
+  String smallestStepTitleShort(String step) =>
+      pseudo(super.smallestStepTitleShort(step));
+
+  @override
+  String get smallestStepStart => pseudo(super.smallestStepStart);
 }

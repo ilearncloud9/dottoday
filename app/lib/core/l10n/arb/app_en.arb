@@ -5759,5 +5759,30 @@
   "focusOpenHint": "Open Focus",
   "@focusOpenHint": {
     "description": "Screen-reader hint on the live dot: one tap opens Focus."
+  },
+  "smallestStepTitle": "Just {step} · {length}?",
+  "@smallestStepTitle": {
+    "description": "Smallest step reminder and row (11 B2, M10.6): only the first step, with its length.",
+    "placeholders": {
+      "step": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "smallestStepTitleShort": "Just {step}?",
+  "@smallestStepTitleShort": {
+    "description": "Smallest step reminder and row when the first step has no length.",
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
+  },
+  "smallestStepStart": "Start",
+  "@smallestStepStart": {
+    "description": "Smallest step's one button (reminder and row): starts the task in Focus."
   }
 }

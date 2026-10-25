@@ -4405,4 +4405,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get focusOpenHint => 'Abrir foco';
+
+  @override
+  String smallestStepTitle(String step, String length) {
+    return '¿Solo $step · $length?';
+  }
+
+  @override
+  String smallestStepTitleShort(String step) {
+    return '¿Solo $step?';
+  }
+
+  @override
+  String get smallestStepStart => 'Empezar';
 }

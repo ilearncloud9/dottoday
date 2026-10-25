@@ -48,13 +48,15 @@ List<ThreadEntry> threadEntries({
   required DateTime nowUtc,
   required ThreadFormat format,
   Map<String, ({int done, int total})> subtasks = const {},
+  Map<String, String> smallestSteps = const {},
   bool showFreeTime = true,
 }) {
   final sorted = [
     for (final o in blocks)
       if (o.startUtc != null) o,
   ]..sort((a, b) => a.startUtc!.compareTo(b.startUtc!));
-  ThreadTask task(Occurrence o) => _task(o, nowUtc, format, subtasks[o.id]);
+  ThreadTask task(Occurrence o) =>
+      _task(o, nowUtc, format, subtasks[o.id], smallestSteps[o.id]);
   final (:before, :inside, :after) = _split(sorted, shape);
   final out = <ThreadEntry>[
     ?_outside(before.map(task).toList(), bedtime: false),
@@ -141,8 +143,9 @@ ThreadTask _task(
   Occurrence o,
   DateTime now,
   ThreadFormat format,
-  ({int done, int total})? subtasks,
-) {
+  ({int done, int total})? subtasks, [
+  String? smallestStep,
+]) {
   final start = o.startUtc!;
   final end = o.endUtc!;
   final state = dotStateOf(o, now);
@@ -167,6 +170,7 @@ ThreadTask _task(
     subtasksTotal: subtasks?.total ?? 0,
     movable: !o.pinned && o.status != OccurrenceStatus.done,
     travel: o.travelBufferMin > 0 ? format.duration(o.travelBufferMin) : null,
+    smallestStep: smallestStep,
   );
 }
 
@@ -198,6 +202,7 @@ ThreadTask _withOverrun(
     minutesLeft: task.minutesLeft,
     subtasksDone: task.subtasksDone,
     subtasksTotal: task.subtasksTotal,
+    smallestStep: task.smallestStep,
     overrunMinutes: overrun,
     movable: task.movable,
     travel: task.travel,

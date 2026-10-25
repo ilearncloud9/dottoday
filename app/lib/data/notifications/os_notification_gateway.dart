@@ -3,10 +3,13 @@ import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/notifications/notification_gateway.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
+import 'package:dottoday/domain/repositories/subtask_repository.dart';
+import 'package:dottoday/domain/scheduling/start_nudge.dart';
 
 /// [NotificationGateway] over the OS scheduler (docs/04 §6, docs/09 M5.1).
 ///
@@ -20,13 +23,18 @@ final class OsNotificationGateway implements NotificationGateway {
     required Future<NotificationPlatform> Function() platform,
     required OccurrenceRepository occurrences,
     required Future<Profile> Function() profile,
+    SubtaskRepository? subtasks,
   }) : _platform = platform,
        _occurrences = occurrences,
-       _profile = profile;
+       _profile = profile,
+       _subtasks = subtasks;
 
   final Future<NotificationPlatform> Function() _platform;
   final OccurrenceRepository _occurrences;
   final Future<Profile> Function() _profile;
+
+  /// For Smallest step's text, the task's first open step (M10.6).
+  final SubtaskRepository? _subtasks;
 
   @override
   Future<Map<int, PlannedNotification>> pending() async {
@@ -54,6 +62,7 @@ final class OsNotificationGateway implements NotificationGateway {
         planned,
         task: await _task(planned, profile),
         profile: profile,
+        step: await _step(planned, profile),
       );
       // A task deleted since planning: the next resync drops it anyway.
       if (os != null) await platform.schedule(os);
@@ -69,6 +78,7 @@ final class OsNotificationGateway implements NotificationGateway {
       planned,
       task: await _task(planned, profile),
       profile: profile,
+      step: await _step(planned, profile),
     );
     return os != null &&
         notificationPayloadContentHash(os.payload) ==
@@ -80,6 +90,18 @@ final class OsNotificationGateway implements NotificationGateway {
     if (p.occurrenceId.isEmpty) return null;
     final task = await _occurrences.findById(profile.id, p.occurrenceId);
     return task?.deletedAt == null ? task : null;
+  }
+
+  /// The step a Smallest step reminder offers; null for any other.
+  Future<Subtask?> _step(PlannedNotification p, Profile profile) async {
+    final subtasks = _subtasks;
+    if (subtasks == null || p.purpose != NotificationPurpose.smallestStep) {
+      return null;
+    }
+    final steps = await subtasks.watchForOccurrences(profile.id, {
+      p.occurrenceId,
+    }).first;
+    return smallestStep(steps);
   }
 
   /// Never equal to a planned notification, so the diff replaces it.

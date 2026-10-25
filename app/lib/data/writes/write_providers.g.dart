@@ -62,7 +62,7 @@ final class NotificationGatewayProvider
 }
 
 String _$notificationGatewayHash() =>
-    r'2ed6d11ff874122b02b95ef7fe908614b85b3a7e';
+    r'07cc4d8acb3df3c1dc78f469fe33a54fde0a982e';
 
 /// Where the widget snapshot goes (M5.4, M5.5): home-screen widgets on
 /// iOS and Android (plus the Live Activity / ongoing notification, M9.3,
@@ -164,7 +164,7 @@ final class NotificationSyncProvider
   }
 }
 
-String _$notificationSyncHash() => r'281790121b5d1826fbbc74db7f69ad9450d96d4e';
+String _$notificationSyncHash() => r'bcf78a294bd6f2ecafe825a3f90de5a125daf822';
 
 @ProviderFor(daySnapshotWriter)
 final daySnapshotWriterProvider = DaySnapshotWriterProvider._();

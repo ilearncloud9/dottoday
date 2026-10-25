@@ -123,4 +123,42 @@ void main() {
     );
     expect(n, isNull);
   });
+
+  // Smallest step (11 B2, docs/09 M10.6): the first step only, with Start.
+  test('Smallest step: "Just <step> · 10 min?", the task below, Start', () {
+    final planned = PlannedNotification(
+      id: 3,
+      occurrenceId: task.id,
+      alertIndex: PlannedNotification.smallestStepIndex,
+      fireAtUtc: task.startUtc!.add(const Duration(minutes: 10)),
+      kind: AlertKind.atStart,
+      purpose: NotificationPurpose.smallestStep,
+    );
+    final step = subtaskFixture().copyWith(
+      title: 'Gather documents',
+      durationMin: 10,
+    );
+    final n = composeNotification(
+      planned,
+      task: task,
+      profile: profileFixture(),
+      step: step,
+    )!;
+    expect(n.title, 'Just Gather documents · 10 min?');
+    expect(n.body, task.title);
+    expect((n.startAction, n.withActions), (true, false));
+    expect(n.channel, NotificationChannelKind.alerts);
+    final short = composeNotification(
+      planned,
+      task: task,
+      profile: profileFixture(),
+      step: step.copyWith(durationMin: null),
+    )!;
+    expect(short.title, 'Just Gather documents?');
+    expect(
+      composeNotification(planned, task: task, profile: profileFixture()),
+      isNull,
+      reason: 'no step left: nothing to post',
+    );
+  });
 }

@@ -217,6 +217,8 @@ class _ThreadState extends State<Thread> {
             onToggleDone: _bind(a.onToggleDone, task),
             onOpen: _open(task),
             onResize: _resize(drag, task),
+            // Smallest step's Start opens Focus, which records the start.
+            onStart: _bind(a.onFocus, task),
           );
     if (onSelect != null) {
       row = SelectableTaskRow(

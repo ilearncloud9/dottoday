@@ -15,8 +15,9 @@ import 'package:dottoday/domain/writes/write_use_case.dart';
 /// Carries out what the user chose on a notification (docs/02 F6): Done
 /// ticks this occurrence, Snooze reminds again in 10 minutes, +15 (the
 /// web's, M9.7) gives it 15 more minutes, Open (or a plain tap) shows the
-/// task. Writes go through the write path, which then
-/// re-plans the notifications, so a ticked task's later alerts disappear.
+/// task, Start (Smallest step, M10.6) opens Focus on it. Writes go through
+/// the write path, which then re-plans the notifications, so a ticked
+/// task's later alerts disappear.
 ///
 /// Snooze only re-reminds: a notification can't ask "shift the rest?", so
 /// moving later tasks stays with the in-app Running late (docs/02 F6).
@@ -63,6 +64,10 @@ final class NotificationResponder {
       return _open(AppRoutes.today);
     }
     final now = _clock.nowUtc();
+    if (action == NotificationAction.start) {
+      // Smallest step's Start (M10.6): Focus records the real start (B1).
+      return _open(AppRoutes.focus(task.id));
+    }
     final changed = switch (action) {
       NotificationAction.done => progress.markDone(task, now),
       // The web's +15 (M9.7): 15 more minutes, as the live row's +15.

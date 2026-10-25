@@ -1072,5 +1072,8 @@
   "focusOpenTask": "Aufgabendetails",
   "focusDoneMessage": "{title} erledigt",
   "focusExtendedMessage": "{title} · 15 Min. mehr",
-  "focusOpenHint": "Fokus öffnen"
+  "focusOpenHint": "Fokus öffnen",
+  "smallestStepTitle": "Nur {step} · {length}?",
+  "smallestStepTitleShort": "Nur {step}?",
+  "smallestStepStart": "Starten"
 }

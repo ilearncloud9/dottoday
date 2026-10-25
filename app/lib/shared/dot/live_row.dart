@@ -83,6 +83,9 @@ class LiveRow extends StatelessWidget {
       spacing: DotSpace.m,
       children: [
         _Summary(task: task, onOpen: onOpen, showMeta: !wide),
+        // Smallest step (M10.6): only the first step, and Start.
+        if (task.smallestStep case final text?)
+          SmallestStepLine(text: text, onStart: onFocus),
         // A read-only thread (the Inbox's Drop onto today) wires none.
         if (onToggleDone != null || onExtend != null)
           _Actions(

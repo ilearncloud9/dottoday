@@ -33,6 +33,9 @@ final class FlnNotificationPlatform implements NotificationPlatform {
   var _exact = false;
 
   static const _category = 'task';
+
+  /// Smallest step's reminders: Start only (M10.6).
+  static const _startCategory = 'smallest_step';
   static const _channelIds = {
     NotificationChannelKind.alerts: 'alerts',
     NotificationChannelKind.summary: 'summary',
@@ -60,6 +63,17 @@ final class FlnNotificationPlatform implements NotificationPlatform {
                 _label(a),
                 options: {DarwinNotificationActionOption.foreground},
               ),
+          ],
+        ),
+        // Smallest step's one button (M10.6).
+        DarwinNotificationCategory(
+          _startCategory,
+          actions: [
+            DarwinNotificationAction.plain(
+              NotificationAction.start.name,
+              _label(NotificationAction.start),
+              options: {DarwinNotificationActionOption.foreground},
+            ),
           ],
         ),
       ],
@@ -144,7 +158,11 @@ final class FlnNotificationPlatform implements NotificationPlatform {
         ? _soundChannel(sound)
         : _channel(n.channel);
     final darwin = DarwinNotificationDetails(
-      categoryIdentifier: n.withActions ? _category : null,
+      categoryIdentifier: n.startAction
+          ? _startCategory
+          : n.withActions
+          ? _category
+          : null,
       presentBanner: !n.silent,
       presentSound: !n.silent,
       sound: n.loud
@@ -180,16 +198,17 @@ final class FlnNotificationPlatform implements NotificationPlatform {
             ? AudioAttributesUsage.alarm
             : AudioAttributesUsage.notification,
         silent: n.silent,
-        actions: n.withActions
-            ? [
-                for (final a in NotificationAction.osActions)
-                  AndroidNotificationAction(
-                    a.name,
-                    _label(a),
-                    showsUserInterface: true,
-                  ),
-              ]
-            : null,
+        actions: [
+          for (final a in [
+            if (n.withActions) ...NotificationAction.osActions,
+            if (n.startAction) NotificationAction.start,
+          ])
+            AndroidNotificationAction(
+              a.name,
+              _label(a),
+              showsUserInterface: true,
+            ),
+        ],
       ),
       iOS: darwin,
       macOS: darwin,
@@ -236,6 +255,7 @@ final class FlnNotificationPlatform implements NotificationPlatform {
     NotificationAction.snooze => _l10n.notifActionSnooze,
     NotificationAction.open => _l10n.notifActionOpen,
     NotificationAction.plus15 => _l10n.liveExtend,
+    NotificationAction.start => _l10n.smallestStepStart,
   };
 
   static NotificationTap _tap(NotificationResponse r) =>

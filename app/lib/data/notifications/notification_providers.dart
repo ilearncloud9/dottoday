@@ -49,6 +49,7 @@ Future<NotificationPlatform> notificationPlatform(Ref ref) async {
         n,
         doneLabel: l10n.notifActionDone,
         plusLabel: l10n.liveExtend,
+        startLabel: l10n.smallestStepStart,
       ),
       onInApp: (n) => deliverInApp(
         n,
