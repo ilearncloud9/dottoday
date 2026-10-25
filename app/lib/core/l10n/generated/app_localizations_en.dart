@@ -4130,4 +4130,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String liveActivityCountLabel(int done, int total) {
     return '$done of $total done today';
   }
+
+  @override
+  String get privacyThinkingTitle => 'Help with thinking';
+
+  @override
+  String get privacyThinkingBody =>
+      'Break it down and suggestions are worked out on this device: Apple Intelligence on iPhone and Mac, Gemini Nano on Android, the browser\'s built-in model in Chrome. Where none is available, Dottoday uses your own history and simple rules. What you type is never sent to a server; what was asked and answered stays on this device.';
+
+  @override
+  String get privacyThinkingOnDevice =>
+      'On this device now: the built-in model.';
+
+  @override
+  String get privacyThinkingRules =>
+      'On this device now: your history and simple rules.';
+
+  @override
+  String get privacyClearThinking => 'Clear thinking history';
+
+  @override
+  String get snackThinkingCleared => 'Thinking history cleared';
 }

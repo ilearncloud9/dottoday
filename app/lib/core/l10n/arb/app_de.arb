@@ -1008,5 +1008,11 @@
   "liveActivityLeft": "noch {time}",
   "liveActivityStartsIn": "beginnt in {time}",
   "liveActivityCount": "{done} von {total}",
-  "liveActivityCountLabel": "{done} von {total} heute erledigt"
+  "liveActivityCountLabel": "{done} von {total} heute erledigt",
+  "privacyThinkingTitle": "Hilfe beim Planen",
+  "privacyThinkingBody": "„In Schritte teilen“ und Vorschläge entstehen auf diesem Gerät: Apple Intelligence auf iPhone und Mac, Gemini Nano auf Android, das eingebaute Modell in Chrome. Wo keins verfügbar ist, nutzt Dottoday deinen eigenen Verlauf und einfache Regeln. Was du eingibst, wird nie an einen Server gesendet; Fragen und Antworten bleiben auf diesem Gerät.",
+  "privacyThinkingOnDevice": "Auf diesem Gerät gerade: das eingebaute Modell.",
+  "privacyThinkingRules": "Auf diesem Gerät gerade: dein Verlauf und einfache Regeln.",
+  "privacyClearThinking": "Planungsverlauf löschen",
+  "snackThinkingCleared": "Planungsverlauf gelöscht"
 }

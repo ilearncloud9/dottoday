@@ -4157,4 +4157,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String liveActivityCountLabel(int done, int total) {
     return '$done sur $total faites aujourd\'hui';
   }
+
+  @override
+  String get privacyThinkingTitle => 'Aide à la réflexion';
+
+  @override
+  String get privacyThinkingBody =>
+      '« Découper » et les suggestions sont calculés sur cet appareil : Apple Intelligence sur iPhone et Mac, Gemini Nano sur Android, le modèle intégré de Chrome. Si aucun n\'est disponible, Dottoday utilise votre propre historique et des règles simples. Ce que vous tapez n\'est jamais envoyé à un serveur ; questions et réponses restent sur cet appareil.';
+
+  @override
+  String get privacyThinkingOnDevice =>
+      'Sur cet appareil maintenant : le modèle intégré.';
+
+  @override
+  String get privacyThinkingRules =>
+      'Sur cet appareil maintenant : votre historique et des règles simples.';
+
+  @override
+  String get privacyClearThinking => 'Effacer l\'historique de réflexion';
+
+  @override
+  String get snackThinkingCleared => 'Historique de réflexion effacé';
 }

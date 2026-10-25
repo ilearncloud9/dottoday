@@ -6155,6 +6155,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{done} of {total} done today'**
   String liveActivityCountLabel(int done, int total);
+
+  /// Privacy page heading: where Break it down and other suggestions are worked out (docs/09 M10.1, ADR-0009).
+  ///
+  /// In en, this message translates to:
+  /// **'Help with thinking'**
+  String get privacyThinkingTitle;
+
+  /// Privacy page text: the on-device model paths and the rules fallback; no server.
+  ///
+  /// In en, this message translates to:
+  /// **'Break it down and suggestions are worked out on this device: Apple Intelligence on iPhone and Mac, Gemini Nano on Android, the browser\'s built-in model in Chrome. Where none is available, Dottoday uses your own history and simple rules. What you type is never sent to a server; what was asked and answered stays on this device.'**
+  String get privacyThinkingBody;
+
+  /// Privacy page line: an on-device model is ready on this device now.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device now: the built-in model.'**
+  String get privacyThinkingOnDevice;
+
+  /// Privacy page line: no on-device model here, so history and rules answer.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device now: your history and simple rules.'**
+  String get privacyThinkingRules;
+
+  /// Privacy page button: forgets saved breakdowns and the local log of what was asked and answered.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear thinking history'**
+  String get privacyClearThinking;
+
+  /// Snackbar after Clear thinking history.
+  ///
+  /// In en, this message translates to:
+  /// **'Thinking history cleared'**
+  String get snackThinkingCleared;
 }
 
 class _AppLocalizationsDelegate

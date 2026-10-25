@@ -1008,5 +1008,11 @@
   "liveActivityLeft": "quedan {time}",
   "liveActivityStartsIn": "empieza en {time}",
   "liveActivityCount": "{done} de {total}",
-  "liveActivityCountLabel": "{done} de {total} hechas hoy"
+  "liveActivityCountLabel": "{done} de {total} hechas hoy",
+  "privacyThinkingTitle": "Ayuda para pensar",
+  "privacyThinkingBody": "«Dividir en pasos» y las sugerencias se calculan en este dispositivo: Apple Intelligence en iPhone y Mac, Gemini Nano en Android, el modelo integrado de Chrome. Si no hay ninguno, Dottoday usa tu propio historial y reglas sencillas. Lo que escribes nunca se envía a un servidor; preguntas y respuestas se quedan en este dispositivo.",
+  "privacyThinkingOnDevice": "En este dispositivo ahora: el modelo integrado.",
+  "privacyThinkingRules": "En este dispositivo ahora: tu historial y reglas sencillas.",
+  "privacyClearThinking": "Borrar historial de ideas",
+  "snackThinkingCleared": "Historial de ideas borrado"
 }

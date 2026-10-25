@@ -38,6 +38,9 @@ import workmanager_apple
       IntentQueueBridge.shared.attach(to: registrar.messenger())
     }
     LiveActivityBridge.register(engineBridge.pluginRegistry)
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "ThinkingBridge") {
+      ThinkingBridge.register(registrar.messenger())
+    }
   }
 }
 

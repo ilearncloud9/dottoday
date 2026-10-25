@@ -3225,4 +3225,22 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String liveActivityCountLabel(int done, int total) =>
       pseudo(super.liveActivityCountLabel(done, total));
+
+  @override
+  String get privacyThinkingTitle => pseudo(super.privacyThinkingTitle);
+
+  @override
+  String get privacyThinkingBody => pseudo(super.privacyThinkingBody);
+
+  @override
+  String get privacyThinkingOnDevice => pseudo(super.privacyThinkingOnDevice);
+
+  @override
+  String get privacyThinkingRules => pseudo(super.privacyThinkingRules);
+
+  @override
+  String get privacyClearThinking => pseudo(super.privacyClearThinking);
+
+  @override
+  String get snackThinkingCleared => pseudo(super.snackThinkingCleared);
 }

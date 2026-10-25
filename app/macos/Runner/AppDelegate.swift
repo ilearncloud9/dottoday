@@ -62,6 +62,9 @@ class AppDelegate: FlutterAppDelegate {
 
     // Reminder sound previews (docs/09 M8.4d).
     SoundBridge.shared.attach(to: controller.engine.binaryMessenger)
+
+    // On-device model, Foundation Models (docs/09 M10.1).
+    ThinkingBridge.register(controller.engine.binaryMessenger)
   }
 
   /// Sends [link] to the router, or keeps it until Dart listens.

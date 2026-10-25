@@ -5,6 +5,8 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/system/system_providers.dart';
+import 'package:dottoday/data/thinking/thinking_providers.dart';
+import 'package:dottoday/domain/thinking/thinking_backend.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/widgets/app_lock_group.dart';
 import 'package:dottoday/features/settings/widgets/feedback_sheet.dart';
@@ -69,7 +71,8 @@ class _Answer extends StatelessWidget {
 
 /// Settings › Privacy (docs/09 M3f.7, docs/06): what stays on the device,
 /// what sync sends, no tracking, crash reports when they are on; Clear
-/// recent searches, and the full policy when its URL is configured (M8.6).
+/// recent searches; where thinking help runs (M10.1, ADR-0009); and the
+/// full policy when its URL is configured (M8.6).
 class PrivacyPage extends ConsumerWidget {
   const PrivacyPage({super.key});
 
@@ -100,6 +103,7 @@ class PrivacyPage extends ConsumerWidget {
             child: Text(l10n.privacyClearSearches),
           ),
         ),
+        const _ThinkingSection(),
         if (policy != null)
           Align(
             alignment: AlignmentDirectional.centerStart,
@@ -117,6 +121,45 @@ class PrivacyPage extends ConsumerWidget {
     final messenger = ScaffoldMessenger.of(context);
     final text = context.l10n.snackSearchesCleared;
     await ref.read(recentSearchesProvider.notifier).clear();
+    messenger.showSnackBar(SnackBar(content: Text(text)));
+  }
+}
+
+/// ADR-0009's compliance line: the on-device paths, the rules fallback,
+/// which one this device uses now, and Clear thinking history.
+class _ThinkingSection extends ConsumerWidget {
+  const _ThinkingSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final path = ref.watch(thinkingPathProvider).value;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: DotSpace.s,
+      children: [
+        _Section(l10n.privacyThinkingTitle, l10n.privacyThinkingBody),
+        if (path != null)
+          PageText(
+            path == ThinkingPath.onDevice
+                ? l10n.privacyThinkingOnDevice
+                : l10n.privacyThinkingRules,
+          ),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: OutlinedButton(
+            onPressed: () => unawaited(_clear(context, ref)),
+            child: Text(l10n.privacyClearThinking),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _clear(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final text = context.l10n.snackThinkingCleared;
+    await ref.read(thinkingMemoryProvider).clear();
     messenger.showSnackBar(SnackBar(content: Text(text)));
   }
 }

@@ -12,6 +12,7 @@ import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import app.dottoday.planner.intents.IntentQueueBridge
 import app.dottoday.planner.intents.OngoingDot
+import app.dottoday.planner.thinking.ThinkingBridge
 import io.flutter.plugin.common.MethodChannel
 
 /**
@@ -24,7 +25,8 @@ import io.flutter.plugin.common.MethodChannel
  * a bundled reminder sound once for the Sound picker's preview (M8.4d).
  * `dottoday/intents` says when a widget or notification queued an action
  * (M9.2c, [IntentQueueBridge]); `dottoday/ongoing` shows the live dot as an
- * ongoing notification (M9.4, [OngoingDot]).
+ * ongoing notification (M9.4, [OngoingDot]); `dottoday/thinking` reaches
+ * Gemini Nano on the device (M10.1, [ThinkingBridge]).
  */
 class MainActivity : FlutterFragmentActivity() {
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
@@ -35,6 +37,7 @@ class MainActivity : FlutterFragmentActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         IntentQueueBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
+        ThinkingBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dottoday/ongoing")
             .setMethodCallHandler { call, result ->
                 when (call.method) {

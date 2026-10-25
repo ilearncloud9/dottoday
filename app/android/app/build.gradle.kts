@@ -82,4 +82,7 @@ dependencies {
     // Compile-only: TimeChangeReceiver enqueues the workmanager plugin's
     // worker; the library itself ships with the plugin (same version, M6.5.5).
     compileOnly("androidx.work:work-runtime:2.11.2")
+    // Gemini Nano on the device through AICore (docs/09 M10.1, ADR-0009):
+    // owner-approved on-device model library, 2026-10-25. Beta: pinned.
+    implementation("com.google.mlkit:genai-prompt:1.0.0-beta4")
 }

@@ -5375,5 +5375,29 @@
   "liveActivityCount": "{done} of {total}",
   "@liveActivityCount": {"description": "Live Activity: today's tasks done so far, next to a small pie, e.g. '1 of 3'.", "placeholders": {"done": {"type": "int"}, "total": {"type": "int"}}},
   "liveActivityCountLabel": "{done} of {total} done today",
-  "@liveActivityCountLabel": {"description": "Screen-reader label for liveActivityCount.", "placeholders": {"done": {"type": "int"}, "total": {"type": "int"}}}
+  "@liveActivityCountLabel": {"description": "Screen-reader label for liveActivityCount.", "placeholders": {"done": {"type": "int"}, "total": {"type": "int"}}},
+  "privacyThinkingTitle": "Help with thinking",
+  "@privacyThinkingTitle": {
+    "description": "Privacy page heading: where Break it down and other suggestions are worked out (docs/09 M10.1, ADR-0009)."
+  },
+  "privacyThinkingBody": "Break it down and suggestions are worked out on this device: Apple Intelligence on iPhone and Mac, Gemini Nano on Android, the browser's built-in model in Chrome. Where none is available, Dottoday uses your own history and simple rules. What you type is never sent to a server; what was asked and answered stays on this device.",
+  "@privacyThinkingBody": {
+    "description": "Privacy page text: the on-device model paths and the rules fallback; no server."
+  },
+  "privacyThinkingOnDevice": "On this device now: the built-in model.",
+  "@privacyThinkingOnDevice": {
+    "description": "Privacy page line: an on-device model is ready on this device now."
+  },
+  "privacyThinkingRules": "On this device now: your history and simple rules.",
+  "@privacyThinkingRules": {
+    "description": "Privacy page line: no on-device model here, so history and rules answer."
+  },
+  "privacyClearThinking": "Clear thinking history",
+  "@privacyClearThinking": {
+    "description": "Privacy page button: forgets saved breakdowns and the local log of what was asked and answered."
+  },
+  "snackThinkingCleared": "Thinking history cleared",
+  "@snackThinkingCleared": {
+    "description": "Snackbar after Clear thinking history."
+  }
 }
