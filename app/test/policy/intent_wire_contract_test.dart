@@ -60,6 +60,38 @@ void main() {
     expect(js, contains("CACHE = 'dottoday-day-snapshot'"));
   });
 
+  // B6 surface rule (CLAUDE.md §11): widgets, controls and tiles act only
+  // through the five intents / the action receiver (docs/09 M9.5).
+  test('widgets, controls and tiles use the B6 paths', () {
+    String read(String p) => File(p).readAsStringSync();
+    const kotlin = 'android/app/src/main/kotlin/app/dottoday/planner';
+    expect(
+      read('$kotlin/widgets/NextUpWidget.kt'),
+      contains('DotActionReceiver.ACTION_MARK_DONE'),
+    );
+    expect(
+      read('$kotlin/tiles/DotTiles.kt'),
+      contains('DotActionKind.START_FOCUS'),
+    );
+    expect(
+      read('ios/DottodayWidgets/Views.swift'),
+      contains('MarkDoneIntent(occurrenceId:'),
+    );
+    final controls = read('ios/DottodayWidgets/DotControls.swift');
+    expect(controls, contains('OpenQuickAddIntent()'));
+    expect(controls, contains('StartFocusIntent()'));
+    final phrases = read('ios/Runner/DotShortcuts.swift');
+    for (final intent in [
+      'AddTaskIntent',
+      'WhatsNextIntent',
+      'MarkDoneIntent',
+      'AddFifteenIntent',
+      'StartFocusIntent',
+    ]) {
+      expect(phrases, contains('$intent()'), reason: intent);
+    }
+  });
+
   test('the queue key matches the Dart stores', () {
     expect(
       File('lib/data/intents/action_queue_json.dart').readAsStringSync(),

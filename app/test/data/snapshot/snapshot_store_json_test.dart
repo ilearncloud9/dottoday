@@ -42,6 +42,7 @@ void main() {
     expect(deep['end_ms'], (deep['start_ms']! as int) + 120 * 60 * 1000);
     expect(json['labels'], containsPair('inbox', '3 in Inbox'));
     expect(json['labels'], containsPair('next_up', 'Next up'));
+    expect(json['labels'], containsPair('done', 'Done'));
     expect(json['format'], {
       'tz': 'Europe/Berlin',
       'locale': 'en',

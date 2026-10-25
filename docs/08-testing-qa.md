@@ -138,6 +138,7 @@ Things the agent can't do: hearing, a person at a system prompt or sheet, physic
 - [ ] **Mac full screen**: View › Enter Full Screen — the rail and Today lay out with no title bar; the menu-bar dot stays. **Blocks** tag.
 - [ ] **Icons on devices** (store README step 6): home screen and launch screen on an iPhone (light and dark), an Android phone (adaptive mask, themed icon on Android 13+, the Android 12+ splash), the Mac Dock and Launchpad, and an installed PWA. The generator (`app/tool/gen_app_icons.dart`) is the single source if the design changes. **Blocks** store (a wrong icon is a resubmission).
 - [ ] **Live Activity on a real iPhone** (lock screen + Dynamic Island, Done / +15 work) — after M9.3, needs A's App Group. **Blocks** tag.
+- [ ] **Widget buttons, controls, tiles and Siri by hand (M9.5)** — iPhone (iOS 17+ for the Next up Done button, iOS 18 for the controls; needs A's App Group): put Next up on the home screen, tap its ✓ with Dottoday closed, open the app — the task is done; add Add task and Start focus in Control Center and on the Action button; say "Add a task in Dottoday", "What's next in Dottoday", "Mark my task done in Dottoday" in each app language. Android: Next up's ✓ with the app swiped away; the Add task and Start focus Quick Settings tiles; long-press the icon for the two shortcuts. Scripts cover the queue with the app killed (`tool/widget_killed_check.sh`, `tool/ongoing_killed_check.sh`), not a finger on the widget. **Blocks** tag.
 
 ### 6.2 Agent (everything else)
 

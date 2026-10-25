@@ -27,6 +27,21 @@ enum DotActions {
       CFNotificationName(DotStore.queueChanged as CFString), nil, nil, true)
   }
 
+  /// The dot under way now (or, with [orNext], else the next one) in the
+  /// stored snapshot: what Siri's "Mark my task done" acts on.
+  static func currentBlock(
+    orNext: Bool = false, at now: Date = Date(), defaults: UserDefaults? = DotStore.shared
+  ) -> (id: String, endMs: Double)? {
+    guard let snapshot = storedSnapshot(defaults: defaults) else { return nil }
+    let blocks = (snapshot["blocks"] as? [[String: Any]] ?? []).filter { $0["done"] as? Bool != true }
+    let nowMs = now.timeIntervalSince1970 * 1000
+    func ms(_ b: [String: Any], _ k: String) -> Double { (b[k] as? NSNumber)?.doubleValue ?? 0 }
+    let live = blocks.first { ms($0, "start_ms") <= nowMs && nowMs < ms($0, "end_ms") }
+    let next = orNext ? blocks.first { ms($0, "start_ms") > nowMs } : nil
+    guard let block = live ?? next, let id = block["id"] as? String else { return nil }
+    return (id, ms(block, "end_ms"))
+  }
+
   /// The snapshot as stored, for `WhatsNext`.
   static func storedSnapshot(defaults: UserDefaults? = DotStore.shared) -> [String: Any]? {
     guard let raw = defaults?.string(forKey: DotStore.snapshotKey),

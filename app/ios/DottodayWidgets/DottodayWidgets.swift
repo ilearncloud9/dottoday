@@ -11,6 +11,10 @@ struct DottodayWidgets: WidgetBundle {
     if #available(iOS 16.2, *) {
       DotLiveActivity()
     }
+    if #available(iOS 18.0, *) {
+      AddTaskControl()
+      StartFocusControl()
+    }
   }
 }
 

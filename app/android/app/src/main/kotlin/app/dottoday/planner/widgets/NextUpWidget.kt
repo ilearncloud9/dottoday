@@ -1,6 +1,19 @@
 package app.dottoday.planner.widgets
 
 import android.content.Context
+import android.content.Intent
+import androidx.compose.ui.graphics.Color
+import androidx.glance.appwidget.action.actionSendBroadcast
+import androidx.glance.appwidget.cornerRadius
+import androidx.glance.layout.Box
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.size
+import androidx.glance.semantics.contentDescription
+import androidx.glance.semantics.semantics
+import androidx.glance.text.FontWeight
+import androidx.glance.text.TextStyle
+import androidx.glance.unit.ColorProvider as FixedColor
+import app.dottoday.planner.intents.DotActionReceiver
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
@@ -60,7 +73,35 @@ private fun NextUp(context: Context, snapshot: WidgetSnapshot, now: Long) {
             Text(block.title, style = DotText.title, maxLines = 2)
         }
         Spacer(GlanceModifier.height(6.dp))
-        Text(if (live != null) block.until else block.time, style = DotText.meta)
+        Row(modifier = GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
+            Text(
+                if (live != null) block.until else block.time,
+                style = DotText.meta,
+                modifier = GlanceModifier.defaultWeight(),
+            )
+            DoneButton(context, block, snapshot.label("done"))
+        }
+    }
+}
+
+/**
+ * Next up's Done (docs/09 M9.5): a broadcast to [DotActionReceiver], the
+ * same path as the ongoing notification's Done — queued for the app,
+ * shown on the snapshot at once, with or without the app running.
+ */
+@Composable
+private fun DoneButton(context: Context, block: WidgetBlock, label: String) {
+    val intent = Intent(context, DotActionReceiver::class.java)
+        .setAction(DotActionReceiver.ACTION_MARK_DONE)
+        .putExtra(DotActionReceiver.EXTRA_OCCURRENCE, block.id)
+    Box(
+        modifier = GlanceModifier.size(44.dp).cornerRadius(22.dp)
+            .background(FixedColor(Color(block.color)))
+            .clickable(actionSendBroadcast(intent))
+            .semantics { contentDescription = label },
+        contentAlignment = Alignment.Center,
+    ) {
+        Text("✓", style = TextStyle(color = FixedColor(Color.White), fontWeight = FontWeight.Bold))
     }
 }
 

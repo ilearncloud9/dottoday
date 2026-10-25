@@ -3,4 +3,5 @@
 <resources>
     <string name="shortcut_add_task">Aufgabe hinzufügen</string>
     <string name="shortcut_whats_next">Was kommt als Nächstes</string>
+    <string name="tile_start_focus">Fokus starten</string>
 </resources>

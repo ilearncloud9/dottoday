@@ -37,6 +37,18 @@ Map<String, String> _usage(File plist) => {
     m.group(1)!: m.group(2)!,
 };
 
+/// AppShortcuts.strings keys are whole English phrases, not identifiers.
+Map<String, String> _phrases(String lang) => {
+  for (final m
+      in RegExp(
+        r'^"((?:[^"\\]|\\.)*)"\s*=\s*"((?:[^"\\]|\\.)*)";',
+        multiLine: true,
+      ).allMatches(
+        File('ios/Runner/$lang.lproj/AppShortcuts.strings').readAsStringSync(),
+      ))
+    m.group(1)!: m.group(2)!,
+};
+
 Map<String, String> _strings(File file) => {
   for (final m in _stringsLine.allMatches(file.readAsStringSync()))
     m.group(1)!: m.group(2)!,
@@ -112,6 +124,20 @@ void main() {
         expect(project, contains('path = $lang.lproj/Localizable.strings;'));
       }
     });
+  });
+
+  // Siri / Shortcuts phrases (docs/09 M9.5): every language has every
+  // phrase, and each keeps the app-name slot Siri needs.
+  test('AppShortcuts.strings: every phrase in every language', () {
+    final english = _phrases('en');
+    expect(english, hasLength(5));
+    for (final lang in _translations) {
+      final phrases = _phrases(lang);
+      expect(phrases.keys.toSet(), english.keys.toSet(), reason: lang);
+      for (final value in phrases.values) {
+        expect(value, contains(r'${applicationName}'), reason: lang);
+      }
+    }
   });
 
   test('Android 13+ offers every language per app', () {

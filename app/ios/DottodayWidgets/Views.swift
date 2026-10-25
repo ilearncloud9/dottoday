@@ -23,6 +23,24 @@ struct TaskDot: View {
   }
 }
 
+/// Next up's Done (iOS 17+, docs/09 M9.5): the B6 MarkDone intent, which
+/// queues for the app and ticks the dot on the snapshot at once.
+struct DoneButton: View {
+  let block: WidgetBlock
+  let label: String
+
+  var body: some View {
+    if #available(iOS 17.0, *) {
+      Button(intent: MarkDoneIntent(occurrenceId: block.id)) {
+        Image(systemName: "checkmark").font(.subheadline.weight(.bold)).foregroundStyle(.white)
+          .frame(width: 36, height: 36).background(Circle().fill(Color(hex: block.color)))
+      }
+      .buttonStyle(.plain)
+      .accessibilityLabel(label)
+    }
+  }
+}
+
 func link(_ path: String) -> URL { URL(string: "dottoday://\(path)")! }
 
 struct NextUpView: View {
@@ -41,8 +59,12 @@ struct NextUpView: View {
           TaskDot(block: block, size: 12)
           Text(block.title).font(.headline).foregroundStyle(Dot.ink).lineLimit(2)
         }
-        Text(live != nil ? block.until : block.time)
-          .font(.caption).foregroundStyle(Dot.muted)
+        HStack(alignment: .bottom) {
+          Text(live != nil ? block.until : block.time)
+            .font(.caption).foregroundStyle(Dot.muted)
+          Spacer(minLength: 4)
+          if family == .systemSmall { DoneButton(block: block, label: s.label("done")) }
+        }
       } else {
         Text(s.label("nothing_next")).font(.caption).foregroundStyle(Dot.muted)
       }
