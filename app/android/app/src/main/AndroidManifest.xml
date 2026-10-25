@@ -39,8 +39,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <!-- dottoday://task/<id>, /day/<date>, /inbox … (07 shared, M5.0).
-                 The router allow-lists every link. https App Links need a
-                 hosted assetlinks.json and wait for the domain (M8.6). -->
+                 The router allow-lists every link. https App Links on dottoday.app need the
+                 hosted assetlinks.json (release gate, docs/08 §6.1 D). -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>

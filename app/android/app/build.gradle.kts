@@ -18,7 +18,7 @@ val uploadKey = Properties().apply {
 }
 
 android {
-    namespace = "com.yourcompany.dottoday"
+    namespace = "app.dottoday.planner"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -35,7 +35,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.yourcompany.dottoday"
+        applicationId = "app.dottoday.planner"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 26 // docs/07 Android (min API 26); also required by sentry_flutter 10

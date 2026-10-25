@@ -1,4 +1,4 @@
-package com.yourcompany.dottoday.widgets
+package app.dottoday.planner.widgets
 
 import android.content.Context
 import androidx.compose.ui.unit.dp

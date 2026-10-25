@@ -1,4 +1,4 @@
-package com.yourcompany.dottoday.alarms
+package app.dottoday.planner.alarms
 
 import android.content.BroadcastReceiver
 import android.content.Context

@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ## [Unreleased]
 
+### Changed
+- Final app ids: `app.dottoday.planner` on iOS, macOS and Android, App Group `group.app.dottoday.planner`, domain `dottoday.app`; the Mac's About shows "© 2026 Dottoday". Send feedback now addresses feedback@dottoday.app. A build with the new id installs as a new app next to earlier test builds.
+
 ### Added
 - M8.7: Release gates reviewed (docs/08 §6): the owner's steps are grouped by theme (accounts and signing, consoles and OAuth, legal and privacy, hosting and config, person checks on real devices), each says where to act, which file or variable it touches and what it blocks; every agent gate is done with evidence or names the task that closes it. The design sweep now covers Export, What's new, Reminders and Send feedback and checks each screen's accessibility tree on the iPhone simulator, the Android emulator and the Mac; the web build's keyboard checks run in CI.
 - Fixed on the Mac and the web: buttons and icon buttons were as small as 32–40 px (Material's desktop density); they now keep the 44 pt minimum everywhere.

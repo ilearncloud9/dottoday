@@ -21,7 +21,7 @@ cd "$(dirname "$0")/.."
 mode="${1:?android | ios | android-reboot}"
 device="${2:-}"
 title="Killed-app check"
-app_id="com.yourcompany.dottoday"
+app_id="app.dottoday.planner"
 adb="${ANDROID_HOME:-$HOME/Library/Android/sdk}/platform-tools/adb"
 a() { "$adb" ${device:+-s "$device"} "$@"; }
 

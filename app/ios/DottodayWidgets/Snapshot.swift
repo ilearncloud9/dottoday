@@ -37,7 +37,7 @@ struct Snapshot: Codable {
   static let empty = Snapshot(v: 1, inboxCount: 0, labels: [:], blocks: [])
 
   /// Shared with the app (Runner.entitlements, home_widget_sink.dart).
-  static let appGroup = "group.com.yourcompany.dottoday"
+  static let appGroup = "group.app.dottoday.planner"
 
   static func load() -> Snapshot {
     guard

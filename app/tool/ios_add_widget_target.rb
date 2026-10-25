@@ -22,7 +22,7 @@ generated = project.files.find { |f| f.path == 'Flutter/Generated.xcconfig' } ||
 widgets.build_configurations.each do |config|
   config.base_configuration_reference = generated
   s = config.build_settings
-  s['PRODUCT_BUNDLE_IDENTIFIER'] = 'com.yourcompany.dottoday.widgets'
+  s['PRODUCT_BUNDLE_IDENTIFIER'] = 'app.dottoday.planner.widgets'
   s['PRODUCT_NAME'] = '$(TARGET_NAME)'
   s['INFOPLIST_FILE'] = 'DottodayWidgets/Info.plist'
   s['GENERATE_INFOPLIST_FILE'] = 'NO'
