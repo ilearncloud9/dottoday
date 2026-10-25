@@ -52,6 +52,9 @@ class ProposalView extends ConsumerWidget {
       body: body,
       lead: request.lead?.call(context, proposal),
       below: request.below?.call(context, proposal),
+      options:
+          request.options?.call(context, proposal, active.update) ?? const [],
+      footnote: request.footnote,
       onAccept: (request.draftOnly ? proposal.edits.isEmpty : proposal.isEmpty)
           ? null
           : () => unawaited(_accept(context, ref, request)),

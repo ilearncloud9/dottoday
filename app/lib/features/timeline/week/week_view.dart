@@ -17,9 +17,8 @@ import 'package:dottoday/features/timeline/week/week_board.dart';
 import 'package:dottoday/features/timeline/week/week_day_column.dart';
 import 'package:dottoday/features/timeline/week/week_header.dart';
 import 'package:dottoday/features/timeline/week/week_pieces.dart';
+import 'package:dottoday/features/timeline/week/week_tasks.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
-import 'package:dottoday/shared/dot/thread.dart';
-import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/foundation.dart';
@@ -201,7 +200,7 @@ class WeekView extends ConsumerWidget {
     final use24h = use24hFor(context, profile.settings.use24h);
     String time(DateTime utc) => timeOfUtc(context, zone, utc, use24h: use24h);
     final date = d.day.date;
-    final tasks = _tasks(context, d, shape, time);
+    final tasks = weekTasks(context, ref, d, shape, time, nowUtc: nowUtc);
     final isToday = date == today;
     final locale = Localizations.localeOf(context).toLanguageTag();
     return WeekDayColumn(
@@ -231,29 +230,13 @@ class WeekView extends ConsumerWidget {
       onDrop: (id, start) => unawaited(_move(context, ref, id, start, time)),
       onOpen: (id) => ref.read(editingTaskProvider.notifier).open(id),
       onAdd: () => Actions.maybeInvoke(context, AddTaskIntent(day: date)),
-    );
-  }
-
-  /// [d]'s timed tasks with their states, as the thread reads them.
-  List<ThreadTask> _tasks(
-    BuildContext context,
-    TimelineData d,
-    DayShape shape,
-    String Function(DateTime utc) time,
-  ) {
-    final l10n = context.l10n;
-    return threadTasks(
-      threadEntries(
-        blocks: d.blocks,
-        shape: shape,
-        nowUtc: nowUtc,
-        format: ThreadFormat(
-          time: time,
-          range: l10n.threadTimeRange,
-          duration: (m) => formatDurationShort(l10n, m),
-        ),
+      onCue: (id) => openWeekCue(
+        context,
+        ref,
+        tasks.where((t) => t.id == id).firstOrNull,
+        find: (id) => _find(ref, id),
       ),
-    ).toList();
+    );
   }
 
   /// A task of this week or the Inbox.

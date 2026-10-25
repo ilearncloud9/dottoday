@@ -103,6 +103,53 @@ final class SeriesRepositoryProvider
 
 String _$seriesRepositoryHash() => r'7e6ca6878a657b13470527634d603adecbf3f02a';
 
+@ProviderFor(routineRepository)
+final routineRepositoryProvider = RoutineRepositoryProvider._();
+
+final class RoutineRepositoryProvider
+    extends
+        $FunctionalProvider<
+          RoutineRepository,
+          RoutineRepository,
+          RoutineRepository
+        >
+    with $Provider<RoutineRepository> {
+  RoutineRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'routineRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$routineRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<RoutineRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  RoutineRepository create(Ref ref) {
+    return routineRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(RoutineRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<RoutineRepository>(value),
+    );
+  }
+}
+
+String _$routineRepositoryHash() => r'64f7c42c7858c1798e648ab1beee8000d34746d4';
+
 @ProviderFor(subtaskRepository)
 final subtaskRepositoryProvider = SubtaskRepositoryProvider._();
 

@@ -56,6 +56,7 @@ _Occurrence _$OccurrenceFromJson(Map<String, dynamic> json) => _Occurrence(
   ),
   durationFromSteps: json['duration_from_steps'] as bool? ?? false,
   moveCount: (json['move_count'] as num?)?.toInt() ?? 0,
+  routineStart: json['routine_start'] as bool? ?? false,
   createdAt: const UtcMillisConverter().fromJson(
     (json['created_at'] as num).toInt(),
   ),
@@ -113,6 +114,7 @@ Map<String, dynamic> _$OccurrenceToJson(_Occurrence instance) =>
       ),
       'duration_from_steps': instance.durationFromSteps,
       'move_count': instance.moveCount,
+      'routine_start': instance.routineStart,
       'created_at': const UtcMillisConverter().toJson(instance.createdAt),
       'updated_at': const UtcMillisConverter().toJson(instance.updatedAt),
       'deleted_at': _$JsonConverterToJson<int, DateTime>(

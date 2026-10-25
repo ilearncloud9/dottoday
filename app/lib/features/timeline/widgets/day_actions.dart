@@ -13,6 +13,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
+import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
@@ -100,6 +101,8 @@ ThreadActions dayThreadActions(
       final live = find(id);
       final overrun = overrunOf(live, blocks);
       if (overrun <= 0) return;
+      // More than two behind it: a proposal first (11 C1, M11.1).
+      if (rebalanceShiftRest(context, blocks, live, overrun)) return;
       report(
         await shiftRest(ref, day: blocks, live: live, overrunMinutes: overrun),
         (v) {

@@ -4,6 +4,7 @@ import 'package:dottoday/data/calendar/calendar_importer.dart';
 import 'package:dottoday/data/calendar/drift_calendar_source_repository.dart';
 import 'package:dottoday/data/mappers/entity_mappers.dart';
 import 'package:dottoday/data/sync/requeue.dart';
+import 'package:dottoday/domain/calendar/calendar_import_plan.dart';
 import 'package:dottoday/domain/calendar/calendar_import_rules.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/entities/enums.dart';
@@ -32,6 +33,7 @@ void main() {
   late FakeDeviceCalendarGateway os;
   late DriftCalendarSourceRepository sources;
   late CalendarImporter importer;
+  late List<CalendarMove> moved;
   late tz.Location berlin;
   final nine = DateTime.utc(2026, 10, 21, 7);
 
@@ -41,6 +43,7 @@ void main() {
   });
 
   setUp(() async {
+    moved = [];
     h = WriteHarness(DateTime.utc(2026, 10, 21, 6));
     await h.writes.apply(WriteBatch(userId: userId, profile: profileFixture()));
     await h.db.delete(h.db.changeLog).go();
@@ -84,6 +87,7 @@ void main() {
       clock: h.clock,
       ids: FakeIds('cal'),
       logger: h.logger,
+      onMoved: moved.addAll,
     );
   });
   tearDown(() async {
@@ -185,6 +189,26 @@ void main() {
     final rows = await imported(deleted: true);
     expect(rows.map((o) => o.title), ['Offsite', 'Offsite']);
     expect(await h.db.select(h.db.calendarLinks).get(), hasLength(2));
+  });
+
+  test('an event the calendar moved is reported after the commit', () async {
+    await run();
+    expect(moved, isEmpty);
+    final later = nine.add(const Duration(minutes: 45));
+    os.eventsByCalendar['work'] = [
+      ExternalEvent(
+        id: 'E1',
+        calendarId: 'work',
+        title: 'Standup',
+        startUtc: later,
+        endUtc: later.add(const Duration(minutes: 15)),
+      ),
+    ];
+    await run();
+    final standup = (await imported()).firstWhere((o) => o.title == 'Standup');
+    expect(standup.startUtc, later, reason: 'written before it is reported');
+    expect(moved.single.occurrenceId, standup.id);
+    expect(moved.single.deltaMin, 45);
   });
 
   test('switching a calendar off removes its events', () async {

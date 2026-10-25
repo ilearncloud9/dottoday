@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/proposals/proposal.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
+import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/proposals/proposal_edit_row.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,11 @@ class ProposalThreadList extends StatelessWidget {
               times: _Times(context, location, use24h, today),
               onRemove: e.removable ? () => onRemove(e.id) : null,
             ),
+        if (_freeMinutes(proposal) case final free when free > 0)
+          ProposalBedtimeRow(
+            label: l10n.threadFree(formatDurationShort(l10n, free)),
+            moon: false,
+          ),
         ProposalBedtimeRow(
           label: l10n.threadBed(
             timeOfUtc(
@@ -65,6 +71,20 @@ class ProposalThreadList extends StatelessWidget {
       ],
     );
   }
+}
+
+/// What the proposed day leaves free from its last dot (or from now) to
+/// Bedtime ("2 h 15 free", `B-ios-rebalance`); 0 for a proposal about one
+/// task (Break it down), whose snapshot has no day around it.
+int _freeMinutes(Proposal proposal) {
+  final after = proposal.after;
+  var from = after.generatedAtUtc;
+  for (final d in after.dots) {
+    if (d.endUtc.isAfter(from) && d.startUtc.isBefore(after.bedUtc)) {
+      from = d.endUtc;
+    }
+  }
+  return after.bedUtc.difference(from).inMinutes;
 }
 
 /// Clock and day texts for the rows.

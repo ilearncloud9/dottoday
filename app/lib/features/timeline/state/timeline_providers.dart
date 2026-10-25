@@ -140,3 +140,18 @@ Stream<Map<String, List<Alert>>> seriesAlerts(Ref ref) {
         .map((all) => {for (final s in all) s.id: s.alerts}),
   );
 }
+
+/// [date]'s timeline, held while it loads: nothing may be watching it
+/// (tomorrow, or a closed sheet's today), and an unwatched day is
+/// disposed mid-load.
+Future<TimelineData> readTimelineDay(
+  ProviderContainer container,
+  DateTime date,
+) async {
+  final hold = container.listen(timelineDataProvider(date), (_, _) {});
+  try {
+    return await container.read(timelineDataProvider(date).future);
+  } finally {
+    hold.close();
+  }
+}

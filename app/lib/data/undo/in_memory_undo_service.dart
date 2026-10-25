@@ -3,10 +3,12 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
+import 'package:dottoday/domain/repositories/routine_repository.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
 import 'package:dottoday/domain/repositories/subtask_repository.dart';
@@ -31,6 +33,7 @@ final class InMemoryUndoService implements UndoService {
     required OccurrenceRepository occurrences,
     required SubtaskRepository subtasks,
     required SeriesRepository series,
+    required RoutineRepository routines,
     required SettingsRepository settings,
     required Clock clock,
     required IdGenerator ids,
@@ -39,6 +42,7 @@ final class InMemoryUndoService implements UndoService {
        _occurrences = occurrences,
        _subtasks = subtasks,
        _series = series,
+       _routines = routines,
        _clock = clock,
        _ids = ids;
 
@@ -46,6 +50,7 @@ final class InMemoryUndoService implements UndoService {
   final OccurrenceRepository _occurrences;
   final SubtaskRepository _subtasks;
   final SeriesRepository _series;
+  final RoutineRepository _routines;
   final SettingsRepository _settings;
   final Clock _clock;
   final IdGenerator _ids;
@@ -152,6 +157,11 @@ final class InMemoryUndoService implements UndoService {
           ?(value ??
               (await _subtasks.findById(u, key))?.copyWith(deletedAt: now)),
       ],
+      routines: [
+        for (final MapEntry(:key, :value) in before.routines.entries)
+          ?(value ??
+              (await _routines.findById(u, key))?.copyWith(deletedAt: now)),
+      ],
     );
   }
 
@@ -175,6 +185,7 @@ final class InMemoryUndoService implements UndoService {
       {for (final s in batch.subtasks) s.id: await _subtasks.findById(u, s.id)},
       series,
       batch.profile == null ? null : await _settings.findLocalProfile(),
+      {for (final r in batch.routines) r.id: await _routines.findById(u, r.id)},
     );
   }
 
@@ -192,6 +203,7 @@ final class _Before {
     this.subtasks,
     this.series,
     this.profile,
+    this.routines,
   );
 
   final String userId;
@@ -201,5 +213,6 @@ final class _Before {
 
   /// The profile as it was, when the batch wrote one.
   final Profile? profile;
+  final Map<String, Routine?> routines;
   late DateTime expiresAtUtc;
 }

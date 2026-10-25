@@ -6581,6 +6581,474 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Step 1 added to {title}'**
   String unstickSaved(String title);
+
+  /// Rebalance proposal's Accept (B-ios-rebalance).
+  ///
+  /// In en, this message translates to:
+  /// **'Accept plan'**
+  String get rebalanceAccept;
+
+  /// Under Rebalance's buttons.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing moves until you accept · Undo for 30 s after'**
+  String get rebalanceFootnote;
+
+  /// Rebalance rule chip: later tasks keep their gaps and move by the delay.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift followers'**
+  String get rebalanceShiftFollowers;
+
+  /// Rebalance rule chip: optional tasks may get shorter.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow shrinking optional'**
+  String get rebalanceAllowShrink;
+
+  /// Rebalance rule chip: let the day run past Bedtime instead of moving tasks to tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Push past bedtime'**
+  String get rebalancePastBedtime;
+
+  /// Rebalance subtitle after a task overran its end.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} ran over by {duration} · here\'s a plan'**
+  String rebalanceRanOver(String title, String duration);
+
+  /// Rebalance subtitle from Running late.
+  ///
+  /// In en, this message translates to:
+  /// **'The rest of today, {duration} later · here\'s a plan'**
+  String rebalanceLate(String duration);
+
+  /// Rebalance subtitle from Shift the rest on a task under way.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} runs {duration} over · here\'s a plan'**
+  String rebalanceRunsOver(String title, String duration);
+
+  /// Snackbar with Undo after Rebalance's Accept.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan accepted'**
+  String get rebalanceAccepted;
+
+  /// Today prompt caption when an imported event moved later and now collides with the plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar changed'**
+  String get calendarMovedTitle;
+
+  /// Today prompt after the calendar moved an event later today.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} moved to {time} · Rebalance?'**
+  String calendarMovedDetail(String title, String time);
+
+  /// Button: open the Rebalance proposal for a calendar move.
+  ///
+  /// In en, this message translates to:
+  /// **'Rebalance'**
+  String get calendarMovedAction;
+
+  /// Rebalance subtitle after the calendar moved an event.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} moved to {time} · here\'s a plan'**
+  String rebalanceMoved(String title, String time);
+
+  /// Reality thread: what follows a row's real times, e.g. '· planned 7:30'.
+  ///
+  /// In en, this message translates to:
+  /// **'· {text}'**
+  String realityMetaJoin(String text);
+
+  /// Reality thread: when the plan had a task, after its real times. Never judgemental (no 'late').
+  ///
+  /// In en, this message translates to:
+  /// **'planned {time}'**
+  String realityPlanned(String time);
+
+  /// Reality thread: a task with no real start yet.
+  ///
+  /// In en, this message translates to:
+  /// **'not started yet'**
+  String get realityNotStarted;
+
+  /// Reality thread: how long a finished task really took.
+  ///
+  /// In en, this message translates to:
+  /// **'took {duration}'**
+  String realityTook(String duration);
+
+  /// Reality thread: how long the task under way has run.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} in'**
+  String realityRunning(String duration);
+
+  /// Reality thread: the open end of the task under way, e.g. '9:10 – now'.
+  ///
+  /// In en, this message translates to:
+  /// **'now'**
+  String get realityNow;
+
+  /// Day card toggle: the planned thread.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get realityPlan;
+
+  /// Day card toggle: what really happened (actual start and end times).
+  ///
+  /// In en, this message translates to:
+  /// **'Reality'**
+  String get realityReality;
+
+  /// Add: a task's usual real length from the user's history (11 C3). Plain, never judgemental.
+  ///
+  /// In en, this message translates to:
+  /// **'usually {duration}'**
+  String learnUsually(String duration);
+
+  /// Add: the user usually starts this task this much after its planned time. Never 'late'.
+  ///
+  /// In en, this message translates to:
+  /// **'you tend to start this ~{minutes} min after plan'**
+  String learnStartsAfter(int minutes);
+
+  /// Add: the user usually starts this task this much before its planned time.
+  ///
+  /// In en, this message translates to:
+  /// **'you tend to start this ~{minutes} min before plan'**
+  String learnStartsBefore(int minutes);
+
+  /// Reality thread insight strip: what the history says about the task under way.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} usually takes you {duration} · Add will suggest it'**
+  String learnInsight(String title, String duration);
+
+  /// Puts the insight strip away.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get learnInsightOk;
+
+  /// Running late sheet: the task at hand's usual real length, which picked the amount.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} usually takes {duration}'**
+  String lateUsually(String title, String duration);
+
+  /// Routines page title (11 C2).
+  ///
+  /// In en, this message translates to:
+  /// **'Routines'**
+  String get routinesTitle;
+
+  /// Routines page subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reusable slices of thread'**
+  String get routinesSubtitle;
+
+  /// Routine card: number of steps.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 step} other{{count} steps}}'**
+  String routineSteps(int count);
+
+  /// Routine card summary, e.g. '4 steps · 1 h 15 · starts at Wake Up'.
+  ///
+  /// In en, this message translates to:
+  /// **'{steps} · {duration} · {anchor}'**
+  String routineSummary(String steps, String duration, String anchor);
+
+  /// Routine anchor: first step at Wake Up.
+  ///
+  /// In en, this message translates to:
+  /// **'starts at Wake Up'**
+  String get routineStartsWake;
+
+  /// Routine anchor: last step ends at Bedtime.
+  ///
+  /// In en, this message translates to:
+  /// **'ends at Bedtime'**
+  String get routineEndsBed;
+
+  /// Routine anchor: a fixed local time.
+  ///
+  /// In en, this message translates to:
+  /// **'starts at {time}'**
+  String routineStartsAt(String time);
+
+  /// Button: propose the routine's tasks on today.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop on today'**
+  String get routineDropToday;
+
+  /// Button: edit a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get routineEdit;
+
+  /// Button and editor title: create a routine from scratch.
+  ///
+  /// In en, this message translates to:
+  /// **'New routine'**
+  String get routineNew;
+
+  /// After 'New routine': the other way to make one.
+  ///
+  /// In en, this message translates to:
+  /// **'or save a selection from any day'**
+  String get routineNewHint;
+
+  /// Footnote on the Routines page (A0).
+  ///
+  /// In en, this message translates to:
+  /// **'Routine-start dots ring loud, like an alarm'**
+  String get routineAlarmNote;
+
+  /// Routines page with none saved.
+  ///
+  /// In en, this message translates to:
+  /// **'No routines yet. Pick a few tasks on any day and save them as a routine, or start a new one.'**
+  String get routinesEmpty;
+
+  /// Selection bar action and sheet title: save the picked tasks as a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as routine'**
+  String get routineSaveSelection;
+
+  /// Routine name field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get routineName;
+
+  /// Snackbar after saving a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved “{title}” as a routine'**
+  String routineSaved(String title);
+
+  /// Snackbar with Undo after deleting a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted “{title}”'**
+  String routineDeleted(String title);
+
+  /// Editor action.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete routine'**
+  String get routineDelete;
+
+  /// Editor title for an existing routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit routine'**
+  String get routineEditTitle;
+
+  /// Editor caption above the anchor choice.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get routineAnchorLabel;
+
+  /// Anchor choice.
+  ///
+  /// In en, this message translates to:
+  /// **'At Wake Up'**
+  String get routineAnchorWake;
+
+  /// Anchor choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Ending at Bedtime'**
+  String get routineAnchorBed;
+
+  /// Anchor choice.
+  ///
+  /// In en, this message translates to:
+  /// **'At a time'**
+  String get routineAnchorTime;
+
+  /// Editor caption above the steps.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get routineStepsLabel;
+
+  /// Hint in a step's name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Step name'**
+  String get routineStepHint;
+
+  /// Editor button.
+  ///
+  /// In en, this message translates to:
+  /// **'Add step'**
+  String get routineAddStep;
+
+  /// Tooltip: remove a step from the routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {title}'**
+  String routineRemoveStep(String title);
+
+  /// Tooltip: move a step earlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Move {title} up'**
+  String routineMoveUp(String title);
+
+  /// Tooltip: move a step later.
+  ///
+  /// In en, this message translates to:
+  /// **'Move {title} down'**
+  String routineMoveDown(String title);
+
+  /// Editor: free time kept between two steps.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} free'**
+  String routineGap(String duration);
+
+  /// Editor button.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get routineSave;
+
+  /// Proposal sheet title when dropping a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine'**
+  String get routineDropTitle;
+
+  /// Proposal subtitle when dropping a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} on {day} · from {time}'**
+  String routineDropSubtitle(String title, String day, String time);
+
+  /// Proposal accept button when dropping a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to day'**
+  String get routineDropAccept;
+
+  /// Snackbar with Undo after a routine drop was accepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine added'**
+  String get routineDropAccepted;
+
+  /// Screen-reader label of a routine chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop routine {title}'**
+  String routineChipLabel(String title);
+
+  /// Today ⋯ menu and Settings › Planning: open the Routines page.
+  ///
+  /// In en, this message translates to:
+  /// **'Routines…'**
+  String get routinesMenu;
+
+  /// Add step 1: caption above routine chips.
+  ///
+  /// In en, this message translates to:
+  /// **'Routines'**
+  String get routinesSuggestions;
+
+  /// Editor: why Save is off.
+  ///
+  /// In en, this message translates to:
+  /// **'Give the routine a name and at least one step'**
+  String get routineInvalid;
+
+  /// Routines page ring, read out.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No routines} =1{1 routine} other{{count} routines}}'**
+  String routinesCount(int count);
+
+  /// Week strip day menu and Inbox: pick a routine to propose on that day.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop a routine…'**
+  String get routineDropHere;
+
+  /// Routine card button for a day other than today.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop on {day}'**
+  String routineDropOnDay(String day);
+
+  /// Routines page: caption above the week strip picking where routines drop.
+  ///
+  /// In en, this message translates to:
+  /// **'Which day'**
+  String get routineDropDay;
+
+  /// Settings › Planning switch (11 C4): suggest when to place high-energy tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy suggestions'**
+  String get settingsEnergy;
+
+  /// Under the Energy suggestions switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest times when you usually finish high-energy tasks'**
+  String get settingsEnergyDetail;
+
+  /// Under the Energy suggestions switch while it can't be on yet.
+  ///
+  /// In en, this message translates to:
+  /// **'After 20 finished high-energy tasks · {count} so far'**
+  String settingsEnergyLocked(int count);
+
+  /// Add step 2: the user's best window for high-energy work, from their own history.
+  ///
+  /// In en, this message translates to:
+  /// **'you finish high-energy tasks best {range}'**
+  String addEnergyBest(String range);
+
+  /// Add step 2: move the new task to the start of the best window.
+  ///
+  /// In en, this message translates to:
+  /// **'Try {time}'**
+  String addEnergyTry(String time);
+
+  /// Debug-build-only menu item: real times on two of today's tasks and three sample routines.
+  ///
+  /// In en, this message translates to:
+  /// **'Load M11 sample (debug)'**
+  String get debugLoadM11Sample;
+
+  /// Confirmation after the debug M11 sample was written.
+  ///
+  /// In en, this message translates to:
+  /// **'M11 sample loaded'**
+  String get debugM11Loaded;
+
+  /// Proposal chip on an existing task a new one would overlap; it stays as it is (routine drop, M11.4).
+  ///
+  /// In en, this message translates to:
+  /// **'already here · overlaps'**
+  String get proposalOverlaps;
 }
 
 class _AppLocalizationsDelegate

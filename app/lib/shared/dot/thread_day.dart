@@ -39,6 +39,10 @@ const minGapMinutes = 15;
 /// as stored; live while now is inside it; missed once it ended undone;
 /// upcoming otherwise. Gaps from now on are "add here" targets.
 ///
+/// With [reality] (the Reality thread, 11 C3) [blocks] carry the times
+/// tasks really ran, every task is decorated (a missing id gets an empty
+/// [ThreadReality]), and only a task [ThreadReality.underWay] is live.
+///
 /// ```dart
 /// threadEntries(blocks: day, shape: shape, nowUtc: clock.nowUtc(), …);
 /// ```
@@ -51,6 +55,7 @@ List<ThreadEntry> threadEntries({
   Map<String, String> smallestSteps = const {},
   Set<String> unstick = const {},
   bool showFreeTime = true,
+  Map<String, ThreadReality>? reality,
 }) {
   final sorted = [
     for (final o in blocks)
@@ -63,6 +68,7 @@ List<ThreadEntry> threadEntries({
     subtasks[o.id],
     smallestSteps[o.id],
     unstick.contains(o.id),
+    reality == null ? null : reality[o.id] ?? const ThreadReality(),
   );
   final (:before, :inside, :after) = _split(sorted, shape);
   final out = <ThreadEntry>[
@@ -153,10 +159,16 @@ ThreadTask _task(
   ({int done, int total})? subtasks, [
   String? smallestStep,
   bool unstick = false,
+  ThreadReality? reality,
 ]) {
   final start = o.startUtc!;
   final end = o.endUtc!;
-  final state = dotStateOf(o, now);
+  final planState = dotStateOf(o, now);
+  // On the Reality thread a task is live only once it really started.
+  final state =
+      reality != null && planState == DotState.live && !reality.underWay
+      ? DotState.upcoming
+      : planState;
   final live = state == DotState.live;
   return ThreadTask(
     id: o.id,
@@ -180,6 +192,7 @@ ThreadTask _task(
     travel: o.travelBufferMin > 0 ? format.duration(o.travelBufferMin) : null,
     smallestStep: smallestStep,
     unstick: unstick,
+    reality: reality,
   );
 }
 
@@ -213,6 +226,7 @@ ThreadTask _withOverrun(
     subtasksTotal: task.subtasksTotal,
     smallestStep: task.smallestStep,
     unstick: task.unstick,
+    reality: task.reality,
     overrunMinutes: overrun,
     movable: task.movable,
     travel: task.travel,

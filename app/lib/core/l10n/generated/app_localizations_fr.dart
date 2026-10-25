@@ -4442,4 +4442,316 @@ class AppLocalizationsFr extends AppLocalizations {
   String unstickSaved(String title) {
     return 'Étape 1 ajoutée à $title';
   }
+
+  @override
+  String get rebalanceAccept => 'Accepter le plan';
+
+  @override
+  String get rebalanceFootnote =>
+      'Rien ne bouge avant ton accord · Annuler pendant 30 s ensuite';
+
+  @override
+  String get rebalanceShiftFollowers => 'Décaler la suite';
+
+  @override
+  String get rebalanceAllowShrink => 'Raccourcir l’optionnel';
+
+  @override
+  String get rebalancePastBedtime => 'Dépasser le coucher';
+
+  @override
+  String rebalanceRanOver(String title, String duration) {
+    return '$title a débordé de $duration · voici un plan';
+  }
+
+  @override
+  String rebalanceLate(String duration) {
+    return 'La suite de la journée $duration plus tard · voici un plan';
+  }
+
+  @override
+  String rebalanceRunsOver(String title, String duration) {
+    return '$title dépasse de $duration · voici un plan';
+  }
+
+  @override
+  String get rebalanceAccepted => 'Plan accepté';
+
+  @override
+  String get calendarMovedTitle => 'Agenda modifié';
+
+  @override
+  String calendarMovedDetail(String title, String time) {
+    return '$title déplacé à $time · rééquilibrer ?';
+  }
+
+  @override
+  String get calendarMovedAction => 'Rééquilibrer';
+
+  @override
+  String rebalanceMoved(String title, String time) {
+    return '$title déplacé à $time · voici un plan';
+  }
+
+  @override
+  String realityMetaJoin(String text) {
+    return '· $text';
+  }
+
+  @override
+  String realityPlanned(String time) {
+    return 'prévu $time';
+  }
+
+  @override
+  String get realityNotStarted => 'pas encore commencé';
+
+  @override
+  String realityTook(String duration) {
+    return 'a pris $duration';
+  }
+
+  @override
+  String realityRunning(String duration) {
+    return 'depuis $duration';
+  }
+
+  @override
+  String get realityNow => 'maintenant';
+
+  @override
+  String get realityPlan => 'Plan';
+
+  @override
+  String get realityReality => 'Réel';
+
+  @override
+  String learnUsually(String duration) {
+    return 'en général $duration';
+  }
+
+  @override
+  String learnStartsAfter(int minutes) {
+    return 'tu commences en général ~$minutes min après le plan';
+  }
+
+  @override
+  String learnStartsBefore(int minutes) {
+    return 'tu commences en général ~$minutes min avant le plan';
+  }
+
+  @override
+  String learnInsight(String title, String duration) {
+    return '$title te prend en général $duration · Ajouter le proposera';
+  }
+
+  @override
+  String get learnInsightOk => 'OK';
+
+  @override
+  String lateUsually(String title, String duration) {
+    return '$title prend en général $duration';
+  }
+
+  @override
+  String get routinesTitle => 'Routines';
+
+  @override
+  String get routinesSubtitle => 'Morceaux de fil réutilisables';
+
+  @override
+  String routineSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count étapes',
+      one: '1 étape',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String routineSummary(String steps, String duration, String anchor) {
+    return '$steps · $duration · $anchor';
+  }
+
+  @override
+  String get routineStartsWake => 'commence au réveil';
+
+  @override
+  String get routineEndsBed => 'finit au coucher';
+
+  @override
+  String routineStartsAt(String time) {
+    return 'commence à $time';
+  }
+
+  @override
+  String get routineDropToday => 'Poser sur aujourd’hui';
+
+  @override
+  String get routineEdit => 'Modifier';
+
+  @override
+  String get routineNew => 'Nouvelle routine';
+
+  @override
+  String get routineNewHint => 'ou enregistrer une sélection d’un jour';
+
+  @override
+  String get routineAlarmNote =>
+      'Le début d’une routine sonne fort, comme un réveil';
+
+  @override
+  String get routinesEmpty =>
+      'Aucune routine. Choisis quelques tâches d’un jour et enregistre-les comme routine, ou commence-en une.';
+
+  @override
+  String get routineSaveSelection => 'Enregistrer comme routine';
+
+  @override
+  String get routineName => 'Nom';
+
+  @override
+  String routineSaved(String title) {
+    return '« $title » enregistrée comme routine';
+  }
+
+  @override
+  String routineDeleted(String title) {
+    return '« $title » supprimée';
+  }
+
+  @override
+  String get routineDelete => 'Supprimer la routine';
+
+  @override
+  String get routineEditTitle => 'Modifier la routine';
+
+  @override
+  String get routineAnchorLabel => 'Quand';
+
+  @override
+  String get routineAnchorWake => 'Au réveil';
+
+  @override
+  String get routineAnchorBed => 'Finit au coucher';
+
+  @override
+  String get routineAnchorTime => 'À une heure';
+
+  @override
+  String get routineStepsLabel => 'Étapes';
+
+  @override
+  String get routineStepHint => 'Nom de l’étape';
+
+  @override
+  String get routineAddStep => 'Ajouter une étape';
+
+  @override
+  String routineRemoveStep(String title) {
+    return 'Retirer $title';
+  }
+
+  @override
+  String routineMoveUp(String title) {
+    return 'Monter $title';
+  }
+
+  @override
+  String routineMoveDown(String title) {
+    return 'Descendre $title';
+  }
+
+  @override
+  String routineGap(String duration) {
+    return '$duration libre';
+  }
+
+  @override
+  String get routineSave => 'Enregistrer';
+
+  @override
+  String get routineDropTitle => 'Routine';
+
+  @override
+  String routineDropSubtitle(String title, String day, String time) {
+    return '$title le $day · dès $time';
+  }
+
+  @override
+  String get routineDropAccept => 'Ajouter au jour';
+
+  @override
+  String get routineDropAccepted => 'Routine ajoutée';
+
+  @override
+  String routineChipLabel(String title) {
+    return 'Poser la routine $title';
+  }
+
+  @override
+  String get routinesMenu => 'Mes routines…';
+
+  @override
+  String get routinesSuggestions => 'Mes routines';
+
+  @override
+  String get routineInvalid =>
+      'Donne un nom à la routine et au moins une étape';
+
+  @override
+  String routinesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routines',
+      one: '1 routine',
+      zero: 'Aucune routine',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get routineDropHere => 'Poser une routine…';
+
+  @override
+  String routineDropOnDay(String day) {
+    return 'Poser sur $day';
+  }
+
+  @override
+  String get routineDropDay => 'Quel jour';
+
+  @override
+  String get settingsEnergy => 'Suggestions d’énergie';
+
+  @override
+  String get settingsEnergyDetail =>
+      'Proposer les moments où tu termines le mieux les tâches exigeantes';
+
+  @override
+  String settingsEnergyLocked(int count) {
+    return 'Après 20 tâches exigeantes terminées · $count pour l’instant';
+  }
+
+  @override
+  String addEnergyBest(String range) {
+    return 'tu termines le mieux les tâches exigeantes $range';
+  }
+
+  @override
+  String addEnergyTry(String time) {
+    return 'Essayer $time';
+  }
+
+  @override
+  String get debugLoadM11Sample => 'Charger l’exemple M11 (debug)';
+
+  @override
+  String get debugM11Loaded => 'Exemple M11 chargé';
+
+  @override
+  String get proposalOverlaps => 'déjà là · chevauche';
 }

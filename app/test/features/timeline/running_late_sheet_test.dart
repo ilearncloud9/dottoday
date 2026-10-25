@@ -1,10 +1,12 @@
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/features/proposals/proposal_host.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
+import '../../support/reality_fixtures.dart';
 import '../../support/timeline_fakes.dart';
 import '../../support/today_harness.dart';
 
@@ -20,13 +22,16 @@ Future<void> _pump(
   WidgetTester tester, {
   DateTime? at,
   Settings settings = const Settings(use24h: false),
+  List<Occurrence> history = const [],
 }) async {
-  _repo = FakeOccurrenceRepository(demoDayRows(todayTestDate));
+  _repo = FakeOccurrenceRepository([...demoDayRows(todayTestDate), ...history]);
   await pumpToday(
     tester,
     repo: _repo,
     settings: settings,
     ticks: at == null ? null : Stream.value(at),
+    // The app shell's host, where Rebalance opens (M11.1).
+    wrap: (today) => ProposalHost(child: today),
   );
 }
 
@@ -41,7 +46,25 @@ void main() {
   setUpAll(tz_data.initializeTimeZones);
 
   group('Running late sheet', () {
-    testWidgets('the preview names the pin that stops the shift', (
+    testWidgets('learning picks the amount Deep work usually needs', (
+      tester,
+    ) async {
+      await _pump(tester, history: deepWorkHistory());
+      await _openSheet(tester);
+      expect(
+        find.text('Deep work: roadmap usually takes 2 h 20'),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('Shift the rest').last);
+      await tester.pumpAndSettle();
+      expect(
+        find.text('The rest of today, 30 min later · here\'s a plan'),
+        findsOneWidget,
+        reason: '20 min more than planned → the 30 min amount',
+      );
+    });
+
+    testWidgets('Shift the rest proposes first; Accept moves, pin stays', (
       tester,
     ) async {
       await _pump(tester);
@@ -55,13 +78,19 @@ void main() {
       );
       await tester.tap(find.text('Shift the rest').last);
       await tester.pumpAndSettle();
-      expect(find.textContaining('Lunch with Sam stays put'), findsOneWidget);
-      expect(_row('Lunch with Sam').startUtc, lunch);
+      // Rebalance (M11.1): the plan, nothing written yet.
       expect(
-        _row('Reply to email').startUtc,
-        mail.add(const Duration(minutes: 15)),
+        find.text('The rest of today, 15 min later · here\'s a plan'),
+        findsOneWidget,
       );
-      // Running late is a move for what it shifts; the pin stays at 0.
+      expect(find.text('pinned · untouched'), findsOneWidget);
+      expect(_row('Reply to email').startUtc, mail);
+      await tester.tap(find.text('Accept plan'));
+      await tester.pumpAndSettle();
+      expect(find.text('Plan accepted'), findsOneWidget);
+      expect(_row('Lunch with Sam').startUtc, lunch);
+      expect(_row('Reply to email').startUtc!.isAfter(mail), isTrue);
+      // Rebalance counts a move for what it shifts; the pin stays at 0.
       expect(_row('Reply to email').moveCount, 1);
       expect(_row('Lunch with Sam').moveCount, 0);
     });
@@ -150,13 +179,29 @@ void main() {
     // 11:45 in Berlin: Design review ended 30 min ago unticked.
     final late = DateTime.utc(2026, 10, 21, 9, 45);
 
-    testWidgets('offers to catch up', (tester) async {
+    testWidgets('30 min over: Catch up opens Rebalance (M11.1)', (
+      tester,
+    ) async {
       await _pump(tester, at: late);
       expect(find.text('NEED MORE TIME?'), findsOneWidget);
       expect(find.text('“Design review” ended 30 min ago'), findsOneWidget);
       await tester.tap(find.text('Catch up'));
       await tester.pumpAndSettle();
+      expect(
+        find.text('Design review ran over by 30 min · here\'s a plan'),
+        findsOneWidget,
+      );
+      expect(find.text('Accept plan'), findsOneWidget);
+    });
+
+    testWidgets('8 min over: Catch up offers the Running late sheet', (
+      tester,
+    ) async {
+      await _pump(tester, at: DateTime.utc(2026, 10, 21, 9, 23));
+      await tester.tap(find.text('Catch up'));
+      await tester.pumpAndSettle();
       expect(find.text('Shift the rest'), findsWidgets);
+      expect(find.text('Accept plan'), findsNothing);
     });
 
     testWidgets('stays away when the setting is off', (tester) async {

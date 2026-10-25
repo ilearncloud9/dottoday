@@ -173,6 +173,53 @@ void main() {
     expect(p.removeLinkIds, isEmpty);
   });
 
+  group('moves reported for Rebalance (M11.1b)', () {
+    test('a calendar move is reported with its old and new start', () {
+      final first = plan([
+        source([_event('E1', nine)]),
+      ], const []);
+      expect(first.moved, isEmpty, reason: 'a new event did not move');
+      final later = nine.add(const Duration(minutes: 30));
+      final p = plan([
+        source([_event('E1', later)]),
+      ], stored(first));
+      final move = p.moved.single;
+      expect(move.occurrenceId, first.occurrences.single.id);
+      expect(move.title, 'Standup');
+      expect(move.fromUtc, nine);
+      expect(move.toUtc, later);
+      expect(move.deltaMin, 30);
+      expect(move.oldEndUtc, nine.add(const Duration(minutes: 30)));
+    });
+
+    test('a rename, a done event or no change reports nothing', () {
+      final first = plan([
+        source([_event('E1', nine)]),
+      ], const []);
+      expect(
+        plan([
+          source([_event('E1', nine, title: 'Sync')]),
+        ], stored(first)).moved,
+        isEmpty,
+      );
+      final done = [
+        LinkedOccurrence(
+          link: first.links.single,
+          occurrence: first.occurrences.single.copyWith(
+            status: OccurrenceStatus.done,
+          ),
+        ),
+      ];
+      final later = nine.add(const Duration(hours: 1));
+      expect(
+        plan([
+          source([_event('E1', later)]),
+        ], done).moved,
+        isEmpty,
+      );
+    });
+  });
+
   test('a local move survives until the calendar moves it', () {
     final first = plan([
       source([_event('E1', nine)]),

@@ -8,6 +8,7 @@ import 'package:dottoday/data/sync/engine_sync_service.dart';
 import 'package:dottoday/data/sync/server_columns.dart';
 import 'package:dottoday/data/sync/synced_rows.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
@@ -77,6 +78,7 @@ final class DriftConflictStore implements ConflictStore {
     'profiles' => WriteBatch(userId: userId, profile: Profile.fromJson(row)),
     'series' => WriteBatch(userId: userId, series: [Series.fromJson(row)]),
     'subtasks' => WriteBatch(userId: userId, subtasks: [Subtask.fromJson(row)]),
+    'routines' => WriteBatch(userId: userId, routines: [Routine.fromJson(row)]),
     _ => WriteBatch(userId: userId, occurrences: [Occurrence.fromJson(row)]),
   };
 

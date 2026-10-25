@@ -32,6 +32,7 @@ void main() {
       'dottoday-tasks-2026-10-21.csv',
       'dottoday-repeats-2026-10-21.csv',
       'dottoday-subtasks-2026-10-21.csv',
+      'dottoday-routines-2026-10-21.csv',
     ]);
     final noRepeats = exportFiles(
       ExportFormat.csv,

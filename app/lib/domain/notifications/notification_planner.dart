@@ -49,8 +49,8 @@ final class NotificationPlanner {
   /// one reminder at that time. An alert without its own sound takes
   /// [defaultSound] (Settings › Reminders › Sound, F6.6).
   ///
-  /// The at-start alert of each day's first dot and of [routineStartIds]
-  /// is [PlannedNotification.loud] and ignores quiet hours (11 A0). A
+  /// The at-start alert of each day's first dot, of [routineStartIds] and
+  /// of every [Occurrence.routineStart] is [PlannedNotification.loud] and ignores quiet hours (11 A0). A
   /// future [testAlarmAtUtc] adds the test alarm (M6.5.9). Each occurrence
   /// with a step in [firstSteps] gets one Smallest step reminder at
   /// [noStartAt] (M10.6); a real start, Done or a move re-plans it away.
@@ -76,7 +76,12 @@ final class NotificationPlanner {
     final loud = loudStartIds(
       occurrences,
       location,
-      routineStartIds: routineStartIds,
+      // A dropped routine marks its first step (11 C2, M11.4).
+      routineStartIds: {
+        ...routineStartIds,
+        for (final o in occurrences)
+          if (o.routineStart) o.id,
+      },
     );
     for (final o in live) {
       for (final (index, alert, fireAt) in _fireTimes(o, seriesAlerts)) {

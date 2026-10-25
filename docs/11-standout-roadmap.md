@@ -76,6 +76,7 @@ The one-line position after this roadmap ships: **"Your day as a thread. Always 
 
 ### C1 · Rebalance — mechanics **built**; proposal **new**
 - Triggers: "Running late", a task overrunning its planned end by > 10 min, an imported event moving, "Shift the rest" with > 2 followers. Instead of applying, open the **ProposalSheet** (B3): the current thread faded, the proposed thread over it with each change labelled (shifted 15 min · shrunk to 30 min · sent to Inbox · moved to tomorrow · pinned, untouched), one tap Accept, Discard keeps everything. Rules first (shift → shrink optional tasks → push to tomorrow past Bedtime), model optional for wording only. Never auto-applies. Render: `B-ios-rebalance.png`.
+- Rules as built (docs/09 M11.1): a pin ends "Shift followers" (it anchors the rest of the day, as Shift the rest does); events are stepped around, never moved. **Optional** = the user's own task, unpinned, not started, energy not high; it may be shrunk by at most a quarter and never below 15 min. Past Bedtime → tomorrow's first free slot from Wake Up, else the Inbox. Triggers open the sheet only when the change is real: the overrun after 10 min, "Shift the rest" when it moves more than two tasks, an imported event only when the calendar moved it later the same day into another planned task (Rebalance then runs from the event's old end, the event kept where the calendar put it; M11.1b).
 
 ### C2 · Routines as thread fragments — **new**
 - A **routine** is a saved slice of thread: ordered dots with durations and gaps, relative to a start time. Create from a selection on any day ("Save as routine") or from scratch. Drop onto any day via Add › Suggestions ("Your usual Tuesday?", "Morning"), the week strip, or the Inbox. Routine-start dots are alarm-loud (A0). Three routines free, unlimited in Pro. Render: `B-ios-routines.png`.
@@ -87,6 +88,7 @@ The one-line position after this roadmap ships: **"Your day as a thread. Always 
 
 ### C4 · Energy-aware suggestions — energy field **built**; learning **new**, depends on C3
 - From completed high-energy tasks' actual times, derive the user's best window; Add suggests placement ("you finish deep work best 9–11"). Suggest / Off switch in Settings › Planning; default Off until 20 completions exist.
+- As built (docs/09 M11.5): a completion = a task marked done, energy high, with a real actual start and end (B1), in the last 90 days. The window is the 2-hour stretch in which most of them really started, in the profile zone (a tie goes to the window starting at the busier hour, then the earliest). Under 20 the switch is off and locked ("After 20 finished high-energy tasks · 7 so far"); from 20 it is on unless turned off. Add says it only for a task whose title is one of those high-energy tasks — "you finish high-energy tasks best 9:00 – 11:00 AM" — with "Try 9:00 AM" when the task starts outside the window (rejected: the render's "deep work" category, which the data doesn't have; suggesting it for every task).
 
 ## D. No shame — reflection without streaks
 

@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/inbox/widgets/inbox_routines_button.dart';
 import 'package:dottoday/shared/dot/count_ring.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class InboxHeader extends StatelessWidget {
                 l10n.inboxSummary(count, formatDurationShort(l10n, minutes)),
                 style: t.styles.body.copyWith(color: t.colors.muted),
               ),
+              const InboxRoutinesButton(),
             ],
           ),
         ),

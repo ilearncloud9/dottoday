@@ -27,7 +27,12 @@ final class ThreadTask {
     this.travel,
     this.smallestStep,
     this.unstick = false,
+    this.reality,
   });
+
+  /// Set on the Reality thread (11 C3, docs/09 M11.2): what really
+  /// happened, drawn beside the plan's ghost lane. Null on the plan.
+  final ThreadReality? reality;
 
   /// Occurrence id, for callbacks.
   final String id;
@@ -74,6 +79,49 @@ final class ThreadTask {
   final String? travel;
 
   bool get hasSubtasks => subtasksTotal > 0;
+}
+
+/// Where the plan put a task's dot, seen from where it really started.
+enum GhostShift {
+  /// Started as planned, or no actual start: no ghost dot.
+  none,
+
+  /// The plan was earlier: the ghost dot sits above.
+  earlier,
+
+  /// The plan was later: the ghost dot sits below.
+  later,
+}
+
+/// A task as the Reality thread shows it (11 C3, `B-ios-reality-thread`):
+/// display strings only, formatted by the feature.
+@immutable
+final class ThreadReality {
+  const ThreadReality({
+    this.range,
+    this.meta,
+    this.note,
+    this.ghost = GhostShift.none,
+    this.underWay = false,
+    this.usual,
+  });
+
+  /// "usually 2 h 20" under the live row's progress (M11.3 learning).
+  final String? usual;
+
+  /// "7:42 – 8:16" or "9:10 – now"; null keeps the planned range.
+  final String? range;
+
+  /// After the range: "planned 7:30", "planned 9:00 – 11:00", "not
+  /// started yet".
+  final String? meta;
+
+  /// Under the title: "took 34 min"; on the live row "1 h 14 in".
+  final String? note;
+  final GhostShift ghost;
+
+  /// Really started and not finished: the only rows drawn live.
+  final bool underWay;
 }
 
 /// One line of a [Thread], top to bottom.

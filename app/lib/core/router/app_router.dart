@@ -43,8 +43,10 @@ final class RouteScreens {
   final WidgetBuilder search;
   final WidgetBuilder settings;
 
-  /// A Settings sub-page, inside the Settings tab (M3f.7).
-  final Widget Function(BuildContext, SettingsPage page) settingsPage;
+  /// A Settings sub-page, inside the Settings tab (M3f.7). [extra] is the
+  /// push's `extra` (Routines' target day, M11.4); links never carry one.
+  final Widget Function(BuildContext, SettingsPage page, Object? extra)
+  settingsPage;
   final WidgetBuilder month;
   final Widget Function(BuildContext, DateTime date) day;
   final Widget Function(BuildContext, String taskId) task;
@@ -111,6 +113,7 @@ List<StatefulShellBranch> _branches(RouteScreens screens) => [
             builder: (context, state) => screens.settingsPage(
               context,
               SettingsPage.byName(state.pathParameters['page']!)!,
+              state.extra,
             ),
           ),
       ],

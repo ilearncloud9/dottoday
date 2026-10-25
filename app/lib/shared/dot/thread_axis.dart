@@ -1,5 +1,6 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
+import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:flutter/widgets.dart';
 
 /// Width of the column the thread runs down (docs/10 §2.3, `Main`): room
@@ -21,7 +22,12 @@ final class SegmentPiece extends AxisPiece {
     required this.state,
     required this.dotSize,
     this.progress = 0,
+    this.ghost,
   });
+
+  /// On the Reality thread (11 C3): the plan's ghost lane beside the
+  /// segment, with the planned dot where it differs. Null on the plan.
+  final GhostShift? ghost;
 
   final Color color;
   final DotState state;
@@ -54,7 +60,11 @@ final class ThreadAxisPainter extends CustomPainter {
     required this.hairline,
     required this.accent,
     required this.accentTint,
+    this.ghostSide = -1,
   });
+
+  /// -1 puts the ghost lane before the centre in LTR; +1 mirrors it (RTL).
+  final double ghostSide;
 
   final AxisPiece piece;
   final Color hairline;
@@ -80,6 +90,7 @@ final class ThreadAxisPainter extends CustomPainter {
   }
 
   void _segment(Canvas canvas, double x, double height, SegmentPiece p) {
+    if (p.ghost case final shift?) _ghost(canvas, x, height, p, shift);
     final top = p.dotSize;
     if (height <= top) return;
     final paint = Paint()
@@ -121,6 +132,42 @@ final class ThreadAxisPainter extends CustomPainter {
     }
   }
 
+  /// The plan's lane at [TaskAlpha.ghost] down the row, and the planned
+  /// dot as a ghost ring above or below where it really started.
+  void _ghost(
+    Canvas canvas,
+    double x,
+    double height,
+    SegmentPiece p,
+    GhostShift shift,
+  ) {
+    final lane = x + ghostSide * DotSize.ghostLaneOffset;
+    final ghost = p.color.withValues(alpha: TaskAlpha.ghost);
+    canvas.drawLine(
+      Offset(lane, DotSize.segment / 2),
+      Offset(lane, height - DotSize.segment / 2),
+      Paint()
+        ..color = ghost
+        ..strokeWidth = DotSize.segment
+        ..strokeCap = StrokeCap.round,
+    );
+    final dy = switch (shift) {
+      GhostShift.none => null,
+      GhostShift.earlier => -DotSize.ghostRingShift,
+      GhostShift.later => DotSize.ghostRingShift,
+    };
+    if (dy == null) return;
+    final at = Offset(lane, p.dotSize / 2 + dy);
+    canvas.drawCircle(
+      at,
+      DotSize.ghostRing / 2,
+      Paint()
+        ..color = ghost
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = DotSize.smallDotOutline,
+    );
+  }
+
   /// The 2 px dotted free-time line (§2.3).
   void _dotted(
     Canvas canvas,
@@ -152,5 +199,6 @@ final class ThreadAxisPainter extends CustomPainter {
       old.piece != piece ||
       old.hairline != hairline ||
       old.accent != accent ||
-      old.accentTint != accentTint;
+      old.accentTint != accentTint ||
+      old.ghostSide != ghostSide;
 }

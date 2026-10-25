@@ -13,6 +13,8 @@ Widget settingsPageFor(SettingsPage page) => switch (page) {
   SettingsPage.account => const AccountPage(),
   SettingsPage.notifications => const NotificationHealthPage(),
   SettingsPage.calendars => const CalendarsPage(),
+  // Composed in app_screens (features don't import each other).
+  SettingsPage.routines => const SizedBox.shrink(),
   SettingsPage.export => const ExportPage(),
   SettingsPage.help => const HelpPage(),
   SettingsPage.privacy => const PrivacyPage(),

@@ -76,6 +76,7 @@ List<ExportFile> _csvFiles(ExportBundle bundle, String date) {
     csv('tasks', occurrencesCsv(bundle.occurrences)),
     csv('repeats', seriesCsv(bundle.series)),
     csv('subtasks', subtasksCsv(bundle.subtasks)),
+    csv('routines', routinesCsv(bundle.routines)),
   ].where((f) => f.content.isNotEmpty).toList();
   return files.isEmpty ? [csv('tasks', '')] : files;
 }

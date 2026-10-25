@@ -14,6 +14,15 @@ typedef ProposalBodyBuilder =
       ValueChanged<Proposal> update,
     );
 
+/// The rule chips under the card (`B-ios-rebalance`); a chip that changes
+/// the rules hands a recomputed proposal to [update].
+typedef ProposalOptionsBuilder =
+    List<Widget> Function(
+      BuildContext context,
+      Proposal proposal,
+      ValueChanged<Proposal> update,
+    );
+
 /// Draws a read-only part of the sheet from the current proposal (the
 /// task's identity row above the card, the total below it).
 typedef ProposalPartBuilder =
@@ -33,6 +42,8 @@ final class ProposalRequest {
     this.body,
     this.lead,
     this.below,
+    this.options,
+    this.footnote,
     this.onAccepted,
     this.failure,
     this.busy = false,
@@ -59,6 +70,13 @@ final class ProposalRequest {
 
   /// Under the card ("Total 1 h 40 · the dot grows to fit").
   final ProposalPartBuilder? below;
+
+  /// Rule chips under the card ("Shift followers", Rebalance).
+  final ProposalOptionsBuilder? options;
+
+  /// Replaces "Nothing is saved until you accept" ("Nothing moves until
+  /// you accept · Undo for 30 s after").
+  final String? footnote;
 
   /// Accept hands the proposal back to an unsaved draft (Add step 1),
   /// which writes it with the task on Save: no write and no Undo here,
@@ -93,6 +111,8 @@ final class ProposalRequest {
     body: body,
     lead: lead,
     below: below,
+    options: options,
+    footnote: footnote,
     onAccepted: onAccepted,
     failure: failure,
     busy: busy,

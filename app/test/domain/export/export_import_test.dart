@@ -44,6 +44,39 @@ void main() {
     expect(encodeExportJson(back), text);
   });
 
+  test('a file from before routines imports with none (M11.4)', () {
+    final json =
+        jsonDecode(encodeExportJson(hostileBundle())) as Map<String, Object?>
+          ..remove('routines');
+    final back = decodeExportJson(
+      jsonEncode(json),
+    ).when(ok: (b) => b, err: (f) => fail(f.code));
+    expect(back.routines, isEmpty);
+    expect(back.occurrences, isNotEmpty);
+  });
+
+  test('a routine with no steps or a foreign owner is refused', () {
+    final b = hostileBundle();
+    final routine = b.routines.single;
+    for (final bad in [
+      routine.copyWith(items: const []),
+      routine.copyWith(userId: 'someone-else'),
+    ]) {
+      final file = ExportBundle(
+        exportedAt: b.exportedAt,
+        profile: b.profile,
+        series: b.series,
+        occurrences: b.occurrences,
+        subtasks: b.subtasks,
+        routines: [bad],
+      );
+      expect(
+        decodeExportJson(encodeExportJson(file)),
+        isA<Err<Object?, Object?>>(),
+      );
+    }
+  });
+
   test('v1 envelope keys and canonical values (docs/05)', () {
     final json =
         jsonDecode(encodeExportJson(hostileBundle())) as Map<String, Object?>;
@@ -54,6 +87,7 @@ void main() {
       'series',
       'occurrences',
       'subtasks',
+      'routines',
     ]);
     expect(json['version'], 1);
     expect(json['exportedAt'], isA<int>());

@@ -3,18 +3,18 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
-import 'package:dottoday/data/notifications/notification_content.dart';
+import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
-import 'package:dottoday/domain/entities/subtask.dart';
-import 'package:dottoday/domain/scheduling/start_nudge.dart';
-import 'package:dottoday/domain/scheduling/unstick.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/features/timeline/state/day_cues.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
+import 'package:dottoday/features/timeline/state/reality_thread.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/day_drag.dart';
 import 'package:dottoday/features/timeline/widgets/empty_day_actions.dart';
+import 'package:dottoday/features/timeline/widgets/reality_insight.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
@@ -61,24 +61,46 @@ class DayPage extends ConsumerWidget {
     final blocks = data.blocks;
     final summary = daySummaryOf(blocks, shape);
     final format = _format(context, data.day.location, data.settings.use24h);
-    final entries = threadEntries(
+    final cues = dayCues(
+      context.l10n,
       blocks: blocks,
+      firstSteps: firstSteps,
+      subtasks: subtasks,
+      now: now,
+    );
+    // Today's card offers the Reality thread once a task really started
+    // (11 C3, docs/09 M11.2); there it is read-only for drags.
+    final offerReality = date == today && side == null && hasActuals(blocks);
+    final learning = offerReality
+        ? ref.watch(learningIndexProvider).value
+        : null;
+    final reality = offerReality && ref.watch(realityModeProvider)
+        ? realityThread(
+            context.l10n,
+            format,
+            blocks: blocks,
+            nowUtc: now,
+            learning: learning,
+          )
+        : null;
+    final entries = threadEntries(
+      blocks: reality?.blocks ?? blocks,
       shape: shape,
       nowUtc: now,
       format: format,
       subtasks: subtasks ?? const {},
-      smallestSteps: _smallestSteps(context, blocks, firstSteps, now),
-      unstick: {
-        for (final o in blocks)
-          // Only once the steps are known: never a flash on a task that has some.
-          if (subtasks != null &&
-              (subtasks[o.id]?.total ?? 0) == 0 &&
-              showsUnstick(o, const []))
-            o.id,
-      },
+      smallestSteps: reality == null ? cues.smallestSteps : const {},
+      unstick: reality == null ? cues.unstick : const {},
       showFreeTime: data.settings.showFreeTime,
+      reality: reality?.reality,
     );
-    final actions = _actions(context, ref, data, format.time);
+    final actions = _actions(
+      context,
+      ref,
+      data,
+      format.time,
+      drag: reality == null,
+    );
     if (side case final s?) {
       return DayCard.side(
         title: DateFormat.EEEE(_locale(context)).format(date),
@@ -88,29 +110,39 @@ class DayPage extends ConsumerWidget {
         actions: actions,
       );
     }
-    return DayCard(
+    final card = DayCard(
       title: _title(context),
       isToday: date == today,
       summary: summary,
       entries: entries,
       actions: actions,
       footer: _footer(blocks, summary.total == 0),
+      reality: offerReality
+          ? RealityToggle(
+              on: reality != null,
+              onChanged: (on) =>
+                  ref.read(realityModeProvider.notifier).set(on: on),
+            )
+          : null,
+    );
+    final insight = reality == null
+        ? null
+        : realityInsight(blocks, now, learning);
+    if (insight == null ||
+        ref.watch(dismissedInsightsProvider).contains(insight.task.id)) {
+      return card;
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(child: card),
+        RealityInsightStrip(
+          task: insight.task,
+          usualMinutes: insight.usualMinutes,
+        ),
+      ],
     );
   }
-
-  /// "Just Gather documents · 10 min?" for each task Smallest step asks
-  /// about now (M10.6).
-  Map<String, String> _smallestSteps(
-    BuildContext context,
-    List<Occurrence> blocks,
-    Map<String, Subtask> firstSteps,
-    DateTime now,
-  ) => {
-    for (final o in blocks)
-      if (firstSteps[o.id] case final step?)
-        if (smallestStepAt(o, [step], now) != null)
-          o.id: smallestStepText(context.l10n, step),
-  };
 
   /// Skeleton or Try again while the day loads (docs/09 M3f.9b).
   Widget _waiting(WidgetRef ref) =>
@@ -119,13 +151,15 @@ class DayPage extends ConsumerWidget {
       ], onRetry: () => ref.invalidate(timelineDataProvider(date))) ??
       const LoadingThread();
 
-  /// Taps, drag, resize and selection for this day's thread.
+  /// Taps, drag, resize and selection for this day's thread; without
+  /// [drag] (the Reality thread) nothing can be dragged or resized.
   ThreadActions _actions(
     BuildContext context,
     WidgetRef ref,
     TimelineData data,
-    String Function(DateTime utc) time,
-  ) {
+    String Function(DateTime utc) time, {
+    required bool drag,
+  }) {
     final picked = ref.watch(taskSelectionProvider);
     final s = data.settings;
     return dayThreadActions(
@@ -133,18 +167,20 @@ class DayPage extends ConsumerWidget {
       ref,
       blocks: data.blocks,
       timeText: time,
-      drag: dayThreadDrag(
-        context,
-        ref,
-        blocks: data.blocks,
-        zone: data.day.location,
-        snapMinutes: s.snapMinutes,
-        timeText: time,
-        shiftFollowers: s.shiftFollowers,
-        includeCalendar: s.includeCalendarInShift,
-        readOnlyIds: ref.watch(readOnlyCalendarIdsProvider).value,
-        elsewhere: (id) => _elsewhere(ref, id),
-      ),
+      drag: !drag
+          ? null
+          : dayThreadDrag(
+              context,
+              ref,
+              blocks: data.blocks,
+              zone: data.day.location,
+              snapMinutes: s.snapMinutes,
+              timeText: time,
+              shiftFollowers: s.shiftFollowers,
+              includeCalendar: s.includeCalendarInShift,
+              readOnlyIds: ref.watch(readOnlyCalendarIdsProvider).value,
+              elsewhere: (id) => _elsewhere(ref, id),
+            ),
       selectedIds: picked.day == date ? picked.ids : const {},
       onSelect: (id) =>
           ref.read(taskSelectionProvider.notifier).toggle(date, id),

@@ -63,6 +63,7 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   inboxNudge: json['inboxNudge'] as bool? ?? false,
   suggestTravelTime: json['suggestTravelTime'] as bool? ?? false,
   travelTimeMin: (json['travelTimeMin'] as num?)?.toInt() ?? 15,
+  energySuggestions: json['energySuggestions'] as bool?,
 );
 
 Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
@@ -92,6 +93,7 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'inboxNudge': instance.inboxNudge,
   'suggestTravelTime': instance.suggestTravelTime,
   'travelTimeMin': instance.travelTimeMin,
+  'energySuggestions': instance.energySuggestions,
 };
 
 const _$WeekdayEnumMap = {

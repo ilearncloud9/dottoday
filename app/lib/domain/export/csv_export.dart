@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 
@@ -73,6 +74,11 @@ String seriesCsv(Iterable<Series> series) => _tableCsv([
 String occurrencesCsv(Iterable<Occurrence> occurrences) => _tableCsv([
   for (final o in occurrences)
     if (o.deletedAt == null) o.toJson(),
+]);
+
+String routinesCsv(Iterable<Routine> routines) => _tableCsv([
+  for (final r in routines)
+    if (r.deletedAt == null) r.toJson(),
 ]);
 
 String subtasksCsv(Iterable<Subtask> subtasks) => _tableCsv([

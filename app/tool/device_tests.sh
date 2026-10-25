@@ -23,6 +23,7 @@
 # DEFINES picks the --dart-define-from-file (default .env; CI .env.example).
 # DRIVER picks the driver (default test_driver/integration_test.dart; the
 # sweep uses test_driver/screenshot_driver.dart automatically).
+# SWEEP_THEME=dark runs the sweep dark (shots named <platform>_dark_*).
 set -uo pipefail
 cd "$(dirname "$0")/.."
 platform="${1:?android | ios}"
@@ -150,6 +151,7 @@ run_one() {
     with_limit flutter drive --driver="$driver" \
       --target="integration_test/${t}_test.dart" \
       --dart-define=SWEEP_TAG="$platform" \
+      ${SWEEP_THEME:+--dart-define=SWEEP_THEME="$SWEEP_THEME"} \
       ${device:+-d "$device"} --dart-define-from-file="$defines" >>"$log" 2>&1 &
     local drive=$!
     # iOS: the test announces each shot (its own capture is blank) and holds

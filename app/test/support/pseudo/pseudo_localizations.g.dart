@@ -3457,4 +3457,253 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String unstickSaved(String title) => pseudo(super.unstickSaved(title));
+
+  @override
+  String get rebalanceAccept => pseudo(super.rebalanceAccept);
+
+  @override
+  String get rebalanceFootnote => pseudo(super.rebalanceFootnote);
+
+  @override
+  String get rebalanceShiftFollowers => pseudo(super.rebalanceShiftFollowers);
+
+  @override
+  String get rebalanceAllowShrink => pseudo(super.rebalanceAllowShrink);
+
+  @override
+  String get rebalancePastBedtime => pseudo(super.rebalancePastBedtime);
+
+  @override
+  String rebalanceRanOver(String title, String duration) =>
+      pseudo(super.rebalanceRanOver(title, duration));
+
+  @override
+  String rebalanceLate(String duration) =>
+      pseudo(super.rebalanceLate(duration));
+
+  @override
+  String rebalanceRunsOver(String title, String duration) =>
+      pseudo(super.rebalanceRunsOver(title, duration));
+
+  @override
+  String get rebalanceAccepted => pseudo(super.rebalanceAccepted);
+
+  @override
+  String get calendarMovedTitle => pseudo(super.calendarMovedTitle);
+
+  @override
+  String calendarMovedDetail(String title, String time) =>
+      pseudo(super.calendarMovedDetail(title, time));
+
+  @override
+  String get calendarMovedAction => pseudo(super.calendarMovedAction);
+
+  @override
+  String rebalanceMoved(String title, String time) =>
+      pseudo(super.rebalanceMoved(title, time));
+
+  @override
+  String realityMetaJoin(String text) => pseudo(super.realityMetaJoin(text));
+
+  @override
+  String realityPlanned(String time) => pseudo(super.realityPlanned(time));
+
+  @override
+  String get realityNotStarted => pseudo(super.realityNotStarted);
+
+  @override
+  String realityTook(String duration) => pseudo(super.realityTook(duration));
+
+  @override
+  String realityRunning(String duration) =>
+      pseudo(super.realityRunning(duration));
+
+  @override
+  String get realityNow => pseudo(super.realityNow);
+
+  @override
+  String get realityPlan => pseudo(super.realityPlan);
+
+  @override
+  String get realityReality => pseudo(super.realityReality);
+
+  @override
+  String learnUsually(String duration) => pseudo(super.learnUsually(duration));
+
+  @override
+  String learnStartsAfter(int minutes) =>
+      pseudo(super.learnStartsAfter(minutes));
+
+  @override
+  String learnStartsBefore(int minutes) =>
+      pseudo(super.learnStartsBefore(minutes));
+
+  @override
+  String learnInsight(String title, String duration) =>
+      pseudo(super.learnInsight(title, duration));
+
+  @override
+  String get learnInsightOk => pseudo(super.learnInsightOk);
+
+  @override
+  String lateUsually(String title, String duration) =>
+      pseudo(super.lateUsually(title, duration));
+
+  @override
+  String get routinesTitle => pseudo(super.routinesTitle);
+
+  @override
+  String get routinesSubtitle => pseudo(super.routinesSubtitle);
+
+  @override
+  String routineSteps(int count) => pseudo(super.routineSteps(count));
+
+  @override
+  String routineSummary(String steps, String duration, String anchor) =>
+      pseudo(super.routineSummary(steps, duration, anchor));
+
+  @override
+  String get routineStartsWake => pseudo(super.routineStartsWake);
+
+  @override
+  String get routineEndsBed => pseudo(super.routineEndsBed);
+
+  @override
+  String routineStartsAt(String time) => pseudo(super.routineStartsAt(time));
+
+  @override
+  String get routineDropToday => pseudo(super.routineDropToday);
+
+  @override
+  String get routineEdit => pseudo(super.routineEdit);
+
+  @override
+  String get routineNew => pseudo(super.routineNew);
+
+  @override
+  String get routineNewHint => pseudo(super.routineNewHint);
+
+  @override
+  String get routineAlarmNote => pseudo(super.routineAlarmNote);
+
+  @override
+  String get routinesEmpty => pseudo(super.routinesEmpty);
+
+  @override
+  String get routineSaveSelection => pseudo(super.routineSaveSelection);
+
+  @override
+  String get routineName => pseudo(super.routineName);
+
+  @override
+  String routineSaved(String title) => pseudo(super.routineSaved(title));
+
+  @override
+  String routineDeleted(String title) => pseudo(super.routineDeleted(title));
+
+  @override
+  String get routineDelete => pseudo(super.routineDelete);
+
+  @override
+  String get routineEditTitle => pseudo(super.routineEditTitle);
+
+  @override
+  String get routineAnchorLabel => pseudo(super.routineAnchorLabel);
+
+  @override
+  String get routineAnchorWake => pseudo(super.routineAnchorWake);
+
+  @override
+  String get routineAnchorBed => pseudo(super.routineAnchorBed);
+
+  @override
+  String get routineAnchorTime => pseudo(super.routineAnchorTime);
+
+  @override
+  String get routineStepsLabel => pseudo(super.routineStepsLabel);
+
+  @override
+  String get routineStepHint => pseudo(super.routineStepHint);
+
+  @override
+  String get routineAddStep => pseudo(super.routineAddStep);
+
+  @override
+  String routineRemoveStep(String title) =>
+      pseudo(super.routineRemoveStep(title));
+
+  @override
+  String routineMoveUp(String title) => pseudo(super.routineMoveUp(title));
+
+  @override
+  String routineMoveDown(String title) => pseudo(super.routineMoveDown(title));
+
+  @override
+  String routineGap(String duration) => pseudo(super.routineGap(duration));
+
+  @override
+  String get routineSave => pseudo(super.routineSave);
+
+  @override
+  String get routineDropTitle => pseudo(super.routineDropTitle);
+
+  @override
+  String routineDropSubtitle(String title, String day, String time) =>
+      pseudo(super.routineDropSubtitle(title, day, time));
+
+  @override
+  String get routineDropAccept => pseudo(super.routineDropAccept);
+
+  @override
+  String get routineDropAccepted => pseudo(super.routineDropAccepted);
+
+  @override
+  String routineChipLabel(String title) =>
+      pseudo(super.routineChipLabel(title));
+
+  @override
+  String get routinesMenu => pseudo(super.routinesMenu);
+
+  @override
+  String get routinesSuggestions => pseudo(super.routinesSuggestions);
+
+  @override
+  String get routineInvalid => pseudo(super.routineInvalid);
+
+  @override
+  String routinesCount(int count) => pseudo(super.routinesCount(count));
+
+  @override
+  String get routineDropHere => pseudo(super.routineDropHere);
+
+  @override
+  String routineDropOnDay(String day) => pseudo(super.routineDropOnDay(day));
+
+  @override
+  String get routineDropDay => pseudo(super.routineDropDay);
+
+  @override
+  String get settingsEnergy => pseudo(super.settingsEnergy);
+
+  @override
+  String get settingsEnergyDetail => pseudo(super.settingsEnergyDetail);
+
+  @override
+  String settingsEnergyLocked(int count) =>
+      pseudo(super.settingsEnergyLocked(count));
+
+  @override
+  String addEnergyBest(String range) => pseudo(super.addEnergyBest(range));
+
+  @override
+  String addEnergyTry(String time) => pseudo(super.addEnergyTry(time));
+
+  @override
+  String get debugLoadM11Sample => pseudo(super.debugLoadM11Sample);
+
+  @override
+  String get debugM11Loaded => pseudo(super.debugM11Loaded);
+
+  @override
+  String get proposalOverlaps => pseudo(super.proposalOverlaps);
 }

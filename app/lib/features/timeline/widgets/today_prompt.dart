@@ -2,15 +2,21 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/data/calendar/calendar_moves.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/scheduling/calendar_move_prompt.dart';
 import 'package:dottoday/domain/scheduling/day_review.dart';
 import 'package:dottoday/domain/scheduling/running_late.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_prompts.dart';
+import 'package:dottoday/features/timeline/widgets/calendar_moved_prompt.dart';
 import 'package:dottoday/features/timeline/widgets/day_review.dart';
 import 'package:dottoday/features/timeline/widgets/inbox_nudge_card.dart';
 import 'package:dottoday/features/timeline/widgets/prompt_card.dart';
 import 'package:dottoday/features/timeline/widgets/running_late_sheet.dart';
+import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,7 +25,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// nudge" on, "Running late?" once a task ended unticked; otherwise, with
 /// the "Plan your inbox" nudge on, that card (F3.3, [InboxNudgeCard]).
 /// "Not now" puts it away for the day (this session). Nothing on other
-/// days.
+/// days. A task over [rebalanceOverrunMin] past its end opens Rebalance;
+/// before the nudge, an event the calendar moved into the plan offers it
+/// ([CalendarMovedPrompt], M11.1b).
 class TodayPrompt extends ConsumerWidget {
   const TodayPrompt({required this.date, required this.today, super.key});
 
@@ -48,6 +56,12 @@ class TodayPrompt extends ConsumerWidget {
           reviewOf(data.blocks).hasRest;
       return show ? _review(context, notNow) : const SizedBox.shrink();
     }
+    final move = moveToRebalance(
+      ref.watch(calendarMovesProvider).values,
+      data.blocks,
+      now,
+    );
+    if (move != null) return CalendarMovedPrompt(move: move, data: data);
     final missed = missedTask(data.blocks, now);
     if (!data.settings.runningLateNudge ||
         missed == null ||
@@ -68,7 +82,7 @@ class TodayPrompt extends ConsumerWidget {
           now.difference(missed.endUtc!).inMinutes,
         ),
         action: context.l10n.lateNudgeAction,
-        onAction: () => unawaited(showRunningLateSheet(context, today)),
+        onAction: () => unawaited(_late(context, missed, now)),
         onNotNow: () => notNow(TodayPromptKind.late),
       ),
     );
@@ -76,6 +90,29 @@ class TodayPrompt extends ConsumerWidget {
 }
 
 extension on TodayPrompt {
+  /// The nudge's action: a task more than [rebalanceOverrunMin] past its
+  /// end opens Rebalance straight away (11 C1, M11.1) with the overrun
+  /// rounded up to 5 min; a fresher one the Running late sheet.
+  Future<void> _late(BuildContext context, Occurrence missed, DateTime now) {
+    final over = now.difference(missed.endUtc!).inMinutes;
+    if (over <= rebalanceOverrunMin) {
+      return showRunningLateSheet(context, today);
+    }
+    final l10n = context.l10n;
+    final delta = (over / 5).ceil() * 5;
+    return openRebalance(
+      ProviderScope.containerOf(context, listen: false),
+      l10n,
+      today: today,
+      fromUtc: now,
+      deltaMin: delta,
+      subtitle: l10n.rebalanceRanOver(
+        missed.title,
+        formatDurationShort(l10n, delta),
+      ),
+    );
+  }
+
   Widget _review(BuildContext context, void Function(TodayPromptKind) notNow) =>
       PromptCard(
         title: context.l10n.reviewTitle,

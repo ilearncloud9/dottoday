@@ -2,6 +2,7 @@ import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/calendar.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
@@ -24,6 +25,25 @@ Series seriesFixture() => Series(
   tzId: 'Europe/Berlin',
   alerts: const [Alert(kind: AlertKind.before, offsetMin: 10)],
   subtaskTemplate: const [SubtaskTemplateItem(id: 'tpl-1', title: 'Stretch')],
+  createdAt: t0,
+  updatedAt: t1,
+);
+
+Routine routineFixture() => Routine(
+  id: '01928c3e-0000-7000-8000-0000000000f1',
+  userId: userId,
+  title: 'Morning',
+  items: const [
+    RoutineItem(
+      id: 'step-1',
+      title: 'Stretch',
+      colorKey: 'mint',
+      iconKey: 'run',
+      offsetMin: 0,
+      durationMin: 10,
+    ),
+    RoutineItem(id: 'step-2', title: 'Shower', offsetMin: 15, durationMin: 15),
+  ],
   createdAt: t0,
   updatedAt: t1,
 );

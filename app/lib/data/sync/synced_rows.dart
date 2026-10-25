@@ -1,9 +1,11 @@
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
+import 'package:dottoday/data/repositories/drift_routine_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
@@ -17,13 +19,15 @@ final class SyncedRows {
     : _profiles = DriftSettingsRepository(_db),
       _series = DriftSeriesRepository(_db),
       _occurrences = DriftOccurrenceRepository(_db),
-      _subtasks = DriftSubtaskRepository(_db);
+      _subtasks = DriftSubtaskRepository(_db),
+      _routines = DriftRoutineRepository(_db);
 
   final AppDatabase _db;
   final DriftSettingsRepository _profiles;
   final DriftSeriesRepository _series;
   final DriftOccurrenceRepository _occurrences;
   final DriftSubtaskRepository _subtasks;
+  final DriftRoutineRepository _routines;
 
   /// Row [id] of [entity] owned by [userId], or null.
   Future<Map<String, Object?>?> find(
@@ -35,6 +39,7 @@ final class SyncedRows {
     'series' => (await _series.findById(userId, id))?.toJson(),
     'occurrences' => (await _occurrences.findById(userId, id))?.toJson(),
     'subtasks' => (await _subtasks.findById(userId, id))?.toJson(),
+    'routines' => (await _routines.findById(userId, id))?.toJson(),
     _ => throw ArgumentError.value(entity, 'entity'),
   };
 
@@ -49,6 +54,8 @@ final class SyncedRows {
         await _occurrences.upsertAll([Occurrence.fromJson(row)]);
       case 'subtasks':
         await _subtasks.upsertAll([Subtask.fromJson(row)]);
+      case 'routines':
+        await _routines.upsertAll([Routine.fromJson(row)]);
       default:
         throw ArgumentError.value(entity, 'entity');
     }

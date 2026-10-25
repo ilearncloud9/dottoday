@@ -1,6 +1,7 @@
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/domain/validation/entity_validators.dart';
+import 'package:dottoday/domain/validation/routine_validator.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 
 /// Validates every row of [batch] (06 §7), returning the batch with
@@ -18,6 +19,7 @@ Result<WriteBatch, ValidationFailure> validateBatch(WriteBatch batch) {
           for (final o in batch.occurrences) _unwrap(validateOccurrence(o)),
         ],
         subtasks: [for (final s in batch.subtasks) _unwrap(validateSubtask(s))],
+        routines: [for (final r in batch.routines) _unwrap(validateRoutine(r))],
       ),
     );
   } on _Invalid catch (e) {

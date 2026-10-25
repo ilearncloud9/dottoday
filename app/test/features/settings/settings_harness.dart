@@ -1,3 +1,4 @@
+import 'package:dottoday/app_screens.dart';
 import 'package:dottoday/bootstrap.dart';
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
@@ -20,15 +21,14 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
-import 'package:dottoday/features/settings/pages/settings_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import '../../support/test_l10n.dart';
 
+import '../../support/test_l10n.dart';
 import '../../support/timeline_fakes.dart';
 
 /// Records links instead of leaving the app.
@@ -125,8 +125,11 @@ Future<SettingsHarness> pumpSettings(
         routes: [
           GoRoute(
             path: ':page',
-            builder: (_, state) => settingsPageFor(
+            // The app's own wiring: Routines comes from its feature.
+            builder: (context, state) => appScreens.settingsPage(
+              context,
               SettingsPage.byName(state.pathParameters['page']!)!,
+              state.extra,
             ),
           ),
         ],

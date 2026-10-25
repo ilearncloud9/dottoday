@@ -100,6 +100,7 @@ class ProposalEditRow extends StatelessWidget {
       },
       ProposalChange.added => l10n.proposalAdded,
       ProposalChange.untouched => l10n.proposalUntouched,
+      ProposalChange.overlaps => l10n.proposalOverlaps,
       ProposalChange.steps => l10n.proposalSteps(
         edit.subtasks.where((s) => s.deletedAt == null).length,
       ),
@@ -220,7 +221,8 @@ class _ChangeChip extends StatelessWidget {
         t.tasks[TaskColor.rose].tint,
         t.tasks[TaskColor.rose].ink,
       ),
-      ProposalChange.untouched => (t.colors.hairline, t.colors.muted),
+      ProposalChange.untouched ||
+      ProposalChange.overlaps => (t.colors.hairline, t.colors.muted),
       _ => (t.colors.accentTint, t.colors.accentInk),
     };
     return DecoratedBox(
@@ -241,9 +243,12 @@ class _ChangeChip extends StatelessWidget {
 
 /// "☾ Bedtime · 22:00", where the thread ends.
 class ProposalBedtimeRow extends StatelessWidget {
-  const ProposalBedtimeRow({required this.label, super.key});
+  const ProposalBedtimeRow({required this.label, this.moon = true, super.key});
 
   final String label;
+
+  /// The moon glyph; off for the "2 h 15 free" line above it.
+  final bool moon;
 
   @override
   Widget build(BuildContext context) {
@@ -253,11 +258,13 @@ class ProposalBedtimeRow extends StatelessWidget {
       children: [
         SizedBox(
           width: DotSize.macRowDot,
-          child: DotIcon(
-            DotGlyphs.moon,
-            color: t.colors.muted,
-            size: DotSize.rowIcon,
-          ),
+          child: moon
+              ? DotIcon(
+                  DotGlyphs.moon,
+                  color: t.colors.muted,
+                  size: DotSize.rowIcon,
+                )
+              : null,
         ),
         Text(label, style: t.styles.rowMeta.copyWith(color: t.colors.muted)),
       ],

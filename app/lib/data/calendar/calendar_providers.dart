@@ -8,6 +8,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_importer.dart';
+import 'package:dottoday/data/calendar/calendar_moves.dart';
 import 'package:dottoday/data/calendar/channel_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/drift_calendar_source_repository.dart';
@@ -76,6 +77,7 @@ CalendarImport calendarImporter(Ref ref) => CalendarImporter(
     for (final p in await ref.read(calendarWriteBackProvider).pending(userId))
       p.link.id,
   },
+  onMoved: (moved) => ref.read(calendarMovesProvider.notifier).add(moved),
 );
 
 /// The calendar permission now; re-read with `ref.invalidate` (on resume,

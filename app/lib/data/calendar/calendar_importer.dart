@@ -46,8 +46,10 @@ final class CalendarImporter implements CalendarImport {
     required IdGenerator ids,
     required Logger logger,
     Future<Set<String>> Function(String userId)? heldLinks,
+    void Function(List<CalendarMove> moved)? onMoved,
     this.providers = deviceProviderWires,
   }) : _db = db,
+       _onMoved = onMoved,
        _heldLinks = heldLinks,
        _links = CalendarLinksDao(db),
        _gateway = gateway,
@@ -78,6 +80,9 @@ final class CalendarImporter implements CalendarImport {
   /// M7.3): the import leaves them to write-back's merge.
   final Future<Set<String>> Function(String userId)? _heldLinks;
   Future<void> _queue = Future.value();
+
+  /// Told after a commit which events the calendar moved (M11.1b).
+  final void Function(List<CalendarMove> moved)? _onMoved;
 
   /// From yesterday to [horizonDays] ahead, in the device zone. Nothing
   /// happens without the calendar permission: a revoked permission never
@@ -212,6 +217,7 @@ final class CalendarImporter implements CalendarImport {
       await _links.deleteLinks(userId, plan.removeLinkIds);
     });
     _effects.schedule(userId);
+    if (plan.moved.isNotEmpty) _onMoved?.call(plan.moved);
     _logger.info(
       'calendar.imported',
       fields: {

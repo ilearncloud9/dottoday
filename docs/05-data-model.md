@@ -22,7 +22,11 @@ title, notes, color_key, icon_key, start_utc? (null = inbox), tz_id, duration_mi
 travel_buffer_min, energy?, alerts jsonb (overrides series when non-null), status
 ('planned'|'done'|'skipped'), completed_at_utc?, sort_order (inbox ordering), source
 ('user'|'calendar'), calendar_link_id?, snoozed_until_utc?, actual_start_utc?, actual_end_utc?,
-duration_from_steps bool, created_at, updated_at, deleted_at?`
+duration_from_steps bool, move_count int (0–1000, M10.7), routine_start bool (M11.4), created_at,
+updated_at, deleted_at?`
+
+`routine_start` (M11.4, migration 0007, Drift schema 6): the first step of a dropped routine; its
+at-start alert rings loud like an alarm (11 A0, `NotificationPlanner`).
 
 `actual_start_utc` / `actual_end_utc` (M6.5.1, `11-standout-roadmap.md` B1) record when the user really
 started (first tap of the live dot, Start, opening Focus) and finished (Done); never inferred from the
@@ -36,6 +40,20 @@ Rules
   "This and following" splits the series (`until` on old, new series from that date). "All" edits the
   series and re-materialises untouched occurrences (occurrences with user edits are preserved).
 - Completion is **per occurrence** (R-09). Subtask state too (below).
+
+### `routines`  (saved slices of thread, M11.4, `11-standout-roadmap.md` C2)
+`id, user_id, title (1–200, trimmed), anchor ('wake'|'bed'|'time'), anchor_minute? (0–1439, set
+exactly when anchor = 'time'), items jsonb [ {id, title, colorKey, iconKey, offsetMin (0–1440, from
+the first step's start), durationMin (5–1440)} ] (1–30 steps; the server allows 0–30 so a placeholder
+row can exist mid-push), sort_order double, created_at, updated_at, deleted_at?`
+
+One table, not `routines` + `routine_items` as first planned: a routine is edited as a whole and
+rarely, and `items` mirrors `series.subtask_template` (one sync entity, one RLS policy, one export
+list). A drop writes ordinary occurrences (one per step, the first with `routine_start`); nothing on
+the timeline points back at the routine, so editing or deleting a routine never touches a day.
+Placement: `wake` — the first step at that day's Wake Up; `bed` — the last step ends at Bedtime;
+`time` — the first step at `anchor_minute` local wall clock (DST-true). RLS: own rows only; synced
+through `sync_push` (0007 adds the entity); purged like other tombstones after 30 days.
 
 ### `subtasks`
 `id, user_id, occurrence_id, title, done bool, sort_order, duration_min? (1–1440, B2), created_at,
@@ -97,16 +115,18 @@ so no Supabase migration. It is PII like a title — never logged, never sent an
 the travel time suggestion; an accepted suggestion is the occurrence's `travel_buffer_min`.
 
 ### `conflicts`
-`id, user_id, entity, entity_id, field, mine jsonb, theirs jsonb, created_at, resolved_at?`
+`id, user_id, entity ('series'|'occurrences'|'subtasks'|'profiles'|'routines'), entity_id, field,
+mine jsonb, theirs jsonb, created_at, resolved_at?`
 
 ### `change_log` (local only) and `sync_cursors` (local only)
 See architecture §4. `change_log (seq autoincrement, entity, entity_id, field, value json, hlc)` is
-the push outbox (rows deleted on ack); `sync_cursors (entity pk, since_utc)` holds the highest server
+the push outbox (rows deleted on ack; its `entity` CHECK names the five synced tables — schema 6
+rebuilt it to add `routines`, keeping pending rows); `sync_cursors (entity pk, since_utc)` holds the highest server
 `updated_at` pulled per table.
 
 ### Local schema (Drift, `app/lib/data/db`, M2.1)
 - Same tables and checks as the server, `STRICT`, plus `dirty` / `version` on the tables pushed via `sync_push` (profiles, series, occurrences,
-  subtasks). Calendar tables have none: they sync through their provider (M7).
+  subtasks, routines). Calendar tables have none: they sync through their provider (M7).
 - Instants are `INTEGER` UTC epoch ms (not Drift `DateTime`); enums are `TEXT` with `CHECK (… IN …)`;
   `jsonb` columns are `TEXT` with `CHECK (json_valid(…))`; booleans are `INTEGER` 0/1.
 - Before sign-in the single local `profiles.id` is a client UUID v7. Every `user_id` references it
@@ -182,16 +202,23 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   Absent keys take the defaults; the server ignores both. `reminderSound` isn't rejected when
   unknown (a newer device may know more sounds): the app resolves it against its own set before it
   names a file, so a stored string never reaches a file name.
+- Clarified in M11.5: `energySuggestions` (Settings › Planning, 11 C4) is `true`/`false` when the
+  user chose, absent/null for the default — off until 20 finished high-energy tasks with real times
+  exist, then on. The server ignores the key, as for `durationPresets`.
+- Clarified in M11.4: a routine needs a title and 1–30 steps, each with a title, a length of 5–1440
+  min, an offset of 0–1440 min and allowed colour/icon keys; `anchor_minute` is set exactly when the
+  anchor is `time` (`validateRoutine`).
 - Server enforces with CHECK constraints and a `validate_settings()` function; client with a Zod-like
   Dart validator in `domain/validation`.
 
 ## Indexes
 `occurrences (user_id, start_utc)`, `occurrences (user_id, series_id, original_start_utc) unique`,
 `occurrences (user_id, deleted_at)`, `subtasks (occurrence_id)`, `series (user_id)`,
-`calendar_links (user_id, external_event_id)`. All tables `(user_id, updated_at)` for sync pulls.
+`calendar_links (user_id, external_event_id)`, `routines (user_id)`. All tables `(user_id, updated_at)` for sync pulls.
 
 ## Export format
-JSON v1: `{version:1, exportedAt, profile, series[], occurrences[], subtasks[]}`; CSV per entity;
+JSON v1: `{version:1, exportedAt, profile, series[], occurrences[], subtasks[], routines[]}` (M11.4:
+`routines` added; a file without the key imports with none, so older backups still restore); CSV per entity;
 ICS of occurrences with `start_utc` (VEVENT, RRULE for series). Import accepts JSON v1 only and runs in
 a transaction with a pre-import backup.
 
@@ -214,7 +241,7 @@ the next import pairs them as before. Rejected: exporting the link keys so the i
 restored rows (links are per device and per calendar account — an EventKit id from another device
 pairs with nothing — and it would put calendar ids into user files). Cost: subtasks or notes added to
 an imported event stay on the device that has the event (as ADR-0011 already says for sync). Files:
-`dottoday-backup-<yyyy-MM-dd>.json`, `dottoday-<yyyy-MM-dd>.ics`, `dottoday-{tasks,repeats,subtasks}-
+`dottoday-backup-<yyyy-MM-dd>.json`, `dottoday-<yyyy-MM-dd>.ics`, `dottoday-{tasks,repeats,subtasks,routines}-
 <yyyy-MM-dd>.csv` (empty tables left out), dated in the profile's zone, never named after content.
 Restore/import policy is **replace**, said in the confirmation in those words ("Anything here that
 isn't in it moves to Trash"): it runs through the write path in one transaction after a pre-import

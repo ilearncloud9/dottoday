@@ -6,16 +6,18 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
+import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/day_scheduler_service.dart';
+import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:dottoday/domain/scheduling/running_late.dart';
-import 'package:dottoday/domain/scheduling/schedule_result.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
-import 'package:dottoday/features/timeline/state/block_actions.dart';
 import 'package:dottoday/features/timeline/state/late_actions.dart';
+import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +28,10 @@ import 'package:timezone/timezone.dart' as tz;
 enum _Late { shift, skip, shorten }
 
 /// "Running late" (docs/09 M3f.5, R-04): how late (+5 / +15 / +30), then
-/// shift the rest of today, skip the task at hand, or shorten it so
-/// nothing after it moves. Each writes one batch with Undo; a pinned task
-/// stops the shift and the preview says so before anything moves (R-17).
+/// shift the rest of today — as a Rebalance proposal, written only on
+/// Accept (M11.1) — skip the task at hand, or shorten it so nothing after
+/// it moves. Skip and Shorten write one batch with Undo; a pinned task
+/// stops the shift and the preview says so (R-17).
 Future<void> showRunningLateSheet(BuildContext context, DateTime today) async {
   final container = ProviderScope.containerOf(context, listen: false);
   final messenger = ScaffoldMessenger.of(context);
@@ -43,21 +46,18 @@ Future<void> showRunningLateSheet(BuildContext context, DateTime today) async {
   final (choice, minutes) = picked;
   final now = container.read(clockProvider).nowUtc();
   final target = lateTarget(data.blocks, now);
-  // Read-only and repeating events never move (docs/09 M7.6); unknown yet
-  // means no calendar event moves.
-  final fixed = container.read(readOnlyCalendarIdsProvider).value;
   final report = _Report(messenger, l10n, container.read(undoServiceProvider));
   switch (choice) {
     case _Late.shift:
-      final run = runLate(
+      // A proposal first; nothing moves until Accept (11 C1, M11.1).
+      await openRebalance(
         container,
-        day: data.blocks,
-        nowUtc: now,
-        minutes: minutes,
-        includeCalendar: fixed != null && data.settings.includeCalendarInShift,
-        readOnlyIds: fixed ?? const {},
+        l10n,
+        today: today,
+        fromUtc: now,
+        deltaMin: minutes,
+        subtitle: l10n.rebalanceLate(formatDurationShort(l10n, minutes)),
       );
-      if (run != null) report.shift(await run, data.blocks, minutes);
     case _Late.skip:
       if (target == null) return;
       report(
@@ -91,26 +91,6 @@ final class _Report {
         message: (_) => message,
         tokenOf: (t) => t,
       );
-
-  void shift(
-    Result<(UndoToken, ShiftReport), AppFailure> result,
-    List<Occurrence> day,
-    int minutes,
-  ) => reportUndoable(
-    messenger,
-    l10n,
-    undo,
-    result,
-    message: (v) => switch (v.$2.blockedById) {
-      final pin? => l10n.snackRunningLatePartial(
-        v.$2.movedIds.length,
-        minutes,
-        _title(day, pin),
-      ),
-      null => l10n.snackRunningLate(v.$2.movedIds.length, minutes),
-    },
-    tokenOf: (v) => v.$1,
-  );
 }
 
 String _title(List<Occurrence> day, String id) =>
@@ -131,7 +111,31 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
 
   int _minutes = 15;
 
+  /// Set once the user picks an amount; until then the history may.
+  bool _picked = false;
+
   void _close(_Late choice) => Navigator.of(context).pop((choice, _minutes));
+
+  /// How much longer [target] usually takes, as the default amount and
+  /// its reason ("Deep work usually takes 2 h 20"; M11.3); null leaves
+  /// the default.
+  String? _learnedAmount(BuildContext context, Occurrence? target) {
+    if (target == null) return null;
+    final learned =
+        ref
+            .watch(learningIndexProvider)
+            .value
+            ?.forTask(title: target.title, seriesId: target.seriesId) ??
+        Learned.none;
+    final amount = lateAmountFor(target.durationMin, learned, _choices);
+    if (amount == null) return null;
+    if (!_picked) _minutes = amount;
+    final l10n = context.l10n;
+    return l10n.lateUsually(
+      target.title,
+      formatDurationShort(l10n, learned.usualMinutes!),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,11 +145,21 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
         ref.watch(minuteTickProvider).value ??
         ref.watch(clockProvider).nowUtc();
     final target = lateTarget(data.blocks, now);
+    final why = _learnedAmount(context, target);
+    final t = DotTheme.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _amounts(context),
+        if (why != null)
+          Padding(
+            padding: const EdgeInsets.only(top: DotSpace.xs),
+            child: Text(
+              why,
+              style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            ),
+          ),
         _shiftTile(context, data, now),
         if (target == null)
           Padding(
@@ -176,7 +190,10 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
               label: Text(l10n.runningLateBy(m)),
               shape: dotChipShape(context),
               selected: m == _minutes,
-              onSelected: (_) => setState(() => _minutes = m),
+              onSelected: (_) => setState(() {
+                _minutes = m;
+                _picked = true;
+              }),
             ),
         ],
       ),

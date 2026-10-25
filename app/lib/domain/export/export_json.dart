@@ -4,6 +4,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/domain/export/export_bundle.dart';
 import 'package:dottoday/domain/validation/entity_validators.dart';
+import 'package:dottoday/domain/validation/routine_validator.dart';
 
 /// Largest import accepted, in UTF-8 bytes (06 §7).
 const maxImportBytes = 25 * 1024 * 1024;
@@ -59,7 +60,14 @@ Result<ExportBundle, ValidationFailure> _validated(ExportBundle b) {
   final series = b.series.map(validateSeries).toList();
   final occurrences = b.occurrences.map(validateOccurrence).toList();
   final subtasks = b.subtasks.map(validateSubtask).toList();
-  for (final r in [profile, ...series, ...occurrences, ...subtasks]) {
+  final routines = b.routines.map(validateRoutine).toList();
+  for (final r in [
+    profile,
+    ...series,
+    ...occurrences,
+    ...subtasks,
+    ...routines,
+  ]) {
     if (r case Err(:final failure)) return Err(failure);
   }
   T ok<T>(Validated<T> r) => (r as Ok<T, ValidationFailure>).value;
@@ -73,6 +81,7 @@ Result<ExportBundle, ValidationFailure> _validated(ExportBundle b) {
       for (final o in occurrences) ok(o).copyWith(calendarLinkId: null),
     ],
     subtasks: subtasks.map(ok).toList(),
+    routines: routines.map(ok).toList(),
   );
   return _consistent(clean) ? Ok(clean) : const Err(_badFile);
 }
@@ -82,9 +91,11 @@ bool _consistent(ExportBundle b) {
   final seriesIds = {for (final s in b.series) s.id};
   final occurrenceIds = {for (final o in b.occurrences) o.id};
   final subtaskIds = {for (final s in b.subtasks) s.id};
+  final routineIds = {for (final r in b.routines) r.id};
   if (seriesIds.length != b.series.length ||
       occurrenceIds.length != b.occurrences.length ||
-      subtaskIds.length != b.subtasks.length) {
+      subtaskIds.length != b.subtasks.length ||
+      routineIds.length != b.routines.length) {
     return false;
   }
   final ownerIds = {
@@ -92,6 +103,7 @@ bool _consistent(ExportBundle b) {
     for (final s in b.series) s.userId,
     for (final o in b.occurrences) o.userId,
     for (final s in b.subtasks) s.userId,
+    for (final r in b.routines) r.userId,
   };
   return ownerIds.length == 1 &&
       b.occurrences.every(

@@ -94,6 +94,13 @@ abstract final class DotSize {
   static const double tabDot = 10;
   static const double tabDotActive = 12;
 
+  /// The Reality thread's plan lane, this far towards the start edge from
+  /// the thread's centre, and the planned dot's ghost ring on it, shifted
+  /// up or down by [ghostRingShift] (`B-ios-reality-thread`, 11 C3).
+  static const double ghostLaneOffset = 14;
+  static const double ghostRing = 24;
+  static const double ghostRingShift = 10;
+
   /// Coloured segment of a task on the thread (Watch 5).
   static const double segment = 6;
 

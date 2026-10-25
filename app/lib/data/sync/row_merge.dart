@@ -108,4 +108,5 @@ const _kinds = {
   'series': EntityKind.series,
   'occurrences': EntityKind.occurrence,
   'subtasks': EntityKind.subtask,
+  'routines': EntityKind.routine,
 };

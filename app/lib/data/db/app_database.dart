@@ -1,6 +1,7 @@
 import 'package:dottoday/data/db/tables/calendar_tables.dart';
 import 'package:dottoday/data/db/tables/occurrences.dart';
 import 'package:dottoday/data/db/tables/profiles.dart';
+import 'package:dottoday/data/db/tables/routines_table.dart';
 import 'package:dottoday/data/db/tables/series_table.dart';
 import 'package:dottoday/data/db/tables/sync_tables.dart';
 import 'package:drift/drift.dart';
@@ -21,6 +22,7 @@ part 'app_database.g.dart';
     CalendarLinks,
     Occurrences,
     Subtasks,
+    RoutinesTable,
     Conflicts,
     ChangeLog,
     SyncCursors,
@@ -33,7 +35,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 5;
+  static const latestSchemaVersion = 6;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -60,6 +62,15 @@ class AppDatabase extends _$AppDatabase {
       if (from < 5) {
         await _addColumnOnce(m, occurrences, occurrences.moveCount);
       }
+      // 6 (M11.4): routines (11 C2), the routine-start flag, and the
+      // outbox / conflicts entity CHECK that now names routines. SQLite
+      // can't alter a CHECK: the two tables are rebuilt, rows kept.
+      if (from < 6) {
+        await _createTableOnce(m, routinesTable);
+        await _addColumnOnce(m, occurrences, occurrences.routineStart);
+        await m.alterTable(TableMigration(changeLog));
+        await m.alterTable(TableMigration(conflicts));
+      }
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without
@@ -67,6 +78,18 @@ class AppDatabase extends _$AppDatabase {
       await customStatement('PRAGMA foreign_keys = ON');
     },
   );
+
+  /// Creates [table] unless it exists (see [_addColumnOnce] for why).
+  Future<void> _createTableOnce(
+    Migrator m,
+    TableInfo<Table, Object?> table,
+  ) async {
+    final found = await customSelect(
+      "SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?",
+      variables: [Variable.withString(table.actualTableName)],
+    ).get();
+    if (found.isEmpty) await m.createTable(table);
+  }
 
   /// Adds [column] unless [table] already has it. Opening a file with an
   /// older build lowers `user_version` but keeps the newer columns (drift

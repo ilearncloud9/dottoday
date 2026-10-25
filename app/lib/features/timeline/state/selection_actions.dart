@@ -4,11 +4,15 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/routine.dart';
+import 'package:dottoday/domain/routines/routine_rules.dart';
 import 'package:dottoday/domain/scheduling/drag_math.dart';
 import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
 import 'package:dottoday/domain/scheduling/unstick.dart';
+import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
+import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -98,3 +102,27 @@ Future<Result<UndoToken, AppFailure>> trashAll(
 ) => ref.read(trashServiceProvider).trashOccurrences(rows.first.userId, {
   for (final o in rows) o.id,
 });
+
+/// [picked] tasks of [day] as a new routine called [title] (11 C2 "Save
+/// as routine"): anchored at Wake Up or Bedtime when they start or end
+/// there, else at the first task's time.
+Future<Routine> routineFromPicked(
+  ProviderContainer ref,
+  List<Occurrence> picked,
+  DateTime day,
+  String title, {
+  IdGenerator ids = const UuidV7Generator(),
+}) async {
+  final data = await readTimelineDay(ref, day);
+  final zone = data.day.location;
+  return routineFromSelection(
+    picked,
+    shape: DayShape.on(zone, day, data.settings.boundaryFor(data.day.weekday)),
+    zone: zone,
+    id: ids.newId(),
+    userId: data.userId,
+    title: title,
+    nowUtc: ref.read(clockProvider).nowUtc(),
+    newId: ids.newId,
+  );
+}

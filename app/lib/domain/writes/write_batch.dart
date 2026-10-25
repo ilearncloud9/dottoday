@@ -1,4 +1,5 @@
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
@@ -18,6 +19,7 @@ final class WriteBatch {
     this.series = const [],
     this.occurrences = const [],
     this.subtasks = const [],
+    this.routines = const [],
   });
 
   final String userId;
@@ -28,17 +30,22 @@ final class WriteBatch {
   final List<Occurrence> occurrences;
   final List<Subtask> subtasks;
 
+  /// Saved slices of thread (11 C2).
+  final List<Routine> routines;
+
   /// Whether the batch writes nothing.
   bool get isEmpty =>
       profile == null &&
       series.isEmpty &&
       occurrences.isEmpty &&
-      subtasks.isEmpty;
+      subtasks.isEmpty &&
+      routines.isEmpty;
 
   /// Whether every row is owned by [userId].
   bool get isSingleOwner =>
       (profile == null || profile!.id == userId) &&
       series.every((s) => s.userId == userId) &&
       occurrences.every((o) => o.userId == userId) &&
-      subtasks.every((s) => s.userId == userId);
+      subtasks.every((s) => s.userId == userId) &&
+      routines.every((r) => r.userId == userId);
 }

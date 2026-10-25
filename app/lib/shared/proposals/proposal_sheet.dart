@@ -26,6 +26,7 @@ class ProposalSheet extends StatelessWidget {
     this.options = const [],
     this.lead,
     this.below,
+    this.footnote,
     this.failure,
     this.busy = false,
     super.key,
@@ -49,6 +50,9 @@ class ProposalSheet extends StatelessWidget {
 
   /// Null keeps the sheet's own "Accept".
   final String? acceptLabel;
+
+  /// Null keeps "Nothing is saved until you accept".
+  final String? footnote;
 
   /// Null disables Accept (nothing left to write).
   final VoidCallback? onAccept;
@@ -109,6 +113,7 @@ class ProposalSheet extends StatelessWidget {
         ),
         _Actions(
           acceptLabel: acceptLabel ?? context.l10n.proposalAccept,
+          footnote: footnote ?? context.l10n.proposalNothingSaved,
           onAccept: busy ? null : onAccept,
           onDiscard: onDiscard,
         ),
@@ -191,11 +196,13 @@ class _OriginChip extends StatelessWidget {
 class _Actions extends StatelessWidget {
   const _Actions({
     required this.acceptLabel,
+    required this.footnote,
     required this.onAccept,
     required this.onDiscard,
   });
 
   final String acceptLabel;
+  final String footnote;
   final VoidCallback? onAccept;
   final VoidCallback onDiscard;
 
@@ -222,7 +229,7 @@ class _Actions extends StatelessWidget {
           ),
           TextButton(onPressed: onDiscard, child: Text(l10n.proposalDiscard)),
           Text(
-            l10n.proposalNothingSaved,
+            footnote,
             textAlign: TextAlign.center,
             style: t.styles.caption.copyWith(color: t.colors.muted),
           ),

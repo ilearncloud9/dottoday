@@ -61,34 +61,6 @@ Future<Result<(UndoToken, ShiftReport), AppFailure>> shiftRest(
   );
 }
 
-/// Pushes what is left of [day] from [nowUtc] [minutes] later ("Running
-/// late +5/+15/+30", docs/02 F1, R-04), up to the first pinned task. Null
-/// when nothing is left to move. Takes a container: the Running late
-/// sheet has closed by the time this runs.
-Future<Result<(UndoToken, ShiftReport), AppFailure>>? runLate(
-  ProviderContainer container, {
-  required List<Occurrence> day,
-  required DateTime nowUtc,
-  required int minutes,
-  bool includeCalendar = false,
-  Set<String> readOnlyIds = const {},
-}) {
-  final result = const DaySchedulerService().runningLate(
-    day,
-    nowUtc,
-    minutes,
-    includeCalendar: includeCalendar,
-    readOnlyIds: readOnlyIds,
-  );
-  if (result.report.movedIds.isEmpty) return null;
-  return _applyShift(
-    container.read(undoServiceProvider),
-    day.first.userId,
-    result,
-    before: day,
-  );
-}
-
 /// Writes [result]'s moved tasks as one undoable batch, each counting a
 /// move against its version in [before] (Unstick, M10.7).
 Future<Result<(UndoToken, ShiftReport), AppFailure>> _applyShift(

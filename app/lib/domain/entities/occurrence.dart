@@ -51,6 +51,10 @@ abstract class Occurrence with _$Occurrence {
     /// Times this task was moved — drag, Running late, Rebalance, never an
     /// edit (11 B3 Unstick); each instance of a repeat counts its own.
     @Default(0) int moveCount,
+
+    /// The first step of a dropped routine (11 C2): its start rings loud
+    /// like an alarm (A0, docs/09 M6.5.3).
+    @Default(false) bool routineStart,
     @UtcMillisConverter() required DateTime createdAt,
     @UtcMillisConverter() required DateTime updatedAt,
     @UtcMillisConverter() DateTime? deletedAt,

@@ -72,6 +72,9 @@ class Occurrences extends Table with TimestampColumns, SyncColumns {
 
   // Schema 5 (M10.7, 11 B3): moves, for Unstick. ALTER TABLE, no CHECK.
   IntColumn get moveCount => integer().withDefault(const Constant(0))();
+
+  // Schema 6 (M11.4, 11 C2): a routine's first step, alarm-loud (A0).
+  BoolColumn get routineStart => boolean().withDefault(const Constant(false))();
   IntColumn get deletedAt => integer().nullable()();
 
   @override

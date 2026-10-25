@@ -24,6 +24,16 @@ final class DaySummary {
   final int freeMinutes;
 }
 
+/// The day card's Plan / Reality switch (11 C3, `B-ios-reality-thread`).
+@immutable
+final class RealityToggle {
+  const RealityToggle({required this.on, required this.onChanged});
+
+  /// Showing the Reality thread.
+  final bool on;
+  final ValueChanged<bool> onChanged;
+}
+
 /// One day on a raised card (docs/10 §3 `DayCard`, `Main`): "Wednesday ·
 /// Today" and its numbers, then the day's [Thread], which scrolls inside
 /// the card so the header stays put.
@@ -35,6 +45,7 @@ class DayCard extends StatelessWidget {
     this.isToday = false,
     this.actions = const ThreadActions(),
     this.footer,
+    this.reality,
     super.key,
   }) : side = null;
 
@@ -49,7 +60,8 @@ class DayCard extends StatelessWidget {
     this.actions = const ThreadActions(),
     this.footer,
     super.key,
-  }) : isToday = false;
+  }) : isToday = false,
+       reality = null;
 
   /// "Wednesday", or "Monday 14 Dec" away from this week.
   final String title;
@@ -64,6 +76,10 @@ class DayCard extends StatelessWidget {
   /// Set on [DayCard.side].
   final SideDay? side;
 
+  /// The Plan / Reality switch in the header; null hides it. While the
+  /// Reality thread shows, the header drops its numbers (as rendered).
+  final RealityToggle? reality;
+
   @override
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
@@ -77,7 +93,12 @@ class DayCard extends StatelessWidget {
         footer: footer,
       );
     }
-    final header = _Header(title: title, isToday: isToday, summary: summary);
+    final header = _Header(
+      title: title,
+      isToday: isToday,
+      summary: summary,
+      reality: reality,
+    );
     return DecoratedBox(
       decoration: BoxDecoration(
         color: c.raised,
@@ -142,11 +163,13 @@ class _Header extends StatelessWidget {
     required this.title,
     required this.isToday,
     required this.summary,
+    this.reality,
   });
 
   final String title;
   final bool isToday;
   final DaySummary summary;
+  final RealityToggle? reality;
 
   @override
   Widget build(BuildContext context) {
@@ -188,10 +211,32 @@ class _Header extends StatelessWidget {
               style: t.styles.cardTitle,
             ),
             // Same size as the rows' time meta, as in `Main`.
-            Text(numbers, style: t.styles.rowMeta),
+            if (reality?.on != true) Text(numbers, style: t.styles.rowMeta),
+            if (reality case final r?) _RealitySwitch(toggle: r),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// "Plan | Reality" (`B-ios-reality-thread`).
+class _RealitySwitch extends StatelessWidget {
+  const _RealitySwitch({required this.toggle});
+
+  final RealityToggle toggle;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return SegmentedButton<bool>(
+      segments: [
+        ButtonSegment(value: false, label: Text(l10n.realityPlan)),
+        ButtonSegment(value: true, label: Text(l10n.realityReality)),
+      ],
+      selected: {toggle.on},
+      showSelectedIcon: false,
+      onSelectionChanged: (s) => toggle.onChanged(s.first),
     );
   }
 }

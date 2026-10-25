@@ -8,11 +8,13 @@ import 'package:dottoday/data/schedule/planned_colors.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
+import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/features/timeline/state/selection_actions.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/shared/pickers/day_pickers.dart';
 import 'package:dottoday/shared/selection/selection_bar_frame.dart';
+import 'package:dottoday/shared/sheets/text_prompt_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -99,6 +101,27 @@ final class SelectionCommands {
           _finish(
             recolourAll(container, rows, colour.key),
             _l10n.snackManyRecoloured(rows.length),
+          );
+        }());
+
+  /// Save as routine (11 C2, M11.4): the picked tasks' order, lengths and
+  /// gaps, named here; one undoable write.
+  VoidCallback? get saveAsRoutine => rows.isEmpty
+      ? null
+      : () => unawaited(() async {
+          final name = await showTextPrompt(
+            _context,
+            title: _l10n.routineSaveSelection,
+            label: _l10n.routineName,
+            action: _l10n.routineSave,
+          );
+          if (name == null) return;
+          final routine = await routineFromPicked(container, rows, day, name);
+          _finish(
+            _undo.applyUndoable(
+              WriteBatch(userId: routine.userId, routines: [routine]),
+            ),
+            _l10n.routineSaved(name),
           );
         }());
 

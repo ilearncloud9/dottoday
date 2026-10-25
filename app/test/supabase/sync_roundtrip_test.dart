@@ -3,6 +3,7 @@ library;
 
 import 'package:dottoday/core/router/auth_callback.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
+import 'package:dottoday/data/repositories/drift_routine_repository.dart';
 import 'package:dottoday/data/sync/account_adoption.dart';
 import 'package:dottoday/data/sync/background_sync.dart';
 import 'package:dottoday/data/sync/supabase_sync_gateway.dart';
@@ -100,6 +101,14 @@ void main() {
       actualStartUtc: now.subtract(const Duration(minutes: 3)),
       actualEndUtc: now.subtract(const Duration(minutes: 1)),
       durationFromSteps: true,
+      // M11.4 crosses too.
+      routineStart: true,
+    );
+    final routine = routineFixture().copyWith(
+      id: '01928c3e-0000-7000-a000-${now.millisecondsSinceEpoch.toString().padLeft(12, '0').substring(0, 12)}',
+      userId: a.account,
+      anchor: RoutineAnchor.time,
+      anchorMinute: 17 * 60 + 30,
     );
     final series = seriesFixture().copyWith(
       id: '01928c3e-0000-7000-9000-${now.millisecondsSinceEpoch.toString().padLeft(12, '0').substring(0, 12)}',
@@ -112,7 +121,12 @@ void main() {
       ],
     );
     await a.h.writes.apply(
-      WriteBatch(userId: a.account, occurrences: [task], series: [series]),
+      WriteBatch(
+        userId: a.account,
+        occurrences: [task],
+        series: [series],
+        routines: [routine],
+      ),
     );
 
     final up = await a.engine.run(a.account);
@@ -141,6 +155,13 @@ void main() {
     expect(mine.alerts, task.alerts);
     expect(mine.sortOrder, 1.5);
     expect(mine.tzId, 'Europe/Berlin');
+    expect(mine.routineStart, isTrue);
+    final theirRoutine = await DriftRoutineRepository(
+      b.h.db,
+    ).findById(b.account, routine.id);
+    expect(theirRoutine!.items, routine.items);
+    expect(theirRoutine.anchor, RoutineAnchor.time);
+    expect(theirRoutine.anchorMinute, 17 * 60 + 30);
     // The repeat's instances: the same ids on both devices.
     final aIds = (await a.h.db.select(a.h.db.occurrences).get())
         .map((r) => r.id)

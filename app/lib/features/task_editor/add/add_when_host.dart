@@ -6,7 +6,10 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/schedule/planned_colors.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
+import 'package:dottoday/data/scheduling/learning_providers.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/quick_add/add_draft.dart';
+import 'package:dottoday/domain/scheduling/energy_window.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/time/duration_presets.dart';
@@ -25,6 +28,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+/// The energy window to suggest for the draft (11 C4, M11.5): only when
+/// suggestions are on and the title is one of the user's high-energy
+/// tasks.
+EnergyWindow? _energyFor(
+  ({EnergyWindow? window, int completions})? energy,
+  Settings? settings,
+  String title,
+) {
+  final w = energy?.window;
+  if (w == null || settings == null || title.isEmpty) return null;
+  final on = energySuggestionsOn(settings, completions: energy!.completions);
+  return on && w.knows(title) ? w : null;
+}
+
 /// Step 2 wired to the flow: the day's room, presets, the TIME and
 /// DURATION ⋯, Add / Add another.
 class AddWhenHost extends ConsumerWidget {
@@ -32,6 +49,12 @@ class AddWhenHost extends ConsumerWidget {
 
   final AddRequest request;
   final AddFlowState state;
+
+  EnergyWindow? _energy(WidgetRef ref) => _energyFor(
+    ref.watch(energyWindowProvider).value,
+    ref.watch(currentProfileProvider).value?.settings,
+    state.draft.title,
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,6 +65,7 @@ class AddWhenHost extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     return AddWhenStep(
+      energy: _energy(ref),
       state: state,
       room: room,
       presets: settings?.durationPresets ?? defaultDurationPresets,

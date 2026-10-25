@@ -131,6 +131,15 @@ void main() {
     expect(_loud(_plan(tasks, routines: {'routine'})), {'first', 'routine'});
   });
 
+  test('a dropped routine\'s first step rings loud by its flag (M11.4)', () {
+    final tasks = [
+      _task('first', DateTime.utc(2026, 10, 21, 7)),
+      _task('gym', DateTime.utc(2026, 10, 21, 18)).copyWith(routineStart: true),
+      _task('protein', DateTime.utc(2026, 10, 21, 19)),
+    ];
+    expect(_loud(_plan(tasks)), {'first', 'gym'});
+  });
+
   test('the test alarm: loud, its own slot, only while ahead (M6.5.9)', () {
     final at = DateTime.utc(2026, 10, 21, 5, 1);
     final planned =

@@ -34,11 +34,17 @@ Future<ExportBundle?> readUserData(
             ..where((s) => s.userId.equals(userId))
             ..orderBy([(s) => OrderingTerm(expression: s.id)]))
           .get();
+  final routines =
+      await (db.select(db.routinesTable)
+            ..where((r) => r.userId.equals(userId))
+            ..orderBy([(r) => OrderingTerm(expression: r.id)]))
+          .get();
   return ExportBundle(
     exportedAt: nowUtc,
     profile: profileFromRow(profile),
     series: series.map(seriesFromRow).toList(),
     occurrences: occurrences.map(occurrenceFromRow).toList(),
     subtasks: subtasks.map(subtaskFromRow).toList(),
+    routines: routines.map(routineFromRow).toList(),
   ).withoutImported();
 }

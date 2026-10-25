@@ -2,6 +2,7 @@
 # Design sweep on macOS (docs/08 §7): runs integration_test/sweep_test.dart
 # and captures the app window each time the test prints SWEEP_SHOT <name>
 # (integration_test's takeScreenshot doesn't support macOS).
+# SWEEP_THEME=dark runs it dark (shots named macos_dark_*).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p build/sweep
@@ -18,6 +19,7 @@ SWIFT
 }
 flutter drive -d macos --dart-define-from-file=.env.example \
   --dart-define=SWEEP_TAG=macos \
+  ${SWEEP_THEME:+--dart-define=SWEEP_THEME="$SWEEP_THEME"} \
   --driver=test_driver/screenshot_driver.dart \
   --target=integration_test/sweep_test.dart >"$log" 2>&1 &
 drive=$!
