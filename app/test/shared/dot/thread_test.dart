@@ -12,6 +12,7 @@ import '../../support/test_app.dart';
 
 Widget _thread({
   ThreadActions actions = const ThreadActions(),
+  List<ThreadEntry>? entries,
   ThemeMode mode = ThemeMode.light,
   TextDirection direction = TextDirection.ltr,
   double textScale = 1,
@@ -25,7 +26,7 @@ Widget _thread({
         textDirection: direction,
         child: Scaffold(
           body: SingleChildScrollView(
-            child: Thread(entries: mainThread, actions: actions),
+            child: Thread(entries: entries ?? mainThread, actions: actions),
           ),
         ),
       ),
@@ -86,6 +87,50 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Reply to email, upcoming'));
     await tester.tap(find.text('Done'));
     expect(log, ['focus deep', 'done mail', 'done deep']);
+  });
+
+  // Unstick (docs/09 M10.7): only a flagged row asks; Enter or the arrow
+  // hands its answer up; a blank answer is ignored.
+  testWidgets('the Unstick row hands its answer up', (tester) async {
+    final answers = <String>[];
+    await tester.pumpWidget(
+      _thread(
+        actions: ThreadActions(onUnstick: (id, a) => answers.add('$id:$a')),
+        entries: [
+          const ThreadTaskEntry(
+            ThreadTask(
+              id: 'taxes',
+              title: 'Do taxes',
+              color: TaskColor.amber,
+              icon: TaskIcon.list,
+              state: DotState.upcoming,
+              timeRange: '16:00 – 17:30',
+              unstick: true,
+            ),
+          ),
+          const ThreadTaskEntry(
+            ThreadTask(
+              id: 'calm',
+              title: 'Calm one',
+              color: TaskColor.mint,
+              icon: TaskIcon.book,
+              state: DotState.upcoming,
+              timeRange: '18:00 – 18:30',
+            ),
+          ),
+        ],
+      ),
+    );
+    expect(
+      find.text("What's the very first thing you'd physically do?"),
+      findsOneWidget,
+    );
+    await tester.tap(find.byTooltip('Make it step 1'));
+    expect(answers, isEmpty, reason: 'a blank answer is ignored');
+    await tester.enterText(find.byType(TextField), 'Open the folder');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+    expect(answers, ['taxes:Open the folder']);
   });
 
   testWidgets('screen reader hears each row with its state (R-12)', (

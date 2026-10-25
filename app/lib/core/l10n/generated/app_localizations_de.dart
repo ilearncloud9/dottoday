@@ -4425,4 +4425,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get smallestStepStart => 'Starten';
+
+  @override
+  String get unstickPrompt =>
+      'Was wäre das allererste, was du ganz konkret tun würdest?';
+
+  @override
+  String get unstickHint => 'z. B. Ordner öffnen';
+
+  @override
+  String get unstickSave => 'Als Schritt 1 speichern';
+
+  @override
+  String unstickSaved(String title) {
+    return 'Schritt 1 zu $title hinzugefügt';
+  }
 }

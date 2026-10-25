@@ -56,6 +56,15 @@ ThreadActions dayThreadActions(
     onOpen: (id) =>
         openTask(context, id, otherwise: () => showTaskSheet(context, id)),
     onFocus: (id) => openFocus(context, id),
+    // Unstick (M10.7): the answer is step 1; the move count starts over.
+    onUnstick: (id, answer) async {
+      final o = find(id);
+      report(
+        await answerUnstick(ref, o, answer),
+        (_) => l10n.unstickSaved(o.title),
+        (token) => token,
+      );
+    },
     // "N h free · add here" opens Add at the gap, or now if the gap has
     // begun (R-17).
     onAddHere: (gap) {

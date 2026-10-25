@@ -33,7 +33,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 4;
+  static const latestSchemaVersion = 5;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -55,6 +55,10 @@ class AppDatabase extends _$AppDatabase {
       // 4 (M7.5): an imported event's place, for travel time (R-17).
       if (from < 4) {
         await _addColumnOnce(m, calendarLinks, calendarLinks.location);
+      }
+      // 5 (M10.7): how often a task was moved, for Unstick (11 B3).
+      if (from < 5) {
+        await _addColumnOnce(m, occurrences, occurrences.moveCount);
       }
     },
     beforeOpen: (details) async {

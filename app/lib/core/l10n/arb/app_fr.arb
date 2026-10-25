@@ -1075,5 +1075,9 @@
   "focusOpenHint": "Ouvrir la concentration",
   "smallestStepTitle": "Juste {step} · {length} ?",
   "smallestStepTitleShort": "Juste {step} ?",
-  "smallestStepStart": "Commencer"
+  "smallestStepStart": "Commencer",
+  "unstickPrompt": "Quelle est la toute première chose concrète que vous feriez ?",
+  "unstickHint": "p. ex. Ouvrir le dossier",
+  "unstickSave": "En faire l'étape 1",
+  "unstickSaved": "Étape 1 ajoutée à {title}"
 }

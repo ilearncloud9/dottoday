@@ -7,6 +7,7 @@ import 'package:dottoday/data/notifications/notification_content.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/scheduling/start_nudge.dart';
+import 'package:dottoday/domain/scheduling/unstick.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
@@ -67,6 +68,14 @@ class DayPage extends ConsumerWidget {
       format: format,
       subtasks: subtasks ?? const {},
       smallestSteps: _smallestSteps(context, blocks, firstSteps, now),
+      unstick: {
+        for (final o in blocks)
+          // Only once the steps are known: never a flash on a task that has some.
+          if (subtasks != null &&
+              (subtasks[o.id]?.total ?? 0) == 0 &&
+              showsUnstick(o, const []))
+            o.id,
+      },
       showFreeTime: data.settings.showFreeTime,
     );
     final actions = _actions(context, ref, data, format.time);

@@ -5,6 +5,7 @@ import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/drag_math.dart';
+import 'package:dottoday/domain/scheduling/unstick.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,14 +44,20 @@ Future<Result<UndoToken, AppFailure>> shortenTask(
 ) => _write(ref, [shortened]);
 
 /// The Day review: [rows] onto [date] at their own wall times, pinned
-/// ones too (the review asked about every unfinished one-off).
+/// ones too (the review asked about every unfinished one-off). Each counts
+/// a move (Unstick, M10.7): rolling forward is how a task gets stuck.
 Future<Result<UndoToken, AppFailure>> rollToDay(
   ProviderContainer ref,
   List<Occurrence> rows,
   DateTime date,
 ) => _write(ref, [
   for (final o in rows)
-    o.copyWith(startUtc: sameTimeOn(tz.getLocation(o.tzId), o.startUtc!, date)),
+    countMove(
+      o,
+      o.copyWith(
+        startUtc: sameTimeOn(tz.getLocation(o.tzId), o.startUtc!, date),
+      ),
+    ),
 ]);
 
 /// The Day review with "Roll unfinished to tomorrow" off: [rows] back to

@@ -4398,4 +4398,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get smallestStepStart => 'Start';
+
+  @override
+  String get unstickPrompt =>
+      'What\'s the very first thing you\'d physically do?';
+
+  @override
+  String get unstickHint => 'e.g. Open the folder';
+
+  @override
+  String get unstickSave => 'Make it step 1';
+
+  @override
+  String unstickSaved(String title) {
+    return 'Step 1 added to $title';
+  }
 }

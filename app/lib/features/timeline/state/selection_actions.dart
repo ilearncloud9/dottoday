@@ -6,6 +6,7 @@ import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/drag_math.dart';
 import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
+import 'package:dottoday/domain/scheduling/unstick.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,7 +56,10 @@ Future<Result<UndoToken, AppFailure>>? nudgeAll(
   final moved = [
     for (final o in rows)
       if (!o.pinned && o.startUtc != null)
-        o.copyWith(startUtc: o.startUtc!.add(Duration(minutes: minutes))),
+        countMove(
+          o,
+          o.copyWith(startUtc: o.startUtc!.add(Duration(minutes: minutes))),
+        ),
   ];
   return moved.isEmpty ? null : _write(ref, moved);
 }

@@ -4418,4 +4418,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get smallestStepStart => 'Empezar';
+
+  @override
+  String get unstickPrompt => '¿Qué es lo primerísimo que harías, físicamente?';
+
+  @override
+  String get unstickHint => 'p. ej. Abrir la carpeta';
+
+  @override
+  String get unstickSave => 'Convertir en el paso 1';
+
+  @override
+  String unstickSaved(String title) {
+    return 'Paso 1 añadido a $title';
+  }
 }

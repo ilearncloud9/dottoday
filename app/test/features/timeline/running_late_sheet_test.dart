@@ -61,6 +61,9 @@ void main() {
         _row('Reply to email').startUtc,
         mail.add(const Duration(minutes: 15)),
       );
+      // Running late is a move for what it shifts; the pin stays at 0.
+      expect(_row('Reply to email').moveCount, 1);
+      expect(_row('Lunch with Sam').moveCount, 0);
     });
 
     testWidgets('Skip skips the live task only, with Undo', (tester) async {

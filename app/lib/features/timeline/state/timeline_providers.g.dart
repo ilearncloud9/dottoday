@@ -247,14 +247,14 @@ final class DaySubtaskProgressFamily extends $Family
   String toString() => r'daySubtaskProgressProvider';
 }
 
-/// The first step still to do of each task on [date] (Smallest step, 11
-/// B2, docs/09 M10.6), by occurrence id.
+/// The first step still to do of each task on [date] whose steps aren't
+/// started (Smallest step, 11 B2, docs/09 M10.6), by occurrence id.
 
 @ProviderFor(dayFirstSteps)
 final dayFirstStepsProvider = DayFirstStepsFamily._();
 
-/// The first step still to do of each task on [date] (Smallest step, 11
-/// B2, docs/09 M10.6), by occurrence id.
+/// The first step still to do of each task on [date] whose steps aren't
+/// started (Smallest step, 11 B2, docs/09 M10.6), by occurrence id.
 
 final class DayFirstStepsProvider
     extends
@@ -266,8 +266,8 @@ final class DayFirstStepsProvider
     with
         $FutureModifier<Map<String, Subtask>>,
         $StreamProvider<Map<String, Subtask>> {
-  /// The first step still to do of each task on [date] (Smallest step, 11
-  /// B2, docs/09 M10.6), by occurrence id.
+  /// The first step still to do of each task on [date] whose steps aren't
+  /// started (Smallest step, 11 B2, docs/09 M10.6), by occurrence id.
   DayFirstStepsProvider._({
     required DayFirstStepsFamily super.from,
     required DateTime super.argument,
@@ -312,10 +312,10 @@ final class DayFirstStepsProvider
   }
 }
 
-String _$dayFirstStepsHash() => r'1a062df254122d69844cf9b8a9dff82164dfd640';
+String _$dayFirstStepsHash() => r'f1e100cd790242e00abeb0e458e4d2789733e7a1';
 
-/// The first step still to do of each task on [date] (Smallest step, 11
-/// B2, docs/09 M10.6), by occurrence id.
+/// The first step still to do of each task on [date] whose steps aren't
+/// started (Smallest step, 11 B2, docs/09 M10.6), by occurrence id.
 
 final class DayFirstStepsFamily extends $Family
     with $FunctionalFamilyOverride<Stream<Map<String, Subtask>>, DateTime> {
@@ -328,8 +328,8 @@ final class DayFirstStepsFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// The first step still to do of each task on [date] (Smallest step, 11
-  /// B2, docs/09 M10.6), by occurrence id.
+  /// The first step still to do of each task on [date] whose steps aren't
+  /// started (Smallest step, 11 B2, docs/09 M10.6), by occurrence id.
 
   DayFirstStepsProvider call(DateTime date) =>
       DayFirstStepsProvider._(argument: date, from: this);

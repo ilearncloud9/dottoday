@@ -1,12 +1,14 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/day_scheduler_service.dart';
 import 'package:dottoday/domain/scheduling/schedule_result.dart';
 import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
+import 'package:dottoday/domain/scheduling/unstick.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,7 +53,12 @@ Future<Result<(UndoToken, ShiftReport), AppFailure>> shiftRest(
     live.endUtc!.subtract(Duration(minutes: overrunMinutes)),
     overrunMinutes,
   );
-  return _applyShift(ref.read(undoServiceProvider), live.userId, result);
+  return _applyShift(
+    ref.read(undoServiceProvider),
+    live.userId,
+    result,
+    before: day,
+  );
 }
 
 /// Pushes what is left of [day] from [nowUtc] [minutes] later ("Running
@@ -78,16 +85,21 @@ Future<Result<(UndoToken, ShiftReport), AppFailure>>? runLate(
     container.read(undoServiceProvider),
     day.first.userId,
     result,
+    before: day,
   );
 }
 
-/// Writes [result]'s moved tasks as one undoable batch.
+/// Writes [result]'s moved tasks as one undoable batch, each counting a
+/// move against its version in [before] (Unstick, M10.7).
 Future<Result<(UndoToken, ShiftReport), AppFailure>> _applyShift(
   UndoService undo,
   String userId,
-  ScheduleResult result,
-) async {
-  final changed = [for (final id in result.report.movedIds) result.byId(id)];
+  ScheduleResult result, {
+  required List<Occurrence> before,
+}) async {
+  final changed = countMoves(before, [
+    for (final id in result.report.movedIds) result.byId(id),
+  ]);
   final applied = await undo.applyUndoable(
     WriteBatch(userId: userId, occurrences: changed),
   );
@@ -151,3 +163,32 @@ Future<Result<UndoToken, AppFailure>> setPinned(
 /// shifted unless the person asks (F1.12).
 bool pinnable(Occurrence o) =>
     o.startUtc != null && o.source != OccurrenceSource.calendar;
+
+/// Unstick's answer for [o] (11 B3, docs/09 M10.7): [answer] as its first
+/// step and its move count back to 0, in one undoable batch.
+Future<Result<UndoToken, AppFailure>> answerUnstick(
+  WidgetRef ref,
+  Occurrence o,
+  String answer,
+) async {
+  final rows = unstickAnswer(
+    o,
+    answer,
+    stepId: const UuidV7Generator().newId(),
+    nowUtc: ref.read(clockProvider).nowUtc(),
+  );
+  if (rows == null) {
+    return const Err(
+      ValidationFailure(ValidationField.subtasks, ValidationRule.required),
+    );
+  }
+  return ref
+      .read(undoServiceProvider)
+      .applyUndoable(
+        WriteBatch(
+          userId: o.userId,
+          occurrences: [rows.task],
+          subtasks: [rows.step],
+        ),
+      );
+}

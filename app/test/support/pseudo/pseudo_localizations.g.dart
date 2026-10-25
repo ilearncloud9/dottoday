@@ -3445,4 +3445,16 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get smallestStepStart => pseudo(super.smallestStepStart);
+
+  @override
+  String get unstickPrompt => pseudo(super.unstickPrompt);
+
+  @override
+  String get unstickHint => pseudo(super.unstickHint);
+
+  @override
+  String get unstickSave => pseudo(super.unstickSave);
+
+  @override
+  String unstickSaved(String title) => pseudo(super.unstickSaved(title));
 }

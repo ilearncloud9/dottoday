@@ -6557,6 +6557,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start'**
   String get smallestStepStart;
+
+  /// Unstick row under a task moved 3 times with no steps (11 B3, M10.7). Never a modal.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s the very first thing you\'d physically do?'**
+  String get unstickPrompt;
+
+  /// Hint in the Unstick row's one-line field.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Open the folder'**
+  String get unstickHint;
+
+  /// Screen-reader label of the Unstick row's send button: the answer becomes step 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Make it step 1'**
+  String get unstickSave;
+
+  /// Undo snackbar after the Unstick answer became step 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 1 added to {title}'**
+  String unstickSaved(String title);
 }
 
 class _AppLocalizationsDelegate

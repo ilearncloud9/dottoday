@@ -4,6 +4,7 @@ import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
+import 'package:dottoday/shared/dot/unstick_line.dart';
 import 'package:flutter/material.dart';
 
 /// A task on the thread (docs/10 §3 `TaskRow`): dot + segment on the axis,
@@ -20,6 +21,7 @@ class TaskRow extends StatelessWidget {
     this.onOpen,
     this.onResize,
     this.onStart,
+    this.onUnstick,
     this.dotSize = DotSize.rowDot,
     this.doneCircle = true,
     super.key,
@@ -42,6 +44,9 @@ class TaskRow extends StatelessWidget {
 
   /// Smallest step's Start (M10.6), under the title while it asks.
   final VoidCallback? onStart;
+
+  /// The Unstick answer (11 B3, M10.7); null hides the row.
+  final ValueChanged<String>? onUnstick;
   final double dotSize;
 
   @override
@@ -76,7 +81,9 @@ class TaskRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(DotRadii.card),
               child: Padding(
                 padding: EdgeInsets.only(
-                  bottom: task.smallestStep == null ? DotSpace.xl : DotSpace.xs,
+                  bottom: task.smallestStep == null && onUnstick == null
+                      ? DotSpace.xl
+                      : DotSpace.xs,
                 ),
                 child: _Text(task: task),
               ),
@@ -86,6 +93,11 @@ class TaskRow extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: DotSpace.l),
               child: SmallestStepLine(text: text, onStart: onStart),
+            ),
+          if (onUnstick case final answer?)
+            Padding(
+              padding: const EdgeInsets.only(bottom: DotSpace.l),
+              child: UnstickLine(onAnswer: answer),
             ),
         ],
       ),

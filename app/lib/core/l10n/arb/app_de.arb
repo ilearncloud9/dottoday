@@ -1075,5 +1075,9 @@
   "focusOpenHint": "Fokus öffnen",
   "smallestStepTitle": "Nur {step} · {length}?",
   "smallestStepTitleShort": "Nur {step}?",
-  "smallestStepStart": "Starten"
+  "smallestStepStart": "Starten",
+  "unstickPrompt": "Was wäre das allererste, was du ganz konkret tun würdest?",
+  "unstickHint": "z. B. Ordner öffnen",
+  "unstickSave": "Als Schritt 1 speichern",
+  "unstickSaved": "Schritt 1 zu {title} hinzugefügt"
 }

@@ -22,6 +22,7 @@ final class ThreadActions {
     this.onToggleDone,
     this.onOpen,
     this.onFocus,
+    this.onUnstick,
     this.onExtend,
     this.onShiftRest,
     this.onAddHere,
@@ -35,6 +36,9 @@ final class ThreadActions {
 
   /// One tap on the live dot opens Focus (M10.5).
   final ValueChanged<String>? onFocus;
+
+  /// The Unstick answer for a task (11 B3, M10.7): its first step.
+  final void Function(String id, String answer)? onUnstick;
   final ValueChanged<String>? onExtend;
   final ValueChanged<String>? onShiftRest;
 
@@ -209,6 +213,7 @@ class _ThreadState extends State<Thread> {
                 ? _bind(a.onShiftRest, task)
                 : null,
             onResize: _resize(drag, task),
+            onUnstick: _answer(a.onUnstick, task),
           )
         : TaskRow(
             task: task,
@@ -219,6 +224,7 @@ class _ThreadState extends State<Thread> {
             onResize: _resize(drag, task),
             // Smallest step's Start opens Focus, which records the start.
             onStart: _bind(a.onFocus, task),
+            onUnstick: _answer(a.onUnstick, task),
           );
     if (onSelect != null) {
       row = SelectableTaskRow(
@@ -258,6 +264,14 @@ class _ThreadState extends State<Thread> {
     if (onResize == null || !task.movable) return null;
     return (steps) => onResize(task.id, steps);
   }
+
+  /// The Unstick answer for [task], while its row shows the question.
+  static ValueChanged<String>? _answer(
+    void Function(String id, String answer)? onUnstick,
+    ThreadTask task,
+  ) => onUnstick == null || !task.unstick
+      ? null
+      : (answer) => onUnstick(task.id, answer);
 
   static VoidCallback? _bind(ValueChanged<String>? f, ThreadTask task) =>
       f == null ? null : () => f(task.id);

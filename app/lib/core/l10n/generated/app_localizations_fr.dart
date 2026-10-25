@@ -4427,4 +4427,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get smallestStepStart => 'Commencer';
+
+  @override
+  String get unstickPrompt =>
+      'Quelle est la toute première chose concrète que vous feriez ?';
+
+  @override
+  String get unstickHint => 'p. ex. Ouvrir le dossier';
+
+  @override
+  String get unstickSave => 'En faire l\'étape 1';
+
+  @override
+  String unstickSaved(String title) {
+    return 'Étape 1 ajoutée à $title';
+  }
 }

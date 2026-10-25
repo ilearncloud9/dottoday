@@ -5784,5 +5784,26 @@
   "smallestStepStart": "Start",
   "@smallestStepStart": {
     "description": "Smallest step's one button (reminder and row): starts the task in Focus."
+  },
+  "unstickPrompt": "What's the very first thing you'd physically do?",
+  "@unstickPrompt": {
+    "description": "Unstick row under a task moved 3 times with no steps (11 B3, M10.7). Never a modal."
+  },
+  "unstickHint": "e.g. Open the folder",
+  "@unstickHint": {
+    "description": "Hint in the Unstick row's one-line field."
+  },
+  "unstickSave": "Make it step 1",
+  "@unstickSave": {
+    "description": "Screen-reader label of the Unstick row's send button: the answer becomes step 1."
+  },
+  "unstickSaved": "Step 1 added to {title}",
+  "@unstickSaved": {
+    "description": "Undo snackbar after the Unstick answer became step 1.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
   }
 }

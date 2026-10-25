@@ -26,6 +26,7 @@ final class ThreadTask {
     this.movable = true,
     this.travel,
     this.smallestStep,
+    this.unstick = false,
   });
 
   /// Occurrence id, for callbacks.
@@ -35,6 +36,9 @@ final class ThreadTask {
   /// "Just Gather documents · 10 min?" once Smallest step asks (11 B2,
   /// docs/09 M10.6); null otherwise.
   final String? smallestStep;
+
+  /// Moved three times with no steps: the Unstick row shows (11 B3).
+  final bool unstick;
   final TaskColor color;
   final TaskIcon icon;
   final DotState state;

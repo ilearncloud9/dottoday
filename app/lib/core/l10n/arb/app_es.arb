@@ -1075,5 +1075,9 @@
   "focusOpenHint": "Abrir foco",
   "smallestStepTitle": "¿Solo {step} · {length}?",
   "smallestStepTitleShort": "¿Solo {step}?",
-  "smallestStepStart": "Empezar"
+  "smallestStepStart": "Empezar",
+  "unstickPrompt": "¿Qué es lo primerísimo que harías, físicamente?",
+  "unstickHint": "p. ej. Abrir la carpeta",
+  "unstickSave": "Convertir en el paso 1",
+  "unstickSaved": "Paso 1 añadido a {title}"
 }
