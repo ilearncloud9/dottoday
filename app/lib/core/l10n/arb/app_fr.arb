@@ -1100,5 +1100,11 @@
   "realityRunning": "depuis {duration}",
   "realityNow": "maintenant",
   "realityPlan": "Plan",
-  "realityReality": "Réel"
+  "realityReality": "Réel",
+  "learnUsually": "en général {duration}",
+  "learnStartsAfter": "tu commences en général ~{minutes} min après le plan",
+  "learnStartsBefore": "tu commences en général ~{minutes} min avant le plan",
+  "learnInsight": "{title} te prend en général {duration} · Ajouter le proposera",
+  "learnInsightOk": "OK",
+  "lateUsually": "{title} prend en général {duration}"
 }

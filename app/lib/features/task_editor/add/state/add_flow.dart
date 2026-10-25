@@ -3,10 +3,12 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/domain/quick_add/add_draft.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
 import 'package:dottoday/domain/quick_add/quick_add_lexicon.dart';
 import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
+import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -139,6 +141,9 @@ class AddFlow extends _$AddFlow {
       ..listen(currentProfileProvider, (_, _) {})
       ..listen(habitsProvider, (_, next) {
         if (next.hasValue) _rematch();
+      })
+      ..listen(learningIndexProvider, (_, next) {
+        if (next.hasValue) _rematch();
       });
     if (request.resume case final resumed?) return resumed;
     final now = ref.read(clockProvider).nowUtc();
@@ -239,9 +244,12 @@ class AddFlow extends _$AddFlow {
     };
     final habits = ref.read(habitsProvider).value ?? const [];
     final habit = const SuggestionService().exact(typed.title, habits);
+    final learned =
+        ref.read(learningIndexProvider).value?.forTask(title: typed.title) ??
+        Learned.none;
     return s.copyWith(
       text: text,
-      draft: s.draft.withTyped(typed).withHabit(habit),
+      draft: s.draft.withTyped(typed).withHabit(habit).withLearned(learned),
     );
   }
 }

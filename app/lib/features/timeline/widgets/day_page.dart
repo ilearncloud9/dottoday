@@ -3,6 +3,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
+import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/day_cues.dart';
@@ -13,6 +14,7 @@ import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/day_drag.dart';
 import 'package:dottoday/features/timeline/widgets/empty_day_actions.dart';
+import 'package:dottoday/features/timeline/widgets/reality_insight.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
@@ -69,8 +71,17 @@ class DayPage extends ConsumerWidget {
     // Today's card offers the Reality thread once a task really started
     // (11 C3, docs/09 M11.2); there it is read-only for drags.
     final offerReality = date == today && side == null && hasActuals(blocks);
+    final learning = offerReality
+        ? ref.watch(learningIndexProvider).value
+        : null;
     final reality = offerReality && ref.watch(realityModeProvider)
-        ? realityThread(context.l10n, format, blocks: blocks, nowUtc: now)
+        ? realityThread(
+            context.l10n,
+            format,
+            blocks: blocks,
+            nowUtc: now,
+            learning: learning,
+          )
         : null;
     final entries = threadEntries(
       blocks: reality?.blocks ?? blocks,
@@ -99,7 +110,7 @@ class DayPage extends ConsumerWidget {
         actions: actions,
       );
     }
-    return DayCard(
+    final card = DayCard(
       title: _title(context),
       isToday: date == today,
       summary: summary,
@@ -113,6 +124,23 @@ class DayPage extends ConsumerWidget {
                   ref.read(realityModeProvider.notifier).set(on: on),
             )
           : null,
+    );
+    final insight = reality == null
+        ? null
+        : realityInsight(blocks, now, learning);
+    if (insight == null ||
+        ref.watch(dismissedInsightsProvider).contains(insight.task.id)) {
+      return card;
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(child: card),
+        RealityInsightStrip(
+          task: insight.task,
+          usualMinutes: insight.usualMinutes,
+        ),
+      ],
     );
   }
 

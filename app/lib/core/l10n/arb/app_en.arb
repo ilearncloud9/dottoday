@@ -5868,5 +5868,17 @@
   "realityPlan": "Plan",
   "@realityPlan": {"description": "Day card toggle: the planned thread."},
   "realityReality": "Reality",
-  "@realityReality": {"description": "Day card toggle: what really happened (actual start and end times)."}
+  "@realityReality": {"description": "Day card toggle: what really happened (actual start and end times)."},
+  "learnUsually": "usually {duration}",
+  "@learnUsually": {"description": "Add: a task's usual real length from the user's history (11 C3). Plain, never judgemental.", "placeholders": {"duration": {"type": "String", "example": "2 h 20"}}},
+  "learnStartsAfter": "you tend to start this ~{minutes} min after plan",
+  "@learnStartsAfter": {"description": "Add: the user usually starts this task this much after its planned time. Never 'late'.", "placeholders": {"minutes": {"type": "int"}}},
+  "learnStartsBefore": "you tend to start this ~{minutes} min before plan",
+  "@learnStartsBefore": {"description": "Add: the user usually starts this task this much before its planned time.", "placeholders": {"minutes": {"type": "int"}}},
+  "learnInsight": "{title} usually takes you {duration} · Add will suggest it",
+  "@learnInsight": {"description": "Reality thread insight strip: what the history says about the task under way.", "placeholders": {"title": {"type": "String"}, "duration": {"type": "String", "example": "2 h 20"}}},
+  "learnInsightOk": "OK",
+  "@learnInsightOk": {"description": "Puts the insight strip away."},
+  "lateUsually": "{title} usually takes {duration}",
+  "@lateUsually": {"description": "Running late sheet: the task at hand's usual real length, which picked the amount.", "placeholders": {"title": {"type": "String"}, "duration": {"type": "String", "example": "1 h 15"}}}
 }

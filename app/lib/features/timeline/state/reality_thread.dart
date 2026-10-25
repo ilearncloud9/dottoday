@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:dottoday/domain/scheduling/reality.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
@@ -31,14 +32,56 @@ bool hasActuals(List<Occurrence> blocks) =>
   ThreadFormat format, {
   required List<Occurrence> blocks,
   required DateTime nowUtc,
+  LearningIndex? learning,
 }) {
   final day = realityOf(blocks, nowUtc);
+  String? usual(Reality r) {
+    if (r.kind != RealityKind.underWay) return null;
+    final m = _learned(learning, r.planned).usualMinutes;
+    return m == null ? null : l10n.learnUsually(format.duration(m));
+  }
+
   return (
     blocks: [for (final r in day) r.shown],
     reality: {
-      for (final r in day) r.planned.id: _caption(l10n, format, r, nowUtc),
+      for (final r in day)
+        r.planned.id: _caption(l10n, format, r, nowUtc, usual(r)),
     },
   );
+}
+
+Learned _learned(LearningIndex? learning, Occurrence o) =>
+    learning?.forTask(title: o.title, seriesId: o.seriesId) ?? Learned.none;
+
+/// The task under way whose usual length differs from its plan by at
+/// least [insightFromMinutes], with that length (the insight strip,
+/// `B-ios-reality-thread`, M11.3); null otherwise.
+({Occurrence task, int usualMinutes})? realityInsight(
+  List<Occurrence> blocks,
+  DateTime nowUtc,
+  LearningIndex? learning,
+) {
+  for (final r in realityOf(blocks, nowUtc)) {
+    if (r.kind != RealityKind.underWay) continue;
+    final usual = _learned(learning, r.planned).usualMinutes;
+    if (usual == null) continue;
+    if ((usual - r.planned.durationMin).abs() >= insightFromMinutes) {
+      return (task: r.planned, usualMinutes: usual);
+    }
+  }
+  return null;
+}
+
+/// A usual length this close to the plan is not worth a strip.
+const insightFromMinutes = 15;
+
+/// Insight strips put away with OK, by occurrence id, this session.
+@Riverpod(keepAlive: true)
+class DismissedInsights extends _$DismissedInsights {
+  @override
+  Set<String> build() => const {};
+
+  void dismiss(String id) => state = {...state, id};
 }
 
 ThreadReality _caption(
@@ -46,6 +89,7 @@ ThreadReality _caption(
   ThreadFormat f,
   Reality r,
   DateTime now,
+  String? usual,
 ) {
   final shown = r.shown;
   final plan = r.planned;
@@ -69,6 +113,7 @@ ThreadReality _caption(
         note: took! < 1 ? null : l10n.realityRunning(f.duration(took)),
         ghost: _ghost(r),
         underWay: true,
+        usual: usual,
       );
     case RealityKind.notStartedYet:
       return ThreadReality(meta: l10n.realityNotStarted);

@@ -6707,6 +6707,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reality'**
   String get realityReality;
+
+  /// Add: a task's usual real length from the user's history (11 C3). Plain, never judgemental.
+  ///
+  /// In en, this message translates to:
+  /// **'usually {duration}'**
+  String learnUsually(String duration);
+
+  /// Add: the user usually starts this task this much after its planned time. Never 'late'.
+  ///
+  /// In en, this message translates to:
+  /// **'you tend to start this ~{minutes} min after plan'**
+  String learnStartsAfter(int minutes);
+
+  /// Add: the user usually starts this task this much before its planned time.
+  ///
+  /// In en, this message translates to:
+  /// **'you tend to start this ~{minutes} min before plan'**
+  String learnStartsBefore(int minutes);
+
+  /// Reality thread insight strip: what the history says about the task under way.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} usually takes you {duration} · Add will suggest it'**
+  String learnInsight(String title, String duration);
+
+  /// Puts the insight strip away.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get learnInsightOk;
+
+  /// Running late sheet: the task at hand's usual real length, which picked the amount.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} usually takes {duration}'**
+  String lateUsually(String title, String duration);
 }
 
 class _AppLocalizationsDelegate

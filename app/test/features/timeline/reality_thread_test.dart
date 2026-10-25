@@ -76,6 +76,38 @@ void main() {
     handle.dispose();
   });
 
+  testWidgets('learning: "usually 2 h 20" and the insight strip', (
+    tester,
+  ) async {
+    await pumpToday(
+      tester,
+      rows: [...realityDayRows(), ...deepWorkHistory()],
+      size: const Size(390, 1600),
+    );
+    await tester.tap(find.text('Reality'));
+    await tester.pumpAndSettle();
+    expect(find.text('usually 2 h 20'), findsOneWidget);
+    const strip =
+        'Deep work: roadmap usually takes you 2 h 20 · Add will suggest it';
+    expect(find.text(strip), findsOneWidget);
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+    expect(find.text(strip), findsNothing);
+    expect(find.text('usually 2 h 20'), findsOneWidget, reason: 'stays');
+  });
+
+  testWidgets('no strip on the plan, or without history', (tester) async {
+    await pumpToday(
+      tester,
+      rows: [...realityDayRows(), ...deepWorkHistory()],
+      size: const Size(390, 1600),
+    );
+    expect(find.textContaining('usually takes you'), findsNothing);
+    await tester.tap(find.text('Reality'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('usually takes you'), findsOneWidget);
+  });
+
   test('the fixture has a dot with no actuals', () {
     final rows = realityDayRows();
     expect(hasActuals(rows), isTrue);

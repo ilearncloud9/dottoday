@@ -4522,4 +4522,32 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get realityReality => 'Wirklich';
+
+  @override
+  String learnUsually(String duration) {
+    return 'meist $duration';
+  }
+
+  @override
+  String learnStartsAfter(int minutes) {
+    return 'du beginnst meist ~$minutes Min. nach Plan';
+  }
+
+  @override
+  String learnStartsBefore(int minutes) {
+    return 'du beginnst meist ~$minutes Min. vor Plan';
+  }
+
+  @override
+  String learnInsight(String title, String duration) {
+    return '$title dauert bei dir meist $duration · Hinzufügen schlägt das vor';
+  }
+
+  @override
+  String get learnInsightOk => 'OK';
+
+  @override
+  String lateUsually(String title, String duration) {
+    return '$title dauert meist $duration';
+  }
 }

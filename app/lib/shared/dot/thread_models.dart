@@ -103,7 +103,11 @@ final class ThreadReality {
     this.note,
     this.ghost = GhostShift.none,
     this.underWay = false,
+    this.usual,
   });
+
+  /// "usually 2 h 20" under the live row's progress (M11.3 learning).
+  final String? usual;
 
   /// "7:42 – 8:16" or "9:10 – now"; null keeps the planned range.
   final String? range;

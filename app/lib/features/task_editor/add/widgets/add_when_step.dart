@@ -14,6 +14,9 @@ import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+/// Smaller start offsets are noise, not a habit worth saying.
+const _tendencyFrom = 5;
+
 /// Add step 2 "When" (docs/10 §5.2 A2, `A-ios-add-when`): the task, the
 /// `ThreadPicker` with its free / overlap caption, duration chips, "Lands
 /// on …", and Add / Add another.
@@ -105,6 +108,14 @@ class AddWhenStep extends StatelessWidget {
             value: draft.length,
             onChanged: onDuration,
           ),
+          if (draft.learned.usualMinutes case final usual?)
+            Padding(
+              padding: const EdgeInsets.only(top: DotSpace.s),
+              child: Text(
+                l10n.learnUsually(formatDurationShort(l10n, usual)),
+                style: _quiet(context),
+              ),
+            ),
           const SizedBox(height: DotSpace.l),
         ],
         LandsOn(
@@ -130,7 +141,28 @@ class AddWhenStep extends StatelessWidget {
         overlapTitle: fit.overlaps.firstOrNull?.title,
         overlapCount: fit.overlaps.length,
       ),
+      if (_tendency(context) case final line?)
+        Padding(
+          padding: const EdgeInsets.only(top: DotSpace.xs),
+          child: Text(line, style: _quiet(context)),
+        ),
     ];
+  }
+
+  /// "you tend to start this ~15 min after plan" (11 C3, M11.3), once
+  /// the history knows and it is at least [_tendencyFrom] minutes.
+  String? _tendency(BuildContext context) {
+    final offset = state.draft.learned.startOffsetMinutes;
+    if (offset == null || offset.abs() < _tendencyFrom) return null;
+    final l10n = context.l10n;
+    return offset > 0
+        ? l10n.learnStartsAfter(offset)
+        : l10n.learnStartsBefore(-offset);
+  }
+
+  static TextStyle _quiet(BuildContext context) {
+    final t = DotTheme.of(context);
+    return t.styles.rowMeta.copyWith(color: t.colors.muted);
   }
 
   Widget _identity(BuildContext context, String range) {

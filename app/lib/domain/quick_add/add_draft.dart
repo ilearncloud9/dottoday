@@ -6,6 +6,7 @@ import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
 import 'package:dottoday/domain/quick_add/draft_rows.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
+import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 import 'package:dottoday/domain/thinking/thinking_proposals.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
@@ -43,7 +44,12 @@ final class AddDraft {
     this.openedDate,
     this.openedMinute,
     this.steps = const [],
+    this.learned = Learned.none,
   });
+
+  /// What the user's own runs of this title say (11 C3, M11.3): its
+  /// usual length is the default before a habit's planned one.
+  final Learned learned;
 
   /// Local calendar date of today (y/m/d).
   final DateTime today;
@@ -101,6 +107,7 @@ final class AddDraft {
       ? Duration.minutesPerDay
       : durationMin ??
             typed.durationMin ??
+            learned.usualMinutes ??
             habit?.durationMin ??
             defaultDurationMin;
 
@@ -120,6 +127,8 @@ final class AddDraft {
   AddDraft withTyped(QuickAddDraft value) => _copy(typed: value);
 
   AddDraft withHabit(HabitSuggestion? value) => _copy(habit: () => value);
+
+  AddDraft withLearned(Learned value) => _copy(learned: value);
 
   AddDraft withColor(String key) => _copy(colorKey: () => key);
 
@@ -272,6 +281,7 @@ final class AddDraft {
     DateTime? Function()? openedDate,
     int? Function()? openedMinute,
     List<ProposedStep>? steps,
+    Learned? learned,
   }) => AddDraft(
     today: today,
     tzId: tzId ?? this.tzId,
@@ -287,5 +297,6 @@ final class AddDraft {
     openedDate: openedDate == null ? this.openedDate : openedDate(),
     openedMinute: openedMinute == null ? this.openedMinute : openedMinute(),
     steps: steps ?? this.steps,
+    learned: learned ?? this.learned,
   );
 }

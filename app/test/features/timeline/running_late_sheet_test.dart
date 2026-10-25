@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
+import '../../support/reality_fixtures.dart';
 import '../../support/timeline_fakes.dart';
 import '../../support/today_harness.dart';
 
@@ -21,8 +22,9 @@ Future<void> _pump(
   WidgetTester tester, {
   DateTime? at,
   Settings settings = const Settings(use24h: false),
+  List<Occurrence> history = const [],
 }) async {
-  _repo = FakeOccurrenceRepository(demoDayRows(todayTestDate));
+  _repo = FakeOccurrenceRepository([...demoDayRows(todayTestDate), ...history]);
   await pumpToday(
     tester,
     repo: _repo,
@@ -44,6 +46,24 @@ void main() {
   setUpAll(tz_data.initializeTimeZones);
 
   group('Running late sheet', () {
+    testWidgets('learning picks the amount Deep work usually needs', (
+      tester,
+    ) async {
+      await _pump(tester, history: deepWorkHistory());
+      await _openSheet(tester);
+      expect(
+        find.text('Deep work: roadmap usually takes 2 h 20'),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('Shift the rest').last);
+      await tester.pumpAndSettle();
+      expect(
+        find.text('The rest of today, 30 min later · here\'s a plan'),
+        findsOneWidget,
+        reason: '20 min more than planned → the 30 min amount',
+      );
+    });
+
     testWidgets('Shift the rest proposes first; Accept moves, pin stays', (
       tester,
     ) async {

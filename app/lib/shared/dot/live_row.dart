@@ -154,6 +154,11 @@ class _Summary extends StatelessWidget {
             if (showMeta) Text(meta, style: t.styles.rowMeta),
             Text(task.title, style: t.styles.liveRowTitle),
             _Progress(task: task),
+            if (task.reality?.usual case final usual?)
+              Text(
+                usual,
+                style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+              ),
           ],
         ),
       ),

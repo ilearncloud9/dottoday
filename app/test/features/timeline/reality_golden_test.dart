@@ -34,7 +34,10 @@ Widget _today({bool reality = true, DateTime? date, DateTime? now}) {
       realityModeProvider.overrideWith(() => _On(reality)),
       ...timelineOverrides(
         now: now ?? DateTime.utc(2026, 10, 21, 7, 22),
-        occurrences: FakeOccurrenceRepository(realityDayRows(day)),
+        occurrences: FakeOccurrenceRepository([
+          ...realityDayRows(day),
+          ...deepWorkHistory(),
+        ]),
         subtasks: FakeSubtaskRepository(demoDaySubtasks(day)),
         profile: testProfile(
           settings: const Settings(use24h: false, firstDayOfWeek: 7),

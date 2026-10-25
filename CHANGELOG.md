@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M11.3: Dottoday learns how long things really take you — on your device, from when you actually start and finish. Add picks a task's usual length for you ("usually 1 h 20") and mentions when you tend to start it; Reality shows "usually 2 h 20" for what's under way; Running late suggests the amount it usually needs. It needs three real runs before it says anything.
 - M11.2: Plan / Reality. Once you've started something today, the Today card gets a Plan | Reality switch: Reality draws what really happened — when each task actually started and finished, how long it took, what's not started yet — beside a faint copy of your plan. No judgement, just the day as it went.
 - M11.1b: When your calendar moves a meeting later into your plan, Today asks quietly — "Standup moved to 10:30 · Rebalance?" — and shows a plan that works around the new time. Nothing moves until you accept; "Not now" puts it away.
 - M11.1: Rebalance. When you're running late, a task ran more than ten minutes over, or "Shift the rest" would move more than two tasks, Dottoday shows a plan first: what shifts, what gets a little shorter, what moves to tomorrow, and the pinned tasks it worked around. Switch Shift followers, Allow shrinking optional and Push past bedtime to see a different plan, drop any line with ×, then Accept plan — Undo stays for 30 seconds. Nothing moves until you accept.
