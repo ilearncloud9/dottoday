@@ -38,8 +38,9 @@ Map<String, Object?> snapshotStoreJson(
       'nothing_next': l10n.widgetNothingNext,
       'today': l10n.widgetToday,
       'inbox': l10n.widgetInboxCount(snapshot.inboxCount),
-      // The Next up widget's Done button (M9.5).
+      // Next up's Done button (M9.5) and the menu bar's Done / +15 (M9.6).
       'done': l10n.notifActionDone,
+      'plus': l10n.liveExtend,
     }
     // How to write a time again after an optimistic +15 in Swift or Kotlin
     // (M9.2): the zone, the language, the clock and the "until" pattern.

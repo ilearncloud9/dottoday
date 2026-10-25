@@ -124,6 +124,12 @@ jobs:
       - if: matrix.target == 'web'
         run: ../tool/web_db_assets.sh
       - run: ${{ matrix.cmd }} --dart-define-from-file=.env.example
+      # The menu-bar day dot's goldens and rules (docs/09 M9.6).
+      - if: matrix.target == 'macos'
+        name: Swift unit tests (macOS RunnerTests)
+        run: >-
+          xcodebuild test -workspace macos/Runner.xcworkspace -scheme Runner
+          -destination 'platform=macOS' -only-testing:RunnerTests -quiet
       # The Swift half of the B6 intents (docs/09 M9.2): queue entries and the
       # optimistic snapshot patch, in RunnerTests on a simulator.
       - if: matrix.target == 'ios'

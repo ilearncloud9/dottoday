@@ -14,6 +14,8 @@ import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:dottoday/data/snapshot/snapshot_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/data/widgets/mac_menu_actions.dart';
+import 'package:dottoday/data/widgets/mac_status_item_sink.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -84,6 +86,10 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
     WidgetsBinding.instance.addObserver(this);
     // A widget or Siri queued an action while the app is open (M9.2).
     listenForQueuedIntents(() => _drainQueue(ref));
+    // Done / +15 from the Mac menu bar (M9.6).
+    if (MacStatusItemSink.supported) {
+      listenForMenuBarActions(ref.read(dotIntentsProvider));
+    }
     _timer = Timer.periodic(_period, (_) => unawaited(runHousekeeping(ref)));
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => unawaited(runHousekeeping(ref)),

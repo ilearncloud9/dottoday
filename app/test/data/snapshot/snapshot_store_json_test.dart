@@ -43,6 +43,7 @@ void main() {
     expect(json['labels'], containsPair('inbox', '3 in Inbox'));
     expect(json['labels'], containsPair('next_up', 'Next up'));
     expect(json['labels'], containsPair('done', 'Done'));
+    expect(json['labels'], containsPair('plus', '+15 min'));
     expect(json['format'], {
       'tz': 'Europe/Berlin',
       'locale': 'en',
