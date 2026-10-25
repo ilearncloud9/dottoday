@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:dottoday/data/widgets/widget_display.dart';
+import 'package:dottoday/data/snapshot/snapshot_store_json.dart';
 import 'package:dottoday/domain/entities/settings.dart';
-import 'package:dottoday/domain/widgets/widget_snapshot.dart';
+import 'package:dottoday/domain/snapshot/day_snapshot.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 /// same display snapshot as the iOS/Android widgets, handed to the
 /// `NSStatusItem` in `macos/Runner/AppDelegate.swift`, which lays it out and
 /// moves on at each start and end by itself.
-final class MacStatusItemSink implements WidgetSnapshotSink {
+final class MacStatusItemSink implements DaySnapshotSink {
   MacStatusItemSink({
     required Future<Profile> Function() profile,
     MethodChannel channel = statusItemChannel,
@@ -26,9 +26,9 @@ final class MacStatusItemSink implements WidgetSnapshotSink {
       !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS;
 
   @override
-  Future<void> write(WidgetSnapshot snapshot) async {
+  Future<void> write(DaySnapshot snapshot) async {
     final profile = await _profile();
-    final json = widgetDisplayJson(
+    final json = snapshotStoreJson(
       snapshot,
       profile: profile,
       use24h:

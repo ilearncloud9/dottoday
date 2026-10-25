@@ -1,8 +1,9 @@
 import 'dart:convert';
 
+import 'package:dottoday/data/snapshot/snapshot_store_json.dart';
 import 'package:dottoday/data/widgets/home_widget_sink.dart';
-import 'package:dottoday/data/widgets/widget_display.dart';
-import 'package:dottoday/domain/widgets/widget_snapshot.dart';
+import 'package:dottoday/domain/snapshot/day_snapshot.dart';
+import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -17,14 +18,18 @@ void main() {
 
   // 07:22 UTC = 09:22 in Berlin: Deep work (9:00–11:00) is live.
   final now = DateTime.utc(2026, 10, 21, 7, 22);
-  WidgetSnapshot snapshot({int inbox = 3}) => WidgetSnapshot.build(
+  DaySnapshot snapshot({int inbox = 3}) => DaySnapshot.build(
     nowUtc: now,
     occurrences: demoDayRows(DateTime(2026, 10, 21)),
     inboxCount: inbox,
+    shape: DayShape(
+      wakeUtc: DateTime.utc(2026, 10, 21, 5),
+      bedUtc: DateTime.utc(2026, 10, 21, 20),
+    ),
   );
 
   test('strings are formatted on the profile clock, colours resolved', () {
-    final json = widgetDisplayJson(
+    final json = snapshotStoreJson(
       snapshot(),
       profile: testProfile(),
       use24h: false,
@@ -40,7 +45,7 @@ void main() {
   });
 
   test('24-hour clock and an empty Inbox', () {
-    final json = widgetDisplayJson(
+    final json = snapshotStoreJson(
       snapshot(inbox: 0),
       profile: testProfile(),
       use24h: true,
@@ -51,7 +56,7 @@ void main() {
   });
 
   test('round-trips through JSON (what the native widgets parse)', () {
-    final json = widgetDisplayJson(
+    final json = snapshotStoreJson(
       snapshot(),
       profile: testProfile(),
       use24h: false,
@@ -61,7 +66,7 @@ void main() {
   });
 
   test('Android redraws at every start and end still ahead', () {
-    final times = HomeWidgetSnapshotSink.redrawTimes(snapshot());
+    final times = HomeWidgetSink.redrawTimes(snapshot());
     expect(times, isNotEmpty);
     expect(times.every((t) => t.isAfter(now)), isTrue);
     expect(times, orderedEquals([...times]..sort()));

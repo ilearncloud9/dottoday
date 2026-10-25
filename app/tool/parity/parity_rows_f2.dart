@@ -135,7 +135,7 @@ const f2Rows = <String, ParityRow>{
   'F3.3': ParityRow(
     tests: [
       'test/features/inbox/inbox_screen_test.dart',
-      'test/domain/widgets/widget_snapshot_test.dart',
+      'test/domain/snapshot/day_snapshot_test.dart',
       'test/shared/navigation/dot_shell_test.dart',
       'test/domain/scheduling/inbox_nudge_test.dart',
       'test/features/timeline/inbox_nudge_card_test.dart',

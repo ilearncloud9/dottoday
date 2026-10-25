@@ -3,7 +3,7 @@ import 'package:dottoday/data/refresh/daily_refresh.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
-import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
+import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
 import 'package:dottoday/domain/notifications/notification_planner.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -37,9 +37,10 @@ void main() {
         series: DriftSeriesRepository(h.db),
         settings: DriftSettingsRepository(h.db),
       ),
-      widgets: WidgetSnapshotWriter(
+      widgets: DaySnapshotWriter(
         clock: h.clock,
         occurrences: DriftOccurrenceRepository(h.db),
+        profile: () async => profileFixture(),
         sink: h.sink,
       ),
       logger: h.logger,

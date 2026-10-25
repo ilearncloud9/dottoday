@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ## [Unreleased]
 
+### Added
+- M9.1: One record of your day for every place outside the app — widgets, the Mac menu bar and the web's background worker now read the same day snapshot, with today's Wake Up to Bedtime, what's on now and the next two dots, and when you really started and finished. It is rewritten within a second of any change, at Bedtime and whenever a surface asks.
+
 ### Changed
 - Final app ids: `app.dottoday.planner` on iOS, macOS and Android, App Group `group.app.dottoday.planner`, domain `dottoday.app`; the Mac's About shows "© 2026 Dottoday". Send feedback now addresses feedback@dottoday.app. A build with the new id installs as a new app next to earlier test builds.
 

@@ -1,3 +1,4 @@
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -21,6 +22,19 @@ final class DayShape {
       wakeUtc: wake.onDate(location, date),
       bedUtc: bed.onDate(location, date),
     );
+  }
+
+  /// The span of the local day that contains [nowUtc] in [location], from
+  /// that weekday's boundary in [settings].
+  factory DayShape.containing(
+    tz.Location location,
+    DateTime nowUtc,
+    Settings settings,
+  ) {
+    final local = tz.TZDateTime.from(nowUtc, location);
+    final date = DateTime(local.year, local.month, local.day);
+    final weekday = Weekday.values[date.weekday - 1];
+    return DayShape.on(location, date, settings.boundaryFor(weekday));
   }
 
   final DateTime wakeUtc;

@@ -14,6 +14,23 @@ let queued = [];
 const SHELL = 'dottoday-shell-v1';
 const OFFLINE = 'offline.html';
 
+// The day snapshot (docs/09 M9.1, B5), written by the app after every change
+// (lib/data/snapshot/web/snapshot_store_web.dart: same cache and URL). Kept
+// on activate: it is data, not a cached file.
+const SNAPSHOT = 'dottoday-day-snapshot';
+const SNAPSHOT_PATH = '__snapshot/day.json';
+
+async function readSnapshot() {
+  try {
+    const cache = await caches.open(SNAPSHOT);
+    const hit = await cache.match(new URL(SNAPSHOT_PATH, self.registration.scope).href);
+    const snapshot = hit ? await hit.json() : null;
+    return snapshot && snapshot.v === 1 ? snapshot : null;
+  } catch (_) {
+    return null;
+  }
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(SHELL).then((c) => c.addAll([OFFLINE, 'offline.css'])).then(() => self.skipWaiting()));
 });
@@ -21,7 +38,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     for (const name of await caches.keys()) {
-      if (name.startsWith('dottoday-') && name !== SHELL) await caches.delete(name);
+      if (name.startsWith('dottoday-') && name !== SHELL && name !== SNAPSHOT) await caches.delete(name);
     }
     await self.clients.claim();
   })());

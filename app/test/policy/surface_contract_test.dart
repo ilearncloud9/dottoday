@@ -11,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 const _surfaceDirs = [
   'ios/DottodayWidgets',
   'android/app/src/main/kotlin/app/dottoday/planner/widgets',
+  'lib/data/snapshot',
   'lib/data/widgets',
   'lib/features/widgets_home',
 ];

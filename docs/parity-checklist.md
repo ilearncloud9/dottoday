@@ -76,7 +76,7 @@ ticked in 08 §6.1) before a tag.
 |---|---|---|---|---|---|---|
 | F3.1 | Unscheduled tasks live in the inbox | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/inbox/inbox_screen_test.dart`<br>`test/features/inbox/wide_inbox_test.dart` |
 | F3.2 | Inbox supports reorder, swipe-to-schedule, swipe-to-trash, bulk select | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/inbox/inbox_screen_test.dart`<br>`test/features/inbox/inbox_reorder_select_test.dart`<br>`test/domain/scheduling/inbox_order_test.dart` |
-| F3.3 | An inbox badge shows count | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/inbox/inbox_screen_test.dart`<br>`test/domain/widgets/widget_snapshot_test.dart`<br>`test/shared/navigation/dot_shell_test.dart`<br>`test/domain/scheduling/inbox_nudge_test.dart`<br>`test/features/timeline/inbox_nudge_card_test.dart`<br>`test/data/inbox/inbox_nudge_seen_test.dart` |
+| F3.3 | An inbox badge shows count | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/features/inbox/inbox_screen_test.dart`<br>`test/domain/snapshot/day_snapshot_test.dart`<br>`test/shared/navigation/dot_shell_test.dart`<br>`test/domain/scheduling/inbox_nudge_test.dart`<br>`test/features/timeline/inbox_nudge_card_test.dart`<br>`test/data/inbox/inbox_nudge_seen_test.dart` |
 ## F4. Recurrence
 
 | ID | Feature | iPhone | Android | macOS | Web | Automated evidence |
@@ -131,7 +131,7 @@ ticked in 08 §6.1) before a tag.
 
 | ID | Feature | iPhone | Android | macOS | Web | Automated evidence |
 |---|---|---|---|---|---|---|
-| F9.1 | IOS/Android widgets: "Next up" (small), "Today timeline" (medium/large), "Inbox count". macOS: menu-bar "ne… | ✓ device<br>Next up on the sim, M5.4; device needs App Group (08 §6.1) | ✓ device<br>all three widgets · emulator, M5.4 | ✓ device<br>menu-bar Next up, M5.5 | → later<br>tab title, favicon, Badging API — M9.7 | `test/domain/widgets/widget_snapshot_test.dart`<br>`test/data/widgets/widget_display_test.dart`<br>`test/policy/surface_contract_test.dart` |
+| F9.1 | IOS/Android widgets: "Next up" (small), "Today timeline" (medium/large), "Inbox count". macOS: menu-bar "ne… | ✓ device<br>Next up on the sim, M5.4; device needs App Group (08 §6.1) | ✓ device<br>all three widgets · emulator, M5.4 | ✓ device<br>menu-bar Next up, M5.5 | → later<br>tab title, favicon, Badging API — M9.7 | `test/domain/snapshot/day_snapshot_test.dart`<br>`test/data/snapshot/snapshot_store_json_test.dart`<br>`test/policy/surface_contract_test.dart` |
 | F9.2 | IOS Live Activity / Dynamic Island and an Android ongoing notification for the live dot | → later<br>M9.3–M9.5 | → later<br>M9.3–M9.5 | → later<br>menu-bar dot M9.6 | → later<br>web live dot M9.7 | `test/policy/surface_contract_test.dart` |
 | F9.3 | Apple Watch complication and glance | — n/a<br>Phase 2 (ADR-0010) | — n/a<br>Phase 2 (ADR-0010) | — n/a<br>Phase 2 (ADR-0010) | — n/a<br>Phase 2 (ADR-0010) |  |
 ## F10. Onboarding

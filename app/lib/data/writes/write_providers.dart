@@ -7,16 +7,17 @@ import 'package:dottoday/data/notifications/os_notification_gateway.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/notifications/test_alarm.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
+import 'package:dottoday/data/snapshot/web_snapshot_sink.dart';
 import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/widgets/home_widget_sink.dart';
 import 'package:dottoday/data/widgets/mac_status_item_sink.dart';
-import 'package:dottoday/data/widgets/widget_snapshot_writer.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
 import 'package:dottoday/data/writes/drift_write_use_case.dart';
 import 'package:dottoday/domain/notifications/notification_gateway.dart';
 import 'package:dottoday/domain/notifications/notification_planner.dart';
 import 'package:dottoday/domain/recurrence/materialiser.dart';
-import 'package:dottoday/domain/widgets/widget_snapshot.dart';
+import 'package:dottoday/domain/snapshot/day_snapshot.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -39,14 +40,17 @@ NotificationGateway notificationGateway(Ref ref) {
 /// Where the widget snapshot goes (M5.4, M5.5): home-screen widgets on
 /// iOS and Android, the menu-bar "Next up" on the Mac, nothing on the web.
 @Riverpod(keepAlive: true)
-WidgetSnapshotSink widgetSnapshotSink(Ref ref) {
-  if (HomeWidgetSnapshotSink.supported) {
-    return HomeWidgetSnapshotSink(profile: () => latestProfile(ref));
+DaySnapshotSink daySnapshotSink(Ref ref) {
+  if (HomeWidgetSink.supported) {
+    return HomeWidgetSink(profile: () => latestProfile(ref));
   }
   if (MacStatusItemSink.supported) {
     return MacStatusItemSink(profile: () => latestProfile(ref));
   }
-  return const UnwiredWidgetSnapshotSink();
+  if (WebSnapshotSink.supported) {
+    return WebSnapshotSink(profile: () => latestProfile(ref));
+  }
+  return const UnwiredDaySnapshotSink();
 }
 
 @Riverpod(keepAlive: true)
@@ -67,16 +71,17 @@ NotificationSync notificationSync(Ref ref) => NotificationSync(
 );
 
 @Riverpod(keepAlive: true)
-WidgetSnapshotWriter widgetSnapshotWriter(Ref ref) => WidgetSnapshotWriter(
+DaySnapshotWriter daySnapshotWriter(Ref ref) => DaySnapshotWriter(
   clock: ref.watch(clockProvider),
   occurrences: ref.watch(occurrenceRepositoryProvider),
-  sink: ref.watch(widgetSnapshotSinkProvider),
+  profile: () => latestProfile(ref),
+  sink: ref.watch(daySnapshotSinkProvider),
 );
 
 @Riverpod(keepAlive: true)
 AfterWriteEffects afterWriteEffects(Ref ref) => AfterWriteEffects(
   notifications: ref.watch(notificationSyncProvider),
-  snapshot: ref.watch(widgetSnapshotWriterProvider),
+  snapshot: ref.watch(daySnapshotWriterProvider),
   logger: ref.watch(loggerProvider),
 );
 

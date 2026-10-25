@@ -14,7 +14,7 @@ DailyRefresh dailyRefresh(Ref ref) => DailyRefresh(
   series: ref.watch(seriesRepositoryProvider),
   writes: ref.watch(writeUseCaseProvider),
   notifications: ref.watch(notificationSyncProvider),
-  widgets: ref.watch(widgetSnapshotWriterProvider),
+  widgets: ref.watch(daySnapshotWriterProvider),
   logger: ref.watch(loggerProvider),
   sync: ref.watch(backgroundSyncProvider),
 );

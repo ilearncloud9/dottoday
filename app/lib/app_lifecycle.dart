@@ -9,6 +9,7 @@ import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
+import 'package:dottoday/data/snapshot/snapshot_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:flutter/widgets.dart';
@@ -17,7 +18,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Housekeeping on app start and on every resume (docs/09 M3.2, M2.3–M2.5):
 /// ensure the local profile, take the daily backup if due, purge expired
 /// Trash, then the daily refresh: roll repeats forward and re-plan OS
-/// notifications (M5.2), then bring calendar events in (device M7.2,
+/// notifications (M5.2), arm the Bedtime snapshot (M9.1), then bring
+/// calendar events in (device M7.2,
 /// Google/Microsoft M7.4). Each step is idempotent and runs
 /// after the first frame, so it never delays the UI; failures are logged
 /// and the next start/resume repairs them.
@@ -36,6 +38,7 @@ Future<void> runHousekeeping(WidgetRef ref) async {
       logger.warn('housekeeping.purge_failed', error: failure);
     }
     await ref.read(dailyRefreshProvider).run(profile.id);
+    await ref.read(bedtimeSnapshotProvider).arm(profile.id);
     await ref.read(calendarActionsProvider).importEvents();
   } on Object catch (e, st) {
     logger.error('housekeeping.failed', error: e, stackTrace: st);

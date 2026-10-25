@@ -138,8 +138,8 @@ const _f8Rows = <String, ParityRow>{
   ),
   'F9.1': ParityRow(
     tests: [
-      'test/domain/widgets/widget_snapshot_test.dart',
-      'test/data/widgets/widget_display_test.dart',
+      'test/domain/snapshot/day_snapshot_test.dart',
+      'test/data/snapshot/snapshot_store_json_test.dart',
       'test/policy/surface_contract_test.dart',
     ],
     all: ci,

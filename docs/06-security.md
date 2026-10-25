@@ -70,7 +70,11 @@ Widgets can't open the encrypted database, so the app writes the next 24 h (titl
 IDs) and the Inbox count to the platform's widget store: the iOS app-group `UserDefaults`
 (Data Protection: available after first unlock) and Android's app-private `SharedPreferences`. It is
 the same text the widget shows on the home screen; notes and subtasks are never included, and the
-snapshot is overwritten on every write.
+snapshot is overwritten on every write. Since M9.1 this is the day snapshot (B5, docs/04 §4), which
+adds actual start/end times, not more text. The web's copy (Cache Storage, for the service worker)
+carries **no titles** — ids, times, colours and UI labels only — because browser storage outside the
+encrypted database is plaintext; CI's web-database probe scans Cache Storage and `localStorage` for a
+task title as well as OPFS and IndexedDB.
 
 ## 9. Security checklist (run at every `/ship-check`)
 - [ ] New/changed tables have RLS enabled and policies tested (pgTAP tests pass).
