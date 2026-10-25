@@ -4961,4 +4961,80 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get lowEnergyProposalAccepted => 'Auf morgen verschoben';
+
+  @override
+  String get journalTitle => 'Vergangene Tage';
+
+  @override
+  String get journalEntryDetail => 'Jeder geplante Tag, wie er gelaufen ist';
+
+  @override
+  String get journalSearchHint => 'Wann habe ich zuletzt…';
+
+  @override
+  String journalDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Tage in den letzten 12 Monaten',
+      one: '1 Tag in den letzten 12 Monaten',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String journalLast(String date, int ago, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      ago,
+      locale: localeName,
+      other: 'vor $ago Tagen',
+      one: 'gestern',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      ago,
+      locale: localeName,
+      other: 'vor $ago Tagen',
+      one: 'gestern',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Zuletzt: $date · $_temp0 · an $count Tagen',
+      one: 'Zuletzt: $date · $_temp1 · einmal',
+    );
+    return '$_temp2';
+  }
+
+  @override
+  String journalNoMatch(String query) {
+    return 'In den letzten 12 Monaten passt nichts zu „$query“';
+  }
+
+  @override
+  String get journalEmpty =>
+      'Noch keine vergangenen Tage. Geplante Tage erscheinen hier, sobald sie vorbei sind.';
+
+  @override
+  String journalDayLabel(String date, String summary) {
+    return '$date, $summary. Tag öffnen';
+  }
+
+  @override
+  String journalMatch(String title, String time) {
+    return '$title · $time';
+  }
+
+  @override
+  String get journalStripTitle => 'Jahresstreifen';
+
+  @override
+  String journalStripLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Dein Jahr in Punkten: $count Tage geplant',
+      one: 'Dein Jahr in Punkten: 1 Tag geplant',
+    );
+    return '$_temp0';
+  }
 }

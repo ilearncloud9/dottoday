@@ -4932,4 +4932,80 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lowEnergyProposalAccepted => 'Moved to tomorrow';
+
+  @override
+  String get journalTitle => 'Past days';
+
+  @override
+  String get journalEntryDetail => 'Every day you planned, as it went';
+
+  @override
+  String get journalSearchHint => 'When did I last…';
+
+  @override
+  String journalDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days in the last 12 months',
+      one: '1 day in the last 12 months',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String journalLast(String date, int ago, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      ago,
+      locale: localeName,
+      other: '$ago days ago',
+      one: 'yesterday',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      ago,
+      locale: localeName,
+      other: '$ago days ago',
+      one: 'yesterday',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Last: $date · $_temp0 · $count days',
+      one: 'Last: $date · $_temp1 · once',
+    );
+    return '$_temp2';
+  }
+
+  @override
+  String journalNoMatch(String query) {
+    return 'Nothing in the last 12 months matches “$query”';
+  }
+
+  @override
+  String get journalEmpty =>
+      'No past days yet. Days you plan show up here once they\'re over.';
+
+  @override
+  String journalDayLabel(String date, String summary) {
+    return '$date, $summary. Open the day';
+  }
+
+  @override
+  String journalMatch(String title, String time) {
+    return '$title · $time';
+  }
+
+  @override
+  String get journalStripTitle => 'Year strip';
+
+  @override
+  String journalStripLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Your year as dots: $count days planned',
+      one: 'Your year as dots: 1 day planned',
+    );
+    return '$_temp0';
+  }
 }

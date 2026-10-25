@@ -4,6 +4,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/search/search_screen.dart';
+import 'package:dottoday/features/search/widgets/past_days_page.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
 import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
 import 'package:dottoday/features/timeline/week_screen.dart';
@@ -16,6 +17,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../features/settings/settings_harness.dart';
 import '../../support/inbox_harness.dart';
+import '../../support/journal_fixtures.dart';
 import '../../support/onboarding_harness.dart';
 import '../../support/test_l10n.dart';
 import '../../support/timeline_fakes.dart';
@@ -71,6 +73,16 @@ final _screens = <String, _Screen>{
         firstDayOfWeek: 7,
         lowEnergyUntil: DateTime.utc(2026, 10, 22, 5),
       ),
+    ),
+  ),
+  // Search › Past days (M12.3).
+  'Past days': _screen(
+    (t, s) => _pumpBoard(
+      t,
+      s,
+      const PastDaysPage(),
+      now: reviewNow,
+      rows: journalRows(),
     ),
   ),
   // The weekly review (M12.1): a sheet on phones, a popover when wider.

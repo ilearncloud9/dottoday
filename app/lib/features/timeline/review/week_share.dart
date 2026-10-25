@@ -1,18 +1,15 @@
-import 'dart:ui' as ui;
-
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/review/week_review.dart';
 import 'package:dottoday/features/timeline/review/week_day_dot.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 
 /// The share image (`B-ios-week-review` bottom card, 11 D1): the seven
 /// dots, the dates and the app's name; task titles only when [titles] is
 /// on (off by default — a title can say more than the user means to
-/// share). What the card shows is exactly the image [captureWeekImage]
-/// makes from [boundary].
+/// share). What the card shows is exactly the image `captureImage` makes
+/// from [boundary].
 class WeekShareCard extends StatelessWidget {
   const WeekShareCard({
     required this.review,
@@ -108,21 +105,4 @@ class WeekShareCard extends StatelessWidget {
       },
     ),
   );
-}
-
-/// The share card's pixels as a PNG, at [pixelRatio]; null if it isn't on
-/// screen.
-Future<List<int>?> captureWeekImage(
-  GlobalKey boundary, {
-  double pixelRatio = 3,
-}) async {
-  final box = boundary.currentContext?.findRenderObject();
-  if (box is! RenderRepaintBoundary) return null;
-  final image = await box.toImage(pixelRatio: pixelRatio);
-  try {
-    final data = await image.toByteData(format: ui.ImageByteFormat.png);
-    return data?.buffer.asUint8List();
-  } finally {
-    image.dispose();
-  }
 }

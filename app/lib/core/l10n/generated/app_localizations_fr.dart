@@ -4969,4 +4969,80 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get lowEnergyProposalAccepted => 'Déplacées à demain';
+
+  @override
+  String get journalTitle => 'Jours passés';
+
+  @override
+  String get journalEntryDetail => 'Chaque jour prévu, tel qu\'il s\'est passé';
+
+  @override
+  String get journalSearchHint => 'Dernière fois que…';
+
+  @override
+  String journalDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jours ces 12 derniers mois',
+      one: '1 jour ces 12 derniers mois',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String journalLast(String date, int ago, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      ago,
+      locale: localeName,
+      other: 'il y a $ago jours',
+      one: 'hier',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      ago,
+      locale: localeName,
+      other: 'il y a $ago jours',
+      one: 'hier',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Dernière fois : $date · $_temp0 · $count jours',
+      one: 'Dernière fois : $date · $_temp1 · une fois',
+    );
+    return '$_temp2';
+  }
+
+  @override
+  String journalNoMatch(String query) {
+    return 'Rien ces 12 derniers mois ne correspond à « $query »';
+  }
+
+  @override
+  String get journalEmpty =>
+      'Pas encore de jours passés. Les jours prévus apparaissent ici une fois terminés.';
+
+  @override
+  String journalDayLabel(String date, String summary) {
+    return '$date, $summary. Ouvrir le jour';
+  }
+
+  @override
+  String journalMatch(String title, String time) {
+    return '$title · $time';
+  }
+
+  @override
+  String get journalStripTitle => 'Bande de l\'année';
+
+  @override
+  String journalStripLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ton année en points : $count jours prévus',
+      one: 'Ton année en points : 1 jour prévu',
+    );
+    return '$_temp0';
+  }
 }

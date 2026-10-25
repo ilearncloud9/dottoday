@@ -7349,6 +7349,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Moved to tomorrow'**
   String get lowEnergyProposalAccepted;
+
+  /// Thread journal (11 D3): Search entry and page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Past days'**
+  String get journalTitle;
+
+  /// Under the Past days entry in Search.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day you planned, as it went'**
+  String get journalEntryDetail;
+
+  /// Past days search field hint.
+  ///
+  /// In en, this message translates to:
+  /// **'When did I last…'**
+  String get journalSearchHint;
+
+  /// Past days: how many days with something planned.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day in the last 12 months} other{{count} days in the last 12 months}}'**
+  String journalDays(int count);
+
+  /// Past days search: the newest matching day, how long ago, and on how many days.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Last: {date} · {ago, plural, =1{yesterday} other{{ago} days ago}} · once} other{Last: {date} · {ago, plural, =1{yesterday} other{{ago} days ago}} · {count} days}}'**
+  String journalLast(String date, int ago, int count);
+
+  /// Past days search with no match.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in the last 12 months matches “{query}”'**
+  String journalNoMatch(String query);
+
+  /// Past days with nothing yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No past days yet. Days you plan show up here once they\'re over.'**
+  String get journalEmpty;
+
+  /// Screen reader: a past day's row.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}, {summary}. Open the day'**
+  String journalDayLabel(String date, String summary);
+
+  /// Past days search: a matching task on that day and its time.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} · {time}'**
+  String journalMatch(String title, String time);
+
+  /// Past days: open the twelve-month strip to share as an image.
+  ///
+  /// In en, this message translates to:
+  /// **'Year strip'**
+  String get journalStripTitle;
+
+  /// Screen reader: the year strip image.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Your year as dots: 1 day planned} other{Your year as dots: {count} days planned}}'**
+  String journalStripLabel(int count);
 }
 
 class _AppLocalizationsDelegate

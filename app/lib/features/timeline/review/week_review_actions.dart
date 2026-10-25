@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/editing/active_proposal.dart';
@@ -10,9 +9,9 @@ import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/proposals/carry_proposal.dart';
 import 'package:dottoday/features/timeline/review/week_review_state.dart';
-import 'package:dottoday/features/timeline/review/week_share.dart';
 import 'package:dottoday/features/timeline/state/late_actions.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/shared/share/capture_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -83,7 +82,7 @@ Future<void> shareWeekImage(
   final origin = box is RenderBox
       ? box.localToGlobal(Offset.zero) & box.size
       : null;
-  final png = await captureWeekImage(boundary);
+  final png = await captureImage(boundary);
   if (png == null) return;
   const fileDate = 'yyyy-MM-dd'; // l10n-ignore: a file name's date
   final day = DateFormat(fileDate).format(firstDay);
@@ -91,7 +90,7 @@ Future<void> shareWeekImage(
     await container
         .read(fileGatewayProvider)
         .shareImage(
-          Uint8List.fromList(png),
+          png,
           name: 'dottoday-week-$day.png', // l10n-ignore: a file name
           origin: origin,
         );

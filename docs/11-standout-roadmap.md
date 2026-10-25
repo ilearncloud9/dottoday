@@ -106,6 +106,7 @@ Enforced by `app/test/policy/no_shame_copy_test.dart` over every English string 
 
 ### D3 · Thread journal — **new**
 - Every past day kept as a B5 snapshot: scroll back by day, search ("when did I last run?"), export a year strip (the month grid's completion dots, 12 rows). Lives under Search › "Past days". Pro.
+- As built (docs/09 M12.3): the snapshots are derived on read from the local tasks (no stored copy, no migration), over the last twelve months; search matches titles and answers with the newest day.
 
 ## E. Together
 

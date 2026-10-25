@@ -1207,5 +1207,16 @@
   "lowEnergyProposalTitle": "Demain",
   "lowEnergyProposalSubtitle": "{count, plural, =1{1 tâche optionnelle, dans le premier temps libre de demain} other{{count} tâches optionnelles, chacune dans le premier temps libre de demain}}",
   "lowEnergyProposalAccept": "Les déplacer",
-  "lowEnergyProposalAccepted": "Déplacées à demain"
+  "lowEnergyProposalAccepted": "Déplacées à demain",
+  "journalTitle": "Jours passés",
+  "journalEntryDetail": "Chaque jour prévu, tel qu'il s'est passé",
+  "journalSearchHint": "Dernière fois que…",
+  "journalDays": "{count, plural, =1{1 jour ces 12 derniers mois} other{{count} jours ces 12 derniers mois}}",
+  "journalLast": "{count, plural, =1{Dernière fois : {date} · {ago, plural, =1{hier} other{il y a {ago} jours}} · une fois} other{Dernière fois : {date} · {ago, plural, =1{hier} other{il y a {ago} jours}} · {count} jours}}",
+  "journalNoMatch": "Rien ces 12 derniers mois ne correspond à « {query} »",
+  "journalEmpty": "Pas encore de jours passés. Les jours prévus apparaissent ici une fois terminés.",
+  "journalDayLabel": "{date}, {summary}. Ouvrir le jour",
+  "journalMatch": "{title} · {time}",
+  "journalStripTitle": "Bande de l'année",
+  "journalStripLabel": "{count, plural, =1{Ton année en points : 1 jour prévu} other{Ton année en points : {count} jours prévus}}"
 }

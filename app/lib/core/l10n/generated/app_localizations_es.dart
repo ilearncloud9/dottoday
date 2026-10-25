@@ -4958,4 +4958,80 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get lowEnergyProposalAccepted => 'Pasadas a mañana';
+
+  @override
+  String get journalTitle => 'Días pasados';
+
+  @override
+  String get journalEntryDetail => 'Cada día que planificaste, tal como fue';
+
+  @override
+  String get journalSearchHint => '¿Cuándo fue la última vez que…?';
+
+  @override
+  String journalDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días en los últimos 12 meses',
+      one: '1 día en los últimos 12 meses',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String journalLast(String date, int ago, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      ago,
+      locale: localeName,
+      other: 'hace $ago días',
+      one: 'ayer',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      ago,
+      locale: localeName,
+      other: 'hace $ago días',
+      one: 'ayer',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Última vez: $date · $_temp0 · $count días',
+      one: 'Última vez: $date · $_temp1 · una vez',
+    );
+    return '$_temp2';
+  }
+
+  @override
+  String journalNoMatch(String query) {
+    return 'Nada en los últimos 12 meses coincide con «$query»';
+  }
+
+  @override
+  String get journalEmpty =>
+      'Aún no hay días pasados. Los días que planifiques aparecerán aquí al terminar.';
+
+  @override
+  String journalDayLabel(String date, String summary) {
+    return '$date, $summary. Abrir el día';
+  }
+
+  @override
+  String journalMatch(String title, String time) {
+    return '$title · $time';
+  }
+
+  @override
+  String get journalStripTitle => 'Franja del año';
+
+  @override
+  String journalStripLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Tu año en puntos: $count días planificados',
+      one: 'Tu año en puntos: 1 día planificado',
+    );
+    return '$_temp0';
+  }
 }

@@ -1207,5 +1207,16 @@
   "lowEnergyProposalTitle": "Mañana",
   "lowEnergyProposalSubtitle": "{count, plural, =1{1 tarea opcional, en el primer hueco libre de mañana} other{{count} tareas opcionales, cada una en el primer hueco libre de mañana}}",
   "lowEnergyProposalAccept": "Moverlas",
-  "lowEnergyProposalAccepted": "Pasadas a mañana"
+  "lowEnergyProposalAccepted": "Pasadas a mañana",
+  "journalTitle": "Días pasados",
+  "journalEntryDetail": "Cada día que planificaste, tal como fue",
+  "journalSearchHint": "¿Cuándo fue la última vez que…?",
+  "journalDays": "{count, plural, =1{1 día en los últimos 12 meses} other{{count} días en los últimos 12 meses}}",
+  "journalLast": "{count, plural, =1{Última vez: {date} · {ago, plural, =1{ayer} other{hace {ago} días}} · una vez} other{Última vez: {date} · {ago, plural, =1{ayer} other{hace {ago} días}} · {count} días}}",
+  "journalNoMatch": "Nada en los últimos 12 meses coincide con «{query}»",
+  "journalEmpty": "Aún no hay días pasados. Los días que planifiques aparecerán aquí al terminar.",
+  "journalDayLabel": "{date}, {summary}. Abrir el día",
+  "journalMatch": "{title} · {time}",
+  "journalStripTitle": "Franja del año",
+  "journalStripLabel": "{count, plural, =1{Tu año en puntos: 1 día planificado} other{Tu año en puntos: {count} días planificados}}"
 }

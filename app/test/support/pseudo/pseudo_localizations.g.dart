@@ -3871,4 +3871,40 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String get lowEnergyProposalAccepted =>
       pseudo(super.lowEnergyProposalAccepted);
+
+  @override
+  String get journalTitle => pseudo(super.journalTitle);
+
+  @override
+  String get journalEntryDetail => pseudo(super.journalEntryDetail);
+
+  @override
+  String get journalSearchHint => pseudo(super.journalSearchHint);
+
+  @override
+  String journalDays(int count) => pseudo(super.journalDays(count));
+
+  @override
+  String journalLast(String date, int ago, int count) =>
+      pseudo(super.journalLast(date, ago, count));
+
+  @override
+  String journalNoMatch(String query) => pseudo(super.journalNoMatch(query));
+
+  @override
+  String get journalEmpty => pseudo(super.journalEmpty);
+
+  @override
+  String journalDayLabel(String date, String summary) =>
+      pseudo(super.journalDayLabel(date, summary));
+
+  @override
+  String journalMatch(String title, String time) =>
+      pseudo(super.journalMatch(title, time));
+
+  @override
+  String get journalStripTitle => pseudo(super.journalStripTitle);
+
+  @override
+  String journalStripLabel(int count) => pseudo(super.journalStripLabel(count));
 }

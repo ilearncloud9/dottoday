@@ -125,6 +125,9 @@ abstract final class DotSize {
   static const double weekReviewGap = 0.06;
   static const double weekReviewHalo = 4;
 
+  /// The year strip's month label column (11 D3).
+  static const double yearStripLabel = 36;
+
   /// The share image's dots (`B-ios-week-review` bottom card).
   static const double weekShareDotMin = 30;
   static const double weekShareDotMax = 50;
