@@ -1,3 +1,6 @@
 # False positive (generic-api-key): the secure-storage entry *name* of the DB key, not a key.
 # Renamed in the following commit; this pins the already-pushed occurrence (M2.1).
 fa010412070b87bfe260534d01cf34c2de1329b3:app/lib/data/db/database_key_store.dart:generic-api-key:17
+# False positive (generic-api-key): the web DB probe's test sentinel, a plain
+# task title, written reversed; joined from words in the next commit (M10).
+4fe4070a1c2db314bad23aec89202ed517815b49:app/tool/web_db_probe.dart:generic-api-key:28
