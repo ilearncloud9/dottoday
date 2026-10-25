@@ -57,6 +57,7 @@ _CalendarLink _$CalendarLinkFromJson(Map<String, dynamic> json) =>
         const UtcMillisConverter().fromJson,
       ),
       readOnly: json['read_only'] as bool? ?? true,
+      location: json['location'] as String?,
     );
 
 Map<String, dynamic> _$CalendarLinkToJson(_CalendarLink instance) =>
@@ -72,6 +73,7 @@ Map<String, dynamic> _$CalendarLinkToJson(_CalendarLink instance) =>
         const UtcMillisConverter().toJson,
       ),
       'read_only': instance.readOnly,
+      'location': instance.location,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(

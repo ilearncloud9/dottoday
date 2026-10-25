@@ -66,6 +66,12 @@ class CalendarLinks extends Table {
   IntColumn get lastSyncedUtc => integer().nullable()();
   BoolColumn get readOnly => boolean().withDefault(const Constant(true))();
 
+  /// The event's place (M7.5, R-17): travel time is suggested before an
+  /// event that has one. Column-level CHECK so ALTER TABLE keeps it.
+  TextColumn get location => text().nullable().check(
+    const CustomExpression<bool>('location IS NULL OR length(location) <= 200'),
+  )();
+
   @override
   Set<Column<Object>> get primaryKey => {id};
 

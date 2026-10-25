@@ -112,6 +112,52 @@ final class CalendarSourceRepositoryProvider
 String _$calendarSourceRepositoryHash() =>
     r'2e120b9ecc35f8fdae5f32b8d4dd00bf926f3bd7';
 
+/// Device-calendar events → occurrences (docs/09 M7.2).
+
+@ProviderFor(calendarImporter)
+final calendarImporterProvider = CalendarImporterProvider._();
+
+/// Device-calendar events → occurrences (docs/09 M7.2).
+
+final class CalendarImporterProvider
+    extends $FunctionalProvider<CalendarImport, CalendarImport, CalendarImport>
+    with $Provider<CalendarImport> {
+  /// Device-calendar events → occurrences (docs/09 M7.2).
+  CalendarImporterProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'calendarImporterProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$calendarImporterHash();
+
+  @$internal
+  @override
+  $ProviderElement<CalendarImport> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  CalendarImport create(Ref ref) {
+    return calendarImporter(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CalendarImport value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CalendarImport>(value),
+    );
+  }
+}
+
+String _$calendarImporterHash() => r'd17a0106ecbb3402042ca07c37c75683c430875a';
+
 /// The calendar permission now; re-read with `ref.invalidate` (on resume,
 /// after asking).
 
@@ -207,7 +253,7 @@ final class DeviceCalendarsProvider
   }
 }
 
-String _$deviceCalendarsHash() => r'8e74cf8e0bcb3976d53aa1e489ca2d7c13584fb6';
+String _$deviceCalendarsHash() => r'8f48463587f1edd3be8d8d8de0cb558693466d19';
 
 /// Each device calendar with its switch and inherited colour.
 
@@ -254,7 +300,7 @@ final class CalendarChoiceListProvider
 }
 
 String _$calendarChoiceListHash() =>
-    r'e129523b518596800902fbc15db74e5c8ced2865';
+    r'39a09e89891e8d2a06b3a1f7632424f50cdd3e1c';
 
 /// What Settings and onboarding do with device calendars.
 

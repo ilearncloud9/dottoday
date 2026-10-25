@@ -146,6 +146,19 @@ void main() {
     expect((await storedSettings(h)).includeCalendarInShift, isTrue);
   });
 
+  testWidgets('Calendars: travel time is off until chosen, then a length', (
+    tester,
+  ) async {
+    final h = await pumpSettings(tester, location: '/settings/calendars');
+    expect((await storedSettings(h)).suggestTravelTime, isFalse);
+    await _tap(tester, 'Suggest travel time');
+    expect((await storedSettings(h)).suggestTravelTime, isTrue);
+    await _tap(tester, '15 min');
+    await _tap(tester, '30 min');
+    expect((await storedSettings(h)).travelTimeMin, 30);
+    await expectA11yGuidelines(tester);
+  });
+
   testWidgets('Privacy: Clear recent searches', (tester) async {
     final h = await pumpSettings(
       tester,

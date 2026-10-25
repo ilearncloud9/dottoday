@@ -1456,6 +1456,12 @@ abstract class AppLocalizations {
   /// **'Shift later tasks'**
   String get shiftChipLabel;
 
+  /// Second toggle chip beside 'Shift later tasks' while dragging, shown when the day has calendar events a shift could move: on, they move with the later tasks (docs/09 M7.6). Starts from Settings › Calendars › Move calendar events too.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar events too'**
+  String get shiftChipCalendar;
+
   /// Snackbar after a drop with Shift later tasks on, with Undo.
   ///
   /// In en, this message translates to:
@@ -3856,11 +3862,77 @@ abstract class AppLocalizations {
   /// **'Connect a calendar'**
   String get calendarsConnect;
 
-  /// Calendars page caption while import is not available.
+  /// Onboarding O4 where the device has no calendars of its own (web): where online calendars are connected (M7.4).
   ///
   /// In en, this message translates to:
-  /// **'Calendar import arrives in a later update.'**
-  String get calendarsComingSoon;
+  /// **'Connect Google or Microsoft in Settings › Calendars.'**
+  String get calendarsOnlineInSettings;
+
+  /// Calendars page group caption for connected online accounts (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Google and Microsoft'**
+  String get calendarsOnline;
+
+  /// Calendars page: how online calendars behave across devices (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Connected once, they show on every device you sign in on. If a calendar is also on this device, switch one of the two off.'**
+  String get calendarsOnlineIntro;
+
+  /// Calendars page row while signed out; opens Settings › Account (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to connect Google or Microsoft'**
+  String get calendarsOnlineSignIn;
+
+  /// Calendars page row: opens Google's sign-in page (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Google Calendar'**
+  String get calendarsConnectGoogle;
+
+  /// Calendars page row: opens Microsoft's sign-in page (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Microsoft Outlook'**
+  String get calendarsConnectMicrosoft;
+
+  /// Calendars page row for an account whose access was revoked or expired (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect'**
+  String get calendarsReconnect;
+
+  /// Calendars page: subtitle of the Reconnect row (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday can\'t reach this account until you reconnect it'**
+  String get calendarsReconnectDetail;
+
+  /// Calendars page: an account the provider didn't answer for; it is tried again later (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach this account just now'**
+  String get calendarsUnreachable;
+
+  /// Calendars page row and confirm button: removes a connected account (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get calendarsDisconnect;
+
+  /// Confirm dialog title before removing a connected calendar account (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect {account}?'**
+  String calendarsDisconnectTitle(String account);
+
+  /// Confirm dialog body before removing a connected calendar account (M7.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Its events leave your timeline on every device. Events with your subtasks or notes go to Trash.'**
+  String get calendarsDisconnectBody;
 
   /// Calendars page group caption.
   ///
@@ -3877,7 +3949,7 @@ abstract class AppLocalizations {
   /// Calendars page toggle subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Off: events stay put when you shift the rest'**
+  /// **'When you shift the rest. Shared and repeating events stay put.'**
   String get calendarsMoveEventsDetail;
 
   /// Calendars page: explains the permission prompt before Connect.
@@ -5433,6 +5505,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} · {status}'**
   String settingsNameAndStatus(String name, String status);
+
+  /// Title of an imported calendar event that has none (M7.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled event'**
+  String get calendarEventUntitled;
+
+  /// Task sheet and editor: caption over the web links found in the notes (R-02).
+  ///
+  /// In en, this message translates to:
+  /// **'Links'**
+  String get taskLinks;
+
+  /// Screen-reader hint of a link row in the task sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Open {host} in the browser'**
+  String taskLinkOpen(String host);
+
+  /// Snackbar when the browser couldn't be opened for a link.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open that link'**
+  String get taskLinkFailed;
+
+  /// Calendars page: caption of the per-calendar write-back switches (M7.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Send changes back'**
+  String get calendarsWriteBack;
+
+  /// Calendars page: what turning write-back on does (M7.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Moves, resizes and renames you make here go to the calendar, earlier ones too. Repeating and all-day events change here only.'**
+  String get calendarsWriteBackDetail;
+
+  /// Banner when edits of imported events couldn't be written to their calendar (M7.3); action: Try again.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change hasn\'t reached your calendar yet} other{{count} changes haven\'t reached your calendar yet}}'**
+  String bannerWriteBackPending(int count);
+
+  /// Banner when an imported event was changed both here and in its calendar (M7.3); actions: Keep mine / Use calendar's.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{This event changed in your calendar too} other{{count} events changed in your calendar too}}'**
+  String bannerWriteBackClash(int count);
+
+  /// Write-back clash banner: take the calendar's version (M7.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Use calendar\'s'**
+  String get bannerUseCalendars;
+
+  /// Editor, imported event: write-back is on for its calendar (M7.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Changes go back to {calendar}'**
+  String taskCalendarSends(String calendar);
+
+  /// Editor, imported event: changes are not written to its calendar (write-back off, read-only, repeating or all-day; M7.3).
+  ///
+  /// In en, this message translates to:
+  /// **'From {calendar} · changes stay in Dottoday'**
+  String taskCalendarStays(String calendar);
+
+  /// Travel time before a task (M7.5, R-17): the task sheet card caption, the sheet and editor row, the Settings row and its picker title.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel time'**
+  String get travelTitle;
+
+  /// Task sheet, an imported event with a place: the travel time suggestion (M7.5). Nothing is written until Add.
+  ///
+  /// In en, this message translates to:
+  /// **'At {place}. Keep {duration} before it for getting there?'**
+  String travelSuggestDetail(String place, String duration);
+
+  /// Task sheet travel suggestion: accept, writes the travel time.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {duration} before'**
+  String travelSuggestAdd(String duration);
+
+  /// Snackbar after accepting a travel time suggestion (with Undo).
+  ///
+  /// In en, this message translates to:
+  /// **'Travel time added before “{title}”'**
+  String travelAdded(String title);
+
+  /// Travel time picker and row: no travel time.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get travelNone;
+
+  /// Travel time row value, e.g. '15 min before'.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} before'**
+  String travelBefore(String duration);
+
+  /// Timeline row meta after the time range when the task has travel time before it, e.g. '15 min travel'.
+  ///
+  /// In en, this message translates to:
+  /// **'· {duration} travel'**
+  String rowTravelMeta(String duration);
+
+  /// Screen-reader row label with travel time.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}, {duration} travel time before'**
+  String rowTravel(String label, String duration);
+
+  /// Calendars page group caption (M7.5).
+  ///
+  /// In en, this message translates to:
+  /// **'Travel time'**
+  String get calendarsTravel;
+
+  /// Calendars page toggle: suggest a travel buffer before events that have a place.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest travel time'**
+  String get calendarsTravelSuggest;
+
+  /// Calendars page toggle subtitle: the suggestion is a fixed length, no route lookup, the place stays on the device.
+  ///
+  /// In en, this message translates to:
+  /// **'Before events with a place. Worked out on this device; no maps are asked'**
+  String get calendarsTravelSuggestDetail;
 }
 
 class _AppLocalizationsDelegate

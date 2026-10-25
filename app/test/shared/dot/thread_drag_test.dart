@@ -34,15 +34,19 @@ final _gap = ThreadGap(
 );
 
 class _Log {
-  _Log({this.shiftByDefault});
+  _Log({this.shiftByDefault, this.calendarByDefault});
 
   final bool? shiftByDefault;
+  final bool? calendarByDefault;
   final drops = <String>[];
   final resizes = <String>[];
   ThreadDrag get drag => ThreadDrag(
     shiftByDefault: shiftByDefault,
-    onDrop: (id, gap, f, shift) =>
-        drops.add('$id ${gap.startLabel}${shift ? ' shift' : ''}'),
+    calendarByDefault: calendarByDefault,
+    onDrop: (id, gap, f, shift) => drops.add(
+      '$id ${gap.startLabel}${shift.followers ? ' shift' : ''}'
+      '${shift.calendar ? ' +calendar' : ''}',
+    ),
     hintFor: (id, gap, f) => gap == null ? null : '→ ${gap.startLabel}',
     onResize: (id, steps) => resizes.add('$id $steps'),
   );
@@ -142,6 +146,42 @@ void main() {
       await dropOnGap(tester, await lift(tester));
       await tester.sendKeyUpEvent(LogicalKeyboardKey.altLeft);
       expect(log.drops, ['write 9:30 shift', 'write 9:30']);
+    });
+
+    testWidgets('"Calendar events too" shows beside it only while it is on, '
+        'starts from the setting and rides along with the drop (M7.6)', (
+      tester,
+    ) async {
+      final log = _Log(shiftByDefault: false, calendarByDefault: true);
+      await tester.pumpWidget(_thread(log));
+      final g = await lift(tester);
+      expect(find.text('Calendar events too'), findsNothing);
+      await tester.tap(find.text('Shift later tasks'));
+      await tester.pump();
+      expect(find.text('Calendar events too'), findsOneWidget);
+      await tester.tap(find.text('Calendar events too'));
+      await tester.pump();
+      await dropOnGap(tester, g);
+      // Started on (the setting), toggled off before the drop.
+      expect(log.drops, ['write 9:30 shift']);
+    });
+
+    testWidgets('the calendar chip on reaches the drop; no events, no chip', (
+      tester,
+    ) async {
+      final on = _Log(shiftByDefault: true, calendarByDefault: true);
+      await tester.pumpWidget(_thread(on));
+      final g = await lift(tester);
+      expect(find.text('Calendar events too'), findsOneWidget);
+      await dropOnGap(tester, g);
+      expect(on.drops, ['write 9:30 shift +calendar']);
+
+      final none = _Log(shiftByDefault: true);
+      await tester.pumpWidget(_thread(none));
+      final h = await lift(tester);
+      expect(find.text('Shift later tasks'), findsOneWidget);
+      expect(find.text('Calendar events too'), findsNothing);
+      await dropOnGap(tester, h);
     });
 
     testWidgets('"never" shows no chip', (tester) async {

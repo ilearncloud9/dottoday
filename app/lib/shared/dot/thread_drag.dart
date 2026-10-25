@@ -8,6 +8,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+export 'resize_grip.dart';
+
 /// What a thread does with drags (docs/10 §6: long-press = drag to another
 /// time or day, drops onto free gaps; R-05). The feature turns positions
 /// into times; the thread only reports them.
@@ -18,11 +20,17 @@ final class ThreadDrag {
     required this.hintFor,
     this.onResize,
     this.shiftByDefault,
+    this.calendarByDefault,
   });
 
-  /// Task [id] dropped on [gap], [fraction] (0–1) down it; [shift] = the
-  /// later tasks follow (the chip, inverted while Alt is held).
-  final void Function(String id, ThreadGap gap, double fraction, bool shift)
+  /// Task [id] dropped on [gap], [fraction] (0–1) down it; [shift] says
+  /// what the chips said at the drop.
+  final void Function(
+    String id,
+    ThreadGap gap,
+    double fraction,
+    DropShift shift,
+  )
   onDrop;
 
   /// The floating label while task [id] hovers [gap] at [fraction]
@@ -35,6 +43,11 @@ final class ThreadDrag {
   /// Where the "Shift later tasks" chip starts each drag (Settings ›
   /// Shift later tasks); null hides the chip (R-04).
   final bool? shiftByDefault;
+
+  /// Where the "Calendar events too" chip starts each drag (Settings ›
+  /// Calendars › Move calendar events too); null hides it, for a day
+  /// without calendar events a shift could carry (docs/09 M7.6).
+  final bool? calendarByDefault;
 }
 
 /// Long-press to lift a task row (250 ms, 03 §3.2; a mouse lifts at once): a lifted chip follows
@@ -179,6 +192,7 @@ class GapDropTarget extends StatelessWidget {
     required this.drag,
     required this.hint,
     required this.shift,
+    required this.calendar,
     required this.child,
     super.key,
   });
@@ -189,6 +203,9 @@ class GapDropTarget extends StatelessWidget {
 
   /// The chip's state for this drag.
   final ValueListenable<bool> shift;
+
+  /// The "Calendar events too" chip's state for this drag.
+  final ValueListenable<bool> calendar;
   final Widget child;
 
   @override
@@ -214,7 +231,13 @@ class GapDropTarget extends StatelessWidget {
         unawaited(HapticFeedback.mediumImpact());
         // Desktop: holding Alt inverts the chip (docs/03 §3.2).
         final invert = HardwareKeyboard.instance.isAltPressed;
-        drag.onDrop(d.data, gap, fractionOf(d.offset), shift.value != invert);
+        final followers = shift.value != invert;
+        drag.onDrop(
+          d.data,
+          gap,
+          fractionOf(d.offset),
+          DropShift(followers: followers, calendar: calendar.value),
+        );
       },
       builder: (context, candidates, _) => DecoratedBox(
         decoration: BoxDecoration(
@@ -222,71 +245,6 @@ class GapDropTarget extends StatelessWidget {
           color: candidates.isEmpty ? null : c.accentTint,
         ),
         child: child,
-      ),
-    );
-  }
-}
-
-/// The grip at the end of a task's segment: drag down for longer, up for
-/// shorter, one [DotTouch.resizeStep] per snap step (R-05).
-class ResizeGrip extends StatefulWidget {
-  const ResizeGrip({required this.onSteps, required this.label, super.key});
-
-  final ValueChanged<int> onSteps;
-
-  /// Screen-reader name ("Change length").
-  final String label;
-
-  @override
-  State<ResizeGrip> createState() => _ResizeGripState();
-}
-
-class _ResizeGripState extends State<ResizeGrip> {
-  double _dy = 0;
-  int _steps = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = DotTheme.of(context).colors;
-    // Screen readers adjust the length with increase / decrease (R-12).
-    return Semantics(
-      label: widget.label,
-      onIncrease: () => widget.onSteps(1),
-      onDecrease: () => widget.onSteps(-1),
-      child: MouseRegion(
-        cursor: SystemMouseCursors.resizeRow,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          // Count from touch-down, so the slop isn't lost from the length.
-          dragStartBehavior: DragStartBehavior.down,
-          onVerticalDragStart: (_) => setState(() => _dy = 0),
-          onVerticalDragUpdate: (d) {
-            _dy += d.delta.dy;
-            final steps = (_dy / DotTouch.resizeStep).round();
-            if (steps != _steps) {
-              unawaited(HapticFeedback.selectionClick());
-              setState(() => _steps = steps);
-            }
-          },
-          onVerticalDragEnd: (_) {
-            if (_steps != 0) widget.onSteps(_steps);
-            setState(() => _steps = 0);
-          },
-          child: SizedBox(
-            width: DotTouch.min,
-            height: DotTouch.min / 2,
-            child: Center(
-              child: Container(
-                width: DotSize.weekDot * 2,
-                height: DotSize.freeLine * 2,
-                decoration: BoxDecoration(
-                  color: _steps == 0 ? c.hairline : c.accent,
-                  borderRadius: BorderRadius.circular(DotRadii.pill),
-                ),
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }

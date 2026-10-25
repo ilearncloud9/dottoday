@@ -95,6 +95,9 @@ class _ThreadState extends State<Thread> {
   /// "Shift later tasks" for the current drag, shown in the overlay.
   final _shift = ValueNotifier<bool>(false);
 
+  /// "Calendar events too" for the current drag (docs/09 M7.6).
+  final _calendar = ValueNotifier<bool>(false);
+
   /// The chip while it shows. An entry rather than an `OverlayPortal`: a
   /// portal is laid out with its slot, and a lazy list may not lay that
   /// slot out once the drag scrolls it away.
@@ -105,15 +108,22 @@ class _ThreadState extends State<Thread> {
     _settle();
     _hint.dispose();
     _shift.dispose();
+    _calendar.dispose();
     super.dispose();
   }
 
   void _lift() {
-    final start = widget.actions.drag?.shiftByDefault;
-    if (start == null) return;
+    final drag = widget.actions.drag;
+    final start = drag?.shiftByDefault;
+    if (drag == null || start == null) return;
+    final calendar = drag.calendarByDefault;
     _shift.value = start;
+    _calendar.value = calendar ?? false;
     _settle();
-    final chip = OverlayEntry(builder: (_) => ShiftChip(on: _shift));
+    final chip = OverlayEntry(
+      builder: (_) =>
+          ShiftChip(on: _shift, calendar: calendar == null ? null : _calendar),
+    );
     Overlay.of(context).insert(chip);
     _chip = chip;
   }
@@ -154,6 +164,7 @@ class _ThreadState extends State<Thread> {
         drag: drag,
         hint: _hint,
         shift: _shift,
+        calendar: _calendar,
         child: _gap(e, dropBox: dropBox),
       ),
       ThreadGap() => _gap(e, dropBox: dropBox),

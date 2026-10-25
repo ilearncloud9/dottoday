@@ -8,6 +8,7 @@ import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/features/timeline/state/task_text.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
+import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/pickers/day_pickers.dart';
 import 'package:dottoday/shared/pickers/zone_picker.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
@@ -150,13 +151,15 @@ class WhenFields extends ConsumerWidget {
   }
 }
 
-/// Repeat and Alerts as read-only rows until their editors land (M3f.1,
-/// M3f.2).
+/// Repeat, Alerts and Travel time (docs/03 §3.4, M7.5): each row opens
+/// its editor.
 class RepeatAlertRows extends StatelessWidget {
   const RepeatAlertRows({
     required this.task,
     this.onRepeat,
     this.onAlerts,
+    this.travelMin = 0,
+    this.onTravel,
     super.key,
   });
 
@@ -167,6 +170,12 @@ class RepeatAlertRows extends StatelessWidget {
 
   /// Opens the Alerts editor (M3f.2).
   final VoidCallback? onAlerts;
+
+  /// The draft's travel time before it (R-17); 0 = none.
+  final int travelMin;
+
+  /// Picks the travel time; null hides the row (an Inbox task).
+  final VoidCallback? onTravel;
 
   @override
   Widget build(BuildContext context) {
@@ -203,6 +212,15 @@ class RepeatAlertRows extends StatelessWidget {
           alertsText(l10n, task.alerts),
           onAlerts,
         ),
+        if (onTravel != null)
+          row(
+            TaskIcon.car.glyph ?? DotGlyphs.clock,
+            l10n.travelTitle,
+            travelMin == 0
+                ? l10n.travelNone
+                : l10n.travelBefore(formatDurationShort(l10n, travelMin)),
+            onTravel,
+          ),
       ],
     );
   }

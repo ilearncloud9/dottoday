@@ -5,7 +5,10 @@
 #   tool/device_tests.sh ios [<simulator udid>] [test ...]
 #
 # Tests are names under integration_test/ without `_test.dart`; default:
-# the device suite below. thread_perf is not here: it needs
+# the device suite below. The calendar checks (calendar_prompt,
+# calendar_denied, calendar_import, calendar_write_back, calendar_revoked,
+# iOS also calendar_regranted; docs/08 §5b) are named explicitly, in that
+# order. thread_perf is not here: it needs
 # `flutter drive --profile --no-dds` on physical hardware (M5.9b).
 #
 # For each test: build the app with that test as its entry, install it as an
@@ -52,6 +55,68 @@ android_grants() {
   a shell appops set "$app_id" SCHEDULE_EXACT_ALARM allow
 }
 
+# The calendar checks (docs/08 §6.2, M7.7) set the calendar permission up
+# front, never through the OS prompt: prompt = never asked, denied = no
+# without a prompt (Android: user-fixed), revoked = granted earlier, now
+# off (revoking ends a running app, so it happens before the launch).
+cal_perms="android.permission.READ_CALENDAR android.permission.WRITE_CALENDAR"
+calendar_access() {
+  local state="$1" p
+  if [[ "$platform" == ios ]]; then
+    case "$state" in
+      grant) xcrun simctl privacy "${device:-booted}" grant calendar "$app_id" ;;
+      reset) xcrun simctl privacy "${device:-booted}" reset calendar "$app_id" ;;
+      *) xcrun simctl privacy "${device:-booted}" revoke calendar "$app_id" ;;
+    esac
+    return
+  fi
+  for p in $cal_perms; do
+    case "$state" in
+      grant) a shell pm grant "$app_id" "$p" ;;
+      reset)
+        a shell pm revoke "$app_id" "$p"
+        a shell pm clear-permission-flags "$app_id" "$p" user-set user-fixed
+        ;;
+      *)
+        a shell pm revoke "$app_id" "$p"
+        a shell pm set-permission-flags "$app_id" "$p" user-fixed
+        ;;
+    esac
+  done
+}
+
+prepare() {
+  case "$1" in
+    calendar_prompt) calendar_access reset ;;
+    calendar_denied | calendar_revoked) calendar_access revoke ;;
+    calendar_import | calendar_write_back | calendar_regranted) calendar_access grant ;;
+  esac
+}
+
+# Back from the browser a test opened (a backgrounded app draws no
+# frames, so the test can't finish on its own).
+bring_to_front() {
+  if [[ "$platform" == ios ]]; then
+    xcrun simctl launch "${device:-booted}" "$app_id"
+  else
+    a shell am start -n "$app_id/.MainActivity"
+  fi
+}
+
+# A test asks for a screenshot with `DEVICE_SHOT <name>` (saved as
+# build/device_shots/<platform>_<name>.png) and for calendar access back
+# with `DEVICE_GRANT calendar`; `DEVICE_FRONT app` brings the app back; `DEVICE_AWAY <name>` (before a
+# tap that leaves the app) waits, shoots and brings it back.
+shoot() {
+  local out="build/device_shots/${platform}_$1.png"
+  mkdir -p build/device_shots
+  if [[ "$platform" == ios ]]; then
+    xcrun simctl io "${device:-booted}" screenshot "$out" >/dev/null 2>&1
+  else
+    a exec-out screencap -p >"$out" 2>/dev/null
+  fi
+}
+
 run_one() {
   local t="$1" log="$logs/${platform}_$1.log" driver binary
   driver="${DRIVER:-test_driver/integration_test.dart}"
@@ -71,6 +136,7 @@ run_one() {
     binary=build/ios/iphonesimulator/Runner.app
     xcrun simctl install "${device:-booted}" "$binary" >>"$log" 2>&1 || return 1
   fi
+  [[ "$t" != sweep ]] && { prepare "$t" >>"$log" 2>&1 || return 1; }
   # The sweep needs no permission; its screenshots come out blank from a
   # prebuilt binary, so it is driven from source, tagged per platform
   # (build/sweep/<platform>_<shot>.png).
@@ -97,10 +163,36 @@ run_one() {
     wait "$drive"
     return
   fi
+  # flutter drive uninstalls the app when it stops it; calendar_revoked
+  # (and calendar_regranted after it) need what the run before left.
+  local keep=""
+  [[ "$t" == calendar_write_back || "$t" == calendar_revoked ]] &&
+    keep="--keep-app-running"
   with_limit flutter drive --driver="$driver" \
     --target="integration_test/${t}_test.dart" \
-    --use-application-binary="$binary" \
-    ${device:+-d "$device"} --dart-define-from-file="$defines" >>"$log" 2>&1
+    --use-application-binary="$binary" $keep \
+    ${device:+-d "$device"} --dart-define-from-file="$defines" >>"$log" 2>&1 &
+  local drive=$! done_marks="" mark
+  while kill -0 "$drive" 2>/dev/null; do
+    for mark in $(grep -oE 'DEVICE_(SHOT|GRANT|FRONT|AWAY) [a-z0-9_]+' "$log" | tr ' ' ':'); do
+      case " $done_marks " in *" $mark "*) continue ;; esac
+      done_marks="$done_marks $mark"
+      case "$mark" in
+        DEVICE_SHOT:*) shoot "${mark#DEVICE_SHOT:}" ;;
+        DEVICE_GRANT:calendar) calendar_access grant >>"$log" 2>&1 ;;
+        DEVICE_FRONT:*) bring_to_front >>"$log" 2>&1 ;;
+        DEVICE_AWAY:*)
+          # The test is about to send the app away (browser, Settings);
+          # iOS suspends it there, so the script shoots and brings it back.
+          sleep 5
+          shoot "${mark#DEVICE_AWAY:}"
+          bring_to_front >>"$log" 2>&1
+          ;;
+      esac
+    done
+    sleep 0.5
+  done
+  wait "$drive"
 }
 
 # Start clean: a system alert left over from an earlier run sits over
@@ -127,5 +219,6 @@ for t in "${tests[@]}"; do
   [[ $code -eq 142 ]] && result="TIMEOUT (>15 min)"
   extra=$(grep -ho "EXACTNESS .*" "$logs/${platform}_$t.log" | tail -1)
   echo "DEVICE $platform $t: $result ${took}s ${extra} log=$logs/${platform}_$t.log"
+  grep -ho "CAL_CHECK .*" "$logs/${platform}_$t.log" | sort -u
 done
 exit $failed

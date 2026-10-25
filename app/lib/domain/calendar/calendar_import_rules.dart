@@ -1,5 +1,7 @@
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/entities/calendar.dart';
+import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -83,12 +85,13 @@ DateTime allDayStartUtc(DateTime date, tz.Location location) =>
 /// inherited colour, grouped by account, then by name. A calendar the
 /// person never switched is on: connecting means "show my calendars"
 /// (R-02), and one added to the device later comes in the same way.
+/// Write-back is off until chosen, and never on for a read-only one.
 List<CalendarChoice> calendarChoices(
   List<DeviceCalendar> calendars,
   List<CalendarAccount> rows,
   Map<String, int> palette,
 ) {
-  final enabled = {for (final r in rows) ?r.externalAccountId: r.enabled};
+  final byId = {for (final r in rows) ?r.externalAccountId: r};
   final sorted = [...calendars]
     ..sort((a, b) {
       final byAccount = (a.accountName ?? '').compareTo(b.accountName ?? '');
@@ -98,8 +101,16 @@ List<CalendarChoice> calendarChoices(
     for (final c in sorted)
       CalendarChoice(
         calendar: c,
-        enabled: enabled[c.id] ?? true,
+        enabled: byId[c.id]?.enabled ?? true,
         colorKey: inheritColorKey(c.colorArgb, palette),
+        writeBack: !c.readOnly && (byId[c.id]?.writeBack ?? false),
       ),
   ];
 }
+
+/// Whether [o] stays on this device, never synced: an imported event,
+/// with its subtasks (docs/05 "Device calendars"). Every device imports
+/// its own calendars, so a synced copy would show twice on the others
+/// (docs/09 M7.2). Google/Microsoft events too: every signed-in device
+/// imports the connected account itself (M7.4, ADR-0011).
+bool isDeviceOnly(Occurrence o) => o.source == OccurrenceSource.calendar;

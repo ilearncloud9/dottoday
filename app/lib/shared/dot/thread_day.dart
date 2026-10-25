@@ -1,6 +1,7 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/scheduling/day_blocks.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread.dart';
@@ -53,7 +54,8 @@ List<ThreadEntry> threadEntries({
   final out = <ThreadEntry>[ThreadCap.wake(format.time(shape.wakeUtc))];
   var cursor = shape.wakeUtc;
   for (final (i, o) in sorted.indexed) {
-    _gap(out, cursor, o.startUtc!, nowUtc, format, showFreeTime);
+    // Travel time before a task is not free (R-17, docs/04 §5).
+    _gap(out, cursor, footprintStart(o), nowUtc, format, showFreeTime);
     final task = _task(o, nowUtc, format, subtasks[o.id]);
     out.add(
       ThreadTaskEntry(
@@ -122,6 +124,7 @@ ThreadTask _task(
     subtasksDone: subtasks?.done ?? 0,
     subtasksTotal: subtasks?.total ?? 0,
     movable: !o.pinned && o.status != OccurrenceStatus.done,
+    travel: o.travelBufferMin > 0 ? format.duration(o.travelBufferMin) : null,
   );
 }
 
@@ -154,6 +157,7 @@ ThreadTask _withOverrun(
     subtasksTotal: task.subtasksTotal,
     overrunMinutes: overrun,
     movable: task.movable,
+    travel: task.travel,
   );
 }
 

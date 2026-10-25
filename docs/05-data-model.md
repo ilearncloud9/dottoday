@@ -51,11 +51,50 @@ by `calendar_accounts.id`, accessible only from Edge Functions.
 Device calendars (M7.1): one **local** row per device calendar the person has switched in Settings ›
 Calendars — `provider` `apple_device` / `android_device`, `external_account_id` = the device's calendar
 id, `label` = its name (clipped to 80), `enabled` = the switch, `write_back` = M7.3's per-calendar
-opt-in. A calendar with no row is on. These rows never sync (device ids mean nothing elsewhere).
+opt-in (off until chosen; never for a read-only calendar). A calendar with no row is on. These rows never sync (device ids mean nothing elsewhere).
+Google/Microsoft (M7.4, ADR-0011): on the **server**, one row per connected account (`provider`
+`google` / `microsoft`, `external_account_id` = the provider's stable account id: Google `sub`,
+Microsoft `oid`; `label` = its email), unique per `(user_id, provider, external_account_id)`, created
+only by `calendar-oauth` (clients may read and delete their own rows, nothing else; deleting one
+deletes its Vault token by trigger). On the **device**, each of its calendars gets a local row like a
+device calendar's: `provider` google/microsoft, `external_account_id` = `<server account id>/<provider
+calendar id>`, so the switches and write-back opt-ins are per device. `calendar_oauth_states` (server
+only, no client access): a connect in progress, with its PKCE verifier and where the browser goes
+back; single use, 10 minutes.
 
 ### `calendar_links`
 `id, user_id, account_id, external_calendar_id, external_event_id, etag, last_synced_utc,
 read_only bool`. Joined to `occurrences.calendar_link_id`.
+Device calendars (M7.2): one **local** link per imported item. `external_event_id` is
+`<event id>@<epoch ms>` — the instance's start, or for an all-day event the UTC midnight of each
+day it covers (one item per day) — because EventKit gives every instance of a repeating event the
+same id. `etag` holds the import fingerprint `v1;<start ms>;<duration min>;<title hash>;<notes
+hash>` (12-hex SHA-256 prefixes, never the text): a re-import changes only what changed in the
+calendar since, so a local move or rename stays until the calendar changes that same field, and
+notes edited in Dottoday are never replaced. `last_synced_utc` = when calendar changes were last
+applied. Imported occurrences (`source = 'calendar'`) and their subtasks are **device-only**: the
+write path upserts them without `change_log` rows and `requeueAll` skips them (each device imports
+its own calendars, so a synced copy would show twice elsewhere). Google/Microsoft imports (M7.4) are
+device-only too: every signed-in device imports the connected account itself, so all show the same
+events, and subtasks and notes stay where they were made (ADR-0011). Their links key each instance
+by the provider's own instance id (a repeating event's instances differ there), so an instance can
+be written back. An event gone from the calendar (or a calendar switched off or removed) removes its
+occurrence outright when nothing of the person's is on it, else soft-deletes it detached
+(`calendar_link_id` null) so Trash keeps the subtasks/notes; an imported occurrence the person
+deleted keeps its link, so the event is not brought back. Imported events carry no Dottoday alerts
+(`alerts` null; the calendar app reminds) until the person adds some.
+Write-back (M7.3): `read_only` is true when nothing may go back to the event — the calendar is
+read-only, or the item is all-day or an instance of a repeating event (refreshed by every import;
+also set when a write finds the event gone or no longer writable). The `etag` fingerprint is the
+base of write-back's three-way merge: after a successful write it holds the merged start, length and
+title (notes hash unchanged, notes never go back) and `external_event_id` the moved instance's key,
+so the next import sees nothing new.
+Travel time (M7.5, local schema 4): `location` (nullable, ≤ 200 chars, control characters
+removed, blank → null) is the event's place as its calendar gave it (device `location`, Google
+`location`, Microsoft `location.displayName`), refreshed by every import. Device-only like the link
+itself: the server's `calendar_links` has no such column and never receives one (links don't sync),
+so no Supabase migration. It is PII like a title — never logged, never sent anywhere. It feeds only
+the travel time suggestion; an accepted suggestion is the occurrence's `travel_buffer_min`.
 
 ### `conflicts`
 `id, user_id, entity, entity_id, field, mine jsonb, theirs jsonb, created_at, resolved_at?`
@@ -105,7 +144,9 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   "showFreeTime": true,
   "runningLateNudge": true,
   "rollUnfinished": false,
-  "bedtimeReminder": true
+  "bedtimeReminder": true,
+  "suggestTravelTime": false,
+  "travelTimeMin": 15
 }
 ```
 
@@ -123,6 +164,9 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
 - Clarified in M3c.3: `durationPresets` are the Add flow's duration chips — 1–12 distinct lengths of
   5–1440 min, sorted; absent means the default list. Checked by the client validator; the server's
   `validate_settings()` ignores keys it doesn't know, so older rows stay valid.
+- Clarified in M7.5: `suggestTravelTime` (off until chosen) and `travelTimeMin`, one of 5, 10, 15,
+  20, 30, 45, 60, 90, 120 (`Settings.travelChoices`, checked by the client validator; the server
+  ignores both keys, as for `durationPresets`).
 - Clarified in M3d.2: `showFreeTime` (the "N free · add here" gaps on the thread), `runningLateNudge`
   (M3f.5 offers to shift the rest), `rollUnfinished` (Day review moves unfinished tasks to tomorrow
   instead of the Inbox, M3f.5) and `bedtimeReminder` (M3d.3/M5) are plain booleans; absent keys take

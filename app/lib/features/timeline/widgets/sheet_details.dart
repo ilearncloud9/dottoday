@@ -2,9 +2,11 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/state/task_text.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
+import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 
-/// Alerts, Repeat and Colour & icon rows (`A-ios-task-sheet`).
+/// Alerts, Repeat and Colour & icon rows (`A-ios-task-sheet`), plus
+/// Travel time when the task has some (M7.5, R-17).
 class SheetDetails extends StatelessWidget {
   const SheetDetails({required this.task, this.onEdit, super.key});
 
@@ -40,6 +42,17 @@ class SheetDetails extends StatelessWidget {
             value: repeatText(l10n, locale, task.series?.rrule),
             onTap: onEdit,
           ),
+          if (o.travelBufferMin > 0) ...[
+            Divider(height: DotSpace.hairline, color: c.outline),
+            _DetailRow(
+              glyph: TaskIcon.car.glyph ?? DotGlyphs.clock,
+              label: l10n.travelTitle,
+              value: l10n.travelBefore(
+                formatDurationShort(l10n, o.travelBufferMin),
+              ),
+              onTap: onEdit,
+            ),
+          ],
           Divider(height: DotSpace.hairline, color: c.outline),
           _DetailRow(
             glyph: TaskIcon.fromKey(o.iconKey).glyph ?? DotGlyphs.today,

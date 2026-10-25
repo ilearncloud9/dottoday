@@ -123,6 +123,11 @@ Validated<Settings> validateSettings(Settings s) {
       if (s.quietHours case final quiet?) checkTimeWindow(quiet),
       checkRange(ValidationField.settings, s.firstDayOfWeek, 1, 7),
       checkAccentKey(s.accent),
+      if (!Settings.travelChoices.contains(s.travelTimeMin))
+        const ValidationFailure(
+          ValidationField.travelBuffer,
+          ValidationRule.outOfRange,
+        ),
     ]),
   );
 }

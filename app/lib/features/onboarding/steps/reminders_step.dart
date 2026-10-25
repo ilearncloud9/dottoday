@@ -134,7 +134,7 @@ class _ConnectCalendar extends ConsumerWidget {
       tint: gateway.available ? t.colors.accentInk : t.colors.muted,
       title: l10n.calendarsConnect,
       subtitle: !gateway.available
-          ? l10n.calendarsComingSoon
+          ? l10n.calendarsOnlineInSettings
           : connected
           ? l10n.calendarsPickInSettings
           : null,

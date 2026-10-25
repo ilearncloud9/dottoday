@@ -1,5 +1,6 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -61,6 +62,62 @@ void main() {
       await tester.tap(find.text('Undo'));
       await tester.pumpAndSettle();
       expect(find.text('9:00 AM – 11:00 AM · 2 h'), findsOneWidget);
+    });
+
+    group('"Calendar events too" (M7.6)', () {
+      // The demo's 9:00–11:00 block, imported from a calendar.
+      final nineBerlin = DateTime.utc(2026, 10, 21, 7);
+      List<Occurrence> rows() => [
+        for (final o in demoDayRows(todayTestDate))
+          o.startUtc == nineBerlin
+              ? o.copyWith(source: OccurrenceSource.calendar)
+              : o,
+      ];
+      const settings = Settings(
+        use24h: false,
+        firstDayOfWeek: 7,
+        shiftFollowers: ShiftFollowersPolicy.always,
+        includeCalendarInShift: true,
+      );
+
+      /// Drags the standup into the free time; returns whether the chip
+      /// showed during the drag.
+      Future<bool> dragStandup(WidgetTester tester) async {
+        final g = await lift(tester, 'Team standup');
+        await g.moveTo(tester.getCenter(find.text('45 min free')));
+        await tester.pump();
+        final chip = find.text('Calendar events too').evaluate().isNotEmpty;
+        await g.up();
+        await tester.pumpAndSettle();
+        return chip;
+      }
+
+      testWidgets('a writable event moves with the rest', (tester) async {
+        await pumpToday(
+          tester,
+          rows: rows(),
+          size: const Size(390, 1400),
+          settings: settings,
+        );
+        expect(await dragStandup(tester), isTrue);
+        expect(find.text('9:00 AM – 11:00 AM · 2 h'), findsNothing);
+      });
+
+      testWidgets('a read-only or repeating one stays, and no chip shows', (
+        tester,
+      ) async {
+        final day = rows();
+        final event = day.firstWhere((o) => o.startUtc == nineBerlin);
+        await pumpToday(
+          tester,
+          rows: day,
+          size: const Size(390, 1400),
+          settings: settings,
+          readOnlyCalendarIds: {event.id},
+        );
+        expect(await dragStandup(tester), isFalse);
+        expect(find.text('9:00 AM – 11:00 AM · 2 h'), findsOneWidget);
+      });
     });
 
     testWidgets('dropping on a week-strip day keeps the time', (tester) async {

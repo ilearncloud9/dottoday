@@ -194,4 +194,49 @@ void main() {
       isA<ChannelDeviceCalendarGateway>(),
     );
   });
+
+  group('write-back (M7.3)', () {
+    final seven = DateTime.utc(2026, 10, 23, 7);
+
+    test('reads one event, with whether it repeats', () async {
+      permission = 'granted';
+      reply = (_) => {
+        'id': 'E1',
+        'title': 'Call',
+        'allDay': false,
+        'startMs': seven.millisecondsSinceEpoch,
+        'endMs': seven.add(const Duration(hours: 1)).millisecondsSinceEpoch,
+        'repeating': true,
+      };
+      final result = await gateway.event('work', 'E1');
+      expect(calls.last.arguments, {'calendarId': 'work', 'eventId': 'E1'});
+      final event = (result as Ok<ExternalEvent?, AppFailure>).value!;
+      expect(event.repeating, isTrue);
+      reply = (_) => null;
+      final gone = await gateway.event('work', 'E1');
+      expect((gone as Ok<ExternalEvent?, AppFailure>).value, isNull);
+    });
+
+    test('update sends start, end and the title only when renamed', () async {
+      reply = (_) => 'written';
+      final update = EventUpdate(
+        calendarId: 'work',
+        eventId: 'E1',
+        startUtc: seven,
+        endUtc: seven.add(const Duration(minutes: 30)),
+      );
+      expect(await gateway.updateEvent(update), EventWriteResult.written);
+      expect(calls.last.method, 'update');
+      expect(calls.last.arguments, {
+        'calendarId': 'work',
+        'eventId': 'E1',
+        'startMs': seven.millisecondsSinceEpoch,
+        'endMs': seven.add(const Duration(minutes: 30)).millisecondsSinceEpoch,
+      });
+      reply = (_) => 'notWritable';
+      expect(await gateway.updateEvent(update), EventWriteResult.notWritable);
+      reply = (_) => throw PlatformException(code: 'write_failed');
+      expect(await gateway.updateEvent(update), EventWriteResult.failed);
+    });
+  });
 }

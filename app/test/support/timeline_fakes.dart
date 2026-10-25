@@ -4,7 +4,10 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
+import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
+import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
+import 'package:dottoday/data/calendar/write_back_providers.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
@@ -15,6 +18,7 @@ import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/security/app_lock_store.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/calendar/calendar_import.dart';
 import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/entities/enums.dart';
@@ -393,6 +397,10 @@ List<Override> timelineOverrides({
   String? deviceZone,
   DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
   CalendarSourceRepository? calendarSources,
+  CalendarImport? calendarImport,
+  CalendarImport? cloudCalendarImport,
+  IdleWriteBackController Function()? writeBack,
+  Set<String> readOnlyCalendarIds = const {},
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
@@ -435,6 +443,20 @@ List<Override> timelineOverrides({
     deviceCalendarGatewayProvider.overrideWithValue(calendarGateway),
     calendarSourceRepositoryProvider.overrideWithValue(
       calendarSources ?? FakeCalendarSourceRepository(),
+    ),
+    calendarImporterProvider.overrideWithValue(
+      calendarImport ?? FakeCalendarImport(),
+    ),
+    cloudCalendarImporterProvider.overrideWithValue(
+      cloudCalendarImport ?? FakeCalendarImport(),
+    ),
+    // Imported events a shift never carries (M7.6); no database here.
+    readOnlyCalendarIdsProvider.overrideWith(
+      (ref) => Stream.value(readOnlyCalendarIds),
+    ),
+    // A factory: each container needs its own notifier.
+    writeBackControllerProvider.overrideWith(
+      writeBack ?? IdleWriteBackController.new,
     ),
   ];
 }

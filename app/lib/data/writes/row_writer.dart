@@ -15,6 +15,7 @@ final class EntityWriter<E> {
     required this.stamp,
     required this.find,
     required this.upsertAll,
+    this.deviceOnly,
   });
 
   /// One of the `change_log.entity` values (a fixed literal, never input).
@@ -26,11 +27,17 @@ final class EntityWriter<E> {
   final E Function(E, DateTime) stamp;
   final Future<E?> Function(String id) find;
   final Future<void> Function(Iterable<E>) upsertAll;
+
+  /// Whether a row stays on this device: written and validated like any
+  /// other, but never queued for `sync_push` (docs/05: device-calendar
+  /// imports, docs/09 M7.2). Null: every row syncs.
+  final Future<bool> Function(E)? deviceOnly;
 }
 
 /// Writes rows of one entity type inside the caller's transaction: skips
 /// unchanged rows, upserts the rest stamped with [now], marks them dirty and
-/// appends one `change_log` row per changed field.
+/// appends one `change_log` row per changed field — except
+/// [EntityWriter.deviceOnly] rows, which are only upserted.
 Future<void> writeRows<E>(
   AppDatabase db,
   EntityWriter<E> writer,
@@ -39,6 +46,7 @@ Future<void> writeRows<E>(
   required Hlc Function() nextHlc,
 }) async {
   final changed = <E>[];
+  final synced = <String>[];
   final log = <ChangeLogCompanion>[];
   for (final row in rows) {
     final previous = await writer.find(writer.idOf(row));
@@ -48,8 +56,10 @@ Future<void> writeRows<E>(
       json,
     );
     if (fields.isEmpty) continue;
-    final hlc = nextHlc().toString();
     changed.add(writer.stamp(row, now));
+    if (await writer.deviceOnly?.call(row) ?? false) continue;
+    synced.add(writer.idOf(row));
+    final hlc = nextHlc().toString();
     log.addAll([
       for (final f in fields)
         ChangeLogCompanion.insert(
@@ -63,7 +73,8 @@ Future<void> writeRows<E>(
   }
   if (changed.isEmpty) return;
   await writer.upsertAll(changed);
-  await _markDirty(db, writer.table, changed.map(writer.idOf).toList());
+  if (synced.isEmpty) return;
+  await _markDirty(db, writer.table, synced);
   await db.batch((b) => b.insertAll(db.changeLog, log));
 }
 

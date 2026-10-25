@@ -87,7 +87,7 @@ final class DriftWriteUseCase implements WriteUseCase {
       ...b.occurrences,
       ...m.occurrences,
     ]);
-    await rows(subtaskWriter(b.userId, _subtasks), [
+    await rows(subtaskWriter(b.userId, _subtasks, _occurrences), [
       ...b.subtasks,
       ...m.subtasks,
     ]);

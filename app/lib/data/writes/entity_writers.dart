@@ -3,6 +3,7 @@ import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/data/writes/row_writer.dart';
+import 'package:dottoday/domain/calendar/calendar_import_rules.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -44,11 +45,16 @@ EntityWriter<Occurrence> occurrenceWriter(
   stamp: (o, now) => o.copyWith(updatedAt: now),
   find: (id) => repo.findById(userId, id),
   upsertAll: repo.upsertAll,
+  deviceOnly: (o) async => isDeviceOnly(o),
 );
 
+/// Subtasks follow their occurrence: those on a device-calendar import
+/// stay on the device too. Written after occurrences, so a new parent in
+/// the same batch is already there.
 EntityWriter<Subtask> subtaskWriter(
   String userId,
   DriftSubtaskRepository repo,
+  DriftOccurrenceRepository occurrences,
 ) => EntityWriter(
   table: 'subtasks',
   toJson: (s) => s.toJson(),
@@ -56,4 +62,8 @@ EntityWriter<Subtask> subtaskWriter(
   stamp: (s, now) => s.copyWith(updatedAt: now),
   find: (id) => repo.findById(userId, id),
   upsertAll: repo.upsertAll,
+  deviceOnly: (s) async {
+    final parent = await occurrences.findById(userId, s.occurrenceId);
+    return parent != null && isDeviceOnly(parent);
+  },
 );

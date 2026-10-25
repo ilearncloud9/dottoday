@@ -136,6 +136,18 @@ void main() {
     expect(_task(_entries(now, day), 'deep').overrunMinutes, 0);
   });
 
+  test('travel time shows on the row and is not free (M7.5, R-17)', () {
+    final e = _entries(clock.nowUtc(), [
+      _o('mail', 11, 0, 30),
+      _o('dentist', 12, 30, 45).copyWith(travelBufferMin: 30),
+    ]);
+    expect(_task(e, 'dentist').travel, '30 min');
+    expect(_task(e, 'mail').travel, isNull);
+    final gaps = e.whereType<ThreadGap>().map((g) => g.minutes).toList();
+    // 7:00–11:00, then 11:30–12:00 (12:00–12:30 is the trip), then to 22:00.
+    expect(gaps, [240, 30, 525]);
+  });
+
   test('an empty day is one free gap between the caps', () {
     final e = _entries(_at(6), const []);
     expect(e, hasLength(3));

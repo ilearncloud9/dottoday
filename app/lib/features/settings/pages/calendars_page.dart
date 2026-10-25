@@ -1,17 +1,19 @@
 import 'dart:async';
 
 import 'package:dottoday/core/failures/app_failure.dart';
-import 'package:dottoday/core/failures/failure_messages.dart';
-import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/logging/error_handlers.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
+import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
+import 'package:dottoday/features/settings/widgets/calendar_rows.dart';
+import 'package:dottoday/features/settings/widgets/cloud_calendars_group.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
+import 'package:dottoday/features/settings/widgets/travel_time_group.dart';
 import 'package:dottoday/shared/feedback/permission_notice.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
@@ -20,8 +22,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Settings › Calendars (docs/02 F5, docs/09 M7.1, R-02): connect the
 /// device calendars (explain, then the OS prompt; denied → explain + a
-/// way to Settings), one switch per calendar in its inherited colour, and
-/// whether shifting the day moves calendar events too.
+/// way to Settings), one switch per calendar in its inherited colour,
+/// Google and Microsoft accounts (M7.4, every platform), which calendars
+/// get changes sent back (M7.3), whether shifting the day moves
+/// calendar events too, and travel time before events with a place (M7.5).
 class CalendarsPage extends ConsumerWidget {
   const CalendarsPage({super.key});
 
@@ -35,6 +39,9 @@ class CalendarsPage extends ConsumerWidget {
       children: [
         PageText(l10n.calendarsIntro),
         ..._source(context, ref),
+        if (ref.watch(cloudCalendarsProvider).available)
+          const CloudCalendarsGroup(),
+        ..._writeBack(context, ref),
         if (settings != null)
           SettingsGroup(
             caption: l10n.calendarsShifting,
@@ -52,6 +59,7 @@ class CalendarsPage extends ConsumerWidget {
               ),
             ],
           ),
+        if (settings != null) TravelTimeGroup(settings: settings),
       ],
     );
   }
@@ -61,11 +69,9 @@ class CalendarsPage extends ConsumerWidget {
     final l10n = context.l10n;
     final gateway = ref.watch(deviceCalendarGatewayProvider);
     if (!gateway.available) {
-      return [
-        const _NoneConnected(),
-        const OutlinedButton(onPressed: null, child: _ConnectLabel()),
-        PageText(l10n.calendarsComingSoon),
-      ];
+      // The web: Google and Microsoft only; say so when neither is here.
+      final cloud = ref.watch(cloudCalendarsProvider).available;
+      return [if (!cloud) const _NoneConnected()];
     }
     final connect = ref.read(calendarActionsProvider).connect;
     return switch (ref.watch(calendarPermissionStateProvider).value) {
@@ -86,6 +92,38 @@ class CalendarsPage extends ConsumerWidget {
       ],
       PermissionState.granted => const [_CalendarList()],
     };
+  }
+
+  /// "Send changes back": every switched-on writable calendar, device and
+  /// connected alike, each off until chosen (M7.3, M7.4).
+  List<Widget> _writeBack(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final actions = ref.read(calendarActionsProvider);
+    final writable = [
+      for (final c in [
+        ...?ref.watch(calendarChoiceListProvider).value,
+        ...?ref.watch(cloudCalendarChoiceListProvider).value,
+      ])
+        if (c.enabled && !c.calendar.readOnly) c,
+    ];
+    if (writable.isEmpty) return const [];
+    return [
+      SettingsGroup(
+        caption: l10n.calendarsWriteBack,
+        children: [
+          for (final c in writable)
+            CalendarChoiceRow(
+              choice: c,
+              toggle: c.writeBack,
+              onToggle: (on) => saveCalendarChange(
+                context,
+                actions.setWriteBack(c.calendar, on: on),
+              ),
+            ),
+        ],
+      ),
+      PageText(l10n.calendarsWriteBackDetail),
+    ];
   }
 }
 
@@ -108,7 +146,7 @@ class _CalendarList extends ConsumerWidget {
     if (list.isEmpty) {
       return SettingsGroup(
         caption: l10n.calendarsConnected,
-        children: [_EmptyRow(title: l10n.calendarsNoneOnDevice)],
+        children: [CalendarEmptyRow(title: l10n.calendarsNoneOnDevice)],
       );
     }
     final groups = <String, List<CalendarChoice>>{};
@@ -126,55 +164,16 @@ class _CalendarList extends ConsumerWidget {
             caption: account,
             children: [
               for (final c in rows)
-                _CalendarRow(
+                CalendarChoiceRow(
                   choice: c,
-                  onToggle: (on) => _toggle(context, actions, c, on),
+                  onToggle: (on) => saveCalendarChange(
+                    context,
+                    actions.setEnabled(c.calendar, on: on),
+                  ),
                 ),
             ],
           ),
       ],
-    );
-  }
-}
-
-/// Stores the switch at once; a failed write says so.
-void _toggle(
-  BuildContext context,
-  CalendarActions actions,
-  CalendarChoice choice,
-  bool on,
-) {
-  final messenger = ScaffoldMessenger.of(context);
-  final l10n = context.l10n;
-  unawaited(
-    actions.setEnabled(choice.calendar, on: on).then((result) {
-      if (result case Err(:final failure)) {
-        messenger.showSnackBar(
-          SnackBar(content: Text(failureMessage(l10n, failure))),
-        );
-      }
-    }),
-  );
-}
-
-/// One calendar: its name in its inherited colour, and the switch.
-class _CalendarRow extends StatelessWidget {
-  const _CalendarRow({required this.choice, required this.onToggle});
-
-  final CalendarChoice choice;
-  final ValueChanged<bool> onToggle;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final calendar = choice.calendar;
-    return SettingsRow(
-      glyph: DotGlyphs.calendar,
-      tint: t.tasks[TaskColor.fromKey(choice.colorKey)].ink,
-      title: calendar.name,
-      subtitle: calendar.readOnly ? context.l10n.calendarsReadOnly : null,
-      toggle: choice.enabled,
-      onToggle: onToggle,
     );
   }
 }
@@ -186,20 +185,7 @@ class _NoneConnected extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SettingsGroup(
     caption: context.l10n.calendarsConnected,
-    children: [_EmptyRow(title: context.l10n.calendarsNone)],
-  );
-}
-
-class _EmptyRow extends StatelessWidget {
-  const _EmptyRow({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) => SettingsRow(
-    glyph: DotGlyphs.calendar,
-    tint: DotTheme.of(context).colors.muted,
-    title: title,
+    children: [CalendarEmptyRow(title: context.l10n.calendarsNone)],
   );
 }
 

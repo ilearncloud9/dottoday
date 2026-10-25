@@ -7,8 +7,9 @@ part 'system_providers.g.dart';
 /// Opens a link outside the app (mail composer for feedback). A port so
 /// tests and previews never leave the app.
 abstract interface class LinkLauncher {
-  /// Whether the platform handled [uri].
-  Future<bool> open(Uri uri);
+  /// Whether the platform handled [uri]. [sameWindow] replaces the page on
+  /// the web instead of opening a tab (connecting a calendar, M7.4).
+  Future<bool> open(Uri uri, {bool sameWindow = false});
 }
 
 /// [LinkLauncher] over `url_launcher`.
@@ -16,7 +17,8 @@ final class UrlLinkLauncher implements LinkLauncher {
   const UrlLinkLauncher();
 
   @override
-  Future<bool> open(Uri uri) => launchUrl(uri);
+  Future<bool> open(Uri uri, {bool sameWindow = false}) =>
+      launchUrl(uri, webOnlyWindowName: sameWindow ? '_self' : null);
 }
 
 @Riverpod(keepAlive: true)

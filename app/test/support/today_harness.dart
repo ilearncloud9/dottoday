@@ -30,6 +30,7 @@ Future<void> pumpToday(
   Stream<DateTime>? ticks,
   ValueChanged<AddTaskIntent>? onAddTask,
   Widget Function(Widget today)? wrap,
+  Set<String> readOnlyCalendarIds = const {},
 }) async {
   tester.view
     ..physicalSize = size
@@ -42,6 +43,7 @@ Future<void> pumpToday(
   await tester.pumpWidget(
     ProviderScope(
       overrides: timelineOverrides(
+        readOnlyCalendarIds: readOnlyCalendarIds,
         now: todayTestNow,
         occurrences:
             repo ??

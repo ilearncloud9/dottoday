@@ -31,4 +31,14 @@ final class NoDeviceCalendarGateway implements DeviceCalendarGateway {
     DateTime fromUtc,
     DateTime toUtc,
   ) async => const Ok([]);
+
+  @override
+  Future<Result<ExternalEvent?, AppFailure>> event(
+    String calendarId,
+    String eventId,
+  ) async => const Ok(null);
+
+  @override
+  Future<EventWriteResult> updateEvent(EventUpdate update) async =>
+      EventWriteResult.notWritable;
 }
