@@ -31,7 +31,7 @@ Theme lives in app/lib/core/theme/ (DotTheme as a ThemeExtension); no second the
 | accent tint (selected pills) | `rgba(59,108,246,.12)` | `rgba(127,160,255,.22)` |
 | success | `#2FA37A` | `#2FA37A` |
 
-Accent is user-selectable in Settings › Look from: indigo `#3B6CF6`/`#7FA0FF`, teal `#1F9E9E`/`#4CC9C9`, coral `#E5674F`/`#FF8A73`, violet `#7A5AF8`/`#A58BFF`. Everything "accent" re-themes; task colours do not.
+Accent is user-selectable in Settings › Look from: indigo `#3B6CF6`/`#7FA0FF`, teal `#1F9E9E`/`#4CC9C9`, coral `#E5674F`/`#FF8A73`, violet `#7A5AF8`/`#A58BFF`. Everything "accent" re-themes; task colours do not. The same four on every platform: no system or wallpaper (Material You) accent (PRD F8.3, M8.4c).
 
 **Task colours** (9, same in both themes; used for dots, segments, chips): coral `#E5674F`, amber `#D99A1F`, mint `#2FA37A`, teal `#1F9E9E`, sky `#2E8FD6`, indigo `#3B6CF6`, violet `#7A5AF8`, rose `#D64F86`, slate `#6B6B70`. Segment of an upcoming task = colour at 28–35 % alpha; done = colour at 45 % with the row struck through; live = solid gradient to the current minute.
 

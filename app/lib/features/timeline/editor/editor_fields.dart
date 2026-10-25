@@ -5,9 +5,11 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/schedule/planned_colors.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
+import 'package:dottoday/features/timeline/state/block_actions.dart';
 import 'package:dottoday/features/timeline/state/task_text.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
+import 'package:dottoday/features/timeline/widgets/pin_row.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/pickers/day_pickers.dart';
 import 'package:dottoday/shared/pickers/zone_picker.dart';
@@ -152,7 +154,8 @@ class WhenFields extends ConsumerWidget {
 }
 
 /// Repeat, Alerts and Travel time (docs/03 §3.4, M7.5): each row opens
-/// its editor.
+/// its editor. Then the Pinned switch (docs/02 F2.9) when [onPinned] is
+/// given.
 class RepeatAlertRows extends StatelessWidget {
   const RepeatAlertRows({
     required this.task,
@@ -160,6 +163,8 @@ class RepeatAlertRows extends StatelessWidget {
     this.onAlerts,
     this.travelMin = 0,
     this.onTravel,
+    this.pinned = false,
+    this.onPinned,
     super.key,
   });
 
@@ -176,6 +181,13 @@ class RepeatAlertRows extends StatelessWidget {
 
   /// Picks the travel time; null hides the row (an Inbox task).
   final VoidCallback? onTravel;
+
+  /// The draft's pin (R-17).
+  final bool pinned;
+
+  /// Pins or unpins the draft; hidden when null or the task is not
+  /// [pinnable].
+  final ValueChanged<bool>? onPinned;
 
   @override
   Widget build(BuildContext context) {
@@ -220,6 +232,12 @@ class RepeatAlertRows extends StatelessWidget {
                 ? l10n.travelNone
                 : l10n.travelBefore(formatDurationShort(l10n, travelMin)),
             onTravel,
+          ),
+        if (onPinned case final onPinned? when pinnable(task.occurrence))
+          PinRow(
+            pinned: pinned,
+            onChanged: onPinned,
+            contentPadding: EdgeInsets.zero,
           ),
       ],
     );

@@ -1,24 +1,24 @@
 import 'dart:async';
 
+import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/widgets/app_lock_group.dart';
-import 'package:dottoday/features/settings/widgets/data_about_groups.dart';
+import 'package:dottoday/features/settings/widgets/feedback_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Settings › Help (docs/09 M3f.7): five quick answers, then Send
 /// feedback. Answers are on the device, so Help works offline.
-class HelpPage extends ConsumerWidget {
+class HelpPage extends StatelessWidget {
   const HelpPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final version = ref.watch(appVersionProvider).value;
     return SettingsPageFrame(
       title: l10n.settingsHelp,
       children: [
@@ -35,7 +35,7 @@ class HelpPage extends ConsumerWidget {
         Align(
           alignment: AlignmentDirectional.centerStart,
           child: FilledButton(
-            onPressed: () => unawaited(showFeedbackSheet(context, version)),
+            onPressed: () => unawaited(showFeedbackSheet(context)),
             child: Text(l10n.settingsFeedback),
           ),
         ),
@@ -68,7 +68,8 @@ class _Answer extends StatelessWidget {
 }
 
 /// Settings › Privacy (docs/09 M3f.7, docs/06): what stays on the device,
-/// what sync sends, no tracking; and Clear recent searches.
+/// what sync sends, no tracking, crash reports when they are on; Clear
+/// recent searches, and the full policy when its URL is configured (M8.6).
 class PrivacyPage extends ConsumerWidget {
   const PrivacyPage({super.key});
 
@@ -76,6 +77,8 @@ class PrivacyPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final hasRecent = ref.watch(recentSearchesProvider).value?.isNotEmpty;
+    final env = ref.watch(envProvider);
+    final policy = env.privacyPolicyUrl;
     return SettingsPageFrame(
       title: l10n.settingsPrivacy,
       children: [
@@ -84,6 +87,9 @@ class PrivacyPage extends ConsumerWidget {
         _Section(l10n.privacyLocalTitle, l10n.privacyLocalBody),
         _Section(l10n.privacyTrackTitle, l10n.privacyTrackBody),
         _Section(l10n.privacySyncTitle, l10n.privacySyncBody),
+        // Said only when Sentry is configured: otherwise nothing is sent.
+        if (env.sentryDsn != null)
+          _Section(l10n.privacyCrashTitle, l10n.privacyCrashBody),
         _Section(l10n.privacySearchTitle, l10n.privacySearchBody),
         Align(
           alignment: AlignmentDirectional.centerStart,
@@ -94,6 +100,15 @@ class PrivacyPage extends ConsumerWidget {
             child: Text(l10n.privacyClearSearches),
           ),
         ),
+        if (policy != null)
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton(
+              onPressed: () =>
+                  unawaited(ref.read(linkLauncherProvider).open(policy)),
+              child: Text(l10n.privacyPolicyOpen),
+            ),
+          ),
       ],
     );
   }

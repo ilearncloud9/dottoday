@@ -43,6 +43,12 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   quietHours: json['quietHours'] == null
       ? null
       : TimeWindow.fromJson(json['quietHours'] as Map<String, dynamic>),
+  daySummaryDays:
+      (json['daySummaryDays'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$WeekdayEnumMap, e))
+          .toSet() ??
+      const <Weekday>{},
+  reminderSound: json['reminderSound'] as String?,
   use24h: json['use24h'] as bool?,
   firstDayOfWeek: (json['firstDayOfWeek'] as num?)?.toInt() ?? 1,
   theme:
@@ -54,6 +60,7 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   runningLateNudge: json['runningLateNudge'] as bool? ?? true,
   rollUnfinished: json['rollUnfinished'] as bool? ?? false,
   bedtimeReminder: json['bedtimeReminder'] as bool? ?? true,
+  inboxNudge: json['inboxNudge'] as bool? ?? false,
   suggestTravelTime: json['suggestTravelTime'] as bool? ?? false,
   travelTimeMin: (json['travelTimeMin'] as num?)?.toInt() ?? 15,
 );
@@ -69,6 +76,10 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'durationPresets': instance.durationPresets,
   'defaultAlerts': instance.defaultAlerts.map((e) => e.toJson()).toList(),
   'quietHours': instance.quietHours?.toJson(),
+  'daySummaryDays': instance.daySummaryDays
+      .map((e) => _$WeekdayEnumMap[e]!)
+      .toList(),
+  'reminderSound': instance.reminderSound,
   'use24h': instance.use24h,
   'firstDayOfWeek': instance.firstDayOfWeek,
   'theme': _$ThemePreferenceEnumMap[instance.theme]!,
@@ -78,6 +89,7 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'runningLateNudge': instance.runningLateNudge,
   'rollUnfinished': instance.rollUnfinished,
   'bedtimeReminder': instance.bedtimeReminder,
+  'inboxNudge': instance.inboxNudge,
   'suggestTravelTime': instance.suggestTravelTime,
   'travelTimeMin': instance.travelTimeMin,
 };

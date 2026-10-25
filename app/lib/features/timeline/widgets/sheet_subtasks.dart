@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
+import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
@@ -38,6 +39,9 @@ class SheetSubtasks extends ConsumerStatefulWidget {
 
 class _SubtasksState extends ConsumerState<SheetSubtasks> {
   bool _adding = false;
+
+  /// The new subtask's write failed: the field keeps it (M8.5b, R-08).
+  AppFailure? _addFailure;
   final _field = TextEditingController();
 
   @override
@@ -102,7 +106,13 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
     controller: _field,
     autofocus: true,
     textInputAction: TextInputAction.done,
-    decoration: InputDecoration(hintText: context.l10n.sheetNewSubtask),
+    decoration: InputDecoration(
+      hintText: context.l10n.sheetNewSubtask,
+      errorText: switch (_addFailure) {
+        final f? => failureMessage(context.l10n, f),
+        null => null,
+      },
+    ),
     onSubmitted: _add,
   );
 
@@ -134,15 +144,14 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
     await _write([list[from].copyWith(sortOrder: order)]);
   }
 
+  /// Writes the typed subtask; the field closes only once it landed.
   Future<void> _add(String text) async {
     final title = text.trim();
-    setState(() => _adding = false);
-    _field.clear();
-    if (title.isEmpty) return;
+    if (title.isEmpty) return _closeField();
     final o = widget.task.occurrence;
     final now = ref.read(clockProvider).nowUtc();
     final last = _list.lastOrNull?.sortOrder ?? 0;
-    await _write([
+    final written = await _write([
       Subtask(
         id: const UuidV7Generator().newId(),
         userId: o.userId,
@@ -153,6 +162,21 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
         updatedAt: now,
       ),
     ]);
+    if (!mounted) return;
+    switch (written) {
+      case Ok():
+        _closeField();
+      case Err(:final failure):
+        setState(() => _addFailure = failure);
+    }
+  }
+
+  void _closeField() {
+    setState(() {
+      _adding = false;
+      _addFailure = null;
+    });
+    _field.clear();
   }
 
   Future<void> _remove(Subtask s) async {

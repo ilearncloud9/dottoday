@@ -110,6 +110,12 @@ ThemeData _build(DotColors c) {
     colorScheme: scheme,
     scaffoldBackgroundColor: c.surface,
     fontFamily: DotType.fontFamily,
+    // Material shrinks controls on desktop (compact density, shrink-wrapped
+    // targets), which took the Mac's and web's buttons to 40 px and below.
+    // The 44 pt floor (03 §1, R-12) holds at every width and pointer; found
+    // by the device a11y-tree check in M8.7 (08 §6.2).
+    visualDensity: VisualDensity.standard,
+    materialTapTargetSize: MaterialTapTargetSize.padded,
     // Android's predictive back previews the page underneath (07 Android,
     // M5.6); the other platforms keep their defaults.
     pageTransitionsTheme: const PageTransitionsTheme(

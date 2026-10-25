@@ -1,4 +1,5 @@
-# gen-l10n config (docs/09 M0.6). en is the source locale; de/fr/es land in M8.3.
+# gen-l10n config (docs/09 M0.6). en is the template; de/fr/es (M8.3) must carry
+# every key — test/policy/l10n_parity_test.dart fails CI otherwise.
 arb-dir: lib/core/l10n/arb
 template-arb-file: app_en.arb
 output-dir: lib/core/l10n/generated

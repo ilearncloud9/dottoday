@@ -12,6 +12,10 @@ enum NotificationPurpose {
   /// "Send me a test alarm" (11 A0, docs/09 M6.5.9): one loud alert in 60 s
   /// so the user can check it gets through.
   testAlarm,
+
+  /// Settings › Reminders › Day-start summary: "Your day: 6 blocks, first
+  /// at 08:00" at Wake Up on the chosen weekdays (docs/02 F6.2, M8.4d).
+  daySummary,
 }
 
 /// One notification the OS should hold (docs/04 §6).
@@ -29,6 +33,7 @@ final class PlannedNotification {
     this.silent = false,
     this.loud = false,
     this.purpose = NotificationPurpose.task,
+    this.blocks,
   });
 
   /// Index used for the snooze reminder, after the ≤ 5 alert slots.
@@ -39,6 +44,9 @@ final class PlannedNotification {
 
   /// Index of the test alarm (M6.5.9).
   static const testAlarmIndex = 7;
+
+  /// Index of the day-start summary (M8.4d).
+  static const daySummaryIndex = 8;
 
   /// Stable OS notification ID; see `notificationIdFor`.
   final int id;
@@ -61,6 +69,10 @@ final class PlannedNotification {
   final bool loud;
   final NotificationPurpose purpose;
 
+  /// For a day-start summary, how many blocks the day has (a count, not
+  /// task text, so it may ride in the payload; 06 §1).
+  final int? blocks;
+
   /// Whether iOS should use the time-sensitive interruption level (07 iOS).
   bool get timeSensitive =>
       purpose == NotificationPurpose.testAlarm ||
@@ -79,7 +91,8 @@ final class PlannedNotification {
       other.sound == sound &&
       other.silent == silent &&
       other.loud == loud &&
-      other.purpose == purpose;
+      other.purpose == purpose &&
+      other.blocks == blocks;
 
   @override
   int get hashCode => Object.hash(
@@ -92,6 +105,7 @@ final class PlannedNotification {
     silent,
     loud,
     purpose,
+    blocks,
   );
 
   @override

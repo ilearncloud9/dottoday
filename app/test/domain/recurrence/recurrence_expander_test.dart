@@ -122,6 +122,44 @@ void main() {
     ]);
   });
 
+  // PRD F4.5 names America/New_York too: the US switches on other dates
+  // (second Sunday of March, first Sunday of November) and at 02:00 local.
+  test('DST spring-forward: 02:30 America/New_York becomes 03:30 EDT', () {
+    final s = _series(
+      'FREQ=DAILY',
+      '2026-03-07T02:30',
+      tzId: 'America/New_York',
+    );
+    final got = _expand(s, DateTime.utc(2026, 3, 7), DateTime.utc(2026, 3, 10));
+    expect(_local(got, 'America/New_York'), [
+      '2026-03-07T02:30',
+      '2026-03-08T03:30',
+      '2026-03-09T02:30',
+    ]);
+    expect(got[1], DateTime.utc(2026, 3, 8, 7, 30));
+  });
+
+  test(
+    'DST fall-back: the duplicated 01:30 New York fires once, at the first',
+    () {
+      final s = _series(
+        'FREQ=DAILY',
+        '2026-10-31T01:30',
+        tzId: 'America/New_York',
+      );
+      final got = _expand(
+        s,
+        DateTime.utc(2026, 10, 31),
+        DateTime.utc(2026, 11, 3),
+      );
+      expect(got, [
+        DateTime.utc(2026, 10, 31, 5, 30),
+        DateTime.utc(2026, 11, 1, 5, 30), // 01:30 EDT, not 01:30 EST
+        DateTime.utc(2026, 11, 2, 6, 30),
+      ]);
+    },
+  );
+
   group('UNTIL in another zone', () {
     // Daily 09:00 New York (13:00Z in October).
     Series ny(String rrule) =>

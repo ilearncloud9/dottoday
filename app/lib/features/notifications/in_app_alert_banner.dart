@@ -12,8 +12,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A reminder shown inside the app (docs/07 Web "in-app banners while
-/// open", docs/09 M5.3): the newest one, with Done (or Open for Bedtime)
-/// and Later. Nothing when there is none.
+/// open", docs/09 M5.3): the newest one — a task's with Done and Snooze
+/// 10 min (docs/02 F6.4, M8.4d: the web's way to snooze, since Chrome
+/// keeps two system actions, Done and Open), Bedtime's and the day-start
+/// summary's with Open and Later. Nothing when there is none.
 class InAppAlertBanner extends ConsumerWidget {
   const InAppAlertBanner({super.key});
 
@@ -52,22 +54,19 @@ class InAppAlertBanner extends ConsumerWidget {
         actions: [(l10n.inAppAlertOk, () => act(null))],
       );
     }
-    final primary = n.withActions
-        ? NotificationAction.done
-        : NotificationAction.open;
     return BannerStrip(
       glyph: DotGlyphs.bell,
       emphasis: true,
       text: l10n.inAppAlertText(n.title, n.body),
-      actions: [
-        (
-          primary == NotificationAction.done
-              ? l10n.notifActionDone
-              : l10n.notifActionOpen,
-          () => act(primary),
-        ),
-        (l10n.inAppAlertLater, () => act(null)),
-      ],
+      actions: n.withActions
+          ? [
+              (l10n.notifActionDone, () => act(NotificationAction.done)),
+              (l10n.notifActionSnooze, () => act(NotificationAction.snooze)),
+            ]
+          : [
+              (l10n.notifActionOpen, () => act(NotificationAction.open)),
+              (l10n.inAppAlertLater, () => act(null)),
+            ],
     );
   }
 }

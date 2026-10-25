@@ -37,4 +37,19 @@ abstract interface class UndoService {
   /// The newest token still redeemable now, if any: what Edit › Undo
   /// reverts on the Mac (docs/07 macOS, M5.5).
   UndoToken? get latest;
+
+  /// The change the newest [undo] reverted, still redoable now, if any:
+  /// what Edit › Redo / ⇧⌘Z re-applies (docs/09 M8.6b). One level: any
+  /// new [applyUndoable] ends it, and it expires [window] after the undo.
+  UndoToken? get redoable;
+
+  /// Re-applies the change [token] (from [redoable]) reverted and returns
+  /// a fresh undo token for it, so ⌘Z after ⇧⌘Z works again. Fails with
+  /// [UndoExpiredFailure] when [token] is no longer [redoable].
+  ///
+  /// ```dart
+  /// await undo.undo(undo.latest!);   // the move is reverted
+  /// await undo.redo(undo.redoable!); // … and made again
+  /// ```
+  Future<Result<UndoToken, AppFailure>> redo(UndoToken token);
 }

@@ -4,10 +4,8 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/alarm_policy.dart';
-import 'package:dottoday/domain/notifications/notification_id.dart';
+import 'package:dottoday/domain/notifications/day_reminders.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
-import 'package:dottoday/domain/time/day_shape.dart';
-import 'package:dottoday/domain/time/wall_clock.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Computes the notifications that should be pending right now (docs/04 §6,
@@ -26,6 +24,11 @@ final class NotificationPlanner {
   /// iOS keeps at most 64 pending notifications (07 iOS).
   static const iosMaxPending = 64;
 
+  /// What the planner keeps pending on Apple platforms: headroom under
+  /// [iosMaxPending], whose overflow iOS drops silently. The nearest ones
+  /// win and every resync refills the window (docs/09 M6.5, M8.4d).
+  static const applePendingBudget = 50;
+
   final Clock _clock;
 
   /// How far ahead to plan; refreshed on open and in the background.
@@ -34,15 +37,16 @@ final class NotificationPlanner {
   /// Keep only the earliest this many (null = no limit).
   final int? maxPending;
 
-  /// The desired pending set, earliest first. With [bedtimeFrom] whose
-  /// `bedtimeReminder` is on, one Bedtime reminder per day is added (see
-  /// [bedtimeReminders]).
+  /// The desired pending set, earliest first. With [daily] settings, one
+  /// Bedtime reminder per day (when `bedtimeReminder` is on) and the
+  /// day-start summaries are added (see [DayReminders]).
   ///
   /// Only planned, scheduled, live occurrences alert. An occurrence with
   /// `alerts == null` inherits [seriesAlerts] for its series. Alerts in
   /// [quietHours] (wall clock in [tzId]) are kept but [silent], so nothing
   /// is lost. A future `snoozedUntilUtc` replaces every alert before it with
-  /// one reminder at that time.
+  /// one reminder at that time. An alert without its own sound takes
+  /// [defaultSound] (Settings › Reminders › Sound, F6.6).
   ///
   /// The at-start alert of each day's first dot and of [routineStartIds]
   /// is [PlannedNotification.loud] and ignores quiet hours (11 A0). A
@@ -52,7 +56,8 @@ final class NotificationPlanner {
     required String tzId,
     Map<String, List<Alert>> seriesAlerts = const {},
     TimeWindow? quietHours,
-    Settings? bedtimeFrom,
+    Settings? daily,
+    String? defaultSound,
     Set<String> routineStartIds = const {},
     DateTime? testAlarmAtUtc,
   }) {
@@ -78,21 +83,33 @@ final class NotificationPlanner {
             loud.contains(o.id);
         planned.add(
           PlannedNotification(
-            id: _uniqueId(usedIds, o.id, index),
+            id: uniqueNotificationId(usedIds, o.id, index),
             occurrenceId: o.id,
             alertIndex: index,
             fireAtUtc: fireAt,
             kind: alert.kind,
-            sound: alert.sound,
-            silent: !isLoud && _inQuietHours(location, fireAt, quietHours),
+            sound: alert.sound ?? defaultSound,
+            silent: !isLoud && inQuietHours(location, fireAt, quietHours),
             loud: isLoud,
           ),
         );
       }
     }
-    if (bedtimeFrom case final settings? when settings.bedtimeReminder) {
+    if (daily case final settings?) {
+      if (settings.bedtimeReminder) {
+        planned.addAll(
+          DayReminders.bedtime(
+            settings: settings,
+            location: location,
+            occurrences: live,
+            fromUtc: now,
+            toUtc: end,
+            used: usedIds,
+          ),
+        );
+      }
       planned.addAll(
-        bedtimeReminders(
+        DayReminders.daySummaries(
           settings: settings,
           location: location,
           occurrences: live,
@@ -113,56 +130,15 @@ final class NotificationPlanner {
     return limit == null ? planned : planned.take(limit).toList();
   }
 
-  /// One reminder at each day's Bedtime in `(fromUtc, toUtc]`, on that
-  /// weekday's own window (Settings › DAY SHAPE, per weekday), with the
-  /// id of the next day's first planned task. Ids are stable per local
-  /// date, so re-planning replaces rather than duplicates (R-10).
-  ///
-  /// ```dart
-  /// bedtimeReminders(settings: s, location: berlin, occurrences: rows,
-  ///     fromUtc: now, toUtc: now.add(week), used: {}).length; // 7
-  /// ```
-  static List<PlannedNotification> bedtimeReminders({
-    required Settings settings,
-    required tz.Location location,
-    required Iterable<Occurrence> occurrences,
-    required DateTime fromUtc,
-    required DateTime toUtc,
-    required Set<int> used,
-  }) {
-    final out = <PlannedNotification>[];
-    final first = utcToWallClock(location, fromUtc);
-    for (var d = 0; ; d++) {
-      final date = DateTime(first.year, first.month, first.day + d);
-      final shape = DayShape.on(
-        location,
-        date,
-        settings.boundaryFor(Weekday.values[date.weekday - 1]),
-      );
-      final at = shape.bedUtc;
-      if (at.isAfter(toUtc)) break;
-      if (!at.isAfter(fromUtc)) continue;
-      final key = 'bedtime:${date.year}-${date.month}-${date.day}';
-      out.add(
-        PlannedNotification(
-          id: _uniqueId(used, key, PlannedNotification.bedtimeIndex),
-          occurrenceId: _firstTomorrow(occurrences, location, date)?.id ?? '',
-          alertIndex: PlannedNotification.bedtimeIndex,
-          fireAtUtc: at,
-          kind: AlertKind.atEnd,
-          silent: _inQuietHours(location, at, settings.quietHours),
-          purpose: NotificationPurpose.bedtime,
-        ),
-      );
-    }
-    return out;
-  }
-
   /// The one test alarm at [atUtc] (M6.5.9): loud, never silent, in its
   /// own slot so it can't collide with a task's alert.
   static PlannedNotification testAlarm(DateTime atUtc, Set<int> used) =>
       PlannedNotification(
-        id: _uniqueId(used, 'test-alarm', PlannedNotification.testAlarmIndex),
+        id: uniqueNotificationId(
+          used,
+          'test-alarm',
+          PlannedNotification.testAlarmIndex,
+        ),
         occurrenceId: '',
         alertIndex: PlannedNotification.testAlarmIndex,
         fireAtUtc: atUtc,
@@ -170,22 +146,6 @@ final class NotificationPlanner {
         loud: true,
         purpose: NotificationPurpose.testAlarm,
       );
-
-  /// The earliest planned task on the day after [date].
-  static Occurrence? _firstTomorrow(
-    Iterable<Occurrence> occurrences,
-    tz.Location location,
-    DateTime date,
-  ) {
-    final next = DateTime(date.year, date.month, date.day + 1);
-    Occurrence? best;
-    for (final o in occurrences) {
-      final l = utcToWallClock(location, o.startUtc!);
-      if (DateTime(l.year, l.month, l.day) != next) continue;
-      if (best == null || o.startUtc!.isBefore(best.startUtc!)) best = o;
-    }
-    return best;
-  }
 
   /// Operations that turn [pending] (the OS set, by ID) into [desired]:
   /// cancel stale or changed IDs, schedule new or changed ones.
@@ -240,32 +200,4 @@ final class NotificationPlanner {
       AlertKind.overdue => o.endUtc!.add(offset),
     };
   }
-
-  /// [notificationIdFor], probing upward on the rare 31-bit collision so two
-  /// alerts never share (and overwrite) one OS slot.
-  static int _uniqueId(Set<int> used, String occurrenceId, int index) {
-    var id = notificationIdFor(occurrenceId, index);
-    while (!used.add(id)) {
-      id = (id + 1) & 0x7FFFFFFF;
-    }
-    return id;
-  }
-
-  static bool _inQuietHours(
-    tz.Location location,
-    DateTime fireAtUtc,
-    TimeWindow? quiet,
-  ) {
-    if (quiet == null) return false;
-    final wall = utcToWallClock(location, fireAtUtc);
-    final minute = wall.hour * 60 + wall.minute;
-    final start = _minutes(quiet.start);
-    final end = _minutes(quiet.end);
-    return start <= end
-        ? minute >= start && minute < end
-        : minute >= start || minute < end;
-  }
-
-  static int _minutes(String hhmm) =>
-      int.parse(hhmm.substring(0, 2)) * 60 + int.parse(hhmm.substring(3, 5));
 }

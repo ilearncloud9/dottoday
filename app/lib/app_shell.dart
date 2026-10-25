@@ -2,33 +2,39 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/inbox/inbox_providers.dart';
+import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/features/calendar_import/write_back_banner.dart';
 import 'package:dottoday/features/notifications/in_app_alert_banner.dart';
 import 'package:dottoday/features/onboarding/install_banner.dart';
+import 'package:dottoday/features/settings/whats_new_banner.dart';
 import 'package:dottoday/features/sync_status/sync_banner.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/features/timeline/widgets/zone_banner.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/skip_link.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 /// App shell around the five tab branches (docs/10 §3–§4, M3a.8): pill tab
 /// bar, Material bar or rail by width class, with the add button. Keyboard
 /// shortcuts live above all routes in `AppCommandScope` (see `app.dart`);
 /// the add button invokes the same intent.
-class AppShell extends StatelessWidget {
+class AppShell extends ConsumerWidget {
   const AppShell({required this.shell, super.key});
 
   final StatefulNavigationShell shell;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    // The Inbox badge (F3.3): open tasks only; none while loading.
+    final inbox = openItems(ref.watch(inboxItemsProvider).value ?? const []);
     // Keyboard users jump past the navigation (07 Web, M5.7).
     return SkipLink(
       label: l10n.skipToContent,
-      builder: (content) => _shell(context, l10n, content),
+      builder: (content) => _shell(context, l10n, content, inbox.length),
     );
   }
 
@@ -36,9 +42,10 @@ class AppShell extends StatelessWidget {
     BuildContext context,
     AppLocalizations l10n,
     FocusNode content,
+    int inbox,
   ) {
     return DotShell(
-      destinations: shellDestinations(l10n),
+      destinations: shellDestinations(l10n, inbox: inbox),
       selected: shell.currentIndex,
       onSelect: (i) => _goTab(ShellTab.values[i]),
       onAdd: () => Actions.maybeInvoke(
@@ -59,6 +66,8 @@ class AppShell extends StatelessWidget {
           const ZoneBanner(),
           // The web's install offer, from the 2nd visit (M5.7).
           const InstallBanner(),
+          // Once after an update with release notes (M8.2, R-19).
+          const WhatsNewBanner(),
           Expanded(
             child: Focus(
               focusNode: content,
@@ -78,8 +87,12 @@ class AppShell extends StatelessWidget {
 }
 
 /// The fixed nav set, in branch order (docs/10 §3): Today · Inbox ·
-/// [Week, Mac/web only] · Search · Settings.
-List<ShellDestination> shellDestinations(AppLocalizations l10n) => [
+/// [Week, Mac/web only] · Search · Settings; [inbox] open tasks badge the
+/// Inbox (docs/02 F3.3).
+List<ShellDestination> shellDestinations(
+  AppLocalizations l10n, {
+  int inbox = 0,
+}) => [
   for (final tab in ShellTab.values)
     switch (tab) {
       ShellTab.today => ShellDestination(
@@ -89,6 +102,8 @@ List<ShellDestination> shellDestinations(AppLocalizations l10n) => [
       ShellTab.inbox => ShellDestination(
         glyph: DotGlyphs.inbox,
         label: l10n.navInbox,
+        badge: inbox,
+        badgeLabel: l10n.navInboxBadge(inbox),
       ),
       ShellTab.week => ShellDestination(
         glyph: DotGlyphs.week,

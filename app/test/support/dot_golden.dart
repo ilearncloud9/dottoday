@@ -1,10 +1,10 @@
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'test_l10n.dart';
 
 /// One cell of the design-review golden matrix (docs/10 §7, 08 §7).
 typedef GoldenCell = ({String theme, double width, double ratio});
@@ -92,8 +92,9 @@ Widget goldenApp(
   return MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: data.copyWith(platform: platform),
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    supportedLocales: AppLocalizations.supportedLocales,
+    localizationsDelegates: testL10nDelegates,
+    supportedLocales: testL10nLocales,
+    locale: testL10nLocale,
     // The frame wraps the root navigator, so sheets, popovers and menus
     // opened by a golden's `act` are captured too (M3c follow-up).
     builder: (context, navigator) => GoldenFrame(child: navigator!),

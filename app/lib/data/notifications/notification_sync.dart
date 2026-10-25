@@ -61,7 +61,8 @@ final class NotificationSync {
         for (final s in series) s.id: s.alerts,
       },
       quietHours: profile.settings.quietHours,
-      bedtimeFrom: profile.settings,
+      daily: profile.settings,
+      defaultSound: profile.settings.reminderSound,
       testAlarmAtUtc: await _testAlarmAt?.call(),
     );
     final diff = NotificationPlanner.diff(desired, await _gateway.pending());

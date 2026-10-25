@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,10 @@ bool selectModifierHeld() {
 /// Out of it, screen readers get a "Select" action (R-12). In it, a tap
 /// anywhere on the row toggles it, and a ring at the end shows the state:
 /// empty, or filled with a check — never colour alone.
-class SelectableTaskRow extends StatelessWidget {
+///
+/// A row that becomes selected scrolls into view, so the keyboard's ↑↓
+/// pick is never off screen (docs/02 F1.17).
+class SelectableTaskRow extends StatefulWidget {
   const SelectableTaskRow({
     required this.selecting,
     required this.selected,
@@ -35,7 +40,40 @@ class SelectableTaskRow extends StatelessWidget {
   final Widget child;
 
   @override
+  State<SelectableTaskRow> createState() => _SelectableTaskRowState();
+}
+
+class _SelectableTaskRowState extends State<SelectableTaskRow> {
+  @override
+  void didUpdateWidget(SelectableTaskRow old) {
+    super.didUpdateWidget(old);
+    if (!widget.selected || old.selected) return;
+    // Two passes: the end one scrolls a row below the view up, the start
+    // one a row above it down; each leaves a visible row where it is.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(
+        Scrollable.ensureVisible(
+          context,
+          alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+        ),
+      );
+      unawaited(
+        Scrollable.ensureVisible(
+          context,
+          alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtStart,
+        ),
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final selecting = widget.selecting;
+    final selected = widget.selected;
+    final label = widget.label;
+    final onSelect = widget.onSelect;
+    final child = widget.child;
     if (!selecting) {
       return Semantics(
         container: true,

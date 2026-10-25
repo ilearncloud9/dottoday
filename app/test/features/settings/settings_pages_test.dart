@@ -1,4 +1,6 @@
+import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
+import 'package:dottoday/data/release/whats_new_seen.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
@@ -14,7 +16,7 @@ import '../../support/sync_fakes.dart';
 import 'settings_harness.dart';
 
 // Settings sub-pages (docs/09 M3f.7): Account, Calendars, Export, Help,
-// Privacy, About.
+// Privacy, About, What's new (M8.2).
 
 Future<void> _tap(WidgetTester tester, String text) async {
   await tester.ensureVisible(find.text(text).first);
@@ -170,6 +172,30 @@ void main() {
     expect(h.container.read(recentSearchesProvider).value, isEmpty);
   });
 
+  testWidgets('Privacy: crash reports and the policy only when configured', (
+    tester,
+  ) async {
+    await pumpSettings(tester, location: '/settings/privacy');
+    expect(find.text('Crash reports'), findsNothing);
+    expect(find.text('Read the privacy policy'), findsNothing);
+    final policy = Uri.parse('https://dottoday.example/privacy.html');
+    final h = await pumpSettings(
+      tester,
+      location: '/settings/privacy',
+      env: Env(
+        supabaseUrl: Uri.parse('https://example.supabase.co'),
+        supabaseAnonKey: 'anon',
+        sentryDsn: 'https://key@sentry.example/1',
+        privacyPolicyUrl: policy,
+      ),
+    );
+    expect(find.text('Crash reports'), findsOneWidget);
+    expect(find.textContaining('Never your tasks'), findsOneWidget);
+    await _tap(tester, 'Read the privacy policy');
+    expect(h.links.opened, [policy]);
+    await expectA11yGuidelines(tester);
+  });
+
   // A platform without a device check (the web): the lock group says what
   // protects the tasks instead of a switch (07 Web, M5.8).
   testWidgets('Privacy: no lock switch without a device check', (tester) async {
@@ -191,6 +217,22 @@ void main() {
     expect(find.byType(LicensePage), findsOneWidget);
   });
 
+  testWidgets("About › What's new opens the changelog and marks it seen", (
+    tester,
+  ) async {
+    final h = await pumpSettings(
+      tester,
+      location: '/settings/about',
+      whatsNewSeen: '0.0.9',
+    );
+    await _tap(tester, "What's new");
+    expect(find.text('VERSION 0.1.0 · ON THIS DEVICE'), findsOneWidget);
+    // One bullet per line of the notes (PRD F11).
+    expect(find.textContaining('shift everything after it'), findsOneWidget);
+    expect(find.textContaining('Send feedback from Settings'), findsOneWidget);
+    expect(h.container.read(whatsNewSeenProvider).value, '0.1.0');
+  });
+
   for (final page in [
     'account',
     'calendars',
@@ -198,6 +240,7 @@ void main() {
     'help',
     'privacy',
     'about',
+    'changelog',
   ]) {
     testWidgets('$page meets a11y guidelines (R-12)', (tester) async {
       await pumpSettings(tester, location: '/settings/$page');

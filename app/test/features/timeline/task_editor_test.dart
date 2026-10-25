@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
@@ -88,6 +89,43 @@ void main() {
     await tester.pumpAndSettle();
     expect(_saved().colorKey, 'coral');
     expect(_saved().durationMin, 45);
+  });
+
+  testWidgets('the Pinned switch saves with the other edits (F2.9)', (
+    tester,
+  ) async {
+    await _pump(tester);
+    await tester.ensureVisible(_editor(find.text('Pinned')));
+    await tester.tap(_editor(find.text('Pinned')));
+    await tester.pump(const Duration(milliseconds: 700));
+    await tester.pumpAndSettle();
+    expect(_saved().pinned, isTrue);
+  });
+
+  testWidgets('energy: pick a level, tap it again to clear (F2.9)', (
+    tester,
+  ) async {
+    await _pump(tester);
+    Future<void> tap(String label) async {
+      await tester.ensureVisible(_editor(find.text(label)));
+      await tester.tap(_editor(find.text(label)));
+      await tester.pump(const Duration(milliseconds: 700));
+      await tester.pumpAndSettle();
+    }
+
+    expect(_editor(find.text('ENERGY')), findsOneWidget);
+    await tap('Medium');
+    expect(_saved().energy, Energy.medium);
+    await tap('Medium');
+    expect(_saved().energy, isNull);
+  });
+
+  testWidgets('notes say which markdown-lite they understand', (tester) async {
+    await _pump(tester);
+    expect(
+      _editor(find.text('**bold**, *italic*, - lists and links work here')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Move to inbox unschedules it, with Undo', (tester) async {

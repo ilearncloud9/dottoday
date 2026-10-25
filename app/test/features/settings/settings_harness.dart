@@ -1,14 +1,17 @@
 import 'package:dottoday/bootstrap.dart';
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
+import 'package:dottoday/data/export/export_service.dart';
+import 'package:dottoday/data/export/file_gateway.dart';
+import 'package:dottoday/data/feedback/diagnostics_reader.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
+import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/calendar/calendar_import.dart';
 import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
@@ -24,6 +27,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import '../../support/test_l10n.dart';
 
 import '../../support/timeline_fakes.dart';
 
@@ -50,7 +54,7 @@ typedef SettingsHarness = ({
 Future<SettingsHarness> pumpSettings(
   WidgetTester tester, {
   Settings settings = const Settings(use24h: true),
-  Size size = const Size(390, 2600),
+  Size size = const Size(390, 3000),
   ThemeMode mode = ThemeMode.light,
   TargetPlatform platform = TargetPlatform.iOS,
   List<Occurrence> rows = const [],
@@ -63,6 +67,12 @@ Future<SettingsHarness> pumpSettings(
   CalendarSourceRepository? calendarSources,
   CalendarImport? calendarImport,
   CalendarImport? cloudCalendarImport,
+  BackupService? backups,
+  FileGateway? files,
+  ExportService? exports,
+  String whatsNewSeen = '0.1.0',
+  DiagnosticsReader? diagnostics,
+  Env? env,
 }) async {
   tester.view
     ..physicalSize = size
@@ -86,14 +96,20 @@ Future<SettingsHarness> pumpSettings(
         calendarSources: calendarSources,
         calendarImport: calendarImport,
         cloudCalendarImport: cloudCalendarImport,
+        backups: backups,
+        files: files,
+        exports: exports,
+        whatsNewSeen: whatsNewSeen,
+        diagnostics: diagnostics ?? const FakeDiagnosticsReader(),
       ),
       linkLauncherProvider.overrideWithValue(links),
       appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),
       envProvider.overrideWithValue(
-        Env(
-          supabaseUrl: Uri.parse('https://example.supabase.co'),
-          supabaseAnonKey: 'anon',
-        ),
+        env ??
+            Env(
+              supabaseUrl: Uri.parse('https://example.supabase.co'),
+              supabaseAnonKey: 'anon',
+            ),
       ),
       ...overrides,
     ],
@@ -126,8 +142,9 @@ Future<SettingsHarness> pumpSettings(
         theme: DotTheme.light().copyWith(platform: platform),
         darkTheme: DotTheme.dark().copyWith(platform: platform),
         themeMode: mode,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: testL10nDelegates,
+        supportedLocales: testL10nLocales,
+        locale: testL10nLocale,
       ),
     ),
   );

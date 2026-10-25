@@ -1,4 +1,5 @@
 import 'package:dottoday/domain/entities/alert.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
@@ -15,6 +16,7 @@ final class SeriesChange {
     this.iconKey,
     this.durationMin,
     this.pinned,
+    this.energy,
     this.startMinute,
     this.rule,
     this.alerts,
@@ -22,11 +24,18 @@ final class SeriesChange {
   });
 
   final String? title;
-  final String? notes;
+
+  /// New notes, wrapped like [energy] so emptied notes (`(to: null)`)
+  /// reach the series instead of reading as "unchanged".
+  final ({String? to})? notes;
   final String? colorKey;
   final String? iconKey;
   final int? durationMin;
   final bool? pinned;
+
+  /// A new energy level (F2.9), wrapped so "cleared" (`(to: null)`) differs
+  /// from "unchanged" (null).
+  final ({Energy? to})? energy;
   final int? startMinute;
   final RepeatRule? rule;
 
@@ -52,11 +61,12 @@ final class SeriesChange {
     T? diff<T extends Object>(T? a, T? b) => a == b ? null : b;
     return SeriesChange(
       title: diff<String>(before.title, after.title),
-      notes: diff<String>(before.notes, after.notes),
+      notes: before.notes == after.notes ? null : (to: after.notes),
       colorKey: diff<String>(before.colorKey, after.colorKey),
       iconKey: diff<String>(before.iconKey, after.iconKey),
       durationMin: diff<int>(before.durationMin, after.durationMin),
       pinned: diff<bool>(before.pinned, after.pinned),
+      energy: before.energy == after.energy ? null : (to: after.energy),
       startMinute: diff<int>(minute(before), minute(after)),
     );
   }
@@ -69,6 +79,7 @@ final class SeriesChange {
       iconKey == null &&
       durationMin == null &&
       pinned == null &&
+      energy == null &&
       startMinute == null &&
       rule == null &&
       alerts == null &&
@@ -82,11 +93,18 @@ final class SeriesChange {
   Occurrence fields(Occurrence o, {bool own = false}) => o.copyWith(
     alerts: alerts == null ? o.alerts : (own ? alerts : null),
     title: title ?? o.title,
-    notes: notes ?? o.notes,
+    notes: switch (notes) {
+      (:final to) => to,
+      null => o.notes,
+    },
     colorKey: colorKey ?? o.colorKey,
     iconKey: iconKey ?? o.iconKey,
     durationMin: durationMin ?? o.durationMin,
     pinned: pinned ?? o.pinned,
+    energy: switch (energy) {
+      (:final to) => to,
+      null => o.energy,
+    },
     tzId: tzId ?? o.tzId,
   );
 
@@ -94,11 +112,18 @@ final class SeriesChange {
   Series template(Series s) => s.copyWith(
     alerts: alerts ?? s.alerts,
     title: title ?? s.title,
-    notes: notes ?? s.notes,
+    notes: switch (notes) {
+      (:final to) => to,
+      null => s.notes,
+    },
     colorKey: colorKey ?? s.colorKey,
     iconKey: iconKey ?? s.iconKey,
     durationMin: durationMin ?? s.durationMin,
     pinned: pinned ?? s.pinned,
+    energy: switch (energy) {
+      (:final to) => to,
+      null => s.energy,
+    },
     tzId: tzId ?? s.tzId,
   );
 

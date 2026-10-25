@@ -70,6 +70,17 @@ abstract final class DotGlyphs {
   static const bell = DotGlyph(
     'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3c0 0 3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0',
   );
+
+  /// Settings › Reminders › Quiet hours (M8.4d): the bell, struck through.
+  static const bellOff = DotGlyph(
+    'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3c0 0 3-2 3-9M10.3 21a1.94 1.94 0 0 0 '
+    '3.4 0M3 3l18 18',
+  );
+
+  /// Settings › Reminders › Sound (M8.4d): a speaker with two waves.
+  static const sound = DotGlyph(
+    'M11 5L6 9H2v6h4l5 4V5zM15.5 8.5q2 3.5 0 7M18.5 5.5q4 6.5 0 13',
+  );
   static final clock = DotGlyph('${_c(12, 12, 9)}M12 7v5l3 2');
   static final timer = DotGlyph('${_c(12, 14, 8)}M12 14v-4M10 2h4');
   static final calendar = DotGlyph(

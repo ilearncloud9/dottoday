@@ -285,4 +285,49 @@ void main() {
       expect(keys.toSet().length, os.length);
     }
   });
+
+  test('the Apple budget keeps the nearest 50 of a full default set', () {
+    expect(NotificationPlanner.applePendingBudget, lessThanOrEqualTo(50));
+    // 10 tasks a day for a week, 5 alerts each: 350 wanted.
+    const five = [
+      Alert(kind: AlertKind.before, offsetMin: 30),
+      Alert(kind: AlertKind.before, offsetMin: 10),
+      Alert(kind: AlertKind.atStart),
+      Alert(kind: AlertKind.atEnd),
+      Alert(kind: AlertKind.overdue, offsetMin: 10),
+    ];
+    final tasks = [
+      for (var d = 0; d < 7; d++)
+        for (var h = 0; h < 10; h++)
+          _task('d$d-h$h', DateTime.utc(2026, 10, 21 + d, 9 + h), alerts: five),
+    ];
+    final all = _plan(tasks);
+    final kept = _plan(
+      tasks,
+      planner: _planner(max: NotificationPlanner.applePendingBudget),
+    );
+    expect(all.length, greaterThan(300));
+    expect(kept, all.take(NotificationPlanner.applePendingBudget).toList());
+  });
+
+  test('an alert without a sound takes the default; its own wins (F6.6)', () {
+    final tasks = [
+      _task('plain', DateTime.utc(2026, 10, 21, 10)),
+      _task(
+        'own',
+        DateTime.utc(2026, 10, 21, 11),
+        alerts: const [Alert(kind: AlertKind.atStart, sound: 'bell')],
+      ),
+    ];
+    final n = _planner().plan(
+      occurrences: tasks,
+      tzId: 'UTC',
+      defaultSound: 'chime',
+    );
+    expect(
+      {for (final x in n) x.occurrenceId: x.sound},
+      {'plain': 'chime', 'own': 'bell'},
+    );
+    expect(_plan(tasks).first.sound, isNull);
+  });
 }

@@ -2510,23 +2510,73 @@
   },
   "settingsWhatsNew": "What's new",
   "@settingsWhatsNew": {
-    "description": "Settings row; also the sheet's title."
+    "description": "About row; also the title of the changelog page (every release's notes)."
   },
-  "settingsWhatsNewBody": "Add a task in two taps, with suggestions from your habits. Pick a time on your day's thread and see what it overlaps. Keep your own duration presets. Paste a list to add several tasks at once. Search everything you've planned, done tasks too.",
-  "@settingsWhatsNewBody": {
-    "description": "What's new sheet body for this version."
+  "changelogVersion": "Version {version}",
+  "@changelogVersion": {
+    "description": "Changelog page: caption over one release's notes.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "0.1.0"
+      }
+    }
+  },
+  "changelogInstalled": "Version {version} · on this device",
+  "@changelogInstalled": {
+    "description": "Changelog page: caption over the installed release's notes.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "0.1.0"
+      }
+    }
+  },
+  "changelogIntro": "What changed in each version of Dottoday.",
+  "@changelogIntro": {
+    "description": "Changelog page intro."
+  },
+  "releaseNotes010": "Plan your day on one thread: drag a task to move it, drag its edge to change how long it takes, and shift everything after it in one go.\nAdd a task in two taps, type times in plain words, or paste a list to add several at once.\nRepeating tasks, reminders with lead times, and your calendars on the timeline — all free.\nSync between iPhone, Android, Mac and the web, with a status you can see and nothing lost.\nExport everything as JSON, CSV or a calendar file, and bring a backup back.\nSend feedback from Settings, and read what's new here after each update.",
+  "@releaseNotes010": {
+    "description": "Changelog notes for version 0.1.0; one item per line (each line becomes a bullet)."
+  },
+  "whatsNewBanner": "Dottoday {version} is here",
+  "@whatsNewBanner": {
+    "description": "Banner after an update that brought release notes.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "0.2.0"
+      }
+    }
+  },
+  "whatsNewOpen": "See what's new",
+  "@whatsNewOpen": {
+    "description": "Banner action: open the changelog page."
   },
   "settingsFeedback": "Send feedback",
   "@settingsFeedback": {
     "description": "Settings row; also the sheet's title."
   },
-  "settingsFeedbackIntro": "Opens an email draft. Nothing about your tasks is included.",
+  "settingsFeedbackIntro": "Opens a draft in your mail app, and you send it from there. Nothing your tasks say is included.",
   "@settingsFeedbackIntro": {
     "description": "Feedback sheet intro."
   },
-  "settingsFeedbackDiagnostics": "Add app version and device type",
+  "settingsFeedbackDiagnostics": "Add diagnostics",
   "@settingsFeedbackDiagnostics": {
     "description": "Feedback switch: diagnostics opt-in."
+  },
+  "settingsFeedbackDiagnosticsHint": "App version, device type, sync state and how many tasks you have — never what they say.",
+  "@settingsFeedbackDiagnosticsHint": {
+    "description": "Feedback switch subtitle: what the diagnostics contain."
+  },
+  "settingsFeedbackDiagnosticsFailed": "Couldn't read the diagnostics, so the email goes without them.",
+  "@settingsFeedbackDiagnosticsFailed": {
+    "description": "Feedback sheet: the diagnostics couldn't be gathered."
+  },
+  "settingsFeedbackPreview": "Added to the end of your email:",
+  "@settingsFeedbackPreview": {
+    "description": "Feedback sheet: caption over the diagnostics shown before sending."
   },
   "settingsFeedbackWrite": "Write email",
   "@settingsFeedbackWrite": {
@@ -4062,9 +4112,110 @@
   "@exportIcsDetail": {
     "description": "Export format row subtitle."
   },
-  "exportComingSoon": "File export arrives in a later update. For now, a day's ⋯ › Copy day as text copies it.",
-  "@exportComingSoon": {
-    "description": "Export page caption while file export is not available."
+  "exportPlain": "Export files aren't encrypted: anyone who has the file can read your tasks. Imported calendar events stay in their calendar and aren't included.",
+  "@exportPlain": {
+    "description": "Export page warning shown before any export (06 §2: plaintext by user action only)."
+  },
+  "exportDone": "Exported",
+  "@exportDone": {
+    "description": "Snackbar after an export file was shared, saved or downloaded."
+  },
+  "exportHandOffFailed": "Couldn't save or share the file. Nothing was changed.",
+  "@exportHandOffFailed": {
+    "description": "Snackbar when the share sheet or save dialog failed."
+  },
+  "exportRestore": "Restore",
+  "@exportRestore": {
+    "description": "Export page group caption for importing a backup."
+  },
+  "exportImport": "Import a backup…",
+  "@exportImport": {
+    "description": "Row that opens the file picker for a JSON backup."
+  },
+  "exportImportDetail": "A JSON file exported from Dottoday",
+  "@exportImportDetail": {
+    "description": "Subtitle of the import row."
+  },
+  "exportImportTitle": "Replace your tasks with this backup?",
+  "@exportImportTitle": {
+    "description": "Import confirmation title."
+  },
+  "exportImportBody": "This file from {date} has {count, plural, =0{no tasks} =1{1 task} other{{count} tasks}}. Anything here that isn't in it moves to Trash. A backup of what's here now is taken first.",
+  "@exportImportBody": {
+    "description": "Import confirmation body; names the replace policy.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exportImportAction": "Replace",
+  "@exportImportAction": {
+    "description": "Import confirmation action."
+  },
+  "exportCancel": "Cancel",
+  "@exportCancel": {
+    "description": "Cancels an import or restore."
+  },
+  "exportImported": "Backup imported",
+  "@exportImported": {
+    "description": "Snackbar after an import; offers Undo."
+  },
+  "exportNotBackup": "This isn't a Dottoday backup, or it comes from a newer version of Dottoday. Nothing was changed.",
+  "@exportNotBackup": {
+    "description": "Import refused: wrong or newer file."
+  },
+  "exportTooLarge": "This file is over 25 MB, too large to import. Nothing was changed.",
+  "@exportTooLarge": {
+    "description": "Import refused: file too large."
+  },
+  "exportBackups": "On this device",
+  "@exportBackups": {
+    "description": "Export page group caption for local backups."
+  },
+  "exportBackupsNote": "Dottoday keeps a backup each day (the last 7) and one before every import or restore, encrypted, on this device only.",
+  "@exportBackupsNote": {
+    "description": "Explains local backups."
+  },
+  "exportBackupsNone": "No backups yet. The first is taken the next time Dottoday opens.",
+  "@exportBackupsNone": {
+    "description": "Shown when there are no local backups."
+  },
+  "exportBackupDaily": "Daily backup",
+  "@exportBackupDaily": {
+    "description": "Local backup row: the daily one."
+  },
+  "exportBackupPreImport": "Before an import",
+  "@exportBackupPreImport": {
+    "description": "Local backup row: taken before an import."
+  },
+  "exportBackupPreRestore": "Before a restore",
+  "@exportBackupPreRestore": {
+    "description": "Local backup row: taken before a restore."
+  },
+  "exportRestoreTitle": "Go back to this backup?",
+  "@exportRestoreTitle": {
+    "description": "Restore confirmation title."
+  },
+  "exportRestoreBody": "Your tasks go back to how they were on {date}. Anything newer moves to Trash. A backup of what's here now is taken first.",
+  "@exportRestoreBody": {
+    "description": "Restore confirmation body; names the replace policy.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "exportRestoreAction": "Restore",
+  "@exportRestoreAction": {
+    "description": "Restore confirmation action."
+  },
+  "exportRestored": "Backup restored",
+  "@exportRestored": {
+    "description": "Snackbar after restoring a local backup; offers Undo."
   },
   "helpIntro": "Quick answers. Anything else? Send feedback below.",
   "@helpIntro": {
@@ -4145,6 +4296,18 @@
   "privacyClearSearches": "Clear recent searches",
   "@privacyClearSearches": {
     "description": "Privacy page button."
+  },
+  "privacyCrashTitle": "Crash reports",
+  "@privacyCrashTitle": {
+    "description": "Privacy page heading, shown only when crash reporting is configured."
+  },
+  "privacyCrashBody": "If the app crashes, it sends the kind of error and where in the app it happened. Never your tasks, notes or account.",
+  "@privacyCrashBody": {
+    "description": "Privacy page paragraph under 'Crash reports' (docs/06 §6)."
+  },
+  "privacyPolicyOpen": "Read the privacy policy",
+  "@privacyPolicyOpen": {
+    "description": "Privacy page button: opens the full privacy policy in the browser."
   },
   "snackSearchesCleared": "Recent searches cleared",
   "@snackSearchesCleared": {
@@ -4430,6 +4593,10 @@
   "onboardingWelcomeBody": "Plan your day as dots on a line, see where the time goes, and move it all when the day moves.",
   "@onboardingWelcomeBody": {
     "description": "Onboarding O1: the one-line value proposition."
+  },
+  "onboardingAgeNote": "Dottoday is for people aged 13 and over.",
+  "@onboardingAgeNote": {
+    "description": "Welcome step, under the buttons: the age gate (docs/06 §6). Wording under owner/legal review (docs/store/age-rating.md)."
   },
   "onboardingGetStarted": "Get started",
   "@onboardingGetStarted": {
@@ -4853,6 +5020,18 @@
   "@menuNextDay": {
     "description": "Mac Go menu: the day after on Today."
   },
+  "menuRedo": "Redo",
+  "@menuRedo": {
+    "description": "Mac Edit menu: makes the change the last Undo reverted again."
+  },
+  "menuDelete": "Delete",
+  "@menuDelete": {
+    "description": "Mac Edit menu: moves the picked tasks on Today to Trash (with Undo); in a text field, deletes the selected text."
+  },
+  "shortcutUndo": "Undo the last change",
+  "@shortcutUndo": {"description": "Keyboard shortcut sheet, everywhere: ⌘Z / Ctrl+Z outside a text field (docs/09 M8.6b)."},
+  "shortcutRedo": "Redo what was undone",
+  "@shortcutRedo": {"description": "Keyboard shortcut sheet, everywhere: ⇧⌘Z / Ctrl+Shift+Z outside a text field (docs/09 M8.6b)."},
   "exactTitle": "Reminders may come a few minutes after their time",
   "@exactTitle": {
     "description": "Settings › Reminders notice when Android doesn't allow exact alarms."
@@ -5102,5 +5281,91 @@
   "calendarsTravelSuggest": "Suggest travel time",
   "@calendarsTravelSuggest": {"description": "Calendars page toggle: suggest a travel buffer before events that have a place."},
   "calendarsTravelSuggestDetail": "Before events with a place. Worked out on this device; no maps are asked",
-  "@calendarsTravelSuggestDetail": {"description": "Calendars page toggle subtitle: the suggestion is a fixed length, no route lookup, the place stays on the device."}
+  "@calendarsTravelSuggestDetail": {"description": "Calendars page toggle subtitle: the suggestion is a fixed length, no route lookup, the place stays on the device."},
+  "rowFromCalendar": "{label}, from your calendar",
+  "@rowFromCalendar": {"description": "Appended to a row label when the row is an imported calendar event (docs/02 F1.10): the screen-reader side of the calendar badge.", "placeholders": {"label": {"type": "String"}}},
+  "pinTitle": "Pinned",
+  "@pinTitle": {"description": "Task sheet and editor toggle (docs/02 F1.5, F2.9): a pinned task is never moved by shifts, Running late or drags of other tasks."},
+  "pinDetail": "Stays put when other tasks shift",
+  "@pinDetail": {"description": "Subtitle of the Pinned toggle in the task sheet and editor."},
+  "threadOutsideBefore": "{count, plural, =1{1 task before Wake Up} other{{count} tasks before Wake Up}}",
+  "@threadOutsideBefore": {"description": "Folded 'outside hours' row above the Wake Up cap (docs/02 F1.15): tasks that end by Wake Up. Tapping unfolds them.", "placeholders": {"count": {"type": "int"}}},
+  "threadOutsideAfter": "{count, plural, =1{1 task after Bedtime} other{{count} tasks after Bedtime}}",
+  "@threadOutsideAfter": {"description": "Folded 'outside hours' row below the Bedtime cap (docs/02 F1.15): tasks that start at Bedtime or later. Tapping unfolds them.", "placeholders": {"count": {"type": "int"}}},
+  "shortcutPickTask": "Pick the previous or next task",
+  "@shortcutPickTask": {"description": "Keyboard shortcut sheet, Today: ↑ / ↓ pick a task along the day (docs/02 F1.17)."},
+  "shortcutNudgeTask": "Move the picked tasks 5 min earlier or later",
+  "@shortcutNudgeTask": {"description": "Keyboard shortcut sheet, Today: ⌘/Ctrl+↑ / ↓ (docs/02 F1.17)."},
+  "shortcutNudgeTaskMore": "Move the picked tasks 15 min earlier or later",
+  "@shortcutNudgeTaskMore": {"description": "Keyboard shortcut sheet, Today: Shift+⌘/Ctrl+↑ / ↓ (docs/02 F1.17)."},
+  "shortcutTrashTask": "Move the picked tasks to Trash",
+  "@shortcutTrashTask": {"description": "Keyboard shortcut sheet, Today: Delete / Backspace, with Undo (docs/02 F1.17)."},
+  "shortcutOpenTask": "Open the picked task",
+  "@shortcutOpenTask": {"description": "Keyboard shortcut sheet, Today: Return opens the one picked task (docs/02 F1.17)."},
+  "shortcutDoneTask": "Mark the picked task done",
+  "@shortcutDoneTask": {"description": "Keyboard shortcut sheet, Today: Space completes the one picked task (docs/02 F1.17)."},
+  "shortcutKeyDelete": "Delete",
+  "@shortcutKeyDelete": {"description": "Name of the Delete key as printed on keyboards, in the shortcut sheet (Backspace works too)."},
+  "shortcutKeySpace": "Space",
+  "@shortcutKeySpace": {"description": "Name of the Space bar in the shortcut sheet."},
+  "editorEnergy": "Energy",
+  "@editorEnergy": {"description": "Editor field: the optional energy level a task needs (low/medium/high)."},
+  "energyLow": "Low",
+  "@energyLow": {"description": "Energy level chip: low."},
+  "energyMedium": "Medium",
+  "@energyMedium": {"description": "Energy level chip: medium."},
+  "energyHigh": "High",
+  "@energyHigh": {"description": "Energy level chip: high."},
+  "editorNotesFormat": "**bold**, *italic*, - lists and links work here",
+  "@editorNotesFormat": {"description": "Helper under the notes field: the markdown-lite syntax it understands. Keep the ** * - markers as typed."},
+  "navInboxBadge": "{count, plural, =1{Inbox, 1 task} other{Inbox, {count} tasks}}",
+  "@navInboxBadge": {"description": "Screen-reader name of the Inbox tab when it shows a count badge.", "placeholders": {"count": {"type": "int"}}},
+  "inboxNudgeTitle": "Plan your inbox",
+  "@inboxNudgeTitle": {"description": "Caption of the once-a-day card on Today inviting the person to give Inbox tasks a time. Friendly, never judging."},
+  "inboxNudgeDetail": "{count, plural, =1{1 task is waiting in your Inbox. A good moment to give it a time?} other{{count} tasks are waiting in your Inbox. A good moment to give them a time?}}",
+  "@inboxNudgeDetail": {"description": "Body of the plan-your-inbox card. Friendly, never judging.", "placeholders": {"count": {"type": "int"}}},
+  "inboxNudgeAction": "Plan",
+  "@inboxNudgeAction": {"description": "Plan-your-inbox card: opens the Inbox."},
+  "settingsInboxNudge": "Plan-your-inbox nudge",
+  "@settingsInboxNudge": {"description": "Settings › Planning switch: the once-a-day card on Today."},
+  "settingsInboxNudgeDetail": "Once a day from Wake Up, when the Inbox holds tasks",
+  "@settingsInboxNudgeDetail": {"description": "Detail under the plan-your-inbox switch."},
+  "settingsAlertsMore": "{first} +{count}",
+  "@settingsAlertsMore": {"description": "Task starts value when the default set has more than one alert: the first alert, then how many more.", "placeholders": {"first": {"type": "String"}, "count": {"type": "int"}}},
+  "settingsSound": "Sound",
+  "@settingsSound": {"description": "Settings › Reminders row and sheet title: the sound of task reminders."},
+  "settingsSoundSystem": "System sound",
+  "@settingsSoundSystem": {"description": "Sound choice: the device's own notification sound."},
+  "settingsSoundDetail": "For task reminders. Tap one to hear it. The first task of the day keeps its alarm.",
+  "@settingsSoundDetail": {"description": "Line at the top of the Sound sheet."},
+  "soundDot": "Dot",
+  "@soundDot": {"description": "Name of a bundled reminder sound: one soft ping."},
+  "soundChime": "Chime",
+  "@soundChime": {"description": "Name of a bundled reminder sound: two rising notes."},
+  "soundBell": "Bell",
+  "@soundBell": {"description": "Name of a bundled reminder sound: a small bell."},
+  "soundRipple": "Ripple",
+  "@soundRipple": {"description": "Name of a bundled reminder sound: three quick notes."},
+  "settingsQuietHours": "Quiet hours",
+  "@settingsQuietHours": {"description": "Settings › Reminders switch: quiet hours."},
+  "settingsQuietHoursOff": "Reminders arrive silently at night",
+  "@settingsQuietHoursOff": {"description": "Quiet hours subtitle while off."},
+  "settingsQuietHoursOn": "{from}–{until}: reminders arrive silently. The first task of the day still rings.",
+  "@settingsQuietHoursOn": {"description": "Quiet hours subtitle while on, with the window.", "placeholders": {"from": {"type": "String"}, "until": {"type": "String"}}},
+  "settingsQuietFrom": "From",
+  "@settingsQuietFrom": {"description": "Quiet hours start row."},
+  "settingsQuietUntil": "Until",
+  "@settingsQuietUntil": {"description": "Quiet hours end row."},
+  "settingsDaySummary": "Day-start summary",
+  "@settingsDaySummary": {"description": "Settings › Reminders row and sheet title: the day-start summary notification."},
+  "settingsDaySummaryOff": "Off",
+  "@settingsDaySummaryOff": {"description": "Day-start summary value when no weekday has it."},
+  "settingsDaySummaryDetail": "At Wake Up on the days you choose: “Your day: 6 blocks, first at 08:00”.",
+  "@settingsDaySummaryDetail": {"description": "Line at the top of the Day-start summary sheet: what it says and when."},
+  "notifDaySummaryTitle": "Your day",
+  "@notifDaySummaryTitle": {"description": "Title of the day-start summary notification."},
+  "notifDaySummaryBody": "{count, plural, =1{1 block, at {time}} other{{count} blocks, first at {time}}}",
+  "@notifDaySummaryBody": {"description": "Body of the day-start summary notification: how many blocks today and when the first starts.", "placeholders": {"count": {"type": "int"}, "time": {"type": "String"}}},
+  "notifChannelAlertsSound": "Task alerts · {sound}",
+  "@notifChannelAlertsSound": {"description": "Android notification channel name for task alerts with one bundled sound.", "placeholders": {"sound": {"type": "String"}}}
 }

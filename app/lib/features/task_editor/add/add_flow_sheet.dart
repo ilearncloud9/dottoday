@@ -7,6 +7,7 @@ import 'package:dottoday/features/task_editor/add/add_when_host.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_header.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_what_step.dart';
+import 'package:dottoday/shared/feedback/save_failure.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
@@ -15,18 +16,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Opens Add (docs/10 §3 `AddFlow`) from the add button or ⌘N: a sheet on
 /// phones, a popover from medium width (the Mac/web editor panel is
 /// M3e.5). [text] prefills the title, [startUtc] the time and [day] the
-/// day.
+/// day; [resume] reopens a sheet whose save failed, as it was (M8.5b).
 Future<void> showAddFlow(
   BuildContext context, {
   String text = '',
   DateTime? startUtc,
   DateTime? day,
+  AddFlowState? resume,
 }) {
   final request = AddRequest(
     languageCode: Localizations.localeOf(context).languageCode,
     text: text,
     startUtc: startUtc,
     day: day,
+    resume: resume,
   );
   return showAppSheet<void>(
     context: context,
@@ -50,6 +53,11 @@ class AddFlowSheet extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AddHeader(step: state.step, onBack: () => notifier.goTo(AddStep.what)),
+        if (state.saveFailure case final failed?)
+          SaveFailureBanner(
+            failure: failed.failure,
+            onRetry: () => _retry(context, ref, state, failed.retry),
+          ),
         Expanded(
           child: switch (state.step) {
             AddStep.what => _What(request: request, state: state),
@@ -58,6 +66,22 @@ class AddFlowSheet extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  /// Try again: the same save, with the draft as it is now.
+  void _retry(
+    BuildContext context,
+    WidgetRef ref,
+    AddFlowState state,
+    AddRetry retry,
+  ) {
+    final draft = currentDraft(ref, request, state);
+    unawaited(switch (retry) {
+      AddRetry.save => saveFromSheet(context, request, draft),
+      AddRetry.inbox => saveFromSheet(context, request, draft, toInbox: true),
+      AddRetry.another => addAnother(context, request, draft),
+      AddRetry.many => addManyFromSheet(context, request, state.text),
+    });
   }
 }
 
@@ -76,6 +100,7 @@ class _What extends ConsumerWidget {
     void save({bool toInbox = false}) => unawaited(
       saveFromSheet(
         context,
+        request,
         currentDraft(ref, request, state),
         toInbox: toInbox,
       ),
@@ -89,25 +114,19 @@ class _What extends ConsumerWidget {
       onColor: (c) => notifier.edit((d) => d.withColor(c.key)),
       onIcon: (i) => notifier.edit((d) => d.withIcon(i.key)),
       onSubmit: save,
-      onAnother: () => unawaited(_another(context, ref)),
+      onAnother: () => unawaited(
+        addAnother(context, request, currentDraft(ref, request, state)),
+      ),
       onAddMany: () => unawaited(
         addManyFromSheet(
           context,
+          request,
           ref.read(addFlowProvider(request)).value?.text ?? state.text,
-          languageCode: request.languageCode,
         ),
       ),
       onContinue: () => unawaited(_continue(ref)),
       onInbox: () => save(toInbox: true),
     );
-  }
-
-  /// Shift+Enter: add this one, keep the sheet, start the next where it
-  /// ends.
-  Future<void> _another(BuildContext context, WidgetRef ref) async {
-    final draft = currentDraft(ref, request, state);
-    final saved = await saveFromSheet(context, draft, close: false);
-    if (saved) ref.read(addFlowProvider(request).notifier).another(draft);
   }
 
   /// To When; with no time yet, start in the first free slot of the day

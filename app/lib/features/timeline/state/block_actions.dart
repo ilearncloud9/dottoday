@@ -129,3 +129,25 @@ Future<Result<UndoToken, AppFailure>> setTravelTime(
         occurrences: [o.copyWith(travelBufferMin: minutes)],
       ),
     );
+
+/// Pins or unpins [o] (docs/02 F1.5, R-17) through the undoable write
+/// path. The task sheet's switch changes this occurrence only, as Done
+/// does; the editor's Save asks about the rest of a series (M3f.1).
+Future<Result<UndoToken, AppFailure>> setPinned(
+  WidgetRef ref,
+  Occurrence o, {
+  required bool pinned,
+}) => ref
+    .read(undoServiceProvider)
+    .applyUndoable(
+      WriteBatch(
+        userId: o.userId,
+        occurrences: [o.copyWith(pinned: pinned)],
+      ),
+    );
+
+/// Whether [o] gets the Pinned switch: a timed task of the user's own.
+/// Inbox items have no time to keep, and imported events are never
+/// shifted unless the person asks (F1.12).
+bool pinnable(Occurrence o) =>
+    o.startUtc != null && o.source != OccurrenceSource.calendar;

@@ -1,4 +1,3 @@
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -7,6 +6,7 @@ import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'test_l10n.dart';
 
 import 'timeline_fakes.dart';
 
@@ -55,8 +55,9 @@ Future<void> pumpToday(
         theme: DotTheme.light(),
         darkTheme: DotTheme.dark(),
         themeMode: mode,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: testL10nDelegates,
+        supportedLocales: testL10nLocales,
+        locale: testL10nLocale,
         // The app root handles AddTaskIntent (M3c.5); tests may listen.
         builder: (context, child) => Actions(
           actions: {

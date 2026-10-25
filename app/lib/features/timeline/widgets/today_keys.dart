@@ -8,14 +8,15 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/features/timeline/widgets/task_keys.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Today's keys (docs/09 M3e.6, R-12): ⌘← / ⌘→ step a day, ⌘T comes back
-/// to today, ⌘D marks the task running now done (Ctrl elsewhere). Every
-/// width: a keyboard on a tablet works too.
+/// to today, ⌘D marks the task running now done (Ctrl elsewhere), and the
+/// task keys of [TaskKeys]. Every width: a keyboard on a tablet works too.
 class TodayKeys extends ConsumerWidget {
   const TodayKeys({
     required this.shown,
@@ -56,11 +57,17 @@ class TodayKeys extends ConsumerWidget {
             onInvoke: (_) => onSelect(today),
           ),
         },
-        child: Focus(
-          autofocus: true,
-          // Catches keys only; adds nothing for screen readers.
-          includeSemantics: false,
-          child: child,
+        // ↑↓ / ⌘↑↓ / Delete / ↩ / Space on the shown day's tasks (F1.17).
+        child: TaskKeys(
+          day: shown,
+          child: Focus(
+            autofocus: true,
+            // Catches keys only; adds nothing for screen readers.
+            includeSemantics: false,
+            // No Tab stop: Tab from here starts at Skip to content (SkipLink).
+            skipTraversal: true,
+            child: child,
+          ),
         ),
       ),
     );

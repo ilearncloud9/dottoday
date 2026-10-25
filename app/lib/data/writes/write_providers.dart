@@ -18,6 +18,7 @@ import 'package:dottoday/domain/notifications/notification_planner.dart';
 import 'package:dottoday/domain/recurrence/materialiser.dart';
 import 'package:dottoday/domain/widgets/widget_snapshot.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'write_providers.g.dart';
@@ -51,7 +52,13 @@ WidgetSnapshotSink widgetSnapshotSink(Ref ref) {
 @Riverpod(keepAlive: true)
 NotificationSync notificationSync(Ref ref) => NotificationSync(
   clock: ref.watch(clockProvider),
-  planner: NotificationPlanner(clock: ref.watch(clockProvider)),
+  planner: NotificationPlanner(
+    clock: ref.watch(clockProvider),
+    // iOS drops pending notifications past 64 without a word; keep the
+    // nearest 50 there and on macOS (M6.5 rule, enforced in M8.4d once a
+    // default set can hold 5 alerts per task).
+    maxPending: _apple ? NotificationPlanner.applePendingBudget : null,
+  ),
   gateway: ref.watch(notificationGatewayProvider),
   occurrences: ref.watch(occurrenceRepositoryProvider),
   series: ref.watch(seriesRepositoryProvider),
@@ -88,3 +95,9 @@ WriteUseCase writeUseCase(Ref ref) => DriftWriteUseCase(
   logger: ref.watch(loggerProvider),
   hlc: ref.watch(sharedHlcProvider),
 );
+
+/// Whether this build runs on iOS or macOS (scheduling budget, not layout).
+bool get _apple =>
+    !kIsWeb &&
+    (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS);

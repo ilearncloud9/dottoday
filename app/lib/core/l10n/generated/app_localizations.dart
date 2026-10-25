@@ -5,7 +5,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
 
 // ignore_for_file: type=lint
 
@@ -92,7 +95,12 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
+    Locale('en'),
+    Locale('es'),
+    Locale('fr'),
+  ];
 
   /// App name shown in the OS task switcher, window title and browser tab.
   ///
@@ -2530,17 +2538,47 @@ abstract class AppLocalizations {
   /// **'Version'**
   String get settingsVersion;
 
-  /// Settings row; also the sheet's title.
+  /// About row; also the title of the changelog page (every release's notes).
   ///
   /// In en, this message translates to:
   /// **'What\'s new'**
   String get settingsWhatsNew;
 
-  /// What's new sheet body for this version.
+  /// Changelog page: caption over one release's notes.
   ///
   /// In en, this message translates to:
-  /// **'Add a task in two taps, with suggestions from your habits. Pick a time on your day\'s thread and see what it overlaps. Keep your own duration presets. Paste a list to add several tasks at once. Search everything you\'ve planned, done tasks too.'**
-  String get settingsWhatsNewBody;
+  /// **'Version {version}'**
+  String changelogVersion(String version);
+
+  /// Changelog page: caption over the installed release's notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} · on this device'**
+  String changelogInstalled(String version);
+
+  /// Changelog page intro.
+  ///
+  /// In en, this message translates to:
+  /// **'What changed in each version of Dottoday.'**
+  String get changelogIntro;
+
+  /// Changelog notes for version 0.1.0; one item per line (each line becomes a bullet).
+  ///
+  /// In en, this message translates to:
+  /// **'Plan your day on one thread: drag a task to move it, drag its edge to change how long it takes, and shift everything after it in one go.\nAdd a task in two taps, type times in plain words, or paste a list to add several at once.\nRepeating tasks, reminders with lead times, and your calendars on the timeline — all free.\nSync between iPhone, Android, Mac and the web, with a status you can see and nothing lost.\nExport everything as JSON, CSV or a calendar file, and bring a backup back.\nSend feedback from Settings, and read what\'s new here after each update.'**
+  String get releaseNotes010;
+
+  /// Banner after an update that brought release notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday {version} is here'**
+  String whatsNewBanner(String version);
+
+  /// Banner action: open the changelog page.
+  ///
+  /// In en, this message translates to:
+  /// **'See what\'s new'**
+  String get whatsNewOpen;
 
   /// Settings row; also the sheet's title.
   ///
@@ -2551,14 +2589,32 @@ abstract class AppLocalizations {
   /// Feedback sheet intro.
   ///
   /// In en, this message translates to:
-  /// **'Opens an email draft. Nothing about your tasks is included.'**
+  /// **'Opens a draft in your mail app, and you send it from there. Nothing your tasks say is included.'**
   String get settingsFeedbackIntro;
 
   /// Feedback switch: diagnostics opt-in.
   ///
   /// In en, this message translates to:
-  /// **'Add app version and device type'**
+  /// **'Add diagnostics'**
   String get settingsFeedbackDiagnostics;
+
+  /// Feedback switch subtitle: what the diagnostics contain.
+  ///
+  /// In en, this message translates to:
+  /// **'App version, device type, sync state and how many tasks you have — never what they say.'**
+  String get settingsFeedbackDiagnosticsHint;
+
+  /// Feedback sheet: the diagnostics couldn't be gathered.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t read the diagnostics, so the email goes without them.'**
+  String get settingsFeedbackDiagnosticsFailed;
+
+  /// Feedback sheet: caption over the diagnostics shown before sending.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to the end of your email:'**
+  String get settingsFeedbackPreview;
 
   /// Feedback sheet primary button.
   ///
@@ -4048,11 +4104,143 @@ abstract class AppLocalizations {
   /// **'For other calendar apps'**
   String get exportIcsDetail;
 
-  /// Export page caption while file export is not available.
+  /// Export page warning shown before any export (06 §2: plaintext by user action only).
   ///
   /// In en, this message translates to:
-  /// **'File export arrives in a later update. For now, a day\'s ⋯ › Copy day as text copies it.'**
-  String get exportComingSoon;
+  /// **'Export files aren\'t encrypted: anyone who has the file can read your tasks. Imported calendar events stay in their calendar and aren\'t included.'**
+  String get exportPlain;
+
+  /// Snackbar after an export file was shared, saved or downloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Exported'**
+  String get exportDone;
+
+  /// Snackbar when the share sheet or save dialog failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save or share the file. Nothing was changed.'**
+  String get exportHandOffFailed;
+
+  /// Export page group caption for importing a backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get exportRestore;
+
+  /// Row that opens the file picker for a JSON backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Import a backup…'**
+  String get exportImport;
+
+  /// Subtitle of the import row.
+  ///
+  /// In en, this message translates to:
+  /// **'A JSON file exported from Dottoday'**
+  String get exportImportDetail;
+
+  /// Import confirmation title.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace your tasks with this backup?'**
+  String get exportImportTitle;
+
+  /// Import confirmation body; names the replace policy.
+  ///
+  /// In en, this message translates to:
+  /// **'This file from {date} has {count, plural, =0{no tasks} =1{1 task} other{{count} tasks}}. Anything here that isn\'t in it moves to Trash. A backup of what\'s here now is taken first.'**
+  String exportImportBody(String date, int count);
+
+  /// Import confirmation action.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get exportImportAction;
+
+  /// Cancels an import or restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get exportCancel;
+
+  /// Snackbar after an import; offers Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup imported'**
+  String get exportImported;
+
+  /// Import refused: wrong or newer file.
+  ///
+  /// In en, this message translates to:
+  /// **'This isn\'t a Dottoday backup, or it comes from a newer version of Dottoday. Nothing was changed.'**
+  String get exportNotBackup;
+
+  /// Import refused: file too large.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is over 25 MB, too large to import. Nothing was changed.'**
+  String get exportTooLarge;
+
+  /// Export page group caption for local backups.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device'**
+  String get exportBackups;
+
+  /// Explains local backups.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday keeps a backup each day (the last 7) and one before every import or restore, encrypted, on this device only.'**
+  String get exportBackupsNote;
+
+  /// Shown when there are no local backups.
+  ///
+  /// In en, this message translates to:
+  /// **'No backups yet. The first is taken the next time Dottoday opens.'**
+  String get exportBackupsNone;
+
+  /// Local backup row: the daily one.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily backup'**
+  String get exportBackupDaily;
+
+  /// Local backup row: taken before an import.
+  ///
+  /// In en, this message translates to:
+  /// **'Before an import'**
+  String get exportBackupPreImport;
+
+  /// Local backup row: taken before a restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Before a restore'**
+  String get exportBackupPreRestore;
+
+  /// Restore confirmation title.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back to this backup?'**
+  String get exportRestoreTitle;
+
+  /// Restore confirmation body; names the replace policy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tasks go back to how they were on {date}. Anything newer moves to Trash. A backup of what\'s here now is taken first.'**
+  String exportRestoreBody(String date);
+
+  /// Restore confirmation action.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get exportRestoreAction;
+
+  /// Snackbar after restoring a local backup; offers Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup restored'**
+  String get exportRestored;
 
   /// Help page intro.
   ///
@@ -4173,6 +4361,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Clear recent searches'**
   String get privacyClearSearches;
+
+  /// Privacy page heading, shown only when crash reporting is configured.
+  ///
+  /// In en, this message translates to:
+  /// **'Crash reports'**
+  String get privacyCrashTitle;
+
+  /// Privacy page paragraph under 'Crash reports' (docs/06 §6).
+  ///
+  /// In en, this message translates to:
+  /// **'If the app crashes, it sends the kind of error and where in the app it happened. Never your tasks, notes or account.'**
+  String get privacyCrashBody;
+
+  /// Privacy page button: opens the full privacy policy in the browser.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the privacy policy'**
+  String get privacyPolicyOpen;
 
   /// Snackbar after Clear recent searches.
   ///
@@ -4509,6 +4715,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Plan your day as dots on a line, see where the time goes, and move it all when the day moves.'**
   String get onboardingWelcomeBody;
+
+  /// Welcome step, under the buttons: the age gate (docs/06 §6). Wording under owner/legal review (docs/store/age-rating.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday is for people aged 13 and over.'**
+  String get onboardingAgeNote;
 
   /// Onboarding O1 primary button.
   ///
@@ -5037,6 +5249,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Next Day'**
   String get menuNextDay;
+
+  /// Mac Edit menu: makes the change the last Undo reverted again.
+  ///
+  /// In en, this message translates to:
+  /// **'Redo'**
+  String get menuRedo;
+
+  /// Mac Edit menu: moves the picked tasks on Today to Trash (with Undo); in a text field, deletes the selected text.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get menuDelete;
+
+  /// Keyboard shortcut sheet, everywhere: ⌘Z / Ctrl+Z outside a text field (docs/09 M8.6b).
+  ///
+  /// In en, this message translates to:
+  /// **'Undo the last change'**
+  String get shortcutUndo;
+
+  /// Keyboard shortcut sheet, everywhere: ⇧⌘Z / Ctrl+Shift+Z outside a text field (docs/09 M8.6b).
+  ///
+  /// In en, this message translates to:
+  /// **'Redo what was undone'**
+  String get shortcutRedo;
 
   /// Settings › Reminders notice when Android doesn't allow exact alarms.
   ///
@@ -5637,6 +5873,264 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Before events with a place. Worked out on this device; no maps are asked'**
   String get calendarsTravelSuggestDetail;
+
+  /// Appended to a row label when the row is an imported calendar event (docs/02 F1.10): the screen-reader side of the calendar badge.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}, from your calendar'**
+  String rowFromCalendar(String label);
+
+  /// Task sheet and editor toggle (docs/02 F1.5, F2.9): a pinned task is never moved by shifts, Running late or drags of other tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned'**
+  String get pinTitle;
+
+  /// Subtitle of the Pinned toggle in the task sheet and editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Stays put when other tasks shift'**
+  String get pinDetail;
+
+  /// Folded 'outside hours' row above the Wake Up cap (docs/02 F1.15): tasks that end by Wake Up. Tapping unfolds them.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task before Wake Up} other{{count} tasks before Wake Up}}'**
+  String threadOutsideBefore(int count);
+
+  /// Folded 'outside hours' row below the Bedtime cap (docs/02 F1.15): tasks that start at Bedtime or later. Tapping unfolds them.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task after Bedtime} other{{count} tasks after Bedtime}}'**
+  String threadOutsideAfter(int count);
+
+  /// Keyboard shortcut sheet, Today: ↑ / ↓ pick a task along the day (docs/02 F1.17).
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the previous or next task'**
+  String get shortcutPickTask;
+
+  /// Keyboard shortcut sheet, Today: ⌘/Ctrl+↑ / ↓ (docs/02 F1.17).
+  ///
+  /// In en, this message translates to:
+  /// **'Move the picked tasks 5 min earlier or later'**
+  String get shortcutNudgeTask;
+
+  /// Keyboard shortcut sheet, Today: Shift+⌘/Ctrl+↑ / ↓ (docs/02 F1.17).
+  ///
+  /// In en, this message translates to:
+  /// **'Move the picked tasks 15 min earlier or later'**
+  String get shortcutNudgeTaskMore;
+
+  /// Keyboard shortcut sheet, Today: Delete / Backspace, with Undo (docs/02 F1.17).
+  ///
+  /// In en, this message translates to:
+  /// **'Move the picked tasks to Trash'**
+  String get shortcutTrashTask;
+
+  /// Keyboard shortcut sheet, Today: Return opens the one picked task (docs/02 F1.17).
+  ///
+  /// In en, this message translates to:
+  /// **'Open the picked task'**
+  String get shortcutOpenTask;
+
+  /// Keyboard shortcut sheet, Today: Space completes the one picked task (docs/02 F1.17).
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the picked task done'**
+  String get shortcutDoneTask;
+
+  /// Name of the Delete key as printed on keyboards, in the shortcut sheet (Backspace works too).
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get shortcutKeyDelete;
+
+  /// Name of the Space bar in the shortcut sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Space'**
+  String get shortcutKeySpace;
+
+  /// Editor field: the optional energy level a task needs (low/medium/high).
+  ///
+  /// In en, this message translates to:
+  /// **'Energy'**
+  String get editorEnergy;
+
+  /// Energy level chip: low.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get energyLow;
+
+  /// Energy level chip: medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get energyMedium;
+
+  /// Energy level chip: high.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get energyHigh;
+
+  /// Helper under the notes field: the markdown-lite syntax it understands. Keep the ** * - markers as typed.
+  ///
+  /// In en, this message translates to:
+  /// **'**bold**, *italic*, - lists and links work here'**
+  String get editorNotesFormat;
+
+  /// Screen-reader name of the Inbox tab when it shows a count badge.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Inbox, 1 task} other{Inbox, {count} tasks}}'**
+  String navInboxBadge(int count);
+
+  /// Caption of the once-a-day card on Today inviting the person to give Inbox tasks a time. Friendly, never judging.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan your inbox'**
+  String get inboxNudgeTitle;
+
+  /// Body of the plan-your-inbox card. Friendly, never judging.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task is waiting in your Inbox. A good moment to give it a time?} other{{count} tasks are waiting in your Inbox. A good moment to give them a time?}}'**
+  String inboxNudgeDetail(int count);
+
+  /// Plan-your-inbox card: opens the Inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get inboxNudgeAction;
+
+  /// Settings › Planning switch: the once-a-day card on Today.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan-your-inbox nudge'**
+  String get settingsInboxNudge;
+
+  /// Detail under the plan-your-inbox switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Once a day from Wake Up, when the Inbox holds tasks'**
+  String get settingsInboxNudgeDetail;
+
+  /// Task starts value when the default set has more than one alert: the first alert, then how many more.
+  ///
+  /// In en, this message translates to:
+  /// **'{first} +{count}'**
+  String settingsAlertsMore(String first, int count);
+
+  /// Settings › Reminders row and sheet title: the sound of task reminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound'**
+  String get settingsSound;
+
+  /// Sound choice: the device's own notification sound.
+  ///
+  /// In en, this message translates to:
+  /// **'System sound'**
+  String get settingsSoundSystem;
+
+  /// Line at the top of the Sound sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'For task reminders. Tap one to hear it. The first task of the day keeps its alarm.'**
+  String get settingsSoundDetail;
+
+  /// Name of a bundled reminder sound: one soft ping.
+  ///
+  /// In en, this message translates to:
+  /// **'Dot'**
+  String get soundDot;
+
+  /// Name of a bundled reminder sound: two rising notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Chime'**
+  String get soundChime;
+
+  /// Name of a bundled reminder sound: a small bell.
+  ///
+  /// In en, this message translates to:
+  /// **'Bell'**
+  String get soundBell;
+
+  /// Name of a bundled reminder sound: three quick notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Ripple'**
+  String get soundRipple;
+
+  /// Settings › Reminders switch: quiet hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet hours'**
+  String get settingsQuietHours;
+
+  /// Quiet hours subtitle while off.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders arrive silently at night'**
+  String get settingsQuietHoursOff;
+
+  /// Quiet hours subtitle while on, with the window.
+  ///
+  /// In en, this message translates to:
+  /// **'{from}–{until}: reminders arrive silently. The first task of the day still rings.'**
+  String settingsQuietHoursOn(String from, String until);
+
+  /// Quiet hours start row.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get settingsQuietFrom;
+
+  /// Quiet hours end row.
+  ///
+  /// In en, this message translates to:
+  /// **'Until'**
+  String get settingsQuietUntil;
+
+  /// Settings › Reminders row and sheet title: the day-start summary notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Day-start summary'**
+  String get settingsDaySummary;
+
+  /// Day-start summary value when no weekday has it.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get settingsDaySummaryOff;
+
+  /// Line at the top of the Day-start summary sheet: what it says and when.
+  ///
+  /// In en, this message translates to:
+  /// **'At Wake Up on the days you choose: “Your day: 6 blocks, first at 08:00”.'**
+  String get settingsDaySummaryDetail;
+
+  /// Title of the day-start summary notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Your day'**
+  String get notifDaySummaryTitle;
+
+  /// Body of the day-start summary notification: how many blocks today and when the first starts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 block, at {time}} other{{count} blocks, first at {time}}}'**
+  String notifDaySummaryBody(int count, String time);
+
+  /// Android notification channel name for task alerts with one bundled sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Task alerts · {sound}'**
+  String notifChannelAlertsSound(String sound);
 }
 
 class _AppLocalizationsDelegate
@@ -5650,7 +6144,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en'].contains(locale.languageCode);
+      <String>['de', 'en', 'es', 'fr'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -5659,8 +6153,14 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
   }
 
   throw FlutterError(

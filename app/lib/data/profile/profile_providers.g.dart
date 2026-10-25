@@ -93,6 +93,55 @@ final class CurrentDeviceZoneProvider
 
 String _$currentDeviceZoneHash() => r'9bce61968295679ef763f415e8a1e5869737c6fb';
 
+/// The first of the device's preferred languages the app speaks, else
+/// `en`: what a new profile starts in (docs/09 M8.3). Tests override it.
+
+@ProviderFor(deviceLanguage)
+final deviceLanguageProvider = DeviceLanguageProvider._();
+
+/// The first of the device's preferred languages the app speaks, else
+/// `en`: what a new profile starts in (docs/09 M8.3). Tests override it.
+
+final class DeviceLanguageProvider
+    extends $FunctionalProvider<String, String, String>
+    with $Provider<String> {
+  /// The first of the device's preferred languages the app speaks, else
+  /// `en`: what a new profile starts in (docs/09 M8.3). Tests override it.
+  DeviceLanguageProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'deviceLanguageProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$deviceLanguageHash();
+
+  @$internal
+  @override
+  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  String create(Ref ref) {
+    return deviceLanguage(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
+String _$deviceLanguageHash() => r'c5e6bf73baa4ed888f2b5579fe75c370b97886f1';
+
 @ProviderFor(localProfileService)
 final localProfileServiceProvider = LocalProfileServiceProvider._();
 
@@ -180,7 +229,7 @@ final class LocalProfileProvider
   }
 }
 
-String _$localProfileHash() => r'f2637855d0402658205a4ed4d1bbf82c5a654832';
+String _$localProfileHash() => r'327b05a857d0af5dfbfcb15759d0ef1fd65c0d55';
 
 /// The local profile, re-emitting whenever it (or its settings) change.
 

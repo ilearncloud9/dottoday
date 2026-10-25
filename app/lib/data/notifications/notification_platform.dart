@@ -1,3 +1,5 @@
+import 'package:dottoday/domain/notifications/reminder_sound.dart';
+
 /// Which Android channel (docs/07 Android) a notification posts on; Apple
 /// platforms ignore it.
 enum NotificationChannelKind {
@@ -8,9 +10,16 @@ enum NotificationChannelKind {
   alarms,
 }
 
-/// The bundled alarm chime, copied into `Library/Sounds` on Apple platforms
-/// (`installAlarmSound`), where notification sounds are looked up.
+/// The bundled alarm chime: copied into `Library/Sounds` on iOS
+/// (`installAlarmSound`), in the app bundle's Resources on macOS
+/// (`tool/xcode_add_sounds.rb`) — where notification sounds are looked up.
 const alarmSoundFile = 'dot_alarm.caf';
+
+/// [sound]'s file: a Flutter asset in `assets/sounds/` (copied to
+/// `Library/Sounds` on iOS, bundled as a resource on macOS, played by the
+/// web's in-app strip)
+/// and, without the extension, an Android raw resource (`tool/gen_sounds.dart`).
+String reminderSoundFile(ReminderSound sound) => 'reminder_${sound.name}.wav';
 
 /// One notification, composed and ready for the OS.
 final class OsNotification {
@@ -25,6 +34,7 @@ final class OsNotification {
     this.timeSensitive = false,
     this.loud = false,
     this.withActions = true,
+    this.sound,
   });
 
   final int id;
@@ -47,6 +57,10 @@ final class OsNotification {
 
   /// Done / Snooze / Open (task alerts); Bedtime has none.
   final bool withActions;
+
+  /// A bundled sound (F6.6); null plays the system sound. Never set with
+  /// [loud], which has its own chime.
+  final ReminderSound? sound;
 }
 
 /// A tap or action on a delivered notification.

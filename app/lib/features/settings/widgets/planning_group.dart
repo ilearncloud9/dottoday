@@ -13,7 +13,8 @@ import 'package:flutter/material.dart';
 
 /// PLANNING (`A-ios-settings`) plus PRD F8's snapping and shift default:
 /// Default duration, Snap to, Shift later tasks, Show free time,
-/// Running-late nudge, Roll unfinished to tomorrow (R-16, R-17).
+/// Running-late nudge, Plan-your-inbox nudge (F3.3), Roll unfinished to
+/// tomorrow (R-16, R-17).
 class PlanningGroup extends StatelessWidget {
   const PlanningGroup({required this.settings, super.key});
 
@@ -52,6 +53,16 @@ class PlanningGroup extends StatelessWidget {
           toggle: settings.runningLateNudge,
           onToggle: (v) =>
               changeSettings(context, (s) => s.copyWith(runningLateNudge: v)),
+        ),
+        // PRD F3.3: off by default, once a day from Wake Up.
+        SettingsRow(
+          glyph: DotGlyphs.inbox,
+          tint: t.colors.accentInk,
+          title: l10n.settingsInboxNudge,
+          subtitle: l10n.settingsInboxNudgeDetail,
+          toggle: settings.inboxNudge,
+          onToggle: (v) =>
+              changeSettings(context, (s) => s.copyWith(inboxNudge: v)),
         ),
         SettingsRow(
           glyph: DotGlyphs.rollForward,

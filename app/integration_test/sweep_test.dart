@@ -1,5 +1,8 @@
 // Design sweep on a device (docs/08 §7, M3b.10, M3c.6, M3d.4): Today, Inbox,
-// the Add flow (A1–A4, paste), Search and Settings with the demo day, saved by test_driver/screenshot_driver.dart. Debug builds only
+// the Add flow (A1–A4, paste), Search and Settings with the demo day, and
+// the M8 screens (Export, Reminders, Send feedback, What's new), saved by
+// test_driver/screenshot_driver.dart. Each main screen also has its
+// accessibility tree checked (support/a11y_tree.dart, 08 §6.2). Debug builds only
 // (the demo day lives in the debug menu). Run:
 //   flutter drive -d <device> --dart-define-from-file=.env.example \
 //     --dart-define=SWEEP_TAG=ios \
@@ -25,6 +28,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:integration_test/integration_test.dart';
 
+import 'support/a11y_tree.dart';
 import 'support/o4.dart';
 
 const _tag = String.fromEnvironment('SWEEP_TAG', defaultValue: 'device');
@@ -103,14 +107,18 @@ void main() {
     await tester.pump(const Duration(seconds: 5)); // the snackbar leaves
     await _rest(tester);
     await _shot(binding, tester, '${_tag}_today');
+    await checkA11yTree(tester, 'today');
 
     await tester.tap(find.text('Inbox').last);
     await _rest(tester);
     await _shot(binding, tester, '${_tag}_inbox');
+    await checkA11yTree(tester, 'inbox');
 
     await _addFlow(binding, tester);
     await _searchAndSettings(binding, tester);
     await _m3f(binding, tester);
+    await _m8(binding, tester);
+    expectNoA11yFindings();
   });
 }
 
@@ -220,11 +228,13 @@ Future<void> _searchAndSettings(
   await _rest(tester);
   await tester.pump(const Duration(seconds: 1));
   await _shot(binding, tester, '${_tag}_search');
+  await checkA11yTree(tester, 'search');
 
   await tester.tap(find.text('Settings').last);
   await _pumpUntil(tester, find.text('DAY SHAPE'));
   await _rest(tester);
   await _shot(binding, tester, '${_tag}_settings');
+  await checkA11yTree(tester, 'settings');
 }
 
 /// M3f: Settings › Account, the Sync sheet, Running late, Inbox selecting.
@@ -257,6 +267,7 @@ Future<void> _m3f(
   await _pumpUntil(tester, find.text('APP LOCK'));
   await _rest(tester);
   await _shot(binding, tester, '${_tag}_settings_privacy');
+  await checkA11yTree(tester, 'settings_privacy');
   router.go('/settings');
   await _pumpUntil(tester, find.text('DAY SHAPE'));
   await _rest(tester);
@@ -317,6 +328,67 @@ Future<void> _m3f(
   await _rest(tester);
   await _shot(binding, tester, '${_tag}_inbox_selecting');
   await tester.tap(find.byTooltip('Done selecting'));
+  await _rest(tester);
+}
+
+/// M8: Settings › Export, the Reminders group, Send feedback and What's new,
+/// by route like Privacy above.
+Future<void> _m8(
+  IntegrationTestWidgetsFlutterBinding binding,
+  WidgetTester tester,
+) async {
+  Future<void> page(String route, String waitFor, String name) async {
+    GoRouter.of(tester.element(find.byType(Scaffold).first)).go(route);
+    await _pumpUntil(tester, find.text(waitFor));
+    await _rest(tester);
+    await _shot(binding, tester, '${_tag}_$name');
+    await checkA11yTree(tester, name);
+  }
+
+  await page(
+    '/settings/export',
+    'Your tasks are yours. Export is free, always, with or without an account.',
+    'settings_export',
+  );
+  await page(
+    '/settings/changelog',
+    'What changed in each version of Dottoday.',
+    'settings_whats_new',
+  );
+
+  // Settings keeps its scroll from the Sync step above: back to the top.
+  GoRouter.of(tester.element(find.byType(Scaffold).first)).go('/settings');
+  await _rest(tester);
+  final settingsList = find.byType(Scrollable).first;
+  final position = tester.state<ScrollableState>(settingsList).position;
+  position.jumpTo(position.minScrollExtent);
+  await _pumpUntil(tester, find.text('DAY SHAPE'));
+  await tester.scrollUntilVisible(
+    find.text('Day-start summary'),
+    300,
+    scrollable: settingsList,
+  );
+  await tester.ensureVisible(find.text('Day-start summary'));
+  await _rest(tester);
+  await _shot(binding, tester, '${_tag}_settings_reminders');
+  await checkA11yTree(tester, 'settings_reminders');
+
+  await tester.scrollUntilVisible(
+    find.text('Send feedback'),
+    300,
+    scrollable: settingsList,
+  );
+  await tester.ensureVisible(find.text('Send feedback'));
+  await _rest(tester);
+  await tester.tap(find.text('Send feedback'));
+  await _pumpUntil(tester, find.text('Write email'));
+  await _rest(tester);
+  await _shot(binding, tester, '${_tag}_feedback');
+  await checkA11yTree(tester, 'feedback');
+  Navigator.of(
+    tester.element(find.byType(Scaffold).first),
+    rootNavigator: true,
+  ).popUntil((r) => r.isFirst);
   await _rest(tester);
 }
 

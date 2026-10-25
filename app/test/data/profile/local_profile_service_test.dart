@@ -47,4 +47,9 @@ void main() {
   test('an unknown device zone falls back to UTC', () async {
     expect(ok(await service.ensure('Mars/Olympus_Mons')).tzId, 'UTC');
   });
+
+  test('a new profile starts in the device language (M8.3)', () async {
+    final created = ok(await service.ensure('Europe/Berlin', language: 'de'));
+    expect(created.locale, 'de');
+  });
 }

@@ -22,12 +22,32 @@ List<Uri> webLinks(String? text) {
   if (text == null || text.isEmpty) return const [];
   final out = <Uri>[];
   for (final m in _candidate.allMatches(text)) {
-    final raw = m.group(0)!.replaceFirst(_trailing, '');
-    if (raw.length > _maxLinkLength) continue;
-    final uri = Uri.tryParse(raw);
-    if (uri == null || uri.host.isEmpty || out.contains(uri)) continue;
+    final uri = webLinkOf(m.group(0)!);
+    if (uri == null || out.contains(uri)) continue;
     out.add(uri);
     if (out.length == maxWebLinks) break;
   }
   return out;
 }
+
+/// [raw] as a web link a tap may open, or null: trailing sentence
+/// punctuation dropped, http(s) only, with a host, at most 2048 chars
+/// (06 §7). Shared by [webLinks] and the notes renderer, so a link reads
+/// the same in both.
+///
+/// ```dart
+/// webLinkOf('https://example.com/a).'); // https://example.com/a
+/// webLinkOf('mailto:x@example.com'); // null
+/// ```
+Uri? webLinkOf(String raw) {
+  final trimmed = trimLinkEnd(raw);
+  if (trimmed.length > _maxLinkLength) return null;
+  final uri = Uri.tryParse(trimmed);
+  if (uri == null || uri.host.isEmpty) return null;
+  if (uri.scheme != 'http' && uri.scheme != 'https') return null;
+  return uri;
+}
+
+/// [raw] without the sentence punctuation that ended it ("x.io/a)." →
+/// "x.io/a").
+String trimLinkEnd(String raw) => raw.replaceFirst(_trailing, '');

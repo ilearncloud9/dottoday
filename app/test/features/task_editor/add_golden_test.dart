@@ -2,6 +2,7 @@
 @Tags(['golden'])
 library;
 
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -9,6 +10,7 @@ import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
@@ -68,7 +70,12 @@ List<Occurrence> _today() {
 
 /// The sheet as it sits over Today: raised, 28 pt top corners; a centred
 /// popover from medium width (`showAppSheet`).
-Widget addSheet(GoldenCell cell, AddRequest request, {bool nested = false}) {
+Widget addSheet(
+  GoldenCell cell,
+  AddRequest request, {
+  bool nested = false,
+  WriteFault? writeFault,
+}) {
   final sheet = Builder(
     builder: (context) {
       final c = DotTheme.of(context).colors;
@@ -89,6 +96,7 @@ Widget addSheet(GoldenCell cell, AddRequest request, {bool nested = false}) {
       now: DateTime.utc(2026, 10, 21, 9),
       occurrences: FakeOccurrenceRepository([..._habits(), ..._today()]),
       profile: testProfile(settings: const Settings(use24h: false)),
+      writeFault: writeFault,
     ),
     child: nested
         ? Navigator(
@@ -137,6 +145,23 @@ void main() {
     platform: TargetPlatform.android,
     widths: const {'compact'},
     build: (cell) => addSheet(cell, shopping),
+  );
+  // Derived (M8.5b, R-08): Add another failed on a full disk; the title
+  // stays, the failure shows with Try again.
+  goldenMatrix(
+    'add_save_failed',
+    height: 844,
+    widths: const {'compact', 'expanded'},
+    act: (tester) async {
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
+    },
+    build: (cell) => addSheet(
+      cell,
+      shopping,
+      writeFault: WriteFault()..failure = const StorageFailure(),
+    ),
   );
   // A2 (`A-ios-add-when`): Continue from "Go shopping 5pm".
   const when = AddRequest(languageCode: 'en', text: 'Go shopping 5pm');

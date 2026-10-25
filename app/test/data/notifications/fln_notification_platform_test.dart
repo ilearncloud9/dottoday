@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/generated/app_localizations_en.dart';
 import 'package:dottoday/data/notifications/fln_notification_platform.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
+import 'package:dottoday/domain/notifications/reminder_sound.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -13,20 +14,25 @@ final class _Plugin extends Mock implements FlutterLocalNotificationsPlugin {}
 
 final _now = DateTime.utc(2026, 10, 23, 8);
 
-OsNotification _n({bool silent = false, bool ts = false, bool loud = false}) =>
-    OsNotification(
-      id: 1,
-      title: 'Reply to email',
-      body: 'Starts at 11:00 · 30 min',
-      fireAtUtc: _now.add(const Duration(hours: 1)),
-      payload: '{}',
-      channel: loud
-          ? NotificationChannelKind.alarms
-          : NotificationChannelKind.alerts,
-      silent: silent,
-      timeSensitive: ts,
-      loud: loud,
-    );
+OsNotification _n({
+  bool silent = false,
+  bool ts = false,
+  bool loud = false,
+  ReminderSound? sound,
+}) => OsNotification(
+  id: 1,
+  title: 'Reply to email',
+  body: 'Starts at 11:00 · 30 min',
+  fireAtUtc: _now.add(const Duration(hours: 1)),
+  payload: '{}',
+  channel: loud
+      ? NotificationChannelKind.alarms
+      : NotificationChannelKind.alerts,
+  silent: silent,
+  timeSensitive: ts,
+  loud: loud,
+  sound: sound,
+);
 
 // What the adapter hands iOS/macOS per kind (docs/09 M6.5.4, 11 A0).
 void main() {
@@ -115,5 +121,26 @@ void main() {
     final quiet = await posted(_n(silent: true));
     expect(quiet.interruptionLevel, InterruptionLevel.passive);
     expect(quiet.presentSound, isFalse);
+  });
+
+  test(
+    'a picked sound: its file on Apple, its own channel on Android',
+    () async {
+      final d = await posted(_n(sound: ReminderSound.chime));
+      expect(d.sound, 'reminder_chime.wav');
+      final a = (await details(_n(sound: ReminderSound.chime))).android!;
+      expect(a.channelId, 'alerts_chime');
+      expect(a.channelName, 'Task alerts · Chime');
+      expect(
+        (a.sound! as RawResourceAndroidNotificationSound).sound,
+        'reminder_chime',
+      );
+    },
+  );
+
+  test('a loud dot keeps the alarm chime whatever sound is picked', () async {
+    final n = _n(ts: true, loud: true, sound: ReminderSound.bell);
+    expect((await posted(n)).sound, alarmSoundFile);
+    expect((await details(n)).android!.channelId, 'alarms');
   });
 }

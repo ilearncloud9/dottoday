@@ -5,6 +5,7 @@ import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
+import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
 import 'package:dottoday/domain/writes/write_batch.dart';
@@ -45,7 +46,10 @@ final class NotificationResponder {
     final planned = decodeNotificationPayload(tap.id ?? 0, tap.payload);
     final action = NotificationAction.fromId(tap.actionId);
     _logger.info('notification.tapped', fields: {'action': action});
-    if (planned == null || planned.occurrenceId.isEmpty) {
+    // The day-start summary is about the day, not its first task.
+    if (planned == null ||
+        planned.occurrenceId.isEmpty ||
+        planned.purpose == NotificationPurpose.daySummary) {
       return _open(AppRoutes.today);
     }
     if (action == NotificationAction.open) {

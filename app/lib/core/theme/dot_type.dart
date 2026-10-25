@@ -46,6 +46,27 @@ final class DotType {
 
   static const fontFamily = 'Inter';
 
+  /// The weight `**bold**` notes take (markdown-lite, docs/02 F2.9).
+  static const _strongWeight = 700;
+
+  /// [base] with markdown-lite emphasis: bold sets the variable font's
+  /// wght axis too (see `_inter`); italic is the renderer's oblique, as
+  /// Inter ships no italic file.
+  static TextStyle emphasis(
+    TextStyle base, {
+    required bool bold,
+    required bool italic,
+  }) {
+    if (!bold && !italic) return base;
+    return base.copyWith(
+      fontWeight: bold ? FontWeight.w700 : null,
+      fontVariations: bold
+          ? [FontVariation.weight(_strongWeight.toDouble())]
+          : null,
+      fontStyle: italic ? FontStyle.italic : null,
+    );
+  }
+
   /// Greeting / page title: Today, Inbox, Search, Settings (28/700).
   final TextStyle pageTitle;
 

@@ -145,6 +145,9 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   "runningLateNudge": true,
   "rollUnfinished": false,
   "bedtimeReminder": true,
+  "inboxNudge": false,
+  "daySummaryDays": [],
+  "reminderSound": null,
   "suggestTravelTime": false,
   "travelTimeMin": 15
 }
@@ -171,6 +174,14 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   (M3f.5 offers to shift the rest), `rollUnfinished` (Day review moves unfinished tasks to tomorrow
   instead of the Inbox, M3f.5) and `bedtimeReminder` (M3d.3/M5) are plain booleans; absent keys take
   the defaults above, so older rows stay valid and the server check is unchanged.
+- Clarified in M8.4c: `inboxNudge` (PRD F3.3, the once-a-day "Plan your inbox" card on Today) is a
+  plain boolean, off by default; the day it was last put away is per device in `local_meta`
+  (`inbox_nudge_day`, never synced — a nudge is a suggestion, like the Day review's "Not now").
+- Clarified in M8.4d: `daySummaryDays` (weekday keys with a day-start summary; empty = off) and
+  `reminderSound` (a bundled sound key, `dot`/`chime`/`bell`/`ripple`; null = the system sound).
+  Absent keys take the defaults; the server ignores both. `reminderSound` isn't rejected when
+  unknown (a newer device may know more sounds): the app resolves it against its own set before it
+  names a file, so a stored string never reaches a file name.
 - Server enforces with CHECK constraints and a `validate_settings()` function; client with a Zod-like
   Dart validator in `domain/validation`.
 
@@ -192,3 +203,23 @@ skipped/deleted instances as `EXDATE`, moved/renamed ones as `RECURRENCE-ID` ove
 inbox items omitted). Import rejects files > 25 MB, any version other than 1, wrong shapes, rows failing
 validation, duplicate ids, dangling `series_id`/`occurrence_id` and rows of more than one owner; it
 clears `calendar_link_id` (links are not exported) and the caller re-owns rows to the signed-in user.
+
+Clarified in M8.1: imported calendar events (`source = 'calendar'`) and their subtasks are **never in
+a backup or an export** (JSON, CSV or ICS), and an import drops any an older file still holds. They
+are device-only and keyed to this device's calendars (`calendar_links`, not exported), so a copy in a
+file could only come back unlinked beside the importer's fresh one; the calendar stays their source
+and each device re-imports them. The current state a restore compares against is read the same way,
+so a restore or import never moves this device's imports to Trash either: they keep their links and
+the next import pairs them as before. Rejected: exporting the link keys so the importer re-pairs
+restored rows (links are per device and per calendar account — an EventKit id from another device
+pairs with nothing — and it would put calendar ids into user files). Cost: subtasks or notes added to
+an imported event stay on the device that has the event (as ADR-0011 already says for sync). Files:
+`dottoday-backup-<yyyy-MM-dd>.json`, `dottoday-<yyyy-MM-dd>.ics`, `dottoday-{tasks,repeats,subtasks}-
+<yyyy-MM-dd>.csv` (empty tables left out), dated in the profile's zone, never named after content.
+Restore/import policy is **replace**, said in the confirmation in those words ("Anything here that
+isn't in it moves to Trash"): it runs through the write path in one transaction after a pre-import
+(or pre-restore) backup, and Undo restores that backup. Rejected: a staging database swapped in by
+rename (the data-export skill's default) — the restore must flow through the write path so it is
+change-logged and syncs to the person's other devices like any edit, and one transaction already
+leaves nothing half-applied; and a payload checksum in the envelope (v1 stays as it is: a truncated
+or edited file already fails JSON parsing or row validation, and a newer `version` is refused).

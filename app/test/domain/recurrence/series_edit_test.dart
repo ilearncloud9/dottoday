@@ -257,4 +257,36 @@ void main() {
     expect(c.moves, isTrue);
     expect(SeriesChange.between(o, o, berlin).isEmpty, isTrue);
   });
+
+  test('energy: set, cleared and unchanged are told apart (F2.9)', () {
+    final berlin = tz.getLocation('Europe/Berlin');
+    final s = _series().copyWith(energy: Energy.low);
+    final o = _rows(s).first;
+    final high = o.copyWith(energy: Energy.high);
+    final set = SeriesChange.between(o, high, berlin);
+    expect(set.energy, (to: Energy.high));
+    expect(set.moves, isFalse);
+    expect(set.template(s).energy, Energy.high);
+    final cleared = SeriesChange.between(o, o.copyWith(energy: null), berlin);
+    expect(cleared.isEmpty, isFalse);
+    expect(cleared.template(s).energy, isNull);
+    expect(cleared.fields(high).energy, isNull);
+    expect(const SeriesChange(title: 'x').fields(high).energy, Energy.high);
+  });
+
+  test('notes: emptied notes reach the series, unchanged keep them', () {
+    final berlin = tz.getLocation('Europe/Berlin');
+    final s = _series().copyWith(notes: 'Bring towel');
+    final o = _rows(s).first.copyWith(notes: 'Bring towel');
+    final cleared = SeriesChange.between(o, o.copyWith(notes: null), berlin);
+    expect(cleared.notes, (to: null));
+    expect(cleared.isEmpty, isFalse);
+    expect(cleared.moves, isFalse);
+    expect(cleared.template(s).notes, isNull);
+    expect(cleared.fields(o).notes, isNull);
+    final set = SeriesChange.between(o, o.copyWith(notes: 'Goggles'), berlin);
+    expect(set.template(s).notes, 'Goggles');
+    expect(const SeriesChange(title: 'x').template(s).notes, 'Bring towel');
+    expect(SeriesChange.between(o, o, berlin).notes, isNull);
+  });
 }

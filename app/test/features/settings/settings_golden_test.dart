@@ -13,6 +13,8 @@ import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
+import 'package:dottoday/domain/entities/alert.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
@@ -20,6 +22,7 @@ import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/settings/pages/about_page.dart';
 import 'package:dottoday/features/settings/pages/account_page.dart';
 import 'package:dottoday/features/settings/pages/calendars_page.dart';
+import 'package:dottoday/features/settings/pages/changelog_page.dart';
 import 'package:dottoday/features/settings/pages/data_pages.dart';
 import 'package:dottoday/features/settings/pages/info_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
@@ -43,13 +46,12 @@ List<Override> _overridesWith({
   ExactAlarms exactAlarms = const AlwaysExactAlarms(),
   DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
   List<Override> extra = const [],
+  Settings settings = const Settings(use24h: true),
 }) => [
   ...extra,
   ...timelineOverrides(
     now: DateTime.utc(2026, 10, 21, 9),
-    profile: testProfile(
-      settings: const Settings(use24h: true),
-    ).copyWith(displayName: 'Kody'),
+    profile: testProfile(settings: settings).copyWith(displayName: 'Kody'),
     notificationPermission: permission,
     exactAlarms: exactAlarms,
     calendarGateway: calendarGateway,
@@ -123,6 +125,70 @@ void main() {
     overrides: _overrides,
     build: (_) => _settings(),
   );
+  // M8.2 (derived, §5.3): the diagnostics opt-in shows what it adds.
+  goldenMatrix(
+    'settings_feedback_diagnostics',
+    height: 900,
+    widths: const {'compact', 'expanded'},
+    act: (t) async {
+      await _open(t, 'Send feedback');
+      await t.pumpAndSettle();
+      await t.tap(find.text('Add diagnostics'));
+    },
+    overrides: _overrides,
+    build: (_) => _settings(),
+  );
+  // M8.4d (derived, §5.3): REMINDERS with quiet hours on, a three-alert
+  // default set, a sound and summary days; the Sound and Day-start
+  // summary sheets.
+  final reminders = _overridesWith(
+    settings: const Settings(
+      use24h: true,
+      defaultAlerts: [
+        Alert(kind: AlertKind.before, offsetMin: 10),
+        Alert(kind: AlertKind.atStart),
+        Alert(kind: AlertKind.atEnd),
+      ],
+      quietHours: Settings.suggestedQuietHours,
+      daySummaryDays: {
+        Weekday.mon,
+        Weekday.tue,
+        Weekday.wed,
+        Weekday.thu,
+        Weekday.fri,
+      },
+      reminderSound: 'chime',
+    ),
+  );
+  goldenMatrix(
+    'settings_reminders',
+    height: 844,
+    widths: const {'compact', 'expanded'},
+    act: (t) async {
+      await t.scrollUntilVisible(
+        find.text('REMINDERS'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      // REMINDERS at the top, so the whole group is in view.
+      await Scrollable.ensureVisible(t.element(find.text('REMINDERS')));
+    },
+    overrides: reminders,
+    build: (_) => _settings(),
+  );
+  for (final (name, row) in [
+    ('settings_sound', 'Sound'),
+    ('settings_day_summary', 'Day-start summary'),
+  ]) {
+    goldenMatrix(
+      name,
+      height: 844,
+      widths: const {'compact', 'expanded'},
+      act: (t) => _open(t, row),
+      overrides: reminders,
+      build: (_) => _settings(),
+    );
+  }
   // M3f.7 sub-pages (derived, §5.3).
   for (final (name, page) in [
     ('account', const AccountPage()),
@@ -131,6 +197,7 @@ void main() {
     ('help', const HelpPage()),
     ('privacy', const PrivacyPage()),
     ('about', const AboutPage()),
+    ('changelog', const ChangelogPage()),
   ]) {
     goldenMatrix(
       'settings_page_$name',

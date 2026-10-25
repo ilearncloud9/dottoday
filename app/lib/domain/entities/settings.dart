@@ -37,6 +37,11 @@ abstract class Settings with _$Settings {
     @Default(<Alert>[Alert(kind: AlertKind.before, offsetMin: 10)])
     List<Alert> defaultAlerts,
     TimeWindow? quietHours,
+    // Settings › Reminders (docs/02 F6.2, F6.6, M8.4d): the weekdays with a
+    // day-start summary at Wake Up (none = off) and the sound of task
+    // reminders (a `ReminderSound` key; null = the system sound).
+    @Default(<Weekday>{}) Set<Weekday> daySummaryDays,
+    String? reminderSound,
     bool? use24h,
     @Default(1) int firstDayOfWeek,
     @Default(ThemePreference.system) ThemePreference theme,
@@ -47,6 +52,8 @@ abstract class Settings with _$Settings {
     @Default(true) bool runningLateNudge,
     @Default(false) bool rollUnfinished,
     @Default(true) bool bedtimeReminder,
+    // The once-a-day "Plan your inbox" card (docs/02 F3.3): off by default.
+    @Default(false) bool inboxNudge,
     // Settings › Calendars › Travel time (M7.5, R-17): off until chosen
     // (docs/02 F5 "if the user enables it").
     @Default(false) bool suggestTravelTime,

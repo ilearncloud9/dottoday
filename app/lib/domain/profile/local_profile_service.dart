@@ -30,13 +30,23 @@ final class LocalProfileService {
   /// The existing local profile, or a new one in [deviceTzId] (falling back
   /// to UTC when the device reports a zone the tz database doesn't know).
   /// Never replaces an existing profile, so it is safe on every start.
-  Future<Result<Profile, AppFailure>> ensure(String deviceTzId) async {
+  /// [language] is the device's language when the app speaks it (docs/09
+  /// M8.3): a new profile starts in it; the user can change it in Settings.
+  ///
+  /// ```dart
+  /// await service.ensure('Europe/Berlin', language: 'de');
+  /// ```
+  Future<Result<Profile, AppFailure>> ensure(
+    String deviceTzId, {
+    String language = 'en',
+  }) async {
     final existing = await _settings.findLocalProfile();
     if (existing != null) return Ok(existing);
     final now = _clock.nowUtc();
     final profile = Profile(
       id: _ids.newId(),
       tzId: _knownZone(deviceTzId) ? deviceTzId : 'UTC',
+      locale: language,
       createdAt: now,
       updatedAt: now,
     );

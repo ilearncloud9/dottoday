@@ -1,4 +1,5 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
@@ -44,6 +45,7 @@ final class AddRequest {
     this.text = '',
     this.startUtc,
     this.day,
+    this.resume,
   });
 
   /// The UI language, which Quick Add parses in (as the Inbox field does).
@@ -58,17 +60,29 @@ final class AddRequest {
   /// A local date to begin on ("Add to this day").
   final DateTime? day;
 
+  /// A sheet to reopen as it was: its save failed after it closed
+  /// (M8.5b, R-08 "never lose typed input"). Compared by identity.
+  final AddFlowState? resume;
+
   @override
   bool operator ==(Object other) =>
       other is AddRequest &&
       other.languageCode == languageCode &&
       other.text == text &&
       other.startUtc == startUtc &&
-      other.day == day;
+      other.day == day &&
+      identical(other.resume, resume);
 
   @override
-  int get hashCode => Object.hash(languageCode, text, startUtc, day);
+  int get hashCode =>
+      Object.hash(languageCode, text, startUtc, day, identityHashCode(resume));
 }
+
+/// Which save a failed one was, so Try again repeats it.
+enum AddRetry { save, inbox, another, many }
+
+/// A save that didn't land, shown on the sheet with Try again (M8.5b).
+typedef AddSaveFailure = ({AppFailure failure, AddRetry retry});
 
 /// The two steps (docs/10 §3 `AddFlow`): What, then When.
 enum AddStep { what, when }
@@ -81,6 +95,7 @@ final class AddFlowState {
     required this.text,
     required this.language,
     this.step = AddStep.what,
+    this.saveFailure,
   });
 
   final AddDraft draft;
@@ -90,13 +105,26 @@ final class AddFlowState {
   final QuickAddLanguage language;
   final AddStep step;
 
+  /// The last save, when it failed; the draft above is what it tried.
+  final AddSaveFailure? saveFailure;
+
   AddFlowState copyWith({AddDraft? draft, String? text, AddStep? step}) =>
       AddFlowState(
         draft: draft ?? this.draft,
         text: text ?? this.text,
         language: language,
         step: step ?? this.step,
+        saveFailure: saveFailure,
       );
+
+  /// This state with [failure] showing (null clears it).
+  AddFlowState withFailure(AddSaveFailure? failure) => AddFlowState(
+    draft: draft,
+    text: text,
+    language: language,
+    step: step,
+    saveFailure: failure,
+  );
 }
 
 /// The Add sheet's draft (M3c). One per open sheet; disposed with it.
@@ -112,6 +140,7 @@ class AddFlow extends _$AddFlow {
       ..listen(habitsProvider, (_, next) {
         if (next.hasValue) _rematch();
       });
+    if (request.resume case final resumed?) return resumed;
     final now = ref.read(clockProvider).nowUtc();
     final profile = await ref.read(currentProfileProvider.future);
     final local = tz.TZDateTime.from(now, tz.getLocation(profile.tzId));
@@ -172,6 +201,13 @@ class AddFlow extends _$AddFlow {
         language: s.language,
       ),
     );
+  }
+
+  /// A save failed with the sheet still open (or about to reopen).
+  void failed(AddSaveFailure? failure) {
+    final s = _now;
+    if (s == null) return;
+    state = AsyncData(s.withFailure(failure));
   }
 
   void goTo(AddStep step) {

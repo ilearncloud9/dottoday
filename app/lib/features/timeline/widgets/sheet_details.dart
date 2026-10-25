@@ -2,16 +2,27 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/state/task_text.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
+import 'package:dottoday/features/timeline/widgets/pin_row.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 
 /// Alerts, Repeat and Colour & icon rows (`A-ios-task-sheet`), plus
-/// Travel time when the task has some (M7.5, R-17).
+/// Travel time when the task has some (M7.5, R-17) and the Pinned switch
+/// (F1.5) when [onPinned] is given.
 class SheetDetails extends StatelessWidget {
-  const SheetDetails({required this.task, this.onEdit, super.key});
+  const SheetDetails({
+    required this.task,
+    this.onEdit,
+    this.onPinned,
+    super.key,
+  });
 
   final TaskView task;
   final VoidCallback? onEdit;
+
+  /// Pins or unpins the task; null hides the row (an Inbox task or an
+  /// imported event, which shifts never move anyway, F1.12).
+  final ValueChanged<bool>? onPinned;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +62,14 @@ class SheetDetails extends StatelessWidget {
                 formatDurationShort(l10n, o.travelBufferMin),
               ),
               onTap: onEdit,
+            ),
+          ],
+          if (onPinned case final onPinned?) ...[
+            Divider(height: DotSpace.hairline, color: c.outline),
+            PinRow(
+              pinned: o.pinned,
+              onChanged: onPinned,
+              minHeight: DotTouch.android + DotSpace.s,
             ),
           ],
           Divider(height: DotSpace.hairline, color: c.outline),

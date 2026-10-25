@@ -20,5 +20,10 @@ class TaskSelection extends _$TaskSelection {
     state = (day: ids.isEmpty ? null : day, ids: Set.unmodifiable(ids));
   }
 
+  /// Just [id] on [day]: the keyboard's ↑↓ (docs/02 F1.17) moves one
+  /// pick along the day instead of adding to it.
+  void only(DateTime day, String id) =>
+      state = (day: day, ids: Set.unmodifiable({id}));
+
   void clear() => state = (day: null, ids: const {});
 }

@@ -1,7 +1,9 @@
 import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
+import 'package:dottoday/data/notifications/sound_names.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
+import 'package:dottoday/domain/notifications/reminder_sound.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -75,6 +77,10 @@ final class FlnNotificationPlatform implements NotificationPlatform {
     for (final kind in NotificationChannelKind.values) {
       await android.createNotificationChannel(_channel(kind));
     }
+    // Android fixes a channel's sound, so each bundled one has its own.
+    for (final sound in ReminderSound.values) {
+      await android.createNotificationChannel(_soundChannel(sound));
+    }
     _exact = await android.canScheduleExactNotifications() ?? false;
   }
 
@@ -133,12 +139,19 @@ final class FlnNotificationPlatform implements NotificationPlatform {
       >();
 
   NotificationDetails _details(OsNotification n) {
-    final channel = _channel(n.channel);
+    final sound = n.loud ? null : n.sound;
+    final channel = n.channel == NotificationChannelKind.alerts && sound != null
+        ? _soundChannel(sound)
+        : _channel(n.channel);
     final darwin = DarwinNotificationDetails(
       categoryIdentifier: n.withActions ? _category : null,
       presentBanner: !n.silent,
       presentSound: !n.silent,
-      sound: n.loud ? alarmSoundFile : null,
+      sound: n.loud
+          ? alarmSoundFile
+          : sound == null
+          ? null
+          : reminderSoundFile(sound),
       interruptionLevel: n.silent
           ? InterruptionLevel.passive
           : n.timeSensitive
@@ -162,7 +175,7 @@ final class FlnNotificationPlatform implements NotificationPlatform {
         // Wakes the screen like an alarm; MainActivity deliberately has no
         // showWhenLocked, so no task list appears over the lock screen.
         fullScreenIntent: n.loud,
-        sound: n.loud ? _alarmSound : null,
+        sound: n.loud ? _alarmSound : channel.sound,
         audioAttributesUsage: n.loud
             ? AudioAttributesUsage.alarm
             : AudioAttributesUsage.notification,
@@ -205,6 +218,18 @@ final class FlnNotificationPlatform implements NotificationPlatform {
           audioAttributesUsage: AudioAttributesUsage.alarm,
         ),
       };
+
+  /// The task-alerts channel playing [sound] (F6.6): `alerts_<name>`.
+  AndroidNotificationChannel _soundChannel(ReminderSound sound) =>
+      AndroidNotificationChannel(
+        'alerts_${sound.name}',
+        _l10n.notifChannelAlertsSound(soundName(_l10n, sound)),
+        description: _l10n.notifChannelAlertsDetail,
+        importance: Importance.high,
+        sound: RawResourceAndroidNotificationSound(
+          reminderSoundFile(sound).split('.').first,
+        ),
+      );
 
   String _label(NotificationAction a) => switch (a) {
     NotificationAction.done => _l10n.notifActionDone,

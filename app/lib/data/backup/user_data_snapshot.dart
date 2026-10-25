@@ -6,6 +6,10 @@ import 'package:drift/drift.dart';
 /// Reads everything [userId] owns, Trash included, as an [ExportBundle]
 /// (the backup and export format, docs/05 "Export format"). Run it inside a
 /// transaction for a consistent cut. Returns null if the profile is missing.
+///
+/// Imported calendar events are left out ([ExportBundle.withoutImported]):
+/// backups and exports never carry them, and because the current state is
+/// read the same way, a restore never moves them to Trash either.
 Future<ExportBundle?> readUserData(
   AppDatabase db,
   String userId,
@@ -36,5 +40,5 @@ Future<ExportBundle?> readUserData(
     series: series.map(seriesFromRow).toList(),
     occurrences: occurrences.map(occurrenceFromRow).toList(),
     subtasks: subtasks.map(subtaskFromRow).toList(),
-  );
+  ).withoutImported();
 }

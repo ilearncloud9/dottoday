@@ -1656,18 +1656,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsWhatsNew => 'What\'s new';
 
   @override
-  String get settingsWhatsNewBody =>
-      'Add a task in two taps, with suggestions from your habits. Pick a time on your day\'s thread and see what it overlaps. Keep your own duration presets. Paste a list to add several tasks at once. Search everything you\'ve planned, done tasks too.';
+  String changelogVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String changelogInstalled(String version) {
+    return 'Version $version · on this device';
+  }
+
+  @override
+  String get changelogIntro => 'What changed in each version of Dottoday.';
+
+  @override
+  String get releaseNotes010 =>
+      'Plan your day on one thread: drag a task to move it, drag its edge to change how long it takes, and shift everything after it in one go.\nAdd a task in two taps, type times in plain words, or paste a list to add several at once.\nRepeating tasks, reminders with lead times, and your calendars on the timeline — all free.\nSync between iPhone, Android, Mac and the web, with a status you can see and nothing lost.\nExport everything as JSON, CSV or a calendar file, and bring a backup back.\nSend feedback from Settings, and read what\'s new here after each update.';
+
+  @override
+  String whatsNewBanner(String version) {
+    return 'Dottoday $version is here';
+  }
+
+  @override
+  String get whatsNewOpen => 'See what\'s new';
 
   @override
   String get settingsFeedback => 'Send feedback';
 
   @override
   String get settingsFeedbackIntro =>
-      'Opens an email draft. Nothing about your tasks is included.';
+      'Opens a draft in your mail app, and you send it from there. Nothing your tasks say is included.';
 
   @override
-  String get settingsFeedbackDiagnostics => 'Add app version and device type';
+  String get settingsFeedbackDiagnostics => 'Add diagnostics';
+
+  @override
+  String get settingsFeedbackDiagnosticsHint =>
+      'App version, device type, sync state and how many tasks you have — never what they say.';
+
+  @override
+  String get settingsFeedbackDiagnosticsFailed =>
+      'Couldn\'t read the diagnostics, so the email goes without them.';
+
+  @override
+  String get settingsFeedbackPreview => 'Added to the end of your email:';
 
   @override
   String get settingsFeedbackWrite => 'Write email';
@@ -2747,8 +2779,90 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exportIcsDetail => 'For other calendar apps';
 
   @override
-  String get exportComingSoon =>
-      'File export arrives in a later update. For now, a day\'s ⋯ › Copy day as text copies it.';
+  String get exportPlain =>
+      'Export files aren\'t encrypted: anyone who has the file can read your tasks. Imported calendar events stay in their calendar and aren\'t included.';
+
+  @override
+  String get exportDone => 'Exported';
+
+  @override
+  String get exportHandOffFailed =>
+      'Couldn\'t save or share the file. Nothing was changed.';
+
+  @override
+  String get exportRestore => 'Restore';
+
+  @override
+  String get exportImport => 'Import a backup…';
+
+  @override
+  String get exportImportDetail => 'A JSON file exported from Dottoday';
+
+  @override
+  String get exportImportTitle => 'Replace your tasks with this backup?';
+
+  @override
+  String exportImportBody(String date, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks',
+      one: '1 task',
+      zero: 'no tasks',
+    );
+    return 'This file from $date has $_temp0. Anything here that isn\'t in it moves to Trash. A backup of what\'s here now is taken first.';
+  }
+
+  @override
+  String get exportImportAction => 'Replace';
+
+  @override
+  String get exportCancel => 'Cancel';
+
+  @override
+  String get exportImported => 'Backup imported';
+
+  @override
+  String get exportNotBackup =>
+      'This isn\'t a Dottoday backup, or it comes from a newer version of Dottoday. Nothing was changed.';
+
+  @override
+  String get exportTooLarge =>
+      'This file is over 25 MB, too large to import. Nothing was changed.';
+
+  @override
+  String get exportBackups => 'On this device';
+
+  @override
+  String get exportBackupsNote =>
+      'Dottoday keeps a backup each day (the last 7) and one before every import or restore, encrypted, on this device only.';
+
+  @override
+  String get exportBackupsNone =>
+      'No backups yet. The first is taken the next time Dottoday opens.';
+
+  @override
+  String get exportBackupDaily => 'Daily backup';
+
+  @override
+  String get exportBackupPreImport => 'Before an import';
+
+  @override
+  String get exportBackupPreRestore => 'Before a restore';
+
+  @override
+  String get exportRestoreTitle => 'Go back to this backup?';
+
+  @override
+  String exportRestoreBody(String date) {
+    return 'Your tasks go back to how they were on $date. Anything newer moves to Trash. A backup of what\'s here now is taken first.';
+  }
+
+  @override
+  String get exportRestoreAction => 'Restore';
+
+  @override
+  String get exportRestored => 'Backup restored';
 
   @override
   String get helpIntro => 'Quick answers. Anything else? Send feedback below.';
@@ -2818,6 +2932,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacyClearSearches => 'Clear recent searches';
+
+  @override
+  String get privacyCrashTitle => 'Crash reports';
+
+  @override
+  String get privacyCrashBody =>
+      'If the app crashes, it sends the kind of error and where in the app it happened. Never your tasks, notes or account.';
+
+  @override
+  String get privacyPolicyOpen => 'Read the privacy policy';
 
   @override
   String get snackSearchesCleared => 'Recent searches cleared';
@@ -3049,6 +3173,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onboardingWelcomeBody =>
       'Plan your day as dots on a line, see where the time goes, and move it all when the day moves.';
+
+  @override
+  String get onboardingAgeNote => 'Dottoday is for people aged 13 and over.';
 
   @override
   String get onboardingGetStarted => 'Get started';
@@ -3371,6 +3498,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get menuNextDay => 'Next Day';
+
+  @override
+  String get menuRedo => 'Redo';
+
+  @override
+  String get menuDelete => 'Delete';
+
+  @override
+  String get shortcutUndo => 'Undo the last change';
+
+  @override
+  String get shortcutRedo => 'Redo what was undone';
 
   @override
   String get exactTitle => 'Reminders may come a few minutes after their time';
@@ -3787,4 +3926,188 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get calendarsTravelSuggestDetail =>
       'Before events with a place. Worked out on this device; no maps are asked';
+
+  @override
+  String rowFromCalendar(String label) {
+    return '$label, from your calendar';
+  }
+
+  @override
+  String get pinTitle => 'Pinned';
+
+  @override
+  String get pinDetail => 'Stays put when other tasks shift';
+
+  @override
+  String threadOutsideBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks before Wake Up',
+      one: '1 task before Wake Up',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String threadOutsideAfter(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks after Bedtime',
+      one: '1 task after Bedtime',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shortcutPickTask => 'Pick the previous or next task';
+
+  @override
+  String get shortcutNudgeTask =>
+      'Move the picked tasks 5 min earlier or later';
+
+  @override
+  String get shortcutNudgeTaskMore =>
+      'Move the picked tasks 15 min earlier or later';
+
+  @override
+  String get shortcutTrashTask => 'Move the picked tasks to Trash';
+
+  @override
+  String get shortcutOpenTask => 'Open the picked task';
+
+  @override
+  String get shortcutDoneTask => 'Mark the picked task done';
+
+  @override
+  String get shortcutKeyDelete => 'Delete';
+
+  @override
+  String get shortcutKeySpace => 'Space';
+
+  @override
+  String get editorEnergy => 'Energy';
+
+  @override
+  String get energyLow => 'Low';
+
+  @override
+  String get energyMedium => 'Medium';
+
+  @override
+  String get energyHigh => 'High';
+
+  @override
+  String get editorNotesFormat =>
+      '**bold**, *italic*, - lists and links work here';
+
+  @override
+  String navInboxBadge(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Inbox, $count tasks',
+      one: 'Inbox, 1 task',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxNudgeTitle => 'Plan your inbox';
+
+  @override
+  String inboxNudgeDetail(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tasks are waiting in your Inbox. A good moment to give them a time?',
+      one: '1 task is waiting in your Inbox. A good moment to give it a time?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inboxNudgeAction => 'Plan';
+
+  @override
+  String get settingsInboxNudge => 'Plan-your-inbox nudge';
+
+  @override
+  String get settingsInboxNudgeDetail =>
+      'Once a day from Wake Up, when the Inbox holds tasks';
+
+  @override
+  String settingsAlertsMore(String first, int count) {
+    return '$first +$count';
+  }
+
+  @override
+  String get settingsSound => 'Sound';
+
+  @override
+  String get settingsSoundSystem => 'System sound';
+
+  @override
+  String get settingsSoundDetail =>
+      'For task reminders. Tap one to hear it. The first task of the day keeps its alarm.';
+
+  @override
+  String get soundDot => 'Dot';
+
+  @override
+  String get soundChime => 'Chime';
+
+  @override
+  String get soundBell => 'Bell';
+
+  @override
+  String get soundRipple => 'Ripple';
+
+  @override
+  String get settingsQuietHours => 'Quiet hours';
+
+  @override
+  String get settingsQuietHoursOff => 'Reminders arrive silently at night';
+
+  @override
+  String settingsQuietHoursOn(String from, String until) {
+    return '$from–$until: reminders arrive silently. The first task of the day still rings.';
+  }
+
+  @override
+  String get settingsQuietFrom => 'From';
+
+  @override
+  String get settingsQuietUntil => 'Until';
+
+  @override
+  String get settingsDaySummary => 'Day-start summary';
+
+  @override
+  String get settingsDaySummaryOff => 'Off';
+
+  @override
+  String get settingsDaySummaryDetail =>
+      'At Wake Up on the days you choose: “Your day: 6 blocks, first at 08:00”.';
+
+  @override
+  String get notifDaySummaryTitle => 'Your day';
+
+  @override
+  String notifDaySummaryBody(int count, String time) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count blocks, first at $time',
+      one: '1 block, at $time',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notifChannelAlertsSound(String sound) {
+    return 'Task alerts · $sound';
+  }
 }

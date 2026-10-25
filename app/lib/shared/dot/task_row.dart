@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 /// time meta, title, and the done circle at the end.
 ///
 /// States: upcoming, done (struck, muted), missed ("missed" in the meta),
-/// skipped, pinned (lock) and recurring (repeat glyph). The live task is
+/// skipped, pinned (lock), recurring (repeat glyph) and imported (calendar
+/// badge, docs/02 F1.10). The live task is
 /// a `LiveRow`.
 class TaskRow extends StatelessWidget {
   const TaskRow({
@@ -104,12 +105,13 @@ Widget taskRowDot(
 }
 
 /// Screen-reader label of a row's text: "Reply to email, 11:00 – 11:30,
-/// pinned, repeats".
+/// pinned, repeats, from your calendar".
 String taskRowLabel(AppLocalizations l10n, ThreadTask task) {
   var label = l10n.rowLabel(task.title, task.timeRange);
   if (task.state == DotState.missed) label = l10n.rowMissed(label);
   if (task.pinned) label = l10n.rowPinned(label);
   if (task.recurring) label = l10n.rowRepeats(label);
+  if (task.imported) label = l10n.rowFromCalendar(label);
   if (task.travel case final travel?) label = l10n.rowTravel(label, travel);
   return label;
 }
@@ -136,6 +138,8 @@ class _Text extends StatelessWidget {
           DotIcon(DotGlyphs.lock, color: muted, size: DotSize.weekDot * 2),
         if (task.recurring)
           DotIcon(DotGlyphs.repeat, color: muted, size: DotSize.weekDot * 2),
+        if (task.imported)
+          DotIcon(DotGlyphs.calendar, color: muted, size: DotSize.weekDot * 2),
         if (task.travel case final travel?)
           Text(l10n.rowTravelMeta(travel), style: t.styles.rowMeta),
       ],

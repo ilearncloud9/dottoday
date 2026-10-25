@@ -30,7 +30,10 @@ final class ThreadFormat {
 const minGapMinutes = 15;
 
 /// The day as thread entries (docs/10 §1, §6): Wake Up cap, tasks in start
-/// order with free gaps between them, Bedtime cap.
+/// order with free gaps between them, Bedtime cap. Tasks that end by Wake
+/// Up or start at Bedtime or later fold into a [ThreadOutside] row before
+/// the sun cap or after the moon cap (F1.15); a task across a cap stays
+/// inline.
 ///
 /// Each task's state comes from its status and [nowUtc]: done and skipped
 /// as stored; live while now is inside it; missed once it ended undone;
@@ -51,25 +54,63 @@ List<ThreadEntry> threadEntries({
     for (final o in blocks)
       if (o.startUtc != null) o,
   ]..sort((a, b) => a.startUtc!.compareTo(b.startUtc!));
-  final out = <ThreadEntry>[ThreadCap.wake(format.time(shape.wakeUtc))];
+  ThreadTask task(Occurrence o) => _task(o, nowUtc, format, subtasks[o.id]);
+  final (:before, :inside, :after) = _split(sorted, shape);
+  final out = <ThreadEntry>[
+    ?_outside(before.map(task).toList(), bedtime: false),
+    ThreadCap.wake(format.time(shape.wakeUtc)),
+  ];
   var cursor = shape.wakeUtc;
-  for (final (i, o) in sorted.indexed) {
+  for (final o in inside) {
     // Travel time before a task is not free (R-17, docs/04 §5).
     _gap(out, cursor, footprintStart(o), nowUtc, format, showFreeTime);
-    final task = _task(o, nowUtc, format, subtasks[o.id]);
+    final t = task(o);
+    // Overrun counts any later task, outside hours too.
     out.add(
       ThreadTaskEntry(
-        task.state == DotState.live
-            ? _withOverrun(task, o, sorted.skip(i + 1))
-            : task,
+        t.state == DotState.live
+            ? _withOverrun(t, o, sorted.skip(sorted.indexOf(o) + 1))
+            : t,
       ),
     );
     if (o.endUtc!.isAfter(cursor)) cursor = o.endUtc!;
   }
   _gap(out, cursor, shape.bedUtc, nowUtc, format, showFreeTime);
-  out.add(ThreadCap.bed(format.time(shape.bedUtc)));
+  out
+    ..add(ThreadCap.bed(format.time(shape.bedUtc)))
+    ..addAll([?_outside(after.map(task).toList(), bedtime: true)]);
   return out;
 }
+
+/// [sorted] split by the day's caps: ended by Wake Up, crossing the waking
+/// day, from Bedtime on.
+({List<Occurrence> before, List<Occurrence> inside, List<Occurrence> after})
+_split(List<Occurrence> sorted, DayShape shape) => (
+  before: [
+    for (final o in sorted)
+      if (!o.endUtc!.isAfter(shape.wakeUtc)) o,
+  ],
+  inside: [
+    for (final o in sorted)
+      if (o.endUtc!.isAfter(shape.wakeUtc) &&
+          o.startUtc!.isBefore(shape.bedUtc))
+        o,
+  ],
+  after: [
+    for (final o in sorted)
+      if (!o.startUtc!.isBefore(shape.bedUtc)) o,
+  ],
+);
+
+/// [tasks] as a folded row, or null when there are none.
+ThreadOutside? _outside(List<ThreadTask> tasks, {required bool bedtime}) =>
+    tasks.isEmpty
+    ? null
+    : ThreadOutside(
+        tasks: tasks,
+        bedtime: bedtime,
+        open: tasks.any((t) => t.state == DotState.live),
+      );
 
 void _gap(
   List<ThreadEntry> out,
@@ -116,6 +157,7 @@ ThreadTask _task(
     duration: live ? format.duration(o.durationMin) : null,
     pinned: o.pinned,
     recurring: o.seriesId != null,
+    imported: o.source == OccurrenceSource.calendar,
     progress: live
         ? now.difference(start).inSeconds / end.difference(start).inSeconds
         : 0,
@@ -151,6 +193,7 @@ ThreadTask _withOverrun(
     duration: task.duration,
     pinned: task.pinned,
     recurring: task.recurring,
+    imported: task.imported,
     progress: task.progress,
     minutesLeft: task.minutesLeft,
     subtasksDone: task.subtasksDone,

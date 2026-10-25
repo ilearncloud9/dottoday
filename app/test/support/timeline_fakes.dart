@@ -3,21 +3,30 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
 import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/write_back_providers.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
+import 'package:dottoday/data/export/export_providers.dart';
+import 'package:dottoday/data/export/export_service.dart';
+import 'package:dottoday/data/export/file_gateway.dart';
+import 'package:dottoday/data/feedback/diagnostics_reader.dart';
+import 'package:dottoday/data/feedback/feedback_providers.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/release/whats_new_seen.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/security/app_lock_store.dart';
+import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/calendar/calendar_import.dart';
 import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
@@ -26,6 +35,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/feedback/feedback_diagnostics.dart';
 import 'package:dottoday/domain/notifications/battery_optimization.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
@@ -45,6 +55,7 @@ import 'package:flutter_riverpod/misc.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import 'calendar_fakes.dart';
+import 'export_fakes.dart';
 import 'fake_clock.dart';
 import 'search_fakes.dart';
 
@@ -141,17 +152,25 @@ final class FakeSettingsRepository implements SettingsRepository {
   }
 }
 
+/// Makes every write through the fakes fail while [failure] is set (a
+/// full disk, M8.5b); clear it to let the next one land.
+final class WriteFault {
+  AppFailure? failure;
+}
+
 /// The write path over the fakes: validates settings like the real one
 /// (refusing an invalid batch whole), then stores profile and occurrences.
 final class FakeWriteUseCase implements WriteUseCase {
-  FakeWriteUseCase(this.settings, this.occurrences);
+  FakeWriteUseCase(this.settings, this.occurrences, [this.fault]);
 
   final FakeSettingsRepository settings;
   final FakeOccurrenceRepository occurrences;
+  final WriteFault? fault;
   final applied = <WriteBatch>[];
 
   @override
   Future<Result<void, AppFailure>> apply(WriteBatch batch) async {
+    if (fault?.failure case final f?) return Err(f);
     if (batch.profile case final p?) {
       if (validateSettings(p.settings) case Err(:final failure)) {
         return Err(failure);
@@ -242,9 +261,13 @@ final class FakeUndoService implements UndoService {
     this.subtasks,
     this.series,
     this.settings,
+    this.fault,
   ]);
 
   final FakeOccurrenceRepository occurrences;
+
+  /// Fails [applyUndoable] while set.
+  final WriteFault? fault;
   final FakeSubtaskRepository? subtasks;
   final FakeSeriesRepository? series;
 
@@ -260,6 +283,8 @@ final class FakeUndoService implements UndoService {
 
   @override
   Future<Result<UndoToken, AppFailure>> applyUndoable(WriteBatch batch) async {
+    if (fault?.failure case final f?) return Err(f);
+    redoable = _redoBatch = null;
     final id = 'undo-${_n++}';
     _before[id] = [
       for (final o in batch.occurrences)
@@ -287,7 +312,25 @@ final class FakeUndoService implements UndoService {
   UndoToken? latest;
 
   @override
+  UndoToken? redoable;
+  WriteBatch? _redoBatch;
+
+  /// Like the real service: re-applying the undone batch, as a new token.
+  @override
+  Future<Result<UndoToken, AppFailure>> redo(UndoToken token) async {
+    final batch = _redoBatch;
+    if (token != redoable || batch == null) {
+      return const Err(UndoExpiredFailure());
+    }
+    return applyUndoable(batch);
+  }
+
+  @override
   Future<Result<void, AppFailure>> undo(UndoToken token) async {
+    _redoBatch = applied.where((b) => _batchIds[b] == token.id).firstOrNull;
+    redoable = _redoBatch == null
+        ? null
+        : UndoToken(id: 'redo-${_n++}', expiresAtUtc: DateTime.utc(2100));
     final seriesBefore = _seriesBefore.remove(token.id) ?? const <Series>[];
     final made = applied
         .where((b) => _batchIds[b] == token.id)
@@ -401,16 +444,28 @@ List<Override> timelineOverrides({
   CalendarImport? cloudCalendarImport,
   IdleWriteBackController Function()? writeBack,
   Set<String> readOnlyCalendarIds = const {},
+  BackupService? backups,
+  FileGateway? files,
+  ExportService? exports,
+  String whatsNewSeen = '0.1.0',
+  DiagnosticsReader diagnostics = const FakeDiagnosticsReader(),
+  WriteFault? writeFault,
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
   final subs = subtasks ?? FakeSubtaskRepository();
   final seriesRepo = FakeSeriesRepository(series);
   final settingsRepo = FakeSettingsRepository(p);
-  final undo = FakeUndoService(repo, subs, seriesRepo, settingsRepo);
+  final undo = FakeUndoService(
+    repo,
+    subs,
+    seriesRepo,
+    settingsRepo,
+    writeFault,
+  );
   return [
     writeUseCaseProvider.overrideWithValue(
-      FakeWriteUseCase(settingsRepo, repo),
+      FakeWriteUseCase(settingsRepo, repo, writeFault),
     ),
     subtaskRepositoryProvider.overrideWithValue(subs),
     seriesRepositoryProvider.overrideWithValue(seriesRepo),
@@ -436,6 +491,10 @@ List<Override> timelineOverrides({
       const NoBatteryOptimization(),
     ),
     appLockSettingProvider.overrideWith(FakeAppLockSetting.new),
+    // No database or package info here (M8.2): up to date, counts fixed.
+    appVersionNameProvider.overrideWith((ref) async => '0.1.0'),
+    whatsNewSeenProvider.overrideWith(() => FakeWhatsNewSeen(whatsNewSeen)),
+    diagnosticsReaderProvider.overrideWithValue(diagnostics),
     notificationGatewayProvider.overrideWithValue(
       const UnwiredNotificationGateway(),
     ),
@@ -454,6 +513,10 @@ List<Override> timelineOverrides({
     readOnlyCalendarIdsProvider.overrideWith(
       (ref) => Stream.value(readOnlyCalendarIds),
     ),
+    // No backups file, share sheet or file picker in tests (M8.1).
+    backupServiceProvider.overrideWithValue(backups ?? FakeBackupService()),
+    fileGatewayProvider.overrideWithValue(files ?? FakeFileGateway()),
+    exportServiceProvider.overrideWithValue(exports ?? FakeExportService()),
     // A factory: each container needs its own notifier.
     writeBackControllerProvider.overrideWith(
       writeBack ?? IdleWriteBackController.new,
@@ -511,6 +574,33 @@ final class FakeTrashService implements TrashService {
 }
 
 /// The app lock, off and in memory (M5.8).
+/// What's new as last seen; [seen] starts at the running version.
+final class FakeWhatsNewSeen extends WhatsNewSeen {
+  FakeWhatsNewSeen([this.initial = '0.1.0']);
+
+  final String initial;
+
+  @override
+  Future<String> build() async => initial;
+
+  @override
+  Future<void> markSeen(String version) async {
+    await future;
+    state = AsyncData(version);
+  }
+}
+
+/// Fixed diagnostics counts and node id.
+final class FakeDiagnosticsReader implements DiagnosticsReader {
+  const FakeDiagnosticsReader();
+
+  @override
+  Future<({DiagnosticCounts counts, String? deviceId})> read() async => (
+    counts: const DiagnosticCounts(tasks: 12, inbox: 3, done: 4, repeats: 2),
+    deviceId: '0a1b2c3d4e5f6071',
+  );
+}
+
 final class FakeAppLockSetting extends AppLockSetting {
   @override
   Future<AppLockSettings> build() async => const AppLockSettings();

@@ -31,3 +31,9 @@ BackupService backupService(Ref ref) => DriftBackupService(
   clock: ref.watch(clockProvider),
   logger: ref.watch(loggerProvider),
 );
+
+/// The backups on this device, newest first (Settings › Export). Invalidate
+/// after taking or restoring one.
+@riverpod
+Future<List<BackupInfo>> backupList(Ref ref) =>
+    ref.watch(backupServiceProvider).list();

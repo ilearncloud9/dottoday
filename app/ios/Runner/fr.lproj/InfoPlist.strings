@@ -1,0 +1,7 @@
+/* OS permission prompts in this language (docs/09 M8.3b). Every
+   *UsageDescription key in Runner/Info.plist needs a line here —
+   test/policy/os_strings_test.dart fails CI otherwise. */
+
+"NSCalendarsFullAccessUsageDescription" = "Dottoday affiche vos événements de calendrier sur votre fil, à côté de vos tâches.";
+"NSCalendarsUsageDescription" = "Dottoday affiche vos événements de calendrier sur votre fil, à côté de vos tâches.";
+"NSFaceIDUsageDescription" = "Dottoday utilise Face ID pour se déverrouiller lorsque vous activez le verrouillage.";

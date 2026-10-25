@@ -39,6 +39,7 @@ void main() {
       logger: logger,
       bundle: bundle,
       library: () async => dir,
+      files: const [alarmSoundFile],
     );
     final file = File('${dir.path}/Sounds/$alarmSoundFile');
     expect(file.readAsBytesSync(), [1, 2, 3, 4]);
@@ -47,6 +48,7 @@ void main() {
       logger: logger,
       bundle: bundle,
       library: () async => dir,
+      files: const [alarmSoundFile],
     );
     expect(file.lastModifiedSync(), stamp, reason: 'identical file kept');
     expect(sink.records, isEmpty);

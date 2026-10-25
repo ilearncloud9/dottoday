@@ -44,6 +44,22 @@ Future<Result<UndoToken, AppFailure>> moveAllToDay(
       ),
 ]);
 
+/// Moves [rows] [minutes] later (earlier when negative): the keyboard's
+/// ⌘/Ctrl+↑↓ (docs/02 F1.17). Pinned tasks stay (R-17); null when none
+/// can move.
+Future<Result<UndoToken, AppFailure>>? nudgeAll(
+  ProviderContainer ref,
+  List<Occurrence> rows,
+  int minutes,
+) {
+  final moved = [
+    for (final o in rows)
+      if (!o.pinned && o.startUtc != null)
+        o.copyWith(startUtc: o.startUtc!.add(Duration(minutes: minutes))),
+  ];
+  return moved.isEmpty ? null : _write(ref, moved);
+}
+
 /// Copies [rows] at the same times as new one-off, planned tasks.
 Future<Result<UndoToken, AppFailure>> duplicateAll(
   ProviderContainer ref,

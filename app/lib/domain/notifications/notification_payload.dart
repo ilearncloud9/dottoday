@@ -31,6 +31,7 @@ String encodeNotificationPayload(
   if (n.silent) 'q': true,
   if (n.loud) 'l': true,
   if (n.purpose != NotificationPurpose.task) 'p': n.purpose.name,
+  'n': ?n.blocks,
 });
 
 /// Reads a payload written by [encodeNotificationPayload] for OS id [id].
@@ -57,6 +58,7 @@ PlannedNotification? decodeNotificationPayload(int id, String? raw) {
       purpose: NotificationPurpose.values.byName(
         (map['p'] as String?) ?? NotificationPurpose.task.name,
       ),
+      blocks: map['n'] as int?,
     );
   } on Object {
     // FormatException, a missing key (TypeError) or an unknown enum name

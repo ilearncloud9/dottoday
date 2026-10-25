@@ -1,11 +1,13 @@
 import 'package:dottoday/app_commands.dart';
-import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/env/env.dart';
+import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:go_router/go_router.dart';
+import 'test_l10n.dart';
 
 import 'timeline_fakes.dart';
 
@@ -19,7 +21,17 @@ Widget testRouterApp(
   List<Override>? overrides,
 }) => ProviderScope(
   overrides:
-      overrides ?? timelineOverrides(now: DateTime.utc(2026, 10, 21, 11)),
+      overrides ??
+      [
+        ...timelineOverrides(now: DateTime.utc(2026, 10, 21, 11)),
+        // Settings › Privacy reads it (M8.6); bootstrap() sets it in the app.
+        envProvider.overrideWithValue(
+          Env(
+            supabaseUrl: Uri.parse('https://example.supabase.co'),
+            supabaseAnonKey: 'anon',
+          ),
+        ),
+      ],
   child: _routerApp(router, onQuickAdd, themeMode),
 );
 
@@ -31,8 +43,9 @@ Widget _routerApp(
   theme: DotTheme.light(),
   darkTheme: DotTheme.dark(),
   themeMode: themeMode,
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
-  supportedLocales: AppLocalizations.supportedLocales,
+  localizationsDelegates: testL10nDelegates,
+  supportedLocales: testL10nLocales,
+  locale: testL10nLocale,
   routerConfig: router,
   builder: (context, child) => AppCommandScope(
     handlers: appCommandHandlers(router, onQuickAdd: onQuickAdd),
@@ -46,7 +59,8 @@ Widget testApp(Widget home, {ThemeMode themeMode = ThemeMode.light}) =>
       theme: DotTheme.light(),
       darkTheme: DotTheme.dark(),
       themeMode: themeMode,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: testL10nDelegates,
+      supportedLocales: testL10nLocales,
+      locale: testL10nLocale,
       home: home,
     );

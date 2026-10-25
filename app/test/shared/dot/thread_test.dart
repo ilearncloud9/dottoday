@@ -1,3 +1,5 @@
+import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/dot/thread_pieces.dart';
@@ -86,6 +88,121 @@ void main() {
     // The done circle duplicates the dot's toggle and stays silent.
     expect(find.bySemanticsLabel(RegExp('circle')), findsNothing);
     handle.dispose();
+  });
+
+  testWidgets('an imported event shows the calendar badge (F1.10)', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(
+      testApp(
+        const Material(
+          child: TaskRow(
+            task: ThreadTask(
+              id: 'standup',
+              title: 'Team standup',
+              color: TaskColor.slate,
+              icon: TaskIcon.people,
+              state: DotState.upcoming,
+              timeRange: '3:00 – 3:15',
+              imported: true,
+            ),
+          ),
+        ),
+      ),
+    );
+    final badge = find.byWidgetPredicate(
+      (w) => w is DotIcon && w.glyph == DotGlyphs.calendar,
+    );
+    expect(badge, findsOneWidget);
+    expect(
+      find.bySemanticsLabel('Team standup, 3:00 – 3:15, from your calendar'),
+      findsOneWidget,
+    );
+    handle.dispose();
+  });
+
+  testWidgets('outside hours: folded, then unfolded by a tap (F1.15)', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    final opened = <String>[];
+    await tester.pumpWidget(
+      testApp(
+        Scaffold(
+          body: Thread(
+            entries: [
+              const ThreadCap.wake('7:00'),
+              const ThreadCap.bed('22:00'),
+              ThreadOutside(
+                bedtime: true,
+                tasks: [
+                  for (final id in ['a', 'b'])
+                    ThreadTask(
+                      id: id,
+                      title: 'Late $id',
+                      color: TaskColor.indigo,
+                      icon: TaskIcon.travel,
+                      state: DotState.upcoming,
+                      timeRange: '23:00 – 23:30',
+                    ),
+                ],
+              ),
+            ],
+            actions: ThreadActions(onOpen: opened.add),
+          ),
+        ),
+      ),
+    );
+    expect(find.text('2 tasks after Bedtime'), findsOneWidget);
+    expect(find.text('Late a'), findsNothing);
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('2 tasks after Bedtime')),
+      matchesSemantics(
+        label: '2 tasks after Bedtime',
+        isButton: true,
+        hasExpandedState: true,
+        hasTapAction: true,
+      ),
+    );
+    await tester.tap(find.text('2 tasks after Bedtime'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Late b'));
+    expect(opened, ['b']);
+    await expectA11yGuidelines(tester);
+    handle.dispose();
+  });
+
+  testWidgets('overlapping rows stack in start order, never covered', (
+    tester,
+  ) async {
+    ThreadTask row(String id, String range) => ThreadTask(
+      id: id,
+      title: id,
+      color: TaskColor.violet,
+      icon: TaskIcon.music,
+      state: DotState.upcoming,
+      timeRange: range,
+    );
+    await tester.pumpWidget(
+      testApp(
+        Scaffold(
+          body: Thread(
+            entries: [
+              const ThreadCap.wake('7:00'),
+              ThreadTaskEntry(row('Concert', '20:00 – 22:00')),
+              ThreadTaskEntry(row('Read', '20:30 – 21:00')),
+              const ThreadCap.bed('23:00'),
+            ],
+          ),
+        ),
+      ),
+    );
+    final concert = tester.getRect(find.byType(TaskRow).first);
+    final read = tester.getRect(find.byType(TaskRow).last);
+    expect(read.top, greaterThanOrEqualTo(concert.bottom));
+    expect(find.text('Concert').hitTestable(), findsOneWidget);
+    expect(find.text('Read').hitTestable(), findsOneWidget);
   });
 
   testWidgets('done titles are struck through', (tester) async {

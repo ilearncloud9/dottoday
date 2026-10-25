@@ -109,6 +109,49 @@ void main() {
     expect(_inSheet(find.text('Not done')), findsOneWidget);
   });
 
+  testWidgets('the Pinned switch pins and unpins this task (F1.5)', (
+    tester,
+  ) async {
+    final rows = demoDayRows(_date);
+    final repo = FakeOccurrenceRepository(rows);
+    final deep = rows.firstWhere((o) => o.title == 'Deep work: roadmap');
+    tester.view
+      ..physicalSize = const Size(390, 1400)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: timelineOverrides(
+          now: _now,
+          occurrences: repo,
+          subtasks: FakeSubtaskRepository(demoDaySubtasks(_date)),
+        ),
+        child: MaterialApp(
+          theme: DotTheme.light(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: TaskScreen(id: deep.id),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    bool pinned() => repo.rows.firstWhere((o) => o.id == deep.id).pinned;
+    expect(find.text('Stays put when other tasks shift'), findsOneWidget);
+    await tester.tap(find.text('Pinned'));
+    await tester.pumpAndSettle();
+    expect(pinned(), isTrue);
+    await tester.tap(find.text('Pinned'));
+    await tester.pumpAndSettle();
+    expect(pinned(), isFalse);
+  });
+
+  testWidgets('an Inbox task has no Pinned switch', (tester) async {
+    final rows = demoDayRows(_date);
+    final inbox = rows.firstWhere((o) => o.isInbox);
+    await _pump(tester, TaskScreen(id: inbox.id), rows: rows);
+    expect(find.text('Pinned'), findsNothing);
+  });
+
   testWidgets('Shift is on for the live task running into the next', (
     tester,
   ) async {

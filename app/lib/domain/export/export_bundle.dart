@@ -1,3 +1,4 @@
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -52,6 +53,34 @@ final class ExportBundle {
     'occurrences': [for (final o in occurrences) o.toJson()],
     'subtasks': [for (final s in subtasks) s.toJson()],
   };
+
+  /// The bundle without imported calendar events and their subtasks
+  /// (docs/05 "Export format", M8.1). Imports are device-only and keyed to
+  /// this device's calendars (`calendar_links`, never exported), so a copy
+  /// in a file could only come back unlinked beside the importer's fresh
+  /// one. The calendar stays their source: each device re-imports them.
+  ExportBundle withoutImported() {
+    bool imported(Occurrence o) => o.source == OccurrenceSource.calendar;
+    final droppedIds = {
+      for (final o in occurrences)
+        if (imported(o)) o.id,
+    };
+    // Only their subtasks go: one pointing nowhere stays, so an import
+    // still refuses a broken file.
+    return ExportBundle(
+      exportedAt: exportedAt,
+      profile: profile,
+      series: series,
+      occurrences: [
+        for (final o in occurrences)
+          if (!imported(o)) o,
+      ],
+      subtasks: [
+        for (final s in subtasks)
+          if (!droppedIds.contains(s.occurrenceId)) s,
+      ],
+    );
+  }
 
   /// The same data owned by [userId], so an import can never write rows for
   /// another account (06 §9, RLS would reject them anyway).

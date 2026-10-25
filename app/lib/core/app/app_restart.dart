@@ -23,15 +23,26 @@ class AppRestart extends StatefulWidget {
 class _AppRestartState extends State<AppRestart> {
   late ProviderContainer _container = widget.create();
   var _key = UniqueKey();
+  var _restarting = false;
 
+  // Two frames, not one: the old tree must unmount before the new one
+  // mounts. Swapping in a single frame mounts the new tree first, and on
+  // the Mac the old `PlatformMenuBar`'s dispose then clears the menus the
+  // new one just set (found by the parity run, M8.4).
   void _restart() {
-    final old = _container;
-    setState(() {
-      _container = widget.create();
-      _key = UniqueKey();
+    if (_restarting) return;
+    setState(() => _restarting = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final old = _container;
+      setState(() {
+        _container = widget.create();
+        _key = UniqueKey();
+        _restarting = false;
+      });
+      // Nothing listens to the old one any more.
+      old.dispose();
     });
-    // After this frame, when nothing listens to the old one any more.
-    WidgetsBinding.instance.addPostFrameCallback((_) => old.dispose());
   }
 
   @override
@@ -41,9 +52,12 @@ class _AppRestartState extends State<AppRestart> {
   }
 
   @override
-  Widget build(BuildContext context) => UncontrolledProviderScope(
-    key: _key,
-    container: _container,
-    child: widget.child,
-  );
+  Widget build(BuildContext context) {
+    if (_restarting) return const SizedBox.shrink();
+    return UncontrolledProviderScope(
+      key: _key,
+      container: _container,
+      child: widget.child,
+    );
+  }
 }

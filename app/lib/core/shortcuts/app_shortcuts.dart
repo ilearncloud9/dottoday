@@ -59,6 +59,24 @@ final class UndoLastIntent extends Intent {
   const UndoLastIntent();
 }
 
+/// Redo the change the last undo reverted (Edit › Redo, ⇧⌘Z / Ctrl+Shift+Z,
+/// M8.6b); text fields keep the key for their own typing.
+final class RedoLastIntent extends Intent {
+  const RedoLastIntent();
+}
+
+/// The text field that has focus, if any. App keys that a field also uses
+/// (⌘Z, ⇧⌘Z, ⌫, Space, arrows) stand aside while it is set, so typing
+/// keeps them (M8.6b).
+EditableTextState? focusedTextField() =>
+    primaryFocus?.context?.findAncestorStateOfType<EditableTextState>();
+
+/// Move the picked tasks to Trash, with Undo: Delete / ⌫ on Today (docs/02
+/// F1.17) and Edit › Delete on the Mac (M8.6b), sent to whatever has focus.
+final class TrashTaskIntent extends Intent {
+  const TrashTaskIntent();
+}
+
 /// Open the Sync sheet (Settings › DATA › Sync, docs/09 M3f.8), handled at
 /// the app root so Settings needn't import the sync feature.
 final class ShowSyncIntent extends Intent {
