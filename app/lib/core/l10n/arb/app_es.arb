@@ -1004,5 +1004,9 @@
   "settingsDaySummaryDetail": "Al despertar los días que elijas: «Tu día: 6 bloques, el primero a las 08:00».",
   "notifDaySummaryTitle": "Tu día",
   "notifDaySummaryBody": "{count, plural, =1{1 bloque, a las {time}} other{{count} bloques, el primero a las {time}}}",
-  "notifChannelAlertsSound": "Avisos de tareas · {sound}"
+  "notifChannelAlertsSound": "Avisos de tareas · {sound}",
+  "liveActivityLeft": "quedan {time}",
+  "liveActivityStartsIn": "empieza en {time}",
+  "liveActivityCount": "{done} de {total}",
+  "liveActivityCountLabel": "{done} de {total} hechas hoy"
 }

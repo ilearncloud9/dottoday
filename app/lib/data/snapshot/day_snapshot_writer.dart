@@ -31,15 +31,20 @@ final class DaySnapshotWriter {
         .watchRange(userId, now, now.add(DaySnapshot.window))
         .first;
     final inbox = await _occurrences.watchInbox(userId).first;
+    final shape = DayShape.containing(
+      tz.getLocation(profile.tzId),
+      now,
+      profile.settings,
+    );
+    final day = await _occurrences
+        .watchRange(userId, shape.wakeUtc, shape.bedUtc)
+        .first;
     return DaySnapshot.build(
       nowUtc: now,
       occurrences: blocks,
       inboxCount: inbox.length,
-      shape: DayShape.containing(
-        tz.getLocation(profile.tzId),
-        now,
-        profile.settings,
-      ),
+      shape: shape,
+      dayOccurrences: day,
     );
   }
 

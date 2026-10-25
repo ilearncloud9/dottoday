@@ -65,20 +65,26 @@ String _$notificationGatewayHash() =>
     r'2ed6d11ff874122b02b95ef7fe908614b85b3a7e';
 
 /// Where the widget snapshot goes (M5.4, M5.5): home-screen widgets on
-/// iOS and Android, the menu-bar "Next up" on the Mac, nothing on the web.
+/// iOS and Android (plus the Live Activity / ongoing notification, M9.3,
+/// M9.4), the menu-bar "Next up"
+/// on the Mac, Cache Storage on the web.
 
 @ProviderFor(daySnapshotSink)
 final daySnapshotSinkProvider = DaySnapshotSinkProvider._();
 
 /// Where the widget snapshot goes (M5.4, M5.5): home-screen widgets on
-/// iOS and Android, the menu-bar "Next up" on the Mac, nothing on the web.
+/// iOS and Android (plus the Live Activity / ongoing notification, M9.3,
+/// M9.4), the menu-bar "Next up"
+/// on the Mac, Cache Storage on the web.
 
 final class DaySnapshotSinkProvider
     extends
         $FunctionalProvider<DaySnapshotSink, DaySnapshotSink, DaySnapshotSink>
     with $Provider<DaySnapshotSink> {
   /// Where the widget snapshot goes (M5.4, M5.5): home-screen widgets on
-  /// iOS and Android, the menu-bar "Next up" on the Mac, nothing on the web.
+  /// iOS and Android (plus the Live Activity / ongoing notification, M9.3,
+  /// M9.4), the menu-bar "Next up"
+  /// on the Mac, Cache Storage on the web.
   DaySnapshotSinkProvider._()
     : super(
         from: null,
@@ -112,7 +118,7 @@ final class DaySnapshotSinkProvider
   }
 }
 
-String _$daySnapshotSinkHash() => r'd1cc3be8b4d1a8e7317b90b75ba58652a1924200';
+String _$daySnapshotSinkHash() => r'15f77b84864036f08dceab01811fc715231e71b9';
 
 @ProviderFor(notificationSync)
 final notificationSyncProvider = NotificationSyncProvider._();

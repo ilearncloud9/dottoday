@@ -4,7 +4,7 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/intents/action_queue_drainer.dart';
-import 'package:dottoday/data/intents/home_widget_action_queue_store.dart';
+import 'package:dottoday/data/intents/native_action_queue_store.dart';
 import 'package:dottoday/data/intents/no_action_queue_store.dart';
 import 'package:dottoday/data/intents/web_action_queue_store.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
@@ -34,7 +34,7 @@ DotIntents dotIntents(Ref ref) => DotIntents(
 /// Where this platform's surfaces queue actions (docs/09 M9.2).
 @Riverpod(keepAlive: true)
 ActionQueueStore actionQueueStore(Ref ref) {
-  if (HomeWidgetSink.supported) return const HomeWidgetActionQueueStore();
+  if (HomeWidgetSink.supported) return const NativeActionQueueStore();
   if (WebSnapshotSink.supported) return const WebActionQueueStore();
   return const NoActionQueueStore();
 }

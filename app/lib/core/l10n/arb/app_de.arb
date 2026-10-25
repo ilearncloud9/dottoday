@@ -1004,5 +1004,9 @@
   "settingsDaySummaryDetail": "Beim Aufstehen an den gewählten Tagen: „Dein Tag: 6 Blöcke, der erste um 08:00“.",
   "notifDaySummaryTitle": "Dein Tag",
   "notifDaySummaryBody": "{count, plural, =1{1 Block, um {time}} other{{count} Blöcke, der erste um {time}}}",
-  "notifChannelAlertsSound": "Aufgabenhinweise · {sound}"
+  "notifChannelAlertsSound": "Aufgabenhinweise · {sound}",
+  "liveActivityLeft": "noch {time}",
+  "liveActivityStartsIn": "beginnt in {time}",
+  "liveActivityCount": "{done} von {total}",
+  "liveActivityCountLabel": "{done} von {total} heute erledigt"
 }

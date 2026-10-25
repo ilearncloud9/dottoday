@@ -1,12 +1,14 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/live_activity/live_activity_sink.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/notifications/os_notification_gateway.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/notifications/test_alarm.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/snapshot/composite_snapshot_sink.dart';
 import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
 import 'package:dottoday/data/snapshot/web_snapshot_sink.dart';
 import 'package:dottoday/data/sync/shared_hlc.dart';
@@ -38,11 +40,22 @@ NotificationGateway notificationGateway(Ref ref) {
 }
 
 /// Where the widget snapshot goes (M5.4, M5.5): home-screen widgets on
-/// iOS and Android, the menu-bar "Next up" on the Mac, nothing on the web.
+/// iOS and Android (plus the Live Activity / ongoing notification, M9.3,
+/// M9.4), the menu-bar "Next up"
+/// on the Mac, Cache Storage on the web.
 @Riverpod(keepAlive: true)
 DaySnapshotSink daySnapshotSink(Ref ref) {
   if (HomeWidgetSink.supported) {
-    return HomeWidgetSink(profile: () => latestProfile(ref));
+    final widgets = HomeWidgetSink(profile: () => latestProfile(ref));
+    if (!LiveActivitySink.supported) return widgets;
+    return CompositeSnapshotSink([
+      widgets,
+      LiveActivitySink(
+        clock: ref.watch(clockProvider),
+        profile: () => latestProfile(ref),
+        channel: LiveActivitySink.platformChannel!,
+      ),
+    ]);
   }
   if (MacStatusItemSink.supported) {
     return MacStatusItemSink(profile: () => latestProfile(ref));

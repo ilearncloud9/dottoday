@@ -3210,4 +3210,19 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String notifChannelAlertsSound(String sound) =>
       pseudo(super.notifChannelAlertsSound(sound));
+
+  @override
+  String liveActivityLeft(String time) => pseudo(super.liveActivityLeft(time));
+
+  @override
+  String liveActivityStartsIn(String time) =>
+      pseudo(super.liveActivityStartsIn(time));
+
+  @override
+  String liveActivityCount(int done, int total) =>
+      pseudo(super.liveActivityCount(done, total));
+
+  @override
+  String liveActivityCountLabel(int done, int total) =>
+      pseudo(super.liveActivityCountLabel(done, total));
 }

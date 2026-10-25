@@ -86,6 +86,17 @@ final class DotIntentsTests: XCTestCase {
     XCTAssertEqual(block()["done"] as? Bool, false)
   }
 
+  func testRemoveDropsOnlyTheSettledAndKeepsTheRest() {
+    let queue = DotQueue(defaults: defaults)
+    queue.append(DotQueue.entry(.markDone, occurrenceId: live, now: now))
+    queue.append(DotQueue.entry(.startFocus, occurrenceId: live, now: now))
+    let settled = queue.entries()[0]["id"] as! String
+    defaults.set(
+      (defaults.string(forKey: DotStore.queueKey)!.dropLast()) + ",\"junk\"]", forKey: DotStore.queueKey)
+    queue.remove([settled], unreadable: true)
+    XCTAssertEqual(queue.entries().map { $0["kind"] as? String }, ["start_focus"])
+  }
+
   func testWhatsNextReadsTheSnapshotsOwnWords() {
     let snapshot = DotActions.storedSnapshot(defaults: defaults)!
     XCTAssertEqual(DotActions.whatsNext(snapshot, at: now), "Now: Deep work · until 12:20")

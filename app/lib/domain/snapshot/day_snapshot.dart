@@ -76,6 +76,8 @@ final class DaySnapshot {
     required this.bedUtc,
     required this.dots,
     required this.inboxCount,
+    this.dayDone = 0,
+    this.dayTotal = 0,
   });
 
   /// Builds the snapshot at [nowUtc] from occurrences overlapping the next
@@ -91,7 +93,12 @@ final class DaySnapshot {
     required Iterable<Occurrence> occurrences,
     required int inboxCount,
     required DayShape shape,
+    Iterable<Occurrence> dayOccurrences = const [],
   }) {
+    final today = [
+      for (final o in dayOccurrences)
+        if (_inDay(o, shape)) o,
+    ];
     final end = nowUtc.add(window);
     final dots = [
       for (final o in occurrences)
@@ -103,6 +110,8 @@ final class DaySnapshot {
       bedUtc: shape.bedUtc,
       dots: List.unmodifiable(dots.take(maxDots)),
       inboxCount: inboxCount,
+      dayDone: today.where((o) => o.status == OccurrenceStatus.done).length,
+      dayTotal: today.length,
     );
   }
 
@@ -120,6 +129,12 @@ final class DaySnapshot {
   final DateTime bedUtc;
   final List<SnapshotDot> dots;
   final int inboxCount;
+
+  /// Today's dots (Wake Up → Bedtime, not skipped) that are done, and all
+  /// of them: the Live Activity's "1 of 3" (M9.3). Past dots are outside
+  /// [dots], so these are counted when the snapshot is built.
+  final int dayDone;
+  final int dayTotal;
 
   /// The dot under way when the snapshot was made, if any.
   SnapshotDot? get current => currentAt(generatedAtUtc);
@@ -152,6 +167,8 @@ final class DaySnapshot {
       other.wakeUtc == wakeUtc &&
       other.bedUtc == bedUtc &&
       other.inboxCount == inboxCount &&
+      other.dayDone == dayDone &&
+      other.dayTotal == dayTotal &&
       _sameDots(other.dots, dots);
 
   @override
@@ -160,6 +177,8 @@ final class DaySnapshot {
     wakeUtc,
     bedUtc,
     inboxCount,
+    dayDone,
+    dayTotal,
     Object.hashAll(dots),
   );
 
@@ -176,6 +195,13 @@ final class DaySnapshot {
     if (start == null || o.deletedAt != null) return false;
     if (o.status == OccurrenceStatus.skipped) return false;
     return start.isBefore(end) && o.endUtc!.isAfter(now);
+  }
+
+  static bool _inDay(Occurrence o, DayShape shape) {
+    final start = o.startUtc;
+    if (start == null || o.deletedAt != null) return false;
+    if (o.status == OccurrenceStatus.skipped) return false;
+    return !start.isBefore(shape.wakeUtc) && start.isBefore(shape.bedUtc);
   }
 
   static SnapshotDot _dot(Occurrence o) => SnapshotDot(

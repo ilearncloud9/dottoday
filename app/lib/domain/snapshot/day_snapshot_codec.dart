@@ -20,6 +20,8 @@ Map<String, Object?> encodeDaySnapshot(DaySnapshot s) => {
   'current_id': s.current?.id,
   'next_ids': [for (final d in s.next) d.id],
   'inbox_count': s.inboxCount,
+  'day_done': s.dayDone,
+  'day_total': s.dayTotal,
   'blocks': [for (final d in s.dots) _encodeDot(d)],
 };
 
@@ -46,9 +48,13 @@ DaySnapshot? decodeDaySnapshot(Object? json) {
   final wake = _instant(json['wake_ms']);
   final bed = _instant(json['bed_ms']);
   final inbox = json['inbox_count'];
+  final dayDone = json['day_done'];
+  final dayTotal = json['day_total'];
   final blocks = json['blocks'];
   if (generated == null || wake == null || bed == null) return null;
   if (inbox is! int || inbox < 0) return null;
+  if (dayTotal is! int || dayDone is! int) return null;
+  if (dayDone < 0 || dayDone > dayTotal) return null;
   if (blocks is! List<Object?> || blocks.length > DaySnapshot.maxDots) {
     return null;
   }
@@ -64,6 +70,8 @@ DaySnapshot? decodeDaySnapshot(Object? json) {
     bedUtc: bed,
     dots: List.unmodifiable(dots),
     inboxCount: inbox,
+    dayDone: dayDone,
+    dayTotal: dayTotal,
   );
 }
 

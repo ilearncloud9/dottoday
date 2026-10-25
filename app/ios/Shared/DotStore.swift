@@ -29,6 +29,10 @@ enum DotActionKind: String {
 struct DotQueue {
   let defaults: UserDefaults
 
+  /// Appends (any thread: intents, the Live Activity) and the drain's
+  /// remove take turns within this process.
+  private static let lock = NSLock()
+
   func entries() -> [[String: Any]] {
     guard let raw = defaults.string(forKey: DotStore.queueKey),
       let data = raw.data(using: .utf8),
@@ -38,7 +42,32 @@ struct DotQueue {
   }
 
   func append(_ entry: [String: Any]) {
-    let list = entries() + [entry]
+    Self.lock.lock()
+    defer { Self.lock.unlock() }
+    write(rawEntries() + [entry])
+  }
+
+  /// Drops the entries whose id is in [ids] (and, when [unreadable], those
+  /// without a string id) in one read-modify-write, so nothing appended in
+  /// between is lost (the app's drain, M9.2).
+  func remove(_ ids: Set<String>, unreadable: Bool) {
+    Self.lock.lock()
+    defer { Self.lock.unlock() }
+    write(rawEntries().filter { entry in
+      guard let id = (entry as? [String: Any])?["id"] as? String else { return !unreadable }
+      return !ids.contains(id)
+    })
+  }
+
+  private func rawEntries() -> [Any] {
+    guard let raw = defaults.string(forKey: DotStore.queueKey),
+      let data = raw.data(using: .utf8),
+      let list = try? JSONSerialization.jsonObject(with: data) as? [Any]
+    else { return [] }
+    return list
+  }
+
+  private func write(_ list: [Any]) {
     guard let data = try? JSONSerialization.data(withJSONObject: list),
       let raw = String(data: data, encoding: .utf8)
     else { return }

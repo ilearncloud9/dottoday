@@ -11,6 +11,8 @@ DaySnapshot _snapshot() => DaySnapshot(
   wakeUtc: DateTime.utc(2026, 10, 21, 7),
   bedUtc: DateTime.utc(2026, 10, 21, 22),
   inboxCount: 4,
+  dayDone: 1,
+  dayTotal: 3,
   dots: [
     SnapshotDot(
       id: 'live',
@@ -74,6 +76,8 @@ void main() {
       'year 1970': (j) => j['bed_ms'] = 0,
       'year 3000': (j) => j['generated_ms'] = 32503680000000,
       'negative inbox': (j) => j['inbox_count'] = -1,
+      'more done than dots': (j) => j['day_done'] = 4,
+      'no day total': (j) => j.remove('day_total'),
       'blocks not a list': (j) => j['blocks'] = {'a': 1},
       'too many blocks': (j) =>
           j['blocks'] = List.filled(DaySnapshot.maxDots + 1, block(j)),

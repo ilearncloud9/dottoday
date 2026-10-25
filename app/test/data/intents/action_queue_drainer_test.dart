@@ -97,6 +97,17 @@ void main() {
     expect(store.entries, isEmpty);
   });
 
+  test('+15, the same +15 again, then Done (the activity\'s path)', () async {
+    store
+      ..append(entry(_a1, AddFifteen(base.id, plannedEndUtc: base.endUtc!)))
+      ..append(entry(_a2, AddFifteen(base.id, plannedEndUtc: base.endUtc!)));
+    await drainer.drain();
+    store.append(entry(_late, MarkDone(base.id)));
+    await drainer.drain();
+    final task = (await occurrences.findById(userId, base.id))!;
+    expect((task.durationMin, task.status), (45, OccurrenceStatus.done));
+  });
+
   test('replaying the same entries changes nothing (idempotent)', () async {
     final plus = entry(_a1, AddFifteen(base.id, plannedEndUtc: base.endUtc!));
     store.append(plus);

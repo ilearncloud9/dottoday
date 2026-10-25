@@ -101,6 +101,31 @@ void main() {
     expect(snap.dots.single.actualEndUtc, now);
   });
 
+  test('counts today\'s dots done and in all, past ones included', () {
+    final day = [
+      base.copyWith(
+        id: 'early',
+        startUtc: DateTime.utc(2026, 10, 21, 8),
+        status: OccurrenceStatus.done,
+      ),
+      base.copyWith(id: 'later', startUtc: DateTime.utc(2026, 10, 21, 15)),
+      base.copyWith(
+        id: 'skipped',
+        startUtc: DateTime.utc(2026, 10, 21, 9),
+        status: OccurrenceStatus.skipped,
+      ),
+      base.copyWith(id: 'night', startUtc: DateTime.utc(2026, 10, 21, 23)),
+    ];
+    final snap = DaySnapshot.build(
+      nowUtc: now,
+      inboxCount: 0,
+      occurrences: const [],
+      shape: shape,
+      dayOccurrences: day,
+    );
+    expect((snap.dayDone, snap.dayTotal), (1, 2));
+  });
+
   test('caps the number of dots', () {
     final snap = build([
       for (var i = 0; i < 30; i++)

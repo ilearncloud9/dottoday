@@ -8,6 +8,9 @@ struct DottodayWidgets: WidgetBundle {
     NextUpWidget()
     TodayWidget()
     InboxWidget()
+    if #available(iOS 16.2, *) {
+      DotLiveActivity()
+    }
   }
 }
 

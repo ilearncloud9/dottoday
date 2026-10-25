@@ -1,12 +1,18 @@
-# Adds ios/Shared (the B6 App Intents, the action queue and the snapshot
-# patch, docs/09 M9.2) to both the Runner app and the DottodayWidgets
+# Adds ios/Shared (the B6 App Intents, the action queue, the snapshot
+# patch, docs/09 M9.2; the Live Activity's state, views and intents, M9.3)
+# to both the Runner app and the DottodayWidgets
 # extension, its Localizable.strings to both, and DotIntentsTests.swift to
 # RunnerTests. Idempotent. Run from app/:
 #   GEM_HOME=$(brew --prefix cocoapods)/libexec $(brew --prefix ruby)/bin/ruby \
 #     tool/ios_add_shared_intents.rb
 require 'xcodeproj'
 
-SOURCES = %w[DotStore.swift SnapshotPatch.swift DotActions.swift DotIntents.swift].freeze
+SOURCES = %w[
+  DotStore.swift SnapshotPatch.swift DotActions.swift DotIntents.swift DotTokens.swift
+  TaskSymbols.swift DotActivity.swift LiveActivities.swift LiveActivityViews.swift
+].freeze
+# Extension-only files (the Live Activity's configuration, M9.3).
+EXTENSION_SOURCES = %w[DotLiveActivity.swift].freeze
 LANGUAGES = %w[en de fr es].freeze
 
 project = Xcodeproj::Project.open('ios/Runner.xcodeproj')
@@ -30,9 +36,18 @@ targets.each do |t|
   t.resources_build_phase.add_file_reference(strings, true)
 end
 
+widgets_group = project.main_group['DottodayWidgets']
+EXTENSION_SOURCES.each do |name|
+  ref = widgets_group.files.find { |f| f.path == name } || widgets_group.new_file(name)
+  extension = targets.last
+  extension.add_file_references([ref]) unless extension.source_build_phase.files_references.include?(ref)
+end
+
 test_group = project.main_group['RunnerTests']
-test_ref = test_group.files.find { |f| f.path == 'DotIntentsTests.swift' } ||
-           test_group.new_file('DotIntentsTests.swift')
-tests.add_file_references([test_ref]) unless tests.source_build_phase.files_references.include?(test_ref)
+%w[DotIntentsTests.swift LiveActivityViewsTests.swift].each do |name|
+  next unless File.exist?("ios/RunnerTests/#{name}")
+  test_ref = test_group.files.find { |f| f.path == name } || test_group.new_file(name)
+  tests.add_file_references([test_ref]) unless tests.source_build_phase.files_references.include?(test_ref)
+end
 
 project.save
