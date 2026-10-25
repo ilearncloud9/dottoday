@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// Native and Dart sources that feed OS surfaces.
 const _surfaceDirs = [
   'ios/DottodayWidgets',
+  'ios/Shared',
   'android/app/src/main/kotlin/app/dottoday/planner/widgets',
   'lib/data/snapshot',
   'lib/data/widgets',

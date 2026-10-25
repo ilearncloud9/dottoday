@@ -42,6 +42,12 @@ void main() {
     expect(deep['end_ms'], (deep['start_ms']! as int) + 120 * 60 * 1000);
     expect(json['labels'], containsPair('inbox', '3 in Inbox'));
     expect(json['labels'], containsPair('next_up', 'Next up'));
+    expect(json['format'], {
+      'tz': 'Europe/Berlin',
+      'locale': 'en',
+      'hour24': false,
+      'until': 'until {time}',
+    });
   });
 
   test('24-hour clock and an empty Inbox', () {

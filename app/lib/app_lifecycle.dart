@@ -6,6 +6,7 @@ import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/intents/intent_providers.dart';
+import 'package:dottoday/data/intents/intent_queue_channel.dart';
 import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -81,6 +82,8 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // A widget or Siri queued an action while the app is open (M9.2).
+    listenForQueuedIntents(() => _drainQueue(ref));
     _timer = Timer.periodic(_period, (_) => unawaited(runHousekeeping(ref)));
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => unawaited(runHousekeeping(ref)),

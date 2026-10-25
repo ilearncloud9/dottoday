@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0277774B9AAC96638F8B085E /* DotIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF20C1EBD7428AB1D846DDA /* DotIntents.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		14AAD6398A84DCF2491B37F7 /* DotIntentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D23147C1D9E28E463F9315 /* DotIntentsTests.swift */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
+		365730C79D3B6A13E92D6B5F /* SnapshotPatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C08AB5AB645575C2308593 /* SnapshotPatch.swift */; };
 		3796BB58BA2860D6030DD397 /* DottodayWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9BD896D8A8380B424F050F63 /* DottodayWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		474B4C2CF42CC943669A58D7 /* DottodayWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9012690487F74080E890CF7D /* DottodayWidgets.swift */; };
@@ -17,13 +20,21 @@
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
+		8774181F8C043A4B0EB3085D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 45BD213795DEDD9446DFC966 /* Localizable.strings */; };
+		9020C94BFD093BD439DB3F13 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 45BD213795DEDD9446DFC966 /* Localizable.strings */; };
+		940225C74F717DD0AC2BE39D /* DotIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF20C1EBD7428AB1D846DDA /* DotIntents.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		A3CDC9C8AF4FA1ED40ED75C6 /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
+		B90E9CF17CDA85AD851A3D4B /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
 		CB4F7F7E60BDFD70BDDCB00E /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC1C822EC533B503A4F8A75 /* Snapshot.swift */; };
 		D965F1C05CE24385436325D9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BBB352BF44D23332BA9CF7AE /* InfoPlist.strings */; };
 		DD4E9BA683C505766566F0E6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53991F7DB8E44DC7ED234E07 /* Foundation.framework */; };
+		E2F14629C6B99D94D3D76BDF /* DotActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9475CDDE68AAF01310D87A /* DotActions.swift */; };
 		E97610F8CA6D24F677ABC9D3 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DFB8722B137929D22D2F8B7 /* Views.swift */; };
+		F0266253C4A161C72DCF526E /* SnapshotPatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C08AB5AB645575C2308593 /* SnapshotPatch.swift */; };
+		FF4E69F492C56F95BC3EBD48 /* DotActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9475CDDE68AAF01310D87A /* DotActions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +79,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		12C08AB5AB645575C2308593 /* SnapshotPatch.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnapshotPatch.swift; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		1E8170E1B727B88396EA7220 /* fr */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -78,15 +90,19 @@
 		333D3C32D7361F85D0AA5390 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		37F528F293D125636F6355B6 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		3B9475CDDE68AAF01310D87A /* DotActions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotActions.swift; sourceTree = "<group>"; };
 		3DC1C822EC533B503A4F8A75 /* Snapshot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Snapshot.swift; sourceTree = "<group>"; };
 		53991F7DB8E44DC7ED234E07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		5DFB8722B137929D22D2F8B7 /* Views.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		60BC003467BBBF8B45D39B59 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		77C3B2342B49E272328C536D /* fr */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		81D23147C1D9E28E463F9315 /* DotIntentsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotIntentsTests.swift; sourceTree = "<group>"; };
+		81DCE2F7DB27897A1C8F948D /* DotStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotStore.swift; sourceTree = "<group>"; };
 		9012690487F74080E890CF7D /* DottodayWidgets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DottodayWidgets.swift; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
@@ -97,11 +113,15 @@
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9BD896D8A8380B424F050F63 /* DottodayWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DottodayWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7FF859CE408F3EF13C10DAB /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		AEF20C1EBD7428AB1D846DDA /* DotIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotIntents.swift; sourceTree = "<group>"; };
 		BDB9ECEFC39891C3ACBA6062 /* DottodayWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = DottodayWidgets.entitlements; sourceTree = "<group>"; };
+		D136DF57206457BBAAC11E02 /* es */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DD62E075ADDD00D3D036B06F /* es */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E39EE94101270E8066DA396B /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EB16FBF79EA3ECABBA333397 /* Runner.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		F27856E16E6A37ADD929DF43 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
 		F29E9BDA3CA2C060A96D5E3B /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F8B68CB0B24001551238040C /* en */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FE1DA42FAA1B3E154E977217 /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		FF19FF533973ED301DC1E66F /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -135,10 +155,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		03783AB089AEBBC9E4152635 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				81DCE2F7DB27897A1C8F948D /* DotStore.swift */,
+				12C08AB5AB645575C2308593 /* SnapshotPatch.swift */,
+				3B9475CDDE68AAF01310D87A /* DotActions.swift */,
+				AEF20C1EBD7428AB1D846DDA /* DotIntents.swift */,
+				45BD213795DEDD9446DFC966 /* Localizable.strings */,
+			);
+			name = Shared;
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		331C8082294A63A400263BE5 /* RunnerTests */ = {
 			isa = PBXGroup;
 			children = (
 				331C807B294A618700263BE5 /* RunnerTests.swift */,
+				81D23147C1D9E28E463F9315 /* DotIntentsTests.swift */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -202,6 +236,7 @@
 				9133758B3F6D4DA319891BB7 /* Pods */,
 				88E1A1B3067C46D9749D53C1 /* Frameworks */,
 				3AFC64CF5CC45F760CCDE295 /* DottodayWidgets */,
+				03783AB089AEBBC9E4152635 /* Shared */,
 			);
 			sourceTree = "<group>";
 		};
@@ -358,6 +393,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9020C94BFD093BD439DB3F13 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,6 +413,7 @@
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 				D965F1C05CE24385436325D9 /* InfoPlist.strings in Resources */,
+				8774181F8C043A4B0EB3085D /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,6 +520,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */,
+				14AAD6398A84DCF2491B37F7 /* DotIntentsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -493,6 +531,10 @@
 				474B4C2CF42CC943669A58D7 /* DottodayWidgets.swift in Sources */,
 				CB4F7F7E60BDFD70BDDCB00E /* Snapshot.swift in Sources */,
 				E97610F8CA6D24F677ABC9D3 /* Views.swift in Sources */,
+				A3CDC9C8AF4FA1ED40ED75C6 /* DotStore.swift in Sources */,
+				F0266253C4A161C72DCF526E /* SnapshotPatch.swift in Sources */,
+				E2F14629C6B99D94D3D76BDF /* DotActions.swift in Sources */,
+				940225C74F717DD0AC2BE39D /* DotIntents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -503,6 +545,10 @@
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */,
+				B90E9CF17CDA85AD851A3D4B /* DotStore.swift in Sources */,
+				365730C79D3B6A13E92D6B5F /* SnapshotPatch.swift in Sources */,
+				FF4E69F492C56F95BC3EBD48 /* DotActions.swift in Sources */,
+				0277774B9AAC96638F8B085E /* DotIntents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,6 +569,17 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		45BD213795DEDD9446DFC966 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F8B68CB0B24001551238040C /* en */,
+				E39EE94101270E8066DA396B /* de */,
+				77C3B2342B49E272328C536D /* fr */,
+				D136DF57206457BBAAC11E02 /* es */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		97C146FA1CF9000F007C117D /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

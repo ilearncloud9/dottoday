@@ -1,0 +1,13 @@
+/* App Intents (docs/09 M9.2). Keys stay in step across languages: test/policy/os_strings_test.dart. */
+"intentAddTaskTitle" = "Ajouter une tâche";
+"intentAddTaskDescription" = "Ajoute une tâche à Dottoday. Avec une heure dans le texte, elle va dans votre journée, sinon dans la boîte de réception.";
+"intentAddTaskDone" = "Ajoutée à Dottoday.";
+"intentWhatsNextTitle" = "Et ensuite ?";
+"intentWhatsNextDescription" = "Dit ce qui est en cours dans Dottoday, ou ce qui vient ensuite.";
+"intentMarkDoneTitle" = "Marquer comme fait";
+"intentAddFifteenTitle" = "15 minutes de plus";
+"intentStartFocusTitle" = "Commencer le focus";
+"intentParamText" = "Texte";
+"intentParamTask" = "Tâche";
+"intentParamEnd" = "Fin prévue";
+"intentNoSnapshot" = "Ouvrez Dottoday une fois pour voir votre journée ici.";

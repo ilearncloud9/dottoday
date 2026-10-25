@@ -38,8 +38,19 @@ Map<String, Object?> snapshotStoreJson(
       'nothing_next': l10n.widgetNothingNext,
       'today': l10n.widgetToday,
       'inbox': l10n.widgetInboxCount(snapshot.inboxCount),
+    }
+    // How to write a time again after an optimistic +15 in Swift or Kotlin
+    // (M9.2): the zone, the language, the clock and the "until" pattern.
+    ..['format'] = {
+      'tz': profile.tzId,
+      'locale': _locale(profile.locale).languageCode,
+      'hour24': use24h,
+      'until': l10n.widgetUntil(timePlaceholder),
     };
 }
+
+/// Where the time goes in `format.until` (`until {time}`).
+const timePlaceholder = '{time}';
 
 Locale _locale(String code) {
   final wanted = Locale(code);

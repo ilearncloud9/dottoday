@@ -1,0 +1,13 @@
+/* App Intents (docs/09 M9.2). Keys stay in step across languages: test/policy/os_strings_test.dart. */
+"intentAddTaskTitle" = "Add task";
+"intentAddTaskDescription" = "Adds a task to Dottoday. A time in the text puts it on your day, otherwise it goes to the Inbox.";
+"intentAddTaskDone" = "Added to Dottoday.";
+"intentWhatsNextTitle" = "What's next";
+"intentWhatsNextDescription" = "Says what is on now in Dottoday, or what comes next.";
+"intentMarkDoneTitle" = "Mark done";
+"intentAddFifteenTitle" = "Add 15 minutes";
+"intentStartFocusTitle" = "Start focus";
+"intentParamText" = "Text";
+"intentParamTask" = "Task";
+"intentParamEnd" = "Planned end";
+"intentNoSnapshot" = "Open Dottoday once to see your day here.";

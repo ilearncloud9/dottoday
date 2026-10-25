@@ -124,6 +124,14 @@ jobs:
       - if: matrix.target == 'web'
         run: ../tool/web_db_assets.sh
       - run: ${{ matrix.cmd }} --dart-define-from-file=.env.example
+      # The Swift half of the B6 intents (docs/09 M9.2): queue entries and the
+      # optimistic snapshot patch, in RunnerTests on a simulator.
+      - if: matrix.target == 'ios'
+        name: Swift unit tests (RunnerTests)
+        run: >-
+          xcodebuild test -workspace ios/Runner.xcworkspace -scheme Runner
+          -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+          -only-testing:RunnerTests CODE_SIGNING_ALLOWED=NO -quiet
 
   integration-android:
     # The device tests on an Android emulator (docs/08 §6, docs/09 M4.9): cold launch,

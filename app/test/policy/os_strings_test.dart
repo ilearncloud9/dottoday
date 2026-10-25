@@ -81,6 +81,39 @@ void main() {
     });
   }
 
+  // App Intents titles, parameters and dialogs (docs/09 M9.2): iOS and
+  // Siri show them, so they speak every app language too.
+  group('ios/Shared Localizable.strings', () {
+    final english = _strings(File('ios/Shared/en.lproj/Localizable.strings'));
+    test('English has the intent strings', () {
+      expect(english.keys, contains('intentAddTaskTitle'));
+    });
+    for (final lang in _translations) {
+      test('$lang has every key, translated', () {
+        final file = File('ios/Shared/$lang.lproj/Localizable.strings');
+        final strings = _strings(file);
+        expect(strings.keys.toSet(), english.keys.toSet(), reason: file.path);
+        for (final MapEntry(:key, :value) in strings.entries) {
+          expect(value.trim(), isNotEmpty, reason: '${file.path} $key');
+        }
+      });
+    }
+    test('the app and the widget extension bundle them', () {
+      final project = File(
+        'ios/Runner.xcodeproj/project.pbxproj',
+      ).readAsStringSync();
+      expect(
+        'Localizable.strings in Resources */ = {isa = PBXBuildFile'.allMatches(
+          project,
+        ),
+        hasLength(2),
+      );
+      for (final lang in ['en', ..._translations]) {
+        expect(project, contains('path = $lang.lproj/Localizable.strings;'));
+      }
+    });
+  });
+
   test('Android 13+ offers every language per app', () {
     final manifest = File(
       'android/app/src/main/AndroidManifest.xml',

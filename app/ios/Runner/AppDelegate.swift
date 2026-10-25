@@ -32,6 +32,31 @@ import workmanager_apple
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "SoundBridge") {
       SoundBridge.shared.attach(to: registrar.messenger())
     }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "IntentQueueBridge") {
+      IntentQueueBridge.shared.attach(to: registrar.messenger())
+    }
+  }
+}
+
+/// Tells Dart on `dottoday/intents` that a widget, control, Live Activity
+/// or Siri queued an action (ios/Shared/DotActions.swift posts a Darwin
+/// notification, which reaches this process from the extension too), so a
+/// running app applies it at once instead of on the next resume (M9.2).
+final class IntentQueueBridge {
+  static let shared = IntentQueueBridge()
+  private var channel: FlutterMethodChannel?
+
+  func attach(to messenger: FlutterBinaryMessenger) {
+    channel = FlutterMethodChannel(name: "dottoday/intents", binaryMessenger: messenger)
+    let observer = Unmanaged.passUnretained(self).toOpaque()
+    CFNotificationCenterAddObserver(
+      CFNotificationCenterGetDarwinNotifyCenter(), observer,
+      { _, observer, _, _, _ in
+        guard let observer else { return }
+        let bridge = Unmanaged<IntentQueueBridge>.fromOpaque(observer).takeUnretainedValue()
+        DispatchQueue.main.async { bridge.channel?.invokeMethod("queueChanged", arguments: nil) }
+      },
+      DotStore.queueChanged as CFString, nil, .deliverImmediately)
   }
 }
 
