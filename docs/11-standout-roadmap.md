@@ -98,6 +98,7 @@ Enforced by `app/test/policy/no_shame_copy_test.dart` over every English string 
 - Daily: unchanged mechanics; copy audited against the principle: counts and moves, never red, never "missed streak". Writes the B5 snapshot.
 - Weekly (Sunday at Bedtime or on demand): the week as **seven dots** — one per day, size = hours planned, ring split into that day's tasks in their colours (done solid, not done faint), done count in the centre, tap a day to pop out its thread — with Busiest/Lightest chips and one sentence. **No streaks anywhere in the product.**
 - Share: the day's (or week's) thread as an image, task titles optional (off by default). Render: `B-ios-week-review.png` (seven dots).
+- As built (docs/09 M12.1): only this week is described — no comparison with another week, no count of days with something left (owner, 2026-10-25). The sentence is two halves at most: how real starts went against the plan (mornings, else afternoons, "to plan" = ≥ 80 % of ≥ 3 real starts within 15 min), then which day carried the most and which breathed. Each day is a `DaySnapshot` built on read from the local tasks.
 
 ### D2 · Low-energy mode — **new**
 - One switch in the Today header menu and in Settings: Today collapses to the next dot and a "later" pile, counts and "N planned" hidden, all nudges off, Rebalance offers "move everything optional to tomorrow" once. Turns itself off at the next Wake Up. Render: `B-ios-low-energy.png`.

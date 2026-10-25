@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:ui' show Rect;
 
 import 'package:dottoday/core/failures/app_failure.dart';
@@ -17,6 +18,9 @@ final class FakeFileGateway implements FileGateway {
   final delivered = <List<ExportFile>>[];
   final pickLimits = <int>[];
 
+  /// PNGs handed to [shareImage], by name.
+  final images = <String, Uint8List>{};
+
   @override
   Future<DeliveryOutcome> deliver(
     List<ExportFile> files, {
@@ -24,6 +28,17 @@ final class FakeFileGateway implements FileGateway {
   }) async {
     if (throws case final e?) throw e;
     delivered.add(files);
+    return outcome;
+  }
+
+  @override
+  Future<DeliveryOutcome> shareImage(
+    Uint8List png, {
+    required String name,
+    Rect? origin,
+  }) async {
+    if (throws case final e?) throw e;
+    images[name] = png;
     return outcome;
   }
 

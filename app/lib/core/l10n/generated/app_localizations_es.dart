@@ -4743,4 +4743,125 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get proposalOverlaps => 'ya está · se solapa';
+
+  @override
+  String get weekReviewTitle => 'Esta semana';
+
+  @override
+  String weekReviewDates(String from, String to) {
+    return '$from – $to';
+  }
+
+  @override
+  String weekReviewDotCount(int done, int total) {
+    return '$done/$total';
+  }
+
+  @override
+  String weekReviewDayLabel(String day, int done, int total, String planned) {
+    return '$day: $done de $total hechas, $planned planificadas';
+  }
+
+  @override
+  String weekReviewPlanned(String planned) {
+    return '$planned planificadas';
+  }
+
+  @override
+  String weekReviewPlannedBusiest(String planned) {
+    return '$planned · el más ocupado';
+  }
+
+  @override
+  String weekReviewBusiest(String day) {
+    return 'Más ocupado · $day';
+  }
+
+  @override
+  String weekReviewLightest(String day) {
+    return 'Más ligero · $day';
+  }
+
+  @override
+  String get weekPaceMornings =>
+      'Las mañanas fueron casi siempre según el plan.';
+
+  @override
+  String get weekPaceAfternoons =>
+      'Las tardes fueron casi siempre según el plan.';
+
+  @override
+  String get weekPaceAllDone => 'Todo lo que planificaste está hecho.';
+
+  @override
+  String get weekPaceQuiet =>
+      'Una semana tranquila: no había nada planificado.';
+
+  @override
+  String weekLoadBoth(String busiest, String lightest) {
+    return 'El $busiest cargó con más; el $lightest respiró.';
+  }
+
+  @override
+  String weekLoadBusiest(String busiest) {
+    return 'El $busiest cargó con más.';
+  }
+
+  @override
+  String weekCarryAsk(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sin terminar · ¿pasarlas a la próxima semana?',
+      one: '1 sin terminar · ¿pasarla a la próxima semana?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get weekCarryPlace => 'Colocar';
+
+  @override
+  String get weekCarryInbox => 'Dejar en la bandeja';
+
+  @override
+  String get weekCarryTitle => 'Próxima semana';
+
+  @override
+  String weekCarrySubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tareas sin terminar, cada una en el primer hueco libre que encaje',
+      one: '1 tarea sin terminar, en el primer hueco libre que encaje',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get weekCarryAccept => 'Colocarlas';
+
+  @override
+  String get weekCarryAccepted => 'Colocadas en la próxima semana';
+
+  @override
+  String get weekShareTitles => 'Mostrar títulos de tareas';
+
+  @override
+  String get weekShareImage => 'Compartir imagen';
+
+  @override
+  String weekShareDayTitles(String day, String titles) {
+    return '$day · $titles';
+  }
+
+  @override
+  String get weekReviewNoStreaks => 'Aquí no hay rachas: solo lo que pasó.';
+
+  @override
+  String get weekPromptDetail => 'Tu semana en siete puntos';
+
+  @override
+  String get weekPromptAction => 'Ver la semana';
 }

@@ -7049,6 +7049,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'already here · overlaps'**
   String get proposalOverlaps;
+
+  /// Weekly review (11 D1): sheet title, Today ⋯ menu item and Bedtime prompt caption.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get weekReviewTitle;
+
+  /// Weekly review: the week's first and last day.
+  ///
+  /// In en, this message translates to:
+  /// **'{from} – {to}'**
+  String weekReviewDates(String from, String to);
+
+  /// Weekly review: done and planned tasks inside a day's dot.
+  ///
+  /// In en, this message translates to:
+  /// **'{done}/{total}'**
+  String weekReviewDotCount(int done, int total);
+
+  /// Weekly review: a day's dot read out by screen readers.
+  ///
+  /// In en, this message translates to:
+  /// **'{day}: {done} of {total} done, {planned} planned'**
+  String weekReviewDayLabel(String day, int done, int total, String planned);
+
+  /// Weekly review: a tapped day's planned time, under its tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'{planned} planned'**
+  String weekReviewPlanned(String planned);
+
+  /// Weekly review: the busiest day's planned time, under its tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'{planned} · busiest'**
+  String weekReviewPlannedBusiest(String planned);
+
+  /// Weekly review chip: the day with the most planned time.
+  ///
+  /// In en, this message translates to:
+  /// **'Busiest · {day}'**
+  String weekReviewBusiest(String day);
+
+  /// Weekly review chip: the day with the least planned time.
+  ///
+  /// In en, this message translates to:
+  /// **'Lightest · {day}'**
+  String weekReviewLightest(String day);
+
+  /// Weekly review sentence, first half: most morning tasks really started within 15 min of plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Mornings mostly went to plan.'**
+  String get weekPaceMornings;
+
+  /// Weekly review sentence, first half: most afternoon tasks really started within 15 min of plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoons mostly went to plan.'**
+  String get weekPaceAfternoons;
+
+  /// Weekly review sentence, first half: every planned task is done.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you planned got done.'**
+  String get weekPaceAllDone;
+
+  /// Weekly review sentence when the week had no tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'A quiet week: nothing was planned.'**
+  String get weekPaceQuiet;
+
+  /// Weekly review sentence, second half: the busiest and the lightest day by planned time.
+  ///
+  /// In en, this message translates to:
+  /// **'{busiest} carried the most; {lightest} breathed.'**
+  String weekLoadBoth(String busiest, String lightest);
+
+  /// Weekly review sentence, second half, when only one day had anything planned.
+  ///
+  /// In en, this message translates to:
+  /// **'{busiest} carried the most.'**
+  String weekLoadBusiest(String busiest);
+
+  /// Weekly review: one-off tasks left unfinished this week.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 unfinished · move it to next week?} other{{count} unfinished · move them to next week?}}'**
+  String weekCarryAsk(int count);
+
+  /// Weekly review: propose the unfinished tasks into next week's free time.
+  ///
+  /// In en, this message translates to:
+  /// **'Place'**
+  String get weekCarryPlace;
+
+  /// Weekly review: send the unfinished tasks to the Inbox (with Undo).
+  ///
+  /// In en, this message translates to:
+  /// **'Leave in Inbox'**
+  String get weekCarryInbox;
+
+  /// Proposal title: unfinished tasks placed into next week.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week'**
+  String get weekCarryTitle;
+
+  /// Proposal subtitle for placing unfinished tasks into next week.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 unfinished task, each in the first free time that fits} other{{count} unfinished tasks, each in the first free time that fits}}'**
+  String weekCarrySubtitle(int count);
+
+  /// Proposal accept button: place the unfinished tasks into next week.
+  ///
+  /// In en, this message translates to:
+  /// **'Place them'**
+  String get weekCarryAccept;
+
+  /// Undo snackbar after the unfinished tasks were placed into next week.
+  ///
+  /// In en, this message translates to:
+  /// **'Placed in next week'**
+  String get weekCarryAccepted;
+
+  /// Weekly review: include task titles in the share image (off by default).
+  ///
+  /// In en, this message translates to:
+  /// **'Show task titles'**
+  String get weekShareTitles;
+
+  /// Weekly review: share the week as an image through the system share sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Share image'**
+  String get weekShareImage;
+
+  /// Share image with titles on: a day and its task titles.
+  ///
+  /// In en, this message translates to:
+  /// **'{day} · {titles}'**
+  String weekShareDayTitles(String day, String titles);
+
+  /// Weekly review footer: states the no-streak principle (11 D). The one string allowed to name streaks, to say there are none.
+  ///
+  /// In en, this message translates to:
+  /// **'No streaks here — just what happened.'**
+  String get weekReviewNoStreaks;
+
+  /// Bedtime prompt on the week's last day: what the weekly review shows.
+  ///
+  /// In en, this message translates to:
+  /// **'Your week in seven dots'**
+  String get weekPromptDetail;
+
+  /// Bedtime prompt on the week's last day: open the weekly review.
+  ///
+  /// In en, this message translates to:
+  /// **'See the week'**
+  String get weekPromptAction;
 }
 
 class _AppLocalizationsDelegate

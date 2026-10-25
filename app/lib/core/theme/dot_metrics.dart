@@ -114,6 +114,20 @@ abstract final class DotSize {
   /// Icon inside a row dot / a 24-unit nav icon.
   static const double rowIcon = 18;
   static const double navIcon = 24;
+
+  /// The weekly review's day dots (`B-ios-week-review`, 11 D1): the
+  /// lightest and busiest day's diameter (each column caps them), the
+  /// ring's stroke, the gap between its task segments, and the selected
+  /// day's halo.
+  static const double weekReviewDotMin = 40;
+  static const double weekReviewDotMax = 72;
+  static const double weekReviewStroke = 6;
+  static const double weekReviewGap = 0.06;
+  static const double weekReviewHalo = 4;
+
+  /// The share image's dots (`B-ios-week-review` bottom card).
+  static const double weekShareDotMin = 30;
+  static const double weekShareDotMax = 50;
 }
 
 /// Minimum tap targets (docs/10 §2.3): 44 pt everywhere, 48 dp on Android.

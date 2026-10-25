@@ -52,6 +52,14 @@ const _runningLateAction = {
   'settingsLateNudge',
 };
 
+/// The weekly review's footer (11 D1, docs/09 M12.1: "No streaks here —
+/// just what happened."): it names streaks only to promise there are
+/// none, as the plan words it.
+const _noStreakPromise = {'weekReviewNoStreaks'};
+
+/// Keys the judging check skips.
+const _allowed = {..._runningLateAction, ..._noStreakPromise};
+
 void main() {
   test('no English string judges the user', () {
     final arb =
@@ -61,7 +69,7 @@ void main() {
       for (final MapEntry(:key, :value) in arb.entries)
         if (!key.startsWith('@') &&
             value is String &&
-            !_runningLateAction.contains(key) &&
+            !_allowed.contains(key) &&
             _judging.hasMatch(_withoutPlaceholders(value)))
           '$key: $value',
     ];
@@ -80,7 +88,7 @@ void main() {
         for (final MapEntry(:key, :value) in arb.entries)
           if (!key.startsWith('@') &&
               value is String &&
-              !_runningLateAction.contains(key) &&
+              !_allowed.contains(key) &&
               judging.hasMatch(_withoutPlaceholders(value)))
             '$key: $value',
       ];
@@ -102,7 +110,7 @@ void main() {
 
   test('the exception list only names strings that exist', () {
     final arb = File('lib/core/l10n/arb/app_en.arb').readAsStringSync();
-    for (final key in _runningLateAction) {
+    for (final key in _allowed) {
       expect(arb, contains('"$key":'), reason: key);
     }
   });

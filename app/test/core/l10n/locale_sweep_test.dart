@@ -1,9 +1,11 @@
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/search/search_screen.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
+import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
 import 'package:dottoday/features/timeline/week_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -18,6 +20,7 @@ import '../../support/onboarding_harness.dart';
 import '../../support/test_l10n.dart';
 import '../../support/timeline_fakes.dart';
 import '../../support/today_harness.dart';
+import '../../support/week_review_fixtures.dart';
 
 // Truncation sweep (docs/09 M8.3, docs/08 §2): every main screen at the
 // three width classes in pseudo-English (about a third longer, accented,
@@ -58,6 +61,20 @@ final _screens = <String, _Screen>{
   ], false),
   'Month': _screen((t, s) => _pumpBoard(t, s, const MonthScreen())),
   'Settings': _screen((t, s) => pumpSettings(t, size: s)),
+  // The weekly review (M12.1): a sheet on phones, a popover when wider.
+  'This week': _screen(
+    (t, s) => _pumpBoard(
+      t,
+      s,
+      Scaffold(
+        body: SingleChildScrollView(
+          child: WeekReviewBody(today: DateTime(2026, 10, 25)),
+        ),
+      ),
+      now: reviewNow,
+      rows: weekReviewRows(),
+    ),
+  ),
   for (final page in SettingsPage.values)
     'Settings › ${page.name}': _screen(
       (t, s) =>
@@ -73,7 +90,13 @@ final _screens = <String, _Screen>{
     ),
 };
 
-Future<void> _pumpBoard(WidgetTester tester, Size size, Widget home) async {
+Future<void> _pumpBoard(
+  WidgetTester tester,
+  Size size,
+  Widget home, {
+  DateTime? now,
+  List<Occurrence>? rows,
+}) async {
   tester.view
     ..physicalSize = size
     ..devicePixelRatio = 1;
@@ -81,8 +104,8 @@ Future<void> _pumpBoard(WidgetTester tester, Size size, Widget home) async {
   await tester.pumpWidget(
     ProviderScope(
       overrides: timelineOverrides(
-        now: DateTime.utc(2026, 10, 21, 7, 22),
-        occurrences: FakeOccurrenceRepository(demoWeekRows()),
+        now: now ?? DateTime.utc(2026, 10, 21, 7, 22),
+        occurrences: FakeOccurrenceRepository(rows ?? demoWeekRows()),
         profile: testProfile(
           settings: const Settings(use24h: false, firstDayOfWeek: 7),
         ),
