@@ -149,13 +149,35 @@ const _f8Rows = <String, ParityRow>{
     ),
     android: Cell(Status.device, 'all three widgets · emulator, M5.4'),
     macos: Cell(Status.device, 'menu-bar Next up, M5.5'),
-    web: Cell(Status.later, 'tab title, favicon, Badging API — M9.7'),
+    web: Cell(
+      Status.device,
+      'tab title, favicon ring, Badging API · Chromium, M9.7',
+    ),
   ),
   'F9.2': ParityRow(
-    tests: ['test/policy/surface_contract_test.dart'],
-    all: Cell(Status.later, 'M9.3–M9.5'),
-    macos: Cell(Status.later, 'menu-bar dot M9.6'),
-    web: Cell(Status.later, 'web live dot M9.7'),
+    tests: [
+      'test/policy/surface_contract_test.dart',
+      'test/domain/live_activity/live_dot_plan_test.dart',
+      'test/data/live_activity/live_activity_test.dart',
+      'test/data/surfaces/surface_consistency_test.dart',
+      'test/data/widgets/mac_menu_actions_test.dart',
+      'test/data/live_activity/web_live_dot_test.dart',
+      'integration_test/surface_consistency_test.dart',
+    ],
+    all: ci,
+    ios: Cell(
+      Status.device,
+      'Live Activity + island, widget ✓, controls · iPhone 17 Pro sim, M9.3–M9.8; device: 08 §6.1 E',
+    ),
+    android: Cell(
+      Status.device,
+      'ongoing notification, widget ✓, tiles · API 37 emulator, killed-app Done, M9.4–M9.8',
+    ),
+    macos: Cell(Status.device, 'menu-bar day dot, Done / +15 · macOS, M9.6'),
+    web: Cell(
+      Status.device,
+      'tab live dot, Done / +15 reminders · Chromium, M9.7',
+    ),
   ),
   'F9.3': ParityRow(tests: [], all: Cell(Status.na, 'Phase 2 (ADR-0010)')),
   'F10.1': ParityRow(
@@ -180,7 +202,7 @@ const _f8Rows = <String, ParityRow>{
       'test/features/settings/whats_new_banner_test.dart',
     ],
     all: Cell(Status.manual, 'composer opens (08 §6.1 E)'),
-    note: 'Recipient is an owner gate (08 §6.1 Feedback address).',
+    note: 'Recipient feedback@dottoday.app, compiled in (chore/final-ids).',
   ),
 };
 

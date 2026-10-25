@@ -206,6 +206,9 @@ jobs:
       # opens the shortcut list (docs/08 §6.2, M8.7).
       - name: Keyboard checks
         run: node ../tool/a11y/keyboard_check.mjs http://127.0.0.1:8080/
+      # The live dot on the tab (docs/09 M9.7): title and favicon ring.
+      - name: Web live dot
+        run: node ../tool/a11y/web_live_dot_check.mjs http://127.0.0.1:8080/
       # No CSP violations, the service worker controls the page, and the app
       # opens offline after one visit (docs/07 Web, M5.7).
       - name: PWA, CSP and offline
