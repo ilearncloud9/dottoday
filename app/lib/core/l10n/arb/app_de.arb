@@ -1154,5 +1154,8 @@
   "settingsEnergyDetail": "Zeiten vorschlagen, zu denen du anspruchsvolle Aufgaben meist erledigst",
   "settingsEnergyLocked": "Nach 20 erledigten anspruchsvollen Aufgaben · bisher {count}",
   "addEnergyBest": "anspruchsvolle Aufgaben erledigst du am besten {range}",
-  "addEnergyTry": "{time} ausprobieren"
+  "addEnergyTry": "{time} ausprobieren",
+  "debugLoadM11Sample": "M11-Beispiel laden (Debug)",
+  "debugM11Loaded": "M11-Beispiel geladen",
+  "proposalOverlaps": "schon da · überschneidet sich"
 }

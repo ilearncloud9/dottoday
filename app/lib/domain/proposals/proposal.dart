@@ -22,6 +22,10 @@ enum ProposalChange {
   /// Shown so the user sees why others moved; writes nothing.
   untouched,
 
+  /// A task already on the day that a new dot would overlap; it stays as
+  /// it is and writes nothing (a routine drop, 11 C2).
+  overlaps,
+
   /// The dot keeps its place and gains steps (Break it down, 11 B1).
   steps,
 }

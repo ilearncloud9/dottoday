@@ -4742,4 +4742,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String addEnergyTry(String time) {
     return '$time ausprobieren';
   }
+
+  @override
+  String get debugLoadM11Sample => 'M11-Beispiel laden (Debug)';
+
+  @override
+  String get debugM11Loaded => 'M11-Beispiel geladen';
+
+  @override
+  String get proposalOverlaps => 'schon da · überschneidet sich';
 }

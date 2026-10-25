@@ -30,8 +30,12 @@ import 'package:integration_test/integration_test.dart';
 
 import 'support/a11y_tree.dart';
 import 'support/o4.dart';
+import 'support/sweep_m11.dart';
 
-const _tag = String.fromEnvironment('SWEEP_TAG', defaultValue: 'device');
+const _tagBase = String.fromEnvironment('SWEEP_TAG', defaultValue: 'device');
+
+/// The shots' prefix: platform, plus `_dark` for a dark run (M11.6).
+const _tag = sweepTheme == 'dark' ? '${_tagBase}_dark' : _tagBase;
 
 Future<void> _pumpUntil(
   WidgetTester tester,
@@ -105,6 +109,9 @@ void main() {
     await tester.tap(find.text('Load demo day (debug)'));
     await _pumpUntil(tester, find.byType(DayCard));
     await tester.pump(const Duration(seconds: 5)); // the snackbar leaves
+    // M11.6: dark runs set the app's theme; the M11 data is seeded here.
+    await applySweepTheme(tester);
+    await seedM11(tester, until: (f) => _pumpUntil(tester, f));
     await _rest(tester);
     await _shot(binding, tester, '${_tag}_today');
     await checkA11yTree(tester, 'today');
@@ -118,6 +125,15 @@ void main() {
     await _searchAndSettings(binding, tester);
     await _m3f(binding, tester);
     await _m8(binding, tester);
+    await sweepM11(
+      tester,
+      shot: (name) async {
+        await _shot(binding, tester, '${_tag}_$name');
+        await checkA11yTree(tester, name);
+      },
+      until: (f) => _pumpUntil(tester, f),
+      rest: () => _rest(tester),
+    );
     expectNoA11yFindings();
   });
 }

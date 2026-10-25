@@ -3,8 +3,10 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
+import 'package:dottoday/data/dev/demo_m11.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
 import 'package:flutter/foundation.dart';
@@ -41,6 +43,26 @@ final class DemoDayLoader {
         userId: profile.id,
         location: location,
         date: DateTime(today.year, today.month, today.day),
+        nowUtc: now,
+      ),
+    );
+  }
+
+  /// Adds the M11 sample to today (real times, routines; `demo_m11.dart`).
+  Future<Result<void, AppFailure>> loadM11({
+    required Future<List<Occurrence>> Function(DateTime from, DateTime to) day,
+  }) async {
+    assert(kDebugMode, 'The M11 sample is a debug-only tool.');
+    final profile = await _profile();
+    final location = tz.getLocation(profile.tzId);
+    final now = _clock.nowUtc();
+    final local = tz.TZDateTime.from(now, location);
+    final from = tz.TZDateTime(location, local.year, local.month, local.day);
+    final to = tz.TZDateTime(location, local.year, local.month, local.day + 1);
+    return _writes.apply(
+      buildM11Sample(
+        userId: profile.id,
+        day: await day(from.toUtc(), to.toUtc()),
         nowUtc: now,
       ),
     );

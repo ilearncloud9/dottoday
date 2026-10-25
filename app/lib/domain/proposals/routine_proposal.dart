@@ -7,8 +7,9 @@ import 'package:dottoday/domain/snapshot/day_snapshot.dart';
 
 /// Dropping a routine's [tasks] onto [day] as a [Proposal] (11 C2, docs/09
 /// M11.4): one "added" line per step over the day as it is. Nothing is
-/// moved to make room — an overlap shows on the thread, and × drops that
-/// step — so Accept writes exactly the steps that are left.
+/// moved to make room: a task already there that a step overlaps gets an
+/// "already here · overlaps" line (never written), × drops a step, and
+/// Accept writes exactly the steps that are left.
 ///
 /// ```dart
 /// routineProposal(userId: me, day: blocks, tasks: steps, …).toBatch();
@@ -32,7 +33,7 @@ Proposal routineProposal({
     ],
     inboxCount: 0,
   ),
-  edits: [
+  edits: _byStart([
     for (final t in tasks)
       ProposalEdit(
         id: t.id,
@@ -40,5 +41,26 @@ Proposal routineProposal({
         after: snapshotDotOf(t),
         occurrences: [t],
       ),
-  ],
+    for (final o in scheduledBlocks(day))
+      if (o.status == OccurrenceStatus.planned &&
+          tasks.any((t) => _overlap(o, t)))
+        ProposalEdit(
+          id: o.id,
+          change: ProposalChange.overlaps,
+          before: snapshotDotOf(o),
+          after: snapshotDotOf(o),
+          removable: false,
+        ),
+  ]),
 );
+
+/// [edits] in day order, so an overlap sits beside the step it meets.
+List<ProposalEdit> _byStart(List<ProposalEdit> edits) => edits
+  ..sort(
+    (a, b) => (a.after ?? a.before)!.startUtc.compareTo(
+      (b.after ?? b.before)!.startUtc,
+    ),
+  );
+
+bool _overlap(Occurrence a, Occurrence b) =>
+    a.startUtc!.isBefore(b.endUtc!) && b.startUtc!.isBefore(a.endUtc!);

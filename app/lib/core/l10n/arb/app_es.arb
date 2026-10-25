@@ -1154,5 +1154,8 @@
   "settingsEnergyDetail": "Sugerir las horas en que sueles terminar las tareas exigentes",
   "settingsEnergyLocked": "Tras 20 tareas exigentes terminadas · {count} hasta ahora",
   "addEnergyBest": "terminas mejor las tareas exigentes {range}",
-  "addEnergyTry": "Probar {time}"
+  "addEnergyTry": "Probar {time}",
+  "debugLoadM11Sample": "Cargar ejemplo M11 (debug)",
+  "debugM11Loaded": "Ejemplo M11 cargado",
+  "proposalOverlaps": "ya está · se solapa"
 }

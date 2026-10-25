@@ -7031,6 +7031,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try {time}'**
   String addEnergyTry(String time);
+
+  /// Debug-build-only menu item: real times on two of today's tasks and three sample routines.
+  ///
+  /// In en, this message translates to:
+  /// **'Load M11 sample (debug)'**
+  String get debugLoadM11Sample;
+
+  /// Confirmation after the debug M11 sample was written.
+  ///
+  /// In en, this message translates to:
+  /// **'M11 sample loaded'**
+  String get debugM11Loaded;
+
+  /// Proposal chip on an existing task a new one would overlap; it stays as it is (routine drop, M11.4).
+  ///
+  /// In en, this message translates to:
+  /// **'already here · overlaps'**
+  String get proposalOverlaps;
 }
 
 class _AppLocalizationsDelegate

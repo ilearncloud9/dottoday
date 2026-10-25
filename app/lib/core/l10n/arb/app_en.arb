@@ -5976,5 +5976,11 @@
   "addEnergyBest": "you finish high-energy tasks best {range}",
   "@addEnergyBest": {"description": "Add step 2: the user's best window for high-energy work, from their own history.", "placeholders": {"range": {"type": "String", "example": "9 – 11 AM"}}},
   "addEnergyTry": "Try {time}",
-  "@addEnergyTry": {"description": "Add step 2: move the new task to the start of the best window.", "placeholders": {"time": {"type": "String", "example": "9:00 AM"}}}
+  "@addEnergyTry": {"description": "Add step 2: move the new task to the start of the best window.", "placeholders": {"time": {"type": "String", "example": "9:00 AM"}}},
+  "debugLoadM11Sample": "Load M11 sample (debug)",
+  "@debugLoadM11Sample": {"description": "Debug-build-only menu item: real times on two of today's tasks and three sample routines."},
+  "debugM11Loaded": "M11 sample loaded",
+  "@debugM11Loaded": {"description": "Confirmation after the debug M11 sample was written."},
+  "proposalOverlaps": "already here · overlaps",
+  "@proposalOverlaps": {"description": "Proposal chip on an existing task a new one would overlap; it stays as it is (routine drop, M11.4)."}
 }

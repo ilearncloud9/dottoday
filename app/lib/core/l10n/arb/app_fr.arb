@@ -1154,5 +1154,8 @@
   "settingsEnergyDetail": "Proposer les moments où tu termines le mieux les tâches exigeantes",
   "settingsEnergyLocked": "Après 20 tâches exigeantes terminées · {count} pour l’instant",
   "addEnergyBest": "tu termines le mieux les tâches exigeantes {range}",
-  "addEnergyTry": "Essayer {time}"
+  "addEnergyTry": "Essayer {time}",
+  "debugLoadM11Sample": "Charger l’exemple M11 (debug)",
+  "debugM11Loaded": "Exemple M11 chargé",
+  "proposalOverlaps": "déjà là · chevauche"
 }

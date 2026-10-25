@@ -3697,4 +3697,13 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String addEnergyTry(String time) => pseudo(super.addEnergyTry(time));
+
+  @override
+  String get debugLoadM11Sample => pseudo(super.debugLoadM11Sample);
+
+  @override
+  String get debugM11Loaded => pseudo(super.debugM11Loaded);
+
+  @override
+  String get proposalOverlaps => pseudo(super.proposalOverlaps);
 }

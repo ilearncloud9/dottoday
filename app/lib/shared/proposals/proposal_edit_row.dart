@@ -100,6 +100,7 @@ class ProposalEditRow extends StatelessWidget {
       },
       ProposalChange.added => l10n.proposalAdded,
       ProposalChange.untouched => l10n.proposalUntouched,
+      ProposalChange.overlaps => l10n.proposalOverlaps,
       ProposalChange.steps => l10n.proposalSteps(
         edit.subtasks.where((s) => s.deletedAt == null).length,
       ),
@@ -220,7 +221,8 @@ class _ChangeChip extends StatelessWidget {
         t.tasks[TaskColor.rose].tint,
         t.tasks[TaskColor.rose].ink,
       ),
-      ProposalChange.untouched => (t.colors.hairline, t.colors.muted),
+      ProposalChange.untouched ||
+      ProposalChange.overlaps => (t.colors.hairline, t.colors.muted),
       _ => (t.colors.accentTint, t.colors.accentInk),
     };
     return DecoratedBox(

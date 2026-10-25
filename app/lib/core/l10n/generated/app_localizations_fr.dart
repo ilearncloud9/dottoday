@@ -4745,4 +4745,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String addEnergyTry(String time) {
     return 'Essayer $time';
   }
+
+  @override
+  String get debugLoadM11Sample => 'Charger l’exemple M11 (debug)';
+
+  @override
+  String get debugM11Loaded => 'Exemple M11 chargé';
+
+  @override
+  String get proposalOverlaps => 'déjà là · chevauche';
 }
