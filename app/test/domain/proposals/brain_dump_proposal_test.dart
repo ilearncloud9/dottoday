@@ -96,4 +96,23 @@ void main() {
     final left = p.without(p.edits.first.id);
     expect(left.toBatch().occurrences.map((o) => o.title), ['B']);
   });
+
+  test('a model never sets a time the person did not write', () {
+    const model = [
+      ProposedDot(title: 'Email Sam', minuteOfDay: 0, durationMin: 15),
+      ProposedDot(title: 'Bank', minuteOfDay: 900),
+    ];
+    const rules = [
+      ProposedDot(title: 'Email Sam'),
+      ProposedDot(title: 'Call the bank', minuteOfDay: 16 * 60),
+    ];
+    final grounded = groundTimes(model, rules);
+    expect(grounded.map((d) => d.minuteOfDay), [null, 16 * 60]);
+    expect(grounded.first.durationMin, 15, reason: 'its sizes stay');
+    expect(
+      groundTimes(model, rules.take(1).toList()).map((d) => d.minuteOfDay),
+      [null, null],
+      reason: 'not line for line: placement decides',
+    );
+  });
 }

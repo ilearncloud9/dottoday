@@ -10,6 +10,31 @@ import 'package:dottoday/domain/thinking/thinking_proposals.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+/// A model's dots with times only where the person wrote one (11 B4,
+/// docs/09 M12.5): [rules] is Quick Add's parse of the same text. When the
+/// two agree line for line, each dot keeps the parsed time (or none);
+/// otherwise every model time is dropped and placement decides. A model
+/// may name and size tasks, never invent when they happen (the iPhone
+/// sweep found it putting untimed lines at midnight).
+///
+/// ```dart
+/// groundTimes(model.dots, rules.dots).map((d) => d.minuteOfDay);
+/// ```
+List<ProposedDot> groundTimes(
+  List<ProposedDot> model,
+  List<ProposedDot> rules,
+) {
+  final aligned = model.length == rules.length;
+  return [
+    for (final (i, d) in model.indexed)
+      ProposedDot(
+        title: d.title,
+        durationMin: d.durationMin,
+        minuteOfDay: aligned ? rules[i].minuteOfDay : null,
+      ),
+  ];
+}
+
 /// What a brain dump lands on: a day as it is.
 final class DumpDay {
   const DumpDay({

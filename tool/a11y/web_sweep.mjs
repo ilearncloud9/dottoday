@@ -118,6 +118,8 @@ for (const theme of ['light', 'dark']) {
       await tap(page, 'More options');
       await tapText(page, 'Turn off low-energy mode');
       await go(page, '/search');
+      await page.getByRole('textbox').first().fill('').catch(() => {});
+      await page.waitForTimeout(900);
       await tapText(page, 'Past days');
       await page.waitForTimeout(1_500);
       await shot('past_days');

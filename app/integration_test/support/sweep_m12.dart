@@ -42,10 +42,13 @@ Future<void> sweepM12(
   await shot('low_energy');
   await menu('Turn off low-energy mode');
 
+  // The sweep searched earlier: Past days shows while nothing is typed.
   router.go('/search');
+  await until(find.byType(TextField));
+  await tester.enterText(find.byType(TextField).first, '');
   await until(find.text('Past days'));
   await tester.tap(find.text('Past days'));
-  await until(find.text('Year strip'));
+  await until(find.text('When did I last…'));
   await rest();
   await shot('past_days');
   await tester.pageBack();

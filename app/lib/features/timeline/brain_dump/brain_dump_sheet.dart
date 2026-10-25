@@ -154,12 +154,9 @@ class _BrainDumpBodyState extends ConsumerState<BrainDumpBody> {
       text: _text.text,
       date: date,
       dayName: dayName,
+      beforeOpen: widget.onPlanned,
     );
-    if (!mounted) return;
-    if (planned) {
-      widget.onPlanned?.call();
-      return;
-    }
+    if (!mounted || planned) return;
     setState(() {
       _busy = false;
       _nothing = true;

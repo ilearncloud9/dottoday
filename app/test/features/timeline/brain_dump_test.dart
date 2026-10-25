@@ -28,6 +28,7 @@ const _dump = 'Email Sam\nTaxes 45m\nCall the bank 4pm';
 Future<ProposalHarness> _pump(
   WidgetTester tester, {
   ThinkingAvailability model = ThinkingAvailability.unavailable,
+  bool sheet = false,
 }) async {
   tester.view
     ..physicalSize = const Size(390, 1600)
@@ -61,9 +62,17 @@ Future<ProposalHarness> _pump(
       child: testApp(
         Scaffold(
           body: ProposalHost(
-            child: SingleChildScrollView(
-              child: BrainDumpBody(today: DateTime(2026, 10, 21)),
-            ),
+            child: sheet
+                ? Builder(
+                    builder: (context) => TextButton(
+                      onPressed: () =>
+                          showBrainDump(context, DateTime(2026, 10, 21)),
+                      child: const Text('Open'),
+                    ),
+                  )
+                : SingleChildScrollView(
+                    child: BrainDumpBody(today: DateTime(2026, 10, 21)),
+                  ),
           ),
         ),
       ),
@@ -141,6 +150,19 @@ void main() {
     final bank = rows.singleWhere((o) => o.title == 'Call the bank');
     expect(bank.startUtc, DateTime.utc(2026, 10, 21, 20), reason: '4 PM EDT');
     expect(rows.singleWhere((o) => o.title == 'Taxes').durationMin, 45);
+    await _unmount(tester);
+  });
+
+  testWidgets('from its sheet: the sheet closes, the proposal stays', (
+    tester,
+  ) async {
+    final h = await _pump(tester, sheet: true);
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+    await _planIt(tester, _dump);
+    expect(find.byType(BrainDumpBody), findsNothing);
+    expect(find.text('Add to day'), findsOneWidget);
+    expect(h.writes.batches, isEmpty);
     await _unmount(tester);
   });
 
