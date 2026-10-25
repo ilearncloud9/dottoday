@@ -50,6 +50,10 @@ object OngoingDot {
         return runCatching { JSONObject(raw).getString("id") }.getOrNull()
     }
 
+    /** The posted notification's content JSON, or null when none shows. */
+    fun activeContent(context: Context): String? =
+        if (activeId(context) == null) null else DotActionReceiver.prefs(context).getString(KEY, null)
+
     /** Fires the posted notification's action [label] ("done" / "plus"). */
     fun press(context: Context, label: String) {
         val manager = context.getSystemService(android.app.NotificationManager::class.java)

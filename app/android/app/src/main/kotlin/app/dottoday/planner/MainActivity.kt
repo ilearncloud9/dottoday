@@ -45,6 +45,8 @@ class MainActivity : FlutterFragmentActivity() {
                     // The device test (integration_test/ongoing_dot_test.dart):
                     // what is posted, and the notification's own action intents.
                     "activeId" -> result.success(OngoingDot.activeId(this))
+                    // The consistency gate (M9.8): what the notification shows.
+                    "activeContent" -> result.success(OngoingDot.activeContent(this))
                     "perform" -> {
                         OngoingDot.press(this, call.argument<String>("action") ?: "")
                         result.success(null)

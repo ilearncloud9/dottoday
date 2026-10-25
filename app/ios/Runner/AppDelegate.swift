@@ -62,6 +62,12 @@ enum LiveActivityBridge {
       // dots have an activity, and the activity's own Done / +15 path.
       case "activeIds":
         result(Activity<DotActivityAttributes>.activities.map { $0.content.state.id })
+      // The consistency gate (M9.8): what each activity shows.
+      case "activeStates":
+        result(
+          Activity<DotActivityAttributes>.activities.compactMap { activity in
+            (try? JSONEncoder().encode(activity.content.state)).flatMap { String(data: $0, encoding: .utf8) }
+          })
       case "perform":
         guard let args = call.arguments as? [String: Any], let id = args["id"] as? String else {
           return result(FlutterError(code: "bad_args", message: nil, details: nil))

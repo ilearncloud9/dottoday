@@ -36,7 +36,10 @@ fi
 tests=("$@")
 if [[ ${#tests[@]} -eq 0 ]]; then
   tests=(app_launch onboarding journey deep_link background_refresh
-    notification_exactness sweep)
+    notification_exactness surface_consistency)
+  # The live dot (M9.3, M9.4): each platform's own surface.
+  if [[ "$platform" == ios ]]; then tests+=(live_activity); else tests+=(ongoing_dot); fi
+  tests+=(sweep)
 fi
 defines="${DEFINES:-.env}"
 limit=$((15 * 60))

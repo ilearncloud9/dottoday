@@ -99,6 +99,19 @@ void main() {
       expect((await stored(live.id)).durationMin, 45);
     });
 
+    test(
+      'an end with microseconds still matches its stored millisecond',
+      () async {
+        final action = queued(
+          AddFifteen(
+            live.id,
+            plannedEndUtc: live.endUtc!.add(const Duration(microseconds: 600)),
+          ),
+        );
+        expect(await intents.apply(action), ActionOutcome.applied);
+      },
+    );
+
     test('an end the task no longer has is stale', () async {
       final action = queued(
         AddFifteen(

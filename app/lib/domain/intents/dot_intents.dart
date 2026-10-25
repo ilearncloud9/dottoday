@@ -109,10 +109,13 @@ final class DotIntents {
   Future<ActionOutcome> _addFifteen(String userId, AddFifteen a) async {
     final task = await _live(userId, a.occurrenceId);
     if (task == null) return ActionOutcome.droppedMissing;
-    final end = task.endUtc;
-    const extra = Duration(minutes: AddFifteen.minutes);
-    if (end == a.plannedEndUtc.add(extra)) return ActionOutcome.alreadyApplied;
-    if (end != a.plannedEndUtc) return ActionOutcome.droppedStale;
+    // Compared in whole milliseconds: what every surface carries (a stored
+    // time has no microseconds; one made in the app may).
+    final end = task.endUtc!.millisecondsSinceEpoch;
+    final planned = a.plannedEndUtc.millisecondsSinceEpoch;
+    const extra = AddFifteen.minutes * 60000;
+    if (end == planned + extra) return ActionOutcome.alreadyApplied;
+    if (end != planned) return ActionOutcome.droppedStale;
     return _write(
       WriteBatch(
         userId: userId,

@@ -5,9 +5,11 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Fixed
+- +15 from a widget, the lock screen or a notification could be ignored for a task created a moment earlier; it now always applies.
 - An action from a widget or the Live Activity made while the app was catching up on earlier ones could be lost; it now always gets through.
 
 ### Added
+- M9.8: Every place outside the app — widgets, lock screen, Dynamic Island, the Android notification, the Mac menu bar and the browser tab — now shows the same task within a second of any change, checked on every build and on iPhone and Android.
 - M9.7: On the web, the browser tab shows the task under way — "● 38 min left · Deep work" and a filling ring as its icon — and an installed Dottoday shows your Inbox count on its icon where the browser supports it. Web reminders now offer Done and +15 min.
 - M9.6: On the Mac, the menu-bar item is now the day dot — a ring that fills from Wake Up to Bedtime — next to what's on now. Click it for What's next, with Done and +15 min right there.
 - M9.5: Tick the next task straight from the Next up widget. iPhone: Add task and Start focus controls for Control Center, the Lock Screen and the Action button, and Siri phrases for all five quick actions in English, German, French and Spanish. Android: Add task and Start focus tiles in Quick Settings.
