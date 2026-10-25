@@ -4692,4 +4692,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routineDropDay => 'Which day';
+
+  @override
+  String get settingsEnergy => 'Energy suggestions';
+
+  @override
+  String get settingsEnergyDetail =>
+      'Suggest times when you usually finish high-energy tasks';
+
+  @override
+  String settingsEnergyLocked(int count) {
+    return 'After 20 finished high-energy tasks · $count so far';
+  }
+
+  @override
+  String addEnergyBest(String range) {
+    return 'you finish high-energy tasks best $range';
+  }
+
+  @override
+  String addEnergyTry(String time) {
+    return 'Try $time';
+  }
 }

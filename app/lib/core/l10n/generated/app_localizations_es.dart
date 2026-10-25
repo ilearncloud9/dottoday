@@ -4712,4 +4712,26 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get routineDropDay => 'Qué día';
+
+  @override
+  String get settingsEnergy => 'Sugerencias de energía';
+
+  @override
+  String get settingsEnergyDetail =>
+      'Sugerir las horas en que sueles terminar las tareas exigentes';
+
+  @override
+  String settingsEnergyLocked(int count) {
+    return 'Tras 20 tareas exigentes terminadas · $count hasta ahora';
+  }
+
+  @override
+  String addEnergyBest(String range) {
+    return 'terminas mejor las tareas exigentes $range';
+  }
+
+  @override
+  String addEnergyTry(String time) {
+    return 'Probar $time';
+  }
 }

@@ -58,6 +58,10 @@ abstract class Settings with _$Settings {
     // (docs/02 F5 "if the user enables it").
     @Default(false) bool suggestTravelTime,
     @Default(15) int travelTimeMin,
+    // Settings › Planning › Energy suggestions (11 C4, M11.5): null follows
+    // the default — off until enough high-energy tasks were finished, then
+    // on; true/false is the user's choice.
+    bool? energySuggestions,
   }) = _Settings;
 
   const Settings._();

@@ -15,6 +15,7 @@ import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
@@ -36,6 +37,7 @@ import '../../support/account_fakes.dart';
 import '../../support/calendar_fakes.dart';
 import '../../support/cloud_calendar_fakes.dart';
 import '../../support/dot_golden.dart';
+import '../../support/energy_history.dart';
 import '../../support/sync_fakes.dart';
 import '../../support/timeline_fakes.dart';
 
@@ -47,6 +49,7 @@ List<Override> _overridesWith({
   DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
   List<Override> extra = const [],
   Settings settings = const Settings(use24h: true),
+  List<Occurrence> rows = const [],
 }) => [
   ...extra,
   ...timelineOverrides(
@@ -55,6 +58,7 @@ List<Override> _overridesWith({
     notificationPermission: permission,
     exactAlarms: exactAlarms,
     calendarGateway: calendarGateway,
+    occurrences: FakeOccurrenceRepository(rows),
   ),
   appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),
   envProvider.overrideWithValue(
@@ -79,6 +83,8 @@ Future<void> _open(WidgetTester tester, String row) async {
 }
 
 void main() {
+  // energyHistory() reads the zone database while tests are declared.
+  tz_data.initializeTimeZones();
   setUpAll(() async {
     tz_data.initializeTimeZones();
     await loadAppFonts();
@@ -91,6 +97,24 @@ void main() {
     overrides: _overrides,
     build: (_) => _settings(),
   );
+  // Energy suggestions (M11.5, derived): locked with the count, then on.
+  for (final (name, count) in [('locked', 7), ('on', 20)]) {
+    goldenMatrix(
+      'settings_energy_$name',
+      height: 844,
+      widths: const {'compact', 'expanded'},
+      act: (t) async {
+        await t.scrollUntilVisible(
+          find.text('Energy suggestions'),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await t.pumpAndSettle();
+      },
+      overrides: _overridesWith(rows: energyHistory(count: count)),
+      build: (_) => _settings(),
+    );
+  }
   goldenMatrix(
     'settings_android',
     height: 915,

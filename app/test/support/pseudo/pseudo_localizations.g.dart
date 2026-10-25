@@ -3681,4 +3681,20 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get routineDropDay => pseudo(super.routineDropDay);
+
+  @override
+  String get settingsEnergy => pseudo(super.settingsEnergy);
+
+  @override
+  String get settingsEnergyDetail => pseudo(super.settingsEnergyDetail);
+
+  @override
+  String settingsEnergyLocked(int count) =>
+      pseudo(super.settingsEnergyLocked(count));
+
+  @override
+  String addEnergyBest(String range) => pseudo(super.addEnergyBest(range));
+
+  @override
+  String addEnergyTry(String time) => pseudo(super.addEnergyTry(time));
 }

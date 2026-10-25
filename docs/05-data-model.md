@@ -202,6 +202,9 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   Absent keys take the defaults; the server ignores both. `reminderSound` isn't rejected when
   unknown (a newer device may know more sounds): the app resolves it against its own set before it
   names a file, so a stored string never reaches a file name.
+- Clarified in M11.5: `energySuggestions` (Settings › Planning, 11 C4) is `true`/`false` when the
+  user chose, absent/null for the default — off until 20 finished high-energy tasks with real times
+  exist, then on. The server ignores the key, as for `durationPresets`.
 - Clarified in M11.4: a routine needs a title and 1–30 steps, each with a title, a length of 5–1440
   min, an offset of 0–1440 min and allowed colour/icon keys; `anchor_minute` is set exactly when the
   anchor is `time` (`validateRoutine`).

@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/scheduling/energy_window.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/domain/scheduling/slot_fit.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
@@ -34,6 +35,7 @@ class AddWhenStep extends StatelessWidget {
     this.onEditDay,
     this.timeMenu,
     this.durationMenu,
+    this.energy,
     super.key,
   });
 
@@ -55,6 +57,10 @@ class AddWhenStep extends StatelessWidget {
   /// The ⋯ beside TIME (M3c.4) and DURATION (M3c.3).
   final Widget? timeMenu;
   final Widget? durationMenu;
+
+  /// The user's best window for high-energy work, when Add should suggest
+  /// it for this task (11 C4, M11.5); null says nothing.
+  final EnergyWindow? energy;
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +152,32 @@ class AddWhenStep extends StatelessWidget {
           padding: const EdgeInsets.only(top: DotSpace.xs),
           child: Text(line, style: _quiet(context)),
         ),
+      if (energy case final w?) _energy(context, text, w),
     ];
+  }
+
+  /// "you finish high-energy tasks best 9:00 – 11:00 AM" and, when the
+  /// task starts outside it, "Try 9:00 AM" (11 C4).
+  Widget _energy(BuildContext context, DayTimeText text, EnergyWindow w) {
+    final l10n = context.l10n;
+    final from = w.startHour * 60;
+    final start = state.draft.startMinute ?? 0;
+    final inside = start >= from && start < from + energyWindowHours * 60;
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: DotSpace.s,
+      children: [
+        Text(
+          l10n.addEnergyBest(text.range(from, energyWindowHours * 60)),
+          style: _quiet(context),
+        ),
+        if (!inside)
+          TextButton(
+            onPressed: () => onStart(from),
+            child: Text(l10n.addEnergyTry(text.at(from))),
+          ),
+      ],
+    );
   }
 
   /// "you tend to start this ~15 min after plan" (11 C3, M11.3), once

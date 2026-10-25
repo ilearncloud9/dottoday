@@ -5,6 +5,7 @@ import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/features/settings/widgets/energy_row.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/duration/duration_sheet.dart';
@@ -16,7 +17,8 @@ import 'package:go_router/go_router.dart';
 /// PLANNING (`A-ios-settings`) plus PRD F8's snapping and shift default:
 /// Default duration, Snap to, Shift later tasks, Show free time,
 /// Running-late nudge, Plan-your-inbox nudge (F3.3), Roll unfinished to
-/// tomorrow (R-16, R-17), and the way to Routines (11 C2).
+/// tomorrow (R-16, R-17), Energy suggestions (11 C4) and the way to
+/// Routines (11 C2).
 class PlanningGroup extends StatelessWidget {
   const PlanningGroup({required this.settings, super.key});
 
@@ -75,6 +77,7 @@ class PlanningGroup extends StatelessWidget {
           onToggle: (v) =>
               changeSettings(context, (s) => s.copyWith(inboxNudge: v)),
         ),
+        EnergyRow(settings: settings),
         SettingsRow(
           glyph: DotGlyphs.rollForward,
           tint: t.tasks[TaskColor.teal].ink,

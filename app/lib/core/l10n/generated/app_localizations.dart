@@ -7001,6 +7001,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Which day'**
   String get routineDropDay;
+
+  /// Settings › Planning switch (11 C4): suggest when to place high-energy tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy suggestions'**
+  String get settingsEnergy;
+
+  /// Under the Energy suggestions switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest times when you usually finish high-energy tasks'**
+  String get settingsEnergyDetail;
+
+  /// Under the Energy suggestions switch while it can't be on yet.
+  ///
+  /// In en, this message translates to:
+  /// **'After 20 finished high-energy tasks · {count} so far'**
+  String settingsEnergyLocked(int count);
+
+  /// Add step 2: the user's best window for high-energy work, from their own history.
+  ///
+  /// In en, this message translates to:
+  /// **'you finish high-energy tasks best {range}'**
+  String addEnergyBest(String range);
+
+  /// Add step 2: move the new task to the start of the best window.
+  ///
+  /// In en, this message translates to:
+  /// **'Try {time}'**
+  String addEnergyTry(String time);
 }
 
 class _AppLocalizationsDelegate

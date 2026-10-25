@@ -1149,5 +1149,10 @@
   "routinesCount": "{count, plural, =0{Sin rutinas} =1{1 rutina} other{{count} rutinas}}",
   "routineDropHere": "Poner una rutina…",
   "routineDropOnDay": "Poner en {day}",
-  "routineDropDay": "Qué día"
+  "routineDropDay": "Qué día",
+  "settingsEnergy": "Sugerencias de energía",
+  "settingsEnergyDetail": "Sugerir las horas en que sueles terminar las tareas exigentes",
+  "settingsEnergyLocked": "Tras 20 tareas exigentes terminadas · {count} hasta ahora",
+  "addEnergyBest": "terminas mejor las tareas exigentes {range}",
+  "addEnergyTry": "Probar {time}"
 }

@@ -88,6 +88,7 @@ The one-line position after this roadmap ships: **"Your day as a thread. Always 
 
 ### C4 · Energy-aware suggestions — energy field **built**; learning **new**, depends on C3
 - From completed high-energy tasks' actual times, derive the user's best window; Add suggests placement ("you finish deep work best 9–11"). Suggest / Off switch in Settings › Planning; default Off until 20 completions exist.
+- As built (docs/09 M11.5): a completion = a task marked done, energy high, with a real actual start and end (B1), in the last 90 days. The window is the 2-hour stretch in which most of them really started, in the profile zone (a tie goes to the window starting at the busier hour, then the earliest). Under 20 the switch is off and locked ("After 20 finished high-energy tasks · 7 so far"); from 20 it is on unless turned off. Add says it only for a task whose title is one of those high-energy tasks — "you finish high-energy tasks best 9:00 – 11:00 AM" — with "Try 9:00 AM" when the task starts outside the window (rejected: the render's "deep work" category, which the data doesn't have; suggesting it for every task).
 
 ## D. No shame — reflection without streaks
 
