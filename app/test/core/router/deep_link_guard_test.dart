@@ -22,6 +22,9 @@ void main() {
       '/task/$_v7': '/task/$_v7',
       'dottoday://task/$_v7': '/task/$_v7',
       'dottoday:///task/$_v7': '/task/$_v7',
+      // Start focus (M10.5).
+      '/focus/$_v7': '/focus/$_v7',
+      'dottoday://focus/$_v7': '/focus/$_v7',
       'dottoday://day/2026-10-20': '/day/2026-10-20',
       'dottoday://inbox': '/inbox',
       '/settings/account': '/settings/account',
@@ -47,6 +50,7 @@ void main() {
       '/day',
       '/task',
       '/task/not-a-uuid',
+      '/focus/not-a-uuid',
       '/task/${'01929a3e-7c4b-4d2a-9f10-3b5c6d7e8f90'}', // v4, not v7
       '/task/01929A3E-7C4B-7D2A-9F10-3B5C6D7E8F90', // uppercase
       '/task/$_v7?redirect=https://evil.example',

@@ -5657,5 +5657,107 @@
         "type": "int"
       }
     }
+  },
+  "focusTitle": "Focus",
+  "@focusTitle": {
+    "description": "Focus screen's top bar title, shown in capitals (B-ios-focus, 11 A3)."
+  },
+  "focusBack": "Today",
+  "@focusBack": {
+    "description": "Focus screen's back link to Today."
+  },
+  "focusRange": "{range} · {length}",
+  "@focusRange": {
+    "description": "Under the ring: the dot's planned time and length, e.g. '9:00 – 11:00 · 2 h'.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "focusStep": "Step {number} of {total}",
+  "@focusStep": {
+    "description": "Step card label, shown in capitals: which step of how many.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "focusAllSteps": "Every step done",
+  "@focusAllSteps": {
+    "description": "Step card when every step is ticked."
+  },
+  "focusChime": "Chime every 15 min",
+  "@focusChime": {
+    "description": "Focus toggle: a soft sound every 15 minutes while Focus is open (off by default)."
+  },
+  "focusDeepWork": "Deep work · Focus on",
+  "@focusDeepWork": {
+    "description": "Focus toggle: quiet the device while this dot runs (B-ios-focus 'Deep work · Focus on')."
+  },
+  "focusDeepWorkAccess": "Allow Dottoday to turn on Do Not Disturb",
+  "@focusDeepWorkAccess": {
+    "description": "Under the Deep work toggle on Android when Dottoday may not change Do Not Disturb yet."
+  },
+  "focusShortcutsTitle": "Turn on Focus with Shortcuts",
+  "@focusShortcutsTitle": {
+    "description": "Sheet title when Deep work is tapped on iPhone or Mac."
+  },
+  "focusShortcutsBody": "iPhone and Mac don't let apps switch Focus. In Shortcuts, make a shortcut with Dottoday's Start focus and Set Focus, and run it from the Action button, Control Center or Siri.",
+  "@focusShortcutsBody": {
+    "description": "Sheet text: apps can't switch Focus on Apple devices; how to do it with a shortcut."
+  },
+  "focusShortcutsOpen": "Open Shortcuts",
+  "@focusShortcutsOpen": {
+    "description": "Button in the Shortcuts sheet."
+  },
+  "focusDeepWorkWeb": "Use your computer's Do Not Disturb; the browser can't change it",
+  "@focusDeepWorkWeb": {
+    "description": "Under the Deep work row on the web: the browser can't change it."
+  },
+  "focusNextStep": "Next step",
+  "@focusNextStep": {
+    "description": "Focus button: ticks the current step and moves to the next."
+  },
+  "focusBreakThrough": "Dot starts still break through Focus (time-sensitive)",
+  "@focusBreakThrough": {
+    "description": "Focus footer: the next dot's start still comes through."
+  },
+  "focusMore": "More",
+  "@focusMore": {
+    "description": "Focus top bar ⋯ menu tooltip."
+  },
+  "focusOpenTask": "Task details",
+  "@focusOpenTask": {
+    "description": "Focus ⋯ menu item: opens the task's details."
+  },
+  "focusDoneMessage": "{title} done",
+  "@focusDoneMessage": {
+    "description": "Undo snackbar after Done in Focus.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "focusExtendedMessage": "{title} · 15 min more",
+  "@focusExtendedMessage": {
+    "description": "Undo snackbar after +15 min in Focus.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "focusOpenHint": "Open Focus",
+  "@focusOpenHint": {
+    "description": "Screen-reader hint on the live dot: one tap opens Focus."
   }
 }

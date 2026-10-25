@@ -4,6 +4,7 @@ import 'package:dottoday/app_commands.dart';
 import 'package:dottoday/app_lifecycle.dart';
 import 'package:dottoday/app_menu.dart';
 import 'package:dottoday/app_shortcut_groups.dart';
+import 'package:dottoday/core/editing/focus_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
@@ -45,6 +46,10 @@ class DottodayApp extends ConsumerWidget {
     if (kIsWeb) {
       ref.listen(webLiveDotStateProvider, (_, d) => applyTabLiveDot(d));
     }
+    // Start focus from a control, tile or Siri (M10.5).
+    ref.listen(focusRequestProvider, (_, r) {
+      if (r != null) _openFocus(router, r.id);
+    });
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (context) => tab.title ?? context.l10n.appTitle,
@@ -111,6 +116,18 @@ Map<Type, Action<Intent>> _intents(GoRouter router) => {
     onInvoke: (i) => unawaited(_breakDown(router, i.occurrenceId)),
   ),
 };
+
+/// Focus on [id] from the root overlay; at a cold start the navigator may
+/// not be up yet, so once more after the first frame.
+void _openFocus(GoRouter router, String id, {bool retry = true}) {
+  final context =
+      router.routerDelegate.navigatorKey.currentState?.overlay?.context;
+  if (context != null) return openFocus(context, id);
+  if (!retry) return;
+  WidgetsBinding.instance.addPostFrameCallback(
+    (_) => _openFocus(router, id, retry: false),
+  );
+}
 
 /// Break it down for a saved task (M10.4), on the root overlay so the
 /// proposal opens above any sheet.

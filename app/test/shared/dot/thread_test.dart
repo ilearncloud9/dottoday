@@ -68,6 +68,26 @@ void main() {
     ]);
   });
 
+  // One tap on the live dot opens Focus (11 A3, docs/09 M10.5); its done
+  // circle and Done still tick it; other dots still tick.
+  testWidgets('the live dot opens Focus; other dots tick', (tester) async {
+    final log = <String>[];
+    await tester.pumpWidget(
+      _thread(
+        actions: ThreadActions(
+          onToggleDone: (id) => log.add('done $id'),
+          onFocus: (id) => log.add('focus $id'),
+        ),
+      ),
+    );
+    await tester.tap(
+      find.bySemanticsLabel('Deep work: roadmap, live, 38 minutes left'),
+    );
+    await tester.tap(find.bySemanticsLabel('Reply to email, upcoming'));
+    await tester.tap(find.text('Done'));
+    expect(log, ['focus deep', 'done mail', 'done deep']);
+  });
+
   testWidgets('screen reader hears each row with its state (R-12)', (
     tester,
   ) async {

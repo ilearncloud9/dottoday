@@ -4345,4 +4345,73 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0 · enregistrées avec la tâche';
   }
+
+  @override
+  String get focusTitle => 'Concentration';
+
+  @override
+  String get focusBack => 'Aujourd\'hui';
+
+  @override
+  String focusRange(String range, String length) {
+    return '$range · $length';
+  }
+
+  @override
+  String focusStep(int number, int total) {
+    return 'Étape $number sur $total';
+  }
+
+  @override
+  String get focusAllSteps => 'Toutes les étapes faites';
+
+  @override
+  String get focusChime => 'Carillon toutes les 15 min';
+
+  @override
+  String get focusDeepWork => 'Travail profond · Concentration activée';
+
+  @override
+  String get focusDeepWorkAccess =>
+      'Autoriser Dottoday à activer Ne pas déranger';
+
+  @override
+  String get focusShortcutsTitle => 'Activer une Concentration avec Raccourcis';
+
+  @override
+  String get focusShortcutsBody =>
+      'L\'iPhone et le Mac ne laissent pas les apps changer de Concentration. Dans Raccourcis, créez un raccourci avec « Commencer le focus » de Dottoday et « Activer la Concentration », puis lancez-le depuis le bouton Action, le centre de contrôle ou Siri.';
+
+  @override
+  String get focusShortcutsOpen => 'Ouvrir Raccourcis';
+
+  @override
+  String get focusDeepWorkWeb =>
+      'Utilisez Ne pas déranger de votre ordinateur ; le navigateur ne peut pas le changer';
+
+  @override
+  String get focusNextStep => 'Étape suivante';
+
+  @override
+  String get focusBreakThrough =>
+      'Les débuts de points passent quand même la Concentration (urgents)';
+
+  @override
+  String get focusMore => 'Plus';
+
+  @override
+  String get focusOpenTask => 'Détails de la tâche';
+
+  @override
+  String focusDoneMessage(String title) {
+    return '$title fait';
+  }
+
+  @override
+  String focusExtendedMessage(String title) {
+    return '$title · 15 min de plus';
+  }
+
+  @override
+  String get focusOpenHint => 'Ouvrir la concentration';
 }

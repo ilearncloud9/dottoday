@@ -4317,4 +4317,72 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0 · saved with the task';
   }
+
+  @override
+  String get focusTitle => 'Focus';
+
+  @override
+  String get focusBack => 'Today';
+
+  @override
+  String focusRange(String range, String length) {
+    return '$range · $length';
+  }
+
+  @override
+  String focusStep(int number, int total) {
+    return 'Step $number of $total';
+  }
+
+  @override
+  String get focusAllSteps => 'Every step done';
+
+  @override
+  String get focusChime => 'Chime every 15 min';
+
+  @override
+  String get focusDeepWork => 'Deep work · Focus on';
+
+  @override
+  String get focusDeepWorkAccess => 'Allow Dottoday to turn on Do Not Disturb';
+
+  @override
+  String get focusShortcutsTitle => 'Turn on Focus with Shortcuts';
+
+  @override
+  String get focusShortcutsBody =>
+      'iPhone and Mac don\'t let apps switch Focus. In Shortcuts, make a shortcut with Dottoday\'s Start focus and Set Focus, and run it from the Action button, Control Center or Siri.';
+
+  @override
+  String get focusShortcutsOpen => 'Open Shortcuts';
+
+  @override
+  String get focusDeepWorkWeb =>
+      'Use your computer\'s Do Not Disturb; the browser can\'t change it';
+
+  @override
+  String get focusNextStep => 'Next step';
+
+  @override
+  String get focusBreakThrough =>
+      'Dot starts still break through Focus (time-sensitive)';
+
+  @override
+  String get focusMore => 'More';
+
+  @override
+  String get focusOpenTask => 'Task details';
+
+  @override
+  String focusDoneMessage(String title) {
+    return '$title done';
+  }
+
+  @override
+  String focusExtendedMessage(String title) {
+    return '$title · 15 min more';
+  }
+
+  @override
+  String get focusOpenHint => 'Open Focus';
 }

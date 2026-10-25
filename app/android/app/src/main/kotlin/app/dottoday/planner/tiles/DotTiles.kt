@@ -58,6 +58,7 @@ class StartFocusTileService : TileService() {
         val snapshot = WidgetSnapshot.read(DotActionReceiver.prefs(this))
         val dot = snapshot.live(now) ?: snapshot.next(now) ?: return openApp("dottoday://today")
         DotActionReceiver.perform(DotActionReceiver.prefs(this), DotActionKind.START_FOCUS, dot.id, null, now)
-        openApp("dottoday://task/${dot.id}")
+        // The app drains the Start focus and opens Focus on it (M10.5).
+        openApp("dottoday://today")
     }
 }

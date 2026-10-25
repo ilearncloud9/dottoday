@@ -3373,4 +3373,65 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String breakdownStepsOnDraft(int count) =>
       pseudo(super.breakdownStepsOnDraft(count));
+
+  @override
+  String get focusTitle => pseudo(super.focusTitle);
+
+  @override
+  String get focusBack => pseudo(super.focusBack);
+
+  @override
+  String focusRange(String range, String length) =>
+      pseudo(super.focusRange(range, length));
+
+  @override
+  String focusStep(int number, int total) =>
+      pseudo(super.focusStep(number, total));
+
+  @override
+  String get focusAllSteps => pseudo(super.focusAllSteps);
+
+  @override
+  String get focusChime => pseudo(super.focusChime);
+
+  @override
+  String get focusDeepWork => pseudo(super.focusDeepWork);
+
+  @override
+  String get focusDeepWorkAccess => pseudo(super.focusDeepWorkAccess);
+
+  @override
+  String get focusShortcutsTitle => pseudo(super.focusShortcutsTitle);
+
+  @override
+  String get focusShortcutsBody => pseudo(super.focusShortcutsBody);
+
+  @override
+  String get focusShortcutsOpen => pseudo(super.focusShortcutsOpen);
+
+  @override
+  String get focusDeepWorkWeb => pseudo(super.focusDeepWorkWeb);
+
+  @override
+  String get focusNextStep => pseudo(super.focusNextStep);
+
+  @override
+  String get focusBreakThrough => pseudo(super.focusBreakThrough);
+
+  @override
+  String get focusMore => pseudo(super.focusMore);
+
+  @override
+  String get focusOpenTask => pseudo(super.focusOpenTask);
+
+  @override
+  String focusDoneMessage(String title) =>
+      pseudo(super.focusDoneMessage(title));
+
+  @override
+  String focusExtendedMessage(String title) =>
+      pseudo(super.focusExtendedMessage(title));
+
+  @override
+  String get focusOpenHint => pseudo(super.focusOpenHint);
 }

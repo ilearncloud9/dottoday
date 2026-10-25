@@ -19,11 +19,17 @@ abstract final class AppRoutes {
   static const dayPattern = '/day/:date';
   static const taskPattern = '/task/:id';
 
+  /// Focus on a dot, full screen on phones (docs/09 M10.5).
+  static const focusPattern = '/focus/:id';
+
   /// Location for the calendar date of [date] (its y/m/d fields as given).
   static String day(DateTime date) => '/day/${formatRouteDate(date)}';
 
   /// Location for the task with [id] (a UUID v7).
   static String task(String id) => '/task/$id';
+
+  /// Location for Focus on the task with [id] (a UUID v7).
+  static String focus(String id) => '/focus/$id';
 
   /// Location for a Settings sub-page (docs/09 M3f.7).
   static String settingsPage(SettingsPage page) => '$settings/${page.name}';

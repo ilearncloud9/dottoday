@@ -1,6 +1,7 @@
 import 'dart:ui' show Locale;
 
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/editing/focus_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/intents/action_queue_drainer.dart';
@@ -44,6 +45,9 @@ ActionQueueDrainer actionQueueDrainer(Ref ref) => ActionQueueDrainer(
   store: ref.watch(actionQueueStoreProvider),
   intents: ref.watch(dotIntentsProvider),
   logger: ref.watch(loggerProvider),
+  now: ref.watch(clockProvider).nowUtc,
+  // Start focus from a control, tile or Siri opens Focus (M10.5).
+  onFocus: (id) => ref.read(focusRequestProvider.notifier).request(id),
 );
 
 AppLocalizations _l10n(String code) {

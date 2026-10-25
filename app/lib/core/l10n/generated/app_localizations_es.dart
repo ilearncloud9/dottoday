@@ -4336,4 +4336,73 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0 · se guardan con la tarea';
   }
+
+  @override
+  String get focusTitle => 'Foco';
+
+  @override
+  String get focusBack => 'Hoy';
+
+  @override
+  String focusRange(String range, String length) {
+    return '$range · $length';
+  }
+
+  @override
+  String focusStep(int number, int total) {
+    return 'Paso $number de $total';
+  }
+
+  @override
+  String get focusAllSteps => 'Todos los pasos hechos';
+
+  @override
+  String get focusChime => 'Aviso cada 15 min';
+
+  @override
+  String get focusDeepWork => 'Trabajo profundo · Foco activado';
+
+  @override
+  String get focusDeepWorkAccess => 'Permite que Dottoday active No molestar';
+
+  @override
+  String get focusShortcutsTitle =>
+      'Activa un modo de concentración con Atajos';
+
+  @override
+  String get focusShortcutsBody =>
+      'El iPhone y el Mac no dejan que las apps cambien el modo de concentración. En Atajos, crea un atajo con «Empezar a concentrarte» de Dottoday y «Activar modo de concentración», y ejecútalo desde el botón de acción, el centro de control o Siri.';
+
+  @override
+  String get focusShortcutsOpen => 'Abrir Atajos';
+
+  @override
+  String get focusDeepWorkWeb =>
+      'Usa No molestar del ordenador; el navegador no puede cambiarlo';
+
+  @override
+  String get focusNextStep => 'Siguiente paso';
+
+  @override
+  String get focusBreakThrough =>
+      'Los inicios de puntos siguen llegando (urgentes)';
+
+  @override
+  String get focusMore => 'Más';
+
+  @override
+  String get focusOpenTask => 'Detalles de la tarea';
+
+  @override
+  String focusDoneMessage(String title) {
+    return '$title hecho';
+  }
+
+  @override
+  String focusExtendedMessage(String title) {
+    return '$title · 15 min más';
+  }
+
+  @override
+  String get focusOpenHint => 'Abrir foco';
 }

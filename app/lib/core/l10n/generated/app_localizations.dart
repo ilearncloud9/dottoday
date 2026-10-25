@@ -6425,6 +6425,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 step} other{{count} steps}} · saved with the task'**
   String breakdownStepsOnDraft(int count);
+
+  /// Focus screen's top bar title, shown in capitals (B-ios-focus, 11 A3).
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get focusTitle;
+
+  /// Focus screen's back link to Today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get focusBack;
+
+  /// Under the ring: the dot's planned time and length, e.g. '9:00 – 11:00 · 2 h'.
+  ///
+  /// In en, this message translates to:
+  /// **'{range} · {length}'**
+  String focusRange(String range, String length);
+
+  /// Step card label, shown in capitals: which step of how many.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {number} of {total}'**
+  String focusStep(int number, int total);
+
+  /// Step card when every step is ticked.
+  ///
+  /// In en, this message translates to:
+  /// **'Every step done'**
+  String get focusAllSteps;
+
+  /// Focus toggle: a soft sound every 15 minutes while Focus is open (off by default).
+  ///
+  /// In en, this message translates to:
+  /// **'Chime every 15 min'**
+  String get focusChime;
+
+  /// Focus toggle: quiet the device while this dot runs (B-ios-focus 'Deep work · Focus on').
+  ///
+  /// In en, this message translates to:
+  /// **'Deep work · Focus on'**
+  String get focusDeepWork;
+
+  /// Under the Deep work toggle on Android when Dottoday may not change Do Not Disturb yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Dottoday to turn on Do Not Disturb'**
+  String get focusDeepWorkAccess;
+
+  /// Sheet title when Deep work is tapped on iPhone or Mac.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Focus with Shortcuts'**
+  String get focusShortcutsTitle;
+
+  /// Sheet text: apps can't switch Focus on Apple devices; how to do it with a shortcut.
+  ///
+  /// In en, this message translates to:
+  /// **'iPhone and Mac don\'t let apps switch Focus. In Shortcuts, make a shortcut with Dottoday\'s Start focus and Set Focus, and run it from the Action button, Control Center or Siri.'**
+  String get focusShortcutsBody;
+
+  /// Button in the Shortcuts sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Shortcuts'**
+  String get focusShortcutsOpen;
+
+  /// Under the Deep work row on the web: the browser can't change it.
+  ///
+  /// In en, this message translates to:
+  /// **'Use your computer\'s Do Not Disturb; the browser can\'t change it'**
+  String get focusDeepWorkWeb;
+
+  /// Focus button: ticks the current step and moves to the next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next step'**
+  String get focusNextStep;
+
+  /// Focus footer: the next dot's start still comes through.
+  ///
+  /// In en, this message translates to:
+  /// **'Dot starts still break through Focus (time-sensitive)'**
+  String get focusBreakThrough;
+
+  /// Focus top bar ⋯ menu tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get focusMore;
+
+  /// Focus ⋯ menu item: opens the task's details.
+  ///
+  /// In en, this message translates to:
+  /// **'Task details'**
+  String get focusOpenTask;
+
+  /// Undo snackbar after Done in Focus.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} done'**
+  String focusDoneMessage(String title);
+
+  /// Undo snackbar after +15 min in Focus.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} · 15 min more'**
+  String focusExtendedMessage(String title);
+
+  /// Screen-reader hint on the live dot: one tap opens Focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Focus'**
+  String get focusOpenHint;
 }
 
 class _AppLocalizationsDelegate

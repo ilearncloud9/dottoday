@@ -81,6 +81,12 @@ abstract final class DotSize {
   /// The identity dot on Add step 1 (`A-ios-add-what`); step 2 uses
   /// [dayDot].
   static const double addDot = 64;
+
+  /// Focus's ring (`B-ios-focus`: 160 px; the roadmap's 120 corrected,
+  /// docs/09 M10.5), its stroke and the glyph inside.
+  static const double focusRing = 160;
+  static const double focusRingStroke = 22;
+  static const double focusGlyph = 48;
   static const double dayDotWatch = 18;
   static const double macRowDot = 26;
   static const double pickerDot = 22;

@@ -12,13 +12,25 @@ final class ActionQueueDrainer {
     required ActionQueueStore store,
     required DotIntents intents,
     required Logger logger,
+    DateTime Function()? now,
+    void Function(String occurrenceId)? onFocus,
   }) : _store = store,
        _intents = intents,
-       _logger = logger;
+       _logger = logger,
+       _now = now,
+       _onFocus = onFocus;
 
   final ActionQueueStore _store;
   final DotIntents _intents;
   final Logger _logger;
+  final DateTime Function()? _now;
+
+  /// A Start focus just tapped on a surface (M10.5): the app opens Focus.
+  final void Function(String occurrenceId)? _onFocus;
+
+  /// How recent a queued Start focus must be to open Focus: it opened the
+  /// app just now (`openAppWhenRun`), not hours ago.
+  static const focusFresh = Duration(minutes: 2);
   Future<int> _tail = Future.value(0);
 
   /// Drains the queue, after any drain already running; completes with
@@ -49,6 +61,7 @@ final class ActionQueueDrainer {
       }
       settled.add(queued.id);
       if (outcome == ActionOutcome.applied) applied++;
+      _maybeFocus(queued, outcome);
       if (_dropped(outcome)) {
         _logger.info(
           'intent.dropped',
@@ -62,6 +75,14 @@ final class ActionQueueDrainer {
     }
     await _store.remove(settled, unreadable: unreadable);
     return applied;
+  }
+
+  void _maybeFocus(QueuedAction queued, ActionOutcome outcome) {
+    final now = _now?.call();
+    final focus = _onFocus;
+    if (focus == null || now == null || _dropped(outcome)) return;
+    if (now.difference(queued.createdAtUtc) > focusFresh) return;
+    if (queued.action case StartFocus(:final occurrenceId)) focus(occurrenceId);
   }
 
   static bool _dropped(ActionOutcome o) =>

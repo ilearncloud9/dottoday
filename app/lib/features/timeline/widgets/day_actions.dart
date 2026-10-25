@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/editing/editing_task.dart';
+import 'package:dottoday/core/editing/focus_task.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
@@ -54,6 +55,7 @@ ThreadActions dayThreadActions(
     onSelect: onSelect,
     onOpen: (id) =>
         openTask(context, id, otherwise: () => showTaskSheet(context, id)),
+    onFocus: (id) => openFocus(context, id),
     // "N h free · add here" opens Add at the gap, or now if the gap has
     // begun (R-17).
     onAddHere: (gap) {

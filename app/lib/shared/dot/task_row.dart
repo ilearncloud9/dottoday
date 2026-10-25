@@ -82,8 +82,9 @@ Widget taskRowDot(
   BuildContext context,
   ThreadTask task,
   double size,
-  VoidCallback? onToggleDone,
-) {
+  VoidCallback? onToggleDone, {
+  VoidCallback? onFocus,
+}) {
   final l10n = context.l10n;
   return TaskDot(
     color: task.color,
@@ -97,8 +98,11 @@ Widget taskRowDot(
       state: task.state,
       minutesLeft: task.minutesLeft,
     ),
-    onTap: onToggleDone,
-    tapHint: task.state == DotState.done
+    // The live dot opens Focus (11 A3); other dots tick.
+    onTap: onFocus ?? onToggleDone,
+    tapHint: onFocus != null
+        ? l10n.focusOpenHint
+        : task.state == DotState.done
         ? l10n.dotMarkNotDoneHint
         : l10n.dotMarkDoneHint,
   );

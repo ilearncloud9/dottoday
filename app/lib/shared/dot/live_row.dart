@@ -16,6 +16,7 @@ class LiveRow extends StatelessWidget {
     required this.task,
     this.onToggleDone,
     this.onOpen,
+    this.onFocus,
     this.onResize,
     this.onExtend,
     this.onShiftRest,
@@ -25,6 +26,9 @@ class LiveRow extends StatelessWidget {
   final ThreadTask task;
   final VoidCallback? onToggleDone;
   final VoidCallback? onOpen;
+
+  /// One tap on the live dot (11 A3, docs/09 M10.5); null: the dot ticks.
+  final VoidCallback? onFocus;
 
   /// Resize grip at the segment end (R-05).
   final ValueChanged<int>? onResize;
@@ -45,7 +49,13 @@ class LiveRow extends StatelessWidget {
         dotSize: DotSize.liveDot,
         progress: task.progress,
       ),
-      dot: taskRowDot(context, task, DotSize.liveDot, onToggleDone),
+      dot: taskRowDot(
+        context,
+        task,
+        DotSize.liveDot,
+        onToggleDone,
+        onFocus: onFocus,
+      ),
       trailing: DoneCircle(
         color: t.colors.accent,
         width: DotSize.dotOutline,

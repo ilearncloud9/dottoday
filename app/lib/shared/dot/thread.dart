@@ -21,6 +21,7 @@ final class ThreadActions {
   const ThreadActions({
     this.onToggleDone,
     this.onOpen,
+    this.onFocus,
     this.onExtend,
     this.onShiftRest,
     this.onAddHere,
@@ -31,6 +32,9 @@ final class ThreadActions {
 
   final ValueChanged<String>? onToggleDone;
   final ValueChanged<String>? onOpen;
+
+  /// One tap on the live dot opens Focus (M10.5).
+  final ValueChanged<String>? onFocus;
   final ValueChanged<String>? onExtend;
   final ValueChanged<String>? onShiftRest;
 
@@ -199,6 +203,7 @@ class _ThreadState extends State<Thread> {
             task: task,
             onToggleDone: _bind(a.onToggleDone, task),
             onOpen: _open(task),
+            onFocus: _bind(a.onFocus, task),
             onExtend: _bind(a.onExtend, task),
             onShiftRest: task.overrunMinutes > 0
                 ? _bind(a.onShiftRest, task)

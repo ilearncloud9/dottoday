@@ -4343,4 +4343,73 @@ class AppLocalizationsDe extends AppLocalizations {
     );
     return '$_temp0 · wird mit der Aufgabe gespeichert';
   }
+
+  @override
+  String get focusTitle => 'Fokus';
+
+  @override
+  String get focusBack => 'Heute';
+
+  @override
+  String focusRange(String range, String length) {
+    return '$range · $length';
+  }
+
+  @override
+  String focusStep(int number, int total) {
+    return 'Schritt $number von $total';
+  }
+
+  @override
+  String get focusAllSteps => 'Alle Schritte erledigt';
+
+  @override
+  String get focusChime => 'Alle 15 Min. ein Ton';
+
+  @override
+  String get focusDeepWork => 'Konzentriert · Fokus an';
+
+  @override
+  String get focusDeepWorkAccess =>
+      'Erlaube Dottoday, „Nicht stören“ einzuschalten';
+
+  @override
+  String get focusShortcutsTitle => 'Fokus mit Kurzbefehlen einschalten';
+
+  @override
+  String get focusShortcutsBody =>
+      'iPhone und Mac lassen Apps den Fokus nicht wechseln. Erstelle in Kurzbefehle einen Kurzbefehl mit „Fokus starten“ von Dottoday und „Fokus festlegen“ und starte ihn über die Aktionstaste, das Kontrollzentrum oder Siri.';
+
+  @override
+  String get focusShortcutsOpen => 'Kurzbefehle öffnen';
+
+  @override
+  String get focusDeepWorkWeb =>
+      'Nutze „Nicht stören“ deines Computers; der Browser kann es nicht ändern';
+
+  @override
+  String get focusNextStep => 'Nächster Schritt';
+
+  @override
+  String get focusBreakThrough =>
+      'Punkt-Starts kommen trotz Fokus durch (zeitkritisch)';
+
+  @override
+  String get focusMore => 'Mehr';
+
+  @override
+  String get focusOpenTask => 'Aufgabendetails';
+
+  @override
+  String focusDoneMessage(String title) {
+    return '$title erledigt';
+  }
+
+  @override
+  String focusExtendedMessage(String title) {
+    return '$title · 15 Min. mehr';
+  }
+
+  @override
+  String get focusOpenHint => 'Fokus öffnen';
 }
