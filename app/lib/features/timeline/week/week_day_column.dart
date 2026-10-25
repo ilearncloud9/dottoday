@@ -18,6 +18,7 @@ class WeekDayColumn extends StatefulWidget {
     required this.onDrop,
     required this.onOpen,
     required this.onAdd,
+    this.onCue,
     super.key,
   });
 
@@ -36,6 +37,9 @@ class WeekDayColumn extends StatefulWidget {
 
   /// "Drop a task here" tapped: Add on this day.
   final VoidCallback onAdd;
+
+  /// A card's Smallest step or Unstick cue tapped (M10.6, M10.7).
+  final ValueChanged<String>? onCue;
 
   @override
   State<WeekDayColumn> createState() => _WeekDayColumnState();
@@ -220,6 +224,10 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
       task: task,
       height: height,
       onOpen: () => widget.onOpen(task.id),
+      onCue: switch (widget.onCue) {
+        final cue? => () => cue(task.id),
+        null => null,
+      },
     );
     if (!task.movable) return card;
     return HoldOrMouseDraggable<String>(

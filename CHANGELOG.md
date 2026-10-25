@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M11.0: The Week view now shows Smallest step and Unstick on a task's card too — tap the line to start in Focus, or to give a stuck task its very first step.
 - M10.7: Unstick. When a task with no steps has been moved three times, a quiet line under it asks "What's the very first thing you'd physically do?" — type it, and it becomes step 1. It never pops up, and never after the first move.
 - M10.6: Smallest step. If a task with steps hasn't started ten minutes after its time, its row and a gentle reminder ask only for the first one — "Just gather documents · 10 min?" — with a Start button that opens Focus. It goes away once you start, tick a step, finish or move the task, and never asks twice.
 - M10.5: Focus. Tap the dot that's under way (or use Start focus from Control Center, a tile or Siri) for one calm screen: a big ring, the time left, the step you're on with its own timer, Done, +15 min and Next step. Optional chime every 15 minutes. Deep work turns on Do Not Disturb on Android until the dot ends — alarms still ring — and on iPhone and Mac shows how to do it with Shortcuts. On a Mac or wide window, Focus opens in place with the sidebar kept.

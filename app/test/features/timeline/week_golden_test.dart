@@ -11,6 +11,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/dot_golden.dart';
 import '../../support/timeline_fakes.dart';
+import '../../support/week_cue_fixtures.dart';
 
 /// W1 at 09:22 in Berlin on the demo week (`A-mac-week-alt3-board`, M3e.3).
 void main() {
@@ -26,6 +27,27 @@ void main() {
       overrides: timelineOverrides(
         now: DateTime.utc(2026, 10, 21, 7, 22),
         occurrences: FakeOccurrenceRepository(demoWeekRows()),
+        profile: testProfile(
+          settings: const Settings(use24h: false, firstDayOfWeek: 7),
+        ),
+      ),
+      child: const WeekScreen(),
+    ),
+  );
+  // Smallest step and Unstick cue lines (M10.6, M10.7 follow-up).
+  goldenMatrix(
+    'week_cues',
+    height: 900,
+    widths: const {'expanded'},
+    build: (_) => ProviderScope(
+      overrides: timelineOverrides(
+        now: weekCueNow,
+        occurrences: FakeOccurrenceRepository([
+          ...demoWeekRows(),
+          weekCueTask(21, 'Tax forms'),
+          weekCueTask(22, 'Garage', moves: 3),
+        ]),
+        subtasks: FakeSubtaskRepository(weekCueSteps()),
         profile: testProfile(
           settings: const Settings(use24h: false, firstDayOfWeek: 7),
         ),

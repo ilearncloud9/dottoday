@@ -3,12 +3,9 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
-import 'package:dottoday/data/notifications/notification_content.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
-import 'package:dottoday/domain/entities/subtask.dart';
-import 'package:dottoday/domain/scheduling/start_nudge.dart';
-import 'package:dottoday/domain/scheduling/unstick.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/features/timeline/state/day_cues.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
@@ -61,21 +58,21 @@ class DayPage extends ConsumerWidget {
     final blocks = data.blocks;
     final summary = daySummaryOf(blocks, shape);
     final format = _format(context, data.day.location, data.settings.use24h);
+    final cues = dayCues(
+      context.l10n,
+      blocks: blocks,
+      firstSteps: firstSteps,
+      subtasks: subtasks,
+      now: now,
+    );
     final entries = threadEntries(
       blocks: blocks,
       shape: shape,
       nowUtc: now,
       format: format,
       subtasks: subtasks ?? const {},
-      smallestSteps: _smallestSteps(context, blocks, firstSteps, now),
-      unstick: {
-        for (final o in blocks)
-          // Only once the steps are known: never a flash on a task that has some.
-          if (subtasks != null &&
-              (subtasks[o.id]?.total ?? 0) == 0 &&
-              showsUnstick(o, const []))
-            o.id,
-      },
+      smallestSteps: cues.smallestSteps,
+      unstick: cues.unstick,
       showFreeTime: data.settings.showFreeTime,
     );
     final actions = _actions(context, ref, data, format.time);
@@ -97,20 +94,6 @@ class DayPage extends ConsumerWidget {
       footer: _footer(blocks, summary.total == 0),
     );
   }
-
-  /// "Just Gather documents · 10 min?" for each task Smallest step asks
-  /// about now (M10.6).
-  Map<String, String> _smallestSteps(
-    BuildContext context,
-    List<Occurrence> blocks,
-    Map<String, Subtask> firstSteps,
-    DateTime now,
-  ) => {
-    for (final o in blocks)
-      if (firstSteps[o.id] case final step?)
-        if (smallestStepAt(o, [step], now) != null)
-          o.id: smallestStepText(context.l10n, step),
-  };
 
   /// Skeleton or Try again while the day loads (docs/09 M3f.9b).
   Widget _waiting(WidgetRef ref) =>
