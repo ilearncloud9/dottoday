@@ -1,5 +1,5 @@
 // Design sweep on the web build (docs/08 §7, docs/09 M11.6): every main
-// screen and the M11 screens at the compact and expanded widths, light and
+// screen and the M11 and M12 screens at the compact and expanded widths, light and
 // dark (prefers-color-scheme), saved to app/build/sweep/web_<theme>_<width>_<shot>.png.
 // Needs a debug web build (the demo data lives in the debug menu), e.g.
 // `flutter run -d web-server --web-port 8099 --dart-define-from-file=.env.example`.
@@ -101,6 +101,37 @@ for (const theme of ['light', 'dark']) {
       await tapText(page, 'Discard');
       await tapText(page, 'Edit');
       await shot('routine_editor');
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(900);
+      // M12: This week, low-energy mode, Past days, Brain dump.
+      await go(page, '/today');
+      await tap(page, 'More options');
+      await tapText(page, 'This week');
+      await page.waitForTimeout(1_500);
+      await shot('week_review');
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(900);
+      await tap(page, 'More options');
+      await tapText(page, 'Low-energy mode');
+      await page.waitForTimeout(2_000);
+      await shot('low_energy');
+      await tap(page, 'More options');
+      await tapText(page, 'Turn off low-energy mode');
+      await go(page, '/search');
+      await tapText(page, 'Past days');
+      await page.waitForTimeout(1_500);
+      await shot('past_days');
+      await go(page, '/today');
+      await tap(page, 'More options');
+      await tapText(page, 'Brain dump');
+      await page.getByRole('textbox').first().click();
+      await page.keyboard.type('Email Sam\nTaxes 45m\nCall the bank 4pm');
+      await page.waitForTimeout(900);
+      await shot('brain_dump');
+      await tapText(page, 'Plan it');
+      await page.waitForTimeout(2_000);
+      await shot('brain_dump_proposal');
+      await tapText(page, 'Discard');
       console.log(`PASS ${tag}`);
     } catch (e) {
       failures.push(`${tag}: ${e.message.split('\n')[0]}`);

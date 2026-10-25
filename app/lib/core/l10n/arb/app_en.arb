@@ -6124,5 +6124,7 @@
   "dumpUseAgain": "Use again",
   "@dumpUseAgain": {"description": "Brain dump history: put an earlier dump back in the field."},
   "proposalToInbox": "no room · to the Inbox",
-  "@proposalToInbox": {"description": "Proposal chip: a new task with no free time left on the day goes to the Inbox (brain dump)."}
+  "@proposalToInbox": {"description": "Proposal chip: a new task with no free time left on the day goes to the Inbox (brain dump)."},
+  "releaseNotes100": "See time: your next dot on the lock screen, widgets, the Mac menu bar and Siri, and alarms that really ring.\nStart: Break it down into small steps, Focus on one dot, and gentle help when a task won't start.\nStay in control: Rebalance shows a plan before anything moves; Plan / Reality shows how the day really went.\nRoutines, energy suggestions and lengths learned from your own days, on your device.\nThis week as seven dots, Past days to look back, and low-energy mode for hard days. Nothing to keep up.\nShare a page or a note to Dottoday from any app, or empty your head with Brain dump.",
+  "@releaseNotes100": {"description": "What's new in 1.0.0 (M9–M12), one item per line (PRD F11)."}
 }

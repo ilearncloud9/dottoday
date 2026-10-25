@@ -5073,4 +5073,8 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get proposalToInbox => 'sin hueco · a la bandeja';
+
+  @override
+  String get releaseNotes100 =>
+      'Ver el tiempo: tu próximo punto en la pantalla de bloqueo, widgets, la barra de menús del Mac y Siri, y alarmas que suenan de verdad.\nEmpezar: divide una tarea en pasos pequeños, céntrate en un punto y recibe ayuda suave cuando algo no arranca.\nMantener el control: Reequilibrar muestra un plan antes de mover nada; Plan / Realidad muestra cómo fue el día de verdad.\nRutinas, sugerencias de energía y duraciones aprendidas de tus propios días, en tu dispositivo.\nEsta semana en siete puntos, Días pasados para mirar atrás y el modo baja energía para los días difíciles. Sin nada que mantener.\nComparte una página o una nota a Dottoday desde cualquier app, o vacía la mente con Vaciar la mente.';
 }

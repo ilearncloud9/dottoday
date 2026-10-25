@@ -4802,7 +4802,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les après-midi se sont surtout passés comme prévu.';
 
   @override
-  String get weekPaceAllDone => 'Tout ce que tu avais prévu est fait.';
+  String get weekPaceAllDone => 'Tout ce que vous aviez prévu est fait.';
 
   @override
   String get weekPaceQuiet => 'Une semaine calme : rien n\'était prévu.';
@@ -4871,7 +4871,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Pas de séries ici — juste ce qui s\'est passé.';
 
   @override
-  String get weekPromptDetail => 'Ta semaine en sept points';
+  String get weekPromptDetail => 'Votre semaine en sept points';
 
   @override
   String get weekPromptAction => 'Voir la semaine';
@@ -4884,7 +4884,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsLowEnergyDetail =>
-      'Aujourd\'hui n\'affiche que la suite et les rappels font une pause, jusqu\'à ton prochain réveil';
+      'Aujourd\'hui n\'affiche que la suite et les rappels font une pause, jusqu\'à votre prochain réveil';
 
   @override
   String lowEnergyCaption(String date) {
@@ -4892,11 +4892,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get lowEnergyGreeting => 'Vas-y doucement';
+  String get lowEnergyGreeting => 'Allez-y doucement';
 
   @override
   String lowEnergyGreetingName(String name) {
-    return 'Vas-y doucement, $name';
+    return 'Allez-y doucement, $name';
   }
 
   @override
@@ -4947,7 +4947,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les rappels sont coupés jusqu\'au réveil de demain';
 
   @override
-  String get lowEnergyNothing => 'Plus rien aujourd\'hui. Repose-toi bien.';
+  String get lowEnergyNothing => 'Plus rien aujourd\'hui. Reposez-vous bien.';
 
   @override
   String get lowEnergyProposalTitle => 'Demain';
@@ -5040,8 +5040,8 @@ class AppLocalizationsFr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Ton année en points : $count jours prévus',
-      one: 'Ton année en points : 1 jour prévu',
+      other: 'Votre année en points : $count jours prévus',
+      one: 'Votre année en points : 1 jour prévu',
     );
     return '$_temp0';
   }
@@ -5051,14 +5051,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get dumpHint =>
-      'Tout ce qui te passe par la tête, une chose par ligne';
+      'Tout ce qui vous passe par la tête, une chose par ligne';
 
   @override
   String get dumpPlan => 'Planifier';
 
   @override
   String get dumpNothing =>
-      'Rien à planifier pour l\'instant. Écris une chose par ligne.';
+      'Rien à planifier pour l\'instant. Écrivez une chose par ligne.';
 
   @override
   String dumpSubtitle(int count, String day) {
@@ -5072,7 +5072,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get dumpAccepted => 'Ajouté depuis ta liste';
+  String get dumpAccepted => 'Ajouté depuis votre liste';
 
   @override
   String get dumpEarlier => 'Listes précédentes';
@@ -5085,4 +5085,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get proposalToInbox => 'pas de place · dans la boîte de réception';
+
+  @override
+  String get releaseNotes100 =>
+      'Voir le temps : votre prochain point sur l\'écran verrouillé, les widgets, la barre des menus du Mac et Siri, et des alarmes qui sonnent vraiment.\nCommencer : découpez une tâche en petites étapes, concentrez-vous sur un point, et une aide douce quand une tâche ne démarre pas.\nGarder la main : Rééquilibrer montre un plan avant que rien ne bouge ; Plan / Réalité montre comment la journée s\'est vraiment passée.\nRoutines, suggestions d\'énergie et durées apprises de vos propres journées, sur votre appareil.\nCette semaine en sept points, Jours passés pour regarder en arrière, et le mode basse énergie pour les jours difficiles. Sans rien à tenir.\nPartagez une page ou une note vers Dottoday depuis n\'importe quelle app, ou videz votre tête avec Vider sa tête.';
 }

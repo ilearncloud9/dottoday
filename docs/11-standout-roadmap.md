@@ -135,6 +135,8 @@ Nothing in M6.5–M12 is gated. Build every feature ungated; the only pricing-re
 Proposed free: the thread, recurrence, calendars, notifications, sync, widgets, **the live dot on every surface (A1)**, Focus (A3), Rebalance (C1), Break it down on-device (B1), Smallest step, Unstick, three routines, Bedtime review (daily), Reality thread view, low-energy mode, export.
 Proposed Pro: unlimited routines, Reality-thread learning + energy suggestions, weekly review + share image, thread journal, brain-dump and cloud model fallback, email-to-Inbox, themes and icon packs (and, if ever built, integrations and body double). Indicative price: €2.99/month, €24.99/year, €69.99 lifetime; 7-day trial on any plan; lifetime honoured forever (R-18).
 
+Trials and lifetime unlocks are store-managed (introductory offers / non-consumable), never server-granted.
+
 ## Milestone proposal (the agent re-plans `09-implementation-plan.md` from this)
 
 | Milestone | Contents | Gate |

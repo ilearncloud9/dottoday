@@ -7475,6 +7475,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'no room · to the Inbox'**
   String get proposalToInbox;
+
+  /// What's new in 1.0.0 (M9–M12), one item per line (PRD F11).
+  ///
+  /// In en, this message translates to:
+  /// **'See time: your next dot on the lock screen, widgets, the Mac menu bar and Siri, and alarms that really ring.\nStart: Break it down into small steps, Focus on one dot, and gentle help when a task won\'t start.\nStay in control: Rebalance shows a plan before anything moves; Plan / Reality shows how the day really went.\nRoutines, energy suggestions and lengths learned from your own days, on your device.\nThis week as seven dots, Past days to look back, and low-energy mode for hard days. Nothing to keep up.\nShare a page or a note to Dottoday from any app, or empty your head with Brain dump.'**
+  String get releaseNotes100;
 }
 
 class _AppLocalizationsDelegate

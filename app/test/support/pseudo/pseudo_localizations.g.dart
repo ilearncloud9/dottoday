@@ -3938,4 +3938,7 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get proposalToInbox => pseudo(super.proposalToInbox);
+
+  @override
+  String get releaseNotes100 => pseudo(super.releaseNotes100);
 }

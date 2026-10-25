@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
@@ -121,7 +122,7 @@ class _BrainDumpBodyState extends ConsumerState<BrainDumpBody> {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            d.text.split('\n').first,
+            LineSplitter.split(d.text).first,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: t.styles.rowTitle,
