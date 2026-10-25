@@ -84,6 +84,7 @@ enum EntityKind {
   calendarAccount,
   calendarLink,
   profile,
+  routine,
 }
 
 /// Entity does not exist or is not visible to the current user.

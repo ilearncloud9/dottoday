@@ -1,5 +1,6 @@
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
@@ -7,7 +8,7 @@ import 'package:dottoday/domain/entities/utc_millis_converter.dart';
 
 /// Everything a user owns, as exported and imported (docs/05 "Export
 /// format", R-11): `{version, exportedAt, profile, series, occurrences,
-/// subtasks}`, values in the same canonical form as storage (snake_case,
+/// subtasks, routines}`, values in the same canonical form as storage (snake_case,
 /// UTC epoch ms).
 final class ExportBundle {
   const ExportBundle({
@@ -16,6 +17,7 @@ final class ExportBundle {
     this.series = const [],
     this.occurrences = const [],
     this.subtasks = const [],
+    this.routines = const [],
   });
 
   /// Decodes a v1 bundle. Throws on any shape mismatch; use
@@ -33,6 +35,10 @@ final class ExportBundle {
       series: list('series', Series.fromJson),
       occurrences: list('occurrences', Occurrence.fromJson),
       subtasks: list('subtasks', Subtask.fromJson),
+      // Added in M11.4: a file from before routines has none.
+      routines: json.containsKey('routines')
+          ? list('routines', Routine.fromJson)
+          : const [],
     );
   }
 
@@ -44,6 +50,7 @@ final class ExportBundle {
   final List<Series> series;
   final List<Occurrence> occurrences;
   final List<Subtask> subtasks;
+  final List<Routine> routines;
 
   Map<String, Object?> toJson() => {
     'version': version,
@@ -52,6 +59,7 @@ final class ExportBundle {
     'series': [for (final s in series) s.toJson()],
     'occurrences': [for (final o in occurrences) o.toJson()],
     'subtasks': [for (final s in subtasks) s.toJson()],
+    'routines': [for (final r in routines) r.toJson()],
   };
 
   /// The bundle without imported calendar events and their subtasks
@@ -79,6 +87,7 @@ final class ExportBundle {
         for (final s in subtasks)
           if (!droppedIds.contains(s.occurrenceId)) s,
       ],
+      routines: routines,
     );
   }
 
@@ -90,5 +99,6 @@ final class ExportBundle {
     series: [for (final s in series) s.copyWith(userId: userId)],
     occurrences: [for (final o in occurrences) o.copyWith(userId: userId)],
     subtasks: [for (final s in subtasks) s.copyWith(userId: userId)],
+    routines: [for (final r in routines) r.copyWith(userId: userId)],
   );
 }

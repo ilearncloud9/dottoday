@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dottoday/data/sync/server_columns.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -78,7 +79,7 @@ final class SupabaseSyncGateway implements SyncGateway {
     out = StreamController<void>(
       onListen: () {
         channel = _client.channel('dottoday-sync');
-        for (final table in ['profiles', 'series', 'occurrences', 'subtasks']) {
+        for (final table in syncedEntities) {
           channel.onPostgresChanges(
             event: PostgresChangeEvent.all,
             schema: 'public',

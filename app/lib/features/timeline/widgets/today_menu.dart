@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/widgets/copy_day_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/day_review.dart';
@@ -8,10 +9,12 @@ import 'package:dottoday/features/timeline/widgets/debug_menu.dart';
 import 'package:dottoday/features/timeline/widgets/export_day.dart';
 import 'package:dottoday/features/timeline/widgets/running_late_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// The day's ⋯ (one on every platform, beside the day dot): Running
 /// late… and Review the day on today (docs/09 M3f.5); Duplicate day… and
-/// Copy day as text on any day (M3f.6); the debug entries in debug
+/// Copy day as text on any day (M3f.6); Routines… to drop one on the day
+/// (M11.4); the debug entries in debug
 /// builds. [withLate] is false where Running late has its own button (the
 /// Mac/web spread).
 class TodayMenu extends StatelessWidget {
@@ -52,6 +55,16 @@ class TodayMenu extends StatelessWidget {
         PopupMenuItem<void>(
           onTap: () => unawaited(copyDayAsText(context, date)),
           child: Text(l10n.todayMenuCopyText),
+        ),
+        // Routines (11 C2, M11.4): drop one on this day.
+        PopupMenuItem<void>(
+          onTap: () => unawaited(
+            context.push(
+              AppRoutes.settingsPage(SettingsPage.routines),
+              extra: date,
+            ),
+          ),
+          child: Text(l10n.routinesMenu),
         ),
         ...debugMenuItems(context),
       ],

@@ -32,6 +32,7 @@ import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
@@ -57,6 +58,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'calendar_fakes.dart';
 import 'export_fakes.dart';
 import 'fake_clock.dart';
+import 'routine_fakes.dart';
 import 'search_fakes.dart';
 
 const testUserId = '01928c3e-0000-7000-8000-000000000001';
@@ -450,6 +452,7 @@ List<Override> timelineOverrides({
   String whatsNewSeen = '0.1.0',
   DiagnosticsReader diagnostics = const FakeDiagnosticsReader(),
   WriteFault? writeFault,
+  List<Routine> routines = const [],
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
@@ -469,6 +472,9 @@ List<Override> timelineOverrides({
     ),
     subtaskRepositoryProvider.overrideWithValue(subs),
     seriesRepositoryProvider.overrideWithValue(seriesRepo),
+    routineRepositoryProvider.overrideWithValue(
+      FakeRoutineRepository(routines),
+    ),
     undoServiceProvider.overrideWithValue(undo),
     trashServiceProvider.overrideWithValue(FakeTrashService(repo, undo)),
     clockProvider.overrideWithValue(FakeClock(now)),

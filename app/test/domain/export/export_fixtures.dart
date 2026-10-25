@@ -72,5 +72,14 @@ ExportBundle hostileBundle() {
         occurrenceId: instance.id,
       ),
     ],
+    routines: [
+      routineFixture().copyWith(
+        title: hostileTitle,
+        items: [
+          routineFixture().items.first.copyWith(title: hostileTitle),
+          ...routineFixture().items.skip(1),
+        ],
+      ),
+    ],
   );
 }

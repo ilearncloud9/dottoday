@@ -3734,6 +3734,21 @@ class $OccurrencesTable extends Occurrences
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _routineStartMeta = const VerificationMeta(
+    'routineStart',
+  );
+  @override
+  late final GeneratedColumn<bool> routineStart = GeneratedColumn<bool>(
+    'routine_start',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("routine_start" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _deletedAtMeta = const VerificationMeta(
     'deletedAt',
   );
@@ -3776,6 +3791,7 @@ class $OccurrencesTable extends Occurrences
     actualEndUtc,
     durationFromSteps,
     moveCount,
+    routineStart,
     deletedAt,
   ];
   @override
@@ -4002,6 +4018,15 @@ class $OccurrencesTable extends Occurrences
         moveCount.isAcceptableOrUnknown(data['move_count']!, _moveCountMeta),
       );
     }
+    if (data.containsKey('routine_start')) {
+      context.handle(
+        _routineStartMeta,
+        routineStart.isAcceptableOrUnknown(
+          data['routine_start']!,
+          _routineStartMeta,
+        ),
+      );
+    }
     if (data.containsKey('deleted_at')) {
       context.handle(
         _deletedAtMeta,
@@ -4133,6 +4158,10 @@ class $OccurrencesTable extends Occurrences
         DriftSqlType.int,
         data['${effectivePrefix}move_count'],
       )!,
+      routineStart: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}routine_start'],
+      )!,
       deletedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}deleted_at'],
@@ -4183,6 +4212,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   final int? actualEndUtc;
   final bool durationFromSteps;
   final int moveCount;
+  final bool routineStart;
   final int? deletedAt;
   const OccurrenceRow({
     required this.createdAt,
@@ -4214,6 +4244,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     this.actualEndUtc,
     required this.durationFromSteps,
     required this.moveCount,
+    required this.routineStart,
     this.deletedAt,
   });
   @override
@@ -4270,6 +4301,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     }
     map['duration_from_steps'] = Variable<bool>(durationFromSteps);
     map['move_count'] = Variable<int>(moveCount);
+    map['routine_start'] = Variable<bool>(routineStart);
     if (!nullToAbsent || deletedAt != null) {
       map['deleted_at'] = Variable<int>(deletedAt);
     }
@@ -4329,6 +4361,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           : Value(actualEndUtc),
       durationFromSteps: Value(durationFromSteps),
       moveCount: Value(moveCount),
+      routineStart: Value(routineStart),
       deletedAt: deletedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(deletedAt),
@@ -4370,6 +4403,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       actualEndUtc: serializer.fromJson<int?>(json['actualEndUtc']),
       durationFromSteps: serializer.fromJson<bool>(json['durationFromSteps']),
       moveCount: serializer.fromJson<int>(json['moveCount']),
+      routineStart: serializer.fromJson<bool>(json['routineStart']),
       deletedAt: serializer.fromJson<int?>(json['deletedAt']),
     );
   }
@@ -4406,6 +4440,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       'actualEndUtc': serializer.toJson<int?>(actualEndUtc),
       'durationFromSteps': serializer.toJson<bool>(durationFromSteps),
       'moveCount': serializer.toJson<int>(moveCount),
+      'routineStart': serializer.toJson<bool>(routineStart),
       'deletedAt': serializer.toJson<int?>(deletedAt),
     };
   }
@@ -4440,6 +4475,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     Value<int?> actualEndUtc = const Value.absent(),
     bool? durationFromSteps,
     int? moveCount,
+    bool? routineStart,
     Value<int?> deletedAt = const Value.absent(),
   }) => OccurrenceRow(
     createdAt: createdAt ?? this.createdAt,
@@ -4481,6 +4517,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     actualEndUtc: actualEndUtc.present ? actualEndUtc.value : this.actualEndUtc,
     durationFromSteps: durationFromSteps ?? this.durationFromSteps,
     moveCount: moveCount ?? this.moveCount,
+    routineStart: routineStart ?? this.routineStart,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   OccurrenceRow copyWithCompanion(OccurrencesCompanion data) {
@@ -4532,6 +4569,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           ? data.durationFromSteps.value
           : this.durationFromSteps,
       moveCount: data.moveCount.present ? data.moveCount.value : this.moveCount,
+      routineStart: data.routineStart.present
+          ? data.routineStart.value
+          : this.routineStart,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
@@ -4568,6 +4608,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           ..write('actualEndUtc: $actualEndUtc, ')
           ..write('durationFromSteps: $durationFromSteps, ')
           ..write('moveCount: $moveCount, ')
+          ..write('routineStart: $routineStart, ')
           ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
@@ -4604,6 +4645,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     actualEndUtc,
     durationFromSteps,
     moveCount,
+    routineStart,
     deletedAt,
   ]);
   @override
@@ -4639,6 +4681,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           other.actualEndUtc == this.actualEndUtc &&
           other.durationFromSteps == this.durationFromSteps &&
           other.moveCount == this.moveCount &&
+          other.routineStart == this.routineStart &&
           other.deletedAt == this.deletedAt);
 }
 
@@ -4672,6 +4715,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   final Value<int?> actualEndUtc;
   final Value<bool> durationFromSteps;
   final Value<int> moveCount;
+  final Value<bool> routineStart;
   final Value<int?> deletedAt;
   final Value<int> rowid;
   const OccurrencesCompanion({
@@ -4704,6 +4748,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     this.actualEndUtc = const Value.absent(),
     this.durationFromSteps = const Value.absent(),
     this.moveCount = const Value.absent(),
+    this.routineStart = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -4737,6 +4782,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     this.actualEndUtc = const Value.absent(),
     this.durationFromSteps = const Value.absent(),
     this.moveCount = const Value.absent(),
+    this.routineStart = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : createdAt = Value(createdAt),
@@ -4776,6 +4822,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     Expression<int>? actualEndUtc,
     Expression<bool>? durationFromSteps,
     Expression<int>? moveCount,
+    Expression<bool>? routineStart,
     Expression<int>? deletedAt,
     Expression<int>? rowid,
   }) {
@@ -4809,6 +4856,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
       if (actualEndUtc != null) 'actual_end_utc': actualEndUtc,
       if (durationFromSteps != null) 'duration_from_steps': durationFromSteps,
       if (moveCount != null) 'move_count': moveCount,
+      if (routineStart != null) 'routine_start': routineStart,
       if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -4844,6 +4892,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     Value<int?>? actualEndUtc,
     Value<bool>? durationFromSteps,
     Value<int>? moveCount,
+    Value<bool>? routineStart,
     Value<int?>? deletedAt,
     Value<int>? rowid,
   }) {
@@ -4877,6 +4926,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
       actualEndUtc: actualEndUtc ?? this.actualEndUtc,
       durationFromSteps: durationFromSteps ?? this.durationFromSteps,
       moveCount: moveCount ?? this.moveCount,
+      routineStart: routineStart ?? this.routineStart,
       deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
@@ -4972,6 +5022,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     if (moveCount.present) {
       map['move_count'] = Variable<int>(moveCount.value);
     }
+    if (routineStart.present) {
+      map['routine_start'] = Variable<bool>(routineStart.value);
+    }
     if (deletedAt.present) {
       map['deleted_at'] = Variable<int>(deletedAt.value);
     }
@@ -5013,6 +5066,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
           ..write('actualEndUtc: $actualEndUtc, ')
           ..write('durationFromSteps: $durationFromSteps, ')
           ..write('moveCount: $moveCount, ')
+          ..write('routineStart: $routineStart, ')
           ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -5733,6 +5787,708 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
           ..write('done: $done, ')
           ..write('sortOrder: $sortOrder, ')
           ..write('durationMin: $durationMin, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $RoutinesTableTable extends RoutinesTable
+    with TableInfo<$RoutinesTableTable, RoutineRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RoutinesTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dirtyMeta = const VerificationMeta('dirty');
+  @override
+  late final GeneratedColumn<bool> dirty = GeneratedColumn<bool>(
+    'dirty',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("dirty" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _anchorMeta = const VerificationMeta('anchor');
+  @override
+  late final GeneratedColumn<String> anchor = GeneratedColumn<String>(
+    'anchor',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('wake'),
+  );
+  static const VerificationMeta _anchorMinuteMeta = const VerificationMeta(
+    'anchorMinute',
+  );
+  @override
+  late final GeneratedColumn<int> anchorMinute = GeneratedColumn<int>(
+    'anchor_minute',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _itemsMeta = const VerificationMeta('items');
+  @override
+  late final GeneratedColumn<String> items = GeneratedColumn<String>(
+    'items',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('[]'),
+  );
+  static const VerificationMeta _sortOrderMeta = const VerificationMeta(
+    'sortOrder',
+  );
+  @override
+  late final GeneratedColumn<double> sortOrder = GeneratedColumn<double>(
+    'sort_order',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<int> deletedAt = GeneratedColumn<int>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    createdAt,
+    updatedAt,
+    dirty,
+    version,
+    id,
+    userId,
+    title,
+    anchor,
+    anchorMinute,
+    items,
+    sortOrder,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'routines';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<RoutineRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('dirty')) {
+      context.handle(
+        _dirtyMeta,
+        dirty.isAcceptableOrUnknown(data['dirty']!, _dirtyMeta),
+      );
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('anchor')) {
+      context.handle(
+        _anchorMeta,
+        anchor.isAcceptableOrUnknown(data['anchor']!, _anchorMeta),
+      );
+    }
+    if (data.containsKey('anchor_minute')) {
+      context.handle(
+        _anchorMinuteMeta,
+        anchorMinute.isAcceptableOrUnknown(
+          data['anchor_minute']!,
+          _anchorMinuteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('items')) {
+      context.handle(
+        _itemsMeta,
+        items.isAcceptableOrUnknown(data['items']!, _itemsMeta),
+      );
+    }
+    if (data.containsKey('sort_order')) {
+      context.handle(
+        _sortOrderMeta,
+        sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta),
+      );
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  RoutineRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RoutineRow(
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      dirty: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}dirty'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      anchor: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}anchor'],
+      )!,
+      anchorMinute: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}anchor_minute'],
+      ),
+      items: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}items'],
+      )!,
+      sortOrder: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}sort_order'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  $RoutinesTableTable createAlias(String alias) {
+    return $RoutinesTableTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class RoutineRow extends DataClass implements Insertable<RoutineRow> {
+  final int createdAt;
+  final int updatedAt;
+  final bool dirty;
+  final int version;
+  final String id;
+  final String userId;
+  final String title;
+  final String anchor;
+  final int? anchorMinute;
+
+  /// JSON array of steps (camelCase keys, as `series.subtask_template`).
+  final String items;
+  final double sortOrder;
+  final int? deletedAt;
+  const RoutineRow({
+    required this.createdAt,
+    required this.updatedAt,
+    required this.dirty,
+    required this.version,
+    required this.id,
+    required this.userId,
+    required this.title,
+    required this.anchor,
+    this.anchorMinute,
+    required this.items,
+    required this.sortOrder,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    map['dirty'] = Variable<bool>(dirty);
+    map['version'] = Variable<int>(version);
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['title'] = Variable<String>(title);
+    map['anchor'] = Variable<String>(anchor);
+    if (!nullToAbsent || anchorMinute != null) {
+      map['anchor_minute'] = Variable<int>(anchorMinute);
+    }
+    map['items'] = Variable<String>(items);
+    map['sort_order'] = Variable<double>(sortOrder);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<int>(deletedAt);
+    }
+    return map;
+  }
+
+  RoutinesTableCompanion toCompanion(bool nullToAbsent) {
+    return RoutinesTableCompanion(
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      dirty: Value(dirty),
+      version: Value(version),
+      id: Value(id),
+      userId: Value(userId),
+      title: Value(title),
+      anchor: Value(anchor),
+      anchorMinute: anchorMinute == null && nullToAbsent
+          ? const Value.absent()
+          : Value(anchorMinute),
+      items: Value(items),
+      sortOrder: Value(sortOrder),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory RoutineRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RoutineRow(
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+      dirty: serializer.fromJson<bool>(json['dirty']),
+      version: serializer.fromJson<int>(json['version']),
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      title: serializer.fromJson<String>(json['title']),
+      anchor: serializer.fromJson<String>(json['anchor']),
+      anchorMinute: serializer.fromJson<int?>(json['anchorMinute']),
+      items: serializer.fromJson<String>(json['items']),
+      sortOrder: serializer.fromJson<double>(json['sortOrder']),
+      deletedAt: serializer.fromJson<int?>(json['deletedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'createdAt': serializer.toJson<int>(createdAt),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+      'dirty': serializer.toJson<bool>(dirty),
+      'version': serializer.toJson<int>(version),
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'title': serializer.toJson<String>(title),
+      'anchor': serializer.toJson<String>(anchor),
+      'anchorMinute': serializer.toJson<int?>(anchorMinute),
+      'items': serializer.toJson<String>(items),
+      'sortOrder': serializer.toJson<double>(sortOrder),
+      'deletedAt': serializer.toJson<int?>(deletedAt),
+    };
+  }
+
+  RoutineRow copyWith({
+    int? createdAt,
+    int? updatedAt,
+    bool? dirty,
+    int? version,
+    String? id,
+    String? userId,
+    String? title,
+    String? anchor,
+    Value<int?> anchorMinute = const Value.absent(),
+    String? items,
+    double? sortOrder,
+    Value<int?> deletedAt = const Value.absent(),
+  }) => RoutineRow(
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    dirty: dirty ?? this.dirty,
+    version: version ?? this.version,
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    title: title ?? this.title,
+    anchor: anchor ?? this.anchor,
+    anchorMinute: anchorMinute.present ? anchorMinute.value : this.anchorMinute,
+    items: items ?? this.items,
+    sortOrder: sortOrder ?? this.sortOrder,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  RoutineRow copyWithCompanion(RoutinesTableCompanion data) {
+    return RoutineRow(
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      dirty: data.dirty.present ? data.dirty.value : this.dirty,
+      version: data.version.present ? data.version.value : this.version,
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      title: data.title.present ? data.title.value : this.title,
+      anchor: data.anchor.present ? data.anchor.value : this.anchor,
+      anchorMinute: data.anchorMinute.present
+          ? data.anchorMinute.value
+          : this.anchorMinute,
+      items: data.items.present ? data.items.value : this.items,
+      sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RoutineRow(')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('dirty: $dirty, ')
+          ..write('version: $version, ')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('title: $title, ')
+          ..write('anchor: $anchor, ')
+          ..write('anchorMinute: $anchorMinute, ')
+          ..write('items: $items, ')
+          ..write('sortOrder: $sortOrder, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    createdAt,
+    updatedAt,
+    dirty,
+    version,
+    id,
+    userId,
+    title,
+    anchor,
+    anchorMinute,
+    items,
+    sortOrder,
+    deletedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RoutineRow &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.dirty == this.dirty &&
+          other.version == this.version &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.title == this.title &&
+          other.anchor == this.anchor &&
+          other.anchorMinute == this.anchorMinute &&
+          other.items == this.items &&
+          other.sortOrder == this.sortOrder &&
+          other.deletedAt == this.deletedAt);
+}
+
+class RoutinesTableCompanion extends UpdateCompanion<RoutineRow> {
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<bool> dirty;
+  final Value<int> version;
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> title;
+  final Value<String> anchor;
+  final Value<int?> anchorMinute;
+  final Value<String> items;
+  final Value<double> sortOrder;
+  final Value<int?> deletedAt;
+  final Value<int> rowid;
+  const RoutinesTableCompanion({
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.dirty = const Value.absent(),
+    this.version = const Value.absent(),
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.anchor = const Value.absent(),
+    this.anchorMinute = const Value.absent(),
+    this.items = const Value.absent(),
+    this.sortOrder = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RoutinesTableCompanion.insert({
+    required int createdAt,
+    required int updatedAt,
+    this.dirty = const Value.absent(),
+    this.version = const Value.absent(),
+    required String id,
+    required String userId,
+    required String title,
+    this.anchor = const Value.absent(),
+    this.anchorMinute = const Value.absent(),
+    this.items = const Value.absent(),
+    this.sortOrder = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt),
+       id = Value(id),
+       userId = Value(userId),
+       title = Value(title);
+  static Insertable<RoutineRow> custom({
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<bool>? dirty,
+    Expression<int>? version,
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? title,
+    Expression<String>? anchor,
+    Expression<int>? anchorMinute,
+    Expression<String>? items,
+    Expression<double>? sortOrder,
+    Expression<int>? deletedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (dirty != null) 'dirty': dirty,
+      if (version != null) 'version': version,
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (title != null) 'title': title,
+      if (anchor != null) 'anchor': anchor,
+      if (anchorMinute != null) 'anchor_minute': anchorMinute,
+      if (items != null) 'items': items,
+      if (sortOrder != null) 'sort_order': sortOrder,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RoutinesTableCompanion copyWith({
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<bool>? dirty,
+    Value<int>? version,
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? title,
+    Value<String>? anchor,
+    Value<int?>? anchorMinute,
+    Value<String>? items,
+    Value<double>? sortOrder,
+    Value<int?>? deletedAt,
+    Value<int>? rowid,
+  }) {
+    return RoutinesTableCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      dirty: dirty ?? this.dirty,
+      version: version ?? this.version,
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      anchor: anchor ?? this.anchor,
+      anchorMinute: anchorMinute ?? this.anchorMinute,
+      items: items ?? this.items,
+      sortOrder: sortOrder ?? this.sortOrder,
+      deletedAt: deletedAt ?? this.deletedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (dirty.present) {
+      map['dirty'] = Variable<bool>(dirty.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (anchor.present) {
+      map['anchor'] = Variable<String>(anchor.value);
+    }
+    if (anchorMinute.present) {
+      map['anchor_minute'] = Variable<int>(anchorMinute.value);
+    }
+    if (items.present) {
+      map['items'] = Variable<String>(items.value);
+    }
+    if (sortOrder.present) {
+      map['sort_order'] = Variable<double>(sortOrder.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<int>(deletedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RoutinesTableCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('dirty: $dirty, ')
+          ..write('version: $version, ')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('title: $title, ')
+          ..write('anchor: $anchor, ')
+          ..write('anchorMinute: $anchorMinute, ')
+          ..write('items: $items, ')
+          ..write('sortOrder: $sortOrder, ')
           ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -7539,11 +8295,24 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'calendar_links_account_event',
     'CREATE UNIQUE INDEX calendar_links_account_event ON calendar_links (user_id, account_id, external_event_id)',
   );
+  late final $RoutinesTableTable routinesTable = $RoutinesTableTable(this);
   late final $ConflictsTable conflicts = $ConflictsTable(this);
   late final $ChangeLogTable changeLog = $ChangeLogTable(this);
   late final $SyncCursorsTable syncCursors = $SyncCursorsTable(this);
   late final $FieldSeenTable fieldSeen = $FieldSeenTable(this);
   late final $LocalMetaTable localMeta = $LocalMetaTable(this);
+  late final Index routinesUser = Index(
+    'routines_user',
+    'CREATE INDEX routines_user ON routines (user_id)',
+  );
+  late final Index routinesUserUpdated = Index(
+    'routines_user_updated',
+    'CREATE INDEX routines_user_updated ON routines (user_id, updated_at)',
+  );
+  late final Index routinesDirty = Index(
+    'routines_dirty',
+    'CREATE INDEX routines_dirty ON routines (dirty) WHERE dirty = 1',
+  );
   late final Index conflictsOpen = Index(
     'conflicts_open',
     'CREATE INDEX conflicts_open ON conflicts (user_id) WHERE resolved_at IS NULL',
@@ -7585,11 +8354,15 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     calendarAccountsUserUpdated,
     calendarLinksUserEvent,
     calendarLinksAccountEvent,
+    routinesTable,
     conflicts,
     changeLog,
     syncCursors,
     fieldSeen,
     localMeta,
+    routinesUser,
+    routinesUserUpdated,
+    routinesDirty,
     conflictsOpen,
     changeLogEntity,
   ];
@@ -7737,6 +8510,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('search_index', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('routines', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('routines', kind: UpdateKind.update)],
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
@@ -8067,6 +8854,24 @@ final class $$ProfilesTableReferences
     );
   }
 
+  static MultiTypedResultKey<$RoutinesTableTable, List<RoutineRow>>
+  _routinesTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.routinesTable,
+    aliasName: 'profiles__id__routines__user_id',
+  );
+
+  $$RoutinesTableTableProcessedTableManager get routinesTableRefs {
+    final manager = $$RoutinesTableTableTableManager(
+      $_db,
+      $_db.routinesTable,
+    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_routinesTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
   static MultiTypedResultKey<$ConflictsTable, List<ConflictRow>>
   _conflictsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.conflicts,
@@ -8256,6 +9061,31 @@ class $$ProfilesTableFilterComposer
           }) => $$SubtasksTableFilterComposer(
             $db: $db,
             $table: $db.subtasks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> routinesTableRefs(
+    Expression<bool> Function($$RoutinesTableTableFilterComposer f) f,
+  ) {
+    final $$RoutinesTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.routinesTable,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RoutinesTableTableFilterComposer(
+            $db: $db,
+            $table: $db.routinesTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8509,6 +9339,31 @@ class $$ProfilesTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> routinesTableRefs<T extends Object>(
+    Expression<T> Function($$RoutinesTableTableAnnotationComposer a) f,
+  ) {
+    final $$RoutinesTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.routinesTable,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RoutinesTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.routinesTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> conflictsRefs<T extends Object>(
     Expression<T> Function($$ConflictsTableAnnotationComposer a) f,
   ) {
@@ -8554,6 +9409,7 @@ class $$ProfilesTableTableManager
             bool calendarLinksRefs,
             bool occurrencesRefs,
             bool subtasksRefs,
+            bool routinesTableRefs,
             bool conflictsRefs,
           })
         > {
@@ -8631,6 +9487,7 @@ class $$ProfilesTableTableManager
                 calendarLinksRefs = false,
                 occurrencesRefs = false,
                 subtasksRefs = false,
+                routinesTableRefs = false,
                 conflictsRefs = false,
               }) {
                 return PrefetchHooks(
@@ -8641,6 +9498,7 @@ class $$ProfilesTableTableManager
                     if (calendarLinksRefs) db.calendarLinks,
                     if (occurrencesRefs) db.occurrences,
                     if (subtasksRefs) db.subtasks,
+                    if (routinesTableRefs) db.routinesTable,
                     if (conflictsRefs) db.conflicts,
                   ],
                   addJoins: null,
@@ -8751,6 +9609,27 @@ class $$ProfilesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (routinesTableRefs)
+                        await $_getPrefetchedData<
+                          ProfileRow,
+                          $ProfilesTable,
+                          RoutineRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._routinesTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).routinesTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.userId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (conflictsRefs)
                         await $_getPrefetchedData<
                           ProfileRow,
@@ -8798,6 +9677,7 @@ typedef $$ProfilesTableProcessedTableManager =
         bool calendarLinksRefs,
         bool occurrencesRefs,
         bool subtasksRefs,
+        bool routinesTableRefs,
         bool conflictsRefs,
       })
     >;
@@ -10727,6 +11607,7 @@ typedef $$OccurrencesTableCreateCompanionBuilder =
       Value<int?> actualEndUtc,
       Value<bool> durationFromSteps,
       Value<int> moveCount,
+      Value<bool> routineStart,
       Value<int?> deletedAt,
       Value<int> rowid,
     });
@@ -10761,6 +11642,7 @@ typedef $$OccurrencesTableUpdateCompanionBuilder =
       Value<int?> actualEndUtc,
       Value<bool> durationFromSteps,
       Value<int> moveCount,
+      Value<bool> routineStart,
       Value<int?> deletedAt,
       Value<int> rowid,
     });
@@ -10976,6 +11858,11 @@ class $$OccurrencesTableFilterComposer
 
   ColumnFilters<int> get moveCount => $composableBuilder(
     column: $table.moveCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get routineStart => $composableBuilder(
+    column: $table.routineStart,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -11218,6 +12105,11 @@ class $$OccurrencesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get routineStart => $composableBuilder(
+    column: $table.routineStart,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get deletedAt => $composableBuilder(
     column: $table.deletedAt,
     builder: (column) => ColumnOrderings(column),
@@ -11396,6 +12288,11 @@ class $$OccurrencesTableAnnotationComposer
   GeneratedColumn<int> get moveCount =>
       $composableBuilder(column: $table.moveCount, builder: (column) => column);
 
+  GeneratedColumn<bool> get routineStart => $composableBuilder(
+    column: $table.routineStart,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get deletedAt =>
       $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
@@ -11556,6 +12453,7 @@ class $$OccurrencesTableTableManager
                 Value<int?> actualEndUtc = const Value.absent(),
                 Value<bool> durationFromSteps = const Value.absent(),
                 Value<int> moveCount = const Value.absent(),
+                Value<bool> routineStart = const Value.absent(),
                 Value<int?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => OccurrencesCompanion(
@@ -11588,6 +12486,7 @@ class $$OccurrencesTableTableManager
                 actualEndUtc: actualEndUtc,
                 durationFromSteps: durationFromSteps,
                 moveCount: moveCount,
+                routineStart: routineStart,
                 deletedAt: deletedAt,
                 rowid: rowid,
               ),
@@ -11622,6 +12521,7 @@ class $$OccurrencesTableTableManager
                 Value<int?> actualEndUtc = const Value.absent(),
                 Value<bool> durationFromSteps = const Value.absent(),
                 Value<int> moveCount = const Value.absent(),
+                Value<bool> routineStart = const Value.absent(),
                 Value<int?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => OccurrencesCompanion.insert(
@@ -11654,6 +12554,7 @@ class $$OccurrencesTableTableManager
                 actualEndUtc: actualEndUtc,
                 durationFromSteps: durationFromSteps,
                 moveCount: moveCount,
+                routineStart: routineStart,
                 deletedAt: deletedAt,
                 rowid: rowid,
               ),
@@ -12326,6 +13227,462 @@ typedef $$SubtasksTableProcessedTableManager =
       (SubtaskRow, $$SubtasksTableReferences),
       SubtaskRow,
       PrefetchHooks Function({bool userId, bool occurrenceId})
+    >;
+typedef $$RoutinesTableTableCreateCompanionBuilder =
+    RoutinesTableCompanion Function({
+      required int createdAt,
+      required int updatedAt,
+      Value<bool> dirty,
+      Value<int> version,
+      required String id,
+      required String userId,
+      required String title,
+      Value<String> anchor,
+      Value<int?> anchorMinute,
+      Value<String> items,
+      Value<double> sortOrder,
+      Value<int?> deletedAt,
+      Value<int> rowid,
+    });
+typedef $$RoutinesTableTableUpdateCompanionBuilder =
+    RoutinesTableCompanion Function({
+      Value<int> createdAt,
+      Value<int> updatedAt,
+      Value<bool> dirty,
+      Value<int> version,
+      Value<String> id,
+      Value<String> userId,
+      Value<String> title,
+      Value<String> anchor,
+      Value<int?> anchorMinute,
+      Value<String> items,
+      Value<double> sortOrder,
+      Value<int?> deletedAt,
+      Value<int> rowid,
+    });
+
+final class $$RoutinesTableTableReferences
+    extends BaseReferences<_$AppDatabase, $RoutinesTableTable, RoutineRow> {
+  $$RoutinesTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ProfilesTable _userIdTable(_$AppDatabase db) =>
+      db.profiles.createAlias('routines__user_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<String>('user_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$RoutinesTableTableFilterComposer
+    extends Composer<_$AppDatabase, $RoutinesTableTable> {
+  $$RoutinesTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get dirty => $composableBuilder(
+    column: $table.dirty,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get anchor => $composableBuilder(
+    column: $table.anchor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get anchorMinute => $composableBuilder(
+    column: $table.anchorMinute,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get items => $composableBuilder(
+    column: $table.items,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ProfilesTableFilterComposer get userId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RoutinesTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $RoutinesTableTable> {
+  $$RoutinesTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get dirty => $composableBuilder(
+    column: $table.dirty,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get anchor => $composableBuilder(
+    column: $table.anchor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get anchorMinute => $composableBuilder(
+    column: $table.anchorMinute,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get items => $composableBuilder(
+    column: $table.items,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ProfilesTableOrderingComposer get userId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RoutinesTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $RoutinesTableTable> {
+  $$RoutinesTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get dirty =>
+      $composableBuilder(column: $table.dirty, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get anchor =>
+      $composableBuilder(column: $table.anchor, builder: (column) => column);
+
+  GeneratedColumn<int> get anchorMinute => $composableBuilder(
+    column: $table.anchorMinute,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get items =>
+      $composableBuilder(column: $table.items, builder: (column) => column);
+
+  GeneratedColumn<double> get sortOrder =>
+      $composableBuilder(column: $table.sortOrder, builder: (column) => column);
+
+  GeneratedColumn<int> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  $$ProfilesTableAnnotationComposer get userId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RoutinesTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $RoutinesTableTable,
+          RoutineRow,
+          $$RoutinesTableTableFilterComposer,
+          $$RoutinesTableTableOrderingComposer,
+          $$RoutinesTableTableAnnotationComposer,
+          $$RoutinesTableTableCreateCompanionBuilder,
+          $$RoutinesTableTableUpdateCompanionBuilder,
+          (RoutineRow, $$RoutinesTableTableReferences),
+          RoutineRow,
+          PrefetchHooks Function({bool userId})
+        > {
+  $$RoutinesTableTableTableManager(_$AppDatabase db, $RoutinesTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RoutinesTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$RoutinesTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$RoutinesTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> createdAt = const Value.absent(),
+                Value<int> updatedAt = const Value.absent(),
+                Value<bool> dirty = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> anchor = const Value.absent(),
+                Value<int?> anchorMinute = const Value.absent(),
+                Value<String> items = const Value.absent(),
+                Value<double> sortOrder = const Value.absent(),
+                Value<int?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RoutinesTableCompanion(
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                dirty: dirty,
+                version: version,
+                id: id,
+                userId: userId,
+                title: title,
+                anchor: anchor,
+                anchorMinute: anchorMinute,
+                items: items,
+                sortOrder: sortOrder,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int createdAt,
+                required int updatedAt,
+                Value<bool> dirty = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                required String id,
+                required String userId,
+                required String title,
+                Value<String> anchor = const Value.absent(),
+                Value<int?> anchorMinute = const Value.absent(),
+                Value<String> items = const Value.absent(),
+                Value<double> sortOrder = const Value.absent(),
+                Value<int?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RoutinesTableCompanion.insert(
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                dirty: dirty,
+                version: version,
+                id: id,
+                userId: userId,
+                title: title,
+                anchor: anchor,
+                anchorMinute: anchorMinute,
+                items: items,
+                sortOrder: sortOrder,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$RoutinesTableTable, RoutineRow>(table),
+                  $$RoutinesTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({userId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (userId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.userId,
+                                referencedTable: $$RoutinesTableTableReferences
+                                    ._userIdTable(db),
+                                referencedColumn: $$RoutinesTableTableReferences
+                                    ._userIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$RoutinesTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $RoutinesTableTable,
+      RoutineRow,
+      $$RoutinesTableTableFilterComposer,
+      $$RoutinesTableTableOrderingComposer,
+      $$RoutinesTableTableAnnotationComposer,
+      $$RoutinesTableTableCreateCompanionBuilder,
+      $$RoutinesTableTableUpdateCompanionBuilder,
+      (RoutineRow, $$RoutinesTableTableReferences),
+      RoutineRow,
+      PrefetchHooks Function({bool userId})
     >;
 typedef $$ConflictsTableCreateCompanionBuilder =
     ConflictsCompanion Function({
@@ -13452,6 +14809,8 @@ class $AppDatabaseManager {
       $$OccurrencesTableTableManager(_db, _db.occurrences);
   $$SubtasksTableTableManager get subtasks =>
       $$SubtasksTableTableManager(_db, _db.subtasks);
+  $$RoutinesTableTableTableManager get routinesTable =>
+      $$RoutinesTableTableTableManager(_db, _db.routinesTable);
   $$ConflictsTableTableManager get conflicts =>
       $$ConflictsTableTableManager(_db, _db.conflicts);
   $$ChangeLogTableTableManager get changeLog =>

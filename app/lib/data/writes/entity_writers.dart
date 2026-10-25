@@ -1,10 +1,12 @@
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
+import 'package:dottoday/data/repositories/drift_routine_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/data/writes/row_writer.dart';
 import 'package:dottoday/domain/calendar/calendar_import_rules.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
@@ -34,6 +36,18 @@ EntityWriter<Series> seriesWriter(String userId, DriftSeriesRepository repo) =>
       find: (id) => repo.findById(userId, id),
       upsertAll: repo.upsertAll,
     );
+
+EntityWriter<Routine> routineWriter(
+  String userId,
+  DriftRoutineRepository repo,
+) => EntityWriter(
+  table: 'routines',
+  toJson: (r) => r.toJson(),
+  idOf: (r) => r.id,
+  stamp: (r, now) => r.copyWith(updatedAt: now),
+  find: (id) => repo.findById(userId, id),
+  upsertAll: repo.upsertAll,
+);
 
 EntityWriter<Occurrence> occurrenceWriter(
   String userId,

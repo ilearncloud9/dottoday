@@ -5,6 +5,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/domain/scheduling/week_plan.dart';
 import 'package:dottoday/features/inbox/state/inbox_state.dart';
+import 'package:dottoday/features/inbox/widgets/inbox_routines_button.dart';
 import 'package:dottoday/shared/dot/count_ring.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/menus/dot_menu_style.dart';
@@ -58,6 +59,7 @@ class WideInboxHeader extends ConsumerWidget {
           runSpacing: DotSpace.s,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
+            const InboxRoutinesButton(),
             const _SortButton(),
             FilledButton(
               onPressed: onAutoPlan,

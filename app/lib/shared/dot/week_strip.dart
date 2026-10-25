@@ -55,6 +55,7 @@ class WeekStrip extends StatelessWidget {
     this.onPull,
     this.onDropTask,
     this.monthOpen = false,
+    this.handle = true,
     super.key,
   }) : assert(days.length == 7, 'a week has 7 days'); // l10n-ignore: assert
 
@@ -66,6 +67,10 @@ class WeekStrip extends StatelessWidget {
 
   /// Tap or drag down on the handle (§2.4 "month pull-open").
   final VoidCallback? onPull;
+
+  /// The pull handle under the selected column; off where there is no
+  /// month to pull open (the Routines page's day pick, M11.4).
+  final bool handle;
 
   /// A dragged task (its id) was let go on day [int]: phones' "week
   /// overview, read + drag" (PRD F8, R-05). Null = not a drop target.
@@ -84,7 +89,7 @@ class WeekStrip extends StatelessWidget {
             for (final (i, d) in days.indexed) Expanded(child: _target(i, d)),
           ],
         ),
-        PullHandle(open: monthOpen, onPull: onPull),
+        if (handle) PullHandle(open: monthOpen, onPull: onPull),
       ],
     );
   }

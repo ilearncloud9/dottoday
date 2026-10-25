@@ -43,8 +43,8 @@ Future<void> openRebalance(
   Set<String> keep = const {},
   String? title,
 }) async {
-  final data = await _day(container, today);
-  final later = await _day(
+  final data = await readTimelineDay(container, today);
+  final later = await readTimelineDay(
     container,
     DateTime(today.year, today.month, today.day + 1),
   );
@@ -105,18 +105,6 @@ ProposalRequest rebalanceRequest(
     RebalanceRules(onChanged: (o) => update(compute(o))),
   ],
 );
-
-/// [date]'s timeline, held while it loads: nothing may be watching it
-/// (tomorrow, or a closed sheet's today), and an unwatched day is
-/// disposed mid-load.
-Future<TimelineData> _day(ProviderContainer container, DateTime date) async {
-  final hold = container.listen(timelineDataProvider(date), (_, _) {});
-  try {
-    return await container.read(timelineDataProvider(date).future);
-  } finally {
-    hold.close();
-  }
-}
 
 DayShape _shape(TimelineData data) => DayShape.on(
   data.day.location,

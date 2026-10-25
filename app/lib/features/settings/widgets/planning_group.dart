@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -10,11 +11,12 @@ import 'package:dottoday/shared/duration/duration_sheet.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// PLANNING (`A-ios-settings`) plus PRD F8's snapping and shift default:
 /// Default duration, Snap to, Shift later tasks, Show free time,
 /// Running-late nudge, Plan-your-inbox nudge (F3.3), Roll unfinished to
-/// tomorrow (R-16, R-17).
+/// tomorrow (R-16, R-17), and the way to Routines (11 C2).
 class PlanningGroup extends StatelessWidget {
   const PlanningGroup({required this.settings, super.key});
 
@@ -33,6 +35,15 @@ class PlanningGroup extends StatelessWidget {
           title: l10n.settingsDefaultDuration,
           value: formatDurationShort(l10n, settings.defaultDurationMin),
           onTap: () => unawaited(_duration(context)),
+        ),
+        // Routines (11 C2, M11.4): saved slices of thread.
+        SettingsRow(
+          glyph: DotGlyphs.repeat,
+          tint: t.tasks[TaskColor.mint].ink,
+          title: l10n.routinesTitle,
+          onTap: () => unawaited(
+            context.push(AppRoutes.settingsPage(SettingsPage.routines)),
+          ),
         ),
         _snap(context, t),
         _shift(context, t),

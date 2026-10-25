@@ -44,6 +44,13 @@ Future<int> purgeTombstones(
       updates: {db.seriesTable},
       updateKind: UpdateKind.delete,
     );
+    removed += await db.customUpdate(
+      'DELETE FROM routines WHERE user_id = ? AND dirty = 0 '
+      'AND deleted_at IS NOT NULL AND deleted_at < ?',
+      variables: [u, c],
+      updates: {db.routinesTable},
+      updateKind: UpdateKind.delete,
+    );
     return removed;
   });
 }

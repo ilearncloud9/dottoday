@@ -7,8 +7,15 @@
 library;
 
 /// Synced entities, in the order their rows may reference each other:
-/// series before the occurrences they make, occurrences before subtasks.
-const syncedEntities = ['profiles', 'series', 'occurrences', 'subtasks'];
+/// series before the occurrences they make, occurrences before subtasks;
+/// routines reference only the profile.
+const syncedEntities = [
+  'profiles',
+  'series',
+  'occurrences',
+  'subtasks',
+  'routines',
+];
 
 /// The columns a change may set (never `id`, `user_id`, `updated_at`).
 /// `calendar_link_id` stays on the device until calendar links sync (M7).
@@ -59,6 +66,7 @@ const pushableColumns = <String, Set<String>>{
     'actual_end_utc',
     'duration_from_steps',
     'move_count',
+    'routine_start',
     'created_at',
     'deleted_at',
   },
@@ -68,6 +76,15 @@ const pushableColumns = <String, Set<String>>{
     'done',
     'sort_order',
     'duration_min',
+    'created_at',
+    'deleted_at',
+  },
+  'routines': {
+    'title',
+    'anchor',
+    'anchor_minute',
+    'items',
+    'sort_order',
     'created_at',
     'deleted_at',
   },

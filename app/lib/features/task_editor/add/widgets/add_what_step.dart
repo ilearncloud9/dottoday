@@ -19,6 +19,7 @@ class AddWhatStep extends StatelessWidget {
   const AddWhatStep({
     required this.state,
     required this.habits,
+    this.routines,
     required this.use24h,
     required this.onType,
     required this.onPickHabit,
@@ -37,6 +38,9 @@ class AddWhatStep extends StatelessWidget {
 
   /// All habits; the step shows the ones matching the title.
   final List<HabitSuggestion> habits;
+
+  /// Routine chips under the habits (11 C2, M11.4); null shows none.
+  final Widget? routines;
   final bool use24h;
   final ValueChanged<String> onType;
   final ValueChanged<HabitSuggestion> onPickHabit;
@@ -114,6 +118,7 @@ class AddWhatStep extends StatelessWidget {
             onPick: onPickHabit,
           ),
         ],
+        if (routines case final r?) ...[const SizedBox(height: DotSpace.xl), r],
       ],
     );
   }

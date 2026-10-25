@@ -56,6 +56,7 @@ void main() {
       'calendar_links',
       'occurrences',
       'subtasks',
+      'routines',
       'conflicts',
       'change_log',
       'field_seen',
@@ -116,10 +117,16 @@ void main() {
   test('re-owning the profile cascades to user_id (M6.4)', () async {
     await insertOccurrence('o1', {});
     await db.customStatement(
+      'INSERT INTO routines (id, user_id, title, created_at, updated_at) '
+      "VALUES ('r1', '$_user', 'Morning', 0, 0)",
+    );
+    await db.customStatement(
       "UPDATE profiles SET id = 'server-user' WHERE id = '$_user'",
     );
     final row = await db.select(db.occurrences).getSingle();
     expect(row.userId, 'server-user');
+    final routine = await db.select(db.routinesTable).getSingle();
+    expect(routine.userId, 'server-user');
   });
 
   test('docs/05 indexes exist', () async {
@@ -142,6 +149,8 @@ void main() {
         'subtasks_occurrence',
         'series_user',
         'calendar_links_user_event',
+        'routines_user',
+        'routines_user_updated',
       ]),
     );
   });

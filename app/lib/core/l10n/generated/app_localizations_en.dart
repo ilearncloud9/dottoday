@@ -4523,4 +4523,173 @@ class AppLocalizationsEn extends AppLocalizations {
   String lateUsually(String title, String duration) {
     return '$title usually takes $duration';
   }
+
+  @override
+  String get routinesTitle => 'Routines';
+
+  @override
+  String get routinesSubtitle => 'Reusable slices of thread';
+
+  @override
+  String routineSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count steps',
+      one: '1 step',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String routineSummary(String steps, String duration, String anchor) {
+    return '$steps · $duration · $anchor';
+  }
+
+  @override
+  String get routineStartsWake => 'starts at Wake Up';
+
+  @override
+  String get routineEndsBed => 'ends at Bedtime';
+
+  @override
+  String routineStartsAt(String time) {
+    return 'starts at $time';
+  }
+
+  @override
+  String get routineDropToday => 'Drop on today';
+
+  @override
+  String get routineEdit => 'Edit';
+
+  @override
+  String get routineNew => 'New routine';
+
+  @override
+  String get routineNewHint => 'or save a selection from any day';
+
+  @override
+  String get routineAlarmNote => 'Routine-start dots ring loud, like an alarm';
+
+  @override
+  String get routinesEmpty =>
+      'No routines yet. Pick a few tasks on any day and save them as a routine, or start a new one.';
+
+  @override
+  String get routineSaveSelection => 'Save as routine';
+
+  @override
+  String get routineName => 'Name';
+
+  @override
+  String routineSaved(String title) {
+    return 'Saved “$title” as a routine';
+  }
+
+  @override
+  String routineDeleted(String title) {
+    return 'Deleted “$title”';
+  }
+
+  @override
+  String get routineDelete => 'Delete routine';
+
+  @override
+  String get routineEditTitle => 'Edit routine';
+
+  @override
+  String get routineAnchorLabel => 'When';
+
+  @override
+  String get routineAnchorWake => 'At Wake Up';
+
+  @override
+  String get routineAnchorBed => 'Ending at Bedtime';
+
+  @override
+  String get routineAnchorTime => 'At a time';
+
+  @override
+  String get routineStepsLabel => 'Steps';
+
+  @override
+  String get routineStepHint => 'Step name';
+
+  @override
+  String get routineAddStep => 'Add step';
+
+  @override
+  String routineRemoveStep(String title) {
+    return 'Remove $title';
+  }
+
+  @override
+  String routineMoveUp(String title) {
+    return 'Move $title up';
+  }
+
+  @override
+  String routineMoveDown(String title) {
+    return 'Move $title down';
+  }
+
+  @override
+  String routineGap(String duration) {
+    return '$duration free';
+  }
+
+  @override
+  String get routineSave => 'Save';
+
+  @override
+  String get routineDropTitle => 'Routine';
+
+  @override
+  String routineDropSubtitle(String title, String day, String time) {
+    return '$title on $day · from $time';
+  }
+
+  @override
+  String get routineDropAccept => 'Add to day';
+
+  @override
+  String get routineDropAccepted => 'Routine added';
+
+  @override
+  String routineChipLabel(String title) {
+    return 'Drop routine $title';
+  }
+
+  @override
+  String get routinesMenu => 'Routines…';
+
+  @override
+  String get routinesSuggestions => 'Routines';
+
+  @override
+  String get routineInvalid => 'Give the routine a name and at least one step';
+
+  @override
+  String routinesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routines',
+      one: '1 routine',
+      zero: 'No routines',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get routineDropHere => 'Drop a routine…';
+
+  @override
+  String routineDropOnDay(String day) {
+    return 'Drop on $day';
+  }
+
+  @override
+  String get routineDropDay => 'Which day';
 }

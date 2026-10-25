@@ -1,8 +1,10 @@
 import 'package:dottoday/app_shell.dart';
 import 'package:dottoday/core/router/app_router.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/features/focus/focus_screen.dart';
 import 'package:dottoday/features/inbox/inbox_screen.dart';
 import 'package:dottoday/features/inbox/inbox_sidebar.dart';
+import 'package:dottoday/features/routines/routines_page.dart';
 import 'package:dottoday/features/search/search_screen.dart';
 import 'package:dottoday/features/settings/pages/settings_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
@@ -20,7 +22,11 @@ final appScreens = RouteScreens(
   week: (_) => const InboxSidebarFrame(child: WeekScreen()),
   search: (_) => const SearchScreen(),
   settings: (_) => const SettingsScreen(),
-  settingsPage: (_, page) => settingsPageFor(page),
+  // Routines (M11.4) belongs to its own feature; a push's extra is the
+  // day it drops on.
+  settingsPage: (_, page, extra) => page == SettingsPage.routines
+      ? RoutinesPage(dropOn: extra is DateTime ? extra : null)
+      : settingsPageFor(page),
   month: (_) => const MonthScreen(),
   day: (_, date) => InboxSidebarFrame(child: TodayScreen(date: date)),
   task: (_, id) => TaskScreen(id: id),

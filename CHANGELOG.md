@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M11.4: Routines. Save a few tasks you do together as a routine — pick them on any day and tap Save as routine, or start one from scratch — with their order, lengths and gaps. Drop it on today or any day from the Routines page, Today's ⋯ menu, the Inbox or Add's suggestions: you see where every step lands first, and nothing is added until you accept. The first step of a routine rings like an alarm. Routines sync, back up and export with everything else, and there's no limit on how many you keep.
 - M11.3: Dottoday learns how long things really take you — on your device, from when you actually start and finish. Add picks a task's usual length for you ("usually 1 h 20") and mentions when you tend to start it; Reality shows "usually 2 h 20" for what's under way; Running late suggests the amount it usually needs. It needs three real runs before it says anything.
 - M11.2: Plan / Reality. Once you've started something today, the Today card gets a Plan | Reality switch: Reality draws what really happened — when each task actually started and finished, how long it took, what's not started yet — beside a faint copy of your plan. No judgement, just the day as it went.
 - M11.1b: When your calendar moves a meeting later into your plan, Today asks quietly — "Standup moved to 10:30 · Rebalance?" — and shows a plan that works around the new time. Nothing moves until you accept; "Not now" puts it away.

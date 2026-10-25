@@ -52,7 +52,7 @@ final class UndoServiceProvider
   }
 }
 
-String _$undoServiceHash() => r'848aecdab52068c5cefe9ed69c6e54a19ad327d3';
+String _$undoServiceHash() => r'46588bc394635a7d32fb1fc3d996ff40d5935a0e';
 
 @ProviderFor(trashService)
 final trashServiceProvider = TrashServiceProvider._();

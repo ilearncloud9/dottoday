@@ -3548,4 +3548,137 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String lateUsually(String title, String duration) =>
       pseudo(super.lateUsually(title, duration));
+
+  @override
+  String get routinesTitle => pseudo(super.routinesTitle);
+
+  @override
+  String get routinesSubtitle => pseudo(super.routinesSubtitle);
+
+  @override
+  String routineSteps(int count) => pseudo(super.routineSteps(count));
+
+  @override
+  String routineSummary(String steps, String duration, String anchor) =>
+      pseudo(super.routineSummary(steps, duration, anchor));
+
+  @override
+  String get routineStartsWake => pseudo(super.routineStartsWake);
+
+  @override
+  String get routineEndsBed => pseudo(super.routineEndsBed);
+
+  @override
+  String routineStartsAt(String time) => pseudo(super.routineStartsAt(time));
+
+  @override
+  String get routineDropToday => pseudo(super.routineDropToday);
+
+  @override
+  String get routineEdit => pseudo(super.routineEdit);
+
+  @override
+  String get routineNew => pseudo(super.routineNew);
+
+  @override
+  String get routineNewHint => pseudo(super.routineNewHint);
+
+  @override
+  String get routineAlarmNote => pseudo(super.routineAlarmNote);
+
+  @override
+  String get routinesEmpty => pseudo(super.routinesEmpty);
+
+  @override
+  String get routineSaveSelection => pseudo(super.routineSaveSelection);
+
+  @override
+  String get routineName => pseudo(super.routineName);
+
+  @override
+  String routineSaved(String title) => pseudo(super.routineSaved(title));
+
+  @override
+  String routineDeleted(String title) => pseudo(super.routineDeleted(title));
+
+  @override
+  String get routineDelete => pseudo(super.routineDelete);
+
+  @override
+  String get routineEditTitle => pseudo(super.routineEditTitle);
+
+  @override
+  String get routineAnchorLabel => pseudo(super.routineAnchorLabel);
+
+  @override
+  String get routineAnchorWake => pseudo(super.routineAnchorWake);
+
+  @override
+  String get routineAnchorBed => pseudo(super.routineAnchorBed);
+
+  @override
+  String get routineAnchorTime => pseudo(super.routineAnchorTime);
+
+  @override
+  String get routineStepsLabel => pseudo(super.routineStepsLabel);
+
+  @override
+  String get routineStepHint => pseudo(super.routineStepHint);
+
+  @override
+  String get routineAddStep => pseudo(super.routineAddStep);
+
+  @override
+  String routineRemoveStep(String title) =>
+      pseudo(super.routineRemoveStep(title));
+
+  @override
+  String routineMoveUp(String title) => pseudo(super.routineMoveUp(title));
+
+  @override
+  String routineMoveDown(String title) => pseudo(super.routineMoveDown(title));
+
+  @override
+  String routineGap(String duration) => pseudo(super.routineGap(duration));
+
+  @override
+  String get routineSave => pseudo(super.routineSave);
+
+  @override
+  String get routineDropTitle => pseudo(super.routineDropTitle);
+
+  @override
+  String routineDropSubtitle(String title, String day, String time) =>
+      pseudo(super.routineDropSubtitle(title, day, time));
+
+  @override
+  String get routineDropAccept => pseudo(super.routineDropAccept);
+
+  @override
+  String get routineDropAccepted => pseudo(super.routineDropAccepted);
+
+  @override
+  String routineChipLabel(String title) =>
+      pseudo(super.routineChipLabel(title));
+
+  @override
+  String get routinesMenu => pseudo(super.routinesMenu);
+
+  @override
+  String get routinesSuggestions => pseudo(super.routinesSuggestions);
+
+  @override
+  String get routineInvalid => pseudo(super.routineInvalid);
+
+  @override
+  String routinesCount(int count) => pseudo(super.routinesCount(count));
+
+  @override
+  String get routineDropHere => pseudo(super.routineDropHere);
+
+  @override
+  String routineDropOnDay(String day) => pseudo(super.routineDropOnDay(day));
+
+  @override
+  String get routineDropDay => pseudo(super.routineDropDay);
 }

@@ -42,6 +42,9 @@ enum SettingsPage {
   /// Reminders › Notification health (M6.5.8).
   notifications,
   calendars,
+
+  /// Routines (11 C2, M11.4), also from Today ⋯ and Add.
+  routines,
   export,
   help,
   privacy,

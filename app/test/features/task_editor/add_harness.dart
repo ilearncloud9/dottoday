@@ -1,4 +1,5 @@
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
@@ -35,6 +36,7 @@ Future<FakeOccurrenceRepository> pumpAddHost(
   DateTime? startUtc,
   DateTime? day,
   WriteFault? writeFault,
+  List<Routine> routines = const [],
 }) async {
   tester.view
     ..physicalSize = size
@@ -48,6 +50,7 @@ Future<FakeOccurrenceRepository> pumpAddHost(
         occurrences: repo,
         profile: testProfile(settings: const Settings(use24h: false)),
         writeFault: writeFault,
+        routines: routines,
       ),
       child: MediaQuery(
         data: MediaQueryData(

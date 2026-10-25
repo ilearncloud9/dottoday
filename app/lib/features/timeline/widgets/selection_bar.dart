@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The multi-select bar (docs/03 §3.2, R-05): "3 selected", Move,
-/// Duplicate, Colour and Delete, at the bottom of Today while tasks are
-/// picked. Escape or Back ends selecting; see [announceSelection].
+/// Duplicate, Colour, Save as routine (M11.4) and Delete, at the bottom of
+/// Today while tasks are picked. Escape or Back ends selecting; see
+/// [announceSelection].
 class SelectionBar extends ConsumerWidget {
   const SelectionBar({required this.today, super.key});
 
@@ -49,6 +50,11 @@ class SelectionBar extends ConsumerWidget {
           icon: const ColourSwatchIcon(),
           label: l10n.selectionColour,
           onTap: commands.recolour,
+        ),
+        (
+          icon: DotIcon(DotGlyphs.repeat, color: t.colors.text),
+          label: l10n.routineSaveSelection,
+          onTap: commands.saveAsRoutine,
         ),
         (
           icon: DotIcon(DotGlyphs.trash, color: t.colors.text),

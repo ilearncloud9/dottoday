@@ -22,6 +22,7 @@ WriteBatch restorePlan({
   final seriesIds = {for (final s in b.series) s.id};
   final occurrenceIds = {for (final o in b.occurrences) o.id};
   final subtaskIds = {for (final s in b.subtasks) s.id};
+  final routineIds = {for (final r in b.routines) r.id};
   return WriteBatch(
     userId: userId,
     profile: b.profile.copyWith(
@@ -45,6 +46,12 @@ WriteBatch restorePlan({
       for (final s in current.subtasks)
         if (s.deletedAt == null && !subtaskIds.contains(s.id))
           s.copyWith(deletedAt: now),
+    ],
+    routines: [
+      ...b.routines,
+      for (final r in current.routines)
+        if (r.deletedAt == null && !routineIds.contains(r.id))
+          r.copyWith(deletedAt: now),
     ],
   );
 }

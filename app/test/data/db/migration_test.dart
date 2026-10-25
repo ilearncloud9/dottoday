@@ -8,9 +8,57 @@ import 'package:flutter_test/flutter_test.dart';
 // Forward-only migrations (persistence-drift). 1 → 2 (M6.2): field_seen;
 // 2 → 3 (M6.5.1): actual start/end and step durations (11 B1/B2);
 // 3 → 4 (M7.5): calendar_links.location (R-17); 4 → 5 (M10.7):
-// occurrences.move_count (Unstick, 11 B3). Steps are idempotent, so
+// occurrences.move_count (Unstick, 11 B3); 5 → 6 (M11.4): routines,
+// occurrences.routine_start and the outbox CHECK naming routines. Steps are idempotent, so
 // a file an older build opened (user_version lowered) upgrades again (M8.5).
 void main() {
+  test('a version 5 file gains routines and keeps its outbox', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig6');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+
+    final v5 = AppDatabase(NativeDatabase(file));
+    await v5.customStatement(
+      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+      "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+    );
+    await v5.customStatement('DROP TABLE routines');
+    await v5.customStatement(
+      'ALTER TABLE occurrences DROP COLUMN routine_start',
+    );
+    // The schema-5 outbox, whose CHECK doesn't know routines.
+    await v5.customStatement('DROP TABLE change_log');
+    await v5.customStatement(
+      'CREATE TABLE change_log (seq INTEGER NOT NULL PRIMARY KEY '
+      'AUTOINCREMENT, entity TEXT NOT NULL, entity_id TEXT NOT NULL, '
+      'field TEXT NOT NULL, value TEXT NOT NULL, hlc TEXT NOT NULL, '
+      "CHECK (entity IN ('series', 'occurrences', 'subtasks', 'profiles')), "
+      'CHECK (length(field) <= 64), CHECK (json_valid(value))) STRICT',
+    );
+    await v5.customStatement(
+      'INSERT INTO change_log (entity, entity_id, field, value, hlc) '
+      "VALUES ('occurrences', 'o1', 'title', '\"Do taxes\"', 'h1')",
+    );
+    await v5.customStatement('PRAGMA user_version = 5');
+    await v5.close();
+
+    final v6 = AppDatabase(NativeDatabase(file));
+    addTearDown(v6.close);
+    final kept = await v6.select(v6.changeLog).getSingle();
+    expect((kept.entityId, kept.hlc), ('o1', 'h1'));
+    await v6.customStatement(
+      'INSERT INTO change_log (entity, entity_id, field, value, hlc) '
+      "VALUES ('routines', 'r1', 'title', '\"Morning\"', 'h2')",
+    );
+    await v6.customStatement(
+      'INSERT INTO routines (id, user_id, title, created_at, updated_at) '
+      "VALUES ('r1', 'u', 'Morning', 0, 0)",
+    );
+    expect(await v6.select(v6.routinesTable).get(), hasLength(1));
+    final version = await v6.customSelect('PRAGMA user_version').getSingle();
+    expect(version.read<int>('user_version'), AppDatabase.latestSchemaVersion);
+  });
+
   test('a version 4 file gains the move count at 0 and keeps its rows', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig5');
     addTearDown(() => dir.delete(recursive: true));

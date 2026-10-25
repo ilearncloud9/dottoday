@@ -6743,6 +6743,264 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title} usually takes {duration}'**
   String lateUsually(String title, String duration);
+
+  /// Routines page title (11 C2).
+  ///
+  /// In en, this message translates to:
+  /// **'Routines'**
+  String get routinesTitle;
+
+  /// Routines page subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reusable slices of thread'**
+  String get routinesSubtitle;
+
+  /// Routine card: number of steps.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 step} other{{count} steps}}'**
+  String routineSteps(int count);
+
+  /// Routine card summary, e.g. '4 steps · 1 h 15 · starts at Wake Up'.
+  ///
+  /// In en, this message translates to:
+  /// **'{steps} · {duration} · {anchor}'**
+  String routineSummary(String steps, String duration, String anchor);
+
+  /// Routine anchor: first step at Wake Up.
+  ///
+  /// In en, this message translates to:
+  /// **'starts at Wake Up'**
+  String get routineStartsWake;
+
+  /// Routine anchor: last step ends at Bedtime.
+  ///
+  /// In en, this message translates to:
+  /// **'ends at Bedtime'**
+  String get routineEndsBed;
+
+  /// Routine anchor: a fixed local time.
+  ///
+  /// In en, this message translates to:
+  /// **'starts at {time}'**
+  String routineStartsAt(String time);
+
+  /// Button: propose the routine's tasks on today.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop on today'**
+  String get routineDropToday;
+
+  /// Button: edit a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get routineEdit;
+
+  /// Button and editor title: create a routine from scratch.
+  ///
+  /// In en, this message translates to:
+  /// **'New routine'**
+  String get routineNew;
+
+  /// After 'New routine': the other way to make one.
+  ///
+  /// In en, this message translates to:
+  /// **'or save a selection from any day'**
+  String get routineNewHint;
+
+  /// Footnote on the Routines page (A0).
+  ///
+  /// In en, this message translates to:
+  /// **'Routine-start dots ring loud, like an alarm'**
+  String get routineAlarmNote;
+
+  /// Routines page with none saved.
+  ///
+  /// In en, this message translates to:
+  /// **'No routines yet. Pick a few tasks on any day and save them as a routine, or start a new one.'**
+  String get routinesEmpty;
+
+  /// Selection bar action and sheet title: save the picked tasks as a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as routine'**
+  String get routineSaveSelection;
+
+  /// Routine name field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get routineName;
+
+  /// Snackbar after saving a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved “{title}” as a routine'**
+  String routineSaved(String title);
+
+  /// Snackbar with Undo after deleting a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted “{title}”'**
+  String routineDeleted(String title);
+
+  /// Editor action.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete routine'**
+  String get routineDelete;
+
+  /// Editor title for an existing routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit routine'**
+  String get routineEditTitle;
+
+  /// Editor caption above the anchor choice.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get routineAnchorLabel;
+
+  /// Anchor choice.
+  ///
+  /// In en, this message translates to:
+  /// **'At Wake Up'**
+  String get routineAnchorWake;
+
+  /// Anchor choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Ending at Bedtime'**
+  String get routineAnchorBed;
+
+  /// Anchor choice.
+  ///
+  /// In en, this message translates to:
+  /// **'At a time'**
+  String get routineAnchorTime;
+
+  /// Editor caption above the steps.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get routineStepsLabel;
+
+  /// Hint in a step's name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Step name'**
+  String get routineStepHint;
+
+  /// Editor button.
+  ///
+  /// In en, this message translates to:
+  /// **'Add step'**
+  String get routineAddStep;
+
+  /// Tooltip: remove a step from the routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {title}'**
+  String routineRemoveStep(String title);
+
+  /// Tooltip: move a step earlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Move {title} up'**
+  String routineMoveUp(String title);
+
+  /// Tooltip: move a step later.
+  ///
+  /// In en, this message translates to:
+  /// **'Move {title} down'**
+  String routineMoveDown(String title);
+
+  /// Editor: free time kept between two steps.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} free'**
+  String routineGap(String duration);
+
+  /// Editor button.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get routineSave;
+
+  /// Proposal sheet title when dropping a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine'**
+  String get routineDropTitle;
+
+  /// Proposal subtitle when dropping a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} on {day} · from {time}'**
+  String routineDropSubtitle(String title, String day, String time);
+
+  /// Proposal accept button when dropping a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to day'**
+  String get routineDropAccept;
+
+  /// Snackbar with Undo after a routine drop was accepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine added'**
+  String get routineDropAccepted;
+
+  /// Screen-reader label of a routine chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop routine {title}'**
+  String routineChipLabel(String title);
+
+  /// Today ⋯ menu and Settings › Planning: open the Routines page.
+  ///
+  /// In en, this message translates to:
+  /// **'Routines…'**
+  String get routinesMenu;
+
+  /// Add step 1: caption above routine chips.
+  ///
+  /// In en, this message translates to:
+  /// **'Routines'**
+  String get routinesSuggestions;
+
+  /// Editor: why Save is off.
+  ///
+  /// In en, this message translates to:
+  /// **'Give the routine a name and at least one step'**
+  String get routineInvalid;
+
+  /// Routines page ring, read out.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No routines} =1{1 routine} other{{count} routines}}'**
+  String routinesCount(int count);
+
+  /// Week strip day menu and Inbox: pick a routine to propose on that day.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop a routine…'**
+  String get routineDropHere;
+
+  /// Routine card button for a day other than today.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop on {day}'**
+  String routineDropOnDay(String day);
+
+  /// Routines page: caption above the week strip picking where routines drop.
+  ///
+  /// In en, this message translates to:
+  /// **'Which day'**
+  String get routineDropDay;
 }
 
 class _AppLocalizationsDelegate

@@ -1,10 +1,12 @@
 import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
+import 'package:dottoday/data/repositories/drift_routine_repository.dart';
 import 'package:dottoday/data/repositories/drift_search_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
+import 'package:dottoday/domain/repositories/routine_repository.dart';
 import 'package:dottoday/domain/repositories/search_repository.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
@@ -22,6 +24,10 @@ OccurrenceRepository occurrenceRepository(Ref ref) =>
 @Riverpod(keepAlive: true)
 SeriesRepository seriesRepository(Ref ref) =>
     DriftSeriesRepository(ref.watch(appDatabaseProvider));
+
+@Riverpod(keepAlive: true)
+RoutineRepository routineRepository(Ref ref) =>
+    DriftRoutineRepository(ref.watch(appDatabaseProvider));
 
 @Riverpod(keepAlive: true)
 SubtaskRepository subtaskRepository(Ref ref) =>

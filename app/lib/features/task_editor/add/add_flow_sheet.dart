@@ -1,12 +1,15 @@
 import 'dart:async';
 
+import 'package:dottoday/core/editing/pending_routine_drop.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/routines/routine_providers.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/features/task_editor/add/add_save.dart';
 import 'package:dottoday/features/task_editor/add/add_when_host.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_header.dart';
+import 'package:dottoday/features/task_editor/add/widgets/add_routine_chips.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_what_step.dart';
 import 'package:dottoday/features/task_editor/breakdown/breakdown_flow.dart';
 import 'package:dottoday/shared/feedback/save_failure.dart';
@@ -110,6 +113,24 @@ class _What extends ConsumerWidget {
     return AddWhatStep(
       state: state,
       habits: ref.watch(habitsProvider).value ?? const [],
+      routines: AddRoutineChips(
+        routines: ref.watch(routinesProvider).value ?? const [],
+        typed: state.draft.title,
+        onPick: (r) {
+          // The shell's host proposes it (routines are their own feature);
+          // Add closes so the proposal opens over the day.
+          ref
+              .read(pendingRoutineDropProvider.notifier)
+              .request(
+                RoutineDropRequest(
+                  routine: r,
+                  date: state.draft.day,
+                  today: state.draft.today,
+                ),
+              );
+          unawaited(Navigator.of(context).maybePop());
+        },
+      ),
       use24h: use24hFor(context, settings?.use24h),
       onType: notifier.type,
       onPickHabit: notifier.pickHabit,
