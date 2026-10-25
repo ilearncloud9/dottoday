@@ -30,11 +30,27 @@ async function tap(page, name, { role = 'button', exact = true } = {}) {
   await page.waitForTimeout(900);
 }
 
+// Flutter's semantics name a thing by its role: try menu item, button,
+// tab and plain text, whichever exists first.
 async function tapText(page, text) {
-  const target = page.getByText(text, { exact: true }).first();
-  await target.waitFor({ state: 'attached', timeout: 30_000 });
-  await target.click();
-  await page.waitForTimeout(900);
+  const candidates = [
+    page.getByRole('menuitem', { name: text, exact: true }),
+    page.getByRole('button', { name: text, exact: true }),
+    page.getByRole('tab', { name: text, exact: true }),
+    page.getByText(text, { exact: true }),
+  ];
+  const end = Date.now() + 30_000;
+  while (Date.now() < end) {
+    for (const c of candidates) {
+      if ((await c.count()) > 0) {
+        await c.first().click();
+        await page.waitForTimeout(900);
+        return;
+      }
+    }
+    await page.waitForTimeout(500);
+  }
+  throw new Error(`nothing called "${text}"`);
 }
 
 async function go(page, route) {
