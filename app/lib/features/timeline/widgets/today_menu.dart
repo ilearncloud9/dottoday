@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/timeline/brain_dump/brain_dump_sheet.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
 import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
@@ -51,6 +52,11 @@ class TodayMenu extends ConsumerWidget {
           PopupMenuItem<void>(
             onTap: () => unawaited(showDayReviewSheet(context, today)),
             child: Text(l10n.todayMenuReview),
+          ),
+          // Brain dump (11 B4, M12.5): everything on your mind → a plan.
+          PopupMenuItem<void>(
+            onTap: () => unawaited(showBrainDump(context, today)),
+            child: Text(l10n.dumpTitle),
           ),
           // Low-energy mode (11 D2, M12.2): on until the next Wake Up.
           PopupMenuItem<void>(

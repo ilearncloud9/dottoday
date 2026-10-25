@@ -65,6 +65,7 @@ The one-line position after this roadmap ships: **"Your day as a thread. Always 
 
 ### B4 · Brain-dump to thread — PRD Phase 2
 - Free text or dictation → proposed dots on the chosen day (B4 model, B3 proposal) → Accept. History of dumps kept locally, searchable. Cloud-only cases are Pro.
+- As built (docs/09 M12.5): from Today's ⋯; timed lines at their time, the rest into the first free time in the order written, the Inbox when the day is full; the dump is kept locally before the proposal opens.
 
 ### B5 · Paper plan to thread — **new, future, do not build now**
 - Photo → on-device OCR → Inbox items via B3. Recorded here so the data model (B2) and B3 are ready; no milestone.

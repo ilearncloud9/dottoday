@@ -35,22 +35,23 @@ class ProposalEditRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final dot = edit.after ?? edit.before;
+    final dot = edit.shown;
     if (dot == null) return const SizedBox.shrink();
-    final leaves = edit.after == null;
+    final inbox = edit.change == ProposalChange.toInbox;
+    final leaves = edit.after == null && !inbox;
     final chip = _chipText(context);
     return MergeSemantics(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: DotSpace.m,
         children: [
-          _Lanes(before: edit.before, after: edit.after),
+          _Lanes(before: edit.before, after: inbox ? dot : edit.after),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: DotSpace.xxs,
               children: [
-                _TimeLine(edit: edit, times: times),
+                if (!inbox) _TimeLine(edit: edit, times: times),
                 Text(
                   dot.title,
                   style: t.styles.rowTitle.copyWith(
@@ -99,6 +100,7 @@ class ProposalEditRow extends StatelessWidget {
         null => l10n.proposalMovedToInbox,
       },
       ProposalChange.added => l10n.proposalAdded,
+      ProposalChange.toInbox => l10n.proposalToInbox,
       ProposalChange.untouched => l10n.proposalUntouched,
       ProposalChange.overlaps => l10n.proposalOverlaps,
       ProposalChange.steps => l10n.proposalSteps(
@@ -222,7 +224,8 @@ class _ChangeChip extends StatelessWidget {
         t.tasks[TaskColor.rose].ink,
       ),
       ProposalChange.untouched ||
-      ProposalChange.overlaps => (t.colors.hairline, t.colors.muted),
+      ProposalChange.overlaps ||
+      ProposalChange.toInbox => (t.colors.hairline, t.colors.muted),
       _ => (t.colors.accentTint, t.colors.accentInk),
     };
     return DecoratedBox(

@@ -40,3 +40,36 @@ final class ThinkingExchange {
 abstract interface class ThinkingJournal {
   Future<void> record(ThinkingExchange exchange);
 }
+
+/// One brain dump as written (11 B4, docs/09 M12.5): kept on this device
+/// only, so a thought is never lost to a Discard.
+final class BrainDump {
+  const BrainDump({required this.text, required this.atUtc});
+
+  final String text;
+  final DateTime atUtc;
+}
+
+/// The local, searchable history of brain dumps (data layer).
+abstract interface class BrainDumpHistory {
+  /// Keeps [dump], newest last, dropping the oldest past a bound.
+  Future<void> rememberDump(BrainDump dump);
+
+  /// Every kept dump, newest first.
+  Future<List<BrainDump>> dumps();
+}
+
+/// The dumps of [all] holding [query] (any case), newest first; all of
+/// them for a blank query.
+///
+/// ```dart
+/// searchDumps(await history.dumps(), 'dentist').first.text;
+/// ```
+List<BrainDump> searchDumps(List<BrainDump> all, String query) {
+  final q = query.trim().toLowerCase();
+  if (q.isEmpty) return all;
+  return [
+    for (final d in all)
+      if (d.text.toLowerCase().contains(q)) d,
+  ];
+}

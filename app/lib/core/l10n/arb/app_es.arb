@@ -1218,5 +1218,15 @@
   "journalDayLabel": "{date}, {summary}. Abrir el día",
   "journalMatch": "{title} · {time}",
   "journalStripTitle": "Franja del año",
-  "journalStripLabel": "{count, plural, =1{Tu año en puntos: 1 día planificado} other{Tu año en puntos: {count} días planificados}}"
+  "journalStripLabel": "{count, plural, =1{Tu año en puntos: 1 día planificado} other{Tu año en puntos: {count} días planificados}}",
+  "dumpTitle": "Vaciar la mente",
+  "dumpHint": "Todo lo que tienes en mente, una cosa por línea",
+  "dumpPlan": "Planificar",
+  "dumpNothing": "Aún no hay nada que planificar. Escribe una cosa por línea.",
+  "dumpSubtitle": "{count, plural, =1{1 tarea {day}, en el primer hueco libre} other{{count} tareas {day}, en el primer hueco libre}}",
+  "dumpAccepted": "Añadido desde tu lista",
+  "dumpEarlier": "Listas anteriores",
+  "dumpSearch": "Buscar en listas anteriores",
+  "dumpUseAgain": "Usar de nuevo",
+  "proposalToInbox": "sin hueco · a la bandeja"
 }

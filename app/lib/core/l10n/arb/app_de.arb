@@ -1218,5 +1218,15 @@
   "journalDayLabel": "{date}, {summary}. Tag öffnen",
   "journalMatch": "{title} · {time}",
   "journalStripTitle": "Jahresstreifen",
-  "journalStripLabel": "{count, plural, =1{Dein Jahr in Punkten: 1 Tag geplant} other{Dein Jahr in Punkten: {count} Tage geplant}}"
+  "journalStripLabel": "{count, plural, =1{Dein Jahr in Punkten: 1 Tag geplant} other{Dein Jahr in Punkten: {count} Tage geplant}}",
+  "dumpTitle": "Kopf leeren",
+  "dumpHint": "Alles, was dir durch den Kopf geht, eins pro Zeile",
+  "dumpPlan": "Einplanen",
+  "dumpNothing": "Noch nichts zum Einplanen. Schreib eins pro Zeile.",
+  "dumpSubtitle": "{count, plural, =1{1 Aufgabe am {day}, in die erste freie Zeit} other{{count} Aufgaben am {day}, in die erste freie Zeit}}",
+  "dumpAccepted": "Aus deinem Kopf übernommen",
+  "dumpEarlier": "Frühere Listen",
+  "dumpSearch": "Frühere Listen durchsuchen",
+  "dumpUseAgain": "Wiederverwenden",
+  "proposalToInbox": "kein Platz · in den Eingang"
 }

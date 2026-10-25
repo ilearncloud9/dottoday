@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M12.5: Brain dump. From Today's ⋯ menu, write or dictate everything on your mind, one thing per line, and tap Plan it: each line becomes a task placed in today's (or tomorrow's) free time — or at the time you wrote — and anything that doesn't fit waits in the Inbox. You see the plan first; nothing is added until you accept. Earlier dumps stay on your device to search and reuse.
 - M12.4: Capture anywhere. Share a page, a link or some text to Dottoday from any app — the share sheet on iPhone and Android, the Share menu on the Mac — and it lands in your Inbox, named after the page or the first line, with the link kept in its note. On the web, paste it into Add: links are kept the same way.
 - M12.3: Past days. In Search, Past days shows every day of the last twelve months as it went — its tasks as dots, how many got done — newest first; type to find when you last did something ("Last: Sun, Sep 27 · 28 days ago"). Year strip shares your twelve months as an image. Everything stays on your device; nothing new is stored.
 - M12.2: Low-energy mode. On a hard day, turn it on from Today's ⋯ menu or Settings › Planning: Today shows just the next thing — Done or Not today — with the rest as a quiet "Later" pile, no counts, and an offer to move everything optional to tomorrow (you see the plan first; nothing moves until you accept). Reminders pause until tomorrow's Wake Up, except the first task of the day, which still rings. It turns itself off at Wake Up.

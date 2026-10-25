@@ -7415,6 +7415,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{Your year as dots: 1 day planned} other{Your year as dots: {count} days planned}}'**
   String journalStripLabel(int count);
+
+  /// Brain dump (11 B4): Today ⋯ item, sheet and proposal title.
+  ///
+  /// In en, this message translates to:
+  /// **'Brain dump'**
+  String get dumpTitle;
+
+  /// Brain dump field hint; typing or dictation.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything on your mind, one thing per line'**
+  String get dumpHint;
+
+  /// Brain dump: turn the lines into a proposal on the chosen day.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan it'**
+  String get dumpPlan;
+
+  /// Brain dump: the text gave no tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to plan yet. Write one thing per line.'**
+  String get dumpNothing;
+
+  /// Brain dump proposal subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task on {day}, in the first free time} other{{count} tasks on {day}, in the first free time}}'**
+  String dumpSubtitle(int count, String day);
+
+  /// Undo snackbar after a brain dump was accepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Added from your brain dump'**
+  String get dumpAccepted;
+
+  /// Brain dump sheet: caption above the local history.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier dumps'**
+  String get dumpEarlier;
+
+  /// Brain dump history search hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search earlier dumps'**
+  String get dumpSearch;
+
+  /// Brain dump history: put an earlier dump back in the field.
+  ///
+  /// In en, this message translates to:
+  /// **'Use again'**
+  String get dumpUseAgain;
+
+  /// Proposal chip: a new task with no free time left on the day goes to the Inbox (brain dump).
+  ///
+  /// In en, this message translates to:
+  /// **'no room · to the Inbox'**
+  String get proposalToInbox;
 }
 
 class _AppLocalizationsDelegate

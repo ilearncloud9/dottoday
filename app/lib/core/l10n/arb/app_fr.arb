@@ -1218,5 +1218,15 @@
   "journalDayLabel": "{date}, {summary}. Ouvrir le jour",
   "journalMatch": "{title} · {time}",
   "journalStripTitle": "Bande de l'année",
-  "journalStripLabel": "{count, plural, =1{Ton année en points : 1 jour prévu} other{Ton année en points : {count} jours prévus}}"
+  "journalStripLabel": "{count, plural, =1{Ton année en points : 1 jour prévu} other{Ton année en points : {count} jours prévus}}",
+  "dumpTitle": "Vider sa tête",
+  "dumpHint": "Tout ce qui te passe par la tête, une chose par ligne",
+  "dumpPlan": "Planifier",
+  "dumpNothing": "Rien à planifier pour l'instant. Écris une chose par ligne.",
+  "dumpSubtitle": "{count, plural, =1{1 tâche {day}, dans le premier temps libre} other{{count} tâches {day}, dans le premier temps libre}}",
+  "dumpAccepted": "Ajouté depuis ta liste",
+  "dumpEarlier": "Listes précédentes",
+  "dumpSearch": "Chercher dans les listes précédentes",
+  "dumpUseAgain": "Réutiliser",
+  "proposalToInbox": "pas de place · dans la boîte de réception"
 }

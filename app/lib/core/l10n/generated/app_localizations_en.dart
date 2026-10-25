@@ -5008,4 +5008,42 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get dumpTitle => 'Brain dump';
+
+  @override
+  String get dumpHint => 'Everything on your mind, one thing per line';
+
+  @override
+  String get dumpPlan => 'Plan it';
+
+  @override
+  String get dumpNothing => 'Nothing to plan yet. Write one thing per line.';
+
+  @override
+  String dumpSubtitle(int count, String day) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks on $day, in the first free time',
+      one: '1 task on $day, in the first free time',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dumpAccepted => 'Added from your brain dump';
+
+  @override
+  String get dumpEarlier => 'Earlier dumps';
+
+  @override
+  String get dumpSearch => 'Search earlier dumps';
+
+  @override
+  String get dumpUseAgain => 'Use again';
+
+  @override
+  String get proposalToInbox => 'no room · to the Inbox';
 }

@@ -5037,4 +5037,43 @@ class AppLocalizationsDe extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get dumpTitle => 'Kopf leeren';
+
+  @override
+  String get dumpHint => 'Alles, was dir durch den Kopf geht, eins pro Zeile';
+
+  @override
+  String get dumpPlan => 'Einplanen';
+
+  @override
+  String get dumpNothing =>
+      'Noch nichts zum Einplanen. Schreib eins pro Zeile.';
+
+  @override
+  String dumpSubtitle(int count, String day) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Aufgaben am $day, in die erste freie Zeit',
+      one: '1 Aufgabe am $day, in die erste freie Zeit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dumpAccepted => 'Aus deinem Kopf übernommen';
+
+  @override
+  String get dumpEarlier => 'Frühere Listen';
+
+  @override
+  String get dumpSearch => 'Frühere Listen durchsuchen';
+
+  @override
+  String get dumpUseAgain => 'Wiederverwenden';
+
+  @override
+  String get proposalToInbox => 'kein Platz · in den Eingang';
 }

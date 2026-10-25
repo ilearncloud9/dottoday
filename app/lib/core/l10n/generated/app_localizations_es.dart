@@ -5034,4 +5034,43 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get dumpTitle => 'Vaciar la mente';
+
+  @override
+  String get dumpHint => 'Todo lo que tienes en mente, una cosa por línea';
+
+  @override
+  String get dumpPlan => 'Planificar';
+
+  @override
+  String get dumpNothing =>
+      'Aún no hay nada que planificar. Escribe una cosa por línea.';
+
+  @override
+  String dumpSubtitle(int count, String day) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tareas $day, en el primer hueco libre',
+      one: '1 tarea $day, en el primer hueco libre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dumpAccepted => 'Añadido desde tu lista';
+
+  @override
+  String get dumpEarlier => 'Listas anteriores';
+
+  @override
+  String get dumpSearch => 'Buscar en listas anteriores';
+
+  @override
+  String get dumpUseAgain => 'Usar de nuevo';
+
+  @override
+  String get proposalToInbox => 'sin hueco · a la bandeja';
 }

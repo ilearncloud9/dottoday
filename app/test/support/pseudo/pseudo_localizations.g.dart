@@ -3907,4 +3907,35 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String journalStripLabel(int count) => pseudo(super.journalStripLabel(count));
+
+  @override
+  String get dumpTitle => pseudo(super.dumpTitle);
+
+  @override
+  String get dumpHint => pseudo(super.dumpHint);
+
+  @override
+  String get dumpPlan => pseudo(super.dumpPlan);
+
+  @override
+  String get dumpNothing => pseudo(super.dumpNothing);
+
+  @override
+  String dumpSubtitle(int count, String day) =>
+      pseudo(super.dumpSubtitle(count, day));
+
+  @override
+  String get dumpAccepted => pseudo(super.dumpAccepted);
+
+  @override
+  String get dumpEarlier => pseudo(super.dumpEarlier);
+
+  @override
+  String get dumpSearch => pseudo(super.dumpSearch);
+
+  @override
+  String get dumpUseAgain => pseudo(super.dumpUseAgain);
+
+  @override
+  String get proposalToInbox => pseudo(super.proposalToInbox);
 }

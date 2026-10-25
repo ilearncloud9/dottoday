@@ -1,16 +1,22 @@
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/thinking/local_thinking_memory.dart';
+import 'package:dottoday/data/thinking/thinking_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/search/search_screen.dart';
 import 'package:dottoday/features/search/widgets/past_days_page.dart';
+import 'package:dottoday/features/timeline/brain_dump/brain_dump_sheet.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
 import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
 import 'package:dottoday/features/timeline/week_screen.dart';
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -40,6 +46,12 @@ const _expandedMin = 840.0;
 const _expanded = 1280.0;
 const _all = [_compact, _medium, _expanded];
 const _height = 2600.0;
+
+/// A thinking store in memory with nothing in it (the brain dump sheet).
+final _dumpMemory = LocalThinkingMemory(
+  AppDatabase(NativeDatabase.memory()),
+  () async => const [],
+);
 
 typedef _Pump = Future<void> Function(WidgetTester tester, Size size);
 typedef _Screen = ({_Pump pump, List<double> widths, bool checkCuts});
@@ -73,6 +85,19 @@ final _screens = <String, _Screen>{
         firstDayOfWeek: 7,
         lowEnergyUntil: DateTime.utc(2026, 10, 22, 5),
       ),
+    ),
+  ),
+  // Brain dump (M12.5), with an earlier dump to search.
+  'Brain dump': _screen(
+    (t, s) => _pumpBoard(
+      t,
+      s,
+      Scaffold(
+        body: SingleChildScrollView(
+          child: BrainDumpBody(today: DateTime(2026, 10, 21)),
+        ),
+      ),
+      extra: [thinkingMemoryProvider.overrideWithValue(_dumpMemory)],
     ),
   ),
   // Search › Past days (M12.3).
@@ -120,6 +145,7 @@ Future<void> _pumpBoard(
   Widget home, {
   DateTime? now,
   List<Occurrence>? rows,
+  List<Override> extra = const [],
 }) async {
   tester.view
     ..physicalSize = size
@@ -127,13 +153,16 @@ Future<void> _pumpBoard(
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
     ProviderScope(
-      overrides: timelineOverrides(
-        now: now ?? DateTime.utc(2026, 10, 21, 7, 22),
-        occurrences: FakeOccurrenceRepository(rows ?? demoWeekRows()),
-        profile: testProfile(
-          settings: const Settings(use24h: false, firstDayOfWeek: 7),
+      overrides: [
+        ...timelineOverrides(
+          now: now ?? DateTime.utc(2026, 10, 21, 7, 22),
+          occurrences: FakeOccurrenceRepository(rows ?? demoWeekRows()),
+          profile: testProfile(
+            settings: const Settings(use24h: false, firstDayOfWeek: 7),
+          ),
         ),
-      ),
+        ...extra,
+      ],
       child: MaterialApp(
         theme: DotTheme.light(),
         localizationsDelegates: testL10nDelegates,
