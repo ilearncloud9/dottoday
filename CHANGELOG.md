@@ -4,7 +4,12 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ## [Unreleased]
 
+### Fixed
+- An action from a widget or the Live Activity made while the app was catching up on earlier ones could be lost; it now always gets through.
+
 ### Added
+- M9.4: On Android, the task under way shows as an ongoing notification with a countdown, today's progress, and Done and +15 min — they work even when Dottoday isn't running, and the notification leaves on Done or half an hour after the planned end.
+- M9.3: On iPhone, the task under way (or the next one, within the hour) shows on the lock screen and in the Dynamic Island: its ring, "38:00 left", how many of today's tasks are done, and Done and +15 min buttons that work without opening the app. It ends when you tap Done, or half an hour after the planned end.
 - M9.2d: On the web, pressing Done on a reminder works even with no Dottoday tab open — the task is ticked the next time you open it, instead of a new tab popping up.
 - M9.2c: On Android, long-press the Dottoday icon for Add task and What's next. Widget names in the widget picker now appear in German, French and Spanish too.
 - M9.2b: On iPhone, Shortcuts and Siri can add a task to Dottoday and tell you what's on now or next, in your language; widgets and the Live Activity get Done, +15 and Start buttons to build on, which show the change straight away and reach the app the next time it runs.

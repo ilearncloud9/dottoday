@@ -30,6 +30,7 @@ class DotActionReceiver : BroadcastReceiver() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 perform(prefs(context), kind, occurrenceId, plannedEnd, System.currentTimeMillis())
+                OngoingDot.afterAction(context, kind, occurrenceId)
                 redraw(context)
                 IntentQueueBridge.notifyQueued()
             } finally {
@@ -70,7 +71,13 @@ class DotActionReceiver : BroadcastReceiver() {
         }
 
         /** Appends to the queue and patches the snapshot, in one commit. */
-        fun perform(prefs: SharedPreferences, kind: DotActionKind, occurrenceId: String, plannedEndMs: Long?, nowMs: Long) {
+        fun perform(
+            prefs: SharedPreferences,
+            kind: DotActionKind,
+            occurrenceId: String,
+            plannedEndMs: Long?,
+            nowMs: Long,
+        ) = synchronized(DotQueue) {
             val queue = prefs.getString(DotQueue.KEY, null)
                 ?.let { runCatching { JSONArray(it) }.getOrNull() } ?: JSONArray()
             queue.put(JsonMaps.fromValue(DotQueue.entry(kind, nowMs, occurrenceId, plannedEndMs)))
@@ -80,6 +87,23 @@ class DotActionReceiver : BroadcastReceiver() {
                 ?.let { DotQueue.patch(it, kind, occurrenceId, nowMs) }
                 ?.let { edit.putString(DotQueue.SNAPSHOT_KEY, JsonMaps.fromValue(it).toString()) }
             edit.commit()
+        }
+
+        /**
+         * The app's drain removes what it settled (and, with [unreadable],
+         * entries without an id) in one step under the same lock as
+         * [perform], so an action queued meanwhile is never lost.
+         */
+        fun remove(prefs: SharedPreferences, ids: Set<String>, unreadable: Boolean) = synchronized(DotQueue) {
+            val queue = prefs.getString(DotQueue.KEY, null)
+                ?.let { runCatching { JSONArray(it) }.getOrNull() } ?: return@synchronized
+            val kept = JSONArray()
+            for (i in 0 until queue.length()) {
+                val id = (queue.opt(i) as? JSONObject)?.optString("id", "")?.takeIf { it.isNotEmpty() }
+                val drop = if (id == null) unreadable else id in ids
+                if (!drop) kept.put(queue.opt(i))
+            }
+            prefs.edit().putString(DotQueue.KEY, kept.toString()).commit()
         }
 
         private suspend fun redraw(context: Context) {

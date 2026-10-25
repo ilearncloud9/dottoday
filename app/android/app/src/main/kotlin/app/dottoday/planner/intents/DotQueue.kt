@@ -86,14 +86,40 @@ object DotQueue {
         return snapshot.toMutableMap().apply { put("blocks", blocks.toMutableList().also { it[i] = block }) }
     }
 
-    /** "until 10:45" in the app's zone, language and clock. */
-    fun untilText(endMs: Long, format: Map<String, Any?>?): String? {
-        val pattern = format?.get("until") as? String ?: return null
+    /**
+     * The ongoing notification's content after +15 on it: end and timeout
+     * move, the range is written again on the app's clock.
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun plusFifteenContent(content: Map<String, Any?>): Map<String, Any?> {
+        val start = (content["start_ms"] as? Number)?.toLong() ?: return content
+        val end = ((content["end_ms"] as? Number)?.toLong() ?: return content) + FIFTEEN_MS
+        val out = content.toMutableMap()
+        out["end_ms"] = end
+        out["ends_ms"] = ((content["ends_ms"] as? Number)?.toLong() ?: end) + FIFTEEN_MS
+        val format = content["format"] as? Map<String, Any?>
+        val pattern = content["range_pattern"] as? String
+        val a = clockText(start, format)
+        val b = clockText(end, format)
+        if (pattern != null && a != null && b != null) {
+            out["range"] = pattern.replace("{start}", a).replace("{end}", b)
+        }
+        return out
+    }
+
+    /** "10:45" in the app's zone, language and clock. */
+    fun clockText(ms: Long, format: Map<String, Any?>?): String? {
+        format ?: return null
         val zone = runCatching { ZoneId.of(format["tz"] as? String) }.getOrNull() ?: return null
         val locale = Locale.forLanguageTag(format["locale"] as? String ?: "en")
         val clock = if (format["hour24"] == true) "HH:mm" else "h:mm a"
-        val time = DateTimeFormatter.ofPattern(clock, locale).format(Instant.ofEpochMilli(endMs).atZone(zone))
-        return pattern.replace("{time}", time)
+        return DateTimeFormatter.ofPattern(clock, locale).format(Instant.ofEpochMilli(ms).atZone(zone))
+    }
+
+    /** "until 10:45" in the app's zone, language and clock. */
+    fun untilText(endMs: Long, format: Map<String, Any?>?): String? {
+        val pattern = format?.get("until") as? String ?: return null
+        return clockText(endMs, format)?.let { pattern.replace("{time}", it) }
     }
 
     private const val FIFTEEN_MS = 15 * 60_000L
