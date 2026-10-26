@@ -197,7 +197,46 @@ final class LearningIndexProvider
   }
 }
 
-String _$learningIndexHash() => r'3eefc4c7a36e4299edbb118092f2a1954292c926';
+String _$learningIndexHash() => r'1869dc2cd7154fd1ad6324709348c19044ae5b74';
+
+@ProviderFor(learningProgress)
+final learningProgressProvider = LearningProgressProvider._();
+
+final class LearningProgressProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<LearningProgress>,
+          LearningProgress,
+          FutureOr<LearningProgress>
+        >
+    with $FutureModifier<LearningProgress>, $FutureProvider<LearningProgress> {
+  LearningProgressProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'learningProgressProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$learningProgressHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<LearningProgress> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<LearningProgress> create(Ref ref) {
+    return learningProgress(ref);
+  }
+}
+
+String _$learningProgressHash() => r'1c5629941497337f9d30c29be51865695f8d99bf';
 
 /// When the user finishes high-energy work best, and how many such tasks
 /// it is read from (11 C4, docs/09 M11.5); the window is null under

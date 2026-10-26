@@ -1,6 +1,7 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
@@ -57,10 +58,41 @@ Stream<List<Subtask>> learningSteps(Ref ref) {
 Future<LearningIndex> learningIndex(Ref ref) async {
   final thresholds = ref.watch(learningThresholdsProvider);
   final steps = ref.watch(learningStepsProvider.future);
+  final meta = ref.watch(learningMetaProvider.future);
+  final history = await ref.watch(learningHistoryProvider.future);
   return LearningIndex.from(
-    await ref.watch(learningHistoryProvider.future),
+    history,
     steps: await steps,
+    resets: (await meta).resets,
     thresholds: thresholds,
+  );
+}
+
+/// How far each learning feature is (docs/13 §4.1): the counts Settings ›
+/// Learning shows and the reality gate reads. From the same history and
+/// index, no second mechanism.
+typedef LearningProgress = ({
+  int realityRuns,
+  bool realityRevealed,
+  int tasksReady,
+  int stepsReady,
+  int energyCompletions,
+});
+
+@riverpod
+Future<LearningProgress> learningProgress(Ref ref) async {
+  final thresholds = ref.watch(learningThresholdsProvider);
+  final index = ref.watch(learningIndexProvider.future);
+  final energy = ref.watch(energyWindowProvider.future);
+  final meta = ref.watch(learningMetaProvider.future);
+  final runs = realityRuns(await ref.watch(learningHistoryProvider.future));
+  return (
+    realityRuns: runs,
+    realityRevealed:
+        (await meta).realityRevealed || runs >= thresholds.realityMinRuns,
+    tasksReady: (await index).tasksReady,
+    stepsReady: (await index).stepsReady,
+    energyCompletions: (await energy).completions,
   );
 }
 

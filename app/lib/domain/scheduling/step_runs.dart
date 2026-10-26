@@ -10,7 +10,12 @@ typedef StepRun = ({DateTime tickedAt, int minutes});
 /// The key a step learns under: its task's and its own normalised titles,
 /// so "Dishes" in "Clean the kitchen" is not "Dishes" in "Party".
 String stepKey(String taskTitle, String stepTitle) =>
-    '${normaliseTitle(taskTitle)}\u0000${normaliseTitle(stepTitle)}';
+    '${normaliseTitle(taskTitle)}$_sep${normaliseTitle(stepTitle)}';
+
+/// The normalised task title a [stepKey] was made from.
+String stepKeyTask(String key) => key.split(_sep).first;
+
+const _sep = '\u0000';
 
 /// Every real step run in [history] with [steps] (any order), by
 /// [stepKey], newest first.
