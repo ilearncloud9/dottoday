@@ -53,7 +53,7 @@ The one-line position after this roadmap ships: **"Your day as a thread. Always 
 ### B1 · Break it down — **new** (free on-device, cloud in Pro)
 - One button, "Break it down", in Add step 1 and in the task sheet. The task becomes ordered subtasks with a duration each (B2, B4), shown as a **mini thread inside the dot** (B3 proposal): the user edits, reorders, deletes, then Accept. Nothing applies before Accept. Total duration = sum of steps (user may override).
 - Recursive on any step; **depth capped at 3**.
-- **"My usual breakdown"**: accepted breakdowns are saved per task title; the next "Clean the kitchen" offers the saved steps first (no model needed). Learned step durations come from B1 timestamps when the user ticks steps in Focus.
+- **"My usual breakdown"**: accepted breakdowns are saved per task title; the next "Clean the kitchen" offers the saved steps first (no model needed). Learned step durations come from real step ticks (`subtasks.done_at`, ADR-0012); thresholds, reveal and explanation: `13-learning-reveal.md` §5–§6.
 - Degrades without a model: offers the saved breakdown or an empty 3-step template.
 - AC: breakdown proposal in < 2 s on-device; accepted steps tick off in Focus with timers; golden of the mini thread at 1, 3, 7 steps. Render: `B-ios-break-it-down.png`.
 
@@ -85,12 +85,12 @@ The one-line position after this roadmap ships: **"Your day as a thread. Always 
 
 ### C3 · Reality thread — **new, highest priority after A0**
 - With B1 data, Today draws the **planned thread as a ghost** under the **actual thread** (real start/end): slipped starts, overruns and gaps become visible without judgement. Toggle in the day card header ("plan / reality").
-- Learning (local, rule-based, no model needed): per task title, median actual duration and median start offset over the last 10 occurrences. Used by Add (duration chip pre-selected: "usually 2 h 20"), by the ThreadPicker caption ("you tend to start this ~15 min late"), and by C1 proposals.
+- Learning (local, rule-based, no model needed): per task title, median actual duration and median start offset. Used by Add, the ThreadPicker caption, Focus and C1 proposals. When each value shows, how it reveals, how it explains itself, the thresholds (`LearningThresholds`) and the Plan / Reality toggle gate: `13-learning-reveal.md`.
 - Honest copy: "usually", never "you're late". Render: `B-ios-reality-thread.png`.
 
 ### C4 · Energy-aware suggestions — energy field **built**; learning **new**, depends on C3
-- From completed high-energy tasks' actual times, derive the user's best window; Add suggests placement ("you finish deep work best 9–11"). Suggest / Off switch in Settings › Planning; default Off until 20 completions exist.
-- As built (docs/09 M11.5): a completion = a task marked done, energy high, with a real actual start and end (B1), in the last 90 days. The window is the 2-hour stretch in which most of them really started, in the profile zone (a tie goes to the window starting at the busier hour, then the earliest). Under 20 the switch is off and locked ("After 20 finished high-energy tasks · 7 so far"); from 20 it is on unless turned off. Add says it only for a task whose title is one of those high-energy tasks — "you finish high-energy tasks best 9:00 – 11:00 AM" — with "Try 9:00 AM" when the task starts outside the window (rejected: the render's "deep work" category, which the data doesn't have; suggesting it for every task).
+- From completed high-energy tasks' actual times, derive the user's best window; Add suggests placement. The switch, its threshold, its default (off, also after the threshold) and its place in Settings › Learning: `13-learning-reveal.md` §3–§4.
+- As built (docs/09 M11.5): a completion = a task marked done, energy high, with a real actual start and end (B1), in the last 90 days. The window is the 2-hour stretch in which most of them really started, in the profile zone (a tie goes to the window starting at the busier hour, then the earliest). Under 20 the switch is off and locked ("After 20 finished high-energy tasks · 7 so far"); from 20 it is enabled but stays off until the user turns it on (changed by `13-learning-reveal.md` §3; it was on by default). Add says it only for a task whose title is one of those high-energy tasks — "you finish high-energy tasks best 9:00 – 11:00 AM" — with "Try 9:00 AM" when the task starts outside the window (rejected: the render's "deep work" category, which the data doesn't have; suggesting it for every task).
 
 ## D. No shame — reflection without streaks
 
@@ -147,6 +147,7 @@ Trials and lifetime unlocks are store-managed (introductory offers / non-consuma
 | **M10 Start** | B2 model service (on-device + cloud + BYOK), B3 ProposalSheet, B1 Break it down, B2 Smallest step, B3 Unstick, A3 Focus | breakdown < 2 s on-device; proposal never auto-applies (test) |
 | **M11 Control** | C1 Rebalance, C3 Reality thread, C2 Routines, C4 energy (behind switch) | ghost thread golden; learning tests on synthetic history |
 | **M12 Reflect + capture** | D1 weekly + share, D2 low-energy, D3 journal, B6 capture anywhere, B4 brain-dump | no-streak audit of every string |
+| **M13 Learning reveal** (retrofit) | `13-learning-reveal.md`: `LearningThresholds`, Settings › Learning, reality gate + caption + highlight, step lengths (`subtasks.done_at`, ADR-0012), explain on demand + reset | threshold tests on synthetic history; nothing learned shows before its threshold |
 | Phase 2 (ideas, not committed — the owner decides later) | F1 Windows/Linux, F2 integrations, E1 body double, A2 wallpaper/watch face, watch app (F3), B5 paper plan, household threads | — |
 
 Done criteria for every task: `10-ui-concept-a.md` §7 unchanged, plus: every proposal flow has a test proving nothing is written before Accept; every new surface reads B5 and calls B6 only; every new string passes the no-shame audit (no "late", "missed streak", "failed", red).
