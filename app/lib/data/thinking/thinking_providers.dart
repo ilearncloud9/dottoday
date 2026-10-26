@@ -55,8 +55,10 @@ ThinkingService thinkingService(Ref ref) {
         transport: ref.watch(thinkingTransportProvider),
         journal: memory,
         clock: ref.watch(clockProvider),
-        onError: (code) =>
-            logger.warn('thinking.failed', fields: {'code': code}),
+        onError: (kind, {required timedOut}) => logger.warn(
+          'thinking.failed',
+          fields: {'kind': ?kind, 'timedOut': timedOut},
+        ),
       ),
     ],
   );

@@ -29,7 +29,7 @@ final class OnDeviceThinkingBackend implements ThinkingBackend {
     required ThinkingJournal journal,
     required Clock clock,
     this.timeout = const Duration(seconds: 10),
-    void Function(String code)? onError,
+    void Function(ThinkingKind? kind, {required bool timedOut})? onError,
   }) : _transport = transport,
        _journal = journal,
        _clock = clock,
@@ -38,7 +38,10 @@ final class OnDeviceThinkingBackend implements ThinkingBackend {
   final ThinkingTransport _transport;
   final ThinkingJournal _journal;
   final Clock _clock;
-  final void Function(String code)? _onError;
+
+  /// What failed (null: asking whether the model is there) and whether it
+  /// was the timeout; never the error text, which may quote the prompt.
+  final void Function(ThinkingKind? kind, {required bool timedOut})? _onError;
 
   /// Generous: the 2 s target (11 B1) is measured by the perf test; this
   /// only stops a stuck model from holding the sheet.
@@ -52,7 +55,7 @@ final class OnDeviceThinkingBackend implements ThinkingBackend {
     try {
       return await _transport.availability().timeout(timeout);
     } on Object catch (e) {
-      _onError?.call('thinking.availability.${e.runtimeType}');
+      _onError?.call(null, timedOut: e is TimeoutException);
       return ThinkingAvailability.unavailable;
     }
   }
@@ -91,8 +94,8 @@ final class OnDeviceThinkingBackend implements ThinkingBackend {
     try {
       output = await _transport.generate(prompt).timeout(timeout);
     } on Object catch (e) {
-      // A code only: the error text may quote the prompt (CLAUDE.md §4).
-      _onError?.call('thinking.${prompt.kind.wire}.${e.runtimeType}');
+      // No error text: it may quote the prompt (CLAUDE.md §4).
+      _onError?.call(prompt.kind, timedOut: e is TimeoutException);
     }
     await _journal.record(
       ThinkingExchange(
