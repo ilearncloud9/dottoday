@@ -75,10 +75,7 @@ FocusState focusAt(Occurrence task, List<Subtask> subtasks, DateTime nowUtc) {
   // that finished the step before it (ADR-0012: the tick time, never
   // `updatedAt`, which any edit moves). A tick from before 0008 has none.
   var stepStart = task.actualStartUtc ?? start;
-  final ticks = [
-    for (final s in steps.take(index))
-      if (s.done) ?s.doneAt,
-  ]..sort();
+  final ticks = [for (final s in steps.take(index)) ?tickedAt(s)]..sort();
   if (ticks.isNotEmpty) stepStart = ticks.last;
   if (stepStart.isAfter(nowUtc)) stepStart = nowUtc;
   final stepLength = steps[index].durationMin;

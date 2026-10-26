@@ -120,4 +120,14 @@ void main() {
     final off = tick(on, done: false, nowUtc: now);
     expect((off.done, off.doneAt), (false, null));
   });
+
+  test('a time left on an unticked step never starts the next one', () {
+    final stray = step(
+      'a',
+      1,
+      len: 25,
+    ).copyWith(doneAt: start.add(const Duration(minutes: 30)));
+    final f = focusAt(task, [stray, step('b', 2, len: 30)], start);
+    expect((f.stepIndex, f.stepStartUtc), (0, start));
+  });
 }

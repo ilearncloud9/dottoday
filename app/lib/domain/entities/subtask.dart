@@ -41,3 +41,14 @@ abstract class Subtask with _$Subtask {
 /// ```
 Subtask tick(Subtask step, {required bool done, required DateTime nowUtc}) =>
     step.copyWith(done: done, doneAt: done ? nowUtc : null, updatedAt: nowUtc);
+
+/// When [step] was ticked, if it counts (ADR-0012): `done` wins. A time
+/// left on an unticked step (an older client unticked by writing `done`
+/// only) is ignored, and a done step without one (ticked before 0008) is
+/// done with no time. No CHECK holds the pair (field-level sync), so every
+/// reader goes through this.
+///
+/// ```dart
+/// tickedAt(step.copyWith(done: false)); // null, whatever doneAt says
+/// ```
+DateTime? tickedAt(Subtask step) => step.done ? step.doneAt : null;
