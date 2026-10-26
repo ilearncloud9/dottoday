@@ -206,6 +206,10 @@ jobs:
       # opens the shortcut list (docs/08 §6.2, M8.7).
       - name: Keyboard checks
         run: node ../tool/a11y/keyboard_check.mjs http://127.0.0.1:8080/
+      # Add and Brain dump take keys without a click into the field, at both
+      # widths, Brain dump from the ⋯ menu (M12 follow-up).
+      - name: Popover fields take keys at once
+        run: node ../tool/a11y/popover_focus_check.mjs http://127.0.0.1:8080/
       # The live dot on the tab (docs/09 M9.7): title and favicon ring.
       - name: Web live dot
         run: node ../tool/a11y/web_live_dot_check.mjs http://127.0.0.1:8080/
