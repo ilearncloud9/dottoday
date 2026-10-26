@@ -55,6 +55,10 @@ void main() {
         find.text('Deep work: roadmap usually takes 2 h 20'),
         findsOneWidget,
       );
+      // docs/13 §6: the reason explains itself.
+      await tester.tap(find.text('Deep work: roadmap usually takes 2 h 20'));
+      await tester.pumpAndSettle();
+      expect(find.text('based on your last 4 times · median'), findsOneWidget);
       await tester.tap(find.text('Shift the rest').last);
       await tester.pumpAndSettle();
       expect(

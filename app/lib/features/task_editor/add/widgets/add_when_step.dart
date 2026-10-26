@@ -6,12 +6,14 @@ import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
 import 'package:dottoday/domain/scheduling/slot_fit.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
+import 'package:dottoday/features/task_editor/add/widgets/add_energy_hint.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_when_parts.dart';
 import 'package:dottoday/shared/dot/picker_caption.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_picker.dart';
 import 'package:dottoday/shared/dot/thread_picker_blocks.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/learning/learned_line.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -35,6 +37,7 @@ class AddWhenStep extends StatelessWidget {
     this.durationMenu,
     this.energy,
     this.thresholds = LearningThresholds.standard,
+    this.onResetLearning,
     super.key,
   });
 
@@ -63,6 +66,17 @@ class AddWhenStep extends StatelessWidget {
 
   /// When the start-offset caption speaks (docs/13 §2).
   final LearningThresholds thresholds;
+
+  /// "Reset for this task on this device" under a learned value (§6).
+  final LearnedReset? onResetLearning;
+
+  LearnedExplanation _why(BuildContext context, int samples) =>
+      LearnedExplanation.perTitle(
+        context.l10n,
+        samples: samples,
+        title: state.draft.title,
+        reset: onResetLearning,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -118,9 +132,10 @@ class AddWhenStep extends StatelessWidget {
           ),
           if (draft.learned.usualMinutes case final usual?)
             Padding(
-              padding: const EdgeInsets.only(top: DotSpace.s),
-              child: Text(
-                l10n.learnUsually(formatDurationShort(l10n, usual)),
+              padding: const EdgeInsets.only(top: DotSpace.xs),
+              child: LearnedLine(
+                text: l10n.learnUsually(formatDurationShort(l10n, usual)),
+                explanation: _why(context, draft.learned.samples),
                 style: _quiet(context),
               ),
             ),
@@ -152,39 +167,24 @@ class AddWhenStep extends StatelessWidget {
       if (_tendency(context) case final line?)
         Padding(
           padding: const EdgeInsets.only(top: DotSpace.xs),
-          child: Text(line, style: _quiet(context)),
+          child: LearnedLine(
+            text: line,
+            explanation: _why(context, state.draft.learned.offsetSamples),
+            style: _quiet(context),
+          ),
         ),
-      if (energy case final w?) _energy(context, text, w),
+      if (energy case final w?)
+        AddEnergyHint(
+          window: w,
+          text: text,
+          startMinute: state.draft.startMinute ?? 0,
+          onStart: onStart,
+        ),
     ];
   }
 
-  /// "you finish high-energy tasks best 9:00 – 11:00 AM" and, when the
-  /// task starts outside it, "Try 9:00 AM" (11 C4).
-  Widget _energy(BuildContext context, DayTimeText text, EnergyWindow w) {
-    final l10n = context.l10n;
-    final from = w.startHour * 60;
-    final start = state.draft.startMinute ?? 0;
-    final inside = start >= from && start < from + w.hours * 60;
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: DotSpace.s,
-      children: [
-        Text(
-          l10n.addEnergyBest(text.range(from, w.hours * 60)),
-          style: _quiet(context),
-        ),
-        if (!inside)
-          TextButton(
-            onPressed: () => onStart(from),
-            child: Text(l10n.addEnergyTry(text.at(from))),
-          ),
-      ],
-    );
-  }
-
-  /// "you tend to start this ~15 min after plan" (11 C3, M11.3), once
-  /// the history knows and it is at least
-  /// [LearningThresholds.tendencyFromMinutes] minutes.
+  /// "usually starts ~15 min after plan" (11 C3) once the history knows,
+  /// from [LearningThresholds.tendencyFromMinutes] minutes.
   String? _tendency(BuildContext context) {
     final offset = state.draft.learned.startOffsetMinutes;
     if (offset == null || offset.abs() < thresholds.tendencyFromMinutes) {

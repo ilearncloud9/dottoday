@@ -1,5 +1,6 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
+import 'package:dottoday/shared/learning/learned_line.dart';
 import 'package:flutter/foundation.dart';
 
 /// A task as the thread draws it (docs/10 §3 `TaskRow`). Display values
@@ -104,10 +105,14 @@ final class ThreadReality {
     this.ghost = GhostShift.none,
     this.underWay = false,
     this.usual,
+    this.usualWhy,
   });
 
   /// "usually 2 h 20" under the live row's progress (M11.3 learning).
   final String? usual;
+
+  /// How [usual] was worked out, on tap (docs/13 §6).
+  final LearnedExplanation? usualWhy;
 
   /// "7:42 – 8:16" or "9:10 – now"; null keeps the planned range.
   final String? range;

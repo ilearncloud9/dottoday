@@ -111,7 +111,8 @@ The data comes from one provider, `learningProgressProvider`, derived from the e
   7. Add's energy line. Its explanation is "based on your last 20 finished high-energy tasks · where most started", with **no** reset, because the energy window is not per title.
 - **Touch and a11y.** The whole line is one 44 px (Android 48) target: Semantics button, label = the visible value plus "learned from your history", hint "Shows how this was worked out". Expanded, it announces the explanation. Keyboard: Enter/Space toggles, Esc collapses. Collapsing happens on a second tap or when the host closes.
 - **Numbers.** N = `Learned.samples` for lengths, the count of runs with a planned start for offsets, and the step's samples for steps. The method word is always "median" for these.
-- **Reset for this task.** It writes `{normalisedTitle: nowUtcMs}` into `local_meta` `learning_resets` (a JSON map, local only, **never synced**, so the copy says "on this device"). `LearningIndex.forTask` and `forStep` ignore runs that started before the reset of the queried title; the cutoff also covers that task's series runs. The line collapses and the value disappears at once. A snackbar says "Learning for Deep work reset on this device" with the built **Undo** (`undoAction`, 30 s), which removes the key. The reset uses accent ink, never error red, and it doesn't ask for confirmation, because it is undoable and local.
+- **Reset for this task.** It writes `{normalisedTitle: nowUtcMs}` into `local_meta` `learning_resets` (a JSON map, local only, **never synced**, so the copy says "on this device"). `LearningIndex.forTask` and `forStep` ignore runs that started before the reset of the queried title; the cutoff also covers that task's series runs. The line collapses and the value disappears at once. On a page (Today, Focus) a snackbar says "Learning for Deep work reset on this device" with the built **Undo** (`undoAction`, 30 s), which puts the previous cutoff back. **In a sheet or popover** (Add, Running late) a snackbar would sit under the modal, out of reach, so the reset asks once inline instead, "Forget what Deep work taught, on this device?" **Reset · Keep** (amended in M13.7; rejected: a messenger scoped to every sheet, which would swallow the snackbars that outlive a sheet, such as Add's "Added"). The reset uses accent ink, never error red.
+- **Built as** `LearnedLine` + `LearnedExplanation` (`.perTitle(l10n, samples:, title:, reset:)` for the per-title hosts) in `shared/learning/`; the reset is `LearningMeta.resetUndoable`, which returns its Undo.
 - After a reset the task starts again from zero and reveals again at `taskMinSamples`.
 
 ## 7. Strings (new or changed ARB keys; English source in `app_en.arb`, de/es/fr updated in the same commit)
@@ -140,10 +141,14 @@ The data comes from one provider, `learningProgressProvider`, derived from the e
 | `learnStartsBefore` | usually starts ~{minutes} min before plan | **changed** wording |
 | `learnBasedOn` | based on your last {count, plural, one{time} other{{count} times}} · median | explanation line |
 | `learnEnergyBasedOn` | based on your last {count} finished high-energy tasks · where most started | energy explanation |
-| `learnFromHistory` | learned from your history | appended to the semantics label |
+| `learnFromHistory` | {value}, learned from your history | the semantics label (one string, no concatenation) |
 | `learnExplainHint` | Shows how this was worked out | semantics hint |
 | `learnReset` | Reset for this task on this device | action |
 | `learnResetDone` | Learning for {title} reset on this device | snackbar; `title` String |
+| `learnResetConfirm` | Forget what {title} taught, on this device? | inline, in a sheet or popover (M13.7) |
+| `learnResetConfirmAction` | Reset | |
+| `learnResetKeep` | Keep | |
+| `realityNothingStartedToday` | nothing started yet today | Reality on a day with no real start (owner, M13.6) |
 
 Kept as built: `learnUsually`, `learnInsight`, `learnInsightOk`, `lateUsually`, `settingsEnergy`, `settingsEnergyDetail`, `undoAction`.
 

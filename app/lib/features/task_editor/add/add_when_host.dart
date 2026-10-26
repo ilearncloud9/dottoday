@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/schedule/planned_colors.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
+import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/quick_add/add_draft.dart';
@@ -74,6 +76,10 @@ class AddWhenHost extends ConsumerWidget {
     return AddWhenStep(
       energy: _energy(ref),
       thresholds: ref.watch(learningThresholdsProvider),
+      // docs/13 §6: clears what this title taught, on this device.
+      onResetLearning: () => ref
+          .read(learningMetaProvider.notifier)
+          .resetUndoable(state.draft.title, ref.read(clockProvider).nowUtc()),
       state: state,
       room: room,
       presets: settings?.durationPresets ?? defaultDurationPresets,

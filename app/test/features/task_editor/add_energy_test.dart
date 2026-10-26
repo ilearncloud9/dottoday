@@ -40,6 +40,18 @@ void main() {
       find.text('you finish high-energy tasks best 9:00 AM – 11:00 AM'),
       findsOneWidget,
     );
+    // docs/13 §6: explained, and no per-title reset for an app-wide window.
+    await tester.tap(
+      find.text('you finish high-energy tasks best 9:00 AM – 11:00 AM'),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.text(
+        'based on your last 20 finished high-energy tasks · where most started',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Reset for this task on this device'), findsNothing);
     await tester.tap(find.text('Try 9:00 AM'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Today · 9:00 AM'), findsOneWidget);

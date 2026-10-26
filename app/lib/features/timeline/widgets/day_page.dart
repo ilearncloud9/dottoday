@@ -3,6 +3,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
+import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
@@ -94,6 +95,13 @@ class DayPage extends ConsumerWidget {
             blocks: blocks,
             nowUtc: now,
             learning: learning,
+            resetFor: (task) =>
+                () => ref
+                    .read(learningMetaProvider.notifier)
+                    .resetUndoable(
+                      task.title,
+                      ref.read(clockProvider).nowUtc(),
+                    ),
           )
         : null;
     final entries = threadEntries(
@@ -154,6 +162,7 @@ class DayPage extends ConsumerWidget {
         RealityInsightStrip(
           task: insight.task,
           usualMinutes: insight.usualMinutes,
+          samples: insight.samples,
         ),
       ],
     );

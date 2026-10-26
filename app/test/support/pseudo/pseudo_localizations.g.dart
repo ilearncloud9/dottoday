@@ -3560,6 +3560,36 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.realityNothingStartedToday);
 
   @override
+  String learnBasedOn(int count) => pseudo(super.learnBasedOn(count));
+
+  @override
+  String learnEnergyBasedOn(int count) =>
+      pseudo(super.learnEnergyBasedOn(count));
+
+  @override
+  String learnFromHistory(String value) =>
+      pseudo(super.learnFromHistory(value));
+
+  @override
+  String get learnExplainHint => pseudo(super.learnExplainHint);
+
+  @override
+  String get learnReset => pseudo(super.learnReset);
+
+  @override
+  String learnResetDone(String title) => pseudo(super.learnResetDone(title));
+
+  @override
+  String learnResetConfirm(String title) =>
+      pseudo(super.learnResetConfirm(title));
+
+  @override
+  String get learnResetConfirmAction => pseudo(super.learnResetConfirmAction);
+
+  @override
+  String get learnResetKeep => pseudo(super.learnResetKeep);
+
+  @override
   String lateUsually(String title, String duration) =>
       pseudo(super.lateUsually(title, duration));
 

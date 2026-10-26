@@ -4530,12 +4530,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String learnStartsAfter(int minutes) {
-    return 'du beginnst meist ~$minutes Min. nach Plan';
+    return 'beginnt meist ~$minutes Min. nach Plan';
   }
 
   @override
   String learnStartsBefore(int minutes) {
-    return 'du beginnst meist ~$minutes Min. vor Plan';
+    return 'beginnt meist ~$minutes Min. vor Plan';
   }
 
   @override
@@ -4560,6 +4560,49 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get realityNothingStartedToday => 'heute noch nichts begonnen';
+
+  @override
+  String learnBasedOn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'auf Grundlage der letzten $count Male',
+      one: 'auf Grundlage des letzten Mals',
+    );
+    return '$_temp0 · Median';
+  }
+
+  @override
+  String learnEnergyBasedOn(int count) {
+    return 'auf Grundlage deiner letzten $count erledigten anspruchsvollen Aufgaben · wann die meisten begannen';
+  }
+
+  @override
+  String learnFromHistory(String value) {
+    return '$value, aus deinem Verlauf gelernt';
+  }
+
+  @override
+  String get learnExplainHint => 'Zeigt, wie das ermittelt wurde';
+
+  @override
+  String get learnReset => 'Für diese Aufgabe auf diesem Gerät zurücksetzen';
+
+  @override
+  String learnResetDone(String title) {
+    return 'Gelerntes für $title auf diesem Gerät zurückgesetzt';
+  }
+
+  @override
+  String learnResetConfirm(String title) {
+    return 'Vergessen, was $title gezeigt hat – auf diesem Gerät?';
+  }
+
+  @override
+  String get learnResetConfirmAction => 'Zurücksetzen';
+
+  @override
+  String get learnResetKeep => 'Behalten';
 
   @override
   String lateUsually(String title, String duration) {

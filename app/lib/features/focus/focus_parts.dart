@@ -2,15 +2,28 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/focus/focus_state.dart';
+import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/learning/learned_line.dart';
 import 'package:flutter/material.dart';
 
 /// "STEP 2 OF 3 · Draft timeline · 14:20 left" with its bar
 /// (`B-ios-focus`); "Every step done" once all are ticked.
 class FocusStepCard extends StatelessWidget {
-  const FocusStepCard({required this.state, super.key});
+  const FocusStepCard({
+    required this.state,
+    this.taskTitle = '',
+    this.onResetLearning,
+    super.key,
+  });
 
   final FocusState state;
+
+  /// The task's title, for the reset's message.
+  final String taskTitle;
+
+  /// Clears what this task taught, on this device (docs/13 §6).
+  final LearnedReset? onResetLearning;
 
   @override
   Widget build(BuildContext context) {
@@ -94,9 +107,18 @@ class FocusStepCard extends StatelessWidget {
                 ),
               ),
             // The timer runs on the step's usual length (docs/13 §5).
-            if (state.stepLearned?.usualMinutes case final usual?)
-              Text(
-                l10n.learnUsually(formatDurationShort(l10n, usual)),
+            if (state.stepLearned case Learned(
+              usualMinutes: final usual?,
+              :final samples,
+            ))
+              LearnedLine(
+                text: l10n.learnUsually(formatDurationShort(l10n, usual)),
+                explanation: LearnedExplanation.perTitle(
+                  l10n,
+                  samples: samples,
+                  title: taskTitle,
+                  reset: onResetLearning,
+                ),
                 style: t.styles.rowMeta.copyWith(color: t.colors.muted),
               ),
           ],

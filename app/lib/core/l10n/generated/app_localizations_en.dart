@@ -4503,12 +4503,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String learnStartsAfter(int minutes) {
-    return 'you tend to start this ~$minutes min after plan';
+    return 'usually starts ~$minutes min after plan';
   }
 
   @override
   String learnStartsBefore(int minutes) {
-    return 'you tend to start this ~$minutes min before plan';
+    return 'usually starts ~$minutes min before plan';
   }
 
   @override
@@ -4533,6 +4533,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get realityNothingStartedToday => 'nothing started yet today';
+
+  @override
+  String learnBasedOn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count times',
+      one: 'time',
+    );
+    return 'based on your last $_temp0 · median';
+  }
+
+  @override
+  String learnEnergyBasedOn(int count) {
+    return 'based on your last $count finished high-energy tasks · where most started';
+  }
+
+  @override
+  String learnFromHistory(String value) {
+    return '$value, learned from your history';
+  }
+
+  @override
+  String get learnExplainHint => 'Shows how this was worked out';
+
+  @override
+  String get learnReset => 'Reset for this task on this device';
+
+  @override
+  String learnResetDone(String title) {
+    return 'Learning for $title reset on this device';
+  }
+
+  @override
+  String learnResetConfirm(String title) {
+    return 'Forget what $title taught, on this device?';
+  }
+
+  @override
+  String get learnResetConfirmAction => 'Reset';
+
+  @override
+  String get learnResetKeep => 'Keep';
 
   @override
   String lateUsually(String title, String duration) {

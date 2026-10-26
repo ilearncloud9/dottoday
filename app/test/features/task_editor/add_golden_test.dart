@@ -8,6 +8,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
+import 'package:dottoday/features/task_editor/add/widgets/add_when_step.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +18,7 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/dot_golden.dart';
+import '../../support/learning_history.dart';
 import '../../support/timeline_fakes.dart';
 
 /// The four habits of `A-ios-add-what`, each used twice in the last weeks.
@@ -75,6 +77,7 @@ Widget addSheet(
   AddRequest request, {
   bool nested = false,
   WriteFault? writeFault,
+  List<Occurrence> history = const [],
 }) {
   final sheet = Builder(
     builder: (context) {
@@ -94,7 +97,11 @@ Widget addSheet(
   return ProviderScope(
     overrides: timelineOverrides(
       now: DateTime.utc(2026, 10, 21, 9),
-      occurrences: FakeOccurrenceRepository([..._habits(), ..._today()]),
+      occurrences: FakeOccurrenceRepository([
+        ..._habits(),
+        ..._today(),
+        ...history,
+      ]),
       profile: testProfile(settings: const Settings(use24h: false)),
       writeFault: writeFault,
     ),
@@ -251,4 +258,47 @@ void main() {
       child: addSheet(cell, const AddRequest(languageCode: 'en')),
     ),
   );
+  // docs/13 §11: the learned length pre-selected ("usually 1 h 20"), and
+  // its explanation open, at the largest text and in RTL too.
+  const learned = AddRequest(languageCode: 'en', text: 'Write report 5pm');
+  for (final (name, open) in [
+    ('learned', false),
+    ('learned_explained', true),
+  ]) {
+    goldenMatrix(
+      'add_when_$name',
+      height: 844,
+      widths: const {'compact', 'expanded'},
+      a11yVariants: true,
+      act: (t) async {
+        await t.ensureVisible(find.text('Continue'));
+        await t.pumpAndSettle();
+        await t.tap(find.text('Continue'));
+        await t.pumpAndSettle();
+        if (!open) return;
+        // At the largest text the line sits below the step's lazy fold:
+        // scroll the step's own list (its outermost ListView) to it.
+        final list = find
+            .descendant(
+              of: find.byType(AddWhenStep),
+              matching: find.byType(ListView),
+            )
+            .first;
+        for (var i = 0; i < 10; i++) {
+          if (find.text('usually 1 h 20').evaluate().isNotEmpty) break;
+          // From the list's edge: its middle is the time picker, which
+          // takes vertical drags itself.
+          await t.dragFrom(
+            t.getTopLeft(list) + const Offset(8, 8),
+            const Offset(0, -150),
+          );
+          await t.pumpAndSettle();
+        }
+        await t.ensureVisible(find.text('usually 1 h 20'));
+        await t.pumpAndSettle();
+        await t.tap(find.text('usually 1 h 20'));
+      },
+      build: (cell) => addSheet(cell, learned, history: writeReportHistory()),
+    );
+  }
 }

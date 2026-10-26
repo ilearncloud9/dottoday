@@ -88,6 +88,15 @@ class LearningMeta extends _$LearningMeta {
     return before;
   }
 
+  /// [reset], returning its Undo for the snackbar (docs/13 §6).
+  Future<Future<void> Function()> resetUndoable(
+    String title,
+    DateTime nowUtc,
+  ) async {
+    final before = await reset(title, nowUtc);
+    return () => restoreReset(title, before);
+  }
+
   /// Undo of [reset]: [previous] back, or no cutoff at all.
   Future<void> restoreReset(String title, DateTime? previous) async {
     final key = normaliseTitle(title);

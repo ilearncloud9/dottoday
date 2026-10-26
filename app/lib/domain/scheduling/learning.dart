@@ -12,6 +12,7 @@ final class Learned {
     required this.samples,
     this.usualMinutes,
     this.startOffsetMinutes,
+    this.offsetSamples = 0,
   });
 
   /// Occurrences with an actual start and end it was taken from.
@@ -24,6 +25,9 @@ final class Learned {
   /// Median of actual start − planned start: positive when it usually
   /// starts after the plan. Null under [LearningThresholds.taskMinSamples].
   final int? startOffsetMinutes;
+
+  /// Runs [startOffsetMinutes] was taken from (those with a planned start).
+  final int offsetSamples;
 
   static const none = Learned(samples: 0);
 }
@@ -161,6 +165,7 @@ final class LearningIndex {
     return Learned(
       samples: recent.length,
       usualMinutes: ((usual / 5).round() * 5).clamp(5, 1440),
+      offsetSamples: offsets.length,
       startOffsetMinutes: offsets.length < min
           ? null
           : _median(offsets).round(),

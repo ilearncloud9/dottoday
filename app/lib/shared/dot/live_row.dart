@@ -7,6 +7,7 @@ import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:dottoday/shared/dot/unstick_line.dart';
+import 'package:dottoday/shared/learning/learned_line.dart';
 import 'package:flutter/material.dart';
 
 /// The current task, expanded (docs/10 §3 `LiveRow`, `Main`): conic dot,
@@ -135,7 +136,7 @@ class _Summary extends StatelessWidget {
       (null, null) => task.timeRange,
     };
     final rowLabel = taskRowLabel(l10n, task);
-    return Semantics(
+    final summary = Semantics(
       button: onOpen != null,
       label: task.hasSubtasks
           ? l10n.rowWithSubtasks(
@@ -154,14 +155,24 @@ class _Summary extends StatelessWidget {
             if (showMeta) Text(meta, style: t.styles.rowMeta),
             Text(task.title, style: t.styles.liveRowTitle),
             _Progress(task: task),
-            if (task.reality?.usual case final usual?)
-              Text(
-                usual,
-                style: t.styles.rowMeta.copyWith(color: t.colors.muted),
-              ),
           ],
         ),
       ),
+    );
+    final usual = task.reality?.usual;
+    if (usual == null) return summary;
+    // Outside the row's merged label, so the explanation is its own
+    // control for screen readers (docs/13 §6).
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        summary,
+        LearnedLine(
+          text: usual,
+          explanation: task.reality?.usualWhy,
+          style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+        ),
+      ],
     );
   }
 }

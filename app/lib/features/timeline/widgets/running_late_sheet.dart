@@ -6,6 +6,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
+import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -18,6 +19,7 @@ import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/learning/learned_line.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
@@ -116,10 +118,9 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
 
   void _close(_Late choice) => Navigator.of(context).pop((choice, _minutes));
 
-  /// How much longer [target] usually takes, as the default amount and
-  /// its reason ("Deep work usually takes 2 h 20"; M11.3); null leaves
-  /// the default.
-  String? _learnedAmount(BuildContext context, Occurrence? target) {
+  /// How much longer [target] usually takes, as the default amount and its
+  /// reason, explained on tap (M11.3, docs/13 §6); null keeps the default.
+  Widget? _learnedAmount(BuildContext context, Occurrence? target) {
     if (target == null) return null;
     final learned =
         ref
@@ -131,9 +132,21 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
     if (amount == null) return null;
     if (!_picked) _minutes = amount;
     final l10n = context.l10n;
-    return l10n.lateUsually(
-      target.title,
-      formatDurationShort(l10n, learned.usualMinutes!),
+    final t = DotTheme.of(context);
+    return LearnedLine(
+      text: l10n.lateUsually(
+        target.title,
+        formatDurationShort(l10n, learned.usualMinutes!),
+      ),
+      explanation: LearnedExplanation.perTitle(
+        l10n,
+        samples: learned.samples,
+        title: target.title,
+        reset: () => ref
+            .read(learningMetaProvider.notifier)
+            .resetUndoable(target.title, ref.read(clockProvider).nowUtc()),
+      ),
+      style: t.styles.rowMeta.copyWith(color: t.colors.muted),
     );
   }
 
@@ -146,7 +159,6 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
         ref.watch(clockProvider).nowUtc();
     final target = lateTarget(data.blocks, now);
     final why = _learnedAmount(context, target);
-    final t = DotTheme.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -155,10 +167,7 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
         if (why != null)
           Padding(
             padding: const EdgeInsets.only(top: DotSpace.xs),
-            child: Text(
-              why,
-              style: t.styles.rowMeta.copyWith(color: t.colors.muted),
-            ),
+            child: why,
           ),
         _shiftTile(context, data, now),
         if (target == null)

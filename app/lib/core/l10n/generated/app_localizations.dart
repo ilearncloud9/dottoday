@@ -6717,13 +6717,13 @@ abstract class AppLocalizations {
   /// Add: the user usually starts this task this much after its planned time. Never 'late'.
   ///
   /// In en, this message translates to:
-  /// **'you tend to start this ~{minutes} min after plan'**
+  /// **'usually starts ~{minutes} min after plan'**
   String learnStartsAfter(int minutes);
 
   /// Add: the user usually starts this task this much before its planned time.
   ///
   /// In en, this message translates to:
-  /// **'you tend to start this ~{minutes} min before plan'**
+  /// **'usually starts ~{minutes} min before plan'**
   String learnStartsBefore(int minutes);
 
   /// Reality thread insight strip: what the history says about the task under way.
@@ -6761,6 +6761,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'nothing started yet today'**
   String get realityNothingStartedToday;
+
+  /// How a learned value was worked out, shown on tap (docs/13 §6).
+  ///
+  /// In en, this message translates to:
+  /// **'based on your last {count, plural, one{time} other{{count} times}} · median'**
+  String learnBasedOn(int count);
+
+  /// How the energy window was worked out, shown on tap.
+  ///
+  /// In en, this message translates to:
+  /// **'based on your last {count} finished high-energy tasks · where most started'**
+  String learnEnergyBasedOn(int count);
+
+  /// Screen-reader label of a learned value (docs/13 §6).
+  ///
+  /// In en, this message translates to:
+  /// **'{value}, learned from your history'**
+  String learnFromHistory(String value);
+
+  /// Screen-reader hint on a learned value.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows how this was worked out'**
+  String get learnExplainHint;
+
+  /// Clears what was learned for this task title, on this device only (docs/13 §6).
+  ///
+  /// In en, this message translates to:
+  /// **'Reset for this task on this device'**
+  String get learnReset;
+
+  /// Snackbar after a reset, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning for {title} reset on this device'**
+  String learnResetDone(String title);
+
+  /// Inside a sheet or popover, where Undo can't be reached, the reset asks once inline (docs/13 §6).
+  ///
+  /// In en, this message translates to:
+  /// **'Forget what {title} taught, on this device?'**
+  String learnResetConfirm(String title);
+
+  /// Confirms the inline reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get learnResetConfirmAction;
+
+  /// Cancels the inline reset; nothing changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep'**
+  String get learnResetKeep;
 
   /// Running late sheet: the task at hand's usual real length, which picked the amount.
   ///

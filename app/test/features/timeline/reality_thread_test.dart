@@ -104,6 +104,16 @@ void main() {
     await tester.tap(find.text('Reality'));
     await tester.pumpAndSettle();
     expect(find.text('usually 2 h 20'), findsOneWidget);
+    // docs/13 §6: the live row's and the strip's values explain themselves.
+    await tester.tap(find.text('usually 2 h 20'));
+    await tester.pumpAndSettle();
+    expect(find.text('based on your last 4 times · median'), findsOneWidget);
+    await tester.tap(find.textContaining('usually takes you'));
+    await tester.pumpAndSettle();
+    expect(find.text('based on your last 4 times · median'), findsNWidgets(2));
+    await tester.tap(find.text('usually 2 h 20'));
+    await tester.tap(find.textContaining('usually takes you'));
+    await tester.pumpAndSettle();
     const strip =
         'Deep work: roadmap usually takes you 2 h 20 · Add will suggest it';
     expect(find.text(strip), findsOneWidget);

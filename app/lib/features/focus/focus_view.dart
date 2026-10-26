@@ -8,6 +8,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/focus/focus_providers.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/data/tasks/task_view.dart';
 import 'package:dottoday/domain/focus/focus_state.dart';
@@ -153,7 +154,16 @@ class _FocusViewState extends ConsumerState<FocusView> {
             ),
             const SizedBox(height: DotSpace.xl),
             if (state.steps.isNotEmpty) ...[
-              FocusStepCard(state: state),
+              FocusStepCard(
+                state: state,
+                taskTitle: task.title,
+                onResetLearning: () => ref
+                    .read(learningMetaProvider.notifier)
+                    .resetUndoable(
+                      task.title,
+                      ref.read(clockProvider).nowUtc(),
+                    ),
+              ),
               const SizedBox(height: DotSpace.l),
               FocusStepThread(state: state),
               const SizedBox(height: DotSpace.l),

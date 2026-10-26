@@ -5,6 +5,7 @@ import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
 import 'package:dottoday/domain/scheduling/reality.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
+import 'package:dottoday/shared/learning/learned_line.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'reality_thread.g.dart';
@@ -34,12 +35,23 @@ bool hasActuals(List<Occurrence> blocks) =>
   required List<Occurrence> blocks,
   required DateTime nowUtc,
   LearningIndex? learning,
+  LearnedReset Function(Occurrence task)? resetFor,
 }) {
   final day = realityOf(blocks, nowUtc);
-  String? usual(Reality r) {
+  ({String text, LearnedExplanation why})? usual(Reality r) {
     if (r.kind != RealityKind.underWay) return null;
-    final m = _learned(learning, r.planned).usualMinutes;
-    return m == null ? null : l10n.learnUsually(format.duration(m));
+    final learned = _learned(learning, r.planned);
+    final m = learned.usualMinutes;
+    if (m == null) return null;
+    return (
+      text: l10n.learnUsually(format.duration(m)),
+      why: LearnedExplanation.perTitle(
+        l10n,
+        samples: learned.samples,
+        title: r.planned.title,
+        reset: resetFor?.call(r.planned),
+      ),
+    );
   }
 
   return (
@@ -57,7 +69,7 @@ Learned _learned(LearningIndex? learning, Occurrence o) =>
 /// The task under way whose usual length differs from its plan by at
 /// least [LearningThresholds.insightFromMinutes], with that length (the insight strip,
 /// `B-ios-reality-thread`, M11.3); null otherwise.
-({Occurrence task, int usualMinutes})? realityInsight(
+({Occurrence task, int usualMinutes, int samples})? realityInsight(
   List<Occurrence> blocks,
   DateTime nowUtc,
   LearningIndex? learning,
@@ -66,10 +78,11 @@ Learned _learned(LearningIndex? learning, Occurrence o) =>
       (learning?.thresholds ?? LearningThresholds.standard).insightFromMinutes;
   for (final r in realityOf(blocks, nowUtc)) {
     if (r.kind != RealityKind.underWay) continue;
-    final usual = _learned(learning, r.planned).usualMinutes;
+    final learned = _learned(learning, r.planned);
+    final usual = learned.usualMinutes;
     if (usual == null) continue;
     if ((usual - r.planned.durationMin).abs() >= from) {
-      return (task: r.planned, usualMinutes: usual);
+      return (task: r.planned, usualMinutes: usual, samples: learned.samples);
     }
   }
   return null;
@@ -89,7 +102,7 @@ ThreadReality _caption(
   ThreadFormat f,
   Reality r,
   DateTime now,
-  String? usual,
+  ({String text, LearnedExplanation why})? usual,
 ) {
   final shown = r.shown;
   final plan = r.planned;
@@ -113,7 +126,8 @@ ThreadReality _caption(
         note: took! < 1 ? null : l10n.realityRunning(f.duration(took)),
         ghost: _ghost(r),
         underWay: true,
-        usual: usual,
+        usual: usual?.text,
+        usualWhy: usual?.why,
       );
     case RealityKind.notStartedYet:
       return ThreadReality(meta: l10n.realityNotStarted);
