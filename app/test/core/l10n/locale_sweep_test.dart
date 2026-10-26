@@ -48,10 +48,7 @@ const _all = [_compact, _medium, _expanded];
 const _height = 2600.0;
 
 /// A thinking store in memory with nothing in it (the brain dump sheet).
-final _dumpMemory = LocalThinkingMemory(
-  AppDatabase(NativeDatabase.memory()),
-  () async => const [],
-);
+final _dumpMemory = LocalThinkingMemory(AppDatabase(NativeDatabase.memory()));
 
 typedef _Pump = Future<void> Function(WidgetTester tester, Size size);
 typedef _Screen = ({_Pump pump, List<double> widths, bool checkCuts});

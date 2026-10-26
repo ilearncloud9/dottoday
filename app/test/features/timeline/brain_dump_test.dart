@@ -182,7 +182,7 @@ void main() {
     await tester.tap(find.text('Discard'));
     await _settle(tester);
     final kept = (await tester.runAsync(
-      () => LocalThinkingMemory(h.base.db, () async => []).dumps(),
+      () => LocalThinkingMemory(h.base.db).dumps(),
     ))!;
     expect(kept.single.text, _dump, reason: 'kept even after Discard');
     // A new sheet shows the history (its read runs on the real database).

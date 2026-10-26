@@ -1,8 +1,11 @@
+import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:dottoday/domain/thinking/on_device_thinking_backend.dart';
 import 'package:dottoday/domain/thinking/thinking_backend.dart';
 import 'package:dottoday/domain/thinking/thinking_memory.dart';
 import 'package:dottoday/domain/thinking/thinking_prompts.dart';
 import 'package:dottoday/domain/thinking/thinking_proposals.dart';
+
+import '../domain/fixtures.dart';
 
 /// The one fake every thinking backend runs through (docs/09 M10.1): a
 /// scripted model answer per kind, or a throw, or silence.
@@ -35,7 +38,6 @@ class FakeThinkingTransport implements ThinkingTransport {
 /// In-memory [ThinkingMemory] + [ThinkingJournal].
 final class MemoryThinkingMemory implements ThinkingMemory, ThinkingJournal {
   final saved = <String, List<ProposedStep>>{};
-  final lengths = <String, List<int>>{};
   final exchanges = <ThinkingExchange>[];
 
   @override
@@ -47,10 +49,27 @@ final class MemoryThinkingMemory implements ThinkingMemory, ThinkingJournal {
       saved[title.trim().toLowerCase()] = steps;
 
   @override
-  Future<List<int>> pastLengths(String title) async =>
-      lengths[title.trim().toLowerCase()] ?? const [];
-
-  @override
   Future<void> record(ThinkingExchange exchange) async =>
       exchanges.add(exchange);
+}
+
+/// Real lengths per title, as runs with actual timestamps, read through
+/// the one derivation (`LearningIndex`, docs/13 §2): what B4's rules ask.
+final class FakeLearning {
+  final lengths = <String, List<int>>{};
+
+  Future<LearningIndex> call() async {
+    var n = 0;
+    final start = DateTime.utc(2026, 10, 1, 9);
+    return LearningIndex.from([
+      for (final MapEntry(key: title, value: minutes) in lengths.entries)
+        for (final m in minutes)
+          occurrenceFixture().copyWith(
+            id: 'learn-${n++}',
+            title: title,
+            actualStartUtc: start.add(Duration(days: n)),
+            actualEndUtc: start.add(Duration(days: n, minutes: m)),
+          ),
+    ]);
+  }
 }

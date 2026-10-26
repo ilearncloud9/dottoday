@@ -1,6 +1,7 @@
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/energy_window.dart';
+import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
@@ -85,5 +86,18 @@ void main() {
       for (var d = 1; d <= 4; d++) _run(d, 9),
     ];
     expect(bestEnergyWindow(history, _berlin)!.startHour, 9);
+  });
+
+  test('LearningThresholds: n − 1 says nothing, n and the window length', () {
+    final min = LearningThresholds.standard.energyMinCompletions;
+    final runs = [for (var d = 1; d <= min; d++) _run(d, 9)];
+    expect(bestEnergyWindow(runs.skip(1), _berlin), isNull);
+    expect(bestEnergyWindow(runs, _berlin)!.hours, 2);
+    const custom = LearningThresholds(
+      energyMinCompletions: 3,
+      energyWindowHours: 3,
+    );
+    final w = bestEnergyWindow(runs.take(3), _berlin, thresholds: custom)!;
+    expect((w.startHour, w.endHour, w.completions), (9, 12, 3));
   });
 }

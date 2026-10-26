@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/learning.dart';
+import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
 import 'package:dottoday/domain/scheduling/reality.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
@@ -54,26 +55,25 @@ Learned _learned(LearningIndex? learning, Occurrence o) =>
     learning?.forTask(title: o.title, seriesId: o.seriesId) ?? Learned.none;
 
 /// The task under way whose usual length differs from its plan by at
-/// least [insightFromMinutes], with that length (the insight strip,
+/// least [LearningThresholds.insightFromMinutes], with that length (the insight strip,
 /// `B-ios-reality-thread`, M11.3); null otherwise.
 ({Occurrence task, int usualMinutes})? realityInsight(
   List<Occurrence> blocks,
   DateTime nowUtc,
   LearningIndex? learning,
 ) {
+  final from =
+      (learning?.thresholds ?? LearningThresholds.standard).insightFromMinutes;
   for (final r in realityOf(blocks, nowUtc)) {
     if (r.kind != RealityKind.underWay) continue;
     final usual = _learned(learning, r.planned).usualMinutes;
     if (usual == null) continue;
-    if ((usual - r.planned.durationMin).abs() >= insightFromMinutes) {
+    if ((usual - r.planned.durationMin).abs() >= from) {
       return (task: r.planned, usualMinutes: usual);
     }
   }
   return null;
 }
-
-/// A usual length this close to the plan is not worth a strip.
-const insightFromMinutes = 15;
 
 /// Insight strips put away with OK, by occurrence id, this session.
 @Riverpod(keepAlive: true)

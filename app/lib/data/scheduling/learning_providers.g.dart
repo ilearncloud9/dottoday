@@ -8,13 +8,66 @@ part of 'learning_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The user's last [learningHistoryDays] days, live: what learning (11 C3)
+/// The numbers learning answers by (docs/13 §2); tests override it.
+
+@ProviderFor(learningThresholds)
+final learningThresholdsProvider = LearningThresholdsProvider._();
+
+/// The numbers learning answers by (docs/13 §2); tests override it.
+
+final class LearningThresholdsProvider
+    extends
+        $FunctionalProvider<
+          LearningThresholds,
+          LearningThresholds,
+          LearningThresholds
+        >
+    with $Provider<LearningThresholds> {
+  /// The numbers learning answers by (docs/13 §2); tests override it.
+  LearningThresholdsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'learningThresholdsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$learningThresholdsHash();
+
+  @$internal
+  @override
+  $ProviderElement<LearningThresholds> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  LearningThresholds create(Ref ref) {
+    return learningThresholds(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LearningThresholds value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LearningThresholds>(value),
+    );
+  }
+}
+
+String _$learningThresholdsHash() =>
+    r'78734d50509a34e2da5297ce440c34f6416001d2';
+
+/// The user's last [LearningThresholds.historyDays] days, live: what learning (11 C3)
 /// and energy suggestions (11 C4) read. On this device's data only.
 
 @ProviderFor(learningHistory)
 final learningHistoryProvider = LearningHistoryProvider._();
 
-/// The user's last [learningHistoryDays] days, live: what learning (11 C3)
+/// The user's last [LearningThresholds.historyDays] days, live: what learning (11 C3)
 /// and energy suggestions (11 C4) read. On this device's data only.
 
 final class LearningHistoryProvider
@@ -25,7 +78,7 @@ final class LearningHistoryProvider
           Stream<List<Occurrence>>
         >
     with $FutureModifier<List<Occurrence>>, $StreamProvider<List<Occurrence>> {
-  /// The user's last [learningHistoryDays] days, live: what learning (11 C3)
+  /// The user's last [LearningThresholds.historyDays] days, live: what learning (11 C3)
   /// and energy suggestions (11 C4) read. On this device's data only.
   LearningHistoryProvider._()
     : super(
@@ -53,7 +106,7 @@ final class LearningHistoryProvider
   }
 }
 
-String _$learningHistoryHash() => r'df54c12070e551635615e5cc6b4f0c46e287852d';
+String _$learningHistoryHash() => r'f1baac2ada3b56eaace5c0be6334b13f856f3a73';
 
 /// What the history says per task (11 C3, docs/09 M11.3).
 
@@ -97,18 +150,18 @@ final class LearningIndexProvider
   }
 }
 
-String _$learningIndexHash() => r'd9c16f137452e371419555decbd39d86e82ed04c';
+String _$learningIndexHash() => r'3ac52eb4ebd9b0c0150412b8426002451424c93e';
 
 /// When the user finishes high-energy work best, and how many such tasks
 /// it is read from (11 C4, docs/09 M11.5); the window is null under
-/// [energyMinCompletions].
+/// [LearningThresholds.energyMinCompletions].
 
 @ProviderFor(energyWindow)
 final energyWindowProvider = EnergyWindowProvider._();
 
 /// When the user finishes high-energy work best, and how many such tasks
 /// it is read from (11 C4, docs/09 M11.5); the window is null under
-/// [energyMinCompletions].
+/// [LearningThresholds.energyMinCompletions].
 
 final class EnergyWindowProvider
     extends
@@ -122,7 +175,7 @@ final class EnergyWindowProvider
         $FutureProvider<({int completions, EnergyWindow? window})> {
   /// When the user finishes high-energy work best, and how many such tasks
   /// it is read from (11 C4, docs/09 M11.5); the window is null under
-  /// [energyMinCompletions].
+  /// [LearningThresholds.energyMinCompletions].
   EnergyWindowProvider._()
     : super(
         from: null,
@@ -148,4 +201,4 @@ final class EnergyWindowProvider
   }
 }
 
-String _$energyWindowHash() => r'8a6486f9b9d7b6a6892a155733d45e699a08385d';
+String _$energyWindowHash() => r'f752fbeb7aa62bf3c351bf5b5981004fe22cb9e8';

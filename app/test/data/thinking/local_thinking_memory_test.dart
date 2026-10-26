@@ -1,7 +1,5 @@
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/thinking/local_thinking_memory.dart';
-import 'package:dottoday/domain/entities/enums.dart';
-import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/thinking/thinking_memory.dart';
 import 'package:dottoday/domain/thinking/thinking_proposals.dart';
 import 'package:drift/native.dart';
@@ -14,15 +12,13 @@ import '../../domain/fixtures.dart';
 
 void main() {
   late AppDatabase db;
-  var history = <Occurrence>[];
 
   setUp(() {
     db = AppDatabase(NativeDatabase.memory());
-    history = [];
   });
   tearDown(() => db.close());
 
-  LocalThinkingMemory memory() => LocalThinkingMemory(db, () async => history);
+  LocalThinkingMemory memory() => LocalThinkingMemory(db);
 
   test('a saved breakdown comes back for the same title, any case', () async {
     await memory().saveBreakdown('Clean the Kitchen', const [
@@ -47,26 +43,6 @@ void main() {
     expect(await m.savedBreakdown('task 0'), isNull);
     expect(await m.savedBreakdown('task 1'), const [ProposedStep(title: 'b')]);
     expect(await m.savedBreakdown('task 100'), isNotNull);
-  });
-
-  test('past lengths: actual when both stamps exist, newest first', () async {
-    final base = occurrenceFixture().copyWith(title: 'Gym');
-    history = [
-      base.copyWith(id: 'a', startUtc: t0, durationMin: 60),
-      base.copyWith(
-        id: 'b',
-        startUtc: t1,
-        durationMin: 60,
-        actualStartUtc: t1,
-        actualEndUtc: t1.add(const Duration(minutes: 42)),
-      ),
-      base.copyWith(id: 'c', title: 'gym ', startUtc: t0, durationMin: 30),
-      base.copyWith(id: 'd', startUtc: null, durationMin: 15),
-      base.copyWith(id: 'e', startUtc: t1, deletedAt: t1),
-      base.copyWith(id: 'f', startUtc: t1, source: OccurrenceSource.calendar),
-      base.copyWith(id: 'g', title: 'Swim', startUtc: t1),
-    ];
-    expect(await memory().pastLengths('GYM'), [42, 60, 30]);
   });
 
   test('the log keeps the last 50 exchanges and clear forgets all', () async {

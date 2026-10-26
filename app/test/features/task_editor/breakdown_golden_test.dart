@@ -71,10 +71,7 @@ void main() {
   for (final steps in [1, 3, 7]) {
     // A model proposes at most 5 steps (M10.1); 7 is the user's usual
     // breakdown, which the sheet holds in full.
-    final memory = LocalThinkingMemory(
-      AppDatabase(NativeDatabase.memory()),
-      () async => const [],
-    );
+    final memory = LocalThinkingMemory(AppDatabase(NativeDatabase.memory()));
     goldenMatrix(
       'breakdown_mini_thread_$steps',
       height: 1300,
