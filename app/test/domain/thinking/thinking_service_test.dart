@@ -25,9 +25,11 @@ final _clock = FakeClock(DateTime.utc(2026, 10, 25, 8));
   ThinkingService service,
   FakeThinkingTransport model,
   MemoryThinkingMemory memory,
+  FakeLearning learning,
 })
 _setUp({ThinkingAvailability state = ThinkingAvailability.available}) {
   final memory = MemoryThinkingMemory();
+  final learning = FakeLearning();
   final model = FakeThinkingTransport(
     state: state,
     answers: {
@@ -37,12 +39,12 @@ _setUp({ThinkingAvailability state = ThinkingAvailability.available}) {
     },
   );
   final service = ThinkingService(
-    rules: RulesThinkingBackend(memory),
+    rules: RulesThinkingBackend(memory, learning: learning.call),
     onDevice: [
       OnDeviceThinkingBackend(transport: model, journal: memory, clock: _clock),
     ],
   );
-  return (service: service, model: model, memory: memory);
+  return (service: service, model: model, memory: memory, learning: learning);
 }
 
 T _ok<T>(Result<T, ValidationFailure> r) => switch (r) {
@@ -193,23 +195,24 @@ void main() {
   group('suggestDuration', () {
     const request = DurationRequest(title: 'Gym', language: 'en');
 
-    test('trusted history beats the model', () async {
+    test('a usual length beats the model', () async {
       final s = _setUp();
-      s.memory.lengths['gym'] = [40, 50, 45];
+      s.learning.lengths['Gym'] = [40, 50, 45, 45];
       final p = _ok(await s.service.suggestDuration(request))!;
       expect(p.origin, ThinkingOrigin.history);
       expect(p.minutes, 45);
-      expect(p.samples, 3);
+      expect(p.samples, 4);
       expect(s.model.prompts, isEmpty);
     });
 
-    test('thin history: the model, else the thin history', () async {
+    test('under the task minimum: the model, else nothing', () async {
+      // Three runs say nothing (docs/13 §2: four), so the model answers;
+      // without it no thin history is offered.
       final s = _setUp();
-      s.memory.lengths['gym'] = [60];
+      s.learning.lengths['Gym'] = [60, 60, 60];
       expect(_ok(await s.service.suggestDuration(request))!.minutes, 25);
       s.model.state = ThinkingAvailability.unavailable;
-      final p = _ok(await s.service.suggestDuration(request))!;
-      expect((p.origin, p.minutes), (ThinkingOrigin.history, 60));
+      expect(_ok(await s.service.suggestDuration(request)), isNull);
     });
 
     test('nothing known: no suggestion', () async {
@@ -218,14 +221,10 @@ void main() {
     });
   });
 
-  test('splitLength and medianLength', () {
+  test('splitLength', () {
     expect(splitLength(50, 3), [15, 15, 20]);
     expect(splitLength(60, 3), [20, 20, 20]);
     expect(splitLength(7, 3), [2, 2, 2]);
     expect(splitLength(null, 3), isNull);
-    expect(medianLength([30, 50, 40]), 40);
-    expect(medianLength([30, 41]), 35);
-    expect(medianLength([1]), 5);
-    expect(medianLength([]), isNull);
   });
 }

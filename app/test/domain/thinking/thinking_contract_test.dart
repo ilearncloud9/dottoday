@@ -41,7 +41,9 @@ final _backends = <String, ThinkingBackend Function(FakeThinkingTransport)>{
   'Android · Gemini Nano': _onDevice,
   'web · Prompt API': _onDevice,
   'rules': (_) => RulesThinkingBackend(
-    MemoryThinkingMemory()..lengths['clean the kitchen'] = [30, 40, 50],
+    MemoryThinkingMemory(),
+    learning:
+        (FakeLearning()..lengths['Clean the kitchen'] = [30, 40, 50, 40]).call,
   ),
 };
 

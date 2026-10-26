@@ -29,14 +29,14 @@ List<Occurrence> realityDayRows([DateTime? date]) {
   ];
 }
 
-/// Three earlier runs of Deep work (14–16 Oct), 140 min each against a
+/// Four earlier runs of Deep work (13–16 Oct), 140 min each against a
 /// 120-min plan: learning says "usually 2 h 20" (M11.3).
 List<Occurrence> deepWorkHistory() {
   final deep = demoDayRows(
     DateTime(2026, 10, 21),
   ).firstWhere((o) => o.title == 'Deep work: roadmap');
   return [
-    for (var d = 14; d <= 16; d++)
+    for (var d = 13; d <= 16; d++)
       deep.copyWith(
         id: '01928c3e-0000-7000-8000-0000000e00$d',
         startUtc: DateTime.utc(2026, 10, d, 7),

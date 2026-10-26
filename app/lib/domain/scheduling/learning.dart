@@ -1,4 +1,5 @@
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 
 /// What the user's own history says about a task (11 C3 learning, docs/09
@@ -14,29 +15,26 @@ final class Learned {
   final int samples;
 
   /// Median actual length, rounded to 5 minutes; null under
-  /// [learningMinSamples].
+  /// [LearningThresholds.taskMinSamples].
   final int? usualMinutes;
 
   /// Median of actual start − planned start: positive when it usually
-  /// starts after the plan. Null under [learningMinSamples].
+  /// starts after the plan. Null under [LearningThresholds.taskMinSamples].
   final int? startOffsetMinutes;
 
   static const none = Learned(samples: 0);
 }
 
-/// How many recent occurrences are looked at, per task.
-const learningWindow = 10;
-
-/// Fewer samples than this say nothing.
-const learningMinSamples = 3;
-
 /// The user's tasks with actual timestamps, indexed by normalised title
 /// and by series, so each lookup is cheap.
 final class LearningIndex {
-  LearningIndex._(this._byTitle, this._bySeries);
+  LearningIndex._(this._byTitle, this._bySeries, this.thresholds);
 
   /// From [history] (any order, any length; deleted rows are skipped).
-  factory LearningIndex.from(Iterable<Occurrence> history) {
+  factory LearningIndex.from(
+    Iterable<Occurrence> history, {
+    LearningThresholds thresholds = LearningThresholds.standard,
+  }) {
     final ran = [
       for (final o in history)
         if (o.deletedAt == null && _span(o) != null) o,
@@ -47,15 +45,22 @@ final class LearningIndex {
       (byTitle[normaliseTitle(o.title)] ??= []).add(o);
       if (o.seriesId case final s?) (bySeries[s] ??= []).add(o);
     }
-    return LearningIndex._(byTitle, bySeries);
+    return LearningIndex._(byTitle, bySeries, thresholds);
   }
 
-  static final empty = LearningIndex._(const {}, const {});
+  static final empty = LearningIndex._(
+    const {},
+    const {},
+    LearningThresholds.standard,
+  );
+
+  /// The numbers this index answers by.
+  final LearningThresholds thresholds;
 
   final Map<String, List<Occurrence>> _byTitle;
   final Map<String, List<Occurrence>> _bySeries;
 
-  /// What the last [learningWindow] runs of [title] — or of [seriesId]'s
+  /// What the last [LearningThresholds.window] runs of [title] — or of [seriesId]'s
   /// repeats, so a renamed repeat keeps its history — say.
   ///
   /// ```dart
@@ -70,8 +75,9 @@ final class LearningIndex {
       ])
         if (seen.add(o.id)) o,
     ]..sort((a, b) => b.actualStartUtc!.compareTo(a.actualStartUtc!));
-    final recent = rows.take(learningWindow).toList();
-    if (recent.length < learningMinSamples) {
+    final recent = rows.take(thresholds.window).toList();
+    final min = thresholds.taskMinSamples;
+    if (recent.length < min) {
       return Learned(samples: recent.length);
     }
     final usual = _median([for (final o in recent) _span(o)!]);
@@ -83,7 +89,7 @@ final class LearningIndex {
     return Learned(
       samples: recent.length,
       usualMinutes: ((usual / 5).round() * 5).clamp(5, 1440),
-      startOffsetMinutes: offsets.length < learningMinSamples
+      startOffsetMinutes: offsets.length < min
           ? null
           : _median(offsets).round(),
     );

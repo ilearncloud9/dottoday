@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/scheduling/energy_window.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
+import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
 import 'package:dottoday/domain/scheduling/slot_fit.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
@@ -14,9 +15,6 @@ import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/timezone.dart' as tz;
-
-/// Smaller start offsets are noise, not a habit worth saying.
-const _tendencyFrom = 5;
 
 /// Add step 2 "When" (docs/10 §5.2 A2, `A-ios-add-when`): the task, the
 /// `ThreadPicker` with its free / overlap caption, duration chips, "Lands
@@ -36,6 +34,7 @@ class AddWhenStep extends StatelessWidget {
     this.timeMenu,
     this.durationMenu,
     this.energy,
+    this.thresholds = LearningThresholds.standard,
     super.key,
   });
 
@@ -61,6 +60,9 @@ class AddWhenStep extends StatelessWidget {
   /// The user's best window for high-energy work, when Add should suggest
   /// it for this task (11 C4, M11.5); null says nothing.
   final EnergyWindow? energy;
+
+  /// When the start-offset caption speaks (docs/13 §2).
+  final LearningThresholds thresholds;
 
   @override
   Widget build(BuildContext context) {
@@ -162,13 +164,13 @@ class AddWhenStep extends StatelessWidget {
     final l10n = context.l10n;
     final from = w.startHour * 60;
     final start = state.draft.startMinute ?? 0;
-    final inside = start >= from && start < from + energyWindowHours * 60;
+    final inside = start >= from && start < from + w.hours * 60;
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: DotSpace.s,
       children: [
         Text(
-          l10n.addEnergyBest(text.range(from, energyWindowHours * 60)),
+          l10n.addEnergyBest(text.range(from, w.hours * 60)),
           style: _quiet(context),
         ),
         if (!inside)
@@ -181,10 +183,13 @@ class AddWhenStep extends StatelessWidget {
   }
 
   /// "you tend to start this ~15 min after plan" (11 C3, M11.3), once
-  /// the history knows and it is at least [_tendencyFrom] minutes.
+  /// the history knows and it is at least
+  /// [LearningThresholds.tendencyFromMinutes] minutes.
   String? _tendency(BuildContext context) {
     final offset = state.draft.learned.startOffsetMinutes;
-    if (offset == null || offset.abs() < _tendencyFrom) return null;
+    if (offset == null || offset.abs() < thresholds.tendencyFromMinutes) {
+      return null;
+    }
     final l10n = context.l10n;
     return offset > 0
         ? l10n.learnStartsAfter(offset)

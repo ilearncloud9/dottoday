@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:dottoday/data/db/app_database.dart';
-import 'package:dottoday/domain/entities/enums.dart';
-import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 import 'package:dottoday/domain/thinking/model_output.dart';
 import 'package:dottoday/domain/thinking/thinking_backend.dart';
@@ -14,12 +12,9 @@ import 'package:dottoday/domain/thinking/thinking_proposals.dart';
 /// §5), encrypted with the rest of the database (ADR-0006).
 final class LocalThinkingMemory
     implements ThinkingMemory, ThinkingJournal, BrainDumpHistory {
-  LocalThinkingMemory(this._db, this._history);
+  LocalThinkingMemory(this._db);
 
   final AppDatabase _db;
-
-  /// The user's recent tasks, any order (the occurrence repository).
-  final Future<List<Occurrence>> Function() _history;
 
   static const savedKey = 'thinking_saved_breakdowns';
   static const logKey = 'thinking_log';
@@ -33,9 +28,6 @@ final class LocalThinkingMemory
 
   /// Exchanges kept; enough to look back on, small enough to stay cheap.
   static const maxLog = 50;
-
-  /// Past tasks a median is taken over.
-  static const maxLengths = 20;
 
   @override
   Future<List<ProposedStep>?> savedBreakdown(String title) async {
@@ -64,20 +56,6 @@ final class LocalThinkingMemory
       saved.remove(saved.keys.first);
     }
     await _write(savedKey, jsonEncode(saved));
-  }
-
-  @override
-  Future<List<int>> pastLengths(String title) async {
-    final key = normaliseTitle(title);
-    final rows = [
-      for (final o in await _history())
-        if (o.deletedAt == null &&
-            o.source == OccurrenceSource.user &&
-            o.startUtc != null &&
-            normaliseTitle(o.title) == key)
-          o,
-    ]..sort((a, b) => b.startUtc!.compareTo(a.startUtc!));
-    return [for (final o in rows.take(maxLengths)) lengthOf(o)];
   }
 
   @override
@@ -151,13 +129,4 @@ final class LocalThinkingMemory
       .insertOnConflictUpdate(
         LocalMetaCompanion.insert(key: key, value: value),
       );
-}
-
-/// How long [o] took: from its actual start to its actual end when both
-/// were recorded (B1, never inferred), else its planned length.
-int lengthOf(Occurrence o) {
-  final start = o.actualStartUtc;
-  final end = o.actualEndUtc;
-  if (start == null || end == null || !end.isAfter(start)) return o.durationMin;
-  return end.difference(start).inMinutes.clamp(1, 1440);
 }
