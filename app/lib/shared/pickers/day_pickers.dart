@@ -209,6 +209,7 @@ class _WeekPickerState extends State<_WeekPicker> {
               for (final d in days)
                 StripDay(
                   weekday: DateFormat.E(locale).format(d),
+                  weekdayNarrow: narrowWeekday(d, locale),
                   date: DateFormat.d(locale).format(d),
                   label: DateFormat.MMMMEEEEd(locale).format(d),
                   completion: const Completion.none(),

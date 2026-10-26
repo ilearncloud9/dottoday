@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ## [Unreleased]
 
+### Fixed
+- The week strip at the largest text sizes: weekdays shorten to one letter ("W") instead of breaking over two lines, and on small phones the strip scrolls sideways rather than squeezing the dates.
+
 ### Added
 - M13: Learning reveal — Dottoday says what it is learning from day one, shows each learned number only once it means something, and explains every one on tap. Everything is learned on your device.
 - M13.7: Every learned number explains itself. Tap "usually 2 h 20" (in Add, Running late, the reality thread, Focus) to see "based on your last 6 times · median" and, if you like, reset what that task taught on this device.

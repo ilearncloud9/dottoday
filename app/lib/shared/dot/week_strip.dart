@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/pull_handle.dart';
+import 'package:dottoday/shared/dot/week_strip_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+export 'package:dottoday/shared/dot/pull_handle.dart';
+export 'package:dottoday/shared/dot/week_strip_layout.dart';
 
 /// How much of a day got done, for the 8 px dots of the strip and month.
 @immutable
@@ -22,6 +26,7 @@ final class Completion {
 final class StripDay {
   const StripDay({
     required this.weekday,
+    this.weekdayNarrow,
     required this.date,
     required this.label,
     required this.completion,
@@ -31,6 +36,10 @@ final class StripDay {
 
   /// "Wed".
   final String weekday;
+
+  /// The locale's one-letter form ("W"), shown when [weekday] would not fit
+  /// its column (a narrow phone at the largest text); null keeps [weekday].
+  final String? weekdayNarrow;
 
   /// "21".
   final String date;
@@ -84,19 +93,42 @@ class WeekStrip extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          children: [
-            for (final (i, d) in days.indexed) Expanded(child: _target(i, d)),
-          ],
-        ),
+        // By the room each column has (docs/10 §5.4): "W" when "Wed" would
+        // wrap; a sideways scroll only if even the dates can't fit.
+        LayoutBuilder(builder: _row),
         if (handle) PullHandle(open: monthOpen, onPull: onPull),
       ],
     );
   }
 
-  Widget _target(int i, StripDay d) {
+  Widget _row(BuildContext context, BoxConstraints box) {
+    final styles = DotTheme.of(context).styles;
+    final room = box.maxWidth / days.length - 2 * _inset;
+    final weekdays = [for (final d in days) d.weekday];
+    final narrow = widestLabel(context, weekdays, styles.stripWeekday) > room;
+    final need = math.max(
+      widestLabel(context, [
+        for (final d in days) narrow ? d.weekdayNarrow ?? d.weekday : d.weekday,
+      ], styles.stripWeekday),
+      widestLabel(context, [for (final d in days) d.date], styles.stripDate),
+    );
+    final columns = [
+      for (final (i, d) in days.indexed) _target(i, d, narrow: narrow),
+    ];
+    if (need <= room) {
+      return Row(children: [for (final c in columns) Expanded(child: c)]);
+    }
+    return ScrollingWeek(
+      columnWidth: need + 2 * _inset,
+      selected: selected,
+      columns: columns,
+    );
+  }
+
+  Widget _target(int i, StripDay d, {required bool narrow}) {
     Widget column({bool hovered = false}) => _Column(
       day: d,
+      narrow: narrow,
       selected: i == selected,
       hovered: hovered,
       onTap: onSelect == null ? null : () => onSelect!(i),
@@ -114,15 +146,26 @@ class WeekStrip extends StatelessWidget {
   }
 }
 
+/// The selected column's border width.
+const _border = DotSpace.hairline * 1.5;
+
+/// What a column's label loses on each side: its margin and the selected
+/// column's border.
+const _inset = DotSpace.xxs + _border;
+
 class _Column extends StatelessWidget {
   const _Column({
     required this.day,
+    required this.narrow,
     required this.selected,
     this.hovered = false,
     this.onTap,
   });
 
   final StripDay day;
+
+  /// Show [StripDay.weekdayNarrow] (see [weekdaysFit]).
+  final bool narrow;
   final bool selected;
 
   /// A dragged task hovers this day.
@@ -163,16 +206,16 @@ class _Column extends StatelessWidget {
               ? BoxDecoration(
                   color: c.raised,
                   borderRadius: BorderRadius.circular(DotRadii.card),
-                  border: Border.all(
-                    color: c.outline,
-                    width: DotSpace.hairline * 1.5,
-                  ),
+                  border: Border.all(color: c.outline, width: _border),
                 )
               : null,
           child: Column(
             spacing: DotSpace.xxs,
             children: [
-              Text(day.weekday, style: label),
+              Text(
+                narrow ? day.weekdayNarrow ?? day.weekday : day.weekday,
+                style: label,
+              ),
               Text(day.date, style: date),
               CompletionDot(completion: day.completion),
             ],
@@ -254,46 +297,4 @@ final class _CompletionPainter extends CustomPainter {
       old.accent != accent ||
       old.track != track ||
       old.hairline != hairline;
-}
-
-/// The grab handle under the strip that pulls the month open (§2.4).
-class PullHandle extends StatelessWidget {
-  const PullHandle({required this.open, this.onPull, super.key});
-
-  final bool open;
-  final VoidCallback? onPull;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = DotTheme.of(context).colors;
-    final l10n = context.l10n;
-    return Semantics(
-      button: true,
-      expanded: open,
-      label: open ? l10n.weekStripHideMonth : l10n.weekStripShowMonth,
-      excludeSemantics: true,
-      onTap: onPull,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onPull,
-        onVerticalDragEnd: onPull == null ? null : (_) => onPull!(),
-        child: SizedBox(
-          // A full 48 dp target although the bar is 5 px (§7.4 wins over
-          // the render's tighter gap).
-          width: DotTouch.android * 2,
-          height: DotTouch.android,
-          child: Center(
-            child: Container(
-              width: DotSize.rowDot,
-              height: DotSize.weekDot / 2 + 1,
-              decoration: BoxDecoration(
-                color: c.outline,
-                borderRadius: BorderRadius.circular(DotRadii.pill),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }
