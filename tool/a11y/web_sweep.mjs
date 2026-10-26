@@ -132,32 +132,18 @@ for (const theme of ['light', 'dark']) {
       await tap(page, 'More options');
       await tapText(page, 'Brain dump');
       const dump = ['Email Sam', 'Taxes 45m', 'Call the bank 4pm'];
-      if (vp.name === 'compact') {
-        await page.getByRole('textbox').last().fill(dump.join('\n'));
-      } else {
-        // The popover's field, centred under its title: type into it.
-        // A popover's autofocused field takes keys after a click on the
-        // web (docs/09 M12.6 follow-up).
-        await page.mouse.click(vp.width / 2, vp.height * 0.42);
-        await page.waitForTimeout(700);
-        for (const [i, line] of dump.entries()) {
-          if (i > 0) await page.keyboard.press('Enter');
-          await page.keyboard.type(line);
-        }
+      // The field has the focus at every width (popover_focus_check.mjs).
+      await page.waitForTimeout(1_200);
+      for (const [i, line] of dump.entries()) {
+        if (i > 0) await page.keyboard.press('Enter');
+        await page.keyboard.type(line);
       }
       await page.waitForTimeout(900);
       await shot('brain_dump');
-      const plan = page.getByRole('button', { name: 'Plan it', exact: true }).first();
-      if (await plan.isEnabled()) {
-        await plan.click();
-        await page.waitForTimeout(2_000);
-        await shot('brain_dump_proposal');
-        await tapText(page, 'Discard');
-      } else {
-        // Headless Chromium doesn't type into the wide popover (the M12.6
-        // follow-up); its proposal is pinned by brain_dump_proposal goldens.
-        console.log(`NOTE ${tag}: brain dump text didn't reach the popover`);
-      }
+      await tapText(page, 'Plan it');
+      await page.waitForTimeout(2_000);
+      await shot('brain_dump_proposal');
+      await tapText(page, 'Discard');
       console.log(`PASS ${tag}`);
     } catch (e) {
       failures.push(`${tag}: ${e.message.split('\n')[0]}`);

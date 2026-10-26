@@ -189,7 +189,15 @@ class AppCommandScope extends StatelessWidget {
       shortcuts: AppShortcuts.bindings(defaultTargetPlatform),
       child: Actions(
         actions: {AppCommandIntent: AppCommandAction(handlers)},
-        child: Focus(autofocus: true, child: child),
+        child: Focus(
+          autofocus: true,
+          // No Tab stop. When the browser gives the view its focus back (a
+          // closed ⋯ menu dropped it), Flutter moves focus to the first
+          // traversable node; this node took it from an open popover's field,
+          // which then took no keys on the web (M12 follow-up).
+          skipTraversal: true,
+          child: child,
+        ),
       ),
     );
   }

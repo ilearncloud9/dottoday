@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - M10.1: The thinking help behind Break it down, brain-dump and length suggestions now runs on your device — Apple Intelligence on iPhone and Mac, Gemini Nano on supported Android phones, Chrome's built-in model on the web — and falls back to your own history and simple rules where there is none. Nothing you type goes to a server; Settings › Privacy explains it and can clear what was kept.
 
 ### Fixed
+- Web: Brain dump (and any popover opened from a menu) now takes your typing straight away — no need to click into the field first.
 - +15 from a widget, the lock screen or a notification could be ignored for a task created a moment earlier; it now always applies.
 - An action from a widget or the Live Activity made while the app was catching up on earlier ones could be lost; it now always gets through.
 
