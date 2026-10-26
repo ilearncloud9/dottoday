@@ -37,6 +37,7 @@ Future<FakeOccurrenceRepository> pumpAddHost(
   DateTime? day,
   WriteFault? writeFault,
   List<Routine> routines = const [],
+  Settings settings = const Settings(use24h: false),
 }) async {
   tester.view
     ..physicalSize = size
@@ -48,7 +49,7 @@ Future<FakeOccurrenceRepository> pumpAddHost(
       overrides: timelineOverrides(
         now: addNow,
         occurrences: repo,
-        profile: testProfile(settings: const Settings(use24h: false)),
+        profile: testProfile(settings: settings),
         writeFault: writeFault,
         routines: routines,
       ),

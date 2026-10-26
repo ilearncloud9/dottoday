@@ -56,14 +56,14 @@ Tags: **built** = exists on main; **changed** = built, and this document changes
 
 | Row | Glyph / tint | Subtitle before | Indicator | Subtitle after |
 |---|---|---|---|---|
-| Reality thread | `DotGlyphs.dottedLine` / accent ink | "Dottoday is learning how your days really go. Your reality thread appears after about 10 finished tasks." | `CapacityRing.count` 7/10 | "Ready · Plan / Reality is in Today's header" |
+| Reality thread | `DotGlyphs.dottedLine` / accent ink | "Dottoday is learning how your days really go. Your reality thread appears after about 10 finished tasks." | ring + 7/10 under the text | "Ready · Plan / Reality is in Today's header" |
 | Task lengths | `DotGlyphs.clock` / accent ink | "Dottoday is learning how long your tasks really take. Each task shows its usual length after about 4 finished times." | value: "Ready for 3 tasks" (none at 0) | same subtitle, value keeps counting |
 | Step lengths | `DotGlyphs.timer` / mint ink | "Dottoday is learning how long each step takes. A step's timer uses its usual length after about 3 finished times." | value: "Ready for 2 steps" (none at 0) | same |
-| Energy suggestions | `DotGlyphs.bolt` / amber ink (as built) | "After 20 finished high-energy tasks · 7 so far" (locked switch) | `CapacityRing.count` 7/20 | "ready — based on 20 completed tasks" (enabled, off). Once on: the built `settingsEnergyDetail` |
+| Energy suggestions | `DotGlyphs.bolt` / amber ink (as built) | "After 20 finished high-energy tasks · 7 so far" (locked switch) | ring + 7/20 under the text | "ready — based on 20 completed tasks" (enabled, off). Once on: the built `settingsEnergyDetail` |
 
 Footer (the group's caption-style note, muted 12/500): **"Learning happens on your device. Your actual start and end times sync with your account like the rest of your plan; the learned numbers themselves are never uploaded."** This is accurate for the current sync design: `actual_start_utc`/`actual_end_utc` (0004) and `subtasks.done_at` (0008, ADR-0012) are synced columns; every learned value is derived on read from the local database, and resets and reveal state live in `local_meta`, which is never synced or exported.
 
-**Indicator.** `CapacityRing` (doc 10 §3) gains a named constructor `CapacityRing.count(done:, of:, label:)`: the same 38 px conic ring, filled `done / of`, with "7/10" inside (tabular figures) instead of planned hours. There is no new component. The per-task rows show a count instead of a fraction because there is no single "of" for features that reveal per task.
+**Indicator.** `CapacityRing` (doc 10 §3) gains a named constructor `CapacityRing.count(done:, of:, label:)`: the same 38 px conic ring, filled `done / of`, with nothing inside. There is no new component. The ring and its "7/10" sit **under** the row's subtitle (`LearningStatus`), not inside the ring or at the row's end (amended in M13.5: at 200 % text "10/10" overflows 38 px, and a value beside the title squeezed it until words broke). The per-task rows show "Ready for 3 tasks" there instead of a fraction because there is no single "of" for features that reveal per task.
 
 The data comes from one provider, `learningProgressProvider`, derived from the existing 90-day `learningHistoryProvider` plus `LearningMeta` (§8). It returns `({int realityRuns, int tasksReady, int stepsReady, int energyCompletions, bool realityRevealed})`. It is not a second stats mechanism: it reads the same stream and `LearningIndex`.
 

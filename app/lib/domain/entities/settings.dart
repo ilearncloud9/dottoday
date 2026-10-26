@@ -58,9 +58,9 @@ abstract class Settings with _$Settings {
     // (docs/02 F5 "if the user enables it").
     @Default(false) bool suggestTravelTime,
     @Default(15) int travelTimeMin,
-    // Settings › Planning › Energy suggestions (11 C4, M11.5): null follows
-    // the default — off until enough high-energy tasks were finished, then
-    // on; true/false is the user's choice.
+    // Settings › Learning › Energy suggestions (11 C4, docs/13 §3): null
+    // is off — reaching 20 finished high-energy tasks makes the switch
+    // available, never on; true is the user's choice (M13.5: was on).
     bool? energySuggestions,
     // Low-energy mode (11 D2, M12.2): on until this instant — the next
     // Wake Up when it was switched on — so it ends by itself everywhere.

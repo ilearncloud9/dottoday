@@ -89,12 +89,13 @@ EnergyWindow? bestEnergyWindow(
 }
 
 /// Whether Add suggests the energy window: never before
-/// [LearningThresholds.energyMinCompletions], then the user's choice
-/// (Settings › Planning), on by default.
+/// [LearningThresholds.energyMinCompletions], then only once the user
+/// turned it on (Settings › Learning). Unset is off (docs/13 §3): reaching
+/// the threshold makes the switch available, never on.
 bool energySuggestionsOn(
   Settings settings, {
   required int completions,
   LearningThresholds thresholds = LearningThresholds.standard,
 }) =>
     completions >= thresholds.energyMinCompletions &&
-    (settings.energySuggestions ?? true);
+    settings.energySuggestions == true;

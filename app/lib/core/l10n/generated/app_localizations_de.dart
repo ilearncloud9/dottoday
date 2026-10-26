@@ -4729,9 +4729,81 @@ class AppLocalizationsDe extends AppLocalizations {
       'Zeiten vorschlagen, zu denen du anspruchsvolle Aufgaben meist erledigst';
 
   @override
-  String settingsEnergyLocked(int count) {
-    return 'Nach 20 erledigten anspruchsvollen Aufgaben · bisher $count';
+  String settingsEnergyLocked(int total, int count) {
+    return 'Nach $total erledigten anspruchsvollen Aufgaben · bisher $count';
   }
+
+  @override
+  String settingsEnergyReady(int count) {
+    return 'bereit – auf Grundlage von $count erledigten Aufgaben';
+  }
+
+  @override
+  String get settingsLearning => 'Lernen';
+
+  @override
+  String get settingsLearningReality => 'Realitätsfaden';
+
+  @override
+  String settingsLearningRealityPending(int total) {
+    return 'Dottoday lernt, wie deine Tage wirklich verlaufen. Dein Realitätsfaden erscheint nach etwa $total erledigten Aufgaben.';
+  }
+
+  @override
+  String get settingsLearningRealityReady =>
+      'Bereit · Plan / Realität steht oben in „Heute“';
+
+  @override
+  String get settingsLearningDurations => 'Aufgabendauer';
+
+  @override
+  String settingsLearningDurationsPending(int min) {
+    return 'Dottoday lernt, wie lange deine Aufgaben wirklich dauern. Jede Aufgabe zeigt ihre übliche Dauer, nachdem du sie etwa $min-mal erledigt hast.';
+  }
+
+  @override
+  String settingsLearningTasksReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Bereit für $count Aufgaben',
+      one: 'Bereit für 1 Aufgabe',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsLearningSteps => 'Dauer der Schritte';
+
+  @override
+  String settingsLearningStepsPending(int min) {
+    return 'Dottoday lernt, wie lange jeder Schritt dauert. Der Timer eines Schritts nutzt seine übliche Dauer, nachdem du ihn etwa $min-mal erledigt hast.';
+  }
+
+  @override
+  String settingsLearningStepsReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Bereit für $count Schritte',
+      one: 'Bereit für 1 Schritt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String settingsLearningProgress(int done, int total) {
+    return '$done/$total';
+  }
+
+  @override
+  String settingsLearningProgressLabel(int done, int total) {
+    return 'bisher $done von $total';
+  }
+
+  @override
+  String get settingsLearningPrivacy =>
+      'Das Lernen passiert auf deinem Gerät. Deine tatsächlichen Start- und Endzeiten werden wie der Rest deines Plans mit deinem Konto synchronisiert; die gelernten Werte selbst werden nie hochgeladen.';
 
   @override
   String addEnergyBest(String range) {

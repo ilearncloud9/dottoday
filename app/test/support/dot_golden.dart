@@ -26,7 +26,8 @@ const goldenWidths = {
 /// exist only from a width class up (§4: Mac/web Week, Month) pass
 /// [widths]. [act] drives the UI into the captured state (a tap, a step);
 /// [overrides] put a `ProviderScope` above the app for screens whose sheets
-/// read providers.
+/// read providers. [a11yVariants] adds, at 1×, the largest text scale
+/// (`_t2`), right-to-left (`_rtl`) and both (`_t2_rtl`) (docs/13 §11).
 ///
 /// ```dart
 /// goldenMatrix('task_dot', height: 120, build: (_) => const _Specimen());
@@ -39,21 +40,36 @@ void goldenMatrix(
   Set<String> widths = const {'compact', 'medium', 'expanded'},
   Future<void> Function(WidgetTester tester)? act,
   List<Override>? overrides,
+  bool a11yVariants = false,
 }) {
+  final variants = [
+    (suffix: '', ratio: 1.0, scale: 1.0, rtl: false),
+    (suffix: '', ratio: 2.0, scale: 1.0, rtl: false),
+    if (a11yVariants) ...[
+      (suffix: '_t2', ratio: 1.0, scale: 2.0, rtl: false),
+      (suffix: '_rtl', ratio: 1.0, scale: 1.0, rtl: true),
+      (suffix: '_t2_rtl', ratio: 1.0, scale: 2.0, rtl: true),
+    ],
+  ];
   for (final theme in ['light', 'dark']) {
     for (final MapEntry(key: widthName, value: width) in goldenWidths.entries) {
       if (!widths.contains(widthName)) continue;
-      for (final ratio in [1.0, 2.0]) {
+      for (final (:suffix, :ratio, :scale, :rtl) in variants) {
         final cell = (theme: theme, width: width, ratio: ratio);
-        final file = '${name}_${theme}_${widthName}_${ratio.toInt()}x.png';
-        testWidgets('$name $theme $widthName ${ratio.toInt()}x', (
-          tester,
-        ) async {
+        final tag = '$widthName${suffix}_${ratio.toInt()}x';
+        final file = '${name}_${theme}_$tag.png';
+        testWidgets('$name $theme $tag', (tester) async {
           tester.view
             ..physicalSize = Size(width, height) * ratio
             ..devicePixelRatio = ratio;
           addTearDown(tester.view.reset);
-          final app = goldenApp(build(cell), theme: theme, platform: platform);
+          final app = goldenApp(
+            build(cell),
+            theme: theme,
+            platform: platform,
+            textScale: scale,
+            rtl: rtl,
+          );
           // Overrides scope the whole app, so sheets opened on the root
           // navigator by `act` see the same providers.
           await tester.pumpWidget(
@@ -87,6 +103,8 @@ Widget goldenApp(
   Widget child, {
   String theme = 'light',
   TargetPlatform platform = TargetPlatform.iOS,
+  double textScale = 1,
+  bool rtl = false,
 }) {
   final data = theme == 'dark' ? DotTheme.dark() : DotTheme.light();
   return MaterialApp(
@@ -97,7 +115,15 @@ Widget goldenApp(
     locale: testL10nLocale,
     // The frame wraps the root navigator, so sheets, popovers and menus
     // opened by a golden's `act` are captured too (M3c follow-up).
-    builder: (context, navigator) => GoldenFrame(child: navigator!),
+    builder: (context, navigator) => MediaQuery(
+      data: MediaQuery.of(
+        context,
+      ).copyWith(textScaler: TextScaler.linear(textScale)),
+      child: Directionality(
+        textDirection: rtl ? TextDirection.rtl : TextDirection.ltr,
+        child: GoldenFrame(child: navigator!),
+      ),
+    ),
     home: child,
   );
 }

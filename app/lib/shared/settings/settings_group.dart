@@ -17,11 +17,15 @@ class SettingsGroup extends StatelessWidget {
   const SettingsGroup({
     required this.caption,
     required this.children,
+    this.footer,
     super.key,
   });
 
   final String caption;
   final List<Widget> children;
+
+  /// A muted note under the card ("Learning happens on your device …").
+  final String? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +57,16 @@ class SettingsGroup extends StatelessWidget {
             ],
           ),
         ),
+        if (footer case final f?)
+          Padding(
+            padding: const EdgeInsetsDirectional.symmetric(
+              horizontal: DotSpace.xs,
+            ),
+            child: Text(
+              f,
+              style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            ),
+          ),
       ],
     );
   }

@@ -7014,11 +7014,95 @@ abstract class AppLocalizations {
   /// **'Suggest times when you usually finish high-energy tasks'**
   String get settingsEnergyDetail;
 
-  /// Under the Energy suggestions switch while it can't be on yet.
+  /// Under the Energy suggestions switch while it can't be on yet (docs/13 §3).
   ///
   /// In en, this message translates to:
-  /// **'After 20 finished high-energy tasks · {count} so far'**
-  String settingsEnergyLocked(int count);
+  /// **'After {total} finished high-energy tasks · {count} so far'**
+  String settingsEnergyLocked(int total, int count);
+
+  /// Under the Energy suggestions switch once it can be turned on, while it is off (docs/13 §3).
+  ///
+  /// In en, this message translates to:
+  /// **'ready — based on {count} completed tasks'**
+  String settingsEnergyReady(int count);
+
+  /// Settings group caption: what Dottoday learns from the user's own history (docs/13 §4.1).
+  ///
+  /// In en, this message translates to:
+  /// **'Learning'**
+  String get settingsLearning;
+
+  /// Settings › Learning row title.
+  ///
+  /// In en, this message translates to:
+  /// **'Reality thread'**
+  String get settingsLearningReality;
+
+  /// Settings › Learning, before the reality thread is ready. A promise, never a judgement.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday is learning how your days really go. Your reality thread appears after about {total} finished tasks.'**
+  String settingsLearningRealityPending(int total);
+
+  /// Settings › Learning, once the reality thread is ready.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready · Plan / Reality is in Today\'s header'**
+  String get settingsLearningRealityReady;
+
+  /// Settings › Learning row title.
+  ///
+  /// In en, this message translates to:
+  /// **'Task lengths'**
+  String get settingsLearningDurations;
+
+  /// Settings › Learning: per task, so it reveals one task at a time.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday is learning how long your tasks really take. Each task shows its usual length after about {min} finished times.'**
+  String settingsLearningDurationsPending(int min);
+
+  /// Settings › Learning value: tasks whose usual length now shows. Hidden at 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{Ready for 1 task} other{Ready for {count} tasks}}'**
+  String settingsLearningTasksReady(int count);
+
+  /// Settings › Learning row title.
+  ///
+  /// In en, this message translates to:
+  /// **'Step lengths'**
+  String get settingsLearningSteps;
+
+  /// Settings › Learning: step lengths in Focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday is learning how long each step takes. A step\'s timer uses its usual length after about {min} finished times.'**
+  String settingsLearningStepsPending(int min);
+
+  /// Settings › Learning value: steps whose usual length now shows. Hidden at 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{Ready for 1 step} other{Ready for {count} steps}}'**
+  String settingsLearningStepsReady(int count);
+
+  /// Settings › Learning value beside the progress ring, e.g. 7/10.
+  ///
+  /// In en, this message translates to:
+  /// **'{done}/{total}'**
+  String settingsLearningProgress(int done, int total);
+
+  /// Screen-reader reading of the progress ring and its value.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} so far'**
+  String settingsLearningProgressLabel(int done, int total);
+
+  /// Settings › Learning footer: the privacy line (docs/13 §4.1). Must stay accurate to the sync design.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning happens on your device. Your actual start and end times sync with your account like the rest of your plan; the learned numbers themselves are never uploaded.'**
+  String get settingsLearningPrivacy;
 
   /// Add step 2: the user's best window for high-energy work, from their own history.
   ///

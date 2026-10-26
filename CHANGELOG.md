@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M13.5: Settings › Learning. One place shows what Dottoday is learning from your own days: your reality thread (with how far along it is), task lengths, step lengths and energy suggestions, and says plainly that learning happens on your device. Energy suggestions no longer turn themselves on: once they're ready, you choose.
 - M13.3: Steps learn their real length. After a step has been finished three times in a task that really started, its timer in Focus uses its usual length ("usually 15 min") when you haven't set one, and your usual breakdown suggests those lengths. You still edit and accept the steps; nothing changes until you do.
 - M13.2: Ticking a step now records when you ticked it, and it syncs with the step. Focus times the next step from that tick, so renaming or reordering a finished step no longer restarts the timer.
 - M13.1: Learned lengths now wait for four finished times of a task (was three), so a usual length or start time is shown only when it means something. Length suggestions while breaking a task down use the same rule.
