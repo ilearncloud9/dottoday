@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M13: Learning reveal — Dottoday says what it is learning from day one, shows each learned number only once it means something, and explains every one on tap. Everything is learned on your device.
 - M13.7: Every learned number explains itself. Tap "usually 2 h 20" (in Add, Running late, the reality thread, Focus) to see "based on your last 6 times · median" and, if you like, reset what that task taught on this device.
 - M13.6: Your reality thread arrives when it has something to show. Until about ten tasks have real start and end times, Today says it's coming (hide it for the day with ×); then the Plan / Reality switch appears with one brief, quiet highlight and stays, even on days where nothing has started yet ("nothing started yet today").
 - M13.5: Settings › Learning. One place shows what Dottoday is learning from your own days: your reality thread (with how far along it is), task lengths, step lengths and energy suggestions, and says plainly that learning happens on your device. Energy suggestions no longer turn themselves on: once they're ready, you choose.
