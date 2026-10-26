@@ -3,6 +3,7 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/scheduling/energy_window.dart';
 import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
@@ -32,12 +33,33 @@ Stream<List<Occurrence>> learningHistory(Ref ref) {
   );
 }
 
-/// What the history says per task (11 C3, docs/09 M11.3).
+/// The steps of the history's tasks that really started: what step
+/// lengths are learned from (docs/13 §5). Live, on this device's data.
+@riverpod
+Stream<List<Subtask>> learningSteps(Ref ref) {
+  final profile = ref.watch(currentProfileProvider.future);
+  final history = ref.watch(learningHistoryProvider.future);
+  final repo = ref.watch(subtaskRepositoryProvider);
+  return Stream.fromFuture(Future.wait([profile, history])).asyncExpand((r) {
+    final p = r[0] as Profile;
+    final ids = {
+      for (final o in r[1] as List<Occurrence>)
+        if (o.actualStartUtc != null) o.id,
+    };
+    return ids.isEmpty
+        ? Stream.value(const <Subtask>[])
+        : repo.watchForOccurrences(p.id, ids);
+  });
+}
+
+/// What the history says per task and per step (11 C3, docs/13 §5).
 @riverpod
 Future<LearningIndex> learningIndex(Ref ref) async {
   final thresholds = ref.watch(learningThresholdsProvider);
+  final steps = ref.watch(learningStepsProvider.future);
   return LearningIndex.from(
     await ref.watch(learningHistoryProvider.future),
+    steps: await steps,
     thresholds: thresholds,
   );
 }
@@ -64,7 +86,16 @@ Future<LearningIndex> readLearningIndex(Ref ref) async {
         now.add(const Duration(days: 1)),
       )
       .first;
-  return LearningIndex.from(rows, thresholds: thresholds);
+  final ids = {
+    for (final o in rows)
+      if (o.actualStartUtc != null) o.id,
+  };
+  final steps = ids.isEmpty
+      ? const <Subtask>[]
+      : await ref
+            .read(subtaskRepositoryProvider)
+            .findForOccurrences(profile.id, ids);
+  return LearningIndex.from(rows, steps: steps, thresholds: thresholds);
 }
 
 /// When the user finishes high-energy work best, and how many such tasks

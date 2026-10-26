@@ -37,9 +37,20 @@ final class RulesThinkingBackend implements ThinkingBackend {
   Future<BreakdownProposal> breakDown(BreakdownRequest request) async {
     final saved = await _memory.savedBreakdown(request.title);
     if (saved != null && saved.isNotEmpty) {
+      final learning = await _learning();
+      Learned usual(ProposedStep s) =>
+          learning.forStep(taskTitle: request.title, stepTitle: s.title);
       return BreakdownProposal(
-        // The user's own list: all of it, as accepted (up to the sheet's cap).
-        steps: saved.take(BreakdownRequest.maxSteps).toList(),
+        // The user's own list: all of it (up to the sheet's cap), each step
+        // with its usual real length where one is known (docs/13 §5), else
+        // as accepted. Still a proposal: nothing is written before Accept.
+        steps: [
+          for (final s in saved.take(BreakdownRequest.maxSteps))
+            switch (usual(s).usualMinutes) {
+              final m? => s.copyWith(durationMin: m),
+              null => s,
+            },
+        ],
         origin: ThinkingOrigin.saved,
       );
     }

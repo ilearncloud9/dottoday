@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/focus/focus_state.dart';
+import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 
 /// "STEP 2 OF 3 · Draft timeline · 14:20 left" with its bar
@@ -91,6 +92,12 @@ class FocusStepCard extends StatelessWidget {
                   color: t.colors.accent,
                   backgroundColor: t.colors.hairline,
                 ),
+              ),
+            // The timer runs on the step's usual length (docs/13 §5).
+            if (state.stepLearned?.usualMinutes case final usual?)
+              Text(
+                l10n.learnUsually(formatDurationShort(l10n, usual)),
+                style: t.styles.rowMeta.copyWith(color: t.colors.muted),
               ),
           ],
         ),

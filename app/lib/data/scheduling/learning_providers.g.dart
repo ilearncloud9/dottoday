@@ -108,12 +108,59 @@ final class LearningHistoryProvider
 
 String _$learningHistoryHash() => r'f1baac2ada3b56eaace5c0be6334b13f856f3a73';
 
-/// What the history says per task (11 C3, docs/09 M11.3).
+/// The steps of the history's tasks that really started: what step
+/// lengths are learned from (docs/13 §5). Live, on this device's data.
+
+@ProviderFor(learningSteps)
+final learningStepsProvider = LearningStepsProvider._();
+
+/// The steps of the history's tasks that really started: what step
+/// lengths are learned from (docs/13 §5). Live, on this device's data.
+
+final class LearningStepsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Subtask>>,
+          List<Subtask>,
+          Stream<List<Subtask>>
+        >
+    with $FutureModifier<List<Subtask>>, $StreamProvider<List<Subtask>> {
+  /// The steps of the history's tasks that really started: what step
+  /// lengths are learned from (docs/13 §5). Live, on this device's data.
+  LearningStepsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'learningStepsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$learningStepsHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<List<Subtask>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<List<Subtask>> create(Ref ref) {
+    return learningSteps(ref);
+  }
+}
+
+String _$learningStepsHash() => r'd21d4435651f0bd4431b0fcbb8e2de8e39b1b849';
+
+/// What the history says per task and per step (11 C3, docs/13 §5).
 
 @ProviderFor(learningIndex)
 final learningIndexProvider = LearningIndexProvider._();
 
-/// What the history says per task (11 C3, docs/09 M11.3).
+/// What the history says per task and per step (11 C3, docs/13 §5).
 
 final class LearningIndexProvider
     extends
@@ -123,7 +170,7 @@ final class LearningIndexProvider
           FutureOr<LearningIndex>
         >
     with $FutureModifier<LearningIndex>, $FutureProvider<LearningIndex> {
-  /// What the history says per task (11 C3, docs/09 M11.3).
+  /// What the history says per task and per step (11 C3, docs/13 §5).
   LearningIndexProvider._()
     : super(
         from: null,
@@ -150,7 +197,7 @@ final class LearningIndexProvider
   }
 }
 
-String _$learningIndexHash() => r'3ac52eb4ebd9b0c0150412b8426002451424c93e';
+String _$learningIndexHash() => r'3eefc4c7a36e4299edbb118092f2a1954292c926';
 
 /// When the user finishes high-energy work best, and how many such tasks
 /// it is read from (11 C4, docs/09 M11.5); the window is null under

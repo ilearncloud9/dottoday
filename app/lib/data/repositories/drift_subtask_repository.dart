@@ -19,6 +19,15 @@ final class DriftSubtaskRepository implements SubtaskRepository {
       .map((rows) => rows.map(subtaskFromRow).toList());
 
   @override
+  Future<List<Subtask>> findForOccurrences(
+    String userId,
+    Set<String> occurrenceIds,
+  ) async => [
+    for (final row in await _dao.findForOccurrences(userId, occurrenceIds))
+      subtaskFromRow(row),
+  ];
+
+  @override
   Future<Subtask?> findById(String userId, String id) async {
     final row = await _dao.findById(userId, id);
     return row == null ? null : subtaskFromRow(row);

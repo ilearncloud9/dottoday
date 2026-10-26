@@ -201,6 +201,15 @@ final class FakeSubtaskRepository implements SubtaskRepository {
     _changes.add(null);
   }
 
+  @override
+  Future<List<Subtask>> findForOccurrences(
+    String userId,
+    Set<String> occurrenceIds,
+  ) async => [
+    for (final s in rows)
+      if (occurrenceIds.contains(s.occurrenceId)) s,
+  ];
+
   List<Subtask> _of(Set<String> ids) => [
     for (final s in rows)
       if (ids.contains(s.occurrenceId) && s.deletedAt == null) s,

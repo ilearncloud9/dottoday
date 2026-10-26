@@ -1,5 +1,7 @@
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
+import 'package:dottoday/domain/scheduling/step_runs.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 
 /// What the user's own history says about a task (11 C3 learning, docs/09
@@ -28,11 +30,18 @@ final class Learned {
 /// The user's tasks with actual timestamps, indexed by normalised title
 /// and by series, so each lookup is cheap.
 final class LearningIndex {
-  LearningIndex._(this._byTitle, this._bySeries, this.thresholds);
+  LearningIndex._(
+    this._byTitle,
+    this._bySeries,
+    this._bySteps,
+    this.thresholds,
+  );
 
-  /// From [history] (any order, any length; deleted rows are skipped).
+  /// From [history] and its [steps] (any order, any length; deleted rows
+  /// are skipped).
   factory LearningIndex.from(
     Iterable<Occurrence> history, {
+    Iterable<Subtask> steps = const [],
     LearningThresholds thresholds = LearningThresholds.standard,
   }) {
     final ran = [
@@ -45,10 +54,16 @@ final class LearningIndex {
       (byTitle[normaliseTitle(o.title)] ??= []).add(o);
       if (o.seriesId case final s?) (bySeries[s] ??= []).add(o);
     }
-    return LearningIndex._(byTitle, bySeries, thresholds);
+    return LearningIndex._(
+      byTitle,
+      bySeries,
+      stepRunsByKey(history, steps),
+      thresholds,
+    );
   }
 
   static final empty = LearningIndex._(
+    const {},
     const {},
     const {},
     LearningThresholds.standard,
@@ -59,6 +74,27 @@ final class LearningIndex {
 
   final Map<String, List<Occurrence>> _byTitle;
   final Map<String, List<Occurrence>> _bySeries;
+  final Map<String, List<StepRun>> _bySteps;
+
+  /// What the last [LearningThresholds.window] real runs of [stepTitle] in
+  /// [taskTitle] say (docs/13 §5): a usual length from
+  /// [LearningThresholds.stepMinSamples], no start offset.
+  ///
+  /// ```dart
+  /// index.forStep(taskTitle: 'Clean', stepTitle: 'Dishes').usualMinutes; // 15
+  /// ```
+  Learned forStep({required String taskTitle, required String stepTitle}) {
+    final runs = _bySteps[stepKey(taskTitle, stepTitle)] ?? const [];
+    final recent = runs.take(thresholds.window).toList();
+    if (recent.length < thresholds.stepMinSamples) {
+      return Learned(samples: recent.length);
+    }
+    final usual = _median([for (final r in recent) r.minutes]);
+    return Learned(
+      samples: recent.length,
+      usualMinutes: ((usual / 5).round() * 5).clamp(5, 1440),
+    );
+  }
 
   /// What the last [LearningThresholds.window] runs of [title] — or of [seriesId]'s
   /// repeats, so a renamed repeat keeps its history — say.

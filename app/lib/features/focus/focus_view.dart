@@ -8,6 +8,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/focus/focus_providers.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/data/tasks/task_view.dart';
 import 'package:dottoday/domain/focus/focus_state.dart';
 import 'package:dottoday/domain/notifications/reminder_sound.dart';
@@ -104,7 +105,12 @@ class _FocusViewState extends ConsumerState<FocusView> {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final task = view.occurrence;
-    final state = focusAt(task, view.subtasks, _now);
+    final state = focusAt(
+      task,
+      view.subtasks,
+      _now,
+      learning: ref.watch(learningIndexProvider).value,
+    );
     final step = state.step;
     return Center(
       child: ConstrainedBox(

@@ -10,6 +10,13 @@ abstract interface class SubtaskRepository {
     Set<String> occurrenceIds,
   );
 
+  /// Every subtask of [occurrenceIds] once (deleted included): for a
+  /// one-shot read that must not open a live query.
+  Future<List<Subtask>> findForOccurrences(
+    String userId,
+    Set<String> occurrenceIds,
+  );
+
   /// The subtask [id] owned by [userId] (deleted included), or null.
   Future<Subtask?> findById(String userId, String id);
 

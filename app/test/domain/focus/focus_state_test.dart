@@ -1,5 +1,6 @@
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/focus/focus_state.dart';
+import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../fixtures.dart';
@@ -129,5 +130,44 @@ void main() {
     ).copyWith(doneAt: start.add(const Duration(minutes: 30)));
     final f = focusAt(task, [stray, step('b', 2, len: 30)], start);
     expect((f.stepIndex, f.stepStartUtc), (0, start));
+  });
+
+  group('learned step lengths (docs/13 §5)', () {
+    // Three earlier runs of the task's "b" step, 20 min each.
+    LearningIndex learned() {
+      final history = [
+        for (var d = 1; d <= 3; d++)
+          task.copyWith(
+            id: 'past-$d',
+            actualStartUtc: start.subtract(Duration(days: d)),
+          ),
+      ];
+      return LearningIndex.from(
+        history,
+        steps: [
+          for (final o in history)
+            subtaskFixture().copyWith(
+              id: 'b-${o.id}',
+              occurrenceId: o.id,
+              title: 'b',
+              done: true,
+              doneAt: o.actualStartUtc!.add(const Duration(minutes: 20)),
+            ),
+        ],
+      );
+    }
+
+    test('a step with no length counts down from its usual one', () {
+      final steps = [step('b', 1).copyWith(title: 'b')];
+      final f = focusAt(task, steps, start, learning: learned());
+      expect(f.stepLeft, const Duration(minutes: 20));
+      expect(f.stepLearned!.usualMinutes, 20);
+    });
+
+    test("the step's own length always wins", () {
+      final steps = [step('b', 1, len: 45).copyWith(title: 'b')];
+      final f = focusAt(task, steps, start, learning: learned());
+      expect((f.stepLeft, f.stepLearned), (const Duration(minutes: 45), null));
+    });
   });
 }
