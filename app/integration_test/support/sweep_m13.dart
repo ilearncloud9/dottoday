@@ -17,12 +17,24 @@ Future<void> sweepM13(
 }) async {
   final router = GoRouter.of(tester.element(find.byType(Scaffold).first));
   router.go('/settings');
-  await until(find.text('Settings'));
-  await tester.scrollUntilVisible(
-    find.text('LEARNING'),
-    200,
-    scrollable: find.byType(Scrollable).first,
-  );
+  await rest();
+  await until(find.text('Send feedback'));
+  // Settings keeps its scroll position from earlier legs: LEARNING may be
+  // above or below.
+  final list = find.byType(Scrollable).first;
+  for (final step in [-300.0, 300.0]) {
+    if (find.text('LEARNING').evaluate().isNotEmpty) break;
+    await tester
+        .scrollUntilVisible(
+          find.text('LEARNING'),
+          step,
+          scrollable: list,
+          maxScrolls: 20,
+        )
+        // Not this way: the other direction tries next, and ensureVisible
+        // below fails loudly if neither found it.
+        .catchError((Object _) {});
+  }
   await Scrollable.ensureVisible(tester.element(find.text('LEARNING')));
   await rest();
   await shot('settings_learning');

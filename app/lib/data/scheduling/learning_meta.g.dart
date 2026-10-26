@@ -39,7 +39,7 @@ final class LearningMetaProvider
   LearningMeta create() => LearningMeta();
 }
 
-String _$learningMetaHash() => r'f81e8caf48c83640e42fbf56a11a9a948983eff1';
+String _$learningMetaHash() => r'481613420e8ea64e6990e67c73e12f1775dee425';
 
 /// [LearningMetaState] in `local_meta` (as `InboxNudgeSeen`): each write
 /// is persisted before the state is published, and awaited.
