@@ -101,39 +101,63 @@ for (const theme of ['light', 'dark']) {
       await tapText(page, 'Discard');
       await tapText(page, 'Edit');
       await shot('routine_editor');
-      await page.keyboard.press('Escape');
-      await page.waitForTimeout(900);
-      // M12: This week, low-energy mode, Past days, Brain dump.
-      await go(page, '/today');
+      // M12: This week, low-energy mode, Past days, Brain dump. A reload
+      // between them clears any sheet or dialog (the data stays local).
+      const fresh = async (route) => {
+        await page.goto(`${baseUrl}#${route}`);
+        await page.reload();
+        await enableSemantics(page);
+        await page.waitForTimeout(2_000);
+      };
+      await fresh('/today');
       await tap(page, 'More options');
       await tapText(page, 'This week');
       await page.waitForTimeout(1_500);
       await shot('week_review');
-      await page.keyboard.press('Escape');
-      await page.waitForTimeout(900);
+      await fresh('/today');
       await tap(page, 'More options');
       await tapText(page, 'Low-energy mode');
       await page.waitForTimeout(2_000);
       await shot('low_energy');
       await tap(page, 'More options');
       await tapText(page, 'Turn off low-energy mode');
-      await go(page, '/search');
+      await fresh('/search');
       await page.getByRole('textbox').first().fill('').catch(() => {});
       await page.waitForTimeout(900);
-      await tapText(page, 'Past days');
+      // Its name is the title and the line under it.
+      await page.getByRole('button', { name: /^Past days/ }).first().click();
       await page.waitForTimeout(1_500);
       await shot('past_days');
-      await go(page, '/today');
+      await fresh('/today');
       await tap(page, 'More options');
       await tapText(page, 'Brain dump');
-      await page.getByRole('textbox').first().click();
-      await page.keyboard.type('Email Sam\nTaxes 45m\nCall the bank 4pm');
+      const dump = ['Email Sam', 'Taxes 45m', 'Call the bank 4pm'];
+      if (vp.name === 'compact') {
+        await page.getByRole('textbox').last().fill(dump.join('\n'));
+      } else {
+        // The popover's field, centred under its title: type into it.
+        // A popover's autofocused field takes keys after a click on the
+        // web (docs/09 M12.6 follow-up).
+        await page.mouse.click(vp.width / 2, vp.height * 0.42);
+        await page.waitForTimeout(700);
+        for (const [i, line] of dump.entries()) {
+          if (i > 0) await page.keyboard.press('Enter');
+          await page.keyboard.type(line);
+        }
+      }
       await page.waitForTimeout(900);
       await shot('brain_dump');
-      await tapText(page, 'Plan it');
-      await page.waitForTimeout(2_000);
-      await shot('brain_dump_proposal');
-      await tapText(page, 'Discard');
+      const plan = page.getByRole('button', { name: 'Plan it', exact: true }).first();
+      if (await plan.isEnabled()) {
+        await plan.click();
+        await page.waitForTimeout(2_000);
+        await shot('brain_dump_proposal');
+        await tapText(page, 'Discard');
+      } else {
+        // Headless Chromium doesn't type into the wide popover (the M12.6
+        // follow-up); its proposal is pinned by brain_dump_proposal goldens.
+        console.log(`NOTE ${tag}: brain dump text didn't reach the popover`);
+      }
       console.log(`PASS ${tag}`);
     } catch (e) {
       failures.push(`${tag}: ${e.message.split('\n')[0]}`);
