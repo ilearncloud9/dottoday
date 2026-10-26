@@ -1,23 +1,34 @@
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/thinking/local_thinking_memory.dart';
+import 'package:dottoday/data/thinking/thinking_providers.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/search/search_screen.dart';
+import 'package:dottoday/features/search/widgets/past_days_page.dart';
+import 'package:dottoday/features/timeline/brain_dump/brain_dump_sheet.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
+import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
 import 'package:dottoday/features/timeline/week_screen.dart';
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../features/settings/settings_harness.dart';
 import '../../support/inbox_harness.dart';
+import '../../support/journal_fixtures.dart';
 import '../../support/onboarding_harness.dart';
 import '../../support/test_l10n.dart';
 import '../../support/timeline_fakes.dart';
 import '../../support/today_harness.dart';
+import '../../support/week_review_fixtures.dart';
 
 // Truncation sweep (docs/09 M8.3, docs/08 §2): every main screen at the
 // three width classes in pseudo-English (about a third longer, accented,
@@ -35,6 +46,12 @@ const _expandedMin = 840.0;
 const _expanded = 1280.0;
 const _all = [_compact, _medium, _expanded];
 const _height = 2600.0;
+
+/// A thinking store in memory with nothing in it (the brain dump sheet).
+final _dumpMemory = LocalThinkingMemory(
+  AppDatabase(NativeDatabase.memory()),
+  () async => const [],
+);
 
 typedef _Pump = Future<void> Function(WidgetTester tester, Size size);
 typedef _Screen = ({_Pump pump, List<double> widths, bool checkCuts});
@@ -58,6 +75,55 @@ final _screens = <String, _Screen>{
   ], false),
   'Month': _screen((t, s) => _pumpBoard(t, s, const MonthScreen())),
   'Settings': _screen((t, s) => pumpSettings(t, size: s)),
+  // Low-energy mode (M12.2): Today with only the next dot.
+  'Today · low-energy': _screen(
+    (t, s) => pumpToday(
+      t,
+      size: s,
+      settings: Settings(
+        use24h: false,
+        firstDayOfWeek: 7,
+        lowEnergyUntil: DateTime.utc(2026, 10, 22, 5),
+      ),
+    ),
+  ),
+  // Brain dump (M12.5), with an earlier dump to search.
+  'Brain dump': _screen(
+    (t, s) => _pumpBoard(
+      t,
+      s,
+      Scaffold(
+        body: SingleChildScrollView(
+          child: BrainDumpBody(today: DateTime(2026, 10, 21)),
+        ),
+      ),
+      extra: [thinkingMemoryProvider.overrideWithValue(_dumpMemory)],
+    ),
+  ),
+  // Search › Past days (M12.3).
+  'Past days': _screen(
+    (t, s) => _pumpBoard(
+      t,
+      s,
+      const PastDaysPage(),
+      now: reviewNow,
+      rows: journalRows(),
+    ),
+  ),
+  // The weekly review (M12.1): a sheet on phones, a popover when wider.
+  'This week': _screen(
+    (t, s) => _pumpBoard(
+      t,
+      s,
+      Scaffold(
+        body: SingleChildScrollView(
+          child: WeekReviewBody(today: DateTime(2026, 10, 25)),
+        ),
+      ),
+      now: reviewNow,
+      rows: weekReviewRows(),
+    ),
+  ),
   for (final page in SettingsPage.values)
     'Settings › ${page.name}': _screen(
       (t, s) =>
@@ -73,20 +139,30 @@ final _screens = <String, _Screen>{
     ),
 };
 
-Future<void> _pumpBoard(WidgetTester tester, Size size, Widget home) async {
+Future<void> _pumpBoard(
+  WidgetTester tester,
+  Size size,
+  Widget home, {
+  DateTime? now,
+  List<Occurrence>? rows,
+  List<Override> extra = const [],
+}) async {
   tester.view
     ..physicalSize = size
     ..devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
     ProviderScope(
-      overrides: timelineOverrides(
-        now: DateTime.utc(2026, 10, 21, 7, 22),
-        occurrences: FakeOccurrenceRepository(demoWeekRows()),
-        profile: testProfile(
-          settings: const Settings(use24h: false, firstDayOfWeek: 7),
+      overrides: [
+        ...timelineOverrides(
+          now: now ?? DateTime.utc(2026, 10, 21, 7, 22),
+          occurrences: FakeOccurrenceRepository(rows ?? demoWeekRows()),
+          profile: testProfile(
+            settings: const Settings(use24h: false, firstDayOfWeek: 7),
+          ),
         ),
-      ),
+        ...extra,
+      ],
       child: MaterialApp(
         theme: DotTheme.light(),
         localizationsDelegates: testL10nDelegates,

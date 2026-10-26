@@ -5,8 +5,10 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/scheduling/low_energy.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 /// The local profile as stored now, for actions outside the widget tree.
 ///
@@ -52,4 +54,19 @@ Future<Result<void, AppFailure>> updateProfile(
   return ref
       .read(writeUseCaseProvider)
       .apply(WriteBatch(userId: next.id, profile: next));
+}
+
+/// Low-energy mode (11 D2, docs/09 M12.2): on until the next Wake Up in
+/// the profile's zone, or off now. Stored in the settings, so it holds on
+/// every device and ends by itself.
+Future<Result<void, AppFailure>> setLowEnergy(
+  ProviderContainer ref, {
+  required bool on,
+}) async {
+  final profile = await readProfile(ref);
+  final now = ref.read(clockProvider).nowUtc();
+  final until = on
+      ? nextWakeUtc(tz.getLocation(profile.tzId), now, profile.settings)
+      : null;
+  return updateSettings(ref, (s) => s.copyWith(lowEnergyUntil: until));
 }

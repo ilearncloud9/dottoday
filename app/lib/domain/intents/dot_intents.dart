@@ -90,7 +90,7 @@ final class DotIntents {
   Future<ActionOutcome> apply(QueuedAction queued) async {
     final profile = await _profile();
     return switch (queued.action) {
-      AddTask(:final text) => _addTask(profile, queued.id, text),
+      final AddTask a => _addTask(profile, queued.id, a),
       MarkDone(:final occurrenceId) => _change(
         profile.id,
         occurrenceId,
@@ -142,8 +142,9 @@ final class DotIntents {
   Future<ActionOutcome> _addTask(
     Profile profile,
     String id,
-    String text,
+    AddTask action,
   ) async {
+    final text = action.text;
     if (await _occurrences.findById(profile.id, id) != null ||
         await _series.findById(profile.id, id) != null) {
       return ActionOutcome.alreadyApplied;
@@ -162,7 +163,16 @@ final class DotIntents {
     final QuickAddDraft draft;
     switch (parsed) {
       case Ok(:final value):
-        draft = value;
+        // A share waits in the Inbox, its length kept (M12.4).
+        draft = action.inbox
+            ? QuickAddDraft(
+                title: value.title,
+                text: value.text,
+                tokens: value.tokens,
+                durationMin: value.durationMin,
+                inbox: true,
+              )
+            : value;
       case Err():
         return ActionOutcome.droppedInvalid;
     }
@@ -176,11 +186,12 @@ final class DotIntents {
       alerts: profile.settings.defaultAlerts,
       ids: _FixedId(id),
     );
+    final task = rows.occurrence;
     return _write(
       WriteBatch(
         userId: profile.id,
         series: [?rows.series],
-        occurrences: [?rows.occurrence],
+        occurrences: [if (task != null) task.copyWith(notes: action.note)],
       ),
     );
   }

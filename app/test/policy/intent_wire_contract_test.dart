@@ -44,6 +44,35 @@ void main() {
     });
   }
 
+  // Capture anywhere (docs/09 M12.4): the share extension (Swift, via
+  // DotStore.swift) and the share intent (Kotlin) write raw shared text.
+  test('shares are written the way Dart reads them', () {
+    for (final name in ['shared', 'subject', 'text']) {
+      expect(dart, contains("'$name'"), reason: 'Dart: $name');
+    }
+    for (final path in [
+      'ios/Shared/DotStore.swift',
+      'android/app/src/main/kotlin/app/dottoday/planner/intents/ShareIntake.kt',
+    ]) {
+      final src = File(path).readAsStringSync();
+      for (final name in ['shared', 'subject']) {
+        expect(src, contains('"$name"'), reason: '$path: $name');
+      }
+    }
+    expect(
+      File('ios/DottodayShare/ShareViewController.swift').readAsStringSync(),
+      contains('ShareQueue.append'),
+    );
+    expect(
+      File('macos/DottodayShare/ShareViewController.swift').readAsStringSync(),
+      contains('ShareQueue.append'),
+    );
+    expect(
+      File('android/app/src/main/AndroidManifest.xml').readAsStringSync(),
+      contains('android.intent.action.SEND'),
+    );
+  });
+
   test('the service worker writes the same names and path', () {
     final js = File('web/action_queue.js').readAsStringSync();
     for (final name in ['mark_done', 'add_fifteen']) {

@@ -128,6 +128,34 @@ final class DaySnapshot {
     );
   }
 
+  /// A whole day as it ended (11 D1, D3): every timed, not skipped task of
+  /// [blocks] starting inside [shape]'s Wake Up → Bedtime, earliest first,
+  /// with no [maxDots] cap. The weekly review and the thread journal read
+  /// past days this way, derived on read from the occurrences (no stored
+  /// copy, docs/09 M12.3), so an edit to an old day shows at once.
+  ///
+  /// ```dart
+  /// DaySnapshot.ofDay(blocks: data.blocks, shape: shape).dayDone;
+  /// ```
+  factory DaySnapshot.ofDay({
+    required Iterable<Occurrence> blocks,
+    required DayShape shape,
+  }) {
+    final dots = [
+      for (final o in blocks)
+        if (_inDay(o, shape)) _dot(o),
+    ]..sort(_byStart);
+    return DaySnapshot(
+      generatedAtUtc: shape.bedUtc,
+      wakeUtc: shape.wakeUtc,
+      bedUtc: shape.bedUtc,
+      dots: List.unmodifiable(dots),
+      inboxCount: 0,
+      dayDone: dots.where((d) => d.done).length,
+      dayTotal: dots.length,
+    );
+  }
+
   /// The JSON format version every reader checks (docs/11 B5).
   static const version = 1;
   static const window = Duration(hours: 24);

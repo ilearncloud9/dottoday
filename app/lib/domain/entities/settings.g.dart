@@ -64,6 +64,10 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   suggestTravelTime: json['suggestTravelTime'] as bool? ?? false,
   travelTimeMin: (json['travelTimeMin'] as num?)?.toInt() ?? 15,
   energySuggestions: json['energySuggestions'] as bool?,
+  lowEnergyUntil: _$JsonConverterFromJson<int, DateTime>(
+    json['lowEnergyUntil'],
+    const UtcMillisConverter().fromJson,
+  ),
 );
 
 Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
@@ -94,6 +98,10 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'suggestTravelTime': instance.suggestTravelTime,
   'travelTimeMin': instance.travelTimeMin,
   'energySuggestions': instance.energySuggestions,
+  'lowEnergyUntil': _$JsonConverterToJson<int, DateTime>(
+    instance.lowEnergyUntil,
+    const UtcMillisConverter().toJson,
+  ),
 };
 
 const _$WeekdayEnumMap = {
@@ -117,6 +125,16 @@ const _$ThemePreferenceEnumMap = {
   ThemePreference.light: 'light',
   ThemePreference.dark: 'dark',
 };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) => json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) => value == null ? null : toJson(value);
 
 _Profile _$ProfileFromJson(Map<String, dynamic> json) => _Profile(
   id: json['id'] as String,

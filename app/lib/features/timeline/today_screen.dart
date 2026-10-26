@@ -1,5 +1,7 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_view.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
@@ -133,6 +135,22 @@ class _TodayCompact extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final view = ref.watch(todaySelectionProvider);
     final base = _day(today, -pagerReachDays);
+    // Low-energy mode (11 D2, M12.2): the header and today's next dot,
+    // in place of the strip and the pager.
+    if (watchLowEnergy(ref)) {
+      return Column(
+        children: [
+          TodayHeader(
+            date: today,
+            today: today,
+            monthOpen: false,
+            month: DateTime(today.year, today.month),
+            onToday: () => onSelect(today),
+          ),
+          Expanded(child: LowEnergyView(today: today)),
+        ],
+      );
+    }
     return Column(
       children: [
         TodayHeader(

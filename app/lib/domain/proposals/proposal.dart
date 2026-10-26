@@ -28,6 +28,10 @@ enum ProposalChange {
 
   /// The dot keeps its place and gains steps (Break it down, 11 B1).
   steps,
+
+  /// A new task with no room on the day: it waits in the Inbox (a brain
+  /// dump, 11 B4). No dot on the thread; the row shows its title.
+  toInbox,
 }
 
 /// One line of the proposal's change list: the dot now ([before]) and as
@@ -54,6 +58,23 @@ final class ProposalEdit {
 
   /// Where a [ProposalChange.movedToDay] dot goes; null = the Inbox.
   final DateTime? movedToUtc;
+
+  /// What the change list names: the proposed dot, the dot now, or — for a
+  /// [ProposalChange.toInbox] line — the new task itself.
+  SnapshotDot? get shown {
+    if (after ?? before case final dot?) return dot;
+    final o = occurrences.firstOrNull;
+    if (o == null) return null;
+    return SnapshotDot(
+      id: o.id,
+      title: o.title,
+      startUtc: o.createdAt,
+      durationMin: o.durationMin,
+      colorKey: o.colorKey,
+      iconKey: o.iconKey,
+      done: false,
+    );
+  }
 
   /// Rows written on Accept: new versions of existing rows or new rows.
   final List<Occurrence> occurrences;

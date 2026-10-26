@@ -31,6 +31,7 @@ import 'package:integration_test/integration_test.dart';
 import 'support/a11y_tree.dart';
 import 'support/o4.dart';
 import 'support/sweep_m11.dart';
+import 'support/sweep_m12.dart';
 
 const _tagBase = String.fromEnvironment('SWEEP_TAG', defaultValue: 'device');
 
@@ -134,7 +135,19 @@ void main() {
       until: (f) => _pumpUntil(tester, f),
       rest: () => _rest(tester),
     );
+    await sweepM12(
+      tester,
+      shot: (name) async {
+        await _shot(binding, tester, '${_tag}_$name');
+        await checkA11yTree(tester, name);
+      },
+      until: (f) => _pumpUntil(tester, f),
+      rest: () => _rest(tester),
+    );
     expectNoA11yFindings();
+    // The Mac's capture loop (tool/mac_sweep.sh) needs the app a moment
+    // after the last SWEEP_SHOT (found in the M11 Mac sweep).
+    await Future<void>.delayed(const Duration(seconds: 3));
   });
 }
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- The action queue shared with the app (docs/09 M12.4), as the
+	     widgets'. Needs the paid Apple Developer account to sign for a device. -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.app.dottoday.planner</string>
+	</array>
+</dict>
+</plist>

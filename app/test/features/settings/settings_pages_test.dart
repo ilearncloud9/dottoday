@@ -19,6 +19,15 @@ import 'settings_harness.dart';
 // Privacy, About, What's new (M8.2).
 
 Future<void> _tap(WidgetTester tester, String text) async {
+  // The list is lazy: a row far down may not be built yet.
+  final list = find.byWidgetPredicate(
+    (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+  );
+  for (final step in [300.0, -300.0]) {
+    if (find.text(text).evaluate().isNotEmpty) break;
+    await tester.drag(list.first, Offset(0, step * 10));
+    await tester.pumpAndSettle();
+  }
   await tester.ensureVisible(find.text(text).first);
   await tester.pumpAndSettle();
   await tester.tap(find.text(text).first);

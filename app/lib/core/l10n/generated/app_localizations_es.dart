@@ -4743,4 +4743,338 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get proposalOverlaps => 'ya está · se solapa';
+
+  @override
+  String get weekReviewTitle => 'Esta semana';
+
+  @override
+  String weekReviewDates(String from, String to) {
+    return '$from – $to';
+  }
+
+  @override
+  String weekReviewDotCount(int done, int total) {
+    return '$done/$total';
+  }
+
+  @override
+  String weekReviewDayLabel(String day, int done, int total, String planned) {
+    return '$day: $done de $total hechas, $planned planificadas';
+  }
+
+  @override
+  String weekReviewPlanned(String planned) {
+    return '$planned planificadas';
+  }
+
+  @override
+  String weekReviewPlannedBusiest(String planned) {
+    return '$planned · el más ocupado';
+  }
+
+  @override
+  String weekReviewBusiest(String day) {
+    return 'Más ocupado · $day';
+  }
+
+  @override
+  String weekReviewLightest(String day) {
+    return 'Más ligero · $day';
+  }
+
+  @override
+  String get weekPaceMornings =>
+      'Las mañanas fueron casi siempre según el plan.';
+
+  @override
+  String get weekPaceAfternoons =>
+      'Las tardes fueron casi siempre según el plan.';
+
+  @override
+  String get weekPaceAllDone => 'Todo lo que planificaste está hecho.';
+
+  @override
+  String get weekPaceQuiet =>
+      'Una semana tranquila: no había nada planificado.';
+
+  @override
+  String weekLoadBoth(String busiest, String lightest) {
+    return 'El $busiest cargó con más; el $lightest respiró.';
+  }
+
+  @override
+  String weekLoadBusiest(String busiest) {
+    return 'El $busiest cargó con más.';
+  }
+
+  @override
+  String weekCarryAsk(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sin terminar · ¿pasarlas a la próxima semana?',
+      one: '1 sin terminar · ¿pasarla a la próxima semana?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get weekCarryPlace => 'Colocar';
+
+  @override
+  String get weekCarryInbox => 'Dejar en la bandeja';
+
+  @override
+  String get weekCarryTitle => 'Próxima semana';
+
+  @override
+  String weekCarrySubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tareas sin terminar, cada una en el primer hueco libre que encaje',
+      one: '1 tarea sin terminar, en el primer hueco libre que encaje',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get weekCarryAccept => 'Colocarlas';
+
+  @override
+  String get weekCarryAccepted => 'Colocadas en la próxima semana';
+
+  @override
+  String get weekShareTitles => 'Mostrar títulos de tareas';
+
+  @override
+  String get weekShareImage => 'Compartir imagen';
+
+  @override
+  String weekShareDayTitles(String day, String titles) {
+    return '$day · $titles';
+  }
+
+  @override
+  String get weekReviewNoStreaks => 'Aquí no hay rachas: solo lo que pasó.';
+
+  @override
+  String get weekPromptDetail => 'Tu semana en siete puntos';
+
+  @override
+  String get weekPromptAction => 'Ver la semana';
+
+  @override
+  String get lowEnergyMode => 'Modo baja energía';
+
+  @override
+  String get lowEnergyTurnOff => 'Desactivar el modo baja energía';
+
+  @override
+  String get settingsLowEnergyDetail =>
+      'Hoy solo muestra lo siguiente y los avisos se pausan hasta tu próximo despertar';
+
+  @override
+  String lowEnergyCaption(String date) {
+    return '$date · Baja energía';
+  }
+
+  @override
+  String get lowEnergyGreeting => 'Tómatelo con calma';
+
+  @override
+  String lowEnergyGreetingName(String name) {
+    return 'Tómatelo con calma, $name';
+  }
+
+  @override
+  String get lowEnergyOn => 'Baja energía · activado';
+
+  @override
+  String lowEnergyUntil(String time, String left) {
+    return 'hasta las $time · quedan $left';
+  }
+
+  @override
+  String lowEnergyAt(String time) {
+    return 'a las $time';
+  }
+
+  @override
+  String get lowEnergyNotToday => 'Hoy no';
+
+  @override
+  String lowEnergyMovedTomorrow(String title) {
+    return '$title pasada a mañana';
+  }
+
+  @override
+  String lowEnergySkipped(String title) {
+    return '$title omitida por hoy';
+  }
+
+  @override
+  String lowEnergyLater(int count) {
+    return 'Más tarde · $count';
+  }
+
+  @override
+  String get lowEnergyShowLater => 'Mostrar lo de más tarde';
+
+  @override
+  String get lowEnergyHideLater => 'Ocultar lo de más tarde';
+
+  @override
+  String get lowEnergyPropose => '¿Pasar todo lo opcional a mañana?';
+
+  @override
+  String get lowEnergyProposeAction => 'Proponer';
+
+  @override
+  String get lowEnergyNudgesOff =>
+      'Los avisos están apagados hasta el despertar de mañana';
+
+  @override
+  String get lowEnergyNothing => 'Nada más por hoy. Descansa.';
+
+  @override
+  String get lowEnergyProposalTitle => 'Mañana';
+
+  @override
+  String lowEnergyProposalSubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tareas opcionales, cada una en el primer hueco libre de mañana',
+      one: '1 tarea opcional, en el primer hueco libre de mañana',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lowEnergyProposalAccept => 'Moverlas';
+
+  @override
+  String get lowEnergyProposalAccepted => 'Pasadas a mañana';
+
+  @override
+  String get journalTitle => 'Días pasados';
+
+  @override
+  String get journalEntryDetail => 'Cada día que planificaste, tal como fue';
+
+  @override
+  String get journalSearchHint => '¿Cuándo fue la última vez que…?';
+
+  @override
+  String journalDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días en los últimos 12 meses',
+      one: '1 día en los últimos 12 meses',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String journalLast(String date, int ago, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      ago,
+      locale: localeName,
+      other: 'hace $ago días',
+      one: 'ayer',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      ago,
+      locale: localeName,
+      other: 'hace $ago días',
+      one: 'ayer',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Última vez: $date · $_temp0 · $count días',
+      one: 'Última vez: $date · $_temp1 · una vez',
+    );
+    return '$_temp2';
+  }
+
+  @override
+  String journalNoMatch(String query) {
+    return 'Nada en los últimos 12 meses coincide con «$query»';
+  }
+
+  @override
+  String get journalEmpty =>
+      'Aún no hay días pasados. Los días que planifiques aparecerán aquí al terminar.';
+
+  @override
+  String journalDayLabel(String date, String summary) {
+    return '$date, $summary. Abrir el día';
+  }
+
+  @override
+  String journalMatch(String title, String time) {
+    return '$title · $time';
+  }
+
+  @override
+  String get journalStripTitle => 'Franja del año';
+
+  @override
+  String journalStripLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Tu año en puntos: $count días planificados',
+      one: 'Tu año en puntos: 1 día planificado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dumpTitle => 'Vaciar la mente';
+
+  @override
+  String get dumpHint => 'Todo lo que tienes en mente, una cosa por línea';
+
+  @override
+  String get dumpPlan => 'Planificar';
+
+  @override
+  String get dumpNothing =>
+      'Aún no hay nada que planificar. Escribe una cosa por línea.';
+
+  @override
+  String dumpSubtitle(int count, String day) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tareas $day, en el primer hueco libre',
+      one: '1 tarea $day, en el primer hueco libre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dumpAccepted => 'Añadido desde tu lista';
+
+  @override
+  String get dumpEarlier => 'Listas anteriores';
+
+  @override
+  String get dumpSearch => 'Buscar en listas anteriores';
+
+  @override
+  String get dumpUseAgain => 'Usar de nuevo';
+
+  @override
+  String get proposalToInbox => 'sin hueco · a la bandeja';
+
+  @override
+  String get releaseNotes100 =>
+      'Ver el tiempo: tu próximo punto en la pantalla de bloqueo, widgets, la barra de menús del Mac y Siri, y alarmas que suenan de verdad.\nEmpezar: divide una tarea en pasos pequeños, céntrate en un punto y recibe ayuda suave cuando algo no arranca.\nMantener el control: Reequilibrar muestra un plan antes de mover nada; Plan / Realidad muestra cómo fue el día de verdad.\nRutinas, sugerencias de energía y duraciones aprendidas de tus propios días, en tu dispositivo.\nEsta semana en siete puntos, Días pasados para mirar atrás y el modo baja energía para los días difíciles. Sin nada que mantener.\nComparte una página o una nota a Dottoday desde cualquier app, o vacía la mente con Vaciar la mente.';
 }

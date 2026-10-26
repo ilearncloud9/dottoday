@@ -4,6 +4,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
 import 'package:dottoday/shared/proposals/proposal_sheet.dart';
@@ -38,20 +39,23 @@ final class CountingWrites implements WriteUseCase {
 /// own providers) for proposal flows (docs/09 M10.2). Rows seeded with
 /// [seed] are not counted.
 final class ProposalHarness {
-  ProposalHarness(DateTime now) : base = WriteHarness(now) {
+  ProposalHarness(DateTime now, {Profile? profile})
+    : base = WriteHarness(now),
+      profile = profile ?? profileFixture() {
     writes = CountingWrites(base.writes);
   }
 
   final WriteHarness base;
+
+  /// The signed-in profile the flows read (zone, week start).
+  final Profile profile;
   late final CountingWrites writes;
 
   List<Override> get overrides => [
     appDatabaseProvider.overrideWithValue(base.db),
     clockProvider.overrideWithValue(base.clock),
     writeUseCaseProvider.overrideWithValue(writes),
-    currentProfileProvider.overrideWith(
-      (ref) => Stream.value(profileFixture()),
-    ),
+    currentProfileProvider.overrideWith((ref) => Stream.value(profile)),
   ];
 
   Future<void> seed(WidgetTester tester, WriteBatch batch) async {

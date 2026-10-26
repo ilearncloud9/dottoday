@@ -22,6 +22,8 @@ void main() {
     final end = _at.add(const Duration(minutes: 30));
     final cases = <DotAction, bool Function(DotAction)>{
       const AddTask('Gym 7am'): (a) => a is AddTask && a.text == 'Gym 7am',
+      const AddTask('Read', note: 'https://ex.com', inbox: true): (a) =>
+          a is AddTask && a.note == 'https://ex.com' && a.inbox,
       const MarkDone(_o): (a) => a is MarkDone && a.occurrenceId == _o,
       const StartFocus(_o): (a) => a is StartFocus && a.occurrenceId == _o,
       AddFifteen(_o, plannedEndUtc: end): (a) =>

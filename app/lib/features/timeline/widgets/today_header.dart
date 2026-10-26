@@ -3,6 +3,9 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_parts.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/widgets/today_menu.dart';
@@ -39,7 +42,9 @@ class TodayHeader extends ConsumerWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toLanguageTag();
-    final caption = DateFormat.MMMEd(locale).format(date).toUpperCase();
+    final low = date == today && watchLowEnergy(ref);
+    final day = DateFormat.MMMEd(locale).format(date);
+    final caption = (low ? l10n.lowEnergyCaption(day) : day).toUpperCase();
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
         DotSpace.page,
@@ -72,6 +77,12 @@ class TodayHeader extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         spacing: DotSpace.xs,
                         children: [
+                          if (low)
+                            DotIcon(
+                              DotGlyphs.moon,
+                              color: t.tasks[TaskColor.violet].ink,
+                              size: DotSize.weekDot * 2,
+                            ),
                           Flexible(
                             child: ExcludeSemantics(
                               child: Text(caption, style: t.styles.caption),
@@ -100,17 +111,36 @@ class TodayHeader extends ConsumerWidget {
               ],
             ),
           ),
-          if (date == today)
-            TodayDot(today: today)
-          else
-            TodayPill(onTap: onToday),
-          TodayMenu(date: date, today: today),
+          // Low-energy mode: its switch above the day dot (as the render).
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (low)
+                LowEnergySwitch(
+                  onChanged: (on) => toggleLowEnergy(context, on: on),
+                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (date == today)
+                    TodayDot(today: today)
+                  else
+                    TodayPill(onTap: onToday),
+                  TodayMenu(date: date, today: today),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 
   String _title(BuildContext context, WidgetRef ref, String locale) {
+    if (date == today && watchLowEnergy(ref)) {
+      return lowEnergyTitle(context, ref);
+    }
     final otherMonth = month.year != today.year || month.month != today.month;
     if (monthOpen && otherMonth) return DateFormat.yMMMM(locale).format(month);
     return dayTitle(context, ref, date: date, today: today);
@@ -137,6 +167,15 @@ String dayTitle(
   return name.isEmpty
       ? l10n.todayGreeting(part)
       : l10n.todayGreetingName(part, name);
+}
+
+/// "Take it easy, Kody" (low-energy mode, `B-ios-low-energy`).
+String lowEnergyTitle(BuildContext context, WidgetRef ref) {
+  final name = ref.watch(currentProfileProvider).value?.displayName?.trim();
+  final l10n = context.l10n;
+  return name == null || name.isEmpty
+      ? l10n.lowEnergyGreeting
+      : l10n.lowEnergyGreetingName(name);
 }
 
 /// The day dot: how far today is through Wake Up → Bedtime.

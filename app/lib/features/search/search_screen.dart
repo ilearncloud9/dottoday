@@ -10,6 +10,7 @@ import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/search/search_results.dart';
 import 'package:dottoday/features/search/state/search_state.dart';
+import 'package:dottoday/features/search/widgets/past_days_page.dart';
 import 'package:dottoday/features/search/widgets/search_extras.dart';
 import 'package:dottoday/features/search/widgets/search_field.dart';
 import 'package:dottoday/features/search/widgets/search_filters.dart';
@@ -91,6 +92,11 @@ class SearchScreen extends ConsumerWidget {
           ),
           const SizedBox(height: DotSpace.m),
           SearchFilters(picked: input.filter, onPick: notifier.pick),
+          // The thread journal (11 D3, M12.3), while nothing is typed.
+          if (query.isEmpty) ...[
+            const SizedBox(height: DotSpace.m),
+            const PastDaysEntry(),
+          ],
         ],
       ),
     );

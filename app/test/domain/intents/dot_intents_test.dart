@@ -160,6 +160,27 @@ void main() {
       expect((await stored(id)).startUtc, isNull);
     });
 
+    test('a share waits in the Inbox with its source as the note', () async {
+      const id = '01928c3e-0000-7000-8000-0000000000a4';
+      final shared = decodeQueuedAction({
+        'id': id,
+        'at_ms': _now.millisecondsSinceEpoch,
+        'kind': 'add_task',
+        'shared': true,
+        'text': 'Dentist tomorrow 3pm 20m https://dentist.example/booking',
+      })!;
+      expect(await intents.apply(shared), ActionOutcome.applied);
+      final task = await stored(id);
+      expect(task.title, 'Dentist');
+      expect(task.startUtc, isNull, reason: 'shares wait in the Inbox');
+      expect(task.durationMin, 20);
+      expect(
+        task.notes,
+        'Dentist tomorrow 3pm 20m https://dentist.example/booking',
+      );
+      expect(await intents.apply(shared), ActionOutcome.alreadyApplied);
+    });
+
     test('a repeating line becomes a series under the action id', () async {
       const id = '01928c3e-0000-7000-8000-0000000000a3';
       final action = queued(const AddTask('Stretch 7am every day'), id: id);

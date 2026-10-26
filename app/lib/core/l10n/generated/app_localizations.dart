@@ -7049,6 +7049,438 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'already here · overlaps'**
   String get proposalOverlaps;
+
+  /// Weekly review (11 D1): sheet title, Today ⋯ menu item and Bedtime prompt caption.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get weekReviewTitle;
+
+  /// Weekly review: the week's first and last day.
+  ///
+  /// In en, this message translates to:
+  /// **'{from} – {to}'**
+  String weekReviewDates(String from, String to);
+
+  /// Weekly review: done and planned tasks inside a day's dot.
+  ///
+  /// In en, this message translates to:
+  /// **'{done}/{total}'**
+  String weekReviewDotCount(int done, int total);
+
+  /// Weekly review: a day's dot read out by screen readers.
+  ///
+  /// In en, this message translates to:
+  /// **'{day}: {done} of {total} done, {planned} planned'**
+  String weekReviewDayLabel(String day, int done, int total, String planned);
+
+  /// Weekly review: a tapped day's planned time, under its tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'{planned} planned'**
+  String weekReviewPlanned(String planned);
+
+  /// Weekly review: the busiest day's planned time, under its tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'{planned} · busiest'**
+  String weekReviewPlannedBusiest(String planned);
+
+  /// Weekly review chip: the day with the most planned time.
+  ///
+  /// In en, this message translates to:
+  /// **'Busiest · {day}'**
+  String weekReviewBusiest(String day);
+
+  /// Weekly review chip: the day with the least planned time.
+  ///
+  /// In en, this message translates to:
+  /// **'Lightest · {day}'**
+  String weekReviewLightest(String day);
+
+  /// Weekly review sentence, first half: most morning tasks really started within 15 min of plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Mornings mostly went to plan.'**
+  String get weekPaceMornings;
+
+  /// Weekly review sentence, first half: most afternoon tasks really started within 15 min of plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoons mostly went to plan.'**
+  String get weekPaceAfternoons;
+
+  /// Weekly review sentence, first half: every planned task is done.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you planned got done.'**
+  String get weekPaceAllDone;
+
+  /// Weekly review sentence when the week had no tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'A quiet week: nothing was planned.'**
+  String get weekPaceQuiet;
+
+  /// Weekly review sentence, second half: the busiest and the lightest day by planned time.
+  ///
+  /// In en, this message translates to:
+  /// **'{busiest} carried the most; {lightest} breathed.'**
+  String weekLoadBoth(String busiest, String lightest);
+
+  /// Weekly review sentence, second half, when only one day had anything planned.
+  ///
+  /// In en, this message translates to:
+  /// **'{busiest} carried the most.'**
+  String weekLoadBusiest(String busiest);
+
+  /// Weekly review: one-off tasks left unfinished this week.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 unfinished · move it to next week?} other{{count} unfinished · move them to next week?}}'**
+  String weekCarryAsk(int count);
+
+  /// Weekly review: propose the unfinished tasks into next week's free time.
+  ///
+  /// In en, this message translates to:
+  /// **'Place'**
+  String get weekCarryPlace;
+
+  /// Weekly review: send the unfinished tasks to the Inbox (with Undo).
+  ///
+  /// In en, this message translates to:
+  /// **'Leave in Inbox'**
+  String get weekCarryInbox;
+
+  /// Proposal title: unfinished tasks placed into next week.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week'**
+  String get weekCarryTitle;
+
+  /// Proposal subtitle for placing unfinished tasks into next week.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 unfinished task, each in the first free time that fits} other{{count} unfinished tasks, each in the first free time that fits}}'**
+  String weekCarrySubtitle(int count);
+
+  /// Proposal accept button: place the unfinished tasks into next week.
+  ///
+  /// In en, this message translates to:
+  /// **'Place them'**
+  String get weekCarryAccept;
+
+  /// Undo snackbar after the unfinished tasks were placed into next week.
+  ///
+  /// In en, this message translates to:
+  /// **'Placed in next week'**
+  String get weekCarryAccepted;
+
+  /// Weekly review: include task titles in the share image (off by default).
+  ///
+  /// In en, this message translates to:
+  /// **'Show task titles'**
+  String get weekShareTitles;
+
+  /// Weekly review: share the week as an image through the system share sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Share image'**
+  String get weekShareImage;
+
+  /// Share image with titles on: a day and its task titles.
+  ///
+  /// In en, this message translates to:
+  /// **'{day} · {titles}'**
+  String weekShareDayTitles(String day, String titles);
+
+  /// Weekly review footer: states the no-streak principle (11 D). The one string allowed to name streaks, to say there are none.
+  ///
+  /// In en, this message translates to:
+  /// **'No streaks here — just what happened.'**
+  String get weekReviewNoStreaks;
+
+  /// Bedtime prompt on the week's last day: what the weekly review shows.
+  ///
+  /// In en, this message translates to:
+  /// **'Your week in seven dots'**
+  String get weekPromptDetail;
+
+  /// Bedtime prompt on the week's last day: open the weekly review.
+  ///
+  /// In en, this message translates to:
+  /// **'See the week'**
+  String get weekPromptAction;
+
+  /// Low-energy mode (11 D2): Today ⋯ item and Settings › Planning switch title.
+  ///
+  /// In en, this message translates to:
+  /// **'Low-energy mode'**
+  String get lowEnergyMode;
+
+  /// Today ⋯ item while low-energy mode is on.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off low-energy mode'**
+  String get lowEnergyTurnOff;
+
+  /// Under the Low-energy mode switch in Settings › Planning.
+  ///
+  /// In en, this message translates to:
+  /// **'Today shows only what\'s next and nudges pause, until your next Wake Up'**
+  String get settingsLowEnergyDetail;
+
+  /// Today header caption in low-energy mode (shown upper-case on phones).
+  ///
+  /// In en, this message translates to:
+  /// **'{date} · Low-energy'**
+  String lowEnergyCaption(String date);
+
+  /// Today title in low-energy mode, no name set.
+  ///
+  /// In en, this message translates to:
+  /// **'Take it easy'**
+  String get lowEnergyGreeting;
+
+  /// Today title in low-energy mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Take it easy, {name}'**
+  String lowEnergyGreetingName(String name);
+
+  /// Today header switch while low-energy mode is on; turning it off ends the mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Low-energy · on'**
+  String get lowEnergyOn;
+
+  /// Low-energy next dot, while it runs.
+  ///
+  /// In en, this message translates to:
+  /// **'until {time} · {left} left'**
+  String lowEnergyUntil(String time, String left);
+
+  /// Low-energy next dot, before it starts.
+  ///
+  /// In en, this message translates to:
+  /// **'at {time}'**
+  String lowEnergyAt(String time);
+
+  /// Low-energy next dot: a one-off moves to tomorrow, a repeat or event is skipped today (with Undo).
+  ///
+  /// In en, this message translates to:
+  /// **'Not today'**
+  String get lowEnergyNotToday;
+
+  /// Undo snackbar after Not today moved a task.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} moved to tomorrow'**
+  String lowEnergyMovedTomorrow(String title);
+
+  /// Undo snackbar after Not today skipped a repeat or event.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} skipped for today'**
+  String lowEnergySkipped(String title);
+
+  /// Low-energy: caption of the pile of today's later tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Later · {count}'**
+  String lowEnergyLater(int count);
+
+  /// Tooltip: open the Later pile.
+  ///
+  /// In en, this message translates to:
+  /// **'Show what\'s later'**
+  String get lowEnergyShowLater;
+
+  /// Tooltip: close the Later pile.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide what\'s later'**
+  String get lowEnergyHideLater;
+
+  /// Low-energy: offered once a day; opens a proposal.
+  ///
+  /// In en, this message translates to:
+  /// **'Move everything optional to tomorrow?'**
+  String get lowEnergyPropose;
+
+  /// Low-energy: open the proposal moving optional tasks to tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Propose'**
+  String get lowEnergyProposeAction;
+
+  /// Low-energy footer. Alarm-loud first dots still ring.
+  ///
+  /// In en, this message translates to:
+  /// **'Nudges are off until tomorrow\'s Wake Up'**
+  String get lowEnergyNudgesOff;
+
+  /// Low-energy: nothing left planned today.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing else today. Rest well.'**
+  String get lowEnergyNothing;
+
+  /// Proposal title: optional tasks moved to tomorrow (low-energy).
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get lowEnergyProposalTitle;
+
+  /// Proposal subtitle (low-energy).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 optional task, in tomorrow\'s first free time} other{{count} optional tasks, each in tomorrow\'s first free time}}'**
+  String lowEnergyProposalSubtitle(int count);
+
+  /// Proposal accept button (low-energy).
+  ///
+  /// In en, this message translates to:
+  /// **'Move them'**
+  String get lowEnergyProposalAccept;
+
+  /// Undo snackbar after the low-energy proposal was accepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved to tomorrow'**
+  String get lowEnergyProposalAccepted;
+
+  /// Thread journal (11 D3): Search entry and page title.
+  ///
+  /// In en, this message translates to:
+  /// **'Past days'**
+  String get journalTitle;
+
+  /// Under the Past days entry in Search.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day you planned, as it went'**
+  String get journalEntryDetail;
+
+  /// Past days search field hint.
+  ///
+  /// In en, this message translates to:
+  /// **'When did I last…'**
+  String get journalSearchHint;
+
+  /// Past days: how many days with something planned.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day in the last 12 months} other{{count} days in the last 12 months}}'**
+  String journalDays(int count);
+
+  /// Past days search: the newest matching day, how long ago, and on how many days.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Last: {date} · {ago, plural, =1{yesterday} other{{ago} days ago}} · once} other{Last: {date} · {ago, plural, =1{yesterday} other{{ago} days ago}} · {count} days}}'**
+  String journalLast(String date, int ago, int count);
+
+  /// Past days search with no match.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in the last 12 months matches “{query}”'**
+  String journalNoMatch(String query);
+
+  /// Past days with nothing yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No past days yet. Days you plan show up here once they\'re over.'**
+  String get journalEmpty;
+
+  /// Screen reader: a past day's row.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}, {summary}. Open the day'**
+  String journalDayLabel(String date, String summary);
+
+  /// Past days search: a matching task on that day and its time.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} · {time}'**
+  String journalMatch(String title, String time);
+
+  /// Past days: open the twelve-month strip to share as an image.
+  ///
+  /// In en, this message translates to:
+  /// **'Year strip'**
+  String get journalStripTitle;
+
+  /// Screen reader: the year strip image.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Your year as dots: 1 day planned} other{Your year as dots: {count} days planned}}'**
+  String journalStripLabel(int count);
+
+  /// Brain dump (11 B4): Today ⋯ item, sheet and proposal title.
+  ///
+  /// In en, this message translates to:
+  /// **'Brain dump'**
+  String get dumpTitle;
+
+  /// Brain dump field hint; typing or dictation.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything on your mind, one thing per line'**
+  String get dumpHint;
+
+  /// Brain dump: turn the lines into a proposal on the chosen day.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan it'**
+  String get dumpPlan;
+
+  /// Brain dump: the text gave no tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to plan yet. Write one thing per line.'**
+  String get dumpNothing;
+
+  /// Brain dump proposal subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task on {day}, in the first free time} other{{count} tasks on {day}, in the first free time}}'**
+  String dumpSubtitle(int count, String day);
+
+  /// Undo snackbar after a brain dump was accepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Added from your brain dump'**
+  String get dumpAccepted;
+
+  /// Brain dump sheet: caption above the local history.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier dumps'**
+  String get dumpEarlier;
+
+  /// Brain dump history search hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search earlier dumps'**
+  String get dumpSearch;
+
+  /// Brain dump history: put an earlier dump back in the field.
+  ///
+  /// In en, this message translates to:
+  /// **'Use again'**
+  String get dumpUseAgain;
+
+  /// Proposal chip: a new task with no free time left on the day goes to the Inbox (brain dump).
+  ///
+  /// In en, this message translates to:
+  /// **'no room · to the Inbox'**
+  String get proposalToInbox;
+
+  /// What's new in 1.0.0 (M9–M12), one item per line (PRD F11).
+  ///
+  /// In en, this message translates to:
+  /// **'See time: your next dot on the lock screen, widgets, the Mac menu bar and Siri, and alarms that really ring.\nStart: Break it down into small steps, Focus on one dot, and gentle help when a task won\'t start.\nStay in control: Rebalance shows a plan before anything moves; Plan / Reality shows how the day really went.\nRoutines, energy suggestions and lengths learned from your own days, on your device.\nThis week as seven dots, Past days to look back, and low-energy mode for hard days. Nothing to keep up.\nShare a page or a note to Dottoday from any app, or empty your head with Brain dump.'**
+  String get releaseNotes100;
 }
 
 class _AppLocalizationsDelegate

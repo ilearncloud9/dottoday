@@ -3706,4 +3706,239 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get proposalOverlaps => pseudo(super.proposalOverlaps);
+
+  @override
+  String get weekReviewTitle => pseudo(super.weekReviewTitle);
+
+  @override
+  String weekReviewDates(String from, String to) =>
+      pseudo(super.weekReviewDates(from, to));
+
+  @override
+  String weekReviewDotCount(int done, int total) =>
+      pseudo(super.weekReviewDotCount(done, total));
+
+  @override
+  String weekReviewDayLabel(String day, int done, int total, String planned) =>
+      pseudo(super.weekReviewDayLabel(day, done, total, planned));
+
+  @override
+  String weekReviewPlanned(String planned) =>
+      pseudo(super.weekReviewPlanned(planned));
+
+  @override
+  String weekReviewPlannedBusiest(String planned) =>
+      pseudo(super.weekReviewPlannedBusiest(planned));
+
+  @override
+  String weekReviewBusiest(String day) => pseudo(super.weekReviewBusiest(day));
+
+  @override
+  String weekReviewLightest(String day) =>
+      pseudo(super.weekReviewLightest(day));
+
+  @override
+  String get weekPaceMornings => pseudo(super.weekPaceMornings);
+
+  @override
+  String get weekPaceAfternoons => pseudo(super.weekPaceAfternoons);
+
+  @override
+  String get weekPaceAllDone => pseudo(super.weekPaceAllDone);
+
+  @override
+  String get weekPaceQuiet => pseudo(super.weekPaceQuiet);
+
+  @override
+  String weekLoadBoth(String busiest, String lightest) =>
+      pseudo(super.weekLoadBoth(busiest, lightest));
+
+  @override
+  String weekLoadBusiest(String busiest) =>
+      pseudo(super.weekLoadBusiest(busiest));
+
+  @override
+  String weekCarryAsk(int count) => pseudo(super.weekCarryAsk(count));
+
+  @override
+  String get weekCarryPlace => pseudo(super.weekCarryPlace);
+
+  @override
+  String get weekCarryInbox => pseudo(super.weekCarryInbox);
+
+  @override
+  String get weekCarryTitle => pseudo(super.weekCarryTitle);
+
+  @override
+  String weekCarrySubtitle(int count) => pseudo(super.weekCarrySubtitle(count));
+
+  @override
+  String get weekCarryAccept => pseudo(super.weekCarryAccept);
+
+  @override
+  String get weekCarryAccepted => pseudo(super.weekCarryAccepted);
+
+  @override
+  String get weekShareTitles => pseudo(super.weekShareTitles);
+
+  @override
+  String get weekShareImage => pseudo(super.weekShareImage);
+
+  @override
+  String weekShareDayTitles(String day, String titles) =>
+      pseudo(super.weekShareDayTitles(day, titles));
+
+  @override
+  String get weekReviewNoStreaks => pseudo(super.weekReviewNoStreaks);
+
+  @override
+  String get weekPromptDetail => pseudo(super.weekPromptDetail);
+
+  @override
+  String get weekPromptAction => pseudo(super.weekPromptAction);
+
+  @override
+  String get lowEnergyMode => pseudo(super.lowEnergyMode);
+
+  @override
+  String get lowEnergyTurnOff => pseudo(super.lowEnergyTurnOff);
+
+  @override
+  String get settingsLowEnergyDetail => pseudo(super.settingsLowEnergyDetail);
+
+  @override
+  String lowEnergyCaption(String date) => pseudo(super.lowEnergyCaption(date));
+
+  @override
+  String get lowEnergyGreeting => pseudo(super.lowEnergyGreeting);
+
+  @override
+  String lowEnergyGreetingName(String name) =>
+      pseudo(super.lowEnergyGreetingName(name));
+
+  @override
+  String get lowEnergyOn => pseudo(super.lowEnergyOn);
+
+  @override
+  String lowEnergyUntil(String time, String left) =>
+      pseudo(super.lowEnergyUntil(time, left));
+
+  @override
+  String lowEnergyAt(String time) => pseudo(super.lowEnergyAt(time));
+
+  @override
+  String get lowEnergyNotToday => pseudo(super.lowEnergyNotToday);
+
+  @override
+  String lowEnergyMovedTomorrow(String title) =>
+      pseudo(super.lowEnergyMovedTomorrow(title));
+
+  @override
+  String lowEnergySkipped(String title) =>
+      pseudo(super.lowEnergySkipped(title));
+
+  @override
+  String lowEnergyLater(int count) => pseudo(super.lowEnergyLater(count));
+
+  @override
+  String get lowEnergyShowLater => pseudo(super.lowEnergyShowLater);
+
+  @override
+  String get lowEnergyHideLater => pseudo(super.lowEnergyHideLater);
+
+  @override
+  String get lowEnergyPropose => pseudo(super.lowEnergyPropose);
+
+  @override
+  String get lowEnergyProposeAction => pseudo(super.lowEnergyProposeAction);
+
+  @override
+  String get lowEnergyNudgesOff => pseudo(super.lowEnergyNudgesOff);
+
+  @override
+  String get lowEnergyNothing => pseudo(super.lowEnergyNothing);
+
+  @override
+  String get lowEnergyProposalTitle => pseudo(super.lowEnergyProposalTitle);
+
+  @override
+  String lowEnergyProposalSubtitle(int count) =>
+      pseudo(super.lowEnergyProposalSubtitle(count));
+
+  @override
+  String get lowEnergyProposalAccept => pseudo(super.lowEnergyProposalAccept);
+
+  @override
+  String get lowEnergyProposalAccepted =>
+      pseudo(super.lowEnergyProposalAccepted);
+
+  @override
+  String get journalTitle => pseudo(super.journalTitle);
+
+  @override
+  String get journalEntryDetail => pseudo(super.journalEntryDetail);
+
+  @override
+  String get journalSearchHint => pseudo(super.journalSearchHint);
+
+  @override
+  String journalDays(int count) => pseudo(super.journalDays(count));
+
+  @override
+  String journalLast(String date, int ago, int count) =>
+      pseudo(super.journalLast(date, ago, count));
+
+  @override
+  String journalNoMatch(String query) => pseudo(super.journalNoMatch(query));
+
+  @override
+  String get journalEmpty => pseudo(super.journalEmpty);
+
+  @override
+  String journalDayLabel(String date, String summary) =>
+      pseudo(super.journalDayLabel(date, summary));
+
+  @override
+  String journalMatch(String title, String time) =>
+      pseudo(super.journalMatch(title, time));
+
+  @override
+  String get journalStripTitle => pseudo(super.journalStripTitle);
+
+  @override
+  String journalStripLabel(int count) => pseudo(super.journalStripLabel(count));
+
+  @override
+  String get dumpTitle => pseudo(super.dumpTitle);
+
+  @override
+  String get dumpHint => pseudo(super.dumpHint);
+
+  @override
+  String get dumpPlan => pseudo(super.dumpPlan);
+
+  @override
+  String get dumpNothing => pseudo(super.dumpNothing);
+
+  @override
+  String dumpSubtitle(int count, String day) =>
+      pseudo(super.dumpSubtitle(count, day));
+
+  @override
+  String get dumpAccepted => pseudo(super.dumpAccepted);
+
+  @override
+  String get dumpEarlier => pseudo(super.dumpEarlier);
+
+  @override
+  String get dumpSearch => pseudo(super.dumpSearch);
+
+  @override
+  String get dumpUseAgain => pseudo(super.dumpUseAgain);
+
+  @override
+  String get proposalToInbox => pseudo(super.proposalToInbox);
+
+  @override
+  String get releaseNotes100 => pseudo(super.releaseNotes100);
 }

@@ -54,12 +54,16 @@ final class DotIntentsProvider
 
 String _$dotIntentsHash() => r'd32f7c5cb0354c4ee3429b565131263b6bd2922c';
 
-/// Where this platform's surfaces queue actions (docs/09 M9.2).
+/// Where this platform's surfaces queue actions (docs/09 M9.2). On the
+/// Mac only the share extension does (M12.4), through the same channel
+/// and with no `home_widget` fallback.
 
 @ProviderFor(actionQueueStore)
 final actionQueueStoreProvider = ActionQueueStoreProvider._();
 
-/// Where this platform's surfaces queue actions (docs/09 M9.2).
+/// Where this platform's surfaces queue actions (docs/09 M9.2). On the
+/// Mac only the share extension does (M12.4), through the same channel
+/// and with no `home_widget` fallback.
 
 final class ActionQueueStoreProvider
     extends
@@ -69,7 +73,9 @@ final class ActionQueueStoreProvider
           ActionQueueStore
         >
     with $Provider<ActionQueueStore> {
-  /// Where this platform's surfaces queue actions (docs/09 M9.2).
+  /// Where this platform's surfaces queue actions (docs/09 M9.2). On the
+  /// Mac only the share extension does (M12.4), through the same channel
+  /// and with no `home_widget` fallback.
   ActionQueueStoreProvider._()
     : super(
         from: null,
@@ -103,7 +109,7 @@ final class ActionQueueStoreProvider
   }
 }
 
-String _$actionQueueStoreHash() => r'461b7a99550362086cbb451b38f34fde17dbdfa8';
+String _$actionQueueStoreHash() => r'0e4baa4733604910271e796a4ff4c3a859db776e';
 
 @ProviderFor(actionQueueDrainer)
 final actionQueueDrainerProvider = ActionQueueDrainerProvider._();

@@ -49,6 +49,13 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="dottoday"/>
             </intent-filter>
+            <!-- Share → Dottoday: text or a link becomes an Inbox task (B6,
+                 docs/09 M12.4, intents/ShareIntake.kt). -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
             <meta-data android:name="flutter_deeplinking_enabled" android:value="true"/>
             <!-- Long-press shortcuts: Add task, What's next (B6, docs/09 M9.2c). -->
             <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts"/>

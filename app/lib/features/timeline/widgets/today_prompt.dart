@@ -4,10 +4,13 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/calendar/calendar_moves.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/review/week_review.dart';
 import 'package:dottoday/domain/scheduling/calendar_move_prompt.dart';
 import 'package:dottoday/domain/scheduling/day_review.dart';
 import 'package:dottoday/domain/scheduling/running_late.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
+import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
 import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_prompts.dart';
@@ -24,6 +27,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// while one-off tasks are unfinished; before it, with "Running-late
 /// nudge" on, "Running late?" once a task ended unticked; otherwise, with
 /// the "Plan your inbox" nudge on, that card (F3.3, [InboxNudgeCard]).
+/// On the week's last day, after the Day review, "This week" (M12.1).
 /// "Not now" puts it away for the day (this session). Nothing on other
 /// days. A task over [rebalanceOverrunMin] past its end opens Rebalance;
 /// before the nudge, an event the calendar moved into the plan offers it
@@ -37,6 +41,8 @@ class TodayPrompt extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (date != today) return const SizedBox.shrink();
+    // Low-energy mode: every nudge is off until Wake Up (11 D2, M12.2).
+    if (watchLowEnergy(ref)) return const SizedBox.shrink();
     final data = ref.watch(timelineDataProvider(today)).value;
     if (data == null) return const SizedBox.shrink();
     final dismissed = ref.watch(dismissedPromptsProvider);
@@ -51,10 +57,15 @@ class TodayPrompt extends ConsumerWidget {
     void notNow(TodayPromptKind kind) =>
         ref.read(dismissedPromptsProvider.notifier).dismiss(kind, today);
     if (!now.isBefore(shape.bedUtc)) {
-      final show =
-          !dismissed.contains((TodayPromptKind.review, today)) &&
-          reviewOf(data.blocks).hasRest;
-      return show ? _review(context, notNow) : const SizedBox.shrink();
+      if (!dismissed.contains((TodayPromptKind.review, today)) &&
+          reviewOf(data.blocks).hasRest) {
+        return _review(context, notNow);
+      }
+      final weekEnds =
+          reviewWeek(today, data.settings.firstDayOfWeek).last == today;
+      return weekEnds && !dismissed.contains((TodayPromptKind.week, today))
+          ? _week(context, notNow)
+          : const SizedBox.shrink();
     }
     final move = moveToRebalance(
       ref.watch(calendarMovesProvider).values,
@@ -112,6 +123,18 @@ extension on TodayPrompt {
       ),
     );
   }
+
+  /// Sunday at Bedtime (the week's last day): the weekly review (11 D1).
+  Widget _week(BuildContext context, void Function(TodayPromptKind) notNow) =>
+      PromptCard(
+        title: context.l10n.weekReviewTitle,
+        child: PromptNudge(
+          detail: context.l10n.weekPromptDetail,
+          action: context.l10n.weekPromptAction,
+          onAction: () => unawaited(showWeekReview(context, today)),
+          onNotNow: () => notNow(TodayPromptKind.week),
+        ),
+      );
 
   Widget _review(BuildContext context, void Function(TodayPromptKind) notNow) =>
       PromptCard(

@@ -81,7 +81,7 @@ void main() {
     tester,
   ) async {
     final h = await pumpSettings(tester);
-    expect(_cupertinoSwitches(), findsNWidgets(7));
+    expect(_cupertinoSwitches(), findsNWidgets(8));
     await _tapRow(tester, 'Show free time');
     expect((await storedSettings(h)).showFreeTime, isFalse);
     // F3.3: the plan-your-inbox nudge starts off.
@@ -95,7 +95,7 @@ void main() {
   testWidgets('Android draws Material switches', (tester) async {
     await pumpSettings(tester, platform: TargetPlatform.android);
     expect(_cupertinoSwitches(), findsNothing);
-    expect(find.byType(Switch), findsNWidgets(7));
+    expect(find.byType(Switch), findsNWidgets(8));
   });
 
   testWidgets('choices: week start, time format, shift, snap, theme', (

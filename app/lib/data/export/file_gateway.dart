@@ -48,6 +48,16 @@ abstract interface class FileGateway {
   /// Mac popovers. Throws only on a platform error.
   Future<DeliveryOutcome> deliver(List<ExportFile> files, {Rect? origin});
 
+  /// Hands a PNG [png] named [name] over (11 D1 share image): the OS
+  /// share sheet on iPhone, Android and the Mac; Web Share on the web where
+  /// the browser offers it for files, else a download. Throws only on a
+  /// platform error.
+  Future<DeliveryOutcome> shareImage(
+    Uint8List png, {
+    required String name,
+    Rect? origin,
+  });
+
   /// Opens the file picker for a `.json` backup and reads it, refusing
   /// anything over [maxBytes] before reading it.
   Future<PickedBackup> pickBackup({required int maxBytes});
@@ -90,6 +100,37 @@ final class PlatformFileGateway implements FileGateway {
         ? DeliveryOutcome.cancelled
         : DeliveryOutcome.delivered;
   }
+
+  @override
+  Future<DeliveryOutcome> shareImage(
+    Uint8List png, {
+    required String name,
+    Rect? origin,
+  }) async {
+    final result = await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile.fromData(png, name: name, mimeType: _png)],
+        fileNameOverrides: [name],
+        sharePositionOrigin: origin,
+      ),
+    );
+    if (result.status != ShareResultStatus.unavailable) {
+      return result.status == ShareResultStatus.dismissed
+          ? DeliveryOutcome.cancelled
+          : DeliveryOutcome.delivered;
+    }
+    // A browser without Web Share for files: download it.
+    final saved = await FilePicker.saveFile(
+      fileName: name,
+      bytes: png,
+      mimeType: _png,
+    );
+    return saved == null && !kIsWeb
+        ? DeliveryOutcome.cancelled
+        : DeliveryOutcome.delivered;
+  }
+
+  static const _png = 'image/png';
 
   /// One save dialog (Mac) or one download per file (web).
   Future<DeliveryOutcome> _save(List<ExportFile> files) async {

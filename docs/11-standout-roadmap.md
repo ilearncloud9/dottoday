@@ -65,12 +65,14 @@ The one-line position after this roadmap ships: **"Your day as a thread. Always 
 
 ### B4 · Brain-dump to thread — PRD Phase 2
 - Free text or dictation → proposed dots on the chosen day (B4 model, B3 proposal) → Accept. History of dumps kept locally, searchable. Cloud-only cases are Pro.
+- As built (docs/09 M12.5): from Today's ⋯; timed lines at their time, the rest into the first free time in the order written, the Inbox when the day is full; the dump is kept locally before the proposal opens.
 
 ### B5 · Paper plan to thread — **new, future, do not build now**
 - Photo → on-device OCR → Inbox items via B3. Recorded here so the data model (B2) and B3 are ready; no milestone.
 
 ### B6 · Capture anywhere — Siri/Shortcuts PRD Phase 2 + **new**
 - Share sheet (link / email / message → Inbox task with source attached), Action button / Control Center "Add", Watch dictation (queues locally, F3 rule), private **email-to-Inbox** address (Pro). All through `AddTask` (B6) and the existing parser.
+- As built (docs/09 M12.4): Android share intent, iOS and Mac share extensions and the web's paste all reach the same rule — the title from the subject or first line, the whole text (with the link) as the note, always the Inbox. No new dependency; email-to-Inbox and watch dictation are Phase 2.
 
 ## C. Stay in control — the day adapts, the user decides
 
@@ -98,12 +100,15 @@ Enforced by `app/test/policy/no_shame_copy_test.dart` over every English string 
 - Daily: unchanged mechanics; copy audited against the principle: counts and moves, never red, never "missed streak". Writes the B5 snapshot.
 - Weekly (Sunday at Bedtime or on demand): the week as **seven dots** — one per day, size = hours planned, ring split into that day's tasks in their colours (done solid, not done faint), done count in the centre, tap a day to pop out its thread — with Busiest/Lightest chips and one sentence. **No streaks anywhere in the product.**
 - Share: the day's (or week's) thread as an image, task titles optional (off by default). Render: `B-ios-week-review.png` (seven dots).
+- As built (docs/09 M12.1): only this week is described — no comparison with another week, no count of days with something left (owner, 2026-10-25). The sentence is two halves at most: how real starts went against the plan (mornings, else afternoons, "to plan" = ≥ 80 % of ≥ 3 real starts within 15 min), then which day carried the most and which breathed. Each day is a `DaySnapshot` built on read from the local tasks.
 
 ### D2 · Low-energy mode — **new**
 - One switch in the Today header menu and in Settings: Today collapses to the next dot and a "later" pile, counts and "N planned" hidden, all nudges off, Rebalance offers "move everything optional to tomorrow" once. Turns itself off at the next Wake Up. Render: `B-ios-low-energy.png`.
+- As built (docs/09 M12.2): stored as `lowEnergyUntil` (the next Wake Up) in the synced settings, so it ends by itself everywhere. "Nudges off" = no notification but the alarm-loud ones (A0) until then and no Today prompts. Optional = the user's own one-off task, unpinned, not started, not high energy. Not today on the next dot is the user's own move (tomorrow, or skip for a repeat), with Undo.
 
 ### D3 · Thread journal — **new**
 - Every past day kept as a B5 snapshot: scroll back by day, search ("when did I last run?"), export a year strip (the month grid's completion dots, 12 rows). Lives under Search › "Past days". Pro.
+- As built (docs/09 M12.3): the snapshots are derived on read from the local tasks (no stored copy, no migration), over the last twelve months; search matches titles and answers with the newest day.
 
 ## E. Together
 
@@ -129,6 +134,8 @@ Nothing in M6.5–M12 is gated. Build every feature ungated; the only pricing-re
 
 Proposed free: the thread, recurrence, calendars, notifications, sync, widgets, **the live dot on every surface (A1)**, Focus (A3), Rebalance (C1), Break it down on-device (B1), Smallest step, Unstick, three routines, Bedtime review (daily), Reality thread view, low-energy mode, export.
 Proposed Pro: unlimited routines, Reality-thread learning + energy suggestions, weekly review + share image, thread journal, brain-dump and cloud model fallback, email-to-Inbox, themes and icon packs (and, if ever built, integrations and body double). Indicative price: €2.99/month, €24.99/year, €69.99 lifetime; 7-day trial on any plan; lifetime honoured forever (R-18).
+
+Trials and lifetime unlocks are store-managed (introductory offers / non-consumable), never server-granted.
 
 ## Milestone proposal (the agent re-plans `09-implementation-plan.md` from this)
 

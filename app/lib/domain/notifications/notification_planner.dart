@@ -54,6 +54,7 @@ final class NotificationPlanner {
   /// future [testAlarmAtUtc] adds the test alarm (M6.5.9). Each occurrence
   /// with a step in [firstSteps] gets one Smallest step reminder at
   /// [noStartAt] (M10.6); a real start, Done or a move re-plans it away.
+  /// While [daily]'s low-energy mode lasts, only loud ones stay (M12.2).
   List<PlannedNotification> plan({
     required Iterable<Occurrence> occurrences,
     required String tzId,
@@ -133,6 +134,12 @@ final class NotificationPlanner {
     }
     if (testAlarmAtUtc case final at? when at.isAfter(now)) {
       planned.add(testAlarm(at, usedIds));
+    }
+    // Low-energy mode (11 D2, M12.2): every nudge before it ends is off;
+    // alarm-loud starts (the day's first dot, routine starts, the test
+    // alarm) still ring (A0).
+    if (daily?.lowEnergyUntil case final until? when until.isAfter(now)) {
+      planned.removeWhere((n) => !n.loud && n.fireAtUtc.isBefore(until));
     }
     planned.sort((a, b) {
       final byTime = a.fireAtUtc.compareTo(b.fireAtUtc);

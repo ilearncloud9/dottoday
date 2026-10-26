@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_parts.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/running_late_sheet.dart';
@@ -32,6 +35,7 @@ class SpreadHeader extends ConsumerWidget {
     final t = DotTheme.of(context);
     final locale = Localizations.localeOf(context).toLanguageTag();
     final isToday = date == today;
+    final low = isToday && watchLowEnergy(ref);
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
         DotSpace.xxl + DotSpace.s,
@@ -50,30 +54,39 @@ class SpreadHeader extends ConsumerWidget {
                   container: true,
                   header: true,
                   child: Text(
-                    dayTitle(context, ref, date: date, today: today),
+                    low
+                        ? lowEnergyTitle(context, ref)
+                        : dayTitle(context, ref, date: date, today: today),
                     style: t.styles.pageTitle,
                   ),
                 ),
                 Text(
-                  _subtitle(context, ref, DateFormat.MMMMEEEEd(locale)),
+                  low
+                      // Counts are hidden in low-energy mode (11 D2).
+                      ? context.l10n.lowEnergyCaption(
+                          DateFormat.MMMMEEEEd(locale).format(date),
+                        )
+                      : _subtitle(context, ref, DateFormat.MMMMEEEEd(locale)),
                   style: t.styles.body.copyWith(color: t.colors.muted),
                 ),
               ],
             ),
           ),
-          ..._end(isToday),
+          if (low)
+            LowEnergySwitch(
+              onChanged: (on) => toggleLowEnergy(context, on: on),
+            ),
+          ..._end(isToday && !low),
         ],
       ),
     );
   }
 
   /// Running late and the day dot on today, else the Today pill; the ⋯.
-  List<Widget> _end(bool isToday) => [
-    if (isToday) ...[
-      _LateButton(today: today),
-      TodayDot(today: today),
-    ] else
-      TodayPill(onTap: onToday),
+  /// [late] is false away from today and in low-energy mode.
+  List<Widget> _end(bool late) => [
+    if (late) _LateButton(today: today),
+    if (date == today) TodayDot(today: today) else TodayPill(onTap: onToday),
     TodayMenu(date: date, today: today, withLate: false),
   ];
 
