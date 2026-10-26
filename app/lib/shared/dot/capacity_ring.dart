@@ -20,14 +20,27 @@ String quarterHours(int minutes) {
 class CapacityRing extends StatelessWidget {
   const CapacityRing({
     required this.share,
-    required this.plannedMinutes,
+    required int this.plannedMinutes,
     required this.label,
     super.key,
   });
 
+  /// [done] of [of] as the same ring with nothing inside (docs/13 §4.1,
+  /// Settings › Learning): the count is the row's value beside it, so it
+  /// grows with the text size instead of overflowing 38 px.
+  const CapacityRing.count({
+    required int done,
+    required int of,
+    required this.label,
+    super.key,
+  }) : share = of <= 0 ? 0 : done / of,
+       plannedMinutes = null;
+
   /// Planned / awake, 0–1.
   final double share;
-  final int plannedMinutes;
+
+  /// The hours shown inside; null for a count ring.
+  final int? plannedMinutes;
   final String label;
 
   static const double size = 38;
@@ -47,13 +60,15 @@ class CapacityRing extends StatelessWidget {
             fill: t.colors.accent,
           ),
           child: Center(
-            child: Text(
-              quarterHours(plannedMinutes),
-              style: t.styles.rowMeta.copyWith(
-                color: t.colors.text,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            child: plannedMinutes == null
+                ? null
+                : Text(
+                    quarterHours(plannedMinutes!),
+                    style: t.styles.rowMeta.copyWith(
+                      color: t.colors.text,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
           ),
         ),
       ),

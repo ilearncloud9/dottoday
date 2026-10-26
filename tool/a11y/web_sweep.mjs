@@ -1,5 +1,5 @@
 // Design sweep on the web build (docs/08 §7, docs/09 M11.6): every main
-// screen and the M11 and M12 screens at the compact and expanded widths, light and
+// screen and the M11, M12 and M13 screens at the compact and expanded widths, light and
 // dark (prefers-color-scheme), saved to app/build/sweep/web_<theme>_<width>_<shot>.png.
 // Needs a debug web build (the demo data lives in the debug menu), e.g.
 // `flutter run -d web-server --web-port 8099 --dart-define-from-file=.env.example`.
@@ -144,6 +144,18 @@ for (const theme of ['light', 'dark']) {
       await page.waitForTimeout(2_000);
       await shot('brain_dump_proposal');
       await tapText(page, 'Discard');
+      // M13 (docs/13 §11): Settings › Learning, and a learned value's
+      // explanation open on the reality thread.
+      await fresh('/settings');
+      await page.getByText('LEARNING').first().scrollIntoViewIfNeeded();
+      await page.waitForTimeout(900);
+      await shot('settings_learning');
+      await fresh('/today');
+      await tapText(page, 'Reality');
+      await page.getByRole('button', { name: /learned from your history$/ })
+        .first().click();
+      await page.waitForTimeout(900);
+      await shot('learned_explained');
       console.log(`PASS ${tag}`);
     } catch (e) {
       failures.push(`${tag}: ${e.message.split('\n')[0]}`);

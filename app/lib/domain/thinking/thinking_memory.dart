@@ -2,7 +2,7 @@ import 'package:dottoday/domain/thinking/thinking_proposals.dart';
 
 /// What the device remembers for the thinking features, all local only
 /// (ADR-0009 §4): accepted breakdowns per title (11 B1 "My usual
-/// breakdown") and how long tasks with a title took.
+/// breakdown"). How long tasks take is `LearningIndex`'s (docs/13 §2).
 abstract interface class ThinkingMemory {
   /// The steps accepted last time for [title] (case and spacing ignored),
   /// or null.
@@ -11,10 +11,6 @@ abstract interface class ThinkingMemory {
   /// Remembers [steps] as the usual breakdown of [title]; called by Accept
   /// only (M10.4), never by a backend.
   Future<void> saveBreakdown(String title, List<ProposedStep> steps);
-
-  /// Minutes each past task named [title] took, newest first: the real
-  /// length when both actual timestamps exist (B1), else the planned one.
-  Future<List<int>> pastLengths(String title);
 }
 
 /// What was asked of a model and what came back, kept on this device so

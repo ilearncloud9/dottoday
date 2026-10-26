@@ -1,4 +1,5 @@
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -6,9 +7,9 @@ import 'package:timezone/data/latest.dart' as tz_data;
 import '../../support/energy_history.dart';
 import 'settings_harness.dart';
 
-// Settings › Planning › Energy suggestions (docs/09 M11.5, 11 C4): off and
-// locked until twenty high-energy tasks were finished, then on until the
-// user turns it off.
+// Settings › Learning › Energy suggestions (11 C4, docs/13 §3): off and
+// locked with its progress until twenty high-energy tasks were finished,
+// then available but still off ("ready") until the user turns it on.
 
 Finder get _row => find.ancestor(
   of: find.text('Energy suggestions'),
@@ -24,6 +25,8 @@ void main() {
       find.text('After 20 finished high-energy tasks · 7 so far'),
       findsOneWidget,
     );
+    expect(find.text('7/20'), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp('7 of 20 so far')), findsOneWidget);
     await tester.tap(_row.first);
     await tester.pumpAndSettle();
     final s = h.container.read(currentProfileProvider).value!.settings;
@@ -34,17 +37,23 @@ void main() {
     );
   });
 
-  testWidgets('twenty: on by default, and the user can turn it off', (
+  testWidgets('twenty: ready but off until the user turns it on', (
     tester,
   ) async {
     final h = await pumpSettings(tester, rows: energyHistory());
+    expect(find.text('ready — based on 20 completed tasks'), findsOneWidget);
+    Settings settings() =>
+        h.container.read(currentProfileProvider).value!.settings;
+    expect(settings().energySuggestions, isNull, reason: 'unset is off');
+    await tester.tap(_row.first);
+    await tester.pumpAndSettle();
+    expect(settings().energySuggestions, isTrue, reason: 'on is explicit');
     expect(
       find.text('Suggest times when you usually finish high-energy tasks'),
       findsOneWidget,
     );
     await tester.tap(_row.first);
     await tester.pumpAndSettle();
-    final s = h.container.read(currentProfileProvider).value!.settings;
-    expect(s.energySuggestions, isFalse);
+    expect(settings().energySuggestions, isFalse);
   });
 }

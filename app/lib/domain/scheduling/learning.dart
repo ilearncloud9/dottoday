@@ -1,4 +1,8 @@
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
+import 'package:dottoday/domain/scheduling/step_runs.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 
 /// What the user's own history says about a task (11 C3 learning, docs/09
@@ -8,35 +12,46 @@ final class Learned {
     required this.samples,
     this.usualMinutes,
     this.startOffsetMinutes,
+    this.offsetSamples = 0,
   });
 
   /// Occurrences with an actual start and end it was taken from.
   final int samples;
 
   /// Median actual length, rounded to 5 minutes; null under
-  /// [learningMinSamples].
+  /// [LearningThresholds.taskMinSamples].
   final int? usualMinutes;
 
   /// Median of actual start − planned start: positive when it usually
-  /// starts after the plan. Null under [learningMinSamples].
+  /// starts after the plan. Null under [LearningThresholds.taskMinSamples].
   final int? startOffsetMinutes;
+
+  /// Runs [startOffsetMinutes] was taken from (those with a planned start).
+  final int offsetSamples;
 
   static const none = Learned(samples: 0);
 }
 
-/// How many recent occurrences are looked at, per task.
-const learningWindow = 10;
-
-/// Fewer samples than this say nothing.
-const learningMinSamples = 3;
-
 /// The user's tasks with actual timestamps, indexed by normalised title
 /// and by series, so each lookup is cheap.
 final class LearningIndex {
-  LearningIndex._(this._byTitle, this._bySeries);
+  LearningIndex._(
+    this._byTitle,
+    this._bySeries,
+    this._bySteps,
+    this._resets,
+    this.thresholds,
+  );
 
-  /// From [history] (any order, any length; deleted rows are skipped).
-  factory LearningIndex.from(Iterable<Occurrence> history) {
+  /// From [history] and its [steps] (any order, any length; deleted rows
+  /// are skipped). [resets] (normalised title → instant, this device's
+  /// "Reset for this task", docs/13 §6) hide that title's earlier runs.
+  factory LearningIndex.from(
+    Iterable<Occurrence> history, {
+    Iterable<Subtask> steps = const [],
+    Map<String, DateTime> resets = const {},
+    LearningThresholds thresholds = LearningThresholds.standard,
+  }) {
     final ran = [
       for (final o in history)
         if (o.deletedAt == null && _span(o) != null) o,
@@ -47,15 +62,80 @@ final class LearningIndex {
       (byTitle[normaliseTitle(o.title)] ??= []).add(o);
       if (o.seriesId case final s?) (bySeries[s] ??= []).add(o);
     }
-    return LearningIndex._(byTitle, bySeries);
+    return LearningIndex._(
+      byTitle,
+      bySeries,
+      stepRunsByKey(history, steps),
+      resets,
+      thresholds,
+    );
   }
 
-  static final empty = LearningIndex._(const {}, const {});
+  static final empty = LearningIndex._(
+    const {},
+    const {},
+    const {},
+    const {},
+    LearningThresholds.standard,
+  );
+
+  /// The numbers this index answers by.
+  final LearningThresholds thresholds;
 
   final Map<String, List<Occurrence>> _byTitle;
   final Map<String, List<Occurrence>> _bySeries;
+  final Map<String, List<StepRun>> _bySteps;
+  final Map<String, DateTime> _resets;
 
-  /// What the last [learningWindow] runs of [title] — or of [seriesId]'s
+  /// Whether a run of [title] at [at] counts: none before its reset.
+  bool _counts(String title, DateTime at) =>
+      !at.isBefore(_resets[normaliseTitle(title)] ?? _never);
+
+  static final _never = DateTime.utc(1970);
+
+  /// Titles that say something now (docs/13 §4.1 "Ready for 3 tasks").
+  int get tasksReady => [
+    for (final title in _byTitle.keys)
+      if (forTask(title: title).usualMinutes != null) title,
+  ].length;
+
+  /// Steps that say something now ("Ready for 2 steps").
+  int get stepsReady => [
+    for (final MapEntry(:key, :value) in _bySteps.entries)
+      if (_stepRuns(stepKeyTask(key), value).length >=
+          thresholds.stepMinSamples)
+        key,
+  ].length;
+
+  List<StepRun> _stepRuns(String taskTitle, List<StepRun> runs) => [
+    for (final r in runs)
+      if (_counts(taskTitle, r.tickedAt)) r,
+  ];
+
+  /// What the last [LearningThresholds.window] real runs of [stepTitle] in
+  /// [taskTitle] say (docs/13 §5): a usual length from
+  /// [LearningThresholds.stepMinSamples], no start offset.
+  ///
+  /// ```dart
+  /// index.forStep(taskTitle: 'Clean', stepTitle: 'Dishes').usualMinutes; // 15
+  /// ```
+  Learned forStep({required String taskTitle, required String stepTitle}) {
+    final runs = _stepRuns(
+      taskTitle,
+      _bySteps[stepKey(taskTitle, stepTitle)] ?? const [],
+    );
+    final recent = runs.take(thresholds.window).toList();
+    if (recent.length < thresholds.stepMinSamples) {
+      return Learned(samples: recent.length);
+    }
+    final usual = _median([for (final r in recent) r.minutes]);
+    return Learned(
+      samples: recent.length,
+      usualMinutes: ((usual / 5).round() * 5).clamp(5, 1440),
+    );
+  }
+
+  /// What the last [LearningThresholds.window] runs of [title] — or of [seriesId]'s
   /// repeats, so a renamed repeat keeps its history — say.
   ///
   /// ```dart
@@ -68,10 +148,12 @@ final class LearningIndex {
         ...?_bySeries[seriesId],
         ...?_byTitle[normaliseTitle(title)],
       ])
-        if (seen.add(o.id)) o,
+        // A reset of this title covers its series' runs too.
+        if (seen.add(o.id) && _counts(title, o.actualStartUtc!)) o,
     ]..sort((a, b) => b.actualStartUtc!.compareTo(a.actualStartUtc!));
-    final recent = rows.take(learningWindow).toList();
-    if (recent.length < learningMinSamples) {
+    final recent = rows.take(thresholds.window).toList();
+    final min = thresholds.taskMinSamples;
+    if (recent.length < min) {
       return Learned(samples: recent.length);
     }
     final usual = _median([for (final o in recent) _span(o)!]);
@@ -83,7 +165,8 @@ final class LearningIndex {
     return Learned(
       samples: recent.length,
       usualMinutes: ((usual / 5).round() * 5).clamp(5, 1440),
-      startOffsetMinutes: offsets.length < learningMinSamples
+      offsetSamples: offsets.length,
+      startOffsetMinutes: offsets.length < min
           ? null
           : _median(offsets).round(),
     );
@@ -124,3 +207,13 @@ int? lateAmountFor(int plannedMinutes, Learned learned, List<int> choices) {
   final extra = usual - plannedMinutes;
   return choices.firstWhere((c) => c >= extra, orElse: () => choices.last);
 }
+
+/// Finished tasks in [history] with a real start and end (docs/13 §2): what
+/// the reality thread waits for, app-wide.
+int realityRuns(Iterable<Occurrence> history) => [
+  for (final o in history)
+    if (o.deletedAt == null &&
+        o.status == OccurrenceStatus.done &&
+        _span(o) != null)
+      o,
+].length;

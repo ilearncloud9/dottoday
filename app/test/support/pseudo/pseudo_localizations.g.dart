@@ -3546,6 +3546,50 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get learnInsightOk => pseudo(super.learnInsightOk);
 
   @override
+  String learnCaption(int total, int done) =>
+      pseudo(super.learnCaption(total, done));
+
+  @override
+  String get learnCaptionHide => pseudo(super.learnCaptionHide);
+
+  @override
+  String get learnRealityReady => pseudo(super.learnRealityReady);
+
+  @override
+  String get realityNothingStartedToday =>
+      pseudo(super.realityNothingStartedToday);
+
+  @override
+  String learnBasedOn(int count) => pseudo(super.learnBasedOn(count));
+
+  @override
+  String learnEnergyBasedOn(int count) =>
+      pseudo(super.learnEnergyBasedOn(count));
+
+  @override
+  String learnFromHistory(String value) =>
+      pseudo(super.learnFromHistory(value));
+
+  @override
+  String get learnExplainHint => pseudo(super.learnExplainHint);
+
+  @override
+  String get learnReset => pseudo(super.learnReset);
+
+  @override
+  String learnResetDone(String title) => pseudo(super.learnResetDone(title));
+
+  @override
+  String learnResetConfirm(String title) =>
+      pseudo(super.learnResetConfirm(title));
+
+  @override
+  String get learnResetConfirmAction => pseudo(super.learnResetConfirmAction);
+
+  @override
+  String get learnResetKeep => pseudo(super.learnResetKeep);
+
+  @override
   String lateUsually(String title, String duration) =>
       pseudo(super.lateUsually(title, duration));
 
@@ -3689,8 +3733,60 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get settingsEnergyDetail => pseudo(super.settingsEnergyDetail);
 
   @override
-  String settingsEnergyLocked(int count) =>
-      pseudo(super.settingsEnergyLocked(count));
+  String settingsEnergyLocked(int total, int count) =>
+      pseudo(super.settingsEnergyLocked(total, count));
+
+  @override
+  String settingsEnergyReady(int count) =>
+      pseudo(super.settingsEnergyReady(count));
+
+  @override
+  String get settingsLearning => pseudo(super.settingsLearning);
+
+  @override
+  String get settingsLearningReality => pseudo(super.settingsLearningReality);
+
+  @override
+  String settingsLearningRealityPending(int total) =>
+      pseudo(super.settingsLearningRealityPending(total));
+
+  @override
+  String get settingsLearningRealityReady =>
+      pseudo(super.settingsLearningRealityReady);
+
+  @override
+  String get settingsLearningDurations =>
+      pseudo(super.settingsLearningDurations);
+
+  @override
+  String settingsLearningDurationsPending(int min) =>
+      pseudo(super.settingsLearningDurationsPending(min));
+
+  @override
+  String settingsLearningTasksReady(int count) =>
+      pseudo(super.settingsLearningTasksReady(count));
+
+  @override
+  String get settingsLearningSteps => pseudo(super.settingsLearningSteps);
+
+  @override
+  String settingsLearningStepsPending(int min) =>
+      pseudo(super.settingsLearningStepsPending(min));
+
+  @override
+  String settingsLearningStepsReady(int count) =>
+      pseudo(super.settingsLearningStepsReady(count));
+
+  @override
+  String settingsLearningProgress(int done, int total) =>
+      pseudo(super.settingsLearningProgress(done, total));
+
+  @override
+  String settingsLearningProgressLabel(int done, int total) =>
+      pseudo(super.settingsLearningProgressLabel(done, total));
+
+  @override
+  String get settingsLearningPrivacy => pseudo(super.settingsLearningPrivacy);
 
   @override
   String addEnergyBest(String range) => pseudo(super.addEnergyBest(range));

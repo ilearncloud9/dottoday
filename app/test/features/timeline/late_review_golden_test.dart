@@ -19,6 +19,7 @@ import '../../support/timeline_fakes.dart';
 /// Today on the demo day, the clock at [now].
 List<Override> _at(DateTime now) => timelineOverrides(
   now: now,
+  learningMeta: captionPutAway(DateTime(now.year, now.month, now.day)),
   minuteTicks: Stream.value(now),
   occurrences: FakeOccurrenceRepository(demoDayRows(DateTime(2026, 10, 21))),
   profile: testProfile(

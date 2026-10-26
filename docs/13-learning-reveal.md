@@ -56,22 +56,22 @@ Tags: **built** = exists on main; **changed** = built, and this document changes
 
 | Row | Glyph / tint | Subtitle before | Indicator | Subtitle after |
 |---|---|---|---|---|
-| Reality thread | `DotGlyphs.dottedLine` / accent ink | "Dottoday is learning how your days really go. Your reality thread appears after about 10 finished tasks." | `CapacityRing.count` 7/10 | "Ready · Plan / Reality is in Today's header" |
+| Reality thread | `DotGlyphs.dottedLine` / accent ink | "Dottoday is learning how your days really go. Your reality thread appears after about 10 finished tasks." | ring + 7/10 under the text | "Ready · Plan / Reality is in Today's header" |
 | Task lengths | `DotGlyphs.clock` / accent ink | "Dottoday is learning how long your tasks really take. Each task shows its usual length after about 4 finished times." | value: "Ready for 3 tasks" (none at 0) | same subtitle, value keeps counting |
 | Step lengths | `DotGlyphs.timer` / mint ink | "Dottoday is learning how long each step takes. A step's timer uses its usual length after about 3 finished times." | value: "Ready for 2 steps" (none at 0) | same |
-| Energy suggestions | `DotGlyphs.bolt` / amber ink (as built) | "After 20 finished high-energy tasks · 7 so far" (locked switch) | `CapacityRing.count` 7/20 | "ready — based on 20 completed tasks" (enabled, off). Once on: the built `settingsEnergyDetail` |
+| Energy suggestions | `DotGlyphs.bolt` / amber ink (as built) | "After 20 finished high-energy tasks · 7 so far" (locked switch) | ring + 7/20 under the text | "ready — based on 20 completed tasks" (enabled, off). Once on: the built `settingsEnergyDetail` |
 
 Footer (the group's caption-style note, muted 12/500): **"Learning happens on your device. Your actual start and end times sync with your account like the rest of your plan; the learned numbers themselves are never uploaded."** This is accurate for the current sync design: `actual_start_utc`/`actual_end_utc` (0004) and `subtasks.done_at` (0008, ADR-0012) are synced columns; every learned value is derived on read from the local database, and resets and reveal state live in `local_meta`, which is never synced or exported.
 
-**Indicator.** `CapacityRing` (doc 10 §3) gains a named constructor `CapacityRing.count(done:, of:, label:)`: the same 38 px conic ring, filled `done / of`, with "7/10" inside (tabular figures) instead of planned hours. There is no new component. The per-task rows show a count instead of a fraction because there is no single "of" for features that reveal per task.
+**Indicator.** `CapacityRing` (doc 10 §3) gains a named constructor `CapacityRing.count(done:, of:, label:)`: the same 38 px conic ring, filled `done / of`, with nothing inside. There is no new component. The ring and its "7/10" sit **under** the row's subtitle (`LearningStatus`), not inside the ring or at the row's end (amended in M13.5: at 200 % text "10/10" overflows 38 px, and a value beside the title squeezed it until words broke). The per-task rows show "Ready for 3 tasks" there instead of a fraction because there is no single "of" for features that reveal per task.
 
 The data comes from one provider, `learningProgressProvider`, derived from the existing 90-day `learningHistoryProvider` plus `LearningMeta` (§8). It returns `({int realityRuns, int tasksReady, int stepsReady, int energyCompletions, bool realityRevealed})`. It is not a second stats mechanism: it reads the same stream and `LearningIndex`.
 
 ### 4.2 Day card header caption (Reality thread only)
 
-**new.** Under today's `DayCard` header, while the reality thread is not yet revealed (§4.3): one muted line, **"Your reality thread appears after about 10 finished tasks · 7 so far"**, with a trailing × (44 px target, Semantics button "Hide until tomorrow").
+**new.** At the top of today's `DayCard` thread (it scrolls with the thread, so at the largest text it never pushes the pinned header past a short card), while the reality thread is not yet revealed (§4.3): one muted line, **"Your reality thread appears after about 10 finished tasks · 7 so far"**, with a trailing × (44 px target, Semantics button "Hide until tomorrow").
 
-- It shows on **today's** card only: the phone `DayPager` and the Mac/web spread's today card.
+- It shows on **today's** card only: the phone `DayPager` and the Mac/web spread's today card. The × is 48 px (both floors), with the tooltip and label "Hide until tomorrow".
 - It shows at most once per day. × stores the local date in `local_meta` (`learning_caption_day`, same shape as `InboxNudgeSeen`), and the caption returns the next day until the threshold is crossed. It is never shown again after the reveal.
 - It is hidden in low-energy mode (11 §D2 hides counts) and in minimal mode (§9).
 - The Add chip, ThreadPicker, Focus and energy line have **no** before-threshold caption.
@@ -80,7 +80,8 @@ The data comes from one provider, `learningProgressProvider`, derived from the e
 
 ### 4.3 At threshold: the toggle reveal
 
-- **Gate.** **changed.** `offerReality = isToday && side == null && hasActuals(blocks) && realityRevealed`. `realityRevealed` is true once `realityRuns >= realityMinRuns` has been seen on this device, and is stored in `local_meta` (`learning_reality_revealed`). A user who stops for three months doesn't lose the toggle when the 90-day window empties.
+- **Gate.** **changed.** `offerReality = isToday && side == null && realityRevealed` (`features/timeline/state/reality_gate.dart`). `realityRevealed` is true once `realityRuns >= realityMinRuns` has been seen on this device, and is stored in `local_meta` (`learning_reality_revealed`). A user who stops for three months doesn't lose the toggle when the 90-day window empties.
+- **A day with nothing started** (owner, 2026-10-26): once revealed, the toggle stays on every day. On a day with no actual start yet, Reality shows the plan as it is with one line at the top of the thread, **"nothing started yet today"**. The toggle is never hidden again.
 - **Highlight, once per device.** The first time the toggle renders after `learning_reality_revealed` is set, the segmented control sits on an `accentTint` pill for `DotMotion.reveal` (new token: hold 2 s, then fade over `slow`). Then `learning_reality_highlighted` is stored and it never runs again. Under reduced motion `DotMotion.reveal` is zero: no tint. Either way, screen readers get one polite announcement, "Plan and reality view is now in the day header".
 - Nothing else: no sheet, no tooltip, no notification. A second device computes the same crossing from synced occurrences and shows its own one highlight; that is accepted.
 
@@ -110,7 +111,8 @@ The data comes from one provider, `learningProgressProvider`, derived from the e
   7. Add's energy line. Its explanation is "based on your last 20 finished high-energy tasks · where most started", with **no** reset, because the energy window is not per title.
 - **Touch and a11y.** The whole line is one 44 px (Android 48) target: Semantics button, label = the visible value plus "learned from your history", hint "Shows how this was worked out". Expanded, it announces the explanation. Keyboard: Enter/Space toggles, Esc collapses. Collapsing happens on a second tap or when the host closes.
 - **Numbers.** N = `Learned.samples` for lengths, the count of runs with a planned start for offsets, and the step's samples for steps. The method word is always "median" for these.
-- **Reset for this task.** It writes `{normalisedTitle: nowUtcMs}` into `local_meta` `learning_resets` (a JSON map, local only, **never synced**, so the copy says "on this device"). `LearningIndex.forTask` and `forStep` ignore runs that started before the reset of the queried title; the cutoff also covers that task's series runs. The line collapses and the value disappears at once. A snackbar says "Learning for Deep work reset on this device" with the built **Undo** (`undoAction`, 30 s), which removes the key. The reset uses accent ink, never error red, and it doesn't ask for confirmation, because it is undoable and local.
+- **Reset for this task.** It writes `{normalisedTitle: nowUtcMs}` into `local_meta` `learning_resets` (a JSON map, local only, **never synced**, so the copy says "on this device"). `LearningIndex.forTask` and `forStep` ignore runs that started before the reset of the queried title; the cutoff also covers that task's series runs. The line collapses and the value disappears at once. On a page (Today, Focus) a snackbar says "Learning for Deep work reset on this device" with the built **Undo** (`undoAction`, 30 s), which puts the previous cutoff back. **In a sheet or popover** (Add, Running late) a snackbar would sit under the modal, out of reach, so the reset asks once inline instead, "Forget what Deep work taught, on this device?" **Reset · Keep** (amended in M13.7; rejected: a messenger scoped to every sheet, which would swallow the snackbars that outlive a sheet, such as Add's "Added"). The reset uses accent ink, never error red.
+- **Built as** `LearnedLine` + `LearnedExplanation` (`.perTitle(l10n, samples:, title:, reset:)` for the per-title hosts) in `shared/learning/`; the reset is `LearningMeta.resetUndoable`, which returns its Undo.
 - After a reset the task starts again from zero and reveals again at `taskMinSamples`.
 
 ## 7. Strings (new or changed ARB keys; English source in `app_en.arb`, de/es/fr updated in the same commit)
@@ -139,10 +141,14 @@ The data comes from one provider, `learningProgressProvider`, derived from the e
 | `learnStartsBefore` | usually starts ~{minutes} min before plan | **changed** wording |
 | `learnBasedOn` | based on your last {count, plural, one{time} other{{count} times}} · median | explanation line |
 | `learnEnergyBasedOn` | based on your last {count} finished high-energy tasks · where most started | energy explanation |
-| `learnFromHistory` | learned from your history | appended to the semantics label |
+| `learnFromHistory` | {value}, learned from your history | the semantics label (one string, no concatenation) |
 | `learnExplainHint` | Shows how this was worked out | semantics hint |
 | `learnReset` | Reset for this task on this device | action |
 | `learnResetDone` | Learning for {title} reset on this device | snackbar; `title` String |
+| `learnResetConfirm` | Forget what {title} taught, on this device? | inline, in a sheet or popover (M13.7) |
+| `learnResetConfirmAction` | Reset | |
+| `learnResetKeep` | Keep | |
+| `realityNothingStartedToday` | nothing started yet today | Reality on a day with no real start (owner, M13.6) |
 
 Kept as built: `learnUsually`, `learnInsight`, `learnInsightOk`, `lateUsually`, `settingsEnergy`, `settingsEnergyDetail`, `undoAction`.
 
@@ -169,7 +175,7 @@ One forward rule, for doc 12 (committed separately by the owner): **Settings ›
 
 Release notes, store text, posts and emails about a data feature (Reality thread, learned lengths, step lengths, energy suggestions) go out only when **≥ 50 % of active users** have crossed that feature's threshold. "Active" means at least one occurrence with an actual start in the last 30 days.
 
-- It is measured by an owner-run aggregate count over the synced `occurrences`/`subtasks` columns, with no titles read. Running it touches the hosted project, so it is a must-ask (CLAUDE.md §10).
+- It is measured by one read-only query, `tool/release/learning_crossing.sql` (M13.8): a single row of counts (`active_users` and one count per feature) over the synced `occurrences`/`subtasks` columns. No user id, title or per-user row leaves it; titles are only hashed inside it to group runs. Its thresholds mirror `LearningThresholds.standard` and its approximations err low (the 90-day window ignores a device's remembered reveal). Running it touches the hosted project, so each run is the owner's call (CLAUDE.md §10).
 - The in-app reveal (§3–§4) is independent: it happens for each user on their own data, whether or not an announcement has gone out.
 - The in-app "What's new" never announces a learning feature before that user's own reveal.
 

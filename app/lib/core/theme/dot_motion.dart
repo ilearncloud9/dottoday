@@ -12,6 +12,7 @@ final class DotMotion {
     required this.slow,
     required this.curve,
     required this.spring,
+    this.reveal = Duration.zero,
   });
 
   static const standard = DotMotion(
@@ -20,6 +21,7 @@ final class DotMotion {
     slow: Duration(milliseconds: 240),
     curve: Curves.easeOut,
     spring: Curves.easeOutBack,
+    reveal: Duration(seconds: 2),
   );
 
   /// All durations zero: animations jump straight to their end state.
@@ -41,6 +43,10 @@ final class DotMotion {
   final Duration fast;
   final Duration base;
   final Duration slow;
+
+  /// How long a one-time reveal accent holds before it fades over [slow]
+  /// (docs/13 §4.3); zero under reduced motion, where nothing is drawn.
+  final Duration reveal;
   final Curve curve;
 
   /// The month pull-open's rubber band (§2.4): a slight overshoot.

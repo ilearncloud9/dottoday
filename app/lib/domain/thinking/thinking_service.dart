@@ -14,8 +14,8 @@ import 'package:dottoday/domain/thinking/thinking_proposals.dart';
 /// - [breakDown]: the saved breakdown (no model), then an on-device model,
 ///   then the empty template.
 /// - [planFromText]: on-device, then Quick Add's parser.
-/// - [suggestDuration]: the user's history when it has [trustedSamples],
-///   then on-device, then any history at all.
+/// - [suggestDuration]: the user's usual length once `LearningIndex` has
+///   one (docs/13 §2), else on-device.
 ///
 /// ```dart
 /// final r = await service.breakDown(
@@ -36,11 +36,6 @@ final class ThinkingService {
 
   final RulesThinkingBackend _rules;
   final List<ThinkingBackend> _onDevice;
-
-  /// History beats a model once the user has done the task this often:
-  /// their own lengths are what "it learns how long things take you"
-  /// promises (11, position line).
-  static const trustedSamples = 3;
 
   Future<Result<BreakdownProposal, ValidationFailure>> breakDown(
     BreakdownRequest request,
@@ -90,12 +85,12 @@ final class ThinkingService {
   ) async {
     final invalid = _checkTitle(request.title);
     if (invalid != null) return Err(invalid);
+    // History beats a model once it says anything: the user's own
+    // lengths are what "it learns how long things take you" promises.
     final history = await _rules.suggestDuration(request);
-    if (history != null && history.samples >= trustedSamples) {
-      return Ok(history);
-    }
+    if (history != null) return Ok(history);
     final model = await _available();
-    return Ok(await model?.suggestDuration(request) ?? history);
+    return Ok(await model?.suggestDuration(request));
   }
 
   Future<ThinkingBackend?> _available() async {

@@ -120,12 +120,22 @@ void main() {
         SubtaskTemplateItem(id: 't1', title: 'Warm up', durationMin: 2),
       ],
     );
+    // ADR-0012 (M13.2): a step's tick time crosses too.
+    final step = subtaskFixture().copyWith(
+      id: '01928c3e-0000-7000-b000-${now.millisecondsSinceEpoch.toString().padLeft(12, '0').substring(0, 12)}',
+      userId: a.account,
+      occurrenceId: task.id,
+      title: 'Find the card',
+      done: true,
+      doneAt: now.subtract(const Duration(minutes: 2)),
+    );
     await a.h.writes.apply(
       WriteBatch(
         userId: a.account,
         occurrences: [task],
         series: [series],
         routines: [routine],
+        subtasks: [step],
       ),
     );
 
@@ -156,6 +166,13 @@ void main() {
     expect(mine.sortOrder, 1.5);
     expect(mine.tzId, 'Europe/Berlin');
     expect(mine.routineStart, isTrue);
+    final theirStep = (await b.h.db.select(b.h.db.subtasks).get()).singleWhere(
+      (r) => r.id == step.id,
+    );
+    expect(
+      (theirStep.done, theirStep.doneAt),
+      (true, step.doneAt!.millisecondsSinceEpoch),
+    );
     final theirRoutine = await DriftRoutineRepository(
       b.h.db,
     ).findById(b.account, routine.id);

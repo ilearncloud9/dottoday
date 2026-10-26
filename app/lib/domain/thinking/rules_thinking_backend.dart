@@ -1,21 +1,26 @@
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/domain/quick_add/quick_add_lexicon.dart';
 import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
+import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:dottoday/domain/thinking/thinking_backend.dart';
 import 'package:dottoday/domain/thinking/thinking_memory.dart';
 import 'package:dottoday/domain/thinking/thinking_proposals.dart';
 
 /// The path that always answers (ADR-0009 §2): the saved breakdown or an
-/// empty three-step template, the median of the user's own lengths, and
+/// empty three-step template, the user's usual length (`LearningIndex`), and
 /// Quick Add's parser for pasted text (R-07). No model, nothing leaves the
 /// device.
 final class RulesThinkingBackend implements ThinkingBackend {
   const RulesThinkingBackend(
     this._memory, {
+    required Future<LearningIndex> Function() learning,
     this.parser = const QuickAddParser(),
-  });
+  }) : _learning = learning;
 
   final ThinkingMemory _memory;
+
+  /// The one place a usual length comes from (docs/13 §2).
+  final Future<LearningIndex> Function() _learning;
   final QuickAddParser parser;
 
   /// "Degrades to the saved list or an empty 3-step template" (11 B1).
@@ -32,9 +37,20 @@ final class RulesThinkingBackend implements ThinkingBackend {
   Future<BreakdownProposal> breakDown(BreakdownRequest request) async {
     final saved = await _memory.savedBreakdown(request.title);
     if (saved != null && saved.isNotEmpty) {
+      final learning = await _learning();
+      Learned usual(ProposedStep s) =>
+          learning.forStep(taskTitle: request.title, stepTitle: s.title);
       return BreakdownProposal(
-        // The user's own list: all of it, as accepted (up to the sheet's cap).
-        steps: saved.take(BreakdownRequest.maxSteps).toList(),
+        // The user's own list: all of it (up to the sheet's cap), each step
+        // with its usual real length where one is known (docs/13 §5), else
+        // as accepted. Still a proposal: nothing is written before Accept.
+        steps: [
+          for (final s in saved.take(BreakdownRequest.maxSteps))
+            switch (usual(s).usualMinutes) {
+              final m? => s.copyWith(durationMin: m),
+              null => s,
+            },
+        ],
         origin: ThinkingOrigin.saved,
       );
     }
@@ -78,14 +94,14 @@ final class RulesThinkingBackend implements ThinkingBackend {
 
   @override
   Future<DurationProposal?> suggestDuration(DurationRequest request) async {
-    final lengths = await _memory.pastLengths(request.title);
-    final median = medianLength(lengths);
-    return median == null
+    final learned = (await _learning()).forTask(title: request.title);
+    final usual = learned.usualMinutes;
+    return usual == null
         ? null
         : DurationProposal(
-            minutes: median,
+            minutes: usual,
             origin: ThinkingOrigin.history,
-            samples: lengths.length,
+            samples: learned.samples,
           );
   }
 }
@@ -104,19 +120,4 @@ List<int>? splitLength(int? total, int parts) {
   }
   final each = (total ~/ parts) ~/ 5 * 5;
   return [...List.filled(parts - 1, each), total - each * (parts - 1)];
-}
-
-/// Median of [lengths] rounded to 5 minutes (at least 5); null when empty.
-///
-/// ```dart
-/// medianLength([30, 50, 40]); // 40
-/// ```
-int? medianLength(List<int> lengths) {
-  if (lengths.isEmpty) return null;
-  final sorted = [...lengths]..sort();
-  final mid = sorted.length ~/ 2;
-  final median = sorted.length.isOdd
-      ? sorted[mid].toDouble()
-      : (sorted[mid - 1] + sorted[mid]) / 2;
-  return ((median / 5).round() * 5).clamp(5, 1440);
 }

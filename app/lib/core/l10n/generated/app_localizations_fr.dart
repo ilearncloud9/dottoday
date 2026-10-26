@@ -4448,7 +4448,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rebalanceFootnote =>
-      'Rien ne bouge avant ton accord · Annuler pendant 30 s ensuite';
+      'Rien ne bouge avant votre accord · Annuler pendant 30 s ensuite';
 
   @override
   String get rebalanceShiftFollowers => 'Décaler la suite';
@@ -4532,21 +4532,80 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String learnStartsAfter(int minutes) {
-    return 'tu commences en général ~$minutes min après le plan';
+    return 'commence d’habitude ~$minutes min après le plan';
   }
 
   @override
   String learnStartsBefore(int minutes) {
-    return 'tu commences en général ~$minutes min avant le plan';
+    return 'commence d’habitude ~$minutes min avant le plan';
   }
 
   @override
   String learnInsight(String title, String duration) {
-    return '$title te prend en général $duration · Ajouter le proposera';
+    return '$title vous prend en général $duration · Ajouter le proposera';
   }
 
   @override
   String get learnInsightOk => 'OK';
+
+  @override
+  String learnCaption(int total, int done) {
+    return 'Votre fil de la réalité apparaît après environ $total tâches terminées · $done pour l’instant';
+  }
+
+  @override
+  String get learnCaptionHide => 'Masquer jusqu’à demain';
+
+  @override
+  String get learnRealityReady =>
+      'La vue plan et réalité est maintenant en haut de la journée';
+
+  @override
+  String get realityNothingStartedToday =>
+      'rien de commencé aujourd’hui pour l’instant';
+
+  @override
+  String learnBasedOn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'd’après les $count dernières fois',
+      one: 'd’après la dernière fois',
+    );
+    return '$_temp0 · médiane';
+  }
+
+  @override
+  String learnEnergyBasedOn(int count) {
+    return 'd’après vos $count dernières tâches exigeantes terminées · quand la plupart ont commencé';
+  }
+
+  @override
+  String learnFromHistory(String value) {
+    return '$value, appris de votre historique';
+  }
+
+  @override
+  String get learnExplainHint => 'Montre comment c’est calculé';
+
+  @override
+  String get learnReset => 'Réinitialiser pour cette tâche sur cet appareil';
+
+  @override
+  String learnResetDone(String title) {
+    return 'Apprentissage pour $title réinitialisé sur cet appareil';
+  }
+
+  @override
+  String learnResetConfirm(String title) {
+    return 'Oublier ce que $title a appris, sur cet appareil ?';
+  }
+
+  @override
+  String get learnResetConfirmAction => 'Réinitialiser';
+
+  @override
+  String get learnResetKeep => 'Garder';
 
   @override
   String lateUsually(String title, String duration) {
@@ -4729,16 +4788,88 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsEnergyDetail =>
-      'Proposer les moments où tu termines le mieux les tâches exigeantes';
+      'Proposer les moments où vous terminez le mieux les tâches exigeantes';
 
   @override
-  String settingsEnergyLocked(int count) {
-    return 'Après 20 tâches exigeantes terminées · $count pour l’instant';
+  String settingsEnergyLocked(int total, int count) {
+    return 'Après $total tâches exigeantes terminées · $count pour l’instant';
   }
 
   @override
+  String settingsEnergyReady(int count) {
+    return 'prêt – d’après $count tâches terminées';
+  }
+
+  @override
+  String get settingsLearning => 'Apprentissage';
+
+  @override
+  String get settingsLearningReality => 'Fil de la réalité';
+
+  @override
+  String settingsLearningRealityPending(int total) {
+    return 'Dottoday apprend comment se passent vraiment vos journées. Votre fil de la réalité apparaît après environ $total tâches terminées.';
+  }
+
+  @override
+  String get settingsLearningRealityReady =>
+      'Prêt · Plan / Réalité est en haut d’Aujourd’hui';
+
+  @override
+  String get settingsLearningDurations => 'Durée des tâches';
+
+  @override
+  String settingsLearningDurationsPending(int min) {
+    return 'Dottoday apprend combien de temps vos tâches prennent vraiment. Chaque tâche affiche sa durée habituelle après environ $min fois terminée.';
+  }
+
+  @override
+  String settingsLearningTasksReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Prêt pour $count tâches',
+      one: 'Prêt pour 1 tâche',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsLearningSteps => 'Durée des étapes';
+
+  @override
+  String settingsLearningStepsPending(int min) {
+    return 'Dottoday apprend combien de temps prend chaque étape. Le minuteur d’une étape utilise sa durée habituelle après environ $min fois terminée.';
+  }
+
+  @override
+  String settingsLearningStepsReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Prêt pour $count étapes',
+      one: 'Prêt pour 1 étape',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String settingsLearningProgress(int done, int total) {
+    return '$done/$total';
+  }
+
+  @override
+  String settingsLearningProgressLabel(int done, int total) {
+    return '$done sur $total pour l’instant';
+  }
+
+  @override
+  String get settingsLearningPrivacy =>
+      'L’apprentissage se fait sur votre appareil. Vos heures réelles de début et de fin se synchronisent avec votre compte comme le reste de votre plan ; les valeurs apprises ne sont jamais envoyées.';
+
+  @override
   String addEnergyBest(String range) {
-    return 'tu termines le mieux les tâches exigeantes $range';
+    return 'vous terminez le mieux les tâches exigeantes $range';
   }
 
   @override

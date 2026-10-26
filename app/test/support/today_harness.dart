@@ -1,13 +1,14 @@
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'test_l10n.dart';
 
+import 'test_l10n.dart';
 import 'timeline_fakes.dart';
 
 /// The demo day the Today tests run on.
@@ -31,6 +32,7 @@ Future<void> pumpToday(
   ValueChanged<AddTaskIntent>? onAddTask,
   Widget Function(Widget today)? wrap,
   Set<String> readOnlyCalendarIds = const {},
+  LearningMetaState learningMeta = const LearningMetaState(),
 }) async {
   tester.view
     ..physicalSize = size
@@ -50,6 +52,7 @@ Future<void> pumpToday(
             FakeOccurrenceRepository(rows ?? demoDayRows(todayTestDate)),
         profile: profile,
         minuteTicks: ticks,
+        learningMeta: learningMeta,
       ),
       child: MaterialApp(
         theme: DotTheme.light(),

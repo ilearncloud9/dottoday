@@ -31,10 +31,7 @@ void main() {
     tz_data.initializeTimeZones();
     await loadAppFonts();
   });
-  final memory = LocalThinkingMemory(
-    AppDatabase(NativeDatabase.memory()),
-    () async => const [],
-  );
+  final memory = LocalThinkingMemory(AppDatabase(NativeDatabase.memory()));
   final overrides = [
     ...timelineOverrides(
       now: DateTime.utc(2026, 10, 21, 7, 22),

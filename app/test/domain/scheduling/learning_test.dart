@@ -1,5 +1,6 @@
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/learning.dart';
+import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../fixtures.dart';
@@ -39,22 +40,24 @@ void main() {
       _run('Deep work', 1, took: 130, late: 10),
       _run('Deep work', 2, took: 140, late: 15),
       _run('deep  WORK ', 3, took: 145, late: 20),
+      _run('Deep work', 4, took: 140, late: 15),
     ]);
     final l = index.forTask(title: 'Deep work');
-    expect(l.samples, 3);
+    expect(l.samples, 4);
     expect(l.usualMinutes, 140);
     expect(l.startOffsetMinutes, 15);
   });
 
-  test('fewer than three runs say nothing', () {
+  test('fewer than four runs say nothing (docs/13 §2)', () {
     final index = LearningIndex.from([
       _run('Gym', 1),
       _run('Gym', 2),
+      _run('Gym', 3),
       // Planned only, no actuals: never counted.
       occurrenceFixture().copyWith(id: 'plan', title: 'Gym'),
     ]);
     final l = index.forTask(title: 'Gym');
-    expect(l.samples, 2);
+    expect(l.samples, 3);
     expect(l.usualMinutes, isNull);
     expect(l.startOffsetMinutes, isNull);
     expect(LearningIndex.empty.forTask(title: 'Gym').samples, 0);
@@ -83,9 +86,10 @@ void main() {
     final index = LearningIndex.from([
       _run('Standup', 1, took: 20, series: 's1'),
       _run('Standup', 2, took: 20, series: 's1'),
-      _run('Daily sync', 3, took: 25, series: 's1'),
+      _run('Standup', 3, took: 20, series: 's1'),
+      _run('Daily sync', 4, took: 25, series: 's1'),
     ]);
-    expect(index.forTask(title: 'Daily sync', seriesId: 's1').samples, 3);
+    expect(index.forTask(title: 'Daily sync', seriesId: 's1').samples, 4);
     expect(index.forTask(title: 'Daily sync', seriesId: 's1').usualMinutes, 20);
     // A one-off renamed is a new task: its old title no longer counts.
     expect(index.forTask(title: 'Daily sync').samples, 1);
@@ -109,7 +113,7 @@ void main() {
 
   test('starting before the plan is a negative offset', () {
     final index = LearningIndex.from([
-      for (var d = 1; d <= 3; d++) _run('Run', d, late: -10),
+      for (var d = 1; d <= 4; d++) _run('Run', d, late: -10),
     ]);
     expect(index.forTask(title: 'Run').startOffsetMinutes, -10);
   });
@@ -122,5 +126,37 @@ void main() {
     const usually50 = Learned(samples: 3, usualMinutes: 50);
     expect(lateAmountFor(60, usually50, const [5, 15, 30]), isNull);
     expect(lateAmountFor(60, Learned.none, const [5, 15, 30]), isNull);
+  });
+
+  group('LearningThresholds (docs/13 §2)', () {
+    List<Occurrence> runs(int n) => [
+      for (var d = 1; d <= n; d++) _run('Plan', d, took: 50, late: 10),
+    ];
+
+    test('taskMinSamples: silent at n − 1, speaks at n', () {
+      final min = LearningThresholds.standard.taskMinSamples;
+      final under = LearningIndex.from(runs(min - 1)).forTask(title: 'Plan');
+      final at = LearningIndex.from(runs(min)).forTask(title: 'Plan');
+      expect((under.usualMinutes, under.startOffsetMinutes), (null, null));
+      expect((at.usualMinutes, at.startOffsetMinutes), (50, 10));
+    });
+
+    test('a custom value moves every rule', () {
+      const custom = LearningThresholds(taskMinSamples: 2, window: 3);
+      final index = LearningIndex.from([
+        ...runs(2),
+        for (var d = 10; d <= 12; d++) _run('Plan', d, took: 20),
+      ], thresholds: custom);
+      final l = index.forTask(title: 'Plan');
+      expect(l.samples, 3);
+      expect(l.usualMinutes, 20);
+      expect(
+        LearningIndex.from(
+          runs(2),
+          thresholds: custom,
+        ).forTask(title: 'Plan').usualMinutes,
+        50,
+      );
+    });
   });
 }

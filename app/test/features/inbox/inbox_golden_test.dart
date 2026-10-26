@@ -92,6 +92,7 @@ void main() {
 /// The demo day's timed rows plus [items] in the Inbox.
 List<Override> _overrides(List<Occurrence> items) => timelineOverrides(
   now: DateTime.utc(2026, 10, 21, 9),
+  learningMeta: captionPutAway(DateTime(2026, 10, 21)),
   occurrences: FakeOccurrenceRepository([
     for (final o in demoDayRows(DateTime(2026, 10, 21)))
       if (o.startUtc != null) o,

@@ -5210,6 +5210,15 @@ class $SubtasksTable extends Subtasks
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _doneAtMeta = const VerificationMeta('doneAt');
+  @override
+  late final GeneratedColumn<int> doneAt = GeneratedColumn<int>(
+    'done_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _deletedAtMeta = const VerificationMeta(
     'deletedAt',
   );
@@ -5234,6 +5243,7 @@ class $SubtasksTable extends Subtasks
     done,
     sortOrder,
     durationMin,
+    doneAt,
     deletedAt,
   ];
   @override
@@ -5329,6 +5339,12 @@ class $SubtasksTable extends Subtasks
         ),
       );
     }
+    if (data.containsKey('done_at')) {
+      context.handle(
+        _doneAtMeta,
+        doneAt.isAcceptableOrUnknown(data['done_at']!, _doneAtMeta),
+      );
+    }
     if (data.containsKey('deleted_at')) {
       context.handle(
         _deletedAtMeta,
@@ -5388,6 +5404,10 @@ class $SubtasksTable extends Subtasks
         DriftSqlType.int,
         data['${effectivePrefix}duration_min'],
       ),
+      doneAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}done_at'],
+      ),
       deletedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}deleted_at'],
@@ -5418,6 +5438,9 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
 
   /// Schema 3 (M6.5.1, 11 B2): optional step length, 1–1440 min.
   final int? durationMin;
+
+  /// Schema 7 (M13.2, ADR-0012): when it was ticked done, epoch ms.
+  final int? doneAt;
   final int? deletedAt;
   const SubtaskRow({
     required this.createdAt,
@@ -5431,6 +5454,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
     required this.done,
     required this.sortOrder,
     this.durationMin,
+    this.doneAt,
     this.deletedAt,
   });
   @override
@@ -5448,6 +5472,9 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
     map['sort_order'] = Variable<double>(sortOrder);
     if (!nullToAbsent || durationMin != null) {
       map['duration_min'] = Variable<int>(durationMin);
+    }
+    if (!nullToAbsent || doneAt != null) {
+      map['done_at'] = Variable<int>(doneAt);
     }
     if (!nullToAbsent || deletedAt != null) {
       map['deleted_at'] = Variable<int>(deletedAt);
@@ -5470,6 +5497,9 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
       durationMin: durationMin == null && nullToAbsent
           ? const Value.absent()
           : Value(durationMin),
+      doneAt: doneAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(doneAt),
       deletedAt: deletedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(deletedAt),
@@ -5493,6 +5523,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
       done: serializer.fromJson<bool>(json['done']),
       sortOrder: serializer.fromJson<double>(json['sortOrder']),
       durationMin: serializer.fromJson<int?>(json['durationMin']),
+      doneAt: serializer.fromJson<int?>(json['doneAt']),
       deletedAt: serializer.fromJson<int?>(json['deletedAt']),
     );
   }
@@ -5511,6 +5542,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
       'done': serializer.toJson<bool>(done),
       'sortOrder': serializer.toJson<double>(sortOrder),
       'durationMin': serializer.toJson<int?>(durationMin),
+      'doneAt': serializer.toJson<int?>(doneAt),
       'deletedAt': serializer.toJson<int?>(deletedAt),
     };
   }
@@ -5527,6 +5559,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
     bool? done,
     double? sortOrder,
     Value<int?> durationMin = const Value.absent(),
+    Value<int?> doneAt = const Value.absent(),
     Value<int?> deletedAt = const Value.absent(),
   }) => SubtaskRow(
     createdAt: createdAt ?? this.createdAt,
@@ -5540,6 +5573,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
     done: done ?? this.done,
     sortOrder: sortOrder ?? this.sortOrder,
     durationMin: durationMin.present ? durationMin.value : this.durationMin,
+    doneAt: doneAt.present ? doneAt.value : this.doneAt,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   SubtaskRow copyWithCompanion(SubtasksCompanion data) {
@@ -5559,6 +5593,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
       durationMin: data.durationMin.present
           ? data.durationMin.value
           : this.durationMin,
+      doneAt: data.doneAt.present ? data.doneAt.value : this.doneAt,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
@@ -5577,6 +5612,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
           ..write('done: $done, ')
           ..write('sortOrder: $sortOrder, ')
           ..write('durationMin: $durationMin, ')
+          ..write('doneAt: $doneAt, ')
           ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
@@ -5595,6 +5631,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
     done,
     sortOrder,
     durationMin,
+    doneAt,
     deletedAt,
   );
   @override
@@ -5612,6 +5649,7 @@ class SubtaskRow extends DataClass implements Insertable<SubtaskRow> {
           other.done == this.done &&
           other.sortOrder == this.sortOrder &&
           other.durationMin == this.durationMin &&
+          other.doneAt == this.doneAt &&
           other.deletedAt == this.deletedAt);
 }
 
@@ -5627,6 +5665,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
   final Value<bool> done;
   final Value<double> sortOrder;
   final Value<int?> durationMin;
+  final Value<int?> doneAt;
   final Value<int?> deletedAt;
   final Value<int> rowid;
   const SubtasksCompanion({
@@ -5641,6 +5680,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
     this.done = const Value.absent(),
     this.sortOrder = const Value.absent(),
     this.durationMin = const Value.absent(),
+    this.doneAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -5656,6 +5696,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
     this.done = const Value.absent(),
     this.sortOrder = const Value.absent(),
     this.durationMin = const Value.absent(),
+    this.doneAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : createdAt = Value(createdAt),
@@ -5676,6 +5717,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
     Expression<bool>? done,
     Expression<double>? sortOrder,
     Expression<int>? durationMin,
+    Expression<int>? doneAt,
     Expression<int>? deletedAt,
     Expression<int>? rowid,
   }) {
@@ -5691,6 +5733,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
       if (done != null) 'done': done,
       if (sortOrder != null) 'sort_order': sortOrder,
       if (durationMin != null) 'duration_min': durationMin,
+      if (doneAt != null) 'done_at': doneAt,
       if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -5708,6 +5751,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
     Value<bool>? done,
     Value<double>? sortOrder,
     Value<int?>? durationMin,
+    Value<int?>? doneAt,
     Value<int?>? deletedAt,
     Value<int>? rowid,
   }) {
@@ -5723,6 +5767,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
       done: done ?? this.done,
       sortOrder: sortOrder ?? this.sortOrder,
       durationMin: durationMin ?? this.durationMin,
+      doneAt: doneAt ?? this.doneAt,
       deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
@@ -5764,6 +5809,9 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
     if (durationMin.present) {
       map['duration_min'] = Variable<int>(durationMin.value);
     }
+    if (doneAt.present) {
+      map['done_at'] = Variable<int>(doneAt.value);
+    }
     if (deletedAt.present) {
       map['deleted_at'] = Variable<int>(deletedAt.value);
     }
@@ -5787,6 +5835,7 @@ class SubtasksCompanion extends UpdateCompanion<SubtaskRow> {
           ..write('done: $done, ')
           ..write('sortOrder: $sortOrder, ')
           ..write('durationMin: $durationMin, ')
+          ..write('doneAt: $doneAt, ')
           ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -12703,6 +12752,7 @@ typedef $$SubtasksTableCreateCompanionBuilder =
       Value<bool> done,
       Value<double> sortOrder,
       Value<int?> durationMin,
+      Value<int?> doneAt,
       Value<int?> deletedAt,
       Value<int> rowid,
     });
@@ -12719,6 +12769,7 @@ typedef $$SubtasksTableUpdateCompanionBuilder =
       Value<bool> done,
       Value<double> sortOrder,
       Value<int?> durationMin,
+      Value<int?> doneAt,
       Value<int?> deletedAt,
       Value<int> rowid,
     });
@@ -12813,6 +12864,11 @@ class $$SubtasksTableFilterComposer
 
   ColumnFilters<int> get durationMin => $composableBuilder(
     column: $table.durationMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get doneAt => $composableBuilder(
+    column: $table.doneAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -12922,6 +12978,11 @@ class $$SubtasksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get doneAt => $composableBuilder(
+    column: $table.doneAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get deletedAt => $composableBuilder(
     column: $table.deletedAt,
     builder: (column) => ColumnOrderings(column),
@@ -13012,6 +13073,9 @@ class $$SubtasksTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get doneAt =>
+      $composableBuilder(column: $table.doneAt, builder: (column) => column);
+
   GeneratedColumn<int> get deletedAt =>
       $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
@@ -13101,6 +13165,7 @@ class $$SubtasksTableTableManager
                 Value<bool> done = const Value.absent(),
                 Value<double> sortOrder = const Value.absent(),
                 Value<int?> durationMin = const Value.absent(),
+                Value<int?> doneAt = const Value.absent(),
                 Value<int?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SubtasksCompanion(
@@ -13115,6 +13180,7 @@ class $$SubtasksTableTableManager
                 done: done,
                 sortOrder: sortOrder,
                 durationMin: durationMin,
+                doneAt: doneAt,
                 deletedAt: deletedAt,
                 rowid: rowid,
               ),
@@ -13131,6 +13197,7 @@ class $$SubtasksTableTableManager
                 Value<bool> done = const Value.absent(),
                 Value<double> sortOrder = const Value.absent(),
                 Value<int?> durationMin = const Value.absent(),
+                Value<int?> doneAt = const Value.absent(),
                 Value<int?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SubtasksCompanion.insert(
@@ -13145,6 +13212,7 @@ class $$SubtasksTableTableManager
                 done: done,
                 sortOrder: sortOrder,
                 durationMin: durationMin,
+                doneAt: doneAt,
                 deletedAt: deletedAt,
                 rowid: rowid,
               ),

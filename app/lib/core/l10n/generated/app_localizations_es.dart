@@ -4522,12 +4522,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String learnStartsAfter(int minutes) {
-    return 'sueles empezar ~$minutes min después de lo previsto';
+    return 'suele empezar ~$minutes min después de lo previsto';
   }
 
   @override
   String learnStartsBefore(int minutes) {
-    return 'sueles empezar ~$minutes min antes de lo previsto';
+    return 'suele empezar ~$minutes min antes de lo previsto';
   }
 
   @override
@@ -4537,6 +4537,64 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get learnInsightOk => 'OK';
+
+  @override
+  String learnCaption(int total, int done) {
+    return 'Tu hilo de la realidad aparece tras unas $total tareas terminadas · $done hasta ahora';
+  }
+
+  @override
+  String get learnCaptionHide => 'Ocultar hasta mañana';
+
+  @override
+  String get learnRealityReady =>
+      'La vista de plan y realidad ya está en la cabecera del día';
+
+  @override
+  String get realityNothingStartedToday => 'hoy aún no has empezado nada';
+
+  @override
+  String learnBasedOn(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'según las últimas $count veces',
+      one: 'según la última vez',
+    );
+    return '$_temp0 · mediana';
+  }
+
+  @override
+  String learnEnergyBasedOn(int count) {
+    return 'según tus últimas $count tareas exigentes terminadas · cuándo empezaron la mayoría';
+  }
+
+  @override
+  String learnFromHistory(String value) {
+    return '$value, aprendido de tu historial';
+  }
+
+  @override
+  String get learnExplainHint => 'Muestra cómo se calculó';
+
+  @override
+  String get learnReset => 'Restablecer para esta tarea en este dispositivo';
+
+  @override
+  String learnResetDone(String title) {
+    return 'Aprendizaje de $title restablecido en este dispositivo';
+  }
+
+  @override
+  String learnResetConfirm(String title) {
+    return '¿Olvidar lo aprendido de $title en este dispositivo?';
+  }
+
+  @override
+  String get learnResetConfirmAction => 'Restablecer';
+
+  @override
+  String get learnResetKeep => 'Conservar';
 
   @override
   String lateUsually(String title, String duration) {
@@ -4721,9 +4779,81 @@ class AppLocalizationsEs extends AppLocalizations {
       'Sugerir las horas en que sueles terminar las tareas exigentes';
 
   @override
-  String settingsEnergyLocked(int count) {
-    return 'Tras 20 tareas exigentes terminadas · $count hasta ahora';
+  String settingsEnergyLocked(int total, int count) {
+    return 'Tras $total tareas exigentes terminadas · $count hasta ahora';
   }
+
+  @override
+  String settingsEnergyReady(int count) {
+    return 'listo: basado en $count tareas terminadas';
+  }
+
+  @override
+  String get settingsLearning => 'Aprendizaje';
+
+  @override
+  String get settingsLearningReality => 'Hilo de la realidad';
+
+  @override
+  String settingsLearningRealityPending(int total) {
+    return 'Dottoday está aprendiendo cómo van de verdad tus días. Tu hilo de la realidad aparece tras unas $total tareas terminadas.';
+  }
+
+  @override
+  String get settingsLearningRealityReady =>
+      'Listo · Plan / Realidad está en la cabecera de Hoy';
+
+  @override
+  String get settingsLearningDurations => 'Duración de las tareas';
+
+  @override
+  String settingsLearningDurationsPending(int min) {
+    return 'Dottoday está aprendiendo cuánto duran de verdad tus tareas. Cada tarea muestra su duración habitual tras unas $min veces terminada.';
+  }
+
+  @override
+  String settingsLearningTasksReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Listo para $count tareas',
+      one: 'Listo para 1 tarea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsLearningSteps => 'Duración de los pasos';
+
+  @override
+  String settingsLearningStepsPending(int min) {
+    return 'Dottoday está aprendiendo cuánto dura cada paso. El temporizador de un paso usa su duración habitual tras unas $min veces terminado.';
+  }
+
+  @override
+  String settingsLearningStepsReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Listo para $count pasos',
+      one: 'Listo para 1 paso',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String settingsLearningProgress(int done, int total) {
+    return '$done/$total';
+  }
+
+  @override
+  String settingsLearningProgressLabel(int done, int total) {
+    return '$done de $total hasta ahora';
+  }
+
+  @override
+  String get settingsLearningPrivacy =>
+      'El aprendizaje ocurre en tu dispositivo. Tus horas reales de inicio y fin se sincronizan con tu cuenta como el resto de tu plan; los valores aprendidos nunca se suben.';
 
   @override
   String addEnergyBest(String range) {

@@ -11,6 +11,7 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/settings/widgets/data_about_groups.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
+import 'package:dottoday/features/settings/widgets/learning_group.dart';
 import 'package:dottoday/features/settings/widgets/look_group.dart';
 import 'package:dottoday/features/settings/widgets/planning_group.dart';
 import 'package:dottoday/features/settings/widgets/reminders_group.dart';
@@ -78,6 +79,7 @@ class SettingsScreen extends ConsumerWidget {
   List<Widget> _groups(BuildContext context, String locale, Settings s) => [
     DayShapeGroup(settings: s),
     PlanningGroup(settings: s),
+    LearningGroup(settings: s),
     RemindersGroup(settings: s),
     LookGroup(
       settings: s,

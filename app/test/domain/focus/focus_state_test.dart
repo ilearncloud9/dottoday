@@ -1,5 +1,6 @@
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/focus/focus_state.dart';
+import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../fixtures.dart';
@@ -21,7 +22,7 @@ void main() {
     sortOrder: order,
     durationMin: len,
     done: done,
-    updatedAt: at ?? t0,
+    doneAt: done ? at : null,
   );
 
   test('ring and minutes left: "38 min left" at 10:22', () {
@@ -87,4 +88,86 @@ void main() {
       expect(f.stepStartUtc, now);
     },
   );
+
+  test('ADR-0012: an edit after the tick never moves the step timer', () {
+    final ticked = start.add(const Duration(minutes: 25));
+    final renamed = step('a', 1, len: 25, done: true, at: ticked).copyWith(
+      title: 'Renamed later',
+      updatedAt: start.add(const Duration(minutes: 39)),
+    );
+    final f = focusAt(task, [
+      renamed,
+      step('b', 2, len: 30),
+    ], start.add(const Duration(minutes: 40)));
+    expect(f.stepStartUtc, ticked);
+    expect(f.stepLeft, const Duration(minutes: 15));
+  });
+
+  test('a tick from before 0008 (no time) falls back to the real start', () {
+    final real = start.add(const Duration(minutes: 5));
+    final legacy = step('a', 1, done: true);
+    final f = focusAt(task.copyWith(actualStartUtc: real), [
+      legacy,
+      step('b', 2, len: 30),
+    ], real.add(const Duration(minutes: 10)));
+    expect(legacy.doneAt, isNull);
+    expect(f.stepStartUtc, real);
+  });
+
+  test('tick sets the time and untick clears it, in one write', () {
+    final now = start.add(const Duration(minutes: 3));
+    final on = tick(step('a', 1), done: true, nowUtc: now);
+    expect((on.done, on.doneAt, on.updatedAt), (true, now, now));
+    final off = tick(on, done: false, nowUtc: now);
+    expect((off.done, off.doneAt), (false, null));
+  });
+
+  test('a time left on an unticked step never starts the next one', () {
+    final stray = step(
+      'a',
+      1,
+      len: 25,
+    ).copyWith(doneAt: start.add(const Duration(minutes: 30)));
+    final f = focusAt(task, [stray, step('b', 2, len: 30)], start);
+    expect((f.stepIndex, f.stepStartUtc), (0, start));
+  });
+
+  group('learned step lengths (docs/13 §5)', () {
+    // Three earlier runs of the task's "b" step, 20 min each.
+    LearningIndex learned() {
+      final history = [
+        for (var d = 1; d <= 3; d++)
+          task.copyWith(
+            id: 'past-$d',
+            actualStartUtc: start.subtract(Duration(days: d)),
+          ),
+      ];
+      return LearningIndex.from(
+        history,
+        steps: [
+          for (final o in history)
+            subtaskFixture().copyWith(
+              id: 'b-${o.id}',
+              occurrenceId: o.id,
+              title: 'b',
+              done: true,
+              doneAt: o.actualStartUtc!.add(const Duration(minutes: 20)),
+            ),
+        ],
+      );
+    }
+
+    test('a step with no length counts down from its usual one', () {
+      final steps = [step('b', 1).copyWith(title: 'b')];
+      final f = focusAt(task, steps, start, learning: learned());
+      expect(f.stepLeft, const Duration(minutes: 20));
+      expect(f.stepLearned!.usualMinutes, 20);
+    });
+
+    test("the step's own length always wins", () {
+      final steps = [step('b', 1, len: 45).copyWith(title: 'b')];
+      final f = focusAt(task, steps, start, learning: learned());
+      expect((f.stepLeft, f.stepLearned), (const Duration(minutes: 45), null));
+    });
+  });
 }

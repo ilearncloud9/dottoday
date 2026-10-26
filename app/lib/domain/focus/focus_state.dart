@@ -1,5 +1,6 @@
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/scheduling/learning.dart';
 
 /// What Focus shows at one moment (11 A3, `B-ios-focus`, docs/09 M10.5):
 /// the task's ring and minutes left, and the current step with its own
@@ -13,6 +14,7 @@ final class FocusState {
     this.stepStartUtc,
     this.stepLeft,
     this.stepProgress,
+    this.stepLearned,
   });
 
   /// Share of the planned time gone, 0–1 (the ring).
@@ -37,6 +39,10 @@ final class FocusState {
   /// Share of the current step's length gone, 0–1.
   final double? stepProgress;
 
+  /// What the history says about the current step, when its timer runs on
+  /// the usual length because the step has none of its own (docs/13 §5).
+  final Learned? stepLearned;
+
   Subtask? get step => stepIndex == null ? null : steps[stepIndex!];
 }
 
@@ -50,7 +56,12 @@ final class FocusState {
 /// ```dart
 /// focusAt(deepWork, steps, now).stepLeft; // 0:14:20
 /// ```
-FocusState focusAt(Occurrence task, List<Subtask> subtasks, DateTime nowUtc) {
+FocusState focusAt(
+  Occurrence task,
+  List<Subtask> subtasks,
+  DateTime nowUtc, {
+  LearningIndex? learning,
+}) {
   final start = task.startUtc ?? task.actualStartUtc ?? nowUtc;
   final length = Duration(minutes: task.durationMin);
   final gone = nowUtc.difference(start);
@@ -72,15 +83,18 @@ FocusState focusAt(Occurrence task, List<Subtask> subtasks, DateTime nowUtc) {
     );
   }
   // The first step runs from the real start; a later one from the tick
-  // that finished the step before it.
+  // that finished the step before it (ADR-0012: the tick time, never
+  // `updatedAt`, which any edit moves). A tick from before 0008 has none.
   var stepStart = task.actualStartUtc ?? start;
-  final ticks = [
-    for (final s in steps.take(index))
-      if (s.done) s.updatedAt,
-  ]..sort();
+  final ticks = [for (final s in steps.take(index)) ?tickedAt(s)]..sort();
   if (ticks.isNotEmpty) stepStart = ticks.last;
   if (stepStart.isAfter(nowUtc)) stepStart = nowUtc;
-  final stepLength = steps[index].durationMin;
+  // The step's own length wins; else its usual one (docs/13 §5).
+  final own = steps[index].durationMin;
+  final learned = own != null
+      ? null
+      : learning?.forStep(taskTitle: task.title, stepTitle: steps[index].title);
+  final stepLength = own ?? learned?.usualMinutes;
   Duration? stepLeft;
   double? stepProgress;
   if (stepLength != null) {
@@ -98,6 +112,7 @@ FocusState focusAt(Occurrence task, List<Subtask> subtasks, DateTime nowUtc) {
     stepStartUtc: stepStart,
     stepLeft: stepLeft,
     stepProgress: stepProgress,
+    stepLearned: learned?.usualMinutes == null ? null : learned,
   );
 }
 

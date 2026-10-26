@@ -97,18 +97,23 @@ void main() {
     overrides: _overrides,
     build: (_) => _settings(),
   );
-  // Energy suggestions (M11.5, derived): locked with the count, then on.
-  for (final (name, count) in [('locked', 7), ('on', 20)]) {
+  // Settings › Learning (docs/13 §4.1, §11): nothing yet (0/10), on the
+  // way (7/10, energy 7/20), and ready (the reality thread revealed, one
+  // task's length known, energy available but off). Light/dark, 1×/2×,
+  // the largest text and RTL.
+  for (final (name, count) in [('0', 0), ('7', 7), ('ready', 20)]) {
     goldenMatrix(
-      'settings_energy_$name',
+      'settings_learning_$name',
       height: 844,
       widths: const {'compact', 'expanded'},
+      a11yVariants: true,
       act: (t) async {
         await t.scrollUntilVisible(
-          find.text('Energy suggestions'),
+          find.text('LEARNING'),
           200,
           scrollable: find.byType(Scrollable).first,
         );
+        await Scrollable.ensureVisible(t.element(find.text('LEARNING')));
         await t.pumpAndSettle();
       },
       overrides: _overridesWith(rows: energyHistory(count: count)),

@@ -65,7 +65,7 @@ final class FocusActions {
     final l10n = context.l10n;
     final now = ref.read(clockProvider).nowUtc();
     return _write(messenger, l10n, [], [
-      step.copyWith(done: true, updatedAt: now),
+      tick(step, done: true, nowUtc: now),
     ], null);
   }
 

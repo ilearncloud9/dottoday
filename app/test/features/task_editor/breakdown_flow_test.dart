@@ -61,6 +61,7 @@ Future<(ProposalHarness, FakeThinkingTransport)> _pump(
   ThinkingAvailability model = ThinkingAvailability.available,
   ValueChanged<List<ProposedStep>>? draft,
   double width = 390,
+  WriteBatch? history,
 }) async {
   tester.view
     ..physicalSize = Size(width, 1600)
@@ -80,7 +81,8 @@ Future<(ProposalHarness, FakeThinkingTransport)> _pump(
     WriteBatch(
       userId: userId,
       profile: profileFixture(),
-      occurrences: sampleDayRows(),
+      occurrences: [...sampleDayRows(), ...?history?.occurrences],
+      subtasks: [...?history?.subtasks],
     ),
   );
   await tester.pumpWidget(
@@ -100,11 +102,21 @@ Future<(ProposalHarness, FakeThinkingTransport)> _pump(
   return (h, transport);
 }
 
+/// Taps Break it down and lets the database answer: real waits and pumps
+/// in turn (the reads hop between the real and the test zone) until the
+/// sheet is up, at most 2 s.
 Future<void> _open(WidgetTester tester) async {
-  await tester.runAsync(() async {
-    await tester.tap(find.text('Break it down'));
-    await Future<void>.delayed(const Duration(milliseconds: 200));
-  });
+  await tester.tap(find.text('Break it down'));
+  for (
+    var i = 0;
+    i < 20 && find.byType(ProposalSheet).evaluate().isEmpty;
+    i++
+  ) {
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 100)),
+    );
+    await tester.pump();
+  }
   await tester.pumpAndSettle();
 }
 
@@ -120,7 +132,55 @@ Future<void> _accept(WidgetTester tester) async {
 
 Finder _field(String text) => find.widgetWithText(TextField, text);
 
+/// Three earlier runs of [_task] with "Reply to Sam" really ticked 25 min
+/// after the real start (docs/13 §5).
+WriteBatch _replyHistory() {
+  final runs = [
+    for (var d = 1; d <= 3; d++)
+      _task.copyWith(
+        id: '01928c3e-0000-7000-8000-00000000d00$d',
+        startUtc: _now.subtract(Duration(days: d)),
+        actualStartUtc: _now.subtract(Duration(days: d)),
+        actualEndUtc: _now.subtract(Duration(days: d, minutes: -30)),
+      ),
+  ];
+  return WriteBatch(
+    userId: userId,
+    occurrences: runs,
+    subtasks: [
+      for (final (i, o) in runs.indexed)
+        subtaskFixture().copyWith(
+          id: '01928c3e-0000-7000-8000-00000000e00$i',
+          occurrenceId: o.id,
+          title: 'Reply to Sam',
+          done: true,
+          doneAt: o.actualStartUtc!.add(const Duration(minutes: 25)),
+        ),
+    ],
+  );
+}
+
 void main() {
+  testWidgets('the usual breakdown proposes usual step lengths, unwritten', (
+    tester,
+  ) async {
+    final (h, transport) = await _pump(tester, history: _replyHistory());
+    await _open(tester);
+    await _accept(tester); // remembers the model's steps (Reply to Sam 15)
+    transport.prompts.clear();
+    await expectNothingWrittenBeforeAccept(
+      tester,
+      h,
+      open: () => _open(tester),
+      leave: () => tester.tap(find.text('Discard')),
+    );
+    await _open(tester);
+    expect(find.text('your usual'), findsOneWidget);
+    // Reply to Sam really takes 25 min; the others keep their saved 10/5.
+    expect(find.text('Total 40 min · the dot grows to fit'), findsOneWidget);
+    expect(transport.prompts, isEmpty);
+  });
+
   testWidgets('nothing is written before Accept', (tester) async {
     final (h, _) = await _pump(tester);
     await expectNothingWrittenBeforeAccept(

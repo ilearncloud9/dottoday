@@ -1,16 +1,19 @@
 import 'dart:async';
 
+import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/schedule/planned_colors.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
+import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/quick_add/add_draft.dart';
 import 'package:dottoday/domain/scheduling/energy_window.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
+import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/time/duration_presets.dart';
 import 'package:dottoday/features/task_editor/add/add_save.dart';
@@ -35,10 +38,15 @@ EnergyWindow? _energyFor(
   ({EnergyWindow? window, int completions})? energy,
   Settings? settings,
   String title,
+  LearningThresholds thresholds,
 ) {
   final w = energy?.window;
   if (w == null || settings == null || title.isEmpty) return null;
-  final on = energySuggestionsOn(settings, completions: energy!.completions);
+  final on = energySuggestionsOn(
+    settings,
+    completions: energy!.completions,
+    thresholds: thresholds,
+  );
   return on && w.knows(title) ? w : null;
 }
 
@@ -54,6 +62,7 @@ class AddWhenHost extends ConsumerWidget {
     ref.watch(energyWindowProvider).value,
     ref.watch(currentProfileProvider).value?.settings,
     state.draft.title,
+    ref.watch(learningThresholdsProvider),
   );
 
   @override
@@ -66,6 +75,11 @@ class AddWhenHost extends ConsumerWidget {
     }
     return AddWhenStep(
       energy: _energy(ref),
+      thresholds: ref.watch(learningThresholdsProvider),
+      // docs/13 §6: clears what this title taught, on this device.
+      onResetLearning: () => ref
+          .read(learningMetaProvider.notifier)
+          .resetUndoable(state.draft.title, ref.read(clockProvider).nowUtc()),
       state: state,
       room: room,
       presets: settings?.durationPresets ?? defaultDurationPresets,

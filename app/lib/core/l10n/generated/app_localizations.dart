@@ -6717,13 +6717,13 @@ abstract class AppLocalizations {
   /// Add: the user usually starts this task this much after its planned time. Never 'late'.
   ///
   /// In en, this message translates to:
-  /// **'you tend to start this ~{minutes} min after plan'**
+  /// **'usually starts ~{minutes} min after plan'**
   String learnStartsAfter(int minutes);
 
   /// Add: the user usually starts this task this much before its planned time.
   ///
   /// In en, this message translates to:
-  /// **'you tend to start this ~{minutes} min before plan'**
+  /// **'usually starts ~{minutes} min before plan'**
   String learnStartsBefore(int minutes);
 
   /// Reality thread insight strip: what the history says about the task under way.
@@ -6737,6 +6737,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get learnInsightOk;
+
+  /// Today's card, under the header, before the reality thread is ready (docs/13 §4.2). A promise; never 'late'.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reality thread appears after about {total} finished tasks · {done} so far'**
+  String learnCaption(int total, int done);
+
+  /// Screen-reader label of the × beside the learning caption.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide until tomorrow'**
+  String get learnCaptionHide;
+
+  /// Announced once to screen readers when the Plan / Reality toggle first appears (docs/13 §4.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Plan and reality view is now in the day header'**
+  String get learnRealityReady;
+
+  /// Under Today's header in the Reality view on a day with no real start yet: the plan is shown as it is. Plain, never 'late'.
+  ///
+  /// In en, this message translates to:
+  /// **'nothing started yet today'**
+  String get realityNothingStartedToday;
+
+  /// How a learned value was worked out, shown on tap (docs/13 §6).
+  ///
+  /// In en, this message translates to:
+  /// **'based on your last {count, plural, one{time} other{{count} times}} · median'**
+  String learnBasedOn(int count);
+
+  /// How the energy window was worked out, shown on tap.
+  ///
+  /// In en, this message translates to:
+  /// **'based on your last {count} finished high-energy tasks · where most started'**
+  String learnEnergyBasedOn(int count);
+
+  /// Screen-reader label of a learned value (docs/13 §6).
+  ///
+  /// In en, this message translates to:
+  /// **'{value}, learned from your history'**
+  String learnFromHistory(String value);
+
+  /// Screen-reader hint on a learned value.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows how this was worked out'**
+  String get learnExplainHint;
+
+  /// Clears what was learned for this task title, on this device only (docs/13 §6).
+  ///
+  /// In en, this message translates to:
+  /// **'Reset for this task on this device'**
+  String get learnReset;
+
+  /// Snackbar after a reset, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning for {title} reset on this device'**
+  String learnResetDone(String title);
+
+  /// Inside a sheet or popover, where Undo can't be reached, the reset asks once inline (docs/13 §6).
+  ///
+  /// In en, this message translates to:
+  /// **'Forget what {title} taught, on this device?'**
+  String learnResetConfirm(String title);
+
+  /// Confirms the inline reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get learnResetConfirmAction;
+
+  /// Cancels the inline reset; nothing changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep'**
+  String get learnResetKeep;
 
   /// Running late sheet: the task at hand's usual real length, which picked the amount.
   ///
@@ -7014,11 +7092,95 @@ abstract class AppLocalizations {
   /// **'Suggest times when you usually finish high-energy tasks'**
   String get settingsEnergyDetail;
 
-  /// Under the Energy suggestions switch while it can't be on yet.
+  /// Under the Energy suggestions switch while it can't be on yet (docs/13 §3).
   ///
   /// In en, this message translates to:
-  /// **'After 20 finished high-energy tasks · {count} so far'**
-  String settingsEnergyLocked(int count);
+  /// **'After {total} finished high-energy tasks · {count} so far'**
+  String settingsEnergyLocked(int total, int count);
+
+  /// Under the Energy suggestions switch once it can be turned on, while it is off (docs/13 §3).
+  ///
+  /// In en, this message translates to:
+  /// **'ready — based on {count} completed tasks'**
+  String settingsEnergyReady(int count);
+
+  /// Settings group caption: what Dottoday learns from the user's own history (docs/13 §4.1).
+  ///
+  /// In en, this message translates to:
+  /// **'Learning'**
+  String get settingsLearning;
+
+  /// Settings › Learning row title.
+  ///
+  /// In en, this message translates to:
+  /// **'Reality thread'**
+  String get settingsLearningReality;
+
+  /// Settings › Learning, before the reality thread is ready. A promise, never a judgement.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday is learning how your days really go. Your reality thread appears after about {total} finished tasks.'**
+  String settingsLearningRealityPending(int total);
+
+  /// Settings › Learning, once the reality thread is ready.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready · Plan / Reality is in Today\'s header'**
+  String get settingsLearningRealityReady;
+
+  /// Settings › Learning row title.
+  ///
+  /// In en, this message translates to:
+  /// **'Task lengths'**
+  String get settingsLearningDurations;
+
+  /// Settings › Learning: per task, so it reveals one task at a time.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday is learning how long your tasks really take. Each task shows its usual length after about {min} finished times.'**
+  String settingsLearningDurationsPending(int min);
+
+  /// Settings › Learning value: tasks whose usual length now shows. Hidden at 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{Ready for 1 task} other{Ready for {count} tasks}}'**
+  String settingsLearningTasksReady(int count);
+
+  /// Settings › Learning row title.
+  ///
+  /// In en, this message translates to:
+  /// **'Step lengths'**
+  String get settingsLearningSteps;
+
+  /// Settings › Learning: step lengths in Focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday is learning how long each step takes. A step\'s timer uses its usual length after about {min} finished times.'**
+  String settingsLearningStepsPending(int min);
+
+  /// Settings › Learning value: steps whose usual length now shows. Hidden at 0.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{Ready for 1 step} other{Ready for {count} steps}}'**
+  String settingsLearningStepsReady(int count);
+
+  /// Settings › Learning value beside the progress ring, e.g. 7/10.
+  ///
+  /// In en, this message translates to:
+  /// **'{done}/{total}'**
+  String settingsLearningProgress(int done, int total);
+
+  /// Screen-reader reading of the progress ring and its value.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} so far'**
+  String settingsLearningProgressLabel(int done, int total);
+
+  /// Settings › Learning footer: the privacy line (docs/13 §4.1). Must stay accurate to the sync design.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning happens on your device. Your actual start and end times sync with your account like the rest of your plan; the learned numbers themselves are never uploaded.'**
+  String get settingsLearningPrivacy;
 
   /// Add step 2: the user's best window for high-energy work, from their own history.
   ///

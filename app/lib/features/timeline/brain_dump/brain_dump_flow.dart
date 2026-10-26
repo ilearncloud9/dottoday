@@ -6,6 +6,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/thinking/thinking_providers.dart';
 import 'package:dottoday/domain/proposals/brain_dump_proposal.dart';
+import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:dottoday/domain/thinking/rules_thinking_backend.dart';
 import 'package:dottoday/domain/thinking/thinking_backend.dart';
 import 'package:dottoday/domain/thinking/thinking_memory.dart';
@@ -55,7 +56,11 @@ Future<bool> planBrainDump(
       ? plan.dots
       : groundTimes(
           plan.dots,
-          (await RulesThinkingBackend(memory).planFromText(request))?.dots ??
+          (await RulesThinkingBackend(
+                memory,
+                // Only the parser is asked here; no length is suggested.
+                learning: () async => LearningIndex.empty,
+              ).planFromText(request))?.dots ??
               const [],
         );
   final data = await readTimelineDay(container, date);

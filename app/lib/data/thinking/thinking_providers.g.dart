@@ -8,12 +8,12 @@ part of 'thinking_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Saved breakdowns, past lengths and the local prompt log.
+/// Saved breakdowns and the local prompt log.
 
 @ProviderFor(thinkingMemory)
 final thinkingMemoryProvider = ThinkingMemoryProvider._();
 
-/// Saved breakdowns, past lengths and the local prompt log.
+/// Saved breakdowns and the local prompt log.
 
 final class ThinkingMemoryProvider
     extends
@@ -23,7 +23,7 @@ final class ThinkingMemoryProvider
           LocalThinkingMemory
         >
     with $Provider<LocalThinkingMemory> {
-  /// Saved breakdowns, past lengths and the local prompt log.
+  /// Saved breakdowns and the local prompt log.
   ThinkingMemoryProvider._()
     : super(
         from: null,
@@ -58,7 +58,7 @@ final class ThinkingMemoryProvider
   }
 }
 
-String _$thinkingMemoryHash() => r'7aedffe53438378a8fc95e6a031a1ebc22069743';
+String _$thinkingMemoryHash() => r'f20120049315a860669ab2ed16e28642f6a93677';
 
 /// The platform's on-device model transport: the method channel on
 /// iOS/macOS/Android, the Prompt API in the browser.
@@ -163,7 +163,7 @@ final class ThinkingServiceProvider
   }
 }
 
-String _$thinkingServiceHash() => r'836648fac87317b223a4a305641c6cfe4fb2abdd';
+String _$thinkingServiceHash() => r'c2aed232f410ba8bedcf5a987f9f6a15fb2bef58';
 
 /// Which path answers on this device now (Settings › Privacy): the model
 /// when the platform says it is ready, else rules. Reads only the

@@ -21,6 +21,7 @@ import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/release/whats_new_seen.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/security/app_lock_store.dart';
 import 'package:dottoday/data/system/system_providers.dart';
@@ -200,6 +201,15 @@ final class FakeSubtaskRepository implements SubtaskRepository {
     }
     _changes.add(null);
   }
+
+  @override
+  Future<List<Subtask>> findForOccurrences(
+    String userId,
+    Set<String> occurrenceIds,
+  ) async => [
+    for (final s in rows)
+      if (occurrenceIds.contains(s.occurrenceId)) s,
+  ];
 
   List<Subtask> _of(Set<String> ids) => [
     for (final s in rows)
@@ -440,6 +450,7 @@ List<Override> timelineOverrides({
       const UnwiredNotificationPermission(),
   ExactAlarms exactAlarms = const AlwaysExactAlarms(),
   String? deviceZone,
+  LearningMetaState learningMeta = const LearningMetaState(),
   DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
   CalendarSourceRepository? calendarSources,
   CalendarImport? calendarImport,
@@ -500,6 +511,7 @@ List<Override> timelineOverrides({
     // No database or package info here (M8.2): up to date, counts fixed.
     appVersionNameProvider.overrideWith((ref) async => '0.1.0'),
     whatsNewSeenProvider.overrideWith(() => FakeWhatsNewSeen(whatsNewSeen)),
+    learningMetaProvider.overrideWith(() => FakeLearningMeta(learningMeta)),
     diagnosticsReaderProvider.overrideWithValue(diagnostics),
     notificationGatewayProvider.overrideWithValue(
       const UnwiredNotificationGateway(),
@@ -581,6 +593,32 @@ final class FakeTrashService implements TrashService {
 
 /// The app lock, off and in memory (M5.8).
 /// What's new as last seen; [seen] starts at the running version.
+/// A user past Today's learning caption on [day], as the reference
+/// renders show an established user (docs/10 §7; the caption has its own
+/// golden, docs/13 §11).
+LearningMetaState captionPutAway(DateTime day) =>
+    LearningMetaState(captionDay: day);
+
+/// Past the reality reveal and its one-time highlight
+/// (`B-ios-reality-thread`).
+const realityRevealedMeta = LearningMetaState(
+  realityRevealed: true,
+  realityHighlighted: true,
+);
+
+/// [LearningMeta] in memory: [initial] instead of `local_meta`.
+final class FakeLearningMeta extends LearningMeta {
+  FakeLearningMeta([this.initial = const LearningMetaState()]);
+
+  final LearningMetaState initial;
+
+  @override
+  Future<LearningMetaState> build() async => initial;
+
+  @override
+  Future<void> persist(String key, String value) async {}
+}
+
 final class FakeWhatsNewSeen extends WhatsNewSeen {
   FakeWhatsNewSeen([this.initial = '0.1.0']);
 

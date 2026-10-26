@@ -1,47 +1,149 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/scheduling/energy_window.dart';
 import 'package:dottoday/domain/scheduling/learning.dart';
+import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 part 'learning_providers.g.dart';
 
-/// How far back learning looks: ten runs of a weekly task fit.
-const learningHistoryDays = 90;
+/// The numbers learning answers by (docs/13 §2); tests override it.
+@Riverpod(keepAlive: true)
+LearningThresholds learningThresholds(Ref ref) => LearningThresholds.standard;
 
-/// The user's last [learningHistoryDays] days, live: what learning (11 C3)
+/// The user's last [LearningThresholds.historyDays] days, live: what learning (11 C3)
 /// and energy suggestions (11 C4) read. On this device's data only.
 @riverpod
 Stream<List<Occurrence>> learningHistory(Ref ref) {
   final profile = ref.watch(currentProfileProvider.future);
   final repo = ref.watch(occurrenceRepositoryProvider);
   final now = ref.watch(clockProvider).nowUtc();
+  final days = ref.watch(learningThresholdsProvider).historyDays;
   return Stream.fromFuture(profile).asyncExpand(
     (p) => repo.watchRange(
       p.id,
-      now.subtract(const Duration(days: learningHistoryDays)),
+      now.subtract(Duration(days: days)),
       now.add(const Duration(days: 1)),
     ),
   );
 }
 
-/// What the history says per task (11 C3, docs/09 M11.3).
+/// The steps of the history's tasks that really started: what step
+/// lengths are learned from (docs/13 §5). Live, on this device's data.
 @riverpod
-Future<LearningIndex> learningIndex(Ref ref) async =>
-    LearningIndex.from(await ref.watch(learningHistoryProvider.future));
+Stream<List<Subtask>> learningSteps(Ref ref) {
+  final profile = ref.watch(currentProfileProvider.future);
+  final history = ref.watch(learningHistoryProvider.future);
+  final repo = ref.watch(subtaskRepositoryProvider);
+  return Stream.fromFuture(Future.wait([profile, history])).asyncExpand((r) {
+    final p = r[0] as Profile;
+    final ids = {
+      for (final o in r[1] as List<Occurrence>)
+        if (o.actualStartUtc != null) o.id,
+    };
+    return ids.isEmpty
+        ? Stream.value(const <Subtask>[])
+        : repo.watchForOccurrences(p.id, ids);
+  });
+}
+
+/// What the history says per task and per step (11 C3, docs/13 §5).
+@riverpod
+Future<LearningIndex> learningIndex(Ref ref) async {
+  final thresholds = ref.watch(learningThresholdsProvider);
+  final steps = ref.watch(learningStepsProvider.future);
+  final meta = ref.watch(learningMetaProvider.future);
+  final history = await ref.watch(learningHistoryProvider.future);
+  return LearningIndex.from(
+    history,
+    steps: await steps,
+    resets: (await meta).resets,
+    thresholds: thresholds,
+  );
+}
+
+/// How far each learning feature is (docs/13 §4.1): the counts Settings ›
+/// Learning shows and the reality gate reads. From the same history and
+/// index, no second mechanism.
+typedef LearningProgress = ({
+  int realityRuns,
+  bool realityRevealed,
+  int tasksReady,
+  int stepsReady,
+  int energyCompletions,
+});
+
+@riverpod
+Future<LearningProgress> learningProgress(Ref ref) async {
+  final thresholds = ref.watch(learningThresholdsProvider);
+  final index = ref.watch(learningIndexProvider.future);
+  final energy = ref.watch(energyWindowProvider.future);
+  final meta = ref.watch(learningMetaProvider.future);
+  final runs = realityRuns(await ref.watch(learningHistoryProvider.future));
+  return (
+    realityRuns: runs,
+    realityRevealed:
+        (await meta).realityRevealed || runs >= thresholds.realityMinRuns,
+    tasksReady: (await index).tasksReady,
+    stepsReady: (await index).stepsReady,
+    energyCompletions: (await energy).completions,
+  );
+}
+
+/// [learningIndex] read once, for kept-alive callers that ask now and
+/// then (B4's length suggestion) and must not hold the live stream open.
+Future<LearningIndex> readLearningIndex(Ref ref) async {
+  final thresholds = ref.read(learningThresholdsProvider);
+  // Held while awaited: nothing else may be watching the profile now, and
+  // an unwatched auto-dispose provider would go before it answers.
+  final hold = ref.listen(currentProfileProvider, (_, _) {});
+  final Profile profile;
+  try {
+    profile = await ref.read(currentProfileProvider.future);
+  } finally {
+    hold.close();
+  }
+  final now = ref.read(clockProvider).nowUtc();
+  final rows = await ref
+      .read(occurrenceRepositoryProvider)
+      .watchRange(
+        profile.id,
+        now.subtract(Duration(days: thresholds.historyDays)),
+        now.add(const Duration(days: 1)),
+      )
+      .first;
+  final ids = {
+    for (final o in rows)
+      if (o.actualStartUtc != null) o.id,
+  };
+  final steps = ids.isEmpty
+      ? const <Subtask>[]
+      : await ref
+            .read(subtaskRepositoryProvider)
+            .findForOccurrences(profile.id, ids);
+  return LearningIndex.from(rows, steps: steps, thresholds: thresholds);
+}
 
 /// When the user finishes high-energy work best, and how many such tasks
 /// it is read from (11 C4, docs/09 M11.5); the window is null under
-/// [energyMinCompletions].
+/// [LearningThresholds.energyMinCompletions].
 @riverpod
 Future<({EnergyWindow? window, int completions})> energyWindow(Ref ref) async {
+  final thresholds = ref.watch(learningThresholdsProvider);
   final history = await ref.watch(learningHistoryProvider.future);
   final profile = await ref.watch(currentProfileProvider.future);
   return (
-    window: bestEnergyWindow(history, tz.getLocation(profile.tzId)),
+    window: bestEnergyWindow(
+      history,
+      tz.getLocation(profile.tzId),
+      thresholds: thresholds,
+    ),
     completions: highEnergyRuns(history).length,
   );
 }

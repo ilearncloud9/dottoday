@@ -66,6 +66,7 @@ ExportBundle hostileBundle() {
         title: hostileTitle,
         done: true,
         durationMin: 1,
+        doneAt: DateTime.utc(2026, 10, 26, 9, 15),
       ),
       subtaskFixture().copyWith(
         id: '01928c3e-0000-7000-8000-0000000000c2',
