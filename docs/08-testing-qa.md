@@ -216,4 +216,9 @@ Sweep entries (add a row per screen as it lands):
 | A4 Type a time | `test/features/task_editor/type_time_golden_test.dart` | derived |
 | Search S1 + empty + no results (+ Android idiom) | `test/features/search/search_golden_test.dart` | `A-ios-search`, `A-android-search`; empty/no-results derived |
 | Settings P1 (+ Android idiom, lower half), Different days, Send feedback (+ diagnostics on), What's new | `test/features/settings/settings_golden_test.dart` | `A-ios-settings`, `A-android-settings`; sheets and changelog derived |
+| Settings › Learning at 0/10, 7/10, ready (+ 2.0 text, RTL) | `test/features/settings/settings_golden_test.dart` (`settings_learning_*`) | derived — docs/13 §4.1 |
+| Today: learning caption; Plan / Reality highlight mid-hold (+ 2.0 text, RTL) | `test/features/timeline/learning_reveal_golden_test.dart` | derived — docs/13 §4.2–§4.3 |
+| Add A2 with a learned length; its explanation open (+ 2.0 text, RTL) | `test/features/task_editor/add_golden_test.dart` (`add_when_learned*`) | derived — docs/13 §6 |
+| Focus step card on a learned length, explained (+ 2.0 text, RTL) | `test/features/focus/focus_step_learned_golden_test.dart` | derived — docs/13 §5–§6 |
+| Device and web sweep: `settings_learning`, `learned_explained` | `integration_test/support/sweep_m13.dart`, `tool/a11y/web_sweep.mjs` | — |
 

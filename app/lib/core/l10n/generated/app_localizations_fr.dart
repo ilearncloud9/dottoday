@@ -4448,7 +4448,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rebalanceFootnote =>
-      'Rien ne bouge avant ton accord · Annuler pendant 30 s ensuite';
+      'Rien ne bouge avant votre accord · Annuler pendant 30 s ensuite';
 
   @override
   String get rebalanceShiftFollowers => 'Décaler la suite';
@@ -4542,7 +4542,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String learnInsight(String title, String duration) {
-    return '$title te prend en général $duration · Ajouter le proposera';
+    return '$title vous prend en général $duration · Ajouter le proposera';
   }
 
   @override
@@ -4788,7 +4788,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsEnergyDetail =>
-      'Proposer les moments où tu termines le mieux les tâches exigeantes';
+      'Proposer les moments où vous terminez le mieux les tâches exigeantes';
 
   @override
   String settingsEnergyLocked(int total, int count) {
@@ -4869,7 +4869,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String addEnergyBest(String range) {
-    return 'tu termines le mieux les tâches exigeantes $range';
+    return 'vous terminez le mieux les tâches exigeantes $range';
   }
 
   @override

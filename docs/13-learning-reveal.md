@@ -175,7 +175,7 @@ One forward rule, for doc 12 (committed separately by the owner): **Settings ›
 
 Release notes, store text, posts and emails about a data feature (Reality thread, learned lengths, step lengths, energy suggestions) go out only when **≥ 50 % of active users** have crossed that feature's threshold. "Active" means at least one occurrence with an actual start in the last 30 days.
 
-- It is measured by an owner-run aggregate count over the synced `occurrences`/`subtasks` columns, with no titles read. Running it touches the hosted project, so it is a must-ask (CLAUDE.md §10).
+- It is measured by one read-only query, `tool/release/learning_crossing.sql` (M13.8): a single row of counts (`active_users` and one count per feature) over the synced `occurrences`/`subtasks` columns. No user id, title or per-user row leaves it; titles are only hashed inside it to group runs. Its thresholds mirror `LearningThresholds.standard` and its approximations err low (the 90-day window ignores a device's remembered reveal). Running it touches the hosted project, so each run is the owner's call (CLAUDE.md §10).
 - The in-app reveal (§3–§4) is independent: it happens for each user on their own data, whether or not an announcement has gone out.
 - The in-app "What's new" never announces a learning feature before that user's own reveal.
 

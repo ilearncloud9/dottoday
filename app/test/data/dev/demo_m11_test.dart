@@ -2,6 +2,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
 import 'package:dottoday/data/dev/demo_m11.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:dottoday/domain/scheduling/reality.dart';
 import 'package:dottoday/domain/validation/routine_validator.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,8 +24,18 @@ void main() {
       nowUtc: now,
     ).occurrences;
     final sample = buildM11Sample(userId: 'u', day: day, nowUtc: now);
-    final kinds = realityOf(sample.occurrences, now).map((r) => r.kind);
+    final today = [
+      for (final o in sample.occurrences)
+        if (o.startUtc!.isAfter(now.subtract(const Duration(hours: 12)))) o,
+    ];
+    final kinds = realityOf(today, now).map((r) => r.kind);
     expect(kinds, [RealityKind.finished, RealityKind.underWay]);
+    // docs/13: enough finished runs to reveal the reality thread, and the
+    // task under way has a usual length.
+    final index = LearningIndex.from(sample.occurrences);
+    expect(realityRuns(sample.occurrences), greaterThanOrEqualTo(10));
+    expect(index.forTask(title: today.last.title).usualMinutes, isNotNull);
+    expect(sample.occurrences.map((o) => o.id).toSet(), hasLength(12));
     expect(sample.occurrences.first.status, OccurrenceStatus.done);
     expect(sample.routines.map((r) => r.title), [
       'Morning',
