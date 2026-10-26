@@ -86,7 +86,15 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
                 index: i,
                 now: s == next,
                 editing: widget.editing,
-                onTick: () => unawaited(_write([s.copyWith(done: !s.done)])),
+                onTick: () => unawaited(
+                  _write([
+                    tick(
+                      s,
+                      done: !s.done,
+                      nowUtc: ref.read(clockProvider).nowUtc(),
+                    ),
+                  ]),
+                ),
                 onRename: (t) => unawaited(_write([s.copyWith(title: t)])),
                 onLength: widget.editing
                     ? (m) => unawaited(_write([s.copyWith(durationMin: m)]))

@@ -35,7 +35,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 6;
+  static const latestSchemaVersion = 7;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -71,6 +71,8 @@ class AppDatabase extends _$AppDatabase {
         await m.alterTable(TableMigration(changeLog));
         await m.alterTable(TableMigration(conflicts));
       }
+      // 7 (M13.2): when a step was ticked, for learned step lengths.
+      if (from < 7) await _addColumnOnce(m, subtasks, subtasks.doneAt);
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without

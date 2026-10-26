@@ -44,6 +44,21 @@ void main() {
     expect(encodeExportJson(back), text);
   });
 
+  test('a file from before 0008 imports its steps with no tick time', () {
+    final json =
+        jsonDecode(encodeExportJson(hostileBundle())) as Map<String, Object?>;
+    final steps = (json['subtasks']! as List).cast<Map<String, Object?>>();
+    expect(steps.first['done_at'], isNotNull);
+    for (final s in steps) {
+      s.remove('done_at');
+    }
+    final back = decodeExportJson(
+      jsonEncode(json),
+    ).when(ok: (b) => b, err: (f) => fail(f.code));
+    expect(back.subtasks.map((s) => s.doneAt), everyElement(isNull));
+    expect(back.subtasks.first.done, isTrue);
+  });
+
   test('a file from before routines imports with none (M11.4)', () {
     final json =
         jsonDecode(encodeExportJson(hostileBundle())) as Map<String, Object?>

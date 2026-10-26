@@ -14,6 +14,10 @@ _Subtask _$SubtaskFromJson(Map<String, dynamic> json) => _Subtask(
   done: json['done'] as bool? ?? false,
   sortOrder: (json['sort_order'] as num?)?.toDouble() ?? 0,
   durationMin: (json['duration_min'] as num?)?.toInt(),
+  doneAt: _$JsonConverterFromJson<int, DateTime>(
+    json['done_at'],
+    const UtcMillisConverter().fromJson,
+  ),
   createdAt: const UtcMillisConverter().fromJson(
     (json['created_at'] as num).toInt(),
   ),
@@ -34,6 +38,10 @@ Map<String, dynamic> _$SubtaskToJson(_Subtask instance) => <String, dynamic>{
   'done': instance.done,
   'sort_order': instance.sortOrder,
   'duration_min': instance.durationMin,
+  'done_at': _$JsonConverterToJson<int, DateTime>(
+    instance.doneAt,
+    const UtcMillisConverter().toJson,
+  ),
   'created_at': const UtcMillisConverter().toJson(instance.createdAt),
   'updated_at': const UtcMillisConverter().toJson(instance.updatedAt),
   'deleted_at': _$JsonConverterToJson<int, DateTime>(

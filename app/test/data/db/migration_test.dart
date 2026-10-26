@@ -9,9 +9,41 @@ import 'package:flutter_test/flutter_test.dart';
 // 2 → 3 (M6.5.1): actual start/end and step durations (11 B1/B2);
 // 3 → 4 (M7.5): calendar_links.location (R-17); 4 → 5 (M10.7):
 // occurrences.move_count (Unstick, 11 B3); 5 → 6 (M11.4): routines,
-// occurrences.routine_start and the outbox CHECK naming routines. Steps are idempotent, so
+// occurrences.routine_start and the outbox CHECK naming routines; 6 → 7
+// (M13.2, ADR-0012): subtasks.done_at. Steps are idempotent, so
 // a file an older build opened (user_version lowered) upgrades again (M8.5).
 void main() {
+  test('a version 6 file gains step tick times, null, rows kept', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig7');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+
+    final v6 = AppDatabase(NativeDatabase(file));
+    await v6.customStatement(
+      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+      "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+    );
+    await v6.customStatement(
+      'INSERT INTO occurrences (id, user_id, title, tz_id, duration_min, '
+      "created_at, updated_at) VALUES ('o1', 'u', 'Clean', 'UTC', 30, 0, 0)",
+    );
+    await v6.customStatement('ALTER TABLE subtasks DROP COLUMN done_at');
+    await v6.customStatement(
+      'INSERT INTO subtasks (id, user_id, occurrence_id, title, done, '
+      "created_at, updated_at) VALUES ('s1', 'u', 'o1', 'Dishes', 1, 0, 0)",
+    );
+    await v6.customStatement('PRAGMA user_version = 6');
+    await v6.close();
+
+    final v7 = AppDatabase(NativeDatabase(file));
+    addTearDown(v7.close);
+    final row = await v7.select(v7.subtasks).getSingle();
+    // Ticked before the column existed: never backfilled (B1).
+    expect((row.title, row.done, row.doneAt), ('Dishes', true, null));
+    final version = await v7.customSelect('PRAGMA user_version').getSingle();
+    expect(version.read<int>('user_version'), AppDatabase.latestSchemaVersion);
+  });
+
   test('a version 5 file gains routines and keeps its outbox', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig6');
     addTearDown(() => dir.delete(recursive: true));

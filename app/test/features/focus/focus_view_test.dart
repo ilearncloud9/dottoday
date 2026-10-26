@@ -43,7 +43,7 @@ List<Subtask> _steps() {
     mine[0].copyWith(
       done: true,
       durationMin: 25,
-      updatedAt: DateTime.utc(2026, 10, 21, 7, 25),
+      doneAt: DateTime.utc(2026, 10, 21, 7, 25),
     ),
     mine[1].copyWith(done: false, durationMin: 30),
     mine[2].copyWith(done: false, durationMin: 20),
@@ -145,7 +145,8 @@ void main() {
       (s) => s.occurrenceId == _deep.id && !s.done,
     );
     await _tap(tester, find.text('Next step'));
-    expect(_subs.rows.firstWhere((s) => s.id == current.id).done, isTrue);
+    final ticked = _subs.rows.firstWhere((s) => s.id == current.id);
+    expect((ticked.done, ticked.doneAt), (true, _now));
     expect(find.text('STEP 3 OF 3'), findsOneWidget);
   });
 

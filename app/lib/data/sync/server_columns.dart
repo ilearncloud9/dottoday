@@ -76,6 +76,7 @@ const pushableColumns = <String, Set<String>>{
     'done',
     'sort_order',
     'duration_min',
+    'done_at',
     'created_at',
     'deleted_at',
   },
