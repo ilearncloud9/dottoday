@@ -8,16 +8,29 @@ import '../../support/reality_fixtures.dart';
 import '../../support/timeline_fakes.dart';
 import '../../support/today_harness.dart';
 
-// The Reality thread on Today (docs/09 M11.2, 11 C3): the toggle shows
-// once a task really started; Reality captions what happened in plain
-// words; Plan is the thread as before.
+// The Reality thread on Today (docs/09 M11.2, 11 C3, docs/13 §4.3): the
+// toggle shows once the reality threshold was crossed; Reality captions
+// what happened in plain words; Plan is the thread as before.
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  testWidgets('no actuals today: no toggle', (tester) async {
-    await pumpToday(tester);
+  testWidgets('before the threshold: no toggle, even with actuals', (
+    tester,
+  ) async {
+    await pumpToday(tester, rows: realityDayRows());
     expect(find.text('Reality'), findsNothing);
+  });
+
+  testWidgets('revealed, no actuals today: the plan, "nothing started yet"', (
+    tester,
+  ) async {
+    await pumpToday(tester, learningMeta: realityRevealedMeta);
+    expect(find.text('nothing started yet today'), findsNothing);
+    await tester.tap(find.text('Reality'));
+    await tester.pumpAndSettle();
+    expect(find.text('nothing started yet today'), findsOneWidget);
+    expect(find.text('Morning run'), findsOneWidget, reason: 'the plan');
   });
 
   testWidgets('Reality captions the day as it went', (tester) async {
@@ -25,6 +38,7 @@ void main() {
       tester,
       rows: realityDayRows(),
       size: const Size(390, 1600),
+      learningMeta: realityRevealedMeta,
     );
     expect(find.text('Reality'), findsOneWidget);
     expect(find.text('6:57 AM – 7:31 AM'), findsNothing, reason: 'Plan first');
@@ -54,6 +68,7 @@ void main() {
       tester,
       rows: realityDayRows(),
       size: const Size(390, 1600),
+      learningMeta: realityRevealedMeta,
     );
     final grips = find.bySemanticsLabel(RegExp('^Change how long'));
     expect(grips, findsWidgets);
@@ -69,6 +84,7 @@ void main() {
       tester,
       rows: realityDayRows(),
       size: const Size(390, 1600),
+      learningMeta: realityRevealedMeta,
     );
     await tester.tap(find.text('Reality'));
     await tester.pumpAndSettle();
@@ -83,6 +99,7 @@ void main() {
       tester,
       rows: [...realityDayRows(), ...deepWorkHistory()],
       size: const Size(390, 1600),
+      learningMeta: realityRevealedMeta,
     );
     await tester.tap(find.text('Reality'));
     await tester.pumpAndSettle();
@@ -101,6 +118,7 @@ void main() {
       tester,
       rows: [...realityDayRows(), ...deepWorkHistory()],
       size: const Size(390, 1600),
+      learningMeta: realityRevealedMeta,
     );
     expect(find.textContaining('usually takes you'), findsNothing);
     await tester.tap(find.text('Reality'));

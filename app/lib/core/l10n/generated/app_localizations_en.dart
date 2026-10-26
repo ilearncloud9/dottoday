@@ -4520,6 +4520,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get learnInsightOk => 'OK';
 
   @override
+  String learnCaption(int total, int done) {
+    return 'Your reality thread appears after about $total finished tasks · $done so far';
+  }
+
+  @override
+  String get learnCaptionHide => 'Hide until tomorrow';
+
+  @override
+  String get learnRealityReady =>
+      'Plan and reality view is now in the day header';
+
+  @override
+  String get realityNothingStartedToday => 'nothing started yet today';
+
+  @override
   String lateUsually(String title, String duration) {
     return '$title usually takes $duration';
   }

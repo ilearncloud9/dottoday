@@ -4547,6 +4547,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get learnInsightOk => 'OK';
 
   @override
+  String learnCaption(int total, int done) {
+    return 'Dein Realitätsfaden erscheint nach etwa $total erledigten Aufgaben · bisher $done';
+  }
+
+  @override
+  String get learnCaptionHide => 'Bis morgen ausblenden';
+
+  @override
+  String get learnRealityReady =>
+      'Die Ansicht Plan und Realität ist jetzt oben im Tag';
+
+  @override
+  String get realityNothingStartedToday => 'heute noch nichts begonnen';
+
+  @override
   String lateUsually(String title, String duration) {
     return '$title dauert meist $duration';
   }

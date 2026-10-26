@@ -3546,6 +3546,20 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get learnInsightOk => pseudo(super.learnInsightOk);
 
   @override
+  String learnCaption(int total, int done) =>
+      pseudo(super.learnCaption(total, done));
+
+  @override
+  String get learnCaptionHide => pseudo(super.learnCaptionHide);
+
+  @override
+  String get learnRealityReady => pseudo(super.learnRealityReady);
+
+  @override
+  String get realityNothingStartedToday =>
+      pseudo(super.realityNothingStartedToday);
+
+  @override
   String lateUsually(String title, String duration) =>
       pseudo(super.lateUsually(title, duration));
 

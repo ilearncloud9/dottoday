@@ -3,6 +3,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/day_card_side.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/motion/reveal_highlight.dart';
 import 'package:flutter/material.dart';
 
 export 'day_card_side.dart' show SideDay;
@@ -27,11 +28,19 @@ final class DaySummary {
 /// The day card's Plan / Reality switch (11 C3, `B-ios-reality-thread`).
 @immutable
 final class RealityToggle {
-  const RealityToggle({required this.on, required this.onChanged});
+  const RealityToggle({
+    required this.on,
+    required this.onChanged,
+    this.highlight,
+  });
 
   /// Showing the Reality thread.
   final bool on;
   final ValueChanged<bool> onChanged;
+
+  /// The one-time reveal (docs/13 §4.3): what to announce and what to do
+  /// once it has run; null when it already has, here.
+  final ({String announcement, VoidCallback onDone})? highlight;
 }
 
 /// One day on a raised card (docs/10 §3 `DayCard`, `Main`): "Wednesday ·
@@ -46,6 +55,7 @@ class DayCard extends StatelessWidget {
     this.actions = const ThreadActions(),
     this.footer,
     this.reality,
+    this.note,
     super.key,
   }) : side = null;
 
@@ -61,7 +71,8 @@ class DayCard extends StatelessWidget {
     this.footer,
     super.key,
   }) : isToday = false,
-       reality = null;
+       reality = null,
+       note = null;
 
   /// "Wednesday", or "Monday 14 Dec" away from this week.
   final String title;
@@ -79,6 +90,10 @@ class DayCard extends StatelessWidget {
   /// The Plan / Reality switch in the header; null hides it. While the
   /// Reality thread shows, the header drops its numbers (as rendered).
   final RealityToggle? reality;
+
+  /// One line at the top of the thread, under the header (the learning
+  /// caption, "nothing started yet today"; docs/13 §4.2).
+  final Widget? note;
 
   @override
   Widget build(BuildContext context) {
@@ -148,6 +163,9 @@ class DayCard extends StatelessWidget {
     ),
     sliver: SliverMainAxisGroup(
       slivers: [
+        // The note scrolls with the thread: pinned, it would grow the
+        // header past a short card at the largest text (docs/13 §4.2).
+        if (note case final n?) SliverToBoxAdapter(child: n),
         Thread.sliver(entries: entries, actions: actions),
         if (footer case final f?) SliverToBoxAdapter(child: f),
       ],
@@ -229,7 +247,7 @@ class _RealitySwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return SegmentedButton<bool>(
+    final button = SegmentedButton<bool>(
       segments: [
         ButtonSegment(value: false, label: Text(l10n.realityPlan)),
         ButtonSegment(value: true, label: Text(l10n.realityReality)),
@@ -238,5 +256,14 @@ class _RealitySwitch extends StatelessWidget {
       showSelectedIcon: false,
       onSelectionChanged: (s) => toggle.onChanged(s.first),
     );
+    final h = toggle.highlight;
+    return h == null
+        ? button
+        : RevealHighlight(
+            active: true,
+            announcement: h.announcement,
+            onDone: h.onDone,
+            child: button,
+          );
   }
 }

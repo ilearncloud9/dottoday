@@ -15,6 +15,7 @@ import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/day_drag.dart';
 import 'package:dottoday/features/timeline/widgets/empty_day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/reality_insight.dart';
+import 'package:dottoday/features/timeline/widgets/today_learning.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
@@ -68,9 +69,21 @@ class DayPage extends ConsumerWidget {
       subtasks: subtasks,
       now: now,
     );
-    // Today's card offers the Reality thread once a task really started
-    // (11 C3, docs/09 M11.2); there it is read-only for drags.
-    final offerReality = date == today && side == null && hasActuals(blocks);
+    // Today's card offers the Reality thread once the reality threshold
+    // was crossed (docs/13 §4.3); there it is read-only for drags. Before
+    // that, it promises it in a caption (§4.2).
+    final learn = todayLearning(
+      context,
+      ref,
+      isToday: date == today,
+      isSide: side != null,
+      hasActuals: hasActuals(blocks),
+      realityOn: ref.watch(realityModeProvider),
+      settings: data.settings,
+      now: now,
+      today: today,
+    );
+    final offerReality = learn.offer;
     final learning = offerReality
         ? ref.watch(learningIndexProvider).value
         : null;
@@ -122,8 +135,10 @@ class DayPage extends ConsumerWidget {
               on: reality != null,
               onChanged: (on) =>
                   ref.read(realityModeProvider.notifier).set(on: on),
+              highlight: learn.highlight,
             )
           : null,
+      note: learn.note,
     );
     final insight = reality == null
         ? null

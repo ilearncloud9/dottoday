@@ -593,6 +593,19 @@ final class FakeTrashService implements TrashService {
 
 /// The app lock, off and in memory (M5.8).
 /// What's new as last seen; [seen] starts at the running version.
+/// A user past Today's learning caption on [day], as the reference
+/// renders show an established user (docs/10 §7; the caption has its own
+/// golden, docs/13 §11).
+LearningMetaState captionPutAway(DateTime day) =>
+    LearningMetaState(captionDay: day);
+
+/// Past the reality reveal and its one-time highlight
+/// (`B-ios-reality-thread`).
+const realityRevealedMeta = LearningMetaState(
+  realityRevealed: true,
+  realityHighlighted: true,
+);
+
 /// [LearningMeta] in memory: [initial] instead of `local_meta`.
 final class FakeLearningMeta extends LearningMeta {
   FakeLearningMeta([this.initial = const LearningMetaState()]);

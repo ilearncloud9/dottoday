@@ -69,9 +69,9 @@ The data comes from one provider, `learningProgressProvider`, derived from the e
 
 ### 4.2 Day card header caption (Reality thread only)
 
-**new.** Under today's `DayCard` header, while the reality thread is not yet revealed (§4.3): one muted line, **"Your reality thread appears after about 10 finished tasks · 7 so far"**, with a trailing × (44 px target, Semantics button "Hide until tomorrow").
+**new.** At the top of today's `DayCard` thread (it scrolls with the thread, so at the largest text it never pushes the pinned header past a short card), while the reality thread is not yet revealed (§4.3): one muted line, **"Your reality thread appears after about 10 finished tasks · 7 so far"**, with a trailing × (44 px target, Semantics button "Hide until tomorrow").
 
-- It shows on **today's** card only: the phone `DayPager` and the Mac/web spread's today card.
+- It shows on **today's** card only: the phone `DayPager` and the Mac/web spread's today card. The × is 48 px (both floors), with the tooltip and label "Hide until tomorrow".
 - It shows at most once per day. × stores the local date in `local_meta` (`learning_caption_day`, same shape as `InboxNudgeSeen`), and the caption returns the next day until the threshold is crossed. It is never shown again after the reveal.
 - It is hidden in low-energy mode (11 §D2 hides counts) and in minimal mode (§9).
 - The Add chip, ThreadPicker, Focus and energy line have **no** before-threshold caption.
@@ -80,7 +80,8 @@ The data comes from one provider, `learningProgressProvider`, derived from the e
 
 ### 4.3 At threshold: the toggle reveal
 
-- **Gate.** **changed.** `offerReality = isToday && side == null && hasActuals(blocks) && realityRevealed`. `realityRevealed` is true once `realityRuns >= realityMinRuns` has been seen on this device, and is stored in `local_meta` (`learning_reality_revealed`). A user who stops for three months doesn't lose the toggle when the 90-day window empties.
+- **Gate.** **changed.** `offerReality = isToday && side == null && realityRevealed` (`features/timeline/state/reality_gate.dart`). `realityRevealed` is true once `realityRuns >= realityMinRuns` has been seen on this device, and is stored in `local_meta` (`learning_reality_revealed`). A user who stops for three months doesn't lose the toggle when the 90-day window empties.
+- **A day with nothing started** (owner, 2026-10-26): once revealed, the toggle stays on every day. On a day with no actual start yet, Reality shows the plan as it is with one line at the top of the thread, **"nothing started yet today"**. The toggle is never hidden again.
 - **Highlight, once per device.** The first time the toggle renders after `learning_reality_revealed` is set, the segmented control sits on an `accentTint` pill for `DotMotion.reveal` (new token: hold 2 s, then fade over `slow`). Then `learning_reality_highlighted` is stored and it never runs again. Under reduced motion `DotMotion.reveal` is zero: no tint. Either way, screen readers get one polite announcement, "Plan and reality view is now in the day header".
 - Nothing else: no sheet, no tooltip, no notification. A second device computes the same crossing from synced occurrences and shows its own one highlight; that is accepted.
 

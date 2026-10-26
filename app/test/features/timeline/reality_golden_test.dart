@@ -38,6 +38,7 @@ List<Override> _overrides({
     realityModeProvider.overrideWith(() => _On(reality)),
     ...timelineOverrides(
       now: now ?? DateTime.utc(2026, 10, 21, 7, 22),
+      learningMeta: realityRevealedMeta,
       occurrences: FakeOccurrenceRepository([
         ...realityDayRows(day),
         ...deepWorkHistory(),

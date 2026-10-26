@@ -6738,6 +6738,30 @@ abstract class AppLocalizations {
   /// **'OK'**
   String get learnInsightOk;
 
+  /// Today's card, under the header, before the reality thread is ready (docs/13 §4.2). A promise; never 'late'.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reality thread appears after about {total} finished tasks · {done} so far'**
+  String learnCaption(int total, int done);
+
+  /// Screen-reader label of the × beside the learning caption.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide until tomorrow'**
+  String get learnCaptionHide;
+
+  /// Announced once to screen readers when the Plan / Reality toggle first appears (docs/13 §4.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Plan and reality view is now in the day header'**
+  String get learnRealityReady;
+
+  /// Under Today's header in the Reality view on a day with no real start yet: the plan is shown as it is. Plain, never 'late'.
+  ///
+  /// In en, this message translates to:
+  /// **'nothing started yet today'**
+  String get realityNothingStartedToday;
+
   /// Running late sheet: the task at hand's usual real length, which picked the amount.
   ///
   /// In en, this message translates to:

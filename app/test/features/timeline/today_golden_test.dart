@@ -34,6 +34,7 @@ Widget _today({
       ),
     ...timelineOverrides(
       now: DateTime.utc(2026, 10, 21, 7, 22),
+      learningMeta: captionPutAway(DateTime(2026, 10, 21)),
       occurrences: FakeOccurrenceRepository(
         demoDayRows(DateTime(2026, 10, 21)),
       ),

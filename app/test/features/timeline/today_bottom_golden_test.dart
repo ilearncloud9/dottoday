@@ -59,6 +59,7 @@ List<Occurrence> _rows() {
 Widget _today() => ProviderScope(
   overrides: timelineOverrides(
     now: DateTime.utc(2026, 10, 21, 7, 22),
+    learningMeta: captionPutAway(DateTime(2026, 10, 21)),
     occurrences: FakeOccurrenceRepository(_rows()),
     subtasks: FakeSubtaskRepository(demoDaySubtasks(_date)),
     profile: testProfile(
