@@ -46,4 +46,21 @@ class _Specimen extends StatelessWidget {
 void main() {
   setUpAll(loadAppFonts);
   goldenMatrix('week_strip', height: 240, build: (_) => const _Specimen());
+  // At the largest text a phone's columns can't hold "Wed": the locale's
+  // one-letter form instead (1.0 / 2.0 × LTR / RTL).
+  goldenMatrix(
+    'week_strip_text',
+    height: 200,
+    widths: const {'compact', 'expanded'},
+    a11yVariants: true,
+    build: (_) => Padding(
+      padding: const EdgeInsets.all(DotSpace.page),
+      child: WeekStrip(
+        days: mainWeek,
+        selected: 3,
+        onSelect: (_) {},
+        onPull: () {},
+      ),
+    ),
+  );
 }

@@ -31,6 +31,7 @@ class RoutineDayStrip extends StatelessWidget {
         for (final d in days)
           StripDay(
             weekday: DateFormat.E(locale).format(d),
+            weekdayNarrow: narrowWeekday(d, locale),
             date: DateFormat.d(locale).format(d),
             label: context.l10n.routineDropOnDay(
               DateFormat.MMMMEEEEd(locale).format(d),

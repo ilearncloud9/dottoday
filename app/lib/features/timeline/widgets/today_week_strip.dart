@@ -83,6 +83,7 @@ class TodayWeekStrip extends ConsumerWidget {
     final name = DateFormat.MMMMEEEEd(locale).format(d);
     return StripDay(
       weekday: DateFormat.E(locale).format(d),
+      weekdayNarrow: narrowWeekday(d, locale),
       date: DateFormat.d(locale).format(d),
       label: counts.total == 0
           ? name

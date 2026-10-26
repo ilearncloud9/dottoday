@@ -95,24 +95,28 @@ const mainThread = <ThreadEntry>[
 const mainWeek = <StripDay>[
   StripDay(
     weekday: 'Sun',
+    weekdayNarrow: 'S',
     date: '18',
     label: 'Sunday 18',
     completion: Completion.of(1),
   ),
   StripDay(
     weekday: 'Mon',
+    weekdayNarrow: 'M',
     date: '19',
     label: 'Monday 19',
     completion: Completion.of(0.75),
   ),
   StripDay(
     weekday: 'Tue',
+    weekdayNarrow: 'T',
     date: '20',
     label: 'Tuesday 20',
     completion: Completion.of(1),
   ),
   StripDay(
     weekday: 'Wed',
+    weekdayNarrow: 'W',
     date: '21',
     label: 'Wednesday 21, today',
     completion: Completion.of(0.3),
@@ -120,18 +124,21 @@ const mainWeek = <StripDay>[
   ),
   StripDay(
     weekday: 'Thu',
+    weekdayNarrow: 'T',
     date: '22',
     label: 'Thursday 22',
     completion: Completion.none(),
   ),
   StripDay(
     weekday: 'Fri',
+    weekdayNarrow: 'F',
     date: '23',
     label: 'Friday 23',
     completion: Completion.none(),
   ),
   StripDay(
     weekday: 'Sat',
+    weekdayNarrow: 'S',
     date: '24',
     label: 'Saturday 24',
     completion: Completion.none(),
