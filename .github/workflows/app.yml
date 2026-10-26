@@ -210,6 +210,12 @@ jobs:
       # widths, Brain dump from the ⋯ menu (M12 follow-up).
       - name: Popover fields take keys at once
         run: node ../tool/a11y/popover_focus_check.mjs http://127.0.0.1:8080/
+      - if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: web-check-screens
+          path: app/build/*.png
+          retention-days: 7
       # The live dot on the tab (docs/09 M9.7): title and favicon ring.
       - name: Web live dot
         run: node ../tool/a11y/web_live_dot_check.mjs http://127.0.0.1:8080/

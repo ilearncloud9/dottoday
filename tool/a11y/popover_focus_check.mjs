@@ -42,10 +42,19 @@ async function fresh(page) {
   await enableSemantics(page);
 }
 
+const focusedTag = (page) => page.evaluate(() => `<${document.activeElement?.tagName.toLowerCase()}>`);
+
 // What the browser's focused element holds after typing: the field's own
-// text when the keys arrived, anything else when they went nowhere.
+// text when the keys arrived, else the tag that held the focus. Waits for a
+// text field to take the focus on its own (slow runners), never clicks.
 async function typedInto(page, text) {
-  await page.waitForTimeout(1_200); // the popover's entrance and the menu's exit
+  const focused = await page.waitForFunction(
+    () => ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName),
+    null,
+    { timeout: 10_000 },
+  ).then(() => true, () => false);
+  if (!focused) return focusedTag(page);
+  await page.waitForTimeout(1_200); // the menu's exit, when the old blur fired
   await page.keyboard.type(text);
   await page.waitForTimeout(400);
   return page.evaluate(() => {
@@ -75,13 +84,14 @@ for (const vp of viewports) {
   await tap(page, vp.add);
   const add = await typedInto(page, 'Call the bank');
   check(`${vp.name}: Add takes keys without a click`, add === 'Call the bank', `got "${add}"`);
+  await page.screenshot({ path: `build/popover_focus_${vp.name}_add.png` });
 
   await fresh(page);
   await tap(page, 'More options');
   await tap(page, 'Brain dump', 'menuitem');
   const dump = await typedInto(page, 'Email Sam');
   check(`${vp.name}: Brain dump takes keys without a click`, dump === 'Email Sam', `got "${dump}"`);
-  await page.screenshot({ path: `build/popover_focus_${vp.name}.png` });
+  await page.screenshot({ path: `build/popover_focus_${vp.name}_dump.png` });
 
   check(`${vp.name}: no uncaught page error`, errors.length === 0, errors.join('; '));
   await page.close();
