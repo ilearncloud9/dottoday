@@ -58,8 +58,12 @@ Future<void> sweepM12(
   await rest();
   await menu('Brain dump');
   await until(find.text('Plan it'));
+  // By its hint: the wide inbox and Earlier dumps' search are fields too.
   await tester.enterText(
-    find.byType(TextField).first,
+    find.widgetWithText(
+      TextField,
+      'Everything on your mind, one thing per line',
+    ),
     'Email Sam\nTaxes 45m\nCall the bank 4pm',
   );
   await rest();
