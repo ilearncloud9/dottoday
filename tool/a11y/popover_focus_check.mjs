@@ -1,6 +1,8 @@
 // Popover fields take keys at once on the web build in Chromium (M12 follow-up):
 // open Add and Brain dump at the compact and expanded widths and type without
-// clicking into the field first; the text must land in the field. Brain dump
+// clicking into the field first; the text must land in the field. Each field
+// must also take the focus within 3 s of the tap that opens it, and the time is
+// printed: slower than that on a phone browser is a bug, not a slow runner. Brain dump
 // opens from Today's ⋯ menu, whose closing used to drop the browser's focus
 // and leave the field with a caret but no keys. Semantics are on so the menu
 // is driven like a screen reader would. Usage: node popover_focus_check.mjs [baseUrl]
@@ -42,18 +44,33 @@ async function fresh(page) {
   await enableSemantics(page);
 }
 
-const focusedTag = (page) => page.evaluate(() => `<${document.activeElement?.tagName.toLowerCase()}>`);
+const focusLimitMs = 3_000;
+
+// Taps [name] and measures, in the page, from the tap to the first moment a
+// text field holds the browser's focus: milliseconds, or null past the limit.
+async function openAndTime(page, name, role = 'button') {
+  const target = page.getByRole(role, { name, exact: true }).first();
+  await target.waitFor({ state: 'attached', timeout: 30_000 });
+  await page.evaluate(() => {
+    window.__fieldFocusAt = null;
+    document.addEventListener('focusin', (e) => {
+      if (window.__fieldFocusAt === null && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+        window.__fieldFocusAt = performance.now();
+      }
+    }, true);
+    window.__tapAt = performance.now();
+  });
+  await target.click();
+  await page.waitForFunction(() => window.__fieldFocusAt !== null, null,
+    { timeout: focusLimitMs + 1_000 }).catch(() => {});
+  const ms = await page.evaluate(() => window.__fieldFocusAt === null
+    ? null : Math.round(window.__fieldFocusAt - window.__tapAt));
+  return ms !== null && ms <= focusLimitMs ? ms : null;
+}
 
 // What the browser's focused element holds after typing: the field's own
-// text when the keys arrived, else the tag that held the focus. Waits for a
-// text field to take the focus on its own (slow runners), never clicks.
+// text when the keys arrived, else the tag that held the focus. Never clicks.
 async function typedInto(page, text) {
-  const focused = await page.waitForFunction(
-    () => ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName),
-    null,
-    { timeout: 10_000 },
-  ).then(() => true, () => false);
-  if (!focused) return focusedTag(page);
   await page.waitForTimeout(1_200); // the menu's exit, when the old blur fired
   await page.keyboard.type(text);
   await page.waitForTimeout(400);
@@ -62,6 +79,8 @@ async function typedInto(page, text) {
     return a && 'value' in a ? a.value : `<${a?.tagName.toLowerCase()}>`;
   });
 }
+
+const focusDetail = (ms) => ms === null ? `no field focus within ${focusLimitMs} ms` : `${ms} ms`;
 
 // CHROMIUM_PATH: an already-installed headless shell when the lockfile's
 // Playwright build isn't downloaded on this machine.
@@ -81,14 +100,16 @@ for (const vp of viewports) {
   await passOnboarding(page);
 
   await fresh(page);
-  await tap(page, vp.add);
+  const addMs = await openAndTime(page, vp.add);
+  check(`${vp.name}: Add's field takes the focus`, addMs !== null, focusDetail(addMs));
   const add = await typedInto(page, 'Call the bank');
   check(`${vp.name}: Add takes keys without a click`, add === 'Call the bank', `got "${add}"`);
   await page.screenshot({ path: `build/popover_focus_${vp.name}_add.png` });
 
   await fresh(page);
   await tap(page, 'More options');
-  await tap(page, 'Brain dump', 'menuitem');
+  const dumpMs = await openAndTime(page, 'Brain dump', 'menuitem');
+  check(`${vp.name}: Brain dump's field takes the focus`, dumpMs !== null, focusDetail(dumpMs));
   const dump = await typedInto(page, 'Email Sam');
   check(`${vp.name}: Brain dump takes keys without a click`, dump === 'Email Sam', `got "${dump}"`);
   await page.screenshot({ path: `build/popover_focus_${vp.name}_dump.png` });
