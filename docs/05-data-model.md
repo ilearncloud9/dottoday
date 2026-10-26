@@ -56,8 +56,10 @@ Placement: `wake` — the first step at that day's Wake Up; `bed` — the last s
 through `sync_push` (0007 adds the entity); purged like other tombstones after 30 days.
 
 ### `subtasks`
-`id, user_id, occurrence_id, title, done bool, sort_order, duration_min? (1–1440, B2), created_at,
-updated_at, deleted_at?` — `sort_order` is the step order B2 asks for (no separate `sort_index`).
+`id, user_id, occurrence_id, title, done bool, sort_order, duration_min? (1–1440, B2), done_at?
+(ADR-0012), created_at, updated_at, deleted_at?` — `sort_order` is the step order B2 asks for (no
+separate `sort_index`). `done_at` is when the step was ticked, set and cleared with `done` in the same
+write, never backfilled; no CHECK ties the two (field-level sync), so readers use `done and done_at`.
 Created from `series.subtask_template` when an occurrence is materialised; never shared across
 occurrences.
 

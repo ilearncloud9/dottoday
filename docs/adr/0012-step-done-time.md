@@ -11,8 +11,10 @@ time, and B1's rule is that actual times are recorded, never inferred.
 
 ## Decision
 - `subtasks` gains `done_at`: nullable, a ms epoch on the client (Drift schema 7) and `timestamptz`
-  on the server (migration `0008_subtask_done_at.sql`), with
-  `check (done_at is null or done)`. It is additive. The existing RLS policies on `subtasks` cover
+  on the server (migration `0008_subtask_done_at.sql`). It is additive. **No CHECK tying it to
+  `done`** (amended in M13.2): sync merges field by field, so an older client that unticks by
+  writing only `done` would have its push refused and its sync stalled; learning reads
+  `done and done_at is not null` instead. The existing RLS policies on `subtasks` cover
   it, and `sync_push` resolves column types dynamically (0002), so no function changes.
 - It is set to now when a step is ticked done and cleared when it is unticked, wherever that happens
   (Focus, task sheet, editor). It is synced, exported and restored like `duration_min`. There is no

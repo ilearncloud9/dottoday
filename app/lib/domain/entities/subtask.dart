@@ -20,6 +20,10 @@ abstract class Subtask with _$Subtask {
 
     /// Optional length of this step in minutes, 1–1440 (11 B2).
     int? durationMin,
+
+    /// When it was ticked done (ADR-0012), cleared when unticked; null for
+    /// steps ticked before it existed. Meaningful only while [done].
+    @UtcMillisConverter() DateTime? doneAt,
     @UtcMillisConverter() required DateTime createdAt,
     @UtcMillisConverter() required DateTime updatedAt,
     @UtcMillisConverter() DateTime? deletedAt,
@@ -28,3 +32,12 @@ abstract class Subtask with _$Subtask {
   factory Subtask.fromJson(Map<String, Object?> json) =>
       _$SubtaskFromJson(json);
 }
+
+/// [step] ticked ([done] true) or unticked at [nowUtc]: the one way a tick
+/// is written, so its time is never forgotten or inferred (ADR-0012).
+///
+/// ```dart
+/// tick(step, done: true, nowUtc: now).doneAt; // now
+/// ```
+Subtask tick(Subtask step, {required bool done, required DateTime nowUtc}) =>
+    step.copyWith(done: done, doneAt: done ? nowUtc : null, updatedAt: nowUtc);

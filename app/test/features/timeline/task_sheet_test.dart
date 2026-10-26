@@ -87,7 +87,12 @@ void main() {
       (s) => s.title == 'Draft milestones',
     );
     expect(ticked.done, isTrue);
+    expect(ticked.doneAt, _now); // ADR-0012: the tick time, in the same write
     expect(_subtasks.rows.where((s) => s.done), hasLength(2));
+    await tester.tap(_inSheet(find.text('Draft milestones')));
+    await tester.pumpAndSettle();
+    final unticked = _subtasks.rows.firstWhere((s) => s.id == ticked.id);
+    expect((unticked.done, unticked.doneAt), (false, null));
   });
 
   testWidgets('+ Add creates a subtask on this occurrence', (tester) async {

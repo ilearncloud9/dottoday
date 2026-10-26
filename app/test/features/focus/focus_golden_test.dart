@@ -34,7 +34,7 @@ void main() {
     mine[0].copyWith(
       done: true,
       durationMin: 25,
-      updatedAt: DateTime.utc(2026, 10, 21, 7, 25),
+      doneAt: DateTime.utc(2026, 10, 21, 7, 25),
     ),
     mine[1].copyWith(done: false, durationMin: 30),
     mine[2].copyWith(done: false, durationMin: 20),

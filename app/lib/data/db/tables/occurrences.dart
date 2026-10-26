@@ -130,6 +130,9 @@ class Subtasks extends Table with TimestampColumns, SyncColumns {
       'duration_min IS NULL OR duration_min BETWEEN 1 AND 1440',
     ),
   )();
+
+  /// Schema 7 (M13.2, ADR-0012): when it was ticked done, epoch ms.
+  IntColumn get doneAt => integer().nullable()();
   IntColumn get deletedAt => integer().nullable()();
 
   @override
