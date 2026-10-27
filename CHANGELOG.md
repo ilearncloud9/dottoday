@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- Task icon library: 524 task icons in 16 categories (was 26), with the names Structured users know ("Laundry Basket", "Dumbbell"…) in English, German, French and Spanish. The first category, Planning & rhythm, is Dottoday's own: focus block, buffer, anytime, wind down, week review, low and high energy and more. The full picker now has search (by name, category or English word) and opens full height. Icons you already use keep working unchanged.
 - M13: Learning reveal — Dottoday says what it is learning from day one, shows each learned number only once it means something, and explains every one on tap. Everything is learned on your device.
 - M13.7: Every learned number explains itself. Tap "usually 2 h 20" (in Add, Running late, the reality thread, Focus) to see "based on your last 6 times · median" and, if you like, reset what that task taught on this device.
 - M13.6: Your reality thread arrives when it has something to show. Until about ten tasks have real start and end times, Today says it's coming (hide it for the day with ×); then the Plan / Reality switch appears with one brief, quiet highlight and stays, even on days where nothing has started yet ("nothing started yet today").
