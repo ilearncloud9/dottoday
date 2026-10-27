@@ -162,87 +162,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get colorSlate => 'Schiefer';
 
   @override
-  String get iconCircle => 'Schlicht';
-
-  @override
-  String get iconCall => 'Anruf';
-
-  @override
-  String get iconMail => 'E-Mail';
-
-  @override
-  String get iconCode => 'Code';
-
-  @override
-  String get iconBook => 'Lesen';
-
-  @override
-  String get iconGym => 'Fitness';
-
-  @override
-  String get iconRun => 'Laufen';
-
-  @override
-  String get iconMeal => 'Essen';
-
-  @override
-  String get iconHeart => 'Gesundheit';
-
-  @override
-  String get iconHome => 'Zuhause';
-
-  @override
-  String get iconMusic => 'Musik';
-
-  @override
-  String get iconPet => 'Haustier';
-
-  @override
-  String get iconStar => 'Stern';
-
-  @override
-  String get iconList => 'Liste';
-
-  @override
-  String get iconLanguage => 'Sprache';
-
-  @override
-  String get iconTravel => 'Reisen';
-
-  @override
-  String get iconCart => 'Einkaufswagen';
-
-  @override
-  String get iconTv => 'TV';
-
-  @override
-  String get iconBag => 'Einkaufstasche';
-
-  @override
-  String get iconMeds => 'Medikamente';
-
-  @override
-  String get iconWater => 'Wasser';
-
-  @override
-  String get iconCar => 'Auto';
-
-  @override
-  String get iconMoney => 'Geld';
-
-  @override
-  String get iconGift => 'Geschenk';
-
-  @override
-  String get iconCamera => 'Kamera';
-
-  @override
-  String get iconPeople => 'Personen';
-
-  @override
-  String get iconDocument => 'Dokument';
-
-  @override
   String get undoAction => 'Rückgängig';
 
   @override
@@ -2368,6 +2287,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get colourIconDone => 'Fertig';
+
+  @override
+  String get iconSearchHint => 'Symbole suchen';
+
+  @override
+  String iconSearchEmpty(String query) {
+    return 'Keine Symbole für „$query“';
+  }
 
   @override
   String get subtaskRenameTitle => 'Unteraufgabe umbenennen';
@@ -5210,4 +5137,1627 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get releaseNotes100 =>
       'Zeit sehen: dein nächster Punkt auf dem Sperrbildschirm, in Widgets, in der Mac-Menüleiste und mit Siri, und Wecker, die wirklich klingeln.\nAnfangen: Zerleg Aufgaben in kleine Schritte, konzentrier dich auf einen Punkt, und sanfte Hilfe, wenn etwas nicht losgeht.\nDie Kontrolle behalten: Neu planen zeigt erst einen Plan, bevor sich etwas bewegt; Plan / Wirklichkeit zeigt, wie der Tag wirklich lief.\nRoutinen, Energie-Vorschläge und Dauern, gelernt aus deinen eigenen Tagen, auf deinem Gerät.\nDiese Woche in sieben Punkten, Vergangene Tage zum Zurückschauen und der Energiesparmodus für schwere Tage. Ohne Druck.\nTeile eine Seite oder Notiz aus jeder App mit Dottoday, oder leere deinen Kopf mit Kopf leeren.';
+
+  @override
+  String get taskIconCategoryPlanning => 'Planung & Rhythmus';
+
+  @override
+  String get taskIconCategoryHealth => 'Gesundheit & Körper';
+
+  @override
+  String get taskIconCategoryFitness => 'Fitness & Sport';
+
+  @override
+  String get taskIconCategoryFood => 'Essen & Trinken';
+
+  @override
+  String get taskIconCategoryHome => 'Zuhause & Haushalt';
+
+  @override
+  String get taskIconCategoryWork => 'Arbeit & Lernen';
+
+  @override
+  String get taskIconCategoryTech => 'Technik & Geräte';
+
+  @override
+  String get taskIconCategoryTravel => 'Reisen & Verkehr';
+
+  @override
+  String get taskIconCategoryNature => 'Natur & Wetter';
+
+  @override
+  String get taskIconCategoryAnimals => 'Tiere';
+
+  @override
+  String get taskIconCategoryPeople => 'Menschen & Soziales';
+
+  @override
+  String get taskIconCategoryLeisure => 'Freizeit & Hobbys';
+
+  @override
+  String get taskIconCategoryShopping => 'Einkaufen & Geld';
+
+  @override
+  String get taskIconCategoryStyle => 'Kleidung & Beauty';
+
+  @override
+  String get taskIconCategoryFaith => 'Glaube & Feste';
+
+  @override
+  String get taskIconCategorySymbols => 'Symbole & Zeichen';
+
+  @override
+  String get taskIconFocusBlock => 'Fokusblock';
+
+  @override
+  String get taskIconDeepWork => 'Konzentriertes Arbeiten';
+
+  @override
+  String get taskIconPlanTheDay => 'Tag planen';
+
+  @override
+  String get taskIconTimeBlock => 'Zeitblock';
+
+  @override
+  String get taskIconBuffer => 'Puffer';
+
+  @override
+  String get taskIconAnytime => 'Jederzeit';
+
+  @override
+  String get taskIconTakeABreak => 'Pause';
+
+  @override
+  String get taskIconMorningRoutine => 'Morgenroutine';
+
+  @override
+  String get taskIconEveningRoutine => 'Abendroutine';
+
+  @override
+  String get taskIconWindDown => 'Runterkommen';
+
+  @override
+  String get taskIconPowerNap => 'Powernap';
+
+  @override
+  String get taskIconWeekReview => 'Wochenrückblick';
+
+  @override
+  String get taskIconInboxZero => 'Leerer Eingang';
+
+  @override
+  String get taskIconHabit => 'Gewohnheit';
+
+  @override
+  String get taskIconErrands => 'Besorgungen';
+
+  @override
+  String get taskIconLowEnergy => 'Wenig Energie';
+
+  @override
+  String get taskIconHighEnergy => 'Viel Energie';
+
+  @override
+  String get taskIconScreenFree => 'Bildschirmfrei';
+
+  @override
+  String get taskIconStandUp => 'Stand-up';
+
+  @override
+  String get taskIconSelfCare => 'Selbstfürsorge';
+
+  @override
+  String get taskIconMealPrep => 'Essensvorbereitung';
+
+  @override
+  String get taskIconPayBills => 'Rechnungen zahlen';
+
+  @override
+  String get taskIconAllergens => 'Allergene';
+
+  @override
+  String get taskIconBandage => 'Pflaster';
+
+  @override
+  String get taskIconBloodBag => 'Blutbeutel';
+
+  @override
+  String get taskIconBrain => 'Gehirn';
+
+  @override
+  String get taskIconCrutch => 'Krücke';
+
+  @override
+  String get taskIconDoctor => 'Arzt';
+
+  @override
+  String get taskIconEar => 'Ohr';
+
+  @override
+  String get taskIconEcg => 'EKG';
+
+  @override
+  String get taskIconEyes => 'Augen';
+
+  @override
+  String get taskIconFaceMask => 'Mund-Nasen-Schutz';
+
+  @override
+  String get taskIconFalling => 'Sturz';
+
+  @override
+  String get taskIconHead => 'Kopf';
+
+  @override
+  String get taskIconHearingDevice => 'Hörgerät';
+
+  @override
+  String get taskIconHeart => 'Herz';
+
+  @override
+  String get taskIconHospital => 'Krankenhaus';
+
+  @override
+  String get taskIconLungs => 'Lunge';
+
+  @override
+  String get taskIconMedicalThermometer => 'Fieberthermometer';
+
+  @override
+  String get taskIconMicrobe => 'Mikrobe';
+
+  @override
+  String get taskIconPharmacy => 'Apotheke';
+
+  @override
+  String get taskIconMeds => 'Tablette';
+
+  @override
+  String get taskIconPills => 'Tabletten';
+
+  @override
+  String get taskIconSleep => 'Schlafen';
+
+  @override
+  String get taskIconSleepyMoon => 'Schlafmond';
+
+  @override
+  String get taskIconStanding => 'Stehen';
+
+  @override
+  String get taskIconStarOfLife => 'Star of Life';
+
+  @override
+  String get taskIconSyringe => 'Spritze';
+
+  @override
+  String get taskIconTherapy => 'Therapie';
+
+  @override
+  String get taskIconTooth => 'Zahn';
+
+  @override
+  String get taskIconToothbrush => 'Zahnbürste';
+
+  @override
+  String get taskIconVial => 'Fläschchen';
+
+  @override
+  String get taskIconWheelchair => 'Rollstuhl';
+
+  @override
+  String get taskIconAmericanFootball => 'American Football';
+
+  @override
+  String get taskIconArchery => 'Bogenschießen';
+
+  @override
+  String get taskIconAustralianFootball => 'Australian Football';
+
+  @override
+  String get taskIconBaseball => 'Baseball';
+
+  @override
+  String get taskIconBasketball => 'Basketball';
+
+  @override
+  String get taskIconBowling => 'Bowling';
+
+  @override
+  String get taskIconCoreTraining => 'Rumpftraining';
+
+  @override
+  String get taskIconCricket => 'Cricket';
+
+  @override
+  String get taskIconCrossTraining => 'Crosstraining';
+
+  @override
+  String get taskIconCurling => 'Curling';
+
+  @override
+  String get taskIconCycling => 'Radfahren';
+
+  @override
+  String get taskIconDancing => 'Tanzen';
+
+  @override
+  String get taskIconGym => 'Hantel';
+
+  @override
+  String get taskIconFencing => 'Fechten';
+
+  @override
+  String get taskIconGolf => 'Golf';
+
+  @override
+  String get taskIconGymnastics => 'Turnen';
+
+  @override
+  String get taskIconHandball => 'Handball';
+
+  @override
+  String get taskIconHelmet => 'Helm';
+
+  @override
+  String get taskIconHiit => 'HIIT';
+
+  @override
+  String get taskIconHiking => 'Wandern';
+
+  @override
+  String get taskIconHorseRiding => 'Reiten';
+
+  @override
+  String get taskIconIceSkates => 'Schlittschuhe';
+
+  @override
+  String get taskIconJogging => 'Joggen';
+
+  @override
+  String get taskIconMartialArts => 'Kampfsport';
+
+  @override
+  String get taskIconMedal => 'Medaille';
+
+  @override
+  String get taskIconPoolSwimming => 'Schwimmen im Becken';
+
+  @override
+  String get taskIconRopeJumping => 'Seilspringen';
+
+  @override
+  String get taskIconRowing => 'Rudern';
+
+  @override
+  String get taskIconRugby => 'Rugby';
+
+  @override
+  String get taskIconRun => 'Laufen';
+
+  @override
+  String get taskIconSailing => 'Segeln';
+
+  @override
+  String get taskIconScubaDiving => 'Tauchen';
+
+  @override
+  String get taskIconSkateboard => 'Skateboard';
+
+  @override
+  String get taskIconSkating => 'Eislaufen';
+
+  @override
+  String get taskIconSkiing => 'Skifahren';
+
+  @override
+  String get taskIconSnowboard => 'Snowboard';
+
+  @override
+  String get taskIconSnowboarding => 'Snowboarden';
+
+  @override
+  String get taskIconSoccer => 'Fußball';
+
+  @override
+  String get taskIconSoftball => 'Softball';
+
+  @override
+  String get taskIconSportcourt => 'Sportplatz';
+
+  @override
+  String get taskIconStairStepper => 'Stepper';
+
+  @override
+  String get taskIconStepping => 'Step-Aerobic';
+
+  @override
+  String get taskIconStopwatch => 'Stoppuhr';
+
+  @override
+  String get taskIconStretching => 'Dehnen';
+
+  @override
+  String get taskIconSwimming => 'Schwimmen';
+
+  @override
+  String get taskIconTableTennis => 'Tischtennis';
+
+  @override
+  String get taskIconTennis => 'Tennis';
+
+  @override
+  String get taskIconTrackAndField => 'Leichtathletik';
+
+  @override
+  String get taskIconTrophy => 'Pokal';
+
+  @override
+  String get taskIconVolleyball => 'Volleyball';
+
+  @override
+  String get taskIconWalking => 'Gehen';
+
+  @override
+  String get taskIconWaterPolo => 'Wasserball';
+
+  @override
+  String get taskIconWeightLifting => 'Gewichtheben';
+
+  @override
+  String get taskIconYoga => 'Yoga';
+
+  @override
+  String get taskIconAlcohol => 'Alkohol';
+
+  @override
+  String get taskIconApple => 'Apfel';
+
+  @override
+  String get taskIconBeer => 'Bier';
+
+  @override
+  String get taskIconBurger => 'Burger';
+
+  @override
+  String get taskIconCandy => 'Bonbon';
+
+  @override
+  String get taskIconCarrot => 'Karotte';
+
+  @override
+  String get taskIconCheese => 'Käse';
+
+  @override
+  String get taskIconChopsticks => 'Essstäbchen';
+
+  @override
+  String get taskIconCoffee => 'Kaffee';
+
+  @override
+  String get taskIconCooking => 'Kochen';
+
+  @override
+  String get taskIconCookingStove => 'Campingkocher';
+
+  @override
+  String get taskIconCup => 'Tasse';
+
+  @override
+  String get taskIconDumplings => 'Teigtaschen';
+
+  @override
+  String get taskIconFryingPan => 'Bratpfanne';
+
+  @override
+  String get taskIconIceCream => 'Eis';
+
+  @override
+  String get taskIconMeal => 'Mahlzeit';
+
+  @override
+  String get taskIconMicrowave => 'Mikrowelle';
+
+  @override
+  String get taskIconMug => 'Becher';
+
+  @override
+  String get taskIconOven => 'Backofen';
+
+  @override
+  String get taskIconPizza => 'Pizza';
+
+  @override
+  String get taskIconPopcorn => 'Popcorn';
+
+  @override
+  String get taskIconSoup => 'Suppe';
+
+  @override
+  String get taskIconTakeout => 'Essen zum Mitnehmen';
+
+  @override
+  String get taskIconTray => 'Tablett';
+
+  @override
+  String get taskIconWaterBottle => 'Wasserflasche';
+
+  @override
+  String get taskIconWater => 'Wasserglas';
+
+  @override
+  String get taskIconWineGlass => 'Weinglas';
+
+  @override
+  String get taskIconWrap => 'Wrap';
+
+  @override
+  String get taskIconAirConditioner => 'Klimaanlage';
+
+  @override
+  String get taskIconAirPurifier => 'Luftreiniger';
+
+  @override
+  String get taskIconAx => 'Axt';
+
+  @override
+  String get taskIconBathtub => 'Badewanne';
+
+  @override
+  String get taskIconBed => 'Bett';
+
+  @override
+  String get taskIconBlinds => 'Jalousie';
+
+  @override
+  String get taskIconBookshelf => 'Bücherregal';
+
+  @override
+  String get taskIconBox => 'Karton';
+
+  @override
+  String get taskIconBroom => 'Besen';
+
+  @override
+  String get taskIconCeilingFan => 'Deckenventilator';
+
+  @override
+  String get taskIconCeilingLamp => 'Deckenlampe';
+
+  @override
+  String get taskIconChair => 'Stuhl';
+
+  @override
+  String get taskIconChairLounge => 'Liegestuhl';
+
+  @override
+  String get taskIconCouch => 'Sofa';
+
+  @override
+  String get taskIconDehumidifier => 'Luftentfeuchter';
+
+  @override
+  String get taskIconDishwasher => 'Geschirrspüler';
+
+  @override
+  String get taskIconDoor => 'Tür';
+
+  @override
+  String get taskIconDryer => 'Trockner';
+
+  @override
+  String get taskIconDuster => 'Staubwedel';
+
+  @override
+  String get taskIconFan => 'Ventilator';
+
+  @override
+  String get taskIconFireplace => 'Kamin';
+
+  @override
+  String get taskIconFloorLamp => 'Stehlampe';
+
+  @override
+  String get taskIconFridge => 'Kühlschrank';
+
+  @override
+  String get taskIconGarage => 'Garage';
+
+  @override
+  String get taskIconHammer => 'Hammer';
+
+  @override
+  String get taskIconHeater => 'Heizung';
+
+  @override
+  String get taskIconHome => 'Haus';
+
+  @override
+  String get taskIconHouseWithFlag => 'Haus mit Flagge';
+
+  @override
+  String get taskIconHumidifier => 'Luftbefeuchter';
+
+  @override
+  String get taskIconIron => 'Bügeleisen';
+
+  @override
+  String get taskIconKey => 'Schlüssel';
+
+  @override
+  String get taskIconLaundryBasket => 'Wäschekorb';
+
+  @override
+  String get taskIconLawnMower => 'Rasenmäher';
+
+  @override
+  String get taskIconLevel => 'Wasserwaage';
+
+  @override
+  String get taskIconLightBulb => 'Glühbirne';
+
+  @override
+  String get taskIconMop => 'Wischmopp';
+
+  @override
+  String get taskIconPottedPlant => 'Topfpflanze';
+
+  @override
+  String get taskIconRake => 'Rechen';
+
+  @override
+  String get taskIconRecycling => 'Recycling';
+
+  @override
+  String get taskIconRefrigerator => 'Kühl-Gefrier-Kombi';
+
+  @override
+  String get taskIconShadeRoller => 'Rollo';
+
+  @override
+  String get taskIconShades => 'Rollos';
+
+  @override
+  String get taskIconShovel => 'Schaufel';
+
+  @override
+  String get taskIconShower => 'Dusche';
+
+  @override
+  String get taskIconSink => 'Spüle';
+
+  @override
+  String get taskIconSnowShovel => 'Schneeschaufel';
+
+  @override
+  String get taskIconSoap => 'Seife';
+
+  @override
+  String get taskIconStairs => 'Treppe';
+
+  @override
+  String get taskIconTable => 'Tisch';
+
+  @override
+  String get taskIconTableLamp => 'Tischlampe';
+
+  @override
+  String get taskIconToilet => 'Toilette';
+
+  @override
+  String get taskIconToiletPaper => 'Toilettenpapier';
+
+  @override
+  String get taskIconTrash => 'Müll';
+
+  @override
+  String get taskIconVacuum => 'Staubsauger';
+
+  @override
+  String get taskIconWashingMachine => 'Waschmaschine';
+
+  @override
+  String get taskIconWateringCan => 'Gießkanne';
+
+  @override
+  String get taskIconWrench => 'Schraubenschlüssel';
+
+  @override
+  String get taskIconAllDayTask => 'Ganztägige Aufgabe';
+
+  @override
+  String get taskIconBiology => 'Biologie';
+
+  @override
+  String get taskIconBlackboard => 'Tafel';
+
+  @override
+  String get taskIconBook => 'Buch';
+
+  @override
+  String get taskIconBookmark => 'Lesezeichen';
+
+  @override
+  String get taskIconBriefcase => 'Aktentasche';
+
+  @override
+  String get taskIconBuilding => 'Gebäude';
+
+  @override
+  String get taskIconCalendar => 'Kalender';
+
+  @override
+  String get taskIconList => 'Checkliste';
+
+  @override
+  String get taskIconChemistry => 'Chemie';
+
+  @override
+  String get taskIconClipboard => 'Klemmbrett';
+
+  @override
+  String get taskIconCode => 'Code';
+
+  @override
+  String get taskIconDeskGlobe => 'Tischglobus';
+
+  @override
+  String get taskIconDeskLamp => 'Schreibtischlampe';
+
+  @override
+  String get taskIconDocument => 'Dokument';
+
+  @override
+  String get taskIconEmail => 'E-Mail';
+
+  @override
+  String get taskIconFile => 'Datei';
+
+  @override
+  String get taskIconFolder => 'Ordner';
+
+  @override
+  String get taskIconHighlighter => 'Textmarker';
+
+  @override
+  String get taskIconIdCard => 'Ausweis';
+
+  @override
+  String get taskIconLanguage => 'Sprache';
+
+  @override
+  String get taskIconLaw => 'Recht';
+
+  @override
+  String get taskIconLoupe => 'Lupe';
+
+  @override
+  String get taskIconMail => 'Post';
+
+  @override
+  String get taskIconMath => 'Mathe';
+
+  @override
+  String get taskIconPaperclip => 'Büroklammer';
+
+  @override
+  String get taskIconPencil => 'Bleistift';
+
+  @override
+  String get taskIconPencilAndRuler => 'Bleistift und Lineal';
+
+  @override
+  String get taskIconPhysics => 'Physik';
+
+  @override
+  String get taskIconQuote => 'Zitat';
+
+  @override
+  String get taskIconReminders => 'Erinnerungen';
+
+  @override
+  String get taskIconRuler => 'Lineal';
+
+  @override
+  String get taskIconSchool => 'Schule';
+
+  @override
+  String get taskIconScissors => 'Schere';
+
+  @override
+  String get taskIconSignature => 'Unterschrift';
+
+  @override
+  String get taskIconSpreadsheet => 'Tabelle';
+
+  @override
+  String get taskIconStudentDesk => 'Schulbank';
+
+  @override
+  String get taskIconTask => 'Aufgabe';
+
+  @override
+  String get taskIconTestTube => 'Reagenzglas';
+
+  @override
+  String get taskIconWriting => 'Schreiben';
+
+  @override
+  String get taskIconZip => 'ZIP-Archiv';
+
+  @override
+  String get taskIconBattery => 'Akku';
+
+  @override
+  String get taskIconCaptions => 'Untertitel';
+
+  @override
+  String get taskIconComputerMouse => 'Computermaus';
+
+  @override
+  String get taskIconConnector => 'Anschluss';
+
+  @override
+  String get taskIconCpu => 'CPU';
+
+  @override
+  String get taskIconCurlyBraces => 'Geschweifte Klammern';
+
+  @override
+  String get taskIconDesktop => 'Desktop-PC';
+
+  @override
+  String get taskIconDial => 'Drehregler';
+
+  @override
+  String get taskIconDisk => 'Diskette';
+
+  @override
+  String get taskIconFax => 'Fax';
+
+  @override
+  String get taskIconFlashlight => 'Taschenlampe';
+
+  @override
+  String get taskIconFlipphone => 'Klapphandy';
+
+  @override
+  String get taskIconGears => 'Zahnräder';
+
+  @override
+  String get taskIconGyroscope => 'Gyroskop';
+
+  @override
+  String get taskIconHardDrive => 'Festplatte';
+
+  @override
+  String get taskIconHeadphones => 'Kopfhörer';
+
+  @override
+  String get taskIconKeyboard => 'Tastatur';
+
+  @override
+  String get taskIconLink => 'Link';
+
+  @override
+  String get taskIconMerge => 'Zusammenführen';
+
+  @override
+  String get taskIconMic => 'Mikrofon';
+
+  @override
+  String get taskIconCall => 'Telefon';
+
+  @override
+  String get taskIconPlug => 'Stecker';
+
+  @override
+  String get taskIconPower => 'Ein/Aus';
+
+  @override
+  String get taskIconPrinter => 'Drucker';
+
+  @override
+  String get taskIconScanner => 'Scanner';
+
+  @override
+  String get taskIconSdCard => 'SD-Karte';
+
+  @override
+  String get taskIconSimcard => 'SIM-Karte';
+
+  @override
+  String get taskIconSpeaker => 'Lautsprecher';
+
+  @override
+  String get taskIconTerminal => 'Terminal';
+
+  @override
+  String get taskIconUpload => 'Hochladen';
+
+  @override
+  String get taskIconVideoProjector => 'Beamer';
+
+  @override
+  String get taskIconWatch => 'Armbanduhr';
+
+  @override
+  String get taskIconWeb => 'Web';
+
+  @override
+  String get taskIconWifi => 'WLAN';
+
+  @override
+  String get taskIconWifiRouter => 'WLAN-Router';
+
+  @override
+  String get taskIconWindows => 'Windows';
+
+  @override
+  String get taskIconTravel => 'Flugzeug';
+
+  @override
+  String get taskIconArrival => 'Ankunft';
+
+  @override
+  String get taskIconArriving => 'Ankommen';
+
+  @override
+  String get taskIconBackpack => 'Rucksack';
+
+  @override
+  String get taskIconBeach => 'Strand';
+
+  @override
+  String get taskIconBike => 'Fahrrad';
+
+  @override
+  String get taskIconBoat => 'Boot';
+
+  @override
+  String get taskIconBus => 'Bus';
+
+  @override
+  String get taskIconCablecar => 'Seilbahn';
+
+  @override
+  String get taskIconCar => 'Auto';
+
+  @override
+  String get taskIconCase => 'Tragekoffer';
+
+  @override
+  String get taskIconChineseCastle => 'Chinesische Burg';
+
+  @override
+  String get taskIconColosseum => 'Kolosseum';
+
+  @override
+  String get taskIconCompass => 'Kompass';
+
+  @override
+  String get taskIconDeparture => 'Abflug';
+
+  @override
+  String get taskIconDoubledeckerBus => 'Doppeldeckerbus';
+
+  @override
+  String get taskIconElectricCar => 'Elektroauto';
+
+  @override
+  String get taskIconEngine => 'Motor';
+
+  @override
+  String get taskIconFerry => 'Fähre';
+
+  @override
+  String get taskIconGasStation => 'Tankstelle';
+
+  @override
+  String get taskIconGlobe => 'Globus';
+
+  @override
+  String get taskIconGlobeAmericas => 'Globus Amerika';
+
+  @override
+  String get taskIconGlobeAsia => 'Globus Asien';
+
+  @override
+  String get taskIconGlobeAsiaPacific => 'Globus Asien-Pazifik';
+
+  @override
+  String get taskIconGlobeEuropeAfrica => 'Globus Europa-Afrika';
+
+  @override
+  String get taskIconLeaving => 'Abreise';
+
+  @override
+  String get taskIconLifePreserver => 'Rettungsring';
+
+  @override
+  String get taskIconLightrail => 'Stadtbahn';
+
+  @override
+  String get taskIconLocation => 'Standort';
+
+  @override
+  String get taskIconLodge => 'Hütte';
+
+  @override
+  String get taskIconMap => 'Karte';
+
+  @override
+  String get taskIconMotorcycle => 'Motorrad';
+
+  @override
+  String get taskIconOilCan => 'Ölkanne';
+
+  @override
+  String get taskIconRoad => 'Straße';
+
+  @override
+  String get taskIconRocket => 'Rakete';
+
+  @override
+  String get taskIconRollingSuitcase => 'Rollkoffer';
+
+  @override
+  String get taskIconScooter => 'Roller';
+
+  @override
+  String get taskIconShip => 'Schiff';
+
+  @override
+  String get taskIconSignpost => 'Wegweiser';
+
+  @override
+  String get taskIconSkiLift => 'Skilift';
+
+  @override
+  String get taskIconSteeringWheel => 'Lenkrad';
+
+  @override
+  String get taskIconSubway => 'U-Bahn';
+
+  @override
+  String get taskIconSuitcase => 'Koffer';
+
+  @override
+  String get taskIconSuitcaseCart => 'Gepäckwagen';
+
+  @override
+  String get taskIconTent => 'Zelt';
+
+  @override
+  String get taskIconTrain => 'Zug';
+
+  @override
+  String get taskIconTruck => 'Lkw';
+
+  @override
+  String get taskIconWindshield => 'Windschutzscheibe';
+
+  @override
+  String get taskIconBarometer => 'Barometer';
+
+  @override
+  String get taskIconCloud => 'Wolke';
+
+  @override
+  String get taskIconDrizzle => 'Nieselregen';
+
+  @override
+  String get taskIconFlame => 'Flamme';
+
+  @override
+  String get taskIconFlower => 'Blume';
+
+  @override
+  String get taskIconFlowers => 'Blumen';
+
+  @override
+  String get taskIconFog => 'Nebel';
+
+  @override
+  String get taskIconFossil => 'Fossil';
+
+  @override
+  String get taskIconHail => 'Hagel';
+
+  @override
+  String get taskIconLeaf => 'Blatt';
+
+  @override
+  String get taskIconMoon => 'Mond';
+
+  @override
+  String get taskIconMoonHaze => 'Mond mit Dunst';
+
+  @override
+  String get taskIconMountain => 'Berg';
+
+  @override
+  String get taskIconMushroom => 'Pilz';
+
+  @override
+  String get taskIconPalmTree => 'Palme';
+
+  @override
+  String get taskIconPartialSun => 'Teilweise sonnig';
+
+  @override
+  String get taskIconPlant => 'Pflanze';
+
+  @override
+  String get taskIconRain => 'Regen';
+
+  @override
+  String get taskIconRainbow => 'Regenbogen';
+
+  @override
+  String get taskIconSeedling => 'Setzling';
+
+  @override
+  String get taskIconSleet => 'Schneeregen';
+
+  @override
+  String get taskIconSnow => 'Schnee';
+
+  @override
+  String get taskIconSnowflake => 'Schneeflocke';
+
+  @override
+  String get taskIconSnowman => 'Schneemann';
+
+  @override
+  String get taskIconStorm => 'Sturm';
+
+  @override
+  String get taskIconSun => 'Sonne';
+
+  @override
+  String get taskIconSunHaze => 'Sonne mit Dunst';
+
+  @override
+  String get taskIconSunrise => 'Sonnenaufgang';
+
+  @override
+  String get taskIconSunset => 'Sonnenuntergang';
+
+  @override
+  String get taskIconTemperature => 'Temperatur';
+
+  @override
+  String get taskIconThunderstorm => 'Gewitter';
+
+  @override
+  String get taskIconTree => 'Baum';
+
+  @override
+  String get taskIconUmbrella => 'Regenschirm';
+
+  @override
+  String get taskIconWaves => 'Wellen';
+
+  @override
+  String get taskIconWind => 'Wind';
+
+  @override
+  String get taskIconAnt => 'Ameise';
+
+  @override
+  String get taskIconBird => 'Vogel';
+
+  @override
+  String get taskIconBug => 'Käfer';
+
+  @override
+  String get taskIconCat => 'Katze';
+
+  @override
+  String get taskIconChicken => 'Huhn';
+
+  @override
+  String get taskIconDog => 'Hund';
+
+  @override
+  String get taskIconFish => 'Fisch';
+
+  @override
+  String get taskIconHamster => 'Hamster';
+
+  @override
+  String get taskIconHorse => 'Pferd';
+
+  @override
+  String get taskIconMouse => 'Maus';
+
+  @override
+  String get taskIconPet => 'Pfote';
+
+  @override
+  String get taskIconPetFoodBowl => 'Futternapf';
+
+  @override
+  String get taskIconPig => 'Schwein';
+
+  @override
+  String get taskIconRabbit => 'Kaninchen';
+
+  @override
+  String get taskIconTortoise => 'Schildkröte';
+
+  @override
+  String get taskIconWalkingCat => 'Laufende Katze';
+
+  @override
+  String get taskIconWalkingDog => 'Gassi gehen';
+
+  @override
+  String get taskIconBaby => 'Baby';
+
+  @override
+  String get taskIconBabyBottle => 'Babyflasche';
+
+  @override
+  String get taskIconBallotBox => 'Wahlurne';
+
+  @override
+  String get taskIconBrokenHeart => 'Gebrochenes Herz';
+
+  @override
+  String get taskIconCouple => 'Paar';
+
+  @override
+  String get taskIconFamily => 'Familie';
+
+  @override
+  String get taskIconPeople => 'Gruppe';
+
+  @override
+  String get taskIconHand => 'Hand';
+
+  @override
+  String get taskIconHandshake => 'Handschlag';
+
+  @override
+  String get taskIconMessage => 'Nachricht';
+
+  @override
+  String get taskIconPerson => 'Person';
+
+  @override
+  String get taskIconSignLanguage => 'Gebärdensprache';
+
+  @override
+  String get taskIconSmile => 'Lächeln';
+
+  @override
+  String get taskIconStroller => 'Kinderwagen';
+
+  @override
+  String get taskIconTwoPersons => 'Zwei Personen';
+
+  @override
+  String get taskIconWaving => 'Winken';
+
+  @override
+  String get taskIconAmplifier => 'Verstärker';
+
+  @override
+  String get taskIconAperture => 'Blende';
+
+  @override
+  String get taskIconBinoculars => 'Fernglas';
+
+  @override
+  String get taskIconCamera => 'Kamera';
+
+  @override
+  String get taskIconCheckerboard => 'Damebrett';
+
+  @override
+  String get taskIconChess => 'Schach';
+
+  @override
+  String get taskIconClub => 'Kreuz (Spielkarte)';
+
+  @override
+  String get taskIconDice => 'Würfel';
+
+  @override
+  String get taskIconDrums => 'Schlagzeug';
+
+  @override
+  String get taskIconEyedropper => 'Pipette';
+
+  @override
+  String get taskIconFilm => 'Film';
+
+  @override
+  String get taskIconFishing => 'Angeln';
+
+  @override
+  String get taskIconGaming => 'Gaming';
+
+  @override
+  String get taskIconGuitar => 'Gitarre';
+
+  @override
+  String get taskIconHorn => 'Horn';
+
+  @override
+  String get taskIconHunting => 'Jagd';
+
+  @override
+  String get taskIconMagazine => 'Zeitschrift';
+
+  @override
+  String get taskIconMagic => 'Zauberei';
+
+  @override
+  String get taskIconMetronome => 'Metronom';
+
+  @override
+  String get taskIconMovie => 'Kino';
+
+  @override
+  String get taskIconMovieClapper => 'Filmklappe';
+
+  @override
+  String get taskIconMusic => 'Musik';
+
+  @override
+  String get taskIconNewspaper => 'Zeitung';
+
+  @override
+  String get taskIconPaintPalette => 'Malpalette';
+
+  @override
+  String get taskIconPaintbrush => 'Pinsel';
+
+  @override
+  String get taskIconPhoto => 'Foto';
+
+  @override
+  String get taskIconPiano => 'Klavier';
+
+  @override
+  String get taskIconPlayground => 'Spielplatz';
+
+  @override
+  String get taskIconPuzzle => 'Puzzle';
+
+  @override
+  String get taskIconRadio => 'Radio';
+
+  @override
+  String get taskIconRecordingTape => 'Kassette';
+
+  @override
+  String get taskIconSewingMachine => 'Nähmaschine';
+
+  @override
+  String get taskIconSinging => 'Singen';
+
+  @override
+  String get taskIconSpade => 'Pik (Spielkarte)';
+
+  @override
+  String get taskIconSwatchPalette => 'Farbmuster';
+
+  @override
+  String get taskIconTheater => 'Theater';
+
+  @override
+  String get taskIconTicket => 'Ticket';
+
+  @override
+  String get taskIconTuning => 'Stimmgerät';
+
+  @override
+  String get taskIconTv => 'TV';
+
+  @override
+  String get taskIconBag => 'Tasche';
+
+  @override
+  String get taskIconBanknote => 'Geldschein';
+
+  @override
+  String get taskIconBarcode => 'Barcode';
+
+  @override
+  String get taskIconBasket => 'Korb';
+
+  @override
+  String get taskIconBitcoin => 'Bitcoin';
+
+  @override
+  String get taskIconCart => 'Einkaufswagen';
+
+  @override
+  String get taskIconCoin => 'Münze';
+
+  @override
+  String get taskIconCreditcard => 'Kreditkarte';
+
+  @override
+  String get taskIconEuro => 'Euro';
+
+  @override
+  String get taskIconGift => 'Geschenk';
+
+  @override
+  String get taskIconGiftcard => 'Geschenkkarte';
+
+  @override
+  String get taskIconMoney => 'Geld';
+
+  @override
+  String get taskIconParcel => 'Paket';
+
+  @override
+  String get taskIconStorefront => 'Geschäft';
+
+  @override
+  String get taskIconTag => 'Etikett';
+
+  @override
+  String get taskIconWalletPass => 'Wallet-Karte';
+
+  @override
+  String get taskIconClothesHanger => 'Kleiderbügel';
+
+  @override
+  String get taskIconDiamond => 'Diamant';
+
+  @override
+  String get taskIconDress => 'Kleid';
+
+  @override
+  String get taskIconGlasses => 'Brille';
+
+  @override
+  String get taskIconHairDresser => 'Friseur';
+
+  @override
+  String get taskIconHairdryer => 'Föhn';
+
+  @override
+  String get taskIconHat => 'Hut';
+
+  @override
+  String get taskIconJacket => 'Jacke';
+
+  @override
+  String get taskIconMustache => 'Schnurrbart';
+
+  @override
+  String get taskIconPurse => 'Handtasche';
+
+  @override
+  String get taskIconRazor => 'Rasierer';
+
+  @override
+  String get taskIconRing => 'Ring';
+
+  @override
+  String get taskIconShoe => 'Schuh';
+
+  @override
+  String get taskIconShoes => 'Schuhe';
+
+  @override
+  String get taskIconSkinCare => 'Hautpflege';
+
+  @override
+  String get taskIconSunglasses => 'Sonnenbrille';
+
+  @override
+  String get taskIconTShirt => 'T-Shirt';
+
+  @override
+  String get taskIconTrousers => 'Hose';
+
+  @override
+  String get taskIconWinterJacket => 'Winterjacke';
+
+  @override
+  String get taskIconBalloons => 'Luftballons';
+
+  @override
+  String get taskIconBirthday => 'Geburtstag';
+
+  @override
+  String get taskIconBuddhism => 'Buddhismus';
+
+  @override
+  String get taskIconCandle => 'Kerze';
+
+  @override
+  String get taskIconChristmasTree => 'Weihnachtsbaum';
+
+  @override
+  String get taskIconChurch => 'Kirche';
+
+  @override
+  String get taskIconCross => 'Kreuz';
+
+  @override
+  String get taskIconFireworks => 'Feuerwerk';
+
+  @override
+  String get taskIconGhost => 'Geist';
+
+  @override
+  String get taskIconGravestone => 'Grabstein';
+
+  @override
+  String get taskIconHalloween => 'Halloween';
+
+  @override
+  String get taskIconHinduism => 'Hinduismus';
+
+  @override
+  String get taskIconIslam => 'Islam';
+
+  @override
+  String get taskIconJudaism => 'Judentum';
+
+  @override
+  String get taskIconMosque => 'Moschee';
+
+  @override
+  String get taskIconParty => 'Party';
+
+  @override
+  String get taskIconPray => 'Beten';
+
+  @override
+  String get taskIconTaoism => 'Taoismus';
+
+  @override
+  String get taskIconAlarm => 'Wecker';
+
+  @override
+  String get taskIconBarChart => 'Balkendiagramm';
+
+  @override
+  String get taskIconBell => 'Glocke';
+
+  @override
+  String get taskIconBolt => 'Blitz';
+
+  @override
+  String get taskIconBubble => 'Sprechblase';
+
+  @override
+  String get taskIconBubbles => 'Blasen';
+
+  @override
+  String get taskIconClock => 'Uhr';
+
+  @override
+  String get taskIconCrown => 'Krone';
+
+  @override
+  String get taskIconCube => 'Kubus';
+
+  @override
+  String get taskIconDanger => 'Gefahr';
+
+  @override
+  String get taskIconError => 'Fehler';
+
+  @override
+  String get taskIconExplosion => 'Explosion';
+
+  @override
+  String get taskIconFemaleSymbol => 'Weiblich-Symbol';
+
+  @override
+  String get taskIconFilters => 'Filter';
+
+  @override
+  String get taskIconFlag => 'Flagge';
+
+  @override
+  String get taskIconHashtag => 'Hashtag';
+
+  @override
+  String get taskIconHazardSign => 'Gefahrenzeichen';
+
+  @override
+  String get taskIconHourglass => 'Sanduhr';
+
+  @override
+  String get taskIconLineChart => 'Liniendiagramm';
+
+  @override
+  String get taskIconLineChartDown => 'Diagramm fallend';
+
+  @override
+  String get taskIconLineChartUp => 'Diagramm steigend';
+
+  @override
+  String get taskIconLocked => 'Gesperrt';
+
+  @override
+  String get taskIconMaleSymbol => 'Männlich-Symbol';
+
+  @override
+  String get taskIconMegaphone => 'Megafon';
+
+  @override
+  String get taskIconMenu => 'Menü';
+
+  @override
+  String get taskIconMinus => 'Minus';
+
+  @override
+  String get taskIconNonBinarySymbol => 'Nichtbinär-Symbol';
+
+  @override
+  String get taskIconPeace => 'Frieden';
+
+  @override
+  String get taskIconPieChart => 'Kreisdiagramm';
+
+  @override
+  String get taskIconPin => 'Stecknadel';
+
+  @override
+  String get taskIconPlus => 'Plus';
+
+  @override
+  String get taskIconQrCode => 'QR-Code';
+
+  @override
+  String get taskIconQuestion => 'Frage';
+
+  @override
+  String get taskIconSearch => 'Suche';
+
+  @override
+  String get taskIconShield => 'Schild';
+
+  @override
+  String get taskIconSkull => 'Totenkopf';
+
+  @override
+  String get taskIconSpeed => 'Tempo';
+
+  @override
+  String get taskIconStar => 'Stern';
+
+  @override
+  String get taskIconTarget => 'Zielscheibe';
+
+  @override
+  String get taskIconThumbsDown => 'Daumen runter';
+
+  @override
+  String get taskIconThumbsUp => 'Daumen hoch';
+
+  @override
+  String get taskIconTimer => 'Timer';
+
+  @override
+  String get taskIconTransgenderSymbol => 'Transgender-Symbol';
+
+  @override
+  String get taskIconTransparentCube => 'Transparenter Würfel';
+
+  @override
+  String get taskIconUnlock => 'Entsperren';
+
+  @override
+  String get taskIconWarning => 'Warnung';
+
+  @override
+  String get taskIconWrongWaySign => 'Einfahrt verboten';
+
+  @override
+  String get taskIconCircle => 'Schlicht';
 }

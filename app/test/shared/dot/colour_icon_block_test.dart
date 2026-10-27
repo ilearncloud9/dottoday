@@ -33,8 +33,8 @@ void main() {
       tester.getSemantics(find.bySemanticsLabel('Coral')),
       isSemantics(isSelected: true, isButton: true, hasTapAction: true),
     );
-    expect(find.bySemanticsLabel('Shopping bag'), findsOneWidget);
-    expect(find.bySemanticsLabel('Shopping cart'), findsOneWidget);
+    expect(find.bySemanticsLabel('Bag'), findsOneWidget);
+    expect(find.bySemanticsLabel('Cart'), findsOneWidget);
     expect(find.byTooltip('All icons'), findsOneWidget);
     handle.dispose();
   });
@@ -44,9 +44,11 @@ void main() {
     final icons = <TaskIcon>[];
     await tester.pumpWidget(_block(onColor: colors.add, onIcon: icons.add));
     await tester.tap(find.bySemanticsLabel('Teal'));
-    await tester.tap(find.bySemanticsLabel('Shopping cart'));
+    await tester.tap(find.bySemanticsLabel('Cart'));
     await tester.ensureVisible(find.byTooltip('All icons'));
     await tester.tap(find.byTooltip('All icons'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'camera');
     await tester.pumpAndSettle();
     await tester.tap(find.bySemanticsLabel('Camera'));
     await tester.pumpAndSettle();
@@ -66,10 +68,11 @@ void main() {
     // The sheet's own colours come after the block's.
     await tester.tap(find.bySemanticsLabel('Mint').last);
     await tester.pumpAndSettle();
-    await tester.tap(find.bySemanticsLabel('Gym'));
+    // Dottoday's own planning icons open the library.
+    await tester.tap(find.bySemanticsLabel('Focus Block'));
     await tester.pumpAndSettle();
     expect(colors, [TaskColor.mint]);
-    expect(icons, [TaskIcon.gym]);
+    expect(icons, [TaskIcon.focusBlock]);
   });
 
   testWidgets('a colour alone: Done keeps it', (tester) async {
@@ -86,6 +89,63 @@ void main() {
     expect(colors, [TaskColor.sky]);
     expect(icons, isEmpty);
   });
+
+  testWidgets('the library is grouped by category and searchable', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(_block());
+    await tester.ensureVisible(find.byTooltip('All icons'));
+    await tester.tap(find.byTooltip('All icons'));
+    await tester.pumpAndSettle();
+    expect(find.text('PLANNING & RHYTHM'), findsOneWidget);
+    expect(
+      tester.getSemantics(find.text('PLANNING & RHYTHM')),
+      isSemantics(isHeader: true),
+    );
+    // By name, by category title and by key ("gym" is Dumbbell's key).
+    await tester.enterText(find.byType(TextField), 'washing');
+    await tester.pumpAndSettle();
+    expect(find.bySemanticsLabel('Washing Machine'), findsOneWidget);
+    expect(find.text('HOME & CHORES'), findsOneWidget);
+    expect(find.text('PLANNING & RHYTHM'), findsNothing);
+    await tester.enterText(find.byType(TextField), 'gym');
+    await tester.pumpAndSettle();
+    expect(find.bySemanticsLabel('Dumbbell'), findsOneWidget);
+    await tester.enterText(find.byType(TextField), 'qwxz');
+    await tester.pumpAndSettle();
+    expect(find.text('No icons match “qwxz”'), findsOneWidget);
+    handle.dispose();
+  });
+
+  testWidgets('the chosen icon is marked selected in the library', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(_block());
+    await tester.ensureVisible(find.byTooltip('All icons'));
+    await tester.tap(find.byTooltip('All icons'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'bag');
+    await tester.pumpAndSettle();
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Bag').last),
+      isSemantics(isSelected: true, isButton: true, hasTapAction: true),
+    );
+    handle.dispose();
+  });
+
+  for (final mode in [ThemeMode.light, ThemeMode.dark]) {
+    testWidgets('the library sheet meets a11y guidelines (${mode.name})', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_block(mode: mode));
+      await tester.ensureVisible(find.byTooltip('All icons'));
+      await tester.tap(find.byTooltip('All icons'));
+      await tester.pumpAndSettle();
+      await expectA11yGuidelines(tester);
+    });
+  }
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     testWidgets('meets a11y guidelines (${mode.name})', (tester) async {

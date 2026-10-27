@@ -44,7 +44,8 @@ final _interface = [
 ];
 
 /// Every glyph: interface set in text colour (normal and active stroke),
-/// then the 26 task icons in their picker colours.
+/// then Dottoday's own planning icons in the task colours (the whole
+/// library has its own golden, task_icon_library_golden_test.dart).
 class _Sheet extends StatelessWidget {
   const _Sheet();
 
@@ -63,7 +64,7 @@ class _Sheet extends StatelessWidget {
             for (final g in _interface) DotIcon(g, color: t.colors.text),
             for (final g in _interface)
               DotIcon(g, color: t.colors.accent, active: true),
-            for (final (i, icon) in TaskIcon.picker.indexed)
+            for (final (i, icon) in _planning.indexed)
               DotIcon(icon.glyph!, color: colors[i % colors.length].color),
           ],
         ),
@@ -71,6 +72,10 @@ class _Sheet extends StatelessWidget {
     );
   }
 }
+
+final _planning = TaskIcon.picker
+    .where((i) => i.category == TaskIconCategory.planning)
+    .toList();
 
 void main() {
   setUpAll(loadAppFonts);

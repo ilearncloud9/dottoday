@@ -226,8 +226,8 @@ void main() {
     await tester.enterText(_title, 'Swim 7pm');
     await tester.tap(find.bySemanticsLabel('Teal'));
     // The colour row scrolls rather than shrink its 44 pt targets.
-    await tester.ensureVisible(find.bySemanticsLabel('Shopping cart'));
-    await tester.tap(find.bySemanticsLabel('Shopping cart'));
+    await tester.ensureVisible(find.bySemanticsLabel('Cart'));
+    await tester.tap(find.bySemanticsLabel('Cart'));
     await tester.pump();
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();

@@ -70,6 +70,7 @@ flutter:
   assets:
     - assets/design/palette.json
     - assets/icons/
+    - assets/licenses/
     - assets/sounds/
   fonts:
     - family: Inter

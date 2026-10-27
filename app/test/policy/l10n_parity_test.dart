@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../tool/gen_task_icons.dart' as icons;
+
 // Key parity (docs/09 M8.3, docs/03 §5, R-13): every language ships with
 // every string. A key added to app_en.arb fails CI until de, fr and es
 // carry it too — gen-l10n alone would silently fall back to English.
@@ -26,8 +28,6 @@ const _sameAsEnglish = {
     'durationHoursMinutes',
     'colorMint',
     'colorIndigo',
-    'iconCode',
-    'iconTv',
     'syncOffline',
     'liveExtend',
     'sheetExtend',
@@ -56,9 +56,6 @@ const _sameAsEnglish = {
     'colorIndigo',
     'colorViolet',
     'colorRose',
-    'iconCode',
-    'iconTv',
-    'iconDocument',
     'liveExtend',
     'sheetExtend',
     'editorNotes',
@@ -82,7 +79,6 @@ const _sameAsEnglish = {
     'durationMinutes',
     'durationHoursMinutes',
     'colorCoral',
-    'iconTv',
     'liveExtend',
     'sheetExtend',
     'settingsSnapValue',
@@ -208,7 +204,10 @@ void main() {
       });
 
       test('is translated (identical to English only when listed)', () {
-        final allowed = _sameAsEnglish[locale]!;
+        final allowed = {
+          ..._sameAsEnglish[locale]!,
+          ..._iconNamesAsEnglish(locale),
+        };
         final copied = [
           for (final MapEntry(:key, value: source) in enMessages.entries)
             if (messages[key] == source &&
@@ -217,8 +216,26 @@ void main() {
               key,
         ];
         expect(copied, isEmpty);
-        expect(allowed.difference(enMessages.keys.toSet()), isEmpty);
+        expect(
+          _sameAsEnglish[locale]!.difference(enMessages.keys.toSet()),
+          isEmpty,
+        );
       });
     });
   }
+}
+
+/// Task icon names written out in task_icons.json that read as in English
+/// ("Yoga", "Golf"): each is a reviewed choice there (ADR-0013), so it is
+/// listed by the library instead of by hand here.
+Set<String> _iconNamesAsEnglish(String locale) {
+  final lib = icons.IconLibrary.parse(
+    jsonDecode(File(icons.inputPath).readAsStringSync()),
+  );
+  return {
+    for (final i in [...lib.icons, lib.plain])
+      if (i.names[locale] == i.names['en']) i.arbKey,
+    for (final c in lib.categories)
+      if (c.names[locale] == c.names['en']) c.arbKey,
+  };
 }
