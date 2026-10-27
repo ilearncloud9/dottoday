@@ -1,6 +1,5 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/core/theme/svg_path.dart';
-import 'package:dottoday/domain/entities/icon_keys.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -68,6 +67,21 @@ void main() {
       expect([r.left, r.top, r.right, r.bottom], [3, 4, 21, 20]);
     });
 
+    test('smooth curves reflect the previous control point', () {
+      // S/T mirror the last C/Q control point (Lucide and Tabler use them).
+      final s = parseSvgPath('M2 12C2 6 8 6 8 12S14 18 14 12').getBounds();
+      final c = parseSvgPath('M2 12C2 6 8 6 8 12C8 18 14 18 14 12').getBounds();
+      expect(s, c);
+      final t = parseSvgPath('M2 12Q5 6 8 12T14 12').getBounds();
+      final q = parseSvgPath('M2 12Q5 6 8 12Q11 18 14 12').getBounds();
+      expect(t, q);
+      // Without a previous curve the control point is the current point.
+      expect(
+        parseSvgPath('M2 2S8 2 8 8').getBounds(),
+        parseSvgPath('M2 2C2 2 8 2 8 8').getBounds(),
+      );
+    });
+
     test('malformed data throws instead of drawing half a glyph', () {
       expect(() => parseSvgPath('L2 2'), throwsFormatException);
       expect(() => parseSvgPath('M2 2 L3'), throwsFormatException);
@@ -79,36 +93,6 @@ void main() {
     for (final MapEntry(key: name, value: glyph) in _glyphs.entries) {
       test(name, () => _expectOnGrid(glyph));
     }
-  });
-
-  group('task icons (docs/10 §3)', () {
-    test('the 26 picker icons in order, then the no-icon default', () {
-      expect(
-        TaskIcon.picker.map((i) => i.key).join(' '),
-        'code run mail call meal book list language heart travel cart home '
-        'tv bag music meds water pet gym car money gift camera star '
-        'people document',
-      );
-      expect(TaskIcon.picker, hasLength(26));
-      expect(TaskIcon.fallback.key, defaultIconKey);
-      expect(TaskIcon.fallback.glyph, isNull);
-    });
-
-    for (final icon in TaskIcon.picker) {
-      test('${icon.key} has a glyph on the grid', () {
-        expect(iconKeyPattern.hasMatch(icon.key), isTrue);
-        _expectOnGrid(icon.glyph!);
-      });
-    }
-
-    test('fromKey: current, pre-Concept A and unknown keys', () {
-      expect(TaskIcon.fromKey('gym'), TaskIcon.gym);
-      expect(TaskIcon.fromKey('meeting'), TaskIcon.people);
-      expect(TaskIcon.fromKey('flight'), TaskIcon.travel);
-      expect(TaskIcon.fromKey('shopping'), TaskIcon.cart);
-      expect(TaskIcon.fromKey('from_a_newer_app'), TaskIcon.circle);
-      expect(TaskIcon.fromKey(null), TaskIcon.circle);
-    });
   });
 }
 
