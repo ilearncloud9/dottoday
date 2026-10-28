@@ -8,10 +8,26 @@ import 'package:flutter_test/flutter_test.dart';
 // every bundled sound. Nothing ships without an entry, no third-party entry
 // lacks its source page and an allowed licence, every credited source is
 // in CREDITS.md, and no sound is a duplicate of another (owner, phase 1:
-// unique ids, names and file contents). The Sounds-screen footer is checked
-// against the manifest once its string exists (phase 4).
+// unique ids, names and file contents), and each category keeps its length
+// and loudness (owner's levelling rule, mirrored from tool/sounds/build.py).
+// The Sounds-screen footer is checked once its string exists (phase 4).
 const _allowedLicenses = {'CC0-1.0', 'CC-BY-4.0'};
 const _categories = {'dottoday', 'quiet', 'clear', 'start', 'play', 'done'};
+
+/// Per category: (loudness target LUFS, shortest ms, longest ms).
+const _rules = {
+  'quiet': (lufs: -20.0, minMs: 1, maxMs: 1500),
+  'clear': (lufs: -16.0, minMs: 1, maxMs: 4000),
+  'play': (lufs: -16.0, minMs: 1, maxMs: 4000),
+  'done': (lufs: -16.0, minMs: 1, maxMs: 4000),
+  'start': (lufs: -14.0, minMs: 3000, maxMs: 20000),
+};
+
+/// Within a category, every built sound stays this close to its target.
+const _spreadLu = 3.0;
+
+/// Changes beyond the source-wide ones, recorded per entry for CC BY.
+const _extraModifications = {'looped'};
 
 /// Where the build puts each third-party sound (tool/sounds/build.py).
 const _shippedDirs = [
@@ -73,7 +89,15 @@ void main() {
       expect(source, isNotNull, reason: '$id: unknown source');
       expect(_allowedLicenses, contains(s['license']), reason: '$id');
       expect(s['license'], source!['license'], reason: '$id: source licence');
-      expect(s['modified'], source['modified'], reason: '$id');
+      final modified = s['modified'];
+      expect(
+        modified == true || _extraModifications.contains(modified),
+        isTrue,
+        reason: '$id: modified is true or one of $_extraModifications',
+      );
+      expect(source['modified'], isTrue, reason: '$id');
+      // build.py loops only what the manifest says, and says so.
+      expect(s.containsKey('loopToMs'), modified == 'looped', reason: '$id');
       for (final key in ['sourceUrl', 'fileUrl']) {
         final url = Uri.parse(s[key]! as String);
         expect(url.scheme, 'https', reason: '$id $key');
@@ -120,12 +144,34 @@ void main() {
     }
   });
 
-  test('durations fit the OS limits', () {
+  test('durations fit the category and the OS limits', () {
     for (final s in _sounds) {
+      final id = s['id'];
       final ms = s['durationMs'];
-      expect(ms, isA<int>(), reason: '${s['id']}: run build.py');
+      expect(ms, isA<int>(), reason: '$id: run build.py');
       // iOS plays the default sound instead of one longer than 30 s.
-      expect(ms! as int, inInclusiveRange(1, 30000), reason: '${s['id']}');
+      expect(ms! as int, inInclusiveRange(1, 30000), reason: '$id');
+      final rule = _rules[s['category']];
+      if (rule == null || _isFirstParty(s)) continue;
+      expect(ms, inInclusiveRange(rule.minMs, rule.maxMs), reason: '$id');
+    }
+  });
+
+  test('every built sound is within ±3 LU of its category target', () {
+    for (final s in _sounds.where((s) => !_isFirstParty(s))) {
+      final id = s['id'];
+      final lufs = s['loudnessLufs'];
+      final peak = s['truePeakDbtp'];
+      expect(lufs, isA<num>(), reason: '$id: run build.py');
+      expect(peak, isA<num>(), reason: '$id: run build.py');
+      final target = _rules[s['category']]!.lufs;
+      expect(
+        (lufs! as num).toDouble(),
+        closeTo(target, _spreadLu),
+        reason: '$id: a quiet outlier for the ear pass (build.py lists them)',
+      );
+      // The limiter's ceiling; the manifest rounds to 0.1 dB.
+      expect((peak! as num).toDouble(), lessThanOrEqualTo(-0.9), reason: '$id');
     }
   });
 
@@ -143,7 +189,12 @@ void main() {
         expect(notice, contains('trimmed'), reason: key);
         expect(notice, contains('loudness-normalised'), reason: key);
       }
-      expect(credits, contains(notice), reason: 'run build.py --credits');
+      for (final extra in _extraModifications) {
+        if (_sounds.any((s) => s['source'] == key && s['modified'] == extra)) {
+          expect(notice, contains(extra), reason: '$key: $extra');
+        }
+      }
+      expect(credits, contains(notice), reason: 'run tool/sounds/credits.py');
       for (final s in _sounds.where((s) => s['source'] == key)) {
         expect(credits, contains('<${s['sourceUrl']}>'), reason: '${s['id']}');
       }
