@@ -239,6 +239,7 @@ Rules:
     - Stage 2: a true-peak limiter (`alimiter`, 4× oversampled, −1 dBTP, attack 5 ms, release 50 ms). It may absorb at most 6 dB, because past that a short sound turns into a click.
     - A sound still more than 4 LU under its target is not pushed further. It goes on the build's "quiet outliers" list for the ear pass, with no loop and no noise-floor lift.
   - write the measured `loudnessLufs` and `truePeakDbtp` into the manifest. The policy test asserts every third-party sound is within ±3 LU of its category target, so a sound 3–4 LU under fails the test without being listed as an outlier.
+  - **ear pass, 2026-10-28** *(owner)*: all 10 sounds outside ±3 LU are kept as built. These are `quiet.slip`, `quiet.whisper`, `quiet.soft`, `quiet.pull`, `clear.turn`, `clear.involved`, `clear.appear`, `start.swing`, `play.drum` and `done.checked`. Each carries `loudnessAccepted: true`, which the policy test accepts only while the sound is still outside the spread. Any new outlier needs the same explicit decision. No other swaps.
   - first-party tones are measured, never changed: Dot −18.7, Chime −16.5, Bell −19.5, Ripple −17.7, `dot_alarm` −13.9 LUFS.
 
 ## 6. Picker UI (Concept A) *(owner layout)*

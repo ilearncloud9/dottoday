@@ -165,10 +165,15 @@ void main() {
       expect(lufs, isA<num>(), reason: '$id: run build.py');
       expect(peak, isA<num>(), reason: '$id: run build.py');
       final target = _rules[s['category']]!.lufs;
+      final within = ((lufs! as num) - target).abs() <= _spreadLu;
+      // loudnessAccepted: kept by the owner in the ear pass despite the
+      // spread (2026-10-28, docs/12 §5). It must still be needed.
       expect(
-        (lufs! as num).toDouble(),
-        closeTo(target, _spreadLu),
-        reason: '$id: a quiet outlier for the ear pass (build.py lists them)',
+        within,
+        s['loudnessAccepted'] != true,
+        reason: within
+            ? '$id: within ±3 LU now; drop loudnessAccepted'
+            : '$id: a quiet outlier for the ear pass (build.py lists them)',
       );
       // The limiter's ceiling; the manifest rounds to 0.1 dB.
       expect((peak! as num).toDouble(), lessThanOrEqualTo(-0.9), reason: '$id');

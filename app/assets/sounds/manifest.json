@@ -90,7 +90,8 @@
       "modified": true,
       "durationMs": 347,
       "loudnessLufs": -27.4,
-      "truePeakDbtp": -1.0
+      "truePeakDbtp": -1.0,
+      "loudnessAccepted": true
     },
     {
       "id": "quiet.whisper",
@@ -105,7 +106,8 @@
       "modified": true,
       "durationMs": 590,
       "loudnessLufs": -28.8,
-      "truePeakDbtp": -1.0
+      "truePeakDbtp": -1.0,
+      "loudnessAccepted": true
     },
     {
       "id": "quiet.soft",
@@ -120,7 +122,8 @@
       "modified": true,
       "durationMs": 490,
       "loudnessLufs": -25.8,
-      "truePeakDbtp": -1.0
+      "truePeakDbtp": -1.0,
+      "loudnessAccepted": true
     },
     {
       "id": "quiet.bubble",
@@ -150,7 +153,8 @@
       "modified": true,
       "durationMs": 300,
       "loudnessLufs": -25.8,
-      "truePeakDbtp": -1.1
+      "truePeakDbtp": -1.1,
+      "loudnessAccepted": true
     },
     {
       "id": "clear.lift",
@@ -225,7 +229,8 @@
       "modified": true,
       "durationMs": 277,
       "loudnessLufs": -25.8,
-      "truePeakDbtp": -1.0
+      "truePeakDbtp": -1.0,
+      "loudnessAccepted": true
     },
     {
       "id": "clear.settled",
@@ -345,7 +350,8 @@
       "modified": true,
       "durationMs": 530,
       "loudnessLufs": -27.6,
-      "truePeakDbtp": -1.0
+      "truePeakDbtp": -1.0,
+      "loudnessAccepted": true
     },
     {
       "id": "clear.appear",
@@ -360,7 +366,8 @@
       "modified": true,
       "durationMs": 840,
       "loudnessLufs": -19.9,
-      "truePeakDbtp": -1.0
+      "truePeakDbtp": -1.0,
+      "loudnessAccepted": true
     },
     {
       "id": "clear.tap",
@@ -465,7 +472,8 @@
       "modified": true,
       "durationMs": 20000,
       "loudnessLufs": -23.5,
-      "truePeakDbtp": -1.0
+      "truePeakDbtp": -1.0,
+      "loudnessAccepted": true
     },
     {
       "id": "start.lovingly",
@@ -631,7 +639,8 @@
       "modified": true,
       "durationMs": 640,
       "loudnessLufs": -22.3,
-      "truePeakDbtp": -1.0
+      "truePeakDbtp": -1.0,
+      "loudnessAccepted": true
     },
     {
       "id": "done.swift",
@@ -661,7 +670,8 @@
       "modified": true,
       "durationMs": 490,
       "loudnessLufs": -28.0,
-      "truePeakDbtp": -1.0
+      "truePeakDbtp": -1.0,
+      "loudnessAccepted": true
     },
     {
       "id": "done.done",
