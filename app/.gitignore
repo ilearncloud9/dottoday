@@ -34,3 +34,4 @@ web/sqlite3mc.wasm
 
 # Unmodified sound downloads (tool/sounds/fetch.py, docs/12 §1): never shipped
 tool/sounds/originals/
+__pycache__/
