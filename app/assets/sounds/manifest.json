@@ -13,7 +13,7 @@
       "license": "CC-BY-4.0",
       "modified": true,
       "credit": true,
-      "notice": "Notification sounds from notificationsounds.com, © Notification Sounds, licensed CC BY 4.0 (creativecommons.org/licenses/by/4.0). Files were trimmed, downmixed to mono, shortened to 20 seconds where longer, and loudness-normalised."
+      "notice": "Notification sounds from notificationsounds.com, © Notification Sounds, licensed CC BY 4.0 (creativecommons.org/licenses/by/4.0). Files were trimmed, downmixed to mono, shortened to fit or looped where noted, and loudness-normalised."
     }
   },
   "sounds": [
@@ -25,7 +25,9 @@
       "source": "dottoday",
       "license": "first-party",
       "modified": false,
-      "durationMs": 950
+      "durationMs": 950,
+      "loudnessLufs": -18.7,
+      "truePeakDbtp": -4.8
     },
     {
       "id": "chime",
@@ -35,7 +37,9 @@
       "source": "dottoday",
       "license": "first-party",
       "modified": false,
-      "durationMs": 1230
+      "durationMs": 1230,
+      "loudnessLufs": -16.5,
+      "truePeakDbtp": -4.3
     },
     {
       "id": "bell",
@@ -45,7 +49,9 @@
       "source": "dottoday",
       "license": "first-party",
       "modified": false,
-      "durationMs": 1450
+      "durationMs": 1450,
+      "loudnessLufs": -19.5,
+      "truePeakDbtp": -4.5
     },
     {
       "id": "ripple",
@@ -55,7 +61,9 @@
       "source": "dottoday",
       "license": "first-party",
       "modified": false,
-      "durationMs": 970
+      "durationMs": 970,
+      "loudnessLufs": -17.7,
+      "truePeakDbtp": -6.6
     },
     {
       "id": "dot_alarm",
@@ -65,7 +73,9 @@
       "source": "dottoday",
       "license": "first-party",
       "modified": false,
-      "durationMs": 9102
+      "durationMs": 9102,
+      "loudnessLufs": -13.9,
+      "truePeakDbtp": -1.1
     },
     {
       "id": "quiet.slip",
@@ -78,7 +88,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1329-slick.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 347
+      "durationMs": 347,
+      "loudnessLufs": -27.4,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "quiet.whisper",
@@ -91,7 +103,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1330-sly.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 590
+      "durationMs": 590,
+      "loudnessLufs": -28.8,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "quiet.soft",
@@ -104,20 +118,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1333-happy-to-help.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 490
-    },
-    {
-      "id": "quiet.tap",
-      "category": "quiet",
-      "name": "Tap",
-      "file": "quiet_tap",
-      "source": "notificationsounds",
-      "sourceTitle": "Confident",
-      "sourceUrl": "https://notificationsounds.com/notification-sounds/confident-543",
-      "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1083-confident.ogg",
-      "license": "CC-BY-4.0",
-      "modified": true,
-      "durationMs": 2370
+      "durationMs": 490,
+      "loudnessLufs": -25.8,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "quiet.bubble",
@@ -130,7 +133,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1077-bubbling-up.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 410
+      "durationMs": 410,
+      "loudnessLufs": -19.9,
+      "truePeakDbtp": -2.7
     },
     {
       "id": "quiet.pull",
@@ -143,33 +148,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1102-pull-out.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 300
-    },
-    {
-      "id": "quiet.pristine",
-      "category": "quiet",
-      "name": "Pristine",
-      "file": "quiet_pristine",
-      "source": "notificationsounds",
-      "sourceTitle": "Pristine",
-      "sourceUrl": "https://notificationsounds.com/message-tones/pristine-609",
-      "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1150-pristine.ogg",
-      "license": "CC-BY-4.0",
-      "modified": true,
-      "durationMs": 4280
-    },
-    {
-      "id": "quiet.discreet",
-      "category": "quiet",
-      "name": "Discreet",
-      "file": "quiet_discreet",
-      "source": "notificationsounds",
-      "sourceTitle": "Discreet",
-      "sourceUrl": "https://notificationsounds.com/wake-up-tones/discreet-492",
-      "fileUrl": "https://notificationsounds.com/storage/sounds/file-b8_discreet-song.ogg",
-      "license": "CC-BY-4.0",
-      "modified": true,
-      "durationMs": 8260
+      "durationMs": 300,
+      "loudnessLufs": -25.8,
+      "truePeakDbtp": -1.1
     },
     {
       "id": "clear.lift",
@@ -182,7 +163,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1351-light-hearted.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 3858
+      "durationMs": 3858,
+      "loudnessLufs": -17.1,
+      "truePeakDbtp": -1.3
     },
     {
       "id": "clear.bright",
@@ -195,7 +178,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1347-joyous.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 4120
+      "durationMs": 4000,
+      "loudnessLufs": -17.3,
+      "truePeakDbtp": -1.2
     },
     {
       "id": "clear.smile",
@@ -208,7 +193,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1325-smile.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 1876
+      "durationMs": 1876,
+      "loudnessLufs": -16.3,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "clear.ease",
@@ -221,7 +208,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1217-relax.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 3710
+      "durationMs": 3710,
+      "loudnessLufs": -16.3,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "clear.turn",
@@ -234,7 +223,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1055-your-turn.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 277
+      "durationMs": 277,
+      "loudnessLufs": -25.8,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "clear.settled",
@@ -247,7 +238,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1149-goes-without-saying.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 4340
+      "durationMs": 4000,
+      "loudnessLufs": -16.5,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "clear.quick",
@@ -260,7 +253,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1147-that-was-quick.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 684
+      "durationMs": 684,
+      "loudnessLufs": -17.3,
+      "truePeakDbtp": -1.1
     },
     {
       "id": "clear.opening",
@@ -273,7 +268,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1349-opening.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 4069
+      "durationMs": 4000,
+      "loudnessLufs": -17.5,
+      "truePeakDbtp": -3.0
     },
     {
       "id": "clear.spark",
@@ -286,7 +283,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1219-magic.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 4990
+      "durationMs": 4000,
+      "loudnessLufs": -16.1,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "clear.emerge",
@@ -299,7 +298,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1221-emergence.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 3450
+      "durationMs": 3450,
+      "loudnessLufs": -16.3,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "clear.elegant",
@@ -312,7 +313,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1233-elegant.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 930
+      "durationMs": 930,
+      "loudnessLufs": -17.1,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "clear.dutiful",
@@ -325,7 +328,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1227-dutifully.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 1267
+      "durationMs": 1267,
+      "loudnessLufs": -16.8,
+      "truePeakDbtp": -1.1
     },
     {
       "id": "clear.involved",
@@ -338,7 +343,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1331-involved.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 530
+      "durationMs": 530,
+      "loudnessLufs": -27.6,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "clear.appear",
@@ -351,20 +358,24 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1231-out-of-nowhere.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 840
+      "durationMs": 840,
+      "loudnessLufs": -19.9,
+      "truePeakDbtp": -1.0
     },
     {
-      "id": "start.rise",
-      "category": "start",
-      "name": "Rise",
-      "file": "start_rise",
+      "id": "clear.tap",
+      "category": "clear",
+      "name": "Tap",
+      "file": "clear_tap",
       "source": "notificationsounds",
-      "sourceTitle": "Gentle alarm",
-      "sourceUrl": "https://notificationsounds.com/wake-up-tones/gentle-alarm-474",
-      "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-928-gentle-alarm.ogg",
+      "sourceTitle": "Confident",
+      "sourceUrl": "https://notificationsounds.com/notification-sounds/confident-543",
+      "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1083-confident.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 427
+      "durationMs": 2370,
+      "loudnessLufs": -16.5,
+      "truePeakDbtp": -1.2
     },
     {
       "id": "start.morning",
@@ -377,7 +388,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-727-good-morning.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 5859
+      "durationMs": 5859,
+      "loudnessLufs": -14.1,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "start.bells",
@@ -390,20 +403,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-74_bells-message.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 3606
-    },
-    {
-      "id": "start.arpeggio",
-      "category": "start",
-      "name": "Arpeggio",
-      "file": "start_arpeggio",
-      "source": "notificationsounds",
-      "sourceTitle": "Arpeggio",
-      "sourceUrl": "https://notificationsounds.com/wake-up-tones/arpeggio-467",
-      "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-767-arpeggio.ogg",
-      "license": "CC-BY-4.0",
-      "modified": true,
-      "durationMs": 2049
+      "durationMs": 3606,
+      "loudnessLufs": -14.0,
+      "truePeakDbtp": -1.3
     },
     {
       "id": "start.sunrise",
@@ -416,7 +418,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-6c_early-sunrise-song.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 20000
+      "durationMs": 20000,
+      "loudnessLufs": -14.8,
+      "truePeakDbtp": -1.4
     },
     {
       "id": "start.solemn",
@@ -429,7 +433,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-882-solemn.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 4310
+      "durationMs": 4310,
+      "loudnessLufs": -16.0,
+      "truePeakDbtp": -1.1
     },
     {
       "id": "start.strike",
@@ -442,7 +448,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1106-serious-strike.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 6110
+      "durationMs": 6110,
+      "loudnessLufs": -16.6,
+      "truePeakDbtp": -1.8
     },
     {
       "id": "start.swing",
@@ -455,20 +463,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1152-swinging.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 20000
-    },
-    {
-      "id": "start.direct",
-      "category": "start",
-      "name": "Direct",
-      "file": "start_direct",
-      "source": "notificationsounds",
-      "sourceTitle": "Direct",
-      "sourceUrl": "https://notificationsounds.com/notification-sounds/direct-545",
-      "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1086-direct.ogg",
-      "license": "CC-BY-4.0",
-      "modified": true,
-      "durationMs": 440
+      "durationMs": 20000,
+      "loudnessLufs": -23.5,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "start.lovingly",
@@ -481,7 +478,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1158-lovingly.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 20000
+      "durationMs": 20000,
+      "loudnessLufs": -14.1,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "start.gentle",
@@ -494,7 +493,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-779-be-gentle-with-yourself.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 20000
+      "durationMs": 20000,
+      "loudnessLufs": -14.2,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "start.insistent",
@@ -506,8 +507,11 @@
       "sourceUrl": "https://notificationsounds.com/wake-up-tones/alarm-frenzy-493",
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-897-alarm-frenzy.ogg",
       "license": "CC-BY-4.0",
-      "modified": true,
-      "durationMs": 2283
+      "modified": "looped",
+      "loopToMs": 18000,
+      "durationMs": 18262,
+      "loudnessLufs": -14.0,
+      "truePeakDbtp": -9.9
     },
     {
       "id": "play.rooster",
@@ -520,7 +524,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1359-young-rooster.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 2270
+      "durationMs": 2270,
+      "loudnessLufs": -16.0,
+      "truePeakDbtp": -1.7
     },
     {
       "id": "play.horse",
@@ -533,7 +539,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-51_horse-whinnies-4.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 2350
+      "durationMs": 2350,
+      "loudnessLufs": -16.0,
+      "truePeakDbtp": -2.4
     },
     {
       "id": "play.knock",
@@ -546,7 +554,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-69_door-knock-2.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 5930
+      "durationMs": 4000,
+      "loudnessLufs": -16.4,
+      "truePeakDbtp": -0.9
     },
     {
       "id": "play.chick",
@@ -559,7 +569,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1402-little-chicken.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 1180
+      "durationMs": 1180,
+      "loudnessLufs": -16.3,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "play.frog",
@@ -572,7 +584,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-f0_bullfrog.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 990
+      "durationMs": 990,
+      "loudnessLufs": -16.1,
+      "truePeakDbtp": -1.1
     },
     {
       "id": "play.dog",
@@ -585,7 +599,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-57_dog-barking.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 4440
+      "durationMs": 4000,
+      "loudnessLufs": -16.1,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "play.gulls",
@@ -598,7 +614,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-33_seagulls.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 5550
+      "durationMs": 4000,
+      "loudnessLufs": -16.0,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "play.drum",
@@ -611,7 +629,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1383-stirring-drum.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 640
+      "durationMs": 640,
+      "loudnessLufs": -22.3,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "done.swift",
@@ -624,7 +644,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1235-swift-gesture.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 870
+      "durationMs": 870,
+      "loudnessLufs": -17.2,
+      "truePeakDbtp": -1.1
     },
     {
       "id": "done.checked",
@@ -637,7 +659,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1335-checked-off.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 490
+      "durationMs": 490,
+      "loudnessLufs": -28.0,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "done.done",
@@ -650,7 +674,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-937-job-done.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 450
+      "durationMs": 450,
+      "loudnessLufs": -17.0,
+      "truePeakDbtp": -1.0
     },
     {
       "id": "done.finished",
@@ -663,7 +689,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1229-my-work-is-done.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 1320
+      "durationMs": 1320,
+      "loudnessLufs": -16.7,
+      "truePeakDbtp": -0.9
     },
     {
       "id": "done.succeeded",
@@ -676,7 +704,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1210-succeeded.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 360
+      "durationMs": 360,
+      "loudnessLufs": -16.0,
+      "truePeakDbtp": -4.1
     },
     {
       "id": "done.achieved",
@@ -689,7 +719,9 @@
       "fileUrl": "https://notificationsounds.com/storage/sounds/file-sounds-1213-achievement.ogg",
       "license": "CC-BY-4.0",
       "modified": true,
-      "durationMs": 790
+      "durationMs": 790,
+      "loudnessLufs": -15.9,
+      "truePeakDbtp": -3.4
     }
   ]
 }
