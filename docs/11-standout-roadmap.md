@@ -66,6 +66,7 @@ The one-line position after this roadmap ships: **"Your day as a thread. Always 
 ### B4 · Brain-dump to thread — PRD Phase 2
 - Free text or dictation → proposed dots on the chosen day (B4 model, B3 proposal) → Accept. History of dumps kept locally, searchable. Cloud-only cases are Pro.
 - As built (docs/09 M12.5): from Today's ⋯; timed lines at their time, the rest into the first free time in the order written, the Inbox when the day is full; the dump is kept locally before the proposal opens.
+- AI status (docs/09 M14.1–M14.2, owner, 2026-10-28): the on-device path reports *why* it can't answer — `available`, `downloadable`, `downloading`, `notEnabled` (Apple Intelligence is off), `notEligible` (device or region can't), `unknown` — with the vendor (apple / google / chrome). Settings › Privacy › Help with thinking names the exact next step; a proposal answered by the rules shows a quiet "simple rules" origin, and a one-line `StatusHint` ("Made with simple rules · Turn on Apple Intelligence for smarter plans") appears only for notEnabled / downloadable / downloading, is dismissible once for both flows, never a modal, and never for notEligible (D4). Brain dump says under Plan it which path will answer.
 
 ### B5 · Paper plan to thread — **new, future, do not build now**
 - Photo → on-device OCR → Inbox items via B3. Recorded here so the data model (B2) and B3 are ready; no milestone.
@@ -73,6 +74,12 @@ The one-line position after this roadmap ships: **"Your day as a thread. Always 
 ### B6 · Capture anywhere — Siri/Shortcuts PRD Phase 2 + **new**
 - Share sheet (link / email / message → Inbox task with source attached), Action button / Control Center "Add", Watch dictation (queues locally, F3 rule), private **email-to-Inbox** address (Pro). All through `AddTask` (B6) and the existing parser.
 - As built (docs/09 M12.4): Android share intent, iOS and Mac share extensions and the web's paste all reach the same rule — the title from the subject or first line, the whole text (with the link) as the note, always the Inbox. No new dependency; email-to-Inbox and watch dictation are Phase 2.
+- Siri (owner, 2026-10-28, D3): iPhone only; exactly the five §0 B6 intents, no new one. M14.3 makes them findable: Settings › Siri & Shortcuts (iPhone only) lists the five phrases as in `AppShortcuts.strings`, how to invoke Siri and an Open Shortcuts button; a one-time Today tip after the 3rd added task; one quiet line on onboarding's Done step.
+
+### B7 · Speak it — **new** (M14, ADR-0014)
+- A mic inside Brain dump's text box (B4) and the task's Notes field, on-device recognition only (D1). Brain dump: a ~1.5 s pause or the command word ("next" / "weiter" / "suivant" / "siguiente") starts a new line, and the lines plan as typed text does (still nothing before Accept). Notes: text at the cursor, like the keyboard mic (D6). Hidden where the locale has no on-device recognizer — the keyboard's dictation still works (D2, approved R-13 exception). Audio and transcripts are never stored, logged or sent. Components: `MicButton`, `StatusHint` (10 §3).
+
+---
 
 ## C. Stay in control — the day adapts, the user decides
 

@@ -22,3 +22,8 @@ Break it down, brain-dump to thread, duration suggestions and Rebalance wording 
 - Cloud and own-key backends are an interface only (`RemoteThinkingBackend`) behind `ThinkingFlags.remoteBackends = false`; wiring one is a must-ask (CLAUDE.md §11).
 - Local storage: saved breakdowns and the last 50 exchanges in `local_meta` (encrypted, not synced, not exported), clearable in Settings › Privacy.
 - ML Kit brings Google's `transport-*` libraries for its own usage metrics; no prompt or answer is part of them. Recorded for the owner's privacy review (08 §6.1 C).
+
+## AI status (docs/09 M14.1–M14.2, owner, 2026-10-28)
+- `ThinkingAvailability` carries the reason: `available`, `downloadable`, `downloading`, `notEnabled` (Apple Intelligence off), `notEligible` (device, OS or region can't run the model; API missing), `unknown`. The wire words (`available`, `downloadable`, `downloading`, `not_enabled`, `not_eligible`) are pinned for Swift, Kotlin, the web and Dart by `test/policy/thinking_wire_contract_test.dart`.
+- `thinkingStatusProvider` pairs it with the vendor (apple / google / chrome / none), so copy names the right setting without `Platform.isX` in widgets.
+- Users see the path: Settings › Privacy › Help with thinking says the status and the next step; a proposal from the rules is labelled "simple rules"; a dismissible `StatusHint` nudges only where turning something on would help (D4: never a modal, never for notEligible).
