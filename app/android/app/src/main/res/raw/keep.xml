@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Notification sounds are looked up by name (FlnNotificationPlatform), so
-     release resource shrinking would drop them as unused (docs/09 M8.4d). -->
+     release resource shrinking would drop them as unused (docs/09 M8.4d,
+     docs/12 §4: one prefix per catalogue category). -->
 <resources xmlns:tools="http://schemas.android.com/tools"
-    tools:keep="@raw/dot_alarm,@raw/reminder_*" />
+    tools:keep="@raw/dot_alarm,@raw/reminder_*,@raw/quiet_*,@raw/clear_*,@raw/start_*,@raw/play_*,@raw/done_*" />
