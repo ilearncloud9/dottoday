@@ -5,16 +5,36 @@ import 'package:dottoday/domain/thinking/thinking_proposals.dart';
 /// [ownKey] exist as interfaces behind [ThinkingFlags.remoteBackends].
 enum ThinkingPath { onDevice, rules, cloud, ownKey }
 
-/// Whether a backend can answer right now.
+/// Whether a backend can answer right now, and if not, why — so the UI
+/// can say what the user can do about it (docs/09 M14.1, ADR-0009 "AI
+/// status"). The native sides send these as wire words
+/// (`thinking_wire_contract_test.dart`).
 enum ThinkingAvailability {
   available,
 
   /// The OS can fetch the model (Gemini Nano, Chrome) but hasn't yet.
   downloadable,
 
-  /// Not on this device: too old, not eligible, switched off, or the API is
-  /// missing.
-  unavailable,
+  /// The model is on its way (Apple Intelligence "getting ready", Gemini
+  /// Nano or Chrome downloading).
+  downloading,
+
+  /// The device could run it, but the user has it switched off (Apple
+  /// Intelligence off in Settings).
+  notEnabled,
+
+  /// The device, OS, browser or region can't run the model at all.
+  notEligible,
+
+  /// The platform didn't say (an error, a timeout, a word we don't know).
+  unknown;
+
+  /// Whether the user could get the model by switching something on or
+  /// waiting — the only states a nudge may mention (D4).
+  bool get canBecomeAvailable => switch (this) {
+    notEnabled || downloadable || downloading => true,
+    available || notEligible || unknown => false,
+  };
 }
 
 /// Language of the user's text and of the steps a model should write, as a

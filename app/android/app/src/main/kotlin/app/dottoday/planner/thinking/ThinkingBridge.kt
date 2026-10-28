@@ -15,8 +15,9 @@ import io.flutter.plugin.common.MethodChannel
  * `dottoday/thinking` (lib/data/thinking/channel_thinking_transport.dart,
  * docs/09 M10.1, ADR-0009): Gemini Nano through ML Kit GenAI's Prompt API,
  * run by AICore on the device. `availability` answers "available",
- * "downloadable"/"downloading" or "unavailable" (no AICore, unsupported
- * device); `generate` returns the model's text, which Dart validates as
+ * "downloadable"/"downloading", "not_eligible" (no AICore, unsupported
+ * device) or "unknown" (the check failed; docs/09 M14.1, words pinned by
+ * thinking_wire_contract_test); `generate` returns the model's text, which Dart validates as
  * JSON before anything is proposed. The prompt never leaves the device;
  * no network API is used here (policy test).
  */
@@ -28,9 +29,9 @@ object ThinkingBridge {
         MethodChannel(messenger, "dottoday/thinking").setMethodCallHandler { call, result ->
             when (call.method) {
                 "availability" -> {
-                    val model = model() ?: return@setMethodCallHandler result.success("unavailable")
+                    val model = model() ?: return@setMethodCallHandler result.success("not_eligible")
                     model.checkStatus().whenDone(main, { result.success(availabilityWord(it)) }) {
-                        result.success("unavailable")
+                        result.success("unknown")
                     }
                 }
                 "generate" -> {
@@ -64,7 +65,8 @@ object ThinkingBridge {
         FeatureStatus.AVAILABLE -> "available"
         FeatureStatus.DOWNLOADABLE -> "downloadable"
         FeatureStatus.DOWNLOADING -> "downloading"
-        else -> "unavailable"
+        FeatureStatus.UNAVAILABLE -> "not_eligible"
+        else -> "unknown"
     }
 
     /** The client, or null where ML Kit GenAI can't start (no AICore). */

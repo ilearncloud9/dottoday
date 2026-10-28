@@ -133,7 +133,7 @@ class _ThinkingSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final path = ref.watch(thinkingPathProvider).value;
+    final path = ref.watch(thinkingStatusProvider).value?.path;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: DotSpace.s,

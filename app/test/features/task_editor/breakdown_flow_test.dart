@@ -253,7 +253,7 @@ void main() {
   testWidgets('no model: an empty template, Accept waits for titles', (
     tester,
   ) async {
-    final (h, _) = await _pump(tester, model: ThinkingAvailability.unavailable);
+    final (h, _) = await _pump(tester, model: ThinkingAvailability.notEligible);
     await _open(tester);
     expect(find.text('on-device'), findsNothing);
     expect(_field('Step 1'), findsOneWidget);

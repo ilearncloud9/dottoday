@@ -56,7 +56,7 @@ final class OnDeviceThinkingBackend implements ThinkingBackend {
       return await _transport.availability().timeout(timeout);
     } on Object catch (e) {
       _onError?.call(null, timedOut: e is TimeoutException);
-      return ThinkingAvailability.unavailable;
+      return ThinkingAvailability.unknown;
     }
   }
 

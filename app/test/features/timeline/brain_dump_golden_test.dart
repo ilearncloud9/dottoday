@@ -40,7 +40,7 @@ void main() {
       profile: testProfile(settings: const Settings(use24h: false)),
     ),
     thinkingTransportProvider.overrideWithValue(
-      FakeThinkingTransport(state: ThinkingAvailability.unavailable),
+      FakeThinkingTransport(state: ThinkingAvailability.notEligible),
     ),
     // A fresh store per test: "Plan it" saves the dump, so a shared one
     // leaks "Earlier dumps" into whichever brain_dump test runs after a

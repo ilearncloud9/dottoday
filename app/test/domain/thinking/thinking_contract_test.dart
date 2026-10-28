@@ -169,13 +169,13 @@ void main() {
       expect(wire['schema'], contains('"maxItems":5'));
     });
 
-    test('an availability error reads as unavailable', () async {
+    test('an availability error reads as unknown', () async {
       final backend = OnDeviceThinkingBackend(
         transport: _ThrowingAvailability(),
         journal: MemoryThinkingMemory(),
         clock: _clock,
       );
-      expect(await backend.availability(), ThinkingAvailability.unavailable);
+      expect(await backend.availability(), ThinkingAvailability.unknown);
     });
   });
 }

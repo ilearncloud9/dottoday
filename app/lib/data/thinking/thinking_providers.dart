@@ -9,6 +9,7 @@ import 'package:dottoday/domain/thinking/on_device_thinking_backend.dart';
 import 'package:dottoday/domain/thinking/rules_thinking_backend.dart';
 import 'package:dottoday/domain/thinking/thinking_backend.dart';
 import 'package:dottoday/domain/thinking/thinking_service.dart';
+import 'package:dottoday/domain/thinking/thinking_status.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -47,18 +48,34 @@ ThinkingService thinkingService(Ref ref) {
   );
 }
 
-/// Which path answers on this device now (Settings › Privacy): the model
-/// when the platform says it is ready, else rules. Reads only the
-/// transport, so the page never opens the database for it. Kept: the
-/// answer only changes with an OS update or a model download.
+/// Whose model this platform would use (docs/09 M14.1). Read here, in
+/// the data layer, so widgets never branch on the platform.
 @Riverpod(keepAlive: true)
-Future<ThinkingPath> thinkingPath(Ref ref) async {
+ThinkingVendor thinkingVendor(Ref ref) {
+  if (kIsWeb) return ThinkingVendor.chrome;
+  return switch (defaultTargetPlatform) {
+    TargetPlatform.iOS => ThinkingVendor.appleIos,
+    TargetPlatform.macOS => ThinkingVendor.appleMac,
+    TargetPlatform.android => ThinkingVendor.google,
+    TargetPlatform.fuchsia ||
+    TargetPlatform.linux ||
+    TargetPlatform.windows => ThinkingVendor.none,
+  };
+}
+
+/// The model's state on this device and whose it is (Settings › Privacy,
+/// the proposal sheets' hint, Brain dump's "Plans with …"). Reads only the
+/// transport, so the page never opens the database for it. Re-read with
+/// `ref.invalidate` on resume: Apple Intelligence can be switched on in
+/// Settings while the app waits.
+@Riverpod(keepAlive: true)
+Future<ThinkingStatus> thinkingStatus(Ref ref) async {
+  final vendor = ref.watch(thinkingVendorProvider);
+  ThinkingAvailability availability;
   try {
-    final state = await ref.watch(thinkingTransportProvider).availability();
-    return state == ThinkingAvailability.available
-        ? ThinkingPath.onDevice
-        : ThinkingPath.rules;
+    availability = await ref.watch(thinkingTransportProvider).availability();
   } on Object {
-    return ThinkingPath.rules;
+    availability = ThinkingAvailability.unknown;
   }
+  return ThinkingStatus(availability: availability, vendor: vendor);
 }

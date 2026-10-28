@@ -27,7 +27,7 @@ const _dump = 'Email Sam\nTaxes 45m\nCall the bank 4pm';
 
 Future<ProposalHarness> _pump(
   WidgetTester tester, {
-  ThinkingAvailability model = ThinkingAvailability.unavailable,
+  ThinkingAvailability model = ThinkingAvailability.notEligible,
   bool sheet = false,
 }) async {
   tester.view
