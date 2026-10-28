@@ -31,3 +31,6 @@ test/**/failures/
 
 # Drift web runtime, produced by tool/web_db_assets.sh (M2.1, M2.9)
 web/sqlite3mc.wasm
+
+# Unmodified sound downloads (tool/sounds/fetch.py, docs/12 §1): never shipped
+tool/sounds/originals/
