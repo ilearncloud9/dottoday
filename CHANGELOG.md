@@ -38,6 +38,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - Web: Brain dump (and any popover opened from a menu) now takes your typing straight away — no need to click into the field first.
 - +15 from a widget, the lock screen or a notification could be ignored for a task created a moment earlier; it now always applies.
 - An action from a widget or the Live Activity made while the app was catching up on earlier ones could be lost; it now always gets through.
+- Tests: brain dump goldens no longer depend on test order — each test gets its own thinking memory, so a planned dump can't leak "Earlier dumps" into a later test; the four expanded proposal goldens, which had the leak baked in, are re-recorded (#18).
 
 ### Added
 - M9.8: Every place outside the app — widgets, lock screen, Dynamic Island, the Android notification, the Mac menu bar and the browser tab — now shows the same task within a second of any change, checked on every build and on iPhone and Android.

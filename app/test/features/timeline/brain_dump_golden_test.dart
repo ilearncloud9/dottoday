@@ -31,7 +31,6 @@ void main() {
     tz_data.initializeTimeZones();
     await loadAppFonts();
   });
-  final memory = LocalThinkingMemory(AppDatabase(NativeDatabase.memory()));
   final overrides = [
     ...timelineOverrides(
       now: DateTime.utc(2026, 10, 21, 7, 22),
@@ -43,7 +42,14 @@ void main() {
     thinkingTransportProvider.overrideWithValue(
       FakeThinkingTransport(state: ThinkingAvailability.unavailable),
     ),
-    thinkingMemoryProvider.overrideWithValue(memory),
+    // A fresh store per test: "Plan it" saves the dump, so a shared one
+    // leaks "Earlier dumps" into whichever brain_dump test runs after a
+    // proposal under a random order (#18).
+    thinkingMemoryProvider.overrideWith((ref) {
+      final db = AppDatabase(NativeDatabase.memory());
+      ref.onDispose(db.close);
+      return LocalThinkingMemory(db);
+    }),
   ];
   Widget sheet() => Scaffold(
     body: ProposalHost(
