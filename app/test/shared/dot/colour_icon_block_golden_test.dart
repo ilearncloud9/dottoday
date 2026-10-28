@@ -25,4 +25,25 @@ void main() {
       ),
     ),
   );
+  // The full picker (docs/10 §3 task icon library, ADR-0013; derived):
+  // colours, search, then the categories from Planning & rhythm down.
+  goldenMatrix(
+    'task_icon_picker',
+    height: 760,
+    a11yVariants: true,
+    build: (_) => Padding(
+      padding: const EdgeInsets.all(DotSpace.page),
+      child: ColourIconBlock(
+        color: TaskColor.coral,
+        icon: TaskIcon.focusBlock,
+        onColor: (_) {},
+        onIcon: (_) {},
+      ),
+    ),
+    act: (tester) async {
+      await tester.ensureVisible(find.byTooltip('All icons'));
+      await tester.tap(find.byTooltip('All icons'));
+      await tester.pumpAndSettle();
+    },
+  );
 }

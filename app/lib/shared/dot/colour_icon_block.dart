@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/pickers/block_names.dart';
-import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/pickers/task_icon_choice.dart';
+import 'package:dottoday/shared/pickers/task_icon_picker.dart';
 import 'package:flutter/material.dart';
 
 /// "COLOUR AND ICON" (docs/10 §3 `ColourIconBlock`, `A-ios-add-what`,
 /// `A-mac-editor`): the 9 colour dots, then the chosen icon and up to two
-/// [suggested] ones, then "…" for the full 26-icon grid. The chosen icon
+/// [suggested] ones, then "…" for the full icon library (by category, with search). The chosen icon
 /// is tinted in the chosen colour; selection is never colour alone (ring
 /// and check).
 class ColourIconBlock extends StatelessWidget {
@@ -61,7 +62,7 @@ class ColourIconBlock extends StatelessWidget {
                   onTap: () => onColor(c),
                 ),
               for (final i in quick)
-                _IconChoice(
+                TaskIconChoice(
                   icon: i,
                   colour: color,
                   selected: i == icon,
@@ -75,13 +76,12 @@ class ColourIconBlock extends StatelessWidget {
     );
   }
 
-  /// The full picker (docs/10 §5.3 "Colour & icon full picker"): every
-  /// colour and all 26 icons in one sheet — a popover on wide windows.
+  /// The full picker (docs/10 §5.3 "Colour & icon full picker").
   Future<void> _pickIcon(BuildContext context) async {
-    final picked = await showAppSheet<({TaskColor color, TaskIcon icon})>(
+    final picked = await showTaskLookPicker(
       context: context,
-      title: context.l10n.colourIconTitle,
-      builder: (_) => _FullPicker(colour: color, icon: icon),
+      colour: color,
+      icon: icon,
     );
     if (picked == null) return;
     if (picked.color != color) onColor(picked.color);
@@ -154,50 +154,6 @@ class ColourDot extends StatelessWidget {
   }
 }
 
-class _IconChoice extends StatelessWidget {
-  const _IconChoice({
-    required this.icon,
-    required this.colour,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final TaskIcon icon;
-  final TaskColor colour;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final swatch = t.tasks[colour];
-    return Semantics(
-      button: true,
-      selected: selected,
-      label: taskIconName(context.l10n, icon),
-      excludeSemantics: true,
-      onTap: onTap,
-      child: InkResponse(
-        onTap: onTap,
-        radius: DotTouch.android / 2,
-        child: Container(
-          width: DotTouch.android,
-          height: DotTouch.android,
-          alignment: Alignment.center,
-          decoration: selected
-              ? BoxDecoration(shape: BoxShape.circle, color: swatch.tint)
-              : null,
-          child: DotIcon(
-            icon.glyph!,
-            color: selected ? swatch.color : t.colors.text,
-            active: selected,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _More extends StatelessWidget {
   const _More({required this.onTap});
 
@@ -212,58 +168,4 @@ class _More extends StatelessWidget {
       icon: DotIcon(DotGlyphs.more, color: c.muted),
     );
   }
-}
-
-/// Every colour, then all 26 icons tinted in it; an icon picks both.
-class _FullPicker extends StatefulWidget {
-  const _FullPicker({required this.colour, required this.icon});
-
-  final TaskColor colour;
-  final TaskIcon icon;
-
-  @override
-  State<_FullPicker> createState() => _FullPickerState();
-}
-
-/// A leaf: the colour while choosing.
-class _FullPickerState extends State<_FullPicker> {
-  late var _colour = widget.colour;
-
-  @override
-  Widget build(BuildContext context) => Column(
-    mainAxisSize: MainAxisSize.min,
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    spacing: DotSpace.m,
-    children: [
-      Wrap(
-        alignment: WrapAlignment.center,
-        children: [
-          for (final c in TaskColor.values)
-            ColourDot(
-              colour: c,
-              selected: c == _colour,
-              onTap: () => setState(() => _colour = c),
-            ),
-        ],
-      ),
-      Wrap(
-        alignment: WrapAlignment.center,
-        children: [
-          for (final i in TaskIcon.picker)
-            _IconChoice(
-              icon: i,
-              colour: _colour,
-              selected: i == widget.icon,
-              onTap: () => Navigator.of(context).pop((color: _colour, icon: i)),
-            ),
-        ],
-      ),
-      // A colour alone is a choice too.
-      FilledButton(
-        onPressed: () =>
-            Navigator.of(context).pop((color: _colour, icon: widget.icon)),
-        child: Text(context.l10n.colourIconDone),
-      ),
-    ],
-  );
 }

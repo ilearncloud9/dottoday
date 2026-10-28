@@ -14,6 +14,7 @@ import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/auth_callback.dart';
 import 'package:dottoday/core/router/native_deep_links.dart';
 import 'package:dottoday/core/router/router_provider.dart';
+import 'package:dottoday/core/theme/icon_licenses.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/auth/supabase_start.dart';
 import 'package:dottoday/data/observability/sentry_reporting.dart';
@@ -34,6 +35,7 @@ Future<void> bootstrap() async {
   final sinks = FanOutLogSink([const DeveloperLogSink()]);
   final logger = Logger(sinks, const SystemClock());
   installErrorHandlers(logger);
+  registerIconLicenses();
   // IANA zone data for TZDateTime arithmetic and tz_id validation (docs/05).
   tz_data.initializeTimeZones();
   // Date symbols for every locale: notification and widget text is

@@ -372,168 +372,6 @@ abstract class AppLocalizations {
   /// **'Slate'**
   String get colorSlate;
 
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Plain'**
-  String get iconCircle;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Call'**
-  String get iconCall;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Email'**
-  String get iconMail;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Code'**
-  String get iconCode;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Reading'**
-  String get iconBook;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Gym'**
-  String get iconGym;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Run'**
-  String get iconRun;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Meal'**
-  String get iconMeal;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Health'**
-  String get iconHeart;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Home'**
-  String get iconHome;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Music'**
-  String get iconMusic;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Pet'**
-  String get iconPet;
-
-  /// Block icon name (screen readers, picker).
-  ///
-  /// In en, this message translates to:
-  /// **'Star'**
-  String get iconStar;
-
-  /// Task icon name (list), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'List'**
-  String get iconList;
-
-  /// Task icon name (language), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Language'**
-  String get iconLanguage;
-
-  /// Task icon name (travel), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Travel'**
-  String get iconTravel;
-
-  /// Task icon name (shopping cart), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Shopping cart'**
-  String get iconCart;
-
-  /// Task icon name (tv), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'TV'**
-  String get iconTv;
-
-  /// Task icon name (shopping bag), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Shopping bag'**
-  String get iconBag;
-
-  /// Task icon name (medication), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Medication'**
-  String get iconMeds;
-
-  /// Task icon name (water), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Water'**
-  String get iconWater;
-
-  /// Task icon name (car), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Car'**
-  String get iconCar;
-
-  /// Task icon name (money), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Money'**
-  String get iconMoney;
-
-  /// Task icon name (gift), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Gift'**
-  String get iconGift;
-
-  /// Task icon name (camera), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Camera'**
-  String get iconCamera;
-
-  /// Task icon name (people), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'People'**
-  String get iconPeople;
-
-  /// Task icon name (document), read by screen readers and shown as the picker tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Document'**
-  String get iconDocument;
-
   /// Snackbar action reverting the last change (30 s).
   ///
   /// In en, this message translates to:
@@ -1320,7 +1158,7 @@ abstract class AppLocalizations {
   /// **'Colour and icon'**
   String get colourIconCaption;
 
-  /// Opens the grid of all 26 task icons.
+  /// Opens the full colour and icon picker (the task icon library, by category, with search).
   ///
   /// In en, this message translates to:
   /// **'All icons'**
@@ -3485,6 +3323,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Done'**
   String get colourIconDone;
+
+  /// Search field in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Search icons'**
+  String get iconSearchHint;
+
+  /// Icon picker: nothing matches the search text.
+  ///
+  /// In en, this message translates to:
+  /// **'No icons match “{query}”'**
+  String iconSearchEmpty(String query);
 
   /// Title of the rename dialog.
   ///
@@ -7643,6 +7493,3252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See time: your next dot on the lock screen, widgets, the Mac menu bar and Siri, and alarms that really ring.\nStart: Break it down into small steps, Focus on one dot, and gentle help when a task won\'t start.\nStay in control: Rebalance shows a plan before anything moves; Plan / Reality shows how the day really went.\nRoutines, energy suggestions and lengths learned from your own days, on your device.\nThis week as seven dots, Past days to look back, and low-energy mode for hard days. Nothing to keep up.\nShare a page or a note to Dottoday from any app, or empty your head with Brain dump.'**
   String get releaseNotes100;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Planning & rhythm'**
+  String get taskIconCategoryPlanning;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Health & body'**
+  String get taskIconCategoryHealth;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness & sport'**
+  String get taskIconCategoryFitness;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Food & drink'**
+  String get taskIconCategoryFood;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Home & chores'**
+  String get taskIconCategoryHome;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Work & study'**
+  String get taskIconCategoryWork;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Tech & devices'**
+  String get taskIconCategoryTech;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel & transport'**
+  String get taskIconCategoryTravel;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Nature & weather'**
+  String get taskIconCategoryNature;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Animals'**
+  String get taskIconCategoryAnimals;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'People & social'**
+  String get taskIconCategoryPeople;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Leisure & hobbies'**
+  String get taskIconCategoryLeisure;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping & money'**
+  String get taskIconCategoryShopping;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Clothing & beauty'**
+  String get taskIconCategoryStyle;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Faith & celebrations'**
+  String get taskIconCategoryFaith;
+
+  /// Section title in the task icon picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Symbols & signs'**
+  String get taskIconCategorySymbols;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Block'**
+  String get taskIconFocusBlock;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Deep Work'**
+  String get taskIconDeepWork;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Plan the Day'**
+  String get taskIconPlanTheDay;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Time Block'**
+  String get taskIconTimeBlock;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Buffer'**
+  String get taskIconBuffer;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Anytime'**
+  String get taskIconAnytime;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Break'**
+  String get taskIconTakeABreak;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Morning Routine'**
+  String get taskIconMorningRoutine;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Evening Routine'**
+  String get taskIconEveningRoutine;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Wind Down'**
+  String get taskIconWindDown;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Power Nap'**
+  String get taskIconPowerNap;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Week Review'**
+  String get taskIconWeekReview;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox Zero'**
+  String get taskIconInboxZero;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Habit'**
+  String get taskIconHabit;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Errands'**
+  String get taskIconErrands;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Low Energy'**
+  String get taskIconLowEnergy;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'High Energy'**
+  String get taskIconHighEnergy;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Screen-free'**
+  String get taskIconScreenFree;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Stand-up'**
+  String get taskIconStandUp;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Self-care'**
+  String get taskIconSelfCare;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Prep'**
+  String get taskIconMealPrep;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Pay Bills'**
+  String get taskIconPayBills;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Allergens'**
+  String get taskIconAllergens;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bandage'**
+  String get taskIconBandage;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Blood Bag'**
+  String get taskIconBloodBag;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Brain'**
+  String get taskIconBrain;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Crutch'**
+  String get taskIconCrutch;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor'**
+  String get taskIconDoctor;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ear'**
+  String get taskIconEar;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'ECG'**
+  String get taskIconEcg;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Eyes'**
+  String get taskIconEyes;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Face Mask'**
+  String get taskIconFaceMask;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Falling'**
+  String get taskIconFalling;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Head'**
+  String get taskIconHead;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hearing Device'**
+  String get taskIconHearingDevice;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Heart'**
+  String get taskIconHeart;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hospital'**
+  String get taskIconHospital;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Lungs'**
+  String get taskIconLungs;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Thermometer'**
+  String get taskIconMedicalThermometer;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Microbe'**
+  String get taskIconMicrobe;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Pharmacy'**
+  String get taskIconPharmacy;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Pill'**
+  String get taskIconMeds;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Pills'**
+  String get taskIconPills;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get taskIconSleep;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Sleepy Moon'**
+  String get taskIconSleepyMoon;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Standing'**
+  String get taskIconStanding;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Star of Life'**
+  String get taskIconStarOfLife;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Syringe'**
+  String get taskIconSyringe;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Therapy'**
+  String get taskIconTherapy;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Tooth'**
+  String get taskIconTooth;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Toothbrush'**
+  String get taskIconToothbrush;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Vial'**
+  String get taskIconVial;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Wheelchair'**
+  String get taskIconWheelchair;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'American Football'**
+  String get taskIconAmericanFootball;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Archery'**
+  String get taskIconArchery;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Australian Football'**
+  String get taskIconAustralianFootball;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Baseball'**
+  String get taskIconBaseball;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Basketball'**
+  String get taskIconBasketball;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bowling'**
+  String get taskIconBowling;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Core Training'**
+  String get taskIconCoreTraining;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Cricket'**
+  String get taskIconCricket;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Cross Training'**
+  String get taskIconCrossTraining;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Curling'**
+  String get taskIconCurling;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Cycling'**
+  String get taskIconCycling;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Dancing'**
+  String get taskIconDancing;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Dumbbell'**
+  String get taskIconGym;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Fencing'**
+  String get taskIconFencing;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Golf'**
+  String get taskIconGolf;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Gymnastics'**
+  String get taskIconGymnastics;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Handball'**
+  String get taskIconHandball;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Helmet'**
+  String get taskIconHelmet;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'HIIT'**
+  String get taskIconHiit;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hiking'**
+  String get taskIconHiking;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Horse Riding'**
+  String get taskIconHorseRiding;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ice Skates'**
+  String get taskIconIceSkates;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Jogging'**
+  String get taskIconJogging;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Martial Arts'**
+  String get taskIconMartialArts;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Medal'**
+  String get taskIconMedal;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Pool Swimming'**
+  String get taskIconPoolSwimming;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Rope Jumping'**
+  String get taskIconRopeJumping;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Rowing'**
+  String get taskIconRowing;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Rugby'**
+  String get taskIconRugby;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get taskIconRun;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Sailing'**
+  String get taskIconSailing;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Scuba Diving'**
+  String get taskIconScubaDiving;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Skateboard'**
+  String get taskIconSkateboard;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Skating'**
+  String get taskIconSkating;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Skiing'**
+  String get taskIconSkiing;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Snowboard'**
+  String get taskIconSnowboard;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Snowboarding'**
+  String get taskIconSnowboarding;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Soccer'**
+  String get taskIconSoccer;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Softball'**
+  String get taskIconSoftball;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Sportcourt'**
+  String get taskIconSportcourt;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Stair Stepper'**
+  String get taskIconStairStepper;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Stepping'**
+  String get taskIconStepping;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Stopwatch'**
+  String get taskIconStopwatch;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Stretching'**
+  String get taskIconStretching;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Swimming'**
+  String get taskIconSwimming;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Table Tennis'**
+  String get taskIconTableTennis;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Tennis'**
+  String get taskIconTennis;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Track and Field'**
+  String get taskIconTrackAndField;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Trophy'**
+  String get taskIconTrophy;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Volleyball'**
+  String get taskIconVolleyball;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Walking'**
+  String get taskIconWalking;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Water Polo'**
+  String get taskIconWaterPolo;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Weight Lifting'**
+  String get taskIconWeightLifting;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Yoga'**
+  String get taskIconYoga;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Alcohol'**
+  String get taskIconAlcohol;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Apple'**
+  String get taskIconApple;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Beer'**
+  String get taskIconBeer;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Burger'**
+  String get taskIconBurger;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Candy'**
+  String get taskIconCandy;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Carrot'**
+  String get taskIconCarrot;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Cheese'**
+  String get taskIconCheese;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Chopsticks'**
+  String get taskIconChopsticks;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Coffee'**
+  String get taskIconCoffee;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking'**
+  String get taskIconCooking;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking Stove'**
+  String get taskIconCookingStove;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Cup'**
+  String get taskIconCup;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Dumplings'**
+  String get taskIconDumplings;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Frying Pan'**
+  String get taskIconFryingPan;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ice Cream'**
+  String get taskIconIceCream;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Meal'**
+  String get taskIconMeal;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Microwave'**
+  String get taskIconMicrowave;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Mug'**
+  String get taskIconMug;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Oven'**
+  String get taskIconOven;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Pizza'**
+  String get taskIconPizza;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Popcorn'**
+  String get taskIconPopcorn;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Soup'**
+  String get taskIconSoup;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Takeout'**
+  String get taskIconTakeout;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Tray'**
+  String get taskIconTray;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Water Bottle'**
+  String get taskIconWaterBottle;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Water Glass'**
+  String get taskIconWater;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Wine Glass'**
+  String get taskIconWineGlass;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Wrap'**
+  String get taskIconWrap;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Air Conditioner'**
+  String get taskIconAirConditioner;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Air Purifier'**
+  String get taskIconAirPurifier;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ax'**
+  String get taskIconAx;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bathtub'**
+  String get taskIconBathtub;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bed'**
+  String get taskIconBed;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Blinds'**
+  String get taskIconBlinds;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bookshelf'**
+  String get taskIconBookshelf;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Box'**
+  String get taskIconBox;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Broom'**
+  String get taskIconBroom;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ceiling Fan'**
+  String get taskIconCeilingFan;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ceiling Lamp'**
+  String get taskIconCeilingLamp;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Chair'**
+  String get taskIconChair;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Chair Lounge'**
+  String get taskIconChairLounge;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Couch'**
+  String get taskIconCouch;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Dehumidifier'**
+  String get taskIconDehumidifier;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Dishwasher'**
+  String get taskIconDishwasher;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Door'**
+  String get taskIconDoor;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Dryer'**
+  String get taskIconDryer;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Duster'**
+  String get taskIconDuster;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Fan'**
+  String get taskIconFan;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Fireplace'**
+  String get taskIconFireplace;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Floor Lamp'**
+  String get taskIconFloorLamp;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Fridge'**
+  String get taskIconFridge;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Garage'**
+  String get taskIconGarage;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hammer'**
+  String get taskIconHammer;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Heater'**
+  String get taskIconHeater;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'House'**
+  String get taskIconHome;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'House with Flag'**
+  String get taskIconHouseWithFlag;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Humidifier'**
+  String get taskIconHumidifier;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Iron'**
+  String get taskIconIron;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Key'**
+  String get taskIconKey;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Laundry Basket'**
+  String get taskIconLaundryBasket;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Lawn Mower'**
+  String get taskIconLawnMower;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get taskIconLevel;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Light Bulb'**
+  String get taskIconLightBulb;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Mop'**
+  String get taskIconMop;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Potted Plant'**
+  String get taskIconPottedPlant;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Rake'**
+  String get taskIconRake;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Recycling'**
+  String get taskIconRecycling;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Refrigerator'**
+  String get taskIconRefrigerator;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Shade Roller'**
+  String get taskIconShadeRoller;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Shades'**
+  String get taskIconShades;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Shovel'**
+  String get taskIconShovel;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Shower'**
+  String get taskIconShower;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Sink'**
+  String get taskIconSink;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Snow Shovel'**
+  String get taskIconSnowShovel;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Soap'**
+  String get taskIconSoap;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Stairs'**
+  String get taskIconStairs;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Table'**
+  String get taskIconTable;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Table Lamp'**
+  String get taskIconTableLamp;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Toilet'**
+  String get taskIconToilet;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Toilet Paper'**
+  String get taskIconToiletPaper;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Trash'**
+  String get taskIconTrash;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Vacuum'**
+  String get taskIconVacuum;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Washing Machine'**
+  String get taskIconWashingMachine;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Watering Can'**
+  String get taskIconWateringCan;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Wrench'**
+  String get taskIconWrench;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'All Day Task'**
+  String get taskIconAllDayTask;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Biology'**
+  String get taskIconBiology;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Blackboard'**
+  String get taskIconBlackboard;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get taskIconBook;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmark'**
+  String get taskIconBookmark;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Briefcase'**
+  String get taskIconBriefcase;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Building'**
+  String get taskIconBuilding;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get taskIconCalendar;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Checklist'**
+  String get taskIconList;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Chemistry'**
+  String get taskIconChemistry;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Clipboard'**
+  String get taskIconClipboard;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get taskIconCode;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Desk Globe'**
+  String get taskIconDeskGlobe;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Desk Lamp'**
+  String get taskIconDeskLamp;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Document'**
+  String get taskIconDocument;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get taskIconEmail;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'File'**
+  String get taskIconFile;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Folder'**
+  String get taskIconFolder;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Highlighter'**
+  String get taskIconHighlighter;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'ID Card'**
+  String get taskIconIdCard;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get taskIconLanguage;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Law'**
+  String get taskIconLaw;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Loupe'**
+  String get taskIconLoupe;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Mail'**
+  String get taskIconMail;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Math'**
+  String get taskIconMath;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Paperclip'**
+  String get taskIconPaperclip;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil'**
+  String get taskIconPencil;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil and Ruler'**
+  String get taskIconPencilAndRuler;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Physics'**
+  String get taskIconPhysics;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Quote'**
+  String get taskIconQuote;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get taskIconReminders;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ruler'**
+  String get taskIconRuler;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'School'**
+  String get taskIconSchool;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Scissors'**
+  String get taskIconScissors;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Signature'**
+  String get taskIconSignature;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Spreadsheet'**
+  String get taskIconSpreadsheet;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Student Desk'**
+  String get taskIconStudentDesk;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Task'**
+  String get taskIconTask;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Test Tube'**
+  String get taskIconTestTube;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Writing'**
+  String get taskIconWriting;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Zip'**
+  String get taskIconZip;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Battery'**
+  String get taskIconBattery;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Captions'**
+  String get taskIconCaptions;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Computer Mouse'**
+  String get taskIconComputerMouse;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Connector'**
+  String get taskIconConnector;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'CPU'**
+  String get taskIconCpu;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Curly Braces'**
+  String get taskIconCurlyBraces;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Desktop'**
+  String get taskIconDesktop;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Dial'**
+  String get taskIconDial;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Disk'**
+  String get taskIconDisk;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Fax'**
+  String get taskIconFax;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Flashlight'**
+  String get taskIconFlashlight;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Flipphone'**
+  String get taskIconFlipphone;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Gears'**
+  String get taskIconGears;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Gyroscope'**
+  String get taskIconGyroscope;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hard Drive'**
+  String get taskIconHardDrive;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Headphones'**
+  String get taskIconHeadphones;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard'**
+  String get taskIconKeyboard;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Link'**
+  String get taskIconLink;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Merge'**
+  String get taskIconMerge;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Mic'**
+  String get taskIconMic;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get taskIconCall;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Plug'**
+  String get taskIconPlug;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Power'**
+  String get taskIconPower;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Printer'**
+  String get taskIconPrinter;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Scanner'**
+  String get taskIconScanner;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'SD Card'**
+  String get taskIconSdCard;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Simcard'**
+  String get taskIconSimcard;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Speaker'**
+  String get taskIconSpeaker;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Terminal'**
+  String get taskIconTerminal;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Upload'**
+  String get taskIconUpload;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Video Projector'**
+  String get taskIconVideoProjector;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Watch'**
+  String get taskIconWatch;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Web'**
+  String get taskIconWeb;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Wifi'**
+  String get taskIconWifi;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Wifi Router'**
+  String get taskIconWifiRouter;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Windows'**
+  String get taskIconWindows;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Airplane'**
+  String get taskIconTravel;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival'**
+  String get taskIconArrival;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Arriving'**
+  String get taskIconArriving;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Backpack'**
+  String get taskIconBackpack;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Beach'**
+  String get taskIconBeach;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bike'**
+  String get taskIconBike;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Boat'**
+  String get taskIconBoat;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bus'**
+  String get taskIconBus;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Cablecar'**
+  String get taskIconCablecar;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Car'**
+  String get taskIconCar;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Case'**
+  String get taskIconCase;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese Castle'**
+  String get taskIconChineseCastle;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Colosseum'**
+  String get taskIconColosseum;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Compass'**
+  String get taskIconCompass;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Departure'**
+  String get taskIconDeparture;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Doubledecker Bus'**
+  String get taskIconDoubledeckerBus;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Electric Car'**
+  String get taskIconElectricCar;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Engine'**
+  String get taskIconEngine;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ferry'**
+  String get taskIconFerry;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Gas Station'**
+  String get taskIconGasStation;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Globe'**
+  String get taskIconGlobe;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Globe Americas'**
+  String get taskIconGlobeAmericas;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Globe Asia'**
+  String get taskIconGlobeAsia;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Globe Asia-Pacific'**
+  String get taskIconGlobeAsiaPacific;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Globe Europe Africa'**
+  String get taskIconGlobeEuropeAfrica;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Leaving'**
+  String get taskIconLeaving;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Life Preserver'**
+  String get taskIconLifePreserver;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Lightrail'**
+  String get taskIconLightrail;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get taskIconLocation;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Lodge'**
+  String get taskIconLodge;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Map'**
+  String get taskIconMap;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Motorcycle'**
+  String get taskIconMotorcycle;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Oil Can'**
+  String get taskIconOilCan;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Road'**
+  String get taskIconRoad;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Rocket'**
+  String get taskIconRocket;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Rolling Suitcase'**
+  String get taskIconRollingSuitcase;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Scooter'**
+  String get taskIconScooter;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ship'**
+  String get taskIconShip;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Signpost'**
+  String get taskIconSignpost;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ski Lift'**
+  String get taskIconSkiLift;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Steering Wheel'**
+  String get taskIconSteeringWheel;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Subway'**
+  String get taskIconSubway;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Suitcase'**
+  String get taskIconSuitcase;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Suitcase Cart'**
+  String get taskIconSuitcaseCart;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Tent'**
+  String get taskIconTent;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Train'**
+  String get taskIconTrain;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Truck'**
+  String get taskIconTruck;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Windshield'**
+  String get taskIconWindshield;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Barometer'**
+  String get taskIconBarometer;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud'**
+  String get taskIconCloud;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Drizzle'**
+  String get taskIconDrizzle;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Flame'**
+  String get taskIconFlame;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Flower'**
+  String get taskIconFlower;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Flowers'**
+  String get taskIconFlowers;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Fog'**
+  String get taskIconFog;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Fossil'**
+  String get taskIconFossil;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hail'**
+  String get taskIconHail;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Leaf'**
+  String get taskIconLeaf;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Moon'**
+  String get taskIconMoon;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Moon Haze'**
+  String get taskIconMoonHaze;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Mountain'**
+  String get taskIconMountain;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Mushroom'**
+  String get taskIconMushroom;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Palm Tree'**
+  String get taskIconPalmTree;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Partial Sun'**
+  String get taskIconPartialSun;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Plant'**
+  String get taskIconPlant;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get taskIconRain;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Rainbow'**
+  String get taskIconRainbow;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Seedling'**
+  String get taskIconSeedling;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Sleet'**
+  String get taskIconSleet;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Snow'**
+  String get taskIconSnow;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Snowflake'**
+  String get taskIconSnowflake;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Snowman'**
+  String get taskIconSnowman;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Storm'**
+  String get taskIconStorm;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get taskIconSun;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Sun Haze'**
+  String get taskIconSunHaze;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Sunrise'**
+  String get taskIconSunrise;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Sunset'**
+  String get taskIconSunset;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature'**
+  String get taskIconTemperature;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Thunderstorm'**
+  String get taskIconThunderstorm;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Tree'**
+  String get taskIconTree;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Umbrella'**
+  String get taskIconUmbrella;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Waves'**
+  String get taskIconWaves;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Wind'**
+  String get taskIconWind;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ant'**
+  String get taskIconAnt;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bird'**
+  String get taskIconBird;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bug'**
+  String get taskIconBug;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Cat'**
+  String get taskIconCat;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Chicken'**
+  String get taskIconChicken;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Dog'**
+  String get taskIconDog;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Fish'**
+  String get taskIconFish;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hamster'**
+  String get taskIconHamster;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Horse'**
+  String get taskIconHorse;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Mouse'**
+  String get taskIconMouse;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Paw'**
+  String get taskIconPet;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Pet Food Bowl'**
+  String get taskIconPetFoodBowl;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Pig'**
+  String get taskIconPig;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Rabbit'**
+  String get taskIconRabbit;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Tortoise'**
+  String get taskIconTortoise;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Walking Cat'**
+  String get taskIconWalkingCat;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Walking Dog'**
+  String get taskIconWalkingDog;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Baby'**
+  String get taskIconBaby;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Baby Bottle'**
+  String get taskIconBabyBottle;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ballot Box'**
+  String get taskIconBallotBox;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Broken Heart'**
+  String get taskIconBrokenHeart;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Couple'**
+  String get taskIconCouple;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get taskIconFamily;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Group'**
+  String get taskIconPeople;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hand'**
+  String get taskIconHand;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Handshake'**
+  String get taskIconHandshake;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get taskIconMessage;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Person'**
+  String get taskIconPerson;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Language'**
+  String get taskIconSignLanguage;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Smile'**
+  String get taskIconSmile;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Stroller'**
+  String get taskIconStroller;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Two Persons'**
+  String get taskIconTwoPersons;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Waving'**
+  String get taskIconWaving;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Amplifier'**
+  String get taskIconAmplifier;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Aperture'**
+  String get taskIconAperture;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Binoculars'**
+  String get taskIconBinoculars;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get taskIconCamera;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Checkerboard'**
+  String get taskIconCheckerboard;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Chess'**
+  String get taskIconChess;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Club'**
+  String get taskIconClub;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Dice'**
+  String get taskIconDice;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Drums'**
+  String get taskIconDrums;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Eyedropper'**
+  String get taskIconEyedropper;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Film'**
+  String get taskIconFilm;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Fishing'**
+  String get taskIconFishing;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Gaming'**
+  String get taskIconGaming;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Guitar'**
+  String get taskIconGuitar;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Horn'**
+  String get taskIconHorn;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hunting'**
+  String get taskIconHunting;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Magazine'**
+  String get taskIconMagazine;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Magic'**
+  String get taskIconMagic;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Metronome'**
+  String get taskIconMetronome;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Movie'**
+  String get taskIconMovie;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Movie Clapper'**
+  String get taskIconMovieClapper;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get taskIconMusic;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Newspaper'**
+  String get taskIconNewspaper;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Paint Palette'**
+  String get taskIconPaintPalette;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Paintbrush'**
+  String get taskIconPaintbrush;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get taskIconPhoto;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Piano'**
+  String get taskIconPiano;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Playground'**
+  String get taskIconPlayground;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Puzzle'**
+  String get taskIconPuzzle;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Radio'**
+  String get taskIconRadio;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Recording Tape'**
+  String get taskIconRecordingTape;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Sewing Machine'**
+  String get taskIconSewingMachine;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Singing'**
+  String get taskIconSinging;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Spade'**
+  String get taskIconSpade;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Swatch Palette'**
+  String get taskIconSwatchPalette;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Theater'**
+  String get taskIconTheater;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ticket'**
+  String get taskIconTicket;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Tuning'**
+  String get taskIconTuning;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'TV'**
+  String get taskIconTv;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bag'**
+  String get taskIconBag;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Banknote'**
+  String get taskIconBanknote;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode'**
+  String get taskIconBarcode;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Basket'**
+  String get taskIconBasket;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bitcoin'**
+  String get taskIconBitcoin;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Cart'**
+  String get taskIconCart;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Coin'**
+  String get taskIconCoin;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Creditcard'**
+  String get taskIconCreditcard;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Euro'**
+  String get taskIconEuro;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Gift'**
+  String get taskIconGift;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Giftcard'**
+  String get taskIconGiftcard;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get taskIconMoney;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Parcel'**
+  String get taskIconParcel;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Storefront'**
+  String get taskIconStorefront;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Tag'**
+  String get taskIconTag;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet Pass'**
+  String get taskIconWalletPass;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Clothes Hanger'**
+  String get taskIconClothesHanger;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Diamond'**
+  String get taskIconDiamond;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Dress'**
+  String get taskIconDress;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Glasses'**
+  String get taskIconGlasses;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hair Dresser'**
+  String get taskIconHairDresser;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hairdryer'**
+  String get taskIconHairdryer;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hat'**
+  String get taskIconHat;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Jacket'**
+  String get taskIconJacket;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Mustache'**
+  String get taskIconMustache;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Purse'**
+  String get taskIconPurse;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Razor'**
+  String get taskIconRazor;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ring'**
+  String get taskIconRing;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Shoe'**
+  String get taskIconShoe;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Shoes'**
+  String get taskIconShoes;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Skin Care'**
+  String get taskIconSkinCare;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Sunglasses'**
+  String get taskIconSunglasses;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'T-Shirt'**
+  String get taskIconTShirt;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Trousers'**
+  String get taskIconTrousers;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Winter Jacket'**
+  String get taskIconWinterJacket;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Balloons'**
+  String get taskIconBalloons;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday'**
+  String get taskIconBirthday;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Buddhism'**
+  String get taskIconBuddhism;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Candle'**
+  String get taskIconCandle;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Christmas Tree'**
+  String get taskIconChristmasTree;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Church'**
+  String get taskIconChurch;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Cross'**
+  String get taskIconCross;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Fireworks'**
+  String get taskIconFireworks;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Ghost'**
+  String get taskIconGhost;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Gravestone'**
+  String get taskIconGravestone;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Halloween'**
+  String get taskIconHalloween;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hinduism'**
+  String get taskIconHinduism;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Islam'**
+  String get taskIconIslam;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Judaism'**
+  String get taskIconJudaism;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Mosque'**
+  String get taskIconMosque;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Party'**
+  String get taskIconParty;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Pray'**
+  String get taskIconPray;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Taoism'**
+  String get taskIconTaoism;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm'**
+  String get taskIconAlarm;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bar Chart'**
+  String get taskIconBarChart;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bell'**
+  String get taskIconBell;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bolt'**
+  String get taskIconBolt;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bubble'**
+  String get taskIconBubble;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Bubbles'**
+  String get taskIconBubbles;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Clock'**
+  String get taskIconClock;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Crown'**
+  String get taskIconCrown;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Cube'**
+  String get taskIconCube;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Danger'**
+  String get taskIconDanger;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get taskIconError;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Explosion'**
+  String get taskIconExplosion;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Female Symbol'**
+  String get taskIconFemaleSymbol;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get taskIconFilters;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Flag'**
+  String get taskIconFlag;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hashtag'**
+  String get taskIconHashtag;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hazard Sign'**
+  String get taskIconHazardSign;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Hourglass'**
+  String get taskIconHourglass;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Line Chart'**
+  String get taskIconLineChart;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Line Chart Down'**
+  String get taskIconLineChartDown;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Line Chart Up'**
+  String get taskIconLineChartUp;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get taskIconLocked;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Male Symbol'**
+  String get taskIconMaleSymbol;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Megaphone'**
+  String get taskIconMegaphone;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get taskIconMenu;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Minus'**
+  String get taskIconMinus;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Non-Binary Symbol'**
+  String get taskIconNonBinarySymbol;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Peace'**
+  String get taskIconPeace;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Pie Chart'**
+  String get taskIconPieChart;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Pin'**
+  String get taskIconPin;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Plus'**
+  String get taskIconPlus;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'QR Code'**
+  String get taskIconQrCode;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Question'**
+  String get taskIconQuestion;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get taskIconSearch;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Shield'**
+  String get taskIconShield;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Skull'**
+  String get taskIconSkull;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Speed'**
+  String get taskIconSpeed;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Star'**
+  String get taskIconStar;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get taskIconTarget;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Thumbs Down'**
+  String get taskIconThumbsDown;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Thumbs Up'**
+  String get taskIconThumbsUp;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Timer'**
+  String get taskIconTimer;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Transgender Symbol'**
+  String get taskIconTransgenderSymbol;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Transparent Cube'**
+  String get taskIconTransparentCube;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get taskIconUnlock;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get taskIconWarning;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong Way Sign'**
+  String get taskIconWrongWaySign;
+
+  /// Task icon name (icon picker, icon search, screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Plain'**
+  String get taskIconCircle;
 }
 
 class _AppLocalizationsDelegate

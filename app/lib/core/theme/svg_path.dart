@@ -1,7 +1,8 @@
 import 'dart:ui';
 
-/// Parses the SVG path subset the icon set is written in: `M L H V C Q A Z`
-/// and their relative forms, on a 24-unit grid.
+/// Parses the SVG path subset the icon set is written in: `M L H V C S Q T
+/// A Z` and their relative forms, on a 24-unit grid. `S` and `T` are the
+/// smooth curves the Lucide and Tabler task icons use (docs/10 §3).
 ///
 /// Throws [FormatException] on anything else, so a typo in an icon fails
 /// its golden test instead of drawing half a glyph.
@@ -21,7 +22,9 @@ String svgRect(double x, double y, double w, double h, double r) =>
     'a$r $r 0 0 1 ${-r} ${r}h${-(w - 2 * r)}a$r $r 0 0 1 ${-r} ${-r}'
     'v${-(h - 2 * r)}a$r $r 0 0 1 $r ${-r}z';
 
-final _token = RegExp(r'[MmLlHhVvCcQqAaZz]|-?(?:\d+\.?\d*|\.\d+)(?:e-?\d+)?');
+final _token = RegExp(
+  r'[MmLlHhVvCcSsQqTtAaZz]|-?(?:\d+\.?\d*|\.\d+)(?:e-?\d+)?',
+);
 
 final class _Parser {
   _Parser(String d)
@@ -40,6 +43,11 @@ final class _Parser {
   var _i = 0;
   var _cur = Offset.zero;
   var _start = Offset.zero;
+
+  // The last curve's second control point, reflected by `S` / `T`; null
+  // after any other command (SVG: the reflection is then the current point).
+  Offset? _lastCubic;
+  Offset? _lastQuad;
   String? _cmd;
 
   Path parse() {
@@ -70,6 +78,8 @@ final class _Parser {
   }
 
   void _apply(String cmd) {
+    final (cubic, quad) = (_lastCubic, _lastQuad);
+    _lastCubic = _lastQuad = null;
     final rel = cmd == cmd.toLowerCase();
     switch (cmd.toUpperCase()) {
       case 'M':
@@ -85,12 +95,15 @@ final class _Parser {
         _lineTo(Offset(_cur.dx, rel ? _cur.dy + y : y));
       case 'C':
         final (a, b, c) = (_point(rel), _point(rel), _point(rel));
-        _path.cubicTo(a.dx, a.dy, b.dx, b.dy, c.dx, c.dy);
-        _cur = c;
+        _cubicTo(a, b, c);
+      case 'S':
+        final a = _reflect(cubic);
+        final (b, c) = (_point(rel), _point(rel));
+        _cubicTo(a, b, c);
       case 'Q':
-        final (a, b) = (_point(rel), _point(rel));
-        _path.quadraticBezierTo(a.dx, a.dy, b.dx, b.dy);
-        _cur = b;
+        _quadTo(_point(rel), _point(rel));
+      case 'T':
+        _quadTo(_reflect(quad), _point(rel));
       case 'A':
         _arc(rel);
       case 'Z':
@@ -100,6 +113,23 @@ final class _Parser {
       default:
         throw FormatException('unsupported path command $cmd');
     }
+  }
+
+  /// The control point mirrored through the current point, or the current
+  /// point itself when the previous command was not the matching curve.
+  Offset _reflect(Offset? control) =>
+      control == null ? _cur : _cur * 2 - control;
+
+  void _cubicTo(Offset a, Offset b, Offset c) {
+    _path.cubicTo(a.dx, a.dy, b.dx, b.dy, c.dx, c.dy);
+    _lastCubic = b;
+    _cur = c;
+  }
+
+  void _quadTo(Offset a, Offset b) {
+    _path.quadraticBezierTo(a.dx, a.dy, b.dx, b.dy);
+    _lastQuad = a;
+    _cur = b;
   }
 
   void _lineTo(Offset p) {

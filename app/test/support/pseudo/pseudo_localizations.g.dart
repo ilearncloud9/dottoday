@@ -152,87 +152,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get colorSlate => pseudo(super.colorSlate);
 
   @override
-  String get iconCircle => pseudo(super.iconCircle);
-
-  @override
-  String get iconCall => pseudo(super.iconCall);
-
-  @override
-  String get iconMail => pseudo(super.iconMail);
-
-  @override
-  String get iconCode => pseudo(super.iconCode);
-
-  @override
-  String get iconBook => pseudo(super.iconBook);
-
-  @override
-  String get iconGym => pseudo(super.iconGym);
-
-  @override
-  String get iconRun => pseudo(super.iconRun);
-
-  @override
-  String get iconMeal => pseudo(super.iconMeal);
-
-  @override
-  String get iconHeart => pseudo(super.iconHeart);
-
-  @override
-  String get iconHome => pseudo(super.iconHome);
-
-  @override
-  String get iconMusic => pseudo(super.iconMusic);
-
-  @override
-  String get iconPet => pseudo(super.iconPet);
-
-  @override
-  String get iconStar => pseudo(super.iconStar);
-
-  @override
-  String get iconList => pseudo(super.iconList);
-
-  @override
-  String get iconLanguage => pseudo(super.iconLanguage);
-
-  @override
-  String get iconTravel => pseudo(super.iconTravel);
-
-  @override
-  String get iconCart => pseudo(super.iconCart);
-
-  @override
-  String get iconTv => pseudo(super.iconTv);
-
-  @override
-  String get iconBag => pseudo(super.iconBag);
-
-  @override
-  String get iconMeds => pseudo(super.iconMeds);
-
-  @override
-  String get iconWater => pseudo(super.iconWater);
-
-  @override
-  String get iconCar => pseudo(super.iconCar);
-
-  @override
-  String get iconMoney => pseudo(super.iconMoney);
-
-  @override
-  String get iconGift => pseudo(super.iconGift);
-
-  @override
-  String get iconCamera => pseudo(super.iconCamera);
-
-  @override
-  String get iconPeople => pseudo(super.iconPeople);
-
-  @override
-  String get iconDocument => pseudo(super.iconDocument);
-
-  @override
   String get undoAction => pseudo(super.undoAction);
 
   @override
@@ -1832,6 +1751,12 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get colourIconDone => pseudo(super.colourIconDone);
+
+  @override
+  String get iconSearchHint => pseudo(super.iconSearchHint);
+
+  @override
+  String iconSearchEmpty(String query) => pseudo(super.iconSearchEmpty(query));
 
   @override
   String get subtaskRenameTitle => pseudo(super.subtaskRenameTitle);
@@ -4037,4 +3962,1631 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get releaseNotes100 => pseudo(super.releaseNotes100);
+
+  @override
+  String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
+
+  @override
+  String get taskIconCategoryHealth => pseudo(super.taskIconCategoryHealth);
+
+  @override
+  String get taskIconCategoryFitness => pseudo(super.taskIconCategoryFitness);
+
+  @override
+  String get taskIconCategoryFood => pseudo(super.taskIconCategoryFood);
+
+  @override
+  String get taskIconCategoryHome => pseudo(super.taskIconCategoryHome);
+
+  @override
+  String get taskIconCategoryWork => pseudo(super.taskIconCategoryWork);
+
+  @override
+  String get taskIconCategoryTech => pseudo(super.taskIconCategoryTech);
+
+  @override
+  String get taskIconCategoryTravel => pseudo(super.taskIconCategoryTravel);
+
+  @override
+  String get taskIconCategoryNature => pseudo(super.taskIconCategoryNature);
+
+  @override
+  String get taskIconCategoryAnimals => pseudo(super.taskIconCategoryAnimals);
+
+  @override
+  String get taskIconCategoryPeople => pseudo(super.taskIconCategoryPeople);
+
+  @override
+  String get taskIconCategoryLeisure => pseudo(super.taskIconCategoryLeisure);
+
+  @override
+  String get taskIconCategoryShopping => pseudo(super.taskIconCategoryShopping);
+
+  @override
+  String get taskIconCategoryStyle => pseudo(super.taskIconCategoryStyle);
+
+  @override
+  String get taskIconCategoryFaith => pseudo(super.taskIconCategoryFaith);
+
+  @override
+  String get taskIconCategorySymbols => pseudo(super.taskIconCategorySymbols);
+
+  @override
+  String get taskIconFocusBlock => pseudo(super.taskIconFocusBlock);
+
+  @override
+  String get taskIconDeepWork => pseudo(super.taskIconDeepWork);
+
+  @override
+  String get taskIconPlanTheDay => pseudo(super.taskIconPlanTheDay);
+
+  @override
+  String get taskIconTimeBlock => pseudo(super.taskIconTimeBlock);
+
+  @override
+  String get taskIconBuffer => pseudo(super.taskIconBuffer);
+
+  @override
+  String get taskIconAnytime => pseudo(super.taskIconAnytime);
+
+  @override
+  String get taskIconTakeABreak => pseudo(super.taskIconTakeABreak);
+
+  @override
+  String get taskIconMorningRoutine => pseudo(super.taskIconMorningRoutine);
+
+  @override
+  String get taskIconEveningRoutine => pseudo(super.taskIconEveningRoutine);
+
+  @override
+  String get taskIconWindDown => pseudo(super.taskIconWindDown);
+
+  @override
+  String get taskIconPowerNap => pseudo(super.taskIconPowerNap);
+
+  @override
+  String get taskIconWeekReview => pseudo(super.taskIconWeekReview);
+
+  @override
+  String get taskIconInboxZero => pseudo(super.taskIconInboxZero);
+
+  @override
+  String get taskIconHabit => pseudo(super.taskIconHabit);
+
+  @override
+  String get taskIconErrands => pseudo(super.taskIconErrands);
+
+  @override
+  String get taskIconLowEnergy => pseudo(super.taskIconLowEnergy);
+
+  @override
+  String get taskIconHighEnergy => pseudo(super.taskIconHighEnergy);
+
+  @override
+  String get taskIconScreenFree => pseudo(super.taskIconScreenFree);
+
+  @override
+  String get taskIconStandUp => pseudo(super.taskIconStandUp);
+
+  @override
+  String get taskIconSelfCare => pseudo(super.taskIconSelfCare);
+
+  @override
+  String get taskIconMealPrep => pseudo(super.taskIconMealPrep);
+
+  @override
+  String get taskIconPayBills => pseudo(super.taskIconPayBills);
+
+  @override
+  String get taskIconAllergens => pseudo(super.taskIconAllergens);
+
+  @override
+  String get taskIconBandage => pseudo(super.taskIconBandage);
+
+  @override
+  String get taskIconBloodBag => pseudo(super.taskIconBloodBag);
+
+  @override
+  String get taskIconBrain => pseudo(super.taskIconBrain);
+
+  @override
+  String get taskIconCrutch => pseudo(super.taskIconCrutch);
+
+  @override
+  String get taskIconDoctor => pseudo(super.taskIconDoctor);
+
+  @override
+  String get taskIconEar => pseudo(super.taskIconEar);
+
+  @override
+  String get taskIconEcg => pseudo(super.taskIconEcg);
+
+  @override
+  String get taskIconEyes => pseudo(super.taskIconEyes);
+
+  @override
+  String get taskIconFaceMask => pseudo(super.taskIconFaceMask);
+
+  @override
+  String get taskIconFalling => pseudo(super.taskIconFalling);
+
+  @override
+  String get taskIconHead => pseudo(super.taskIconHead);
+
+  @override
+  String get taskIconHearingDevice => pseudo(super.taskIconHearingDevice);
+
+  @override
+  String get taskIconHeart => pseudo(super.taskIconHeart);
+
+  @override
+  String get taskIconHospital => pseudo(super.taskIconHospital);
+
+  @override
+  String get taskIconLungs => pseudo(super.taskIconLungs);
+
+  @override
+  String get taskIconMedicalThermometer =>
+      pseudo(super.taskIconMedicalThermometer);
+
+  @override
+  String get taskIconMicrobe => pseudo(super.taskIconMicrobe);
+
+  @override
+  String get taskIconPharmacy => pseudo(super.taskIconPharmacy);
+
+  @override
+  String get taskIconMeds => pseudo(super.taskIconMeds);
+
+  @override
+  String get taskIconPills => pseudo(super.taskIconPills);
+
+  @override
+  String get taskIconSleep => pseudo(super.taskIconSleep);
+
+  @override
+  String get taskIconSleepyMoon => pseudo(super.taskIconSleepyMoon);
+
+  @override
+  String get taskIconStanding => pseudo(super.taskIconStanding);
+
+  @override
+  String get taskIconStarOfLife => pseudo(super.taskIconStarOfLife);
+
+  @override
+  String get taskIconSyringe => pseudo(super.taskIconSyringe);
+
+  @override
+  String get taskIconTherapy => pseudo(super.taskIconTherapy);
+
+  @override
+  String get taskIconTooth => pseudo(super.taskIconTooth);
+
+  @override
+  String get taskIconToothbrush => pseudo(super.taskIconToothbrush);
+
+  @override
+  String get taskIconVial => pseudo(super.taskIconVial);
+
+  @override
+  String get taskIconWheelchair => pseudo(super.taskIconWheelchair);
+
+  @override
+  String get taskIconAmericanFootball => pseudo(super.taskIconAmericanFootball);
+
+  @override
+  String get taskIconArchery => pseudo(super.taskIconArchery);
+
+  @override
+  String get taskIconAustralianFootball =>
+      pseudo(super.taskIconAustralianFootball);
+
+  @override
+  String get taskIconBaseball => pseudo(super.taskIconBaseball);
+
+  @override
+  String get taskIconBasketball => pseudo(super.taskIconBasketball);
+
+  @override
+  String get taskIconBowling => pseudo(super.taskIconBowling);
+
+  @override
+  String get taskIconCoreTraining => pseudo(super.taskIconCoreTraining);
+
+  @override
+  String get taskIconCricket => pseudo(super.taskIconCricket);
+
+  @override
+  String get taskIconCrossTraining => pseudo(super.taskIconCrossTraining);
+
+  @override
+  String get taskIconCurling => pseudo(super.taskIconCurling);
+
+  @override
+  String get taskIconCycling => pseudo(super.taskIconCycling);
+
+  @override
+  String get taskIconDancing => pseudo(super.taskIconDancing);
+
+  @override
+  String get taskIconGym => pseudo(super.taskIconGym);
+
+  @override
+  String get taskIconFencing => pseudo(super.taskIconFencing);
+
+  @override
+  String get taskIconGolf => pseudo(super.taskIconGolf);
+
+  @override
+  String get taskIconGymnastics => pseudo(super.taskIconGymnastics);
+
+  @override
+  String get taskIconHandball => pseudo(super.taskIconHandball);
+
+  @override
+  String get taskIconHelmet => pseudo(super.taskIconHelmet);
+
+  @override
+  String get taskIconHiit => pseudo(super.taskIconHiit);
+
+  @override
+  String get taskIconHiking => pseudo(super.taskIconHiking);
+
+  @override
+  String get taskIconHorseRiding => pseudo(super.taskIconHorseRiding);
+
+  @override
+  String get taskIconIceSkates => pseudo(super.taskIconIceSkates);
+
+  @override
+  String get taskIconJogging => pseudo(super.taskIconJogging);
+
+  @override
+  String get taskIconMartialArts => pseudo(super.taskIconMartialArts);
+
+  @override
+  String get taskIconMedal => pseudo(super.taskIconMedal);
+
+  @override
+  String get taskIconPoolSwimming => pseudo(super.taskIconPoolSwimming);
+
+  @override
+  String get taskIconRopeJumping => pseudo(super.taskIconRopeJumping);
+
+  @override
+  String get taskIconRowing => pseudo(super.taskIconRowing);
+
+  @override
+  String get taskIconRugby => pseudo(super.taskIconRugby);
+
+  @override
+  String get taskIconRun => pseudo(super.taskIconRun);
+
+  @override
+  String get taskIconSailing => pseudo(super.taskIconSailing);
+
+  @override
+  String get taskIconScubaDiving => pseudo(super.taskIconScubaDiving);
+
+  @override
+  String get taskIconSkateboard => pseudo(super.taskIconSkateboard);
+
+  @override
+  String get taskIconSkating => pseudo(super.taskIconSkating);
+
+  @override
+  String get taskIconSkiing => pseudo(super.taskIconSkiing);
+
+  @override
+  String get taskIconSnowboard => pseudo(super.taskIconSnowboard);
+
+  @override
+  String get taskIconSnowboarding => pseudo(super.taskIconSnowboarding);
+
+  @override
+  String get taskIconSoccer => pseudo(super.taskIconSoccer);
+
+  @override
+  String get taskIconSoftball => pseudo(super.taskIconSoftball);
+
+  @override
+  String get taskIconSportcourt => pseudo(super.taskIconSportcourt);
+
+  @override
+  String get taskIconStairStepper => pseudo(super.taskIconStairStepper);
+
+  @override
+  String get taskIconStepping => pseudo(super.taskIconStepping);
+
+  @override
+  String get taskIconStopwatch => pseudo(super.taskIconStopwatch);
+
+  @override
+  String get taskIconStretching => pseudo(super.taskIconStretching);
+
+  @override
+  String get taskIconSwimming => pseudo(super.taskIconSwimming);
+
+  @override
+  String get taskIconTableTennis => pseudo(super.taskIconTableTennis);
+
+  @override
+  String get taskIconTennis => pseudo(super.taskIconTennis);
+
+  @override
+  String get taskIconTrackAndField => pseudo(super.taskIconTrackAndField);
+
+  @override
+  String get taskIconTrophy => pseudo(super.taskIconTrophy);
+
+  @override
+  String get taskIconVolleyball => pseudo(super.taskIconVolleyball);
+
+  @override
+  String get taskIconWalking => pseudo(super.taskIconWalking);
+
+  @override
+  String get taskIconWaterPolo => pseudo(super.taskIconWaterPolo);
+
+  @override
+  String get taskIconWeightLifting => pseudo(super.taskIconWeightLifting);
+
+  @override
+  String get taskIconYoga => pseudo(super.taskIconYoga);
+
+  @override
+  String get taskIconAlcohol => pseudo(super.taskIconAlcohol);
+
+  @override
+  String get taskIconApple => pseudo(super.taskIconApple);
+
+  @override
+  String get taskIconBeer => pseudo(super.taskIconBeer);
+
+  @override
+  String get taskIconBurger => pseudo(super.taskIconBurger);
+
+  @override
+  String get taskIconCandy => pseudo(super.taskIconCandy);
+
+  @override
+  String get taskIconCarrot => pseudo(super.taskIconCarrot);
+
+  @override
+  String get taskIconCheese => pseudo(super.taskIconCheese);
+
+  @override
+  String get taskIconChopsticks => pseudo(super.taskIconChopsticks);
+
+  @override
+  String get taskIconCoffee => pseudo(super.taskIconCoffee);
+
+  @override
+  String get taskIconCooking => pseudo(super.taskIconCooking);
+
+  @override
+  String get taskIconCookingStove => pseudo(super.taskIconCookingStove);
+
+  @override
+  String get taskIconCup => pseudo(super.taskIconCup);
+
+  @override
+  String get taskIconDumplings => pseudo(super.taskIconDumplings);
+
+  @override
+  String get taskIconFryingPan => pseudo(super.taskIconFryingPan);
+
+  @override
+  String get taskIconIceCream => pseudo(super.taskIconIceCream);
+
+  @override
+  String get taskIconMeal => pseudo(super.taskIconMeal);
+
+  @override
+  String get taskIconMicrowave => pseudo(super.taskIconMicrowave);
+
+  @override
+  String get taskIconMug => pseudo(super.taskIconMug);
+
+  @override
+  String get taskIconOven => pseudo(super.taskIconOven);
+
+  @override
+  String get taskIconPizza => pseudo(super.taskIconPizza);
+
+  @override
+  String get taskIconPopcorn => pseudo(super.taskIconPopcorn);
+
+  @override
+  String get taskIconSoup => pseudo(super.taskIconSoup);
+
+  @override
+  String get taskIconTakeout => pseudo(super.taskIconTakeout);
+
+  @override
+  String get taskIconTray => pseudo(super.taskIconTray);
+
+  @override
+  String get taskIconWaterBottle => pseudo(super.taskIconWaterBottle);
+
+  @override
+  String get taskIconWater => pseudo(super.taskIconWater);
+
+  @override
+  String get taskIconWineGlass => pseudo(super.taskIconWineGlass);
+
+  @override
+  String get taskIconWrap => pseudo(super.taskIconWrap);
+
+  @override
+  String get taskIconAirConditioner => pseudo(super.taskIconAirConditioner);
+
+  @override
+  String get taskIconAirPurifier => pseudo(super.taskIconAirPurifier);
+
+  @override
+  String get taskIconAx => pseudo(super.taskIconAx);
+
+  @override
+  String get taskIconBathtub => pseudo(super.taskIconBathtub);
+
+  @override
+  String get taskIconBed => pseudo(super.taskIconBed);
+
+  @override
+  String get taskIconBlinds => pseudo(super.taskIconBlinds);
+
+  @override
+  String get taskIconBookshelf => pseudo(super.taskIconBookshelf);
+
+  @override
+  String get taskIconBox => pseudo(super.taskIconBox);
+
+  @override
+  String get taskIconBroom => pseudo(super.taskIconBroom);
+
+  @override
+  String get taskIconCeilingFan => pseudo(super.taskIconCeilingFan);
+
+  @override
+  String get taskIconCeilingLamp => pseudo(super.taskIconCeilingLamp);
+
+  @override
+  String get taskIconChair => pseudo(super.taskIconChair);
+
+  @override
+  String get taskIconChairLounge => pseudo(super.taskIconChairLounge);
+
+  @override
+  String get taskIconCouch => pseudo(super.taskIconCouch);
+
+  @override
+  String get taskIconDehumidifier => pseudo(super.taskIconDehumidifier);
+
+  @override
+  String get taskIconDishwasher => pseudo(super.taskIconDishwasher);
+
+  @override
+  String get taskIconDoor => pseudo(super.taskIconDoor);
+
+  @override
+  String get taskIconDryer => pseudo(super.taskIconDryer);
+
+  @override
+  String get taskIconDuster => pseudo(super.taskIconDuster);
+
+  @override
+  String get taskIconFan => pseudo(super.taskIconFan);
+
+  @override
+  String get taskIconFireplace => pseudo(super.taskIconFireplace);
+
+  @override
+  String get taskIconFloorLamp => pseudo(super.taskIconFloorLamp);
+
+  @override
+  String get taskIconFridge => pseudo(super.taskIconFridge);
+
+  @override
+  String get taskIconGarage => pseudo(super.taskIconGarage);
+
+  @override
+  String get taskIconHammer => pseudo(super.taskIconHammer);
+
+  @override
+  String get taskIconHeater => pseudo(super.taskIconHeater);
+
+  @override
+  String get taskIconHome => pseudo(super.taskIconHome);
+
+  @override
+  String get taskIconHouseWithFlag => pseudo(super.taskIconHouseWithFlag);
+
+  @override
+  String get taskIconHumidifier => pseudo(super.taskIconHumidifier);
+
+  @override
+  String get taskIconIron => pseudo(super.taskIconIron);
+
+  @override
+  String get taskIconKey => pseudo(super.taskIconKey);
+
+  @override
+  String get taskIconLaundryBasket => pseudo(super.taskIconLaundryBasket);
+
+  @override
+  String get taskIconLawnMower => pseudo(super.taskIconLawnMower);
+
+  @override
+  String get taskIconLevel => pseudo(super.taskIconLevel);
+
+  @override
+  String get taskIconLightBulb => pseudo(super.taskIconLightBulb);
+
+  @override
+  String get taskIconMop => pseudo(super.taskIconMop);
+
+  @override
+  String get taskIconPottedPlant => pseudo(super.taskIconPottedPlant);
+
+  @override
+  String get taskIconRake => pseudo(super.taskIconRake);
+
+  @override
+  String get taskIconRecycling => pseudo(super.taskIconRecycling);
+
+  @override
+  String get taskIconRefrigerator => pseudo(super.taskIconRefrigerator);
+
+  @override
+  String get taskIconShadeRoller => pseudo(super.taskIconShadeRoller);
+
+  @override
+  String get taskIconShades => pseudo(super.taskIconShades);
+
+  @override
+  String get taskIconShovel => pseudo(super.taskIconShovel);
+
+  @override
+  String get taskIconShower => pseudo(super.taskIconShower);
+
+  @override
+  String get taskIconSink => pseudo(super.taskIconSink);
+
+  @override
+  String get taskIconSnowShovel => pseudo(super.taskIconSnowShovel);
+
+  @override
+  String get taskIconSoap => pseudo(super.taskIconSoap);
+
+  @override
+  String get taskIconStairs => pseudo(super.taskIconStairs);
+
+  @override
+  String get taskIconTable => pseudo(super.taskIconTable);
+
+  @override
+  String get taskIconTableLamp => pseudo(super.taskIconTableLamp);
+
+  @override
+  String get taskIconToilet => pseudo(super.taskIconToilet);
+
+  @override
+  String get taskIconToiletPaper => pseudo(super.taskIconToiletPaper);
+
+  @override
+  String get taskIconTrash => pseudo(super.taskIconTrash);
+
+  @override
+  String get taskIconVacuum => pseudo(super.taskIconVacuum);
+
+  @override
+  String get taskIconWashingMachine => pseudo(super.taskIconWashingMachine);
+
+  @override
+  String get taskIconWateringCan => pseudo(super.taskIconWateringCan);
+
+  @override
+  String get taskIconWrench => pseudo(super.taskIconWrench);
+
+  @override
+  String get taskIconAllDayTask => pseudo(super.taskIconAllDayTask);
+
+  @override
+  String get taskIconBiology => pseudo(super.taskIconBiology);
+
+  @override
+  String get taskIconBlackboard => pseudo(super.taskIconBlackboard);
+
+  @override
+  String get taskIconBook => pseudo(super.taskIconBook);
+
+  @override
+  String get taskIconBookmark => pseudo(super.taskIconBookmark);
+
+  @override
+  String get taskIconBriefcase => pseudo(super.taskIconBriefcase);
+
+  @override
+  String get taskIconBuilding => pseudo(super.taskIconBuilding);
+
+  @override
+  String get taskIconCalendar => pseudo(super.taskIconCalendar);
+
+  @override
+  String get taskIconList => pseudo(super.taskIconList);
+
+  @override
+  String get taskIconChemistry => pseudo(super.taskIconChemistry);
+
+  @override
+  String get taskIconClipboard => pseudo(super.taskIconClipboard);
+
+  @override
+  String get taskIconCode => pseudo(super.taskIconCode);
+
+  @override
+  String get taskIconDeskGlobe => pseudo(super.taskIconDeskGlobe);
+
+  @override
+  String get taskIconDeskLamp => pseudo(super.taskIconDeskLamp);
+
+  @override
+  String get taskIconDocument => pseudo(super.taskIconDocument);
+
+  @override
+  String get taskIconEmail => pseudo(super.taskIconEmail);
+
+  @override
+  String get taskIconFile => pseudo(super.taskIconFile);
+
+  @override
+  String get taskIconFolder => pseudo(super.taskIconFolder);
+
+  @override
+  String get taskIconHighlighter => pseudo(super.taskIconHighlighter);
+
+  @override
+  String get taskIconIdCard => pseudo(super.taskIconIdCard);
+
+  @override
+  String get taskIconLanguage => pseudo(super.taskIconLanguage);
+
+  @override
+  String get taskIconLaw => pseudo(super.taskIconLaw);
+
+  @override
+  String get taskIconLoupe => pseudo(super.taskIconLoupe);
+
+  @override
+  String get taskIconMail => pseudo(super.taskIconMail);
+
+  @override
+  String get taskIconMath => pseudo(super.taskIconMath);
+
+  @override
+  String get taskIconPaperclip => pseudo(super.taskIconPaperclip);
+
+  @override
+  String get taskIconPencil => pseudo(super.taskIconPencil);
+
+  @override
+  String get taskIconPencilAndRuler => pseudo(super.taskIconPencilAndRuler);
+
+  @override
+  String get taskIconPhysics => pseudo(super.taskIconPhysics);
+
+  @override
+  String get taskIconQuote => pseudo(super.taskIconQuote);
+
+  @override
+  String get taskIconReminders => pseudo(super.taskIconReminders);
+
+  @override
+  String get taskIconRuler => pseudo(super.taskIconRuler);
+
+  @override
+  String get taskIconSchool => pseudo(super.taskIconSchool);
+
+  @override
+  String get taskIconScissors => pseudo(super.taskIconScissors);
+
+  @override
+  String get taskIconSignature => pseudo(super.taskIconSignature);
+
+  @override
+  String get taskIconSpreadsheet => pseudo(super.taskIconSpreadsheet);
+
+  @override
+  String get taskIconStudentDesk => pseudo(super.taskIconStudentDesk);
+
+  @override
+  String get taskIconTask => pseudo(super.taskIconTask);
+
+  @override
+  String get taskIconTestTube => pseudo(super.taskIconTestTube);
+
+  @override
+  String get taskIconWriting => pseudo(super.taskIconWriting);
+
+  @override
+  String get taskIconZip => pseudo(super.taskIconZip);
+
+  @override
+  String get taskIconBattery => pseudo(super.taskIconBattery);
+
+  @override
+  String get taskIconCaptions => pseudo(super.taskIconCaptions);
+
+  @override
+  String get taskIconComputerMouse => pseudo(super.taskIconComputerMouse);
+
+  @override
+  String get taskIconConnector => pseudo(super.taskIconConnector);
+
+  @override
+  String get taskIconCpu => pseudo(super.taskIconCpu);
+
+  @override
+  String get taskIconCurlyBraces => pseudo(super.taskIconCurlyBraces);
+
+  @override
+  String get taskIconDesktop => pseudo(super.taskIconDesktop);
+
+  @override
+  String get taskIconDial => pseudo(super.taskIconDial);
+
+  @override
+  String get taskIconDisk => pseudo(super.taskIconDisk);
+
+  @override
+  String get taskIconFax => pseudo(super.taskIconFax);
+
+  @override
+  String get taskIconFlashlight => pseudo(super.taskIconFlashlight);
+
+  @override
+  String get taskIconFlipphone => pseudo(super.taskIconFlipphone);
+
+  @override
+  String get taskIconGears => pseudo(super.taskIconGears);
+
+  @override
+  String get taskIconGyroscope => pseudo(super.taskIconGyroscope);
+
+  @override
+  String get taskIconHardDrive => pseudo(super.taskIconHardDrive);
+
+  @override
+  String get taskIconHeadphones => pseudo(super.taskIconHeadphones);
+
+  @override
+  String get taskIconKeyboard => pseudo(super.taskIconKeyboard);
+
+  @override
+  String get taskIconLink => pseudo(super.taskIconLink);
+
+  @override
+  String get taskIconMerge => pseudo(super.taskIconMerge);
+
+  @override
+  String get taskIconMic => pseudo(super.taskIconMic);
+
+  @override
+  String get taskIconCall => pseudo(super.taskIconCall);
+
+  @override
+  String get taskIconPlug => pseudo(super.taskIconPlug);
+
+  @override
+  String get taskIconPower => pseudo(super.taskIconPower);
+
+  @override
+  String get taskIconPrinter => pseudo(super.taskIconPrinter);
+
+  @override
+  String get taskIconScanner => pseudo(super.taskIconScanner);
+
+  @override
+  String get taskIconSdCard => pseudo(super.taskIconSdCard);
+
+  @override
+  String get taskIconSimcard => pseudo(super.taskIconSimcard);
+
+  @override
+  String get taskIconSpeaker => pseudo(super.taskIconSpeaker);
+
+  @override
+  String get taskIconTerminal => pseudo(super.taskIconTerminal);
+
+  @override
+  String get taskIconUpload => pseudo(super.taskIconUpload);
+
+  @override
+  String get taskIconVideoProjector => pseudo(super.taskIconVideoProjector);
+
+  @override
+  String get taskIconWatch => pseudo(super.taskIconWatch);
+
+  @override
+  String get taskIconWeb => pseudo(super.taskIconWeb);
+
+  @override
+  String get taskIconWifi => pseudo(super.taskIconWifi);
+
+  @override
+  String get taskIconWifiRouter => pseudo(super.taskIconWifiRouter);
+
+  @override
+  String get taskIconWindows => pseudo(super.taskIconWindows);
+
+  @override
+  String get taskIconTravel => pseudo(super.taskIconTravel);
+
+  @override
+  String get taskIconArrival => pseudo(super.taskIconArrival);
+
+  @override
+  String get taskIconArriving => pseudo(super.taskIconArriving);
+
+  @override
+  String get taskIconBackpack => pseudo(super.taskIconBackpack);
+
+  @override
+  String get taskIconBeach => pseudo(super.taskIconBeach);
+
+  @override
+  String get taskIconBike => pseudo(super.taskIconBike);
+
+  @override
+  String get taskIconBoat => pseudo(super.taskIconBoat);
+
+  @override
+  String get taskIconBus => pseudo(super.taskIconBus);
+
+  @override
+  String get taskIconCablecar => pseudo(super.taskIconCablecar);
+
+  @override
+  String get taskIconCar => pseudo(super.taskIconCar);
+
+  @override
+  String get taskIconCase => pseudo(super.taskIconCase);
+
+  @override
+  String get taskIconChineseCastle => pseudo(super.taskIconChineseCastle);
+
+  @override
+  String get taskIconColosseum => pseudo(super.taskIconColosseum);
+
+  @override
+  String get taskIconCompass => pseudo(super.taskIconCompass);
+
+  @override
+  String get taskIconDeparture => pseudo(super.taskIconDeparture);
+
+  @override
+  String get taskIconDoubledeckerBus => pseudo(super.taskIconDoubledeckerBus);
+
+  @override
+  String get taskIconElectricCar => pseudo(super.taskIconElectricCar);
+
+  @override
+  String get taskIconEngine => pseudo(super.taskIconEngine);
+
+  @override
+  String get taskIconFerry => pseudo(super.taskIconFerry);
+
+  @override
+  String get taskIconGasStation => pseudo(super.taskIconGasStation);
+
+  @override
+  String get taskIconGlobe => pseudo(super.taskIconGlobe);
+
+  @override
+  String get taskIconGlobeAmericas => pseudo(super.taskIconGlobeAmericas);
+
+  @override
+  String get taskIconGlobeAsia => pseudo(super.taskIconGlobeAsia);
+
+  @override
+  String get taskIconGlobeAsiaPacific => pseudo(super.taskIconGlobeAsiaPacific);
+
+  @override
+  String get taskIconGlobeEuropeAfrica =>
+      pseudo(super.taskIconGlobeEuropeAfrica);
+
+  @override
+  String get taskIconLeaving => pseudo(super.taskIconLeaving);
+
+  @override
+  String get taskIconLifePreserver => pseudo(super.taskIconLifePreserver);
+
+  @override
+  String get taskIconLightrail => pseudo(super.taskIconLightrail);
+
+  @override
+  String get taskIconLocation => pseudo(super.taskIconLocation);
+
+  @override
+  String get taskIconLodge => pseudo(super.taskIconLodge);
+
+  @override
+  String get taskIconMap => pseudo(super.taskIconMap);
+
+  @override
+  String get taskIconMotorcycle => pseudo(super.taskIconMotorcycle);
+
+  @override
+  String get taskIconOilCan => pseudo(super.taskIconOilCan);
+
+  @override
+  String get taskIconRoad => pseudo(super.taskIconRoad);
+
+  @override
+  String get taskIconRocket => pseudo(super.taskIconRocket);
+
+  @override
+  String get taskIconRollingSuitcase => pseudo(super.taskIconRollingSuitcase);
+
+  @override
+  String get taskIconScooter => pseudo(super.taskIconScooter);
+
+  @override
+  String get taskIconShip => pseudo(super.taskIconShip);
+
+  @override
+  String get taskIconSignpost => pseudo(super.taskIconSignpost);
+
+  @override
+  String get taskIconSkiLift => pseudo(super.taskIconSkiLift);
+
+  @override
+  String get taskIconSteeringWheel => pseudo(super.taskIconSteeringWheel);
+
+  @override
+  String get taskIconSubway => pseudo(super.taskIconSubway);
+
+  @override
+  String get taskIconSuitcase => pseudo(super.taskIconSuitcase);
+
+  @override
+  String get taskIconSuitcaseCart => pseudo(super.taskIconSuitcaseCart);
+
+  @override
+  String get taskIconTent => pseudo(super.taskIconTent);
+
+  @override
+  String get taskIconTrain => pseudo(super.taskIconTrain);
+
+  @override
+  String get taskIconTruck => pseudo(super.taskIconTruck);
+
+  @override
+  String get taskIconWindshield => pseudo(super.taskIconWindshield);
+
+  @override
+  String get taskIconBarometer => pseudo(super.taskIconBarometer);
+
+  @override
+  String get taskIconCloud => pseudo(super.taskIconCloud);
+
+  @override
+  String get taskIconDrizzle => pseudo(super.taskIconDrizzle);
+
+  @override
+  String get taskIconFlame => pseudo(super.taskIconFlame);
+
+  @override
+  String get taskIconFlower => pseudo(super.taskIconFlower);
+
+  @override
+  String get taskIconFlowers => pseudo(super.taskIconFlowers);
+
+  @override
+  String get taskIconFog => pseudo(super.taskIconFog);
+
+  @override
+  String get taskIconFossil => pseudo(super.taskIconFossil);
+
+  @override
+  String get taskIconHail => pseudo(super.taskIconHail);
+
+  @override
+  String get taskIconLeaf => pseudo(super.taskIconLeaf);
+
+  @override
+  String get taskIconMoon => pseudo(super.taskIconMoon);
+
+  @override
+  String get taskIconMoonHaze => pseudo(super.taskIconMoonHaze);
+
+  @override
+  String get taskIconMountain => pseudo(super.taskIconMountain);
+
+  @override
+  String get taskIconMushroom => pseudo(super.taskIconMushroom);
+
+  @override
+  String get taskIconPalmTree => pseudo(super.taskIconPalmTree);
+
+  @override
+  String get taskIconPartialSun => pseudo(super.taskIconPartialSun);
+
+  @override
+  String get taskIconPlant => pseudo(super.taskIconPlant);
+
+  @override
+  String get taskIconRain => pseudo(super.taskIconRain);
+
+  @override
+  String get taskIconRainbow => pseudo(super.taskIconRainbow);
+
+  @override
+  String get taskIconSeedling => pseudo(super.taskIconSeedling);
+
+  @override
+  String get taskIconSleet => pseudo(super.taskIconSleet);
+
+  @override
+  String get taskIconSnow => pseudo(super.taskIconSnow);
+
+  @override
+  String get taskIconSnowflake => pseudo(super.taskIconSnowflake);
+
+  @override
+  String get taskIconSnowman => pseudo(super.taskIconSnowman);
+
+  @override
+  String get taskIconStorm => pseudo(super.taskIconStorm);
+
+  @override
+  String get taskIconSun => pseudo(super.taskIconSun);
+
+  @override
+  String get taskIconSunHaze => pseudo(super.taskIconSunHaze);
+
+  @override
+  String get taskIconSunrise => pseudo(super.taskIconSunrise);
+
+  @override
+  String get taskIconSunset => pseudo(super.taskIconSunset);
+
+  @override
+  String get taskIconTemperature => pseudo(super.taskIconTemperature);
+
+  @override
+  String get taskIconThunderstorm => pseudo(super.taskIconThunderstorm);
+
+  @override
+  String get taskIconTree => pseudo(super.taskIconTree);
+
+  @override
+  String get taskIconUmbrella => pseudo(super.taskIconUmbrella);
+
+  @override
+  String get taskIconWaves => pseudo(super.taskIconWaves);
+
+  @override
+  String get taskIconWind => pseudo(super.taskIconWind);
+
+  @override
+  String get taskIconAnt => pseudo(super.taskIconAnt);
+
+  @override
+  String get taskIconBird => pseudo(super.taskIconBird);
+
+  @override
+  String get taskIconBug => pseudo(super.taskIconBug);
+
+  @override
+  String get taskIconCat => pseudo(super.taskIconCat);
+
+  @override
+  String get taskIconChicken => pseudo(super.taskIconChicken);
+
+  @override
+  String get taskIconDog => pseudo(super.taskIconDog);
+
+  @override
+  String get taskIconFish => pseudo(super.taskIconFish);
+
+  @override
+  String get taskIconHamster => pseudo(super.taskIconHamster);
+
+  @override
+  String get taskIconHorse => pseudo(super.taskIconHorse);
+
+  @override
+  String get taskIconMouse => pseudo(super.taskIconMouse);
+
+  @override
+  String get taskIconPet => pseudo(super.taskIconPet);
+
+  @override
+  String get taskIconPetFoodBowl => pseudo(super.taskIconPetFoodBowl);
+
+  @override
+  String get taskIconPig => pseudo(super.taskIconPig);
+
+  @override
+  String get taskIconRabbit => pseudo(super.taskIconRabbit);
+
+  @override
+  String get taskIconTortoise => pseudo(super.taskIconTortoise);
+
+  @override
+  String get taskIconWalkingCat => pseudo(super.taskIconWalkingCat);
+
+  @override
+  String get taskIconWalkingDog => pseudo(super.taskIconWalkingDog);
+
+  @override
+  String get taskIconBaby => pseudo(super.taskIconBaby);
+
+  @override
+  String get taskIconBabyBottle => pseudo(super.taskIconBabyBottle);
+
+  @override
+  String get taskIconBallotBox => pseudo(super.taskIconBallotBox);
+
+  @override
+  String get taskIconBrokenHeart => pseudo(super.taskIconBrokenHeart);
+
+  @override
+  String get taskIconCouple => pseudo(super.taskIconCouple);
+
+  @override
+  String get taskIconFamily => pseudo(super.taskIconFamily);
+
+  @override
+  String get taskIconPeople => pseudo(super.taskIconPeople);
+
+  @override
+  String get taskIconHand => pseudo(super.taskIconHand);
+
+  @override
+  String get taskIconHandshake => pseudo(super.taskIconHandshake);
+
+  @override
+  String get taskIconMessage => pseudo(super.taskIconMessage);
+
+  @override
+  String get taskIconPerson => pseudo(super.taskIconPerson);
+
+  @override
+  String get taskIconSignLanguage => pseudo(super.taskIconSignLanguage);
+
+  @override
+  String get taskIconSmile => pseudo(super.taskIconSmile);
+
+  @override
+  String get taskIconStroller => pseudo(super.taskIconStroller);
+
+  @override
+  String get taskIconTwoPersons => pseudo(super.taskIconTwoPersons);
+
+  @override
+  String get taskIconWaving => pseudo(super.taskIconWaving);
+
+  @override
+  String get taskIconAmplifier => pseudo(super.taskIconAmplifier);
+
+  @override
+  String get taskIconAperture => pseudo(super.taskIconAperture);
+
+  @override
+  String get taskIconBinoculars => pseudo(super.taskIconBinoculars);
+
+  @override
+  String get taskIconCamera => pseudo(super.taskIconCamera);
+
+  @override
+  String get taskIconCheckerboard => pseudo(super.taskIconCheckerboard);
+
+  @override
+  String get taskIconChess => pseudo(super.taskIconChess);
+
+  @override
+  String get taskIconClub => pseudo(super.taskIconClub);
+
+  @override
+  String get taskIconDice => pseudo(super.taskIconDice);
+
+  @override
+  String get taskIconDrums => pseudo(super.taskIconDrums);
+
+  @override
+  String get taskIconEyedropper => pseudo(super.taskIconEyedropper);
+
+  @override
+  String get taskIconFilm => pseudo(super.taskIconFilm);
+
+  @override
+  String get taskIconFishing => pseudo(super.taskIconFishing);
+
+  @override
+  String get taskIconGaming => pseudo(super.taskIconGaming);
+
+  @override
+  String get taskIconGuitar => pseudo(super.taskIconGuitar);
+
+  @override
+  String get taskIconHorn => pseudo(super.taskIconHorn);
+
+  @override
+  String get taskIconHunting => pseudo(super.taskIconHunting);
+
+  @override
+  String get taskIconMagazine => pseudo(super.taskIconMagazine);
+
+  @override
+  String get taskIconMagic => pseudo(super.taskIconMagic);
+
+  @override
+  String get taskIconMetronome => pseudo(super.taskIconMetronome);
+
+  @override
+  String get taskIconMovie => pseudo(super.taskIconMovie);
+
+  @override
+  String get taskIconMovieClapper => pseudo(super.taskIconMovieClapper);
+
+  @override
+  String get taskIconMusic => pseudo(super.taskIconMusic);
+
+  @override
+  String get taskIconNewspaper => pseudo(super.taskIconNewspaper);
+
+  @override
+  String get taskIconPaintPalette => pseudo(super.taskIconPaintPalette);
+
+  @override
+  String get taskIconPaintbrush => pseudo(super.taskIconPaintbrush);
+
+  @override
+  String get taskIconPhoto => pseudo(super.taskIconPhoto);
+
+  @override
+  String get taskIconPiano => pseudo(super.taskIconPiano);
+
+  @override
+  String get taskIconPlayground => pseudo(super.taskIconPlayground);
+
+  @override
+  String get taskIconPuzzle => pseudo(super.taskIconPuzzle);
+
+  @override
+  String get taskIconRadio => pseudo(super.taskIconRadio);
+
+  @override
+  String get taskIconRecordingTape => pseudo(super.taskIconRecordingTape);
+
+  @override
+  String get taskIconSewingMachine => pseudo(super.taskIconSewingMachine);
+
+  @override
+  String get taskIconSinging => pseudo(super.taskIconSinging);
+
+  @override
+  String get taskIconSpade => pseudo(super.taskIconSpade);
+
+  @override
+  String get taskIconSwatchPalette => pseudo(super.taskIconSwatchPalette);
+
+  @override
+  String get taskIconTheater => pseudo(super.taskIconTheater);
+
+  @override
+  String get taskIconTicket => pseudo(super.taskIconTicket);
+
+  @override
+  String get taskIconTuning => pseudo(super.taskIconTuning);
+
+  @override
+  String get taskIconTv => pseudo(super.taskIconTv);
+
+  @override
+  String get taskIconBag => pseudo(super.taskIconBag);
+
+  @override
+  String get taskIconBanknote => pseudo(super.taskIconBanknote);
+
+  @override
+  String get taskIconBarcode => pseudo(super.taskIconBarcode);
+
+  @override
+  String get taskIconBasket => pseudo(super.taskIconBasket);
+
+  @override
+  String get taskIconBitcoin => pseudo(super.taskIconBitcoin);
+
+  @override
+  String get taskIconCart => pseudo(super.taskIconCart);
+
+  @override
+  String get taskIconCoin => pseudo(super.taskIconCoin);
+
+  @override
+  String get taskIconCreditcard => pseudo(super.taskIconCreditcard);
+
+  @override
+  String get taskIconEuro => pseudo(super.taskIconEuro);
+
+  @override
+  String get taskIconGift => pseudo(super.taskIconGift);
+
+  @override
+  String get taskIconGiftcard => pseudo(super.taskIconGiftcard);
+
+  @override
+  String get taskIconMoney => pseudo(super.taskIconMoney);
+
+  @override
+  String get taskIconParcel => pseudo(super.taskIconParcel);
+
+  @override
+  String get taskIconStorefront => pseudo(super.taskIconStorefront);
+
+  @override
+  String get taskIconTag => pseudo(super.taskIconTag);
+
+  @override
+  String get taskIconWalletPass => pseudo(super.taskIconWalletPass);
+
+  @override
+  String get taskIconClothesHanger => pseudo(super.taskIconClothesHanger);
+
+  @override
+  String get taskIconDiamond => pseudo(super.taskIconDiamond);
+
+  @override
+  String get taskIconDress => pseudo(super.taskIconDress);
+
+  @override
+  String get taskIconGlasses => pseudo(super.taskIconGlasses);
+
+  @override
+  String get taskIconHairDresser => pseudo(super.taskIconHairDresser);
+
+  @override
+  String get taskIconHairdryer => pseudo(super.taskIconHairdryer);
+
+  @override
+  String get taskIconHat => pseudo(super.taskIconHat);
+
+  @override
+  String get taskIconJacket => pseudo(super.taskIconJacket);
+
+  @override
+  String get taskIconMustache => pseudo(super.taskIconMustache);
+
+  @override
+  String get taskIconPurse => pseudo(super.taskIconPurse);
+
+  @override
+  String get taskIconRazor => pseudo(super.taskIconRazor);
+
+  @override
+  String get taskIconRing => pseudo(super.taskIconRing);
+
+  @override
+  String get taskIconShoe => pseudo(super.taskIconShoe);
+
+  @override
+  String get taskIconShoes => pseudo(super.taskIconShoes);
+
+  @override
+  String get taskIconSkinCare => pseudo(super.taskIconSkinCare);
+
+  @override
+  String get taskIconSunglasses => pseudo(super.taskIconSunglasses);
+
+  @override
+  String get taskIconTShirt => pseudo(super.taskIconTShirt);
+
+  @override
+  String get taskIconTrousers => pseudo(super.taskIconTrousers);
+
+  @override
+  String get taskIconWinterJacket => pseudo(super.taskIconWinterJacket);
+
+  @override
+  String get taskIconBalloons => pseudo(super.taskIconBalloons);
+
+  @override
+  String get taskIconBirthday => pseudo(super.taskIconBirthday);
+
+  @override
+  String get taskIconBuddhism => pseudo(super.taskIconBuddhism);
+
+  @override
+  String get taskIconCandle => pseudo(super.taskIconCandle);
+
+  @override
+  String get taskIconChristmasTree => pseudo(super.taskIconChristmasTree);
+
+  @override
+  String get taskIconChurch => pseudo(super.taskIconChurch);
+
+  @override
+  String get taskIconCross => pseudo(super.taskIconCross);
+
+  @override
+  String get taskIconFireworks => pseudo(super.taskIconFireworks);
+
+  @override
+  String get taskIconGhost => pseudo(super.taskIconGhost);
+
+  @override
+  String get taskIconGravestone => pseudo(super.taskIconGravestone);
+
+  @override
+  String get taskIconHalloween => pseudo(super.taskIconHalloween);
+
+  @override
+  String get taskIconHinduism => pseudo(super.taskIconHinduism);
+
+  @override
+  String get taskIconIslam => pseudo(super.taskIconIslam);
+
+  @override
+  String get taskIconJudaism => pseudo(super.taskIconJudaism);
+
+  @override
+  String get taskIconMosque => pseudo(super.taskIconMosque);
+
+  @override
+  String get taskIconParty => pseudo(super.taskIconParty);
+
+  @override
+  String get taskIconPray => pseudo(super.taskIconPray);
+
+  @override
+  String get taskIconTaoism => pseudo(super.taskIconTaoism);
+
+  @override
+  String get taskIconAlarm => pseudo(super.taskIconAlarm);
+
+  @override
+  String get taskIconBarChart => pseudo(super.taskIconBarChart);
+
+  @override
+  String get taskIconBell => pseudo(super.taskIconBell);
+
+  @override
+  String get taskIconBolt => pseudo(super.taskIconBolt);
+
+  @override
+  String get taskIconBubble => pseudo(super.taskIconBubble);
+
+  @override
+  String get taskIconBubbles => pseudo(super.taskIconBubbles);
+
+  @override
+  String get taskIconClock => pseudo(super.taskIconClock);
+
+  @override
+  String get taskIconCrown => pseudo(super.taskIconCrown);
+
+  @override
+  String get taskIconCube => pseudo(super.taskIconCube);
+
+  @override
+  String get taskIconDanger => pseudo(super.taskIconDanger);
+
+  @override
+  String get taskIconError => pseudo(super.taskIconError);
+
+  @override
+  String get taskIconExplosion => pseudo(super.taskIconExplosion);
+
+  @override
+  String get taskIconFemaleSymbol => pseudo(super.taskIconFemaleSymbol);
+
+  @override
+  String get taskIconFilters => pseudo(super.taskIconFilters);
+
+  @override
+  String get taskIconFlag => pseudo(super.taskIconFlag);
+
+  @override
+  String get taskIconHashtag => pseudo(super.taskIconHashtag);
+
+  @override
+  String get taskIconHazardSign => pseudo(super.taskIconHazardSign);
+
+  @override
+  String get taskIconHourglass => pseudo(super.taskIconHourglass);
+
+  @override
+  String get taskIconLineChart => pseudo(super.taskIconLineChart);
+
+  @override
+  String get taskIconLineChartDown => pseudo(super.taskIconLineChartDown);
+
+  @override
+  String get taskIconLineChartUp => pseudo(super.taskIconLineChartUp);
+
+  @override
+  String get taskIconLocked => pseudo(super.taskIconLocked);
+
+  @override
+  String get taskIconMaleSymbol => pseudo(super.taskIconMaleSymbol);
+
+  @override
+  String get taskIconMegaphone => pseudo(super.taskIconMegaphone);
+
+  @override
+  String get taskIconMenu => pseudo(super.taskIconMenu);
+
+  @override
+  String get taskIconMinus => pseudo(super.taskIconMinus);
+
+  @override
+  String get taskIconNonBinarySymbol => pseudo(super.taskIconNonBinarySymbol);
+
+  @override
+  String get taskIconPeace => pseudo(super.taskIconPeace);
+
+  @override
+  String get taskIconPieChart => pseudo(super.taskIconPieChart);
+
+  @override
+  String get taskIconPin => pseudo(super.taskIconPin);
+
+  @override
+  String get taskIconPlus => pseudo(super.taskIconPlus);
+
+  @override
+  String get taskIconQrCode => pseudo(super.taskIconQrCode);
+
+  @override
+  String get taskIconQuestion => pseudo(super.taskIconQuestion);
+
+  @override
+  String get taskIconSearch => pseudo(super.taskIconSearch);
+
+  @override
+  String get taskIconShield => pseudo(super.taskIconShield);
+
+  @override
+  String get taskIconSkull => pseudo(super.taskIconSkull);
+
+  @override
+  String get taskIconSpeed => pseudo(super.taskIconSpeed);
+
+  @override
+  String get taskIconStar => pseudo(super.taskIconStar);
+
+  @override
+  String get taskIconTarget => pseudo(super.taskIconTarget);
+
+  @override
+  String get taskIconThumbsDown => pseudo(super.taskIconThumbsDown);
+
+  @override
+  String get taskIconThumbsUp => pseudo(super.taskIconThumbsUp);
+
+  @override
+  String get taskIconTimer => pseudo(super.taskIconTimer);
+
+  @override
+  String get taskIconTransgenderSymbol =>
+      pseudo(super.taskIconTransgenderSymbol);
+
+  @override
+  String get taskIconTransparentCube => pseudo(super.taskIconTransparentCube);
+
+  @override
+  String get taskIconUnlock => pseudo(super.taskIconUnlock);
+
+  @override
+  String get taskIconWarning => pseudo(super.taskIconWarning);
+
+  @override
+  String get taskIconWrongWaySign => pseudo(super.taskIconWrongWaySign);
+
+  @override
+  String get taskIconCircle => pseudo(super.taskIconCircle);
 }

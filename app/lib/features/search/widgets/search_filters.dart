@@ -5,6 +5,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/search/search_results.dart';
 import 'package:dottoday/shared/dot/colour_icon_block.dart';
 import 'package:dottoday/shared/pickers/block_names.dart';
+import 'package:dottoday/shared/pickers/task_icon_picker.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
 
@@ -115,20 +116,9 @@ class SearchFilters extends StatelessWidget {
   }
 
   Future<void> _pickIcon(BuildContext context) async {
-    final t = DotTheme.of(context);
-    final icon = await showAppSheet<TaskIcon>(
+    final icon = await showTaskIconPicker(
       context: context,
       title: context.l10n.searchPickIcon,
-      builder: (sheet) => Wrap(
-        children: [
-          for (final i in TaskIcon.picker)
-            IconButton(
-              tooltip: taskIconName(context.l10n, i),
-              onPressed: () => Navigator.of(sheet).pop(i),
-              icon: DotIcon(i.glyph!, color: t.colors.text),
-            ),
-        ],
-      ),
     );
     if (icon != null) onPick(IconResults(icon.key));
   }

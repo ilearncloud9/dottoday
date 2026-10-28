@@ -100,6 +100,7 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Low-energy extras (M12.2): the next dot before it starts ("at 2:00 PM"), nothing left ("Nothing else today. Rest well."), Later opened as rows with times, the Mac/web spread (today card = low-energy view, side days dimmed, no Running late), the Settings › Planning switch, the ⋯ items (derived) | `B-ios-low-energy` + 11 §D2 | `today_low_energy_*`, `settings_*` |
 | Thread journal (M12.3): Search › Past days entry (while nothing is typed), the Past days page (day cards with date, "4 of 5 done", dots in task colours, "+N"), its search ("When did I last…", "Last: Sun, Sep 27 · 28 days ago · 10 days", matching tasks with times, no match), the Year strip sheet (twelve rows of completion dots, Share image) (derived) | 11 §D3, `A-ios-search`, `A-ios-today-month` dots | `past_days_*`, `past_days_search_*`, `year_strip_*`, `search_empty_*` |
 | Brain dump (M12.5): the sheet (multi-line field, Today / Tomorrow, Plan it, EARLIER DUMPS with search and Use again) and its proposal with a "no room · to the Inbox" line (derived) | 11 §B4, the B3 proposal sheet | `brain_dump_*`, `brain_dump_proposal_*` |
+| Task icon picker (ADR-0013): full-height sheet: colour dots, search field, then the icon library under category captions, Planning & rhythm first; "No icons match …" when nothing matches (derived) | 10 §3 "Icon set" + the M3f.3 full colour & icon picker | `task_icon_picker_*`, `task_icon_library_*`; `colour_icon_block_test`, `task_icons_test` |
 
 ## Set B (Concept A+, standout features)
 
