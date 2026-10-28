@@ -1,12 +1,20 @@
 """Builds the shipped sound files from tool/sounds/originals/.
 
-Run from app/:  python3 -I tool/sounds/build.py [--only ID ...] [--credits]
+Run from app/:  python3 -I tool/sounds/build.py [--only ID ...]
+         then:  python3 -I tool/sounds/credits.py
 
-docs/12-sounds.md §5. For each third-party manifest entry: trim leading and
-trailing silence, downmix to mono at 44.1 kHz, cap at 20 s with a 1 s fade,
-then one linear gain to -16 LUFS integrated with a -1 dBTP ceiling (the
-ceiling wins for short, peaky sounds, which then stay below -16; nothing is
-compressed or limited). Writes:
+docs/12-sounds.md §5. For each third-party manifest entry:
+
+1. trim leading and trailing silence; downmix to mono at 44.1 kHz;
+2. shape: loop to `loopToMs` when the entry asks (start.insistent), cap at
+   the category's longest duration with a fade, fade the cut tail;
+3. level: one linear gain towards the category's loudness target, then a
+   -1 dBTP true-peak limiter (4x oversampled, attack 5 ms, release 50 ms)
+   allowed to absorb at most 6 dB, so a short sound never becomes a click.
+   A sound still more than 4 LU under its target is not pushed further: it
+   is listed as a quiet outlier for the ear pass. No noise-floor lift.
+
+Writes:
 
   android/app/src/main/res/raw/<file>.m4a   Android channel sound
   ios/Runner/Sounds/<file>.caf              iOS / macOS notification sound
@@ -17,9 +25,9 @@ Ogg needs Android 10 (minSdk is 26), and `dot_alarm.m4a` already ships
 the same way. `.caf` is IMA4 ADPCM: iOS notification sounds take linear
 PCM, IMA4, µ-law or a-law, and IMA4 is a quarter of PCM's size.
 
-`durationMs` in the manifest and the repo's CREDITS.md are rewritten from
-the result. First-party entries (tool/gen_sounds.dart) are never rebuilt;
-only their duration is read.
+`durationMs`, `loudnessLufs` and `truePeakDbtp` in the manifest are
+rewritten from the result (CREDITS.md is credits.py's). First-party entries
+(tool/gen_sounds.dart) are never rebuilt, only measured.
 """
 
 from __future__ import annotations
@@ -36,19 +44,26 @@ import tempfile
 from pathlib import Path
 
 APP = Path(__file__).resolve().parents[2]
-REPO = APP.parent
 MANIFEST = APP / "assets" / "sounds" / "manifest.json"
 ORIGINALS = APP / "tool" / "sounds" / "originals"
 ANDROID_RAW = APP / "android" / "app" / "src" / "main" / "res" / "raw"
 IOS_SOUNDS = APP / "ios" / "Runner" / "Sounds"
 WEB_SOUNDS = APP / "assets" / "sounds"
-CREDITS = REPO / "CREDITS.md"
 
-TARGET_LUFS = -16.0
+# Per category: (loudness target LUFS, shortest ms, longest ms, cap fade s).
+# Consistency within a category beats one global figure (owner, phase 1).
+CATEGORIES = {
+    "quiet": (-20.0, 0, 1500, 0.5),
+    "clear": (-16.0, 0, 4000, 0.5),
+    "play": (-16.0, 0, 4000, 0.5),
+    "done": (-16.0, 0, 4000, 0.5),
+    "start": (-14.0, 3000, 20000, 1.0),
+}
 CEILING_DBTP = -1.0
+LIMITER_MAX_DB = 6.0
+OUTLIER_LU = 4.0
+OVERSAMPLE = 4
 SAMPLE_RATE = 44100
-MAX_SECONDS = 20.0
-FADE_SECONDS = 1.0
 AAC_BITRATE = "128k"
 # Silence = more than this below the loudest 10 ms (keeps reverb tails).
 SILENCE_DB = -70
@@ -91,8 +106,7 @@ def measure(path: Path) -> tuple[float, float]:
     """
     log = _ffmpeg(
         "-i", str(path), "-af",
-        f"apad=whole_dur=1,loudnorm=I={TARGET_LUFS}:TP={CEILING_DBTP}"
-        ":print_format=json",
+        "apad=whole_dur=1,loudnorm=print_format=json",
         "-f", "null", "-",
     )
     match = _LOUDNORM_JSON.search(log)
@@ -102,15 +116,16 @@ def measure(path: Path) -> tuple[float, float]:
     return float(data["input_i"]), float(data["input_tp"])
 
 
-def gain_db(lufs: float, peak: float) -> float:
-    """The one linear gain that meets both targets; the ceiling wins.
+def gain_db(target: float, lufs: float, peak: float) -> float:
+    """The linear gain before the limiter: towards [target], but never so
+    much that the limiter must take more than LIMITER_MAX_DB off the peak.
 
-    >>> gain_db(-20.0, -6.0)   # room to reach -16
+    >>> gain_db(-16.0, -20.0, -6.0)   # reaches the target, no limiting
     4.0
-    >>> gain_db(-20.0, -2.0)   # peak would pass -1: stop at the ceiling
-    1.0
+    >>> gain_db(-16.0, -30.0, -2.0)   # stops where the limiter takes 6 dB
+    7.0
     """
-    return min(TARGET_LUFS - lufs, CEILING_DBTP - peak)
+    return min(target - lufs, CEILING_DBTP - peak + LIMITER_MAX_DB)
 
 
 def sound_span(rms_db: list[float], window_s: float) -> tuple[float, float]:
@@ -158,18 +173,40 @@ def _trim(source: Path, out: Path) -> None:
             "-c:a", "pcm_f32le", str(out))
 
 
-def _shape(trimmed: Path, out: Path, gain: float) -> None:
+def _shape(trimmed: Path, out: Path, entry: dict) -> str:
+    """Loops, caps and fades [trimmed]; returns a note for the report."""
+    _, _, longest_ms, cap_fade = CATEGORIES[entry["category"]]
     length = duration_seconds(trimmed)
-    if length > MAX_SECONDS:
-        start = MAX_SECONDS - FADE_SECONDS
-        filters = [f"atrim=0:{MAX_SECONDS}",
-                   f"afade=t=out:st={start}:d={FADE_SECONDS}"]
+    longest = longest_ms / 1000
+    if "loopToMs" in entry:
+        # Back to back, no gap; the final repeat fades out (start.insistent).
+        repeats = max(2, round(entry["loopToMs"] / 1000 / length))
+        while repeats * length > longest:
+            repeats -= 1
+        filters = [f"aloop=loop={repeats - 1}:size={round(length * SAMPLE_RATE)}",
+                   f"afade=t=out:st={(repeats - 1) * length:.4f}:d={length:.4f}"]
+        note = f"looped x{repeats}"
+    elif length > longest:
+        filters = [f"atrim=0:{longest}",
+                   f"afade=t=out:st={longest - cap_fade}:d={cap_fade}"]
+        note = f"capped from {length:.2f} s"
     else:
         # The trim cuts inside a quiet tail: fade it so it can't click.
         start = max(length - TAIL_FADE_SECONDS, 0)
         filters = [f"afade=t=out:st={start:.4f}:d={TAIL_FADE_SECONDS}"]
-    filters.append(f"volume={gain:.2f}dB")
+        note = ""
     _ffmpeg("-i", str(trimmed), "-af", ",".join(filters),
+            "-c:a", "pcm_f32le", str(out))
+    return note
+
+
+def _level(shaped: Path, out: Path, gain: float, limit_dbtp: float) -> None:
+    # Oversampled so the limiter holds true peaks, not just sample peaks.
+    limit = 10 ** (limit_dbtp / 20)
+    _ffmpeg("-i", str(shaped), "-af",
+            f"volume={gain:.2f}dB,aresample={SAMPLE_RATE * OVERSAMPLE},"
+            f"alimiter=limit={limit:.4f}:attack=5:release=50:level=0:latency=1,"
+            f"aresample={SAMPLE_RATE}",
             "-c:a", "pcm_f32le", str(out))
 
 
@@ -186,22 +223,22 @@ def build_one(entry: dict, work: Path) -> dict:
     sources = sorted(ORIGINALS.glob(f"{entry['file']}.*"))
     if len(sources) != 1:
         raise BuildError(f"{entry['id']}: {len(sources)} originals (run fetch.py)")
-    trimmed, shaped = work / "trimmed.wav", work / "shaped.wav"
+    target = CATEGORIES[entry["category"]][0]
+    trimmed, shaped, leveled = (work / n for n in ("t.wav", "s.wav", "l.wav"))
     m4a, caf = work / "out.m4a", work / "out.caf"
     _trim(sources[0], trimmed)
-    lufs, peak = measure(trimmed)
-    gain = gain_db(lufs, peak)
-    _shape(trimmed, shaped, gain)
-    _encode(shaped, m4a, caf)
-    # AAC can overshoot the ceiling a little; take it back.
-    out_lufs, out_peak = measure(m4a)
-    for _ in range(3):
+    note = _shape(trimmed, shaped, entry)
+    lufs, peak = measure(shaped)
+    gain = gain_db(target, lufs, peak)
+    limit_dbtp = CEILING_DBTP
+    for _ in range(4):
+        _level(shaped, leveled, gain, limit_dbtp)
+        _encode(leveled, m4a, caf)
+        out_lufs, out_peak = measure(m4a)
+        # Resampling and AAC can overshoot a little: lower the limit.
         if out_peak <= CEILING_DBTP + 0.05:
             break
-        gain -= out_peak - CEILING_DBTP
-        _shape(trimmed, shaped, gain)
-        _encode(shaped, m4a, caf)
-        out_lufs, out_peak = measure(m4a)
+        limit_dbtp -= out_peak - CEILING_DBTP
     shutil.copyfile(m4a, ANDROID_RAW / f"{entry['file']}.m4a")
     shutil.copyfile(m4a, WEB_SOUNDS / f"{entry['file']}.m4a")
     shutil.copyfile(caf, IOS_SOUNDS / f"{entry['file']}.caf")
@@ -210,44 +247,27 @@ def build_one(entry: dict, work: Path) -> dict:
         "durationMs": round(duration_seconds(m4a) * 1000),
         "lufs": out_lufs,
         "peak": out_peak,
+        "target": target,
+        "limited": max(0.0, peak + gain - CEILING_DBTP),
+        "note": note,
         "kb": (caf.stat().st_size + m4a.stat().st_size) // 1024,
     }
 
 
-def first_party_duration_ms(entry: dict) -> int:
+def measure_first_party(entry: dict) -> None:
+    """Records [entry]'s duration and loudness; its file is never touched."""
     # The Android copy: ffprobe can't read Apple's own IMA4 .caf files.
     files = sorted(ANDROID_RAW.glob(f"{entry['file']}.*"))
     if not files:
         raise BuildError(f"{entry['id']}: no file in res/raw")
-    return round(duration_seconds(files[0]) * 1000)
+    lufs, peak = measure(files[0])
+    _record(entry, round(duration_seconds(files[0]) * 1000), lufs, peak)
 
 
-def credits_markdown(manifest: dict) -> str:
-    """CREDITS.md: one section per credited source, one row per sound."""
-    lines = [
-        "# Credits",
-        "",
-        "Generated from `app/assets/sounds/manifest.json` by",
-        "`app/tool/sounds/build.py`. Do not edit by hand.",
-        "",
-    ]
-    for key, source in manifest["sources"].items():
-        if not source.get("credit"):
-            continue
-        lines += [f"## {source['name']}", "", source["notice"], ""]
-        lines += ["| Dottoday id | Dottoday name | Original | Source page |",
-                  "|---|---|---|---|"]
-        for s in manifest["sounds"]:
-            if s["source"] == key:
-                lines.append(f"| `{s['id']}` | {s['name']} | {s['sourceTitle']}"
-                             f" | <{s['sourceUrl']}> |")
-        lines.append("")
-    first_party = [s["name"] for s in manifest["sounds"]
-                   if not manifest["sources"][s["source"]].get("credit")]
-    lines += ["## Made for Dottoday", "",
-              "Synthesised by `app/tool/gen_sounds.dart`; no third-party audio: "
-              + ", ".join(first_party) + ".", ""]
-    return "\n".join(lines)
+def _record(entry: dict, duration_ms: int, lufs: float, peak: float) -> None:
+    entry["durationMs"] = duration_ms
+    entry["loudnessLufs"] = round(lufs, 1)
+    entry["truePeakDbtp"] = round(peak, 1)
 
 
 def _write_manifest(manifest: dict) -> None:
@@ -256,38 +276,40 @@ def _write_manifest(manifest: dict) -> None:
 
 
 def _print_report(rows: list[dict]) -> None:
-    print(f"{'id':22} {'ms':>6} {'LUFS':>6} {'dBTP':>6} {'KB':>5}")
+    print(f"{'id':18} {'ms':>6} {'LUFS':>6} {'aim':>4} {'dBTP':>5} "
+          f"{'lim':>4} {'KB':>4}  note")
     for r in rows:
-        flag = "  below -16 (peak-limited)" if r["lufs"] < TARGET_LUFS - 0.5 else ""
-        print(f"{r['id']:22} {r['durationMs']:6} {r['lufs']:6.1f} "
-              f"{r['peak']:6.1f} {r['kb']:5}{flag}")
+        print(f"{r['id']:18} {r['durationMs']:6} {r['lufs']:6.1f} "
+              f"{r['target']:4.0f} {r['peak']:5.1f} {r['limited']:4.1f} "
+              f"{r['kb']:4}  {r['note']}")
+    outliers = [r for r in rows if r["lufs"] < r["target"] - OUTLIER_LU]
+    print(f"\nQuiet outliers (> {OUTLIER_LU:.0f} LU under target after the "
+          f"limiter), for the ear pass: {len(outliers)}")
+    for r in outliers:
+        print(f"  {r['id']}: {r['lufs']:.1f} LUFS, target {r['target']:.0f}")
 
 
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--only", nargs="*", help="sound ids to build")
-    parser.add_argument("--credits", action="store_true",
-                        help="only rewrite CREDITS.md")
     args = parser.parse_args(argv)
 
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-    if not args.credits:
-        for directory in (ANDROID_RAW, IOS_SOUNDS, WEB_SOUNDS):
-            directory.mkdir(parents=True, exist_ok=True)
-        rows = []
-        with tempfile.TemporaryDirectory() as tmp:
-            for entry in manifest["sounds"]:
-                if args.only and entry["id"] not in args.only:
-                    continue
-                if "sourceUrl" not in entry:
-                    entry["durationMs"] = first_party_duration_ms(entry)
-                    continue
-                row = build_one(entry, Path(tmp))
-                entry["durationMs"] = row["durationMs"]
-                rows.append(row)
-        _write_manifest(manifest)
-        _print_report(rows)
-    CREDITS.write_text(credits_markdown(manifest), encoding="utf-8")
+    for directory in (ANDROID_RAW, IOS_SOUNDS, WEB_SOUNDS):
+        directory.mkdir(parents=True, exist_ok=True)
+    rows = []
+    with tempfile.TemporaryDirectory() as tmp:
+        for entry in manifest["sounds"]:
+            if args.only and entry["id"] not in args.only:
+                continue
+            if "sourceUrl" not in entry:
+                measure_first_party(entry)
+                continue
+            row = build_one(entry, Path(tmp))
+            _record(entry, row["durationMs"], row["lufs"], row["peak"])
+            rows.append(row)
+    _write_manifest(manifest)
+    _print_report(rows)
     return 0
 
 
