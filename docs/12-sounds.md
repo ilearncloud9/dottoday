@@ -40,7 +40,15 @@ The text is the `notice` of the source in the manifest; `CREDITS.md` and the lic
 
 **Repo**: `assets/sounds/manifest.json` (§5) is the provenance record, one entry per file with the specific source page; `CREDITS.md` is generated from it. Original downloads kept unmodified in `tool/sounds/originals/` (not shipped). The footer and the licences notice are both rendered from the manifest's distinct `sourceName`/`license` values, so adding a source can never ship without its credit.
 
-## 2. Catalogue — 5 first-party + 42 notification sounds + 6 Done sounds (53 entries)
+## 2. Catalogue — 5 first-party + 37 notification sounds + 6 Done sounds (48 entries)
+
+*(owner, phase-1 rebuild)* Duration rules (policy test, `durationMs`): Quiet ≤ 1500 ms; Clear, Playful, Done ≤ 4000 ms; Start 3000–20000 ms. Changes:
+- **Dropped:** `quiet.discreet` (8.3 s), `quiet.pristine` (4.28 s after trim: over the 4 s Clear limit), `start.rise` (0.4 s); also `start.direct` (0.4 s) and `start.arpeggio` (2.0 s), which are under the 3 s Start minimum for the same reason as `rise`.
+- **Moved:** `quiet.tap` → `clear.tap` (2.4 s).
+- **Capped at the category maximum with a 0.5 s fade:** Clear `bright`, `settled`, `opening`, `spark`; Playful `knock`, `dog`, `gulls`. Start sounds over 20 s are cut with a 1 s fade.
+- **Looped:** `start.insistent` (2.3 s original), back to back ×8 to 18.3 s with the final repeat faded out; `modified: "looped"` and `loopToMs` in the manifest.
+
+The tables below are the original proposal; the manifest is the shipped list.
 
 Source names are the originals on notificationsounds.com; the slug is the path after `https://notificationsounds.com/`. Dottoday names are proposals; the **ear pass** (§7) may swap any entry for a sibling in the same collection without an ADR.
 
@@ -191,7 +199,7 @@ Tests (phase 2): resolve(null, null, null, null) → `dot`; `"none"` at each lev
 - Channel groups: "Dot reminders" (`alerts`, `alerts_*`, `dottoday.alert.*`) and "Start of day" (`alarms`, `dottoday.alarm.*`); `summary` stays outside them.
 - Files are AAC `.m4a` in `res/raw` (like the existing `dot_alarm.m4a`), not `.ogg`: the build machine's ffmpeg has no libvorbis, and Opus in Ogg needs Android 10 (minSdk is 26). `res/raw/keep.xml` keeps every category prefix through resource shrinking.
 - The user may mute a channel in OS settings; the Notification health panel (A0) must report "the sound for *Lift* is muted in system settings" rather than falling silent.
-- Looping is not a notification feature on either OS. `start.insistent` is a 2.3 s original, not 20 s; the ear pass decides whether it stays.
+- Looping is not a notification feature on either OS, so `start.insistent` is built as a looped 18.3 s file (§2).
 
 **Web.** Previews, the in-app reminder strip and the Done sound play `assets/sounds/<file>.m4a`.
 
@@ -226,7 +234,12 @@ Rules:
   - trim leading/trailing silence (70 dB below the loudest 10 ms) with a 20 ms tail fade
   - downmix to mono at 44.1 kHz
   - cap at 20 s with a 1 s fade
-  - apply one linear gain towards −16 LUFS integrated under a −1 dBTP ceiling, the ceiling winning. Short, peaky sounds therefore stay below −16; there is no compression or limiting. The build reports which ones.
+  - level per category *(owner)*. Targets: Quiet −20 LUFS; Clear, Playful and Done −16; Start −14. Consistency within a category matters more than a global figure, since the OS sets the absolute volume.
+    - Stage 1: linear gain towards the target.
+    - Stage 2: a true-peak limiter (`alimiter`, 4× oversampled, −1 dBTP, attack 5 ms, release 50 ms). It may absorb at most 6 dB, because past that a short sound turns into a click.
+    - A sound still more than 4 LU under its target is not pushed further. It goes on the build's "quiet outliers" list for the ear pass, with no loop and no noise-floor lift.
+  - write the measured `loudnessLufs` and `truePeakDbtp` into the manifest. The policy test asserts every third-party sound is within ±3 LU of its category target, so a sound 3–4 LU under fails the test without being listed as an outlier.
+  - first-party tones are measured, never changed: Dot −18.7, Chime −16.5, Bell −19.5, Ripple −17.7, `dot_alarm` −13.9 LUFS.
 
 ## 6. Picker UI (Concept A) *(owner layout)*
 
@@ -247,3 +260,9 @@ Rules:
 ## 8. Milestone placement
 
 M6.5 is closed. Sounds is its own milestone in `09-implementation-plan.md` (phases: tooling → data → gateway → ui → docs, one PR each, branch `feat/sounds-<phase>`). It reuses A0's channel work. ADR-0014 records D2–D4 and the owner amendments.
+
+## 9. Follow-ups
+
+- **App size.** The catalogue adds about 7 MB: `.caf` for iOS/macOS, and `.m4a` stored twice, once as an Android raw resource and once as a Flutter asset. The Start files are the bulk (four 20 s files plus the 18 s loop). A 15 s Start cap would roughly halve it. Accepted for now (owner, 2026-10-28).
+- **Golden order flake** found during the phase-1 gates: ilearncloud9/dottoday#18 (not a sounds issue).
+
