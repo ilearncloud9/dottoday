@@ -3,14 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0277774B9AAC96638F8B085E /* DotIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF20C1EBD7428AB1D846DDA /* DotIntents.swift */; };
+		048B3BB197C543D7DF8C4DD3 /* DottodayShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DD96AFEBEC6DC487B38BA47A /* DottodayShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0C5C18D487071F55C2C6ABE2 /* TaskSymbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C896B258150ABFB9C3BD4567 /* TaskSymbols.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		14AAD6398A84DCF2491B37F7 /* DotIntentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D23147C1D9E28E463F9315 /* DotIntentsTests.swift */; };
+		29267702C36DF550D7792F61 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB63392B2470BB3162B34042 /* ShareViewController.swift */; };
 		2DAD369DB08A19596B4698AB /* DotActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6896750FE31F95897106A0A7 /* DotActivity.swift */; };
 		3261C528E16F15B66C53F7D1 /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69ADD44F5E8B69668AE7B59D /* Snapshot.swift */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
@@ -39,6 +41,7 @@
 		A18852BAB97CC5F6BDD39A88 /* WidgetSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F0B527264204D0C2F73046 /* WidgetSnapshotTests.swift */; };
 		A3CDC9C8AF4FA1ED40ED75C6 /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
 		A870E3DA3E7EFA6C4B7ABEA8 /* LiveActivityViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF327A6E80AA18432DB80F2 /* LiveActivityViews.swift */; };
+		AC3888CD0B372BDD1DB9839B /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
 		B90E9CF17CDA85AD851A3D4B /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
 		BA76BE689526EC3B4969C5CA /* DotControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656B1CE923F32B8B268C4ECA /* DotControls.swift */; };
 		C04EB1EB4948A0E2FFCA5616 /* DotLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F233CCFDCA8F76524C329C /* DotLiveActivity.swift */; };
@@ -53,12 +56,16 @@
 		E97610F8CA6D24F677ABC9D3 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DFB8722B137929D22D2F8B7 /* Views.swift */; };
 		F0266253C4A161C72DCF526E /* SnapshotPatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C08AB5AB645575C2308593 /* SnapshotPatch.swift */; };
 		FF4E69F492C56F95BC3EBD48 /* DotActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9475CDDE68AAF01310D87A /* DotActions.swift */; };
-		29267702C36DF550D7792F61 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB63392B2470BB3162B34042 /* ShareViewController.swift */; };
-		AC3888CD0B372BDD1DB9839B /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
-		048B3BB197C543D7DF8C4DD3 /* DottodayShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DD96AFEBEC6DC487B38BA47A /* DottodayShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1335ECB45A27E13380647341 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FE1CFB9D05A8A7ABABB413D0;
+			remoteInfo = DottodayShare;
+		};
 		331C8085294A63A400263BE5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
@@ -72,13 +79,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 10E2CB2C4A7B305A172E0DC1;
 			remoteInfo = DottodayWidgets;
-		};
-		1335ECB45A27E13380647341 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = FE1CFB9D05A8A7ABABB413D0;
-			remoteInfo = DottodayShare;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -156,22 +156,22 @@
 		BDB9ECEFC39891C3ACBA6062 /* DottodayWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = DottodayWidgets.entitlements; sourceTree = "<group>"; };
 		C2F0B527264204D0C2F73046 /* WidgetSnapshotTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSnapshotTests.swift; sourceTree = "<group>"; };
 		C896B258150ABFB9C3BD4567 /* TaskSymbols.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TaskSymbols.swift; sourceTree = "<group>"; };
+		CFCB9EE75F6E260E5068751F /* DottodayShare.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = DottodayShare.entitlements; sourceTree = "<group>"; };
 		D057CBF4043C1304FE844CA9 /* ThinkingBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThinkingBridge.swift; sourceTree = "<group>"; };
 		D136DF57206457BBAAC11E02 /* es */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D35E811333715D9C04A443BC /* LiveActivityViewsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityViewsTests.swift; sourceTree = "<group>"; };
 		DD62E075ADDD00D3D036B06F /* es */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		DD96AFEBEC6DC487B38BA47A /* DottodayShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DottodayShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E39EE94101270E8066DA396B /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E8F233CCFDCA8F76524C329C /* DotLiveActivity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotLiveActivity.swift; sourceTree = "<group>"; };
 		EB16FBF79EA3ECABBA333397 /* Runner.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
+		EB63392B2470BB3162B34042 /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		EBA6597E3922EBA9938415E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F27856E16E6A37ADD929DF43 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
 		F29E9BDA3CA2C060A96D5E3B /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8B68CB0B24001551238040C /* en */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FE1DA42FAA1B3E154E977217 /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		FF19FF533973ED301DC1E66F /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
-		EB63392B2470BB3162B34042 /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
-		EBA6597E3922EBA9938415E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CFCB9EE75F6E260E5068751F /* DottodayShare.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = DottodayShare.entitlements; sourceTree = "<group>"; };
-		DD96AFEBEC6DC487B38BA47A /* DottodayShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DottodayShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,19 +191,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		956652B7177B33CE7F752A0A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EB1CF9000F007C117D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 				4AFDF0F6B143AA52A88BC35F /* Pods_Runner.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		956652B7177B33CE7F752A0A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,7 +225,6 @@
 				BBF327A6E80AA18432DB80F2 /* LiveActivityViews.swift */,
 				69ADD44F5E8B69668AE7B59D /* Snapshot.swift */,
 			);
-			name = Shared;
 			path = Shared;
 			sourceTree = "<group>";
 		};
@@ -250,7 +249,6 @@
 				E8F233CCFDCA8F76524C329C /* DotLiveActivity.swift */,
 				656B1CE923F32B8B268C4ECA /* DotControls.swift */,
 			);
-			name = DottodayWidgets;
 			path = DottodayWidgets;
 			sourceTree = "<group>";
 		};
@@ -274,8 +272,17 @@
 				F27856E16E6A37ADD929DF43 /* Pods-RunnerTests.release.xcconfig */,
 				23F29779A5F742B4AC8E97AB /* Pods-RunnerTests.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		964CC0B2742075C4321FED24 /* DottodayShare */ = {
+			isa = PBXGroup;
+			children = (
+				EB63392B2470BB3162B34042 /* ShareViewController.swift */,
+				EBA6597E3922EBA9938415E5 /* Info.plist */,
+				CFCB9EE75F6E260E5068751F /* DottodayShare.entitlements */,
+			);
+			path = DottodayShare;
 			sourceTree = "<group>";
 		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
@@ -343,17 +350,6 @@
 				53991F7DB8E44DC7ED234E07 /* Foundation.framework */,
 			);
 			name = iOS;
-			sourceTree = "<group>";
-		};
-		964CC0B2742075C4321FED24 /* DottodayShare */ = {
-			isa = PBXGroup;
-			children = (
-				EB63392B2470BB3162B34042 /* ShareViewController.swift */,
-				EBA6597E3922EBA9938415E5 /* Info.plist */,
-				CFCB9EE75F6E260E5068751F /* DottodayShare.entitlements */,
-			);
-			name = DottodayShare;
-			path = DottodayShare;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -503,6 +499,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		91C827EE6BAE71ADE76F4FE6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EC1CF9000F007C117D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -514,13 +517,6 @@
 				D965F1C05CE24385436325D9 /* InfoPlist.strings in Resources */,
 				8774181F8C043A4B0EB3085D /* Localizable.strings in Resources */,
 				E685B4942D46ABDFA77C6142 /* AppShortcuts.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91C827EE6BAE71ADE76F4FE6 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -622,6 +618,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		183BFE24C7ADA918F34EB2F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				29267702C36DF550D7792F61 /* ShareViewController.swift in Sources */,
+				AC3888CD0B372BDD1DB9839B /* DotStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		331C807D294A63A400263BE5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -673,15 +678,6 @@
 				CCBAD89CD26B5126667E7A1E /* Snapshot.swift in Sources */,
 				393277596608AB97021B23B3 /* DotShortcuts.swift in Sources */,
 				D015D12A752D6D3BCDC243C7 /* ThinkingBridge.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		183BFE24C7ADA918F34EB2F0 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				29267702C36DF550D7792F61 /* ShareViewController.swift in Sources */,
-				AC3888CD0B372BDD1DB9839B /* DotStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -759,12 +755,38 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		0BCB75B77C3D01860B462F19 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9740EEB31CF90195004384FC /* Generated.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = DottodayShare/DottodayShare.entitlements;
+				DEVELOPMENT_TEAM = JBHAWSBYLG;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = DottodayShare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.dottoday.planner.share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		23BD0895148E2A6B9DEC88E2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9740EEB31CF90195004384FC /* Generated.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = DottodayWidgets/DottodayWidgets.entitlements;
+				DEVELOPMENT_TEAM = JBHAWSBYLG;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DottodayWidgets/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -844,6 +866,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = JBHAWSBYLG;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -907,6 +930,55 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
 			};
 			name = Profile;
+		};
+		3B581549081962821CF884BA /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9740EEB31CF90195004384FC /* Generated.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = DottodayShare/DottodayShare.entitlements;
+				DEVELOPMENT_TEAM = JBHAWSBYLG;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = DottodayShare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.dottoday.planner.share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Profile;
+		};
+		697CB37CB971C4AAC5777512 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9740EEB31CF90195004384FC /* Generated.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = DottodayShare/DottodayShare.entitlements;
+				DEVELOPMENT_TEAM = JBHAWSBYLG;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = DottodayShare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.dottoday.planner.share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
 		};
 		97C147031CF9000F007C117D /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1029,6 +1101,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = JBHAWSBYLG;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1052,6 +1125,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Release.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = JBHAWSBYLG;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1072,6 +1146,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = DottodayWidgets/DottodayWidgets.entitlements;
+				DEVELOPMENT_TEAM = JBHAWSBYLG;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DottodayWidgets/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -1096,6 +1171,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = DottodayWidgets/DottodayWidgets.entitlements;
+				DEVELOPMENT_TEAM = JBHAWSBYLG;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DottodayWidgets/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -1112,77 +1188,6 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
-		};
-		0BCB75B77C3D01860B462F19 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9740EEB31CF90195004384FC /* Generated.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_ENTITLEMENTS = DottodayShare/DottodayShare.entitlements;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = DottodayShare/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = app.dottoday.planner.share;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		697CB37CB971C4AAC5777512 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9740EEB31CF90195004384FC /* Generated.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_ENTITLEMENTS = DottodayShare/DottodayShare.entitlements;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = DottodayShare/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = app.dottoday.planner.share;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		3B581549081962821CF884BA /* Profile */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9740EEB31CF90195004384FC /* Generated.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_ENTITLEMENTS = DottodayShare/DottodayShare.entitlements;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = DottodayShare/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = app.dottoday.planner.share;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Profile;
 		};
 /* End XCBuildConfiguration section */
 
@@ -1207,6 +1212,16 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		3ABF79BD7ACC16AC5255D4E4 /* Build configuration list for PBXNativeTarget "DottodayShare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0BCB75B77C3D01860B462F19 /* Release */,
+				697CB37CB971C4AAC5777512 /* Debug */,
+				3B581549081962821CF884BA /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		97C146E91CF9000F007C117D /* Build configuration list for PBXProject "Runner" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1223,16 +1238,6 @@
 				97C147061CF9000F007C117D /* Debug */,
 				97C147071CF9000F007C117D /* Release */,
 				249021D4217E4FDB00AE95B9 /* Profile */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3ABF79BD7ACC16AC5255D4E4 /* Build configuration list for PBXNativeTarget "DottodayShare" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0BCB75B77C3D01860B462F19 /* Release */,
-				697CB37CB971C4AAC5777512 /* Debug */,
-				3B581549081962821CF884BA /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
