@@ -5,8 +5,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.speech.RecognitionListener
 import android.speech.RecognitionSupport
 import android.speech.RecognitionSupportCallback
@@ -56,6 +58,8 @@ object SpeechBridge : EventChannel.StreamHandler {
                     stop()
                     result.success(null)
                 }
+                // Mic denied for good: the app's own page in Settings (M14.5).
+                "openSettings" -> result.success(openSettings())
                 else -> result.notImplemented()
             }
         }
@@ -120,6 +124,14 @@ object SpeechBridge : EventChannel.StreamHandler {
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(ASKED, true).apply()
         pendingPermission = done
         ActivityCompat.requestPermissions(context, arrayOf(Manifest.permission.RECORD_AUDIO), REQUEST_CODE)
+    }
+
+    private fun openSettings(): Boolean {
+        val context = activity ?: return false
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            .setData(Uri.fromParts("package", context.packageName, null))
+        context.startActivity(intent)
+        return true
     }
 
     // Listening

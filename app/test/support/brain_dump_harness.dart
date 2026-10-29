@@ -8,6 +8,7 @@ import 'package:dottoday/features/proposals/proposal_host.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../domain/fixtures.dart';
@@ -24,6 +25,7 @@ Future<ProposalHarness> pumpBrainDump(
   ThinkingAvailability model = ThinkingAvailability.notEligible,
   ThinkingVendor vendor = ThinkingVendor.none,
   bool sheet = false,
+  List<Override> extra = const [],
 }) async {
   tester.view
     ..physicalSize = const Size(390, 1600)
@@ -45,6 +47,7 @@ Future<ProposalHarness> pumpBrainDump(
         ...h.overrides,
         minuteTickProvider.overrideWith((ref) => const Stream.empty()),
         thinkingVendorProvider.overrideWithValue(vendor),
+        ...extra,
         thinkingTransportProvider.overrideWithValue(
           FakeThinkingTransport(
             state: model,

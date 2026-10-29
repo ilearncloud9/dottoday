@@ -13,6 +13,7 @@ final class DotMotion {
     required this.curve,
     required this.spring,
     this.reveal = Duration.zero,
+    this.pulse = Duration.zero,
   });
 
   static const standard = DotMotion(
@@ -22,6 +23,7 @@ final class DotMotion {
     curve: Curves.easeOut,
     spring: Curves.easeOutBack,
     reveal: Duration(seconds: 2),
+    pulse: Duration(milliseconds: 1200),
   );
 
   /// All durations zero: animations jump straight to their end state.
@@ -47,6 +49,10 @@ final class DotMotion {
   /// How long a one-time reveal accent holds before it fades over [slow]
   /// (docs/13 §4.3); zero under reduced motion, where nothing is drawn.
   final Duration reveal;
+
+  /// One breath of the listening dot (`MicButton`, M14.5); zero under
+  /// reduced motion, where the dot holds still.
+  final Duration pulse;
   final Curve curve;
 
   /// The month pull-open's rubber band (§2.4): a slight overshoot.

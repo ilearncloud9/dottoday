@@ -3,8 +3,10 @@ import 'dart:convert';
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/speech/dictation_controller.dart';
 import 'package:dottoday/data/thinking/thinking_providers.dart';
 import 'package:dottoday/domain/thinking/thinking_memory.dart';
+import 'package:dottoday/features/timeline/brain_dump/brain_dump_field.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_flow.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:dottoday/shared/thinking/thinking_copy.dart';
@@ -14,7 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 /// "Brain dump" (11 B4, docs/09 M12.5), from Today's ⋯: write or dictate
-/// everything on your mind, one thing per line, pick Today or Tomorrow,
+/// (the mic, M14.5) everything on your mind, one thing per line, pick Today or Tomorrow,
 /// Plan it — a proposal places it on the day. Earlier dumps stay on this
 /// device and can be searched and used again.
 Future<void> showBrainDump(BuildContext context, DateTime today) =>
@@ -52,6 +54,12 @@ class _BrainDumpBodyState extends ConsumerState<BrainDumpBody> {
   void initState() {
     super.initState();
     unawaited(_load());
+    // Typed or dictated (M14.5): Plan it follows the text either way.
+    _text.addListener(_changed);
+  }
+
+  void _changed() {
+    if (mounted) setState(() => _nothing = false);
   }
 
   Future<void> _load() async {
@@ -61,6 +69,7 @@ class _BrainDumpBodyState extends ConsumerState<BrainDumpBody> {
 
   @override
   void dispose() {
+    _text.removeListener(_changed);
     _text.dispose();
     _search.dispose();
     super.dispose();
@@ -75,16 +84,7 @@ class _BrainDumpBodyState extends ConsumerState<BrainDumpBody> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.m,
       children: [
-        TextField(
-          controller: _text,
-          autofocus: true,
-          minLines: 5,
-          maxLines: 12,
-          keyboardType: TextInputType.multiline,
-          textCapitalization: TextCapitalization.sentences,
-          onChanged: (_) => setState(() => _nothing = false),
-          decoration: InputDecoration(hintText: l10n.dumpHint),
-        ),
+        BrainDumpField(controller: _text),
         SegmentedButton<bool>(
           segments: [
             ButtonSegment(value: false, label: Text(l10n.sheetToday)),
@@ -155,6 +155,9 @@ class _BrainDumpBodyState extends ConsumerState<BrainDumpBody> {
         ? DateTime(today.year, today.month, today.day + 1)
         : today;
     final dayName = relativeDayName(context, date, today);
+    // Plan it while listening: stop first, keep what was said (M14.5).
+    await container.read(dictationControllerProvider.notifier).stopFor(_text);
+    if (!context.mounted) return;
     setState(() => _busy = true);
     final planned = await planBrainDump(
       container,
