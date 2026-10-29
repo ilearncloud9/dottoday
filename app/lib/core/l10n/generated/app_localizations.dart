@@ -7632,6 +7632,138 @@ abstract class AppLocalizations {
   /// **'{lead} · {action}'**
   String statusHintJoin(String lead, String action);
 
+  /// Settings row and page title (M14.3, iPhone only): Siri and the Shortcuts app.
+  ///
+  /// In en, this message translates to:
+  /// **'Siri & Shortcuts'**
+  String get settingsSiri;
+
+  /// Settings › Siri & Shortcuts row subtitle (M14.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Siri about your day'**
+  String get settingsSiriDetail;
+
+  /// Siri page (M14.3): what Siri can do with Dottoday.
+  ///
+  /// In en, this message translates to:
+  /// **'Siri can add a task, tell you what\'s next, and help with the task you\'re on — without opening Dottoday.'**
+  String get siriIntro;
+
+  /// Siri page (M14.3): how to invoke Siri.
+  ///
+  /// In en, this message translates to:
+  /// **'Say \"Hey Siri\" or hold the side button, then say a phrase.'**
+  String get siriHowTo;
+
+  /// Siri page (M14.3): caption above the five phrases.
+  ///
+  /// In en, this message translates to:
+  /// **'What you can say'**
+  String get siriPhrasesCaption;
+
+  /// Siri phrase; must match ios/Runner/<lang>.lproj/AppShortcuts.strings with the app name (siri_phrases_test).
+  ///
+  /// In en, this message translates to:
+  /// **'Add a task in Dottoday'**
+  String get siriPhraseAdd;
+
+  /// Siri page: what the Add a task phrase does.
+  ///
+  /// In en, this message translates to:
+  /// **'Siri asks what to add. Say a time and it goes on your day; otherwise it goes to the Inbox.'**
+  String get siriPhraseAddDetail;
+
+  /// Siri phrase; must match AppShortcuts.strings (siri_phrases_test).
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s next in Dottoday'**
+  String get siriPhraseNext;
+
+  /// Siri page: what the What's next phrase does.
+  ///
+  /// In en, this message translates to:
+  /// **'Siri says what\'s on now, or what comes next.'**
+  String get siriPhraseNextDetail;
+
+  /// Siri phrase; must match AppShortcuts.strings (siri_phrases_test).
+  ///
+  /// In en, this message translates to:
+  /// **'Mark my task done in Dottoday'**
+  String get siriPhraseDone;
+
+  /// Siri page: what the Mark done phrase does.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticks off the task you\'re on.'**
+  String get siriPhraseDoneDetail;
+
+  /// Siri phrase; must match AppShortcuts.strings (siri_phrases_test).
+  ///
+  /// In en, this message translates to:
+  /// **'Give my task 15 more minutes in Dottoday'**
+  String get siriPhrasePlus15;
+
+  /// Siri page: what the +15 phrase does.
+  ///
+  /// In en, this message translates to:
+  /// **'Gives the task you\'re on 15 more minutes.'**
+  String get siriPhrasePlus15Detail;
+
+  /// Siri phrase; must match AppShortcuts.strings (siri_phrases_test).
+  ///
+  /// In en, this message translates to:
+  /// **'Start focus in Dottoday'**
+  String get siriPhraseFocus;
+
+  /// Siri page: what the Start focus phrase does.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens Focus on the task you\'re on.'**
+  String get siriPhraseFocusDetail;
+
+  /// Siri page (M14.3): caption above the Shortcuts part.
+  ///
+  /// In en, this message translates to:
+  /// **'Shortcuts'**
+  String get siriShortcutsCaption;
+
+  /// Siri page (M14.3): the same actions are in the Shortcuts app.
+  ///
+  /// In en, this message translates to:
+  /// **'The same five actions are in the Shortcuts app, ready for the Action button, Control Center or your Home Screen.'**
+  String get siriShortcutsBody;
+
+  /// Siri page (M14.3): button that opens the Shortcuts app.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Shortcuts'**
+  String get siriOpenShortcuts;
+
+  /// Today tip card (M14.3, iPhone, once): suggests a Siri phrase.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Siri \"What\'s next in Dottoday\"'**
+  String get siriTipTitle;
+
+  /// Today tip card (M14.3): opens Settings › Siri & Shortcuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Show me'**
+  String get siriTipShow;
+
+  /// A one-time tip card's × (M14): it never shows again on this device.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show again'**
+  String get tipDismiss;
+
+  /// Onboarding Done step (M14.3, iPhone only): one quiet line about Siri.
+  ///
+  /// In en, this message translates to:
+  /// **'You can also ask Siri \"What\'s next in Dottoday\".'**
+  String get onboardingSiriLine;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

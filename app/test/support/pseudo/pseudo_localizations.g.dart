@@ -4039,6 +4039,72 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.statusHintJoin(lead, action));
 
   @override
+  String get settingsSiri => pseudo(super.settingsSiri);
+
+  @override
+  String get settingsSiriDetail => pseudo(super.settingsSiriDetail);
+
+  @override
+  String get siriIntro => pseudo(super.siriIntro);
+
+  @override
+  String get siriHowTo => pseudo(super.siriHowTo);
+
+  @override
+  String get siriPhrasesCaption => pseudo(super.siriPhrasesCaption);
+
+  @override
+  String get siriPhraseAdd => pseudo(super.siriPhraseAdd);
+
+  @override
+  String get siriPhraseAddDetail => pseudo(super.siriPhraseAddDetail);
+
+  @override
+  String get siriPhraseNext => pseudo(super.siriPhraseNext);
+
+  @override
+  String get siriPhraseNextDetail => pseudo(super.siriPhraseNextDetail);
+
+  @override
+  String get siriPhraseDone => pseudo(super.siriPhraseDone);
+
+  @override
+  String get siriPhraseDoneDetail => pseudo(super.siriPhraseDoneDetail);
+
+  @override
+  String get siriPhrasePlus15 => pseudo(super.siriPhrasePlus15);
+
+  @override
+  String get siriPhrasePlus15Detail => pseudo(super.siriPhrasePlus15Detail);
+
+  @override
+  String get siriPhraseFocus => pseudo(super.siriPhraseFocus);
+
+  @override
+  String get siriPhraseFocusDetail => pseudo(super.siriPhraseFocusDetail);
+
+  @override
+  String get siriShortcutsCaption => pseudo(super.siriShortcutsCaption);
+
+  @override
+  String get siriShortcutsBody => pseudo(super.siriShortcutsBody);
+
+  @override
+  String get siriOpenShortcuts => pseudo(super.siriOpenShortcuts);
+
+  @override
+  String get siriTipTitle => pseudo(super.siriTipTitle);
+
+  @override
+  String get siriTipShow => pseudo(super.siriTipShow);
+
+  @override
+  String get tipDismiss => pseudo(super.tipDismiss);
+
+  @override
+  String get onboardingSiriLine => pseudo(super.onboardingSiriLine);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

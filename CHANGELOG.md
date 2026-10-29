@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M14.3: Ask Siri. On iPhone, Settings › Siri & Shortcuts lists the five things Siri can do with Dottoday — "What's next in Dottoday", "Add a task in Dottoday" and more — how to ask, and a button to put them on the Action button or in Control Center. After your third new task, Today mentions it once; onboarding's last step says it in one quiet line.
 - M14.2: Know who plans for you. Settings › Privacy says whether Apple Intelligence, Gemini Nano or your browser's built-in AI is helping on this device — and if not, exactly how to turn it on. Plans made without a model say "simple rules", with a quiet, dismissible tip where turning the model on would help; Brain dump says under Plan it which one will answer. The proposal header and its Bedtime line no longer run off the screen at the largest text size.
 - Task icon library: 524 task icons in 16 categories (was 26), with the names Structured users know ("Laundry Basket", "Dumbbell"…) in English, German, French and Spanish. The first category, Planning & rhythm, is Dottoday's own: focus block, buffer, anytime, wind down, week review, low and high energy and more. The full picker now has search (by name, category or English word) and opens full height. Icons you already use keep working unchanged.
 - M13: Learning reveal — Dottoday says what it is learning from day one, shows each learned number only once it means something, and explains every one on tap. Everything is learned on your device.

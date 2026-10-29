@@ -223,4 +223,6 @@ Sweep entries (add a row per screen as it lands):
 | Device and web sweep: `settings_learning`, `learned_explained` | `integration_test/support/sweep_m13.dart`, `tool/a11y/web_sweep.mjs` | — |
 | Privacy › Help with thinking status: Apple Intelligence off (iPhone; + 2.0 text, RTL, 3 widths), Gemini Nano downloadable, not eligible | `test/features/settings/privacy_ai_status_golden_test.dart` | derived — 11 §B4 AI status |
 | Proposal "simple rules" + `StatusHint` (+ 2.0 text, RTL, 3 widths) | `test/features/proposals/proposal_rules_hint_golden_test.dart` | derived — 10 §5 |
+| Settings › Siri & Shortcuts (iPhone, compact; + 2.0 text, RTL) | `test/features/settings/siri_page_golden_test.dart` | derived — 11 §B6 |
+| Today: one-time Siri tip (iPhone, compact; + 2.0 text, RTL) | `test/features/timeline/siri_tip_golden_test.dart` | derived — 11 §B6 |
 

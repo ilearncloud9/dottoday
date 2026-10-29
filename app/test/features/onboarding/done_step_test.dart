@@ -1,3 +1,4 @@
+import 'package:dottoday/data/intents/siri_providers.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -38,6 +39,23 @@ void main() {
     await pumpOnboarding(tester, progress: _step);
     expect(find.textContaining('is all yours'), findsOneWidget);
   });
+
+  // M14.3 (D3): one quiet Siri line on iPhone, nowhere else.
+  for (final siri in [true, false]) {
+    testWidgets('Siri line ${siri ? 'on iPhone' : 'hidden elsewhere'}', (
+      tester,
+    ) async {
+      await pumpOnboarding(
+        tester,
+        progress: _step,
+        extra: [siriAvailableProvider.overrideWithValue(siri)],
+      );
+      expect(
+        find.text('You can also ask Siri "What\'s next in Dottoday".'),
+        siri ? findsOneWidget : findsNothing,
+      );
+    });
+  }
 
   testWidgets('meets a11y guidelines (R-12)', (tester) async {
     await pumpOnboarding(

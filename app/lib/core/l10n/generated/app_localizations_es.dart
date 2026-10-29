@@ -5223,6 +5223,79 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get settingsSiri => 'Siri y atajos';
+
+  @override
+  String get settingsSiriDetail => 'Pregunta a Siri por tu día';
+
+  @override
+  String get siriIntro =>
+      'Siri puede añadir una tarea, decirte qué sigue y ayudarte con la tarea en curso, sin abrir Dottoday.';
+
+  @override
+  String get siriHowTo =>
+      'Di «Oye Siri» o mantén pulsado el botón lateral y di una frase.';
+
+  @override
+  String get siriPhrasesCaption => 'Lo que puedes decir';
+
+  @override
+  String get siriPhraseAdd => 'Añadir una tarea en Dottoday';
+
+  @override
+  String get siriPhraseAddDetail =>
+      'Siri pregunta qué añadir. Si dices una hora, va a tu día; si no, a la bandeja de entrada.';
+
+  @override
+  String get siriPhraseNext => 'Qué sigue en Dottoday';
+
+  @override
+  String get siriPhraseNextDetail =>
+      'Siri dice qué toca ahora o qué viene después.';
+
+  @override
+  String get siriPhraseDone => 'Marcar mi tarea como hecha en Dottoday';
+
+  @override
+  String get siriPhraseDoneDetail => 'Marca la tarea en curso.';
+
+  @override
+  String get siriPhrasePlus15 => 'Dar 15 minutos más a mi tarea en Dottoday';
+
+  @override
+  String get siriPhrasePlus15Detail => 'Da 15 minutos más a la tarea en curso.';
+
+  @override
+  String get siriPhraseFocus => 'Empezar a concentrarme en Dottoday';
+
+  @override
+  String get siriPhraseFocusDetail =>
+      'Abre el modo concentración en la tarea en curso.';
+
+  @override
+  String get siriShortcutsCaption => 'Atajos';
+
+  @override
+  String get siriShortcutsBody =>
+      'Las mismas cinco acciones están en la app Atajos, listas para el botón de acción, el centro de control o tu pantalla de inicio.';
+
+  @override
+  String get siriOpenShortcuts => 'Abrir Atajos';
+
+  @override
+  String get siriTipTitle => 'Pregunta a Siri «Qué sigue en Dottoday»';
+
+  @override
+  String get siriTipShow => 'Muéstrame';
+
+  @override
+  String get tipDismiss => 'No volver a mostrar';
+
+  @override
+  String get onboardingSiriLine =>
+      'También puedes preguntar a Siri «Qué sigue en Dottoday».';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

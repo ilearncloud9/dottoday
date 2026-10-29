@@ -51,7 +51,10 @@ enum SettingsPage {
   about,
 
   /// About › What's new: every release's notes (M8.2, R-19).
-  changelog;
+  changelog,
+
+  /// Siri & Shortcuts (M14.3, iPhone only: listed only where Siri runs).
+  siri;
 
   /// The page called [name], or null (an unknown deep link).
   static SettingsPage? byName(String name) =>

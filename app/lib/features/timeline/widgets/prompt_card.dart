@@ -45,13 +45,15 @@ class PromptCard extends StatelessWidget {
   }
 }
 
-/// A prompt's body: one line of [detail], the [action] and "Not now".
+/// A prompt's body: one line of [detail], the [action] and "Not now" (or
+/// [dismissLabel], e.g. "Don't show again" for a one-time tip).
 class PromptNudge extends StatelessWidget {
   const PromptNudge({
     required this.detail,
     required this.action,
     required this.onAction,
     required this.onNotNow,
+    this.dismissLabel,
     super.key,
   });
 
@@ -59,6 +61,7 @@ class PromptNudge extends StatelessWidget {
   final String action;
   final VoidCallback onAction;
   final VoidCallback onNotNow;
+  final String? dismissLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +76,7 @@ class PromptNudge extends StatelessWidget {
             FilledButton(onPressed: onAction, child: Text(action)),
             TextButton(
               onPressed: onNotNow,
-              child: Text(context.l10n.promptNotNow),
+              child: Text(dismissLabel ?? context.l10n.promptNotNow),
             ),
           ],
         ),

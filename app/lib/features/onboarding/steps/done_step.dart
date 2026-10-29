@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/intents/siri_providers.dart';
 import 'package:dottoday/data/onboarding/first_thread.dart';
 import 'package:dottoday/domain/scheduling/day_capacity.dart';
 import 'package:dottoday/features/onboarding/steps/step_frame.dart';
@@ -13,7 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// O6 Done (docs/10 §5.1, docs/09 M4.6): tomorrow's thread with the
-/// habits from O3 on it, and "Open today", which ends onboarding.
+/// habits from O3 on it, and "Open today", which ends onboarding. On
+/// iPhone, one line points to Siri (M14.3).
 class DoneStep extends ConsumerWidget {
   const DoneStep({required this.onFinish, super.key});
 
@@ -25,6 +28,7 @@ class DoneStep extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final t = DotTheme.of(context);
     final first = ref.watch(firstThreadProvider).value;
     final empty = first == null || first.rows.isEmpty;
     return StepFrame(
@@ -35,6 +39,12 @@ class DoneStep extends ConsumerWidget {
       children: [
         if (first != null)
           SizedBox(height: _cardHeight, child: _card(context, ref, first)),
+        // One quiet line on iPhone (M14.3, D3); no new step.
+        if (ref.watch(siriAvailableProvider))
+          Text(
+            l10n.onboardingSiriLine,
+            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+          ),
       ],
     );
   }

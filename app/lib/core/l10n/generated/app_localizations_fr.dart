@@ -5236,6 +5236,80 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get settingsSiri => 'Siri et raccourcis';
+
+  @override
+  String get settingsSiriDetail => 'Demandez à Siri votre journée';
+
+  @override
+  String get siriIntro =>
+      'Siri peut ajouter une tâche, vous dire ce qui suit et vous aider avec la tâche en cours — sans ouvrir Dottoday.';
+
+  @override
+  String get siriHowTo =>
+      'Dites « Dis Siri » ou maintenez le bouton latéral, puis dites une phrase.';
+
+  @override
+  String get siriPhrasesCaption => 'Ce que vous pouvez dire';
+
+  @override
+  String get siriPhraseAdd => 'Ajouter une tâche dans Dottoday';
+
+  @override
+  String get siriPhraseAddDetail =>
+      'Siri demande quoi ajouter. Avec une heure, c\'est placé dans votre journée ; sinon, dans la boîte de réception.';
+
+  @override
+  String get siriPhraseNext => 'Et ensuite dans Dottoday';
+
+  @override
+  String get siriPhraseNextDetail =>
+      'Siri dit ce qui est en cours, ou ce qui vient ensuite.';
+
+  @override
+  String get siriPhraseDone => 'Marquer ma tâche comme faite dans Dottoday';
+
+  @override
+  String get siriPhraseDoneDetail => 'Coche la tâche en cours.';
+
+  @override
+  String get siriPhrasePlus15 =>
+      'Donner 15 minutes de plus à ma tâche dans Dottoday';
+
+  @override
+  String get siriPhrasePlus15Detail =>
+      'Donne 15 minutes de plus à la tâche en cours.';
+
+  @override
+  String get siriPhraseFocus => 'Commencer le focus dans Dottoday';
+
+  @override
+  String get siriPhraseFocusDetail => 'Ouvre le focus sur la tâche en cours.';
+
+  @override
+  String get siriShortcutsCaption => 'Raccourcis';
+
+  @override
+  String get siriShortcutsBody =>
+      'Les cinq mêmes actions sont dans l\'app Raccourcis, prêtes pour le bouton Action, le centre de contrôle ou l\'écran d\'accueil.';
+
+  @override
+  String get siriOpenShortcuts => 'Ouvrir Raccourcis';
+
+  @override
+  String get siriTipTitle => 'Demandez à Siri « Et ensuite dans Dottoday »';
+
+  @override
+  String get siriTipShow => 'Me montrer';
+
+  @override
+  String get tipDismiss => 'Ne plus afficher';
+
+  @override
+  String get onboardingSiriLine =>
+      'Vous pouvez aussi demander à Siri « Et ensuite dans Dottoday ».';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

@@ -19,6 +19,7 @@ import 'package:dottoday/features/timeline/widgets/day_review.dart';
 import 'package:dottoday/features/timeline/widgets/inbox_nudge_card.dart';
 import 'package:dottoday/features/timeline/widgets/prompt_card.dart';
 import 'package:dottoday/features/timeline/widgets/running_late_sheet.dart';
+import 'package:dottoday/features/timeline/widgets/siri_tip_card.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -77,12 +78,19 @@ class TodayPrompt extends ConsumerWidget {
     if (!data.settings.runningLateNudge ||
         missed == null ||
         dismissed.contains((TodayPromptKind.late, today))) {
-      // Nothing more pressing: the once-a-day inbox card (F3.3).
-      return InboxNudgeCard(
-        enabled: data.settings.inboxNudge,
-        today: today,
-        shape: shape,
-        now: now,
+      // Nothing more pressing: the once-a-day inbox card (F3.3), and the
+      // once-ever Siri tip on iPhone (M14.3; each hides itself).
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          InboxNudgeCard(
+            enabled: data.settings.inboxNudge,
+            today: today,
+            shape: shape,
+            now: now,
+          ),
+          const SiriTipCard(),
+        ],
       );
     }
     return PromptCard(

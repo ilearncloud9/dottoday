@@ -5195,6 +5195,79 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get settingsSiri => 'Siri & Shortcuts';
+
+  @override
+  String get settingsSiriDetail => 'Ask Siri about your day';
+
+  @override
+  String get siriIntro =>
+      'Siri can add a task, tell you what\'s next, and help with the task you\'re on — without opening Dottoday.';
+
+  @override
+  String get siriHowTo =>
+      'Say \"Hey Siri\" or hold the side button, then say a phrase.';
+
+  @override
+  String get siriPhrasesCaption => 'What you can say';
+
+  @override
+  String get siriPhraseAdd => 'Add a task in Dottoday';
+
+  @override
+  String get siriPhraseAddDetail =>
+      'Siri asks what to add. Say a time and it goes on your day; otherwise it goes to the Inbox.';
+
+  @override
+  String get siriPhraseNext => 'What\'s next in Dottoday';
+
+  @override
+  String get siriPhraseNextDetail =>
+      'Siri says what\'s on now, or what comes next.';
+
+  @override
+  String get siriPhraseDone => 'Mark my task done in Dottoday';
+
+  @override
+  String get siriPhraseDoneDetail => 'Ticks off the task you\'re on.';
+
+  @override
+  String get siriPhrasePlus15 => 'Give my task 15 more minutes in Dottoday';
+
+  @override
+  String get siriPhrasePlus15Detail =>
+      'Gives the task you\'re on 15 more minutes.';
+
+  @override
+  String get siriPhraseFocus => 'Start focus in Dottoday';
+
+  @override
+  String get siriPhraseFocusDetail => 'Opens Focus on the task you\'re on.';
+
+  @override
+  String get siriShortcutsCaption => 'Shortcuts';
+
+  @override
+  String get siriShortcutsBody =>
+      'The same five actions are in the Shortcuts app, ready for the Action button, Control Center or your Home Screen.';
+
+  @override
+  String get siriOpenShortcuts => 'Open Shortcuts';
+
+  @override
+  String get siriTipTitle => 'Ask Siri \"What\'s next in Dottoday\"';
+
+  @override
+  String get siriTipShow => 'Show me';
+
+  @override
+  String get tipDismiss => 'Don\'t show again';
+
+  @override
+  String get onboardingSiriLine =>
+      'You can also ask Siri \"What\'s next in Dottoday\".';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override
