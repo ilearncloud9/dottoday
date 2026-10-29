@@ -156,6 +156,26 @@ for (const theme of ['light', 'dark']) {
         .first().click();
       await page.waitForTimeout(900);
       await shot('learned_explained');
+      // M14 (docs/09 M14.7): Privacy's AI status and a brain dump's
+      // proposal with its origin ("simple rules" without a built-in
+      // model). Headless Chromium has no on-device speech, so the sheet
+      // shows no mic (D2); the mic states are goldens.
+      await fresh('/settings/privacy');
+      await page.getByText('Clear thinking history').first()
+        .scrollIntoViewIfNeeded();
+      await page.waitForTimeout(900);
+      await shot('privacy_ai_status');
+      await fresh('/today');
+      await tap(page, 'More options');
+      await tapText(page, 'Brain dump');
+      await page.waitForTimeout(1_200);
+      await page.keyboard.type('Email Sam');
+      await page.waitForTimeout(600);
+      await shot('brain_dump_no_mic');
+      await tapText(page, 'Plan it');
+      await page.waitForTimeout(2_000);
+      await shot('proposal_origin');
+      await tapText(page, 'Discard');
       console.log(`PASS ${tag}`);
     } catch (e) {
       failures.push(`${tag}: ${e.message.split('\n')[0]}`);

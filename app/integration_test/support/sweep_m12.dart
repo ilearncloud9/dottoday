@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
+import 'sweep_m14.dart';
+
 // M12 in the design sweep (docs/09 M12.6): This week, low-energy mode,
 // Search › Past days, and a brain dump with its proposal, on the demo day
 // and the M11 sample.
@@ -60,10 +62,7 @@ Future<void> sweepM12(
   await until(find.text('Plan it'));
   // By its hint: the wide inbox and Earlier dumps' search are fields too.
   await tester.enterText(
-    find.widgetWithText(
-      TextField,
-      'Everything on your mind, one thing per line',
-    ),
+    dumpField(),
     'Email Sam\nTaxes 45m\nCall the bank 4pm',
   );
   await rest();

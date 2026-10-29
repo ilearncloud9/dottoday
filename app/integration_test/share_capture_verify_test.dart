@@ -18,9 +18,7 @@ const _link = 'https://dentist.example/book';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('a shared link is an Inbox task with its source', (
-    tester,
-  ) async {
+  testWidgets('a shared link is an Inbox task with its source', (tester) async {
     final container = await startApp(tester);
     final profile = await container.read(localProfileProvider.future);
     final repo = container.read(occurrenceRepositoryProvider);

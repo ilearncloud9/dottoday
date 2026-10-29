@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- M14.7: The design sweep covers the new screens (Privacy's AI status, Siri & Shortcuts on iPhone, Brain dump with or without the mic, a plan's origin) on the Mac, the web and devices.
 - M14.6: Dictate notes. A task's notes have the same mic in their corner: your words go in where the cursor is, just like the keyboard's own mic — on your device only.
 - M14.5: Speak your brain dump. Tap the mic in the corner of Brain dump's box and say what's on your mind: pause, or say "next", to start a new task ("weiter", "suivant", "siguiente" in German, French and Spanish). The words appear as you speak; Plan it stops listening first. The mic shows only where your device can understand speech by itself, and your words never leave it.
 - M14.4: Dictation engine, on your device only. Dottoday can now use your phone's, Mac's or browser's own on-device speech recognizer — never a server. Nothing you say is recorded, stored or logged. (The mic appears in the next steps.)
