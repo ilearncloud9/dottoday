@@ -18,7 +18,17 @@ external JSAny? _eval(String code);
 // is unavailable too; a stubbed recognizer is started with
 // processLocally and its results become partials and finals.
 
-const _stub = '''
+/// The browser as Google Chrome (the test runner is headless Chromium).
+const _chrome = '''
+Object.defineProperty(navigator, 'userAgentData', {
+  configurable: true,
+  value: {brands: [{brand: 'Google Chrome', version: '150'}]},
+});
+''';
+
+const _stub =
+    '''
+$_chrome
 globalThis.__made = [];
 globalThis.SpeechRecognition = class {
   constructor() { this.processLocally = false; __made.push(this); }
@@ -40,11 +50,30 @@ globalThis.__answer = 'available';
 
 void main() {
   final original = globalContext.getProperty<JSAny?>('SpeechRecognition'.toJS);
-  tearDown(() => globalContext.setProperty('SpeechRecognition'.toJS, original));
+  tearDown(() {
+    globalContext.setProperty('SpeechRecognition'.toJS, original);
+    // Back to the browser's own brands (an own property shadows them).
+    _eval('delete navigator.userAgentData;');
+  });
 
-  test("the browser's own API, if any, answers without throwing", () async {
-    final a = await const WebSpeechRecognizer().availability('en-US');
-    expect(SpeechAvailability.values, contains(a));
+  test('headless Chromium is not trusted: unavailable, never probed', () async {
+    // Its real available() crashes the tab (M14 PR): it must not be called.
+    expect(
+      await const WebSpeechRecognizer().availability('en-US'),
+      SpeechAvailability.unavailable,
+    );
+  });
+
+  test('another Chromium (Brave) with a stub: still unavailable', () async {
+    _eval(_stub);
+    _eval('''
+Object.defineProperty(navigator, 'userAgentData', {
+  configurable: true, value: {brands: [{brand: 'Brave'}]},
+});''');
+    expect(
+      await const WebSpeechRecognizer().availability('en-US'),
+      SpeechAvailability.unavailable,
+    );
   });
 
   test('no API: unavailable', () async {
@@ -58,7 +87,7 @@ void main() {
   test(
     'a server-only API (no available/processLocally): unavailable',
     () async {
-      _eval('globalThis.SpeechRecognition = class { start() {} };');
+      _eval('$_chrome globalThis.SpeechRecognition = class { start() {} };');
       expect(
         await const WebSpeechRecognizer().availability('en-US'),
         SpeechAvailability.unavailable,

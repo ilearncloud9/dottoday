@@ -33,7 +33,11 @@ server. Our trust line is "data on your device" (00-vision); titles and notes ar
      `processLocally` property; if either is missing — Safari, Firefox, older Chrome with only
      the server-backed `webkitSpeechRecognition` — the mic is unavailable. `downloadable` and
      `downloading` read as unavailable in v1: Dottoday does not trigger a language-pack download
-     the user did not ask for.
+     the user did not ask for. The probe runs only in Google Chrome and Microsoft Edge
+     (`navigator.userAgentData.brands`): in a Chromium without Google's on-device speech
+     component (CI's headless Chromium; likely Brave, Opera, plain Chromium) `available()` with
+     `processLocally` crashed the whole tab (found on the M14 PR, 2026-10-29), so elsewhere the
+     mic stays hidden without asking.
    Audio and transcripts never leave the device, are never stored (only the text the user keeps
    in the field is saved, as typed text is) and are never logged.
 2. **Hidden where unavailable (D2).** The mic shows only where the current locale has an

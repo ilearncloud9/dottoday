@@ -54,7 +54,7 @@ final class DictationControllerProvider
 }
 
 String _$dictationControllerHash() =>
-    r'2813194814c01b30597b83686ae6c5c4c056e6e1';
+    r'80227abc05b5053c9f61d9b3688235726a5eef73';
 
 /// Runs one dictation at a time (ADR-0014): starts the recognizer, feeds
 /// its events through [Dictation] with the injected clock, ticks for

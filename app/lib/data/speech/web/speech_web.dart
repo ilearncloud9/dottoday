@@ -18,8 +18,28 @@ final class WebSpeechRecognizer implements SpeechRecognizer {
 
   static JSObject? _active;
 
+  /// The browsers that ship on-device Web Speech (ADR-0014). Elsewhere —
+  /// headless Chromium, Brave, Opera, plain Chromium — `available()` with
+  /// `processLocally` can crash the tab (found in CI's headless Chromium,
+  /// M14 PR), so it is never called there and the mic stays hidden (D2).
+  static const _onDeviceBrowsers = {'Google Chrome', 'Microsoft Edge'};
+
+  static bool get _trustedBrowser {
+    final data = globalContext
+        .getProperty<JSObject>('navigator'.toJS)
+        .getProperty<JSObject?>('userAgentData'.toJS);
+    final brands = data?.getProperty<JSArray<JSObject>?>('brands'.toJS);
+    if (brands == null) return false;
+    return brands.toDart.any(
+      (b) => _onDeviceBrowsers.contains(
+        b.getProperty<JSString?>('brand'.toJS)?.toDart,
+      ),
+    );
+  }
+
   /// The constructor, only when it can promise on-device recognition.
   static JSFunction? get _api {
+    if (!_trustedBrowser) return null;
     final ctor = globalContext.getProperty<JSAny?>('SpeechRecognition'.toJS);
     if (ctor == null || !ctor.isA<JSFunction>()) return null;
     final api = ctor as JSFunction;
