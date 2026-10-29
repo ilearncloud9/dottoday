@@ -37,7 +37,8 @@ final class PromptApiTransport implements ThinkingTransport {
   @override
   Future<ThinkingAvailability> availability() async {
     final api = _api;
-    if (api == null) return ThinkingAvailability.unavailable;
+    // No API (Safari, Firefox, older Chrome): this browser can't run it.
+    if (api == null) return parseAvailability('not_eligible');
     final value = await api.availability(_options('en')).toDart;
     return parseAvailability(value.toDart);
   }

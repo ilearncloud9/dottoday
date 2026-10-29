@@ -30,7 +30,7 @@ void main() {
   test('no LanguageModel: unavailable, no answer', () async {
     globalContext.setProperty('LanguageModel'.toJS, null);
     const t = PromptApiTransport();
-    expect(await t.availability(), ThinkingAvailability.unavailable);
+    expect(await t.availability(), ThinkingAvailability.notEligible);
     expect(
       await t.generate(
         ThinkingPrompts.suggestDuration(
@@ -45,8 +45,8 @@ void main() {
     for (final (word, expected) in [
       ('available', ThinkingAvailability.available),
       ('downloadable', ThinkingAvailability.downloadable),
-      ('downloading', ThinkingAvailability.downloadable),
-      ('unavailable', ThinkingAvailability.unavailable),
+      ('downloading', ThinkingAvailability.downloading),
+      ('unavailable', ThinkingAvailability.notEligible),
     ]) {
       _eval(
         'globalThis.LanguageModel = '

@@ -163,7 +163,7 @@ void main() {
     });
 
     test("then Quick Add's parser, bullets and times understood", () async {
-      final s = _setUp(state: ThinkingAvailability.unavailable);
+      final s = _setUp(state: ThinkingAvailability.notEligible);
       final p = _ok(await s.service.planFromText(request))!;
       expect(p.origin, ThinkingOrigin.rules);
       expect(p.dots.map((d) => d.title), ['Gym', 'Call mum']);
@@ -211,12 +211,12 @@ void main() {
       final s = _setUp();
       s.learning.lengths['Gym'] = [60, 60, 60];
       expect(_ok(await s.service.suggestDuration(request))!.minutes, 25);
-      s.model.state = ThinkingAvailability.unavailable;
+      s.model.state = ThinkingAvailability.notEligible;
       expect(_ok(await s.service.suggestDuration(request)), isNull);
     });
 
     test('nothing known: no suggestion', () async {
-      final s = _setUp(state: ThinkingAvailability.unavailable);
+      final s = _setUp(state: ThinkingAvailability.notEligible);
       expect(_ok(await s.service.suggestDuration(request)), isNull);
     });
   });

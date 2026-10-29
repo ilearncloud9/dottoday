@@ -4,6 +4,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/thinking/thinking_backend.dart';
 import 'package:dottoday/domain/thinking/thinking_prompts.dart';
 import 'package:dottoday/domain/thinking/thinking_proposals.dart';
+import 'package:dottoday/domain/thinking/thinking_status.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/features/proposals/proposal_host.dart';
 import 'package:dottoday/features/task_editor/breakdown/breakdown_flow.dart';
@@ -59,6 +60,7 @@ class _Opener extends StatelessWidget {
 Future<(ProposalHarness, FakeThinkingTransport)> _pump(
   WidgetTester tester, {
   ThinkingAvailability model = ThinkingAvailability.available,
+  ThinkingVendor vendor = ThinkingVendor.none,
   ValueChanged<List<ProposedStep>>? draft,
   double width = 390,
   WriteBatch? history,
@@ -90,6 +92,7 @@ Future<(ProposalHarness, FakeThinkingTransport)> _pump(
       overrides: [
         ...h.overrides,
         thinkingTransportProvider.overrideWithValue(transport),
+        thinkingVendorProvider.overrideWithValue(vendor),
       ],
       child: testApp(
         Scaffold(
@@ -253,9 +256,11 @@ void main() {
   testWidgets('no model: an empty template, Accept waits for titles', (
     tester,
   ) async {
-    final (h, _) = await _pump(tester, model: ThinkingAvailability.unavailable);
+    final (h, _) = await _pump(tester, model: ThinkingAvailability.notEligible);
     await _open(tester);
     expect(find.text('on-device'), findsNothing);
+    expect(find.text('simple rules'), findsOneWidget, reason: 'M14.2');
+    expect(find.textContaining('Made with simple rules'), findsNothing);
     expect(_field('Step 1'), findsOneWidget);
     expect(find.text('Total 30 min · the dot grows to fit'), findsOneWidget);
     final accept = find.ancestor(
@@ -271,6 +276,25 @@ void main() {
     expect(tester.widget<FilledButton>(accept).onPressed, isNotNull);
     await _accept(tester);
     expect(h.writes.batches.single.subtasks, hasLength(3));
+  });
+
+  testWidgets('rules with Apple Intelligence off: the hint, nothing written', (
+    tester,
+  ) async {
+    final (h, _) = await _pump(
+      tester,
+      model: ThinkingAvailability.notEnabled,
+      vendor: ThinkingVendor.appleIos,
+    );
+    await _open(tester);
+    expect(
+      find.bySemanticsLabel(
+        'Made with simple rules · '
+        'Turn on Apple Intelligence for smarter plans',
+      ),
+      findsOneWidget,
+    );
+    expect(h.writes.batches, isEmpty);
   });
 
   testWidgets('Add step 1: Accept hands the steps to the draft, no write', (

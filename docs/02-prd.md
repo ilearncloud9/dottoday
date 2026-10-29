@@ -80,6 +80,7 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
   stay what a tap opens (44 pt rows a screen reader lists, R-12); a line that is only a listed link is
   not repeated. In-repo renderer, no package (rejected: a markdown package — a new dependency for
   four constructs; a WYSIWYG field — a new concept on four platforms).
+  Clarified in M14.6 (owner, 2026-10-28, D6): where the device recognizes speech on-device, the Notes field has a mic in its bottom-end corner that inserts text at the cursor, like the keyboard mic (ADR-0014).
 - [F2.10] Saving is optimistic; the sheet closes immediately. If the write fails (a full disk), nothing typed is lost (R-08): Add reopens as it was — title, time, colour, a pasted list — with the failure and Try again; Add another keeps the sheet. The editor stays open on a failed Save with the same strip, and a new subtask stays in its field. (M8.5b; rejected: holding the sheet open until the write lands, which breaks "closes immediately".)
 - [F2.11] Subtasks gain an optional duration each and an order; a task's duration may be the sum of its steps.
   Occurrences record actual start and actual end timestamps when the user starts/completes them
@@ -244,6 +245,8 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
 - [F9.2] iOS Live Activity / Dynamic Island and an Android ongoing notification for the live dot; interactive
   widget actions; Control Center / Action button controls. All surfaces read the day snapshot and call
   the five App Intents only; none talk to Supabase (`11-standout-roadmap.md` A1, B5, B6).
+  Clarified in M14.3 (owner, 2026-10-28, D3): on iPhone, Settings › Siri & Shortcuts lists the five
+  App Intent phrases and opens Shortcuts; no new intent, no Siri work on Mac or Android.
 - [F9.3] Apple Watch complication and glance: Phase 2 (not blocking v1), but data layer designed for it.
   Watch rule (ADR-0010): the watch never authenticates — no account, network or token on the wrist; the
   phone pushes the day snapshot; check-offs and +15 queue on the watch; native app (Swift / Compose).
@@ -268,6 +271,7 @@ The milestones after v1's core (M7 calendars, M8 export/l10n/device QA) come fro
 | M10 Start | B4 ThinkingService (on-device first), B3 ProposalSheet, B1 Break it down, B2 Smallest step, B3 Unstick, A3 Focus |
 | M11 Control | C1 Rebalance proposal, C3 Reality thread, C2 Routines, C4 energy suggestions (behind a switch) |
 | M12 Reflect + capture | D1 weekly review + share, D2 low-energy mode, D3 thread journal, B6 capture anywhere, B4 brain-dump |
+| M14 Voice + AI clarity | B7 speak it (on-device mic in Brain dump — a pause or "next" starts a new line — and Notes; ADR-0014), B4 AI status (which path plans and how to turn on the better one), B6 Siri discoverability (iPhone) |
 
 Phase 2 (ideas, not committed — the owner decides later): F1 Windows/Linux, F2 integrations (Reminders,
 Google Tasks, Todoist, Notion), E1 body double, A2 wallpaper / watch face, the watch app (F3, ADR-0010),

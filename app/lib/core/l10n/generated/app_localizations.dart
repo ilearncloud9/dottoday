@@ -7494,6 +7494,348 @@ abstract class AppLocalizations {
   /// **'See time: your next dot on the lock screen, widgets, the Mac menu bar and Siri, and alarms that really ring.\nStart: Break it down into small steps, Focus on one dot, and gentle help when a task won\'t start.\nStay in control: Rebalance shows a plan before anything moves; Plan / Reality shows how the day really went.\nRoutines, energy suggestions and lengths learned from your own days, on your device.\nThis week as seven dots, Past days to look back, and low-energy mode for hard days. Nothing to keep up.\nShare a page or a note to Dottoday from any app, or empty your head with Brain dump.'**
   String get releaseNotes100;
 
+  /// Privacy › Help with thinking (M14.2): Apple Intelligence is off on this iPhone; where to turn it on.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Apple Intelligence in iPhone Settings › Apple Intelligence & Siri. Dottoday will use it automatically.'**
+  String get privacyAiAppleOffIos;
+
+  /// Privacy › Help with thinking (M14.2): Apple Intelligence is off on this Mac; where to turn it on.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Apple Intelligence in System Settings › Apple Intelligence & Siri. Dottoday will use it automatically.'**
+  String get privacyAiAppleOffMac;
+
+  /// Privacy › Help with thinking (M14.2): Apple Intelligence is preparing its model.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Intelligence is getting ready on this device. It can take a while.'**
+  String get privacyAiAppleDownloading;
+
+  /// Privacy › Help with thinking (M14.2): Gemini Nano can be downloaded by Android.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini Nano can be downloaded on this phone; it downloads in the background.'**
+  String get privacyAiGoogleDownloadable;
+
+  /// Privacy › Help with thinking (M14.2): Gemini Nano is downloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini Nano is downloading on this phone. Dottoday will use it once it\'s ready.'**
+  String get privacyAiGoogleDownloading;
+
+  /// Privacy › Help with thinking (M14.2): the browser's built-in model can be downloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'This browser can download its built-in AI model. Dottoday will use it once it\'s there.'**
+  String get privacyAiChromeDownloadable;
+
+  /// Privacy › Help with thinking (M14.2): the browser is downloading its built-in model.
+  ///
+  /// In en, this message translates to:
+  /// **'This browser is downloading its built-in AI model. Dottoday will use it once it\'s ready.'**
+  String get privacyAiChromeDownloading;
+
+  /// Privacy › Help with thinking (M14.2): this device, OS or browser can't run an on-device model.
+  ///
+  /// In en, this message translates to:
+  /// **'This device can\'t run the built-in model. Dottoday uses your history and simple rules.'**
+  String get privacyAiNotEligible;
+
+  /// Privacy › Help with thinking (M14.2): button that opens the OS settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get privacyAiOpenSettings;
+
+  /// Privacy › Help with thinking (M14.2): under Open Settings on iPhone; iOS only allows opening the app's own page.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens Dottoday\'s page in Settings. Apple doesn\'t let apps open Apple Intelligence directly: go back to Settings, then Apple Intelligence & Siri.'**
+  String get privacyAiOpenSettingsIos;
+
+  /// Proposal origin chip (M14.2): the plan was made by Dottoday's rules, not a model. Lower case like 'on-device'.
+  ///
+  /// In en, this message translates to:
+  /// **'simple rules'**
+  String get thinkingOriginRules;
+
+  /// Proposal hint (M14.2, StatusHint): first, muted part.
+  ///
+  /// In en, this message translates to:
+  /// **'Made with simple rules'**
+  String get thinkingHintLead;
+
+  /// Proposal hint (M14.2): accent part when Apple Intelligence is off; taps to Privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Apple Intelligence for smarter plans'**
+  String get thinkingHintApple;
+
+  /// Proposal hint (M14.2): accent part while Apple Intelligence prepares its model.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Intelligence is getting ready for smarter plans'**
+  String get thinkingHintAppleReady;
+
+  /// Proposal hint (M14.2): accent part while Gemini Nano is downloadable or downloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini Nano makes smarter plans once it\'s on this phone'**
+  String get thinkingHintGoogle;
+
+  /// Proposal hint (M14.2): accent part while the browser's model is downloadable or downloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Your browser\'s built-in AI makes smarter plans once it\'s ready'**
+  String get thinkingHintChrome;
+
+  /// Proposal hint (M14.2): the ×; the hint never shows again on this device.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show again'**
+  String get thinkingHintDismiss;
+
+  /// Brain dump: caption under Plan it when Apple Intelligence will answer (M14.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Plans with Apple Intelligence on this device'**
+  String get dumpPlansApple;
+
+  /// Brain dump: caption under Plan it when Gemini Nano will answer (M14.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Plans with Gemini Nano on this phone'**
+  String get dumpPlansGoogle;
+
+  /// Brain dump: caption under Plan it when the browser's built-in model will answer (M14.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Plans with your browser\'s built-in AI, on this device'**
+  String get dumpPlansChrome;
+
+  /// Brain dump: caption under Plan it when Dottoday's rules will answer (M14.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Plans with simple rules'**
+  String get dumpPlansRules;
+
+  /// What's new in 1.1.0 (M14: voice + AI clarity), one item per line (PRD F11).
+  ///
+  /// In en, this message translates to:
+  /// **'Speak it: tap the mic in Brain dump and say what\'s on your mind — pause, or say \"next\", to start a new task. The mic is in a task\'s notes too. Your words are turned into text on this device and never sent anywhere.\nAsk Siri: on iPhone, Settings › Siri & Shortcuts shows the five things you can ask, like \"What\'s next in Dottoday\".\nKnow who plans: Settings › Privacy says whether Apple Intelligence, Gemini Nano or your browser\'s built-in AI is helping on this device, and how to turn it on. Plans made with simple rules now say so.'**
+  String get releaseNotes110;
+
+  /// StatusHint (M14.2): a muted lead and an accent action on one line, e.g. 'Made with simple rules · Turn on Apple Intelligence for smarter plans'.
+  ///
+  /// In en, this message translates to:
+  /// **'{lead} · {action}'**
+  String statusHintJoin(String lead, String action);
+
+  /// Settings row and page title (M14.3, iPhone only): Siri and the Shortcuts app.
+  ///
+  /// In en, this message translates to:
+  /// **'Siri & Shortcuts'**
+  String get settingsSiri;
+
+  /// Settings › Siri & Shortcuts row subtitle (M14.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Siri about your day'**
+  String get settingsSiriDetail;
+
+  /// Siri page (M14.3): what Siri can do with Dottoday.
+  ///
+  /// In en, this message translates to:
+  /// **'Siri can add a task, tell you what\'s next, and help with the task you\'re on — without opening Dottoday.'**
+  String get siriIntro;
+
+  /// Siri page (M14.3): how to invoke Siri.
+  ///
+  /// In en, this message translates to:
+  /// **'Say \"Hey Siri\" or hold the side button, then say a phrase.'**
+  String get siriHowTo;
+
+  /// Siri page (M14.3): caption above the five phrases.
+  ///
+  /// In en, this message translates to:
+  /// **'What you can say'**
+  String get siriPhrasesCaption;
+
+  /// Siri phrase; must match ios/Runner/<lang>.lproj/AppShortcuts.strings with the app name (siri_phrases_test).
+  ///
+  /// In en, this message translates to:
+  /// **'Add a task in Dottoday'**
+  String get siriPhraseAdd;
+
+  /// Siri page: what the Add a task phrase does.
+  ///
+  /// In en, this message translates to:
+  /// **'Siri asks what to add. Say a time and it goes on your day; otherwise it goes to the Inbox.'**
+  String get siriPhraseAddDetail;
+
+  /// Siri phrase; must match AppShortcuts.strings (siri_phrases_test).
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s next in Dottoday'**
+  String get siriPhraseNext;
+
+  /// Siri page: what the What's next phrase does.
+  ///
+  /// In en, this message translates to:
+  /// **'Siri says what\'s on now, or what comes next.'**
+  String get siriPhraseNextDetail;
+
+  /// Siri phrase; must match AppShortcuts.strings (siri_phrases_test).
+  ///
+  /// In en, this message translates to:
+  /// **'Mark my task done in Dottoday'**
+  String get siriPhraseDone;
+
+  /// Siri page: what the Mark done phrase does.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticks off the task you\'re on.'**
+  String get siriPhraseDoneDetail;
+
+  /// Siri phrase; must match AppShortcuts.strings (siri_phrases_test).
+  ///
+  /// In en, this message translates to:
+  /// **'Give my task 15 more minutes in Dottoday'**
+  String get siriPhrasePlus15;
+
+  /// Siri page: what the +15 phrase does.
+  ///
+  /// In en, this message translates to:
+  /// **'Gives the task you\'re on 15 more minutes.'**
+  String get siriPhrasePlus15Detail;
+
+  /// Siri phrase; must match AppShortcuts.strings (siri_phrases_test).
+  ///
+  /// In en, this message translates to:
+  /// **'Start focus in Dottoday'**
+  String get siriPhraseFocus;
+
+  /// Siri page: what the Start focus phrase does.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens Focus on the task you\'re on.'**
+  String get siriPhraseFocusDetail;
+
+  /// Siri page (M14.3): caption above the Shortcuts part.
+  ///
+  /// In en, this message translates to:
+  /// **'Shortcuts'**
+  String get siriShortcutsCaption;
+
+  /// Siri page (M14.3): the same actions are in the Shortcuts app.
+  ///
+  /// In en, this message translates to:
+  /// **'The same five actions are in the Shortcuts app, ready for the Action button, Control Center or your Home Screen.'**
+  String get siriShortcutsBody;
+
+  /// Siri page (M14.3): button that opens the Shortcuts app.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Shortcuts'**
+  String get siriOpenShortcuts;
+
+  /// Today tip card (M14.3, iPhone, once): suggests a Siri phrase.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Siri \"What\'s next in Dottoday\"'**
+  String get siriTipTitle;
+
+  /// Today tip card (M14.3): opens Settings › Siri & Shortcuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Show me'**
+  String get siriTipShow;
+
+  /// A one-time tip card's × (M14): it never shows again on this device.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show again'**
+  String get tipDismiss;
+
+  /// Onboarding Done step (M14.3, iPhone only): one quiet line about Siri.
+  ///
+  /// In en, this message translates to:
+  /// **'You can also ask Siri \"What\'s next in Dottoday\".'**
+  String get onboardingSiriLine;
+
+  /// Brain dump dictation (D6): the ONE spoken word that starts a new line. A single common word, lower case; owner-decided per language.
+  ///
+  /// In en, this message translates to:
+  /// **'next'**
+  String get dictationCommand;
+
+  /// Mic button (M14.5): screen reader label and tooltip when idle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dictate'**
+  String get micDictate;
+
+  /// Mic button (M14.5): screen reader label and tooltip while listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop dictation'**
+  String get micStop;
+
+  /// Quiet line when the microphone permission is off (M14.5); never red.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone is off for Dottoday'**
+  String get micDenied;
+
+  /// Dictation stopped for a reason other than the user (interruption, recognizer).
+  ///
+  /// In en, this message translates to:
+  /// **'Dictation stopped. Tap the mic to go on.'**
+  String get failureSpeech;
+
+  /// In-app rationale before Android's microphone dialog (D5).
+  ///
+  /// In en, this message translates to:
+  /// **'Use the microphone?'**
+  String get micRationaleTitle;
+
+  /// In-app rationale before the system microphone dialog (D5, same meaning as the iOS usage text).
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday listens only while the mic button is on, to turn your words into text on this device.'**
+  String get micRationaleBody;
+
+  /// In-app microphone rationale: go on to the system dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get micRationaleContinue;
+
+  /// Brain dump caption while listening (M14.5); the quoted word is dictationCommand.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause, or say \"next\", to start a new task.'**
+  String get dumpListening;
+
+  /// Brain dump field hint where the mic is available (M14.5).
+  ///
+  /// In en, this message translates to:
+  /// **'Type or tap the mic. One thing per line.'**
+  String get dumpHintMic;
+
+  /// Brain dump first-use dictation tip card title (M14.5, once).
+  ///
+  /// In en, this message translates to:
+  /// **'Speak your list'**
+  String get dumpMicTipTitle;
+
+  /// Brain dump first-use dictation tip (M14.5): the two ways to start a new line, with an example.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause, or say \"next\", between things. \"Call the dentist … next … buy milk\" becomes two lines.'**
+  String get dumpMicTipBody;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

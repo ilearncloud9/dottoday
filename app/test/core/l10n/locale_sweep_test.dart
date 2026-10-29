@@ -1,6 +1,7 @@
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/speech/speech_providers.dart';
 import 'package:dottoday/data/thinking/local_thinking_memory.dart';
 import 'package:dottoday/data/thinking/thinking_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -22,6 +23,7 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../features/settings/settings_harness.dart';
+import '../../support/fake_speech.dart';
 import '../../support/inbox_harness.dart';
 import '../../support/journal_fixtures.dart';
 import '../../support/onboarding_harness.dart';
@@ -95,6 +97,22 @@ final _screens = <String, _Screen>{
         ),
       ),
       extra: [thinkingMemoryProvider.overrideWithValue(_dumpMemory)],
+    ),
+  ),
+  // Brain dump with the mic (M14.5): the mic-aware hint and the mic.
+  'Brain dump · mic': _screen(
+    (t, s) => _pumpBoard(
+      t,
+      s,
+      Scaffold(
+        body: SingleChildScrollView(
+          child: BrainDumpBody(today: DateTime(2026, 10, 21)),
+        ),
+      ),
+      extra: [
+        thinkingMemoryProvider.overrideWithValue(_dumpMemory),
+        speechRecognizerProvider.overrideWithValue(FakeSpeechRecognizer()),
+      ],
     ),
   ),
   // Search › Past days (M12.3).

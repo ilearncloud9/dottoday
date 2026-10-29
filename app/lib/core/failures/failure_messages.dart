@@ -20,6 +20,8 @@ String failureMessage(AppLocalizations l10n, AppFailure failure) {
       l10n.failurePermissionNotifications,
     PermissionFailure(permission: AppPermission.calendar) =>
       l10n.failurePermissionCalendar,
+    PermissionFailure(permission: AppPermission.microphone) => l10n.micDenied,
+    SpeechFailure() => l10n.failureSpeech,
     UndoExpiredFailure() => l10n.failureUndoExpired,
     UnexpectedFailure() => l10n.failureUnexpected,
   };

@@ -269,7 +269,13 @@ class ProposalBedtimeRow extends StatelessWidget {
                 )
               : null,
         ),
-        Text(label, style: t.styles.rowMeta.copyWith(color: t.colors.muted)),
+        // Wraps at large text instead of overflowing (docs/10 §5.4).
+        Expanded(
+          child: Text(
+            label,
+            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+          ),
+        ),
       ],
     );
   }

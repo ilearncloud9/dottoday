@@ -10,6 +10,9 @@
 	<!-- Export / import through the save and open panels (07 macOS, M8.1). -->
 	<key>com.apple.security.files.user-selected.read-write</key>
 	<true/>
+	<!-- Dictation: the microphone, on-device recognition only (M14.4, ADR-0014). -->
+	<key>com.apple.security.device.audio-input</key>
+	<true/>
 	<!-- Device calendars through EventKit (docs/09 M7.1b). -->
 	<key>com.apple.security.personal-information.calendars</key>
 	<true/>

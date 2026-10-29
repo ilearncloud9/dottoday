@@ -4,6 +4,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/intents/siri_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
@@ -77,7 +78,7 @@ String _syncValue(AppLocalizations l10n, SyncStatus s) {
   };
 }
 
-/// ABOUT: Help, Privacy, About Dottoday (version, What's new, licences;
+/// ABOUT: Help, Siri & Shortcuts (iPhone, M14.3), Privacy, About Dottoday (version, What's new, licences;
 /// pages, M3f.7) and Send feedback (PRD F11, R-19).
 class AboutGroup extends ConsumerWidget {
   const AboutGroup({super.key});
@@ -96,6 +97,15 @@ class AboutGroup extends ConsumerWidget {
           title: l10n.settingsHelp,
           onTap: () => _open(context, SettingsPage.help),
         ),
+        // iPhone only (D3): the row and the page are hidden elsewhere.
+        if (ref.watch(siriAvailableProvider))
+          SettingsRow(
+            glyph: DotGlyphs.mic,
+            tint: t.tasks[TaskColor.violet].ink,
+            title: l10n.settingsSiri,
+            subtitle: l10n.settingsSiriDetail,
+            onTap: () => _open(context, SettingsPage.siri),
+          ),
         SettingsRow(
           glyph: DotGlyphs.lock,
           tint: t.tasks[TaskColor.teal].ink,

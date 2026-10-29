@@ -11,8 +11,10 @@ import Foundation
 
 /// `dottoday/thinking` (lib/data/thinking/channel_thinking_transport.dart,
 /// docs/09 M10.1, ADR-0009): Apple Foundation Models on iOS/macOS 26+, on
-/// the device only. `availability` answers "available", "downloadable"
-/// (Apple Intelligence still preparing the model) or "unavailable";
+/// the device only. `availability` answers "available", "downloading"
+/// (Apple Intelligence still preparing the model), "not_enabled" (Apple
+/// Intelligence is off), "not_eligible" (device, OS or region can't) or
+/// "unknown" (docs/09 M14.1; words pinned by thinking_wire_contract_test);
 /// `generate` runs one guided generation and returns its JSON, which Dart
 /// validates before anything is proposed. Compiled into the iOS and the
 /// macOS Runner (one file, R-13). No network API is used here (policy test).
@@ -46,12 +48,15 @@ enum ThinkingBridge {
       if #available(iOS 26.0, macOS 26.0, *) {
         switch SystemLanguageModel.default.availability {
         case .available: return "available"
-        case .unavailable(.modelNotReady): return "downloadable"
-        default: return "unavailable"
+        case .unavailable(.appleIntelligenceNotEnabled): return "not_enabled"
+        case .unavailable(.deviceNotEligible): return "not_eligible"
+        case .unavailable(.modelNotReady): return "downloading"
+        default: return "unknown"
         }
       }
     #endif
-    return "unavailable"
+    // Before iOS/macOS 26 there is no on-device model to turn on.
+    return "not_eligible"
   }
 
   /// The model's answer as JSON, or nil (unavailable, refused, failed).

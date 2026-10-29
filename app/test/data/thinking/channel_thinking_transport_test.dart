@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 // Availability detection per platform (docs/09 M10.1): the words Swift
 // (Foundation Models) and Kotlin (ML Kit GenAI FeatureStatus) send, and a
-// platform with no handler (Windows/Linux, tests) reads as unavailable.
+// platform with no handler (Windows/Linux, tests) reads as not eligible.
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -16,19 +16,18 @@ void main() {
   tearDown(() => messenger.setMockMethodCallHandler(channel, null));
 
   final cases = {
-    // iOS/macOS: SystemLanguageModel.availability.
+    // iOS/macOS: SystemLanguageModel.availability (docs/09 M14.1).
     'Apple available': ('available', ThinkingAvailability.available),
-    'Apple model not ready': (
-      'downloadable',
-      ThinkingAvailability.downloadable,
-    ),
-    'Apple not eligible / off': (
-      'unavailable',
-      ThinkingAvailability.unavailable,
+    'Apple model not ready': ('downloading', ThinkingAvailability.downloading),
+    'Apple Intelligence off': ('not_enabled', ThinkingAvailability.notEnabled),
+    'Apple device not eligible': (
+      'not_eligible',
+      ThinkingAvailability.notEligible,
     ),
     // Android: FeatureStatus AVAILABLE / DOWNLOADABLE / DOWNLOADING / UNAVAILABLE.
-    'Android downloading': ('downloading', ThinkingAvailability.downloadable),
-    'unknown word': ('maybe', ThinkingAvailability.unavailable),
+    'Android downloadable': ('downloadable', ThinkingAvailability.downloadable),
+    'Android downloading': ('downloading', ThinkingAvailability.downloading),
+    'unknown word': ('maybe', ThinkingAvailability.unknown),
   };
   for (final MapEntry(key: name, value: (word, expected)) in cases.entries) {
     test(name, () async {
@@ -37,10 +36,10 @@ void main() {
     });
   }
 
-  test('no handler: unavailable', () async {
+  test('no handler: not eligible', () async {
     expect(
       await const ChannelThinkingTransport().availability(),
-      ThinkingAvailability.unavailable,
+      ThinkingAvailability.notEligible,
     );
   });
 

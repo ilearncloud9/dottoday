@@ -40,4 +40,18 @@ void f(Logger log) {
     ];
     expect(offenders, isEmpty, reason: 'docs/06 §8 no_pii_in_logs');
   });
+
+  // Dictation (docs/09 M14.4, ADR-0014): what was said is never logged,
+  // not even as an event — speech code has no logger at all.
+  test('speech code never logs', () {
+    final offenders = [
+      for (final MapEntry(key: path, value: src) in readLibSources(
+        'lib',
+      ).entries)
+        if (path.contains('speech/') &&
+            RegExp(r'logger|Logger|debugPrint|print\(').hasMatch(src))
+          'lib/$path',
+    ];
+    expect(offenders, isEmpty);
+  });
 }

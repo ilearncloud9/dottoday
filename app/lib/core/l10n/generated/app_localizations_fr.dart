@@ -5149,6 +5149,207 @@ class AppLocalizationsFr extends AppLocalizations {
       'Voir le temps : votre prochain point sur l\'écran verrouillé, les widgets, la barre des menus du Mac et Siri, et des alarmes qui sonnent vraiment.\nCommencer : découpez une tâche en petites étapes, concentrez-vous sur un point, et une aide douce quand une tâche ne démarre pas.\nGarder la main : Rééquilibrer montre un plan avant que rien ne bouge ; Plan / Réalité montre comment la journée s\'est vraiment passée.\nRoutines, suggestions d\'énergie et durées apprises de vos propres journées, sur votre appareil.\nCette semaine en sept points, Jours passés pour regarder en arrière, et le mode basse énergie pour les jours difficiles. Sans rien à tenir.\nPartagez une page ou une note vers Dottoday depuis n\'importe quelle app, ou videz votre tête avec Vider sa tête.';
 
   @override
+  String get privacyAiAppleOffIos =>
+      'Activez Apple Intelligence dans Réglages de l\'iPhone › Apple Intelligence et Siri. Dottoday l\'utilisera automatiquement.';
+
+  @override
+  String get privacyAiAppleOffMac =>
+      'Activez Apple Intelligence dans Réglages Système › Apple Intelligence et Siri. Dottoday l\'utilisera automatiquement.';
+
+  @override
+  String get privacyAiAppleDownloading =>
+      'Apple Intelligence se prépare sur cet appareil. Cela peut prendre un moment.';
+
+  @override
+  String get privacyAiGoogleDownloadable =>
+      'Gemini Nano peut être téléchargé sur ce téléphone ; le téléchargement se fait en arrière-plan.';
+
+  @override
+  String get privacyAiGoogleDownloading =>
+      'Gemini Nano est en cours de téléchargement sur ce téléphone. Dottoday l\'utilisera dès qu\'il sera prêt.';
+
+  @override
+  String get privacyAiChromeDownloadable =>
+      'Ce navigateur peut télécharger son modèle d\'IA intégré. Dottoday l\'utilisera dès qu\'il sera là.';
+
+  @override
+  String get privacyAiChromeDownloading =>
+      'Ce navigateur télécharge son modèle d\'IA intégré. Dottoday l\'utilisera dès qu\'il sera prêt.';
+
+  @override
+  String get privacyAiNotEligible =>
+      'Cet appareil ne peut pas faire tourner le modèle intégré. Dottoday utilise votre historique et des règles simples.';
+
+  @override
+  String get privacyAiOpenSettings => 'Ouvrir les Réglages';
+
+  @override
+  String get privacyAiOpenSettingsIos =>
+      'Ouvre la page de Dottoday dans Réglages. Apple ne permet pas aux apps d\'ouvrir Apple Intelligence directement : revenez à Réglages, puis Apple Intelligence et Siri.';
+
+  @override
+  String get thinkingOriginRules => 'règles simples';
+
+  @override
+  String get thinkingHintLead => 'Fait avec des règles simples';
+
+  @override
+  String get thinkingHintApple =>
+      'Activez Apple Intelligence pour des plans plus fins';
+
+  @override
+  String get thinkingHintAppleReady =>
+      'Apple Intelligence se prépare pour des plans plus fins';
+
+  @override
+  String get thinkingHintGoogle =>
+      'Gemini Nano fera des plans plus fins une fois sur ce téléphone';
+
+  @override
+  String get thinkingHintChrome =>
+      'L\'IA intégrée de votre navigateur fera des plans plus fins une fois prête';
+
+  @override
+  String get thinkingHintDismiss => 'Ne plus afficher';
+
+  @override
+  String get dumpPlansApple =>
+      'Planifie avec Apple Intelligence sur cet appareil';
+
+  @override
+  String get dumpPlansGoogle => 'Planifie avec Gemini Nano sur ce téléphone';
+
+  @override
+  String get dumpPlansChrome =>
+      'Planifie avec l\'IA intégrée de votre navigateur, sur cet appareil';
+
+  @override
+  String get dumpPlansRules => 'Planifie avec des règles simples';
+
+  @override
+  String get releaseNotes110 =>
+      'Dites-le : touchez le micro dans « Vider sa tête » et dites ce qui vous occupe l\'esprit — faites une pause, ou dites « suivant », pour passer à une nouvelle tâche. Le micro est aussi dans les notes d\'une tâche. Vos mots deviennent du texte sur cet appareil et ne sont envoyés nulle part.\nDemandez à Siri : sur iPhone, Réglages › Siri et raccourcis montre les cinq choses que vous pouvez demander, comme « Et ensuite dans Dottoday ».\nSachez qui planifie : Réglages › Confidentialité indique si Apple Intelligence, Gemini Nano ou l\'IA intégrée de votre navigateur aide sur cet appareil, et comment l\'activer. Les plans faits avec des règles simples le disent désormais.';
+
+  @override
+  String statusHintJoin(String lead, String action) {
+    return '$lead · $action';
+  }
+
+  @override
+  String get settingsSiri => 'Siri et raccourcis';
+
+  @override
+  String get settingsSiriDetail => 'Demandez à Siri votre journée';
+
+  @override
+  String get siriIntro =>
+      'Siri peut ajouter une tâche, vous dire ce qui suit et vous aider avec la tâche en cours — sans ouvrir Dottoday.';
+
+  @override
+  String get siriHowTo =>
+      'Dites « Dis Siri » ou maintenez le bouton latéral, puis dites une phrase.';
+
+  @override
+  String get siriPhrasesCaption => 'Ce que vous pouvez dire';
+
+  @override
+  String get siriPhraseAdd => 'Ajouter une tâche dans Dottoday';
+
+  @override
+  String get siriPhraseAddDetail =>
+      'Siri demande quoi ajouter. Avec une heure, c\'est placé dans votre journée ; sinon, dans la boîte de réception.';
+
+  @override
+  String get siriPhraseNext => 'Et ensuite dans Dottoday';
+
+  @override
+  String get siriPhraseNextDetail =>
+      'Siri dit ce qui est en cours, ou ce qui vient ensuite.';
+
+  @override
+  String get siriPhraseDone => 'Marquer ma tâche comme faite dans Dottoday';
+
+  @override
+  String get siriPhraseDoneDetail => 'Coche la tâche en cours.';
+
+  @override
+  String get siriPhrasePlus15 =>
+      'Donner 15 minutes de plus à ma tâche dans Dottoday';
+
+  @override
+  String get siriPhrasePlus15Detail =>
+      'Donne 15 minutes de plus à la tâche en cours.';
+
+  @override
+  String get siriPhraseFocus => 'Commencer le focus dans Dottoday';
+
+  @override
+  String get siriPhraseFocusDetail => 'Ouvre le focus sur la tâche en cours.';
+
+  @override
+  String get siriShortcutsCaption => 'Raccourcis';
+
+  @override
+  String get siriShortcutsBody =>
+      'Les cinq mêmes actions sont dans l\'app Raccourcis, prêtes pour le bouton Action, le centre de contrôle ou l\'écran d\'accueil.';
+
+  @override
+  String get siriOpenShortcuts => 'Ouvrir Raccourcis';
+
+  @override
+  String get siriTipTitle => 'Demandez à Siri « Et ensuite dans Dottoday »';
+
+  @override
+  String get siriTipShow => 'Me montrer';
+
+  @override
+  String get tipDismiss => 'Ne plus afficher';
+
+  @override
+  String get onboardingSiriLine =>
+      'Vous pouvez aussi demander à Siri « Et ensuite dans Dottoday ».';
+
+  @override
+  String get dictationCommand => 'suivant';
+
+  @override
+  String get micDictate => 'Dicter';
+
+  @override
+  String get micStop => 'Arrêter la dictée';
+
+  @override
+  String get micDenied => 'Le micro est désactivé pour Dottoday';
+
+  @override
+  String get failureSpeech =>
+      'La dictée s\'est arrêtée. Touchez le micro pour continuer.';
+
+  @override
+  String get micRationaleTitle => 'Utiliser le micro ?';
+
+  @override
+  String get micRationaleBody =>
+      'Dottoday n\'écoute que lorsque le bouton micro est activé, pour transformer vos mots en texte sur cet appareil.';
+
+  @override
+  String get micRationaleContinue => 'Continuer';
+
+  @override
+  String get dumpListening =>
+      'Faites une pause, ou dites « suivant », pour passer à une nouvelle tâche.';
+
+  @override
+  String get dumpHintMic => 'Tapez ou touchez le micro. Une chose par ligne.';
+
+  @override
+  String get dumpMicTipTitle => 'Dictez votre liste';
+
+  @override
+  String get dumpMicTipBody =>
+      'Faites une pause, ou dites « suivant », entre deux choses. « Appeler le dentiste … suivant … acheter du lait » donne deux lignes.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

@@ -107,7 +107,7 @@ final class ConflictFailure extends AppFailure {
   String get code => 'conflict.${entity.name}';
 }
 
-enum AppPermission { notifications, calendar }
+enum AppPermission { notifications, calendar, microphone }
 
 /// An OS permission the feature needs was denied.
 final class PermissionFailure extends AppFailure {
@@ -117,6 +117,29 @@ final class PermissionFailure extends AppFailure {
 
   @override
   String get code => 'permission.${permission.name}';
+}
+
+/// Why dictation ended early (ADR-0014). The recognizer's own message is
+/// never kept: it can quote what was said.
+enum SpeechFailureKind {
+  /// No on-device recognizer for the language after all.
+  unavailable,
+
+  /// Another app or the OS took the microphone (a call, an alarm).
+  interrupted,
+
+  /// The recognizer failed on its own.
+  recognizer,
+}
+
+/// Dictation stopped for a reason other than the user (docs/09 M14.4).
+final class SpeechFailure extends AppFailure {
+  const SpeechFailure(this.kind);
+
+  final SpeechFailureKind kind;
+
+  @override
+  String get code => 'speech.${kind.name}';
 }
 
 /// The 30-second undo window passed (or the app restarted); the change

@@ -6,6 +6,7 @@ import 'package:dottoday/features/settings/pages/changelog_page.dart';
 import 'package:dottoday/features/settings/pages/data_pages.dart';
 import 'package:dottoday/features/settings/pages/info_pages.dart';
 import 'package:dottoday/features/settings/pages/notification_health_page.dart';
+import 'package:dottoday/features/settings/pages/siri_page.dart';
 import 'package:flutter/widgets.dart';
 
 /// The page at `/settings/<page>` (docs/09 M3f.7).
@@ -20,4 +21,5 @@ Widget settingsPageFor(SettingsPage page) => switch (page) {
   SettingsPage.privacy => const PrivacyPage(),
   SettingsPage.about => const AboutPage(),
   SettingsPage.changelog => const ChangelogPage(),
+  SettingsPage.siri => const SiriPage(),
 };

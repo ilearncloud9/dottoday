@@ -6,8 +6,8 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/data/thinking/thinking_providers.dart';
-import 'package:dottoday/domain/thinking/thinking_backend.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
+import 'package:dottoday/features/settings/pages/thinking_status_block.dart';
 import 'package:dottoday/features/settings/widgets/app_lock_group.dart';
 import 'package:dottoday/features/settings/widgets/feedback_sheet.dart';
 import 'package:flutter/material.dart';
@@ -126,25 +126,19 @@ class PrivacyPage extends ConsumerWidget {
 }
 
 /// ADR-0009's compliance line: the on-device paths, the rules fallback,
-/// which one this device uses now, and Clear thinking history.
+/// this device's status and next step (M14.2), and Clear thinking history.
 class _ThinkingSection extends ConsumerWidget {
   const _ThinkingSection();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final path = ref.watch(thinkingPathProvider).value;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: DotSpace.s,
       children: [
         _Section(l10n.privacyThinkingTitle, l10n.privacyThinkingBody),
-        if (path != null)
-          PageText(
-            path == ThinkingPath.onDevice
-                ? l10n.privacyThinkingOnDevice
-                : l10n.privacyThinkingRules,
-          ),
+        const ThinkingStatusBlock(),
         Align(
           alignment: AlignmentDirectional.centerStart,
           child: OutlinedButton(

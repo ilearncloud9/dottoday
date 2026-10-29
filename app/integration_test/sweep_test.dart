@@ -33,6 +33,7 @@ import 'support/o4.dart';
 import 'support/sweep_m11.dart';
 import 'support/sweep_m12.dart';
 import 'support/sweep_m13.dart';
+import 'support/sweep_m14.dart';
 
 const _tagBase = String.fromEnvironment('SWEEP_TAG', defaultValue: 'device');
 
@@ -146,6 +147,15 @@ void main() {
       rest: () => _rest(tester),
     );
     await sweepM13(
+      tester,
+      shot: (name) async {
+        await _shot(binding, tester, '${_tag}_$name');
+        await checkA11yTree(tester, name);
+      },
+      until: (f) => _pumpUntil(tester, f),
+      rest: () => _rest(tester),
+    );
+    await sweepM14(
       tester,
       shot: (name) async {
         await _shot(binding, tester, '${_tag}_$name');

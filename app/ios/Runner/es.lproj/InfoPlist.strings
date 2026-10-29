@@ -5,3 +5,5 @@
 "NSCalendarsFullAccessUsageDescription" = "Dottoday muestra los eventos de tu calendario en tu línea de tiempo, junto a tus tareas.";
 "NSCalendarsUsageDescription" = "Dottoday muestra los eventos de tu calendario en tu línea de tiempo, junto a tus tareas.";
 "NSFaceIDUsageDescription" = "Dottoday usa Face ID para desbloquearse cuando activas el bloqueo de la app.";
+"NSMicrophoneUsageDescription" = "Dottoday solo escucha mientras el botón del micrófono está activado, para convertir tus palabras en texto en este dispositivo.";
+"NSSpeechRecognitionUsageDescription" = "Tus palabras se convierten en texto en este dispositivo. No se envía nada a ningún servidor.";

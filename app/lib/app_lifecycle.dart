@@ -12,7 +12,9 @@ import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:dottoday/data/snapshot/snapshot_providers.dart';
+import 'package:dottoday/data/speech/speech_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
+import 'package:dottoday/data/thinking/thinking_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/widgets/mac_menu_actions.dart';
 import 'package:dottoday/data/widgets/mac_status_item_sink.dart';
@@ -108,7 +110,11 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
       ..invalidate(cloudAccountsProvider)
       ..invalidate(exactAlarmsAllowedProvider)
       ..invalidate(powerStateProvider)
-      ..invalidate(currentDeviceZoneProvider);
+      ..invalidate(currentDeviceZoneProvider)
+      // Apple Intelligence switched on, Gemini Nano downloaded (M14.2).
+      ..invalidate(thinkingStatusProvider)
+      // The microphone switched on in Settings (M14.5).
+      ..invalidate(speechAvailabilityProvider);
     unawaited(runHousekeeping(ref));
     // Back in the foreground: catch up with other devices (docs/04 §4).
     unawaited(ref.read(syncServiceProvider).syncNow());

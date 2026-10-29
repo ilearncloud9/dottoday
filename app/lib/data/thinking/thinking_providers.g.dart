@@ -165,55 +165,107 @@ final class ThinkingServiceProvider
 
 String _$thinkingServiceHash() => r'c2aed232f410ba8bedcf5a987f9f6a15fb2bef58';
 
-/// Which path answers on this device now (Settings › Privacy): the model
-/// when the platform says it is ready, else rules. Reads only the
-/// transport, so the page never opens the database for it. Kept: the
-/// answer only changes with an OS update or a model download.
+/// Whose model this platform would use (docs/09 M14.1). Read here, in
+/// the data layer, so widgets never branch on the platform.
 
-@ProviderFor(thinkingPath)
-final thinkingPathProvider = ThinkingPathProvider._();
+@ProviderFor(thinkingVendor)
+final thinkingVendorProvider = ThinkingVendorProvider._();
 
-/// Which path answers on this device now (Settings › Privacy): the model
-/// when the platform says it is ready, else rules. Reads only the
-/// transport, so the page never opens the database for it. Kept: the
-/// answer only changes with an OS update or a model download.
+/// Whose model this platform would use (docs/09 M14.1). Read here, in
+/// the data layer, so widgets never branch on the platform.
 
-final class ThinkingPathProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<ThinkingPath>,
-          ThinkingPath,
-          FutureOr<ThinkingPath>
-        >
-    with $FutureModifier<ThinkingPath>, $FutureProvider<ThinkingPath> {
-  /// Which path answers on this device now (Settings › Privacy): the model
-  /// when the platform says it is ready, else rules. Reads only the
-  /// transport, so the page never opens the database for it. Kept: the
-  /// answer only changes with an OS update or a model download.
-  ThinkingPathProvider._()
+final class ThinkingVendorProvider
+    extends $FunctionalProvider<ThinkingVendor, ThinkingVendor, ThinkingVendor>
+    with $Provider<ThinkingVendor> {
+  /// Whose model this platform would use (docs/09 M14.1). Read here, in
+  /// the data layer, so widgets never branch on the platform.
+  ThinkingVendorProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'thinkingPathProvider',
+        name: r'thinkingVendorProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$thinkingPathHash();
+  String debugGetCreateSourceHash() => _$thinkingVendorHash();
 
   @$internal
   @override
-  $FutureProviderElement<ThinkingPath> $createElement(
+  $ProviderElement<ThinkingVendor> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ThinkingVendor create(Ref ref) {
+    return thinkingVendor(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ThinkingVendor value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ThinkingVendor>(value),
+    );
+  }
+}
+
+String _$thinkingVendorHash() => r'50c2eb20d7e8cecf11b8ab6f401daad2e44e1f9e';
+
+/// The model's state on this device and whose it is (Settings › Privacy,
+/// the proposal sheets' hint, Brain dump's "Plans with …"). Reads only the
+/// transport, so the page never opens the database for it. Re-read with
+/// `ref.invalidate` on resume: Apple Intelligence can be switched on in
+/// Settings while the app waits.
+
+@ProviderFor(thinkingStatus)
+final thinkingStatusProvider = ThinkingStatusProvider._();
+
+/// The model's state on this device and whose it is (Settings › Privacy,
+/// the proposal sheets' hint, Brain dump's "Plans with …"). Reads only the
+/// transport, so the page never opens the database for it. Re-read with
+/// `ref.invalidate` on resume: Apple Intelligence can be switched on in
+/// Settings while the app waits.
+
+final class ThinkingStatusProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<ThinkingStatus>,
+          ThinkingStatus,
+          FutureOr<ThinkingStatus>
+        >
+    with $FutureModifier<ThinkingStatus>, $FutureProvider<ThinkingStatus> {
+  /// The model's state on this device and whose it is (Settings › Privacy,
+  /// the proposal sheets' hint, Brain dump's "Plans with …"). Reads only the
+  /// transport, so the page never opens the database for it. Re-read with
+  /// `ref.invalidate` on resume: Apple Intelligence can be switched on in
+  /// Settings while the app waits.
+  ThinkingStatusProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'thinkingStatusProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$thinkingStatusHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<ThinkingStatus> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<ThinkingPath> create(Ref ref) {
-    return thinkingPath(ref);
+  FutureOr<ThinkingStatus> create(Ref ref) {
+    return thinkingStatus(ref);
   }
 }
 
-String _$thinkingPathHash() => r'35171c2981ab286fbab99586833e2032fec20f0b';
+String _$thinkingStatusHash() => r'536fb3a97d52f1d81398f0634270d5c348c1838b';

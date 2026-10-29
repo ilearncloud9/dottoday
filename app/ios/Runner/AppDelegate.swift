@@ -41,6 +41,10 @@ import workmanager_apple
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "ThinkingBridge") {
       ThinkingBridge.register(registrar.messenger())
     }
+    // Dictation, on the device only (M14.4, ADR-0014).
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "SpeechBridge") {
+      SpeechBridge.register(registrar.messenger())
+    }
   }
 }
 

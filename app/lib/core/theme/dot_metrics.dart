@@ -94,6 +94,9 @@ abstract final class DotSize {
   static const double tabDot = 10;
   static const double tabDotActive = 12;
 
+  /// The listening dot in `MicButton` (M14.5): the accent dot that breathes.
+  static const double micDot = 14;
+
   /// The Reality thread's plan lane, this far towards the start edge from
   /// the thread's centre, and the planned dot's ghost ring on it, shifted
   /// up or down by [ghostRingShift] (`B-ios-reality-thread`, 11 C3).

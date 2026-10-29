@@ -13,6 +13,10 @@
          write for opt-in write-back (M7.3). The plugin asks for both at once. -->
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
     <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <!-- Dictation (docs/09 M14.4, ADR-0014): the on-device recognizer only,
+         Android 12+; asked at the first tap on the mic, after Dottoday's own
+         rationale. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <application
         android:label="Dottoday"
         android:name="${applicationName}"
@@ -154,6 +158,11 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- Android 11+ package visibility: the on-device speech service
+             (SpeechRecognizer.isOnDeviceRecognitionAvailable, M14.4). -->
+        <intent>
+            <action android:name="android.speech.RecognitionService"/>
         </intent>
     </queries>
 </manifest>

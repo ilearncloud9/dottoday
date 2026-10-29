@@ -2,6 +2,7 @@
 /// release = a value here (the changelog page's exhaustive switch then asks
 /// for its localised notes) and its `CHANGELOG.md` section.
 enum Release {
+  v1_1_0('1.1.0'),
   v1_0_0('1.0.0'),
   v0_1_0('0.1.0');
 

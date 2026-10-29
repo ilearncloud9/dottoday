@@ -78,6 +78,10 @@ abstract final class DotGlyphs {
   );
 
   /// Settings › Reminders › Sound (M8.4d): a speaker with two waves.
+  // Dictation and Siri (M14.3, M14.5): a stroke mic on the 24 grid.
+  static final mic = DotGlyph(
+    '${_r(9, 2, 6, 12, 3)}M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M8 22h8',
+  );
   static const sound = DotGlyph(
     'M11 5L6 9H2v6h4l5 4V5zM15.5 8.5q2 3.5 0 7M18.5 5.5q4 6.5 0 13',
   );

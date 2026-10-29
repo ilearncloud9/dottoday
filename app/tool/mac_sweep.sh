@@ -3,6 +3,9 @@
 # and captures the app window each time the test prints SWEEP_SHOT <name>
 # (integration_test's takeScreenshot doesn't support macOS).
 # SWEEP_THEME=dark runs it dark (shots named macos_dark_*).
+# Every SWEEP_SHOT is captured, so new legs (M14: privacy_ai_status,
+# brain_dump_mic / brain_dump_no_mic, proposal_origin, editor_notes) need
+# no change here.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p build/sweep
