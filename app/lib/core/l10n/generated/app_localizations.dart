@@ -7494,6 +7494,144 @@ abstract class AppLocalizations {
   /// **'See time: your next dot on the lock screen, widgets, the Mac menu bar and Siri, and alarms that really ring.\nStart: Break it down into small steps, Focus on one dot, and gentle help when a task won\'t start.\nStay in control: Rebalance shows a plan before anything moves; Plan / Reality shows how the day really went.\nRoutines, energy suggestions and lengths learned from your own days, on your device.\nThis week as seven dots, Past days to look back, and low-energy mode for hard days. Nothing to keep up.\nShare a page or a note to Dottoday from any app, or empty your head with Brain dump.'**
   String get releaseNotes100;
 
+  /// Privacy › Help with thinking (M14.2): Apple Intelligence is off on this iPhone; where to turn it on.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Apple Intelligence in iPhone Settings › Apple Intelligence & Siri. Dottoday will use it automatically.'**
+  String get privacyAiAppleOffIos;
+
+  /// Privacy › Help with thinking (M14.2): Apple Intelligence is off on this Mac; where to turn it on.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Apple Intelligence in System Settings › Apple Intelligence & Siri. Dottoday will use it automatically.'**
+  String get privacyAiAppleOffMac;
+
+  /// Privacy › Help with thinking (M14.2): Apple Intelligence is preparing its model.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Intelligence is getting ready on this device. It can take a while.'**
+  String get privacyAiAppleDownloading;
+
+  /// Privacy › Help with thinking (M14.2): Gemini Nano can be downloaded by Android.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini Nano can be downloaded on this phone; it downloads in the background.'**
+  String get privacyAiGoogleDownloadable;
+
+  /// Privacy › Help with thinking (M14.2): Gemini Nano is downloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini Nano is downloading on this phone. Dottoday will use it once it\'s ready.'**
+  String get privacyAiGoogleDownloading;
+
+  /// Privacy › Help with thinking (M14.2): the browser's built-in model can be downloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'This browser can download its built-in AI model. Dottoday will use it once it\'s there.'**
+  String get privacyAiChromeDownloadable;
+
+  /// Privacy › Help with thinking (M14.2): the browser is downloading its built-in model.
+  ///
+  /// In en, this message translates to:
+  /// **'This browser is downloading its built-in AI model. Dottoday will use it once it\'s ready.'**
+  String get privacyAiChromeDownloading;
+
+  /// Privacy › Help with thinking (M14.2): this device, OS or browser can't run an on-device model.
+  ///
+  /// In en, this message translates to:
+  /// **'This device can\'t run the built-in model. Dottoday uses your history and simple rules.'**
+  String get privacyAiNotEligible;
+
+  /// Privacy › Help with thinking (M14.2): button that opens the OS settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get privacyAiOpenSettings;
+
+  /// Privacy › Help with thinking (M14.2): under Open Settings on iPhone; iOS only allows opening the app's own page.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens Dottoday\'s page in Settings. Apple doesn\'t let apps open Apple Intelligence directly: go back to Settings, then Apple Intelligence & Siri.'**
+  String get privacyAiOpenSettingsIos;
+
+  /// Proposal origin chip (M14.2): the plan was made by Dottoday's rules, not a model. Lower case like 'on-device'.
+  ///
+  /// In en, this message translates to:
+  /// **'simple rules'**
+  String get thinkingOriginRules;
+
+  /// Proposal hint (M14.2, StatusHint): first, muted part.
+  ///
+  /// In en, this message translates to:
+  /// **'Made with simple rules'**
+  String get thinkingHintLead;
+
+  /// Proposal hint (M14.2): accent part when Apple Intelligence is off; taps to Privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Apple Intelligence for smarter plans'**
+  String get thinkingHintApple;
+
+  /// Proposal hint (M14.2): accent part while Apple Intelligence prepares its model.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Intelligence is getting ready for smarter plans'**
+  String get thinkingHintAppleReady;
+
+  /// Proposal hint (M14.2): accent part while Gemini Nano is downloadable or downloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini Nano makes smarter plans once it\'s on this phone'**
+  String get thinkingHintGoogle;
+
+  /// Proposal hint (M14.2): accent part while the browser's model is downloadable or downloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Your browser\'s built-in AI makes smarter plans once it\'s ready'**
+  String get thinkingHintChrome;
+
+  /// Proposal hint (M14.2): the ×; the hint never shows again on this device.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show again'**
+  String get thinkingHintDismiss;
+
+  /// Brain dump: caption under Plan it when Apple Intelligence will answer (M14.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Plans with Apple Intelligence on this device'**
+  String get dumpPlansApple;
+
+  /// Brain dump: caption under Plan it when Gemini Nano will answer (M14.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Plans with Gemini Nano on this phone'**
+  String get dumpPlansGoogle;
+
+  /// Brain dump: caption under Plan it when the browser's built-in model will answer (M14.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Plans with your browser\'s built-in AI, on this device'**
+  String get dumpPlansChrome;
+
+  /// Brain dump: caption under Plan it when Dottoday's rules will answer (M14.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Plans with simple rules'**
+  String get dumpPlansRules;
+
+  /// What's new in 1.1.0 (M14: voice + AI clarity), one item per line (PRD F11).
+  ///
+  /// In en, this message translates to:
+  /// **'Speak it: tap the mic in Brain dump and say what\'s on your mind — pause, or say \"next\", to start a new task. The mic is in a task\'s notes too. Your words are turned into text on this device and never sent anywhere.\nAsk Siri: on iPhone, Settings › Siri & Shortcuts shows the five things you can ask, like \"What\'s next in Dottoday\".\nKnow who plans: Settings › Privacy says whether Apple Intelligence, Gemini Nano or your browser\'s built-in AI is helping on this device, and how to turn it on. Plans made with simple rules now say so.'**
+  String get releaseNotes110;
+
+  /// StatusHint (M14.2): a muted lead and an accent action on one line, e.g. 'Made with simple rules · Turn on Apple Intelligence for smarter plans'.
+  ///
+  /// In en, this message translates to:
+  /// **'{lead} · {action}'**
+  String statusHintJoin(String lead, String action);
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

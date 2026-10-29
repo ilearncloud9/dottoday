@@ -5109,6 +5109,92 @@ class AppLocalizationsEn extends AppLocalizations {
       'See time: your next dot on the lock screen, widgets, the Mac menu bar and Siri, and alarms that really ring.\nStart: Break it down into small steps, Focus on one dot, and gentle help when a task won\'t start.\nStay in control: Rebalance shows a plan before anything moves; Plan / Reality shows how the day really went.\nRoutines, energy suggestions and lengths learned from your own days, on your device.\nThis week as seven dots, Past days to look back, and low-energy mode for hard days. Nothing to keep up.\nShare a page or a note to Dottoday from any app, or empty your head with Brain dump.';
 
   @override
+  String get privacyAiAppleOffIos =>
+      'Turn on Apple Intelligence in iPhone Settings › Apple Intelligence & Siri. Dottoday will use it automatically.';
+
+  @override
+  String get privacyAiAppleOffMac =>
+      'Turn on Apple Intelligence in System Settings › Apple Intelligence & Siri. Dottoday will use it automatically.';
+
+  @override
+  String get privacyAiAppleDownloading =>
+      'Apple Intelligence is getting ready on this device. It can take a while.';
+
+  @override
+  String get privacyAiGoogleDownloadable =>
+      'Gemini Nano can be downloaded on this phone; it downloads in the background.';
+
+  @override
+  String get privacyAiGoogleDownloading =>
+      'Gemini Nano is downloading on this phone. Dottoday will use it once it\'s ready.';
+
+  @override
+  String get privacyAiChromeDownloadable =>
+      'This browser can download its built-in AI model. Dottoday will use it once it\'s there.';
+
+  @override
+  String get privacyAiChromeDownloading =>
+      'This browser is downloading its built-in AI model. Dottoday will use it once it\'s ready.';
+
+  @override
+  String get privacyAiNotEligible =>
+      'This device can\'t run the built-in model. Dottoday uses your history and simple rules.';
+
+  @override
+  String get privacyAiOpenSettings => 'Open Settings';
+
+  @override
+  String get privacyAiOpenSettingsIos =>
+      'Opens Dottoday\'s page in Settings. Apple doesn\'t let apps open Apple Intelligence directly: go back to Settings, then Apple Intelligence & Siri.';
+
+  @override
+  String get thinkingOriginRules => 'simple rules';
+
+  @override
+  String get thinkingHintLead => 'Made with simple rules';
+
+  @override
+  String get thinkingHintApple =>
+      'Turn on Apple Intelligence for smarter plans';
+
+  @override
+  String get thinkingHintAppleReady =>
+      'Apple Intelligence is getting ready for smarter plans';
+
+  @override
+  String get thinkingHintGoogle =>
+      'Gemini Nano makes smarter plans once it\'s on this phone';
+
+  @override
+  String get thinkingHintChrome =>
+      'Your browser\'s built-in AI makes smarter plans once it\'s ready';
+
+  @override
+  String get thinkingHintDismiss => 'Don\'t show again';
+
+  @override
+  String get dumpPlansApple => 'Plans with Apple Intelligence on this device';
+
+  @override
+  String get dumpPlansGoogle => 'Plans with Gemini Nano on this phone';
+
+  @override
+  String get dumpPlansChrome =>
+      'Plans with your browser\'s built-in AI, on this device';
+
+  @override
+  String get dumpPlansRules => 'Plans with simple rules';
+
+  @override
+  String get releaseNotes110 =>
+      'Speak it: tap the mic in Brain dump and say what\'s on your mind — pause, or say \"next\", to start a new task. The mic is in a task\'s notes too. Your words are turned into text on this device and never sent anywhere.\nAsk Siri: on iPhone, Settings › Siri & Shortcuts shows the five things you can ask, like \"What\'s next in Dottoday\".\nKnow who plans: Settings › Privacy says whether Apple Intelligence, Gemini Nano or your browser\'s built-in AI is helping on this device, and how to turn it on. Plans made with simple rules now say so.';
+
+  @override
+  String statusHintJoin(String lead, String action) {
+    return '$lead · $action';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

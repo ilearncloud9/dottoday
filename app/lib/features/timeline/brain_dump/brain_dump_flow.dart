@@ -90,7 +90,8 @@ Future<bool> planBrainDump(
           subtitle: l10n.dumpSubtitle(dots.length, dayName),
           originLabel: plan.origin == ThinkingOrigin.onDevice
               ? l10n.breakdownOnDevice
-              : null,
+              : l10n.thinkingOriginRules,
+          rulesAnswered: plan.origin != ThinkingOrigin.onDevice,
           acceptLabel: l10n.routineDropAccept,
           acceptedMessage: l10n.dumpAccepted,
         ),

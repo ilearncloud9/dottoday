@@ -5139,6 +5139,92 @@ class AppLocalizationsDe extends AppLocalizations {
       'Zeit sehen: dein nächster Punkt auf dem Sperrbildschirm, in Widgets, in der Mac-Menüleiste und mit Siri, und Wecker, die wirklich klingeln.\nAnfangen: Zerleg Aufgaben in kleine Schritte, konzentrier dich auf einen Punkt, und sanfte Hilfe, wenn etwas nicht losgeht.\nDie Kontrolle behalten: Neu planen zeigt erst einen Plan, bevor sich etwas bewegt; Plan / Wirklichkeit zeigt, wie der Tag wirklich lief.\nRoutinen, Energie-Vorschläge und Dauern, gelernt aus deinen eigenen Tagen, auf deinem Gerät.\nDiese Woche in sieben Punkten, Vergangene Tage zum Zurückschauen und der Energiesparmodus für schwere Tage. Ohne Druck.\nTeile eine Seite oder Notiz aus jeder App mit Dottoday, oder leere deinen Kopf mit Kopf leeren.';
 
   @override
+  String get privacyAiAppleOffIos =>
+      'Schalte Apple Intelligence in den iPhone-Einstellungen › Apple Intelligence & Siri ein. Dottoday nutzt sie dann automatisch.';
+
+  @override
+  String get privacyAiAppleOffMac =>
+      'Schalte Apple Intelligence in den Systemeinstellungen › Apple Intelligence & Siri ein. Dottoday nutzt sie dann automatisch.';
+
+  @override
+  String get privacyAiAppleDownloading =>
+      'Apple Intelligence wird auf diesem Gerät vorbereitet. Das kann eine Weile dauern.';
+
+  @override
+  String get privacyAiGoogleDownloadable =>
+      'Gemini Nano kann auf dieses Telefon geladen werden; das passiert im Hintergrund.';
+
+  @override
+  String get privacyAiGoogleDownloading =>
+      'Gemini Nano wird auf dieses Telefon geladen. Dottoday nutzt es, sobald es bereit ist.';
+
+  @override
+  String get privacyAiChromeDownloadable =>
+      'Dieser Browser kann sein eingebautes KI-Modell laden. Dottoday nutzt es, sobald es da ist.';
+
+  @override
+  String get privacyAiChromeDownloading =>
+      'Dieser Browser lädt gerade sein eingebautes KI-Modell. Dottoday nutzt es, sobald es bereit ist.';
+
+  @override
+  String get privacyAiNotEligible =>
+      'Dieses Gerät kann das eingebaute Modell nicht ausführen. Dottoday nutzt deinen Verlauf und einfache Regeln.';
+
+  @override
+  String get privacyAiOpenSettings => 'Einstellungen öffnen';
+
+  @override
+  String get privacyAiOpenSettingsIos =>
+      'Öffnet die Seite von Dottoday in den Einstellungen. Apple erlaubt Apps nicht, Apple Intelligence direkt zu öffnen: Geh zurück zu den Einstellungen, dann zu Apple Intelligence & Siri.';
+
+  @override
+  String get thinkingOriginRules => 'einfache Regeln';
+
+  @override
+  String get thinkingHintLead => 'Mit einfachen Regeln erstellt';
+
+  @override
+  String get thinkingHintApple =>
+      'Schalte Apple Intelligence für klügere Pläne ein';
+
+  @override
+  String get thinkingHintAppleReady =>
+      'Apple Intelligence wird für klügere Pläne vorbereitet';
+
+  @override
+  String get thinkingHintGoogle =>
+      'Gemini Nano macht klügere Pläne, sobald es auf diesem Telefon ist';
+
+  @override
+  String get thinkingHintChrome =>
+      'Die eingebaute KI deines Browsers macht klügere Pläne, sobald sie bereit ist';
+
+  @override
+  String get thinkingHintDismiss => 'Nicht mehr zeigen';
+
+  @override
+  String get dumpPlansApple => 'Plant mit Apple Intelligence auf diesem Gerät';
+
+  @override
+  String get dumpPlansGoogle => 'Plant mit Gemini Nano auf diesem Telefon';
+
+  @override
+  String get dumpPlansChrome =>
+      'Plant mit der eingebauten KI deines Browsers, auf diesem Gerät';
+
+  @override
+  String get dumpPlansRules => 'Plant mit einfachen Regeln';
+
+  @override
+  String get releaseNotes110 =>
+      'Einfach sprechen: Tipp in „Kopf leeren“ auf das Mikrofon und sag, was dir durch den Kopf geht — mach eine Pause oder sag „weiter“, um eine neue Aufgabe anzufangen. Das Mikrofon gibt es auch in den Notizen einer Aufgabe. Deine Worte werden auf diesem Gerät zu Text und nirgendwohin gesendet.\nSiri fragen: Auf dem iPhone zeigt Einstellungen › Siri & Kurzbefehle die fünf Dinge, die du fragen kannst, etwa „Was kommt als Nächstes in Dottoday“.\nWissen, wer plant: Einstellungen › Datenschutz sagt, ob Apple Intelligence, Gemini Nano oder die eingebaute KI deines Browsers auf diesem Gerät hilft und wie du sie einschaltest. Pläne aus einfachen Regeln sagen das jetzt.';
+
+  @override
+  String statusHintJoin(String lead, String action) {
+    return '$lead · $action';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

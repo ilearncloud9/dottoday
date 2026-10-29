@@ -3964,6 +3964,81 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get releaseNotes100 => pseudo(super.releaseNotes100);
 
   @override
+  String get privacyAiAppleOffIos => pseudo(super.privacyAiAppleOffIos);
+
+  @override
+  String get privacyAiAppleOffMac => pseudo(super.privacyAiAppleOffMac);
+
+  @override
+  String get privacyAiAppleDownloading =>
+      pseudo(super.privacyAiAppleDownloading);
+
+  @override
+  String get privacyAiGoogleDownloadable =>
+      pseudo(super.privacyAiGoogleDownloadable);
+
+  @override
+  String get privacyAiGoogleDownloading =>
+      pseudo(super.privacyAiGoogleDownloading);
+
+  @override
+  String get privacyAiChromeDownloadable =>
+      pseudo(super.privacyAiChromeDownloadable);
+
+  @override
+  String get privacyAiChromeDownloading =>
+      pseudo(super.privacyAiChromeDownloading);
+
+  @override
+  String get privacyAiNotEligible => pseudo(super.privacyAiNotEligible);
+
+  @override
+  String get privacyAiOpenSettings => pseudo(super.privacyAiOpenSettings);
+
+  @override
+  String get privacyAiOpenSettingsIos => pseudo(super.privacyAiOpenSettingsIos);
+
+  @override
+  String get thinkingOriginRules => pseudo(super.thinkingOriginRules);
+
+  @override
+  String get thinkingHintLead => pseudo(super.thinkingHintLead);
+
+  @override
+  String get thinkingHintApple => pseudo(super.thinkingHintApple);
+
+  @override
+  String get thinkingHintAppleReady => pseudo(super.thinkingHintAppleReady);
+
+  @override
+  String get thinkingHintGoogle => pseudo(super.thinkingHintGoogle);
+
+  @override
+  String get thinkingHintChrome => pseudo(super.thinkingHintChrome);
+
+  @override
+  String get thinkingHintDismiss => pseudo(super.thinkingHintDismiss);
+
+  @override
+  String get dumpPlansApple => pseudo(super.dumpPlansApple);
+
+  @override
+  String get dumpPlansGoogle => pseudo(super.dumpPlansGoogle);
+
+  @override
+  String get dumpPlansChrome => pseudo(super.dumpPlansChrome);
+
+  @override
+  String get dumpPlansRules => pseudo(super.dumpPlansRules);
+
+  @override
+  String get releaseNotes110 => pseudo(super.releaseNotes110);
+
+  @override
+  String statusHintJoin(String lead, String action) =>
+      pseudo(super.statusHintJoin(lead, action));
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

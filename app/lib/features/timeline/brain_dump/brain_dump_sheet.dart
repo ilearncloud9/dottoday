@@ -7,6 +7,7 @@ import 'package:dottoday/data/thinking/thinking_providers.dart';
 import 'package:dottoday/domain/thinking/thinking_memory.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_flow.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/thinking/thinking_copy.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -97,6 +98,13 @@ class _BrainDumpBodyState extends ConsumerState<BrainDumpBody> {
           onPressed: empty || _busy ? null : () => unawaited(_plan(context)),
           child: Text(l10n.dumpPlan),
         ),
+        // Which path will answer, before the tap (M14.2).
+        if (ref.watch(thinkingStatusProvider).value case final s?)
+          Text(
+            l10n.plansWith(s),
+            textAlign: TextAlign.center,
+            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+          ),
         if (_history.isNotEmpty) ..._earlier(context),
       ],
     );

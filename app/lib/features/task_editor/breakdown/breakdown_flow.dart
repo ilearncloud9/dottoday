@@ -140,8 +140,10 @@ Future<void> breakDown(BuildContext context, BreakdownTarget target) async {
           originLabel: switch (first.origin) {
             ThinkingOrigin.onDevice => l10n.breakdownOnDevice,
             ThinkingOrigin.saved => l10n.breakdownUsual,
-            _ => null,
+            ThinkingOrigin.rules => l10n.thinkingOriginRules,
+            ThinkingOrigin.history => null,
           },
+          rulesAnswered: first.origin == ThinkingOrigin.rules,
           acceptedMessage: l10n.breakdownAccepted(target.title),
           draftOnly: target.task == null,
           overSheet: target.task == null,

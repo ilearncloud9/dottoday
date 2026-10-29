@@ -7,6 +7,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/proposals/proposal_acceptor.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/features/proposals/thinking_hint.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:dottoday/shared/proposals/proposal_sheet.dart';
 import 'package:dottoday/shared/proposals/proposal_thread_list.dart';
@@ -50,6 +51,9 @@ class ProposalView extends ConsumerWidget {
       failure: request.failure,
       busy: request.busy,
       body: body,
+      hint: request.rulesAnswered
+          ? ThinkingHint(onOpen: () => _close(ref))
+          : null,
       lead: request.lead?.call(context, proposal),
       below: request.below?.call(context, proposal),
       options:
@@ -58,11 +62,13 @@ class ProposalView extends ConsumerWidget {
       onAccept: (request.draftOnly ? proposal.edits.isEmpty : proposal.isEmpty)
           ? null
           : () => unawaited(_accept(context, ref, request)),
-      onDiscard: () {
-        active.close();
-        onClosed?.call();
-      },
+      onDiscard: () => _close(ref),
     );
+  }
+
+  void _close(WidgetRef ref) {
+    ref.read(activeProposalProvider.notifier).close();
+    onClosed?.call();
   }
 
   Future<void> _accept(

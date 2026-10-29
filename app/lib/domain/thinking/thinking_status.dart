@@ -47,6 +47,14 @@ final class ThinkingStatus {
   bool get offersNudge =>
       vendor != ThinkingVendor.none && availability.canBecomeAvailable;
 
+  /// Whether the OS lets an app open the place the user would act on:
+  /// Apple Intelligence's switch. iOS opens only the app's own page; the
+  /// Mac opens Apple Intelligence & Siri. Android and the web have no
+  /// such link (Gemini Nano and Chrome download by themselves).
+  bool get opensSettings =>
+      availability == ThinkingAvailability.notEnabled &&
+      (vendor == ThinkingVendor.appleIos || vendor == ThinkingVendor.appleMac);
+
   @override
   bool operator ==(Object other) =>
       other is ThinkingStatus &&

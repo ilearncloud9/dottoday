@@ -24,6 +24,7 @@ class ProposalSheet extends StatelessWidget {
     this.originLabel,
     this.acceptLabel,
     this.options = const [],
+    this.hint,
     this.lead,
     this.below,
     this.footnote,
@@ -38,6 +39,9 @@ class ProposalSheet extends StatelessWidget {
   /// "on-device", "Your usual"; null hides the chip.
   final String? originLabel;
   final Widget body;
+
+  /// Right under the subtitle: one quiet line (`StatusHint`, M14.2).
+  final Widget? hint;
 
   /// Above the card: what the proposal is about (the task's row).
   final Widget? lead;
@@ -86,6 +90,7 @@ class ProposalSheet extends StatelessWidget {
               children: [
                 if (subtitle case final s?)
                   Text(s, style: t.styles.body.copyWith(color: t.colors.muted)),
+                ?hint,
                 ?lead,
                 DecoratedBox(
                   decoration: BoxDecoration(
@@ -146,14 +151,22 @@ class _Header extends StatelessWidget {
       child: Row(
         spacing: DotSpace.s,
         children: [
-          Flexible(
-            child: Semantics(
-              header: true,
-              child: Text(title, style: t.styles.pageTitle),
+          // A Wrap, so the chip moves under the title rather than
+          // overflowing at large text (docs/10 §5.4; M14.2).
+          Expanded(
+            child: Wrap(
+              spacing: DotSpace.s,
+              runSpacing: DotSpace.xs,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text(title, style: t.styles.pageTitle),
+                ),
+                if (originLabel case final o?) _OriginChip(o),
+              ],
             ),
           ),
-          if (originLabel case final o?) _OriginChip(o),
-          const Spacer(),
           IconButton(
             onPressed: onClose,
             tooltip: context.l10n.sheetClose,

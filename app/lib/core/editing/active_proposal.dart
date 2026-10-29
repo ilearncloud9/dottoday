@@ -49,6 +49,7 @@ final class ProposalRequest {
     this.busy = false,
     this.draftOnly = false,
     this.overSheet = false,
+    this.rulesAnswered = false,
   });
 
   final Proposal proposal;
@@ -87,6 +88,10 @@ final class ProposalRequest {
   /// popover at every width, never in the panel the popover covers.
   final bool overSheet;
 
+  /// Dottoday's rules made this plan, not a model (docs/09 M14.2): the
+  /// sheet may add a `StatusHint` when turning the model on would help.
+  final bool rulesAnswered;
+
   /// After the write committed, with the proposal as accepted (e.g. to
   /// remember "My usual breakdown").
   final void Function(Proposal accepted)? onAccepted;
@@ -118,6 +123,7 @@ final class ProposalRequest {
     busy: busy,
     draftOnly: draftOnly,
     overSheet: overSheet,
+    rulesAnswered: rulesAnswered,
   );
 }
 

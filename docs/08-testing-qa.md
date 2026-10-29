@@ -221,4 +221,6 @@ Sweep entries (add a row per screen as it lands):
 | Add A2 with a learned length; its explanation open (+ 2.0 text, RTL) | `test/features/task_editor/add_golden_test.dart` (`add_when_learned*`) | derived — docs/13 §6 |
 | Focus step card on a learned length, explained (+ 2.0 text, RTL) | `test/features/focus/focus_step_learned_golden_test.dart` | derived — docs/13 §5–§6 |
 | Device and web sweep: `settings_learning`, `learned_explained` | `integration_test/support/sweep_m13.dart`, `tool/a11y/web_sweep.mjs` | — |
+| Privacy › Help with thinking status: Apple Intelligence off (iPhone; + 2.0 text, RTL, 3 widths), Gemini Nano downloadable, not eligible | `test/features/settings/privacy_ai_status_golden_test.dart` | derived — 11 §B4 AI status |
+| Proposal "simple rules" + `StatusHint` (+ 2.0 text, RTL, 3 widths) | `test/features/proposals/proposal_rules_hint_golden_test.dart` | derived — 10 §5 |
 

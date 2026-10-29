@@ -1,7 +1,7 @@
 name: dottoday
 description: Visual timeline day planner for iOS, Android, macOS and Web.
 publish_to: "none"
-version: 1.0.0+2
+version: 1.1.0+3
 
 environment:
   sdk: ^3.8.0

@@ -5149,6 +5149,93 @@ class AppLocalizationsFr extends AppLocalizations {
       'Voir le temps : votre prochain point sur l\'écran verrouillé, les widgets, la barre des menus du Mac et Siri, et des alarmes qui sonnent vraiment.\nCommencer : découpez une tâche en petites étapes, concentrez-vous sur un point, et une aide douce quand une tâche ne démarre pas.\nGarder la main : Rééquilibrer montre un plan avant que rien ne bouge ; Plan / Réalité montre comment la journée s\'est vraiment passée.\nRoutines, suggestions d\'énergie et durées apprises de vos propres journées, sur votre appareil.\nCette semaine en sept points, Jours passés pour regarder en arrière, et le mode basse énergie pour les jours difficiles. Sans rien à tenir.\nPartagez une page ou une note vers Dottoday depuis n\'importe quelle app, ou videz votre tête avec Vider sa tête.';
 
   @override
+  String get privacyAiAppleOffIos =>
+      'Activez Apple Intelligence dans Réglages de l\'iPhone › Apple Intelligence et Siri. Dottoday l\'utilisera automatiquement.';
+
+  @override
+  String get privacyAiAppleOffMac =>
+      'Activez Apple Intelligence dans Réglages Système › Apple Intelligence et Siri. Dottoday l\'utilisera automatiquement.';
+
+  @override
+  String get privacyAiAppleDownloading =>
+      'Apple Intelligence se prépare sur cet appareil. Cela peut prendre un moment.';
+
+  @override
+  String get privacyAiGoogleDownloadable =>
+      'Gemini Nano peut être téléchargé sur ce téléphone ; le téléchargement se fait en arrière-plan.';
+
+  @override
+  String get privacyAiGoogleDownloading =>
+      'Gemini Nano est en cours de téléchargement sur ce téléphone. Dottoday l\'utilisera dès qu\'il sera prêt.';
+
+  @override
+  String get privacyAiChromeDownloadable =>
+      'Ce navigateur peut télécharger son modèle d\'IA intégré. Dottoday l\'utilisera dès qu\'il sera là.';
+
+  @override
+  String get privacyAiChromeDownloading =>
+      'Ce navigateur télécharge son modèle d\'IA intégré. Dottoday l\'utilisera dès qu\'il sera prêt.';
+
+  @override
+  String get privacyAiNotEligible =>
+      'Cet appareil ne peut pas faire tourner le modèle intégré. Dottoday utilise votre historique et des règles simples.';
+
+  @override
+  String get privacyAiOpenSettings => 'Ouvrir les Réglages';
+
+  @override
+  String get privacyAiOpenSettingsIos =>
+      'Ouvre la page de Dottoday dans Réglages. Apple ne permet pas aux apps d\'ouvrir Apple Intelligence directement : revenez à Réglages, puis Apple Intelligence et Siri.';
+
+  @override
+  String get thinkingOriginRules => 'règles simples';
+
+  @override
+  String get thinkingHintLead => 'Fait avec des règles simples';
+
+  @override
+  String get thinkingHintApple =>
+      'Activez Apple Intelligence pour des plans plus fins';
+
+  @override
+  String get thinkingHintAppleReady =>
+      'Apple Intelligence se prépare pour des plans plus fins';
+
+  @override
+  String get thinkingHintGoogle =>
+      'Gemini Nano fera des plans plus fins une fois sur ce téléphone';
+
+  @override
+  String get thinkingHintChrome =>
+      'L\'IA intégrée de votre navigateur fera des plans plus fins une fois prête';
+
+  @override
+  String get thinkingHintDismiss => 'Ne plus afficher';
+
+  @override
+  String get dumpPlansApple =>
+      'Planifie avec Apple Intelligence sur cet appareil';
+
+  @override
+  String get dumpPlansGoogle => 'Planifie avec Gemini Nano sur ce téléphone';
+
+  @override
+  String get dumpPlansChrome =>
+      'Planifie avec l\'IA intégrée de votre navigateur, sur cet appareil';
+
+  @override
+  String get dumpPlansRules => 'Planifie avec des règles simples';
+
+  @override
+  String get releaseNotes110 =>
+      'Dites-le : touchez le micro dans « Vider sa tête » et dites ce qui vous occupe l\'esprit — faites une pause, ou dites « suivant », pour passer à une nouvelle tâche. Le micro est aussi dans les notes d\'une tâche. Vos mots deviennent du texte sur cet appareil et ne sont envoyés nulle part.\nDemandez à Siri : sur iPhone, Réglages › Siri et raccourcis montre les cinq choses que vous pouvez demander, comme « Et ensuite dans Dottoday ».\nSachez qui planifie : Réglages › Confidentialité indique si Apple Intelligence, Gemini Nano ou l\'IA intégrée de votre navigateur aide sur cet appareil, et comment l\'activer. Les plans faits avec des règles simples le disent désormais.';
+
+  @override
+  String statusHintJoin(String lead, String action) {
+    return '$lead · $action';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override
