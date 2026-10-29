@@ -226,4 +226,5 @@ Sweep entries (add a row per screen as it lands):
 | Settings › Siri & Shortcuts (iPhone, compact; + 2.0 text, RTL) | `test/features/settings/siri_page_golden_test.dart` | derived — 11 §B6 |
 | Today: one-time Siri tip (iPhone, compact; + 2.0 text, RTL) | `test/features/timeline/siri_tip_golden_test.dart` | derived — 11 §B6 |
 | Brain dump with mic: idle, listening, first-use tip (3 widths; + 2.0 text, RTL) | `test/features/timeline/brain_dump_mic_golden_test.dart` | derived — 11 §B7, 10 §3 `MicButton` |
+| Editor NOTES with mic: idle (3 widths; + 2.0 text, RTL), listening | `test/features/timeline/editor/editor_notes_mic_golden_test.dart` | derived — 11 §B7 |
 
