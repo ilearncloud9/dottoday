@@ -7764,6 +7764,78 @@ abstract class AppLocalizations {
   /// **'You can also ask Siri \"What\'s next in Dottoday\".'**
   String get onboardingSiriLine;
 
+  /// Brain dump dictation (D6): the ONE spoken word that starts a new line. A single common word, lower case; owner-decided per language.
+  ///
+  /// In en, this message translates to:
+  /// **'next'**
+  String get dictationCommand;
+
+  /// Mic button (M14.5): screen reader label and tooltip when idle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dictate'**
+  String get micDictate;
+
+  /// Mic button (M14.5): screen reader label and tooltip while listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop dictation'**
+  String get micStop;
+
+  /// Quiet line when the microphone permission is off (M14.5); never red.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone is off for Dottoday'**
+  String get micDenied;
+
+  /// Dictation stopped for a reason other than the user (interruption, recognizer).
+  ///
+  /// In en, this message translates to:
+  /// **'Dictation stopped. Tap the mic to go on.'**
+  String get failureSpeech;
+
+  /// In-app rationale before Android's microphone dialog (D5).
+  ///
+  /// In en, this message translates to:
+  /// **'Use the microphone?'**
+  String get micRationaleTitle;
+
+  /// In-app rationale before the system microphone dialog (D5, same meaning as the iOS usage text).
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday listens only while the mic button is on, to turn your words into text on this device.'**
+  String get micRationaleBody;
+
+  /// In-app microphone rationale: go on to the system dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get micRationaleContinue;
+
+  /// Brain dump caption while listening (M14.5); the quoted word is dictationCommand.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause, or say \"next\", to start a new task.'**
+  String get dumpListening;
+
+  /// Brain dump field hint where the mic is available (M14.5).
+  ///
+  /// In en, this message translates to:
+  /// **'Type or tap the mic. One thing per line.'**
+  String get dumpHintMic;
+
+  /// Brain dump first-use dictation tip card title (M14.5, once).
+  ///
+  /// In en, this message translates to:
+  /// **'Speak your list'**
+  String get dumpMicTipTitle;
+
+  /// Brain dump first-use dictation tip (M14.5): the two ways to start a new line, with an example.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause, or say \"next\", between things. \"Call the dentist … next … buy milk\" becomes two lines.'**
+  String get dumpMicTipBody;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

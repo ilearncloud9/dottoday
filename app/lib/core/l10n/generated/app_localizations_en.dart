@@ -5268,6 +5268,44 @@ class AppLocalizationsEn extends AppLocalizations {
       'You can also ask Siri \"What\'s next in Dottoday\".';
 
   @override
+  String get dictationCommand => 'next';
+
+  @override
+  String get micDictate => 'Dictate';
+
+  @override
+  String get micStop => 'Stop dictation';
+
+  @override
+  String get micDenied => 'Microphone is off for Dottoday';
+
+  @override
+  String get failureSpeech => 'Dictation stopped. Tap the mic to go on.';
+
+  @override
+  String get micRationaleTitle => 'Use the microphone?';
+
+  @override
+  String get micRationaleBody =>
+      'Dottoday listens only while the mic button is on, to turn your words into text on this device.';
+
+  @override
+  String get micRationaleContinue => 'Continue';
+
+  @override
+  String get dumpListening => 'Pause, or say \"next\", to start a new task.';
+
+  @override
+  String get dumpHintMic => 'Type or tap the mic. One thing per line.';
+
+  @override
+  String get dumpMicTipTitle => 'Speak your list';
+
+  @override
+  String get dumpMicTipBody =>
+      'Pause, or say \"next\", between things. \"Call the dentist … next … buy milk\" becomes two lines.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

@@ -4,3 +4,5 @@
 
 "NSCalendarsFullAccessUsageDescription" = "Dottoday zeigt deine Kalendertermine auf deiner Zeitleiste, neben deinen Aufgaben.";
 "NSCalendarsUsageDescription" = "Dottoday zeigt deine Kalendertermine auf deiner Zeitleiste, neben deinen Aufgaben.";
+"NSMicrophoneUsageDescription" = "Dottoday hört nur zu, solange die Mikrofontaste an ist, und macht deine Worte auf diesem Gerät zu Text.";
+"NSSpeechRecognitionUsageDescription" = "Deine Worte werden auf diesem Gerät zu Text. Nichts wird an einen Server gesendet.";

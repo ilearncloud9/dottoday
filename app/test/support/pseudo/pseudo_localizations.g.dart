@@ -4105,6 +4105,42 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get onboardingSiriLine => pseudo(super.onboardingSiriLine);
 
   @override
+  String get dictationCommand => pseudo(super.dictationCommand);
+
+  @override
+  String get micDictate => pseudo(super.micDictate);
+
+  @override
+  String get micStop => pseudo(super.micStop);
+
+  @override
+  String get micDenied => pseudo(super.micDenied);
+
+  @override
+  String get failureSpeech => pseudo(super.failureSpeech);
+
+  @override
+  String get micRationaleTitle => pseudo(super.micRationaleTitle);
+
+  @override
+  String get micRationaleBody => pseudo(super.micRationaleBody);
+
+  @override
+  String get micRationaleContinue => pseudo(super.micRationaleContinue);
+
+  @override
+  String get dumpListening => pseudo(super.dumpListening);
+
+  @override
+  String get dumpHintMic => pseudo(super.dumpHintMic);
+
+  @override
+  String get dumpMicTipTitle => pseudo(super.dumpMicTipTitle);
+
+  @override
+  String get dumpMicTipBody => pseudo(super.dumpMicTipBody);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

@@ -5296,6 +5296,46 @@ class AppLocalizationsEs extends AppLocalizations {
       'También puedes preguntar a Siri «Qué sigue en Dottoday».';
 
   @override
+  String get dictationCommand => 'siguiente';
+
+  @override
+  String get micDictate => 'Dictar';
+
+  @override
+  String get micStop => 'Detener el dictado';
+
+  @override
+  String get micDenied => 'El micrófono está desactivado para Dottoday';
+
+  @override
+  String get failureSpeech =>
+      'El dictado se ha detenido. Toca el micrófono para seguir.';
+
+  @override
+  String get micRationaleTitle => '¿Usar el micrófono?';
+
+  @override
+  String get micRationaleBody =>
+      'Dottoday solo escucha mientras el botón del micrófono está activado, para convertir tus palabras en texto en este dispositivo.';
+
+  @override
+  String get micRationaleContinue => 'Continuar';
+
+  @override
+  String get dumpListening =>
+      'Haz una pausa, o di «siguiente», para empezar una tarea nueva.';
+
+  @override
+  String get dumpHintMic => 'Escribe o toca el micrófono. Una cosa por línea.';
+
+  @override
+  String get dumpMicTipTitle => 'Dicta tu lista';
+
+  @override
+  String get dumpMicTipBody =>
+      'Haz una pausa, o di «siguiente», entre una cosa y otra. «Llamar al dentista … siguiente … comprar leche» se convierte en dos líneas.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

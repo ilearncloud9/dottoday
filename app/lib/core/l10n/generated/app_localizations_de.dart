@@ -5300,6 +5300,46 @@ class AppLocalizationsDe extends AppLocalizations {
       'Du kannst Siri auch fragen: „Was kommt als Nächstes in Dottoday“.';
 
   @override
+  String get dictationCommand => 'weiter';
+
+  @override
+  String get micDictate => 'Diktieren';
+
+  @override
+  String get micStop => 'Diktieren beenden';
+
+  @override
+  String get micDenied => 'Das Mikrofon ist für Dottoday aus';
+
+  @override
+  String get failureSpeech =>
+      'Das Diktieren wurde beendet. Tipp auf das Mikrofon, um weiterzumachen.';
+
+  @override
+  String get micRationaleTitle => 'Mikrofon verwenden?';
+
+  @override
+  String get micRationaleBody =>
+      'Dottoday hört nur zu, solange die Mikrofontaste an ist, und macht deine Worte auf diesem Gerät zu Text.';
+
+  @override
+  String get micRationaleContinue => 'Weiter';
+
+  @override
+  String get dumpListening =>
+      'Mach eine Pause oder sag „weiter“, um eine neue Aufgabe anzufangen.';
+
+  @override
+  String get dumpHintMic => 'Tippe oder nutze das Mikrofon. Eins pro Zeile.';
+
+  @override
+  String get dumpMicTipTitle => 'Sprich deine Liste';
+
+  @override
+  String get dumpMicTipBody =>
+      'Mach eine Pause oder sag „weiter“ zwischen den Dingen. „Zahnarzt anrufen … weiter … Milch kaufen“ wird zu zwei Zeilen.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

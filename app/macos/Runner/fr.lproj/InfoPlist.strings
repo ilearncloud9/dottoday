@@ -4,3 +4,5 @@
 
 "NSCalendarsFullAccessUsageDescription" = "Dottoday affiche vos événements de calendrier sur votre fil, à côté de vos tâches.";
 "NSCalendarsUsageDescription" = "Dottoday affiche vos événements de calendrier sur votre fil, à côté de vos tâches.";
+"NSMicrophoneUsageDescription" = "Dottoday n'écoute que lorsque le bouton micro est activé, pour transformer vos mots en texte sur cet appareil.";
+"NSSpeechRecognitionUsageDescription" = "Vos mots deviennent du texte sur cet appareil. Rien n'est envoyé à un serveur.";

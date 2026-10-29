@@ -20,6 +20,13 @@ void main() {
     expect(_manifest, isNot(contains('REQUEST_IGNORE_BATTERY_OPTIMIZATIONS')));
   });
 
+  // Dictation (docs/09 M14.4, ADR-0014): the mic, and the on-device speech
+  // service made visible on Android 11+.
+  test('RECORD_AUDIO and the RecognitionService query', () {
+    expect(_manifest, contains('android.permission.RECORD_AUDIO'));
+    expect(_manifest, contains('android.speech.RecognitionService'));
+  });
+
   test('no task list over the lock screen', () {
     expect(_manifest, isNot(contains('showWhenLocked')));
     expect(_manifest, isNot(contains('turnScreenOn')));

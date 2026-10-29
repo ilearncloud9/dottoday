@@ -15,6 +15,7 @@ import app.dottoday.planner.intents.IntentQueueBridge
 import app.dottoday.planner.intents.ShareIntake
 import app.dottoday.planner.intents.OngoingDot
 import app.dottoday.planner.focus.DeepWork
+import app.dottoday.planner.speech.SpeechBridge
 import app.dottoday.planner.thinking.ThinkingBridge
 import io.flutter.plugin.common.MethodChannel
 
@@ -32,6 +33,8 @@ import io.flutter.plugin.common.MethodChannel
  * Gemini Nano on the device (M10.1, [ThinkingBridge]); `dottoday/deep_work`
  * is Focus's Do Not Disturb, alarms only (M10.5, [DeepWork]). A shared
  * text or link is queued as an Inbox task (M12.4, [ShareIntake]).
+ * `dottoday/speech` is dictation with the on-device recognizer only
+ * (M14.4, [SpeechBridge]); it stops when the activity pauses.
  */
 class MainActivity : FlutterFragmentActivity() {
     // Share → Dottoday (M12.4): queued before Flutter reads the intent,
@@ -46,6 +49,22 @@ class MainActivity : FlutterFragmentActivity() {
         super.onNewIntent(intent)
     }
 
+    override fun onPause() {
+        SpeechBridge.stop()
+        super.onPause()
+    }
+
+    @Deprecated("Still the FragmentActivity callback for requestPermissions")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        @Suppress("DEPRECATION")
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        SpeechBridge.onPermissionResult(requestCode)
+    }
+
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
         IntentQueueBridge.detach()
         super.cleanUpFlutterEngine(flutterEngine)
@@ -55,6 +74,7 @@ class MainActivity : FlutterFragmentActivity() {
         super.configureFlutterEngine(flutterEngine)
         IntentQueueBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         ThinkingBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
+        SpeechBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         DeepWork.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dottoday/ongoing")
             .setMethodCallHandler { call, result ->
