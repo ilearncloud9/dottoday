@@ -163,7 +163,7 @@ Five screens change; everything else is reached through them. All are the Concep
 
 Notification health (A0) is not a row; it appears as a banner above row 1 only when the OS state is wrong.
 
-**Onboarding.** Step 0 asks one question with two cards: *Just the next dot* ("Dottoday shows what's now and what's next. Add, do, done.") and *The full planner* ("Thread, routines, reviews, widgets and every setting."). Minimal then runs three steps: Wake Up and Bedtime, reminders permission with the test alarm, first task. Full runs the existing O1–O4 flow. Either way the choice is one tap to undo later.
+**Onboarding.** Step 0 (render `C-ios-onboarding-mode.png`, owner 2026-10-31) shows the day dot, asks one question ("How much do you want to see?", "You can change this any time, from the top of Settings.") with two radio cards, each with a sketch of its thread: *Just the next dot* ("What's now and what's next. Add, do, done. Nothing to set up.") and *The full planner* ("The whole thread, week and month, routines, reviews, widgets and every setting."). Continue is pinned at the bottom with the flow's step dots under it; step 0 has no top bar. Minimal then runs three steps: Wake Up and Bedtime, reminders permission with the test alarm, first task. Full runs the existing O1–O4 flow. Either way the choice is one tap to undo later.
 
 ## 5. Entering, leaving, revealing
 

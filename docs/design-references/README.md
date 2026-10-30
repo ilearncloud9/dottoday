@@ -128,3 +128,11 @@ Rendered at 2× from the canvas (version 128, 2026-10-23). iPhone 390×844 only;
 | `png/B-ios-low-energy.png` | Low-energy mode: one next dot, no counts, "Later" pile as dots, propose-to-tomorrow, nudges off | D2 |
 
 Derived (no render; build from the spec and components): Smallest step reminder/row (B2), Unstick row (B3), notification-health panel and "send me a test alarm" step (A0), Android ongoing notification (A1, mirror of the Live Activity card in M3 style), interactive widgets and Control Center controls (A1), Mac menu-bar dot (A1), thread journal (D3), body-double dot in the Today header (E1), brain-dump sheet (B4, reuse Add step 1 + ProposalSheet).
+
+## Set C (minimal layout, docs/14)
+
+| Render | Screen | Golden |
+|---|---|---|
+| `C-ios-onboarding-mode.png` | Onboarding step 0: the day dot, the question, two radio cards with thread sketches, Continue and the step dots (owner, 2026-10-31) | `minimal_onboarding_layout_*` |
+
+`C-ios-today-minimal.png`, `C-ios-add-minimal.png` and `C-ios-settings-minimal.png` are not drawn yet; those screens are derived (above).
