@@ -1,4 +1,5 @@
 import 'package:dottoday/core/env/env.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/release/whats_new_seen.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
@@ -8,6 +9,7 @@ import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
@@ -256,4 +258,28 @@ void main() {
       await expectA11yGuidelines(tester);
     });
   }
+
+  // A title word wider than the space beside ‹ ("Notification" at 200 %
+  // on a 390 px phone) puts the title under ‹ on the full width, so it
+  // wraps at its space instead of breaking mid-word. Real fonts: the test
+  // font draws every letter a full square wide.
+  group('page title', () {
+    setUpAll(loadAppFonts);
+    for (final (scale, stacked) in [(1.0, false), (2.0, true)]) {
+      testWidgets('page title at ${(scale * 100).round()} % text', (
+        tester,
+      ) async {
+        tester.platformDispatcher.textScaleFactorTestValue = scale;
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        await pumpSettings(
+          tester,
+          size: const Size(390, 2400),
+          location: AppRoutes.settingsPage(SettingsPage.notifications),
+        );
+        final back = tester.getRect(find.byTooltip('Back to Settings'));
+        final title = tester.getRect(find.text('Notification health'));
+        expect(title.top >= back.bottom, stacked, reason: '$back $title');
+      });
+    }
+  });
 }

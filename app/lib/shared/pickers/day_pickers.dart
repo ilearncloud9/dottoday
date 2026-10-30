@@ -1,4 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/l10n/weekday_names.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/month_grid.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
@@ -209,6 +210,7 @@ class _WeekPickerState extends State<_WeekPicker> {
               for (final d in days)
                 StripDay(
                   weekday: DateFormat.E(locale).format(d),
+                  weekdayNarrow: narrowWeekday(locale, d),
                   date: DateFormat.d(locale).format(d),
                   label: DateFormat.MMMMEEEEd(locale).format(d),
                   completion: const Completion.none(),
