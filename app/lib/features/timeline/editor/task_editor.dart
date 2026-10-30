@@ -9,6 +9,7 @@ import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/icon_guess/title_look.dart';
 import 'package:dottoday/domain/scheduling/step_lengths.dart';
 import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
 import 'package:dottoday/features/timeline/editor/editor_duration.dart';
@@ -101,6 +102,7 @@ class _FormState extends ConsumerState<_Form> {
   /// Set in initState: a lazy read would see the autosaved row.
   late final Occurrence _opened;
   late final _title = TextEditingController(text: _draft.title);
+  late final _look = TitleLook(widget.task.occurrence);
   late final EditorWriter _writer;
   late final Clock _clock;
   late final _autosave = DraftAutosave(
@@ -230,14 +232,15 @@ class _FormState extends ConsumerState<_Form> {
           controller: _title,
           autofocus: widget.autofocus,
           onSubmitted: _save,
-          onChanged: (v) => _change((o) => o.copyWith(title: v)),
+          onChanged: (v) =>
+              _change((o) => _look.retitle(o, v, language: l10n.localeName)),
         ),
         const SizedBox(height: DotSpace.l),
         ColourIconBlock(
           color: TaskColor.fromKey(_draft.colorKey),
           icon: TaskIcon.fromKey(_draft.iconKey),
-          onColor: (c) => _change((o) => o.copyWith(colorKey: c.key)),
-          onIcon: (i) => _change((o) => o.copyWith(iconKey: i.key)),
+          onColor: (c) => _change((o) => _look.pickColor(o, c.key)),
+          onIcon: (i) => _change((o) => _look.pickIcon(o, i.key)),
         ),
         const SizedBox(height: DotSpace.l),
         if (_draft.startUtc case final start?)

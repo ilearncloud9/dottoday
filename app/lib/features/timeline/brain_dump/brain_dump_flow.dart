@@ -79,6 +79,7 @@ Future<bool> planBrainDump(
     defaultDurationMin: profile.settings.defaultDurationMin,
     alerts: profile.settings.defaultAlerts,
     newId: ids.newId,
+    language: profile.locale,
   );
   beforeOpen?.call();
   container

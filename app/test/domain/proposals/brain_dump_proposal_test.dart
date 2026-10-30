@@ -25,26 +25,46 @@ Occurrence _busy(int hour, int minutes) => Occurrence(
   updatedAt: DateTime.utc(2026),
 );
 
-Proposal _plan(List<ProposedDot> dots, {List<Occurrence> blocks = const []}) =>
-    brainDumpProposal(
-      userId: 'u',
-      dots: dots,
-      day: DumpDay(
-        date: DateTime(2026, 10, 21),
-        blocks: blocks,
-        wakeUtc: DateTime.utc(2026, 10, 21, 7),
-        bedUtc: DateTime.utc(2026, 10, 21, 22),
-      ),
-      zone: tz.UTC,
-      nowUtc: _now,
-      defaultDurationMin: 30,
-      alerts: const [],
-      newId: _id,
-    );
+Proposal _plan(
+  List<ProposedDot> dots, {
+  List<Occurrence> blocks = const [],
+  String? language,
+}) => brainDumpProposal(
+  userId: 'u',
+  dots: dots,
+  day: DumpDay(
+    date: DateTime(2026, 10, 21),
+    blocks: blocks,
+    wakeUtc: DateTime.utc(2026, 10, 21, 7),
+    bedUtc: DateTime.utc(2026, 10, 21, 22),
+  ),
+  zone: tz.UTC,
+  nowUtc: _now,
+  defaultDurationMin: 30,
+  alerts: const [],
+  newId: _id,
+  language: language,
+);
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
   setUp(() => _n = 0);
+
+  test('each line takes the icon and colour its title suggests', () {
+    final p = _plan(const [
+      ProposedDot(title: 'Email Sam'),
+      ProposedDot(title: 'Gym'),
+      ProposedDot(title: 'Xyzzy'),
+    ], language: 'en');
+    final looks = [
+      for (final o in p.toBatch().occurrences) (o.title, o.iconKey, o.colorKey),
+    ];
+    expect(looks, [
+      ('Email Sam', 'email', 'sky'),
+      ('Gym', 'gym', 'coral'),
+      ('Xyzzy', 'circle', 'indigo'),
+    ]);
+  });
 
   test('timed lines at their time; the rest in order from now', () {
     final p = _plan(
