@@ -2,7 +2,7 @@ import 'package:dottoday/data/focus/focus_providers.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/sound/sound_player.dart';
 import 'package:dottoday/domain/focus/deep_work.dart';
-import 'package:dottoday/domain/notifications/reminder_sound.dart';
+import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 
@@ -37,10 +37,10 @@ final class FakeDeepWork implements DeepWorkGateway {
 
 /// Sounds played, in order.
 final class FakeSoundPlayer implements SoundPlayer {
-  final played = <ReminderSound>[];
+  final played = <CatalogueSound>[];
 
   @override
-  Future<void> play(ReminderSound sound) async => played.add(sound);
+  Future<void> play(CatalogueSound sound) async => played.add(sound);
 }
 
 /// The chime setting in memory.

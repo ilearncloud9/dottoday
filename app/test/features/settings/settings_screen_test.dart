@@ -7,7 +7,8 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/feedback/feedback_diagnostics.dart';
-import 'package:dottoday/domain/notifications/reminder_sound.dart';
+import 'package:dottoday/domain/notifications/sound_catalogue.dart';
+import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/shared/dot/day_shape_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,10 +39,10 @@ Future<void> _tapRow(WidgetTester tester, String title) async {
 Finder _cupertinoSwitches() => find.byType(CupertinoSwitch);
 
 final class _FakePlayer implements SoundPlayer {
-  final played = <ReminderSound>[];
+  final played = <CatalogueSound>[];
 
   @override
-  Future<void> play(ReminderSound sound) async => played.add(sound);
+  Future<void> play(CatalogueSound sound) async => played.add(sound);
 }
 
 void main() {
@@ -203,16 +204,17 @@ void main() {
       tester,
       overrides: [soundPlayerProvider.overrideWithValue(player)],
     );
-    expect(find.text('System sound'), findsOneWidget);
+    // docs/12 §3: unset is the Dot tone; the OS sound is "system".
+    expect(find.text('Dot'), findsOneWidget);
     await _tapRow(tester, 'Sound');
     await tester.tap(find.text('Chime'));
     await tester.pumpAndSettle();
     expect((await storedSettings(h)).reminderSound, 'chime');
-    expect(player.played, [ReminderSound.chime]);
+    expect(player.played, [resolveSound('chime')]);
     await tester.tap(find.text('System sound').last);
     await tester.pumpAndSettle();
-    expect((await storedSettings(h)).reminderSound, isNull);
-    expect(player.played, [ReminderSound.chime], reason: 'nothing to play');
+    expect((await storedSettings(h)).reminderSound, 'system');
+    expect(player.played, [resolveSound('chime')], reason: 'nothing to play');
     await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
     expect(find.text('System sound'), findsOneWidget);

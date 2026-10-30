@@ -142,7 +142,7 @@ class MainActivity : FlutterFragmentActivity() {
 
     /** Plays raw resource [resource] once as a notification sound (DND applies). */
     private fun playSound(resource: String) {
-        // keep.xml keeps the reminder sounds, which are only named at run time.
+        // keep.xml keeps every sound prefix: they are only named at run time.
         @Suppress("DiscouragedApi")
         val id = resources.getIdentifier(resource, "raw", packageName)
         if (id == 0) return
@@ -158,6 +158,8 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     private companion object {
-        val soundName = Regex("^reminder_[a-z]+\\.wav$")
+        // A catalogue file name (docs/12 §5): the sender's Apple name; the
+        // raw resource is its base name. Nothing else reaches getIdentifier.
+        val soundName = Regex("^[a-z][a-z0-9_]{0,63}\\.(wav|caf|m4a)$")
     }
 }

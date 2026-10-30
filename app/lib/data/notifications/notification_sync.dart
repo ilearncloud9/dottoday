@@ -72,6 +72,8 @@ final class NotificationSync {
       quietHours: profile.settings.quietHours,
       daily: profile.settings,
       defaultSound: profile.settings.reminderSound,
+      seriesSounds: <String, String?>{for (final s in series) s.id: s.soundId},
+      startSound: profile.settings.startSoundId,
       testAlarmAtUtc: await _testAlarmAt?.call(),
       withSteps: await _withSteps(userId, blocks),
     );

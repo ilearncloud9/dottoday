@@ -1,7 +1,7 @@
 import 'package:dottoday/core/logging/logger.dart';
-import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/data/notifications/sound/browser_sound_any.dart';
-import 'package:dottoday/domain/notifications/reminder_sound.dart';
+import 'package:dottoday/data/notifications/sound_files.dart';
+import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 /// (a browser notification can't carry a custom sound). Best effort: a
 /// sound that can't play is logged, never thrown.
 abstract interface class SoundPlayer {
-  Future<void> play(ReminderSound sound);
+  Future<void> play(CatalogueSound sound);
 }
 
 /// The player for this build: the browser's audio on the web, the
@@ -18,10 +18,10 @@ abstract interface class SoundPlayer {
 SoundPlayer platformSoundPlayer(Logger logger) =>
     kIsWeb ? _BrowserSoundPlayer(logger) : ChannelSoundPlayer(logger);
 
-/// Native playback over `dottoday/sound` (`play` with the file name): the
-/// installed `Library/Sounds` file on Apple platforms, the raw resource on
-/// Android; both play as a notification sound, so the silent switch and
-/// Do Not Disturb apply.
+/// Native playback over `dottoday/sound` (`play` with [appleSoundFile]'s
+/// name): the `Library/Sounds` copy or the bundled `.caf` on Apple
+/// platforms, the raw resource of the same base name on Android; both play
+/// as a notification sound, so the silent switch and Do Not Disturb apply.
 final class ChannelSoundPlayer implements SoundPlayer {
   ChannelSoundPlayer(
     this._logger, [
@@ -32,9 +32,9 @@ final class ChannelSoundPlayer implements SoundPlayer {
   final MethodChannel _channel;
 
   @override
-  Future<void> play(ReminderSound sound) async {
+  Future<void> play(CatalogueSound sound) async {
     try {
-      await _channel.invokeMethod<void>('play', reminderSoundFile(sound));
+      await _channel.invokeMethod<void>('play', appleSoundFile(sound));
     } on Object catch (e, s) {
       // MissingPluginException in tests, PlatformException on a device
       // without the file: no preview, nothing else breaks.
@@ -49,12 +49,10 @@ final class _BrowserSoundPlayer implements SoundPlayer {
   final Logger _logger;
 
   @override
-  Future<void> play(ReminderSound sound) async {
+  Future<void> play(CatalogueSound sound) async {
     try {
       // Flutter web serves asset `x` at `assets/x`.
-      await playBrowserSound(
-        'assets/assets/sounds/${reminderSoundFile(sound)}',
-      );
+      await playBrowserSound('assets/${webSoundAsset(sound)}');
     } on Object catch (e, s) {
       // Autoplay rules may refuse audio before the first user gesture.
       _logger.warn('notifications.sound_failed', error: e, stackTrace: s);

@@ -5,7 +5,6 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/focus/deep_work.dart';
-import 'package:dottoday/domain/notifications/reminder_sound.dart';
 import 'package:dottoday/features/focus/focus_view.dart';
 import 'package:dottoday/shared/dot/focus_ring.dart';
 import 'package:flutter/material.dart';
@@ -171,7 +170,7 @@ void main() {
     await _tap(tester, find.byType(Switch).first);
     await tester.pump(const Duration(minutes: 15));
     await tester.pump(const Duration(minutes: 15));
-    expect(h.sounds.played, [ReminderSound.chime, ReminderSound.chime]);
+    expect(h.sounds.played.map((s) => s.id), ['chime', 'chime']);
     await _tap(tester, find.byType(Switch).first);
     await tester.pump(const Duration(minutes: 15));
     expect(h.sounds.played, hasLength(2));

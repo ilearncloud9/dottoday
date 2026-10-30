@@ -5,9 +5,11 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
+import 'package:dottoday/data/notifications/sound_names.gen.dart';
 import 'package:dottoday/data/notifications/test_alarm.dart';
 import 'package:dottoday/domain/notifications/notification_health.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
+import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/shared/notifications/test_alarm_card.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
@@ -50,6 +52,9 @@ class NotificationHealthPage extends ConsumerWidget {
 class HealthRow extends ConsumerWidget {
   const HealthRow({required this.check, super.key});
 
+  /// Text scale past which a fix button moves under the row's text.
+  static const _stackAbove = 1.3;
+
   final HealthCheck check;
 
   @override
@@ -57,6 +62,12 @@ class HealthRow extends ConsumerWidget {
     final t = DotTheme.of(context);
     final (title, detail) = _text(context.l10n);
     final fix = _fix(context, ref);
+    final button = fix == null
+        ? null
+        : TextButton(onPressed: () => unawaited(fix.$2()), child: Text(fix.$1));
+    // Large text: the button goes under the words instead of squeezing
+    // them to a letter a line beside it (accessibility-as-code: reflow).
+    final stacked = MediaQuery.textScalerOf(context).scale(1) > _stackAbove;
     return SettingsRow(
       glyph: switch (check.level) {
         HealthLevel.ok => DotGlyphs.check,
@@ -70,12 +81,10 @@ class HealthRow extends ConsumerWidget {
       },
       title: title,
       subtitle: detail,
-      trailing: fix == null
-          ? null
-          : TextButton(
-              onPressed: () => unawaited(fix.$2()),
-              child: Text(fix.$1),
-            ),
+      trailing: stacked ? null : button,
+      below: stacked && button != null
+          ? Align(alignment: AlignmentDirectional.centerStart, child: button)
+          : null,
     );
   }
 
@@ -98,6 +107,16 @@ class HealthRow extends ConsumerWidget {
         ok
             ? (l10n.healthDndOff, null)
             : (l10n.healthDndOn, l10n.healthDndOnDetail),
+      HealthCheckKind.sounds =>
+        ok
+            ? (l10n.healthSoundsOk, null)
+            : (
+                l10n.healthSoundsMuted(
+                  check.mutedSounds.length,
+                  _soundNames(l10n, check.mutedSounds),
+                ),
+                l10n.healthSoundsMutedDetail,
+              ),
       HealthCheckKind.focus => (l10n.healthFocus, l10n.healthFocusDetail),
       HealthCheckKind.webPush =>
         ok
@@ -141,6 +160,14 @@ class HealthRow extends ConsumerWidget {
           ref.invalidate(powerStateProvider);
         },
       ),
+      // The app's notification settings, where each sound's channel lives.
+      HealthCheckKind.sounds => (
+        l10n.healthFixOpen,
+        () async {
+          await ref.read(notificationPermissionProvider).openSettings();
+          ref.invalidate(mutedSoundsProvider);
+        },
+      ),
       // The clock is the OS's own setting; the sentence says where.
       HealthCheckKind.clock ||
       HealthCheckKind.doNotDisturb ||
@@ -149,3 +176,8 @@ class HealthRow extends ConsumerWidget {
     };
   }
 }
+
+/// "Lift, Rooster": the muted sounds' names in the user's language.
+String _soundNames(AppLocalizations l10n, List<String> ids) => [
+  for (final id in ids) soundDisplayName(l10n, resolveSound(id)),
+].reduce(l10n.listJoin);

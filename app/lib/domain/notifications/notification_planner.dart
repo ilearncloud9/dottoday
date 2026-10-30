@@ -6,6 +6,7 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/alarm_policy.dart';
 import 'package:dottoday/domain/notifications/day_reminders.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
+import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/domain/scheduling/start_nudge.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -46,8 +47,10 @@ final class NotificationPlanner {
   /// `alerts == null` inherits [seriesAlerts] for its series. Alerts in
   /// [quietHours] (wall clock in [tzId]) are kept but [silent], so nothing
   /// is lost. A future `snoozedUntilUtc` replaces every alert before it with
-  /// one reminder at that time. An alert without its own sound takes
-  /// [defaultSound] (Settings › Reminders › Sound, F6.6).
+  /// one reminder at that time. A task reminder's sound follows docs/12 §3:
+  /// the alert's, the occurrence's, [seriesSounds] for its series, then
+  /// [defaultSound] (Settings › Reminders › Sound); see [soundKeyFor].
+  /// A loud one always plays [startSound] (D2).
   ///
   /// The at-start alert of each day's first dot, of [routineStartIds] and
   /// of every [Occurrence.routineStart] is [PlannedNotification.loud] and ignores quiet hours (11 A0). A
@@ -62,6 +65,8 @@ final class NotificationPlanner {
     TimeWindow? quietHours,
     Settings? daily,
     String? defaultSound,
+    Map<String, String?> seriesSounds = const {},
+    String? startSound,
     Set<String> routineStartIds = const {},
     DateTime? testAlarmAtUtc,
     Set<String> withSteps = const {},
@@ -98,7 +103,14 @@ final class NotificationPlanner {
             alertIndex: index,
             fireAtUtc: fireAt,
             kind: alert.kind,
-            sound: alert.sound ?? defaultSound,
+            sound: isLoud
+                ? resolveStartSound(startSound).id
+                : soundKeyFor(
+                    alert: alert.sound,
+                    occurrence: o.soundId,
+                    series: seriesSounds[o.seriesId],
+                    settings: defaultSound,
+                  ),
             silent: !isLoud && inQuietHours(location, fireAt, quietHours),
             loud: isLoud,
           ),
@@ -248,3 +260,30 @@ final class NotificationPlanner {
     };
   }
 }
+
+/// The stored sound key of a normal-tier task reminder
+/// ([PlannedNotification.sound]): a catalogue id, [soundNoneKey] for
+/// silent, or null for the OS sound. Null keeps the key every reminder had
+/// before docs/12 for a user on the OS sound, so their pending reminders
+/// aren't all posted again on upgrade.
+///
+/// ```dart
+/// soundKeyFor(series: 'clear.lift', settings: 'system'); // 'clear.lift'
+/// soundKeyFor(settings: 'system');                       // null
+/// soundKeyFor(occurrence: 'none', settings: 'bell');     // 'none'
+/// ```
+String? soundKeyFor({
+  String? alert,
+  String? occurrence,
+  String? series,
+  String? settings,
+}) => switch (resolveReminderSound(
+  alert: alert,
+  occurrence: occurrence,
+  series: series,
+  settings: settings,
+)) {
+  SilentSound() => soundNoneKey,
+  SystemSound() => null,
+  BundledSound(:final sound) => sound.id,
+};

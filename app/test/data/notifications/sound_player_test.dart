@@ -1,6 +1,6 @@
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/notifications/sound/sound_player.dart';
-import 'package:dottoday/domain/notifications/reminder_sound.dart';
+import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -29,9 +29,15 @@ void main() {
       return null;
     });
     final (p, sink) = player();
-    await p.play(ReminderSound.ripple);
-    expect(calls.single.method, 'play');
-    expect(calls.single.arguments, 'reminder_ripple.wav');
+    await p.play(resolveSound('ripple'));
+    await p.play(resolveSound('clear.lift'));
+    expect(calls.map((c) => c.method), ['play', 'play']);
+    // First-party tones are installed .wav; the catalogue's are .caf
+    // (Android plays the raw resource of the same base name).
+    expect(calls.map((c) => c.arguments), [
+      'reminder_ripple.wav',
+      'clear_lift.caf',
+    ]);
     expect(sink.records, isEmpty);
   });
 
@@ -41,7 +47,7 @@ void main() {
       (_) async => throw PlatformException(code: 'no_sound'),
     );
     final (p, sink) = player();
-    await p.play(ReminderSound.dot);
+    await p.play(resolveSound('dot'));
     expect(sink.records.map((r) => r.event), ['notifications.sound_failed']);
   });
 }

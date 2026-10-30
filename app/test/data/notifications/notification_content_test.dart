@@ -2,7 +2,6 @@ import 'package:dottoday/data/notifications/notification_content.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
-import 'package:dottoday/domain/notifications/reminder_sound.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -45,31 +44,44 @@ void main() {
     expect(n.loud, isFalse);
   });
 
-  test('a picked sound rides on task alerts, never on loud ones', () {
-    OsNotification? withSound({required bool loud, NotificationPurpose? p}) =>
-        composeNotification(
-          PlannedNotification(
-            id: 1,
-            occurrenceId: task.id,
-            alertIndex: 0,
-            fireAtUtc: task.startUtc!,
-            kind: AlertKind.atStart,
-            loud: loud,
-            sound: 'ripple',
-            purpose: p ?? NotificationPurpose.task,
-          ),
-          task: task,
-          profile: profileFixture(),
-        );
-    expect(withSound(loud: false)!.sound, ReminderSound.ripple);
-    expect(withSound(loud: true)!.sound, isNull);
+  test('a task alert carries its sound; a loud one only a Start sound', () {
+    OsNotification? withSound({
+      required bool loud,
+      NotificationPurpose? p,
+      String? sound = 'ripple',
+    }) => composeNotification(
+      PlannedNotification(
+        id: 1,
+        occurrenceId: task.id,
+        alertIndex: 0,
+        fireAtUtc: task.startUtc!,
+        kind: AlertKind.atStart,
+        loud: loud,
+        sound: sound,
+        purpose: p ?? NotificationPurpose.task,
+      ),
+      task: task,
+      profile: profileFixture(),
+    );
+    expect(withSound(loud: false)!.sound?.id, 'ripple');
+    // docs/12 D2: loud plays the Start sound the planner chose.
+    expect(
+      withSound(loud: true, sound: 'start.swing')!.sound?.id,
+      'start.swing',
+    );
+    expect(withSound(loud: true)!.sound?.id, 'dot_alarm', reason: 'not Start');
     expect(
       withSound(loud: false, p: NotificationPurpose.bedtime)!.sound,
       isNull,
     );
+    // Null is the OS sound; "none" shows without a sound.
+    expect(withSound(loud: false, sound: null)!.sound, isNull);
+    final off = withSound(loud: false, sound: 'none')!;
+    expect((off.sound, off.soundOff), (null, true));
+    expect(withSound(loud: false)!.soundOff, isFalse);
   });
 
-  test('an unknown sound key plays the system sound', () {
+  test('an unknown sound key plays the Dot tone, never nothing', () {
     final n = composeNotification(
       PlannedNotification(
         id: 1,
@@ -82,7 +94,7 @@ void main() {
       task: task,
       profile: profileFixture(),
     )!;
-    expect(n.sound, isNull);
+    expect(n.sound?.id, 'dot');
   });
 
   test('day-start summary: count and first time, summary channel, '

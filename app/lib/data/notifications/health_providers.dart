@@ -1,6 +1,9 @@
+import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
+import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/notifications/notification_health.dart';
+import 'package:dottoday/domain/notifications/notification_payload.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:flutter/foundation.dart';
@@ -26,6 +29,26 @@ Future<({bool battery, bool dnd})> powerState(Ref ref) async {
   return (battery: await power.restricted(), dnd: await power.doNotDisturb());
 }
 
+/// Sounds in use whose Android channel the user muted (docs/12 §4): the
+/// default and Start sounds and every pending reminder's. Re-read with
+/// `ref.invalidate` on resume.
+@riverpod
+Future<Set<String>> mutedSounds(Ref ref) async {
+  final platform = await ref.watch(notificationPlatformProvider.future);
+  final muted = await platform.mutedSoundIds();
+  if (muted.isEmpty) return const {};
+  final settings = (await ref.watch(currentProfileProvider.future)).settings;
+  final inUse = soundsInUse(
+    reminderSound: settings.reminderSound,
+    startSoundId: settings.startSoundId,
+    plannedSounds: [
+      for (final (id, payload) in await platform.pending())
+        decodeNotificationPayload(id, payload)?.sound,
+    ],
+  );
+  return muted.intersection(inUse);
+}
+
 /// The notification health panel's rows from the real OS state (docs/09
 /// M6.5.8, 11 A0), recomputed whenever one of its inputs is re-read.
 @riverpod
@@ -35,6 +58,7 @@ Future<List<HealthCheck>> notificationHealthChecks(Ref ref) async {
   );
   final exact = await ref.watch(exactAlarmsAllowedProvider.future);
   final power = await ref.watch(powerStateProvider.future);
+  final muted = await ref.watch(mutedSoundsProvider.future);
   final sync = ref.watch(syncStatusProvider).value;
   final signedIn = sync != null && sync.state != SyncState.localOnly;
   return notificationHealth(
@@ -48,6 +72,7 @@ Future<List<HealthCheck>> notificationHealthChecks(Ref ref) async {
       // allowed (M5.3b, M6.1).
       webPushReady: signedIn && permission == PermissionState.granted,
       clockSkew: sync?.clockSkew,
+      mutedSounds: muted,
     ),
   );
 }

@@ -110,6 +110,7 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
       ..invalidate(cloudAccountsProvider)
       ..invalidate(exactAlarmsAllowedProvider)
       ..invalidate(powerStateProvider)
+      ..invalidate(mutedSoundsProvider)
       ..invalidate(currentDeviceZoneProvider)
       // Apple Intelligence switched on, Gemini Nano downloaded (M14.2).
       ..invalidate(thinkingStatusProvider)

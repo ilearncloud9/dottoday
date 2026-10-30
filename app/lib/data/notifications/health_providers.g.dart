@@ -57,6 +57,56 @@ final class PowerStateProvider
 
 String _$powerStateHash() => r'9b399b8c6951632b8debc11e5f8be75892ae0be2';
 
+/// Sounds in use whose Android channel the user muted (docs/12 §4): the
+/// default and Start sounds and every pending reminder's. Re-read with
+/// `ref.invalidate` on resume.
+
+@ProviderFor(mutedSounds)
+final mutedSoundsProvider = MutedSoundsProvider._();
+
+/// Sounds in use whose Android channel the user muted (docs/12 §4): the
+/// default and Start sounds and every pending reminder's. Re-read with
+/// `ref.invalidate` on resume.
+
+final class MutedSoundsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Set<String>>,
+          Set<String>,
+          FutureOr<Set<String>>
+        >
+    with $FutureModifier<Set<String>>, $FutureProvider<Set<String>> {
+  /// Sounds in use whose Android channel the user muted (docs/12 §4): the
+  /// default and Start sounds and every pending reminder's. Re-read with
+  /// `ref.invalidate` on resume.
+  MutedSoundsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mutedSoundsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mutedSoundsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<Set<String>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Set<String>> create(Ref ref) {
+    return mutedSounds(ref);
+  }
+}
+
+String _$mutedSoundsHash() => r'6a2161c7eb1d812720b9a41911a7899e33b2373d';
+
 /// The notification health panel's rows from the real OS state (docs/09
 /// M6.5.8, 11 A0), recomputed whenever one of its inputs is re-read.
 
@@ -105,4 +155,4 @@ final class NotificationHealthChecksProvider
 }
 
 String _$notificationHealthChecksHash() =>
-    r'7aed177326fd71d176e184db0cb617199efa37f1';
+    r'57d30a41e7e1bc2e425a3a65fa1550a6c58f241a';

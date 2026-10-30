@@ -4017,6 +4017,170 @@ class AppLocalizationsDe extends AppLocalizations {
   String get soundRipple => 'Welle';
 
   @override
+  String get soundDotAlarm => 'Punkt-Wecker';
+
+  @override
+  String get soundQuietSlip => 'Hauch';
+
+  @override
+  String get soundQuietWhisper => 'Flüstern';
+
+  @override
+  String get soundQuietSoft => 'Sanft';
+
+  @override
+  String get soundQuietBubble => 'Blase';
+
+  @override
+  String get soundQuietPull => 'Zug';
+
+  @override
+  String get soundClearLift => 'Aufschwung';
+
+  @override
+  String get soundClearBright => 'Hell';
+
+  @override
+  String get soundClearSmile => 'Lächeln';
+
+  @override
+  String get soundClearEase => 'Ruhe';
+
+  @override
+  String get soundClearTurn => 'Dran';
+
+  @override
+  String get soundClearSettled => 'Gelassen';
+
+  @override
+  String get soundClearQuick => 'Flink';
+
+  @override
+  String get soundClearOpening => 'Auftakt';
+
+  @override
+  String get soundClearSpark => 'Funke';
+
+  @override
+  String get soundClearEmerge => 'Aufgehen';
+
+  @override
+  String get soundClearElegant => 'Anmutig';
+
+  @override
+  String get soundClearDutiful => 'Pflichtbewusst';
+
+  @override
+  String get soundClearInvolved => 'Beteiligt';
+
+  @override
+  String get soundClearAppear => 'Erscheinen';
+
+  @override
+  String get soundClearTap => 'Tipp';
+
+  @override
+  String get soundStartMorning => 'Morgen';
+
+  @override
+  String get soundStartBells => 'Sanfte Glocken';
+
+  @override
+  String get soundStartSunrise => 'Sonnenaufgang';
+
+  @override
+  String get soundStartSolemn => 'Feierlich';
+
+  @override
+  String get soundStartStrike => 'Schlag';
+
+  @override
+  String get soundStartSwing => 'Schwung';
+
+  @override
+  String get soundStartLovingly => 'Liebevoll';
+
+  @override
+  String get soundStartGentle => 'Behutsam';
+
+  @override
+  String get soundStartInsistent => 'Beharrlich';
+
+  @override
+  String get soundPlayRooster => 'Hahn';
+
+  @override
+  String get soundPlayHorse => 'Pferd';
+
+  @override
+  String get soundPlayKnock => 'Klopfen';
+
+  @override
+  String get soundPlayChick => 'Küken';
+
+  @override
+  String get soundPlayFrog => 'Frosch';
+
+  @override
+  String get soundPlayDog => 'Hund';
+
+  @override
+  String get soundPlayGulls => 'Möwen';
+
+  @override
+  String get soundPlayDrum => 'Trommel';
+
+  @override
+  String get soundDoneSwift => 'Zügig';
+
+  @override
+  String get soundDoneChecked => 'Abgehakt';
+
+  @override
+  String get soundDoneDone => 'Fertig';
+
+  @override
+  String get soundDoneFinished => 'Geschafft';
+
+  @override
+  String get soundDoneSucceeded => 'Gelungen';
+
+  @override
+  String get soundDoneAchieved => 'Erreicht';
+
+  @override
+  String notifChannelAlarmsSound(String sound) {
+    return 'Start in den Tag · $sound';
+  }
+
+  @override
+  String get notifChannelAlertsSilent => 'Aufgabenhinweise · Ohne Ton';
+
+  @override
+  String get notifGroupDots => 'Punkt-Erinnerungen';
+
+  @override
+  String get notifGroupStart => 'Tagesstart';
+
+  @override
+  String get healthSoundsOk => 'Erinnerungstöne sind an';
+
+  @override
+  String healthSoundsMuted(int count, String names) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Die Töne für $names sind in den Systemeinstellungen stumm',
+      one: 'Der Ton für $names ist in den Systemeinstellungen stumm',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get healthSoundsMutedDetail =>
+      'Öffne die Mitteilungseinstellungen von Dottoday und schalte den Ton wieder ein.';
+
+  @override
   String get settingsQuietHours => 'Ruhezeit';
 
   @override
