@@ -70,8 +70,8 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
 - [F2.6] Time entry is always typeable; wheel/picker optional. One shared `TimeInput` component. (R-20)
 - [F2.7] Duration chips 15/30/45/60/90 + custom; range 5 min–24 h. (R-16)
 - [F2.8] "Add another" keeps the sheet open; multi-line paste → one task per non-empty line. (R-07)
-- [F2.8a] The title fills the icon and colour: "Gym" → dumbbell in the fitness colour, "Dentist" → tooth
-  in the health colour, in en/de/fr/es (English words work in every language). It is matched on the
+  Clarified (icon autofill): the title fills the icon and colour: "Gym" → dumbbell in the fitness colour,
+  "Dentist" → tooth in the health colour, in en/de/fr/es (English words work in every language). It is matched on the
   device from `assets/design/task_icon_keywords.json` and the icon names (`domain/icon_guess/`); nothing
   is sent anywhere. A picked icon or colour, or a matching habit's, always wins; no match keeps the plain
   dot. Each pasted line, brain-dump line and Siri/Shortcuts task gets its own. The editor follows the
