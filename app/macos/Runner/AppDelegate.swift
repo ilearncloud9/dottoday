@@ -92,8 +92,8 @@ class AppDelegate: FlutterAppDelegate {
 /// Reminder sound previews on `dottoday/sound` (lib/data/notifications/sound/
 /// sound_player.dart, docs/09 M8.4d): plays a sound from the app bundle's
 /// Resources (tool/xcode_add_sounds.rb; the sandbox can't write the
-/// container's Library/Sounds, M8.5) as a system sound. Only the generated
-/// reminder file names are accepted.
+/// container's Library/Sounds, M8.5) as a system sound. Only plain catalogue
+/// file names are accepted (docs/12).
 final class SoundBridge {
   static let shared = SoundBridge()
   private var channel: FlutterMethodChannel?
@@ -111,7 +111,7 @@ final class SoundBridge {
   }
 
   private static func play(_ name: String) -> FlutterError? {
-    guard name.range(of: "^reminder_[a-z]+\\.wav$", options: .regularExpression) != nil
+    guard name.range(of: "^[a-z][a-z0-9_]{0,63}\\.(wav|caf)$", options: .regularExpression) != nil
     else { return FlutterError(code: "bad_sound", message: nil, details: nil) }
     guard let url = Bundle.main.url(forResource: name, withExtension: nil) else {
       return FlutterError(code: "no_sound", message: nil, details: nil)

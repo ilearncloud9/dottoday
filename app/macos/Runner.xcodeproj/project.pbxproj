@@ -21,12 +21,21 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		0093699D80D8E7EE4BAEBE40 /* done_done.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7C19495645B7E0B87A9EDCB2 /* done_done.caf */; };
 		03F1E0399EF22D8F046CC29F /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5320F194139FE4ED14609713 /* Pods_RunnerTests.framework */; };
+		0805328A528E626866EFC519 /* done_checked.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4BC72DFFEF261631D79A3275 /* done_checked.caf */; };
 		08531D7F0C6F481D2F260AF4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E4000C80151F405B50FE812 /* InfoPlist.strings */; };
+		0952B2A5E2F303652F290665 /* DottodayShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0A30A749B23C066535425C9F /* DottodayShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0DC93EC5D74B6D9A654EF4FC /* start_insistent.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7F4D189CED693BCD93C95E5B /* start_insistent.caf */; };
+		1070A1FC865F8B6B90D645EC /* play_chick.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0428686613BE33AFBECCA17F /* play_chick.caf */; };
 		110C4778699B875E748E943B /* DayDotStatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C8C4A884C19DCEE1DA1932 /* DayDotStatusItem.swift */; };
+		112F61121DEB34C0FD77C586 /* clear_appear.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF8B704D01AC1980CA02E7A7 /* clear_appear.caf */; };
+		1939DCE3E5CE55464FC09C02 /* quiet_slip.caf in Resources */ = {isa = PBXBuildFile; fileRef = C2EE55A7C1B4CC879048E84E /* quiet_slip.caf */; };
 		1B776BC7A13CFEA1B21178A9 /* reminder_ripple.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9D991EE80A7FB2385F8E8814 /* reminder_ripple.wav */; };
 		1E2D096E1AF1B5F1049802D7 /* dot_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = 77A73470F6BA6972F7A10282 /* dot_alarm.caf */; };
+		26C2AC9117B447243B002B74 /* quiet_bubble.caf in Resources */ = {isa = PBXBuildFile; fileRef = C1C4A03648D65799D798F54C /* quiet_bubble.caf */; };
 		27578FB588600BA5455274BC /* reminder_bell.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0B37EB83162C9A757CEB554D /* reminder_bell.wav */; };
+		307CDFDBEE864B168C25DA13 /* clear_tap.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9E3DC7112505EEA9A228F38D /* clear_tap.caf */; };
 		31C5440F2EC1E5D4D1C7282A /* reminder_dot.wav in Resources */ = {isa = PBXBuildFile; fileRef = 73B011AB823E168682D941DB /* reminder_dot.wav */; };
 		331C80D8294CF71000263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C80D7294CF71000263BE5 /* RunnerTests.swift */; };
 		335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */; };
@@ -34,18 +43,52 @@
 		33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F22044A3C60003C045 /* Assets.xcassets */; };
 		33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F42044A3C60003C045 /* MainMenu.xib */; };
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
+		34E28D09A2217B1B1E9C6B8B /* clear_dutiful.caf in Resources */ = {isa = PBXBuildFile; fileRef = 432684923027D0A102AC8C4A /* clear_dutiful.caf */; };
 		363F237EE592EEA9E0BDD04B /* DayDotImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5FC895D2C19BB4E7D48BE6 /* DayDotImageTests.swift */; };
-		4D7A1B2C2E8F000100C0FFEE /* CalendarBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7A1B2D2E8F000100C0FFEE /* CalendarBridge.swift */; };
-		5A38B0F6448DE1214CE36867 /* ThinkingBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = E31060CD99B889FD8CFFD316 /* ThinkingBridge.swift */; };
-		A1B2C3D4E5F60718293A4B03 /* SpeechBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B04 /* SpeechBridge.swift */; };
-		643C5081A4CFF74881AE4155 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA239FDEC478DDF4AD1FE316 /* Pods_Runner.framework */; };
-		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
-		8631BC7729DF682FD5AE78B6 /* reminder_chime.wav in Resources */ = {isa = PBXBuildFile; fileRef = ED4611A732A87659D6435421 /* reminder_chime.wav */; };
-		F3D55486F824C4C714E893C3 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE226B0A7178000F8195B36 /* ShareViewController.swift */; };
+		368472458D71E1D1391C9938 /* clear_settled.caf in Resources */ = {isa = PBXBuildFile; fileRef = 561DC09F364E16F8A2954960 /* clear_settled.caf */; };
+		392D28DFEA5DD8442F4643C1 /* done_finished.caf in Resources */ = {isa = PBXBuildFile; fileRef = 1821739EB1239CE690A83C09 /* done_finished.caf */; };
+		3C471531455953FF93B2CBDB /* play_frog.caf in Resources */ = {isa = PBXBuildFile; fileRef = D0ABF79B5C8EDB4465EF5746 /* play_frog.caf */; };
+		3C652C711830E623D626F173 /* clear_bright.caf in Resources */ = {isa = PBXBuildFile; fileRef = 48609A3F0C209768664C863E /* clear_bright.caf */; };
 		3D052759CF477BA6E3474773 /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD451A8BE2D7D08996B3C88E /* DotStore.swift */; };
+		42D8375DD4C894DD801BFF8F /* done_succeeded.caf in Resources */ = {isa = PBXBuildFile; fileRef = 1D6F28BD8EC68EB6B2A3F3C6 /* done_succeeded.caf */; };
+		4484EC05B8B380B9B81105E1 /* quiet_whisper.caf in Resources */ = {isa = PBXBuildFile; fileRef = E5183269BDF498C457B716F6 /* quiet_whisper.caf */; };
+		4D7A1B2C2E8F000100C0FFEE /* CalendarBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7A1B2D2E8F000100C0FFEE /* CalendarBridge.swift */; };
+		53F97C149E3F775EA3770755 /* play_horse.caf in Resources */ = {isa = PBXBuildFile; fileRef = 084D50A246138E8BBF21F2F1 /* play_horse.caf */; };
+		586DAC8B779C4F0555B51B11 /* play_knock.caf in Resources */ = {isa = PBXBuildFile; fileRef = A2FC5BA3A2E7B7455CFB32E7 /* play_knock.caf */; };
+		5A38B0F6448DE1214CE36867 /* ThinkingBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = E31060CD99B889FD8CFFD316 /* ThinkingBridge.swift */; };
+		5AE9A39A93FD5687AB67F2A6 /* start_bells.caf in Resources */ = {isa = PBXBuildFile; fileRef = CEE8CCE33323BA65FB9281B9 /* start_bells.caf */; };
+		643C5081A4CFF74881AE4155 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA239FDEC478DDF4AD1FE316 /* Pods_Runner.framework */; };
+		6496250D62B0F1DDA35DAE80 /* clear_opening.caf in Resources */ = {isa = PBXBuildFile; fileRef = E50A27EE85904F2C1FA48E6B /* clear_opening.caf */; };
+		69F1C63989A2934719FF00B9 /* clear_spark.caf in Resources */ = {isa = PBXBuildFile; fileRef = DA308393825C4DE335620D93 /* clear_spark.caf */; };
+		7656B0A91924BE04BD5C5824 /* play_drum.caf in Resources */ = {isa = PBXBuildFile; fileRef = 5E52BA9632E509AF7AD4AB51 /* play_drum.caf */; };
+		7841A31D06EEF690B29FCAB5 /* clear_quick.caf in Resources */ = {isa = PBXBuildFile; fileRef = EAFA382DA7DDFE87FA2D7137 /* clear_quick.caf */; };
+		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
+		7E2871962ECB4107E8BDB653 /* start_sunrise.caf in Resources */ = {isa = PBXBuildFile; fileRef = 82BE8E9F54A08E2635E2157E /* start_sunrise.caf */; };
+		8218E1C9BCB61F16A6687437 /* clear_emerge.caf in Resources */ = {isa = PBXBuildFile; fileRef = 6FF5000AFD02C960F2378565 /* clear_emerge.caf */; };
+		858DEF5491D5C565C4A92110 /* done_achieved.caf in Resources */ = {isa = PBXBuildFile; fileRef = B530FD866252E46FF4A475A8 /* done_achieved.caf */; };
+		8631BC7729DF682FD5AE78B6 /* reminder_chime.wav in Resources */ = {isa = PBXBuildFile; fileRef = ED4611A732A87659D6435421 /* reminder_chime.wav */; };
+		9117FCA3168FBE0D1F797D21 /* done_swift.caf in Resources */ = {isa = PBXBuildFile; fileRef = 85134D8B6C92D4A24DC174F9 /* done_swift.caf */; };
+		947661B7C5BB3D5985932902 /* clear_elegant.caf in Resources */ = {isa = PBXBuildFile; fileRef = ABF71F465E20805CAD34B318 /* clear_elegant.caf */; };
+		9CDEBE0E9B5FFB1CEA79DEFA /* start_solemn.caf in Resources */ = {isa = PBXBuildFile; fileRef = A26FF939B8D094FBDAAA5B74 /* start_solemn.caf */; };
+		A1B2C3D4E5F60718293A4B03 /* SpeechBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B04 /* SpeechBridge.swift */; };
+		A7AA73C437084401A4112BA0 /* clear_lift.caf in Resources */ = {isa = PBXBuildFile; fileRef = EE87AF667EAB48922F2C250E /* clear_lift.caf */; };
+		ACBBDE6AA2740B026820C3A3 /* quiet_soft.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0277A5B525B6876C7DB0326B /* quiet_soft.caf */; };
+		AF2F3EC0CA4681C6E75902BF /* play_dog.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2FAF1D6BB6A09F60ECBA1DDD /* play_dog.caf */; };
+		B1A48BE738530F72518F1A15 /* start_morning.caf in Resources */ = {isa = PBXBuildFile; fileRef = B5F70759849667F5C607D9B5 /* start_morning.caf */; };
+		B61DCFE42F080C8333495F29 /* play_gulls.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7C47CC50E417501C1A00E20F /* play_gulls.caf */; };
+		C1EFFBFABC49621DAFD4C421 /* start_gentle.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2C271A1DC7A6BC2C237FE934 /* start_gentle.caf */; };
+		C500332C150FF31201EE88FB /* play_rooster.caf in Resources */ = {isa = PBXBuildFile; fileRef = 685AE016E7DDABEE1D6BAD6D /* play_rooster.caf */; };
+		C73B6F004A12E3B5D488693C /* clear_ease.caf in Resources */ = {isa = PBXBuildFile; fileRef = 44AC203EE2F5357A75B112B7 /* clear_ease.caf */; };
+		C8FA01E1EF4BAD7ADEE82C9D /* start_strike.caf in Resources */ = {isa = PBXBuildFile; fileRef = 8262E72B02992ABC6ECD7CD2 /* start_strike.caf */; };
 		D74A14723FFB04FCF582C67F /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD451A8BE2D7D08996B3C88E /* DotStore.swift */; };
+		DC694768AC610803EF3FE3F6 /* clear_involved.caf in Resources */ = {isa = PBXBuildFile; fileRef = A48F3673E981EC1FA3A39D90 /* clear_involved.caf */; };
+		E475D6700AB45BD578AA316C /* quiet_pull.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4B0CD317A4E7936A6C0365A5 /* quiet_pull.caf */; };
 		EA0ECF4143D7501174EC83E3 /* IntentQueueBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064113D26C4B8C6EC4357132 /* IntentQueueBridge.swift */; };
-		0952B2A5E2F303652F290665 /* DottodayShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0A30A749B23C066535425C9F /* DottodayShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EC419A2A0FF236AA1C768A15 /* clear_smile.caf in Resources */ = {isa = PBXBuildFile; fileRef = 728EA0968EB413640CA48432 /* clear_smile.caf */; };
+		EEE1F91BF9973ECC1A9EFF7A /* start_lovingly.caf in Resources */ = {isa = PBXBuildFile; fileRef = 768A5D1719066B54E4DE2C58 /* start_lovingly.caf */; };
+		F12789E85F477131147519B4 /* clear_turn.caf in Resources */ = {isa = PBXBuildFile; fileRef = C3523CDD2752B783BAC7CCB0 /* clear_turn.caf */; };
+		F30395F762FC203A5831C816 /* start_swing.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2F40F0066198B23F2E4D53F0 /* start_swing.caf */; };
+		F3D55486F824C4C714E893C3 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE226B0A7178000F8195B36 /* ShareViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,8 +140,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0277A5B525B6876C7DB0326B /* quiet_soft.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_soft.caf; path = ../ios/Runner/Sounds/quiet_soft.caf; sourceTree = SOURCE_ROOT; };
+		0428686613BE33AFBECCA17F /* play_chick.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_chick.caf; path = ../ios/Runner/Sounds/play_chick.caf; sourceTree = SOURCE_ROOT; };
+		064113D26C4B8C6EC4357132 /* IntentQueueBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IntentQueueBridge.swift; sourceTree = "<group>"; };
+		084D50A246138E8BBF21F2F1 /* play_horse.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_horse.caf; path = ../ios/Runner/Sounds/play_horse.caf; sourceTree = SOURCE_ROOT; };
+		0A30A749B23C066535425C9F /* DottodayShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DottodayShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B37EB83162C9A757CEB554D /* reminder_bell.wav */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_bell.wav; path = ../assets/sounds/reminder_bell.wav; sourceTree = SOURCE_ROOT; };
+		1821739EB1239CE690A83C09 /* done_finished.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = done_finished.caf; path = ../ios/Runner/Sounds/done_finished.caf; sourceTree = SOURCE_ROOT; };
+		1877F0371D3D66FD03072483 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1D6F28BD8EC68EB6B2A3F3C6 /* done_succeeded.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = done_succeeded.caf; path = ../ios/Runner/Sounds/done_succeeded.caf; sourceTree = SOURCE_ROOT; };
 		2862012E65337F8DAB571D5C /* fr */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2C271A1DC7A6BC2C237FE934 /* start_gentle.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_gentle.caf; path = ../ios/Runner/Sounds/start_gentle.caf; sourceTree = SOURCE_ROOT; };
+		2F40F0066198B23F2E4D53F0 /* start_swing.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_swing.caf; path = ../ios/Runner/Sounds/start_swing.caf; sourceTree = SOURCE_ROOT; };
+		2FAF1D6BB6A09F60ECBA1DDD /* play_dog.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_dog.caf; path = ../ios/Runner/Sounds/play_dog.caf; sourceTree = SOURCE_ROOT; };
 		331C80D5294CF71000263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		331C80D7294CF71000263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		333000ED22D3DE5D00554162 /* Warnings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
@@ -116,33 +170,65 @@
 		33E51914231749380026EE4D /* Release.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Release.entitlements; sourceTree = "<group>"; };
 		33E5194F232828860026EE4D /* AppInfo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AppInfo.xcconfig; sourceTree = "<group>"; };
 		351D27534206C15FA746A358 /* es */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3BE226B0A7178000F8195B36 /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		432684923027D0A102AC8C4A /* clear_dutiful.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_dutiful.caf; path = ../ios/Runner/Sounds/clear_dutiful.caf; sourceTree = SOURCE_ROOT; };
+		44AC203EE2F5357A75B112B7 /* clear_ease.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_ease.caf; path = ../ios/Runner/Sounds/clear_ease.caf; sourceTree = SOURCE_ROOT; };
+		48609A3F0C209768664C863E /* clear_bright.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_bright.caf; path = ../ios/Runner/Sounds/clear_bright.caf; sourceTree = SOURCE_ROOT; };
+		4B0CD317A4E7936A6C0365A5 /* quiet_pull.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_pull.caf; path = ../ios/Runner/Sounds/quiet_pull.caf; sourceTree = SOURCE_ROOT; };
+		4BC72DFFEF261631D79A3275 /* done_checked.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = done_checked.caf; path = ../ios/Runner/Sounds/done_checked.caf; sourceTree = SOURCE_ROOT; };
 		4D7A1B2D2E8F000100C0FFEE /* CalendarBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarBridge.swift; sourceTree = "<group>"; };
 		5320F194139FE4ED14609713 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		561DC09F364E16F8A2954960 /* clear_settled.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_settled.caf; path = ../ios/Runner/Sounds/clear_settled.caf; sourceTree = SOURCE_ROOT; };
 		577A0BB34F94910ED4771241 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
+		5E52BA9632E509AF7AD4AB51 /* play_drum.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_drum.caf; path = ../ios/Runner/Sounds/play_drum.caf; sourceTree = SOURCE_ROOT; };
+		685AE016E7DDABEE1D6BAD6D /* play_rooster.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_rooster.caf; path = ../ios/Runner/Sounds/play_rooster.caf; sourceTree = SOURCE_ROOT; };
 		6A9DDC813CBBA865CD8D65D7 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
+		6FF5000AFD02C960F2378565 /* clear_emerge.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_emerge.caf; path = ../ios/Runner/Sounds/clear_emerge.caf; sourceTree = SOURCE_ROOT; };
+		728EA0968EB413640CA48432 /* clear_smile.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_smile.caf; path = ../ios/Runner/Sounds/clear_smile.caf; sourceTree = SOURCE_ROOT; };
 		73B011AB823E168682D941DB /* reminder_dot.wav */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_dot.wav; path = ../assets/sounds/reminder_dot.wav; sourceTree = SOURCE_ROOT; };
+		768A5D1719066B54E4DE2C58 /* start_lovingly.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_lovingly.caf; path = ../ios/Runner/Sounds/start_lovingly.caf; sourceTree = SOURCE_ROOT; };
 		77A73470F6BA6972F7A10282 /* dot_alarm.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = dot_alarm.caf; path = ../assets/sounds/dot_alarm.caf; sourceTree = SOURCE_ROOT; };
 		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		7B7EE10448FABE1412AE3F82 /* DottodayShare.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = DottodayShare.entitlements; sourceTree = "<group>"; };
+		7C19495645B7E0B87A9EDCB2 /* done_done.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = done_done.caf; path = ../ios/Runner/Sounds/done_done.caf; sourceTree = SOURCE_ROOT; };
+		7C47CC50E417501C1A00E20F /* play_gulls.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_gulls.caf; path = ../ios/Runner/Sounds/play_gulls.caf; sourceTree = SOURCE_ROOT; };
+		7F4D189CED693BCD93C95E5B /* start_insistent.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_insistent.caf; path = ../ios/Runner/Sounds/start_insistent.caf; sourceTree = SOURCE_ROOT; };
+		8262E72B02992ABC6ECD7CD2 /* start_strike.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_strike.caf; path = ../ios/Runner/Sounds/start_strike.caf; sourceTree = SOURCE_ROOT; };
+		82BE8E9F54A08E2635E2157E /* start_sunrise.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_sunrise.caf; path = ../ios/Runner/Sounds/start_sunrise.caf; sourceTree = SOURCE_ROOT; };
+		85134D8B6C92D4A24DC174F9 /* done_swift.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = done_swift.caf; path = ../ios/Runner/Sounds/done_swift.caf; sourceTree = SOURCE_ROOT; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		9D991EE80A7FB2385F8E8814 /* reminder_ripple.wav */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_ripple.wav; path = ../assets/sounds/reminder_ripple.wav; sourceTree = SOURCE_ROOT; };
+		9E3DC7112505EEA9A228F38D /* clear_tap.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_tap.caf; path = ../ios/Runner/Sounds/clear_tap.caf; sourceTree = SOURCE_ROOT; };
 		A1AE07484F8F561832403D18 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718293A4B04 /* SpeechBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SpeechBridge.swift; path = ../../ios/Runner/SpeechBridge.swift; sourceTree = "<group>"; };
+		A26FF939B8D094FBDAAA5B74 /* start_solemn.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_solemn.caf; path = ../ios/Runner/Sounds/start_solemn.caf; sourceTree = SOURCE_ROOT; };
+		A2FC5BA3A2E7B7455CFB32E7 /* play_knock.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_knock.caf; path = ../ios/Runner/Sounds/play_knock.caf; sourceTree = SOURCE_ROOT; };
+		A48F3673E981EC1FA3A39D90 /* clear_involved.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_involved.caf; path = ../ios/Runner/Sounds/clear_involved.caf; sourceTree = SOURCE_ROOT; };
 		A4C8C4A884C19DCEE1DA1932 /* DayDotStatusItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DayDotStatusItem.swift; sourceTree = "<group>"; };
 		A68E47B0C2DB38F5AAB52FBE /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		ABF71F465E20805CAD34B318 /* clear_elegant.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_elegant.caf; path = ../ios/Runner/Sounds/clear_elegant.caf; sourceTree = SOURCE_ROOT; };
 		AC70431C64A481189B369B74 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		B530FD866252E46FF4A475A8 /* done_achieved.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = done_achieved.caf; path = ../ios/Runner/Sounds/done_achieved.caf; sourceTree = SOURCE_ROOT; };
+		B5F70759849667F5C607D9B5 /* start_morning.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_morning.caf; path = ../ios/Runner/Sounds/start_morning.caf; sourceTree = SOURCE_ROOT; };
+		C1C4A03648D65799D798F54C /* quiet_bubble.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_bubble.caf; path = ../ios/Runner/Sounds/quiet_bubble.caf; sourceTree = SOURCE_ROOT; };
+		C2EE55A7C1B4CC879048E84E /* quiet_slip.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_slip.caf; path = ../ios/Runner/Sounds/quiet_slip.caf; sourceTree = SOURCE_ROOT; };
+		C3523CDD2752B783BAC7CCB0 /* clear_turn.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_turn.caf; path = ../ios/Runner/Sounds/clear_turn.caf; sourceTree = SOURCE_ROOT; };
 		CED2D9A80665A5D3FC657E97 /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CEE8CCE33323BA65FB9281B9 /* start_bells.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_bells.caf; path = ../ios/Runner/Sounds/start_bells.caf; sourceTree = SOURCE_ROOT; };
+		CF8B704D01AC1980CA02E7A7 /* clear_appear.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_appear.caf; path = ../ios/Runner/Sounds/clear_appear.caf; sourceTree = SOURCE_ROOT; };
+		D0ABF79B5C8EDB4465EF5746 /* play_frog.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_frog.caf; path = ../ios/Runner/Sounds/play_frog.caf; sourceTree = SOURCE_ROOT; };
+		DA308393825C4DE335620D93 /* clear_spark.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_spark.caf; path = ../ios/Runner/Sounds/clear_spark.caf; sourceTree = SOURCE_ROOT; };
 		E31060CD99B889FD8CFFD316 /* ThinkingBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ThinkingBridge.swift; path = ../../ios/Runner/ThinkingBridge.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60718293A4B04 /* SpeechBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SpeechBridge.swift; path = ../../ios/Runner/SpeechBridge.swift; sourceTree = "<group>"; };
+		E50A27EE85904F2C1FA48E6B /* clear_opening.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_opening.caf; path = ../ios/Runner/Sounds/clear_opening.caf; sourceTree = SOURCE_ROOT; };
+		E5183269BDF498C457B716F6 /* quiet_whisper.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_whisper.caf; path = ../ios/Runner/Sounds/quiet_whisper.caf; sourceTree = SOURCE_ROOT; };
 		E8EE2A12D3D79EA3BF70835B /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		EA239FDEC478DDF4AD1FE316 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EAFA382DA7DDFE87FA2D7137 /* clear_quick.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_quick.caf; path = ../ios/Runner/Sounds/clear_quick.caf; sourceTree = SOURCE_ROOT; };
 		ED4611A732A87659D6435421 /* reminder_chime.wav */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_chime.wav; path = ../assets/sounds/reminder_chime.wav; sourceTree = SOURCE_ROOT; };
 		EE5FC895D2C19BB4E7D48BE6 /* DayDotImageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DayDotImageTests.swift; sourceTree = "<group>"; };
-		3BE226B0A7178000F8195B36 /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
-		1877F0371D3D66FD03072483 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7B7EE10448FABE1412AE3F82 /* DottodayShare.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = DottodayShare.entitlements; sourceTree = "<group>"; };
-		0A30A749B23C066535425C9F /* DottodayShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DottodayShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE87AF667EAB48922F2C250E /* clear_lift.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_lift.caf; path = ../ios/Runner/Sounds/clear_lift.caf; sourceTree = SOURCE_ROOT; };
 		FD451A8BE2D7D08996B3C88E /* DotStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DotStore.swift; path = ../../ios/Shared/DotStore.swift; sourceTree = "<group>"; };
-		064113D26C4B8C6EC4357132 /* IntentQueueBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IntentQueueBridge.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +259,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		24B43F489B99CD35E9491A60 /* DottodayShare */ = {
+			isa = PBXGroup;
+			children = (
+				3BE226B0A7178000F8195B36 /* ShareViewController.swift */,
+				1877F0371D3D66FD03072483 /* Info.plist */,
+				7B7EE10448FABE1412AE3F82 /* DottodayShare.entitlements */,
+			);
+			path = DottodayShare;
+			sourceTree = "<group>";
+		};
 		331C80D6294CF71000263BE5 /* RunnerTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -268,6 +364,49 @@
 				ED4611A732A87659D6435421 /* reminder_chime.wav */,
 				73B011AB823E168682D941DB /* reminder_dot.wav */,
 				9D991EE80A7FB2385F8E8814 /* reminder_ripple.wav */,
+				CF8B704D01AC1980CA02E7A7 /* clear_appear.caf */,
+				48609A3F0C209768664C863E /* clear_bright.caf */,
+				432684923027D0A102AC8C4A /* clear_dutiful.caf */,
+				44AC203EE2F5357A75B112B7 /* clear_ease.caf */,
+				ABF71F465E20805CAD34B318 /* clear_elegant.caf */,
+				6FF5000AFD02C960F2378565 /* clear_emerge.caf */,
+				A48F3673E981EC1FA3A39D90 /* clear_involved.caf */,
+				EE87AF667EAB48922F2C250E /* clear_lift.caf */,
+				E50A27EE85904F2C1FA48E6B /* clear_opening.caf */,
+				EAFA382DA7DDFE87FA2D7137 /* clear_quick.caf */,
+				561DC09F364E16F8A2954960 /* clear_settled.caf */,
+				728EA0968EB413640CA48432 /* clear_smile.caf */,
+				DA308393825C4DE335620D93 /* clear_spark.caf */,
+				9E3DC7112505EEA9A228F38D /* clear_tap.caf */,
+				C3523CDD2752B783BAC7CCB0 /* clear_turn.caf */,
+				B530FD866252E46FF4A475A8 /* done_achieved.caf */,
+				4BC72DFFEF261631D79A3275 /* done_checked.caf */,
+				7C19495645B7E0B87A9EDCB2 /* done_done.caf */,
+				1821739EB1239CE690A83C09 /* done_finished.caf */,
+				1D6F28BD8EC68EB6B2A3F3C6 /* done_succeeded.caf */,
+				85134D8B6C92D4A24DC174F9 /* done_swift.caf */,
+				0428686613BE33AFBECCA17F /* play_chick.caf */,
+				2FAF1D6BB6A09F60ECBA1DDD /* play_dog.caf */,
+				5E52BA9632E509AF7AD4AB51 /* play_drum.caf */,
+				D0ABF79B5C8EDB4465EF5746 /* play_frog.caf */,
+				7C47CC50E417501C1A00E20F /* play_gulls.caf */,
+				084D50A246138E8BBF21F2F1 /* play_horse.caf */,
+				A2FC5BA3A2E7B7455CFB32E7 /* play_knock.caf */,
+				685AE016E7DDABEE1D6BAD6D /* play_rooster.caf */,
+				C1C4A03648D65799D798F54C /* quiet_bubble.caf */,
+				4B0CD317A4E7936A6C0365A5 /* quiet_pull.caf */,
+				C2EE55A7C1B4CC879048E84E /* quiet_slip.caf */,
+				0277A5B525B6876C7DB0326B /* quiet_soft.caf */,
+				E5183269BDF498C457B716F6 /* quiet_whisper.caf */,
+				CEE8CCE33323BA65FB9281B9 /* start_bells.caf */,
+				2C271A1DC7A6BC2C237FE934 /* start_gentle.caf */,
+				7F4D189CED693BCD93C95E5B /* start_insistent.caf */,
+				768A5D1719066B54E4DE2C58 /* start_lovingly.caf */,
+				B5F70759849667F5C607D9B5 /* start_morning.caf */,
+				A26FF939B8D094FBDAAA5B74 /* start_solemn.caf */,
+				8262E72B02992ABC6ECD7CD2 /* start_strike.caf */,
+				82BE8E9F54A08E2635E2157E /* start_sunrise.caf */,
+				2F40F0066198B23F2E4D53F0 /* start_swing.caf */,
 			);
 			name = Sounds;
 			sourceTree = "<group>";
@@ -293,16 +432,6 @@
 				5320F194139FE4ED14609713 /* Pods_RunnerTests.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		24B43F489B99CD35E9491A60 /* DottodayShare */ = {
-			isa = PBXGroup;
-			children = (
-				3BE226B0A7178000F8195B36 /* ShareViewController.swift */,
-				1877F0371D3D66FD03072483 /* Info.plist */,
-				7B7EE10448FABE1412AE3F82 /* DottodayShare.entitlements */,
-			);
-			path = DottodayShare;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -449,6 +578,49 @@
 				8631BC7729DF682FD5AE78B6 /* reminder_chime.wav in Resources */,
 				31C5440F2EC1E5D4D1C7282A /* reminder_dot.wav in Resources */,
 				1B776BC7A13CFEA1B21178A9 /* reminder_ripple.wav in Resources */,
+				112F61121DEB34C0FD77C586 /* clear_appear.caf in Resources */,
+				3C652C711830E623D626F173 /* clear_bright.caf in Resources */,
+				34E28D09A2217B1B1E9C6B8B /* clear_dutiful.caf in Resources */,
+				C73B6F004A12E3B5D488693C /* clear_ease.caf in Resources */,
+				947661B7C5BB3D5985932902 /* clear_elegant.caf in Resources */,
+				8218E1C9BCB61F16A6687437 /* clear_emerge.caf in Resources */,
+				DC694768AC610803EF3FE3F6 /* clear_involved.caf in Resources */,
+				A7AA73C437084401A4112BA0 /* clear_lift.caf in Resources */,
+				6496250D62B0F1DDA35DAE80 /* clear_opening.caf in Resources */,
+				7841A31D06EEF690B29FCAB5 /* clear_quick.caf in Resources */,
+				368472458D71E1D1391C9938 /* clear_settled.caf in Resources */,
+				EC419A2A0FF236AA1C768A15 /* clear_smile.caf in Resources */,
+				69F1C63989A2934719FF00B9 /* clear_spark.caf in Resources */,
+				307CDFDBEE864B168C25DA13 /* clear_tap.caf in Resources */,
+				F12789E85F477131147519B4 /* clear_turn.caf in Resources */,
+				858DEF5491D5C565C4A92110 /* done_achieved.caf in Resources */,
+				0805328A528E626866EFC519 /* done_checked.caf in Resources */,
+				0093699D80D8E7EE4BAEBE40 /* done_done.caf in Resources */,
+				392D28DFEA5DD8442F4643C1 /* done_finished.caf in Resources */,
+				42D8375DD4C894DD801BFF8F /* done_succeeded.caf in Resources */,
+				9117FCA3168FBE0D1F797D21 /* done_swift.caf in Resources */,
+				1070A1FC865F8B6B90D645EC /* play_chick.caf in Resources */,
+				AF2F3EC0CA4681C6E75902BF /* play_dog.caf in Resources */,
+				7656B0A91924BE04BD5C5824 /* play_drum.caf in Resources */,
+				3C471531455953FF93B2CBDB /* play_frog.caf in Resources */,
+				B61DCFE42F080C8333495F29 /* play_gulls.caf in Resources */,
+				53F97C149E3F775EA3770755 /* play_horse.caf in Resources */,
+				586DAC8B779C4F0555B51B11 /* play_knock.caf in Resources */,
+				C500332C150FF31201EE88FB /* play_rooster.caf in Resources */,
+				26C2AC9117B447243B002B74 /* quiet_bubble.caf in Resources */,
+				E475D6700AB45BD578AA316C /* quiet_pull.caf in Resources */,
+				1939DCE3E5CE55464FC09C02 /* quiet_slip.caf in Resources */,
+				ACBBDE6AA2740B026820C3A3 /* quiet_soft.caf in Resources */,
+				4484EC05B8B380B9B81105E1 /* quiet_whisper.caf in Resources */,
+				5AE9A39A93FD5687AB67F2A6 /* start_bells.caf in Resources */,
+				C1EFFBFABC49621DAFD4C421 /* start_gentle.caf in Resources */,
+				0DC93EC5D74B6D9A654EF4FC /* start_insistent.caf in Resources */,
+				EEE1F91BF9973ECC1A9EFF7A /* start_lovingly.caf in Resources */,
+				B1A48BE738530F72518F1A15 /* start_morning.caf in Resources */,
+				9CDEBE0E9B5FFB1CEA79DEFA /* start_solemn.caf in Resources */,
+				C8FA01E1EF4BAD7ADEE82C9D /* start_strike.caf in Resources */,
+				7E2871962ECB4107E8BDB653 /* start_sunrise.caf in Resources */,
+				F30395F762FC203A5831C816 /* start_swing.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -928,6 +1100,29 @@
 			};
 			name = Release;
 		};
+		4D61F11E6C8C70B9E39086EC /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = DottodayShare/DottodayShare.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JBHAWSBYLG;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = DottodayShare/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.dottoday.planner.share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Profile;
+		};
 		54874127F20A1FFE12E7E745 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -973,29 +1168,6 @@
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
-		};
-		4D61F11E6C8C70B9E39086EC /* Profile */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = DottodayShare/DottodayShare.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = JBHAWSBYLG;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = DottodayShare/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@executable_path/../../../../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.dottoday.planner.share;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Profile;
 		};
 /* End XCBuildConfiguration section */
 
