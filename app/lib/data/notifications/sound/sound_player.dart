@@ -11,6 +11,10 @@ import 'package:flutter/services.dart';
 /// sound that can't play is logged, never thrown.
 abstract interface class SoundPlayer {
   Future<void> play(CatalogueSound sound);
+
+  /// Whether the device's ringer is silent, so a preview won't be heard
+  /// (docs/12 §6). Only Android can tell; false when unknown.
+  Future<bool> deviceMuted();
 }
 
 /// The player for this build: the browser's audio on the web, the
@@ -41,6 +45,17 @@ final class ChannelSoundPlayer implements SoundPlayer {
       _logger.warn('notifications.sound_failed', error: e, stackTrace: s);
     }
   }
+
+  @override
+  Future<bool> deviceMuted() async {
+    try {
+      return await _channel.invokeMethod<bool>('isMuted') ?? false;
+    } on Object catch (e, s) {
+      // MissingPluginException in tests: no banner, nothing else breaks.
+      _logger.warn('notifications.sound_failed', error: e, stackTrace: s);
+      return false;
+    }
+  }
 }
 
 final class _BrowserSoundPlayer implements SoundPlayer {
@@ -58,4 +73,8 @@ final class _BrowserSoundPlayer implements SoundPlayer {
       _logger.warn('notifications.sound_failed', error: e, stackTrace: s);
     }
   }
+
+  /// A browser can't read the device's ringer.
+  @override
+  Future<bool> deviceMuted() async => false;
 }

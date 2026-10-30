@@ -4157,6 +4157,77 @@ class AppLocalizationsEn extends AppLocalizations {
       'Open Dottoday\'s notification settings and turn the sound back on.';
 
   @override
+  String get soundsTitle => 'Sounds';
+
+  @override
+  String get soundsIntro =>
+      'Task reminders play this, unless a task has its own. Tap one to hear it.';
+
+  @override
+  String get soundsTaskCaption => 'Task reminders';
+
+  @override
+  String get soundNone => 'None';
+
+  @override
+  String get soundNoneDetail => 'Shows and vibrates, without a sound';
+
+  @override
+  String get soundSectionQuiet => 'Quiet';
+
+  @override
+  String get soundSectionClear => 'Clear';
+
+  @override
+  String get soundSectionPlayful => 'Playful';
+
+  @override
+  String get soundsMoreCaption => 'Also';
+
+  @override
+  String get soundsStart => 'Start sound';
+
+  @override
+  String get soundsStartDetail =>
+      'Rings for the first task of your day and when a routine starts';
+
+  @override
+  String get soundsDone => 'Done sound';
+
+  @override
+  String get soundsDoneDetail => 'When you tick a task done';
+
+  @override
+  String get soundsInApp => 'Sounds in app';
+
+  @override
+  String get soundsInAppDetail => 'The Done sound and the Focus tick';
+
+  @override
+  String get soundInsistentNote =>
+      'Loud and repeating. Use it if quieter sounds don\'t reach you.';
+
+  @override
+  String get soundsMuted =>
+      'Your device is muted — you may still get vibration';
+
+  @override
+  String soundsCredit(String source, String license) {
+    return 'Sounds from $source ($license).';
+  }
+
+  @override
+  String soundDefault(String sound) {
+    return 'Default · $sound';
+  }
+
+  @override
+  String get soundDefaultOption => 'Default';
+
+  @override
+  String get sheetSound => 'Sound';
+
+  @override
   String get settingsQuietHours => 'Quiet hours';
 
   @override

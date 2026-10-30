@@ -175,6 +175,12 @@ final class SoundBridge {
   func attach(to messenger: FlutterBinaryMessenger) {
     let channel = FlutterMethodChannel(name: "dottoday/sound", binaryMessenger: messenger)
     channel.setMethodCallHandler { call, result in
+      // The ring/silent switch has no public API (docs/12 §6): never claim
+      // muted; system sounds obey the switch on their own.
+      if call.method == "isMuted" {
+        result(false)
+        return
+      }
       guard call.method == "play", let name = call.arguments as? String else {
         result(FlutterMethodNotImplemented)
         return

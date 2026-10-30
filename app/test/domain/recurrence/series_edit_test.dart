@@ -97,6 +97,38 @@ void main() {
     expect(w.occurrences.every((o) => o.title == 'Long run'), isTrue);
   });
 
+  test('a sound for all: the series takes it, later rows inherit '
+      '(docs/12 §3)', () {
+    final s = _series();
+    final rows = [for (final o in _rows(s)) o.copyWith(soundId: 'play.frog')];
+    final opened = _on(rows, 23);
+    final change = SeriesChange.between(
+      opened,
+      opened.copyWith(soundId: 'clear.lift'),
+      tz.getLocation(opened.tzId),
+    );
+    expect(change.soundId, (to: 'clear.lift'));
+    final w = _editor().edit(
+      series: s,
+      rows: rows,
+      target: opened,
+      scope: EditScope.following,
+      change: change,
+    );
+    expect(w.series.single.soundId, 'clear.lift');
+    expect(w.occurrences.map((o) => o.soundId), everyElement(isNull));
+    // Back to Default: (to: null) clears the series' sound.
+    final cleared = SeriesChange.between(
+      opened,
+      opened.copyWith(soundId: null),
+      tz.getLocation(opened.tzId),
+    );
+    expect(cleared.soundId, (to: null));
+    expect(cleared.template(s.copyWith(soundId: 'bell')).soundId, isNull);
+    // "This one" keeps it on the row.
+    expect(change.fields(opened, own: true).soundId, 'clear.lift');
+  });
+
   test('all, fields only: from the first planned instance today on', () {
     final s = _series();
     final rows = _rows(s);

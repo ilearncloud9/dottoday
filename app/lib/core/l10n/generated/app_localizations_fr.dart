@@ -4184,6 +4184,77 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ouvrez les réglages de notification de Dottoday et réactivez le son.';
 
   @override
+  String get soundsTitle => 'Sons';
+
+  @override
+  String get soundsIntro =>
+      'Les rappels de tâches jouent ce son, sauf si une tâche a le sien. Touchez-en un pour l\'écouter.';
+
+  @override
+  String get soundsTaskCaption => 'Rappels de tâches';
+
+  @override
+  String get soundNone => 'Aucun';
+
+  @override
+  String get soundNoneDetail => 'S\'affiche et vibre, sans son';
+
+  @override
+  String get soundSectionQuiet => 'Discrets';
+
+  @override
+  String get soundSectionClear => 'Clairs';
+
+  @override
+  String get soundSectionPlayful => 'Ludiques';
+
+  @override
+  String get soundsMoreCaption => 'Aussi';
+
+  @override
+  String get soundsStart => 'Son de départ';
+
+  @override
+  String get soundsStartDetail =>
+      'Sonne pour la première tâche de la journée et au début d\'une routine';
+
+  @override
+  String get soundsDone => 'Son de fin';
+
+  @override
+  String get soundsDoneDetail => 'Quand vous cochez une tâche';
+
+  @override
+  String get soundsInApp => 'Sons dans l\'app';
+
+  @override
+  String get soundsInAppDetail => 'Le son de fin et le tic de Concentration';
+
+  @override
+  String get soundInsistentNote =>
+      'Fort et répété. Utile si les sons plus doux ne vous atteignent pas.';
+
+  @override
+  String get soundsMuted =>
+      'Votre appareil est en silencieux — la vibration reste possible';
+
+  @override
+  String soundsCredit(String source, String license) {
+    return 'Sons de $source ($license).';
+  }
+
+  @override
+  String soundDefault(String sound) {
+    return 'Par défaut · $sound';
+  }
+
+  @override
+  String get soundDefaultOption => 'Par défaut';
+
+  @override
+  String get sheetSound => 'Son';
+
+  @override
   String get settingsQuietHours => 'Heures calmes';
 
   @override

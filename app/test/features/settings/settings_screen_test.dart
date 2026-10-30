@@ -43,6 +43,12 @@ final class _FakePlayer implements SoundPlayer {
 
   @override
   Future<void> play(CatalogueSound sound) async => played.add(sound);
+
+  /// What [deviceMuted] answers.
+  bool muted = false;
+
+  @override
+  Future<bool> deviceMuted() async => muted;
 }
 
 void main() {
