@@ -40,6 +40,7 @@ Result<Routine, ValidationFailure> validateRoutine(Routine routine) {
     if (minute != null) checkRange(ValidationField.startTime, minute, 0, 1439),
     for (final i in r.items) ...[
       checkRequiredText(ValidationField.title, i.title),
+      checkSoundKey(i.soundId),
       checkRange(
         ValidationField.duration,
         i.durationMin,

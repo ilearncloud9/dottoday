@@ -15,4 +15,11 @@ void main() {
       'done': true,
     });
   });
+
+  test('a task sound may be pushed and crosses as it is (docs/12 §3)', () {
+    expect(pushableColumns['series'], contains('sound_id'));
+    expect(pushableColumns['occurrences'], contains('sound_id'));
+    expect(toServerValue('sound_id', 'clear.lift'), 'clear.lift');
+    expect(toLocalValue('sound_id', 'none'), 'none');
+  });
 }

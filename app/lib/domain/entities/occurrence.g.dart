@@ -30,6 +30,7 @@ _Occurrence _$OccurrenceFromJson(Map<String, dynamic> json) => _Occurrence(
   alerts: (json['alerts'] as List<dynamic>?)
       ?.map((e) => Alert.fromJson(e as Map<String, dynamic>))
       .toList(),
+  soundId: json['sound_id'] as String?,
   status:
       $enumDecodeNullable(_$OccurrenceStatusEnumMap, json['status']) ??
       OccurrenceStatus.planned,
@@ -92,6 +93,7 @@ Map<String, dynamic> _$OccurrenceToJson(_Occurrence instance) =>
       'travel_buffer_min': instance.travelBufferMin,
       'energy': _$EnergyEnumMap[instance.energy],
       'alerts': instance.alerts?.map((e) => e.toJson()).toList(),
+      'sound_id': instance.soundId,
       'status': _$OccurrenceStatusEnumMap[instance.status]!,
       'completed_at_utc': _$JsonConverterToJson<int, DateTime>(
         instance.completedAtUtc,

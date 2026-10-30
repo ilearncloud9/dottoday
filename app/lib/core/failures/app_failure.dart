@@ -48,6 +48,7 @@ enum ValidationField {
   alertOffset,
   color,
   icon,
+  sound,
   timeZone,
   alerts,
   subtasks,

@@ -38,6 +38,10 @@ class SeriesTable extends Table with TimestampColumns, SyncColumns {
       boolean().withDefault(const Constant(false))();
   IntColumn get energy => integer().nullable()();
   TextColumn get alerts => text().withDefault(const Constant('[]'))();
+
+  /// The reminder sound (docs/12 §3); column-level CHECK so the v8
+  /// migration's ADD COLUMN carries it (a table CHECK needs a rebuild).
+  TextColumn get soundId => text().nullable().check(soundIdCheck)();
   TextColumn get subtaskTemplate => text().withDefault(const Constant('[]'))();
   IntColumn get materialisedThroughUtc => integer().nullable()();
   IntColumn get archivedAt => integer().nullable()();

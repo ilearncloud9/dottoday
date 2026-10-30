@@ -94,6 +94,17 @@ ValidationFailure? checkIconKey(String key) => iconKeyPattern.hasMatch(key)
     ? null
     : _fail(ValidationField.icon, ValidationRule.invalidFormat);
 
+final _soundKey = RegExp(r'^[a-z0-9._]{1,64}$');
+
+/// A stored sound value's shape (docs/12 §3): null, `none`, `system` or a
+/// sound id. Only the shape: an id this version doesn't ship is kept (a
+/// newer device's catalogue) and resolves to a default on read.
+/// Mirrors `soundIdCheck` and 0009_sound_id.sql.
+ValidationFailure? checkSoundKey(String? key) =>
+    key == null || _soundKey.hasMatch(key)
+    ? null
+    : _fail(ValidationField.sound, ValidationRule.invalidFormat);
+
 /// [tzId] must be a known IANA zone.
 ///
 /// Throws [StateError] if the time-zone database was never loaded: that is a
@@ -114,6 +125,7 @@ ValidationFailure? checkAlerts(List<Alert> alerts) {
     return _fail(ValidationField.alerts, ValidationRule.tooLarge);
   }
   for (final alert in alerts) {
+    if (checkSoundKey(alert.sound) case final failure?) return failure;
     final failure = checkRange(
       ValidationField.alertOffset,
       alert.offsetMin,

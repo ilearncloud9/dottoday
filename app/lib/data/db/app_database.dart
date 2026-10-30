@@ -1,4 +1,6 @@
 import 'package:dottoday/data/db/tables/calendar_tables.dart';
+// The generated part copies `soundIdCheck` (a column CHECK) verbatim.
+import 'package:dottoday/data/db/tables/columns.dart';
 import 'package:dottoday/data/db/tables/occurrences.dart';
 import 'package:dottoday/data/db/tables/profiles.dart';
 import 'package:dottoday/data/db/tables/routines_table.dart';
@@ -35,7 +37,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 7;
+  static const latestSchemaVersion = 8;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -73,12 +75,28 @@ class AppDatabase extends _$AppDatabase {
       }
       // 7 (M13.2): when a step was ticked, for learned step lengths.
       if (from < 7) await _addColumnOnce(m, subtasks, subtasks.doneAt);
+      // 8 (docs/12 §3): a task's reminder sound, and "system" for every
+      // profile whose reminder sound was null — null meant the OS sound
+      // until now and means the Dot tone from here, so no one's reminders
+      // change on upgrade. Only on upgrade: a new install keeps null.
+      if (from < 8) {
+        await _addColumnOnce(m, seriesTable, seriesTable.soundId);
+        await _addColumnOnce(m, occurrences, occurrences.soundId);
+        await _keepSystemReminderSound();
+      }
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without
       // it SQLite silently ignores every FK action declared above.
       await customStatement('PRAGMA foreign_keys = ON');
     },
+  );
+
+  /// Writes `reminderSound: "system"` where it is missing or null (v8).
+  /// Not marked dirty: the server's 0009 does the same to its copy.
+  Future<void> _keepSystemReminderSound() => customStatement(
+    "UPDATE profiles SET settings = json_set(settings, '\$.reminderSound', "
+    "'system') WHERE json_extract(settings, '\$.reminderSound') IS NULL",
   );
 
   /// Creates [table] unless it exists (see [_addColumnOnce] for why).

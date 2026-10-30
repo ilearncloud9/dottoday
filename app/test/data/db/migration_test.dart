@@ -10,9 +10,97 @@ import 'package:flutter_test/flutter_test.dart';
 // 3 → 4 (M7.5): calendar_links.location (R-17); 4 → 5 (M10.7):
 // occurrences.move_count (Unstick, 11 B3); 5 → 6 (M11.4): routines,
 // occurrences.routine_start and the outbox CHECK naming routines; 6 → 7
-// (M13.2, ADR-0012): subtasks.done_at. Steps are idempotent, so
-// a file an older build opened (user_version lowered) upgrades again (M8.5).
+// (M13.2, ADR-0012): subtasks.done_at; 7 → 8 (docs/12 §3): sound_id on
+// series and occurrences, and "system" for every null reminder sound.
+// Steps are idempotent, so a file an older build opened (user_version
+// lowered) upgrades again (M8.5).
 void main() {
+  test('a version 7 file gains task sounds and keeps the OS sound', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig8');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+
+    final v7 = AppDatabase(NativeDatabase(file));
+    for (final (id, settings) in [
+      ('missing', '{}'),
+      ('null', '{"reminderSound":null,"snapMinutes":10}'),
+      ('chosen', '{"reminderSound":"bell"}'),
+    ]) {
+      await v7.customStatement(
+        'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+        "updated_at) VALUES ('$id', 'UTC', 'en', '$settings', 0, 0)",
+      );
+    }
+    await v7.customStatement('ALTER TABLE occurrences DROP COLUMN sound_id');
+    await v7.customStatement('ALTER TABLE series DROP COLUMN sound_id');
+    await v7.customStatement(
+      'INSERT INTO occurrences (id, user_id, title, tz_id, duration_min, '
+      "created_at, updated_at) VALUES ('o1', 'chosen', 'Run', 'UTC', 30, 0, 0)",
+    );
+    await v7.customStatement('PRAGMA user_version = 7');
+    await v7.close();
+
+    final v8 = AppDatabase(NativeDatabase(file));
+    addTearDown(v8.close);
+    final row = await v8.select(v8.occurrences).getSingle();
+    expect((row.title, row.soundId), ('Run', null), reason: 'inherits');
+    Future<Object?> sound(String id) async =>
+        (await v8
+                .customSelect(
+                  "SELECT json_extract(settings, '\$.reminderSound') AS s "
+                  'FROM profiles WHERE id = ?',
+                  variables: [Variable.withString(id)],
+                )
+                .getSingle())
+            .data['s'];
+    // Null meant the OS sound; it still does, now said out loud.
+    expect(await sound('missing'), 'system');
+    expect(await sound('null'), 'system');
+    expect(await sound('chosen'), 'bell', reason: 'a choice is kept');
+    final other = await v8
+        .customSelect(
+          "SELECT json_extract(settings, '\$.snapMinutes') AS v "
+          "FROM profiles WHERE id = 'null'",
+        )
+        .getSingle();
+    expect(other.data['v'], 10, reason: 'the rest of the JSON is kept');
+    // The added column carries its CHECK.
+    await expectLater(
+      v8.customStatement("UPDATE occurrences SET sound_id = 'Free text!'"),
+      throwsA(isA<SqliteException>()),
+    );
+    final version = await v8.customSelect('PRAGMA user_version').getSingle();
+    expect(version.read<int>('user_version'), AppDatabase.latestSchemaVersion);
+  });
+
+  test(
+    'a new database leaves the reminder sound unset (the Dot tone)',
+    () async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+      await db.customStatement(
+        'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+        "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+      );
+      final row = await db
+          .customSelect(
+            "SELECT json_extract(settings, '\$.reminderSound') AS s "
+            'FROM profiles',
+          )
+          .getSingle();
+      expect(row.data['s'], null);
+      await expectLater(
+        db.customStatement(
+          'INSERT INTO series (id, user_id, title, duration_min, rrule, '
+          'dtstart_local, tz_id, created_at, updated_at, sound_id) VALUES '
+          "('s', 'u', 'x', 30, 'FREQ=DAILY', '2026-10-30T09:00', 'UTC', 0, 0, "
+          "'a b')",
+        ),
+        throwsA(isA<SqliteException>()),
+      );
+    },
+  );
+
   test('a version 6 file gains step tick times, null, rows kept', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig7');
     addTearDown(() => dir.delete(recursive: true));

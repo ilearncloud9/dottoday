@@ -53,6 +53,9 @@ class Occurrences extends Table with TimestampColumns, SyncColumns {
 
   /// Null inherits the series alerts; `[]` is an explicit "no alerts".
   TextColumn get alerts => text().nullable()();
+
+  /// The reminder sound (docs/12 §3); null inherits the series'.
+  TextColumn get soundId => text().nullable().check(soundIdCheck)();
   TextColumn get status => text().withDefault(const Constant('planned'))();
   IntColumn get completedAtUtc => integer().nullable()();
   RealColumn get sortOrder => real().withDefault(const Constant(0))();

@@ -324,7 +324,8 @@ as DateTime?,
 mixin _$RoutineItem {
 
  String get id; String get title; String get colorKey; String get iconKey;/// Minutes after the routine's first step starts (0 for the first).
- int get offsetMin; int get durationMin;
+ int get offsetMin; int get durationMin;/// Copied onto the occurrence this step creates (docs/12 §3).
+ String? get soundId;
 /// Create a copy of RoutineItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -338,20 +339,20 @@ $RoutineItemCopyWith<RoutineItem> get copyWith => _$RoutineItemCopyWithImpl<Rout
 @override
 bool operator ==(Object other) {
   final _this = this as RoutineItem;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoutineItem&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.colorKey, _this.colorKey) || other.colorKey == _this.colorKey)&&(identical(other.iconKey, _this.iconKey) || other.iconKey == _this.iconKey)&&(identical(other.offsetMin, _this.offsetMin) || other.offsetMin == _this.offsetMin)&&(identical(other.durationMin, _this.durationMin) || other.durationMin == _this.durationMin));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoutineItem&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.colorKey, _this.colorKey) || other.colorKey == _this.colorKey)&&(identical(other.iconKey, _this.iconKey) || other.iconKey == _this.iconKey)&&(identical(other.offsetMin, _this.offsetMin) || other.offsetMin == _this.offsetMin)&&(identical(other.durationMin, _this.durationMin) || other.durationMin == _this.durationMin)&&(identical(other.soundId, _this.soundId) || other.soundId == _this.soundId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as RoutineItem;
-  return Object.hash(runtimeType,_this.id,_this.title,_this.colorKey,_this.iconKey,_this.offsetMin,_this.durationMin);
+  return Object.hash(runtimeType,_this.id,_this.title,_this.colorKey,_this.iconKey,_this.offsetMin,_this.durationMin,_this.soundId);
 }
 
 @override
 String toString() {
   final _this = this as RoutineItem;
-  return 'RoutineItem(id: ${_this.id}, title: ${_this.title}, colorKey: ${_this.colorKey}, iconKey: ${_this.iconKey}, offsetMin: ${_this.offsetMin}, durationMin: ${_this.durationMin})';
+  return 'RoutineItem(id: ${_this.id}, title: ${_this.title}, colorKey: ${_this.colorKey}, iconKey: ${_this.iconKey}, offsetMin: ${_this.offsetMin}, durationMin: ${_this.durationMin}, soundId: ${_this.soundId})';
 }
 
 
@@ -362,7 +363,7 @@ abstract mixin class $RoutineItemCopyWith<$Res>  {
   factory $RoutineItemCopyWith(RoutineItem value, $Res Function(RoutineItem) _then) = _$RoutineItemCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String colorKey, String iconKey, int offsetMin, int durationMin
+ String id, String title, String colorKey, String iconKey, int offsetMin, int durationMin, String? soundId
 });
 
 
@@ -379,7 +380,7 @@ class _$RoutineItemCopyWithImpl<$Res>
 
 /// Create a copy of RoutineItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? colorKey = null,Object? iconKey = null,Object? offsetMin = null,Object? durationMin = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? colorKey = null,Object? iconKey = null,Object? offsetMin = null,Object? durationMin = null,Object? soundId = freezed,}) {
   return _then(RoutineItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -387,7 +388,8 @@ as String,colorKey: null == colorKey ? _self.colorKey : colorKey // ignore: cast
 as String,iconKey: null == iconKey ? _self.iconKey : iconKey // ignore: cast_nullable_to_non_nullable
 as String,offsetMin: null == offsetMin ? _self.offsetMin : offsetMin // ignore: cast_nullable_to_non_nullable
 as int,durationMin: null == durationMin ? _self.durationMin : durationMin // ignore: cast_nullable_to_non_nullable
-as int,
+as int,soundId: freezed == soundId ? _self.soundId : soundId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -472,10 +474,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String colorKey,  String iconKey,  int offsetMin,  int durationMin)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String colorKey,  String iconKey,  int offsetMin,  int durationMin,  String? soundId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RoutineItem() when $default != null:
-return $default(_that.id,_that.title,_that.colorKey,_that.iconKey,_that.offsetMin,_that.durationMin);case _:
+return $default(_that.id,_that.title,_that.colorKey,_that.iconKey,_that.offsetMin,_that.durationMin,_that.soundId);case _:
   return orElse();
 
 }
@@ -493,10 +495,10 @@ return $default(_that.id,_that.title,_that.colorKey,_that.iconKey,_that.offsetMi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String colorKey,  String iconKey,  int offsetMin,  int durationMin)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String colorKey,  String iconKey,  int offsetMin,  int durationMin,  String? soundId)  $default,) {final _that = this;
 switch (_that) {
 case _RoutineItem():
-return $default(_that.id,_that.title,_that.colorKey,_that.iconKey,_that.offsetMin,_that.durationMin);case _:
+return $default(_that.id,_that.title,_that.colorKey,_that.iconKey,_that.offsetMin,_that.durationMin,_that.soundId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -513,10 +515,10 @@ return $default(_that.id,_that.title,_that.colorKey,_that.iconKey,_that.offsetMi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String colorKey,  String iconKey,  int offsetMin,  int durationMin)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String colorKey,  String iconKey,  int offsetMin,  int durationMin,  String? soundId)?  $default,) {final _that = this;
 switch (_that) {
 case _RoutineItem() when $default != null:
-return $default(_that.id,_that.title,_that.colorKey,_that.iconKey,_that.offsetMin,_that.durationMin);case _:
+return $default(_that.id,_that.title,_that.colorKey,_that.iconKey,_that.offsetMin,_that.durationMin,_that.soundId);case _:
   return null;
 
 }
@@ -528,7 +530,7 @@ return $default(_that.id,_that.title,_that.colorKey,_that.iconKey,_that.offsetMi
 @JsonSerializable()
 
 class _RoutineItem implements RoutineItem {
-  const _RoutineItem({required this.id, required this.title, this.colorKey = defaultTaskColorKey, this.iconKey = defaultIconKey, required this.offsetMin, required this.durationMin});
+  const _RoutineItem({required this.id, required this.title, this.colorKey = defaultTaskColorKey, this.iconKey = defaultIconKey, required this.offsetMin, required this.durationMin, this.soundId});
   factory _RoutineItem.fromJson(Map<String, dynamic> json) => _$RoutineItemFromJson(json);
 
 @override final  String id;
@@ -538,6 +540,8 @@ class _RoutineItem implements RoutineItem {
 /// Minutes after the routine's first step starts (0 for the first).
 @override final  int offsetMin;
 @override final  int durationMin;
+/// Copied onto the occurrence this step creates (docs/12 §3).
+@override final  String? soundId;
 
 /// Create a copy of RoutineItem
 /// with the given fields replaced by the non-null parameter values.
@@ -552,18 +556,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoutineItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.colorKey, colorKey) || other.colorKey == colorKey)&&(identical(other.iconKey, iconKey) || other.iconKey == iconKey)&&(identical(other.offsetMin, offsetMin) || other.offsetMin == offsetMin)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoutineItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.colorKey, colorKey) || other.colorKey == colorKey)&&(identical(other.iconKey, iconKey) || other.iconKey == iconKey)&&(identical(other.offsetMin, offsetMin) || other.offsetMin == offsetMin)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin)&&(identical(other.soundId, soundId) || other.soundId == soundId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,title,colorKey,iconKey,offsetMin,durationMin);
+    return Object.hash(runtimeType,id,title,colorKey,iconKey,offsetMin,durationMin,soundId);
 }
 
 @override
 String toString() {
-    return 'RoutineItem(id: $id, title: $title, colorKey: $colorKey, iconKey: $iconKey, offsetMin: $offsetMin, durationMin: $durationMin)';
+    return 'RoutineItem(id: $id, title: $title, colorKey: $colorKey, iconKey: $iconKey, offsetMin: $offsetMin, durationMin: $durationMin, soundId: $soundId)';
 }
 
 
@@ -574,7 +578,7 @@ abstract mixin class _$RoutineItemCopyWith<$Res> implements $RoutineItemCopyWith
   factory _$RoutineItemCopyWith(_RoutineItem value, $Res Function(_RoutineItem) _then) = __$RoutineItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String colorKey, String iconKey, int offsetMin, int durationMin
+ String id, String title, String colorKey, String iconKey, int offsetMin, int durationMin, String? soundId
 });
 
 
@@ -591,7 +595,7 @@ class __$RoutineItemCopyWithImpl<$Res>
 
 /// Create a copy of RoutineItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? colorKey = null,Object? iconKey = null,Object? offsetMin = null,Object? durationMin = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? colorKey = null,Object? iconKey = null,Object? offsetMin = null,Object? durationMin = null,Object? soundId = freezed,}) {
   return _then(_RoutineItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -599,7 +603,8 @@ as String,colorKey: null == colorKey ? _self.colorKey : colorKey // ignore: cast
 as String,iconKey: null == iconKey ? _self.iconKey : iconKey // ignore: cast_nullable_to_non_nullable
 as String,offsetMin: null == offsetMin ? _self.offsetMin : offsetMin // ignore: cast_nullable_to_non_nullable
 as int,durationMin: null == durationMin ? _self.durationMin : durationMin // ignore: cast_nullable_to_non_nullable
-as int,
+as int,soundId: freezed == soundId ? _self.soundId : soundId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

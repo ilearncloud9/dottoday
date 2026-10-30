@@ -59,6 +59,32 @@ void main() {
     expect(back.subtasks.first.done, isTrue);
   });
 
+  test('a file from before sounds imports every task as inherit', () {
+    final json =
+        jsonDecode(encodeExportJson(hostileBundle())) as Map<String, Object?>;
+    final settings =
+        (json['profile']! as Map<String, Object?>)['settings']!
+            as Map<String, Object?>;
+    for (final key in ['startSoundId', 'doneSoundId', 'inAppSoundsEnabled']) {
+      settings.remove(key);
+    }
+    for (final table in ['series', 'occurrences']) {
+      for (final row in (json[table]! as List).cast<Map<String, Object?>>()) {
+        row.remove('sound_id');
+      }
+    }
+    final back = decodeExportJson(
+      jsonEncode(json),
+    ).when(ok: (b) => b, err: (f) => fail(f.code));
+    expect(back.series.single.soundId, isNull);
+    expect(back.occurrences.map((o) => o.soundId), everyElement(isNull));
+    final s = back.profile.settings;
+    expect(
+      (s.startSoundId, s.doneSoundId, s.inAppSoundsEnabled),
+      ('dot_alarm', 'done.swift', true),
+    );
+  });
+
   test('a file from before routines imports with none (M11.4)', () {
     final json =
         jsonDecode(encodeExportJson(hostileBundle())) as Map<String, Object?>
@@ -146,6 +172,11 @@ void main() {
         _code(decodeExportJson(rule)),
         'validation.recurrence.invalidFormat',
       );
+    });
+
+    test('a malformed sound id, with the field (docs/12 §3)', () {
+      final text = _mutate((j) => _first(j, 'series')['sound_id'] = 'A b!');
+      expect(_code(decodeExportJson(text)), 'validation.sound.invalidFormat');
     });
 
     test('oversize files (> 25 MB)', () {

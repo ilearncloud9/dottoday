@@ -33,6 +33,10 @@ abstract class Occurrence with _$Occurrence {
     @Default(0) int travelBufferMin,
     Energy? energy,
     List<Alert>? alerts,
+
+    /// The reminder sound (docs/12 §3): null inherits the series' (or the
+    /// default for a one-off), `"none"` is silent, else a sound id.
+    String? soundId,
     @Default(OccurrenceStatus.planned) OccurrenceStatus status,
     @UtcMillisConverter() DateTime? completedAtUtc,
     @Default(0) double sortOrder,
