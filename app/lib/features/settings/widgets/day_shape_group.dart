@@ -24,6 +24,10 @@ class DayShapeGroup extends StatelessWidget {
 
   final Settings settings;
 
+  /// Wake Up and Bedtime alone, "same every day" (minimal Settings rows
+  /// 2–3, docs/14 §4).
+  List<Widget> times(BuildContext context) => _times(context);
+
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
@@ -51,34 +55,48 @@ class DayShapeGroup extends StatelessWidget {
           bedLabel: l10n.settingsBedtime,
           onChanged: setWindow,
         ),
-        SettingsRow(
-          glyph: DotGlyphs.sunrise,
-          tint: t.tasks[TaskColor.amber].ink,
-          title: l10n.settingsWakeUp,
-          value: at(wake),
-          onTap: () => unawaited(
-            _time(context, l10n.settingsWakeUp, wake, (m) => setWindow(m, bed)),
-          ),
-        ),
-        SettingsRow(
-          glyph: DotGlyphs.moon,
-          tint: t.tasks[TaskColor.violet].ink,
-          title: l10n.settingsBedtime,
-          value: at(bed),
-          onTap: () => unawaited(
-            _time(
-              context,
-              l10n.settingsBedtime,
-              bed,
-              (m) => setWindow(wake, m),
-            ),
-          ),
-        ),
+        ..._times(context),
         _days(context, t),
         _weekStart(context, t),
         _timeFormat(context, t),
       ],
     );
+  }
+
+  List<Widget> _times(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    final common = commonWindow(settings);
+    final wake = windowMinutes(common.start);
+    final bed = windowMinutes(common.end);
+    String at(int m) => clockText(context, m, settings.use24h);
+    void setWindow(int w, int b) => changeSettings(
+      context,
+      (s) => withCommonWindow(
+        s,
+        TimeWindow(start: windowTime(w), end: windowTime(b)),
+      ),
+    );
+    return [
+      SettingsRow(
+        glyph: DotGlyphs.sunrise,
+        tint: t.tasks[TaskColor.amber].ink,
+        title: l10n.settingsWakeUp,
+        value: at(wake),
+        onTap: () => unawaited(
+          _time(context, l10n.settingsWakeUp, wake, (m) => setWindow(m, bed)),
+        ),
+      ),
+      SettingsRow(
+        glyph: DotGlyphs.moon,
+        tint: t.tasks[TaskColor.violet].ink,
+        title: l10n.settingsBedtime,
+        value: at(bed),
+        onTap: () => unawaited(
+          _time(context, l10n.settingsBedtime, bed, (m) => setWindow(wake, m)),
+        ),
+      ),
+    ];
   }
 
   Future<void> _time(

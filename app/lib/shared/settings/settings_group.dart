@@ -34,13 +34,15 @@ class SettingsGroup extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
       children: [
-        Padding(
-          padding: const EdgeInsetsDirectional.only(start: DotSpace.xs),
-          child: Semantics(
-            header: true,
-            child: Text(caption.toUpperCase(), style: t.styles.caption),
+        // No caption: minimal Settings' one group (docs/14 §4 "no sections").
+        if (caption.isNotEmpty)
+          Padding(
+            padding: const EdgeInsetsDirectional.only(start: DotSpace.xs),
+            child: Semantics(
+              header: true,
+              child: Text(caption.toUpperCase(), style: t.styles.caption),
+            ),
           ),
-        ),
         Material(
           color: t.colors.raised,
           shape: RoundedRectangleBorder(
