@@ -60,6 +60,8 @@ void main() {
     await _pumpUntil(tester, find.text('Demo day loaded'));
 
     await _pumpUntil(tester, find.byType(DayCard));
-    expect(find.textContaining('· Today'), findsOneWidget);
+    // The day's numbers sit under Today's title now (ADR-0015).
+    await _pumpUntil(tester, find.textContaining(RegExp(r'^\d+ of \d+ · ')));
+    expect(find.textContaining(RegExp(r'^\d+ of \d+ · ')), findsOneWidget);
   });
 }
