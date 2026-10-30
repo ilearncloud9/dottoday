@@ -13,15 +13,21 @@ void main() {
   // 09:05 Berlin on 21 Oct 2026 (CEST, UTC+2).
   final gap = DateTime.utc(2026, 10, 21, 7, 5);
 
-  DateTime drop(double f, {int gapMin = 60, int dur = 30, int snap = 15}) =>
-      dropStart(
-        zone: berlin,
-        gapStartUtc: gap,
-        gapMinutes: gapMin,
-        fraction: f,
-        durationMin: dur,
-        snapMinutes: snap,
-      );
+  DateTime drop(
+    double f, {
+    int gapMin = 60,
+    int dur = 30,
+    int snap = 15,
+    bool fit = true,
+  }) => dropStart(
+    zone: berlin,
+    gapStartUtc: gap,
+    gapMinutes: gapMin,
+    fraction: f,
+    durationMin: dur,
+    snapMinutes: snap,
+    fit: fit,
+  );
 
   group('dropStart', () {
     test('snaps to the wall clock, not to the gap start', () {
@@ -41,14 +47,14 @@ void main() {
     });
   });
 
-  group('resizedDuration', () {
-    test('adds and removes whole snap steps', () {
-      expect(resizedDuration(30, steps: 2, snapMinutes: 15), 60);
-      expect(resizedDuration(60, steps: -1, snapMinutes: 15), 45);
+  group('dropStart on a task row (ADR-0015)', () {
+    test('lands where it was let go, overlapping the task', () {
+      // 3/4 down a 60-min task from 09:05: 09:50, snapped to 09:45.
+      expect(drop(0.75, fit: false), DateTime.utc(2026, 10, 21, 7, 45));
     });
 
-    test('keeps at least one step', () {
-      expect(resizedDuration(30, steps: -5, snapMinutes: 15), 15);
+    test('is not pulled back to fit inside the row', () {
+      expect(drop(1, fit: false), DateTime.utc(2026, 10, 21, 8, 0)); // 10:00
     });
   });
 

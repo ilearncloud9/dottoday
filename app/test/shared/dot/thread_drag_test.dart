@@ -1,7 +1,6 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread.dart';
-import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +16,7 @@ const _write = ThreadTask(
   state: DotState.upcoming,
   timeRange: '9:00 – 9:30',
 );
-const _pinned = ThreadTask(
+final _pinned = ThreadTask(
   id: 'call',
   title: 'Call',
   color: TaskColor.coral,
@@ -25,7 +24,11 @@ const _pinned = ThreadTask(
   state: DotState.upcoming,
   timeRange: '11:00 – 11:30',
   movable: false,
+  startUtc: _call,
+  minutes: 30,
 );
+// 11:00 Berlin (CEST); the gap opens 9:30.
+final _call = DateTime.utc(2026, 10, 21, 9);
 final _gap = ThreadGap(
   minutes: 90,
   startLabel: '9:30',
@@ -39,17 +42,22 @@ class _Log {
   final bool? shiftByDefault;
   final bool? calendarByDefault;
   final drops = <String>[];
-  final resizes = <String>[];
   ThreadDrag get drag => ThreadDrag(
     shiftByDefault: shiftByDefault,
     calendarByDefault: calendarByDefault,
-    onDrop: (id, gap, f, shift) => drops.add(
-      '$id ${gap.startLabel}${shift.followers ? ' shift' : ''}'
+    onDrop: (id, span, f, shift) => drops.add(
+      '$id ${_label(span)}${shift.followers ? ' shift' : ''}'
       '${shift.calendar ? ' +calendar' : ''}',
     ),
-    hintFor: (id, gap, f) => gap == null ? null : '→ ${gap.startLabel}',
-    onResize: (id, steps) => resizes.add('$id $steps'),
+    hintFor: (id, span, f) => span == null ? null : '→ ${_label(span)}',
   );
+
+  /// "9:30" for the gap, "on 11:00" for Call's row (Berlin, CEST).
+  static String _label(DropSpan s) {
+    final local = s.startUtc.add(const Duration(hours: 2));
+    final time = '${local.hour}:${local.minute.toString().padLeft(2, '0')}';
+    return s.fit ? time : 'on $time';
+  }
 }
 
 Widget _thread(_Log log, {double textScale = 1}) => testApp(
@@ -64,7 +72,7 @@ Widget _thread(_Log log, {double textScale = 1}) => testApp(
             entries: [
               const ThreadTaskEntry(_write),
               _gap,
-              const ThreadTaskEntry(_pinned),
+              ThreadTaskEntry(_pinned),
             ],
             actions: ThreadActions(drag: log.drag),
           ),
@@ -204,21 +212,38 @@ void main() {
     await g.up();
     await tester.pumpAndSettle();
     expect(log.drops, isEmpty);
-    expect(find.byType(ResizeGrip), findsOneWidget, reason: 'only Write');
   });
 
-  testWidgets('the grip resizes in snap steps, by drag and by screen '
-      'reader increase / decrease (R-12)', (tester) async {
-    final handle = tester.ensureSemantics();
+  testWidgets('a task drops onto another task\'s row, overlapping it '
+      '(ADR-0015)', (tester) async {
     final log = _Log();
     await tester.pumpWidget(_thread(log));
-    final grip = find.byType(ResizeGrip);
-    await tester.drag(grip, const Offset(0, DotTouch.resizeStep * 2 + 4));
-    await tester.drag(grip, const Offset(0, -DotTouch.resizeStep * 2));
-    final node = find.semantics.byLabel('Change how long Write takes');
-    tester.semantics.increase(node);
-    tester.semantics.decrease(node);
-    expect(log.resizes, ['write 2', 'write -2', 'write 1', 'write -1']);
+    final g = await tester.startGesture(tester.getCenter(find.text('Write')));
+    await tester.pump(DotTouch.liftDelay + const Duration(milliseconds: 50));
+    await g.moveTo(tester.getCenter(find.text('Call')));
+    await tester.pump();
+    expect(find.text('→ on 11:00'), findsOneWidget);
+    await g.up();
+    await tester.pumpAndSettle();
+    expect(log.drops, ['write on 11:00']);
+  });
+
+  testWidgets('a task let go on its own row drops nothing', (tester) async {
+    final log = _Log();
+    await tester.pumpWidget(_thread(log));
+    final g = await tester.startGesture(tester.getCenter(find.text('Write')));
+    await tester.pump(DotTouch.liftDelay + const Duration(milliseconds: 50));
+    await g.moveBy(const Offset(0, 30));
+    await tester.pump();
+    await g.up();
+    await tester.pumpAndSettle();
+    expect(log.drops, isEmpty);
+  });
+
+  testWidgets('the day thread has no resize grip (ADR-0015)', (tester) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(_thread(_Log()));
+    expect(find.bySemanticsLabel(RegExp('^Change how long')), findsNothing);
     handle.dispose();
   });
 

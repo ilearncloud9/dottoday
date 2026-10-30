@@ -3,7 +3,8 @@ import 'package:dottoday/core/theme/dot_metrics.dart';
 import 'package:flutter/widgets.dart';
 
 /// Draws a [DotGlyph] (docs/10 §3 "Icon set"): stroke 2 on the 24-unit
-/// grid, 2.4 when [active], round caps and joins, scaled to [size].
+/// grid, 2.4 when [active], 2.8 when [bold], round caps and joins, scaled
+/// to [size].
 ///
 /// Decorative: it adds no semantics. The control around it carries the
 /// label (an icon is never the only description of an action).
@@ -13,6 +14,7 @@ class DotIcon extends StatelessWidget {
     required this.color,
     this.size = DotSize.navIcon,
     this.active = false,
+    this.bold = false,
     super.key,
   });
 
@@ -23,9 +25,13 @@ class DotIcon extends StatelessWidget {
   /// Selected tab / chosen icon: the heavier 2.4 stroke.
   final bool active;
 
+  /// A task dot's icon: the bold [boldStroke] (ADR-0015).
+  final bool bold;
+
   /// Stroke width in grid units.
   static const double stroke = 2;
   static const double activeStroke = 2.4;
+  static const double boldStroke = 2.8;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +41,11 @@ class DotIcon extends StatelessWidget {
         painter: _GlyphPainter(
           glyph: glyph,
           color: color,
-          stroke: active ? activeStroke : stroke,
+          stroke: bold
+              ? boldStroke
+              : active
+              ? activeStroke
+              : stroke,
         ),
       ),
     );

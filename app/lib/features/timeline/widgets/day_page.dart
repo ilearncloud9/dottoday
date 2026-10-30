@@ -1,6 +1,5 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/scheduling/learning_meta.dart';
@@ -12,6 +11,7 @@ import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/reality_thread.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
+import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/day_drag.dart';
 import 'package:dottoday/features/timeline/widgets/empty_day_actions.dart';
@@ -20,6 +20,7 @@ import 'package:dottoday/features/timeline/widgets/today_learning.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
+import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
@@ -28,19 +29,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// One page of the Today pager: [date]'s thread on a [DayCard] (`Main`);
+/// One page of the Today pager: [date]'s thread on a [DayCard.sheet]
+/// (`Main`, ADR-0015);
 /// with [side], a day beside the card on the Mac/web spread (M3e.1).
 class DayPage extends ConsumerWidget {
   const DayPage({
     required this.date,
     required this.today,
     this.side,
+    this.sheet = false,
     super.key,
   });
 
   final DateTime date;
   final DateTime today;
   final SideDay? side;
+
+  /// The phones' pager page: a full-width [DayCard.sheet] whose numbers
+  /// live in the screen header (ADR-0015). Off, the Mac/web spread's
+  /// titled card.
+  final bool sheet;
 
   /// How far a drop looks for a task dragged in from another day: the
   /// spread shows three days, so two days either way.
@@ -131,23 +139,39 @@ class DayPage extends ConsumerWidget {
         actions: actions,
       );
     }
-    final card = DayCard(
-      title: _title(context),
-      isToday: date == today,
-      summary: summary,
-      entries: entries,
-      actions: actions,
-      footer: _footer(blocks, summary.total == 0),
-      reality: offerReality
-          ? RealityToggle(
-              on: reality != null,
-              onChanged: (on) =>
-                  ref.read(realityModeProvider.notifier).set(on: on),
-              highlight: learn.highlight,
-            )
-          : null,
-      note: learn.note,
-    );
+    final toggle = offerReality
+        ? RealityToggle(
+            on: reality != null,
+            onChanged: (on) =>
+                ref.read(realityModeProvider.notifier).set(on: on),
+            highlight: learn.highlight,
+          )
+        : null;
+    final footer = _footer(blocks, summary.total == 0);
+    final card = sheet
+        ? DayCard.sheet(
+            entries: entries,
+            actions: actions,
+            footer: footer,
+            handle: PullHandle(
+              open: ref.watch(
+                todaySelectionProvider.select((v) => v.monthOpen),
+              ),
+              onPull: ref.read(todaySelectionProvider.notifier).toggleMonth,
+            ),
+            reality: toggle,
+            note: learn.note,
+          )
+        : DayCard(
+            title: _title(context),
+            isToday: date == today,
+            summary: summary,
+            entries: entries,
+            actions: actions,
+            footer: footer,
+            reality: toggle,
+            note: learn.note,
+          );
     final insight = reality == null
         ? null
         : realityInsight(blocks, now, learning);
@@ -234,12 +258,12 @@ class DayPage extends ConsumerWidget {
   /// an empty past day only says so.
   Widget? _footer(List<Occurrence> blocks, bool empty) {
     final oneOffs = blocks.any((o) => o.seriesId == null);
-    if (date.isBefore(today)) return empty ? const _Empty() : null;
+    if (date.isBefore(today)) return empty ? const EmptyDayLine() : null;
     if (oneOffs) return null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (empty) const _Empty(),
+        if (empty) const EmptyDayLine(),
         EmptyDayActions(date: date),
       ],
     );
@@ -266,27 +290,6 @@ class DayPage extends ConsumerWidget {
       time: (utc) => timeOfUtc(context, location, utc, use24h: use24h),
       range: l10n.threadTimeRange,
       duration: (m) => formatDurationShort(l10n, m),
-    );
-  }
-}
-
-class _Empty extends StatelessWidget {
-  const _Empty();
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(
-        DotSpace.page,
-        DotSpace.l,
-        DotSpace.page,
-        0,
-      ),
-      child: Text(
-        context.l10n.todayEmpty,
-        style: t.styles.body.copyWith(color: t.colors.muted),
-      ),
     );
   }
 }

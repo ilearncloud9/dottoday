@@ -4,7 +4,6 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
-import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:dottoday/shared/dot/unstick_line.dart';
 import 'package:dottoday/shared/learning/learned_line.dart';
@@ -20,7 +19,6 @@ class LiveRow extends StatelessWidget {
     this.onOpen,
     this.onFocus,
     this.onUnstick,
-    this.onResize,
     this.onExtend,
     this.onShiftRest,
     super.key,
@@ -30,14 +28,12 @@ class LiveRow extends StatelessWidget {
   final VoidCallback? onToggleDone;
   final VoidCallback? onOpen;
 
-  /// One tap on the live dot (11 A3, docs/09 M10.5); null: the dot ticks.
+  /// One tap on the live dot (11 A3, docs/09 M10.5); null: the dot opens
+  /// the task.
   final VoidCallback? onFocus;
 
   /// The Unstick answer (11 B3, M10.7); null hides the row.
   final ValueChanged<String>? onUnstick;
-
-  /// Resize grip at the segment end (R-05).
-  final ValueChanged<int>? onResize;
 
   /// +15 min.
   final VoidCallback? onExtend;
@@ -47,32 +43,31 @@ class LiveRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
     return ThreadRowFrame(
       piece: SegmentPiece(
         color: task.color.color,
         state: task.state,
-        dotSize: DotSize.liveDot,
+        dotSize: DotSize.threadDot,
         progress: task.progress,
         ghost: task.reality?.ghost,
+        fill: DotTheme.of(context).tasks[task.color].tint,
+        joinAbove: task.overlapsAbove,
+        joinBelow: task.overlapsBelow,
       ),
       dot: taskRowDot(
         context,
         task,
-        DotSize.liveDot,
-        onToggleDone,
+        DotSize.threadDot,
+        onOpen,
         onFocus: onFocus,
       ),
-      trailing: DoneCircle(
-        color: t.colors.accent,
-        width: DotSize.dotOutline,
-        onTap: onToggleDone,
-      ),
-      grip: onResize == null
+      trailing: onToggleDone == null
           ? null
-          : ResizeGrip(
-              onSteps: onResize!,
-              label: context.l10n.resizeLabel(task.title),
+          : DoneCircle(
+              color: task.color,
+              done: false,
+              title: task.title,
+              onTap: onToggleDone,
             ),
       child: Padding(
         padding: const EdgeInsets.only(bottom: DotSpace.xl),
@@ -84,7 +79,7 @@ class LiveRow extends StatelessWidget {
   /// Wide (the Mac spread's card): the time in its own column, as on
   /// [TaskRow]; else above the title.
   Widget _body(double width) {
-    final wide = width >= DotSize.wideRowFrom;
+    final wide = width >= DotSize.wideThreadRowFrom;
     final column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: DotSpace.m,
@@ -108,7 +103,7 @@ class LiveRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: DotSize.wideRowMeta,
+          width: DotSize.wideThreadRowMeta,
           child: _WideMeta(task: task),
         ),
         Expanded(child: column),

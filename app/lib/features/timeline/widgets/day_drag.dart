@@ -14,7 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// Drag and resize for a day's [blocks] (docs/10 §6, R-05): drops snap to
+/// Drag for a day's [blocks] (docs/10 §6, R-05; resize is the task sheet's
+/// duration since ADR-0015): drops snap to
 /// [snapMinutes] on the wall clock in [zone]; each write has Undo.
 /// [elsewhere] finds a task dragged in from another day (the Mac/web
 /// spread's columns, M3e.1); it moves alone, without shifting this day.
@@ -56,7 +57,6 @@ ThreadDrag dayThreadDrag(
   return ThreadDrag(
     hintFor: d.hint,
     onDrop: d.drop,
-    onResize: d.resize,
     // "ask" offers the chip, off; "never" hides it (docs/03 §3.2).
     shiftByDefault: switch (shiftFollowers) {
       ShiftFollowersPolicy.always => true,
@@ -96,33 +96,33 @@ final class _DayDrag {
 
   Occurrence? _find(String id) => _own(id) ?? elsewhere?.call(id);
 
-  DateTime? _start(String id, ThreadGap gap, double fraction) {
+  DateTime? _start(String id, DropSpan span, double fraction) {
     final o = _find(id);
-    final gapStart = gap.startUtc;
-    if (o == null || gapStart == null) return null;
+    if (o == null) return null;
     return dropStart(
       zone: zone,
-      gapStartUtc: gapStart,
-      gapMinutes: gap.minutes,
+      gapStartUtc: span.startUtc,
+      gapMinutes: span.minutes,
       fraction: fraction,
       durationMin: o.durationMin,
       snapMinutes: snapMinutes,
+      fit: span.fit,
     );
   }
 
-  String? hint(String id, ThreadGap? gap, double fraction) {
-    final start = gap == null ? null : _start(id, gap, fraction);
+  String? hint(String id, DropSpan? span, double fraction) {
+    final start = span == null ? null : _start(id, span, fraction);
     return start == null ? null : l10n.dragDropAt(timeText(start));
   }
 
   Future<void> drop(
     String id,
-    ThreadGap gap,
+    DropSpan span,
     double fraction,
     DropShift shift,
   ) async {
     final o = _find(id);
-    final start = _start(id, gap, fraction);
+    final start = _start(id, span, fraction);
     if (o == null || start == null || start == o.startUtc) return;
     final time = timeText(start);
     if (!shift.followers || _own(id) == null) {
@@ -153,22 +153,6 @@ final class _DayDrag {
         null => l10n.snackMovedShifted(o.title, time, v.$2.movedIds.length - 1),
       },
       tokenOf: (v) => v.$1,
-    );
-  }
-
-  Future<void> resize(String id, int steps) async {
-    final o = _find(id);
-    if (o == null) return;
-    final minutes = resizedDuration(
-      o.durationMin,
-      steps: steps,
-      snapMinutes: snapMinutes,
-    );
-    if (minutes == o.durationMin) return;
-    final end = o.startUtc!.add(Duration(minutes: minutes));
-    _report(
-      await resizeTask(ref, o, minutes),
-      l10n.snackResized(o.title, timeText(end)),
     );
   }
 

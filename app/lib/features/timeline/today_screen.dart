@@ -115,7 +115,7 @@ class TodayScreen extends ConsumerWidget {
 }
 
 /// Phones and medium widths: header, week strip (or month), all-day
-/// chips and the day pager (`Main`).
+/// chips and the day pager of full-width sheets (`Main`, ADR-0015).
 class _TodayCompact extends ConsumerWidget {
   const _TodayCompact({
     required this.shown,
@@ -179,15 +179,23 @@ class _TodayCompact extends ConsumerWidget {
         ),
         AllDayChips(date: shown),
         TodayPrompt(date: shown, today: today),
-        const SizedBox(height: DotSpace.s),
+        const SizedBox(height: DotSpace.xs),
         Expanded(
-          child: DayPager(
-            itemCount: pagerReachDays * 2 + 1,
-            initialIndex: _index(base, shown),
-            onChanged: (i) => onSelect(_day(base, i)),
-            dotIndexOf: (i) => (_day(base, i).weekday - firstDayOfWeek) % 7,
-            itemBuilder: (context, i) =>
-                DayPage(date: _day(base, i), today: today),
+          // A medium-width window keeps the sheet at a readable width
+          // rather than stretching rows across it (ADR-0015).
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: DotSize.readableColumn,
+              ),
+              child: DayPager(
+                itemCount: pagerReachDays * 2 + 1,
+                initialIndex: _index(base, shown),
+                onChanged: (i) => onSelect(_day(base, i)),
+                itemBuilder: (context, i) =>
+                    DayPage(date: _day(base, i), today: today, sheet: true),
+              ),
+            ),
           ),
         ),
       ],

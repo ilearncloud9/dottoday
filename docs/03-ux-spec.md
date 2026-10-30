@@ -86,7 +86,7 @@ Month view opens from the Today date header. The current date is always one tap 
 | Open | tap | click / Enter |
 | Complete | tap icon circle | click circle / Space |
 | Move | long-press 250 ms → drag | drag |
-| Resize | handles appear on selected block; drag edge | drag top/bottom edge |
+| Resize | the task sheet's duration (day-thread edge resize removed, ADR-0015) | the editor's duration |
 | Multi-select | long-press then tap others | Shift/⌘-click |
 | Shift followers | chip appears during drag: "Shift later blocks: On/Off" | same + hold Alt to invert |
 | Quick add at time | long-press empty gap | double-click gap |

@@ -22,6 +22,10 @@ final class DotType {
     required this.stripDate,
     required this.monthDate,
     required this.stripWeekday,
+    required this.dayTitle,
+    required this.dayCaption,
+    required this.threadTitle,
+    required this.threadMeta,
   });
 
   /// Roles in [text], with [muted] for captions and meta.
@@ -33,7 +37,7 @@ final class DotType {
         caption: _inter(12, 16, 600, muted, tracking: 0.06),
         cardTitle: _inter(15, 20, 700, text),
         rowTitle: _inter(16, 22, 500, text),
-        liveRowTitle: _inter(17, 22, 600, text),
+        liveRowTitle: _inter(20, 26, 700, text),
         rowMeta: _inter(12, 16, 500, muted),
         body: _inter(16, 22, 400, text),
         button: _inter(14, 18, 600, text),
@@ -42,6 +46,10 @@ final class DotType {
         stripDate: _inter(18, 22, 600, text),
         stripWeekday: _inter(13, 16, 500, muted),
         monthDate: _inter(15, 20, 500, text),
+        dayTitle: _inter(30, 36, 800, text, tracking: -0.02),
+        dayCaption: _inter(13, 18, 700, muted, tracking: 0.06),
+        threadTitle: _inter(20, 26, 700, text),
+        threadMeta: _inter(15, 20, 500, muted),
       );
 
   static const fontFamily = 'Inter';
@@ -85,7 +93,7 @@ final class DotType {
   /// Task rows (16/500).
   final TextStyle rowTitle;
 
-  /// The live row (17/600).
+  /// The live row (20/700, as [threadTitle]; ADR-0015).
   final TextStyle liveRowTitle;
 
   /// Time range, "1 h free" (12/500, muted).
@@ -111,6 +119,20 @@ final class DotType {
   /// Week-strip weekday names (≈ 13/500 muted, `Main`).
   final TextStyle stripWeekday;
 
+  /// Today's title, "Friday" (30/800, ADR-0015: the bolder header).
+  final TextStyle dayTitle;
+
+  /// Today's "FRI, OCT 30" line over [dayTitle] (13/700, uppercase by the
+  /// caller, muted) and the day's numbers under it.
+  final TextStyle dayCaption;
+
+  /// A task on the day thread (20/700, ADR-0015); [rowTitle] stays for
+  /// lists and the Mac spread's side days.
+  final TextStyle threadTitle;
+
+  /// A day-thread row's time range (15/500, muted).
+  final TextStyle threadMeta;
+
   /// Android's 12 px tab labels (§2.2).
   TextStyle androidTab(TextStyle tab) => tab.copyWith(fontSize: 12);
 
@@ -133,6 +155,10 @@ final class DotType {
       stripDate: l(stripDate, other.stripDate),
       monthDate: l(monthDate, other.monthDate),
       stripWeekday: l(stripWeekday, other.stripWeekday),
+      dayTitle: l(dayTitle, other.dayTitle),
+      dayCaption: l(dayCaption, other.dayCaption),
+      threadTitle: l(threadTitle, other.threadTitle),
+      threadMeta: l(threadMeta, other.threadMeta),
     );
   }
 }

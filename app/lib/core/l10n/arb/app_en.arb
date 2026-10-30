@@ -466,6 +466,23 @@
   "@dotMarkNotDoneHint": {
     "description": "Screen-reader hint: tapping a done task's dot undoes it."
   },
+  "dotOpenHint": "Open",
+  "@dotOpenHint": {
+    "description": "Screen-reader hint: tapping a task's dot opens the task (ADR-0015)."
+  },
+  "threadOverlapping": "Tasks are {overlapping}",
+  "@threadOverlapping": {
+    "description": "Line between two thread rows whose times overlap; {overlapping} is threadOverlappingWord, drawn in the task's colour.",
+    "placeholders": {
+      "overlapping": {
+        "type": "String"
+      }
+    }
+  },
+  "threadOverlappingWord": "overlapping",
+  "@threadOverlappingWord": {
+    "description": "The coloured word of threadOverlapping."
+  },
   "rowLabel": "{title}, {range}",
   "@rowLabel": {
     "description": "Screen-reader label of a task row: title and time range.",
@@ -1228,15 +1245,6 @@
   "@editorPickDay": {
     "description": "Title of the day picker sheet in the editor."
   },
-  "resizeLabel": "Change how long {title} takes",
-  "@resizeLabel": {
-    "description": "Screen-reader label of a task's resize grip; increase / decrease change the length.",
-    "placeholders": {
-      "title": {
-        "type": "String"
-      }
-    }
-  },
   "dragDropAt": "→ {time}",
   "@dragDropAt": {
     "description": "Floating label while dragging a task over a free gap.",
@@ -1266,18 +1274,6 @@
         "type": "String"
       },
       "day": {
-        "type": "String"
-      }
-    }
-  },
-  "snackResized": "{title} now ends at {time}",
-  "@snackResized": {
-    "description": "Snackbar after resizing a task, with Undo.",
-    "placeholders": {
-      "title": {
-        "type": "String"
-      },
-      "time": {
         "type": "String"
       }
     }

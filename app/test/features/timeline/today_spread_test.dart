@@ -13,7 +13,8 @@ import '../../support/today_harness.dart';
 
 // T5, the Mac/web three-day spread (docs/09 M3e.1,
 // `A-mac-today-alt1-spread`). Wednesday 21 Oct, 09:22 in Berlin.
-const _wide = Size(1280, 900);
+// Tall enough for the day thread's stretched rows (ADR-0015).
+const _wide = Size(1280, 1400);
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
@@ -81,8 +82,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Plan accepted'), findsOneWidget);
     expect(find.text('10:45 AM – 11:30 AM'), findsOneWidget);
-    // The live task started before now and stays put.
-    expect(find.text('9:00 AM – 11:00 AM'), findsOneWidget);
+    // The live task started before now and stays put ("… · 2 h": the
+    // card's live row keeps its time above the title, ADR-0015).
+    expect(find.textContaining('9:00 AM – 11:00 AM'), findsOneWidget);
     await tester.tap(find.text('Undo'));
     await tester.pumpAndSettle();
     expect(find.text('10:30 AM – 11:15 AM'), findsOneWidget);

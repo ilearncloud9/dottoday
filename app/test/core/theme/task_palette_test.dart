@@ -72,6 +72,8 @@ void main() {
           for (final bg in [colors.surface, colors.raised, s.tint]) {
             expect(contrastRatio(s.ink, bg), greaterThanOrEqualTo(4.5));
           }
+          // A dot's icon on its tint is graphics-grade (ADR-0015).
+          expect(contrastRatio(s.glyph, s.tint), greaterThanOrEqualTo(3));
         });
       }
     });

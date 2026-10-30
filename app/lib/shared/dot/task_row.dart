@@ -1,11 +1,15 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/done_circle.dart';
+import 'package:dottoday/shared/dot/smallest_step_line.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
-import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:dottoday/shared/dot/unstick_line.dart';
 import 'package:flutter/material.dart';
+
+export 'done_circle.dart';
+export 'smallest_step_line.dart';
 
 /// A task on the thread (docs/10 §3 `TaskRow`): dot + segment on the axis,
 /// time meta, title, and the done circle at the end.
@@ -19,10 +23,9 @@ class TaskRow extends StatelessWidget {
     required this.task,
     this.onToggleDone,
     this.onOpen,
-    this.onResize,
     this.onStart,
     this.onUnstick,
-    this.dotSize = DotSize.rowDot,
+    this.dotSize = DotSize.threadDot,
     this.doneCircle = true,
     super.key,
   });
@@ -30,17 +33,14 @@ class TaskRow extends StatelessWidget {
   final ThreadTask task;
 
   /// The round done circle at the end; the spread's side days have none
-  /// (`A-mac-today-alt1-spread`), the dot still toggles.
+  /// (`A-mac-today-alt1-spread`): their tasks are marked done in the sheet.
   final bool doneCircle;
 
-  /// Tap on the dot or the done circle (§6 "Tap a dot = mark done").
+  /// Tap on the done circle (ADR-0015: the circle, not the dot, marks done).
   final VoidCallback? onToggleDone;
 
-  /// Tap on the row: the task sheet (§6).
+  /// Tap on the row or the dot: the task sheet (§6, ADR-0015).
   final VoidCallback? onOpen;
-
-  /// Resize grip at the segment end (R-05); null hides it.
-  final ValueChanged<int>? onResize;
 
   /// Smallest step's Start (M10.6), under the title while it asks.
   final VoidCallback? onStart;
@@ -51,25 +51,25 @@ class TaskRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
     return ThreadRowFrame(
       piece: SegmentPiece(
         color: task.color.color,
         state: task.state,
         dotSize: dotSize,
         ghost: task.reality?.ghost,
+        fill: DotTheme.of(context).tasks[task.color].tint,
+        joinAbove: task.overlapsAbove,
+        joinBelow: task.overlapsBelow,
       ),
-      dot: taskRowDot(context, task, dotSize, onToggleDone),
-      grip: onResize == null
+      dot: taskRowDot(context, task, dotSize, onOpen),
+      trailing: !doneCircle || onToggleDone == null
           ? null
-          : ResizeGrip(
-              onSteps: onResize!,
-              label: context.l10n.resizeLabel(task.title),
+          : DoneCircle(
+              color: task.color,
+              done: task.state == DotState.done,
+              title: task.title,
+              onTap: onToggleDone,
             ),
-      trailing:
-          task.state == DotState.done || !doneCircle || onToggleDone == null
-          ? null
-          : DoneCircle(color: t.colors.hairline, onTap: onToggleDone),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -86,7 +86,7 @@ class TaskRow extends StatelessWidget {
                       ? DotSpace.xl
                       : DotSpace.xs,
                 ),
-                child: _Text(task: task),
+                child: _Text(task: task, large: dotSize >= DotSize.threadDot),
               ),
             ),
           ),
@@ -106,39 +106,13 @@ class TaskRow extends StatelessWidget {
   }
 }
 
-/// "Just Gather documents · 10 min?" and Start (11 B2, docs/09 M10.6): a
-/// quiet line in the accent, never a warning colour (11 §D no shame).
-class SmallestStepLine extends StatelessWidget {
-  const SmallestStepLine({required this.text, this.onStart, super.key});
-
-  final String text;
-  final VoidCallback? onStart;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return Wrap(
-      spacing: DotSpace.s,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        Text(text, style: t.styles.rowMeta.copyWith(color: t.colors.accentInk)),
-        if (onStart != null)
-          FilledButton.tonal(
-            onPressed: onStart,
-            style: FilledButton.styleFrom(shape: dotChipShape(context)),
-            child: Text(context.l10n.smallestStepStart),
-          ),
-      ],
-    );
-  }
-}
-
-/// The dot of a thread row, wired as the done toggle.
+/// The dot of a thread row: opens the task, or Focus on the live one
+/// (11 A3). Marking done is the [DoneCircle]'s job (ADR-0015).
 Widget taskRowDot(
   BuildContext context,
   ThreadTask task,
   double size,
-  VoidCallback? onToggleDone, {
+  VoidCallback? onOpen, {
   VoidCallback? onFocus,
 }) {
   final l10n = context.l10n;
@@ -154,13 +128,8 @@ Widget taskRowDot(
       state: task.state,
       minutesLeft: task.minutesLeft,
     ),
-    // The live dot opens Focus (11 A3); other dots tick.
-    onTap: onFocus ?? onToggleDone,
-    tapHint: onFocus != null
-        ? l10n.focusOpenHint
-        : task.state == DotState.done
-        ? l10n.dotMarkNotDoneHint
-        : l10n.dotMarkDoneHint,
+    onTap: onFocus ?? onOpen,
+    tapHint: onFocus != null ? l10n.focusOpenHint : l10n.dotOpenHint,
   );
 }
 
@@ -177,9 +146,12 @@ String taskRowLabel(AppLocalizations l10n, ThreadTask task) {
 }
 
 class _Text extends StatelessWidget {
-  const _Text({required this.task});
+  const _Text({required this.task, this.large = false});
 
   final ThreadTask task;
+
+  /// The day thread's bold row (ADR-0015); off for the Mac side days.
+  final bool large;
 
   @override
   Widget build(BuildContext context) {
@@ -187,11 +159,12 @@ class _Text extends StatelessWidget {
     final l10n = context.l10n;
     final done = task.state == DotState.done;
     final muted = t.colors.muted;
+    final metaStyle = large ? t.styles.threadMeta : t.styles.rowMeta;
     final meta = Wrap(
       spacing: DotSpace.xs,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Text(task.reality?.range ?? task.timeRange, style: t.styles.rowMeta),
+        Text(task.reality?.range ?? task.timeRange, style: metaStyle),
         if (task.reality?.meta case final m?)
           Text(l10n.realityMetaJoin(m), style: _plan(t)),
         if (task.state == DotState.missed && task.reality == null)
@@ -208,7 +181,7 @@ class _Text extends StatelessWidget {
     );
     final title = Text(
       task.title,
-      style: t.styles.rowTitle.copyWith(
+      style: (large ? t.styles.threadTitle : t.styles.rowTitle).copyWith(
         color: done || task.state == DotState.skipped ? muted : null,
         decoration: done ? TextDecoration.lineThrough : null,
         decorationColor: muted,
@@ -220,11 +193,18 @@ class _Text extends StatelessWidget {
     };
     // Wide (the Mac spread's card): time beside the title; else above it.
     return LayoutBuilder(
-      builder: (context, box) => box.maxWidth >= DotSize.wideRowFrom
+      builder: (context, box) =>
+          box.maxWidth >=
+              (large ? DotSize.wideThreadRowFrom : DotSize.wideRowFrom)
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(width: DotSize.wideRowMeta, child: meta),
+                SizedBox(
+                  width: large
+                      ? DotSize.wideThreadRowMeta
+                      : DotSize.wideRowMeta,
+                  child: meta,
+                ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,46 +225,6 @@ class _Text extends StatelessWidget {
       t.styles.rowMeta.copyWith(color: t.colors.muted);
 }
 
-/// The round done circle at a row's end (`Main`): a second, larger target
-/// for the same toggle as the dot, so it adds no semantics of its own.
-class DoneCircle extends StatelessWidget {
-  const DoneCircle({required this.color, this.onTap, this.width, super.key});
-
-  final Color color;
-  final VoidCallback? onTap;
-
-  /// Stroke width; the live row's circle is heavier.
-  final double? width;
-
-  static const double diameter = DotSize.rowDot - DotSpace.s;
-
-  @override
-  Widget build(BuildContext context) {
-    return ExcludeSemantics(
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        child: SizedBox.square(
-          dimension: DotTouch.android,
-          child: Center(
-            child: Container(
-              width: diameter,
-              height: diameter,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: color,
-                  width: width ?? DotSize.smallDotOutline,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 /// Lays out one thread row: [dot] on the axis over the [piece] painted
 /// down it, [child] beside it and an optional [trailing] control.
 /// Geometry is directional, so the thread runs down the start edge in RTL.
@@ -294,7 +234,6 @@ class ThreadRowFrame extends StatelessWidget {
     required this.child,
     this.dot,
     this.trailing,
-    this.grip,
     super.key,
   });
 
@@ -302,9 +241,6 @@ class ThreadRowFrame extends StatelessWidget {
   final Widget child;
   final Widget? dot;
   final Widget? trailing;
-
-  /// Resize grip at the bottom of the axis, over the segment's end.
-  final Widget? grip;
 
   @override
   Widget build(BuildContext context) {
@@ -340,12 +276,6 @@ class ThreadRowFrame extends StatelessWidget {
             ?trailing,
           ],
         ),
-        if (grip case final g?)
-          PositionedDirectional(
-            start: (threadAxisWidth - DotTouch.min) / 2,
-            bottom: 0,
-            child: g,
-          ),
       ],
     );
   }

@@ -7,7 +7,6 @@ import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/drag_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
-import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +45,8 @@ class TodayWeekStrip extends ConsumerWidget {
       selected: week.indexOf(DateTime(shown.year, shown.month, shown.day)),
       monthOpen: monthOpen,
       onSelect: (i) => onSelect(week[i]),
-      onPull: ref.read(todaySelectionProvider.notifier).toggleMonth,
+      // The handle sits on the day sheet instead (ADR-0015).
+      handle: false,
       onDropTask: (id, i) => unawaited(_drop(context, ref, id, week[i])),
     );
   }

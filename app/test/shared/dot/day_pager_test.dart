@@ -43,9 +43,7 @@ Widget _pager({
 );
 
 void main() {
-  testWidgets('a squeezed pager drops its dots instead of overflowing', (
-    tester,
-  ) async {
+  testWidgets('a short pager never overflows', (tester) async {
     for (final height in [30.0, 80.0, 200.0]) {
       await tester.pumpWidget(
         testApp(
@@ -65,11 +63,6 @@ void main() {
         ),
       );
       expect(tester.takeException(), isNull, reason: '$height');
-      expect(
-        find.bySemanticsLabel(RegExp('Day 4 of 7')),
-        height >= 140 ? findsOneWidget : findsNothing,
-        reason: '$height',
-      );
     }
   });
 
@@ -77,17 +70,19 @@ void main() {
     await tester.pumpWidget(_pager());
     expect(find.text('Wednesday · Today'), findsOneWidget);
     expect(find.text('2 of 7 · 5 h 45 planned'), findsWidgets);
-    expect(find.bySemanticsLabel('Day 4 of 7'), findsOneWidget);
   });
 
-  testWidgets('neighbours peek in at both edges', (tester) async {
+  testWidgets('a day fills the width: no peek, no page dots (ADR-0015)', (
+    tester,
+  ) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpWidget(_pager());
-    final today = tester.getRect(find.byType(DayCard).at(1));
-    expect(today.left, closeTo(DayPager.peek + 4, 0.5));
-    expect(390 - today.right, closeTo(DayPager.peek + 4, 0.5));
-    expect(find.byType(DayCard), findsNWidgets(3));
+    final today = tester.getRect(find.byType(DayCard));
+    expect(today.left, 0);
+    expect(today.right, 390);
+    expect(find.byType(DayCard), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp(r'^Day \d of 7$')), findsNothing);
   });
 
   testWidgets('swiping snaps to the next day and reports it', (tester) async {
@@ -100,7 +95,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(pages, [4]);
-    expect(find.bySemanticsLabel('Day 5 of 7'), findsOneWidget);
+    expect(find.text('Thursday'), findsOneWidget);
   });
 
   testWidgets('a new index (week strip tap) slides the pager there', (
@@ -118,7 +113,6 @@ void main() {
     await tester.pumpWidget(pager(3));
     await tester.pumpWidget(pager(5));
     await tester.pumpAndSettle();
-    expect(find.bySemanticsLabel('Day 6 of 7'), findsOneWidget);
     expect(find.text('Friday'), findsOneWidget);
   });
 

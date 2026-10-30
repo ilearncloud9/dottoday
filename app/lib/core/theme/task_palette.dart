@@ -1,5 +1,6 @@
 import 'package:dottoday/core/theme/contrast.dart';
 import 'package:dottoday/core/theme/dot_colors.dart';
+import 'package:dottoday/core/theme/tokens.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
@@ -36,6 +37,7 @@ final class TaskSwatch {
     required this.color,
     required this.ink,
     required this.tint,
+    required this.glyph,
   });
 
   /// Dot outline, icon, live segment and the filled done dot (§2.1).
@@ -44,8 +46,18 @@ final class TaskSwatch {
   /// [color] as text on the theme's surfaces and on [tint] (≥ 4.5:1, §7.4).
   final Color ink;
 
-  /// Opaque chip background: [color] at the tint alpha over `raised`.
+  /// Opaque chip background: [color] at the tint alpha over `raised`;
+  /// also the fill of every task dot (ADR-0015).
   final Color tint;
+
+  /// [color] as a dot's icon on [tint]: the spec hue, deepened (light) or
+  /// lifted (dark) only as far as 3:1 for graphics needs (§7.4, ADR-0015).
+  final Color glyph;
+
+  /// The tick on a filled done circle (ADR-0015): white on every task
+  /// colour in both themes, as in the reference; the struck title and the
+  /// circle's checked state carry "done" without it (§7.4).
+  Color get check => DotPrimitives.white;
 
   /// Segment of an upcoming task.
   Color get upcomingSegment => color.withValues(alpha: TaskAlpha.upcoming);
@@ -83,6 +95,7 @@ final class TaskPalette {
         color: c.color,
         ink: Color.lerp(this[c].ink, other[c].ink, t)!,
         tint: Color.lerp(this[c].tint, other[c].tint, t)!,
+        glyph: Color.lerp(this[c].glyph, other[c].glyph, t)!,
       ),
   ]);
 }
@@ -100,5 +113,15 @@ TaskSwatch _swatch(Color color, DotColors colors, double tintAlpha) {
       toward: colors.text,
     ),
     tint: tint,
+    glyph: inkFor(
+      color,
+      backgrounds: [tint],
+      toward: colors.text,
+      minRatio: glyphContrastTarget,
+    ),
   );
 }
+
+/// What [TaskSwatch.glyph] aims for: WCAG's 3:1 for graphics plus the same
+/// anti-aliasing margin as [inkContrastTarget].
+const double glyphContrastTarget = 3.1;
