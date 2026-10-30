@@ -169,6 +169,11 @@ final class FlnNotificationPlatform implements NotificationPlatform {
         AndroidFlutterLocalNotificationsPlugin
       >();
 
+  /// What [schedule] hands the plugin for [n]. iOS can't report a pending
+  /// or delivered notification's sound, so the device test reads it here.
+  @visibleForTesting
+  NotificationDetails detailsFor(OsNotification n) => _details(n);
+
   NotificationDetails _details(OsNotification n) {
     final channel = _channelFor(n);
     final darwin = DarwinNotificationDetails(
