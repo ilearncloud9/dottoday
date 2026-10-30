@@ -8,9 +8,15 @@ final class FakeNotificationPlatform implements NotificationPlatform {
   void Function(NotificationTap)? onTap;
   NotificationTap? launch;
 
+  /// What [mutedSoundIds] reports: channels muted in the OS settings.
+  final muted = <String>{};
+
   @override
   Future<void> initialize(void Function(NotificationTap) onTap) async =>
       this.onTap = onTap;
+
+  @override
+  Future<Set<String>> mutedSoundIds() async => {...muted};
 
   @override
   Future<NotificationTap?> launchTap() async => launch;

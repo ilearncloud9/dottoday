@@ -50,6 +50,10 @@ final class TimerNotificationPlatform implements NotificationPlatform {
   @override
   Future<void> cancel(int id) async => _pending.remove(id)?.$2.cancel();
 
+  /// The browser has no per-sound channels to mute.
+  @override
+  Future<Set<String>> mutedSoundIds() async => const {};
+
   @override
   Future<void> schedule(OsNotification n) async {
     // Replaced in the same turn, so overlapping calls can't double a timer.

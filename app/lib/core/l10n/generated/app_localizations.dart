@@ -5916,6 +5916,312 @@ abstract class AppLocalizations {
   /// **'Ripple'**
   String get soundRipple;
 
+  /// Name of a bundled sound (docs/12): the Dottoday alarm chime.
+  ///
+  /// In en, this message translates to:
+  /// **'Dot alarm'**
+  String get soundDotAlarm;
+
+  /// Name of a bundled sound (docs/12): a quick soft click.
+  ///
+  /// In en, this message translates to:
+  /// **'Slip'**
+  String get soundQuietSlip;
+
+  /// Name of a bundled sound (docs/12): a very soft tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Whisper'**
+  String get soundQuietWhisper;
+
+  /// Name of a bundled sound (docs/12): a short gentle tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft'**
+  String get soundQuietSoft;
+
+  /// Name of a bundled sound (docs/12): a bubble rising.
+  ///
+  /// In en, this message translates to:
+  /// **'Bubble'**
+  String get soundQuietBubble;
+
+  /// Name of a bundled sound (docs/12): a short pull sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull'**
+  String get soundQuietPull;
+
+  /// Name of a bundled sound (docs/12): a light, rising melody.
+  ///
+  /// In en, this message translates to:
+  /// **'Lift'**
+  String get soundClearLift;
+
+  /// Name of a bundled sound (docs/12): a joyful chime.
+  ///
+  /// In en, this message translates to:
+  /// **'Bright'**
+  String get soundClearBright;
+
+  /// Name of a bundled sound (docs/12): a cheerful short tune.
+  ///
+  /// In en, this message translates to:
+  /// **'Smile'**
+  String get soundClearSmile;
+
+  /// Name of a bundled sound (docs/12): a relaxed melody.
+  ///
+  /// In en, this message translates to:
+  /// **'Ease'**
+  String get soundClearEase;
+
+  /// Name of a bundled sound (docs/12): a short 'your turn' tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn'**
+  String get soundClearTurn;
+
+  /// Name of a bundled sound (docs/12): a calm, sure melody.
+  ///
+  /// In en, this message translates to:
+  /// **'Settled'**
+  String get soundClearSettled;
+
+  /// Name of a bundled sound (docs/12): a quick bright tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick'**
+  String get soundClearQuick;
+
+  /// Name of a bundled sound (docs/12): an opening phrase.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening'**
+  String get soundClearOpening;
+
+  /// Name of a bundled sound (docs/12): a magical sparkle.
+  ///
+  /// In en, this message translates to:
+  /// **'Spark'**
+  String get soundClearSpark;
+
+  /// Name of a bundled sound (docs/12): a melody that grows.
+  ///
+  /// In en, this message translates to:
+  /// **'Emerge'**
+  String get soundClearEmerge;
+
+  /// Name of a bundled sound (docs/12): an elegant chime.
+  ///
+  /// In en, this message translates to:
+  /// **'Elegant'**
+  String get soundClearElegant;
+
+  /// Name of a bundled sound (docs/12): a steady, willing tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Dutiful'**
+  String get soundClearDutiful;
+
+  /// Name of a bundled sound (docs/12): a short lively tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Involved'**
+  String get soundClearInvolved;
+
+  /// Name of a bundled sound (docs/12): a tone out of nowhere.
+  ///
+  /// In en, this message translates to:
+  /// **'Appear'**
+  String get soundClearAppear;
+
+  /// Name of a bundled sound (docs/12): a confident tap.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap'**
+  String get soundClearTap;
+
+  /// Name of a bundled sound (docs/12): a good-morning alarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get soundStartMorning;
+
+  /// Name of a bundled sound (docs/12): soft bells, for waking.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft bells'**
+  String get soundStartBells;
+
+  /// Name of a bundled sound (docs/12): a slow sunrise alarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunrise'**
+  String get soundStartSunrise;
+
+  /// Name of a bundled sound (docs/12): a solemn alarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Solemn'**
+  String get soundStartSolemn;
+
+  /// Name of a bundled sound (docs/12): a firm striking alarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Strike'**
+  String get soundStartStrike;
+
+  /// Name of a bundled sound (docs/12): a swinging alarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Swing'**
+  String get soundStartSwing;
+
+  /// Name of a bundled sound (docs/12): a tender alarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Lovingly'**
+  String get soundStartLovingly;
+
+  /// Name of a bundled sound (docs/12): a gentle alarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Gentle'**
+  String get soundStartGentle;
+
+  /// Name of a bundled sound (docs/12): a loud repeating alarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Insistent'**
+  String get soundStartInsistent;
+
+  /// Name of a bundled sound (docs/12): a rooster crowing.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooster'**
+  String get soundPlayRooster;
+
+  /// Name of a bundled sound (docs/12): a horse whinnying.
+  ///
+  /// In en, this message translates to:
+  /// **'Horse'**
+  String get soundPlayHorse;
+
+  /// Name of a bundled sound (docs/12): a knock at the door.
+  ///
+  /// In en, this message translates to:
+  /// **'Knock'**
+  String get soundPlayKnock;
+
+  /// Name of a bundled sound (docs/12): a little chick.
+  ///
+  /// In en, this message translates to:
+  /// **'Chick'**
+  String get soundPlayChick;
+
+  /// Name of a bundled sound (docs/12): a bullfrog.
+  ///
+  /// In en, this message translates to:
+  /// **'Frog'**
+  String get soundPlayFrog;
+
+  /// Name of a bundled sound (docs/12): a dog barking.
+  ///
+  /// In en, this message translates to:
+  /// **'Dog'**
+  String get soundPlayDog;
+
+  /// Name of a bundled sound (docs/12): seagulls.
+  ///
+  /// In en, this message translates to:
+  /// **'Gulls'**
+  String get soundPlayGulls;
+
+  /// Name of a bundled sound (docs/12): a short drum roll.
+  ///
+  /// In en, this message translates to:
+  /// **'Drum'**
+  String get soundPlayDrum;
+
+  /// Name of a bundled sound (docs/12): a swift gesture sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Swift'**
+  String get soundDoneSwift;
+
+  /// Name of a bundled sound (docs/12): a tick-off sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked'**
+  String get soundDoneChecked;
+
+  /// Name of a bundled sound (docs/12): a job-done sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get soundDoneDone;
+
+  /// Name of a bundled sound (docs/12): a work-is-done sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished'**
+  String get soundDoneFinished;
+
+  /// Name of a bundled sound (docs/12): a success sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Succeeded'**
+  String get soundDoneSucceeded;
+
+  /// Name of a bundled sound (docs/12): an achievement sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Achieved'**
+  String get soundDoneAchieved;
+
+  /// Android notification channel name for the alarm-loud first task with one Start sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Start of your day · {sound}'**
+  String notifChannelAlarmsSound(String sound);
+
+  /// Android notification channel name for task alerts set to None: they vibrate and show, without a sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Task alerts · No sound'**
+  String get notifChannelAlertsSilent;
+
+  /// Android notification channel group: every task-reminder channel, one per sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Dot reminders'**
+  String get notifGroupDots;
+
+  /// Android notification channel group: the alarm-loud first-task channels, one per Start sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Start of day'**
+  String get notifGroupStart;
+
+  /// Notification health row when no reminder sound in use is muted in Android's settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder sounds are on'**
+  String get healthSoundsOk;
+
+  /// Notification health row: reminder sounds in use whose Android channel the user muted; {names} is a list like 'Lift, Rooster'.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{The sound for {names} is muted in system settings} other{The sounds for {names} are muted in system settings}}'**
+  String healthSoundsMuted(int count, String names);
+
+  /// Notification health: how to fix a muted reminder sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Dottoday\'s notification settings and turn the sound back on.'**
+  String get healthSoundsMutedDetail;
+
   /// Settings › Reminders switch: quiet hours.
   ///
   /// In en, this message translates to:

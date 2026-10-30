@@ -12,7 +12,7 @@ import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/data/tasks/task_view.dart';
 import 'package:dottoday/domain/focus/focus_state.dart';
-import 'package:dottoday/domain/notifications/reminder_sound.dart';
+import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/features/focus/focus_actions.dart';
 import 'package:dottoday/features/focus/focus_deep_work.dart';
 import 'package:dottoday/features/focus/focus_parts.dart';
@@ -81,7 +81,7 @@ class _FocusViewState extends ConsumerState<FocusView> {
         ? Timer.periodic(
             FocusView.chimeEvery,
             (_) => unawaited(
-              ref.read(soundPlayerProvider).play(ReminderSound.chime),
+              ref.read(soundPlayerProvider).play(resolveSound('chime')),
             ),
           )
         : null;

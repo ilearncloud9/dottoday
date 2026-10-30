@@ -77,6 +77,9 @@ final class ServerPushMirror implements NotificationPlatform {
   Future<List<(int, String?)>> pending() => _inner.pending();
 
   @override
+  Future<Set<String>> mutedSoundIds() => _inner.mutedSoundIds();
+
+  @override
   Future<void> cancel(int id) async {
     await _inner.cancel(id);
     await _guard((t) => _store.remove(t.subscriptionId, [id]));

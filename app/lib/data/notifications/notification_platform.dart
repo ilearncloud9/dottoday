@@ -1,4 +1,5 @@
 import 'package:dottoday/domain/notifications/reminder_sound.dart';
+import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 
 /// Which Android channel (docs/07 Android) a notification posts on; Apple
 /// platforms ignore it.
@@ -36,6 +37,7 @@ final class OsNotification {
     this.withActions = true,
     this.startAction = false,
     this.sound,
+    this.soundOff = false,
   });
 
   final int id;
@@ -51,9 +53,9 @@ final class OsNotification {
   /// iOS time-sensitive interruption level (docs/07 iOS).
   final bool timeSensitive;
 
-  /// Rings like an alarm: the day's first dot or a routine start (11 A0).
-  /// Apple platforms play [alarmSoundFile]; Android posts on the alarm
-  /// channel.
+  /// Rings like an alarm: the day's first dot or a routine start (11 A0),
+  /// with the Start [sound] (docs/12 D2; `dot_alarm` when null). Android
+  /// posts on that sound's alarm channel.
   final bool loud;
 
   /// Done / Snooze / Open (task alerts); Bedtime has none.
@@ -62,9 +64,13 @@ final class OsNotification {
   /// Smallest step (M10.6): the one Start button instead of the task's.
   final bool startAction;
 
-  /// A bundled sound (F6.6); null plays the system sound. Never set with
-  /// [loud], which has its own chime.
-  final ReminderSound? sound;
+  /// The bundled sound (docs/12); null plays the system sound. With
+  /// [loud], the Start sound.
+  final CatalogueSound? sound;
+
+  /// The task's sound is "None" (docs/12 §3): it shows and vibrates, with
+  /// no sound.
+  final bool soundOff;
 }
 
 /// A tap or action on a delivered notification.
@@ -92,4 +98,8 @@ abstract interface class NotificationPlatform {
   Future<void> cancel(int id);
 
   Future<void> schedule(OsNotification n);
+
+  /// Catalogue sound ids whose OS channel the user muted (Android; empty
+  /// where sounds have no channel), for the health panel (docs/12 §4).
+  Future<Set<String>> mutedSoundIds();
 }

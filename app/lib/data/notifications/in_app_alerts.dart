@@ -36,7 +36,7 @@ void deliverInApp(
   required SoundPlayer player,
 }) {
   add(n);
-  if (n.sound case final sound? when !n.silent) {
+  if (n.sound case final sound? when !n.silent && !n.soundOff) {
     unawaited(player.play(sound));
   }
 }

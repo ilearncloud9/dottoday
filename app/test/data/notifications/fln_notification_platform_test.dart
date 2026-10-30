@@ -1,7 +1,8 @@
 import 'package:dottoday/core/l10n/generated/app_localizations_en.dart';
 import 'package:dottoday/data/notifications/fln_notification_platform.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
-import 'package:dottoday/domain/notifications/reminder_sound.dart';
+import 'package:dottoday/domain/notifications/sound_catalogue.dart';
+import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -18,7 +19,8 @@ OsNotification _n({
   bool silent = false,
   bool ts = false,
   bool loud = false,
-  ReminderSound? sound,
+  String? sound,
+  bool soundOff = false,
 }) => OsNotification(
   id: 1,
   title: 'Reply to email',
@@ -31,7 +33,8 @@ OsNotification _n({
   silent: silent,
   timeSensitive: ts,
   loud: loud,
-  sound: sound,
+  sound: sound == null ? null : resolveSound(sound),
+  soundOff: soundOff,
 );
 
 // What the adapter hands iOS/macOS per kind (docs/09 M6.5.4, 11 A0).
@@ -126,9 +129,9 @@ void main() {
   test(
     'a picked sound: its file on Apple, its own channel on Android',
     () async {
-      final d = await posted(_n(sound: ReminderSound.chime));
+      final d = await posted(_n(sound: 'chime'));
       expect(d.sound, 'reminder_chime.wav');
-      final a = (await details(_n(sound: ReminderSound.chime))).android!;
+      final a = (await details(_n(sound: 'chime'))).android!;
       expect(a.channelId, 'alerts_chime');
       expect(a.channelName, 'Task alerts · Chime');
       expect(
@@ -139,8 +142,82 @@ void main() {
   );
 
   test('a loud dot keeps the alarm chime whatever sound is picked', () async {
-    final n = _n(ts: true, loud: true, sound: ReminderSound.bell);
+    final n = _n(ts: true, loud: true, sound: 'bell');
     expect((await posted(n)).sound, alarmSoundFile);
     expect((await details(n)).android!.channelId, 'alarms');
+  });
+
+  group('the catalogue (docs/12 §4)', () {
+    test('a new sound: its .caf on Apple, its own channel', () async {
+      expect((await posted(_n(sound: 'clear.lift'))).sound, 'clear_lift.caf');
+      final a = (await details(_n(sound: 'clear.lift'))).android!;
+      expect(a.channelId, 'dottoday.alert.clear.lift');
+      expect(a.channelName, 'Task alerts · Lift');
+      expect(
+        (a.sound! as RawResourceAndroidNotificationSound).sound,
+        'clear_lift',
+      );
+      expect(a.audioAttributesUsage, AudioAttributesUsage.notification);
+    });
+
+    test('a Start sound rings on its own alarm channel', () async {
+      final n = _n(ts: true, loud: true, sound: 'start.morning');
+      expect((await posted(n)).sound, 'start_morning.caf');
+      final a = (await details(n)).android!;
+      expect(a.channelId, 'dottoday.alarm.start.morning');
+      expect(a.channelName, 'Start of your day · Morning');
+      expect(a.audioAttributesUsage, AudioAttributesUsage.alarm);
+      expect(a.fullScreenIntent, isTrue);
+    });
+
+    test('"None" shows and vibrates, with no sound', () async {
+      final d = await posted(_n(ts: true, soundOff: true));
+      expect((d.sound, d.presentSound, d.presentBanner), (null, false, true));
+      final a = (await details(_n(ts: true, soundOff: true))).android!;
+      expect(a.channelId, 'dottoday.alert.none');
+      expect(a.channelName, 'Task alerts · No sound');
+    });
+
+    test('a Start or Done sound never lands on a task channel', () async {
+      for (final id in ['start.morning', 'done.swift']) {
+        expect((await details(_n(sound: id))).android!.channelId, 'alerts');
+      }
+    });
+
+    test('one channel per sound that notifies, ids permanent and unique', () {
+      final platform = FlnNotificationPlatform(
+        _Plugin(),
+        AppLocalizationsEn(),
+        FakeClock(_now),
+      );
+      final ids = platform.androidChannels.map((c) => c.id).toList();
+      expect(ids.toSet(), hasLength(ids.length));
+      final legacy = {'alerts', 'summary', 'alarms'};
+      final firstParty = {
+        for (final s in ['dot', 'chime', 'bell', 'ripple']) 'alerts_$s',
+      };
+      final added = ids.toSet().difference({...legacy, ...firstParty});
+      // 28 new normal (Quiet 5, Clear 15, Playful 8) + 9 new Start
+      // (dot_alarm keeps `alarms`) + None, after the ear pass.
+      expect(added, hasLength(38));
+      for (final sound in soundCatalogue) {
+        final id = channelIdForSound(sound);
+        if (id == null) continue;
+        expect(ids, contains(id));
+        expect(soundIdOfChannel(id), sound.id, reason: 'round trip');
+      }
+      expect(soundIdOfChannel('alarms'), 'dot_alarm');
+      expect(soundIdOfChannel('alerts'), isNull);
+      expect(soundIdOfChannel('dottoday.alert.none'), isNull);
+      expect(soundIdOfChannel('someone.else'), isNull);
+      final groups = {
+        for (final c in platform.androidChannels) c.id: c.groupId,
+      };
+      expect(groups['alerts'], 'dottoday.group.dots');
+      expect(groups['alerts_chime'], 'dottoday.group.dots');
+      expect(groups['alarms'], 'dottoday.group.start');
+      expect(groups['dottoday.alarm.start.swing'], 'dottoday.group.start');
+      expect(groups['summary'], isNull);
+    });
   });
 }

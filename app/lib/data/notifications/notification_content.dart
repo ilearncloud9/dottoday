@@ -10,7 +10,8 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
-import 'package:dottoday/domain/notifications/reminder_sound.dart';
+import 'package:dottoday/domain/notifications/sound_catalogue.dart';
+import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -76,11 +77,24 @@ OsNotification? composeNotification(
     loud: planned.loud,
     withActions: planned.purpose == NotificationPurpose.task,
     startAction: planned.purpose == NotificationPurpose.smallestStep,
-    // The picked sound is for task reminders; loud dots keep the alarm.
-    sound: planned.purpose == NotificationPurpose.task && !planned.loud
-        ? ReminderSound.fromKey(planned.sound)
-        : null,
+    sound: _soundOf(planned),
+    soundOff:
+        planned.purpose == NotificationPurpose.task &&
+        !planned.loud &&
+        planned.sound == soundNoneKey,
   );
+}
+
+/// The sound [planned] plays (docs/12): the Start sound when loud, the
+/// planner's resolved key for a task reminder (null = the OS sound), and
+/// none for the summaries, Bedtime and Smallest step.
+CatalogueSound? _soundOf(PlannedNotification planned) {
+  if (planned.purpose != NotificationPurpose.task) return null;
+  if (planned.loud) return resolveStartSound(planned.sound);
+  return switch (planned.sound) {
+    null || soundNoneKey => null,
+    final key => resolveSound(key),
+  };
 }
 
 /// "Just Gather documents · 10 min?" (11 B2): the first step only.
