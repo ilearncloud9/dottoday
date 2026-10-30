@@ -247,6 +247,9 @@ class _TitleButton extends ConsumerWidget {
       label: title,
       hint: monthOpen ? l10n.weekStripHideMonth : l10n.weekStripShowMonth,
       excludeSemantics: true,
+      // The InkWell's own action is excluded above; a screen reader needs
+      // this one to open the month (R-12, found by the M16 tappable sweep).
+      onTap: ref.read(todaySelectionProvider.notifier).toggleMonth,
       child: InkWell(
         onTap: ref.read(todaySelectionProvider.notifier).toggleMonth,
         borderRadius: BorderRadius.circular(DotRadii.card),

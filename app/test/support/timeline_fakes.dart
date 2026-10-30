@@ -61,6 +61,7 @@ import 'calendar_fakes.dart';
 import 'export_fakes.dart';
 import 'fake_clock.dart';
 import 'fake_notification_platform.dart';
+import 'reveal_hint_fakes.dart';
 import 'routine_fakes.dart';
 import 'search_fakes.dart';
 
@@ -166,11 +167,12 @@ final class WriteFault {
 /// The write path over the fakes: validates settings like the real one
 /// (refusing an invalid batch whole), then stores profile and occurrences.
 final class FakeWriteUseCase implements WriteUseCase {
-  FakeWriteUseCase(this.settings, this.occurrences, [this.fault]);
+  FakeWriteUseCase(this.settings, this.occurrences, [this.fault, this.hints]);
 
   final FakeSettingsRepository settings;
   final FakeOccurrenceRepository occurrences;
   final WriteFault? fault;
+  final FakeRevealHintRepository? hints;
   final applied = <WriteBatch>[];
 
   @override
@@ -184,6 +186,7 @@ final class FakeWriteUseCase implements WriteUseCase {
     applied.add(batch);
     if (batch.profile case final p?) await settings.upsert(p);
     occurrences.put(batch.occurrences);
+    await hints?.upsertAll(batch.revealHints);
     return const Ok(null);
   }
 }
@@ -466,12 +469,14 @@ List<Override> timelineOverrides({
   DiagnosticsReader diagnostics = const FakeDiagnosticsReader(),
   WriteFault? writeFault,
   List<Routine> routines = const [],
+  FakeRevealHintRepository? revealHints,
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
   final subs = subtasks ?? FakeSubtaskRepository();
   final seriesRepo = FakeSeriesRepository(series);
   final settingsRepo = FakeSettingsRepository(p);
+  final hintRepo = revealHints ?? FakeRevealHintRepository();
   final undo = FakeUndoService(
     repo,
     subs,
@@ -481,12 +486,16 @@ List<Override> timelineOverrides({
   );
   return [
     writeUseCaseProvider.overrideWithValue(
-      FakeWriteUseCase(settingsRepo, repo, writeFault),
+      FakeWriteUseCase(settingsRepo, repo, writeFault, hintRepo),
     ),
     subtaskRepositoryProvider.overrideWithValue(subs),
     seriesRepositoryProvider.overrideWithValue(seriesRepo),
     routineRepositoryProvider.overrideWithValue(
       FakeRoutineRepository(routines),
+    ),
+    // Minimal mode's hint records (docs/14 §6).
+    revealHintRepositoryProvider.overrideWithValue(
+      hintRepo,
     ),
     undoServiceProvider.overrideWithValue(undo),
     trashServiceProvider.overrideWithValue(FakeTrashService(repo, undo)),

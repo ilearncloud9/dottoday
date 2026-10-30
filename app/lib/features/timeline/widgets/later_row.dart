@@ -35,6 +35,7 @@ class LaterRow extends ConsumerWidget {
           button: true,
           label: l10n.laterRowLabel(count),
           excludeSemantics: true,
+          onTap: () => context.go(AppRoutes.inbox),
           child: InkWell(
             onTap: () => context.go(AppRoutes.inbox),
             borderRadius: BorderRadius.circular(DotRadii.card),
