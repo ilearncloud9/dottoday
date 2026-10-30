@@ -60,6 +60,7 @@ Future<Result<Added, AppFailure>> addFromText(
           defaultDurationMin: profile.settings.defaultDurationMin,
           untitled: untitled,
           alerts: profile.settings.defaultAlerts,
+          language: languageCode,
         ),
         note,
       ),

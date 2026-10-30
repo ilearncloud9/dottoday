@@ -3,11 +3,13 @@ import 'package:dottoday/app_screens.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
 import 'package:dottoday/features/task_editor/add/widgets/habit_list.dart';
+import 'package:dottoday/shared/dot/colour_icon_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -236,6 +238,31 @@ void main() {
     await tester.tap(find.text('Undo'));
     await tester.pumpAndSettle();
     expect(_added(repo, 'Swim')!.deletedAt, isNotNull);
+  });
+
+  testWidgets('the title fills the icon and colour; a pick then wins', (
+    tester,
+  ) async {
+    final repo = await _pumpApp(tester);
+    await tester.tap(_addButton);
+    await tester.pumpAndSettle();
+    ColourIconBlock look() => tester.widget(find.byType(ColourIconBlock));
+
+    await tester.enterText(_title, 'Dentist 3pm');
+    await tester.pump();
+    expect((look().color, look().icon), (TaskColor.rose, TaskIcon.tooth));
+
+    // The quick row: the suggested icon, then the habits' (Bag, Mail).
+    await tester.ensureVisible(find.bySemanticsLabel('Bag'));
+    await tester.tap(find.bySemanticsLabel('Bag'));
+    await tester.enterText(_title, 'Dentist checkup 3pm');
+    await tester.pump();
+    expect((look().color, look().icon), (TaskColor.rose, TaskIcon.bag));
+
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    final o = _added(repo, 'Dentist checkup')!;
+    expect((o.colorKey, o.iconKey), ('rose', 'bag'));
   });
 
   testWidgets('close discards; a11y guidelines hold', (tester) async {
