@@ -3,6 +3,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
+import 'package:dottoday/features/task_editor/add/widgets/add_minimal_parts.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
 import 'package:dottoday/features/task_editor/add/widgets/habit_list.dart';
 import 'package:dottoday/shared/dot/colour_icon_block.dart';
@@ -15,6 +16,10 @@ const addSuggestionLimit = 4;
 /// Add step 1 "What" (docs/10 §5.2 A1, `A-ios-add-what`): title with live
 /// parsing, colour and icon, Suggestions from habits, Continue, and "Add to
 /// Inbox instead".
+///
+/// [minimal] (docs/14 §4 Add): the title and two chips only — when and how
+/// long — then Add and More; colour, icon, suggestions, routines and Break
+/// it down are under More (the full step 2).
 class AddWhatStep extends StatelessWidget {
   const AddWhatStep({
     required this.state,
@@ -31,6 +36,10 @@ class AddWhatStep extends StatelessWidget {
     required this.onContinue,
     required this.onInbox,
     this.onBreakDown,
+    this.minimal = false,
+    this.whenLabel,
+    this.lengthLabel = '',
+    this.onMore,
     super.key,
   });
 
@@ -61,6 +70,16 @@ class AddWhatStep extends StatelessWidget {
   /// "Break it down" (11 B1, M10.4); null hides it until there is a title.
   final VoidCallback? onBreakDown;
 
+  /// The minimal layout's one-step Add.
+  final bool minimal;
+
+  /// Minimal: the when chip ("At 11:30 AM") and the length chip.
+  final String? whenLabel;
+  final String lengthLabel;
+
+  /// Minimal: More, and either chip — the full step 2.
+  final VoidCallback? onMore;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -70,6 +89,8 @@ class AddWhatStep extends StatelessWidget {
         // A pasted list is answered above first.
         if (QuickAddParser.lines(state.text).length > 1)
           const _Footer(onContinue: null, onInbox: null)
+        else if (minimal)
+          AddMinimalFooter(onAdd: onSubmit, onMore: onMore)
         else
           _Footer(onContinue: onContinue, onInbox: onInbox),
       ],
@@ -105,22 +126,35 @@ class AddWhatStep extends StatelessWidget {
             Expanded(child: _title()),
           ],
         ),
-        if (onBreakDown case final breakDown?)
-          _BreakDownRow(steps: draft.steps.length, onTap: breakDown),
-        const SizedBox(height: DotSpace.l),
-        _look(colour, icon),
-        if (shown.isNotEmpty) ...[
-          const SizedBox(height: DotSpace.xl),
-          HabitList(
-            habits: shown,
-            selected: draft.habit,
-            use24h: use24h,
-            onPick: onPickHabit,
-          ),
-        ],
-        if (routines case final r?) ...[const SizedBox(height: DotSpace.xl), r],
+        if (minimal)
+          AddQuickChips(when: whenLabel, length: lengthLabel, onMore: onMore),
+        if (!minimal) ..._full(colour, icon, shown),
       ],
     );
+  }
+
+  List<Widget> _full(
+    TaskColor colour,
+    TaskIcon icon,
+    List<HabitSuggestion> shown,
+  ) {
+    final draft = state.draft;
+    return [
+      if (onBreakDown case final breakDown?)
+        _BreakDownRow(steps: draft.steps.length, onTap: breakDown),
+      const SizedBox(height: DotSpace.l),
+      _look(colour, icon),
+      if (shown.isNotEmpty) ...[
+        const SizedBox(height: DotSpace.xl),
+        HabitList(
+          habits: shown,
+          selected: draft.habit,
+          use24h: use24h,
+          onPick: onPickHabit,
+        ),
+      ],
+      if (routines case final r?) ...[const SizedBox(height: DotSpace.xl), r],
+    ];
   }
 
   Widget _look(TaskColor colour, TaskIcon icon) => ColourIconBlock(

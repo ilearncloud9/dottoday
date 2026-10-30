@@ -16,6 +16,7 @@ import 'package:dottoday/features/proposals/proposal_host.dart';
 import 'package:dottoday/features/routines/routine_drop_host.dart';
 import 'package:dottoday/features/settings/whats_new_banner.dart';
 import 'package:dottoday/features/sync_status/sync_banner.dart';
+import 'package:dottoday/features/timeline/brain_dump/brain_dump_host.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/features/timeline/widgets/shell_drops.dart';
 import 'package:dottoday/features/timeline/widgets/zone_banner.dart';
@@ -101,14 +102,17 @@ class AppShell extends ConsumerWidget {
                 // Focus on Mac/web takes the content area (M10.5).
                 // A routine dropped from Add (M11.4).
                 child: RoutineDropHost(
-                  child: EditorPanelFrame(
-                    child: FocusFrame(
-                      child: BackToToday(
-                        show:
-                            minimalNav &&
-                            shell.currentIndex != ShellTab.today.index,
-                        onToday: () => _goTab(ShellTab.today),
-                        child: shell,
+                  // Several lines from minimal Add (docs/14 §3 B4).
+                  child: BrainDumpHost(
+                    child: EditorPanelFrame(
+                      child: FocusFrame(
+                        child: BackToToday(
+                          show:
+                              minimalNav &&
+                              shell.currentIndex != ShellTab.today.index,
+                          onToday: () => _goTab(ShellTab.today),
+                          child: shell,
+                        ),
                       ),
                     ),
                   ),
