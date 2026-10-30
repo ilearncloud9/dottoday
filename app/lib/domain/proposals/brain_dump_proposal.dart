@@ -1,6 +1,9 @@
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/icon_keys.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
+import 'package:dottoday/domain/icon_guess/icon_guess.dart';
 import 'package:dottoday/domain/proposals/proposal.dart';
 import 'package:dottoday/domain/proposals/rebalance_proposal.dart';
 import 'package:dottoday/domain/scheduling/day_blocks.dart';
@@ -57,7 +60,8 @@ final class DumpDay {
 /// that fits from Wake Up (never before [nowUtc]); a line with no room goes
 /// to the Inbox. A task already there that a timed line overlaps gets an
 /// "already here · overlaps" line and never moves. × drops a line; Accept
-/// writes exactly the lines left (CLAUDE.md §11 proposal rule).
+/// writes exactly the lines left (CLAUDE.md §11 proposal rule). With a
+/// [language], each line's title picks its icon and colour ([guessIcon]).
 ///
 /// ```dart
 /// brainDumpProposal(userId: me, dots: plan.dots, day: today, ...).edits;
@@ -71,20 +75,29 @@ Proposal brainDumpProposal({
   required int defaultDurationMin,
   required List<Alert> alerts,
   required String Function() newId,
+  String? language,
 }) {
   final timed = scheduledBlocks(day.blocks);
   final taken = [...timed];
-  Occurrence task(ProposedDot d, DateTime? start) => Occurrence(
-    id: newId(),
-    userId: userId,
-    title: d.title,
-    startUtc: start,
-    tzId: zone.name,
-    durationMin: d.durationMin ?? defaultDurationMin,
-    alerts: alerts,
-    createdAt: nowUtc,
-    updatedAt: nowUtc,
-  );
+  Occurrence task(ProposedDot d, DateTime? start) {
+    final look = language == null
+        ? null
+        : guessIcon(d.title, language: language);
+    return Occurrence(
+      id: newId(),
+      userId: userId,
+      title: d.title,
+      startUtc: start,
+      tzId: zone.name,
+      durationMin: d.durationMin ?? defaultDurationMin,
+      alerts: alerts,
+      colorKey: look?.colorKey ?? defaultTaskColorKey,
+      iconKey: look?.iconKey ?? defaultIconKey,
+      createdAt: nowUtc,
+      updatedAt: nowUtc,
+    );
+  }
+
   final added = <Occurrence>[];
   for (final d in dots.where((d) => d.minuteOfDay != null)) {
     final start = ClockTime.fromMinutes(d.minuteOfDay!).onDate(zone, day.date);

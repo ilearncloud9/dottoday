@@ -1,5 +1,6 @@
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
+import 'package:dottoday/domain/icon_guess/icon_guess.dart';
 import 'package:dottoday/domain/quick_add/add_draft.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
 import 'package:dottoday/domain/quick_add/quick_add_lexicon.dart';
@@ -55,6 +56,35 @@ void main() {
     expect(d.startUtc, isNull);
     expect(d.length, 30);
     expect((d.color, d.icon), ('indigo', 'circle'));
+  });
+
+  group('the look the title suggests', () {
+    final gym = guessIcon('Gym', language: 'en');
+
+    test('fills the icon and colour, and is saved', () {
+      final d = _draft().withTyped(_parse('Gym 7am')).withGuess(gym);
+      expect((d.color, d.icon), ('coral', 'gym'));
+      final rows = d.toRows(userId: 'u', nowUtc: _now, untitled: 'New');
+      expect(
+        (rows.occurrence!.colorKey, rows.occurrence!.iconKey),
+        ('coral', 'gym'),
+      );
+    });
+
+    test('never replaces a picked icon or colour', () {
+      final d = _draft().withIcon('heart').withColor('sky').withGuess(gym);
+      expect((d.color, d.icon), ('sky', 'heart'));
+    });
+
+    test("never replaces a matched habit's", () {
+      final d = _draft().withHabit(_shopping).withGuess(gym);
+      expect((d.color, d.icon), ('coral', 'bag'));
+    });
+
+    test('no match keeps the defaults', () {
+      final d = _draft().withGuess(null);
+      expect((d.color, d.icon), ('indigo', 'circle'));
+    });
   });
 
   test('typing "Go shopping 5pm 1h" fills time and length (R-06)', () {
