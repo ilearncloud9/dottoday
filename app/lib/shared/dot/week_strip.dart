@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/core/utils/text_fit.dart';
 import 'package:dottoday/shared/dot/week_strip_parts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,12 +27,17 @@ final class StripDay {
     required this.date,
     required this.label,
     required this.completion,
+    this.weekdayNarrow,
     this.isToday = false,
     this.isPast = false,
   });
 
   /// "Wed".
   final String weekday;
+
+  /// "W": shown instead of [weekday] when that doesn't fit its column on
+  /// one line (large text on a phone), so it never breaks mid-word.
+  final String? weekdayNarrow;
 
   /// "21".
   final String date;
@@ -82,22 +88,36 @@ class WeekStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style = DotTheme.of(context).styles.stripWeekday;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          children: [
-            for (final (i, d) in days.indexed) Expanded(child: _target(i, d)),
-          ],
+        LayoutBuilder(
+          builder: (context, box) {
+            // One form for the whole week: if any day's "Wed" doesn't fit
+            // its column on one line (large text on a phone: "We / d"),
+            // every day shows its narrow form, never a mix.
+            final width = box.maxWidth / days.length - 2 * DotSpace.xxs;
+            final narrow = days.any(
+              (d) => !textFitsOneLine(context, d.weekday, style, width),
+            );
+            return Row(
+              children: [
+                for (final (i, d) in days.indexed)
+                  Expanded(child: _target(i, d, narrow: narrow)),
+              ],
+            );
+          },
         ),
         if (handle) PullHandle(open: monthOpen, onPull: onPull),
       ],
     );
   }
 
-  Widget _target(int i, StripDay d) {
+  Widget _target(int i, StripDay d, {required bool narrow}) {
     Widget column({bool hovered = false}) => _Column(
       day: d,
+      narrow: narrow,
       selected: i == selected,
       hovered: hovered,
       onTap: onSelect == null ? null : () => onSelect!(i),
@@ -171,12 +191,16 @@ class _DayDropTargetState extends State<_DayDropTarget> {
 class _Column extends StatelessWidget {
   const _Column({
     required this.day,
+    required this.narrow,
     required this.selected,
     this.hovered = false,
     this.onTap,
   });
 
   final StripDay day;
+
+  /// Show [StripDay.weekdayNarrow] (the whole week does, or none).
+  final bool narrow;
   final bool selected;
 
   /// A dragged task hovers this day.
@@ -225,7 +249,10 @@ class _Column extends StatelessWidget {
           child: Column(
             spacing: DotSpace.xxs,
             children: [
-              Text(day.weekday, style: label),
+              Text(
+                narrow ? day.weekdayNarrow ?? day.weekday : day.weekday,
+                style: label,
+              ),
               Text(day.date, style: date),
               CompletionDot(completion: day.completion),
             ],

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/l10n/weekday_names.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/drag_actions.dart';
@@ -83,6 +84,7 @@ class TodayWeekStrip extends ConsumerWidget {
     final name = DateFormat.MMMMEEEEd(locale).format(d);
     return StripDay(
       weekday: DateFormat.E(locale).format(d),
+      weekdayNarrow: narrowWeekday(locale, d),
       date: DateFormat.d(locale).format(d),
       label: counts.total == 0
           ? name

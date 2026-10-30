@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - Drag a task anywhere on the day, even onto another task: overlapping tasks join on the thread with "Tasks are overlapping". A task's length is now changed in its sheet; the day no longer has resize handles.
 
 ### Added
+- M15: Sounds. 48 reminder sounds made to sit well together, from soft clicks to gentle alarms — choose one for all your tasks, or give any task its own. Your first task of the day always rings with your Start sound. Nothing you already hear changes: if you used the system sound, you still do.
+- M15.4: Settings › Reminders › Sounds. Pick your default from System sound, None, Dottoday's own tones, or the Quiet, Clear and Playful sets, and hear each one as you tap. Choose a Start sound for the first task of your day and a Done sound for when you tick a task off, or switch the app's own sounds off. If your phone is on silent, the page says so (Android). A task's Sound row reads "Default · Dot" until you give it its own; for a repeating task, choose this one or all of them. The sounds' credit sits at the bottom of the page and in About › Licences.
+- M15.3: Reminders ring with the sound you chose, on iPhone, Android, the Mac and the web. Android lists each sound in its own notification setting, grouped under Dot reminders and Start of day. If you mute one there, Notification health names it ("The sound for Lift is muted in system settings"). Send me a test alarm now rings with your Start sound.
 - M14.7: The design sweep covers the new screens (Privacy's AI status, Siri & Shortcuts on iPhone, Brain dump with or without the mic, a plan's origin) on the Mac, the web and devices.
 - M14.6: Dictate notes. A task's notes have the same mic in their corner: your words go in where the cursor is, just like the keyboard's own mic — on your device only.
 - M14.5: Speak your brain dump. Tap the mic in the corner of Brain dump's box and say what's on your mind: pause, or say "next", to start a new task ("weiter", "suivant", "siguiente" in German, French and Spanish). The words appear as you speak; Plan it stops listening first. The mic shows only where your device can understand speech by itself, and your words never leave it.
@@ -47,6 +50,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - M10.1: The thinking help behind Break it down, brain-dump and length suggestions now runs on your device — Apple Intelligence on iPhone and Mac, Gemini Nano on supported Android phones, Chrome's built-in model on the web — and falls back to your own history and simple rules where there is none. Nothing you type goes to a server; Settings › Privacy explains it and can clear what was kept.
 
 ### Fixed
+- At the largest text sizes, nothing breaks mid-word any more. A Settings page's title moves under the back arrow and wraps between words ("Notification health"), and Today's week strip shows S M T W T F S when "Wed" no longer fits its column.
 - Dictation keeps up after a new line: once "next" or a pause started a new line, the next words were slow to appear or went missing. They now show as you say them, on iPhone, Mac and Android.
 - Web: Brain dump (and any popover opened from a menu) now takes your typing straight away — no need to click into the field first.
 - +15 from a widget, the lock screen or a notification could be ignored for a task created a moment earlier; it now always applies.

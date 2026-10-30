@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/core/utils/text_fit.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -46,7 +47,10 @@ class SettingsPageFrame extends StatelessWidget {
   }
 }
 
-/// ‹ and the page title.
+/// ‹ and the page title: side by side while every word of the title fits
+/// beside ‹; otherwise ‹ above and the title on the full width, so large
+/// text wraps at spaces instead of breaking a word ("Notificatio / n
+/// health" at 200 % on a 390 px phone).
 class _TitleRow extends StatelessWidget {
   const _TitleRow({required this.title});
 
@@ -55,20 +59,31 @@ class _TitleRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    return Row(
-      children: [
-        IconButton(
-          tooltip: context.l10n.settingsBack,
-          onPressed: () => _back(context),
-          icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.text),
-        ),
-        Expanded(
-          child: Semantics(
-            header: true,
-            child: Text(title, style: t.styles.pageTitle),
-          ),
-        ),
-      ],
+    final back = IconButton(
+      tooltip: context.l10n.settingsBack,
+      onPressed: () => _back(context),
+      icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.text),
+    );
+    final heading = Semantics(
+      header: true,
+      child: Text(title, style: t.styles.pageTitle),
+    );
+    return LayoutBuilder(
+      builder: (context, box) {
+        final beside = box.maxWidth - kMinInteractiveDimension;
+        if (longestWordFits(context, title, t.styles.pageTitle, beside)) {
+          return Row(
+            children: [
+              back,
+              Expanded(child: heading),
+            ],
+          );
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [back, heading],
+        );
+      },
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/l10n/weekday_names.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -31,6 +32,7 @@ class RoutineDayStrip extends StatelessWidget {
         for (final d in days)
           StripDay(
             weekday: DateFormat.E(locale).format(d),
+            weekdayNarrow: narrowWeekday(locale, d),
             date: DateFormat.d(locale).format(d),
             label: context.l10n.routineDropOnDay(
               DateFormat.MMMMEEEEd(locale).format(d),

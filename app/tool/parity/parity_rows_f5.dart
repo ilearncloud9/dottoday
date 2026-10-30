@@ -154,13 +154,21 @@ const f6Rows = <String, ParityRow>{
       'test/data/notifications/fln_notification_platform_test.dart',
       'test/data/notifications/in_app_alerts_test.dart',
       'test/data/notifications/sound_player_test.dart',
+      'test/domain/notifications/sound_resolution_test.dart',
+      'test/policy/sounds_manifest_test.dart',
+      'test/policy/mac_bundled_sounds_test.dart',
+      'test/features/settings/sounds_page_test.dart',
+      'integration_test/sound_channels_test.dart',
+      'integration_test/sound_test.dart',
     ],
     all: Cell(Status.manual, 'hear each sound and its preview (08 §6.1 E)'),
     note:
         'M8.4d: Dot, Chime, Bell, Ripple (tool/gen_sounds.dart) or the '
-        'system sound; Android one channel per sound; the web plays it in '
-        'the in-app strip. Loud dots keep their chime (M6.5.4/5); Focus/DND '
-        'respected (time-sensitive on Apple, health panel M6.5.8).',
+        'system sound. M15 (docs/12, ADR-0015): 48 bundled sounds, a sound '
+        'per task, a Start sound for loud dots, a Done sound; Android one '
+        'channel per sound (45), Apple a .caf per notification, the web '
+        'plays it in the in-app strip. Focus/DND respected (time-sensitive '
+        'on Apple, health panel M6.5.8 names a muted sound channel).',
   ),
   'F6.7': ParityRow(
     tests: [
