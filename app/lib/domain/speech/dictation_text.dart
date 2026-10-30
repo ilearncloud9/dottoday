@@ -31,8 +31,10 @@ final _edgePunctuation = RegExp(
 /// when listening started; the text around it is kept.
 ///
 /// Recognizers resend the whole utterance so far with every guess, so
-/// the words already turned into lines are remembered by count and never
-/// written twice:
+/// the words already turned into lines are remembered and never written
+/// twice. Some start the transcript over after a pause instead (iOS): a
+/// guess that no longer begins with the remembered words is a new
+/// utterance, and all of it lands (found on devices, 2026-10-30):
 ///
 /// ```dart
 /// var d = Dictation.start(text: '', cursor: 0,
@@ -41,6 +43,9 @@ final _edgePunctuation = RegExp(
 /// d = d.tick(t0.add(kDictationPause));    // "Call the dentist\n"
 /// d = d.partial('call the dentist buy milk', t1);
 /// d.text; // "Call the dentist\nBuy milk"
+/// d = d.tick(t2);                          // "…\nBuy milk\n"
+/// d = d.partial('eggs', t3);               // started over: a new utterance
+/// d.text; // "Call the dentist\nBuy milk\nEggs"
 /// ```
 ///
 /// The command word (Brain dump only; "next", "weiter", "suivant",
@@ -61,14 +66,14 @@ final class Dictation {
     required String lead,
     required String committed,
     required List<String> live,
-    required int consumed,
+    required List<String> said,
     required DateTime heardAt,
   }) : _before = before,
        _after = after,
        _lead = lead,
        _committed = committed,
        _live = live,
-       _consumed = consumed,
+       _said = said,
        _heardAt = heardAt;
 
   /// Listening starts in [text] at [cursor] (clamped to the text). In
@@ -98,7 +103,7 @@ final class Dictation {
       lead: lead,
       committed: '',
       live: const [],
-      consumed: 0,
+      said: const [],
       heardAt: now,
     );
   }
@@ -119,8 +124,9 @@ final class Dictation {
   /// The utterance's words not yet settled.
   final List<String> _live;
 
-  /// Words of the current utterance already in [_committed].
-  final int _consumed;
+  /// The current utterance's words already in [_committed], normalised
+  /// ([_word]): what a guess must begin with to be the same utterance.
+  final List<String> _said;
 
   /// When the live words last changed.
   final DateTime _heardAt;
@@ -149,24 +155,36 @@ final class Dictation {
   /// The recognizer's current guess for the utterance in progress.
   Dictation partial(String hypothesis, DateTime now) {
     final words = _split(hypothesis);
-    final live = words.length > _consumed
-        ? words.sublist(_consumed)
-        : const <String>[];
-    if (_same(live, _live)) return this;
-    return _copy(live: live, heardAt: now);
+    // Started over after a pause with words still unsettled (Notes never
+    // split lines): keep them rather than let the new guess replace them.
+    if (_live.isNotEmpty &&
+        now.difference(_heardAt) >= kDictationPause &&
+        !_continues(words, _heard)) {
+      final kept = switch (mode) {
+        DictationMode.plain => _settle(newLine: false),
+        DictationMode.brainDump => _endLine(),
+      };
+      return kept._copy(said: const []).partial(hypothesis, now);
+    }
+    final said = _continues(words, _said) ? _said : const <String>[];
+    final live = _wordsAfter(words, said);
+    if (identical(said, _said) && _same(live, _live)) return this;
+    return _copy(said: said, live: live, heardAt: now);
   }
 
   /// The utterance is final: its unsettled words are settled. In Brain
   /// dump the end of an utterance is a pause, so a new line starts.
   Dictation finalResult(String text, DateTime now) {
     final words = _split(text);
-    final rest = words.length > _consumed
-        ? words.sublist(_consumed)
-        : const <String>[];
-    final next = _copy(live: rest, heardAt: now);
+    final said = _continues(words, _said) ? _said : const <String>[];
+    final next = _copy(
+      said: said,
+      live: _wordsAfter(words, said),
+      heardAt: now,
+    );
     return switch (mode) {
-      DictationMode.plain => next._settle(newLine: false)._copy(consumed: 0),
-      DictationMode.brainDump => next._endLine()._copy(consumed: 0),
+      DictationMode.plain => next._settle(newLine: false)._copy(said: const []),
+      DictationMode.brainDump => next._endLine()._copy(said: const []),
     };
   }
 
@@ -188,9 +206,9 @@ final class Dictation {
     if (command != null && words.isNotEmpty && _word(words.last) == command) {
       words.removeLast();
     }
-    final consumed = _consumed + _live.length;
-    if (words.isEmpty) return _copy(live: const [], consumed: consumed);
-    return _copy(live: words)._settle(newLine: true)._copy(consumed: consumed);
+    final said = _heard;
+    if (words.isEmpty) return _copy(live: const [], said: said);
+    return _copy(live: words)._settle(newLine: true)._copy(said: said);
   }
 
   /// Moves the live words into [_committed].
@@ -200,14 +218,17 @@ final class Dictation {
     return _copy(
       committed: '$_committed${_joiner(_committed)}$line${newLine ? '\n' : ''}',
       live: const [],
-      consumed: _consumed + _live.length,
+      said: _heard,
     );
   }
+
+  /// [_said] and the live words: the whole utterance heard so far.
+  List<String> get _heard => [..._said, ..._live.map(_word)];
 
   Dictation _copy({
     String? committed,
     List<String>? live,
-    int? consumed,
+    List<String>? said,
     DateTime? heardAt,
   }) => Dictation._(
     mode: mode,
@@ -217,9 +238,27 @@ final class Dictation {
     lead: _lead,
     committed: committed ?? _committed,
     live: live ?? _live,
-    consumed: consumed ?? _consumed,
+    said: said ?? _said,
     heardAt: heardAt ?? _heardAt,
   );
+
+  /// The words of [words] after the [said] ones.
+  static List<String> _wordsAfter(List<String> words, List<String> said) =>
+      words.length > said.length ? words.sublist(said.length) : const [];
+
+  /// Whether [words] goes on from the [said] ones (the same utterance):
+  /// it begins with them, normalised, allowing one revised word once
+  /// three are said ("dentist" heard again as "dentists"). Anything else
+  /// — shorter, or other words — is the recognizer starting over.
+  static bool _continues(List<String> words, List<String> said) {
+    if (said.isEmpty) return true;
+    if (words.length < said.length) return false;
+    var changed = 0;
+    for (var i = 0; i < said.length; i++) {
+      if (_word(words[i]) != said[i]) changed++;
+    }
+    return changed <= (said.length >= 3 ? 1 : 0);
+  }
 
   /// A space between settled words and the next ones on the same line.
   static String _joiner(String committed) =>

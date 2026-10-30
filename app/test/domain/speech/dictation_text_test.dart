@@ -155,6 +155,68 @@ void main() {
     }
   });
 
+  // Found on devices (2026-10-30): after a line break the recognizer may
+  // start its transcript over, and the next words must still land.
+  group('a recognizer that starts over', () {
+    test('after a pause: the shorter new guess lands whole', () {
+      var d = say(dump(), ['call the dentist']);
+      d = d.tick(at(kDictationPause.inMilliseconds));
+      d = d.partial('buy milk', at(2000));
+      expect(d.text, 'Call the dentist\nBuy milk');
+      d = d.partial('buy milk and eggs', at(2300));
+      expect(d.text, 'Call the dentist\nBuy milk and eggs');
+    });
+
+    test('after "next": the new utterance lands', () {
+      var d = say(dump(), ['email Sam next']);
+      d = d.tick(at(kCommandSettle.inMilliseconds));
+      d = d.partial('taxes', at(1500));
+      expect(d.text, 'Email Sam\nTaxes');
+    });
+
+    test('same first word, other words: still a new utterance', () {
+      var d = say(dump(), ['buy bread']);
+      d = d.tick(at(kDictationPause.inMilliseconds));
+      d = d.partial('buy milk', at(2000));
+      expect(d.text, 'Buy bread\nBuy milk');
+    });
+
+    test('one revised word in a long line is the same utterance', () {
+      var d = say(dump(), ['call the dentist']);
+      d = d.tick(at(kDictationPause.inMilliseconds));
+      d = d.partial('call the dentists buy milk', at(2000));
+      expect(d.text, 'Call the dentist\nBuy milk');
+    });
+
+    test('re-punctuated words are the same utterance', () {
+      var d = say(dump(), ['call the dentist']);
+      d = d.tick(at(kDictationPause.inMilliseconds));
+      d = d.partial('Call the dentist. Buy milk', at(2000));
+      expect(d.text, 'Call the dentist\nBuy milk');
+    });
+
+    test('several lines in a row keep landing', () {
+      var d = dump();
+      var t = 0;
+      for (final line in ['email Sam', 'taxes', 'call the bank', 'gym']) {
+        d = d.partial(line, at(t)).tick(at(t + kDictationPause.inMilliseconds));
+        t += 3000;
+      }
+      expect(d.text, 'Email Sam\nTaxes\nCall the bank\nGym\n');
+    });
+
+    test('Notes: words before the restart are kept', () {
+      var d = plain(text: 'Ask').partial('about the form', at(0));
+      d = d.partial('and the receipt', at(kDictationPause.inMilliseconds));
+      expect(d.text, 'Ask about the form and the receipt');
+    });
+
+    test('a quick revision is not a restart', () {
+      final d = plain().partial('buy mill', at(0)).partial('buy milk', at(300));
+      expect(d.text, 'buy milk');
+    });
+  });
+
   group('Notes (plain)', () {
     test('no pause lines, no command', () {
       var d = plain(text: 'Ask about').partial('the next step', at(0));

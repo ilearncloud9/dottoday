@@ -20,7 +20,8 @@ import Speech
 /// a file. No network API is used here (speech_on_device_test). On iOS
 /// the audio session is active only while listening, so alarms and
 /// reminder sounds are unaffected; listening stops on an interruption and
-/// when the app leaves the foreground.
+/// when the app leaves the foreground, and otherwise only when the user
+/// stops it: a task Apple ends by itself is replaced by a new one.
 final class SpeechBridge: NSObject, FlutterStreamHandler {
   static let shared = SpeechBridge()
 
@@ -28,6 +29,14 @@ final class SpeechBridge: NSObject, FlutterStreamHandler {
   private let engine = AVAudioEngine()
   private var request: SFSpeechAudioBufferRecognitionRequest?
   private var task: SFSpeechRecognitionTask?
+  /// The recognizer of the running session.
+  private var active: SFSpeechRecognizer?
+  /// Guards [request], which the audio thread reads.
+  private let lock = NSLock()
+  /// Which task's callbacks still count.
+  private var generation = 0
+  /// Tasks ended by an error with nothing heard since the last result.
+  private var misses = 0
   /// Set by stop(): the final result ends the session, not an error.
   private var stopping = false
 
@@ -148,11 +157,6 @@ final class SpeechBridge: NSObject, FlutterStreamHandler {
       return "unavailable"
     }
     guard availability(tag) == "available" else { return "permission" }
-    let request = SFSpeechAudioBufferRecognitionRequest()
-    request.shouldReportPartialResults = true
-    // D1: never a server, whatever the OS would prefer.
-    request.requiresOnDeviceRecognition = true
-    if #available(iOS 16.0, macOS 13.0, *) { request.addsPunctuation = true }
     do {
       #if os(iOS)
         let session = AVAudioSession.sharedInstance()
@@ -160,8 +164,10 @@ final class SpeechBridge: NSObject, FlutterStreamHandler {
         try session.setActive(true, options: .notifyOthersOnDeactivation)
       #endif
       let input = engine.inputNode
+      // The tap feeds whichever request is current: a new one starts each
+      // time Apple ends a task while the mic is still on.
       input.installTap(onBus: 0, bufferSize: 1024, format: input.outputFormat(forBus: 0)) {
-        buffer, _ in request.append(buffer)
+        [weak self] buffer, _ in self?.feed(buffer)
       }
       engine.prepare()
       try engine.start()
@@ -169,24 +175,67 @@ final class SpeechBridge: NSObject, FlutterStreamHandler {
       teardown()
       return "recognizer"
     }
-    self.request = request
+    active = recognizer
     stopping = false
-    task = recognizer.recognitionTask(with: request) { [weak self] result, error in
-      DispatchQueue.main.async { self?.received(result, error) }
-    }
+    misses = 0
+    beginTask()
     return nil
+  }
+
+  /// A fresh request and task on the running audio. Apple ends a task by
+  /// itself — after a silence, at its own time limit — and the next words
+  /// then went nowhere (found on devices, 2026-10-30); listening goes on
+  /// until the user stops it.
+  private func beginTask() {
+    guard let recognizer = active else { return }
+    let request = SFSpeechAudioBufferRecognitionRequest()
+    request.shouldReportPartialResults = true
+    // D1: never a server, whatever the OS would prefer.
+    request.requiresOnDeviceRecognition = true
+    if #available(iOS 16.0, macOS 13.0, *) { request.addsPunctuation = true }
+    lock.lock()
+    self.request = request
+    lock.unlock()
+    generation += 1
+    let current = generation
+    task = recognizer.recognitionTask(with: request) { [weak self] result, error in
+      DispatchQueue.main.async {
+        // A task replaced since sends nothing.
+        guard let self, current == self.generation else { return }
+        self.received(result, error)
+      }
+    }
+  }
+
+  /// Audio thread: into the current request.
+  private func feed(_ buffer: AVAudioPCMBuffer) {
+    lock.lock()
+    let request = self.request
+    lock.unlock()
+    request?.append(buffer)
   }
 
   private func received(_ result: SFSpeechRecognitionResult?, _ error: Error?) {
     guard task != nil else { return }
     if let result {
+      misses = 0
       send(["type": result.isFinal ? "final" : "partial", "text": result.bestTranscription.formattedString])
     }
     guard error != nil || result?.isFinal == true else { return }
-    // No message: it can quote what was said.
-    let failed = error != nil && !stopping
-    teardown()
-    send(failed ? ["type": "error", "code": "recognizer"] : ["type": "stopped"])
+    if stopping {
+      teardown()
+      return send(["type": "stopped"])
+    }
+    // Apple ended the task with the mic still on: listen on. Errors with
+    // nothing heard in between (no speech, a failing recognizer) end the
+    // session after three in a row, so it never spins.
+    if error != nil { misses += 1 }
+    guard misses < 3 else {
+      teardown()
+      // No message: it can quote what was said.
+      return send(["type": "error", "code": "recognizer"])
+    }
+    beginTask()
   }
 
   /// Ends the audio; the recognizer then sends its final result, which
@@ -194,6 +243,9 @@ final class SpeechBridge: NSObject, FlutterStreamHandler {
   func stop() {
     guard task != nil else { return }
     stopping = true
+    lock.lock()
+    let request = self.request
+    lock.unlock()
     request?.endAudio()
     engine.stop()
     engine.inputNode.removeTap(onBus: 0)
@@ -212,9 +264,13 @@ final class SpeechBridge: NSObject, FlutterStreamHandler {
   }
 
   private func teardown() {
+    generation += 1
     task?.cancel()
     task = nil
+    lock.lock()
     request = nil
+    lock.unlock()
+    active = nil
     stopping = false
     if engine.isRunning { engine.stop() }
     engine.inputNode.removeTap(onBus: 0)
