@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
-import 'package:dottoday/data/notifications/sound_names.dart';
+import 'package:dottoday/data/notifications/sound_names.gen.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
-import 'package:dottoday/domain/notifications/reminder_sound.dart';
+import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
 import 'package:dottoday/features/settings/widgets/health_summary_row.dart';
@@ -76,7 +76,8 @@ class RemindersGroup extends ConsumerWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final bed = windowMinutes(commonWindow(settings).end);
-    final sound = ReminderSound.fromKey(settings.reminderSound);
+    // Unset is the Dot tone; "system" the OS sound (docs/12 §3).
+    final stored = settings.reminderSound ?? defaultReminderSoundId;
     return SettingsGroup(
       caption: l10n.settingsReminders,
       children: [
@@ -91,9 +92,9 @@ class RemindersGroup extends ConsumerWidget {
           glyph: DotGlyphs.sound,
           tint: t.tasks[TaskColor.sky].ink,
           title: l10n.settingsSound,
-          value: sound == null
+          value: stored == soundSystemKey
               ? l10n.settingsSoundSystem
-              : soundName(l10n, sound),
+              : soundDisplayName(l10n, resolveSound(stored)),
           onTap: () => unawaited(showSoundSheet(context)),
         ),
         QuietHoursRow(settings: settings),

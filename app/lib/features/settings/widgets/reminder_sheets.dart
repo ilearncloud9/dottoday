@@ -7,6 +7,7 @@ import 'package:dottoday/data/notifications/sound_names.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/notifications/reminder_sound.dart';
+import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
@@ -63,19 +64,28 @@ class _Sounds extends ConsumerWidget {
     final l10n = context.l10n;
     final settings = ref.watch(currentProfileProvider).value?.settings;
     if (settings == null) return const SizedBox.shrink();
-    final current = ReminderSound.fromKey(settings.reminderSound);
+    // docs/12 §3: unset is the Dot tone; the OS sound is stored as
+    // "system" (null meant it before schema v8).
+    final stored = settings.reminderSound ?? defaultReminderSoundId;
+    bool isCurrent(ReminderSound? sound) =>
+        (sound?.name ?? soundSystemKey) == stored;
     void pick(ReminderSound? sound) {
-      changeSettings(context, (s) => s.copyWith(reminderSound: sound?.name));
-      if (sound != null) unawaited(ref.read(soundPlayerProvider).play(sound));
+      changeSettings(
+        context,
+        (s) => s.copyWith(reminderSound: sound?.name ?? soundSystemKey),
+      );
+      if (sound != null) {
+        unawaited(ref.read(soundPlayerProvider).play(resolveSound(sound.name)));
+      }
     }
 
     Widget option(ReminderSound? sound, String label) => Semantics(
-      selected: sound == current,
+      selected: isCurrent(sound),
       child: ListTile(
         minTileHeight: DotTouch.android,
         contentPadding: EdgeInsets.zero,
         title: Text(label, style: t.styles.rowTitle),
-        trailing: sound == current
+        trailing: isCurrent(sound)
             ? DotIcon(DotGlyphs.check, color: t.colors.accentInk)
             : null,
         onTap: () => pick(sound),
