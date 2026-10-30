@@ -5573,6 +5573,122 @@ class AppLocalizationsEs extends AppLocalizations {
       'Haz una pausa, o di «siguiente», entre una cosa y otra. «Llamar al dentista … siguiente … comprar leche» se convierte en dos líneas.';
 
   @override
+  String get layoutShowEverything => 'Mostrar todo';
+
+  @override
+  String get layoutShowLess => 'Mostrar menos';
+
+  @override
+  String get layoutRow => 'Vista';
+
+  @override
+  String get layoutMinimal => 'Mínima';
+
+  @override
+  String get layoutFull => 'Completa';
+
+  @override
+  String laterRow(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Más tarde · $count',
+      zero: 'Más tarde',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String laterRowLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Más tarde, $count tareas en espera',
+      one: 'Más tarde, 1 tarea en espera',
+      zero: 'Más tarde, nada en espera',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get moreOptions => 'Más';
+
+  @override
+  String get sheetLater => 'Más tarde';
+
+  @override
+  String get sheetDelete => 'Eliminar';
+
+  @override
+  String get settingsEverythingElse => 'Todo lo demás…';
+
+  @override
+  String get settingsRemindDotStarts => 'Avisarme cuando empiece un punto';
+
+  @override
+  String get settingsAccountAndSync => 'Cuenta y sincronización';
+
+  @override
+  String addWhenChip(String time) {
+    return 'A las $time';
+  }
+
+  @override
+  String get onboardingLayoutTitle => '¿Cuánto quieres ver?';
+
+  @override
+  String get onboardingLayoutBody =>
+      'Puedes cambiarlo cuando quieras en Ajustes.';
+
+  @override
+  String get onboardingLayoutMinimalTitle => 'Solo el siguiente punto';
+
+  @override
+  String get onboardingLayoutMinimalBody =>
+      'Dottoday muestra lo de ahora y lo siguiente. Añadir, hacer, hecho.';
+
+  @override
+  String get onboardingLayoutFullTitle => 'El planificador completo';
+
+  @override
+  String get onboardingLayoutFullBody =>
+      'Hilo, rutinas, repasos, widgets y todos los ajustes.';
+
+  @override
+  String get onboardingFirstTaskTitle => '¿Qué es una cosa para hoy?';
+
+  @override
+  String get onboardingFirstTaskBody =>
+      'Escríbelo como lo dirías, por ejemplo «llamar a Sam 18:00». Va a tu hilo.';
+
+  @override
+  String get onboardingFirstTaskAdd => 'Ponerlo en hoy';
+
+  @override
+  String get hintRoutines => '¿Guardar esto como tu mañana?';
+
+  @override
+  String get hintBreakDown => '¿Dividirlo en pasos?';
+
+  @override
+  String get hintWidget =>
+      '¿Quieres el siguiente punto también en tu pantalla de inicio?';
+
+  @override
+  String get hintWidgetHow =>
+      'Añade el widget de Dottoday desde la lista de widgets de tu pantalla de inicio.';
+
+  @override
+  String get hintWeek => '¿Ver tu semana como siete puntos?';
+
+  @override
+  String get hintLearned =>
+      'Dottoday puede rellenar las duraciones según lo que de verdad tardan las cosas.';
+
+  @override
+  String get hintShowMe => 'Muéstramelo';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override
@@ -7194,120 +7310,4 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get taskIconCircle => 'Simple';
-
-  @override
-  String get layoutShowEverything => 'Mostrar todo';
-
-  @override
-  String get layoutShowLess => 'Mostrar menos';
-
-  @override
-  String get layoutRow => 'Vista';
-
-  @override
-  String get layoutMinimal => 'Mínima';
-
-  @override
-  String get layoutFull => 'Completa';
-
-  @override
-  String laterRow(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'Más tarde · $count',
-      zero: 'Más tarde',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String laterRowLabel(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'Más tarde, $count tareas en espera',
-      one: 'Más tarde, 1 tarea en espera',
-      zero: 'Más tarde, nada en espera',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get moreOptions => 'Más';
-
-  @override
-  String get sheetLater => 'Más tarde';
-
-  @override
-  String get sheetDelete => 'Eliminar';
-
-  @override
-  String get settingsEverythingElse => 'Todo lo demás…';
-
-  @override
-  String get settingsRemindDotStarts => 'Avisarme cuando empiece un punto';
-
-  @override
-  String get settingsAccountAndSync => 'Cuenta y sincronización';
-
-  @override
-  String addWhenChip(String time) {
-    return 'A las $time';
-  }
-
-  @override
-  String get onboardingLayoutTitle => '¿Cuánto quieres ver?';
-
-  @override
-  String get onboardingLayoutBody =>
-      'Puedes cambiarlo cuando quieras en Ajustes.';
-
-  @override
-  String get onboardingLayoutMinimalTitle => 'Solo el siguiente punto';
-
-  @override
-  String get onboardingLayoutMinimalBody =>
-      'Dottoday muestra lo de ahora y lo siguiente. Añadir, hacer, hecho.';
-
-  @override
-  String get onboardingLayoutFullTitle => 'El planificador completo';
-
-  @override
-  String get onboardingLayoutFullBody =>
-      'Hilo, rutinas, repasos, widgets y todos los ajustes.';
-
-  @override
-  String get onboardingFirstTaskTitle => '¿Qué es una cosa para hoy?';
-
-  @override
-  String get onboardingFirstTaskBody =>
-      'Escríbelo como lo dirías, por ejemplo «llamar a Sam 18:00». Va a tu hilo.';
-
-  @override
-  String get onboardingFirstTaskAdd => 'Ponerlo en hoy';
-
-  @override
-  String get hintRoutines => '¿Guardar esto como tu mañana?';
-
-  @override
-  String get hintBreakDown => '¿Dividirlo en pasos?';
-
-  @override
-  String get hintWidget =>
-      '¿Quieres el siguiente punto también en tu pantalla de inicio?';
-
-  @override
-  String get hintWidgetHow =>
-      'Añade el widget de Dottoday desde la lista de widgets de tu pantalla de inicio.';
-
-  @override
-  String get hintWeek => '¿Ver tu semana como siete puntos?';
-
-  @override
-  String get hintLearned =>
-      'Dottoday puede rellenar las duraciones según lo que de verdad tardan las cosas.';
-
-  @override
-  String get hintShowMe => 'Muéstramelo';
 }
