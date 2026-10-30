@@ -37,6 +37,10 @@ abstract class Series with _$Series {
     @Default(false) bool durationFromSteps,
     Energy? energy,
     @Default(<Alert>[]) List<Alert> alerts,
+
+    /// The reminder sound (docs/12 §3): null inherits
+    /// `Settings.reminderSound`, `"none"` is silent, else a sound id.
+    String? soundId,
     @Default(<SubtaskTemplateItem>[]) List<SubtaskTemplateItem> subtaskTemplate,
     @UtcMillisConverter() DateTime? materialisedThroughUtc,
     @UtcMillisConverter() DateTime? archivedAt,

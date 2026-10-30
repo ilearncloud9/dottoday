@@ -38,10 +38,18 @@ abstract class Settings with _$Settings {
     List<Alert> defaultAlerts,
     TimeWindow? quietHours,
     // Settings › Reminders (docs/02 F6.2, F6.6, M8.4d): the weekdays with a
-    // day-start summary at Wake Up (none = off) and the sound of task
-    // reminders (a `ReminderSound` key; null = the system sound).
+    // day-start summary at Wake Up (none = off) and the default sound of
+    // task reminders (docs/12 §3: a sound id, "system" for the OS sound,
+    // "none" for silent; null = the Dot tone — the v8 migration wrote
+    // "system" for every profile that had null, which then meant the OS
+    // sound, so no one's reminders changed).
     @Default(<Weekday>{}) Set<Weekday> daySummaryDays,
     String? reminderSound,
+    // The alarm-loud tier's sound (D2) and the Done sound (D4), docs/12;
+    // whether the app itself plays sounds (previews excepted, §2.6).
+    @Default('dot_alarm') String startSoundId,
+    @Default('done.swift') String doneSoundId,
+    @Default(true) bool inAppSoundsEnabled,
     bool? use24h,
     @Default(1) int firstDayOfWeek,
     @Default(ThemePreference.system) ThemePreference theme,

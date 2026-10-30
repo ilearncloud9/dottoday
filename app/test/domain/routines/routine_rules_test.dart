@@ -120,6 +120,22 @@ void main() {
     expect(tasks.map((o) => o.id).toSet(), hasLength(2));
   });
 
+  test('each step keeps its sound, saved and dropped (docs/12 §3)', () {
+    final r = _from([
+      _task('Stretch', 7, 0, 10).copyWith(soundId: 'play.frog'),
+      _task('Run', 7, 15, 30),
+    ]);
+    expect(r.items.map((i) => i.soundId), ['play.frog', null]);
+    final tasks = routineTasks(
+      r,
+      startUtc: _at(9),
+      tzId: 'Europe/Berlin',
+      nowUtc: t0,
+      newId: _id,
+    );
+    expect(tasks.map((o) => o.soundId), ['play.frog', null]);
+  });
+
   test('validation', () {
     bool ok(Routine r) => validateRoutine(r) is Ok;
     final gym = _from([_task('Gym', 17, 30, 60)]);

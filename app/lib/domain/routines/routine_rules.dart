@@ -38,6 +38,7 @@ Routine routineFromSelection(
         iconKey: o.iconKey,
         offsetMin: o.startUtc!.difference(first).inMinutes,
         durationMin: o.durationMin,
+        soundId: o.soundId,
       ),
   ];
   final lastEnd = timed
@@ -102,6 +103,7 @@ List<Occurrence> routineTasks(
         startUtc: startUtc.add(Duration(minutes: item.offsetMin)),
         tzId: tzId,
         durationMin: item.durationMin,
+        soundId: item.soundId,
         routineStart: i == 0,
         createdAt: nowUtc,
         updatedAt: nowUtc,

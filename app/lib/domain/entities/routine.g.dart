@@ -71,6 +71,7 @@ _RoutineItem _$RoutineItemFromJson(Map<String, dynamic> json) => _RoutineItem(
   iconKey: json['iconKey'] as String? ?? defaultIconKey,
   offsetMin: (json['offsetMin'] as num).toInt(),
   durationMin: (json['durationMin'] as num).toInt(),
+  soundId: json['soundId'] as String?,
 );
 
 Map<String, dynamic> _$RoutineItemToJson(_RoutineItem instance) =>
@@ -81,4 +82,5 @@ Map<String, dynamic> _$RoutineItemToJson(_RoutineItem instance) =>
       'iconKey': instance.iconKey,
       'offsetMin': instance.offsetMin,
       'durationMin': instance.durationMin,
+      'soundId': instance.soundId,
     };

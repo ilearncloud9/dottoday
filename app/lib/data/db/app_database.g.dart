@@ -1113,6 +1113,18 @@ class $SeriesTableTable extends SeriesTable
     requiredDuringInsert: false,
     defaultValue: const Constant('[]'),
   );
+  static const VerificationMeta _soundIdMeta = const VerificationMeta(
+    'soundId',
+  );
+  @override
+  late final GeneratedColumn<String> soundId = GeneratedColumn<String>(
+    'sound_id',
+    aliasedName,
+    true,
+    check: () => soundIdCheck,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _subtaskTemplateMeta = const VerificationMeta(
     'subtaskTemplate',
   );
@@ -1180,6 +1192,7 @@ class $SeriesTableTable extends SeriesTable
     durationFromSteps,
     energy,
     alerts,
+    soundId,
     subtaskTemplate,
     materialisedThroughUtc,
     archivedAt,
@@ -1350,6 +1363,12 @@ class $SeriesTableTable extends SeriesTable
         alerts.isAcceptableOrUnknown(data['alerts']!, _alertsMeta),
       );
     }
+    if (data.containsKey('sound_id')) {
+      context.handle(
+        _soundIdMeta,
+        soundId.isAcceptableOrUnknown(data['sound_id']!, _soundIdMeta),
+      );
+    }
     if (data.containsKey('subtask_template')) {
       context.handle(
         _subtaskTemplateMeta,
@@ -1473,6 +1492,10 @@ class $SeriesTableTable extends SeriesTable
         DriftSqlType.string,
         data['${effectivePrefix}alerts'],
       )!,
+      soundId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sound_id'],
+      ),
       subtaskTemplate: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}subtask_template'],
@@ -1527,6 +1550,10 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
   final bool durationFromSteps;
   final int? energy;
   final String alerts;
+
+  /// The reminder sound (docs/12 §3); column-level CHECK so the v8
+  /// migration's ADD COLUMN carries it (a table CHECK needs a rebuild).
+  final String? soundId;
   final String subtaskTemplate;
   final int? materialisedThroughUtc;
   final int? archivedAt;
@@ -1553,6 +1580,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
     required this.durationFromSteps,
     this.energy,
     required this.alerts,
+    this.soundId,
     required this.subtaskTemplate,
     this.materialisedThroughUtc,
     this.archivedAt,
@@ -1590,6 +1618,9 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
       map['energy'] = Variable<int>(energy);
     }
     map['alerts'] = Variable<String>(alerts);
+    if (!nullToAbsent || soundId != null) {
+      map['sound_id'] = Variable<String>(soundId);
+    }
     map['subtask_template'] = Variable<String>(subtaskTemplate);
     if (!nullToAbsent || materialisedThroughUtc != null) {
       map['materialised_through_utc'] = Variable<int>(materialisedThroughUtc);
@@ -1634,6 +1665,9 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
           ? const Value.absent()
           : Value(energy),
       alerts: Value(alerts),
+      soundId: soundId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(soundId),
       subtaskTemplate: Value(subtaskTemplate),
       materialisedThroughUtc: materialisedThroughUtc == null && nullToAbsent
           ? const Value.absent()
@@ -1674,6 +1708,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
       durationFromSteps: serializer.fromJson<bool>(json['durationFromSteps']),
       energy: serializer.fromJson<int?>(json['energy']),
       alerts: serializer.fromJson<String>(json['alerts']),
+      soundId: serializer.fromJson<String?>(json['soundId']),
       subtaskTemplate: serializer.fromJson<String>(json['subtaskTemplate']),
       materialisedThroughUtc: serializer.fromJson<int?>(
         json['materialisedThroughUtc'],
@@ -1707,6 +1742,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
       'durationFromSteps': serializer.toJson<bool>(durationFromSteps),
       'energy': serializer.toJson<int?>(energy),
       'alerts': serializer.toJson<String>(alerts),
+      'soundId': serializer.toJson<String?>(soundId),
       'subtaskTemplate': serializer.toJson<String>(subtaskTemplate),
       'materialisedThroughUtc': serializer.toJson<int?>(materialisedThroughUtc),
       'archivedAt': serializer.toJson<int?>(archivedAt),
@@ -1736,6 +1772,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
     bool? durationFromSteps,
     Value<int?> energy = const Value.absent(),
     String? alerts,
+    Value<String?> soundId = const Value.absent(),
     String? subtaskTemplate,
     Value<int?> materialisedThroughUtc = const Value.absent(),
     Value<int?> archivedAt = const Value.absent(),
@@ -1762,6 +1799,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
     durationFromSteps: durationFromSteps ?? this.durationFromSteps,
     energy: energy.present ? energy.value : this.energy,
     alerts: alerts ?? this.alerts,
+    soundId: soundId.present ? soundId.value : this.soundId,
     subtaskTemplate: subtaskTemplate ?? this.subtaskTemplate,
     materialisedThroughUtc: materialisedThroughUtc.present
         ? materialisedThroughUtc.value
@@ -1800,6 +1838,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
           : this.durationFromSteps,
       energy: data.energy.present ? data.energy.value : this.energy,
       alerts: data.alerts.present ? data.alerts.value : this.alerts,
+      soundId: data.soundId.present ? data.soundId.value : this.soundId,
       subtaskTemplate: data.subtaskTemplate.present
           ? data.subtaskTemplate.value
           : this.subtaskTemplate,
@@ -1837,6 +1876,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
           ..write('durationFromSteps: $durationFromSteps, ')
           ..write('energy: $energy, ')
           ..write('alerts: $alerts, ')
+          ..write('soundId: $soundId, ')
           ..write('subtaskTemplate: $subtaskTemplate, ')
           ..write('materialisedThroughUtc: $materialisedThroughUtc, ')
           ..write('archivedAt: $archivedAt, ')
@@ -1868,6 +1908,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
     durationFromSteps,
     energy,
     alerts,
+    soundId,
     subtaskTemplate,
     materialisedThroughUtc,
     archivedAt,
@@ -1898,6 +1939,7 @@ class SeriesRow extends DataClass implements Insertable<SeriesRow> {
           other.durationFromSteps == this.durationFromSteps &&
           other.energy == this.energy &&
           other.alerts == this.alerts &&
+          other.soundId == this.soundId &&
           other.subtaskTemplate == this.subtaskTemplate &&
           other.materialisedThroughUtc == this.materialisedThroughUtc &&
           other.archivedAt == this.archivedAt &&
@@ -1926,6 +1968,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
   final Value<bool> durationFromSteps;
   final Value<int?> energy;
   final Value<String> alerts;
+  final Value<String?> soundId;
   final Value<String> subtaskTemplate;
   final Value<int?> materialisedThroughUtc;
   final Value<int?> archivedAt;
@@ -1953,6 +1996,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
     this.durationFromSteps = const Value.absent(),
     this.energy = const Value.absent(),
     this.alerts = const Value.absent(),
+    this.soundId = const Value.absent(),
     this.subtaskTemplate = const Value.absent(),
     this.materialisedThroughUtc = const Value.absent(),
     this.archivedAt = const Value.absent(),
@@ -1981,6 +2025,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
     this.durationFromSteps = const Value.absent(),
     this.energy = const Value.absent(),
     this.alerts = const Value.absent(),
+    this.soundId = const Value.absent(),
     this.subtaskTemplate = const Value.absent(),
     this.materialisedThroughUtc = const Value.absent(),
     this.archivedAt = const Value.absent(),
@@ -2017,6 +2062,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
     Expression<bool>? durationFromSteps,
     Expression<int>? energy,
     Expression<String>? alerts,
+    Expression<String>? soundId,
     Expression<String>? subtaskTemplate,
     Expression<int>? materialisedThroughUtc,
     Expression<int>? archivedAt,
@@ -2045,6 +2091,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
       if (durationFromSteps != null) 'duration_from_steps': durationFromSteps,
       if (energy != null) 'energy': energy,
       if (alerts != null) 'alerts': alerts,
+      if (soundId != null) 'sound_id': soundId,
       if (subtaskTemplate != null) 'subtask_template': subtaskTemplate,
       if (materialisedThroughUtc != null)
         'materialised_through_utc': materialisedThroughUtc,
@@ -2076,6 +2123,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
     Value<bool>? durationFromSteps,
     Value<int?>? energy,
     Value<String>? alerts,
+    Value<String?>? soundId,
     Value<String>? subtaskTemplate,
     Value<int?>? materialisedThroughUtc,
     Value<int?>? archivedAt,
@@ -2104,6 +2152,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
       durationFromSteps: durationFromSteps ?? this.durationFromSteps,
       energy: energy ?? this.energy,
       alerts: alerts ?? this.alerts,
+      soundId: soundId ?? this.soundId,
       subtaskTemplate: subtaskTemplate ?? this.subtaskTemplate,
       materialisedThroughUtc:
           materialisedThroughUtc ?? this.materialisedThroughUtc,
@@ -2179,6 +2228,9 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
     if (alerts.present) {
       map['alerts'] = Variable<String>(alerts.value);
     }
+    if (soundId.present) {
+      map['sound_id'] = Variable<String>(soundId.value);
+    }
     if (subtaskTemplate.present) {
       map['subtask_template'] = Variable<String>(subtaskTemplate.value);
     }
@@ -2223,6 +2275,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesRow> {
           ..write('durationFromSteps: $durationFromSteps, ')
           ..write('energy: $energy, ')
           ..write('alerts: $alerts, ')
+          ..write('soundId: $soundId, ')
           ..write('subtaskTemplate: $subtaskTemplate, ')
           ..write('materialisedThroughUtc: $materialisedThroughUtc, ')
           ..write('archivedAt: $archivedAt, ')
@@ -3617,6 +3670,18 @@ class $OccurrencesTable extends Occurrences
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _soundIdMeta = const VerificationMeta(
+    'soundId',
+  );
+  @override
+  late final GeneratedColumn<String> soundId = GeneratedColumn<String>(
+    'sound_id',
+    aliasedName,
+    true,
+    check: () => soundIdCheck,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
   late final GeneratedColumn<String> status = GeneratedColumn<String>(
@@ -3781,6 +3846,7 @@ class $OccurrencesTable extends Occurrences
     travelBufferMin,
     energy,
     alerts,
+    soundId,
     status,
     completedAtUtc,
     sortOrder,
@@ -3938,6 +4004,12 @@ class $OccurrencesTable extends Occurrences
       context.handle(
         _alertsMeta,
         alerts.isAcceptableOrUnknown(data['alerts']!, _alertsMeta),
+      );
+    }
+    if (data.containsKey('sound_id')) {
+      context.handle(
+        _soundIdMeta,
+        soundId.isAcceptableOrUnknown(data['sound_id']!, _soundIdMeta),
       );
     }
     if (data.containsKey('status')) {
@@ -4118,6 +4190,10 @@ class $OccurrencesTable extends Occurrences
         DriftSqlType.string,
         data['${effectivePrefix}alerts'],
       ),
+      soundId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sound_id'],
+      ),
       status: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}status'],
@@ -4202,6 +4278,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
 
   /// Null inherits the series alerts; `[]` is an explicit "no alerts".
   final String? alerts;
+
+  /// The reminder sound (docs/12 §3); null inherits the series'.
+  final String? soundId;
   final String status;
   final int? completedAtUtc;
   final double sortOrder;
@@ -4234,6 +4313,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     required this.travelBufferMin,
     this.energy,
     this.alerts,
+    this.soundId,
     required this.status,
     this.completedAtUtc,
     required this.sortOrder,
@@ -4280,6 +4360,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     }
     if (!nullToAbsent || alerts != null) {
       map['alerts'] = Variable<String>(alerts);
+    }
+    if (!nullToAbsent || soundId != null) {
+      map['sound_id'] = Variable<String>(soundId);
     }
     map['status'] = Variable<String>(status);
     if (!nullToAbsent || completedAtUtc != null) {
@@ -4341,6 +4424,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       alerts: alerts == null && nullToAbsent
           ? const Value.absent()
           : Value(alerts),
+      soundId: soundId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(soundId),
       status: Value(status),
       completedAtUtc: completedAtUtc == null && nullToAbsent
           ? const Value.absent()
@@ -4393,6 +4479,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       travelBufferMin: serializer.fromJson<int>(json['travelBufferMin']),
       energy: serializer.fromJson<int?>(json['energy']),
       alerts: serializer.fromJson<String?>(json['alerts']),
+      soundId: serializer.fromJson<String?>(json['soundId']),
       status: serializer.fromJson<String>(json['status']),
       completedAtUtc: serializer.fromJson<int?>(json['completedAtUtc']),
       sortOrder: serializer.fromJson<double>(json['sortOrder']),
@@ -4430,6 +4517,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       'travelBufferMin': serializer.toJson<int>(travelBufferMin),
       'energy': serializer.toJson<int?>(energy),
       'alerts': serializer.toJson<String?>(alerts),
+      'soundId': serializer.toJson<String?>(soundId),
       'status': serializer.toJson<String>(status),
       'completedAtUtc': serializer.toJson<int?>(completedAtUtc),
       'sortOrder': serializer.toJson<double>(sortOrder),
@@ -4465,6 +4553,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     int? travelBufferMin,
     Value<int?> energy = const Value.absent(),
     Value<String?> alerts = const Value.absent(),
+    Value<String?> soundId = const Value.absent(),
     String? status,
     Value<int?> completedAtUtc = const Value.absent(),
     double? sortOrder,
@@ -4499,6 +4588,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     travelBufferMin: travelBufferMin ?? this.travelBufferMin,
     energy: energy.present ? energy.value : this.energy,
     alerts: alerts.present ? alerts.value : this.alerts,
+    soundId: soundId.present ? soundId.value : this.soundId,
     status: status ?? this.status,
     completedAtUtc: completedAtUtc.present
         ? completedAtUtc.value
@@ -4547,6 +4637,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           : this.travelBufferMin,
       energy: data.energy.present ? data.energy.value : this.energy,
       alerts: data.alerts.present ? data.alerts.value : this.alerts,
+      soundId: data.soundId.present ? data.soundId.value : this.soundId,
       status: data.status.present ? data.status.value : this.status,
       completedAtUtc: data.completedAtUtc.present
           ? data.completedAtUtc.value
@@ -4598,6 +4689,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           ..write('travelBufferMin: $travelBufferMin, ')
           ..write('energy: $energy, ')
           ..write('alerts: $alerts, ')
+          ..write('soundId: $soundId, ')
           ..write('status: $status, ')
           ..write('completedAtUtc: $completedAtUtc, ')
           ..write('sortOrder: $sortOrder, ')
@@ -4635,6 +4727,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     travelBufferMin,
     energy,
     alerts,
+    soundId,
     status,
     completedAtUtc,
     sortOrder,
@@ -4671,6 +4764,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           other.travelBufferMin == this.travelBufferMin &&
           other.energy == this.energy &&
           other.alerts == this.alerts &&
+          other.soundId == this.soundId &&
           other.status == this.status &&
           other.completedAtUtc == this.completedAtUtc &&
           other.sortOrder == this.sortOrder &&
@@ -4705,6 +4799,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   final Value<int> travelBufferMin;
   final Value<int?> energy;
   final Value<String?> alerts;
+  final Value<String?> soundId;
   final Value<String> status;
   final Value<int?> completedAtUtc;
   final Value<double> sortOrder;
@@ -4738,6 +4833,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     this.travelBufferMin = const Value.absent(),
     this.energy = const Value.absent(),
     this.alerts = const Value.absent(),
+    this.soundId = const Value.absent(),
     this.status = const Value.absent(),
     this.completedAtUtc = const Value.absent(),
     this.sortOrder = const Value.absent(),
@@ -4772,6 +4868,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     this.travelBufferMin = const Value.absent(),
     this.energy = const Value.absent(),
     this.alerts = const Value.absent(),
+    this.soundId = const Value.absent(),
     this.status = const Value.absent(),
     this.completedAtUtc = const Value.absent(),
     this.sortOrder = const Value.absent(),
@@ -4812,6 +4909,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     Expression<int>? travelBufferMin,
     Expression<int>? energy,
     Expression<String>? alerts,
+    Expression<String>? soundId,
     Expression<String>? status,
     Expression<int>? completedAtUtc,
     Expression<double>? sortOrder,
@@ -4846,6 +4944,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
       if (travelBufferMin != null) 'travel_buffer_min': travelBufferMin,
       if (energy != null) 'energy': energy,
       if (alerts != null) 'alerts': alerts,
+      if (soundId != null) 'sound_id': soundId,
       if (status != null) 'status': status,
       if (completedAtUtc != null) 'completed_at_utc': completedAtUtc,
       if (sortOrder != null) 'sort_order': sortOrder,
@@ -4882,6 +4981,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     Value<int>? travelBufferMin,
     Value<int?>? energy,
     Value<String?>? alerts,
+    Value<String?>? soundId,
     Value<String>? status,
     Value<int?>? completedAtUtc,
     Value<double>? sortOrder,
@@ -4916,6 +5016,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
       travelBufferMin: travelBufferMin ?? this.travelBufferMin,
       energy: energy ?? this.energy,
       alerts: alerts ?? this.alerts,
+      soundId: soundId ?? this.soundId,
       status: status ?? this.status,
       completedAtUtc: completedAtUtc ?? this.completedAtUtc,
       sortOrder: sortOrder ?? this.sortOrder,
@@ -4992,6 +5093,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     if (alerts.present) {
       map['alerts'] = Variable<String>(alerts.value);
     }
+    if (soundId.present) {
+      map['sound_id'] = Variable<String>(soundId.value);
+    }
     if (status.present) {
       map['status'] = Variable<String>(status.value);
     }
@@ -5056,6 +5160,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
           ..write('travelBufferMin: $travelBufferMin, ')
           ..write('energy: $energy, ')
           ..write('alerts: $alerts, ')
+          ..write('soundId: $soundId, ')
           ..write('status: $status, ')
           ..write('completedAtUtc: $completedAtUtc, ')
           ..write('sortOrder: $sortOrder, ')
@@ -9753,6 +9858,7 @@ typedef $$SeriesTableTableCreateCompanionBuilder =
       Value<bool> durationFromSteps,
       Value<int?> energy,
       Value<String> alerts,
+      Value<String?> soundId,
       Value<String> subtaskTemplate,
       Value<int?> materialisedThroughUtc,
       Value<int?> archivedAt,
@@ -9782,6 +9888,7 @@ typedef $$SeriesTableTableUpdateCompanionBuilder =
       Value<bool> durationFromSteps,
       Value<int?> energy,
       Value<String> alerts,
+      Value<String?> soundId,
       Value<String> subtaskTemplate,
       Value<int?> materialisedThroughUtc,
       Value<int?> archivedAt,
@@ -9935,6 +10042,11 @@ class $$SeriesTableTableFilterComposer
 
   ColumnFilters<String> get alerts => $composableBuilder(
     column: $table.alerts,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get soundId => $composableBuilder(
+    column: $table.soundId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10116,6 +10228,11 @@ class $$SeriesTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get soundId => $composableBuilder(
+    column: $table.soundId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get subtaskTemplate => $composableBuilder(
     column: $table.subtaskTemplate,
     builder: (column) => ColumnOrderings(column),
@@ -10237,6 +10354,9 @@ class $$SeriesTableTableAnnotationComposer
   GeneratedColumn<String> get alerts =>
       $composableBuilder(column: $table.alerts, builder: (column) => column);
 
+  GeneratedColumn<String> get soundId =>
+      $composableBuilder(column: $table.soundId, builder: (column) => column);
+
   GeneratedColumn<String> get subtaskTemplate => $composableBuilder(
     column: $table.subtaskTemplate,
     builder: (column) => column,
@@ -10353,6 +10473,7 @@ class $$SeriesTableTableTableManager
                 Value<bool> durationFromSteps = const Value.absent(),
                 Value<int?> energy = const Value.absent(),
                 Value<String> alerts = const Value.absent(),
+                Value<String?> soundId = const Value.absent(),
                 Value<String> subtaskTemplate = const Value.absent(),
                 Value<int?> materialisedThroughUtc = const Value.absent(),
                 Value<int?> archivedAt = const Value.absent(),
@@ -10380,6 +10501,7 @@ class $$SeriesTableTableTableManager
                 durationFromSteps: durationFromSteps,
                 energy: energy,
                 alerts: alerts,
+                soundId: soundId,
                 subtaskTemplate: subtaskTemplate,
                 materialisedThroughUtc: materialisedThroughUtc,
                 archivedAt: archivedAt,
@@ -10409,6 +10531,7 @@ class $$SeriesTableTableTableManager
                 Value<bool> durationFromSteps = const Value.absent(),
                 Value<int?> energy = const Value.absent(),
                 Value<String> alerts = const Value.absent(),
+                Value<String?> soundId = const Value.absent(),
                 Value<String> subtaskTemplate = const Value.absent(),
                 Value<int?> materialisedThroughUtc = const Value.absent(),
                 Value<int?> archivedAt = const Value.absent(),
@@ -10436,6 +10559,7 @@ class $$SeriesTableTableTableManager
                 durationFromSteps: durationFromSteps,
                 energy: energy,
                 alerts: alerts,
+                soundId: soundId,
                 subtaskTemplate: subtaskTemplate,
                 materialisedThroughUtc: materialisedThroughUtc,
                 archivedAt: archivedAt,
@@ -11646,6 +11770,7 @@ typedef $$OccurrencesTableCreateCompanionBuilder =
       Value<int> travelBufferMin,
       Value<int?> energy,
       Value<String?> alerts,
+      Value<String?> soundId,
       Value<String> status,
       Value<int?> completedAtUtc,
       Value<double> sortOrder,
@@ -11681,6 +11806,7 @@ typedef $$OccurrencesTableUpdateCompanionBuilder =
       Value<int> travelBufferMin,
       Value<int?> energy,
       Value<String?> alerts,
+      Value<String?> soundId,
       Value<String> status,
       Value<int?> completedAtUtc,
       Value<double> sortOrder,
@@ -11862,6 +11988,11 @@ class $$OccurrencesTableFilterComposer
 
   ColumnFilters<String> get alerts => $composableBuilder(
     column: $table.alerts,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get soundId => $composableBuilder(
+    column: $table.soundId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -12109,6 +12240,11 @@ class $$OccurrencesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get soundId => $composableBuilder(
+    column: $table.soundId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get status => $composableBuilder(
     column: $table.status,
     builder: (column) => ColumnOrderings(column),
@@ -12299,6 +12435,9 @@ class $$OccurrencesTableAnnotationComposer
 
   GeneratedColumn<String> get alerts =>
       $composableBuilder(column: $table.alerts, builder: (column) => column);
+
+  GeneratedColumn<String> get soundId =>
+      $composableBuilder(column: $table.soundId, builder: (column) => column);
 
   GeneratedColumn<String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
@@ -12492,6 +12631,7 @@ class $$OccurrencesTableTableManager
                 Value<int> travelBufferMin = const Value.absent(),
                 Value<int?> energy = const Value.absent(),
                 Value<String?> alerts = const Value.absent(),
+                Value<String?> soundId = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<int?> completedAtUtc = const Value.absent(),
                 Value<double> sortOrder = const Value.absent(),
@@ -12525,6 +12665,7 @@ class $$OccurrencesTableTableManager
                 travelBufferMin: travelBufferMin,
                 energy: energy,
                 alerts: alerts,
+                soundId: soundId,
                 status: status,
                 completedAtUtc: completedAtUtc,
                 sortOrder: sortOrder,
@@ -12560,6 +12701,7 @@ class $$OccurrencesTableTableManager
                 Value<int> travelBufferMin = const Value.absent(),
                 Value<int?> energy = const Value.absent(),
                 Value<String?> alerts = const Value.absent(),
+                Value<String?> soundId = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<int?> completedAtUtc = const Value.absent(),
                 Value<double> sortOrder = const Value.absent(),
@@ -12593,6 +12735,7 @@ class $$OccurrencesTableTableManager
                 travelBufferMin: travelBufferMin,
                 energy: energy,
                 alerts: alerts,
+                soundId: soundId,
                 status: status,
                 completedAtUtc: completedAtUtc,
                 sortOrder: sortOrder,

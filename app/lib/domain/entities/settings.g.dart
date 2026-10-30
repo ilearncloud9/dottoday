@@ -49,6 +49,9 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
           .toSet() ??
       const <Weekday>{},
   reminderSound: json['reminderSound'] as String?,
+  startSoundId: json['startSoundId'] as String? ?? 'dot_alarm',
+  doneSoundId: json['doneSoundId'] as String? ?? 'done.swift',
+  inAppSoundsEnabled: json['inAppSoundsEnabled'] as bool? ?? true,
   use24h: json['use24h'] as bool?,
   firstDayOfWeek: (json['firstDayOfWeek'] as num?)?.toInt() ?? 1,
   theme:
@@ -85,6 +88,9 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
       .map((e) => _$WeekdayEnumMap[e]!)
       .toList(),
   'reminderSound': instance.reminderSound,
+  'startSoundId': instance.startSoundId,
+  'doneSoundId': instance.doneSoundId,
+  'inAppSoundsEnabled': instance.inAppSoundsEnabled,
   'use24h': instance.use24h,
   'firstDayOfWeek': instance.firstDayOfWeek,
   'theme': _$ThemePreferenceEnumMap[instance.theme]!,

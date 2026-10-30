@@ -31,6 +31,7 @@ _Series _$SeriesFromJson(Map<String, dynamic> json) => _Series(
           ?.map((e) => Alert.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const <Alert>[],
+  soundId: json['sound_id'] as String?,
   subtaskTemplate:
       (json['subtask_template'] as List<dynamic>?)
           ?.map((e) => SubtaskTemplateItem.fromJson(e as Map<String, dynamic>))
@@ -77,6 +78,7 @@ Map<String, dynamic> _$SeriesToJson(_Series instance) => <String, dynamic>{
   'duration_from_steps': instance.durationFromSteps,
   'energy': _$EnergyEnumMap[instance.energy],
   'alerts': instance.alerts.map((e) => e.toJson()).toList(),
+  'sound_id': instance.soundId,
   'subtask_template': instance.subtaskTemplate.map((e) => e.toJson()).toList(),
   'materialised_through_utc': _$JsonConverterToJson<int, DateTime>(
     instance.materialisedThroughUtc,

@@ -45,6 +45,7 @@ Validated<Series> validateSeries(Series series) {
           ValidationRule.invalidFormat,
         ),
       checkAlerts(s.alerts),
+      checkSoundKey(s.soundId),
       checkSubtaskCount(s.subtaskTemplate.length),
       for (final item in s.subtaskTemplate) ...[
         checkRequiredText(ValidationField.title, item.title.trim()),
@@ -70,6 +71,7 @@ Validated<Occurrence> validateOccurrence(Occurrence occurrence) {
       ),
       checkTimeZone(o.tzId),
       if (alerts != null) checkAlerts(alerts),
+      checkSoundKey(o.soundId),
     ]),
   );
 }
@@ -123,6 +125,9 @@ Validated<Settings> validateSettings(Settings s) {
       if (s.quietHours case final quiet?) checkTimeWindow(quiet),
       checkRange(ValidationField.settings, s.firstDayOfWeek, 1, 7),
       checkAccentKey(s.accent),
+      checkSoundKey(s.reminderSound),
+      checkSoundKey(s.startSoundId),
+      checkSoundKey(s.doneSoundId),
       if (!Settings.travelChoices.contains(s.travelTimeMin))
         const ValidationFailure(
           ValidationField.travelBuffer,

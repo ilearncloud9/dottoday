@@ -174,7 +174,8 @@ A sound choice is one text value with three states:
 - `occurrences.sound_id`, `series.sound_id` — nullable text, synced like other fields, exported. One-off tasks have no series, so both carry it (an occurrence's `null` inherits its series', like `alerts`).
 - `Settings.reminderSound` — **kept**, now the default normal-tier sound. It also takes `"system"` (the OS sound, a visible row in the Settings picker only). Existing users whose stored value is `null` get `"system"` written once by the settings migration, so they hear exactly what they hear today; new installs start at `null`, which resolves to `dot`.
 - `Settings.startSoundId` — default `dot_alarm`. `Settings.doneSoundId` — default `done.swift`. `Settings.inAppSoundsEnabled` — default true.
-- Routine dots (C2) carry their own `soundId` inside the routine's `items` JSON and copy it onto the series they create.
+- Routine dots (C2) carry their own `soundId` inside the routine's `items` JSON and copy it onto the occurrences they create (routines make occurrences, not series). Saving a selection as a routine copies each task's own `soundId` back.
+- Storage shape (device CHECK, server CHECK, import validator): null or 1–64 of `[a-z0-9._]`. Only the shape: an id this version doesn't ship is kept and resolved on read. A sound id never builds a file path; files come only from the catalogue.
 
 **Resolution** for a normal-tier reminder, first non-null wins:
 

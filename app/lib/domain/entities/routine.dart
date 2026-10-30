@@ -55,6 +55,9 @@ abstract class RoutineItem with _$RoutineItem {
     /// Minutes after the routine's first step starts (0 for the first).
     required int offsetMin,
     required int durationMin,
+
+    /// Copied onto the occurrence this step creates (docs/12 §3).
+    String? soundId,
   }) = _RoutineItem;
 
   factory RoutineItem.fromJson(Map<String, Object?> json) =>

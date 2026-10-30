@@ -177,6 +177,41 @@ void main() {
     });
   });
 
+  test('sound ids: shape only, unknown ids kept (docs/12 §3)', () {
+    const bad = 'validation.sound.invalidFormat';
+    for (final ok in [null, 'none', 'system', 'dot', 'clear.lift', 'x.y_9']) {
+      expect(
+        _code(validateSeries(seriesFixture().copyWith(soundId: ok))),
+        'ok',
+      );
+      expect(
+        _code(validateOccurrence(occurrenceFixture().copyWith(soundId: ok))),
+        'ok',
+      );
+    }
+    for (final no in ['', 'Clear.Lift', 'a b', 'x' * 65, 'é', '../etc']) {
+      expect(
+        _code(validateOccurrence(occurrenceFixture().copyWith(soundId: no))),
+        bad,
+        reason: no,
+      );
+    }
+    expect(
+      _code(
+        validateSeries(
+          seriesFixture().copyWith(
+            alerts: const [Alert(kind: AlertKind.atStart, sound: 'NOPE')],
+          ),
+        ),
+      ),
+      bad,
+    );
+    expect(
+      _code(validateSettings(const Settings(startSoundId: 'start morning'))),
+      bad,
+    );
+  });
+
   test('validateSubtask trims and requires a title', () {
     final ok = validateSubtask(subtaskFixture().copyWith(title: ' Card '));
     expect(ok.when(ok: (s) => s.title, err: (f) => f.code), 'Card');
