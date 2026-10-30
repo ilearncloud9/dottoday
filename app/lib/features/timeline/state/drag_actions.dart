@@ -27,13 +27,21 @@ Future<Result<UndoToken, AppFailure>> _write(
       .applyUndoable(WriteBatch(userId: row.userId, occurrences: [row]));
 }
 
-/// Moves [o] to start at [startUtc], keeping its length (drag, R-05).
+/// Moves [o] to start at [startUtc], keeping its length unless given
+/// [durationMin] (an all-day task dropped on a time, or made all day).
 /// Other tasks stay put; it may overlap them (ADR-0015).
 Future<Result<UndoToken, AppFailure>> moveTask(
   WidgetRef ref,
   Occurrence o,
-  DateTime startUtc,
-) => _write(ref, countMove(o, o.copyWith(startUtc: startUtc)));
+  DateTime startUtc, {
+  int? durationMin,
+}) => _write(
+  ref,
+  countMove(
+    o,
+    o.copyWith(startUtc: startUtc, durationMin: durationMin ?? o.durationMin),
+  ),
+);
 
 /// Moves [o] to [startUtc] and lets the tasks after it follow ("Shift
 /// later tasks" on, R-04); see `moveWithFollowers` for the pin and

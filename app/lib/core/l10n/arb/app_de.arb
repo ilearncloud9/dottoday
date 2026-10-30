@@ -120,8 +120,6 @@
   "monthNowItem": "{title} · jetzt",
   "threadTimeRange": "{start} – {end}",
   "debugConceptPreview": "Konzept-A-Vorschau (Debug)",
-  "todayGreeting": "{part, select, morning{Guten Morgen} afternoon{Guten Tag} other{Guten Abend}}",
-  "todayGreetingName": "{part, select, morning{Guten Morgen, {name}} afternoon{Guten Tag, {name}} other{Guten Abend, {name}}}",
   "todayEmpty": "Nichts geplant · zieh die Leiste zum Planen oder tippe auf +",
   "todayAllDay": "Ganztägig",
   "stripDayLabel": "{day}, {done} von {total} erledigt",

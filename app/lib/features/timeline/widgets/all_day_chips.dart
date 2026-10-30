@@ -1,8 +1,11 @@
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
+import 'package:dottoday/shared/dot/pointer_draggable.dart';
+import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -31,14 +34,17 @@ class AllDayChips extends ConsumerWidget {
           spacing: DotSpace.s,
           children: [
             for (final o in items)
-              _Chip(
-                title: o.title,
-                swatch: t.tasks[TaskColor.fromKey(o.colorKey)],
-                icon: TaskIcon.fromKey(o.iconKey),
-                onTap: () => openTask(
-                  context,
-                  o.id,
-                  otherwise: () => showTaskSheet(context, o.id),
+              _draggable(
+                o,
+                _Chip(
+                  title: o.title,
+                  swatch: t.tasks[TaskColor.fromKey(o.colorKey)],
+                  icon: TaskIcon.fromKey(o.iconKey),
+                  onTap: () => openTask(
+                    context,
+                    o.id,
+                    otherwise: () => showTaskSheet(context, o.id),
+                  ),
                 ),
               ),
           ],
@@ -46,6 +52,29 @@ class AllDayChips extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Held and dragged down onto the thread, an all-day item gets a time
+/// (Structured's reverse of the all-day drop zone, ADR-0015). Pinned ones
+/// stay put.
+Widget _draggable(Occurrence o, Widget chip) {
+  if (o.pinned) return chip;
+  return HoldOrMouseDraggable<String>(
+    data: o.id,
+    feedback: LiftedDot(
+      color: TaskColor.fromKey(o.colorKey),
+      icon: TaskIcon.fromKey(o.iconKey),
+      hint: TaskDragging.hint,
+    ),
+    childWhenDragging: Opacity(opacity: TaskAlpha.done, child: chip),
+    callbacks: DragCallbacks(
+      onDragStarted: () => TaskDragging.current.value = o.id,
+      onDragUpdate: (_) {},
+      onDragEnd: (_) => TaskDragging.hint.value = null,
+      onFinished: () => TaskDragging.current.value = null,
+    ),
+    child: chip,
+  );
 }
 
 class _Chip extends StatelessWidget {

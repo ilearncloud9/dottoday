@@ -16,13 +16,13 @@ import '../../support/today_harness.dart';
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  testWidgets('opens on today: caption, greeting, day dot, today card', (
-    tester,
-  ) async {
+  testWidgets('opens on today: date title, day dot, numbers', (tester) async {
     final handle = tester.ensureSemantics();
     await pumpToday(tester);
-    expect(find.text('WED, OCT 21'), findsOneWidget);
-    expect(find.text('Good morning, Kody'), findsOneWidget);
+    expect(
+      find.textContaining('October 21, 2026', findRichText: true),
+      findsOneWidget,
+    );
     // The day's numbers sit under the title (ADR-0015).
     expect(find.textContaining(RegExp(r'^\d+ of \d+ · ')), findsOneWidget);
     expect(
@@ -36,11 +36,6 @@ void main() {
       findsOneWidget,
     );
     handle.dispose();
-  });
-
-  testWidgets('no name: plain greeting', (tester) async {
-    await pumpToday(tester, name: null);
-    expect(find.text('Good morning'), findsOneWidget);
   });
 
   testWidgets('the week starts on the profile setting', (tester) async {
@@ -58,28 +53,37 @@ void main() {
     await pumpToday(tester);
     await tester.tap(find.text('Fri'));
     await tester.pumpAndSettle();
-    expect(find.text('Friday'), findsWidgets);
-    expect(find.text('FRI, OCT 23'), findsOneWidget);
+    expect(
+      find.textContaining('October 23, 2026', findRichText: true),
+      findsOneWidget,
+    );
   });
 
   testWidgets('swiping the pager changes the day', (tester) async {
     await pumpToday(tester);
     await tester.fling(find.byType(DayCard).first, const Offset(-300, 0), 1000);
     await tester.pumpAndSettle();
-    expect(find.text('THU, OCT 22'), findsOneWidget);
+    expect(
+      find.textContaining('October 22, 2026', findRichText: true),
+      findsOneWidget,
+    );
   });
 
   testWidgets('/day/:date opens that day', (tester) async {
     await pumpToday(tester, date: DateTime(2026, 12, 14));
-    expect(find.text('MON, DEC 14'), findsOneWidget);
-    expect(find.text('Monday'), findsWidgets);
+    expect(
+      find.textContaining('December 14, 2026', findRichText: true),
+      findsOneWidget,
+    );
   });
 
   testWidgets('the caption chevron and the strip handle open the month', (
     tester,
   ) async {
     await pumpToday(tester);
-    await tester.tap(find.text('WED, OCT 21'));
+    await tester.tap(
+      find.textContaining('October 21, 2026', findRichText: true),
+    );
     await tester.pumpAndSettle();
     expect(find.byType(MonthGrid), findsOneWidget);
     expect(find.byType(WeekStrip), findsNothing);
@@ -96,7 +100,9 @@ void main() {
     tester,
   ) async {
     await pumpToday(tester, size: const Size(390, 1000));
-    await tester.tap(find.text('WED, OCT 21'));
+    await tester.tap(
+      find.textContaining('October 21, 2026', findRichText: true),
+    );
     await tester.pumpAndSettle();
     expect(find.text('October · 1 of 31 days planned'), findsOneWidget);
     expect(find.text('Sep · Oct · Nov'), findsOneWidget);
@@ -106,7 +112,10 @@ void main() {
     );
     await tester.tap(find.byTooltip('Next month'));
     await tester.pumpAndSettle();
-    expect(find.text('November 2026'), findsOneWidget);
+    expect(
+      find.textContaining('November 2026', findRichText: true),
+      findsOneWidget,
+    );
     expect(find.text('Oct · Nov · Dec'), findsOneWidget);
   });
 
@@ -123,7 +132,10 @@ void main() {
     expect(find.text('Copy a day…'), findsWidgets);
     await tester.tap(find.widgetWithText(OutlinedButton, 'Today'));
     await tester.pumpAndSettle();
-    expect(find.text('WED, OCT 21'), findsOneWidget);
+    expect(
+      find.textContaining('October 21, 2026', findRichText: true),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Copy a day copies the picked day’s one-offs, with Undo', (
@@ -157,7 +169,9 @@ void main() {
         const FakeAccessibilityFeatures(disableAnimations: true);
     addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
     await pumpToday(tester);
-    await tester.tap(find.text('WED, OCT 21'));
+    await tester.tap(
+      find.textContaining('October 21, 2026', findRichText: true),
+    );
     await tester.pump();
     await tester.pump();
     expect(find.byType(MonthGrid), findsOneWidget);

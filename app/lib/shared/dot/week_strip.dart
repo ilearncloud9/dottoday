@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'dart:math' as math;
 
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/week_strip_parts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+export 'week_strip_parts.dart';
 
 /// How much of a day got done, for the 8 px dots of the strip and month.
 @immutable
@@ -103,13 +104,66 @@ class WeekStrip extends StatelessWidget {
     );
     final onDrop = onDropTask;
     if (onDrop == null) return column();
+    return _DayDropTarget(
+      onDrop: (id) => onDrop(id, i),
+      // Held over a day, the strip pages there so the task can land at a
+      // time on it (Structured's hover, ADR-0015); let go at once, it
+      // keeps its time (PRD F8).
+      onHover: i == selected || onSelect == null ? null : () => onSelect!(i),
+      builder: (hovered) => column(hovered: hovered),
+    );
+  }
+}
+
+/// A week-strip day that takes a dropped task, and pages to its day when
+/// one is held over it for [DotTouch.hoverSwitch].
+class _DayDropTarget extends StatefulWidget {
+  const _DayDropTarget({
+    required this.onDrop,
+    required this.builder,
+    this.onHover,
+  });
+
+  final ValueChanged<String> onDrop;
+  final VoidCallback? onHover;
+  final Widget Function(bool hovered) builder;
+
+  @override
+  State<_DayDropTarget> createState() => _DayDropTargetState();
+}
+
+class _DayDropTargetState extends State<_DayDropTarget> {
+  Timer? _hover;
+
+  @override
+  void dispose() {
+    _hover?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return DragTarget<String>(
+      onMove: (_) {
+        final onHover = widget.onHover;
+        if (onHover == null || _hover != null) return;
+        _hover = Timer(DotTouch.hoverSwitch, () {
+          unawaited(HapticFeedback.selectionClick());
+          onHover();
+        });
+      },
+      onLeave: (_) {
+        _hover?.cancel();
+        _hover = null;
+      },
       onAcceptWithDetails: (details) {
+        _hover?.cancel();
+        _hover = null;
         unawaited(HapticFeedback.mediumImpact());
-        onDrop(details.data, i);
+        widget.onDrop(details.data);
       },
       builder: (context, candidates, _) =>
-          column(hovered: candidates.isNotEmpty),
+          widget.builder(candidates.isNotEmpty),
     );
   }
 }
@@ -175,121 +229,6 @@ class _Column extends StatelessWidget {
               Text(day.date, style: date),
               CompletionDot(completion: day.completion),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// The 8 px completion dot (docs/10 §3 `WeekStrip`, `MonthGrid`).
-class CompletionDot extends StatelessWidget {
-  const CompletionDot({
-    required this.completion,
-    this.size = DotSize.weekDot,
-    super.key,
-  });
-
-  final Completion completion;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = DotTheme.of(context).colors;
-    return CustomPaint(
-      size: Size.square(size + DotSpace.xxs),
-      painter: _CompletionPainter(
-        share: completion.share,
-        accent: c.accent,
-        track: Color.alphaBlend(c.accentTint, c.raised),
-        hairline: c.hairline,
-      ),
-    );
-  }
-}
-
-final class _CompletionPainter extends CustomPainter {
-  const _CompletionPainter({
-    required this.share,
-    required this.accent,
-    required this.track,
-    required this.hairline,
-  });
-
-  final double? share;
-  final Color accent;
-  final Color track;
-  final Color hairline;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final c = size.center(Offset.zero);
-    final r = DotSize.weekDot / 2;
-    final s = share;
-    if (s == null) {
-      final ring = Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = DotSpace.hairline * 1.5
-        ..color = hairline;
-      canvas.drawCircle(c, r, ring);
-      return;
-    }
-    final rect = Rect.fromCircle(center: c, radius: r);
-    canvas.drawCircle(c, r, Paint()..color = s >= 1 ? accent : track);
-    if (s > 0 && s < 1) {
-      canvas.drawArc(
-        rect,
-        -math.pi / 2,
-        2 * math.pi * s,
-        true,
-        Paint()..color = accent,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(_CompletionPainter old) =>
-      old.share != share ||
-      old.accent != accent ||
-      old.track != track ||
-      old.hairline != hairline;
-}
-
-/// The grab handle under the strip that pulls the month open (§2.4).
-class PullHandle extends StatelessWidget {
-  const PullHandle({required this.open, this.onPull, super.key});
-
-  final bool open;
-  final VoidCallback? onPull;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = DotTheme.of(context).colors;
-    final l10n = context.l10n;
-    return Semantics(
-      button: true,
-      expanded: open,
-      label: open ? l10n.weekStripHideMonth : l10n.weekStripShowMonth,
-      excludeSemantics: true,
-      onTap: onPull,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onPull,
-        onVerticalDragEnd: onPull == null ? null : (_) => onPull!(),
-        child: SizedBox(
-          // A full 48 dp target although the bar is 5 px (§7.4 wins over
-          // the render's tighter gap).
-          width: DotTouch.android * 2,
-          height: DotTouch.android,
-          child: Center(
-            child: Container(
-              width: DotSize.rowDot,
-              height: DotSize.weekDot / 2 + 1,
-              decoration: BoxDecoration(
-                color: c.outline,
-                borderRadius: BorderRadius.circular(DotRadii.pill),
-              ),
-            ),
           ),
         ),
       ),

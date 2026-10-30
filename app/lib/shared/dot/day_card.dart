@@ -132,7 +132,7 @@ class DayCard extends StatelessWidget {
       );
     }
     final numbers = summary;
-    if (numbers == null) return _sheet(c);
+    if (numbers == null) return _sheet(context, c);
     final header = _Header(
       title: title,
       isToday: isToday,
@@ -158,7 +158,7 @@ class DayCard extends StatelessWidget {
 
   /// [DayCard.sheet]: the handle and the Plan / Reality switch pinned over
   /// the scrolling thread, on a sheet that runs to the bottom edge.
-  Widget _sheet(DotColors c) {
+  Widget _sheet(BuildContext context, DotColors c) {
     final top = [
       ?handle,
       if (reality case final r?)
@@ -176,7 +176,9 @@ class DayCard extends StatelessWidget {
         borderRadius: const BorderRadius.vertical(
           top: Radius.circular(DotRadii.sheet),
         ),
-        border: Border.all(color: c.outline, width: DotSpace.hairline),
+        // No outline: the sheet runs to the screen's bottom edge under the
+        // tab bar, and a bottom or side line would show there (ADR-0015).
+        boxShadow: DotElevation.sheet,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -191,9 +193,12 @@ class DayCard extends StatelessWidget {
               child: CustomScrollView(
                 slivers: [
                   _thread(),
-                  // Rows scroll clear of the floating tab bar and + button.
-                  const SliverToBoxAdapter(
-                    child: SizedBox(height: DotSpace.fabClearance),
+                  // The last row scrolls clear of the floating tab bar and
+                  // + button (their height is in the bottom padding).
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: MediaQuery.paddingOf(context).bottom + DotSpace.l,
+                    ),
                   ),
                 ],
               ),

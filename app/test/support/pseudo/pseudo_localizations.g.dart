@@ -399,13 +399,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get debugConceptPreview => pseudo(super.debugConceptPreview);
 
   @override
-  String todayGreeting(String part) => pseudo(super.todayGreeting(part));
-
-  @override
-  String todayGreetingName(String part, String name) =>
-      pseudo(super.todayGreetingName(part, name));
-
-  @override
   String get todayEmpty => pseudo(super.todayEmpty);
 
   @override

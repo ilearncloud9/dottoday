@@ -13,6 +13,7 @@ import 'package:dottoday/features/routines/routine_drop_host.dart';
 import 'package:dottoday/features/settings/whats_new_banner.dart';
 import 'package:dottoday/features/sync_status/sync_banner.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
+import 'package:dottoday/features/timeline/widgets/shell_drops.dart';
 import 'package:dottoday/features/timeline/widgets/zone_banner.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/skip_link.dart';
@@ -37,18 +38,26 @@ class AppShell extends ConsumerWidget {
     // Keyboard users jump past the navigation (07 Web, M5.7).
     return SkipLink(
       label: l10n.skipToContent,
-      builder: (content) => _shell(context, l10n, content, inbox.length),
+      builder: (content) => _shell(context, ref, l10n, content, inbox.length),
     );
   }
 
   Widget _shell(
     BuildContext context,
+    WidgetRef ref,
     AppLocalizations l10n,
     FocusNode content,
     int inbox,
   ) {
+    final drops = ShellDrops(context, ref);
     return DotShell(
-      destinations: shellDestinations(l10n, inbox: inbox),
+      destinations: shellDestinations(
+        l10n,
+        inbox: inbox,
+        onDropOnInbox: drops.toInbox,
+      ),
+      onTrashTask: drops.toTrash,
+      trashLabel: l10n.inboxTrash,
       selected: shell.currentIndex,
       onSelect: (i) => _goTab(ShellTab.values[i]),
       onAdd: () => Actions.maybeInvoke(
@@ -102,6 +111,7 @@ class AppShell extends ConsumerWidget {
 List<ShellDestination> shellDestinations(
   AppLocalizations l10n, {
   int inbox = 0,
+  ValueChanged<String>? onDropOnInbox,
 }) => [
   for (final tab in ShellTab.values)
     switch (tab) {
@@ -114,6 +124,8 @@ List<ShellDestination> shellDestinations(
         label: l10n.navInbox,
         badge: inbox,
         badgeLabel: l10n.navInboxBadge(inbox),
+        // A dragged task let go here goes back to the Inbox (ADR-0015).
+        onDropTask: onDropOnInbox,
       ),
       ShellTab.week => ShellDestination(
         glyph: DotGlyphs.week,

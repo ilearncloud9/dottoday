@@ -77,10 +77,20 @@ Future<void> _toEnd(WidgetTester tester) async {
   final lists = find.byWidgetPredicate(
     (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
   );
-  for (final state in tester.stateList<ScrollableState>(lists)) {
-    state.position.jumpTo(state.position.maxScrollExtent);
+  // A lazy list learns its full height as it builds the rows it reaches,
+  // so one jump can stop short of the end: jump until it stays there.
+  for (var pass = 0; pass < 5; pass++) {
+    var moved = false;
+    for (final state in tester.stateList<ScrollableState>(lists)) {
+      final p = state.position;
+      if (p.pixels < p.maxScrollExtent) {
+        p.jumpTo(p.maxScrollExtent);
+        moved = true;
+      }
+    }
+    await tester.pumpAndSettle();
+    if (!moved) break;
   }
-  await tester.pumpAndSettle();
 }
 
 void main() {

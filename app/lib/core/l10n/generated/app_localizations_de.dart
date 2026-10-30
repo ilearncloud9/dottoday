@@ -495,26 +495,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get debugConceptPreview => 'Konzept-A-Vorschau (Debug)';
 
   @override
-  String todayGreeting(String part) {
-    String _temp0 = intl.Intl.selectLogic(part, {
-      'morning': 'Guten Morgen',
-      'afternoon': 'Guten Tag',
-      'other': 'Guten Abend',
-    });
-    return '$_temp0';
-  }
-
-  @override
-  String todayGreetingName(String part, String name) {
-    String _temp0 = intl.Intl.selectLogic(part, {
-      'morning': 'Guten Morgen, $name',
-      'afternoon': 'Guten Tag, $name',
-      'other': 'Guten Abend, $name',
-    });
-    return '$_temp0';
-  }
-
-  @override
   String get todayEmpty =>
       'Nichts geplant · zieh die Leiste zum Planen oder tippe auf +';
 

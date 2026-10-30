@@ -759,27 +759,6 @@
   "@debugConceptPreview": {
     "description": "Debug-build-only menu item that opens the new components on today's data."
   },
-  "todayGreeting": "{part, select, morning{Good morning} afternoon{Good afternoon} other{Good evening}}",
-  "@todayGreeting": {
-    "description": "Today's page title when the profile has no name (Main).",
-    "placeholders": {
-      "part": {
-        "type": "String"
-      }
-    }
-  },
-  "todayGreetingName": "{part, select, morning{Good morning, {name}} afternoon{Good afternoon, {name}} other{Good evening, {name}}}",
-  "@todayGreetingName": {
-    "description": "Today's page title with the user's name (Main: 'Good morning, Kody').",
-    "placeholders": {
-      "part": {
-        "type": "String"
-      },
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "todayEmpty": "Nothing planned · pull the strip to plan or tap +",
   "@todayEmpty": {
     "description": "Empty Today (docs/10 §5.4)."

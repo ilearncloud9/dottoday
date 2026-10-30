@@ -1,5 +1,6 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
+import 'package:dottoday/shared/navigation/drag_targets.dart';
 import 'package:flutter/material.dart';
 
 /// iPhone compact shell (`Main`): a floating pill tab bar with the round
@@ -29,7 +30,9 @@ class PillTabShell extends StatelessWidget {
           children: [
             Expanded(child: _Pill(bar: bar)),
             if (bar.onAdd case final onAdd?)
-              _AddButton(onAdd: onAdd, label: bar.addLabel),
+              AddDraggable(
+                child: _AddButton(onAdd: onAdd, label: bar.addLabel),
+              ),
           ],
         ),
       ),

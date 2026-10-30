@@ -10,11 +10,16 @@ final class DragCallbacks {
     required this.onDragStarted,
     required this.onDragUpdate,
     required this.onDragEnd,
+    this.onFinished,
   });
 
   final VoidCallback onDragStarted;
   final DragUpdateCallback onDragUpdate;
   final DragEndCallback onDragEnd;
+
+  /// The drag is over, accepted or not. Unlike [onDragEnd] it still runs
+  /// when the row was unmounted mid-drag (the day changed under it).
+  final VoidCallback? onFinished;
 }
 
 /// Lifts [data] on a [DotTouch.liftDelay] hold for touch and pen (so a
@@ -49,6 +54,10 @@ class HoldOrMouseDraggable<T extends Object> extends StatelessWidget {
       onDragStarted: c.onDragStarted,
       onDragUpdate: c.onDragUpdate,
       onDragEnd: c.onDragEnd,
+      onDragCompleted: c.onFinished,
+      onDraggableCanceled: c.onFinished == null
+          ? null
+          : (_, _) => c.onFinished!(),
       child: _HoldDraggable<T>(
         data: data,
         feedback: feedback,
@@ -56,6 +65,10 @@ class HoldOrMouseDraggable<T extends Object> extends StatelessWidget {
         onDragStarted: c.onDragStarted,
         onDragUpdate: c.onDragUpdate,
         onDragEnd: c.onDragEnd,
+        onDragCompleted: c.onFinished,
+        onDraggableCanceled: c.onFinished == null
+            ? null
+            : (_, _) => c.onFinished!(),
         child: child,
       ),
     );
@@ -76,6 +89,8 @@ class _MouseDraggable<T extends Object> extends Draggable<T> {
     required super.onDragUpdate,
     required super.onDragEnd,
     required super.child,
+    super.onDragCompleted,
+    super.onDraggableCanceled,
   });
 
   @override
@@ -95,6 +110,8 @@ class _HoldDraggable<T extends Object> extends Draggable<T> {
     required super.onDragUpdate,
     required super.onDragEnd,
     required super.child,
+    super.onDragCompleted,
+    super.onDraggableCanceled,
   });
 
   @override

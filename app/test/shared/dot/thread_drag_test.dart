@@ -1,6 +1,7 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread.dart';
+import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,6 +40,8 @@ final _gap = ThreadGap(
 class _Log {
   _Log({this.shiftByDefault, this.calendarByDefault});
 
+  final allDay = <String>[];
+
   final bool? shiftByDefault;
   final bool? calendarByDefault;
   final drops = <String>[];
@@ -50,6 +53,7 @@ class _Log {
       '${shift.calendar ? ' +calendar' : ''}',
     ),
     hintFor: (id, span, f) => span == null ? null : '→ ${_label(span)}',
+    onAllDay: allDay.add,
   );
 
   /// "9:30" for the gap, "on 11:00" for Call's row (Berlin, CEST).
@@ -70,6 +74,7 @@ Widget _thread(_Log log, {double textScale = 1}) => testApp(
         body: SingleChildScrollView(
           child: Thread(
             entries: [
+              const ThreadCap.wake('7:00'),
               const ThreadTaskEntry(_write),
               _gap,
               ThreadTaskEntry(_pinned),
@@ -91,7 +96,9 @@ void main() {
     await tester.pump(DotTouch.liftDelay + const Duration(milliseconds: 50));
     await g.moveTo(tester.getCenter(find.textContaining('free')));
     await tester.pump();
-    expect(find.text('→ 9:30'), findsOneWidget);
+    // Beside the lifted dot and on the landing preview (ADR-0015).
+    expect(find.text('→ 9:30'), findsWidgets);
+    expect(find.byType(LandingPreview), findsOneWidget);
     await g.up();
     await tester.pumpAndSettle();
     expect(log.drops, ['write 9:30']);
@@ -222,7 +229,7 @@ void main() {
     await tester.pump(DotTouch.liftDelay + const Duration(milliseconds: 50));
     await g.moveTo(tester.getCenter(find.text('Call')));
     await tester.pump();
-    expect(find.text('→ on 11:00'), findsOneWidget);
+    expect(find.text('→ on 11:00'), findsWidgets);
     await g.up();
     await tester.pumpAndSettle();
     expect(log.drops, ['write on 11:00']);
@@ -284,5 +291,65 @@ void main() {
     await g.up();
     await tester.pumpAndSettle();
     expect(drops, ['write 3']);
+  });
+
+  testWidgets('let go on Wake Up, a task becomes all day (ADR-0015)', (
+    tester,
+  ) async {
+    final log = _Log();
+    await tester.pumpWidget(_thread(log));
+    final g = await tester.startGesture(tester.getCenter(find.text('Write')));
+    await tester.pump(DotTouch.liftDelay + const Duration(milliseconds: 50));
+    await g.moveTo(tester.getCenter(find.textContaining('Wake Up')));
+    await tester.pump();
+    expect(find.text('All day'), findsOneWidget);
+    await g.up();
+    await tester.pumpAndSettle();
+    expect(log.allDay, ['write']);
+    expect(log.drops, isEmpty);
+  });
+
+  testWidgets('a task held over a week-strip day pages to it; a quick drop '
+      'keeps its time (ADR-0015)', (tester) async {
+    final picked = <int>[];
+    final drops = <String>[];
+    await tester.pumpWidget(
+      testApp(
+        Scaffold(
+          body: Column(
+            children: [
+              WeekStrip(
+                days: [
+                  for (var i = 0; i < 7; i++)
+                    StripDay(
+                      weekday: 'D$i',
+                      date: '${i + 1}',
+                      label: 'day $i',
+                      completion: const Completion.none(),
+                    ),
+                ],
+                selected: 0,
+                onSelect: picked.add,
+                onDropTask: (id, i) => drops.add('$id $i'),
+              ),
+              Thread(
+                entries: const [ThreadTaskEntry(_write)],
+                actions: ThreadActions(drag: _Log().drag),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    final g = await tester.startGesture(tester.getCenter(find.text('Write')));
+    await tester.pump(DotTouch.liftDelay + const Duration(milliseconds: 50));
+    await g.moveTo(tester.getCenter(find.text('D4')));
+    await tester.pump();
+    expect(picked, isEmpty);
+    await tester.pump(DotTouch.hoverSwitch);
+    expect(picked, [4]);
+    await g.up();
+    await tester.pumpAndSettle();
+    expect(drops, ['write 4']);
   });
 }

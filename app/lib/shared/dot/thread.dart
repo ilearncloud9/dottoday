@@ -101,8 +101,9 @@ class Thread extends StatefulWidget {
 }
 
 class _ThreadState extends State<Thread> {
-  /// The lifted chip's drop time while a task is dragged.
-  final _hint = ValueNotifier<String?>(null);
+  /// The lifted dot's drop time while a task is dragged (app-wide, so the
+  /// dragged add button shows it too).
+  ValueNotifier<String?> get _hint => TaskDragging.hint;
 
   /// "Shift later tasks" for the current drag, shown in the overlay.
   final _shift = ValueNotifier<bool>(false);
@@ -118,7 +119,6 @@ class _ThreadState extends State<Thread> {
   @override
   void dispose() {
     _settle();
-    _hint.dispose();
     _shift.dispose();
     _calendar.dispose();
     super.dispose();
@@ -170,6 +170,11 @@ class _ThreadState extends State<Thread> {
     final a = widget.actions;
     final drag = a.drag;
     return switch (e) {
+      ThreadCap(bedtime: false) when drag?.onAllDay != null => AllDayDropTarget(
+        onAllDay: drag!.onAllDay!,
+        label: context.l10n.timelineAllDay,
+        child: CapRow(cap: e),
+      ),
       ThreadCap() => CapRow(cap: e),
       ThreadGap(:final span?) when drag != null => _droppable(
         span,
@@ -200,8 +205,13 @@ class _ThreadState extends State<Thread> {
     shift: _shift,
     calendar: _calendar,
     ownId: ownId,
+    taskOf: _taskOf,
     child: child,
   );
+
+  /// A task of this thread by id, for the landing preview.
+  ThreadTask? _taskOf(String id) =>
+      threadTasks(widget.entries).where((t) => t.id == id).firstOrNull;
 
   Widget _gap(ThreadGap gap, {required bool dropBox}) => GapRow(
     gap: gap,

@@ -120,8 +120,6 @@
   "monthNowItem": "{title} · ahora",
   "threadTimeRange": "{start} – {end}",
   "debugConceptPreview": "Vista previa del concepto A (debug)",
-  "todayGreeting": "{part, select, morning{Buenos días} afternoon{Buenas tardes} other{Buenas noches}}",
-  "todayGreetingName": "{part, select, morning{Buenos días, {name}} afternoon{Buenas tardes, {name}} other{Buenas noches, {name}}}",
   "todayEmpty": "Nada planificado · desliza la tira para planificar o toca +",
   "todayAllDay": "Todo el día",
   "stripDayLabel": "{day}, {done} de {total} hechas",

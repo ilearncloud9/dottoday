@@ -15,10 +15,10 @@ import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:timezone/timezone.dart' as tz;
 
-/// Today's header (`Main`): "WEDNESDAY 21 OCT ⌄" (tap: month), the
-/// greeting (or the weekday away from today), and the day dot.
+/// Today's header (ADR-0015, after Structured's): the date as the title,
+/// "October 25, 2026 ⌄" (tap: month), with the day dot (or "● Today" away
+/// from today) and ⋯ on the same line; the day's numbers under it.
 class TodayHeader extends ConsumerWidget {
   const TodayHeader({
     required this.date,
@@ -41,12 +41,9 @@ class TodayHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final t = DotTheme.of(context);
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toLanguageTag();
     final low = date == today && watchLowEnergy(ref);
-    final day = DateFormat.MMMEd(locale).format(date);
-    final caption = (low ? l10n.lowEnergyCaption(day) : day).toUpperCase();
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
         DotSpace.page,
@@ -54,87 +51,34 @@ class TodayHeader extends ConsumerWidget {
         DotSpace.s,
         DotSpace.xs,
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Semantics(
-                  button: true,
-                  expanded: monthOpen,
-                  label: monthOpen
-                      ? l10n.weekStripHideMonth
-                      : l10n.weekStripShowMonth,
-                  child: InkWell(
-                    onTap: ref
-                        .read(todaySelectionProvider.notifier)
-                        .toggleMonth,
-                    borderRadius: BorderRadius.circular(DotRadii.card),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        minHeight: DotTouch.android,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        spacing: DotSpace.xs,
-                        children: [
-                          if (low)
-                            DotIcon(
-                              DotGlyphs.moon,
-                              color: t.tasks[TaskColor.violet].ink,
-                              size: DotSize.weekDot * 2,
-                            ),
-                          Flexible(
-                            child: ExcludeSemantics(
-                              child: Text(caption, style: t.styles.dayCaption),
-                            ),
-                          ),
-                          DotIcon(
-                            monthOpen
-                                ? DotGlyphs.chevronUp
-                                : DotGlyphs.chevronDown,
-                            color: t.colors.muted,
-                            size: DotSize.weekDot * 2,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Semantics(
-                  container: true,
-                  header: true,
-                  child: Text(
-                    _title(context, ref, locale),
-                    style: t.styles.dayTitle,
-                  ),
-                ),
-                if (!low && !monthOpen) DayNumbers(date: date),
-              ],
-            ),
-          ),
-          // Low-energy mode: its switch above the day dot (as the render).
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
+          Row(
             children: [
+              Expanded(
+                child: _TitleButton(
+                  title: _title(context, ref, locale),
+                  monthOpen: monthOpen,
+                ),
+              ),
               if (low)
                 LowEnergySwitch(
                   onChanged: (on) => toggleLowEnergy(context, on: on),
-                ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (date == today)
-                    TodayDot(today: today)
-                  else
-                    TodayPill(onTap: onToday),
-                  TodayMenu(date: date, today: today),
-                ],
-              ),
+                )
+              else if (date == today)
+                TodayDot(today: today)
+              else
+                TodayPill(onTap: onToday),
+              TodayMenu(date: date, today: today),
             ],
           ),
+          if (low)
+            _Caption(
+              l10n.lowEnergyCaption(DateFormat.MMMEd(locale).format(date)),
+            )
+          else if (!monthOpen)
+            DayNumbers(date: date),
         ],
       ),
     );
@@ -150,27 +94,16 @@ class TodayHeader extends ConsumerWidget {
   }
 }
 
-/// "Good morning, Kody" on today, else the weekday (Today headers on every
-/// width).
+/// "October 25, 2026": the day's title on every width (ADR-0015 replaced
+/// the greeting with the date, as Structured's header).
 String dayTitle(
   BuildContext context,
   WidgetRef ref, {
   required DateTime date,
   required DateTime today,
-}) {
-  final locale = Localizations.localeOf(context).toLanguageTag();
-  if (date != today) return DateFormat.EEEE(locale).format(date);
-  final profile = ref.watch(currentProfileProvider).value;
-  final now =
-      ref.watch(minuteTickProvider).value ?? ref.watch(clockProvider).nowUtc();
-  final zone = profile == null ? tz.UTC : tz.getLocation(profile.tzId);
-  final part = dayPart(tz.TZDateTime.from(now, zone).hour);
-  final name = profile?.displayName?.trim() ?? '';
-  final l10n = context.l10n;
-  return name.isEmpty
-      ? l10n.todayGreeting(part)
-      : l10n.todayGreetingName(part, name);
-}
+}) => DateFormat.yMMMMd(
+  Localizations.localeOf(context).toLanguageTag(),
+).format(date);
 
 /// "Take it easy, Kody" (low-energy mode, `B-ios-low-energy`).
 String lowEnergyTitle(BuildContext context, WidgetRef ref) {
@@ -202,18 +135,11 @@ class TodayDot extends ConsumerWidget {
           ).progressAt(now);
     return Padding(
       padding: const EdgeInsets.all(DotSpace.xs),
-      child: DayDot(progress: progress),
+      // The header's line also holds the date and ⋯ (ADR-0015).
+      child: DayDot(progress: progress, size: DotSize.headerDayDot),
     );
   }
 }
-
-/// ICU select key of the greeting for a local [hour]: before noon,
-/// before 17:00, or later.
-String dayPart(int hour) => hour < 12
-    ? 'morning' // l10n-ignore: ICU select key
-    : hour < 17
-    ? 'afternoon' // l10n-ignore: ICU select key
-    : 'evening'; // l10n-ignore: ICU select key
 
 /// "● Today" (`A-ios-future-month`): one tap back to the current date
 /// (03 §2).
@@ -272,5 +198,70 @@ class DayNumbers extends ConsumerWidget {
             ),
       style: t.styles.dayCaption.copyWith(letterSpacing: 0),
     );
+  }
+}
+
+/// The title, which opens the month (the chevron says which way).
+class _TitleButton extends ConsumerWidget {
+  const _TitleButton({required this.title, required this.monthOpen});
+
+  final String title;
+  final bool monthOpen;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    final style = t.styles.dayTitle;
+    return Semantics(
+      button: true,
+      header: true,
+      expanded: monthOpen,
+      label: title,
+      hint: monthOpen ? l10n.weekStripHideMonth : l10n.weekStripShowMonth,
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: ref.read(todaySelectionProvider.notifier).toggleMonth,
+        borderRadius: BorderRadius.circular(DotRadii.card),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: DotTouch.android),
+          child: Text.rich(
+            TextSpan(
+              text: title,
+              children: [
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: DotSpace.xs,
+                    ),
+                    child: DotIcon(
+                      monthOpen ? DotGlyphs.chevronUp : DotGlyphs.chevronDown,
+                      color: t.colors.text,
+                      size: DotSize.rowIcon,
+                      bold: true,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            style: style,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A muted line under the title (low-energy mode's "Thursday · low energy").
+class _Caption extends StatelessWidget {
+  const _Caption(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    return Text(text, style: t.styles.dayCaption.copyWith(letterSpacing: 0));
   }
 }

@@ -1,7 +1,6 @@
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
-import 'package:dottoday/features/timeline/widgets/today_header.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../domain/fixtures.dart';
@@ -59,19 +58,5 @@ void main() {
     expect(completionOf(blocks, begun: true).share, 0.5);
     expect(completionOf(blocks, begun: false).share, isNull);
     expect(completionOf(const [], begun: true).share, isNull);
-  });
-
-  test('greeting part by local hour', () {
-    expect(
-      [
-        dayPart(5),
-        dayPart(11),
-        dayPart(12),
-        dayPart(16),
-        dayPart(17),
-        dayPart(23),
-      ],
-      ['morning', 'morning', 'afternoon', 'afternoon', 'evening', 'evening'],
-    );
   });
 }

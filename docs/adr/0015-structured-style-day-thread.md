@@ -42,6 +42,32 @@ control that stays visible, and the room Structured gives the timeline. Concept 
   request (2026-10-30). Length is changed in the task sheet's duration. The Week board is
   unchanged.
 
+## Amendment (owner, 2026-10-30, second pass)
+- **Header on one line.** The greeting is gone. The title is the date, "October 25, 2026 ⌄",
+  all in the text colour at `dayTitle` size, and it opens the month. The day dot (or "● Today"
+  away from today) and ⋯ sit on the same line, with the day's numbers under it. The Mac/web
+  spread header shows the same date title.
+- **The sheet runs under the tab bar.** It has no outline, just a soft shadow, and goes to the
+  screen's bottom edge behind the floating bar and + button. Its list ends with the bar's
+  height as clearance.
+- **Bold nav icons.** The Inbox tray and Settings gear are solid, Search and Week use the bold
+  stroke, and Today is a solid dot (14 px, 16 when selected). This is the same on the pill
+  bar, the Material bar and the rail.
+- **Drag, as Structured** ([help article](https://help.structured.app/en/articles/338306)):
+  - The task's dot follows the finger with the time it would get.
+  - A landing preview shows on the thread where it would land, like the Mac week board's hover
+    card.
+  - Holding over a week-strip day for 700 ms pages to that day. A quick drop keeps the task's
+    time.
+  - Letting go on Wake Up makes the task all day. An all-day chip dragged onto the thread gets
+    a time, with the default length.
+  - Dragging the + button onto the thread starts Add at that time.
+  - Letting go on the Inbox tab unschedules the task.
+  - While a task is dragged, a Trash target shows above the + button. Dropping on it moves the
+    task to Trash with Undo; it is never deleted outright (R-08, R-11). It is drawn in the text
+    colour, never red.
+  - Pinned tasks never lift.
+
 ## Consequences
 - R-05 still holds for drag-to-move, 5-min snapping, multi-select, haptics and "shift everything
   after". Its "drag-edge resize" on the day thread is withdrawn by the owner. CLAUDE.md §8 and

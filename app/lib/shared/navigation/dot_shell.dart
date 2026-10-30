@@ -1,5 +1,6 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/navigation/dot_rail.dart';
+import 'package:dottoday/shared/navigation/drag_targets.dart';
 import 'package:dottoday/shared/navigation/material_nav_bar.dart';
 import 'package:dottoday/shared/navigation/pill_tab_bar.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,12 @@ final class ShellDestination {
     this.expandedOnly = false,
     this.badge,
     this.badgeLabel,
+    this.onDropTask,
   });
+
+  /// A dragged task let go on this destination (the Inbox: unschedule it,
+  /// ADR-0015); null takes no drops.
+  final ValueChanged<String>? onDropTask;
 
   /// [DotGlyphs.today] is drawn as the Today dot (filled when selected).
   final DotGlyph glyph;
@@ -47,8 +53,17 @@ class DotShell extends StatelessWidget {
     required this.body,
     required this.onAdd,
     required this.addLabel,
+    this.onTrashTask,
+    this.trashLabel = '',
     super.key,
   });
+
+  /// A dragged task let go on the Trash target that shows above the add
+  /// button while dragging (ADR-0015); null shows none.
+  final ValueChanged<String>? onTrashTask;
+
+  /// "Move to Trash".
+  final String trashLabel;
 
   /// All destinations in nav order; each width shows the ones it may.
   final List<ShellDestination> destinations;
@@ -80,7 +95,7 @@ class DotShell extends StatelessWidget {
           onAdd: width == WidthClass.expanded ? null : onAdd,
           addLabel: addLabel,
         );
-        return switch ((width, DotIdiom.of(context))) {
+        final shell = switch ((width, DotIdiom.of(context))) {
           (WidthClass.compact, DotIdiom.cupertino) => PillTabShell(
             bar: bar,
             body: body,
@@ -91,6 +106,23 @@ class DotShell extends StatelessWidget {
           ),
           (_, _) => DotRailShell(bar: bar, body: body),
         };
+        final onTrash = onTrashTask;
+        if (onTrash == null) return shell;
+        // Above the add button on phones; the bottom-end corner on the
+        // rail, which has no floating add button.
+        final lift = width == WidthClass.compact
+            ? PillTabShell.height + DotSpace.l * 2
+            : 0.0;
+        return Stack(
+          children: [
+            shell,
+            PositionedDirectional(
+              end: DotSpace.l,
+              bottom: MediaQuery.paddingOf(context).bottom + lift + DotSpace.l,
+              child: TrashDropZone(onTrash: onTrash, label: trashLabel),
+            ),
+          ],
+        );
       },
     );
   }
@@ -156,7 +188,10 @@ class ShellIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final count = destination.badge ?? 0;
-    final icon = _icon();
+    var icon = _icon();
+    if (destination.onDropTask case final onDrop?) {
+      icon = TaskDropTab(onDropTask: onDrop, child: icon);
+    }
     if (count <= 0) return icon;
     final t = DotTheme.of(context);
     // Accent, never red: a count of loose tasks is not an alarm (§11
@@ -171,28 +206,31 @@ class ShellIcon extends StatelessWidget {
     );
   }
 
+  /// Bold, and solid where the shape allows (ADR-0015, after Structured's
+  /// tab bar): the Inbox tray and the Settings gear are filled, the others
+  /// drawn at the bold stroke; Today is a solid dot (§1 "the Today tab icon
+  /// is a dot"), larger when selected.
   Widget _icon() {
-    if (destination.glyph != DotGlyphs.today) {
-      return DotIcon(destination.glyph, color: color, active: active);
-    }
-    // §1: "the Today tab icon is a dot", filled 12 px when selected and a
-    // 10 px ring otherwise (`Main`, `A-ios-inbox`).
-    final size = active ? DotSize.tabDotActive : DotSize.tabDot;
-    return SizedBox.square(
-      dimension: DotSize.navIcon,
-      child: Center(
-        child: Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: active ? color : null,
-            border: active
-                ? null
-                : Border.all(color: color, width: DotSize.smallDotOutline),
+    final glyph = destination.glyph;
+    if (glyph == DotGlyphs.today) {
+      final size = active ? DotSize.tabDotActive : DotSize.tabDot;
+      return SizedBox.square(
+        dimension: DotSize.navIcon,
+        child: Center(
+          child: Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(shape: BoxShape.circle, color: color),
           ),
         ),
-      ),
+      );
+    }
+    final solid = glyph == DotGlyphs.inbox || glyph == DotGlyphs.settings;
+    return DotIcon(
+      glyph == DotGlyphs.inbox ? DotGlyphs.inboxSolid : glyph,
+      color: color,
+      bold: true,
+      filled: solid,
     );
   }
 }

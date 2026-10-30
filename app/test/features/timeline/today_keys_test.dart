@@ -61,13 +61,25 @@ void main() {
     ) async {
       await pumpToday(tester, size: size);
       await _ctrl(tester, LogicalKeyboardKey.arrowRight);
-      expect(find.text('Thursday'), findsWidgets);
-      expect(find.text('Good morning, Kody'), findsNothing);
+      expect(
+        find.textContaining('October 22, 2026', findRichText: true),
+        findsWidgets,
+      );
+      expect(
+        find.textContaining('October 21, 2026', findRichText: true),
+        findsNothing,
+      );
       await _ctrl(tester, LogicalKeyboardKey.arrowLeft);
       await _ctrl(tester, LogicalKeyboardKey.arrowLeft);
-      expect(find.text('Tuesday'), findsWidgets);
+      expect(
+        find.textContaining('October 20, 2026', findRichText: true),
+        findsWidgets,
+      );
       await _ctrl(tester, LogicalKeyboardKey.keyT);
-      expect(find.text('Good morning, Kody'), findsOneWidget);
+      expect(
+        find.textContaining('October 21, 2026', findRichText: true),
+        findsOneWidget,
+      );
     });
   }
 
