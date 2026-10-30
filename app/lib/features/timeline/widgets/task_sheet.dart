@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/layout/feature_id.dart';
+import 'package:dottoday/features/layout/layout_providers.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
@@ -54,19 +57,35 @@ void showTaskEditor(BuildContext context, String id) => unawaited(
 
 /// What the sheet (and the `/task/:id` page) shows for task [id]: the
 /// identity row, action tiles, subtasks and details, or "not here".
-class TaskSheetBody extends ConsumerWidget {
+///
+/// Minimal (docs/14 §4): title, time and length, then Done · Tomorrow ·
+/// Later · Delete and Break it down; More opens the rest in this layout.
+class TaskSheetBody extends ConsumerStatefulWidget {
   const TaskSheetBody({required this.id, this.scrollController, super.key});
 
   final String id;
   final ScrollController? scrollController;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TaskSheetBody> createState() => _TaskSheetBodyState();
+}
+
+/// A leaf: only whether minimal's More is open.
+class _TaskSheetBodyState extends ConsumerState<TaskSheetBody> {
+  bool _more = false;
+
+  String get id => widget.id;
+
+  @override
+  Widget build(BuildContext context) {
     final view = ref.watch(taskViewProvider(id));
+    final minimal = watchSimplified(ref, FeatureId.taskSheet) && !_more;
     // A reload keeps the previous task, so the sheet doesn't jump (M5.5).
     return switch (view) {
+      AsyncValue(hasValue: true, value: final TaskView task) when minimal =>
+        _minimal(context, task),
       AsyncValue(hasValue: true, value: final TaskView task) => ListView(
-        controller: scrollController,
+        controller: widget.scrollController,
         padding: const EdgeInsets.fromLTRB(
           DotSpace.page,
           0,
@@ -102,6 +121,37 @@ class TaskSheetBody extends ConsumerWidget {
             ], onRetry: () => ref.invalidate(taskViewProvider(id))) ??
             const LoadingThread(),
     };
+  }
+
+  Widget _minimal(BuildContext context, TaskView task) {
+    final l10n = context.l10n;
+    return ListView(
+      controller: widget.scrollController,
+      padding: const EdgeInsets.fromLTRB(
+        DotSpace.page,
+        0,
+        DotSpace.page,
+        DotSpace.xl,
+      ),
+      children: [
+        _Identity(task: task),
+        const SizedBox(height: DotSpace.l),
+        SheetActions(task: task, minimal: true),
+        const SizedBox(height: DotSpace.m),
+        if (task.subtasks.isEmpty)
+          TextButton(
+            onPressed: () => Actions.maybeInvoke(
+              context,
+              BreakDownIntent(task.occurrence.id),
+            ),
+            child: Text(l10n.breakdownAction),
+          ),
+        TextButton(
+          onPressed: () => setState(() => _more = true),
+          child: Text(l10n.moreOptions),
+        ),
+      ],
+    );
   }
 }
 
