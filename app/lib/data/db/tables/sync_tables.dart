@@ -31,7 +31,7 @@ class Conflicts extends Table {
   @override
   List<String> get customConstraints => const [
     "CHECK (entity IN ('series', 'occurrences', 'subtasks', 'profiles', "
-        "'routines'))",
+        "'routines', 'reveal_hints'))",
     'CHECK (length(field) <= 64)',
     'CHECK (mine IS NULL OR json_valid(mine))',
     'CHECK (theirs IS NULL OR json_valid(theirs))',
@@ -61,7 +61,7 @@ class ChangeLog extends Table {
   List<String> get customConstraints => const [
     // The `sync_push` allow-list (supabase/migrations/0002).
     "CHECK (entity IN ('series', 'occurrences', 'subtasks', 'profiles', "
-        "'routines'))",
+        "'routines', 'reveal_hints'))",
     'CHECK (length(field) <= 64)',
     'CHECK (json_valid(value))',
   ];

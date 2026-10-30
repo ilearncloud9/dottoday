@@ -1,4 +1,5 @@
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -20,6 +21,7 @@ final class WriteBatch {
     this.occurrences = const [],
     this.subtasks = const [],
     this.routines = const [],
+    this.revealHints = const [],
   });
 
   final String userId;
@@ -33,13 +35,17 @@ final class WriteBatch {
   /// Saved slices of thread (11 C2).
   final List<Routine> routines;
 
+  /// Minimal mode's hint records (docs/14 §6).
+  final List<RevealHint> revealHints;
+
   /// Whether the batch writes nothing.
   bool get isEmpty =>
       profile == null &&
       series.isEmpty &&
       occurrences.isEmpty &&
       subtasks.isEmpty &&
-      routines.isEmpty;
+      routines.isEmpty &&
+      revealHints.isEmpty;
 
   /// Whether every row is owned by [userId].
   bool get isSingleOwner =>
@@ -47,5 +53,6 @@ final class WriteBatch {
       series.every((s) => s.userId == userId) &&
       occurrences.every((o) => o.userId == userId) &&
       subtasks.every((s) => s.userId == userId) &&
-      routines.every((r) => r.userId == userId);
+      routines.every((r) => r.userId == userId) &&
+      revealHints.every((h) => h.userId == userId);
 }

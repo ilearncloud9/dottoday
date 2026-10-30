@@ -4,6 +4,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
+import 'package:dottoday/data/repositories/drift_reveal_hint_repository.dart';
 import 'package:dottoday/data/repositories/drift_routine_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
@@ -39,6 +40,7 @@ final class DriftWriteUseCase implements WriteUseCase {
        _series = DriftSeriesRepository(db),
        _subtasks = DriftSubtaskRepository(db),
        _routines = DriftRoutineRepository(db),
+       _hints = DriftRevealHintRepository(db),
        _profiles = DriftSettingsRepository(db);
 
   final AppDatabase _db;
@@ -51,6 +53,7 @@ final class DriftWriteUseCase implements WriteUseCase {
   final DriftSeriesRepository _series;
   final DriftSubtaskRepository _subtasks;
   final DriftRoutineRepository _routines;
+  final DriftRevealHintRepository _hints;
   final DriftSettingsRepository _profiles;
 
   @override
@@ -95,6 +98,7 @@ final class DriftWriteUseCase implements WriteUseCase {
       ...m.subtasks,
     ]);
     await rows(routineWriter(b.userId, _routines), b.routines);
+    await rows(revealHintWriter(b.userId, _hints), b.revealHints);
     await _hlc.save();
   }
 

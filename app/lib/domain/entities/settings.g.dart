@@ -71,6 +71,8 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
     json['lowEnergyUntil'],
     const UtcMillisConverter().fromJson,
   ),
+  uiLayout:
+      $enumDecodeNullable(_$UiLayoutEnumMap, json['uiLayout']) ?? UiLayout.full,
 );
 
 Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
@@ -108,6 +110,7 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
     instance.lowEnergyUntil,
     const UtcMillisConverter().toJson,
   ),
+  'uiLayout': _$UiLayoutEnumMap[instance.uiLayout]!,
 };
 
 const _$WeekdayEnumMap = {
@@ -136,6 +139,8 @@ Value? _$JsonConverterFromJson<Json, Value>(
   Object? json,
   Value? Function(Json json) fromJson,
 ) => json == null ? null : fromJson(json as Json);
+
+const _$UiLayoutEnumMap = {UiLayout.minimal: 'minimal', UiLayout.full: 'full'};
 
 Json? _$JsonConverterToJson<Json, Value>(
   Value? value,

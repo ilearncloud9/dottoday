@@ -3,6 +3,7 @@ import 'package:dottoday/data/db/tables/calendar_tables.dart';
 import 'package:dottoday/data/db/tables/columns.dart';
 import 'package:dottoday/data/db/tables/occurrences.dart';
 import 'package:dottoday/data/db/tables/profiles.dart';
+import 'package:dottoday/data/db/tables/reveal_hints_table.dart';
 import 'package:dottoday/data/db/tables/routines_table.dart';
 import 'package:dottoday/data/db/tables/series_table.dart';
 import 'package:dottoday/data/db/tables/sync_tables.dart';
@@ -25,6 +26,7 @@ part 'app_database.g.dart';
     Occurrences,
     Subtasks,
     RoutinesTable,
+    RevealHintsTable,
     Conflicts,
     ChangeLog,
     SyncCursors,
@@ -37,7 +39,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 8;
+  static const latestSchemaVersion = 9;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -84,6 +86,17 @@ class AppDatabase extends _$AppDatabase {
         await _addColumnOnce(m, occurrences, occurrences.soundId);
         await _keepSystemReminderSound();
       }
+      // 9 (M16, docs/14 §6): minimal mode's reveal hints, the outbox /
+      // conflicts CHECK that now names them (rebuilt, rows kept, as in 6),
+      // and `uiLayout: "full"` for every existing profile, so nobody's
+      // app changes on upgrade. Only on upgrade: a new install picks its
+      // layout in onboarding step 0.
+      if (from < 9) {
+        await _createTableOnce(m, revealHintsTable);
+        await m.alterTable(TableMigration(changeLog));
+        await m.alterTable(TableMigration(conflicts));
+        await _keepFullLayout();
+      }
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without
@@ -97,6 +110,13 @@ class AppDatabase extends _$AppDatabase {
   Future<void> _keepSystemReminderSound() => customStatement(
     "UPDATE profiles SET settings = json_set(settings, '\$.reminderSound', "
     "'system') WHERE json_extract(settings, '\$.reminderSound') IS NULL",
+  );
+
+  /// Writes `uiLayout: "full"` where it is missing (v9). Not marked dirty:
+  /// the server's 0010 does the same to its copy.
+  Future<void> _keepFullLayout() => customStatement(
+    "UPDATE profiles SET settings = json_set(settings, '\$.uiLayout', 'full') "
+    "WHERE json_extract(settings, '\$.uiLayout') IS NULL",
   );
 
   /// Creates [table] unless it exists (see [_addColumnOnce] for why).

@@ -55,6 +55,11 @@ enum ShiftFollowersPolicy { ask, always, never }
 /// Theme preference in settings (docs/02 F8).
 enum ThemePreference { system, light, dark }
 
+/// How much of Dottoday the screens show (docs/14 §6): [minimal] is the
+/// thread, the next dot, Add and Done; [full] is everything. A View-layer
+/// flag only (ADR-0016): no repository, sync or notification code reads it.
+enum UiLayout { minimal, full }
+
 /// Weekday keys of `settings.dayBoundaries`, ISO order (Monday first).
 enum Weekday { mon, tue, wed, thu, fri, sat, sun }
 
