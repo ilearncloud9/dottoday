@@ -62,6 +62,7 @@ class OnboardingFlow extends ConsumerWidget {
                     next,
                     () => _finish(ref),
                     returning,
+                    minimal: minimal,
                   ),
                 ),
               ],
@@ -87,8 +88,9 @@ class OnboardingFlow extends ConsumerWidget {
     void Function(OnboardingStep, {bool? returning}) go,
     VoidCallback next,
     Future<void> Function() finish,
-    bool returning,
-  ) => switch (step) {
+    bool returning, {
+    required bool minimal,
+  }) => switch (step) {
     OnboardingStep.welcome => WelcomeStep(
       // A new install starts with minimal preselected (docs/14 §7, owner
       // 2026-10-30); step 0 shows it chosen and can change it.
@@ -99,7 +101,10 @@ class OnboardingFlow extends ConsumerWidget {
       // "Welcome back" on O5 (M4.7; the flag was never set, found M6.1).
       onSignIn: () => go(OnboardingStep.account, returning: true),
     ),
-    OnboardingStep.layout => LayoutStep(onNext: next),
+    OnboardingStep.layout => LayoutStep(
+      onNext: next,
+      steps: OnboardingStep.flow(minimal: minimal).length - 1,
+    ),
     OnboardingStep.dayShape => DayShapeStep(onNext: next),
     OnboardingStep.habits => HabitsStep(onNext: next),
     OnboardingStep.reminders => RemindersStep(onNext: next),
@@ -129,7 +134,9 @@ class _TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    if (step == OnboardingStep.welcome) {
+    // The welcome and step 0 (the owner's render, 2026-10-31) have no bar:
+    // step 0 shows where you are under its Continue.
+    if (step == OnboardingStep.welcome || step == OnboardingStep.layout) {
       return const SizedBox(height: DotTouch.android);
     }
     return Padding(

@@ -5641,21 +5641,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get onboardingLayoutBody =>
-      'Sie können das jederzeit in den Einstellungen ändern.';
+      'Sie können das jederzeit oben in den Einstellungen ändern.';
 
   @override
   String get onboardingLayoutMinimalTitle => 'Nur der nächste Punkt';
 
   @override
   String get onboardingLayoutMinimalBody =>
-      'Dottoday zeigt, was jetzt dran ist und was als Nächstes kommt. Hinzufügen, machen, erledigt.';
+      'Was jetzt dran ist und was als Nächstes kommt. Hinzufügen, machen, erledigt. Nichts einzurichten.';
 
   @override
   String get onboardingLayoutFullTitle => 'Der ganze Planer';
 
   @override
   String get onboardingLayoutFullBody =>
-      'Faden, Routinen, Rückblicke, Widgets und jede Einstellung.';
+      'Der ganze Faden, Woche und Monat, Routinen, Rückblicke, Widgets und jede Einstellung.';
 
   @override
   String get onboardingFirstTaskTitle => 'Was ist eine Sache für heute?';

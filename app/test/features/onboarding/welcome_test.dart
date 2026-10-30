@@ -37,22 +37,28 @@ void main() {
     expect(find.text('the app'), findsOneWidget);
   });
 
-  testWidgets('Get started, Back; Sign in goes to the account step', (
+  testWidgets('Get started, step 0, Back; Sign in goes to the account step', (
     tester,
   ) async {
     final c = await pumpOnboarding(tester);
     await tester.tap(find.text('Get started'));
     await tester.pumpAndSettle();
-    // Step 0 (docs/14 §4), with minimal preselected: its flow is five
-    // steps long.
+    // Step 0 (docs/14 §4, the owner's render): minimal preselected, no top
+    // bar, its own dots under Continue — the first of minimal's four.
     expect(stepOf(c), OnboardingStep.layout);
-    expect(find.bySemanticsLabel('Step 2 of 5'), findsOneWidget);
+    expect(find.bySemanticsLabel('Step 1 of 4'), findsOneWidget);
+    expect(find.byTooltip('Back'), findsNothing);
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    expect(stepOf(c), OnboardingStep.dayShape);
     await tester.tap(find.byTooltip('Back'));
     await tester.pumpAndSettle();
-    expect(stepOf(c), OnboardingStep.welcome);
+    expect(stepOf(c), OnboardingStep.layout);
+
+    final again = await pumpOnboarding(tester);
     await tester.tap(find.text('I already have an account'));
     await tester.pumpAndSettle();
-    expect(stepOf(c), OnboardingStep.account);
+    expect(stepOf(again), OnboardingStep.account);
   });
 
   testWidgets('a killed flow resumes where it was', (tester) async {

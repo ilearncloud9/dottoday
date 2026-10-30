@@ -5607,21 +5607,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingLayoutBody =>
-      'You can change this any time in Settings.';
+      'You can change this any time, from the top of Settings.';
 
   @override
   String get onboardingLayoutMinimalTitle => 'Just the next dot';
 
   @override
   String get onboardingLayoutMinimalBody =>
-      'Dottoday shows what\'s now and what\'s next. Add, do, done.';
+      'What\'s now and what\'s next. Add, do, done. Nothing to set up.';
 
   @override
   String get onboardingLayoutFullTitle => 'The full planner';
 
   @override
   String get onboardingLayoutFullBody =>
-      'Thread, routines, reviews, widgets and every setting.';
+      'The whole thread, week and month, routines, reviews, widgets and every setting.';
 
   @override
   String get onboardingFirstTaskTitle => 'What\'s one thing for today?';

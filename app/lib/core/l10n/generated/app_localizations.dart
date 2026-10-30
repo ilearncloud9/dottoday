@@ -8367,7 +8367,7 @@ abstract class AppLocalizations {
   /// Onboarding step 0, under the title.
   ///
   /// In en, this message translates to:
-  /// **'You can change this any time in Settings.'**
+  /// **'You can change this any time, from the top of Settings.'**
   String get onboardingLayoutBody;
 
   /// Onboarding step 0: the minimal card's title (owner's copy, docs/14 §4).
@@ -8379,7 +8379,7 @@ abstract class AppLocalizations {
   /// Onboarding step 0: the minimal card's text (owner's copy).
   ///
   /// In en, this message translates to:
-  /// **'Dottoday shows what\'s now and what\'s next. Add, do, done.'**
+  /// **'What\'s now and what\'s next. Add, do, done. Nothing to set up.'**
   String get onboardingLayoutMinimalBody;
 
   /// Onboarding step 0: the full card's title (owner's copy).
@@ -8391,7 +8391,7 @@ abstract class AppLocalizations {
   /// Onboarding step 0: the full card's text (owner's copy).
   ///
   /// In en, this message translates to:
-  /// **'Thread, routines, reviews, widgets and every setting.'**
+  /// **'The whole thread, week and month, routines, reviews, widgets and every setting.'**
   String get onboardingLayoutFullBody;
 
   /// Minimal onboarding, last step: the first task.
