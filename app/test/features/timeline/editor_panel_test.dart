@@ -11,7 +11,8 @@ import '../../support/today_harness.dart';
 
 // E1 as the Mac/web right-hand panel (docs/09 M3e.5, `A-mac-editor`).
 // Tests run on Android, so Ctrl.
-const _wide = Size(1400, 1000);
+// Tall enough for the day thread's stretched rows (ADR-0015).
+const _wide = Size(1400, 1600);
 
 Widget _frame(Widget today) => EditorPanelFrame(child: today);
 

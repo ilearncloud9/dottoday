@@ -107,30 +107,30 @@ class DropTodayPanel extends StatelessWidget {
   ThreadActions _actions(BuildContext context) {
     final l10n = context.l10n;
     Occurrence? find(String id) => items.where((o) => o.id == id).firstOrNull;
-    Slot? slotFor(String id, ThreadGap? gap, double fraction) {
+    Slot? slotFor(String id, DropSpan? span, double fraction) {
       final o = find(id);
-      final start = gap?.startUtc;
-      if (o == null || start == null || gap == null) return null;
+      if (o == null || span == null) return null;
       final at = dropStart(
         zone: zone,
-        gapStartUtc: start,
-        gapMinutes: gap.minutes,
+        gapStartUtc: span.startUtc,
+        gapMinutes: span.minutes,
         fraction: fraction,
         durationMin: o.durationMin,
         snapMinutes: room.snapMinutes,
+        fit: span.fit,
       );
       return Slot(at, at.add(Duration(minutes: o.durationMin)));
     }
 
     return ThreadActions(
       drag: ThreadDrag(
-        hintFor: (id, gap, fraction) => switch (slotFor(id, gap, fraction)) {
+        hintFor: (id, span, fraction) => switch (slotFor(id, span, fraction)) {
           final s? => l10n.dragDropAt(format.time(s.startUtc)),
           null => null,
         },
-        onDrop: (id, gap, fraction, _) {
+        onDrop: (id, span, fraction, _) {
           final o = find(id);
-          final slot = slotFor(id, gap, fraction);
+          final slot = slotFor(id, span, fraction);
           if (o == null || slot == null) return;
           unawaited(
             commands.place(o, (

@@ -115,3 +115,25 @@ class _Action extends StatelessWidget {
     );
   }
 }
+
+/// "Nothing planned" on an empty day (`A-ios-future-month`).
+class EmptyDayLine extends StatelessWidget {
+  const EmptyDayLine({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(
+        DotSpace.page,
+        DotSpace.l,
+        DotSpace.page,
+        0,
+      ),
+      child: Text(
+        context.l10n.todayEmpty,
+        style: t.styles.body.copyWith(color: t.colors.muted),
+      ),
+    );
+  }
+}

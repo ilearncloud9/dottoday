@@ -6,10 +6,12 @@ import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_parts.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
+import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/widgets/today_menu.dart';
 import 'package:dottoday/shared/dot/day_dot.dart';
+import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -48,9 +50,9 @@ class TodayHeader extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
         DotSpace.page,
-        DotSpace.l,
         DotSpace.s,
         DotSpace.s,
+        DotSpace.xs,
       ),
       child: Row(
         children: [
@@ -85,7 +87,7 @@ class TodayHeader extends ConsumerWidget {
                             ),
                           Flexible(
                             child: ExcludeSemantics(
-                              child: Text(caption, style: t.styles.caption),
+                              child: Text(caption, style: t.styles.dayCaption),
                             ),
                           ),
                           DotIcon(
@@ -105,9 +107,10 @@ class TodayHeader extends ConsumerWidget {
                   header: true,
                   child: Text(
                     _title(context, ref, locale),
-                    style: t.styles.pageTitle,
+                    style: t.styles.dayTitle,
                   ),
                 ),
+                if (!low && !monthOpen) DayNumbers(date: date),
               ],
             ),
           ),
@@ -234,6 +237,40 @@ class TodayPill extends StatelessWidget {
         context.l10n.todayPill,
         style: t.styles.button.copyWith(color: c.accentInk),
       ),
+    );
+  }
+}
+
+/// "0 of 15 · 22 h 55 planned" under Today's title (ADR-0015: moved up
+/// from the day card's header row, so the sheet below is all thread).
+class DayNumbers extends ConsumerWidget {
+  const DayNumbers({required this.date, super.key});
+
+  final DateTime date;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final data = ref.watch(timelineDataProvider(date)).value;
+    if (data == null) return const SizedBox.shrink();
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    final s = daySummaryOf(
+      data.blocks,
+      DayShape.on(
+        data.day.location,
+        date,
+        data.settings.boundaryFor(data.day.weekday),
+      ),
+    );
+    return Text(
+      s.total == 0
+          ? l10n.dayCardNothing(formatDurationShort(l10n, s.freeMinutes))
+          : l10n.dayCardSummary(
+              s.done,
+              s.total,
+              formatDurationShort(l10n, s.plannedMinutes),
+            ),
+      style: t.styles.dayCaption.copyWith(letterSpacing: 0),
     );
   }
 }

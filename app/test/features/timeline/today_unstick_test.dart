@@ -18,7 +18,7 @@ void main() {
         o.title == 'Spanish lesson' ? o.copyWith(moveCount: moves) : o,
     ];
     final repo = FakeOccurrenceRepository(rows);
-    await pumpToday(tester, repo: repo, size: const Size(390, 1600));
+    await pumpToday(tester, repo: repo, size: const Size(390, 2400));
     return repo;
   }
 

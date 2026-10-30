@@ -4,9 +4,11 @@ import 'package:dottoday/shared/dot/live_row.dart';
 import 'package:dottoday/shared/dot/shift_chip.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
+import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:dottoday/shared/dot/thread_outside.dart';
+import 'package:dottoday/shared/dot/thread_overlap.dart';
 import 'package:dottoday/shared/dot/thread_pieces.dart';
 import 'package:dottoday/shared/dot/thread_select.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +47,8 @@ final class ThreadActions {
   /// A future gap was tapped; reports the gap.
   final ValueChanged<ThreadGap>? onAddHere;
 
-  /// Long-press drag onto gaps and resize grips (R-05); null = no drag.
+  /// Long-press drag onto any time of the day (R-05, ADR-0015); null = no
+  /// drag.
   final ThreadDrag? drag;
 
   /// Multi-select (R-05): non-empty puts every row in selection mode,
@@ -168,16 +171,14 @@ class _ThreadState extends State<Thread> {
     final drag = a.drag;
     return switch (e) {
       ThreadCap() => CapRow(cap: e),
-      ThreadGap() when drag != null => GapDropTarget(
-        gap: e,
-        drag: drag,
-        hint: _hint,
-        shift: _shift,
-        calendar: _calendar,
-        child: _gap(e, dropBox: dropBox),
+      ThreadGap(:final span?) when drag != null => _droppable(
+        span,
+        drag,
+        _gap(e, dropBox: dropBox),
       ),
       ThreadGap() => _gap(e, dropBox: dropBox),
       ThreadTaskEntry(:final task) => _task(task),
+      ThreadOverlap() => OverlapRow(overlap: e),
       ThreadOutside(:final tasks) => OutsideRow(
         zone: e,
         taskRow: _task,
@@ -185,6 +186,22 @@ class _ThreadState extends State<Thread> {
       ),
     };
   }
+
+  /// [child] as a drop target standing for [span] (ADR-0015).
+  Widget _droppable(
+    DropSpan span,
+    ThreadDrag drag,
+    Widget child, {
+    String? ownId,
+  }) => SpanDropTarget(
+    span: span,
+    drag: drag,
+    hint: _hint,
+    shift: _shift,
+    calendar: _calendar,
+    ownId: ownId,
+    child: child,
+  );
 
   Widget _gap(ThreadGap gap, {required bool dropBox}) => GapRow(
     gap: gap,
@@ -212,20 +229,25 @@ class _ThreadState extends State<Thread> {
             onShiftRest: task.overrunMinutes > 0
                 ? _bind(a.onShiftRest, task)
                 : null,
-            onResize: _resize(drag, task),
             onUnstick: _answer(a.onUnstick, task),
           )
         : TaskRow(
             task: task,
-            dotSize: widget.side ? DotSize.macRowDot : DotSize.rowDot,
+            dotSize: widget.side ? DotSize.macRowDot : DotSize.threadDot,
             doneCircle: !widget.side,
             onToggleDone: _bind(a.onToggleDone, task),
             onOpen: _open(task),
-            onResize: _resize(drag, task),
             // Smallest step's Start opens Focus, which records the start.
             onStart: _bind(a.onFocus, task),
             onUnstick: _answer(a.onUnstick, task),
           );
+    // The day thread's rows stretch with their task (ADR-0015).
+    if (!widget.side) {
+      row = ConstrainedBox(
+        constraints: BoxConstraints(minHeight: threadRowHeight(task.minutes)),
+        child: row,
+      );
+    }
     if (onSelect != null) {
       row = SelectableTaskRow(
         selecting: a.selectedIds.isNotEmpty,
@@ -236,6 +258,9 @@ class _ThreadState extends State<Thread> {
       );
     }
     if (drag == null) return row;
+    if (task.span case final span?) {
+      row = _droppable(span, drag, row, ownId: task.id);
+    }
     return DraggableTaskRow(
       task: task,
       drag: drag,
@@ -257,12 +282,6 @@ class _ThreadState extends State<Thread> {
     return () => select != null && selectModifierHeld()
         ? select(task.id)
         : open(task.id);
-  }
-
-  static ValueChanged<int>? _resize(ThreadDrag? drag, ThreadTask task) {
-    final onResize = drag?.onResize;
-    if (onResize == null || !task.movable) return null;
-    return (steps) => onResize(task.id, steps);
   }
 
   /// The Unstick answer for [task], while its row shows the question.

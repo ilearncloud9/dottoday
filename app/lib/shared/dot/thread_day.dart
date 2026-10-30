@@ -30,7 +30,8 @@ final class ThreadFormat {
 const minGapMinutes = 15;
 
 /// The day as thread entries (docs/10 §1, §6): Wake Up cap, tasks in start
-/// order with free gaps between them, Bedtime cap. Tasks that end by Wake
+/// order with free gaps between them, Bedtime cap. A task that starts
+/// before an earlier one ends follows a [ThreadOverlap] (ADR-0015). Tasks that end by Wake
 /// Up or start at Bedtime or later fold into a [ThreadOutside] row before
 /// the sun cap or after the moon cap (F1.15); a task across a cap stays
 /// inline.
@@ -75,11 +76,22 @@ List<ThreadEntry> threadEntries({
     ?_outside(before.map(task).toList(), bedtime: false),
     ThreadCap.wake(format.time(shape.wakeUtc)),
   ];
+  final overlaps = _overlaps(inside);
   var cursor = shape.wakeUtc;
-  for (final o in inside) {
+  for (final (i, o) in inside.indexed) {
     // Travel time before a task is not free (R-17, docs/04 §5).
     _gap(out, cursor, footprintStart(o), nowUtc, format, showFreeTime);
-    final t = task(o);
+    final above = overlaps[i];
+    final below = i + 1 < inside.length && overlaps[i + 1];
+    if (above) {
+      out.add(
+        ThreadOverlap(
+          above: TaskColor.fromKey(inside[i - 1].colorKey),
+          below: TaskColor.fromKey(o.colorKey),
+        ),
+      );
+    }
+    final t = task(o).joined(above: above, below: below);
     // Overrun counts any later task, outside hours too.
     out.add(
       ThreadTaskEntry(
@@ -94,6 +106,19 @@ List<ThreadEntry> threadEntries({
   out
     ..add(ThreadCap.bed(format.time(shape.bedUtc)))
     ..addAll([?_outside(after.map(task).toList(), bedtime: true)]);
+  return out;
+}
+
+/// For each of [sorted], whether it starts before an earlier one ends
+/// (ADR-0015: "Tasks are overlapping").
+List<bool> _overlaps(List<Occurrence> sorted) {
+  final out = <bool>[];
+  DateTime? end;
+  for (final o in sorted) {
+    final last = end;
+    out.add(last != null && o.startUtc!.isBefore(last));
+    if (last == null || o.endUtc!.isAfter(last)) end = o.endUtc;
+  }
   return out;
 }
 
@@ -193,6 +218,8 @@ ThreadTask _task(
     smallestStep: smallestStep,
     unstick: unstick,
     reality: reality,
+    startUtc: start,
+    minutes: o.durationMin,
   );
 }
 
@@ -230,6 +257,10 @@ ThreadTask _withOverrun(
     overrunMinutes: overrun,
     movable: task.movable,
     travel: task.travel,
+    startUtc: task.startUtc,
+    minutes: task.minutes,
+    overlapsAbove: task.overlapsAbove,
+    overlapsBelow: task.overlapsBelow,
   );
 }
 

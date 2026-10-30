@@ -8,37 +8,32 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-export 'resize_grip.dart';
-
 /// What a thread does with drags (docs/10 §6: long-press = drag to another
-/// time or day, drops onto free gaps; R-05). The feature turns positions
-/// into times; the thread only reports them.
+/// time or day, R-05). A task lands anywhere on the day: in free time or
+/// on another task's row, overlapping it (ADR-0015). The feature turns
+/// positions into times; the thread only reports them.
 @immutable
 final class ThreadDrag {
   const ThreadDrag({
     required this.onDrop,
     required this.hintFor,
-    this.onResize,
     this.shiftByDefault,
     this.calendarByDefault,
   });
 
-  /// Task [id] dropped on [gap], [fraction] (0–1) down it; [shift] says
-  /// what the chips said at the drop.
+  /// Task [id] dropped on [span], [fraction] (0–1) down its row; [shift]
+  /// says what the chips said at the drop.
   final void Function(
     String id,
-    ThreadGap gap,
+    DropSpan span,
     double fraction,
     DropShift shift,
   )
   onDrop;
 
-  /// The floating label while task [id] hovers [gap] at [fraction]
-  /// ("11:30"), or null off any gap.
-  final String? Function(String id, ThreadGap? gap, double fraction) hintFor;
-
-  /// Task [id]'s end moved by [steps] grip steps (+ longer, − shorter).
-  final void Function(String id, int steps)? onResize;
+  /// The floating label while task [id] hovers [span] at [fraction]
+  /// ("11:30"), or null off any row.
+  final String? Function(String id, DropSpan? span, double fraction) hintFor;
 
   /// Where the "Shift later tasks" chip starts each drag (Settings ›
   /// Shift later tasks); null hides the chip (R-04).
@@ -184,20 +179,26 @@ class _Lifted extends StatelessWidget {
   }
 }
 
-/// A free gap that accepts a dragged task; it lights up while one hovers
-/// and reports where in the gap it was let go.
-class GapDropTarget extends StatelessWidget {
-  const GapDropTarget({
-    required this.gap,
+/// A row that accepts a dragged task, a free gap or another task's row
+/// (ADR-0015); it lights up while one hovers and reports how far down it
+/// was let go.
+class SpanDropTarget extends StatelessWidget {
+  const SpanDropTarget({
+    required this.span,
     required this.drag,
     required this.hint,
     required this.shift,
     required this.calendar,
     required this.child,
+    this.ownId,
     super.key,
   });
 
-  final ThreadGap gap;
+  final DropSpan span;
+
+  /// The task this row shows: it never accepts itself, so a long-press
+  /// let go in place still selects (docs/03 §3.2).
+  final String? ownId;
   final ThreadDrag drag;
   final ValueNotifier<String?> hint;
 
@@ -218,8 +219,10 @@ class GapDropTarget extends StatelessWidget {
     }
 
     return DragTarget<String>(
+      onWillAcceptWithDetails: (d) => d.data != ownId,
       onMove: (d) {
-        final text = drag.hintFor(d.data, gap, fractionOf(d.offset));
+        if (d.data == ownId) return;
+        final text = drag.hintFor(d.data, span, fractionOf(d.offset));
         if (hint.value != text) {
           hint.value = text;
           unawaited(HapticFeedback.selectionClick());
@@ -234,7 +237,7 @@ class GapDropTarget extends StatelessWidget {
         final followers = shift.value != invert;
         drag.onDrop(
           d.data,
-          gap,
+          span,
           fractionOf(d.offset),
           DropShift(followers: followers, calendar: calendar.value),
         );

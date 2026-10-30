@@ -114,7 +114,7 @@ Never run destructive git commands or delete >30 lines without saying so first.
 These exist because real users complained about the original app. Do not cut them for time:
 
 - Recurring tasks, calendar import, custom notifications, export: **free tier**. (R-01, R-02, R-03, R-11)
-- Drag to move, drag edges to resize, long-press multi-select, and **shift everything after this** in one gesture. (R-04, R-05)
+- Drag to move (anywhere on the day, overlaps allowed), long-press multi-select, and **shift everything after this** in one gesture. Resize is the task sheet's duration: the owner removed day-thread edge resize (ADR-0015). (R-04, R-05)
 - Quick add: a task is creatable in ≤ 2 taps + typing; natural-language time parsing; paste a list → multiple tasks. (R-06, R-07)
 - Sync is conflict-safe and visible: a sync status indicator, never silent data loss, local backups + export. (R-08, R-11)
 - Recurring subtasks reset correctly per occurrence (occurrence-scoped completion). (R-09)

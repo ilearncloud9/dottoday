@@ -8,7 +8,7 @@ Reference renders live in `docs/design-references/png/` (2× PNG) with their HTM
 
 ## 1. The idea in one paragraph
 
-A day is a **thread**: a vertical line that starts at Wake Up (sun cap) and ends at Bedtime (moon cap). Every task is a **dot** on that thread: a round icon in the task's colour. A dot is outlined while the task is upcoming, becomes a conic ring that fills while the task is live, and is solid with a check when done. Between dots the thread is a dotted line (free time); over a task it is a thick coloured segment the length of the task. The same dot vocabulary carries the whole app: the **day dot** in the header fills from Wake Up to Bedtime, the **week strip** is seven small completion dots, the **Inbox** is a dotted ring holding loose dots, the Today tab icon is a dot. Nothing else is decorative.
+A day is a **thread**: a vertical line that starts at Wake Up (sun cap) and ends at Bedtime (moon cap). Every task is a **dot** on that thread: a round tint of the task's colour with its bold icon in the colour itself (ADR-0015). The dot looks the same whether the task is upcoming or done; a ring inside it fills while the task is live, and the round **done circle** at the row's end fills with a tick when the task is done. Between dots the thread is a dotted line (free time); over a task it is a thick coloured segment the length of the task. The same dot vocabulary carries the whole app: the **day dot** in the header fills from Wake Up to Bedtime, the **week strip** is seven small completion dots, the **Inbox** is a dotted ring holding loose dots, the Today tab icon is a dot. Nothing else is decorative.
 
 ## 2. Tokens
 
@@ -63,13 +63,13 @@ Durations 180–240 ms, standard ease-out; all animation collapses to 0 under re
 | Widget | What it is | Renders in |
 |---|---|---|
 | `DayDot` | 44 px conic ring, Wake Up→Bedtime progress, small accent dot centre | every header, Watch (18 px) |
-| `WeekStrip` | 7 columns: weekday, date, 8 px completion dot (filled past / conic partial / outline future); today column raised; pull handle below opens `MonthGrid` | Today (all platforms) |
-| `DayPager` | horizontal pager of `DayCard`s, neighbours peek 22 px, 7 page dots, always opens on today | iPhone, Android |
-| `DayCard` | raised card: "Weekday · Today" + "2 of 7 · 5 h 45 planned", then `Thread` | iPhone, Android, Mac spread |
+| `WeekStrip` | 7 columns: weekday, date, 8 px completion dot (filled past / conic partial / outline future); the selected column filled in the text colour (ADR-0015); on Today the pull handle sits on the day sheet and opens `MonthGrid` | Today (all platforms) |
+| `DayPager` | horizontal pager of full-width `DayCard.sheet`s (ADR-0015: no peek, no page dots), always opens on today | iPhone, Android |
+| `DayCard` | raised card: "Weekday · Today" + "2 of 7 · 5 h 45 planned", then `Thread`; on Today the `.sheet` form: top-rounded, the month handle on top, no title row (the header carries the numbers, ADR-0015) | iPhone, Android, Mac spread, onboarding |
 | `Thread` | the vertical timeline: sun cap, rows, free gaps ("1 h free · add here" drop target), moon cap "Bedtime · 22:00" | Today, task sheet, pickers |
-| `TaskRow` | dot + segment + meta + title + done circle; states upcoming / live / done / missed / pinned (lock) / recurring (repeat glyph) | thread, search results |
+| `TaskRow` | dot + segment + meta + title + done circle (ring in the task colour, filled with a white tick when done; ADR-0015); the row stretches with its task (88–288 px); states upcoming / live / done / missed / pinned (lock) / recurring (repeat glyph) | thread, search results |
 | `LiveRow` | `TaskRow` expanded: subtask ring "1 of 3", "38 min left", Done / +15 min / Shift the rest | the current task |
-| `TaskDot` | the icon dot; variants outline / conic / filled-check / dashed (skipped) | everywhere |
+| `TaskDot` | the icon dot: tint + bold icon in the task colour, the same in every state; live adds an inner progress ring, skipped a dashed ring and faded icon (ADR-0015) | everywhere |
 | `MonthGrid` | 7×(5–6) cells; past cells: completion dot by the date, done titles struck, "missed" in text, "3 of 4 done"; today accent-ringed; future plain; "Light day"/"+N more" | Today pull-open, Mac Month, future-month planning |
 | `InboxRow` | outlined dot, duration, title, round accent "+" (Schedule); swipe left = schedule, right = trash | Inbox, Search |
 | `NextFreeSlot` | dashed row "Next free slot today 11:30 – 12:30 · fits X" + Place | Inbox |
@@ -145,7 +145,7 @@ Loading (skeleton dots on a dotted thread, never a spinner for > 300 ms), empty 
 ## 6. Behaviours that define the concept (must-haves)
 
 - Today always opens on the current date; swiping the pager or tapping the strip changes day; the header caption chevron and the strip's pull handle both open the month.
-- Tap a dot = mark done (with undo). Tap the row = task sheet. Long-press = drag to another time / day (drops onto free gaps; on Mac drag between columns).
+- Tap the done circle = mark done (with undo); tap it again = not done; the task keeps its place. Tap the dot or the row = task sheet (the live dot opens Focus). Long-press = drag to another time / day: drop on a free gap (kept inside it when it fits) or on another task's row, which overlaps the two — drawn as joined capsules with "Tasks are overlapping" (ADR-0015); on Mac drag between columns. A task's length changes in the sheet's duration; the day thread has no edge resize (ADR-0015).
 - The live task's dot fills in real time; the now-marker travels the thread; "38 min left" updates every minute.
 - Free gaps are drop targets and carry "N h free · add here".
 - Add never asks for what it can infer: typing "Go shopping 5pm 1h" fills time and duration; Suggestions come from the user's own history (same title → last used time, duration, colour, icon).

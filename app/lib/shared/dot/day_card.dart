@@ -57,7 +57,24 @@ class DayCard extends StatelessWidget {
     this.reality,
     this.note,
     super.key,
-  }) : side = null;
+  }) : side = null,
+       handle = null;
+
+  /// Today's day as a full-width sheet (ADR-0015): top corners rounded, no
+  /// title row (the screen header carries the day and its numbers), the
+  /// [handle] centred at the top, then the thread.
+  const DayCard.sheet({
+    required this.entries,
+    this.actions = const ThreadActions(),
+    this.footer,
+    this.reality,
+    this.note,
+    this.handle,
+    super.key,
+  }) : title = '',
+       isToday = false,
+       summary = null,
+       side = null;
 
   /// A side day of the Mac/web spread (`A-mac-today-alt1-spread`): no
   /// raised card, a muted "Tuesday · Yesterday" header with "● 7 of 7" or
@@ -72,12 +89,18 @@ class DayCard extends StatelessWidget {
     super.key,
   }) : isToday = false,
        reality = null,
-       note = null;
+       note = null,
+       handle = null;
 
   /// "Wednesday", or "Monday 14 Dec" away from this week.
   final String title;
   final bool isToday;
-  final DaySummary summary;
+
+  /// The header's numbers; null on [DayCard.sheet].
+  final DaySummary? summary;
+
+  /// On [DayCard.sheet]: the month pull handle at the top.
+  final Widget? handle;
   final List<ThreadEntry> entries;
   final ThreadActions actions;
 
@@ -102,16 +125,18 @@ class DayCard extends StatelessWidget {
       return SideDayColumn(
         title: title,
         side: day,
-        summary: summary,
+        summary: summary!,
         entries: entries,
         actions: actions,
         footer: footer,
       );
     }
+    final numbers = summary;
+    if (numbers == null) return _sheet(c);
     final header = _Header(
       title: title,
       isToday: isToday,
-      summary: summary,
+      summary: numbers,
       reality: reality,
     );
     return DecoratedBox(
@@ -127,6 +152,54 @@ class DayCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: DotRadii.cardLarge),
         child: LayoutBuilder(builder: (_, box) => _body(box, header)),
+      ),
+    );
+  }
+
+  /// [DayCard.sheet]: the handle and the Plan / Reality switch pinned over
+  /// the scrolling thread, on a sheet that runs to the bottom edge.
+  Widget _sheet(DotColors c) {
+    final top = [
+      ?handle,
+      if (reality case final r?)
+        Padding(
+          padding: const EdgeInsetsDirectional.only(end: DotSpace.l),
+          child: Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: _RealitySwitch(toggle: r),
+          ),
+        ),
+    ];
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: c.raised,
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(DotRadii.sheet),
+        ),
+        border: Border.all(color: c.outline, width: DotSpace.hairline),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (top.isEmpty) const SizedBox(height: DotSpace.l) else ...top,
+          // Lazy: only the rows on screen are built (R-15). The list's
+          // rectangular clip sits below the rounded corners.
+          Expanded(
+            // The thread keeps clear of the sheet's edge (`Main`'s inset).
+            child: Padding(
+              padding: const EdgeInsetsDirectional.only(start: DotSpace.xs),
+              child: CustomScrollView(
+                slivers: [
+                  _thread(),
+                  // Rows scroll clear of the floating tab bar and + button.
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: DotSpace.fabClearance),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -155,8 +228,9 @@ class DayCard extends StatelessWidget {
 
   /// The day's thread (and footer), with the card's insets.
   Widget _thread() => SliverPadding(
+    // The 56 px dot fills the axis column: keep it off the card's edge.
     padding: const EdgeInsetsDirectional.fromSTEB(
-      0,
+      DotSpace.s,
       DotSpace.xs,
       DotSpace.xs,
       0,

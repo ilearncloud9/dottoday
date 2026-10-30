@@ -1,4 +1,5 @@
 import 'package:dottoday/features/timeline/state/reality_thread.dart';
+import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -70,11 +71,11 @@ void main() {
       size: const Size(390, 1600),
       learningMeta: realityRevealedMeta,
     );
-    final grips = find.bySemanticsLabel(RegExp('^Change how long'));
-    expect(grips, findsWidgets);
+    final lifts = find.byType(DraggableTaskRow);
+    expect(lifts, findsWidgets);
     await tester.tap(find.text('Reality'));
     await tester.pumpAndSettle();
-    expect(grips, findsNothing);
+    expect(lifts, findsNothing);
     handle.dispose();
   });
 

@@ -59,8 +59,9 @@ void main() {
     await tester.tap(find.text('Done'));
     await tester.tap(find.text('1 h free · add here'));
     expect(log, [
-      'done mail',
-      'done deep',
+      'open mail',
+      // The first circle is the done Run's: it stays, so a tap undoes it.
+      'done run',
       'open mail',
       'extend deep',
       'shift deep',
@@ -70,8 +71,10 @@ void main() {
   });
 
   // One tap on the live dot opens Focus (11 A3, docs/09 M10.5); its done
-  // circle and Done still tick it; other dots still tick.
-  testWidgets('the live dot opens Focus; other dots tick', (tester) async {
+  // circle and Done still tick it; other dots open, never tick (ADR-0015).
+  testWidgets('the live dot opens Focus; other dots never tick', (
+    tester,
+  ) async {
     final log = <String>[];
     await tester.pumpWidget(
       _thread(
@@ -86,7 +89,7 @@ void main() {
     );
     await tester.tap(find.bySemanticsLabel('Reply to email, upcoming'));
     await tester.tap(find.text('Done'));
-    expect(log, ['focus deep', 'done mail', 'done deep']);
+    expect(log, ['focus deep', 'done deep']);
   });
 
   // Unstick (docs/09 M10.7): only a flagged row asks; Enter or the arrow

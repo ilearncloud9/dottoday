@@ -73,6 +73,7 @@ void main() {
           ThreadGap(:final minutes) => 'gap$minutes',
           ThreadTaskEntry(:final task) => task.id,
           ThreadOutside(:final tasks) => 'outside${tasks.length}',
+          ThreadOverlap() => 'overlap',
         },
     ];
     expect(order, [
@@ -127,6 +128,7 @@ void main() {
           ThreadTaskEntry(:final task) => task.id,
           ThreadOutside(:final bedtime, :final tasks) =>
             '${bedtime ? 'after' : 'before'}:${tasks.map((t) => t.id).join(',')}',
+          ThreadOverlap() => 'overlap',
         },
     ];
 
@@ -244,5 +246,51 @@ void main() {
   test('overlapping tasks never produce a negative gap', () {
     final e = _entries(_at(6), [_o('a', 9, 0, 60), _o('b', 9, 30, 15)]);
     expect(e.whereType<ThreadGap>().map((g) => g.minutes), [120, 720]);
+  });
+
+  test('overlapping tasks meet at a ThreadOverlap and are flagged '
+      '(ADR-0015)', () {
+    final e = _entries(_at(6), [
+      _o('a', 9, 0, 60),
+      _o('b', 9, 30, 15),
+      _o('c', 11, 0, 30),
+    ]);
+    final kinds = [
+      for (final x in e)
+        switch (x) {
+          ThreadTaskEntry(:final task) => task.id,
+          ThreadOverlap() => 'overlap',
+          ThreadGap() => 'gap',
+          ThreadCap() => 'cap',
+          ThreadOutside() => 'outside',
+        },
+    ];
+    expect(kinds, [
+      'cap',
+      'gap',
+      'a',
+      'overlap',
+      'b',
+      'gap',
+      'c',
+      'gap',
+      'cap',
+    ]);
+    expect(_task(e, 'a').overlapsBelow, isTrue);
+    expect(_task(e, 'a').overlapsAbove, isFalse);
+    expect(_task(e, 'b').overlapsAbove, isTrue);
+    expect(_task(e, 'c').overlapsAbove, isFalse);
+  });
+
+  test('a task that starts as another ends does not overlap it', () {
+    final e = _entries(_at(6), [_o('a', 9, 0, 60), _o('b', 10, 0, 30)]);
+    expect(e.whereType<ThreadOverlap>(), isEmpty);
+  });
+
+  test('rows carry their start and length for drops (ADR-0015)', () {
+    final t = _task(_entries(_at(6), [_o('a', 9, 0, 60)]), 'a');
+    expect(t.span?.startUtc, _at(9));
+    expect(t.span?.minutes, 60);
+    expect(t.span?.fit, isFalse);
   });
 }
