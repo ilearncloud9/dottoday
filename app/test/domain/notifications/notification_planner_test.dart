@@ -163,7 +163,9 @@ void main() {
         's1': const [Alert(kind: AlertKind.atStart, sound: 'chime')],
       },
     );
-    expect(plan.map((n) => (n.occurrenceId, n.sound)), [('i', 'chime')]);
+    // 'i' is the day's first dot: loud, so it plays the Start sound
+    // whatever its alert's sound (docs/12 D2).
+    expect(plan.map((n) => (n.occurrenceId, n.sound)), [('i', 'dot_alarm')]);
   });
 
   group('quiet hours', () {
@@ -328,6 +330,78 @@ void main() {
       {for (final x in n) x.occurrenceId: x.sound},
       {'plain': 'chime', 'own': 'bell'},
     );
-    expect(_plan(tasks).first.sound, isNull);
+    // docs/12 §3: nothing chosen anywhere is the Dot tone; the OS sound
+    // is "system" (written for every pre-v8 profile), planned as null.
+    expect(_plan(tasks).first.sound, 'dot');
+    final system = _planner().plan(
+      occurrences: tasks,
+      tzId: 'UTC',
+      defaultSound: 'system',
+    );
+    expect(
+      {for (final x in system) x.occurrenceId: x.sound},
+      {'plain': null, 'own': 'bell'},
+    );
+  });
+
+  group('sound chain (docs/12 §3)', () {
+    final at = DateTime.utc(2026, 10, 21, 11);
+    PlannedNotification one({
+      String? alert,
+      String? occurrence,
+      String? series,
+      String? settings,
+      String? start,
+    }) {
+      final first = _task('first', DateTime.utc(2026, 10, 21, 10));
+      final task = _task(
+        'task',
+        at,
+        alerts: [Alert(kind: AlertKind.atStart, sound: alert)],
+      ).copyWith(seriesId: 's1', soundId: occurrence);
+      return _planner()
+          .plan(
+            occurrences: [first, task],
+            tzId: 'UTC',
+            seriesSounds: {'s1': series},
+            defaultSound: settings,
+            startSound: start,
+          )
+          .singleWhere((n) => n.occurrenceId == 'task');
+    }
+
+    test('the nearest choice wins: alert, task, repeat, Settings', () {
+      expect(one(settings: 'bell').sound, 'bell');
+      expect(one(series: 'clear.lift', settings: 'bell').sound, 'clear.lift');
+      expect(
+        one(occurrence: 'play.frog', series: 'clear.lift').sound,
+        'play.frog',
+      );
+      expect(one(alert: 'chime', occurrence: 'play.frog').sound, 'chime');
+    });
+
+    test('"none" anywhere is silent; unknown plays Dot', () {
+      expect(one(series: 'none', settings: 'bell').sound, 'none');
+      expect(one(occurrence: 'none').sound, 'none');
+      expect(one(series: 'quiet.gone').sound, 'dot');
+      expect(one(series: 'system', settings: 'bell').sound, 'dot');
+    });
+
+    test('a loud dot plays the Start sound, never the task\'s', () {
+      final first = _task(
+        'first',
+        DateTime.utc(2026, 10, 21, 10),
+        alerts: const [Alert(kind: AlertKind.atStart, sound: 'bell')],
+      ).copyWith(soundId: 'clear.lift');
+      List<String?> loud(String? start) => _planner()
+          .plan(occurrences: [first], tzId: 'UTC', startSound: start)
+          .where((n) => n.loud)
+          .map((n) => n.sound)
+          .toList();
+      expect(loud(null), ['dot_alarm']);
+      expect(loud('start.morning'), ['start.morning']);
+      expect(loud('start.gone'), ['dot_alarm']);
+      expect(loud('clear.lift'), ['dot_alarm'], reason: 'not a Start sound');
+    });
   });
 }
