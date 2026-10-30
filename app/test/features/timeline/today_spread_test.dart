@@ -82,8 +82,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Plan accepted'), findsOneWidget);
     expect(find.text('10:45 AM – 11:30 AM'), findsOneWidget);
-    // The live task started before now and stays put.
-    expect(find.text('9:00 AM – 11:00 AM'), findsOneWidget);
+    // The live task started before now and stays put ("… · 2 h": the
+    // card's live row keeps its time above the title, ADR-0015).
+    expect(find.textContaining('9:00 AM – 11:00 AM'), findsOneWidget);
     await tester.tap(find.text('Undo'));
     await tester.pumpAndSettle();
     expect(find.text('10:30 AM – 11:15 AM'), findsOneWidget);
