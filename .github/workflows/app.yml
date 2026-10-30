@@ -136,6 +136,28 @@ jobs:
           sed -i '' -e '/DEVELOPMENT_TEAM = /d'
           -e 's/"Apple Development"/"-"/'
           macos/Runner.xcodeproj/project.pbxproj
+      # Gradle installs the NDK Flutter asks for when the runner image lacks
+      # it, with no retry, and a corrupt download ("Error on ZipFile unknown
+      # archive") then fails the build (PR #36, twice). Install it first,
+      # with retries; fail clearly if it really can't be had.
+      - if: matrix.target == 'android'
+        name: Install the Android NDK Flutter uses
+        run: |
+          root="$(dirname "$(dirname "$(command -v flutter)")")"
+          ndk="$(sed -nE 's/.*val ndkVersion: String = "([0-9.]+)".*/\1/p' \
+            "$root/packages/flutter_tools/gradle/src/main/kotlin/FlutterExtension.kt")"
+          test -n "$ndk"
+          sdkmanager="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          for attempt in 1 2 3; do
+            if "$sdkmanager" --install "ndk;$ndk" < <(yes) > /dev/null; then
+              echo "NDK $ndk installed"
+              exit 0
+            fi
+            echo "NDK $ndk download failed (attempt $attempt)"
+            rm -rf "$ANDROID_HOME/ndk/$ndk" "$ANDROID_HOME/.temp"
+            sleep 15
+          done
+          exit 1
       - if: matrix.target == 'web'
         run: ../tool/web_db_assets.sh
       - run: ${{ matrix.cmd }} --dart-define-from-file=.env.example
