@@ -395,7 +395,7 @@ Follow-ups:
 - [ ] App size: the catalogue adds about 7 MB, mostly the Start sounds. Measure a 15 s Start cap, which would roughly halve it, in the ear pass before a store build.
 - [ ] Native-speaker pass on the de/fr/es sound names and the Sounds page copy.
 - [x] At 200 % text the Notification health title breaks mid-word ("Notificatio / n health"): `PageFrame`'s large title should wrap at words. Done 2026-10-30. When a word of the title is wider than the space beside ‹, the title goes under ‹ on the full width and wraps at its spaces. This applies to every Settings page. The `settings_health_sounds_*_t2` goldens are re-baselined; `settings_pages_test` covers 100 % and 200 % with real fonts.
-- [ ] The golden test-order flake (#18), found during M15.1.
+- [x] The golden test-order flake (#18), found during M15.1. Done: each brain-dump test gets its own thinking memory (issue closed; CHANGELOG › Fixed).
 - [ ] Device ear check on hardware: the Start sounds at alarm volume, Insistent's loop, and None (vibrates without sound) on an iPhone and an Android phone.
 
 ## Follow-ups after M12 (found at the M12.6 ship-check)
