@@ -85,10 +85,14 @@ OsNotification? composeNotification(
   );
 }
 
-/// The sound [planned] plays (docs/12): the Start sound when loud, the
-/// planner's resolved key for a task reminder (null = the OS sound), and
-/// none for the summaries, Bedtime and Smallest step.
+/// The sound [planned] plays (docs/12): the Start sound when loud and for
+/// the test alarm, the planner's resolved key for a task reminder (null =
+/// the OS sound), and none for the summaries, Bedtime and Smallest step.
 CatalogueSound? _soundOf(PlannedNotification planned) {
+  // The test alarm sounds like the real first dot (docs/12 D2).
+  if (planned.purpose == NotificationPurpose.testAlarm) {
+    return resolveStartSound(planned.sound);
+  }
   if (planned.purpose != NotificationPurpose.task) return null;
   if (planned.loud) return resolveStartSound(planned.sound);
   return switch (planned.sound) {

@@ -20,6 +20,10 @@ const defaultDoneSoundId = 'done.swift';
 /// Focus's step tick: the first-party Chime, kept (docs/12 §2.6).
 const focusTickSoundId = 'chime';
 
+/// The one loud, repeating Start sound: opt-in, never a default, with its
+/// own caption in the picker (docs/12 §2.3, D7).
+const insistentStartSoundId = 'start.insistent';
+
 /// What a normal-tier reminder plays.
 sealed class ReminderSoundChoice {
   const ReminderSoundChoice();

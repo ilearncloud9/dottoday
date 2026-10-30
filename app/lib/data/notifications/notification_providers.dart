@@ -35,6 +35,12 @@ FlutterLocalNotificationsPlugin localNotificationsPlugin(Ref ref) =>
 SoundPlayer soundPlayer(Ref ref) =>
     platformSoundPlayer(ref.watch(loggerProvider));
 
+/// Whether the ringer is silent right now, for the pickers' banner
+/// (docs/12 §6); re-read each time a picker opens.
+@riverpod
+Future<bool> deviceMuted(Ref ref) =>
+    ref.watch(soundPlayerProvider).deviceMuted();
+
 /// The scheduler under the gateway: the OS on iOS, Android and macOS; on
 /// the web, timers while the tab is open, posting through the service
 /// worker or the in-app banner (M5.3).

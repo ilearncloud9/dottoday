@@ -145,7 +145,7 @@ final class NotificationPlanner {
       );
     }
     if (testAlarmAtUtc case final at? when at.isAfter(now)) {
-      planned.add(testAlarm(at, usedIds));
+      planned.add(testAlarm(at, usedIds, startSound: startSound));
     }
     // Low-energy mode (11 D2, M12.2): every nudge before it ends is off;
     // alarm-loud starts (the day's first dot, routine starts, the test
@@ -190,21 +190,26 @@ final class NotificationPlanner {
   }
 
   /// The one test alarm at [atUtc] (M6.5.9): loud, never silent, in its
-  /// own slot so it can't collide with a task's alert.
-  static PlannedNotification testAlarm(DateTime atUtc, Set<int> used) =>
-      PlannedNotification(
-        id: uniqueNotificationId(
-          used,
-          'test-alarm',
-          PlannedNotification.testAlarmIndex,
-        ),
-        occurrenceId: '',
-        alertIndex: PlannedNotification.testAlarmIndex,
-        fireAtUtc: atUtc,
-        kind: AlertKind.atStart,
-        loud: true,
-        purpose: NotificationPurpose.testAlarm,
-      );
+  /// own slot so it can't collide with a task's alert. It rings with
+  /// [startSound], so the test sounds like the real first dot (docs/12).
+  static PlannedNotification testAlarm(
+    DateTime atUtc,
+    Set<int> used, {
+    String? startSound,
+  }) => PlannedNotification(
+    id: uniqueNotificationId(
+      used,
+      'test-alarm',
+      PlannedNotification.testAlarmIndex,
+    ),
+    occurrenceId: '',
+    alertIndex: PlannedNotification.testAlarmIndex,
+    fireAtUtc: atUtc,
+    kind: AlertKind.atStart,
+    sound: resolveStartSound(startSound).id,
+    loud: true,
+    purpose: NotificationPurpose.testAlarm,
+  );
 
   /// Operations that turn [pending] (the OS set, by ID) into [desired]:
   /// cancel stale or changed IDs, schedule new or changed ones.

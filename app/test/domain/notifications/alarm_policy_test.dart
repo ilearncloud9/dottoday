@@ -157,6 +157,18 @@ void main() {
     expect((test.loud, test.silent, test.timeSensitive), (true, false, true));
     expect(test.fireAtUtc, at);
     expect(planned.map((n) => n.id).toSet(), hasLength(planned.length));
+    // It rings with the Start sound (docs/12): Dot alarm unless chosen.
+    expect(test.sound, 'dot_alarm');
+    final swing =
+        NotificationPlanner(
+          clock: FakeClock(DateTime.utc(2026, 10, 21, 5)),
+        ).plan(
+          occurrences: const [],
+          tzId: 'UTC',
+          testAlarmAtUtc: at,
+          startSound: 'start.swing',
+        );
+    expect(swing.single.sound, 'start.swing');
     final later = NotificationPlanner(
       clock: FakeClock(at.add(const Duration(seconds: 1))),
     ).plan(occurrences: const [], tzId: 'UTC', testAlarmAtUtc: at);

@@ -20,6 +20,7 @@ final class SeriesChange {
     this.startMinute,
     this.rule,
     this.alerts,
+    this.soundId,
     this.tzId,
   });
 
@@ -42,6 +43,12 @@ final class SeriesChange {
   /// New alerts (M3f.2): the series takes them and later rows inherit;
   /// "this one" keeps them on the row.
   final List<Alert>? alerts;
+
+  /// A new reminder sound (docs/12 §3), wrapped so "Default" (`(to: null)`)
+  /// differs from "unchanged". Like [alerts]: picked with its own scope
+  /// question (so not in [SeriesChange.between]); the series takes it and
+  /// later rows inherit; "this one" keeps it on the row.
+  final ({String? to})? soundId;
 
   /// A new zone (M5.9, travel "keep times"): later instances keep their
   /// clock time in it. Moves instances, so the series is split.
@@ -83,6 +90,7 @@ final class SeriesChange {
       startMinute == null &&
       rule == null &&
       alerts == null &&
+      soundId == null &&
       tzId == null;
 
   /// A new time or rule moves instances: the series is split.
@@ -92,6 +100,10 @@ final class SeriesChange {
   /// row's own when [own] (this one), else it inherits the series'.
   Occurrence fields(Occurrence o, {bool own = false}) => o.copyWith(
     alerts: alerts == null ? o.alerts : (own ? alerts : null),
+    soundId: switch (soundId) {
+      (:final to) => own ? to : null,
+      null => o.soundId,
+    },
     title: title ?? o.title,
     notes: switch (notes) {
       (:final to) => to,
@@ -111,6 +123,10 @@ final class SeriesChange {
   /// [s]'s template with the field changes.
   Series template(Series s) => s.copyWith(
     alerts: alerts ?? s.alerts,
+    soundId: switch (soundId) {
+      (:final to) => to,
+      null => s.soundId,
+    },
     title: title ?? s.title,
     notes: switch (notes) {
       (:final to) => to,

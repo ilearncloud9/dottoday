@@ -17,6 +17,7 @@ import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/theme/icon_licenses.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/auth/supabase_start.dart';
+import 'package:dottoday/data/notifications/sound_licenses.dart';
 import 'package:dottoday/data/observability/sentry_reporting.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -36,6 +37,7 @@ Future<void> bootstrap() async {
   final logger = Logger(sinks, const SystemClock());
   installErrorHandlers(logger);
   registerIconLicenses();
+  registerSoundLicenses();
   // IANA zone data for TZDateTime arithmetic and tz_id validation (docs/05).
   tz_data.initializeTimeZones();
   // Date symbols for every locale: notification and widget text is
