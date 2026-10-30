@@ -131,7 +131,6 @@ class _App extends StatelessWidget {
               drag: ThreadDrag(
                 onDrop: (_, _, _, _) {},
                 hintFor: (_, _, _) => null,
-                onResize: (_, _) {},
               ),
             ),
           ),

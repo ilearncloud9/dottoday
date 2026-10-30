@@ -159,8 +159,46 @@ final _outside = <ThreadEntry>[
   ),
 ];
 
+/// Overlap (ADR-0015, the owner's Run / Good reference): two amber tasks
+/// at the same time join as capsules under "Tasks are overlapping"; the
+/// done one keeps its dot and fills its circle.
+const _overlap = <ThreadEntry>[
+  ThreadCap.wake('7:00'),
+  ThreadTaskEntry(
+    ThreadTask(
+      id: 'run',
+      title: 'Run',
+      color: TaskColor.amber,
+      icon: TaskIcon.run,
+      state: DotState.upcoming,
+      timeRange: '23:20 – 23:35 (15 min)',
+      minutes: 15,
+      overlapsBelow: true,
+    ),
+  ),
+  ThreadOverlap(above: TaskColor.amber, below: TaskColor.amber),
+  ThreadTaskEntry(
+    ThreadTask(
+      id: 'good',
+      title: 'Good',
+      color: TaskColor.amber,
+      icon: TaskIcon.sleep,
+      state: DotState.done,
+      timeRange: '23:20 – 23:35 (15 min)',
+      minutes: 15,
+      overlapsAbove: true,
+    ),
+  ),
+  ThreadCap.bed('23:45'),
+];
+
 void main() {
   setUpAll(loadAppFonts);
+  goldenMatrix(
+    'thread_overlap',
+    height: 460,
+    build: (_) => const _Card(_overlap),
+  );
   goldenMatrix(
     'thread_travel',
     height: 420,
@@ -188,5 +226,5 @@ void main() {
     build: (_) => _Card([mainThread.first, mainThread[3], mainThread.last]),
   );
   goldenMatrix('thread_outside', height: 420, build: (_) => _Card(_outside));
-  goldenMatrix('thread_thirty', height: 2400, build: (_) => _Card(_thirty));
+  goldenMatrix('thread_thirty', height: 3000, build: (_) => _Card(_thirty));
 }

@@ -27,8 +27,8 @@ Future<Result<UndoToken, AppFailure>> _write(
       .applyUndoable(WriteBatch(userId: row.userId, occurrences: [row]));
 }
 
-/// Moves [o] to start at [startUtc], keeping its length (drag onto a gap,
-/// R-05). Other tasks stay put.
+/// Moves [o] to start at [startUtc], keeping its length (drag, R-05).
+/// Other tasks stay put; it may overlap them (ADR-0015).
 Future<Result<UndoToken, AppFailure>> moveTask(
   WidgetRef ref,
   Occurrence o,
@@ -67,13 +67,6 @@ Future<Result<(UndoToken, ShiftReport), AppFailure>> moveWithFollowing(
     Err(:final failure) => Err(failure),
   };
 }
-
-/// Gives [o] [durationMin] (resize grip, R-05).
-Future<Result<UndoToken, AppFailure>> resizeTask(
-  WidgetRef ref,
-  Occurrence o,
-  int durationMin,
-) => _write(ref, o.copyWith(durationMin: durationMin));
 
 /// Moves task [id] onto [date] at the same wall time (drop on a week-strip
 /// day, PRD F8). Returns the moved row with the token, or null when the

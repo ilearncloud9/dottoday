@@ -76,7 +76,9 @@ void main() {
     final handle = tester.ensureSemantics();
     final log = <String>[];
     await tester.pumpWidget(_thread(const {}, log));
-    final row = find.semantics.byLabel(RegExp('^Write, upcoming'));
+    // The row's container: its dot is a button of its own (it opens the
+    // task, ADR-0015), so find the node that carries "Select".
+    final row = find.semantics.byAction(SemanticsAction.customAction).first;
     tester.semantics.performAction(
       row,
       SemanticsAction.customAction,

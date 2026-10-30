@@ -13,7 +13,8 @@ import '../../support/timeline_fakes.dart';
 
 // The Mac/web Inbox and its sidebar (docs/09 M3e.2, `A-mac-inbox`).
 // 11:00 in Berlin on the demo day; tests run on Android, so Ctrl.
-const _wide = Size(1280, 900);
+// Tall enough for the day thread's stretched rows (ADR-0015).
+const _wide = Size(1280, 1400);
 
 DateTime? _start(FakeOccurrenceRepository repo, String title) =>
     repo.rows.singleWhere((o) => o.title == title).startUtc;

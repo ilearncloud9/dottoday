@@ -30,7 +30,7 @@ Widget _dot({
             minutesLeft: state == DotState.live ? 38 : null,
           ),
           onTap: onTap,
-          tapHint: context.l10n.dotMarkDoneHint,
+          tapHint: context.l10n.dotOpenHint,
         ),
       ),
     ),
@@ -58,9 +58,9 @@ void main() {
           label: label,
           isButton: true,
           hasTapAction: true,
-          hasCheckedState: true,
-          isChecked: state == DotState.done,
-          onTapHint: 'Mark done',
+          // The dot opens the task; the row's done circle is checkable
+          // (ADR-0015).
+          onTapHint: 'Open',
         ),
       );
       handle.dispose();

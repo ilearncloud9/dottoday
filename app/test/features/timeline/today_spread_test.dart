@@ -13,7 +13,8 @@ import '../../support/today_harness.dart';
 
 // T5, the Mac/web three-day spread (docs/09 M3e.1,
 // `A-mac-today-alt1-spread`). Wednesday 21 Oct, 09:22 in Berlin.
-const _wide = Size(1280, 900);
+// Tall enough for the day thread's stretched rows (ADR-0015).
+const _wide = Size(1280, 1400);
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);

@@ -282,6 +282,16 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get dotMarkNotDoneHint => pseudo(super.dotMarkNotDoneHint);
 
   @override
+  String get dotOpenHint => pseudo(super.dotOpenHint);
+
+  @override
+  String threadOverlapping(String overlapping) =>
+      pseudo(super.threadOverlapping(overlapping));
+
+  @override
+  String get threadOverlappingWord => pseudo(super.threadOverlappingWord);
+
+  @override
   String rowLabel(String title, String range) =>
       pseudo(super.rowLabel(title, range));
 
@@ -633,9 +643,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get editorPickDay => pseudo(super.editorPickDay);
 
   @override
-  String resizeLabel(String title) => pseudo(super.resizeLabel(title));
-
-  @override
   String dragDropAt(String time) => pseudo(super.dragDropAt(time));
 
   @override
@@ -645,10 +652,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String snackMovedDay(String title, String day) =>
       pseudo(super.snackMovedDay(title, day));
-
-  @override
-  String snackResized(String title, String time) =>
-      pseudo(super.snackResized(title, time));
 
   @override
   String get shiftChipLabel => pseudo(super.shiftChipLabel);

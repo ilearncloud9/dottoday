@@ -144,16 +144,5 @@ void main() {
       // 08:00 Berlin on Thursday 22 October.
       expect(moved.startUtc, DateTime.utc(2026, 10, 22, 6));
     });
-
-    testWidgets('the grip lengthens a task by the snap step', (tester) async {
-      final handle = tester.ensureSemantics();
-      await pumpToday(tester, size: const Size(390, 1400));
-      tester.semantics.increase(
-        find.semantics.byLabel('Change how long Team standup takes'),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Team standup now ends at 8:20 AM'), findsOneWidget);
-      handle.dispose();
-    });
   });
 }

@@ -23,7 +23,8 @@ void main() {
     await pumpToday(tester);
     expect(find.text('WED, OCT 21'), findsOneWidget);
     expect(find.text('Good morning, Kody'), findsOneWidget);
-    expect(find.text('Wednesday · Today'), findsOneWidget);
+    // The day's numbers sit under the title (ADR-0015).
+    expect(find.textContaining(RegExp(r'^\d+ of \d+ · ')), findsOneWidget);
     expect(
       find.bySemanticsLabel(RegExp(r'^Day \d+ % through$')),
       findsOneWidget,
@@ -63,7 +64,7 @@ void main() {
 
   testWidgets('swiping the pager changes the day', (tester) async {
     await pumpToday(tester);
-    await tester.fling(find.byType(DayCard).at(1), const Offset(-300, 0), 1000);
+    await tester.fling(find.byType(DayCard).first, const Offset(-300, 0), 1000);
     await tester.pumpAndSettle();
     expect(find.text('THU, OCT 22'), findsOneWidget);
   });
@@ -71,7 +72,7 @@ void main() {
   testWidgets('/day/:date opens that day', (tester) async {
     await pumpToday(tester, date: DateTime(2026, 12, 14));
     expect(find.text('MON, DEC 14'), findsOneWidget);
-    expect(find.text('Monday, December 14'), findsWidgets);
+    expect(find.text('Monday'), findsWidgets);
   });
 
   testWidgets('the caption chevron and the strip handle open the month', (
@@ -82,10 +83,11 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(MonthGrid), findsOneWidget);
     expect(find.byType(WeekStrip), findsNothing);
-    await tester.tap(find.bySemanticsLabel('Hide month').last);
+    // The month's own handle, then the one on the day sheet (ADR-0015).
+    await tester.tap(find.byType(PullHandle).first);
     await tester.pumpAndSettle();
     expect(find.byType(MonthGrid), findsNothing);
-    await tester.drag(find.byType(PullHandle), const Offset(0, 120));
+    await tester.drag(find.byType(PullHandle).first, const Offset(0, 120));
     await tester.pumpAndSettle();
     expect(find.byType(MonthGrid), findsOneWidget);
   });
@@ -165,9 +167,9 @@ void main() {
   });
 
   group('done, live and shift (M3b.3)', () {
-    testWidgets('a dot marks done with Undo', (tester) async {
+    testWidgets('the done circle marks done with Undo', (tester) async {
       await pumpToday(tester);
-      await tester.tap(find.bySemanticsLabel('Team standup, not done'));
+      await tester.tap(find.bySemanticsLabel('Team standup'));
       await tester.pumpAndSettle();
       expect(find.text('Team standup done'), findsOneWidget);
       expect(find.bySemanticsLabel('Team standup, done'), findsOneWidget);
@@ -238,11 +240,32 @@ void main() {
     );
   });
 
-  testWidgets('tapping a dot marks the task done', (tester) async {
+  testWidgets('the dot opens the task; the circle ticks it in place '
+      '(ADR-0015)', (tester) async {
+    final handle = tester.ensureSemantics();
     await pumpToday(tester);
     await tester.tap(find.bySemanticsLabel('Team standup, not done'));
     await tester.pumpAndSettle();
+    // Opening never ticks it.
+    expect(find.bySemanticsLabel('Team standup, not done'), findsOneWidget);
+    await tester.tapAt(Offset.zero);
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('Team standup'));
+    await tester.pumpAndSettle();
     expect(find.bySemanticsLabel('Team standup, done'), findsOneWidget);
+    // The circle stays, checked, so the same tap undoes it.
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Team standup')),
+      matchesSemantics(
+        label: 'Team standup',
+        isButton: true,
+        hasCheckedState: true,
+        isChecked: true,
+        hasTapAction: true,
+        onTapHint: 'Mark not done',
+      ),
+    );
+    handle.dispose();
   });
 
   for (final (name, size) in [

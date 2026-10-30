@@ -612,6 +612,24 @@ abstract class AppLocalizations {
   /// **'Mark not done'**
   String get dotMarkNotDoneHint;
 
+  /// Screen-reader hint: tapping a task's dot opens the task (ADR-0015).
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get dotOpenHint;
+
+  /// Line between two thread rows whose times overlap; {overlapping} is threadOverlappingWord, drawn in the task's colour.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks are {overlapping}'**
+  String threadOverlapping(String overlapping);
+
+  /// The coloured word of threadOverlapping.
+  ///
+  /// In en, this message translates to:
+  /// **'overlapping'**
+  String get threadOverlappingWord;
+
   /// Screen-reader label of a task row: title and time range.
   ///
   /// In en, this message translates to:
@@ -1266,12 +1284,6 @@ abstract class AppLocalizations {
   /// **'Pick a day'**
   String get editorPickDay;
 
-  /// Screen-reader label of a task's resize grip; increase / decrease change the length.
-  ///
-  /// In en, this message translates to:
-  /// **'Change how long {title} takes'**
-  String resizeLabel(String title);
-
   /// Floating label while dragging a task over a free gap.
   ///
   /// In en, this message translates to:
@@ -1289,12 +1301,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title} moved to {day}'**
   String snackMovedDay(String title, String day);
-
-  /// Snackbar after resizing a task, with Undo.
-  ///
-  /// In en, this message translates to:
-  /// **'{title} now ends at {time}'**
-  String snackResized(String title, String time);
 
   /// Toggle chip shown while dragging a task: when on, the tasks after it move along (R-04). Desktop: hold Alt to invert.
   ///

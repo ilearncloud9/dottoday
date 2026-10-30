@@ -46,7 +46,7 @@ final class StripDay {
 
 /// Seven days with their completion dots (docs/10 §3 `WeekStrip`, `Main`):
 /// filled when done, conic when partly, outline ahead; the selected column
-/// is raised and the pull handle under it opens the month.
+/// is filled (ADR-0015) and the pull handle under it opens the month.
 class WeekStrip extends StatelessWidget {
   const WeekStrip({
     required this.days,
@@ -133,13 +133,16 @@ class _Column extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final c = t.colors;
+    // The selected day is filled in the text colour, its labels in the
+    // surface colour (ADR-0015, as Structured's selected date).
+    final on = selected && !hovered ? c.raised : null;
     final label = t.styles.stripWeekday.copyWith(
-      color: day.isToday ? c.accentInk : null,
+      color: on ?? (day.isToday ? c.accentInk : null),
     );
     // Only the weekday turns accent on today; the date stays text, muted
     // for days already gone (`Main`).
     final date = t.styles.stripDate.copyWith(
-      color: day.isPast ? c.muted : null,
+      color: on ?? (day.isPast ? c.muted : null),
     );
     return Semantics(
       button: onTap != null,
@@ -152,7 +155,7 @@ class _Column extends StatelessWidget {
         borderRadius: BorderRadius.circular(DotRadii.card),
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: DotSpace.xxs),
-          padding: const EdgeInsets.symmetric(vertical: DotSpace.s),
+          padding: const EdgeInsets.symmetric(vertical: DotSpace.xs),
           constraints: const BoxConstraints(minHeight: DotTouch.android),
           decoration: hovered
               ? BoxDecoration(
@@ -161,12 +164,8 @@ class _Column extends StatelessWidget {
                 )
               : selected
               ? BoxDecoration(
-                  color: c.raised,
+                  color: c.text,
                   borderRadius: BorderRadius.circular(DotRadii.card),
-                  border: Border.all(
-                    color: c.outline,
-                    width: DotSpace.hairline * 1.5,
-                  ),
                 )
               : null,
           child: Column(

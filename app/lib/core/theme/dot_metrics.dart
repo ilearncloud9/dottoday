@@ -70,6 +70,26 @@ abstract final class DotSize {
   static const int spreadSideFlex = 5;
 
   static const double rowDot = 36;
+
+  /// A task's dot on the day thread (ADR-0015, the Structured-sized row):
+  /// the live dot is the same size, its progress ring drawn inside.
+  static const double threadDot = 56;
+
+  /// The done circle at a thread row's end (ADR-0015).
+  static const double doneCircle = 28;
+
+  /// A day-thread row grows this much per minute of its task, from
+  /// [threadRowMin] (what a row's dot and text need anyway) to
+  /// [threadRowMax], so a long task reads long without a 3-hour block
+  /// filling the screen (ADR-0015).
+  static const double threadPerMinute = 1.6;
+  static const double threadRowMin = 88;
+  static const double threadRowMax = 288;
+
+  /// "Tasks are overlapping" between two joined capsules (ADR-0015), and
+  /// how far the two capsules overlap inside it.
+  static const double overlapRow = 56;
+  static const double overlapJoin = 12;
   static const double liveDot = 42;
   static const double liveRing = 5;
 
@@ -114,7 +134,8 @@ abstract final class DotSize {
   static const double nowMarker = 16;
   static const double nowHalo = 4;
 
-  /// Icon inside a row dot / a 24-unit nav icon.
+  /// Icon inside a row dot / a 24-unit nav icon. A dot of any size keeps
+  /// this share of its diameter for the icon.
   static const double rowIcon = 18;
   static const double navIcon = 24;
 
@@ -143,9 +164,6 @@ abstract final class DotTouch {
 
   /// Hold this long to pick a task up (03 §3.2 "long-press 250 ms").
   static const liftDelay = Duration(milliseconds: 250);
-
-  /// Vertical drag per resize step on a segment's grip.
-  static const double resizeStep = 12;
 }
 
 /// Shadow of floating elements: tab bar, FAB, menus (docs/10 §2.3).

@@ -6,19 +6,19 @@ import 'package:flutter/material.dart';
 
 /// What a task's dot shows (docs/10 §1, §3 `TaskDot`).
 enum DotState {
-  /// Outlined: the task has not started.
+  /// The task has not started.
   upcoming,
 
-  /// Conic ring filling with the task's progress.
+  /// A ring inside the dot fills with the task's progress.
   live,
 
-  /// Solid with a check.
+  /// Done: the dot is unchanged; the row's done circle is filled.
   done,
 
-  /// Dashed outline: skipped, or a repeat not yet materialised.
+  /// Dashed ring, faded icon: skipped, or a repeat not yet materialised.
   skipped,
 
-  /// Outlined like [upcoming]; its row says "missed" (§5.2, `A-mac-month`).
+  /// Drawn like [upcoming]; its row says "not done" (§5.2, `A-mac-month`).
   missed,
 }
 
@@ -41,12 +41,15 @@ String taskDotLabel(
   DotState.missed => l10n.dotMissed(title),
 };
 
-/// The icon dot every task is drawn as (docs/10 §3 `TaskDot`): outline,
-/// conic (live), filled-check (done) or dashed (skipped).
+/// The icon dot every task is drawn as (docs/10 §3 `TaskDot`, ADR-0015): a
+/// tint of the task's colour with the bold icon in the colour itself. The
+/// dot looks the same upcoming, done or missed (done shows in the row's
+/// done circle and struck title); a live dot adds its progress ring and a
+/// skipped one fades its icon inside a dashed ring.
 ///
-/// With [onTap] it is the done toggle ("Tap a dot = mark done", §6) and
-/// its hit area is at least 48 dp whatever its [size]; without, it is
-/// decorative and merges into the row's own label.
+/// With [onTap] it opens the task (or Focus for the live one) and its hit
+/// area is at least 48 dp whatever its [size]; without, it is decorative
+/// and merges into the row's own label.
 class TaskDot extends StatelessWidget {
   const TaskDot({
     required this.color,
@@ -70,17 +73,18 @@ class TaskDot extends StatelessWidget {
   /// 0–1 share of a live task that has elapsed; ignored in other states.
   final double progress;
 
-  /// [DotSize.rowDot] (36), [DotSize.liveDot] (42), [DotSize.macRowDot]
+  /// [DotSize.threadDot] (56), [DotSize.rowDot] (36), [DotSize.macRowDot]
   /// (26) or [DotSize.pickerDot] (22).
   final double size;
   final VoidCallback? onTap;
 
-  /// What a tap does, read after the label ("Mark done").
+  /// What a tap does, read after the label ("Open").
   final String? tapHint;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
+    final swatch = t.tasks[color];
     final dot = TweenAnimationBuilder<double>(
       tween: Tween(end: state == DotState.live ? progress.clamp(0, 1) : 0),
       duration: t.motion.base,
@@ -89,14 +93,14 @@ class TaskDot extends StatelessWidget {
         size: Size.square(size),
         painter: _DotPainter(
           color: color.color,
+          fill: swatch.tint,
           state: state,
           sweep: sweep,
           ring: _ring(size),
-          inner: t.colors.raised,
         ),
         child: child,
       ),
-      child: SizedBox.square(dimension: size, child: _glyph(t)),
+      child: SizedBox.square(dimension: size, child: _glyph(swatch.glyph)),
     );
     if (onTap == null) {
       return Semantics(label: label, excludeSemantics: true, child: dot);
@@ -104,7 +108,6 @@ class TaskDot extends StatelessWidget {
     final target = math.max(size, DotTouch.android);
     return Semantics(
       button: true,
-      checked: state == DotState.done,
       label: label,
       onTapHint: tapHint,
       onTap: onTap,
@@ -120,28 +123,16 @@ class TaskDot extends StatelessWidget {
     );
   }
 
-  Widget? _glyph(DotTheme t) {
-    final iconSize = size * DotSize.rowIcon / DotSize.rowDot;
-    if (state == DotState.done) {
-      return Center(
-        child: DotIcon(
-          DotGlyphs.check,
-          color: t.colors.raised,
-          size: iconSize,
-          active: true,
-        ),
-      );
-    }
+  Widget? _glyph(Color ink) {
     final glyph = icon.glyph;
     if (glyph == null) return null;
     final faded = state == DotState.skipped;
     return Center(
       child: DotIcon(
         glyph,
-        color: faded
-            ? color.color.withValues(alpha: TaskAlpha.faded)
-            : color.color,
-        size: iconSize,
+        color: faded ? ink.withValues(alpha: TaskAlpha.faded) : ink,
+        size: size * DotSize.rowIcon / DotSize.rowDot,
+        bold: true,
       ),
     );
   }
@@ -156,43 +147,39 @@ double _ring(double size) => size >= DotSize.liveDot
 final class _DotPainter extends CustomPainter {
   const _DotPainter({
     required this.color,
+    required this.fill,
     required this.state,
     required this.sweep,
     required this.ring,
-    required this.inner,
   });
 
   final Color color;
+  final Color fill;
   final DotState state;
   final double sweep;
   final double ring;
-  final Color inner;
 
   @override
   void paint(Canvas canvas, Size size) {
     final c = size.center(Offset.zero);
+    canvas.drawCircle(c, size.shortestSide / 2, Paint()..color = fill);
     final r = size.shortestSide / 2 - ring / 2;
     final stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = ring
       ..color = color;
     switch (state) {
-      case DotState.done:
-        canvas.drawCircle(c, size.shortestSide / 2, Paint()..color = color);
-      case DotState.upcoming || DotState.missed:
-        canvas.drawCircle(c, r, Paint()..color = inner);
-        canvas.drawCircle(c, r, stroke);
       case DotState.live:
-        canvas.drawCircle(c, r, Paint()..color = inner);
         _live(canvas, c, r, stroke);
       case DotState.skipped:
-        canvas.drawCircle(c, r, Paint()..color = inner);
         _dashed(
           canvas,
           c,
           r,
           stroke..color = color.withValues(alpha: TaskAlpha.faded),
         );
+      case DotState.upcoming || DotState.done || DotState.missed:
+        break;
     }
   }
 
@@ -226,8 +213,8 @@ final class _DotPainter extends CustomPainter {
   @override
   bool shouldRepaint(_DotPainter old) =>
       old.color != color ||
+      old.fill != fill ||
       old.state != state ||
       old.sweep != sweep ||
-      old.ring != ring ||
-      old.inner != inner;
+      old.ring != ring;
 }

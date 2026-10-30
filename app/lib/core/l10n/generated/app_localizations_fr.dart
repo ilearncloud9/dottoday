@@ -336,6 +336,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dotMarkNotDoneHint => 'Marquer comme pas fait';
 
   @override
+  String get dotOpenHint => 'Ouvrir';
+
+  @override
+  String threadOverlapping(String overlapping) {
+    return 'Les tâches se $overlapping';
+  }
+
+  @override
+  String get threadOverlappingWord => 'chevauchent';
+
+  @override
   String rowLabel(String title, String range) {
     return '$title, $range';
   }
@@ -804,11 +815,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get editorPickDay => 'Choisir un jour';
 
   @override
-  String resizeLabel(String title) {
-    return 'Modifier la durée de $title';
-  }
-
-  @override
   String dragDropAt(String time) {
     return '→ $time';
   }
@@ -821,11 +827,6 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String snackMovedDay(String title, String day) {
     return '$title déplacée à $day';
-  }
-
-  @override
-  String snackResized(String title, String time) {
-    return '$title se termine maintenant à $time';
   }
 
   @override

@@ -1,7 +1,9 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
-import 'package:dottoday/shared/learning/learned_line.dart';
+import 'package:dottoday/shared/dot/thread_reality.dart';
 import 'package:flutter/foundation.dart';
+
+export 'thread_reality.dart';
 
 /// A task as the thread draws it (docs/10 §3 `TaskRow`). Display values
 /// only: the feature formats times in the user's zone and 12/24 h setting,
@@ -29,7 +31,32 @@ final class ThreadTask {
     this.smallestStep,
     this.unstick = false,
     this.reality,
+    this.startUtc,
+    this.minutes = 0,
+    this.overlapsAbove = false,
+    this.overlapsBelow = false,
   });
+
+  /// When the task starts, for drops onto its row (feature-supplied; null
+  /// leaves the row out of drops).
+  final DateTime? startUtc;
+
+  /// Its length: the row stretches with it (ADR-0015).
+  final int minutes;
+
+  /// Starts before an earlier task ends: its dot joins the one above as a
+  /// capsule under "Tasks are overlapping" (ADR-0015).
+  final bool overlapsAbove;
+
+  /// A later task starts before this one ends.
+  final bool overlapsBelow;
+
+  /// Where a drop onto this row lands: anywhere along it, overlap allowed
+  /// (ADR-0015); null without [startUtc].
+  DropSpan? get span => switch (startUtc) {
+    final at? => DropSpan(startUtc: at, minutes: minutes, fit: false),
+    null => null,
+  };
 
   /// Set on the Reality thread (11 C3, docs/09 M11.2): what really
   /// happened, drawn beside the plan's ghost lane. Null on the plan.
@@ -80,53 +107,37 @@ final class ThreadTask {
   final String? travel;
 
   bool get hasSubtasks => subtasksTotal > 0;
-}
 
-/// Where the plan put a task's dot, seen from where it really started.
-enum GhostShift {
-  /// Started as planned, or no actual start: no ghost dot.
-  none,
-
-  /// The plan was earlier: the ghost dot sits above.
-  earlier,
-
-  /// The plan was later: the ghost dot sits below.
-  later,
-}
-
-/// A task as the Reality thread shows it (11 C3, `B-ios-reality-thread`):
-/// display strings only, formatted by the feature.
-@immutable
-final class ThreadReality {
-  const ThreadReality({
-    this.range,
-    this.meta,
-    this.note,
-    this.ghost = GhostShift.none,
-    this.underWay = false,
-    this.usual,
-    this.usualWhy,
-  });
-
-  /// "usually 2 h 20" under the live row's progress (M11.3 learning).
-  final String? usual;
-
-  /// How [usual] was worked out, on tap (docs/13 §6).
-  final LearnedExplanation? usualWhy;
-
-  /// "7:42 – 8:16" or "9:10 – now"; null keeps the planned range.
-  final String? range;
-
-  /// After the range: "planned 7:30", "planned 9:00 – 11:00", "not
-  /// started yet".
-  final String? meta;
-
-  /// Under the title: "took 34 min"; on the live row "1 h 14 in".
-  final String? note;
-  final GhostShift ghost;
-
-  /// Really started and not finished: the only rows drawn live.
-  final bool underWay;
+  /// This task with its overlap flags (ADR-0015).
+  ThreadTask joined({required bool above, required bool below}) =>
+      above == overlapsAbove && below == overlapsBelow
+      ? this
+      : ThreadTask(
+          id: id,
+          title: title,
+          color: color,
+          icon: icon,
+          state: state,
+          timeRange: timeRange,
+          duration: duration,
+          pinned: pinned,
+          recurring: recurring,
+          imported: imported,
+          progress: progress,
+          minutesLeft: minutesLeft,
+          subtasksDone: subtasksDone,
+          subtasksTotal: subtasksTotal,
+          overrunMinutes: overrunMinutes,
+          movable: movable,
+          travel: travel,
+          smallestStep: smallestStep,
+          unstick: unstick,
+          reality: reality,
+          startUtc: startUtc,
+          minutes: minutes,
+          overlapsAbove: above,
+          overlapsBelow: below,
+        );
 }
 
 /// One line of a [Thread], top to bottom.
@@ -180,10 +191,19 @@ Iterable<ThreadTask> threadTasks(List<ThreadEntry> entries) sync* {
         yield task;
       case ThreadOutside(:final tasks):
         yield* tasks;
-      case ThreadCap() || ThreadGap():
+      case ThreadCap() || ThreadGap() || ThreadOverlap():
         break;
     }
   }
+}
+
+/// Two overlapping tasks meet here (ADR-0015): their dots join as capsules
+/// with a notch, beside "Tasks are overlapping" in the later one's colour.
+final class ThreadOverlap extends ThreadEntry {
+  const ThreadOverlap({required this.above, required this.below});
+
+  final TaskColor above;
+  final TaskColor below;
 }
 
 /// Free time between tasks (docs/10 §6 "Free gaps are drop targets").
@@ -220,6 +240,13 @@ final class ThreadGap extends ThreadEntry {
   /// fits", `A-mac-inbox`'s Drop onto today).
   final String? fits;
 
+  /// Where a drop onto this gap lands: snapped and kept inside it when the
+  /// task fits; null without [startUtc].
+  DropSpan? get span => switch (startUtc) {
+    final at? => DropSpan(startUtc: at, minutes: minutes),
+    null => null,
+  };
+
   /// This gap naming [title] as what fits it.
   ThreadGap fitting(String title) => ThreadGap(
     minutes: minutes,
@@ -230,6 +257,23 @@ final class ThreadGap extends ThreadEntry {
     labelled: labelled,
     fits: title,
   );
+}
+
+/// The stretch of the day a thread row stands for, as a drop target (docs/10
+/// §6, ADR-0015): a drop [fraction] down the row lands that far into
+/// [minutes] from [startUtc]. A gap keeps a dropped task inside it ([fit]);
+/// a task's row does not, so a drop there overlaps it.
+@immutable
+final class DropSpan {
+  const DropSpan({
+    required this.startUtc,
+    required this.minutes,
+    this.fit = true,
+  });
+
+  final DateTime startUtc;
+  final int minutes;
+  final bool fit;
 }
 
 /// What the shift chips said when a task was let go (docs/03 §3.2).

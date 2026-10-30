@@ -122,7 +122,7 @@ void main() {
       );
       expect(
         [t.liveRowTitle.fontSize, t.liveRowTitle.fontWeight],
-        [17, FontWeight.w600],
+        [20, FontWeight.w700],
       );
       expect([t.rowMeta.fontSize, t.rowMeta.color], [12, Colors.grey]);
       expect(
