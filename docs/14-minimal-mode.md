@@ -63,7 +63,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | C1 Rebalance proposal | M11 | Simplified | Before/after ghost only, no per-change labels; Accept or Discard |
 | C2 Routines | M11 | Hidden | Revealed after three similar mornings: "Save this as your morning?" |
 | C3 Reality thread view | M11 | Hidden | Plan/reality toggle hidden; **learning stays on**, it feeds the duration and start-time defaults minimal relies on |
-| C4 Energy suggestions | M11 | Simplified | No energy field on the task; the Add "when" chip silently prefers the learned best window once 20 completions exist, no settings switch, no "you finish deep work best 9–11" caption |
+| C4 Energy suggestions | M11 | Off | No energy field on the task, no caption. Off goes through the existing opt-in switch (13 §3, M13.5), as §6 says; the switch is under Everything else (owner, 2026-10-30) |
 | D1 Weekly review + share image | M12 | Hidden | Opt-in from Settings; hinted once after 14 days of use |
 | D2 Low-energy mode | M12 | Shown | Same switch in the header menu; inside minimal it collapses Today to one dot |
 | D3 Thread journal | M12 | Hidden | Settings › More |
@@ -71,6 +71,72 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | F1/F2 Windows/Linux, integrations | Phase 2 | Hidden | Integrations under Settings › More |
 | F3 Watch | Phase 2 | Shown | The watch is already minimal; unchanged |
 | Themes, icon packs, Pro upsell | Pro | Hidden | No banners; one Settings row "Dottoday Pro" |
+| Today header extras: `DayDot` (or "● Today" away from today), day numbers ("2 of 13 · 10 h planned") | ADR-0015 + amendment | Hidden | One line: the date title "October 21, 2026 ⌄" (still opens the month) and ⋯; no dot, no numbers line |
+| `DoneCircle` on every row | ADR-0015 | Shown | Unchanged; it is minimal's Done on every row, the live one included |
+| Task dot tap → task sheet (live dot → Focus) | ADR-0015 | Shown | Unchanged; the sheet opens in its minimal form |
+| Overlapping tasks ("Tasks are overlapping") | ADR-0015 | Shown | Unchanged; it describes, never warns |
+| Live row details: subtask ring "1 of 3", "38 min left" | M3b | Simplified | "min left" stays; the subtask ring shows only once the task has steps |
+| Long-press multi-select + selection bar | M3b | Shown | Unchanged; appears only after a long-press (R-05) |
+| Structured drag: dot follows the finger with its time, landing preview, 700 ms hover-paging over the week strip | ADR-0015 amendment | Shown | Unchanged |
+| Drop on Wake Up = all day; all-day chip dragged onto the thread | ADR-0015 amendment | Shown | Unchanged |
+| Drag the + button onto the thread to add at a time | ADR-0015 amendment | Shown | Unchanged; the floating Add is still the + |
+| Drop on the Inbox tab to unschedule | ADR-0015 amendment | Simplified | No tab in minimal: the Later row takes the same drop |
+| Trash target above + while dragging (Trash with Undo) | ADR-0015 amendment | Shown | Unchanged; text colour, never red |
+| Pinned tasks (lock glyph, Pin switch) | M3f | Simplified | The lock glyph stays on the row; the Pin switch is under the sheet's More |
+| All-day chips | M3b | Shown | Unchanged |
+| Empty-day actions (Add to the day, Pull from Inbox, Copy a day) | M3f | Simplified | An empty day shows its quiet line, the Add button and the Later row only |
+| Duplicate day…, Copy day as text, Routines… (⋯) | M3f.6, M11.4 | Hidden | Not in minimal's three-item header menu; full ⋯ only |
+| Brain dump ⋯ entry, Earlier dumps | M12.5 | Hidden | Reached by typing several lines into Add (B4 row) |
+| Dictation mic (Brain dump, Notes) | M14.5–6 | Hidden | Mic stays wherever Brain dump and Notes are shown (both under More) |
+| Today prompt: Inbox nudge card | M3f | Hidden | The Later row replaces it |
+| Today prompt: "Need more time?" nudge | M6.5 | Hidden | Running late sits on the live dot instead |
+| Today prompt: ran-over / calendar-moved rebalance ("Rebalance?") | M11.1, M11.1b | Simplified | Same quiet row; opens the simplified C1 proposal |
+| Today prompt: This week on the last day | M12.1 | Hidden | Follows D1 |
+| Siri tip card + Settings › Siri & Shortcuts + onboarding Siri line | M14.3 | Hidden | §5's hints are minimal's only tip channel; the page is under Everything else |
+| Reality-coming caption, insight strip, reality highlight | M13.6 | Hidden | Learning runs; the caption and highlight wait for full mode |
+| Learned lines ("usually 2 h 20") + explain-on-tap sheet | M13.7 | Hidden | The learned value is the pre-filled duration chip; the line and its explanation are under More |
+| Settings › Learning page | M13.5 | Hidden | Under Everything else; learning keeps running |
+| Travel time (row meta, suggestion card, editor row, Calendars › Travel) | M7 | Hidden | Stored travel blocks still apply; suggestions and editing under More |
+| Calendar write-back + move-with-calendar (line in editor, Calendars rows) | M7 | Hidden | Keeps working as set; settings under Calendars in Everything else |
+| Time zones: zone banner, Time ⋯ › Time zone | M6 | Simplified | The banner shows when the device zone changed (a fact, not a choice); picking a zone is under More |
+| Search tab, recent searches, filters | M3d | Hidden | No Search tab in minimal; Search is under Everything else |
+| Past days + Year strip (where D3 lives in code) | M12.3 | Hidden | Under Search, as D3 |
+| Navigation bar / rail (bold icons, ADR-0015 amendment) | M3a | Simplified | Compact: no tab bar, one floating Add. Medium/expanded: the rail keeps Today and Settings; Inbox is the Later row |
+| Mac/web spread with its greeting title, Inbox sidebar, `TaskEditor` panel | M3e, ADR-0015 amendment | Simplified | Expanded minimal shows Today alone with the phone's one-line date header (no spread, no greeting, no sidebar); the editor panel opens in its minimal form; keyboard shortcuts unchanged |
+| Inbox page extras: filters, completed group, Routines button, swipe hint, Drop on today panel | M3b–M11.4 | Hidden | The Later row opens the Inbox list with Next free slot, swipe and Place only |
+| Task sheet extras: +15, Shift the rest, Move, Edit, Alerts, Sound, Travel, Pin, calendar line | M3b–M15 | Hidden | Under the sheet's More, in today's sheet layout |
+| Task icon library picker | ADR-0013 | Hidden | Under the sheet's More with colour; Add uses the default dot |
+| Sounds page, task Sound row, Start and Done sounds | M15 | Hidden | Sounds play exactly as set (defaults for new users); pickers under Everything else |
+| Quiet hours, Bedtime reminder, Day summary | M5–M6.5 | Hidden | Keep running as set; under Everything else |
+| Day shape extras: per-weekday times, 12/24 h, week start | M3d | Hidden | Under Everything else; minimal rows 2–3 edit the "same every day" times |
+| Planning settings: default duration, snapping, shift default, roll over unfinished, show free time, nudges, low-energy row | M3d–M12.2 | Hidden | Values keep applying; under Everything else |
+| Accent colour | M3d | Hidden | A stored accent keeps applying |
+| Backups, import, restore | M8 | Hidden | Settings › Everything else › Data, with Export |
+| Trash | M3d | Hidden | Under Everything else |
+| Help, Feedback, What's new, About + licences | M8 | Hidden | Under Everything else |
+| Privacy page (AI status, clear thinking/searches) | M10, M14.2 | Hidden | Under Everything else |
+| Proposal model-status line (`StatusHint`) | M14.2 | Hidden | Proposals open without the "simple rules" tip |
+| App lock | M8 | Shown | The lock gate always applies when on; its switch is under Everything else › Privacy |
+| Sync conflicts banner, Sync sheet | M6.3 | Shown | Silent while healthy; the banner always appears when something needs the user (R-08) |
+| Database recovery screen | M6.5 | Shown | System state; unchanged |
+| Web install banner | M8 | Hidden | No install prompt in minimal |
+| Onboarding extras: welcome, account step, habits step, calendar connect, Done step | M4 | Simplified | Welcome → step 0; minimal skips account and Done, and turns habits into the first-task step |
+
+**Matrix notes from the M16 inventory (30 Oct 2026).** Where a row above was written before the code it describes:
+
+- *Today thread.* Since ADR-0015 a dot looks the same before and after Done; a task is marked done by its row's `DoneCircle` (filled, title struck), and tapping the dot opens the task. Minimal keeps this; "past dots fade" is withdrawn.
+- *Week strip.* The strip's own 8 px completion dots are hidden too, not just the month's: both are done ratios.
+- *Mac Week / Month.* The Mac View menu already lists Week and Month; minimal removes Week from the rail only.
+- *Task sheet.* Tomorrow and Later reuse the Bedtime review's "Move to tomorrow" / "Send to Inbox" actions; Delete reuses the editor footer's delete (its confirm and Undo unchanged).
+- *Shift the rest / Running late.* Minimal's live row shows Done and Running late (the existing sheet); +15 and Shift the rest move under the sheet's More.
+- *Inbox.* The Later row is low-energy mode's "Later" pile row (M12.2), not a new component.
+- *Wind Down sleep block.* Not built: the thread already ends at the Bedtime cap and draws no sleep segment. The row stays as a no-op.
+- *Notifications.* Minimal row 4 maps on/off onto the existing default alert ("at start" / "none"); no new notification setting.
+- *Light/dark, language.* Hidden settings keep their stored values; nothing is reset.
+- *B4 Brain dump.* Add already splits a pasted list into tasks directly (R-07). In minimal, several lines route to Brain dump's planner and open its `ProposalSheet`.
+- *D1, D3.* There is no weekly-review switch in Settings today, and the journal lives in Search › Past days.
+- *Not built yet.* A2, B5, E1, F1/F2 and F3 (Phase 2 / future) have rows and `FeatureId`s but no View to subtract from.
+- *Pro.* No "Dottoday Pro" row until the owner signs off pricing (09 › Pricing; `isPro` is true in every build).
 
 From now on every new feature spec declares its row in this table before it is built; the row is part of its done criteria.
 
@@ -78,11 +144,11 @@ From now on every new feature spec declares its row in this table before it is b
 
 Five screens change; everything else is reached through them. All are the Concept A components with elements removed, not new designs; reference renders go in `docs/design-references/png/` as set C (`C-ios-today-minimal.png`, `C-ios-add-minimal.png`, `C-ios-settings-minimal.png`, `C-ios-onboarding-mode.png`).
 
-**Today.** The thread, full height. Header: the date and one menu button (Show everything · Low-energy day · Settings). The live dot carries its ring and two actions: Done and Running late (becomes +15 in Focus). Past dots fade, no done count. The thread ends in one quiet row, "Later (3)", which is the Inbox. One floating Add button. That is the whole screen: three primary controls (Add, Done, Running late).
+**Today.** The thread on the full-width day sheet (ADR-0015), running under the floating Add to the bottom edge. Header on one line: the date title ("October 21, 2026 ⌄", opens the month) and one menu button (Show everything · Low-energy day · Settings), without the day dot or the numbers line; the week strip stays without completion dots. Rows keep their tinted dots and `DoneCircle`s; a done task keeps its place with its title struck, and there is no done count. The live dot carries its ring and two actions: Done and Running late (becomes +15 in Focus). The thread ends in one quiet row, "Later (3)", which is the Inbox. One floating Add button. That is the whole screen: three primary controls (Add, Done, Running late).
 
 **Add.** One sheet, one field, keyboard up. The parser reads time, duration and recurrence from the text ("dentist 3pm 45 min", "gym every Tuesday"). Under the field, two chips at most: when (next free slot, pre-selected) and how long (learned median from C3, else 30 min). *More* expands to the full Add step 2. Enter saves; the sheet closes; the dot is on the thread. Two taps from app open.
 
-**Task sheet.** Title, time, duration, then four buttons: Done · Tomorrow · Later · Delete. *Break it down* appears once B1 ships. *More* expands colour, icon, energy, notes, recurrence and subtasks in the existing sheet layout.
+**Task sheet.** Title, time, duration (the only place a length changes since ADR-0015), then four buttons: Done · Tomorrow · Later · Delete. *Break it down* appears once B1 ships. *More* expands colour, icon, energy, notes, recurrence and subtasks in the existing sheet layout.
 
 **Settings.** One page, eight rows, no sections:
 
@@ -147,18 +213,18 @@ Placement, revised 30 Oct 2026: M1–M15 are on main (M13 learning reveal, M14 v
 
 **Acceptance criteria for M16**
 
-- [ ] Widget test enumerates every tappable control on minimal Today and asserts the set is exactly {Add, Done, Running late, header menu, Later row, day swipe}
+- [ ] Widget test enumerates every tappable control on minimal Today and asserts the set is exactly {Add, Done (each row's `DoneCircle` and the live row's Done), task row → sheet, Running late, header menu, Later row, day swipe and week-strip day} (owner, 2026-10-30: ADR-0015 put a done circle on every row and made rows open their sheet)
 - [ ] Property test: for any seeded database, `full → minimal → full` leaves every table byte-identical
-- [ ] Policy test: every `FeatureId` has a row; every `hidden` feature is reachable within two taps from a *More* row (traversal test over the route table)
+- [ ] Policy test: every `FeatureId` has a row; every `hidden` feature is reachable within two taps from a *More* row (traversal test over the route table). The *More* rows are Settings › Everything else…, the task sheet's and Add's More, and the header menu's Show everything (owner, 2026-10-30: weekly review, the journal and Search have no Settings path; Everything else… gains a Search row)
 - [ ] Golden matrix: 5 minimal screens × light/dark × largest text scale × RTL
 - [ ] Onboarding in minimal is three steps after the mode choice and asks for no setting that has a default
 - [ ] No string in minimal mode or in a hint fails the no-shame audit (no "late", "missed", "failed", no red)
 - [ ] Manual on a real device: cold install to first dot on the thread in under 20 seconds
 
-**Open questions for the owner**
+**Open questions for the owner** — all answered as proposed (owner, 2026-10-30)
 
-- [ ] Default for new installs: preselect *Just the next dot*, preselect *The full planner*, or no preselection? Proposal: preselect minimal; the full planner is a tap away and the first impression is the one that keeps ADHD users
-- [ ] Name in the UI: "Minimal", "Simple", or "Just today"? Proposal: no name, just the two card titles and the Settings row *Layout: Minimal / Full*
-- [ ] One layout per account (synced) or per device? Proposal: per account, with the Mac free to show Week/Month in its View menu either way
-- [ ] Should the Mac in minimal mode hide Week and Month entirely, or keep them one click away? Proposal: one click away under View
-- [ ] Does the Bedtime review stay in minimal as the one-card version, or go hidden? Proposal: stay, because "tomorrow or Later?" is the one decision that keeps the thread honest
+- [x] Default for new installs: preselect *Just the next dot*, preselect *The full planner*, or no preselection? Proposal: preselect minimal; the full planner is a tap away and the first impression is the one that keeps ADHD users
+- [x] Name in the UI: "Minimal", "Simple", or "Just today"? Proposal: no name, just the two card titles and the Settings row *Layout: Minimal / Full*
+- [x] One layout per account (synced) or per device? Proposal: per account, with the Mac free to show Week/Month in its View menu either way
+- [x] Should the Mac in minimal mode hide Week and Month entirely, or keep them one click away? Proposal: one click away under View
+- [x] Does the Bedtime review stay in minimal as the one-card version, or go hidden? Proposal: stay, because "tomorrow or Later?" is the one decision that keeps the thread honest
