@@ -28,7 +28,9 @@ import java.util.Locale
  * [SpeechRecognizer.isOnDeviceRecognitionAvailable] says no, the answer is
  * "unavailable" and the mic hides (D2): the default recognizer is never
  * used, because the service behind it may send audio to a server. On API
- * 33+ the language must be installed on the device. Words go to Dart only,
+ * 33+ the language must be installed on the device; where it can be but
+ * isn't yet, the answer is "downloadable" and "download" asks Android to
+ * fetch its model (owner, 2026-10-30). Words go to Dart only,
  * never to a log; no network API is used here (speech_on_device_test).
  * Listening restarts after each utterance until [stop], and stops when the
  * activity pauses.
@@ -45,6 +47,9 @@ object SpeechBridge : EventChannel.StreamHandler {
     private var language = ""
     private var pendingPermission: (() -> Unit)? = null
 
+    /** Kept while Android fetches a language model, then let go. */
+    private var downloader: SpeechRecognizer? = null
+
     fun attach(activity: Activity, messenger: BinaryMessenger) {
         this.activity = activity
         EventChannel(messenger, "dottoday/speech/events").setStreamHandler(this)
@@ -53,6 +58,9 @@ object SpeechBridge : EventChannel.StreamHandler {
             when (call.method) {
                 "availability" -> availability(tag) { result.success(it) }
                 "requestPermission" -> requestPermission { availability(tag) { result.success(it) } }
+                // The user tapped the mic where the language isn't on the
+                // device yet: Android fetches its model (owner, 2026-10-30).
+                "download" -> download(tag) { result.success(it) }
                 "start" -> start(tag)?.let { result.error(it, null, null) } ?: result.success(null)
                 "stop" -> {
                     stop()
@@ -92,10 +100,22 @@ object SpeechBridge : EventChannel.StreamHandler {
                 override fun onSupportResult(support: RecognitionSupport) {
                     probe.destroy()
                     val language = languageOf(tag)
-                    val installed = support.installedOnDeviceLanguages.any {
-                        it.lowercase(Locale.ROOT).startsWith(language)
-                    }
-                    done(if (installed) permission else "unavailable")
+                    fun has(list: List<String>) =
+                        list.any { it.lowercase(Locale.ROOT).startsWith(language) }
+                    done(
+                        when {
+                            has(support.installedOnDeviceLanguages) -> {
+                                downloader?.destroy()
+                                downloader = null
+                                permission
+                            }
+                            has(support.pendingOnDeviceLanguages) -> "downloading"
+                            // On-device capable, model not here yet: the
+                            // mic shows and its first tap fetches it.
+                            has(support.supportedOnDeviceLanguages) -> "downloadable"
+                            else -> "unavailable"
+                        },
+                    )
                 }
 
                 override fun onError(error: Int) {
@@ -104,6 +124,26 @@ object SpeechBridge : EventChannel.StreamHandler {
                 }
             },
         )
+    }
+
+    /**
+     * Asks Android to fetch [tag]'s on-device model (API 33+). The model
+     * comes from the OS's own speech service; nothing goes through
+     * Dottoday, and recognition stays on the device. Answers with the
+     * availability right after asking.
+     */
+    private fun download(tag: String, done: (String) -> Unit) {
+        val context = activity ?: return done("unavailable")
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            !SpeechRecognizer.isOnDeviceRecognitionAvailable(context)
+        ) {
+            return done("unavailable")
+        }
+        downloader?.destroy()
+        val r = SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
+        downloader = r
+        r.triggerModelDownload(intentFor(tag))
+        availability(tag, done)
     }
 
     private fun permissionWord(context: Activity): String {

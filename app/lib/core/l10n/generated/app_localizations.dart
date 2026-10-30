@@ -7836,6 +7836,18 @@ abstract class AppLocalizations {
   /// **'Pause, or say \"next\", between things. \"Call the dentist … next … buy milk\" becomes two lines.'**
   String get dumpMicTipBody;
 
+  /// Under a dictated field while Android downloads the language's on-device speech model (owner, 2026-10-30).
+  ///
+  /// In en, this message translates to:
+  /// **'Getting speech ready on this device…'**
+  String get micGettingReady;
+
+  /// Under a dictated field once the language's on-device speech model has arrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech is ready on this device. Tap the mic to start.'**
+  String get micReady;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/data/speech/dictation_controller.dart';
@@ -70,6 +72,34 @@ void main() {
     await pumpEventQueue();
     expect(st().phase, DictationPhase.idle);
     expect(st().failure, isA<SpeechFailure>());
+  });
+
+  // Timers run in testWidgets' fake time (no fake_async dependency).
+  testWidgets('fetch: asks for the model, then says when it is ready', (
+    tester,
+  ) async {
+    fake.state = SpeechAvailability.downloadable;
+    unawaited(ctl().prepareLanguage('a', 'en-US'));
+    await tester.pump();
+    expect(fake.downloads, ['en-US']);
+    expect(st().phase, DictationPhase.fetching);
+    await tester.pump(const Duration(seconds: 5));
+    expect(st().phase, DictationPhase.fetching, reason: 'still coming');
+    fake.state = SpeechAvailability.available;
+    await tester.pump(const Duration(seconds: 3));
+    expect(st().phase, DictationPhase.idle);
+    expect(st().ready, isTrue);
+  });
+
+  testWidgets('fetch: a declined download gives up quietly', (tester) async {
+    fake.state = SpeechAvailability.downloadable;
+    unawaited(ctl().prepareLanguage('a', 'en-US'));
+    await tester.pump();
+    fake.state = SpeechAvailability.downloadable;
+    await tester.pump(const Duration(seconds: 10));
+    expect(st().phase, DictationPhase.idle);
+    expect(st().ready, isFalse);
+    expect(st().failure, isNull);
   });
 
   test('preparing / notStarted for the permission flow', () async {

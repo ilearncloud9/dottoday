@@ -11,6 +11,14 @@ enum SpeechAvailability {
   /// The user said no to the microphone (or speech recognition).
   denied,
 
+  /// The device can recognize the language on-device but hasn't got its
+  /// model yet (Android 13+): the mic shows, and the first tap asks the OS
+  /// to fetch it (owner, 2026-10-30, amending D2).
+  downloadable,
+
+  /// The OS is fetching the language's model: the mic waits.
+  downloading,
+
   /// No on-device recognizer for the language here (D2: the mic hides).
   unavailable,
 }
@@ -63,6 +71,12 @@ abstract interface class SpeechRecognizer {
   /// Asks the OS for the microphone (and speech recognition on Apple);
   /// the app shows its own rationale first (D5).
   Future<SpeechAvailability> requestPermission(String localeTag);
+
+  /// Asks the OS to fetch [localeTag]'s on-device model; the answer is
+  /// the availability right after asking (usually [downloading]). Only
+  /// Android does this; elsewhere it is [SpeechAvailability.unavailable].
+  /// The model comes from the OS itself, never through Dottoday.
+  Future<SpeechAvailability> download(String localeTag);
 
   /// Starts listening; the stream ends after [SpeechStopped] or
   /// [SpeechError].

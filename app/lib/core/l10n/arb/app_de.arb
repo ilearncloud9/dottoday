@@ -1289,6 +1289,8 @@
   "dumpHintMic": "Tippe oder nutze das Mikrofon. Eins pro Zeile.",
   "dumpMicTipTitle": "Sprich deine Liste",
   "dumpMicTipBody": "Mach eine Pause oder sag „weiter“ zwischen den Dingen. „Zahnarzt anrufen … weiter … Milch kaufen“ wird zu zwei Zeilen.",
+  "micGettingReady": "Spracherkennung wird auf diesem Gerät vorbereitet …",
+  "micReady": "Die Spracherkennung ist auf diesem Gerät bereit. Tipp auf das Mikrofon, um anzufangen.",
   "taskIconCategoryPlanning": "Planung & Rhythmus",
   "taskIconCategoryHealth": "Gesundheit & Körper",
   "taskIconCategoryFitness": "Fitness & Sport",

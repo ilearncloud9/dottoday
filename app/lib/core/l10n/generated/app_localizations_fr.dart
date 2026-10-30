@@ -5350,6 +5350,14 @@ class AppLocalizationsFr extends AppLocalizations {
       'Faites une pause, ou dites « suivant », entre deux choses. « Appeler le dentiste … suivant … acheter du lait » donne deux lignes.';
 
   @override
+  String get micGettingReady =>
+      'Préparation de la reconnaissance vocale sur cet appareil…';
+
+  @override
+  String get micReady =>
+      'La reconnaissance vocale est prête sur cet appareil. Touchez le micro pour commencer.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

@@ -186,6 +186,32 @@ void main() {
     await unmountBrainDump(tester);
   });
 
+  // Owner, 2026-10-30: where Android can recognize the language on the
+  // device but hasn't its model, the mic shows; the first tap fetches it.
+  testWidgets('language not downloaded: the mic fetches it, then listens', (
+    tester,
+  ) async {
+    final (_, fake, _) = await _pump(
+      tester,
+      state: SpeechAvailability.downloadable,
+    );
+    expect(find.byTooltip('Dictate'), findsOneWidget);
+    await _listen(tester);
+    expect(fake.downloads, hasLength(1));
+    expect(fake.starts, isEmpty);
+    expect(find.text('Getting speech ready on this device…'), findsOneWidget);
+    fake.state = SpeechAvailability.available;
+    await tester.pump(const Duration(seconds: 3));
+    expect(
+      find.text('Speech is ready on this device. Tap the mic to start.'),
+      findsOneWidget,
+    );
+    await _listen(tester);
+    expect(fake.starts, hasLength(1));
+    expect(find.text(_caption), findsOneWidget);
+    await unmountBrainDump(tester);
+  });
+
   testWidgets('microphone refused: a quiet line and Open settings', (
     tester,
   ) async {

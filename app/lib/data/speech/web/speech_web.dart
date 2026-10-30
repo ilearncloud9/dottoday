@@ -103,6 +103,11 @@ final class WebSpeechRecognizer implements SpeechRecognizer {
       ? SpeechAvailability.unavailable
       : SpeechAvailability.available;
 
+  /// No pack download on the web (ADR-0014): only Android fetches models.
+  @override
+  Future<SpeechAvailability> download(String localeTag) async =>
+      SpeechAvailability.unavailable;
+
   @override
   Stream<SpeechEvent> start(String localeTag) {
     final api = _api;

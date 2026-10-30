@@ -40,6 +40,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - M10.2: Suggested changes to your day now open in one place first: what moves is shown over your day as it is, each change can be dropped with ×, and nothing is saved until you tap Accept — after which Undo is there for 30 seconds. On a Mac or a wide window it opens beside your day instead of over it.
 - M10.1: The thinking help behind Break it down, brain-dump and length suggestions now runs on your device — Apple Intelligence on iPhone and Mac, Gemini Nano on supported Android phones, Chrome's built-in model on the web — and falls back to your own history and simple rules where there is none. Nothing you type goes to a server; Settings › Privacy explains it and can clear what was kept.
 
+### Changed
+- Android: the mic now shows where your phone can understand your language on the device but hasn't downloaded it yet. The first tap asks Android to fetch it ("Getting speech ready on this device…"); then tap again and speak. Your words still never leave the phone.
+
 ### Fixed
 - Dictation keeps up after a new line: once "next" or a pause started a new line, the next words were slow to appear or went missing. They now show as you say them, on iPhone, Mac and Android.
 - Web: Brain dump (and any popover opened from a menu) now takes your typing straight away — no need to click into the field first.

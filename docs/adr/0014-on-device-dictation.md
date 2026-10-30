@@ -55,6 +55,19 @@ server. Our trust line is "data on your device" (00-vision); titles and notes ar
    mic button is on, to turn your words into text on this device." Speech recognition — "Your
    words are turned into text on this device. Nothing is sent to a server."
 
+## Amendment — Android language models (owner, 2026-10-30)
+Found on the emulator: Android had its on-device recognizer, but the English model wasn't
+downloaded, so the mic stayed hidden and users would never learn it exists. The owner chose to
+offer the download: on Android 13+, when `checkRecognitionSupport` lists the language under
+`supportedOnDeviceLanguages` (or `pendingOnDeviceLanguages`) but not
+`installedOnDeviceLanguages`, the bridge answers `downloadable` (`downloading`) and the mic shows.
+Its first tap calls `SpeechRecognizer.triggerModelDownload` — the model comes from Android's own
+speech service, never through Dottoday — and the field says "Getting speech ready on this
+device…", re-checking every 2 s (at most 10 min) until "Speech is ready on this device. Tap the
+mic to start." A declined or stalled download gives up quietly. Recognition itself is unchanged:
+on-device only (D1). iOS/macOS fetch their own assets and the web stays as decided above (no pack
+download): only Android offers it.
+
 ## Alternatives rejected
 - `speech_to_text` package: a new dependency, and it uses the platform's default recognizer, which
   may stream audio to Google's or Apple's servers; no per-call on-device guarantee on Android.

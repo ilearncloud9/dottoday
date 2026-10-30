@@ -13,6 +13,10 @@ final class WebSpeechRecognizer implements SpeechRecognizer {
       SpeechAvailability.unavailable;
 
   @override
+  Future<SpeechAvailability> download(String localeTag) async =>
+      SpeechAvailability.unavailable;
+
+  @override
   Stream<SpeechEvent> start(String localeTag) => const Stream.empty();
 
   @override

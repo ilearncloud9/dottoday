@@ -53,6 +53,9 @@ final class SpeechBridge: NSObject, FlutterStreamHandler {
     switch call.method {
     case "availability":
       result(availability(locale))
+    case "download":
+      // Apple fetches on-device speech assets by itself; nothing to ask.
+      result(availability(locale))
     case "requestPermission":
       requestPermission { result(self.availability(locale)) }
     case "start":

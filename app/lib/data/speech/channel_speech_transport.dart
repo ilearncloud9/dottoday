@@ -26,6 +26,10 @@ final class ChannelSpeechRecognizer implements SpeechRecognizer {
   Future<SpeechAvailability> requestPermission(String localeTag) =>
       _ask('requestPermission', localeTag);
 
+  @override
+  Future<SpeechAvailability> download(String localeTag) =>
+      _ask('download', localeTag);
+
   Future<SpeechAvailability> _ask(String method, String localeTag) async {
     try {
       return parseSpeechAvailability(

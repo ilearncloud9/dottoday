@@ -11,6 +11,8 @@ SpeechAvailability parseSpeechAvailability(String? word) => switch (word) {
   'available' => SpeechAvailability.available,
   'needs_permission' => SpeechAvailability.needsPermission,
   'denied' => SpeechAvailability.denied,
+  'downloadable' => SpeechAvailability.downloadable,
+  'downloading' => SpeechAvailability.downloading,
   _ => SpeechAvailability.unavailable,
 };
 
