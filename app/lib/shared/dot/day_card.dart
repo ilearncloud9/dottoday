@@ -187,7 +187,7 @@ class DayCard extends StatelessWidget {
           Expanded(
             // The thread keeps clear of the sheet's edge (`Main`'s inset).
             child: Padding(
-              padding: const EdgeInsetsDirectional.only(start: DotSpace.m),
+              padding: const EdgeInsetsDirectional.only(start: DotSpace.xs),
               child: CustomScrollView(
                 slivers: [
                   _thread(),
@@ -228,8 +228,9 @@ class DayCard extends StatelessWidget {
 
   /// The day's thread (and footer), with the card's insets.
   Widget _thread() => SliverPadding(
+    // The 56 px dot fills the axis column: keep it off the card's edge.
     padding: const EdgeInsetsDirectional.fromSTEB(
-      0,
+      DotSpace.s,
       DotSpace.xs,
       DotSpace.xs,
       0,

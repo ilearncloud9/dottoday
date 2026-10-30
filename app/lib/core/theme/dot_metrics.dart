@@ -64,6 +64,13 @@ abstract final class DotSize {
   static const double wideRowFrom = 300;
   static const double wideRowMeta = 144;
 
+  /// The same for the day thread's larger rows (ADR-0015): a full-width
+  /// phone sheet (~330 px of text on the largest iPhone) keeps the time
+  /// above the title; the Mac card's wider text goes side by side, in a
+  /// column that fits "10:30 AM – 11:15 AM" at the 15 px time size.
+  static const double wideThreadRowFrom = 440;
+  static const double wideThreadRowMeta = 184;
+
   /// Today card's share of the Mac spread against each side day (render:
   /// 700 px card between ~430 px days).
   static const int spreadCardFlex = 8;

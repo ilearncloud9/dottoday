@@ -79,7 +79,7 @@ class LiveRow extends StatelessWidget {
   /// Wide (the Mac spread's card): the time in its own column, as on
   /// [TaskRow]; else above the title.
   Widget _body(double width) {
-    final wide = width >= DotSize.wideRowFrom;
+    final wide = width >= DotSize.wideThreadRowFrom;
     final column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: DotSpace.m,
@@ -103,7 +103,7 @@ class LiveRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: DotSize.wideRowMeta,
+          width: DotSize.wideThreadRowMeta,
           child: _WideMeta(task: task),
         ),
         Expanded(child: column),

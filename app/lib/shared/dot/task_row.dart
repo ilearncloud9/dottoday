@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/done_circle.dart';
+import 'package:dottoday/shared/dot/smallest_step_line.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
@@ -8,6 +9,7 @@ import 'package:dottoday/shared/dot/unstick_line.dart';
 import 'package:flutter/material.dart';
 
 export 'done_circle.dart';
+export 'smallest_step_line.dart';
 
 /// A task on the thread (docs/10 §3 `TaskRow`): dot + segment on the axis,
 /// time meta, title, and the done circle at the end.
@@ -104,33 +106,6 @@ class TaskRow extends StatelessWidget {
   }
 }
 
-/// "Just Gather documents · 10 min?" and Start (11 B2, docs/09 M10.6): a
-/// quiet line in the accent, never a warning colour (11 §D no shame).
-class SmallestStepLine extends StatelessWidget {
-  const SmallestStepLine({required this.text, this.onStart, super.key});
-
-  final String text;
-  final VoidCallback? onStart;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return Wrap(
-      spacing: DotSpace.s,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        Text(text, style: t.styles.rowMeta.copyWith(color: t.colors.accentInk)),
-        if (onStart != null)
-          FilledButton.tonal(
-            onPressed: onStart,
-            style: FilledButton.styleFrom(shape: dotChipShape(context)),
-            child: Text(context.l10n.smallestStepStart),
-          ),
-      ],
-    );
-  }
-}
-
 /// The dot of a thread row: opens the task, or Focus on the live one
 /// (11 A3). Marking done is the [DoneCircle]'s job (ADR-0015).
 Widget taskRowDot(
@@ -218,11 +193,18 @@ class _Text extends StatelessWidget {
     };
     // Wide (the Mac spread's card): time beside the title; else above it.
     return LayoutBuilder(
-      builder: (context, box) => box.maxWidth >= DotSize.wideRowFrom
+      builder: (context, box) =>
+          box.maxWidth >=
+              (large ? DotSize.wideThreadRowFrom : DotSize.wideRowFrom)
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(width: DotSize.wideRowMeta, child: meta),
+                SizedBox(
+                  width: large
+                      ? DotSize.wideThreadRowMeta
+                      : DotSize.wideRowMeta,
+                  child: meta,
+                ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

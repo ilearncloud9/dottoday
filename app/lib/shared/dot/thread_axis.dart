@@ -120,7 +120,14 @@ final class ThreadAxisPainter extends CustomPainter {
       case FreePiece(:final nowFraction):
         _dotted(canvas, x, 0, size.height);
         if (nowFraction != null) {
-          _now(canvas, Offset(x, size.height * nowFraction));
+          // Kept inside the gap: at the very end it would sit on the next
+          // task's 56 px dot (ADR-0015).
+          const r = DotSize.nowMarker / 2 + DotSize.nowHalo;
+          final y = (size.height * nowFraction).clamp(
+            r,
+            size.height < 2 * r ? r : size.height - r,
+          );
+          _now(canvas, Offset(x, y));
         }
       case OverlapPiece() && final p:
         _overlap(canvas, x, size.height, p);
