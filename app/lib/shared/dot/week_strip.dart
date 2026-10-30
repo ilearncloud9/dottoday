@@ -26,7 +26,7 @@ final class StripDay {
     required this.weekday,
     required this.date,
     required this.label,
-    required this.completion,
+    this.completion,
     this.weekdayNarrow,
     this.isToday = false,
     this.isPast = false,
@@ -44,7 +44,10 @@ final class StripDay {
 
   /// Screen-reader label, e.g. "Wednesday 21 October, 2 of 7 done".
   final String label;
-  final Completion completion;
+
+  /// The day's completion dot; null draws none (minimal mode, docs/14 §3:
+  /// a done ratio is a number that judges).
+  final Completion? completion;
   final bool isToday;
 
   /// Past dates read muted (`Main`).
@@ -254,7 +257,7 @@ class _Column extends StatelessWidget {
                 style: label,
               ),
               Text(day.date, style: date),
-              CompletionDot(completion: day.completion),
+              if (day.completion case final c?) CompletionDot(completion: c),
             ],
           ),
         ),

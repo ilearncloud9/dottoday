@@ -7207,4 +7207,120 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get taskIconCircle => 'Simple';
+
+  @override
+  String get layoutShowEverything => 'Tout afficher';
+
+  @override
+  String get layoutShowLess => 'Afficher moins';
+
+  @override
+  String get layoutRow => 'Affichage';
+
+  @override
+  String get layoutMinimal => 'Minimal';
+
+  @override
+  String get layoutFull => 'Complet';
+
+  @override
+  String laterRow(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Plus tard · $count',
+      zero: 'Plus tard',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String laterRowLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Plus tard, $count tâches en attente',
+      one: 'Plus tard, 1 tâche en attente',
+      zero: 'Plus tard, rien en attente',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get moreOptions => 'Plus';
+
+  @override
+  String get sheetLater => 'Plus tard';
+
+  @override
+  String get sheetDelete => 'Supprimer';
+
+  @override
+  String get settingsEverythingElse => 'Tout le reste…';
+
+  @override
+  String get settingsRemindDotStarts => 'Me rappeler quand un point commence';
+
+  @override
+  String get settingsAccountAndSync => 'Compte et synchronisation';
+
+  @override
+  String addWhenChip(String time) {
+    return 'À $time';
+  }
+
+  @override
+  String get onboardingLayoutTitle => 'Que voulez-vous voir ?';
+
+  @override
+  String get onboardingLayoutBody =>
+      'Vous pouvez changer cela à tout moment dans les Réglages.';
+
+  @override
+  String get onboardingLayoutMinimalTitle => 'Juste le prochain point';
+
+  @override
+  String get onboardingLayoutMinimalBody =>
+      'Dottoday montre ce qui se passe maintenant et ensuite. Ajouter, faire, fait.';
+
+  @override
+  String get onboardingLayoutFullTitle => 'Le planificateur complet';
+
+  @override
+  String get onboardingLayoutFullBody =>
+      'Fil, routines, bilans, widgets et tous les réglages.';
+
+  @override
+  String get onboardingFirstTaskTitle => 'Une chose pour aujourd\'hui ?';
+
+  @override
+  String get onboardingFirstTaskBody =>
+      'Écrivez-le comme vous le diriez, par exemple « appeler Sam 18h ». Il va sur votre fil.';
+
+  @override
+  String get onboardingFirstTaskAdd => 'Mettre sur aujourd\'hui';
+
+  @override
+  String get hintRoutines => 'Enregistrer ceci comme votre matin ?';
+
+  @override
+  String get hintBreakDown => 'Le découper en étapes ?';
+
+  @override
+  String get hintWidget =>
+      'Le prochain point aussi sur votre écran d\'accueil ?';
+
+  @override
+  String get hintWidgetHow =>
+      'Ajoutez le widget Dottoday depuis la liste des widgets de votre écran d\'accueil.';
+
+  @override
+  String get hintWeek => 'Voir votre semaine en sept points ?';
+
+  @override
+  String get hintLearned =>
+      'Dottoday peut préremplir les durées selon le temps que les choses prennent vraiment.';
+
+  @override
+  String get hintShowMe => 'Montrer';
 }

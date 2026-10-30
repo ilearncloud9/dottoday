@@ -12,6 +12,7 @@ final class ShellDestination {
     required this.glyph,
     required this.label,
     this.expandedOnly = false,
+    this.visible = true,
     this.badge,
     this.badgeLabel,
     this.onDropTask,
@@ -29,6 +30,10 @@ final class ShellDestination {
 
   /// Week: on the Mac/web rail only; phones use the strip + month (§4).
   final bool expandedOnly;
+
+  /// False leaves it out of every bar (minimal layout, docs/14 §3); its
+  /// branch is still routable.
+  final bool visible;
 
   /// A count on the icon (the Inbox, docs/02 F3.3); null or 0 shows none.
   final int? badge;
@@ -55,8 +60,18 @@ class DotShell extends StatelessWidget {
     required this.addLabel,
     this.onTrashTask,
     this.trashLabel = '',
+    this.compactBar = true,
+    this.addAtEveryWidth = false,
     super.key,
   });
+
+  /// False draws no tab bar at compact width, only the floating add button
+  /// (minimal layout, docs/14 §4: "One floating Add button").
+  final bool compactBar;
+
+  /// The add button on the expanded rail too, which otherwise adds by ⌘N
+  /// and the Inbox field (minimal has no Inbox sidebar, docs/14 §3).
+  final bool addAtEveryWidth;
 
   /// A dragged task let go on the Trash target that shows above the add
   /// button while dragging (ADR-0015); null shows none.
@@ -84,7 +99,10 @@ class DotShell extends StatelessWidget {
         final width = WidthClass.of(box.maxWidth);
         final shown = [
           for (final (i, d) in destinations.indexed)
-            if (width == WidthClass.expanded || !d.expandedOnly) i,
+            if (d.visible &&
+                (width == WidthClass.expanded || !d.expandedOnly) &&
+                (width != WidthClass.compact || compactBar))
+              i,
         ];
         final bar = ShellBar(
           items: [for (final i in shown) destinations[i]],
@@ -92,7 +110,9 @@ class DotShell extends StatelessWidget {
           selected: shown.indexOf(selected),
           onSelect: (k) => onSelect(shown[k]),
           // Mac/web add by ⌘N, the Inbox field and "add here" (§4 renders).
-          onAdd: width == WidthClass.expanded ? null : onAdd,
+          onAdd: width == WidthClass.expanded && !addAtEveryWidth
+              ? null
+              : onAdd,
           addLabel: addLabel,
         );
         final shell = switch ((width, DotIdiom.of(context))) {

@@ -21,6 +21,7 @@ class LiveRow extends StatelessWidget {
     this.onUnstick,
     this.onExtend,
     this.onShiftRest,
+    this.onRunningLate,
     super.key,
   });
 
@@ -40,6 +41,10 @@ class LiveRow extends StatelessWidget {
 
   /// Moves every later task by the overrun (R-04).
   final VoidCallback? onShiftRest;
+
+  /// Running late (minimal layout, docs/14 §4): drawn instead of +15 and
+  /// Shift the rest.
+  final VoidCallback? onRunningLate;
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +100,7 @@ class LiveRow extends StatelessWidget {
             onDone: onToggleDone,
             onExtend: onExtend,
             onShiftRest: onShiftRest,
+            onRunningLate: onRunningLate,
           ),
       ],
     );
@@ -236,11 +242,17 @@ class _Progress extends StatelessWidget {
 }
 
 class _Actions extends StatelessWidget {
-  const _Actions({this.onDone, this.onExtend, this.onShiftRest});
+  const _Actions({
+    this.onDone,
+    this.onExtend,
+    this.onShiftRest,
+    this.onRunningLate,
+  });
 
   final VoidCallback? onDone;
   final VoidCallback? onExtend;
   final VoidCallback? onShiftRest;
+  final VoidCallback? onRunningLate;
 
   @override
   Widget build(BuildContext context) {
@@ -250,8 +262,15 @@ class _Actions extends StatelessWidget {
       runSpacing: DotSpace.s,
       children: [
         FilledButton(onPressed: onDone, child: Text(l10n.liveDone)),
-        OutlinedButton(onPressed: onExtend, child: Text(l10n.liveExtend)),
-        OutlinedButton(onPressed: onShiftRest, child: Text(l10n.liveShiftRest)),
+        if (onRunningLate case final late?)
+          OutlinedButton(onPressed: late, child: Text(l10n.runningLate))
+        else ...[
+          OutlinedButton(onPressed: onExtend, child: Text(l10n.liveExtend)),
+          OutlinedButton(
+            onPressed: onShiftRest,
+            child: Text(l10n.liveShiftRest),
+          ),
+        ],
       ],
     );
   }

@@ -6,6 +6,10 @@ import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/features/calendar_import/write_back_banner.dart';
 import 'package:dottoday/features/focus/focus_screen.dart';
+import 'package:dottoday/features/layout/back_to_today.dart';
+import 'package:dottoday/features/layout/feature_id.dart';
+import 'package:dottoday/features/layout/layout_policy.dart';
+import 'package:dottoday/features/layout/layout_providers.dart';
 import 'package:dottoday/features/notifications/in_app_alert_banner.dart';
 import 'package:dottoday/features/onboarding/install_banner.dart';
 import 'package:dottoday/features/proposals/proposal_host.dart';
@@ -50,12 +54,20 @@ class AppShell extends ConsumerWidget {
     int inbox,
   ) {
     final drops = ShellDrops(context, ref);
+    // Minimal layout (docs/14 §3): no tab bar on phones, Today and
+    // Settings on the rail; the Inbox is Today's Later row.
+    final minimalNav = watchSimplified(ref, FeatureId.navigation);
     return DotShell(
       destinations: shellDestinations(
         l10n,
         inbox: inbox,
         onDropOnInbox: drops.toInbox,
+        inboxTab: watchFeature(ref, FeatureId.inbox) == FeatureVisibility.shown,
+        weekTab: watchOnScreen(ref, FeatureId.macWeekMonth),
+        searchTab: watchOnScreen(ref, FeatureId.search),
       ),
+      compactBar: !minimalNav,
+      addAtEveryWidth: minimalNav,
       onTrashTask: drops.toTrash,
       trashLabel: l10n.inboxTrash,
       selected: shell.currentIndex,
@@ -77,9 +89,10 @@ class AppShell extends ConsumerWidget {
           // The device moved zone: keep times or shift (M5.9).
           const ZoneBanner(),
           // The web's install offer, from the 2nd visit (M5.7).
-          const InstallBanner(),
+          if (watchOnScreen(ref, FeatureId.installBanner))
+            const InstallBanner(),
           // Once after an update with release notes (M8.2, R-19).
-          const WhatsNewBanner(),
+          if (watchOnScreen(ref, FeatureId.infoPages)) const WhatsNewBanner(),
           Expanded(
             child: Focus(
               focusNode: content,
@@ -88,7 +101,17 @@ class AppShell extends ConsumerWidget {
                 // Focus on Mac/web takes the content area (M10.5).
                 // A routine dropped from Add (M11.4).
                 child: RoutineDropHost(
-                  child: EditorPanelFrame(child: FocusFrame(child: shell)),
+                  child: EditorPanelFrame(
+                    child: FocusFrame(
+                      child: BackToToday(
+                        show:
+                            minimalNav &&
+                            shell.currentIndex != ShellTab.today.index,
+                        onToday: () => _goTab(ShellTab.today),
+                        child: shell,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -112,6 +135,9 @@ List<ShellDestination> shellDestinations(
   AppLocalizations l10n, {
   int inbox = 0,
   ValueChanged<String>? onDropOnInbox,
+  bool inboxTab = true,
+  bool weekTab = true,
+  bool searchTab = true,
 }) => [
   for (final tab in ShellTab.values)
     switch (tab) {
@@ -122,6 +148,7 @@ List<ShellDestination> shellDestinations(
       ShellTab.inbox => ShellDestination(
         glyph: DotGlyphs.inbox,
         label: l10n.navInbox,
+        visible: inboxTab,
         badge: inbox,
         badgeLabel: l10n.navInboxBadge(inbox),
         // A dragged task let go here goes back to the Inbox (ADR-0015).
@@ -131,10 +158,12 @@ List<ShellDestination> shellDestinations(
         glyph: DotGlyphs.week,
         label: l10n.navWeek,
         expandedOnly: true,
+        visible: weekTab,
       ),
       ShellTab.search => ShellDestination(
         glyph: DotGlyphs.search,
         label: l10n.navSearch,
+        visible: searchTab,
       ),
       ShellTab.settings => ShellDestination(
         glyph: DotGlyphs.settings,

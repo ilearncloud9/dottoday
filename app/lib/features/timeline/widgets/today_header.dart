@@ -3,6 +3,8 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/features/layout/feature_id.dart';
+import 'package:dottoday/features/layout/layout_providers.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_parts.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
@@ -20,6 +22,7 @@ import 'package:timezone/timezone.dart' as tz;
 /// Today's header (ADR-0015, after Structured's): the date as the title,
 /// "October 25, 2026 ⌄" (tap: month), with the day dot (or "● Today" away
 /// from today) and ⋯ on the same line; the day's numbers under it.
+/// Minimal (docs/14 §4): the date and ⋯ only, no day dot, no numbers.
 class TodayHeader extends ConsumerWidget {
   const TodayHeader({
     required this.date,
@@ -45,6 +48,7 @@ class TodayHeader extends ConsumerWidget {
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toLanguageTag();
     final low = date == today && watchLowEnergy(ref);
+    final extras = watchOnScreen(ref, FeatureId.headerExtras);
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
         DotSpace.page,
@@ -67,10 +71,10 @@ class TodayHeader extends ConsumerWidget {
                 LowEnergySwitch(
                   onChanged: (on) => toggleLowEnergy(context, on: on),
                 )
-              else if (date == today)
-                TodayDot(today: today)
-              else
-                TodayPill(onTap: onToday),
+              else if (date != today)
+                TodayPill(onTap: onToday)
+              else if (extras)
+                TodayDot(today: today),
               TodayMenu(date: date, today: today),
             ],
           ),
@@ -78,7 +82,7 @@ class TodayHeader extends ConsumerWidget {
             _Caption(
               l10n.lowEnergyCaption(DateFormat.MMMEd(locale).format(date)),
             )
-          else if (!monthOpen)
+          else if (!monthOpen && extras)
             DayNumbers(date: date),
         ],
       ),

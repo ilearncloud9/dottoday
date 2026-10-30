@@ -11519,6 +11519,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Plain'**
   String get taskIconCircle;
+
+  /// Today ⋯ item in minimal mode: switches to the full layout at once (docs/14 §5).
+  ///
+  /// In en, this message translates to:
+  /// **'Show everything'**
+  String get layoutShowEverything;
+
+  /// Today ⋯ item in full mode: switches to the minimal layout at once (docs/14 §5).
+  ///
+  /// In en, this message translates to:
+  /// **'Show less'**
+  String get layoutShowLess;
+
+  /// Settings row 1 in both layouts (docs/14 §4): the minimal / full switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Layout'**
+  String get layoutRow;
+
+  /// Settings › Layout: the minimal choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimal'**
+  String get layoutMinimal;
+
+  /// Settings › Layout: the full choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get layoutFull;
+
+  /// Minimal Today: the quiet row at the end of the thread that opens the Inbox (docs/14 §3).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Later} other{Later · {count}}}'**
+  String laterRow(int count);
+
+  /// Screen-reader label of the Later row.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Later, nothing waiting} =1{Later, 1 task waiting} other{Later, {count} tasks waiting}}'**
+  String laterRowLabel(int count);
+
+  /// Minimal Add and task sheet: opens every other option (docs/14 §4).
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get moreOptions;
+
+  /// Minimal task sheet: sends the task to the Inbox (the Later row).
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get sheetLater;
+
+  /// Minimal task sheet: moves the task to Trash, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get sheetDelete;
+
+  /// Minimal Settings row 8: opens the full Settings tree (docs/14 §4).
+  ///
+  /// In en, this message translates to:
+  /// **'Everything else…'**
+  String get settingsEverythingElse;
+
+  /// Minimal Settings row 4: on = the default alert at the start, off = no default alert.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me when a dot starts'**
+  String get settingsRemindDotStarts;
+
+  /// Minimal Settings row 7.
+  ///
+  /// In en, this message translates to:
+  /// **'Account and sync'**
+  String get settingsAccountAndSync;
+
+  /// Minimal Add: the when chip, pre-set to the next free slot (docs/14 §4).
+  ///
+  /// In en, this message translates to:
+  /// **'At {time}'**
+  String addWhenChip(String time);
+
+  /// Onboarding step 0 (docs/14 §4).
+  ///
+  /// In en, this message translates to:
+  /// **'How much do you want to see?'**
+  String get onboardingLayoutTitle;
+
+  /// Onboarding step 0, under the title.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this any time in Settings.'**
+  String get onboardingLayoutBody;
+
+  /// Onboarding step 0: the minimal card's title (owner's copy, docs/14 §4).
+  ///
+  /// In en, this message translates to:
+  /// **'Just the next dot'**
+  String get onboardingLayoutMinimalTitle;
+
+  /// Onboarding step 0: the minimal card's text (owner's copy).
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday shows what\'s now and what\'s next. Add, do, done.'**
+  String get onboardingLayoutMinimalBody;
+
+  /// Onboarding step 0: the full card's title (owner's copy).
+  ///
+  /// In en, this message translates to:
+  /// **'The full planner'**
+  String get onboardingLayoutFullTitle;
+
+  /// Onboarding step 0: the full card's text (owner's copy).
+  ///
+  /// In en, this message translates to:
+  /// **'Thread, routines, reviews, widgets and every setting.'**
+  String get onboardingLayoutFullBody;
+
+  /// Minimal onboarding, last step: the first task.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s one thing for today?'**
+  String get onboardingFirstTaskTitle;
+
+  /// Minimal onboarding, last step: the text under the title.
+  ///
+  /// In en, this message translates to:
+  /// **'Type it the way you\'d say it, like \"call Sam 6pm\". It goes on your thread.'**
+  String get onboardingFirstTaskBody;
+
+  /// Minimal onboarding, last step: adds the task and opens Today.
+  ///
+  /// In en, this message translates to:
+  /// **'Put it on today'**
+  String get onboardingFirstTaskAdd;
+
+  /// Minimal-mode reveal hint (docs/14 §5): three mornings started the same way.
+  ///
+  /// In en, this message translates to:
+  /// **'Save this as your morning?'**
+  String get hintRoutines;
+
+  /// Minimal-mode reveal hint: a task over 60 min without steps.
+  ///
+  /// In en, this message translates to:
+  /// **'Break it into steps?'**
+  String get hintBreakDown;
+
+  /// Minimal-mode reveal hint: after the first Live Activity was dismissed.
+  ///
+  /// In en, this message translates to:
+  /// **'Want the next dot on your home screen too?'**
+  String get hintWidget;
+
+  /// After Show me on the widget hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the Dottoday widget from your home screen\'s widget list.'**
+  String get hintWidgetHow;
+
+  /// Minimal-mode reveal hint: after 14 days of use.
+  ///
+  /// In en, this message translates to:
+  /// **'See your week as seven dots?'**
+  String get hintWeek;
+
+  /// Minimal-mode reveal hint: three tasks took more than 20 min longer than planned this week.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday can start pre-filling times from how long things really take.'**
+  String get hintLearned;
+
+  /// A reveal hint's action.
+  ///
+  /// In en, this message translates to:
+  /// **'Show me'**
+  String get hintShowMe;
 }
 
 class _AppLocalizationsDelegate

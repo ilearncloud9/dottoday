@@ -7163,4 +7163,119 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get taskIconCircle => 'Plain';
+
+  @override
+  String get layoutShowEverything => 'Show everything';
+
+  @override
+  String get layoutShowLess => 'Show less';
+
+  @override
+  String get layoutRow => 'Layout';
+
+  @override
+  String get layoutMinimal => 'Minimal';
+
+  @override
+  String get layoutFull => 'Full';
+
+  @override
+  String laterRow(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Later · $count',
+      zero: 'Later',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String laterRowLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Later, $count tasks waiting',
+      one: 'Later, 1 task waiting',
+      zero: 'Later, nothing waiting',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get moreOptions => 'More';
+
+  @override
+  String get sheetLater => 'Later';
+
+  @override
+  String get sheetDelete => 'Delete';
+
+  @override
+  String get settingsEverythingElse => 'Everything else…';
+
+  @override
+  String get settingsRemindDotStarts => 'Remind me when a dot starts';
+
+  @override
+  String get settingsAccountAndSync => 'Account and sync';
+
+  @override
+  String addWhenChip(String time) {
+    return 'At $time';
+  }
+
+  @override
+  String get onboardingLayoutTitle => 'How much do you want to see?';
+
+  @override
+  String get onboardingLayoutBody =>
+      'You can change this any time in Settings.';
+
+  @override
+  String get onboardingLayoutMinimalTitle => 'Just the next dot';
+
+  @override
+  String get onboardingLayoutMinimalBody =>
+      'Dottoday shows what\'s now and what\'s next. Add, do, done.';
+
+  @override
+  String get onboardingLayoutFullTitle => 'The full planner';
+
+  @override
+  String get onboardingLayoutFullBody =>
+      'Thread, routines, reviews, widgets and every setting.';
+
+  @override
+  String get onboardingFirstTaskTitle => 'What\'s one thing for today?';
+
+  @override
+  String get onboardingFirstTaskBody =>
+      'Type it the way you\'d say it, like \"call Sam 6pm\". It goes on your thread.';
+
+  @override
+  String get onboardingFirstTaskAdd => 'Put it on today';
+
+  @override
+  String get hintRoutines => 'Save this as your morning?';
+
+  @override
+  String get hintBreakDown => 'Break it into steps?';
+
+  @override
+  String get hintWidget => 'Want the next dot on your home screen too?';
+
+  @override
+  String get hintWidgetHow =>
+      'Add the Dottoday widget from your home screen\'s widget list.';
+
+  @override
+  String get hintWeek => 'See your week as seven dots?';
+
+  @override
+  String get hintLearned =>
+      'Dottoday can start pre-filling times from how long things really take.';
+
+  @override
+  String get hintShowMe => 'Show me';
 }

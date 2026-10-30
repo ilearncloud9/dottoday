@@ -1,5 +1,7 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/features/layout/feature_id.dart';
+import 'package:dottoday/features/layout/layout_providers.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_view.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
@@ -25,7 +27,8 @@ const pagerReachDays = 365;
 
 /// Today (docs/10 §5.2 T1, `Main`): greeting header with the day dot, the
 /// week strip and its month pull-open, all-day chips, and the day pager;
-/// at the expanded width the three-day spread (T5, M3e.1).
+/// at the expanded width the three-day spread (T5, M3e.1), except in the
+/// minimal layout (docs/14 §3).
 /// [date] opens another day (`/day/:date`); otherwise it follows today.
 class TodayScreen extends ConsumerWidget {
   const TodayScreen({this.date, super.key});
@@ -65,6 +68,8 @@ class TodayScreen extends ConsumerWidget {
     final selecting = ref.watch(
       taskSelectionProvider.select((p) => p.ids.isNotEmpty),
     );
+    // Minimal (docs/14 §3): Today alone at every width, no spread.
+    final spread = !watchSimplified(ref, FeatureId.spread);
     return PopScope(
       // Back ends selecting before it leaves the screen (R-05).
       canPop: !selecting,
@@ -89,7 +94,8 @@ class TodayScreen extends ConsumerWidget {
               children: [
                 LayoutBuilder(
                   builder: (context, box) =>
-                      WidthClass.of(box.maxWidth) == WidthClass.expanded
+                      spread &&
+                          WidthClass.of(box.maxWidth) == WidthClass.expanded
                       ? TodaySpread(
                           shown: shown,
                           today: today,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
@@ -6,6 +8,8 @@ import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/features/layout/feature_id.dart';
+import 'package:dottoday/features/layout/layout_providers.dart';
 import 'package:dottoday/features/timeline/state/day_cues.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/reality_thread.dart';
@@ -15,7 +19,9 @@ import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/day_drag.dart';
 import 'package:dottoday/features/timeline/widgets/empty_day_actions.dart';
+import 'package:dottoday/features/timeline/widgets/later_row.dart';
 import 'package:dottoday/features/timeline/widgets/reality_insight.dart';
+import 'package:dottoday/features/timeline/widgets/running_late_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/today_learning.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/thread.dart';
@@ -93,7 +99,11 @@ class DayPage extends ConsumerWidget {
       now: now,
       today: today,
     );
-    final offerReality = learn.offer;
+    // Minimal layout (docs/14 §3): no Plan / Reality switch and no
+    // "coming" caption; learning itself keeps running.
+    final realityShown = watchOnScreen(ref, FeatureId.realityThread);
+    final offerReality = realityShown && learn.offer;
+    final note = realityShown ? learn.note : null;
     final learning = offerReality
         ? ref.watch(learningIndexProvider).value
         : null;
@@ -148,7 +158,12 @@ class DayPage extends ConsumerWidget {
             highlight: learn.highlight,
           )
         : null;
-    final footer = _footer(blocks, summary.total == 0);
+    final footer = _footer(
+      blocks,
+      summary.total == 0,
+      emptyActions: watchOnScreen(ref, FeatureId.emptyDayActions),
+      later: sheet && watchSimplified(ref, FeatureId.inbox),
+    );
     final card = sheet
         ? DayCard.sheet(
             entries: entries,
@@ -161,7 +176,7 @@ class DayPage extends ConsumerWidget {
               onPull: ref.read(todaySelectionProvider.notifier).toggleMonth,
             ),
             reality: toggle,
-            note: learn.note,
+            note: note,
           )
         : DayCard(
             title: _title(context),
@@ -171,7 +186,7 @@ class DayPage extends ConsumerWidget {
             actions: actions,
             footer: footer,
             reality: toggle,
-            note: learn.note,
+            note: note,
           );
     final insight = reality == null
         ? null
@@ -235,6 +250,10 @@ class DayPage extends ConsumerWidget {
       selectedIds: picked.day == date ? picked.ids : const {},
       onSelect: (id) =>
           ref.read(taskSelectionProvider.notifier).toggle(date, id),
+      // Minimal: Running late on the live row (docs/14 §4).
+      onRunningLate: watchSimplified(ref, FeatureId.shiftRunningLate)
+          ? (_) => unawaited(showRunningLateSheet(context, today))
+          : null,
     );
   }
 
@@ -260,15 +279,25 @@ class DayPage extends ConsumerWidget {
 
   /// A free day from today on offers its actions (`A-ios-future-month`);
   /// an empty past day only says so.
-  Widget? _footer(List<Occurrence> blocks, bool empty) {
+  ///
+  /// Minimal (docs/14 §3): no empty-day actions ([emptyActions] false), and
+  /// from today on the thread ends in the [LaterRow] ([later]).
+  Widget? _footer(
+    List<Occurrence> blocks,
+    bool empty, {
+    required bool emptyActions,
+    required bool later,
+  }) {
     final oneOffs = blocks.any((o) => o.seriesId == null);
     if (date.isBefore(today)) return empty ? const EmptyDayLine() : null;
-    if (oneOffs) return null;
+    final actions = emptyActions && !oneOffs;
+    if (!actions && !later) return empty ? const EmptyDayLine() : null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (empty) const EmptyDayLine(),
-        EmptyDayActions(date: date),
+        if (actions) EmptyDayActions(date: date),
+        if (later) const LaterRow(),
       ],
     );
   }
