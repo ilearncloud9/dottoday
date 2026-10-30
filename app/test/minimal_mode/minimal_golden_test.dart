@@ -156,16 +156,15 @@ void main() {
     height: 844,
     widths: compact,
     a11yVariants: true,
-    build: (_) => ProviderScope(
-      overrides: [
-        ..._overrides(),
-        onboardingProvider.overrideWith(
-          () => FakeOnboarding(
-            const OnboardingProgress(step: OnboardingStep.layout),
-          ),
+    // As the onboarding goldens: the onboarding store is app-wide.
+    overrides: [
+      ..._overrides(),
+      onboardingProvider.overrideWith(
+        () => FakeOnboarding(
+          const OnboardingProgress(step: OnboardingStep.layout),
         ),
-      ],
-      child: const OnboardingGate(child: SizedBox.shrink()),
-    ),
+      ),
+    ],
+    build: (_) => const OnboardingGate(child: SizedBox.shrink()),
   );
 }
