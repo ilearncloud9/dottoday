@@ -222,6 +222,11 @@ object SpeechBridge : EventChannel.StreamHandler {
         putExtra(RecognizerIntent.EXTRA_LANGUAGE, resolve(tag))
         putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
+        // Lines come from Dart's own pause rule (1.5 s): don't end the
+        // utterance on a short pause, which restarts the recognizer and
+        // loses the first words after it (found on devices, 2026-10-30).
+        putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 4000L)
+        putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 4000L)
     }
 
     /** "en" → the device's own en-XX when it speaks English, else "en". */

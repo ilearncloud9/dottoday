@@ -97,6 +97,28 @@ void main() {
     await unmountBrainDump(tester);
   });
 
+  // Found on devices (2026-10-30): iOS starts its transcript over after a
+  // pause; the words after a line break must still land at once.
+  testWidgets('a recognizer that starts over keeps landing lines', (
+    tester,
+  ) async {
+    final (h, fake, _) = await _pump(tester);
+    await _listen(tester);
+    fake.say('call the dentist');
+    await tester.pump();
+    await _quiet(tester, h, kDictationPause);
+    fake.say('buy');
+    await tester.pump();
+    expect(_text(tester), 'Call the dentist\nBuy');
+    fake.say('buy milk next');
+    await tester.pump();
+    await _quiet(tester, h, kCommandSettle);
+    fake.say('gym');
+    await tester.pump();
+    expect(_text(tester), 'Call the dentist\nBuy milk\nGym');
+    await unmountBrainDump(tester);
+  });
+
   testWidgets('"next" starts a new line and is dropped', (tester) async {
     final (h, fake, _) = await _pump(tester);
     await _listen(tester);
