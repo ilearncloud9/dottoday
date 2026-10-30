@@ -65,8 +65,29 @@ jobs:
       - run: flutter pub get
       # Verify only: never --update-goldens in CI. Tolerance: test/flutter_test_config.dart.
       - run: flutter test --tags golden
-      # Design review (docs/10 §7, M3a.9): every component golden beside its
-      # reference render. A review aid, never a gate.
+      - if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: golden-failures
+          path: app/test/**/failures/
+          retention-days: 7
+
+  reference-sheet:
+    # Design review (docs/10 §7, M3a.9): every component golden beside its
+    # reference render. A review aid, never a gate: its own job, so its
+    # minutes never count against the golden gate's budget (it shared the
+    # goldens job until the 30 min limit cancelled a run whose goldens had
+    # all passed, PR #33).
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
       - run: flutter test --tags reference-sheet
         env:
           REFERENCE_SHEET: "1"
@@ -75,12 +96,6 @@ jobs:
           name: reference-sheet
           path: app/build/reference_sheet/
           retention-days: 30
-      - if: failure()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: golden-failures
-          path: app/test/**/failures/
-          retention-days: 7
 
   build:
     # Every target must compile, so a broken platform build can't go unnoticed (M0.12).

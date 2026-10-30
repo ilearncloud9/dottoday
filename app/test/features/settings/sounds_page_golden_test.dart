@@ -37,16 +37,29 @@ void main() {
   setUpAll(loadAppFonts);
   goldenMatrix(
     'settings_sounds_default',
-    height: 3200,
+    // The whole page and no more: a tall golden costs CI minutes.
+    height: 2300,
     widths: const {'compact', 'expanded'},
     overrides: _overrides(const Settings()),
     build: (_) => const SoundsPage(),
   );
   goldenMatrix(
     'settings_sounds_muted',
-    height: 4600,
+    // The banner at the top (1x, 2x), then at 200 % text the Also group,
+    // whose rows reflow, scrolled to rather than a 4600 px page.
+    height: 1400,
     widths: const {'compact'},
     a11yVariants: true,
+    act: (t) async {
+      final page = t.element(find.byType(SoundsPage));
+      if (MediaQuery.textScalerOf(page).scale(1) <= 1) return;
+      await t.scrollUntilVisible(
+        find.text('Sounds in app'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await t.pumpAndSettle();
+    },
     overrides: _overrides(
       const Settings(
         reminderSound: 'clear.lift',
