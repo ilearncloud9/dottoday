@@ -129,7 +129,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 - *Mac Week / Month.* The Mac View menu already lists Week and Month; minimal removes Week from the rail only.
 - *Task sheet.* Tomorrow and Later reuse the Bedtime review's "Move to tomorrow" / "Send to Inbox" actions; Delete reuses the editor footer's delete (its confirm and Undo unchanged).
 - *Shift the rest / Running late.* Minimal's live row shows Done and Running late (the existing sheet); +15 and Shift the rest move under the sheet's More.
-- *Inbox.* The Later row is low-energy mode's "Later" pile row (M12.2), not a new component.
+- *Inbox.* The Later row is `LaterRow`, one quiet row (tray glyph, "Later · 3") that opens the Inbox and takes a dragged task (ADR-0016); low-energy's "Later" pile is today's remaining tasks, not the Inbox.
 - *Wind Down sleep block.* Not built: the thread already ends at the Bedtime cap and draws no sleep segment. The row stays as a no-op.
 - *Notifications.* Minimal row 4 maps on/off onto the existing default alert ("at start" / "none"); no new notification setting.
 - *Light/dark, language.* Hidden settings keep their stored values; nothing is reset.
@@ -192,7 +192,7 @@ Minimal mode is one presentation flag read in the View layer through a single vi
 
 **The flag.** `settings.uiLayout` with values `minimal | full`, stored with the other user settings, synced per account (one layout on every device; a per-device override is an open question below). Default for existing users on upgrade: `full`, so nobody's app changes under them. Default for new installs: decided in onboarding step 0 (see open questions).
 
-**One policy object, not scattered ifs.** `features/layout/` holds `LayoutPolicy` with `visibility(FeatureId) → Visibility {shown, simplified, hidden, off}` backed by one table that mirrors §3 exactly, plus `uiLayoutProvider` exposed through Riverpod and read with `ref.watch(select)` so a flip rebuilds only what changes. Views ask the policy; they never read the raw flag. A new `FeatureId` without a row in the table fails a policy test, so the matrix cannot drift from the code.
+**One policy object, not scattered ifs.** As built (ADR-0016; CLAUDE.md §3 forbids feature-to-feature imports): `domain/layout/` holds `FeatureId` and `LayoutPolicy`, `data/layout/` the providers and `watchFeature`, `shared/layout/` the switch. `LayoutPolicy` with `visibility(FeatureId) → Visibility {shown, simplified, hidden, off}` backed by one table that mirrors §3 exactly, plus `uiLayoutProvider` exposed through Riverpod and read with `ref.watch(select)` so a flip rebuilds only what changes. Views ask the policy; they never read the raw flag. A new `FeatureId` without a row in the table fails a policy test, so the matrix cannot drift from the code.
 
 **Hidden runs, off does not.** `hidden` is a View-only state: alarms (A0), timestamps (B1), learning (C3), the Smallest-step trigger (B2) and the B5 snapshot keep running untouched. `off` is the only state that reaches a service, and only through the existing feature switches those services already expose (C4 energy, E1 body double, A2 wallpaper).
 
@@ -213,12 +213,12 @@ Placement, revised 30 Oct 2026: M1–M15 are on main (M13 learning reveal, M14 v
 
 **Acceptance criteria for M16**
 
-- [ ] Widget test enumerates every tappable control on minimal Today and asserts the set is exactly {Add, Done (each row's `DoneCircle` and the live row's Done), task row → sheet, Running late, header menu, Later row, day swipe and week-strip day} (owner, 2026-10-30: ADR-0015 put a done circle on every row and made rows open their sheet)
-- [ ] Property test: for any seeded database, `full → minimal → full` leaves every table byte-identical
-- [ ] Policy test: every `FeatureId` has a row; every `hidden` feature is reachable within two taps from a *More* row (traversal test over the route table). The *More* rows are Settings › Everything else…, the task sheet's and Add's More, and the header menu's Show everything (owner, 2026-10-30: weekly review, the journal and Search have no Settings path; Everything else… gains a Search row)
-- [ ] Golden matrix: 5 minimal screens × light/dark × largest text scale × RTL
-- [ ] Onboarding in minimal is three steps after the mode choice and asks for no setting that has a default
-- [ ] No string in minimal mode or in a hint fails the no-shame audit (no "late", "missed", "failed", no red)
+- [x] Widget test enumerates every tappable control on minimal Today and asserts the set is exactly {Add, Done (each row's `DoneCircle` and the live row's Done), task row → sheet, Running late, header menu, Later row, day swipe and week-strip day} (owner, 2026-10-30: ADR-0015 put a done circle on every row and made rows open their sheet). As built, day navigation also counts the date title and the sheet's pull handle (both open the month), and a task row also counts the thread's own "N tasks after Bedtime" row (`test/minimal_mode/minimal_today_test.dart`)
+- [x] Property test: for any seeded database, `full → minimal → full` leaves every table byte-identical
+- [x] Policy test: every `FeatureId` has a row; every `hidden` feature is reachable within two taps from a *More* row (traversal test over the route table). The *More* rows are Settings › Everything else…, the task sheet's and Add's More, and the header menu's Show everything (owner, 2026-10-30: weekly review, the journal and Search have no Settings path; Everything else… gains a Search row)
+- [x] Golden matrix: 5 minimal screens × light/dark × largest text scale × RTL
+- [x] Onboarding in minimal is three steps after the mode choice and asks for no setting that has a default
+- [x] No string in minimal mode or in a hint fails the no-shame audit (no "late", "missed", "failed", no red)
 - [ ] Manual on a real device: cold install to first dot on the thread in under 20 seconds
 
 **Open questions for the owner** — all answered as proposed (owner, 2026-10-30)

@@ -42,6 +42,7 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Item | Derived from | Golden |
 |---|---|---|
 | `TaskDot` skipped (dashed) and missed states | §3 `TaskDot`, `A-ios-future-month` | `task_dot_*` |
+| Minimal layout (M16, docs/14 §4): Today (date + ⋯, Done / Running late on the live row, the Later row, no tab bar), one-step Add (when and length chips, Add / More), the task sheet (Done · Tomorrow · Later · Delete, More), eight-row Settings, onboarding step 0's two cards, the reveal hint row (derived until set C arrives) | docs/14 §4–§5 + `Main`, `A-ios-add-what`, `A-ios-task-sheet`, `A-ios-settings` | `minimal_today_*`, `minimal_add_*`, `minimal_task_sheet_*`, `minimal_settings_*`, `minimal_onboarding_layout_*`, `minimal_today_hint_*` |
 | Thread "missed" meta and skipped rows | §3 `TaskRow`, `A-mac-month` | `thread_*` |
 | Medium-width rail (600–840) | §4 | `shell_rail_*_medium_*` |
 | Add A1 with no habits yet (no Suggestions, helper line) | §5.2 A1, `A-ios-add-what` | `add_what_blank_*` |
