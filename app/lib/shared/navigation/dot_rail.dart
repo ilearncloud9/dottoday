@@ -1,5 +1,6 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
+import 'package:dottoday/shared/navigation/drag_targets.dart';
 import 'package:flutter/material.dart';
 
 /// Medium and expanded shell (`A-mac-today-alt1-spread`): a left rail of
@@ -38,7 +39,9 @@ class DotRailShell extends StatelessWidget {
                     spacing: DotSpace.s,
                     children: [
                       if (bar.onAdd case final onAdd?)
-                        _RailAdd(onAdd: onAdd, label: bar.addLabel),
+                        AddDraggable(
+                          child: _RailAdd(onAdd: onAdd, label: bar.addLabel),
+                        ),
                       for (var i = 0; i < top; i++) _tile(i),
                       const Spacer(),
                       _tile(top),

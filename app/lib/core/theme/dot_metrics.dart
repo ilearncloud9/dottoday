@@ -105,6 +105,10 @@ abstract final class DotSize {
   static const double smallDotOutline = 2;
   static const double dayDot = 44;
 
+  /// The day dot on Today's one-line header, beside the date and ⋯ so
+  /// "October 21, 2026 ⌄" fits a 390 pt phone (ADR-0015).
+  static const double headerDayDot = 36;
+
   /// The identity dot on Add step 1 (`A-ios-add-what`); step 2 uses
   /// [dayDot].
   static const double addDot = 64;
@@ -118,8 +122,8 @@ abstract final class DotSize {
   static const double macRowDot = 26;
   static const double pickerDot = 22;
   static const double weekDot = 8;
-  static const double tabDot = 10;
-  static const double tabDotActive = 12;
+  static const double tabDot = 14;
+  static const double tabDotActive = 16;
 
   /// The listening dot in `MicButton` (M14.5): the accent dot that breathes.
   static const double micDot = 14;
@@ -171,10 +175,24 @@ abstract final class DotTouch {
 
   /// Hold this long to pick a task up (03 §3.2 "long-press 250 ms").
   static const liftDelay = Duration(milliseconds: 250);
+
+  /// Hold a dragged task over a week-strip day this long and the view
+  /// pages to that day (Structured's hover, ADR-0015).
+  static const hoverSwitch = Duration(milliseconds: 700);
 }
 
 /// Shadow of floating elements: tab bar, FAB, menus (docs/10 §2.3).
 abstract final class DotElevation {
+  /// Today's day sheet (ADR-0015): a soft lift off the page, in place of
+  /// an outline, so its edge reads without a line.
+  static const sheet = [
+    BoxShadow(
+      color: DotPrimitives.shadow,
+      offset: Offset(0, -2),
+      blurRadius: 16,
+    ),
+  ];
+
   static const floating = [
     BoxShadow(
       color: DotPrimitives.shadow,

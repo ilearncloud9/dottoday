@@ -46,7 +46,7 @@ final class DotType {
         stripDate: _inter(18, 22, 600, text),
         stripWeekday: _inter(13, 16, 500, muted),
         monthDate: _inter(15, 20, 500, text),
-        dayTitle: _inter(30, 36, 800, text, tracking: -0.02),
+        dayTitle: _inter(28, 34, 800, text, tracking: -0.03),
         dayCaption: _inter(13, 18, 700, muted, tracking: 0.06),
         threadTitle: _inter(20, 26, 700, text),
         threadMeta: _inter(15, 20, 500, muted),
@@ -119,7 +119,8 @@ final class DotType {
   /// Week-strip weekday names (≈ 13/500 muted, `Main`).
   final TextStyle stripWeekday;
 
-  /// Today's title, "Friday" (30/800, ADR-0015: the bolder header).
+  /// Today's title, "October 21, 2026" (28/800, tight, ADR-0015): one
+  /// line with the day dot and ⋯ on a 390 pt phone.
   final TextStyle dayTitle;
 
   /// Today's "FRI, OCT 30" line over [dayTitle] (13/700, uppercase by the

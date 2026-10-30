@@ -50,9 +50,10 @@ class DayPage extends ConsumerWidget {
   /// titled card.
   final bool sheet;
 
-  /// How far a drop looks for a task dragged in from another day: the
-  /// spread shows three days, so two days either way.
-  static const _dragReachDays = 2;
+  /// How far a drop looks for a task dragged in from another day: a week
+  /// either way, as hovering a week-strip day pages there mid-drag
+  /// (ADR-0015).
+  static const _dragReachDays = 7;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -228,6 +229,8 @@ class DayPage extends ConsumerWidget {
               includeCalendar: s.includeCalendarInShift,
               readOnlyIds: ref.watch(readOnlyCalendarIdsProvider).value,
               elsewhere: (id) => _elsewhere(ref, id),
+              defaultMinutes: s.defaultDurationMin,
+              allDayStartUtc: data.day.startUtc,
             ),
       selectedIds: picked.day == date ? picked.ids : const {},
       onSelect: (id) =>
@@ -242,10 +245,11 @@ class DayPage extends ConsumerWidget {
     final fromInbox = inbox?.where((o) => o.id == id).firstOrNull;
     if (fromInbox != null) return fromInbox;
     for (var d = -_dragReachDays; d <= _dragReachDays; d++) {
-      if (d == 0) continue;
       final day = DateTime(date.year, date.month, date.day + d);
-      final blocks = ref.read(timelineDataProvider(day)).value?.blocks;
-      final hit = blocks?.where((o) => o.id == id).firstOrNull;
+      final data = ref.read(timelineDataProvider(day)).value;
+      // This day's all-day chips too: dragged onto the thread (ADR-0015).
+      final rows = d == 0 ? data?.allDay : [...?data?.blocks, ...?data?.allDay];
+      final hit = rows?.where((o) => o.id == id).firstOrNull;
       if (hit != null) return hit;
     }
     return null;

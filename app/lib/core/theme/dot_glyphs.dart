@@ -31,6 +31,14 @@ abstract final class DotGlyphs {
     'M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89'
     'A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z',
   );
+
+  /// The Inbox tab's solid tray (ADR-0015, bold nav icons): the lid and
+  /// the tray with its notch, as two filled shapes.
+  static const inboxSolid = DotGlyph(
+    'M5.45 5.11L2.55 11h18.9l-2.9-5.89A2 2 0 0 0 16.76 4H7.24'
+    'a2 2 0 0 0-1.79 1.11z'
+    'M2 13h5.4l2 3h5.2l2-3H22v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z',
+  );
   static const week = DotGlyph('M7 5v14M12 5v14M17 5v14');
   static final search = DotGlyph('${_c(11, 11, 7)}M20.5 20.5l-4.6-4.6');
   static final settings = DotGlyph('${_c(12, 12, 3)}$_gear');

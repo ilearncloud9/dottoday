@@ -1,15 +1,20 @@
+import 'dart:async';
+
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/day_scheduler_service.dart';
 import 'package:dottoday/domain/scheduling/drag_math.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
+import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/features/timeline/state/drag_actions.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/shared/dot/thread.dart';
+import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -34,6 +39,8 @@ ThreadDrag dayThreadDrag(
   bool includeCalendar = false,
   Set<String>? readOnlyIds,
   Occurrence? Function(String id)? elsewhere,
+  int defaultMinutes = 30,
+  DateTime? allDayStartUtc,
 }) {
   final fixed = readOnlyIds;
   final carriable =
@@ -53,10 +60,19 @@ ThreadDrag dayThreadDrag(
     timeText: timeText,
     readOnlyIds: fixed ?? const {},
     elsewhere: elsewhere,
+    defaultMinutes: defaultMinutes,
+    // Drag-the-+ (ADR-0015): Add, at the time it was let go.
+    onAdd: (start) {
+      if (!context.mounted) return;
+      Actions.maybeInvoke(context, AddTaskIntent(startUtc: start));
+    },
   );
   return ThreadDrag(
     hintFor: d.hint,
     onDrop: d.drop,
+    onAllDay: allDayStartUtc == null
+        ? null
+        : (id) => unawaited(d.allDay(id, allDayStartUtc)),
     // "ask" offers the chip, off; "never" hides it (docs/03 §3.2).
     shiftByDefault: switch (shiftFollowers) {
       ShiftFollowersPolicy.always => true,
@@ -78,6 +94,8 @@ final class _DayDrag {
     required this.snapMinutes,
     required this.timeText,
     required this.readOnlyIds,
+    required this.defaultMinutes,
+    required this.onAdd,
     this.elsewhere,
   }) : undo = ref.read(undoServiceProvider);
 
@@ -92,27 +110,56 @@ final class _DayDrag {
   final Set<String> readOnlyIds;
   final Occurrence? Function(String id)? elsewhere;
 
+  /// A new task's length, and an all-day task's once it gets a time.
+  final int defaultMinutes;
+  final ValueChanged<DateTime> onAdd;
+
   Occurrence? _own(String id) => blocks.where((o) => o.id == id).firstOrNull;
 
   Occurrence? _find(String id) => _own(id) ?? elsewhere?.call(id);
 
-  DateTime? _start(String id, DropSpan span, double fraction) {
+  /// How long [id] runs once dropped: a new task and an all-day one take
+  /// the default length (ADR-0015).
+  int? _minutes(String id) {
+    if (id == newTaskDragId) return defaultMinutes;
     final o = _find(id);
     if (o == null) return null;
+    return o.durationMin >= maxDurationMin ? defaultMinutes : o.durationMin;
+  }
+
+  DateTime? _start(String id, DropSpan span, double fraction) {
+    final minutes = _minutes(id);
+    if (minutes == null) return null;
     return dropStart(
       zone: zone,
       gapStartUtc: span.startUtc,
       gapMinutes: span.minutes,
       fraction: fraction,
-      durationMin: o.durationMin,
+      durationMin: minutes,
       snapMinutes: snapMinutes,
       fit: span.fit,
     );
   }
 
+  /// "9:05 – 9:20 PM": the time the task would get (ADR-0015 preview).
   String? hint(String id, DropSpan? span, double fraction) {
     final start = span == null ? null : _start(id, span, fraction);
-    return start == null ? null : l10n.dragDropAt(timeText(start));
+    final minutes = _minutes(id);
+    if (start == null || minutes == null) return null;
+    return l10n.threadTimeRange(
+      timeText(start),
+      timeText(start.add(Duration(minutes: minutes))),
+    );
+  }
+
+  /// Task [id] made all day on the day starting at [dayStartUtc].
+  Future<void> allDay(String id, DateTime dayStartUtc) async {
+    final o = _find(id);
+    if (o == null || o.pinned) return;
+    _report(
+      await moveTask(ref, o, dayStartUtc, durationMin: maxDurationMin),
+      l10n.snackMoved(o.title, l10n.timelineAllDay),
+    );
   }
 
   Future<void> drop(
@@ -121,13 +168,20 @@ final class _DayDrag {
     double fraction,
     DropShift shift,
   ) async {
-    final o = _find(id);
     final start = _start(id, span, fraction);
+    if (id == newTaskDragId && start != null) return onAdd(start);
+    final o = _find(id);
     if (o == null || start == null || start == o.startUtc) return;
     final time = timeText(start);
-    if (!shift.followers || _own(id) == null) {
+    final wasAllDay = o.durationMin >= maxDurationMin;
+    if (!shift.followers || _own(id) == null || wasAllDay) {
       return _report(
-        await moveTask(ref, o, start),
+        await moveTask(
+          ref,
+          o,
+          start,
+          durationMin: wasAllDay ? defaultMinutes : null,
+        ),
         l10n.snackMoved(o.title, time),
       );
     }

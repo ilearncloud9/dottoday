@@ -15,6 +15,7 @@ class DotIcon extends StatelessWidget {
     this.size = DotSize.navIcon,
     this.active = false,
     this.bold = false,
+    this.filled = false,
     super.key,
   });
 
@@ -27,6 +28,10 @@ class DotIcon extends StatelessWidget {
 
   /// A task dot's icon: the bold [boldStroke] (ADR-0015).
   final bool bold;
+
+  /// Painted solid (even-odd, so a gear keeps its hole) under the stroke:
+  /// the bold nav icons (ADR-0015).
+  final bool filled;
 
   /// Stroke width in grid units.
   static const double stroke = 2;
@@ -41,6 +46,7 @@ class DotIcon extends StatelessWidget {
         painter: _GlyphPainter(
           glyph: glyph,
           color: color,
+          filled: filled,
           stroke: bold
               ? boldStroke
               : active
@@ -57,11 +63,13 @@ final class _GlyphPainter extends CustomPainter {
     required this.glyph,
     required this.color,
     required this.stroke,
+    this.filled = false,
   });
 
   final DotGlyph glyph;
   final Color color;
   final double stroke;
+  final bool filled;
 
   static const _grid = 24.0;
 
@@ -71,6 +79,12 @@ final class _GlyphPainter extends CustomPainter {
     canvas
       ..save()
       ..scale(scale);
+    if (filled) {
+      canvas.drawPath(
+        Path.from(glyph.path)..fillType = PathFillType.evenOdd,
+        Paint()..color = color,
+      );
+    }
     canvas.drawPath(
       glyph.path,
       Paint()
@@ -85,5 +99,8 @@ final class _GlyphPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_GlyphPainter old) =>
-      old.glyph != glyph || old.color != color || old.stroke != stroke;
+      old.glyph != glyph ||
+      old.color != color ||
+      old.stroke != stroke ||
+      old.filled != filled;
 }

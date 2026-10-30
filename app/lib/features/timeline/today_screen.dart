@@ -81,7 +81,10 @@ class TodayScreen extends ConsumerWidget {
           // (Add, Type a time) that lifts itself. Resizing would squeeze the
           // day card behind it to nothing (found after Bedtime, M5.0).
           resizeToAvoidBottomInset: false,
+          // The day sheet runs to the bottom edge, under the floating tab
+          // bar (ADR-0015); its list insets itself by the bar's padding.
           body: SafeArea(
+            bottom: false,
             child: Stack(
               children: [
                 LayoutBuilder(
@@ -103,7 +106,10 @@ class TodayScreen extends ConsumerWidget {
                 if (selecting)
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: SelectionBar(today: today),
+                    child: SafeArea(
+                      top: false,
+                      child: SelectionBar(today: today),
+                    ),
                   ),
               ],
             ),

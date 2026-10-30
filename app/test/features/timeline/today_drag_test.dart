@@ -2,6 +2,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,7 +31,8 @@ void main() {
       final g = await lift(tester, 'Team standup');
       await g.moveTo(tester.getCenter(find.text('45 min free')));
       await tester.pump();
-      expect(find.textContaining('→ '), findsOneWidget);
+      // Where it lands shows on the thread (ADR-0015).
+      expect(find.byType(LandingPreview), findsOneWidget);
       await g.up();
       await tester.pumpAndSettle();
       expect(find.textContaining('Team standup moved to'), findsOneWidget);

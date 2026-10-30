@@ -1,5 +1,6 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
+import 'package:dottoday/shared/navigation/drag_targets.dart';
 import 'package:flutter/material.dart';
 
 /// Android / web compact shell (`A-android-today`): Material 3
@@ -19,16 +20,18 @@ class MaterialBarShell extends StatelessWidget {
       body: ChromeClearance(bottom: DotSpace.fabClearance, child: body),
       floatingActionButton: onAdd == null
           ? null
-          : FloatingActionButton(
-              onPressed: onAdd,
-              tooltip: bar.addLabel,
-              backgroundColor: c.accent,
-              foregroundColor: c.onAccent,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(DotRadii.fabAndroid),
+          : AddDraggable(
+              child: FloatingActionButton(
+                onPressed: onAdd,
+                tooltip: bar.addLabel,
+                backgroundColor: c.accent,
+                foregroundColor: c.onAccent,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(DotRadii.fabAndroid),
+                ),
+                child: DotIcon(DotGlyphs.add, color: c.onAccent, active: true),
               ),
-              child: DotIcon(DotGlyphs.add, color: c.onAccent, active: true),
             ),
       bottomNavigationBar: NavigationBar(
         // No entry for this page here (Week at phone width): nothing lit.
