@@ -62,6 +62,38 @@ void main() {
       build: (_) => const NotificationHealthPage(),
     );
   }
+  // A muted reminder sound, named (derived — docs/12 §4, §7): none, one
+  // and three muted, at 200 % text and right-to-left too.
+  for (final (name, muted) in [
+    ('sounds_0', const <String>[]),
+    ('sounds_1', const ['clear.lift']),
+    ('sounds_3', const ['clear.lift', 'play.rooster', 'start.swing']),
+  ]) {
+    goldenMatrix(
+      'settings_health_$name',
+      // Tall enough for the muted row and its button at 200 % text.
+      height: 1500,
+      platform: TargetPlatform.android,
+      a11yVariants: true,
+      overrides: [
+        notificationHealthChecksProvider.overrideWith(
+          (ref) async => [
+            const HealthCheck(HealthCheckKind.permission, _ok),
+            const HealthCheck(HealthCheckKind.exactAlarms, _ok),
+            const HealthCheck(HealthCheckKind.battery, _ok),
+            const HealthCheck(HealthCheckKind.doNotDisturb, _ok),
+            HealthCheck(
+              HealthCheckKind.sounds,
+              muted.isEmpty ? _ok : _problem,
+              mutedSounds: muted,
+            ),
+            const HealthCheck(HealthCheckKind.clock, _ok),
+          ],
+        ),
+      ],
+      build: (_) => const NotificationHealthPage(),
+    );
+  }
   // The test alarm's waiting and asking steps (M6.5.9, derived).
   for (final step in [TestAlarmStep.waiting, TestAlarmStep.ask]) {
     goldenMatrix(

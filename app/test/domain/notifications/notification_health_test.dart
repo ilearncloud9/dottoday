@@ -26,6 +26,7 @@ void main() {
         HealthCheckKind.exactAlarms,
         HealthCheckKind.battery,
         HealthCheckKind.doNotDisturb,
+        HealthCheckKind.sounds,
         HealthCheckKind.clock,
       ],
     );
@@ -86,5 +87,55 @@ void main() {
     );
     expect(healthProblems(checks), 0);
     expect(checks.every((c) => c.level == HealthLevel.ok), isTrue);
+  });
+
+  group('muted sounds (docs/12 §4)', () {
+    HealthCheck soundsRow(Set<String> muted) => notificationHealth(
+      HealthInputs(
+        platform: HealthPlatform.android,
+        permission: granted,
+        mutedSounds: muted,
+      ),
+    ).singleWhere((c) => c.kind == HealthCheckKind.sounds);
+
+    test('none muted is fine; any muted is a problem, named, sorted', () {
+      expect(soundsRow(const {}).level, HealthLevel.ok);
+      final row = soundsRow(const {'play.rooster', 'clear.lift'});
+      expect(row.level, HealthLevel.problem);
+      expect(row.mutedSounds, ['clear.lift', 'play.rooster']);
+    });
+
+    test('only Android has the row', () {
+      for (final other in [
+        HealthPlatform.iphone,
+        HealthPlatform.mac,
+        HealthPlatform.web,
+      ]) {
+        expect(
+          notificationHealth(
+            HealthInputs(
+              platform: other,
+              permission: granted,
+              mutedSounds: const {'clear.lift'},
+            ),
+          ).map((c) => c.kind),
+          isNot(contains(HealthCheckKind.sounds)),
+        );
+      }
+    });
+
+    test('in use: the default, the Start sound and pending reminders', () {
+      expect(soundsInUse(), {'dot', 'dot_alarm'});
+      expect(
+        soundsInUse(
+          reminderSound: 'system',
+          startSoundId: 'start.swing',
+          plannedSounds: ['clear.lift', null, 'none', 'quiet.gone'],
+        ),
+        {'start.swing', 'clear.lift', 'dot'},
+        reason: 'system and none name no sound; unknown is Dot',
+      );
+      expect(soundsInUse(reminderSound: 'none'), {'dot_alarm'});
+    });
   });
 }

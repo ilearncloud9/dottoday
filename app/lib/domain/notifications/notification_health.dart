@@ -1,4 +1,6 @@
 import 'package:dottoday/domain/notifications/notification_permission.dart';
+import 'package:dottoday/domain/notifications/notification_planner.dart';
+import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/domain/sync/clock_skew.dart';
 
 /// Where Dottoday runs, for which checks apply (docs/09 M6.5.8). Not a
@@ -19,6 +21,10 @@ enum HealthCheckKind {
   /// Android Do Not Disturb is on: alarms ring, other reminders are quiet.
   doNotDisturb,
 
+  /// Android: a reminder sound in use whose channel the user muted in the
+  /// system settings — named, rather than falling silent (docs/12 §4).
+  sounds,
+
   /// iPhone/Mac Focus: can't be read; dot-starts break through anyway.
   focus,
 
@@ -34,7 +40,12 @@ enum HealthLevel { ok, problem, info }
 
 /// A row of the panel.
 final class HealthCheck {
-  const HealthCheck(this.kind, this.level, {this.skew});
+  const HealthCheck(
+    this.kind,
+    this.level, {
+    this.skew,
+    this.mutedSounds = const [],
+  });
 
   final HealthCheckKind kind;
   final HealthLevel level;
@@ -42,15 +53,20 @@ final class HealthCheck {
   /// For [HealthCheckKind.clock] when it is off.
   final ClockSkew? skew;
 
+  /// For [HealthCheckKind.sounds]: the muted sound ids, sorted.
+  final List<String> mutedSounds;
+
   @override
   bool operator ==(Object other) =>
       other is HealthCheck &&
       other.kind == kind &&
       other.level == level &&
-      other.skew == skew;
+      other.skew == skew &&
+      _sameList(other.mutedSounds, mutedSounds);
 
   @override
-  int get hashCode => Object.hash(kind, level, skew);
+  int get hashCode =>
+      Object.hash(kind, level, skew, Object.hashAll(mutedSounds));
 
   @override
   String toString() => 'HealthCheck(${kind.name}, ${level.name})';
@@ -66,6 +82,7 @@ final class HealthInputs {
     this.doNotDisturb = false,
     this.webPushReady = false,
     this.clockSkew,
+    this.mutedSounds = const {},
   });
 
   final HealthPlatform platform;
@@ -75,6 +92,10 @@ final class HealthInputs {
   final bool doNotDisturb;
   final bool webPushReady;
   final ClockSkew? clockSkew;
+
+  /// Sound ids in use (the defaults and pending reminders') whose Android
+  /// channel is muted (docs/12 §4).
+  final Set<String> mutedSounds;
 }
 
 /// The panel's rows for [i], in display order (11 A0 "Notification
@@ -100,6 +121,11 @@ List<HealthCheck> notificationHealth(HealthInputs i) {
         HealthCheckKind.doNotDisturb,
         i.doNotDisturb ? HealthLevel.info : HealthLevel.ok,
       ),
+      HealthCheck(
+        HealthCheckKind.sounds,
+        problemIf(i.mutedSounds.isNotEmpty),
+        mutedSounds: [...i.mutedSounds]..sort(),
+      ),
     ],
     if (i.platform == HealthPlatform.iphone || i.platform == HealthPlatform.mac)
       const HealthCheck(HealthCheckKind.focus, HealthLevel.info),
@@ -119,3 +145,30 @@ List<HealthCheck> notificationHealth(HealthInputs i) {
 /// How many rows need fixing, for "1 thing to fix" in Settings.
 int healthProblems(List<HealthCheck> checks) =>
     checks.where((c) => c.level == HealthLevel.problem).length;
+
+bool _sameList(List<String> a, List<String> b) {
+  if (a.length != b.length) return false;
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] != b[i]) return false;
+  }
+  return true;
+}
+
+/// The sound ids this user can hear right now (docs/12 §4): the default
+/// task sound, the Start sound, and each of [plannedSounds] (pending
+/// reminders' keys). Silent and OS-sound keys name no sound of ours.
+///
+/// ```dart
+/// soundsInUse(reminderSound: 'system', plannedSounds: ['clear.lift']);
+/// // {'dot_alarm', 'clear.lift'}
+/// ```
+Set<String> soundsInUse({
+  String? reminderSound,
+  String? startSoundId,
+  Iterable<String?> plannedSounds = const [],
+}) => {
+  ?soundKeyFor(settings: reminderSound),
+  resolveStartSound(startSoundId).id,
+  for (final key in plannedSounds)
+    if (key != null) resolveSound(key).id,
+}..remove(soundNoneKey);
