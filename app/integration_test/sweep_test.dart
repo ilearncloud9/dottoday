@@ -485,6 +485,11 @@ Future<void> _onboarding(
   }
 
   await step('onboarding_welcome', 'Get started');
+  // Step 0 (docs/14 §4): the sweep walks the full planner.
+  await _pumpUntil(tester, find.text('The full planner'));
+  await tester.tap(find.text('The full planner'));
+  await _rest(tester);
+  await step('onboarding_layout', 'Continue');
   await step('onboarding_day_shape', 'Continue');
   await step('onboarding_habits', 'Continue', pick: 'Lunch');
   // Already allowed on this device → the test alarm and Continue (M6.5.9).
