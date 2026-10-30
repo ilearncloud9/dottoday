@@ -404,6 +404,12 @@ Future<void> _m8(
     'What changed in each version of Dottoday.',
     'settings_whats_new',
   );
+  // docs/12 §6: the sound pickers' page.
+  await page(
+    '/settings/sounds',
+    'Task reminders play this, unless a task has its own. Tap one to hear it.',
+    'settings_sounds',
+  );
 
   // Settings keeps its scroll from the Sync step above: back to the top.
   GoRouter.of(tester.element(find.byType(Scaffold).first)).go('/settings');

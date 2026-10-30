@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/task_screen.dart';
@@ -10,12 +11,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
+import '../../support/focus_fakes.dart';
 import '../../support/timeline_fakes.dart';
 
 final _date = DateTime(2026, 10, 21);
 final _now = DateTime.utc(2026, 10, 21, 7, 22); // 09:22 Berlin
 
 late FakeSubtaskRepository _subtasks;
+late FakeSoundPlayer _sounds;
 
 Future<void> _pump(
   WidgetTester tester,
@@ -28,14 +31,18 @@ Future<void> _pump(
     ..devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   _subtasks = FakeSubtaskRepository(demoDaySubtasks(_date));
+  _sounds = FakeSoundPlayer();
   await tester.pumpWidget(
     ProviderScope(
-      overrides: timelineOverrides(
-        now: _now,
-        occurrences: FakeOccurrenceRepository(rows ?? demoDayRows(_date)),
-        subtasks: _subtasks,
-        profile: testProfile(settings: const Settings(use24h: false)),
-      ),
+      overrides: [
+        ...timelineOverrides(
+          now: _now,
+          occurrences: FakeOccurrenceRepository(rows ?? demoDayRows(_date)),
+          subtasks: _subtasks,
+          profile: testProfile(settings: const Settings(use24h: false)),
+        ),
+        soundPlayerProvider.overrideWithValue(_sounds),
+      ],
       child: MaterialApp(
         theme: DotTheme.light(),
         darkTheme: DotTheme.dark(),
@@ -112,6 +119,11 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Deep work: roadmap done'), findsOneWidget);
     expect(_inSheet(find.text('Not done')), findsOneWidget);
+    // The Done sound (docs/12 D4); undoing it is silent.
+    expect(_sounds.played.map((s) => s.id), ['done.swift']);
+    await tester.tap(_inSheet(find.text('Not done')));
+    await tester.pumpAndSettle();
+    expect(_sounds.played, hasLength(1));
   });
 
   testWidgets('the Pinned switch pins and unpins this task (F1.5)', (
