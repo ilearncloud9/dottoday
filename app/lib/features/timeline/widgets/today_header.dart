@@ -1,10 +1,10 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
-import 'package:dottoday/features/layout/feature_id.dart';
-import 'package:dottoday/features/layout/layout_providers.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_parts.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';

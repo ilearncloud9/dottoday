@@ -1,5 +1,5 @@
 import 'package:dottoday/domain/entities/enums.dart';
-import 'package:dottoday/features/layout/feature_id.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 
 /// What a feature looks like in minimal mode (docs/14 §3).
 enum FeatureVisibility {

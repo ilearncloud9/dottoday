@@ -1,7 +1,7 @@
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
-import 'package:dottoday/features/layout/feature_id.dart';
-import 'package:dottoday/features/layout/layout_policy.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
+import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

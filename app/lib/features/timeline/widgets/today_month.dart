@@ -1,9 +1,9 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/schedule/month_data.dart';
-import 'package:dottoday/features/layout/feature_id.dart';
-import 'package:dottoday/features/layout/layout_providers.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/timeline/state/month_cells.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/month_grid.dart';

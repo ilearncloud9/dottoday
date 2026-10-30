@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:dottoday/domain/entities/enums.dart';
-import 'package:dottoday/features/layout/feature_id.dart';
-import 'package:dottoday/features/layout/layout_policy.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
+import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // docs/14 §3 and §6, M16 policy test: every FeatureId has a row, and the

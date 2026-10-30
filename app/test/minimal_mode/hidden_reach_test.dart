@@ -1,6 +1,6 @@
 import 'package:dottoday/core/router/deep_link_guard.dart';
-import 'package:dottoday/features/layout/feature_id.dart';
-import 'package:dottoday/features/layout/layout_policy.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
+import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // docs/14 §7, M16: every Hidden feature is reachable within two taps from

@@ -14,8 +14,8 @@ import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../data/writes/write_harness.dart';
-import '../../domain/fixtures.dart';
+import '../data/writes/write_harness.dart';
+import '../domain/fixtures.dart';
 
 // docs/14 §2.1 and §7, M16: "Hide, never remove". For any seeded database,
 // full → minimal → full through the switch's own write leaves every table

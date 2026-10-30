@@ -1,8 +1,8 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/features/layout/layout_actions.dart';
-import 'package:dottoday/features/layout/layout_providers.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/features/onboarding/steps/step_frame.dart';
+import 'package:dottoday/shared/layout/layout_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

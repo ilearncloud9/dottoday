@@ -11,10 +11,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
-import '../../support/reveal_hint_fakes.dart';
-import '../../support/test_app.dart';
-import '../../support/timeline_fakes.dart';
-import '../../support/today_harness.dart';
+import '../support/reveal_hint_fakes.dart';
+import '../support/test_app.dart';
+import '../support/timeline_fakes.dart';
+import '../support/today_harness.dart';
 
 // docs/14 §7, M16: minimal Today's tappable set is exactly {Add, Done,
 // task row → sheet, Running late, header menu, Later row, day navigation}
@@ -90,7 +90,9 @@ List<(String, Rect)> _tappables(WidgetTester tester) {
     });
   }
 
-  visit(tester.binding.pipelineOwner.semanticsOwner!.rootSemanticsNode!);
+  visit(
+    tester.binding.renderViews.first.owner!.semanticsOwner!.rootSemanticsNode!,
+  );
   return out;
 }
 

@@ -3,11 +3,11 @@ import 'dart:convert';
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/speech/dictation_controller.dart';
 import 'package:dottoday/data/thinking/thinking_providers.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/thinking/thinking_memory.dart';
-import 'package:dottoday/features/layout/feature_id.dart';
-import 'package:dottoday/features/layout/layout_providers.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_field.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_flow.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';

@@ -494,9 +494,7 @@ List<Override> timelineOverrides({
       FakeRoutineRepository(routines),
     ),
     // Minimal mode's hint records (docs/14 §6).
-    revealHintRepositoryProvider.overrideWithValue(
-      hintRepo,
-    ),
+    revealHintRepositoryProvider.overrideWithValue(hintRepo),
     undoServiceProvider.overrideWithValue(undo),
     trashServiceProvider.overrideWithValue(FakeTrashService(repo, undo)),
     clockProvider.overrideWithValue(FakeClock(now)),

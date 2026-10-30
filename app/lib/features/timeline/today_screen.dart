@@ -1,7 +1,7 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
-import 'package:dottoday/features/layout/feature_id.dart';
-import 'package:dottoday/features/layout/layout_providers.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_view.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';

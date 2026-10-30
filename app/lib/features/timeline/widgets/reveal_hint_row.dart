@@ -4,11 +4,12 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/reveal/hint_providers.dart';
 import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/reveal/hint_scheduler.dart';
-import 'package:dottoday/features/layout/layout_providers.dart';
 import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
 import 'package:dottoday/features/timeline/state/hint_signals.dart';
 import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
@@ -37,11 +38,14 @@ class _RevealHintRowState extends ConsumerState<RevealHintRow> {
 
   @override
   Widget build(BuildContext context) {
-    final minimal = ref.watch(layoutPolicyProvider.select((p) => p.isMinimal));
+    // Hints reveal what minimal hides: none in the full layout.
+    if (!ref.watch(layoutPolicyProvider.select((p) => p.isMinimal))) {
+      return const SizedBox.shrink();
+    }
     final signals = watchHintSignals(ref, widget.today);
     final records = ref.watch(revealHintsProvider).value;
     final profile = ref.watch(currentProfileProvider).value;
-    if (!minimal || signals == null || records == null || profile == null) {
+    if (signals == null || records == null || profile == null) {
       return const SizedBox.shrink();
     }
     final pick = pickHint(
@@ -59,13 +63,17 @@ class _RevealHintRowState extends ConsumerState<RevealHintRow> {
       );
     }
     final l10n = context.l10n;
-    return StatusHint(
-      lead: _text(l10n, pick.hint),
-      action: l10n.hintShowMe,
-      dismissLabel: l10n.promptNotNow,
-      onOpen: () => _open(context, pick),
-      onDismiss: () =>
-          unawaited(dismissHint(ProviderScope.containerOf(context), pick.hint)),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: DotSpace.page),
+      child: StatusHint(
+        lead: _text(l10n, pick.hint),
+        action: l10n.hintShowMe,
+        dismissLabel: l10n.promptNotNow,
+        onOpen: () => _open(context, pick),
+        onDismiss: () => unawaited(
+          dismissHint(ProviderScope.containerOf(context), pick.hint),
+        ),
+      ),
     );
   }
 
