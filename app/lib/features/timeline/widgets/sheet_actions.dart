@@ -4,6 +4,7 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/core/utils/text_fit.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
@@ -70,9 +71,8 @@ class SheetActions extends ConsumerWidget {
         unawaited(navigator.maybePop());
       }
 
-      return Row(
-        spacing: DotSpace.s,
-        children: [
+      return _TileGrid(
+        tiles: [
           doneTile,
           _Tile(
             glyph: DotGlyphs.rollForward,
@@ -99,28 +99,31 @@ class SheetActions extends ConsumerWidget {
     return Row(
       spacing: DotSpace.s,
       children: [
-        doneTile,
-        _Tile(
-          glyph: DotGlyphs.clock,
-          label: l10n.sheetExtend,
-          onTap: o.startUtc == null
-              ? null
-              : () async => reportUndoable(
-                  messenger,
-                  l10n,
-                  undo,
-                  await extendTask(ref, o),
-                  message: (_) => l10n.sheetExtend,
-                  tokenOf: (token) => token,
-                ),
-        ),
-        _Tile(
-          glyph: DotGlyphs.rollForward,
-          label: l10n.sheetShift,
-          onTap: _shift(context, ref),
-        ),
-        _Tile(glyph: DotGlyphs.move, label: l10n.sheetMove),
-        _Tile(glyph: DotGlyphs.edit, label: l10n.sheetEdit, onTap: onEdit),
+        for (final tile in <_Tile>[
+          doneTile,
+          _Tile(
+            glyph: DotGlyphs.clock,
+            label: l10n.sheetExtend,
+            onTap: o.startUtc == null
+                ? null
+                : () async => reportUndoable(
+                    messenger,
+                    l10n,
+                    undo,
+                    await extendTask(ref, o),
+                    message: (_) => l10n.sheetExtend,
+                    tokenOf: (token) => token,
+                  ),
+          ),
+          _Tile(
+            glyph: DotGlyphs.rollForward,
+            label: l10n.sheetShift,
+            onTap: _shift(context, ref),
+          ),
+          _Tile(glyph: DotGlyphs.move, label: l10n.sheetMove),
+          _Tile(glyph: DotGlyphs.edit, label: l10n.sheetEdit, onTap: onEdit),
+        ])
+          Expanded(child: tile),
       ],
     );
   }
@@ -181,6 +184,55 @@ class SheetActions extends ConsumerWidget {
   }
 }
 
+/// The tiles in one row, or — when a label's longest word would not fit
+/// its tile at the current text size — two per row, or one: a label never
+/// breaks mid-word (accessibility-as-code; found by the M16 goldens).
+class _TileGrid extends StatelessWidget {
+  const _TileGrid({required this.tiles});
+
+  final List<_Tile> tiles;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = DotTheme.of(context).styles.button;
+    return LayoutBuilder(
+      builder: (context, box) {
+        bool fits(int perRow) {
+          final width =
+              (box.maxWidth - DotSpace.s * (perRow - 1)) / perRow -
+              2 * DotSpace.xs;
+          return tiles.every(
+            (t) => longestWordFits(context, t.label, style, width),
+          );
+        }
+
+        final perRow = [tiles.length, 2, 1].firstWhere(fits, orElse: () => 1);
+        return Column(
+          spacing: DotSpace.s,
+          children: [
+            for (var i = 0; i < tiles.length; i += perRow)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: DotSpace.s,
+                children: [
+                  for (final t in tiles.skip(i).take(perRow))
+                    Expanded(child: t),
+                  // A short last row keeps the tiles' width.
+                  for (
+                    var k = tiles.skip(i).take(perRow).length;
+                    k < perRow;
+                    k++
+                  )
+                    const Spacer(),
+                ],
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
 class _Tile extends StatelessWidget {
   const _Tile({
     required this.glyph,
@@ -200,38 +252,36 @@ class _Tile extends StatelessWidget {
     final c = t.colors;
     final enabled = onTap != null;
     final ink = filled ? c.onAccent : (enabled ? c.text : c.muted);
-    return Expanded(
-      child: Semantics(
-        button: true,
-        enabled: enabled,
-        label: label,
-        excludeSemantics: true,
-        onTap: onTap,
-        child: Material(
-          color: filled ? c.accentFill : c.surface,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(DotRadii.card),
-            side: filled ? BorderSide.none : BorderSide(color: c.outline),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onTap,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: DotSize.rowDot * 2),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: DotSpace.s),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: DotSpace.xs,
-                  children: [
-                    DotIcon(glyph, color: ink, active: filled),
-                    Text(
-                      label,
-                      textAlign: TextAlign.center,
-                      style: t.styles.button.copyWith(color: ink),
-                    ),
-                  ],
-                ),
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      label: label,
+      excludeSemantics: true,
+      onTap: onTap,
+      child: Material(
+        color: filled ? c.accentFill : c.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DotRadii.card),
+          side: filled ? BorderSide.none : BorderSide(color: c.outline),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: DotSize.rowDot * 2),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: DotSpace.s),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: DotSpace.xs,
+                children: [
+                  DotIcon(glyph, color: ink, active: filled),
+                  Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: t.styles.button.copyWith(color: ink),
+                  ),
+                ],
               ),
             ),
           ),

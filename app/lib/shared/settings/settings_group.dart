@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/core/utils/text_fit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -111,9 +114,34 @@ class SettingsRow extends StatelessWidget {
   final Widget? below;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) =>
+      LayoutBuilder(builder: (context, box) => _build(context, box.maxWidth));
+
+  /// At large text a word of the title may not fit beside the value
+  /// ("Bedt / ime" at 200 %): the value then goes under the title, so
+  /// nothing breaks mid-word (accessibility-as-code; found by the M16
+  /// minimal Settings goldens).
+  bool _stacked(BuildContext context, DotTheme t, double width) {
+    final v = value;
+    if (v == null || !width.isFinite) return false;
+    final valueWidth = math.min(
+      textWidth(context, v, t.styles.body),
+      MediaQuery.sizeOf(context).width * _valueShare,
+    );
+    final titleWidth =
+        width -
+        2 * DotSpace.l -
+        DotSize.rowDot -
+        3 * DotSpace.m -
+        DotSize.rowIcon -
+        valueWidth;
+    return !longestWordFits(context, title, t.styles.rowTitle, titleWidth);
+  }
+
+  Widget _build(BuildContext context, double width) {
     final t = DotTheme.of(context);
     final on = toggle;
+    final stacked = _stacked(context, t, width);
     final row = ConstrainedBox(
       constraints: BoxConstraints(minHeight: settingsRowHeight(context)),
       child: Padding(
@@ -125,8 +153,8 @@ class SettingsRow extends StatelessWidget {
           spacing: DotSpace.m,
           children: [
             _Icon(glyph: glyph, tint: tint),
-            Expanded(child: _texts(t)),
-            if (value case final v?)
+            Expanded(child: _texts(t, stacked: stacked)),
+            if (value case final v? when !stacked)
               // As wide as it needs, up to 45 % of the row: short values
               // leave the title room, long ones wrap instead of overflow.
               ConstrainedBox(
@@ -160,11 +188,13 @@ class SettingsRow extends StatelessWidget {
     return InkWell(onTap: onTap, child: row);
   }
 
-  Widget _texts(DotTheme t) => Column(
+  Widget _texts(DotTheme t, {required bool stacked}) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(title, style: t.styles.rowTitle),
       if (subtitle case final s?) Text(s, style: t.styles.rowMeta),
+      if (value case final v? when stacked)
+        Text(v, style: t.styles.body.copyWith(color: t.colors.muted)),
       ?below,
     ],
   );
