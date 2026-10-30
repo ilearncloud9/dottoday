@@ -16,6 +16,7 @@ import 'package:dottoday/data/export/file_gateway.dart';
 import 'package:dottoday/data/feedback/diagnostics_reader.dart';
 import 'package:dottoday/data/feedback/feedback_providers.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
+import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -59,6 +60,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'calendar_fakes.dart';
 import 'export_fakes.dart';
 import 'fake_clock.dart';
+import 'fake_notification_platform.dart';
 import 'routine_fakes.dart';
 import 'search_fakes.dart';
 
@@ -515,6 +517,11 @@ List<Override> timelineOverrides({
     diagnosticsReaderProvider.overrideWithValue(diagnostics),
     notificationGatewayProvider.overrideWithValue(
       const UnwiredNotificationGateway(),
+    ),
+    // The OS scheduler under the gateway: no plugin under `flutter test`;
+    // the health panel reads its muted sound channels (docs/12 §4).
+    notificationPlatformProvider.overrideWith(
+      (ref) async => FakeNotificationPlatform(),
     ),
     // No calendar plugin under `flutter test` (M7.1).
     deviceCalendarGatewayProvider.overrideWithValue(calendarGateway),

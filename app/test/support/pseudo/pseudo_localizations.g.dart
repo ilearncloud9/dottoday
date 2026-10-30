@@ -3101,6 +3101,161 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get soundRipple => pseudo(super.soundRipple);
 
   @override
+  String get soundDotAlarm => pseudo(super.soundDotAlarm);
+
+  @override
+  String get soundQuietSlip => pseudo(super.soundQuietSlip);
+
+  @override
+  String get soundQuietWhisper => pseudo(super.soundQuietWhisper);
+
+  @override
+  String get soundQuietSoft => pseudo(super.soundQuietSoft);
+
+  @override
+  String get soundQuietBubble => pseudo(super.soundQuietBubble);
+
+  @override
+  String get soundQuietPull => pseudo(super.soundQuietPull);
+
+  @override
+  String get soundClearLift => pseudo(super.soundClearLift);
+
+  @override
+  String get soundClearBright => pseudo(super.soundClearBright);
+
+  @override
+  String get soundClearSmile => pseudo(super.soundClearSmile);
+
+  @override
+  String get soundClearEase => pseudo(super.soundClearEase);
+
+  @override
+  String get soundClearTurn => pseudo(super.soundClearTurn);
+
+  @override
+  String get soundClearSettled => pseudo(super.soundClearSettled);
+
+  @override
+  String get soundClearQuick => pseudo(super.soundClearQuick);
+
+  @override
+  String get soundClearOpening => pseudo(super.soundClearOpening);
+
+  @override
+  String get soundClearSpark => pseudo(super.soundClearSpark);
+
+  @override
+  String get soundClearEmerge => pseudo(super.soundClearEmerge);
+
+  @override
+  String get soundClearElegant => pseudo(super.soundClearElegant);
+
+  @override
+  String get soundClearDutiful => pseudo(super.soundClearDutiful);
+
+  @override
+  String get soundClearInvolved => pseudo(super.soundClearInvolved);
+
+  @override
+  String get soundClearAppear => pseudo(super.soundClearAppear);
+
+  @override
+  String get soundClearTap => pseudo(super.soundClearTap);
+
+  @override
+  String get soundStartMorning => pseudo(super.soundStartMorning);
+
+  @override
+  String get soundStartBells => pseudo(super.soundStartBells);
+
+  @override
+  String get soundStartSunrise => pseudo(super.soundStartSunrise);
+
+  @override
+  String get soundStartSolemn => pseudo(super.soundStartSolemn);
+
+  @override
+  String get soundStartStrike => pseudo(super.soundStartStrike);
+
+  @override
+  String get soundStartSwing => pseudo(super.soundStartSwing);
+
+  @override
+  String get soundStartLovingly => pseudo(super.soundStartLovingly);
+
+  @override
+  String get soundStartGentle => pseudo(super.soundStartGentle);
+
+  @override
+  String get soundStartInsistent => pseudo(super.soundStartInsistent);
+
+  @override
+  String get soundPlayRooster => pseudo(super.soundPlayRooster);
+
+  @override
+  String get soundPlayHorse => pseudo(super.soundPlayHorse);
+
+  @override
+  String get soundPlayKnock => pseudo(super.soundPlayKnock);
+
+  @override
+  String get soundPlayChick => pseudo(super.soundPlayChick);
+
+  @override
+  String get soundPlayFrog => pseudo(super.soundPlayFrog);
+
+  @override
+  String get soundPlayDog => pseudo(super.soundPlayDog);
+
+  @override
+  String get soundPlayGulls => pseudo(super.soundPlayGulls);
+
+  @override
+  String get soundPlayDrum => pseudo(super.soundPlayDrum);
+
+  @override
+  String get soundDoneSwift => pseudo(super.soundDoneSwift);
+
+  @override
+  String get soundDoneChecked => pseudo(super.soundDoneChecked);
+
+  @override
+  String get soundDoneDone => pseudo(super.soundDoneDone);
+
+  @override
+  String get soundDoneFinished => pseudo(super.soundDoneFinished);
+
+  @override
+  String get soundDoneSucceeded => pseudo(super.soundDoneSucceeded);
+
+  @override
+  String get soundDoneAchieved => pseudo(super.soundDoneAchieved);
+
+  @override
+  String notifChannelAlarmsSound(String sound) =>
+      pseudo(super.notifChannelAlarmsSound(sound));
+
+  @override
+  String get notifChannelAlertsSilent => pseudo(super.notifChannelAlertsSilent);
+
+  @override
+  String get notifGroupDots => pseudo(super.notifGroupDots);
+
+  @override
+  String get notifGroupStart => pseudo(super.notifGroupStart);
+
+  @override
+  String get healthSoundsOk => pseudo(super.healthSoundsOk);
+
+  @override
+  String healthSoundsMuted(int count, String names) =>
+      pseudo(super.healthSoundsMuted(count, names));
+
+  @override
+  String get healthSoundsMutedDetail => pseudo(super.healthSoundsMutedDetail);
+
+  @override
   String get settingsQuietHours => pseudo(super.settingsQuietHours);
 
   @override

@@ -4065,7 +4065,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get soundClearEmerge => 'Aufgehen';
 
   @override
-  String get soundClearElegant => 'Elegant';
+  String get soundClearElegant => 'Anmutig';
 
   @override
   String get soundClearDutiful => 'Pflichtbewusst';

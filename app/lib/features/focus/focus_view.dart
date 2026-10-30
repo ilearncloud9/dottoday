@@ -81,7 +81,9 @@ class _FocusViewState extends ConsumerState<FocusView> {
         ? Timer.periodic(
             FocusView.chimeEvery,
             (_) => unawaited(
-              ref.read(soundPlayerProvider).play(resolveSound('chime')),
+              ref
+                  .read(soundPlayerProvider)
+                  .play(resolveSound(focusTickSoundId)),
             ),
           )
         : null;

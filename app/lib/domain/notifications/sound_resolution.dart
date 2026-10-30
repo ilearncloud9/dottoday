@@ -17,6 +17,9 @@ const defaultStartSoundId = 'dot_alarm';
 /// The Done sound's default, `Settings.doneSoundId` (D4).
 const defaultDoneSoundId = 'done.swift';
 
+/// Focus's step tick: the first-party Chime, kept (docs/12 §2.6).
+const focusTickSoundId = 'chime';
+
 /// What a normal-tier reminder plays.
 sealed class ReminderSoundChoice {
   const ReminderSoundChoice();

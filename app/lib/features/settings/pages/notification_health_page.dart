@@ -178,5 +178,6 @@ class HealthRow extends ConsumerWidget {
 }
 
 /// "Lift, Rooster": the muted sounds' names in the user's language.
-String _soundNames(AppLocalizations l10n, List<String> ids) =>
-    [for (final id in ids) soundDisplayName(l10n, resolveSound(id))].join(', ');
+String _soundNames(AppLocalizations l10n, List<String> ids) => [
+  for (final id in ids) soundDisplayName(l10n, resolveSound(id)),
+].reduce(l10n.listJoin);
