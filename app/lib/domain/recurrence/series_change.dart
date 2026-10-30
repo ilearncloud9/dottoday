@@ -45,7 +45,8 @@ final class SeriesChange {
   final List<Alert>? alerts;
 
   /// A new reminder sound (docs/12 §3), wrapped so "Default" (`(to: null)`)
-  /// differs from "unchanged". Like [alerts]: the series takes it and
+  /// differs from "unchanged". Like [alerts]: picked with its own scope
+  /// question (so not in [SeriesChange.between]); the series takes it and
   /// later rows inherit; "this one" keeps it on the row.
   final ({String? to})? soundId;
 
@@ -73,7 +74,6 @@ final class SeriesChange {
       durationMin: diff<int>(before.durationMin, after.durationMin),
       pinned: diff<bool>(before.pinned, after.pinned),
       energy: before.energy == after.energy ? null : (to: after.energy),
-      soundId: before.soundId == after.soundId ? null : (to: after.soundId),
       startMinute: diff<int>(minute(before), minute(after)),
     );
   }

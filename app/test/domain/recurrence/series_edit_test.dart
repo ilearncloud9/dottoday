@@ -102,12 +102,7 @@ void main() {
     final s = _series();
     final rows = [for (final o in _rows(s)) o.copyWith(soundId: 'play.frog')];
     final opened = _on(rows, 23);
-    final change = SeriesChange.between(
-      opened,
-      opened.copyWith(soundId: 'clear.lift'),
-      tz.getLocation(opened.tzId),
-    );
-    expect(change.soundId, (to: 'clear.lift'));
+    const change = SeriesChange(soundId: (to: 'clear.lift'));
     final w = _editor().edit(
       series: s,
       rows: rows,
@@ -118,13 +113,18 @@ void main() {
     expect(w.series.single.soundId, 'clear.lift');
     expect(w.occurrences.map((o) => o.soundId), everyElement(isNull));
     // Back to Default: (to: null) clears the series' sound.
-    final cleared = SeriesChange.between(
-      opened,
-      opened.copyWith(soundId: null),
-      tz.getLocation(opened.tzId),
-    );
-    expect(cleared.soundId, (to: null));
+    const cleared = SeriesChange(soundId: (to: null));
+    expect(cleared.isEmpty, isFalse);
     expect(cleared.template(s.copyWith(soundId: 'bell')).soundId, isNull);
+    // Picked with its own scope question, so Save never asks again.
+    expect(
+      SeriesChange.between(
+        opened,
+        opened.copyWith(soundId: 'clear.lift'),
+        tz.getLocation(opened.tzId),
+      ).isEmpty,
+      isTrue,
+    );
     // "This one" keeps it on the row.
     expect(change.fields(opened, own: true).soundId, 'clear.lift');
   });

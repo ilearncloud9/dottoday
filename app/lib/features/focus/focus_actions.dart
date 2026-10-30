@@ -13,6 +13,7 @@ import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/shared/feedback/save_failure.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
+import 'package:dottoday/shared/sounds/sound_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,13 +33,14 @@ final class FocusActions {
     final l10n = context.l10n;
     final now = ref.read(clockProvider).nowUtc();
     unawaited(ref.read(deepWorkGatewayProvider).turnOff());
-    await _undoable(
+    final written = await _undoable(
       messenger,
       l10n,
       [progress.markDone(task, now)],
       const [],
       l10n.focusDoneMessage(task.title),
     );
+    if (written) playDoneSound(ref);
   }
 
   /// +15 min on the planned length, with Undo.
@@ -69,7 +71,7 @@ final class FocusActions {
     ], null);
   }
 
-  Future<void> _undoable(
+  Future<bool> _undoable(
     ScaffoldMessengerState messenger,
     AppLocalizations l10n,
     List<Occurrence> occurrences,
@@ -78,8 +80,8 @@ final class FocusActions {
   ) => _write(messenger, l10n, occurrences, subtasks, message);
 
   /// One undoable batch; [message] offers Undo. A failure is said, with
-  /// Try again (R-08: never silent).
-  Future<void> _write(
+  /// Try again (R-08: never silent). Whether it was written.
+  Future<bool> _write(
     ScaffoldMessengerState messenger,
     AppLocalizations l10n,
     List<Occurrence> occurrences,
@@ -91,23 +93,28 @@ final class FocusActions {
     final written = await undo.applyUndoable(
       WriteBatch(userId: userId, occurrences: occurrences, subtasks: subtasks),
     );
-    written.when(
+    return written.when(
       ok: (token) {
-        if (message == null) return;
+        if (message == null) return true;
         showUndoSnackbarOn(
           messenger,
           l10n,
           message: message,
           onUndo: () => unawaited(undo.undo(token)),
         );
+        return true;
       },
-      err: (f) => showSaveFailureSnack(
-        messenger,
-        l10n,
-        f,
-        onRetry: () =>
-            unawaited(_write(messenger, l10n, occurrences, subtasks, message)),
-      ),
+      err: (f) {
+        showSaveFailureSnack(
+          messenger,
+          l10n,
+          f,
+          onRetry: () => unawaited(
+            _write(messenger, l10n, occurrences, subtasks, message),
+          ),
+        );
+        return false;
+      },
     );
   }
 }

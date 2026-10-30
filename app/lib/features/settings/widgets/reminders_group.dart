@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
-import 'package:dottoday/data/notifications/sound_names.gen.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
-import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
 import 'package:dottoday/features/settings/widgets/health_summary_row.dart';
@@ -18,8 +17,10 @@ import 'package:dottoday/features/settings/widgets/settings_change.dart';
 import 'package:dottoday/shared/feedback/permission_notice.dart';
 import 'package:dottoday/shared/pickers/alerts/alerts_editor.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
+import 'package:dottoday/shared/sounds/sound_sections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// REMINDERS (`A-ios-settings`, docs/02 F6.2, F6.6): Task starts (the
 /// default alert set, up to 5, R-10), Sound, Quiet hours, Day-start
@@ -76,8 +77,6 @@ class RemindersGroup extends ConsumerWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final bed = windowMinutes(commonWindow(settings).end);
-    // Unset is the Dot tone; "system" the OS sound (docs/12 §3).
-    final stored = settings.reminderSound ?? defaultReminderSoundId;
     return SettingsGroup(
       caption: l10n.settingsReminders,
       children: [
@@ -92,10 +91,11 @@ class RemindersGroup extends ConsumerWidget {
           glyph: DotGlyphs.sound,
           tint: t.tasks[TaskColor.sky].ink,
           title: l10n.settingsSound,
-          value: stored == soundSystemKey
-              ? l10n.settingsSoundSystem
-              : soundDisplayName(l10n, resolveSound(stored)),
-          onTap: () => unawaited(showSoundSheet(context)),
+          // Unset is the Dot tone; "system" the OS sound (docs/12 §3).
+          value: reminderSoundName(l10n, settings.reminderSound),
+          onTap: () => unawaited(
+            context.push(AppRoutes.settingsPage(SettingsPage.sounds)),
+          ),
         ),
         QuietHoursRow(settings: settings),
         SettingsRow(

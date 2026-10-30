@@ -213,15 +213,17 @@ void main() {
     // docs/12 §3: unset is the Dot tone; the OS sound is "system".
     expect(find.text('Dot'), findsOneWidget);
     await _tapRow(tester, 'Sound');
+    // Its own page now (docs/12 §6).
+    expect(find.text('Sounds'), findsOneWidget);
     await tester.tap(find.text('Chime'));
     await tester.pumpAndSettle();
     expect((await storedSettings(h)).reminderSound, 'chime');
     expect(player.played, [resolveSound('chime')]);
-    await tester.tap(find.text('System sound').last);
+    await tester.tap(find.text('System sound'));
     await tester.pumpAndSettle();
     expect((await storedSettings(h)).reminderSound, 'system');
     expect(player.played, [resolveSound('chime')], reason: 'nothing to play');
-    await tester.tap(find.text('Done'));
+    await tester.tap(find.byTooltip('Back to Settings'));
     await tester.pumpAndSettle();
     expect(find.text('System sound'), findsOneWidget);
   });
