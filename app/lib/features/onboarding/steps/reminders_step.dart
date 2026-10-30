@@ -10,6 +10,8 @@ import 'package:dottoday/data/notifications/test_alarm.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
+import 'package:dottoday/features/layout/feature_id.dart';
+import 'package:dottoday/features/layout/layout_providers.dart';
 import 'package:dottoday/features/onboarding/steps/step_frame.dart';
 import 'package:dottoday/shared/feedback/permission_notice.dart';
 import 'package:dottoday/shared/notifications/test_alarm_card.dart';
@@ -79,7 +81,10 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
             afterNo: l10n.testAlarmLookLater,
           ),
         if (_denied) PermissionNotice(onOpenSettings: permission.openSettings),
-        const _ConnectCalendar(),
+        // Minimal asks for no setting with a default (docs/14 §4, §7):
+        // calendars wait for Settings.
+        if (!watchSimplified(ref, FeatureId.onboardingExtras))
+          const _ConnectCalendar(),
       ],
     );
   }

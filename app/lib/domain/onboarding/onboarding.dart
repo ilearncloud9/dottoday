@@ -1,22 +1,64 @@
-/// The first-run steps (docs/10 §5.1, PRD F10). Only [dayShape], [habits]
-/// and [account] ask for anything; every one can be skipped.
+/// The first-run steps (docs/10 §5.1, PRD F10; docs/14 §4). Only
+/// [dayShape], [habits], [account] and [firstTask] ask for anything; every
+/// one can be skipped. [layout] is step 0: a choice with a preselected
+/// answer, so, like the permission prompt, it isn't counted as one.
 enum OnboardingStep {
   welcome,
+  layout,
   dayShape,
   habits,
   reminders,
   account,
+  firstTask,
   done;
 
   /// Whether this step asks the user for something (PRD F10 allows at
-  /// most three such screens; the permission prompt doesn't count).
-  bool get asksForInput => const {dayShape, habits, account}.contains(this);
+  /// most three such screens per flow; the permission prompt doesn't
+  /// count).
+  bool get asksForInput =>
+      const {dayShape, habits, account, firstTask}.contains(this);
 
-  /// The step after this one; [done] stays.
-  OnboardingStep get next => values[(index + 1).clamp(0, done.index)];
+  /// The full planner's flow: step 0, then the O1–O4 flow as before.
+  static const fullFlow = [
+    welcome,
+    layout,
+    dayShape,
+    habits,
+    reminders,
+    account,
+    done,
+  ];
 
-  /// The step before this one; [welcome] stays.
-  OnboardingStep get previous => values[(index - 1).clamp(0, done.index)];
+  /// Minimal's flow (docs/14 §4): step 0, then three steps — Wake Up and
+  /// Bedtime, reminders with the test alarm, the first task.
+  static const minimalFlow = [welcome, layout, dayShape, reminders, firstTask];
+
+  /// The steps in order for the chosen layout.
+  static List<OnboardingStep> flow({required bool minimal}) =>
+      minimal ? minimalFlow : fullFlow;
+
+  /// The step after this one in [flow]; the last stays. A step from the
+  /// other flow (the layout changed) goes on from step 0's successor.
+  ///
+  /// ```dart
+  /// OnboardingStep.dayShape.nextIn(minimal: true); // reminders
+  /// ```
+  OnboardingStep nextIn({required bool minimal}) {
+    final steps = flow(minimal: minimal);
+    final i = steps.indexOf(this);
+    if (i < 0) return steps[steps.indexOf(layout) + 1];
+    return steps[(i + 1).clamp(0, steps.length - 1)];
+  }
+
+  /// The step before this one in [flow]; [welcome] stays.
+  OnboardingStep previousIn({required bool minimal}) {
+    final steps = flow(minimal: minimal);
+    final i = steps.indexOf(this);
+    return i <= 0 ? welcome : steps[i - 1];
+  }
+
+  /// Whether this is the flow's last step (its primary action finishes).
+  bool isLastIn({required bool minimal}) => flow(minimal: minimal).last == this;
 }
 
 /// Where this device is in onboarding: [finished] once "Open today" (or

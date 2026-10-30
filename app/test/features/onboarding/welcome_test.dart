@@ -43,8 +43,10 @@ void main() {
     final c = await pumpOnboarding(tester);
     await tester.tap(find.text('Get started'));
     await tester.pumpAndSettle();
-    expect(stepOf(c), OnboardingStep.dayShape);
-    expect(find.bySemanticsLabel('Step 2 of 6'), findsOneWidget);
+    // Step 0 (docs/14 §4), with minimal preselected: its flow is five
+    // steps long.
+    expect(stepOf(c), OnboardingStep.layout);
+    expect(find.bySemanticsLabel('Step 2 of 5'), findsOneWidget);
     await tester.tap(find.byTooltip('Back'));
     await tester.pumpAndSettle();
     expect(stepOf(c), OnboardingStep.welcome);
