@@ -1289,6 +1289,8 @@
   "dumpHintMic": "Tapez ou touchez le micro. Une chose par ligne.",
   "dumpMicTipTitle": "Dictez votre liste",
   "dumpMicTipBody": "Faites une pause, ou dites « suivant », entre deux choses. « Appeler le dentiste … suivant … acheter du lait » donne deux lignes.",
+  "micGettingReady": "Préparation de la reconnaissance vocale sur cet appareil…",
+  "micReady": "La reconnaissance vocale est prête sur cet appareil. Touchez le micro pour commencer.",
   "taskIconCategoryPlanning": "Planification et rythme",
   "taskIconCategoryHealth": "Santé et corps",
   "taskIconCategoryFitness": "Forme et sport",

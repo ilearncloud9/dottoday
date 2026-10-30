@@ -5306,6 +5306,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Pause, or say \"next\", between things. \"Call the dentist … next … buy milk\" becomes two lines.';
 
   @override
+  String get micGettingReady => 'Getting speech ready on this device…';
+
+  @override
+  String get micReady =>
+      'Speech is ready on this device. Tap the mic to start.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

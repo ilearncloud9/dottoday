@@ -14,6 +14,7 @@ final class FakeSpeechRecognizer implements SpeechRecognizer {
   SpeechAvailability state;
   final SpeechAvailability afterAsking;
   final starts = <String>[];
+  final downloads = <String>[];
   int stops = 0;
   int asked = 0;
   StreamController<SpeechEvent>? _session;
@@ -30,6 +31,14 @@ final class FakeSpeechRecognizer implements SpeechRecognizer {
   Future<SpeechAvailability> requestPermission(String localeTag) async {
     asked++;
     return state = afterAsking;
+  }
+
+  /// Android fetching the language's model: [state] moves to
+  /// [SpeechAvailability.downloading]; a test sets it on from there.
+  @override
+  Future<SpeechAvailability> download(String localeTag) async {
+    downloads.add(localeTag);
+    return state = SpeechAvailability.downloading;
   }
 
   @override

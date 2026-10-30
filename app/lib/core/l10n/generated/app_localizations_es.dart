@@ -5336,6 +5336,14 @@ class AppLocalizationsEs extends AppLocalizations {
       'Haz una pausa, o di «siguiente», entre una cosa y otra. «Llamar al dentista … siguiente … comprar leche» se convierte en dos líneas.';
 
   @override
+  String get micGettingReady =>
+      'Preparando el reconocimiento de voz en este dispositivo…';
+
+  @override
+  String get micReady =>
+      'El reconocimiento de voz está listo en este dispositivo. Toca el micrófono para empezar.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

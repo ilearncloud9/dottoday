@@ -31,6 +31,8 @@ void main() {
     ('available', SpeechAvailability.available),
     ('needs_permission', SpeechAvailability.needsPermission),
     ('denied', SpeechAvailability.denied),
+    ('downloadable', SpeechAvailability.downloadable),
+    ('downloading', SpeechAvailability.downloading),
     ('unavailable', SpeechAvailability.unavailable),
     ('maybe', SpeechAvailability.unavailable),
   ]) {
@@ -49,6 +51,16 @@ void main() {
       await const ChannelSpeechRecognizer().availability('en'),
       SpeechAvailability.unavailable,
     );
+  });
+
+  test('download asks Android and reads the answer', () async {
+    answer((_) => 'downloading');
+    expect(
+      await const ChannelSpeechRecognizer().download('en-US'),
+      SpeechAvailability.downloading,
+    );
+    expect(calls.single.method, 'download');
+    expect(calls.single.arguments, {'locale': 'en-US'});
   });
 
   test('requestPermission asks and reads the answer', () async {

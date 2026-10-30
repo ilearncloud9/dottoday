@@ -9,8 +9,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dictation_controller.g.dart';
 
-/// Where a dictation is: [starting] while the permission flow runs.
-enum DictationPhase { idle, starting, listening }
+/// Where a dictation is: [starting] while the permission flow runs,
+/// [fetching] while Android downloads the language's model.
+enum DictationPhase { idle, starting, fetching, listening }
 
 /// The app's one dictation (docs/09 M14.5): which field ([owner]) it
 /// writes into, its phase, the [dictation] so far and why it last ended
@@ -21,6 +22,7 @@ final class DictationState {
     this.phase = DictationPhase.idle,
     this.dictation,
     this.failure,
+    this.ready = false,
   });
 
   final Object? owner;
@@ -28,9 +30,16 @@ final class DictationState {
   final Dictation? dictation;
   final AppFailure? failure;
 
+  /// The language's model just arrived: the next tap listens.
+  final bool ready;
+
   bool listeningFor(Object owner) =>
       this.owner == owner && phase != DictationPhase.idle;
 }
+
+/// How often a fetching language model is checked, and how long at most.
+const _fetchEvery = Duration(seconds: 2);
+const _fetchFor = Duration(minutes: 10);
 
 /// How often a pause or a settled command word is checked while
 /// listening; well under [kCommandSettle].
@@ -44,6 +53,7 @@ const _tick = Duration(milliseconds: 150);
 class DictationController extends _$DictationController {
   StreamSubscription<SpeechEvent>? _events;
   Timer? _ticker;
+  Timer? _fetchCheck;
 
   @override
   DictationState build() {
@@ -99,6 +109,46 @@ class DictationController extends _$DictationController {
     state = DictationState(owner: owner, failure: failure);
   }
 
+  /// The language has no model on the device yet (Android 13+): asks the
+  /// OS to fetch it and checks every [_fetchEvery] until it is there,
+  /// then says so ([DictationState.ready]); the user taps again to speak.
+  /// Gives up quietly if the download doesn't start (declined) or takes
+  /// longer than [_fetchFor].
+  Future<void> prepareLanguage(Object owner, String localeTag) async {
+    await stop();
+    final recognizer = ref.read(speechRecognizerProvider);
+    state = DictationState(owner: owner, phase: DictationPhase.fetching);
+    final asked = await recognizer.download(localeTag);
+    if (asked == SpeechAvailability.unavailable) {
+      return notStarted(
+        owner,
+        failure: const SpeechFailure(SpeechFailureKind.unavailable),
+      );
+    }
+    var waited = Duration.zero;
+    var idle = 0;
+    _fetchCheck?.cancel();
+    _fetchCheck = Timer.periodic(_fetchEvery, (t) async {
+      waited += _fetchEvery;
+      final a = await recognizer.availability(localeTag);
+      if (state.owner != owner || state.phase != DictationPhase.fetching) {
+        return t.cancel();
+      }
+      if (a == SpeechAvailability.downloadable) idle++;
+      final done =
+          a != SpeechAvailability.downloading &&
+          a != SpeechAvailability.downloadable;
+      if (done || idle >= 3 || waited >= _fetchFor) {
+        t.cancel();
+        ref.invalidate(speechAvailabilityProvider(localeTag));
+        state = DictationState(
+          owner: owner,
+          ready: a != SpeechAvailability.unavailable && done,
+        );
+      }
+    });
+  }
+
   /// Stops if [owner] is listening (its field closed or lost focus).
   Future<void> stopFor(Object owner) =>
       state.listeningFor(owner) ? stop() : Future.value();
@@ -142,6 +192,8 @@ class DictationController extends _$DictationController {
   /// Ends the ticker and the subscription; cancelling it stops the
   /// recognizer (the transport's onCancel).
   void _end() {
+    _fetchCheck?.cancel();
+    _fetchCheck = null;
     _ticker?.cancel();
     _ticker = null;
     unawaited(_events?.cancel());

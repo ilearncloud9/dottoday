@@ -92,7 +92,21 @@ void main() {
     }
     const events = {'type', 'text', 'code', 'partial', 'final', 'stopped'};
     const codes = {'permission', 'unavailable', 'interrupted', 'recognizer'};
-    const known = {...events, 'error', ...codes};
+    const known = {...events, 'error', ...codes, 'downloadable', 'downloading'};
+    expect(
+      parseSpeechAvailability('downloadable'),
+      SpeechAvailability.downloadable,
+    );
+    expect(
+      parseSpeechAvailability('downloading'),
+      SpeechAvailability.downloading,
+    );
+    // Android says when a language can be fetched (owner, 2026-10-30).
+    expect(
+      _words(_read(_kotlin)),
+      containsAll(['downloadable', 'downloading']),
+    );
+    expect(_read(_kotlin), contains('triggerModelDownload('));
     for (final path in [_swift, _kotlin]) {
       final src = _read(path);
       final sent = {

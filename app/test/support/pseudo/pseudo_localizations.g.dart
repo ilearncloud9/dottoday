@@ -4141,6 +4141,12 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get dumpMicTipBody => pseudo(super.dumpMicTipBody);
 
   @override
+  String get micGettingReady => pseudo(super.micGettingReady);
+
+  @override
+  String get micReady => pseudo(super.micReady);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

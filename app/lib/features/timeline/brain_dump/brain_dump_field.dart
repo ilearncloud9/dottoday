@@ -50,7 +50,9 @@ class _BrainDumpFieldState extends ConsumerState<BrainDumpField> {
     final l10n = context.l10n;
     final mic = micAvailable(ref, context) ?? false;
     ref.listen(dictationControllerProvider, (_, next) {
-      if (!_tipAsked && next.listeningFor(widget.controller)) {
+      if (!_tipAsked &&
+          next.owner == widget.controller &&
+          next.phase == DictationPhase.listening) {
         unawaited(_maybeTip());
       }
     });

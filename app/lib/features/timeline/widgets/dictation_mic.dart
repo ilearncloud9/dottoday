@@ -105,7 +105,8 @@ class _DictationMicState extends ConsumerState<DictationMic> {
     final mine = s.owner == widget.field;
     final state = switch (s.phase) {
       DictationPhase.listening when mine => MicState.listening,
-      DictationPhase.starting when mine => MicState.busy,
+      DictationPhase.starting ||
+      DictationPhase.fetching when mine => MicState.busy,
       _ => MicState.idle,
     };
     return MicButton(
@@ -123,6 +124,12 @@ class _DictationMicState extends ConsumerState<DictationMic> {
     final recognizer = ref.read(speechRecognizerProvider);
     _controller.preparing(widget.field);
     var a = await recognizer.availability(locale);
+    // The language's model isn't on the device yet (Android 13+): this
+    // tap asks Android for it; the next one listens (owner, 2026-10-30).
+    if (a == SpeechAvailability.downloadable ||
+        a == SpeechAvailability.downloading) {
+      return _controller.prepareLanguage(widget.field, locale);
+    }
     if (a == SpeechAvailability.needsPermission) {
       final go = !rationale || (context.mounted && await _rationale(context));
       a = go ? await recognizer.requestPermission(locale) : a;
@@ -173,8 +180,10 @@ class _DictationMicState extends ConsumerState<DictationMic> {
   }
 }
 
-/// Under a dictated field (M14.5): while listening, [listeningCaption]
-/// (Brain dump's "Pause, or say "next" …"; none for Notes); after the
+/// Under a dictated field (M14.5): while the language's model downloads,
+/// "Getting speech ready on this device…" and then that it is ready; while
+/// listening, [listeningCaption] (Brain dump's "Pause, or say "next" …";
+/// none for Notes); after the
 /// microphone was refused, "Microphone is off for Dottoday" with Open
 /// settings; after another stop, why. Quiet, never red.
 class DictationNotice extends ConsumerWidget {
@@ -195,6 +204,17 @@ class DictationNotice extends ConsumerWidget {
     final l10n = context.l10n;
     final style = t.styles.rowMeta.copyWith(color: t.colors.muted);
     final caption = listeningCaption;
+    if (s.phase == DictationPhase.fetching || s.ready) {
+      return _gap(
+        Semantics(
+          liveRegion: true,
+          child: Text(
+            s.ready ? l10n.micReady : l10n.micGettingReady,
+            style: style,
+          ),
+        ),
+      );
+    }
     if (s.phase == DictationPhase.listening && caption != null) {
       return _gap(
         Semantics(liveRegion: true, child: Text(caption, style: style)),

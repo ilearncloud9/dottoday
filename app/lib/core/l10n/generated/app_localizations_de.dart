@@ -5340,6 +5340,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Mach eine Pause oder sag „weiter“ zwischen den Dingen. „Zahnarzt anrufen … weiter … Milch kaufen“ wird zu zwei Zeilen.';
 
   @override
+  String get micGettingReady =>
+      'Spracherkennung wird auf diesem Gerät vorbereitet …';
+
+  @override
+  String get micReady =>
+      'Die Spracherkennung ist auf diesem Gerät bereit. Tipp auf das Mikrofon, um anzufangen.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override
