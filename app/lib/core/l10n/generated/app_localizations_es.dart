@@ -4177,6 +4177,77 @@ class AppLocalizationsEs extends AppLocalizations {
       'Abre los ajustes de notificaciones de Dottoday y vuelve a activar el sonido.';
 
   @override
+  String get soundsTitle => 'Sonidos';
+
+  @override
+  String get soundsIntro =>
+      'Los avisos de tareas suenan así, salvo que una tarea tenga el suyo. Toca uno para oírlo.';
+
+  @override
+  String get soundsTaskCaption => 'Avisos de tareas';
+
+  @override
+  String get soundNone => 'Ninguno';
+
+  @override
+  String get soundNoneDetail => 'Se muestra y vibra, sin sonido';
+
+  @override
+  String get soundSectionQuiet => 'Suaves';
+
+  @override
+  String get soundSectionClear => 'Claros';
+
+  @override
+  String get soundSectionPlayful => 'Divertidos';
+
+  @override
+  String get soundsMoreCaption => 'Además';
+
+  @override
+  String get soundsStart => 'Sonido de inicio';
+
+  @override
+  String get soundsStartDetail =>
+      'Suena con la primera tarea del día y al empezar una rutina';
+
+  @override
+  String get soundsDone => 'Sonido de hecho';
+
+  @override
+  String get soundsDoneDetail => 'Al marcar una tarea como hecha';
+
+  @override
+  String get soundsInApp => 'Sonidos en la app';
+
+  @override
+  String get soundsInAppDetail => 'El sonido de hecho y el tic de Foco';
+
+  @override
+  String get soundInsistentNote =>
+      'Fuerte y repetido. Úsalo si los sonidos suaves no te llegan.';
+
+  @override
+  String get soundsMuted =>
+      'Tu dispositivo está en silencio — aún puede vibrar';
+
+  @override
+  String soundsCredit(String source, String license) {
+    return 'Sonidos de $source ($license).';
+  }
+
+  @override
+  String soundDefault(String sound) {
+    return 'Predeterminado · $sound';
+  }
+
+  @override
+  String get soundDefaultOption => 'Predeterminado';
+
+  @override
+  String get sheetSound => 'Sonido';
+
+  @override
   String get settingsQuietHours => 'Horas de silencio';
 
   @override

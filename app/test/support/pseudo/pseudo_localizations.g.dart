@@ -3259,6 +3259,70 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get healthSoundsMutedDetail => pseudo(super.healthSoundsMutedDetail);
 
   @override
+  String get soundsTitle => pseudo(super.soundsTitle);
+
+  @override
+  String get soundsIntro => pseudo(super.soundsIntro);
+
+  @override
+  String get soundsTaskCaption => pseudo(super.soundsTaskCaption);
+
+  @override
+  String get soundNone => pseudo(super.soundNone);
+
+  @override
+  String get soundNoneDetail => pseudo(super.soundNoneDetail);
+
+  @override
+  String get soundSectionQuiet => pseudo(super.soundSectionQuiet);
+
+  @override
+  String get soundSectionClear => pseudo(super.soundSectionClear);
+
+  @override
+  String get soundSectionPlayful => pseudo(super.soundSectionPlayful);
+
+  @override
+  String get soundsMoreCaption => pseudo(super.soundsMoreCaption);
+
+  @override
+  String get soundsStart => pseudo(super.soundsStart);
+
+  @override
+  String get soundsStartDetail => pseudo(super.soundsStartDetail);
+
+  @override
+  String get soundsDone => pseudo(super.soundsDone);
+
+  @override
+  String get soundsDoneDetail => pseudo(super.soundsDoneDetail);
+
+  @override
+  String get soundsInApp => pseudo(super.soundsInApp);
+
+  @override
+  String get soundsInAppDetail => pseudo(super.soundsInAppDetail);
+
+  @override
+  String get soundInsistentNote => pseudo(super.soundInsistentNote);
+
+  @override
+  String get soundsMuted => pseudo(super.soundsMuted);
+
+  @override
+  String soundsCredit(String source, String license) =>
+      pseudo(super.soundsCredit(source, license));
+
+  @override
+  String soundDefault(String sound) => pseudo(super.soundDefault(sound));
+
+  @override
+  String get soundDefaultOption => pseudo(super.soundDefaultOption);
+
+  @override
+  String get sheetSound => pseudo(super.sheetSound);
+
+  @override
   String get settingsQuietHours => pseudo(super.settingsQuietHours);
 
   @override

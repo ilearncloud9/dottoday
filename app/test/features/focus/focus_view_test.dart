@@ -55,6 +55,7 @@ Future<({FakeDeepWork deepWork, FakeSoundPlayer sounds, List<int> left})> _pump(
   bool granted = true,
   bool reduceMotion = false,
   double width = 390,
+  bool inAppSounds = true,
 }) async {
   tester.view
     ..physicalSize = Size(width, 1500)
@@ -74,7 +75,9 @@ Future<({FakeDeepWork deepWork, FakeSoundPlayer sounds, List<int> left})> _pump(
           now: _now,
           occurrences: _repo,
           subtasks: _subs,
-          profile: testProfile(settings: const Settings(use24h: false)),
+          profile: testProfile(
+            settings: Settings(use24h: false, inAppSoundsEnabled: inAppSounds),
+          ),
         ),
         ...focusOverrides(deepWork: deepWork, sounds: sounds),
       ],
@@ -161,6 +164,19 @@ void main() {
     expect(_task().status, OccurrenceStatus.done);
     expect(h.left, [1]);
     expect(h.deepWork.on, isFalse);
+    // The Done sound (docs/12 D4): Swift unless chosen.
+    expect(h.sounds.played.map((s) => s.id), ['done.swift']);
+  });
+
+  testWidgets('Sounds in app off: no tick, no Done sound (docs/12 §2.6)', (
+    tester,
+  ) async {
+    final h = await _pump(tester, inAppSounds: false);
+    await _tap(tester, find.byType(Switch).first);
+    await tester.pump(const Duration(minutes: 15));
+    await _tap(tester, find.text('Done'));
+    expect(_task().status, OccurrenceStatus.done);
+    expect(h.sounds.played, isEmpty);
   });
 
   testWidgets('the chime sounds every 15 min once on, and stops', (

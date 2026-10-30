@@ -101,6 +101,22 @@ Future<void> pickRepeat(
   );
 }
 
+/// Opens [pickAlerts] for the editor's [draft]; [edit] keeps "this one".
+VoidCallback alertsRowTap(
+  BuildContext context,
+  TaskView task,
+  Occurrence draft,
+  void Function(Occurrence Function(Occurrence)) edit,
+) =>
+    () => unawaited(
+      pickAlerts(
+        context,
+        task: task,
+        draft: draft,
+        onOwn: (a) => edit((o) => o.copyWith(alerts: a)),
+      ),
+    );
+
 /// The Alerts row (M3f.2, R-10): the editor, then the alerts on this row
 /// ([onOwn], saved with the other edits) or, for a repeating task, on the
 /// instances the user picks. The Bedtime switch writes Settings at once.

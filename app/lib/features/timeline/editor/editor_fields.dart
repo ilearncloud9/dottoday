@@ -153,14 +153,16 @@ class WhenFields extends ConsumerWidget {
   }
 }
 
-/// Repeat, Alerts and Travel time (docs/03 §3.4, M7.5): each row opens
-/// its editor. Then the Pinned switch (docs/02 F2.9) when [onPinned] is
-/// given.
+/// Repeat, Alerts, Sound (docs/12 §6) and Travel time (docs/03 §3.4,
+/// M7.5): each row opens its editor. Then the Pinned switch (docs/02
+/// F2.9) when [onPinned] is given.
 class RepeatAlertRows extends StatelessWidget {
   const RepeatAlertRows({
     required this.task,
     this.onRepeat,
     this.onAlerts,
+    this.soundText,
+    this.onSound,
     this.travelMin = 0,
     this.onTravel,
     this.pinned = false,
@@ -175,6 +177,12 @@ class RepeatAlertRows extends StatelessWidget {
 
   /// Opens the Alerts editor (M3f.2).
   final VoidCallback? onAlerts;
+
+  /// The task's sound, "Default · Dot" (docs/12 §6); null hides the row.
+  final String? soundText;
+
+  /// Opens the sound picker.
+  final VoidCallback? onSound;
 
   /// The draft's travel time before it (R-17); 0 = none.
   final int travelMin;
@@ -224,6 +232,8 @@ class RepeatAlertRows extends StatelessWidget {
           alertsText(l10n, task.alerts),
           onAlerts,
         ),
+        if (soundText case final sound?)
+          row(DotGlyphs.sound, l10n.sheetSound, sound, onSound),
         if (onTravel != null)
           row(
             TaskIcon.car.glyph ?? DotGlyphs.clock,

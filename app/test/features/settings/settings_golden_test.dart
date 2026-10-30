@@ -205,10 +205,8 @@ void main() {
     overrides: reminders,
     build: (_) => _settings(),
   );
-  for (final (name, row) in [
-    ('settings_sound', 'Sound'),
-    ('settings_day_summary', 'Day-start summary'),
-  ]) {
+  // Sound is its own page now (sounds_page_golden_test.dart, docs/12 §6).
+  for (final (name, row) in [('settings_day_summary', 'Day-start summary')]) {
     goldenMatrix(
       name,
       height: 844,

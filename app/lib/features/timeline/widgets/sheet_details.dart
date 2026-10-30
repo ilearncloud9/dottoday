@@ -1,12 +1,16 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/features/timeline/state/task_text.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/widgets/pin_row.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/sounds/sound_sections.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Alerts, Repeat and Colour & icon rows (`A-ios-task-sheet`), plus
+/// Alerts, Sound (docs/12 §6), Repeat and Colour & icon rows
+/// (`A-ios-task-sheet`), plus
 /// Travel time when the task has some (M7.5, R-17) and the Pinned switch
 /// (F1.5) when [onPinned] is given.
 class SheetDetails extends StatelessWidget {
@@ -46,6 +50,8 @@ class SheetDetails extends StatelessWidget {
             value: alertsText(l10n, task.alerts),
             onTap: onEdit,
           ),
+          Divider(height: DotSpace.hairline, color: c.outline),
+          _SoundDetail(task: task, onEdit: onEdit),
           Divider(height: DotSpace.hairline, color: c.outline),
           _DetailRow(
             glyph: DotGlyphs.repeat,
@@ -115,4 +121,28 @@ class _DetailRow extends StatelessWidget {
       ),
     );
   }
+}
+
+/// "Sound · Default · Dot" or the task's own sound; opens the editor.
+class _SoundDetail extends ConsumerWidget {
+  const _SoundDetail({required this.task, this.onEdit});
+
+  final TaskView task;
+  final VoidCallback? onEdit;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => _DetailRow(
+    glyph: DotGlyphs.sound,
+    label: context.l10n.sheetSound,
+    value: taskSoundText(
+      context.l10n,
+      own: task.occurrence.soundId ?? task.series?.soundId,
+      defaultSound: ref
+          .watch(currentProfileProvider)
+          .value
+          ?.settings
+          .reminderSound,
+    ),
+    onTap: onEdit,
+  );
 }

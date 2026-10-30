@@ -6,7 +6,6 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/focus/focus_providers.dart';
-import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
@@ -18,6 +17,7 @@ import 'package:dottoday/features/focus/focus_deep_work.dart';
 import 'package:dottoday/features/focus/focus_parts.dart';
 import 'package:dottoday/shared/dot/focus_ring.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/sounds/sound_preview.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -80,11 +80,8 @@ class _FocusViewState extends ConsumerState<FocusView> {
     _chime = on
         ? Timer.periodic(
             FocusView.chimeEvery,
-            (_) => unawaited(
-              ref
-                  .read(soundPlayerProvider)
-                  .play(resolveSound(focusTickSoundId)),
-            ),
+            // Sounds in app off: no tick (docs/12 §2.6).
+            (_) => playAppSound(ref, resolveSound(focusTickSoundId)),
           )
         : null;
   }

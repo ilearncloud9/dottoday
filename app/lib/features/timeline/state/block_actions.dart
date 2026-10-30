@@ -11,16 +11,25 @@ import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
 import 'package:dottoday/domain/scheduling/unstick.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
+import 'package:dottoday/shared/sounds/sound_preview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Marks [o] done, or planned again if it is done, through the undoable
 /// write path (docs/02 F1 "check a block done", R-11 undo). Completion is
-/// on this occurrence only, never its series (R-09).
-Future<Result<UndoToken, AppFailure>> toggleDone(WidgetRef ref, Occurrence o) {
+/// on this occurrence only, never its series (R-09). A written Done plays
+/// the Done sound (docs/12 D4).
+Future<Result<UndoToken, AppFailure>> toggleDone(
+  WidgetRef ref,
+  Occurrence o,
+) async {
   final changed = progress.toggleDone(o, ref.read(clockProvider).nowUtc());
-  return ref
+  final result = await ref
       .read(undoServiceProvider)
       .applyUndoable(WriteBatch(userId: o.userId, occurrences: [changed]));
+  if (result is Ok && changed.status == OccurrenceStatus.done) {
+    playDoneSound(ref);
+  }
+  return result;
 }
 
 /// Gives the live task [o] [minutes] more (LiveRow "+15 min", R-04).

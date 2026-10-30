@@ -109,6 +109,47 @@ final class SoundPlayerProvider
 
 String _$soundPlayerHash() => r'b81ef35325558f2c9231bd4c47bce2925f9566cf';
 
+/// Whether the ringer is silent right now, for the pickers' banner
+/// (docs/12 §6); re-read each time a picker opens.
+
+@ProviderFor(deviceMuted)
+final deviceMutedProvider = DeviceMutedProvider._();
+
+/// Whether the ringer is silent right now, for the pickers' banner
+/// (docs/12 §6); re-read each time a picker opens.
+
+final class DeviceMutedProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
+  /// Whether the ringer is silent right now, for the pickers' banner
+  /// (docs/12 §6); re-read each time a picker opens.
+  DeviceMutedProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'deviceMutedProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$deviceMutedHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<bool> create(Ref ref) {
+    return deviceMuted(ref);
+  }
+}
+
+String _$deviceMutedHash() => r'1d0bd0582ebe0f138d8e9edb89f201924e4a37dc';
+
 /// The scheduler under the gateway: the OS on iOS, Android and macOS; on
 /// the web, timers while the tab is open, posting through the service
 /// worker or the in-app banner (M5.3).

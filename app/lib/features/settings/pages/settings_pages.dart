@@ -7,12 +7,14 @@ import 'package:dottoday/features/settings/pages/data_pages.dart';
 import 'package:dottoday/features/settings/pages/info_pages.dart';
 import 'package:dottoday/features/settings/pages/notification_health_page.dart';
 import 'package:dottoday/features/settings/pages/siri_page.dart';
+import 'package:dottoday/features/settings/pages/sounds_page.dart';
 import 'package:flutter/widgets.dart';
 
 /// The page at `/settings/<page>` (docs/09 M3f.7).
 Widget settingsPageFor(SettingsPage page) => switch (page) {
   SettingsPage.account => const AccountPage(),
   SettingsPage.notifications => const NotificationHealthPage(),
+  SettingsPage.sounds => const SoundsPage(),
   SettingsPage.calendars => const CalendarsPage(),
   // Composed in app_screens (features don't import each other).
   SettingsPage.routines => const SizedBox.shrink(),

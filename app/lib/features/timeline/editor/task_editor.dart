@@ -17,6 +17,7 @@ import 'package:dottoday/features/timeline/editor/editor_fields.dart';
 import 'package:dottoday/features/timeline/editor/editor_footer.dart';
 import 'package:dottoday/features/timeline/editor/editor_notes.dart';
 import 'package:dottoday/features/timeline/editor/editor_series.dart';
+import 'package:dottoday/features/timeline/editor/editor_sound.dart';
 import 'package:dottoday/features/timeline/editor/editor_travel.dart';
 import 'package:dottoday/features/timeline/editor/editor_writer.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
@@ -261,14 +262,9 @@ class _FormState extends ConsumerState<_Form> {
           onTravel: _draft.startUtc == null ? null : () => unawaited(_travel()),
           pinned: _draft.pinned,
           onPinned: (v) => _change((o) => o.copyWith(pinned: v)),
-          onAlerts: () => unawaited(
-            pickAlerts(
-              context,
-              task: widget.task,
-              draft: _draft,
-              onOwn: (a) => _change((o) => o.copyWith(alerts: a)),
-            ),
-          ),
+          onAlerts: alertsRowTap(context, widget.task, _draft, _change),
+          soundText: soundRowText(context, ref, widget.task, _draft),
+          onSound: soundRowTap(context, widget.task, _draft, _change),
         ),
         const SizedBox(height: DotSpace.l),
         SheetSubtasks(task: widget.task, editing: true),

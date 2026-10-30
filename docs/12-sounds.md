@@ -248,7 +248,10 @@ Rules:
 
 - **Settings › Reminders › Sounds** (the default normal-tier sound): System sound · None · Dottoday · Quiet · Clear · Playful, then **Start sound** and **Done sound** as separate rows opening their own lists (Start: Dot alarm, then §2.3). Each row: name, play-on-tap preview, check mark. Footer caption = the credit line from §1.
 - **Task sheet › Sound** row: Default (shows the resolved name, "Default · Dot") · None · Dottoday · Quiet · Clear · Playful. No System sound, Start or Done here (D2, D4).
-- Preview plays through the media channel and honours the mute switch; when muted, show the banner "Your device is muted — you may still get vibration" (no exclamation mark).
+- Preview plays through the media channel and honours the mute switch; when muted, show the banner "Your device is muted — you may still get vibration" (no exclamation mark). **Platform exception** *(phase 4)*: only Android can read the ringer (silent or vibrate). iOS has no public API for the ring/silent switch, and a Mac has none, so there the banner never shows. Previews still obey the switch, because they play as system sounds.
+- *(phase 4)* The task picker is full height, with Done pinned under the scrolling list. For a repeating task it asks "this one or all", as Alerts does: "all" puts the sound on the series and later instances inherit it.
+- *(phase 4)* The Done sound plays after a Done is written (the task sheet, timeline, keyboard and Focus), never after undoing one. Both the Done sound and Focus's tick follow **Sounds in app**; previews always play. The test alarm rings with the Start sound.
+- Large text: past 130 % a row's value or fix button moves under its title instead of squeezing it.
 - Everything through `AppLocalizations`; EdgeInsetsDirectional only.
 
 ## 7. Gates

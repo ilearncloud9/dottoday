@@ -128,6 +128,13 @@ class MainActivity : FlutterFragmentActivity() {
             }
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dottoday/sound")
             .setMethodCallHandler { call, result ->
+                // Silent or vibrate: the preview banner says so (docs/12 §6).
+                if (call.method == "isMuted") {
+                    val audio = getSystemService(AUDIO_SERVICE) as AudioManager
+                    return@setMethodCallHandler result.success(
+                        audio.ringerMode != AudioManager.RINGER_MODE_NORMAL,
+                    )
+                }
                 val name = call.arguments as? String
                 if (call.method != "play" || name == null) {
                     return@setMethodCallHandler result.notImplemented()

@@ -6228,6 +6228,132 @@ abstract class AppLocalizations {
   /// **'Open Dottoday\'s notification settings and turn the sound back on.'**
   String get healthSoundsMutedDetail;
 
+  /// Settings › Reminders › Sounds page title (docs/12 §6).
+  ///
+  /// In en, this message translates to:
+  /// **'Sounds'**
+  String get soundsTitle;
+
+  /// Sounds page: line at the top.
+  ///
+  /// In en, this message translates to:
+  /// **'Task reminders play this, unless a task has its own. Tap one to hear it.'**
+  String get soundsIntro;
+
+  /// Sounds page: caption of the default-sound list.
+  ///
+  /// In en, this message translates to:
+  /// **'Task reminders'**
+  String get soundsTaskCaption;
+
+  /// Sound picker row: no sound (the reminder still shows and vibrates).
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get soundNone;
+
+  /// Sound picker: subtitle of None.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows and vibrates, without a sound'**
+  String get soundNoneDetail;
+
+  /// Sound picker section: short, soft sounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet'**
+  String get soundSectionQuiet;
+
+  /// Sound picker section: short melodies.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get soundSectionClear;
+
+  /// Sound picker section: animals and objects.
+  ///
+  /// In en, this message translates to:
+  /// **'Playful'**
+  String get soundSectionPlayful;
+
+  /// Sounds page: caption over the Start sound, Done sound and Sounds in app rows.
+  ///
+  /// In en, this message translates to:
+  /// **'Also'**
+  String get soundsMoreCaption;
+
+  /// Sounds page row and sheet title: the alarm-loud first task's sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Start sound'**
+  String get soundsStart;
+
+  /// Sounds page: what the Start sound is for.
+  ///
+  /// In en, this message translates to:
+  /// **'Rings for the first task of your day and when a routine starts'**
+  String get soundsStartDetail;
+
+  /// Sounds page row and sheet title: the sound when a task is ticked done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done sound'**
+  String get soundsDone;
+
+  /// Sounds page: what the Done sound is for.
+  ///
+  /// In en, this message translates to:
+  /// **'When you tick a task done'**
+  String get soundsDoneDetail;
+
+  /// Sounds page switch: the app's own sounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Sounds in app'**
+  String get soundsInApp;
+
+  /// Sounds in app switch subtitle: what it covers (previews always play).
+  ///
+  /// In en, this message translates to:
+  /// **'The Done sound and the Focus tick'**
+  String get soundsInAppDetail;
+
+  /// Start sound list: caption under Insistent (never 'annoying', docs/12 §2.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Loud and repeating. Use it if quieter sounds don\'t reach you.'**
+  String get soundInsistentNote;
+
+  /// Sounds page banner while the device's ringer is silent (docs/12 §6; no exclamation mark).
+  ///
+  /// In en, this message translates to:
+  /// **'Your device is muted — you may still get vibration'**
+  String get soundsMuted;
+
+  /// Sounds page footer: the one credit line per source (docs/12 §1); {source} is a link.
+  ///
+  /// In en, this message translates to:
+  /// **'Sounds from {source} ({license}).'**
+  String soundsCredit(String source, String license);
+
+  /// Task Sound row value when the task uses the default, e.g. 'Default · Dot'.
+  ///
+  /// In en, this message translates to:
+  /// **'Default · {sound}'**
+  String soundDefault(String sound);
+
+  /// Task sound picker row: use the default sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get soundDefaultOption;
+
+  /// Task sheet and editor row: the task's reminder sound.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound'**
+  String get sheetSound;
+
   /// Settings › Reminders switch: quiet hours.
   ///
   /// In en, this message translates to:

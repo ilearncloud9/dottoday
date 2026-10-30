@@ -41,6 +41,9 @@ enum SettingsPage {
 
   /// Reminders › Notification health (M6.5.8).
   notifications,
+
+  /// Reminders › Sounds (docs/12 §6).
+  sounds,
   calendars,
 
   /// Routines (11 C2, M11.4), also from Today ⋯ and Add.

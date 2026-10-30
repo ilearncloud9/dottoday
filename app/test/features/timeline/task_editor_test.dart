@@ -22,7 +22,8 @@ Future<void> _pump(
   ThemeMode mode = ThemeMode.light,
 }) async {
   tester.view
-    ..physicalSize = const Size(390, 1400)
+    // Tall enough for every row, Sound included (docs/12 §6).
+    ..physicalSize = const Size(390, 1500)
     ..devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   final rows = demoDayRows(_date);
@@ -131,6 +132,30 @@ void main() {
     expect(_saved().energy, Energy.medium);
     await tap('Medium');
     expect(_saved().energy, isNull);
+  });
+
+  testWidgets('Sound: Default · Dot, a picked sound, Default again '
+      '(docs/12 §6)', (tester) async {
+    await _pump(tester);
+    Future<void> pick(String sound) async {
+      await _reveal(tester, find.text('Sound', skipOffstage: false));
+      await tester.tap(_editor(find.text('Sound')));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text(sound).last);
+      await tester.tap(find.text(sound).last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Done').last);
+      await tester.pump(const Duration(milliseconds: 700));
+      await tester.pumpAndSettle();
+    }
+
+    expect(_editor(find.text('Default · Dot')), findsOneWidget);
+    await pick('Lift');
+    expect(_saved().soundId, 'clear.lift');
+    expect(_editor(find.text('Lift')), findsOneWidget);
+    await pick('Default');
+    expect(_saved().soundId, isNull);
+    expect(_editor(find.text('Default · Dot')), findsOneWidget);
   });
 
   testWidgets('notes say which markdown-lite they understand', (tester) async {

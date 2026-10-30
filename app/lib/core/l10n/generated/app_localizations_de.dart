@@ -4182,6 +4182,77 @@ class AppLocalizationsDe extends AppLocalizations {
       'Öffne die Mitteilungseinstellungen von Dottoday und schalte den Ton wieder ein.';
 
   @override
+  String get soundsTitle => 'Töne';
+
+  @override
+  String get soundsIntro =>
+      'Aufgabenhinweise spielen diesen Ton, außer eine Aufgabe hat einen eigenen. Tippe, um ihn zu hören.';
+
+  @override
+  String get soundsTaskCaption => 'Aufgabenhinweise';
+
+  @override
+  String get soundNone => 'Kein Ton';
+
+  @override
+  String get soundNoneDetail => 'Zeigt an und vibriert, ohne Ton';
+
+  @override
+  String get soundSectionQuiet => 'Leise';
+
+  @override
+  String get soundSectionClear => 'Klar';
+
+  @override
+  String get soundSectionPlayful => 'Verspielt';
+
+  @override
+  String get soundsMoreCaption => 'Außerdem';
+
+  @override
+  String get soundsStart => 'Startton';
+
+  @override
+  String get soundsStartDetail =>
+      'Klingelt bei der ersten Aufgabe des Tages und wenn eine Routine beginnt';
+
+  @override
+  String get soundsDone => 'Fertig-Ton';
+
+  @override
+  String get soundsDoneDetail => 'Wenn du eine Aufgabe abhakst';
+
+  @override
+  String get soundsInApp => 'Töne in der App';
+
+  @override
+  String get soundsInAppDetail => 'Fertig-Ton und Fokus-Takt';
+
+  @override
+  String get soundInsistentNote =>
+      'Laut und wiederholt. Für dich, wenn leisere Töne dich nicht erreichen.';
+
+  @override
+  String get soundsMuted =>
+      'Dein Gerät ist stumm – Vibration kann trotzdem kommen';
+
+  @override
+  String soundsCredit(String source, String license) {
+    return 'Töne von $source ($license).';
+  }
+
+  @override
+  String soundDefault(String sound) {
+    return 'Standard · $sound';
+  }
+
+  @override
+  String get soundDefaultOption => 'Standard';
+
+  @override
+  String get sheetSound => 'Ton';
+
+  @override
   String get settingsQuietHours => 'Ruhezeit';
 
   @override
