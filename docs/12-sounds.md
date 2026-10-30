@@ -1,6 +1,6 @@
 # 12 · Sounds — "a dot you can hear"
 
-Status: **approved with owner amendments, 2026-10-28** (→ ADR-0014; ADR-0010 is taken). The amendments are folded in below and marked *(owner)*. Extends `11-standout-roadmap.md` §A0 (alert tiers) and `10-ui-concept-a.md`; does not replace them. Builds on the `NotificationGateway` from the `local-notifications-scheduler` skill.
+Status: **built** (M15, 2026-10-30) · approved with owner amendments, 2026-10-28 (→ ADR-0015; ADR-0010 and ADR-0014 are taken). The amendments are folded in below and marked *(owner)*. Extends `11-standout-roadmap.md` §A0 (alert tiers) and `10-ui-concept-a.md`; does not replace them. Builds on the `NotificationGateway` from the `local-notifications-scheduler` skill.
 
 Tags: **built** = exists on main; **new** = this document adds it.
 
@@ -16,7 +16,7 @@ One-line position: every dot has a sound; the user picks it per task; the first 
 |---|---|---|
 | D1 | Sounds are bundled assets, never downloaded at runtime. | Offline-first; no network on any notification path. |
 | D2 | **Per-task sound applies to the normal (time-sensitive) tier only.** The alarm-loud tier (first dot of the day, routine starts — A0) always plays the **Start sound** chosen in Settings › Reminders (default: the existing `dot_alarm` chime *(owner)*). | Halves the Android channel count (see §4) and is explainable in one sentence: "your first dot always sounds like your Start sound". |
-| D3 | The per-task alert **tier** stays rule-based (A0: "no per-task settings in v1"). Only the *sound* is per-task. | Bends A0's wording, not its intent; record in ADR-0014. |
+| D3 | The per-task alert **tier** stays rule-based (A0: "no per-task settings in v1"). Only the *sound* is per-task. | Bends A0's wording, not its intent; record in ADR-0015. |
 | D4 | The **Done sound** is one global setting (Settings › Reminders › Done sound), not per task. | Completion should feel the same every time. |
 | D5 | Nothing is gated. If extra packs ever become Pro, they belong beside "themes and icon packs" in the draft split in `11-standout-roadmap.md`. The Start tier is a delivery guarantee and is never gated. | `00-vision.md`: core free forever. |
 | D6 | Sources limited to **CC0** and **CC BY 4.0**. No Mixkit, no Zapsplat Standard, no CC BY-NC / BY-SA, nothing without a written licence. | One obligation (a credit line), no revocable or account-bound terms. |
@@ -265,7 +265,7 @@ Rules:
 
 ## 8. Milestone placement
 
-M6.5 is closed. Sounds is its own milestone in `09-implementation-plan.md` (phases: tooling → data → gateway → ui → docs, one PR each, branch `feat/sounds-<phase>`). It reuses A0's channel work. ADR-0014 records D2–D4 and the owner amendments.
+M6.5 is closed. Sounds is its own milestone in `09-implementation-plan.md`, **M15** (phases: tooling → data → gateway → ui → docs, one PR each, branch `feat/sounds-<phase>`). It reuses A0's channel work. ADR-0015 records D2–D4 and the owner amendments.
 
 ## 9. Follow-ups
 

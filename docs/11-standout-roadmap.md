@@ -148,7 +148,7 @@ Trials and lifetime unlocks are store-managed (introductory offers / non-consuma
 
 | Milestone | Contents | Gate |
 |---|---|---|
-| **M6.5 Delivery guarantees** (before M7) | A0; B1 timestamps + migration; B2 subtask durations; F3 rule into PRD; ADR-0009/0010 | alarm fires with app killed on both simulators; health panel |
+| **M6.5 Delivery guarantees** (before M7) | A0; B1 timestamps + migration; B2 subtask durations; F3 rule into PRD; ADR-0009/0010. A0's sounds (a per-task sound, a Start sound for the loud tier) shipped later as **M15 Sounds** (`12-sounds.md`, ADR-0015) | alarm fires with app killed on both simulators; health panel |
 | M7, M8 | as planned (calendars; export + l10n) | — |
 | **M9 See time** | A1 (Live Activity + ongoing notification first, then widgets/controls/menu bar), B6 intents, B5 snapshot | all surfaces show the same dot within 1 s of a change |
 | **M10 Start** | B2 model service (on-device + cloud + BYOK), B3 ProposalSheet, B1 Break it down, B2 Smallest step, B3 Unstick, A3 Focus | breakdown < 2 s on-device; proposal never auto-applies (test) |
