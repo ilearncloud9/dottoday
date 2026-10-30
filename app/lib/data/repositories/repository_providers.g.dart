@@ -150,6 +150,54 @@ final class RoutineRepositoryProvider
 
 String _$routineRepositoryHash() => r'64f7c42c7858c1798e648ab1beee8000d34746d4';
 
+@ProviderFor(revealHintRepository)
+final revealHintRepositoryProvider = RevealHintRepositoryProvider._();
+
+final class RevealHintRepositoryProvider
+    extends
+        $FunctionalProvider<
+          RevealHintRepository,
+          RevealHintRepository,
+          RevealHintRepository
+        >
+    with $Provider<RevealHintRepository> {
+  RevealHintRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'revealHintRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$revealHintRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<RevealHintRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  RevealHintRepository create(Ref ref) {
+    return revealHintRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(RevealHintRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<RevealHintRepository>(value),
+    );
+  }
+}
+
+String _$revealHintRepositoryHash() =>
+    r'fb6a759d94c13eed99c5de0e714758687f748871';
+
 @ProviderFor(subtaskRepository)
 final subtaskRepositoryProvider = SubtaskRepositoryProvider._();
 

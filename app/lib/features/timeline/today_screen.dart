@@ -9,6 +9,7 @@ import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/widgets/all_day_chips.dart';
 import 'package:dottoday/features/timeline/widgets/day_page.dart';
+import 'package:dottoday/features/timeline/widgets/reveal_hint_row.dart';
 import 'package:dottoday/features/timeline/widgets/selection_bar.dart';
 import 'package:dottoday/features/timeline/widgets/today_header.dart';
 import 'package:dottoday/features/timeline/widgets/today_keys.dart';
@@ -190,7 +191,11 @@ class _TodayCompact extends ConsumerWidget {
           ),
         ),
         AllDayChips(date: shown),
-        TodayPrompt(date: shown, today: today),
+        TodayPrompt(
+          date: shown,
+          today: today,
+          hint: RevealHintRow(today: today),
+        ),
         const SizedBox(height: DotSpace.xs),
         Expanded(
           // A medium-width window keeps the sheet at a readable width
