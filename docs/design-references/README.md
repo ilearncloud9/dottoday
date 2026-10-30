@@ -1,5 +1,7 @@
 # Design references — Concept A
 
+> **Superseded in part by ADR-0015 (2026-10-30).** The task dots (now a tint with a bold icon, the same in every state), the done circle (filled with a tick when done), Today's day card (now a full-width sheet with no title row, peek or page dots) and the header (the day's numbers under the title) no longer match these renders. Where they disagree, ADR-0015 wins and the goldens are the reference.
+
 Rendered at 2× from the design canvas (version 124, 2026-10-21). `png/` is what to match; `src/` is the HTML each PNG was rendered from (inline styles; `{{accent}}` = the accent token). Sizes: iPhone 390×844, Android 412×915, Mac/web 1280×800, Watch 198×242.
 
 | File | Shows |

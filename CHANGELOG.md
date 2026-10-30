@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ## [Unreleased]
 
+### Changed
+- Today, redesigned for room: task dots are a soft tint of their colour with a bold icon, and look the same before and after you finish. The round circle at the end of each row now marks a task done — it fills with a tick in the task's colour, and the task stays where it is. Tapping a dot opens the task. The day fills the screen as one sheet (no card, no page dots), the header shows the day's numbers under the title, and the selected day in the week strip is filled.
+- Drag a task anywhere on the day, even onto another task: overlapping tasks join on the thread with "Tasks are overlapping". A task's length is now changed in its sheet; the day no longer has resize handles.
+
 ### Added
 - M14.7: The design sweep covers the new screens (Privacy's AI status, Siri & Shortcuts on iPhone, Brain dump with or without the mic, a plan's origin) on the Mac, the web and devices.
 - M14.6: Dictate notes. A task's notes have the same mic in their corner: your words go in where the cursor is, just like the keyboard's own mic — on your device only.
