@@ -822,6 +822,18 @@ abstract class AppLocalizations {
   /// **'Concept A preview (debug)'**
   String get debugConceptPreview;
 
+  /// Today's page title when the profile has no name (Main).
+  ///
+  /// In en, this message translates to:
+  /// **'{part, select, morning{Good morning} afternoon{Good afternoon} other{Good evening}}'**
+  String todayGreeting(String part);
+
+  /// Today's page title with the user's name (Main: 'Good morning, Kody').
+  ///
+  /// In en, this message translates to:
+  /// **'{part, select, morning{Good morning, {name}} afternoon{Good afternoon, {name}} other{Good evening, {name}}}'**
+  String todayGreetingName(String part, String name);
+
   /// Empty Today (docs/10 §5.4).
   ///
   /// In en, this message translates to:

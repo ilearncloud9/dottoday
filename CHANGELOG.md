@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
-- Today's header is now the date, "October 25, 2026", on one line with the day dot and ⋯; the day fills the screen to the bottom, under the menu, and the menu's icons are bold.
+- Today's phone header is now the date, "October 25, 2026", on one line (the Mac/web spread keeps "Good morning") with the day dot and ⋯; the day fills the screen to the bottom, under the menu, and the menu's icons are bold.
 - Drag and drop works like Structured: as you drag, the task shows on the thread where it will land. Hold over a day in the week strip to switch to it, drop on Wake Up for all day, on the Inbox tab to unschedule, or on the Trash that appears above + (with Undo). Drag the + onto the day to add a task at that time.
 - Today, redesigned for room: task dots are a soft tint of their colour with a bold icon, and look the same before and after you finish. The round circle at the end of each row now marks a task done — it fills with a tick in the task's colour, and the task stays where it is. Tapping a dot opens the task. The day fills the screen as one sheet (no card, no page dots), the header shows the day's numbers under the title, and the selected day in the week strip is filled.
 - Drag a task anywhere on the day, even onto another task: overlapping tasks join on the thread with "Tasks are overlapping". A task's length is now changed in its sheet; the day no longer has resize handles.

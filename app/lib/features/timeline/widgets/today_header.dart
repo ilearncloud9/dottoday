@@ -15,6 +15,7 @@ import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 /// Today's header (ADR-0015, after Structured's): the date as the title,
 /// "October 25, 2026 ⌄" (tap: month), with the day dot (or "● Today" away
@@ -90,20 +91,42 @@ class TodayHeader extends ConsumerWidget {
     }
     final otherMonth = month.year != today.year || month.month != today.month;
     if (monthOpen && otherMonth) return DateFormat.yMMMM(locale).format(month);
-    return dayTitle(context, ref, date: date, today: today);
+    // The date, as Structured's header (ADR-0015); the spread keeps the
+    // greeting (dayTitle).
+    return DateFormat.yMMMMd(locale).format(date);
   }
 }
 
-/// "October 25, 2026": the day's title on every width (ADR-0015 replaced
-/// the greeting with the date, as Structured's header).
+/// "Good morning, Kody" on today, else the weekday: the Mac/web spread's
+/// title (`A-mac-today-alt1-spread`). The phone header shows the date
+/// instead (ADR-0015); the spread has the room for both.
 String dayTitle(
   BuildContext context,
   WidgetRef ref, {
   required DateTime date,
   required DateTime today,
-}) => DateFormat.yMMMMd(
-  Localizations.localeOf(context).toLanguageTag(),
-).format(date);
+}) {
+  final locale = Localizations.localeOf(context).toLanguageTag();
+  if (date != today) return DateFormat.EEEE(locale).format(date);
+  final profile = ref.watch(currentProfileProvider).value;
+  final now =
+      ref.watch(minuteTickProvider).value ?? ref.watch(clockProvider).nowUtc();
+  final zone = profile == null ? tz.UTC : tz.getLocation(profile.tzId);
+  final part = dayPart(tz.TZDateTime.from(now, zone).hour);
+  final name = profile?.displayName?.trim() ?? '';
+  final l10n = context.l10n;
+  return name.isEmpty
+      ? l10n.todayGreeting(part)
+      : l10n.todayGreetingName(part, name);
+}
+
+/// ICU select key of the greeting for a local [hour]: before noon,
+/// before 17:00, or later.
+String dayPart(int hour) => hour < 12
+    ? 'morning' // l10n-ignore: ICU select key
+    : hour < 17
+    ? 'afternoon' // l10n-ignore: ICU select key
+    : 'evening'; // l10n-ignore: ICU select key
 
 /// "Take it easy, Kody" (low-energy mode, `B-ios-low-energy`).
 String lowEnergyTitle(BuildContext context, WidgetRef ref) {

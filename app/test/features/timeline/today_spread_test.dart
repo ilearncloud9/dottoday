@@ -25,10 +25,7 @@ void main() {
     await pumpToday(tester, size: _wide);
     expect(find.byType(TodaySpread), findsOneWidget);
     expect(find.byType(DayPager), findsNothing);
-    expect(
-      find.textContaining('October 21, 2026', findRichText: true),
-      findsOneWidget,
-    );
+    expect(find.text('Good morning, Kody'), findsOneWidget);
     expect(find.text('Wednesday, October 21 · 2 of 13 done'), findsOneWidget);
     expect(find.text('Tuesday · Yesterday'), findsOneWidget);
     expect(find.text('Wednesday · Today'), findsOneWidget);
@@ -56,10 +53,7 @@ void main() {
     expect(find.text('Running late'), findsNothing);
     await tester.tap(find.text('Today').last);
     await tester.pumpAndSettle();
-    expect(
-      find.textContaining('October 21, 2026', findRichText: true),
-      findsOneWidget,
-    );
+    expect(find.text('Good morning, Kody'), findsOneWidget);
     await tester.tap(find.byTooltip('Previous day'));
     await tester.pumpAndSettle();
     expect(find.text('Monday'), findsOneWidget);

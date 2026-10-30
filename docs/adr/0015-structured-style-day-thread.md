@@ -46,7 +46,8 @@ control that stays visible, and the room Structured gives the timeline. Concept 
 - **Header on one line.** The greeting is gone. The title is the date, "October 25, 2026 ⌄",
   all in the text colour at `dayTitle` size, and it opens the month. The day dot (or "● Today"
   away from today) and ⋯ sit on the same line, with the day's numbers under it. The Mac/web
-  spread header shows the same date title.
+  spread keeps "Good morning, Kody" (the weekday away from today), as the owner asked: it has
+  the room for both.
 - **The sheet runs under the tab bar.** It has no outline, just a soft shadow, and goes to the
   screen's bottom edge behind the floating bar and + button. Its list ends with the bar's
   height as clearance.

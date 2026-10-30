@@ -52,34 +52,32 @@ Future<void> _pickNth(WidgetTester tester, int times) async {
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  for (final (label, size) in [
-    ('phone', const Size(390, 844)),
-    ('spread', const Size(1280, 900)),
+  // The phone's title is the date (ADR-0015); the spread's the greeting,
+  // or the weekday away from today.
+  for (final (label, size, next, back, home) in [
+    (
+      'phone',
+      const Size(390, 844),
+      'October 22, 2026',
+      'October 20, 2026',
+      'October 21, 2026',
+    ),
+    ('spread', const Size(1280, 900), 'Thursday', 'Tuesday', 'Good morning'),
   ]) {
     testWidgets('$label: Ctrl+→ next day, Ctrl+← back, Ctrl+T today', (
       tester,
     ) async {
+      Finder title(String text) =>
+          find.textContaining(text, findRichText: true);
       await pumpToday(tester, size: size);
       await _ctrl(tester, LogicalKeyboardKey.arrowRight);
-      expect(
-        find.textContaining('October 22, 2026', findRichText: true),
-        findsWidgets,
-      );
-      expect(
-        find.textContaining('October 21, 2026', findRichText: true),
-        findsNothing,
-      );
+      expect(title(next), findsWidgets);
+      expect(title(home), findsNothing);
       await _ctrl(tester, LogicalKeyboardKey.arrowLeft);
       await _ctrl(tester, LogicalKeyboardKey.arrowLeft);
-      expect(
-        find.textContaining('October 20, 2026', findRichText: true),
-        findsWidgets,
-      );
+      expect(title(back), findsWidgets);
       await _ctrl(tester, LogicalKeyboardKey.keyT);
-      expect(
-        find.textContaining('October 21, 2026', findRichText: true),
-        findsOneWidget,
-      );
+      expect(title(home), findsOneWidget);
     });
   }
 
