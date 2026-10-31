@@ -7,7 +7,7 @@
 # Library/Sounds — macOS makes it a link to ~/Library/Sounds — so the copy
 # iOS does at start never lands there (found in M8.5).
 # iOS: every catalogue sound's .caf, the first-party tones included, so each
-# is in the app bundle where AlarmKit can play it (docs/15-alarms.md); the
+# is in the app bundle where AlarmKit can play it (docs/15-wake-up.md); the
 # first-party start-up copy to Library/Sounds stays too (docs/12 §4).
 # macOS already bundles the first-party files from assets/sounds, so a
 # catalogue .caf of the same name isn't added twice.

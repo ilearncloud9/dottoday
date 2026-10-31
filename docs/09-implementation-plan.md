@@ -392,7 +392,7 @@ Spec: `12-sounds.md` (with the owner's amendments, 2026-10-28); ADR-0015; `11-st
 - [x] M15.5 Docs. ADR-0015, this milestone, the roadmap pointer, the F6.6 parity row, the CHANGELOG. Done 2026-10-30.
 - [x] M15.6 Ten more Start sounds (owner, 2026-10-31). Done 2026-10-31. **Files** `assets/sounds/manifest.json` (Slow bell, Music box, Dawn chorus, Rain, Stream, Waves, Wind chimes, Forest, Clock bell, Beep rise; CC0 from BigSoundBank and Freesound, uploader kept as `author`), `tool/sounds/fetch.py` (per-source file host; brand words refused), `tool/sounds/build.py` (seamless 27 s loops with a 1.5 s crossfaded seam, 10 s fade-in on all but Clock bell and Beep rise; Start up to 28 s; an IMA4 `.caf` of each first-party tone for the iOS bundle), `tool/sounds/credits.py` (CC0 sources listed), `tool/xcode_add_sounds.rb` (every catalogue sound in the iOS bundle), `test/policy/ios_bundled_sounds_test.dart`. Notes:
   - Quiet outliers after the 6 dB limiter, kept in the owner's ear pass (2026-10-31, all ten kept) with `loudnessAccepted`: Music box, Rain, Wind chimes, Forest.
-  - The fade-in is baked into the loop, so each repeat fades in again; the Alarms milestone's code-side ramp replaces it on Android.
+  - The fade-in is baked into the loop, so each repeat fades in again; M17 Wake Up's Android volume ramp (W1b) replaces it there.
   - About 15 MB more across platforms (27 s files).
 
 Follow-ups:
@@ -436,15 +436,39 @@ Follow-ups:
 - [x] The Mac/web `TaskEditor` panel in its minimal form (§3 "Mac/web spread … panel"). Done 2026-10-31, found by the Mac sweep: in minimal the panel shows the minimal sheet (Done · Tomorrow · Later · Delete); More opens the editor in the panel.
 - [x] Device and web sweep entries for the minimal screens: M16.11.
 
-## Milestone 17 — Alarms (goal: the Start sound rings through silent mode, like an alarm, where the OS allows it)
+## Milestone 17 — Wake Up (goal: the Wake Up time rings like an alarm when the user asks for it, the morning opens on the day, and the night between Wind Down and Wake Up is planned and visible)
 
-Spec: `15-alarms.md` (stub; owner, 2026-10-31); ADR-0015 ("every Start-tier sound is authored to be AlarmKit-eligible"); `11-standout-roadmap.md` A0. Not started. Must-ask before starting: a native target or new dependency, if the design needs one (CLAUDE.md §10).
+Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit `docs/audits/m17-wake-up-inventory.md`; ADR-0017 (written with W1b). Rules:
 
-- [ ] M17.1 Real-device test: does AlarmKit repeat a custom bundled `.caf` until stopped, or play it once? Record the answer in `15-alarms.md` §3 before M17.2's design is fixed.
-- [ ] M17.2 iOS 26+: the alarm-loud tier schedules an AlarmKit alarm with the Start sound from the app bundle (bundle sounds only; every catalogue `.caf` is already there).
-- [ ] M17.3 Below iOS 26: fall back to the A0 time-sensitive tier, and Settings › Reminders shows "Alarms that ring through silent mode need iOS 26".
-- [ ] M17.4 Android: a foreground service plays the Start sound on `USAGE_ALARM`, with a code-side volume ramp.
-- [ ] M17.5 macOS and web: R-13 exception recorded (no OS alarm path); docs, CHANGELOG.
+- **Nothing changes until opted in:** nothing rings or moves differently until the user opts in (§11).
+- **No-shame:** every string passes `no_shame_copy` (the M17 words added with the first strings that need them).
+- **Minimal mode:** every surface has a minimal-mode variant through `LayoutPolicy`.
+- **Platforms:** W1–W3 and W5 are mobile only; W4 + W6 apply on every platform.
+- **Delivery:** one PR per piece, each from `origin/main`, with a screenshot sweep before each close. Version 1.2.0.
+
+- [x] M17.0 Audit + docs: inventory, doc 15 renumbered and the owner's decisions recorded, doc 14 sleep-block row fixed, Play full-screen-intent declaration in 08 §6.1 C. Branch `docs/wake-up-audit`.
+- [ ] M17.1 W1a Wake Up alarm on the existing path (`feat/wake-up-w1`):
+  - **Setting:** `Settings.wakeUpAlarm` (synced, default off), with a row in Settings › Day shape and an onboarding offer that defaults to on for new users.
+  - **The alarm:** one loud notification a day at the Wake Up time, planned by `NotificationPlanner` with Android `alarmClock` scheduling.
+  - **First-dot rule:** when the alarm is on and the first dot starts within 30 min of Wake Up, the first dot's start is a normal notification.
+  - **Capabilities:** an `AlarmGateway` port with `capabilities()` (tier + blockers), using a Kotlin `canUseFullScreenIntent()` check.
+  - **Health:** a Wake Up row in Notification health with its fix button.
+  - **Release:** version 1.2.0.
+- [ ] M17.2 W1b Alarm grade:
+  - **iOS 26+:** the in-house AlarmKit bridge (availability-checked); the countdown view goes in `DottodayWidgets`; add `NSAlarmKitUsageDescription`.
+  - **Android:** the ringing activity and a foreground service capped at 10 min.
+  - **Shared:** snooze, the `wake_up_days` state (local only) and sound rotation.
+  - **Docs:** ADR-0017.
+  - **Bundle sounds** (owner, 2026-10-31): every Start-tier sound is authored to be AlarmKit-eligible and is already in the iOS bundle (ADR-0015, docs/12 §2.3.1). First, a real-device test records whether AlarmKit repeats a custom bundled `.caf` until stopped or plays it once (`15-wake-up.md` W1).
+- [ ] M17.3 W2 Wake Up card. Late start reuses `openRebalance`, and a test proves nothing is written before Accept.
+- [ ] M17.4 W3 Wake Up Check: the `StartEscalation` scheduler, built once from `noStartAt` with the wake-up input, the deferred A0 dot-start input, and Smallest step as a consumer.
+- [ ] M17.5 W4 + W6 (one PR):
+  - **Wind Down maths:** `effectiveWindDown`, the sleep target, and the onboarding sleep slider.
+  - **Night arc:** one shared geometry function, used by `DayDot`, `WeekDayDot`, the Mac menu bar and the iOS/Android widgets, with `tomorrowWake` in the snapshot. The arc shows on Today, the menu bar and the widgets, not the Live Activity.
+  - **Review and nudge:** the review's opening line and the nudge wording; the review also shows on fully-done days, and the Wind Down notification opens it; the one-time sleep offer for existing users.
+  - **Rename:** Bedtime → Wind Down in identifiers, comments and docs. The synced key `bedtimeReminder` stays, with a comment.
+- [ ] M17.6 Discovery (§11) on the M16 hint scheduler.
+- [ ] M17.7 W5 Physical dismissal. Its sensor plugins are a must-ask.
 
 ## Follow-ups after M12 (found at the M12.6 ship-check)
 

@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 
-// docs/15-alarms.md: AlarmKit plays only sounds in the app bundle, so every
+// docs/15-wake-up.md: AlarmKit plays only sounds in the app bundle, so every
 // catalogue sound — the first-party tones too — has a `.caf` in the iOS
 // Runner target (tool/xcode_add_sounds.rb; build.py writes the files). And
 // iOS plays the default sound instead of one that is over 30 s or not a

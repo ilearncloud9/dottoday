@@ -40,7 +40,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Shift the rest / Running late | built | Simplified | One button on the live dot; before/after preview, Accept or Discard |
 | Wake Up / Wind Down | built | Shown | Set once in onboarding; never on Today |
 | Tap a Wake Up / Wind Down cap to change its time | built | Hidden | The caps stay plain labels; the times change in onboarding or Settings (owner, 2026-10-31: Wind Down rename and tappable caps) |
-| Wind Down sleep block | built | Hidden | Thread ends at Wind Down; no sleep segment drawn |
+| Wind Down sleep block | not built | Hidden | No sleep block exists: the thread ends at the Wind Down cap and draws no sleep segment; the row is a no-op (M17 audit, `docs/audits/m17-wake-up-inventory.md`) |
 | Notifications + sound library | built | Simplified | One switch "Remind me when a dot starts", one default tone; library under More |
 | Wind Down review, daily | built | Simplified | One card: "3 things left — tomorrow or Later?"; one tap, then the snapshot writes |
 | Sign-in and sync | built | Shown | Silent; one Settings row |

@@ -48,7 +48,7 @@ hears or configured changes on upgrade.**
   iOS app bundle as IMA4 `.caf`, mono, 44.1 kHz, under 30 s; the long ones as seamless 25–28 s
   loops. The first-party tones get a bundle `.caf` too; the `Library/Sounds` copy stays. Ten CC0
   Start sounds (BigSoundBank, Freesound) join the catalogue: 58 sounds, 20 Start, 48 new
-  channels. The alarm engine itself is the Alarms milestone (`docs/15-alarms.md`).
+  channels. The alarm engine itself is M17 Wake Up (W1b, `docs/15-wake-up.md`).
 - **Credits.** One line per source on the Sounds page ("Sounds from notificationsounds.com (CC BY
   4.0)."), and the full notice in About › Licences. Both are generated from the manifest, so a new
   source can't ship uncredited.

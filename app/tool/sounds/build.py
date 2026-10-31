@@ -36,7 +36,7 @@ rewritten from the result (CREDITS.md is credits.py's). First-party entries
 (tool/gen_sounds.dart) are never rebuilt, only measured; each also gets
 an IMA4 `.caf` copy of the same audio in ios/Runner/Sounds, so every
 catalogue sound is in the iOS app bundle (AlarmKit plays bundle sounds
-only, docs/15-alarms.md). Originals may be FLAC, Ogg or MP3.
+only, docs/15-wake-up.md). Originals may be FLAC, Ogg or MP3.
 """
 
 from __future__ import annotations
