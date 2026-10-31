@@ -5,15 +5,19 @@ import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
+import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/inbox/state/inbox_state.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_add_field.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_commands.dart';
 import 'package:dottoday/features/inbox/widgets/wide_inbox.dart';
+import 'package:dottoday/shared/dot/inbox_beside.dart';
 import 'package:dottoday/shared/dot/inbox_row.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/sync/sync_status_line.dart';
@@ -26,8 +30,10 @@ import 'package:timezone/timezone.dart' as tz;
 /// §4 "Inbox as a 300 px sidebar on Today", `A-mac-week-alt3-board`):
 /// drag a row onto a free gap to plan it (M3e.2). It shows once [child]
 /// keeps the expanded width beside it (a window of ~1 140 px with the
-/// rail); narrower windows get [child] alone. Composed at the app root, so no feature imports another.
-class InboxSidebarFrame extends StatelessWidget {
+/// rail); narrower windows get [child] alone, and so does the minimal
+/// layout, whose Inbox is Today's Later row (docs/14 §3). Composed at the
+/// app root, so no feature imports another.
+class InboxSidebarFrame extends ConsumerWidget {
   const InboxSidebarFrame({required this.child, super.key});
 
   final Widget child;
@@ -35,11 +41,14 @@ class InboxSidebarFrame extends StatelessWidget {
   static const width = 300.0;
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
+  Widget build(BuildContext context, WidgetRef ref) => LayoutBuilder(
     builder: (context, box) {
       // Only when what is beside it stays expanded: a narrower Today would
       // fall back to the pager, a narrower Week would scroll sideways.
       if (box.maxWidth - width < WidthClass.expandedFrom) return child;
+      if (watchFeature(ref, FeatureId.inbox) != FeatureVisibility.shown) {
+        return child;
+      }
       final c = DotTheme.of(context).colors;
       return Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -51,7 +60,7 @@ class InboxSidebarFrame extends StatelessWidget {
             child: Material(color: c.surface, child: const _Sidebar()),
           ),
           VerticalDivider(width: DotSpace.hairline, color: c.outline),
-          Expanded(child: child),
+          Expanded(child: InboxBeside(child: child)),
         ],
       );
     },

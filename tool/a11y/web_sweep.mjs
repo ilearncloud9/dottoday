@@ -37,6 +37,8 @@ async function tapText(page, text) {
     page.getByRole('menuitem', { name: text, exact: true }),
     page.getByRole('button', { name: text, exact: true }),
     page.getByRole('tab', { name: text, exact: true }),
+    // Onboarding step 0's cards are radio buttons (M16).
+    page.getByRole('radio', { name: text, exact: true }),
     page.getByText(text, { exact: true }),
   ];
   const end = Date.now() + 30_000;
@@ -51,6 +53,20 @@ async function tapText(page, text) {
     await page.waitForTimeout(500);
   }
   throw new Error(`nothing called "${text}"`);
+}
+
+// Flutter builds a long list lazily: wheel down until [text] exists,
+// then bring it into view (the M16 Layout row moved LEARNING down).
+async function scrollToText(page, text) {
+  const target = page.getByText(text).first();
+  for (let i = 0; i < 20 && (await target.count()) === 0; i++) {
+    const vp = page.viewportSize();
+    await page.mouse.move(vp.width / 2, vp.height / 2);
+    await page.mouse.wheel(0, 300);
+    await page.waitForTimeout(300);
+  }
+  await target.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(900);
 }
 
 async function go(page, route) {
@@ -153,8 +169,7 @@ for (const theme of ['light', 'dark']) {
       // M13 (docs/13 §11): Settings › Learning, and a learned value's
       // explanation open on the reality thread.
       await fresh('/settings');
-      await page.getByText('LEARNING').first().scrollIntoViewIfNeeded();
-      await page.waitForTimeout(900);
+      await scrollToText(page, 'LEARNING');
       await shot('settings_learning');
       await fresh('/today');
       await tapText(page, 'Reality');
@@ -167,9 +182,7 @@ for (const theme of ['light', 'dark']) {
       // model). Headless Chromium has no on-device speech, so the sheet
       // shows no mic (D2); the mic states are goldens.
       await fresh('/settings/privacy');
-      await page.getByText('Clear thinking history').first()
-        .scrollIntoViewIfNeeded();
-      await page.waitForTimeout(900);
+      await scrollToText(page, 'Clear thinking history');
       await shot('privacy_ai_status');
       await fresh('/today');
       await tap(page, 'More options');

@@ -30,6 +30,10 @@ seen=""
 while kill -0 "$drive" 2>/dev/null; do
   for name in $(grep -o 'SWEEP_SHOT [a-z_]*' "$log" | cut -d' ' -f2); do
     case " $seen " in *" $name "*) continue ;; esac
+    # Stage Manager draws a window outside the active stage as a small
+    # thumbnail, which is what -l then captures: bring the app forward
+    # (the running instance; nothing relaunches) before each shot.
+    open build/macos/Build/Products/Debug/dottoday.app 2>/dev/null || true
     sleep 1
     screencapture -x -o -l"$(winid)" "build/sweep/$name.png"
     seen="$seen $name"
