@@ -432,6 +432,39 @@ Follow-ups:
 - [x] The Mac/web `TaskEditor` panel in its minimal form (§3 "Mac/web spread … panel"). Done 2026-10-31, found by the Mac sweep: in minimal the panel shows the minimal sheet (Done · Tomorrow · Later · Delete); More opens the editor in the panel.
 - [x] Device and web sweep entries for the minimal screens: M16.11.
 
+## Milestone 17 — Wake Up (goal: the Wake Up time rings like an alarm when the user asks for it, the morning opens on the day, and the night between Wind Down and Wake Up is planned and visible)
+
+Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit `docs/audits/m17-wake-up-inventory.md`; ADR-0017 (written with W1b). Rules:
+
+- **Nothing changes until opted in:** nothing rings or moves differently until the user opts in (§11).
+- **No-shame:** every string passes `no_shame_copy` (the M17 words added with the first strings that need them).
+- **Minimal mode:** every surface has a minimal-mode variant through `LayoutPolicy`.
+- **Platforms:** W1–W3 and W5 are mobile only; W4 + W6 apply on every platform.
+- **Delivery:** one PR per piece, each from `origin/main`, with a screenshot sweep before each close. Version 1.2.0.
+
+- [x] M17.0 Audit + docs: inventory, doc 15 renumbered and the owner's decisions recorded, doc 14 sleep-block row fixed, Play full-screen-intent declaration in 08 §6.1 C. Branch `docs/wake-up-audit`.
+- [ ] M17.1 W1a Wake Up alarm on the existing path (`feat/wake-up-w1`):
+  - **Setting:** `Settings.wakeUpAlarm` (synced, default off), with a row in Settings › Day shape and an onboarding offer that defaults to on for new users.
+  - **The alarm:** one loud notification a day at the Wake Up time, planned by `NotificationPlanner` with Android `alarmClock` scheduling.
+  - **First-dot rule:** when the alarm is on and the first dot starts within 30 min of Wake Up, the first dot's start is a normal notification.
+  - **Capabilities:** an `AlarmGateway` port with `capabilities()` (tier + blockers), using a Kotlin `canUseFullScreenIntent()` check.
+  - **Health:** a Wake Up row in Notification health with its fix button.
+  - **Release:** version 1.2.0.
+- [ ] M17.2 W1b Alarm grade:
+  - **iOS 26+:** the in-house AlarmKit bridge (availability-checked); the countdown view goes in `DottodayWidgets`; add `NSAlarmKitUsageDescription`.
+  - **Android:** the ringing activity and a foreground service capped at 10 min.
+  - **Shared:** snooze, the `wake_up_days` state (local only) and sound rotation.
+  - **Docs:** ADR-0017.
+- [ ] M17.3 W2 Wake Up card. Late start reuses `openRebalance`, and a test proves nothing is written before Accept.
+- [ ] M17.4 W3 Wake Up Check: the `StartEscalation` scheduler, built once from `noStartAt` with the wake-up input, the deferred A0 dot-start input, and Smallest step as a consumer.
+- [ ] M17.5 W4 + W6 (one PR):
+  - **Wind Down maths:** `effectiveWindDown`, the sleep target, and the onboarding sleep slider.
+  - **Night arc:** one shared geometry function, used by `DayDot`, `WeekDayDot`, the Mac menu bar and the iOS/Android widgets, with `tomorrowWake` in the snapshot. The arc shows on Today, the menu bar and the widgets, not the Live Activity.
+  - **Review and nudge:** the review's opening line and the nudge wording; the review also shows on fully-done days, and the Wind Down notification opens it; the one-time sleep offer for existing users.
+  - **Rename:** Bedtime → Wind Down in identifiers, comments and docs. The synced key `bedtimeReminder` stays, with a comment.
+- [ ] M17.6 Discovery (§11) on the M16 hint scheduler.
+- [ ] M17.7 W5 Physical dismissal. Its sensor plugins are a must-ask.
+
 ## Follow-ups after M12 (found at the M12.6 ship-check)
 
 - [x] Web: a popover's autofocused text field (Add, Brain dump) shows a caret but takes keys only after a click, in the browser pane's Chromium and headless Chromium; on phones and the Mac it types at once. Check real desktop Chrome (08 §6.1 E), then hand the field DOM focus when the popover opens. The web sweep clicks first and notes it. Done 2026-10-26. Cause (traced in the browser): Brain dump opens from Today's ⋯ menu; with semantics on, the menu item's DOM element holds the browser focus and goes away as the menu closes, so the engine reports the Flutter view unfocused. When the popover's field then takes DOM focus, the view counts as refocused and the framework (`_ViewState.didChangeViewFocus`) moves Flutter's focus to the first traversable node in the view — the app-wide key catcher in `AppCommandScope` — so the field lost focus for a moment, and the engine's deferred blur of the closed connection then left the browser's focus on `flutter-view` with the caret still drawn. Add from a button never lost the view's focus, which is why it typed. Fix: the key catcher is `skipTraversal: true` (no Tab stop, like `TodayKeys`), so the framework falls back to the focused route — the popover — and the field keeps its focus; nothing is done per field (rejected: a web-only DOM refocus, deferring sheets until a menu closes — tried, still failed — and the menu on the root navigator — tried, still failed). Tests: `test/core/shortcuts/app_command_scope_focus_test.dart` replays the view's unfocus/refocus with a sheet (compact) and a popover (expanded) open — fails without the fix; `tool/a11y/popover_focus_check.mjs` (CI a11y-web) opens Add and Brain dump at 390 and 1280 and types without a click — fails on the old build (`<flutter-view>`), passes now; the keyboard checks still pass. The check also times each field, from the tap to the field's focus, and fails past 3 s (owner, 2026-10-26: slower focus on a phone browser is a bug, not a slow runner); the times are printed in CI. The web sweep types into the brain dump at both widths again.
