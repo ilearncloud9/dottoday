@@ -390,6 +390,10 @@ Spec: `12-sounds.md` (with the owner's amendments, 2026-10-28); ADR-0015; `11-st
   - The muted banner is Android-only (an R-13 exception: iOS has no API for the silent switch).
   - CI: the reference sheet moved to its own job after it pushed the golden gate past its 30-minute limit.
 - [x] M15.5 Docs. ADR-0015, this milestone, the roadmap pointer, the F6.6 parity row, the CHANGELOG. Done 2026-10-30.
+- [x] M15.6 Ten more Start sounds (owner, 2026-10-31). Done 2026-10-31. **Files** `assets/sounds/manifest.json` (Slow bell, Music box, Dawn chorus, Rain, Stream, Waves, Wind chimes, Forest, Clock bell, Beep rise; CC0 from BigSoundBank and Freesound, uploader kept as `author`), `tool/sounds/fetch.py` (per-source file host; brand words refused), `tool/sounds/build.py` (seamless 27 s loops with a 1.5 s crossfaded seam, 10 s fade-in on all but Clock bell and Beep rise; Start up to 28 s; an IMA4 `.caf` of each first-party tone for the iOS bundle), `tool/sounds/credits.py` (CC0 sources listed), `tool/xcode_add_sounds.rb` (every catalogue sound in the iOS bundle), `test/policy/ios_bundled_sounds_test.dart`. Notes:
+  - Quiet outliers after the 6 dB limiter, kept in the owner's ear pass (2026-10-31, all ten kept) with `loudnessAccepted`: Music box, Rain, Wind chimes, Forest.
+  - The fade-in is baked into the loop, so each repeat fades in again; M17 Wake Up's Android volume ramp (W1b) replaces it there.
+  - About 15 MB more across platforms (27 s files).
 
 Follow-ups:
 - [ ] App size: the catalogue adds about 7 MB, mostly the Start sounds. Measure a 15 s Start cap, which would roughly halve it, in the ear pass before a store build.
@@ -455,6 +459,7 @@ Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit 
   - **Android:** the ringing activity and a foreground service capped at 10 min.
   - **Shared:** snooze, the `wake_up_days` state (local only) and sound rotation.
   - **Docs:** ADR-0017.
+  - **Bundle sounds** (owner, 2026-10-31): every Start-tier sound is authored to be AlarmKit-eligible and is already in the iOS bundle (ADR-0015, docs/12 §2.3.1). First, a real-device test records whether AlarmKit repeats a custom bundled `.caf` until stopped or plays it once (`15-wake-up.md` W1).
   - **Done 2026-10-31:**
     - `AlarmGateway.sync` arms the week, and the planner leaves out what it armed (R-10).
     - iOS 26: `AlarmBridge.swift`, `WakeUpAlarmKit.swift` (weak-linked) and `WakeUpAlarmActivity` in `DottodayWidgets`.
@@ -479,7 +484,7 @@ Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit 
 Follow-ups (M17):
 - [ ] "Vary the sound": choose which 2–6 Start sounds rotate (15 §9); M17.2 rotates through all but Insistent.
 - [ ] §2 blockers not yet read: battery optimisation (its own health row already exists) and Do Not Disturb with the "Alarms" exception off (`dndAlarmsBlocked`), each with its fix in the Wake Up row.
-- [ ] Real-device gates for the Wake Up alarm (08 §6.1 C): iOS 26 force-quit + Silent, Android 14 in Doze, no AlarmKit alarm after uninstall.
+- [ ] Real-device gates for the Wake Up alarm (08 §6.1 C): iOS 26 force-quit + Silent, Android 14 in Doze, no AlarmKit alarm after uninstall; on the same iPhone, record whether AlarmKit loops a bundled Start `.caf` until stopped (the Bundle sounds note under M17.2).
 
 ## Follow-ups after M12 (found at the M12.6 ship-check)
 

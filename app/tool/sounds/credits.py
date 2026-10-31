@@ -3,7 +3,9 @@
 Run from app/:  python3 -I tool/sounds/credits.py
 
 docs/12-sounds.md §1: one section per credited source (its licence notice,
-then one row per sound with its source page), and the first-party tones.
+then one row per sound with its source page), the CC0 sources (no credit
+needed, listed anyway so every sound's origin is on record), and the
+first-party tones.
 test/policy/sounds_manifest_test.dart fails when this file is stale.
 """
 
@@ -38,12 +40,33 @@ def credits_markdown(manifest: dict) -> str:
                 lines.append(f"| `{s['id']}` | {s['name']} | {s['sourceTitle']}"
                              f" | <{s['sourceUrl']}> | {also} |")
         lines.append("")
+    lines += _public_domain(manifest)
     first_party = [s["name"] for s in manifest["sounds"]
-                   if not manifest["sources"][s["source"]].get("credit")]
+                   if s["source"] == "dottoday"]
     lines += ["## Made for Dottoday", "",
               "Synthesised by `app/tool/gen_sounds.dart`; no third-party audio: "
               + ", ".join(first_party) + ".", ""]
     return "\n".join(lines)
+
+
+def _public_domain(manifest: dict) -> list[str]:
+    """One section per CC0 source: who recorded each sound, and where."""
+    lines = []
+    for key, source in manifest["sources"].items():
+        if source.get("credit") or key == "dottoday":
+            continue
+        lines += [f"## {source['name']}", "",
+                  f"<{source['url']}>, {source['license']} (public domain; "
+                  "no credit required). Trimmed, looped, faded and "
+                  "loudness-normalised for Dottoday.", "",
+                  "| Dottoday id | Dottoday name | Original | Author | Source page |",
+                  "|---|---|---|---|---|"]
+        for s in manifest["sounds"]:
+            if s["source"] == key:
+                lines.append(f"| `{s['id']}` | {s['name']} | {s['sourceTitle']}"
+                             f" | {s['author']} | <{s['sourceUrl']}> |")
+        lines.append("")
+    return lines
 
 
 if __name__ == "__main__":

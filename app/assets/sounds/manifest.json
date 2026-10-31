@@ -13,7 +13,27 @@
       "license": "CC-BY-4.0",
       "modified": true,
       "credit": true,
-      "notice": "Notification sounds from notificationsounds.com, © Notification Sounds, licensed CC BY 4.0 (creativecommons.org/licenses/by/4.0). Files were trimmed, downmixed to mono, shortened to fit or looped where noted, and loudness-normalised."
+      "notice": "Notification sounds from notificationsounds.com, © Notification Sounds, licensed CC BY 4.0 (creativecommons.org/licenses/by/4.0). Files were trimmed, downmixed to mono, shortened to fit or looped where noted, and loudness-normalised.",
+      "fileHost": "notificationsounds.com",
+      "filePathPrefix": "/storage/sounds/"
+    },
+    "bigsoundbank": {
+      "name": "BigSoundBank",
+      "url": "https://bigsoundbank.com",
+      "license": "CC0-1.0",
+      "modified": true,
+      "credit": false,
+      "fileHost": "bigsoundbank.com",
+      "filePathPrefix": "/UPLOAD/"
+    },
+    "freesound": {
+      "name": "Freesound",
+      "url": "https://freesound.org",
+      "license": "CC0-1.0",
+      "modified": true,
+      "credit": false,
+      "fileHost": "cdn.freesound.org",
+      "filePathPrefix": "/previews/"
     }
   },
   "sounds": [
@@ -520,6 +540,222 @@
       "durationMs": 18262,
       "loudnessLufs": -14.0,
       "truePeakDbtp": -9.9
+    },
+    {
+      "id": "start.slow_bell",
+      "category": "start",
+      "name": "Slow bell",
+      "file": "start_slow_bell",
+      "source": "bigsoundbank",
+      "sourceTitle": "1 pendulum chime",
+      "author": "Joseph SARDIN & Axeline T.",
+      "sourceUrl": "https://bigsoundbank.com/1-pendulum-chime-s3360.html",
+      "fileUrl": "https://bigsoundbank.com/UPLOAD/flac/3360.flac",
+      "license": "CC0-1.0",
+      "modified": true,
+      "loop": {
+        "toMs": 27000,
+        "crossfadeMs": 1500
+      },
+      "fadeInMs": 10000,
+      "durationMs": 27000,
+      "loudnessLufs": -16.8,
+      "truePeakDbtp": -1.0
+    },
+    {
+      "id": "start.music_box",
+      "category": "start",
+      "name": "Music box",
+      "file": "start_music_box",
+      "source": "bigsoundbank",
+      "sourceTitle": "The music box Temps Des Cerises",
+      "author": "Joseph SARDIN",
+      "sourceUrl": "https://bigsoundbank.com/the-music-box-temps-des-cerises-s0195.html",
+      "fileUrl": "https://bigsoundbank.com/UPLOAD/ogg/0195.ogg",
+      "license": "CC0-1.0",
+      "modified": true,
+      "loop": {
+        "toMs": 27000,
+        "crossfadeMs": 1500
+      },
+      "fadeInMs": 10000,
+      "lossySource": true,
+      "durationMs": 27000,
+      "loudnessLufs": -26.6,
+      "truePeakDbtp": -1.1,
+      "loudnessAccepted": true
+    },
+    {
+      "id": "start.dawn_chorus",
+      "category": "start",
+      "name": "Dawn chorus",
+      "file": "start_dawn_chorus",
+      "source": "bigsoundbank",
+      "sourceTitle": "Birds Waking #4",
+      "author": "Joseph SARDIN",
+      "sourceUrl": "https://bigsoundbank.com/birds-waking-4-s1906.html",
+      "fileUrl": "https://bigsoundbank.com/UPLOAD/flac/1906.flac",
+      "license": "CC0-1.0",
+      "modified": true,
+      "loop": {
+        "toMs": 27000,
+        "crossfadeMs": 1500
+      },
+      "fadeInMs": 10000,
+      "durationMs": 27000,
+      "loudnessLufs": -15.6,
+      "truePeakDbtp": -1.1
+    },
+    {
+      "id": "start.rain",
+      "category": "start",
+      "name": "Rain",
+      "file": "start_rain",
+      "source": "freesound",
+      "sourceTitle": "180219 Rain, modulating light drips on leaves BAHAMAS.flac",
+      "author": "TRP",
+      "sourceUrl": "https://freesound.org/people/TRP/sounds/572267/",
+      "fileUrl": "https://cdn.freesound.org/previews/572/572267_97550-hq.mp3",
+      "license": "CC0-1.0",
+      "modified": true,
+      "loop": {
+        "toMs": 27000,
+        "crossfadeMs": 1500
+      },
+      "fadeInMs": 10000,
+      "lossySource": true,
+      "durationMs": 27000,
+      "loudnessLufs": -27.4,
+      "truePeakDbtp": -1.2,
+      "loudnessAccepted": true
+    },
+    {
+      "id": "start.stream",
+      "category": "start",
+      "name": "Stream",
+      "file": "start_stream",
+      "source": "bigsoundbank",
+      "sourceTitle": "Brooklet",
+      "author": "Joseph SARDIN",
+      "sourceUrl": "https://bigsoundbank.com/brooklet-s0864.html",
+      "fileUrl": "https://bigsoundbank.com/UPLOAD/flac/0864.flac",
+      "license": "CC0-1.0",
+      "modified": true,
+      "loop": {
+        "toMs": 27000,
+        "crossfadeMs": 1500
+      },
+      "fadeInMs": 10000,
+      "durationMs": 27000,
+      "loudnessLufs": -14.8,
+      "truePeakDbtp": -1.0
+    },
+    {
+      "id": "start.waves",
+      "category": "start",
+      "name": "Waves",
+      "file": "start_waves",
+      "source": "bigsoundbank",
+      "sourceTitle": "Beach: Small Waves",
+      "author": "DenisChardonnet",
+      "sourceUrl": "https://bigsoundbank.com/beach-small-waves-s0265.html",
+      "fileUrl": "https://bigsoundbank.com/UPLOAD/ogg/0265.ogg",
+      "license": "CC0-1.0",
+      "modified": true,
+      "loop": {
+        "toMs": 27000,
+        "crossfadeMs": 1500
+      },
+      "fadeInMs": 10000,
+      "lossySource": true,
+      "durationMs": 27000,
+      "loudnessLufs": -15.9,
+      "truePeakDbtp": -1.0
+    },
+    {
+      "id": "start.wind_chimes",
+      "category": "start",
+      "name": "Wind chimes",
+      "file": "start_wind_chimes",
+      "source": "bigsoundbank",
+      "sourceTitle": "Cluster Chimes #1",
+      "author": "Pierre SIBANARCO",
+      "sourceUrl": "https://bigsoundbank.com/cluster-chimes-1-s2687.html",
+      "fileUrl": "https://bigsoundbank.com/UPLOAD/flac/2687.flac",
+      "license": "CC0-1.0",
+      "modified": true,
+      "loop": {
+        "toMs": 27000,
+        "crossfadeMs": 1500
+      },
+      "fadeInMs": 10000,
+      "durationMs": 27000,
+      "loudnessLufs": -21.3,
+      "truePeakDbtp": -1.2,
+      "loudnessAccepted": true
+    },
+    {
+      "id": "start.forest",
+      "category": "start",
+      "name": "Forest",
+      "file": "start_forest",
+      "source": "bigsoundbank",
+      "sourceTitle": "Forest #3",
+      "author": "Pierre SIBANARCO",
+      "sourceUrl": "https://bigsoundbank.com/forest-3-s2715.html",
+      "fileUrl": "https://bigsoundbank.com/UPLOAD/flac/2715.flac",
+      "license": "CC0-1.0",
+      "modified": true,
+      "loop": {
+        "toMs": 27000,
+        "crossfadeMs": 1500
+      },
+      "fadeInMs": 10000,
+      "durationMs": 27000,
+      "loudnessLufs": -21.1,
+      "truePeakDbtp": -1.1,
+      "loudnessAccepted": true
+    },
+    {
+      "id": "start.clock_bell",
+      "category": "start",
+      "name": "Clock bell",
+      "file": "start_clock_bell",
+      "source": "bigsoundbank",
+      "sourceTitle": "Mechanical alarm clock, long ring #1",
+      "author": "Joseph SARDIN",
+      "sourceUrl": "https://bigsoundbank.com/mechanical-alarm-clock-long-ring-1-s1374.html",
+      "fileUrl": "https://bigsoundbank.com/UPLOAD/flac/1374.flac",
+      "license": "CC0-1.0",
+      "modified": true,
+      "loop": {
+        "toMs": 27000,
+        "crossfadeMs": 1500
+      },
+      "durationMs": 27000,
+      "loudnessLufs": -14.4,
+      "truePeakDbtp": -1.4
+    },
+    {
+      "id": "start.beep_rise",
+      "category": "start",
+      "name": "Beep rise",
+      "file": "start_beep_rise",
+      "source": "freesound",
+      "sourceTitle": "alarm clock buzzer alarm beep",
+      "author": "Garuda1982",
+      "sourceUrl": "https://freesound.org/people/Garuda1982/sounds/530172/",
+      "fileUrl": "https://cdn.freesound.org/previews/530/530172_2061858-hq.mp3",
+      "license": "CC0-1.0",
+      "modified": true,
+      "loop": {
+        "toMs": 27000,
+        "crossfadeMs": 1500
+      },
+      "lossySource": true,
+      "durationMs": 27000,
+      "loudnessLufs": -14.0,
+      "truePeakDbtp": -2.6
     },
     {
       "id": "play.rooster",

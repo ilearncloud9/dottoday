@@ -6120,6 +6120,66 @@ abstract class AppLocalizations {
   /// **'Insistent'**
   String get soundStartInsistent;
 
+  /// Name of a bundled sound (docs/12): a single soft bell, repeating slowly.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow bell'**
+  String get soundStartSlowBell;
+
+  /// Name of a bundled sound (docs/12): a slow, gentle music box.
+  ///
+  /// In en, this message translates to:
+  /// **'Music box'**
+  String get soundStartMusicBox;
+
+  /// Name of a bundled sound (docs/12): birdsong at first light, a recording.
+  ///
+  /// In en, this message translates to:
+  /// **'Dawn chorus'**
+  String get soundStartDawnChorus;
+
+  /// Name of a bundled sound (docs/12): light rain on leaves.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get soundStartRain;
+
+  /// Name of a bundled sound (docs/12): a small brook, close up.
+  ///
+  /// In en, this message translates to:
+  /// **'Stream'**
+  String get soundStartStream;
+
+  /// Name of a bundled sound (docs/12): a calm shoreline.
+  ///
+  /// In en, this message translates to:
+  /// **'Waves'**
+  String get soundStartWaves;
+
+  /// Name of a bundled sound (docs/12): soft chimes in a light breeze.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind chimes'**
+  String get soundStartWindChimes;
+
+  /// Name of a bundled sound (docs/12): a forest morning with distant birds.
+  ///
+  /// In en, this message translates to:
+  /// **'Forest'**
+  String get soundStartForest;
+
+  /// Name of a bundled sound (docs/12): a mechanical alarm-clock bell.
+  ///
+  /// In en, this message translates to:
+  /// **'Clock bell'**
+  String get soundStartClockBell;
+
+  /// Name of a bundled sound (docs/12): a digital beep that gets louder.
+  ///
+  /// In en, this message translates to:
+  /// **'Beep rise'**
+  String get soundStartBeepRise;
+
   /// Name of a bundled sound (docs/12): a rooster crowing.
   ///
   /// In en, this message translates to:
