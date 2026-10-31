@@ -155,6 +155,11 @@ Trials and lifetime unlocks are store-managed (introductory offers / non-consuma
 | **M11 Control** | C1 Rebalance, C3 Reality thread, C2 Routines, C4 energy (behind switch) | ghost thread golden; learning tests on synthetic history |
 | **M12 Reflect + capture** | D1 weekly + share, D2 low-energy, D3 journal, B6 capture anywhere, B4 brain-dump | no-streak audit of every string |
 | **M13 Learning reveal** (retrofit) | `13-learning-reveal.md`: `LearningThresholds`, Settings › Learning, reality gate + caption + highlight, step lengths (`subtasks.done_at`, ADR-0012), explain on demand + reset | threshold tests on synthetic history; nothing learned shows before its threshold |
-| Phase 2 (ideas, not committed — the owner decides later) | F1 Windows/Linux, F2 integrations, E1 body double, A2 wallpaper/watch face, watch app (F3), B5 paper plan, household threads | — |
+| Phase 2 (ideas, not committed — the owner decides later) | F1 Windows/Linux, F2 integrations, E1 body double, A2 wallpaper/watch face, watch app (F3), B5 paper plan, household threads, the Wake Up card's weather chip (decided below) | — |
+
+**Wake Up card weather chip — Phase 2, decided (owner, 2026-10-31).** It was cut from M17 (`15-wake-up.md` §5 step 5, §9 `cardWeather`), and nothing of it ships in the M17 card or its goldens. When it is built:
+- **Provider:** Open-Meteo. It needs no key and no SDK: plain HTTPS through the existing HTTP client, behind a `WeatherGateway` port with a fake for tests. It is the only network call the card makes.
+- **Location:** coarse only (city-level, for example approximate location on Android and reduced accuracy on iOS). It is rounded before it leaves the device and never stored with task data.
+- **Opt-in:** the switch lives in Wake Up options › Morning card, off by default. Location permission is asked the first time it is switched on, never during onboarding.
 
 Done criteria for every task: `10-ui-concept-a.md` §7 unchanged, plus: every proposal flow has a test proving nothing is written before Accept; every new surface reads B5 and calls B6 only; every new string passes the no-shame audit (no "late", "missed streak", "failed", red).

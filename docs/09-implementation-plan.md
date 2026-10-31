@@ -480,7 +480,7 @@ Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit 
     - Settings has a MORNING CARD group under Day shape › Wake Up options, and Notification health has its "Last wake-up" line.
   - **Decided (15 §9 vs §11):** `wakeUpCard` is nullable and, unset, follows the Wake Up alarm, so nothing new opens for anyone who hasn't said yes to Wake Up (written into 15 §9).
   - **Not built:**
-    - The weather chip: a new network provider is a must-ask, so it is left for the owner.
+    - The weather chip: moved to Phase 2 by the owner (2026-10-31; `11-standout-roadmap.md`: Open-Meteo, coarse location, opt-in, off by default).
     - "Your usual Saturday?": C2's weekday match isn't built.
     - The coach marks (§11) are M17.6 Discovery.
     - The day dot's per-colour ring arrives with M17.5's shared geometry.

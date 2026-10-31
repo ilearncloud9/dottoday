@@ -171,7 +171,7 @@ Invariant tested by property test: at most one armed OS alarm per `wake_up_days`
 2. The **day dot** (B5 render) at 96 px, ring split by the day's dots in their colours, all faint because nothing is done yet; centre shows "N planned · ends 21:30".
 3. **First dot, large:** title, icon, planned start, duration, and its first subtask when it has one ("first: lay out running clothes · 2 min"). This is the same row component as the Today live dot.
 4. **Thread strip:** the next 4 dots as a horizontal mini thread (the B1 mini-thread component), tap any to open its sheet.
-5. **Context chips** (each a setting, each off until enabled): calendar events imported for today (M7; count + next one), weather for the device location (new, opt-in, needs location permission, one provider behind a `WeatherGateway`), Inbox count, and "from yesterday: 2 moved here" when C1 pushed tasks.
+5. **Context chips** (each a setting, each off until enabled): calendar events imported for today (M7; count + next one), weather for the device location (new, opt-in, needs location permission, one provider behind a `WeatherGateway`), Inbox count, and "from yesterday: 2 moved here" when C1 pushed tasks. **Owner, 2026-10-31: weather moved to Phase 2** (`11-standout-roadmap.md`, Phase 2: Open-Meteo, coarse location, opt-in); the M17 card has calendar and Inbox lines only.
 6. **Late-start line**, only when dismissal is ≥ `lateThresholdMin` (default 10) after planned Wake Up: "You're up 25 min after plan." followed by one button, **Shift the rest?** → opens the C1 ProposalSheet with trigger `lateStart(25)`: shift dots forward, shrink optional ones, push past-Wind Down dots to tomorrow, pinned dots untouched. Accept / Discard, nothing applied before Accept, Undo 30 s. The ghost preview is the existing B3 render.
 7. Primary button **Start the day** → `StartFocus(firstDot)` when the first dot is within 15 min, else `MarkStarted` (sets `actualStartUtc` on the day row, not on a dot) and returns to Today. Secondary: **Later** (closes; W3 still runs).
 
@@ -262,7 +262,7 @@ A new Settings section **Wake Up** sits directly under Day shape (Wake Up / Wind
 | Wake Up card | `cardEnabled` | switch | on | always | W2 master. As built (M17.3): `wakeUpCard`, nullable; unset follows the Wake Up alarm switch, so the card never opens for anyone who hasn't said yes to Wake Up (§11); a flip stores the choice |
 | Show it when I first open the app | `showOnFirstOpen` | switch | on | cardEnabled | covers older OS / notification-tap path |
 | Calendar on the card | `cardCalendar` | switch | on when a calendar is connected | cardEnabled |  |
-| Weather on the card | `cardWeather` | switch | off | cardEnabled | asks location permission on first enable; says the provider |
+| Weather on the card | `cardWeather` | switch | off | cardEnabled | **Phase 2** (owner, 2026-10-31; `11-standout-roadmap.md`): not in M17 |
 | Inbox count on the card | `cardInbox` | switch | on | cardEnabled |  |
 | Offer to shift the day when I'm up late | `lateStartOffer` | switch | on | cardEnabled | W2 step 6 |
 | …after | `lateThresholdMin` | 5 / 10 / 15 / 30 | 10 | lateStartOffer |  |
@@ -404,7 +404,7 @@ Tone rules carried from `11-standout-roadmap.md`: counts and times, never judgem
 
 - [ ] v1.0.0 or v1.1 for M17 (see Placement)?
 - [ ] Which AlarmKit plugin, or a thin in-house bridge? The audit compares `alarm_kit` and `flutter_alarmkit` on maintenance, licence and widget-extension fit
-- [ ] Weather provider for the card: which one, and is a network call at Wind Down acceptable under the data-on-device principle?
+- [x] Weather provider for the card. Decided 2026-10-31: Phase 2, Open-Meteo over plain HTTPS behind a `WeatherGateway`, coarse location, opt-in from Morning card settings, off by default, never asked during onboarding (`11-standout-roadmap.md`).
 - [ ] Default anchor: Wake Up time (proposed) or first dot?
 - [ ] Should routine-start alarms default on for users who turn on the wake-up alarm, or stay opt-in as written?
 - [ ] Is the iOS "light" mission worth the camera permission, or iOS ships Walk only?
