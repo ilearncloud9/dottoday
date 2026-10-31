@@ -58,7 +58,11 @@ class SettingsScreen extends ConsumerWidget {
             child: ListView(
               // One saved scroll position per layout: switching layouts
               // never opens the other list part-way down (M16 sweep).
-              key: PageStorageKey(minimal ? 'settings:minimal' : 'settings'),
+              key: PageStorageKey(
+                minimal
+                    ? 'settings:minimal' // l10n-ignore: storage key
+                    : 'settings', // l10n-ignore: storage key
+              ),
               padding: const EdgeInsets.fromLTRB(
                 DotSpace.page,
                 DotSpace.l,

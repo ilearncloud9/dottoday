@@ -413,15 +413,23 @@ Spec: `14-minimal-mode.md` (the owner's answers, 2026-10-30); ADR-0016; `10-ui-c
 - [x] M16.8 Reveal hints. `domain/reveal/` pure `pickHint` (one a day, twice ever, Not now forever, never in Focus, after Bedtime or in low-energy mode) and the trigger derivations; `data/reveal/` records (UUID v5 per user and hint); `RevealHintRow` (`StatusHint`) on minimal Today. **Tests** the budget over 15 simulated days, the quiet states, the local-day boundary, each trigger. Done 2026-10-30.
 - [x] M16.9 Acceptance. `test/minimal_mode/`: the tappable set from the semantics tree, the round trip over 25 seeded databases, every Hidden feature within two taps of a More row on a served route, the golden matrix (five screens + Today with a hint × light/dark × 1×/2× × 2.0 text × RTL, compact). Found and fixed: the date title and Later row lacked a screen-reader tap action; Settings rows and the minimal tiles broke words at 200 % text. Done 2026-10-30.
 - [x] M16.10 Docs. ADR-0016, CLAUDE.md §5 and §11 (every feature declares its §3 row before it is built), 08 §7 sweep rows, design-references "derived", 10 §3 components, CHANGELOG. Done 2026-10-30.
+- [x] M16.11 Sweep (owner, 2026-10-31: before the PR). Device suites on the iPhone 17 Pro simulator and the Android API 37 emulator: journey PASS on both; sweep PASS light and dark on both, now with the M16 leg (`integration_test/support/sweep_m16.dart`: minimal Today, the Later row, Add, a task's sheet, Settings, Everything else…, each with its accessibility tree checked; step 0 shot as a new install sees it). Mac (`tool/mac_sweep.sh`, expanded only: the window's minimum is 960 px) PASS light and dark. Web (`tool/a11y/web_sweep.mjs` on a debug build) PASS at 390 and 1280, light and dark. `tool/sweep/compare.mjs` writes the four-platform comparison (`build/sweep/compare*.html`). Outside the §4 idioms, the sweep found and M16 fixed:
+  - the Mac/web panel showed the full editor in minimal;
+  - minimal Settings opened part-way down (shared scroll position);
+  - the Inbox sidebar showed at 1280 in minimal, and gaps said "drop an inbox task here" by width;
+  - an empty day kept its day actions in minimal;
+  - the rail's add button took no clicks (the hidden skip link over it; this also affected the medium rail before M16);
+  - minimal onboarding's first task never opened Add (the navigator wasn't mounted yet).
+  The rest differs only by the §4 idioms: pill bar / Material bar / rail, sheet vs popover, the round vs rounded-square add button. The Mac capture now brings the app forward (Stage Manager drew it as a thumbnail). Done 2026-10-31.
 
 Follow-ups:
 - [ ] Push Supabase `0010` to the hosted project **before any build with M16 ships** (owner's go; CLAUDE.md §10 must-ask). The hosted `validate_settings` ignores unknown keys, so `uiLayout` would sync, but `sync_push` refuses the unknown `reveal_hints` entity and fails the whole push it is in.
 - [ ] Live Activity dismissal signal for the widget hint (iOS ActivityKit `activityStateUpdates` → `.dismissed` by the user; Android ongoing notification swipe). Touches the native extension (must-ask).
 - [ ] Native-speaker pass on the M16 strings in de/fr/es.
-- [ ] Set C renders (`C-ios-today-minimal.png`, `C-ios-add-minimal.png`, `C-ios-settings-minimal.png`, `C-ios-onboarding-mode.png`): none were supplied; the goldens are the reference until they are.
+- [ ] Set C renders: `C-ios-onboarding-mode.png` arrived 2026-10-31 and step 0 is built to it; `C-ios-today-minimal.png`, `C-ios-add-minimal.png` and `C-ios-settings-minimal.png` are still to come, and the goldens are the reference until they do.
 - [ ] Manual on a real device: cold install to the first dot on the thread in under 20 s (docs/14 §7).
 - [x] The Mac/web `TaskEditor` panel in its minimal form (§3 "Mac/web spread … panel"). Done 2026-10-31, found by the Mac sweep: in minimal the panel shows the minimal sheet (Done · Tomorrow · Later · Delete); More opens the editor in the panel.
-- [ ] Device and web sweep entries for the minimal screens (`integration_test/support/sweep_*.dart`, `tool/a11y/web_sweep.mjs`).
+- [x] Device and web sweep entries for the minimal screens: M16.11.
 
 ## Follow-ups after M12 (found at the M12.6 ship-check)
 

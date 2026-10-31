@@ -4,8 +4,44 @@
     {
       "name": "web-build",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8099", "--bind", "127.0.0.1", "--directory", "app/build/web"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8099",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "app/build/web"
+      ],
       "port": 8099
+    },
+    {
+      "name": "web-build-8097",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8097",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "app/build/web"
+      ],
+      "port": 8097
+    },
+    {
+      "name": "sweep-compare",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8096",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "app/build/sweep"
+      ],
+      "port": 8096
     }
   ]
 }
