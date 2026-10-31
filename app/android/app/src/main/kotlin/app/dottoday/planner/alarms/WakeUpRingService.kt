@@ -53,6 +53,7 @@ class WakeUpRingService : Service() {
         instance = this
         ringing = alarm.id
         WakeUpAlarms.put(this, alarm.copy(state = WakeUpAlarm.RINGING))
+        WakeUpAlarms.record(this, alarm.id, "rang")
         notes().cancel(WakeUpActions.SNOOZED_NOTE)
         play(alarm)
         vibrate()

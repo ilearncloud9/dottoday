@@ -1,6 +1,7 @@
 import 'package:dottoday/domain/notifications/notification_health.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
+import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 
 /// How loud the Wake Up alarm can be on this device (docs/15 §2): [alarm]
 /// on Android with the full-screen intent and on iOS 26+ with AlarmKit
@@ -140,6 +141,11 @@ abstract interface class AlarmGateway {
   /// Stops and disarms every Wake Up alarm, ringing or snoozed included:
   /// the switch went off.
   Future<void> disarmAll();
+
+  /// What the alarms did since the last drain (rang, snoozed, stopped),
+  /// oldest first, with the app perhaps closed (M17.3); empty where
+  /// nothing is armed.
+  Future<List<AlarmEvent>> drainEvents();
 
   /// Arms [alarm] (a [WakeUpAlarm.testId] one) apart from [sync]'s set;
   /// false when this device has no alarm path, so the caller falls back to

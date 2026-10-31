@@ -33,6 +33,7 @@ final class RouteScreens {
     required this.day,
     required this.task,
     required this.focus,
+    required this.wakeUp,
   });
 
   /// Wraps the five tab branches (nav bar/rail lands in M0.13).
@@ -53,6 +54,9 @@ final class RouteScreens {
 
   /// Focus on a dot, full screen (M10.5).
   final Widget Function(BuildContext, String taskId) focus;
+
+  /// The Wake Up card, full screen (docs/15 §5, M17.3).
+  final WidgetBuilder wakeUp;
 }
 
 /// Builds the app router. Every location passes [allowListedLocation];
@@ -94,6 +98,10 @@ GoRouter buildRouter(
         path: AppRoutes.focusPattern,
         builder: (context, state) =>
             screens.focus(context, state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: AppRoutes.wakeUp,
+        builder: (context, state) => screens.wakeUp(context),
       ),
     ],
   );

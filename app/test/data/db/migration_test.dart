@@ -13,10 +13,41 @@ import 'package:flutter_test/flutter_test.dart';
 // (M13.2, ADR-0012): subtasks.done_at; 7 → 8 (docs/12 §3): sound_id on
 // series and occurrences, and "system" for every null reminder sound;
 // 8 → 9 (M16, docs/14 §6): reveal_hints, the outbox CHECK naming them, and
-// `uiLayout: "full"` for every existing profile.
+// `uiLayout: "full"` for every existing profile; 9 → 10 (M17.3, docs/15
+// §3): the local wake_up_days.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
+  test('a version 9 file gains wake_up_days and keeps its rows', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig10');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+
+    final v9 = AppDatabase(NativeDatabase(file));
+    await v9.customStatement(
+      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+      "updated_at) VALUES ('p1', 'UTC', 'en', '{}', 0, 0)",
+    );
+    await v9.customStatement('DROP TABLE wake_up_days');
+    await v9.customStatement('PRAGMA user_version = 9');
+    await v9.close();
+
+    final v10 = AppDatabase(NativeDatabase(file));
+    addTearDown(v10.close);
+    expect(await v10.select(v10.profiles).get(), hasLength(1));
+    await v10.customStatement(
+      "INSERT INTO wake_up_days (date, snoozes) VALUES ('2026-11-02', 1)",
+    );
+    expect(await v10.select(v10.wakeUpDaysTable).get(), hasLength(1));
+    // Its CHECKs: a civil date, never a negative count.
+    await expectLater(
+      v10.customStatement("INSERT INTO wake_up_days (date) VALUES ('soon')"),
+      throwsA(isA<SqliteException>()),
+    );
+    final version = (await v10.customSelect('PRAGMA user_version').getSingle());
+    expect(version.read<int>('user_version'), AppDatabase.latestSchemaVersion);
+  });
+
   test(
     'a version 8 file keeps the full layout and gains reveal hints',
     () async {

@@ -112,6 +112,9 @@ abstract final class DotSize {
   static const double smallDotOutline = 2;
   static const double dayDot = 44;
 
+  /// The day dot on the Wake Up card (docs/15 §5 step 2).
+  static const double wakeUpDayDot = 96;
+
   /// The day dot on Today's one-line header, beside the date and ⋯ so
   /// "October 21, 2026 ⌄" fits a 390 pt phone (ADR-0015).
   static const double headerDayDot = 36;

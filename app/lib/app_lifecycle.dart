@@ -18,6 +18,7 @@ import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/data/system/system_events.dart';
 import 'package:dottoday/data/thinking/thinking_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/data/widgets/mac_menu_actions.dart';
 import 'package:dottoday/data/widgets/mac_status_item_sink.dart';
 import 'package:dottoday/domain/time/housekeeping_due.dart';
@@ -27,7 +28,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 /// Housekeeping on app start and on every resume (docs/09 M3.2, M2.3–M2.5):
 /// ensure the local profile, take the daily backup if due, purge expired
-/// Trash, apply queued intents (M9.2), then the daily refresh: roll repeats forward and re-plan OS
+/// Trash, apply queued intents (M9.2) and alarm events (M17.3), then the daily refresh: roll repeats forward and re-plan OS
 /// notifications (M5.2), arm the Wind Down snapshot (M9.1), then bring
 /// calendar events in (device M7.2,
 /// Google/Microsoft M7.4). Each step is idempotent and runs
@@ -50,11 +51,25 @@ Future<void> runHousekeeping(WidgetRef ref) async {
     // What widgets, controls and notifications queued while the app was
     // closed, before the refresh redraws everything (M9.2).
     await _drainQueue(ref);
+    // What the Wake Up alarm did with the app closed, before Today asks
+    // whether the Wake Up card opens (docs/15 §3, M17.3).
+    await _drainAlarmEvents(ref);
     await ref.read(dailyRefreshProvider).run(profile.id);
     await ref.read(bedtimeSnapshotProvider).arm(profile.id);
     await ref.read(calendarActionsProvider).importEvents();
   } on Object catch (e, st) {
     logger.error('housekeeping.failed', error: e, stackTrace: st);
+  }
+}
+
+// Alarm events that can't be read must not hold up the refresh either.
+Future<void> _drainAlarmEvents(WidgetRef ref) async {
+  try {
+    await ref.read(alarmEventsDrainProvider.notifier).run();
+  } on Object catch (e, st) {
+    ref
+        .read(loggerProvider)
+        .error('wake_up.drain_failed', error: e, stackTrace: st);
   }
 }
 

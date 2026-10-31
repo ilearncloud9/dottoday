@@ -4,6 +4,7 @@ import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_health.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
+import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:flutter/services.dart';
 
 /// [AlarmGateway] over the permissions Dottoday already reads and the
@@ -69,6 +70,33 @@ final class OsAlarmGateway implements AlarmGateway {
     } on MissingPluginException {
       return false;
     }
+  }
+
+  @override
+  Future<List<AlarmEvent>> drainEvents() async {
+    if (!_native) return const [];
+    try {
+      final raw = await _channel.invokeListMethod<Map<Object?, Object?>>(
+        'drainEvents',
+      );
+      return [
+        for (final e in raw ?? const <Map<Object?, Object?>>[]) ?_event(e),
+      ];
+    } on MissingPluginException {
+      return const [];
+    }
+  }
+
+  AlarmEvent? _event(Map<Object?, Object?> e) {
+    final kind = AlarmEventKind.values.asNameMap()[e['kind']];
+    final at = e['atMs'];
+    final id = e['id'];
+    if (kind == null || at is! int || id is! String) return null;
+    return AlarmEvent(
+      id,
+      kind,
+      DateTime.fromMillisecondsSinceEpoch(at, isUtc: true),
+    );
   }
 
   /// Only phones arm; the Mac and the web keep the notification path.

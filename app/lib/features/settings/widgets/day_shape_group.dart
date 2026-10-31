@@ -92,15 +92,16 @@ class DayShapeGroup extends StatelessWidget {
         ),
       ),
       WakeUpAlarmRow(on: settings.wakeUpAlarm),
-      if (settings.wakeUpAlarm)
-        SettingsRow(
-          glyph: DotGlyphs.sound,
-          tint: t.tasks[TaskColor.amber].ink,
-          title: l10n.settingsWakeUpOptions,
-          onTap: () => unawaited(
-            context.push(AppRoutes.settingsPage(SettingsPage.wakeUp)),
-          ),
+      // Sound, snooze and the Morning card (docs/15 §9); on the Mac and
+      // the web too, where they sync to the phone (15 §11).
+      SettingsRow(
+        glyph: DotGlyphs.sound,
+        tint: t.tasks[TaskColor.amber].ink,
+        title: l10n.settingsWakeUpOptions,
+        onTap: () => unawaited(
+          context.push(AppRoutes.settingsPage(SettingsPage.wakeUp)),
         ),
+      ),
       SettingsRow(
         glyph: DotGlyphs.moon,
         tint: t.tasks[TaskColor.violet].ink,

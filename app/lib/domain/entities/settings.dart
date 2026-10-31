@@ -73,6 +73,16 @@ abstract class Settings with _$Settings {
     @Default(true) bool wakeUpSnooze,
     @Default(9) int wakeUpSnoozeMin,
     @Default(3) int wakeUpSnoozeMax,
+    // The Wake Up card (15 §5, §9, M17.3). Null follows `wakeUpAlarm`, so
+    // nothing new opens until the user says yes to Wake Up once (15 §11);
+    // a switch flip stores the choice. Then: open on the first launch after
+    // Wake Up, its chips, and the late-start offer past N minutes.
+    bool? wakeUpCard,
+    @Default(true) bool wakeUpCardOnOpen,
+    @Default(true) bool wakeUpCardCalendar,
+    @Default(true) bool wakeUpCardInbox,
+    @Default(true) bool wakeUpLateOffer,
+    @Default(10) int wakeUpLateMin,
     // The once-a-day "Plan your inbox" card (docs/02 F3.3): off by default.
     @Default(false) bool inboxNudge,
     // Settings › Calendars › Travel time (M7.5, R-17): off until chosen

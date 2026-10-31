@@ -7,6 +7,7 @@ import 'package:dottoday/features/timeline/low_energy/low_energy_view.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
+import 'package:dottoday/features/timeline/wake_up/wake_up_card_gate.dart';
 import 'package:dottoday/features/timeline/widgets/all_day_chips.dart';
 import 'package:dottoday/features/timeline/widgets/day_page.dart';
 import 'package:dottoday/features/timeline/widgets/reveal_hint_row.dart';
@@ -71,7 +72,7 @@ class TodayScreen extends ConsumerWidget {
     );
     // Minimal (docs/14 §3): Today alone at every width, no spread.
     final spread = !watchSimplified(ref, FeatureId.spread);
-    return PopScope(
+    final screen = PopScope(
       // Back ends selecting before it leaves the screen (R-05).
       canPop: !selecting,
       onPopInvokedWithResult: (popped, _) {
@@ -124,6 +125,8 @@ class TodayScreen extends ConsumerWidget {
         ),
       ),
     );
+    // Today itself opens the Wake Up card once a day (docs/15 §5).
+    return date == null ? WakeUpCardGate(child: screen) : screen;
   }
 }
 
