@@ -10,6 +10,7 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_alarm_row.dart';
+import 'package:dottoday/features/settings/widgets/wake_up_card_group.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_option_groups.dart';
 import 'package:dottoday/shared/notifications/test_alarm_card.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
@@ -17,11 +18,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// Settings › Wake Up alarm (docs/15 §9, M17.2; derived from
-/// `SettingsGroup` rows): the switch with this device's tier and fix, then
-/// sound and snooze while it is on, a real test alarm and Notification
-/// health. Minimal mode shows the switch and the sound, with the rest
-/// behind More options (15 §10).
+/// Settings › Day shape › Wake Up options (docs/15 §9, M17.2–M17.3;
+/// derived from `SettingsGroup` rows): the alarm switch with this device's
+/// tier and fix, sound and snooze while it is on, the Morning card, a real
+/// test alarm and Notification health. Minimal mode shows the two switches
+/// and the sound, with the rest behind More options (15 §10).
 class WakeUpPage extends ConsumerStatefulWidget {
   const WakeUpPage({super.key});
 
@@ -42,7 +43,7 @@ class _WakeUpPageState extends ConsumerState<WakeUpPage> {
     final full = !minimal || _more;
     final alarm = ref.read(testAlarmProvider.notifier);
     return SettingsPageFrame(
-      title: l10n.settingsWakeUpAlarm,
+      title: l10n.settingsWakeUpOptions,
       children: [
         SettingsGroup(
           caption: l10n.wakeUpAlarmCaption,
@@ -51,15 +52,16 @@ class _WakeUpPageState extends ConsumerState<WakeUpPage> {
         if (settings.wakeUpAlarm) ...[
           WakeUpSoundGroup(settings: settings, full: full),
           if (full) WakeUpSnoozeGroup(settings: settings),
-          if (!full)
-            Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: TextButton(
-                onPressed: () => setState(() => _more = true),
-                child: Text(l10n.wakeUpMoreOptions),
-              ),
-            ),
         ],
+        WakeUpCardGroup(settings: settings, full: full),
+        if (!full)
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton(
+              onPressed: () => setState(() => _more = true),
+              child: Text(l10n.wakeUpMoreOptions),
+            ),
+          ),
         TestAlarmCard(
           onSend: alarm.sendWakeUp,
           // A test alarm is meant to ring after the phone is locked, so

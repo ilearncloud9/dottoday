@@ -49,13 +49,16 @@ final class NotificationResponder {
     final planned = decodeNotificationPayload(tap.id ?? 0, tap.payload);
     final action = NotificationAction.fromId(tap.actionId);
     _logger.info('notification.tapped', fields: {'action': action});
-    // The day-start summary and the Wake Up alarm are about the day, not
-    // its first task.
+    // The day-start summary is about the day, not its first task.
     if (planned == null ||
         planned.occurrenceId.isEmpty ||
-        planned.purpose == NotificationPurpose.daySummary ||
-        planned.purpose == NotificationPurpose.wakeUp) {
+        planned.purpose == NotificationPurpose.daySummary) {
       return _open(AppRoutes.today);
+    }
+    // The Wake Up alarm on the notification path (older iPhones, exact
+    // alarms off): its tap opens the Wake Up card (docs/15 §5).
+    if (planned.purpose == NotificationPurpose.wakeUp) {
+      return _open(AppRoutes.wakeUp);
     }
     if (action == NotificationAction.open) {
       return _open(AppRoutes.task(planned.occurrenceId));

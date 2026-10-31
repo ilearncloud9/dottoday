@@ -3,6 +3,7 @@ package app.dottoday.planner.alarms
 import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
@@ -13,6 +14,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextClock
 import android.widget.TextView
+import app.dottoday.planner.MainActivity
 import app.dottoday.planner.R
 import java.lang.ref.WeakReference
 
@@ -74,8 +76,17 @@ class WakeUpAlarmActivity : Activity() {
         finish()
     }
 
+    /** "I'm up": stops the ring and opens the Wake Up card (docs/15 §5),
+     *  which shows once the phone is unlocked. Not for the test alarm. */
     private fun stop() {
-        id?.let { WakeUpActions.dismiss(this, it) }
+        val id = id ?: return finish()
+        WakeUpActions.dismiss(this, id)
+        if (id != WakeUpAlarm.TEST_ID) {
+            startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse("dottoday://wake-up"), this, MainActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+            )
+        }
         finish()
     }
 

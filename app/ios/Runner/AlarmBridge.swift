@@ -39,6 +39,9 @@ enum AlarmBridge {
         guard #available(iOS 26.0, *), let spec = (call.arguments as? [String: Any]).flatMap(WakeUpAlarmSpec.init)
         else { return result(false) }
         Task { result(await WakeUpAlarms.test(spec)) }
+      case "drainEvents":
+        guard #available(iOS 26.0, *) else { return result([[String: Any]]()) }
+        result(WakeUpAlarms.drainEvents())
       case "disarmAll":
         if #available(iOS 26.0, *) { WakeUpAlarms.disarmAll() }
         result(nil)

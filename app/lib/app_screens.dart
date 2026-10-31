@@ -11,6 +11,7 @@ import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
 import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
+import 'package:dottoday/features/timeline/wake_up/wake_up_card_screen.dart';
 import 'package:dottoday/features/timeline/week_screen.dart';
 
 /// Composition-root wiring of routes to screens. Today and Week get the
@@ -31,4 +32,5 @@ final appScreens = RouteScreens(
   day: (_, date) => InboxSidebarFrame(child: TodayScreen(date: date)),
   task: (_, id) => TaskScreen(id: id),
   focus: (_, id) => FocusScreen(id: id),
+  wakeUp: (_) => const WakeUpCardScreen(),
 );

@@ -5775,7 +5775,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get notifWakeUpBody => 'Guten Morgen.';
 
   @override
-  String get settingsWakeUpOptions => 'Ton und Schlummern';
+  String get settingsWakeUpOptions => 'Aufstehen-Optionen';
 
   @override
   String get wakeUpAlarmCaption => 'Wecker';
@@ -5860,6 +5860,118 @@ class AppLocalizationsDe extends AppLocalizations {
       one: 'Einmal',
     );
     return '$_temp0';
+  }
+
+  @override
+  String get wakeUpCardFirst => 'Zuerst';
+
+  @override
+  String get wakeUpCardNext => 'Danach';
+
+  @override
+  String get wakeUpCardShift => 'Den Rest verschieben?';
+
+  @override
+  String get wakeUpCardStart => 'Tag beginnen';
+
+  @override
+  String get wakeUpCardLater => 'Später';
+
+  @override
+  String get wakeUpCardEmpty => 'Noch nichts geplant';
+
+  @override
+  String get wakeUpCardPlan => 'Heute planen';
+
+  @override
+  String get wakeUpCardShowDay => 'Meinen Tag zeigen';
+
+  @override
+  String get wakeUpCardCaption => 'Morgenkarte';
+
+  @override
+  String get wakeUpCardRow => 'Morgenkarte';
+
+  @override
+  String get wakeUpCardRowDetail =>
+      'Dein Tag auf einen Blick, wenn du aufstehst';
+
+  @override
+  String get wakeUpCardOnOpenRow => 'Beim ersten Öffnen der App zeigen';
+
+  @override
+  String get wakeUpCardCalendarRow => 'Kalender auf der Karte';
+
+  @override
+  String get wakeUpCardInboxRow => 'Eingang auf der Karte';
+
+  @override
+  String get wakeUpLateOfferRow =>
+      'Anbieten, den Tag zu verschieben, wenn ich nach Plan aufstehe';
+
+  @override
+  String get wakeUpLateAfterRow => 'Ab';
+
+  @override
+  String wakeUpCardGreeting(String date) {
+    return 'Guten Morgen. $date.';
+  }
+
+  @override
+  String wakeUpCardPlanned(int count, String time) {
+    return '$count geplant · Ende $time';
+  }
+
+  @override
+  String wakeUpCardFirstStep(String step, String length) {
+    return 'zuerst: $step · $length';
+  }
+
+  @override
+  String wakeUpCardFirstStepShort(String step) {
+    return 'zuerst: $step';
+  }
+
+  @override
+  String wakeUpCardCalendar(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Termine heute',
+      one: '1 Termin heute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wakeUpCardInbox(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count im Eingang',
+      one: '1 im Eingang',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wakeUpCardLate(int min) {
+    return 'Du bist $min Min. nach Plan auf.';
+  }
+
+  @override
+  String healthLastWakeUp(String rang, String up) {
+    return 'Letztes Aufstehen: geklingelt $rang, auf $up';
+  }
+
+  @override
+  String healthLastWakeUpUp(String up) {
+    return 'Letztes Aufstehen: auf $up';
+  }
+
+  @override
+  String healthLastWakeUpRang(String rang) {
+    return 'Letztes Aufstehen: geklingelt $rang';
   }
 
   @override

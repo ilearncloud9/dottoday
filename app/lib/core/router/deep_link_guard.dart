@@ -15,6 +15,8 @@ const _staticRoutes = {
   'search': AppRoutes.search,
   'settings': AppRoutes.settings,
   'add': AppRoutes.add,
+  // "I'm up" on Android's ringing screen (docs/15 §5, M17.3).
+  'wake-up': AppRoutes.wakeUp,
 };
 
 /// Maps an incoming location or deep link to its canonical in-app location,

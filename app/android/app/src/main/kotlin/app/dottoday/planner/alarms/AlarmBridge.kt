@@ -40,6 +40,7 @@ object AlarmBridge {
                     WakeUpAlarms.disarmAll(context)
                     result.success(null)
                 }
+                "drainEvents" -> result.success(WakeUpAlarms.drainEvents(context))
                 // The device test (integration_test/wake_up_alarm_test.dart):
                 // what rings, what is stored, and the ringing screen's buttons.
                 "ringingId" -> result.success(WakeUpRingService.instance?.ringingId)

@@ -87,6 +87,7 @@ data class WakeUpAlarm(
 object WakeUpAlarms {
     private const val PREFS = "dottoday_wake_up"
     private const val KEY = "alarms"
+    private const val EVENTS = "events"
 
     /**
      * Makes [incoming] the armed set and returns the instants armed. A
@@ -135,6 +136,31 @@ object WakeUpAlarms {
         val ahead = load(context).filter { it.state != WakeUpAlarm.RINGING && it.fireAtMs > now }
         if (exactAllowed(context)) ahead.forEach { schedule(context, it) }
         save(context, ahead)
+    }
+
+    /**
+     * Notes what an alarm did ("rang", "snoozed", "stopped") for the app,
+     * which may be closed: it drains them on launch and resume into
+     * `wake_up_days` (docs/15 §3, M17.3).
+     */
+    fun record(context: Context, id: String, kind: String) {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val events = runCatching { JSONArray(prefs.getString(EVENTS, "[]")) }.getOrDefault(JSONArray())
+        events.put(JSONObject().put("id", id).put("kind", kind).put("atMs", System.currentTimeMillis()))
+        prefs.edit().putString(EVENTS, events.toString()).apply()
+    }
+
+    /** The events noted since the last drain, oldest first; clears them. */
+    fun drainEvents(context: Context): List<Map<String, Any>> {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val events = runCatching { JSONArray(prefs.getString(EVENTS, "[]")) }.getOrDefault(JSONArray())
+        prefs.edit().remove(EVENTS).apply()
+        return (0 until events.length()).mapNotNull { i ->
+            runCatching {
+                val o = events.getJSONObject(i)
+                mapOf<String, Any>("id" to o.getString("id"), "kind" to o.getString("kind"), "atMs" to o.getLong("atMs"))
+            }.getOrNull()
+        }
     }
 
     fun find(context: Context, id: String): WakeUpAlarm? = load(context).firstOrNull { it.id == id }

@@ -338,3 +338,56 @@ final class SearchRepositoryProvider
 }
 
 String _$searchRepositoryHash() => r'78cce970b6da543752074227437de2875e14a637';
+
+/// This device's mornings (docs/15 §3, M17.3).
+
+@ProviderFor(wakeUpDayRepository)
+final wakeUpDayRepositoryProvider = WakeUpDayRepositoryProvider._();
+
+/// This device's mornings (docs/15 §3, M17.3).
+
+final class WakeUpDayRepositoryProvider
+    extends
+        $FunctionalProvider<
+          WakeUpDayRepository,
+          WakeUpDayRepository,
+          WakeUpDayRepository
+        >
+    with $Provider<WakeUpDayRepository> {
+  /// This device's mornings (docs/15 §3, M17.3).
+  WakeUpDayRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'wakeUpDayRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$wakeUpDayRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<WakeUpDayRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  WakeUpDayRepository create(Ref ref) {
+    return wakeUpDayRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(WakeUpDayRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WakeUpDayRepository>(value),
+    );
+  }
+}
+
+String _$wakeUpDayRepositoryHash() =>
+    r'42119ef89268be600fa6fbcbe271b2628779c552';

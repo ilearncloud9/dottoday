@@ -6,6 +6,7 @@ import 'package:dottoday/data/repositories/drift_search_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
+import 'package:dottoday/data/repositories/drift_wake_up_day_repository.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/repositories/reveal_hint_repository.dart';
 import 'package:dottoday/domain/repositories/routine_repository.dart';
@@ -13,6 +14,7 @@ import 'package:dottoday/domain/repositories/search_repository.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
 import 'package:dottoday/domain/repositories/subtask_repository.dart';
+import 'package:dottoday/domain/repositories/wake_up_day_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'repository_providers.g.dart';
@@ -46,3 +48,8 @@ SettingsRepository settingsRepository(Ref ref) =>
 @Riverpod(keepAlive: true)
 SearchRepository searchRepository(Ref ref) =>
     DriftSearchRepository(ref.watch(appDatabaseProvider));
+
+/// This device's mornings (docs/15 §3, M17.3).
+@Riverpod(keepAlive: true)
+WakeUpDayRepository wakeUpDayRepository(Ref ref) =>
+    DriftWakeUpDayRepository(ref.watch(appDatabaseProvider));

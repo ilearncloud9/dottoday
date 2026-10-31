@@ -16,6 +16,9 @@ abstract final class AppRoutes {
   /// Add task shortcut and controls, docs/09 M9.2c).
   static const add = '/add';
 
+  /// The Wake Up card, full screen over Today (docs/15 §5, M17.3).
+  static const wakeUp = '/wake-up';
+
   static const dayPattern = '/day/:date';
   static const taskPattern = '/task/:id';
 

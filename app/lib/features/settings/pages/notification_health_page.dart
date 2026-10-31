@@ -7,16 +7,20 @@ import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/notifications/sound_names.gen.dart';
 import 'package:dottoday/data/notifications/test_alarm.dart';
+import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/domain/notifications/notification_health.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
+import 'package:dottoday/shared/notifications/last_wake_up_text.dart';
 import 'package:dottoday/shared/notifications/test_alarm_card.dart';
 import 'package:dottoday/shared/notifications/wake_up_tier_text.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sync/clock_skew_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 /// Settings › Reminders › Notification health (docs/09 M6.5.8, 11 A0;
 /// derived from `SettingsGroup` rows): the real OS state that decides
@@ -69,6 +73,14 @@ class HealthRow extends ConsumerWidget {
     // Large text: the button goes under the words instead of squeezing
     // them to a letter a line beside it (accessibility-as-code: reflow).
     final stacked = MediaQuery.textScalerOf(context).scale(1) > _stackAbove;
+    final last = check.kind == HealthCheckKind.wakeUp
+        ? _lastWakeUp(context, ref)
+        : null;
+    final under = [
+      if (last != null) Text(last, style: t.styles.rowMeta),
+      if (stacked && button != null)
+        Align(alignment: AlignmentDirectional.centerStart, child: button),
+    ];
     return SettingsRow(
       glyph: switch (check.level) {
         HealthLevel.ok => DotGlyphs.check,
@@ -83,9 +95,26 @@ class HealthRow extends ConsumerWidget {
       title: title,
       subtitle: detail,
       trailing: stacked ? null : button,
-      below: stacked && button != null
-          ? Align(alignment: AlignmentDirectional.centerStart, child: button)
-          : null,
+      below: under.isEmpty
+          ? null
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: under,
+            ),
+    );
+  }
+
+  /// When the alarm last rang and was stopped here (docs/15 §4, M17.3).
+  String? _lastWakeUp(BuildContext context, WidgetRef ref) {
+    final day = ref.watch(lastWakeUpProvider).value;
+    if (day == null) return null;
+    final profile = ref.watch(currentProfileProvider).value;
+    if (profile == null) return null;
+    return lastWakeUpText(
+      context,
+      day,
+      tz.getLocation(profile.tzId),
+      use24h: profile.settings.use24h,
     );
   }
 

@@ -59,6 +59,7 @@ import Foundation
   enum WakeUpAlarms {
     static let testId = "wakeup:test"
     private static let storeKey = "wake_up_alarms"
+    private static let eventsKey = "wake_up_events"
     private static var manager: AlarmManager { .shared }
 
     /// AlarmKit's id for [id]: a stable UUID from its hash, so the same day
@@ -130,12 +131,40 @@ import Foundation
       try? manager.stop(id: id)
       var stored = load()
       guard var spec = stored[key], spec.canSnooze else { return }
+      record(spec.id, "snoozed")
       spec.snoozes += 1
       let wait = TimeInterval(spec.snoozeMin * 60)
       spec.fireAtMs = Int64((Date().timeIntervalSince1970 + wait) * 1000)
       stored[key] = spec
       save(stored)
       _ = try? await arm(spec, countdown: wait)
+    }
+
+    /// "I'm up" (`StopWakeUpIntent`): stops the ring and notes it for the
+    /// app, which may be closed (docs/15 §3, M17.3).
+    static func stop(_ key: String) {
+      guard let id = UUID(uuidString: key) else { return }
+      try? manager.stop(id: id)
+      var stored = load()
+      if let spec = stored[key] {
+        record(spec.id, "stopped")
+        stored[key] = nil
+        save(stored)
+      }
+    }
+
+    /// Notes what an alarm did; the app drains these into `wake_up_days`.
+    static func record(_ id: String, _ kind: String) {
+      var events = (DotStore.shared?.array(forKey: eventsKey) as? [[String: Any]]) ?? []
+      events.append(["id": id, "kind": kind, "atMs": Int64(Date().timeIntervalSince1970 * 1000)])
+      DotStore.shared?.set(events, forKey: eventsKey)
+    }
+
+    /// The events since the last drain, oldest first; clears them.
+    static func drainEvents() -> [[String: Any]] {
+      let events = (DotStore.shared?.array(forKey: eventsKey) as? [[String: Any]]) ?? []
+      DotStore.shared?.removeObject(forKey: eventsKey)
+      return events
     }
 
     /// Schedules [spec] at its time, or after [countdown] seconds with the
@@ -151,6 +180,7 @@ import Foundation
         countdownDuration: countdown.map { .init(preAlert: $0, postAlert: nil) },
         schedule: countdown == nil ? .fixed(Date(timeIntervalSince1970: Double(spec.fireAtMs) / 1000)) : nil,
         attributes: attributes,
+        stopIntent: StopWakeUpIntent(alarm: id.uuidString),
         secondaryIntent: spec.canSnooze ? SnoozeWakeUpIntent(alarm: id.uuidString) : nil,
         sound: .named(spec.sound))
       return try await manager.schedule(id: id, configuration: config)
@@ -183,6 +213,28 @@ import Foundation
 
     private static func save(_ specs: [String: WakeUpAlarmSpec]) {
       DotStore.shared?.set(try? JSONEncoder().encode(specs), forKey: storeKey)
+    }
+  }
+
+  /// The alert's stop, "I'm up" (docs/15 W1b, M17.3): stops the ring and
+  /// notes when, so the Wake Up card knows the user is up.
+  @available(iOS 26.0, *)
+  struct StopWakeUpIntent: LiveActivityIntent {
+    static let title: LocalizedStringResource = "Stop"
+    static let isDiscoverable = false
+
+    @Parameter(title: "Alarm")
+    var alarm: String
+
+    init() {}
+
+    init(alarm: String) {
+      self.alarm = alarm
+    }
+
+    func perform() async throws -> some IntentResult {
+      WakeUpAlarms.stop(alarm)
+      return .result()
     }
   }
 

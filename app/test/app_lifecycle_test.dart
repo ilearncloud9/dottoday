@@ -14,6 +14,7 @@ import 'package:dottoday/data/intents/intent_providers.dart';
 import 'package:dottoday/data/intents/no_action_queue_store.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/daily_refresh.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
@@ -165,6 +166,11 @@ void main() {
         // 02:00 in Berlin (testProfile): midnight is 22 h away.
         clockProvider.overrideWithValue(FakeClock(_now)),
         systemEventsProvider.overrideWithValue(events),
+        // The Wake Up alarm's events (M17.3): none here.
+        alarmGatewayProvider.overrideWithValue(FakeAlarmGateway()),
+        wakeUpDayRepositoryProvider.overrideWithValue(
+          FakeWakeUpDayRepository(),
+        ),
       ],
       child: const AppLifecycleScope(child: SizedBox()),
     ),
