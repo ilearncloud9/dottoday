@@ -56,6 +56,8 @@
 	<string>Dottoday shows your calendar events on your timeline, next to your tasks.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Dottoday listens only while the mic button is on, to turn your words into text on this device.</string>
+	<key>NSAlarmKitUsageDescription</key>
+	<string>Dottoday rings your Wake Up time like an alarm, even on Silent, on the days you have planned.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Your words are turned into text on this device. Nothing is sent to a server.</string>
 	<key>NSFaceIDUsageDescription</key>
