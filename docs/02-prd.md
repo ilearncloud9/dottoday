@@ -131,8 +131,9 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
   calendar's colour. A multi-day all-day event shows in the strip on each of its days; tapping a strip
   item opens it to edit.
 - [F5.3] Imported events are first-class blocks: draggable, resizable, can have subtasks/notes stored locally (never written to the external calendar unless the user enables write-back for that calendar). (R-02, R-09)
-  Clarified in M7.2: events from yesterday to 90 days ahead come in on start, on resume, every
-  6 hours and right after a calendar is switched or connected. An event's description and link
+  Clarified in M7.2: events from yesterday to 90 days ahead come in on start, on resume, at local
+  midnight, right after a calendar is switched or connected, and (2026-10-31) about 2 s after the
+  device's calendars change while the app is open (iPhone, Android, Mac; docs/04 §4 "Triggers"). An event's description and link
   become its notes. Subtasks, notes, moves and renames made in Dottoday stay on this device (each
   device imports its own calendars) and stay put until the calendar changes that same thing; notes
   edited here are never overwritten. An event deleted from its calendar disappears here too —

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
@@ -14,12 +15,15 @@ import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:dottoday/data/snapshot/snapshot_providers.dart';
 import 'package:dottoday/data/speech/speech_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
+import 'package:dottoday/data/system/system_events.dart';
 import 'package:dottoday/data/thinking/thinking_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/widgets/mac_menu_actions.dart';
 import 'package:dottoday/data/widgets/mac_status_item_sink.dart';
+import 'package:dottoday/domain/time/housekeeping_due.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 /// Housekeeping on app start and on every resume (docs/09 M3.2, M2.3–M2.5):
 /// ensure the local profile, take the daily backup if due, purge expired
@@ -65,7 +69,11 @@ Future<void> _drainQueue(WidgetRef ref) async {
   }
 }
 
-/// Runs [runHousekeeping] once after the first frame and on each resume.
+/// Runs [runHousekeeping] after the first frame, on each resume, when the
+/// OS says the Mac woke or the clock or zone changed, and at the moment the
+/// next run is due while the app stays open ([housekeepingDueUtc]: local
+/// midnight or the daily backup). Nothing runs on a polling period
+/// (docs/04 §4 "Triggers"). Device calendar changes import their events.
 class AppLifecycleScope extends ConsumerStatefulWidget {
   const AppLifecycleScope({required this.child, super.key});
 
@@ -77,10 +85,12 @@ class AppLifecycleScope extends ConsumerStatefulWidget {
 
 class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
     with WidgetsBindingObserver {
-  /// A Mac or browser window can stay open for days without a resume, so
-  /// housekeeping also runs on this timer (M5.2).
-  static const _period = Duration(hours: 6);
-  Timer? _timer;
+  /// The next due run, re-armed after every run (a Mac or browser window
+  /// can stay open for days without a resume, M5.2).
+  Timer? _due;
+  StreamSubscription<SystemEvent>? _events;
+  var _running = false;
+  var _again = false;
 
   @override
   void initState() {
@@ -92,10 +102,63 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
     if (MacStatusItemSink.supported) {
       listenForMenuBarActions(ref.read(dotIntentsProvider));
     }
-    _timer = Timer.periodic(_period, (_) => unawaited(runHousekeeping(ref)));
+    _events = ref.read(systemEventsProvider).events.listen(_onSystemEvent);
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) => unawaited(runHousekeeping(ref)),
+      (_) => unawaited(_housekeep()),
     );
+  }
+
+  void _onSystemEvent(SystemEvent event) {
+    switch (event) {
+      // Timers may have slept through their moment, or the day moved.
+      case SystemEvent.wake || SystemEvent.clock:
+        ref.invalidate(currentDeviceZoneProvider);
+        unawaited(_housekeep());
+      case SystemEvent.calendar:
+        ref.read(calendarActionsProvider).deviceCalendarChanged();
+    }
+  }
+
+  /// One run at a time (a resume and a wake can coincide; one asked for
+  /// meanwhile runs once after), then the next due run is armed.
+  Future<void> _housekeep() async {
+    if (_running) {
+      _again = true;
+      return;
+    }
+    _running = true;
+    try {
+      do {
+        _again = false;
+        await runHousekeeping(ref);
+      } while (_again && mounted);
+      if (mounted) await _armNext();
+    } finally {
+      _running = false;
+    }
+  }
+
+  Future<void> _armNext() async {
+    try {
+      final profile = await ref.read(localProfileProvider.future);
+      final backupDue = await ref
+          .read(backupServiceProvider)
+          .nextDailyDueUtc(profile.id);
+      if (!mounted) return;
+      final now = ref.read(clockProvider).nowUtc();
+      final at = housekeepingDueUtc(
+        location: tz.getLocation(profile.tzId),
+        nowUtc: now,
+        backupDueUtc: backupDue,
+      );
+      _due?.cancel();
+      _due = Timer(at.difference(now), () => unawaited(_housekeep()));
+    } on Object catch (e, st) {
+      // The next start, resume or OS event arms it again.
+      ref
+          .read(loggerProvider)
+          .error('housekeeping.arm_failed', error: e, stackTrace: st);
+    }
   }
 
   @override
@@ -116,14 +179,15 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
       ..invalidate(thinkingStatusProvider)
       // The microphone switched on in Settings (M14.5).
       ..invalidate(speechAvailabilityProvider);
-    unawaited(runHousekeeping(ref));
+    unawaited(_housekeep());
     // Back in the foreground: catch up with other devices (docs/04 §4).
     unawaited(ref.read(syncServiceProvider).syncNow());
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _due?.cancel();
+    unawaited(_events?.cancel());
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

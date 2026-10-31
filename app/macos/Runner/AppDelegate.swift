@@ -1,5 +1,6 @@
 import AudioToolbox
 import Cocoa
+import EventKit
 import FlutterMacOS
 
 @main
@@ -70,6 +71,9 @@ class AppDelegate: FlutterAppDelegate {
 
     // The share extension's queue (docs/09 M12.4).
     IntentQueueBridge.shared.attach(to: controller.engine.binaryMessenger)
+
+    // Wake, clock and calendar changes (docs/04 §4 "Triggers").
+    SystemEventsBridge.shared.attach(to: controller.engine.binaryMessenger)
   }
 
   /// Sends [link] to the router, or keeps it until Dart listens.
@@ -86,6 +90,62 @@ class AppDelegate: FlutterAppDelegate {
     for url in urls where url.scheme == "dottoday" {
       deliver(url.absoluteString)
     }
+  }
+}
+
+/// What macOS announces while the app runs, on `dottoday/system_events`
+/// (lib/data/system/system_events.dart, docs/04 §4 "Triggers"), so Dart acts on the
+/// event instead of checking on a timer: `wake` after sleep (timers may
+/// have slept through their moment), `clock` when the day turns over or
+/// the time or zone changes, `calendar` when the calendars change.
+final class SystemEventsBridge {
+  static let shared = SystemEventsBridge()
+  private var channel: FlutterMethodChannel?
+  /// Only observed; reading goes through CalendarBridge.
+  private var store: EKEventStore?
+  private var observers: [NSObjectProtocol] = []
+
+  func attach(to messenger: FlutterBinaryMessenger) {
+    channel = FlutterMethodChannel(name: "dottoday/system_events", binaryMessenger: messenger)
+    guard observers.isEmpty else { return }
+    observers.append(
+      NSWorkspace.shared.notificationCenter.addObserver(
+        forName: NSWorkspace.didWakeNotification, object: nil, queue: .main
+      ) { [weak self] _ in self?.send("wake") })
+    let center = NotificationCenter.default
+    for name in [Notification.Name.NSCalendarDayChanged, .NSSystemClockDidChange, .NSSystemTimeZoneDidChange] {
+      observers.append(
+        center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+          self?.send("clock")
+        })
+    }
+    // Access is granted in a system prompt or Settings while the app is
+    // in the background; a store made before that never reports changes.
+    observers.append(
+      center.addObserver(forName: NSApplication.didBecomeActiveNotification, object: nil, queue: .main) {
+        [weak self] _ in self?.watchCalendars()
+      })
+    watchCalendars()
+  }
+
+  private func watchCalendars() {
+    guard store == nil, Self.calendarReadable() else { return }
+    let store = EKEventStore()
+    self.store = store
+    observers.append(
+      NotificationCenter.default.addObserver(
+        forName: .EKEventStoreChanged, object: store, queue: .main
+      ) { [weak self] _ in self?.send("calendar") })
+  }
+
+  private static func calendarReadable() -> Bool {
+    let status = EKEventStore.authorizationStatus(for: .event)
+    if #available(macOS 14.0, *) { return status == .fullAccess }
+    return status == .authorized
+  }
+
+  private func send(_ event: String) {
+    channel?.invokeMethod(event, arguments: nil)
   }
 }
 

@@ -148,4 +148,42 @@ void main() {
     expect((await device.occurrence(occurrenceFixture().id))!.title, 'Mine');
     expect(server.table('occurrences').values.single['title'], 'Mine');
   });
+
+  // Nothing runs on a clock (docs/04 §4 "Triggers"): a failed run must come back on
+  // its own, or an outage would wait for the next edit (R-08).
+  test('a failed run is retried until one succeeds, then stops', () async {
+    await service.dispose();
+    await accounts.close();
+    accounts = StreamController<String?>();
+    final retrying = EngineSyncService(
+      engine: device.engine,
+      accounts: accounts.stream,
+      adopt: (_) async {},
+      conflicts: DriftConflictStore(
+        db: device.h.db,
+        writes: device.h.writes,
+        clock: device.h.clock,
+      ),
+      remoteChanges: const Stream.empty(),
+      clock: device.h.clock,
+      logger: Logger(MemoryLogSink(), device.h.clock),
+      settle: Duration.zero,
+      retryFirst: const Duration(milliseconds: 1),
+    );
+    service = retrying;
+    await device.write([occurrenceFixture().copyWith(userId: _account)]);
+    server.failNext = SyncTrouble.server;
+    accounts.add(_account);
+    final seen = <SyncState>[];
+    final sub = retrying.watch().listen((s) => seen.add(s.state));
+    for (var i = 0; i < 200 && !seen.contains(SyncState.synced); i++) {
+      await Future<void>.delayed(const Duration(milliseconds: 5));
+    }
+    await sub.cancel();
+    expect(seen, containsAllInOrder([SyncState.error, SyncState.synced]));
+    expect(server.table('occurrences'), hasLength(1));
+    final pushes = server.pushes;
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+    expect(server.pushes, pushes, reason: 'no retry after a success');
+  });
 }

@@ -199,7 +199,9 @@ const f2Rows = <String, ParityRow>{
     ios: Cell(Status.owner, 'BGAppRefresh fires on a device (M8.5)'),
     android: Cell(Status.device, 'background_refresh · emulator, M5.2'),
     note:
-        'Mac and web refresh on start, resume and every 6 h while open '
-        '(M5.2, M6.5.6); web offline via the service worker (CI pwa_check).',
+        'Mac and web refresh on start, resume, at local midnight while '
+        'open, and the Mac also on wake and clock/zone changes (M5.2, '
+        'M6.5.6; 2026-10-31 no polling, docs/04 §4); web offline via the '
+        'service worker (CI pwa_check).',
   ),
 };

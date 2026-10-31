@@ -65,6 +65,22 @@ void main() {
     expect(list.every((b) => b.sizeBytes > 0), isTrue);
   });
 
+  test('the next daily backup is due 24 h after the last one', () async {
+    final start = h.clock.nowUtc();
+    expect(await service.nextDailyDueUtc(userId), start, reason: 'none yet');
+    _ok(await service.create(userId, BackupReason.preImport));
+    expect(await service.nextDailyDueUtc(userId), start, reason: 'not daily');
+    _ok(await service.runDailyIfDue(userId));
+    h.clock.advance(const Duration(hours: 5));
+    expect(
+      await service.nextDailyDueUtc(userId),
+      start.add(const Duration(hours: 24)),
+    );
+    // At that moment runDailyIfDue takes it (the boundary is inclusive).
+    h.clock.advance(const Duration(hours: 19));
+    expect(_ok(await service.runDailyIfDue(userId)), isTrue);
+  });
+
   test('a backup holds the user data as JSON v1', () async {
     final info = _ok(await service.create(userId, BackupReason.daily));
     final row = await backups.select(backups.backups).getSingle();

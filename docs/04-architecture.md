@@ -48,7 +48,27 @@ hlc)` per local write.
 logical clock (HLC) carried in each change; the RPC returns the authoritative rows.
 
 **Pull**: initial full pull per table paged by `updatedAt`; afterwards Realtime `postgres_changes`
-on the user's rows + a periodic `since` pull as a safety net (every 5 min foreground, on resume).
+on the user's rows, each nudge pulling from the cursor.
+
+**Triggers — events, never polling** (owner, 2026-10-31): the open app acts when something happens,
+not on a period. Sync runs on sign-in, ~3 s after local writes, on every Realtime change, every time
+the Realtime channel joins (the first join and each rejoin after a drop: the cursor pull catches up
+with whatever went unannounced) and again when the server says its change feed is live (the
+`postgres_changes` "ok" system event: joining is reported ~0.1–0.3 s before changes are announced,
+found against the local stack), on resume and on "Sync now". A channel that errors or closes for
+good is replaced after 1 s, doubling to 30 s (`RealtimeNudges`); a channel that times out rejoins by
+itself. A failed run is retried after 5 s, doubling to 5 min, and only until one succeeds
+(`EngineSyncService`). Housekeeping (backup, Trash purge, queued intents, daily refresh, Wind Down
+snapshot, calendar import) runs on start, on resume, on the OS's `wake` and `clock` events
+(`dottoday/system_events`: Mac wake; date, clock or zone change on iOS, Android and the Mac), and at
+the one moment it is next due — local midnight or the daily backup, whichever is first
+(`housekeepingDueUtc`) — re-armed after every run. Device calendar changes (EventKit
+`EKEventStoreChanged`, Android `CalendarContract` observer) import after a 2 s settle. What stays
+scheduled by design: the OS's once-a-day background refresh on iOS/Android (a closed app hears no
+events), timers for a known future moment (reminders on the web, Wind Down, the minute tick), and
+Realtime's own 25 s keep-alive. The web has no OS events: its tab becoming visible is a resume; Google
+and Microsoft calendars there are read on start, resume and midnight until the backend gets their
+change webhooks (owner gate).
 
 **Conflicts**: per-field LWW by HLC. If two devices change the *same field* of the same row within
 60 s, record a `conflict` row and show "keep mine / keep theirs" in Sync details; default keeps server.

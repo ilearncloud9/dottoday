@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Dottoday no longer checks for changes on a timer; it reacts when something happens. Changes from your other devices arrive within seconds, also right after your connection comes back. While the app is open, midnight's refresh and the daily backup happen on the moment, and on a Mac also right after it wakes or the time zone changes. Edits to your phone's or Mac's calendars show up in Dottoday about two seconds later.
 - Bedtime is now Wind Down, everywhere. The Wake Up and Wind Down ends of the day are dots like your tasks — a sun and a sleepy moon — and tapping one changes its time, for every day or only that weekday.
 - Today's phone header is now the date, "October 25, 2026", on one line (the Mac/web spread keeps "Good morning") with the day dot and ⋯; the day fills the screen to the bottom, under the menu, and the menu's icons are bold.
 - Drag and drop works like Structured: as you drag, the task shows on the thread where it will land. Hold over a day in the week strip to switch to it, drop on Wake Up for all day, on the Inbox tab to unschedule, or on the Trash that appears above + (with Undo). Drag the + onto the day to add a task at that time.
