@@ -390,6 +390,10 @@ Spec: `12-sounds.md` (with the owner's amendments, 2026-10-28); ADR-0015; `11-st
   - The muted banner is Android-only (an R-13 exception: iOS has no API for the silent switch).
   - CI: the reference sheet moved to its own job after it pushed the golden gate past its 30-minute limit.
 - [x] M15.5 Docs. ADR-0015, this milestone, the roadmap pointer, the F6.6 parity row, the CHANGELOG. Done 2026-10-30.
+- [ ] M15.6 Ten more Start sounds (owner, 2026-10-31; awaiting the owner's ear pass). **Files** `assets/sounds/manifest.json` (Slow bell, Music box, Dawn chorus, Rain, Stream, Waves, Wind chimes, Forest, Clock bell, Beep rise; CC0 from BigSoundBank and Freesound, uploader kept as `author`), `tool/sounds/fetch.py` (per-source file host; brand words refused), `tool/sounds/build.py` (seamless 27 s loops with a 1.5 s crossfaded seam, 10 s fade-in on all but Clock bell and Beep rise; Start up to 28 s; an IMA4 `.caf` of each first-party tone for the iOS bundle), `tool/sounds/credits.py` (CC0 sources listed), `tool/xcode_add_sounds.rb` (every catalogue sound in the iOS bundle), `test/policy/ios_bundled_sounds_test.dart`. Notes:
+  - Quiet outliers after the 6 dB limiter, marked `loudnessAccepted` pending the ear pass: Music box, Rain, Wind chimes, Forest.
+  - The fade-in is baked into the loop, so each repeat fades in again; the Alarms milestone's code-side ramp replaces it on Android.
+  - About 15 MB more across platforms (27 s files).
 
 Follow-ups:
 - [ ] App size: the catalogue adds about 7 MB, mostly the Start sounds. Measure a 15 s Start cap, which would roughly halve it, in the ear pass before a store build.
@@ -431,6 +435,16 @@ Follow-ups:
 - [ ] Manual on a real device: cold install to the first dot on the thread in under 20 s (docs/14 §7).
 - [x] The Mac/web `TaskEditor` panel in its minimal form (§3 "Mac/web spread … panel"). Done 2026-10-31, found by the Mac sweep: in minimal the panel shows the minimal sheet (Done · Tomorrow · Later · Delete); More opens the editor in the panel.
 - [x] Device and web sweep entries for the minimal screens: M16.11.
+
+## Milestone 17 — Alarms (goal: the Start sound rings through silent mode, like an alarm, where the OS allows it)
+
+Spec: `15-alarms.md` (stub; owner, 2026-10-31); ADR-0015 ("every Start-tier sound is authored to be AlarmKit-eligible"); `11-standout-roadmap.md` A0. Not started. Must-ask before starting: a native target or new dependency, if the design needs one (CLAUDE.md §10).
+
+- [ ] M17.1 Real-device test: does AlarmKit repeat a custom bundled `.caf` until stopped, or play it once? Record the answer in `15-alarms.md` §3 before M17.2's design is fixed.
+- [ ] M17.2 iOS 26+: the alarm-loud tier schedules an AlarmKit alarm with the Start sound from the app bundle (bundle sounds only; every catalogue `.caf` is already there).
+- [ ] M17.3 Below iOS 26: fall back to the A0 time-sensitive tier, and Settings › Reminders shows "Alarms that ring through silent mode need iOS 26".
+- [ ] M17.4 Android: a foreground service plays the Start sound on `USAGE_ALARM`, with a code-side volume ramp.
+- [ ] M17.5 macOS and web: R-13 exception recorded (no OS alarm path); docs, CHANGELOG.
 
 ## Follow-ups after M12 (found at the M12.6 ship-check)
 

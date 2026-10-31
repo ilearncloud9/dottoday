@@ -44,6 +44,11 @@ hears or configured changes on upgrade.**
   - Levelling: Quiet −20, Clear/Playful/Done −16, Start −14 LUFS, with one linear gain and a
     −1 dBTP limiter allowed to take off at most 6 dB. Sounds more than 3 LU off target stay only
     with the owner's ear-pass mark (`loudnessAccepted`).
+- **Every Start-tier sound is authored to be AlarmKit-eligible** *(owner, 2026-10-31)*: in the
+  iOS app bundle as IMA4 `.caf`, mono, 44.1 kHz, under 30 s; the long ones as seamless 25–28 s
+  loops. The first-party tones get a bundle `.caf` too; the `Library/Sounds` copy stays. Ten CC0
+  Start sounds (BigSoundBank, Freesound) join the catalogue: 58 sounds, 20 Start, 48 new
+  channels. The alarm engine itself is the Alarms milestone (`docs/15-alarms.md`).
 - **Credits.** One line per source on the Sounds page ("Sounds from notificationsounds.com (CC BY
   4.0)."), and the full notice in About › Licences. Both are generated from the manifest, so a new
   source can't ship uncredited.
