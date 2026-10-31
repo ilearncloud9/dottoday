@@ -8601,7 +8601,7 @@ abstract class AppLocalizations {
   /// Day shape row under Wake Up alarm: opens its sound and snooze page.
   ///
   /// In en, this message translates to:
-  /// **'Sound and snooze'**
+  /// **'Wake Up options'**
   String get settingsWakeUpOptions;
 
   /// Wake Up alarm page: caption over the switch.
@@ -8741,6 +8741,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{Once} other{{count} times}}'**
   String wakeUpSnoozeTimes(int count);
+
+  /// Wake Up card: caption over the first dot.
+  ///
+  /// In en, this message translates to:
+  /// **'First'**
+  String get wakeUpCardFirst;
+
+  /// Wake Up card: caption over the next dots.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get wakeUpCardNext;
+
+  /// Wake Up card: opens Rebalance when up after plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift the rest?'**
+  String get wakeUpCardShift;
+
+  /// Wake Up card's main button.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the day'**
+  String get wakeUpCardStart;
+
+  /// Wake Up card: closes it.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get wakeUpCardLater;
+
+  /// Wake Up card on a day with no dots.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned yet'**
+  String get wakeUpCardEmpty;
+
+  /// Wake Up card on an empty day: opens Add.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan today'**
+  String get wakeUpCardPlan;
+
+  /// Minimal Wake Up card: shows the day dot, next dots and chips.
+  ///
+  /// In en, this message translates to:
+  /// **'Show my day'**
+  String get wakeUpCardShowDay;
+
+  /// Wake Up options page: caption over the card rows.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning card'**
+  String get wakeUpCardCaption;
+
+  /// Switch: the Wake Up card.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning card'**
+  String get wakeUpCardRow;
+
+  /// Under the Morning card switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Your day on one screen when you\'re up'**
+  String get wakeUpCardRowDetail;
+
+  /// Switch: open the card on the first launch after Wake Up.
+  ///
+  /// In en, this message translates to:
+  /// **'Show it when I first open the app'**
+  String get wakeUpCardOnOpenRow;
+
+  /// Switch: today's events on the card.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar on the card'**
+  String get wakeUpCardCalendarRow;
+
+  /// Switch: the Inbox count on the card.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox count on the card'**
+  String get wakeUpCardInboxRow;
+
+  /// Switch: the card's Shift the rest? offer.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer to shift the day when I\'m up after plan'**
+  String get wakeUpLateOfferRow;
+
+  /// Row: minutes after Wake Up before the shift offer shows.
+  ///
+  /// In en, this message translates to:
+  /// **'After'**
+  String get wakeUpLateAfterRow;
+
+  /// Wake Up card's first line; date is the weekday and date.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning. {date}.'**
+  String wakeUpCardGreeting(String date);
+
+  /// Inside the Wake Up card's day dot.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} planned · ends {time}'**
+  String wakeUpCardPlanned(int count, String time);
+
+  /// Wake Up card: the first dot's first step and its length.
+  ///
+  /// In en, this message translates to:
+  /// **'first: {step} · {length}'**
+  String wakeUpCardFirstStep(String step, String length);
+
+  /// Wake Up card: the first dot's first step, no length.
+  ///
+  /// In en, this message translates to:
+  /// **'first: {step}'**
+  String wakeUpCardFirstStepShort(String step);
+
+  /// Wake Up card chip.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 event today} other{{count} events today}}'**
+  String wakeUpCardCalendar(int count);
+
+  /// Wake Up card chip.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 in Inbox} other{{count} in Inbox}}'**
+  String wakeUpCardInbox(int count);
+
+  /// Wake Up card: up this long after Wake Up (no-shame: never 'late').
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re up {min} min after plan.'**
+  String wakeUpCardLate(int min);
+
+  /// Notification health, under the Wake Up row.
+  ///
+  /// In en, this message translates to:
+  /// **'Last wake-up: rang {rang}, up {up}'**
+  String healthLastWakeUp(String rang, String up);
+
+  /// Notification health when the ring time isn't known (iPhone).
+  ///
+  /// In en, this message translates to:
+  /// **'Last wake-up: up {up}'**
+  String healthLastWakeUpUp(String up);
+
+  /// Notification health when it rang and stopped by itself.
+  ///
+  /// In en, this message translates to:
+  /// **'Last wake-up: rang {rang}'**
+  String healthLastWakeUpRang(String rang);
 
   /// What's new in 1.2.0 (M15 sounds, M16 minimal layout, the Structured-style day, M17 Wake Up alarm), one item per line (PRD F11).
   ///

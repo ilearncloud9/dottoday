@@ -4606,6 +4606,91 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String wakeUpSnoozeTimes(int count) => pseudo(super.wakeUpSnoozeTimes(count));
 
   @override
+  String get wakeUpCardFirst => pseudo(super.wakeUpCardFirst);
+
+  @override
+  String get wakeUpCardNext => pseudo(super.wakeUpCardNext);
+
+  @override
+  String get wakeUpCardShift => pseudo(super.wakeUpCardShift);
+
+  @override
+  String get wakeUpCardStart => pseudo(super.wakeUpCardStart);
+
+  @override
+  String get wakeUpCardLater => pseudo(super.wakeUpCardLater);
+
+  @override
+  String get wakeUpCardEmpty => pseudo(super.wakeUpCardEmpty);
+
+  @override
+  String get wakeUpCardPlan => pseudo(super.wakeUpCardPlan);
+
+  @override
+  String get wakeUpCardShowDay => pseudo(super.wakeUpCardShowDay);
+
+  @override
+  String get wakeUpCardCaption => pseudo(super.wakeUpCardCaption);
+
+  @override
+  String get wakeUpCardRow => pseudo(super.wakeUpCardRow);
+
+  @override
+  String get wakeUpCardRowDetail => pseudo(super.wakeUpCardRowDetail);
+
+  @override
+  String get wakeUpCardOnOpenRow => pseudo(super.wakeUpCardOnOpenRow);
+
+  @override
+  String get wakeUpCardCalendarRow => pseudo(super.wakeUpCardCalendarRow);
+
+  @override
+  String get wakeUpCardInboxRow => pseudo(super.wakeUpCardInboxRow);
+
+  @override
+  String get wakeUpLateOfferRow => pseudo(super.wakeUpLateOfferRow);
+
+  @override
+  String get wakeUpLateAfterRow => pseudo(super.wakeUpLateAfterRow);
+
+  @override
+  String wakeUpCardGreeting(String date) =>
+      pseudo(super.wakeUpCardGreeting(date));
+
+  @override
+  String wakeUpCardPlanned(int count, String time) =>
+      pseudo(super.wakeUpCardPlanned(count, time));
+
+  @override
+  String wakeUpCardFirstStep(String step, String length) =>
+      pseudo(super.wakeUpCardFirstStep(step, length));
+
+  @override
+  String wakeUpCardFirstStepShort(String step) =>
+      pseudo(super.wakeUpCardFirstStepShort(step));
+
+  @override
+  String wakeUpCardCalendar(int count) =>
+      pseudo(super.wakeUpCardCalendar(count));
+
+  @override
+  String wakeUpCardInbox(int count) => pseudo(super.wakeUpCardInbox(count));
+
+  @override
+  String wakeUpCardLate(int min) => pseudo(super.wakeUpCardLate(min));
+
+  @override
+  String healthLastWakeUp(String rang, String up) =>
+      pseudo(super.healthLastWakeUp(rang, up));
+
+  @override
+  String healthLastWakeUpUp(String up) => pseudo(super.healthLastWakeUpUp(up));
+
+  @override
+  String healthLastWakeUpRang(String rang) =>
+      pseudo(super.healthLastWakeUpRang(rang));
+
+  @override
   String get releaseNotes120 => pseudo(super.releaseNotes120);
 
   @override

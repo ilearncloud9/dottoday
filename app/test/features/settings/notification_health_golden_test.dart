@@ -3,16 +3,20 @@
 library;
 
 import 'package:dottoday/data/notifications/health_providers.dart';
+import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/notification_health.dart';
 import 'package:dottoday/domain/sync/clock_skew.dart';
+import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:dottoday/features/settings/pages/notification_health_page.dart';
 import 'package:dottoday/shared/notifications/test_alarm_card.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/dot_golden.dart';
+import '../../support/timeline_fakes.dart';
 
 // Notification health's four states (derived — 11 A0, docs/09 M6.5.8):
 // all good · permission off · exact alarms/battery off · clock off.
@@ -53,6 +57,7 @@ final _states = <String, List<HealthCheck>>{
 
 void main() {
   setUpAll(loadAppFonts);
+  setUpAll(tz_data.initializeTimeZones);
   for (final MapEntry(key: name, value: checks) in _states.entries) {
     goldenMatrix(
       'settings_health_$name',
@@ -149,10 +154,41 @@ void main() {
             const HealthCheck(HealthCheckKind.clock, _ok),
           ],
         ),
+        lastWakeUpProvider.overrideWith((ref) async => null),
       ],
       build: (_) => const NotificationHealthPage(),
     );
   }
+  // The Wake Up row with the last morning under it (docs/15 §4, M17.3).
+  goldenMatrix(
+    'settings_health_wake_up_last',
+    height: 900,
+    widths: const {'compact'},
+    overrides: [
+      ...timelineOverrides(
+        now: DateTime.utc(2026, 11, 2, 7),
+        wakeUpDays: FakeWakeUpDayRepository([
+          WakeUpDay(
+            date: '2026-11-02',
+            rangAtUtc: DateTime.utc(2026, 11, 2, 5, 30),
+            stoppedAtUtc: DateTime.utc(2026, 11, 2, 5, 41),
+            snoozes: 1,
+          ),
+        ]),
+      ),
+      notificationHealthChecksProvider.overrideWith(
+        (ref) async => [
+          const HealthCheck(HealthCheckKind.permission, _ok),
+          const HealthCheck(
+            HealthCheckKind.wakeUp,
+            _ok,
+            wakeUp: AlarmCapabilities(AlarmTier.alarm),
+          ),
+        ],
+      ),
+    ],
+    build: (_) => const NotificationHealthPage(),
+  );
   // The test alarm's waiting and asking steps (M6.5.9, derived).
   for (final step in [TestAlarmStep.waiting, TestAlarmStep.ask]) {
     goldenMatrix(

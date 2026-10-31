@@ -25,6 +25,7 @@ enum FeatureId {
   onboarding('Onboarding'),
   alarmsHealth('A0 alarms + Notification health'),
   wakeUpAlarm('W1 Wake Up alarm'),
+  wakeUpCard('W2 Wake Up card'),
   actualTimestamps('B1 actual timestamps'),
   subtaskDurations('B2 subtask durations'),
   liveActivity('A1 Live Activity / ongoing notification'),

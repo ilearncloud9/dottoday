@@ -36,7 +36,7 @@ void main() {
 
   testWidgets('off: the switch, the test and health only', (tester) async {
     await _pump(tester, settings: const Settings(use24h: true));
-    expect(find.text('Wake Up alarm'), findsWidgets);
+    expect(find.text('Wake Up options'), findsOneWidget);
     expect(find.text('Alarm sound'), findsNothing);
     expect(find.text('Snooze length'), findsNothing);
     expect(find.text('Notification health'), findsOneWidget);
@@ -116,5 +116,24 @@ void main() {
     await _tap(tester, "Rings like an alarm at Wake Up on days you've planned");
     expect((await storedSettings(h)).wakeUpAlarm, isTrue);
     expect(gateway.authorizationRequests, 1);
+  });
+
+  testWidgets('Morning card: follows the alarm until chosen; its rows', (
+    tester,
+  ) async {
+    final h = await _pump(tester);
+    expect(find.text('Show it when I first open the app'), findsOneWidget);
+    await _tap(tester, 'Offer to shift the day when I\'m up after plan');
+    expect((await storedSettings(h)).wakeUpLateOffer, isFalse);
+    expect(find.text('After'), findsNothing);
+    await _tap(tester, "Your day on one screen when you're up");
+    expect((await storedSettings(h)).wakeUpCard, isFalse);
+    expect(find.text('Show it when I first open the app'), findsNothing);
+  });
+
+  testWidgets('Morning card off for anyone without Wake Up', (tester) async {
+    await _pump(tester, settings: const Settings(use24h: true));
+    expect(find.text('Morning card'), findsWidgets);
+    expect(find.text('Show it when I first open the app'), findsNothing);
   });
 }
