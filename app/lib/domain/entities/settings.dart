@@ -64,6 +64,15 @@ abstract class Settings with _$Settings {
     // time rings like an alarm on phones. A missing key reads as off, so an
     // upgrade rings nothing new (15 §11); onboarding offers it on.
     @Default(false) bool wakeUpAlarm,
+    // Settings › Wake Up alarm (15 §9, M17.2): its sound (null = the Start
+    // sound), a different start-tier cue each day, Android's volume ramp,
+    // and snooze (length in minutes; limit 0 = no limit).
+    String? wakeUpSoundId,
+    @Default(false) bool wakeUpVarySound,
+    @Default(30) int wakeUpRampSec,
+    @Default(true) bool wakeUpSnooze,
+    @Default(9) int wakeUpSnoozeMin,
+    @Default(3) int wakeUpSnoozeMax,
     // The once-a-day "Plan your inbox" card (docs/02 F3.3): off by default.
     @Default(false) bool inboxNudge,
     // Settings › Calendars › Travel time (M7.5, R-17): off until chosen

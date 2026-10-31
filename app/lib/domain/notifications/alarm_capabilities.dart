@@ -1,10 +1,10 @@
 import 'package:dottoday/domain/notifications/notification_health.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
+import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
 
-/// How loud the Wake Up alarm can be on this device (docs/15 §2). The
-/// existing notification path (W1a) reaches [alarm] on Android with the
-/// full-screen intent, and [timeSensitive] on iPhone; AlarmKit (W1b)
-/// raises iOS 26+ to [alarm].
+/// How loud the Wake Up alarm can be on this device (docs/15 §2): [alarm]
+/// on Android with the full-screen intent and on iOS 26+ with AlarmKit
+/// allowed (W1b), [timeSensitive] on other iPhones.
 enum AlarmTier {
   /// Takes over the screen and rings on the alarm stream.
   alarm,
@@ -33,6 +33,31 @@ enum AlarmBlocker {
 
   /// Android 12+: "Alarms & reminders" is off, so the alarm may be late.
   exactAlarmDenied,
+
+  /// iOS 26+: Dottoday's alarms are not allowed yet (asked or turned off).
+  alarmsDenied,
+
+  /// iOS below 26 on an iPhone that can update to it.
+  osTooOld,
+}
+
+/// AlarmKit on this iPhone (docs/15 §2, W1b); every other device reads
+/// [unsupported].
+enum AlarmKitStatus {
+  /// iOS 26+, alarms allowed.
+  authorized,
+
+  /// iOS 26+, never asked.
+  notAsked,
+
+  /// iOS 26+, turned off in Settings.
+  denied,
+
+  /// Below iOS 26 on hardware that can run it.
+  needsUpdate,
+
+  /// No AlarmKit here, and no update brings it.
+  unsupported,
 }
 
 /// The single answer every Wake Up surface reads (15 §2): no screen checks
@@ -70,19 +95,18 @@ AlarmCapabilities alarmCapabilities({
   required PermissionState permission,
   bool fullScreenIntent = true,
   bool exactAlarms = true,
+  AlarmKitStatus alarmKit = AlarmKitStatus.unsupported,
 }) {
   if (!platform.isPhone) {
     return const AlarmCapabilities(AlarmTier.none, [AlarmBlocker.notAPhone]);
   }
+  if (platform == HealthPlatform.iphone) return _iphone(permission, alarmKit);
   if (permission != PermissionState.granted) {
     return const AlarmCapabilities(AlarmTier.none, [
       AlarmBlocker.permissionDenied,
     ]);
   }
   final timing = [if (!exactAlarms) AlarmBlocker.exactAlarmDenied];
-  if (platform == HealthPlatform.iphone) {
-    return AlarmCapabilities(AlarmTier.timeSensitive, timing);
-  }
   return fullScreenIntent
       ? AlarmCapabilities(AlarmTier.alarm, timing)
       : AlarmCapabilities(AlarmTier.headsUp, [
@@ -91,16 +115,55 @@ AlarmCapabilities alarmCapabilities({
         ]);
 }
 
-/// The Wake Up alarm's port to the OS (docs/15 §3, ADR-0017). W1a only
-/// reads and fixes capabilities: the alarm itself is still planned by
-/// `NotificationPlanner` on the existing path. W1b adds arming through
-/// AlarmKit and the Android ringing screen here.
+/// The Wake Up alarm's port to the OS (docs/15 §3, ADR-0017): AlarmKit on
+/// iOS 26+, the ringing screen on Android. Where it arms nothing (older
+/// iPhones, exact alarms off, the Mac and the web) `NotificationPlanner`
+/// rings the Wake Up on the notification path instead (W1a).
 abstract interface class AlarmGateway {
   /// What this device can do now; re-read on resume.
   Future<AlarmCapabilities> capabilities();
 
   /// Opens the system page (or prompt) that removes [blocker].
   Future<void> fix(AlarmBlocker blocker);
+
+  /// Shows the OS's own alarm prompt where it was never shown (iOS 26+,
+  /// when the Wake Up switch goes on); anywhere else, nothing.
+  Future<void> requestAuthorization();
+
+  /// Makes [alarms] the armed set: arms new and changed ones and disarms
+  /// the rest, except one ringing or snoozed now (only dismissing ends
+  /// those) and the test alarm. Returns the instants armed, or null when
+  /// the OS side can't be reached (a background engine), so the caller
+  /// keeps what it knew. Idempotent.
+  Future<Set<DateTime>?> sync(List<WakeUpAlarm> alarms);
+
+  /// Stops and disarms every Wake Up alarm, ringing or snoozed included:
+  /// the switch went off.
+  Future<void> disarmAll();
+
+  /// Arms [alarm] (a [WakeUpAlarm.testId] one) apart from [sync]'s set;
+  /// false when this device has no alarm path, so the caller falls back to
+  /// the notification test alarm.
+  Future<bool> test(WakeUpAlarm alarm);
+}
+
+/// AlarmKit rings without the notification permission, so an allowed
+/// AlarmKit is the alarm tier on its own; otherwise allowing it is the
+/// first fix offered.
+AlarmCapabilities _iphone(PermissionState permission, AlarmKitStatus kit) {
+  if (kit == AlarmKitStatus.authorized) {
+    return const AlarmCapabilities(AlarmTier.alarm);
+  }
+  final blockers = [
+    if (kit == AlarmKitStatus.notAsked || kit == AlarmKitStatus.denied)
+      AlarmBlocker.alarmsDenied,
+    if (permission != PermissionState.granted) AlarmBlocker.permissionDenied,
+    if (kit == AlarmKitStatus.needsUpdate) AlarmBlocker.osTooOld,
+  ];
+  final tier = permission == PermissionState.granted
+      ? AlarmTier.timeSensitive
+      : AlarmTier.none;
+  return AlarmCapabilities(tier, blockers);
 }
 
 bool _sameList(List<AlarmBlocker> a, List<AlarmBlocker> b) {

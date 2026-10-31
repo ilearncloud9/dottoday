@@ -76,6 +76,7 @@ final class LayoutPolicy {
     FeatureId.lightDarkLanguage: FeatureVisibility.shown,
     FeatureId.onboarding: FeatureVisibility.simplified,
     FeatureId.alarmsHealth: FeatureVisibility.shown,
+    FeatureId.wakeUpAlarm: FeatureVisibility.simplified,
     FeatureId.actualTimestamps: FeatureVisibility.shown,
     FeatureId.subtaskDurations: FeatureVisibility.hidden,
     FeatureId.liveActivity: FeatureVisibility.shown,

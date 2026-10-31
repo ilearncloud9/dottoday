@@ -11,8 +11,8 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
+import 'package:dottoday/features/settings/widgets/sound_tier_sheet.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
-import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:dottoday/shared/sounds/sound_options.dart';
 import 'package:dottoday/shared/sounds/sound_preview.dart';
 import 'package:dottoday/shared/sounds/sound_sections.dart';
@@ -101,7 +101,7 @@ class _MoreGroup extends StatelessWidget {
           value: start.value,
           below: start.below,
           onTap: () => unawaited(
-            _showTierSheet(
+            showSoundTierSheet(
               context,
               title: l10n.soundsStart,
               sections: startSoundSections(l10n),
@@ -118,7 +118,7 @@ class _MoreGroup extends StatelessWidget {
           value: done.value,
           below: done.below,
           onTap: () => unawaited(
-            _showTierSheet(
+            showSoundTierSheet(
               context,
               title: l10n.soundsDone,
               sections: doneSoundSections(l10n),
@@ -142,53 +142,6 @@ class _MoreGroup extends StatelessWidget {
     );
   }
 }
-
-/// The Start or Done list in a sheet: a tap picks and plays; Done closes
-/// and stops the preview.
-Future<void> _showTierSheet(
-  BuildContext context, {
-  required String title,
-  required List<SoundSection> sections,
-  required String Function(Settings) selected,
-  required Settings Function(Settings, String) write,
-}) => showAppSheet<void>(
-  context: context,
-  title: title,
-  builder: (_) =>
-      SoundPreviewScope(child: _tierList(sections, selected, write)),
-);
-
-Widget _tierList(
-  List<SoundSection> sections,
-  String Function(Settings) selected,
-  Settings Function(Settings, String) write,
-) => Consumer(
-  builder: (context, ref, _) {
-    final settings = ref.watch(currentProfileProvider).value?.settings;
-    if (settings == null) return const SizedBox.shrink();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: DotSpace.s,
-      children: [
-        if (ref.watch(deviceMutedProvider).value ?? false)
-          const SoundMutedBanner(),
-        SoundOptionList(
-          sections: sections,
-          selected: selected(settings),
-          onPick: (key) {
-            if (key == null) return;
-            changeSettings(context, (s) => write(s, key));
-            previewSound(ref, key);
-          },
-        ),
-        FilledButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(context.l10n.alertsDone),
-        ),
-      ],
-    );
-  },
-);
 
 /// The single credit line per source (docs/12 §1), each a link to it.
 class _Credits extends ConsumerWidget {

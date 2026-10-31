@@ -100,4 +100,57 @@ void main() {
       HealthLevel.ok,
     );
   });
+
+  group('iPhone with AlarmKit (W1b)', () {
+    AlarmCapabilities iphone(
+      AlarmKitStatus kit, {
+      PermissionState permission = PermissionState.granted,
+    }) => alarmCapabilities(
+      platform: HealthPlatform.iphone,
+      permission: permission,
+      alarmKit: kit,
+    );
+
+    test('allowed: the alarm tier, even with notifications off', () {
+      expect(
+        iphone(AlarmKitStatus.authorized),
+        const AlarmCapabilities(AlarmTier.alarm),
+      );
+      expect(
+        iphone(AlarmKitStatus.authorized, permission: PermissionState.denied),
+        const AlarmCapabilities(AlarmTier.alarm),
+      );
+    });
+
+    test('not asked or turned off: allowing alarms is the first fix', () {
+      for (final kit in [AlarmKitStatus.notAsked, AlarmKitStatus.denied]) {
+        expect(
+          iphone(kit),
+          const AlarmCapabilities(AlarmTier.timeSensitive, [
+            AlarmBlocker.alarmsDenied,
+          ]),
+        );
+        expect(
+          iphone(kit, permission: PermissionState.denied),
+          const AlarmCapabilities(AlarmTier.none, [
+            AlarmBlocker.alarmsDenied,
+            AlarmBlocker.permissionDenied,
+          ]),
+        );
+      }
+    });
+
+    test('below iOS 26: an update is offered only where one exists', () {
+      expect(
+        iphone(AlarmKitStatus.needsUpdate),
+        const AlarmCapabilities(AlarmTier.timeSensitive, [
+          AlarmBlocker.osTooOld,
+        ]),
+      );
+      expect(
+        iphone(AlarmKitStatus.unsupported),
+        const AlarmCapabilities(AlarmTier.timeSensitive),
+      );
+    });
+  });
 }

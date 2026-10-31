@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The Wake Up alarm's notification channel and snooze line (docs/15 W1b);
+     the ringing screen's own words come from the app with each alarm. -->
+<resources>
+    <string name="wake_up_channel">Aufstehen-Wecker</string>
+    <string name="wake_up_snoozed">Schlummert bis %1$s</string>
+</resources>

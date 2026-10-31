@@ -73,6 +73,7 @@ Future<SettingsHarness> pumpSettings(
   String whatsNewSeen = '0.1.0',
   DiagnosticsReader? diagnostics,
   Env? env,
+  FakeAlarmGateway? alarmGateway,
 }) async {
   tester.view
     ..physicalSize = size
@@ -101,6 +102,7 @@ Future<SettingsHarness> pumpSettings(
         exports: exports,
         whatsNewSeen: whatsNewSeen,
         diagnostics: diagnostics ?? const FakeDiagnosticsReader(),
+        alarmGateway: alarmGateway,
       ),
       linkLauncherProvider.overrideWithValue(links),
       appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),

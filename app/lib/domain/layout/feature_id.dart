@@ -24,6 +24,7 @@ enum FeatureId {
   lightDarkLanguage('Light/dark, language'),
   onboarding('Onboarding'),
   alarmsHealth('A0 alarms + Notification health'),
+  wakeUpAlarm('W1 Wake Up alarm'),
   actualTimestamps('B1 actual timestamps'),
   subtaskDurations('B2 subtask durations'),
   liveActivity('A1 Live Activity / ongoing notification'),

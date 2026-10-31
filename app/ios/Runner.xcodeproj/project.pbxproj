@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0198158024A57009A75B0BEB /* start_lovingly.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0902871A5CE25538DAD36A02 /* start_lovingly.caf */; };
+		02678329CCD2A03207DA79D5 /* AlarmBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923A60B7EFB7BFEBF94DBB37 /* AlarmBridge.swift */; };
 		0277774B9AAC96638F8B085E /* DotIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF20C1EBD7428AB1D846DDA /* DotIntents.swift */; };
 		048B3BB197C543D7DF8C4DD3 /* DottodayShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DD96AFEBEC6DC487B38BA47A /* DottodayShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		08A3E384D6D24DF1A6DE98E3 /* clear_lift.caf in Resources */ = {isa = PBXBuildFile; fileRef = 89D24CE647055FDCBE987970 /* clear_lift.caf */; };
@@ -20,6 +21,7 @@
 		20597DA19B519072120EDB05 /* start_dawn_chorus.caf in Resources */ = {isa = PBXBuildFile; fileRef = 002323410D2E1E136FBBA344 /* start_dawn_chorus.caf */; };
 		226FEE0B743CE98F2C6CFFF9 /* clear_turn.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4AFFF428E87BAC002FDBBF26 /* clear_turn.caf */; };
 		29267702C36DF550D7792F61 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB63392B2470BB3162B34042 /* ShareViewController.swift */; };
+		2D1762B2C2127BFD97EA5DE1 /* WakeUpAlarmKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07F3DD0B674D3A1795CA07B /* WakeUpAlarmKit.swift */; };
 		2DAD369DB08A19596B4698AB /* DotActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6896750FE31F95897106A0A7 /* DotActivity.swift */; };
 		312CB761987213FA15593676 /* start_forest.caf in Resources */ = {isa = PBXBuildFile; fileRef = F6B2CF4D23026C5BCE555DF1 /* start_forest.caf */; };
 		31CF07C1EE3213C5F5ADAC0B /* reminder_bell.caf in Resources */ = {isa = PBXBuildFile; fileRef = B06B6834A4ACABA8C53E2A48 /* reminder_bell.caf */; };
@@ -35,6 +37,7 @@
 		3E26F5DA547F11A9619353B3 /* play_dog.caf in Resources */ = {isa = PBXBuildFile; fileRef = 1CB024381AF756438BA8BC8A /* play_dog.caf */; };
 		3F56DFA20181A3BD30E4A1D1 /* start_solemn.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7290521AD0DD95D0FDD54BAD /* start_solemn.caf */; };
 		456F2ADA626395AD86F1DED9 /* quiet_soft.caf in Resources */ = {isa = PBXBuildFile; fileRef = ACF2F1CC152008A2C7D4135F /* quiet_soft.caf */; };
+		46621FF7464C297DADEFE799 /* WakeUpAlarmActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554B38E47E0AAE49D9ED2997 /* WakeUpAlarmActivity.swift */; };
 		474B4C2CF42CC943669A58D7 /* DottodayWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9012690487F74080E890CF7D /* DottodayWidgets.swift */; };
 		4AFDF0F6B143AA52A88BC35F /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 333D3C32D7361F85D0AA5390 /* Pods_Runner.framework */; };
 		4E8A60D9C588371B244A20B1 /* start_insistent.caf in Resources */ = {isa = PBXBuildFile; fileRef = 6B4B00FAD2C80F0416DD2993 /* start_insistent.caf */; };
@@ -114,6 +117,7 @@
 		F266430ED06D4B1A1DC3A49E /* done_checked.caf in Resources */ = {isa = PBXBuildFile; fileRef = B05210FC5A88801B9E879BA4 /* done_checked.caf */; };
 		F698BC841321E78783E40625 /* clear_involved.caf in Resources */ = {isa = PBXBuildFile; fileRef = 80E55EE769C90EE357400A18 /* clear_involved.caf */; };
 		FA4062DD993DED8F67A24B23 /* clear_settled.caf in Resources */ = {isa = PBXBuildFile; fileRef = D2463FE71D931F9B918F960C /* clear_settled.caf */; };
+		FB06A964B9B1197955384188 /* WakeUpAlarmKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07F3DD0B674D3A1795CA07B /* WakeUpAlarmKit.swift */; };
 		FF4E69F492C56F95BC3EBD48 /* DotActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9475CDDE68AAF01310D87A /* DotActions.swift */; };
 /* End PBXBuildFile section */
 
@@ -203,6 +207,7 @@
 		52272219734A687F44161C60 /* done_finished.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = done_finished.caf; path = Runner/Sounds/done_finished.caf; sourceTree = SOURCE_ROOT; };
 		53991F7DB8E44DC7ED234E07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		53A045524ECFC47C52272928 /* done_succeeded.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = done_succeeded.caf; path = Runner/Sounds/done_succeeded.caf; sourceTree = SOURCE_ROOT; };
+		554B38E47E0AAE49D9ED2997 /* WakeUpAlarmActivity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WakeUpAlarmActivity.swift; sourceTree = "<group>"; };
 		569EBECAF1492CF244C8D661 /* LiveActivities.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivities.swift; sourceTree = "<group>"; };
 		5C98AE1A8DEB0128D3814376 /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/AppShortcuts.strings; sourceTree = "<group>"; };
 		5DFB8722B137929D22D2F8B7 /* Views.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
@@ -232,6 +237,7 @@
 		89D24CE647055FDCBE987970 /* clear_lift.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_lift.caf; path = Runner/Sounds/clear_lift.caf; sourceTree = SOURCE_ROOT; };
 		8A7F3DBEA3F12BCB8407A9B4 /* play_gulls.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_gulls.caf; path = Runner/Sounds/play_gulls.caf; sourceTree = SOURCE_ROOT; };
 		9012690487F74080E890CF7D /* DottodayWidgets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DottodayWidgets.swift; sourceTree = "<group>"; };
+		923A60B7EFB7BFEBF94DBB37 /* AlarmBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AlarmBridge.swift; sourceTree = "<group>"; };
 		938E2D9F7892511A64ACA938 /* clear_smile.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_smile.caf; path = Runner/Sounds/clear_smile.caf; sourceTree = SOURCE_ROOT; };
 		93AB358D63D95905230F72BA /* DotTokens.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotTokens.swift; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
@@ -261,6 +267,7 @@
 		CE337F8072ED47A16A886BE2 /* play_drum.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_drum.caf; path = Runner/Sounds/play_drum.caf; sourceTree = SOURCE_ROOT; };
 		CFCB9EE75F6E260E5068751F /* DottodayShare.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = DottodayShare.entitlements; sourceTree = "<group>"; };
 		D057CBF4043C1304FE844CA9 /* ThinkingBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ThinkingBridge.swift; sourceTree = "<group>"; };
+		D07F3DD0B674D3A1795CA07B /* WakeUpAlarmKit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WakeUpAlarmKit.swift; sourceTree = "<group>"; };
 		D136DF57206457BBAAC11E02 /* es */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D2463FE71D931F9B918F960C /* clear_settled.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_settled.caf; path = Runner/Sounds/clear_settled.caf; sourceTree = SOURCE_ROOT; };
 		D35E811333715D9C04A443BC /* LiveActivityViewsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityViewsTests.swift; sourceTree = "<group>"; };
@@ -342,6 +349,7 @@
 				569EBECAF1492CF244C8D661 /* LiveActivities.swift */,
 				BBF327A6E80AA18432DB80F2 /* LiveActivityViews.swift */,
 				69ADD44F5E8B69668AE7B59D /* Snapshot.swift */,
+				D07F3DD0B674D3A1795CA07B /* WakeUpAlarmKit.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -431,6 +439,7 @@
 				BDB9ECEFC39891C3ACBA6062 /* DottodayWidgets.entitlements */,
 				E8F233CCFDCA8F76524C329C /* DotLiveActivity.swift */,
 				656B1CE923F32B8B268C4ECA /* DotControls.swift */,
+				554B38E47E0AAE49D9ED2997 /* WakeUpAlarmActivity.swift */,
 			);
 			path = DottodayWidgets;
 			sourceTree = "<group>";
@@ -525,6 +534,7 @@
 				D057CBF4043C1304FE844CA9 /* ThinkingBridge.swift */,
 				A1B2C3D4E5F60718293A4B02 /* SpeechBridge.swift */,
 				38D6FFE543424C4973F4A138 /* Sounds */,
+				923A60B7EFB7BFEBF94DBB37 /* AlarmBridge.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -899,6 +909,8 @@
 				C04EB1EB4948A0E2FFCA5616 /* DotLiveActivity.swift in Sources */,
 				BA76BE689526EC3B4969C5CA /* DotControls.swift in Sources */,
 				3261C528E16F15B66C53F7D1 /* Snapshot.swift in Sources */,
+				2D1762B2C2127BFD97EA5DE1 /* WakeUpAlarmKit.swift in Sources */,
+				46621FF7464C297DADEFE799 /* WakeUpAlarmActivity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -922,6 +934,8 @@
 				393277596608AB97021B23B3 /* DotShortcuts.swift in Sources */,
 				D015D12A752D6D3BCDC243C7 /* ThinkingBridge.swift in Sources */,
 				A1B2C3D4E5F60718293A4B01 /* SpeechBridge.swift in Sources */,
+				FB06A964B9B1197955384188 /* WakeUpAlarmKit.swift in Sources */,
+				02678329CCD2A03207DA79D5 /* AlarmBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

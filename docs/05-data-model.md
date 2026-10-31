@@ -168,6 +168,12 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   "rollUnfinished": false,
   "bedtimeReminder": true,
   "wakeUpAlarm": false,
+  "wakeUpSoundId": null,
+  "wakeUpVarySound": false,
+  "wakeUpRampSec": 30,
+  "wakeUpSnooze": true,
+  "wakeUpSnoozeMin": 9,
+  "wakeUpSnoozeMax": 3,
   "inboxNudge": false,
   "daySummaryDays": [],
   "reminderSound": null,
@@ -201,6 +207,15 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   boolean, off by default, so an upgrade rings nothing new; onboarding offers it on for a new user. It
   rings only on phones. `bedtimeReminder` keeps its name: it is the stored, synced key of the
   Wind Down reminder (renaming it would need a settings migration). The server ignores both keys.
+- Clarified in M17.2: the Wake Up alarm's options (docs/15 §9) are flat keys beside it.
+  - `wakeUpSoundId`: a Start sound id; null follows `startSoundId`.
+  - `wakeUpVarySound`: a different start-tier cue each day, the same cue for a given date.
+  - `wakeUpRampSec`: 0, 15, 30 or 60; Android only, because AlarmKit sets the iPhone's volume.
+  - `wakeUpSnooze`, `wakeUpSnoozeMin` (5, 9, 10 or 15) and `wakeUpSnoozeMax` (1–5; 0 = no limit).
+
+  All are synced, and a missing key reads as the default. What the alarm did on this device stays
+  local. In `local_meta`, `armed_wake_ups` holds the instants `AlarmGateway` armed (ADR-0017). The
+  OS keeps the rest in its own store: AlarmKit, or Android's `dottoday_wake_up` preferences.
 - Clarified in M8.4c: `inboxNudge` (PRD F3.3, the once-a-day "Plan your inbox" card on Today) is a
   plain boolean, off by default; the day it was last put away is per device in `local_meta`
   (`inbox_nudge_day`, never synced — a nudge is a suggestion, like the Day review's "Not now").

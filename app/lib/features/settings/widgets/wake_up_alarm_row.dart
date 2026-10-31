@@ -35,8 +35,11 @@ class WakeUpAlarmRow extends ConsumerWidget {
       title: l10n.settingsWakeUpAlarm,
       subtitle: detail,
       toggle: on,
-      onToggle: (value) =>
-          changeSettings(context, (s) => s.copyWith(wakeUpAlarm: value)),
+      onToggle: (value) {
+        changeSettings(context, (s) => s.copyWith(wakeUpAlarm: value));
+        // iOS 26+ asks for alarms as the switch goes on (15 §2).
+        if (value) unawaited(_allow(ref));
+      },
       below: more == null && fix == null
           ? null
           : Column(
@@ -46,7 +49,7 @@ class WakeUpAlarmRow extends ConsumerWidget {
                 if (fix != null)
                   TextButton(
                     onPressed: () => unawaited(_fix(ref, fix)),
-                    child: Text(l10n.healthFixAllow),
+                    child: Text(wakeUpFixLabel(l10n, fix)),
                   ),
               ],
             ),
@@ -62,6 +65,11 @@ class WakeUpAlarmRow extends ConsumerWidget {
     final away = capabilities.blockers.contains(AlarmBlocker.notAPhone);
     if (!on && !away) return (l10n.settingsWakeUpAlarmDetail, null);
     return wakeUpTierText(l10n, capabilities);
+  }
+
+  Future<void> _allow(WidgetRef ref) async {
+    await ref.read(alarmGatewayProvider).requestAuthorization();
+    ref.invalidate(alarmCapabilitiesNowProvider);
   }
 
   Future<void> _fix(WidgetRef ref, AlarmBlocker blocker) async {

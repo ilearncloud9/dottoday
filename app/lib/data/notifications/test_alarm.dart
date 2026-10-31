@@ -1,8 +1,15 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/data/notifications/notification_content.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
+import 'package:dottoday/domain/notifications/planned_notification.dart';
+import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'test_alarm.g.dart';
@@ -61,6 +68,33 @@ class TestAlarm extends _$TestAlarm {
     await ref.read(testAlarmStoreProvider).set(at);
     await _resync();
     return at;
+  }
+
+  /// Settings › Wake Up alarm's test (docs/15 §9): a real Wake Up alarm in
+  /// [TestAlarmStore.delay] through `AlarmGateway`, so the user hears what
+  /// the morning will do; where the gateway arms nothing, [send].
+  Future<DateTime> sendWakeUp() async {
+    final at = ref.read(clockProvider).nowUtc().add(TestAlarmStore.delay);
+    final profile = await ref.read(localProfileProvider.future);
+    final planned = PlannedNotification(
+      id: 0,
+      occurrenceId: '',
+      alertIndex: PlannedNotification.wakeUpIndex,
+      fireAtUtc: at,
+      kind: AlertKind.atStart,
+      sound: wakeUpSound(profile.settings, at).id,
+      loud: true,
+      purpose: NotificationPurpose.wakeUp,
+    );
+    final alarm = composeWakeUpAlarm(
+      planned,
+      task: null,
+      profile: profile,
+      minimal: readSimplified(ref, FeatureId.wakeUpAlarm),
+      id: WakeUpAlarm.testId,
+    );
+    if (await ref.read(alarmGatewayProvider).test(alarm)) return at;
+    return send();
   }
 
   /// Takes the test alarm back (the screen was left before it rang).

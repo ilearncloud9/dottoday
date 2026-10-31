@@ -17,6 +17,11 @@
          Android 12+; asked at the first tap on the mic, after Dottoday's own
          rationale. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- The Wake Up alarm's ringing (docs/15 W1b, ADR-0017): a foreground
+         service that plays the alarm for at most 10 minutes, with vibration. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <application
         android:label="Dottoday"
         android:name="${applicationName}"
@@ -143,6 +148,28 @@
                 <action android:name="android.intent.action.TIME_SET"/>
             </intent-filter>
         </receiver>
+        <!-- The Wake Up alarm (docs/15 W1b): its ring, Snooze and "I'm up"
+             from the notification, and re-arming after a reboot or update;
+             the ringing service; the screen over the lock screen. -->
+        <receiver android:exported="false" android:name=".alarms.WakeUpAlarmReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            </intent-filter>
+        </receiver>
+        <service
+            android:name=".alarms.WakeUpRingService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback"/>
+        <activity
+            android:name=".alarms.WakeUpAlarmActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:taskAffinity=""
+            android:theme="@style/NormalTheme"/>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
