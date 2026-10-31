@@ -17,9 +17,12 @@
 		15E75C055683C5F62F512B96 /* play_drum.caf in Resources */ = {isa = PBXBuildFile; fileRef = CE337F8072ED47A16A886BE2 /* play_drum.caf */; };
 		1983C84398CF264E6543B99C /* done_finished.caf in Resources */ = {isa = PBXBuildFile; fileRef = 52272219734A687F44161C60 /* done_finished.caf */; };
 		1F9A6022F4D9CC7C8CBDE991 /* clear_elegant.caf in Resources */ = {isa = PBXBuildFile; fileRef = 9966EEEE9CA48F635D854568 /* clear_elegant.caf */; };
+		20597DA19B519072120EDB05 /* start_dawn_chorus.caf in Resources */ = {isa = PBXBuildFile; fileRef = 002323410D2E1E136FBBA344 /* start_dawn_chorus.caf */; };
 		226FEE0B743CE98F2C6CFFF9 /* clear_turn.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4AFFF428E87BAC002FDBBF26 /* clear_turn.caf */; };
 		29267702C36DF550D7792F61 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB63392B2470BB3162B34042 /* ShareViewController.swift */; };
 		2DAD369DB08A19596B4698AB /* DotActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6896750FE31F95897106A0A7 /* DotActivity.swift */; };
+		312CB761987213FA15593676 /* start_forest.caf in Resources */ = {isa = PBXBuildFile; fileRef = F6B2CF4D23026C5BCE555DF1 /* start_forest.caf */; };
+		31CF07C1EE3213C5F5ADAC0B /* reminder_bell.caf in Resources */ = {isa = PBXBuildFile; fileRef = B06B6834A4ACABA8C53E2A48 /* reminder_bell.caf */; };
 		3249E399449C809A1985CDED /* clear_tap.caf in Resources */ = {isa = PBXBuildFile; fileRef = 71332EA3C35CF2C2A7475D68 /* clear_tap.caf */; };
 		3261C528E16F15B66C53F7D1 /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69ADD44F5E8B69668AE7B59D /* Snapshot.swift */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
@@ -41,13 +44,17 @@
 		58F0BBD873D33BCB5CAFC94E /* DotTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93AB358D63D95905230F72BA /* DotTokens.swift */; };
 		5EF1925C14C4D7F3DDC4270F /* done_achieved.caf in Resources */ = {isa = PBXBuildFile; fileRef = FE203AA4E512FBF80FCDBB04 /* done_achieved.caf */; };
 		6252B6AFA28801EF994E5B7F /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F29E9BDA3CA2C060A96D5E3B /* Pods_RunnerTests.framework */; };
+		62EAD2EBE46E09415E8EE043 /* reminder_dot.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7A6BD5525C7DD45F0E16E5F0 /* reminder_dot.caf */; };
 		63ED24173E4ED24FF4055DF5 /* play_frog.caf in Resources */ = {isa = PBXBuildFile; fileRef = E13799EC06E2094996D3EA1E /* play_frog.caf */; };
+		69DE518EE1EF9A44A1B8F4C4 /* start_rain.caf in Resources */ = {isa = PBXBuildFile; fileRef = E88AA64FB243D6641514ADDA /* start_rain.caf */; };
 		6BB08023E0411EC375DCF4C8 /* start_swing.caf in Resources */ = {isa = PBXBuildFile; fileRef = 18721CF6CB321B9C9FB33AA8 /* start_swing.caf */; };
+		6C672EE5085A84D49548C19D /* reminder_chime.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0B82511C0A268CE5FFA15112 /* reminder_chime.caf */; };
 		6F08E3DB93197DC8741644C9 /* clear_dutiful.caf in Resources */ = {isa = PBXBuildFile; fileRef = D675C6D6041A0E8E62826711 /* clear_dutiful.caf */; };
 		7222A5E932331CE403C9DFDB /* quiet_whisper.caf in Resources */ = {isa = PBXBuildFile; fileRef = 71F48DFF3F8D4FA89A083458 /* quiet_whisper.caf */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
+		79B7F4D2735C913BDEBEC478 /* dot_alarm.caf in Resources */ = {isa = PBXBuildFile; fileRef = D989DD3FF4507FE9B2F1DD11 /* dot_alarm.caf */; };
 		7C8798F7B09D68E4148B8BBE /* play_chick.caf in Resources */ = {isa = PBXBuildFile; fileRef = 68D475E363FB03588F2D10B5 /* play_chick.caf */; };
 		7FEC2A7AF8657950F55E2724 /* LiveActivities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569EBECAF1492CF244C8D661 /* LiveActivities.swift */; };
 		81027480F98126A3CFF209A8 /* clear_appear.caf in Resources */ = {isa = PBXBuildFile; fileRef = 1CC8D2937FB5B8E1200A0376 /* clear_appear.caf */; };
@@ -58,6 +65,7 @@
 		8F2812C2F75444876F6BFBA6 /* DotActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6896750FE31F95897106A0A7 /* DotActivity.swift */; };
 		9020C94BFD093BD439DB3F13 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 45BD213795DEDD9446DFC966 /* Localizable.strings */; };
 		906E9CBE5D8836EA54F3E933 /* LiveActivityViewsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35E811333715D9C04A443BC /* LiveActivityViewsTests.swift */; };
+		90886090CAE2455D0F7BE54E /* start_waves.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0EFF7D0F8F74FB080CB96E13 /* start_waves.caf */; };
 		934D73C5F7D7E3336F927349 /* clear_ease.caf in Resources */ = {isa = PBXBuildFile; fileRef = 51B2FBEC2C94E27FF883E584 /* clear_ease.caf */; };
 		940225C74F717DD0AC2BE39D /* DotIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF20C1EBD7428AB1D846DDA /* DotIntents.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -66,8 +74,10 @@
 		97E9999935CA187574047FA1 /* start_morning.caf in Resources */ = {isa = PBXBuildFile; fileRef = EAF148E75D456EA30291022F /* start_morning.caf */; };
 		A18852BAB97CC5F6BDD39A88 /* WidgetSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F0B527264204D0C2F73046 /* WidgetSnapshotTests.swift */; };
 		A1B2C3D4E5F60718293A4B01 /* SpeechBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B02 /* SpeechBridge.swift */; };
+		A1E0BC2D094EABDDE16EC931 /* start_wind_chimes.caf in Resources */ = {isa = PBXBuildFile; fileRef = FF9A7BFB94E4F5D26D9C60FD /* start_wind_chimes.caf */; };
 		A3CDC9C8AF4FA1ED40ED75C6 /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
 		A52B01C7F16748FFA1F864B3 /* clear_spark.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4582D74ACAC8B91600913863 /* clear_spark.caf */; };
+		A5CF70EC905AA3EA73533AC0 /* reminder_ripple.caf in Resources */ = {isa = PBXBuildFile; fileRef = 5FA0495FCE149F9D328BFADE /* reminder_ripple.caf */; };
 		A6885C93D510F19B4D4A75AC /* clear_smile.caf in Resources */ = {isa = PBXBuildFile; fileRef = 938E2D9F7892511A64ACA938 /* clear_smile.caf */; };
 		A870E3DA3E7EFA6C4B7ABEA8 /* LiveActivityViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF327A6E80AA18432DB80F2 /* LiveActivityViews.swift */; };
 		AC3888CD0B372BDD1DB9839B /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
@@ -77,14 +87,17 @@
 		B90E9CF17CDA85AD851A3D4B /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
 		BA76BE689526EC3B4969C5CA /* DotControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656B1CE923F32B8B268C4ECA /* DotControls.swift */; };
 		BB0429360429E5429F263C41 /* start_bells.caf in Resources */ = {isa = PBXBuildFile; fileRef = 6E87541BA029AEF4C9AE8052 /* start_bells.caf */; };
+		BBAA3E56E6C49F3DE03507E3 /* start_music_box.caf in Resources */ = {isa = PBXBuildFile; fileRef = EED2C1D0EC543210C3DBD83D /* start_music_box.caf */; };
 		C04EB1EB4948A0E2FFCA5616 /* DotLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F233CCFDCA8F76524C329C /* DotLiveActivity.swift */; };
 		C0C861D9AFDC31FB3D540C6D /* DotTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93AB358D63D95905230F72BA /* DotTokens.swift */; };
 		C7C092777DA62DFFFDD542DA /* start_sunrise.caf in Resources */ = {isa = PBXBuildFile; fileRef = E003AD25F43CEBDB4EF9A11C /* start_sunrise.caf */; };
 		CCBAD89CD26B5126667E7A1E /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69ADD44F5E8B69668AE7B59D /* Snapshot.swift */; };
+		CE7B21BB2EED12718DE59233 /* start_stream.caf in Resources */ = {isa = PBXBuildFile; fileRef = 407FED600A6784BC954DA3F9 /* start_stream.caf */; };
 		CFA9E8D738461ED104D2E31C /* clear_emerge.caf in Resources */ = {isa = PBXBuildFile; fileRef = DA9237FB970961F1EB933F9F /* clear_emerge.caf */; };
 		D015D12A752D6D3BCDC243C7 /* ThinkingBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D057CBF4043C1304FE844CA9 /* ThinkingBridge.swift */; };
 		D4EB141A5B6FD0904CC4505A /* LiveActivityViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF327A6E80AA18432DB80F2 /* LiveActivityViews.swift */; };
 		D5857B465BD14D77395DF42A /* play_knock.caf in Resources */ = {isa = PBXBuildFile; fileRef = 355240C5F667E64963584F30 /* play_knock.caf */; };
+		D5C489060DF87379751341E1 /* start_slow_bell.caf in Resources */ = {isa = PBXBuildFile; fileRef = 022814BBCB43E2BEF7A63546 /* start_slow_bell.caf */; };
 		D723D0BE712665A5AEAF7DAC /* quiet_pull.caf in Resources */ = {isa = PBXBuildFile; fileRef = 3B0339DE18C1FDF1E5413D34 /* quiet_pull.caf */; };
 		D74F164CF80678F4F025723F /* clear_bright.caf in Resources */ = {isa = PBXBuildFile; fileRef = 3552A0FBD99C76C07FDED4B9 /* clear_bright.caf */; };
 		D7549E47E9DB77A8189F699D /* clear_quick.caf in Resources */ = {isa = PBXBuildFile; fileRef = 82DBBA36E160CA6125E5785E /* clear_quick.caf */; };
@@ -94,7 +107,9 @@
 		E0286E8E9450B770471D1E22 /* quiet_slip.caf in Resources */ = {isa = PBXBuildFile; fileRef = B7CE84C13CC4866DC46D4DB1 /* quiet_slip.caf */; };
 		E2F14629C6B99D94D3D76BDF /* DotActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9475CDDE68AAF01310D87A /* DotActions.swift */; };
 		E685B4942D46ABDFA77C6142 /* AppShortcuts.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3013B4C5D6CD3BCE94FE8938 /* AppShortcuts.strings */; };
+		E847443B9B5C04A772FE2DB3 /* start_beep_rise.caf in Resources */ = {isa = PBXBuildFile; fileRef = B2817D94662BA2CDA1EC69A1 /* start_beep_rise.caf */; };
 		E97610F8CA6D24F677ABC9D3 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DFB8722B137929D22D2F8B7 /* Views.swift */; };
+		EB19A01D31CB1D8689BDEC22 /* start_clock_bell.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7BBE686A5DE859BC1F616D23 /* start_clock_bell.caf */; };
 		F0266253C4A161C72DCF526E /* SnapshotPatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C08AB5AB645575C2308593 /* SnapshotPatch.swift */; };
 		F266430ED06D4B1A1DC3A49E /* done_checked.caf in Resources */ = {isa = PBXBuildFile; fileRef = B05210FC5A88801B9E879BA4 /* done_checked.caf */; };
 		F698BC841321E78783E40625 /* clear_involved.caf in Resources */ = {isa = PBXBuildFile; fileRef = 80E55EE769C90EE357400A18 /* clear_involved.caf */; };
@@ -152,8 +167,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		002323410D2E1E136FBBA344 /* start_dawn_chorus.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_dawn_chorus.caf; path = Runner/Sounds/start_dawn_chorus.caf; sourceTree = SOURCE_ROOT; };
+		022814BBCB43E2BEF7A63546 /* start_slow_bell.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_slow_bell.caf; path = Runner/Sounds/start_slow_bell.caf; sourceTree = SOURCE_ROOT; };
 		0902871A5CE25538DAD36A02 /* start_lovingly.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_lovingly.caf; path = Runner/Sounds/start_lovingly.caf; sourceTree = SOURCE_ROOT; };
+		0B82511C0A268CE5FFA15112 /* reminder_chime.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_chime.caf; path = Runner/Sounds/reminder_chime.caf; sourceTree = SOURCE_ROOT; };
 		0BF4C6FD130A31F237424129 /* play_rooster.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_rooster.caf; path = Runner/Sounds/play_rooster.caf; sourceTree = SOURCE_ROOT; };
+		0EFF7D0F8F74FB080CB96E13 /* start_waves.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_waves.caf; path = Runner/Sounds/start_waves.caf; sourceTree = SOURCE_ROOT; };
 		113FB5BCA357692CCBB0B532 /* fr */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/AppShortcuts.strings; sourceTree = "<group>"; };
 		11AFFCA38B39E8526598E15C /* quiet_bubble.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_bubble.caf; path = Runner/Sounds/quiet_bubble.caf; sourceTree = SOURCE_ROOT; };
 		12C08AB5AB645575C2308593 /* SnapshotPatch.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnapshotPatch.swift; sourceTree = "<group>"; };
@@ -177,6 +196,7 @@
 		3B0339DE18C1FDF1E5413D34 /* quiet_pull.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_pull.caf; path = Runner/Sounds/quiet_pull.caf; sourceTree = SOURCE_ROOT; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		3B9475CDDE68AAF01310D87A /* DotActions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotActions.swift; sourceTree = "<group>"; };
+		407FED600A6784BC954DA3F9 /* start_stream.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_stream.caf; path = Runner/Sounds/start_stream.caf; sourceTree = SOURCE_ROOT; };
 		4582D74ACAC8B91600913863 /* clear_spark.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_spark.caf; path = Runner/Sounds/clear_spark.caf; sourceTree = SOURCE_ROOT; };
 		4AFFF428E87BAC002FDBBF26 /* clear_turn.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_turn.caf; path = Runner/Sounds/clear_turn.caf; sourceTree = SOURCE_ROOT; };
 		51B2FBEC2C94E27FF883E584 /* clear_ease.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_ease.caf; path = Runner/Sounds/clear_ease.caf; sourceTree = SOURCE_ROOT; };
@@ -186,6 +206,7 @@
 		569EBECAF1492CF244C8D661 /* LiveActivities.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivities.swift; sourceTree = "<group>"; };
 		5C98AE1A8DEB0128D3814376 /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/AppShortcuts.strings; sourceTree = "<group>"; };
 		5DFB8722B137929D22D2F8B7 /* Views.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
+		5FA0495FCE149F9D328BFADE /* reminder_ripple.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_ripple.caf; path = Runner/Sounds/reminder_ripple.caf; sourceTree = SOURCE_ROOT; };
 		60BC003467BBBF8B45D39B59 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		656B1CE923F32B8B268C4ECA /* DotControls.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotControls.swift; sourceTree = "<group>"; };
 		6896750FE31F95897106A0A7 /* DotActivity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotActivity.swift; sourceTree = "<group>"; };
@@ -201,7 +222,9 @@
 		77C3B2342B49E272328C536D /* fr */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
+		7A6BD5525C7DD45F0E16E5F0 /* reminder_dot.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_dot.caf; path = Runner/Sounds/reminder_dot.caf; sourceTree = SOURCE_ROOT; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		7BBE686A5DE859BC1F616D23 /* start_clock_bell.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_clock_bell.caf; path = Runner/Sounds/start_clock_bell.caf; sourceTree = SOURCE_ROOT; };
 		80E55EE769C90EE357400A18 /* clear_involved.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_involved.caf; path = Runner/Sounds/clear_involved.caf; sourceTree = SOURCE_ROOT; };
 		81D23147C1D9E28E463F9315 /* DotIntentsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotIntentsTests.swift; sourceTree = "<group>"; };
 		81DCE2F7DB27897A1C8F948D /* DotStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotStore.swift; sourceTree = "<group>"; };
@@ -227,7 +250,9 @@
 		AEAB9B248941538C0F682FB2 /* start_strike.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_strike.caf; path = Runner/Sounds/start_strike.caf; sourceTree = SOURCE_ROOT; };
 		AEF20C1EBD7428AB1D846DDA /* DotIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotIntents.swift; sourceTree = "<group>"; };
 		B05210FC5A88801B9E879BA4 /* done_checked.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = done_checked.caf; path = Runner/Sounds/done_checked.caf; sourceTree = SOURCE_ROOT; };
+		B06B6834A4ACABA8C53E2A48 /* reminder_bell.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_bell.caf; path = Runner/Sounds/reminder_bell.caf; sourceTree = SOURCE_ROOT; };
 		B17CFA3AEC0E7D9360BD76CA /* done_swift.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = done_swift.caf; path = Runner/Sounds/done_swift.caf; sourceTree = SOURCE_ROOT; };
+		B2817D94662BA2CDA1EC69A1 /* start_beep_rise.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_beep_rise.caf; path = Runner/Sounds/start_beep_rise.caf; sourceTree = SOURCE_ROOT; };
 		B7CE84C13CC4866DC46D4DB1 /* quiet_slip.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_slip.caf; path = Runner/Sounds/quiet_slip.caf; sourceTree = SOURCE_ROOT; };
 		BBF327A6E80AA18432DB80F2 /* LiveActivityViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityViews.swift; sourceTree = "<group>"; };
 		BDB9ECEFC39891C3ACBA6062 /* DottodayWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = DottodayWidgets.entitlements; sourceTree = "<group>"; };
@@ -240,26 +265,31 @@
 		D2463FE71D931F9B918F960C /* clear_settled.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_settled.caf; path = Runner/Sounds/clear_settled.caf; sourceTree = SOURCE_ROOT; };
 		D35E811333715D9C04A443BC /* LiveActivityViewsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityViewsTests.swift; sourceTree = "<group>"; };
 		D675C6D6041A0E8E62826711 /* clear_dutiful.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_dutiful.caf; path = Runner/Sounds/clear_dutiful.caf; sourceTree = SOURCE_ROOT; };
+		D989DD3FF4507FE9B2F1DD11 /* dot_alarm.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = dot_alarm.caf; path = Runner/Sounds/dot_alarm.caf; sourceTree = SOURCE_ROOT; };
 		DA9237FB970961F1EB933F9F /* clear_emerge.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_emerge.caf; path = Runner/Sounds/clear_emerge.caf; sourceTree = SOURCE_ROOT; };
 		DD62E075ADDD00D3D036B06F /* es */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DD96AFEBEC6DC487B38BA47A /* DottodayShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DottodayShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E003AD25F43CEBDB4EF9A11C /* start_sunrise.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_sunrise.caf; path = Runner/Sounds/start_sunrise.caf; sourceTree = SOURCE_ROOT; };
 		E13799EC06E2094996D3EA1E /* play_frog.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_frog.caf; path = Runner/Sounds/play_frog.caf; sourceTree = SOURCE_ROOT; };
 		E39EE94101270E8066DA396B /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E88AA64FB243D6641514ADDA /* start_rain.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_rain.caf; path = Runner/Sounds/start_rain.caf; sourceTree = SOURCE_ROOT; };
 		E8F233CCFDCA8F76524C329C /* DotLiveActivity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotLiveActivity.swift; sourceTree = "<group>"; };
 		EAF148E75D456EA30291022F /* start_morning.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_morning.caf; path = Runner/Sounds/start_morning.caf; sourceTree = SOURCE_ROOT; };
 		EB16FBF79EA3ECABBA333397 /* Runner.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		EB63392B2470BB3162B34042 /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		EBA6597E3922EBA9938415E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC583B20AEC813AE09463D1F /* start_gentle.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_gentle.caf; path = Runner/Sounds/start_gentle.caf; sourceTree = SOURCE_ROOT; };
+		EED2C1D0EC543210C3DBD83D /* start_music_box.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_music_box.caf; path = Runner/Sounds/start_music_box.caf; sourceTree = SOURCE_ROOT; };
 		F27856E16E6A37ADD929DF43 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
 		F29E9BDA3CA2C060A96D5E3B /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2C53CB871101D5E3B05CA68 /* play_horse.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_horse.caf; path = Runner/Sounds/play_horse.caf; sourceTree = SOURCE_ROOT; };
 		F61E882B539006D64CCDEA98 /* clear_opening.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_opening.caf; path = Runner/Sounds/clear_opening.caf; sourceTree = SOURCE_ROOT; };
+		F6B2CF4D23026C5BCE555DF1 /* start_forest.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_forest.caf; path = Runner/Sounds/start_forest.caf; sourceTree = SOURCE_ROOT; };
 		F8B68CB0B24001551238040C /* en */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FE1DA42FAA1B3E154E977217 /* de */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		FE203AA4E512FBF80FCDBB04 /* done_achieved.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = done_achieved.caf; path = Runner/Sounds/done_achieved.caf; sourceTree = SOURCE_ROOT; };
 		FF19FF533973ED301DC1E66F /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+		FF9A7BFB94E4F5D26D9C60FD /* start_wind_chimes.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_wind_chimes.caf; path = Runner/Sounds/start_wind_chimes.caf; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -373,6 +403,21 @@
 				AEAB9B248941538C0F682FB2 /* start_strike.caf */,
 				E003AD25F43CEBDB4EF9A11C /* start_sunrise.caf */,
 				18721CF6CB321B9C9FB33AA8 /* start_swing.caf */,
+				D989DD3FF4507FE9B2F1DD11 /* dot_alarm.caf */,
+				B06B6834A4ACABA8C53E2A48 /* reminder_bell.caf */,
+				0B82511C0A268CE5FFA15112 /* reminder_chime.caf */,
+				7A6BD5525C7DD45F0E16E5F0 /* reminder_dot.caf */,
+				5FA0495FCE149F9D328BFADE /* reminder_ripple.caf */,
+				B2817D94662BA2CDA1EC69A1 /* start_beep_rise.caf */,
+				7BBE686A5DE859BC1F616D23 /* start_clock_bell.caf */,
+				002323410D2E1E136FBBA344 /* start_dawn_chorus.caf */,
+				F6B2CF4D23026C5BCE555DF1 /* start_forest.caf */,
+				EED2C1D0EC543210C3DBD83D /* start_music_box.caf */,
+				E88AA64FB243D6641514ADDA /* start_rain.caf */,
+				022814BBCB43E2BEF7A63546 /* start_slow_bell.caf */,
+				407FED600A6784BC954DA3F9 /* start_stream.caf */,
+				0EFF7D0F8F74FB080CB96E13 /* start_waves.caf */,
+				FF9A7BFB94E4F5D26D9C60FD /* start_wind_chimes.caf */,
 			);
 			name = Sounds;
 			sourceTree = "<group>";
@@ -700,6 +745,21 @@
 				52ECE1915E549500626E2C4F /* start_strike.caf in Resources */,
 				C7C092777DA62DFFFDD542DA /* start_sunrise.caf in Resources */,
 				6BB08023E0411EC375DCF4C8 /* start_swing.caf in Resources */,
+				79B7F4D2735C913BDEBEC478 /* dot_alarm.caf in Resources */,
+				31CF07C1EE3213C5F5ADAC0B /* reminder_bell.caf in Resources */,
+				6C672EE5085A84D49548C19D /* reminder_chime.caf in Resources */,
+				62EAD2EBE46E09415E8EE043 /* reminder_dot.caf in Resources */,
+				A5CF70EC905AA3EA73533AC0 /* reminder_ripple.caf in Resources */,
+				E847443B9B5C04A772FE2DB3 /* start_beep_rise.caf in Resources */,
+				EB19A01D31CB1D8689BDEC22 /* start_clock_bell.caf in Resources */,
+				20597DA19B519072120EDB05 /* start_dawn_chorus.caf in Resources */,
+				312CB761987213FA15593676 /* start_forest.caf in Resources */,
+				BBAA3E56E6C49F3DE03507E3 /* start_music_box.caf in Resources */,
+				69DE518EE1EF9A44A1B8F4C4 /* start_rain.caf in Resources */,
+				D5C489060DF87379751341E1 /* start_slow_bell.caf in Resources */,
+				CE7B21BB2EED12718DE59233 /* start_stream.caf in Resources */,
+				90886090CAE2455D0F7BE54E /* start_waves.caf in Resources */,
+				A1E0BC2D094EABDDE16EC931 /* start_wind_chimes.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

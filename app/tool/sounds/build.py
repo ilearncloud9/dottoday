@@ -6,13 +6,19 @@ Run from app/:  python3 -I tool/sounds/build.py [--only ID ...]
 docs/12-sounds.md §5. For each third-party manifest entry:
 
 1. trim leading and trailing silence; downmix to mono at 44.1 kHz;
-2. shape: loop to `loopToMs` when the entry asks (start.insistent), cap at
-   the category's longest duration with a fade, fade the cut tail;
+2. shape: loop to `loopToMs` when the entry asks (start.insistent); or,
+   for an entry with `loop`, author a seamless loop of `loop.toMs` whose
+   seam is a `loop.crossfadeMs` equal-power crossfade (a short source is
+   first repeated with the same crossfade); else cap at the category's
+   longest duration with a fade, fade the cut tail;
 3. level: one linear gain towards the category's loudness target, then a
    -1 dBTP true-peak limiter (4x oversampled, attack 5 ms, release 50 ms)
    allowed to absorb at most 6 dB, so a short sound never becomes a click.
    A sound still more than 4 LU under its target is not pushed further: it
    is listed as a quiet outlier for the ear pass. No noise-floor lift.
+4. fade in over `fadeInMs` when the entry asks, after levelling, so the
+   fade doesn't pull the measured loudness down, with a 20 ms tail fade
+   so the loop restarts without a click (docs/12 §2.3.1).
 
 Writes:
 
@@ -27,7 +33,10 @@ PCM, IMA4, µ-law or a-law, and IMA4 is a quarter of PCM's size.
 
 `durationMs`, `loudnessLufs` and `truePeakDbtp` in the manifest are
 rewritten from the result (CREDITS.md is credits.py's). First-party entries
-(tool/gen_sounds.dart) are never rebuilt, only measured.
+(tool/gen_sounds.dart) are never rebuilt, only measured; each also gets
+an IMA4 `.caf` copy of the same audio in ios/Runner/Sounds, so every
+catalogue sound is in the iOS app bundle (AlarmKit plays bundle sounds
+only, docs/15-wake-up.md). Originals may be FLAC, Ogg or MP3.
 """
 
 from __future__ import annotations
@@ -57,7 +66,7 @@ CATEGORIES = {
     "clear": (-16.0, 0, 4000, 0.5),
     "play": (-16.0, 0, 4000, 0.5),
     "done": (-16.0, 0, 4000, 0.5),
-    "start": (-14.0, 3000, 20000, 1.0),
+    "start": (-14.0, 3000, 28000, 1.0),
 }
 CEILING_DBTP = -1.0
 LIMITER_MAX_DB = 6.0
@@ -147,14 +156,8 @@ def sound_span(rms_db: list[float], window_s: float) -> tuple[float, float]:
 
 
 def _rms_db(path: Path, window_s: float) -> list[float]:
-    """Per-window RMS level of [path] (mono float samples via a pipe)."""
-    raw = subprocess.run(
-        ["ffmpeg", "-hide_banner", "-nostdin", "-v", "error", "-i", str(path),
-         "-f", "f32le", "-ac", "1", "-ar", str(SAMPLE_RATE), "-"],
-        capture_output=True, check=True,
-    ).stdout
-    samples = array.array("f")
-    samples.frombytes(raw[: len(raw) // 4 * 4])
+    """Per-window RMS level of [path]."""
+    samples = _read_samples(path)
     size = round(SAMPLE_RATE * window_s)
     levels = []
     for i in range(0, len(samples), size):
@@ -162,6 +165,68 @@ def _rms_db(path: Path, window_s: float) -> list[float]:
         power = sum(x * x for x in chunk) / len(chunk)
         levels.append(10 * math.log10(power) if power > 1e-12 else -120.0)
     return levels
+
+
+def _read_samples(path: Path) -> array.array:
+    """Mono float samples of [path] at SAMPLE_RATE."""
+    raw = subprocess.run(
+        ["ffmpeg", "-hide_banner", "-nostdin", "-v", "error", "-i", str(path),
+         "-f", "f32le", "-ac", "1", "-ar", str(SAMPLE_RATE), "-"],
+        capture_output=True, check=True,
+    ).stdout
+    samples = array.array("f")
+    samples.frombytes(raw[: len(raw) // 4 * 4])
+    return samples
+
+
+def _write_samples(samples: array.array, out: Path) -> None:
+    subprocess.run(
+        ["ffmpeg", "-hide_banner", "-nostdin", "-v", "error", "-y",
+         "-f", "f32le", "-ar", str(SAMPLE_RATE), "-ac", "1", "-i", "-",
+         "-c:a", "pcm_f32le", str(out)],
+        input=samples.tobytes(), check=True,
+    )
+
+
+def crossfade(a: array.array, b: array.array, n: int) -> array.array:
+    """[a] then [b], the last [n] samples of [a] blended into the first [n]
+    of [b] with equal-power gains (unrelated material keeps its level).
+
+    >>> list(crossfade(array.array("f", [1, 1]), array.array("f", [2, 2]), 0))
+    [1.0, 1.0, 2.0, 2.0]
+    """
+    out = a[: len(a) - n]
+    for i in range(n):
+        x = (i + 0.5) / n * math.pi / 2
+        out.append(a[len(a) - n + i] * math.cos(x) + b[i] * math.sin(x))
+    out.extend(b[n:])
+    return out
+
+
+def seamless_loop(samples: array.array, length: int, fade: int) -> array.array:
+    """[length] samples that repeat without a click: the head is the
+    crossfade of what would follow the cut into the start, so the last
+    sample runs straight into the first (docs/12 §2.3).
+
+    >>> s = array.array("f", range(10))
+    >>> list(seamless_loop(s, 6, 0))
+    [0.0, 1.0, 2.0, 3.0, 4.0, 5.0]
+    """
+    if len(samples) <= fade:
+        raise BuildError("source shorter than the loop crossfade")
+    source = samples
+    while len(source) < length + fade:
+        source = crossfade(source, samples, fade)
+    tail = source[length : length + fade]
+    return crossfade(tail, source[:length], fade)[: length]
+
+
+def _loop(trimmed: Path, out: Path, loop: dict) -> str:
+    length = round(loop["toMs"] / 1000 * SAMPLE_RATE)
+    fade = round(loop["crossfadeMs"] / 1000 * SAMPLE_RATE)
+    samples = _read_samples(trimmed)
+    _write_samples(seamless_loop(samples, length, fade), out)
+    return f"loop {loop['toMs'] / 1000:g} s from {len(samples) / SAMPLE_RATE:.1f} s"
 
 
 def _trim(source: Path, out: Path) -> None:
@@ -176,6 +241,8 @@ def _trim(source: Path, out: Path) -> None:
 def _shape(trimmed: Path, out: Path, entry: dict) -> str:
     """Loops, caps and fades [trimmed]; returns a note for the report."""
     _, _, longest_ms, cap_fade = CATEGORIES[entry["category"]]
+    if "loop" in entry:
+        return _loop(trimmed, out, entry["loop"])
     length = duration_seconds(trimmed)
     longest = longest_ms / 1000
     if "loopToMs" in entry:
@@ -200,13 +267,19 @@ def _shape(trimmed: Path, out: Path, entry: dict) -> str:
     return note
 
 
-def _level(shaped: Path, out: Path, gain: float, limit_dbtp: float) -> None:
+def _level(shaped: Path, out: Path, gain: float, limit_dbtp: float,
+           fade_in_ms: int = 0) -> None:
     # Oversampled so the limiter holds true peaks, not just sample peaks.
     limit = 10 ** (limit_dbtp / 20)
+    # A faded-in loop restarts from silence, so its end fades too: the
+    # seam is then a quick dip, never a click.
+    fade_in = (f",afade=t=in:d={fade_in_ms / 1000:g},areverse,"
+               f"afade=t=in:d={TAIL_FADE_SECONDS},areverse"
+               if fade_in_ms else "")
     _ffmpeg("-i", str(shaped), "-af",
             f"volume={gain:.2f}dB,aresample={SAMPLE_RATE * OVERSAMPLE},"
             f"alimiter=limit={limit:.4f}:attack=5:release=50:level=0:latency=1,"
-            f"aresample={SAMPLE_RATE}",
+            f"aresample={SAMPLE_RATE}{fade_in}",
             "-c:a", "pcm_f32le", str(out))
 
 
@@ -214,8 +287,12 @@ def _encode(shaped: Path, m4a: Path, caf: Path) -> None:
     _ffmpeg("-i", str(shaped), "-c:a", "aac", "-b:a", AAC_BITRATE,
             "-ar", str(SAMPLE_RATE), "-movflags", "+faststart", *BITEXACT,
             str(m4a))
-    _ffmpeg("-i", str(shaped), "-c:a", "adpcm_ima_qt", "-ar", str(SAMPLE_RATE),
-            *BITEXACT, "-f", "caf", str(caf))
+    _encode_caf(shaped, caf)
+
+
+def _encode_caf(source: Path, caf: Path) -> None:
+    _ffmpeg("-i", str(source), "-c:a", "adpcm_ima_qt", "-ac", "1",
+            "-ar", str(SAMPLE_RATE), *BITEXACT, "-f", "caf", str(caf))
 
 
 def build_one(entry: dict, work: Path) -> dict:
@@ -232,7 +309,7 @@ def build_one(entry: dict, work: Path) -> dict:
     gain = gain_db(target, lufs, peak)
     limit_dbtp = CEILING_DBTP
     for _ in range(4):
-        _level(shaped, leveled, gain, limit_dbtp)
+        _level(shaped, leveled, gain, limit_dbtp, entry.get("fadeInMs", 0))
         _encode(leveled, m4a, caf)
         out_lufs, out_peak = measure(m4a)
         # Resampling and AAC can overshoot a little: lower the limit.
@@ -262,6 +339,7 @@ def measure_first_party(entry: dict) -> None:
         raise BuildError(f"{entry['id']}: no file in res/raw")
     lufs, peak = measure(files[0])
     _record(entry, round(duration_seconds(files[0]) * 1000), lufs, peak)
+    _encode_caf(files[0], IOS_SOUNDS / f"{entry['file']}.caf")
 
 
 def _record(entry: dict, duration_ms: int, lufs: float, peak: float) -> None:

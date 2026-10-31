@@ -3,7 +3,9 @@
 Run from app/:  python3 -I tool/sounds/fetch.py
 
 docs/12-sounds.md §1, §5. The manifest is the only list of sources: this
-script has no URLs of its own. For an entry without `fileUrl` it reads the
+script has no URLs of its own: each source names the host and path its
+files may come from (`fileHost`, `filePathPrefix`). For an entry without
+`fileUrl` (notificationsounds.com) it reads the
 entry's `sourceUrl` page once, takes the sound from the page's schema.org
 AudioObject (the page also links other sounds), checks that the title and
 licence are the ones the manifest records, and writes the `.ogg` link back
@@ -27,14 +29,15 @@ APP = Path(__file__).resolve().parents[2]
 MANIFEST = APP / "assets" / "sounds" / "manifest.json"
 ORIGINALS = APP / "tool" / "sounds" / "originals"
 
-# A page may only point at its own site's sound storage.
-ALLOWED_HOST = "notificationsounds.com"
-STORAGE_PREFIX = "/storage/sounds/"
+# Never a sound named after a phone, brand or OS (owner, docs/12 §5).
+BRANDS = re.compile(r"iphone|samsung|nokia|android|windows|philips", re.I)
 LICENSE_URLS = {
     "CC-BY-4.0": "https://creativecommons.org/licenses/by/4.0/",
     "CC0-1.0": "https://creativecommons.org/publicdomain/zero/1.0/",
 }
-MAX_BYTES = 5 * 1024 * 1024
+# Long ambiences arrive as lossless FLAC (6 min of stereo dawn chorus is
+# ~100 MB); they go only to the gitignored originals/.
+MAX_BYTES = 200 * 1024 * 1024
 USER_AGENT = "dottoday-sound-fetch/1 (+https://github.com/ilearncloud9)"
 
 _LD_JSON = re.compile(
@@ -82,16 +85,25 @@ def _audio_objects(page: str) -> list[dict]:
     return found
 
 
-def _checked_storage_url(url: str) -> str:
+def _checked_storage_url(url: str, source: dict) -> str:
+    """[url] when it is on [source]'s file host, under its path prefix."""
+    host, prefix = source["fileHost"], source["filePathPrefix"]
     parts = urllib.parse.urlsplit(url)
-    if parts.scheme != "https" or parts.hostname != ALLOWED_HOST:
-        raise FetchError(f"{url}: not on https://{ALLOWED_HOST}")
-    if not parts.path.startswith(STORAGE_PREFIX) or ".." in parts.path:
-        raise FetchError(f"{url}: not under {STORAGE_PREFIX}")
+    if parts.scheme != "https" or parts.hostname != host:
+        raise FetchError(f"{url}: not on https://{host}")
+    if not parts.path.startswith(prefix) or ".." in parts.path:
+        raise FetchError(f"{url}: not under {prefix}")
     return url
 
 
-def resolve_file_url(entry: dict) -> str:
+def check_brand_free(entry: dict) -> None:
+    """Refuses a sound whose title or author names a phone, brand or OS."""
+    text = f"{entry.get('sourceTitle', '')} {entry.get('author', '')}"
+    if BRANDS.search(text):
+        raise FetchError(f"{entry['id']}: names a brand ({text!r})")
+
+
+def resolve_file_url(entry: dict, source: dict) -> str:
     """The `.ogg` behind [entry]'s page, after checking title and licence."""
     page = _get(entry["sourceUrl"]).decode("utf-8", "replace")
     audio = _audio_objects(page)
@@ -106,7 +118,7 @@ def resolve_file_url(entry: dict) -> str:
     expected = LICENSE_URLS[entry["license"]]
     if sound.get("license") != expected:
         raise FetchError(f"{entry['id']}: page licence {sound.get('license')!r}")
-    content = _checked_storage_url(sound["contentUrl"])
+    content = _checked_storage_url(sound["contentUrl"], source)
     ogg = re.sub(r"\.[a-z0-9]+$", ".ogg", content)
     # Prefer the .ogg the page offers beside the .mp3; else keep the .mp3.
     path = urllib.parse.urlsplit(ogg).path
@@ -151,15 +163,19 @@ def main(argv: list[str]) -> int:
             continue  # first-party: made in this repo (tool/gen_sounds.dart)
         if args.only and entry["id"] not in args.only:
             continue
+        source = manifest["sources"][entry["source"]]
         try:
+            check_brand_free(entry)
+            # Only notificationsounds.com pages carry an AudioObject to read;
+            # the other sources' file links are recorded with the entry.
             if args.refresh or "fileUrl" not in entry:
-                entry = _with_file_url(entry, resolve_file_url(entry))
+                entry = _with_file_url(entry, resolve_file_url(entry, source))
                 manifest["sounds"][i] = entry
                 write_manifest(manifest)
             target = original_path(entry)
             if target.exists():
                 continue
-            data = _get(_checked_storage_url(entry["fileUrl"]))
+            data = _get(_checked_storage_url(entry["fileUrl"], source))
             target.write_bytes(data)
             print(f"{entry['id']}: {len(data)} bytes")
         except FetchError as e:

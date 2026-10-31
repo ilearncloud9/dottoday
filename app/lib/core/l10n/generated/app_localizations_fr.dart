@@ -4124,6 +4124,36 @@ class AppLocalizationsFr extends AppLocalizations {
   String get soundStartInsistent => 'Insistant';
 
   @override
+  String get soundStartSlowBell => 'Cloche lente';
+
+  @override
+  String get soundStartMusicBox => 'Boîte à musique';
+
+  @override
+  String get soundStartDawnChorus => 'Chœur de l\'aube';
+
+  @override
+  String get soundStartRain => 'Pluie';
+
+  @override
+  String get soundStartStream => 'Ruisseau';
+
+  @override
+  String get soundStartWaves => 'Vagues';
+
+  @override
+  String get soundStartWindChimes => 'Carillon à vent';
+
+  @override
+  String get soundStartForest => 'Forêt';
+
+  @override
+  String get soundStartClockBell => 'Sonnerie de réveil';
+
+  @override
+  String get soundStartBeepRise => 'Bip montant';
+
+  @override
   String get soundPlayRooster => 'Coq';
 
   @override
