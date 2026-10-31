@@ -81,17 +81,8 @@ List<ThreadEntry> threadEntries({
   for (final (i, o) in inside.indexed) {
     // Travel time before a task is not free (R-17, docs/04 §5).
     _gap(out, cursor, footprintStart(o), nowUtc, format, showFreeTime);
-    final above = overlaps[i];
-    final below = i + 1 < inside.length && overlaps[i + 1];
-    if (above) {
-      out.add(
-        ThreadOverlap(
-          above: TaskColor.fromKey(inside[i - 1].colorKey),
-          below: TaskColor.fromKey(o.colorKey),
-        ),
-      );
-    }
-    final t = task(o).joined(above: above, below: below);
+    if (overlaps[i] case final earlier?) out.add(_overlap(earlier, o));
+    final t = task(o);
     // Overrun counts any later task, outside hours too.
     out.add(
       ThreadTaskEntry(
@@ -109,17 +100,29 @@ List<ThreadEntry> threadEntries({
   return out;
 }
 
-/// For each of [sorted], whether it starts before an earlier one ends
-/// (ADR-0015: "Tasks are overlapping").
-List<bool> _overlaps(List<Occurrence> sorted) {
-  final out = <bool>[];
-  DateTime? end;
+/// For each of [sorted], the earlier task it starts inside (the one ending
+/// last), or null (ADR-0015: the knot).
+List<Occurrence?> _overlaps(List<Occurrence> sorted) {
+  final out = <Occurrence?>[];
+  Occurrence? last;
   for (final o in sorted) {
-    final last = end;
-    out.add(last != null && o.startUtc!.isBefore(last));
-    if (last == null || o.endUtc!.isAfter(last)) end = o.endUtc;
+    final end = last?.endUtc;
+    out.add(end != null && o.startUtc!.isBefore(end) ? last : null);
+    if (end == null || o.endUtc!.isAfter(end)) last = o;
   }
   return out;
+}
+
+/// The knot between [earlier] and [o], which starts inside it.
+ThreadOverlap _overlap(Occurrence earlier, Occurrence o) {
+  final end = o.endUtc!.isBefore(earlier.endUtc!) ? o.endUtc! : earlier.endUtc!;
+  return ThreadOverlap(
+    above: TaskColor.fromKey(earlier.colorKey),
+    below: TaskColor.fromKey(o.colorKey),
+    aboveTitle: earlier.title,
+    belowTitle: o.title,
+    minutes: end.difference(o.startUtc!).inMinutes,
+  );
 }
 
 /// [sorted] split by the day's caps: ended by Wake Up, crossing the waking
@@ -259,8 +262,6 @@ ThreadTask _withOverrun(
     travel: task.travel,
     startUtc: task.startUtc,
     minutes: task.minutes,
-    overlapsAbove: task.overlapsAbove,
-    overlapsBelow: task.overlapsBelow,
   );
 }
 

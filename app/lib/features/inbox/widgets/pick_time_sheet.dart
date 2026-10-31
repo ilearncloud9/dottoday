@@ -89,7 +89,12 @@ class _PickTimeState extends ConsumerState<_PickTime> {
         _picker(room, zone, text, minute, profile.settings.snapMinutes),
         PickerCaption(
           freeUntil: text.utc(fit.freeUntilUtc),
+          color: TaskColor.fromKey(widget.item.colorKey),
           overlapTitle: fit.overlaps.firstOrNull?.title,
+          overlapColor: switch (fit.overlaps.firstOrNull) {
+            final o? => TaskColor.fromKey(o.colorKey),
+            null => null,
+          },
           overlapCount: fit.overlaps.length,
         ),
         FilledButton(

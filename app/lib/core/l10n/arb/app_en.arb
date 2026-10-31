@@ -470,18 +470,29 @@
   "@dotOpenHint": {
     "description": "Screen-reader hint: tapping a task's dot opens the task (ADR-0015)."
   },
-  "threadOverlapping": "Tasks are {overlapping}",
-  "@threadOverlapping": {
-    "description": "Line between two thread rows whose times overlap; {overlapping} is threadOverlappingWord, drawn in the task's colour.",
+  "threadOverlapShare": "{first} and {second} {share}",
+  "@threadOverlapShare": {
+    "description": "Beside the knot between two overlapping thread rows: 'Run and Sleep share 15 min'; {share} is threadOverlapShareTime, drawn in the later task's colour.",
     "placeholders": {
-      "overlapping": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      },
+      "share": {
         "type": "String"
       }
     }
   },
-  "threadOverlappingWord": "overlapping",
-  "@threadOverlappingWord": {
-    "description": "The coloured word of threadOverlapping."
+  "threadOverlapShareTime": "share {duration}",
+  "@threadOverlapShareTime": {
+    "description": "The coloured part of threadOverlapShare: 'share 15 min'.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
   },
   "rowLabel": "{title}, {range}",
   "@rowLabel": {

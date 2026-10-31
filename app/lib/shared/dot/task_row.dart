@@ -57,9 +57,6 @@ class TaskRow extends StatelessWidget {
         state: task.state,
         dotSize: dotSize,
         ghost: task.reality?.ghost,
-        fill: DotTheme.of(context).tasks[task.color].tint,
-        joinAbove: task.overlapsAbove,
-        joinBelow: task.overlapsBelow,
       ),
       dot: taskRowDot(context, task, dotSize, onOpen),
       trailing: !doneCircle || onToggleDone == null

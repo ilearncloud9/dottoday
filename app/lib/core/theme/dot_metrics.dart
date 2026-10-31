@@ -93,10 +93,17 @@ abstract final class DotSize {
   static const double threadRowMin = 88;
   static const double threadRowMax = 288;
 
-  /// "Tasks are overlapping" between two joined capsules (ADR-0015), and
-  /// how far the two capsules overlap inside it.
+  /// The knot row between two overlapping tasks (ADR-0015), and how far
+  /// each strand swings off the thread.
   static const double overlapRow = 56;
-  static const double overlapJoin = 12;
+  static const double knotSway = 10;
+  static const double knotStroke = 4;
+
+  /// The knot as a mark beside text (picker caption, proposals), and its
+  /// stroke.
+  static const double knotMark = 20;
+  static const double knotMarkWidth = 14;
+  static const double knotMarkStroke = 2.5;
   static const double liveDot = 42;
   static const double liveRing = 5;
 

@@ -311,6 +311,48 @@ void main() {
     expect(find.text('Read').hitTestable(), findsOneWidget);
   });
 
+  testWidgets('an overlap is the knot: both dots stay round, the line '
+      'says what they share (ADR-0015)', (tester) async {
+    ThreadTask row(String id, TaskColor color) => ThreadTask(
+      id: id,
+      title: id,
+      color: color,
+      icon: TaskIcon.run,
+      state: DotState.upcoming,
+      timeRange: '23:20 – 23:35',
+    );
+    await tester.pumpWidget(
+      testApp(
+        Scaffold(
+          body: Thread(
+            entries: [
+              const ThreadCap.wake('7:00'),
+              ThreadTaskEntry(row('Run', TaskColor.amber)),
+              const ThreadOverlap(
+                above: TaskColor.amber,
+                below: TaskColor.violet,
+                aboveTitle: 'Run',
+                belowTitle: 'Sleep',
+                minutes: 15,
+              ),
+              ThreadTaskEntry(row('Sleep', TaskColor.violet)),
+              const ThreadCap.bed('23:45'),
+            ],
+          ),
+        ),
+      ),
+    );
+    expect(
+      find.textContaining('Run and Sleep share 15 min', findRichText: true),
+      findsOneWidget,
+    );
+    // Every dot, the two tasks' included, is as wide as it is tall.
+    for (final dot in find.byType(TaskDot).evaluate()) {
+      final size = (dot.renderObject! as RenderBox).size;
+      expect(size.width, size.height);
+    }
+  });
+
   testWidgets('done titles are struck through', (tester) async {
     await tester.pumpWidget(_thread());
     final style = tester.widget<Text>(find.text('Morning run')).style!;

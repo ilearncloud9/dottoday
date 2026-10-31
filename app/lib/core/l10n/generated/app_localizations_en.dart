@@ -338,12 +338,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dotOpenHint => 'Open';
 
   @override
-  String threadOverlapping(String overlapping) {
-    return 'Tasks are $overlapping';
+  String threadOverlapShare(String first, String second, String share) {
+    return '$first and $second $share';
   }
 
   @override
-  String get threadOverlappingWord => 'overlapping';
+  String threadOverlapShareTime(String duration) {
+    return 'share $duration';
+  }
 
   @override
   String rowLabel(String title, String range) {

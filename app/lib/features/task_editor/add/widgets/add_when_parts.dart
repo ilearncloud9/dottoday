@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/scheduling/slot_fit.dart';
+import 'package:dottoday/shared/dot/overlap_knot.dart';
 import 'package:flutter/material.dart';
 
 /// A caption with an optional trailing control ("TIME ⋯", "DURATION ⋯").
@@ -69,14 +70,22 @@ class LandsOn extends StatelessWidget {
       child: Row(
         spacing: DotSpace.m,
         children: [
-          Container(
-            width: DotSize.segment,
-            height: DotSpace.xl,
-            decoration: BoxDecoration(
-              color: t.tasks[colour].color,
-              borderRadius: BorderRadius.circular(DotRadii.pill),
+          // The task's colour bar; on a busy slot, the knot with the
+          // task it would share time with (ADR-0015).
+          if (fit.overlaps.firstOrNull case final busy?)
+            OverlapKnot(
+              first: t.tasks[colour].color,
+              second: t.tasks[TaskColor.fromKey(busy.colorKey)].color,
+            )
+          else
+            Container(
+              width: DotSize.segment,
+              height: DotSpace.xl,
+              decoration: BoxDecoration(
+                color: t.tasks[colour].color,
+                borderRadius: BorderRadius.circular(DotRadii.pill),
+              ),
             ),
-          ),
           Expanded(child: _sentence(t, full, style)),
           if (onEdit case final edit?)
             TextButton(onPressed: edit, child: Text(l10n.addLandsOnEdit)),

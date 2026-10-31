@@ -618,17 +618,17 @@ abstract class AppLocalizations {
   /// **'Open'**
   String get dotOpenHint;
 
-  /// Line between two thread rows whose times overlap; {overlapping} is threadOverlappingWord, drawn in the task's colour.
+  /// Beside the knot between two overlapping thread rows: 'Run and Sleep share 15 min'; {share} is threadOverlapShareTime, drawn in the later task's colour.
   ///
   /// In en, this message translates to:
-  /// **'Tasks are {overlapping}'**
-  String threadOverlapping(String overlapping);
+  /// **'{first} and {second} {share}'**
+  String threadOverlapShare(String first, String second, String share);
 
-  /// The coloured word of threadOverlapping.
+  /// The coloured part of threadOverlapShare: 'share 15 min'.
   ///
   /// In en, this message translates to:
-  /// **'overlapping'**
-  String get threadOverlappingWord;
+  /// **'share {duration}'**
+  String threadOverlapShareTime(String duration);
 
   /// Screen-reader label of a task row: title and time range.
   ///

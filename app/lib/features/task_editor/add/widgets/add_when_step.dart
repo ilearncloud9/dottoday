@@ -161,7 +161,12 @@ class AddWhenStep extends StatelessWidget {
       const SizedBox(height: DotSpace.m),
       PickerCaption(
         freeUntil: text.utc(fit.freeUntilUtc),
+        color: TaskColor.fromKey(state.draft.color),
         overlapTitle: fit.overlaps.firstOrNull?.title,
+        overlapColor: switch (fit.overlaps.firstOrNull) {
+          final o? => TaskColor.fromKey(o.colorKey),
+          null => null,
+        },
         overlapCount: fit.overlaps.length,
       ),
       if (_tendency(context) case final line?)

@@ -55,9 +55,6 @@ class LiveRow extends StatelessWidget {
         dotSize: DotSize.threadDot,
         progress: task.progress,
         ghost: task.reality?.ghost,
-        fill: DotTheme.of(context).tasks[task.color].tint,
-        joinAbove: task.overlapsAbove,
-        joinBelow: task.overlapsBelow,
       ),
       dot: taskRowDot(
         context,

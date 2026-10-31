@@ -4,6 +4,7 @@ import 'package:dottoday/domain/proposals/proposal.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/proposals/proposal_change_chip.dart';
 import 'package:flutter/material.dart';
 
 /// Clock texts a [ProposalEditRow] needs, in the user's zone and 12/24 h.
@@ -58,7 +59,11 @@ class ProposalEditRow extends StatelessWidget {
                     color: leaves ? t.colors.muted : null,
                   ),
                 ),
-                _ChangeChip(text: chip, change: edit.change),
+                ProposalChangeChip(
+                  text: chip,
+                  change: edit.change,
+                  color: TaskColor.fromKey(dot.colorKey),
+                ),
               ],
             ),
           ),
@@ -199,48 +204,6 @@ class _TimeLine extends StatelessWidget {
       ],
     ];
     return Text.rich(TextSpan(children: spans));
-  }
-}
-
-/// What changes, tinted by kind (`B-ios-rebalance`): moves in the accent,
-/// length in amber, leaving the day in rose, untouched in grey. Colour is
-/// never the only signal: the text says it.
-class _ChangeChip extends StatelessWidget {
-  const _ChangeChip({required this.text, required this.change});
-
-  final String text;
-  final ProposalChange change;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final (fill, ink) = switch (change) {
-      ProposalChange.resized => (
-        t.tasks[TaskColor.amber].tint,
-        t.tasks[TaskColor.amber].ink,
-      ),
-      ProposalChange.movedToDay => (
-        t.tasks[TaskColor.rose].tint,
-        t.tasks[TaskColor.rose].ink,
-      ),
-      ProposalChange.untouched ||
-      ProposalChange.overlaps ||
-      ProposalChange.toInbox => (t.colors.hairline, t.colors.muted),
-      _ => (t.colors.accentTint, t.colors.accentInk),
-    };
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: fill,
-        borderRadius: const BorderRadius.all(Radius.circular(DotRadii.pill)),
-      ),
-      child: Padding(
-        padding: const EdgeInsetsDirectional.symmetric(
-          horizontal: DotSpace.m,
-          vertical: DotSpace.xxs,
-        ),
-        child: Text(text, style: t.styles.rowMeta.copyWith(color: ink)),
-      ),
-    );
   }
 }
 

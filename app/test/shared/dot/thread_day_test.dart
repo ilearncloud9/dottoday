@@ -248,8 +248,8 @@ void main() {
     expect(e.whereType<ThreadGap>().map((g) => g.minutes), [120, 720]);
   });
 
-  test('overlapping tasks meet at a ThreadOverlap and are flagged '
-      '(ADR-0015)', () {
+  test('overlapping tasks meet at a knot that names both and the time '
+      'they share (ADR-0015)', () {
     final e = _entries(_at(6), [
       _o('a', 9, 0, 60),
       _o('b', 9, 30, 15),
@@ -276,10 +276,23 @@ void main() {
       'gap',
       'cap',
     ]);
-    expect(_task(e, 'a').overlapsBelow, isTrue);
-    expect(_task(e, 'a').overlapsAbove, isFalse);
-    expect(_task(e, 'b').overlapsAbove, isTrue);
-    expect(_task(e, 'c').overlapsAbove, isFalse);
+    final knot = e.whereType<ThreadOverlap>().single;
+    expect((knot.aboveTitle, knot.belowTitle, knot.minutes), ('a', 'b', 15));
+  });
+
+  test('the knot names the task ending last and counts only the shared '
+      'time', () {
+    // b sits inside a; c starts inside a (not b) and runs past it.
+    final e = _entries(_at(6), [
+      _o('a', 9, 0, 120),
+      _o('b', 9, 15, 15),
+      _o('c', 10, 30, 60),
+    ]);
+    final knots = e.whereType<ThreadOverlap>().toList();
+    expect(
+      [for (final k in knots) (k.aboveTitle, k.belowTitle, k.minutes)],
+      [('a', 'b', 15), ('a', 'c', 30)],
+    );
   });
 
   test('a task that starts as another ends does not overlap it', () {
