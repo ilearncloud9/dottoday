@@ -61,7 +61,10 @@ class TodayKeys extends ConsumerWidget {
         child: TaskKeys(
           day: shown,
           child: Focus(
-            autofocus: true,
+            // Never from a sheet above: on a slow web load Today mounts
+            // under an open Add sheet and took its title's keys (CI
+            // a11y-web). It takes the keys on a build once on top.
+            autofocus: _onTop(context),
             // Catches keys only; adds nothing for screen readers.
             includeSemantics: false,
             // No Tab stop: Tab from here starts at Skip to content (SkipLink).
@@ -71,6 +74,22 @@ class TodayKeys extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Whether Today's route is on top in every navigator above it: Add and
+  /// the other sheets open on the root navigator, over the tab shell.
+  static bool _onTop(BuildContext context) {
+    for (
+      var route = ModalRoute.of(context);
+      route != null;
+      route = switch (route.navigator) {
+        final nav? => ModalRoute.of(nav.context),
+        null => null,
+      }
+    ) {
+      if (!route.isCurrent) return false;
+    }
+    return true;
   }
 
   /// Marks today's live task done, with Undo; nothing when none runs.

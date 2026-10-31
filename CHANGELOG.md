@@ -53,6 +53,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - M10.1: The thinking help behind Break it down, brain-dump and length suggestions now runs on your device — Apple Intelligence on iPhone and Mac, Gemini Nano on supported Android phones, Chrome's built-in model on the web — and falls back to your own history and simple rules where there is none. Nothing you type goes to a server; Settings › Privacy explains it and can clear what was kept.
 
 ### Fixed
+- Add keeps your typing when Today finishes loading behind it: on a slow start the day's keyboard shortcuts no longer take the title field's focus.
 - Screen readers can open the month from Today's date title.
 - At the largest text sizes, a Settings row's value moves under its title instead of breaking the title mid-word.
 - At the largest text sizes, nothing breaks mid-word any more. A Settings page's title moves under the back arrow and wraps between words ("Notification health"), and Today's week strip shows S M T W T F S when "Wed" no longer fits its column.
