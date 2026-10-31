@@ -103,7 +103,11 @@ class _WakeUpCardScreenState extends ConsumerState<WakeUpCardScreen> {
     try {
       await sync.resync(model.data.userId);
     } on Object catch (e, st) {
-      logger.error('wake_up.resync_failed', error: e, stackTrace: st);
+      logger.error(
+        'wake_up.resync_failed', // l10n-ignore: log key
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
