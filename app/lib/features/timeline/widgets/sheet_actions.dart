@@ -1,25 +1,45 @@
 import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/core/utils/text_fit.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
+import 'package:dottoday/features/timeline/state/drag_actions.dart';
 import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/features/timeline/widgets/shell_drops.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// Done · +15 min · Shift · Move · Edit tiles.
+/// Done · +15 min · Shift · Move · Edit tiles; in the minimal layout
+/// Done · Tomorrow · Later · Delete (docs/14 §4), the rest under More.
 class SheetActions extends ConsumerWidget {
-  const SheetActions({required this.task, this.onEdit, super.key});
+  const SheetActions({
+    required this.task,
+    this.onEdit,
+    this.minimal = false,
+    this.onClose,
+    super.key,
+  });
 
   final TaskView task;
+
+  /// Minimal's four tiles: Tomorrow keeps the time, Later is the Inbox,
+  /// Delete is Trash; each says so with Undo and closes the sheet.
+  final bool minimal;
+
+  /// How the sheet goes after Tomorrow / Later / Delete: the route pops,
+  /// unless the Mac/web panel closes itself (M16).
+  final VoidCallback? onClose;
 
   /// Opens the editor (M3b.4b wires it).
   final VoidCallback? onEdit;
@@ -31,48 +51,109 @@ class SheetActions extends ConsumerWidget {
     final done = o.status == OccurrenceStatus.done;
     final messenger = ScaffoldMessenger.of(context);
     final undo = ref.read(undoServiceProvider);
+    final doneTile = _Tile(
+      glyph: DotGlyphs.check,
+      label: done ? l10n.sheetUndone : l10n.sheetDone,
+      filled: !done,
+      onTap: () async {
+        unawaited(HapticFeedback.lightImpact());
+        reportUndoable(
+          messenger,
+          l10n,
+          undo,
+          await toggleDone(ref, o),
+          message: (_) =>
+              done ? l10n.snackNotDone(o.title) : l10n.snackDone(o.title),
+          tokenOf: (token) => token,
+        );
+      },
+    );
+    if (minimal) {
+      final drops = ShellDrops(context, ref);
+      final navigator = Navigator.of(context);
+      void then(void Function() write) {
+        write();
+        if (onClose case final close?) return close();
+        unawaited(navigator.maybePop());
+      }
+
+      return _TileGrid(
+        tiles: [
+          doneTile,
+          _Tile(
+            glyph: DotGlyphs.rollForward,
+            label: l10n.sheetTomorrow,
+            onTap: o.startUtc == null
+                ? null
+                : () => then(() => unawaited(_tomorrow(context, ref))),
+          ),
+          _Tile(
+            glyph: DotGlyphs.inbox,
+            label: l10n.sheetLater,
+            onTap: o.startUtc == null || o.pinned
+                ? null
+                : () => then(() => drops.toInbox(o.id)),
+          ),
+          _Tile(
+            glyph: DotGlyphs.trash,
+            label: l10n.sheetDelete,
+            onTap: o.pinned ? null : () => then(() => drops.toTrash(o.id)),
+          ),
+        ],
+      );
+    }
     return Row(
       spacing: DotSpace.s,
       children: [
-        _Tile(
-          glyph: DotGlyphs.check,
-          label: done ? l10n.sheetUndone : l10n.sheetDone,
-          filled: !done,
-          onTap: () async {
-            unawaited(HapticFeedback.lightImpact());
-            reportUndoable(
-              messenger,
-              l10n,
-              undo,
-              await toggleDone(ref, o),
-              message: (_) =>
-                  done ? l10n.snackNotDone(o.title) : l10n.snackDone(o.title),
-              tokenOf: (token) => token,
-            );
-          },
-        ),
-        _Tile(
-          glyph: DotGlyphs.clock,
-          label: l10n.sheetExtend,
-          onTap: o.startUtc == null
-              ? null
-              : () async => reportUndoable(
-                  messenger,
-                  l10n,
-                  undo,
-                  await extendTask(ref, o),
-                  message: (_) => l10n.sheetExtend,
-                  tokenOf: (token) => token,
-                ),
-        ),
-        _Tile(
-          glyph: DotGlyphs.rollForward,
-          label: l10n.sheetShift,
-          onTap: _shift(context, ref),
-        ),
-        _Tile(glyph: DotGlyphs.move, label: l10n.sheetMove),
-        _Tile(glyph: DotGlyphs.edit, label: l10n.sheetEdit, onTap: onEdit),
+        for (final tile in <_Tile>[
+          doneTile,
+          _Tile(
+            glyph: DotGlyphs.clock,
+            label: l10n.sheetExtend,
+            onTap: o.startUtc == null
+                ? null
+                : () async => reportUndoable(
+                    messenger,
+                    l10n,
+                    undo,
+                    await extendTask(ref, o),
+                    message: (_) => l10n.sheetExtend,
+                    tokenOf: (token) => token,
+                  ),
+          ),
+          _Tile(
+            glyph: DotGlyphs.rollForward,
+            label: l10n.sheetShift,
+            onTap: _shift(context, ref),
+          ),
+          _Tile(glyph: DotGlyphs.move, label: l10n.sheetMove),
+          _Tile(glyph: DotGlyphs.edit, label: l10n.sheetEdit, onTap: onEdit),
+        ])
+          Expanded(child: tile),
       ],
+    );
+  }
+
+  /// Tomorrow at the same time, with Undo (as a week-strip drop).
+  Future<void> _tomorrow(BuildContext context, WidgetRef ref) async {
+    final o = task.occurrence;
+    final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
+    final undo = ref.read(undoServiceProvider);
+    final l = tz.TZDateTime.from(o.startUtc!, tz.getLocation(o.tzId));
+    final date = DateTime(l.year, l.month, l.day + 1);
+    final day = DateFormat.MMMMEEEEd(
+      Localizations.localeOf(context).toLanguageTag(),
+    ).format(date);
+    final result = await moveToDay(ref, o.id, date);
+    if (result case Ok(value: null)) return;
+    reportUndoable(
+      messenger,
+      l10n,
+      undo,
+      result,
+      message: (v) => l10n.snackMovedDay(v!.$1.title, day),
+      tokenOf: (v) => v!.$2,
     );
   }
 
@@ -109,6 +190,55 @@ class SheetActions extends ConsumerWidget {
   }
 }
 
+/// The tiles in one row, or — when a label's longest word would not fit
+/// its tile at the current text size — two per row, or one: a label never
+/// breaks mid-word (accessibility-as-code; found by the M16 goldens).
+class _TileGrid extends StatelessWidget {
+  const _TileGrid({required this.tiles});
+
+  final List<_Tile> tiles;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = DotTheme.of(context).styles.button;
+    return LayoutBuilder(
+      builder: (context, box) {
+        bool fits(int perRow) {
+          final width =
+              (box.maxWidth - DotSpace.s * (perRow - 1)) / perRow -
+              2 * DotSpace.xs;
+          return tiles.every(
+            (t) => longestWordFits(context, t.label, style, width),
+          );
+        }
+
+        final perRow = [tiles.length, 2, 1].firstWhere(fits, orElse: () => 1);
+        return Column(
+          spacing: DotSpace.s,
+          children: [
+            for (var i = 0; i < tiles.length; i += perRow)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: DotSpace.s,
+                children: [
+                  for (final t in tiles.skip(i).take(perRow))
+                    Expanded(child: t),
+                  // A short last row keeps the tiles' width.
+                  for (
+                    var k = tiles.skip(i).take(perRow).length;
+                    k < perRow;
+                    k++
+                  )
+                    const Spacer(),
+                ],
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
 class _Tile extends StatelessWidget {
   const _Tile({
     required this.glyph,
@@ -128,38 +258,36 @@ class _Tile extends StatelessWidget {
     final c = t.colors;
     final enabled = onTap != null;
     final ink = filled ? c.onAccent : (enabled ? c.text : c.muted);
-    return Expanded(
-      child: Semantics(
-        button: true,
-        enabled: enabled,
-        label: label,
-        excludeSemantics: true,
-        onTap: onTap,
-        child: Material(
-          color: filled ? c.accentFill : c.surface,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(DotRadii.card),
-            side: filled ? BorderSide.none : BorderSide(color: c.outline),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onTap,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: DotSize.rowDot * 2),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: DotSpace.s),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: DotSpace.xs,
-                  children: [
-                    DotIcon(glyph, color: ink, active: filled),
-                    Text(
-                      label,
-                      textAlign: TextAlign.center,
-                      style: t.styles.button.copyWith(color: ink),
-                    ),
-                  ],
-                ),
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      label: label,
+      excludeSemantics: true,
+      onTap: onTap,
+      child: Material(
+        color: filled ? c.accentFill : c.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DotRadii.card),
+          side: filled ? BorderSide.none : BorderSide(color: c.outline),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: DotSize.rowDot * 2),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: DotSpace.s),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: DotSpace.xs,
+                children: [
+                  DotIcon(glyph, color: ink, active: filled),
+                  Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: t.styles.button.copyWith(color: ink),
+                  ),
+                ],
               ),
             ),
           ),

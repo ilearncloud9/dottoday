@@ -222,10 +222,12 @@ Sweep entries (add a row per screen as it lands):
 | Add A2 with a learned length; its explanation open (+ 2.0 text, RTL) | `test/features/task_editor/add_golden_test.dart` (`add_when_learned*`) | derived — docs/13 §6 |
 | Focus step card on a learned length, explained (+ 2.0 text, RTL) | `test/features/focus/focus_step_learned_golden_test.dart` | derived — docs/13 §5–§6 |
 | Device and web sweep: `settings_learning`, `learned_explained` | `integration_test/support/sweep_m13.dart`, `tool/a11y/web_sweep.mjs` | — |
+| Device and web sweep: `onboarding_layout`, `minimal_today`, `minimal_later`, `minimal_add`, `minimal_task_sheet`, `minimal_settings`, `minimal_everything`; comparison `tool/sweep/compare.mjs` | `integration_test/support/sweep_m16.dart`, `tool/a11y/web_sweep.mjs` | `C-ios-onboarding-mode` |
 | Privacy › Help with thinking status: Apple Intelligence off (iPhone; + 2.0 text, RTL, 3 widths), Gemini Nano downloadable, not eligible | `test/features/settings/privacy_ai_status_golden_test.dart` | derived — 11 §B4 AI status |
 | Proposal "simple rules" + `StatusHint` (+ 2.0 text, RTL, 3 widths) | `test/features/proposals/proposal_rules_hint_golden_test.dart` | derived — 10 §5 |
 | Settings › Siri & Shortcuts (iPhone, compact; + 2.0 text, RTL) | `test/features/settings/siri_page_golden_test.dart` | derived — 11 §B6 |
 | Today: one-time Siri tip (iPhone, compact; + 2.0 text, RTL) | `test/features/timeline/siri_tip_golden_test.dart` | derived — 11 §B6 |
 | Brain dump with mic: idle, listening, first-use tip (3 widths; + 2.0 text, RTL) | `test/features/timeline/brain_dump_mic_golden_test.dart` | derived — 11 §B7, 10 §3 `MicButton` |
 | Editor NOTES with mic: idle (3 widths; + 2.0 text, RTL), listening | `test/features/timeline/editor/editor_notes_mic_golden_test.dart` | derived — 11 §B7 |
+| Minimal Today (shell without a tab bar; + a reveal hint), Add, task sheet (live; finished task for 2.0 text / RTL), Settings, onboarding step 0 (compact; + 2.0 text, RTL) | `test/minimal_mode/minimal_golden_test.dart` | derived — docs/14 §4 (set C renders pending) |
 

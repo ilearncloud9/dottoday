@@ -88,6 +88,7 @@ interfaces or Riverpod providers, never direct widget imports.
 - [ ] Works on all four targets or the task explicitly lists platform exceptions with a follow-up task.
 - [ ] Accessibility: semantics labels, 44pt touch targets, Dynamic Type up to 200%, reduced-motion respected, keyboard operable on desktop/web.
 - [ ] Security checklist in `docs/06-security.md` §9 re-checked if the task touches auth, storage, sync, or input.
+- [ ] A new user-facing feature has its row in `docs/14-minimal-mode.md` §3 and its `FeatureId` (the policy test fails otherwise).
 - [ ] `docs/09-implementation-plan.md` checkbox ticked; CHANGELOG entry added.
 
 ## 6. Workflow
@@ -165,6 +166,7 @@ summaries, not individual decisions. Decide, record the reason in the commit bod
 - Decide yourself (per §10): spacing within ±4 px of the render, icon paths, copy that is not in a render, state handling. Must ask: removing or merging a screen from the inventory, changing the nav set/order, changing a dot state's meaning, adding a third-party UI package.
 - The standout roadmap is `docs/11-standout-roadmap.md` (ADR-0009, ADR-0010), with set B renders in `docs/design-references/` (README section "set B"). It extends `10-ui-concept-a.md`; §3–§7 of that document still govern every screen.
 - Build the shared blocks (B1–B6 in `11-standout-roadmap.md` §0) before the features that use them; never fork a second proposal sheet, model service or snapshot format.
+- Minimal mode (`docs/14-minimal-mode.md`, ADR-0016): every new feature declares its §3 row (Shown / Simplified / Hidden / Off and what changes) and its `FeatureId` in `domain/layout/` **before it is built**. Views ask `LayoutPolicy` through `watchFeature` / `watchOnScreen` / `watchSimplified` (`data/layout/`); nothing else reads `Settings.uiLayout`, and no repository, DAO, sync or notification code branches on it. Hidden is View-only; Off goes through the feature's own switch, never a stored change.
 - Proposal rule: any model- or rule-generated change (break down, rebalance, brain-dump, routine drop) is rendered by `ProposalSheet` and written only on Accept. A test proving nothing is written before Accept is part of done for each flow.
 - Surface rule: widgets, Live Activity, ongoing notification, menu bar, controls and the watch read `DaySnapshot` and call the five App Intents only; none talk to Supabase.
 - No-shame rule: no streaks, no red for incomplete, no "late/missed/failed" in user-facing copy; a string audit is part of done for D1–D3.

@@ -66,6 +66,9 @@ void main() {
     final clock = Stopwatch()..start();
 
     await _tap(tester, 'Get started');
+    // Step 0 (docs/14 §4): this flow is the full planner's.
+    await _tap(tester, 'The full planner');
+    await _tap(tester, 'Continue');
     await _tap(tester, 'Continue'); // O2: the default day shape
     await _pumpUntil(tester, find.text('What fills your days?'));
 

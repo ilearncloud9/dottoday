@@ -27,6 +27,7 @@ final class ThreadActions {
     this.onUnstick,
     this.onExtend,
     this.onShiftRest,
+    this.onRunningLate,
     this.onAddHere,
     this.drag,
     this.selectedIds = const {},
@@ -43,6 +44,10 @@ final class ThreadActions {
   final void Function(String id, String answer)? onUnstick;
   final ValueChanged<String>? onExtend;
   final ValueChanged<String>? onShiftRest;
+
+  /// Running late on the live row, in place of +15 and Shift the rest
+  /// (minimal layout, docs/14 §4); null keeps those two.
+  final ValueChanged<String>? onRunningLate;
 
   /// A future gap was tapped; reports the gap.
   final ValueChanged<ThreadGap>? onAddHere;
@@ -240,6 +245,7 @@ class _ThreadState extends State<Thread> {
                 ? _bind(a.onShiftRest, task)
                 : null,
             onUnstick: _answer(a.onUnstick, task),
+            onRunningLate: _bind(a.onRunningLate, task),
           )
         : TaskRow(
             task: task,

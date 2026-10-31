@@ -5576,6 +5576,121 @@ class AppLocalizationsDe extends AppLocalizations {
       'Mach eine Pause oder sag „weiter“ zwischen den Dingen. „Zahnarzt anrufen … weiter … Milch kaufen“ wird zu zwei Zeilen.';
 
   @override
+  String get layoutShowEverything => 'Alles zeigen';
+
+  @override
+  String get layoutShowLess => 'Weniger zeigen';
+
+  @override
+  String get layoutRow => 'Ansicht';
+
+  @override
+  String get layoutMinimal => 'Minimal';
+
+  @override
+  String get layoutFull => 'Vollständig';
+
+  @override
+  String laterRow(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Später · $count',
+      zero: 'Später',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String laterRowLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Später, $count Aufgaben warten',
+      one: 'Später, 1 Aufgabe wartet',
+      zero: 'Später, nichts wartet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get moreOptions => 'Mehr';
+
+  @override
+  String get sheetLater => 'Später';
+
+  @override
+  String get sheetDelete => 'Löschen';
+
+  @override
+  String get settingsEverythingElse => 'Alles andere …';
+
+  @override
+  String get settingsRemindDotStarts => 'Erinnern, wenn ein Punkt beginnt';
+
+  @override
+  String get settingsAccountAndSync => 'Konto und Sync';
+
+  @override
+  String addWhenChip(String time) {
+    return 'Um $time';
+  }
+
+  @override
+  String get onboardingLayoutTitle => 'Wie viel möchten Sie sehen?';
+
+  @override
+  String get onboardingLayoutBody =>
+      'Sie können das jederzeit oben in den Einstellungen ändern.';
+
+  @override
+  String get onboardingLayoutMinimalTitle => 'Nur der nächste Punkt';
+
+  @override
+  String get onboardingLayoutMinimalBody =>
+      'Was jetzt dran ist und was als Nächstes kommt. Hinzufügen, machen, erledigt. Nichts einzurichten.';
+
+  @override
+  String get onboardingLayoutFullTitle => 'Der ganze Planer';
+
+  @override
+  String get onboardingLayoutFullBody =>
+      'Der ganze Faden, Woche und Monat, Routinen, Rückblicke, Widgets und jede Einstellung.';
+
+  @override
+  String get onboardingFirstTaskTitle => 'Was ist eine Sache für heute?';
+
+  @override
+  String get onboardingFirstTaskBody =>
+      'Schreiben Sie es, wie Sie es sagen würden, etwa „Sam anrufen 18 Uhr“. Es kommt auf Ihren Faden.';
+
+  @override
+  String get onboardingFirstTaskAdd => 'Auf heute legen';
+
+  @override
+  String get hintRoutines => 'Das als Ihren Morgen speichern?';
+
+  @override
+  String get hintBreakDown => 'In Schritte aufteilen?';
+
+  @override
+  String get hintWidget => 'Den nächsten Punkt auch auf dem Home-Bildschirm?';
+
+  @override
+  String get hintWidgetHow =>
+      'Fügen Sie das Dottoday-Widget aus der Widget-Liste Ihres Home-Bildschirms hinzu.';
+
+  @override
+  String get hintWeek => 'Ihre Woche als sieben Punkte sehen?';
+
+  @override
+  String get hintLearned =>
+      'Dottoday kann Zeiten danach vorschlagen, wie lange Dinge wirklich dauern.';
+
+  @override
+  String get hintShowMe => 'Zeigen';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

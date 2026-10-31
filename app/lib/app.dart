@@ -9,6 +9,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/live_activity/web_live_dot.dart';
 import 'package:dottoday/data/live_activity/web_live_dot_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -47,6 +48,11 @@ class DottodayApp extends ConsumerWidget {
       ref.listen(webLiveDotStateProvider, (_, d) => applyTabLiveDot(d));
     }
     // Start focus from a control, tile or Siri (M10.5).
+    // The Live Activity's dismissal event (iOS, M16): the handler lives in
+    // the provider, which this keeps alive from launch.
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
+      ref.listen(liveActivityDismissedProvider, (_, _) {});
+    }
     ref.listen(focusRequestProvider, (_, r) {
       if (r != null) _openFocus(router, r.id);
     });

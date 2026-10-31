@@ -99,4 +99,31 @@ void main() {
     await tester.pump();
     expect(focused(tester, 'Late'), isTrue);
   });
+
+  testWidgets('unseen, it lets a click through to what is under it', (
+    tester,
+  ) async {
+    var taps = 0;
+    await tester.pumpWidget(
+      testApp(
+        SkipLink(
+          label: 'Skip to content',
+          builder: (content) => Align(
+            alignment: AlignmentDirectional.topStart,
+            child: SizedBox.square(
+              dimension: 64,
+              child: TextButton(
+                onPressed: () => taps++,
+                child: const Text('Add task'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    // The add button sits under the hidden link (the M16 rail).
+    await tester.tapAt(const Offset(20, 20));
+    await tester.pump();
+    expect(taps, 1);
+  });
 }

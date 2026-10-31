@@ -73,6 +73,10 @@ abstract class Settings with _$Settings {
     // Low-energy mode (11 D2, M12.2): on until this instant — the next
     // Wake Up when it was switched on — so it ends by itself everywhere.
     @UtcMillisConverter() DateTime? lowEnergyUntil,
+    // Minimal or full layout (docs/14 §6, M16). A missing key reads as full,
+    // so an upgrade changes no one's app; onboarding step 0 picks it for a
+    // new install (minimal preselected).
+    @Default(UiLayout.full) UiLayout uiLayout,
   }) = _Settings;
 
   const Settings._();

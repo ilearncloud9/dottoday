@@ -1,6 +1,7 @@
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/mappers/row_codec.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -13,6 +14,7 @@ const seriesCodec = RowCodec(jsonColumns: {'alerts', 'subtask_template'});
 const subtaskCodec = RowCodec();
 const profileCodec = RowCodec(jsonColumns: {'settings'});
 const routineCodec = RowCodec(jsonColumns: {'items'});
+const revealHintCodec = RowCodec();
 
 Occurrence occurrenceFromRow(OccurrenceRow row) =>
     Occurrence.fromJson(occurrenceCodec.decode(row));
@@ -27,3 +29,6 @@ Profile profileFromRow(ProfileRow row) =>
 
 Routine routineFromRow(RoutineRow row) =>
     Routine.fromJson(routineCodec.decode(row));
+
+RevealHint revealHintFromRow(RevealHintRow row) =>
+    RevealHint.fromJson(revealHintCodec.decode(row));

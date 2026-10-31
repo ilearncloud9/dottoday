@@ -17,7 +17,9 @@ async function enableSemantics(page) {
 }
 
 async function tapButton(page, name) {
-  const button = page.getByRole('button', { name, exact: true }).first();
+  // Onboarding step 0's cards are radio buttons (M16).
+  const button = page.getByRole('button', { name, exact: true })
+    .or(page.getByRole('radio', { name, exact: true })).first();
   await button.waitFor({ state: 'attached', timeout: 30_000 });
   await button.click();
   await page.waitForTimeout(800);
@@ -25,7 +27,7 @@ async function tapButton(page, name) {
 
 // Onboarding O1–O6 the short way: no permission, no account.
 async function passOnboarding(page) {
-  for (const name of ['Get started', 'Continue', 'Continue', 'Not now',
+  for (const name of ['Get started', 'The full planner', 'Continue', 'Continue', 'Continue', 'Not now',
     'Continue without an account', 'Open today']) {
     await tapButton(page, name);
   }

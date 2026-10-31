@@ -57,7 +57,10 @@ enum SettingsPage {
   changelog,
 
   /// Siri & Shortcuts (M14.3, iPhone only: listed only where Siri runs).
-  siri;
+  siri,
+
+  /// Minimal Settings › Everything else… (docs/14 §4): the full tree.
+  everything;
 
   /// The page called [name], or null (an unknown deep link).
   static SettingsPage? byName(String name) =>

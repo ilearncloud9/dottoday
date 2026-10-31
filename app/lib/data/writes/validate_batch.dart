@@ -20,6 +20,8 @@ Result<WriteBatch, ValidationFailure> validateBatch(WriteBatch batch) {
         ],
         subtasks: [for (final s in batch.subtasks) _unwrap(validateSubtask(s))],
         routines: [for (final r in batch.routines) _unwrap(validateRoutine(r))],
+        // Hint records carry no user text; the schema CHECKs bound them.
+        revealHints: batch.revealHints,
       ),
     );
   } on _Invalid catch (e) {

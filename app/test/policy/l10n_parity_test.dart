@@ -42,8 +42,12 @@ const _sameAsEnglish = {
     'syncTitle',
     'inAppAlertOk',
     'taskLinks',
+    // "Minimal" is the word in German too (M16).
+    'layoutMinimal',
   },
   'fr': {
+    // "Minimal" is the word in French too (M16).
+    'layoutMinimal',
     'routinesTitle',
     'routineSummary',
     'routineDropTitle',

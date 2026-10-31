@@ -86,6 +86,7 @@ enum EntityKind {
   calendarLink,
   profile,
   routine,
+  revealHint,
 }
 
 /// Entity does not exist or is not visible to the current user.

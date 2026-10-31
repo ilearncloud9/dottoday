@@ -11,10 +11,64 @@ import 'package:flutter_test/flutter_test.dart';
 // occurrences.move_count (Unstick, 11 B3); 5 → 6 (M11.4): routines,
 // occurrences.routine_start and the outbox CHECK naming routines; 6 → 7
 // (M13.2, ADR-0012): subtasks.done_at; 7 → 8 (docs/12 §3): sound_id on
-// series and occurrences, and "system" for every null reminder sound.
+// series and occurrences, and "system" for every null reminder sound;
+// 8 → 9 (M16, docs/14 §6): reveal_hints, the outbox CHECK naming them, and
+// `uiLayout: "full"` for every existing profile.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
+  test(
+    'a version 8 file keeps the full layout and gains reveal hints',
+    () async {
+      final dir = await Directory.systemTemp.createTemp('dottoday-mig9');
+      addTearDown(() => dir.delete(recursive: true));
+      final file = File('${dir.path}/db.sqlite');
+
+      final v8 = AppDatabase(NativeDatabase(file));
+      for (final (id, settings) in [
+        ('missing', '{"snapMinutes":10}'),
+        ('chosen', '{"uiLayout":"minimal"}'),
+      ]) {
+        await v8.customStatement(
+          'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+          "updated_at) VALUES ('$id', 'UTC', 'en', '$settings', 0, 0)",
+        );
+      }
+      await v8.customStatement(
+        'INSERT INTO change_log (entity, entity_id, field, value, hlc) '
+        "VALUES ('routines', 'r1', 'title', '\"Morning\"', 'h1')",
+      );
+      await v8.customStatement('DROP TABLE reveal_hints');
+      await v8.customStatement('PRAGMA user_version = 8');
+      await v8.close();
+
+      final v9 = AppDatabase(NativeDatabase(file));
+      addTearDown(v9.close);
+      Future<Object?> layout(String id) async =>
+          (await v9
+                  .customSelect(
+                    "SELECT json_extract(settings, '\$.uiLayout') AS l "
+                    'FROM profiles WHERE id = ?',
+                    variables: [Variable.withString(id)],
+                  )
+                  .getSingle())
+              .data['l'];
+      // Nobody's app changes on upgrade (docs/14 §6).
+      expect(await layout('missing'), 'full');
+      expect(await layout('chosen'), 'minimal', reason: 'a choice is kept');
+      expect(await v9.select(v9.changeLog).get(), hasLength(1));
+      await v9.customStatement(
+        'INSERT INTO reveal_hints (id, user_id, hint_id, created_at, '
+        "updated_at) VALUES ('h1', 'missing', 'unstick', 0, 0)",
+      );
+      await v9.customStatement(
+        'INSERT INTO change_log (entity, entity_id, field, value, hlc) '
+        "VALUES ('reveal_hints', 'h1', 'shown_count', '1', 'h2')",
+      );
+      expect(await v9.select(v9.revealHintsTable).get(), hasLength(1));
+    },
+  );
+
   test('a version 7 file gains task sounds and keeps the OS sound', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig8');
     addTearDown(() => dir.delete(recursive: true));

@@ -109,4 +109,5 @@ const _kinds = {
   'occurrences': EntityKind.occurrence,
   'subtasks': EntityKind.subtask,
   'routines': EntityKind.routine,
+  'reveal_hints': EntityKind.revealHint,
 };

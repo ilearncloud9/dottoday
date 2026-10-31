@@ -33,39 +33,40 @@ class MaterialBarShell extends StatelessWidget {
                 child: DotIcon(DotGlyphs.add, color: c.onAccent, active: true),
               ),
             ),
-      bottomNavigationBar: NavigationBar(
-        // No entry for this page here (Week at phone width): nothing lit.
-        selectedIndex: bar.selected < 0 ? 0 : bar.selected,
-        indicatorColor: bar.selected < 0
-            ? Colors.transparent
-            : Color.alphaBlend(c.accentTint, c.raised),
-        backgroundColor: c.raised,
-        surfaceTintColor: Colors.transparent,
-        onDestinationSelected: bar.onSelect,
-        labelTextStyle: WidgetStateProperty.resolveWith(
-          (s) => t.styles
-              .androidTab(
-                s.contains(WidgetState.selected)
-                    ? t.styles.tabLabelActive
-                    : t.styles.tabLabel,
-              )
-              .copyWith(
-                color: s.contains(WidgetState.selected) ? c.text : c.muted,
-              ),
-        ),
-        destinations: [
-          for (final (i, d) in bar.items.indexed)
-            NavigationDestination(
-              icon: ShellIcon(destination: d, active: false, color: c.muted),
-              selectedIcon: ShellIcon(
-                destination: d,
-                active: i == bar.selected,
-                color: c.accent,
-              ),
-              label: d.label,
-            ),
-        ],
-      ),
+      // No tabs (minimal layout): the FAB alone.
+      bottomNavigationBar: bar.items.isEmpty ? null : _bar(t, c),
     );
   }
+
+  Widget _bar(DotTheme t, DotColors c) => NavigationBar(
+    // No entry for this page here (Week at phone width): nothing lit.
+    selectedIndex: bar.selected < 0 ? 0 : bar.selected,
+    indicatorColor: bar.selected < 0
+        ? Colors.transparent
+        : Color.alphaBlend(c.accentTint, c.raised),
+    backgroundColor: c.raised,
+    surfaceTintColor: Colors.transparent,
+    onDestinationSelected: bar.onSelect,
+    labelTextStyle: WidgetStateProperty.resolveWith(
+      (s) => t.styles
+          .androidTab(
+            s.contains(WidgetState.selected)
+                ? t.styles.tabLabelActive
+                : t.styles.tabLabel,
+          )
+          .copyWith(color: s.contains(WidgetState.selected) ? c.text : c.muted),
+    ),
+    destinations: [
+      for (final (i, d) in bar.items.indexed)
+        NavigationDestination(
+          icon: ShellIcon(destination: d, active: false, color: c.muted),
+          selectedIcon: ShellIcon(
+            destination: d,
+            active: i == bar.selected,
+            color: c.accent,
+          ),
+          label: d.label,
+        ),
+    ],
+  );
 }

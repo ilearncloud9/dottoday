@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/schedule/planned_colors.dart';
@@ -10,6 +11,8 @@ import 'package:dottoday/data/scheduling/day_room_providers.dart';
 import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
+import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:dottoday/domain/quick_add/add_draft.dart';
 import 'package:dottoday/domain/scheduling/energy_window.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
@@ -58,12 +61,19 @@ class AddWhenHost extends ConsumerWidget {
   final AddRequest request;
   final AddFlowState state;
 
-  EnergyWindow? _energy(WidgetRef ref) => _energyFor(
-    ref.watch(energyWindowProvider).value,
-    ref.watch(currentProfileProvider).value?.settings,
-    state.draft.title,
-    ref.watch(learningThresholdsProvider),
-  );
+  EnergyWindow? _energy(WidgetRef ref) {
+    final settings = ref.watch(currentProfileProvider).value?.settings;
+    // C4 is Off in minimal (docs/14 §3, §6): "off" goes into the feature's
+    // own switch here, in the View; the stored choice is never written.
+    final off =
+        watchFeature(ref, FeatureId.energySuggestions) == FeatureVisibility.off;
+    return _energyFor(
+      ref.watch(energyWindowProvider).value,
+      off ? settings?.copyWith(energySuggestions: false) : settings,
+      state.draft.title,
+      ref.watch(learningThresholdsProvider),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

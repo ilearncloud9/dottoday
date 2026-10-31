@@ -4363,6 +4363,99 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get dumpMicTipBody => pseudo(super.dumpMicTipBody);
 
   @override
+  String get layoutShowEverything => pseudo(super.layoutShowEverything);
+
+  @override
+  String get layoutShowLess => pseudo(super.layoutShowLess);
+
+  @override
+  String get layoutRow => pseudo(super.layoutRow);
+
+  @override
+  String get layoutMinimal => pseudo(super.layoutMinimal);
+
+  @override
+  String get layoutFull => pseudo(super.layoutFull);
+
+  @override
+  String laterRow(int count) => pseudo(super.laterRow(count));
+
+  @override
+  String laterRowLabel(int count) => pseudo(super.laterRowLabel(count));
+
+  @override
+  String get moreOptions => pseudo(super.moreOptions);
+
+  @override
+  String get sheetLater => pseudo(super.sheetLater);
+
+  @override
+  String get sheetDelete => pseudo(super.sheetDelete);
+
+  @override
+  String get settingsEverythingElse => pseudo(super.settingsEverythingElse);
+
+  @override
+  String get settingsRemindDotStarts => pseudo(super.settingsRemindDotStarts);
+
+  @override
+  String get settingsAccountAndSync => pseudo(super.settingsAccountAndSync);
+
+  @override
+  String addWhenChip(String time) => pseudo(super.addWhenChip(time));
+
+  @override
+  String get onboardingLayoutTitle => pseudo(super.onboardingLayoutTitle);
+
+  @override
+  String get onboardingLayoutBody => pseudo(super.onboardingLayoutBody);
+
+  @override
+  String get onboardingLayoutMinimalTitle =>
+      pseudo(super.onboardingLayoutMinimalTitle);
+
+  @override
+  String get onboardingLayoutMinimalBody =>
+      pseudo(super.onboardingLayoutMinimalBody);
+
+  @override
+  String get onboardingLayoutFullTitle =>
+      pseudo(super.onboardingLayoutFullTitle);
+
+  @override
+  String get onboardingLayoutFullBody => pseudo(super.onboardingLayoutFullBody);
+
+  @override
+  String get onboardingFirstTaskTitle => pseudo(super.onboardingFirstTaskTitle);
+
+  @override
+  String get onboardingFirstTaskBody => pseudo(super.onboardingFirstTaskBody);
+
+  @override
+  String get onboardingFirstTaskAdd => pseudo(super.onboardingFirstTaskAdd);
+
+  @override
+  String get hintRoutines => pseudo(super.hintRoutines);
+
+  @override
+  String get hintBreakDown => pseudo(super.hintBreakDown);
+
+  @override
+  String get hintWidget => pseudo(super.hintWidget);
+
+  @override
+  String get hintWidgetHow => pseudo(super.hintWidgetHow);
+
+  @override
+  String get hintWeek => pseudo(super.hintWeek);
+
+  @override
+  String get hintLearned => pseudo(super.hintLearned);
+
+  @override
+  String get hintShowMe => pseudo(super.hintShowMe);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override
