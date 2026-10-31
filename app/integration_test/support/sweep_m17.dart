@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
-// M17.1 in the design sweep (docs/15 W1a): Settings › Day shape with the
+// M17 in the design sweep (docs/15 W1): Settings › Day shape with the
 // Wake Up alarm switched on (its tier line, and Allow where something is
-// in the way), then Notification health's Wake Up row. The switch goes
-// back off, so later runs start as an upgrade does.
+// in the way), its Sound and snooze page (M17.2), then Notification
+// health's Wake Up row. The switch goes back off, so later runs start as
+// an upgrade does.
 
 /// The Wake Up alarm's screens, each captured with [shot].
 Future<void> sweepM17(
@@ -33,6 +34,11 @@ Future<void> sweepM17(
   await tester.tap(alarm);
   await rest();
   await shot('settings_wake_up');
+
+  router.go('/settings/wakeUp');
+  await until(find.text('Snooze length'));
+  await rest();
+  await shot('wake_up_options');
 
   router.go('/settings/notifications');
   await rest();

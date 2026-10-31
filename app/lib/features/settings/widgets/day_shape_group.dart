@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -16,6 +17,7 @@ import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:dottoday/shared/time_input/time_input.dart';
 import 'package:dottoday/shared/time_input/time_input_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 /// DAY SHAPE (`A-ios-settings`): the sun → moon slider, Wake Up, its alarm
@@ -90,6 +92,15 @@ class DayShapeGroup extends StatelessWidget {
         ),
       ),
       WakeUpAlarmRow(on: settings.wakeUpAlarm),
+      if (settings.wakeUpAlarm)
+        SettingsRow(
+          glyph: DotGlyphs.sound,
+          tint: t.tasks[TaskColor.amber].ink,
+          title: l10n.settingsWakeUpOptions,
+          onTap: () => unawaited(
+            context.push(AppRoutes.settingsPage(SettingsPage.wakeUp)),
+          ),
+        ),
       SettingsRow(
         glyph: DotGlyphs.moon,
         tint: t.tasks[TaskColor.violet].ink,

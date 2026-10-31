@@ -44,6 +44,9 @@ enum SettingsPage {
 
   /// Reminders › Sounds (docs/12 §6).
   sounds,
+
+  /// Day shape › Wake Up alarm › Sound and snooze (docs/15 §9, M17.2).
+  wakeUp,
   calendars,
 
   /// Routines (11 C2, M11.4), also from Today ⋯ and Add.
