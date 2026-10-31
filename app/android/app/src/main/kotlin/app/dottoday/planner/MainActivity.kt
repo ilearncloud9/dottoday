@@ -16,6 +16,7 @@ import app.dottoday.planner.intents.ShareIntake
 import app.dottoday.planner.intents.OngoingDot
 import app.dottoday.planner.focus.DeepWork
 import app.dottoday.planner.speech.SpeechBridge
+import app.dottoday.planner.system.SystemEvents
 import app.dottoday.planner.thinking.ThinkingBridge
 import io.flutter.plugin.common.MethodChannel
 
@@ -35,6 +36,8 @@ import io.flutter.plugin.common.MethodChannel
  * text or link is queued as an Inbox task (M12.4, [ShareIntake]).
  * `dottoday/speech` is dictation with the on-device recognizer only
  * (M14.4, [SpeechBridge]); it stops when the activity pauses.
+ * `dottoday/system_events` says when the clock, zone or calendars change
+ * ([SystemEvents], docs/04 §4 "Triggers").
  */
 class MainActivity : FlutterFragmentActivity() {
     // Share → Dottoday (M12.4): queued before Flutter reads the intent,
@@ -47,6 +50,12 @@ class MainActivity : FlutterFragmentActivity() {
     override fun onNewIntent(intent: Intent) {
         ShareIntake.accept(this, intent)
         super.onNewIntent(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Calendar access may have just been granted.
+        SystemEvents.watchCalendars()
     }
 
     override fun onPause() {
@@ -67,12 +76,14 @@ class MainActivity : FlutterFragmentActivity() {
 
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
         IntentQueueBridge.detach()
+        SystemEvents.detach()
         super.cleanUpFlutterEngine(flutterEngine)
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         IntentQueueBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
+        SystemEvents.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         ThinkingBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         SpeechBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         DeepWork.attach(this, flutterEngine.dartExecutor.binaryMessenger)

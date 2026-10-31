@@ -95,6 +95,10 @@ final class FakeBackupService implements BackupService {
       const Ok(false);
 
   @override
+  Future<DateTime> nextDailyDueUtc(String userId) async =>
+      DateTime.utc(2026, 10, 22, 9);
+
+  @override
   Future<Result<BackupInfo, AppFailure>> create(
     String userId,
     BackupReason reason,

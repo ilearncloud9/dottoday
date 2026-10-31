@@ -1,5 +1,6 @@
 import ActivityKit
 import AudioToolbox
+import EventKit
 import Flutter
 import UIKit
 import UserNotifications
@@ -45,6 +46,57 @@ import workmanager_apple
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "SpeechBridge") {
       SpeechBridge.register(registrar.messenger())
     }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "SystemEventsBridge") {
+      SystemEventsBridge.shared.attach(to: registrar.messenger())
+    }
+  }
+}
+
+/// What iOS announces while the app runs, on `dottoday/system_events`
+/// (lib/data/system/system_events.dart, docs/04 §4 "Triggers"), so Dart acts on the
+/// event instead of checking on a timer: `clock` when the day turns over
+/// or the time or zone changes, `calendar` when the device's calendars
+/// change (another app, an account sync, Dottoday's own write-back).
+final class SystemEventsBridge {
+  static let shared = SystemEventsBridge()
+  private var channel: FlutterMethodChannel?
+  /// Only observed; reading goes through device_calendar.
+  private var store: EKEventStore?
+  private var observers: [NSObjectProtocol] = []
+
+  func attach(to messenger: FlutterBinaryMessenger) {
+    channel = FlutterMethodChannel(name: "dottoday/system_events", binaryMessenger: messenger)
+    guard observers.isEmpty else { return }
+    let center = NotificationCenter.default
+    for name in [UIApplication.significantTimeChangeNotification, .NSSystemTimeZoneDidChange] {
+      observers.append(
+        center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+          self?.channel?.invokeMethod("clock", arguments: nil)
+        })
+    }
+    // Access is granted in a system prompt or Settings while the app is
+    // in the background; a store made before that never reports changes.
+    observers.append(
+      center.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) {
+        [weak self] _ in self?.watchCalendars()
+      })
+    watchCalendars()
+  }
+
+  private func watchCalendars() {
+    guard store == nil, Self.calendarReadable() else { return }
+    let store = EKEventStore()
+    self.store = store
+    observers.append(
+      NotificationCenter.default.addObserver(
+        forName: .EKEventStoreChanged, object: store, queue: .main
+      ) { [weak self] _ in self?.channel?.invokeMethod("calendar", arguments: nil) })
+  }
+
+  private static func calendarReadable() -> Bool {
+    let status = EKEventStore.authorizationStatus(for: .event)
+    if #available(iOS 17.0, *) { return status == .fullAccess }
+    return status == .authorized
   }
 }
 

@@ -347,4 +347,4 @@ final class CalendarActionsProvider
   }
 }
 
-String _$calendarActionsHash() => r'085454a45919f587388c4c443c48cc8f7cdd2443';
+String _$calendarActionsHash() => r'65d2547d11882c5912883ebaaf429aabd7bd761c';

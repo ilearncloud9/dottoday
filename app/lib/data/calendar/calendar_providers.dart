@@ -128,7 +128,11 @@ final calendarPalette = {
 
 /// What Settings and onboarding do with device calendars.
 @Riverpod(keepAlive: true)
-CalendarActions calendarActions(Ref ref) => CalendarActions(ref);
+CalendarActions calendarActions(Ref ref) {
+  final actions = CalendarActions(ref);
+  ref.onDispose(actions.dispose);
+  return actions;
+}
 
 /// Asking for the permission and switching calendars (docs/02 F5).
 final class CalendarActions {
@@ -204,10 +208,33 @@ final class CalendarActions {
   /// switch, connecting): this device's, then the connected Google and
   /// Microsoft accounts' (M7.4). Failures are logged; the next run repairs
   /// them.
-  Future<void> importEvents() async {
+  Future<void> importEvents() => _import(cloud: true);
+
+  /// How long the device's change announcements settle before one import:
+  /// a calendar sync announces each event it touches.
+  static const deviceChangeSettle = Duration(seconds: 2);
+
+  Timer? _deviceChanged;
+
+  /// The device's calendars changed (the OS said so, docs/04 §4 "Triggers"): their
+  /// events come in once the burst settles. Cloud accounts aren't read;
+  /// nothing about them changed. An import that finds nothing new writes
+  /// nothing, so Dottoday's own write-back can't loop.
+  void deviceCalendarChanged() {
+    _deviceChanged?.cancel();
+    _deviceChanged = Timer(
+      deviceChangeSettle,
+      () => unawaited(_import(cloud: false)),
+    );
+  }
+
+  /// Drops a pending [deviceCalendarChanged] import.
+  void dispose() => _deviceChanged?.cancel();
+
+  Future<void> _import({required bool cloud}) async {
     final device = _ref.read(deviceCalendarGatewayProvider).available;
-    final cloud = _ref.read(cloudCalendarsProvider).available;
-    if (!device && !cloud) return;
+    final fromCloud = cloud && _ref.read(cloudCalendarsProvider).available;
+    if (!device && !fromCloud) return;
     final logger = _ref.read(loggerProvider);
     try {
       // Edits on their way to a calendar go first, so the import reads
@@ -224,7 +251,7 @@ final class CalendarActions {
         calendarChoiceListProvider.future,
       );
     }
-    if (cloud && await _cloudReadable()) {
+    if (fromCloud && await _cloudReadable()) {
       await _importFrom(
         _ref.read(cloudCalendarImporterProvider),
         cloudCalendarChoiceListProvider.future,

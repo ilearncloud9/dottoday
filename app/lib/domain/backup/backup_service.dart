@@ -37,6 +37,11 @@ abstract interface class BackupService {
   /// Returns whether a backup was taken.
   Future<Result<bool, AppFailure>> runDailyIfDue(String userId);
 
+  /// When [runDailyIfDue] will next take one: 24 h after the last daily
+  /// backup, or now when there is none (the open app arms its housekeeping
+  /// for that moment, docs/04 §4 "Triggers").
+  Future<DateTime> nextDailyDueUtc(String userId);
+
   /// Takes a backup now and applies retention.
   Future<Result<BackupInfo, AppFailure>> create(
     String userId,

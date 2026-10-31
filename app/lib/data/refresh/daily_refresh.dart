@@ -14,9 +14,9 @@ import 'package:dottoday/domain/writes/write_use_case.dart';
 /// and redraws the home-screen widgets.
 ///
 /// Series are only materialised when saved, so without this a repeat would
-/// run out 90 days after its last edit. Runs on start/resume, on a timer
-/// while the app stays open, and from the OS background scheduler on iOS
-/// and Android. Idempotent: a second run the same day writes nothing.
+/// run out 90 days after its last edit. Runs on start/resume, at local
+/// midnight while the app stays open (docs/04 §4 "Triggers"), and from the
+/// OS background scheduler on iOS and Android. Idempotent: a second run the same day writes nothing.
 final class DailyRefresh {
   DailyRefresh({
     required Clock clock,

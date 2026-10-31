@@ -58,6 +58,22 @@ final class DriftBackupService implements BackupService {
   }
 
   @override
+  Future<DateTime> nextDailyDueUtc(String userId) async {
+    final last = _backups.backups.createdAt.max();
+    final row =
+        await (_backups.selectOnly(_backups.backups)
+              ..addColumns([last])
+              ..where(_backups.backups.reason.equals(BackupReason.daily.name)))
+            .getSingle();
+    final ms = row.read(last);
+    if (ms == null) return _clock.nowUtc();
+    return DateTime.fromMillisecondsSinceEpoch(
+      ms,
+      isUtc: true,
+    ).add(dailyInterval);
+  }
+
+  @override
   Future<Result<BackupInfo, AppFailure>> create(
     String userId,
     BackupReason reason,
