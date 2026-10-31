@@ -23,7 +23,7 @@ So Wake Up is **M17**, doc **15** (`docs/15-wake-up.md`) and **ADR-0017**. ADR-0
 | 2 | **Notification scheduler (A0)** | The port is `NotificationGateway` (`lib/domain/notifications/notification_gateway.dart:6`, with `pending()` and `apply(diff)`). It is implemented by `OsNotificationGateway`, which calls a lower port `NotificationPlatform` (`lib/data/notifications/notification_platform.dart:87`), implemented by `FlnNotificationPlatform`. The sync entrypoint is `NotificationSync.resync(userId)` (`notification_sync.dart:54`); there is no `syncNotifications()`. | Partly | (a) Four files import `flutter_local_notifications`, all in `lib/data/notifications/`: `fln_notification_platform`, `fln_notification_permission`, `fln_exact_alarms` and `notification_providers`. The import is confined to the data layer, but not to one class. (b) The **alarm-loud rule** is `loudStartIds()` in `lib/domain/notifications/alarm_policy.dart:20`. It covers the earliest dot per local day, loud only while still planned, plus routine starts (`notification_planner.dart:82-91`), and plays `startSoundId` (default `dot_alarm`). **Today's alarm anchors on the first dot, not on the Wake Up time.** (c) **Quiet hours** (`day_reminders.dart:155`) make a notification silent rather than dropping it; loud starts and the test alarm are exempt. Low-energy mode drops every non-loud notification. (d) **Android:** channel `alarms` (importance max, `AudioAttributesUsage.alarm`, raw `dot_alarm`) and `dottoday.alarm.<id>` per Start sound; loud notifications set `fullScreenIntent: true` (`fln_notification_platform.dart:218`); the schedule mode is `exactAllowWhileIdle` or `inexactAllowWhileIdle`, **not `alarmClock`**. (e) **iOS:** the interruption level is `timeSensitive` for loud starts *and* for every ordinary at-start alert (`planned_notification.dart:84`), so on iOS only the sound tells the alarm apart. Critical alerts are never used. The time-sensitive entitlement is in `Release.entitlements` only, not in Debug `Runner.entitlements`. |
 | 3 | **Health panel + O4 test alarm** | Domain: `lib/domain/notifications/notification_health.dart`, using enums `HealthCheckKind` and `HealthLevel{ok,problem,info}`, the row class `HealthCheck`, and `notificationHealth()`. Page: `lib/features/settings/pages/notification_health_page.dart`. Test alarm: `TestAlarmStore` (`local_meta` key `test_alarm_at`, 60 s) and the `TestAlarm` notifier in `lib/data/notifications/test_alarm.dart`. UI: `TestAlarmCard` (`lib/shared/notifications/test_alarm_card.dart`, `enum TestAlarmStep {idle, explain, waiting, ask, rang, notRang}`), embedded in onboarding `reminders_step.dart:77` and the health page. | Yes | A Wake Up row is a new `HealthCheckKind` plus its inputs; the model is enums, not sealed. Goldens: `settings_health_{all_good,android_off,clock_off,permission_off}_*`, `settings_health_sounds_{0,1,3}_*`, `settings_test_alarm_{ask,waiting}_*`, `onboarding_reminders{,_allowed}_*`. The test alarm goes through `resync` and the planner (loud + time-sensitive), so W1 must reroute it to `AlarmGateway`. |
 | 4 | **Sound library** | `sound_catalogue.gen.dart` has 48 sounds: dottoday 4, start 10, quiet 5, clear 15, play 8, done 6. The user picks a default, a Start sound (`startSoundId`, which the loud first dot always uses), a Done sound and a per-task sound (normal tier only). Assets: `ios/Runner/Sounds/` holds 43 `.caf`; `assets/sounds/` holds `dot_alarm.caf`, 4 `.wav` and 44 `.m4a` (web); Android `res/raw` holds `.m4a`/`.wav`. | Yes | **Every Apple file is `.caf` (IMA4) or `.wav` and under 30 s**: Start sounds run 3.6–20.0 s and `dot_alarm` is 9.0 s. So **AlarmKit can use the catalogue as-is**, with no trimming. Separate mismatch: `docs/12-sounds.md` §2.3 lists 12 Start sounds but code has 10 (`rise`, `arpeggio` and `direct` are missing). |
-| 5 | **B5 snapshot + app group** | `DaySnapshot` (`lib/domain/snapshot/day_snapshot.dart:85`) holds `wakeUtc`, `bedUtc` and `dots` (now→+24 h, max 20, ended dots dropped), plus inbox, done and total counts. It is written by `DaySnapshotWriter` after every write, at the daily refresh, after intents, and by `WindDownSnapshot` (an in-process timer at Wind Down). Sinks: home_widget (app group `group.app.dottoday.planner`), Live Activity, the macOS status item and web Cache Storage. | Partly | The day's first occurrence **cannot be derived** from the snapshot once that dot has ended. The snapshot has no tomorrow Wake Up / first dot, which W4 and W6 need. iOS and Android native models don't decode `wake_ms`/`bed_ms`; only macOS does. The W2 card is a Flutter route, so it can read providers directly; the snapshot gap matters only for native surfaces. |
+| 5 | **B5 snapshot + app group** | `DaySnapshot` (`lib/domain/snapshot/day_snapshot.dart:85`) holds `wakeUtc`, `bedUtc` and `dots` (now→+24 h, max 20, ended dots dropped), plus inbox, done and total counts. It is written by `DaySnapshotWriter` after every write, at the daily refresh, after intents, and by `BedtimeSnapshot` (an in-process timer at Wind Down). Sinks: home_widget (app group `group.app.dottoday.planner`), Live Activity, the macOS status item and web Cache Storage. | Partly | The day's first occurrence **cannot be derived** from the snapshot once that dot has ended. The snapshot has no tomorrow Wake Up / first dot, which W4 and W6 need. iOS and Android native models don't decode `wake_ms`/`bed_ms`; only macOS does. The W2 card is a Flutter route, so it can read providers directly; the snapshot gap matters only for native surfaces. |
 | 6 | **B6 intents** | `sealed class DotAction` (`lib/domain/intents/dot_action.dart`) has `AddTask(text,{note,inbox})`, `MarkDone(occurrenceId)`, `AddFifteen(occurrenceId,{plannedEndUtc})` and `StartFocus(occurrenceId)`, plus `DotIntents.whatsNext()`. On the Swift side, `ios/Shared/DotIntents.swift` has the five intents, plus `OpenQuickAddIntent` for Control Center. | Yes | **There is no `MarkStarted`**, and the roadmap fixes the set at exactly five (`docs/11:20`, `:77`). W2's "MarkStarted (sets `actualStartUtc` on the day row)" must be an in-app write to `wake_up_days`, not a new App Intent. |
 | 7 | **B3 ProposalSheet + C1 triggers** | `ProposalSheet` (`lib/shared/proposals/proposal_sheet.dart:17`) is hosted by `proposal_view.dart` through `activeProposalProvider`. There is **no trigger type**: every trigger calls `openRebalance(container, l10n, {today, fromUtc, deltaMin, subtitle, keep, title})` (`lib/features/timeline/state/rebalance_flow.dart:36`). The callers are Running late +5/+15/+30, overrun > 10 min, Shift the rest, and a moved calendar event. Accept goes through `ProposalAcceptor.accept`, one batch with a 30 s Undo. | Yes | `lateStart(offsetMin)` is `openRebalance(fromUtc: now, deltaMin: offset, subtitle: …)` plus one ARB string, with no new structure. The nothing-before-Accept helper `expectNothingWrittenBeforeAccept` already exists (`test/support/proposal_harness.dart:80`). |
 | 8 | **B1 timestamps + B2 Smallest step** | `Occurrence.actualStartUtc` is set only by `markStarted` (`lib/domain/scheduling/task_progress.dart:38`), reached through the `StartFocus` intent, opening Focus, and the queued surface starts. Smallest step is built: `noStartAt(o, afterMin: 10)` (`lib/domain/scheduling/start_nudge.dart:18`) and the planner's `_smallestSteps` (`notification_planner.dart:166`). | Partly | **The A0 start escalation is not built.** Smallest step fires only for dots *with* steps. The shared trigger `noStartAt` exists and its comment says the escalation "will reuse it" (`start_nudge.dart:12`). `docs/09:227` and `:298` record the deferral. |
@@ -45,39 +45,41 @@ So Wake Up is **M17**, doc **15** (`docs/15-wake-up.md`) and **ADR-0017**. ADR-0
 
 ## 2. Stale "Bedtime" (report only, not fixed)
 
-**User-visible text is clean.** No ARB *value* in en/de/fr/es contains Wind Down. The one French
+**Done in M17.5 (2026-11-01).** Everything listed below now says Wind Down: identifiers, l10n keys, comments, docs and (owner: "Wind Down everywhere") the synced key, now `windDownReminder`, moved by schema 11 and Supabase 0011. This section keeps the 2026-10-31 findings as they were.
+
+**User-visible text is clean.** No ARB *value* in en/de/fr/es contains Bedtime. The one French
 hit is `taskIconSunset` ("coucher de soleil"), which is a false positive. The 349 hits, outside
 generated files and the CHANGELOG, are identifiers, comments and history:
 
 - **ARB keys (values already say Wind Down):**
-  - `durationFitsWindDown`, `durationPastWindDown`
+  - `durationFitsBedtime`, `durationPastBedtime`
   - `settingsBedtime`, `settingsBedtimeReminder`, `settingsBedtimeReminderDetail`
   - `alertsBedtime`, `alertsBedtimeDetail`
-  - `onboardingWindDown`, `onboardingWindDownDetail`
-  - `notifWindDownTitle`, `notifWindDownFirst`, `notifWindDownFree`
-  - `rebalancePastWindDown`
+  - `onboardingBedtime`, `onboardingBedtimeDetail`
+  - `notifBedtimeTitle`, `notifBedtimeFirst`, `notifBedtimeFree`
+  - `rebalancePastBedtime`
 
   These are mirrored in `app_{de,fr,es}.arb`, the generated `app_localizations*.dart` and `test/support/pseudo/pseudo_localizations.g.dart`.
 - **Synced data key:** `Settings.bedtimeReminder` (`settings.dart:62`; `docs/05-data-model.md:169,197`). It is a JSON key inside `profiles.settings`, so renaming it needs a read-old-key step. It is not a free rename.
 - **Dart identifiers:**
-  - `ThreadCap.Wind Down`, `bedUtc` (in `DayShape` and the snapshot), `NotificationPurpose.Wind Down`, `DayReminders.Wind Down`, `WindDownSnapshot`
-  - `FeatureId.wakeWindDown` / `bedtimeReview` (`feature_id.dart`, `layout_policy.dart`)
+  - `ThreadCap.bedtime`, `bedUtc` (in `DayShape` and the snapshot), `NotificationPurpose.bedtime`, `DayReminders.bedtime`, `BedtimeSnapshot`
+  - `FeatureId.wakeBedtime` / `bedtimeReview` (`feature_id.dart`, `layout_policy.dart`)
   - `slot_fit.dart`, `rebalance.dart`, `hint_scheduler.dart`, `thread_models.dart`, `thread_day.dart`, `thread.dart`, `thread_pieces.dart`, `thread_outside.dart`, `planned_notification.dart`, `notification_planner.dart`, `day_reminders.dart`, `notification_content.dart`, `snapshot_providers.dart`
   - `alerts_editor.dart` (18), `reminders_step.dart` (8), `reminders_group.dart`, `day_shape_group.dart`, `day_shape_step.dart`, `weekday_sheet.dart`, `cap_time_sheet.dart`, `rebalance_rules.dart`, `editor_series.dart`, `duration_preview.dart`, `proposal_thread_list.dart`, `proposal_edit_row.dart`, `hint_signals.dart`, `app_lifecycle.dart`
 - **File names:**
-  - `lib/data/snapshot/wind_down_snapshot.dart`
-  - `test/domain/notifications/wind_down_reminder_test.dart`
-  - `test/data/snapshot/wind_down_snapshot_test.dart`
+  - `lib/data/snapshot/bedtime_snapshot.dart`
+  - `test/domain/notifications/bedtime_reminder_test.dart`
+  - `test/data/snapshot/bedtime_snapshot_test.dart`
 - **Tests:**
   - `alerts_editor_test`, `thread_day_test`, `running_late_sheet_test`, `settings_screen_test`, `rebalance_test`, `app_lifecycle_test`, `pickers_golden_test`, `thread_golden_test`, `in_app_alert_banner_test`, `notification_payload_test`, `thread_test`, `reminders_step_test`, `hint_scheduler_test`, `low_energy_plan_test`, `day_summary_test`, `notification_content_test`
   - `tool/parity/parity_rows_f5.dart` and `docs/parity-checklist.md:105`, which cite the test path
-- **Native comments:** `macos/Runner/DayDotStatusItem.swift:4,45` and `macos/RunnerTests/DayDotImageTests.swift:24` (`testDayShareFollowsWakeUpToWindDown`).
+- **Native comments:** `macos/Runner/DayDotStatusItem.swift:4,45` and `macos/RunnerTests/DayDotImageTests.swift:24` (`testDayShareFollowsWakeUpToBedtime`).
 - **Docs:**
   - `docs/09-implementation-plan.md` (27, all in ticked history items)
   - `docs/adr/0007` (3), `docs/adr/0016:42`, `docs/02-prd.md:36` (the rename note itself)
   - design-reference sources `docs/design-references/src/*.dc.html` (A-android/ios-settings, B-ios-rebalance, routines, reality-thread, mac spread, add-when)
 - **Migration comment:** `supabase/migrations/0007_routines.sql:4`. Old migrations are never edited, so this one stays.
-- **Copied into doc 15:** `docs/15-wake-up.md:202` "asks for sleep, not for a Wind Down" (generic noun) and §2 "Wind Down mode (Digital Wellbeing)" (Android's own name). Both are intentional.
+- **Copied into doc 15:** `docs/15-wake-up.md:202` "asks for sleep, not for a bedtime" (generic noun) and §2 "Bedtime mode (Digital Wellbeing)" (Android's own name). Both are intentional.
 
 ## 3. Answers
 
@@ -170,7 +172,7 @@ Activity, but those have no day dot today. Adding one is new scope, and the doc 
 handles that writes on release. Settings' `weekday_sheet.dart:82` uses the same slider. The step
 writes only `withCommonWindow`.
 
-- **Keys:** `onboardingDayShapeTitle`, `onboardingDayShapeBody`, `settingsAwake`, `settingsWakeUp`, `settingsWindDown`.
+- **Keys:** `onboardingDayShapeTitle`, `onboardingDayShapeBody`, `settingsAwake`, `settingsWakeUp`, `settingsBedtime`.
 - **Tests:** `test/features/onboarding/day_shape_step_test.dart`, `onboarding_golden_test.dart:67`.
 - **Goldens:** `onboarding_dayShape_{light,dark}_{compact,expanded}_{1x,2x}.png` (8 files).
 
@@ -193,7 +195,7 @@ I'd keep `DayShapeSlider` and add the sleep slider under it. That needs no new c
 
 **Nudge:**
 - **Planner:** `DayReminders.bedtime` (`lib/domain/notifications/day_reminders.dart:24`). It fires exactly at `bedUtc`, once a day, with id `bedtime:<date>`, gated by `settings.bedtimeReminder`, and silent in quiet hours.
-- **Copy:** `notification_content.dart:35`, using `notifWindDownTitle` "Wind Down", `notifWindDownFirst` "Tomorrow starts with {title} at {time}." and `notifWindDownFree` "Nothing planned for tomorrow yet."
+- **Copy:** `notification_content.dart:35`, using `notifBedtimeTitle` "Wind Down", `notifBedtimeFirst` "Tomorrow starts with {title} at {time}." and `notifBedtimeFree` "Nothing planned for tomorrow yet."
 - **Change for W6:** swap the body for "Wind down now for {hours} before your {firstDot}." when a sleep target is set.
 
 ### 8. AlarmKit plugin

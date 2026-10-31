@@ -70,7 +70,7 @@ One rule: the feature never disappears on an older OS; it steps down one tier, a
 | Focus (any), incl. Sleep Focus | Yes | Yes, unless that Focus has "Time Sensitive" turned off | — | — |
 | Silent switch / Action button silent | Yes | No sound, vibration only | — | — |
 | Do Not Disturb | Yes | Yes (same Focus rule) | Yes while "Alarms" stays an allowed exception | Yes, no full screen |
-| Wind Down mode (Digital Wellbeing) / OEM sleep modes | — | — | Yes (they allow alarms by default) | Yes, no full screen |
+| Bedtime mode (Digital Wellbeing, Google's name) / OEM sleep modes | — | — | Yes (they allow alarms by default) | Yes, no full screen |
 | DND with the "Alarms" exception turned off | — | — | No — nothing rings, stock Clock included | No |
 | Volume at zero | Rings at alarm volume | Silent | Rings on the alarm stream | Rings on the alarm stream |
 | Dottoday quiet hours | Ignored | Ignored | Ignored | Ignored |
@@ -215,7 +215,7 @@ If the day has no thread: the dot is empty, the first-dot slot becomes "Nothing 
 
 Four small changes, all pure consumers of W4's `effectiveWindDown(D)` and the existing Wake Up value:
 
-1. **Onboarding Day shape asks for sleep, not for a Wind Down.** The step keeps the Wake Up picker and replaces the Wind Down picker with a sleep-target slider (6 h–10 h, 15-min steps, default 8 h); Wind Down is computed live beneath it as "Wind Down 22:45 · 7 h 45 of sleep" and can still be dragged directly, which then shows the resulting sleep. This sets `sleepTargetMin` from day one; existing users get the one-time offer in their next Wind Down review (§11) and stay at "off" until they answer it. The Concept A onboarding render for this step is updated in set B (`B-ios-onboarding-day-shape.png`); the component is the existing time picker plus one slider, nothing new.
+1. **Onboarding Day shape asks how much sleep, not for an end time.** The step keeps the Wake Up picker and replaces the Wind Down picker with a sleep-target slider (6 h–10 h, 15-min steps, default 8 h); Wind Down is computed live beneath it as "Wind Down 22:45 · 7 h 45 of sleep" and can still be dragged directly, which then shows the resulting sleep. This sets `sleepTargetMin` from day one; existing users get the one-time offer in their next Wind Down review (§11) and stay at "off" until they answer it. The Concept A onboarding render for this step is updated in set B (`B-ios-onboarding-day-shape.png`); the component is the existing time picker plus one slider, nothing new.
 2. **The night on the day dot.** The arc from Wind Down round to the next day's Wake Up renders as a faint night segment (token `night`, derived from `surface` at 12 % in light and 18 % in dark; never a colour that reads as a warning). Tap or long-press shows "Night · 7 h 45". Applies everywhere the day dot is drawn: Today, Wake Up card, widgets, menu bar, Live Activity, and the seven dots of the weekly review, where short nights become visible as geometry without a number. One switch, `showNightArc`, default on.
 3. **The Wind Down review opens with the night.** First line: "7 h 20 until Wake Up at 06:30", or "7 h 45 if you wind down now" when opened early. Everything after it is unchanged.
 4. **The Wind Down nudge names what it protects.** "Wind down now for 7 h 30 before your 06:30 run." — tomorrow's first dot title when there is one, else the Wake Up time. When no sleep target is set, the nudge stays as it is today.
@@ -401,7 +401,7 @@ Tone rules carried from `11-standout-roadmap.md`: counts and times, never judgem
 - **Where the switch lives:** Settings › Day shape › **Wake Up alarm**. It is off for existing users, and offered in onboarding for new users with on as the default there.
 - **Night arc:** one shared geometry function, read by every painter: `DayDot`, `WeekDayDot`, the Mac menu bar and the iOS/Android widgets. The snapshot gains `tomorrowWake`. The arc appears on Today's day dot, the Mac menu bar and the lock-screen/home widgets. The Live Activity stays task-only.
 - **Strings:** l10n keys are flat camelCase, as the repo does (`wakeUpAlarmLabel`, not `wakeUp.alarm.label`). Every dotted key in §11–§12 is read that way.
-- **Bedtime rename:** code identifiers, comments and docs move to Wind Down. The stored/synced settings key `bedtimeReminder` stays, with a comment saying why. There is no settings migration.
+- **Wind Down rename:** code identifiers, comments and docs move to Wind Down. *Superseded 2026-11-01 by the owner ("Wind Down everywhere, whether the customer sees it or not"):* the stored, synced settings key is `windDownReminder` too; schema 11 and Supabase `0011_wind_down_reminder.sql` move the value from the old key.
 - **Wind Down review:**
   - It also shows on a fully-done day, because the §11 sleep offer needs it.
   - Tapping the Wind Down notification opens the review.

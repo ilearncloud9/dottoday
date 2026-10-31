@@ -16,7 +16,7 @@ import '../fixtures.dart';
 // AlarmGateway armed never ring a second time on the notification path,
 // and the day's cue is the same for a given date.
 
-const _on = Settings(wakeUpAlarm: true, bedtimeReminder: false);
+const _on = Settings(wakeUpAlarm: true, windDownReminder: false);
 
 Occurrence _task(String id, DateTime start) => occurrenceFixture().copyWith(
   id: id,

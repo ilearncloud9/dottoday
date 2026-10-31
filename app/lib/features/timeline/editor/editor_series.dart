@@ -137,9 +137,9 @@ Future<void> pickAlerts(
     context,
     initial: task.alerts,
     deniedOpenSettings: denied ? permission.openSettings : null,
-    windDown: settings?.bedtimeReminder ?? false,
+    windDown: settings?.windDownReminder ?? false,
     onWindDown: (on) => unawaited(
-      updateSettings(container, (s) => s.copyWith(bedtimeReminder: on)),
+      updateSettings(container, (s) => s.copyWith(windDownReminder: on)),
     ),
   );
   if (picked == null || _same(picked, task.alerts) || !context.mounted) return;

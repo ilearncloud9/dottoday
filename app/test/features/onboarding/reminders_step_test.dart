@@ -111,7 +111,7 @@ void main() {
     await tester.pumpAndSettle();
     final stored = await c.read(settingsRepositoryProvider).findLocalProfile();
     // On by default; the switch turns it off.
-    expect(stored!.settings.bedtimeReminder, isFalse);
+    expect(stored!.settings.windDownReminder, isFalse);
     await tester.ensureVisible(find.text('Not now'));
     await tester.tap(find.text('Not now'));
     await tester.pumpAndSettle();

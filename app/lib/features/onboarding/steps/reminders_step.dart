@@ -61,7 +61,7 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final windDown =
-        ref.watch(currentProfileProvider).value?.settings.bedtimeReminder ??
+        ref.watch(currentProfileProvider).value?.settings.windDownReminder ??
         false;
     final permission = ref.read(notificationPermissionProvider);
     final granted =
@@ -144,7 +144,7 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
         onToggle: (on) => unawaited(
           updateSettings(
             ProviderScope.containerOf(context, listen: false),
-            (s) => s.copyWith(bedtimeReminder: on),
+            (s) => s.copyWith(windDownReminder: on),
           ),
         ),
       ),

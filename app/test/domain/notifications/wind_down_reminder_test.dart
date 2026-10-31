@@ -62,7 +62,7 @@ void main() {
   });
 
   test('off: none', () {
-    expect(_windDowns(const Settings(bedtimeReminder: false)), isEmpty);
+    expect(_windDowns(const Settings(windDownReminder: false)), isEmpty);
   });
 
   test("carries tomorrow's first task, or none", () {

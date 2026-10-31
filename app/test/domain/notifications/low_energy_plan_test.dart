@@ -39,7 +39,7 @@ List<PlannedNotification> _plan({DateTime? until, DateTime? now}) =>
         _task('thu-2', DateTime.utc(2026, 10, 22, 9)),
       ],
       tzId: 'UTC',
-      daily: Settings(bedtimeReminder: true, lowEnergyUntil: until),
+      daily: Settings(windDownReminder: true, lowEnergyUntil: until),
     );
 
 void main() {

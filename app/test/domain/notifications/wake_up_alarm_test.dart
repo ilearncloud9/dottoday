@@ -19,7 +19,7 @@ import '../fixtures.dart';
 const _atStart = [Alert(kind: AlertKind.atStart)];
 
 /// Wake Up 07:00 (UTC) every day: the default window.
-const _on = Settings(wakeUpAlarm: true, bedtimeReminder: false);
+const _on = Settings(wakeUpAlarm: true, windDownReminder: false);
 
 Occurrence _task(String id, DateTime start, {bool routine = false}) =>
     occurrenceFixture().copyWith(

@@ -41,7 +41,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 10;
+  static const latestSchemaVersion = 11;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -101,6 +101,9 @@ class AppDatabase extends _$AppDatabase {
       }
       // 10 (M17.3, docs/15 §3): this device's mornings, local only.
       if (from < 10) await _createTableOnce(m, wakeUpDaysTable);
+      // 11 (M17.5, owner 2026-11-01): the Wind Down reminder's settings key
+      // is windDownReminder; the value moves from bedtimeReminder.
+      if (from < 11) await _moveWindDownReminder();
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without
@@ -114,6 +117,15 @@ class AppDatabase extends _$AppDatabase {
   Future<void> _keepSystemReminderSound() => customStatement(
     "UPDATE profiles SET settings = json_set(settings, '\$.reminderSound', "
     "'system') WHERE json_extract(settings, '\$.reminderSound') IS NULL",
+  );
+
+  /// Moves `bedtimeReminder` to `windDownReminder` (v11). Not marked
+  /// dirty: the server's 0011 does the same to its copy.
+  Future<void> _moveWindDownReminder() => customStatement(
+    'UPDATE profiles SET settings = json_remove(json_set(settings, '
+    "'\$.windDownReminder', json_extract(settings, '\$.bedtimeReminder')), "
+    "'\$.bedtimeReminder') "
+    "WHERE json_type(settings, '\$.bedtimeReminder') IS NOT NULL",
   );
 
   /// Writes `uiLayout: "full"` where it is missing (v9). Not marked dirty:
