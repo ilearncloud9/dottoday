@@ -6424,6 +6424,60 @@
   "@hintLearned": {"description": "Minimal-mode reveal hint: three tasks took more than 20 min longer than planned this week."},
   "hintShowMe": "Show me",
   "@hintShowMe": {"description": "A reveal hint's action."},
+  "settingsWakeUpAlarm": "Wake Up alarm",
+  "@settingsWakeUpAlarm": {
+    "description": "Settings › Day shape and onboarding: the Wake Up alarm switch (docs/15 W1)."
+  },
+  "settingsWakeUpAlarmDetail": "Rings like an alarm at Wake Up on days you've planned",
+  "@settingsWakeUpAlarmDetail": {
+    "description": "Under the Wake Up alarm switch while it is off."
+  },
+  "wakeUpTierAlarm": "Alarm-grade wake-up is on.",
+  "@wakeUpTierAlarm": {
+    "description": "The Wake Up alarm takes over the screen like an alarm (docs/15 §2)."
+  },
+  "wakeUpTierTimeSensitive": "Wake Up rings as a time-sensitive notification.",
+  "@wakeUpTierTimeSensitive": {
+    "description": "iPhone: the Wake Up alarm is a time-sensitive notification (docs/15 §2)."
+  },
+  "wakeUpTierTimeSensitiveDetail": "It breaks through Focus. The Silent switch still mutes it.",
+  "@wakeUpTierTimeSensitiveDetail": {
+    "description": "Under wakeUpTierTimeSensitive: what breaks through and what doesn't."
+  },
+  "wakeUpTierFsiRevoked": "Wake Up can take over the screen like an alarm. Android needs you to allow it.",
+  "@wakeUpTierFsiRevoked": {
+    "description": "Android 14+: the full-screen intent is not allowed (docs/15 §2, §12 tier.fsiRevoked)."
+  },
+  "wakeUpTierNoPermission": "Wake Up can't ring while notifications are off.",
+  "@wakeUpTierNoPermission": {
+    "description": "The Wake Up alarm can't ring because notifications are off."
+  },
+  "wakeUpTierNotAPhone": "Wake-up alarms ring on your phone.",
+  "@wakeUpTierNotAPhone": {
+    "description": "Mac and web: the Wake Up alarm rings on the phone (docs/15 §2)."
+  },
+  "notifWakeUpTitle": "Wake Up",
+  "@notifWakeUpTitle": {
+    "description": "Title of the Wake Up alarm notification (docs/15 §12 alarm.label)."
+  },
+  "notifWakeUpFirst": "First: {title} at {time}",
+  "@notifWakeUpFirst": {
+    "description": "Wake Up alarm body: the day's first task and its time.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "notifWakeUpBody": "Good morning.",
+  "@notifWakeUpBody": {
+    "description": "Wake Up alarm body when the day's first task is gone."
+  },
+  "releaseNotes120": "Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you've planned — like an alarm on Android, as a time-sensitive notification on iPhone. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.",
+  "@releaseNotes120": {"description": "What's new in 1.2.0 (M15 sounds, M16 minimal layout, the Structured-style day, M17 Wake Up alarm), one item per line (PRD F11)."},
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},
   "taskIconCategoryHealth": "Health & body",

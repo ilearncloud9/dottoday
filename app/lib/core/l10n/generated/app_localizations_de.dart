@@ -5704,6 +5704,51 @@ class AppLocalizationsDe extends AppLocalizations {
   String get hintShowMe => 'Zeigen';
 
   @override
+  String get settingsWakeUpAlarm => 'Aufstehen-Wecker';
+
+  @override
+  String get settingsWakeUpAlarmDetail =>
+      'Klingelt wie ein Wecker zum Aufstehen an geplanten Tagen';
+
+  @override
+  String get wakeUpTierAlarm => 'Der Wecker zum Aufstehen ist an.';
+
+  @override
+  String get wakeUpTierTimeSensitive =>
+      'Aufstehen klingelt als zeitkritische Mitteilung.';
+
+  @override
+  String get wakeUpTierTimeSensitiveDetail =>
+      'Sie kommt durch jeden Fokus. Der Stumm-Schalter macht sie leise.';
+
+  @override
+  String get wakeUpTierFsiRevoked =>
+      'Aufstehen kann den Bildschirm wie ein Wecker füllen. Android braucht dafür deine Erlaubnis.';
+
+  @override
+  String get wakeUpTierNoPermission =>
+      'Aufstehen kann nicht klingeln, solange Mitteilungen aus sind.';
+
+  @override
+  String get wakeUpTierNotAPhone =>
+      'Der Wecker zum Aufstehen klingelt auf deinem Handy.';
+
+  @override
+  String get notifWakeUpTitle => 'Aufstehen';
+
+  @override
+  String notifWakeUpFirst(String title, String time) {
+    return 'Zuerst: $title um $time';
+  }
+
+  @override
+  String get notifWakeUpBody => 'Guten Morgen.';
+
+  @override
+  String get releaseNotes120 =>
+      'Aufstehen-Wecker: Schalte ihn unter Einstellungen › Tagesform ein, und deine Aufstehzeit klingelt an geplanten Tagen — auf Android wie ein Wecker, auf dem iPhone als zeitkritische Mitteilung. Nichts klingelt, bevor du ihn einschaltest.\nTöne: 48 Erinnerungstöne, die gut zusammenpassen. Wähle einen für alle Aufgaben oder gib einer Aufgabe ihren eigenen; deine erste Aufgabe des Tages klingelt mit deinem Start-Ton.\nNur der nächste Punkt: ein minimales Layout, jederzeit wählbar, ohne dass etwas verloren geht. Heute zeigt deinen Faden, das Datum und ein Menü.\nZieh eine Aufgabe irgendwohin auf den Tag, auch auf eine andere: Überschneidungen knüpfen einen kleinen Knoten in den Faden.\nAus Schlafenszeit wird Abendruhe. Die beiden Enden deines Tages sind Punkte, eine Sonne und ein Mond; tipp einen an, um seine Zeit zu ändern.\nIcons füllen sich selbst: Schreib „Fitnessstudio“, und die Aufgabe bekommt eine Hantel — aus 524 Icons.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

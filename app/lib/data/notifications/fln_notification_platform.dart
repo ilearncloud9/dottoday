@@ -157,9 +157,7 @@ final class FlnNotificationPlatform implements NotificationPlatform {
       _details(n),
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
-      androidScheduleMode: _exact
-          ? AndroidScheduleMode.exactAllowWhileIdle
-          : AndroidScheduleMode.inexactAllowWhileIdle,
+      androidScheduleMode: androidScheduleModeFor(n, exact: _exact),
       payload: n.payload,
     );
   }
@@ -387,4 +385,18 @@ String? soundIdOfChannel(String? channelId) {
     }
   }
   return null;
+}
+
+/// How Android schedules [n] (docs/07 Android, docs/15 W1a): exact when
+/// allowed, and the Wake Up alarm as an alarm clock (exact through Doze,
+/// with the status-bar alarm icon). An alarm clock needs the same exact
+/// permission, so without it the alarm still posts, inexact (15 §2).
+AndroidScheduleMode androidScheduleModeFor(
+  OsNotification n, {
+  required bool exact,
+}) {
+  if (!exact) return AndroidScheduleMode.inexactAllowWhileIdle;
+  return n.alarmClock
+      ? AndroidScheduleMode.alarmClock
+      : AndroidScheduleMode.exactAllowWhileIdle;
 }

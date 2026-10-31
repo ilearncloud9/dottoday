@@ -100,6 +100,34 @@ void main() {
     expect(a.priority, Priority.max);
   });
 
+  test(
+    'Android: the Wake Up alarm is an alarm clock when exact is allowed',
+    () {
+      final wake = OsNotification(
+        id: 1,
+        title: 't',
+        body: 'b',
+        fireAtUtc: _now,
+        payload: '',
+        channel: NotificationChannelKind.alarms,
+        loud: true,
+        alarmClock: true,
+      );
+      expect(
+        androidScheduleModeFor(wake, exact: true),
+        AndroidScheduleMode.alarmClock,
+      );
+      expect(
+        androidScheduleModeFor(wake, exact: false),
+        AndroidScheduleMode.inexactAllowWhileIdle,
+      );
+      expect(
+        androidScheduleModeFor(_n(loud: true), exact: true),
+        AndroidScheduleMode.exactAllowWhileIdle,
+      );
+    },
+  );
+
   test('Android: other alerts stay on the reminder channel', () async {
     final a = (await details(_n(ts: true))).android!;
     expect(a.channelId, 'alerts');

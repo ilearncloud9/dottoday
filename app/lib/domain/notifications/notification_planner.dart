@@ -58,6 +58,11 @@ final class NotificationPlanner {
   /// with a step in [firstSteps] gets one Smallest step reminder at
   /// [noStartAt] (M10.6); a real start, Done or a move re-plans it away.
   /// While [daily]'s low-energy mode lasts, only loud ones stay (M12.2).
+  ///
+  /// When [ringsWakeUp] (a phone) and [daily]'s `wakeUpAlarm` are on, each
+  /// planned day's Wake Up rings loud (docs/15 W1), and that day's first
+  /// dot, if it starts within [wakeUpQuietWindow] of it, is a normal
+  /// notification instead of a second alarm.
   List<PlannedNotification> plan({
     required Iterable<Occurrence> occurrences,
     required String tzId,
@@ -70,6 +75,7 @@ final class NotificationPlanner {
     Set<String> routineStartIds = const {},
     DateTime? testAlarmAtUtc,
     Set<String> withSteps = const {},
+    bool ringsWakeUp = false,
   }) {
     final now = _clock.nowUtc();
     final end = now.add(horizon);
@@ -79,6 +85,21 @@ final class NotificationPlanner {
     // Sorted by id so collision probing (below) is deterministic.
     final live = occurrences.where(_alerts).toList()
       ..sort((a, b) => a.id.compareTo(b.id));
+    final wakeUps = ringsWakeUp && (daily?.wakeUpAlarm ?? false)
+        ? DayReminders.wakeUp(
+            settings: daily!,
+            location: location,
+            occurrences: live,
+            fromUtc: now,
+            toUtc: end,
+            used: usedIds,
+            startSound: startSound,
+          )
+        : const <PlannedNotification>[];
+    bool nearWakeUp(DateTime at) => wakeUps.any(
+      (w) => w.fireAtUtc.difference(at).abs() <= wakeUpQuietWindow,
+    );
+    final firstDots = firstDotIds(occurrences, location);
     final loud = loudStartIds(
       occurrences,
       location,
@@ -95,7 +116,8 @@ final class NotificationPlanner {
         final isLoud =
             alert.kind == AlertKind.atStart &&
             index != PlannedNotification.snoozeIndex &&
-            loud.contains(o.id);
+            loud.contains(o.id) &&
+            !(firstDots.contains(o.id) && nearWakeUp(fireAt));
         planned.add(
           PlannedNotification(
             id: uniqueNotificationId(usedIds, o.id, index),
@@ -117,6 +139,7 @@ final class NotificationPlanner {
         );
       }
     }
+    planned.addAll(wakeUps);
     planned.addAll(
       _smallestSteps(live, withSteps, now, end, location, quietHours, usedIds),
     );

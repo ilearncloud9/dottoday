@@ -155,4 +155,4 @@ final class NotificationHealthChecksProvider
 }
 
 String _$notificationHealthChecksHash() =>
-    r'57d30a41e7e1bc2e425a3a65fa1550a6c58f241a';
+    r'777818a516207376b4b52e05adbff92a5171cef8';

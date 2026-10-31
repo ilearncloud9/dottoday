@@ -12,6 +12,7 @@ import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/shared/notifications/test_alarm_card.dart';
+import 'package:dottoday/shared/notifications/wake_up_tier_text.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sync/clock_skew_text.dart';
 import 'package:flutter/material.dart';
@@ -122,6 +123,10 @@ class HealthRow extends ConsumerWidget {
         ok
             ? (l10n.healthPushOk, null)
             : (l10n.healthPushOff, l10n.healthPushOffDetail),
+      HealthCheckKind.wakeUp => switch (check.wakeUp) {
+        final wakeUp? => wakeUpTierText(l10n, wakeUp),
+        null => (l10n.settingsWakeUpAlarm, null),
+      },
       HealthCheckKind.clock => switch (check.skew) {
         final skew? => (clockSkewText(l10n, skew), l10n.healthClockOffDetail),
         null => (l10n.healthClockOk, null),
@@ -133,6 +138,10 @@ class HealthRow extends ConsumerWidget {
   (String, Future<void> Function())? _fix(BuildContext context, WidgetRef ref) {
     if (check.level != HealthLevel.problem) return null;
     final l10n = context.l10n;
+    final wakeUpBlocker = switch (check.wakeUp) {
+      final wakeUp? => wakeUpFix(wakeUp),
+      null => null,
+    };
     return switch (check.kind) {
       HealthCheckKind.permission => (
         l10n.healthFixAllow,
@@ -168,6 +177,18 @@ class HealthRow extends ConsumerWidget {
           ref.invalidate(mutedSoundsProvider);
         },
       ),
+      HealthCheckKind.wakeUp => switch (wakeUpBlocker) {
+        final blocker? => (
+          l10n.healthFixAllow,
+          () async {
+            await ref.read(alarmGatewayProvider).fix(blocker);
+            ref
+              ..invalidate(alarmCapabilitiesNowProvider)
+              ..invalidate(notificationPermissionStateProvider);
+          },
+        ),
+        null => null,
+      },
       // The clock is the OS's own setting; the sentence says where.
       HealthCheckKind.clock ||
       HealthCheckKind.doNotDisturb ||

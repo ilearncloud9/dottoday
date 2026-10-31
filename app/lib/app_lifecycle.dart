@@ -172,6 +172,8 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
       // Back from connecting a Google/Microsoft account (M7.4).
       ..invalidate(cloudAccountsProvider)
       ..invalidate(exactAlarmsAllowedProvider)
+      // The full-screen intent re-allowed for the Wake Up alarm (M17.1).
+      ..invalidate(alarmCapabilitiesNowProvider)
       ..invalidate(powerStateProvider)
       ..invalidate(mutedSoundsProvider)
       ..invalidate(currentDeviceZoneProvider)

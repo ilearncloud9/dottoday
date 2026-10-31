@@ -2,8 +2,11 @@ import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/notifications/channel_battery_optimization.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/fln_notification_permission.dart';
+import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
+import 'package:dottoday/data/notifications/os_alarm_gateway.dart';
 import 'package:dottoday/data/notifications/web_notification_permission.dart';
+import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/battery_optimization.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
@@ -68,3 +71,18 @@ BatteryOptimization batteryOptimization(Ref ref) =>
 @riverpod
 Future<bool> batteryRestricted(Ref ref) =>
     ref.watch(batteryOptimizationProvider).restricted();
+
+/// The Wake Up alarm's port (docs/15 W1a): what this device can do and the
+/// fix for each gap.
+@Riverpod(keepAlive: true)
+AlarmGateway alarmGateway(Ref ref) => OsAlarmGateway(
+  platform: currentHealthPlatform(),
+  permission: ref.watch(notificationPermissionProvider),
+  exactAlarms: ref.watch(exactAlarmsProvider),
+);
+
+/// The Wake Up alarm's tier and blockers now; re-read with `ref.invalidate`
+/// (on resume, after a fix).
+@riverpod
+Future<AlarmCapabilities> alarmCapabilitiesNow(Ref ref) =>
+    ref.watch(alarmGatewayProvider).capabilities();

@@ -8472,6 +8472,78 @@ abstract class AppLocalizations {
   /// **'Show me'**
   String get hintShowMe;
 
+  /// Settings › Day shape and onboarding: the Wake Up alarm switch (docs/15 W1).
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up alarm'**
+  String get settingsWakeUpAlarm;
+
+  /// Under the Wake Up alarm switch while it is off.
+  ///
+  /// In en, this message translates to:
+  /// **'Rings like an alarm at Wake Up on days you\'ve planned'**
+  String get settingsWakeUpAlarmDetail;
+
+  /// The Wake Up alarm takes over the screen like an alarm (docs/15 §2).
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm-grade wake-up is on.'**
+  String get wakeUpTierAlarm;
+
+  /// iPhone: the Wake Up alarm is a time-sensitive notification (docs/15 §2).
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up rings as a time-sensitive notification.'**
+  String get wakeUpTierTimeSensitive;
+
+  /// Under wakeUpTierTimeSensitive: what breaks through and what doesn't.
+  ///
+  /// In en, this message translates to:
+  /// **'It breaks through Focus. The Silent switch still mutes it.'**
+  String get wakeUpTierTimeSensitiveDetail;
+
+  /// Android 14+: the full-screen intent is not allowed (docs/15 §2, §12 tier.fsiRevoked).
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up can take over the screen like an alarm. Android needs you to allow it.'**
+  String get wakeUpTierFsiRevoked;
+
+  /// The Wake Up alarm can't ring because notifications are off.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up can\'t ring while notifications are off.'**
+  String get wakeUpTierNoPermission;
+
+  /// Mac and web: the Wake Up alarm rings on the phone (docs/15 §2).
+  ///
+  /// In en, this message translates to:
+  /// **'Wake-up alarms ring on your phone.'**
+  String get wakeUpTierNotAPhone;
+
+  /// Title of the Wake Up alarm notification (docs/15 §12 alarm.label).
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up'**
+  String get notifWakeUpTitle;
+
+  /// Wake Up alarm body: the day's first task and its time.
+  ///
+  /// In en, this message translates to:
+  /// **'First: {title} at {time}'**
+  String notifWakeUpFirst(String title, String time);
+
+  /// Wake Up alarm body when the day's first task is gone.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning.'**
+  String get notifWakeUpBody;
+
+  /// What's new in 1.2.0 (M15 sounds, M16 minimal layout, the Structured-style day, M17 Wake Up alarm), one item per line (PRD F11).
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android, as a time-sensitive notification on iPhone. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.'**
+  String get releaseNotes120;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

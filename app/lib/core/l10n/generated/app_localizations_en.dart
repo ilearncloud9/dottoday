@@ -5670,6 +5670,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintShowMe => 'Show me';
 
   @override
+  String get settingsWakeUpAlarm => 'Wake Up alarm';
+
+  @override
+  String get settingsWakeUpAlarmDetail =>
+      'Rings like an alarm at Wake Up on days you\'ve planned';
+
+  @override
+  String get wakeUpTierAlarm => 'Alarm-grade wake-up is on.';
+
+  @override
+  String get wakeUpTierTimeSensitive =>
+      'Wake Up rings as a time-sensitive notification.';
+
+  @override
+  String get wakeUpTierTimeSensitiveDetail =>
+      'It breaks through Focus. The Silent switch still mutes it.';
+
+  @override
+  String get wakeUpTierFsiRevoked =>
+      'Wake Up can take over the screen like an alarm. Android needs you to allow it.';
+
+  @override
+  String get wakeUpTierNoPermission =>
+      'Wake Up can\'t ring while notifications are off.';
+
+  @override
+  String get wakeUpTierNotAPhone => 'Wake-up alarms ring on your phone.';
+
+  @override
+  String get notifWakeUpTitle => 'Wake Up';
+
+  @override
+  String notifWakeUpFirst(String title, String time) {
+    return 'First: $title at $time';
+  }
+
+  @override
+  String get notifWakeUpBody => 'Good morning.';
+
+  @override
+  String get releaseNotes120 =>
+      'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android, as a time-sensitive notification on iPhone. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

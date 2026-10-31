@@ -24,6 +24,7 @@ final class NotificationSync {
     required SettingsRepository settings,
     Future<DateTime?> Function()? testAlarmAt,
     SubtaskRepository? subtasks,
+    this.ringsWakeUp = false,
   }) : _clock = clock,
        _planner = planner,
        _gateway = gateway,
@@ -49,6 +50,9 @@ final class NotificationSync {
 
   /// Which tasks have a step left, for Smallest step (M10.6).
   final SubtaskRepository? _subtasks;
+
+  /// Whether this device rings the Wake Up alarm: phones only (docs/15 W1).
+  final bool ringsWakeUp;
 
   /// Re-plans [userId]'s notifications and applies the delta to the OS.
   Future<void> resync(String userId) async {
@@ -76,6 +80,7 @@ final class NotificationSync {
       startSound: profile.settings.startSoundId,
       testAlarmAtUtc: await _testAlarmAt?.call(),
       withSteps: await _withSteps(userId, blocks),
+      ringsWakeUp: ringsWakeUp,
     );
     final diff = NotificationPlanner.diff(desired, await _gateway.pending());
     if (diff.cancel.isEmpty && diff.schedule.isEmpty) return;
