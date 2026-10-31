@@ -3,6 +3,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_id.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
+import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/domain/time/wall_clock.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
@@ -46,6 +47,46 @@ abstract final class DayReminders {
           silent: inQuietHours(location, shape.bedUtc, settings.quietHours),
           purpose: NotificationPurpose.bedtime,
         ),
+  ];
+
+  /// The Wake Up alarm (docs/15 W1, M17.1): loud at each day's Wake Up in
+  /// `(fromUtc, toUtc]`, on that weekday's own window, for days that have a
+  /// block ("only days I've planned", 15 §9). It ignores quiet hours like
+  /// every loud start (15 §2), and `occurrenceId` is the day's first block,
+  /// so the alarm says what the day starts with and re-posts when that
+  /// changes.
+  ///
+  /// ```dart
+  /// DayReminders.wakeUp(settings: s, location: berlin, occurrences: rows,
+  ///     fromUtc: now, toUtc: now.add(week), used: {}); // one per planned day
+  /// ```
+  static List<PlannedNotification> wakeUp({
+    required Settings settings,
+    required tz.Location location,
+    required Iterable<Occurrence> occurrences,
+    required DateTime fromUtc,
+    required DateTime toUtc,
+    required Set<int> used,
+    String? startSound,
+  }) => [
+    for (final (date, shape) in _days(settings, location, fromUtc, toUtc))
+      if (shape.wakeUtc.isAfter(fromUtc) && !shape.wakeUtc.isAfter(toUtc))
+        if (_blocksOn(occurrences, location, date).firstOrNull
+            case final first?)
+          PlannedNotification(
+            id: uniqueNotificationId(
+              used,
+              'wakeup:${_key(date)}',
+              PlannedNotification.wakeUpIndex,
+            ),
+            occurrenceId: first.id,
+            alertIndex: PlannedNotification.wakeUpIndex,
+            fireAtUtc: shape.wakeUtc,
+            kind: AlertKind.atStart,
+            sound: resolveStartSound(startSound).id,
+            loud: true,
+            purpose: NotificationPurpose.wakeUp,
+          ),
   ];
 
   /// "Your day: 6 blocks, first at 08:00" at Wake Up on each weekday in

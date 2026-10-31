@@ -164,7 +164,7 @@ final class NotificationSyncProvider
   }
 }
 
-String _$notificationSyncHash() => r'bcf78a294bd6f2ecafe825a3f90de5a125daf822';
+String _$notificationSyncHash() => r'59369cd4ffa3994e80f6550b7c7242060f5b1bf6';
 
 @ProviderFor(daySnapshotWriter)
 final daySnapshotWriterProvider = DaySnapshotWriterProvider._();

@@ -11,6 +11,7 @@ import 'package:dottoday/data/notifications/test_alarm.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
+import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/features/onboarding/steps/step_frame.dart';
 import 'package:dottoday/shared/feedback/permission_notice.dart';
@@ -22,7 +23,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// O4 Reminders (docs/10 §5.1, docs/09 M4.4): the two kinds (before each
 /// task; at Wind Down, with its switch), then Allow notifications (the
 /// system prompt) or Not now. Denied → the M3f.8 notice, and on. Allowed
-/// → "Send me a test alarm" (M6.5.9, skippable) and Continue. "Connect a
+/// → on a phone, the Wake Up alarm (docs/15 W1a, on by default for a new
+/// user, saved on Continue), "Send me a test alarm" (M6.5.9, skippable) and
+/// Continue. "Connect a
 /// calendar" asks for the device calendars (M7.1); which ones come in is
 /// chosen in Settings › Calendars.
 class RemindersStep extends ConsumerStatefulWidget {
@@ -34,14 +37,17 @@ class RemindersStep extends ConsumerStatefulWidget {
   ConsumerState<RemindersStep> createState() => _RemindersStepState();
 }
 
-/// A leaf: only whether the system said no.
+/// A leaf: whether the system said no, and the Wake Up alarm until saved.
 class _RemindersStepState extends ConsumerState<RemindersStep> {
   var _denied = false;
   var _granted = false;
+  var _wakeUp = true;
 
   Future<void> _allow() async {
     final answer = await ref.read(notificationPermissionProvider).request();
-    ref.invalidate(notificationPermissionStateProvider);
+    ref
+      ..invalidate(notificationPermissionStateProvider)
+      ..invalidate(alarmCapabilitiesNowProvider);
     if (!mounted) return;
     // Allowed: stay to offer the test alarm; Continue moves on (M6.5.9).
     setState(() {
@@ -64,15 +70,22 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
             PermissionState.granted;
     final decided = _denied || granted;
     final alarm = ref.read(testAlarmProvider.notifier);
+    final caps = ref.watch(alarmCapabilitiesNowProvider).value;
+    final offerWakeUp =
+        granted &&
+        caps != null &&
+        !caps.blockers.contains(AlarmBlocker.notAPhone);
     return StepFrame(
       title: l10n.onboardingRemindersTitle,
       body: l10n.onboardingRemindersBody,
       primary: decided ? l10n.onboardingContinue : l10n.onboardingAllow,
-      onPrimary: decided ? widget.onNext : () => unawaited(_allow()),
+      onPrimary: decided
+          ? () => _next(saveWakeUp: offerWakeUp)
+          : () => unawaited(_allow()),
       secondary: decided ? null : l10n.onboardingNotNow,
       onSecondary: widget.onNext,
       children: [
-        _rows(context, t, l10n, bedtime),
+        _rows(context, t, l10n, bedtime, offerWakeUp: offerWakeUp),
         if (granted)
           TestAlarmCard(
             onSend: alarm.send,
@@ -89,13 +102,29 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
     );
   }
 
-  /// Before each task, At Wind Down (its switch).
+  /// Continue: the Wake Up alarm as left here, then the next step. Only a
+  /// phone that may post saves it, so nothing rings that wasn't offered.
+  void _next({required bool saveWakeUp}) {
+    if (saveWakeUp) {
+      unawaited(
+        updateSettings(
+          ProviderScope.containerOf(context, listen: false),
+          (s) => s.copyWith(wakeUpAlarm: _wakeUp),
+        ),
+      );
+    }
+    widget.onNext();
+  }
+
+  /// Before each task, At Wind Down (its switch), and on a phone that may
+  /// post, the Wake Up alarm.
   Widget _rows(
     BuildContext context,
     DotTheme t,
     AppLocalizations l10n,
-    bool bedtime,
-  ) => SettingsGroup(
+    bool bedtime, {
+    required bool offerWakeUp,
+  }) => SettingsGroup(
     caption: l10n.settingsReminders,
     children: [
       SettingsRow(
@@ -117,6 +146,15 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
           ),
         ),
       ),
+      if (offerWakeUp)
+        SettingsRow(
+          glyph: DotGlyphs.bell,
+          tint: t.tasks[TaskColor.amber].ink,
+          title: l10n.settingsWakeUpAlarm,
+          subtitle: l10n.settingsWakeUpAlarmDetail,
+          toggle: _wakeUp,
+          onToggle: (on) => setState(() => _wakeUp = on),
+        ),
     ],
   );
 }

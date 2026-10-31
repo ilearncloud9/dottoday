@@ -35,6 +35,7 @@ import 'support/sweep_m12.dart';
 import 'support/sweep_m13.dart';
 import 'support/sweep_m14.dart';
 import 'support/sweep_m16.dart';
+import 'support/sweep_m17.dart';
 
 const _tagBase = String.fromEnvironment('SWEEP_TAG', defaultValue: 'device');
 
@@ -167,6 +168,16 @@ void main() {
     );
     // M16: the minimal layout, switched there and back from Today's ⋯.
     await sweepM16(
+      tester,
+      shot: (name) async {
+        await _shot(binding, tester, '${_tag}_$name');
+        await checkA11yTree(tester, name);
+      },
+      until: (f) => _pumpUntil(tester, f),
+      rest: () => _rest(tester),
+    );
+    // M17.1: the Wake Up alarm in Settings and Notification health.
+    await sweepM17(
       tester,
       shot: (name) async {
         await _shot(binding, tester, '${_tag}_$name');

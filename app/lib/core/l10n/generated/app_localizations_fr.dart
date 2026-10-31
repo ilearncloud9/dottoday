@@ -5745,6 +5745,51 @@ class AppLocalizationsFr extends AppLocalizations {
   String get hintShowMe => 'Montrer';
 
   @override
+  String get settingsWakeUpAlarm => 'Alarme du réveil';
+
+  @override
+  String get settingsWakeUpAlarmDetail =>
+      'Sonne comme une alarme au réveil les jours planifiés';
+
+  @override
+  String get wakeUpTierAlarm => 'Le réveil sonne comme une alarme.';
+
+  @override
+  String get wakeUpTierTimeSensitive =>
+      'Le réveil sonne comme une notification urgente.';
+
+  @override
+  String get wakeUpTierTimeSensitiveDetail =>
+      'Elle passe à travers la Concentration. Le mode Silence la coupe encore.';
+
+  @override
+  String get wakeUpTierFsiRevoked =>
+      'Le réveil peut prendre tout l\'écran comme une alarme. Android a besoin de votre autorisation.';
+
+  @override
+  String get wakeUpTierNoPermission =>
+      'Le réveil ne peut pas sonner tant que les notifications sont désactivées.';
+
+  @override
+  String get wakeUpTierNotAPhone =>
+      'Les alarmes du réveil sonnent sur votre téléphone.';
+
+  @override
+  String get notifWakeUpTitle => 'Réveil';
+
+  @override
+  String notifWakeUpFirst(String title, String time) {
+    return 'D\'abord : $title à $time';
+  }
+
+  @override
+  String get notifWakeUpBody => 'Bonjour.';
+
+  @override
+  String get releaseNotes120 =>
+      'Alarme du réveil : activez-la dans Réglages › Forme de la journée et votre heure de réveil sonne les jours planifiés — comme une alarme sur Android, en notification urgente sur iPhone. Rien ne sonne tant que vous ne l\'activez pas.\nSons : 48 sons de rappel qui vont bien ensemble. Choisissez-en un pour toutes vos tâches ou donnez à une tâche le sien ; la première tâche de la journée sonne avec votre son de début.\nJuste le point suivant : une présentation minimale à choisir à tout moment, sans rien perdre. Aujourd\'hui montre votre fil, la date et un menu.\nFaites glisser une tâche n\'importe où dans la journée, même sur une autre : les tâches qui se chevauchent font un petit nœud dans le fil.\nL\'heure du coucher devient Détente. Les deux bouts de votre journée sont des points, un soleil et une lune ; touchez-en un pour changer son heure.\nLes icônes se remplissent seules : tapez « Sport » et la tâche reçoit un haltère, parmi 524 icônes.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

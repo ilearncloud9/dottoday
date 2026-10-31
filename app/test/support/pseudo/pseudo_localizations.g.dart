@@ -4497,6 +4497,45 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get hintShowMe => pseudo(super.hintShowMe);
 
   @override
+  String get settingsWakeUpAlarm => pseudo(super.settingsWakeUpAlarm);
+
+  @override
+  String get settingsWakeUpAlarmDetail =>
+      pseudo(super.settingsWakeUpAlarmDetail);
+
+  @override
+  String get wakeUpTierAlarm => pseudo(super.wakeUpTierAlarm);
+
+  @override
+  String get wakeUpTierTimeSensitive => pseudo(super.wakeUpTierTimeSensitive);
+
+  @override
+  String get wakeUpTierTimeSensitiveDetail =>
+      pseudo(super.wakeUpTierTimeSensitiveDetail);
+
+  @override
+  String get wakeUpTierFsiRevoked => pseudo(super.wakeUpTierFsiRevoked);
+
+  @override
+  String get wakeUpTierNoPermission => pseudo(super.wakeUpTierNoPermission);
+
+  @override
+  String get wakeUpTierNotAPhone => pseudo(super.wakeUpTierNotAPhone);
+
+  @override
+  String get notifWakeUpTitle => pseudo(super.notifWakeUpTitle);
+
+  @override
+  String notifWakeUpFirst(String title, String time) =>
+      pseudo(super.notifWakeUpFirst(title, time));
+
+  @override
+  String get notifWakeUpBody => pseudo(super.notifWakeUpBody);
+
+  @override
+  String get releaseNotes120 => pseudo(super.releaseNotes120);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

@@ -112,6 +112,7 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Siri & Shortcuts (M14.3, iPhone only): the page (what Siri can do, the five phrases, how to ask, Open Shortcuts), the one-time Today tip card, onboarding Done's Siri line (derived) | 11 §B6 (D3), `SettingsGroup` | `siri_page_*`, `today_siri_tip_*` |
 | Brain dump with mic (M14.5): `MicButton` bottom-end in the box (idle, listening with the caption "Pause, or say "next", to start a new task."), the first-use tip card, the mic-aware placeholder, the quiet denied line with Open Settings (derived) | 11 §B7, `B4` sheet, 10 §3 `MicButton` | `brain_dump_mic_idle_*`, `brain_dump_mic_listening_*`, `brain_dump_mic_tip_*` |
 | Notes with mic (M14.6): the editor's NOTES field with the `MicButton` bottom-end (derived) | 11 §B7, the M3f editor | `editor_notes_mic_*` |
+| Wake Up alarm (M17.1): Settings › Day shape › Wake Up alarm switch with its one-line tier and Allow fix; Notification health's Wake Up row per tier (Android alarm, full-screen intent off, iPhone time-sensitive); onboarding O4's Wake Up alarm row after Allow (derived) | docs/15 §2, §9, §11; `SettingsGroup` rows | `settings_health_wake_up_*`, `settings_*` (Day shape), `onboarding_reminders_allowed_*` |
 
 ## Set B (Concept A+, standout features)
 

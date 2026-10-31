@@ -3,6 +3,7 @@
 library;
 
 import 'package:dottoday/data/notifications/health_providers.dart';
+import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/notification_health.dart';
 import 'package:dottoday/domain/sync/clock_skew.dart';
 import 'package:dottoday/features/settings/pages/notification_health_page.dart';
@@ -87,6 +88,48 @@ void main() {
               muted.isEmpty ? _ok : _problem,
               mutedSounds: muted,
             ),
+            const HealthCheck(HealthCheckKind.clock, _ok),
+          ],
+        ),
+      ],
+      build: (_) => const NotificationHealthPage(),
+    );
+  }
+  // The Wake Up alarm's row per tier (derived — docs/15 §2, W1a): alarm
+  // and full-screen intent revoked on Android, time-sensitive on iPhone,
+  // at 200 % text and right-to-left too.
+  for (final (name, platform, level, wakeUp) in [
+    (
+      'wake_up_alarm',
+      TargetPlatform.android,
+      _ok,
+      const AlarmCapabilities(AlarmTier.alarm),
+    ),
+    (
+      'wake_up_fsi_off',
+      TargetPlatform.android,
+      _problem,
+      const AlarmCapabilities(AlarmTier.headsUp, [
+        AlarmBlocker.fullScreenIntentRevoked,
+      ]),
+    ),
+    (
+      'wake_up_time_sensitive',
+      TargetPlatform.iOS,
+      HealthLevel.info,
+      const AlarmCapabilities(AlarmTier.timeSensitive),
+    ),
+  ]) {
+    goldenMatrix(
+      'settings_health_$name',
+      height: 1500,
+      platform: platform,
+      a11yVariants: true,
+      overrides: [
+        notificationHealthChecksProvider.overrideWith(
+          (ref) async => [
+            const HealthCheck(HealthCheckKind.permission, _ok),
+            HealthCheck(HealthCheckKind.wakeUp, level, wakeUp: wakeUp),
             const HealthCheck(HealthCheckKind.clock, _ok),
           ],
         ),

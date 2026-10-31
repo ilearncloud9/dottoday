@@ -34,6 +34,7 @@ final class OsNotification {
     this.silent = false,
     this.timeSensitive = false,
     this.loud = false,
+    this.alarmClock = false,
     this.withActions = true,
     this.startAction = false,
     this.sound,
@@ -57,6 +58,11 @@ final class OsNotification {
   /// with the Start [sound] (docs/12 D2; `dot_alarm` when null). Android
   /// posts on that sound's alarm channel.
   final bool loud;
+
+  /// The Wake Up alarm (docs/15 W1): Android schedules it as an alarm clock
+  /// (exact through Doze, the status-bar alarm icon) when exact alarms are
+  /// allowed.
+  final bool alarmClock;
 
   /// Done / Snooze / Open (task alerts); Wind Down has none.
   final bool withActions;

@@ -5732,6 +5732,51 @@ class AppLocalizationsEs extends AppLocalizations {
   String get hintShowMe => 'Muéstramelo';
 
   @override
+  String get settingsWakeUpAlarm => 'Alarma al despertar';
+
+  @override
+  String get settingsWakeUpAlarmDetail =>
+      'Suena como una alarma al despertar los días que tienes planificados';
+
+  @override
+  String get wakeUpTierAlarm => 'El despertador suena como una alarma.';
+
+  @override
+  String get wakeUpTierTimeSensitive =>
+      'El despertar suena como una notificación urgente.';
+
+  @override
+  String get wakeUpTierTimeSensitiveDetail =>
+      'Atraviesa los modos Concentración. El modo silencio aún la silencia.';
+
+  @override
+  String get wakeUpTierFsiRevoked =>
+      'El despertar puede ocupar la pantalla como una alarma. Android necesita que lo permitas.';
+
+  @override
+  String get wakeUpTierNoPermission =>
+      'El despertar no puede sonar mientras las notificaciones estén desactivadas.';
+
+  @override
+  String get wakeUpTierNotAPhone =>
+      'Las alarmas al despertar suenan en tu teléfono.';
+
+  @override
+  String get notifWakeUpTitle => 'Despertar';
+
+  @override
+  String notifWakeUpFirst(String title, String time) {
+    return 'Primero: $title a las $time';
+  }
+
+  @override
+  String get notifWakeUpBody => 'Buenos días.';
+
+  @override
+  String get releaseNotes120 =>
+      'Alarma al despertar: actívala en Ajustes › Forma del día y tu hora de despertar suena los días que tienes planificados — como una alarma en Android, como notificación urgente en el iPhone. Nada suena hasta que la actives.\nSonidos: 48 sonidos de recordatorio que combinan bien. Elige uno para todas tus tareas o da a una tarea el suyo; tu primera tarea del día suena con tu sonido de inicio.\nSolo el siguiente punto: un diseño mínimo que puedes elegir cuando quieras, sin perder nada. Hoy muestra tu hilo, la fecha y un menú.\nArrastra una tarea a cualquier parte del día, incluso encima de otra: las tareas que se solapan hacen un pequeño nudo en el hilo.\nLa hora de dormir ahora es Desconexión. Los dos extremos de tu día son puntos, un sol y una luna; toca uno para cambiar su hora.\nLos iconos se rellenan solos: escribe «Gimnasio» y la tarea recibe una mancuerna, entre 524 iconos.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

@@ -88,7 +88,12 @@ void main() {
     tester,
   ) async {
     final h = await pumpSettings(tester);
-    expect(_cupertinoSwitches(), findsNWidgets(8));
+    // Day shape's Wake Up alarm (docs/15 W1a) is the ninth.
+    expect(_cupertinoSwitches(), findsNWidgets(9));
+    // Off for an existing profile, so an upgrade rings nothing new (15 §11).
+    expect((await storedSettings(h)).wakeUpAlarm, isFalse);
+    await _tapRow(tester, 'Wake Up alarm');
+    expect((await storedSettings(h)).wakeUpAlarm, isTrue);
     await _tapRow(tester, 'Show free time');
     expect((await storedSettings(h)).showFreeTime, isFalse);
     // F3.3: the plan-your-inbox nudge starts off.
@@ -102,7 +107,7 @@ void main() {
   testWidgets('Android draws Material switches', (tester) async {
     await pumpSettings(tester, platform: TargetPlatform.android);
     expect(_cupertinoSwitches(), findsNothing);
-    expect(find.byType(Switch), findsNWidgets(8));
+    expect(find.byType(Switch), findsNWidgets(9));
   });
 
   testWidgets('choices: week start, time format, shift, snap, theme', (
