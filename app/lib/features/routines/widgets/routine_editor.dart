@@ -58,7 +58,7 @@ class _RoutineEditorState extends State<RoutineEditor> {
     title: _name.text,
     anchor: _anchor,
     anchorMinute: _anchor == RoutineAnchor.time ? _minute : null,
-    items: RoutineStepDraft.toItems(_steps),
+    items: RoutineStepDraft.toItems(_steps, language: context.l10n.localeName),
   );
 
   bool get _valid => validateRoutine(_draft) is Ok;

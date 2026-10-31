@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/routine.dart';
+import 'package:dottoday/domain/icon_guess/icon_guess.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
@@ -62,8 +63,13 @@ final class RoutineStepDraft {
     ];
   }
 
-  /// The steps back as items, offsets laid end to end with their gaps.
-  static List<RoutineItem> toItems(List<RoutineStepDraft> steps) {
+  /// The steps back as items, offsets laid end to end with their gaps. A
+  /// step still on the plain icon takes the one its name suggests
+  /// ([guessIcon] in [language]); the step's colour stays the user's.
+  static List<RoutineItem> toItems(
+    List<RoutineStepDraft> steps, {
+    required String language,
+  }) {
     var at = 0;
     return [
       for (final (i, s) in steps.indexed)
@@ -73,7 +79,10 @@ final class RoutineStepDraft {
             id: s.id,
             title: s.name.text,
             colorKey: s.color.key,
-            iconKey: s.iconKey,
+            iconKey: s.iconKey == TaskIcon.fallback.key
+                ? guessIcon(s.name.text, language: language)?.iconKey ??
+                      s.iconKey
+                : s.iconKey,
             offsetMin: at,
             durationMin: s.durationMin,
           );

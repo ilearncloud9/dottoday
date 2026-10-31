@@ -4,6 +4,7 @@ import 'package:dottoday/domain/entities/icon_keys.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
+import 'package:dottoday/domain/icon_guess/icon_guess.dart';
 import 'package:dottoday/domain/quick_add/draft_rows.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
 import 'package:dottoday/domain/scheduling/learning.dart';
@@ -18,7 +19,8 @@ import 'package:timezone/timezone.dart' as tz;
 /// Each value comes from the most deliberate source that set it: a choice
 /// made on step 2 (or the colour row), then what was typed ("Go shopping
 /// 5pm 1h", R-06), then where Add was opened (an "add here" gap or a day,
-/// R-17), then the picked [habit], then the defaults. So typing
+/// R-17), then the picked [habit], then what the title suggests ([guess]:
+/// icon and colour only), then the defaults. So typing
 /// never overwrites a time the user picked, and clearing the typed time
 /// falls back to the habit's usual one (docs/10 §6 "Add never asks for
 /// what it can infer").
@@ -45,7 +47,12 @@ final class AddDraft {
     this.openedMinute,
     this.steps = const [],
     this.learned = Learned.none,
+    this.guess,
   });
+
+  /// The icon and colour the title suggests ("Gym" → dumbbell), below
+  /// any choice and the habit's, so a pick is never replaced.
+  final IconGuess? guess;
 
   /// What the user's own runs of this title say (11 C3, M11.3): its
   /// usual length is the default before a habit's planned one.
@@ -85,8 +92,10 @@ final class AddDraft {
   /// Title without the recognised tokens.
   String get title => typed.title.trim();
 
-  String get color => colorKey ?? habit?.colorKey ?? defaultTaskColorKey;
-  String get icon => iconKey ?? habit?.iconKey ?? defaultIconKey;
+  String get color =>
+      colorKey ?? habit?.colorKey ?? guess?.colorKey ?? defaultTaskColorKey;
+  String get icon =>
+      iconKey ?? habit?.iconKey ?? guess?.iconKey ?? defaultIconKey;
 
   /// The local day it lands on.
   DateTime get day => date ?? _typedDay ?? openedDate ?? today;
@@ -129,6 +138,8 @@ final class AddDraft {
   AddDraft withHabit(HabitSuggestion? value) => _copy(habit: () => value);
 
   AddDraft withLearned(Learned value) => _copy(learned: value);
+
+  AddDraft withGuess(IconGuess? value) => _copy(guess: () => value);
 
   AddDraft withColor(String key) => _copy(colorKey: () => key);
 
@@ -282,6 +293,7 @@ final class AddDraft {
     int? Function()? openedMinute,
     List<ProposedStep>? steps,
     Learned? learned,
+    IconGuess? Function()? guess,
   }) => AddDraft(
     today: today,
     tzId: tzId ?? this.tzId,
@@ -298,5 +310,6 @@ final class AddDraft {
     openedMinute: openedMinute == null ? this.openedMinute : openedMinute(),
     steps: steps ?? this.steps,
     learned: learned ?? this.learned,
+    guess: guess == null ? this.guess : guess(),
   );
 }
