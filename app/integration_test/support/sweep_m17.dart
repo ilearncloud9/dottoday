@@ -16,12 +16,21 @@ Future<void> sweepM17(
 }) async {
   final router = GoRouter.of(tester.element(find.byType(Scaffold).first));
   final alarm = find.text('Wake Up alarm');
-  router.go('/settings');
-  await until(alarm);
-  await tester.ensureVisible(alarm);
+  // Settings may be scrolled down by an earlier leg; Day shape is at the
+  // top of its lazy list.
+  Future<void> open() async {
+    router.go('/settings');
+    await until(find.text('Settings'));
+    await tester.dragUntilVisible(
+      alarm,
+      find.byType(Scrollable).first,
+      const Offset(0, 300),
+    );
+    await rest();
+  }
+
+  await open();
   await tester.tap(alarm);
-  await rest();
-  await tester.ensureVisible(alarm);
   await rest();
   await shot('settings_wake_up');
 
@@ -29,9 +38,7 @@ Future<void> sweepM17(
   await rest();
   await shot('health_wake_up');
 
-  router.go('/settings');
-  await until(alarm);
-  await tester.ensureVisible(alarm);
+  await open();
   await tester.tap(alarm);
   await rest();
 }
