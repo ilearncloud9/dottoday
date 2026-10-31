@@ -1,4 +1,5 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/overlap_knot.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:flutter/widgets.dart';
@@ -34,20 +35,7 @@ final class SegmentPiece extends AxisPiece {
     required this.dotSize,
     this.progress = 0,
     this.ghost,
-    this.fill,
-    this.joinAbove = false,
-    this.joinBelow = false,
   });
-
-  /// The dot's tint, for the capsule an overlap draws (ADR-0015).
-  final Color? fill;
-
-  /// The task overlaps the one above: its dot reaches up as a capsule.
-  final bool joinAbove;
-
-  /// The task below overlaps this one: its dot reaches down as a capsule
-  /// in place of the segment.
-  final bool joinBelow;
 
   /// On the Reality thread (11 C3): the plan's ghost lane beside the
   /// segment, with the planned dot where it differs. Null on the plan.
@@ -62,20 +50,13 @@ final class SegmentPiece extends AxisPiece {
   final double progress;
 }
 
-/// Two overlapping tasks meeting (ADR-0015): the upper capsule's rounded
-/// end, then the lower one's over it with a [notch] cut along its top.
+/// Two overlapping tasks (ADR-0015): the knot, one strand in each task's
+/// colour, crossing once between the two dots.
 final class OverlapPiece extends AxisPiece {
-  const OverlapPiece({
-    required this.above,
-    required this.below,
-    required this.notch,
-  });
+  const OverlapPiece({required this.above, required this.below});
 
   final Color above;
   final Color below;
-
-  /// The surface colour the notch is cut in.
-  final Color notch;
 }
 
 /// Free time: the dotted line, with the now-marker if now is inside it.
@@ -140,17 +121,6 @@ final class ThreadAxisPainter extends CustomPainter {
 
   void _segment(Canvas canvas, double x, double height, SegmentPiece p) {
     if (p.ghost case final shift?) _ghost(canvas, x, height, p, shift);
-    if (p.fill case final fill? when p.joinAbove || p.joinBelow) {
-      final half = p.dotSize / 2;
-      final paint = Paint()..color = fill;
-      if (p.joinAbove) {
-        canvas.drawRect(Rect.fromLTRB(x - half, 0, x + half, half), paint);
-      }
-      if (p.joinBelow) {
-        canvas.drawRect(Rect.fromLTRB(x - half, half, x + half, height), paint);
-        return;
-      }
-    }
     final top = p.dotSize;
     if (height <= top) return;
     final paint = Paint()
@@ -228,37 +198,17 @@ final class ThreadAxisPainter extends CustomPainter {
     );
   }
 
-  void _overlap(Canvas canvas, double x, double height, OverlapPiece p) {
-    const half = DotSize.threadDot / 2;
-    final mid = height / 2;
-    const join = DotSize.overlapJoin / 2;
-    final radius = const Radius.circular(half);
-    canvas.drawRRect(
-      RRect.fromLTRBAndCorners(
-        x - half,
-        -half,
-        x + half,
-        mid + join,
-        bottomLeft: radius,
-        bottomRight: radius,
-      ),
-      Paint()..color = p.above,
-    );
-    final lower = RRect.fromLTRBAndCorners(
-      x - half,
-      mid - join,
-      x + half,
-      height + half,
-      topLeft: radius,
-      topRight: radius,
-    );
-    canvas
-      ..drawRRect(
-        lower.inflate(DotSize.smallDotOutline),
-        Paint()..color = p.notch,
-      )
-      ..drawRRect(lower, Paint()..color = p.below);
-  }
+  void _overlap(Canvas canvas, double x, double height, OverlapPiece p) =>
+      paintKnot(
+        canvas,
+        x: x,
+        top: 0,
+        bottom: height,
+        sway: DotSize.knotSway,
+        stroke: DotSize.knotStroke,
+        first: p.above,
+        second: p.below,
+      );
 
   /// The 2 px dotted free-time line (§2.3).
   void _dotted(

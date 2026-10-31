@@ -69,6 +69,24 @@ control that stays visible, and the room Structured gives the timeline. Concept 
     colour, never red.
   - Pinned tasks never lift.
 
+## Amendment (owner, 2026-10-31): the knot
+- The joined capsules made two overlapping tasks' dots stop looking like dots. The owner asked
+  for an overlap that is Dottoday's own and the same everywhere, and chose the knot from three
+  mockups (knot, linked rings, two-colour stretch).
+- **The dots never change.** Overlapping tasks keep their round tinted dots, segments and done
+  circles exactly as when they don't overlap.
+- **The knot.** Between the two dots the thread splits into two strands, one in each task's
+  colour, that cross once and join again (`OverlapPiece`, painted by `paintKnot`). The earlier
+  strand is the task that ends last, so a task inside a long one names the long one.
+- **The line says what is shared**, concretely: "Run and Sleep share 15 min", with "share 15
+  min" in the later task's ink. It is never a warning colour (11 §D no shame).
+- **The same mark everywhere else** (`OverlapKnot`, 20 × 14 px): the time picker's caption (in
+  place of the warning glyph), the Add sheet's "Lands on" line (in place of the colour bar) and a
+  proposal's "overlaps" chip (this task's strand, the other muted). The Mac week board still
+  moves an overlapping block below the other, so it draws no knot.
+- Rejected: the linked rings (quieter, but a second symbol beside the thread rather than the
+  thread itself) and the two-colour stretch (busiest on a small phone).
+
 ## Consequences
 - R-05 still holds for drag-to-move, 5-min snapping, multi-select, haptics and "shift everything
   after". Its "drag-edge resize" on the day thread is withdrawn by the owner. CLAUDE.md §8 and

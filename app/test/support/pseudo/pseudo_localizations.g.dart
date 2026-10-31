@@ -285,11 +285,12 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get dotOpenHint => pseudo(super.dotOpenHint);
 
   @override
-  String threadOverlapping(String overlapping) =>
-      pseudo(super.threadOverlapping(overlapping));
+  String threadOverlapShare(String first, String second, String share) =>
+      pseudo(super.threadOverlapShare(first, second, share));
 
   @override
-  String get threadOverlappingWord => pseudo(super.threadOverlappingWord);
+  String threadOverlapShareTime(String duration) =>
+      pseudo(super.threadOverlapShareTime(duration));
 
   @override
   String rowLabel(String title, String range) =>

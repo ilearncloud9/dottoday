@@ -33,8 +33,6 @@ final class ThreadTask {
     this.reality,
     this.startUtc,
     this.minutes = 0,
-    this.overlapsAbove = false,
-    this.overlapsBelow = false,
   });
 
   /// When the task starts, for drops onto its row (feature-supplied; null
@@ -43,13 +41,6 @@ final class ThreadTask {
 
   /// Its length: the row stretches with it (ADR-0015).
   final int minutes;
-
-  /// Starts before an earlier task ends: its dot joins the one above as a
-  /// capsule under "Tasks are overlapping" (ADR-0015).
-  final bool overlapsAbove;
-
-  /// A later task starts before this one ends.
-  final bool overlapsBelow;
 
   /// Where a drop onto this row lands: anywhere along it, overlap allowed
   /// (ADR-0015); null without [startUtc].
@@ -107,37 +98,6 @@ final class ThreadTask {
   final String? travel;
 
   bool get hasSubtasks => subtasksTotal > 0;
-
-  /// This task with its overlap flags (ADR-0015).
-  ThreadTask joined({required bool above, required bool below}) =>
-      above == overlapsAbove && below == overlapsBelow
-      ? this
-      : ThreadTask(
-          id: id,
-          title: title,
-          color: color,
-          icon: icon,
-          state: state,
-          timeRange: timeRange,
-          duration: duration,
-          pinned: pinned,
-          recurring: recurring,
-          imported: imported,
-          progress: progress,
-          minutesLeft: minutesLeft,
-          subtasksDone: subtasksDone,
-          subtasksTotal: subtasksTotal,
-          overrunMinutes: overrunMinutes,
-          movable: movable,
-          travel: travel,
-          smallestStep: smallestStep,
-          unstick: unstick,
-          reality: reality,
-          startUtc: startUtc,
-          minutes: minutes,
-          overlapsAbove: above,
-          overlapsBelow: below,
-        );
 }
 
 /// One line of a [Thread], top to bottom.
@@ -197,13 +157,27 @@ Iterable<ThreadTask> threadTasks(List<ThreadEntry> entries) sync* {
   }
 }
 
-/// Two overlapping tasks meet here (ADR-0015): their dots join as capsules
-/// with a notch, beside "Tasks are overlapping" in the later one's colour.
+/// Two overlapping tasks (ADR-0015): the knot between their dots, beside
+/// "Run and Sleep share 15 min".
 final class ThreadOverlap extends ThreadEntry {
-  const ThreadOverlap({required this.above, required this.below});
+  const ThreadOverlap({
+    required this.above,
+    required this.below,
+    required this.aboveTitle,
+    required this.belowTitle,
+    required this.minutes,
+  });
 
+  /// The earlier task it runs into (the one ending last) and its title.
   final TaskColor above;
+  final String aboveTitle;
+
+  /// The task that starts inside it.
   final TaskColor below;
+  final String belowTitle;
+
+  /// How long the two share.
+  final int minutes;
 }
 
 /// Free time between tasks (docs/10 §6 "Free gaps are drop targets").
