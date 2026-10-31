@@ -171,7 +171,7 @@ ticked in 08 §6.1) before a tag.
 - **F3.2** Wide: +, right-click and screen-reader actions replace swipes (M3e.2).
 - **F3.3** Count on the Inbox tab/rail at every width, in the header and the Inbox widget; the plan-your-inbox card on Today, off by default (M8.4c).
 - **F4.5** New York spring/fall cases added in M8.4 (Berlin existed).
-- **F4.6** Mac and web refresh on start, resume and every 6 h while open (M5.2, M6.5.6); web offline via the service worker (CI pwa_check).
+- **F4.6** Mac and web refresh on start, resume, at local midnight while open, and the Mac also on wake and clock/zone changes (M5.2, M6.5.6; 2026-10-31 no polling, docs/04 §4); web offline via the service worker (CI pwa_check).
 - **F5.1** Device calendars on iPhone/Android (EventKit, CalendarContract) and the Mac (EventKit channel, M7.1b); Google/Microsoft on all four through the backend (owner gate: OAuth clients); Apple on web via CalDAV is Phase 2 (07 Web).
 - **F5.4** Invitees kept on a real iPhone: owner gate (08 §6.1).
 - **F5.5** A rule on the device, no routing service (M7.5): same Dart on all four.
