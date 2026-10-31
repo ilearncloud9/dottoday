@@ -4,6 +4,7 @@ import 'package:dottoday/shared/navigation/dot_rail.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/material_nav_bar.dart';
 import 'package:dottoday/shared/navigation/pill_tab_bar.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -216,5 +217,37 @@ void main() {
         }
       }
     }, variant: TargetPlatformVariant.only(platform));
+  }
+
+  for (final width in [700.0, 1280.0]) {
+    testWidgets('the rail add button opens Add on a mouse click ($width)', (
+      tester,
+    ) async {
+      await _size(tester, width);
+      var added = 0;
+      await tester.pumpWidget(
+        testApp(
+          Builder(
+            builder: (context) => DotShell(
+              destinations: shellDestinations(context.l10n),
+              selected: 0,
+              onSelect: (_) {},
+              onAdd: () => added++,
+              addLabel: context.l10n.quickAddTooltip,
+              addAtEveryWidth: true,
+              body: const SizedBox.expand(),
+            ),
+          ),
+        ),
+      );
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: Offset.zero);
+      await mouse.moveTo(tester.getCenter(find.byTooltip('Add task')));
+      await tester.pump();
+      await mouse.down(tester.getCenter(find.byTooltip('Add task')));
+      await mouse.up();
+      await tester.pumpAndSettle();
+      expect(added, 1);
+    });
   }
 }

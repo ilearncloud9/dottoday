@@ -79,7 +79,14 @@ class OnboardingFlow extends ConsumerWidget {
   Future<void> _finish(WidgetRef ref, {bool add = false}) async {
     final router = ref.read(routerProvider);
     await ref.read(onboardingProvider.notifier).finish();
-    router.go(add ? AppRoutes.add : AppRoutes.today);
+    router.go(AppRoutes.today);
+    if (!add) return;
+    // The app's navigator mounts once the gate has swapped onboarding out;
+    // Add opens on it, so wait for that frame (found by the M16 sweep).
+    for (var i = 0; i < 2; i++) {
+      await WidgetsBinding.instance.endOfFrame;
+    }
+    router.go(AppRoutes.add);
   }
 
   Widget _body(
