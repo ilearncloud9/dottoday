@@ -2,6 +2,7 @@ import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/notifications/notification_content.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 
@@ -29,11 +30,14 @@ final class WakeUpArming {
 
   /// Arms [wakeUps] (`NotificationPlanner.wakeUps`) for [profile]; with the
   /// switch off, disarms every alarm once. [tasks] finds each day's first
-  /// block by id.
+  /// block by id and [steps] its Smallest step, for the Wake Up Check;
+  /// [startedDays] call off the check of a day that began (15 W3).
   Future<Set<DateTime>> arm(
     List<PlannedNotification> wakeUps, {
     required Profile profile,
     required Map<String, Occurrence> tasks,
+    Map<String, Subtask> steps = const {},
+    Set<String> startedDays = const {},
   }) async {
     final known = await _read();
     if (!profile.settings.wakeUpAlarm) {
@@ -49,8 +53,9 @@ final class WakeUpArming {
           task: tasks[w.occurrenceId],
           profile: profile,
           minimal: _minimal?.call() ?? false,
+          step: steps[w.occurrenceId],
         ),
-    ]);
+    ], startedDays: startedDays);
     if (armed == null) return known ?? const {};
     await _write(armed);
     return armed;

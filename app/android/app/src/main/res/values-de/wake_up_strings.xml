@@ -4,4 +4,5 @@
 <resources>
     <string name="wake_up_channel">Aufstehen-Wecker</string>
     <string name="wake_up_snoozed">Schlummert bis %1$s</string>
+    <string name="wake_up_check_channel">Aufstehen-Check</string>
 </resources>

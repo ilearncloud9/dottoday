@@ -28,6 +28,26 @@ import workmanager_apple
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
+  /// The Wake Up Check's tap (docs/15 W3) is Dottoday's own, not
+  /// flutter_local_notifications': it opens its link (Focus on the first
+  /// dot). Every other notification goes to the plugins as before.
+  override func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    didReceive response: UNNotificationResponse,
+    withCompletionHandler completionHandler: @escaping () -> Void
+  ) {
+    let info = response.notification.request.content.userInfo
+    if #available(iOS 26.0, *),
+      response.notification.request.identifier.hasPrefix(WakeUpAlarms.checkPrefix),
+      let link = (info[WakeUpAlarms.checkLinkKey] as? String).flatMap(URL.init(string:))
+    {
+      UIApplication.shared.open(link)
+      completionHandler()
+      return
+    }
+    super.userNotificationCenter(center, didReceive: response, withCompletionHandler: completionHandler)
+  }
+
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "DeepLinkBridge") {

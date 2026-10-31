@@ -28,6 +28,13 @@ data class WakeUpAlarm(
     val minimal: Boolean,
     val state: String = ARMED,
     val snoozes: Int = 0,
+    /** The Wake Up Check armed at "I'm up" (docs/15 W3); 0 = none. */
+    val checkMin: Int = 0,
+    val checkTitle: String = "",
+    val checkBody: String = "",
+    val checkStart: String = "",
+    val checkTarget: String = "",
+    val checkLoud: Boolean = false,
 ) {
     /** Snooze is offered: on, and under its limit (0 = no limit). */
     val canSnooze: Boolean get() = snoozeMin > 0 && (snoozeLimit == 0 || snoozes < snoozeLimit)
@@ -37,11 +44,16 @@ data class WakeUpAlarm(
         .put("title", title).put("body", body).put("stop", stop).put("snooze", snooze)
         .put("snoozeMin", snoozeMin).put("snoozeLimit", snoozeLimit).put("rampSec", rampSec)
         .put("minimal", minimal).put("state", state).put("snoozes", snoozes)
+        .put("checkMin", checkMin).put("checkTitle", checkTitle).put("checkBody", checkBody)
+        .put("checkStart", checkStart).put("checkTarget", checkTarget).put("checkLoud", checkLoud)
 
     companion object {
         const val ARMED = "armed"
         const val RINGING = "ringing"
         const val SNOOZED = "snoozed"
+
+        /** An alarm with only [id], for matching its PendingIntents. */
+        fun blank(id: String) = WakeUpAlarm(id, 0, "", "", "", "", "", 0, 0, 0, false)
 
         /** The test alarm (WakeUpAlarm.testId): `sync` never disarms it. */
         const val TEST_ID = "wakeup:test"
@@ -58,6 +70,12 @@ data class WakeUpAlarm(
             snoozeLimit = (m["snoozeLimit"] as Number).toInt(),
             rampSec = (m["rampSec"] as Number).toInt(),
             minimal = m["minimal"] == true,
+            checkMin = (m["checkMin"] as? Number)?.toInt() ?: 0,
+            checkTitle = m["checkTitle"] as? String ?: "",
+            checkBody = m["checkBody"] as? String ?: "",
+            checkStart = m["checkStart"] as? String ?: "",
+            checkTarget = m["checkTarget"] as? String ?: "",
+            checkLoud = m["checkLoud"] == true,
         )
 
         fun fromJson(o: JSONObject): WakeUpAlarm = WakeUpAlarm(
@@ -74,6 +92,12 @@ data class WakeUpAlarm(
             minimal = o.getBoolean("minimal"),
             state = o.getString("state"),
             snoozes = o.getInt("snoozes"),
+            checkMin = o.optInt("checkMin"),
+            checkTitle = o.optString("checkTitle"),
+            checkBody = o.optString("checkBody"),
+            checkStart = o.optString("checkStart"),
+            checkTarget = o.optString("checkTarget"),
+            checkLoud = o.optBoolean("checkLoud"),
         )
     }
 }
@@ -97,7 +121,11 @@ object WakeUpAlarms {
      */
     fun sync(context: Context, incoming: List<WakeUpAlarm>): List<Long> {
         val stored = load(context)
-        val (keep, armed) = stored.partition { it.state != WakeUpAlarm.ARMED || it.id == WakeUpAlarm.TEST_ID }
+        // A ringing or snoozed alarm, the test alarm and a Wake Up Check
+        // that rings stay: "I'm up" or a start calls those off.
+        val (keep, armed) = stored.partition {
+            it.state != WakeUpAlarm.ARMED || it.id == WakeUpAlarm.TEST_ID || WakeUpChecks.isCheck(it.id)
+        }
         val exact = exactAllowed(context)
         // An alarm armed exactly as wanted stays armed: no churn on each write.
         val unchanged = if (exact) armed.filter { it in incoming } else emptyList()

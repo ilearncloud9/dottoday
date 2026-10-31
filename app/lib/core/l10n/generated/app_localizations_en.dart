@@ -5938,6 +5938,33 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get wakeUpCheckBody => 'Tap to start.';
+
+  @override
+  String get wakeUpCheckCaption => 'Check I\'ve started';
+
+  @override
+  String get wakeUpCheckRow => 'Check I\'ve started';
+
+  @override
+  String get wakeUpCheckRowDetail =>
+      'One nudge if nothing has started a few minutes after I\'m up';
+
+  @override
+  String get wakeUpCheckAsRow => 'As';
+
+  @override
+  String get wakeUpCheckGentle => 'Gentle ping';
+
+  @override
+  String get wakeUpCheckAlarm => 'Alarm';
+
+  @override
+  String wakeUpCheckStart(String title) {
+    return 'Start $title?';
+  }
+
+  @override
   String get releaseNotes120 =>
       'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android and on iPhones with iOS 26, as a time-sensitive notification on older iPhones. Pick its sound and snooze under Sound and snooze, and send yourself a test. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.';
 

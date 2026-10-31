@@ -11,6 +11,9 @@ const wakeUpSnoozeLimits = [1, 2, 3, 4, 5, 0];
 /// Android's volume ramp on offer, in seconds; 0 starts at full (15 §9).
 const wakeUpRampChoices = [0, 15, 30, 60];
 
+/// The Wake Up Check's waits on offer, in minutes (15 §9: 5–30).
+const wakeUpCheckChoices = [5, 10, 15, 20, 30];
+
 /// The Start sounds a varied Wake Up alarm rotates through: the start tier
 /// without the insistent one, which is opt-in only (docs/12 D7).
 final List<CatalogueSound> wakeUpRotation = List.unmodifiable([
@@ -54,6 +57,7 @@ final class WakeUpAlarm {
     this.snoozeLimit = 0,
     this.rampSeconds = 0,
     this.minimal = false,
+    this.check,
   });
 
   /// `wakeup:<yyyy-mm-dd>` (the civil day), or [testId].
@@ -81,6 +85,10 @@ final class WakeUpAlarm {
   /// Minimal mode's ringing screen (15 §10): one big "I'm up".
   final bool minimal;
 
+  /// The Wake Up Check the OS arms when "I'm up" stops this alarm (15 W3),
+  /// or null when it is off or the day has no dot to start.
+  final WakeUpCheck? check;
+
   /// The test alarm's id: `sync` never disarms it.
   static const testId = 'wakeup:test';
 
@@ -97,7 +105,8 @@ final class WakeUpAlarm {
       other.snoozeMinutes == snoozeMinutes &&
       other.snoozeLimit == snoozeLimit &&
       other.rampSeconds == rampSeconds &&
-      other.minimal == minimal;
+      other.minimal == minimal &&
+      other.check == check;
 
   @override
   int get hashCode => Object.hash(
@@ -112,8 +121,49 @@ final class WakeUpAlarm {
     snoozeLimit,
     rampSeconds,
     minimal,
+    check,
   );
 
   @override
   String toString() => 'WakeUpAlarm($id, $fireAtUtc)';
+}
+
+/// The Wake Up Check (docs/15 W3): [minutes] after "I'm up", while
+/// nothing has started, one nudge that starts [occurrenceId] in Focus.
+/// The OS side arms it at the stop, so it reaches a phone put back down;
+/// a start in the app calls it off (`AlarmGateway.sync`'s started days).
+final class WakeUpCheck {
+  const WakeUpCheck({
+    required this.minutes,
+    required this.occurrenceId,
+    required this.title,
+    required this.body,
+    required this.startLabel,
+    this.loud = false,
+  });
+
+  final int minutes;
+  final String occurrenceId;
+
+  /// "Just Lay out clothes · 2 min?" or "Start Run?".
+  final String title;
+  final String body;
+  final String startLabel;
+
+  /// Rings like the alarm (once, no snooze) instead of a gentle ping.
+  final bool loud;
+
+  @override
+  bool operator ==(Object other) =>
+      other is WakeUpCheck &&
+      other.minutes == minutes &&
+      other.occurrenceId == occurrenceId &&
+      other.title == title &&
+      other.body == body &&
+      other.startLabel == startLabel &&
+      other.loud == loud;
+
+  @override
+  int get hashCode =>
+      Object.hash(minutes, occurrenceId, title, body, startLabel, loud);
 }

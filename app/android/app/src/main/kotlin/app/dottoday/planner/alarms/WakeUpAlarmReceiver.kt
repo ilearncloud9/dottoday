@@ -17,6 +17,7 @@ class WakeUpAlarmReceiver : BroadcastReceiver() {
             ACTION_RING -> intent.getStringExtra(EXTRA_ID)?.let { WakeUpRingService.ring(context, it) }
             WakeUpActions.SNOOZE -> intent.getStringExtra(EXTRA_ID)?.let { WakeUpActions.snooze(context, it) }
             WakeUpActions.STOP -> intent.getStringExtra(EXTRA_ID)?.let { WakeUpActions.dismiss(context, it) }
+            WakeUpChecks.ACTION -> WakeUpChecks.post(context, intent)
             Intent.ACTION_BOOT_COMPLETED,
             Intent.ACTION_MY_PACKAGE_REPLACED -> WakeUpAlarms.rearm(context)
         }

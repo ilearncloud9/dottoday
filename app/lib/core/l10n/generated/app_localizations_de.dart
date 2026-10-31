@@ -5975,6 +5975,33 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get wakeUpCheckBody => 'Zum Starten tippen.';
+
+  @override
+  String get wakeUpCheckCaption => 'Prüfen, ob ich angefangen habe';
+
+  @override
+  String get wakeUpCheckRow => 'Prüfen, ob ich angefangen habe';
+
+  @override
+  String get wakeUpCheckRowDetail =>
+      'Ein Anstoß, wenn ein paar Minuten nach dem Aufstehen noch nichts begonnen hat';
+
+  @override
+  String get wakeUpCheckAsRow => 'Als';
+
+  @override
+  String get wakeUpCheckGentle => 'Sanfter Hinweis';
+
+  @override
+  String get wakeUpCheckAlarm => 'Wecker';
+
+  @override
+  String wakeUpCheckStart(String title) {
+    return '$title beginnen?';
+  }
+
+  @override
   String get releaseNotes120 =>
       'Aufstehen-Wecker: Schalte ihn unter Einstellungen › Tagesform ein, und deine Aufstehzeit klingelt an geplanten Tagen — auf Android und auf iPhones mit iOS 26 wie ein Wecker, auf älteren iPhones als zeitkritische Mitteilung. Ton und Schlummern wählst du unter Ton und Schlummern, mit einem Testwecker. Nichts klingelt, bevor du ihn einschaltest.\nTöne: 48 Erinnerungstöne, die gut zusammenpassen. Wähle einen für alle Aufgaben oder gib einer Aufgabe ihren eigenen; deine erste Aufgabe des Tages klingelt mit deinem Start-Ton.\nNur der nächste Punkt: ein minimales Layout, jederzeit wählbar, ohne dass etwas verloren geht. Heute zeigt deinen Faden, das Datum und ein Menü.\nZieh eine Aufgabe irgendwohin auf den Tag, auch auf eine andere: Überschneidungen knüpfen einen kleinen Knoten in den Faden.\nAus Schlafenszeit wird Abendruhe. Die beiden Enden deines Tages sind Punkte, eine Sonne und ein Mond; tipp einen an, um seine Zeit zu ändern.\nIcons füllen sich selbst: Schreib „Fitnessstudio“, und die Aufgabe bekommt eine Hantel — aus 524 Icons.';
 

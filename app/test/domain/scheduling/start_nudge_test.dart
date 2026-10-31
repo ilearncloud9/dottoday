@@ -1,4 +1,5 @@
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/scheduling/start_escalation.dart';
 import 'package:dottoday/domain/scheduling/start_nudge.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -11,18 +12,34 @@ void main() {
   final task = occurrenceFixture().copyWith(startUtc: start, durationMin: 60);
 
   test('planned start + 10 min, only while nobody started it', () {
-    expect(noStartAt(task), start.add(const Duration(minutes: 10)));
     expect(
-      noStartAt(task, afterMin: 20),
+      escalationAt(DotStart(task)),
+      start.add(const Duration(minutes: 10)),
+    );
+    expect(
+      escalationAt(DotStart(task), afterMin: 20),
       start.add(const Duration(minutes: 20)),
     );
-    expect(noStartAt(task.copyWith(actualStartUtc: start)), isNull);
-    expect(noStartAt(task.copyWith(status: OccurrenceStatus.done)), isNull);
-    expect(noStartAt(task.copyWith(status: OccurrenceStatus.skipped)), isNull);
-    expect(noStartAt(task.copyWith(startUtc: null)), isNull, reason: 'Inbox');
-    expect(noStartAt(task.copyWith(deletedAt: t1)), isNull);
     expect(
-      noStartAt(task.copyWith(durationMin: 10)),
+      escalationAt(DotStart(task.copyWith(actualStartUtc: start))),
+      isNull,
+    );
+    expect(
+      escalationAt(DotStart(task.copyWith(status: OccurrenceStatus.done))),
+      isNull,
+    );
+    expect(
+      escalationAt(DotStart(task.copyWith(status: OccurrenceStatus.skipped))),
+      isNull,
+    );
+    expect(
+      escalationAt(DotStart(task.copyWith(startUtc: null))),
+      isNull,
+      reason: 'Inbox',
+    );
+    expect(escalationAt(DotStart(task.copyWith(deletedAt: t1))), isNull);
+    expect(
+      escalationAt(DotStart(task.copyWith(durationMin: 10))),
       isNull,
       reason: 'over before anyone would be asked',
     );

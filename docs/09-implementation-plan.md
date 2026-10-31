@@ -484,7 +484,17 @@ Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit 
     - "Your usual Saturday?": C2's weekday match isn't built.
     - The coach marks (§11) are M17.6 Discovery.
     - The day dot's per-colour ring arrives with M17.5's shared geometry.
-- [ ] M17.4 W3 Wake Up Check: the `StartEscalation` scheduler, built once from `noStartAt` with the wake-up input, the deferred A0 dot-start input, and Smallest step as a consumer.
+- [x] M17.4 W3 Wake Up Check: the `StartEscalation` scheduler, built once from `noStartAt` with the wake-up input, the deferred A0 dot-start input, and Smallest step as a consumer (`feat/wake-up-w3`).
+  - **Done 2026-10-31:**
+    - `escalationAt(DotStart | WakeUpStart)` in `domain/scheduling/start_escalation.dart` replaces `noStartAt`. Smallest step uses the dot input. The check uses the "I'm up" input, cancelled by the same starts (B1 `actualStart`, Done, the card's Start the day).
+    - Each Wake Up alarm carries its check: the first dot's Smallest step ("Just … · 2 min?") or "Start <dot>?".
+    - The OS arms the check at "I'm up". Android uses a gentle notification, or the alarm once more without snooze. iOS 26 uses a gentle notification whose tap opens Focus, or an AlarmKit re-ring. So it reaches a phone put back down.
+    - `AlarmGateway.sync(startedDays:)` calls it off. Never more than one a day.
+    - Settings: Wake Up options › CHECK I'VE STARTED (on, after 10 min, a gentle ping or the alarm). It has its docs/14 row and `FeatureId.wakeUpCheck`.
+  - **Decided:**
+    - The A0 dot-start input exists, but no new "Start <dot>?" ping is added for ordinary dots. That would ring differently for everyone (15 §11), so it is a follow-up below.
+    - The check rides the alarm tier: on iPhones below iOS 26 and with exact alarms off, nothing tells the app the user is up.
+  - **Not done:** goldens of the check notification (it is native). The check's first-two-times hint is M17.6 Discovery.
 - [ ] M17.5 W4 + W6 (one PR):
   - **Wind Down maths:** `effectiveWindDown`, the sleep target, and the onboarding sleep slider.
   - **Night arc:** one shared geometry function, used by `DayDot`, `WeekDayDot`, the Mac menu bar and the iOS/Android widgets, with `tomorrowWake` in the snapshot. The arc shows on Today, the menu bar and the widgets, not the Live Activity.
@@ -496,6 +506,7 @@ Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit 
 Follow-ups (M17):
 - [ ] "Vary the sound": choose which 2–6 Start sounds rotate (15 §9); M17.2 rotates through all but Insistent.
 - [ ] §2 blockers not yet read: battery optimisation (its own health row already exists) and Do Not Disturb with the "Alarms" exception off (`dndAlarmsBlocked`), each with its fix in the Wake Up row.
+- [ ] The A0 dot-start escalation as its own nudge ("Start <dot>?" for dots without steps): the input exists in `StartEscalation`; it needs a switch (off by default, 15 §11) and its docs/14 row.
 - [ ] Real-device gates for the Wake Up alarm (08 §6.1 C): iOS 26 force-quit + Silent, Android 14 in Doze, no AlarmKit alarm after uninstall; on the same iPhone, record whether AlarmKit loops a bundled Start `.caf` until stopped (the Bundle sounds note under M17.2).
 
 ## Follow-ups after M12 (found at the M12.6 ship-check)

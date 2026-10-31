@@ -95,13 +95,15 @@ OsNotification? composeNotification(
 /// the notification's own words, the day's cue and [settings]' snooze and
 /// ramp. [minimal] is minimal mode's ringing screen (15 §10), decided by
 /// the caller's `LayoutPolicy` (ADR-0016: notification code never reads
-/// the layout). [id] replaces the day's id (the test alarm's).
+/// the layout). [id] replaces the day's id (the test alarm's). [step] is
+/// [task]'s Smallest step, which the Wake Up Check offers (15 W3).
 WakeUpAlarm composeWakeUpAlarm(
   PlannedNotification planned, {
   required Occurrence? task,
   required Profile profile,
   bool minimal = false,
   String? id,
+  Subtask? step,
 }) {
   final l10n = _l10n(profile.locale);
   final settings = profile.settings;
@@ -122,6 +124,18 @@ WakeUpAlarm composeWakeUpAlarm(
     snoozeLimit: settings.wakeUpSnoozeMax,
     rampSeconds: settings.wakeUpRampSec,
     minimal: minimal,
+    check: settings.wakeUpCheck && task != null && id == null
+        ? WakeUpCheck(
+            minutes: settings.wakeUpCheckMin,
+            occurrenceId: task.id,
+            title: step == null
+                ? l10n.wakeUpCheckStart(task.title)
+                : smallestStepText(l10n, step),
+            body: step == null ? l10n.wakeUpCheckBody : task.title,
+            startLabel: l10n.smallestStepStart,
+            loud: settings.wakeUpCheckLoud,
+          )
+        : null,
   );
 }
 

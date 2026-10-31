@@ -36,7 +36,12 @@ object WakeUpActions {
     }
 
     fun dismiss(context: Context, id: String) {
-        if (WakeUpAlarms.find(context, id) != null) WakeUpAlarms.record(context, id, "stopped")
+        val alarm = WakeUpAlarms.find(context, id)
+        if (alarm != null) {
+            WakeUpAlarms.record(context, id, "stopped")
+            // Up, but has the day started? One check later (15 W3).
+            WakeUpChecks.arm(context, alarm)
+        }
         WakeUpAlarms.disarm(context, id)
         WakeUpRingService.stop(context)
         notes(context).cancel(SNOOZED_NOTE)

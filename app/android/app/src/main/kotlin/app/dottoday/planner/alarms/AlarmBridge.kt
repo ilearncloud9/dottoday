@@ -28,8 +28,11 @@ object AlarmBridge {
                     result.success(null)
                 }
                 "sync" -> {
-                    val alarms = (call.arguments as? List<*>).orEmpty()
+                    val args = call.arguments as? Map<*, *>
+                    val alarms = (args?.get("alarms") as? List<*>).orEmpty()
                         .mapNotNull { (it as? Map<*, *>)?.let(WakeUpAlarm::fromMap) }
+                    // The day began: its Wake Up Check is called off (15 W3).
+                    WakeUpChecks.cancel(context, (args?.get("started") as? List<*>).orEmpty().filterIsInstance<String>())
                     result.success(WakeUpAlarms.sync(context, alarms))
                 }
                 "test" -> {
@@ -44,6 +47,7 @@ object AlarmBridge {
                 // The device test (integration_test/wake_up_alarm_test.dart):
                 // what rings, what is stored, and the ringing screen's buttons.
                 "ringingId" -> result.success(WakeUpRingService.instance?.ringingId)
+                "checkArmed" -> result.success(WakeUpChecks.armed(context, call.argument<String>("id").orEmpty()))
                 "stored" -> result.success(
                     WakeUpAlarms.all(context).map { mapOf("id" to it.id, "state" to it.state, "snoozes" to it.snoozes) },
                 )

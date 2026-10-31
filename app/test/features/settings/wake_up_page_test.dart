@@ -125,7 +125,7 @@ void main() {
     expect(find.text('Show it when I first open the app'), findsOneWidget);
     await _tap(tester, 'Offer to shift the day when I\'m up after plan');
     expect((await storedSettings(h)).wakeUpLateOffer, isFalse);
-    expect(find.text('After'), findsNothing);
+    expect(find.text('After'), findsOneWidget, reason: "the check's only");
     await _tap(tester, "Your day on one screen when you're up");
     expect((await storedSettings(h)).wakeUpCard, isFalse);
     expect(find.text('Show it when I first open the app'), findsNothing);

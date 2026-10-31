@@ -133,10 +133,14 @@ abstract interface class AlarmGateway {
 
   /// Makes [alarms] the armed set: arms new and changed ones and disarms
   /// the rest, except one ringing or snoozed now (only dismissing ends
-  /// those) and the test alarm. Returns the instants armed, or null when
-  /// the OS side can't be reached (a background engine), so the caller
-  /// keeps what it knew. Idempotent.
-  Future<Set<DateTime>?> sync(List<WakeUpAlarm> alarms);
+  /// those) and the test alarm. A Wake Up Check pending for a day in
+  /// [startedDays] (`yyyy-MM-dd`) is called off: the day began (15 W3).
+  /// Returns the instants armed, or null when the OS side can't be reached
+  /// (a background engine), so the caller keeps what it knew. Idempotent.
+  Future<Set<DateTime>?> sync(
+    List<WakeUpAlarm> alarms, {
+    Set<String> startedDays = const {},
+  });
 
   /// Stops and disarms every Wake Up alarm, ringing or snoozed included:
   /// the switch went off.

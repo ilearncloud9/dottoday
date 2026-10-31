@@ -189,6 +189,12 @@ If the day has no thread: the dot is empty, the first-dot slot becomes "Nothing 
 
 **Shared trigger.** Implement as `StartEscalation` (one scheduler, two inputs): `wakeUp(dayRow)` and `dotStart(occurrence)` (the deferred A0 escalation and B2). Both compute "planned anchor + N min with no actualStart" the same way, both are cancelled by the same `StartFocus` / `MarkDone` / `MarkStarted` events. If the audit (§1) finds B2's trigger already built, W3 is one new input to it; if not, build it once here and B2 consumes it.
 
+**As built (M17.4).**
+- `escalationAt(WakeUpStart(day, firstDot:))` shares `escalationAt(DotStart(o))` with Smallest step (`domain/scheduling/start_escalation.dart`).
+- The OS arms the check when "I'm up" stops the alarm, because the app may be closed. Android uses `WakeUpChecks`; iOS 26 uses `WakeUpAlarms.armCheck`.
+- A start in the app calls it off through `AlarmGateway.sync(startedDays:)`.
+- The check rides the alarm tier. Where the Wake Up rings as a notification, nothing reports "I'm up", so there is no check.
+
 **AC.** Headless Notifier test: dismissed + 10 min + no start → exactly one check; start at minute 4 → none; two dismissals in a day → one check. Golden for the check notification on both platforms.
 
 ## 7. W4 · Wind Down from tomorrow's first dot

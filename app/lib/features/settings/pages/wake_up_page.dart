@@ -11,6 +11,7 @@ import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_alarm_row.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_card_group.dart';
+import 'package:dottoday/features/settings/widgets/wake_up_check_group.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_option_groups.dart';
 import 'package:dottoday/shared/notifications/test_alarm_card.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
@@ -52,6 +53,7 @@ class _WakeUpPageState extends ConsumerState<WakeUpPage> {
         if (settings.wakeUpAlarm) ...[
           WakeUpSoundGroup(settings: settings, full: full),
           if (full) WakeUpSnoozeGroup(settings: settings),
+          if (full) WakeUpCheckGroup(settings: settings),
         ],
         WakeUpCardGroup(settings: settings, full: full),
         if (!full)

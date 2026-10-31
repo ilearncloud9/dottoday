@@ -7,7 +7,7 @@ import 'package:dottoday/domain/notifications/alarm_policy.dart';
 import 'package:dottoday/domain/notifications/day_reminders.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
-import 'package:dottoday/domain/scheduling/start_nudge.dart';
+import 'package:dottoday/domain/scheduling/start_escalation.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Computes the notifications that should be pending right now (docs/04 §6,
@@ -56,7 +56,8 @@ final class NotificationPlanner {
   /// of every [Occurrence.routineStart] is [PlannedNotification.loud] and ignores quiet hours (11 A0). A
   /// future [testAlarmAtUtc] adds the test alarm (M6.5.9). Each occurrence
   /// with a step in [firstSteps] gets one Smallest step reminder at
-  /// [noStartAt] (M10.6); a real start, Done or a move re-plans it away.
+  /// `escalationAt(DotStart(o))` (M10.6); a real start, Done or a move
+  /// re-plans it away.
   /// While [daily]'s low-energy mode lasts, only loud ones stay (M12.2).
   ///
   /// When [ringsWakeUp] (a phone) and [daily]'s `wakeUpAlarm` are on, each
@@ -178,7 +179,7 @@ final class NotificationPlanner {
   }
 
   /// One Smallest step reminder per occurrence in [withSteps] (11 B2),
-  /// at [noStartAt]: the shared "not started yet" trigger.
+  /// at `escalationAt(DotStart(o))`: the shared "not started yet" trigger.
   static Iterable<PlannedNotification> _smallestSteps(
     List<Occurrence> live,
     Set<String> withSteps,
@@ -190,7 +191,7 @@ final class NotificationPlanner {
   ) sync* {
     for (final o in live) {
       if (!withSteps.contains(o.id)) continue;
-      final at = noStartAt(o);
+      final at = escalationAt(DotStart(o));
       if (at == null || !at.isAfter(now) || at.isAfter(end)) continue;
       const index = PlannedNotification.smallestStepIndex;
       yield PlannedNotification(
