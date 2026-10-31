@@ -31,3 +31,9 @@ bool watchOnScreen(WidgetRef ref, FeatureId feature) =>
 /// Whether [feature] is drawn in its simplified, minimal form now.
 bool watchSimplified(WidgetRef ref, FeatureId feature) =>
     watchFeature(ref, feature) == FeatureVisibility.simplified;
+
+/// [watchSimplified] for code without a `WidgetRef` that hands a View its
+/// form: the Wake Up ringing screen, drawn natively (docs/15 §10).
+bool readSimplified(Ref ref, FeatureId feature) =>
+    ref.read(layoutPolicyProvider).visibility(feature) ==
+    FeatureVisibility.simplified;

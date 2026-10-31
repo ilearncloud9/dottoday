@@ -8,8 +8,6 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
-import 'package:dottoday/domain/layout/feature_id.dart';
-import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/notifications/sound_catalogue.dart';
@@ -95,12 +93,14 @@ OsNotification? composeNotification(
 
 /// [planned] (a Wake Up) as the alarm `AlarmGateway` arms (docs/15 W1b):
 /// the notification's own words, the day's cue and [settings]' snooze and
-/// ramp, and minimal mode's ringing screen when it is on (15 §10). [id]
-/// replaces the day's id (the test alarm's).
+/// ramp. [minimal] is minimal mode's ringing screen (15 §10), decided by
+/// the caller's `LayoutPolicy` (ADR-0016: notification code never reads
+/// the layout). [id] replaces the day's id (the test alarm's).
 WakeUpAlarm composeWakeUpAlarm(
   PlannedNotification planned, {
   required Occurrence? task,
   required Profile profile,
+  bool minimal = false,
   String? id,
 }) {
   final l10n = _l10n(profile.locale);
@@ -121,9 +121,7 @@ WakeUpAlarm composeWakeUpAlarm(
     snoozeMinutes: settings.wakeUpSnooze ? settings.wakeUpSnoozeMin : 0,
     snoozeLimit: settings.wakeUpSnoozeMax,
     rampSeconds: settings.wakeUpRampSec,
-    minimal:
-        LayoutPolicy.of(settings).visibility(FeatureId.notifications) ==
-        FeatureVisibility.simplified,
+    minimal: minimal,
   );
 }
 

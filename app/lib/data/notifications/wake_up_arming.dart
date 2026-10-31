@@ -15,12 +15,17 @@ import 'package:dottoday/domain/notifications/planned_notification.dart';
 /// while ringing the rest on the notification path (W1a) rather than not
 /// at all.
 final class WakeUpArming {
-  const WakeUpArming(this._gateway, this._db);
+  const WakeUpArming(this._gateway, this._db, {bool Function()? minimal})
+    : _minimal = minimal;
 
   static const _key = 'armed_wake_ups';
 
   final AlarmGateway _gateway;
   final AppDatabase _db;
+
+  /// Whether the ringing screen is minimal mode's (the provider asks
+  /// `LayoutPolicy`; this code never reads the layout, ADR-0016).
+  final bool Function()? _minimal;
 
   /// Arms [wakeUps] (`NotificationPlanner.wakeUps`) for [profile]; with the
   /// switch off, disarms every alarm once. [tasks] finds each day's first
@@ -39,7 +44,12 @@ final class WakeUpArming {
     }
     final armed = await _gateway.sync([
       for (final w in wakeUps)
-        composeWakeUpAlarm(w, task: tasks[w.occurrenceId], profile: profile),
+        composeWakeUpAlarm(
+          w,
+          task: tasks[w.occurrenceId],
+          profile: profile,
+          minimal: _minimal?.call() ?? false,
+        ),
     ]);
     if (armed == null) return known ?? const {};
     await _write(armed);

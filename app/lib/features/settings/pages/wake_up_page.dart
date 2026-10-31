@@ -38,7 +38,7 @@ class _WakeUpPageState extends ConsumerState<WakeUpPage> {
     final l10n = context.l10n;
     final settings = ref.watch(currentProfileProvider).value?.settings;
     if (settings == null) return const SizedBox.shrink();
-    final minimal = watchSimplified(ref, FeatureId.notifications);
+    final minimal = watchSimplified(ref, FeatureId.wakeUpAlarm);
     final full = !minimal || _more;
     final alarm = ref.read(testAlarmProvider.notifier);
     return SettingsPageFrame(

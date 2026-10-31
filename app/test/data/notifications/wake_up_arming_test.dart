@@ -96,4 +96,14 @@ void main() {
     ).arm([_wakeUp(mon)], profile: on, tasks: const {});
     expect(armed, isEmpty);
   });
+
+  test('minimal mode, as the policy says: the short ringing screen', () async {
+    final gateway = FakeAlarmGateway();
+    await WakeUpArming(
+      gateway,
+      db,
+      minimal: () => true,
+    ).arm([_wakeUp(mon)], profile: on, tasks: const {});
+    expect(gateway.armed.single.minimal, isTrue);
+  });
 }

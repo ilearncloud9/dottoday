@@ -1,11 +1,13 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/notifications/notification_content.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -88,6 +90,7 @@ class TestAlarm extends _$TestAlarm {
       planned,
       task: null,
       profile: profile,
+      minimal: readSimplified(ref, FeatureId.wakeUpAlarm),
       id: WakeUpAlarm.testId,
     );
     if (await ref.read(alarmGatewayProvider).test(alarm)) return at;

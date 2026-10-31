@@ -49,6 +49,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Light/dark, language | built | Shown | Follow the device; no setting shown |
 | Onboarding | built | Simplified | Mode choice, then three steps: Wake Up/Wind Down, reminders + test alarm, first task |
 | A0 alarms + Notification health | M6.5 | Shown | A0 defaults as specified; health panel shows as a banner only when something is off |
+| W1 Wake Up alarm | M17 | Simplified | Settings › Wake Up alarm shows the switch and the alarm sound; vary, ramp and snooze under More options. The ringing screen is the time, one big "I'm up" and Snooze as a link (docs/15 §10) |
 | B1 actual timestamps | M6.5 | Shown | Invisible; recorded on tap and Done exactly as in full mode |
 | B2 subtask durations | M6.5 | Hidden | Appear only once Break it down has been used on that task |
 | A1 Live Activity / ongoing notification | M9 | Shown | Unchanged; this surface is minimal mode's heart |
