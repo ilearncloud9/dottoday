@@ -1,6 +1,7 @@
 import AppIntents
 import CryptoKit
 import Foundation
+import UserNotifications
 
 #if os(iOS) && canImport(AlarmKit)
   import AlarmKit
@@ -28,6 +29,12 @@ import Foundation
     var snoozeMin: Int
     var snoozeLimit: Int
     var snoozes = 0
+    /// The Wake Up Check armed at "I'm up" (docs/15 W3); 0 = none.
+    var checkMin = 0
+    var checkTitle = ""
+    var checkBody = ""
+    var checkTarget = ""
+    var checkLoud = false
 
     /// Snooze is offered: on, and under its limit (0 = no limit).
     var canSnooze: Bool { snoozeMin > 0 && (snoozeLimit == 0 || snoozes < snoozeLimit) }
@@ -47,6 +54,11 @@ import Foundation
       self.snooze = snooze
       snoozeMin = (map["snoozeMin"] as? NSNumber)?.intValue ?? 0
       snoozeLimit = (map["snoozeLimit"] as? NSNumber)?.intValue ?? 0
+      checkMin = (map["checkMin"] as? NSNumber)?.intValue ?? 0
+      checkTitle = map["checkTitle"] as? String ?? ""
+      checkBody = map["checkBody"] as? String ?? ""
+      checkTarget = map["checkTarget"] as? String ?? ""
+      checkLoud = map["checkLoud"] as? Bool ?? false
     }
   }
 
@@ -150,8 +162,58 @@ import Foundation
         record(spec.id, "stopped")
         stored[key] = nil
         save(stored)
+        Task { await armCheck(spec) }
       }
     }
+
+    /// The Wake Up Check (docs/15 W3, M17.4): `checkMin` after "I'm up",
+    /// one nudge to start the first dot — a notification whose tap opens
+    /// Focus, or, set to ring, the alarm once more without Snooze. The app
+    /// calls it off when the day starts ([cancelChecks]).
+    static func armCheck(_ spec: WakeUpAlarmSpec) async {
+      guard spec.checkMin > 0, !spec.id.hasSuffix(":check"), spec.id != testId else { return }
+      let wait = TimeInterval(spec.checkMin * 60)
+      if spec.checkLoud {
+        var ring = spec
+        ring.id = spec.id + ":check"
+        ring.title = spec.checkTitle
+        ring.body = spec.checkBody
+        ring.snoozeMin = 0
+        ring.checkMin = 0
+        ring.fireAtMs = Int64((Date().timeIntervalSince1970 + wait) * 1000)
+        guard (try? await arm(ring)) != nil else { return }
+        var stored = load()
+        stored[uuid(ring.id).uuidString] = ring
+        save(stored)
+        return
+      }
+      let content = UNMutableNotificationContent()
+      content.title = spec.checkTitle
+      content.body = spec.checkBody
+      content.sound = .default
+      content.userInfo = [
+        checkLinkKey: spec.checkTarget.isEmpty ? "dottoday://today" : "dottoday://focus/\(spec.checkTarget)"
+      ]
+      let request = UNNotificationRequest(
+        identifier: checkPrefix + spec.id, content: content,
+        trigger: UNTimeIntervalNotificationTrigger(timeInterval: wait, repeats: false))
+      try? await UNUserNotificationCenter.current().add(request)
+    }
+
+    /// Calls off the checks of [days] (`yyyy-MM-dd`): those days began.
+    static func cancelChecks(_ days: [String]) {
+      guard !days.isEmpty else { return }
+      let ids = days.map { "wakeup:\($0)" }
+      UNUserNotificationCenter.current().removePendingNotificationRequests(
+        withIdentifiers: ids.map { checkPrefix + $0 })
+      for id in ids {
+        try? manager.cancel(id: uuid(id + ":check"))
+      }
+    }
+
+    /// A gentle check's notification id prefix, and where its tap goes.
+    static let checkPrefix = "wakeup-check:"
+    static let checkLinkKey = "dottodayLink"
 
     /// Notes what an alarm did; the app drains these into `wake_up_days`.
     static func record(_ id: String, _ kind: String) {

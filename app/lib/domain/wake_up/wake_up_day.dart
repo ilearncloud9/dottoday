@@ -37,10 +37,11 @@ final class AlarmEvent {
   final AlarmEventKind kind;
   final DateTime atUtc;
 
-  /// The civil day of a Wake Up alarm, or null for the test alarm.
-  String? get date => id.startsWith('wakeup:') && id != 'wakeup:test'
-      ? id.substring('wakeup:'.length)
-      : null;
+  /// The civil day of a Wake Up alarm, or null for the test alarm and a
+  /// Wake Up Check's re-ring (`wakeup:<date>:check`).
+  String? get date => _dayId.firstMatch(id)?.group(1);
+
+  static final _dayId = RegExp(r'^wakeup:(\d{4}-\d{2}-\d{2})$');
 
   @override
   bool operator ==(Object other) =>

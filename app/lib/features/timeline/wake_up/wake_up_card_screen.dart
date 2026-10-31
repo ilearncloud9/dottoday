@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/wake_up/wake_up_card.dart';
 import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
@@ -93,8 +95,16 @@ class _WakeUpCardScreenState extends ConsumerState<WakeUpCardScreen> {
       context.pushReplacement(AppRoutes.focus(dot.id));
       return;
     }
+    final sync = ref.read(notificationSyncProvider);
+    final logger = ref.read(loggerProvider);
     await ref.read(wakeUpDayRepositoryProvider).markStarted(model.dateKey, now);
     if (mounted) _close();
+    // The day began: the Wake Up Check is called off (15 W3).
+    try {
+      await sync.resync(model.data.userId);
+    } on Object catch (e, st) {
+      logger.error('wake_up.resync_failed', error: e, stackTrace: st);
+    }
   }
 
   /// Rebalance by the minutes up after plan, from now (15 §5 step 6). The

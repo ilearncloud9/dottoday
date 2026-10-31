@@ -4691,6 +4691,31 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.healthLastWakeUpRang(rang));
 
   @override
+  String get wakeUpCheckBody => pseudo(super.wakeUpCheckBody);
+
+  @override
+  String get wakeUpCheckCaption => pseudo(super.wakeUpCheckCaption);
+
+  @override
+  String get wakeUpCheckRow => pseudo(super.wakeUpCheckRow);
+
+  @override
+  String get wakeUpCheckRowDetail => pseudo(super.wakeUpCheckRowDetail);
+
+  @override
+  String get wakeUpCheckAsRow => pseudo(super.wakeUpCheckAsRow);
+
+  @override
+  String get wakeUpCheckGentle => pseudo(super.wakeUpCheckGentle);
+
+  @override
+  String get wakeUpCheckAlarm => pseudo(super.wakeUpCheckAlarm);
+
+  @override
+  String wakeUpCheckStart(String title) =>
+      pseudo(super.wakeUpCheckStart(title));
+
+  @override
   String get releaseNotes120 => pseudo(super.releaseNotes120);
 
   @override

@@ -70,4 +70,52 @@ void main() {
     });
     expect(await _stored(WakeUpAlarm.testId), isNull);
   });
+
+  // The Wake Up Check (docs/15 W3): armed by "I'm up", called off when the
+  // day starts (`sync`'s started days), never armed by the test alarm.
+  testWidgets("I'm up arms the check; a start calls it off", (tester) async {
+    if (defaultTargetPlatform != TargetPlatform.android) return;
+    await startApp(tester);
+    const id = 'wakeup:2099-01-01';
+    Map<String, Object> alarm(int inMs) => {
+      'id': id,
+      'fireAtMs': DateTime.now().millisecondsSinceEpoch + inMs,
+      'sound': 'start_bells',
+      'title': 'Wake Up',
+      'body': 'Device check',
+      'stop': "I'm up",
+      'snooze': 'Snooze',
+      'snoozeMin': 9,
+      'snoozeLimit': 3,
+      'rampSec': 15,
+      'minimal': false,
+      'checkMin': 10,
+      'checkTitle': 'Start Run?',
+      'checkBody': 'Tap to start.',
+      'checkStart': 'Start',
+      'checkTarget': '',
+      'checkLoud': false,
+    };
+    Future<bool?> armed() =>
+        _channel.invokeMethod<bool>('checkArmed', {'id': id});
+
+    await _channel.invokeMethod<Object>('sync', {
+      'alarms': [alarm(3000)],
+      'started': <String>[],
+    });
+    await waitUntil(
+      tester,
+      () async => await _ringing() == id,
+      timeout: const Duration(seconds: 30),
+    );
+    expect(await armed(), isFalse, reason: 'only "I\'m up" arms it');
+    await _channel.invokeMethod<void>('perform', {'action': 'stop', 'id': id});
+    expect(await armed(), isTrue);
+
+    await _channel.invokeMethod<Object>('sync', {
+      'alarms': <Object>[],
+      'started': ['2099-01-01'],
+    });
+    expect(await armed(), isFalse);
+  });
 }

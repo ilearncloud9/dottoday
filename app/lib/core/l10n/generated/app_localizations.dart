@@ -8898,6 +8898,54 @@ abstract class AppLocalizations {
   /// **'Last wake-up: rang {rang}'**
   String healthLastWakeUpRang(String rang);
 
+  /// Wake Up Check body when the first dot has no steps.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to start.'**
+  String get wakeUpCheckBody;
+
+  /// Wake Up options: caption over the check rows.
+  ///
+  /// In en, this message translates to:
+  /// **'Check I\'ve started'**
+  String get wakeUpCheckCaption;
+
+  /// Switch: the Wake Up Check.
+  ///
+  /// In en, this message translates to:
+  /// **'Check I\'ve started'**
+  String get wakeUpCheckRow;
+
+  /// Under the Wake Up Check switch.
+  ///
+  /// In en, this message translates to:
+  /// **'One nudge if nothing has started a few minutes after I\'m up'**
+  String get wakeUpCheckRowDetail;
+
+  /// Row: how the Wake Up Check comes (gentle ping or alarm).
+  ///
+  /// In en, this message translates to:
+  /// **'As'**
+  String get wakeUpCheckAsRow;
+
+  /// Wake Up Check tier: a normal notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Gentle ping'**
+  String get wakeUpCheckGentle;
+
+  /// Wake Up Check tier: rings like the alarm, once.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm'**
+  String get wakeUpCheckAlarm;
+
+  /// Wake Up Check title when the first dot has no steps.
+  ///
+  /// In en, this message translates to:
+  /// **'Start {title}?'**
+  String wakeUpCheckStart(String title);
+
   /// What's new in 1.2.0 (M15 sounds, M16 minimal layout, the Structured-style day, M17 Wake Up alarm), one item per line (PRD F11).
   ///
   /// In en, this message translates to:

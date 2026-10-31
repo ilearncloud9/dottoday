@@ -724,10 +724,17 @@ final class FakeAlarmGateway implements AlarmGateway {
   @override
   Future<void> requestAuthorization() async => authorizationRequests++;
 
+  /// The started days the last [sync] called checks off for.
+  Set<String> started = const {};
+
   @override
-  Future<Set<DateTime>?> sync(List<WakeUpAlarm> alarms) async {
+  Future<Set<DateTime>?> sync(
+    List<WakeUpAlarm> alarms, {
+    Set<String> startedDays = const {},
+  }) async {
     if (!reachable) return null;
     armed = alarms;
+    started = startedDays;
     return {
       if (arms)
         for (final a in alarms) a.fireAtUtc,

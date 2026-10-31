@@ -97,6 +97,7 @@ NotificationSync notificationSync(Ref ref) => NotificationSync(
     ref.watch(appDatabaseProvider),
     minimal: () => readSimplified(ref, FeatureId.wakeUpAlarm),
   ),
+  days: ref.watch(wakeUpDayRepositoryProvider),
   ringsWakeUp: currentHealthPlatform().isPhone,
 );
 

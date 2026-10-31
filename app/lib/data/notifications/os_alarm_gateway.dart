@@ -36,12 +36,16 @@ final class OsAlarmGateway implements AlarmGateway {
   );
 
   @override
-  Future<Set<DateTime>?> sync(List<WakeUpAlarm> alarms) async {
+  Future<Set<DateTime>?> sync(
+    List<WakeUpAlarm> alarms, {
+    Set<String> startedDays = const {},
+  }) async {
     if (!_native) return const {};
     try {
-      final armed = await _channel.invokeListMethod<int>('sync', [
-        for (final a in alarms) _toChannel(a),
-      ]);
+      final armed = await _channel.invokeListMethod<int>('sync', {
+        'alarms': [for (final a in alarms) _toChannel(a)],
+        'started': startedDays.toList(),
+      });
       return {
         for (final ms in armed ?? const <int>[])
           DateTime.fromMillisecondsSinceEpoch(ms, isUtc: true),
@@ -116,6 +120,13 @@ final class OsAlarmGateway implements AlarmGateway {
     'snoozeLimit': a.snoozeLimit,
     'rampSec': a.rampSeconds,
     'minimal': a.minimal,
+    // The Wake Up Check, armed by the OS at "I'm up" (15 W3); 0 = none.
+    'checkMin': a.check?.minutes ?? 0,
+    'checkTitle': a.check?.title ?? '',
+    'checkBody': a.check?.body ?? '',
+    'checkStart': a.check?.startLabel ?? '',
+    'checkTarget': a.check?.occurrenceId ?? '',
+    'checkLoud': a.check?.loud ?? false,
   };
 
   @override

@@ -54,7 +54,9 @@ void main() {
       answer((call) => [_alarm.fireAtUtc.millisecondsSinceEpoch]);
       final armed = await _gateway(HealthPlatform.iphone).sync([_alarm]);
       expect(armed, {_alarm.fireAtUtc});
-      final sent = (calls.single.arguments as List).single as Map;
+      final args = calls.single.arguments as Map;
+      expect(args['started'], isEmpty);
+      final sent = (args['alarms'] as List).single as Map;
       expect(sent['id'], 'wakeup:2026-11-02');
       expect(sent['sound'], 'start_bells.caf');
       expect(sent['snoozeMin'], 9);
@@ -64,7 +66,8 @@ void main() {
       calls.clear();
       await _gateway(HealthPlatform.android).sync([_alarm]);
       expect(
-        ((calls.single.arguments as List).single as Map)['sound'],
+        (((calls.single.arguments as Map)['alarms'] as List).single
+            as Map)['sound'],
         'start_bells',
       );
     },
@@ -107,4 +110,40 @@ void main() {
     await _gateway(HealthPlatform.iphone).requestAuthorization();
     expect(calls.map((c) => c.method), ['alarmKitStatus', 'allowAlarms']);
   });
+
+  test(
+    'sync: the Wake Up Check rides with its alarm; started days go too',
+    () async {
+      answer((call) => <int>[]);
+      await _gateway(HealthPlatform.android).sync(
+        [
+          WakeUpAlarm(
+            id: _alarm.id,
+            fireAtUtc: _alarm.fireAtUtc,
+            sound: _alarm.sound,
+            title: _alarm.title,
+            body: _alarm.body,
+            stopLabel: _alarm.stopLabel,
+            snoozeLabel: _alarm.snoozeLabel,
+            check: const WakeUpCheck(
+              minutes: 10,
+              occurrenceId: 'run',
+              title: 'Start Run?',
+              body: 'Tap to start.',
+              startLabel: 'Start',
+              loud: true,
+            ),
+          ),
+        ],
+        startedDays: {'2026-11-01'},
+      );
+      final args = calls.single.arguments as Map;
+      expect(args['started'], ['2026-11-01']);
+      final sent = (args['alarms'] as List).single as Map;
+      expect(sent['checkMin'], 10);
+      expect(sent['checkTarget'], 'run');
+      expect(sent['checkLoud'], isTrue);
+      expect(sent['checkStart'], 'Start');
+    },
+  );
 }

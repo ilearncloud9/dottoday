@@ -32,8 +32,11 @@ enum AlarmBridge {
         UIApplication.shared.open(updateHelp)
         result(nil)
       case "sync":
-        let specs = (call.arguments as? [[String: Any]] ?? []).compactMap(WakeUpAlarmSpec.init)
+        let args = call.arguments as? [String: Any]
+        let specs = (args?["alarms"] as? [[String: Any]] ?? []).compactMap(WakeUpAlarmSpec.init)
         guard #available(iOS 26.0, *) else { return result([Int64]()) }
+        // The day began: its Wake Up Check is called off (15 W3).
+        WakeUpAlarms.cancelChecks(args?["started"] as? [String] ?? [])
         Task { result(await WakeUpAlarms.sync(specs)) }
       case "test":
         guard #available(iOS 26.0, *), let spec = (call.arguments as? [String: Any]).flatMap(WakeUpAlarmSpec.init)

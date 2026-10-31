@@ -5,6 +5,7 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../domain/fixtures.dart';
@@ -27,6 +28,7 @@ PlannedNotification _wakeUp(DateTime at) => PlannedNotification(
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
+  setUpAll(initializeDateFormatting);
 
   late AppDatabase db;
   setUp(() => db = AppDatabase(NativeDatabase.memory()));
@@ -105,5 +107,67 @@ void main() {
       minimal: () => true,
     ).arm([_wakeUp(mon)], profile: on, tasks: const {});
     expect(gateway.armed.single.minimal, isTrue);
+  });
+
+  group('the Wake Up Check (15 W3)', () {
+    final run = occurrenceFixture().copyWith(id: 'first', title: 'Run');
+
+    test(
+      'on by default: start the first dot, with its step when it has one',
+      () async {
+        final gateway = FakeAlarmGateway();
+        await WakeUpArming(
+          gateway,
+          db,
+        ).arm([_wakeUp(mon)], profile: on, tasks: {'first': run});
+        final check = gateway.armed.single.check!;
+        expect(check.minutes, 10);
+        expect(check.title, 'Start Run?');
+        expect(check.occurrenceId, 'first');
+        expect(check.loud, isFalse);
+
+        await WakeUpArming(gateway, db).arm(
+          [_wakeUp(mon)],
+          profile: on,
+          tasks: {'first': run},
+          steps: {
+            'first': subtaskFixture().copyWith(
+              title: 'Lace up',
+              durationMin: 2,
+            ),
+          },
+        );
+        expect(gateway.armed.single.check!.title, 'Just Lace up · 2 min?');
+        expect(gateway.armed.single.check!.body, 'Run');
+      },
+    );
+
+    test('off, or no dot to start: no check', () async {
+      final gateway = FakeAlarmGateway();
+      await WakeUpArming(gateway, db).arm(
+        [_wakeUp(mon)],
+        profile: on.copyWith(
+          settings: on.settings.copyWith(wakeUpCheck: false),
+        ),
+        tasks: {'first': run},
+      );
+      expect(gateway.armed.single.check, isNull);
+      await WakeUpArming(
+        gateway,
+        db,
+      ).arm([_wakeUp(mon)], profile: on, tasks: const {});
+      expect(gateway.armed.single.check, isNull);
+    });
+
+    test('a day that began calls its check off', () async {
+      final gateway = FakeAlarmGateway();
+      await WakeUpArming(gateway, db).arm(
+        [_wakeUp(mon)],
+        profile: on,
+        tasks: {'first': run},
+        startedDays: {'2026-11-02'},
+      );
+      expect(gateway.started, {'2026-11-02'});
+    });
   });
 }

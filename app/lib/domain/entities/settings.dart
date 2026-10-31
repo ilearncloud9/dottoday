@@ -83,6 +83,11 @@ abstract class Settings with _$Settings {
     @Default(true) bool wakeUpCardInbox,
     @Default(true) bool wakeUpLateOffer,
     @Default(10) int wakeUpLateMin,
+    // The Wake Up Check (15 W3, M17.4): one nudge N minutes after "I'm up"
+    // while nothing has started; a gentle ping unless set to ring.
+    @Default(true) bool wakeUpCheck,
+    @Default(10) int wakeUpCheckMin,
+    @Default(false) bool wakeUpCheckLoud,
     // The once-a-day "Plan your inbox" card (docs/02 F3.3): off by default.
     @Default(false) bool inboxNudge,
     // Settings › Calendars › Travel time (M7.5, R-17): off until chosen

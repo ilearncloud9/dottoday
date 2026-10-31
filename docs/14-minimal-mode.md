@@ -51,6 +51,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | A0 alarms + Notification health | M6.5 | Shown | A0 defaults as specified; health panel shows as a banner only when something is off |
 | W1 Wake Up alarm | M17 | Simplified | Settings › Wake Up alarm shows the switch and the alarm sound; vary, ramp and snooze under More options. The ringing screen is the time, one big "I'm up" and Snooze as a link (docs/15 §10) |
 | W2 Wake Up card | M17 | Simplified | Opens only after "I'm up" (or its notification), never by itself on first open. The first dot and Start the day; the late-start line when it applies; the day dot, the next dots and the chips behind "Show my day" (docs/15 §10) |
+| W3 Wake Up Check | M17 | Shown | Identical: already one line and one Start (docs/15 §10); its settings under More options |
 | B1 actual timestamps | M6.5 | Shown | Invisible; recorded on tap and Done exactly as in full mode |
 | B2 subtask durations | M6.5 | Hidden | Appear only once Break it down has been used on that task |
 | A1 Live Activity / ongoing notification | M9 | Shown | Unchanged; this surface is minimal mode's heart |
