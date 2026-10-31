@@ -11,6 +11,9 @@ final class _Player implements SoundPlayer {
   @override
   Future<void> play(CatalogueSound sound) async => played.add(sound);
 
+  @override
+  Future<void> stop() async {}
+
   /// What [deviceMuted] answers.
   bool muted = false;
 

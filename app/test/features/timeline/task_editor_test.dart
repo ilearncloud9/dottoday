@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -11,11 +12,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
+import '../../support/focus_fakes.dart';
 import '../../support/timeline_fakes.dart';
 
 final _date = DateTime(2026, 10, 21);
 late FakeOccurrenceRepository _repo;
 late Occurrence _deep;
+late FakeSoundPlayer _sounds;
 
 Future<void> _pump(
   WidgetTester tester, {
@@ -29,14 +32,18 @@ Future<void> _pump(
   final rows = demoDayRows(_date);
   _deep = rows.firstWhere((o) => o.title == 'Deep work: roadmap');
   _repo = FakeOccurrenceRepository(rows);
+  _sounds = FakeSoundPlayer();
   await tester.pumpWidget(
     ProviderScope(
-      overrides: timelineOverrides(
-        now: DateTime.utc(2026, 10, 21, 7, 22),
-        occurrences: _repo,
-        subtasks: FakeSubtaskRepository(demoDaySubtasks(_date)),
-        profile: testProfile(settings: const Settings(use24h: false)),
-      ),
+      overrides: [
+        ...timelineOverrides(
+          now: DateTime.utc(2026, 10, 21, 7, 22),
+          occurrences: _repo,
+          subtasks: FakeSubtaskRepository(demoDaySubtasks(_date)),
+          profile: testProfile(settings: const Settings(use24h: false)),
+        ),
+        soundPlayerProvider.overrideWithValue(_sounds),
+      ],
       child: MaterialApp(
         theme: DotTheme.light(),
         darkTheme: DotTheme.dark(),
@@ -137,6 +144,7 @@ void main() {
   testWidgets('Sound: Default · Dot, a picked sound, Default again '
       '(docs/12 §6)', (tester) async {
     await _pump(tester);
+    var stopped = 0;
     Future<void> pick(String sound) async {
       await _reveal(tester, find.text('Sound', skipOffstage: false));
       await tester.tap(_editor(find.text('Sound')));
@@ -144,13 +152,17 @@ void main() {
       await tester.ensureVisible(find.text(sound).last);
       await tester.tap(find.text(sound).last);
       await tester.pumpAndSettle();
+      expect(_sounds.stops, stopped, reason: 'still choosing');
       await tester.tap(find.text('Done').last);
       await tester.pump(const Duration(milliseconds: 700));
       await tester.pumpAndSettle();
+      // Done ends the preview, even a long one (docs/12 §6).
+      expect(_sounds.stops, ++stopped);
     }
 
     expect(_editor(find.text('Default · Dot')), findsOneWidget);
     await pick('Lift');
+    expect(_sounds.played.map((s) => s.id), ['clear.lift']);
     expect(_saved().soundId, 'clear.lift');
     expect(_editor(find.text('Lift')), findsOneWidget);
     await pick('Default');

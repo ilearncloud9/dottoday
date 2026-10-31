@@ -95,7 +95,7 @@ Future<void> pickSound(
 }
 
 /// The picker: Default, None, then the sound sections. A tap marks and
-/// plays; Done returns the mark.
+/// plays; Done returns the mark. Closing stops the preview.
 class _SoundSheet extends ConsumerStatefulWidget {
   const _SoundSheet({required this.initial});
 
@@ -117,53 +117,58 @@ class _SoundSheetState extends ConsumerState<_SoundSheet> {
         .value
         ?.settings
         .reminderSound;
-    return Padding(
-      padding: const EdgeInsetsDirectional.symmetric(horizontal: DotSpace.l),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: DotSpace.s,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Semantics(
-                  header: true,
-                  child: Text(l10n.sheetSound, style: t.styles.cardTitle),
+    return SoundPreviewScope(
+      child: Padding(
+        padding: const EdgeInsetsDirectional.symmetric(horizontal: DotSpace.l),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: DotSpace.s,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Semantics(
+                    header: true,
+                    child: Text(l10n.sheetSound, style: t.styles.cardTitle),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.of(context).maybePop(),
+                  tooltip: l10n.sheetClose,
+                  icon: DotIcon(DotGlyphs.close, color: t.colors.muted),
+                ),
+              ],
+            ),
+            if (ref.watch(deviceMutedProvider).value ?? false)
+              const SoundMutedBanner(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: SoundOptionList(
+                  sections: taskSoundSections(
+                    l10n,
+                    defaultName: reminderSoundName(l10n, fallback),
+                  ),
+                  selected: _picked,
+                  onPick: (key) {
+                    setState(() => _picked = key);
+                    // Default plays what the task will then play.
+                    previewSound(
+                      ref,
+                      key ?? fallback ?? defaultReminderSoundId,
+                    );
+                  },
                 ),
               ),
-              IconButton(
-                onPressed: () => Navigator.of(context).maybePop(),
-                tooltip: l10n.sheetClose,
-                icon: DotIcon(DotGlyphs.close, color: t.colors.muted),
-              ),
-            ],
-          ),
-          if (ref.watch(deviceMutedProvider).value ?? false)
-            const SoundMutedBanner(),
-          Expanded(
-            child: SingleChildScrollView(
-              child: SoundOptionList(
-                sections: taskSoundSections(
-                  l10n,
-                  defaultName: reminderSoundName(l10n, fallback),
-                ),
-                selected: _picked,
-                onPick: (key) {
-                  setState(() => _picked = key);
-                  // Default plays what the task will then play.
-                  previewSound(ref, key ?? fallback ?? defaultReminderSoundId);
-                },
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(bottom: DotSpace.l),
+              child: FilledButton(
+                onPressed: () => Navigator.of(context).pop((key: _picked)),
+                child: Text(l10n.alertsDone),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsetsDirectional.only(bottom: DotSpace.l),
-            child: FilledButton(
-              onPressed: () => Navigator.of(context).pop((key: _picked)),
-              child: Text(l10n.alertsDone),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

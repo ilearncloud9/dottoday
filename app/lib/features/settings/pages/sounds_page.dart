@@ -32,23 +32,25 @@ class SoundsPage extends ConsumerWidget {
     final settings = ref.watch(currentProfileProvider).value?.settings;
     if (settings == null) return const SizedBox.shrink();
     final muted = ref.watch(deviceMutedProvider).value ?? false;
-    return SettingsPageFrame(
-      title: l10n.soundsTitle,
-      children: [
-        if (muted) const SoundMutedBanner(),
-        PageText(l10n.soundsIntro),
-        SoundOptionList(
-          sections: settingsSoundSections(l10n),
-          // Unset is the Dot tone (docs/12 §3).
-          selected: settings.reminderSound ?? defaultReminderSoundId,
-          onPick: (key) {
-            changeSettings(context, (s) => s.copyWith(reminderSound: key));
-            previewSound(ref, key);
-          },
-        ),
-        _MoreGroup(settings: settings),
-        const _Credits(),
-      ],
+    return SoundPreviewScope(
+      child: SettingsPageFrame(
+        title: l10n.soundsTitle,
+        children: [
+          if (muted) const SoundMutedBanner(),
+          PageText(l10n.soundsIntro),
+          SoundOptionList(
+            sections: settingsSoundSections(l10n),
+            // Unset is the Dot tone (docs/12 §3).
+            selected: settings.reminderSound ?? defaultReminderSoundId,
+            onPick: (key) {
+              changeSettings(context, (s) => s.copyWith(reminderSound: key));
+              previewSound(ref, key);
+            },
+          ),
+          _MoreGroup(settings: settings),
+          const _Credits(),
+        ],
+      ),
     );
   }
 }

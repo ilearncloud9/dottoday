@@ -20,6 +20,12 @@ final class _Player implements SoundPlayer {
   @override
   Future<void> play(CatalogueSound sound) async => played.add(sound.id);
 
+  /// How many times [stop] was called.
+  int stops = 0;
+
+  @override
+  Future<void> stop() async => stops++;
+
   @override
   Future<bool> deviceMuted() async => muted;
 }
@@ -81,8 +87,10 @@ void main() {
     await _tap(tester, 'Insistent');
     expect((await storedSettings(h)).startSoundId, insistentStartSoundId);
     expect(player.played, [insistentStartSoundId]);
+    expect(player.stops, 0, reason: 'still choosing');
     await _tap(tester, 'Done');
     expect(find.text('Insistent'), findsOneWidget, reason: 'the row value');
+    expect(player.stops, 1, reason: 'Done ends the preview');
   });
 
   testWidgets('Done sound: its own list', (tester) async {
@@ -91,6 +99,17 @@ void main() {
     await _tap(tester, 'Checked');
     expect((await storedSettings(h)).doneSoundId, 'done.checked');
     expect(player.played, ['done.checked']);
+  });
+
+  testWidgets('leaving the page stops the preview (docs/12 §6)', (
+    tester,
+  ) async {
+    final (_, player) = await _pump(tester);
+    await _tap(tester, 'Rooster');
+    expect(player.stops, 0);
+    // The page goes away, as on Back.
+    await tester.pumpWidget(const SizedBox.shrink());
+    expect(player.stops, 1);
   });
 
   testWidgets('Sounds in app switches off', (tester) async {
