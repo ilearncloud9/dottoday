@@ -8,11 +8,20 @@ import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
   AppLocalizations l10n,
   AlarmCapabilities capabilities,
 ) {
-  if (capabilities.blockers.contains(AlarmBlocker.notAPhone)) {
+  final blockers = capabilities.blockers;
+  if (blockers.contains(AlarmBlocker.notAPhone)) {
     return (l10n.wakeUpTierNotAPhone, null);
+  }
+  // iOS 26+ with Dottoday's alarms off: allowing them is the way up.
+  if (blockers.contains(AlarmBlocker.alarmsDenied)) {
+    return (l10n.wakeUpTierAlarmsOff, null);
   }
   return switch (capabilities.tier) {
     AlarmTier.alarm => (l10n.wakeUpTierAlarm, null),
+    AlarmTier.timeSensitive when blockers.contains(AlarmBlocker.osTooOld) => (
+      l10n.wakeUpTierNeedsUpdate,
+      l10n.wakeUpTierTimeSensitiveDetail,
+    ),
     AlarmTier.timeSensitive => (
       l10n.wakeUpTierTimeSensitive,
       l10n.wakeUpTierTimeSensitiveDetail,
@@ -31,3 +40,10 @@ AlarmBlocker? wakeUpFix(AlarmCapabilities capabilities) =>
       [final first, ...] => first,
       [] => null,
     };
+
+/// The fix button's words for [blocker]: an update is read about, every
+/// other gap is allowed.
+String wakeUpFixLabel(AppLocalizations l10n, AlarmBlocker blocker) =>
+    blocker == AlarmBlocker.osTooOld
+    ? l10n.wakeUpFixUpdate
+    : l10n.healthFixAllow;

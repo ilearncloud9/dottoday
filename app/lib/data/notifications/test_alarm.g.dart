@@ -88,7 +88,7 @@ final class TestAlarmProvider extends $NotifierProvider<TestAlarm, void> {
   }
 }
 
-String _$testAlarmHash() => r'1e6281bc733723f04c0a947a3b42c10f6b35b95f';
+String _$testAlarmHash() => r'e95bfa261e0f9bd789f795e65fb101f1649ee84c';
 
 /// Sends or cancels the test alarm, then re-plans so the OS holds exactly
 /// what the store says.

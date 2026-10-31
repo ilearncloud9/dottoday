@@ -5773,8 +5773,95 @@ class AppLocalizationsEs extends AppLocalizations {
   String get notifWakeUpBody => 'Buenos días.';
 
   @override
+  String get settingsWakeUpOptions => 'Sonido y posponer';
+
+  @override
+  String get wakeUpAlarmCaption => 'Alarma';
+
+  @override
+  String get wakeUpFixUpdate => 'Cómo actualizar';
+
+  @override
+  String get wakeUpMoreOptions => 'Más opciones';
+
+  @override
+  String get wakeUpRamp => 'Subida de volumen';
+
+  @override
+  String get wakeUpRampDetail =>
+      'Empieza más bajo y sube hasta el volumen de tu alarma.';
+
+  @override
+  String get wakeUpRampOff => 'Desactivada';
+
+  @override
+  String get wakeUpSnooze => 'Posponer';
+
+  @override
+  String get wakeUpSnoozeCaption => 'Posponer';
+
+  @override
+  String get wakeUpSnoozeDetail => 'Vuelve a sonar unos minutos después.';
+
+  @override
+  String get wakeUpSnoozeLength => 'Duración';
+
+  @override
+  String get wakeUpSnoozeLimit => 'Máximo de veces';
+
+  @override
+  String get wakeUpSnoozeNoLimit => 'Sin límite';
+
+  @override
+  String get wakeUpSnoozeRow => 'Posponer';
+
+  @override
+  String get wakeUpSoundCaption => 'Sonido';
+
+  @override
+  String get wakeUpSoundRow => 'Sonido de la alarma';
+
+  @override
+  String get wakeUpStop => 'Ya estoy en pie';
+
+  @override
+  String get wakeUpTestLookHere =>
+      'Si no sonó, la línea de arriba dice qué lo impide.';
+
+  @override
+  String get wakeUpTierAlarmsOff =>
+      'El despertar puede sonar como una alarma, pero las alarmas están desactivadas para Dottoday en Ajustes.';
+
+  @override
+  String get wakeUpTierNeedsUpdate =>
+      'Tu iPhone aún no puede hacer sonar el despertar como una alarma. Necesita iOS 26.';
+
+  @override
+  String get wakeUpVary => 'Variar el sonido';
+
+  @override
+  String get wakeUpVaryDetail =>
+      'Un sonido de alarma distinto cada día, para oírlo bien.';
+
+  @override
+  String wakeUpRampSeconds(int seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String wakeUpSnoozeTimes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count veces',
+      one: 'Una vez',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get releaseNotes120 =>
-      'Alarma al despertar: actívala en Ajustes › Forma del día y tu hora de despertar suena los días que tienes planificados — como una alarma en Android, como notificación urgente en el iPhone. Nada suena hasta que la actives.\nSonidos: 48 sonidos de recordatorio que combinan bien. Elige uno para todas tus tareas o da a una tarea el suyo; tu primera tarea del día suena con tu sonido de inicio.\nSolo el siguiente punto: un diseño mínimo que puedes elegir cuando quieras, sin perder nada. Hoy muestra tu hilo, la fecha y un menú.\nArrastra una tarea a cualquier parte del día, incluso encima de otra: las tareas que se solapan hacen un pequeño nudo en el hilo.\nLa hora de dormir ahora es Desconexión. Los dos extremos de tu día son puntos, un sol y una luna; toca uno para cambiar su hora.\nLos iconos se rellenan solos: escribe «Gimnasio» y la tarea recibe una mancuerna, entre 524 iconos.';
+      'Alarma al despertar: actívala en Ajustes › Forma del día y tu hora de despertar suena los días que tienes planificados — como una alarma en Android y en iPhones con iOS 26, como notificación urgente en iPhones anteriores. Elige su sonido y posponer en Sonido y posponer, con una alarma de prueba. Nada suena hasta que la actives.\nSonidos: 48 sonidos de recordatorio que combinan bien. Elige uno para todas tus tareas o da a una tarea el suyo; tu primera tarea del día suena con tu sonido de inicio.\nSolo el siguiente punto: un diseño mínimo que puedes elegir cuando quieras, sin perder nada. Hoy muestra tu hilo, la fecha y un menú.\nArrastra una tarea a cualquier parte del día, incluso encima de otra: las tareas que se solapan hacen un pequeño nudo en el hilo.\nLa hora de dormir ahora es Desconexión. Los dos extremos de tu día son puntos, un sol y una luna; toca uno para cambiar su hora.\nLos iconos se rellenan solos: escribe «Gimnasio» y la tarea recibe una mancuerna, entre 524 iconos.';
 
   @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';

@@ -15,6 +15,9 @@ struct DottodayWidgets: WidgetBundle {
       AddTaskControl()
       StartFocusControl()
     }
+    if #available(iOS 26.0, *) {
+      WakeUpAlarmActivity()
+    }
   }
 }
 

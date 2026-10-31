@@ -5740,8 +5740,95 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifWakeUpBody => 'Good morning.';
 
   @override
+  String get settingsWakeUpOptions => 'Sound and snooze';
+
+  @override
+  String get wakeUpAlarmCaption => 'Alarm';
+
+  @override
+  String get wakeUpFixUpdate => 'How to update';
+
+  @override
+  String get wakeUpMoreOptions => 'More options';
+
+  @override
+  String get wakeUpRamp => 'Volume ramp';
+
+  @override
+  String get wakeUpRampDetail =>
+      'Starts quieter and rises to your alarm volume.';
+
+  @override
+  String get wakeUpRampOff => 'Off';
+
+  @override
+  String get wakeUpSnooze => 'Snooze';
+
+  @override
+  String get wakeUpSnoozeCaption => 'Snooze';
+
+  @override
+  String get wakeUpSnoozeDetail => 'Rings again a few minutes later.';
+
+  @override
+  String get wakeUpSnoozeLength => 'Snooze length';
+
+  @override
+  String get wakeUpSnoozeLimit => 'Snooze limit';
+
+  @override
+  String get wakeUpSnoozeNoLimit => 'No limit';
+
+  @override
+  String get wakeUpSnoozeRow => 'Snooze';
+
+  @override
+  String get wakeUpSoundCaption => 'Sound';
+
+  @override
+  String get wakeUpSoundRow => 'Alarm sound';
+
+  @override
+  String get wakeUpStop => 'I\'m up';
+
+  @override
+  String get wakeUpTestLookHere =>
+      'If it didn\'t ring, the line at the top says what\'s in the way.';
+
+  @override
+  String get wakeUpTierAlarmsOff =>
+      'Wake Up can ring like an alarm, but alarms are off for Dottoday in Settings.';
+
+  @override
+  String get wakeUpTierNeedsUpdate =>
+      'Your iPhone can\'t ring Wake Up like an alarm yet. That needs iOS 26.';
+
+  @override
+  String get wakeUpVary => 'Vary the sound';
+
+  @override
+  String get wakeUpVaryDetail =>
+      'A different alarm sound each day, so it stays easy to hear.';
+
+  @override
+  String wakeUpRampSeconds(int seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String wakeUpSnoozeTimes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count times',
+      one: 'Once',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get releaseNotes120 =>
-      'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android, as a time-sensitive notification on iPhone. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.';
+      'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android and on iPhones with iOS 26, as a time-sensitive notification on older iPhones. Pick its sound and snooze under Sound and snooze, and send yourself a test. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.';
 
   @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';

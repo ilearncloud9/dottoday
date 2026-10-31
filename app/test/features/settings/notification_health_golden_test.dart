@@ -119,6 +119,22 @@ void main() {
       HealthLevel.info,
       const AlarmCapabilities(AlarmTier.timeSensitive),
     ),
+    // iOS 26+ with alarms not allowed, and an iPhone that could update
+    // to it (W1b).
+    (
+      'wake_up_alarms_off',
+      TargetPlatform.iOS,
+      HealthLevel.info,
+      const AlarmCapabilities(AlarmTier.timeSensitive, [
+        AlarmBlocker.alarmsDenied,
+      ]),
+    ),
+    (
+      'wake_up_needs_update',
+      TargetPlatform.iOS,
+      HealthLevel.info,
+      const AlarmCapabilities(AlarmTier.timeSensitive, [AlarmBlocker.osTooOld]),
+    ),
   ]) {
     goldenMatrix(
       'settings_health_$name',

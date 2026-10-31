@@ -1,6 +1,7 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/live_activity/live_activity_sink.dart';
 import 'package:dottoday/data/live_activity/web_live_dot_providers.dart';
 import 'package:dottoday/data/notifications/health_providers.dart';
@@ -8,7 +9,9 @@ import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/notifications/os_notification_gateway.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/notifications/test_alarm.dart';
+import 'package:dottoday/data/notifications/wake_up_arming.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/snapshot/composite_snapshot_sink.dart';
 import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
@@ -18,6 +21,7 @@ import 'package:dottoday/data/widgets/home_widget_sink.dart';
 import 'package:dottoday/data/widgets/mac_status_item_sink.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
 import 'package:dottoday/data/writes/drift_write_use_case.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/notifications/notification_gateway.dart';
 import 'package:dottoday/domain/notifications/notification_planner.dart';
 import 'package:dottoday/domain/recurrence/materialiser.dart';
@@ -88,6 +92,11 @@ NotificationSync notificationSync(Ref ref) => NotificationSync(
   settings: ref.watch(settingsRepositoryProvider),
   testAlarmAt: () => TestAlarmStore(ref.read(appDatabaseProvider)).at(),
   subtasks: ref.watch(subtaskRepositoryProvider),
+  arming: WakeUpArming(
+    ref.watch(alarmGatewayProvider),
+    ref.watch(appDatabaseProvider),
+    minimal: () => readSimplified(ref, FeatureId.wakeUpAlarm),
+  ),
   ringsWakeUp: currentHealthPlatform().isPhone,
 );
 

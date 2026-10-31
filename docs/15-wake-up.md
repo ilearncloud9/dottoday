@@ -105,6 +105,14 @@ abstract interface class AlarmGateway {
 }
 ```
 
+**As built (M17.2, ADR-0017).**
+- The port lives in `lib/domain/notifications/alarm_capabilities.dart`.
+- Instead of `arm` / `disarm` / `events`, it has:
+  - `sync(alarms)`: makes the list the armed set, leaves a ringing or snoozed alarm alone, and returns the instants armed;
+  - `disarmAll()`, `test()` and `requestAuthorization()`.
+- The planner leaves out what `sync` armed, so a device that arms nothing rings on the notification path.
+- `events()` comes with `wake_up_days` in W2.
+
 `AlarmCapabilities` = `tier` (alarm / timeSensitive / headsUp / none), `blockers` (a sealed list: `osTooOld(required)`, `permissionDenied`, `fullScreenIntentRevoked`, `exactAlarmDenied`, `batteryOptimised`, `dndAlarmsBlocked`, `notAPhone`) and `fixAction` per blocker (a sealed intent the UI turns into a button). `WakeUpAlarm` = id, `fireAt` (civil wall-clock + tz, resolved to an instant at arm time, re-resolved on `TIMEZONE_CHANGED`), `soundId`, `snooze` (allowed, minutes, maxCount), `dismissal` (swipe / mission), `label`, `occurrenceId?`.
 
 **Wake Up state machine** (one per calendar day, persisted in Drift, `wake_up_days` table): `planned → armed → alerting → snoozed(n) → dismissed → started | skipped`. Transitions and who causes them:

@@ -27,9 +27,18 @@ void main() {
     expect(_manifest, contains('android.speech.RecognitionService'));
   });
 
+  // Only the Wake Up ringing screen shows over the lock screen (docs/15
+  // W1b): the time and two buttons, never the task list.
   test('no task list over the lock screen', () {
-    expect(_manifest, isNot(contains('showWhenLocked')));
-    expect(_manifest, isNot(contains('turnScreenOn')));
+    final activities = RegExp(
+      r'<activity\b[^>]*>',
+    ).allMatches(_manifest).map((m) => m[0]!).toList();
+    final locked = activities.where(
+      (a) => a.contains('showWhenLocked') || a.contains('turnScreenOn'),
+    );
+    expect(locked, hasLength(1));
+    expect(locked.single, contains('.alarms.WakeUpAlarmActivity'));
+    expect(locked.single, contains('android:exported="false"'));
   });
 
   test('clock and zone changes re-arm through the background task', () {

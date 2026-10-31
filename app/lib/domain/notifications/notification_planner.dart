@@ -62,7 +62,9 @@ final class NotificationPlanner {
   /// When [ringsWakeUp] (a phone) and [daily]'s `wakeUpAlarm` are on, each
   /// planned day's Wake Up rings loud (docs/15 W1), and that day's first
   /// dot, if it starts within [wakeUpQuietWindow] of it, is a normal
-  /// notification instead of a second alarm.
+  /// notification instead of a second alarm. A Wake Up whose instant is in
+  /// [armedWakeUps] already rings through `AlarmGateway` (W1b), so it is
+  /// left out here: it never rings twice.
   List<PlannedNotification> plan({
     required Iterable<Occurrence> occurrences,
     required String tzId,
@@ -76,6 +78,7 @@ final class NotificationPlanner {
     DateTime? testAlarmAtUtc,
     Set<String> withSteps = const {},
     bool ringsWakeUp = false,
+    Set<DateTime> armedWakeUps = const {},
   }) {
     final now = _clock.nowUtc();
     final end = now.add(horizon);
@@ -85,17 +88,7 @@ final class NotificationPlanner {
     // Sorted by id so collision probing (below) is deterministic.
     final live = occurrences.where(_alerts).toList()
       ..sort((a, b) => a.id.compareTo(b.id));
-    final wakeUps = ringsWakeUp && (daily?.wakeUpAlarm ?? false)
-        ? DayReminders.wakeUp(
-            settings: daily!,
-            location: location,
-            occurrences: live,
-            fromUtc: now,
-            toUtc: end,
-            used: usedIds,
-            startSound: startSound,
-          )
-        : const <PlannedNotification>[];
+    final wakeUps = _wakeUps(live, location, daily, usedIds, ringsWakeUp);
     bool nearWakeUp(DateTime at) => wakeUps.any(
       (w) => w.fireAtUtc.difference(at).abs() <= wakeUpQuietWindow,
     );
@@ -139,7 +132,7 @@ final class NotificationPlanner {
         );
       }
     }
-    planned.addAll(wakeUps);
+    planned.addAll(wakeUps.where((w) => !armedWakeUps.contains(w.fireAtUtc)));
     planned.addAll(
       _smallestSteps(live, withSteps, now, end, location, quietHours, usedIds),
     );
@@ -250,6 +243,39 @@ final class NotificationPlanner {
         for (final n in desired)
           if (pending[n.id] != n) n,
       ],
+    );
+  }
+
+  /// The Wake Up alarms [plan] would ring with the same inputs (docs/15
+  /// W1b): what `NotificationSync` hands `AlarmGateway`. Empty unless
+  /// [ringsWakeUp] and [daily]'s `wakeUpAlarm` are on.
+  List<PlannedNotification> wakeUps({
+    required Iterable<Occurrence> occurrences,
+    required String tzId,
+    required Settings daily,
+    bool ringsWakeUp = false,
+  }) {
+    final live = occurrences.where(_alerts).toList()
+      ..sort((a, b) => a.id.compareTo(b.id));
+    return _wakeUps(live, tz.getLocation(tzId), daily, {}, ringsWakeUp);
+  }
+
+  List<PlannedNotification> _wakeUps(
+    List<Occurrence> live,
+    tz.Location location,
+    Settings? daily,
+    Set<int> used,
+    bool ringsWakeUp,
+  ) {
+    if (!ringsWakeUp || daily == null || !daily.wakeUpAlarm) return const [];
+    final now = _clock.nowUtc();
+    return DayReminders.wakeUp(
+      settings: daily,
+      location: location,
+      occurrences: live,
+      fromUtc: now,
+      toUtc: now.add(horizon),
+      used: used,
     );
   }
 

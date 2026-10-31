@@ -5775,8 +5775,96 @@ class AppLocalizationsDe extends AppLocalizations {
   String get notifWakeUpBody => 'Guten Morgen.';
 
   @override
+  String get settingsWakeUpOptions => 'Ton und Schlummern';
+
+  @override
+  String get wakeUpAlarmCaption => 'Wecker';
+
+  @override
+  String get wakeUpFixUpdate => 'So aktualisierst du';
+
+  @override
+  String get wakeUpMoreOptions => 'Weitere Optionen';
+
+  @override
+  String get wakeUpRamp => 'Lauter werden';
+
+  @override
+  String get wakeUpRampDetail =>
+      'Beginnt leiser und wird bis zu deiner Weckerlautstärke lauter.';
+
+  @override
+  String get wakeUpRampOff => 'Aus';
+
+  @override
+  String get wakeUpSnooze => 'Schlummern';
+
+  @override
+  String get wakeUpSnoozeCaption => 'Schlummern';
+
+  @override
+  String get wakeUpSnoozeDetail =>
+      'Klingelt ein paar Minuten später noch einmal.';
+
+  @override
+  String get wakeUpSnoozeLength => 'Schlummerdauer';
+
+  @override
+  String get wakeUpSnoozeLimit => 'Höchstens';
+
+  @override
+  String get wakeUpSnoozeNoLimit => 'Unbegrenzt';
+
+  @override
+  String get wakeUpSnoozeRow => 'Schlummern';
+
+  @override
+  String get wakeUpSoundCaption => 'Ton';
+
+  @override
+  String get wakeUpSoundRow => 'Weckton';
+
+  @override
+  String get wakeUpStop => 'Bin wach';
+
+  @override
+  String get wakeUpTestLookHere =>
+      'Wenn nichts geklingelt hat, steht oben, was im Weg ist.';
+
+  @override
+  String get wakeUpTierAlarmsOff =>
+      'Aufstehen kann wie ein Wecker klingeln, aber Wecker sind für Dottoday in den Einstellungen aus.';
+
+  @override
+  String get wakeUpTierNeedsUpdate =>
+      'Dein iPhone kann Aufstehen noch nicht wie einen Wecker klingeln lassen. Dafür braucht es iOS 26.';
+
+  @override
+  String get wakeUpVary => 'Ton abwechseln';
+
+  @override
+  String get wakeUpVaryDetail =>
+      'Jeden Tag ein anderer Weckton, damit du ihn gut hörst.';
+
+  @override
+  String wakeUpRampSeconds(int seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String wakeUpSnoozeTimes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count-mal',
+      one: 'Einmal',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get releaseNotes120 =>
-      'Aufstehen-Wecker: Schalte ihn unter Einstellungen › Tagesform ein, und deine Aufstehzeit klingelt an geplanten Tagen — auf Android wie ein Wecker, auf dem iPhone als zeitkritische Mitteilung. Nichts klingelt, bevor du ihn einschaltest.\nTöne: 48 Erinnerungstöne, die gut zusammenpassen. Wähle einen für alle Aufgaben oder gib einer Aufgabe ihren eigenen; deine erste Aufgabe des Tages klingelt mit deinem Start-Ton.\nNur der nächste Punkt: ein minimales Layout, jederzeit wählbar, ohne dass etwas verloren geht. Heute zeigt deinen Faden, das Datum und ein Menü.\nZieh eine Aufgabe irgendwohin auf den Tag, auch auf eine andere: Überschneidungen knüpfen einen kleinen Knoten in den Faden.\nAus Schlafenszeit wird Abendruhe. Die beiden Enden deines Tages sind Punkte, eine Sonne und ein Mond; tipp einen an, um seine Zeit zu ändern.\nIcons füllen sich selbst: Schreib „Fitnessstudio“, und die Aufgabe bekommt eine Hantel — aus 524 Icons.';
+      'Aufstehen-Wecker: Schalte ihn unter Einstellungen › Tagesform ein, und deine Aufstehzeit klingelt an geplanten Tagen — auf Android und auf iPhones mit iOS 26 wie ein Wecker, auf älteren iPhones als zeitkritische Mitteilung. Ton und Schlummern wählst du unter Ton und Schlummern, mit einem Testwecker. Nichts klingelt, bevor du ihn einschaltest.\nTöne: 48 Erinnerungstöne, die gut zusammenpassen. Wähle einen für alle Aufgaben oder gib einer Aufgabe ihren eigenen; deine erste Aufgabe des Tages klingelt mit deinem Start-Ton.\nNur der nächste Punkt: ein minimales Layout, jederzeit wählbar, ohne dass etwas verloren geht. Heute zeigt deinen Faden, das Datum und ein Menü.\nZieh eine Aufgabe irgendwohin auf den Tag, auch auf eine andere: Überschneidungen knüpfen einen kleinen Knoten in den Faden.\nAus Schlafenszeit wird Abendruhe. Die beiden Enden deines Tages sind Punkte, eine Sonne und ein Mond; tipp einen an, um seine Zeit zu ändern.\nIcons füllen sich selbst: Schreib „Fitnessstudio“, und die Aufgabe bekommt eine Hantel — aus 524 Icons.';
 
   @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';

@@ -2,6 +2,7 @@
    *UsageDescription key in Runner/Info.plist needs a line here —
    test/policy/os_strings_test.dart fails CI otherwise. */
 
+"NSAlarmKitUsageDescription" = "Dottoday fait sonner votre heure de réveil comme une alarme les jours planifiés, même en mode Silence.";
 "NSCalendarsFullAccessUsageDescription" = "Dottoday affiche vos événements de calendrier sur votre fil, à côté de vos tâches.";
 "NSCalendarsUsageDescription" = "Dottoday affiche vos événements de calendrier sur votre fil, à côté de vos tâches.";
 "NSFaceIDUsageDescription" = "Dottoday utilise Face ID pour se déverrouiller lorsque vous activez le verrouillage.";

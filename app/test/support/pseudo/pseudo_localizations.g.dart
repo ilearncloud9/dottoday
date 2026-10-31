@@ -4533,6 +4533,79 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get notifWakeUpBody => pseudo(super.notifWakeUpBody);
 
   @override
+  String get settingsWakeUpOptions => pseudo(super.settingsWakeUpOptions);
+
+  @override
+  String get wakeUpAlarmCaption => pseudo(super.wakeUpAlarmCaption);
+
+  @override
+  String get wakeUpFixUpdate => pseudo(super.wakeUpFixUpdate);
+
+  @override
+  String get wakeUpMoreOptions => pseudo(super.wakeUpMoreOptions);
+
+  @override
+  String get wakeUpRamp => pseudo(super.wakeUpRamp);
+
+  @override
+  String get wakeUpRampDetail => pseudo(super.wakeUpRampDetail);
+
+  @override
+  String get wakeUpRampOff => pseudo(super.wakeUpRampOff);
+
+  @override
+  String get wakeUpSnooze => pseudo(super.wakeUpSnooze);
+
+  @override
+  String get wakeUpSnoozeCaption => pseudo(super.wakeUpSnoozeCaption);
+
+  @override
+  String get wakeUpSnoozeDetail => pseudo(super.wakeUpSnoozeDetail);
+
+  @override
+  String get wakeUpSnoozeLength => pseudo(super.wakeUpSnoozeLength);
+
+  @override
+  String get wakeUpSnoozeLimit => pseudo(super.wakeUpSnoozeLimit);
+
+  @override
+  String get wakeUpSnoozeNoLimit => pseudo(super.wakeUpSnoozeNoLimit);
+
+  @override
+  String get wakeUpSnoozeRow => pseudo(super.wakeUpSnoozeRow);
+
+  @override
+  String get wakeUpSoundCaption => pseudo(super.wakeUpSoundCaption);
+
+  @override
+  String get wakeUpSoundRow => pseudo(super.wakeUpSoundRow);
+
+  @override
+  String get wakeUpStop => pseudo(super.wakeUpStop);
+
+  @override
+  String get wakeUpTestLookHere => pseudo(super.wakeUpTestLookHere);
+
+  @override
+  String get wakeUpTierAlarmsOff => pseudo(super.wakeUpTierAlarmsOff);
+
+  @override
+  String get wakeUpTierNeedsUpdate => pseudo(super.wakeUpTierNeedsUpdate);
+
+  @override
+  String get wakeUpVary => pseudo(super.wakeUpVary);
+
+  @override
+  String get wakeUpVaryDetail => pseudo(super.wakeUpVaryDetail);
+
+  @override
+  String wakeUpRampSeconds(int seconds) =>
+      pseudo(super.wakeUpRampSeconds(seconds));
+
+  @override
+  String wakeUpSnoozeTimes(int count) => pseudo(super.wakeUpSnoozeTimes(count));
+
+  @override
   String get releaseNotes120 => pseudo(super.releaseNotes120);
 
   @override

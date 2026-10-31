@@ -21,6 +21,7 @@ import workmanager_apple
     WorkmanagerPlugin.setPluginRegistrantCallback { registry in
       GeneratedPluginRegistrant.register(with: registry)
       LiveActivityBridge.register(registry)
+      AlarmBridge.register(registry)
     }
     WorkmanagerPlugin.registerPeriodicTask(
       withIdentifier: "dottoday.refresh", earliestBeginInSeconds: NSNumber(value: 12 * 60 * 60))
@@ -39,6 +40,8 @@ import workmanager_apple
       IntentQueueBridge.shared.attach(to: registrar.messenger())
     }
     LiveActivityBridge.register(engineBridge.pluginRegistry)
+    // The Wake Up alarm on iOS 26+ (docs/15 W1b, ADR-0017).
+    AlarmBridge.register(engineBridge.pluginRegistry)
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "ThinkingBridge") {
       ThinkingBridge.register(registrar.messenger())
     }

@@ -1,5 +1,6 @@
 # Adds ios/Shared (the B6 App Intents, the action queue, the snapshot
-# patch, docs/09 M9.2; the Live Activity's state, views and intents, M9.3)
+# patch, docs/09 M9.2; the Live Activity's state, views and intents, M9.3;
+# the Wake Up alarm's AlarmKit code, M17.2)
 # to both the Runner app and the DottodayWidgets
 # extension, its Localizable.strings to both, and DotIntentsTests.swift to
 # RunnerTests. Idempotent. Run from app/:
@@ -10,11 +11,14 @@ require 'xcodeproj'
 SOURCES = %w[
   DotStore.swift SnapshotPatch.swift DotActions.swift DotIntents.swift DotTokens.swift
   TaskSymbols.swift DotActivity.swift LiveActivities.swift LiveActivityViews.swift Snapshot.swift
+  WakeUpAlarmKit.swift
 ].freeze
-# Extension-only files (the Live Activity's configuration, M9.3; controls, M9.5).
-EXTENSION_SOURCES = %w[DotLiveActivity.swift DotControls.swift].freeze
-# App-only files (Siri / Shortcuts phrases, M9.5: one provider per app).
-APP_SOURCES = %w[DotShortcuts.swift].freeze
+# Extension-only files (the Live Activity's configuration, M9.3; controls, M9.5;
+# the Wake Up alarm's countdown, M17.2).
+EXTENSION_SOURCES = %w[DotLiveActivity.swift DotControls.swift WakeUpAlarmActivity.swift].freeze
+# App-only files (Siri / Shortcuts phrases, M9.5: one provider per app; the
+# AlarmKit channel, M17.2).
+APP_SOURCES = %w[DotShortcuts.swift AlarmBridge.swift].freeze
 LANGUAGES = %w[en de fr es].freeze
 
 project = Xcodeproj::Project.open('ios/Runner.xcodeproj')
