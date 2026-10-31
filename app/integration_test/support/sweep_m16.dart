@@ -4,6 +4,7 @@ import 'package:dottoday/features/timeline/widgets/later_row.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -68,7 +69,7 @@ Future<void> sweepM16(
   // The first dot on screen opens its sheet, in its minimal form (a dot
   // scrolled off screen would take the tap elsewhere, e.g. a hint row).
   await tester.dragUntilVisible(
-    find.byType(TaskDot).hitTestable(),
+    find.byType(TaskDot).hitTestable().first,
     find.byType(DayCard).first,
     const Offset(0, 300),
   );
@@ -78,6 +79,8 @@ Future<void> sweepM16(
   await rest();
   await shot('minimal_task_sheet');
   closeSheets();
+  // The Mac/web panel isn't a route: Esc closes it.
+  await tester.sendKeyEvent(LogicalKeyboardKey.escape);
   await rest();
 
   router.go('/settings');
