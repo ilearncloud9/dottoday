@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
+import 'package:dottoday/domain/icon_guess/icon_guess.dart';
 import 'package:dottoday/domain/quick_add/add_draft.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
 import 'package:dottoday/domain/quick_add/quick_add_lexicon.dart';
@@ -249,7 +252,17 @@ class AddFlow extends _$AddFlow {
         Learned.none;
     return s.copyWith(
       text: text,
-      draft: s.draft.withTyped(typed).withHabit(habit).withLearned(learned),
+      draft: s.draft
+          .withTyped(typed)
+          .withHabit(habit)
+          .withLearned(learned)
+          // A pasted list is about to become several tasks, each with
+          // its own look (addFromText); one guess for all would mislead.
+          .withGuess(
+            const LineSplitter().convert(text).length > 1
+                ? null
+                : guessIcon(typed.title, language: s.language.name),
+          ),
     );
   }
 }

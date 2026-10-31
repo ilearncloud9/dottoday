@@ -70,6 +70,14 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
 - [F2.6] Time entry is always typeable; wheel/picker optional. One shared `TimeInput` component. (R-20)
 - [F2.7] Duration chips 15/30/45/60/90 + custom; range 5 min–24 h. (R-16)
 - [F2.8] "Add another" keeps the sheet open; multi-line paste → one task per non-empty line. (R-07)
+  Clarified (icon autofill): the title fills the icon and colour: "Gym" → dumbbell in the fitness colour,
+  "Dentist" → tooth in the health colour, in en/de/fr/es (English words work in every language). It is matched on the
+  device from `assets/design/task_icon_keywords.json` and the icon names (`domain/icon_guess/`); nothing
+  is sent anywhere. A picked icon or colour, or a matching habit's, always wins; no match keeps the plain
+  dot. Each pasted line, brain-dump line and Siri/Shortcuts task gets its own. The editor follows the
+  title only while the task's icon is still plain; a routine step on the plain icon takes its name's
+  icon on save. Generic verbs ("buy", "clean", "appointment") count only when nothing else matches.
+  (R-06, R-07)
 - [F2.9] Editor fields: title (required, ≤ 200 chars), notes (markdown-lite, links tappable, ≤ 10 000 chars), start, duration, colour, icon, subtasks (≤ 50), alerts (≤ 5), recurrence, pinned, travel-time buffer (0–180 min), energy level (optional, low/med/high). (R-02, R-17)
   Clarified in M8.4c: energy is three chips (Low · Medium · High) under ENERGY in the editor; tapping
   the picked chip clears it (no fourth "None" chip). An edit of a repeating task's energy asks the

@@ -184,6 +184,7 @@ final class DotIntents {
       defaultDurationMin: profile.settings.defaultDurationMin,
       untitled: _untitled(profile.locale),
       alerts: profile.settings.defaultAlerts,
+      language: profile.locale,
       ids: _FixedId(id),
     );
     final task = rows.occurrence;

@@ -1,7 +1,10 @@
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/domain/entities/alert.dart';
+import 'package:dottoday/domain/entities/icon_keys.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
+import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
+import 'package:dottoday/domain/icon_guess/icon_guess.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -19,7 +22,9 @@ typedef DraftRows = ({Series? series, Occurrence? occurrence});
 ///
 /// The length is the draft's, else [defaultDurationMin]; an empty title
 /// becomes [untitled]. [alerts] are Settings › Reminders' defaults, copied
-/// onto the new task (docs/09 M3f.2, R-10).
+/// onto the new task (docs/09 M3f.2, R-10). With a [language], the title
+/// picks the icon and colour ([guessIcon]), so each pasted line gets its
+/// own.
 ///
 /// ```dart
 /// rowsFromDraft(parse('Gym 7am every day'), ...).series!.rrule; // FREQ=DAILY
@@ -32,12 +37,18 @@ DraftRows rowsFromDraft(
   required int defaultDurationMin,
   required String untitled,
   List<Alert> alerts = const [],
+  String? language,
   IdGenerator ids = const UuidV7Generator(),
 }) {
   final duration = draft.durationMin ?? defaultDurationMin;
   final start = draft.startUtc;
   final rrule = draft.rrule;
   final title = draft.title.isEmpty ? untitled : draft.title;
+  final look = language == null
+      ? null
+      : guessIcon(draft.title, language: language);
+  final colorKey = look?.colorKey ?? defaultTaskColorKey;
+  final iconKey = look?.iconKey ?? defaultIconKey;
   if (rrule != null && start != null) {
     final local = tz.TZDateTime.from(start, tz.getLocation(tzId));
     return (
@@ -50,6 +61,8 @@ DraftRows rowsFromDraft(
         dtstartLocal: _isoLocal(local),
         tzId: tzId,
         alerts: alerts,
+        colorKey: colorKey,
+        iconKey: iconKey,
         createdAt: nowUtc,
         updatedAt: nowUtc,
       ),
@@ -67,6 +80,8 @@ DraftRows rowsFromDraft(
       tzId: tzId,
       durationMin: duration,
       alerts: alerts,
+      colorKey: colorKey,
+      iconKey: iconKey,
       createdAt: nowUtc,
       updatedAt: nowUtc,
     ),
