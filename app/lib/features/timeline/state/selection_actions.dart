@@ -104,7 +104,7 @@ Future<Result<UndoToken, AppFailure>> trashAll(
 });
 
 /// [picked] tasks of [day] as a new routine called [title] (11 C2 "Save
-/// as routine"): anchored at Wake Up or Bedtime when they start or end
+/// as routine"): anchored at Wake Up or Wind Down when they start or end
 /// there, else at the first task's time.
 Future<Routine> routineFromPicked(
   ProviderContainer ref,

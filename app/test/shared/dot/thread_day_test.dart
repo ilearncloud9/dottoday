@@ -132,7 +132,7 @@ void main() {
         },
     ];
 
-    test('tasks before Wake Up and after Bedtime fold beyond the caps', () {
+    test('tasks before Wake Up and after Wind Down fold beyond the caps', () {
       final e = _entries(clock.nowUtc(), [
         _o('early', 5, 30, 30),
         _o('dawn', 6, 0, 60),

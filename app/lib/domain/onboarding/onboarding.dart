@@ -30,7 +30,7 @@ enum OnboardingStep {
   ];
 
   /// Minimal's flow (docs/14 §4): step 0, then three steps — Wake Up and
-  /// Bedtime, reminders with the test alarm, the first task.
+  /// Wind Down, reminders with the test alarm, the first task.
   static const minimalFlow = [welcome, layout, dayShape, reminders, firstTask];
 
   /// The steps in order for the chosen layout.

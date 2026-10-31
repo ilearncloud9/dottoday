@@ -146,7 +146,7 @@ sealed class ThreadEntry {
   const ThreadEntry();
 }
 
-/// The sun cap ("Wake Up · 7:00") or moon cap ("Bedtime · 22:00").
+/// The sun cap ("Wake Up · 7:00") or moon cap ("Wind Down · 22:00").
 final class ThreadCap extends ThreadEntry {
   const ThreadCap.wake(this.time) : bedtime = false;
   const ThreadCap.bed(this.time) : bedtime = true;
@@ -163,7 +163,7 @@ final class ThreadTaskEntry extends ThreadEntry {
   final ThreadTask task;
 }
 
-/// Tasks wholly before Wake Up or from Bedtime on, folded into one row
+/// Tasks wholly before Wake Up or from Wind Down on, folded into one row
 /// above the sun cap or below the moon cap (docs/02 F1.15, R-17): they
 /// still render, without stretching the day's shape.
 final class ThreadOutside extends ThreadEntry {
@@ -176,7 +176,7 @@ final class ThreadOutside extends ThreadEntry {
   /// In start order.
   final List<ThreadTask> tasks;
 
-  /// After Bedtime (below the moon cap); false: before Wake Up.
+  /// After Wind Down (below the moon cap); false: before Wake Up.
   final bool bedtime;
 
   /// Starts unfolded: it holds the live task, which never hides.

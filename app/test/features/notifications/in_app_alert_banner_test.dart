@@ -120,7 +120,7 @@ void main() {
     expect(opened, isEmpty);
   });
 
-  testWidgets('Bedtime has Open and Later; Later only dismisses', (
+  testWidgets('Wind Down has Open and Later; Later only dismisses', (
     tester,
   ) async {
     await pump(tester);
@@ -129,7 +129,7 @@ void main() {
         .add(
           OsNotification(
             id: 13,
-            title: 'Bedtime',
+            title: 'Wind Down',
             body: 'Nothing planned for tomorrow yet.',
             fireAtUtc: _now,
             payload: encodeNotificationPayload(
@@ -151,7 +151,7 @@ void main() {
     expect(find.text('Snooze 10 min'), findsNothing);
     await tester.tap(find.text('Later'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Bedtime'), findsNothing);
+    expect(find.textContaining('Wind Down'), findsNothing);
     expect(opened, isEmpty);
   });
 

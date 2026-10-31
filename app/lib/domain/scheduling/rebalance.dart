@@ -7,7 +7,7 @@ import 'package:dottoday/domain/scheduling/slot_finder.dart';
 
 // Rebalance (11 C1, docs/09 M11.1): the rule pass behind the proposal.
 // Pure; nothing here writes. Rules in order: shift → shrink optional →
-// past a pin → past Bedtime to tomorrow (or the Inbox). Pinned tasks and
+// past a pin → past Wind Down to tomorrow (or the Inbox). Pinned tasks and
 // calendar events the shift may not carry never move.
 
 /// The three rule switches of `B-ios-rebalance`.
@@ -26,7 +26,7 @@ final class RebalanceOptions {
   /// Shorten optional tasks ([shrinkable]) before moving one off the day.
   final bool allowShrink;
 
-  /// Let the day run past Bedtime instead of moving tasks to tomorrow.
+  /// Let the day run past Wind Down instead of moving tasks to tomorrow.
   final bool pastBedtime;
 
   RebalanceOptions copyWith({
@@ -40,8 +40,8 @@ final class RebalanceOptions {
   );
 }
 
-/// Where a task pushed past Bedtime may go: tomorrow's blocks between its
-/// Wake Up and Bedtime.
+/// Where a task pushed past Wind Down may go: tomorrow's blocks between its
+/// Wake Up and Wind Down.
 final class RebalanceTomorrow {
   const RebalanceTomorrow({
     required this.blocks,
@@ -146,8 +146,8 @@ RebalancePlan rebalance(
   );
 }
 
-/// Where the last stretch must end: Bedtime (or a task already planned
-/// past it), none with Push past bedtime.
+/// Where the last stretch must end: Wind Down (or a task already planned
+/// past it), none with Push past Wind Down.
 DateTime? _dayLimit(
   List<Occurrence> queue,
   DateTime bedUtc,
@@ -255,7 +255,7 @@ final class _Pass {
     }
   }
 
-  /// Tasks past Bedtime: tomorrow's first free slot from Wake Up, else
+  /// Tasks past Wind Down: tomorrow's first free slot from Wake Up, else
   /// the Inbox.
   void sendOff(List<Occurrence> overflow, RebalanceTomorrow? tomorrow) {
     final taken = [...?tomorrow?.blocks];

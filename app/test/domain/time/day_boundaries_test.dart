@@ -34,6 +34,31 @@ void main() {
     expect(customDays(s), [Weekday.fri, Weekday.sat, Weekday.sun]);
   });
 
+  test('a cap edit for one weekday moves only that end of that day', () {
+    final s = withCapAt(
+      const Settings(),
+      Weekday.sat,
+      windDown: false,
+      minute: 9 * 60,
+      everyDay: false,
+    );
+    expect(
+      s.boundaryFor(Weekday.sat),
+      const TimeWindow(start: '09:00', end: '22:00'),
+    );
+    expect(s.boundaryFor(Weekday.fri), Settings.defaultDayBoundary);
+  });
+
+  test('a cap edit for every day moves the everyday window and the day', () {
+    var s = withDayWindow(const Settings(), Weekday.sat, _late);
+    s = withCapAt(s, Weekday.sat, windDown: true, minute: 1350, everyDay: true);
+    const moved = TimeWindow(start: '07:00', end: '22:30');
+    expect(s.boundaryFor(Weekday.mon), moved);
+    // Saturday rejoins every day.
+    expect(s.boundaryFor(Weekday.sat), moved);
+    expect(customDays(s), isEmpty);
+  });
+
   test('windowTime / windowMinutes, including 24:00', () {
     expect(windowTime(7 * 60), '07:00');
     expect(windowTime(1440), '24:00');

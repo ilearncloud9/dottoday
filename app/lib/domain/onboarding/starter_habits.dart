@@ -4,7 +4,7 @@ import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Where a starter habit sits in the day: after Wake Up, at a time of
-/// day, or before Bedtime (minutes).
+/// day, or before Wind Down (minutes).
 sealed class StarterAnchor {
   const StarterAnchor(this.minutes);
 
@@ -46,7 +46,7 @@ enum StarterHabit {
   final String colorKey;
   final String iconKey;
 
-  /// Its start on the day [shape] (that day's Wake Up and Bedtime).
+  /// Its start on the day [shape] (that day's Wake Up and Wind Down).
   DateTime startOn(DayShape shape, tz.Location zone) => switch (anchor) {
     AfterWake(:final minutes) => shape.wakeUtc.add(Duration(minutes: minutes)),
     BeforeBed(:final minutes) => shape.bedUtc.subtract(

@@ -5,7 +5,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 
 /// The day dot in every header (docs/10 §3 `DayDot`, `Main`): a conic ring
-/// filling from Wake Up to Bedtime with a small accent dot in the centre.
+/// filling from Wake Up to Wind Down with a small accent dot in the centre.
 ///
 /// [progress] comes from `DayShape.progressAt(clock.nowUtc())`.
 class DayDot extends StatelessWidget {

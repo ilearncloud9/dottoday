@@ -19,7 +19,7 @@ final class DayRoom {
   /// Nothing earlier is offered (now, on today).
   final DateTime fromUtc;
 
-  /// Wake Up and Bedtime.
+  /// Wake Up and Wind Down.
   final DateTime startUtc;
   final DateTime endUtc;
   final int snapMinutes;

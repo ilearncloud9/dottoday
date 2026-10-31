@@ -70,10 +70,10 @@ void main() {
     expect(chip.onPressed, isNull);
   });
 
-  testWidgets('the Bedtime switch reports at once', (tester) async {
+  testWidgets('the Wind Down switch reports at once', (tester) async {
     bool? bedtime;
     await _open(tester, const [], onBedtime: (v) => bedtime = v);
-    await tester.tap(find.text('Bedtime reminder'));
+    await tester.tap(find.text('Wind Down reminder'));
     await tester.pumpAndSettle();
     expect(bedtime, isTrue);
   });

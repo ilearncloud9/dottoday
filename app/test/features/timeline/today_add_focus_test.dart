@@ -34,6 +34,32 @@ void main() {
 
     expect(_fieldHasFocus(tester), isTrue);
   });
+
+  // The same check failed again (2026-10-29, 2026-10-31): after a reload
+  // on a slow runner, Today drew under an already open Add sheet and its
+  // key catcher's autofocus took the field's focus.
+  testWidgets('Today drawn under an open Add leaves its field focused', (
+    tester,
+  ) async {
+    final today = ValueNotifier(false);
+    addTearDown(today.dispose);
+    await pumpToday(
+      tester,
+      wrap: (screen) => ValueListenableBuilder(
+        valueListenable: today,
+        builder: (_, shown, _) => shown ? screen : const Placeholder(),
+      ),
+    );
+    unawaited(showAddFlow(tester.element(find.byType(Placeholder))));
+    await tester.pumpAndSettle();
+    expect(_fieldHasFocus(tester), isTrue);
+
+    today.value = true;
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TodayScreen), findsOneWidget);
+    expect(_fieldHasFocus(tester), isTrue);
+  });
 }
 
 bool _fieldHasFocus(WidgetTester tester) => tester

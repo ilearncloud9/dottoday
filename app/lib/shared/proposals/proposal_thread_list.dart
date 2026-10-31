@@ -12,7 +12,7 @@ import 'package:timezone/timezone.dart' as tz;
 /// is now — faded to [TaskAlpha.ghost] — with the proposed dot over it,
 /// outlined in the accent, then the times (old ones struck), the title, a
 /// chip saying what changes, and × to keep that dot as it is. Ends at
-/// Bedtime. The default body of `ProposalSheet`.
+/// Wind Down. The default body of `ProposalSheet`.
 class ProposalThreadList extends StatelessWidget {
   const ProposalThreadList({
     required this.proposal,
@@ -74,7 +74,7 @@ class ProposalThreadList extends StatelessWidget {
 }
 
 /// What the proposed day leaves free from its last dot (or from now) to
-/// Bedtime ("2 h 15 free", `B-ios-rebalance`); 0 for a proposal about one
+/// Wind Down ("2 h 15 free", `B-ios-rebalance`); 0 for a proposal about one
 /// task (Break it down), whose snapshot has no day around it.
 int _freeMinutes(Proposal proposal) {
   final after = proposal.after;

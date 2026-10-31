@@ -40,7 +40,7 @@ final class NotificationPlanner {
   final int? maxPending;
 
   /// The desired pending set, earliest first. With [daily] settings, one
-  /// Bedtime reminder per day (when `bedtimeReminder` is on) and the
+  /// Wind Down reminder per day (when `bedtimeReminder` is on) and the
   /// day-start summaries are added (see [DayReminders]).
   ///
   /// Only planned, scheduled, live occurrences alert. An occurrence with

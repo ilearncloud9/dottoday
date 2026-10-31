@@ -314,6 +314,16 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String threadBed(String time) => pseudo(super.threadBed(time));
 
   @override
+  String get capEditHint => pseudo(super.capEditHint);
+
+  @override
+  String get capEveryDay => pseudo(super.capEveryDay);
+
+  @override
+  String capEveryWeekday(String weekday) =>
+      pseudo(super.capEveryWeekday(weekday));
+
+  @override
   String threadFree(String duration) => pseudo(super.threadFree(duration));
 
   @override

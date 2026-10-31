@@ -15,7 +15,7 @@ final rebalanceNow = DateTime.utc(2026, 10, 21, 15, 25);
 /// 11:00 in New York, where the delay starts.
 final rebalanceFrom = DateTime.utc(2026, 10, 21, 15);
 
-/// Wake Up 7:00 and Bedtime 22:00 in New York.
+/// Wake Up 7:00 and Wind Down 22:00 in New York.
 final rebalanceWake = DateTime.utc(2026, 10, 21, 11);
 final rebalanceBed = DateTime.utc(2026, 10, 22, 2);
 

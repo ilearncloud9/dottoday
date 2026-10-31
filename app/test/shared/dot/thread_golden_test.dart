@@ -217,7 +217,7 @@ void main() {
   );
   goldenMatrix(
     'thread_smallest_step',
-    height: 420,
+    height: 460,
     build: (_) => const _Card(_smallest),
   );
   goldenMatrix(

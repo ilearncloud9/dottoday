@@ -1,6 +1,6 @@
 /// Whether Today shows the "Plan your inbox" card (docs/02 F3.3): the
 /// setting is on, the Inbox holds open tasks, it is [today] between Wake
-/// Up and Bedtime, and the card has not been put away today ([putAwayOn],
+/// Up and Wind Down, and the card has not been put away today ([putAwayOn],
 /// a local date). Once put away — Plan or Not now — it waits for the next
 /// day, so it shows at most once a day. All instants are UTC.
 ///

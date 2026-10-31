@@ -1,7 +1,7 @@
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 
-/// The Day review at Bedtime (docs/09 M3f.5): "3 of 7 done · move the rest
+/// The Day review at Wind Down (docs/09 M3f.5): "3 of 7 done · move the rest
 /// to tomorrow?".
 final class DayReview {
   const DayReview({

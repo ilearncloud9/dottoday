@@ -376,7 +376,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String threadBed(String time) {
-    return 'Hora de dormir · $time';
+    return 'Desconexión · $time';
+  }
+
+  @override
+  String get capEditHint => 'Cambiar la hora';
+
+  @override
+  String get capEveryDay => 'Todos los días';
+
+  @override
+  String capEveryWeekday(String weekday) {
+    return 'Cada $weekday';
   }
 
   @override
@@ -1187,7 +1198,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String durationFitsBedtime(String time) {
-    return 'Cabe antes de la hora de dormir, a las $time';
+    return 'Cabe antes de la desconexión, a las $time';
   }
 
   @override
@@ -1197,7 +1208,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String durationPastBedtime(String time) {
-    return 'Pasa de la hora de dormir, a las $time';
+    return 'Pasa de la desconexión, a las $time';
   }
 
   @override
@@ -1426,7 +1437,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsWakeUp => 'Despertar';
 
   @override
-  String get settingsBedtime => 'Hora de dormir';
+  String get settingsBedtime => 'Desconexión';
 
   @override
   String get settingsPerWeekday => 'Días distintos';
@@ -1521,7 +1532,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get settingsBedtimeReminder => 'Recordatorio para dormir';
+  String get settingsBedtimeReminder => 'Recordatorio de desconexión';
 
   @override
   String settingsBedtimeReminderDetail(String time) {
@@ -2228,7 +2239,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get alertsBedtime => 'Recordatorio para dormir';
+  String get alertsBedtime => 'Recordatorio de desconexión';
 
   @override
   String get alertsBedtimeDetail =>
@@ -3197,7 +3208,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get onboardingRemindersBody =>
-      'Dottoday te avisa cuando empieza una tarea y antes de dormir. Puedes cambiarlo cuando quieras en Ajustes.';
+      'Dottoday te avisa cuando empieza una tarea y antes de desconectar. Puedes cambiarlo cuando quieras en Ajustes.';
 
   @override
   String get onboardingTaskStarts => 'Antes de cada tarea';
@@ -3207,7 +3218,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Cuánto antes lo decides tú, en Ajustes';
 
   @override
-  String get onboardingBedtime => 'A la hora de dormir';
+  String get onboardingBedtime => 'Al desconectar';
 
   @override
   String get onboardingBedtimeDetail =>
@@ -3234,11 +3245,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get onboardingDoneBody =>
-      'Mañana, de Despertar a Hora de dormir. Añade cosas, muévelas o empieza por hoy.';
+      'Mañana, de Despertar a Desconexión. Añade cosas, muévelas o empieza por hoy.';
 
   @override
   String get onboardingDoneEmpty =>
-      'Mañana, de Despertar a Hora de dormir, es todo tuyo. Añade la primera tarea cuando quieras.';
+      'Mañana, de Despertar a Desconexión, es todo tuyo. Añade la primera tarea cuando quieras.';
 
   @override
   String get onboardingOpenToday => 'Abrir hoy';
@@ -3322,7 +3333,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get notifSnoozed => 'Recordatorio pospuesto';
 
   @override
-  String get notifBedtimeTitle => 'Hora de dormir';
+  String get notifBedtimeTitle => 'Desconexión';
 
   @override
   String notifBedtimeFirst(String title, String time) {
@@ -3356,7 +3367,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Suena como una alarma para la primera tarea del día y cuando empieza una rutina';
 
   @override
-  String get notifChannelSummary => 'Hora de dormir';
+  String get notifChannelSummary => 'Desconexión';
 
   @override
   String get notifChannelSummaryDetail => 'El vistazo nocturno a mañana';
@@ -3898,8 +3909,8 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count tareas después de la hora de dormir',
-      one: '1 tarea después de la hora de dormir',
+      other: '$count tareas después de la desconexión',
+      one: '1 tarea después de la desconexión',
     );
     return '$_temp0';
   }
@@ -4611,7 +4622,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get rebalanceAllowShrink => 'Permitir acortar lo opcional';
 
   @override
-  String get rebalancePastBedtime => 'Pasar de la hora de dormir';
+  String get rebalancePastBedtime => 'Pasar de la desconexión';
 
   @override
   String rebalanceRanOver(String title, String duration) {
@@ -4791,7 +4802,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get routineStartsWake => 'empieza al despertar';
 
   @override
-  String get routineEndsBed => 'termina a la hora de dormir';
+  String get routineEndsBed => 'termina en la desconexión';
 
   @override
   String routineStartsAt(String time) {
@@ -4847,7 +4858,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get routineAnchorWake => 'Al despertar';
 
   @override
-  String get routineAnchorBed => 'Terminando a la hora de dormir';
+  String get routineAnchorBed => 'Terminando en la desconexión';
 
   @override
   String get routineAnchorTime => 'A una hora';

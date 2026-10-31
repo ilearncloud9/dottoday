@@ -50,18 +50,18 @@ void main() {
     expect([for (final o in fit.overlaps) o.id], ['review']);
   });
 
-  test('after the last task: free until Bedtime', () {
+  test('after the last task: free until Wind Down', () {
     final fit = fitAt(day, _at(20), 30, dayEndUtc: bed);
     expect(fit.freeUntilUtc, bed);
     expect(fit.next, isNull);
   });
 
-  test('Bedtime before the next task bounds the room', () {
+  test('Wind Down before the next task bounds the room', () {
     final late = [_o('night', 23, 30)];
     expect(fitAt(late, _at(20), 30, dayEndUtc: bed).freeUntilUtc, bed);
   });
 
-  test('past Bedtime: the room is the slot itself or the next task', () {
+  test('past Wind Down: the room is the slot itself or the next task', () {
     expect(fitAt(day, _at(22, 30), 30, dayEndUtc: bed).freeUntilUtc, _at(23));
     expect(
       fitAt(

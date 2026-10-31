@@ -2,15 +2,15 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Shortest day the slider allows (Wake Up to Bedtime).
+/// Shortest day the slider allows (Wake Up to Wind Down).
 const int minAwakeMinutes = 60;
 
 /// DAY SHAPE (`A-ios-settings`, `A-android-settings`; also O2): a sun →
-/// moon track with a Wake Up and a Bedtime handle, the times under the
+/// moon track with a Wake Up and a Wind Down handle, the times under the
 /// handles and "15 h awake" between. Each handle is its own slider for
 /// keyboards (arrows ±[step], Page ±1 h) and screen readers.
 ///
-/// Minutes are after local midnight; Bedtime stops one [step] before
+/// Minutes are after local midnight; Wind Down stops one [step] before
 /// midnight (`HH:mm` windows end by 23:59, docs/05). A drag moves locally
 /// and calls [onChanged] once on release, so a drag is one settings write.
 class DayShapeSlider extends StatefulWidget {
@@ -35,7 +35,7 @@ class DayShapeSlider extends StatefulWidget {
   /// "15 h awake" for a length in minutes.
   final String Function(int minutes) awakeText;
 
-  /// "Wake Up", "Bedtime": the handles' names, read out.
+  /// "Wake Up", "Wind Down": the handles' names, read out.
   final String wakeLabel;
   final String bedLabel;
   final void Function(int wake, int bed) onChanged;

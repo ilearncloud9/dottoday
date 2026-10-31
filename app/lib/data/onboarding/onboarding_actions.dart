@@ -13,7 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// O3 (docs/09 M4.3): [picked] onto tomorrow's thread, within tomorrow's
-/// Wake Up and Bedtime, as one write (one Undo). Null when nothing was
+/// Wake Up and Wind Down, as one write (one Undo). Null when nothing was
 /// picked.
 Future<Result<UndoToken, AppFailure>?> plantStarters(
   ProviderContainer ref,

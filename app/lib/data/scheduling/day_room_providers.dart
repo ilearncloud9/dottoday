@@ -10,7 +10,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 part 'day_room_providers.g.dart';
 
-/// What is left of [date] between Wake Up and Bedtime, live, for fitting
+/// What is left of [date] between Wake Up and Wind Down, live, for fitting
 /// inbox items (docs/02 F3 "next free gap today, tomorrow morning") and
 /// for picking a time in Add (M3c.2). Shared by both features.
 /// Dependencies are read synchronously (see `timelineData`).

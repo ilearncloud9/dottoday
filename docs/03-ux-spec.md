@@ -191,7 +191,7 @@ Android's `LocaleManager` needs a platform channel and is not worth a new concep
 | Today · Inbox · Week · Month | Heute · Eingang · Woche · Monat | Aujourd'hui · Boîte de réception · Semaine · Mois | Hoy · Bandeja de entrada · Semana · Mes |
 | task · subtask | Aufgabe · Unteraufgabe | tâche · sous-tâche | tarea · subtarea |
 | thread · dot | Faden · Punkt | fil · point | hilo · punto |
-| Wake Up · Bedtime | Aufstehen · Schlafenszeit | Réveil · Coucher | Despertar · Hora de dormir |
+| Wake Up · Wind Down | Aufstehen · Schlafenszeit | Réveil · Coucher | Despertar · Hora de dormir |
 | Done · not done · skipped | Erledigt · nicht erledigt · übersprungen | Fait · pas fait · passée | Hecho · sin hacer · omitida |
 | alert · reminder | Hinweis · Erinnerung | alerte · rappel | aviso · recordatorio |
 | Shift the rest · Move | Rest verschieben · Verlegen | Décaler la suite · Déplacer | Desplazar el resto · Mover |

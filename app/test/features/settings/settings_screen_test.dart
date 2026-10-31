@@ -79,7 +79,7 @@ void main() {
     ]) {
       expect(find.text(text), findsWidgets, reason: text);
     }
-    // Wake Up / Bedtime under the handles and on their rows.
+    // Wake Up / Wind Down under the handles and on their rows.
     expect(find.text('07:00'), findsNWidgets(2));
     expect(find.text('22:00'), findsNWidgets(2));
   });
@@ -273,8 +273,8 @@ void main() {
     final handle = tester.ensureSemantics();
     final h = await pumpSettings(tester);
     await _tapRow(tester, 'Different days');
-    // The sheet's seven Bedtime handles, Monday first (week starts Monday).
-    final bedtimes = find.semantics.byPredicate((n) => n.label == 'Bedtime');
+    // The sheet's seven Wind Down handles, Monday first (week starts Monday).
+    final bedtimes = find.semantics.byPredicate((n) => n.label == 'Wind Down');
     expect(bedtimes.evaluate(), hasLength(7));
     tester.semantics.increase(bedtimes.at(5));
     await tester.pumpAndSettle();

@@ -23,7 +23,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 /// Minimal Settings (docs/14 §4): one page, eight rows, no sections —
-/// Layout, Wake Up, Bedtime, Remind me when a dot starts, the test alarm,
+/// Layout, Wake Up, Wind Down, Remind me when a dot starts, the test alarm,
 /// Calendars, Account and sync, Everything else…. Notification health
 /// shows above them only while something is off.
 class MinimalSettings extends ConsumerWidget {

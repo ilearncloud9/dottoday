@@ -18,7 +18,7 @@ import '../../support/timeline_fakes.dart';
 
 final _date = DateTime(2026, 10, 21);
 
-/// The latest Bedtime a day can have: the slider's last step (a window end
+/// The latest Wind Down a day can have: the slider's last step (a window end
 /// of `24:00` is not valid, `checkTimeWindow`), so the thread runs to the
 /// very end of the calendar day (docs/02 F1.16, R-14).
 const _lateDay = TimeWindow(start: '07:00', end: '23:55');
@@ -100,7 +100,7 @@ void main() {
   });
 
   // F1.16 (R-14): the bottom of the day renders — the 23:30 task and the
-  // Bedtime cap, with nothing blank or cut below them.
+  // Wind Down cap, with nothing blank or cut below them.
   goldenMatrix(
     'today_bottom',
     height: 844,
@@ -109,7 +109,7 @@ void main() {
     act: _toEnd,
   );
 
-  testWidgets('scrolled to the end, the last task and Bedtime show', (
+  testWidgets('scrolled to the end, the last task and Wind Down show', (
     tester,
   ) async {
     tester.view
@@ -119,7 +119,7 @@ void main() {
     await tester.pumpWidget(goldenApp(_today(), theme: 'light'));
     await tester.pumpAndSettle();
     await _toEnd(tester);
-    for (final text in ['Night walk', 'Bedtime · 11:55 PM']) {
+    for (final text in ['Night walk', 'Wind Down · 11:55 PM']) {
       expect(find.text(text).hitTestable(), findsOneWidget, reason: text);
     }
   });

@@ -26,7 +26,7 @@ enum Tappable { add, done, row, runningLate, headerMenu, later, dayNav }
 
 final _titles = {for (final o in demoDayRows(todayTestDate)) o.title};
 
-final _outside = RegExp(r'^\d+ tasks? (after Bedtime|before Wake Up)$');
+final _outside = RegExp(r'^\d+ tasks? (after Wind Down|before Wake Up)$');
 
 final _weekday = RegExp(
   r'^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), ',
@@ -109,7 +109,7 @@ Tappable? _classify(String label, Rect rect, Rect? add) => switch (label) {
   // The done circle reads the title; the dot reads it with its state.
   _ when _titles.contains(label) => Tappable.done,
   _ when _titles.any((t) => label.startsWith('$t, ')) => Tappable.row,
-  // The thread's own "N tasks after Bedtime" row (§3 "Today thread").
+  // The thread's own "N tasks after Wind Down" row (§3 "Today thread").
   _ when _outside.hasMatch(label) => Tappable.row,
   _ => null,
 };

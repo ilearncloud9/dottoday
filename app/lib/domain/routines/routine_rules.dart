@@ -8,7 +8,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 /// A routine saved from [picked] tasks of a day (11 C2 "Save as
 /// routine"): their order, lengths and gaps from the first start. It
-/// starts at Wake Up when the first task does, ends at Bedtime when the
+/// starts at Wake Up when the first task does, ends at Wind Down when the
 /// last one does, else keeps the first task's local time.
 ///
 /// ```dart
@@ -64,7 +64,7 @@ Routine routineFromSelection(
 }
 
 /// Where [routine]'s first step starts on [date] in [zone], given that
-/// day's [shape] (Wake Up / Bedtime).
+/// day's [shape] (Wake Up / Wind Down).
 DateTime routineStartUtc(
   Routine routine, {
   required DayShape shape,

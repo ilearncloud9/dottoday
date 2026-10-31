@@ -5,7 +5,7 @@ import 'package:dottoday/domain/scheduling/slot_finder.dart';
 import 'package:dottoday/domain/scheduling/unstick.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
 
-/// A day tasks may be placed on: its blocks between Wake Up and Bedtime.
+/// A day tasks may be placed on: its blocks between Wake Up and Wind Down.
 final class CarryDay {
   const CarryDay({
     required this.blocks,

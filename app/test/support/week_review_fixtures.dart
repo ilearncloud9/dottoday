@@ -31,7 +31,7 @@ const reviewSeriesId = '01928c3e-0000-7000-8000-0000000000a1';
 /// The review week's sunday.
 final reviewSunday = DateTime(2026, 10, 18);
 
-/// Sunday 25 Oct 2026, 22:30 in Berlin: past Bedtime, the review's day.
+/// Sunday 25 Oct 2026, 22:30 in Berlin: past Wind Down, the review's day.
 final reviewNow = DateTime.utc(2026, 10, 25, 21, 30);
 
 /// Thirty-four tasks over the review week.

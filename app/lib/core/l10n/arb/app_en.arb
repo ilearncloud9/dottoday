@@ -535,11 +535,28 @@
       }
     }
   },
-  "threadBed": "Bedtime · {time}",
+  "threadBed": "Wind Down · {time}",
   "@threadBed": {
     "description": "Moon cap at the end of the day's thread (Main).",
     "placeholders": {
       "time": {
+        "type": "String"
+      }
+    }
+  },
+  "capEditHint": "Change time",
+  "@capEditHint": {
+    "description": "Screen-reader hint on the Wake Up / Wind Down caps of the thread: a tap edits the time."
+  },
+  "capEveryDay": "Every day",
+  "@capEveryDay": {
+    "description": "Cap time sheet: the new Wake Up / Wind Down applies to every day."
+  },
+  "capEveryWeekday": "Every {weekday}",
+  "@capEveryWeekday": {
+    "description": "Cap time sheet: the new time applies only to this weekday, e.g. 'Every Saturday'.",
+    "placeholders": {
+      "weekday": {
         "type": "String"
       }
     }
@@ -645,7 +662,7 @@
   },
   "dayDotLabel": "Day {percent} % through",
   "@dayDotLabel": {
-    "description": "Screen-reader label of the day dot: share of Wake Up → Bedtime elapsed.",
+    "description": "Screen-reader label of the day dot: share of Wake Up → Wind Down elapsed.",
     "placeholders": {
       "percent": {
         "type": "int"
@@ -1804,9 +1821,9 @@
       }
     }
   },
-  "durationFitsBedtime": "Fits before Bedtime at {time}",
+  "durationFitsBedtime": "Fits before Wind Down at {time}",
   "@durationFitsBedtime": {
-    "description": "Duration sheet preview: nothing follows until Bedtime.",
+    "description": "Duration sheet preview: nothing follows until Wind Down.",
     "placeholders": {
       "time": {
         "type": "String"
@@ -1825,9 +1842,9 @@
       }
     }
   },
-  "durationPastBedtime": "Runs past Bedtime at {time}",
+  "durationPastBedtime": "Runs past Wind Down at {time}",
   "@durationPastBedtime": {
-    "description": "Duration sheet preview: the task ends after Bedtime.",
+    "description": "Duration sheet preview: the task ends after Wind Down.",
     "placeholders": {
       "time": {
         "type": "String"
@@ -2182,13 +2199,13 @@
   "@settingsWakeUp": {
     "description": "Settings row; also the DAY SHAPE handle's name."
   },
-  "settingsBedtime": "Bedtime",
+  "settingsBedtime": "Wind Down",
   "@settingsBedtime": {
     "description": "Settings row; also the DAY SHAPE handle's name."
   },
   "settingsPerWeekday": "Different days",
   "@settingsPerWeekday": {
-    "description": "Settings row: per-weekday Wake Up / Bedtime."
+    "description": "Settings row: per-weekday Wake Up / Wind Down."
   },
   "settingsSameEveryDay": "Same every day",
   "@settingsSameEveryDay": {
@@ -2318,13 +2335,13 @@
       }
     }
   },
-  "settingsBedtimeReminder": "Bedtime reminder",
+  "settingsBedtimeReminder": "Wind Down reminder",
   "@settingsBedtimeReminder": {
     "description": "Settings switch."
   },
   "settingsBedtimeReminderDetail": "At {time}, with tomorrow's first task",
   "@settingsBedtimeReminderDetail": {
-    "description": "Subtitle of Bedtime reminder.",
+    "description": "Subtitle of Wind Down reminder.",
     "placeholders": {
       "time": {
         "type": "String"
@@ -3362,13 +3379,13 @@
       }
     }
   },
-  "alertsBedtime": "Bedtime reminder",
+  "alertsBedtime": "Wind Down reminder",
   "@alertsBedtime": {
     "description": "Switch in the Alerts editor (applies to every day)."
   },
   "alertsBedtimeDetail": "Every evening, with tomorrow's first task",
   "@alertsBedtimeDetail": {
-    "description": "Under the Bedtime reminder switch."
+    "description": "Under the Wind Down reminder switch."
   },
   "alertsDone": "Done",
   "@alertsDone": {
@@ -4604,7 +4621,7 @@
   "@onboardingRemindersTitle": {
     "description": "Onboarding O4 question."
   },
-  "onboardingRemindersBody": "Dottoday reminds you when a task starts and before bedtime. You can change this any time in Settings.",
+  "onboardingRemindersBody": "Dottoday reminds you when a task starts and before Wind Down. You can change this any time in Settings.",
   "@onboardingRemindersBody": {
     "description": "Onboarding O4 explanation."
   },
@@ -4616,13 +4633,13 @@
   "@onboardingTaskStartsDetail": {
     "description": "Onboarding O4: under the task-start reminder."
   },
-  "onboardingBedtime": "At Bedtime",
+  "onboardingBedtime": "At Wind Down",
   "@onboardingBedtime": {
-    "description": "Onboarding O4: the Bedtime reminder switch."
+    "description": "Onboarding O4: the Wind Down reminder switch."
   },
   "onboardingBedtimeDetail": "Tomorrow's first task, so the morning has no surprises",
   "@onboardingBedtimeDetail": {
-    "description": "Onboarding O4: under the Bedtime switch."
+    "description": "Onboarding O4: under the Wind Down switch."
   },
   "onboardingAllow": "Allow notifications",
   "@onboardingAllow": {
@@ -4648,11 +4665,11 @@
   "@onboardingDoneTitle": {
     "description": "Onboarding O6 heading."
   },
-  "onboardingDoneBody": "Tomorrow, from Wake Up to Bedtime. Add to it, drag things around, or start with today.",
+  "onboardingDoneBody": "Tomorrow, from Wake Up to Wind Down. Add to it, drag things around, or start with today.",
   "@onboardingDoneBody": {
     "description": "Onboarding O6 explanation."
   },
-  "onboardingDoneEmpty": "Tomorrow, from Wake Up to Bedtime, is all yours. Add the first task whenever you like.",
+  "onboardingDoneEmpty": "Tomorrow, from Wake Up to Wind Down, is all yours. Add the first task whenever you like.",
   "@onboardingDoneEmpty": {
     "description": "Onboarding O6 when no habits were picked."
   },
@@ -4759,13 +4776,13 @@
   "@notifSnoozed": {
     "description": "Body of the reminder a Snooze sets."
   },
-  "notifBedtimeTitle": "Bedtime",
+  "notifBedtimeTitle": "Wind Down",
   "@notifBedtimeTitle": {
-    "description": "Title of the Bedtime reminder."
+    "description": "Title of the Wind Down reminder."
   },
   "notifBedtimeFirst": "Tomorrow starts with {title} at {time}.",
   "@notifBedtimeFirst": {
-    "description": "Bedtime reminder body.",
+    "description": "Wind Down reminder body.",
     "placeholders": {
       "title": {
         "type": "String"
@@ -4777,7 +4794,7 @@
   },
   "notifBedtimeFree": "Nothing planned for tomorrow yet.",
   "@notifBedtimeFree": {
-    "description": "Bedtime reminder body when tomorrow is empty."
+    "description": "Wind Down reminder body when tomorrow is empty."
   },
   "notifActionDone": "Done",
   "@notifActionDone": {
@@ -4807,7 +4824,7 @@
   "@notifChannelAlarmsDetail": {
     "description": "Android channel description for the alarm channel."
   },
-  "notifChannelSummary": "Bedtime",
+  "notifChannelSummary": "Wind Down",
   "@notifChannelSummary": {
     "description": "Android notification channel name."
   },
@@ -5187,8 +5204,8 @@
   "@pinDetail": {"description": "Subtitle of the Pinned toggle in the task sheet and editor."},
   "threadOutsideBefore": "{count, plural, =1{1 task before Wake Up} other{{count} tasks before Wake Up}}",
   "@threadOutsideBefore": {"description": "Folded 'outside hours' row above the Wake Up cap (docs/02 F1.15): tasks that end by Wake Up. Tapping unfolds them.", "placeholders": {"count": {"type": "int"}}},
-  "threadOutsideAfter": "{count, plural, =1{1 task after Bedtime} other{{count} tasks after Bedtime}}",
-  "@threadOutsideAfter": {"description": "Folded 'outside hours' row below the Bedtime cap (docs/02 F1.15): tasks that start at Bedtime or later. Tapping unfolds them.", "placeholders": {"count": {"type": "int"}}},
+  "threadOutsideAfter": "{count, plural, =1{1 task after Wind Down} other{{count} tasks after Wind Down}}",
+  "@threadOutsideAfter": {"description": "Folded 'outside hours' row below the Wind Down cap (docs/02 F1.15): tasks that start at Wind Down or later. Tapping unfolds them.", "placeholders": {"count": {"type": "int"}}},
   "shortcutPickTask": "Pick the previous or next task",
   "@shortcutPickTask": {"description": "Keyboard shortcut sheet, Today: ↑ / ↓ pick a task along the day (docs/02 F1.17)."},
   "shortcutNudgeTask": "Move the picked tasks 5 min earlier or later",
@@ -5863,9 +5880,9 @@
   "@rebalanceAllowShrink": {
     "description": "Rebalance rule chip: optional tasks may get shorter."
   },
-  "rebalancePastBedtime": "Push past bedtime",
+  "rebalancePastBedtime": "Push past Wind Down",
   "@rebalancePastBedtime": {
-    "description": "Rebalance rule chip: let the day run past Bedtime instead of moving tasks to tomorrow."
+    "description": "Rebalance rule chip: let the day run past Wind Down instead of moving tasks to tomorrow."
   },
   "rebalanceRanOver": "{title} ran over by {duration} · here's a plan",
   "@rebalanceRanOver": {
@@ -5958,8 +5975,8 @@
   "@routineSummary": {"description": "Routine card summary, e.g. '4 steps · 1 h 15 · starts at Wake Up'.", "placeholders": {"steps": {"type": "String", "example": "4 steps"}, "duration": {"type": "String", "example": "1 h 15"}, "anchor": {"type": "String", "example": "starts at Wake Up"}}},
   "routineStartsWake": "starts at Wake Up",
   "@routineStartsWake": {"description": "Routine anchor: first step at Wake Up."},
-  "routineEndsBed": "ends at Bedtime",
-  "@routineEndsBed": {"description": "Routine anchor: last step ends at Bedtime."},
+  "routineEndsBed": "ends at Wind Down",
+  "@routineEndsBed": {"description": "Routine anchor: last step ends at Wind Down."},
   "routineStartsAt": "starts at {time}",
   "@routineStartsAt": {"description": "Routine anchor: a fixed local time.", "placeholders": {"time": {"type": "String", "example": "5:30 PM"}}},
   "routineDropToday": "Drop on today",
@@ -5990,7 +6007,7 @@
   "@routineAnchorLabel": {"description": "Editor caption above the anchor choice."},
   "routineAnchorWake": "At Wake Up",
   "@routineAnchorWake": {"description": "Anchor choice."},
-  "routineAnchorBed": "Ending at Bedtime",
+  "routineAnchorBed": "Ending at Wind Down",
   "@routineAnchorBed": {"description": "Anchor choice."},
   "routineAnchorTime": "At a time",
   "@routineAnchorTime": {"description": "Anchor choice."},
@@ -6079,7 +6096,7 @@
   "proposalOverlaps": "already here · overlaps",
   "@proposalOverlaps": {"description": "Proposal chip on an existing task a new one would overlap; it stays as it is (routine drop, M11.4)."},
   "weekReviewTitle": "This week",
-  "@weekReviewTitle": {"description": "Weekly review (11 D1): sheet title, Today ⋯ menu item and Bedtime prompt caption."},
+  "@weekReviewTitle": {"description": "Weekly review (11 D1): sheet title, Today ⋯ menu item and Wind Down prompt caption."},
   "weekReviewDates": "{from} – {to}",
   "@weekReviewDates": {"description": "Weekly review: the week's first and last day.", "placeholders": {"from": {"type": "String", "example": "Oct 18"}, "to": {"type": "String", "example": "Oct 24"}}},
   "weekReviewDotCount": "{done}/{total}",
@@ -6129,9 +6146,9 @@
   "weekReviewNoStreaks": "No streaks here — just what happened.",
   "@weekReviewNoStreaks": {"description": "Weekly review footer: states the no-streak principle (11 D). The one string allowed to name streaks, to say there are none."},
   "weekPromptDetail": "Your week in seven dots",
-  "@weekPromptDetail": {"description": "Bedtime prompt on the week's last day: what the weekly review shows."},
+  "@weekPromptDetail": {"description": "Wind Down prompt on the week's last day: what the weekly review shows."},
   "weekPromptAction": "See the week",
-  "@weekPromptAction": {"description": "Bedtime prompt on the week's last day: open the weekly review."},
+  "@weekPromptAction": {"description": "Wind Down prompt on the week's last day: open the weekly review."},
   "lowEnergyMode": "Low-energy mode",
   "@lowEnergyMode": {"description": "Low-energy mode (11 D2): Today ⋯ item and Settings › Planning switch title."},
   "lowEnergyTurnOff": "Turn off low-energy mode",

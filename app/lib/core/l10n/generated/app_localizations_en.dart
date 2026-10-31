@@ -375,7 +375,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String threadBed(String time) {
-    return 'Bedtime · $time';
+    return 'Wind Down · $time';
+  }
+
+  @override
+  String get capEditHint => 'Change time';
+
+  @override
+  String get capEveryDay => 'Every day';
+
+  @override
+  String capEveryWeekday(String weekday) {
+    return 'Every $weekday';
   }
 
   @override
@@ -1184,7 +1195,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String durationFitsBedtime(String time) {
-    return 'Fits before Bedtime at $time';
+    return 'Fits before Wind Down at $time';
   }
 
   @override
@@ -1194,7 +1205,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String durationPastBedtime(String time) {
-    return 'Runs past Bedtime at $time';
+    return 'Runs past Wind Down at $time';
   }
 
   @override
@@ -1423,7 +1434,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsWakeUp => 'Wake Up';
 
   @override
-  String get settingsBedtime => 'Bedtime';
+  String get settingsBedtime => 'Wind Down';
 
   @override
   String get settingsPerWeekday => 'Different days';
@@ -1518,7 +1529,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get settingsBedtimeReminder => 'Bedtime reminder';
+  String get settingsBedtimeReminder => 'Wind Down reminder';
 
   @override
   String settingsBedtimeReminderDetail(String time) {
@@ -2224,7 +2235,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get alertsBedtime => 'Bedtime reminder';
+  String get alertsBedtime => 'Wind Down reminder';
 
   @override
   String get alertsBedtimeDetail =>
@@ -3187,7 +3198,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingRemindersBody =>
-      'Dottoday reminds you when a task starts and before bedtime. You can change this any time in Settings.';
+      'Dottoday reminds you when a task starts and before Wind Down. You can change this any time in Settings.';
 
   @override
   String get onboardingTaskStarts => 'Before each task';
@@ -3197,7 +3208,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'How early is up to you, in Settings';
 
   @override
-  String get onboardingBedtime => 'At Bedtime';
+  String get onboardingBedtime => 'At Wind Down';
 
   @override
   String get onboardingBedtimeDetail =>
@@ -3224,11 +3235,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingDoneBody =>
-      'Tomorrow, from Wake Up to Bedtime. Add to it, drag things around, or start with today.';
+      'Tomorrow, from Wake Up to Wind Down. Add to it, drag things around, or start with today.';
 
   @override
   String get onboardingDoneEmpty =>
-      'Tomorrow, from Wake Up to Bedtime, is all yours. Add the first task whenever you like.';
+      'Tomorrow, from Wake Up to Wind Down, is all yours. Add the first task whenever you like.';
 
   @override
   String get onboardingOpenToday => 'Open today';
@@ -3312,7 +3323,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifSnoozed => 'Snoozed reminder';
 
   @override
-  String get notifBedtimeTitle => 'Bedtime';
+  String get notifBedtimeTitle => 'Wind Down';
 
   @override
   String notifBedtimeFirst(String title, String time) {
@@ -3346,7 +3357,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Rings like an alarm for the first task of your day and when a routine starts';
 
   @override
-  String get notifChannelSummary => 'Bedtime';
+  String get notifChannelSummary => 'Wind Down';
 
   @override
   String get notifChannelSummaryDetail => 'The nightly look at tomorrow';
@@ -3882,8 +3893,8 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count tasks after Bedtime',
-      one: '1 task after Bedtime',
+      other: '$count tasks after Wind Down',
+      one: '1 task after Wind Down',
     );
     return '$_temp0';
   }
@@ -4591,7 +4602,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rebalanceAllowShrink => 'Allow shrinking optional';
 
   @override
-  String get rebalancePastBedtime => 'Push past bedtime';
+  String get rebalancePastBedtime => 'Push past Wind Down';
 
   @override
   String rebalanceRanOver(String title, String duration) {
@@ -4771,7 +4782,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineStartsWake => 'starts at Wake Up';
 
   @override
-  String get routineEndsBed => 'ends at Bedtime';
+  String get routineEndsBed => 'ends at Wind Down';
 
   @override
   String routineStartsAt(String time) {
@@ -4826,7 +4837,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineAnchorWake => 'At Wake Up';
 
   @override
-  String get routineAnchorBed => 'Ending at Bedtime';
+  String get routineAnchorBed => 'Ending at Wind Down';
 
   @override
   String get routineAnchorTime => 'At a time';

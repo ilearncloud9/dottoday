@@ -34,7 +34,7 @@ final class HintSignals {
   /// Tasks finished more than [overrunMinutes] after plan this week.
   final int overrunsThisWeek;
 
-  /// Never inside Focus, a Bedtime review or low-energy mode (§5).
+  /// Never inside Focus, a Wind Down review or low-energy mode (§5).
   final bool inFocus;
   final bool inBedtimeReview;
   final bool lowEnergy;
@@ -58,7 +58,7 @@ const overrunMinutes = 20;
 const overrunsForHint = 3;
 
 /// At most one hint per local calendar day, each at most twice ever,
-/// never after *Not now*, never in Focus, a Bedtime review or low-energy
+/// never after *Not now*, never in Focus, a Wind Down review or low-energy
 /// mode (docs/14 §5). Pure: [nowUtc] comes from the injected Clock.
 ///
 /// A hint already shown today keeps showing until dismissed; otherwise the

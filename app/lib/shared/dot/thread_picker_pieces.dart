@@ -29,7 +29,7 @@ final class PickerBlock {
 }
 
 /// The whole day at picker scale: dotted thread, neighbours as 22 px dots
-/// with their segments, hour labels and the Bedtime cap. Decorative: the
+/// with their segments, hour labels and the Wind Down cap. Decorative: the
 /// picker speaks for it.
 class PickerDay extends StatelessWidget {
   const PickerDay({
@@ -67,7 +67,7 @@ class PickerDay extends StatelessWidget {
     );
   }
 
-  /// Hour labels (none too close to Bedtime) and the Bedtime cap, each
+  /// Hour labels (none too close to Wind Down) and the Wind Down cap, each
   /// centred on its minute.
   List<Widget> _labels(DotTheme t, TextStyle label, double half) {
     Widget at(int minute, Widget child) => Positioned(

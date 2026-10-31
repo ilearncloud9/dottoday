@@ -19,8 +19,9 @@ const _everything = '/settings/everything';
 const reach = <FeatureId, Reach>{
   FeatureId.macWeekMonth: (from: More.showEverything, taps: 1, route: '/week'),
   FeatureId.recurrenceEditor: (from: More.sheetMore, taps: 1, route: '/today'),
-  // Not built: the thread ends at the Bedtime cap either way.
+  // Not built: the thread ends at the Wind Down cap either way.
   FeatureId.windDown: (from: More.showEverything, taps: 0, route: '/today'),
+  FeatureId.capTimeEdit: (from: More.showEverything, taps: 0, route: '/today'),
   FeatureId.export: (
     from: More.everythingElse,
     taps: 1,

@@ -33,7 +33,7 @@ void main() {
     expect(_shows(open: 0), isFalse);
   });
 
-  test('not before Wake Up nor from Bedtime', () {
+  test('not before Wake Up nor from Wind Down', () {
     expect(_shows(now: _wake.subtract(const Duration(minutes: 1))), isFalse);
     expect(_shows(now: _bed), isFalse);
   });

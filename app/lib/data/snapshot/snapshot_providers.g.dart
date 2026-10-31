@@ -8,18 +8,18 @@ part of 'snapshot_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The Bedtime write of the day snapshot (docs/09 M9.1).
+/// The Wind Down write of the day snapshot (docs/09 M9.1).
 
 @ProviderFor(bedtimeSnapshot)
 final bedtimeSnapshotProvider = BedtimeSnapshotProvider._();
 
-/// The Bedtime write of the day snapshot (docs/09 M9.1).
+/// The Wind Down write of the day snapshot (docs/09 M9.1).
 
 final class BedtimeSnapshotProvider
     extends
         $FunctionalProvider<BedtimeSnapshot, BedtimeSnapshot, BedtimeSnapshot>
     with $Provider<BedtimeSnapshot> {
-  /// The Bedtime write of the day snapshot (docs/09 M9.1).
+  /// The Wind Down write of the day snapshot (docs/09 M9.1).
   BedtimeSnapshotProvider._()
     : super(
         from: null,

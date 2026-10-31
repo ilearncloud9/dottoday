@@ -38,15 +38,16 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Inbox | built | Simplified | One "Later (3)" row at the end of the thread; no tab |
 | Move, reorder, drag | built | Shown | Unchanged |
 | Shift the rest / Running late | built | Simplified | One button on the live dot; before/after preview, Accept or Discard |
-| Wake Up / Bedtime | built | Shown | Set once in onboarding; never on Today |
-| Wind Down sleep block | built | Hidden | Thread ends at Bedtime; no sleep segment drawn |
+| Wake Up / Wind Down | built | Shown | Set once in onboarding; never on Today |
+| Tap a Wake Up / Wind Down cap to change its time | built | Hidden | The caps stay plain labels; the times change in onboarding or Settings (owner, 2026-10-31: Wind Down rename and tappable caps) |
+| Wind Down sleep block | built | Hidden | Thread ends at Wind Down; no sleep segment drawn |
 | Notifications + sound library | built | Simplified | One switch "Remind me when a dot starts", one default tone; library under More |
-| Bedtime review, daily | built | Simplified | One card: "3 things left — tomorrow or Later?"; one tap, then the snapshot writes |
+| Wind Down review, daily | built | Simplified | One card: "3 things left — tomorrow or Later?"; one tap, then the snapshot writes |
 | Sign-in and sync | built | Shown | Silent; one Settings row |
 | Calendar import | built | Simplified | Connected calendars draw as dots; calendar management under More |
 | Export | built | Hidden | Settings › More |
 | Light/dark, language | built | Shown | Follow the device; no setting shown |
-| Onboarding | built | Simplified | Mode choice, then three steps: Wake Up/Bedtime, reminders + test alarm, first task |
+| Onboarding | built | Simplified | Mode choice, then three steps: Wake Up/Wind Down, reminders + test alarm, first task |
 | A0 alarms + Notification health | M6.5 | Shown | A0 defaults as specified; health panel shows as a banner only when something is off |
 | B1 actual timestamps | M6.5 | Shown | Invisible; recorded on tap and Done exactly as in full mode |
 | B2 subtask durations | M6.5 | Hidden | Appear only once Break it down has been used on that task |
@@ -107,7 +108,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Task sheet extras: +15, Shift the rest, Move, Edit, Alerts, Sound, Travel, Pin, calendar line | M3b–M15 | Hidden | Under the sheet's More, in today's sheet layout |
 | Task icon library picker | ADR-0013 | Hidden | Under the sheet's More with colour; Add uses the default dot |
 | Sounds page, task Sound row, Start and Done sounds | M15 | Hidden | Sounds play exactly as set (defaults for new users); pickers under Everything else |
-| Quiet hours, Bedtime reminder, Day summary | M5–M6.5 | Hidden | Keep running as set; under Everything else |
+| Quiet hours, Wind Down reminder, Day summary | M5–M6.5 | Hidden | Keep running as set; under Everything else |
 | Day shape extras: per-weekday times, 12/24 h, week start | M3d | Hidden | Under Everything else; minimal rows 2–3 edit the "same every day" times |
 | Planning settings: default duration, snapping, shift default, roll over unfinished, show free time, nudges, low-energy row | M3d–M12.2 | Hidden | Values keep applying; under Everything else |
 | Accent colour | M3d | Hidden | A stored accent keeps applying |
@@ -127,10 +128,10 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 - *Today thread.* Since ADR-0015 a dot looks the same before and after Done; a task is marked done by its row's `DoneCircle` (filled, title struck), and tapping the dot opens the task. Minimal keeps this; "past dots fade" is withdrawn.
 - *Week strip.* The strip's own 8 px completion dots are hidden too, not just the month's: both are done ratios.
 - *Mac Week / Month.* The Mac View menu already lists Week and Month; minimal removes Week from the rail only.
-- *Task sheet.* Tomorrow and Later reuse the Bedtime review's "Move to tomorrow" / "Send to Inbox" actions; Delete reuses the editor footer's delete (its confirm and Undo unchanged).
+- *Task sheet.* Tomorrow and Later reuse the Wind Down review's "Move to tomorrow" / "Send to Inbox" actions; Delete reuses the editor footer's delete (its confirm and Undo unchanged).
 - *Shift the rest / Running late.* Minimal's live row shows Done and Running late (the existing sheet); +15 and Shift the rest move under the sheet's More.
 - *Inbox.* The Later row is `LaterRow`, one quiet row (tray glyph, "Later · 3") that opens the Inbox and takes a dragged task (ADR-0016); low-energy's "Later" pile is today's remaining tasks, not the Inbox.
-- *Wind Down sleep block.* Not built: the thread already ends at the Bedtime cap and draws no sleep segment. The row stays as a no-op.
+- *Wind Down sleep block.* Not built: the thread already ends at the Wind Down cap and draws no sleep segment. The row stays as a no-op.
 - *Notifications.* Minimal row 4 maps on/off onto the existing default alert ("at start" / "none"); no new notification setting.
 - *Light/dark, language.* Hidden settings keep their stored values; nothing is reset.
 - *B4 Brain dump.* Add already splits a pasted list into tasks directly (R-07). In minimal, several lines route to Brain dump's planner and open its `ProposalSheet`.
@@ -154,7 +155,7 @@ Five screens change; everything else is reached through them. All are the Concep
 
 1. Layout — Minimal / Full (the switch, always first)
 2. Wake Up
-3. Bedtime
+3. Wind Down
 4. Remind me when a dot starts — on/off
 5. Send me a test alarm
 6. Calendars — connect
@@ -163,7 +164,7 @@ Five screens change; everything else is reached through them. All are the Concep
 
 Notification health (A0) is not a row; it appears as a banner above row 1 only when the OS state is wrong.
 
-**Onboarding.** Step 0 (render `C-ios-onboarding-mode.png`, owner 2026-10-31) shows the day dot, asks one question ("How much do you want to see?", "You can change this any time, from the top of Settings.") with two radio cards, each with a sketch of its thread: *Just the next dot* ("What's now and what's next. Add, do, done. Nothing to set up.") and *The full planner* ("The whole thread, week and month, routines, reviews, widgets and every setting."). Continue is pinned at the bottom with the flow's step dots under it; step 0 has no top bar. Minimal then runs three steps: Wake Up and Bedtime, reminders permission with the test alarm, first task. Full runs the existing O1–O4 flow. Either way the choice is one tap to undo later.
+**Onboarding.** Step 0 (render `C-ios-onboarding-mode.png`, owner 2026-10-31) shows the day dot, asks one question ("How much do you want to see?", "You can change this any time, from the top of Settings.") with two radio cards, each with a sketch of its thread: *Just the next dot* ("What's now and what's next. Add, do, done. Nothing to set up.") and *The full planner* ("The whole thread, week and month, routines, reviews, widgets and every setting."). Continue is pinned at the bottom with the flow's step dots under it; step 0 has no top bar. Minimal then runs three steps: Wake Up and Wind Down, reminders permission with the test alarm, first task. Full runs the existing O1–O4 flow. Either way the choice is one tap to undo later.
 
 ## 5. Entering, leaving, revealing
 
@@ -171,7 +172,7 @@ The mode is chosen in onboarding step 0, changed in two places, and overruled by
 
 **Where the switch lives.** Settings row 1 (both modes) and the Today header menu as *Show everything* / *Show less*. Nowhere else: no banner, no onboarding re-prompt, no "try full mode" nudge after N days.
 
-**Progressive reveal.** Hidden features earn their way onto the screen through a trigger, as a single quiet row in context (the same component as B3 Unstick's row), never a modal or a toast. Fixed budget: one hint per calendar day, each hint at most twice ever, *Not now* dismisses forever. Hints never fire inside Focus, in a Bedtime review, or while low-energy mode is on.
+**Progressive reveal.** Hidden features earn their way onto the screen through a trigger, as a single quiet row in context (the same component as B3 Unstick's row), never a modal or a toast. Fixed budget: one hint per calendar day, each hint at most twice ever, *Not now* dismisses forever. Hints never fire inside Focus, in a Wind Down review, or while low-energy mode is on.
 
 | Trigger | Hint row | Reveals |
 | --- | --- | --- |
@@ -213,7 +214,7 @@ Placement, revised 30 Oct 2026: M1–M15 are on main (M13 learning reveal, M14 v
 
 **Acceptance criteria for M16**
 
-- [x] Widget test enumerates every tappable control on minimal Today and asserts the set is exactly {Add, Done (each row's `DoneCircle` and the live row's Done), task row → sheet, Running late, header menu, Later row, day swipe and week-strip day} (owner, 2026-10-30: ADR-0015 put a done circle on every row and made rows open their sheet). As built, day navigation also counts the date title and the sheet's pull handle (both open the month), and a task row also counts the thread's own "N tasks after Bedtime" row (`test/minimal_mode/minimal_today_test.dart`)
+- [x] Widget test enumerates every tappable control on minimal Today and asserts the set is exactly {Add, Done (each row's `DoneCircle` and the live row's Done), task row → sheet, Running late, header menu, Later row, day swipe and week-strip day} (owner, 2026-10-30: ADR-0015 put a done circle on every row and made rows open their sheet). As built, day navigation also counts the date title and the sheet's pull handle (both open the month), and a task row also counts the thread's own "N tasks after Wind Down" row (`test/minimal_mode/minimal_today_test.dart`)
 - [x] Property test: for any seeded database, `full → minimal → full` leaves every table byte-identical
 - [x] Policy test: every `FeatureId` has a row; every `hidden` feature is reachable within two taps from a *More* row (traversal test over the route table). The *More* rows are Settings › Everything else…, the task sheet's and Add's More, and the header menu's Show everything (owner, 2026-10-30: weekly review, the journal and Search have no Settings path; Everything else… gains a Search row)
 - [x] Golden matrix: 5 minimal screens × light/dark × largest text scale × RTL
@@ -227,4 +228,4 @@ Placement, revised 30 Oct 2026: M1–M15 are on main (M13 learning reveal, M14 v
 - [x] Name in the UI: "Minimal", "Simple", or "Just today"? Proposal: no name, just the two card titles and the Settings row *Layout: Minimal / Full*
 - [x] One layout per account (synced) or per device? Proposal: per account, with the Mac free to show Week/Month in its View menu either way
 - [x] Should the Mac in minimal mode hide Week and Month entirely, or keep them one click away? Proposal: one click away under View
-- [x] Does the Bedtime review stay in minimal as the one-card version, or go hidden? Proposal: stay, because "tomorrow or Later?" is the one decision that keeps the thread honest
+- [x] Does the Wind Down review stay in minimal as the one-card version, or go hidden? Proposal: stay, because "tomorrow or Later?" is the one decision that keeps the thread honest

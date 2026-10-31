@@ -7,7 +7,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
 // docs/14 §5, M16: the hint budget — one hint per local calendar day, each
-// twice ever, never after Not now, never in Focus, a Bedtime review or
+// twice ever, never after Not now, never in Focus, a Wind Down review or
 // low-energy mode — proven on the pure scheduler with a fixed clock.
 
 late tz.Location berlin;
@@ -107,7 +107,7 @@ void main() {
     expect(shown[1], HintId.routines);
   });
 
-  test('never in Focus, a Bedtime review or low-energy mode', () {
+  test('never in Focus, a Wind Down review or low-energy mode', () {
     for (final quiet in const [
       HintSignals(daysOfUse: 30, inFocus: true, sameMornings: true),
       HintSignals(daysOfUse: 30, inBedtimeReview: true, sameMornings: true),

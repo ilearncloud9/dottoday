@@ -66,6 +66,7 @@ final class LayoutPolicy {
     FeatureId.dragMove: FeatureVisibility.shown,
     FeatureId.shiftRunningLate: FeatureVisibility.simplified,
     FeatureId.wakeBedtime: FeatureVisibility.shown,
+    FeatureId.capTimeEdit: FeatureVisibility.hidden,
     FeatureId.windDown: FeatureVisibility.hidden,
     FeatureId.notifications: FeatureVisibility.simplified,
     FeatureId.bedtimeReview: FeatureVisibility.simplified,

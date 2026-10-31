@@ -22,7 +22,7 @@ planner,daily planner,timeline,schedule,time blocking,routine,calendar,to do,tas
 A calm visual day planner: your day as dots on one timeline. Free, no ads.
 
 ### Description
-Dottoday turns your to-do list into a day you can follow. Your day is a thread from Wake Up to Bedtime, and every task is a dot on it: outlined while it is coming up, filling while it is happening, solid when it is done. One look tells you what is now and what is next.
+Dottoday turns your to-do list into a day you can follow. Your day is a thread from Wake Up to Wind Down, and every task is a dot on it: outlined while it is coming up, filling while it is happening, solid when it is done. One look tells you what is now and what is next.
 
 WHEN THE DAY MOVES, MOVE IT ALL
 • Drag a task to move it, drag its edge to change how long it takes.

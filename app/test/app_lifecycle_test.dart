@@ -147,7 +147,7 @@ void main() {
             clock: FakeClock(DateTime.utc(2026, 10, 21)),
             writer: snapshots,
             logger: Logger(logs, FakeClock(DateTime.utc(2026))),
-            // Bedtime is hours away; the lifecycle only arms it.
+            // Wind Down is hours away; the lifecycle only arms it.
             timer: (_, _) => _IdleTimer(),
           ),
         ),

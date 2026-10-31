@@ -159,7 +159,7 @@ void main() {
     expect(decodeNotificationPayload(n.id, encodeNotificationPayload(n)), n);
   });
 
-  test('never collides with a task alert or Bedtime', () {
+  test('never collides with a task alert or Wind Down', () {
     final tasks = [
       for (final t in _week)
         t.copyWith(alerts: const [Alert(kind: AlertKind.atStart)]),

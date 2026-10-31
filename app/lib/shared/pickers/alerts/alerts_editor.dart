@@ -32,7 +32,7 @@ const alertChoices = [
 
 /// The Alerts editor (docs/10 §5.3, docs/09 M3f.2, R-10): the task's
 /// alerts with ×, the choices to add (up to [maxAlerts]), and — when
-/// [onBedtime] is given — the every-evening Bedtime reminder. Returns the
+/// [onBedtime] is given — the every-evening Wind Down reminder. Returns the
 /// alerts in time order, or null when dismissed.
 Future<List<Alert>?> showAlertsEditor(
   BuildContext context, {

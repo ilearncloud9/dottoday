@@ -5,7 +5,7 @@ enum NotificationPurpose {
   /// An alert of a task.
   task,
 
-  /// Settings › Bedtime reminder: once a day at Bedtime, with tomorrow's
+  /// Settings › Wind Down reminder: once a day at Wind Down, with tomorrow's
   /// first task (M3d.3, R-10).
   bedtime,
 
@@ -43,7 +43,7 @@ final class PlannedNotification {
   /// Index used for the snooze reminder, after the ≤ 5 alert slots.
   static const snoozeIndex = 5;
 
-  /// Index of the Bedtime reminder.
+  /// Index of the Wind Down reminder.
   static const bedtimeIndex = 6;
 
   /// Index of the test alarm (M6.5.9).
@@ -58,7 +58,7 @@ final class PlannedNotification {
   /// Stable OS notification ID; see `notificationIdFor`.
   final int id;
 
-  /// The task alerted; for a Bedtime reminder, tomorrow's first task, or
+  /// The task alerted; for a Wind Down reminder, tomorrow's first task, or
   /// empty when tomorrow has none.
   final String occurrenceId;
 

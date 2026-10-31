@@ -16,11 +16,11 @@ final class SlotFit {
   /// timeline order.
   final List<Occurrence> overlaps;
 
-  /// When the next task (or Bedtime) begins after the proposed start; the
+  /// When the next task (or Wind Down) begins after the proposed start; the
   /// room the slot has.
   final DateTime freeUntilUtc;
 
-  /// The task that ends the room at [freeUntilUtc]; null when Bedtime
+  /// The task that ends the room at [freeUntilUtc]; null when Wind Down
   /// (or nothing) does.
   final Occurrence? next;
 
@@ -31,8 +31,8 @@ final class SlotFit {
 ///
 /// Skipped and all-day items don't occupy time; [ignoreId] leaves out the
 /// task being moved. [freeUntilUtc] is the first busy start after
-/// [startUtc], else [dayEndUtc] (Bedtime) — or [startUtc]'s own end when it
-/// is already past Bedtime.
+/// [startUtc], else [dayEndUtc] (Wind Down) — or [startUtc]'s own end when it
+/// is already past Wind Down.
 ///
 /// ```dart
 /// fitAt(day, fivePm, 60, dayEndUtc: bedtime).isFree; // true

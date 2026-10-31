@@ -118,7 +118,7 @@ class _StepChip extends StatelessWidget {
 
 /// The routine as a small vertical thread: a picker-size dot per step and
 /// a short dotted segment in its colour, the moon cap under a routine that
-/// ends at Bedtime.
+/// ends at Wind Down.
 class RoutineMiniThread extends StatelessWidget {
   const RoutineMiniThread({required this.routine, super.key});
 

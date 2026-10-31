@@ -62,6 +62,6 @@ final class DayTimeText {
           Localizations.localeOf(context).toLanguageTag(),
         ).format(DateTime(2000, 1, 1, minute ~/ 60));
 
-  /// "Bedtime · 22:00".
+  /// "Wind Down · 22:00".
   String bed(DateTime bedUtc) => context.l10n.threadBed(utc(bedUtc));
 }

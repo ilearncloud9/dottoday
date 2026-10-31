@@ -13,7 +13,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 import '../../support/dot_golden.dart';
 import '../../support/timeline_fakes.dart';
 
-// The Running late sheet, the Day review at Bedtime and the running-late
+// The Running late sheet, the Day review at Wind Down and the running-late
 // nudge on Today (derived, docs/09 M3f.5; docs/10 §5.3).
 
 /// Today on the demo day, the clock at [now].
@@ -54,7 +54,7 @@ void main() {
     overrides: _at(DateTime.utc(2026, 10, 21, 7, 22)),
     build: _today,
   );
-  // 23:30 in Berlin, after Bedtime.
+  // 23:30 in Berlin, after Wind Down.
   goldenMatrix(
     'today_day_review',
     height: 900,

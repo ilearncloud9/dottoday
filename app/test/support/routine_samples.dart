@@ -21,7 +21,7 @@ RoutineItem _step(
   durationMin: len,
 );
 
-/// Morning (from Wake Up), Shutdown (ending at Bedtime), Gym day (5:30 PM).
+/// Morning (from Wake Up), Shutdown (ending at Wind Down), Gym day (5:30 PM).
 List<Routine> sampleRoutines() => [
   Routine(
     id: '01928c3e-0000-7000-8000-0000000001a1',

@@ -19,7 +19,7 @@ typedef FirstThread = ({
   List<Occurrence> rows,
 });
 
-/// Tomorrow's tasks with its Wake Up and Bedtime, live.
+/// Tomorrow's tasks with its Wake Up and Wind Down, live.
 @riverpod
 Stream<FirstThread> firstThread(Ref ref) async* {
   final profile = await ref.watch(currentProfileProvider.future);

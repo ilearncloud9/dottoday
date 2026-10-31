@@ -142,7 +142,7 @@ void main() {
     );
   });
 
-  test('Bedtime has no actions', () async {
+  test('Wind Down has no actions', () async {
     await mirror().schedule(n(9, actions: false));
     expect(pushed(9)['actions'], isEmpty);
   });

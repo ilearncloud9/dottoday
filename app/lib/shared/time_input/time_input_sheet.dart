@@ -6,7 +6,7 @@ import 'package:dottoday/shared/time_input/time_input.dart';
 import 'package:flutter/material.dart';
 
 /// The shared `TimeInput` in a sheet with Done (R-20): Add's "Type a
-/// time", Settings › Wake Up / Bedtime. Returns the time, or null.
+/// time", Settings › Wake Up / Wind Down. Returns the time, or null.
 Future<ClockTime?> showTimeInputSheet(
   BuildContext context, {
   required String title,

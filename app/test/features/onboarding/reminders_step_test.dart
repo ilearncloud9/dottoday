@@ -67,10 +67,12 @@ void main() {
     expect(stepOf(c), OnboardingStep.account);
   });
 
-  testWidgets('Not now asks nothing; the Bedtime switch saves', (tester) async {
+  testWidgets('Not now asks nothing; the Wind Down switch saves', (
+    tester,
+  ) async {
     final os = _Answers(PermissionState.granted);
     final c = await pumpOnboarding(tester, progress: _step, permission: os);
-    await tester.tap(find.text('At Bedtime'));
+    await tester.tap(find.text('At Wind Down'));
     await tester.pumpAndSettle();
     final stored = await c.read(settingsRepositoryProvider).findLocalProfile();
     // On by default; the switch turns it off.

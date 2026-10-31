@@ -147,7 +147,7 @@ ticked in 08 §6.1) before a tag.
 
 ## Notes
 
-- **F1.1** Concept A thread (ADR-0007): Wake Up → Bedtime with the now dot; the three-day spread from 840 px; Mac and web pixel-identical at 1280.
+- **F1.1** Concept A thread (ADR-0007): Wake Up → Wind Down with the now dot; the three-day spread from 840 px; Mac and web pixel-identical at 1280.
 - **F1.2** Resize is the end grip only (M3b.5); the start moves with the task. Touch holds 250 ms, a mouse lifts at once (`today_spread_test`).
 - **F1.3** Touch: second finger toggles the chip (device runs); desktop: Alt.
 - **F1.5** Pinned switch in the task sheet (this occurrence) and the editor (Save asks about the series), M8.4b; pins are honoured by the scheduler, drag and Running late.
@@ -159,8 +159,8 @@ ticked in 08 §6.1) before a tag.
 - **F1.12** Web calendar events come from Google/Microsoft (F5.1).
 - **F1.13** Recorded in PRD F1.13 (M8.4b): the thread lists overlaps in start order with the live overrun (Shift the rest); the Week board stacks them. No side-by-side columns on the one-axis thread.
 - **F1.14** `thread_perf_test` needs `flutter drive --profile` on hardware (M5.9b); the thread is a sliver (lazy) on every target.
-- **F1.15** Per-weekday Wake Up/Bedtime (M3d.3); tasks before Wake Up / after Bedtime fold into a row beyond the cap that unfolds on tap (M8.4b).
-- **F1.16** Bedtime 23:55 (the latest) with a 23:30 task, scrolled to the end, on the phone pager and the Mac/web spread (M8.4b).
+- **F1.15** Per-weekday Wake Up/Wind Down (M3d.3); tasks before Wake Up / after Wind Down fold into a row beyond the cap that unfolds on tap (M8.4b).
+- **F1.16** Wind Down 23:55 (the latest) with a 23:30 task, scrolled to the end, on the phone pager and the Mac/web spread (M8.4b).
 - **F1.17** Tab/Enter open, Enter/Space done, ⌘/Ctrl+D, ⌘/Ctrl+←/→/T, Esc (M3e.6); ↑↓ pick, ⌘/Ctrl+↑↓ move 5 (Shift 15), Delete → Trash with Undo, ↩ open, Space done on the pick (M8.4b, the multi-select model).
 - **F2.2** A real clipboard paste on a phone is in the 08 §6.1 hardware pass.
 - **F2.3** Sheet below 840 px, side panel above — by width, not platform.

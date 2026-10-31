@@ -12,7 +12,7 @@ import 'package:dottoday/shared/time_input/time_input.dart';
 import 'package:flutter/material.dart';
 
 /// Edits a routine (derived screen, 11 C2): its name, when it sits on a
-/// day (Wake Up, a time, ending at Bedtime) and its steps. Gaps between
+/// day (Wake Up, a time, ending at Wind Down) and its steps. Gaps between
 /// steps are kept as they were; a new step follows the last one. A leaf:
 /// the draft is its only state, handed to [onSave] when valid.
 class RoutineEditor extends StatefulWidget {

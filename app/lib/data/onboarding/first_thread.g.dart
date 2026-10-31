@@ -8,12 +8,12 @@ part of 'first_thread.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Tomorrow's tasks with its Wake Up and Bedtime, live.
+/// Tomorrow's tasks with its Wake Up and Wind Down, live.
 
 @ProviderFor(firstThread)
 final firstThreadProvider = FirstThreadProvider._();
 
-/// Tomorrow's tasks with its Wake Up and Bedtime, live.
+/// Tomorrow's tasks with its Wake Up and Wind Down, live.
 
 final class FirstThreadProvider
     extends
@@ -23,7 +23,7 @@ final class FirstThreadProvider
           Stream<FirstThread>
         >
     with $FutureModifier<FirstThread>, $StreamProvider<FirstThread> {
-  /// Tomorrow's tasks with its Wake Up and Bedtime, live.
+  /// Tomorrow's tasks with its Wake Up and Wind Down, live.
   FirstThreadProvider._()
     : super(
         from: null,

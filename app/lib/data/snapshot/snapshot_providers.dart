@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'snapshot_providers.g.dart';
 
-/// The Bedtime write of the day snapshot (docs/09 M9.1).
+/// The Wind Down write of the day snapshot (docs/09 M9.1).
 @Riverpod(keepAlive: true)
 BedtimeSnapshot bedtimeSnapshot(Ref ref) {
   final bedtime = BedtimeSnapshot(
