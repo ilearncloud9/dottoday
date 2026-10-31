@@ -46,10 +46,12 @@ abstract class Settings with _$Settings {
     @Default(<Weekday>{}) Set<Weekday> daySummaryDays,
     String? reminderSound,
     // The alarm-loud tier's sound (D2) and the Done sound (D4), docs/12;
-    // whether the app itself plays sounds (previews excepted, §2.6).
+    // whether the app itself plays sounds (previews excepted, §2.6) and its
+    // haptic taps (a missing key reads as on, as before the switch).
     @Default('dot_alarm') String startSoundId,
     @Default('done.swift') String doneSoundId,
     @Default(true) bool inAppSoundsEnabled,
+    @Default(true) bool inAppHapticsEnabled,
     bool? use24h,
     @Default(1) int firstDayOfWeek,
     @Default(ThemePreference.system) ThemePreference theme,

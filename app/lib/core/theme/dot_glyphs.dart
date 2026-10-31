@@ -93,6 +93,10 @@ abstract final class DotGlyphs {
   static const sound = DotGlyph(
     'M11 5L6 9H2v6h4l5 4V5zM15.5 8.5q2 3.5 0 7M18.5 5.5q4 6.5 0 13',
   );
+  // Settings › Sounds › Haptics in app: a phone between two buzz marks.
+  static final haptics = DotGlyph(
+    '${_r(8, 3, 8, 18, 2)}M11 18h2M4 9q-1.5 3 0 6M20 9q1.5 3 0 6',
+  );
   static final clock = DotGlyph('${_c(12, 12, 9)}M12 7v5l3 2');
   static final timer = DotGlyph('${_c(12, 14, 8)}M12 14v-4M10 2h4');
   static final calendar = DotGlyph(

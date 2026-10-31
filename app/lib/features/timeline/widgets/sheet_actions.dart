@@ -14,8 +14,8 @@ import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/shell_drops.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -56,7 +56,7 @@ class SheetActions extends ConsumerWidget {
       label: done ? l10n.sheetUndone : l10n.sheetDone,
       filled: !done,
       onTap: () async {
-        unawaited(HapticFeedback.lightImpact());
+        AppHaptics.play(context, HapticTick.light);
         reportUndoable(
           messenger,
           l10n,

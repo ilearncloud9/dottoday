@@ -65,6 +65,7 @@ ExportBundle hostileBundle() {
         startSoundId: 'start.morning',
         doneSoundId: 'done.checked',
         inAppSoundsEnabled: false,
+        inAppHapticsEnabled: false,
         dayBoundaries: {Weekday.sun: TimeWindow(start: '09:00', end: '20:00')},
       ),
     ),

@@ -4267,6 +4267,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get soundsInAppDetail => 'El sonido de hecho y el tic de Foco';
 
   @override
+  String get soundsEffectsCaption => 'Sonido y vibración';
+
+  @override
+  String get soundsHapticsInApp => 'Vibración en la app';
+
+  @override
+  String get soundsHapticsInAppDetail =>
+      'Una pequeña vibración al arrastrar, soltar y marcar una tarea como hecha';
+
+  @override
+  String get soundsEffectsFooter =>
+      'Según los ajustes de tu dispositivo, es posible que los sonidos y la vibración no se reproduzcan.';
+
+  @override
   String get soundInsistentNote =>
       'Fuerte y repetido. Úsalo si los sonidos suaves no te llegan.';
 

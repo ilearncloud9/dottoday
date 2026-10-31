@@ -65,7 +65,12 @@ void main() {
     final settings =
         (json['profile']! as Map<String, Object?>)['settings']!
             as Map<String, Object?>;
-    for (final key in ['startSoundId', 'doneSoundId', 'inAppSoundsEnabled']) {
+    for (final key in [
+      'startSoundId',
+      'doneSoundId',
+      'inAppSoundsEnabled',
+      'inAppHapticsEnabled',
+    ]) {
       settings.remove(key);
     }
     for (final table in ['series', 'occurrences']) {
@@ -80,8 +85,13 @@ void main() {
     expect(back.occurrences.map((o) => o.soundId), everyElement(isNull));
     final s = back.profile.settings;
     expect(
-      (s.startSoundId, s.doneSoundId, s.inAppSoundsEnabled),
-      ('dot_alarm', 'done.swift', true),
+      (
+        s.startSoundId,
+        s.doneSoundId,
+        s.inAppSoundsEnabled,
+        s.inAppHapticsEnabled,
+      ),
+      ('dot_alarm', 'done.swift', true, true),
     );
   });
 

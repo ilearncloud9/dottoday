@@ -24,6 +24,7 @@ import 'package:dottoday/features/recovery/database_recovery.dart';
 import 'package:dottoday/features/sync_status/sync_sheet.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/breakdown/breakdown_flow.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:dottoday/shared/sheets/shortcut_sheet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -77,23 +78,27 @@ class DottodayApp extends ConsumerWidget {
           onQuickAdd: () => openQuickAdd(router),
           onShortcuts: () => _shortcuts(router),
         );
-        return AppLifecycleScope(
-          // The Mac menu bar (M5.5) runs the same handlers as the keys.
-          child: AppMenuBar(
-            router: router,
-            handlers: handlers,
-            child: AppCommandScope(
+        // Above every route, so a plain widget asks AppHaptics (docs/12 §2.6).
+        return HapticsScope(
+          enabled: settings?.inAppHapticsEnabled ?? true,
+          child: AppLifecycleScope(
+            // The Mac menu bar (M5.5) runs the same handlers as the keys.
+            child: AppMenuBar(
+              router: router,
               handlers: handlers,
-              child: UndoKeys(
-                child: Actions(
-                  actions: _intents(router),
-                  // An unreadable database replaces every screen (M3f.9).
-                  child: DatabaseGate(
-                    // The optional app lock over everything else (M5.8).
-                    child: LockGate(
-                      // First run on this device (M4).
-                      child: OnboardingGate(
-                        child: child ?? const SizedBox.shrink(),
+              child: AppCommandScope(
+                handlers: handlers,
+                child: UndoKeys(
+                  child: Actions(
+                    actions: _intents(router),
+                    // An unreadable database replaces every screen (M3f.9).
+                    child: DatabaseGate(
+                      // The optional app lock over everything else (M5.8).
+                      child: LockGate(
+                        // First run on this device (M4).
+                        child: OnboardingGate(
+                          child: child ?? const SizedBox.shrink(),
+                        ),
                       ),
                     ),
                   ),

@@ -104,6 +104,7 @@ enum FeatureId {
   ),
   iconLibrary('Task icon library picker'),
   sounds('Sounds page, task Sound row, Start and Done sounds'),
+  haptics('In-app haptics switch'),
   quietReminders('Quiet hours, Wind Down reminder, Day summary'),
   dayShapeExtras('Day shape extras: per-weekday times, 12/24 h, week start'),
   planningSettings(

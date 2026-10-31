@@ -1,7 +1,7 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 /// What a lifted task row hands its [Draggable]s.
 @immutable
@@ -59,6 +59,7 @@ class HoldOrMouseDraggable<T extends Object> extends StatelessWidget {
           ? null
           : (_, _) => c.onFinished!(),
       child: _HoldDraggable<T>(
+        haptic: AppHaptics.enabledOf(context),
         data: data,
         feedback: feedback,
         childWhenDragging: childWhenDragging,
@@ -103,6 +104,7 @@ class _MouseDraggable<T extends Object> extends Draggable<T> {
 
 class _HoldDraggable<T extends Object> extends Draggable<T> {
   const _HoldDraggable({
+    required this.haptic,
     required super.data,
     required super.feedback,
     required super.childWhenDragging,
@@ -114,6 +116,10 @@ class _HoldDraggable<T extends Object> extends Draggable<T> {
     super.onDraggableCanceled,
   });
 
+  /// Whether the lift ticks (Settings › Sounds › Haptics in app): read in
+  /// build, since the recognizer has no context.
+  final bool haptic;
+
   @override
   MultiDragGestureRecognizer createRecognizer(
     GestureMultiDragStartCallback onStart,
@@ -124,12 +130,8 @@ class _HoldDraggable<T extends Object> extends Draggable<T> {
         )
         ..onStart = (position) {
           final drag = onStart(position);
-          if (drag != null) _liftTick();
+          // The lift's tick (LongPressDraggable's `hapticFeedbackOnStart`).
+          if (drag != null && haptic) AppHaptics.fire(HapticTick.selection);
           return drag;
         };
-}
-
-/// The lift's haptic tick (LongPressDraggable's `hapticFeedbackOnStart`).
-void _liftTick() {
-  HapticFeedback.selectionClick().ignore();
 }
