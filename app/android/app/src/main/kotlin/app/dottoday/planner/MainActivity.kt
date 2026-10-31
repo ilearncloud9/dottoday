@@ -150,6 +150,10 @@ class MainActivity : FlutterFragmentActivity() {
                         audio.ringerMode != AudioManager.RINGER_MODE_NORMAL,
                     )
                 }
+                if (call.method == "stop") {
+                    stopSound()
+                    return@setMethodCallHandler result.success(null)
+                }
                 val name = call.arguments as? String
                 if (call.method != "play" || name == null) {
                     return@setMethodCallHandler result.notImplemented()
@@ -162,8 +166,15 @@ class MainActivity : FlutterFragmentActivity() {
             }
     }
 
+    /**
+     * The sound still playing: a new one or [stopSound] releases it, so a
+     * picker never stacks previews (docs/12 §6).
+     */
+    private var playing: MediaPlayer? = null
+
     /** Plays raw resource [resource] once as a notification sound (DND applies). */
     private fun playSound(resource: String) {
+        stopSound()
         // keep.xml keeps every sound prefix: they are only named at run time.
         @Suppress("DiscouragedApi")
         val id = resources.getIdentifier(resource, "raw", packageName)
@@ -175,8 +186,19 @@ class MainActivity : FlutterFragmentActivity() {
         val audio = getSystemService(AUDIO_SERVICE) as AudioManager
         val player = MediaPlayer.create(this, id, attributes, audio.generateAudioSessionId())
             ?: return
-        player.setOnCompletionListener { it.release() }
+        player.setOnCompletionListener {
+            if (playing === it) playing = null
+            it.release()
+        }
+        playing = player
         player.start()
+    }
+
+    private fun stopSound() {
+        val player = playing ?: return
+        playing = null
+        player.stop()
+        player.release()
     }
 
     private companion object {

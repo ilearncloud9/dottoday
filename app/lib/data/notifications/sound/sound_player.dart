@@ -8,9 +8,15 @@ import 'package:flutter/services.dart';
 /// Plays a bundled reminder sound once, in the app (docs/02 F6.6, M8.4d):
 /// the Sound picker's preview, and on the web the in-app strip's reminder
 /// (a browser notification can't carry a custom sound). Best effort: a
-/// sound that can't play is logged, never thrown.
+/// sound that can't play is logged, never thrown. One sound at a time: a
+/// new [play] cuts off the one still playing, so tapping through a picker
+/// never stacks previews (docs/12 §6).
 abstract interface class SoundPlayer {
   Future<void> play(CatalogueSound sound);
+
+  /// Stops the sound [play] started, if it is still playing: the pickers
+  /// call it when they close.
+  Future<void> stop();
 
   /// Whether the device's ringer is silent, so a preview won't be heard
   /// (docs/12 §6). Only Android can tell; false when unknown.
@@ -47,6 +53,16 @@ final class ChannelSoundPlayer implements SoundPlayer {
   }
 
   @override
+  Future<void> stop() async {
+    try {
+      await _channel.invokeMethod<void>('stop');
+    } on Object catch (e, s) {
+      // MissingPluginException in tests: nothing is playing anyway.
+      _logger.warn('notifications.sound_failed', error: e, stackTrace: s);
+    }
+  }
+
+  @override
   Future<bool> deviceMuted() async {
     try {
       return await _channel.invokeMethod<bool>('isMuted') ?? false;
@@ -73,6 +89,9 @@ final class _BrowserSoundPlayer implements SoundPlayer {
       _logger.warn('notifications.sound_failed', error: e, stackTrace: s);
     }
   }
+
+  @override
+  Future<void> stop() async => stopBrowserSound();
 
   /// A browser can't read the device's ringer.
   @override
