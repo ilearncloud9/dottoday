@@ -4115,6 +4115,36 @@ class AppLocalizationsEs extends AppLocalizations {
   String get soundStartInsistent => 'Insistente';
 
   @override
+  String get soundStartSlowBell => 'Campana lenta';
+
+  @override
+  String get soundStartMusicBox => 'Caja de música';
+
+  @override
+  String get soundStartDawnChorus => 'Coro del alba';
+
+  @override
+  String get soundStartRain => 'Lluvia';
+
+  @override
+  String get soundStartStream => 'Arroyo';
+
+  @override
+  String get soundStartWaves => 'Olas';
+
+  @override
+  String get soundStartWindChimes => 'Campanillas de viento';
+
+  @override
+  String get soundStartForest => 'Bosque';
+
+  @override
+  String get soundStartClockBell => 'Timbre de despertador';
+
+  @override
+  String get soundStartBeepRise => 'Pitido creciente';
+
+  @override
   String get soundPlayRooster => 'Gallo';
 
   @override

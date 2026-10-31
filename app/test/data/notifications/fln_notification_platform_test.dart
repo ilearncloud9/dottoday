@@ -197,9 +197,9 @@ void main() {
         for (final s in ['dot', 'chime', 'bell', 'ripple']) 'alerts_$s',
       };
       final added = ids.toSet().difference({...legacy, ...firstParty});
-      // 28 new normal (Quiet 5, Clear 15, Playful 8) + 9 new Start
+      // 28 new normal (Quiet 5, Clear 15, Playful 8) + 19 new Start
       // (dot_alarm keeps `alarms`) + None, after the ear pass.
-      expect(added, hasLength(38));
+      expect(added, hasLength(48));
       for (final sound in soundCatalogue) {
         final id = channelIdForSound(sound);
         if (id == null) continue;

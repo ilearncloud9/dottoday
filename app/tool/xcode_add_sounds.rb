@@ -6,8 +6,11 @@
 # docs/12 §4). Why: the sandboxed Mac app can't write its container's
 # Library/Sounds — macOS makes it a link to ~/Library/Sounds — so the copy
 # iOS does at start never lands there (found in M8.5).
-# iOS: the catalogue's .caf files (the first-party ones keep the start-up
-# copy to Library/Sounds, which is never removed — docs/12 §4).
+# iOS: every catalogue sound's .caf, the first-party tones included, so each
+# is in the app bundle where AlarmKit can play it (docs/15-alarms.md); the
+# first-party start-up copy to Library/Sounds stays too (docs/12 §4).
+# macOS already bundles the first-party files from assets/sounds, so a
+# catalogue .caf of the same name isn't added twice.
 #
 # The files stay where the build writes them (one source); the projects only
 # reference them. Idempotent. Run from app/:
@@ -35,6 +38,6 @@ def bundle(project_path, files)
 end
 
 bundle('macos/Runner.xcodeproj',
-       FIRST_PARTY.to_h { |n| [n, "../assets/sounds/#{n}"] }
-         .merge(CATALOGUE.to_h { |n| [n, "../ios/Runner/Sounds/#{n}"] }))
+       (CATALOGUE - FIRST_PARTY).to_h { |n| [n, "../ios/Runner/Sounds/#{n}"] }
+         .merge(FIRST_PARTY.to_h { |n| [n, "../assets/sounds/#{n}"] }))
 bundle('ios/Runner.xcodeproj', CATALOGUE.to_h { |n| [n, "Runner/Sounds/#{n}"] })

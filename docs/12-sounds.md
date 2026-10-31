@@ -40,9 +40,9 @@ The text is the `notice` of the source in the manifest; `CREDITS.md` and the lic
 
 **Repo**: `assets/sounds/manifest.json` (§5) is the provenance record, one entry per file with the specific source page; `CREDITS.md` is generated from it. Original downloads kept unmodified in `tool/sounds/originals/` (not shipped). The footer and the licences notice are both rendered from the manifest's distinct `sourceName`/`license` values, so adding a source can never ship without its credit.
 
-## 2. Catalogue — 5 first-party + 37 notification sounds + 6 Done sounds (48 entries)
+## 2. Catalogue — 5 first-party + 37 notification sounds + 6 Done sounds + 10 CC0 Start sounds (58 entries)
 
-*(owner, phase-1 rebuild)* Duration rules (policy test, `durationMs`): Quiet ≤ 1500 ms; Clear, Playful, Done ≤ 4000 ms; Start 3000–20000 ms. Changes:
+*(owner, phase-1 rebuild)* Duration rules (policy test, `durationMs`): Quiet ≤ 1500 ms; Clear, Playful, Done ≤ 4000 ms; Start 3000–28000 ms *(owner, 2026-10-31; was 20000)*. Changes:
 - **Dropped:** `quiet.discreet` (8.3 s), `quiet.pristine` (4.28 s after trim: over the 4 s Clear limit), `start.rise` (0.4 s); also `start.direct` (0.4 s) and `start.arpeggio` (2.0 s), which are under the 3 s Start minimum for the same reason as `rise`.
 - **Moved:** `quiet.tap` → `clear.tap` (2.4 s).
 - **Capped at the category maximum with a 0.5 s fade:** Clear `bright`, `settled`, `opening`, `spark`; Playful `knock`, `dog`, `gulls`. Start sounds over 20 s are cut with a 1 s fade.
@@ -116,6 +116,25 @@ Only offered in Settings › Reminders › **Start sound** (D2), after the defau
 | `start.insistent` | Insistent | Alarm frenzy | wake-up-tones/alarm-frenzy-493 |
 
 `start.insistent` shows a caption "Loud and repeating. Use it if quieter sounds don't reach you." — never "annoying".
+
+#### 2.3.1 CC0 Start sounds *(owner, 2026-10-31)*
+
+Ten more Start sounds, listed after the ones above, so Start is 20 entries (`start.direct` and `start.arpeggio` stay dropped). Each is authored to be AlarmKit-eligible (ADR-0015, `15-alarms.md`): a **seamless 27 s loop** whose seam is a 1.5 s equal-power crossfade (a shorter original is first repeated with the same crossfade), in the iOS app bundle. **A 10 s fade-in** is baked into Slow bell, Music box and the six nature loops, not Clock bell or Beep rise; because it is part of the file, each repeat of the loop fades in again, and those loops also end with a 20 ms fade so the restart is a dip, never a click. The six nature entries are recordings, not synthesis. Ids use `_` (the stored shape `^[a-z0-9._]{1,64}$` has no `-`). Existing Start files were not rebuilt; `dot_alarm` stays the default.
+
+| id | Dottoday | Source | Original (author) | Page |
+|---|---|---|---|---|
+| `start.slow_bell` | Slow bell | BigSoundBank | 1 pendulum chime (Joseph SARDIN & Axeline T.) | <https://bigsoundbank.com/1-pendulum-chime-s3360.html> |
+| `start.music_box` | Music box | BigSoundBank | The music box Temps Des Cerises (Joseph SARDIN) · Ogg | <https://bigsoundbank.com/the-music-box-temps-des-cerises-s0195.html> |
+| `start.dawn_chorus` | Dawn chorus | BigSoundBank | Birds Waking #4 (Joseph SARDIN) | <https://bigsoundbank.com/birds-waking-4-s1906.html> |
+| `start.rain` | Rain | Freesound | 180219 Rain, modulating light drips on leaves (TRP) · HQ preview | <https://freesound.org/people/TRP/sounds/572267/> |
+| `start.stream` | Stream | BigSoundBank | Brooklet (Joseph SARDIN) | <https://bigsoundbank.com/brooklet-s0864.html> |
+| `start.waves` | Waves | BigSoundBank | Beach: Small Waves (DenisChardonnet) · Ogg | <https://bigsoundbank.com/beach-small-waves-s0265.html> |
+| `start.wind_chimes` | Wind chimes | BigSoundBank | Cluster Chimes #1 (Pierre SIBANARCO) | <https://bigsoundbank.com/cluster-chimes-1-s2687.html> |
+| `start.forest` | Forest | BigSoundBank | Forest #3 (Pierre SIBANARCO) | <https://bigsoundbank.com/forest-3-s2715.html> |
+| `start.clock_bell` | Clock bell | BigSoundBank | Mechanical alarm clock, long ring #1 (Joseph SARDIN) | <https://bigsoundbank.com/mechanical-alarm-clock-long-ring-1-s1374.html> |
+| `start.beep_rise` | Beep rise | Freesound | alarm clock buzzer alarm beep (Garuda1982) · HQ preview | <https://freesound.org/people/Garuda1982/sounds/530172/> |
+
+"Ogg" and "HQ preview" mark a lossy original (`lossySource` in the manifest); the rest are FLAC. BigSoundBank came first; Freesound HQ previews only where BigSoundBank had nothing that fit. Rejected while choosing: a "White Christmas" music box (the tune is not free), a branded plush music box and a branded alarm clock (the brand rule, §5).
 
 ### 2.4 Playful · 8
 
@@ -191,11 +210,11 @@ Tests (phase 2): resolve(null, null, null, null) → `dot`; `"none"` at each lev
 
 ## 4. Platform rules — **new**
 
-**iOS / macOS.** Each sound is a `.caf` (IMA4 ADPCM, mono, 44.1 kHz, ≤ 30 s). The gateway sets the notification's sound to the file name. Time-sensitive level (A0) and custom sounds combine. The existing `Library/Sounds` install step stays and is extended (or `tool/xcode_add_sounds.rb` adds `Runner/Sounds` to the iOS and macOS targets); it is never removed *(owner)*.
+**iOS / macOS.** Each sound is a `.caf` (IMA4 ADPCM, mono, 44.1 kHz, ≤ 30 s). The gateway sets the notification's sound to the file name. Time-sensitive level (A0) and custom sounds combine. The existing `Library/Sounds` install step stays and is extended (or `tool/xcode_add_sounds.rb` adds `Runner/Sounds` to the iOS and macOS targets); it is never removed *(owner)*. *(owner, 2026-10-31)* **Every** catalogue sound, the first-party tones included, also has a `.caf` in the iOS app bundle (`ios/Runner/Sounds`), because AlarmKit plays bundle sounds only (`15-alarms.md`); the first-party `.caf` is the same audio as its `.wav`, and the `Library/Sounds` copy stays.
 
 **Android 8+.** Sound belongs to the **channel**, not the notification. Therefore:
-- One channel per (tier, sound) for the new sounds: `dottoday.alert.<soundId>` for the 28 new normal-tier sounds (Quiet 5 + Clear 15 + Playful 8, after the ear pass), `dottoday.alarm.<soundId>` for the 9 new Start sounds, and `dottoday.alert.none` for "None" (shows and vibrates, no sound): **38 new channels**, created idempotently at start (names/descriptions are localised). `dot_alarm` keeps the legacy `alarms` channel; Done sounds never notify, so they have none.
-- **Legacy channels are never deleted *(owner)*:** `alerts`, `alarms`, `summary` and `alerts_<dot|chime|bell|ripple>` keep serving the existing tones. Mixed naming is fine. In total the app owns 45 channels: the 38 new ones, `alerts`, `alarms`, `summary` and the four `alerts_<tone>`.
+- One channel per (tier, sound) for the new sounds: `dottoday.alert.<soundId>` for the 28 new normal-tier sounds (Quiet 5 + Clear 15 + Playful 8, after the ear pass), `dottoday.alarm.<soundId>` for the 19 new Start sounds (9, plus the 10 of §2.3.1), and `dottoday.alert.none` for "None" (shows and vibrates, no sound): **48 new channels**, created idempotently at start (names/descriptions are localised). `dot_alarm` keeps the legacy `alarms` channel; Done sounds never notify, so they have none.
+- **Legacy channels are never deleted *(owner)*:** `alerts`, `alarms`, `summary` and `alerts_<dot|chime|bell|ripple>` keep serving the existing tones. Mixed naming is fine. In total the app owns 55 channels: the 48 new ones, `alerts`, `alarms`, `summary` and the four `alerts_<tone>`.
 - Channel ids are **permanent**. Removing a sound keeps its channel id mapped to the category default forever; renaming a sound never changes its id.
 - Channel groups: "Dot reminders" (`alerts`, `alerts_*`, `dottoday.alert.*`) and "Start of day" (`alarms`, `dottoday.alarm.*`); `summary` stays outside them.
 - The Notification health panel's sound row counts only sounds in use: the default task sound, the Start sound and every pending reminder's. A channel counts as muted below Android's default (sound-making) importance.
@@ -213,7 +232,12 @@ Tests (phase 2): resolve(null, null, null, null) → `dot`; `"none"` at each lev
   "sources": {
     "dottoday": { "name": "Dottoday", "license": "first-party", "modified": false, "credit": false },
     "notificationsounds": { "name": "notificationsounds.com", "url": "https://notificationsounds.com",
-      "license": "CC-BY-4.0", "modified": true, "credit": true, "notice": "Notification sounds from …" }
+      "license": "CC-BY-4.0", "modified": true, "credit": true, "notice": "Notification sounds from …",
+      "fileHost": "notificationsounds.com", "filePathPrefix": "/storage/sounds/" },
+    "bigsoundbank": { "name": "BigSoundBank", "url": "https://bigsoundbank.com", "license": "CC0-1.0",
+      "modified": true, "credit": false, "fileHost": "bigsoundbank.com", "filePathPrefix": "/UPLOAD/" },
+    "freesound": { "name": "Freesound", "url": "https://freesound.org", "license": "CC0-1.0",
+      "modified": true, "credit": false, "fileHost": "cdn.freesound.org", "filePathPrefix": "/previews/" }
   },
   "sounds": [
     { "id": "dot", "category": "dottoday", "name": "Dot", "file": "reminder_dot",
@@ -229,19 +253,22 @@ Tests (phase 2): resolve(null, null, null, null) → `dot`; `"none"` at each lev
 
 Rules:
 - `file` is the base name. For each third-party entry, `tool/sounds/build.py` writes `android/app/src/main/res/raw/<file>.m4a`, `ios/Runner/Sounds/<file>.caf` and `assets/sounds/<file>.m4a`. First-party files come from `tool/gen_sounds.dart` and are never rebuilt.
-- `fileUrl` is written once by `tool/sounds/fetch.py`. It reads the page's schema.org AudioObject and checks the title and licence against the manifest.
+- `fileUrl` is written once by `tool/sounds/fetch.py`. For notificationsounds.com it reads the page's schema.org AudioObject and checks the title and licence against the manifest; for BigSoundBank and Freesound it is recorded with the entry (the page's licence checked by hand: BigSoundBank's "CC0 (public domain)", Freesound's "Creative Commons 0" filter). Every file must come from its source's `fileHost` under `filePathPrefix`.
+- **Sources *(owner, 2026-10-31)*:** notificationsounds.com (CC BY 4.0, credited) and, for Start only, **BigSoundBank** and **Freesound** (CC0 1.0 only). CC0 needs no credit, so the footer line is unchanged; `CREDITS.md` still lists both with each sound's `author` (the uploader) and page. **Brand rule:** no sound whose title, page or author names a phone, brand or OS ("iphone", "samsung", "nokia", "android", "windows"; also "philips") — `fetch.py` refuses one and the policy test fails on it. The rule is about the sound, not the recording gear a page credits.
+- Per entry, optional: `loop` (`toMs`, `crossfadeMs`: the seamless loop of §2.3.1), `fadeInMs` (faded in after levelling, so the fade doesn't pull the gain down), `lossySource` (the original is Ogg or an MP3 preview, flagged for the ear pass), `author`.
 - `durationMs` is written by the build.
 - `name` is the l10n key fallback; display names live in ARB (`sound_quiet_slip`).
 - Processing, by `build.py` from `originals/` and never by hand:
   - trim leading/trailing silence (70 dB below the loudest 10 ms) with a 20 ms tail fade
   - downmix to mono at 44.1 kHz
-  - cap at 20 s with a 1 s fade
+  - cap at the category's maximum with a fade (Start: 28 s, 1 s), or build the entry's seamless `loop`
   - level per category *(owner)*. Targets: Quiet −20 LUFS; Clear, Playful and Done −16; Start −14. Consistency within a category matters more than a global figure, since the OS sets the absolute volume.
     - Stage 1: linear gain towards the target.
     - Stage 2: a true-peak limiter (`alimiter`, 4× oversampled, −1 dBTP, attack 5 ms, release 50 ms). It may absorb at most 6 dB, because past that a short sound turns into a click.
     - A sound still more than 4 LU under its target is not pushed further. It goes on the build's "quiet outliers" list for the ear pass, with no loop and no noise-floor lift.
   - write the measured `loudnessLufs` and `truePeakDbtp` into the manifest. The policy test asserts every third-party sound is within ±3 LU of its category target, so a sound 3–4 LU under fails the test without being listed as an outlier.
   - **ear pass, 2026-10-28** *(owner)*: all 10 sounds outside ±3 LU are kept as built. These are `quiet.slip`, `quiet.whisper`, `quiet.soft`, `quiet.pull`, `clear.turn`, `clear.involved`, `clear.appear`, `start.swing`, `play.drum` and `done.checked`. Each carries `loudnessAccepted: true`, which the policy test accepts only while the sound is still outside the spread. Any new outlier needs the same explicit decision. No other swaps.
+  - **CC0 Start build, 2026-10-31:** four of §2.3.1 stay more than 4 LU under −14 after the 6 dB limiter: Music box −26.6, Rain −27.4, Wind chimes −21.3, Forest −21.1 LUFS (sparse material: drips, single notes, distant birds). They carry `loudnessAccepted: true` **pending the owner's ear pass**, which keeps or drops each. The loudness is measured on the finished file, fade-in included.
   - first-party tones are measured, never changed: Dot −18.7, Chime −16.5, Bell −19.5, Ripple −17.7, `dot_alarm` −13.9 LUFS.
 
 ## 6. Picker UI (Concept A) *(owner layout)*
@@ -256,8 +283,8 @@ Rules:
 
 ## 7. Gates
 
-- **Ear pass** before the branch opens: owner listens to every candidate on a phone speaker at arm's length; swaps noted in the manifest commit message.
-- Policy test (`test/policy/sounds_manifest_test.dart`): every sound file in `assets/sounds/`, `res/raw/` and `ios/Runner/Sounds/` has a manifest entry; every third-party entry has `sourceUrl`, `fileUrl` and a `license` in `{CC0-1.0, CC-BY-4.0}` and is built for all three targets; every modified CC BY source has a notice that says so and is in `CREDITS.md`; ids, names and file contents are unique (D9); durations ≤ 30 s; `keep.xml` keeps every category. Phase 4 adds: the credit footer string contains every credited `sources.*.name`.
+- **Ear pass** before the branch opens: owner listens to every candidate on a phone speaker at arm's length; swaps noted in the manifest commit message. For §2.3.1 the page shows every entry, original beside built, with its source page and lossy flag; a new sound that is an audible twin of Bell or Chime is dropped (D9).
+- Policy test (`test/policy/sounds_manifest_test.dart`): every sound file in `assets/sounds/`, `res/raw/` and `ios/Runner/Sounds/` has a manifest entry; every third-party entry has `sourceUrl`, `fileUrl` and a `license` in `{CC0-1.0, CC-BY-4.0}` and is built for all three targets; every modified CC BY source has a notice that says so and is in `CREDITS.md`; ids, names and file contents are unique (D9); durations ≤ 30 s; `keep.xml` keeps every category. *(2026-10-31)* Also: each file comes from its source's file host; no brand word in a title or author; CC0 entries name their author; every `loop` is 25–28 s and its `durationMs` equals it; `fadeInMs` only on a loop. `test/policy/ios_bundled_sounds_test.dart`: every manifest entry's `.caf` is a resource of the iOS Runner, and every `.caf` in `ios/Runner/Sounds` is IMA4, mono, 44.1 kHz, under 30 s (read from its CAF header). Phase 4 adds: the credit footer string contains every credited `sources.*.name`.
 - Property test: `resolveSound(unknownId)` never throws and never returns `null`.
 - Integration test on both simulators: a dot with `soundId = clear.lift` fires on the `dottoday.alert.clear.lift` channel (Android, read from the delivered notification) / is requested with `clear_lift.caf` (iOS can't report a delivered notification's sound, so the iOS test checks the built request and says so in its name); the first dot of the day fires with `settings.startSoundId` regardless of the task's sound.
 - Golden: Sounds screen with 0, 1 and 3 muted channels (health panel copy), light/dark, largest text scale.
@@ -269,6 +296,7 @@ M6.5 is closed. Sounds is its own milestone in `09-implementation-plan.md`, **M1
 
 ## 9. Follow-ups
 
-- **App size.** The catalogue adds about 7 MB: `.caf` for iOS/macOS, and `.m4a` stored twice, once as an Android raw resource and once as a Flutter asset. The Start files are the bulk (four 20 s files plus the 18 s loop). A 15 s Start cap would roughly halve it. Accepted for now (owner, 2026-10-28).
+- **App size.** *(2026-10-31)* The ten 27 s CC0 loops add about 15 MB more across the shipped copies (iOS: `.caf` + asset `.m4a`; Android: raw + asset `.m4a`). Measure again after the ear pass; dropping the asset copy on mobile, or shorter loops, are the levers.
+- **App size (M15).** The catalogue adds about 7 MB: `.caf` for iOS/macOS, and `.m4a` stored twice, once as an Android raw resource and once as a Flutter asset. The Start files are the bulk (four 20 s files plus the 18 s loop). A 15 s Start cap would roughly halve it. Accepted for now (owner, 2026-10-28).
 - **Golden order flake** found during the phase-1 gates: ilearncloud9/dottoday#18 (not a sounds issue).
 

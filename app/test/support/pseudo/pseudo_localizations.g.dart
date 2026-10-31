@@ -3205,6 +3205,36 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get soundStartInsistent => pseudo(super.soundStartInsistent);
 
   @override
+  String get soundStartSlowBell => pseudo(super.soundStartSlowBell);
+
+  @override
+  String get soundStartMusicBox => pseudo(super.soundStartMusicBox);
+
+  @override
+  String get soundStartDawnChorus => pseudo(super.soundStartDawnChorus);
+
+  @override
+  String get soundStartRain => pseudo(super.soundStartRain);
+
+  @override
+  String get soundStartStream => pseudo(super.soundStartStream);
+
+  @override
+  String get soundStartWaves => pseudo(super.soundStartWaves);
+
+  @override
+  String get soundStartWindChimes => pseudo(super.soundStartWindChimes);
+
+  @override
+  String get soundStartForest => pseudo(super.soundStartForest);
+
+  @override
+  String get soundStartClockBell => pseudo(super.soundStartClockBell);
+
+  @override
+  String get soundStartBeepRise => pseudo(super.soundStartBeepRise);
+
+  @override
   String get soundPlayRooster => pseudo(super.soundPlayRooster);
 
   @override

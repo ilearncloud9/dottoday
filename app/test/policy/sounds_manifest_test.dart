@@ -20,11 +20,18 @@ const _rules = {
   'clear': (lufs: -16.0, minMs: 1, maxMs: 4000),
   'play': (lufs: -16.0, minMs: 1, maxMs: 4000),
   'done': (lufs: -16.0, minMs: 1, maxMs: 4000),
-  'start': (lufs: -14.0, minMs: 3000, maxMs: 20000),
+  'start': (lufs: -14.0, minMs: 3000, maxMs: 28000),
 };
 
 /// Within a category, every built sound stays this close to its target.
 const _spreadLu = 3.0;
+
+/// Never a sound named after a phone, brand or OS (owner, docs/12 §5);
+/// mirrors tool/sounds/fetch.py.
+final _brands = RegExp(
+  'iphone|samsung|nokia|android|windows|philips',
+  caseSensitive: false,
+);
 
 /// Changes beyond the source-wide ones, recorded per entry for CC BY.
 const _extraModifications = {'looped'};
@@ -98,12 +105,20 @@ void main() {
       expect(source['modified'], isTrue, reason: '$id');
       // build.py loops only what the manifest says, and says so.
       expect(s.containsKey('loopToMs'), modified == 'looped', reason: '$id');
-      for (final key in ['sourceUrl', 'fileUrl']) {
-        final url = Uri.parse(s[key]! as String);
-        expect(url.scheme, 'https', reason: '$id $key');
-        expect(url.host, Uri.parse(source['url'] as String).host);
-      }
+      // The page is on the source's site; the file on its file host.
+      final page = Uri.parse(s['sourceUrl']! as String);
+      final file = Uri.parse(s['fileUrl']! as String);
+      expect([page.scheme, file.scheme], ['https', 'https'], reason: '$id');
+      expect(page.host, Uri.parse(source['url'] as String).host);
+      expect(file.host, source['fileHost'], reason: '$id fileUrl');
+      expect(file.path, startsWith(source['filePathPrefix'] as String));
       expect(s['sourceTitle'], isA<String>(), reason: '$id');
+      final named = '${s['sourceTitle']} ${s['author'] ?? ''}';
+      expect(_brands.hasMatch(named), isFalse, reason: '$id names a brand');
+      // CC0 sources need no credit, so the uploader is kept per entry.
+      if (s['license'] == 'CC0-1.0') {
+        expect(s['author'], isA<String>(), reason: '$id: author');
+      }
     }
   });
 
@@ -141,6 +156,24 @@ void main() {
         expect(seen[hash], isNull, reason: '${f.path} == ${seen[hash]}');
         seen[hash] = f.path;
       }
+    }
+  });
+
+  // docs/12 §2.3: the long Start sounds are seamless loops (AlarmKit
+  // repeats a sound until stopped), faded in only where the entry says.
+  test('authored loops are 25–28 s and fade in within the loop', () {
+    for (final s in _sounds.where((s) => s.containsKey('loop'))) {
+      final id = s['id'];
+      final loop = (s['loop']! as Map).cast<String, Object?>();
+      expect(s['category'], 'start', reason: '$id');
+      expect(loop['toMs']! as int, inInclusiveRange(25000, 28000));
+      expect(loop['crossfadeMs']! as int, inInclusiveRange(1, 5000));
+      expect(s['durationMs'], loop['toMs'], reason: '$id: run build.py');
+      final fadeIn = s['fadeInMs'] as int? ?? 0;
+      expect(fadeIn, lessThan(loop['toMs']! as int), reason: '$id');
+    }
+    for (final s in _sounds.where((s) => s.containsKey('fadeInMs'))) {
+      expect(s.containsKey('loop'), isTrue, reason: '${s['id']}');
     }
   });
 

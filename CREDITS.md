@@ -53,6 +53,30 @@ Notification sounds from notificationsounds.com, © Notification Sounds, license
 | `done.succeeded` | Succeeded | Succeeded | <https://notificationsounds.com/message-tones/succeeded-message-tone> |  |
 | `done.achieved` | Achieved | Achievement | <https://notificationsounds.com/message-tones/achievement-message-tone> |  |
 
+## BigSoundBank
+
+<https://bigsoundbank.com>, CC0-1.0 (public domain; no credit required). Trimmed, looped, faded and loudness-normalised for Dottoday.
+
+| Dottoday id | Dottoday name | Original | Author | Source page |
+|---|---|---|---|---|
+| `start.slow_bell` | Slow bell | 1 pendulum chime | Joseph SARDIN & Axeline T. | <https://bigsoundbank.com/1-pendulum-chime-s3360.html> |
+| `start.music_box` | Music box | The music box Temps Des Cerises | Joseph SARDIN | <https://bigsoundbank.com/the-music-box-temps-des-cerises-s0195.html> |
+| `start.dawn_chorus` | Dawn chorus | Birds Waking #4 | Joseph SARDIN | <https://bigsoundbank.com/birds-waking-4-s1906.html> |
+| `start.stream` | Stream | Brooklet | Joseph SARDIN | <https://bigsoundbank.com/brooklet-s0864.html> |
+| `start.waves` | Waves | Beach: Small Waves | DenisChardonnet | <https://bigsoundbank.com/beach-small-waves-s0265.html> |
+| `start.wind_chimes` | Wind chimes | Cluster Chimes #1 | Pierre SIBANARCO | <https://bigsoundbank.com/cluster-chimes-1-s2687.html> |
+| `start.forest` | Forest | Forest #3 | Pierre SIBANARCO | <https://bigsoundbank.com/forest-3-s2715.html> |
+| `start.clock_bell` | Clock bell | Mechanical alarm clock, long ring #1 | Joseph SARDIN | <https://bigsoundbank.com/mechanical-alarm-clock-long-ring-1-s1374.html> |
+
+## Freesound
+
+<https://freesound.org>, CC0-1.0 (public domain; no credit required). Trimmed, looped, faded and loudness-normalised for Dottoday.
+
+| Dottoday id | Dottoday name | Original | Author | Source page |
+|---|---|---|---|---|
+| `start.rain` | Rain | 180219 Rain, modulating light drips on leaves BAHAMAS.flac | TRP | <https://freesound.org/people/TRP/sounds/572267/> |
+| `start.beep_rise` | Beep rise | alarm clock buzzer alarm beep | Garuda1982 | <https://freesound.org/people/Garuda1982/sounds/530172/> |
+
 ## Made for Dottoday
 
 Synthesised by `app/tool/gen_sounds.dart`; no third-party audio: Dot, Chime, Bell, Ripple, Dot alarm.
