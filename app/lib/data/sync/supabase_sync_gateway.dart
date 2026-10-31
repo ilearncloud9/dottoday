@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dottoday/data/sync/realtime_nudges.dart';
 import 'package:dottoday/data/sync/server_columns.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -71,30 +72,40 @@ final class SupabaseSyncGateway implements SyncGateway {
   });
 
   @override
-  Stream<void> changes() {
-    late final RealtimeChannel channel;
-    // Closed by its own onCancel, when the engine stops listening.
-    // ignore: close_sinks
-    late final StreamController<void> out;
-    out = StreamController<void>(
-      onListen: () {
-        channel = _client.channel('dottoday-sync');
-        for (final table in syncedEntities) {
-          channel.onPostgresChanges(
-            event: PostgresChangeEvent.all,
-            schema: 'public',
-            table: table,
-            callback: (_) => out.add(null),
-          );
-        }
-        channel.subscribe();
-      },
-      onCancel: () async {
-        await _client.removeChannel(channel);
-        await out.close();
-      },
+  Stream<void> changes() => RealtimeNudges(_openFeed).stream();
+
+  /// One `dottoday-sync` channel on every synced table.
+  Future<void> Function() _openFeed({
+    required void Function() onChange,
+    required void Function(FeedStatus) onStatus,
+  }) {
+    final channel = _client.channel('dottoday-sync');
+    for (final table in syncedEntities) {
+      channel.onPostgresChanges(
+        event: PostgresChangeEvent.all,
+        schema: 'public',
+        table: table,
+        callback: (_) => onChange(),
+      );
+    }
+    // Joining is reported before the server's change feed is live; its
+    // own "ok" says when changes made from then on will be announced.
+    channel.onSystemEvents((payload) {
+      if (payload is Map &&
+          payload['extension'] == 'postgres_changes' &&
+          payload['status'] == 'ok') {
+        onStatus(FeedStatus.live);
+      }
+    });
+    channel.subscribe(
+      (status, _) => onStatus(switch (status) {
+        RealtimeSubscribeStatus.subscribed => FeedStatus.subscribed,
+        RealtimeSubscribeStatus.channelError => FeedStatus.error,
+        RealtimeSubscribeStatus.timedOut => FeedStatus.timedOut,
+        RealtimeSubscribeStatus.closed => FeedStatus.closed,
+      }),
     );
-    return out.stream;
+    return () async => _client.removeChannel(channel);
   }
 
   /// Network trouble is "offline"; anything the server refused is "server".

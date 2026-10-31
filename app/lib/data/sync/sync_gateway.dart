@@ -64,7 +64,8 @@ abstract interface class SyncGateway {
     List<String> ids,
   );
 
-  /// A nudge whenever the server reports a change to the user's rows
-  /// (Realtime); the engine then pulls.
+  /// A nudge whenever the server reports a change to the user's rows, and
+  /// each time the live feed (re)joins, since changes while it was down
+  /// went unannounced (Realtime); the engine then pulls.
   Stream<void> changes();
 }

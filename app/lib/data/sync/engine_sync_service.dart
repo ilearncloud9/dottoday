@@ -23,10 +23,13 @@ abstract interface class ConflictStore {
 
 /// [SyncService] over the [SyncEngine] (docs/04 §4, docs/09 M6.2/M6.3):
 /// nothing while signed out; once signed in it adopts the account, then
-/// syncs on sign-in, every [period], shortly after local writes, when the
-/// server nudges (Realtime), and on "Sync now". One run at a time; a
-/// trigger during a run queues one more. Failures only change the status
-/// (R-08): offline, or an error that is logged.
+/// syncs on events only: sign-in, shortly after local writes, when the
+/// server nudges (Realtime: a change, or the live feed (re)connecting),
+/// on resume and on "Sync now". Nothing runs on a clock (docs/04 §4 "Triggers").
+/// One run at a time; a trigger during a run queues one more. A failed run
+/// changes the status (R-08: offline, or an error that is logged) and is
+/// retried after [retryFirst], doubling up to [retryMax], until one
+/// succeeds; the retry stops there.
 final class EngineSyncService implements SyncService {
   EngineSyncService({
     required SyncEngine engine,
@@ -37,8 +40,9 @@ final class EngineSyncService implements SyncService {
     required Clock clock,
     required Logger logger,
     void Function(String accountId)? onPulled,
-    Duration period = const Duration(minutes: 5),
     Duration settle = const Duration(seconds: 3),
+    this.retryFirst = const Duration(seconds: 5),
+    this.retryMax = const Duration(minutes: 5),
   }) : _engine = engine,
        _adopt = adopt,
        _conflicts = conflicts,
@@ -46,7 +50,6 @@ final class EngineSyncService implements SyncService {
        _clock = clock,
        _logger = logger,
        _onPulled = onPulled,
-       _period = period,
        _settle = settle {
     _accountSub = accounts.listen((id) => unawaited(_signedIn(id)));
   }
@@ -58,8 +61,13 @@ final class EngineSyncService implements SyncService {
   final Clock _clock;
   final Logger _logger;
   final void Function(String)? _onPulled;
-  final Duration _period;
   final Duration _settle;
+
+  /// The wait before retrying a failed run; doubles per failure.
+  final Duration retryFirst;
+
+  /// The longest wait between retries of a run that keeps failing.
+  final Duration retryMax;
 
   final _state = StreamController<SyncStatus>.broadcast();
   final _restore = StreamController<RestoreProgress>.broadcast();
@@ -68,8 +76,9 @@ final class EngineSyncService implements SyncService {
   StreamSubscription<void>? _remoteSub;
   StreamSubscription<int>? _outboxSub;
   StreamSubscription<List<SyncConflict>>? _conflictSub;
-  Timer? _timer;
   Timer? _soon;
+  Timer? _retry;
+  var _failures = 0;
   String? _account;
   var _status = SyncStatus.localOnly;
   var _running = false;
@@ -134,7 +143,6 @@ final class EngineSyncService implements SyncService {
       _emit(const SyncStatus(state: SyncState.error));
       return;
     }
-    _timer = Timer.periodic(_period, (_) => unawaited(_run()));
     _remoteSub = _remote.listen((_) => _later());
     _outboxSub = _engine.outbox.watchCount().listen((n) {
       _status = SyncStatus(
@@ -154,8 +162,9 @@ final class EngineSyncService implements SyncService {
   }
 
   Future<void> _stop() async {
-    _timer?.cancel();
     _soon?.cancel();
+    _retry?.cancel();
+    _failures = 0;
     await _remoteSub?.cancel();
     await _outboxSub?.cancel();
     await _conflictSub?.cancel();
@@ -184,21 +193,19 @@ final class EngineSyncService implements SyncService {
       if (_account != account) return;
       _skew = run.skew;
       _emit(_with(state: SyncState.synced, lastSyncedUtc: _clock.nowUtc()));
+      _retry?.cancel();
+      _failures = 0;
       if (run.pulled > 0) _onPulled?.call(account);
     } on SyncGatewayException catch (e, s) {
       if (e.trouble == SyncTrouble.server) {
         _logger.warn('sync.server_refused', error: e.cause, stackTrace: s);
       }
-      _emit(
-        _with(
-          state: e.trouble == SyncTrouble.offline
-              ? SyncState.offline
-              : SyncState.error,
-        ),
+      _failed(
+        e.trouble == SyncTrouble.offline ? SyncState.offline : SyncState.error,
       );
     } on Object catch (e, s) {
       _logger.error('sync.failed', error: e, stackTrace: s);
-      _emit(_with(state: SyncState.error));
+      _failed(SyncState.error);
     } finally {
       // Whatever happened, nobody waits on this run any more.
       _progress(1, 1);
@@ -208,6 +215,18 @@ final class EngineSyncService implements SyncService {
         unawaited(_run());
       }
     }
+  }
+
+  /// Shows [state] and retries after a wait that doubles per failure:
+  /// with no timer behind it, a refused or offline run would otherwise
+  /// wait for the next edit (R-08). Any other trigger runs sooner.
+  void _failed(SyncState state) {
+    _emit(_with(state: state));
+    if (_account == null) return;
+    final wait = retryFirst * (1 << _failures.clamp(0, 16));
+    _failures++;
+    _retry?.cancel();
+    _retry = Timer(wait > retryMax ? retryMax : wait, () => unawaited(_run()));
   }
 
   void _progress(int done, int total) {
