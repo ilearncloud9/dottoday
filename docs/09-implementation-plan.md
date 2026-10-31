@@ -443,19 +443,30 @@ Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit 
 - **Delivery:** one PR per piece, each from `origin/main`, with a screenshot sweep before each close. Version 1.2.0.
 
 - [x] M17.0 Audit + docs: inventory, doc 15 renumbered and the owner's decisions recorded, doc 14 sleep-block row fixed, Play full-screen-intent declaration in 08 §6.1 C. Branch `docs/wake-up-audit`.
-- [ ] M17.1 W1a Wake Up alarm on the existing path (`feat/wake-up-w1`):
+- [x] M17.1 W1a Wake Up alarm on the existing path (`feat/wake-up-w1`, PR #44):
   - **Setting:** `Settings.wakeUpAlarm` (synced, default off), with a row in Settings › Day shape and an onboarding offer that defaults to on for new users.
   - **The alarm:** one loud notification a day at the Wake Up time, planned by `NotificationPlanner` with Android `alarmClock` scheduling.
   - **First-dot rule:** when the alarm is on and the first dot starts within 30 min of Wake Up, the first dot's start is a normal notification.
   - **Capabilities:** an `AlarmGateway` port with `capabilities()` (tier + blockers), using a Kotlin `canUseFullScreenIntent()` check.
   - **Health:** a Wake Up row in Notification health with its fix button.
   - **Release:** version 1.2.0.
-- [ ] M17.2 W1b Alarm grade:
+- [x] M17.2 W1b Alarm grade (`feat/wake-up-w1b`):
   - **iOS 26+:** the in-house AlarmKit bridge (availability-checked); the countdown view goes in `DottodayWidgets`; add `NSAlarmKitUsageDescription`.
   - **Android:** the ringing activity and a foreground service capped at 10 min.
   - **Shared:** snooze, the `wake_up_days` state (local only) and sound rotation.
   - **Docs:** ADR-0017.
-- [ ] M17.3 W2 Wake Up card. Late start reuses `openRebalance`, and a test proves nothing is written before Accept.
+  - **Done 2026-10-31:**
+    - `AlarmGateway.sync` arms the week, and the planner leaves out what it armed (R-10).
+    - iOS 26: `AlarmBridge.swift`, `WakeUpAlarmKit.swift` (weak-linked) and `WakeUpAlarmActivity` in `DottodayWidgets`.
+    - Android: `setAlarmClock` → `WakeUpRingService` (alarm stream, ramp, 10-min cap) → `WakeUpAlarmActivity`, re-armed after a reboot.
+    - Snooze has a length and a limit; at the limit the next ring has no Snooze. Sound rotation is deterministic per date.
+    - Settings › Wake Up alarm › Sound and snooze carries every §9 row the alarm uses so far, with a test alarm through the gateway.
+  - **Deferred:**
+    - The `wake_up_days` table and the native event log move to M17.3, the Wake Up card being their first reader (ADR-0017).
+    - "Vary the sound" rotates through every Start sound except Insistent. Choosing the 2–6 cues (15 §9) is a follow-up below.
+    - The §2 battery and DND "Alarms" blockers are a follow-up below.
+    - Notification health's "Last wake-up" line (15 §4) needs the event log, so it comes with M17.3.
+- [ ] M17.3 W2 Wake Up card. Late start reuses `openRebalance`, and a test proves nothing is written before Accept. It also builds the `wake_up_days` table (local only) and drains the native alarm events (rang, snoozed, "I'm up") into it, deferred from M17.2.
 - [ ] M17.4 W3 Wake Up Check: the `StartEscalation` scheduler, built once from `noStartAt` with the wake-up input, the deferred A0 dot-start input, and Smallest step as a consumer.
 - [ ] M17.5 W4 + W6 (one PR):
   - **Wind Down maths:** `effectiveWindDown`, the sleep target, and the onboarding sleep slider.
@@ -464,6 +475,11 @@ Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit 
   - **Rename:** Bedtime → Wind Down in identifiers, comments and docs. The synced key `bedtimeReminder` stays, with a comment.
 - [ ] M17.6 Discovery (§11) on the M16 hint scheduler.
 - [ ] M17.7 W5 Physical dismissal. Its sensor plugins are a must-ask.
+
+Follow-ups (M17):
+- [ ] "Vary the sound": choose which 2–6 Start sounds rotate (15 §9); M17.2 rotates through all but Insistent.
+- [ ] §2 blockers not yet read: battery optimisation (its own health row already exists) and Do Not Disturb with the "Alarms" exception off (`dndAlarmsBlocked`), each with its fix in the Wake Up row.
+- [ ] Real-device gates for the Wake Up alarm (08 §6.1 C): iOS 26 force-quit + Silent, Android 14 in Doze, no AlarmKit alarm after uninstall.
 
 ## Follow-ups after M12 (found at the M12.6 ship-check)
 
