@@ -17,7 +17,7 @@ import 'package:dottoday/shared/time_input/time_input_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// DAY SHAPE (`A-ios-settings`): the sun → moon slider, Wake Up, Bedtime,
+/// DAY SHAPE (`A-ios-settings`): the sun → moon slider, Wake Up, Wind Down,
 /// different days, Week starts, Time format (R-17, R-20).
 class DayShapeGroup extends StatelessWidget {
   const DayShapeGroup({required this.settings, super.key});

@@ -78,10 +78,10 @@ final class SnapshotDot {
 /// outside the app reads — widgets, Live Activity, ongoing notification,
 /// menu bar, the web's service worker and, later, the watch (ADR-0010).
 /// Written after every write, by the daily refresh (which also covers
-/// Bedtime) and on demand; none of those surfaces talks to Supabase.
+/// Wind Down) and on demand; none of those surfaces talks to Supabase.
 ///
 /// The dots cover the next [window] from [generatedAtUtc] (the widgets'
-/// view), the day fields today's Wake Up → Bedtime.
+/// view), the day fields today's Wake Up → Wind Down.
 final class DaySnapshot {
   const DaySnapshot({
     required this.generatedAtUtc,
@@ -129,7 +129,7 @@ final class DaySnapshot {
   }
 
   /// A whole day as it ended (11 D1, D3): every timed, not skipped task of
-  /// [blocks] starting inside [shape]'s Wake Up → Bedtime, earliest first,
+  /// [blocks] starting inside [shape]'s Wake Up → Wind Down, earliest first,
   /// with no [maxDots] cap. The weekly review and the thread journal read
   /// past days this way, derived on read from the occurrences (no stored
   /// copy, docs/09 M12.3), so an edit to an old day shows at once.
@@ -171,7 +171,7 @@ final class DaySnapshot {
   final List<SnapshotDot> dots;
   final int inboxCount;
 
-  /// Today's dots (Wake Up → Bedtime, not skipped) that are done, and all
+  /// Today's dots (Wake Up → Wind Down, not skipped) that are done, and all
   /// of them: the Live Activity's "1 of 3" (M9.3). Past dots are outside
   /// [dots], so these are counted when the snapshot is built.
   final int dayDone;

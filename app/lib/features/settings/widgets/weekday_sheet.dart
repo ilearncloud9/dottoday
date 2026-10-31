@@ -14,7 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 /// Settings › Different days (PRD F1 "per-weekday start/end", R-17): each
-/// weekday's Wake Up → Bedtime; a custom day has its own slider and "Same
+/// weekday's Wake Up → Wind Down; a custom day has its own slider and "Same
 /// as every day" to return.
 Future<void> showWeekdaySheet(BuildContext context) => showAppSheet<void>(
   context: context,

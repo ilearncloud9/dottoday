@@ -7,7 +7,7 @@ import 'package:dottoday/shared/dot/week_strip.dart';
 
 /// "2 of 7 · 5 h 45 planned" for a day's timed [blocks] (docs/10 §3
 /// `DayCard`). Skipped tasks count as neither planned nor to do; free time
-/// is what no task occupies between Wake Up and Bedtime (overlaps counted
+/// is what no task occupies between Wake Up and Wind Down (overlaps counted
 /// once, tasks outside the waking day ignored — domain `capacityOf`).
 DaySummary daySummaryOf(List<Occurrence> blocks, DayShape shape) {
   final active = [

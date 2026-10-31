@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
@@ -12,6 +14,7 @@ import 'package:dottoday/features/timeline/state/reality_thread.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
+import 'package:dottoday/features/timeline/widgets/cap_time_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/day_drag.dart';
 import 'package:dottoday/features/timeline/widgets/empty_day_actions.dart';
@@ -235,6 +238,9 @@ class DayPage extends ConsumerWidget {
       selectedIds: picked.day == date ? picked.ids : const {},
       onSelect: (id) =>
           ref.read(taskSelectionProvider.notifier).toggle(date, id),
+      onCap: (windDown) => unawaited(
+        showCapTimeSheet(context, date: date, windDown: windDown, settings: s),
+      ),
     );
   }
 

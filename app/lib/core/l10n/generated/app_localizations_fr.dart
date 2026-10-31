@@ -376,7 +376,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String threadBed(String time) {
-    return 'Coucher · $time';
+    return 'Détente · $time';
+  }
+
+  @override
+  String get capEditHint => 'Changer l\'heure';
+
+  @override
+  String get capEveryDay => 'Tous les jours';
+
+  @override
+  String capEveryWeekday(String weekday) {
+    return 'Chaque $weekday';
   }
 
   @override
@@ -1187,7 +1198,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String durationFitsBedtime(String time) {
-    return 'Tient avant le coucher à $time';
+    return 'Tient avant la détente à $time';
   }
 
   @override
@@ -1197,7 +1208,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String durationPastBedtime(String time) {
-    return 'Finit après le coucher à $time';
+    return 'Finit après la détente à $time';
   }
 
   @override
@@ -1428,7 +1439,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsWakeUp => 'Réveil';
 
   @override
-  String get settingsBedtime => 'Coucher';
+  String get settingsBedtime => 'Détente';
 
   @override
   String get settingsPerWeekday => 'Jours différents';
@@ -1524,7 +1535,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get settingsBedtimeReminder => 'Rappel du coucher';
+  String get settingsBedtimeReminder => 'Rappel de détente';
 
   @override
   String settingsBedtimeReminderDetail(String time) {
@@ -2232,7 +2243,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get alertsBedtime => 'Rappel du coucher';
+  String get alertsBedtime => 'Rappel de détente';
 
   @override
   String get alertsBedtimeDetail =>
@@ -3202,7 +3213,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onboardingRemindersBody =>
-      'Dottoday vous rappelle le début d\'une tâche et l\'heure du coucher. Vous pouvez changer cela à tout moment dans les réglages.';
+      'Dottoday vous rappelle le début d\'une tâche et l\'heure de la détente. Vous pouvez changer cela à tout moment dans les réglages.';
 
   @override
   String get onboardingTaskStarts => 'Avant chaque tâche';
@@ -3212,7 +3223,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Combien de temps avant, à vous de voir dans les réglages';
 
   @override
-  String get onboardingBedtime => 'Au coucher';
+  String get onboardingBedtime => 'À la détente';
 
   @override
   String get onboardingBedtimeDetail =>
@@ -3239,11 +3250,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onboardingDoneBody =>
-      'Demain, du réveil au coucher. Ajoutez des tâches, déplacez-les, ou commencez par aujourd\'hui.';
+      'Demain, du réveil à la détente. Ajoutez des tâches, déplacez-les, ou commencez par aujourd\'hui.';
 
   @override
   String get onboardingDoneEmpty =>
-      'Demain, du réveil au coucher, est à vous. Ajoutez la première tâche quand vous voulez.';
+      'Demain, du réveil à la détente, est à vous. Ajoutez la première tâche quand vous voulez.';
 
   @override
   String get onboardingOpenToday => 'Ouvrir aujourd\'hui';
@@ -3328,7 +3339,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notifSnoozed => 'Rappel reporté';
 
   @override
-  String get notifBedtimeTitle => 'Coucher';
+  String get notifBedtimeTitle => 'Détente';
 
   @override
   String notifBedtimeFirst(String title, String time) {
@@ -3362,7 +3373,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Sonne comme une alarme pour la première tâche de la journée et au début d\'une routine';
 
   @override
-  String get notifChannelSummary => 'Coucher';
+  String get notifChannelSummary => 'Détente';
 
   @override
   String get notifChannelSummaryDetail => 'Le coup d\'œil du soir sur demain';
@@ -3907,8 +3918,8 @@ class AppLocalizationsFr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count tâches après le coucher',
-      one: '1 tâche après le coucher',
+      other: '$count tâches après la détente',
+      one: '1 tâche après la détente',
     );
     return '$_temp0';
   }
@@ -4620,7 +4631,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get rebalanceAllowShrink => 'Raccourcir l’optionnel';
 
   @override
-  String get rebalancePastBedtime => 'Dépasser le coucher';
+  String get rebalancePastBedtime => 'Dépasser la détente';
 
   @override
   String rebalanceRanOver(String title, String duration) {
@@ -4801,7 +4812,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get routineStartsWake => 'commence au réveil';
 
   @override
-  String get routineEndsBed => 'finit au coucher';
+  String get routineEndsBed => 'finit à la détente';
 
   @override
   String routineStartsAt(String time) {
@@ -4857,7 +4868,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get routineAnchorWake => 'Au réveil';
 
   @override
-  String get routineAnchorBed => 'Finit au coucher';
+  String get routineAnchorBed => 'Finit à la détente';
 
   @override
   String get routineAnchorTime => 'À une heure';

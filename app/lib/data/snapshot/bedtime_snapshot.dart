@@ -4,8 +4,8 @@ import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
 
-/// Writes the day snapshot again at today's Bedtime while the app is open
-/// (docs/11 B5 "written at Bedtime"): the record then holds the finished
+/// Writes the day snapshot again at today's Wind Down while the app is open
+/// (docs/11 B5 "written at Wind Down"): the record then holds the finished
 /// day, with progress 1. Re-armed after every housekeeping run; with the
 /// app closed, the next start or background refresh writes it instead.
 final class BedtimeSnapshot {
@@ -25,8 +25,8 @@ final class BedtimeSnapshot {
   final Timer Function(Duration, void Function()) _timer;
   Timer? _pending;
 
-  /// Arms one write at [userId]'s Bedtime today, replacing any armed one;
-  /// nothing when Bedtime has passed.
+  /// Arms one write at [userId]'s Wind Down today, replacing any armed one;
+  /// nothing when Wind Down has passed.
   Future<void> arm(String userId) async {
     final snapshot = await _writer.build(userId);
     _pending?.cancel();

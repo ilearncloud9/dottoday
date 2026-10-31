@@ -59,5 +59,5 @@ enum ThemePreference { system, light, dark }
 enum Weekday { mon, tue, wed, thu, fri, sat, sun }
 
 /// Where a routine sits on a day (docs/05 `routines`, 11 C2): its first
-/// step at Wake Up, its last step ending at Bedtime, or a fixed time.
+/// step at Wake Up, its last step ending at Wind Down, or a fixed time.
 enum RoutineAnchor { wake, bed, time }

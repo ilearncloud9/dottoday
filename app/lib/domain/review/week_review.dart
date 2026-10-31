@@ -4,7 +4,7 @@ import 'package:timezone/timezone.dart' as tz;
 /// The seven days the weekly review shows (11 D1, docs/09 M12.1) for
 /// [today]: the week (starting on [firstDayOfWeek], 1 = Monday … 7 =
 /// Sunday) that holds today, or, on the first day of a week, the week that
-/// just ended — so Sunday at Bedtime shows the week ending tonight when
+/// just ended — so Sunday at Wind Down shows the week ending tonight when
 /// weeks start on Monday, and the one ending yesterday when they start on
 /// Sunday (`B-ios-week-review`: Sunday 25 Oct shows 18 – 24 October).
 ///

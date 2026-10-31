@@ -669,8 +669,26 @@ abstract class AppLocalizations {
   /// Moon cap at the end of the day's thread (Main).
   ///
   /// In en, this message translates to:
-  /// **'Bedtime · {time}'**
+  /// **'Wind Down · {time}'**
   String threadBed(String time);
+
+  /// Screen-reader hint on the Wake Up / Wind Down caps of the thread: a tap edits the time.
+  ///
+  /// In en, this message translates to:
+  /// **'Change time'**
+  String get capEditHint;
+
+  /// Cap time sheet: the new Wake Up / Wind Down applies to every day.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get capEveryDay;
+
+  /// Cap time sheet: the new time applies only to this weekday, e.g. 'Every Saturday'.
+  ///
+  /// In en, this message translates to:
+  /// **'Every {weekday}'**
+  String capEveryWeekday(String weekday);
 
   /// A free gap on the thread, e.g. '1 h free' (Main).
   ///
@@ -738,7 +756,7 @@ abstract class AppLocalizations {
   /// **'{label}, {progress}'**
   String rowWithSubtasks(String label, String progress);
 
-  /// Screen-reader label of the day dot: share of Wake Up → Bedtime elapsed.
+  /// Screen-reader label of the day dot: share of Wake Up → Wind Down elapsed.
   ///
   /// In en, this message translates to:
   /// **'Day {percent} % through'**
@@ -1734,10 +1752,10 @@ abstract class AppLocalizations {
   /// **'Still fits before {title} at {time}'**
   String durationFitsBefore(String title, String time);
 
-  /// Duration sheet preview: nothing follows until Bedtime.
+  /// Duration sheet preview: nothing follows until Wind Down.
   ///
   /// In en, this message translates to:
-  /// **'Fits before Bedtime at {time}'**
+  /// **'Fits before Wind Down at {time}'**
   String durationFitsBedtime(String time);
 
   /// Duration sheet preview: the task overlaps the next one.
@@ -1746,10 +1764,10 @@ abstract class AppLocalizations {
   /// **'Runs into {title} at {time}'**
   String durationRunsInto(String title, String time);
 
-  /// Duration sheet preview: the task ends after Bedtime.
+  /// Duration sheet preview: the task ends after Wind Down.
   ///
   /// In en, this message translates to:
-  /// **'Runs past Bedtime at {time}'**
+  /// **'Runs past Wind Down at {time}'**
   String durationPastBedtime(String time);
 
   /// Duration sheet section caption (shown uppercase).
@@ -2109,10 +2127,10 @@ abstract class AppLocalizations {
   /// Settings row; also the DAY SHAPE handle's name.
   ///
   /// In en, this message translates to:
-  /// **'Bedtime'**
+  /// **'Wind Down'**
   String get settingsBedtime;
 
-  /// Settings row: per-weekday Wake Up / Bedtime.
+  /// Settings row: per-weekday Wake Up / Wind Down.
   ///
   /// In en, this message translates to:
   /// **'Different days'**
@@ -2283,10 +2301,10 @@ abstract class AppLocalizations {
   /// Settings switch.
   ///
   /// In en, this message translates to:
-  /// **'Bedtime reminder'**
+  /// **'Wind Down reminder'**
   String get settingsBedtimeReminder;
 
-  /// Subtitle of Bedtime reminder.
+  /// Subtitle of Wind Down reminder.
   ///
   /// In en, this message translates to:
   /// **'At {time}, with tomorrow\'s first task'**
@@ -3243,10 +3261,10 @@ abstract class AppLocalizations {
   /// Switch in the Alerts editor (applies to every day).
   ///
   /// In en, this message translates to:
-  /// **'Bedtime reminder'**
+  /// **'Wind Down reminder'**
   String get alertsBedtime;
 
-  /// Under the Bedtime reminder switch.
+  /// Under the Wind Down reminder switch.
   ///
   /// In en, this message translates to:
   /// **'Every evening, with tomorrow\'s first task'**
@@ -4713,7 +4731,7 @@ abstract class AppLocalizations {
   /// Onboarding O4 explanation.
   ///
   /// In en, this message translates to:
-  /// **'Dottoday reminds you when a task starts and before bedtime. You can change this any time in Settings.'**
+  /// **'Dottoday reminds you when a task starts and before Wind Down. You can change this any time in Settings.'**
   String get onboardingRemindersBody;
 
   /// Onboarding O4: the task-start reminder.
@@ -4728,13 +4746,13 @@ abstract class AppLocalizations {
   /// **'How early is up to you, in Settings'**
   String get onboardingTaskStartsDetail;
 
-  /// Onboarding O4: the Bedtime reminder switch.
+  /// Onboarding O4: the Wind Down reminder switch.
   ///
   /// In en, this message translates to:
-  /// **'At Bedtime'**
+  /// **'At Wind Down'**
   String get onboardingBedtime;
 
-  /// Onboarding O4: under the Bedtime switch.
+  /// Onboarding O4: under the Wind Down switch.
   ///
   /// In en, this message translates to:
   /// **'Tomorrow\'s first task, so the morning has no surprises'**
@@ -4779,13 +4797,13 @@ abstract class AppLocalizations {
   /// Onboarding O6 explanation.
   ///
   /// In en, this message translates to:
-  /// **'Tomorrow, from Wake Up to Bedtime. Add to it, drag things around, or start with today.'**
+  /// **'Tomorrow, from Wake Up to Wind Down. Add to it, drag things around, or start with today.'**
   String get onboardingDoneBody;
 
   /// Onboarding O6 when no habits were picked.
   ///
   /// In en, this message translates to:
-  /// **'Tomorrow, from Wake Up to Bedtime, is all yours. Add the first task whenever you like.'**
+  /// **'Tomorrow, from Wake Up to Wind Down, is all yours. Add the first task whenever you like.'**
   String get onboardingDoneEmpty;
 
   /// Onboarding O6 primary button: finishes onboarding.
@@ -4908,19 +4926,19 @@ abstract class AppLocalizations {
   /// **'Snoozed reminder'**
   String get notifSnoozed;
 
-  /// Title of the Bedtime reminder.
+  /// Title of the Wind Down reminder.
   ///
   /// In en, this message translates to:
-  /// **'Bedtime'**
+  /// **'Wind Down'**
   String get notifBedtimeTitle;
 
-  /// Bedtime reminder body.
+  /// Wind Down reminder body.
   ///
   /// In en, this message translates to:
   /// **'Tomorrow starts with {title} at {time}.'**
   String notifBedtimeFirst(String title, String time);
 
-  /// Bedtime reminder body when tomorrow is empty.
+  /// Wind Down reminder body when tomorrow is empty.
   ///
   /// In en, this message translates to:
   /// **'Nothing planned for tomorrow yet.'**
@@ -4971,7 +4989,7 @@ abstract class AppLocalizations {
   /// Android notification channel name.
   ///
   /// In en, this message translates to:
-  /// **'Bedtime'**
+  /// **'Wind Down'**
   String get notifChannelSummary;
 
   /// Android channel description.
@@ -5754,10 +5772,10 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 task before Wake Up} other{{count} tasks before Wake Up}}'**
   String threadOutsideBefore(int count);
 
-  /// Folded 'outside hours' row below the Bedtime cap (docs/02 F1.15): tasks that start at Bedtime or later. Tapping unfolds them.
+  /// Folded 'outside hours' row below the Wind Down cap (docs/02 F1.15): tasks that start at Wind Down or later. Tapping unfolds them.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{1 task after Bedtime} other{{count} tasks after Bedtime}}'**
+  /// **'{count, plural, =1{1 task after Wind Down} other{{count} tasks after Wind Down}}'**
   String threadOutsideAfter(int count);
 
   /// Keyboard shortcut sheet, Today: ↑ / ↓ pick a task along the day (docs/02 F1.17).
@@ -6894,10 +6912,10 @@ abstract class AppLocalizations {
   /// **'Allow shrinking optional'**
   String get rebalanceAllowShrink;
 
-  /// Rebalance rule chip: let the day run past Bedtime instead of moving tasks to tomorrow.
+  /// Rebalance rule chip: let the day run past Wind Down instead of moving tasks to tomorrow.
   ///
   /// In en, this message translates to:
-  /// **'Push past bedtime'**
+  /// **'Push past Wind Down'**
   String get rebalancePastBedtime;
 
   /// Rebalance subtitle after a task overran its end.
@@ -7140,10 +7158,10 @@ abstract class AppLocalizations {
   /// **'starts at Wake Up'**
   String get routineStartsWake;
 
-  /// Routine anchor: last step ends at Bedtime.
+  /// Routine anchor: last step ends at Wind Down.
   ///
   /// In en, this message translates to:
-  /// **'ends at Bedtime'**
+  /// **'ends at Wind Down'**
   String get routineEndsBed;
 
   /// Routine anchor: a fixed local time.
@@ -7239,7 +7257,7 @@ abstract class AppLocalizations {
   /// Anchor choice.
   ///
   /// In en, this message translates to:
-  /// **'Ending at Bedtime'**
+  /// **'Ending at Wind Down'**
   String get routineAnchorBed;
 
   /// Anchor choice.
@@ -7500,7 +7518,7 @@ abstract class AppLocalizations {
   /// **'already here · overlaps'**
   String get proposalOverlaps;
 
-  /// Weekly review (11 D1): sheet title, Today ⋯ menu item and Bedtime prompt caption.
+  /// Weekly review (11 D1): sheet title, Today ⋯ menu item and Wind Down prompt caption.
   ///
   /// In en, this message translates to:
   /// **'This week'**
@@ -7650,13 +7668,13 @@ abstract class AppLocalizations {
   /// **'No streaks here — just what happened.'**
   String get weekReviewNoStreaks;
 
-  /// Bedtime prompt on the week's last day: what the weekly review shows.
+  /// Wind Down prompt on the week's last day: what the weekly review shows.
   ///
   /// In en, this message translates to:
   /// **'Your week in seven dots'**
   String get weekPromptDetail;
 
-  /// Bedtime prompt on the week's last day: open the weekly review.
+  /// Wind Down prompt on the week's last day: open the weekly review.
   ///
   /// In en, this message translates to:
   /// **'See the week'**

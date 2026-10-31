@@ -51,7 +51,7 @@ One table, not `routines` + `routine_items` as first planned: a routine is edite
 rarely, and `items` mirrors `series.subtask_template` (one sync entity, one RLS policy, one export
 list). A drop writes ordinary occurrences (one per step, the first with `routine_start`); nothing on
 the timeline points back at the routine, so editing or deleting a routine never touches a day.
-Placement: `wake` — the first step at that day's Wake Up; `bed` — the last step ends at Bedtime;
+Placement: `wake` — the first step at that day's Wake Up; `bed` — the last step ends at Wind Down;
 `time` — the first step at `anchor_minute` local wall clock (DST-true). RLS: own rows only; synced
 through `sync_push` (0007 adds the entity); purged like other tombstones after 30 days.
 

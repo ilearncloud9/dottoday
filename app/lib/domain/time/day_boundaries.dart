@@ -1,7 +1,7 @@
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 
-/// The everyday Wake Up → Bedtime window (Settings › DAY SHAPE): the one
+/// The everyday Wake Up → Wind Down window (Settings › DAY SHAPE): the one
 /// most weekdays use (ties go to the earliest weekday). Days with their
 /// own window are "custom".
 ///
@@ -53,7 +53,31 @@ Settings withDayWindow(Settings s, Weekday day, TimeWindow? window) {
   );
 }
 
-/// `HH:mm` for minutes after midnight; 1440 is `24:00` (Bedtime at
+/// [s] with one end of [day]'s window moved to [minute]: Wake Up, or
+/// Wind Down when [windDown]. With [everyDay] the everyday window takes
+/// the new time and [day] follows it; otherwise only [day] does (the
+/// thread's caps, R-17).
+///
+/// ```dart
+/// withCapAt(s, Weekday.sat, windDown: false, minute: 540, everyDay: false);
+/// // Saturdays wake at 09:00; other days keep theirs.
+/// ```
+Settings withCapAt(
+  Settings s,
+  Weekday day, {
+  required bool windDown,
+  required int minute,
+  required bool everyDay,
+}) {
+  TimeWindow moved(TimeWindow w) => windDown
+      ? w.copyWith(end: windowTime(minute))
+      : w.copyWith(start: windowTime(minute));
+  if (!everyDay) return withDayWindow(s, day, moved(s.boundaryFor(day)));
+  final common = moved(commonWindow(s));
+  return withDayWindow(withCommonWindow(s, common), day, common);
+}
+
+/// `HH:mm` for minutes after midnight; 1440 is `24:00` (Wind Down at
 /// midnight).
 String windowTime(int minutes) {
   String two(int n) => n.toString().padLeft(2, '0');

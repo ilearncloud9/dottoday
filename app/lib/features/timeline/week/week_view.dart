@@ -142,7 +142,7 @@ class WeekView extends ConsumerWidget {
     );
   }
 
-  /// The earliest Wake Up or task start and the latest Bedtime or task
+  /// The earliest Wake Up or task start and the latest Wind Down or task
   /// end of the week, in whole local hours, so every day fits one shared
   /// axis (a 6:45 run or a late train stays on the board).
   static (int, int) _axisHours(

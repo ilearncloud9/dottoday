@@ -19,7 +19,7 @@ late tz.Location _berlin;
 var _n = 0;
 String _id() => 'id-${++_n}';
 
-// Berlin, Wed 21 Oct 2026 (UTC+2): Wake Up 7:00, Bedtime 22:00.
+// Berlin, Wed 21 Oct 2026 (UTC+2): Wake Up 7:00, Wind Down 22:00.
 DateTime _at(int h, [int m = 0]) => DateTime.utc(2026, 10, 21, h - 2, m);
 final _shape = DayShape(wakeUtc: _at(7), bedUtc: _at(22));
 
@@ -57,7 +57,7 @@ void main() {
     expect(r.anchorMinute, isNull);
   });
 
-  test('ending at Bedtime anchors there; otherwise the local time', () {
+  test('ending at Wind Down anchors there; otherwise the local time', () {
     final shutdown = _from([
       _task('Review', 21, 20, 20),
       _task('Read', 21, 40, 20),

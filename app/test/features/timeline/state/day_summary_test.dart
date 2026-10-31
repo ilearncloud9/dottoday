@@ -47,7 +47,7 @@ void main() {
     final day = [
       occurrenceFixture().copyWith(id: 'x', startUtc: at(9), durationMin: 120),
       occurrenceFixture().copyWith(id: 'y', startUtc: at(10), durationMin: 120),
-      // 19:00–21:00Z: only the hour before Bedtime (20:00Z) counts.
+      // 19:00–21:00Z: only the hour before Wind Down (20:00Z) counts.
       occurrenceFixture().copyWith(id: 'z', startUtc: at(19), durationMin: 120),
     ];
     final s = daySummaryOf(day, shape);

@@ -27,7 +27,7 @@ final class _FakeTimer implements Timer {
 }
 
 void main() {
-  // 06:00Z = 02:00 in New York (the fixture profile); Bedtime 22:00 EDT is
+  // 06:00Z = 02:00 in New York (the fixture profile); Wind Down 22:00 EDT is
   // 02:00Z the next day.
   final now = DateTime.utc(2026, 10, 21, 6);
   late WriteHarness h;
@@ -57,7 +57,7 @@ void main() {
   });
   tearDown(() => h.dispose());
 
-  test('arms one write at Bedtime and writes the snapshot then', () async {
+  test('arms one write at Wind Down and writes the snapshot then', () async {
     await bedtime.arm(userId);
     expect(timers.single.wait, const Duration(hours: 20));
     final before = h.sink.written.length;
@@ -75,7 +75,7 @@ void main() {
     expect(timers.last.cancelled, isFalse);
   });
 
-  test('after Bedtime nothing is armed', () async {
+  test('after Wind Down nothing is armed', () async {
     h.clock.now = DateTime.utc(2026, 10, 22, 3);
     await bedtime.arm(userId);
     expect(timers, isEmpty);

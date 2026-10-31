@@ -36,6 +36,44 @@ Widget _thread({
 );
 
 void main() {
+  testWidgets('caps are task dots that report Wake Up / Wind Down taps', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    final log = <bool>[];
+    await tester.pumpWidget(_thread(actions: ThreadActions(onCap: log.add)));
+    final dots = tester.widgetList<TaskDot>(
+      find.descendant(of: find.byType(CapRow), matching: find.byType(TaskDot)),
+    );
+    expect(dots.map((d) => d.icon), [TaskIcon.sun, TaskIcon.sleepyMoon]);
+    expect(dots.map((d) => d.size), everyElement(DotSize.threadDot));
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Wake Up · 7:00')),
+      matchesSemantics(
+        label: 'Wake Up · 7:00',
+        isButton: true,
+        hasTapAction: true,
+        onTapHint: 'Change time',
+      ),
+    );
+    await tester.tap(find.text('Wake Up · 7:00'));
+    await tester.ensureVisible(find.text('Wind Down · 22:00'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('Wind Down · 22:00'));
+    expect(log, [false, true]);
+    handle.dispose();
+  });
+
+  testWidgets('without onCap the caps are not buttons', (tester) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(_thread());
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Wake Up · 7:00')),
+      isNot(matchesSemantics(isButton: true)),
+    );
+    handle.dispose();
+  });
+
   testWidgets('dot, done circle, row and live buttons report the task', (
     tester,
   ) async {
@@ -222,18 +260,18 @@ void main() {
         ),
       ),
     );
-    expect(find.text('2 tasks after Bedtime'), findsOneWidget);
+    expect(find.text('2 tasks after Wind Down'), findsOneWidget);
     expect(find.text('Late a'), findsNothing);
     expect(
-      tester.getSemantics(find.bySemanticsLabel('2 tasks after Bedtime')),
+      tester.getSemantics(find.bySemanticsLabel('2 tasks after Wind Down')),
       matchesSemantics(
-        label: '2 tasks after Bedtime',
+        label: '2 tasks after Wind Down',
         isButton: true,
         hasExpandedState: true,
         hasTapAction: true,
       ),
     );
-    await tester.tap(find.text('2 tasks after Bedtime'));
+    await tester.tap(find.text('2 tasks after Wind Down'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Late b'));
     expect(opened, ['b']);

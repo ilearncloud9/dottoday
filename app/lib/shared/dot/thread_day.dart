@@ -30,9 +30,9 @@ final class ThreadFormat {
 const minGapMinutes = 15;
 
 /// The day as thread entries (docs/10 §1, §6): Wake Up cap, tasks in start
-/// order with free gaps between them, Bedtime cap. A task that starts
+/// order with free gaps between them, Wind Down cap. A task that starts
 /// before an earlier one ends follows a [ThreadOverlap] (ADR-0015). Tasks that end by Wake
-/// Up or start at Bedtime or later fold into a [ThreadOutside] row before
+/// Up or start at Wind Down or later fold into a [ThreadOutside] row before
 /// the sun cap or after the moon cap (F1.15); a task across a cap stays
 /// inline.
 ///
@@ -123,7 +123,7 @@ List<bool> _overlaps(List<Occurrence> sorted) {
 }
 
 /// [sorted] split by the day's caps: ended by Wake Up, crossing the waking
-/// day, from Bedtime on.
+/// day, from Wind Down on.
 ({List<Occurrence> before, List<Occurrence> inside, List<Occurrence> after})
 _split(List<Occurrence> sorted, DayShape shape) => (
   before: [

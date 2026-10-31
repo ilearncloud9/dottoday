@@ -7,7 +7,7 @@ import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// The day's Wake Up → Bedtime from its timeline data.
+/// The day's Wake Up → Wind Down from its timeline data.
 DayShape shapeOf(TimelineData d) => DayShape.on(
   d.day.location,
   d.day.date,

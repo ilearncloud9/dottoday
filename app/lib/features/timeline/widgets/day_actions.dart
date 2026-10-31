@@ -31,6 +31,7 @@ ThreadActions dayThreadActions(
   ThreadDrag? drag,
   Set<String> selectedIds = const {},
   ValueChanged<String>? onSelect,
+  ValueChanged<bool>? onCap,
 }) {
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
@@ -54,6 +55,7 @@ ThreadActions dayThreadActions(
     drag: drag,
     selectedIds: selectedIds,
     onSelect: onSelect,
+    onCap: onCap,
     onOpen: (id) =>
         openTask(context, id, otherwise: () => showTaskSheet(context, id)),
     onFocus: (id) => openFocus(context, id),

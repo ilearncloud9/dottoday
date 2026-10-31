@@ -8,7 +8,7 @@ Reference renders live in `docs/design-references/png/` (2× PNG) with their HTM
 
 ## 1. The idea in one paragraph
 
-A day is a **thread**: a vertical line that starts at Wake Up (sun cap) and ends at Bedtime (moon cap). Every task is a **dot** on that thread: a round tint of the task's colour with its bold icon in the colour itself (ADR-0015). The dot looks the same whether the task is upcoming or done; a ring inside it fills while the task is live, and the round **done circle** at the row's end fills with a tick when the task is done. Between dots the thread is a dotted line (free time); over a task it is a thick coloured segment the length of the task. The same dot vocabulary carries the whole app: the **day dot** in the header fills from Wake Up to Bedtime, the **week strip** is seven small completion dots, the **Inbox** is a dotted ring holding loose dots, the Today tab icon is a dot. Nothing else is decorative.
+A day is a **thread**: a vertical line that starts at Wake Up (sun cap) and ends at Wind Down (moon cap). Every task is a **dot** on that thread: a round tint of the task's colour with its bold icon in the colour itself (ADR-0015). The dot looks the same whether the task is upcoming or done; a ring inside it fills while the task is live, and the round **done circle** at the row's end fills with a tick when the task is done. Between dots the thread is a dotted line (free time); over a task it is a thick coloured segment the length of the task. The same dot vocabulary carries the whole app: the **day dot** in the header fills from Wake Up to Wind Down, the **week strip** is seven small completion dots, the **Inbox** is a dotted ring holding loose dots, the Today tab icon is a dot. Nothing else is decorative.
 
 ## 2. Tokens
 
@@ -62,11 +62,11 @@ Durations 180–240 ms, standard ease-out; all animation collapses to 0 under re
 
 | Widget | What it is | Renders in |
 |---|---|---|
-| `DayDot` | 44 px conic ring, Wake Up→Bedtime progress, small accent dot centre | every header, Watch (18 px) |
+| `DayDot` | 44 px conic ring, Wake Up→Wind Down progress, small accent dot centre | every header, Watch (18 px) |
 | `WeekStrip` | 7 columns: weekday, date, 8 px completion dot (filled past / conic partial / outline future); the selected column filled in the text colour (ADR-0015); on Today the pull handle sits on the day sheet and opens `MonthGrid` | Today (all platforms) |
 | `DayPager` | horizontal pager of full-width `DayCard.sheet`s (ADR-0015: no peek, no page dots), always opens on today | iPhone, Android |
 | `DayCard` | raised card: "Weekday · Today" + "2 of 7 · 5 h 45 planned", then `Thread`; on Today the `.sheet` form: top-rounded, the month handle on top, no title row (the header carries the numbers, ADR-0015) | iPhone, Android, Mac spread, onboarding |
-| `Thread` | the vertical timeline: sun cap, rows, free gaps ("1 h free · add here" drop target), moon cap "Bedtime · 22:00" | Today, task sheet, pickers |
+| `Thread` | the vertical timeline: sun cap, rows, free gaps ("1 h free · add here" drop target), moon cap "Wind Down · 22:00". Both caps are `TaskDot`s at the row-dot size (amber sun, violet sleepy moon); tapping a cap or its time opens its time for every day or only that weekday (R-17) | Today, task sheet, pickers |
 | `TaskRow` | dot + segment + meta + title + done circle (ring in the task colour, filled with a white tick when done; ADR-0015); the row stretches with its task (88–288 px); states upcoming / live / done / missed / pinned (lock) / recurring (repeat glyph) | thread, search results |
 | `LiveRow` | `TaskRow` expanded: subtask ring "1 of 3", "38 min left", Done / +15 min / Shift the rest | the current task |
 | `TaskDot` | the icon dot: tint + bold icon in the task colour, the same in every state; live adds an inner progress ring, skipped a dashed ring and faded icon (ADR-0015) | everywhere |
@@ -107,9 +107,9 @@ Web = the Mac layout at expanded width and the Android layout (Material) at comp
 | # | Screen | Content | Ref |
 |---|---|---|---|
 | O1 | Welcome | the dot draws itself, "Your day, as a thread." one-line value prop, Get started / Sign in | no ref — compose from `DayDot` + `Thread` sample |
-| O2 | Day shape | "When does your day start and end?" two wheels Wake Up / Bedtime with the live sun→moon mini-thread; this is the one onboarding question that matters | no ref — reuse Settings › DAY SHAPE preview |
+| O2 | Day shape | "When does your day start and end?" two wheels Wake Up / Wind Down with the live sun→moon mini-thread; this is the one onboarding question that matters | no ref — reuse Settings › DAY SHAPE preview |
 | O3 | Habits (optional, skippable) | pick 3–5 starter tasks from suggestion chips (Morning run, Deep work, Lunch, …); they land on tomorrow's thread as upcoming dots | no ref — `ColourIconBlock` + suggestion rows from Add step 1 |
-| O4 | Reminders | explain the two notification types (task starts, Bedtime reminder), request permission with the system prompt; optional row "Connect a calendar" (PRD F10) | no ref |
+| O4 | Reminders | explain the two notification types (task starts, Wind Down reminder), request permission with the system prompt; optional row "Connect a calendar" (PRD F10) | no ref |
 | O5 | Account | Sign in with Apple / Google / email magic link, or "Continue without an account" (local only; sync later) | no ref — plain, raised card, accent primary |
 | O6 | Done | the user's first thread with their habits placed; "Open today" | no ref |
 Also: returning-user sign-in, magic-link "check your mail", account error, and a restore-from-sync progress state.
@@ -135,7 +135,7 @@ Also: returning-user sign-in, magic-link "check your mail", account error, and a
 | WA1 | Watch "Now" | `Watch` (Watch is a companion: Now, Next, Done / +15; no editing) |
 
 ### 5.3 Secondary (no refs — derive)
-Repeat editor (never / daily / weekdays / weekly on … / monthly / custom; end date; "this one or all future" on edit and delete); Alerts editor (at start, N min before, Bedtime reminder); Subtask editor (reorder, rename); Colour & icon full picker (sheet with the 26 icons in a grid); Change day picker (the month grid in a sheet); Time zone picker; "Running late" sheet (shift the rest / skip / shorten); Day review at Bedtime ("3 of 7 done · move the rest to tomorrow?"); Inbox swipe confirmations and Undo snackbar; Completed group expanded; Search empty and no-results; Settings sub-pages (Calendars import list, Export, Help, Privacy, About); Account page (sign in/out, delete account with confirm); Sync status sheet (last synced, conflicts: local vs remote with "keep mine / keep theirs"); offline banner; permission-denied states for notifications; Mac/web keyboard shortcut sheet (⌘/).
+Repeat editor (never / daily / weekdays / weekly on … / monthly / custom; end date; "this one or all future" on edit and delete); Alerts editor (at start, N min before, Wind Down reminder); Subtask editor (reorder, rename); Colour & icon full picker (sheet with the 26 icons in a grid); Change day picker (the month grid in a sheet); Time zone picker; "Running late" sheet (shift the rest / skip / shorten); Day review at Wind Down ("3 of 7 done · move the rest to tomorrow?"); Inbox swipe confirmations and Undo snackbar; Completed group expanded; Search empty and no-results; Settings sub-pages (Calendars import list, Export, Help, Privacy, About); Account page (sign in/out, delete account with confirm); Sync status sheet (last synced, conflicts: local vs remote with "keep mine / keep theirs"); offline banner; permission-denied states for notifications; Mac/web keyboard shortcut sheet (⌘/).
 
 Added in M14 (owner, 2026-10-28; derived, no render): **Settings › Siri & Shortcuts** (iPhone only, D3 — the five phrases, how to ask Siri, Open Shortcuts); **Brain dump with mic** (the `MicButton` in the box, the listening caption, a first-use tip card, the denied line); **Notes with mic** (the editor's NOTES field with the `MicButton`); **the "simple rules" proposal state** (origin "simple rules" + the optional `StatusHint`); Settings › Privacy › Help with thinking with the AI status line.
 
@@ -150,7 +150,7 @@ Loading (skeleton dots on a dotted thread, never a spinner for > 300 ms), empty 
 - Free gaps are drop targets and carry "N h free · add here".
 - Add never asks for what it can infer: typing "Go shopping 5pm 1h" fills time and duration; Suggestions come from the user's own history (same title → last used time, duration, colour, icon).
 - The `ThreadPicker` never lets the user pick a time blind: the slice shows neighbours and warns on overlap.
-- Wake Up / Bedtime drive: the day dot, the thread's caps, free-time maths, capacity rings, the week's "Free · unplanned", and the Bedtime reminder.
+- Wake Up / Wind Down drive: the day dot, the thread's caps, free-time maths, capacity rings, the week's "Free · unplanned", and the Wind Down reminder.
 - Past days show what happened: completion dot, struck done titles, "missed" items, "N of M done".
 - Mac/web never use sheets for editing; the right panel edits in place. Esc closes, ⏎ saves, ⌘D marks done.
 

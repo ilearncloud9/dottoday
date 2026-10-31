@@ -43,7 +43,7 @@ class AddWhenStep extends StatelessWidget {
 
   final AddFlowState state;
 
-  /// The draft's day: its tasks, Wake Up and Bedtime.
+  /// The draft's day: its tasks, Wake Up and Wind Down.
   final DayRoom room;
   final List<int> presets;
   final bool use24h;

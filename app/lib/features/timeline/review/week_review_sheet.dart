@@ -19,7 +19,7 @@ import 'package:intl/intl.dart';
 /// "This week" (11 D1, docs/09 M12.1, `B-ios-week-review`): a sheet on
 /// phones and a popover from the medium width, like the Day review (the
 /// right-hand panel belongs to the proposal "Place" opens). From Today's ⋯
-/// at any time, and at Bedtime on the week's last day.
+/// at any time, and at Wind Down on the week's last day.
 Future<void> showWeekReview(BuildContext context, DateTime today) =>
     showAppSheet<void>(
       context: context,

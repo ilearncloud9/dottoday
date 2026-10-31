@@ -8,7 +8,7 @@ part of 'day_room_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// What is left of [date] between Wake Up and Bedtime, live, for fitting
+/// What is left of [date] between Wake Up and Wind Down, live, for fitting
 /// inbox items (docs/02 F3 "next free gap today, tomorrow morning") and
 /// for picking a time in Add (M3c.2). Shared by both features.
 /// Dependencies are read synchronously (see `timelineData`).
@@ -16,7 +16,7 @@ part of 'day_room_providers.dart';
 @ProviderFor(dayRoom)
 final dayRoomProvider = DayRoomFamily._();
 
-/// What is left of [date] between Wake Up and Bedtime, live, for fitting
+/// What is left of [date] between Wake Up and Wind Down, live, for fitting
 /// inbox items (docs/02 F3 "next free gap today, tomorrow morning") and
 /// for picking a time in Add (M3c.2). Shared by both features.
 /// Dependencies are read synchronously (see `timelineData`).
@@ -24,7 +24,7 @@ final dayRoomProvider = DayRoomFamily._();
 final class DayRoomProvider
     extends $FunctionalProvider<AsyncValue<DayRoom>, DayRoom, Stream<DayRoom>>
     with $FutureModifier<DayRoom>, $StreamProvider<DayRoom> {
-  /// What is left of [date] between Wake Up and Bedtime, live, for fitting
+  /// What is left of [date] between Wake Up and Wind Down, live, for fitting
   /// inbox items (docs/02 F3 "next free gap today, tomorrow morning") and
   /// for picking a time in Add (M3c.2). Shared by both features.
   /// Dependencies are read synchronously (see `timelineData`).
@@ -73,7 +73,7 @@ final class DayRoomProvider
 
 String _$dayRoomHash() => r'539500b6e291e8dad28a1c961485cbbeb3b67295';
 
-/// What is left of [date] between Wake Up and Bedtime, live, for fitting
+/// What is left of [date] between Wake Up and Wind Down, live, for fitting
 /// inbox items (docs/02 F3 "next free gap today, tomorrow morning") and
 /// for picking a time in Add (M3c.2). Shared by both features.
 /// Dependencies are read synchronously (see `timelineData`).
@@ -89,7 +89,7 @@ final class DayRoomFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// What is left of [date] between Wake Up and Bedtime, live, for fitting
+  /// What is left of [date] between Wake Up and Wind Down, live, for fitting
   /// inbox items (docs/02 F3 "next free gap today, tomorrow morning") and
   /// for picking a time in Add (M3c.2). Shared by both features.
   /// Dependencies are read synchronously (see `timelineData`).

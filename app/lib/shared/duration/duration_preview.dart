@@ -16,7 +16,7 @@ typedef DurationPreview = ({
 });
 
 /// The preview of [minutes] from [startUtc] in [room]: where it ends and
-/// whether it fits before the next task or Bedtime ([ignoreId] is the task
+/// whether it fits before the next task or Wind Down ([ignoreId] is the task
 /// itself, when it is already on the day).
 DurationPreview durationPreview(
   BuildContext context,

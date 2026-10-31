@@ -24,7 +24,7 @@ import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Above today's thread (docs/09 M3f.5): from Bedtime, the Day review
+/// Above today's thread (docs/09 M3f.5): from Wind Down, the Day review
 /// while one-off tasks are unfinished; before it, with "Running-late
 /// nudge" on, "Running late?" once a task ended unticked; otherwise, with
 /// the "Plan your inbox" nudge on, that card (F3.3, [InboxNudgeCard]).
@@ -132,7 +132,7 @@ extension on TodayPrompt {
     );
   }
 
-  /// Sunday at Bedtime (the week's last day): the weekly review (11 D1).
+  /// Sunday at Wind Down (the week's last day): the weekly review (11 D1).
   Widget _week(BuildContext context, void Function(TodayPromptKind) notNow) =>
       PromptCard(
         title: context.l10n.weekReviewTitle,

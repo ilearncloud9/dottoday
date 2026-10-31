@@ -66,7 +66,7 @@ android_delivered() {
 }
 
 # Banners SpringBoard posted since [start] for the request phase 1
-# scheduled — by id, so a Bedtime reminder in the window doesn't count.
+# scheduled — by id, so a Wind Down reminder in the window doesn't count.
 # SpringBoard names requests by a short id ("FFEF-4D1A"); the line that
 # loads the request maps it to our identifier. (bash 3.2 can't parse a
 # multi-line $(… | …) inside `case`, hence a function.)

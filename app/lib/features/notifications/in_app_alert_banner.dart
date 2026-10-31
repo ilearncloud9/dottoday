@@ -14,7 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// A reminder shown inside the app (docs/07 Web "in-app banners while
 /// open", docs/09 M5.3): the newest one — a task's with Done and Snooze
 /// 10 min (docs/02 F6.4, M8.4d: the web's way to snooze, since Chrome
-/// keeps two system actions, Done and Open), Bedtime's and the day-start
+/// keeps two system actions, Done and Open), Wind Down's and the day-start
 /// summary's with Open and Later. Nothing when there is none.
 class InAppAlertBanner extends ConsumerWidget {
   const InAppAlertBanner({super.key});

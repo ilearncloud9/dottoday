@@ -1,37 +1,63 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 
-/// The sun or moon cap at either end of the thread.
+/// The Wake Up or Wind Down cap at either end of the thread: a [TaskDot]
+/// like every task's (sun, sleepy moon), with its time beside it. With
+/// [onTap] the dot and the time open the time editor (R-17).
 class CapRow extends StatelessWidget {
-  const CapRow({required this.cap, super.key});
+  const CapRow({
+    required this.cap,
+    this.size = DotSize.threadDot,
+    this.onTap,
+    super.key,
+  });
 
   final ThreadCap cap;
 
-  static const double _icon = DotSize.navIcon - DotSpace.xs;
+  /// The row dots' size on this thread ([DotSize.threadDot], or
+  /// [DotSize.macRowDot] on the spread's side days).
+  final double size;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final bed = cap.bedtime;
+    final windDown = cap.bedtime;
+    final label = windDown
+        ? l10n.threadBed(cap.time)
+        : l10n.threadWake(cap.time);
     return ThreadRowFrame(
-      piece: CapPiece(below: !bed, iconExtent: _icon + DotSpace.xs),
-      dot: DotIcon(
-        bed ? DotGlyphs.moon : DotGlyphs.sun,
-        color: (bed ? TaskColor.violet : TaskColor.amber).color,
-        size: _icon,
+      piece: CapPiece(below: !windDown, iconExtent: size),
+      dot: TaskDot(
+        color: windDown ? TaskColor.violet : TaskColor.amber,
+        icon: windDown ? TaskIcon.sleepyMoon : TaskIcon.sun,
+        state: DotState.upcoming,
+        label: label,
+        size: size,
+        onTap: onTap,
+        tapHint: l10n.capEditHint,
       ),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: DotSpace.s),
-        child: Text(
-          bed ? l10n.threadBed(cap.time) : l10n.threadWake(cap.time),
-          // Caps and gaps read at the weekday size in `Main` (≈ 13 muted).
-          style: t.styles.stripWeekday,
+      // The dot carries the label and the tap for screen readers.
+      child: ExcludeSemantics(
+        child: InkWell(
+          onTap: onTap,
+          canRequestFocus: false,
+          borderRadius: BorderRadius.circular(DotRadii.card),
+          child: SizedBox(
+            height: size,
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              // Caps and gaps read at the weekday size in `Main` (≈ 13 muted).
+              child: Text(label, style: t.styles.stripWeekday),
+            ),
+          ),
         ),
       ),
     );

@@ -6,7 +6,7 @@ import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:flutter/material.dart';
 
 /// The folded "outside hours" zone (docs/02 F1.15, R-17): one row, "2 tasks
-/// before Wake Up" above the sun cap or "1 task after Bedtime" below the
+/// before Wake Up" above the sun cap or "1 task after Wind Down" below the
 /// moon cap, that unfolds into the tasks' own rows. Folded by default so
 /// the day keeps its shape; unfolded when it holds the live task.
 class OutsideRow extends StatefulWidget {

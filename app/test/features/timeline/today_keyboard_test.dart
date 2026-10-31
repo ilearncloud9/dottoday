@@ -8,10 +8,10 @@ import '../../support/today_harness.dart';
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  // Found by CI's journey test after Bedtime: with the Day review above the
+  // Found by CI's journey test after Wind Down: with the Day review above the
   // card, the Add sheet's keyboard shrank Today behind it until the pager
   // overflowed (M5.0 carry-over CI run).
-  testWidgets('a keyboard over Today after Bedtime leaves the card alone', (
+  testWidgets('a keyboard over Today after Wind Down leaves the card alone', (
     tester,
   ) async {
     await pumpToday(

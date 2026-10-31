@@ -10,7 +10,7 @@ import '../../support/reality_fixtures.dart';
 import '../../support/timeline_fakes.dart';
 import '../../support/today_harness.dart';
 
-// The Running late sheet, the Day review at Bedtime and the running-late
+// The Running late sheet, the Day review at Wind Down and the running-late
 // nudge (docs/09 M3f.5, R-04). The demo day in Berlin: Deep work 9–11
 // (live at 9:22), Reply to email 11:00, Lunch with Sam 12:30 (pinned).
 
@@ -135,8 +135,8 @@ void main() {
     });
   });
 
-  group('Day review at Bedtime', () {
-    // 23:30 in Berlin, after the default Bedtime.
+  group('Day review at Wind Down', () {
+    // 23:30 in Berlin, after the default Wind Down.
     final bedtime = DateTime.utc(2026, 10, 21, 21, 30);
 
     testWidgets('sends the rest to the Inbox by default, with Undo', (
@@ -167,7 +167,7 @@ void main() {
       );
     });
 
-    testWidgets('Not now puts it away; not shown before Bedtime', (
+    testWidgets('Not now puts it away; not shown before Wind Down', (
       tester,
     ) async {
       await _pump(tester, at: bedtime);

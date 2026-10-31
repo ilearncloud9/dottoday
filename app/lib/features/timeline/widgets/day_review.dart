@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The Day review (docs/09 M3f.5) in a sheet, from Today's ⋯ menu at any
-/// time; at Bedtime it shows on Today itself (`TodayPrompt`).
+/// time; at Wind Down it shows on Today itself (`TodayPrompt`).
 Future<void> showDayReviewSheet(BuildContext context, DateTime day) =>
     showAppSheet<void>(
       context: context,

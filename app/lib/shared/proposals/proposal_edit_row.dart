@@ -244,7 +244,7 @@ class _ChangeChip extends StatelessWidget {
   }
 }
 
-/// "☾ Bedtime · 22:00", where the thread ends.
+/// "☾ Wind Down · 22:00", where the thread ends.
 class ProposalBedtimeRow extends StatelessWidget {
   const ProposalBedtimeRow({required this.label, this.moon = true, super.key});
 

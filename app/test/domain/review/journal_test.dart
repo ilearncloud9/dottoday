@@ -55,16 +55,19 @@ void main() {
     ]);
   });
 
-  test('a day keeps every task inside Wake Up → Bedtime, with its counts', () {
-    final d = DateTime(2026, 10, 20);
-    final day = _days([
-      _o('Run', d),
-      _o('Write', d, done: false, h: 11),
-      _o('Too early', d, h: 5),
-    ]).single;
-    expect(day.snapshot.dots.map((x) => x.title), ['Run', 'Write']);
-    expect((day.snapshot.dayDone, day.snapshot.dayTotal), (1, 2));
-  });
+  test(
+    'a day keeps every task inside Wake Up → Wind Down, with its counts',
+    () {
+      final d = DateTime(2026, 10, 20);
+      final day = _days([
+        _o('Run', d),
+        _o('Write', d, done: false, h: 11),
+        _o('Too early', d, h: 5),
+      ]).single;
+      expect(day.snapshot.dots.map((x) => x.title), ['Run', 'Write']);
+      expect((day.snapshot.dayDone, day.snapshot.dayTotal), (1, 2));
+    },
+  );
 
   test('"when did I last run?": the newest day whose titles hold it', () {
     final days = _days([

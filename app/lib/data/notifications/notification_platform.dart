@@ -58,7 +58,7 @@ final class OsNotification {
   /// posts on that sound's alarm channel.
   final bool loud;
 
-  /// Done / Snooze / Open (task alerts); Bedtime has none.
+  /// Done / Snooze / Open (task alerts); Wind Down has none.
   final bool withActions;
 
   /// Smallest step (M10.6): the one Start button instead of the task's.

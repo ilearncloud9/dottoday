@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// O4 Reminders (docs/10 §5.1, docs/09 M4.4): the two kinds (before each
-/// task; at Bedtime, with its switch), then Allow notifications (the
+/// task; at Wind Down, with its switch), then Allow notifications (the
 /// system prompt) or Not now. Denied → the M3f.8 notice, and on. Allowed
 /// → "Send me a test alarm" (M6.5.9, skippable) and Continue. "Connect a
 /// calendar" asks for the device calendars (M7.1); which ones come in is
@@ -84,7 +84,7 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
     );
   }
 
-  /// Before each task, At Bedtime (its switch).
+  /// Before each task, At Wind Down (its switch).
   Widget _rows(
     BuildContext context,
     DotTheme t,

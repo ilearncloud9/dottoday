@@ -119,7 +119,7 @@ VoidCallback alertsRowTap(
 
 /// The Alerts row (M3f.2, R-10): the editor, then the alerts on this row
 /// ([onOwn], saved with the other edits) or, for a repeating task, on the
-/// instances the user picks. The Bedtime switch writes Settings at once.
+/// instances the user picks. The Wind Down switch writes Settings at once.
 Future<void> pickAlerts(
   BuildContext context, {
   required TaskView task,

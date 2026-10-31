@@ -108,7 +108,7 @@ void main() {
     await _pump(tester);
     expect(find.text('Morning'), findsOneWidget);
     expect(find.text('4 steps · 1 h 15 · starts at Wake Up'), findsOneWidget);
-    expect(find.text('3 steps · 40 min · ends at Bedtime'), findsOneWidget);
+    expect(find.text('3 steps · 40 min · ends at Wind Down'), findsOneWidget);
     expect(find.text('3 steps · 1 h 15 · starts at 5:30 PM'), findsOneWidget);
     expect(find.text('Drop on today'), findsNWidgets(3));
     expect(find.text('Routine-start dots ring loud, like an alarm'), findsOne);

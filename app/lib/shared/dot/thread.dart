@@ -28,6 +28,7 @@ final class ThreadActions {
     this.onExtend,
     this.onShiftRest,
     this.onAddHere,
+    this.onCap,
     this.drag,
     this.selectedIds = const {},
     this.onSelect,
@@ -46,6 +47,9 @@ final class ThreadActions {
 
   /// A future gap was tapped; reports the gap.
   final ValueChanged<ThreadGap>? onAddHere;
+
+  /// A cap was tapped: true for Wind Down, false for Wake Up (R-17).
+  final ValueChanged<bool>? onCap;
 
   /// Long-press drag onto any time of the day (R-05, ADR-0015); null = no
   /// drag.
@@ -173,9 +177,9 @@ class _ThreadState extends State<Thread> {
       ThreadCap(bedtime: false) when drag?.onAllDay != null => AllDayDropTarget(
         onAllDay: drag!.onAllDay!,
         label: context.l10n.timelineAllDay,
-        child: CapRow(cap: e),
+        child: _cap(e),
       ),
-      ThreadCap() => CapRow(cap: e),
+      ThreadCap() => _cap(e),
       ThreadGap(:final span?) when drag != null => _droppable(
         span,
         drag,
@@ -190,6 +194,15 @@ class _ThreadState extends State<Thread> {
         reveal: tasks.any((t) => a.selectedIds.contains(t.id)),
       ),
     };
+  }
+
+  Widget _cap(ThreadCap cap) {
+    final onCap = widget.actions.onCap;
+    return CapRow(
+      cap: cap,
+      size: widget.side ? DotSize.macRowDot : DotSize.threadDot,
+      onTap: onCap == null ? null : () => onCap(cap.bedtime),
+    );
   }
 
   /// [child] as a drop target standing for [span] (ADR-0015).

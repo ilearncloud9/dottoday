@@ -137,7 +137,7 @@ String lowEnergyTitle(BuildContext context, WidgetRef ref) {
       : l10n.lowEnergyGreetingName(name);
 }
 
-/// The day dot: how far today is through Wake Up → Bedtime.
+/// The day dot: how far today is through Wake Up → Wind Down.
 class TodayDot extends ConsumerWidget {
   const TodayDot({required this.today, super.key});
 

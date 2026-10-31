@@ -3,7 +3,7 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// A day's Wake Up → Bedtime span (docs/10 §6 "Wake Up / Bedtime drive the
+/// A day's Wake Up → Wind Down span (docs/10 §6 "Wake Up / Wind Down drive the
 /// day dot, the thread's caps, free-time maths…"), as UTC instants.
 final class DayShape {
   const DayShape({required this.wakeUtc, required this.bedUtc});
@@ -44,7 +44,7 @@ final class DayShape {
   int get awakeMinutes => bedUtc.difference(wakeUtc).inMinutes;
 
   /// Share of the waking day elapsed at [nowUtc]: 0 before Wake Up, 1 from
-  /// Bedtime on. Pass `clock.nowUtc()`; never read the system time here.
+  /// Wind Down on. Pass `clock.nowUtc()`; never read the system time here.
   double progressAt(DateTime nowUtc) {
     final total = bedUtc.difference(wakeUtc).inSeconds;
     if (total <= 0) return 0;

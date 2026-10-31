@@ -97,7 +97,7 @@ void main() {
       edit: () async {
         await tester.tap(find.text('Allow shrinking optional'));
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Push past bedtime'));
+        await tester.tap(find.text('Push past Wind Down'));
         await tester.pumpAndSettle();
         await tester.tap(find.byTooltip('Keep Reply to email as it is'));
       },

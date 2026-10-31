@@ -15,7 +15,7 @@ const f1Rows = <String, ParityRow>{
     android: jAnd,
     macos: Cell(Status.device, 'app_launch · macOS, M8.4'),
     note:
-        'Concept A thread (ADR-0007): Wake Up → Bedtime with the now dot; the '
+        'Concept A thread (ADR-0007): Wake Up → Wind Down with the now dot; the '
         'three-day spread from 840 px; Mac and web pixel-identical at 1280.',
   ),
   'F1.2': ParityRow(
@@ -177,8 +177,8 @@ const f1Rows = <String, ParityRow>{
     ],
     all: ci,
     note:
-        'Per-weekday Wake Up/Bedtime (M3d.3); tasks before Wake Up / after '
-        'Bedtime fold into a row beyond the cap that unfolds on tap (M8.4b).',
+        'Per-weekday Wake Up/Wind Down (M3d.3); tasks before Wake Up / after '
+        'Wind Down fold into a row beyond the cap that unfolds on tap (M8.4b).',
   ),
   'F1.16': ParityRow(
     tests: [
@@ -188,7 +188,7 @@ const f1Rows = <String, ParityRow>{
     ],
     all: ci,
     note:
-        'Bedtime 23:55 (the latest) with a 23:30 task, scrolled to the end, '
+        'Wind Down 23:55 (the latest) with a 23:30 task, scrolled to the end, '
         'on the phone pager and the Mac/web spread (M8.4b).',
   ),
   'F1.17': ParityRow(

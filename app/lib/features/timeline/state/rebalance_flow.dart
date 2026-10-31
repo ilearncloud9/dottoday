@@ -30,7 +30,7 @@ const rebalanceFollowers = 2;
 
 /// Opens the Rebalance proposal for [today]: a delay of [deltaMin] at
 /// [fromUtc], explained by [subtitle]. Tomorrow's day is read so a task
-/// pushed past Bedtime lands in its first free slot. [keep] never moves
+/// pushed past Wind Down lands in its first free slot. [keep] never moves
 /// (the event a calendar move is about, M11.1b); [title] heads the sheet
 /// (default "Running late").
 Future<void> openRebalance(

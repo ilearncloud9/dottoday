@@ -117,7 +117,7 @@ void main() {
   });
 }
 
-/// Task alerts only: the Bedtime reminder (on by default, M3d.3) is
+/// Task alerts only: the Wind Down reminder (on by default, M3d.3) is
 /// planned alongside them.
 List<PlannedNotification> _taskAlerts(WriteHarness h) => [
   for (final n in h.gateway.pendingSet.values)

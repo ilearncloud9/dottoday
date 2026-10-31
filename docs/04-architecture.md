@@ -80,11 +80,11 @@ migration snapshots (no file-level copy on OPFS/IndexedDB).
 **Day snapshot (B5, M9.1).** Every surface outside the app — widgets, Live Activity, Android ongoing
 notification, Mac menu bar, the web's service worker, later the watch — reads one record,
 `DaySnapshot` (`domain/snapshot/`): the dots of the next 24 h (planned + actual, B1), today's Wake Up →
-Bedtime, current and next two dots, day progress and the Inbox count. JSON v1
+Wind Down, current and next two dots, day progress and the Inbox count. JSON v1
 (`day_snapshot_codec.dart`, instants as UTC ms; a reader refuses any other `v`); platform sinks add
 display fields (localised labels, formatted times, resolved colours) next to it so native code only
 lays out. Written after every write (after-write effects; `test/policy/snapshot_write_paths_test.dart`
-keeps every direct writer of tasks accounted for), by the daily refresh, at Bedtime while the app is
+keeps every direct writer of tasks accounted for), by the daily refresh, at Wind Down while the app is
 open, and on demand (`DaySnapshotWriter.write`). Stores: iOS App Group `group.app.dottoday.planner`
 and Android `home_widget` prefs (key `snapshot`), the Mac menu bar in process, the web's Cache Storage
 (`dottoday-day-snapshot`, `__snapshot/day.json`; a service worker has no `localStorage`) with titles

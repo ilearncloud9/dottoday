@@ -7,7 +7,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/timeline_fakes.dart';
 
-// M3d.3: a weekday's own Wake Up / Bedtime bound the room Add and the
+// M3d.3: a weekday's own Wake Up / Wind Down bound the room Add and the
 // Inbox fit into; other days keep the everyday window. Berlin, UTC+2.
 void main() {
   setUpAll(tz_data.initializeTimeZones);

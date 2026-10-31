@@ -11,7 +11,7 @@ import '../../support/fake_ids.dart';
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  test('times follow Wake Up, the clock and Bedtime; at most five', () {
+  test('times follow Wake Up, the clock and Wind Down; at most five', () {
     final berlin = tz.getLocation('Europe/Berlin');
     final thu = DateTime(2026, 10, 22);
     final shape = DayShape(
@@ -44,7 +44,7 @@ void main() {
     );
   });
 
-  test('a habit before Bedtime ends before it', () {
+  test('a habit before Wind Down ends before it', () {
     final utc = tz.UTC;
     final shape = DayShape(
       wakeUtc: DateTime.utc(2026, 10, 22, 7),

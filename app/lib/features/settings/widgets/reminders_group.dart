@@ -24,7 +24,7 @@ import 'package:go_router/go_router.dart';
 
 /// REMINDERS (`A-ios-settings`, docs/02 F6.2, F6.6): Task starts (the
 /// default alert set, up to 5, R-10), Sound, Quiet hours, Day-start
-/// summary, the Bedtime reminder and Notification health.
+/// summary, the Wind Down reminder and Notification health.
 class RemindersGroup extends ConsumerWidget {
   const RemindersGroup({required this.settings, super.key});
 

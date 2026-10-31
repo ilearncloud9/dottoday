@@ -10,7 +10,7 @@ void main() {
   tzdata.initializeTimeZones();
   final berlin = tz.getLocation('Europe/Berlin');
 
-  test('Wake Up → Bedtime on the local day, as UTC', () {
+  test('Wake Up → Wind Down on the local day, as UTC', () {
     final s = DayShape.on(
       berlin,
       DateTime(2026, 10, 21),

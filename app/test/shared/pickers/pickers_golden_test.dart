@@ -118,7 +118,7 @@ void main() {
     act: _open,
     build: (_) => _opener((c) => unawaited(showScopeSheet(c, delete: false))),
   );
-  // M3f.2: the Alerts editor with two alerts and the Bedtime switch.
+  // M3f.2: the Alerts editor with two alerts and the Wind Down switch.
   goldenMatrix(
     'picker_alerts',
     height: 700,

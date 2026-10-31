@@ -9,7 +9,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 import '../../support/fake_clock.dart';
 import '../fixtures.dart';
 
-// The Bedtime reminder (M3d.3, R-10). Now: Wed 2026-10-21 08:00Z; Berlin
+// The Wind Down reminder (M3d.3, R-10). Now: Wed 2026-10-21 08:00Z; Berlin
 // leaves summer time on Sun 2026-10-25, so 22:00 local is 20:00Z before
 // and 21:00Z from that day on.
 
@@ -39,7 +39,7 @@ Occurrence _task(String id, DateTime start) => occurrenceFixture().copyWith(
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  test('one per day at local Bedtime, across the DST change', () {
+  test('one per day at local Wind Down, across the DST change', () {
     final fire = _bedtimes(const Settings()).map((n) => n.fireAtUtc);
     expect(fire, [
       DateTime.utc(2026, 10, 21, 20),
@@ -52,7 +52,7 @@ void main() {
     ]);
   });
 
-  test('each weekday uses its own Bedtime', () {
+  test('each weekday uses its own Wind Down', () {
     const late = TimeWindow(start: '09:00', end: '23:30');
     final fire = _bedtimes(
       const Settings(dayBoundaries: {Weekday.fri: late}),
@@ -96,7 +96,7 @@ void main() {
     expect(diff.cancel, isEmpty);
   });
 
-  test('past Bedtime today: starts tomorrow', () {
+  test('past Wind Down today: starts tomorrow', () {
     final n = _bedtimes(
       const Settings(),
       now: DateTime.utc(2026, 10, 21, 20, 1),

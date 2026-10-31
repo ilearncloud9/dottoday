@@ -4,7 +4,7 @@ import 'package:dottoday/domain/scheduling/rebalance.dart';
 import 'package:flutter/material.dart';
 
 /// Rebalance's three rule chips (`B-ios-rebalance`): Shift followers,
-/// Allow shrinking optional, Push past bedtime. Each change hands the new
+/// Allow shrinking optional, Push past Wind Down. Each change hands the new
 /// rules up so the proposal is worked out again (dropped lines come back:
 /// it is a new plan).
 class RebalanceRules extends StatefulWidget {

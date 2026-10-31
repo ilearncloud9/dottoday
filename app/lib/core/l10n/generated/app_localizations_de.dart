@@ -376,7 +376,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String threadBed(String time) {
-    return 'Schlafenszeit · $time';
+    return 'Abendruhe · $time';
+  }
+
+  @override
+  String get capEditHint => 'Uhrzeit ändern';
+
+  @override
+  String get capEveryDay => 'Jeden Tag';
+
+  @override
+  String capEveryWeekday(String weekday) {
+    return 'Jeden $weekday';
   }
 
   @override
@@ -1188,7 +1199,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String durationFitsBedtime(String time) {
-    return 'Passt vor die Schlafenszeit um $time';
+    return 'Passt vor die Abendruhe um $time';
   }
 
   @override
@@ -1198,7 +1209,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String durationPastBedtime(String time) {
-    return 'Reicht über die Schlafenszeit um $time';
+    return 'Reicht über die Abendruhe um $time';
   }
 
   @override
@@ -1428,7 +1439,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsWakeUp => 'Aufstehen';
 
   @override
-  String get settingsBedtime => 'Schlafenszeit';
+  String get settingsBedtime => 'Abendruhe';
 
   @override
   String get settingsPerWeekday => 'Abweichende Tage';
@@ -1524,7 +1535,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get settingsBedtimeReminder => 'Erinnerung zur Schlafenszeit';
+  String get settingsBedtimeReminder => 'Erinnerung zur Abendruhe';
 
   @override
   String settingsBedtimeReminderDetail(String time) {
@@ -2232,7 +2243,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get alertsBedtime => 'Erinnerung zur Schlafenszeit';
+  String get alertsBedtime => 'Erinnerung zur Abendruhe';
 
   @override
   String get alertsBedtimeDetail =>
@@ -3203,7 +3214,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get onboardingRemindersBody =>
-      'Dottoday erinnert dich, wenn eine Aufgabe beginnt, und vor der Schlafenszeit. Du kannst das jederzeit in den Einstellungen ändern.';
+      'Dottoday erinnert dich, wenn eine Aufgabe beginnt, und vor der Abendruhe. Du kannst das jederzeit in den Einstellungen ändern.';
 
   @override
   String get onboardingTaskStarts => 'Vor jeder Aufgabe';
@@ -3213,7 +3224,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Wie früh, entscheidest du in den Einstellungen';
 
   @override
-  String get onboardingBedtime => 'Zur Schlafenszeit';
+  String get onboardingBedtime => 'Zur Abendruhe';
 
   @override
   String get onboardingBedtimeDetail =>
@@ -3240,11 +3251,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get onboardingDoneBody =>
-      'Morgen, vom Aufstehen bis zur Schlafenszeit. Füg etwas hinzu, verschieb Dinge oder fang mit heute an.';
+      'Morgen, vom Aufstehen bis zur Abendruhe. Füg etwas hinzu, verschieb Dinge oder fang mit heute an.';
 
   @override
   String get onboardingDoneEmpty =>
-      'Morgen, vom Aufstehen bis zur Schlafenszeit, gehört ganz dir. Füg die erste Aufgabe hinzu, wann du willst.';
+      'Morgen, vom Aufstehen bis zur Abendruhe, gehört ganz dir. Füg die erste Aufgabe hinzu, wann du willst.';
 
   @override
   String get onboardingOpenToday => 'Heute öffnen';
@@ -3329,7 +3340,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get notifSnoozed => 'Geschlummerte Erinnerung';
 
   @override
-  String get notifBedtimeTitle => 'Schlafenszeit';
+  String get notifBedtimeTitle => 'Abendruhe';
 
   @override
   String notifBedtimeFirst(String title, String time) {
@@ -3363,7 +3374,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Klingelt wie ein Wecker bei der ersten Aufgabe des Tages und wenn eine Routine beginnt';
 
   @override
-  String get notifChannelSummary => 'Schlafenszeit';
+  String get notifChannelSummary => 'Abendruhe';
 
   @override
   String get notifChannelSummaryDetail => 'Der abendliche Blick auf morgen';
@@ -3905,8 +3916,8 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count Aufgaben nach der Schlafenszeit',
-      one: '1 Aufgabe nach der Schlafenszeit',
+      other: '$count Aufgaben nach der Abendruhe',
+      one: '1 Aufgabe nach der Abendruhe',
     );
     return '$_temp0';
   }
@@ -4618,7 +4629,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get rebalanceAllowShrink => 'Optionale kürzen erlauben';
 
   @override
-  String get rebalancePastBedtime => 'Über Schlafenszeit hinaus';
+  String get rebalancePastBedtime => 'Über die Abendruhe hinaus';
 
   @override
   String rebalanceRanOver(String title, String duration) {
@@ -4798,7 +4809,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get routineStartsWake => 'beginnt beim Aufstehen';
 
   @override
-  String get routineEndsBed => 'endet zur Schlafenszeit';
+  String get routineEndsBed => 'endet zur Abendruhe';
 
   @override
   String routineStartsAt(String time) {
@@ -4853,7 +4864,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get routineAnchorWake => 'Beim Aufstehen';
 
   @override
-  String get routineAnchorBed => 'Endet zur Schlafenszeit';
+  String get routineAnchorBed => 'Endet zur Abendruhe';
 
   @override
   String get routineAnchorTime => 'Zu einer Uhrzeit';

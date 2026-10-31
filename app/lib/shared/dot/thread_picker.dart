@@ -51,7 +51,7 @@ class ThreadPicker extends StatefulWidget {
   /// "4 PM" for an hour's minute.
   final String Function(int minute) hourText;
 
-  /// Bedtime, and its cap "Bedtime · 22:00".
+  /// Wind Down, and its cap "Wind Down · 22:00".
   final int bedMinute;
   final String bedText;
   final ValueChanged<int> onChanged;

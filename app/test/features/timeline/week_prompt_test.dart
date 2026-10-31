@@ -10,8 +10,8 @@ import '../../support/test_app.dart';
 import '../../support/timeline_fakes.dart';
 import '../../support/week_review_fixtures.dart';
 
-// "This week" at Bedtime on the week's last day (docs/09 M12.1, 11 D1
-// "Sunday at Bedtime"), after the Day review; not on other days.
+// "This week" at Wind Down on the week's last day (docs/09 M12.1, 11 D1
+// "Sunday at Wind Down"), after the Day review; not on other days.
 
 Future<void> _pump(WidgetTester tester, DateTime today, DateTime now) async {
   await tester.pumpWidget(
@@ -37,7 +37,7 @@ Future<void> _pump(WidgetTester tester, DateTime today, DateTime now) async {
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  testWidgets('Sunday at Bedtime (weeks from Monday): the week prompt', (
+  testWidgets('Sunday at Wind Down (weeks from Monday): the week prompt', (
     tester,
   ) async {
     await _pump(tester, DateTime(2026, 10, 25), reviewNow);

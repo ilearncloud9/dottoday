@@ -79,7 +79,7 @@ class TodayScreen extends ConsumerWidget {
           key: key,
           // Today has no text field; a keyboard over it belongs to a sheet
           // (Add, Type a time) that lifts itself. Resizing would squeeze the
-          // day card behind it to nothing (found after Bedtime, M5.0).
+          // day card behind it to nothing (found after Wind Down, M5.0).
           resizeToAvoidBottomInset: false,
           // The day sheet runs to the bottom edge, under the floating tab
           // bar (ADR-0015); its list insets itself by the bar's padding.

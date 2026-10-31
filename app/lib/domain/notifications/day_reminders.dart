@@ -9,11 +9,11 @@ import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// The once-a-day reminders the planner adds from Settings › Reminders:
-/// Bedtime (M3d.3) and the day-start summary (docs/02 F6.2, M8.4d). Pure:
+/// Wind Down (M3d.3) and the day-start summary (docs/02 F6.2, M8.4d). Pure:
 /// ids are stable per local date, so re-planning replaces rather than
 /// duplicates (R-10).
 abstract final class DayReminders {
-  /// One reminder at each day's Bedtime in `(fromUtc, toUtc]`, on that
+  /// One reminder at each day's Wind Down in `(fromUtc, toUtc]`, on that
   /// weekday's own window (Settings › DAY SHAPE, per weekday), with the
   /// id of the next day's first planned task.
   ///
@@ -91,7 +91,7 @@ abstract final class DayReminders {
     return out;
   }
 
-  /// (local date, its Wake Up → Bedtime) for every day from [fromUtc]'s
+  /// (local date, its Wake Up → Wind Down) for every day from [fromUtc]'s
   /// local date until a day's Wake Up is past [toUtc].
   static Iterable<(DateTime, DayShape)> _days(
     Settings settings,

@@ -3,12 +3,12 @@ import 'package:dottoday/domain/scheduling/day_blocks.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
 
-/// How full a waking day is (docs/10 §6 "Wake Up / Bedtime drive … free-time
+/// How full a waking day is (docs/10 §6 "Wake Up / Wind Down drive … free-time
 /// maths, capacity rings, the week's Free · unplanned").
 final class DayCapacity {
   const DayCapacity({required this.awakeMinutes, required this.busyMinutes});
 
-  /// Wake Up → Bedtime.
+  /// Wake Up → Wind Down.
   final int awakeMinutes;
 
   /// Minutes of the waking day some task occupies, overlaps counted once.
@@ -23,7 +23,7 @@ final class DayCapacity {
 
 /// [blocks]' footprint inside [shape]'s waking day: the union of the time
 /// each occupying task (travel buffer included, skipped and all-day ones
-/// left out) spends between Wake Up and Bedtime.
+/// left out) spends between Wake Up and Wind Down.
 ///
 /// ```dart
 /// capacityOf([nineToEleven, tenToTwelve], shape).busyMinutes; // 180

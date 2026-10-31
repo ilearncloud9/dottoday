@@ -16,9 +16,9 @@ import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Turns a planned notification into what the OS shows (docs/02 F6): the
-/// task's title over a line that says when, or the Bedtime summary.
+/// task's title over a line that says when, or the Wind Down summary.
 ///
-/// [task] is the alerted task (for Bedtime, tomorrow's first one); null for
+/// [task] is the alerted task (for Wind Down, tomorrow's first one); null for
 /// a task alert means the task is gone, and nothing should be posted.
 OsNotification? composeNotification(
   PlannedNotification planned, {
@@ -87,7 +87,7 @@ OsNotification? composeNotification(
 
 /// The sound [planned] plays (docs/12): the Start sound when loud and for
 /// the test alarm, the planner's resolved key for a task reminder (null =
-/// the OS sound), and none for the summaries, Bedtime and Smallest step.
+/// the OS sound), and none for the summaries, Wind Down and Smallest step.
 CatalogueSound? _soundOf(PlannedNotification planned) {
   // The test alarm sounds like the real first dot (docs/12 D2).
   if (planned.purpose == NotificationPurpose.testAlarm) {

@@ -10,7 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'scheduling_support.dart';
 
 // Rebalance's rules (11 C1, docs/09 M11.1): shift → shrink optional →
-// past a pin → past Bedtime to tomorrow; pinned never moves; nothing is
+// past a pin → past Wind Down to tomorrow; pinned never moves; nothing is
 // written here. The seeded property checks the invariants on random days.
 
 final _bed = at('22:00');
@@ -107,10 +107,10 @@ void main() {
     });
   });
 
-  group('Bedtime', () {
+  group('Wind Down', () {
     final day = [block('read', '20:00', 60), block('dentist', '21:00', 45)];
 
-    test('past Bedtime moves to tomorrow\'s first free slot', () {
+    test('past Wind Down moves to tomorrow\'s first free slot', () {
       final plan = _run(
         day,
         from: '20:00',
@@ -130,7 +130,7 @@ void main() {
       expect(_startsOf(plan)['dentist'], 'inbox');
     });
 
-    test('Push past bedtime: the day just runs later', () {
+    test('Push past Wind Down: the day just runs later', () {
       final plan = _run(
         day,
         from: '20:00',
@@ -181,7 +181,7 @@ void main() {
       expect(written.every((o) => o.moveCount == 1), isTrue);
     });
 
-    test('past Bedtime: moved to tomorrow, counted as a move', () {
+    test('past Wind Down: moved to tomorrow, counted as a move', () {
       final day = [
         block('read', '20:00', 90),
         block('dentist', '21:30', 30).copyWith(energy: Energy.high),
