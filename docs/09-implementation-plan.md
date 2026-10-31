@@ -471,7 +471,19 @@ Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit 
     - "Vary the sound" rotates through every Start sound except Insistent. Choosing the 2–6 cues (15 §9) is a follow-up below.
     - The §2 battery and DND "Alarms" blockers are a follow-up below.
     - Notification health's "Last wake-up" line (15 §4) needs the event log, so it comes with M17.3.
-- [ ] M17.3 W2 Wake Up card. Late start reuses `openRebalance`, and a test proves nothing is written before Accept. It also builds the `wake_up_days` table (local only) and drains the native alarm events (rang, snoozed, "I'm up") into it, deferred from M17.2.
+- [x] M17.3 W2 Wake Up card. Late start reuses `openRebalance`, and a test proves nothing is written before Accept. It also builds the `wake_up_days` table (local only) and drains the native alarm events (rang, snoozed, "I'm up") into it, deferred from M17.2 (`feat/wake-up-w2`).
+  - **Done 2026-10-31:**
+    - Schema 10 adds `wake_up_days`. The native event logs (Android preferences, iOS App Group with AlarmKit's Stop and Snooze intents) are drained on launch and resume.
+    - `wakeUpCardDue` and `lateStartMin` are pure.
+    - The card is `/wake-up` over Today, opened by `WakeUpCardGate`, by "I'm up" on Android's ringing screen and by the Wake Up notification's tap.
+    - Its variants: full, minimal, low-energy and empty.
+    - Settings has a MORNING CARD group under Day shape › Wake Up options, and Notification health has its "Last wake-up" line.
+  - **Decided (15 §9 vs §11):** `wakeUpCard` is nullable and, unset, follows the Wake Up alarm, so nothing new opens for anyone who hasn't said yes to Wake Up (written into 15 §9).
+  - **Not built:**
+    - The weather chip: a new network provider is a must-ask, so it is left for the owner.
+    - "Your usual Saturday?": C2's weekday match isn't built.
+    - The coach marks (§11) are M17.6 Discovery.
+    - The day dot's per-colour ring arrives with M17.5's shared geometry.
 - [ ] M17.4 W3 Wake Up Check: the `StartEscalation` scheduler, built once from `noStartAt` with the wake-up input, the deferred A0 dot-start input, and Smallest step as a consumer.
 - [ ] M17.5 W4 + W6 (one PR):
   - **Wind Down maths:** `effectiveWindDown`, the sleep target, and the onboarding sleep slider.

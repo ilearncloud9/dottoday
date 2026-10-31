@@ -105,7 +105,9 @@ abstract interface class AlarmGateway {
 }
 ```
 
-**As built (M17.2, ADR-0017).**
+**As built (M17.2–M17.3, ADR-0017).** `wake_up_days` is local-only Drift (schema 10): one row per civil day, with when it rang, when "I'm up" stopped it, snoozes, and when the card showed and the day was started. `AlarmGateway.drainEvents()` stands in for `events()`.
+
+**M17.2 port.**
 - The port lives in `lib/domain/notifications/alarm_capabilities.dart`.
 - Instead of `arm` / `disarm` / `events`, it has:
   - `sync(alarms)`: makes the list the armed set, leaves a ringing or snoozed alarm alone, and returns the instants armed;
@@ -257,7 +259,7 @@ A new Settings section **Wake Up** sits directly under Day shape (Wake Up / Wind
 | Snooze length | `snoozeMin` | 5 / 9 / 10 / 15 | 9 | snoozeAllowed |  |
 | Snooze limit | `snoozeMax` | 1–5 / unlimited | 3 | snoozeAllowed |  |
 | Routine starts ring like an alarm | `routineAlarms` | switch | off | alarmEnabled | moves A0's routine-start rule onto W1 |
-| Wake Up card | `cardEnabled` | switch | on | always | W2 master |
+| Wake Up card | `cardEnabled` | switch | on | always | W2 master. As built (M17.3): `wakeUpCard`, nullable; unset follows the Wake Up alarm switch, so the card never opens for anyone who hasn't said yes to Wake Up (§11); a flip stores the choice |
 | Show it when I first open the app | `showOnFirstOpen` | switch | on | cardEnabled | covers older OS / notification-tap path |
 | Calendar on the card | `cardCalendar` | switch | on when a calendar is connected | cardEnabled |  |
 | Weather on the card | `cardWeather` | switch | off | cardEnabled | asks location permission on first enable; says the provider |

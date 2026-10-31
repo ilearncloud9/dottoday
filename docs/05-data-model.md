@@ -174,6 +174,12 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   "wakeUpSnooze": true,
   "wakeUpSnoozeMin": 9,
   "wakeUpSnoozeMax": 3,
+  "wakeUpCard": null,
+  "wakeUpCardOnOpen": true,
+  "wakeUpCardCalendar": true,
+  "wakeUpCardInbox": true,
+  "wakeUpLateOffer": true,
+  "wakeUpLateMin": 10,
   "inboxNudge": false,
   "daySummaryDays": [],
   "reminderSound": null,
@@ -207,6 +213,11 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   boolean, off by default, so an upgrade rings nothing new; onboarding offers it on for a new user. It
   rings only on phones. `bedtimeReminder` keeps its name: it is the stored, synced key of the
   Wind Down reminder (renaming it would need a settings migration). The server ignores both keys.
+- Clarified in M17.3: the Wake Up card (docs/15 §5, §9).
+  - `wakeUpCard` is nullable: null follows `wakeUpAlarm` (15 §11), and a switch flip stores the choice.
+  - `wakeUpCardOnOpen`, `wakeUpCardCalendar` and `wakeUpCardInbox` are its switches.
+  - `wakeUpLateOffer` and `wakeUpLateMin` (5, 10, 15 or 30) control the shift offer.
+  - Local only (schema 10): `wake_up_days` has `date` (`yyyy-MM-dd`, PK) and `rang_at_utc`, `stopped_at_utc`, `snoozes`, `card_shown_at_utc` and `started_at_utc` (epoch ms). It is STRICT, with CHECKs on the date shape and `snoozes >= 0`. It is never synced: each phone rings and opens its own card.
 - Clarified in M17.2: the Wake Up alarm's options (docs/15 §9) are flat keys beside it.
   - `wakeUpSoundId`: a Start sound id; null follows `startSoundId`.
   - `wakeUpVarySound`: a different start-tier cue each day, the same cue for a given date.
