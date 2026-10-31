@@ -424,7 +424,8 @@ Spec: `14-minimal-mode.md` (the owner's answers, 2026-10-30); ADR-0016; `10-ui-c
 
 Follow-ups:
 - [ ] Push Supabase `0010` to the hosted project **before any build with M16 ships** (owner's go; CLAUDE.md §10 must-ask). The hosted `validate_settings` ignores unknown keys, so `uiLayout` would sync, but `sync_push` refuses the unknown `reveal_hints` entity and fails the whole push it is in.
-- [ ] Live Activity dismissal signal for the widget hint (iOS ActivityKit `activityStateUpdates` → `.dismissed` by the user; Android ongoing notification swipe). Touches the native extension (must-ask).
+- [x] Live Activity dismissal signal for the widget hint (owner pre-approved 2026-10-31; iOS only). Done 2026-10-31: `activityStateUpdates` → one `dismissedByUser` event → `local_meta` → `HintSignals.liveActivityDismissed`; the live_activity device test passes. A real Lock Screen swipe is a person check (08 §6.1).
+- [ ] Android parity for the widget hint's trigger: swiping the ongoing notification away (R-13; not in the pre-approval, which was iOS only).
 - [ ] Native-speaker pass on the M16 strings in de/fr/es.
 - [ ] Set C renders: `C-ios-onboarding-mode.png` arrived 2026-10-31 and step 0 is built to it; `C-ios-today-minimal.png`, `C-ios-add-minimal.png` and `C-ios-settings-minimal.png` are still to come, and the goldens are the reference until they do.
 - [ ] Manual on a real device: cold install to the first dot on the thread in under 20 s (docs/14 §7).
