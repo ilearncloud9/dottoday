@@ -61,10 +61,23 @@ void showTaskEditor(BuildContext context, String id) => unawaited(
 /// Minimal (docs/14 §4): title, time and length, then Done · Tomorrow ·
 /// Later · Delete and Break it down; More opens the rest in this layout.
 class TaskSheetBody extends ConsumerStatefulWidget {
-  const TaskSheetBody({required this.id, this.scrollController, super.key});
+  const TaskSheetBody({
+    required this.id,
+    this.scrollController,
+    this.onMore,
+    this.onClose,
+    super.key,
+  });
 
   final String id;
   final ScrollController? scrollController;
+
+  /// Minimal's More in the Mac/web panel: the full editor (M16); null
+  /// expands this sheet in place.
+  final VoidCallback? onMore;
+
+  /// The panel closes itself after Tomorrow / Later / Delete.
+  final VoidCallback? onClose;
 
   @override
   ConsumerState<TaskSheetBody> createState() => _TaskSheetBodyState();
@@ -136,7 +149,7 @@ class _TaskSheetBodyState extends ConsumerState<TaskSheetBody> {
       children: [
         _Identity(task: task),
         const SizedBox(height: DotSpace.l),
-        SheetActions(task: task, minimal: true),
+        SheetActions(task: task, minimal: true, onClose: widget.onClose),
         const SizedBox(height: DotSpace.m),
         if (task.subtasks.isEmpty)
           TextButton(
@@ -147,7 +160,7 @@ class _TaskSheetBodyState extends ConsumerState<TaskSheetBody> {
             child: Text(l10n.breakdownAction),
           ),
         TextButton(
-          onPressed: () => setState(() => _more = true),
+          onPressed: widget.onMore ?? () => setState(() => _more = true),
           child: Text(l10n.moreOptions),
         ),
       ],

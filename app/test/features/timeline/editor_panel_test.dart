@@ -1,5 +1,7 @@
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
+import 'package:dottoday/features/timeline/editor/task_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -116,5 +118,28 @@ void main() {
       await _open(tester, mode: mode);
       await expectA11yGuidelines(tester);
     }
+  });
+
+  testWidgets('minimal: the panel shows the minimal sheet; More, the editor', (
+    tester,
+  ) async {
+    final repo = FakeOccurrenceRepository(demoDayRows(todayTestDate));
+    await pumpToday(
+      tester,
+      size: _wide,
+      repo: repo,
+      wrap: _frame,
+      settings: const Settings(uiLayout: UiLayout.minimal, use24h: false),
+    );
+    await tester.tap(find.text('Reply to email').first);
+    await tester.pumpAndSettle();
+    final panel = find.byType(TaskEditorPanel);
+    expect(panel, findsOneWidget);
+    for (final tile in ['Tomorrow', 'Later', 'Delete']) {
+      expect(find.descendant(of: panel, matching: find.text(tile)), findsOne);
+    }
+    await tester.tap(find.descendant(of: panel, matching: find.text('More')));
+    await tester.pumpAndSettle();
+    expect(find.byType(TaskEditor), findsOneWidget);
   });
 }

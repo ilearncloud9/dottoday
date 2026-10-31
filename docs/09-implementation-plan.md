@@ -420,7 +420,7 @@ Follow-ups:
 - [ ] Native-speaker pass on the M16 strings in de/fr/es.
 - [ ] Set C renders (`C-ios-today-minimal.png`, `C-ios-add-minimal.png`, `C-ios-settings-minimal.png`, `C-ios-onboarding-mode.png`): none were supplied; the goldens are the reference until they are.
 - [ ] Manual on a real device: cold install to the first dot on the thread in under 20 s (docs/14 §7).
-- [ ] The Mac/web `TaskEditor` panel in its minimal form (§3 "Mac/web spread … panel"); today the panel opens in full.
+- [x] The Mac/web `TaskEditor` panel in its minimal form (§3 "Mac/web spread … panel"). Done 2026-10-31, found by the Mac sweep: in minimal the panel shows the minimal sheet (Done · Tomorrow · Later · Delete); More opens the editor in the panel.
 - [ ] Device and web sweep entries for the minimal screens (`integration_test/support/sweep_*.dart`, `tool/a11y/web_sweep.mjs`).
 
 ## Follow-ups after M12 (found at the M12.6 ship-check)

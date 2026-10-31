@@ -47,6 +47,7 @@ class SettingsScreen extends ConsumerWidget {
       );
     }
     final s = profile.settings;
+    final minimal = watchSimplified(ref, FeatureId.notifications);
     return Scaffold(
       key: _key,
       body: SafeArea(
@@ -55,6 +56,9 @@ class SettingsScreen extends ConsumerWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: DotSize.readableColumn),
             child: ListView(
+              // One saved scroll position per layout: switching layouts
+              // never opens the other list part-way down (M16 sweep).
+              key: PageStorageKey(minimal ? 'settings:minimal' : 'settings'),
               padding: const EdgeInsets.fromLTRB(
                 DotSpace.page,
                 DotSpace.l,
@@ -70,7 +74,7 @@ class SettingsScreen extends ConsumerWidget {
                   now: ref.watch(clockProvider).nowUtc(),
                 ),
                 const SizedBox(height: DotSpace.xl),
-                if (watchSimplified(ref, FeatureId.notifications))
+                if (minimal)
                   MinimalSettings(settings: s)
                 else ...[
                   const SettingsGroup(caption: '', children: [LayoutRow()]),

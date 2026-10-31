@@ -2,7 +2,10 @@ import 'package:dottoday/core/editing/active_proposal.dart';
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
+import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,13 +53,27 @@ class EditorPanelFrame extends ConsumerWidget {
 /// icon, When / Start, duration, Repeat, Alerts, subtasks, notes, Delete ·
 /// Move to inbox · Save). Esc closes, ⌘S saves, ⌘D marks done; Tab stays
 /// inside the panel while it is open.
-class TaskEditorPanel extends ConsumerWidget {
+///
+/// Minimal (docs/14 §3 "Mac/web spread … panel"): the panel first shows
+/// the minimal sheet (Done · Tomorrow · Later · Delete); More opens the
+/// editor in it.
+class TaskEditorPanel extends ConsumerStatefulWidget {
   const TaskEditorPanel({required this.id, super.key});
 
   final String id;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TaskEditorPanel> createState() => _TaskEditorPanelState();
+}
+
+/// A leaf: only whether minimal's More was tapped.
+class _TaskEditorPanelState extends ConsumerState<TaskEditorPanel> {
+  bool _more = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final id = widget.id;
+    final minimal = watchSimplified(ref, FeatureId.taskSheet) && !_more;
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     void close() => ref.read(editingTaskProvider.notifier).close();
@@ -100,12 +117,18 @@ class TaskEditorPanel extends ConsumerWidget {
                 ),
               ),
               Expanded(
-                child: TaskEditor(
-                  id: id,
-                  onClose: close,
-                  caption: false,
-                  autofocus: true,
-                ),
+                child: minimal
+                    ? TaskSheetBody(
+                        id: id,
+                        onMore: () => setState(() => _more = true),
+                        onClose: close,
+                      )
+                    : TaskEditor(
+                        id: id,
+                        onClose: close,
+                        caption: false,
+                        autofocus: true,
+                      ),
               ),
             ],
           ),

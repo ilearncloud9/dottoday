@@ -27,6 +27,7 @@ class SheetActions extends ConsumerWidget {
     required this.task,
     this.onEdit,
     this.minimal = false,
+    this.onClose,
     super.key,
   });
 
@@ -35,6 +36,10 @@ class SheetActions extends ConsumerWidget {
   /// Minimal's four tiles: Tomorrow keeps the time, Later is the Inbox,
   /// Delete is Trash; each says so with Undo and closes the sheet.
   final bool minimal;
+
+  /// How the sheet goes after Tomorrow / Later / Delete: the route pops,
+  /// unless the Mac/web panel closes itself (M16).
+  final VoidCallback? onClose;
 
   /// Opens the editor (M3b.4b wires it).
   final VoidCallback? onEdit;
@@ -68,6 +73,7 @@ class SheetActions extends ConsumerWidget {
       final navigator = Navigator.of(context);
       void then(void Function() write) {
         write();
+        if (onClose case final close?) return close();
         unawaited(navigator.maybePop());
       }
 
