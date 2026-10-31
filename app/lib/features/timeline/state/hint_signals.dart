@@ -1,5 +1,6 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/editing/focus_task.dart';
+import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/reveal/hint_scheduler.dart';
@@ -42,8 +43,9 @@ HintSignals? watchHintSignals(WidgetRef ref, DateTime today) {
     movedTaskId: movedTaskOf(data.blocks, counts),
     sameMornings: sameMornings([...mornings.nonNulls]),
     longTaskId: longTaskOf(data.blocks, counts),
-    // No signal from the OS yet (follow-up in docs/09 M16): the widget
-    // hint waits for the Live Activity's dismissal to be reported.
+    // iOS reports a Live Activity the user swiped away (M16).
+    liveActivityDismissed:
+        ref.watch(liveActivityDismissedProvider).value ?? false,
     overrunsThisWeek: overrunsOf([...week.nonNulls.expand((d) => d)]),
     inFocus: ref.watch(focusTaskProvider) != null,
     inBedtimeReview: !now.isBefore(shape.bedUtc),

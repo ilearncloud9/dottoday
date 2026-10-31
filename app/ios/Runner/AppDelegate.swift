@@ -53,9 +53,21 @@ import workmanager_apple
 /// Activity, `sync` with null ends it. Also registered for the background
 /// refresh's engine, so the daily job can refresh or end it.
 enum LiveActivityBridge {
+  /// The channel of every engine registered in this process.
+  private static var channels: [FlutterMethodChannel] = []
+
   static func register(_ registry: FlutterPluginRegistry) {
     guard let registrar = registry.registrar(forPlugin: "LiveActivityBridge") else { return }
     let channel = FlutterMethodChannel(name: "dottoday/live_activity", binaryMessenger: registrar.messenger())
+    // One event to Dart when the user dismisses the activity (M16: the
+    // widget hint). Every engine that registers hears it; each records
+    // the same flag.
+    if #available(iOS 16.2, *) {
+      channels.append(channel)
+      LiveActivities.onUserDismiss = {
+        for c in channels { c.invokeMethod("dismissedByUser", arguments: nil) }
+      }
+    }
     channel.setMethodCallHandler { call, result in
       guard #available(iOS 16.2, *) else { return result(nil) }
       switch call.method {
