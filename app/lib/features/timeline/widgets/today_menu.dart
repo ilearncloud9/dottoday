@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_sheet.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
@@ -12,6 +14,7 @@ import 'package:dottoday/features/timeline/widgets/day_review.dart';
 import 'package:dottoday/features/timeline/widgets/debug_menu.dart';
 import 'package:dottoday/features/timeline/widgets/export_day.dart';
 import 'package:dottoday/features/timeline/widgets/running_late_sheet.dart';
+import 'package:dottoday/shared/layout/layout_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -22,6 +25,10 @@ import 'package:go_router/go_router.dart';
 /// (M11.4); the debug entries in debug
 /// builds. [withLate] is false where Running late has its own button (the
 /// Mac/web spread).
+///
+/// The layout switch comes first in both layouts (docs/14 §2.6, §5): Show
+/// less here, Show everything in minimal, whose menu is that, Low-energy
+/// day and Settings only (§4).
 class TodayMenu extends ConsumerWidget {
   const TodayMenu({
     required this.date,
@@ -39,10 +46,34 @@ class TodayMenu extends ConsumerWidget {
     final t = DotTheme.of(context);
     final low = watchLowEnergy(ref);
     final l10n = context.l10n;
+    if (!watchOnScreen(ref, FeatureId.dayMenuExtras)) {
+      return PopupMenuButton<void>(
+        tooltip: l10n.timelineMenu,
+        icon: DotIcon(DotGlyphs.more, color: t.colors.text),
+        itemBuilder: (context) => [
+          PopupMenuItem<void>(
+            onTap: () => setLayout(context, minimal: false),
+            child: Text(l10n.layoutShowEverything),
+          ),
+          PopupMenuItem<void>(
+            onTap: () => toggleLowEnergy(context, on: !low),
+            child: Text(low ? l10n.lowEnergyTurnOff : l10n.lowEnergyMode),
+          ),
+          PopupMenuItem<void>(
+            onTap: () => context.go(AppRoutes.settings),
+            child: Text(l10n.navSettings),
+          ),
+        ],
+      );
+    }
     return PopupMenuButton<void>(
       tooltip: l10n.timelineMenu,
       icon: DotIcon(DotGlyphs.more, color: t.colors.text),
       itemBuilder: (context) => [
+        PopupMenuItem<void>(
+          onTap: () => setLayout(context, minimal: true),
+          child: Text(l10n.layoutShowLess),
+        ),
         if (date == today) ...[
           if (withLate)
             PopupMenuItem<void>(

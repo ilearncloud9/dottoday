@@ -3,8 +3,10 @@ import 'dart:convert';
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/speech/dictation_controller.dart';
 import 'package:dottoday/data/thinking/thinking_providers.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/thinking/thinking_memory.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_field.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_flow.dart';
@@ -19,20 +21,32 @@ import 'package:intl/intl.dart';
 /// (the mic, M14.5) everything on your mind, one thing per line, pick Today or Tomorrow,
 /// Plan it — a proposal places it on the day. Earlier dumps stay on this
 /// device and can be searched and used again.
-Future<void> showBrainDump(BuildContext context, DateTime today) =>
-    showAppSheet<void>(
-      context: context,
-      title: context.l10n.dumpTitle,
-      builder: (sheet) => BrainDumpBody(
-        today: today,
-        onPlanned: () => Navigator.of(sheet).pop(),
-      ),
-    );
+Future<void> showBrainDump(
+  BuildContext context,
+  DateTime today, {
+  String text = '',
+}) => showAppSheet<void>(
+  context: context,
+  title: context.l10n.dumpTitle,
+  builder: (sheet) => BrainDumpBody(
+    today: today,
+    text: text,
+    onPlanned: () => Navigator.of(sheet).pop(),
+  ),
+);
 
 class BrainDumpBody extends ConsumerStatefulWidget {
-  const BrainDumpBody({required this.today, this.onPlanned, super.key});
+  const BrainDumpBody({
+    required this.today,
+    this.onPlanned,
+    this.text = '',
+    super.key,
+  });
 
   final DateTime today;
+
+  /// Lines to start from (minimal Add's several lines, docs/14 §3 B4).
+  final String text;
 
   /// The proposal is open: the sheet steps aside.
   final VoidCallback? onPlanned;
@@ -43,7 +57,7 @@ class BrainDumpBody extends ConsumerStatefulWidget {
 
 class _BrainDumpBodyState extends ConsumerState<BrainDumpBody> {
   // Leaf view state (CLAUDE.md §4): the text, the day and the search.
-  final _text = TextEditingController();
+  late final _text = TextEditingController(text: widget.text);
   final _search = TextEditingController();
   bool _tomorrow = false;
   bool _busy = false;
@@ -105,7 +119,9 @@ class _BrainDumpBodyState extends ConsumerState<BrainDumpBody> {
             textAlign: TextAlign.center,
             style: t.styles.rowMeta.copyWith(color: t.colors.muted),
           ),
-        if (_history.isNotEmpty) ..._earlier(context),
+        // Minimal (docs/14 §3): no dump history.
+        if (_history.isNotEmpty && watchOnScreen(ref, FeatureId.brainDumpEntry))
+          ..._earlier(context),
       ],
     );
   }

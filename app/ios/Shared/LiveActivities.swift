@@ -12,27 +12,82 @@ import Foundation
   enum LiveActivities {
     typealias Dot = Activity<DotActivityAttributes>
 
+    /// Called once each time the user dismisses an activity themselves
+    /// (swiped away on the Lock Screen), never when the app or the system
+    /// ends it: minimal mode's widget hint (docs/14 §5, M16). Set by the
+    /// app's bridge; nil in the widget extension, which never watches.
+    static var onUserDismiss: (() -> Void)?
+
+    private static let lock = NSLock()
+    private static var watched = Set<String>()
+    private static var endedHere = Set<String>()
+
+    /// Follows [activity]'s state once per activity: `.dismissed` with no
+    /// `.ended` before it, and not ended by this app, is the user's swipe.
+    static func watch(_ activity: Dot) {
+      lock.lock()
+      let fresh = watched.insert(activity.id).inserted
+      lock.unlock()
+      guard fresh else { return }
+      Task {
+        var ended = false
+        for await state in activity.activityStateUpdates {
+          switch state {
+          case .ended:
+            ended = true
+          case .dismissed:
+            lock.lock()
+            let ours = endedHere.contains(activity.id)
+            lock.unlock()
+            if !ended && !ours {
+              await MainActor.run { onUserDismiss?() }
+            }
+            return
+          default:
+            break
+          }
+        }
+      }
+    }
+
+    /// The app is about to end [activity]: its dismissal is not the user's.
+    private static func ending(_ activity: Dot) {
+      lock.lock()
+      endedHere.insert(activity.id)
+      lock.unlock()
+    }
+
     /// Shows [state] — starting, updating or replacing the activity — or
     /// ends it when [state] is nil. Stale after the dot's grace, so the
     /// system greys it out if the app can't end it in time.
     static func sync(_ state: LiveDotState?) async {
       guard let state else {
-        for activity in Dot.activities { await activity.end(nil, dismissalPolicy: .immediate) }
+        for activity in Dot.activities {
+          ending(activity)
+          await activity.end(nil, dismissalPolicy: .immediate)
+        }
         return
       }
       let content = ActivityContent(state: state, staleDate: state.endsAt)
       if let current = Dot.activities.first {
+        watch(current)
         await current.update(content)
-        for extra in Dot.activities.dropFirst() { await extra.end(nil, dismissalPolicy: .immediate) }
+        for extra in Dot.activities.dropFirst() {
+          ending(extra)
+          await extra.end(nil, dismissalPolicy: .immediate)
+        }
         return
       }
       guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
-      _ = try? Dot.request(attributes: DotActivityAttributes(), content: content)
+      if let started = try? Dot.request(attributes: DotActivityAttributes(), content: content) {
+        watch(started)
+      }
     }
 
     /// Done on the activity: it goes at once.
     static func end(occurrenceId: String) async {
       for activity in Dot.activities where activity.content.state.id == occurrenceId.lowercased() {
+        ending(activity)
         await activity.end(nil, dismissalPolicy: .immediate)
       }
     }

@@ -1,5 +1,5 @@
 // Design sweep on the web build (docs/08 §7, docs/09 M11.6): every main
-// screen and the M11, M12 and M13 screens at the compact and expanded widths, light and
+// screen, the M11–M14 screens and the M16 minimal layout at the compact and expanded widths, light and
 // dark (prefers-color-scheme), saved to app/build/sweep/web_<theme>_<width>_<shot>.png.
 // Needs a debug web build (the demo data lives in the debug menu), e.g.
 // `flutter run -d web-server --web-port 8099 --dart-define-from-file=.env.example`.
@@ -37,6 +37,8 @@ async function tapText(page, text) {
     page.getByRole('menuitem', { name: text, exact: true }),
     page.getByRole('button', { name: text, exact: true }),
     page.getByRole('tab', { name: text, exact: true }),
+    // Onboarding step 0's cards are radio buttons (M16).
+    page.getByRole('radio', { name: text, exact: true }),
     page.getByText(text, { exact: true }),
   ];
   const end = Date.now() + 30_000;
@@ -51,6 +53,20 @@ async function tapText(page, text) {
     await page.waitForTimeout(500);
   }
   throw new Error(`nothing called "${text}"`);
+}
+
+// Flutter builds a long list lazily: wheel down until [text] exists,
+// then bring it into view (the M16 Layout row moved LEARNING down).
+async function scrollToText(page, text) {
+  const target = page.getByText(text).first();
+  for (let i = 0; i < 20 && (await target.count()) === 0; i++) {
+    const vp = page.viewportSize();
+    await page.mouse.move(vp.width / 2, vp.height / 2);
+    await page.mouse.wheel(0, 300);
+    await page.waitForTimeout(300);
+  }
+  await target.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(900);
 }
 
 async function go(page, route) {
@@ -70,7 +86,13 @@ for (const theme of ['light', 'dark']) {
     try {
       await page.goto(baseUrl);
       await enableSemantics(page);
-      for (const name of ['Get started', 'Continue', 'Continue', 'Not now',
+      await tap(page, 'Get started');
+      // Step 0 (docs/14 §4): shot with minimal preselected, then the full
+      // planner, which the legs below walk.
+      await page.waitForTimeout(900);
+      await shot('onboarding_layout');
+      await tapText(page, 'The full planner');
+      for (const name of ['Continue', 'Continue', 'Continue', 'Not now',
         'Continue without an account', 'Open today']) {
         await tap(page, name);
       }
@@ -147,8 +169,7 @@ for (const theme of ['light', 'dark']) {
       // M13 (docs/13 §11): Settings › Learning, and a learned value's
       // explanation open on the reality thread.
       await fresh('/settings');
-      await page.getByText('LEARNING').first().scrollIntoViewIfNeeded();
-      await page.waitForTimeout(900);
+      await scrollToText(page, 'LEARNING');
       await shot('settings_learning');
       await fresh('/today');
       await tapText(page, 'Reality');
@@ -161,9 +182,7 @@ for (const theme of ['light', 'dark']) {
       // model). Headless Chromium has no on-device speech, so the sheet
       // shows no mic (D2); the mic states are goldens.
       await fresh('/settings/privacy');
-      await page.getByText('Clear thinking history').first()
-        .scrollIntoViewIfNeeded();
-      await page.waitForTimeout(900);
+      await scrollToText(page, 'Clear thinking history');
       await shot('privacy_ai_status');
       await fresh('/today');
       await tap(page, 'More options');
@@ -176,6 +195,36 @@ for (const theme of ['light', 'dark']) {
       await page.waitForTimeout(2_000);
       await shot('proposal_origin');
       await tapText(page, 'Discard');
+      // M16 (docs/14 §4): the minimal layout, from Today's ⋯ and back.
+      await fresh('/today');
+      await tap(page, 'More options');
+      await tapText(page, 'Show less');
+      await page.waitForTimeout(1_500);
+      await shot('minimal_today');
+      // The rail's add button never settles for Playwright's stability
+      // check at 1280 (the live ring repaints): click its centre.
+      const add = await page.getByRole('button', { name: 'Add task' })
+        .first().boundingBox();
+      await page.mouse.click(add.x + add.width / 2, add.y + add.height / 2);
+      await page.waitForTimeout(1_200);
+      await page.keyboard.type('Call Sam');
+      await page.waitForTimeout(900);
+      await shot('minimal_add');
+      await page.keyboard.press('Escape');
+      await fresh('/today');
+      await page.getByRole('button', { name: /, (upcoming|live|done|not done)/ })
+        .first().click();
+      await page.waitForTimeout(1_500);
+      await shot('minimal_task_sheet');
+      await fresh('/settings');
+      await shot('minimal_settings');
+      await tapText(page, 'Everything else…');
+      await page.waitForTimeout(1_200);
+      await shot('minimal_everything');
+      await fresh('/today');
+      await tap(page, 'More options');
+      await tapText(page, 'Show everything');
+      await page.waitForTimeout(1_200);
       console.log(`PASS ${tag}`);
     } catch (e) {
       failures.push(`${tag}: ${e.message.split('\n')[0]}`);

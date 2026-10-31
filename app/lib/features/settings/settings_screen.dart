@@ -4,17 +4,21 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
+import 'package:dottoday/features/settings/minimal_settings.dart';
 import 'package:dottoday/features/settings/widgets/data_about_groups.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
 import 'package:dottoday/features/settings/widgets/learning_group.dart';
 import 'package:dottoday/features/settings/widgets/look_group.dart';
 import 'package:dottoday/features/settings/widgets/planning_group.dart';
 import 'package:dottoday/features/settings/widgets/reminders_group.dart';
+import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:dottoday/shared/sync/sync_status_line.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +28,8 @@ import 'package:go_router/go_router.dart';
 /// Settings P1 (docs/10 §5.2, `A-ios-settings`, `A-android-settings`):
 /// DAY SHAPE, PLANNING, REMINDERS, LOOK, DATA, ABOUT, plus PRD F8's
 /// snapping, shift default, alerts default, language, trash, feedback and
-/// changelog. Every change applies at once (03 §3.7).
+/// changelog. Every change applies at once (03 §3.7). Layout is the first
+/// row in both layouts; minimal shows [MinimalSettings] (docs/14 §4).
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -42,6 +47,7 @@ class SettingsScreen extends ConsumerWidget {
       );
     }
     final s = profile.settings;
+    final minimal = watchSimplified(ref, FeatureId.notifications);
     return Scaffold(
       key: _key,
       body: SafeArea(
@@ -50,6 +56,13 @@ class SettingsScreen extends ConsumerWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: DotSize.readableColumn),
             child: ListView(
+              // One saved scroll position per layout: switching layouts
+              // never opens the other list part-way down (M16 sweep).
+              key: PageStorageKey(
+                minimal
+                    ? 'settings:minimal' // l10n-ignore: storage key
+                    : 'settings', // l10n-ignore: storage key
+              ),
               padding: const EdgeInsets.fromLTRB(
                 DotSpace.page,
                 DotSpace.l,
@@ -64,9 +77,15 @@ class SettingsScreen extends ConsumerWidget {
                       SyncStatus.localOnly,
                   now: ref.watch(clockProvider).nowUtc(),
                 ),
-                for (final group in _groups(context, profile.locale, s)) ...[
-                  const SizedBox(height: DotSpace.xl),
-                  group,
+                const SizedBox(height: DotSpace.xl),
+                if (minimal)
+                  MinimalSettings(settings: s)
+                else ...[
+                  const SettingsGroup(caption: '', children: [LayoutRow()]),
+                  for (final group in settingsGroups(context, profile, s)) ...[
+                    const SizedBox(height: DotSpace.xl),
+                    group,
+                  ],
                 ],
               ],
             ),
@@ -75,26 +94,32 @@ class SettingsScreen extends ConsumerWidget {
       ),
     );
   }
+}
 
-  List<Widget> _groups(BuildContext context, String locale, Settings s) => [
-    DayShapeGroup(settings: s),
-    PlanningGroup(settings: s),
-    LearningGroup(settings: s),
-    RemindersGroup(settings: s),
-    LookGroup(
-      settings: s,
-      locale: locale,
-      onLocale: (code) => unawaited(
-        updateProfile(
-          ProviderScope.containerOf(context),
-          (p) => p.copyWith(locale: code),
-        ),
+/// The full Settings tree's groups: the Settings tab in full, and minimal's
+/// Everything else… page.
+List<Widget> settingsGroups(
+  BuildContext context,
+  Profile profile,
+  Settings s,
+) => [
+  DayShapeGroup(settings: s),
+  PlanningGroup(settings: s),
+  LearningGroup(settings: s),
+  RemindersGroup(settings: s),
+  LookGroup(
+    settings: s,
+    locale: profile.locale,
+    onLocale: (code) => unawaited(
+      updateProfile(
+        ProviderScope.containerOf(context),
+        (p) => p.copyWith(locale: code),
       ),
     ),
-    const DataGroup(),
-    const AboutGroup(),
-  ];
-}
+  ),
+  const DataGroup(),
+  const AboutGroup(),
+];
 
 /// "Settings", "Kody · on this device" — or "Kody · synced just now" when
 /// signed in (`A-ios-settings`, M6.3) — and the initial in a circle. The

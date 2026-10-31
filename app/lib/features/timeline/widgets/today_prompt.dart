@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/calendar/calendar_moves.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/review/week_review.dart';
 import 'package:dottoday/domain/scheduling/calendar_move_prompt.dart';
 import 'package:dottoday/domain/scheduling/day_review.dart';
@@ -33,11 +35,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// days. A task over [rebalanceOverrunMin] past its end opens Rebalance;
 /// before the nudge, an event the calendar moved into the plan offers it
 /// ([CalendarMovedPrompt], M11.1b).
+///
+/// Minimal layout (docs/14 §3): no "Need more time?", This week, Inbox or
+/// Siri card; in their place, at most one reveal hint a day ([hint]).
 class TodayPrompt extends ConsumerWidget {
-  const TodayPrompt({required this.date, required this.today, super.key});
+  const TodayPrompt({
+    required this.date,
+    required this.today,
+    this.hint,
+    super.key,
+  });
 
   final DateTime date;
   final DateTime today;
+
+  /// Minimal mode's reveal hint row, drawn when nothing else is due.
+  final Widget? hint;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -63,7 +76,8 @@ class TodayPrompt extends ConsumerWidget {
         return _review(context, notNow);
       }
       final weekEnds =
-          reviewWeek(today, data.settings.firstDayOfWeek).last == today;
+          reviewWeek(today, data.settings.firstDayOfWeek).last == today &&
+          watchOnScreen(ref, FeatureId.weekPrompt);
       return weekEnds && !dismissed.contains((TodayPromptKind.week, today))
           ? _week(context, notNow)
           : const SizedBox.shrink();
@@ -74,12 +88,17 @@ class TodayPrompt extends ConsumerWidget {
       now,
     );
     if (move != null) return CalendarMovedPrompt(move: move, data: data);
-    final missed = missedTask(data.blocks, now);
+    final missed = watchOnScreen(ref, FeatureId.needMoreTimeNudge)
+        ? missedTask(data.blocks, now)
+        : null;
     if (!data.settings.runningLateNudge ||
         missed == null ||
         dismissed.contains((TodayPromptKind.late, today))) {
       // Nothing more pressing: the once-a-day inbox card (F3.3), and the
       // once-ever Siri tip on iPhone (M14.3; each hides itself).
+      if (!watchOnScreen(ref, FeatureId.inboxNudge)) {
+        return hint ?? const SizedBox.shrink();
+      }
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -89,7 +108,7 @@ class TodayPrompt extends ConsumerWidget {
             shape: shape,
             now: now,
           ),
-          const SiriTipCard(),
+          if (watchOnScreen(ref, FeatureId.siri)) const SiriTipCard(),
         ],
       );
     }

@@ -53,7 +53,14 @@ void main() {
         .go(OnboardingStep.welcome, returning: false);
 
     // Onboarding, the short way: defaults, no habits, no account.
-    for (final label in ['Get started', 'Continue', 'Continue']) {
+    // Step 0: the full planner, the layout this journey walks (docs/14).
+    for (final label in [
+      'Get started',
+      'The full planner',
+      'Continue',
+      'Continue',
+      'Continue',
+    ]) {
       await tapOn(tester, find.text(label));
     }
     // O4: "Not now" on a first install; once notifications are allowed (the

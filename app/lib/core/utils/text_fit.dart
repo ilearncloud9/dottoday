@@ -36,3 +36,16 @@ bool longestWordFits(
     .split(RegExp(r'\s+'))
     .where((w) => w.isNotEmpty)
     .every((w) => textFitsOneLine(context, w, style, width));
+
+/// The width of [text] on one line in [style] at this context's text size.
+double textWidth(BuildContext context, String text, TextStyle style) {
+  final painter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    textDirection: Directionality.of(context),
+    textScaler: MediaQuery.textScalerOf(context),
+    maxLines: 1,
+  )..layout();
+  final width = painter.width;
+  painter.dispose();
+  return width;
+}

@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/inbox_beside.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
@@ -128,10 +129,7 @@ class GapRow extends StatelessWidget {
         // Wide screens plan from the Inbox sidebar by dragging (M3e.2).
         label: switch (gap.fits) {
           final title? => l10n.threadFreeFits(duration, title),
-          null
-              when WidthClass.of(MediaQuery.sizeOf(context).width) ==
-                  WidthClass.expanded =>
-            l10n.threadDropInbox(duration),
+          null when InboxBeside.of(context) => l10n.threadDropInbox(duration),
           null => l10n.threadAddHere(duration),
         },
         semantics: l10n.threadAddHereLabel(duration, gap.startLabel),

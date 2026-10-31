@@ -1,4 +1,5 @@
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
+import 'package:dottoday/data/repositories/drift_reveal_hint_repository.dart';
 import 'package:dottoday/data/repositories/drift_routine_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
@@ -6,6 +7,7 @@ import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/data/writes/row_writer.dart';
 import 'package:dottoday/domain/calendar/calendar_import_rules.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -45,6 +47,18 @@ EntityWriter<Routine> routineWriter(
   toJson: (r) => r.toJson(),
   idOf: (r) => r.id,
   stamp: (r, now) => r.copyWith(updatedAt: now),
+  find: (id) => repo.findById(userId, id),
+  upsertAll: repo.upsertAll,
+);
+
+EntityWriter<RevealHint> revealHintWriter(
+  String userId,
+  DriftRevealHintRepository repo,
+) => EntityWriter(
+  table: 'reveal_hints',
+  toJson: (h) => h.toJson(),
+  idOf: (h) => h.id,
+  stamp: (h, now) => h.copyWith(updatedAt: now),
   find: (id) => repo.findById(userId, id),
   upsertAll: repo.upsertAll,
 );

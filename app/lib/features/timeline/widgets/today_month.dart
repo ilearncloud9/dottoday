@@ -1,7 +1,9 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/schedule/month_data.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/timeline/state/month_cells.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/month_grid.dart';
@@ -38,6 +40,8 @@ class TodayMonth extends ConsumerWidget {
     final first =
         ref.watch(currentProfileProvider).value?.settings.firstDayOfWeek ?? 1;
     final byDay = ref.watch(monthOccurrencesProvider(month)).value ?? const {};
+    // Minimal mode: no per-day completion (docs/14 §3).
+    final dots = !watchSimplified(ref, FeatureId.weekStrip);
     final cells = compactMonthCells(
       month: month,
       firstDayOfWeek: first,
@@ -46,7 +50,9 @@ class TodayMonth extends ConsumerWidget {
       dateText: (d) => DateFormat.d(locale).format(d),
       label: (d, c) {
         final name = DateFormat.MMMMEEEEd(locale).format(d);
-        return c.total == 0 ? name : l10n.monthCellLabel(name, c.done, c.total);
+        return c.total == 0 || !dots
+            ? name
+            : l10n.monthCellLabel(name, c.done, c.total);
       },
     );
     final lead = cells.indexWhere((c) => c != null);
@@ -65,7 +71,7 @@ class TodayMonth extends ConsumerWidget {
                   locale,
                 ).format(DateTime(start.year, start.month, start.day + i)),
             ],
-            days: cells,
+            days: dots ? cells : [for (final c in cells) c?.withoutCompletion],
             selected: shownHere ? lead + shown.day - 1 : null,
             onSelect: (i) =>
                 onSelect(DateTime(month.year, month.month, i - lead + 1)),
@@ -238,4 +244,18 @@ class _Legend extends StatelessWidget {
       ],
     );
   }
+}
+
+extension on MonthDay {
+  /// The cell without its completion dot and counts (minimal mode).
+  MonthDay get withoutCompletion => MonthDay(
+    date: date,
+    label: label,
+    planned: planned,
+    repeatsOnly: repeatsOnly,
+    items: items,
+    isPast: isPast,
+    isToday: isToday,
+    isLight: isLight,
+  );
 }

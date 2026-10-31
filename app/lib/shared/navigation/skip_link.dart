@@ -83,16 +83,22 @@ class _SkipLinkState extends State<SkipLink> {
                     _shown = f;
                     _offered = _offered || f;
                   }),
-                  child: Opacity(
-                    opacity: _shown ? 1 : 0,
-                    child: FilledButton(
-                      focusNode: _link,
-                      onPressed: () {
-                        _content.requestFocus();
-                        // On into the page's first stop.
-                        _content.nextFocus();
-                      },
-                      child: Text(widget.label),
+                  // Unseen, it takes no clicks: the rail's add button sits
+                  // under it (found by the M16 web sweep). Keyboard focus,
+                  // which shows it, is unaffected.
+                  child: IgnorePointer(
+                    ignoring: !_shown,
+                    child: Opacity(
+                      opacity: _shown ? 1 : 0,
+                      child: FilledButton(
+                        focusNode: _link,
+                        onPressed: () {
+                          _content.requestFocus();
+                          // On into the page's first stop.
+                          _content.nextFocus();
+                        },
+                        child: Text(widget.label),
+                      ),
                     ),
                   ),
                 ),

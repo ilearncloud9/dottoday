@@ -6650,6 +6650,627 @@ class RoutinesTableCompanion extends UpdateCompanion<RoutineRow> {
   }
 }
 
+class $RevealHintsTableTable extends RevealHintsTable
+    with TableInfo<$RevealHintsTableTable, RevealHintRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RevealHintsTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dirtyMeta = const VerificationMeta('dirty');
+  @override
+  late final GeneratedColumn<bool> dirty = GeneratedColumn<bool>(
+    'dirty',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("dirty" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _hintIdMeta = const VerificationMeta('hintId');
+  @override
+  late final GeneratedColumn<String> hintId = GeneratedColumn<String>(
+    'hint_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _shownCountMeta = const VerificationMeta(
+    'shownCount',
+  );
+  @override
+  late final GeneratedColumn<int> shownCount = GeneratedColumn<int>(
+    'shown_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _lastShownUtcMeta = const VerificationMeta(
+    'lastShownUtc',
+  );
+  @override
+  late final GeneratedColumn<int> lastShownUtc = GeneratedColumn<int>(
+    'last_shown_utc',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dismissedAtUtcMeta = const VerificationMeta(
+    'dismissedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<int> dismissedAtUtc = GeneratedColumn<int>(
+    'dismissed_at_utc',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    createdAt,
+    updatedAt,
+    dirty,
+    version,
+    id,
+    userId,
+    hintId,
+    shownCount,
+    lastShownUtc,
+    dismissedAtUtc,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'reveal_hints';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<RevealHintRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('dirty')) {
+      context.handle(
+        _dirtyMeta,
+        dirty.isAcceptableOrUnknown(data['dirty']!, _dirtyMeta),
+      );
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('hint_id')) {
+      context.handle(
+        _hintIdMeta,
+        hintId.isAcceptableOrUnknown(data['hint_id']!, _hintIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_hintIdMeta);
+    }
+    if (data.containsKey('shown_count')) {
+      context.handle(
+        _shownCountMeta,
+        shownCount.isAcceptableOrUnknown(data['shown_count']!, _shownCountMeta),
+      );
+    }
+    if (data.containsKey('last_shown_utc')) {
+      context.handle(
+        _lastShownUtcMeta,
+        lastShownUtc.isAcceptableOrUnknown(
+          data['last_shown_utc']!,
+          _lastShownUtcMeta,
+        ),
+      );
+    }
+    if (data.containsKey('dismissed_at_utc')) {
+      context.handle(
+        _dismissedAtUtcMeta,
+        dismissedAtUtc.isAcceptableOrUnknown(
+          data['dismissed_at_utc']!,
+          _dismissedAtUtcMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  RevealHintRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RevealHintRow(
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      dirty: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}dirty'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      hintId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}hint_id'],
+      )!,
+      shownCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}shown_count'],
+      )!,
+      lastShownUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}last_shown_utc'],
+      ),
+      dismissedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}dismissed_at_utc'],
+      ),
+    );
+  }
+
+  @override
+  $RevealHintsTableTable createAlias(String alias) {
+    return $RevealHintsTableTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class RevealHintRow extends DataClass implements Insertable<RevealHintRow> {
+  final int createdAt;
+  final int updatedAt;
+  final bool dirty;
+  final int version;
+  final String id;
+  final String userId;
+  final String hintId;
+  final int shownCount;
+  final int? lastShownUtc;
+  final int? dismissedAtUtc;
+  const RevealHintRow({
+    required this.createdAt,
+    required this.updatedAt,
+    required this.dirty,
+    required this.version,
+    required this.id,
+    required this.userId,
+    required this.hintId,
+    required this.shownCount,
+    this.lastShownUtc,
+    this.dismissedAtUtc,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    map['dirty'] = Variable<bool>(dirty);
+    map['version'] = Variable<int>(version);
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['hint_id'] = Variable<String>(hintId);
+    map['shown_count'] = Variable<int>(shownCount);
+    if (!nullToAbsent || lastShownUtc != null) {
+      map['last_shown_utc'] = Variable<int>(lastShownUtc);
+    }
+    if (!nullToAbsent || dismissedAtUtc != null) {
+      map['dismissed_at_utc'] = Variable<int>(dismissedAtUtc);
+    }
+    return map;
+  }
+
+  RevealHintsTableCompanion toCompanion(bool nullToAbsent) {
+    return RevealHintsTableCompanion(
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      dirty: Value(dirty),
+      version: Value(version),
+      id: Value(id),
+      userId: Value(userId),
+      hintId: Value(hintId),
+      shownCount: Value(shownCount),
+      lastShownUtc: lastShownUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastShownUtc),
+      dismissedAtUtc: dismissedAtUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dismissedAtUtc),
+    );
+  }
+
+  factory RevealHintRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RevealHintRow(
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+      dirty: serializer.fromJson<bool>(json['dirty']),
+      version: serializer.fromJson<int>(json['version']),
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      hintId: serializer.fromJson<String>(json['hintId']),
+      shownCount: serializer.fromJson<int>(json['shownCount']),
+      lastShownUtc: serializer.fromJson<int?>(json['lastShownUtc']),
+      dismissedAtUtc: serializer.fromJson<int?>(json['dismissedAtUtc']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'createdAt': serializer.toJson<int>(createdAt),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+      'dirty': serializer.toJson<bool>(dirty),
+      'version': serializer.toJson<int>(version),
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'hintId': serializer.toJson<String>(hintId),
+      'shownCount': serializer.toJson<int>(shownCount),
+      'lastShownUtc': serializer.toJson<int?>(lastShownUtc),
+      'dismissedAtUtc': serializer.toJson<int?>(dismissedAtUtc),
+    };
+  }
+
+  RevealHintRow copyWith({
+    int? createdAt,
+    int? updatedAt,
+    bool? dirty,
+    int? version,
+    String? id,
+    String? userId,
+    String? hintId,
+    int? shownCount,
+    Value<int?> lastShownUtc = const Value.absent(),
+    Value<int?> dismissedAtUtc = const Value.absent(),
+  }) => RevealHintRow(
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    dirty: dirty ?? this.dirty,
+    version: version ?? this.version,
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    hintId: hintId ?? this.hintId,
+    shownCount: shownCount ?? this.shownCount,
+    lastShownUtc: lastShownUtc.present ? lastShownUtc.value : this.lastShownUtc,
+    dismissedAtUtc: dismissedAtUtc.present
+        ? dismissedAtUtc.value
+        : this.dismissedAtUtc,
+  );
+  RevealHintRow copyWithCompanion(RevealHintsTableCompanion data) {
+    return RevealHintRow(
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      dirty: data.dirty.present ? data.dirty.value : this.dirty,
+      version: data.version.present ? data.version.value : this.version,
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      hintId: data.hintId.present ? data.hintId.value : this.hintId,
+      shownCount: data.shownCount.present
+          ? data.shownCount.value
+          : this.shownCount,
+      lastShownUtc: data.lastShownUtc.present
+          ? data.lastShownUtc.value
+          : this.lastShownUtc,
+      dismissedAtUtc: data.dismissedAtUtc.present
+          ? data.dismissedAtUtc.value
+          : this.dismissedAtUtc,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RevealHintRow(')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('dirty: $dirty, ')
+          ..write('version: $version, ')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('hintId: $hintId, ')
+          ..write('shownCount: $shownCount, ')
+          ..write('lastShownUtc: $lastShownUtc, ')
+          ..write('dismissedAtUtc: $dismissedAtUtc')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    createdAt,
+    updatedAt,
+    dirty,
+    version,
+    id,
+    userId,
+    hintId,
+    shownCount,
+    lastShownUtc,
+    dismissedAtUtc,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RevealHintRow &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.dirty == this.dirty &&
+          other.version == this.version &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.hintId == this.hintId &&
+          other.shownCount == this.shownCount &&
+          other.lastShownUtc == this.lastShownUtc &&
+          other.dismissedAtUtc == this.dismissedAtUtc);
+}
+
+class RevealHintsTableCompanion extends UpdateCompanion<RevealHintRow> {
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<bool> dirty;
+  final Value<int> version;
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> hintId;
+  final Value<int> shownCount;
+  final Value<int?> lastShownUtc;
+  final Value<int?> dismissedAtUtc;
+  final Value<int> rowid;
+  const RevealHintsTableCompanion({
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.dirty = const Value.absent(),
+    this.version = const Value.absent(),
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.hintId = const Value.absent(),
+    this.shownCount = const Value.absent(),
+    this.lastShownUtc = const Value.absent(),
+    this.dismissedAtUtc = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RevealHintsTableCompanion.insert({
+    required int createdAt,
+    required int updatedAt,
+    this.dirty = const Value.absent(),
+    this.version = const Value.absent(),
+    required String id,
+    required String userId,
+    required String hintId,
+    this.shownCount = const Value.absent(),
+    this.lastShownUtc = const Value.absent(),
+    this.dismissedAtUtc = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt),
+       id = Value(id),
+       userId = Value(userId),
+       hintId = Value(hintId);
+  static Insertable<RevealHintRow> custom({
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<bool>? dirty,
+    Expression<int>? version,
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? hintId,
+    Expression<int>? shownCount,
+    Expression<int>? lastShownUtc,
+    Expression<int>? dismissedAtUtc,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (dirty != null) 'dirty': dirty,
+      if (version != null) 'version': version,
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (hintId != null) 'hint_id': hintId,
+      if (shownCount != null) 'shown_count': shownCount,
+      if (lastShownUtc != null) 'last_shown_utc': lastShownUtc,
+      if (dismissedAtUtc != null) 'dismissed_at_utc': dismissedAtUtc,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RevealHintsTableCompanion copyWith({
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<bool>? dirty,
+    Value<int>? version,
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? hintId,
+    Value<int>? shownCount,
+    Value<int?>? lastShownUtc,
+    Value<int?>? dismissedAtUtc,
+    Value<int>? rowid,
+  }) {
+    return RevealHintsTableCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      dirty: dirty ?? this.dirty,
+      version: version ?? this.version,
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      hintId: hintId ?? this.hintId,
+      shownCount: shownCount ?? this.shownCount,
+      lastShownUtc: lastShownUtc ?? this.lastShownUtc,
+      dismissedAtUtc: dismissedAtUtc ?? this.dismissedAtUtc,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (dirty.present) {
+      map['dirty'] = Variable<bool>(dirty.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (hintId.present) {
+      map['hint_id'] = Variable<String>(hintId.value);
+    }
+    if (shownCount.present) {
+      map['shown_count'] = Variable<int>(shownCount.value);
+    }
+    if (lastShownUtc.present) {
+      map['last_shown_utc'] = Variable<int>(lastShownUtc.value);
+    }
+    if (dismissedAtUtc.present) {
+      map['dismissed_at_utc'] = Variable<int>(dismissedAtUtc.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RevealHintsTableCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('dirty: $dirty, ')
+          ..write('version: $version, ')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('hintId: $hintId, ')
+          ..write('shownCount: $shownCount, ')
+          ..write('lastShownUtc: $lastShownUtc, ')
+          ..write('dismissedAtUtc: $dismissedAtUtc, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ConflictsTable extends Conflicts
     with TableInfo<$ConflictsTable, ConflictRow> {
   @override
@@ -8450,6 +9071,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'CREATE UNIQUE INDEX calendar_links_account_event ON calendar_links (user_id, account_id, external_event_id)',
   );
   late final $RoutinesTableTable routinesTable = $RoutinesTableTable(this);
+  late final $RevealHintsTableTable revealHintsTable = $RevealHintsTableTable(
+    this,
+  );
   late final $ConflictsTable conflicts = $ConflictsTable(this);
   late final $ChangeLogTable changeLog = $ChangeLogTable(this);
   late final $SyncCursorsTable syncCursors = $SyncCursorsTable(this);
@@ -8466,6 +9090,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final Index routinesDirty = Index(
     'routines_dirty',
     'CREATE INDEX routines_dirty ON routines (dirty) WHERE dirty = 1',
+  );
+  late final Index revealHintsUser = Index(
+    'reveal_hints_user',
+    'CREATE INDEX reveal_hints_user ON reveal_hints (user_id)',
+  );
+  late final Index revealHintsDirty = Index(
+    'reveal_hints_dirty',
+    'CREATE INDEX reveal_hints_dirty ON reveal_hints (dirty) WHERE dirty = 1',
   );
   late final Index conflictsOpen = Index(
     'conflicts_open',
@@ -8509,6 +9141,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     calendarLinksUserEvent,
     calendarLinksAccountEvent,
     routinesTable,
+    revealHintsTable,
     conflicts,
     changeLog,
     syncCursors,
@@ -8517,6 +9150,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     routinesUser,
     routinesUserUpdated,
     routinesDirty,
+    revealHintsUser,
+    revealHintsDirty,
     conflictsOpen,
     changeLogEntity,
   ];
@@ -8678,6 +9313,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.update,
       ),
       result: [TableUpdate('routines', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('reveal_hints', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('reveal_hints', kind: UpdateKind.update)],
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
@@ -9026,6 +9675,26 @@ final class $$ProfilesTableReferences
     );
   }
 
+  static MultiTypedResultKey<$RevealHintsTableTable, List<RevealHintRow>>
+  _revealHintsTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.revealHintsTable,
+    aliasName: 'profiles__id__reveal_hints__user_id',
+  );
+
+  $$RevealHintsTableTableProcessedTableManager get revealHintsTableRefs {
+    final manager = $$RevealHintsTableTableTableManager(
+      $_db,
+      $_db.revealHintsTable,
+    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _revealHintsTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
   static MultiTypedResultKey<$ConflictsTable, List<ConflictRow>>
   _conflictsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.conflicts,
@@ -9240,6 +9909,31 @@ class $$ProfilesTableFilterComposer
           }) => $$RoutinesTableTableFilterComposer(
             $db: $db,
             $table: $db.routinesTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> revealHintsTableRefs(
+    Expression<bool> Function($$RevealHintsTableTableFilterComposer f) f,
+  ) {
+    final $$RevealHintsTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.revealHintsTable,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RevealHintsTableTableFilterComposer(
+            $db: $db,
+            $table: $db.revealHintsTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9518,6 +10212,31 @@ class $$ProfilesTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> revealHintsTableRefs<T extends Object>(
+    Expression<T> Function($$RevealHintsTableTableAnnotationComposer a) f,
+  ) {
+    final $$RevealHintsTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.revealHintsTable,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RevealHintsTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.revealHintsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> conflictsRefs<T extends Object>(
     Expression<T> Function($$ConflictsTableAnnotationComposer a) f,
   ) {
@@ -9564,6 +10283,7 @@ class $$ProfilesTableTableManager
             bool occurrencesRefs,
             bool subtasksRefs,
             bool routinesTableRefs,
+            bool revealHintsTableRefs,
             bool conflictsRefs,
           })
         > {
@@ -9642,6 +10362,7 @@ class $$ProfilesTableTableManager
                 occurrencesRefs = false,
                 subtasksRefs = false,
                 routinesTableRefs = false,
+                revealHintsTableRefs = false,
                 conflictsRefs = false,
               }) {
                 return PrefetchHooks(
@@ -9653,6 +10374,7 @@ class $$ProfilesTableTableManager
                     if (occurrencesRefs) db.occurrences,
                     if (subtasksRefs) db.subtasks,
                     if (routinesTableRefs) db.routinesTable,
+                    if (revealHintsTableRefs) db.revealHintsTable,
                     if (conflictsRefs) db.conflicts,
                   ],
                   addJoins: null,
@@ -9784,6 +10506,27 @@ class $$ProfilesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (revealHintsTableRefs)
+                        await $_getPrefetchedData<
+                          ProfileRow,
+                          $ProfilesTable,
+                          RevealHintRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._revealHintsTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).revealHintsTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.userId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (conflictsRefs)
                         await $_getPrefetchedData<
                           ProfileRow,
@@ -9832,6 +10575,7 @@ typedef $$ProfilesTableProcessedTableManager =
         bool occurrencesRefs,
         bool subtasksRefs,
         bool routinesTableRefs,
+        bool revealHintsTableRefs,
         bool conflictsRefs,
       })
     >;
@@ -13895,6 +14639,433 @@ typedef $$RoutinesTableTableProcessedTableManager =
       RoutineRow,
       PrefetchHooks Function({bool userId})
     >;
+typedef $$RevealHintsTableTableCreateCompanionBuilder =
+    RevealHintsTableCompanion Function({
+      required int createdAt,
+      required int updatedAt,
+      Value<bool> dirty,
+      Value<int> version,
+      required String id,
+      required String userId,
+      required String hintId,
+      Value<int> shownCount,
+      Value<int?> lastShownUtc,
+      Value<int?> dismissedAtUtc,
+      Value<int> rowid,
+    });
+typedef $$RevealHintsTableTableUpdateCompanionBuilder =
+    RevealHintsTableCompanion Function({
+      Value<int> createdAt,
+      Value<int> updatedAt,
+      Value<bool> dirty,
+      Value<int> version,
+      Value<String> id,
+      Value<String> userId,
+      Value<String> hintId,
+      Value<int> shownCount,
+      Value<int?> lastShownUtc,
+      Value<int?> dismissedAtUtc,
+      Value<int> rowid,
+    });
+
+final class $$RevealHintsTableTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $RevealHintsTableTable, RevealHintRow> {
+  $$RevealHintsTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ProfilesTable _userIdTable(_$AppDatabase db) =>
+      db.profiles.createAlias('reveal_hints__user_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<String>('user_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$RevealHintsTableTableFilterComposer
+    extends Composer<_$AppDatabase, $RevealHintsTableTable> {
+  $$RevealHintsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get dirty => $composableBuilder(
+    column: $table.dirty,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get hintId => $composableBuilder(
+    column: $table.hintId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get shownCount => $composableBuilder(
+    column: $table.shownCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lastShownUtc => $composableBuilder(
+    column: $table.lastShownUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get dismissedAtUtc => $composableBuilder(
+    column: $table.dismissedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ProfilesTableFilterComposer get userId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RevealHintsTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $RevealHintsTableTable> {
+  $$RevealHintsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get dirty => $composableBuilder(
+    column: $table.dirty,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get hintId => $composableBuilder(
+    column: $table.hintId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get shownCount => $composableBuilder(
+    column: $table.shownCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get lastShownUtc => $composableBuilder(
+    column: $table.lastShownUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get dismissedAtUtc => $composableBuilder(
+    column: $table.dismissedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ProfilesTableOrderingComposer get userId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RevealHintsTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $RevealHintsTableTable> {
+  $$RevealHintsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get dirty =>
+      $composableBuilder(column: $table.dirty, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get hintId =>
+      $composableBuilder(column: $table.hintId, builder: (column) => column);
+
+  GeneratedColumn<int> get shownCount => $composableBuilder(
+    column: $table.shownCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get lastShownUtc => $composableBuilder(
+    column: $table.lastShownUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get dismissedAtUtc => $composableBuilder(
+    column: $table.dismissedAtUtc,
+    builder: (column) => column,
+  );
+
+  $$ProfilesTableAnnotationComposer get userId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RevealHintsTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $RevealHintsTableTable,
+          RevealHintRow,
+          $$RevealHintsTableTableFilterComposer,
+          $$RevealHintsTableTableOrderingComposer,
+          $$RevealHintsTableTableAnnotationComposer,
+          $$RevealHintsTableTableCreateCompanionBuilder,
+          $$RevealHintsTableTableUpdateCompanionBuilder,
+          (RevealHintRow, $$RevealHintsTableTableReferences),
+          RevealHintRow,
+          PrefetchHooks Function({bool userId})
+        > {
+  $$RevealHintsTableTableTableManager(
+    _$AppDatabase db,
+    $RevealHintsTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RevealHintsTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$RevealHintsTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$RevealHintsTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> createdAt = const Value.absent(),
+                Value<int> updatedAt = const Value.absent(),
+                Value<bool> dirty = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> hintId = const Value.absent(),
+                Value<int> shownCount = const Value.absent(),
+                Value<int?> lastShownUtc = const Value.absent(),
+                Value<int?> dismissedAtUtc = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RevealHintsTableCompanion(
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                dirty: dirty,
+                version: version,
+                id: id,
+                userId: userId,
+                hintId: hintId,
+                shownCount: shownCount,
+                lastShownUtc: lastShownUtc,
+                dismissedAtUtc: dismissedAtUtc,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int createdAt,
+                required int updatedAt,
+                Value<bool> dirty = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                required String id,
+                required String userId,
+                required String hintId,
+                Value<int> shownCount = const Value.absent(),
+                Value<int?> lastShownUtc = const Value.absent(),
+                Value<int?> dismissedAtUtc = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RevealHintsTableCompanion.insert(
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                dirty: dirty,
+                version: version,
+                id: id,
+                userId: userId,
+                hintId: hintId,
+                shownCount: shownCount,
+                lastShownUtc: lastShownUtc,
+                dismissedAtUtc: dismissedAtUtc,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$RevealHintsTableTable, RevealHintRow>(table),
+                  $$RevealHintsTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({userId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (userId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.userId,
+                                referencedTable:
+                                    $$RevealHintsTableTableReferences
+                                        ._userIdTable(db),
+                                referencedColumn:
+                                    $$RevealHintsTableTableReferences
+                                        ._userIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$RevealHintsTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $RevealHintsTableTable,
+      RevealHintRow,
+      $$RevealHintsTableTableFilterComposer,
+      $$RevealHintsTableTableOrderingComposer,
+      $$RevealHintsTableTableAnnotationComposer,
+      $$RevealHintsTableTableCreateCompanionBuilder,
+      $$RevealHintsTableTableUpdateCompanionBuilder,
+      (RevealHintRow, $$RevealHintsTableTableReferences),
+      RevealHintRow,
+      PrefetchHooks Function({bool userId})
+    >;
 typedef $$ConflictsTableCreateCompanionBuilder =
     ConflictsCompanion Function({
       required String id,
@@ -15022,6 +16193,8 @@ class $AppDatabaseManager {
       $$SubtasksTableTableManager(_db, _db.subtasks);
   $$RoutinesTableTableTableManager get routinesTable =>
       $$RoutinesTableTableTableManager(_db, _db.routinesTable);
+  $$RevealHintsTableTableTableManager get revealHintsTable =>
+      $$RevealHintsTableTableTableManager(_db, _db.revealHintsTable);
   $$ConflictsTableTableManager get conflicts =>
       $$ConflictsTableTableManager(_db, _db.conflicts);
   $$ChangeLogTableTableManager get changeLog =>

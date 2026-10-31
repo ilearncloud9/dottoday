@@ -1,0 +1,127 @@
+/// One value per row of the minimal-mode feature matrix (docs/14 §3), in
+/// the doc's order. [docRow] is that row's Feature cell, verbatim: the
+/// policy test reads §3 and fails if a row and a value stop matching, so
+/// the matrix cannot drift from the code. A new feature adds its row to §3
+/// and its value here before it is built (CLAUDE.md §11).
+enum FeatureId {
+  todayThread('Today thread, day pager'),
+  weekStrip('Week strip + month pull-open'),
+  macWeekMonth('Mac Week / Month views'),
+  addTask('Add task, two steps + parser'),
+  taskSheet('Task sheet'),
+  recurrenceEditor('Recurrence editor'),
+  inbox('Inbox'),
+  dragMove('Move, reorder, drag'),
+  shiftRunningLate('Shift the rest / Running late'),
+  wakeBedtime('Wake Up / Wind Down'),
+  capTimeEdit('Tap a Wake Up / Wind Down cap to change its time'),
+  windDown('Wind Down sleep block'),
+  notifications('Notifications + sound library'),
+  bedtimeReview('Wind Down review, daily'),
+  syncAccount('Sign-in and sync'),
+  calendarImport('Calendar import'),
+  export('Export'),
+  lightDarkLanguage('Light/dark, language'),
+  onboarding('Onboarding'),
+  alarmsHealth('A0 alarms + Notification health'),
+  actualTimestamps('B1 actual timestamps'),
+  subtaskDurations('B2 subtask durations'),
+  liveActivity('A1 Live Activity / ongoing notification'),
+  homeWidgets('A1 widgets, controls, menu bar'),
+  wallpaper('A2 wallpaper / watch face'),
+  focus('A3 Focus'),
+  breakDown('B1 Break it down'),
+  smallestStep('B2 Smallest step'),
+  unstick('B3 Unstick'),
+  brainDump('B4 Brain-dump to thread'),
+  paperPlan('B5 Paper plan to thread'),
+  captureAnywhere('B6 Capture anywhere'),
+  rebalance('C1 Rebalance proposal'),
+  routines('C2 Routines'),
+  realityThread('C3 Reality thread view'),
+  energySuggestions('C4 Energy suggestions'),
+  weekReview('D1 Weekly review + share image'),
+  lowEnergy('D2 Low-energy mode'),
+  journal('D3 Thread journal'),
+  bodyDouble('E1 Body double'),
+  integrations('F1/F2 Windows/Linux, integrations'),
+  watch('F3 Watch'),
+  proUpsell('Themes, icon packs, Pro upsell'),
+  headerExtras(
+    'Today header extras: `DayDot` (or "● Today" away from today), day numbers ("2 of 13 · 10 h planned")',
+  ),
+  doneCircle('`DoneCircle` on every row'),
+  dotTapSheet('Task dot tap → task sheet (live dot → Focus)'),
+  overlaps('Overlapping tasks ("Tasks are overlapping")'),
+  liveRowDetails('Live row details: subtask ring "1 of 3", "38 min left"'),
+  multiSelect('Long-press multi-select + selection bar'),
+  structuredDrag(
+    'Structured drag: dot follows the finger with its time, landing preview, 700 ms hover-paging over the week strip',
+  ),
+  allDayDrop('Drop on Wake Up = all day; all-day chip dragged onto the thread'),
+  addButtonDrag('Drag the + button onto the thread to add at a time'),
+  inboxTabDrop('Drop on the Inbox tab to unschedule'),
+  trashTarget('Trash target above + while dragging (Trash with Undo)'),
+  pinned('Pinned tasks (lock glyph, Pin switch)'),
+  allDayChips('All-day chips'),
+  emptyDayActions(
+    'Empty-day actions (Add to the day, Pull from Inbox, Copy a day)',
+  ),
+  dayMenuExtras('Duplicate day…, Copy day as text, Routines… (⋯)'),
+  brainDumpEntry('Brain dump ⋯ entry, Earlier dumps'),
+  dictation('Dictation mic (Brain dump, Notes)'),
+  inboxNudge('Today prompt: Inbox nudge card'),
+  needMoreTimeNudge('Today prompt: "Need more time?" nudge'),
+  rebalancePrompt(
+    'Today prompt: ran-over / calendar-moved rebalance ("Rebalance?")',
+  ),
+  weekPrompt('Today prompt: This week on the last day'),
+  siri('Siri tip card + Settings › Siri & Shortcuts + onboarding Siri line'),
+  realityCaption('Reality-coming caption, insight strip, reality highlight'),
+  learnedLines('Learned lines ("usually 2 h 20") + explain-on-tap sheet'),
+  learningPage('Settings › Learning page'),
+  travelTime(
+    'Travel time (row meta, suggestion card, editor row, Calendars › Travel)',
+  ),
+  calendarWriteBack(
+    'Calendar write-back + move-with-calendar (line in editor, Calendars rows)',
+  ),
+  timeZones('Time zones: zone banner, Time ⋯ › Time zone'),
+  search('Search tab, recent searches, filters'),
+  pastDays('Past days + Year strip (where D3 lives in code)'),
+  navigation('Navigation bar / rail (bold icons, ADR-0015 amendment)'),
+  spread(
+    'Mac/web spread with its greeting title, Inbox sidebar, `TaskEditor` panel',
+  ),
+  inboxExtras(
+    'Inbox page extras: filters, completed group, Routines button, swipe hint, Drop on today panel',
+  ),
+  sheetExtras(
+    'Task sheet extras: +15, Shift the rest, Move, Edit, Alerts, Sound, Travel, Pin, calendar line',
+  ),
+  iconLibrary('Task icon library picker'),
+  sounds('Sounds page, task Sound row, Start and Done sounds'),
+  quietReminders('Quiet hours, Wind Down reminder, Day summary'),
+  dayShapeExtras('Day shape extras: per-weekday times, 12/24 h, week start'),
+  planningSettings(
+    'Planning settings: default duration, snapping, shift default, roll over unfinished, show free time, nudges, low-energy row',
+  ),
+  accent('Accent colour'),
+  backups('Backups, import, restore'),
+  trash('Trash'),
+  infoPages('Help, Feedback, What\'s new, About + licences'),
+  privacy('Privacy page (AI status, clear thinking/searches)'),
+  statusHint('Proposal model-status line (`StatusHint`)'),
+  appLock('App lock'),
+  syncConflicts('Sync conflicts banner, Sync sheet'),
+  recovery('Database recovery screen'),
+  installBanner('Web install banner'),
+  onboardingExtras(
+    'Onboarding extras: welcome, account step, habits step, calendar connect, Done step',
+  );
+
+  const FeatureId(this.docRow);
+
+  /// The Feature cell of this value's row in docs/14 §3.
+  final String docRow;
+}

@@ -57,6 +57,7 @@ void main() {
       'occurrences',
       'subtasks',
       'routines',
+      'reveal_hints',
       'conflicts',
       'change_log',
       'field_seen',
@@ -171,5 +172,25 @@ void main() {
       plan.map((r) => r.read<String>('detail')).join(),
       contains('occurrences_user_start'),
     );
+  });
+
+  test('reveal_hints: one row per hint, known ids, twice ever (M16)', () async {
+    Future<void> insert(String id, String hint, {int shown = 0}) =>
+        db.customInsert(
+          'INSERT INTO reveal_hints (id, user_id, hint_id, shown_count, '
+          'created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)',
+          variables: [
+            Variable(id),
+            const Variable(_user),
+            Variable(hint),
+            Variable(shown),
+            const Variable(_now),
+            const Variable(_now),
+          ],
+        );
+    await insert('h1', 'unstick', shown: 2);
+    await expectLater(insert('h2', 'unstick'), throwsA(anything));
+    await expectLater(insert('h3', 'streaks'), throwsA(anything));
+    await expectLater(insert('h4', 'routines', shown: 3), throwsA(anything));
   });
 }

@@ -1,10 +1,12 @@
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
+import 'package:dottoday/data/repositories/drift_reveal_hint_repository.dart';
 import 'package:dottoday/data/repositories/drift_routine_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -20,7 +22,8 @@ final class SyncedRows {
       _series = DriftSeriesRepository(_db),
       _occurrences = DriftOccurrenceRepository(_db),
       _subtasks = DriftSubtaskRepository(_db),
-      _routines = DriftRoutineRepository(_db);
+      _routines = DriftRoutineRepository(_db),
+      _hints = DriftRevealHintRepository(_db);
 
   final AppDatabase _db;
   final DriftSettingsRepository _profiles;
@@ -28,6 +31,7 @@ final class SyncedRows {
   final DriftOccurrenceRepository _occurrences;
   final DriftSubtaskRepository _subtasks;
   final DriftRoutineRepository _routines;
+  final DriftRevealHintRepository _hints;
 
   /// Row [id] of [entity] owned by [userId], or null.
   Future<Map<String, Object?>?> find(
@@ -40,6 +44,7 @@ final class SyncedRows {
     'occurrences' => (await _occurrences.findById(userId, id))?.toJson(),
     'subtasks' => (await _subtasks.findById(userId, id))?.toJson(),
     'routines' => (await _routines.findById(userId, id))?.toJson(),
+    'reveal_hints' => (await _hints.findById(userId, id))?.toJson(),
     _ => throw ArgumentError.value(entity, 'entity'),
   };
 
@@ -56,6 +61,8 @@ final class SyncedRows {
         await _subtasks.upsertAll([Subtask.fromJson(row)]);
       case 'routines':
         await _routines.upsertAll([Routine.fromJson(row)]);
+      case 'reveal_hints':
+        await _hints.upsertAll([RevealHint.fromJson(row)]);
       default:
         throw ArgumentError.value(entity, 'entity');
     }

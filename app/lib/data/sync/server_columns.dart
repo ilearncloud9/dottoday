@@ -8,13 +8,14 @@ library;
 
 /// Synced entities, in the order their rows may reference each other:
 /// series before the occurrences they make, occurrences before subtasks;
-/// routines reference only the profile.
+/// routines and reveal hints reference only the profile.
 const syncedEntities = [
   'profiles',
   'series',
   'occurrences',
   'subtasks',
   'routines',
+  'reveal_hints',
 ];
 
 /// The columns a change may set (never `id`, `user_id`, `updated_at`).
@@ -81,6 +82,13 @@ const pushableColumns = <String, Set<String>>{
     'done_at',
     'created_at',
     'deleted_at',
+  },
+  'reveal_hints': {
+    'hint_id',
+    'shown_count',
+    'last_shown_utc',
+    'dismissed_at_utc',
+    'created_at',
   },
   'routines': {
     'title',

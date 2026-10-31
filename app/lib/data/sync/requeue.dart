@@ -32,6 +32,8 @@ Future<void> requeueAll(AppDatabase db, SharedHlc hlc) async {
         ('subtasks', r.id, subtaskFromRow(r).toJson()),
     for (final r in await db.select(db.routinesTable).get())
       ('routines', r.id, routineFromRow(r).toJson()),
+    for (final r in await db.select(db.revealHintsTable).get())
+      ('reveal_hints', r.id, revealHintFromRow(r).toJson()),
   ];
   await db.delete(db.changeLog).go();
   await db.batch((b) {

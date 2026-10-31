@@ -15,6 +15,7 @@ import 'package:dottoday/data/export/export_service.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
 import 'package:dottoday/data/feedback/diagnostics_reader.dart';
 import 'package:dottoday/data/feedback/feedback_providers.dart';
+import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
@@ -61,6 +62,7 @@ import 'calendar_fakes.dart';
 import 'export_fakes.dart';
 import 'fake_clock.dart';
 import 'fake_notification_platform.dart';
+import 'reveal_hint_fakes.dart';
 import 'routine_fakes.dart';
 import 'search_fakes.dart';
 
@@ -166,11 +168,12 @@ final class WriteFault {
 /// The write path over the fakes: validates settings like the real one
 /// (refusing an invalid batch whole), then stores profile and occurrences.
 final class FakeWriteUseCase implements WriteUseCase {
-  FakeWriteUseCase(this.settings, this.occurrences, [this.fault]);
+  FakeWriteUseCase(this.settings, this.occurrences, [this.fault, this.hints]);
 
   final FakeSettingsRepository settings;
   final FakeOccurrenceRepository occurrences;
   final WriteFault? fault;
+  final FakeRevealHintRepository? hints;
   final applied = <WriteBatch>[];
 
   @override
@@ -184,6 +187,7 @@ final class FakeWriteUseCase implements WriteUseCase {
     applied.add(batch);
     if (batch.profile case final p?) await settings.upsert(p);
     occurrences.put(batch.occurrences);
+    await hints?.upsertAll(batch.revealHints);
     return const Ok(null);
   }
 }
@@ -466,12 +470,14 @@ List<Override> timelineOverrides({
   DiagnosticsReader diagnostics = const FakeDiagnosticsReader(),
   WriteFault? writeFault,
   List<Routine> routines = const [],
+  FakeRevealHintRepository? revealHints,
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
   final subs = subtasks ?? FakeSubtaskRepository();
   final seriesRepo = FakeSeriesRepository(series);
   final settingsRepo = FakeSettingsRepository(p);
+  final hintRepo = revealHints ?? FakeRevealHintRepository();
   final undo = FakeUndoService(
     repo,
     subs,
@@ -481,13 +487,17 @@ List<Override> timelineOverrides({
   );
   return [
     writeUseCaseProvider.overrideWithValue(
-      FakeWriteUseCase(settingsRepo, repo, writeFault),
+      FakeWriteUseCase(settingsRepo, repo, writeFault, hintRepo),
     ),
     subtaskRepositoryProvider.overrideWithValue(subs),
     seriesRepositoryProvider.overrideWithValue(seriesRepo),
     routineRepositoryProvider.overrideWithValue(
       FakeRoutineRepository(routines),
     ),
+    // The widget hint's trigger (M16): never dismissed, no database.
+    liveActivityDismissedProvider.overrideWith(_NoLiveActivityDismissal.new),
+    // Minimal mode's hint records (docs/14 §6).
+    revealHintRepositoryProvider.overrideWithValue(hintRepo),
     undoServiceProvider.overrideWithValue(undo),
     trashServiceProvider.overrideWithValue(FakeTrashService(repo, undo)),
     clockProvider.overrideWithValue(FakeClock(now)),
@@ -661,4 +671,10 @@ final class FakeAppLockSetting extends AppLockSetting {
     state = AsyncData(settings);
     return true;
   }
+}
+
+/// No Live Activity was ever dismissed (M16), without the database.
+final class _NoLiveActivityDismissal extends LiveActivityDismissed {
+  @override
+  Future<bool> build() async => false;
 }

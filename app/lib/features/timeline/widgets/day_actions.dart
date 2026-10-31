@@ -22,7 +22,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Thread callbacks for a day's [blocks]: done toggles (light haptic, §2.4),
-/// +15 min and Shift the rest, each confirmed with an Undo snackbar.
+/// +15 min and Shift the rest, each confirmed with an Undo snackbar. With
+/// [onRunningLate] (minimal layout, docs/14 §4) the live row offers Running
+/// late instead of +15 and Shift the rest.
 ThreadActions dayThreadActions(
   BuildContext context,
   WidgetRef ref, {
@@ -32,6 +34,7 @@ ThreadActions dayThreadActions(
   Set<String> selectedIds = const {},
   ValueChanged<String>? onSelect,
   ValueChanged<bool>? onCap,
+  ValueChanged<String>? onRunningLate,
 }) {
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
@@ -90,6 +93,7 @@ ThreadActions dayThreadActions(
         (token) => token,
       );
     },
+    onRunningLate: onRunningLate,
     onExtend: (id) async {
       final o = find(id);
       final end = o.endUtc!.add(const Duration(minutes: 15));

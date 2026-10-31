@@ -42,6 +42,7 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Item | Derived from | Golden |
 |---|---|---|
 | `TaskDot` skipped (dashed) and missed states | §3 `TaskDot`, `A-ios-future-month` | `task_dot_*` |
+| Minimal layout (M16, docs/14 §4): Today (date + ⋯, Done / Running late on the live row, the Later row, no tab bar), one-step Add (when and length chips, Add / More), the task sheet (Done · Tomorrow · Later · Delete, More), eight-row Settings, onboarding step 0's two cards, the reveal hint row (derived until set C arrives). The task sheet's 2.0-text and RTL cells capture a finished task (`minimal_task_sheet_done_*`): on the live task, white bold "Done" on the accent fill at 200 % rasterises 0.14 % differently by test order (engine-side, over the 0.1 % tolerance); the live sheet keeps light/dark 1×/2× (`minimal_task_sheet_*`) (owner accepted, 2026-10-31) | docs/14 §4–§5 + `Main`, `A-ios-add-what`, `A-ios-task-sheet`, `A-ios-settings` | `minimal_today_*`, `minimal_add_*`, `minimal_task_sheet_*`, `minimal_settings_*`, `minimal_onboarding_layout_*`, `minimal_today_hint_*` |
 | Thread "missed" meta and skipped rows | §3 `TaskRow`, `A-mac-month` | `thread_*` |
 | Medium-width rail (600–840) | §4 | `shell_rail_*_medium_*` |
 | Add A1 with no habits yet (no Suggestions, helper line) | §5.2 A1, `A-ios-add-what` | `add_what_blank_*` |
@@ -127,3 +128,11 @@ Rendered at 2× from the canvas (version 128, 2026-10-23). iPhone 390×844 only;
 | `png/B-ios-low-energy.png` | Low-energy mode: one next dot, no counts, "Later" pile as dots, propose-to-tomorrow, nudges off | D2 |
 
 Derived (no render; build from the spec and components): Smallest step reminder/row (B2), Unstick row (B3), notification-health panel and "send me a test alarm" step (A0), Android ongoing notification (A1, mirror of the Live Activity card in M3 style), interactive widgets and Control Center controls (A1), Mac menu-bar dot (A1), thread journal (D3), body-double dot in the Today header (E1), brain-dump sheet (B4, reuse Add step 1 + ProposalSheet).
+
+## Set C (minimal layout, docs/14)
+
+| Render | Screen | Golden |
+|---|---|---|
+| `C-ios-onboarding-mode.png` | Onboarding step 0: the day dot, the question, two radio cards with thread sketches, Continue and the step dots (owner, 2026-10-31) | `minimal_onboarding_layout_*` |
+
+`C-ios-today-minimal.png`, `C-ios-add-minimal.png` and `C-ios-settings-minimal.png` are not drawn yet; those screens are derived (above).

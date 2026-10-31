@@ -28,7 +28,12 @@ class PillTabShell extends StatelessWidget {
         child: Row(
           spacing: DotSpace.m,
           children: [
-            Expanded(child: _Pill(bar: bar)),
+            // No tabs (minimal layout): the add button alone, at the end.
+            Expanded(
+              child: bar.items.isEmpty
+                  ? const SizedBox.shrink()
+                  : _Pill(bar: bar),
+            ),
             if (bar.onAdd case final onAdd?)
               AddDraggable(
                 child: _AddButton(onAdd: onAdd, label: bar.addLabel),

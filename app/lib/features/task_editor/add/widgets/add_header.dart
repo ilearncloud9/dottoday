@@ -6,10 +6,18 @@ import 'package:flutter/material.dart';
 /// Top of the Add sheet (`A-ios-add-what`, `A-ios-add-when`): "‹ Back" on
 /// step 2, the step dots, and close.
 class AddHeader extends StatelessWidget {
-  const AddHeader({required this.step, required this.onBack, super.key});
+  const AddHeader({
+    required this.step,
+    required this.onBack,
+    this.dots = true,
+    super.key,
+  });
 
   final AddStep step;
   final VoidCallback onBack;
+
+  /// The step dots; off for minimal's one-step Add (docs/14 §4).
+  final bool dots;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +43,8 @@ class AddHeader extends StatelessWidget {
                 ),
               ),
             ),
-          _StepDots(current: step.index, total: AddStep.values.length),
+          if (dots)
+            _StepDots(current: step.index, total: AddStep.values.length),
           Align(
             alignment: AlignmentDirectional.centerEnd,
             child: IconButton(
