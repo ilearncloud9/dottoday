@@ -15,6 +15,7 @@ import 'package:dottoday/data/export/export_service.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
 import 'package:dottoday/data/feedback/diagnostics_reader.dart';
 import 'package:dottoday/data/feedback/feedback_providers.dart';
+import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
@@ -493,6 +494,8 @@ List<Override> timelineOverrides({
     routineRepositoryProvider.overrideWithValue(
       FakeRoutineRepository(routines),
     ),
+    // The widget hint's trigger (M16): never dismissed, no database.
+    liveActivityDismissedProvider.overrideWith(_NoLiveActivityDismissal.new),
     // Minimal mode's hint records (docs/14 §6).
     revealHintRepositoryProvider.overrideWithValue(hintRepo),
     undoServiceProvider.overrideWithValue(undo),
@@ -668,4 +671,10 @@ final class FakeAppLockSetting extends AppLockSetting {
     state = AsyncData(settings);
     return true;
   }
+}
+
+/// No Live Activity was ever dismissed (M16), without the database.
+final class _NoLiveActivityDismissal extends LiveActivityDismissed {
+  @override
+  Future<bool> build() async => false;
 }

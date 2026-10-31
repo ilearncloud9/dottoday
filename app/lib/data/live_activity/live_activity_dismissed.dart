@@ -20,11 +20,11 @@ class LiveActivityDismissed extends _$LiveActivityDismissed {
 
   @override
   Future<bool> build() async {
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
-      LiveActivitySink.liveActivityChannel.setMethodCallHandler((call) async {
-        if (call.method == 'dismissedByUser') await record();
-      });
-    }
+    // Only iOS has a Live Activity to dismiss: elsewhere nothing to read.
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.iOS) return false;
+    LiveActivitySink.liveActivityChannel.setMethodCallHandler((call) async {
+      if (call.method == 'dismissedByUser') await record();
+    });
     final row = await (_db.select(
       _db.localMeta,
     )..where((m) => m.key.equals(_key))).getSingleOrNull();
