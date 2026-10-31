@@ -8974,6 +8974,448 @@ class LocalMetaCompanion extends UpdateCompanion<LocalMetaRow> {
   }
 }
 
+class $WakeUpDaysTableTable extends WakeUpDaysTable
+    with TableInfo<$WakeUpDaysTableTable, WakeUpDayRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WakeUpDaysTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<String> date = GeneratedColumn<String>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _rangAtUtcMeta = const VerificationMeta(
+    'rangAtUtc',
+  );
+  @override
+  late final GeneratedColumn<int> rangAtUtc = GeneratedColumn<int>(
+    'rang_at_utc',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stoppedAtUtcMeta = const VerificationMeta(
+    'stoppedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<int> stoppedAtUtc = GeneratedColumn<int>(
+    'stopped_at_utc',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _snoozesMeta = const VerificationMeta(
+    'snoozes',
+  );
+  @override
+  late final GeneratedColumn<int> snoozes = GeneratedColumn<int>(
+    'snoozes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _cardShownAtUtcMeta = const VerificationMeta(
+    'cardShownAtUtc',
+  );
+  @override
+  late final GeneratedColumn<int> cardShownAtUtc = GeneratedColumn<int>(
+    'card_shown_at_utc',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _startedAtUtcMeta = const VerificationMeta(
+    'startedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<int> startedAtUtc = GeneratedColumn<int>(
+    'started_at_utc',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    date,
+    rangAtUtc,
+    stoppedAtUtc,
+    snoozes,
+    cardShownAtUtc,
+    startedAtUtc,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'wake_up_days';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WakeUpDayRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('rang_at_utc')) {
+      context.handle(
+        _rangAtUtcMeta,
+        rangAtUtc.isAcceptableOrUnknown(data['rang_at_utc']!, _rangAtUtcMeta),
+      );
+    }
+    if (data.containsKey('stopped_at_utc')) {
+      context.handle(
+        _stoppedAtUtcMeta,
+        stoppedAtUtc.isAcceptableOrUnknown(
+          data['stopped_at_utc']!,
+          _stoppedAtUtcMeta,
+        ),
+      );
+    }
+    if (data.containsKey('snoozes')) {
+      context.handle(
+        _snoozesMeta,
+        snoozes.isAcceptableOrUnknown(data['snoozes']!, _snoozesMeta),
+      );
+    }
+    if (data.containsKey('card_shown_at_utc')) {
+      context.handle(
+        _cardShownAtUtcMeta,
+        cardShownAtUtc.isAcceptableOrUnknown(
+          data['card_shown_at_utc']!,
+          _cardShownAtUtcMeta,
+        ),
+      );
+    }
+    if (data.containsKey('started_at_utc')) {
+      context.handle(
+        _startedAtUtcMeta,
+        startedAtUtc.isAcceptableOrUnknown(
+          data['started_at_utc']!,
+          _startedAtUtcMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {date};
+  @override
+  WakeUpDayRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WakeUpDayRow(
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}date'],
+      )!,
+      rangAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rang_at_utc'],
+      ),
+      stoppedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}stopped_at_utc'],
+      ),
+      snoozes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}snoozes'],
+      )!,
+      cardShownAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}card_shown_at_utc'],
+      ),
+      startedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}started_at_utc'],
+      ),
+    );
+  }
+
+  @override
+  $WakeUpDaysTableTable createAlias(String alias) {
+    return $WakeUpDaysTableTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
+  /// `yyyy-MM-dd` in the profile's zone.
+  final String date;
+  final int? rangAtUtc;
+  final int? stoppedAtUtc;
+  final int snoozes;
+  final int? cardShownAtUtc;
+  final int? startedAtUtc;
+  const WakeUpDayRow({
+    required this.date,
+    this.rangAtUtc,
+    this.stoppedAtUtc,
+    required this.snoozes,
+    this.cardShownAtUtc,
+    this.startedAtUtc,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['date'] = Variable<String>(date);
+    if (!nullToAbsent || rangAtUtc != null) {
+      map['rang_at_utc'] = Variable<int>(rangAtUtc);
+    }
+    if (!nullToAbsent || stoppedAtUtc != null) {
+      map['stopped_at_utc'] = Variable<int>(stoppedAtUtc);
+    }
+    map['snoozes'] = Variable<int>(snoozes);
+    if (!nullToAbsent || cardShownAtUtc != null) {
+      map['card_shown_at_utc'] = Variable<int>(cardShownAtUtc);
+    }
+    if (!nullToAbsent || startedAtUtc != null) {
+      map['started_at_utc'] = Variable<int>(startedAtUtc);
+    }
+    return map;
+  }
+
+  WakeUpDaysTableCompanion toCompanion(bool nullToAbsent) {
+    return WakeUpDaysTableCompanion(
+      date: Value(date),
+      rangAtUtc: rangAtUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rangAtUtc),
+      stoppedAtUtc: stoppedAtUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stoppedAtUtc),
+      snoozes: Value(snoozes),
+      cardShownAtUtc: cardShownAtUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cardShownAtUtc),
+      startedAtUtc: startedAtUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startedAtUtc),
+    );
+  }
+
+  factory WakeUpDayRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WakeUpDayRow(
+      date: serializer.fromJson<String>(json['date']),
+      rangAtUtc: serializer.fromJson<int?>(json['rangAtUtc']),
+      stoppedAtUtc: serializer.fromJson<int?>(json['stoppedAtUtc']),
+      snoozes: serializer.fromJson<int>(json['snoozes']),
+      cardShownAtUtc: serializer.fromJson<int?>(json['cardShownAtUtc']),
+      startedAtUtc: serializer.fromJson<int?>(json['startedAtUtc']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'date': serializer.toJson<String>(date),
+      'rangAtUtc': serializer.toJson<int?>(rangAtUtc),
+      'stoppedAtUtc': serializer.toJson<int?>(stoppedAtUtc),
+      'snoozes': serializer.toJson<int>(snoozes),
+      'cardShownAtUtc': serializer.toJson<int?>(cardShownAtUtc),
+      'startedAtUtc': serializer.toJson<int?>(startedAtUtc),
+    };
+  }
+
+  WakeUpDayRow copyWith({
+    String? date,
+    Value<int?> rangAtUtc = const Value.absent(),
+    Value<int?> stoppedAtUtc = const Value.absent(),
+    int? snoozes,
+    Value<int?> cardShownAtUtc = const Value.absent(),
+    Value<int?> startedAtUtc = const Value.absent(),
+  }) => WakeUpDayRow(
+    date: date ?? this.date,
+    rangAtUtc: rangAtUtc.present ? rangAtUtc.value : this.rangAtUtc,
+    stoppedAtUtc: stoppedAtUtc.present ? stoppedAtUtc.value : this.stoppedAtUtc,
+    snoozes: snoozes ?? this.snoozes,
+    cardShownAtUtc: cardShownAtUtc.present
+        ? cardShownAtUtc.value
+        : this.cardShownAtUtc,
+    startedAtUtc: startedAtUtc.present ? startedAtUtc.value : this.startedAtUtc,
+  );
+  WakeUpDayRow copyWithCompanion(WakeUpDaysTableCompanion data) {
+    return WakeUpDayRow(
+      date: data.date.present ? data.date.value : this.date,
+      rangAtUtc: data.rangAtUtc.present ? data.rangAtUtc.value : this.rangAtUtc,
+      stoppedAtUtc: data.stoppedAtUtc.present
+          ? data.stoppedAtUtc.value
+          : this.stoppedAtUtc,
+      snoozes: data.snoozes.present ? data.snoozes.value : this.snoozes,
+      cardShownAtUtc: data.cardShownAtUtc.present
+          ? data.cardShownAtUtc.value
+          : this.cardShownAtUtc,
+      startedAtUtc: data.startedAtUtc.present
+          ? data.startedAtUtc.value
+          : this.startedAtUtc,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WakeUpDayRow(')
+          ..write('date: $date, ')
+          ..write('rangAtUtc: $rangAtUtc, ')
+          ..write('stoppedAtUtc: $stoppedAtUtc, ')
+          ..write('snoozes: $snoozes, ')
+          ..write('cardShownAtUtc: $cardShownAtUtc, ')
+          ..write('startedAtUtc: $startedAtUtc')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    date,
+    rangAtUtc,
+    stoppedAtUtc,
+    snoozes,
+    cardShownAtUtc,
+    startedAtUtc,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WakeUpDayRow &&
+          other.date == this.date &&
+          other.rangAtUtc == this.rangAtUtc &&
+          other.stoppedAtUtc == this.stoppedAtUtc &&
+          other.snoozes == this.snoozes &&
+          other.cardShownAtUtc == this.cardShownAtUtc &&
+          other.startedAtUtc == this.startedAtUtc);
+}
+
+class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
+  final Value<String> date;
+  final Value<int?> rangAtUtc;
+  final Value<int?> stoppedAtUtc;
+  final Value<int> snoozes;
+  final Value<int?> cardShownAtUtc;
+  final Value<int?> startedAtUtc;
+  final Value<int> rowid;
+  const WakeUpDaysTableCompanion({
+    this.date = const Value.absent(),
+    this.rangAtUtc = const Value.absent(),
+    this.stoppedAtUtc = const Value.absent(),
+    this.snoozes = const Value.absent(),
+    this.cardShownAtUtc = const Value.absent(),
+    this.startedAtUtc = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WakeUpDaysTableCompanion.insert({
+    required String date,
+    this.rangAtUtc = const Value.absent(),
+    this.stoppedAtUtc = const Value.absent(),
+    this.snoozes = const Value.absent(),
+    this.cardShownAtUtc = const Value.absent(),
+    this.startedAtUtc = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : date = Value(date);
+  static Insertable<WakeUpDayRow> custom({
+    Expression<String>? date,
+    Expression<int>? rangAtUtc,
+    Expression<int>? stoppedAtUtc,
+    Expression<int>? snoozes,
+    Expression<int>? cardShownAtUtc,
+    Expression<int>? startedAtUtc,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (date != null) 'date': date,
+      if (rangAtUtc != null) 'rang_at_utc': rangAtUtc,
+      if (stoppedAtUtc != null) 'stopped_at_utc': stoppedAtUtc,
+      if (snoozes != null) 'snoozes': snoozes,
+      if (cardShownAtUtc != null) 'card_shown_at_utc': cardShownAtUtc,
+      if (startedAtUtc != null) 'started_at_utc': startedAtUtc,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WakeUpDaysTableCompanion copyWith({
+    Value<String>? date,
+    Value<int?>? rangAtUtc,
+    Value<int?>? stoppedAtUtc,
+    Value<int>? snoozes,
+    Value<int?>? cardShownAtUtc,
+    Value<int?>? startedAtUtc,
+    Value<int>? rowid,
+  }) {
+    return WakeUpDaysTableCompanion(
+      date: date ?? this.date,
+      rangAtUtc: rangAtUtc ?? this.rangAtUtc,
+      stoppedAtUtc: stoppedAtUtc ?? this.stoppedAtUtc,
+      snoozes: snoozes ?? this.snoozes,
+      cardShownAtUtc: cardShownAtUtc ?? this.cardShownAtUtc,
+      startedAtUtc: startedAtUtc ?? this.startedAtUtc,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (date.present) {
+      map['date'] = Variable<String>(date.value);
+    }
+    if (rangAtUtc.present) {
+      map['rang_at_utc'] = Variable<int>(rangAtUtc.value);
+    }
+    if (stoppedAtUtc.present) {
+      map['stopped_at_utc'] = Variable<int>(stoppedAtUtc.value);
+    }
+    if (snoozes.present) {
+      map['snoozes'] = Variable<int>(snoozes.value);
+    }
+    if (cardShownAtUtc.present) {
+      map['card_shown_at_utc'] = Variable<int>(cardShownAtUtc.value);
+    }
+    if (startedAtUtc.present) {
+      map['started_at_utc'] = Variable<int>(startedAtUtc.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WakeUpDaysTableCompanion(')
+          ..write('date: $date, ')
+          ..write('rangAtUtc: $rangAtUtc, ')
+          ..write('stoppedAtUtc: $stoppedAtUtc, ')
+          ..write('snoozes: $snoozes, ')
+          ..write('cardShownAtUtc: $cardShownAtUtc, ')
+          ..write('startedAtUtc: $startedAtUtc, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -9079,6 +9521,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SyncCursorsTable syncCursors = $SyncCursorsTable(this);
   late final $FieldSeenTable fieldSeen = $FieldSeenTable(this);
   late final $LocalMetaTable localMeta = $LocalMetaTable(this);
+  late final $WakeUpDaysTableTable wakeUpDaysTable = $WakeUpDaysTableTable(
+    this,
+  );
   late final Index routinesUser = Index(
     'routines_user',
     'CREATE INDEX routines_user ON routines (user_id)',
@@ -9147,6 +9592,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     syncCursors,
     fieldSeen,
     localMeta,
+    wakeUpDaysTable,
     routinesUser,
     routinesUserUpdated,
     routinesDirty,
@@ -16173,6 +16619,242 @@ typedef $$LocalMetaTableProcessedTableManager =
       LocalMetaRow,
       PrefetchHooks Function()
     >;
+typedef $$WakeUpDaysTableTableCreateCompanionBuilder =
+    WakeUpDaysTableCompanion Function({
+      required String date,
+      Value<int?> rangAtUtc,
+      Value<int?> stoppedAtUtc,
+      Value<int> snoozes,
+      Value<int?> cardShownAtUtc,
+      Value<int?> startedAtUtc,
+      Value<int> rowid,
+    });
+typedef $$WakeUpDaysTableTableUpdateCompanionBuilder =
+    WakeUpDaysTableCompanion Function({
+      Value<String> date,
+      Value<int?> rangAtUtc,
+      Value<int?> stoppedAtUtc,
+      Value<int> snoozes,
+      Value<int?> cardShownAtUtc,
+      Value<int?> startedAtUtc,
+      Value<int> rowid,
+    });
+
+class $$WakeUpDaysTableTableFilterComposer
+    extends Composer<_$AppDatabase, $WakeUpDaysTableTable> {
+  $$WakeUpDaysTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get rangAtUtc => $composableBuilder(
+    column: $table.rangAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get stoppedAtUtc => $composableBuilder(
+    column: $table.stoppedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get snoozes => $composableBuilder(
+    column: $table.snoozes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cardShownAtUtc => $composableBuilder(
+    column: $table.cardShownAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get startedAtUtc => $composableBuilder(
+    column: $table.startedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WakeUpDaysTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $WakeUpDaysTableTable> {
+  $$WakeUpDaysTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get rangAtUtc => $composableBuilder(
+    column: $table.rangAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get stoppedAtUtc => $composableBuilder(
+    column: $table.stoppedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get snoozes => $composableBuilder(
+    column: $table.snoozes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get cardShownAtUtc => $composableBuilder(
+    column: $table.cardShownAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get startedAtUtc => $composableBuilder(
+    column: $table.startedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WakeUpDaysTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WakeUpDaysTableTable> {
+  $$WakeUpDaysTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<int> get rangAtUtc =>
+      $composableBuilder(column: $table.rangAtUtc, builder: (column) => column);
+
+  GeneratedColumn<int> get stoppedAtUtc => $composableBuilder(
+    column: $table.stoppedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get snoozes =>
+      $composableBuilder(column: $table.snoozes, builder: (column) => column);
+
+  GeneratedColumn<int> get cardShownAtUtc => $composableBuilder(
+    column: $table.cardShownAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get startedAtUtc => $composableBuilder(
+    column: $table.startedAtUtc,
+    builder: (column) => column,
+  );
+}
+
+class $$WakeUpDaysTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WakeUpDaysTableTable,
+          WakeUpDayRow,
+          $$WakeUpDaysTableTableFilterComposer,
+          $$WakeUpDaysTableTableOrderingComposer,
+          $$WakeUpDaysTableTableAnnotationComposer,
+          $$WakeUpDaysTableTableCreateCompanionBuilder,
+          $$WakeUpDaysTableTableUpdateCompanionBuilder,
+          (
+            WakeUpDayRow,
+            BaseReferences<_$AppDatabase, $WakeUpDaysTableTable, WakeUpDayRow>,
+          ),
+          WakeUpDayRow,
+          PrefetchHooks Function()
+        > {
+  $$WakeUpDaysTableTableTableManager(
+    _$AppDatabase db,
+    $WakeUpDaysTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WakeUpDaysTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WakeUpDaysTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WakeUpDaysTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> date = const Value.absent(),
+                Value<int?> rangAtUtc = const Value.absent(),
+                Value<int?> stoppedAtUtc = const Value.absent(),
+                Value<int> snoozes = const Value.absent(),
+                Value<int?> cardShownAtUtc = const Value.absent(),
+                Value<int?> startedAtUtc = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WakeUpDaysTableCompanion(
+                date: date,
+                rangAtUtc: rangAtUtc,
+                stoppedAtUtc: stoppedAtUtc,
+                snoozes: snoozes,
+                cardShownAtUtc: cardShownAtUtc,
+                startedAtUtc: startedAtUtc,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String date,
+                Value<int?> rangAtUtc = const Value.absent(),
+                Value<int?> stoppedAtUtc = const Value.absent(),
+                Value<int> snoozes = const Value.absent(),
+                Value<int?> cardShownAtUtc = const Value.absent(),
+                Value<int?> startedAtUtc = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WakeUpDaysTableCompanion.insert(
+                date: date,
+                rangAtUtc: rangAtUtc,
+                stoppedAtUtc: stoppedAtUtc,
+                snoozes: snoozes,
+                cardShownAtUtc: cardShownAtUtc,
+                startedAtUtc: startedAtUtc,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$WakeUpDaysTableTable, WakeUpDayRow>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $WakeUpDaysTableTable,
+                    WakeUpDayRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WakeUpDaysTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WakeUpDaysTableTable,
+      WakeUpDayRow,
+      $$WakeUpDaysTableTableFilterComposer,
+      $$WakeUpDaysTableTableOrderingComposer,
+      $$WakeUpDaysTableTableAnnotationComposer,
+      $$WakeUpDaysTableTableCreateCompanionBuilder,
+      $$WakeUpDaysTableTableUpdateCompanionBuilder,
+      (
+        WakeUpDayRow,
+        BaseReferences<_$AppDatabase, $WakeUpDaysTableTable, WakeUpDayRow>,
+      ),
+      WakeUpDayRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -16205,4 +16887,6 @@ class $AppDatabaseManager {
       $$FieldSeenTableTableManager(_db, _db.fieldSeen);
   $$LocalMetaTableTableManager get localMeta =>
       $$LocalMetaTableTableManager(_db, _db.localMeta);
+  $$WakeUpDaysTableTableTableManager get wakeUpDaysTable =>
+      $$WakeUpDaysTableTableTableManager(_db, _db.wakeUpDaysTable);
 }

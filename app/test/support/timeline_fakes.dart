@@ -49,10 +49,12 @@ import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
 import 'package:dottoday/domain/repositories/subtask_repository.dart';
+import 'package:dottoday/domain/repositories/wake_up_day_repository.dart';
 import 'package:dottoday/domain/security/app_lock.dart';
 import 'package:dottoday/domain/trash/trash_service.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/validation/entity_validators.dart';
+import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
@@ -459,6 +461,7 @@ List<Override> timelineOverrides({
   ExactAlarms exactAlarms = const AlwaysExactAlarms(),
   AlarmCapabilities wakeUpAlarm = const AlarmCapabilities(AlarmTier.alarm),
   FakeAlarmGateway? alarmGateway,
+  FakeWakeUpDayRepository? wakeUpDays,
   String? deviceZone,
   LearningMetaState learningMeta = const LearningMetaState(),
   DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
@@ -502,6 +505,9 @@ List<Override> timelineOverrides({
     liveActivityDismissedProvider.overrideWith(_NoLiveActivityDismissal.new),
     // Minimal mode's hint records (docs/14 §6).
     revealHintRepositoryProvider.overrideWithValue(hintRepo),
+    wakeUpDayRepositoryProvider.overrideWithValue(
+      wakeUpDays ?? FakeWakeUpDayRepository(),
+    ),
     undoServiceProvider.overrideWithValue(undo),
     trashServiceProvider.overrideWithValue(FakeTrashService(repo, undo)),
     clockProvider.overrideWithValue(FakeClock(now)),
@@ -738,5 +744,67 @@ final class FakeAlarmGateway implements AlarmGateway {
   Future<bool> test(WakeUpAlarm alarm) async {
     tests.add(alarm);
     return true;
+  }
+
+  /// Handed out once by [drainEvents].
+  List<AlarmEvent> events = [];
+
+  @override
+  Future<List<AlarmEvent>> drainEvents() async {
+    final out = events;
+    events = [];
+    return out;
+  }
+}
+
+/// This device's mornings in memory (docs/15 §3).
+final class FakeWakeUpDayRepository implements WakeUpDayRepository {
+  FakeWakeUpDayRepository([Iterable<WakeUpDay> days = const []])
+    : _days = {for (final d in days) d.date: d};
+
+  final Map<String, WakeUpDay> _days;
+  final _changes = StreamController<void>.broadcast();
+
+  WakeUpDay? operator [](String date) => _days[date];
+
+  @override
+  Stream<WakeUpDay?> watch(String date) async* {
+    yield _days[date];
+    await for (final _ in _changes.stream) {
+      yield _days[date];
+    }
+  }
+
+  @override
+  Future<WakeUpDay?> lastAlarm() async {
+    final days = [
+      for (final d in _days.values)
+        if (d.rangAtUtc != null || d.stoppedAtUtc != null) d,
+    ]..sort((a, b) => b.date.compareTo(a.date));
+    return days.firstOrNull;
+  }
+
+  @override
+  Future<void> applyEvents(List<AlarmEvent> events) async {
+    for (final e in events) {
+      final date = e.date;
+      if (date == null) continue;
+      _days[date] = applyAlarmEvent(_days[date] ?? WakeUpDay(date: date), e);
+    }
+    _changes.add(null);
+  }
+
+  @override
+  Future<void> markCardShown(String date, DateTime atUtc) async {
+    final d = _days[date] ?? WakeUpDay(date: date);
+    _days[date] = d.copyWith(cardShownAtUtc: d.cardShownAtUtc ?? atUtc);
+    _changes.add(null);
+  }
+
+  @override
+  Future<void> markStarted(String date, DateTime atUtc) async {
+    final d = _days[date] ?? WakeUpDay(date: date);
+    _days[date] = d.copyWith(startedAtUtc: d.startedAtUtc ?? atUtc);
+    _changes.add(null);
   }
 }

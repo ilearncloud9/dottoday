@@ -7,13 +7,14 @@ import 'package:dottoday/data/db/tables/reveal_hints_table.dart';
 import 'package:dottoday/data/db/tables/routines_table.dart';
 import 'package:dottoday/data/db/tables/series_table.dart';
 import 'package:dottoday/data/db/tables/sync_tables.dart';
+import 'package:dottoday/data/db/tables/wake_up_days_table.dart';
 import 'package:drift/drift.dart';
 
 part 'app_database.g.dart';
 
 /// The local source of truth (docs/04 §4): server tables mirrored with sync
-/// columns, plus the local-only `change_log`, `sync_cursors`, `field_seen`
-/// and `local_meta`.
+/// columns, plus the local-only `change_log`, `sync_cursors`, `field_seen`,
+/// `local_meta` and `wake_up_days`.
 ///
 /// Open it with `openAppDatabase` (connection/connection.dart) so the
 /// SQLCipher key is applied before any statement (06 §4, ADR-0006).
@@ -32,6 +33,7 @@ part 'app_database.g.dart';
     SyncCursors,
     FieldSeen,
     LocalMeta,
+    WakeUpDaysTable,
   ],
   include: {'search.drift'},
 )
@@ -39,7 +41,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 9;
+  static const latestSchemaVersion = 10;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -97,6 +99,8 @@ class AppDatabase extends _$AppDatabase {
         await m.alterTable(TableMigration(conflicts));
         await _keepFullLayout();
       }
+      // 10 (M17.3, docs/15 §3): this device's mornings, local only.
+      if (from < 10) await _createTableOnce(m, wakeUpDaysTable);
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without

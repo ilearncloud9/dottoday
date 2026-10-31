@@ -30,11 +30,13 @@ object WakeUpActions {
         )
         WakeUpAlarms.put(context, next)
         WakeUpAlarms.schedule(context, next)
+        WakeUpAlarms.record(context, id, "snoozed")
         WakeUpRingService.stop(context)
         notes(context).notify(SNOOZED_NOTE, snoozedNote(context, next))
     }
 
     fun dismiss(context: Context, id: String) {
+        if (WakeUpAlarms.find(context, id) != null) WakeUpAlarms.record(context, id, "stopped")
         WakeUpAlarms.disarm(context, id)
         WakeUpRingService.stop(context)
         notes(context).cancel(SNOOZED_NOTE)

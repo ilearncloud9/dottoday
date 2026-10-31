@@ -63,6 +63,7 @@ void main() {
       'field_seen',
       'sync_cursors',
       'local_meta',
+      'wake_up_days',
     });
     expect(rows.every((r) => r.read<int>('strict') == 1), isTrue);
   });
