@@ -155,4 +155,17 @@ void main() {
     expect(find.text('Shift the rest'), findsNothing);
     expect(find.text('Running late'), findsOneWidget);
   });
+
+  testWidgets('an empty day: the quiet line and Later, no day actions', (
+    tester,
+  ) async {
+    await pumpToday(
+      tester,
+      rows: const [],
+      settings: const Settings(uiLayout: UiLayout.minimal, use24h: false),
+    );
+    expect(find.text('Add to this day'), findsNothing);
+    expect(find.text('Copy a day…'), findsNothing);
+    expect(find.byType(LaterRow, skipOffstage: false), findsOneWidget);
+  });
 }

@@ -161,7 +161,7 @@ class DayPage extends ConsumerWidget {
     final footer = _footer(
       blocks,
       summary.total == 0,
-      emptyActions: watchOnScreen(ref, FeatureId.emptyDayActions),
+      emptyActions: !watchSimplified(ref, FeatureId.emptyDayActions),
       later: sheet && watchSimplified(ref, FeatureId.inbox),
     );
     final card = sheet

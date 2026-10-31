@@ -201,7 +201,11 @@ for (const theme of ['light', 'dark']) {
       await tapText(page, 'Show less');
       await page.waitForTimeout(1_500);
       await shot('minimal_today');
-      await tap(page, 'Add task');
+      // The rail's add button never settles for Playwright's stability
+      // check at 1280 (the live ring repaints): click its centre.
+      const add = await page.getByRole('button', { name: 'Add task' })
+        .first().boundingBox();
+      await page.mouse.click(add.x + add.width / 2, add.y + add.height / 2);
       await page.waitForTimeout(1_200);
       await page.keyboard.type('Call Sam');
       await page.waitForTimeout(900);
