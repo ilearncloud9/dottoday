@@ -3,7 +3,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_id.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
-import 'package:dottoday/domain/notifications/sound_resolution.dart';
+import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/domain/time/wall_clock.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
@@ -67,7 +67,6 @@ abstract final class DayReminders {
     required DateTime fromUtc,
     required DateTime toUtc,
     required Set<int> used,
-    String? startSound,
   }) => [
     for (final (date, shape) in _days(settings, location, fromUtc, toUtc))
       if (shape.wakeUtc.isAfter(fromUtc) && !shape.wakeUtc.isAfter(toUtc))
@@ -83,7 +82,7 @@ abstract final class DayReminders {
             alertIndex: PlannedNotification.wakeUpIndex,
             fireAtUtc: shape.wakeUtc,
             kind: AlertKind.atStart,
-            sound: resolveStartSound(startSound).id,
+            sound: wakeUpSound(settings, date).id,
             loud: true,
             purpose: NotificationPurpose.wakeUp,
           ),

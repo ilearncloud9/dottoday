@@ -1,4 +1,5 @@
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 
 /// What a feature looks like in minimal mode (docs/14 §3).
@@ -34,6 +35,10 @@ enum FeatureVisibility {
 /// ```
 final class LayoutPolicy {
   const LayoutPolicy(this.layout);
+
+  /// [settings]' layout, for code with no `WidgetRef` (the Wake Up ringing
+  /// screen's words are composed in the data layer, docs/15 §10).
+  LayoutPolicy.of(Settings settings) : this(settings.uiLayout);
 
   /// The layout this policy answers for.
   final UiLayout layout;

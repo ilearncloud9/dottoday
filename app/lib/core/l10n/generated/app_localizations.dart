@@ -8538,10 +8538,154 @@ abstract class AppLocalizations {
   /// **'Good morning.'**
   String get notifWakeUpBody;
 
+  /// Day shape row under Wake Up alarm: opens its sound and snooze page.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound and snooze'**
+  String get settingsWakeUpOptions;
+
+  /// Wake Up alarm page: caption over the switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm'**
+  String get wakeUpAlarmCaption;
+
+  /// Wake Up row button on an iPhone below iOS 26: how to update iOS.
+  ///
+  /// In en, this message translates to:
+  /// **'How to update'**
+  String get wakeUpFixUpdate;
+
+  /// Wake Up alarm page in minimal mode: shows the remaining rows.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get wakeUpMoreOptions;
+
+  /// Wake Up alarm row (Android): how long the alarm takes to reach full volume.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume ramp'**
+  String get wakeUpRamp;
+
+  /// Under Volume ramp.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts quieter and rises to your alarm volume.'**
+  String get wakeUpRampDetail;
+
+  /// Volume ramp value: starts at full volume.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get wakeUpRampOff;
+
+  /// Button on the ringing Wake Up alarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze'**
+  String get wakeUpSnooze;
+
+  /// Wake Up alarm page: caption over the snooze rows.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze'**
+  String get wakeUpSnoozeCaption;
+
+  /// Under the Snooze switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Rings again a few minutes later.'**
+  String get wakeUpSnoozeDetail;
+
+  /// Wake Up alarm row: minutes until a snoozed alarm rings again.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze length'**
+  String get wakeUpSnoozeLength;
+
+  /// Wake Up alarm row: how many snoozes before only I'm up is left.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze limit'**
+  String get wakeUpSnoozeLimit;
+
+  /// Snooze limit value.
+  ///
+  /// In en, this message translates to:
+  /// **'No limit'**
+  String get wakeUpSnoozeNoLimit;
+
+  /// Wake Up alarm switch: whether the alarm offers snooze.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze'**
+  String get wakeUpSnoozeRow;
+
+  /// Wake Up alarm page: caption over the sound rows.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound'**
+  String get wakeUpSoundCaption;
+
+  /// Wake Up alarm row: which Start sound it rings with.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm sound'**
+  String get wakeUpSoundRow;
+
+  /// Button that stops the ringing Wake Up alarm.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m up'**
+  String get wakeUpStop;
+
+  /// After No on the Wake Up alarm page's test.
+  ///
+  /// In en, this message translates to:
+  /// **'If it didn\'t ring, the line at the top says what\'s in the way.'**
+  String get wakeUpTestLookHere;
+
+  /// iOS 26+ with Dottoday's alarms not allowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up can ring like an alarm, but alarms are off for Dottoday in Settings.'**
+  String get wakeUpTierAlarmsOff;
+
+  /// An iPhone below iOS 26 that can update to it.
+  ///
+  /// In en, this message translates to:
+  /// **'Your iPhone can\'t ring Wake Up like an alarm yet. That needs iOS 26.'**
+  String get wakeUpTierNeedsUpdate;
+
+  /// Wake Up alarm switch: a different Start sound each day.
+  ///
+  /// In en, this message translates to:
+  /// **'Vary the sound'**
+  String get wakeUpVary;
+
+  /// Under Vary the sound.
+  ///
+  /// In en, this message translates to:
+  /// **'A different alarm sound each day, so it stays easy to hear.'**
+  String get wakeUpVaryDetail;
+
+  /// Volume ramp value in seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} s'**
+  String wakeUpRampSeconds(int seconds);
+
+  /// Snooze limit value.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Once} other{{count} times}}'**
+  String wakeUpSnoozeTimes(int count);
+
   /// What's new in 1.2.0 (M15 sounds, M16 minimal layout, the Structured-style day, M17 Wake Up alarm), one item per line (PRD F11).
   ///
   /// In en, this message translates to:
-  /// **'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android, as a time-sensitive notification on iPhone. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.'**
+  /// **'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android and on iPhones with iOS 26, as a time-sensitive notification on older iPhones. Pick its sound and snooze under Sound and snooze, and send yourself a test. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.'**
   String get releaseNotes120;
 
   /// Section title in the task icon picker.

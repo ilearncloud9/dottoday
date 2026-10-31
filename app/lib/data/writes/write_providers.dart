@@ -8,7 +8,9 @@ import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/notifications/os_notification_gateway.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/notifications/test_alarm.dart';
+import 'package:dottoday/data/notifications/wake_up_arming.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/snapshot/composite_snapshot_sink.dart';
 import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
@@ -88,6 +90,10 @@ NotificationSync notificationSync(Ref ref) => NotificationSync(
   settings: ref.watch(settingsRepositoryProvider),
   testAlarmAt: () => TestAlarmStore(ref.read(appDatabaseProvider)).at(),
   subtasks: ref.watch(subtaskRepositoryProvider),
+  arming: WakeUpArming(
+    ref.watch(alarmGatewayProvider),
+    ref.watch(appDatabaseProvider),
+  ),
   ringsWakeUp: currentHealthPlatform().isPhone,
 );
 

@@ -44,6 +44,7 @@ import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/battery_optimization.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
+import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
@@ -457,6 +458,7 @@ List<Override> timelineOverrides({
       const UnwiredNotificationPermission(),
   ExactAlarms exactAlarms = const AlwaysExactAlarms(),
   AlarmCapabilities wakeUpAlarm = const AlarmCapabilities(AlarmTier.alarm),
+  FakeAlarmGateway? alarmGateway,
   String? deviceZone,
   LearningMetaState learningMeta = const LearningMetaState(),
   DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
@@ -517,7 +519,9 @@ List<Override> timelineOverrides({
     notificationPermissionProvider.overrideWithValue(notificationPermission),
     exactAlarmsProvider.overrideWithValue(exactAlarms),
     // The full-screen-intent channel has no handler here (docs/15 W1a).
-    alarmGatewayProvider.overrideWithValue(FakeAlarmGateway(wakeUpAlarm)),
+    alarmGatewayProvider.overrideWithValue(
+      alarmGateway ?? FakeAlarmGateway(wakeUpAlarm),
+    ),
     // No platform channel in widget tests (its reply would arrive outside
     // fake time): battery optimisation and DND read as off (M6.5.8).
     batteryOptimizationProvider.overrideWithValue(
@@ -692,9 +696,47 @@ final class FakeAlarmGateway implements AlarmGateway {
   final AlarmCapabilities _capabilities;
   final fixed = <AlarmBlocker>[];
 
+  /// The last set handed to [sync]; every one counts as armed.
+  List<WakeUpAlarm> armed = const [];
+
+  /// False: the channel isn't there (a background engine), so [sync]
+  /// answers null.
+  var reachable = true;
+
+  /// False: a device with no alarm path, which arms nothing.
+  var arms = true;
+  final tests = <WakeUpAlarm>[];
+  var disarmed = 0;
+  var authorizationRequests = 0;
+
   @override
   Future<AlarmCapabilities> capabilities() async => _capabilities;
 
   @override
   Future<void> fix(AlarmBlocker blocker) async => fixed.add(blocker);
+
+  @override
+  Future<void> requestAuthorization() async => authorizationRequests++;
+
+  @override
+  Future<Set<DateTime>?> sync(List<WakeUpAlarm> alarms) async {
+    if (!reachable) return null;
+    armed = alarms;
+    return {
+      if (arms)
+        for (final a in alarms) a.fireAtUtc,
+    };
+  }
+
+  @override
+  Future<void> disarmAll() async {
+    armed = const [];
+    disarmed++;
+  }
+
+  @override
+  Future<bool> test(WakeUpAlarm alarm) async {
+    tests.add(alarm);
+    return true;
+  }
 }

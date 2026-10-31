@@ -104,14 +104,16 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
 
   /// Continue: the Wake Up alarm as left here, then the next step. Only a
   /// phone that may post saves it, so nothing rings that wasn't offered.
+  /// On iOS 26+ an alarm left on asks for alarms here (15 §2).
   void _next({required bool saveWakeUp}) {
     if (saveWakeUp) {
+      final container = ProviderScope.containerOf(context, listen: false);
       unawaited(
-        updateSettings(
-          ProviderScope.containerOf(context, listen: false),
-          (s) => s.copyWith(wakeUpAlarm: _wakeUp),
-        ),
+        updateSettings(container, (s) => s.copyWith(wakeUpAlarm: _wakeUp)),
       );
+      if (_wakeUp) {
+        unawaited(container.read(alarmGatewayProvider).requestAuthorization());
+      }
     }
     widget.onNext();
   }

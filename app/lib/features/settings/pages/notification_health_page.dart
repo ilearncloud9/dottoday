@@ -179,7 +179,7 @@ class HealthRow extends ConsumerWidget {
       ),
       HealthCheckKind.wakeUp => switch (wakeUpBlocker) {
         final blocker? => (
-          l10n.healthFixAllow,
+          wakeUpFixLabel(l10n, blocker),
           () async {
             await ref.read(alarmGatewayProvider).fix(blocker);
             ref

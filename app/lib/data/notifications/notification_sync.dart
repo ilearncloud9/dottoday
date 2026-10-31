@@ -1,6 +1,8 @@
 import 'package:dottoday/core/clock/clock.dart';
+import 'package:dottoday/data/notifications/wake_up_arming.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/notifications/notification_gateway.dart';
 import 'package:dottoday/domain/notifications/notification_planner.dart';
@@ -24,6 +26,7 @@ final class NotificationSync {
     required SettingsRepository settings,
     Future<DateTime?> Function()? testAlarmAt,
     SubtaskRepository? subtasks,
+    WakeUpArming? arming,
     this.ringsWakeUp = false,
   }) : _clock = clock,
        _planner = planner,
@@ -32,7 +35,8 @@ final class NotificationSync {
        _series = series,
        _settings = settings,
        _testAlarmAt = testAlarmAt,
-       _subtasks = subtasks;
+       _subtasks = subtasks,
+       _arming = arming;
 
   // Alert offsets are <= 1 day (maxAlertOffsetMin) and blocks <= 1 day long,
   // so every fire time in the horizon belongs to a block in this margin.
@@ -51,6 +55,10 @@ final class NotificationSync {
   /// Which tasks have a step left, for Smallest step (M10.6).
   final SubtaskRepository? _subtasks;
 
+  /// Arms the Wake Up alarms through `AlarmGateway` (docs/15 W1b); null
+  /// rings them all on the notification path.
+  final WakeUpArming? _arming;
+
   /// Whether this device rings the Wake Up alarm: phones only (docs/15 W1).
   final bool ringsWakeUp;
 
@@ -67,6 +75,7 @@ final class NotificationSync {
         )
         .first;
     final series = await _series.watchActive(userId).first;
+    final armed = await _armWakeUps(profile, blocks);
     final desired = _planner.plan(
       occurrences: blocks,
       tzId: profile.tzId,
@@ -81,10 +90,27 @@ final class NotificationSync {
       testAlarmAtUtc: await _testAlarmAt?.call(),
       withSteps: await _withSteps(userId, blocks),
       ringsWakeUp: ringsWakeUp,
+      armedWakeUps: armed,
     );
     final diff = NotificationPlanner.diff(desired, await _gateway.pending());
     if (diff.cancel.isEmpty && diff.schedule.isEmpty) return;
     await _gateway.apply(diff);
+  }
+
+  /// The Wake Up instants `AlarmGateway` rings (docs/15 W1b).
+  Future<Set<DateTime>> _armWakeUps(Profile profile, List<Occurrence> blocks) {
+    final arming = _arming;
+    if (arming == null || !ringsWakeUp) return Future.value(const {});
+    return arming.arm(
+      _planner.wakeUps(
+        occurrences: blocks,
+        tzId: profile.tzId,
+        daily: profile.settings,
+        ringsWakeUp: ringsWakeUp,
+      ),
+      profile: profile,
+      tasks: {for (final o in blocks) o.id: o},
+    );
   }
 
   /// Occurrences among [blocks] with steps to do and none ticked yet.

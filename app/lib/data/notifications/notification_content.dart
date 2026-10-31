@@ -8,10 +8,13 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
+import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
+import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -87,6 +90,40 @@ OsNotification? composeNotification(
         planned.purpose == NotificationPurpose.task &&
         !planned.loud &&
         planned.sound == soundNoneKey,
+  );
+}
+
+/// [planned] (a Wake Up) as the alarm `AlarmGateway` arms (docs/15 W1b):
+/// the notification's own words, the day's cue and [settings]' snooze and
+/// ramp, and minimal mode's ringing screen when it is on (15 §10). [id]
+/// replaces the day's id (the test alarm's).
+WakeUpAlarm composeWakeUpAlarm(
+  PlannedNotification planned, {
+  required Occurrence? task,
+  required Profile profile,
+  String? id,
+}) {
+  final l10n = _l10n(profile.locale);
+  final settings = profile.settings;
+  final shown = composeNotification(planned, task: task, profile: profile);
+  final day = tz.TZDateTime.from(
+    planned.fireAtUtc,
+    tz.getLocation(profile.tzId),
+  );
+  return WakeUpAlarm(
+    id: id ?? 'wakeup:${DateFormat('yyyy-MM-dd').format(day)}',
+    fireAtUtc: planned.fireAtUtc,
+    sound: resolveStartSound(planned.sound),
+    title: shown?.title ?? l10n.notifWakeUpTitle,
+    body: shown?.body ?? l10n.notifWakeUpBody,
+    stopLabel: l10n.wakeUpStop,
+    snoozeLabel: l10n.wakeUpSnooze,
+    snoozeMinutes: settings.wakeUpSnooze ? settings.wakeUpSnoozeMin : 0,
+    snoozeLimit: settings.wakeUpSnoozeMax,
+    rampSeconds: settings.wakeUpRampSec,
+    minimal:
+        LayoutPolicy.of(settings).visibility(FeatureId.notifications) ==
+        FeatureVisibility.simplified,
   );
 }
 

@@ -5756,8 +5756,96 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notifWakeUpBody => 'Bonjour.';
 
   @override
+  String get settingsWakeUpOptions => 'Son et répétition';
+
+  @override
+  String get wakeUpAlarmCaption => 'Alarme';
+
+  @override
+  String get wakeUpFixUpdate => 'Comment mettre à jour';
+
+  @override
+  String get wakeUpMoreOptions => 'Plus d\'options';
+
+  @override
+  String get wakeUpRamp => 'Montée du volume';
+
+  @override
+  String get wakeUpRampDetail =>
+      'Commence plus doucement et monte jusqu\'au volume de l\'alarme.';
+
+  @override
+  String get wakeUpRampOff => 'Désactivée';
+
+  @override
+  String get wakeUpSnooze => 'Répéter';
+
+  @override
+  String get wakeUpSnoozeCaption => 'Répétition';
+
+  @override
+  String get wakeUpSnoozeDetail =>
+      'Sonne à nouveau quelques minutes plus tard.';
+
+  @override
+  String get wakeUpSnoozeLength => 'Durée de répétition';
+
+  @override
+  String get wakeUpSnoozeLimit => 'Nombre de répétitions';
+
+  @override
+  String get wakeUpSnoozeNoLimit => 'Illimité';
+
+  @override
+  String get wakeUpSnoozeRow => 'Répétition';
+
+  @override
+  String get wakeUpSoundCaption => 'Son';
+
+  @override
+  String get wakeUpSoundRow => 'Son de l\'alarme';
+
+  @override
+  String get wakeUpStop => 'Je suis debout';
+
+  @override
+  String get wakeUpTestLookHere =>
+      'S\'il n\'a pas sonné, la ligne du haut dit ce qui bloque.';
+
+  @override
+  String get wakeUpTierAlarmsOff =>
+      'Le réveil peut sonner comme une alarme, mais les alarmes sont désactivées pour Dottoday dans Réglages.';
+
+  @override
+  String get wakeUpTierNeedsUpdate =>
+      'Votre iPhone ne peut pas encore faire sonner le réveil comme une alarme. Il faut iOS 26.';
+
+  @override
+  String get wakeUpVary => 'Varier le son';
+
+  @override
+  String get wakeUpVaryDetail =>
+      'Un son d\'alarme différent chaque jour, pour bien l\'entendre.';
+
+  @override
+  String wakeUpRampSeconds(int seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String wakeUpSnoozeTimes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count fois',
+      one: 'Une fois',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get releaseNotes120 =>
-      'Alarme du réveil : activez-la dans Réglages › Forme de la journée et votre heure de réveil sonne les jours planifiés — comme une alarme sur Android, en notification urgente sur iPhone. Rien ne sonne tant que vous ne l\'activez pas.\nSons : 48 sons de rappel qui vont bien ensemble. Choisissez-en un pour toutes vos tâches ou donnez à une tâche le sien ; la première tâche de la journée sonne avec votre son de début.\nJuste le point suivant : une présentation minimale à choisir à tout moment, sans rien perdre. Aujourd\'hui montre votre fil, la date et un menu.\nFaites glisser une tâche n\'importe où dans la journée, même sur une autre : les tâches qui se chevauchent font un petit nœud dans le fil.\nL\'heure du coucher devient Détente. Les deux bouts de votre journée sont des points, un soleil et une lune ; touchez-en un pour changer son heure.\nLes icônes se remplissent seules : tapez « Sport » et la tâche reçoit un haltère, parmi 524 icônes.';
+      'Alarme du réveil : activez-la dans Réglages › Forme de la journée et votre heure de réveil sonne les jours planifiés — comme une alarme sur Android et sur les iPhone sous iOS 26, en notification urgente sur les iPhone plus anciens. Choisissez son son et la répétition dans Son et répétition, avec une alarme de test. Rien ne sonne tant que vous ne l\'activez pas.\nSons : 48 sons de rappel qui vont bien ensemble. Choisissez-en un pour toutes vos tâches ou donnez à une tâche le sien ; la première tâche de la journée sonne avec votre son de début.\nJuste le point suivant : une présentation minimale à choisir à tout moment, sans rien perdre. Aujourd\'hui montre votre fil, la date et un menu.\nFaites glisser une tâche n\'importe où dans la journée, même sur une autre : les tâches qui se chevauchent font un petit nœud dans le fil.\nL\'heure du coucher devient Détente. Les deux bouts de votre journée sont des points, un soleil et une lune ; touchez-en un pour changer son heure.\nLes icônes se remplissent seules : tapez « Sport » et la tâche reçoit un haltère, parmi 524 icônes.';
 
   @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
