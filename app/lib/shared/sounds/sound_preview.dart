@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:dottoday/data/notifications/notification_providers.dart';
+import 'package:dottoday/data/notifications/sound/sound_player.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Plays [key] when it names a bundled sound (not System or None): the
@@ -13,6 +15,39 @@ void previewSound(WidgetRef ref, String? key) {
   final sound = catalogueSound(key);
   if (sound == null) return;
   unawaited(ref.read(soundPlayerProvider).play(sound));
+}
+
+/// Wraps a sound picker so its preview stops when the picker closes — by
+/// Done, ✕, a swipe or Back (docs/12 §6): a choice ends the preview, even a
+/// 27 s Start loop. A new preview already cuts off the last one
+/// ([SoundPlayer.play]).
+class SoundPreviewScope extends ConsumerStatefulWidget {
+  const SoundPreviewScope({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  ConsumerState<SoundPreviewScope> createState() => _SoundPreviewScopeState();
+}
+
+class _SoundPreviewScopeState extends ConsumerState<SoundPreviewScope> {
+  // Read up front: `ref` can't be used in dispose.
+  late final SoundPlayer _player;
+
+  @override
+  void initState() {
+    super.initState();
+    _player = ref.read(soundPlayerProvider);
+  }
+
+  @override
+  void dispose() {
+    unawaited(_player.stop());
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 /// Plays [sound] as the app's own feedback — the Done sound, Focus's tick —

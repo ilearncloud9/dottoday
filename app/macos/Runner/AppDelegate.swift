@@ -157,6 +157,11 @@ final class SystemEventsBridge {
 final class SoundBridge {
   static let shared = SoundBridge()
   private var channel: FlutterMethodChannel?
+  /// The sound still playing: a new one or `stop` disposes it, which cuts
+  /// it off, so a picker never stacks previews (docs/12 §6). The token
+  /// tells a finished sound's completion from a reused id's. Main thread.
+  private var playing: (id: SystemSoundID, token: Int)?
+  private var nextToken = 0
 
   func attach(to messenger: FlutterBinaryMessenger) {
     let channel = FlutterMethodChannel(name: "dottoday/sound", binaryMessenger: messenger)
@@ -167,16 +172,21 @@ final class SoundBridge {
         result(false)
         return
       }
+      if call.method == "stop" {
+        self.stop()
+        result(nil)
+        return
+      }
       guard call.method == "play", let name = call.arguments as? String else {
         result(FlutterMethodNotImplemented)
         return
       }
-      result(SoundBridge.play(name))
+      result(self.play(name))
     }
     self.channel = channel
   }
 
-  private static func play(_ name: String) -> FlutterError? {
+  private func play(_ name: String) -> FlutterError? {
     guard name.range(of: "^[a-z][a-z0-9_]{0,63}\\.(wav|caf)$", options: .regularExpression) != nil
     else { return FlutterError(code: "bad_sound", message: nil, details: nil) }
     guard let url = Bundle.main.url(forResource: name, withExtension: nil) else {
@@ -186,7 +196,22 @@ final class SoundBridge {
     guard AudioServicesCreateSystemSoundID(url as CFURL, &id) == kAudioServicesNoError else {
       return FlutterError(code: "no_sound", message: nil, details: nil)
     }
-    AudioServicesPlaySystemSoundWithCompletion(id) { AudioServicesDisposeSystemSoundID(id) }
+    stop()
+    nextToken += 1
+    let token = nextToken
+    playing = (id, token)
+    AudioServicesPlaySystemSoundWithCompletion(id) {
+      DispatchQueue.main.async {
+        guard self.playing?.token == token else { return }
+        self.stop()
+      }
+    }
     return nil
+  }
+
+  private func stop() {
+    guard let id = playing?.id else { return }
+    playing = nil
+    AudioServicesDisposeSystemSoundID(id)
   }
 }

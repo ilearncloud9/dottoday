@@ -41,6 +41,18 @@ void main() {
     expect(sink.records, isEmpty);
   });
 
+  test('stop asks the platform to cut off the sound still playing', () async {
+    final calls = <MethodCall>[];
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      calls.add(call);
+      return null;
+    });
+    final (p, sink) = player();
+    await p.stop();
+    expect(calls.map((c) => c.method), ['stop']);
+    expect(sink.records, isEmpty);
+  });
+
   test('a platform that refuses is logged, not thrown', () async {
     messenger.setMockMethodCallHandler(
       channel,

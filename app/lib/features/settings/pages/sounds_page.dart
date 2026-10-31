@@ -32,23 +32,25 @@ class SoundsPage extends ConsumerWidget {
     final settings = ref.watch(currentProfileProvider).value?.settings;
     if (settings == null) return const SizedBox.shrink();
     final muted = ref.watch(deviceMutedProvider).value ?? false;
-    return SettingsPageFrame(
-      title: l10n.soundsTitle,
-      children: [
-        if (muted) const SoundMutedBanner(),
-        PageText(l10n.soundsIntro),
-        SoundOptionList(
-          sections: settingsSoundSections(l10n),
-          // Unset is the Dot tone (docs/12 §3).
-          selected: settings.reminderSound ?? defaultReminderSoundId,
-          onPick: (key) {
-            changeSettings(context, (s) => s.copyWith(reminderSound: key));
-            previewSound(ref, key);
-          },
-        ),
-        _MoreGroup(settings: settings),
-        const _Credits(),
-      ],
+    return SoundPreviewScope(
+      child: SettingsPageFrame(
+        title: l10n.soundsTitle,
+        children: [
+          if (muted) const SoundMutedBanner(),
+          PageText(l10n.soundsIntro),
+          SoundOptionList(
+            sections: settingsSoundSections(l10n),
+            // Unset is the Dot tone (docs/12 §3).
+            selected: settings.reminderSound ?? defaultReminderSoundId,
+            onPick: (key) {
+              changeSettings(context, (s) => s.copyWith(reminderSound: key));
+              previewSound(ref, key);
+            },
+          ),
+          _MoreGroup(settings: settings),
+          const _Credits(),
+        ],
+      ),
     );
   }
 }
@@ -141,7 +143,8 @@ class _MoreGroup extends StatelessWidget {
   }
 }
 
-/// The Start or Done list in a sheet: a tap picks and plays; Done closes.
+/// The Start or Done list in a sheet: a tap picks and plays; Done closes
+/// and stops the preview.
 Future<void> _showTierSheet(
   BuildContext context, {
   required String title,
@@ -151,33 +154,40 @@ Future<void> _showTierSheet(
 }) => showAppSheet<void>(
   context: context,
   title: title,
-  builder: (_) => Consumer(
-    builder: (context, ref, _) {
-      final settings = ref.watch(currentProfileProvider).value?.settings;
-      if (settings == null) return const SizedBox.shrink();
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: DotSpace.s,
-        children: [
-          if (ref.watch(deviceMutedProvider).value ?? false)
-            const SoundMutedBanner(),
-          SoundOptionList(
-            sections: sections,
-            selected: selected(settings),
-            onPick: (key) {
-              if (key == null) return;
-              changeSettings(context, (s) => write(s, key));
-              previewSound(ref, key);
-            },
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(context.l10n.alertsDone),
-          ),
-        ],
-      );
-    },
-  ),
+  builder: (_) =>
+      SoundPreviewScope(child: _tierList(sections, selected, write)),
+);
+
+Widget _tierList(
+  List<SoundSection> sections,
+  String Function(Settings) selected,
+  Settings Function(Settings, String) write,
+) => Consumer(
+  builder: (context, ref, _) {
+    final settings = ref.watch(currentProfileProvider).value?.settings;
+    if (settings == null) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: DotSpace.s,
+      children: [
+        if (ref.watch(deviceMutedProvider).value ?? false)
+          const SoundMutedBanner(),
+        SoundOptionList(
+          sections: sections,
+          selected: selected(settings),
+          onPick: (key) {
+            if (key == null) return;
+            changeSettings(context, (s) => write(s, key));
+            previewSound(ref, key);
+          },
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(context.l10n.alertsDone),
+        ),
+      ],
+    );
+  },
 );
 
 /// The single credit line per source (docs/12 §1), each a link to it.
