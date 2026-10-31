@@ -52,7 +52,7 @@ final class LiveActivityDismissedProvider
 }
 
 String _$liveActivityDismissedHash() =>
-    r'7dc7c83ba05a8c9e64d8d4557d28b115a907b714';
+    r'5d8140389e60a3d2565c6a1deea38e2ebfa56bcd';
 
 /// Whether the user has ever dismissed a Live Activity themselves (iOS):
 /// the trigger of minimal mode's widget hint (docs/14 §5, M16). The native
