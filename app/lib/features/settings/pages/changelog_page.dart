@@ -70,6 +70,7 @@ class _ChangelogPageState extends ConsumerState<ChangelogPage> {
 /// [Release] can't ship without its notes.
 String releaseNotes(AppLocalizations l10n, Release release) =>
     switch (release) {
+      Release.v1_2_0 => l10n.releaseNotes120,
       Release.v1_1_0 => l10n.releaseNotes110,
       Release.v1_0_0 => l10n.releaseNotes100,
       Release.v0_1_0 => l10n.releaseNotes010,
