@@ -110,7 +110,7 @@ void main() {
   test('never in Focus, a Wind Down review or low-energy mode', () {
     for (final quiet in const [
       HintSignals(daysOfUse: 30, inFocus: true, sameMornings: true),
-      HintSignals(daysOfUse: 30, inBedtimeReview: true, sameMornings: true),
+      HintSignals(daysOfUse: 30, inWindDownReview: true, sameMornings: true),
       HintSignals(daysOfUse: 30, lowEnergy: true, sameMornings: true),
     ]) {
       expect(

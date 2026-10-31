@@ -110,7 +110,7 @@ void main() {
     );
     expect(withSound(loud: true)!.sound?.id, 'dot_alarm', reason: 'not Start');
     expect(
-      withSound(loud: false, p: NotificationPurpose.bedtime)!.sound,
+      withSound(loud: false, p: NotificationPurpose.windDown)!.sound,
       isNull,
     );
     // Null is the OS sound; "none" shows without a sound.

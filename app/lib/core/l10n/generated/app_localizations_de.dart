@@ -1200,7 +1200,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String durationFitsBedtime(String time) {
+  String durationFitsWindDown(String time) {
     return 'Passt vor die Abendruhe um $time';
   }
 
@@ -1210,7 +1210,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String durationPastBedtime(String time) {
+  String durationPastWindDown(String time) {
     return 'Reicht über die Abendruhe um $time';
   }
 
@@ -1441,7 +1441,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsWakeUp => 'Aufstehen';
 
   @override
-  String get settingsBedtime => 'Abendruhe';
+  String get settingsWindDown => 'Abendruhe';
 
   @override
   String get settingsPerWeekday => 'Abweichende Tage';
@@ -1537,10 +1537,10 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get settingsBedtimeReminder => 'Erinnerung zur Abendruhe';
+  String get settingsWindDownReminder => 'Erinnerung zur Abendruhe';
 
   @override
-  String settingsBedtimeReminderDetail(String time) {
+  String settingsWindDownReminderDetail(String time) {
     return 'Um $time, mit der ersten Aufgabe von morgen';
   }
 
@@ -2245,10 +2245,10 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get alertsBedtime => 'Erinnerung zur Abendruhe';
+  String get alertsWindDown => 'Erinnerung zur Abendruhe';
 
   @override
-  String get alertsBedtimeDetail =>
+  String get alertsWindDownDetail =>
       'Jeden Abend, mit der ersten Aufgabe von morgen';
 
   @override
@@ -3226,10 +3226,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Wie früh, entscheidest du in den Einstellungen';
 
   @override
-  String get onboardingBedtime => 'Zur Abendruhe';
+  String get onboardingWindDown => 'Zur Abendruhe';
 
   @override
-  String get onboardingBedtimeDetail =>
+  String get onboardingWindDownDetail =>
       'Die erste Aufgabe von morgen, damit der Morgen keine Überraschungen bringt';
 
   @override
@@ -3342,15 +3342,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get notifSnoozed => 'Geschlummerte Erinnerung';
 
   @override
-  String get notifBedtimeTitle => 'Abendruhe';
+  String get notifWindDownTitle => 'Abendruhe';
 
   @override
-  String notifBedtimeFirst(String title, String time) {
+  String notifWindDownFirst(String title, String time) {
     return 'Morgen beginnt mit $title um $time.';
   }
 
   @override
-  String get notifBedtimeFree => 'Für morgen ist noch nichts geplant.';
+  String get notifWindDownFree => 'Für morgen ist noch nichts geplant.';
 
   @override
   String get notifActionDone => 'Erledigt';
@@ -4661,7 +4661,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get rebalanceAllowShrink => 'Optionale kürzen erlauben';
 
   @override
-  String get rebalancePastBedtime => 'Über die Abendruhe hinaus';
+  String get rebalancePastWindDown => 'Über die Abendruhe hinaus';
 
   @override
   String rebalanceRanOver(String title, String duration) {

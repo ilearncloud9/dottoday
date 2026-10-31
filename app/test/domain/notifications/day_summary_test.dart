@@ -174,7 +174,7 @@ void main() {
       all.map((n) => n.purpose).toSet(),
       containsAll([
         NotificationPurpose.task,
-        NotificationPurpose.bedtime,
+        NotificationPurpose.windDown,
         NotificationPurpose.daySummary,
       ]),
     );

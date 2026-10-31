@@ -73,7 +73,7 @@ List<ThreadEntry> threadEntries({
   );
   final (:before, :inside, :after) = _split(sorted, shape);
   final out = <ThreadEntry>[
-    ?_outside(before.map(task).toList(), bedtime: false),
+    ?_outside(before.map(task).toList(), windDown: false),
     ThreadCap.wake(format.time(shape.wakeUtc)),
   ];
   final overlaps = _overlaps(inside);
@@ -96,7 +96,7 @@ List<ThreadEntry> threadEntries({
   _gap(out, cursor, shape.bedUtc, nowUtc, format, showFreeTime);
   out
     ..add(ThreadCap.bed(format.time(shape.bedUtc)))
-    ..addAll([?_outside(after.map(task).toList(), bedtime: true)]);
+    ..addAll([?_outside(after.map(task).toList(), windDown: true)]);
   return out;
 }
 
@@ -146,12 +146,12 @@ _split(List<Occurrence> sorted, DayShape shape) => (
 );
 
 /// [tasks] as a folded row, or null when there are none.
-ThreadOutside? _outside(List<ThreadTask> tasks, {required bool bedtime}) =>
+ThreadOutside? _outside(List<ThreadTask> tasks, {required bool windDown}) =>
     tasks.isEmpty
     ? null
     : ThreadOutside(
         tasks: tasks,
-        bedtime: bedtime,
+        windDown: windDown,
         open: tasks.any((t) => t.state == DotState.live),
       );
 

@@ -241,7 +241,7 @@ void main() {
               const ThreadCap.wake('7:00'),
               const ThreadCap.bed('22:00'),
               ThreadOutside(
-                bedtime: true,
+                windDown: true,
                 tasks: [
                   for (final id in ['a', 'b'])
                     ThreadTask(

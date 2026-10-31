@@ -10,47 +10,51 @@ part of 'snapshot_providers.dart';
 // ignore_for_file: type=lint, type=warning
 /// The Wind Down write of the day snapshot (docs/09 M9.1).
 
-@ProviderFor(bedtimeSnapshot)
-final bedtimeSnapshotProvider = BedtimeSnapshotProvider._();
+@ProviderFor(windDownSnapshot)
+final windDownSnapshotProvider = WindDownSnapshotProvider._();
 
 /// The Wind Down write of the day snapshot (docs/09 M9.1).
 
-final class BedtimeSnapshotProvider
+final class WindDownSnapshotProvider
     extends
-        $FunctionalProvider<BedtimeSnapshot, BedtimeSnapshot, BedtimeSnapshot>
-    with $Provider<BedtimeSnapshot> {
+        $FunctionalProvider<
+          WindDownSnapshot,
+          WindDownSnapshot,
+          WindDownSnapshot
+        >
+    with $Provider<WindDownSnapshot> {
   /// The Wind Down write of the day snapshot (docs/09 M9.1).
-  BedtimeSnapshotProvider._()
+  WindDownSnapshotProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'bedtimeSnapshotProvider',
+        name: r'windDownSnapshotProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$bedtimeSnapshotHash();
+  String debugGetCreateSourceHash() => _$windDownSnapshotHash();
 
   @$internal
   @override
-  $ProviderElement<BedtimeSnapshot> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<WindDownSnapshot> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  BedtimeSnapshot create(Ref ref) {
-    return bedtimeSnapshot(ref);
+  WindDownSnapshot create(Ref ref) {
+    return windDownSnapshot(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(BedtimeSnapshot value) {
+  Override overrideWithValue(WindDownSnapshot value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<BedtimeSnapshot>(value),
+      providerOverride: $SyncValueProvider<WindDownSnapshot>(value),
     );
   }
 }
 
-String _$bedtimeSnapshotHash() => r'96bafcaa05a226ae3072c462f45408aa31becdfe';
+String _$windDownSnapshotHash() => r'33d8f320b2b8a1ce8ea3ba3f2383075e07457de3';

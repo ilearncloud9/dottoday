@@ -62,7 +62,7 @@ class DayShapeStep extends ConsumerWidget {
       timeText: at,
       awakeText: (m) => l10n.settingsAwake(formatDurationShort(l10n, m)),
       wakeLabel: l10n.settingsWakeUp,
-      bedLabel: l10n.settingsBedtime,
+      bedLabel: l10n.settingsWindDown,
       onChanged: (wake, bed) => unawaited(
         updateSettings(
           ProviderScope.containerOf(context, listen: false),

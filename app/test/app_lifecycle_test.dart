@@ -19,9 +19,9 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/daily_refresh.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
-import 'package:dottoday/data/snapshot/bedtime_snapshot.dart';
 import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
 import 'package:dottoday/data/snapshot/snapshot_providers.dart';
+import 'package:dottoday/data/snapshot/wind_down_snapshot.dart';
 import 'package:dottoday/data/system/system_events.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
@@ -151,8 +151,8 @@ void main() {
         notificationSyncProvider.overrideWithValue(sync),
         dailyRefreshProvider.overrideWithValue(refresh),
         actionQueueStoreProvider.overrideWithValue(const NoActionQueueStore()),
-        bedtimeSnapshotProvider.overrideWithValue(
-          BedtimeSnapshot(
+        windDownSnapshotProvider.overrideWithValue(
+          WindDownSnapshot(
             clock: FakeClock(DateTime.utc(2026, 10, 21)),
             writer: snapshots,
             logger: Logger(logs, FakeClock(DateTime.utc(2026))),

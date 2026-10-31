@@ -13,7 +13,7 @@ import '../../support/a11y.dart';
 Future<Future<List<Alert>?>> _open(
   WidgetTester tester,
   List<Alert> initial, {
-  ValueChanged<bool>? onBedtime,
+  ValueChanged<bool>? onWindDown,
   ThemeMode mode = ThemeMode.light,
 }) async {
   tester.view
@@ -36,7 +36,11 @@ Future<Future<List<Alert>?>> _open(
       ),
     ),
   );
-  final result = showAlertsEditor(ctx, initial: initial, onBedtime: onBedtime);
+  final result = showAlertsEditor(
+    ctx,
+    initial: initial,
+    onWindDown: onWindDown,
+  );
   await tester.pumpAndSettle();
   return result;
 }
@@ -71,16 +75,16 @@ void main() {
   });
 
   testWidgets('the Wind Down switch reports at once', (tester) async {
-    bool? bedtime;
-    await _open(tester, const [], onBedtime: (v) => bedtime = v);
+    bool? windDown;
+    await _open(tester, const [], onWindDown: (v) => windDown = v);
     await tester.tap(find.text('Wind Down reminder'));
     await tester.pumpAndSettle();
-    expect(bedtime, isTrue);
+    expect(windDown, isTrue);
   });
 
   testWidgets('meets a11y guidelines in both themes', (tester) async {
     for (final mode in [ThemeMode.light, ThemeMode.dark]) {
-      await _open(tester, const [_ten], onBedtime: (_) {}, mode: mode);
+      await _open(tester, const [_ten], onWindDown: (_) {}, mode: mode);
       await expectA11yGuidelines(tester);
     }
   });

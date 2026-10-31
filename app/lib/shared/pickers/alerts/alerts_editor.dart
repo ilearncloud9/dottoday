@@ -32,21 +32,21 @@ const alertChoices = [
 
 /// The Alerts editor (docs/10 §5.3, docs/09 M3f.2, R-10): the task's
 /// alerts with ×, the choices to add (up to [maxAlerts]), and — when
-/// [onBedtime] is given — the every-evening Wind Down reminder. Returns the
+/// [onWindDown] is given — the every-evening Wind Down reminder. Returns the
 /// alerts in time order, or null when dismissed.
 Future<List<Alert>?> showAlertsEditor(
   BuildContext context, {
   required List<Alert> initial,
-  bool bedtime = false,
-  ValueChanged<bool>? onBedtime,
+  bool windDown = false,
+  ValueChanged<bool>? onWindDown,
   Future<bool> Function()? deniedOpenSettings,
 }) => showAppSheet<List<Alert>>(
   context: context,
   title: context.l10n.alertsTitle,
   builder: (_) => _Alerts(
     initial: initial,
-    bedtime: bedtime,
-    onBedtime: onBedtime,
+    windDown: windDown,
+    onWindDown: onWindDown,
     deniedOpenSettings: deniedOpenSettings,
   ),
 );
@@ -54,14 +54,14 @@ Future<List<Alert>?> showAlertsEditor(
 class _Alerts extends StatefulWidget {
   const _Alerts({
     required this.initial,
-    required this.bedtime,
-    this.onBedtime,
+    required this.windDown,
+    this.onWindDown,
     this.deniedOpenSettings,
   });
 
   final List<Alert> initial;
-  final bool bedtime;
-  final ValueChanged<bool>? onBedtime;
+  final bool windDown;
+  final ValueChanged<bool>? onWindDown;
 
   /// Set while notifications are denied (M3f.8): the notice on top, whose
   /// button calls it.
@@ -74,7 +74,7 @@ class _Alerts extends StatefulWidget {
 /// A leaf: the list being edited and the switch's echo.
 class _AlertsState extends State<_Alerts> {
   late final _alerts = [...widget.initial];
-  late var _bedtime = widget.bedtime;
+  late var _windDown = widget.windDown;
 
   /// Time order: the earliest fire first.
   static int _order(Alert a) => switch (a.kind) {
@@ -90,8 +90,8 @@ class _AlertsState extends State<_Alerts> {
       ..sort((x, y) => _order(x).compareTo(_order(y))),
   );
 
-  void _bedtimeTo(bool on, ValueChanged<bool> set) {
-    setState(() => _bedtime = on);
+  void _windDownTo(bool on, ValueChanged<bool> set) {
+    setState(() => _windDown = on);
     set(on);
   }
 
@@ -134,16 +134,19 @@ class _AlertsState extends State<_Alerts> {
           ],
         ),
         if (full) Text(l10n.alertsMax, style: t.styles.rowMeta),
-        if (widget.onBedtime case final set?)
+        if (widget.onWindDown case final set?)
           MergeSemantics(
             child: ListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text(l10n.alertsBedtime, style: t.styles.body),
-              subtitle: Text(l10n.alertsBedtimeDetail, style: t.styles.rowMeta),
-              onTap: () => _bedtimeTo(!_bedtime, set),
+              title: Text(l10n.alertsWindDown, style: t.styles.body),
+              subtitle: Text(
+                l10n.alertsWindDownDetail,
+                style: t.styles.rowMeta,
+              ),
+              onTap: () => _windDownTo(!_windDown, set),
               trailing: DotSwitch(
-                value: _bedtime,
-                onChanged: (v) => _bedtimeTo(v, set),
+                value: _windDown,
+                onChanged: (v) => _windDownTo(v, set),
               ),
             ),
           ),

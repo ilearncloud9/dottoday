@@ -1,7 +1,7 @@
 import Cocoa
 
 /// The day dot in the menu bar (docs/02 F9, docs/11 A1, docs/09 M9.6): a
-/// ring that fills from Wake Up to Bedtime, then the task under way or the
+/// ring that fills from Wake Up to Wind Down, then the task under way or the
 /// next one. Click: What's next — the dot with Done and +15 min (B6, run
 /// by the app in process), what is left of the day, Today. Text arrives
 /// formatted and localised in the day snapshot
@@ -42,7 +42,7 @@ final class DayDotStatusItem: NSObject {
 
   private static func done(_ block: [String: Any]) -> Bool { block["done"] as? Bool ?? false }
 
-  /// Share of the waking day gone at [now] (ms): 0 before Wake Up, 1 after Bedtime.
+  /// Share of the waking day gone at [now] (ms): 0 before Wake Up, 1 after Wind Down.
   static func dayShare(_ snapshot: [String: Any], now: Double) -> Double {
     let wake = ms(snapshot, "wake_ms")
     let bed = ms(snapshot, "bed_ms")

@@ -140,7 +140,7 @@ final class NotificationPlanner {
     if (daily case final settings?) {
       if (settings.bedtimeReminder) {
         planned.addAll(
-          DayReminders.bedtime(
+          DayReminders.windDown(
             settings: settings,
             location: location,
             occurrences: live,

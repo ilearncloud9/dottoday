@@ -56,7 +56,7 @@ class DayShapeGroup extends StatelessWidget {
           timeText: at,
           awakeText: (m) => l10n.settingsAwake(formatDurationShort(l10n, m)),
           wakeLabel: l10n.settingsWakeUp,
-          bedLabel: l10n.settingsBedtime,
+          bedLabel: l10n.settingsWindDown,
           onChanged: setWindow,
         ),
         ..._times(context),
@@ -105,10 +105,10 @@ class DayShapeGroup extends StatelessWidget {
       SettingsRow(
         glyph: DotGlyphs.moon,
         tint: t.tasks[TaskColor.violet].ink,
-        title: l10n.settingsBedtime,
+        title: l10n.settingsWindDown,
         value: at(bed),
         onTap: () => unawaited(
-          _time(context, l10n.settingsBedtime, bed, (m) => setWindow(wake, m)),
+          _time(context, l10n.settingsWindDown, bed, (m) => setWindow(wake, m)),
         ),
       ),
     ];

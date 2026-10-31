@@ -59,6 +59,9 @@ abstract class Settings with _$Settings {
     @Default(true) bool showFreeTime,
     @Default(true) bool runningLateNudge,
     @Default(false) bool rollUnfinished,
+    // The Wind Down reminder. Its name stays the stored, synced key from
+    // before the Wind Down rename (owner, 2026-10-31): renaming it would
+    // need a settings migration on every device and the server.
     @Default(true) bool bedtimeReminder,
     // Settings › Day shape › Wake Up alarm (docs/15 W1, M17.1): the Wake Up
     // time rings like an alarm on phones. A missing key reads as off, so an

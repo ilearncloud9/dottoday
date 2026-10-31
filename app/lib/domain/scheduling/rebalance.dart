@@ -15,7 +15,7 @@ final class RebalanceOptions {
   const RebalanceOptions({
     this.shiftFollowers = true,
     this.allowShrink = true,
-    this.pastBedtime = false,
+    this.pastWindDown = false,
   });
 
   /// On: up to the first pin, every later task moves by the delay and
@@ -27,16 +27,16 @@ final class RebalanceOptions {
   final bool allowShrink;
 
   /// Let the day run past Wind Down instead of moving tasks to tomorrow.
-  final bool pastBedtime;
+  final bool pastWindDown;
 
   RebalanceOptions copyWith({
     bool? shiftFollowers,
     bool? allowShrink,
-    bool? pastBedtime,
+    bool? pastWindDown,
   }) => RebalanceOptions(
     shiftFollowers: shiftFollowers ?? this.shiftFollowers,
     allowShrink: allowShrink ?? this.allowShrink,
-    pastBedtime: pastBedtime ?? this.pastBedtime,
+    pastWindDown: pastWindDown ?? this.pastWindDown,
   );
 }
 
@@ -153,7 +153,7 @@ DateTime? _dayLimit(
   DateTime bedUtc,
   RebalanceOptions options,
 ) {
-  if (options.pastBedtime) return null;
+  if (options.pastWindDown) return null;
   final last = queue.isEmpty ? null : queue.last.endUtc!;
   return last != null && last.isAfter(bedUtc) ? last : bedUtc;
 }

@@ -1199,7 +1199,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String durationFitsBedtime(String time) {
+  String durationFitsWindDown(String time) {
     return 'Tient avant la détente à $time';
   }
 
@@ -1209,7 +1209,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String durationPastBedtime(String time) {
+  String durationPastWindDown(String time) {
     return 'Finit après la détente à $time';
   }
 
@@ -1441,7 +1441,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsWakeUp => 'Réveil';
 
   @override
-  String get settingsBedtime => 'Détente';
+  String get settingsWindDown => 'Détente';
 
   @override
   String get settingsPerWeekday => 'Jours différents';
@@ -1537,10 +1537,10 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get settingsBedtimeReminder => 'Rappel de détente';
+  String get settingsWindDownReminder => 'Rappel de détente';
 
   @override
-  String settingsBedtimeReminderDetail(String time) {
+  String settingsWindDownReminderDetail(String time) {
     return 'À $time, avec la première tâche de demain';
   }
 
@@ -2245,10 +2245,10 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get alertsBedtime => 'Rappel de détente';
+  String get alertsWindDown => 'Rappel de détente';
 
   @override
-  String get alertsBedtimeDetail =>
+  String get alertsWindDownDetail =>
       'Chaque soir, avec la première tâche de demain';
 
   @override
@@ -3225,10 +3225,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Combien de temps avant, à vous de voir dans les réglages';
 
   @override
-  String get onboardingBedtime => 'À la détente';
+  String get onboardingWindDown => 'À la détente';
 
   @override
-  String get onboardingBedtimeDetail =>
+  String get onboardingWindDownDetail =>
       'La première tâche de demain, pour un matin sans surprise';
 
   @override
@@ -3341,15 +3341,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notifSnoozed => 'Rappel reporté';
 
   @override
-  String get notifBedtimeTitle => 'Détente';
+  String get notifWindDownTitle => 'Détente';
 
   @override
-  String notifBedtimeFirst(String title, String time) {
+  String notifWindDownFirst(String title, String time) {
     return 'Demain commence par $title à $time.';
   }
 
   @override
-  String get notifBedtimeFree => 'Rien de prévu pour demain pour l\'instant.';
+  String get notifWindDownFree => 'Rien de prévu pour demain pour l\'instant.';
 
   @override
   String get notifActionDone => 'Fait';
@@ -4663,7 +4663,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get rebalanceAllowShrink => 'Raccourcir l’optionnel';
 
   @override
-  String get rebalancePastBedtime => 'Dépasser la détente';
+  String get rebalancePastWindDown => 'Dépasser la détente';
 
   @override
   String rebalanceRanOver(String title, String duration) {

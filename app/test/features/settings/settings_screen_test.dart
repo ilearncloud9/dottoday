@@ -282,9 +282,9 @@ void main() {
     final h = await pumpSettings(tester);
     await _tapRow(tester, 'Different days');
     // The sheet's seven Wind Down handles, Monday first (week starts Monday).
-    final bedtimes = find.semantics.byPredicate((n) => n.label == 'Wind Down');
-    expect(bedtimes.evaluate(), hasLength(7));
-    tester.semantics.increase(bedtimes.at(5));
+    final windDowns = find.semantics.byPredicate((n) => n.label == 'Wind Down');
+    expect(windDowns.evaluate(), hasLength(7));
+    tester.semantics.increase(windDowns.at(5));
     await tester.pumpAndSettle();
     final s = await storedSettings(h);
     expect(s.boundaryFor(Weekday.sat).end, '22:15');

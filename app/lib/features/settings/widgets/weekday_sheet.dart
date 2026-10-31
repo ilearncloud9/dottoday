@@ -85,7 +85,7 @@ class _Day extends StatelessWidget {
           timeText: (m) => clockText(context, m, settings.use24h),
           awakeText: (m) => l10n.settingsAwake(formatDurationShort(l10n, m)),
           wakeLabel: l10n.settingsWakeUp,
-          bedLabel: l10n.settingsBedtime,
+          bedLabel: l10n.settingsWindDown,
           onChanged: (w, b) => changeSettings(
             context,
             (s) => withDayWindow(

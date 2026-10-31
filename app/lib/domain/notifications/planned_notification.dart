@@ -7,7 +7,7 @@ enum NotificationPurpose {
 
   /// Settings › Wind Down reminder: once a day at Wind Down, with tomorrow's
   /// first task (M3d.3, R-10).
-  bedtime,
+  windDown,
 
   /// "Send me a test alarm" (11 A0, docs/09 M6.5.9): one loud alert in 60 s
   /// so the user can check it gets through.
@@ -48,7 +48,7 @@ final class PlannedNotification {
   static const snoozeIndex = 5;
 
   /// Index of the Wind Down reminder.
-  static const bedtimeIndex = 6;
+  static const windDownIndex = 6;
 
   /// Index of the test alarm (M6.5.9).
   static const testAlarmIndex = 7;

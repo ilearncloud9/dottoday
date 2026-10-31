@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
-import 'package:dottoday/data/snapshot/bedtime_snapshot.dart';
 import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
+import 'package:dottoday/data/snapshot/wind_down_snapshot.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -31,7 +31,7 @@ void main() {
   // 02:00Z the next day.
   final now = DateTime.utc(2026, 10, 21, 6);
   late WriteHarness h;
-  late BedtimeSnapshot bedtime;
+  late WindDownSnapshot windDown;
   late List<_FakeTimer> timers;
 
   setUp(() async {
@@ -39,7 +39,7 @@ void main() {
     await h.writes.apply(WriteBatch(userId: userId, profile: profileFixture()));
     await h.effects.idle;
     timers = [];
-    bedtime = BedtimeSnapshot(
+    windDown = WindDownSnapshot(
       clock: h.clock,
       writer: DaySnapshotWriter(
         clock: h.clock,
@@ -58,7 +58,7 @@ void main() {
   tearDown(() => h.dispose());
 
   test('arms one write at Wind Down and writes the snapshot then', () async {
-    await bedtime.arm(userId);
+    await windDown.arm(userId);
     expect(timers.single.wait, const Duration(hours: 20));
     final before = h.sink.written.length;
     h.clock.advance(const Duration(hours: 20));
@@ -69,15 +69,15 @@ void main() {
   });
 
   test('re-arming replaces the armed write', () async {
-    await bedtime.arm(userId);
-    await bedtime.arm(userId);
+    await windDown.arm(userId);
+    await windDown.arm(userId);
     expect(timers.first.cancelled, isTrue);
     expect(timers.last.cancelled, isFalse);
   });
 
   test('after Wind Down nothing is armed', () async {
     h.clock.now = DateTime.utc(2026, 10, 22, 3);
-    await bedtime.arm(userId);
+    await windDown.arm(userId);
     expect(timers, isEmpty);
   });
 }

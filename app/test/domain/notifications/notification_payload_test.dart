@@ -18,12 +18,12 @@ void main() {
       PlannedNotification(
         id: 7,
         occurrenceId: '',
-        alertIndex: PlannedNotification.bedtimeIndex,
+        alertIndex: PlannedNotification.windDownIndex,
         fireAtUtc: DateTime.utc(2026, 10, 23, 21),
         kind: AlertKind.atStart,
         sound: 'chime',
         silent: true,
-        purpose: NotificationPurpose.bedtime,
+        purpose: NotificationPurpose.windDown,
       ),
       // Loud (M6.5.3) must survive too, or every re-plan re-posts it.
       PlannedNotification(

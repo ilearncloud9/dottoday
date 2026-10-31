@@ -55,9 +55,9 @@ class _RebalanceRulesState extends State<RebalanceRules> {
           (v) => _set(o.copyWith(allowShrink: v)),
         ),
         chip(
-          l10n.rebalancePastBedtime,
-          o.pastBedtime,
-          (v) => _set(o.copyWith(pastBedtime: v)),
+          l10n.rebalancePastWindDown,
+          o.pastWindDown,
+          (v) => _set(o.copyWith(pastWindDown: v)),
           DotGlyphs.moon,
         ),
       ],

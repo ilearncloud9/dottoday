@@ -21,7 +21,7 @@ final class DayDotImageTests: XCTestCase {
     }
   }
 
-  func testDayShareFollowsWakeUpToBedtime() {
+  func testDayShareFollowsWakeUpToWindDown() {
     let snapshot: [String: Any] = ["wake_ms": 1000.0, "bed_ms": 3000.0]
     XCTAssertEqual(DayDotStatusItem.dayShare(snapshot, now: 500), 0)
     XCTAssertEqual(DayDotStatusItem.dayShare(snapshot, now: 2000), 0.5)

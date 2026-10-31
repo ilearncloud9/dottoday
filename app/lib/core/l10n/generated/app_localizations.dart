@@ -1756,7 +1756,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Fits before Wind Down at {time}'**
-  String durationFitsBedtime(String time);
+  String durationFitsWindDown(String time);
 
   /// Duration sheet preview: the task overlaps the next one.
   ///
@@ -1768,7 +1768,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Runs past Wind Down at {time}'**
-  String durationPastBedtime(String time);
+  String durationPastWindDown(String time);
 
   /// Duration sheet section caption (shown uppercase).
   ///
@@ -2128,7 +2128,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Wind Down'**
-  String get settingsBedtime;
+  String get settingsWindDown;
 
   /// Settings row: per-weekday Wake Up / Wind Down.
   ///
@@ -2302,13 +2302,13 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Wind Down reminder'**
-  String get settingsBedtimeReminder;
+  String get settingsWindDownReminder;
 
   /// Subtitle of Wind Down reminder.
   ///
   /// In en, this message translates to:
   /// **'At {time}, with tomorrow\'s first task'**
-  String settingsBedtimeReminderDetail(String time);
+  String settingsWindDownReminderDetail(String time);
 
   /// Settings group caption.
   ///
@@ -3262,13 +3262,13 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Wind Down reminder'**
-  String get alertsBedtime;
+  String get alertsWindDown;
 
   /// Under the Wind Down reminder switch.
   ///
   /// In en, this message translates to:
   /// **'Every evening, with tomorrow\'s first task'**
-  String get alertsBedtimeDetail;
+  String get alertsWindDownDetail;
 
   /// Closes the Alerts editor and applies the alerts.
   ///
@@ -4750,13 +4750,13 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'At Wind Down'**
-  String get onboardingBedtime;
+  String get onboardingWindDown;
 
   /// Onboarding O4: under the Wind Down switch.
   ///
   /// In en, this message translates to:
   /// **'Tomorrow\'s first task, so the morning has no surprises'**
-  String get onboardingBedtimeDetail;
+  String get onboardingWindDownDetail;
 
   /// Onboarding O4: asks the system for permission.
   ///
@@ -4930,19 +4930,19 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Wind Down'**
-  String get notifBedtimeTitle;
+  String get notifWindDownTitle;
 
   /// Wind Down reminder body.
   ///
   /// In en, this message translates to:
   /// **'Tomorrow starts with {title} at {time}.'**
-  String notifBedtimeFirst(String title, String time);
+  String notifWindDownFirst(String title, String time);
 
   /// Wind Down reminder body when tomorrow is empty.
   ///
   /// In en, this message translates to:
   /// **'Nothing planned for tomorrow yet.'**
-  String get notifBedtimeFree;
+  String get notifWindDownFree;
 
   /// Notification action: mark the task done.
   ///
@@ -6976,7 +6976,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Push past Wind Down'**
-  String get rebalancePastBedtime;
+  String get rebalancePastWindDown;
 
   /// Rebalance subtitle after a task overran its end.
   ///

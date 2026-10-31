@@ -64,12 +64,12 @@ void main() {
 
   test('caps, tasks in start order, gaps of 15 min or more', () {
     final e = _entries(clock.nowUtc(), day);
-    expect(e.first, isA<ThreadCap>().having((c) => c.bedtime, 'wake', false));
-    expect(e.last, isA<ThreadCap>().having((c) => c.bedtime, 'bed', true));
+    expect(e.first, isA<ThreadCap>().having((c) => c.windDown, 'wake', false));
+    expect(e.last, isA<ThreadCap>().having((c) => c.windDown, 'bed', true));
     final order = [
       for (final x in e)
         switch (x) {
-          ThreadCap(:final bedtime) => bedtime ? 'bed' : 'wake',
+          ThreadCap(:final windDown) => windDown ? 'bed' : 'wake',
           ThreadGap(:final minutes) => 'gap$minutes',
           ThreadTaskEntry(:final task) => task.id,
           ThreadOutside(:final tasks) => 'outside${tasks.length}',
@@ -123,11 +123,11 @@ void main() {
     List<String> shape(List<ThreadEntry> e) => [
       for (final x in e)
         switch (x) {
-          ThreadCap(:final bedtime) => bedtime ? 'bed' : 'wake',
+          ThreadCap(:final windDown) => windDown ? 'bed' : 'wake',
           ThreadGap() => 'gap',
           ThreadTaskEntry(:final task) => task.id,
-          ThreadOutside(:final bedtime, :final tasks) =>
-            '${bedtime ? 'after' : 'before'}:${tasks.map((t) => t.id).join(',')}',
+          ThreadOutside(:final windDown, :final tasks) =>
+            '${windDown ? 'after' : 'before'}:${tasks.map((t) => t.id).join(',')}',
           ThreadOverlap() => 'overlap',
         },
     ];

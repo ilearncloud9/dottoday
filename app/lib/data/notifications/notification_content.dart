@@ -33,11 +33,11 @@ OsNotification? composeNotification(
   if (planned.purpose == NotificationPurpose.testAlarm) {
     title = l10n.testAlarmTitle;
     body = l10n.testAlarmBody;
-  } else if (planned.purpose == NotificationPurpose.bedtime) {
-    title = l10n.notifBedtimeTitle;
+  } else if (planned.purpose == NotificationPurpose.windDown) {
+    title = l10n.notifWindDownTitle;
     body = task?.startUtc == null
-        ? l10n.notifBedtimeFree
-        : l10n.notifBedtimeFirst(task!.title, _time(task.startUtc!, profile));
+        ? l10n.notifWindDownFree
+        : l10n.notifWindDownFirst(task!.title, _time(task.startUtc!, profile));
   } else if (planned.purpose == NotificationPurpose.wakeUp) {
     // Never dropped: an alarm whose first block just went still rings.
     title = l10n.notifWakeUpTitle;

@@ -1199,7 +1199,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String durationFitsBedtime(String time) {
+  String durationFitsWindDown(String time) {
     return 'Cabe antes de la desconexión, a las $time';
   }
 
@@ -1209,7 +1209,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String durationPastBedtime(String time) {
+  String durationPastWindDown(String time) {
     return 'Pasa de la desconexión, a las $time';
   }
 
@@ -1439,7 +1439,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsWakeUp => 'Despertar';
 
   @override
-  String get settingsBedtime => 'Desconexión';
+  String get settingsWindDown => 'Desconexión';
 
   @override
   String get settingsPerWeekday => 'Días distintos';
@@ -1534,10 +1534,10 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get settingsBedtimeReminder => 'Recordatorio de desconexión';
+  String get settingsWindDownReminder => 'Recordatorio de desconexión';
 
   @override
-  String settingsBedtimeReminderDetail(String time) {
+  String settingsWindDownReminderDetail(String time) {
     return 'A las $time, con la primera tarea de mañana';
   }
 
@@ -2241,10 +2241,10 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get alertsBedtime => 'Recordatorio de desconexión';
+  String get alertsWindDown => 'Recordatorio de desconexión';
 
   @override
-  String get alertsBedtimeDetail =>
+  String get alertsWindDownDetail =>
       'Cada noche, con la primera tarea de mañana';
 
   @override
@@ -3220,10 +3220,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Cuánto antes lo decides tú, en Ajustes';
 
   @override
-  String get onboardingBedtime => 'Al desconectar';
+  String get onboardingWindDown => 'Al desconectar';
 
   @override
-  String get onboardingBedtimeDetail =>
+  String get onboardingWindDownDetail =>
       'La primera tarea de mañana, para que la mañana no traiga sorpresas';
 
   @override
@@ -3335,15 +3335,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get notifSnoozed => 'Recordatorio pospuesto';
 
   @override
-  String get notifBedtimeTitle => 'Desconexión';
+  String get notifWindDownTitle => 'Desconexión';
 
   @override
-  String notifBedtimeFirst(String title, String time) {
+  String notifWindDownFirst(String title, String time) {
     return 'Mañana empieza con $title a las $time.';
   }
 
   @override
-  String get notifBedtimeFree => 'Aún no hay nada planificado para mañana.';
+  String get notifWindDownFree => 'Aún no hay nada planificado para mañana.';
 
   @override
   String get notifActionDone => 'Hecho';
@@ -4654,7 +4654,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get rebalanceAllowShrink => 'Permitir acortar lo opcional';
 
   @override
-  String get rebalancePastBedtime => 'Pasar de la desconexión';
+  String get rebalancePastWindDown => 'Pasar de la desconexión';
 
   @override
   String rebalanceRanOver(String title, String duration) {

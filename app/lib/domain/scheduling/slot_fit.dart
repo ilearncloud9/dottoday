@@ -35,7 +35,7 @@ final class SlotFit {
 /// is already past Wind Down.
 ///
 /// ```dart
-/// fitAt(day, fivePm, 60, dayEndUtc: bedtime).isFree; // true
+/// fitAt(day, fivePm, 60, dayEndUtc: Wind Down).isFree; // true
 /// ```
 SlotFit fitAt(
   Iterable<Occurrence> day,
@@ -61,8 +61,8 @@ SlotFit fitAt(
       nextTask = o;
     }
   }
-  final bedtime = dayEndUtc.isAfter(startUtc) ? dayEndUtc : null;
-  final bounds = [?next, ?bedtime];
+  final windDown = dayEndUtc.isAfter(startUtc) ? dayEndUtc : null;
+  final bounds = [?next, ?windDown];
   final until = bounds.isEmpty
       ? end
       : bounds.reduce((a, b) => a.isBefore(b) ? a : b);

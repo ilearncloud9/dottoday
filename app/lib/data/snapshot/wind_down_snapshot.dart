@@ -8,8 +8,8 @@ import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
 /// (docs/11 B5 "written at Wind Down"): the record then holds the finished
 /// day, with progress 1. Re-armed after every housekeeping run; with the
 /// app closed, the next start or background refresh writes it instead.
-final class BedtimeSnapshot {
-  BedtimeSnapshot({
+final class WindDownSnapshot {
+  WindDownSnapshot({
     required Clock clock,
     required DaySnapshotWriter writer,
     required Logger logger,
@@ -42,7 +42,7 @@ final class BedtimeSnapshot {
     try {
       await _writer.write(userId);
     } on Object catch (e, st) {
-      _logger.error('day_snapshot.bedtime_failed', error: e, stackTrace: st);
+      _logger.error('day_snapshot.wind_down_failed', error: e, stackTrace: st);
     }
   }
 }

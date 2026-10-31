@@ -102,7 +102,7 @@ const f6Rows = <String, ParityRow>{
   'F6.2': ParityRow(
     tests: [
       'test/domain/notifications/notification_planner_test.dart',
-      'test/domain/notifications/bedtime_reminder_test.dart',
+      'test/domain/notifications/wind_down_reminder_test.dart',
       'test/domain/notifications/day_summary_test.dart',
       'test/features/settings/settings_screen_test.dart',
     ],

@@ -19,10 +19,10 @@ abstract final class DayReminders {
   /// id of the next day's first planned task.
   ///
   /// ```dart
-  /// DayReminders.bedtime(settings: s, location: berlin, occurrences: rows,
+  /// DayReminders.Wind Down(settings: s, location: berlin, occurrences: rows,
   ///     fromUtc: now, toUtc: now.add(week), used: {}).length; // 7
   /// ```
-  static List<PlannedNotification> bedtime({
+  static List<PlannedNotification> windDown({
     required Settings settings,
     required tz.Location location,
     required Iterable<Occurrence> occurrences,
@@ -35,17 +35,17 @@ abstract final class DayReminders {
         PlannedNotification(
           id: uniqueNotificationId(
             used,
-            'bedtime:${_key(date)}',
-            PlannedNotification.bedtimeIndex,
+            'windDown:${_key(date)}',
+            PlannedNotification.windDownIndex,
           ),
           occurrenceId:
               _blocksOn(occurrences, location, _next(date)).firstOrNull?.id ??
               '',
-          alertIndex: PlannedNotification.bedtimeIndex,
+          alertIndex: PlannedNotification.windDownIndex,
           fireAtUtc: shape.bedUtc,
           kind: AlertKind.atEnd,
           silent: inQuietHours(location, shape.bedUtc, settings.quietHours),
-          purpose: NotificationPurpose.bedtime,
+          purpose: NotificationPurpose.windDown,
         ),
   ];
 

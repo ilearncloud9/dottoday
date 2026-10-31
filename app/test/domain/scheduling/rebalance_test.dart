@@ -134,7 +134,7 @@ void main() {
       final plan = _run(
         day,
         from: '20:00',
-        options: const RebalanceOptions(pastBedtime: true),
+        options: const RebalanceOptions(pastWindDown: true),
       );
       expect(plan.sentOffIds, isEmpty);
       expect(_startsOf(plan), {'read': '20:25', 'dentist': '21:25'});
@@ -204,7 +204,7 @@ void main() {
       final options = RebalanceOptions(
         shiftFollowers: rnd.nextBool(),
         allowShrink: rnd.nextBool(),
-        pastBedtime: rnd.nextInt(4) == 0,
+        pastWindDown: rnd.nextInt(4) == 0,
       );
       final from = at('09:00').add(Duration(minutes: rnd.nextInt(8) * 30));
       final plan = rebalance(
@@ -276,7 +276,7 @@ void _checkInvariants(
       expect(next.durationMin >= shrunkMinutes(o), isTrue, reason: reason);
     }
     if (plan.sentOffIds.contains(o.id)) {
-      expect(options.pastBedtime, isFalse, reason: reason);
+      expect(options.pastWindDown, isFalse, reason: reason);
     }
   }
   // Moved tasks never overlap each other or a pin (events may overlap:
