@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="wake_up_surface">#121214</color>
+    <color name="wake_up_ink">#F2F2F0</color>
+    <color name="wake_up_muted">#9A9AA0</color>
+    <color name="wake_up_accent">#7FA0FF</color>
+    <color name="wake_up_on_accent">#121214</color>
+</resources>
