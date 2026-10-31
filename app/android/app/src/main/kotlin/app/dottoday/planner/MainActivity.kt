@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.view.WindowManager
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
+import app.dottoday.planner.alarms.FullScreenIntentBridge
 import app.dottoday.planner.intents.IntentQueueBridge
 import app.dottoday.planner.intents.ShareIntake
 import app.dottoday.planner.intents.OngoingDot
@@ -37,7 +38,9 @@ import io.flutter.plugin.common.MethodChannel
  * `dottoday/speech` is dictation with the on-device recognizer only
  * (M14.4, [SpeechBridge]); it stops when the activity pauses.
  * `dottoday/system_events` says when the clock, zone or calendars change
- * ([SystemEvents], docs/04 §4 "Triggers").
+ * ([SystemEvents], docs/04 §4 "Triggers"). `dottoday/alarm` reads and opens
+ * the full-screen-intent permission the Wake Up alarm needs (docs/15 W1a,
+ * [FullScreenIntentBridge]).
  */
 class MainActivity : FlutterFragmentActivity() {
     // Share → Dottoday (M12.4): queued before Flutter reads the intent,
@@ -87,6 +90,7 @@ class MainActivity : FlutterFragmentActivity() {
         ThinkingBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         SpeechBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         DeepWork.attach(this, flutterEngine.dartExecutor.binaryMessenger)
+        FullScreenIntentBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dottoday/ongoing")
             .setMethodCallHandler { call, result ->
                 when (call.method) {

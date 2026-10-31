@@ -60,6 +60,10 @@ Future<List<HealthCheck>> notificationHealthChecks(Ref ref) async {
   final power = await ref.watch(powerStateProvider.future);
   final muted = await ref.watch(mutedSoundsProvider.future);
   final sync = ref.watch(syncStatusProvider).value;
+  final settings = (await ref.watch(currentProfileProvider.future)).settings;
+  final wakeUp = settings.wakeUpAlarm
+      ? await ref.watch(alarmCapabilitiesNowProvider.future)
+      : null;
   final signedIn = sync != null && sync.state != SyncState.localOnly;
   return notificationHealth(
     HealthInputs(
@@ -73,6 +77,7 @@ Future<List<HealthCheck>> notificationHealthChecks(Ref ref) async {
       webPushReady: signedIn && permission == PermissionState.granted,
       clockSkew: sync?.clockSkew,
       mutedSounds: muted,
+      wakeUp: wakeUp,
     ),
   );
 }

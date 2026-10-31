@@ -40,6 +40,7 @@ import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/feedback/feedback_diagnostics.dart';
+import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/battery_optimization.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
@@ -455,6 +456,7 @@ List<Override> timelineOverrides({
   NotificationPermission notificationPermission =
       const UnwiredNotificationPermission(),
   ExactAlarms exactAlarms = const AlwaysExactAlarms(),
+  AlarmCapabilities wakeUpAlarm = const AlarmCapabilities(AlarmTier.alarm),
   String? deviceZone,
   LearningMetaState learningMeta = const LearningMetaState(),
   DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
@@ -514,6 +516,8 @@ List<Override> timelineOverrides({
     // No OS plugin under `flutter test` (M5.1).
     notificationPermissionProvider.overrideWithValue(notificationPermission),
     exactAlarmsProvider.overrideWithValue(exactAlarms),
+    // The full-screen-intent channel has no handler here (docs/15 W1a).
+    alarmGatewayProvider.overrideWithValue(FakeAlarmGateway(wakeUpAlarm)),
     // No platform channel in widget tests (its reply would arrive outside
     // fake time): battery optimisation and DND read as off (M6.5.8).
     batteryOptimizationProvider.overrideWithValue(
@@ -677,4 +681,20 @@ final class FakeAppLockSetting extends AppLockSetting {
 final class _NoLiveActivityDismissal extends LiveActivityDismissed {
   @override
   Future<bool> build() async => false;
+}
+
+/// [AlarmGateway] answering [capabilities] (docs/15 W1a); records fixes.
+final class FakeAlarmGateway implements AlarmGateway {
+  FakeAlarmGateway([
+    this._capabilities = const AlarmCapabilities(AlarmTier.alarm),
+  ]);
+
+  final AlarmCapabilities _capabilities;
+  final fixed = <AlarmBlocker>[];
+
+  @override
+  Future<AlarmCapabilities> capabilities() async => _capabilities;
+
+  @override
+  Future<void> fix(AlarmBlocker blocker) async => fixed.add(blocker);
 }

@@ -37,6 +37,12 @@ OsNotification? composeNotification(
     body = task?.startUtc == null
         ? l10n.notifBedtimeFree
         : l10n.notifBedtimeFirst(task!.title, _time(task.startUtc!, profile));
+  } else if (planned.purpose == NotificationPurpose.wakeUp) {
+    // Never dropped: an alarm whose first block just went still rings.
+    title = l10n.notifWakeUpTitle;
+    body = task?.startUtc == null
+        ? l10n.notifWakeUpBody
+        : l10n.notifWakeUpFirst(task!.title, _time(task.startUtc!, profile));
   } else if (planned.purpose == NotificationPurpose.daySummary) {
     // The first block gone since planning: the next resync re-counts.
     if (task?.startUtc == null) return null;
@@ -64,17 +70,16 @@ OsNotification? composeNotification(
       planned,
       contentHash: notificationContentHash(title, body),
     ),
-    channel: planned.purpose == NotificationPurpose.smallestStep
-        ? NotificationChannelKind.alerts
-        : planned.purpose != NotificationPurpose.task &&
-              planned.purpose != NotificationPurpose.testAlarm
-        ? NotificationChannelKind.summary
-        : planned.loud
+    channel: planned.loud
         ? NotificationChannelKind.alarms
-        : NotificationChannelKind.alerts,
+        : planned.purpose == NotificationPurpose.task ||
+              planned.purpose == NotificationPurpose.smallestStep
+        ? NotificationChannelKind.alerts
+        : NotificationChannelKind.summary,
     silent: planned.silent,
     timeSensitive: planned.timeSensitive,
     loud: planned.loud,
+    alarmClock: planned.purpose == NotificationPurpose.wakeUp,
     withActions: planned.purpose == NotificationPurpose.task,
     startAction: planned.purpose == NotificationPurpose.smallestStep,
     sound: _soundOf(planned),
@@ -89,8 +94,10 @@ OsNotification? composeNotification(
 /// the test alarm, the planner's resolved key for a task reminder (null =
 /// the OS sound), and none for the summaries, Wind Down and Smallest step.
 CatalogueSound? _soundOf(PlannedNotification planned) {
-  // The test alarm sounds like the real first dot (docs/12 D2).
-  if (planned.purpose == NotificationPurpose.testAlarm) {
+  // The test alarm sounds like the real first dot (docs/12 D2); the Wake
+  // Up alarm rings with the Start sound too (docs/15 W1).
+  if (planned.purpose == NotificationPurpose.testAlarm ||
+      planned.purpose == NotificationPurpose.wakeUp) {
     return resolveStartSound(planned.sound);
   }
   if (planned.purpose != NotificationPurpose.task) return null;

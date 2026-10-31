@@ -1,3 +1,4 @@
+import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/notifications/notification_planner.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
@@ -5,7 +6,15 @@ import 'package:dottoday/domain/sync/clock_skew.dart';
 
 /// Where Dottoday runs, for which checks apply (docs/09 M6.5.8). Not a
 /// layout switch: the panel's rows differ because the OSes do.
-enum HealthPlatform { iphone, android, mac, web }
+enum HealthPlatform {
+  iphone,
+  android,
+  mac,
+  web;
+
+  /// Rings the Wake Up alarm (docs/15 W1–W3: mobile only).
+  bool get isPhone => this == iphone || this == android;
+}
 
 /// One thing that decides whether a reminder gets through.
 enum HealthCheckKind {
@@ -33,6 +42,9 @@ enum HealthCheckKind {
 
   /// This device's clock against the server's (M6.5.7).
   clock,
+
+  /// The Wake Up alarm's tier on this phone, when it is on (docs/15 §2).
+  wakeUp,
 }
 
 /// Whether a check needs fixing ([problem]) or is only worth knowing.
@@ -45,6 +57,7 @@ final class HealthCheck {
     this.level, {
     this.skew,
     this.mutedSounds = const [],
+    this.wakeUp,
   });
 
   final HealthCheckKind kind;
@@ -56,17 +69,21 @@ final class HealthCheck {
   /// For [HealthCheckKind.sounds]: the muted sound ids, sorted.
   final List<String> mutedSounds;
 
+  /// For [HealthCheckKind.wakeUp]: what the alarm can do here.
+  final AlarmCapabilities? wakeUp;
+
   @override
   bool operator ==(Object other) =>
       other is HealthCheck &&
       other.kind == kind &&
       other.level == level &&
       other.skew == skew &&
+      other.wakeUp == wakeUp &&
       _sameList(other.mutedSounds, mutedSounds);
 
   @override
   int get hashCode =>
-      Object.hash(kind, level, skew, Object.hashAll(mutedSounds));
+      Object.hash(kind, level, skew, wakeUp, Object.hashAll(mutedSounds));
 
   @override
   String toString() => 'HealthCheck(${kind.name}, ${level.name})';
@@ -83,6 +100,7 @@ final class HealthInputs {
     this.webPushReady = false,
     this.clockSkew,
     this.mutedSounds = const {},
+    this.wakeUp,
   });
 
   final HealthPlatform platform;
@@ -96,6 +114,10 @@ final class HealthInputs {
   /// Sound ids in use (the defaults and pending reminders') whose Android
   /// channel is muted (docs/12 §4).
   final Set<String> mutedSounds;
+
+  /// The Wake Up alarm's capabilities when it is on (docs/15 W1a); null
+  /// when it is off, so the row only shows for someone who uses it.
+  final AlarmCapabilities? wakeUp;
 }
 
 /// The panel's rows for [i], in display order (11 A0 "Notification
@@ -127,6 +149,12 @@ List<HealthCheck> notificationHealth(HealthInputs i) {
         mutedSounds: [...i.mutedSounds]..sort(),
       ),
     ],
+    if (i.wakeUp case final wakeUp? when i.platform.isPhone)
+      HealthCheck(HealthCheckKind.wakeUp, switch (wakeUp.tier) {
+        AlarmTier.alarm => HealthLevel.ok,
+        AlarmTier.timeSensitive => HealthLevel.info,
+        AlarmTier.headsUp || AlarmTier.none => HealthLevel.problem,
+      }, wakeUp: wakeUp),
     if (i.platform == HealthPlatform.iphone || i.platform == HealthPlatform.mac)
       const HealthCheck(HealthCheckKind.focus, HealthLevel.info),
     if (i.platform == HealthPlatform.web)

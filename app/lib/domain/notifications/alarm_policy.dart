@@ -21,7 +21,16 @@ Set<String> loudStartIds(
   Iterable<Occurrence> occurrences,
   tz.Location location, {
   Set<String> routineStartIds = const {},
-}) {
+}) => {...firstDotIds(occurrences, location), ...routineStartIds};
+
+/// The first dot of each local day in [location] that is still planned
+/// (see [loudStartIds] for why a done or skipped first dot hands nothing
+/// on). The Wake Up alarm reads it too (docs/15 W1): a first dot within
+/// [wakeUpQuietWindow] of a ringing Wake Up is a normal notification.
+Set<String> firstDotIds(
+  Iterable<Occurrence> occurrences,
+  tz.Location location,
+) {
   final firstByDay = <DateTime, Occurrence>{};
   for (final o in occurrences) {
     final start = o.startUtc;
@@ -34,9 +43,12 @@ Set<String> loudStartIds(
   return {
     for (final o in firstByDay.values)
       if (o.status == OccurrenceStatus.planned) o.id,
-    ...routineStartIds,
   };
 }
+
+/// How close to a ringing Wake Up alarm the day's first dot stops ringing
+/// loud itself, either side (owner, 2026-10-31): one alarm a morning.
+const wakeUpQuietWindow = Duration(minutes: 30);
 
 /// Earlier start wins; a tie goes to the lower id so the choice is stable.
 bool _earlier(Occurrence a, Occurrence b) {

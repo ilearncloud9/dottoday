@@ -294,3 +294,102 @@ final class BatteryRestrictedProvider
 }
 
 String _$batteryRestrictedHash() => r'02a91a394bd47217a4973c60dae1311158a56e6b';
+
+/// The Wake Up alarm's port (docs/15 W1a): what this device can do and the
+/// fix for each gap.
+
+@ProviderFor(alarmGateway)
+final alarmGatewayProvider = AlarmGatewayProvider._();
+
+/// The Wake Up alarm's port (docs/15 W1a): what this device can do and the
+/// fix for each gap.
+
+final class AlarmGatewayProvider
+    extends $FunctionalProvider<AlarmGateway, AlarmGateway, AlarmGateway>
+    with $Provider<AlarmGateway> {
+  /// The Wake Up alarm's port (docs/15 W1a): what this device can do and the
+  /// fix for each gap.
+  AlarmGatewayProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'alarmGatewayProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$alarmGatewayHash();
+
+  @$internal
+  @override
+  $ProviderElement<AlarmGateway> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AlarmGateway create(Ref ref) {
+    return alarmGateway(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AlarmGateway value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AlarmGateway>(value),
+    );
+  }
+}
+
+String _$alarmGatewayHash() => r'360e78ee770ae0d93f1ecc568ee6aad7f9351f8a';
+
+/// The Wake Up alarm's tier and blockers now; re-read with `ref.invalidate`
+/// (on resume, after a fix).
+
+@ProviderFor(alarmCapabilitiesNow)
+final alarmCapabilitiesNowProvider = AlarmCapabilitiesNowProvider._();
+
+/// The Wake Up alarm's tier and blockers now; re-read with `ref.invalidate`
+/// (on resume, after a fix).
+
+final class AlarmCapabilitiesNowProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<AlarmCapabilities>,
+          AlarmCapabilities,
+          FutureOr<AlarmCapabilities>
+        >
+    with
+        $FutureModifier<AlarmCapabilities>,
+        $FutureProvider<AlarmCapabilities> {
+  /// The Wake Up alarm's tier and blockers now; re-read with `ref.invalidate`
+  /// (on resume, after a fix).
+  AlarmCapabilitiesNowProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'alarmCapabilitiesNowProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$alarmCapabilitiesNowHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<AlarmCapabilities> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<AlarmCapabilities> create(Ref ref) {
+    return alarmCapabilitiesNow(ref);
+  }
+}
+
+String _$alarmCapabilitiesNowHash() =>
+    r'2460f055b05b6cb8082bbf3f250938e148141fd9';

@@ -38,6 +38,45 @@ void main() {
     expect((n.loud, n.timeSensitive), (true, true));
   });
 
+  test('the Wake Up alarm: alarm channel, alarm clock, the day it opens', () {
+    final n = composeNotification(
+      PlannedNotification(
+        id: 1,
+        occurrenceId: task.id,
+        alertIndex: PlannedNotification.wakeUpIndex,
+        fireAtUtc: DateTime.utc(2026, 10, 21, 6),
+        kind: AlertKind.atStart,
+        loud: true,
+        purpose: NotificationPurpose.wakeUp,
+      ),
+      task: task,
+      profile: profileFixture(),
+    )!;
+    expect(n.channel, NotificationChannelKind.alarms);
+    expect((n.loud, n.alarmClock, n.timeSensitive), (true, true, true));
+    expect(n.withActions, isFalse);
+    expect(n.title, 'Wake Up');
+    expect(n.body, startsWith('First: '));
+    expect(n.sound?.id, 'dot_alarm');
+  });
+
+  test('the Wake Up alarm still rings when its first task is gone', () {
+    final n = composeNotification(
+      PlannedNotification(
+        id: 1,
+        occurrenceId: 'gone',
+        alertIndex: PlannedNotification.wakeUpIndex,
+        fireAtUtc: DateTime.utc(2026, 10, 21, 6),
+        kind: AlertKind.atStart,
+        loud: true,
+        purpose: NotificationPurpose.wakeUp,
+      ),
+      task: null,
+      profile: profileFixture(),
+    )!;
+    expect(n.body, 'Good morning.');
+  });
+
   test('a normal dot-start stays on the alerts channel', () {
     final n = compose(loud: false);
     expect(n.channel, NotificationChannelKind.alerts);

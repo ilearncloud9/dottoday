@@ -49,10 +49,12 @@ final class NotificationResponder {
     final planned = decodeNotificationPayload(tap.id ?? 0, tap.payload);
     final action = NotificationAction.fromId(tap.actionId);
     _logger.info('notification.tapped', fields: {'action': action});
-    // The day-start summary is about the day, not its first task.
+    // The day-start summary and the Wake Up alarm are about the day, not
+    // its first task.
     if (planned == null ||
         planned.occurrenceId.isEmpty ||
-        planned.purpose == NotificationPurpose.daySummary) {
+        planned.purpose == NotificationPurpose.daySummary ||
+        planned.purpose == NotificationPurpose.wakeUp) {
       return _open(AppRoutes.today);
     }
     if (action == NotificationAction.open) {

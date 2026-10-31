@@ -7,6 +7,7 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
+import 'package:dottoday/features/settings/widgets/wake_up_alarm_row.dart';
 import 'package:dottoday/features/settings/widgets/weekday_sheet.dart';
 import 'package:dottoday/shared/dot/day_shape_slider.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
@@ -17,15 +18,16 @@ import 'package:dottoday/shared/time_input/time_input_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// DAY SHAPE (`A-ios-settings`): the sun → moon slider, Wake Up, Wind Down,
-/// different days, Week starts, Time format (R-17, R-20).
+/// DAY SHAPE (`A-ios-settings`): the sun → moon slider, Wake Up, its alarm
+/// (docs/15 W1a), Wind Down, different days, Week starts, Time format
+/// (R-17, R-20).
 class DayShapeGroup extends StatelessWidget {
   const DayShapeGroup({required this.settings, super.key});
 
   final Settings settings;
 
-  /// Wake Up and Wind Down alone, "same every day" (minimal Settings rows
-  /// 2–3, docs/14 §4).
+  /// Wake Up, its alarm and Wind Down, "same every day" (minimal Settings
+  /// rows 2–3, docs/14 §4; the alarm is in both layouts, docs/15 §10).
   List<Widget> times(BuildContext context) => _times(context);
 
   @override
@@ -87,6 +89,7 @@ class DayShapeGroup extends StatelessWidget {
           _time(context, l10n.settingsWakeUp, wake, (m) => setWindow(m, bed)),
         ),
       ),
+      WakeUpAlarmRow(on: settings.wakeUpAlarm),
       SettingsRow(
         glyph: DotGlyphs.moon,
         tint: t.tasks[TaskColor.violet].ink,

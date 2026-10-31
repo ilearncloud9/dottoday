@@ -230,6 +230,7 @@ Sweep entries (add a row per screen as it lands):
 | Focus step card on a learned length, explained (+ 2.0 text, RTL) | `test/features/focus/focus_step_learned_golden_test.dart` | derived — docs/13 §5–§6 |
 | Device and web sweep: `settings_learning`, `learned_explained` | `integration_test/support/sweep_m13.dart`, `tool/a11y/web_sweep.mjs` | — |
 | Device and web sweep: `onboarding_layout`, `minimal_today`, `minimal_later`, `minimal_add`, `minimal_task_sheet`, `minimal_settings`, `minimal_everything`; comparison `tool/sweep/compare.mjs` | `integration_test/support/sweep_m16.dart`, `tool/a11y/web_sweep.mjs` | `C-ios-onboarding-mode` |
+| Device sweep: `settings_wake_up` (Day shape with the Wake Up alarm on, its tier line and fix), `health_wake_up` (Notification health's Wake Up row); the switch goes back off. Goldens `settings_health_wake_up_*` per tier | `integration_test/support/sweep_m17.dart` | docs/15 §2, §9 (derived) |
 | Privacy › Help with thinking status: Apple Intelligence off (iPhone; + 2.0 text, RTL, 3 widths), Gemini Nano downloadable, not eligible | `test/features/settings/privacy_ai_status_golden_test.dart` | derived — 11 §B4 AI status |
 | Proposal "simple rules" + `StatusHint` (+ 2.0 text, RTL, 3 widths) | `test/features/proposals/proposal_rules_hint_golden_test.dart` | derived — 10 §5 |
 | Settings › Siri & Shortcuts (iPhone, compact; + 2.0 text, RTL) | `test/features/settings/siri_page_golden_test.dart` | derived — 11 §B6 |

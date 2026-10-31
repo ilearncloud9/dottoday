@@ -60,6 +60,10 @@ abstract class Settings with _$Settings {
     @Default(true) bool runningLateNudge,
     @Default(false) bool rollUnfinished,
     @Default(true) bool bedtimeReminder,
+    // Settings › Day shape › Wake Up alarm (docs/15 W1, M17.1): the Wake Up
+    // time rings like an alarm on phones. A missing key reads as off, so an
+    // upgrade rings nothing new (15 §11); onboarding offers it on.
+    @Default(false) bool wakeUpAlarm,
     // The once-a-day "Plan your inbox" card (docs/02 F3.3): off by default.
     @Default(false) bool inboxNudge,
     // Settings › Calendars › Travel time (M7.5, R-17): off until chosen

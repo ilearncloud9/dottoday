@@ -20,6 +20,10 @@ enum NotificationPurpose {
   /// Smallest step (11 B2, docs/09 M10.6): planned start + 10 min with no
   /// real start and steps to do — "Just `step` · 2 min?" with Start.
   smallestStep,
+
+  /// Settings › Day shape › Wake Up alarm (docs/15 W1, M17.1): loud at the
+  /// Wake Up time on each planned day, on phones only.
+  wakeUp,
 }
 
 /// One notification the OS should hold (docs/04 §6).
@@ -55,6 +59,9 @@ final class PlannedNotification {
   /// Index of the Smallest step reminder (M10.6): one per occurrence.
   static const smallestStepIndex = 9;
 
+  /// Index of the Wake Up alarm (M17.1): one per day.
+  static const wakeUpIndex = 10;
+
   /// Stable OS notification ID; see `notificationIdFor`.
   final int id;
 
@@ -83,6 +90,7 @@ final class PlannedNotification {
   /// Whether iOS should use the time-sensitive interruption level (07 iOS).
   bool get timeSensitive =>
       purpose == NotificationPurpose.testAlarm ||
+      purpose == NotificationPurpose.wakeUp ||
       (purpose == NotificationPurpose.task &&
           kind == AlertKind.atStart &&
           !silent);

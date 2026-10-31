@@ -53,6 +53,39 @@ void main() {
     expect(stepOf(c), OnboardingStep.account);
   });
 
+  testWidgets('allowed on a phone: the Wake Up alarm is offered on', (
+    tester,
+  ) async {
+    final os = _Answers(PermissionState.granted);
+    final c = await pumpOnboarding(tester, progress: _step, permission: os);
+    await tester.ensureVisible(find.text('Allow notifications'));
+    await tester.tap(find.text('Allow notifications'));
+    await tester.pumpAndSettle();
+    // docs/15 W1a: on by default for a new user, saved on Continue.
+    expect(find.text('Wake Up alarm'), findsOneWidget);
+    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Continue'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
+    await tester.pumpAndSettle();
+    final stored = await c.read(settingsRepositoryProvider).findLocalProfile();
+    expect(stored!.settings.wakeUpAlarm, isTrue);
+  });
+
+  testWidgets('the Wake Up alarm turned off here stays off', (tester) async {
+    final os = _Answers(PermissionState.granted);
+    final c = await pumpOnboarding(tester, progress: _step, permission: os);
+    await tester.ensureVisible(find.text('Allow notifications'));
+    await tester.tap(find.text('Allow notifications'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Wake Up alarm'));
+    await tester.tap(find.text('Wake Up alarm'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Continue'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
+    await tester.pumpAndSettle();
+    final stored = await c.read(settingsRepositoryProvider).findLocalProfile();
+    expect(stored!.settings.wakeUpAlarm, isFalse);
+  });
+
   testWidgets('denied: the notice, then Continue', (tester) async {
     final os = _Answers(PermissionState.denied);
     final c = await pumpOnboarding(tester, progress: _step, permission: os);
@@ -61,6 +94,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(stepOf(c), OnboardingStep.reminders);
     expect(find.text('Notifications are off'), findsOneWidget);
+    // Nothing can ring, so the Wake Up alarm isn't offered (docs/15 W1a).
+    expect(find.text('Wake Up alarm'), findsNothing);
     await tester.ensureVisible(find.widgetWithText(FilledButton, 'Continue'));
     await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
     await tester.pumpAndSettle();
