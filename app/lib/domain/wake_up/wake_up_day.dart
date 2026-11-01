@@ -30,15 +30,20 @@ abstract class WakeUpDay with _$WakeUpDay {
 }
 
 /// What the alarm reported, drained from the OS side on launch and resume.
-enum AlarmEventKind { rang, snoozed, stopped }
+/// [mission]: "I'm up" (iOS's Stop) opened a mission the app must show
+/// (15 §8); AlarmKit can't open a link itself.
+enum AlarmEventKind { rang, snoozed, stopped, mission }
 
 /// One alarm event: [id] is the alarm's (`wakeup:<yyyy-MM-dd>`).
 final class AlarmEvent {
-  const AlarmEvent(this.id, this.kind, this.atUtc);
+  const AlarmEvent(this.id, this.kind, this.atUtc, {this.mission});
 
   final String id;
   final AlarmEventKind kind;
   final DateTime atUtc;
+
+  /// A [AlarmEventKind.mission] event's `MissionKind` name.
+  final String? mission;
 
   /// The civil day of a Wake Up alarm, or null for the test alarm and a
   /// Wake Up Check's re-ring (`wakeup:<date>:check`).
@@ -51,10 +56,11 @@ final class AlarmEvent {
       other is AlarmEvent &&
       other.id == id &&
       other.kind == kind &&
-      other.atUtc == atUtc;
+      other.atUtc == atUtc &&
+      other.mission == mission;
 
   @override
-  int get hashCode => Object.hash(id, kind, atUtc);
+  int get hashCode => Object.hash(id, kind, atUtc, mission);
 }
 
 /// [day] after [event]: the first ring counts, each snooze adds one, and
@@ -72,4 +78,24 @@ WakeUpDay applyAlarmEvent(WakeUpDay day, AlarmEvent event) =>
       ),
       AlarmEventKind.snoozed => day.copyWith(snoozes: day.snoozes + 1),
       AlarmEventKind.stopped => day.copyWith(stoppedAtUtc: event.atUtc),
+      // Not up yet: the mission is (15 §8).
+      AlarmEventKind.mission => day,
     };
+
+/// The mission [events] leave open (15 §8): the last one "I'm up" opened
+/// that no later stop ended, as `(date, kind)`, or null.
+///
+/// ```dart
+/// openMission([AlarmEvent('wakeup:2026-11-02', AlarmEventKind.mission,
+///     at, mission: 'walk')]); // ('2026-11-02', 'walk')
+/// ```
+(String, String)? openMission(List<AlarmEvent> events) {
+  for (final e in events.reversed) {
+    if (e.kind == AlarmEventKind.stopped) return null;
+    if (e.kind != AlarmEventKind.mission) continue;
+    final date = e.date;
+    final kind = e.mission;
+    return date == null || kind == null ? null : (date, kind);
+  }
+  return null;
+}

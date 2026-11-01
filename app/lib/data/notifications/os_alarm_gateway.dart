@@ -120,6 +120,7 @@ final class OsAlarmGateway implements AlarmGateway {
       id,
       kind,
       DateTime.fromMillisecondsSinceEpoch(at, isUtc: true),
+      mission: e['mission'] as String?,
     );
   }
 

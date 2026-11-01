@@ -52,10 +52,17 @@ class AlarmEventsDrain extends _$AlarmEventsDrain {
   @override
   void build() {}
 
-  Future<void> run() async {
+  /// Returns the mission location to open when "I'm up" opened one the
+  /// OS side couldn't show itself (iOS, 15 §8), else null.
+  Future<String?> run() async {
     final events = await ref.read(alarmGatewayProvider).drainEvents();
-    if (events.isEmpty) return;
+    if (events.isEmpty) return null;
     await ref.read(wakeUpDayRepositoryProvider).applyEvents(events);
     ref.invalidate(lastWakeUpProvider);
+    return switch (openMission(events)) {
+      (final date, final kind) when AppRoutes.missionKinds.contains(kind) =>
+        AppRoutes.mission(date, kind),
+      _ => null,
+    };
   }
 }

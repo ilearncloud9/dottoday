@@ -62,6 +62,10 @@ import workmanager_apple
     LiveActivityBridge.register(engineBridge.pluginRegistry)
     // The Wake Up alarm on iOS 26+ (docs/15 W1b, ADR-0017).
     AlarmBridge.register(engineBridge.pluginRegistry)
+    // The missions' sensors (docs/15 §8): an in-house bridge, no plugin.
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "MissionSensors") {
+      MissionSensors.register(registrar.messenger())
+    }
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "ThinkingBridge") {
       ThinkingBridge.register(registrar.messenger())
     }

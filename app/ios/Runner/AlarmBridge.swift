@@ -45,6 +45,18 @@ enum AlarmBridge {
       case "drainEvents":
         guard #available(iOS 26.0, *) else { return result([[String: Any]]()) }
         result(WakeUpAlarms.drainEvents())
+      // The mission screen (docs/15 §8): done or skipped, and in use.
+      case "dismiss":
+        let id = (call.arguments as? [String: Any])?["id"] as? String ?? ""
+        if #available(iOS 26.0, *) { WakeUpAlarms.dismiss(id) }
+        result(nil)
+      case "keepMission":
+        let id = (call.arguments as? [String: Any])?["id"] as? String ?? ""
+        guard #available(iOS 26.0, *) else { return result(nil) }
+        Task {
+          await WakeUpAlarms.keepMission(id)
+          result(nil)
+        }
       case "disarmAll":
         if #available(iOS 26.0, *) { WakeUpAlarms.disarmAll() }
         result(nil)
