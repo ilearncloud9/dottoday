@@ -17,8 +17,8 @@ import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Thread callbacks for a day's [blocks]: done toggles (light haptic, §2.4),
@@ -86,7 +86,7 @@ ThreadActions dayThreadActions(
     onToggleDone: (id) async {
       final o = find(id);
       final wasDone = o.status == OccurrenceStatus.done;
-      unawaited(HapticFeedback.lightImpact());
+      AppHaptics.playFor(ref, HapticTick.light);
       report(
         await toggleDone(ref, o),
         (_) => wasDone ? l10n.snackNotDone(o.title) : l10n.snackDone(o.title),

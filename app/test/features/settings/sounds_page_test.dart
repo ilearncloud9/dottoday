@@ -118,6 +118,22 @@ void main() {
     expect((await storedSettings(h)).inAppSoundsEnabled, isFalse);
   });
 
+  testWidgets('Sound effects: Haptics in app switches off, with the note '
+      '(M15.7)', (tester) async {
+    final (h, _) = await _pump(tester);
+    expect(find.text('SOUND EFFECTS'), findsOneWidget);
+    expect(
+      find.text(
+        "Sounds and haptics may not play, depending on your device's settings.",
+      ),
+      findsOneWidget,
+    );
+    await _tap(tester, 'Haptics in app');
+    final s = await storedSettings(h);
+    expect(s.inAppHapticsEnabled, isFalse);
+    expect(s.inAppSoundsEnabled, isTrue, reason: 'its own switch');
+  });
+
   const banner = 'Your device is muted — you may still get vibration';
   testWidgets('muted: the banner says so', (tester) async {
     await _pump(tester, muted: true);

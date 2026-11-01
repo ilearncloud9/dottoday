@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/core/utils/text_fit.dart';
 import 'package:dottoday/shared/dot/week_strip_parts.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 export 'week_strip_parts.dart';
 
@@ -171,7 +171,7 @@ class _DayDropTargetState extends State<_DayDropTarget> {
         final onHover = widget.onHover;
         if (onHover == null || _hover != null) return;
         _hover = Timer(DotTouch.hoverSwitch, () {
-          unawaited(HapticFeedback.selectionClick());
+          AppHaptics.play(context, HapticTick.selection);
           onHover();
         });
       },
@@ -182,7 +182,7 @@ class _DayDropTargetState extends State<_DayDropTarget> {
       onAcceptWithDetails: (details) {
         _hover?.cancel();
         _hover = null;
-        unawaited(HapticFeedback.mediumImpact());
+        AppHaptics.play(context, HapticTick.medium);
         widget.onDrop(details.data);
       },
       builder: (context, candidates, _) =>

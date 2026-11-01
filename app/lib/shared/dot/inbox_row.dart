@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
-import 'package:flutter/services.dart';
 
 part 'inbox_row_parts.dart';
 
@@ -93,7 +93,7 @@ class InboxRow extends StatelessWidget {
               ),
               // The row leaves when the write lands, not on the swipe itself.
               confirmDismiss: (direction) async {
-                unawaited(HapticFeedback.mediumImpact());
+                AppHaptics.play(context, HapticTick.medium);
                 direction == DismissDirection.endToStart
                     ? onSchedule()
                     : onTrash();

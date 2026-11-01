@@ -1,7 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 /// What the mic is doing (docs/10 §3 `MicButton`, docs/09 M14.5).
 enum MicState {
@@ -50,7 +50,7 @@ class MicButton extends StatelessWidget {
             ? null
             : () {
                 // A tick as listening starts or stops (M14.5).
-                HapticFeedback.selectionClick().ignore();
+                AppHaptics.play(context, HapticTick.selection);
                 onPressed();
               },
         constraints: const BoxConstraints.tightFor(

@@ -4248,6 +4248,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get soundsInAppDetail => 'The Done sound and the Focus tick';
 
   @override
+  String get soundsEffectsCaption => 'Sound effects';
+
+  @override
+  String get soundsHapticsInApp => 'Haptics in app';
+
+  @override
+  String get soundsHapticsInAppDetail =>
+      'Taps you feel as you drag, drop and tick a task done';
+
+  @override
+  String get soundsEffectsFooter =>
+      'Sounds and haptics may not play, depending on your device\'s settings.';
+
+  @override
   String get soundInsistentNote =>
       'Loud and repeating. Use it if quieter sounds don\'t reach you.';
 

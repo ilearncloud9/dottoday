@@ -21,8 +21,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Settings › Reminders › Sounds (docs/12 §6; derived from `SettingsGroup`
 /// rows): the default task sound — System sound, None, then Dottoday,
-/// Quiet, Clear, Playful — then Start sound, Done sound and Sounds in app,
-/// and the one credit line. A tap picks and plays; previews always play.
+/// Quiet, Clear, Playful — then Start sound and Done sound, the Sound
+/// effects switches (Sounds and Haptics in app), and the one credit line. A tap picks and plays; previews always play.
 class SoundsPage extends ConsumerWidget {
   const SoundsPage({super.key});
 
@@ -48,6 +48,7 @@ class SoundsPage extends ConsumerWidget {
             },
           ),
           _MoreGroup(settings: settings),
+          _EffectsGroup(settings: settings),
           const _Credits(),
         ],
       ),
@@ -55,7 +56,7 @@ class SoundsPage extends ConsumerWidget {
   }
 }
 
-/// Start sound, Done sound and the Sounds in app switch.
+/// Start sound and Done sound.
 class _MoreGroup extends StatelessWidget {
   const _MoreGroup({required this.settings});
 
@@ -127,6 +128,26 @@ class _MoreGroup extends StatelessWidget {
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+/// Sound effects: the app's own sounds and haptics, each one switch
+/// (docs/12 §2.6), and a note that the device can still silence them.
+class _EffectsGroup extends StatelessWidget {
+  const _EffectsGroup({required this.settings});
+
+  final Settings settings;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    return SettingsGroup(
+      caption: l10n.soundsEffectsCaption,
+      footer: l10n.soundsEffectsFooter,
+      children: [
         SettingsRow(
           glyph: DotGlyphs.sound,
           tint: t.tasks[TaskColor.sky].ink,
@@ -136,6 +157,17 @@ class _MoreGroup extends StatelessWidget {
           onToggle: (on) => changeSettings(
             context,
             (s) => s.copyWith(inAppSoundsEnabled: on),
+          ),
+        ),
+        SettingsRow(
+          glyph: DotGlyphs.haptics,
+          tint: t.tasks[TaskColor.amber].ink,
+          title: l10n.soundsHapticsInApp,
+          subtitle: l10n.soundsHapticsInAppDetail,
+          toggle: settings.inAppHapticsEnabled,
+          onToggle: (on) => changeSettings(
+            context,
+            (s) => s.copyWith(inAppHapticsEnabled: on),
           ),
         ),
       ],

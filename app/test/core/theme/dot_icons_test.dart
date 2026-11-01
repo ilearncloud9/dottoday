@@ -29,6 +29,7 @@ final _glyphs = <String, DotGlyph>{
   'bell': DotGlyphs.bell,
   'bellOff': DotGlyphs.bellOff,
   'sound': DotGlyphs.sound,
+  'haptics': DotGlyphs.haptics,
   'clock': DotGlyphs.clock,
   'timer': DotGlyphs.timer,
   'calendar': DotGlyphs.calendar,
