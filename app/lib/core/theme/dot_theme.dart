@@ -161,6 +161,8 @@ ThemeData _build(DotColors c) {
       backgroundColor: c.raised,
       surfaceTintColor: Colors.transparent,
     ),
+    // Shown on a hover, not on a sweep (DotTouch.tooltipWait).
+    tooltipTheme: const TooltipThemeData(waitDuration: DotTouch.tooltipWait),
     extensions: [
       DotTheme(colors: c, styles: type, tasks: TaskPalette.resolve(c)),
     ],

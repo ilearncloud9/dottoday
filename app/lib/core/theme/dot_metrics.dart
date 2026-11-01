@@ -192,6 +192,12 @@ abstract final class DotTouch {
   /// Hold a dragged task over a week-strip day this long and the view
   /// pages to that day (Structured's hover, ADR-0015).
   static const hoverSwitch = Duration(milliseconds: 700);
+
+  /// A mouse rests on a control this long before its tooltip shows, so a
+  /// control that slides under a resting pointer (a sheet opening) shows
+  /// none. A tooltip's overlay re-parents the routes' semantics, and on the
+  /// web that drops the focused field's keys (CI a11y-web, 2026-11-01).
+  static const tooltipWait = Duration(milliseconds: 500);
 }
 
 /// Shadow of floating elements: tab bar, FAB, menus (docs/10 §2.3).
