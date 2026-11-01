@@ -9,6 +9,7 @@ import 'package:dottoday/domain/time/wind_down.dart';
 import 'package:dottoday/features/timeline/state/day_ends.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/pickers/sleep_stepper.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,7 +51,7 @@ class ReviewNightLine extends ConsumerWidget {
 }
 
 /// The one-time sleep offer for existing users (docs/15 §11, W6): "New:
-/// tell Dottoday how much sleep you want…" with a slider (8 h to start),
+/// tell Dottoday how much sleep you want…" with a stepper (8 h to start),
 /// Set and Not now. Either answer retires it for good
 /// (`sleepOfferAnswered`); Set writes the target, and Wind Down follows
 /// from tomorrow's first dot.
@@ -68,20 +69,14 @@ class _SleepOfferState extends State<SleepOffer> {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final choices = sleepTargetChoices;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(l10n.reviewSleepOffer, style: t.styles.body),
-        Slider(
-          value: choices.indexOf(_minutes).toDouble(),
-          max: choices.length - 1,
-          divisions: choices.length - 1,
-          label: formatDurationShort(l10n, _minutes),
-          semanticFormatterCallback: (_) => formatDurationShort(l10n, _minutes),
-          onChanged: (i) => setState(() => _minutes = choices[i.round()]),
+        SleepStepper(
+          minutes: _minutes,
+          onChanged: (m) => setState(() => _minutes = m),
         ),
-        Text(formatDurationShort(l10n, _minutes), style: t.styles.rowMeta),
         Wrap(
           spacing: DotSpace.s,
           children: [

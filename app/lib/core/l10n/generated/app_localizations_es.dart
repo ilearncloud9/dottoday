@@ -6078,6 +6078,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get sleepLess => 'Menos sueño';
+
+  @override
+  String get sleepMore => 'Más sueño';
+
+  @override
   String get releaseNotes120 =>
       'Alarma al despertar: actívala en Ajustes › Forma del día y tu hora de despertar suena los días que tienes planificados — como una alarma en Android y en iPhones con iOS 26, como notificación urgente en iPhones anteriores. Elige su sonido y posponer en Sonido y posponer, con una alarma de prueba. Nada suena hasta que la actives.\nSonidos: 48 sonidos de recordatorio que combinan bien. Elige uno para todas tus tareas o da a una tarea el suyo; tu primera tarea del día suena con tu sonido de inicio.\nSolo el siguiente punto: un diseño mínimo que puedes elegir cuando quieras, sin perder nada. Hoy muestra tu hilo, la fecha y un menú.\nArrastra una tarea a cualquier parte del día, incluso encima de otra: las tareas que se solapan hacen un pequeño nudo en el hilo.\nLa hora de dormir ahora es Desconexión. Los dos extremos de tu día son puntos, un sol y una luna; toca uno para cambiar su hora.\nLos iconos se rellenan solos: escribe «Gimnasio» y la tarea recibe una mancuerna, entre 524 iconos.\nLa noche: dile a Dottoday cuánto quieres dormir y la desconexión se adelanta antes de una mañana temprana. El punto del día muestra la noche, y el repaso de la desconexión empieza por ella.';
 

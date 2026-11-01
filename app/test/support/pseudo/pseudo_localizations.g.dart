@@ -4784,6 +4784,12 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.onboardingWindDownLive(time, length));
 
   @override
+  String get sleepLess => pseudo(super.sleepLess);
+
+  @override
+  String get sleepMore => pseudo(super.sleepMore);
+
+  @override
   String get releaseNotes120 => pseudo(super.releaseNotes120);
 
   @override

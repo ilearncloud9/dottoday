@@ -11,6 +11,7 @@ import 'package:dottoday/domain/time/wind_down.dart';
 import 'package:dottoday/features/onboarding/steps/step_frame.dart';
 import 'package:dottoday/shared/dot/day_shape_slider.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/pickers/sleep_stepper.dart';
 import 'package:dottoday/shared/time_input/time_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -107,14 +108,9 @@ class _DayShapeStepState extends ConsumerState<DayShapeStep> {
       children: [
         const SizedBox(height: DotSpace.l),
         Text(l10n.onboardingSleepTarget, style: t.styles.rowTitle),
-        Slider(
-          value: index.toDouble(),
-          max: choices.length - 1,
-          divisions: choices.length - 1,
-          label: formatDurationShort(l10n, choices[index]),
-          semanticFormatterCallback: (_) =>
-              formatDurationShort(l10n, choices[index]),
-          onChanged: (i) => _save(wake, _windDownFor(wake, choices[i.round()])),
+        SleepStepper(
+          minutes: choices[index],
+          onChanged: (m) => _save(wake, _windDownFor(wake, m)),
         ),
         Text(
           l10n.onboardingWindDownLive(

@@ -9066,6 +9066,18 @@ abstract class AppLocalizations {
   /// **'Wind Down {time} · {length} of sleep'**
   String onboardingWindDownLive(String time, String length);
 
+  /// Sleep target stepper: the minus button.
+  ///
+  /// In en, this message translates to:
+  /// **'Less sleep'**
+  String get sleepLess;
+
+  /// Sleep target stepper: the plus button.
+  ///
+  /// In en, this message translates to:
+  /// **'More sleep'**
+  String get sleepMore;
+
   /// What's new in 1.2.0 (M15 sounds, M16 minimal layout, the Structured-style day, M17 Wake Up alarm), one item per line (PRD F11).
   ///
   /// In en, this message translates to:
