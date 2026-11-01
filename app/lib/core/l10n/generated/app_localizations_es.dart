@@ -6299,6 +6299,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get oneThingInInbox => 'en tu bandeja de entrada';
 
   @override
+  String windDownLearnOffer(int usual, int more) {
+    return 'Sueles levantarte ~$usual min después de Wake Up. ¿Adelantar Wind Down $more min?';
+  }
+
+  @override
+  String get windDownLearnMove => 'Adelantar';
+
+  @override
+  String get windDownLearnKeep => 'Dejarlo';
+
+  @override
+  String get settingsWindDownLearn =>
+      'Proponer mover Wind Down según cuándo me levanto';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

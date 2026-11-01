@@ -29,6 +29,18 @@ final class DriftWakeUpDayRepository implements WakeUpDayRepository {
   }
 
   @override
+  Future<List<WakeUpDay>> recentStops(int limit) async {
+    final t = _db.wakeUpDaysTable;
+    final rows =
+        await (_db.select(t)
+              ..where((d) => d.stoppedAtUtc.isNotNull())
+              ..orderBy([(d) => OrderingTerm.desc(d.date)])
+              ..limit(limit))
+            .get();
+    return [for (final r in rows) ?_toDay(r)];
+  }
+
+  @override
   Future<void> applyEvents(List<AlarmEvent> events) =>
       _db.transaction(() async {
         for (final event in events) {

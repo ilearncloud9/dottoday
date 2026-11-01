@@ -9,6 +9,10 @@ abstract interface class WakeUpDayRepository {
   /// health's "Last wake-up" line.
   Future<WakeUpDay?> lastAlarm();
 
+  /// The newest [limit] days whose alarm "I'm up" stopped, newest first,
+  /// for how long after Wake Up the user usually gets up (15 §7b).
+  Future<List<WakeUpDay>> recentStops(int limit);
+
   /// Folds [events] into their days, in order (one transaction).
   Future<void> applyEvents(List<AlarmEvent> events);
 

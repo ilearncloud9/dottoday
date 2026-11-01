@@ -100,6 +100,11 @@ abstract class Settings with _$Settings {
     int? sleepTargetMin,
     @Default(true) bool showNightArc,
     @Default(false) bool sleepOfferAnswered,
+    // The learned offer (15 §7b): "You usually get up ~12 min after Wake
+    // Up. Move Wind Down 15 min earlier?" Its switch, and when it was last
+    // answered: never again inside 30 days.
+    @Default(true) bool windDownLearnOffer,
+    @UtcMillisConverter() DateTime? windDownLearnOfferAt,
     // Missions (15 §8, M17.7): which mornings ask for one (off by default),
     // the chosen days, the mission and Walk's steps, a backup for mornings
     // the mission can't run, and the once-only offer to turn them off.
