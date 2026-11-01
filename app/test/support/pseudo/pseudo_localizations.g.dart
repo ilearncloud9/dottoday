@@ -5020,6 +5020,19 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.healthWakeUpBatteryDetail);
 
   @override
+  String windDownLearnOffer(int usual, int more) =>
+      pseudo(super.windDownLearnOffer(usual, more));
+
+  @override
+  String get windDownLearnMove => pseudo(super.windDownLearnMove);
+
+  @override
+  String get windDownLearnKeep => pseudo(super.windDownLearnKeep);
+
+  @override
+  String get settingsWindDownLearn => pseudo(super.settingsWindDownLearn);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

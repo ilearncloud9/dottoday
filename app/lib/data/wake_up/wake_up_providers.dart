@@ -9,6 +9,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:dottoday/domain/wake_up/one_thing.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
+import 'package:dottoday/domain/wake_up/wind_down_learn.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -32,6 +33,29 @@ String? todayOneThingId(Ref ref) {
     profile.settings.oneThing,
     wakeUpDateKey(now, profile.tzId),
   );
+}
+
+/// The learned Wind Down offer due now (docs/15 §7b): how long after Wake
+/// Up the user usually gets up on this phone, and the minutes Wind Down
+/// would move earlier; null when it isn't due.
+@riverpod
+Future<({int usual, int more})?> learnedWindDownOffer(Ref ref) async {
+  final profile = await ref.watch(currentProfileProvider.future);
+  final now = ref.watch(clockProvider).nowUtc();
+  final days = await ref
+      .watch(wakeUpDayRepositoryProvider)
+      .recentStops(learnWakeUpDays);
+  final usual = medianDismissOffsetMin(
+    days,
+    settings: profile.settings,
+    location: tz.getLocation(profile.tzId),
+  );
+  final more = windDownLearnOfferMin(
+    profile.settings,
+    offsetMin: usual,
+    nowUtc: now,
+  );
+  return usual == null || more == null ? null : (usual: usual, more: more);
 }
 
 /// The sensors the missions read (docs/15 §8); tests override it.

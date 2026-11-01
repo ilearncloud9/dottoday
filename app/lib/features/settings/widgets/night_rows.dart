@@ -5,6 +5,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/time/wind_down.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
+import 'package:dottoday/features/settings/widgets/wind_down_learn_offer.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/choice_sheet.dart';
@@ -12,7 +13,8 @@ import 'package:flutter/material.dart';
 
 /// Settings › Day shape's night rows (docs/15 W4, W6, §9): the sleep target
 /// (off, or 6 h–10 h), which pulls Wind Down earlier before an early
-/// tomorrow, and whether the day dot shows the night.
+/// tomorrow, with the learned offer and its switch while one is set, and
+/// whether the day dot shows the night.
 List<Widget> nightRows(BuildContext context, Settings settings) {
   final t = DotTheme.of(context);
   final l10n = context.l10n;
@@ -27,7 +29,18 @@ List<Widget> nightRows(BuildContext context, Settings settings) {
           ? l10n.settingsSleepTargetOff
           : formatDurationShort(l10n, target),
       onTap: () => unawaited(_pickTarget(context, target)),
+      // The learned offer (15 §7b), only while Wind Down follows a target.
+      below: target == null ? null : const WindDownLearnOffer(),
     ),
+    if (target != null)
+      SettingsRow(
+        glyph: DotGlyphs.sunrise,
+        tint: t.tasks[TaskColor.violet].ink,
+        title: l10n.settingsWindDownLearn,
+        toggle: settings.windDownLearnOffer,
+        onToggle: (v) =>
+            changeSettings(context, (s) => s.copyWith(windDownLearnOffer: v)),
+      ),
     SettingsRow(
       glyph: DotGlyphs.freeRing,
       tint: t.tasks[TaskColor.violet].ink,

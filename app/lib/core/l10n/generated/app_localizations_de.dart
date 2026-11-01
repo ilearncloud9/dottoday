@@ -6353,6 +6353,21 @@ class AppLocalizationsDe extends AppLocalizations {
       'Lass Dottoday ohne Akku-Einschränkung laufen, damit er nach einem Neustart bereit ist.';
 
   @override
+  String windDownLearnOffer(int usual, int more) {
+    return 'Du stehst meist ~$usual Min. nach Wake Up auf. Wind Down $more Min. früher legen?';
+  }
+
+  @override
+  String get windDownLearnMove => 'Verschieben';
+
+  @override
+  String get windDownLearnKeep => 'Lassen';
+
+  @override
+  String get settingsWindDownLearn =>
+      'Anbieten, Wind Down danach zu richten, wann ich aufstehe';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

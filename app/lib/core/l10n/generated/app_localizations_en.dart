@@ -6314,6 +6314,21 @@ class AppLocalizationsEn extends AppLocalizations {
       'Let Dottoday run without battery limits so it\'s ready after a restart.';
 
   @override
+  String windDownLearnOffer(int usual, int more) {
+    return 'You usually get up ~$usual min after Wake Up. Move Wind Down $more min earlier?';
+  }
+
+  @override
+  String get windDownLearnMove => 'Move it';
+
+  @override
+  String get windDownLearnKeep => 'Keep it';
+
+  @override
+  String get settingsWindDownLearn =>
+      'Offer to move Wind Down from how I actually get up';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

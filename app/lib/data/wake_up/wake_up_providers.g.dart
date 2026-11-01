@@ -60,6 +60,59 @@ final class TodayOneThingIdProvider
 
 String _$todayOneThingIdHash() => r'8a94f660fbe6346a4054e69f35fde23ff39ed293';
 
+/// The learned Wind Down offer due now (docs/15 §7b): how long after Wake
+/// Up the user usually gets up on this phone, and the minutes Wind Down
+/// would move earlier; null when it isn't due.
+
+@ProviderFor(learnedWindDownOffer)
+final learnedWindDownOfferProvider = LearnedWindDownOfferProvider._();
+
+/// The learned Wind Down offer due now (docs/15 §7b): how long after Wake
+/// Up the user usually gets up on this phone, and the minutes Wind Down
+/// would move earlier; null when it isn't due.
+
+final class LearnedWindDownOfferProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<({int more, int usual})?>,
+          ({int more, int usual})?,
+          FutureOr<({int more, int usual})?>
+        >
+    with
+        $FutureModifier<({int more, int usual})?>,
+        $FutureProvider<({int more, int usual})?> {
+  /// The learned Wind Down offer due now (docs/15 §7b): how long after Wake
+  /// Up the user usually gets up on this phone, and the minutes Wind Down
+  /// would move earlier; null when it isn't due.
+  LearnedWindDownOfferProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'learnedWindDownOfferProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$learnedWindDownOfferHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<({int more, int usual})?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<({int more, int usual})?> create(Ref ref) {
+    return learnedWindDownOffer(ref);
+  }
+}
+
+String _$learnedWindDownOfferHash() =>
+    r'e8ff06c3f17c716e245f73450f9622b3f2b9b581';
+
 /// The sensors the missions read (docs/15 §8); tests override it.
 
 @ProviderFor(missionSensors)

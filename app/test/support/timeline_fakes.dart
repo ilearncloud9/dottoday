@@ -856,6 +856,12 @@ final class FakeWakeUpDayRepository implements WakeUpDayRepository {
   }
 
   @override
+  Future<List<WakeUpDay>> recentStops(int limit) async => ([
+    for (final d in _days.values)
+      if (d.stoppedAtUtc != null) d,
+  ]..sort((a, b) => b.date.compareTo(a.date))).take(limit).toList();
+
+  @override
   Future<void> applyEvents(List<AlarmEvent> events) async {
     for (final e in events) {
       final date = e.date;

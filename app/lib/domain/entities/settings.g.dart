@@ -88,6 +88,11 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   sleepTargetMin: (json['sleepTargetMin'] as num?)?.toInt(),
   showNightArc: json['showNightArc'] as bool? ?? true,
   sleepOfferAnswered: json['sleepOfferAnswered'] as bool? ?? false,
+  windDownLearnOffer: json['windDownLearnOffer'] as bool? ?? true,
+  windDownLearnOfferAt: _$JsonConverterFromJson<int, DateTime>(
+    json['windDownLearnOfferAt'],
+    const UtcMillisConverter().fromJson,
+  ),
   missionMode:
       $enumDecodeNullable(_$MissionModeEnumMap, json['missionMode']) ??
       MissionMode.off,
@@ -175,6 +180,11 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'sleepTargetMin': instance.sleepTargetMin,
   'showNightArc': instance.showNightArc,
   'sleepOfferAnswered': instance.sleepOfferAnswered,
+  'windDownLearnOffer': instance.windDownLearnOffer,
+  'windDownLearnOfferAt': _$JsonConverterToJson<int, DateTime>(
+    instance.windDownLearnOfferAt,
+    const UtcMillisConverter().toJson,
+  ),
   'missionMode': _$MissionModeEnumMap[instance.missionMode]!,
   'missionDays': instance.missionDays.map((e) => _$WeekdayEnumMap[e]!).toList(),
   'missionKind': _$MissionKindEnumMap[instance.missionKind]!,
@@ -218,6 +228,11 @@ const _$ThemePreferenceEnumMap = {
   ThemePreference.dark: 'dark',
 };
 
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) => json == null ? null : fromJson(json as Json);
+
 const _$MissionModeEnumMap = {
   MissionMode.off: 'off',
   MissionMode.whenAsked: 'whenAsked',
@@ -234,11 +249,6 @@ const _$MissionKindEnumMap = {
   MissionKind.catchDot: 'catchDot',
   MissionKind.oneThing: 'oneThing',
 };
-
-Value? _$JsonConverterFromJson<Json, Value>(
-  Object? json,
-  Value? Function(Json json) fromJson,
-) => json == null ? null : fromJson(json as Json);
 
 const _$UiLayoutEnumMap = {UiLayout.minimal: 'minimal', UiLayout.full: 'full'};
 
