@@ -54,13 +54,15 @@ abstract final class AppHaptics {
   /// touch feedback, which System Haptics (iOS) and Touch feedback
   /// (Android) switch off, so the in-app switch alone decides.
   @visibleForTesting
-  static const channel = MethodChannel('dottoday/haptics');
+  static const channel = MethodChannel('dottoday/haptics'); // l10n-ignore: channel name, not copy
 
   /// Plays [tick] with no check: only for a caller that already asked
   /// [enabledOf] (a gesture recognizer has no context of its own).
   static void fire(HapticTick tick) {
     // A Mac and the web have no bridge (no haptics); the missing plugin
     // there is expected, so the call's outcome is not waited on.
-    channel.invokeMethod<bool>('play', tick.name).ignore();
+    channel.invokeMethod<bool>(_play, tick.name).ignore();
   }
+
+  static const _play = 'play'; // l10n-ignore: method name, not copy
 }
