@@ -24,6 +24,11 @@ enum NotificationPurpose {
   /// Settings › Day shape › Wake Up alarm (docs/15 W1, M17.1): loud at the
   /// Wake Up time on each planned day, on phones only.
   wakeUp,
+
+  /// Settings › Planning › Start nudge (15 §11, A0): planned start + 10
+  /// min with no real start on a dot without steps — "Start `dot`?" with
+  /// Start.
+  startNudge,
 }
 
 /// One notification the OS should hold (docs/04 §6).
@@ -61,6 +66,9 @@ final class PlannedNotification {
 
   /// Index of the Wake Up alarm (M17.1): one per day.
   static const wakeUpIndex = 10;
+
+  /// Index of the Start nudge: one per occurrence (15 §11).
+  static const startNudgeIndex = 11;
 
   /// Stable OS notification ID; see `notificationIdFor`.
   final int id;

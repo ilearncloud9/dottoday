@@ -56,6 +56,11 @@ OsNotification? composeNotification(
     if (task == null || step == null) return null;
     title = smallestStepText(l10n, step);
     body = task.title;
+  } else if (planned.purpose == NotificationPurpose.startNudge) {
+    // Started or gone since planning: the next resync drops it.
+    if (task == null) return null;
+    title = l10n.startNudgeTitle(task.title);
+    body = l10n.startNudgeBody;
   } else {
     if (task == null) return null;
     title = task.title;
@@ -73,7 +78,8 @@ OsNotification? composeNotification(
     channel: planned.loud
         ? NotificationChannelKind.alarms
         : planned.purpose == NotificationPurpose.task ||
-              planned.purpose == NotificationPurpose.smallestStep
+              planned.purpose == NotificationPurpose.smallestStep ||
+              planned.purpose == NotificationPurpose.startNudge
         ? NotificationChannelKind.alerts
         : NotificationChannelKind.summary,
     silent: planned.silent,
@@ -81,7 +87,9 @@ OsNotification? composeNotification(
     loud: planned.loud,
     alarmClock: planned.purpose == NotificationPurpose.wakeUp,
     withActions: planned.purpose == NotificationPurpose.task,
-    startAction: planned.purpose == NotificationPurpose.smallestStep,
+    startAction:
+        planned.purpose == NotificationPurpose.smallestStep ||
+        planned.purpose == NotificationPurpose.startNudge,
     sound: _soundOf(planned),
     soundOff:
         planned.purpose == NotificationPurpose.task &&

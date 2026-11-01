@@ -52,6 +52,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | W1 Wake Up alarm | M17 | Simplified | Settings › Wake Up alarm shows the switch and the alarm sound; vary, ramp and snooze under More options. The ringing screen is the time, one big "I'm up" and Snooze as a link (docs/15 §10) |
 | W2 Wake Up card | M17 | Simplified | Opens only after "I'm up" (or its notification), never by itself on first open. The first dot and Start the day; the late-start line when it applies; the day dot, the next dots and the chips behind "Show my day" (docs/15 §10) |
 | W3 Wake Up Check | M17 | Shown | Identical: already one line and one Start (docs/15 §10); its settings under More options |
+| A0 Start nudge | M17 | Shown | Identical: one "Start <dot>?" notification with Start; its switch is in Settings › Planning, which minimal Settings reaches through Everything else… |
 | W4 + W6 Sleep target and the night | M17 | Shown | Unchanged: the onboarding sleep slider, the night on the day dot, the review's first line and the Wind Down nudge's words are geometry and copy, not chrome (docs/15 §7b) |
 | W5 Missions (modes, rules, skip offer) | M17 | Simplified | Settings › Wake Up shows one Missions row (the mode); kind, steps, days and backup under More options. The mission screen is the same: the ring, one line and "Can't right now" (docs/15 §8) |
 | W5 Stand up | M17 | Shown | Identical: one line and a live "upright" state |

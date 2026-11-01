@@ -6264,6 +6264,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get missionOffOfferKeep => 'Mantenerlas';
 
   @override
+  String startNudgeTitle(String title) {
+    return '¿Empezar $title?';
+  }
+
+  @override
+  String get startNudgeBody => 'Toca Empezar cuando quieras.';
+
+  @override
+  String get settingsStartNudge => 'Preguntar si un punto no ha empezado';
+
+  @override
+  String get settingsStartNudgeDetail =>
+      '10 minutos después de su inicio, un aviso suave: «¿Empezar Correr?»';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

@@ -92,6 +92,10 @@ abstract class Settings with _$Settings {
     @Default(true) bool wakeUpCheck,
     @Default(10) int wakeUpCheckMin,
     @Default(false) bool wakeUpCheckLoud,
+    // "Start <dot>?" (15 §11, A0 dot-start input of StartEscalation): one
+    // gentle ping when a dot without steps hasn't started 10 min in. Off by
+    // default, so nothing rings differently until the user says yes.
+    @Default(false) bool startNudge,
     // The night (15 W4, W6, M17.5): a sleep target in minutes (null = off;
     // a new account starts at 8 h from onboarding) makes Wind Down follow
     // tomorrow's Wake Up; the night shows on the day dot; and the one-time

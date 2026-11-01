@@ -16,7 +16,8 @@ import 'package:go_router/go_router.dart';
 
 /// PLANNING (`A-ios-settings`) plus PRD F8's snapping and shift default:
 /// Default duration, Snap to, Shift later tasks, Show free time,
-/// Running-late nudge, Plan-your-inbox nudge (F3.3), Roll unfinished to
+/// Running-late nudge, Start nudge (docs/15 §11), Plan-your-inbox nudge
+/// (F3.3), Roll unfinished to
 /// tomorrow (R-16, R-17), Low-energy mode (11 D2) and the way to
 /// Routines (11 C2). Energy suggestions moved to LEARNING (docs/13 §4.1).
 class PlanningGroup extends StatelessWidget {
@@ -66,6 +67,16 @@ class PlanningGroup extends StatelessWidget {
           toggle: settings.runningLateNudge,
           onToggle: (v) =>
               changeSettings(context, (s) => s.copyWith(runningLateNudge: v)),
+        ),
+        // "Start <dot>?" (15 §11): off until the user says yes.
+        SettingsRow(
+          glyph: DotGlyphs.bell,
+          tint: t.tasks[TaskColor.amber].ink,
+          title: l10n.settingsStartNudge,
+          subtitle: l10n.settingsStartNudgeDetail,
+          toggle: settings.startNudge,
+          onToggle: (v) =>
+              changeSettings(context, (s) => s.copyWith(startNudge: v)),
         ),
         // PRD F3.3: off by default, once a day from Wake Up.
         SettingsRow(
