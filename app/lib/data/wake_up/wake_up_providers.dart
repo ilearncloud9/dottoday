@@ -4,6 +4,7 @@ import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/wake_up/channel_mission_sensors.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,6 +20,12 @@ String wakeUpDateKey(DateTime nowUtc, String tzId) =>
 /// The sensors the missions read (docs/15 §8); tests override it.
 @Riverpod(keepAlive: true)
 MissionSensors missionSensors(Ref ref) => const ChannelMissionSensors();
+
+/// Whether this device can run [kind] now (15 §8), re-read when Settings
+/// asks for a permission.
+@riverpod
+Future<MissionSupport> missionSupport(Ref ref, MissionKind kind) =>
+    ref.watch(missionSensorsProvider).support(kind);
 
 /// Today's row on this device, null until the alarm or the card did
 /// something (docs/15 §3, M17.3).

@@ -1,9 +1,8 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
 import 'package:dottoday/shared/pickers/repeat/repeat_end.dart';
-import 'package:dottoday/shared/pickers/repeat/repeat_text.dart';
+import 'package:dottoday/shared/pickers/weekday_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -72,14 +71,22 @@ class RepeatChoices extends StatelessWidget {
   }
 
   List<Widget> _controls(RepeatChoice c) => switch (c) {
-    RepeatChoice.weekly => [_Days(rule: rule, onRule: onRule)],
+    RepeatChoice.weekly => [
+      WeekdayChips(
+        days: rule.days,
+        onChanged: (days) => onRule((r) => r.copyWith(days: days)),
+      ),
+    ],
     RepeatChoice.monthly => [
       _MonthlyBy(rule: rule, start: start, onRule: onRule),
     ],
     RepeatChoice.custom => [
       _Interval(rule: rule, onRule: onRule),
       if (rule.frequency == RepeatFrequency.weekly)
-        _Days(rule: rule, onRule: onRule),
+        WeekdayChips(
+          days: rule.days,
+          onChanged: (days) => onRule((r) => r.copyWith(days: days)),
+        ),
       if (rule.frequency == RepeatFrequency.monthly)
         _MonthlyBy(rule: rule, start: start, onRule: onRule),
     ],
@@ -109,37 +116,6 @@ class _Row extends StatelessWidget {
             : null,
         onTap: onTap,
       ),
-    );
-  }
-}
-
-/// Weekday chips for a weekly rule; at least one stays on.
-class _Days extends StatelessWidget {
-  const _Days({required this.rule, required this.onRule});
-
-  final RepeatRule rule;
-  final ValueChanged<RepeatRule Function(RepeatRule)> onRule;
-
-  @override
-  Widget build(BuildContext context) {
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    return Wrap(
-      spacing: DotSpace.xs,
-      runSpacing: DotSpace.xs,
-      children: [
-        for (final d in Weekday.values)
-          FilterChip(
-            label: Text(weekdayShort(locale, d)),
-            selected: rule.days.contains(d),
-            shape: dotChipShape(context),
-            showCheckmark: false,
-            onSelected: (on) => onRule((r) {
-              final days = {...r.days};
-              on ? days.add(d) : days.remove(d);
-              return days.isEmpty ? r : r.copyWith(days: days);
-            }),
-          ),
-      ],
     );
   }
 }

@@ -54,6 +54,95 @@ final class MissionSensorsProvider
 
 String _$missionSensorsHash() => r'1f3af2a30c5704b92683a86ac3a118e3e85efd64';
 
+/// Whether this device can run [kind] now (15 §8), re-read when Settings
+/// asks for a permission.
+
+@ProviderFor(missionSupport)
+final missionSupportProvider = MissionSupportFamily._();
+
+/// Whether this device can run [kind] now (15 §8), re-read when Settings
+/// asks for a permission.
+
+final class MissionSupportProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<MissionSupport>,
+          MissionSupport,
+          FutureOr<MissionSupport>
+        >
+    with $FutureModifier<MissionSupport>, $FutureProvider<MissionSupport> {
+  /// Whether this device can run [kind] now (15 §8), re-read when Settings
+  /// asks for a permission.
+  MissionSupportProvider._({
+    required MissionSupportFamily super.from,
+    required MissionKind super.argument,
+  }) : super(
+         retry: null,
+         name: r'missionSupportProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$missionSupportHash();
+
+  @override
+  String toString() {
+    return r'missionSupportProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<MissionSupport> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<MissionSupport> create(Ref ref) {
+    final argument = this.argument as MissionKind;
+    return missionSupport(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MissionSupportProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$missionSupportHash() => r'01e9bc7cd84b1cb5b8201048cb42712234f6ba47';
+
+/// Whether this device can run [kind] now (15 §8), re-read when Settings
+/// asks for a permission.
+
+final class MissionSupportFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<MissionSupport>, MissionKind> {
+  MissionSupportFamily._()
+    : super(
+        retry: null,
+        name: r'missionSupportProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Whether this device can run [kind] now (15 §8), re-read when Settings
+  /// asks for a permission.
+
+  MissionSupportProvider call(MissionKind kind) =>
+      MissionSupportProvider._(argument: kind, from: this);
+
+  @override
+  String toString() => r'missionSupportProvider';
+}
+
 /// Today's row on this device, null until the alarm or the card did
 /// something (docs/15 §3, M17.3).
 
