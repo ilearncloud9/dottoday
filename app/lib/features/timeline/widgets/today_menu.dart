@@ -8,6 +8,7 @@ import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_sheet.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
+import 'package:dottoday/features/timeline/one_thing/one_thing_sheet.dart';
 import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/copy_day_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/day_review.dart';
@@ -88,6 +89,11 @@ class TodayMenu extends ConsumerWidget {
           PopupMenuItem<void>(
             onTap: () => unawaited(showBrainDump(context, today)),
             child: Text(l10n.dumpTitle),
+          ),
+          // Today's one thing (15 §8, owner 2026-11-01): any time of day.
+          PopupMenuItem<void>(
+            onTap: () => unawaited(showOneThingSheet(context)),
+            child: Text(l10n.oneThingMenu),
           ),
           // Low-energy mode (11 D2, M12.2): on until the next Wake Up.
           PopupMenuItem<void>(

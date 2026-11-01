@@ -34,8 +34,13 @@ class InboxRow extends StatelessWidget {
     this.reorderIndex,
     this.onMoveUp,
     this.onMoveDown,
+    this.oneThing = false,
     super.key,
   });
+
+  /// Today's one thing (docs/15 §8): the dot's accent ring. The caller's
+  /// [meta] says "Your one thing", so it never relies on colour.
+  final bool oneThing;
 
   /// Null when not selecting; otherwise whether this row is picked (a tap
   /// — [onOpen] — then toggles it).
@@ -181,6 +186,7 @@ class _Card extends StatelessWidget {
                     icon: row.icon,
                     state: DotState.upcoming,
                     label: row.title,
+                    oneThing: row.oneThing,
                   ),
                 ),
                 Expanded(child: _Texts(row: row)),

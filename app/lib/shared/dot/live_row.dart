@@ -152,6 +152,7 @@ class _Summary extends StatelessWidget {
           children: [
             if (showMeta) Text(meta, style: t.styles.rowMeta),
             Text(task.title, style: t.styles.liveRowTitle),
+            if (task.oneThing) Text(l10n.oneThingMeta, style: t.styles.rowMeta),
             _Progress(task: task),
           ],
         ),

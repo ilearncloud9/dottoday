@@ -8,6 +8,7 @@ import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
+import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/layout/layout_policy.dart';
@@ -16,6 +17,7 @@ import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/inbox/state/inbox_state.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_add_field.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_commands.dart';
+import 'package:dottoday/features/inbox/widgets/one_thing_meta.dart';
 import 'package:dottoday/features/inbox/widgets/wide_inbox.dart';
 import 'package:dottoday/shared/dot/inbox_beside.dart';
 import 'package:dottoday/shared/dot/inbox_row.dart';
@@ -90,6 +92,7 @@ class _Sidebar extends ConsumerWidget {
     );
     final open = openItems(items).toList();
     final sync = ref.watch(syncStatusProvider).value ?? SyncStatus.localOnly;
+    final oneThing = ref.watch(todayOneThingIdProvider);
     return Column(
       children: [
         Expanded(
@@ -104,7 +107,7 @@ class _Sidebar extends ConsumerWidget {
                 Padding(
                   key: ValueKey(o.id),
                   padding: const EdgeInsets.only(bottom: DotSpace.s),
-                  child: _row(context, o, commands),
+                  child: _row(context, o, commands, oneThing: o.id == oneThing),
                 ),
             ],
           ),
@@ -122,22 +125,31 @@ class _Sidebar extends ConsumerWidget {
     );
   }
 
-  Widget _row(BuildContext context, Occurrence o, InboxCommands commands) =>
-      InboxDraggable(
-        item: o,
-        child: InboxRow(
-          title: o.title,
-          meta: formatDurationShort(context.l10n, o.durationMin),
-          swipe: false,
-          color: TaskColor.fromKey(o.colorKey),
-          icon: TaskIcon.fromKey(o.iconKey),
-          onSchedule: () => unawaited(commands.schedule(o)),
-          onTrash: () => unawaited(commands.trash(o)),
-          onOpen: () => ProviderScope.containerOf(
-            context,
-          ).read(editingTaskProvider.notifier).open(o.id),
-        ),
-      );
+  Widget _row(
+    BuildContext context,
+    Occurrence o,
+    InboxCommands commands, {
+    required bool oneThing,
+  }) => InboxDraggable(
+    item: o,
+    child: InboxRow(
+      title: o.title,
+      meta: inboxMetaWithOneThing(
+        context.l10n,
+        formatDurationShort(context.l10n, o.durationMin),
+        oneThing: oneThing,
+      ),
+      oneThing: oneThing,
+      swipe: false,
+      color: TaskColor.fromKey(o.colorKey),
+      icon: TaskIcon.fromKey(o.iconKey),
+      onSchedule: () => unawaited(commands.schedule(o)),
+      onTrash: () => unawaited(commands.trash(o)),
+      onOpen: () => ProviderScope.containerOf(
+        context,
+      ).read(editingTaskProvider.notifier).open(o.id),
+    ),
+  );
 }
 
 /// "Inbox · 4 unscheduled" (`A-mac-week-alt3-board`).

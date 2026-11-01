@@ -4954,6 +4954,36 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get missionOffOfferKeep => pseudo(super.missionOffOfferKeep);
 
   @override
+  String rowOneThing(String label) => pseudo(super.rowOneThing(label));
+
+  @override
+  String get oneThingMeta => pseudo(super.oneThingMeta);
+
+  @override
+  String oneThingMetaJoin(String meta) => pseudo(super.oneThingMetaJoin(meta));
+
+  @override
+  String get oneThingAsk => pseudo(super.oneThingAsk);
+
+  @override
+  String get oneThingEveryAnswer => pseudo(super.oneThingEveryAnswer);
+
+  @override
+  String get oneThingToday => pseudo(super.oneThingToday);
+
+  @override
+  String get oneThingInbox => pseudo(super.oneThingInbox);
+
+  @override
+  String get oneThingMenu => pseudo(super.oneThingMenu);
+
+  @override
+  String get oneThingNothing => pseudo(super.oneThingNothing);
+
+  @override
+  String get oneThingInInbox => pseudo(super.oneThingInInbox);
+
+  @override
   String get healthWakeUpDnd => pseudo(super.healthWakeUpDnd);
 
   @override

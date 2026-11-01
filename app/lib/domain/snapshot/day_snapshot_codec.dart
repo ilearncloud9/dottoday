@@ -24,6 +24,8 @@ Map<String, Object?> encodeDaySnapshot(DaySnapshot s) => {
   'night_start': s.geometry.dayEnd,
   'current_id': s.current?.id,
   'next_ids': [for (final d in s.next) d.id],
+  // Today's one thing (docs/15 §8): its dot is ringed on the widgets.
+  'one_thing_id': s.oneThingId,
   'inbox_count': s.inboxCount,
   'day_done': s.dayDone,
   'day_total': s.dayTotal,
@@ -78,6 +80,7 @@ DaySnapshot? decodeDaySnapshot(Object? json) {
     dayDone: dayDone,
     dayTotal: dayTotal,
     tomorrowWakeUtc: _instant(json['tomorrow_wake_ms']),
+    oneThingId: _text(json['one_thing_id'], 64),
   );
 }
 

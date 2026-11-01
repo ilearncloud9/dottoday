@@ -6231,6 +6231,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get missionOffOfferKeep => 'Keep them';
 
   @override
+  String rowOneThing(String label) {
+    return '$label, your one thing';
+  }
+
+  @override
+  String get oneThingMeta => 'Your one thing';
+
+  @override
+  String oneThingMetaJoin(String meta) {
+    return '$meta · Your one thing';
+  }
+
+  @override
+  String get oneThingAsk => 'What matters most today?';
+
+  @override
+  String get oneThingEveryAnswer => 'Tap one. Every answer is right.';
+
+  @override
+  String get oneThingToday => 'TODAY';
+
+  @override
+  String get oneThingInbox => 'INBOX';
+
+  @override
+  String get oneThingMenu => 'Pick today\'s one thing…';
+
+  @override
+  String get oneThingNothing =>
+      'Nothing to pick from yet. Plan a dot or two first.';
+
+  @override
+  String get oneThingInInbox => 'in your Inbox';
+
+  @override
   String get healthWakeUpDnd => 'Do Not Disturb keeps your Wake Up alarm quiet';
 
   @override

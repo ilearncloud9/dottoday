@@ -1,8 +1,10 @@
 import 'package:dottoday/core/clock/clock.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
 import 'package:dottoday/domain/time/wind_down.dart';
+import 'package:dottoday/domain/wake_up/one_thing.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Rebuilds the day snapshot (B5) from the database and hands it to the
@@ -57,6 +59,7 @@ final class DaySnapshotWriter {
       shape: shape,
       dayOccurrences: day,
       tomorrowWakeUtc: settings.showNightArc ? next : null,
+      oneThingId: oneThingOn(settings.oneThing, formatRouteDate(local)),
     );
   }
 
