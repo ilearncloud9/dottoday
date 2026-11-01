@@ -44,6 +44,15 @@ object AlarmBridge {
                     result.success(null)
                 }
                 "drainEvents" -> result.success(WakeUpAlarms.drainEvents(context))
+                // The mission screen (docs/15 §8): done or skipped, and in use.
+                "dismiss" -> {
+                    WakeUpActions.dismiss(context, call.argument<String>("id").orEmpty())
+                    result.success(null)
+                }
+                "keepMission" -> {
+                    WakeUpActions.keepMission(context, call.argument<String>("id").orEmpty())
+                    result.success(null)
+                }
                 // The device test (integration_test/wake_up_alarm_test.dart):
                 // what rings, what is stored, and the ringing screen's buttons.
                 "ringingId" -> result.success(WakeUpRingService.instance?.ringingId)

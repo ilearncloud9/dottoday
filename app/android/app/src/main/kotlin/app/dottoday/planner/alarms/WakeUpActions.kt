@@ -20,6 +20,11 @@ object WakeUpActions {
     const val STOP = "app.dottoday.planner.WAKE_UP_STOP"
     const val SNOOZED_NOTE = 0x534e5a45 // "SNZE"
 
+    /** A mission morning re-rings a minute after the screen is left alone,
+     *  and stops for good 10 minutes after the mission first opened (15 §8). */
+    private const val RE_RING_MS = 60_000L
+    const val MISSION_CAP_MS = 10 * 60_000L
+
     fun snooze(context: Context, id: String) {
         val alarm = WakeUpAlarms.find(context, id) ?: return WakeUpRingService.stop(context)
         if (!alarm.canSnooze) return dismiss(context, id)
@@ -35,6 +40,42 @@ object WakeUpActions {
         notes(context).notify(SNOOZED_NOTE, snoozedNote(context, next))
     }
 
+    /**
+     * "I'm up". On a mission morning (docs/15 §8) the ring goes quiet, the
+     * mission opens and the alarm re-rings in a minute until the app ends
+     * it (done or skipped) or the 10-minute cap does; else [dismiss].
+     * Returns the link to open: the mission, or the Wake Up card.
+     */
+    fun up(context: Context, id: String): String {
+        val alarm = WakeUpAlarms.find(context, id)
+        if (alarm == null || !alarm.missionDue) {
+            dismiss(context, id)
+            return "dottoday://wake-up"
+        }
+        val now = System.currentTimeMillis()
+        val since = alarm.missionSinceMs.takeIf { it > 0 } ?: now
+        reRing(context, alarm.copy(state = WakeUpAlarm.MISSION, missionSinceMs = since), now)
+        WakeUpRingService.stop(context)
+        notes(context).cancel(SNOOZED_NOTE)
+        return alarm.missionLink
+    }
+
+    /** The mission screen is in use: its re-ring moves a minute out. */
+    fun keepMission(context: Context, id: String) {
+        val alarm = WakeUpAlarms.find(context, id) ?: return
+        if (alarm.state == WakeUpAlarm.MISSION) reRing(context, alarm, System.currentTimeMillis())
+    }
+
+    /** Whether a mission's 10 minutes are up: the alarm then just stops. */
+    fun missionOver(alarm: WakeUpAlarm, now: Long): Boolean =
+        alarm.state == WakeUpAlarm.MISSION && now >= alarm.missionSinceMs + MISSION_CAP_MS
+
+    private fun reRing(context: Context, alarm: WakeUpAlarm, now: Long) {
+        val next = alarm.copy(fireAtMs = minOf(now + RE_RING_MS, alarm.missionSinceMs + MISSION_CAP_MS))
+        WakeUpAlarms.put(context, next)
+        WakeUpAlarms.schedule(context, next)
+    }
+
     fun dismiss(context: Context, id: String) {
         val alarm = WakeUpAlarms.find(context, id)
         if (alarm != null) {
@@ -45,6 +86,23 @@ object WakeUpActions {
         WakeUpAlarms.disarm(context, id)
         WakeUpRingService.stop(context)
         notes(context).cancel(SNOOZED_NOTE)
+    }
+
+    /**
+     * A notification's "I'm up". A mission must open the app, and Android
+     * 12+ won't let a broadcast do that: on a mission morning the button
+     * opens the ringing screen, which does [up]; else it is [STOP].
+     */
+    fun upIntent(context: Context, alarm: WakeUpAlarm): PendingIntent {
+        if (!alarm.missionDue) return pending(context, STOP, alarm.id)
+        return PendingIntent.getActivity(
+            context, (alarm.id + "up").hashCode(),
+            Intent(context, WakeUpAlarmActivity::class.java)
+                .putExtra(WakeUpRingService.EXTRA_ID, alarm.id)
+                .putExtra(WakeUpAlarmActivity.EXTRA_UP, true)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
     }
 
     /** A notification button's intent, handled by [WakeUpAlarmReceiver]. */
@@ -73,7 +131,7 @@ object WakeUpActions {
             .setOngoing(true)
             .setSilent(true)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
-            .addAction(0, alarm.stop, pending(context, STOP, alarm.id))
+            .addAction(0, alarm.stop, upIntent(context, alarm))
             .build()
 
     private fun notes(context: Context) = context.getSystemService(NotificationManager::class.java)
