@@ -173,6 +173,13 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
   the timeline (into Trash when they carry subtasks or notes). An account Dottoday can no longer reach
   shows Reconnect, and its events stay as they were.
 
+- [F5.7] A repeating event from any calendar is one repeating item here (owner request, 2026-11-01;
+  docs/09 "Repeating calendar events as one series"). Editing an instance asks This one / All; All
+  changes every planned instance from today and the ones that arrive later (subtasks, notes, alerts,
+  colour, icon, travel time). Time, length and title with All go back to the calendar's series when
+  Send changes back is on, else stay here. Deleting asks This one / All; All with write-back on then
+  asks Only in Dottoday / Delete from the calendar too, every time. Subtasks reset per occurrence.
+  (R-01, R-02, R-09)
 ## F6. Notifications & alerts
 
 - [F6.1] Per task up to 5 alerts: at start, N minutes before (1–1440), at end, when overdue by N minutes. (R-03, R-10)
