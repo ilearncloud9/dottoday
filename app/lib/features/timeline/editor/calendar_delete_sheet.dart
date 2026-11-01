@@ -1,9 +1,8 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/write_back_providers.dart';
 import 'package:dottoday/domain/calendar/calendar_series_sender.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
-import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/pickers/repeat/delete_from_calendar_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,38 +25,7 @@ Future<String?> askDeleteFromCalendar(
   final status = await ref.read(calendarWriteStatusProvider(linkId).future);
   if (status == null || !context.mounted) return '';
   final calendar = status.calendar;
-  final l10n = context.l10n;
-  final there = await showAppSheet<bool>(
-    context: context,
-    title: l10n.seriesDeleteCalendarTitle(calendar),
-    builder: (sheet) {
-      final t = DotTheme.of(sheet);
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            minTileHeight: DotTouch.android,
-            title: Text(l10n.seriesDeleteOnlyHere, style: t.styles.body),
-            onTap: () => Navigator.of(sheet).pop(false),
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            minTileHeight: DotTouch.android,
-            title: Text(
-              l10n.seriesDeleteFromCalendar(calendar),
-              style: t.styles.body,
-            ),
-            subtitle: Text(
-              l10n.seriesDeleteFromCalendarDetail,
-              style: t.styles.rowMeta,
-            ),
-            onTap: () => Navigator.of(sheet).pop(true),
-          ),
-        ],
-      );
-    },
-  );
+  final there = await showDeleteFromCalendarSheet(context, calendar);
   return switch (there) {
     true => calendar,
     false => '',

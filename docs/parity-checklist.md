@@ -97,7 +97,7 @@ ticked in 08 §6.1) before a tag.
 | F5.4 | Write-back (optional per calendar) | ✓ device<br>calendar_write_back/revoked/regranted · sim, M7.7 | ✓ device<br>calendar_write_back/revoked · emulator, M7.7 | ◐ owner<br>Calendars on this Mac (08 §6.1) | ◐ owner<br>Google/Microsoft calendars (08 §6.1) | `integration_test/calendar_write_back_test.dart`<br>`test/domain/calendar/write_back_merge_test.dart`<br>`supabase/functions/calendar-sync/sync_test.ts` |
 | F5.5 | Travel time: if the event has a location and the user enables it, a buffer block is suggested before it. (R… | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/domain/calendar/travel_time_test.dart`<br>`test/features/timeline/travel_suggestion_test.dart`<br>`test/features/timeline/task_sheet_travel_golden_test.dart` |
 | F5.6 | Links in event descriptions open in the browser | ✓ device<br>calendar_import opens Safari · sim, M7.7 | ✓ device<br>calendar_import opens Chrome · emulator, M7.7 | ✓ CI | ✓ CI | `test/core/utils/web_links_test.dart`<br>`test/features/timeline/note_links_test.dart` |
-| F5.7 | A repeating event from any calendar is one repeating item here (owner request, 2026-11-01; | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/domain/calendar/calendar_import_plan_test.dart`<br>`test/data/calendar/calendar_series_writes_test.dart`<br>`test/domain/calendar/calendar_series_edit_test.dart`<br>`test/features/timeline/editor_calendar_series_test.dart`<br>`supabase/functions/_shared/calendar/calendar_test.ts` |
+| F5.7 | A repeating event from any calendar is one repeating item here (owner request, 2026-11-01; | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/domain/calendar/calendar_import_plan_test.dart`<br>`test/data/calendar/calendar_series_writes_test.dart`<br>`test/domain/calendar/calendar_series_edit_test.dart`<br>`test/features/timeline/editor_calendar_series_test.dart`<br>`test/data/calendar/calendar_series_write_back_test.dart`<br>`test/data/calendar/calendar_series_channel_test.dart`<br>`supabase/functions/calendar-sync/sync_test.ts`<br>`supabase/functions/_shared/calendar/calendar_test.ts` |
 ## F6. Notifications & alerts
 
 | ID | Feature | iPhone | Android | macOS | Web | Automated evidence |
@@ -176,7 +176,7 @@ ticked in 08 §6.1) before a tag.
 - **F5.1** Device calendars on iPhone/Android (EventKit, CalendarContract) and the Mac (EventKit channel, M7.1b); Google/Microsoft on all four through the backend (owner gate: OAuth clients); Apple on web via CalDAV is Phase 2 (07 Web).
 - **F5.4** Invitees kept on a real iPhone: owner gate (08 §6.1).
 - **F5.5** A rule on the device, no routing service (M7.5): same Dart on all four.
-- **F5.7** In progress (docs/09 "Repeating calendar events as one series"): series keys, series settings on import, This one / All in the editor; the delete-from-calendar question and series write-back follow.
+- **F5.7** Google/Microsoft series write-back waits on the calendar-sync deploy (owner gate, 08 §6.1).
 - **F6.1** Minutes before are a fixed set 5/10/15/30/60 (M3f.2 decision).
 - **F6.2** M8.4d: default set (up to 5) in the Alerts editor; Quiet hours (loud first dot still rings); day-start summary per weekday at Wake Up, skipped on an empty day; Apple keeps the nearest 50 pending.
 - **F6.4** Web system notifications carry Done and Open (Chrome shows two actions, M5.3a); the in-app strip offers Done and Snooze 10 min (M8.4d).

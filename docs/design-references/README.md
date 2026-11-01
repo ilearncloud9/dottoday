@@ -67,6 +67,7 @@ design-review matrix (`docs/08-testing-qa.md` §7).
 | Task sheet TRAVEL TIME suggestion (an imported event's place, Add N min before · Not now, M7.5) | §3 `TaskSheet`, §5.4 card, `A-ios-task-sheet` | `task_sheet_travel_*` |
 | Keyboard shortcut sheet (⌘/), focus ring on buttons | §5.3 "Mac/web keyboard shortcut sheet" | widget tests (`app_shortcut_groups_test`, `focus_ring_test`); golden at the M3e.9 sweep |
 | Repeat editor (choices, weekday chips, custom interval, ends) and the "Change which? / Delete which?" scope sheet | §5.3 "Repeat editor", R-01 | `picker_repeat_*`, `picker_scope_*` |
+| Repeating calendar events (docs/02 F5.7): the scope sheet with This one / All only, and "Also delete it from <calendar>?" (Only in Dottoday / Delete from <calendar> too) after Delete › All (derived) | the scope sheet's rows | `picker_scope_calendar_*`, `picker_delete_from_calendar_*`; `editor_calendar_series_test` |
 | Alerts editor (task alerts, add choices, five at most, Wind Down switch) | §5.3 "Alerts editor", R-10 | `picker_alerts_*` |
 | Subtask rows in the editor (rename dialog, ×, drag handle, "now", Use this list every time); full colour & icon picker | §5.3 "Subtask editor", "Colour & icon full picker", R-09 | `task_editor_*`; widget tests |
 | Running late sheet (+5 / +15 / +30; shift the rest with the pinned task named, skip, shorten), Today's ⋯ (Running late…, Review the day) | §5.3 "Running late sheet", PRD F1, R-04 | `today_running_late_*` |

@@ -8,8 +8,10 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
+import 'package:dottoday/domain/recurrence/series_edit.dart';
 import 'package:dottoday/shared/pickers/alerts/alerts_editor.dart';
 import 'package:dottoday/shared/pickers/day_pickers.dart';
+import 'package:dottoday/shared/pickers/repeat/delete_from_calendar_sheet.dart';
 import 'package:dottoday/shared/pickers/repeat/repeat_editor.dart';
 import 'package:dottoday/shared/pickers/repeat/scope_sheet.dart';
 import 'package:dottoday/shared/pickers/zone_picker.dart';
@@ -117,6 +119,31 @@ void main() {
     widths: widths,
     act: _open,
     build: (_) => _opener((c) => unawaited(showScopeSheet(c, delete: false))),
+  );
+  // docs/02 F5.7: a repeating calendar event offers This one / All, and
+  // after Delete › All asks whether its calendar loses it too.
+  goldenMatrix(
+    'picker_scope_calendar',
+    height: 500,
+    widths: widths,
+    act: _open,
+    build: (_) => _opener(
+      (c) => unawaited(
+        showScopeSheet(
+          c,
+          delete: true,
+          scopes: const [EditScope.thisOne, EditScope.all],
+        ),
+      ),
+    ),
+  );
+  goldenMatrix(
+    'picker_delete_from_calendar',
+    height: 500,
+    widths: widths,
+    act: _open,
+    build: (_) =>
+        _opener((c) => unawaited(showDeleteFromCalendarSheet(c, 'Home'))),
   );
   // M3f.2: the Alerts editor with two alerts and the Wind Down switch.
   goldenMatrix(

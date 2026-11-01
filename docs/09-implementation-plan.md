@@ -585,21 +585,45 @@ One branch, one PR (`feat/calendar-series`).
   the target and every live planned instance from the start of today (done/skipped/earlier stay),
   alerts and sound become each row's own (no series row to inherit from), a new time is placed on
   each instance's own date. Delete All here only; CS4 adds the calendar question.
-- [ ] CS4 Delete scope for imported series. **This one** / **All**. All marks the series hidden (no
+- [x] CS4 Delete scope for imported series. **This one** / **All**. All marks the series hidden (no
   instance comes back on re-import) and sends its planned instances to Trash; Undo restores both.
   When write-back is on for that calendar a second question follows: **Only in Dottoday** (default) /
   **Delete from <calendar> too** — deleting there can't be undone here and reaches other devices, so
   it is always asked, never remembered.
-- [ ] CS5 Series write-back. `CalendarWriter` gains series read/write/delete. Google: PATCH/DELETE the
+- [x] CS5 Series write-back. `CalendarWriter` gains series read/write/delete. Google: PATCH/DELETE the
   `recurringEventId` master (If-Match). Microsoft: PATCH/DELETE the `seriesMaster`. iOS plugin and macOS
   bridge: save/remove with span `.futureEvents` on the first instance from today. Android: update the
   `Events` row of the series (verify on the emulator that the plugin keeps the RRULE; if it can't, a
   small Kotlin channel method, as macOS has — no new package). A clash uses the M7.3 banner. Done:
   device tests on the iPhone simulator and the Android emulator; Google/Microsoft against fakes in
-  `calendar_test.ts` (live check is an owner gate after deploy).
-- [ ] CS6 Copy, goldens and a11y: editor line "Changes go back to Work · every repeat", the two scope
+  `calendar_test.ts` (live check is an owner gate after deploy). Notes (CS4 + CS5): `CalendarWriter.writeSeries` / `deleteSeries`
+  with a `SeriesPatch` (time-of-day shift, length, title); the shift is the edited instance's new
+  wall-clock minute against its link fingerprint (what the calendar last had), so the date of the
+  series' first occurrence never moves. Google/Microsoft: `calendar-sync` `update_series` /
+  `delete_series` read the master and write with If-Match (Google keeps the master's own zone);
+  organiser and calendar role checked first. Device: native, not `device_calendar` — its save
+  rewrites the RRULE and invitees from its own model (read in its iOS and Kotlin code):
+  `CalendarSeriesBridge.swift` (iOS and macOS Runners, one file; EventKit's first occurrence,
+  `.futureEvents`) and `CalendarSeries.kt` (DTSTART + shift, DURATION, TITLE on the `Events` row),
+  over `dottoday/calendar_series` (`CalendarSeriesChannel`). The calendar's series changes as its
+  own "All events" does, past repeats included; in Dottoday only today on changes (history stays).
+  `CalendarSeriesWriteBack` (the `CalendarSeriesSender` port) sends after the local write; on
+  success the series' time/length/title overrides are cleared and each instance's link takes the
+  calendar's values, so per-instance write-back sends nothing. A calendar out of reach: the change
+  stays here and the snackbar says so; no automatic retry (a later All edit sends again). Import:
+  a series moved to another time gives every instance a new key, so leftover links and items of a
+  series pair by series and local date before anything is removed (done days keep their row).
+  Delete › All asks "Also delete it from <calendar>?" before writing (Only in Dottoday first;
+  closing cancels the delete), only when Send changes back is on. Known limits: Undo of a sent
+  All edit reverts Dottoday only (the snackbar's Undo can't reach the calendar); a slow network
+  (> 2 s) can let per-instance write-back of a Google/Microsoft series go first, which lands the
+  same times as instance exceptions there.
+- [x] CS6 Copy, goldens and a11y: editor line "Changes go back to Work · every repeat", the two scope
   sheets in both themes and three widths, semantics tests, de/fr/es strings, docs/14 rows. Then
-  `/ship-check`-style gate for this section and the PR.
+  `/ship-check`-style gate for this section and the PR. Notes: goldens `picker_scope_calendar_*`, `picker_delete_from_calendar_*`
+  (derived, both themes, compact and expanded); de/fr/es strings by the agent — native-speaker pass
+  joins the open M16 one. The editor line stays "Changes go back to <calendar>" (it already says
+  where edits go). Device check `calendar_series` (iOS simulator, Android emulator).
 
 ## Pricing (owner sign-off pending)
 

@@ -94,14 +94,15 @@ const f5Rows = <String, ParityRow>{
       'test/data/calendar/calendar_series_writes_test.dart',
       'test/domain/calendar/calendar_series_edit_test.dart',
       'test/features/timeline/editor_calendar_series_test.dart',
+      'test/data/calendar/calendar_series_write_back_test.dart',
+      'test/data/calendar/calendar_series_channel_test.dart',
+      'supabase/functions/calendar-sync/sync_test.ts',
       'supabase/functions/_shared/calendar/calendar_test.ts',
     ],
     all: ci,
     note:
-        'In progress (docs/09 "Repeating calendar events as one series"): '
-        'series keys, series settings on import, This one / All in the '
-        'editor; the delete-from-calendar question and series write-back '
-        'follow.',
+        'Google/Microsoft series write-back waits on the calendar-sync '
+        'deploy (owner gate, 08 §6.1).',
   ),
 };
 
