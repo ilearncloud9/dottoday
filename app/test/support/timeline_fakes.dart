@@ -62,8 +62,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-import 'calendar_series_fakes.dart';
 import 'calendar_fakes.dart';
+import 'calendar_series_fakes.dart';
 import 'export_fakes.dart';
 import 'fake_clock.dart';
 import 'fake_notification_platform.dart';
