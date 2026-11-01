@@ -60,18 +60,22 @@ private fun Today(context: Context, snapshot: WidgetSnapshot, now: Long) {
         for (block in ahead) {
             val live = block.startMs <= now && !block.done
             Row(
-                modifier = GlanceModifier.height(28.dp)
+                // Today's one thing has its label under the title.
+                modifier = GlanceModifier.height(if (block.oneThing) 40.dp else 28.dp)
                     .clickable(open(context, "dottoday://task/${block.id}")),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                TaskDot(block.color, block.done)
-                Spacer(GlanceModifier.width(10.dp))
+                TaskDot(block.color, block.done, oneThing = block.oneThing)
+                Spacer(GlanceModifier.width(if (block.oneThing) 6.dp else 10.dp))
                 Text(
                     if (live) snapshot.label("now") else block.time,
                     style = DotText.meta,
                     modifier = GlanceModifier.width(64.dp),
                 )
-                Text(block.title, style = if (block.done) DotText.done else DotText.title, maxLines = 1)
+                Column {
+                    Text(block.title, style = if (block.done) DotText.done else DotText.title, maxLines = 1)
+                    if (block.oneThing) Text(snapshot.label("one_thing"), style = DotText.meta, maxLines = 1)
+                }
             }
         }
     }

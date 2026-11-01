@@ -6270,6 +6270,41 @@ class AppLocalizationsDe extends AppLocalizations {
   String get missionOffOfferKeep => 'Behalten';
 
   @override
+  String rowOneThing(String label) {
+    return '$label, dein Eines für heute';
+  }
+
+  @override
+  String get oneThingMeta => 'Dein Eines für heute';
+
+  @override
+  String oneThingMetaJoin(String meta) {
+    return '$meta · Dein Eines für heute';
+  }
+
+  @override
+  String get oneThingAsk => 'Was zählt heute am meisten?';
+
+  @override
+  String get oneThingEveryAnswer => 'Tipp auf eins. Jede Antwort ist richtig.';
+
+  @override
+  String get oneThingToday => 'HEUTE';
+
+  @override
+  String get oneThingInbox => 'EINGANG';
+
+  @override
+  String get oneThingMenu => 'Das Eine für heute wählen…';
+
+  @override
+  String get oneThingNothing =>
+      'Noch nichts zum Wählen. Plane zuerst ein, zwei Punkte.';
+
+  @override
+  String get oneThingInInbox => 'im Eingang';
+
+  @override
   String startNudgeTitle(String title) {
     return '$title starten?';
   }

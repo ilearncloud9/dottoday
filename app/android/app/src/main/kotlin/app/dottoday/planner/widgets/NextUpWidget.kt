@@ -72,10 +72,11 @@ private fun NextUp(context: Context, snapshot: WidgetSnapshot, now: Long) {
             return@Column
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
-            TaskDot(block.color, done = false, size = 14)
+            TaskDot(block.color, done = false, size = 14, oneThing = block.oneThing)
             Spacer(GlanceModifier.width(8.dp))
             Text(block.title, style = DotText.title, maxLines = 2)
         }
+        if (block.oneThing) Text(snapshot.label("one_thing"), style = DotText.meta)
         Spacer(GlanceModifier.height(6.dp))
         Row(modifier = GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
             Text(

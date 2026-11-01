@@ -3,6 +3,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
 import 'package:dottoday/domain/entities/utc_millis_converter.dart';
 import 'package:dottoday/domain/time/duration_presets.dart';
+import 'package:dottoday/domain/wake_up/one_thing.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'settings.freezed.dart';
@@ -114,6 +115,9 @@ abstract class Settings with _$Settings {
     MissionKind? missionBackup,
     @Default(true) bool missionSkipOffer,
     @Default(false) bool missionOffOfferAnswered,
+    // Today's one thing (15 §8, M17.7b): picked by the mission or from
+    // Today, one a day, cleared by its date.
+    OneThing? oneThing,
     // The once-a-day "Plan your inbox" card (docs/02 F3.3): off by default.
     @Default(false) bool inboxNudge,
     // Settings › Calendars › Travel time (M7.5, R-17): off until chosen
