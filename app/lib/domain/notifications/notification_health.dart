@@ -47,6 +47,17 @@ enum HealthCheckKind {
   wakeUp,
 }
 
+/// What can still stop an alarm-grade Wake Up on Android (docs/15 §2):
+/// neither lowers the tier, so they show only in the health panel's Wake
+/// Up row, each with its fix (owner, 2026-11-01: never a modal).
+enum WakeUpWarning {
+  /// Do Not Disturb doesn't let alarms through: the alarm is silenced.
+  dndBlocksAlarms,
+
+  /// Battery optimisation may delay arming after a reboot or a long sleep.
+  batteryRestricted,
+}
+
 /// Whether a check needs fixing ([problem]) or is only worth knowing.
 enum HealthLevel { ok, problem, info }
 
@@ -58,6 +69,7 @@ final class HealthCheck {
     this.skew,
     this.mutedSounds = const [],
     this.wakeUp,
+    this.wakeUpWarning,
   });
 
   final HealthCheckKind kind;
@@ -72,6 +84,10 @@ final class HealthCheck {
   /// For [HealthCheckKind.wakeUp]: what the alarm can do here.
   final AlarmCapabilities? wakeUp;
 
+  /// For [HealthCheckKind.wakeUp] at the alarm tier: what may still stop
+  /// it, the most serious first; null when nothing does.
+  final WakeUpWarning? wakeUpWarning;
+
   @override
   bool operator ==(Object other) =>
       other is HealthCheck &&
@@ -79,11 +95,18 @@ final class HealthCheck {
       other.level == level &&
       other.skew == skew &&
       other.wakeUp == wakeUp &&
+      other.wakeUpWarning == wakeUpWarning &&
       _sameList(other.mutedSounds, mutedSounds);
 
   @override
-  int get hashCode =>
-      Object.hash(kind, level, skew, wakeUp, Object.hashAll(mutedSounds));
+  int get hashCode => Object.hash(
+    kind,
+    level,
+    skew,
+    wakeUp,
+    wakeUpWarning,
+    Object.hashAll(mutedSounds),
+  );
 
   @override
   String toString() => 'HealthCheck(${kind.name}, ${level.name})';
@@ -97,6 +120,7 @@ final class HealthInputs {
     this.exactAlarms = true,
     this.batteryRestricted = false,
     this.doNotDisturb = false,
+    this.dndAlarmsBlocked = false,
     this.webPushReady = false,
     this.clockSkew,
     this.mutedSounds = const {},
@@ -108,6 +132,9 @@ final class HealthInputs {
   final bool exactAlarms;
   final bool batteryRestricted;
   final bool doNotDisturb;
+
+  /// Do Not Disturb's settings don't let alarms through (Android).
+  final bool dndAlarmsBlocked;
   final bool webPushReady;
   final ClockSkew? clockSkew;
 
@@ -150,11 +177,7 @@ List<HealthCheck> notificationHealth(HealthInputs i) {
       ),
     ],
     if (i.wakeUp case final wakeUp? when i.platform.isPhone)
-      HealthCheck(HealthCheckKind.wakeUp, switch (wakeUp.tier) {
-        AlarmTier.alarm => HealthLevel.ok,
-        AlarmTier.timeSensitive => HealthLevel.info,
-        AlarmTier.headsUp || AlarmTier.none => HealthLevel.problem,
-      }, wakeUp: wakeUp),
+      _wakeUpCheck(i, wakeUp),
     if (i.platform == HealthPlatform.iphone || i.platform == HealthPlatform.mac)
       const HealthCheck(HealthCheckKind.focus, HealthLevel.info),
     if (i.platform == HealthPlatform.web)
@@ -168,6 +191,30 @@ List<HealthCheck> notificationHealth(HealthInputs i) {
       skew: i.clockSkew,
     ),
   ];
+}
+
+/// The Wake Up row: its tier, and at the alarm tier with nothing else to
+/// fix, the first [WakeUpWarning] that applies (docs/15 §2).
+HealthCheck _wakeUpCheck(HealthInputs i, AlarmCapabilities wakeUp) {
+  final warning = wakeUp.tier != AlarmTier.alarm || wakeUp.blockers.isNotEmpty
+      ? null
+      : i.dndAlarmsBlocked
+      ? WakeUpWarning.dndBlocksAlarms
+      : i.batteryRestricted
+      ? WakeUpWarning.batteryRestricted
+      : null;
+  final level = switch (wakeUp.tier) {
+    AlarmTier.alarm when warning != null => HealthLevel.problem,
+    AlarmTier.alarm => HealthLevel.ok,
+    AlarmTier.timeSensitive => HealthLevel.info,
+    AlarmTier.headsUp || AlarmTier.none => HealthLevel.problem,
+  };
+  return HealthCheck(
+    HealthCheckKind.wakeUp,
+    level,
+    wakeUp: wakeUp,
+    wakeUpWarning: warning,
+  );
 }
 
 /// How many rows need fixing, for "1 thing to fix" in Settings.

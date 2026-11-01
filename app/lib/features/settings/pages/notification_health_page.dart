@@ -152,9 +152,17 @@ class HealthRow extends ConsumerWidget {
         ok
             ? (l10n.healthPushOk, null)
             : (l10n.healthPushOff, l10n.healthPushOffDetail),
-      HealthCheckKind.wakeUp => switch (check.wakeUp) {
-        final wakeUp? => wakeUpTierText(l10n, wakeUp),
-        null => (l10n.settingsWakeUpAlarm, null),
+      HealthCheckKind.wakeUp => switch ((check.wakeUpWarning, check.wakeUp)) {
+        (WakeUpWarning.dndBlocksAlarms, _) => (
+          l10n.healthWakeUpDnd,
+          l10n.healthWakeUpDndDetail,
+        ),
+        (WakeUpWarning.batteryRestricted, _) => (
+          l10n.healthWakeUpBattery,
+          l10n.healthWakeUpBatteryDetail,
+        ),
+        (null, final wakeUp?) => wakeUpTierText(l10n, wakeUp),
+        (null, null) => (l10n.settingsWakeUpAlarm, null),
       },
       HealthCheckKind.clock => switch (check.skew) {
         final skew? => (clockSkewText(l10n, skew), l10n.healthClockOffDetail),
@@ -206,6 +214,11 @@ class HealthRow extends ConsumerWidget {
           ref.invalidate(mutedSoundsProvider);
         },
       ),
+      HealthCheckKind.wakeUp when check.wakeUpWarning != null => _warningFix(
+        l10n,
+        ref,
+        check.wakeUpWarning!,
+      ),
       HealthCheckKind.wakeUp => switch (wakeUpBlocker) {
         final blocker? => (
           wakeUpFixLabel(l10n, blocker),
@@ -226,6 +239,24 @@ class HealthRow extends ConsumerWidget {
     };
   }
 }
+
+/// The Wake Up row's fix for [warning] (docs/15 §2): Do Not Disturb's
+/// exceptions, or the battery list; the row re-reads on return.
+(String, Future<void> Function()) _warningFix(
+  AppLocalizations l10n,
+  WidgetRef ref,
+  WakeUpWarning warning,
+) => (
+  l10n.healthFixOpen,
+  () async {
+    final power = ref.read(batteryOptimizationProvider);
+    await switch (warning) {
+      WakeUpWarning.dndBlocksAlarms => power.openDndSettings(),
+      WakeUpWarning.batteryRestricted => power.openSettings(),
+    };
+    ref.invalidate(powerStateProvider);
+  },
+);
 
 /// "Lift, Rooster": the muted sounds' names in the user's language.
 String _soundNames(AppLocalizations l10n, List<String> ids) => [

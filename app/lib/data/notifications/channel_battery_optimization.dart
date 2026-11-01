@@ -31,4 +31,17 @@ final class ChannelBatteryOptimization implements BatteryOptimization {
       return false;
     }
   }
+
+  @override
+  Future<bool> dndAlarmsBlocked() async {
+    try {
+      return await _channel.invokeMethod<bool>('isDndAlarmsBlocked') ?? false;
+    } on MissingPluginException {
+      return false;
+    }
+  }
+
+  @override
+  Future<void> openDndSettings() =>
+      _channel.invokeMethod<void>('openDndSettings');
 }
