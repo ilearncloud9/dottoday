@@ -33,7 +33,12 @@ final class ThreadTask {
     this.reality,
     this.startUtc,
     this.minutes = 0,
+    this.oneThing = false,
   });
+
+  /// Today's one thing (docs/15 §8): an accent ring outside the dot and
+  /// "Your one thing" in the row's small text, never colour alone.
+  final bool oneThing;
 
   /// When the task starts, for drops onto its row (feature-supplied; null
   /// leaves the row out of drops).

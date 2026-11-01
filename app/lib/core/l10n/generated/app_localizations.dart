@@ -9384,6 +9384,66 @@ abstract class AppLocalizations {
   /// **'Keep them'**
   String get missionOffOfferKeep;
 
+  /// Appended to a row label when the task is today's one thing (docs/15 §8).
+  ///
+  /// In en, this message translates to:
+  /// **'{label}, your one thing'**
+  String rowOneThing(String label);
+
+  /// Row small text under today's one thing (docs/15 §8).
+  ///
+  /// In en, this message translates to:
+  /// **'Your one thing'**
+  String get oneThingMeta;
+
+  /// A row's small text with today's one thing added.
+  ///
+  /// In en, this message translates to:
+  /// **'{meta} · Your one thing'**
+  String oneThingMetaJoin(String meta);
+
+  /// Pick screen title and the mission line (docs/15 §8).
+  ///
+  /// In en, this message translates to:
+  /// **'What matters most today?'**
+  String get oneThingAsk;
+
+  /// Under the pick screen title: there is no wrong pick.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap one. Every answer is right.'**
+  String get oneThingEveryAnswer;
+
+  /// Pick screen caption over today's dots.
+  ///
+  /// In en, this message translates to:
+  /// **'TODAY'**
+  String get oneThingToday;
+
+  /// Pick screen caption over the Inbox items.
+  ///
+  /// In en, this message translates to:
+  /// **'INBOX'**
+  String get oneThingInbox;
+
+  /// Today ⋯ menu item: opens the pick sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick today\'s one thing…'**
+  String get oneThingMenu;
+
+  /// Pick sheet with no dots and an empty Inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to pick from yet. Plan a dot or two first.'**
+  String get oneThingNothing;
+
+  /// Wake Up card: today's one thing waits in the Inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'in your Inbox'**
+  String get oneThingInInbox;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

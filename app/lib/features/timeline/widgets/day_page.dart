@@ -7,6 +7,7 @@ import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
+import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
@@ -138,6 +139,8 @@ class DayPage extends ConsumerWidget {
       unstick: reality == null ? cues.unstick : const {},
       showFreeTime: data.settings.showFreeTime,
       reality: reality?.reality,
+      // Today's one thing rings on today only (docs/15 §8).
+      oneThingId: date == today ? ref.watch(todayOneThingIdProvider) : null,
     );
     final actions = _actions(
       context,

@@ -12,12 +12,17 @@ struct WidgetBlock: Codable, Identifiable {
   let until: String
   let color: String
   let done: Bool
+  /// Today's one thing (docs/15 §8): ringed, with the "one_thing" label.
+  var oneThing: Bool? = nil
 
   enum CodingKeys: String, CodingKey {
     case id, title, time, until, color, done
     case startMs = "start_ms"
     case endMs = "end_ms"
+    case oneThing = "one_thing"
   }
+
+  var isOneThing: Bool { oneThing ?? false }
 
   var start: Date { Date(timeIntervalSince1970: startMs / 1000) }
   var end: Date { Date(timeIntervalSince1970: endMs / 1000) }

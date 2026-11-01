@@ -8,6 +8,58 @@ part of 'wake_up_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// The occurrence id of today's one thing (docs/15 §8), or null: none
+/// picked, or picked on another day (it clears when the day ends). Every
+/// surface that rings it reads this, so they agree.
+
+@ProviderFor(todayOneThingId)
+final todayOneThingIdProvider = TodayOneThingIdProvider._();
+
+/// The occurrence id of today's one thing (docs/15 §8), or null: none
+/// picked, or picked on another day (it clears when the day ends). Every
+/// surface that rings it reads this, so they agree.
+
+final class TodayOneThingIdProvider
+    extends $FunctionalProvider<String?, String?, String?>
+    with $Provider<String?> {
+  /// The occurrence id of today's one thing (docs/15 §8), or null: none
+  /// picked, or picked on another day (it clears when the day ends). Every
+  /// surface that rings it reads this, so they agree.
+  TodayOneThingIdProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'todayOneThingIdProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$todayOneThingIdHash();
+
+  @$internal
+  @override
+  $ProviderElement<String?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  String? create(Ref ref) {
+    return todayOneThingId(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String?>(value),
+    );
+  }
+}
+
+String _$todayOneThingIdHash() => r'8a94f660fbe6346a4054e69f35fde23ff39ed293';
+
 /// The sensors the missions read (docs/15 §8); tests override it.
 
 @ProviderFor(missionSensors)

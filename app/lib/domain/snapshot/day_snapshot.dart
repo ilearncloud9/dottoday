@@ -93,6 +93,7 @@ final class DaySnapshot {
     this.dayDone = 0,
     this.dayTotal = 0,
     this.tomorrowWakeUtc,
+    this.oneThingId,
   });
 
   /// Builds the snapshot at [nowUtc] from occurrences overlapping the next
@@ -110,6 +111,7 @@ final class DaySnapshot {
     required DayShape shape,
     Iterable<Occurrence> dayOccurrences = const [],
     DateTime? tomorrowWakeUtc,
+    String? oneThingId,
   }) {
     final today = [
       for (final o in dayOccurrences)
@@ -129,6 +131,7 @@ final class DaySnapshot {
       dayDone: today.where((o) => o.status == OccurrenceStatus.done).length,
       dayTotal: today.length,
       tomorrowWakeUtc: tomorrowWakeUtc,
+      oneThingId: oneThingId,
     );
   }
 
@@ -187,6 +190,10 @@ final class DaySnapshot {
   /// W6, owner 2026-10-31); null when the night isn't shown.
   final DateTime? tomorrowWakeUtc;
 
+  /// Today's one thing (docs/15 §8): the widgets ring the dot with this
+  /// id and say "Your one thing". Null when none is picked today.
+  final String? oneThingId;
+
   /// The day dot's geometry when the snapshot was made: the one every
   /// painter reads (Today, the week review, the menu bar, the widgets).
   DayDotGeometry get geometry => dayDotGeometry(
@@ -226,6 +233,7 @@ final class DaySnapshot {
       other.generatedAtUtc == generatedAtUtc &&
       other.wakeUtc == wakeUtc &&
       other.tomorrowWakeUtc == tomorrowWakeUtc &&
+      other.oneThingId == oneThingId &&
       other.bedUtc == bedUtc &&
       other.inboxCount == inboxCount &&
       other.dayDone == dayDone &&
@@ -237,6 +245,7 @@ final class DaySnapshot {
     generatedAtUtc,
     wakeUtc,
     tomorrowWakeUtc,
+    oneThingId,
     bedUtc,
     inboxCount,
     dayDone,
