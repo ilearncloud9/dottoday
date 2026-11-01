@@ -8,12 +8,12 @@ import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/data/recurrence/series_actions.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
+import 'package:dottoday/features/timeline/editor/editor_scope.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
@@ -108,7 +108,7 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
           ],
         ),
         if (_adding) _newField(context),
-        if (widget.editing && widget.task.series != null && list.isNotEmpty)
+        if (widget.editing && widget.task.repeats && list.isNotEmpty)
           Align(
             alignment: AlignmentDirectional.centerStart,
             child: TextButton(
@@ -219,20 +219,19 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
   }
 
   Future<void> _everyTime() async {
-    final series = widget.task.series;
-    if (series == null) return;
+    final write = listEveryTime(
+      ProviderScope.containerOf(context),
+      task: widget.task,
+      subtasks: _list,
+    );
+    if (write == null) return;
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     reportUndoable(
       messenger,
       l10n,
       ref.read(undoServiceProvider),
-      await useListEveryTime(
-        ProviderScope.containerOf(context),
-        series: series,
-        source: widget.task.occurrence,
-        subtasks: _list,
-      ),
+      await write,
       message: (_) => l10n.snackListEveryTime(widget.task.occurrence.title),
       tokenOf: (t) => t,
     );

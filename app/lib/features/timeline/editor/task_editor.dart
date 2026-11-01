@@ -216,6 +216,7 @@ class _FormState extends ConsumerState<_Form> {
   }
 
   Widget _fields(BuildContext context) {
+    final navigator = Navigator.of(context);
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final zone = tz.getLocation(_draft.tzId);
@@ -284,13 +285,13 @@ class _FormState extends ConsumerState<_Form> {
         EditorFooter(
           task: _draft,
           onSave: _save,
-          scopedDelete: widget.task.series == null
+          scopedDelete: !widget.task.repeats
               ? null
               : () => deleteScoped(context, task: widget.task, target: _draft),
           // Back to the page: the sheet below would show a task now gone.
-          onLeft:
-              widget.onClose ??
-              () => Navigator.of(context).popUntil((r) => r.isFirst),
+          // The navigator is taken now: a delete that reaches a calendar
+          // can outlast the editor, which closes when its task goes.
+          onLeft: widget.onClose ?? () => navigator.popUntil((r) => r.isFirst),
           beforeLeave: () => _autosave.dirty = false,
         ),
       ],

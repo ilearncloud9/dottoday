@@ -1695,6 +1695,33 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.snackSeriesChanged(title));
 
   @override
+  String snackSeriesNotSent(String calendar) =>
+      pseudo(super.snackSeriesNotSent(calendar));
+
+  @override
+  String seriesDeleteCalendarTitle(String calendar) =>
+      pseudo(super.seriesDeleteCalendarTitle(calendar));
+
+  @override
+  String get seriesDeleteOnlyHere => pseudo(super.seriesDeleteOnlyHere);
+
+  @override
+  String seriesDeleteFromCalendar(String calendar) =>
+      pseudo(super.seriesDeleteFromCalendar(calendar));
+
+  @override
+  String get seriesDeleteFromCalendarDetail =>
+      pseudo(super.seriesDeleteFromCalendarDetail);
+
+  @override
+  String snackSeriesDeletedThere(String title, String calendar) =>
+      pseudo(super.snackSeriesDeletedThere(title, calendar));
+
+  @override
+  String snackSeriesNotDeletedThere(String calendar) =>
+      pseudo(super.snackSeriesNotDeletedThere(calendar));
+
+  @override
   String snackSeriesDeleted(String title) =>
       pseudo(super.snackSeriesDeleted(title));
 

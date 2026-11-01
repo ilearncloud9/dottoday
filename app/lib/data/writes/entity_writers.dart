@@ -1,3 +1,4 @@
+import 'package:dottoday/data/repositories/drift_calendar_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_reveal_hint_repository.dart';
 import 'package:dottoday/data/repositories/drift_routine_repository.dart';
@@ -6,6 +7,7 @@ import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/data/writes/row_writer.dart';
 import 'package:dottoday/domain/calendar/calendar_import_rules.dart';
+import 'package:dottoday/domain/entities/calendar_series.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/entities/routine.dart';
@@ -61,6 +63,21 @@ EntityWriter<RevealHint> revealHintWriter(
   stamp: (h, now) => h.copyWith(updatedAt: now),
   find: (id) => repo.findById(userId, id),
   upsertAll: repo.upsertAll,
+);
+
+/// Repeating calendar events' settings (docs/02 F5.7): device-only like
+/// the imports they shape, so `table` is never logged to the outbox.
+EntityWriter<CalendarSeries> calendarSeriesWriter(
+  String userId,
+  DriftCalendarSeriesRepository repo,
+) => EntityWriter(
+  table: 'calendar_series',
+  toJson: (s) => s.toJson(),
+  idOf: (s) => s.id,
+  stamp: (s, now) => s.copyWith(updatedAt: now),
+  find: (id) => repo.findById(userId, id),
+  upsertAll: repo.upsertAll,
+  deviceOnly: (_) async => true,
 );
 
 EntityWriter<Occurrence> occurrenceWriter(

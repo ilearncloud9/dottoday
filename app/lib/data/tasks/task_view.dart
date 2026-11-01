@@ -1,6 +1,7 @@
 import 'package:dottoday/core/utils/switch_map.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/domain/calendar/calendar_series_edit.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/series.dart';
@@ -17,6 +18,7 @@ final class TaskView {
     required this.occurrence,
     required this.subtasks,
     required this.series,
+    this.imported,
   });
 
   final Occurrence occurrence;
@@ -26,6 +28,13 @@ final class TaskView {
 
   /// Its series when it repeats.
   final Series? series;
+
+  /// The repeating calendar event it is an instance of (docs/02 F5.7);
+  /// null for a task made here or a one-off event.
+  final ImportedSeries? imported;
+
+  /// Whether an edit or delete asks which instances it reaches.
+  bool get repeats => series != null || imported != null;
 
   /// The alerts that apply: its own, else its series' (docs/05).
   List<Alert> get alerts => occurrence.alerts ?? series?.alerts ?? const [];
@@ -40,6 +49,7 @@ Stream<TaskView?> taskView(Ref ref, String id) {
   final occurrences = ref.watch(occurrenceRepositoryProvider);
   final subtasks = ref.watch(subtaskRepositoryProvider);
   final seriesRepo = ref.watch(seriesRepositoryProvider);
+  final importedRepo = ref.watch(calendarSeriesRepositoryProvider);
   return Stream.fromFuture(profile).asyncExpand((profile) async* {
     final first = await occurrences.findById(profile.id, id);
     if (first == null || first.deletedAt != null) {
@@ -55,16 +65,27 @@ Stream<TaskView?> taskView(Ref ref, String id) {
             o?.seriesId == null
                 ? null
                 : await seriesRepo.findById(profile.id, o!.seriesId!),
+            o?.calendarLinkId == null
+                ? null
+                : await importedRepo.seriesOfLink(
+                    profile.id,
+                    o!.calendarLinkId!,
+                  ),
           ),
         )
         .switchMap(
-          (pair) => switch (pair) {
-            (null, _) => Stream<TaskView?>.value(null),
-            (final o?, final series) =>
+          (row) => switch (row) {
+            (null, _, _) => Stream<TaskView?>.value(null),
+            (final o?, final series, final imported) =>
               subtasks
                   .watchForOccurrences(profile.id, {o.id})
                   .map(
-                    (s) => TaskView(occurrence: o, subtasks: s, series: series),
+                    (s) => TaskView(
+                      occurrence: o,
+                      subtasks: s,
+                      series: series,
+                      imported: imported,
+                    ),
                   ),
           },
         );

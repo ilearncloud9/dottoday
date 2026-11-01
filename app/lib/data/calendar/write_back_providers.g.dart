@@ -64,7 +64,63 @@ final class CalendarWriteBackProvider
   }
 }
 
-String _$calendarWriteBackHash() => r'8ebde0dbac6994d4774cd95b2c12d1bd24f56e6c';
+String _$calendarWriteBackHash() => r'c261ccddbc9381bca4a9f4d474eaccf763c9e067';
+
+/// Scope-All edits and deletes of repeating events, sent on the whole
+/// series (docs/02 F5.7), through the same writers.
+
+@ProviderFor(calendarSeriesWriteBack)
+final calendarSeriesWriteBackProvider = CalendarSeriesWriteBackProvider._();
+
+/// Scope-All edits and deletes of repeating events, sent on the whole
+/// series (docs/02 F5.7), through the same writers.
+
+final class CalendarSeriesWriteBackProvider
+    extends
+        $FunctionalProvider<
+          CalendarSeriesSender,
+          CalendarSeriesSender,
+          CalendarSeriesSender
+        >
+    with $Provider<CalendarSeriesSender> {
+  /// Scope-All edits and deletes of repeating events, sent on the whole
+  /// series (docs/02 F5.7), through the same writers.
+  CalendarSeriesWriteBackProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'calendarSeriesWriteBackProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$calendarSeriesWriteBackHash();
+
+  @$internal
+  @override
+  $ProviderElement<CalendarSeriesSender> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  CalendarSeriesSender create(Ref ref) {
+    return calendarSeriesWriteBack(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CalendarSeriesSender value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CalendarSeriesSender>(value),
+    );
+  }
+}
+
+String _$calendarSeriesWriteBackHash() =>
+    r'65d08b07ea9d5d4b3bcca723a5f641fb2be38011';
 
 /// The write-back status of the imported event linked by [linkId]; null
 /// when the link is gone.

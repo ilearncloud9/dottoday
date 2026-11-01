@@ -58,6 +58,8 @@ function setup(api: Partial<CalendarApi>, world: Partial<World> = {}): [Deps, Wo
     events: async () => [],
     event: async () => null,
     update: async () => 'written',
+    updateSeries: async () => 'written',
+    deleteSeries: async () => 'written',
     ...api,
   };
   return [
@@ -124,6 +126,30 @@ test('update: validated, passes the etag, returns the result', async () => {
   assert.equal((await handle('good', { ...call, end: 5 }, d)).status, 400);
   assert.equal((await handle('good', { ...call, title: 'x'.repeat(201) }, d)).status, 400);
   assert.equal((await handle('good', { ...call, etag: undefined }, d)).status, 400);
+});
+
+test('update_series: validated, checked against the caller', async () => {
+  let seen: unknown[] = [];
+  const [d] = setup({ updateSeries: async (_t, cal, id, patch) => { seen = [cal, id, patch]; return 'written'; } });
+  const call = { action: 'update_series', calendarId: `${acc}/c`, seriesId: 'r1', shiftMs: -1_800_000 };
+  const out = await handle('good', call, d);
+  assert.deepEqual([out.body.result, seen], ['written', ['c', 'r1', { shiftMs: -1_800_000 }]]);
+  const full = await handle('good', { ...call, durationMs: 2_700_000, title: 'Pray' }, d);
+  assert.deepEqual([full.status, seen[2]], [200, { shiftMs: -1_800_000, durationMs: 2_700_000, title: 'Pray' }]);
+  assert.equal((await handle('good', { ...call, shiftMs: 86_400_000 }, d)).status, 400);
+  assert.equal((await handle('good', { ...call, shiftMs: 0.5 }, d)).status, 400);
+  assert.equal((await handle('good', { ...call, durationMs: 60_000 }, d)).status, 400);
+  assert.equal((await handle('good', { ...call, seriesId: '' }, d)).status, 400);
+  const other = '0192f000-0000-7000-8000-000000000009';
+  assert.equal((await handle('good', { ...call, calendarId: `${other}/c` }, d)).status, 404);
+});
+
+test('delete_series: the caller\'s calendar only', async () => {
+  let seen: unknown[] = [];
+  const [d] = setup({ deleteSeries: async (_t, cal, id) => { seen = [cal, id]; return 'gone'; } });
+  const out = await handle('good', { action: 'delete_series', calendarId: `${acc}/c`, seriesId: 'r1' }, d);
+  assert.deepEqual([out.body.result, seen], ['gone', ['c', 'r1']]);
+  assert.equal((await handle('good', { action: 'delete_series', calendarId: `${acc}/c` }, d)).status, 400);
 });
 
 test('disconnect deletes only the caller\'s account', async () => {

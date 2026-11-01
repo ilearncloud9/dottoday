@@ -3216,6 +3216,48 @@ abstract class AppLocalizations {
   /// **'{title} changed'**
   String snackSeriesChanged(String title);
 
+  /// After a scope-All edit of a repeating calendar event whose calendar couldn't be reached (docs/02 F5.7). The change stays here.
+  ///
+  /// In en, this message translates to:
+  /// **'Changed in Dottoday only. {calendar} couldn\'t be reached.'**
+  String snackSeriesNotSent(String calendar);
+
+  /// Title of the question after deleting every repeat of a calendar event here (docs/02 F5.7).
+  ///
+  /// In en, this message translates to:
+  /// **'Also delete it from {calendar}?'**
+  String seriesDeleteCalendarTitle(String calendar);
+
+  /// Keeps the repeating event in the person's calendar (the default).
+  ///
+  /// In en, this message translates to:
+  /// **'Only in Dottoday'**
+  String get seriesDeleteOnlyHere;
+
+  /// Deletes every repeat of the event from the person's calendar as well.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete from {calendar} too'**
+  String seriesDeleteFromCalendar(String calendar);
+
+  /// Under 'Delete from … too': what it does.
+  ///
+  /// In en, this message translates to:
+  /// **'Every repeat goes, on all your devices. Undo here can\'t bring it back.'**
+  String get seriesDeleteFromCalendarDetail;
+
+  /// After deleting a repeating event here and from its calendar.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} deleted here and from {calendar}'**
+  String snackSeriesDeletedThere(String title, String calendar);
+
+  /// After deleting a repeating event here when its calendar couldn't be reached.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted in Dottoday. {calendar} couldn\'t be reached.'**
+  String snackSeriesNotDeletedThere(String calendar);
+
   /// After a scoped delete of a repeating task.
   ///
   /// In en, this message translates to:

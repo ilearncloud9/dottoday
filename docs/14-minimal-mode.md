@@ -44,7 +44,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Notifications + sound library | built | Simplified | One switch "Remind me when a dot starts", one default tone; library under More |
 | Wind Down review, daily | built | Simplified | One card: "3 things left — tomorrow or Later?"; one tap, then the snapshot writes |
 | Sign-in and sync | built | Shown | Silent; one Settings row |
-| Calendar import | built | Simplified | Connected calendars draw as dots; calendar management under More |
+| Calendar import | built | Simplified | Connected calendars draw as dots; calendar management under More. A repeating event is one series: the This one / All scope question shows as for any repeating task (F5.7) |
 | Export | built | Hidden | Settings › More |
 | Light/dark, language | built | Shown | Follow the device; no setting shown |
 | Onboarding | built | Simplified | Mode choice, then three steps: Wake Up/Wind Down, reminders + test alarm, first task |
@@ -110,7 +110,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Learned lines ("usually 2 h 20") + explain-on-tap sheet | M13.7 | Hidden | The learned value is the pre-filled duration chip; the line and its explanation are under More |
 | Settings › Learning page | M13.5 | Hidden | Under Everything else; learning keeps running |
 | Travel time (row meta, suggestion card, editor row, Calendars › Travel) | M7 | Hidden | Stored travel blocks still apply; suggestions and editing under More |
-| Calendar write-back + move-with-calendar (line in editor, Calendars rows) | M7 | Hidden | Keeps working as set; settings under Calendars in Everything else |
+| Calendar write-back + move-with-calendar (line in editor, Calendars rows) | M7 | Hidden | Keeps working as set, series edits included; settings under Calendars in Everything else. "Delete from the calendar too" is still asked, since it can't be undone here (F5.7) |
 | Time zones: zone banner, Time ⋯ › Time zone | M6 | Simplified | The banner shows when the device zone changed (a fact, not a choice); picking a zone is under More |
 | Search tab, recent searches, filters | M3d | Hidden | No Search tab in minimal; Search is under Everything else |
 | Past days + Year strip (where D3 lives in code) | M12.3 | Hidden | Under Search, as D3 |

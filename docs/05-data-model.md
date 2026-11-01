@@ -115,6 +115,24 @@ removed, blank → null) is the event's place as its calendar gave it (device `l
 itself: the server's `calendar_links` has no such column and never receives one (links don't sync),
 so no Supabase migration. It is PII like a title — never logged, never sent anywhere. It feeds only
 the travel time suggestion; an accepted suggestion is the occurrence's `travel_buffer_min`.
+Series (docs/02 F5.7, local schema 13): `series_key` (nullable, ≤ 512) names the repeating event an
+instance belongs to — the shared event id on iOS/macOS/Android, Google `recurringEventId`, Microsoft
+`seriesMasterId` — and is null for a one-off event. Instances of one account sharing it are one
+series here. Device-only like the rest of the link; refreshed by every import (null on upgrade until
+the next import). A key too long to store is left null, never cut (a cut key could join two series).
+
+### `calendar_series` (local only, schema 13)
+`id, user_id, account_id, series_key, title?, notes?, color_key?, icon_key?, duration_min?,
+start_minute?, tz_id?, pinned?, travel_buffer_min?, energy?, alerts?, sound_id?, subtask_template?,
+hidden, created_at, updated_at`; unique `(user_id, account_id, series_key)`. What the person set for
+every instance of one repeating calendar event (docs/02 F5.7). Every field but `hidden` is an
+override: null keeps what the calendar gives (title, notes, time, length) or the import default.
+Each import gives a new instance of the series these values and the unticked steps of
+`subtask_template` (completion stays per occurrence, R-09); `hidden` (deleted with scope All) brings
+no instance back. A series instance's steps and notes came from the series, so when the calendar
+ends the series its planned instances are removed outright rather than sent to Trash. Written through
+the write path (validated, undoable — Undo of the write that created a row clears it) but never queued
+for sync, like the imports it shapes; no server table.
 
 ### `conflicts`
 `id, user_id, entity ('series'|'occurrences'|'subtasks'|'profiles'|'routines'), entity_id, field,

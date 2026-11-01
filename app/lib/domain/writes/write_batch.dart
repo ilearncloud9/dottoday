@@ -1,3 +1,4 @@
+import 'package:dottoday/domain/entities/calendar_series.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/entities/routine.dart';
@@ -22,6 +23,7 @@ final class WriteBatch {
     this.subtasks = const [],
     this.routines = const [],
     this.revealHints = const [],
+    this.calendarSeries = const [],
   });
 
   final String userId;
@@ -38,6 +40,10 @@ final class WriteBatch {
   /// Minimal mode's hint records (docs/14 §6).
   final List<RevealHint> revealHints;
 
+  /// What the person set for repeating calendar events (docs/02 F5.7);
+  /// device-only, never queued for sync.
+  final List<CalendarSeries> calendarSeries;
+
   /// Whether the batch writes nothing.
   bool get isEmpty =>
       profile == null &&
@@ -45,7 +51,8 @@ final class WriteBatch {
       occurrences.isEmpty &&
       subtasks.isEmpty &&
       routines.isEmpty &&
-      revealHints.isEmpty;
+      revealHints.isEmpty &&
+      calendarSeries.isEmpty;
 
   /// Whether every row is owned by [userId].
   bool get isSingleOwner =>
@@ -54,5 +61,6 @@ final class WriteBatch {
       occurrences.every((o) => o.userId == userId) &&
       subtasks.every((s) => s.userId == userId) &&
       routines.every((r) => r.userId == userId) &&
-      revealHints.every((h) => h.userId == userId);
+      revealHints.every((h) => h.userId == userId) &&
+      calendarSeries.every((s) => s.userId == userId);
 }

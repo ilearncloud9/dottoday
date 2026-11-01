@@ -6,7 +6,9 @@ import 'package:dottoday/features/timeline/editor/task_editor.dart';
 import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'calendar_series_fakes.dart';
 import 'test_l10n.dart';
 
 import 'timeline_fakes.dart';
@@ -20,19 +22,27 @@ Future<ProviderContainer> pumpEditor(
   required FakeOccurrenceRepository repo,
   List<Series> series = const [],
   FakeSubtaskRepository? subtasks,
+  FakeCalendarSeriesRepository? calendarSeries,
+  FakeCalendarSeriesSender? seriesSender,
+  List<Override> overrides = const [],
 }) async {
   tester.view
     ..physicalSize = const Size(390, 2400)
     ..devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   final container = ProviderContainer(
-    overrides: timelineOverrides(
-      now: DateTime.utc(2026, 10, 21, 7, 22),
-      occurrences: repo,
-      subtasks: subtasks,
-      series: series,
-      profile: testProfile(settings: const Settings(use24h: false)),
-    ),
+    overrides: [
+      ...timelineOverrides(
+        now: DateTime.utc(2026, 10, 21, 7, 22),
+        occurrences: repo,
+        subtasks: subtasks,
+        series: series,
+        calendarSeries: calendarSeries,
+        seriesSender: seriesSender,
+        profile: testProfile(settings: const Settings(use24h: false)),
+      ),
+      ...overrides,
+    ],
   );
   addTearDown(container.dispose);
   await tester.pumpWidget(

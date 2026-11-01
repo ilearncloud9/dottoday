@@ -1,3 +1,4 @@
+import 'package:dottoday/data/db/tables/calendar_series_table.dart';
 import 'package:dottoday/data/db/tables/calendar_tables.dart';
 // The generated part copies `soundIdCheck` (a column CHECK) verbatim.
 import 'package:dottoday/data/db/tables/columns.dart';
@@ -14,7 +15,7 @@ part 'app_database.g.dart';
 
 /// The local source of truth (docs/04 §4): server tables mirrored with sync
 /// columns, plus the local-only `change_log`, `sync_cursors`, `field_seen`,
-/// `local_meta` and `wake_up_days`.
+/// `local_meta`, `wake_up_days` and `calendar_series`.
 ///
 /// Open it with `openAppDatabase` (connection/connection.dart) so the
 /// SQLCipher key is applied before any statement (06 §4, ADR-0006).
@@ -24,6 +25,7 @@ part 'app_database.g.dart';
     SeriesTable,
     CalendarAccounts,
     CalendarLinks,
+    CalendarSeriesTable,
     Occurrences,
     Subtasks,
     RoutinesTable,
@@ -41,7 +43,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 13;
+  static const latestSchemaVersion = 14;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -113,9 +115,16 @@ class AppDatabase extends _$AppDatabase {
           wakeUpDaysTable.missionSkippedAtUtc,
         );
       }
-      // 13: files that ran the first step 11 hold windDownReminder as 0/1,
+      // 13 (docs/02 F5.7): which repeating calendar event a link belongs
+      // to (null on upgrade; the next import fills it), and the local
+      // calendar_series the person sets for every instance of one.
+      if (from < 13) {
+        await _addColumnOnce(m, calendarLinks, calendarLinks.seriesKey);
+        await _createTableOnce(m, calendarSeriesTable);
+      }
+      // 14: files that ran the first step 11 hold windDownReminder as 0/1,
       // which Settings.fromJson can't read, so the profile never loaded.
-      if (from < 13) await _repairWindDownReminder();
+      if (from < 14) await _repairWindDownReminder();
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without
@@ -142,7 +151,7 @@ class AppDatabase extends _$AppDatabase {
     "WHERE json_type(settings, '\$.bedtimeReminder') IS NOT NULL",
   );
 
-  /// Turns an integer `windDownReminder` back into a JSON boolean (v13),
+  /// Turns an integer `windDownReminder` back into a JSON boolean (v14),
   /// for files the first v11 step wrote 0/1 into. Not marked dirty: that
   /// step never reached the server, whose 0011 kept booleans.
   Future<void> _repairWindDownReminder() => customStatement(

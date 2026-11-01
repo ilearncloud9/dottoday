@@ -176,6 +176,7 @@ Validated<CalendarLink> validateCalendarLink(CalendarLink link) {
         max: 256,
       ),
       checkRequiredText(ValidationField.label, link.externalEventId, max: 512),
+      checkOptionalText(ValidationField.label, link.seriesKey, max: 512),
     ]),
   );
 }

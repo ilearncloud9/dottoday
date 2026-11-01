@@ -34,6 +34,7 @@ final class ImportedItem {
     required this.durationMin,
     this.writable = true,
     this.location,
+    this.seriesKey,
   });
 
   /// The provider's event id. EventKit gives every instance of a repeating
@@ -57,6 +58,10 @@ final class ImportedItem {
   /// Where the event happens, cleaned for storage ([importedLocation]);
   /// null when it has no place. Travel time is suggested from it (R-17).
   final String? location;
+
+  /// The series it belongs to ([ExternalEvent.seriesId]); null for a
+  /// one-off event or a series id too long to store (docs/02 F5.7).
+  final String? seriesKey;
 
   /// `calendar_links.external_event_id`: `<eventId>@<keyMs>`.
   String get key => importKey(eventId, keyMs);
@@ -96,6 +101,7 @@ List<ImportedItem> importedItems(
   final title = importedTitle(event.title, untitled);
   final notes = importedNotes(event.description, event.url);
   final place = importedLocation(event.location);
+  final series = importedSeriesKey(event.seriesId);
   if (event.allDay) {
     return [
       for (final date in allDayDates(event))
@@ -108,6 +114,7 @@ List<ImportedItem> importedItems(
           durationMin: maxDurationMin,
           writable: false,
           location: place,
+          seriesKey: series,
         ),
     ];
   }
@@ -121,9 +128,18 @@ List<ImportedItem> importedItems(
       durationMin: importedDurationMin(event.startUtc, event.endUtc),
       writable: !event.repeating && event.editable,
       location: place,
+      seriesKey: series,
     ),
   ];
 }
+
+/// [raw] as `calendar_links.series_key`: null when empty or too long to
+/// store (skipped rather than cut, since a cut key could join two series,
+/// 06 §7).
+String? importedSeriesKey(String? raw) =>
+    raw == null || raw.isEmpty || raw.length > maxExternalEventIdLength
+    ? null
+    : raw;
 
 /// How long a timed event's block is: longer than a day shows its first
 /// 24 h; a zero-length reminder gets the shortest block.

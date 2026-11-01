@@ -554,6 +554,96 @@ Follow-ups (M17):
 - [x] Replace every polling loop in the open app with the event that makes it needed (docs/04 §4 "Triggers"; R-08). **Sync**: the 5-minute `Timer.periodic` is gone; Realtime nudges on every change, on every channel join (catch-up after a drop) and when the server's change feed goes live (a change in the ~0.2 s before that is otherwise never announced), a broken channel is replaced with back-off (`data/sync/realtime_nudges.dart`), a failed run is retried with back-off until one succeeds (`EngineSyncService`). **Housekeeping**: the 6-hour `Timer.periodic` is gone; one timer for the moment it is next due (`domain/time/housekeeping_due.dart`: local midnight or the daily backup, `BackupService.nextDailyDueUtc`), re-armed after each run, one run at a time; the OS's `wake`/`clock` events run it (`data/system/system_events.dart` over `dottoday/system_events`: `SystemEventsBridge` in the iOS and macOS AppDelegate, `system/SystemEvents.kt` on Android). **Calendars**: device calendar changes (EventKit, `CalendarContract` observer, started once access is granted) import device events after a 2 s settle (`CalendarActions.deviceCalendarChanged`). No fallback timer is kept. **Tests** `tool/sync/realtime_live_check_test.dart` against the local stack (join, a change at once after joining, a change, a real socket drop with a change while down, a closed channel; each nudged within ~1 s), device `calendar_live_change` on the iPhone 17 Pro simulator and the API 37 emulator (added / moved / deleted with no resume, each ~2.1–2.3 s), `realtime_nudges_test`, `engine_sync_service_test` (retry until success, then stop), `housekeeping_due_test` (DST, month/year ends, overdue backup), `backup_service_test` (next due), `app_lifecycle_test` (nothing before it is due; midnight; backup first; wake/clock; coalesced events; calendar burst → one import). Kept by design: the OS's daily background refresh on iOS/Android, timers for known moments, Realtime's keep-alive.
 - [ ] Google/Microsoft calendar change webhooks (Google push channels, Microsoft Graph subscriptions) into the backend, so cloud calendars update while the app is open on the web too. Owner gate: hosted Supabase project and the providers' consoles (CLAUDE.md §10).
 
+## Repeating calendar events as one series (owner request, 2026-11-01)
+
+Goal: a repeating event imported from any calendar (Apple, Android, Google, Microsoft) is one repeating
+item in Dottoday, like a repeating task made here. One edit or delete reaches every instance;
+subtasks still reset per occurrence (R-09). Spec: docs/02 F5.7. Today every instance is its own
+unlinked item, and a repeating event's instance can't write back on device calendars (M7.3).
+One branch, one PR (`feat/calendar-series`).
+
+- [x] CS1 Series key on every import. `ExternalEvent.seriesId`: Google `recurringEventId`, Microsoft
+  `seriesMasterId`, EventKit/Android/macOS bridge the shared event id of a repeating event; null for
+  one-off events. Kept on the device-only link as `calendar_links.series_key` (local Drift schema
+  bump, no Supabase migration: links don't sync). `calendar-sync` returns the field (code here;
+  deploy is an owner gate). Done: importer tests for each provider's shape; a series key survives a
+  moved instance. Notes: `ExternalEvent.seriesId` sits beside `repeating` (still the device
+  rule "this instance can't be written alone"; Google/Microsoft instances can, M7.4).
+  `importedSeriesKey` drops an empty or over-long key. Local schema 13 adds the column
+  (`_addColumnOnce`, CHECK kept); `validateCalendarLink` checks it.
+- [x] CS2 Imported series settings. A device-only table `calendar_series` (account, series key,
+  colour, icon, alerts, sound, travel time, subtask templates, notes override, hidden) — the
+  series-level Dottoday fields. Every import gives new instances of a series what the row holds, so
+  an instance appearing in the 90-day window next month already has the subtasks. Rejected: a synced
+  `series` row (imports are device-only, and the materialiser would create instances the calendar
+  owns); copying from the previous instance (breaks when that one was edited "this one"). Notes:
+  `CalendarSeries` (`domain/entities/`), local schema 13, `WriteBatch.calendarSeries` (device-only
+  writer, `validateCalendarSeries`), Undo puts a changed row back and clears a created one (no
+  Trash for it). `withSeriesSettings` / `seriesSubtasks` (`domain/calendar/`) shape a new instance;
+  a time of day is placed on the instance's own date in the series' zone. A series ended in the
+  calendar removes its planned instances outright (their steps came from the series) — rejected:
+  Trash per instance (one copy of the list per day).
+- [x] CS3 Edit scope for imported series. An imported instance with a series key opens the existing
+  edit-scope sheet with **This one** / **All** (no "This and following": splitting a series in
+  someone's calendar is a bigger change; follow-up if asked). All = the `calendar_series` row plus
+  every planned instance from today (done and past ones stay, as for repeating tasks). Time, length
+  and title with All move every planned instance here and become a pending series write-back (CS5).
+  One batch, one Undo. Notes: `TaskView.imported` (`ImportedSeries`: account, series key, settings) is
+  read from the link; `TaskView.repeats` gates every scope question. One dispatcher
+  (`features/timeline/editor/editor_scope.dart`: `scopesFor`, `writeScoped`, `deleteScopedWrite`,
+  `listEveryTime`) serves Save, Delete, Alerts, Sound and "Use this list every time" for both kinds
+  of series. Pure `editImportedSeries` / `deleteImportedSeries` (`domain/calendar/`): All reaches
+  the target and every live planned instance from the start of today (done/skipped/earlier stay),
+  alerts and sound become each row's own (no series row to inherit from), a new time is placed on
+  each instance's own date. Delete All here only; CS4 adds the calendar question.
+- [x] CS4 Delete scope for imported series. **This one** / **All**. All marks the series hidden (no
+  instance comes back on re-import) and sends its planned instances to Trash; Undo restores both.
+  When write-back is on for that calendar a second question follows: **Only in Dottoday** (default) /
+  **Delete from <calendar> too** — deleting there can't be undone here and reaches other devices, so
+  it is always asked, never remembered.
+- [x] CS5 Series write-back. `CalendarWriter` gains series read/write/delete. Google: PATCH/DELETE the
+  `recurringEventId` master (If-Match). Microsoft: PATCH/DELETE the `seriesMaster`. iOS plugin and macOS
+  bridge: save/remove with span `.futureEvents` on the first instance from today. Android: update the
+  `Events` row of the series (verify on the emulator that the plugin keeps the RRULE; if it can't, a
+  small Kotlin channel method, as macOS has — no new package). A clash uses the M7.3 banner. Done:
+  device tests on the iPhone simulator and the Android emulator; Google/Microsoft against fakes in
+  `calendar_test.ts` (live check is an owner gate after deploy). Notes (CS4 + CS5): `CalendarWriter.writeSeries` / `deleteSeries`
+  with a `SeriesPatch` (time-of-day shift, length, title); the shift is the edited instance's new
+  wall-clock minute against its link fingerprint (what the calendar last had), so the date of the
+  series' first occurrence never moves. Google/Microsoft: `calendar-sync` `update_series` /
+  `delete_series` read the master and write with If-Match (Google keeps the master's own zone);
+  organiser and calendar role checked first. Device: native, not `device_calendar` — its save
+  rewrites the RRULE and invitees from its own model (read in its iOS and Kotlin code):
+  `CalendarSeriesBridge.swift` (iOS and macOS Runners, one file; EventKit's first occurrence,
+  `.futureEvents`) and `CalendarSeries.kt` (DTSTART + shift, DURATION, TITLE on the `Events` row),
+  over `dottoday/calendar_series` (`CalendarSeriesChannel`). The calendar's series changes as its
+  own "All events" does, past repeats included; in Dottoday only today on changes (history stays).
+  `CalendarSeriesWriteBack` (the `CalendarSeriesSender` port) sends after the local write; on
+  success the series' time/length/title overrides are cleared and each instance's link takes the
+  calendar's values, so per-instance write-back sends nothing. A calendar out of reach: the change
+  stays here and the snackbar says so; no automatic retry (a later All edit sends again). Import:
+  a series moved to another time gives every instance a new key, so leftover links and items of a
+  series pair by series and local date before anything is removed (done days keep their row).
+  Delete › All asks "Also delete it from <calendar>?" before writing (Only in Dottoday first;
+  closing cancels the delete), only when Send changes back is on. Known limits: Undo of a sent
+  All edit reverts Dottoday only (the snackbar's Undo can't reach the calendar); a slow network
+  (> 2 s) can let per-instance write-back of a Google/Microsoft series go first, which lands the
+  same times as instance exceptions there.
+- [x] CS6 Copy, goldens and a11y: editor line "Changes go back to Work · every repeat", the two scope
+  sheets in both themes and three widths, semantics tests, de/fr/es strings, docs/14 rows. Then
+  `/ship-check`-style gate for this section and the PR. Notes: goldens `picker_scope_calendar_*`, `picker_delete_from_calendar_*`
+  (derived, both themes, compact and expanded); de/fr/es strings by the agent — native-speaker pass
+  joins the open M16 one. The editor line stays "Changes go back to <calendar>" (it already says
+  where edits go). Device check `calendar_series` 5/5 on the iPhone 17 Pro simulator (iOS 26.5) and
+  the API 37 emulator, 2026-11-01: three days one series; rename All reaches the calendar; 30 min
+  earlier and 45 min long reach the series with its rule (daily ×3), notes and alert kept; the
+  re-import keeps the same three days; Delete All › from the calendar too removes it. Fixed from
+  it: Android's provider re-expands a series from the fields an update carries, so the stored
+  RRULE goes back unchanged with every write, and the DTEND form device_calendar uses is kept
+  (DURATION beside DTEND is refused); the editor's close after a scoped delete takes its navigator
+  at build, as a delete that reaches a calendar outlasts the editor. The Mac shares the iOS bridge
+  file; its run needs a person at the TCC prompt (08 §6.1, as M7.1b).
+
 ## Pricing (owner sign-off pending)
 
 The free/Pro split in `11-standout-roadmap.md` is a **draft** the owner will review. Until it is signed off, everything is built ungated; the only pricing code is `domain/entitlements` (M6.5.11) with one `isPro` flag, `true` in every build. No paywall, no purchase flow, no store products. Features may read `isPro` but no build sets it false.

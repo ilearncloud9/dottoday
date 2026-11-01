@@ -31,6 +31,12 @@ export interface EventInfo {
   etag: string;
   /** Whether a move or rename can go back (timed, editable calendar). */
   writable: boolean;
+  /**
+   * The repeating event this is an instance of (Google `recurringEventId`,
+   * Microsoft `seriesMasterId`); absent for a one-off event. The app makes
+   * one series of the instances that share it (docs/02 F5.7).
+   */
+  seriesId?: string;
 }
 
 /** What write-back changes: start, end and maybe the title. */
@@ -38,6 +44,23 @@ export interface EventPatch {
   start: number;
   end: number;
   title?: string;
+}
+
+/**
+ * What a scope-All edit changes on a whole repeating event (docs/02 F5.7):
+ * its start moves by [shiftMs] (the time of day; the date stays), its
+ * length becomes [durationMs] when given, its title [title] when given.
+ */
+export interface SeriesPatch {
+  shiftMs: number;
+  durationMs?: number;
+  title?: string;
+}
+
+/** The new start and end of a series that was at [start]–[end]. */
+export function seriesTimes(start: number, end: number, patch: SeriesPatch): { start: number; end: number } {
+  const next = start + patch.shiftMs;
+  return { start: next, end: next + (patch.durationMs ?? end - start) };
 }
 
 export type WriteResult = 'written' | 'changed' | 'gone' | 'not_writable' | 'failed';
@@ -54,6 +77,10 @@ export interface CalendarApi {
     patch: EventPatch,
     etag: string,
   ): Promise<WriteResult>;
+  /** Changes the whole repeating event [seriesId] (read, then If-Match). */
+  updateSeries(token: string, calendarId: string, seriesId: string, patch: SeriesPatch): Promise<WriteResult>;
+  /** Deletes the whole repeating event [seriesId]. */
+  deleteSeries(token: string, calendarId: string, seriesId: string): Promise<WriteResult>;
 }
 
 /** Thrown when the provider says the access token isn't accepted. */

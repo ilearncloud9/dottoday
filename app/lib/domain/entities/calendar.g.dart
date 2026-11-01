@@ -58,6 +58,7 @@ _CalendarLink _$CalendarLinkFromJson(Map<String, dynamic> json) =>
       ),
       readOnly: json['read_only'] as bool? ?? true,
       location: json['location'] as String?,
+      seriesKey: json['series_key'] as String?,
     );
 
 Map<String, dynamic> _$CalendarLinkToJson(_CalendarLink instance) =>
@@ -74,6 +75,7 @@ Map<String, dynamic> _$CalendarLinkToJson(_CalendarLink instance) =>
       ),
       'read_only': instance.readOnly,
       'location': instance.location,
+      'series_key': instance.seriesKey,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(

@@ -46,6 +46,25 @@ final class FakeCloudCalendars implements CloudCalendars {
     required String expectedVersion,
   }) async => WriteBackOutcome.written;
 
+  /// Whole-series edits and deletes sent (docs/02 F5.7), in order.
+  final seriesPatches = <(EventAddress, SeriesPatch)>[];
+  final seriesDeletes = <EventAddress>[];
+
+  @override
+  Future<WriteBackOutcome> writeSeries(
+    EventAddress at,
+    SeriesPatch patch,
+  ) async {
+    seriesPatches.add((at, patch));
+    return WriteBackOutcome.written;
+  }
+
+  @override
+  Future<WriteBackOutcome> deleteSeries(EventAddress at) async {
+    seriesDeletes.add(at);
+    return WriteBackOutcome.written;
+  }
+
   @override
   Future<Result<Uri, AppFailure>> connectUrl(
     CalendarProvider provider,
