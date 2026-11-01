@@ -2,6 +2,7 @@ import 'package:device_calendar/device_calendar.dart' as dc;
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
+import 'package:dottoday/data/calendar/calendar_series_channel.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
@@ -22,7 +23,9 @@ final class PluginDeviceCalendarGateway implements DeviceCalendarGateway {
     this._logger, {
     required Future<String> Function() deviceZone,
     dc.DeviceCalendarPlugin? plugin,
+    CalendarSeriesChannel? series,
   }) : _deviceZone = deviceZone,
+       _series = series ?? CalendarSeriesChannel(_logger),
        // The app initialises time zones itself (bootstrap); the plugin's
        // own init would only repeat it.
        _plugin = plugin ?? dc.DeviceCalendarPlugin(shouldInitTimezone: false);
@@ -33,6 +36,32 @@ final class PluginDeviceCalendarGateway implements DeviceCalendarGateway {
   /// The device's IANA zone: where an iOS all-day event's dates are read.
   final Future<String> Function() _deviceZone;
   final dc.DeviceCalendarPlugin _plugin;
+
+  /// Whole-series edits (docs/02 F5.7): native, not the plugin, which
+  /// would rewrite the repeat rule and invitees.
+  final CalendarSeriesChannel _series;
+
+  @override
+  Future<EventWriteResult> updateSeries(SeriesUpdate update) async {
+    if (!await _granted()) return EventWriteResult.failed;
+    if (!_addressable(update.eventId)) return EventWriteResult.gone;
+    return _series.update(update);
+  }
+
+  @override
+  Future<EventWriteResult> deleteSeries(
+    String calendarId,
+    String eventId,
+  ) async {
+    if (!await _granted()) return EventWriteResult.failed;
+    if (!_addressable(eventId)) return EventWriteResult.gone;
+    return _series.delete(calendarId, eventId);
+  }
+
+  /// Android ids must be the numeric ones CalendarContract hands out (06 §7).
+  static bool _addressable(String eventId) =>
+      defaultTargetPlatform != TargetPlatform.android ||
+      _numeric.hasMatch(eventId);
 
   static const _askedKey = 'calendar_permission_asked';
 
@@ -216,6 +245,8 @@ final class PluginDeviceCalendarGateway implements DeviceCalendarGateway {
       description: e.description,
       url: _link(e.url),
       repeating: e.recurrenceRule != null,
+      // The plugin gives every instance of a series the same event id.
+      seriesId: e.recurrenceRule != null ? id : null,
     );
   }
 

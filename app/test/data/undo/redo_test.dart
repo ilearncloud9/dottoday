@@ -1,5 +1,6 @@
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/data/repositories/drift_calendar_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_routine_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
@@ -39,6 +40,7 @@ void main() {
       subtasks: DriftSubtaskRepository(h.db),
       series: DriftSeriesRepository(h.db),
       routines: DriftRoutineRepository(h.db),
+      calendarSeries: DriftCalendarSeriesRepository(h.db),
       settings: DriftSettingsRepository(h.db),
       clock: h.clock,
       ids: FakeIds('undo'),

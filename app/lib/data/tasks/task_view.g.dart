@@ -69,7 +69,7 @@ final class TaskViewProvider
   }
 }
 
-String _$taskViewHash() => r'0b41c1a4703d41ca555d5ff6334d272d0d47e8b1';
+String _$taskViewHash() => r'e41b208ff78fe6effc8077a2acd6cd41027a3457';
 
 /// The live task [id] of the current user, or null when there is none:
 /// unknown, deleted or another user's id all read as not found (06 §9:

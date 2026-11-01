@@ -119,6 +119,7 @@ void main() {
           'allDay': false,
           'writable': false,
           'etag': '"1"',
+          'seriesId': 'r1',
         },
         {
           'id': 'h1',
@@ -139,6 +140,8 @@ void main() {
     final list = (result as Ok<List<ExternalEvent>, AppFailure>).value;
     expect(list, hasLength(2));
     expect(list[0].editable, isFalse);
+    expect(list[0].seriesId, 'r1');
+    expect(list[1].seriesId, isNull);
     expect(list[0].startUtc, DateTime.utc(2026, 10, 24, 9));
     expect(list[1].allDay, isTrue);
     expect(list[1].startUtc, DateTime.utc(2026, 10, 24));
@@ -177,6 +180,30 @@ void main() {
     final sent = functions.calls.last.$2;
     expect(sent['etag'], '"7"');
     expect(sent.containsKey('title'), isFalse, reason: 'not renamed here');
+  });
+
+  test('series: update_series and delete_series with the series id', () async {
+    functions.answer = (_, body) => {
+      'result': body['action'] == 'delete_series' ? 'gone' : 'not_writable',
+    };
+    const at = EventAddress(calendarId: '$_acc/primary', eventId: 'r1');
+    final edit = await gateway().writeSeries(
+      at,
+      const SeriesPatch(
+        shift: Duration(minutes: -30),
+        duration: Duration(minutes: 45),
+      ),
+    );
+    expect(edit, WriteBackOutcome.notWritable);
+    expect(functions.calls.last.$2, {
+      'action': 'update_series',
+      'calendarId': '$_acc/primary',
+      'seriesId': 'r1',
+      'shiftMs': -1800000,
+      'durationMs': 2700000,
+    });
+    expect(await gateway().deleteSeries(at), WriteBackOutcome.gone);
+    expect(functions.calls.last.$2['action'], 'delete_series');
   });
 
   test('gone events read as null', () async {

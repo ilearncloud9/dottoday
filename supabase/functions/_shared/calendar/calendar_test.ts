@@ -30,6 +30,15 @@ test('google timed and all-day events', () => {
   assert.equal(googleEvent({ id: 'bad', start: { dateTime: 'nope' }, end: { dateTime: 'nope' } }, true), null);
 });
 
+test('series ids: an instance names its repeating event, a one-off none', () => {
+  const at = { start: { dateTime: '2026-10-24T09:00:00Z' }, end: { dateTime: '2026-10-24T09:30:00Z' } };
+  assert.equal(googleEvent({ id: 'r_20261024', recurringEventId: 'r', ...at }, true)!.seriesId, 'r');
+  assert.equal(googleEvent({ id: 'once', ...at }, true)!.seriesId, undefined);
+  const graphAt = { start: { dateTime: '2026-10-24T09:00:00' }, end: { dateTime: '2026-10-24T09:30:00' } };
+  assert.equal(graphEvent({ id: 'occ', seriesMasterId: 'master', ...graphAt }, true)!.seriesId, 'master');
+  assert.equal(graphEvent({ id: 'single', ...graphAt }, true)!.seriesId, undefined);
+});
+
 test('graph events: UTC times, organiser only, all-day dates', () => {
   const e = graphEvent({
     id: 'AAMk=', subject: 'Review', '@odata.etag': 'W/"x"', isOrganizer: true,
@@ -115,6 +124,69 @@ test('graph api: read-only calendars and missing events', async () => {
   const [cal] = await api.calendars('tok');
   assert.deepEqual([cal.readOnly, cal.colorArgb], [true, 0xff00aa00]);
   assert.equal(await api.event('tok', 'c1', 'gone'), null);
+});
+
+test('google series: the master moves by the shift, keeps its zone, If-Match', async () => {
+  const sent: { method: string; body?: Record<string, unknown>; ifMatch?: string }[] = [];
+  const fake = (async (url: string, init: RequestInit = {}) => {
+    if (url.includes('/calendarList/')) return Response.json({ id: 'c', accessRole: 'owner' });
+    const method = init.method ?? 'GET';
+    if (method === 'GET') {
+      return Response.json({
+        id: 'r1', etag: '"m1"',
+        start: { dateTime: '2026-01-05T06:00:00+01:00', timeZone: 'Europe/Berlin' },
+        end: { dateTime: '2026-01-05T06:30:00+01:00', timeZone: 'Europe/Berlin' },
+      });
+    }
+    sent.push({
+      method,
+      body: init.body ? JSON.parse(String(init.body)) : undefined,
+      ifMatch: (init.headers as Record<string, string>)['If-Match'],
+    });
+    return new Response(null, { status: method === 'DELETE' ? 204 : 200 });
+  }) as typeof fetch;
+  const api = googleApi(fake);
+  assert.equal(await api.updateSeries('tok', 'c', 'r1', { shiftMs: -30 * 60_000, durationMs: 45 * 60_000, title: 'Pray' }), 'written');
+  const [patch] = sent;
+  assert.equal(patch.ifMatch, '"m1"');
+  assert.deepEqual(patch.body, {
+    start: { dateTime: '2026-01-05T04:30:00.000Z', timeZone: 'Europe/Berlin' },
+    end: { dateTime: '2026-01-05T05:15:00.000Z', timeZone: 'Europe/Berlin' },
+    summary: 'Pray',
+  });
+  assert.equal(await api.deleteSeries('tok', 'c', 'r1'), 'written');
+  assert.equal(sent.at(-1)!.method, 'DELETE');
+  const reader = googleApi((async (url: string) =>
+    Response.json(url.includes('/calendarList/') ? { accessRole: 'reader' } : {})) as typeof fetch);
+  assert.equal(await reader.updateSeries('tok', 'c', 'r1', { shiftMs: 0 }), 'not_writable');
+  assert.equal(await reader.deleteSeries('tok', 'c', 'r1'), 'not_writable');
+});
+
+test('graph series: organiser only; the master moves in UTC', async () => {
+  let organizer = true;
+  const sent: { method: string; body?: Record<string, unknown> }[] = [];
+  const fake = (async (url: string, init: RequestInit = {}) => {
+    const method = init.method ?? 'GET';
+    if (url.includes('$select=id,canEdit')) return Response.json({ id: 'c1', canEdit: true });
+    if (method === 'GET') {
+      return Response.json({
+        id: 'm', isOrganizer: organizer, '@odata.etag': 'W/"m"',
+        start: { dateTime: '2026-01-05T05:00:00.0000000' }, end: { dateTime: '2026-01-05T05:30:00.0000000' },
+      });
+    }
+    sent.push({ method, body: init.body ? JSON.parse(String(init.body)) : undefined });
+    return new Response(null, { status: method === 'DELETE' ? 204 : 200 });
+  }) as typeof fetch;
+  const api = microsoftApi(fake);
+  assert.equal(await api.updateSeries('tok', 'c1', 'm', { shiftMs: 60 * 60_000 }), 'written');
+  assert.deepEqual(sent[0].body, {
+    start: { dateTime: '2026-01-05T06:00:00', timeZone: 'UTC' },
+    end: { dateTime: '2026-01-05T06:30:00', timeZone: 'UTC' },
+  });
+  assert.equal(await api.deleteSeries('tok', 'c1', 'm'), 'written');
+  organizer = false;
+  assert.equal(await api.updateSeries('tok', 'c1', 'm', { shiftMs: 0 }), 'not_writable');
+  assert.equal(await api.deleteSeries('tok', 'c1', 'm'), 'not_writable');
 });
 
 test('env: placeholders count as unset', () => {

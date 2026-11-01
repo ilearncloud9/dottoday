@@ -78,6 +78,7 @@
 		9D6CD054197ACE3166C86C56 /* start_waves.caf in Resources */ = {isa = PBXBuildFile; fileRef = 46B84868EF87805228268F67 /* start_waves.caf */; };
 		9DBBC280C44959CB4A8B9A63 /* start_rain.caf in Resources */ = {isa = PBXBuildFile; fileRef = 81F74FCF5B52C4F0860B4FB2 /* start_rain.caf */; };
 		A1B2C3D4E5F60718293A4B03 /* SpeechBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B04 /* SpeechBridge.swift */; };
+		A1B2C3D4E5F60718293A4C03 /* CalendarSeriesBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4C04 /* CalendarSeriesBridge.swift */; };
 		A7AA73C437084401A4112BA0 /* clear_lift.caf in Resources */ = {isa = PBXBuildFile; fileRef = EE87AF667EAB48922F2C250E /* clear_lift.caf */; };
 		ACBBDE6AA2740B026820C3A3 /* quiet_soft.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0277A5B525B6876C7DB0326B /* quiet_soft.caf */; };
 		AF2F3EC0CA4681C6E75902BF /* play_dog.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2FAF1D6BB6A09F60ECBA1DDD /* play_dog.caf */; };
@@ -227,6 +228,7 @@
 		9E3DC7112505EEA9A228F38D /* clear_tap.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_tap.caf; path = ../ios/Runner/Sounds/clear_tap.caf; sourceTree = SOURCE_ROOT; };
 		A1AE07484F8F561832403D18 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		A1B2C3D4E5F60718293A4B04 /* SpeechBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SpeechBridge.swift; path = ../../ios/Runner/SpeechBridge.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718293A4C04 /* CalendarSeriesBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CalendarSeriesBridge.swift; path = ../../ios/Runner/CalendarSeriesBridge.swift; sourceTree = "<group>"; };
 		A26FF939B8D094FBDAAA5B74 /* start_solemn.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_solemn.caf; path = ../ios/Runner/Sounds/start_solemn.caf; sourceTree = SOURCE_ROOT; };
 		A2FC5BA3A2E7B7455CFB32E7 /* play_knock.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_knock.caf; path = ../ios/Runner/Sounds/play_knock.caf; sourceTree = SOURCE_ROOT; };
 		A48F3673E981EC1FA3A39D90 /* clear_involved.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_involved.caf; path = ../ios/Runner/Sounds/clear_involved.caf; sourceTree = SOURCE_ROOT; };
@@ -378,6 +380,7 @@
 				A4C8C4A884C19DCEE1DA1932 /* DayDotStatusItem.swift */,
 				E31060CD99B889FD8CFFD316 /* ThinkingBridge.swift */,
 				A1B2C3D4E5F60718293A4B04 /* SpeechBridge.swift */,
+				A1B2C3D4E5F60718293A4C04 /* CalendarSeriesBridge.swift */,
 				FD451A8BE2D7D08996B3C88E /* DotStore.swift */,
 				064113D26C4B8C6EC4357132 /* IntentQueueBridge.swift */,
 			);
@@ -812,6 +815,7 @@
 				110C4778699B875E748E943B /* DayDotStatusItem.swift in Sources */,
 				5A38B0F6448DE1214CE36867 /* ThinkingBridge.swift in Sources */,
 				A1B2C3D4E5F60718293A4B03 /* SpeechBridge.swift in Sources */,
+				A1B2C3D4E5F60718293A4C03 /* CalendarSeriesBridge.swift in Sources */,
 				D74A14723FFB04FCF582C67F /* DotStore.swift in Sources */,
 				EA0ECF4143D7501174EC83E3 /* IntentQueueBridge.swift in Sources */,
 			);

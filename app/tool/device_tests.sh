@@ -7,6 +7,7 @@
 # Tests are names under integration_test/ without `_test.dart`; default:
 # the device suite below. The calendar checks (calendar_prompt,
 # calendar_denied, calendar_import, calendar_live_change, calendar_write_back,
+# calendar_series,
 # calendar_revoked, iOS also calendar_regranted; docs/08 §5b) are named
 # explicitly, in that order. thread_perf is not here: it needs
 # `flutter drive --profile --no-dds` on physical hardware (M5.9b).
@@ -96,7 +97,7 @@ prepare() {
   case "$1" in
     calendar_prompt) calendar_access reset ;;
     calendar_denied | calendar_revoked) calendar_access revoke ;;
-    calendar_import | calendar_live_change | calendar_write_back | calendar_regranted) calendar_access grant ;;
+    calendar_import | calendar_live_change | calendar_write_back | calendar_series | calendar_regranted) calendar_access grant ;;
   esac
 }
 

@@ -88,6 +88,26 @@ const f5Rows = <String, ParityRow>{
       'calendar_import opens Chrome · emulator, M7.7',
     ),
   ),
+  'F5.7': ParityRow(
+    tests: [
+      'test/domain/calendar/calendar_import_plan_test.dart',
+      'test/data/calendar/calendar_series_writes_test.dart',
+      'test/domain/calendar/calendar_series_edit_test.dart',
+      'test/features/timeline/editor_calendar_series_test.dart',
+      'test/data/calendar/calendar_series_write_back_test.dart',
+      'test/data/calendar/calendar_series_channel_test.dart',
+      'supabase/functions/calendar-sync/sync_test.ts',
+      'supabase/functions/_shared/calendar/calendar_test.ts',
+    ],
+    all: ci,
+    ios: Cell(Status.device, 'calendar_series · sim, 2026-11-01'),
+    android: Cell(Status.device, 'calendar_series · emulator, 2026-11-01'),
+    macos: _macCal,
+    web: Cell(Status.owner, 'calendar-sync deploy + a real account (08 §6.1)'),
+    note:
+        'Google/Microsoft series write-back waits on the calendar-sync '
+        'deploy (owner gate, 08 §6.1).',
+  ),
 };
 
 const f6Rows = <String, ParityRow>{

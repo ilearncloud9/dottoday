@@ -68,6 +68,7 @@ final class ExternalEvent {
     this.description,
     this.url,
     this.repeating = false,
+    this.seriesId,
     this.editable = true,
   });
 
@@ -85,6 +86,12 @@ final class ExternalEvent {
   /// can only change the whole series through the plugin, so such an
   /// instance is never written back (docs/09 M7.3).
   final bool repeating;
+
+  /// The repeating event this is an instance of, as its calendar names it
+  /// (the shared event id on the device, Google `recurringEventId`,
+  /// Microsoft `seriesMasterId`); null for a one-off event. Instances that
+  /// share it are one series in Dottoday (docs/02 F5.7).
+  final String? seriesId;
 
   /// Whether the event itself takes changes: false for a meeting someone
   /// else organises in a Google/Microsoft calendar (M7.4).
@@ -106,6 +113,27 @@ final class EventUpdate {
   final String eventId;
   final DateTime startUtc;
   final DateTime endUtc;
+  final String? title;
+}
+
+/// A scope-All edit of a whole repeating event (docs/02 F5.7): its
+/// start moves by [shift] (the time of day; dates stay), [duration] and
+/// [title] replace the length and title when given.
+final class SeriesUpdate {
+  const SeriesUpdate({
+    required this.calendarId,
+    required this.eventId,
+    required this.shift,
+    this.duration,
+    this.title,
+  });
+
+  final String calendarId;
+
+  /// The series' own id ([ExternalEvent.seriesId]).
+  final String eventId;
+  final Duration shift;
+  final Duration? duration;
   final String? title;
 }
 
@@ -163,6 +191,13 @@ abstract interface class DeviceCalendarGateway implements CalendarEventReader {
   /// Changes the start, end and (when given) title of one event, leaving
   /// everything else on it as it is (M7.3).
   Future<EventWriteResult> updateEvent(EventUpdate update);
+
+  /// Changes a whole repeating event: its start, length and title only
+  /// (docs/02 F5.7). Its rule, zone and invitees stay as they are.
+  Future<EventWriteResult> updateSeries(SeriesUpdate update);
+
+  /// Deletes the whole repeating event [eventId] from [calendarId].
+  Future<EventWriteResult> deleteSeries(String calendarId, String eventId);
 }
 
 /// A device calendar as Settings › Calendars lists it: whether its events

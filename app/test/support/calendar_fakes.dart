@@ -39,6 +39,28 @@ final class FakeDeviceCalendarGateway implements DeviceCalendarGateway {
   /// Updates sent through [updateEvent], in order.
   final updates = <EventUpdate>[];
 
+  /// Whole-series edits and deletes sent (docs/02 F5.7), in order.
+  final seriesUpdates = <SeriesUpdate>[];
+  final seriesDeletes = <String>[];
+
+  /// What [updateSeries] and [deleteSeries] answer.
+  EventWriteResult seriesResult = EventWriteResult.written;
+
+  @override
+  Future<EventWriteResult> updateSeries(SeriesUpdate update) async {
+    seriesUpdates.add(update);
+    return seriesResult;
+  }
+
+  @override
+  Future<EventWriteResult> deleteSeries(
+    String calendarId,
+    String eventId,
+  ) async {
+    seriesDeletes.add(eventId);
+    return seriesResult;
+  }
+
   /// What [updateEvent] answers; [EventWriteResult.written] changes the
   /// stored event, as the calendar would.
   EventWriteResult writeResult = EventWriteResult.written;

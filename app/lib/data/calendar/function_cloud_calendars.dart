@@ -112,7 +112,7 @@ final class FunctionCloudCalendars implements CloudCalendars {
     EventPatch patch, {
     required String expectedVersion,
   }) async {
-    final result = await _call(_sync, {
+    return _outcomeOf({
       'action': 'update',
       'calendarId': at.calendarId,
       'eventId': at.eventId,
@@ -120,15 +120,35 @@ final class FunctionCloudCalendars implements CloudCalendars {
       'end': patch.endUtc.millisecondsSinceEpoch,
       'title': ?patch.title,
       'etag': expectedVersion,
-    }, (json) => _map(json)['result']);
-    return switch (result) {
-      Ok(value: 'written') => WriteBackOutcome.written,
-      Ok(value: 'changed') => WriteBackOutcome.changed,
-      Ok(value: 'gone') => WriteBackOutcome.gone,
-      Ok(value: 'not_writable') => WriteBackOutcome.notWritable,
-      _ => WriteBackOutcome.failed,
-    };
+    });
   }
+
+  @override
+  Future<WriteBackOutcome> writeSeries(EventAddress at, SeriesPatch patch) =>
+      _outcomeOf({
+        'action': 'update_series',
+        'calendarId': at.calendarId,
+        'seriesId': at.eventId,
+        'shiftMs': patch.shift.inMilliseconds,
+        'durationMs': ?patch.duration?.inMilliseconds,
+        'title': ?patch.title,
+      });
+
+  @override
+  Future<WriteBackOutcome> deleteSeries(EventAddress at) => _outcomeOf({
+    'action': 'delete_series',
+    'calendarId': at.calendarId,
+    'seriesId': at.eventId,
+  });
+
+  Future<WriteBackOutcome> _outcomeOf(Map<String, Object?> body) async =>
+      switch (await _call(_sync, body, (json) => _map(json)['result'])) {
+        Ok(value: 'written') => WriteBackOutcome.written,
+        Ok(value: 'changed') => WriteBackOutcome.changed,
+        Ok(value: 'gone') => WriteBackOutcome.gone,
+        Ok(value: 'not_writable') => WriteBackOutcome.notWritable,
+        _ => WriteBackOutcome.failed,
+      };
 
   @override
   Future<Result<Uri, AppFailure>> connectUrl(
@@ -244,6 +264,7 @@ DeviceCalendar? _calendar(
   final location = json['location'];
   final description = json['description'];
   final etag = json['etag'];
+  final seriesId = json['seriesId'];
   return (
     ExternalEvent(
       id: id,
@@ -255,6 +276,7 @@ DeviceCalendar? _calendar(
       location: location is String ? location : null,
       description: description is String ? description : null,
       editable: json['writable'] == true,
+      seriesId: seriesId is String && seriesId.isNotEmpty ? seriesId : null,
     ),
     etag is String ? etag : '',
   );

@@ -7,6 +7,8 @@
 //   events     {calendarId, from, to} → the events of one calendar
 //   event      {calendarId, eventId}  → one event now (write-back's read)
 //   update     {calendarId, eventId, start, end, title?, etag} → result
+//   update_series {calendarId, seriesId, shiftMs, durationMs?, title?} → result
+//   delete_series {calendarId, seriesId} → result
 //   disconnect {accountId}            → the account and its token are gone
 // A calendar id is `<account id>/<provider calendar id>`, so every call is
 // checked against the caller's own accounts.
@@ -53,6 +55,10 @@ export async function handle(jwt: string | null, body: unknown, deps: Deps): Pro
         return await event(user, call, deps);
       case 'update':
         return await update(user, call, deps);
+      case 'update_series':
+        return await updateSeries(user, call, deps);
+      case 'delete_series':
+        return await deleteSeries(user, call, deps);
       case 'disconnect':
         return await disconnect(user, call, deps);
       default:
@@ -127,6 +133,42 @@ async function update(user: string, call: Record<string, unknown>, deps: Deps): 
   const patch = { start, end, ...(typeof title === 'string' ? { title } : {}) };
   const result = await withToken(account, deps, (api, token) =>
     api.update(token, calendarId, eventId, patch, etag));
+  return { status: 200, body: { result } };
+}
+
+const dayMs = 86_400_000;
+
+/** A whole repeating event (docs/02 F5.7): its time of day, length, title. */
+async function updateSeries(user: string, call: Record<string, unknown>, deps: Deps): Promise<Outcome> {
+  const { shiftMs, durationMs, title, seriesId } = call;
+  if (!Number.isSafeInteger(shiftMs) || Math.abs(shiftMs as number) >= dayMs) return bad('shift');
+  if (durationMs !== undefined && durationMs !== null &&
+      (!Number.isSafeInteger(durationMs) || (durationMs as number) < 5 * 60_000 || (durationMs as number) > dayMs)) {
+    return bad('duration');
+  }
+  if (title !== undefined && title !== null && !str(title, 200)) return bad('title');
+  if (!str(seriesId, 512)) return bad('series');
+  const found = await calendarOf(user, call.calendarId, deps);
+  if (!found) return { status: 404, body: { error: 'calendar' } };
+  const [account, calendarId] = found;
+  const patch = {
+    shiftMs: shiftMs as number,
+    ...(typeof durationMs === 'number' ? { durationMs } : {}),
+    ...(typeof title === 'string' ? { title } : {}),
+  };
+  const result = await withToken(account, deps, (api, token) =>
+    api.updateSeries(token, calendarId, seriesId, patch));
+  return { status: 200, body: { result } };
+}
+
+async function deleteSeries(user: string, call: Record<string, unknown>, deps: Deps): Promise<Outcome> {
+  if (!str(call.seriesId, 512)) return bad('series');
+  const found = await calendarOf(user, call.calendarId, deps);
+  if (!found) return { status: 404, body: { error: 'calendar' } };
+  const [account, calendarId] = found;
+  const seriesId = call.seriesId;
+  const result = await withToken(account, deps, (api, token) =>
+    api.deleteSeries(token, calendarId, seriesId));
   return { status: 200, body: { result } };
 }
 

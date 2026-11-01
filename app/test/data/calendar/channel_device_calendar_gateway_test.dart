@@ -212,6 +212,7 @@ void main() {
       expect(calls.last.arguments, {'calendarId': 'work', 'eventId': 'E1'});
       final event = (result as Ok<ExternalEvent?, AppFailure>).value!;
       expect(event.repeating, isTrue);
+      expect(event.seriesId, 'E1', reason: 'one id for the series');
       reply = (_) => null;
       final gone = await gateway.event('work', 'E1');
       expect((gone as Ok<ExternalEvent?, AppFailure>).value, isNull);

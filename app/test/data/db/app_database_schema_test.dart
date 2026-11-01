@@ -64,6 +64,7 @@ void main() {
       'sync_cursors',
       'local_meta',
       'wake_up_days',
+      'calendar_series',
     });
     expect(rows.every((r) => r.read<int>('strict') == 1), isTrue);
   });

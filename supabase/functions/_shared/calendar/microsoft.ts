@@ -1,9 +1,10 @@
 // Microsoft Graph calendars behind [CalendarApi] (docs/09 M7.4).
-import { argbOf, check, dateMs, maxEvents, plainText, writeResultOf } from './api.ts';
-import type { CalendarApi, CalendarInfo, EventInfo, EventPatch, WriteResult } from './api.ts';
+import { argbOf, check, dateMs, maxEvents, plainText, seriesTimes, writeResultOf } from './api.ts';
+import type { CalendarApi, CalendarInfo, EventInfo, EventPatch, SeriesPatch, WriteResult } from './api.ts';
 
 const graph = 'https://graph.microsoft.com/v1.0';
-const fields = 'id,subject,bodyPreview,location,start,end,isAllDay,isCancelled,isOrganizer';
+const fields =
+  'id,subject,bodyPreview,location,start,end,isAllDay,isCancelled,isOrganizer,seriesMasterId';
 
 interface GraphTime {
   dateTime?: string;
@@ -20,6 +21,7 @@ interface GraphEvent {
   isAllDay?: boolean;
   isCancelled?: boolean;
   isOrganizer?: boolean;
+  seriesMasterId?: string;
   '@odata.etag'?: string;
 }
 
@@ -51,6 +53,7 @@ export function graphEvent(e: GraphEvent, canEdit: boolean): EventInfo | null {
     location: e.location?.displayName || undefined,
     description: plainText(e.bodyPreview),
     etag: e['@odata.etag'] ?? '',
+    seriesId: e.seriesMasterId || undefined,
   };
   if (e.isAllDay) {
     // An all-day event's times are midnights: its dates are what count.
@@ -157,5 +160,55 @@ export function microsoftApi(send: typeof fetch): CalendarApi {
       });
       return writeResultOf(r.status);
     },
+
+    async updateSeries(token, calendarId, seriesId, patch: SeriesPatch): Promise<WriteResult> {
+      const master = await seriesMaster(token, calendarId, seriesId);
+      if (typeof master === 'string') return master;
+      const start = utcMs(master.start);
+      const end = utcMs(master.end);
+      if (master.isAllDay || Number.isNaN(start) || Number.isNaN(end)) return 'not_writable';
+      const next = seriesTimes(start, end, patch);
+      const r = await send(eventUrl(calendarId, seriesId), {
+        method: 'PATCH',
+        headers: {
+          ...headers(token),
+          'Content-Type': 'application/json',
+          'If-Match': master['@odata.etag'] ?? '',
+        },
+        body: JSON.stringify({
+          start: { dateTime: isoUtc(next.start), timeZone: 'UTC' },
+          end: { dateTime: isoUtc(next.end), timeZone: 'UTC' },
+          ...(patch.title === undefined ? {} : { subject: patch.title }),
+        }),
+      });
+      return writeResultOf(r.status);
+    },
+
+    async deleteSeries(token, calendarId, seriesId): Promise<WriteResult> {
+      const master = await seriesMaster(token, calendarId, seriesId);
+      if (typeof master === 'string') return master;
+      const r = await send(eventUrl(calendarId, seriesId), {
+        method: 'DELETE',
+        headers: headers(token),
+      });
+      return writeResultOf(r.status);
+    },
   };
+
+  /** The series master, or why it can't be changed here. */
+  async function seriesMaster(
+    token: string,
+    calendarId: string,
+    seriesId: string,
+  ): Promise<GraphEvent | WriteResult> {
+    if (!(await canEdit(token, calendarId))) return 'not_writable';
+    const r = await send(`${eventUrl(calendarId, seriesId)}?$select=${fields}`, {
+      headers: headers(token),
+    });
+    if (r.status === 404 || r.status === 410) return 'gone';
+    check(r, 'series');
+    const master = (await r.json()) as GraphEvent;
+    // Only the organiser can change a meeting for everyone.
+    return master.isOrganizer === false ? 'not_writable' : master;
+  }
 }

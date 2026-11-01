@@ -2,11 +2,13 @@ import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
+import 'package:dottoday/domain/entities/calendar_series.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/repositories/calendar_series_repository.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/repositories/routine_repository.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
@@ -34,6 +36,7 @@ final class InMemoryUndoService implements UndoService {
     required SubtaskRepository subtasks,
     required SeriesRepository series,
     required RoutineRepository routines,
+    required CalendarSeriesRepository calendarSeries,
     required SettingsRepository settings,
     required Clock clock,
     required IdGenerator ids,
@@ -43,6 +46,7 @@ final class InMemoryUndoService implements UndoService {
        _subtasks = subtasks,
        _series = series,
        _routines = routines,
+       _calendarSeries = calendarSeries,
        _clock = clock,
        _ids = ids;
 
@@ -51,6 +55,7 @@ final class InMemoryUndoService implements UndoService {
   final SubtaskRepository _subtasks;
   final SeriesRepository _series;
   final RoutineRepository _routines;
+  final CalendarSeriesRepository _calendarSeries;
   final SettingsRepository _settings;
   final Clock _clock;
   final IdGenerator _ids;
@@ -162,6 +167,12 @@ final class InMemoryUndoService implements UndoService {
           ?(value ??
               (await _routines.findById(u, key))?.copyWith(deletedAt: now)),
       ],
+      // A series row has no Trash: one the write created goes back to
+      // setting nothing, which imports exactly as no row does.
+      calendarSeries: [
+        for (final MapEntry(:key, :value) in before.calendarSeries.entries)
+          ?(value ?? (await _calendarSeries.findById(u, key))?.cleared()),
+      ],
     );
   }
 
@@ -186,6 +197,10 @@ final class InMemoryUndoService implements UndoService {
       series,
       batch.profile == null ? null : await _settings.findLocalProfile(),
       {for (final r in batch.routines) r.id: await _routines.findById(u, r.id)},
+      {
+        for (final s in batch.calendarSeries)
+          s.id: await _calendarSeries.findById(u, s.id),
+      },
     );
   }
 
@@ -204,6 +219,7 @@ final class _Before {
     this.series,
     this.profile,
     this.routines,
+    this.calendarSeries,
   );
 
   final String userId;
@@ -214,5 +230,6 @@ final class _Before {
   /// The profile as it was, when the batch wrote one.
   final Profile? profile;
   final Map<String, Routine?> routines;
+  final Map<String, CalendarSeries?> calendarSeries;
   late DateTime expiresAtUtc;
 }
