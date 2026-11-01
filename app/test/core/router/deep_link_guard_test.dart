@@ -1,5 +1,6 @@
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/router/deep_link_guard.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const _v7 = '01929a3e-7c4b-7d2a-9f10-3b5c6d7e8f90';
@@ -31,6 +32,11 @@ void main() {
       '/settings/privacy/': '/settings/privacy',
       'dottoday://settings/help': '/settings/help',
       'dottoday://add': '/add',
+      // A mission morning's "I'm up" (docs/15 §8).
+      'dottoday://wake-up/mission/2026-11-02/walk':
+          '/wake-up/mission/2026-11-02/walk',
+      '/wake-up/mission/2026-11-02/catchDot':
+          '/wake-up/mission/2026-11-02/catchDot',
     };
     cases.forEach((input, expected) {
       test(input, () => expect(_guard(input), expected));
@@ -63,6 +69,10 @@ void main() {
       '/settings/admin',
       '/settings/Account',
       '/settings/help/x',
+      '/wake-up/mission/2026-11-02/math',
+      '/wake-up/mission/2026-02-30/walk',
+      '/wake-up/mission/2026-11-02',
+      '/wake-up/mission/2026-11-02/walk/x',
     ];
     for (final input in cases) {
       test(input, () => expect(_guard(input), isNull));
@@ -75,6 +85,12 @@ void main() {
     expect(_guard('/task/../settings'), '/settings');
     expect(_guard('/task/%2E%2E'), '/today');
     expect(_guard('/task/../../admin'), isNull);
+  });
+
+  test('mission links carry exactly the MissionKind names', () {
+    expect(AppRoutes.missionKinds, {
+      for (final k in MissionKind.values) k.name,
+    });
   });
 
   group('route dates', () {

@@ -50,7 +50,7 @@ final class WakeUpCardProvider
   }
 }
 
-String _$wakeUpCardHash() => r'38018dac39289c8cef99787460b6375dc6285a4e';
+String _$wakeUpCardHash() => r'349d645b9a2ba79140bf8fd0464877039b07cbac';
 
 /// Today's key when the card should open by itself now, else null (15 §5,
 /// `wakeUpCardDue`). Phones only. Minimal mode opens it only after "I'm

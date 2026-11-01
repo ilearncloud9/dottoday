@@ -80,6 +80,7 @@ class _CatchDotMissionState extends State<CatchDotMission>
                     left: at.dx,
                     top: at.dy,
                     child: Semantics(
+                      container: true,
                       button: true,
                       label: l10n.missionCatchTap,
                       child: GestureDetector(
