@@ -2,6 +2,7 @@
 @Tags(['golden'])
 library;
 
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,14 +18,15 @@ import '../../support/timeline_fakes.dart';
 // nudge on Today (derived, docs/09 M3f.5; docs/10 §5.3).
 
 /// Today on the demo day, the clock at [now].
-List<Override> _at(DateTime now) => timelineOverrides(
+List<Override> _at(
+  DateTime now, {
+  Settings settings = const Settings(use24h: false, firstDayOfWeek: 7),
+}) => timelineOverrides(
   now: now,
   learningMeta: captionPutAway(DateTime(now.year, now.month, now.day)),
   minuteTicks: Stream.value(now),
   occurrences: FakeOccurrenceRepository(demoDayRows(DateTime(2026, 10, 21))),
-  profile: testProfile(
-    settings: const Settings(use24h: false, firstDayOfWeek: 7),
-  ).copyWith(displayName: 'Kody'),
+  profile: testProfile(settings: settings).copyWith(displayName: 'Kody'),
 );
 
 Widget _today(GoldenCell _) => const TodayScreen();
@@ -60,6 +62,24 @@ void main() {
     height: 900,
     widths: widths,
     overrides: _at(DateTime.utc(2026, 10, 21, 21, 30)),
+    build: _today,
+  );
+  // Missions on (M17.7c): "Tomorrow matters" switched on, and tomorrow
+  // has nothing to pick from, so Breathe will be used instead.
+  goldenMatrix(
+    'today_day_review_tomorrow_matters',
+    height: 1000,
+    widths: const {'compact'},
+    overrides: _at(
+      DateTime.utc(2026, 10, 21, 21, 30),
+      settings: const Settings(
+        use24h: false,
+        firstDayOfWeek: 7,
+        missionMode: MissionMode.whenAsked,
+        missionKind: MissionKind.oneThing,
+        missionFlagDate: '2026-10-22',
+      ),
+    ),
     build: _today,
   );
   // 11:45: Design review ended 30 min ago unticked.

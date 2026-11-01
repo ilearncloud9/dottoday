@@ -6316,6 +6316,20 @@ class AppLocalizationsFr extends AppLocalizations {
   String get oneThingInInbox => 'dans votre boîte de réception';
 
   @override
+  String get tomorrowMatters => 'Demain compte : assure-toi que je me lève';
+
+  @override
+  String get tomorrowMattersBreathe =>
+      'Demain, rien à choisir pour l\'instant ; Respirer sera utilisé à la place.';
+
+  @override
+  String get makeSureUpTitle => 'Assure-toi que je sois levé pour ça';
+
+  @override
+  String get makeSureUpDetail =>
+      'Si c\'est le premier point du jour, ce matin-là a une mission';
+
+  @override
   String startNudgeTitle(String title) {
     return 'Commencer $title ?';
   }

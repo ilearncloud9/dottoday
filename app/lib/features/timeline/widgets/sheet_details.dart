@@ -3,6 +3,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/features/timeline/state/task_text.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
+import 'package:dottoday/features/timeline/widgets/make_sure_up.dart';
 import 'package:dottoday/features/timeline/widgets/pin_row.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/sounds/sound_sections.dart';
@@ -78,6 +79,7 @@ class SheetDetails extends StatelessWidget {
               minHeight: DotTouch.android + DotSpace.s,
             ),
           ],
+          MakeSureUpRow(occurrence: o),
           Divider(height: DotSpace.hairline, color: c.outline),
           _DetailRow(
             glyph: TaskIcon.fromKey(o.iconKey).glyph ?? DotGlyphs.today,
