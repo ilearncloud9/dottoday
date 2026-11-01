@@ -123,7 +123,8 @@ String _windDownBody(
 /// ramp. [minimal] is minimal mode's ringing screen (15 §10), decided by
 /// the caller's `LayoutPolicy` (ADR-0016: notification code never reads
 /// the layout). [id] replaces the day's id (the test alarm's). [step] is
-/// [task]'s Smallest step, which the Wake Up Check offers (15 W3).
+/// [task]'s Smallest step, which the Wake Up Check offers (15 W3);
+/// [explainCheck] adds where to change it to the check's text (15 §11).
 WakeUpAlarm composeWakeUpAlarm(
   PlannedNotification planned, {
   required Occurrence? task,
@@ -131,10 +132,12 @@ WakeUpAlarm composeWakeUpAlarm(
   bool minimal = false,
   String? id,
   Subtask? step,
+  bool explainCheck = false,
 }) {
   final l10n = _l10n(profile.locale);
   final settings = profile.settings;
   final shown = composeNotification(planned, task: task, profile: profile);
+  final checkBody = step == null ? l10n.wakeUpCheckBody : task?.title ?? '';
   final day = tz.TZDateTime.from(
     planned.fireAtUtc,
     tz.getLocation(profile.tzId),
@@ -158,7 +161,9 @@ WakeUpAlarm composeWakeUpAlarm(
             title: step == null
                 ? l10n.wakeUpCheckStart(task.title)
                 : smallestStepText(l10n, step),
-            body: step == null ? l10n.wakeUpCheckBody : task.title,
+            body: explainCheck
+                ? l10n.wakeUpDiscoveryCheckBody(checkBody)
+                : checkBody,
             startLabel: l10n.smallestStepStart,
             loud: settings.wakeUpCheckLoud,
           )

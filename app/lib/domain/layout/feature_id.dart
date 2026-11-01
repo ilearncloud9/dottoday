@@ -36,6 +36,7 @@ enum FeatureId {
   missionCatchDot('W5 Catch the dot'),
   missionOneThing("W5 Pick today's one thing"),
   makeSureImUp("W5 Make sure I'm up"),
+  wakeUpDiscovery('W Discovery (promise, coach marks, How it works)'),
   actualTimestamps('B1 actual timestamps'),
   subtaskDurations('B2 subtask durations'),
   liveActivity('A1 Live Activity / ongoing notification'),

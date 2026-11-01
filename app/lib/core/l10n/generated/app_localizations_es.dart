@@ -6362,6 +6362,62 @@ class AppLocalizationsEs extends AppLocalizations {
       'Proponer mover Wind Down según cuándo me levanto';
 
   @override
+  String get wakeUpDiscoveryPromise =>
+      'Nuevo: el despertar puede sonar como una alarma, y tu mañana empieza con una tarjeta que muestra tu día.';
+
+  @override
+  String get wakeUpDiscoveryTurnOn => 'Activar';
+
+  @override
+  String get wakeUpDiscoveryLater => 'Más tarde';
+
+  @override
+  String get wakeUpSeeHowItWorks => 'Ver cómo funciona';
+
+  @override
+  String get wakeUpHowItWorks => 'Cómo funciona';
+
+  @override
+  String get wakeUpExplainRings =>
+      'El despertar suena al empezar tu día, como una alarma si tu teléfono lo permite.';
+
+  @override
+  String get wakeUpExplainCard =>
+      'Cuando lo detienes, una tarjeta muestra tu día y lo empieza con un toque.';
+
+  @override
+  String get wakeUpExplainCheck =>
+      'Si nada ha empezado unos minutos después, un aviso suave pregunta.';
+
+  @override
+  String get wakeUpExplainOff =>
+      'Cada uno tiene su interruptor en Ajustes › Forma del día › Opciones del despertar.';
+
+  @override
+  String get wakeUpDiscoveryStartDay =>
+      'Toca cuando estés en pie: el hilo de tu día empieza aquí.';
+
+  @override
+  String get wakeUpDiscoveryShift =>
+      'Esto mueve lo que queda; nada cambia hasta que lo aceptes.';
+
+  @override
+  String wakeUpDiscoveryCheckBody(String body) {
+    return '$body Puedes cambiarlo o desactivarlo en Ajustes › Despertar.';
+  }
+
+  @override
+  String get wakeUpDiscoveryMissionOffer =>
+      'Últimamente las mañanas empiezan un rato después de la alarma. ¿Un paseo corto o una luz para apagarla?';
+
+  @override
+  String get wakeUpDesktopNote =>
+      'Esto suena en tu teléfono. Cámbialo allí o aquí; se sincroniza.';
+
+  @override
+  String get helpWakeUpQ => '¿Cómo funciona el despertar?';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

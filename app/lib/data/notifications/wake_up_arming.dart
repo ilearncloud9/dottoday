@@ -27,8 +27,10 @@ final class WakeUpArming {
     this._db, {
     bool Function()? minimal,
     MissionSensors? sensors,
+    Future<bool> Function(String userId)? explainCheck,
   }) : _minimal = minimal,
-       _sensors = sensors;
+       _sensors = sensors,
+       _explainCheck = explainCheck;
 
   static const _key = 'armed_wake_ups';
 
@@ -41,6 +43,10 @@ final class WakeUpArming {
 
   /// What missions this device can run (15 §8); none without it.
   final MissionSensors? _sensors;
+
+  /// Whether the check's notification still says where to change it (15
+  /// §11, first 2 times); never without it.
+  final Future<bool> Function(String userId)? _explainCheck;
 
   /// Arms [wakeUps] (`NotificationPlanner.wakeUps`) for [profile]; with the
   /// switch off, disarms every alarm once. [tasks] finds each day's first
@@ -60,6 +66,9 @@ final class WakeUpArming {
       await _write(null);
       return const {};
     }
+    final explain =
+        profile.settings.wakeUpCheck &&
+        (await _explainCheck?.call(profile.id) ?? false);
     final alarms = [
       for (final w in wakeUps)
         composeWakeUpAlarm(
@@ -68,6 +77,7 @@ final class WakeUpArming {
           profile: profile,
           minimal: _minimal?.call() ?? false,
           step: steps[w.occurrenceId],
+          explainCheck: explain,
         ),
     ];
     final armed = await _gateway.sync(

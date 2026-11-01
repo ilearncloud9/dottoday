@@ -38,7 +38,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// ([CalendarMovedPrompt], M11.1b).
 ///
 /// Minimal layout (docs/14 §3): no "Need more time?", This week, Inbox or
-/// Siri card; in their place, at most one reveal hint a day ([hint]).
+/// Siri card; in their place, at most one reveal hint a day ([hint]). The
+/// full layout draws [hint] under them: Wake Up's discovery (docs/15 §11).
 class TodayPrompt extends ConsumerWidget {
   const TodayPrompt({
     required this.date,
@@ -50,7 +51,8 @@ class TodayPrompt extends ConsumerWidget {
   final DateTime date;
   final DateTime today;
 
-  /// Minimal mode's reveal hint row, drawn when nothing else is due.
+  /// The reveal hint row (minimal mode's, Wake Up's discovery), drawn when
+  /// nothing more pressing is due.
   final Widget? hint;
 
   @override
@@ -115,6 +117,7 @@ class TodayPrompt extends ConsumerWidget {
             now: now,
           ),
           if (watchOnScreen(ref, FeatureId.siri)) const SiriTipCard(),
+          ?hint,
         ],
       );
     }

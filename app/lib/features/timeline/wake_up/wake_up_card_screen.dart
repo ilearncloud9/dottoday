@@ -8,13 +8,16 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/reveal/hint_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/wake_up/wake_up_card.dart';
 import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_body.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_state.dart';
+import 'package:dottoday/features/timeline/wake_up/wake_up_coach_mark.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -34,6 +37,9 @@ class WakeUpCardScreen extends ConsumerStatefulWidget {
 class _WakeUpCardScreenState extends ConsumerState<WakeUpCardScreen> {
   var _marked = false;
 
+  /// The coach mark whose showing this visit already recorded.
+  HintId? _coached;
+
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
@@ -45,6 +51,14 @@ class _WakeUpCardScreenState extends ConsumerState<WakeUpCardScreen> {
         ref
             .read(wakeUpDayRepositoryProvider)
             .markCardShown(model.dateKey, ref.read(clockProvider).nowUtc()),
+      );
+    }
+    final coach = model == null ? null : watchCardCoachMark(ref, model);
+    if (coach != null && _coached != coach) {
+      _coached = coach;
+      final container = ProviderScope.containerOf(context, listen: false);
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => unawaited(recordHintShown(container, coach)),
       );
     }
     return Scaffold(
@@ -74,6 +88,7 @@ class _WakeUpCardScreenState extends ConsumerState<WakeUpCardScreen> {
                       onLater: _close,
                       onPlan: () => context.go(AppRoutes.add),
                       onMissionsOff: (off) => unawaited(_missionsOff(off)),
+                      coachMark: coach,
                     ),
             ),
           ],

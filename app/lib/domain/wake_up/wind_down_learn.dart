@@ -31,19 +31,34 @@ int? medianDismissOffsetMin(
   required Settings settings,
   required tz.Location location,
 }) {
-  final offsets = <int>[
-    for (final d in days.take(learnWakeUpDays))
-      if ((d.stoppedAtUtc, DateTime.tryParse(d.date)) case (
-        final up?,
-        final date?,
-      ))
-        up.difference(_wakeOn(date, settings, location)).inMinutes,
-  ]..sort();
+  final offsets = dismissOffsetsMin(
+    days.take(learnWakeUpDays),
+    settings: settings,
+    location: location,
+  ).toList()..sort();
   if (offsets.length < learnMinMornings) return null;
   final mid = offsets.length ~/ 2;
   return offsets.length.isOdd
       ? offsets[mid]
       : ((offsets[mid - 1] + offsets[mid]) / 2).round();
+}
+
+/// Minutes from each of [days]' Wake Up time to its "I'm up", in [days]'
+/// order, skipping mornings the alarm wasn't stopped. Each day's Wake Up
+/// is its own weekday's, in [location].
+Iterable<int> dismissOffsetsMin(
+  Iterable<WakeUpDay> days, {
+  required Settings settings,
+  required tz.Location location,
+}) sync* {
+  for (final d in days) {
+    if ((d.stoppedAtUtc, DateTime.tryParse(d.date)) case (
+      final up?,
+      final date?,
+    )) {
+      yield up.difference(_wakeOn(date, settings, location)).inMinutes;
+    }
+  }
 }
 
 /// The minutes the learned offer proposes moving Wind Down earlier, or

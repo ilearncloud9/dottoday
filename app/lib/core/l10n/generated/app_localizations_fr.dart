@@ -6379,6 +6379,62 @@ class AppLocalizationsFr extends AppLocalizations {
       'Proposer d\'ajuster Wind Down selon mon vrai lever';
 
   @override
+  String get wakeUpDiscoveryPromise =>
+      'Nouveau : le réveil peut sonner comme une alarme, et ta matinée commence par une carte qui montre ta journée.';
+
+  @override
+  String get wakeUpDiscoveryTurnOn => 'Activer';
+
+  @override
+  String get wakeUpDiscoveryLater => 'Plus tard';
+
+  @override
+  String get wakeUpSeeHowItWorks => 'Voir comment ça marche';
+
+  @override
+  String get wakeUpHowItWorks => 'Comment ça marche';
+
+  @override
+  String get wakeUpExplainRings =>
+      'Le réveil sonne au début de ta journée, comme une alarme si ton téléphone le permet.';
+
+  @override
+  String get wakeUpExplainCard =>
+      'Quand tu l\'arrêtes, une carte montre ta journée et la lance d\'un geste.';
+
+  @override
+  String get wakeUpExplainCheck =>
+      'Si rien n\'a commencé quelques minutes plus tard, un doux rappel demande.';
+
+  @override
+  String get wakeUpExplainOff =>
+      'Chacun a son interrupteur dans Réglages › Forme de la journée › Options du réveil.';
+
+  @override
+  String get wakeUpDiscoveryStartDay =>
+      'Touche quand tu es levé·e — le fil de ta journée commence ici.';
+
+  @override
+  String get wakeUpDiscoveryShift =>
+      'Ceci déplace ce qui reste ; rien ne change avant que tu acceptes.';
+
+  @override
+  String wakeUpDiscoveryCheckBody(String body) {
+    return '$body Tu peux le modifier ou le désactiver dans Réglages › Réveil.';
+  }
+
+  @override
+  String get wakeUpDiscoveryMissionOffer =>
+      'Les matins commencent un moment après l\'alarme ces temps-ci. Une courte marche ou une lumière pour l\'arrêter ?';
+
+  @override
+  String get wakeUpDesktopNote =>
+      'Ces réglages sonnent sur ton téléphone. Modifie-les là-bas ou ici ; ils se synchronisent.';
+
+  @override
+  String get helpWakeUpQ => 'Comment fonctionne le réveil ?';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

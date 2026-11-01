@@ -113,6 +113,60 @@ final class LearnedWindDownOfferProvider
 String _$learnedWindDownOfferHash() =>
     r'e8ff06c3f17c716e245f73450f9622b3f2b9b581';
 
+/// The Wake Up discovery signals (docs/15 §11): whether this phone can
+/// ring Wake Up while it is off (the promise), and whether its last
+/// mornings were stopped late with missions off on the alarm tier (the
+/// mission offer). Both false off a phone.
+
+@ProviderFor(wakeUpDiscovery)
+final wakeUpDiscoveryProvider = WakeUpDiscoveryProvider._();
+
+/// The Wake Up discovery signals (docs/15 §11): whether this phone can
+/// ring Wake Up while it is off (the promise), and whether its last
+/// mornings were stopped late with missions off on the alarm tier (the
+/// mission offer). Both false off a phone.
+
+final class WakeUpDiscoveryProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<({bool lateMornings, bool wakeUpOffer})>,
+          ({bool lateMornings, bool wakeUpOffer}),
+          FutureOr<({bool lateMornings, bool wakeUpOffer})>
+        >
+    with
+        $FutureModifier<({bool lateMornings, bool wakeUpOffer})>,
+        $FutureProvider<({bool lateMornings, bool wakeUpOffer})> {
+  /// The Wake Up discovery signals (docs/15 §11): whether this phone can
+  /// ring Wake Up while it is off (the promise), and whether its last
+  /// mornings were stopped late with missions off on the alarm tier (the
+  /// mission offer). Both false off a phone.
+  WakeUpDiscoveryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'wakeUpDiscoveryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$wakeUpDiscoveryHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<({bool lateMornings, bool wakeUpOffer})>
+  $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<({bool lateMornings, bool wakeUpOffer})> create(Ref ref) {
+    return wakeUpDiscovery(ref);
+  }
+}
+
+String _$wakeUpDiscoveryHash() => r'e413b3792dd139205e136eb0c5d540f35e323cea';
+
 /// The sensors the missions read (docs/15 §8); tests override it.
 
 @ProviderFor(missionSensors)
@@ -382,7 +436,7 @@ final class AlarmEventsDrainProvider
   }
 }
 
-String _$alarmEventsDrainHash() => r'9bdddbff7e805460811a8c791342f0424f6349a6';
+String _$alarmEventsDrainHash() => r'903b71b759cac14556f72aa32d56fe64ec01f6bc';
 
 /// Folds what the alarms did while the app was closed (rang, snoozed,
 /// "I'm up") into `wake_up_days`: run on launch and every resume, before

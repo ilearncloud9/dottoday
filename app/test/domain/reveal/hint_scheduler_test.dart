@@ -31,6 +31,10 @@ RevealHint record(
   updatedAt: day(1),
 );
 
+/// Minimal mode's six (docs/14 §5); Wake Up's discovery is in
+/// `discovery_hints_test.dart`.
+final minimalHints = HintId.values.take(6).toList();
+
 /// Every trigger at once.
 const all = HintSignals(
   daysOfUse: 30,
@@ -93,10 +97,10 @@ void main() {
     final shown = simulate(15);
     // Day 1 and 2 show the first hint (twice), days 3–4 the second, …
     expect(shown.take(12), [
-      for (final h in HintId.values) ...[h, h],
+      for (final h in minimalHints) ...[h, h],
     ]);
     expect(shown.skip(12), everyElement(isNull));
-    for (final h in HintId.values) {
+    for (final h in minimalHints) {
       expect(shown.where((s) => s == h), hasLength(hintMaxShows));
     }
   });
