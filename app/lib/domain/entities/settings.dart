@@ -21,6 +21,14 @@ abstract class TimeWindow with _$TimeWindow {
       _$TimeWindowFromJson(json);
 }
 
+/// The calmest Start sounds (docs/12 §2.3): Gentle and Soft bells by name,
+/// Dawn chorus fading in over 10 s — the default "Vary the sound" set.
+const defaultWakeUpRotationIds = [
+  'start.gentle',
+  'start.bells',
+  'start.dawn_chorus',
+];
+
 /// User preferences, persisted as `profiles.settings` (docs/05 "Settings
 /// JSON"). Defaults equal the documented example, except [quietHours]: null
 /// means off, so it defaults to off (a non-null default would make a stored
@@ -74,6 +82,9 @@ abstract class Settings with _$Settings {
     // and snooze (length in minutes; limit 0 = no limit).
     String? wakeUpSoundId,
     @Default(false) bool wakeUpVarySound,
+    // The cues "Vary the sound" rotates through (15 §9: the user picks
+    // 2–6; owner 2026-11-01: by default the three calmest Start sounds).
+    @Default(defaultWakeUpRotationIds) List<String> wakeUpRotationIds,
     @Default(30) int wakeUpRampSec,
     @Default(true) bool wakeUpSnooze,
     @Default(9) int wakeUpSnoozeMin,

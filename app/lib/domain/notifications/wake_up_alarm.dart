@@ -15,17 +15,35 @@ const wakeUpRampChoices = [0, 15, 30, 60];
 /// The Wake Up Check's waits on offer, in minutes (15 §9: 5–30).
 const wakeUpCheckChoices = [5, 10, 15, 20, 30];
 
-/// The Start sounds a varied Wake Up alarm rotates through: the start tier
-/// without the insistent one, which is opt-in only (docs/12 D7).
-final List<CatalogueSound> wakeUpRotation = List.unmodifiable([
-  for (final s in soundCatalogue)
-    if (s.category == SoundCategory.start && s.id != insistentStartSoundId) s,
-]);
+/// How many cues "Vary the sound" rotates (15 §9: choose 2–6).
+const wakeUpRotationMin = 2;
+const wakeUpRotationMax = 6;
+
+/// The Start sounds a varied Wake Up alarm rotates through: the user's
+/// pick (`wakeUpRotationIds`), in catalogue order, unknown or non-Start
+/// ids dropped; fewer than [wakeUpRotationMin] left falls back to the
+/// calmest three ([defaultWakeUpRotationIds]).
+///
+/// ```dart
+/// wakeUpRotation(const Settings()).map((s) => s.id);
+/// // (start.bells, start.gentle, start.dawn_chorus)
+/// ```
+List<CatalogueSound> wakeUpRotation(Settings settings) {
+  List<CatalogueSound> of(List<String> ids) => [
+    for (final s in soundCatalogue)
+      if (s.category == SoundCategory.start && ids.contains(s.id)) s,
+  ];
+  final picked = of(settings.wakeUpRotationIds);
+  if (picked.length >= wakeUpRotationMin) {
+    return picked.take(wakeUpRotationMax).toList();
+  }
+  return of(defaultWakeUpRotationIds);
+}
 
 /// What the Wake Up alarm plays on the civil [date] (15 W1 "Sound
 /// rotation"): `wakeUpSoundId`, else the Start sound; with
-/// `wakeUpVarySound` on, the next cue of [wakeUpRotation] each day from
-/// there, so a given date always gets the same cue.
+/// `wakeUpVarySound` on, one cue of [wakeUpRotation] per day in turn, so
+/// a given date always gets the same cue.
 ///
 /// ```dart
 /// wakeUpSound(const Settings(wakeUpSoundId: 'start.bells'), DateTime(2026, 11, 2));
@@ -36,10 +54,10 @@ CatalogueSound wakeUpSound(Settings settings, DateTime date) {
     settings.wakeUpSoundId ?? settings.startSoundId,
   );
   if (!settings.wakeUpVarySound) return base;
+  final rotation = wakeUpRotation(settings);
   final day = DateTime.utc(date.year, date.month, date.day);
   final days = day.millisecondsSinceEpoch ~/ Duration.millisecondsPerDay;
-  final start = wakeUpRotation.indexOf(base).clamp(0, wakeUpRotation.length);
-  return wakeUpRotation[(start + days) % wakeUpRotation.length];
+  return rotation[days % rotation.length];
 }
 
 /// One Wake Up alarm handed to the OS through `AlarmGateway.sync` (docs/15

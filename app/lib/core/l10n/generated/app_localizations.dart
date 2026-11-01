@@ -9468,6 +9468,24 @@ abstract class AppLocalizations {
   /// **'If it\'s the day\'s first dot, that morning has a mission'**
   String get makeSureUpDetail;
 
+  /// Settings row and sheet title: which Start sounds Vary the sound rotates (docs/15 §9).
+  ///
+  /// In en, this message translates to:
+  /// **'Sounds to vary'**
+  String get wakeUpRotationTitle;
+
+  /// Under the sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick {min} to {max}. One plays each morning, in turn.'**
+  String wakeUpRotationDetail(int min, int max);
+
+  /// Row value: how many sounds rotate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 sound} other{{count} sounds}}'**
+  String wakeUpRotationCount(int count);
+
   /// Start nudge notification title (docs/15 §11).
   ///
   /// In en, this message translates to:
