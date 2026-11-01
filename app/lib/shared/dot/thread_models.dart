@@ -108,12 +108,12 @@ sealed class ThreadEntry {
 
 /// The sun cap ("Wake Up · 7:00") or moon cap ("Wind Down · 22:00").
 final class ThreadCap extends ThreadEntry {
-  const ThreadCap.wake(this.time) : bedtime = false;
-  const ThreadCap.bed(this.time) : bedtime = true;
+  const ThreadCap.wake(this.time) : windDown = false;
+  const ThreadCap.bed(this.time) : windDown = true;
 
   /// Formatted clock time of the day's boundary.
   final String time;
-  final bool bedtime;
+  final bool windDown;
 }
 
 /// A task row; the live one renders as a `LiveRow`.
@@ -129,7 +129,7 @@ final class ThreadTaskEntry extends ThreadEntry {
 final class ThreadOutside extends ThreadEntry {
   const ThreadOutside({
     required this.tasks,
-    required this.bedtime,
+    required this.windDown,
     this.open = false,
   });
 
@@ -137,7 +137,7 @@ final class ThreadOutside extends ThreadEntry {
   final List<ThreadTask> tasks;
 
   /// After Wind Down (below the moon cap); false: before Wake Up.
-  final bool bedtime;
+  final bool windDown;
 
   /// Starts unfolded: it holds the live task, which never hides.
   final bool open;

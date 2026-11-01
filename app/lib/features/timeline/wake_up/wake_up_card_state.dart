@@ -13,6 +13,7 @@ import 'package:dottoday/domain/scheduling/low_energy.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/domain/wake_up/wake_up_card.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
+import 'package:dottoday/features/timeline/state/day_ends.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -31,6 +32,7 @@ final class WakeUpCardModel {
     required this.dateKey,
     required this.inbox,
     required this.steps,
+    required this.nextWakeUtc,
   });
 
   final TimelineData data;
@@ -44,6 +46,9 @@ final class WakeUpCardModel {
 
   /// First step to do of each task with untouched steps (B2).
   final Map<String, Subtask> steps;
+
+  /// Where tonight's night ends, for the day dot (docs/15 W6).
+  final DateTime nextWakeUtc;
 
   Settings get settings => data.settings;
 
@@ -81,13 +86,11 @@ Future<WakeUpCardModel> wakeUpCard(Ref ref) async {
       .watch(occurrenceRepositoryProvider)
       .watchInbox(data.userId)
       .first;
+  final ends = await ref.watch(dayEndsProvider(date).future);
   return WakeUpCardModel(
     data: data,
-    shape: DayShape.on(
-      data.day.location,
-      data.day.date,
-      data.settings.boundaryFor(data.day.weekday),
-    ),
+    shape: ends.shape,
+    nextWakeUtc: ends.nextWakeUtc,
     day: day,
     nowUtc: now,
     dateKey: wakeUpDateKey(now, data.day.location.name),

@@ -97,6 +97,17 @@ void main() {
     overrides: _overrides,
     build: (_) => _settings(),
   );
+  // Day shape with a sleep target that pulls Wind Down earlier (docs/15
+  // W4 AC: the row in both states; the plain one is 'settings' above).
+  goldenMatrix(
+    'settings_day_shape_sleep',
+    height: 900,
+    widths: const {'compact'},
+    overrides: _overridesWith(
+      settings: const Settings(use24h: true, sleepTargetMin: 9 * 60 + 15),
+    ),
+    build: (_) => _settings(),
+  );
   // Settings › Learning (docs/13 §4.1, §11): nothing yet (0/10), on the
   // way (7/10, energy 7/20), and ready (the reality thread revealed, one
   // task's length known, energy available but off). Light/dark, 1×/2×,

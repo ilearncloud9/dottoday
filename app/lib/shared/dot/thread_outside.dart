@@ -58,7 +58,7 @@ class _OutsideRowState extends State<OutsideRow> {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final n = widget.zone.tasks.length;
-    final label = widget.zone.bedtime
+    final label = widget.zone.windDown
         ? l10n.threadOutsideAfter(n)
         : l10n.threadOutsideBefore(n);
     void toggle() => setState(() => _open = !_open);

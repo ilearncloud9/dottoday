@@ -136,10 +136,10 @@ void main() {
               PlannedNotification(
                 id: 13,
                 occurrenceId: '',
-                alertIndex: PlannedNotification.bedtimeIndex,
+                alertIndex: PlannedNotification.windDownIndex,
                 fireAtUtc: _now,
                 kind: AlertKind.atEnd,
-                purpose: NotificationPurpose.bedtime,
+                purpose: NotificationPurpose.windDown,
               ),
             ),
             channel: NotificationChannelKind.summary,

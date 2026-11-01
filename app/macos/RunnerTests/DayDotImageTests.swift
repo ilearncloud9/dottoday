@@ -21,7 +21,7 @@ final class DayDotImageTests: XCTestCase {
     }
   }
 
-  func testDayShareFollowsWakeUpToBedtime() {
+  func testDayShareFollowsWakeUpToWindDown() {
     let snapshot: [String: Any] = ["wake_ms": 1000.0, "bed_ms": 3000.0]
     XCTAssertEqual(DayDotStatusItem.dayShare(snapshot, now: 500), 0)
     XCTAssertEqual(DayDotStatusItem.dayShare(snapshot, now: 2000), 0.5)
@@ -95,4 +95,12 @@ final class DayDotImageTests: XCTestCase {
 
   private static let snapshots = URL(fileURLWithPath: #filePath)
     .deletingLastPathComponent().appendingPathComponent("DayDotSnapshots")
+
+  /// The night (docs/15 W6): the app's `night_start`, clamped; 1 without it.
+  func testNightStartFromTheSnapshot() {
+    XCTAssertEqual(DayDotStatusItem.nightStart(["night_start": 0.66]), 0.66)
+    XCTAssertEqual(DayDotStatusItem.nightStart([:]), 1)
+    XCTAssertEqual(DayDotStatusItem.nightStart(["night_start": 1.4]), 1)
+    XCTAssertTrue(DayDotImage.make(share: 0.3, day: 0.66).isTemplate)
+  }
 }

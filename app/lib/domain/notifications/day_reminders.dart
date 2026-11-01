@@ -6,6 +6,7 @@ import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/domain/time/wall_clock.dart';
+import 'package:dottoday/domain/time/wind_down.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -14,15 +15,16 @@ import 'package:timezone/timezone.dart' as tz;
 /// ids are stable per local date, so re-planning replaces rather than
 /// duplicates (R-10).
 abstract final class DayReminders {
-  /// One reminder at each day's Wind Down in `(fromUtc, toUtc]`, on that
-  /// weekday's own window (Settings › DAY SHAPE, per weekday), with the
-  /// id of the next day's first planned task.
+  /// One reminder at each day's effective Wind Down in `(fromUtc, toUtc]`
+  /// (that weekday's own window, pulled earlier by a sleep target before
+  /// an early tomorrow, docs/15 W4), with the id of the next day's first
+  /// planned task.
   ///
   /// ```dart
-  /// DayReminders.bedtime(settings: s, location: berlin, occurrences: rows,
+  /// DayReminders.windDown(settings: s, location: berlin, occurrences: rows,
   ///     fromUtc: now, toUtc: now.add(week), used: {}).length; // 7
   /// ```
-  static List<PlannedNotification> bedtime({
+  static List<PlannedNotification> windDown({
     required Settings settings,
     required tz.Location location,
     required Iterable<Occurrence> occurrences,
@@ -30,24 +32,41 @@ abstract final class DayReminders {
     required DateTime toUtc,
     required Set<int> used,
   }) => [
-    for (final (date, shape) in _days(settings, location, fromUtc, toUtc))
-      if (shape.bedUtc.isAfter(fromUtc) && !shape.bedUtc.isAfter(toUtc))
+    for (final (date, _) in _days(settings, location, fromUtc, toUtc))
+      if (_windDownOn(settings, location, occurrences, date, fromUtc)
+          case final at when at.isAfter(fromUtc) && !at.isAfter(toUtc))
         PlannedNotification(
           id: uniqueNotificationId(
             used,
-            'bedtime:${_key(date)}',
-            PlannedNotification.bedtimeIndex,
+            'windDown:${_key(date)}',
+            PlannedNotification.windDownIndex,
           ),
           occurrenceId:
               _blocksOn(occurrences, location, _next(date)).firstOrNull?.id ??
               '',
-          alertIndex: PlannedNotification.bedtimeIndex,
-          fireAtUtc: shape.bedUtc,
+          alertIndex: PlannedNotification.windDownIndex,
+          fireAtUtc: at,
           kind: AlertKind.atEnd,
-          silent: inQuietHours(location, shape.bedUtc, settings.quietHours),
-          purpose: NotificationPurpose.bedtime,
+          silent: inQuietHours(location, at, settings.quietHours),
+          purpose: NotificationPurpose.windDown,
         ),
   ];
+
+  /// Day [date]'s effective Wind Down (docs/15 W4): earlier before an
+  /// early tomorrow when a sleep target is set.
+  static DateTime _windDownOn(
+    Settings settings,
+    tz.Location location,
+    Iterable<Occurrence> occurrences,
+    DateTime date,
+    DateTime nowUtc,
+  ) => effectiveDayShape(
+    location,
+    date,
+    settings,
+    nowUtc: nowUtc,
+    tomorrowHasThread: _blocksOn(occurrences, location, _next(date)).isNotEmpty,
+  ).bedUtc;
 
   /// The Wake Up alarm (docs/15 W1, M17.1): loud at each day's Wake Up in
   /// `(fromUtc, toUtc]`, on that weekday's own window, for days that have a

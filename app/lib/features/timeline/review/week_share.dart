@@ -91,6 +91,7 @@ class WeekShareCard extends StatelessWidget {
                 child: Center(
                   child: WeekDayDot(
                     dots: d.snapshot.dots,
+                    dayEnd: d.snapshot.geometry.dayEnd,
                     diameter: weekDotDiameter(
                       d.plannedMinutes,
                       review.maxPlannedMinutes,

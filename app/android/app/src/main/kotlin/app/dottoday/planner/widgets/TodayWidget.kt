@@ -47,7 +47,11 @@ private fun Today(context: Context, snapshot: WidgetSnapshot, now: Long) {
         modifier = GlanceModifier.fillMaxSize().background(DotColors.surface)
             .padding(14.dp).clickable(open(context, "dottoday://today")),
     ) {
-        Text(snapshot.label("today").uppercase(), style = DotText.caption)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            DayDot(context, snapshot, now)
+            Spacer(GlanceModifier.width(6.dp))
+            Text(snapshot.label("today").uppercase(), style = DotText.caption)
+        }
         Spacer(GlanceModifier.height(8.dp))
         if (ahead.isEmpty()) {
             Text(snapshot.label("nothing_next"), style = DotText.meta)

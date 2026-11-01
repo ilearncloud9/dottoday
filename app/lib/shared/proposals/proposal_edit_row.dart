@@ -208,8 +208,8 @@ class _TimeLine extends StatelessWidget {
 }
 
 /// "☾ Wind Down · 22:00", where the thread ends.
-class ProposalBedtimeRow extends StatelessWidget {
-  const ProposalBedtimeRow({required this.label, this.moon = true, super.key});
+class ProposalWindDownRow extends StatelessWidget {
+  const ProposalWindDownRow({required this.label, this.moon = true, super.key});
 
   final String label;
 

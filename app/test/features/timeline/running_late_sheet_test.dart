@@ -137,25 +137,26 @@ void main() {
 
   group('Day review at Wind Down', () {
     // 23:30 in Berlin, after the default Wind Down.
-    final bedtime = DateTime.utc(2026, 10, 21, 21, 30);
+    final windDown = DateTime.utc(2026, 10, 21, 21, 30);
 
     testWidgets('sends the rest to the Inbox by default, with Undo', (
       tester,
     ) async {
-      await _pump(tester, at: bedtime);
+      await _pump(tester, at: windDown);
       expect(find.text('DAY REVIEW'), findsOneWidget);
       expect(find.text('Send the rest to the Inbox?'), findsOneWidget);
       await tester.tap(find.textContaining('to Inbox'));
       await tester.pumpAndSettle();
       expect(_row('Reply to email').startUtc, isNull);
       expect(find.textContaining('sent to the Inbox'), findsOneWidget);
-      expect(find.text('DAY REVIEW'), findsNothing);
+      // The review stays, all done (docs/15 W6: its night line is there).
+      expect(find.text('Nothing left to move'), findsOneWidget);
     });
 
     testWidgets('moves the rest to tomorrow when Roll is on', (tester) async {
       await _pump(
         tester,
-        at: bedtime,
+        at: windDown,
         settings: const Settings(use24h: false, rollUnfinished: true),
       );
       final mail = _row('Reply to email').startUtc!;
@@ -170,7 +171,7 @@ void main() {
     testWidgets('Not now puts it away; not shown before Wind Down', (
       tester,
     ) async {
-      await _pump(tester, at: bedtime);
+      await _pump(tester, at: windDown);
       await tester.tap(find.text('Not now'));
       await tester.pumpAndSettle();
       expect(find.text('DAY REVIEW'), findsNothing);

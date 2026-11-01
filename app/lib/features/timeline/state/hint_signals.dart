@@ -48,7 +48,7 @@ HintSignals? watchHintSignals(WidgetRef ref, DateTime today) {
         ref.watch(liveActivityDismissedProvider).value ?? false,
     overrunsThisWeek: overrunsOf([...week.nonNulls.expand((d) => d)]),
     inFocus: ref.watch(focusTaskProvider) != null,
-    inBedtimeReview: !now.isBefore(shape.bedUtc),
+    inWindDownReview: !now.isBefore(shape.bedUtc),
     lowEnergy: lowEnergyOn(data.settings, now),
   );
 }

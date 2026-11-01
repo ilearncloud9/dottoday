@@ -905,16 +905,16 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.durationFitsBefore(title, time));
 
   @override
-  String durationFitsBedtime(String time) =>
-      pseudo(super.durationFitsBedtime(time));
+  String durationFitsWindDown(String time) =>
+      pseudo(super.durationFitsWindDown(time));
 
   @override
   String durationRunsInto(String title, String time) =>
       pseudo(super.durationRunsInto(title, time));
 
   @override
-  String durationPastBedtime(String time) =>
-      pseudo(super.durationPastBedtime(time));
+  String durationPastWindDown(String time) =>
+      pseudo(super.durationPastWindDown(time));
 
   @override
   String get durationPresets => pseudo(super.durationPresets);
@@ -1106,7 +1106,7 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get settingsWakeUp => pseudo(super.settingsWakeUp);
 
   @override
-  String get settingsBedtime => pseudo(super.settingsBedtime);
+  String get settingsWindDown => pseudo(super.settingsWindDown);
 
   @override
   String get settingsPerWeekday => pseudo(super.settingsPerWeekday);
@@ -1197,11 +1197,11 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.settingsAlertBefore(minutes));
 
   @override
-  String get settingsBedtimeReminder => pseudo(super.settingsBedtimeReminder);
+  String get settingsWindDownReminder => pseudo(super.settingsWindDownReminder);
 
   @override
-  String settingsBedtimeReminderDetail(String time) =>
-      pseudo(super.settingsBedtimeReminderDetail(time));
+  String settingsWindDownReminderDetail(String time) =>
+      pseudo(super.settingsWindDownReminderDetail(time));
 
   @override
   String get settingsLook => pseudo(super.settingsLook);
@@ -1719,10 +1719,10 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String alertsRemove(String alert) => pseudo(super.alertsRemove(alert));
 
   @override
-  String get alertsBedtime => pseudo(super.alertsBedtime);
+  String get alertsWindDown => pseudo(super.alertsWindDown);
 
   @override
-  String get alertsBedtimeDetail => pseudo(super.alertsBedtimeDetail);
+  String get alertsWindDownDetail => pseudo(super.alertsWindDownDetail);
 
   @override
   String get alertsDone => pseudo(super.alertsDone);
@@ -2493,10 +2493,10 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.onboardingTaskStartsDetail);
 
   @override
-  String get onboardingBedtime => pseudo(super.onboardingBedtime);
+  String get onboardingWindDown => pseudo(super.onboardingWindDown);
 
   @override
-  String get onboardingBedtimeDetail => pseudo(super.onboardingBedtimeDetail);
+  String get onboardingWindDownDetail => pseudo(super.onboardingWindDownDetail);
 
   @override
   String get onboardingAllow => pseudo(super.onboardingAllow);
@@ -2587,14 +2587,14 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get notifSnoozed => pseudo(super.notifSnoozed);
 
   @override
-  String get notifBedtimeTitle => pseudo(super.notifBedtimeTitle);
+  String get notifWindDownTitle => pseudo(super.notifWindDownTitle);
 
   @override
-  String notifBedtimeFirst(String title, String time) =>
-      pseudo(super.notifBedtimeFirst(title, time));
+  String notifWindDownFirst(String title, String time) =>
+      pseudo(super.notifWindDownFirst(title, time));
 
   @override
-  String get notifBedtimeFree => pseudo(super.notifBedtimeFree);
+  String get notifWindDownFree => pseudo(super.notifWindDownFree);
 
   @override
   String get notifActionDone => pseudo(super.notifActionDone);
@@ -3671,7 +3671,7 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get rebalanceAllowShrink => pseudo(super.rebalanceAllowShrink);
 
   @override
-  String get rebalancePastBedtime => pseudo(super.rebalancePastBedtime);
+  String get rebalancePastWindDown => pseudo(super.rebalancePastWindDown);
 
   @override
   String rebalanceRanOver(String title, String duration) =>
@@ -4726,6 +4726,68 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String wakeUpCheckStart(String title) =>
       pseudo(super.wakeUpCheckStart(title));
+
+  @override
+  String get settingsSleepTarget => pseudo(super.settingsSleepTarget);
+
+  @override
+  String get settingsSleepTargetOff => pseudo(super.settingsSleepTargetOff);
+
+  @override
+  String get settingsSleepTargetDetail =>
+      pseudo(super.settingsSleepTargetDetail);
+
+  @override
+  String get settingsShowNight => pseudo(super.settingsShowNight);
+
+  @override
+  String get reviewSleepOffer => pseudo(super.reviewSleepOffer);
+
+  @override
+  String get reviewSleepOfferSet => pseudo(super.reviewSleepOfferSet);
+
+  @override
+  String get reviewSleepOfferLater => pseudo(super.reviewSleepOfferLater);
+
+  @override
+  String get onboardingSleepTarget => pseudo(super.onboardingSleepTarget);
+
+  @override
+  String nightLabel(String length) => pseudo(super.nightLabel(length));
+
+  @override
+  String reviewNightUntil(String length, String time) =>
+      pseudo(super.reviewNightUntil(length, time));
+
+  @override
+  String reviewNightIfNow(String length) =>
+      pseudo(super.reviewNightIfNow(length));
+
+  @override
+  String notifWindDownNudge(String length, String title, String time) =>
+      pseudo(super.notifWindDownNudge(length, title, time));
+
+  @override
+  String notifWindDownNudgeNoDot(String length, String time) =>
+      pseudo(super.notifWindDownNudgeNoDot(length, time));
+
+  @override
+  String settingsWindDownFrom(String time, String wake) =>
+      pseudo(super.settingsWindDownFrom(time, wake));
+
+  @override
+  String todayWindDownFooter(String start, String windDown) =>
+      pseudo(super.todayWindDownFooter(start, windDown));
+
+  @override
+  String onboardingWindDownLive(String time, String length) =>
+      pseudo(super.onboardingWindDownLive(time, length));
+
+  @override
+  String get sleepLess => pseudo(super.sleepLess);
+
+  @override
+  String get sleepMore => pseudo(super.sleepMore);
 
   @override
   String get releaseNotes120 => pseudo(super.releaseNotes120);

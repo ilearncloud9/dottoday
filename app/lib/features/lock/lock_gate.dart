@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/security/app_lock_store.dart';
+import 'package:dottoday/domain/time/day_dot_geometry.dart';
 import 'package:dottoday/shared/dot/day_dot.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -149,6 +150,6 @@ class _Dot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const ExcludeSemantics(
-    child: DayDot(progress: 1, size: DotSize.dayDot * 3),
+    child: DayDot(geometry: DayDotGeometry.filled(1), size: DotSize.dayDot * 3),
   );
 }

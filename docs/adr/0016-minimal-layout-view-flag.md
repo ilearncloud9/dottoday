@@ -39,7 +39,7 @@ and notifications, where a flip could change what gets stored or what rings.
   and hint (a UUID v5 id). It is UNIQUE per user and hint, its hint id must be one of the six, and its
   count is at most 2. RLS is in the same migration. `pickHint` is pure over the signals, the
   records, the injected Clock's now and the profile zone. It shows one hint per local day, each at
-  most twice. Not now retires a hint forever. No hint shows in Focus, after Bedtime or in
+  most twice. Not now retires a hint forever. No hint shows in Focus, after Wind Down or in
   low-energy mode. The row is the existing `StatusHint`.
 - **Where it lives.** docs/14 §6 named `features/layout/`. CLAUDE.md §3 forbids
   feature-to-feature imports, and on engineering questions CLAUDE.md wins. So:

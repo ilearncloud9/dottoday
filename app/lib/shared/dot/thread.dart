@@ -179,11 +179,12 @@ class _ThreadState extends State<Thread> {
     final a = widget.actions;
     final drag = a.drag;
     return switch (e) {
-      ThreadCap(bedtime: false) when drag?.onAllDay != null => AllDayDropTarget(
-        onAllDay: drag!.onAllDay!,
-        label: context.l10n.timelineAllDay,
-        child: _cap(e),
-      ),
+      ThreadCap(windDown: false) when drag?.onAllDay != null =>
+        AllDayDropTarget(
+          onAllDay: drag!.onAllDay!,
+          label: context.l10n.timelineAllDay,
+          child: _cap(e),
+        ),
       ThreadCap() => _cap(e),
       ThreadGap(:final span?) when drag != null => _droppable(
         span,
@@ -206,7 +207,7 @@ class _ThreadState extends State<Thread> {
     return CapRow(
       cap: cap,
       size: widget.side ? DotSize.macRowDot : DotSize.threadDot,
-      onTap: onCap == null ? null : () => onCap(cap.bedtime),
+      onTap: onCap == null ? null : () => onCap(cap.windDown),
     );
   }
 

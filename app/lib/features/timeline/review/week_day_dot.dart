@@ -14,6 +14,7 @@ class WeekDayDot extends StatelessWidget {
     required this.diameter,
     this.centre,
     this.selected = false,
+    this.dayEnd = 1,
     super.key,
   });
 
@@ -25,6 +26,11 @@ class WeekDayDot extends StatelessWidget {
 
   /// The day whose thread is open: a halo in the accent tint.
   final bool selected;
+
+  /// Where the day ends on the ring (`DayDotGeometry.dayEnd`): the tasks
+  /// share the day, and the night fills the rest faintly (docs/15 W6), so
+  /// a short night shows as geometry, never as a number.
+  final double dayEnd;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +52,8 @@ class WeekDayDot extends StatelessWidget {
               ),
           ],
           track: t.colors.outline,
+          night: t.colors.night,
+          dayEnd: dayEnd,
           halo: selected ? t.colors.accentTint : null,
           haloWidth: halo,
           stroke:
@@ -73,6 +81,8 @@ final class _RingPainter extends CustomPainter {
   const _RingPainter({
     required this.segments,
     required this.track,
+    required this.night,
+    required this.dayEnd,
     required this.halo,
     required this.haloWidth,
     required this.stroke,
@@ -80,6 +90,8 @@ final class _RingPainter extends CustomPainter {
 
   final List<_Segment> segments;
   final Color track;
+  final Color night;
+  final double dayEnd;
   final Color? halo;
   final double haloWidth;
   final double stroke;
@@ -99,16 +111,31 @@ final class _RingPainter extends CustomPainter {
           ..color = h,
       );
     }
+    const top = -math.pi / 2;
+    final day = 2 * math.pi * dayEnd;
+    if (dayEnd < 1) {
+      // Thinner, not just fainter: the night reads as night without colour.
+      canvas.drawArc(
+        ring,
+        top + day,
+        2 * math.pi - day,
+        false,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = stroke * 0.45
+          ..color = night,
+      );
+    }
     final total = segments.fold(0, (s, x) => s + x.minutes);
     if (total == 0) {
-      canvas.drawOval(ring, paint..color = track);
+      canvas.drawArc(ring, top, day, false, paint..color = track);
       return;
     }
     // A small gap between tasks, none for a single task.
     final gap = segments.length == 1 ? 0.0 : DotSize.weekReviewGap;
-    var angle = -math.pi / 2;
+    var angle = top;
     for (final s in segments) {
-      final sweep = 2 * math.pi * s.minutes / total;
+      final sweep = day * s.minutes / total;
       canvas.drawArc(
         ring,
         angle + gap / 2,
@@ -124,6 +151,8 @@ final class _RingPainter extends CustomPainter {
   bool shouldRepaint(_RingPainter old) =>
       old.segments != segments ||
       old.track != track ||
+      old.night != night ||
+      old.dayEnd != dayEnd ||
       old.halo != halo ||
       old.haloWidth != haloWidth ||
       old.stroke != stroke;

@@ -28,13 +28,31 @@ struct Snapshot: Codable {
   let inboxCount: Int
   let labels: [String: String]
   let blocks: [WidgetBlock]
+  /// Today's Wake Up and Wind Down, and where the day ends on the day
+  /// dot's ring (the night after it, docs/15 W6; 1 = no night). Computed
+  /// once in the app (`dayDotGeometry`); the widgets only scale by it.
+  var wakeMs: Double? = nil
+  var bedMs: Double? = nil
+  var nightStart: Double? = nil
 
   enum CodingKeys: String, CodingKey {
     case v, labels, blocks
     case inboxCount = "inbox_count"
+    case wakeMs = "wake_ms"
+    case bedMs = "bed_ms"
+    case nightStart = "night_start"
   }
 
   static let empty = Snapshot(v: 1, inboxCount: 0, labels: [:], blocks: [])
+
+  /// Ring shares at [now]: the waking day ends at `day`, `filled` of it so
+  /// far, and the night takes the rest.
+  func dayDot(at now: Date) -> (day: Double, filled: Double) {
+    let day = min(1, max(0, nightStart ?? 1))
+    guard let wake = wakeMs, let bed = bedMs, bed > wake else { return (day, 0) }
+    let t = now.timeIntervalSince1970 * 1000
+    return (day, day * min(1, max(0, (t - wake) / (bed - wake))))
+  }
 
   /// Shared with the app (Runner.entitlements, home_widget_sink.dart).
   static let appGroup = "group.app.dottoday.planner"

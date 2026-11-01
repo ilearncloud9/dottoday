@@ -54,11 +54,11 @@ class ProposalThreadList extends StatelessWidget {
               onRemove: e.removable ? () => onRemove(e.id) : null,
             ),
         if (_freeMinutes(proposal) case final free when free > 0)
-          ProposalBedtimeRow(
+          ProposalWindDownRow(
             label: l10n.threadFree(formatDurationShort(l10n, free)),
             moon: false,
           ),
-        ProposalBedtimeRow(
+        ProposalWindDownRow(
           label: l10n.threadBed(
             timeOfUtc(
               context,

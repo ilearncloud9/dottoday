@@ -1196,7 +1196,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String durationFitsBedtime(String time) {
+  String durationFitsWindDown(String time) {
     return 'Fits before Wind Down at $time';
   }
 
@@ -1206,7 +1206,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String durationPastBedtime(String time) {
+  String durationPastWindDown(String time) {
     return 'Runs past Wind Down at $time';
   }
 
@@ -1436,7 +1436,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsWakeUp => 'Wake Up';
 
   @override
-  String get settingsBedtime => 'Wind Down';
+  String get settingsWindDown => 'Wind Down';
 
   @override
   String get settingsPerWeekday => 'Different days';
@@ -1531,10 +1531,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get settingsBedtimeReminder => 'Wind Down reminder';
+  String get settingsWindDownReminder => 'Wind Down reminder';
 
   @override
-  String settingsBedtimeReminderDetail(String time) {
+  String settingsWindDownReminderDetail(String time) {
     return 'At $time, with tomorrow\'s first task';
   }
 
@@ -2237,10 +2237,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get alertsBedtime => 'Wind Down reminder';
+  String get alertsWindDown => 'Wind Down reminder';
 
   @override
-  String get alertsBedtimeDetail =>
+  String get alertsWindDownDetail =>
       'Every evening, with tomorrow\'s first task';
 
   @override
@@ -3210,10 +3210,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'How early is up to you, in Settings';
 
   @override
-  String get onboardingBedtime => 'At Wind Down';
+  String get onboardingWindDown => 'At Wind Down';
 
   @override
-  String get onboardingBedtimeDetail =>
+  String get onboardingWindDownDetail =>
       'Tomorrow\'s first task, so the morning has no surprises';
 
   @override
@@ -3325,15 +3325,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifSnoozed => 'Snoozed reminder';
 
   @override
-  String get notifBedtimeTitle => 'Wind Down';
+  String get notifWindDownTitle => 'Wind Down';
 
   @override
-  String notifBedtimeFirst(String title, String time) {
+  String notifWindDownFirst(String title, String time) {
     return 'Tomorrow starts with $title at $time.';
   }
 
   @override
-  String get notifBedtimeFree => 'Nothing planned for tomorrow yet.';
+  String get notifWindDownFree => 'Nothing planned for tomorrow yet.';
 
   @override
   String get notifActionDone => 'Done';
@@ -4648,7 +4648,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rebalanceAllowShrink => 'Allow shrinking optional';
 
   @override
-  String get rebalancePastBedtime => 'Push past Wind Down';
+  String get rebalancePastWindDown => 'Push past Wind Down';
 
   @override
   String rebalanceRanOver(String title, String duration) {
@@ -5979,8 +5979,80 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get settingsSleepTarget => 'Sleep target';
+
+  @override
+  String get settingsSleepTargetOff => 'Off';
+
+  @override
+  String get settingsSleepTargetDetail =>
+      'Wind Down moves earlier before an early morning';
+
+  @override
+  String get settingsShowNight => 'Show the night on the day dot';
+
+  @override
+  String get reviewSleepOffer =>
+      'New: tell Dottoday how much sleep you want, and Wind Down will move earlier before an early Wake Up.';
+
+  @override
+  String get reviewSleepOfferSet => 'Set';
+
+  @override
+  String get reviewSleepOfferLater => 'No thanks';
+
+  @override
+  String get onboardingSleepTarget => 'How much sleep do you want?';
+
+  @override
+  String nightLabel(String length) {
+    return 'Night · $length';
+  }
+
+  @override
+  String reviewNightUntil(String length, String time) {
+    return '$length until Wake Up at $time';
+  }
+
+  @override
+  String reviewNightIfNow(String length) {
+    return '$length if you wind down now';
+  }
+
+  @override
+  String notifWindDownNudge(String length, String title, String time) {
+    return 'Wind down now for $length before $title at $time.';
+  }
+
+  @override
+  String notifWindDownNudgeNoDot(String length, String time) {
+    return 'Wind down now for $length before $time.';
+  }
+
+  @override
+  String settingsWindDownFrom(String time, String wake) {
+    return '$time · from tomorrow\'s $wake';
+  }
+
+  @override
+  String todayWindDownFooter(String start, String windDown) {
+    return 'Tomorrow starts $start → wind down $windDown';
+  }
+
+  @override
+  String onboardingWindDownLive(String time, String length) {
+    return 'Wind Down $time · $length of sleep';
+  }
+
+  @override
+  String get sleepLess => 'Less sleep';
+
+  @override
+  String get sleepMore => 'More sleep';
+
+  @override
   String get releaseNotes120 =>
-      'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android and on iPhones with iOS 26, as a time-sensitive notification on older iPhones. Pick its sound and snooze under Sound and snooze, and send yourself a test. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.';
+      'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android and on iPhones with iOS 26, as a time-sensitive notification on older iPhones. Pick its sound and snooze under Sound and snooze, and send yourself a test. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.\nThe night: tell Dottoday how much sleep you want and Wind Down moves earlier before an early morning. The day dot shows the night, and the Wind Down review opens with it.';
 
   @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';

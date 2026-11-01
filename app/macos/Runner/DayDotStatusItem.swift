@@ -1,7 +1,7 @@
 import Cocoa
 
 /// The day dot in the menu bar (docs/02 F9, docs/11 A1, docs/09 M9.6): a
-/// ring that fills from Wake Up to Bedtime, then the task under way or the
+/// ring that fills from Wake Up to Wind Down, then the task under way or the
 /// next one. Click: What's next — the dot with Done and +15 min (B6, run
 /// by the app in process), what is left of the day, Today. Text arrives
 /// formatted and localised in the day snapshot
@@ -42,12 +42,18 @@ final class DayDotStatusItem: NSObject {
 
   private static func done(_ block: [String: Any]) -> Bool { block["done"] as? Bool ?? false }
 
-  /// Share of the waking day gone at [now] (ms): 0 before Wake Up, 1 after Bedtime.
+  /// Share of the waking day gone at [now] (ms): 0 before Wake Up, 1 after Wind Down.
   static func dayShare(_ snapshot: [String: Any], now: Double) -> Double {
     let wake = ms(snapshot, "wake_ms")
     let bed = ms(snapshot, "bed_ms")
     guard bed > wake else { return 0 }
     return min(1, max(0, (now - wake) / (bed - wake)))
+  }
+
+  /// Where the day ends on the ring; the night fills the rest (docs/15 W6).
+  /// The app computes it once (`dayDotGeometry`); 1 is no night.
+  static func nightStart(_ snapshot: [String: Any]) -> Double {
+    min(1, max(0, (snapshot["night_start"] as? NSNumber)?.doubleValue ?? 1))
   }
 
   private func render() {
@@ -62,7 +68,8 @@ final class DayDotStatusItem: NSObject {
       item = created
     }
     guard let item, let button = item.button else { return }
-    button.image = DayDotImage.make(share: Self.dayShare(snapshot, now: now))
+    let day = Self.nightStart(snapshot)
+    button.image = DayDotImage.make(share: Self.dayShare(snapshot, now: now) * day, day: day)
     button.imagePosition = .imageLeading
     button.attributedTitle = title(for: shown, live: live != nil)
     button.setAccessibilityLabel(
@@ -168,15 +175,27 @@ final class DayDotStatusItem: NSObject {
 /// waking day filled clockwise from the top, a dot at the centre. A template
 /// image, so the menu bar tints it for light and dark itself.
 enum DayDotImage {
-  static func make(share: Double, size: CGFloat = 16) -> NSImage {
+  /// [share] of the ring filled; the day ends at [day] and the night,
+  /// fainter, runs on to the top (docs/15 W6).
+  static func make(share: Double, day: Double = 1, size: CGFloat = 16) -> NSImage {
     let image = NSImage(size: NSSize(width: size, height: size), flipped: false) { rect in
       let center = NSPoint(x: rect.midX, y: rect.midY)
       let radius = size / 2 - 1.5
       NSColor.black.withAlphaComponent(0.35).setStroke()
       let track = NSBezierPath()
-      track.appendArc(withCenter: center, radius: radius, startAngle: 0, endAngle: 360)
+      track.appendArc(
+        withCenter: center, radius: radius, startAngle: 90, endAngle: 90 - 360 * day, clockwise: true)
       track.lineWidth = 2
       track.stroke()
+      if day < 1 {
+        NSColor.black.withAlphaComponent(0.12).setStroke()
+        let night = NSBezierPath()
+        night.appendArc(
+          withCenter: center, radius: radius, startAngle: 90 - 360 * day, endAngle: -270, clockwise: true)
+        // Thinner, not just fainter (docs/15 W6).
+        night.lineWidth = 0.9
+        night.stroke()
+      }
       if share > 0 {
         NSColor.black.setStroke()
         let fill = NSBezierPath()

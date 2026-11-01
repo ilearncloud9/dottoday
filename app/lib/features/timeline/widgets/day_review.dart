@@ -7,6 +7,7 @@ import 'package:dottoday/domain/scheduling/day_review.dart';
 import 'package:dottoday/features/timeline/state/late_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/features/timeline/widgets/review_night.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,11 +50,14 @@ class DayReviewBody extends ConsumerWidget {
     if (data == null) return const SizedBox.shrink();
     final review = reviewOf(data.blocks);
     final roll = data.settings.rollUnfinished;
+    final settings = data.settings;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: DotSpace.s,
       children: [
+        // The night first (docs/15 W6); then the day as before.
+        ReviewNightLine(day: day),
         Text(
           l10n.reviewSummary(review.done, review.total),
           style: t.styles.cardTitle,
@@ -69,6 +73,9 @@ class DayReviewBody extends ConsumerWidget {
         if (review.staying > 0)
           Text(l10n.reviewStaying(review.staying), style: t.styles.rowMeta),
         _buttons(context, ref, review, roll),
+        // Once, for an account from before the sleep target (15 §11).
+        if (settings.sleepTargetMin == null && !settings.sleepOfferAnswered)
+          const SleepOffer(),
       ],
     );
   }

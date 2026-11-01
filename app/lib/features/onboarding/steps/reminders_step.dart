@@ -60,8 +60,8 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final bedtime =
-        ref.watch(currentProfileProvider).value?.settings.bedtimeReminder ??
+    final windDown =
+        ref.watch(currentProfileProvider).value?.settings.windDownReminder ??
         false;
     final permission = ref.read(notificationPermissionProvider);
     final granted =
@@ -85,7 +85,7 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
       secondary: decided ? null : l10n.onboardingNotNow,
       onSecondary: widget.onNext,
       children: [
-        _rows(context, t, l10n, bedtime, offerWakeUp: offerWakeUp),
+        _rows(context, t, l10n, windDown, offerWakeUp: offerWakeUp),
         if (granted)
           TestAlarmCard(
             onSend: alarm.send,
@@ -124,7 +124,7 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
     BuildContext context,
     DotTheme t,
     AppLocalizations l10n,
-    bool bedtime, {
+    bool windDown, {
     required bool offerWakeUp,
   }) => SettingsGroup(
     caption: l10n.settingsReminders,
@@ -138,13 +138,13 @@ class _RemindersStepState extends ConsumerState<RemindersStep> {
       SettingsRow(
         glyph: DotGlyphs.moon,
         tint: t.tasks[TaskColor.violet].ink,
-        title: l10n.onboardingBedtime,
-        subtitle: l10n.onboardingBedtimeDetail,
-        toggle: bedtime,
+        title: l10n.onboardingWindDown,
+        subtitle: l10n.onboardingWindDownDetail,
+        toggle: windDown,
         onToggle: (on) => unawaited(
           updateSettings(
             ProviderScope.containerOf(context, listen: false),
-            (s) => s.copyWith(bedtimeReminder: on),
+            (s) => s.copyWith(windDownReminder: on),
           ),
         ),
       ),

@@ -118,6 +118,29 @@ void main() {
     expect(writes.applied, isEmpty);
   });
 
+  test(
+    'the Wind Down reminder opens the review, even for a free tomorrow',
+    () async {
+      await responder.handle(
+        NotificationTap(
+          id: 6,
+          payload: encodeNotificationPayload(
+            PlannedNotification(
+              id: 6,
+              occurrenceId: '',
+              alertIndex: PlannedNotification.windDownIndex,
+              fireAtUtc: now,
+              kind: AlertKind.atEnd,
+              purpose: NotificationPurpose.windDown,
+            ),
+          ),
+        ),
+      );
+      expect(opened, ['/review']);
+      expect(writes.applied, isEmpty);
+    },
+  );
+
   test('Start (Smallest step) opens Focus and writes nothing itself', () async {
     await responder.handle(tap(gymId(), 'start'));
     expect(opened, ['/focus/${gymId()}']);

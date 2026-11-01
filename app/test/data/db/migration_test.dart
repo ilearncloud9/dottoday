@@ -14,10 +14,48 @@ import 'package:flutter_test/flutter_test.dart';
 // series and occurrences, and "system" for every null reminder sound;
 // 8 → 9 (M16, docs/14 §6): reveal_hints, the outbox CHECK naming them, and
 // `uiLayout: "full"` for every existing profile; 9 → 10 (M17.3, docs/15
-// §3): the local wake_up_days.
+// §3): the local wake_up_days; 10 → 11 (M17.5): the Wind Down reminder's
+// settings key moves from bedtimeReminder to windDownReminder.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
+  test('a version 10 file moves bedtimeReminder to windDownReminder', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig11');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+
+    final v10 = AppDatabase(NativeDatabase(file));
+    for (final (id, settings) in [
+      ('off', '{"bedtimeReminder":false,"snapMinutes":10}'),
+      ('on', '{"bedtimeReminder":true}'),
+      ('unset', '{"snapMinutes":5}'),
+    ]) {
+      await v10.customStatement(
+        'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+        "updated_at) VALUES ('$id', 'UTC', 'en', '$settings', 0, 0)",
+      );
+    }
+    await v10.customStatement('PRAGMA user_version = 10');
+    await v10.close();
+
+    final v11 = AppDatabase(NativeDatabase(file));
+    addTearDown(v11.close);
+    Future<Map<String, Object?>> settings(String id) async =>
+        (await v11
+                .customSelect(
+                  "SELECT json_extract(settings, '\$.windDownReminder') AS w, "
+                  "json_type(settings, '\$.bedtimeReminder') AS b, "
+                  "json_extract(settings, '\$.snapMinutes') AS s "
+                  'FROM profiles WHERE id = ?',
+                  variables: [Variable.withString(id)],
+                )
+                .getSingle())
+            .data;
+    expect(await settings('off'), {'w': 0, 'b': null, 's': 10});
+    expect(await settings('on'), {'w': 1, 'b': null, 's': null});
+    expect(await settings('unset'), {'w': null, 'b': null, 's': 5});
+  });
+
   test('a version 9 file gains wake_up_days and keeps its rows', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig10');
     addTearDown(() => dir.delete(recursive: true));

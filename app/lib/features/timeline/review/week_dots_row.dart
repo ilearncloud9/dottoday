@@ -109,6 +109,7 @@ class _DayColumn extends StatelessWidget {
             children: [
               WeekDayDot(
                 dots: day.snapshot.dots,
+                dayEnd: day.snapshot.geometry.dayEnd,
                 diameter: diameter,
                 centre: countInside ? count : null,
                 selected: selected,

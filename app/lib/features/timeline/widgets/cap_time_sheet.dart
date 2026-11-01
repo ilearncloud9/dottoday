@@ -30,7 +30,7 @@ Future<void> showCapTimeSheet(
   final window = settings.boundaryFor(day);
   final picked = await showAppSheet<_CapPick>(
     context: context,
-    title: windDown ? l10n.settingsBedtime : l10n.settingsWakeUp,
+    title: windDown ? l10n.settingsWindDown : l10n.settingsWakeUp,
     builder: (_) => _CapSheet(
       initial: ClockTime.fromMinutes(
         windowMinutes(windDown ? window.end : window.start),

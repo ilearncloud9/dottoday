@@ -1199,7 +1199,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String durationFitsBedtime(String time) {
+  String durationFitsWindDown(String time) {
     return 'Tient avant la détente à $time';
   }
 
@@ -1209,7 +1209,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String durationPastBedtime(String time) {
+  String durationPastWindDown(String time) {
     return 'Finit après la détente à $time';
   }
 
@@ -1441,7 +1441,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsWakeUp => 'Réveil';
 
   @override
-  String get settingsBedtime => 'Détente';
+  String get settingsWindDown => 'Détente';
 
   @override
   String get settingsPerWeekday => 'Jours différents';
@@ -1537,10 +1537,10 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get settingsBedtimeReminder => 'Rappel de détente';
+  String get settingsWindDownReminder => 'Rappel de détente';
 
   @override
-  String settingsBedtimeReminderDetail(String time) {
+  String settingsWindDownReminderDetail(String time) {
     return 'À $time, avec la première tâche de demain';
   }
 
@@ -2245,10 +2245,10 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get alertsBedtime => 'Rappel de détente';
+  String get alertsWindDown => 'Rappel de détente';
 
   @override
-  String get alertsBedtimeDetail =>
+  String get alertsWindDownDetail =>
       'Chaque soir, avec la première tâche de demain';
 
   @override
@@ -3225,10 +3225,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Combien de temps avant, à vous de voir dans les réglages';
 
   @override
-  String get onboardingBedtime => 'À la détente';
+  String get onboardingWindDown => 'À la détente';
 
   @override
-  String get onboardingBedtimeDetail =>
+  String get onboardingWindDownDetail =>
       'La première tâche de demain, pour un matin sans surprise';
 
   @override
@@ -3341,15 +3341,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notifSnoozed => 'Rappel reporté';
 
   @override
-  String get notifBedtimeTitle => 'Détente';
+  String get notifWindDownTitle => 'Détente';
 
   @override
-  String notifBedtimeFirst(String title, String time) {
+  String notifWindDownFirst(String title, String time) {
     return 'Demain commence par $title à $time.';
   }
 
   @override
-  String get notifBedtimeFree => 'Rien de prévu pour demain pour l\'instant.';
+  String get notifWindDownFree => 'Rien de prévu pour demain pour l\'instant.';
 
   @override
   String get notifActionDone => 'Fait';
@@ -4677,7 +4677,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get rebalanceAllowShrink => 'Raccourcir l’optionnel';
 
   @override
-  String get rebalancePastBedtime => 'Dépasser la détente';
+  String get rebalancePastWindDown => 'Dépasser la détente';
 
   @override
   String rebalanceRanOver(String title, String duration) {
@@ -6027,8 +6027,80 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get settingsSleepTarget => 'Objectif de sommeil';
+
+  @override
+  String get settingsSleepTargetOff => 'Désactivé';
+
+  @override
+  String get settingsSleepTargetDetail =>
+      'La détente avance avant un matin matinal';
+
+  @override
+  String get settingsShowNight => 'Afficher la nuit sur le point du jour';
+
+  @override
+  String get reviewSleepOffer =>
+      'Nouveau : dites à Dottoday combien de sommeil vous voulez, et la détente avancera avant un réveil matinal.';
+
+  @override
+  String get reviewSleepOfferSet => 'Définir';
+
+  @override
+  String get reviewSleepOfferLater => 'Non merci';
+
+  @override
+  String get onboardingSleepTarget => 'Combien de sommeil voulez-vous ?';
+
+  @override
+  String nightLabel(String length) {
+    return 'Nuit · $length';
+  }
+
+  @override
+  String reviewNightUntil(String length, String time) {
+    return '$length jusqu\'au réveil à $time';
+  }
+
+  @override
+  String reviewNightIfNow(String length) {
+    return '$length si vous vous détendez maintenant';
+  }
+
+  @override
+  String notifWindDownNudge(String length, String title, String time) {
+    return 'Détendez-vous maintenant : $length avant $title à $time.';
+  }
+
+  @override
+  String notifWindDownNudgeNoDot(String length, String time) {
+    return 'Détendez-vous maintenant : $length avant $time.';
+  }
+
+  @override
+  String settingsWindDownFrom(String time, String wake) {
+    return '$time · selon demain $wake';
+  }
+
+  @override
+  String todayWindDownFooter(String start, String windDown) {
+    return 'Demain commence à $start → détente à $windDown';
+  }
+
+  @override
+  String onboardingWindDownLive(String time, String length) {
+    return 'Détente à $time · $length de sommeil';
+  }
+
+  @override
+  String get sleepLess => 'Moins de sommeil';
+
+  @override
+  String get sleepMore => 'Plus de sommeil';
+
+  @override
   String get releaseNotes120 =>
-      'Alarme du réveil : activez-la dans Réglages › Forme de la journée et votre heure de réveil sonne les jours planifiés — comme une alarme sur Android et sur les iPhone sous iOS 26, en notification urgente sur les iPhone plus anciens. Choisissez son son et la répétition dans Son et répétition, avec une alarme de test. Rien ne sonne tant que vous ne l\'activez pas.\nSons : 48 sons de rappel qui vont bien ensemble. Choisissez-en un pour toutes vos tâches ou donnez à une tâche le sien ; la première tâche de la journée sonne avec votre son de début.\nJuste le point suivant : une présentation minimale à choisir à tout moment, sans rien perdre. Aujourd\'hui montre votre fil, la date et un menu.\nFaites glisser une tâche n\'importe où dans la journée, même sur une autre : les tâches qui se chevauchent font un petit nœud dans le fil.\nL\'heure du coucher devient Détente. Les deux bouts de votre journée sont des points, un soleil et une lune ; touchez-en un pour changer son heure.\nLes icônes se remplissent seules : tapez « Sport » et la tâche reçoit un haltère, parmi 524 icônes.';
+      'Alarme du réveil : activez-la dans Réglages › Forme de la journée et votre heure de réveil sonne les jours planifiés — comme une alarme sur Android et sur les iPhone sous iOS 26, en notification urgente sur les iPhone plus anciens. Choisissez son son et la répétition dans Son et répétition, avec une alarme de test. Rien ne sonne tant que vous ne l\'activez pas.\nSons : 48 sons de rappel qui vont bien ensemble. Choisissez-en un pour toutes vos tâches ou donnez à une tâche le sien ; la première tâche de la journée sonne avec votre son de début.\nJuste le point suivant : une présentation minimale à choisir à tout moment, sans rien perdre. Aujourd\'hui montre votre fil, la date et un menu.\nFaites glisser une tâche n\'importe où dans la journée, même sur une autre : les tâches qui se chevauchent font un petit nœud dans le fil.\nL\'heure du coucher devient Détente. Les deux bouts de votre journée sont des points, un soleil et une lune ; touchez-en un pour changer son heure.\nLes icônes se remplissent seules : tapez « Sport » et la tâche reçoit un haltère, parmi 524 icônes.\nLa nuit : dites à Dottoday combien de sommeil vous voulez et la détente avance avant un matin matinal. Le point du jour montre la nuit, et le bilan de la détente commence par elle.';
 
   @override
   String get taskIconCategoryPlanning => 'Planification et rythme';

@@ -76,6 +76,11 @@ final class DotColors {
 
   bool get isDark => brightness == Brightness.dark;
 
+  /// The night on a day dot (docs/15 W6): [text] over [surface] at 12 %
+  /// (light) or 18 % (dark), opaque. Faint by design, never a warning.
+  Color get night =>
+      Color.alphaBlend(text.withValues(alpha: isDark ? 0.18 : 0.12), surface);
+
   /// Interpolates every role; used by theme animations.
   DotColors lerp(DotColors other, double t) {
     Color l(Color a, Color b) => Color.lerp(a, b, t)!;

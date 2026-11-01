@@ -33,7 +33,7 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
   The Mac/web Week board stacks overlaps in its day columns. Rejected: side-by-side columns (two
   parallel threads break the single axis and halve the row width on a phone).
 - [F1.14] Timeline builds lazily; 200 blocks in a day scroll at ≥ 55 fps on a Pixel 6a / iPhone 12 class device. (R-15)
-- [F1.15] Day boundaries: per-weekday start/end; blocks outside boundaries still render in a collapsed "outside hours" zone. (R-17) Clarification (2026-10-31): the end of the day is named **Wind Down** (was Bedtime), and tapping the Wake Up or Wind Down cap on the thread edits its time for every day or only that weekday.
+- [F1.15] Day boundaries: per-weekday start/end; blocks outside boundaries still render in a collapsed "outside hours" zone. (R-17) Clarification (2026-10-31): the end of the day is named **Wind Down** (was Wind Down), and tapping the Wake Up or Wind Down cap on the thread edits its time for every day or only that weekday.
   Clarified in M8.4b: built on the thread as `ThreadOutside` — tasks that end by Wake Up fold into one
   row above the sun cap ("2 tasks before Wake Up"), tasks that start at Wind Down or later into one below
   the moon cap ("1 task after Wind Down"); a tap unfolds them into ordinary rows (open, done, drag,

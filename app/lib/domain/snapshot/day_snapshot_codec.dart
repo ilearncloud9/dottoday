@@ -17,6 +17,11 @@ Map<String, Object?> encodeDaySnapshot(DaySnapshot s) => {
   'wake_ms': s.wakeUtc.millisecondsSinceEpoch,
   'bed_ms': s.bedUtc.millisecondsSinceEpoch,
   'progress': s.dayProgress,
+  // The night (docs/15 W6): the next Wake Up, and the ring share where the
+  // day ends and the night starts (1 = no night), so native painters draw
+  // it without the geometry's maths.
+  'tomorrow_wake_ms': s.tomorrowWakeUtc?.millisecondsSinceEpoch,
+  'night_start': s.geometry.dayEnd,
   'current_id': s.current?.id,
   'next_ids': [for (final d in s.next) d.id],
   'inbox_count': s.inboxCount,
@@ -72,6 +77,7 @@ DaySnapshot? decodeDaySnapshot(Object? json) {
     inboxCount: inbox,
     dayDone: dayDone,
     dayTotal: dayTotal,
+    tomorrowWakeUtc: _instant(json['tomorrow_wake_ms']),
   );
 }
 

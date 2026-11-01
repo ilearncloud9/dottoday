@@ -12,6 +12,32 @@ extension View {
   }
 }
 
+/// The day dot (docs/10 §3, docs/15 W6): the waking day as a ring from the
+/// top, filled so far in the accent, then the night round to the next Wake
+/// Up in a faint tint. The shares come from the app's snapshot.
+struct DayDotView: View {
+  let snapshot: Snapshot
+  let date: Date
+  var size: CGFloat = 18
+
+  var body: some View {
+    let dot = snapshot.dayDot(at: date)
+    let line = size * 0.2
+    ZStack {
+      Circle().trim(from: 0, to: dot.day).stroke(Dot.hairline, lineWidth: line)
+      if dot.day < 1 {
+        // Thinner, not just fainter: the night reads as night without colour.
+        Circle().trim(from: dot.day, to: 1).stroke(Dot.ink.opacity(0.12), lineWidth: line * 0.45)
+      }
+      Circle().trim(from: 0, to: dot.filled).stroke(Dot.accent, style: StrokeStyle(lineWidth: line))
+      Circle().fill(Dot.accent).frame(width: size * 0.24, height: size * 0.24)
+    }
+    .rotationEffect(.degrees(-90))
+    .frame(width: size, height: size)
+    .accessibilityHidden(true)
+  }
+}
+
 struct TaskDot: View {
   let block: WidgetBlock
   var size: CGFloat = 10
@@ -52,8 +78,11 @@ struct NextUpView: View {
     let live = s.live(at: entry.date)
     let block = live ?? s.next(at: entry.date)
     VStack(alignment: .leading, spacing: 6) {
-      Text((live != nil ? s.label("now") : s.label("next_up")).uppercased())
-        .font(.caption2.weight(.semibold)).foregroundStyle(Dot.muted)
+      HStack(spacing: 6) {
+        DayDotView(snapshot: s, date: entry.date, size: 14)
+        Text((live != nil ? s.label("now") : s.label("next_up")).uppercased())
+          .font(.caption2.weight(.semibold)).foregroundStyle(Dot.muted)
+      }
       if let block {
         HStack(spacing: 6) {
           TaskDot(block: block, size: 12)
@@ -84,8 +113,11 @@ struct TodayView: View {
     let rows = family == .systemLarge ? 9 : 4
     let ahead = Array(s.ahead(at: entry.date).prefix(rows))
     VStack(alignment: .leading, spacing: 6) {
-      Text(s.label("today").uppercased())
-        .font(.caption2.weight(.semibold)).foregroundStyle(Dot.muted)
+      HStack(spacing: 6) {
+        DayDotView(snapshot: s, date: entry.date, size: 14)
+        Text(s.label("today").uppercased())
+          .font(.caption2.weight(.semibold)).foregroundStyle(Dot.muted)
+      }
       if ahead.isEmpty {
         Text(s.label("nothing_next")).font(.caption).foregroundStyle(Dot.muted)
       }

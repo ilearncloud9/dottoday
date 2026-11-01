@@ -30,7 +30,7 @@ class CapRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final windDown = cap.bedtime;
+    final windDown = cap.windDown;
     final label = windDown
         ? l10n.threadBed(cap.time)
         : l10n.threadWake(cap.time);

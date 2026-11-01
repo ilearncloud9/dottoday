@@ -12,7 +12,7 @@ final class HintSignals {
     this.liveActivityDismissed = false,
     this.overrunsThisWeek = 0,
     this.inFocus = false,
-    this.inBedtimeReview = false,
+    this.inWindDownReview = false,
     this.lowEnergy = false,
   });
 
@@ -36,10 +36,10 @@ final class HintSignals {
 
   /// Never inside Focus, a Wind Down review or low-energy mode (§5).
   final bool inFocus;
-  final bool inBedtimeReview;
+  final bool inWindDownReview;
   final bool lowEnergy;
 
-  bool get _quiet => inFocus || inBedtimeReview || lowEnergy;
+  bool get _quiet => inFocus || inWindDownReview || lowEnergy;
 }
 
 /// The hint to show today, and whether this is its first showing today

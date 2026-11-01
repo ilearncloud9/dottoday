@@ -41,10 +41,10 @@ DurationPreview durationPreview(
   final note = switch ((busy, next)) {
     (final b?, _) => l10n.durationRunsInto(b.title, text.utc(b.startUtc!)),
     (null, final n?) => l10n.durationFitsBefore(n.title, text.utc(n.startUtc!)),
-    _ when end.isAfter(room.endUtc) => l10n.durationPastBedtime(
+    _ when end.isAfter(room.endUtc) => l10n.durationPastWindDown(
       text.utc(room.endUtc),
     ),
-    _ => l10n.durationFitsBedtime(text.utc(room.endUtc)),
+    _ => l10n.durationFitsWindDown(text.utc(room.endUtc)),
   };
   return (
     start: text.utc(startUtc),

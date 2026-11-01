@@ -11,9 +11,12 @@ import 'store_listing_test.dart' show readListing, storeLocales;
 // what isn't done. Every string in every language is checked; new strings
 // must pass (docs/09 M8.3 added de/fr/es).
 
-/// Words that judge (word boundaries: "later" and "latest" pass).
+/// Words that judge (word boundaries: "later" and "latest" pass). The
+/// night (docs/15 W6, §12) adds "short", "debt" and "score": the app plans
+/// sleep, it never measures it.
 final _judging = RegExp(
-  r'\b(late|missed|miss|failed|fail|failure|streaks?|overdue|behind)\b',
+  r'\b(late|missed|miss|failed|fail|failure|streaks?|overdue|behind|'
+  r'short|debt|score)\b',
   caseSensitive: false,
 );
 
@@ -57,8 +60,12 @@ const _runningLateAction = {
 /// none, as the plan words it.
 const _noStreakPromise = {'weekReviewNoStreaks'};
 
+/// Running late's "Too short to lose {minutes} min": about a task's
+/// length, not the user's night.
+const _taskLength = {'lateShortenTooShort'};
+
 /// Keys the judging check skips.
-const _allowed = {..._runningLateAction, ..._noStreakPromise};
+const _allowed = {..._runningLateAction, ..._noStreakPromise, ..._taskLength};
 
 void main() {
   test('no English string judges the user', () {

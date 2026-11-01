@@ -45,6 +45,8 @@ So Wake Up is **M17**, doc **15** (`docs/15-wake-up.md`) and **ADR-0017**. ADR-0
 
 ## 2. Stale "Bedtime" (report only, not fixed)
 
+**Done in M17.5 (2026-11-01).** Everything listed below now says Wind Down: identifiers, l10n keys, comments, docs and (owner: "Wind Down everywhere") the synced key, now `windDownReminder`, moved by schema 11 and Supabase 0011. This section keeps the 2026-10-31 findings as they were.
+
 **User-visible text is clean.** No ARB *value* in en/de/fr/es contains Bedtime. The one French
 hit is `taskIconSunset` ("coucher de soleil"), which is a false positive. The 349 hits, outside
 generated files and the CHANGELOG, are identifiers, comments and history:

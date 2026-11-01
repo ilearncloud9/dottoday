@@ -7,6 +7,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
+import 'package:dottoday/features/settings/widgets/night_rows.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_alarm_row.dart';
 import 'package:dottoday/features/settings/widgets/weekday_sheet.dart';
@@ -56,10 +57,13 @@ class DayShapeGroup extends StatelessWidget {
           timeText: at,
           awakeText: (m) => l10n.settingsAwake(formatDurationShort(l10n, m)),
           wakeLabel: l10n.settingsWakeUp,
-          bedLabel: l10n.settingsBedtime,
+          bedLabel: l10n.settingsWindDown,
           onChanged: setWindow,
         ),
         ..._times(context),
+        // The full list only: minimal Settings stays short (docs/14 §4),
+        // and these live under Everything else… there.
+        ...nightRows(context, settings),
         _days(context, t),
         _weekStart(context, t),
         _timeFormat(context, t),
@@ -105,10 +109,16 @@ class DayShapeGroup extends StatelessWidget {
       SettingsRow(
         glyph: DotGlyphs.moon,
         tint: t.tasks[TaskColor.violet].ink,
-        title: l10n.settingsBedtime,
-        value: at(bed),
+        title: l10n.settingsWindDown,
+        value: windDownValue(
+          l10n,
+          settings,
+          wakeMinute: wake,
+          windDownMinute: bed,
+          at: at,
+        ),
         onTap: () => unawaited(
-          _time(context, l10n.settingsBedtime, bed, (m) => setWindow(wake, m)),
+          _time(context, l10n.settingsWindDown, bed, (m) => setWindow(wake, m)),
         ),
       ),
     ];

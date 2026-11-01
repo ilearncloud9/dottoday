@@ -147,14 +147,14 @@ ThreadTask _night(String id, String title, String range) => ThreadTask(
 final _outside = <ThreadEntry>[
   ThreadOutside(
     tasks: [_night('flight', 'Early flight', '5:00 – 6:30')],
-    bedtime: false,
+    windDown: false,
   ),
   const ThreadCap.wake('7:00'),
   const ThreadGap(minutes: 900, startLabel: '7:00', addable: true),
   const ThreadCap.bed('22:00'),
   ThreadOutside(
     tasks: [_night('train', 'Night train', '23:30 – 0:45')],
-    bedtime: true,
+    windDown: true,
     open: true,
   ),
 ];

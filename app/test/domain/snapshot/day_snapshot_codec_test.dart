@@ -106,4 +106,20 @@ void main() {
       }
     });
   });
+
+  test('the night: the next Wake Up round-trips; night_start is derived', () {
+    final s = DaySnapshot(
+      generatedAtUtc: _now,
+      wakeUtc: DateTime.utc(2026, 10, 21, 7),
+      bedUtc: DateTime.utc(2026, 10, 21, 23),
+      tomorrowWakeUtc: DateTime.utc(2026, 10, 22, 7),
+      dots: const [],
+      inboxCount: 0,
+    );
+    final json =
+        jsonDecode(jsonEncode(encodeDaySnapshot(s))) as Map<String, Object?>;
+    expect(json['night_start'], closeTo(16 / 24, 1e-9));
+    expect(decodeDaySnapshot(json), s);
+    expect(_wire()['night_start'], 1, reason: 'no next Wake Up: no night');
+  });
 }

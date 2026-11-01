@@ -1200,7 +1200,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String durationFitsBedtime(String time) {
+  String durationFitsWindDown(String time) {
     return 'Passt vor die Abendruhe um $time';
   }
 
@@ -1210,7 +1210,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String durationPastBedtime(String time) {
+  String durationPastWindDown(String time) {
     return 'Reicht über die Abendruhe um $time';
   }
 
@@ -1441,7 +1441,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsWakeUp => 'Aufstehen';
 
   @override
-  String get settingsBedtime => 'Abendruhe';
+  String get settingsWindDown => 'Abendruhe';
 
   @override
   String get settingsPerWeekday => 'Abweichende Tage';
@@ -1537,10 +1537,10 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get settingsBedtimeReminder => 'Erinnerung zur Abendruhe';
+  String get settingsWindDownReminder => 'Erinnerung zur Abendruhe';
 
   @override
-  String settingsBedtimeReminderDetail(String time) {
+  String settingsWindDownReminderDetail(String time) {
     return 'Um $time, mit der ersten Aufgabe von morgen';
   }
 
@@ -2245,10 +2245,10 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get alertsBedtime => 'Erinnerung zur Abendruhe';
+  String get alertsWindDown => 'Erinnerung zur Abendruhe';
 
   @override
-  String get alertsBedtimeDetail =>
+  String get alertsWindDownDetail =>
       'Jeden Abend, mit der ersten Aufgabe von morgen';
 
   @override
@@ -3226,10 +3226,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Wie früh, entscheidest du in den Einstellungen';
 
   @override
-  String get onboardingBedtime => 'Zur Abendruhe';
+  String get onboardingWindDown => 'Zur Abendruhe';
 
   @override
-  String get onboardingBedtimeDetail =>
+  String get onboardingWindDownDetail =>
       'Die erste Aufgabe von morgen, damit der Morgen keine Überraschungen bringt';
 
   @override
@@ -3342,15 +3342,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get notifSnoozed => 'Geschlummerte Erinnerung';
 
   @override
-  String get notifBedtimeTitle => 'Abendruhe';
+  String get notifWindDownTitle => 'Abendruhe';
 
   @override
-  String notifBedtimeFirst(String title, String time) {
+  String notifWindDownFirst(String title, String time) {
     return 'Morgen beginnt mit $title um $time.';
   }
 
   @override
-  String get notifBedtimeFree => 'Für morgen ist noch nichts geplant.';
+  String get notifWindDownFree => 'Für morgen ist noch nichts geplant.';
 
   @override
   String get notifActionDone => 'Erledigt';
@@ -4675,7 +4675,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get rebalanceAllowShrink => 'Optionale kürzen erlauben';
 
   @override
-  String get rebalancePastBedtime => 'Über die Abendruhe hinaus';
+  String get rebalancePastWindDown => 'Über die Abendruhe hinaus';
 
   @override
   String rebalanceRanOver(String title, String duration) {
@@ -6016,8 +6016,80 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get settingsSleepTarget => 'Schlafziel';
+
+  @override
+  String get settingsSleepTargetOff => 'Aus';
+
+  @override
+  String get settingsSleepTargetDetail =>
+      'Die Abendruhe rückt vor einem frühen Morgen nach vorn';
+
+  @override
+  String get settingsShowNight => 'Die Nacht auf dem Tagespunkt zeigen';
+
+  @override
+  String get reviewSleepOffer =>
+      'Neu: Sag Dottoday, wie viel Schlaf du willst, und die Abendruhe rückt vor einem frühen Aufstehen nach vorn.';
+
+  @override
+  String get reviewSleepOfferSet => 'Festlegen';
+
+  @override
+  String get reviewSleepOfferLater => 'Nein danke';
+
+  @override
+  String get onboardingSleepTarget => 'Wie viel Schlaf möchtest du?';
+
+  @override
+  String nightLabel(String length) {
+    return 'Nacht · $length';
+  }
+
+  @override
+  String reviewNightUntil(String length, String time) {
+    return '$length bis zum Aufstehen um $time';
+  }
+
+  @override
+  String reviewNightIfNow(String length) {
+    return '$length, wenn du jetzt zur Ruhe kommst';
+  }
+
+  @override
+  String notifWindDownNudge(String length, String title, String time) {
+    return 'Jetzt zur Ruhe kommen: $length bis $title um $time.';
+  }
+
+  @override
+  String notifWindDownNudgeNoDot(String length, String time) {
+    return 'Jetzt zur Ruhe kommen: $length bis $time.';
+  }
+
+  @override
+  String settingsWindDownFrom(String time, String wake) {
+    return '$time · nach morgen $wake';
+  }
+
+  @override
+  String todayWindDownFooter(String start, String windDown) {
+    return 'Morgen geht\'s um $start los → Abendruhe $windDown';
+  }
+
+  @override
+  String onboardingWindDownLive(String time, String length) {
+    return 'Abendruhe $time · $length Schlaf';
+  }
+
+  @override
+  String get sleepLess => 'Weniger Schlaf';
+
+  @override
+  String get sleepMore => 'Mehr Schlaf';
+
+  @override
   String get releaseNotes120 =>
-      'Aufstehen-Wecker: Schalte ihn unter Einstellungen › Tagesform ein, und deine Aufstehzeit klingelt an geplanten Tagen — auf Android und auf iPhones mit iOS 26 wie ein Wecker, auf älteren iPhones als zeitkritische Mitteilung. Ton und Schlummern wählst du unter Ton und Schlummern, mit einem Testwecker. Nichts klingelt, bevor du ihn einschaltest.\nTöne: 48 Erinnerungstöne, die gut zusammenpassen. Wähle einen für alle Aufgaben oder gib einer Aufgabe ihren eigenen; deine erste Aufgabe des Tages klingelt mit deinem Start-Ton.\nNur der nächste Punkt: ein minimales Layout, jederzeit wählbar, ohne dass etwas verloren geht. Heute zeigt deinen Faden, das Datum und ein Menü.\nZieh eine Aufgabe irgendwohin auf den Tag, auch auf eine andere: Überschneidungen knüpfen einen kleinen Knoten in den Faden.\nAus Schlafenszeit wird Abendruhe. Die beiden Enden deines Tages sind Punkte, eine Sonne und ein Mond; tipp einen an, um seine Zeit zu ändern.\nIcons füllen sich selbst: Schreib „Fitnessstudio“, und die Aufgabe bekommt eine Hantel — aus 524 Icons.';
+      'Aufstehen-Wecker: Schalte ihn unter Einstellungen › Tagesform ein, und deine Aufstehzeit klingelt an geplanten Tagen — auf Android und auf iPhones mit iOS 26 wie ein Wecker, auf älteren iPhones als zeitkritische Mitteilung. Ton und Schlummern wählst du unter Ton und Schlummern, mit einem Testwecker. Nichts klingelt, bevor du ihn einschaltest.\nTöne: 48 Erinnerungstöne, die gut zusammenpassen. Wähle einen für alle Aufgaben oder gib einer Aufgabe ihren eigenen; deine erste Aufgabe des Tages klingelt mit deinem Start-Ton.\nNur der nächste Punkt: ein minimales Layout, jederzeit wählbar, ohne dass etwas verloren geht. Heute zeigt deinen Faden, das Datum und ein Menü.\nZieh eine Aufgabe irgendwohin auf den Tag, auch auf eine andere: Überschneidungen knüpfen einen kleinen Knoten in den Faden.\nAus Schlafenszeit wird Abendruhe. Die beiden Enden deines Tages sind Punkte, eine Sonne und ein Mond; tipp einen an, um seine Zeit zu ändern.\nIcons füllen sich selbst: Schreib „Fitnessstudio“, und die Aufgabe bekommt eine Hantel — aus 524 Icons.\nDie Nacht: Sag Dottoday, wie viel Schlaf du willst, und die Abendruhe rückt vor einem frühen Morgen nach vorn. Der Tagespunkt zeigt die Nacht, und der Rückblick zur Abendruhe beginnt mit ihr.';
 
   @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';

@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/time/day_dot_geometry.dart';
 import 'package:dottoday/shared/dot/day_dot.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
@@ -20,11 +21,15 @@ class WakeUpGreeting extends StatelessWidget {
     required this.date,
     required this.planned,
     required this.ends,
+    required this.geometry,
     this.showDot = true,
     super.key,
   });
 
   final String date;
+
+  /// Today's day dot with its night (docs/15 W6).
+  final DayDotGeometry geometry;
   final int planned;
   final String ends;
   final bool showDot;
@@ -45,7 +50,7 @@ class WakeUpGreeting extends StatelessWidget {
           ),
         ),
         if (showDot && planned > 0) ...[
-          const DayDot(progress: 0, size: DotSize.wakeUpDayDot),
+          DayDot(geometry: geometry, size: DotSize.wakeUpDayDot),
           Text(
             l10n.wakeUpCardPlanned(planned, ends),
             style: t.styles.rowMeta,

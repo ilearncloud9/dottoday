@@ -108,13 +108,13 @@ class RemindersGroup extends ConsumerWidget {
         SettingsRow(
           glyph: DotGlyphs.moon,
           tint: t.tasks[TaskColor.violet].ink,
-          title: l10n.settingsBedtimeReminder,
-          subtitle: l10n.settingsBedtimeReminderDetail(
+          title: l10n.settingsWindDownReminder,
+          subtitle: l10n.settingsWindDownReminderDetail(
             clockText(context, bed, settings.use24h),
           ),
-          toggle: settings.bedtimeReminder,
+          toggle: settings.windDownReminder,
           onToggle: (v) =>
-              changeSettings(context, (s) => s.copyWith(bedtimeReminder: v)),
+              changeSettings(context, (s) => s.copyWith(windDownReminder: v)),
         ),
         const HealthSummaryRow(),
       ],

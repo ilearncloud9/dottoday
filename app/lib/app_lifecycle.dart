@@ -55,7 +55,7 @@ Future<void> runHousekeeping(WidgetRef ref) async {
     // whether the Wake Up card opens (docs/15 §3, M17.3).
     await _drainAlarmEvents(ref);
     await ref.read(dailyRefreshProvider).run(profile.id);
-    await ref.read(bedtimeSnapshotProvider).arm(profile.id);
+    await ref.read(windDownSnapshotProvider).arm(profile.id);
     await ref.read(calendarActionsProvider).importEvents();
   } on Object catch (e, st) {
     logger.error('housekeeping.failed', error: e, stackTrace: st);
