@@ -60,6 +60,38 @@ void main() {
     expect(find.byType(TodayScreen), findsOneWidget);
     expect(_fieldHasFocus(tester), isTrue);
   });
+
+  // And again (2026-11-01): at 390 px the sheet's close button slides up
+  // under the pointer that tapped Add. Its tooltip popped for a frame, and
+  // that overlay re-parented the sheet's semantics, which on the web moved
+  // the focused field's element and dropped its browser focus.
+  testWidgets('Add sliding under a resting pointer shows no tooltip', (
+    tester,
+  ) async {
+    await pumpToday(tester);
+    unawaited(showAddFlow(tester.element(find.byType(TodayScreen))));
+    final close = find.byTooltip('Close');
+    final screen = tester.view.physicalSize / tester.view.devicePixelRatio;
+    // Mid-slide: the close button is on screen, still on its way up.
+    do {
+      await tester.pump(const Duration(milliseconds: 16));
+    } while (close.evaluate().isEmpty ||
+        tester.getRect(close).bottom > screen.height);
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    addTearDown(mouse.removePointer);
+    final rest = tester.getCenter(close);
+    await mouse.addPointer(location: rest);
+
+    var tooltip = false;
+    for (var i = 0; i < 60; i++) {
+      await tester.pump(const Duration(milliseconds: 16));
+      tooltip = tooltip || find.text('Close').evaluate().isNotEmpty;
+    }
+
+    expect(tester.getRect(close).contains(rest), isFalse);
+    expect(tooltip, isFalse);
+    expect(_fieldHasFocus(tester), isTrue);
+  });
 }
 
 bool _fieldHasFocus(WidgetTester tester) => tester
