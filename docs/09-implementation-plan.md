@@ -495,11 +495,22 @@ Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit 
     - The A0 dot-start input exists, but no new "Start <dot>?" ping is added for ordinary dots. That would ring differently for everyone (15 §11), so it is a follow-up below.
     - The check rides the alarm tier: on iPhones below iOS 26 and with exact alarms off, nothing tells the app the user is up.
   - **Not done:** goldens of the check notification (it is native). The check's first-two-times hint is M17.6 Discovery.
-- [ ] M17.5 W4 + W6 (one PR):
+- [x] M17.5 W4 + W6 (one PR, `feat/wake-up-w4-w6`):
   - **Wind Down maths:** `effectiveWindDown`, the sleep target, and the onboarding sleep slider.
   - **Night arc:** one shared geometry function, used by `DayDot`, `WeekDayDot`, the Mac menu bar and the iOS/Android widgets, with `tomorrowWake` in the snapshot. The arc shows on Today, the menu bar and the widgets, not the Live Activity.
   - **Review and nudge:** the review's opening line and the nudge wording; the review also shows on fully-done days, and the Wind Down notification opens it; the one-time sleep offer for existing users.
   - **Rename:** Wind Down everywhere: identifiers, comments, docs and (owner, 2026-11-01) the synced key, now `windDownReminder`, moved by schema 11 and Supabase 0011.
+  - **Done 2026-11-01:**
+    - `effectiveDayShape` (`domain/time/wind_down.dart`): `min(configured, tomorrow's Wake Up − target)`. The configured Wind Down stays when there is no target, tomorrow is free, or the derived time is within 1 h of now. It is DST-true and tested. The review, the reminder (its time and words), the snapshot and Today's Wind Down cap all read it.
+    - `dayDotGeometry` (`domain/time/day_dot_geometry.dart`) is the one geometry. It is read by `DayDot` (Today, the Wake Up card), `WeekDayDot` (the review and its share image) and the snapshot (`tomorrow_wake_ms`, `night_start`). The Mac menu bar and a new small day dot on the iOS and Android widgets scale by `night_start`.
+    - The night is a thinner, fainter arc, so it reads without colour. The Live Activity stays task-only.
+    - The review opens with "7 h 20 until Wake Up at 06:30" (or "… if you wind down now"), shows on fully-done days, and gets its own `/review` route, which the Wind Down notification opens. The one-time sleep offer has an inline slider with Set and No thanks; a test proves it never returns.
+    - Settings › Day shape: the Wind Down value ("21:45 · from tomorrow's 07:00"), Sleep target and Show the night on the day dot. Today's day numbers add "Tomorrow starts 06:00 → wind down 22:15" when moved.
+    - Onboarding asks how much sleep (8 h to start) and shows Wind Down live. The no-shame audit adds "short", "debt" and "score". docs/14 has the row "W4 + W6 Sleep target and the night".
+  - **Decided:** the offer's decline reads "No thanks", not "Not now". It retires the offer for good, unlike the review's own Not now, and two "Not now" buttons in one card read the same.
+  - **Deferred:**
+    - The learned "you usually get up ~12 min after Wake Up" offer (`windDownLearnOffer`) needs the median from `wake_up_days`. It is a follow-up below.
+    - The store pitch line goes to M17.6 Discovery.
 - [ ] M17.6 Discovery (§11) on the M16 hint scheduler.
 - [ ] M17.7 W5 Physical dismissal. Its sensor plugins are a must-ask.
 
@@ -507,6 +518,7 @@ Follow-ups (M17):
 - [ ] "Vary the sound": choose which 2–6 Start sounds rotate (15 §9); M17.2 rotates through all but Insistent.
 - [ ] §2 blockers not yet read: battery optimisation (its own health row already exists) and Do Not Disturb with the "Alarms" exception off (`dndAlarmsBlocked`), each with its fix in the Wake Up row.
 - [ ] The A0 dot-start escalation as its own nudge ("Start <dot>?" for dots without steps): the input exists in `StartEscalation`; it needs a switch (off by default, 15 §11) and its docs/14 row.
+- [ ] The learned Wind Down offer (15 §7b): "You usually get up ~12 min after Wake Up. Move Wind Down 12 min earlier?" from the `wake_up_days` median, once per 30 days, with its `windDownLearnOffer` switch.
 - [ ] Real-device gates for the Wake Up alarm (08 §6.1 C): iOS 26 force-quit + Silent, Android 14 in Doze, no AlarmKit alarm after uninstall; on the same iPhone, record whether AlarmKit loops a bundled Start `.caf` until stopped (the Bundle sounds note under M17.2).
 
 ## Follow-ups after M12 (found at the M12.6 ship-check)

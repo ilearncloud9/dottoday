@@ -183,6 +183,9 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   "wakeUpCheck": true,
   "wakeUpCheckMin": 10,
   "wakeUpCheckLoud": false,
+  "sleepTargetMin": null,
+  "showNightArc": true,
+  "sleepOfferAnswered": false,
   "inboxNudge": false,
   "daySummaryDays": [],
   "reminderSound": null,
@@ -216,6 +219,7 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   boolean, off by default, so an upgrade rings nothing new; onboarding offers it on for a new user. It
   rings only on phones. `windDownReminder` is the Wind Down reminder's key: it was `bedtimeReminder` until
   schema 11 and Supabase 0011 moved the value (owner, 2026-11-01: Wind Down everywhere). The server ignores both keys.
+- Clarified in M17.5: the night (docs/15 W4, W6). `sleepTargetMin` is null (off) or 360–600 in 15-minute steps; onboarding starts a new account at 480. With it, Wind Down is derived (`effectiveDayShape`) and never stored. `showNightArc` (on) shows the night on every day dot. `sleepOfferAnswered` is set by the review's one-time offer and by onboarding, so the offer never returns. The B5 snapshot gains `tomorrow_wake_ms` (null without the night) and the derived `night_start`.
 - Clarified in M17.4: the Wake Up Check (docs/15 W3). `wakeUpCheck` is on, `wakeUpCheckMin` is 5, 10, 15, 20 or 30, and `wakeUpCheckLoud` (off) makes it ring like the alarm once instead of a gentle ping. Nothing new is stored: the OS holds the armed check until it fires or a start calls it off.
 - Clarified in M17.3: the Wake Up card (docs/15 §5, §9).
   - `wakeUpCard` is nullable: null follows `wakeUpAlarm` (15 §11), and a switch flip stores the choice.

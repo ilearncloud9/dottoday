@@ -207,6 +207,8 @@ If the day has no thread: the dot is empty, the first-dot slot becomes "Nothing 
 
 **Edges.** Per-weekday Wind Down overrides keep winning when earlier. Timezone change re-derives. Tomorrow has no thread → configured Wind Down. The Wind Down review's weekly picture (D1) gains nothing; the daily review opens at the effective Wind Down.
 
+**As built (M17.5).** `effectiveDayShape` in `domain/time/wind_down.dart` is anchored on tomorrow's Wake Up time (owner's anchor) and read through the `dayEnds` provider. There is no sleep block (§1), so nothing else is subtracted.
+
 **AC.** Pure-function tests with a table of (Wind Down, tomorrow anchor, target, wind-down) → effective Wind Down, including DST-crossing dates; golden of the Day-shape row in both states.
 
 ## 7b. W6 · The night — making the two ends visible
@@ -219,6 +221,11 @@ Four small changes, all pure consumers of W4's `effectiveWindDown(D)` and the ex
 2. **The night on the day dot.** The arc from Wind Down round to the next day's Wake Up renders as a faint night segment (token `night`, derived from `surface` at 12 % in light and 18 % in dark; never a colour that reads as a warning). Tap or long-press shows "Night · 7 h 45". Applies everywhere the day dot is drawn: Today, Wake Up card, widgets, menu bar, Live Activity, and the seven dots of the weekly review, where short nights become visible as geometry without a number. One switch, `showNightArc`, default on.
 3. **The Wind Down review opens with the night.** First line: "7 h 20 until Wake Up at 06:30", or "7 h 45 if you wind down now" when opened early. Everything after it is unchanged.
 4. **The Wind Down nudge names what it protects.** "Wind down now for 7 h 30 before your 06:30 run." — tomorrow's first dot title when there is one, else the Wake Up time. When no sleep target is set, the nudge stays as it is today.
+
+**As built (M17.5).**
+- `dayDotGeometry` (`domain/time/day_dot_geometry.dart`) is the one geometry. The snapshot carries `tomorrow_wake_ms` and the derived `night_start`, so the Mac menu bar and the iOS and Android widget day dots only scale by it.
+- The night is drawn thinner as well as fainter, so it reads without colour (owner's surfaces: Today, Wake Up card, week review, menu bar, widgets; not the Live Activity).
+- The review's opening line follows the minute tick. The sleep offer's decline is "No thanks".
 
 **Learned value allowed:** `medianDismissOffsetMin` (W0) may offer, once, in the Day shape row: "You usually get up \~12 min after Wake Up. Move Wind Down 12 min earlier?" Yes / No; never automatic, never repeated inside 30 days, reveal rules from doc 13.
 
