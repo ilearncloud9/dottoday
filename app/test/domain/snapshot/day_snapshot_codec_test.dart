@@ -122,4 +122,20 @@ void main() {
     expect(decodeDaySnapshot(json), s);
     expect(_wire()['night_start'], 1, reason: 'no next Wake Up: no night');
   });
+
+  test("today's one thing round-trips; none by default (docs/15 §8)", () {
+    final s = DaySnapshot(
+      generatedAtUtc: _now,
+      wakeUtc: DateTime.utc(2026, 10, 21, 7),
+      bedUtc: DateTime.utc(2026, 10, 21, 23),
+      dots: const [],
+      inboxCount: 0,
+      oneThingId: 'next',
+    );
+    final json =
+        jsonDecode(jsonEncode(encodeDaySnapshot(s))) as Map<String, Object?>;
+    expect(json['one_thing_id'], 'next');
+    expect(decodeDaySnapshot(json), s);
+    expect(_wire()['one_thing_id'], isNull);
+  });
 }

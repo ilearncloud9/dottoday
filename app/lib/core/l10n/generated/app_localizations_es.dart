@@ -6264,6 +6264,41 @@ class AppLocalizationsEs extends AppLocalizations {
   String get missionOffOfferKeep => 'Mantenerlas';
 
   @override
+  String rowOneThing(String label) {
+    return '$label, lo único de hoy';
+  }
+
+  @override
+  String get oneThingMeta => 'Lo único de hoy';
+
+  @override
+  String oneThingMetaJoin(String meta) {
+    return '$meta · Lo único de hoy';
+  }
+
+  @override
+  String get oneThingAsk => '¿Qué importa más hoy?';
+
+  @override
+  String get oneThingEveryAnswer => 'Toca una. Cualquier respuesta vale.';
+
+  @override
+  String get oneThingToday => 'HOY';
+
+  @override
+  String get oneThingInbox => 'BANDEJA DE ENTRADA';
+
+  @override
+  String get oneThingMenu => 'Elegir lo único de hoy…';
+
+  @override
+  String get oneThingNothing =>
+      'Aún no hay nada que elegir. Planea uno o dos puntos primero.';
+
+  @override
+  String get oneThingInInbox => 'en tu bandeja de entrada';
+
+  @override
   String get tomorrowMatters => 'Mañana importa: asegúrate de que me levante';
 
   @override

@@ -1,6 +1,7 @@
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
+import 'package:dottoday/domain/wake_up/one_thing.dart';
 
 /// The backup missions on offer (15 §8 `missionBackup`): none, or one
 /// that needs no dots.
@@ -8,12 +9,6 @@ const missionBackups = [null, MissionKind.walk, MissionKind.standUp];
 
 /// Step targets on offer for Walk (15 §8: 10–60, default 20).
 const missionStepChoices = [10, 20, 30, 40, 60];
-
-/// Pick today's one thing needs a real choice (15 §8).
-const oneThingMinDots = 2;
-
-/// How many dots Pick today's one thing offers at most (15 §8: 3–5).
-const oneThingMaxDots = 5;
 
 /// Skips that bring the offer to turn missions off, and over how long
 /// (15 §8 rule 4).

@@ -17,6 +17,8 @@ data class WidgetBlock(
     val until: String,
     val color: Int,
     val done: Boolean,
+    /** Today's one thing (docs/15 §8): ringed, with the "one_thing" label. */
+    val oneThing: Boolean = false,
 )
 
 data class WidgetSnapshot(
@@ -71,6 +73,7 @@ data class WidgetSnapshot(
                             until = b.getString("until"),
                             color = android.graphics.Color.parseColor(b.getString("color")),
                             done = b.getBoolean("done"),
+                            oneThing = b.optBoolean("one_thing"),
                         )
                     },
                     inboxCount = json.getInt("inbox_count"),

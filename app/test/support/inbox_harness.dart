@@ -22,6 +22,7 @@ Future<FakeOccurrenceRepository> pumpInbox(
   Size size = const Size(390, 1200),
   ThemeMode mode = ThemeMode.light,
   Widget home = const InboxScreen(),
+  Settings settings = const Settings(use24h: false),
 }) async {
   tester.view
     ..physicalSize = size
@@ -38,7 +39,7 @@ Future<FakeOccurrenceRepository> pumpInbox(
       overrides: timelineOverrides(
         now: inboxTestNow,
         occurrences: repo,
-        profile: testProfile(settings: const Settings(use24h: false)),
+        profile: testProfile(settings: settings),
       ),
       child: MaterialApp(
         theme: DotTheme.light(),

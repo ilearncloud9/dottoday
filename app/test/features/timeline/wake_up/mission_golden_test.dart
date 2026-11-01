@@ -108,4 +108,20 @@ void main() {
     build: (_) =>
         _still(const MissionScreen(date: _date, kind: MissionKind.catchDot)),
   );
+  // Pick today's one thing (M17.7b): the first dots and the Inbox.
+  goldenMatrix(
+    'mission_one_thing',
+    height: 1000,
+    widths: const {'compact'},
+    a11yVariants: true,
+    overrides: _overrides(FakeMissionSensors()),
+    build: (_) => const MissionScreen(date: _date, kind: MissionKind.oneThing),
+  );
+  goldenMatrix(
+    'mission_one_thing_minimal',
+    height: 1000,
+    widths: const {'compact'},
+    overrides: _overrides(FakeMissionSensors(), layout: UiLayout.minimal),
+    build: (_) => const MissionScreen(date: _date, kind: MissionKind.oneThing),
+  );
 }

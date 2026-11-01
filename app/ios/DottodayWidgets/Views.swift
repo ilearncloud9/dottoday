@@ -45,6 +45,12 @@ struct TaskDot: View {
     Circle()
       .fill(block.done ? Dot.hairline : Color(hex: block.color))
       .frame(width: size, height: size)
+      // Today's one thing (docs/15 §8): one thin accent ring outside it.
+      .overlay {
+        if block.isOneThing {
+          Circle().stroke(Dot.accent, lineWidth: 1.5).padding(-3)
+        }
+      }
       .accessibilityHidden(true)
   }
 }
@@ -88,6 +94,9 @@ struct NextUpView: View {
           TaskDot(block: block, size: 12)
           Text(block.title).font(.headline).foregroundStyle(Dot.ink).lineLimit(2)
         }
+        if block.isOneThing {
+          Text(s.label("one_thing")).font(.caption2).foregroundStyle(Dot.muted)
+        }
         HStack(alignment: .bottom) {
           Text(live != nil ? block.until : block.time)
             .font(.caption).foregroundStyle(Dot.muted)
@@ -127,9 +136,15 @@ struct TodayView: View {
             TaskDot(block: block)
             Text(block.start <= entry.date && !block.done ? s.label("now") : block.time)
               .font(.caption).foregroundStyle(Dot.muted).frame(width: 64, alignment: .leading)
-            Text(block.title).font(.subheadline.weight(.medium))
-              .foregroundStyle(block.done ? Dot.muted : Dot.ink)
-              .strikethrough(block.done).lineLimit(1)
+            VStack(alignment: .leading, spacing: 0) {
+              Text(block.title).font(.subheadline.weight(.medium))
+                .foregroundStyle(block.done ? Dot.muted : Dot.ink)
+                .strikethrough(block.done).lineLimit(1)
+              if block.isOneThing {
+                Text(s.label("one_thing")).font(.caption2).foregroundStyle(Dot.muted)
+                  .lineLimit(1)
+              }
+            }
           }
         }
       }

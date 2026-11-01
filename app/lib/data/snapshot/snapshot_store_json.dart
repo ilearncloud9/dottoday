@@ -29,7 +29,9 @@ Map<String, Object?> snapshotStoreJson(
     blocks[i]
       ..['time'] = time(dot.startUtc)
       ..['until'] = l10n.widgetUntil(time(dot.endUtc))
-      ..['color'] = _hex(TaskColor.fromKey(dot.colorKey).color.toARGB32());
+      ..['color'] = _hex(TaskColor.fromKey(dot.colorKey).color.toARGB32())
+      // Today's one thing (docs/15 §8): a ring and the label below.
+      ..['one_thing'] = dot.id == snapshot.oneThingId;
   }
   return json
     ..['labels'] = {
@@ -41,6 +43,7 @@ Map<String, Object?> snapshotStoreJson(
       // Next up's Done button (M9.5) and the menu bar's Done / +15 (M9.6).
       'done': l10n.notifActionDone,
       'plus': l10n.liveExtend,
+      'one_thing': l10n.oneThingMeta,
     }
     // How to write a time again after an optimistic +15 in Swift or Kotlin
     // (M9.2): the zone, the language, the clock and the "until" pattern.

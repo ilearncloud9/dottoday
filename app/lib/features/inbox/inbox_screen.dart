@@ -8,6 +8,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
+import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
@@ -21,6 +22,7 @@ import 'package:dottoday/features/inbox/widgets/inbox_fit.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_header.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_list.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_selection_bar.dart';
+import 'package:dottoday/features/inbox/widgets/one_thing_meta.dart';
 import 'package:dottoday/features/inbox/widgets/swipe_hint.dart';
 import 'package:dottoday/features/inbox/widgets/wide_inbox.dart';
 import 'package:dottoday/shared/dot/inbox_row.dart';
@@ -86,6 +88,7 @@ class InboxScreen extends ConsumerWidget {
           room: room,
           filter: ref.watch(inboxFilterChoiceProvider),
           commands: commands,
+          oneThingId: ref.watch(todayOneThingIdProvider),
         ),
       ),
     );
@@ -159,7 +162,11 @@ class _Body extends StatelessWidget {
     required this.room,
     required this.filter,
     required this.commands,
+    this.oneThingId,
   });
+
+  /// Today's one thing (docs/15 §8), ringed when it is in the Inbox.
+  final String? oneThingId;
 
   final List<Occurrence> items;
   final DayRoom? room;
@@ -207,7 +214,12 @@ class _Body extends StatelessWidget {
           commands: commands,
           row: (o, s) => InboxRow(
             title: o.title,
-            meta: formatDurationShort(l10n, o.durationMin),
+            meta: inboxMetaWithOneThing(
+              l10n,
+              formatDurationShort(l10n, o.durationMin),
+              oneThing: o.id == oneThingId,
+            ),
+            oneThing: o.id == oneThingId,
             color: TaskColor.fromKey(o.colorKey),
             icon: TaskIcon.fromKey(o.iconKey),
             onSchedule: () => unawaited(commands.schedule(o)),

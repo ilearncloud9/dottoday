@@ -15,8 +15,9 @@ export 'smallest_step_line.dart';
 /// time meta, title, and the done circle at the end.
 ///
 /// States: upcoming, done (struck, muted), missed ("missed" in the meta),
-/// skipped, pinned (lock), recurring (repeat glyph) and imported (calendar
-/// badge, docs/02 F1.10). The live task is
+/// skipped, pinned (lock), recurring (repeat glyph), imported (calendar
+/// badge, docs/02 F1.10) and today's one thing (ring + "Your one thing",
+/// docs/15 §8). The live task is
 /// a `LiveRow`.
 class TaskRow extends StatelessWidget {
   const TaskRow({
@@ -127,6 +128,7 @@ Widget taskRowDot(
     ),
     onTap: onFocus ?? onOpen,
     tapHint: onFocus != null ? l10n.focusOpenHint : l10n.dotOpenHint,
+    oneThing: task.oneThing,
   );
 }
 
@@ -139,6 +141,7 @@ String taskRowLabel(AppLocalizations l10n, ThreadTask task) {
   if (task.recurring) label = l10n.rowRepeats(label);
   if (task.imported) label = l10n.rowFromCalendar(label);
   if (task.travel case final travel?) label = l10n.rowTravel(label, travel);
+  if (task.oneThing) label = l10n.rowOneThing(label);
   return label;
 }
 
@@ -174,6 +177,7 @@ class _Text extends StatelessWidget {
           DotIcon(DotGlyphs.calendar, color: muted, size: DotSize.weekDot * 2),
         if (task.travel case final travel?)
           Text(l10n.rowTravelMeta(travel), style: t.styles.rowMeta),
+        if (task.oneThing) Text(l10n.oneThingMeta, style: metaStyle),
       ],
     );
     final title = Text(
