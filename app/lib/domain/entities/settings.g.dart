@@ -67,6 +67,11 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   wakeUpAlarm: json['wakeUpAlarm'] as bool? ?? false,
   wakeUpSoundId: json['wakeUpSoundId'] as String?,
   wakeUpVarySound: json['wakeUpVarySound'] as bool? ?? false,
+  wakeUpRotationIds:
+      (json['wakeUpRotationIds'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      defaultWakeUpRotationIds,
   wakeUpRampSec: (json['wakeUpRampSec'] as num?)?.toInt() ?? 30,
   wakeUpSnooze: json['wakeUpSnooze'] as bool? ?? true,
   wakeUpSnoozeMin: (json['wakeUpSnoozeMin'] as num?)?.toInt() ?? 9,
@@ -153,6 +158,7 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'wakeUpAlarm': instance.wakeUpAlarm,
   'wakeUpSoundId': instance.wakeUpSoundId,
   'wakeUpVarySound': instance.wakeUpVarySound,
+  'wakeUpRotationIds': instance.wakeUpRotationIds,
   'wakeUpRampSec': instance.wakeUpRampSec,
   'wakeUpSnooze': instance.wakeUpSnooze,
   'wakeUpSnoozeMin': instance.wakeUpSnoozeMin,
