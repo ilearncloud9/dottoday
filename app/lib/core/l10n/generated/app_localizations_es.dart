@@ -6313,6 +6313,25 @@ class AppLocalizationsEs extends AppLocalizations {
       'Si es el primer punto del día, esa mañana tiene misión';
 
   @override
+  String get wakeUpRotationTitle => 'Sonidos que alternan';
+
+  @override
+  String wakeUpRotationDetail(int min, int max) {
+    return 'Elige de $min a $max. Suena uno cada mañana, por turnos.';
+  }
+
+  @override
+  String wakeUpRotationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sonidos',
+      one: '1 sonido',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String windDownLearnOffer(int usual, int more) {
     return 'Sueles levantarte ~$usual min después de Wake Up. ¿Adelantar Wind Down $more min?';
   }

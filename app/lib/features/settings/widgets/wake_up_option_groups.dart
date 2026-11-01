@@ -10,6 +10,7 @@ import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
 import 'package:dottoday/features/settings/widgets/sound_tier_sheet.dart';
+import 'package:dottoday/features/settings/widgets/wake_up_rotation_sheet.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:dottoday/shared/sounds/sound_sections.dart';
@@ -64,6 +65,15 @@ class WakeUpSoundGroup extends StatelessWidget {
             toggle: settings.wakeUpVarySound,
             onToggle: (on) =>
                 changeSettings(context, (s) => s.copyWith(wakeUpVarySound: on)),
+          ),
+        // Which Start sounds rotate (15 §9: choose 2–6).
+        if (full && settings.wakeUpVarySound)
+          SettingsRow(
+            glyph: DotGlyphs.sound,
+            tint: t.tasks[TaskColor.sky].ink,
+            title: l10n.wakeUpRotationTitle,
+            value: wakeUpRotationValue(l10n, settings),
+            onTap: () => unawaited(showWakeUpRotationSheet(context)),
           ),
         if (full && currentHealthPlatform() != HealthPlatform.iphone)
           SettingsRow(

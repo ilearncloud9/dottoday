@@ -77,6 +77,31 @@ void main() {
     expect(find.text('Snooze length'), findsNothing);
   });
 
+  testWidgets('Vary the sound: choose 2–6, the calm three to start', (
+    tester,
+  ) async {
+    final h = await _pump(
+      tester,
+      settings: _on.copyWith(wakeUpVarySound: true),
+    );
+    expect(find.text('3 sounds'), findsOneWidget);
+    await _tap(tester, 'Sounds to vary');
+    await _tap(tester, 'Rain');
+    expect((await storedSettings(h)).wakeUpRotationIds.toSet(), {
+      ...defaultWakeUpRotationIds,
+      'start.rain',
+    });
+    await _tap(tester, 'Gentle');
+    await _tap(tester, 'Soft bells');
+    expect((await storedSettings(h)).wakeUpRotationIds.toSet(), {
+      'start.dawn_chorus',
+      'start.rain',
+    });
+    // Two left: neither can go.
+    await _tap(tester, 'Rain');
+    expect((await storedSettings(h)).wakeUpRotationIds, hasLength(2));
+  });
+
   testWidgets('iPhone: no volume ramp (AlarmKit sets the volume)', (
     tester,
   ) async {
