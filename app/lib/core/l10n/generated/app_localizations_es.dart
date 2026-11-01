@@ -6264,6 +6264,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get missionOffOfferKeep => 'Mantenerlas';
 
   @override
+  String get tomorrowMatters => 'Mañana importa: asegúrate de que me levante';
+
+  @override
+  String get tomorrowMattersBreathe =>
+      'Mañana aún no hay nada que elegir; se usará Respirar.';
+
+  @override
+  String get makeSureUpTitle => 'Asegúrate de que esté despierto para esto';
+
+  @override
+  String get makeSureUpDetail =>
+      'Si es el primer punto del día, esa mañana tiene misión';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

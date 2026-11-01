@@ -4954,6 +4954,18 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get missionOffOfferKeep => pseudo(super.missionOffOfferKeep);
 
   @override
+  String get tomorrowMatters => pseudo(super.tomorrowMatters);
+
+  @override
+  String get tomorrowMattersBreathe => pseudo(super.tomorrowMattersBreathe);
+
+  @override
+  String get makeSureUpTitle => pseudo(super.makeSureUpTitle);
+
+  @override
+  String get makeSureUpDetail => pseudo(super.makeSureUpDetail);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

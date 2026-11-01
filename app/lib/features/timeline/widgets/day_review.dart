@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/scheduling/day_review.dart';
 import 'package:dottoday/features/timeline/state/late_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/features/timeline/widgets/make_sure_up.dart';
 import 'package:dottoday/features/timeline/widgets/review_night.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +75,10 @@ class DayReviewBody extends ConsumerWidget {
         if (review.staying > 0)
           Text(l10n.reviewStaying(review.staying), style: t.styles.rowMeta),
         _buttons(context, ref, review, roll),
+        // "Make sure I'm up" for tomorrow (15 §8 rule 5), missions on only:
+        // a hidden child would still take a gap.
+        if (settings.missionMode != MissionMode.off)
+          TomorrowMattersToggle(day: day),
         // Once, for an account from before the sleep target (15 §11).
         if (settings.sleepTargetMin == null && !settings.sleepOfferAnswered)
           const SleepOffer(),

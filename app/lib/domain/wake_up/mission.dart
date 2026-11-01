@@ -71,7 +71,9 @@ MissionPlan? missionFor(
     MissionMode.chosenDays => settings.missionDays.contains(weekday),
   };
   if (!asked && !flagged) return null;
-  final kind = missionKindFor(settings, dots: dots, can: can);
+  final kind = flagged
+      ? flaggedMissionKind(settings, dots: dots, can: can)
+      : missionKindFor(settings, dots: dots, can: can);
   if (kind == null) return null;
   // A flagged morning asks from the first ring (15 §8 rule 5).
   return MissionPlan(
@@ -93,6 +95,59 @@ MissionKind? missionKindFor(
   final backup = settings.missionBackup;
   return backup != null && runs(backup) ? backup : null;
 }
+
+/// The mission of a "Make sure I'm up" morning (15 §8 rule 5): the chosen
+/// one, else always the gentlest, Breathe, which every phone can run; never
+/// a step count (owner, 2026-11-01). The user asked to be sure, so the
+/// morning always has one.
+///
+/// ```dart
+/// flaggedMissionKind(const Settings(missionKind: MissionKind.oneThing),
+///     dots: 1, can: (_) => true); // MissionKind.breathe
+/// ```
+MissionKind? flaggedMissionKind(
+  Settings settings, {
+  required int dots,
+  required bool Function(MissionKind kind) can,
+}) {
+  final chosen = settings.missionKind;
+  final runs =
+      can(chosen) &&
+      (chosen != MissionKind.oneThing || dots >= oneThingMinDots);
+  if (runs) return chosen;
+  return can(MissionKind.breathe) ? MissionKind.breathe : null;
+}
+
+/// Whether the morning of [dateKey] is flagged "Make sure I'm up" (15 §8
+/// rule 5): by the Wind Down review's toggle for that date, or by the task
+/// sheet's switch on the day's [firstDotId]. Hidden and ignored while
+/// missions are off.
+///
+/// ```dart
+/// morningFlagged(const Settings(missionMode: MissionMode.whenAsked,
+///     missionFlagDate: '2026-11-03'), '2026-11-03'); // true
+/// ```
+bool morningFlagged(Settings settings, String dateKey, {String? firstDotId}) {
+  if (settings.missionMode == MissionMode.off) return false;
+  if (settings.missionFlagDate == dateKey) return true;
+  return firstDotId != null && settings.missionFlagIds.contains(firstDotId);
+}
+
+/// [settings] with [occurrenceId]'s "Make sure I'm up for this" switch set
+/// to [on], keeping only flags in [live] (occurrences still ahead), so a
+/// flag lasts one morning and the list never grows.
+Settings withMissionFlag(
+  Settings settings,
+  String occurrenceId, {
+  required bool on,
+  required Set<String> live,
+}) => settings.copyWith(
+  missionFlagIds: [
+    for (final id in settings.missionFlagIds)
+      if (id != occurrenceId && live.contains(id)) id,
+    if (on) occurrenceId,
+  ],
+);
 
 /// Whether to offer turning missions off now (15 §8 rule 4): on, not yet
 /// answered, and [missionSkipOfferCount] skips within the last

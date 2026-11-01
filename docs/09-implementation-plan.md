@@ -523,7 +523,12 @@ Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit 
     - Security §9: no new table (one local column); no task text in events or logs; the mission link passes the allow-list (date + `MissionKind` names only); sensor data is never stored; new OS permissions have usage text in every language (`os_strings_test.dart`); no new dependency.
     - Not verified here: the iOS gate below (AlarmKit's Stop with the app force-quit) needs a real iPhone on iOS 26.1+.
   - [ ] M17.7b Pick today's one thing: the pick screen, the one-thing ring + "Your one thing" on Today, the Wake Up card and the widgets (owner: ring + label).
-  - [ ] M17.7c Make sure I'm up: the Wind Down review toggle and the task sheet switch, one morning each; the backup mission.
+  - [x] M17.7c Make sure I'm up: the Wind Down review toggle and the task sheet switch, one morning each; the backup mission. Done 2026-11-01 (`feat/make-sure-up-w5c`).
+    - Settings (synced JSON, no migration): `missionFlagDate` (the review's "Tomorrow matters: make sure I'm up", tomorrow's date; it clears itself once that day comes) and `missionFlagIds` (the sheet's "Make sure I'm up for this"; spent ids are dropped on each write by `setMissionFlag`).
+    - Domain: `morningFlagged` (date flag, or the day's first dot flagged; nothing while missions are off) and `flaggedMissionKind`: a flagged morning runs the chosen mission, else Breathe, never a step count (owner pre-answer). `WakeUpArming` finds each day's first dot and passes `flagged`, so a flagged morning asks from the first ring in every mode but Off.
+    - UI: `TomorrowMattersToggle` in the Wind Down review, with "Tomorrow has nothing to pick from yet; Breathe will be used instead." when the chosen mission can't run; `MakeSureUpRow` in the task sheet's card for a dot still ahead (minimal: under More options, docs/14). Both hidden while missions are off.
+    - Decided: Breathe replaces `missionBackup` only on flagged mornings; unflagged mornings keep the user's backup (rejected: dropping `missionBackup`, which would change mornings nobody flagged). The sheet's flag is the occurrence id, not its date, so a moved flight still flags its new morning (rejected: storing the date).
+    - Tests: `mission_test` (flags, Breathe fallback, pruning), `wake_up_arming_test` (date flag, first-dot flag, Breathe), `make_sure_up_test` (review and sheet, hidden while off); golden `today_day_review_tomorrow_matters_*`.
   - Real-device gate (owner): iOS mission morning, app force-quit, tap Stop → the app opens on the mission and rings again ~1 min later. Only if that fails, a backup alarm with an ADR.
 
 Follow-ups (M17):

@@ -101,6 +101,12 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   ),
   missionSkipOffer: json['missionSkipOffer'] as bool? ?? true,
   missionOffOfferAnswered: json['missionOffOfferAnswered'] as bool? ?? false,
+  missionFlagDate: json['missionFlagDate'] as String?,
+  missionFlagIds:
+      (json['missionFlagIds'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const <String>[],
   inboxNudge: json['inboxNudge'] as bool? ?? false,
   suggestTravelTime: json['suggestTravelTime'] as bool? ?? false,
   travelTimeMin: (json['travelTimeMin'] as num?)?.toInt() ?? 15,
@@ -167,6 +173,8 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'missionBackup': _$MissionKindEnumMap[instance.missionBackup],
   'missionSkipOffer': instance.missionSkipOffer,
   'missionOffOfferAnswered': instance.missionOffOfferAnswered,
+  'missionFlagDate': instance.missionFlagDate,
+  'missionFlagIds': instance.missionFlagIds,
   'inboxNudge': instance.inboxNudge,
   'suggestTravelTime': instance.suggestTravelTime,
   'travelTimeMin': instance.travelTimeMin,

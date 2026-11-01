@@ -286,6 +286,7 @@ Four small changes, all pure consumers of W4's `effectiveWindDown(D)` and the ex
   - This only happens with explicit weekdays and the Wake Up time anchor; with the first-dot anchor and no dots there is nothing to ring for.
   - A flagged morning with fewer than 2 dots: the evening toggle says so the night before: "Tomorrow has nothing to pick from yet; Walk will be used instead" when a backup mission is set, or "…plan a dot or two first."
 - **Backup mission** (`missionBackup`, none / Walk / Stand up, default none): used on a morning the chosen mission can't run. Without one, the alarm dismisses with "I'm up".
+  - **Flagged mornings (owner, 2026-11-01; M17.7c):** a "Make sure I'm up" morning always has a mission. When the chosen one can't run, it is Breathe, the gentlest, never a step count, whatever `missionBackup` says. The evening toggle's line reads "…Breathe will be used instead". The toggle is per day, off by default, and clears itself once that morning comes.
 
 **Flow.** The alarm rings as in W1. On iOS 26+ the primary AlarmKit button is "Snooze" (if allowed); on a mission morning the system Stop opens the app on the mission (iOS Stop above). On Android the full-screen activity is the Wake Up screen already. The screen shows the ring at 120 px, the mission as one line ("Walk 20 steps") with its live state, and "Can't right now". When done, the alarm stops and the W2 card opens.
 

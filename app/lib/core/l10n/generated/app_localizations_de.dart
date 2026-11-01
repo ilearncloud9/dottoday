@@ -6270,6 +6270,20 @@ class AppLocalizationsDe extends AppLocalizations {
   String get missionOffOfferKeep => 'Behalten';
 
   @override
+  String get tomorrowMatters => 'Morgen zählt: sorg dafür, dass ich aufstehe';
+
+  @override
+  String get tomorrowMattersBreathe =>
+      'Morgen gibt es noch nichts zum Wählen; stattdessen kommt Atmen.';
+
+  @override
+  String get makeSureUpTitle => 'Sorg dafür, dass ich dafür wach bin';
+
+  @override
+  String get makeSureUpDetail =>
+      'Ist es der erste Punkt des Tages, hat der Morgen eine Mission';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override
