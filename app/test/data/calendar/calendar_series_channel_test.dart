@@ -18,6 +18,8 @@ void main() {
 
   setUp(() {
     calls.clear();
+    // Tests run in a random order on CI; each starts from a plain answer.
+    answer = (_) => 'written';
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (call) async {
           calls.add(call);
