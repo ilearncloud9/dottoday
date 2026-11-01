@@ -1,7 +1,8 @@
+import 'dart:io';
+
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/shared/haptics/app_haptics.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,12 +18,12 @@ void main() {
 
   void listen(WidgetTester tester) {
     final messenger = tester.binding.defaultBinaryMessenger;
-    messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
-      if (call.method == 'HapticFeedback.vibrate') taps.add(call.arguments);
-      return null;
+    messenger.setMockMethodCallHandler(AppHaptics.channel, (call) async {
+      if (call.method == 'play') taps.add(call.arguments);
+      return true;
     });
     addTearDown(
-      () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+      () => messenger.setMockMethodCallHandler(AppHaptics.channel, null),
     );
   }
 
@@ -41,12 +42,26 @@ void main() {
     return context;
   }
 
+  test('the native bridges listen on the same channel', () {
+    for (final file in [
+      'ios/Runner/AppDelegate.swift',
+      'android/app/src/main/kotlin/app/dottoday/planner/haptics/'
+          'HapticsBridge.kt',
+    ]) {
+      expect(
+        File(file).readAsStringSync(),
+        contains('"${AppHaptics.channel.name}"'),
+        reason: file,
+      );
+    }
+  });
+
   testWidgets('on outside a scope, as before the switch', (tester) async {
     listen(tester);
     final context = await pump(tester);
     AppHaptics.play(context, HapticTick.medium);
     await tester.pump();
-    expect(taps, ['HapticFeedbackType.mediumImpact']);
+    expect(taps, ['medium']);
   });
 
   testWidgets('each tick plays its own kind', (tester) async {
@@ -56,11 +71,9 @@ void main() {
       AppHaptics.play(context, tick);
     }
     await tester.pump();
-    expect(taps, [
-      'HapticFeedbackType.selectionClick',
-      'HapticFeedbackType.lightImpact',
-      'HapticFeedbackType.mediumImpact',
-    ]);
+    // The names the native bridges switch on (AppDelegate.swift's
+    // HapticsBridge, HapticsBridge.kt): renaming a tick breaks this.
+    expect(taps, ['selection', 'light', 'medium']);
   });
 
   testWidgets('off: no tick plays', (tester) async {
@@ -98,7 +111,7 @@ void main() {
       await tester.pump();
       AppHaptics.playFor(ref, HapticTick.light);
       await tester.pump();
-      expect(taps, on ? ['HapticFeedbackType.lightImpact'] : isEmpty);
+      expect(taps, on ? ['light'] : isEmpty);
     });
   }
 }

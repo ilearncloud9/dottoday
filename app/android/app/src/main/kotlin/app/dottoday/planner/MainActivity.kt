@@ -16,6 +16,7 @@ import app.dottoday.planner.intents.IntentQueueBridge
 import app.dottoday.planner.intents.ShareIntake
 import app.dottoday.planner.intents.OngoingDot
 import app.dottoday.planner.focus.DeepWork
+import app.dottoday.planner.haptics.HapticsBridge
 import app.dottoday.planner.speech.SpeechBridge
 import app.dottoday.planner.system.SystemEvents
 import app.dottoday.planner.thinking.ThinkingBridge
@@ -91,6 +92,7 @@ class MainActivity : FlutterFragmentActivity() {
         SpeechBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         DeepWork.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         AlarmBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
+        HapticsBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dottoday/ongoing")
             .setMethodCallHandler { call, result ->
                 when (call.method) {

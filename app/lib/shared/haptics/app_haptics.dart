@@ -49,15 +49,18 @@ abstract final class AppHaptics {
     if (settings?.inAppHapticsEnabled ?? true) fire(tick);
   }
 
+  /// The app's own haptics bridge (iOS Core Haptics, Android Vibrator),
+  /// not Flutter's HapticFeedback: that one goes through the system's
+  /// touch feedback, which System Haptics (iOS) and Touch feedback
+  /// (Android) switch off, so the in-app switch alone decides.
+  @visibleForTesting
+  static const channel = MethodChannel('dottoday/haptics');
+
   /// Plays [tick] with no check: only for a caller that already asked
   /// [enabledOf] (a gesture recognizer has no context of its own).
   static void fire(HapticTick tick) {
-    final Future<void> tap = switch (tick) {
-      HapticTick.selection => HapticFeedback.selectionClick(),
-      HapticTick.light => HapticFeedback.lightImpact(),
-      HapticTick.medium => HapticFeedback.mediumImpact(),
-    };
-    // A platform without haptics (web, a Mac) completes without effect.
-    tap.ignore();
+    // A Mac and the web have no bridge (no haptics); the missing plugin
+    // there is expected, so the call's outcome is not waited on.
+    channel.invokeMethod<bool>('play', tick.name).ignore();
   }
 }
