@@ -35,9 +35,21 @@ import UserNotifications
     var checkBody = ""
     var checkTarget = ""
     var checkLoud = false
+    /// This morning's mission (docs/15 §8). Optional: alarms saved before
+    /// missions decode as they were.
+    var mission: String?
+    var missionAfterSnooze: Bool?
+    /// When Stop first opened the mission: its 10 minutes count from here.
+    var missionSinceMs: Int64?
 
     /// Snooze is offered: on, and under its limit (0 = no limit).
     var canSnooze: Bool { snoozeMin > 0 && (snoozeLimit == 0 || snoozes < snoozeLimit) }
+
+    /// Stop opens the mission instead of ending the alarm (15 §8 rules 1-2).
+    var missionDue: Bool {
+      guard let mission, !mission.isEmpty, id != "wakeup:test" else { return false }
+      return missionAfterSnooze != true || snoozes > 0
+    }
 
     init?(_ map: [String: Any]) {
       guard let id = map["id"] as? String, let fireAt = map["fireAtMs"] as? NSNumber,
@@ -59,6 +71,8 @@ import UserNotifications
       checkBody = map["checkBody"] as? String ?? ""
       checkTarget = map["checkTarget"] as? String ?? ""
       checkLoud = map["checkLoud"] as? Bool ?? false
+      mission = (map["mission"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+      missionAfterSnooze = map["missionAfterSnooze"] as? Bool
     }
   }
 
@@ -166,6 +180,54 @@ import UserNotifications
       }
     }
 
+    /// Stop on a mission morning (`MissionStopIntent`, docs/15 §8; owner,
+    /// 2026-11-01): silences the ring, tells the app to open the mission
+    /// (an event, as the intent can't open a link), and rings again a
+    /// minute later until the app ends it ([dismiss]) or 10 minutes pass.
+    static func startMission(_ key: String) async {
+      guard let id = UUID(uuidString: key) else { return }
+      try? manager.stop(id: id)
+      var stored = load()
+      guard var spec = stored[key] else { return }
+      let now = Int64(Date().timeIntervalSince1970 * 1000)
+      let since = spec.missionSinceMs ?? now
+      if now >= since + missionCapMs { return stop(key) }
+      spec.missionSinceMs = since
+      record(spec.id, "mission", mission: spec.mission)
+      stored[key] = spec
+      save(stored)
+      await reRing(spec, now: now)
+    }
+
+    /// The mission screen is in use: the re-ring moves a minute out.
+    static func keepMission(_ dayId: String) async {
+      let key = uuid(dayId).uuidString
+      guard let spec = load()[key], spec.missionSinceMs != nil else { return }
+      await reRing(spec, now: Int64(Date().timeIntervalSince1970 * 1000))
+    }
+
+    /// The app ended the mission, done or skipped: no re-ring, and the
+    /// morning ends as "I'm up" would ([stop]).
+    static func dismiss(_ dayId: String) {
+      let id = uuid(dayId)
+      try? manager.cancel(id: id)
+      stop(id.uuidString)
+    }
+
+    /// A minute from [now], never past the mission's 10 minutes.
+    private static func reRing(_ spec: WakeUpAlarmSpec, now: Int64) async {
+      var next = spec
+      next.fireAtMs = min(now + reRingMs, (spec.missionSinceMs ?? now) + missionCapMs)
+      var stored = load()
+      stored[uuid(spec.id).uuidString] = next
+      save(stored)
+      try? manager.cancel(id: uuid(spec.id))
+      _ = try? await arm(next)
+    }
+
+    private static let reRingMs: Int64 = 60_000
+    private static let missionCapMs: Int64 = 10 * 60_000
+
     /// The Wake Up Check (docs/15 W3, M17.4): `checkMin` after "I'm up",
     /// one nudge to start the first dot — a notification whose tap opens
     /// Focus, or, set to ring, the alarm once more without Snooze. The app
@@ -216,9 +278,11 @@ import UserNotifications
     static let checkLinkKey = "dottodayLink"
 
     /// Notes what an alarm did; the app drains these into `wake_up_days`.
-    static func record(_ id: String, _ kind: String) {
+    static func record(_ id: String, _ kind: String, mission: String? = nil) {
       var events = (DotStore.shared?.array(forKey: eventsKey) as? [[String: Any]]) ?? []
-      events.append(["id": id, "kind": kind, "atMs": Int64(Date().timeIntervalSince1970 * 1000)])
+      var event: [String: Any] = ["id": id, "kind": kind, "atMs": Int64(Date().timeIntervalSince1970 * 1000)]
+      if let mission { event["mission"] = mission }
+      events.append(event)
       DotStore.shared?.set(events, forKey: eventsKey)
     }
 
@@ -242,7 +306,9 @@ import UserNotifications
         countdownDuration: countdown.map { .init(preAlert: $0, postAlert: nil) },
         schedule: countdown == nil ? .fixed(Date(timeIntervalSince1970: Double(spec.fireAtMs) / 1000)) : nil,
         attributes: attributes,
-        stopIntent: StopWakeUpIntent(alarm: id.uuidString),
+        stopIntent: spec.missionDue
+          ? MissionStopIntent(alarm: id.uuidString) as any LiveActivityIntent
+          : StopWakeUpIntent(alarm: id.uuidString),
         secondaryIntent: spec.canSnooze ? SnoozeWakeUpIntent(alarm: id.uuidString) : nil,
         sound: .named(spec.sound))
       return try await manager.schedule(id: id, configuration: config)
@@ -296,6 +362,29 @@ import UserNotifications
 
     func perform() async throws -> some IntentResult {
       WakeUpAlarms.stop(alarm)
+      return .result()
+    }
+  }
+
+  /// The alert's stop on a mission morning (docs/15 §8): the app opens on
+  /// the mission, and the ring comes back each minute it is left alone.
+  @available(iOS 26.0, *)
+  struct MissionStopIntent: LiveActivityIntent {
+    static let title: LocalizedStringResource = "Stop"
+    static let isDiscoverable = false
+    static let openAppWhenRun = true
+
+    @Parameter(title: "Alarm")
+    var alarm: String
+
+    init() {}
+
+    init(alarm: String) {
+      self.alarm = alarm
+    }
+
+    func perform() async throws -> some IntentResult {
+      await WakeUpAlarms.startMission(alarm)
       return .result()
     }
   }

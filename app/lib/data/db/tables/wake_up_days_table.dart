@@ -16,6 +16,9 @@ class WakeUpDaysTable extends Table {
   IntColumn get cardShownAtUtc => integer().nullable()();
   IntColumn get startedAtUtc => integer().nullable()();
 
+  /// "Can't right now" skipped the mission (15 §8). Schema 12.
+  IntColumn get missionSkippedAtUtc => integer().nullable()();
+
   @override
   Set<Column<Object>> get primaryKey => {date};
 

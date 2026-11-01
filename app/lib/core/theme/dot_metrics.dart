@@ -127,6 +127,9 @@ abstract final class DotSize {
   /// docs/09 M10.5), its stroke and the glyph inside.
   static const double focusRing = 160;
   static const double focusRingStroke = 22;
+
+  /// The mission screen's ring (docs/15 §8: 120 px).
+  static const double missionRing = 120;
   static const double focusGlyph = 48;
   static const double dayDotWatch = 18;
   static const double macRowDot = 26;

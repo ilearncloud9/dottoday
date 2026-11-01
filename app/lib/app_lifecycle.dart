@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
+import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
@@ -65,7 +66,9 @@ Future<void> runHousekeeping(WidgetRef ref) async {
 // Alarm events that can't be read must not hold up the refresh either.
 Future<void> _drainAlarmEvents(WidgetRef ref) async {
   try {
-    await ref.read(alarmEventsDrainProvider.notifier).run();
+    final mission = await ref.read(alarmEventsDrainProvider.notifier).run();
+    // iOS's Stop opened a mission (docs/15 §8): show it.
+    if (mission != null) ref.read(routerProvider).go(mission);
   } on Object catch (e, st) {
     ref
         .read(loggerProvider)

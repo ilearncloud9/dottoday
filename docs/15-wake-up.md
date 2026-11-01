@@ -16,7 +16,7 @@ Five pieces, each independently shippable, in dependency order:
 | W2 | Wake Up card | W1, B5 snapshot, B3 ProposalSheet, C1 Rebalance (all built) | none |
 | W3 | Wake Up Check | W1, B1 timestamps, B2 subtasks (built) | none |
 | W4 | Wind Down from tomorrow's first dot | Wake Up / Wind Down settings, Wind Down review (built) | none |
-| W5 | Physical dismissal | W1, W2 | pedometer + ambient light sensor plugins |
+| W5 | Missions | W1, W2 | in-house sensor bridge (owner, 2026-11-01): no new dependency |
 
 W6 **The night** (§7b) is a sixth piece: four small visual and copy changes that make the two ends of the thread visible — the sleep slider in onboarding, the night arc on the day dot, the review's opening line and the nudge wording. Depends on W4 only; no native code; ships with W4.
 
@@ -237,24 +237,67 @@ Four small changes, all pure consumers of W4's `effectiveWindDown(D)` and the ex
 
 **Milestone AC additions for W6** (merge into §13's list): existing-user offer shown exactly once and never after Not now (headless test); night arc present on every dot surface, verified by one golden per surface; store-copy review confirms only plan / protect / wind down verbs.
 
-## 8. W5 · Physical dismissal (opt-in, default off)
+## 8. W5 · Missions (opt-in, default off)
 
-*Problem:* some users cannot trust a swipe. Awake solves this with missions (math, QR, steps, light); the math and QR ones generate most of its "won't stop ringing" anger. Dottoday offers exactly two, both physical, both short, both opt-in, and only ever on the wake-up alarm. Dot starts, routine starts and the W3 check never require a mission.
+*Problem:* some users cannot trust a swipe. Awake solves this with missions (math, QR, steps, light); the math and QR ones generate most of its "won't stop ringing" anger. Dottoday offers short missions that are physical, calm or part of planning the day. None of them can be failed, and every one has a way out. Rules, missions and choices below are the owner's (2026-11-01).
 
-**The two missions.**
+**Rules.**
 
-| Mission | Sensor | Done when | Default target | Range | Fallback when the sensor is missing or denied |
-| --- | --- | --- | --- | --- | --- |
-| Walk | pedometer (Core Motion / Android step counter, `ACTIVITY_RECOGNITION` on API 29+) | step delta ≥ target since ringing began | 20 steps | 10–60 | mission is skipped, alarm dismisses by swipe; Settings shows why |
-| Light | ambient light sensor (Android `TYPE_LIGHT`; iOS has no public API → uses the camera's exposure brightness with a one-time camera permission, or is hidden) | lux ≥ 200 for 3 s, or brightness delta ≥ 3× baseline on iOS | 200 lux | fixed | hidden on devices without a usable sensor; stated in Settings |
+1. **Only the morning wake-up alarm.** Dot starts, routine starts and the W3 check never ask for a mission.
+2. **When.** The `missionMode` setting (§9) decides which mornings have a mission:
+   - **Off:** never. This is the default.
+   - **Only when I ask:** only on mornings the user flagged with "Make sure I'm up" (below).
+   - **Only after a snooze:** the first ring dismisses with a swipe as usual; the mission appears only on a ring after the user has snoozed once that morning. People who wake on their first ring never see one. Turning missions on starts here, with Stand up.
+   - **Only on chosen days:** the weekdays in `missionDays` (for example Mon–Fri).
+   - **Every time:** every wake-up alarm.
+   In every mode except Off, a flagged morning gets the mission too.
+3. **Never stuck.** The mission is skipped and the alarm dismisses with "I'm up" as usual when:
+   - the user taps "Can't right now" and holds it for 5 seconds (recorded as `missionSkipped = true`);
+   - the mission's sensor is missing or its permission was denied;
+   - the phone is connected to CarPlay or Android Auto;
+   - the alarm is not on the alarm tier (§2);
+   - the mission cannot run that morning (Pick today's one thing with fewer than 2 dots).
+   The alarm stops at the 10-minute ringing cap regardless.
+4. **A gentle way out.** After 3 skips in 7 days the app offers once: "Missions seem to get in the way lately. Turn them off?" It never turns them off by itself. No skip counter is ever shown.
+5. **"Make sure I'm up".** The user flags an important morning in places they already visit:
+   - In the Wind Down review: one toggle, "Tomorrow matters: make sure I'm up."
+   - In the task sheet: a switch, "Make sure I'm up for this." When that dot is the first one of its day, that morning gets the mission. Useful for flights added weeks ahead. On a repeating task it flags this occurrence only.
+   Each flag applies to one morning and clears afterwards, so a mission is never "always on" by accident. The flags are hidden while `missionMode` is Off.
+6. **Sensors only while ringing.** Sensor data is read while the mission screen is open and never stored.
 
-**Flow.** The alarm rings as in W1. On iOS 26+ the primary AlarmKit button is "Snooze" (if allowed) and the secondary opens the app's Wake Up screen (custom behaviour); on Android the full-screen activity is the Wake Up screen already. The screen shows the ring at 120 px, the mission as one line ("Walk 20 steps") with a live count or a light meter, and nothing else. When done, the alarm stops and the W2 card opens. A **"Can't right now"** link is always visible: tap → 5-second hold → dismisses without the mission and records `missionSkipped = true`. No shame copy, no counter of skips shown; the skip count is kept only to offer turning the mission off after 3 skips in 7 days ("Missions seem to get in the way lately. Turn them off?").
+**iOS Stop (owner, 2026-11-01).** On iOS 26.1+ AlarmKit always shows the system's own Stop, and the app cannot hide it. On a mission morning, Stop silences the alarm, opens the app on the mission, and the alarm rings again 1 minute later until an exit: mission done, "Can't right now" (hold 5 s), or the 10-minute cap. After an exit the Wake Up Check still runs, as on every morning. Android behaves the same (R-13). Real-device gate: mission morning, app force-quit, alarm rings, tap Stop → the app opens on the mission and, if left alone, rings again about 1 minute later. If that passes it ships as built; only if it fails is a backup alarm added, with an ADR saying why.
 
-**Hard limits.** Ringing cap 10 min still applies; at the cap the alarm stops regardless of the mission. Missions require the alarm tier (§2); on time-sensitive / heads-up tiers the setting is shown greyed with "needs alarm-grade wake-up". Missions never run while the phone reports driving (CarPlay / Android Auto connected) — the alarm dismisses by swipe. Sensor data is read for the duration of the ringing only and never stored.
+**The missions.** The user picks one (`missionKind`). Stand up is the default because it needs no permission.
 
-**Why not more.** Math and typing missions contradict the no-shame principle (failing a quiz at 06:30), QR scanning needs the camera at the moment the user is least coordinated, and third-party app missions are a partnership programme, not a feature. If analytics (local, opt-in) show mission users skipping more than completing, W5 is removed rather than extended.
+| Mission | How | Done when | Fallback |
+| --- | --- | --- | --- |
+| Stand up | accelerometer + gyroscope, no permission | the phone has been held upright and moving for 3 s | — (every phone has the sensors) |
+| Walk | pedometer (Core Motion / Android step counter, `ACTIVITY_RECOGNITION` on API 29+) | step delta ≥ `missionSteps` (10–60, default 20) since the mission began | skipped (rule 3); Settings shows why |
+| Light | Android ambient light sensor (`TYPE_LIGHT`); iPhone has no public light API, so it reads the camera's exposure brightness, no image kept. The camera permission is asked once, when the user picks Light in Settings, never while ringing | lux ≥ 200 for 3 s (Android), or brightness ≥ 3× the starting level for 3 s (iPhone) | greyed on devices without a usable sensor, with the reason |
+| Breathe | on-screen: hold the ring while it grows, let go while it shrinks, 3 times (about 20 s) | 3 breaths; losing the rhythm just keeps it going | — |
+| Catch the dot | on-screen: tap the slowly moving dot 5 times | 5 taps; a miss doesn't count and nothing says so | — |
+| Pick today's one thing | on-screen: today's first 3–5 dots; tap the one that matters most. Every answer is right | one tap | skipped with fewer than 2 dots (rule 3) |
 
-**AC.** Fake sensors in tests drive both missions to completion and to skip; the 10-min cap stops the ringing in both; golden for the mission screen in minimal and full mode, light and dark; a11y: the step count is announced every 5 steps, the light meter has a text state.
+- **Wakes you up, doesn't get you up.** Breathe, Catch the dot and Pick today's one thing prove you're awake, not out of bed. Their Settings rows say so: "Wakes you up, doesn't get you up."
+- **Breathe** is the option for people who can't walk or stand easily. With reduced motion the ring doesn't grow; a "Hold · Let go" text and the count lead instead.
+- **Catch the dot** stays slow and forgiving (no-shame rule): no timer, no score, no fail screen.
+- **Pick today's one thing** marks the picked dot as today's one thing: a thin accent ring outside the dot (its fill and state are unchanged) and "Your one thing" in the row's small text, so it never relies on colour. It shows on Today, the Wake Up card and the widgets, and clears when the day ends.
+  - Fewer than 2 dots: no pick that morning. With 0 there is nothing to pick; with 1 the app would be deciding for the user, which the mission exists to avoid. The alarm shows the normal "I'm up", and the Wake Up card's empty-day state takes over unchanged ("Nothing planned yet", Plan today). Its Settings row says once: "Needs at least two dots that day."
+  - This only happens with explicit weekdays and the Wake Up time anchor; with the first-dot anchor and no dots there is nothing to ring for.
+  - A flagged morning with fewer than 2 dots: the evening toggle says so the night before: "Tomorrow has nothing to pick from yet; Walk will be used instead" when a backup mission is set, or "…plan a dot or two first."
+- **Backup mission** (`missionBackup`, none / Walk / Stand up, default none): used on a morning the chosen mission can't run. Without one, the alarm dismisses with "I'm up".
+
+**Flow.** The alarm rings as in W1. On iOS 26+ the primary AlarmKit button is "Snooze" (if allowed); on a mission morning the system Stop opens the app on the mission (iOS Stop above). On Android the full-screen activity is the Wake Up screen already. The screen shows the ring at 120 px, the mission as one line ("Walk 20 steps") with its live state, and "Can't right now". When done, the alarm stops and the W2 card opens.
+
+**Why not more.** Math and typing missions contradict the no-shame principle (failing a quiz at 06:30), QR scanning needs the camera at the moment the user is least coordinated, and third-party app missions are a partnership programme, not a feature. If local, opt-in analytics show mission users skipping more than completing, W5 is reduced rather than extended. Tap a spot (NFC), Dock the phone, Reach up and Turn around are Phase 2 ideas (`11-standout-roadmap.md`).
+
+**AC.**
+- Fake sensors in tests drive every mission to done and to skip.
+- The 10-minute cap stops the ringing for every mission.
+- Each `missionMode` decides the right mornings (pure tests, including the snooze rule and flags).
+- The skip offer shows once after 3 skips in 7 days and never turns missions off itself.
+- Goldens for each mission screen in minimal and full mode, light and dark; the one-thing ring on Today.
+- a11y: the step count is announced every 5 steps, the light meter and Breathe have a text state, Catch the dot has a "Tap" button for screen readers.
 
 ## 9. Settings › Wake Up — every option
 
@@ -283,10 +326,12 @@ A new Settings section **Wake Up** sits directly under Day shape (Wake Up / Wind
 | …after | `checkAfterMin` | 5–30 | 10 | checkEnabled |  |
 | …as | `checkTier` | gentle ping / alarm | gentle ping | checkEnabled |  |
 | Sleep target | `sleepTargetMin` | off / 6 h–10 h | off | always | W4; shown with the derived Wind Down preview |
-| Prove I'm up | `missionEnabled` | switch | off | alarm tier available | W5; greyed with reason otherwise |
-| Mission | `missionKind` | walk / light | walk | missionEnabled | only sensors present are listed |
+| Missions | `missionMode` | off / only when I ask / only after a snooze / only on chosen days / every time | off | alarm tier available | W5 §8 rule 2; greyed with "needs alarm-grade wake-up" otherwise. Turning it on starts at "only after a snooze" |
+| …on | `missionDays` | weekday set | Mon–Fri | missionMode = chosen days |  |
+| Mission | `missionKind` | stand up / walk / light / breathe / catch the dot / pick today's one thing | stand up | missionMode ≠ off | a mission this device can't do is greyed with its reason; the on-screen three say "Wakes you up, doesn't get you up" |
 | Steps | `missionSteps` | 10–60 | 20 | missionKind = walk |  |
-| Offer to turn missions off after repeated skips | `missionSkipOffer` | switch | on | missionEnabled |  |
+| Backup mission | `missionBackup` | none / walk / stand up | none | missionMode ≠ off | used when the chosen mission can't run that morning |
+| Offer to turn missions off after repeated skips | `missionSkipOffer` | switch | on | missionMode ≠ off |  |
 | Quiet hours apply to the wake-up alarm | — | read-only line | never | always | states the A0 rule: the wake-up and routine-start alarms always break through; the Wake Up Check and every other ping respect quiet hours |
 | Send a test alarm | — | button |  | always | fires in 60 s through the real gateway |
 | Notification health | — | link |  | always | opens the panel |
@@ -305,7 +350,7 @@ Every W-surface reads the minimal-mode flag from doc 14 (M16) and renders a redu
 | Wake Up card (W2) | Day dot, first dot, thread strip, context chips, late-start line, Start / Later | First dot + **Start**. Late-start line only when it applies, as one sentence + one button. Thread strip and chips behind "Show my day" |
 | Wake Up Check (W3) | "Just \<step> · 2 min?" + Start | identical (already one line) |
 | Day shape row (W4) | "22:45 · from tomorrow's 06:30" + chip | "Wind Down 22:45" — the derivation shows on tap only |
-| Settings › Wake Up | 29 rows (§9) | Three grouped rows: **Alarm** (on/off, sound), **Morning card** (on/off), **Prove I'm up** (on/off); "More options" expands the full list in place |
+| Settings › Wake Up | 29 rows (§9) | Three grouped rows: **Alarm** (on/off, sound), **Morning card** (on/off), **Missions** (mode); "More options" expands the full list in place |
 | Notification health | Full panel | Tier chip + the single most important fix button; "Details" expands |
 | Discovery cards (§11) | Promise card + explain sheet | One line with a single button; no illustration |
 
@@ -323,7 +368,7 @@ Nothing in M17 rings differently until the user has said yes once, and every ent
 | First late start | users with W2 on | Coach mark on **Shift the rest?**: "This moves what's left; nothing changes until you accept." | once |
 | First check ping | users with W3 on | The notification's expanded text adds "You can change or turn this off in Settings › Wake Up." | first 2 times |
 | Device gains the alarm tier (OS update) | users with W1 off | Soft reveal on Today: "Your phone can now ring Dottoday's wake-up like an alarm. Turn it on?" | once per OS major |
-| 3 wake-ups where dismissal was ≥ 20 min after plan | users with W5 off and the alarm tier | Soft reveal: "Mornings start a while after the alarm lately. Want a short walk or a light to switch it off?" → Settings › Prove I'm up | once per 30 days |
+| 3 wake-ups where dismissal was ≥ 20 min after plan | users with W5 off and the alarm tier | Soft reveal: "Mornings start a while after the alarm lately. Want a short walk or a light to switch it off?" → Settings › Missions | once per 30 days |
 | Settings › Wake Up header | everyone | Permanent **How it works** link → explain sheet with four lines: what rings, what the card does, what the check does, where to turn each off | always |
 | Help › Wake Up | everyone | The explain sheet plus the §2 table in plain words, per the user's own device | always |
 | Mac / web Settings | desktop users | The Wake Up section exists, read-only, saying "These ring on your phone. Change them there or here; they sync." — the switches are editable so a desktop user can configure the phone | always |

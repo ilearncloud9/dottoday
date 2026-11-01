@@ -6,8 +6,10 @@ import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/wake_up/wake_up_card.dart';
 import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
@@ -71,6 +73,7 @@ class _WakeUpCardScreenState extends ConsumerState<WakeUpCardScreen> {
                       onStart: () => unawaited(_start(model)),
                       onLater: _close,
                       onPlan: () => context.go(AppRoutes.add),
+                      onMissionsOff: (off) => unawaited(_missionsOff(off)),
                     ),
             ),
           ],
@@ -128,4 +131,14 @@ class _WakeUpCardScreenState extends ConsumerState<WakeUpCardScreen> {
       title: l10n.wakeUpCardShift,
     );
   }
+
+  /// The once-only offer (15 §8 rule 4): either answer retires it; only
+  /// "Turn off" turns missions off.
+  Future<void> _missionsOff(bool off) => updateSettings(
+    ProviderScope.containerOf(context, listen: false),
+    (s) => s.copyWith(
+      missionOffOfferAnswered: true,
+      missionMode: off ? MissionMode.off : s.missionMode,
+    ),
+  );
 }

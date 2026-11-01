@@ -17,4 +17,11 @@ abstract interface class WakeUpDayRepository {
 
   /// "Start the day" with no dot to start.
   Future<void> markStarted(String date, DateTime atUtc);
+
+  /// "Can't right now" skipped [date]'s mission at [atUtc] (15 §8).
+  Future<void> markMissionSkipped(String date, DateTime atUtc);
+
+  /// When missions were skipped since [sinceUtc], for the offer to turn
+  /// them off (15 §8 rule 4).
+  Future<List<DateTime>> missionSkipsSince(DateTime sinceUtc);
 }

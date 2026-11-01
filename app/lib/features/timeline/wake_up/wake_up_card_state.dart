@@ -11,6 +11,7 @@ import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:dottoday/domain/scheduling/low_energy.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/domain/wake_up/mission.dart';
 import 'package:dottoday/domain/wake_up/wake_up_card.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:dottoday/features/timeline/state/day_ends.dart';
@@ -33,6 +34,7 @@ final class WakeUpCardModel {
     required this.inbox,
     required this.steps,
     required this.nextWakeUtc,
+    this.offerMissionsOff = false,
   });
 
   final TimelineData data;
@@ -49,6 +51,10 @@ final class WakeUpCardModel {
 
   /// Where tonight's night ends, for the day dot (docs/15 W6).
   final DateTime nextWakeUtc;
+
+  /// Missions were skipped 3 times in 7 days: offer once to turn them
+  /// off (15 §8 rule 4).
+  final bool offerMissionsOff;
 
   Settings get settings => data.settings;
 
@@ -87,6 +93,9 @@ Future<WakeUpCardModel> wakeUpCard(Ref ref) async {
       .watchInbox(data.userId)
       .first;
   final ends = await ref.watch(dayEndsProvider(date).future);
+  final skips = await ref
+      .watch(wakeUpDayRepositoryProvider)
+      .missionSkipsSince(now.subtract(missionSkipOfferWindow));
   return WakeUpCardModel(
     data: data,
     shape: ends.shape,
@@ -96,6 +105,11 @@ Future<WakeUpCardModel> wakeUpCard(Ref ref) async {
     dateKey: wakeUpDateKey(now, data.day.location.name),
     inbox: inbox.length,
     steps: steps,
+    offerMissionsOff: missionOffOfferDue(
+      data.settings,
+      skipsUtc: skips,
+      nowUtc: now,
+    ),
   );
 }
 

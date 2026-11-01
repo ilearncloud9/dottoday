@@ -107,6 +107,7 @@
 		D965F1C05CE24385436325D9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BBB352BF44D23332BA9CF7AE /* InfoPlist.strings */; };
 		DD069CE460F66C6169F3A913 /* play_rooster.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0BF4C6FD130A31F237424129 /* play_rooster.caf */; };
 		DD4E9BA683C505766566F0E6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53991F7DB8E44DC7ED234E07 /* Foundation.framework */; };
+		DF387F38E98E3E022E2B012A /* MissionSensors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48F46CD11C519672B445D57 /* MissionSensors.swift */; };
 		E0286E8E9450B770471D1E22 /* quiet_slip.caf in Resources */ = {isa = PBXBuildFile; fileRef = B7CE84C13CC4866DC46D4DB1 /* quiet_slip.caf */; };
 		E2F14629C6B99D94D3D76BDF /* DotActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9475CDDE68AAF01310D87A /* DotActions.swift */; };
 		E685B4942D46ABDFA77C6142 /* AppShortcuts.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3013B4C5D6CD3BCE94FE8938 /* AppShortcuts.strings */; };
@@ -259,6 +260,7 @@
 		B06B6834A4ACABA8C53E2A48 /* reminder_bell.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_bell.caf; path = Runner/Sounds/reminder_bell.caf; sourceTree = SOURCE_ROOT; };
 		B17CFA3AEC0E7D9360BD76CA /* done_swift.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = done_swift.caf; path = Runner/Sounds/done_swift.caf; sourceTree = SOURCE_ROOT; };
 		B2817D94662BA2CDA1EC69A1 /* start_beep_rise.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_beep_rise.caf; path = Runner/Sounds/start_beep_rise.caf; sourceTree = SOURCE_ROOT; };
+		B48F46CD11C519672B445D57 /* MissionSensors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MissionSensors.swift; sourceTree = "<group>"; };
 		B7CE84C13CC4866DC46D4DB1 /* quiet_slip.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_slip.caf; path = Runner/Sounds/quiet_slip.caf; sourceTree = SOURCE_ROOT; };
 		BBF327A6E80AA18432DB80F2 /* LiveActivityViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityViews.swift; sourceTree = "<group>"; };
 		BDB9ECEFC39891C3ACBA6062 /* DottodayWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = DottodayWidgets.entitlements; sourceTree = "<group>"; };
@@ -535,6 +537,7 @@
 				A1B2C3D4E5F60718293A4B02 /* SpeechBridge.swift */,
 				38D6FFE543424C4973F4A138 /* Sounds */,
 				923A60B7EFB7BFEBF94DBB37 /* AlarmBridge.swift */,
+				B48F46CD11C519672B445D57 /* MissionSensors.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -936,6 +939,7 @@
 				A1B2C3D4E5F60718293A4B01 /* SpeechBridge.swift in Sources */,
 				FB06A964B9B1197955384188 /* WakeUpAlarmKit.swift in Sources */,
 				02678329CCD2A03207DA79D5 /* AlarmBridge.swift in Sources */,
+				DF387F38E98E3E022E2B012A /* MissionSensors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,6 +12,7 @@ class FocusRing extends StatelessWidget {
     required this.progress,
     required this.color,
     required this.icon,
+    this.size = DotSize.focusRing,
     super.key,
   });
 
@@ -20,6 +21,9 @@ class FocusRing extends StatelessWidget {
   final TaskColor color;
   final TaskIcon icon;
 
+  /// [DotSize.focusRing], or [DotSize.missionRing]; the stroke scales.
+  final double size;
+
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
@@ -27,7 +31,7 @@ class FocusRing extends StatelessWidget {
     final glyph = icon.glyph;
     return ExcludeSemantics(
       child: SizedBox.square(
-        dimension: DotSize.focusRing,
+        dimension: size,
         child: TweenAnimationBuilder<double>(
           tween: Tween(end: progress.clamp(0, 1)),
           duration: t.motion.slow,
@@ -38,6 +42,7 @@ class FocusRing extends StatelessWidget {
               color: swatch.color,
               track: t.colors.hairline,
               inner: t.colors.raised,
+              stroke: DotSize.focusRingStroke * size / DotSize.focusRing,
             ),
             child: child,
           ),
@@ -47,7 +52,7 @@ class FocusRing extends StatelessWidget {
                 : DotIcon(
                     glyph,
                     color: swatch.color,
-                    size: DotSize.focusGlyph,
+                    size: DotSize.focusGlyph * size / DotSize.focusRing,
                     active: true,
                   ),
           ),
@@ -63,16 +68,17 @@ final class _RingPainter extends CustomPainter {
     required this.color,
     required this.track,
     required this.inner,
+    required this.stroke,
   });
 
   final double sweep;
   final Color color;
   final Color track;
   final Color inner;
+  final double stroke;
 
   @override
   void paint(Canvas canvas, Size size) {
-    const stroke = DotSize.focusRingStroke;
     final center = size.center(Offset.zero);
     final radius = size.shortestSide / 2 - stroke / 2;
     canvas.drawCircle(center, radius - stroke / 2, Paint()..color = inner);
@@ -95,5 +101,6 @@ final class _RingPainter extends CustomPainter {
       old.sweep != sweep ||
       old.color != color ||
       old.track != track ||
-      old.inner != inner;
+      old.inner != inner ||
+      old.stroke != stroke;
 }

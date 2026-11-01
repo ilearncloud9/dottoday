@@ -46,6 +46,11 @@ String? allowListedLocation(Uri uri) {
     },
     ['day', final date] when parseRouteDate(date) != null => '/day/$date',
     ['task', final id] when _uuidV7.hasMatch(id) => AppRoutes.task(id),
+    // A mission morning's "I'm up" (docs/15 §8).
+    ['wake-up', 'mission', final date, final kind]
+        when parseRouteDate(date) != null &&
+            AppRoutes.missionKinds.contains(kind) =>
+      AppRoutes.mission(date, kind),
     // Start focus from a tile or Siri (M10.5).
     ['focus', final id] when _uuidV7.hasMatch(id) => AppRoutes.focus(id),
     _ => null,

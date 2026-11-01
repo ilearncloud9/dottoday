@@ -28,6 +28,7 @@ import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/security/app_lock_store.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/calendar/calendar_import.dart';
@@ -54,6 +55,8 @@ import 'package:dottoday/domain/security/app_lock.dart';
 import 'package:dottoday/domain/trash/trash_service.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/validation/entity_validators.dart';
+import 'package:dottoday/domain/wake_up/mission_progress.dart';
+import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
@@ -462,6 +465,7 @@ List<Override> timelineOverrides({
   AlarmCapabilities wakeUpAlarm = const AlarmCapabilities(AlarmTier.alarm),
   FakeAlarmGateway? alarmGateway,
   FakeWakeUpDayRepository? wakeUpDays,
+  MissionSensors? missionSensors,
   String? deviceZone,
   LearningMetaState learningMeta = const LearningMetaState(),
   DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
@@ -525,6 +529,9 @@ List<Override> timelineOverrides({
     notificationPermissionProvider.overrideWithValue(notificationPermission),
     exactAlarmsProvider.overrideWithValue(exactAlarms),
     // The full-screen-intent channel has no handler here (docs/15 W1a).
+    missionSensorsProvider.overrideWithValue(
+      missionSensors ?? FakeMissionSensors(),
+    ),
     alarmGatewayProvider.overrideWithValue(
       alarmGateway ?? FakeAlarmGateway(wakeUpAlarm),
     ),
@@ -762,6 +769,50 @@ final class FakeAlarmGateway implements AlarmGateway {
     events = [];
     return out;
   }
+
+  /// Alarms ended from a mission screen, in order.
+  final dismissed = <String>[];
+
+  @override
+  Future<void> dismiss(String id) async => dismissed.add(id);
+
+  /// How often a mission screen pushed its re-ring out.
+  var kept = 0;
+
+  @override
+  Future<void> keepMission(String id) async => kept++;
+}
+
+/// The mission sensors in memory (docs/15 §8): every mission ready unless
+/// [support] says otherwise; tests push readings through [push].
+final class FakeMissionSensors implements MissionSensors {
+  FakeMissionSensors({this.supports = const {}, this.isDriving = false});
+
+  @override
+  Future<MissionSupport> support(MissionKind kind) async =>
+      supports[kind] ?? MissionSupport.ready;
+
+  /// Overrides per kind; the rest are ready.
+  final Map<MissionKind, MissionSupport> supports;
+  final bool isDriving;
+  final requested = <MissionKind>[];
+  final _readings = StreamController<SensorReading>.broadcast();
+
+  void push(SensorReading reading) => _readings.add(reading);
+
+  void fail() => _readings.addError(StateError('sensor gone'));
+
+  @override
+  Future<bool> request(MissionKind kind) async {
+    requested.add(kind);
+    return true;
+  }
+
+  @override
+  Stream<SensorReading> readings(MissionKind kind) => _readings.stream;
+
+  @override
+  Future<bool> driving() async => isDriving;
 }
 
 /// This device's mornings in memory (docs/15 §3).
@@ -800,6 +851,20 @@ final class FakeWakeUpDayRepository implements WakeUpDayRepository {
     }
     _changes.add(null);
   }
+
+  @override
+  Future<void> markMissionSkipped(String date, DateTime atUtc) async {
+    _days[date] = (_days[date] ?? WakeUpDay(date: date)).copyWith(
+      missionSkippedAtUtc: atUtc,
+    );
+    _changes.add(null);
+  }
+
+  @override
+  Future<List<DateTime>> missionSkipsSince(DateTime sinceUtc) async => [
+    for (final d in _days.values)
+      if (d.missionSkippedAtUtc case final at? when at.isAfter(sinceUtc)) at,
+  ];
 
   @override
   Future<void> markCardShown(String date, DateTime atUtc) async {

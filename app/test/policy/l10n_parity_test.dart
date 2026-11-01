@@ -17,6 +17,7 @@ const _translations = ['de', 'fr', 'es'];
 /// only when the English word is the right word in that language.
 const _sameAsEnglish = {
   'de': {
+    'settingsMission', // "Mission"
     'routineSummary',
     'routineDropTitle',
     'routineName',
@@ -46,6 +47,8 @@ const _sameAsEnglish = {
     'layoutMinimal',
   },
   'fr': {
+    'settingsMissions', // "Missions"
+    'settingsMission', // "Mission"
     // "Minimal" is the word in French too (M16).
     'layoutMinimal',
     'routinesTitle',

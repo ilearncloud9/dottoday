@@ -35,9 +35,21 @@ data class WakeUpAlarm(
     val checkStart: String = "",
     val checkTarget: String = "",
     val checkLoud: Boolean = false,
+    /** This morning's mission (docs/15 §8); "" = none. */
+    val mission: String = "",
+    val missionAfterSnooze: Boolean = false,
+    /** When "I'm up" first opened the mission: the 10-minute cap counts from here. */
+    val missionSinceMs: Long = 0,
 ) {
     /** Snooze is offered: on, and under its limit (0 = no limit). */
     val canSnooze: Boolean get() = snoozeMin > 0 && (snoozeLimit == 0 || snoozes < snoozeLimit)
+
+    /** "I'm up" opens the mission instead of stopping (15 §8 rules 1-2). */
+    val missionDue: Boolean
+        get() = mission.isNotEmpty() && id != TEST_ID && (!missionAfterSnooze || snoozes > 0)
+
+    /** `dottoday://wake-up/mission/<yyyy-MM-dd>/<kind>`. */
+    val missionLink: String get() = "dottoday://wake-up/mission/${id.removePrefix("wakeup:")}/$mission"
 
     fun toJson(): JSONObject = JSONObject()
         .put("id", id).put("fireAtMs", fireAtMs).put("sound", sound)
@@ -46,11 +58,16 @@ data class WakeUpAlarm(
         .put("minimal", minimal).put("state", state).put("snoozes", snoozes)
         .put("checkMin", checkMin).put("checkTitle", checkTitle).put("checkBody", checkBody)
         .put("checkStart", checkStart).put("checkTarget", checkTarget).put("checkLoud", checkLoud)
+        .put("mission", mission).put("missionAfterSnooze", missionAfterSnooze)
+        .put("missionSinceMs", missionSinceMs)
 
     companion object {
         const val ARMED = "armed"
         const val RINGING = "ringing"
         const val SNOOZED = "snoozed"
+
+        /** Quiet while its mission screen is open; re-rings until an exit. */
+        const val MISSION = "mission"
 
         /** An alarm with only [id], for matching its PendingIntents. */
         fun blank(id: String) = WakeUpAlarm(id, 0, "", "", "", "", "", 0, 0, 0, false)
@@ -76,6 +93,8 @@ data class WakeUpAlarm(
             checkStart = m["checkStart"] as? String ?: "",
             checkTarget = m["checkTarget"] as? String ?: "",
             checkLoud = m["checkLoud"] == true,
+            mission = m["mission"] as? String ?: "",
+            missionAfterSnooze = m["missionAfterSnooze"] == true,
         )
 
         fun fromJson(o: JSONObject): WakeUpAlarm = WakeUpAlarm(
@@ -98,6 +117,9 @@ data class WakeUpAlarm(
             checkStart = o.optString("checkStart"),
             checkTarget = o.optString("checkTarget"),
             checkLoud = o.optBoolean("checkLoud"),
+            mission = o.optString("mission"),
+            missionAfterSnooze = o.optBoolean("missionAfterSnooze"),
+            missionSinceMs = o.optLong("missionSinceMs"),
         )
     }
 }

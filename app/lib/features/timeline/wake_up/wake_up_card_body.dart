@@ -25,6 +25,7 @@ class WakeUpCardBody extends StatefulWidget {
     required this.onStart,
     required this.onLater,
     required this.onPlan,
+    this.onMissionsOff,
     super.key,
   });
 
@@ -35,6 +36,9 @@ class WakeUpCardBody extends StatefulWidget {
   final VoidCallback onStart;
   final VoidCallback onLater;
   final VoidCallback onPlan;
+
+  /// The once-only offer's answer (15 §8 rule 4): true turns missions off.
+  final ValueChanged<bool>? onMissionsOff;
 
   @override
   State<WakeUpCardBody> createState() => _WakeUpCardBodyState();
@@ -85,6 +89,10 @@ class _WakeUpCardBodyState extends State<WakeUpCardBody> {
           ],
         ],
         if (whole) ..._chips(context),
+        if (m.offerMissionsOff && widget.onMissionsOff != null) ...[
+          const SizedBox(height: DotSpace.l),
+          _MissionsOffOffer(onAnswer: widget.onMissionsOff!),
+        ],
         if (late != null && first != null && !m.lowEnergy) ...[
           const SizedBox(height: DotSpace.l),
           WakeUpLateLine(minutes: late, onShift: () => widget.onShift(late)),
@@ -170,4 +178,37 @@ class _WakeUpCardBodyState extends State<WakeUpCardBody> {
 
   String _locale(BuildContext context) =>
       Localizations.localeOf(context).toLanguageTag();
+}
+
+/// "Missions seem to get in the way lately. Turn them off?" (15 §8 rule
+/// 4): asked once; the app never turns them off by itself.
+class _MissionsOffOffer extends StatelessWidget {
+  const _MissionsOffOffer({required this.onAnswer});
+
+  final ValueChanged<bool> onAnswer;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l10n.missionOffOffer, style: t.styles.body),
+        Wrap(
+          spacing: DotSpace.s,
+          children: [
+            TextButton(
+              onPressed: () => onAnswer(true),
+              child: Text(l10n.missionOffOfferTurnOff),
+            ),
+            TextButton(
+              onPressed: () => onAnswer(false),
+              child: Text(l10n.missionOffOfferKeep),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }

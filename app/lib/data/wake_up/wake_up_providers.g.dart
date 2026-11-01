@@ -8,6 +8,141 @@ part of 'wake_up_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// The sensors the missions read (docs/15 §8); tests override it.
+
+@ProviderFor(missionSensors)
+final missionSensorsProvider = MissionSensorsProvider._();
+
+/// The sensors the missions read (docs/15 §8); tests override it.
+
+final class MissionSensorsProvider
+    extends $FunctionalProvider<MissionSensors, MissionSensors, MissionSensors>
+    with $Provider<MissionSensors> {
+  /// The sensors the missions read (docs/15 §8); tests override it.
+  MissionSensorsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'missionSensorsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$missionSensorsHash();
+
+  @$internal
+  @override
+  $ProviderElement<MissionSensors> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  MissionSensors create(Ref ref) {
+    return missionSensors(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(MissionSensors value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<MissionSensors>(value),
+    );
+  }
+}
+
+String _$missionSensorsHash() => r'1f3af2a30c5704b92683a86ac3a118e3e85efd64';
+
+/// Whether this device can run [kind] now (15 §8), re-read when Settings
+/// asks for a permission.
+
+@ProviderFor(missionSupport)
+final missionSupportProvider = MissionSupportFamily._();
+
+/// Whether this device can run [kind] now (15 §8), re-read when Settings
+/// asks for a permission.
+
+final class MissionSupportProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<MissionSupport>,
+          MissionSupport,
+          FutureOr<MissionSupport>
+        >
+    with $FutureModifier<MissionSupport>, $FutureProvider<MissionSupport> {
+  /// Whether this device can run [kind] now (15 §8), re-read when Settings
+  /// asks for a permission.
+  MissionSupportProvider._({
+    required MissionSupportFamily super.from,
+    required MissionKind super.argument,
+  }) : super(
+         retry: null,
+         name: r'missionSupportProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$missionSupportHash();
+
+  @override
+  String toString() {
+    return r'missionSupportProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<MissionSupport> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<MissionSupport> create(Ref ref) {
+    final argument = this.argument as MissionKind;
+    return missionSupport(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MissionSupportProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$missionSupportHash() => r'01e9bc7cd84b1cb5b8201048cb42712234f6ba47';
+
+/// Whether this device can run [kind] now (15 §8), re-read when Settings
+/// asks for a permission.
+
+final class MissionSupportFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<MissionSupport>, MissionKind> {
+  MissionSupportFamily._()
+    : super(
+        retry: null,
+        name: r'missionSupportProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Whether this device can run [kind] now (15 §8), re-read when Settings
+  /// asks for a permission.
+
+  MissionSupportProvider call(MissionKind kind) =>
+      MissionSupportProvider._(argument: kind, from: this);
+
+  @override
+  String toString() => r'missionSupportProvider';
+}
+
 /// Today's row on this device, null until the alarm or the card did
 /// something (docs/15 §3, M17.3).
 
@@ -142,7 +277,7 @@ final class AlarmEventsDrainProvider
   }
 }
 
-String _$alarmEventsDrainHash() => r'f09380da0c1c948d465598521a39f0e1181a37b6';
+String _$alarmEventsDrainHash() => r'9bdddbff7e805460811a8c791342f0424f6349a6';
 
 /// Folds what the alarms did while the app was closed (rang, snoozed,
 /// "I'm up") into `wake_up_days`: run on launch and every resume, before

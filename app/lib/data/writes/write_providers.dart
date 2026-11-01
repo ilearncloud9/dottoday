@@ -17,6 +17,7 @@ import 'package:dottoday/data/snapshot/composite_snapshot_sink.dart';
 import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
 import 'package:dottoday/data/snapshot/web_snapshot_sink.dart';
 import 'package:dottoday/data/sync/shared_hlc.dart';
+import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/data/widgets/home_widget_sink.dart';
 import 'package:dottoday/data/widgets/mac_status_item_sink.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
@@ -96,6 +97,7 @@ NotificationSync notificationSync(Ref ref) => NotificationSync(
     ref.watch(alarmGatewayProvider),
     ref.watch(appDatabaseProvider),
     minimal: () => readSimplified(ref, FeatureId.wakeUpAlarm),
+    sensors: ref.watch(missionSensorsProvider),
   ),
   days: ref.watch(wakeUpDayRepositoryProvider),
   ringsWakeUp: currentHealthPlatform().isPhone,

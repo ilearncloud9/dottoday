@@ -27,7 +27,9 @@ import app.dottoday.planner.R
  * from 40 % up to that stream's volume over the ramp, with vibration. Its
  * notification carries the full-screen [WakeUpAlarmActivity] and the same
  * two buttons, so a revoked full-screen intent still leaves a ringing
- * heads-up (15 §2). It stops on "I'm up", on Snooze and after [CAP_MS].
+ * heads-up (15 §2). It stops on "I'm up", on Snooze and after [CAP_MS];
+ * on a mission morning (15 §8) "I'm up" opens the mission and the ring
+ * comes back each minute it is left alone, for 10 minutes at most.
  */
 class WakeUpRingService : Service() {
     private val handler = Handler(Looper.getMainLooper())
@@ -49,6 +51,13 @@ class WakeUpRingService : Service() {
             if (ringing == null) silence()
             return START_NOT_STICKY
         }
+        val now = System.currentTimeMillis()
+        // A mission's 10 minutes are up (15 §8): it stops, as "I'm up" would.
+        if (WakeUpActions.missionOver(alarm, now)) {
+            WakeUpActions.dismiss(this, alarm.id)
+            if (ringing == null) silence()
+            return START_NOT_STICKY
+        }
         ringing?.takeIf { it != alarm.id }?.let { WakeUpAlarms.remove(this, it) }
         instance = this
         ringing = alarm.id
@@ -58,7 +67,9 @@ class WakeUpRingService : Service() {
         play(alarm)
         vibrate()
         handler.removeCallbacks(cap)
-        handler.postDelayed(cap, CAP_MS)
+        // A mission morning's re-ring stops at the mission's own cap.
+        val left = if (alarm.missionSinceMs > 0) alarm.missionSinceMs + WakeUpActions.MISSION_CAP_MS - now else CAP_MS
+        handler.postDelayed(cap, minOf(CAP_MS, left))
         return START_NOT_STICKY
     }
 
@@ -116,9 +127,7 @@ class WakeUpRingService : Service() {
         if (alarm.canSnooze) {
             builder.addAction(0, alarm.snooze, WakeUpActions.pending(this, WakeUpActions.SNOOZE, alarm.id))
         }
-        return builder
-            .addAction(0, alarm.stop, WakeUpActions.pending(this, WakeUpActions.STOP, alarm.id))
-            .build()
+        return builder.addAction(0, alarm.stop, WakeUpActions.upIntent(this, alarm)).build()
     }
 
     private fun play(alarm: WakeUpAlarm) {

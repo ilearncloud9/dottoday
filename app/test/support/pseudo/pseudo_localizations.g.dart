@@ -4793,6 +4793,140 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get releaseNotes120 => pseudo(super.releaseNotes120);
 
   @override
+  String get settingsMissions => pseudo(super.settingsMissions);
+
+  @override
+  String get missionModeOff => pseudo(super.missionModeOff);
+
+  @override
+  String get missionModeWhenAsked => pseudo(super.missionModeWhenAsked);
+
+  @override
+  String get missionModeAfterSnooze => pseudo(super.missionModeAfterSnooze);
+
+  @override
+  String get missionModeChosenDays => pseudo(super.missionModeChosenDays);
+
+  @override
+  String get missionModeAlways => pseudo(super.missionModeAlways);
+
+  @override
+  String get settingsMissionDays => pseudo(super.settingsMissionDays);
+
+  @override
+  String get settingsMission => pseudo(super.settingsMission);
+
+  @override
+  String get missionStandUp => pseudo(super.missionStandUp);
+
+  @override
+  String get missionWalk => pseudo(super.missionWalk);
+
+  @override
+  String get missionLight => pseudo(super.missionLight);
+
+  @override
+  String get missionBreathe => pseudo(super.missionBreathe);
+
+  @override
+  String get missionCatchDot => pseudo(super.missionCatchDot);
+
+  @override
+  String get missionOneThing => pseudo(super.missionOneThing);
+
+  @override
+  String get missionOnScreenNote => pseudo(super.missionOnScreenNote);
+
+  @override
+  String get settingsMissionSteps => pseudo(super.settingsMissionSteps);
+
+  @override
+  String get settingsMissionBackup => pseudo(super.settingsMissionBackup);
+
+  @override
+  String get missionBackupNone => pseudo(super.missionBackupNone);
+
+  @override
+  String get settingsMissionSkipOffer => pseudo(super.settingsMissionSkipOffer);
+
+  @override
+  String get missionNeedsAlarm => pseudo(super.missionNeedsAlarm);
+
+  @override
+  String get missionSensorMissing => pseudo(super.missionSensorMissing);
+
+  @override
+  String get missionSensorDenied => pseudo(super.missionSensorDenied);
+
+  @override
+  String get missionOneThingNeeds => pseudo(super.missionOneThingNeeds);
+
+  @override
+  String get missionLineStandUp => pseudo(super.missionLineStandUp);
+
+  @override
+  String missionLineWalk(int count) => pseudo(super.missionLineWalk(count));
+
+  @override
+  String get missionLineLight => pseudo(super.missionLineLight);
+
+  @override
+  String get missionLineBreathe => pseudo(super.missionLineBreathe);
+
+  @override
+  String missionLineCatchDot(int count) =>
+      pseudo(super.missionLineCatchDot(count));
+
+  @override
+  String missionStepsProgress(int done, int target) =>
+      pseudo(super.missionStepsProgress(done, target));
+
+  @override
+  String missionHoldProgress(int done, int target) =>
+      pseudo(super.missionHoldProgress(done, target));
+
+  @override
+  String get missionLightDark => pseudo(super.missionLightDark);
+
+  @override
+  String get missionLightBright => pseudo(super.missionLightBright);
+
+  @override
+  String get missionUprightHint => pseudo(super.missionUprightHint);
+
+  @override
+  String get missionBreatheHold => pseudo(super.missionBreatheHold);
+
+  @override
+  String get missionBreatheLetGo => pseudo(super.missionBreatheLetGo);
+
+  @override
+  String missionBreathCount(int done, int total) =>
+      pseudo(super.missionBreathCount(done, total));
+
+  @override
+  String get missionCatchTap => pseudo(super.missionCatchTap);
+
+  @override
+  String missionCatchCount(int done, int total) =>
+      pseudo(super.missionCatchCount(done, total));
+
+  @override
+  String get missionCantNow => pseudo(super.missionCantNow);
+
+  @override
+  String get missionCantNowHint => pseudo(super.missionCantNowHint);
+
+  @override
+  String get missionOffOffer => pseudo(super.missionOffOffer);
+
+  @override
+  String get missionOffOfferTurnOff => pseudo(super.missionOffOfferTurnOff);
+
+  @override
+  String get missionOffOfferKeep => pseudo(super.missionOffOfferKeep);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

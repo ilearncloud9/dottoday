@@ -15,10 +15,33 @@ import 'package:flutter_test/flutter_test.dart';
 // 8 → 9 (M16, docs/14 §6): reveal_hints, the outbox CHECK naming them, and
 // `uiLayout: "full"` for every existing profile; 9 → 10 (M17.3, docs/15
 // §3): the local wake_up_days; 10 → 11 (M17.5): the Wind Down reminder's
-// settings key moves from bedtimeReminder to windDownReminder.
+// settings key moves from bedtimeReminder to windDownReminder; 11 → 12
+// (M17.7, docs/15 §8): wake_up_days.mission_skipped_at_utc.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
+  test('a version 11 file gains the mission skip and keeps its days', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig12');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+
+    final v11 = AppDatabase(NativeDatabase(file));
+    await v11.customStatement(
+      'ALTER TABLE wake_up_days DROP COLUMN mission_skipped_at_utc',
+    );
+    await v11.customStatement(
+      "INSERT INTO wake_up_days (date, snoozes) VALUES ('2026-11-02', 2)",
+    );
+    await v11.customStatement('PRAGMA user_version = 11');
+    await v11.close();
+
+    final v12 = AppDatabase(NativeDatabase(file));
+    addTearDown(v12.close);
+    final days = await v12.select(v12.wakeUpDaysTable).get();
+    expect(days.single.snoozes, 2);
+    expect(days.single.missionSkippedAtUtc, isNull);
+  });
+
   test('a version 10 file moves bedtimeReminder to windDownReminder', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig11');
     addTearDown(() => dir.delete(recursive: true));

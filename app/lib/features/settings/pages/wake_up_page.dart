@@ -9,6 +9,7 @@ import 'package:dottoday/data/notifications/test_alarm.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
+import 'package:dottoday/features/settings/widgets/mission_group.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_alarm_row.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_card_group.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_check_group.dart';
@@ -21,8 +22,8 @@ import 'package:go_router/go_router.dart';
 
 /// Settings › Day shape › Wake Up options (docs/15 §9, M17.2–M17.3;
 /// derived from `SettingsGroup` rows): the alarm switch with this device's
-/// tier and fix, sound and snooze while it is on, the Morning card, a real
-/// test alarm and Notification health. Minimal mode shows the two switches
+/// tier and fix, sound, snooze, the check and missions (15 §8) while it is
+/// on, the Morning card, a real test alarm and Notification health. Minimal mode shows the two switches
 /// and the sound, with the rest behind More options (15 §10).
 class WakeUpPage extends ConsumerStatefulWidget {
   const WakeUpPage({super.key});
@@ -54,6 +55,7 @@ class _WakeUpPageState extends ConsumerState<WakeUpPage> {
           WakeUpSoundGroup(settings: settings, full: full),
           if (full) WakeUpSnoozeGroup(settings: settings),
           if (full) WakeUpCheckGroup(settings: settings),
+          MissionGroup(settings: settings, full: full),
         ],
         WakeUpCardGroup(settings: settings, full: full),
         if (!full)

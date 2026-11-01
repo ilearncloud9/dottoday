@@ -1,6 +1,7 @@
 import 'package:dottoday/app_shell.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/focus/focus_screen.dart';
 import 'package:dottoday/features/inbox/inbox_screen.dart';
 import 'package:dottoday/features/inbox/inbox_sidebar.dart';
@@ -12,6 +13,7 @@ import 'package:dottoday/features/timeline/month_screen.dart';
 import 'package:dottoday/features/timeline/review/day_review_screen.dart';
 import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
+import 'package:dottoday/features/timeline/wake_up/mission/mission_screen.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_screen.dart';
 import 'package:dottoday/features/timeline/week_screen.dart';
 
@@ -34,5 +36,7 @@ final appScreens = RouteScreens(
   task: (_, id) => TaskScreen(id: id),
   focus: (_, id) => FocusScreen(id: id),
   wakeUp: (_) => const WakeUpCardScreen(),
+  mission: (_, date, kind) =>
+      MissionScreen(date: date, kind: MissionKind.values.byName(kind)),
   review: (_) => const DayReviewScreen(),
 );

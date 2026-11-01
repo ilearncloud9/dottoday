@@ -8,3 +8,5 @@
 "NSFaceIDUsageDescription" = "Dottoday nutzt Face ID zum Entsperren, wenn du die App-Sperre einschaltest.";
 "NSMicrophoneUsageDescription" = "Dottoday hört nur zu, solange die Mikrofontaste an ist, und macht deine Worte auf diesem Gerät zu Text.";
 "NSSpeechRecognitionUsageDescription" = "Deine Worte werden auf diesem Gerät zu Text. Nichts wird an einen Server gesendet.";
+"NSCameraUsageDescription" = "Dottoday prüft nur, solange eine Licht-Mission auf dem Bildschirm ist, wie hell der Raum ist, um deinen Wecker zu beenden. Es wird kein Bild aufgenommen oder gespeichert.";
+"NSMotionUsageDescription" = "Dottoday zählt deine Schritte nur, solange eine Gehen-Mission auf dem Bildschirm ist, um deinen Wecker zu beenden. Nichts wird gespeichert.";
