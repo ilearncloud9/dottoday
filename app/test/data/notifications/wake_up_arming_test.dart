@@ -1,6 +1,7 @@
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/notifications/wake_up_arming.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
@@ -114,6 +115,68 @@ void main() {
         ),
       ).arm([_wakeUp(mon)], profile: walk, tasks: const {});
       expect(gateway.armed.single.mission?.kind, MissionKind.standUp);
+    });
+
+    group("Make sure I'm up (M17.7c)", () {
+      final asked = on.copyWith(
+        settings: on.settings.copyWith(missionMode: MissionMode.whenAsked),
+      );
+
+      Future<List<MissionPlan?>> arm(
+        Settings settings, {
+        Map<String, Occurrence> tasks = const {},
+      }) async {
+        final gateway = FakeAlarmGateway();
+        await WakeUpArming(gateway, db, sensors: FakeMissionSensors()).arm(
+          [_wakeUp(mon), _wakeUp(tue)],
+          profile: asked.copyWith(settings: settings),
+          tasks: tasks,
+        );
+        return [for (final a in gateway.armed) a.mission];
+      }
+
+      test(
+        "the review's toggle: only that morning, from the first ring",
+        () async {
+          expect(
+            await arm(asked.settings.copyWith(missionFlagDate: '2026-11-03')),
+            [null, const MissionPlan(MissionKind.standUp, afterSnooze: false)],
+          );
+        },
+      );
+
+      test("the sheet's switch: the morning its first dot starts", () async {
+        final flight = occurrenceFixture().copyWith(
+          id: 'flight',
+          startUtc: DateTime.utc(2026, 11, 2, 12),
+        );
+        final later = occurrenceFixture().copyWith(
+          id: 'later',
+          startUtc: DateTime.utc(2026, 11, 2, 15),
+        );
+        final flagged = asked.settings.copyWith(missionFlagIds: ['flight']);
+        expect(await arm(flagged, tasks: {'flight': flight, 'later': later}), [
+          const MissionPlan(MissionKind.standUp, afterSnooze: false),
+          null,
+        ]);
+        // Not the day's first dot: no mission.
+        expect(
+          await arm(
+            asked.settings.copyWith(missionFlagIds: ['later']),
+            tasks: {'flight': flight, 'later': later},
+          ),
+          [null, null],
+        );
+      });
+
+      test('nothing to pick from: Breathe, never Walk', () async {
+        final pick = asked.settings.copyWith(
+          missionKind: MissionKind.oneThing,
+          missionBackup: MissionKind.walk,
+          missionFlagDate: '2026-11-02',
+        );
+        expect((await arm(pick)).first?.kind, MissionKind.breathe);
+      });
     });
   });
 
