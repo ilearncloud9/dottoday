@@ -43,6 +43,10 @@ abstract class CalendarLink with _$CalendarLink {
 
     /// The event's place, device-only like the link itself (M7.5, R-17).
     String? location,
+
+    /// The repeating event it is an instance of ([ImportedItem.seriesKey]);
+    /// null for a one-off event. Device-only (docs/02 F5.7).
+    String? seriesKey,
   }) = _CalendarLink;
 
   factory CalendarLink.fromJson(Map<String, Object?> json) =>

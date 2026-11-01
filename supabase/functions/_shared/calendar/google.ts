@@ -26,6 +26,7 @@ interface GoogleEvent {
   start?: GoogleTime;
   end?: GoogleTime;
   etag?: string;
+  recurringEventId?: string;
 }
 
 interface GoogleCalendar {
@@ -48,6 +49,7 @@ export function googleEvent(e: GoogleEvent, canEdit: boolean): EventInfo | null 
     location: e.location || undefined,
     description: plainText(e.description),
     etag: e.etag ?? '',
+    seriesId: e.recurringEventId || undefined,
   };
   if (e.start.date) {
     const endDate = e.end.date ?? nextDate(e.start.date);

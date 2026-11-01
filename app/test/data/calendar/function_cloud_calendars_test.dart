@@ -119,6 +119,7 @@ void main() {
           'allDay': false,
           'writable': false,
           'etag': '"1"',
+          'seriesId': 'r1',
         },
         {
           'id': 'h1',
@@ -139,6 +140,8 @@ void main() {
     final list = (result as Ok<List<ExternalEvent>, AppFailure>).value;
     expect(list, hasLength(2));
     expect(list[0].editable, isFalse);
+    expect(list[0].seriesId, 'r1');
+    expect(list[1].seriesId, isNull);
     expect(list[0].startUtc, DateTime.utc(2026, 10, 24, 9));
     expect(list[1].allDay, isTrue);
     expect(list[1].startUtc, DateTime.utc(2026, 10, 24));

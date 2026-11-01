@@ -68,6 +68,7 @@ final class ExternalEvent {
     this.description,
     this.url,
     this.repeating = false,
+    this.seriesId,
     this.editable = true,
   });
 
@@ -85,6 +86,12 @@ final class ExternalEvent {
   /// can only change the whole series through the plugin, so such an
   /// instance is never written back (docs/09 M7.3).
   final bool repeating;
+
+  /// The repeating event this is an instance of, as its calendar names it
+  /// (the shared event id on the device, Google `recurringEventId`,
+  /// Microsoft `seriesMasterId`); null for a one-off event. Instances that
+  /// share it are one series in Dottoday (docs/02 F5.7).
+  final String? seriesId;
 
   /// Whether the event itself takes changes: false for a meeting someone
   /// else organises in a Google/Microsoft calendar (M7.4).

@@ -30,6 +30,15 @@ test('google timed and all-day events', () => {
   assert.equal(googleEvent({ id: 'bad', start: { dateTime: 'nope' }, end: { dateTime: 'nope' } }, true), null);
 });
 
+test('series ids: an instance names its repeating event, a one-off none', () => {
+  const at = { start: { dateTime: '2026-10-24T09:00:00Z' }, end: { dateTime: '2026-10-24T09:30:00Z' } };
+  assert.equal(googleEvent({ id: 'r_20261024', recurringEventId: 'r', ...at }, true)!.seriesId, 'r');
+  assert.equal(googleEvent({ id: 'once', ...at }, true)!.seriesId, undefined);
+  const graphAt = { start: { dateTime: '2026-10-24T09:00:00' }, end: { dateTime: '2026-10-24T09:30:00' } };
+  assert.equal(graphEvent({ id: 'occ', seriesMasterId: 'master', ...graphAt }, true)!.seriesId, 'master');
+  assert.equal(graphEvent({ id: 'single', ...graphAt }, true)!.seriesId, undefined);
+});
+
 test('graph events: UTC times, organiser only, all-day dates', () => {
   const e = graphEvent({
     id: 'AAMk=', subject: 'Review', '@odata.etag': 'W/"x"', isOrganizer: true,

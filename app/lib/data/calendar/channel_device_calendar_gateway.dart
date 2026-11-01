@@ -194,6 +194,8 @@ final class ChannelDeviceCalendarGateway implements DeviceCalendarGateway {
       description: r['notes'] as String?,
       url: _link(r['url']),
       repeating: r['repeating'] == true,
+      // EventKit gives every instance of a series the same identifier.
+      seriesId: r['repeating'] == true ? id : null,
     );
   }
 

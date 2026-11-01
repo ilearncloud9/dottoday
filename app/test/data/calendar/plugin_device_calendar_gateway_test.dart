@@ -206,6 +206,7 @@ void main() {
       expect(calls.last.arguments, containsPair('eventIds', ['42']));
       final event = (result as Ok<ExternalEvent?, AppFailure>).value!;
       expect(event.repeating, isTrue);
+      expect(event.seriesId, event.id, reason: 'one id for the series');
       expect(event.startUtc, seven);
     });
 

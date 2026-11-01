@@ -72,6 +72,14 @@ class CalendarLinks extends Table {
     const CustomExpression<bool>('location IS NULL OR length(location) <= 200'),
   )();
 
+  /// The repeating event it is an instance of (docs/02 F5.7): instances
+  /// sharing it are one series here. Column-level CHECK for ALTER TABLE.
+  TextColumn get seriesKey => text().nullable().check(
+    const CustomExpression<bool>(
+      'series_key IS NULL OR length(series_key) <= 512',
+    ),
+  )();
+
   @override
   Set<Column<Object>> get primaryKey => {id};
 

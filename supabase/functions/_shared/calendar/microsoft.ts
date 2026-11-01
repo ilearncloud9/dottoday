@@ -3,7 +3,8 @@ import { argbOf, check, dateMs, maxEvents, plainText, writeResultOf } from './ap
 import type { CalendarApi, CalendarInfo, EventInfo, EventPatch, WriteResult } from './api.ts';
 
 const graph = 'https://graph.microsoft.com/v1.0';
-const fields = 'id,subject,bodyPreview,location,start,end,isAllDay,isCancelled,isOrganizer';
+const fields =
+  'id,subject,bodyPreview,location,start,end,isAllDay,isCancelled,isOrganizer,seriesMasterId';
 
 interface GraphTime {
   dateTime?: string;
@@ -20,6 +21,7 @@ interface GraphEvent {
   isAllDay?: boolean;
   isCancelled?: boolean;
   isOrganizer?: boolean;
+  seriesMasterId?: string;
   '@odata.etag'?: string;
 }
 
@@ -51,6 +53,7 @@ export function graphEvent(e: GraphEvent, canEdit: boolean): EventInfo | null {
     location: e.location?.displayName || undefined,
     description: plainText(e.bodyPreview),
     etag: e['@odata.etag'] ?? '',
+    seriesId: e.seriesMasterId || undefined,
   };
   if (e.isAllDay) {
     // An all-day event's times are midnights: its dates are what count.

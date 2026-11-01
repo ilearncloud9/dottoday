@@ -395,6 +395,50 @@ void main() {
     expect(again.occurrences, isEmpty);
   });
 
+  group('series (docs/02 F5.7)', () {
+    ExternalEvent daily(String id, DateTime start, {String? series}) =>
+        ExternalEvent(
+          id: id,
+          calendarId: 'work',
+          title: 'Read the Bible and pray',
+          startUtc: start,
+          endUtc: start.add(const Duration(minutes: 30)),
+          repeating: series != null,
+          seriesId: series,
+        );
+
+    test('every instance of a repeating event keeps its series key', () {
+      final p = plan([
+        source([
+          daily('R1', nine, series: 'R1'),
+          daily('R1', nine.add(const Duration(days: 1)), series: 'R1'),
+          _event('E1', nine),
+        ]),
+      ], const []);
+      final keys = {for (final l in p.links) l.externalEventId: l.seriesKey};
+      expect(keys.values.where((k) => k == 'R1'), hasLength(2));
+      expect(keys[importKey('E1', nine.millisecondsSinceEpoch)], isNull);
+    });
+
+    test('a link gains the key when its event starts repeating', () {
+      final first = plan([
+        source([daily('R1', nine)]),
+      ], const []);
+      final p = plan([
+        source([daily('R1', nine, series: 'R1')]),
+      ], stored(first));
+      expect(p.links.single.seriesKey, 'R1');
+      expect(p.occurrences, isEmpty, reason: 'nothing else changed');
+    });
+
+    test('a series key too long to store is left out, never cut', () {
+      final long = 'x' * (maxExternalEventIdLength + 1);
+      expect(importedSeriesKey(long), isNull);
+      expect(importedSeriesKey(''), isNull);
+      expect(importedSeriesKey('R1'), 'R1');
+    });
+  });
+
   group('write-back (M7.3)', () {
     test('only timed, non-repeating events in writable calendars', () {
       final weekly = ExternalEvent(

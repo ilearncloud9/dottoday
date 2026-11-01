@@ -551,12 +551,15 @@ subtasks still reset per occurrence (R-09). Spec: docs/02 F5.7. Today every inst
 unlinked item, and a repeating event's instance can't write back on device calendars (M7.3).
 One branch, one PR (`feat/calendar-series`).
 
-- [ ] CS1 Series key on every import. `ExternalEvent.seriesId`: Google `recurringEventId`, Microsoft
+- [x] CS1 Series key on every import. `ExternalEvent.seriesId`: Google `recurringEventId`, Microsoft
   `seriesMasterId`, EventKit/Android/macOS bridge the shared event id of a repeating event; null for
   one-off events. Kept on the device-only link as `calendar_links.series_key` (local Drift schema
   bump, no Supabase migration: links don't sync). `calendar-sync` returns the field (code here;
   deploy is an owner gate). Done: importer tests for each provider's shape; a series key survives a
-  moved instance.
+  moved instance. Notes: `ExternalEvent.seriesId` sits beside `repeating` (still the device
+  rule "this instance can't be written alone"; Google/Microsoft instances can, M7.4).
+  `importedSeriesKey` drops an empty or over-long key. Local schema 12 adds the column
+  (`_addColumnOnce`, CHECK kept); `validateCalendarLink` checks it.
 - [ ] CS2 Imported series settings. A device-only table `calendar_series` (account, series key,
   colour, icon, alerts, sound, travel time, subtask templates, notes override, hidden) — the
   series-level Dottoday fields. Every import gives new instances of a series what the row holds, so

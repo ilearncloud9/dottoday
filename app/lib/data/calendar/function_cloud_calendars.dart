@@ -244,6 +244,7 @@ DeviceCalendar? _calendar(
   final location = json['location'];
   final description = json['description'];
   final etag = json['etag'];
+  final seriesId = json['seriesId'];
   return (
     ExternalEvent(
       id: id,
@@ -255,6 +256,7 @@ DeviceCalendar? _calendar(
       location: location is String ? location : null,
       description: description is String ? description : null,
       editable: json['writable'] == true,
+      seriesId: seriesId is String && seriesId.isNotEmpty ? seriesId : null,
     ),
     etag is String ? etag : '',
   );

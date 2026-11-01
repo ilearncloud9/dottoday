@@ -2974,6 +2974,20 @@ class $CalendarLinksTable extends CalendarLinks
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _seriesKeyMeta = const VerificationMeta(
+    'seriesKey',
+  );
+  @override
+  late final GeneratedColumn<String> seriesKey = GeneratedColumn<String>(
+    'series_key',
+    aliasedName,
+    true,
+    check: () => const CustomExpression<bool>(
+      'series_key IS NULL OR length(series_key) <= 512',
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2985,6 +2999,7 @@ class $CalendarLinksTable extends CalendarLinks
     lastSyncedUtc,
     readOnly,
     location,
+    seriesKey,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3068,6 +3083,12 @@ class $CalendarLinksTable extends CalendarLinks
         location.isAcceptableOrUnknown(data['location']!, _locationMeta),
       );
     }
+    if (data.containsKey('series_key')) {
+      context.handle(
+        _seriesKeyMeta,
+        seriesKey.isAcceptableOrUnknown(data['series_key']!, _seriesKeyMeta),
+      );
+    }
     return context;
   }
 
@@ -3113,6 +3134,10 @@ class $CalendarLinksTable extends CalendarLinks
         DriftSqlType.string,
         data['${effectivePrefix}location'],
       ),
+      seriesKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}series_key'],
+      ),
     );
   }
 
@@ -3138,6 +3163,10 @@ class CalendarLinkRow extends DataClass implements Insertable<CalendarLinkRow> {
   /// The event's place (M7.5, R-17): travel time is suggested before an
   /// event that has one. Column-level CHECK so ALTER TABLE keeps it.
   final String? location;
+
+  /// The repeating event it is an instance of (docs/02 F5.7): instances
+  /// sharing it are one series here. Column-level CHECK for ALTER TABLE.
+  final String? seriesKey;
   const CalendarLinkRow({
     required this.id,
     required this.userId,
@@ -3148,6 +3177,7 @@ class CalendarLinkRow extends DataClass implements Insertable<CalendarLinkRow> {
     this.lastSyncedUtc,
     required this.readOnly,
     this.location,
+    this.seriesKey,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3167,6 +3197,9 @@ class CalendarLinkRow extends DataClass implements Insertable<CalendarLinkRow> {
     if (!nullToAbsent || location != null) {
       map['location'] = Variable<String>(location);
     }
+    if (!nullToAbsent || seriesKey != null) {
+      map['series_key'] = Variable<String>(seriesKey);
+    }
     return map;
   }
 
@@ -3185,6 +3218,9 @@ class CalendarLinkRow extends DataClass implements Insertable<CalendarLinkRow> {
       location: location == null && nullToAbsent
           ? const Value.absent()
           : Value(location),
+      seriesKey: seriesKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(seriesKey),
     );
   }
 
@@ -3205,6 +3241,7 @@ class CalendarLinkRow extends DataClass implements Insertable<CalendarLinkRow> {
       lastSyncedUtc: serializer.fromJson<int?>(json['lastSyncedUtc']),
       readOnly: serializer.fromJson<bool>(json['readOnly']),
       location: serializer.fromJson<String?>(json['location']),
+      seriesKey: serializer.fromJson<String?>(json['seriesKey']),
     );
   }
   @override
@@ -3220,6 +3257,7 @@ class CalendarLinkRow extends DataClass implements Insertable<CalendarLinkRow> {
       'lastSyncedUtc': serializer.toJson<int?>(lastSyncedUtc),
       'readOnly': serializer.toJson<bool>(readOnly),
       'location': serializer.toJson<String?>(location),
+      'seriesKey': serializer.toJson<String?>(seriesKey),
     };
   }
 
@@ -3233,6 +3271,7 @@ class CalendarLinkRow extends DataClass implements Insertable<CalendarLinkRow> {
     Value<int?> lastSyncedUtc = const Value.absent(),
     bool? readOnly,
     Value<String?> location = const Value.absent(),
+    Value<String?> seriesKey = const Value.absent(),
   }) => CalendarLinkRow(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -3245,6 +3284,7 @@ class CalendarLinkRow extends DataClass implements Insertable<CalendarLinkRow> {
         : this.lastSyncedUtc,
     readOnly: readOnly ?? this.readOnly,
     location: location.present ? location.value : this.location,
+    seriesKey: seriesKey.present ? seriesKey.value : this.seriesKey,
   );
   CalendarLinkRow copyWithCompanion(CalendarLinksCompanion data) {
     return CalendarLinkRow(
@@ -3263,6 +3303,7 @@ class CalendarLinkRow extends DataClass implements Insertable<CalendarLinkRow> {
           : this.lastSyncedUtc,
       readOnly: data.readOnly.present ? data.readOnly.value : this.readOnly,
       location: data.location.present ? data.location.value : this.location,
+      seriesKey: data.seriesKey.present ? data.seriesKey.value : this.seriesKey,
     );
   }
 
@@ -3277,7 +3318,8 @@ class CalendarLinkRow extends DataClass implements Insertable<CalendarLinkRow> {
           ..write('etag: $etag, ')
           ..write('lastSyncedUtc: $lastSyncedUtc, ')
           ..write('readOnly: $readOnly, ')
-          ..write('location: $location')
+          ..write('location: $location, ')
+          ..write('seriesKey: $seriesKey')
           ..write(')'))
         .toString();
   }
@@ -3293,6 +3335,7 @@ class CalendarLinkRow extends DataClass implements Insertable<CalendarLinkRow> {
     lastSyncedUtc,
     readOnly,
     location,
+    seriesKey,
   );
   @override
   bool operator ==(Object other) =>
@@ -3306,7 +3349,8 @@ class CalendarLinkRow extends DataClass implements Insertable<CalendarLinkRow> {
           other.etag == this.etag &&
           other.lastSyncedUtc == this.lastSyncedUtc &&
           other.readOnly == this.readOnly &&
-          other.location == this.location);
+          other.location == this.location &&
+          other.seriesKey == this.seriesKey);
 }
 
 class CalendarLinksCompanion extends UpdateCompanion<CalendarLinkRow> {
@@ -3319,6 +3363,7 @@ class CalendarLinksCompanion extends UpdateCompanion<CalendarLinkRow> {
   final Value<int?> lastSyncedUtc;
   final Value<bool> readOnly;
   final Value<String?> location;
+  final Value<String?> seriesKey;
   final Value<int> rowid;
   const CalendarLinksCompanion({
     this.id = const Value.absent(),
@@ -3330,6 +3375,7 @@ class CalendarLinksCompanion extends UpdateCompanion<CalendarLinkRow> {
     this.lastSyncedUtc = const Value.absent(),
     this.readOnly = const Value.absent(),
     this.location = const Value.absent(),
+    this.seriesKey = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   CalendarLinksCompanion.insert({
@@ -3342,6 +3388,7 @@ class CalendarLinksCompanion extends UpdateCompanion<CalendarLinkRow> {
     this.lastSyncedUtc = const Value.absent(),
     this.readOnly = const Value.absent(),
     this.location = const Value.absent(),
+    this.seriesKey = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
@@ -3358,6 +3405,7 @@ class CalendarLinksCompanion extends UpdateCompanion<CalendarLinkRow> {
     Expression<int>? lastSyncedUtc,
     Expression<bool>? readOnly,
     Expression<String>? location,
+    Expression<String>? seriesKey,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -3371,6 +3419,7 @@ class CalendarLinksCompanion extends UpdateCompanion<CalendarLinkRow> {
       if (lastSyncedUtc != null) 'last_synced_utc': lastSyncedUtc,
       if (readOnly != null) 'read_only': readOnly,
       if (location != null) 'location': location,
+      if (seriesKey != null) 'series_key': seriesKey,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3385,6 +3434,7 @@ class CalendarLinksCompanion extends UpdateCompanion<CalendarLinkRow> {
     Value<int?>? lastSyncedUtc,
     Value<bool>? readOnly,
     Value<String?>? location,
+    Value<String?>? seriesKey,
     Value<int>? rowid,
   }) {
     return CalendarLinksCompanion(
@@ -3397,6 +3447,7 @@ class CalendarLinksCompanion extends UpdateCompanion<CalendarLinkRow> {
       lastSyncedUtc: lastSyncedUtc ?? this.lastSyncedUtc,
       readOnly: readOnly ?? this.readOnly,
       location: location ?? this.location,
+      seriesKey: seriesKey ?? this.seriesKey,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3431,6 +3482,9 @@ class CalendarLinksCompanion extends UpdateCompanion<CalendarLinkRow> {
     if (location.present) {
       map['location'] = Variable<String>(location.value);
     }
+    if (seriesKey.present) {
+      map['series_key'] = Variable<String>(seriesKey.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -3449,6 +3503,7 @@ class CalendarLinksCompanion extends UpdateCompanion<CalendarLinkRow> {
           ..write('lastSyncedUtc: $lastSyncedUtc, ')
           ..write('readOnly: $readOnly, ')
           ..write('location: $location, ')
+          ..write('seriesKey: $seriesKey, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -12354,6 +12409,7 @@ typedef $$CalendarLinksTableCreateCompanionBuilder =
       Value<int?> lastSyncedUtc,
       Value<bool> readOnly,
       Value<String?> location,
+      Value<String?> seriesKey,
       Value<int> rowid,
     });
 typedef $$CalendarLinksTableUpdateCompanionBuilder =
@@ -12367,6 +12423,7 @@ typedef $$CalendarLinksTableUpdateCompanionBuilder =
       Value<int?> lastSyncedUtc,
       Value<bool> readOnly,
       Value<String?> location,
+      Value<String?> seriesKey,
       Value<int> rowid,
     });
 
@@ -12474,6 +12531,11 @@ class $$CalendarLinksTableFilterComposer
 
   ColumnFilters<String> get location => $composableBuilder(
     column: $table.location,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get seriesKey => $composableBuilder(
+    column: $table.seriesKey,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -12593,6 +12655,11 @@ class $$CalendarLinksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get seriesKey => $composableBuilder(
+    column: $table.seriesKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$ProfilesTableOrderingComposer get userId {
     final $$ProfilesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -12675,6 +12742,9 @@ class $$CalendarLinksTableAnnotationComposer
 
   GeneratedColumn<String> get location =>
       $composableBuilder(column: $table.location, builder: (column) => column);
+
+  GeneratedColumn<String> get seriesKey =>
+      $composableBuilder(column: $table.seriesKey, builder: (column) => column);
 
   $$ProfilesTableAnnotationComposer get userId {
     final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
@@ -12789,6 +12859,7 @@ class $$CalendarLinksTableTableManager
                 Value<int?> lastSyncedUtc = const Value.absent(),
                 Value<bool> readOnly = const Value.absent(),
                 Value<String?> location = const Value.absent(),
+                Value<String?> seriesKey = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CalendarLinksCompanion(
                 id: id,
@@ -12800,6 +12871,7 @@ class $$CalendarLinksTableTableManager
                 lastSyncedUtc: lastSyncedUtc,
                 readOnly: readOnly,
                 location: location,
+                seriesKey: seriesKey,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -12813,6 +12885,7 @@ class $$CalendarLinksTableTableManager
                 Value<int?> lastSyncedUtc = const Value.absent(),
                 Value<bool> readOnly = const Value.absent(),
                 Value<String?> location = const Value.absent(),
+                Value<String?> seriesKey = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CalendarLinksCompanion.insert(
                 id: id,
@@ -12824,6 +12897,7 @@ class $$CalendarLinksTableTableManager
                 lastSyncedUtc: lastSyncedUtc,
                 readOnly: readOnly,
                 location: location,
+                seriesKey: seriesKey,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

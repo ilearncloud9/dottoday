@@ -31,6 +31,12 @@ export interface EventInfo {
   etag: string;
   /** Whether a move or rename can go back (timed, editable calendar). */
   writable: boolean;
+  /**
+   * The repeating event this is an instance of (Google `recurringEventId`,
+   * Microsoft `seriesMasterId`); absent for a one-off event. The app makes
+   * one series of the instances that share it (docs/02 F5.7).
+   */
+  seriesId?: string;
 }
 
 /** What write-back changes: start, end and maybe the title. */

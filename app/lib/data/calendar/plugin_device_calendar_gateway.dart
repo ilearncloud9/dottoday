@@ -216,6 +216,8 @@ final class PluginDeviceCalendarGateway implements DeviceCalendarGateway {
       description: e.description,
       url: _link(e.url),
       repeating: e.recurrenceRule != null,
+      // The plugin gives every instance of a series the same event id.
+      seriesId: e.recurrenceRule != null ? id : null,
     );
   }
 

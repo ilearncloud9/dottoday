@@ -229,6 +229,7 @@ final class _PlanBuilder {
       lastSyncedUtc: now,
       readOnly: source.calendar.readOnly || !item.writable,
       location: item.location,
+      seriesKey: item.seriesKey,
     );
     _links.add(link);
     _occurrences.add(
@@ -262,7 +263,8 @@ final class _PlanBuilder {
     if (link.etag == etag &&
         link.externalEventId == item.key &&
         link.readOnly == readOnly &&
-        link.location == item.location) {
+        link.location == item.location &&
+        link.seriesKey == item.seriesKey) {
       return;
     }
     _links.add(
@@ -272,6 +274,7 @@ final class _PlanBuilder {
         lastSyncedUtc: now,
         readOnly: readOnly,
         location: item.location,
+        seriesKey: item.seriesKey,
       ),
     );
     final o = existing.occurrence;
