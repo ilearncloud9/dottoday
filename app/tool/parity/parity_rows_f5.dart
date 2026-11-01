@@ -92,13 +92,16 @@ const f5Rows = <String, ParityRow>{
     tests: [
       'test/domain/calendar/calendar_import_plan_test.dart',
       'test/data/calendar/calendar_series_writes_test.dart',
+      'test/domain/calendar/calendar_series_edit_test.dart',
+      'test/features/timeline/editor_calendar_series_test.dart',
       'supabase/functions/_shared/calendar/calendar_test.ts',
     ],
     all: ci,
     note:
         'In progress (docs/09 "Repeating calendar events as one series"): '
-        'series keys and series settings on import; edit/delete scope and '
-        'series write-back follow.',
+        'series keys, series settings on import, This one / All in the '
+        'editor; the delete-from-calendar question and series write-back '
+        'follow.',
   ),
 };
 

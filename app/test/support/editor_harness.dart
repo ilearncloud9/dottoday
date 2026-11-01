@@ -7,6 +7,7 @@ import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'calendar_series_fakes.dart';
 import 'test_l10n.dart';
 
 import 'timeline_fakes.dart';
@@ -20,6 +21,7 @@ Future<ProviderContainer> pumpEditor(
   required FakeOccurrenceRepository repo,
   List<Series> series = const [],
   FakeSubtaskRepository? subtasks,
+  FakeCalendarSeriesRepository? calendarSeries,
 }) async {
   tester.view
     ..physicalSize = const Size(390, 2400)
@@ -31,6 +33,7 @@ Future<ProviderContainer> pumpEditor(
       occurrences: repo,
       subtasks: subtasks,
       series: series,
+      calendarSeries: calendarSeries,
       profile: testProfile(settings: const Settings(use24h: false)),
     ),
   );

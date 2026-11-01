@@ -284,7 +284,7 @@ class _FormState extends ConsumerState<_Form> {
         EditorFooter(
           task: _draft,
           onSave: _save,
-          scopedDelete: widget.task.series == null
+          scopedDelete: !widget.task.repeats
               ? null
               : () => deleteScoped(context, task: widget.task, target: _draft),
           // Back to the page: the sheet below would show a task now gone.

@@ -62,6 +62,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import 'calendar_series_fakes.dart';
 import 'calendar_fakes.dart';
 import 'export_fakes.dart';
 import 'fake_clock.dart';
@@ -293,6 +294,9 @@ final class FakeUndoService implements UndoService {
   final FakeSubtaskRepository? subtasks;
   final FakeSeriesRepository? series;
 
+  /// Takes a batch's repeating-calendar-event settings (docs/02 F5.7).
+  FakeCalendarSeriesRepository? calendarSeries;
+
   /// Takes a batch's profile (the travel banner, M5.9).
   final FakeSettingsRepository? settings;
   final _profileBefore = <String, Profile>{};
@@ -327,6 +331,7 @@ final class FakeUndoService implements UndoService {
     series?.put(batch.series);
     occurrences.put(batch.occurrences);
     subtasks?.put(batch.subtasks);
+    await calendarSeries?.upsertAll(batch.calendarSeries);
     return Ok(latest = UndoToken(id: id, expiresAtUtc: DateTime.utc(2100)));
   }
 
@@ -478,6 +483,7 @@ List<Override> timelineOverrides({
   WriteFault? writeFault,
   List<Routine> routines = const [],
   FakeRevealHintRepository? revealHints,
+  FakeCalendarSeriesRepository? calendarSeries,
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
@@ -485,6 +491,8 @@ List<Override> timelineOverrides({
   final seriesRepo = FakeSeriesRepository(series);
   final settingsRepo = FakeSettingsRepository(p);
   final hintRepo = revealHints ?? FakeRevealHintRepository();
+  final importedRepo = (calendarSeries ?? FakeCalendarSeriesRepository())
+    ..occurrences = repo;
   final undo = FakeUndoService(
     repo,
     subs,
@@ -508,7 +516,8 @@ List<Override> timelineOverrides({
     wakeUpDayRepositoryProvider.overrideWithValue(
       wakeUpDays ?? FakeWakeUpDayRepository(),
     ),
-    undoServiceProvider.overrideWithValue(undo),
+    undoServiceProvider.overrideWithValue(undo..calendarSeries = importedRepo),
+    calendarSeriesRepositoryProvider.overrideWithValue(importedRepo),
     trashServiceProvider.overrideWithValue(FakeTrashService(repo, undo)),
     clockProvider.overrideWithValue(FakeClock(now)),
     minuteTickProvider.overrideWith((ref) => minuteTicks ?? Stream.value(now)),

@@ -572,12 +572,19 @@ One branch, one PR (`feat/calendar-series`).
   a time of day is placed on the instance's own date in the series' zone. A series ended in the
   calendar removes its planned instances outright (their steps came from the series) — rejected:
   Trash per instance (one copy of the list per day).
-- [ ] CS3 Edit scope for imported series. An imported instance with a series key opens the existing
+- [x] CS3 Edit scope for imported series. An imported instance with a series key opens the existing
   edit-scope sheet with **This one** / **All** (no "This and following": splitting a series in
   someone's calendar is a bigger change; follow-up if asked). All = the `calendar_series` row plus
   every planned instance from today (done and past ones stay, as for repeating tasks). Time, length
   and title with All move every planned instance here and become a pending series write-back (CS5).
-  One batch, one Undo.
+  One batch, one Undo. Notes: `TaskView.imported` (`ImportedSeries`: account, series key, settings) is
+  read from the link; `TaskView.repeats` gates every scope question. One dispatcher
+  (`features/timeline/editor/editor_scope.dart`: `scopesFor`, `writeScoped`, `deleteScopedWrite`,
+  `listEveryTime`) serves Save, Delete, Alerts, Sound and "Use this list every time" for both kinds
+  of series. Pure `editImportedSeries` / `deleteImportedSeries` (`domain/calendar/`): All reaches
+  the target and every live planned instance from the start of today (done/skipped/earlier stay),
+  alerts and sound become each row's own (no series row to inherit from), a new time is placed on
+  each instance's own date. Delete All here only; CS4 adds the calendar question.
 - [ ] CS4 Delete scope for imported series. **This one** / **All**. All marks the series hidden (no
   instance comes back on re-import) and sends its planned instances to Trash; Undo restores both.
   When write-back is on for that calendar a second question follows: **Only in Dottoday** (default) /

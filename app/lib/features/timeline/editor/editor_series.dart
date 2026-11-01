@@ -15,6 +15,7 @@ import 'package:dottoday/domain/recurrence/repeat_rule.dart';
 import 'package:dottoday/domain/recurrence/series_edit.dart';
 import 'package:dottoday/domain/time/wall_clock.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
+import 'package:dottoday/features/timeline/editor/editor_scope.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
@@ -143,22 +144,27 @@ Future<void> pickAlerts(
     ),
   );
   if (picked == null || _same(picked, task.alerts) || !context.mounted) return;
-  final series = task.series;
-  if (series == null) return onOwn(picked);
-  final scope = await showScopeSheet(context, delete: false);
+  if (!task.repeats) return onOwn(picked);
+  final scope = await showScopeSheet(
+    context,
+    delete: false,
+    scopes: scopesFor(task),
+  );
   if (scope == null) return;
   if (scope == EditScope.thisOne) return onOwn(picked);
+  final write = writeScoped(
+    container,
+    task: task,
+    target: draft,
+    change: SeriesChange(alerts: picked),
+    scope: scope,
+  );
+  if (write == null) return;
   _report(
     messenger,
     l10n,
     container.read(undoServiceProvider),
-    await editSeries(
-      container,
-      series: series,
-      target: draft,
-      change: SeriesChange(alerts: picked),
-      scope: scope,
-    ),
+    await write,
     l10n.snackAlertsSaved(draft.title),
   );
 }
@@ -177,8 +183,7 @@ Future<bool> saveScoped(
   required Occurrence opened,
   required Occurrence draft,
 }) async {
-  final series = task.series;
-  if (series == null) return true;
+  if (!task.repeats) return true;
   final change = SeriesChange.between(
     opened,
     draft,
@@ -188,21 +193,26 @@ Future<bool> saveScoped(
   final container = ProviderScope.containerOf(context);
   final l10n = context.l10n;
   final messenger = ScaffoldMessenger.of(context);
-  final scope = await showScopeSheet(context, delete: false);
+  final scope = await showScopeSheet(
+    context,
+    delete: false,
+    scopes: scopesFor(task),
+  );
   if (scope == null) return false;
   if (scope == EditScope.thisOne) return true;
-  final result = await editSeries(
+  final write = writeScoped(
     container,
-    series: series,
+    task: task,
     target: draft,
     change: change,
     scope: scope,
   );
+  if (write == null) return true;
   _report(
     messenger,
     l10n,
     container.read(undoServiceProvider),
-    result,
+    await write,
     l10n.snackSeriesChanged(draft.title),
   );
   return true;
@@ -215,25 +225,29 @@ Future<({bool cancelled, bool done})> deleteScoped(
   required TaskView task,
   required Occurrence target,
 }) async {
-  final series = task.series;
-  if (series == null) return (cancelled: false, done: false);
+  if (!task.repeats) return (cancelled: false, done: false);
   final container = ProviderScope.containerOf(context);
   final l10n = context.l10n;
   final messenger = ScaffoldMessenger.of(context);
-  final scope = await showScopeSheet(context, delete: true);
+  final scope = await showScopeSheet(
+    context,
+    delete: true,
+    scopes: scopesFor(task),
+  );
   if (scope == null) return (cancelled: true, done: false);
   if (scope == EditScope.thisOne) return (cancelled: false, done: false);
-  final result = await deleteSeries(
+  final write = deleteScopedWrite(
     container,
-    series: series,
+    task: task,
     target: target,
     scope: scope,
   );
+  if (write == null) return (cancelled: false, done: false);
   _report(
     messenger,
     l10n,
     container.read(undoServiceProvider),
-    result,
+    await write,
     l10n.snackSeriesDeleted(target.title),
   );
   return (cancelled: false, done: true);

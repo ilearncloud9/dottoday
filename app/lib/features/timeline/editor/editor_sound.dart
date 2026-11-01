@@ -4,11 +4,11 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
-import 'package:dottoday/data/recurrence/series_actions.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/domain/recurrence/series_edit.dart';
+import 'package:dottoday/features/timeline/editor/editor_scope.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/shared/pickers/repeat/scope_sheet.dart';
@@ -72,23 +72,27 @@ Future<void> pickSound(
     builder: (_) => _SoundSheet(initial: current),
   );
   if (picked == null || picked.key == current || !context.mounted) return;
-  final series = task.series;
-  if (series == null) return onOwn(picked.key);
-  final scope = await showScopeSheet(context, delete: false);
+  if (!task.repeats) return onOwn(picked.key);
+  final scope = await showScopeSheet(
+    context,
+    delete: false,
+    scopes: scopesFor(task),
+  );
   if (scope == null) return;
   if (scope == EditScope.thisOne) return onOwn(picked.key);
-  final result = await editSeries(
+  final write = writeScoped(
     container,
-    series: series,
+    task: task,
     target: draft,
     change: SeriesChange(soundId: (to: picked.key)),
     scope: scope,
   );
+  if (write == null) return;
   reportUndoable(
     messenger,
     l10n,
     container.read(undoServiceProvider),
-    result,
+    await write,
     message: (_) => l10n.snackSeriesChanged(draft.title),
     tokenOf: (t) => t,
   );

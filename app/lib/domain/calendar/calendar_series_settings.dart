@@ -12,24 +12,30 @@ import 'package:timezone/timezone.dart' as tz;
 /// ```dart
 /// withSeriesSettings(o, s.copyWith(startMinute: 330)); // 05:30 that day
 /// ```
-Occurrence withSeriesSettings(Occurrence o, CalendarSeries series) {
+Occurrence withSeriesSettings(Occurrence o, CalendarSeries series) =>
+    atSeriesTime(
+      o.copyWith(
+        title: series.title ?? o.title,
+        notes: series.notes ?? o.notes,
+        colorKey: series.colorKey ?? o.colorKey,
+        iconKey: series.iconKey ?? o.iconKey,
+        durationMin: series.durationMin ?? o.durationMin,
+        pinned: series.pinned ?? o.pinned,
+        travelBufferMin: series.travelBufferMin ?? o.travelBufferMin,
+        energy: series.energy ?? o.energy,
+        alerts: series.alerts ?? o.alerts,
+        soundId: series.soundId ?? o.soundId,
+      ),
+      series,
+    );
+
+/// [o] at [series]' time of day on [o]'s own date (in the series' zone),
+/// or [o] as it is when no time is set.
+Occurrence atSeriesTime(Occurrence o, CalendarSeries series) {
   final start = o.startUtc;
   final minute = series.startMinute;
-  return o.copyWith(
-    title: series.title ?? o.title,
-    notes: series.notes ?? o.notes,
-    colorKey: series.colorKey ?? o.colorKey,
-    iconKey: series.iconKey ?? o.iconKey,
-    durationMin: series.durationMin ?? o.durationMin,
-    startUtc: start == null || minute == null
-        ? start
-        : _atMinute(start, minute, series.tzId ?? o.tzId),
-    pinned: series.pinned ?? o.pinned,
-    travelBufferMin: series.travelBufferMin ?? o.travelBufferMin,
-    energy: series.energy ?? o.energy,
-    alerts: series.alerts ?? o.alerts,
-    soundId: series.soundId ?? o.soundId,
-  );
+  if (start == null || minute == null) return o;
+  return o.copyWith(startUtc: _atMinute(start, minute, series.tzId ?? o.tzId));
 }
 
 /// The steps a new instance [o] starts with: [series]' list, unticked

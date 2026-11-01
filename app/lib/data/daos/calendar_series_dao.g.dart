@@ -9,6 +9,9 @@ mixin _$CalendarSeriesDaoMixin on DatabaseAccessor<AppDatabase> {
       attachedDatabase.calendarAccounts;
   $CalendarSeriesTableTable get calendarSeriesTable =>
       attachedDatabase.calendarSeriesTable;
+  $CalendarLinksTable get calendarLinks => attachedDatabase.calendarLinks;
+  $SeriesTableTable get seriesTable => attachedDatabase.seriesTable;
+  $OccurrencesTable get occurrences => attachedDatabase.occurrences;
   CalendarSeriesDaoManager get managers => CalendarSeriesDaoManager(this);
 }
 
@@ -27,4 +30,10 @@ class CalendarSeriesDaoManager {
         _db.attachedDatabase,
         _db.calendarSeriesTable,
       );
+  $$CalendarLinksTableTableManager get calendarLinks =>
+      $$CalendarLinksTableTableManager(_db.attachedDatabase, _db.calendarLinks);
+  $$SeriesTableTableTableManager get seriesTable =>
+      $$SeriesTableTableTableManager(_db.attachedDatabase, _db.seriesTable);
+  $$OccurrencesTableTableManager get occurrences =>
+      $$OccurrencesTableTableManager(_db.attachedDatabase, _db.occurrences);
 }
