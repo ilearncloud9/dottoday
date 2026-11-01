@@ -6319,6 +6319,25 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ist es der erste Punkt des Tages, hat der Morgen eine Mission';
 
   @override
+  String get wakeUpRotationTitle => 'Wechselnde Töne';
+
+  @override
+  String wakeUpRotationDetail(int min, int max) {
+    return 'Wähle $min bis $max. Jeden Morgen spielt einer, der Reihe nach.';
+  }
+
+  @override
+  String wakeUpRotationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Töne',
+      one: '1 Ton',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get healthWakeUpDnd => '„Nicht stören“ lässt deinen Wecker stumm';
 
   @override
