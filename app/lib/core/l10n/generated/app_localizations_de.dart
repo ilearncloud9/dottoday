@@ -6305,6 +6305,20 @@ class AppLocalizationsDe extends AppLocalizations {
   String get oneThingInInbox => 'im Eingang';
 
   @override
+  String get tomorrowMatters => 'Morgen zählt: sorg dafür, dass ich aufstehe';
+
+  @override
+  String get tomorrowMattersBreathe =>
+      'Morgen gibt es noch nichts zum Wählen; stattdessen kommt Atmen.';
+
+  @override
+  String get makeSureUpTitle => 'Sorg dafür, dass ich dafür wach bin';
+
+  @override
+  String get makeSureUpDetail =>
+      'Ist es der erste Punkt des Tages, hat der Morgen eine Mission';
+
+  @override
   String windDownLearnOffer(int usual, int more) {
     return 'Du stehst meist ~$usual Min. nach Wake Up auf. Wind Down $more Min. früher legen?';
   }

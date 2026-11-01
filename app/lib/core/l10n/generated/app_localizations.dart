@@ -9444,6 +9444,30 @@ abstract class AppLocalizations {
   /// **'in your Inbox'**
   String get oneThingInInbox;
 
+  /// Wind Down review toggle: flags tomorrow morning for a mission (docs/15 §8).
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow matters: make sure I\'m up'**
+  String get tomorrowMatters;
+
+  /// Under the toggle when the chosen mission can't run tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow has nothing to pick from yet; Breathe will be used instead.'**
+  String get tomorrowMattersBreathe;
+
+  /// Task sheet switch (docs/15 §8 rule 5).
+  ///
+  /// In en, this message translates to:
+  /// **'Make sure I\'m up for this'**
+  String get makeSureUpTitle;
+
+  /// Under the task sheet switch.
+  ///
+  /// In en, this message translates to:
+  /// **'If it\'s the day\'s first dot, that morning has a mission'**
+  String get makeSureUpDetail;
+
   /// Learned offer under Sleep target (docs/15 §7b).
   ///
   /// In en, this message translates to:
