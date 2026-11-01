@@ -16,11 +16,11 @@ import 'package:flutter_test/flutter_test.dart';
 // `uiLayout: "full"` for every existing profile; 9 → 10 (M17.3, docs/15
 // §3): the local wake_up_days; 10 → 11 (M17.5): the Wind Down reminder's
 // settings key moves from bedtimeReminder to windDownReminder; 11 → 12
-// (docs/02 F5.7): calendar_links.series_key.
+// (docs/02 F5.7): calendar_links.series_key and calendar_series.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
-  test('a version 11 file gains the link series key, rows kept', () async {
+  test('a version 11 file gains series keys and settings, rows kept', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig12');
     addTearDown(() => dir.delete(recursive: true));
     final file = File('${dir.path}/db.sqlite');
@@ -42,6 +42,7 @@ void main() {
     await v11.customStatement(
       'ALTER TABLE calendar_links DROP COLUMN series_key',
     );
+    await v11.customStatement('DROP TABLE calendar_series');
     await v11.customStatement('PRAGMA user_version = 11');
     await v11.close();
 
@@ -57,6 +58,7 @@ void main() {
       throwsA(isA<SqliteException>()),
       reason: 'the added column keeps its CHECK',
     );
+    expect(await v12.select(v12.calendarSeriesTable).get(), isEmpty);
   });
 
   test('a version 10 file moves bedtimeReminder to windDownReminder', () async {

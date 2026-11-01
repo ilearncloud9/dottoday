@@ -7,7 +7,9 @@ import 'package:dottoday/data/daos/calendar_links_dao.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/mappers/entity_mappers.dart';
 import 'package:dottoday/data/mappers/row_codec.dart';
+import 'package:dottoday/data/repositories/drift_calendar_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
+import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
 import 'package:dottoday/data/writes/validate_batch.dart';
 import 'package:dottoday/domain/calendar/calendar_import.dart';
@@ -16,6 +18,7 @@ import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/calendar/imported_event.dart';
 import 'package:dottoday/domain/entities/calendar.dart';
+import 'package:dottoday/domain/entities/calendar_series.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
@@ -55,6 +58,8 @@ final class CalendarImporter implements CalendarImport {
        _gateway = gateway,
        _sources = sources,
        _occurrences = DriftOccurrenceRepository(db),
+       _subtasks = DriftSubtaskRepository(db),
+       _series = DriftCalendarSeriesRepository(db),
        _effects = effects,
        _clock = clock,
        _ids = ids,
@@ -71,6 +76,8 @@ final class CalendarImporter implements CalendarImport {
   final CalendarEventReader _gateway;
   final CalendarSourceRepository _sources;
   final DriftOccurrenceRepository _occurrences;
+  final DriftSubtaskRepository _subtasks;
+  final DriftCalendarSeriesRepository _series;
   final AfterWriteEffects _effects;
   final Clock _clock;
   final IdGenerator _ids;
@@ -130,6 +137,10 @@ final class CalendarImporter implements CalendarImport {
         newId: _ids.newId,
         untouchedAccountIds: untouched,
         heldLinkIds: await _heldLinks?.call(userId) ?? const {},
+        series: {
+          for (final s in await _series.findAll(userId))
+            calendarSeriesLookup(s.accountId, s.seriesKey): s,
+        },
       );
       return await _apply(userId, plan);
     } on Exception catch (e, st) {
@@ -199,7 +210,11 @@ final class CalendarImporter implements CalendarImport {
   ) async {
     if (plan.isEmpty) return const Ok(null);
     final valid = validateBatch(
-      WriteBatch(userId: userId, occurrences: plan.occurrences),
+      WriteBatch(
+        userId: userId,
+        occurrences: plan.occurrences,
+        subtasks: plan.subtasks,
+      ),
     );
     final WriteBatch batch;
     switch (valid) {
@@ -213,6 +228,7 @@ final class CalendarImporter implements CalendarImport {
         for (final l in plan.links) _codec.encode<CalendarLinkRow>(l.toJson()),
       ]);
       await _occurrences.upsertAll(batch.occurrences);
+      await _subtasks.upsertAll(batch.subtasks);
       await _links.deleteImported(userId, plan.removeOccurrenceIds);
       await _links.deleteLinks(userId, plan.removeLinkIds);
     });

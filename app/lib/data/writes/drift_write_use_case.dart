@@ -3,6 +3,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/repositories/drift_calendar_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_reveal_hint_repository.dart';
 import 'package:dottoday/data/repositories/drift_routine_repository.dart';
@@ -41,6 +42,7 @@ final class DriftWriteUseCase implements WriteUseCase {
        _subtasks = DriftSubtaskRepository(db),
        _routines = DriftRoutineRepository(db),
        _hints = DriftRevealHintRepository(db),
+       _calendarSeries = DriftCalendarSeriesRepository(db),
        _profiles = DriftSettingsRepository(db);
 
   final AppDatabase _db;
@@ -54,6 +56,7 @@ final class DriftWriteUseCase implements WriteUseCase {
   final DriftSubtaskRepository _subtasks;
   final DriftRoutineRepository _routines;
   final DriftRevealHintRepository _hints;
+  final DriftCalendarSeriesRepository _calendarSeries;
   final DriftSettingsRepository _profiles;
 
   @override
@@ -99,6 +102,10 @@ final class DriftWriteUseCase implements WriteUseCase {
     ]);
     await rows(routineWriter(b.userId, _routines), b.routines);
     await rows(revealHintWriter(b.userId, _hints), b.revealHints);
+    await rows(
+      calendarSeriesWriter(b.userId, _calendarSeries),
+      b.calendarSeries,
+    );
     await _hlc.save();
   }
 

@@ -150,6 +150,54 @@ final class RoutineRepositoryProvider
 
 String _$routineRepositoryHash() => r'64f7c42c7858c1798e648ab1beee8000d34746d4';
 
+@ProviderFor(calendarSeriesRepository)
+final calendarSeriesRepositoryProvider = CalendarSeriesRepositoryProvider._();
+
+final class CalendarSeriesRepositoryProvider
+    extends
+        $FunctionalProvider<
+          CalendarSeriesRepository,
+          CalendarSeriesRepository,
+          CalendarSeriesRepository
+        >
+    with $Provider<CalendarSeriesRepository> {
+  CalendarSeriesRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'calendarSeriesRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$calendarSeriesRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<CalendarSeriesRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  CalendarSeriesRepository create(Ref ref) {
+    return calendarSeriesRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CalendarSeriesRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CalendarSeriesRepository>(value),
+    );
+  }
+}
+
+String _$calendarSeriesRepositoryHash() =>
+    r'9adbae9f826dcbd1f54df603799c8eaf6ec0fb8e';
+
 @ProviderFor(revealHintRepository)
 final revealHintRepositoryProvider = RevealHintRepositoryProvider._();
 

@@ -1,8 +1,11 @@
+import 'package:dottoday/domain/calendar/calendar_series_settings.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/calendar/imported_event.dart';
 import 'package:dottoday/domain/entities/calendar.dart';
+import 'package:dottoday/domain/entities/calendar_series.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
 
 /// One switched-on device calendar and the events read from it.
 final class ImportSource {
@@ -74,6 +77,7 @@ final class CalendarImportPlan {
   const CalendarImportPlan({
     this.links = const [],
     this.occurrences = const [],
+    this.subtasks = const [],
     this.removeOccurrenceIds = const {},
     this.removeLinkIds = const {},
     this.moved = const [],
@@ -86,6 +90,9 @@ final class CalendarImportPlan {
   /// soft-deleted and detached so Trash keeps them.
   final List<Occurrence> occurrences;
 
+  /// The steps new instances of a repeating event start with (F5.7).
+  final List<Subtask> subtasks;
+
   /// Gone events' occurrences with nothing of the person's on them: a
   /// copy of the calendar, removed outright (never synced, docs/05).
   final Set<String> removeOccurrenceIds;
@@ -97,6 +104,7 @@ final class CalendarImportPlan {
   bool get isEmpty =>
       links.isEmpty &&
       occurrences.isEmpty &&
+      subtasks.isEmpty &&
       removeOccurrenceIds.isEmpty &&
       removeLinkIds.isEmpty;
 }
@@ -113,6 +121,9 @@ final class CalendarImportPlan {
 ///   anywhere for a calendar now off or gone, is removed — except links
 ///   of [untouchedAccountIds] (calendars that couldn't be read: an error
 ///   never deletes anything, R-08).
+/// - A new instance of a repeating event takes what the person set for
+///   the whole series ([series], by [calendarSeriesLookup]); a series
+///   deleted with scope All brings no instance back (docs/02 F5.7).
 /// - [heldLinkIds] (edits here still on their way to the calendar,
 ///   M7.3) still match their items, so nothing is duplicated, but are
 ///   neither changed nor removed: write-back merges them.
@@ -127,6 +138,7 @@ CalendarImportPlan planCalendarImport({
   required String Function() newId,
   Set<String> untouchedAccountIds = const {},
   Set<String> heldLinkIds = const {},
+  Map<String, CalendarSeries> series = const {},
 }) {
   final out = _PlanBuilder(
     userId: userId,
@@ -134,6 +146,7 @@ CalendarImportPlan planCalendarImport({
     now: now,
     newId: newId,
     held: heldLinkIds,
+    series: series,
   );
   final bySource = {for (final s in sources) s.accountId: s};
   final inWindow = <String, List<LinkedOccurrence>>{};
@@ -205,6 +218,7 @@ final class _PlanBuilder {
     required this.now,
     required this.newId,
     required this.held,
+    required this.series,
   });
 
   final String userId;
@@ -212,13 +226,22 @@ final class _PlanBuilder {
   final DateTime now;
   final String Function() newId;
   final Set<String> held;
+  final Map<String, CalendarSeries> series;
   final _links = <CalendarLink>[];
   final _occurrences = <Occurrence>[];
+  final _subtasks = <Subtask>[];
   final _removeOccurrences = <String>{};
   final _removeLinks = <String>{};
   final _moved = <CalendarMove>[];
 
+  CalendarSeries? _seriesOf(String accountId, String? seriesKey) =>
+      seriesKey == null
+      ? null
+      : series[calendarSeriesLookup(accountId, seriesKey)];
+
   void add(ImportSource source, ImportedItem item) {
+    final settings = _seriesOf(source.accountId, item.seriesKey);
+    if (settings != null && settings.hidden) return;
     final link = CalendarLink(
       id: newId(),
       userId: userId,
@@ -232,22 +255,26 @@ final class _PlanBuilder {
       seriesKey: item.seriesKey,
     );
     _links.add(link);
-    _occurrences.add(
-      Occurrence(
-        id: newId(),
-        userId: userId,
-        title: item.title,
-        notes: item.notes,
-        colorKey: source.colorKey,
-        startUtc: item.startUtc,
-        tzId: tzId,
-        durationMin: item.durationMin,
-        source: OccurrenceSource.calendar,
-        calendarLinkId: link.id,
-        createdAt: now,
-        updatedAt: now,
-      ),
+    final o = Occurrence(
+      id: newId(),
+      userId: userId,
+      title: item.title,
+      notes: item.notes,
+      colorKey: source.colorKey,
+      startUtc: item.startUtc,
+      tzId: tzId,
+      durationMin: item.durationMin,
+      source: OccurrenceSource.calendar,
+      calendarLinkId: link.id,
+      createdAt: now,
+      updatedAt: now,
     );
+    if (settings == null) {
+      _occurrences.add(o);
+      return;
+    }
+    _occurrences.add(withSeriesSettings(o, settings));
+    _subtasks.addAll(seriesSubtasks(o, settings, now: now, newId: newId));
   }
 
   /// Applies what changed in the calendar since the last import.
@@ -306,11 +333,16 @@ final class _PlanBuilder {
     final o = existing.occurrence;
     if (existing._hidden || o == null) return;
     final before = ImportFingerprint.parse(existing.link.etag);
+    // A series instance's steps and notes came from the series (F5.7):
+    // only doing it counts, or a series ended in the calendar would
+    // fill Trash with one copy of its list per day.
+    final fromSeries =
+        _seriesOf(existing.link.accountId, existing.link.seriesKey) != null;
     final localWork =
-        existing.hasSubtasks ||
         o.status != OccurrenceStatus.planned ||
         o.actualStartUtc != null ||
-        textHash(o.notes) != before?.notes;
+        (!fromSeries &&
+            (existing.hasSubtasks || textHash(o.notes) != before?.notes));
     if (!localWork) {
       _removeOccurrences.add(o.id);
       return;
@@ -323,6 +355,7 @@ final class _PlanBuilder {
   CalendarImportPlan build() => CalendarImportPlan(
     links: _links,
     occurrences: _occurrences,
+    subtasks: _subtasks,
     removeOccurrenceIds: _removeOccurrences,
     removeLinkIds: _removeLinks,
     moved: _moved,

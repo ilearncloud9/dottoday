@@ -121,6 +121,19 @@ instance belongs to — the shared event id on iOS/macOS/Android, Google `recurr
 series here. Device-only like the rest of the link; refreshed by every import (null on upgrade until
 the next import). A key too long to store is left null, never cut (a cut key could join two series).
 
+### `calendar_series` (local only, schema 12)
+`id, user_id, account_id, series_key, title?, notes?, color_key?, icon_key?, duration_min?,
+start_minute?, tz_id?, pinned?, travel_buffer_min?, energy?, alerts?, sound_id?, subtask_template?,
+hidden, created_at, updated_at`; unique `(user_id, account_id, series_key)`. What the person set for
+every instance of one repeating calendar event (docs/02 F5.7). Every field but `hidden` is an
+override: null keeps what the calendar gives (title, notes, time, length) or the import default.
+Each import gives a new instance of the series these values and the unticked steps of
+`subtask_template` (completion stays per occurrence, R-09); `hidden` (deleted with scope All) brings
+no instance back. A series instance's steps and notes came from the series, so when the calendar
+ends the series its planned instances are removed outright rather than sent to Trash. Written through
+the write path (validated, undoable — Undo of the write that created a row clears it) but never queued
+for sync, like the imports it shapes; no server table.
+
 ### `conflicts`
 `id, user_id, entity ('series'|'occurrences'|'subtasks'|'profiles'|'routines'), entity_id, field,
 mine jsonb, theirs jsonb, created_at, resolved_at?`

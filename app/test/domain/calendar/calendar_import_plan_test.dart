@@ -1,7 +1,9 @@
 import 'package:dottoday/domain/calendar/calendar_import_plan.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/calendar/imported_event.dart';
+import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/calendar.dart';
+import 'package:dottoday/domain/entities/calendar_series.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -429,6 +431,87 @@ void main() {
       ], stored(first));
       expect(p.links.single.seriesKey, 'R1');
       expect(p.occurrences, isEmpty, reason: 'nothing else changed');
+    });
+
+    CalendarSeries settings({bool hidden = false}) => CalendarSeries(
+      id: 's1',
+      userId: _user,
+      accountId: 'acc',
+      seriesKey: 'R1',
+      notes: 'Psalm of the day',
+      startMinute: 330,
+      tzId: 'Europe/Berlin',
+      alerts: const [Alert(kind: AlertKind.atStart)],
+      subtaskTemplate: const [
+        SubtaskTemplateItem(id: 't1', title: 'Read', sortOrder: 1),
+        SubtaskTemplateItem(id: 't2', title: 'Pray', sortOrder: 2),
+      ],
+      hidden: hidden,
+      createdAt: _now,
+      updatedAt: _now,
+    );
+
+    CalendarImportPlan withSeries(
+      List<ExternalEvent> events,
+      List<LinkedOccurrence> existing,
+      CalendarSeries s,
+    ) => planCalendarImport(
+      userId: _user,
+      sources: [source(events)],
+      existing: existing,
+      fromUtc: _from,
+      toUtc: _to,
+      tzId: berlin.name,
+      now: _now,
+      newId: () => 'new-${++n}',
+      series: {calendarSeriesLookup(s.accountId, s.seriesKey): s},
+    );
+
+    test('a new instance takes what was set for the whole series', () {
+      final p = withSeries(
+        [daily('R1', nine, series: 'R1'), _event('E1', nine)],
+        const [],
+        settings(),
+      );
+      final o = p.occurrences.firstWhere((o) => o.title != 'Standup');
+      expect(o.notes, 'Psalm of the day');
+      // 05:30 in Berlin on 21 Oct (CEST, UTC+2).
+      expect(o.startUtc, DateTime.utc(2026, 10, 21, 3, 30));
+      expect(o.alerts, const [Alert(kind: AlertKind.atStart)]);
+      expect(
+        [for (final t in p.subtasks) (t.occurrenceId, t.title, t.done)],
+        [(o.id, 'Read', false), (o.id, 'Pray', false)],
+      );
+      final other = p.occurrences.firstWhere((o) => o.title == 'Standup');
+      expect(other.notes, isNull, reason: 'a one-off event is untouched');
+    });
+
+    test('a series deleted with scope All brings nothing back', () {
+      final p = withSeries(
+        [daily('R1', nine, series: 'R1')],
+        const [],
+        settings(hidden: true),
+      );
+      expect(p.isEmpty, isTrue);
+    });
+
+    test('a series ended in the calendar leaves no Trash copies', () {
+      final first = withSeries(
+        [daily('R1', nine, series: 'R1')],
+        const [],
+        settings(),
+      );
+      final existing = [
+        for (final e in stored(first))
+          LinkedOccurrence(
+            link: e.link,
+            occurrence: e.occurrence,
+            hasSubtasks: true,
+          ),
+      ];
+      final p = withSeries(const [], existing, settings());
+      expect(p.removeOccurrenceIds, hasLength(1));
+      expect(p.occurrences, isEmpty);
     });
 
     test('a series key too long to store is left out, never cut', () {

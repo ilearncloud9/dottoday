@@ -1,5 +1,6 @@
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/domain/validation/calendar_series_validator.dart';
 import 'package:dottoday/domain/validation/entity_validators.dart';
 import 'package:dottoday/domain/validation/routine_validator.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
@@ -22,6 +23,10 @@ Result<WriteBatch, ValidationFailure> validateBatch(WriteBatch batch) {
         routines: [for (final r in batch.routines) _unwrap(validateRoutine(r))],
         // Hint records carry no user text; the schema CHECKs bound them.
         revealHints: batch.revealHints,
+        calendarSeries: [
+          for (final s in batch.calendarSeries)
+            _unwrap(validateCalendarSeries(s)),
+        ],
       ),
     );
   } on _Invalid catch (e) {

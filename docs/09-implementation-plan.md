@@ -560,12 +560,18 @@ One branch, one PR (`feat/calendar-series`).
   rule "this instance can't be written alone"; Google/Microsoft instances can, M7.4).
   `importedSeriesKey` drops an empty or over-long key. Local schema 12 adds the column
   (`_addColumnOnce`, CHECK kept); `validateCalendarLink` checks it.
-- [ ] CS2 Imported series settings. A device-only table `calendar_series` (account, series key,
+- [x] CS2 Imported series settings. A device-only table `calendar_series` (account, series key,
   colour, icon, alerts, sound, travel time, subtask templates, notes override, hidden) — the
   series-level Dottoday fields. Every import gives new instances of a series what the row holds, so
   an instance appearing in the 90-day window next month already has the subtasks. Rejected: a synced
   `series` row (imports are device-only, and the materialiser would create instances the calendar
-  owns); copying from the previous instance (breaks when that one was edited "this one").
+  owns); copying from the previous instance (breaks when that one was edited "this one"). Notes:
+  `CalendarSeries` (`domain/entities/`), local schema 12, `WriteBatch.calendarSeries` (device-only
+  writer, `validateCalendarSeries`), Undo puts a changed row back and clears a created one (no
+  Trash for it). `withSeriesSettings` / `seriesSubtasks` (`domain/calendar/`) shape a new instance;
+  a time of day is placed on the instance's own date in the series' zone. A series ended in the
+  calendar removes its planned instances outright (their steps came from the series) — rejected:
+  Trash per instance (one copy of the list per day).
 - [ ] CS3 Edit scope for imported series. An imported instance with a series key opens the existing
   edit-scope sheet with **This one** / **All** (no "This and following": splitting a series in
   someone's calendar is a bigger change; follow-up if asked). All = the `calendar_series` row plus

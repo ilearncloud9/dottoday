@@ -1,3 +1,4 @@
+import 'package:dottoday/data/db/tables/calendar_series_table.dart';
 import 'package:dottoday/data/db/tables/calendar_tables.dart';
 // The generated part copies `soundIdCheck` (a column CHECK) verbatim.
 import 'package:dottoday/data/db/tables/columns.dart';
@@ -14,7 +15,7 @@ part 'app_database.g.dart';
 
 /// The local source of truth (docs/04 §4): server tables mirrored with sync
 /// columns, plus the local-only `change_log`, `sync_cursors`, `field_seen`,
-/// `local_meta` and `wake_up_days`.
+/// `local_meta`, `wake_up_days` and `calendar_series`.
 ///
 /// Open it with `openAppDatabase` (connection/connection.dart) so the
 /// SQLCipher key is applied before any statement (06 §4, ADR-0006).
@@ -24,6 +25,7 @@ part 'app_database.g.dart';
     SeriesTable,
     CalendarAccounts,
     CalendarLinks,
+    CalendarSeriesTable,
     Occurrences,
     Subtasks,
     RoutinesTable,
@@ -105,9 +107,11 @@ class AppDatabase extends _$AppDatabase {
       // is windDownReminder; the value moves from bedtimeReminder.
       if (from < 11) await _moveWindDownReminder();
       // 12 (docs/02 F5.7): which repeating calendar event a link belongs
-      // to. Null on upgrade; the next import fills it.
+      // to (null on upgrade; the next import fills it), and the local
+      // calendar_series the person sets for every instance of one.
       if (from < 12) {
         await _addColumnOnce(m, calendarLinks, calendarLinks.seriesKey);
+        await _createTableOnce(m, calendarSeriesTable);
       }
     },
     beforeOpen: (details) async {

@@ -88,6 +88,18 @@ const f5Rows = <String, ParityRow>{
       'calendar_import opens Chrome · emulator, M7.7',
     ),
   ),
+  'F5.7': ParityRow(
+    tests: [
+      'test/domain/calendar/calendar_import_plan_test.dart',
+      'test/data/calendar/calendar_series_writes_test.dart',
+      'supabase/functions/_shared/calendar/calendar_test.ts',
+    ],
+    all: ci,
+    note:
+        'In progress (docs/09 "Repeating calendar events as one series"): '
+        'series keys and series settings on import; edit/delete scope and '
+        'series write-back follow.',
+  ),
 };
 
 const f6Rows = <String, ParityRow>{
