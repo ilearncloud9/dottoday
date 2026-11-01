@@ -5007,6 +5007,19 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.wakeUpRotationCount(count));
 
   @override
+  String get healthWakeUpDnd => pseudo(super.healthWakeUpDnd);
+
+  @override
+  String get healthWakeUpDndDetail => pseudo(super.healthWakeUpDndDetail);
+
+  @override
+  String get healthWakeUpBattery => pseudo(super.healthWakeUpBattery);
+
+  @override
+  String get healthWakeUpBatteryDetail =>
+      pseudo(super.healthWakeUpBatteryDetail);
+
+  @override
   String startNudgeTitle(String title) => pseudo(super.startNudgeTitle(title));
 
   @override

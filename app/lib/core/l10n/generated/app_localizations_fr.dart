@@ -6349,6 +6349,21 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get healthWakeUpDnd => 'Ne pas déranger rend votre réveil muet';
+
+  @override
+  String get healthWakeUpDndDetail =>
+      'Autorisez les alarmes dans Ne pas déranger pour qu\'il sonne.';
+
+  @override
+  String get healthWakeUpBattery =>
+      'L\'économie de batterie peut retarder votre réveil';
+
+  @override
+  String get healthWakeUpBatteryDetail =>
+      'Laissez Dottoday fonctionner sans limite de batterie pour qu\'il soit prêt après un redémarrage.';
+
+  @override
   String startNudgeTitle(String title) {
     return 'Commencer $title ?';
   }
