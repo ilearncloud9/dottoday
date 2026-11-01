@@ -6280,6 +6280,42 @@ class AppLocalizationsFr extends AppLocalizations {
   String get missionOffOfferKeep => 'Les garder';
 
   @override
+  String rowOneThing(String label) {
+    return '$label, ta chose du jour';
+  }
+
+  @override
+  String get oneThingMeta => 'Ta chose du jour';
+
+  @override
+  String oneThingMetaJoin(String meta) {
+    return '$meta · Ta chose du jour';
+  }
+
+  @override
+  String get oneThingAsk => 'Qu\'est-ce qui compte le plus aujourd\'hui ?';
+
+  @override
+  String get oneThingEveryAnswer =>
+      'Touchez-en une. Toutes les réponses sont bonnes.';
+
+  @override
+  String get oneThingToday => 'AUJOURD\'HUI';
+
+  @override
+  String get oneThingInbox => 'BOÎTE DE RÉCEPTION';
+
+  @override
+  String get oneThingMenu => 'Choisir la chose du jour…';
+
+  @override
+  String get oneThingNothing =>
+      'Rien à choisir pour l\'instant. Planifiez d\'abord un ou deux points.';
+
+  @override
+  String get oneThingInInbox => 'dans votre boîte de réception';
+
+  @override
   String get wakeUpRotationTitle => 'Sons en alternance';
 
   @override

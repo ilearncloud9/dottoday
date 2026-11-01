@@ -18,15 +18,17 @@ void main() {
 
   // 07:22 UTC = 09:22 in Berlin: Deep work (9:00–11:00) is live.
   final now = DateTime.utc(2026, 10, 21, 7, 22);
-  DaySnapshot snapshot({int inbox = 3}) => DaySnapshot.build(
-    nowUtc: now,
-    occurrences: demoDayRows(DateTime(2026, 10, 21)),
-    inboxCount: inbox,
-    shape: DayShape(
-      wakeUtc: DateTime.utc(2026, 10, 21, 5),
-      bedUtc: DateTime.utc(2026, 10, 21, 20),
-    ),
-  );
+  DaySnapshot snapshot({int inbox = 3, String? oneThingId}) =>
+      DaySnapshot.build(
+        nowUtc: now,
+        occurrences: demoDayRows(DateTime(2026, 10, 21)),
+        inboxCount: inbox,
+        oneThingId: oneThingId,
+        shape: DayShape(
+          wakeUtc: DateTime.utc(2026, 10, 21, 5),
+          bedUtc: DateTime.utc(2026, 10, 21, 20),
+        ),
+      );
 
   test('strings are formatted on the profile clock, colours resolved', () {
     final json = snapshotStoreJson(
@@ -50,6 +52,25 @@ void main() {
       'hour24': false,
       'until': 'until {time}',
     });
+  });
+
+  test("today's one thing: its block is flagged, the label is set", () {
+    final rows = demoDayRows(DateTime(2026, 10, 21));
+    final deepId = rows.firstWhere((o) => o.title == 'Deep work: roadmap').id;
+    final json = snapshotStoreJson(
+      snapshot(oneThingId: deepId),
+      profile: testProfile(),
+      use24h: false,
+    );
+    final blocks = (json['blocks']! as List).cast<Map<String, Object?>>();
+    expect(
+      [
+        for (final b in blocks)
+          if (b['one_thing'] == true) b['id'],
+      ],
+      [deepId],
+    );
+    expect(json['labels'], containsPair('one_thing', 'Your one thing'));
   });
 
   test('24-hour clock and an empty Inbox', () {

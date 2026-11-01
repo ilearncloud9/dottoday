@@ -13,7 +13,10 @@ import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.color.ColorProvider
+import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
+import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.padding
 import androidx.glance.layout.size
 import androidx.glance.text.FontWeight
 import androidx.glance.text.TextDecoration
@@ -37,15 +40,34 @@ object DotText {
     val big = TextStyle(color = DotColors.ink, fontSize = 34.sp, fontWeight = FontWeight.Bold)
 }
 
-/** A task's dot: its colour, hollow-looking (muted) when done. */
+/**
+ * A task's dot: its colour, hollow-looking (muted) when done. Today's one
+ * thing (docs/15 §8) wears one thin accent ring outside it: an accent
+ * disc, a surface gap, then the dot (Glance draws no strokes).
+ */
 @Composable
-fun TaskDot(color: Int, done: Boolean, size: Int = 12) {
+fun TaskDot(color: Int, done: Boolean, size: Int = 12, oneThing: Boolean = false) {
+    val dot = @Composable {
+        Box(
+            modifier = GlanceModifier
+                .size(size.dp)
+                .cornerRadius((size / 2).dp)
+                .background(if (done) DotColors.hairline else FixedColor(Color(color))),
+        ) {}
+    }
+    if (!oneThing) return dot()
+    val ring = size + 8
     Box(
-        modifier = GlanceModifier
-            .size(size.dp)
-            .cornerRadius((size / 2).dp)
-            .background(if (done) DotColors.hairline else FixedColor(Color(color))),
-    ) {}
+        modifier = GlanceModifier.size(ring.dp).cornerRadius((ring / 2).dp)
+            .background(DotColors.accent).padding(1.5.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Box(
+            modifier = GlanceModifier.fillMaxSize().cornerRadius((ring / 2).dp)
+                .background(DotColors.surface),
+            contentAlignment = Alignment.Center,
+        ) { dot() }
+    }
 }
 
 /** Opens [link] (a `dottoday://` deep link, M5.0) in the app. */

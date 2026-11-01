@@ -1,10 +1,13 @@
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/wake_up/mission.dart';
 import 'package:dottoday/domain/wake_up/mission_progress.dart';
 import 'package:dottoday/domain/wake_up/mission_sensors.dart';
+import 'package:dottoday/domain/wake_up/one_thing.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/mission_screen.dart';
 import 'package:dottoday/shared/dot/focus_ring.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +36,7 @@ Future<_Handles> _pump(
   WidgetTester tester,
   MissionKind kind, {
   FakeMissionSensors? sensors,
+  List<Occurrence>? rows,
   Settings settings = const Settings(
     wakeUpAlarm: true,
     missionMode: MissionMode.always,
@@ -63,7 +67,9 @@ Future<_Handles> _pump(
     ProviderScope(
       overrides: timelineOverrides(
         now: todayTestNow,
-        occurrences: FakeOccurrenceRepository(demoDayRows(todayTestDate)),
+        occurrences: FakeOccurrenceRepository(
+          rows ?? demoDayRows(todayTestDate),
+        ),
         profile: testProfile(settings: settings),
         alarmGateway: gateway,
         missionSensors: fake,
@@ -244,6 +250,42 @@ void main() {
     });
   });
 
+  group("Pick today's one thing (M17.7b)", () {
+    testWidgets('one tap stores the pick and ends the morning', (tester) async {
+      final h = await _pump(tester, MissionKind.oneThing);
+      await _settle(tester);
+      expect(find.text('What matters most today?'), findsOneWidget);
+      expect(find.text('Tap one. Every answer is right.'), findsOneWidget);
+      final first = _firstOpenDot();
+      await tester.tap(find.text(first.title).first);
+      await _settle(tester);
+      expect(h.gateway.dismissed, [_id]);
+      expect(find.text('card'), findsOneWidget);
+      final profile = await _container(
+        tester,
+      ).read(settingsRepositoryProvider).findLocalProfile();
+      expect(
+        profile!.settings.oneThing,
+        OneThing(date: _date, occurrenceId: first.id),
+      );
+      expect(h.days[_date]?.missionSkippedAtUtc, isNull);
+    });
+
+    testWidgets('a day down to one dot just ends the morning', (tester) async {
+      final h = await _pump(
+        tester,
+        MissionKind.oneThing,
+        rows: [_firstOpenDot()],
+      );
+      await _settle(tester);
+      expect(h.gateway.dismissed, [_id]);
+      final profile = await _container(
+        tester,
+      ).read(settingsRepositoryProvider).findLocalProfile();
+      expect(profile!.settings.oneThing, isNull);
+    });
+  });
+
   testWidgets('pushes the re-ring out while open', (tester) async {
     final h = await _pump(tester, MissionKind.walk);
     expect(h.gateway.kept, 1);
@@ -260,3 +302,12 @@ void main() {
     handle.dispose();
   });
 }
+
+/// The demo day's first dot still ahead at [todayTestNow].
+Occurrence _firstOpenDot() => ([
+  for (final o in demoDayRows(todayTestDate))
+    if (o.startUtc != null && o.endUtc!.isAfter(todayTestNow)) o,
+]..sort((a, b) => a.startUtc!.compareTo(b.startUtc!))).first;
+
+ProviderContainer _container(WidgetTester tester) =>
+    ProviderScope.containerOf(tester.element(find.byType(Navigator).first));

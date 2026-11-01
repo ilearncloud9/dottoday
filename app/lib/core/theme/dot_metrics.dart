@@ -110,6 +110,11 @@ abstract final class DotSize {
   /// Outline of an upcoming dot (2.5 at row size, 2 in pickers / Mac rows).
   static const double dotOutline = 2.5;
   static const double smallDotOutline = 2;
+
+  /// Today's one thing (docs/15 §8): a thin accent ring just outside the
+  /// dot, its fill and state unchanged.
+  static const double oneThingRing = 2;
+  static const double oneThingGap = 3;
   static const double dayDot = 44;
 
   /// The day dot on the Wake Up card (docs/15 §5 step 2).

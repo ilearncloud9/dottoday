@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/time/day_dot_geometry.dart';
+import 'package:dottoday/domain/wake_up/one_thing.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_parts.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_state.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
@@ -88,6 +89,10 @@ class _WakeUpCardBodyState extends State<WakeUpCardBody> {
             ),
           ],
         ],
+        if (m.oneThingInbox case final o? when !m.lowEnergy) ...[
+          const SizedBox(height: DotSpace.l),
+          WakeUpOneThing(occurrence: o, onOpen: () => widget.onOpenTask(o.id)),
+        ],
         if (whole) ..._chips(context),
         if (m.offerMissionsOff && widget.onMissionsOff != null) ...[
           const SizedBox(height: DotSpace.l),
@@ -158,6 +163,7 @@ class _WakeUpCardBodyState extends State<WakeUpCardBody> {
         range: context.l10n.threadTimeRange,
         duration: (min) => formatDurationShort(context.l10n, min),
       ),
+      oneThingId: oneThingOn(m.settings.oneThing, m.dateKey),
     );
     return [
       for (final e in entries)

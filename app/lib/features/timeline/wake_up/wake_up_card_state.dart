@@ -12,6 +12,7 @@ import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:dottoday/domain/scheduling/low_energy.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/domain/wake_up/mission.dart';
+import 'package:dottoday/domain/wake_up/one_thing.dart';
 import 'package:dottoday/domain/wake_up/wake_up_card.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:dottoday/features/timeline/state/day_ends.dart';
@@ -35,7 +36,12 @@ final class WakeUpCardModel {
     required this.steps,
     required this.nextWakeUtc,
     this.offerMissionsOff = false,
+    this.oneThingInbox,
   });
+
+  /// Today's one thing when it waits in the Inbox (docs/15 §8): a dot of
+  /// the day is ringed in place instead.
+  final Occurrence? oneThingInbox;
 
   final TimelineData data;
   final DayShape shape;
@@ -92,6 +98,8 @@ Future<WakeUpCardModel> wakeUpCard(Ref ref) async {
       .watch(occurrenceRepositoryProvider)
       .watchInbox(data.userId)
       .first;
+  final dateKey = wakeUpDateKey(now, data.day.location.name);
+  final oneThing = oneThingOn(data.settings.oneThing, dateKey);
   final ends = await ref.watch(dayEndsProvider(date).future);
   final skips = await ref
       .watch(wakeUpDayRepositoryProvider)
@@ -102,8 +110,9 @@ Future<WakeUpCardModel> wakeUpCard(Ref ref) async {
     nextWakeUtc: ends.nextWakeUtc,
     day: day,
     nowUtc: now,
-    dateKey: wakeUpDateKey(now, data.day.location.name),
+    dateKey: dateKey,
     inbox: inbox.length,
+    oneThingInbox: inbox.where((o) => o.id == oneThing).firstOrNull,
     steps: steps,
     offerMissionsOff: missionOffOfferDue(
       data.settings,

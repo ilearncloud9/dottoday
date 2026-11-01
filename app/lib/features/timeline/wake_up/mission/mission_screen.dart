@@ -14,6 +14,7 @@ import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/breathe_mission.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/cant_right_now.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/catch_dot_mission.dart';
+import 'package:dottoday/features/timeline/wake_up/mission/one_thing_mission.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/sensor_mission.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -122,7 +123,7 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
     MissionKind.light => l10n.missionLineLight,
     MissionKind.breathe => l10n.missionLineBreathe,
     MissionKind.catchDot => l10n.missionLineCatchDot(catchTaps),
-    MissionKind.oneThing => l10n.missionOneThing,
+    MissionKind.oneThing => l10n.oneThingAsk,
   };
 
   Widget _mission(int steps) {
@@ -130,9 +131,7 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
     return switch (widget.kind) {
       MissionKind.breathe => BreatheMission(onDone: done),
       MissionKind.catchDot => CatchDotMission(onDone: done),
-      // Pick today's one thing lands in M17.7b; until then it can't be
-      // chosen, and an old link just ends the morning.
-      MissionKind.oneThing => _EndAtOnce(onEnd: done),
+      MissionKind.oneThing => OneThingMission(onDone: done),
       _ => SensorMission(
         kind: widget.kind,
         steps: steps,
@@ -142,24 +141,4 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
       ),
     };
   }
-}
-
-class _EndAtOnce extends StatefulWidget {
-  const _EndAtOnce({required this.onEnd});
-
-  final VoidCallback onEnd;
-
-  @override
-  State<_EndAtOnce> createState() => _EndAtOnceState();
-}
-
-class _EndAtOnceState extends State<_EndAtOnce> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => widget.onEnd());
-  }
-
-  @override
-  Widget build(BuildContext context) => const SizedBox.shrink();
 }
