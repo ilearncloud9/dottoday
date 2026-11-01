@@ -61,6 +61,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - M10.1: The thinking help behind Break it down, brain-dump and length suggestions now runs on your device — Apple Intelligence on iPhone and Mac, Gemini Nano on supported Android phones, Chrome's built-in model on the web — and falls back to your own history and simple rules where there is none. Nothing you type goes to a server; Settings › Privacy explains it and can clear what was kept.
 
 ### Fixed
+- Haptics in app now play whenever the switch is on, even with iPhone's System Haptics or Android's Touch feedback turned off. Turning vibration off for the whole phone still silences them.
 - Trying out sounds plays one at a time: picking another sound stops the one before, and Done (or closing the list, or leaving Sounds) stops it, on every device.
 - Add keeps your typing when Today finishes loading behind it: on a slow start the day's keyboard shortcuts no longer take the title field's focus.
 - Screen readers can open the month from Today's date title.
