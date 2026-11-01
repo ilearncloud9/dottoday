@@ -105,8 +105,7 @@ void main() {
     height: 800,
     widths: const {'compact'},
     overrides: _overrides(FakeMissionSensors()),
-    build: (_) => _still(
-      const MissionScreen(date: _date, kind: MissionKind.catchDot),
-    ),
+    build: (_) =>
+        _still(const MissionScreen(date: _date, kind: MissionKind.catchDot)),
   );
 }
