@@ -57,6 +57,7 @@ List<ThreadEntry> threadEntries({
   Set<String> unstick = const {},
   bool showFreeTime = true,
   Map<String, ThreadReality>? reality,
+  String? oneThingId,
 }) {
   final sorted = [
     for (final o in blocks)
@@ -70,6 +71,7 @@ List<ThreadEntry> threadEntries({
     smallestSteps[o.id],
     unstick.contains(o.id),
     reality == null ? null : reality[o.id] ?? const ThreadReality(),
+    o.id == oneThingId,
   );
   final (:before, :inside, :after) = _split(sorted, shape);
   final out = <ThreadEntry>[
@@ -188,6 +190,7 @@ ThreadTask _task(
   String? smallestStep,
   bool unstick = false,
   ThreadReality? reality,
+  bool oneThing = false,
 ]) {
   final start = o.startUtc!;
   final end = o.endUtc!;
@@ -223,6 +226,7 @@ ThreadTask _task(
     reality: reality,
     startUtc: start,
     minutes: o.durationMin,
+    oneThing: oneThing,
   );
 }
 
@@ -262,6 +266,7 @@ ThreadTask _withOverrun(
     travel: task.travel,
     startUtc: task.startUtc,
     minutes: task.minutes,
+    oneThing: task.oneThing,
   );
 }
 

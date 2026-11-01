@@ -60,8 +60,13 @@ class TaskDot extends StatelessWidget {
     this.size = DotSize.rowDot,
     this.onTap,
     this.tapHint,
+    this.oneThing = false,
     super.key,
   });
+
+  /// Today's one thing (docs/15 §8): the single accent ring outside the
+  /// dot. The row says "Your one thing" too, so it never relies on colour.
+  final bool oneThing;
 
   final TaskColor color;
   final TaskIcon icon;
@@ -97,6 +102,7 @@ class TaskDot extends StatelessWidget {
           state: state,
           sweep: sweep,
           ring: _ring(size),
+          halo: oneThing ? t.colors.accent : null,
         ),
         child: child,
       ),
@@ -151,6 +157,7 @@ final class _DotPainter extends CustomPainter {
     required this.state,
     required this.sweep,
     required this.ring,
+    this.halo,
   });
 
   final Color color;
@@ -159,9 +166,23 @@ final class _DotPainter extends CustomPainter {
   final double sweep;
   final double ring;
 
+  /// The one-thing ring's colour, or null; drawn outside the dot's box
+  /// so the layout around it never moves.
+  final Color? halo;
+
   @override
   void paint(Canvas canvas, Size size) {
     final c = size.center(Offset.zero);
+    if (halo case final h?) {
+      canvas.drawCircle(
+        c,
+        size.shortestSide / 2 + DotSize.oneThingGap + DotSize.oneThingRing / 2,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = DotSize.oneThingRing
+          ..color = h,
+      );
+    }
     canvas.drawCircle(c, size.shortestSide / 2, Paint()..color = fill);
     final r = size.shortestSide / 2 - ring / 2;
     final stroke = Paint()
@@ -216,5 +237,6 @@ final class _DotPainter extends CustomPainter {
       old.fill != fill ||
       old.state != state ||
       old.sweep != sweep ||
-      old.ring != ring;
+      old.ring != ring ||
+      old.halo != halo;
 }

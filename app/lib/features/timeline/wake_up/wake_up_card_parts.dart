@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/time/day_dot_geometry.dart';
 import 'package:dottoday/shared/dot/day_dot.dart';
@@ -140,14 +141,68 @@ class WakeUpNextDots extends StatelessWidget {
               color: task.color,
               icon: task.icon,
               state: task.state,
-              label: context.l10n.rowLabel(task.title, task.timeRange),
+              label: taskRowLabel(context.l10n, task),
               size: DotSize.rowDot,
               onTap: () => onOpen(task.id),
+              oneThing: task.oneThing,
             ),
         ],
       ),
     ],
   );
+}
+
+/// Today's one thing waiting in the Inbox (docs/15 §8): its ringed dot,
+/// title and "Your one thing · in your Inbox". Tapping opens its sheet.
+class WakeUpOneThing extends StatelessWidget {
+  const WakeUpOneThing({
+    required this.occurrence,
+    required this.onOpen,
+    super.key,
+  });
+
+  final Occurrence occurrence;
+  final VoidCallback onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    final o = occurrence;
+    return Semantics(
+      button: true,
+      label: l10n.rowOneThing(l10n.rowLabel(o.title, l10n.oneThingInInbox)),
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: onOpen,
+        borderRadius: BorderRadius.circular(DotRadii.card),
+        child: Row(
+          spacing: DotSpace.m,
+          children: [
+            TaskDot(
+              color: TaskColor.fromKey(o.colorKey),
+              icon: TaskIcon.fromKey(o.iconKey),
+              state: DotState.upcoming,
+              label: o.title,
+              oneThing: true,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(o.title, style: t.styles.rowTitle),
+                  Text(
+                    l10n.oneThingMetaJoin(l10n.oneThingInInbox),
+                    style: t.styles.rowMeta,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 /// Today's events and the Inbox count, each only while its switch is on

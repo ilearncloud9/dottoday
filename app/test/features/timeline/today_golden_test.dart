@@ -4,6 +4,7 @@ library;
 
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/wake_up/one_thing.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
@@ -23,6 +24,7 @@ Widget _today({
   DateTime? date,
   Set<String>? picked,
   String? editing,
+  String? oneThing,
 }) => ProviderScope(
   overrides: [
     if (editing != null)
@@ -40,7 +42,13 @@ Widget _today({
       ),
       subtasks: FakeSubtaskRepository(demoDaySubtasks(DateTime(2026, 10, 21))),
       profile: testProfile(
-        settings: const Settings(use24h: false, firstDayOfWeek: 7),
+        settings: Settings(
+          use24h: false,
+          firstDayOfWeek: 7,
+          oneThing: oneThing == null
+              ? null
+              : OneThing(date: '2026-10-21', occurrenceId: oneThing),
+        ),
       ).copyWith(displayName: 'Kody'),
     ),
   ],
@@ -95,6 +103,14 @@ void main() {
     height: 844,
     widths: const {'compact', 'medium'},
     build: (_) => _today(),
+  );
+  // Today's one thing (docs/15 §8, M17.7b): the accent ring outside the
+  // dot and "Your one thing" in the row's small text.
+  goldenMatrix(
+    'today_one_thing',
+    height: 1100,
+    widths: const {'compact', 'expanded'},
+    build: (_) => _today(oneThing: _ids(['Design review']).single),
   );
   // T5: the Mac/web three-day spread (`A-mac-today-alt1-spread`, M3e.1).
   goldenMatrix(

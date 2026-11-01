@@ -4,6 +4,7 @@ import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
@@ -15,6 +16,7 @@ import 'package:dottoday/features/inbox/widgets/inbox_commands.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_filters.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_fit.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_list.dart';
+import 'package:dottoday/features/inbox/widgets/one_thing_meta.dart';
 import 'package:dottoday/features/inbox/widgets/wide_inbox_header.dart';
 import 'package:dottoday/shared/dot/inbox_row.dart';
 import 'package:dottoday/shared/dot/pointer_draggable.dart';
@@ -111,6 +113,7 @@ class WideInbox extends ConsumerWidget {
     List<Occurrence> shown,
     Map<String, WeekFit?> fitOf,
   ) {
+    final oneThingId = ref.watch(todayOneThingIdProvider);
     final done = [
       for (final o in items)
         if (o.status == OccurrenceStatus.done) o,
@@ -128,7 +131,8 @@ class WideInbox extends ConsumerWidget {
               ref.watch(inboxSortChoiceProvider) == InboxSort.added &&
               ref.watch(inboxFilterChoiceProvider) == InboxFilter.all,
           commands: commands,
-          row: (o, s) => _row(context, o, fitOf[o.id], s),
+          row: (o, s) =>
+              _row(context, o, fitOf[o.id], s, oneThing: o.id == oneThingId),
           after: (_) => const SizedBox(height: DotSpace.s),
         ),
         if (done.isNotEmpty) ...[
@@ -148,8 +152,9 @@ class WideInbox extends ConsumerWidget {
     BuildContext context,
     Occurrence o,
     WeekFit? fit,
-    InboxRowState s,
-  ) {
+    InboxRowState s, {
+    required bool oneThing,
+  }) {
     final l10n = context.l10n;
     final created = tz.TZDateTime.from(o.createdAt, zone);
     void place() {
@@ -158,7 +163,12 @@ class WideInbox extends ConsumerWidget {
 
     final row = InboxRow(
       title: o.title,
-      meta: fits.added(formatDurationShort(l10n, o.durationMin), created),
+      meta: inboxMetaWithOneThing(
+        l10n,
+        fits.added(formatDurationShort(l10n, o.durationMin), created),
+        oneThing: oneThing,
+      ),
+      oneThing: oneThing,
       fit: rooms == null ? null : fits.fit(fit),
       titleFirst: true,
       swipe: false,

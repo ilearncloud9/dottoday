@@ -1,4 +1,5 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/clock/minute_tick.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -6,6 +7,7 @@ import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/wake_up/channel_mission_sensors.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/wake_up/mission_sensors.dart';
+import 'package:dottoday/domain/wake_up/one_thing.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -16,6 +18,21 @@ part 'wake_up_providers.g.dart';
 /// alarm id's day (docs/15 §3).
 String wakeUpDateKey(DateTime nowUtc, String tzId) =>
     formatRouteDate(tz.TZDateTime.from(nowUtc, tz.getLocation(tzId)));
+
+/// The occurrence id of today's one thing (docs/15 §8), or null: none
+/// picked, or picked on another day (it clears when the day ends). Every
+/// surface that rings it reads this, so they agree.
+@riverpod
+String? todayOneThingId(Ref ref) {
+  final profile = ref.watch(currentProfileProvider).value;
+  if (profile == null) return null;
+  final now =
+      ref.watch(minuteTickProvider).value ?? ref.watch(clockProvider).nowUtc();
+  return oneThingOn(
+    profile.settings.oneThing,
+    wakeUpDateKey(now, profile.tzId),
+  );
+}
 
 /// The sensors the missions read (docs/15 §8); tests override it.
 @Riverpod(keepAlive: true)

@@ -146,7 +146,8 @@ class MissionGroup extends ConsumerWidget {
 }
 
 /// The Mission row: which mission, each greyed with its reason when this
-/// phone can't run it (15 §8). Pick today's one thing arrives in M17.7b.
+/// phone can't run it (15 §8). Pick today's one thing says once that it
+/// needs two dots.
 class _KindRow extends ConsumerWidget {
   const _KindRow({required this.settings});
 
@@ -158,6 +159,7 @@ class _KindRow extends ConsumerWidget {
     MissionKind.light,
     MissionKind.breathe,
     MissionKind.catchDot,
+    MissionKind.oneThing,
   ];
 
   @override
@@ -194,6 +196,7 @@ class _KindRow extends ConsumerWidget {
             detail: switch (support[k]) {
               MissionSupport.missing => l10n.missionSensorMissing,
               MissionSupport.denied => l10n.missionSensorDenied,
+              _ when k == MissionKind.oneThing => l10n.missionOneThingNeeds,
               _ when k.onScreen => l10n.missionOnScreenNote,
               _ => null,
             },
