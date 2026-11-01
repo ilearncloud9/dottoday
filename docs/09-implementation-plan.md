@@ -513,7 +513,11 @@ Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit 
     - The learned "you usually get up ~12 min after Wake Up" offer (`windDownLearnOffer`) needs the median from `wake_up_days`. It is a follow-up below.
     - The store pitch line goes to M17.6 Discovery.
 - [ ] M17.6 Discovery (§11) on the M16 hint scheduler.
-- [ ] M17.7 W5 Physical dismissal. Its sensor plugins are a must-ask.
+- [ ] M17.7 W5 Missions (15 §8, rewritten with the owner's rules and missions, 2026-11-01). Sensors through an in-house bridge (Kotlin `SensorManager`, Swift Core Motion + camera exposure), no new dependency (owner). Three PRs:
+  - [ ] M17.7a Engine, modes and Settings: `missionMode` and the morning decision (the snooze rule, chosen days, flags), the skip rules, the 10-minute cap, the skip offer, iOS Stop re-ring, the mission screen; Stand up, Walk, Light, Breathe, Catch the dot.
+  - [ ] M17.7b Pick today's one thing: the pick screen, the one-thing ring + "Your one thing" on Today, the Wake Up card and the widgets (owner: ring + label).
+  - [ ] M17.7c Make sure I'm up: the Wind Down review toggle and the task sheet switch, one morning each; the backup mission.
+  - Real-device gate (owner): iOS mission morning, app force-quit, tap Stop → the app opens on the mission and rings again ~1 min later. Only if that fails, a backup alarm with an ADR.
 
 Follow-ups (M17):
 - [ ] "Vary the sound": choose which 2–6 Start sounds rotate (15 §9); M17.2 rotates through all but Insistent.

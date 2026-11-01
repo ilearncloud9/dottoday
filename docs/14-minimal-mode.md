@@ -53,6 +53,14 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | W2 Wake Up card | M17 | Simplified | Opens only after "I'm up" (or its notification), never by itself on first open. The first dot and Start the day; the late-start line when it applies; the day dot, the next dots and the chips behind "Show my day" (docs/15 §10) |
 | W3 Wake Up Check | M17 | Shown | Identical: already one line and one Start (docs/15 §10); its settings under More options |
 | W4 + W6 Sleep target and the night | M17 | Shown | Unchanged: the onboarding sleep slider, the night on the day dot, the review's first line and the Wind Down nudge's words are geometry and copy, not chrome (docs/15 §7b) |
+| W5 Missions (modes, rules, skip offer) | M17 | Simplified | Settings › Wake Up shows one Missions row (the mode); kind, steps, days and backup under More options. The mission screen is the same: the ring, one line and "Can't right now" (docs/15 §8) |
+| W5 Stand up | M17 | Shown | Identical: one line and a live "upright" state |
+| W5 Walk | M17 | Shown | Identical: one line and the step count |
+| W5 Light | M17 | Shown | Identical: one line and the light meter's text state |
+| W5 Breathe | M17 | Shown | Identical: the ring and "Hold · Let go" |
+| W5 Catch the dot | M17 | Shown | Identical: one moving dot and the count |
+| W5 Pick today's one thing | M17 | Shown | The pick screen is identical; the ring and "Your one thing" show on minimal Today too, since it is the day's one decision |
+| W5 Make sure I'm up | M17 | Simplified | The Wind Down review's toggle shows; the task sheet's switch sits under More options |
 | B1 actual timestamps | M6.5 | Shown | Invisible; recorded on tap and Done exactly as in full mode |
 | B2 subtask durations | M6.5 | Hidden | Appear only once Break it down has been used on that task |
 | A1 Live Activity / ongoing notification | M9 | Shown | Unchanged; this surface is minimal mode's heart |
