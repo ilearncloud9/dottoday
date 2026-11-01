@@ -309,7 +309,7 @@ A new Settings section **Wake Up** sits directly under Day shape (Wake Up / Wind
 | Anchor | `anchor` | Wake Up time / first dot | Wake Up time | alarmEnabled | W1 and W4 share it |
 | Days | `days` | weekday set | days with a thread | alarmEnabled | "Only days I've planned" is the default option; explicit weekdays optional |
 | Sound | `soundId` | picker from the alarm tier | first alarm cue | alarmEnabled | Preview button; "None (vibrate / watch)" allowed |
-| Vary the sound | `soundMode` | off / rotate (choose 2–6) | off | alarmEnabled | W1 rotation |
+| Vary the sound | `soundMode` | off / rotate (choose 2–6) | off | alarmEnabled | W1 rotation. As built: `wakeUpVarySound` + `wakeUpRotationIds`, by default the three calmest Start sounds (Gentle, Soft bells, Dawn chorus; owner 2026-11-01) |
 | Volume ramp | `rampSeconds` | 0 / 15 / 30 / 60 | 30 | Android only | iOS: hidden, AlarmKit owns volume |
 | Snooze | `snoozeAllowed` | switch | on | alarmEnabled |  |
 | Snooze length | `snoozeMin` | 5 / 9 / 10 / 15 | 9 | snoozeAllowed |  |

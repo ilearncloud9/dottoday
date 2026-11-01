@@ -4954,6 +4954,17 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get missionOffOfferKeep => pseudo(super.missionOffOfferKeep);
 
   @override
+  String get wakeUpRotationTitle => pseudo(super.wakeUpRotationTitle);
+
+  @override
+  String wakeUpRotationDetail(int min, int max) =>
+      pseudo(super.wakeUpRotationDetail(min, max));
+
+  @override
+  String wakeUpRotationCount(int count) =>
+      pseudo(super.wakeUpRotationCount(count));
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

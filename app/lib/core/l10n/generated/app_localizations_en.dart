@@ -6231,6 +6231,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get missionOffOfferKeep => 'Keep them';
 
   @override
+  String get wakeUpRotationTitle => 'Sounds to vary';
+
+  @override
+  String wakeUpRotationDetail(int min, int max) {
+    return 'Pick $min to $max. One plays each morning, in turn.';
+  }
+
+  @override
+  String wakeUpRotationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sounds',
+      one: '1 sound',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

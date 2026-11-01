@@ -9384,6 +9384,24 @@ abstract class AppLocalizations {
   /// **'Keep them'**
   String get missionOffOfferKeep;
 
+  /// Settings row and sheet title: which Start sounds Vary the sound rotates (docs/15 §9).
+  ///
+  /// In en, this message translates to:
+  /// **'Sounds to vary'**
+  String get wakeUpRotationTitle;
+
+  /// Under the sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick {min} to {max}. One plays each morning, in turn.'**
+  String wakeUpRotationDetail(int min, int max);
+
+  /// Row value: how many sounds rotate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 sound} other{{count} sounds}}'**
+  String wakeUpRotationCount(int count);
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

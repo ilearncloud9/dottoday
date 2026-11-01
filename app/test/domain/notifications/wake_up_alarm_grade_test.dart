@@ -4,6 +4,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_planner.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
+import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -130,16 +131,55 @@ void main() {
       expect(wakeUpSound(vary, day), wakeUpSound(vary, DateTime(2026, 11, 2)));
     });
 
-    test('varied: each next day the next cue, never the insistent one', () {
+    test('varied: by default the three calmest Start sounds, in turn', () {
       const vary = Settings(wakeUpVarySound: true);
-      final week = [
-        for (var i = 0; i < wakeUpRotation.length; i++)
+      final rotation = wakeUpRotation(vary);
+      expect(rotation.map((s) => s.id).toSet(), {
+        'start.gentle',
+        'start.bells',
+        'start.dawn_chorus',
+      });
+      final days = [
+        for (var i = 0; i < 6; i++)
           wakeUpSound(vary, day.add(Duration(days: i))),
       ];
-      expect(week.toSet(), hasLength(wakeUpRotation.length));
-      expect(week.map((s) => s.id), isNot(contains(insistentStartSoundId)));
-      final first = wakeUpRotation.indexOf(week.first);
-      expect(week[1], wakeUpRotation[(first + 1) % wakeUpRotation.length]);
+      expect(days.toSet(), hasLength(3));
+      final first = rotation.indexOf(days.first);
+      expect(days[1], rotation[(first + 1) % rotation.length]);
+      expect(days[3], days.first);
+    });
+
+    test('varied: the set the user picked, Insistent only if picked', () {
+      const picked = Settings(
+        wakeUpVarySound: true,
+        wakeUpRotationIds: ['start.rain', 'start.insistent'],
+      );
+      expect(wakeUpRotation(picked).map((s) => s.id).toSet(), {
+        'start.rain',
+        insistentStartSoundId,
+      });
+    });
+
+    test('varied: fewer than two usable cues falls back to the calm three', () {
+      const odd = Settings(
+        wakeUpVarySound: true,
+        wakeUpRotationIds: ['start.rain', 'quiet.tick', 'gone'],
+      );
+      expect(
+        wakeUpRotation(odd).map((s) => s.id).toSet(),
+        defaultWakeUpRotationIds.toSet(),
+      );
+    });
+
+    test('varied: at most six cues', () {
+      final many = Settings(
+        wakeUpVarySound: true,
+        wakeUpRotationIds: [
+          for (final s in soundCatalogue)
+            if (s.category == SoundCategory.start) s.id,
+        ],
+      );
+      expect(wakeUpRotation(many), hasLength(wakeUpRotationMax));
     });
 
     test('the planner rings each day with its own cue', () {
