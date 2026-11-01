@@ -52,6 +52,7 @@ class WakeUpAlarmActivity : Activity() {
             ?.let { WakeUpAlarms.find(this, it) }
             ?: return finish()
         id = alarm.id
+        if (intent.getBooleanExtra(EXTRA_UP, false)) return stop()
         setContentView(if (alarm.minimal) minimal(alarm) else full(alarm))
     }
 
@@ -77,13 +78,14 @@ class WakeUpAlarmActivity : Activity() {
     }
 
     /** "I'm up": stops the ring and opens the Wake Up card (docs/15 §5),
-     *  which shows once the phone is unlocked. Not for the test alarm. */
+     *  or on a mission morning quiets it and opens the mission (15 §8);
+     *  either shows once the phone is unlocked. Not for the test alarm. */
     private fun stop() {
         val id = id ?: return finish()
-        WakeUpActions.dismiss(this, id)
+        val link = WakeUpActions.up(this, id)
         if (id != WakeUpAlarm.TEST_ID) {
             startActivity(
-                Intent(Intent.ACTION_VIEW, Uri.parse("dottoday://wake-up"), this, MainActivity::class.java)
+                Intent(Intent.ACTION_VIEW, Uri.parse(link), this, MainActivity::class.java)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
             )
         }
@@ -163,6 +165,9 @@ class WakeUpAlarmActivity : Activity() {
 
     companion object {
         private var current: WeakReference<WakeUpAlarmActivity>? = null
+
+        /** Opened by the notification's "I'm up" on a mission morning. */
+        const val EXTRA_UP = "up"
 
         /** Closes the screen when the ring ends elsewhere (button, cap). */
         fun close() {

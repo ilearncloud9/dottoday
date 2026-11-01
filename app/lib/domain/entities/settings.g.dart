@@ -83,6 +83,24 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   sleepTargetMin: (json['sleepTargetMin'] as num?)?.toInt(),
   showNightArc: json['showNightArc'] as bool? ?? true,
   sleepOfferAnswered: json['sleepOfferAnswered'] as bool? ?? false,
+  missionMode:
+      $enumDecodeNullable(_$MissionModeEnumMap, json['missionMode']) ??
+      MissionMode.off,
+  missionDays:
+      (json['missionDays'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$WeekdayEnumMap, e))
+          .toList() ??
+      const [Weekday.mon, Weekday.tue, Weekday.wed, Weekday.thu, Weekday.fri],
+  missionKind:
+      $enumDecodeNullable(_$MissionKindEnumMap, json['missionKind']) ??
+      MissionKind.standUp,
+  missionSteps: (json['missionSteps'] as num?)?.toInt() ?? 20,
+  missionBackup: $enumDecodeNullable(
+    _$MissionKindEnumMap,
+    json['missionBackup'],
+  ),
+  missionSkipOffer: json['missionSkipOffer'] as bool? ?? true,
+  missionOffOfferAnswered: json['missionOffOfferAnswered'] as bool? ?? false,
   inboxNudge: json['inboxNudge'] as bool? ?? false,
   suggestTravelTime: json['suggestTravelTime'] as bool? ?? false,
   travelTimeMin: (json['travelTimeMin'] as num?)?.toInt() ?? 15,
@@ -142,6 +160,13 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'sleepTargetMin': instance.sleepTargetMin,
   'showNightArc': instance.showNightArc,
   'sleepOfferAnswered': instance.sleepOfferAnswered,
+  'missionMode': _$MissionModeEnumMap[instance.missionMode]!,
+  'missionDays': instance.missionDays.map((e) => _$WeekdayEnumMap[e]!).toList(),
+  'missionKind': _$MissionKindEnumMap[instance.missionKind]!,
+  'missionSteps': instance.missionSteps,
+  'missionBackup': _$MissionKindEnumMap[instance.missionBackup],
+  'missionSkipOffer': instance.missionSkipOffer,
+  'missionOffOfferAnswered': instance.missionOffOfferAnswered,
   'inboxNudge': instance.inboxNudge,
   'suggestTravelTime': instance.suggestTravelTime,
   'travelTimeMin': instance.travelTimeMin,
@@ -173,6 +198,23 @@ const _$ThemePreferenceEnumMap = {
   ThemePreference.system: 'system',
   ThemePreference.light: 'light',
   ThemePreference.dark: 'dark',
+};
+
+const _$MissionModeEnumMap = {
+  MissionMode.off: 'off',
+  MissionMode.whenAsked: 'whenAsked',
+  MissionMode.afterSnooze: 'afterSnooze',
+  MissionMode.chosenDays: 'chosenDays',
+  MissionMode.always: 'always',
+};
+
+const _$MissionKindEnumMap = {
+  MissionKind.standUp: 'standUp',
+  MissionKind.walk: 'walk',
+  MissionKind.light: 'light',
+  MissionKind.breathe: 'breathe',
+  MissionKind.catchDot: 'catchDot',
+  MissionKind.oneThing: 'oneThing',
 };
 
 Value? _$JsonConverterFromJson<Json, Value>(

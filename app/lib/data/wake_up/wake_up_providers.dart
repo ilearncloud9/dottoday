@@ -3,6 +3,9 @@ import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/wake_up/channel_mission_sensors.dart';
+import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -13,6 +16,16 @@ part 'wake_up_providers.g.dart';
 /// alarm id's day (docs/15 §3).
 String wakeUpDateKey(DateTime nowUtc, String tzId) =>
     formatRouteDate(tz.TZDateTime.from(nowUtc, tz.getLocation(tzId)));
+
+/// The sensors the missions read (docs/15 §8); tests override it.
+@Riverpod(keepAlive: true)
+MissionSensors missionSensors(Ref ref) => const ChannelMissionSensors();
+
+/// Whether this device can run [kind] now (15 §8), re-read when Settings
+/// asks for a permission.
+@riverpod
+Future<MissionSupport> missionSupport(Ref ref, MissionKind kind) =>
+    ref.watch(missionSensorsProvider).support(kind);
 
 /// Today's row on this device, null until the alarm or the card did
 /// something (docs/15 §3, M17.3).
@@ -39,10 +52,17 @@ class AlarmEventsDrain extends _$AlarmEventsDrain {
   @override
   void build() {}
 
-  Future<void> run() async {
+  /// Returns the mission location to open when "I'm up" opened one the
+  /// OS side couldn't show itself (iOS, 15 §8), else null.
+  Future<String?> run() async {
     final events = await ref.read(alarmGatewayProvider).drainEvents();
-    if (events.isEmpty) return;
+    if (events.isEmpty) return null;
     await ref.read(wakeUpDayRepositoryProvider).applyEvents(events);
     ref.invalidate(lastWakeUpProvider);
+    return switch (openMission(events)) {
+      (final date, final kind) when AppRoutes.missionKinds.contains(kind) =>
+        AppRoutes.mission(date, kind),
+      _ => null,
+    };
   }
 }

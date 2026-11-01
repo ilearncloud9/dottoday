@@ -99,6 +99,17 @@ abstract class Settings with _$Settings {
     int? sleepTargetMin,
     @Default(true) bool showNightArc,
     @Default(false) bool sleepOfferAnswered,
+    // Missions (15 §8, M17.7): which mornings ask for one (off by default),
+    // the chosen days, the mission and Walk's steps, a backup for mornings
+    // the mission can't run, and the once-only offer to turn them off.
+    @Default(MissionMode.off) MissionMode missionMode,
+    @Default([Weekday.mon, Weekday.tue, Weekday.wed, Weekday.thu, Weekday.fri])
+    List<Weekday> missionDays,
+    @Default(MissionKind.standUp) MissionKind missionKind,
+    @Default(20) int missionSteps,
+    MissionKind? missionBackup,
+    @Default(true) bool missionSkipOffer,
+    @Default(false) bool missionOffOfferAnswered,
     // The once-a-day "Plan your inbox" card (docs/02 F3.3): off by default.
     @Default(false) bool inboxNudge,
     // Settings › Calendars › Travel time (M7.5, R-17): off until chosen

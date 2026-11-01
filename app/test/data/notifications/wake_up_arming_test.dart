@@ -2,7 +2,10 @@ import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/notifications/wake_up_arming.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
+import 'package:dottoday/domain/wake_up/mission.dart';
+import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -56,6 +59,62 @@ void main() {
     expect(first.snoozeLimit, 3);
     expect(first.sound.id, 'start.bells');
     expect(first.stopLabel, "I'm up");
+  });
+
+  group('missions (15 §8)', () {
+    final missions = on.copyWith(
+      settings: on.settings.copyWith(missionMode: MissionMode.afterSnooze),
+    );
+
+    test('each morning carries its mission to the OS side', () async {
+      final gateway = FakeAlarmGateway();
+      await WakeUpArming(
+        gateway,
+        db,
+        sensors: FakeMissionSensors(),
+      ).arm([_wakeUp(mon)], profile: missions, tasks: const {});
+      expect(
+        gateway.armed.single.mission,
+        const MissionPlan(MissionKind.standUp, afterSnooze: true),
+      );
+    });
+
+    test('none off the alarm tier, or with missions off', () async {
+      final heads = FakeAlarmGateway(
+        const AlarmCapabilities(AlarmTier.headsUp),
+      );
+      await WakeUpArming(
+        heads,
+        db,
+        sensors: FakeMissionSensors(),
+      ).arm([_wakeUp(mon)], profile: missions, tasks: const {});
+      expect(heads.armed.single.mission, isNull);
+      final off = FakeAlarmGateway();
+      await WakeUpArming(
+        off,
+        db,
+        sensors: FakeMissionSensors(),
+      ).arm([_wakeUp(mon)], profile: on, tasks: const {});
+      expect(off.armed.single.mission, isNull);
+    });
+
+    test('a sensor this phone lacks: the backup, else none', () async {
+      final walk = missions.copyWith(
+        settings: missions.settings.copyWith(
+          missionKind: MissionKind.walk,
+          missionBackup: MissionKind.standUp,
+        ),
+      );
+      final gateway = FakeAlarmGateway();
+      await WakeUpArming(
+        gateway,
+        db,
+        sensors: FakeMissionSensors(
+          supports: {MissionKind.walk: MissionSupport.missing},
+        ),
+      ).arm([_wakeUp(mon)], profile: walk, tasks: const {});
+      expect(gateway.armed.single.mission?.kind, MissionKind.standUp);
+    });
   });
 
   test('snooze off: no Snooze on the alarm', () async {

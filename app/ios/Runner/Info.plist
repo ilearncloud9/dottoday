@@ -60,6 +60,10 @@
 	<string>Dottoday rings your Wake Up time like an alarm, even on Silent, on the days you have planned.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Your words are turned into text on this device. Nothing is sent to a server.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Dottoday counts your steps only while a Walk mission is on screen, to stop your Wake Up alarm. Nothing is kept.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Dottoday checks how bright the room is only while a Light mission is on screen, to stop your Wake Up alarm. No picture is taken or kept.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Dottoday uses Face ID to unlock when you turn on App lock.</string>
 	<key>NSSupportsLiveActivities</key>

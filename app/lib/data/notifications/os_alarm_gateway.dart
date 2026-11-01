@@ -91,6 +91,26 @@ final class OsAlarmGateway implements AlarmGateway {
     }
   }
 
+  @override
+  Future<void> dismiss(String id) async {
+    if (!_native) return;
+    try {
+      await _channel.invokeMethod<void>('dismiss', {'id': id});
+    } on MissingPluginException {
+      return;
+    }
+  }
+
+  @override
+  Future<void> keepMission(String id) async {
+    if (!_native) return;
+    try {
+      await _channel.invokeMethod<void>('keepMission', {'id': id});
+    } on MissingPluginException {
+      return;
+    }
+  }
+
   AlarmEvent? _event(Map<Object?, Object?> e) {
     final kind = AlarmEventKind.values.asNameMap()[e['kind']];
     final at = e['atMs'];
@@ -100,6 +120,7 @@ final class OsAlarmGateway implements AlarmGateway {
       id,
       kind,
       DateTime.fromMillisecondsSinceEpoch(at, isUtc: true),
+      mission: e['mission'] as String?,
     );
   }
 
@@ -127,6 +148,9 @@ final class OsAlarmGateway implements AlarmGateway {
     'checkStart': a.check?.startLabel ?? '',
     'checkTarget': a.check?.occurrenceId ?? '',
     'checkLoud': a.check?.loud ?? false,
+    // The mission (15 §8): '' = none; only after a snooze, or every ring.
+    'mission': a.mission?.kind.name ?? '',
+    'missionAfterSnooze': a.mission?.afterSnooze ?? false,
   };
 
   @override

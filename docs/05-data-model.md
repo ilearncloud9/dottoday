@@ -115,13 +115,13 @@ removed, blank → null) is the event's place as its calendar gave it (device `l
 itself: the server's `calendar_links` has no such column and never receives one (links don't sync),
 so no Supabase migration. It is PII like a title — never logged, never sent anywhere. It feeds only
 the travel time suggestion; an accepted suggestion is the occurrence's `travel_buffer_min`.
-Series (docs/02 F5.7, local schema 12): `series_key` (nullable, ≤ 512) names the repeating event an
+Series (docs/02 F5.7, local schema 13): `series_key` (nullable, ≤ 512) names the repeating event an
 instance belongs to — the shared event id on iOS/macOS/Android, Google `recurringEventId`, Microsoft
 `seriesMasterId` — and is null for a one-off event. Instances of one account sharing it are one
 series here. Device-only like the rest of the link; refreshed by every import (null on upgrade until
 the next import). A key too long to store is left null, never cut (a cut key could join two series).
 
-### `calendar_series` (local only, schema 12)
+### `calendar_series` (local only, schema 13)
 `id, user_id, account_id, series_key, title?, notes?, color_key?, icon_key?, duration_min?,
 start_minute?, tz_id?, pinned?, travel_buffer_min?, energy?, alerts?, sound_id?, subtask_template?,
 hidden, created_at, updated_at`; unique `(user_id, account_id, series_key)`. What the person set for

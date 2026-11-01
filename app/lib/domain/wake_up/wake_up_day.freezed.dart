@@ -20,7 +20,8 @@ mixin _$WakeUpDay {
  DateTime? get rangAtUtc;/// When "I'm up" stopped it.
  DateTime? get stoppedAtUtc; int get snoozes;/// When the Wake Up card was shown: it opens once a day (15 §5).
  DateTime? get cardShownAtUtc;/// "Start the day" with no dot to start yet (15 §5 step 7).
- DateTime? get startedAtUtc;
+ DateTime? get startedAtUtc;/// "Can't right now" skipped the mission (15 §8).
+ DateTime? get missionSkippedAtUtc;
 /// Create a copy of WakeUpDay
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -32,20 +33,20 @@ $WakeUpDayCopyWith<WakeUpDay> get copyWith => _$WakeUpDayCopyWithImpl<WakeUpDay>
 @override
 bool operator ==(Object other) {
   final _this = this as WakeUpDay;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WakeUpDay&&(identical(other.date, _this.date) || other.date == _this.date)&&(identical(other.rangAtUtc, _this.rangAtUtc) || other.rangAtUtc == _this.rangAtUtc)&&(identical(other.stoppedAtUtc, _this.stoppedAtUtc) || other.stoppedAtUtc == _this.stoppedAtUtc)&&(identical(other.snoozes, _this.snoozes) || other.snoozes == _this.snoozes)&&(identical(other.cardShownAtUtc, _this.cardShownAtUtc) || other.cardShownAtUtc == _this.cardShownAtUtc)&&(identical(other.startedAtUtc, _this.startedAtUtc) || other.startedAtUtc == _this.startedAtUtc));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WakeUpDay&&(identical(other.date, _this.date) || other.date == _this.date)&&(identical(other.rangAtUtc, _this.rangAtUtc) || other.rangAtUtc == _this.rangAtUtc)&&(identical(other.stoppedAtUtc, _this.stoppedAtUtc) || other.stoppedAtUtc == _this.stoppedAtUtc)&&(identical(other.snoozes, _this.snoozes) || other.snoozes == _this.snoozes)&&(identical(other.cardShownAtUtc, _this.cardShownAtUtc) || other.cardShownAtUtc == _this.cardShownAtUtc)&&(identical(other.startedAtUtc, _this.startedAtUtc) || other.startedAtUtc == _this.startedAtUtc)&&(identical(other.missionSkippedAtUtc, _this.missionSkippedAtUtc) || other.missionSkippedAtUtc == _this.missionSkippedAtUtc));
 }
 
 
 @override
 int get hashCode {
   final _this = this as WakeUpDay;
-  return Object.hash(runtimeType,_this.date,_this.rangAtUtc,_this.stoppedAtUtc,_this.snoozes,_this.cardShownAtUtc,_this.startedAtUtc);
+  return Object.hash(runtimeType,_this.date,_this.rangAtUtc,_this.stoppedAtUtc,_this.snoozes,_this.cardShownAtUtc,_this.startedAtUtc,_this.missionSkippedAtUtc);
 }
 
 @override
 String toString() {
   final _this = this as WakeUpDay;
-  return 'WakeUpDay(date: ${_this.date}, rangAtUtc: ${_this.rangAtUtc}, stoppedAtUtc: ${_this.stoppedAtUtc}, snoozes: ${_this.snoozes}, cardShownAtUtc: ${_this.cardShownAtUtc}, startedAtUtc: ${_this.startedAtUtc})';
+  return 'WakeUpDay(date: ${_this.date}, rangAtUtc: ${_this.rangAtUtc}, stoppedAtUtc: ${_this.stoppedAtUtc}, snoozes: ${_this.snoozes}, cardShownAtUtc: ${_this.cardShownAtUtc}, startedAtUtc: ${_this.startedAtUtc}, missionSkippedAtUtc: ${_this.missionSkippedAtUtc})';
 }
 
 
@@ -56,7 +57,7 @@ abstract mixin class $WakeUpDayCopyWith<$Res>  {
   factory $WakeUpDayCopyWith(WakeUpDay value, $Res Function(WakeUpDay) _then) = _$WakeUpDayCopyWithImpl;
 @useResult
 $Res call({
- String date, DateTime? rangAtUtc, DateTime? stoppedAtUtc, int snoozes, DateTime? cardShownAtUtc, DateTime? startedAtUtc
+ String date, DateTime? rangAtUtc, DateTime? stoppedAtUtc, int snoozes, DateTime? cardShownAtUtc, DateTime? startedAtUtc, DateTime? missionSkippedAtUtc
 });
 
 
@@ -73,7 +74,7 @@ class _$WakeUpDayCopyWithImpl<$Res>
 
 /// Create a copy of WakeUpDay
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? rangAtUtc = freezed,Object? stoppedAtUtc = freezed,Object? snoozes = null,Object? cardShownAtUtc = freezed,Object? startedAtUtc = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? rangAtUtc = freezed,Object? stoppedAtUtc = freezed,Object? snoozes = null,Object? cardShownAtUtc = freezed,Object? startedAtUtc = freezed,Object? missionSkippedAtUtc = freezed,}) {
   return _then(WakeUpDay(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,rangAtUtc: freezed == rangAtUtc ? _self.rangAtUtc : rangAtUtc // ignore: cast_nullable_to_non_nullable
@@ -81,6 +82,7 @@ as DateTime?,stoppedAtUtc: freezed == stoppedAtUtc ? _self.stoppedAtUtc : stoppe
 as DateTime?,snoozes: null == snoozes ? _self.snoozes : snoozes // ignore: cast_nullable_to_non_nullable
 as int,cardShownAtUtc: freezed == cardShownAtUtc ? _self.cardShownAtUtc : cardShownAtUtc // ignore: cast_nullable_to_non_nullable
 as DateTime?,startedAtUtc: freezed == startedAtUtc ? _self.startedAtUtc : startedAtUtc // ignore: cast_nullable_to_non_nullable
+as DateTime?,missionSkippedAtUtc: freezed == missionSkippedAtUtc ? _self.missionSkippedAtUtc : missionSkippedAtUtc // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
@@ -166,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String date,  DateTime? rangAtUtc,  DateTime? stoppedAtUtc,  int snoozes,  DateTime? cardShownAtUtc,  DateTime? startedAtUtc)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String date,  DateTime? rangAtUtc,  DateTime? stoppedAtUtc,  int snoozes,  DateTime? cardShownAtUtc,  DateTime? startedAtUtc,  DateTime? missionSkippedAtUtc)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WakeUpDay() when $default != null:
-return $default(_that.date,_that.rangAtUtc,_that.stoppedAtUtc,_that.snoozes,_that.cardShownAtUtc,_that.startedAtUtc);case _:
+return $default(_that.date,_that.rangAtUtc,_that.stoppedAtUtc,_that.snoozes,_that.cardShownAtUtc,_that.startedAtUtc,_that.missionSkippedAtUtc);case _:
   return orElse();
 
 }
@@ -187,10 +189,10 @@ return $default(_that.date,_that.rangAtUtc,_that.stoppedAtUtc,_that.snoozes,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String date,  DateTime? rangAtUtc,  DateTime? stoppedAtUtc,  int snoozes,  DateTime? cardShownAtUtc,  DateTime? startedAtUtc)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String date,  DateTime? rangAtUtc,  DateTime? stoppedAtUtc,  int snoozes,  DateTime? cardShownAtUtc,  DateTime? startedAtUtc,  DateTime? missionSkippedAtUtc)  $default,) {final _that = this;
 switch (_that) {
 case _WakeUpDay():
-return $default(_that.date,_that.rangAtUtc,_that.stoppedAtUtc,_that.snoozes,_that.cardShownAtUtc,_that.startedAtUtc);case _:
+return $default(_that.date,_that.rangAtUtc,_that.stoppedAtUtc,_that.snoozes,_that.cardShownAtUtc,_that.startedAtUtc,_that.missionSkippedAtUtc);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +209,10 @@ return $default(_that.date,_that.rangAtUtc,_that.stoppedAtUtc,_that.snoozes,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String date,  DateTime? rangAtUtc,  DateTime? stoppedAtUtc,  int snoozes,  DateTime? cardShownAtUtc,  DateTime? startedAtUtc)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String date,  DateTime? rangAtUtc,  DateTime? stoppedAtUtc,  int snoozes,  DateTime? cardShownAtUtc,  DateTime? startedAtUtc,  DateTime? missionSkippedAtUtc)?  $default,) {final _that = this;
 switch (_that) {
 case _WakeUpDay() when $default != null:
-return $default(_that.date,_that.rangAtUtc,_that.stoppedAtUtc,_that.snoozes,_that.cardShownAtUtc,_that.startedAtUtc);case _:
+return $default(_that.date,_that.rangAtUtc,_that.stoppedAtUtc,_that.snoozes,_that.cardShownAtUtc,_that.startedAtUtc,_that.missionSkippedAtUtc);case _:
   return null;
 
 }
@@ -222,7 +224,7 @@ return $default(_that.date,_that.rangAtUtc,_that.stoppedAtUtc,_that.snoozes,_tha
 
 
 class _WakeUpDay implements WakeUpDay {
-  const _WakeUpDay({required this.date, this.rangAtUtc, this.stoppedAtUtc, this.snoozes = 0, this.cardShownAtUtc, this.startedAtUtc});
+  const _WakeUpDay({required this.date, this.rangAtUtc, this.stoppedAtUtc, this.snoozes = 0, this.cardShownAtUtc, this.startedAtUtc, this.missionSkippedAtUtc});
   
 
 /// `yyyy-MM-dd` in the profile's zone.
@@ -236,6 +238,8 @@ class _WakeUpDay implements WakeUpDay {
 @override final  DateTime? cardShownAtUtc;
 /// "Start the day" with no dot to start yet (15 §5 step 7).
 @override final  DateTime? startedAtUtc;
+/// "Can't right now" skipped the mission (15 §8).
+@override final  DateTime? missionSkippedAtUtc;
 
 /// Create a copy of WakeUpDay
 /// with the given fields replaced by the non-null parameter values.
@@ -247,18 +251,18 @@ _$WakeUpDayCopyWith<_WakeUpDay> get copyWith => __$WakeUpDayCopyWithImpl<_WakeUp
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _WakeUpDay&&(identical(other.date, date) || other.date == date)&&(identical(other.rangAtUtc, rangAtUtc) || other.rangAtUtc == rangAtUtc)&&(identical(other.stoppedAtUtc, stoppedAtUtc) || other.stoppedAtUtc == stoppedAtUtc)&&(identical(other.snoozes, snoozes) || other.snoozes == snoozes)&&(identical(other.cardShownAtUtc, cardShownAtUtc) || other.cardShownAtUtc == cardShownAtUtc)&&(identical(other.startedAtUtc, startedAtUtc) || other.startedAtUtc == startedAtUtc));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _WakeUpDay&&(identical(other.date, date) || other.date == date)&&(identical(other.rangAtUtc, rangAtUtc) || other.rangAtUtc == rangAtUtc)&&(identical(other.stoppedAtUtc, stoppedAtUtc) || other.stoppedAtUtc == stoppedAtUtc)&&(identical(other.snoozes, snoozes) || other.snoozes == snoozes)&&(identical(other.cardShownAtUtc, cardShownAtUtc) || other.cardShownAtUtc == cardShownAtUtc)&&(identical(other.startedAtUtc, startedAtUtc) || other.startedAtUtc == startedAtUtc)&&(identical(other.missionSkippedAtUtc, missionSkippedAtUtc) || other.missionSkippedAtUtc == missionSkippedAtUtc));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,date,rangAtUtc,stoppedAtUtc,snoozes,cardShownAtUtc,startedAtUtc);
+    return Object.hash(runtimeType,date,rangAtUtc,stoppedAtUtc,snoozes,cardShownAtUtc,startedAtUtc,missionSkippedAtUtc);
 }
 
 @override
 String toString() {
-    return 'WakeUpDay(date: $date, rangAtUtc: $rangAtUtc, stoppedAtUtc: $stoppedAtUtc, snoozes: $snoozes, cardShownAtUtc: $cardShownAtUtc, startedAtUtc: $startedAtUtc)';
+    return 'WakeUpDay(date: $date, rangAtUtc: $rangAtUtc, stoppedAtUtc: $stoppedAtUtc, snoozes: $snoozes, cardShownAtUtc: $cardShownAtUtc, startedAtUtc: $startedAtUtc, missionSkippedAtUtc: $missionSkippedAtUtc)';
 }
 
 
@@ -269,7 +273,7 @@ abstract mixin class _$WakeUpDayCopyWith<$Res> implements $WakeUpDayCopyWith<$Re
   factory _$WakeUpDayCopyWith(_WakeUpDay value, $Res Function(_WakeUpDay) _then) = __$WakeUpDayCopyWithImpl;
 @override @useResult
 $Res call({
- String date, DateTime? rangAtUtc, DateTime? stoppedAtUtc, int snoozes, DateTime? cardShownAtUtc, DateTime? startedAtUtc
+ String date, DateTime? rangAtUtc, DateTime? stoppedAtUtc, int snoozes, DateTime? cardShownAtUtc, DateTime? startedAtUtc, DateTime? missionSkippedAtUtc
 });
 
 
@@ -286,7 +290,7 @@ class __$WakeUpDayCopyWithImpl<$Res>
 
 /// Create a copy of WakeUpDay
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? rangAtUtc = freezed,Object? stoppedAtUtc = freezed,Object? snoozes = null,Object? cardShownAtUtc = freezed,Object? startedAtUtc = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? rangAtUtc = freezed,Object? stoppedAtUtc = freezed,Object? snoozes = null,Object? cardShownAtUtc = freezed,Object? startedAtUtc = freezed,Object? missionSkippedAtUtc = freezed,}) {
   return _then(_WakeUpDay(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,rangAtUtc: freezed == rangAtUtc ? _self.rangAtUtc : rangAtUtc // ignore: cast_nullable_to_non_nullable
@@ -294,6 +298,7 @@ as DateTime?,stoppedAtUtc: freezed == stoppedAtUtc ? _self.stoppedAtUtc : stoppe
 as DateTime?,snoozes: null == snoozes ? _self.snoozes : snoozes // ignore: cast_nullable_to_non_nullable
 as int,cardShownAtUtc: freezed == cardShownAtUtc ? _self.cardShownAtUtc : cardShownAtUtc // ignore: cast_nullable_to_non_nullable
 as DateTime?,startedAtUtc: freezed == startedAtUtc ? _self.startedAtUtc : startedAtUtc // ignore: cast_nullable_to_non_nullable
+as DateTime?,missionSkippedAtUtc: freezed == missionSkippedAtUtc ? _self.missionSkippedAtUtc : missionSkippedAtUtc // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }

@@ -10222,6 +10222,16 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _missionSkippedAtUtcMeta =
+      const VerificationMeta('missionSkippedAtUtc');
+  @override
+  late final GeneratedColumn<int> missionSkippedAtUtc = GeneratedColumn<int>(
+    'mission_skipped_at_utc',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     date,
@@ -10230,6 +10240,7 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
     snoozes,
     cardShownAtUtc,
     startedAtUtc,
+    missionSkippedAtUtc,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -10290,6 +10301,15 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
         ),
       );
     }
+    if (data.containsKey('mission_skipped_at_utc')) {
+      context.handle(
+        _missionSkippedAtUtcMeta,
+        missionSkippedAtUtc.isAcceptableOrUnknown(
+          data['mission_skipped_at_utc']!,
+          _missionSkippedAtUtcMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -10323,6 +10343,10 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
         DriftSqlType.int,
         data['${effectivePrefix}started_at_utc'],
       ),
+      missionSkippedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}mission_skipped_at_utc'],
+      ),
     );
   }
 
@@ -10343,6 +10367,9 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   final int snoozes;
   final int? cardShownAtUtc;
   final int? startedAtUtc;
+
+  /// "Can't right now" skipped the mission (15 §8). Schema 12.
+  final int? missionSkippedAtUtc;
   const WakeUpDayRow({
     required this.date,
     this.rangAtUtc,
@@ -10350,6 +10377,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
     required this.snoozes,
     this.cardShownAtUtc,
     this.startedAtUtc,
+    this.missionSkippedAtUtc,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -10367,6 +10395,9 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
     }
     if (!nullToAbsent || startedAtUtc != null) {
       map['started_at_utc'] = Variable<int>(startedAtUtc);
+    }
+    if (!nullToAbsent || missionSkippedAtUtc != null) {
+      map['mission_skipped_at_utc'] = Variable<int>(missionSkippedAtUtc);
     }
     return map;
   }
@@ -10387,6 +10418,9 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
       startedAtUtc: startedAtUtc == null && nullToAbsent
           ? const Value.absent()
           : Value(startedAtUtc),
+      missionSkippedAtUtc: missionSkippedAtUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(missionSkippedAtUtc),
     );
   }
 
@@ -10402,6 +10436,9 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
       snoozes: serializer.fromJson<int>(json['snoozes']),
       cardShownAtUtc: serializer.fromJson<int?>(json['cardShownAtUtc']),
       startedAtUtc: serializer.fromJson<int?>(json['startedAtUtc']),
+      missionSkippedAtUtc: serializer.fromJson<int?>(
+        json['missionSkippedAtUtc'],
+      ),
     );
   }
   @override
@@ -10414,6 +10451,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
       'snoozes': serializer.toJson<int>(snoozes),
       'cardShownAtUtc': serializer.toJson<int?>(cardShownAtUtc),
       'startedAtUtc': serializer.toJson<int?>(startedAtUtc),
+      'missionSkippedAtUtc': serializer.toJson<int?>(missionSkippedAtUtc),
     };
   }
 
@@ -10424,6 +10462,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
     int? snoozes,
     Value<int?> cardShownAtUtc = const Value.absent(),
     Value<int?> startedAtUtc = const Value.absent(),
+    Value<int?> missionSkippedAtUtc = const Value.absent(),
   }) => WakeUpDayRow(
     date: date ?? this.date,
     rangAtUtc: rangAtUtc.present ? rangAtUtc.value : this.rangAtUtc,
@@ -10433,6 +10472,9 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
         ? cardShownAtUtc.value
         : this.cardShownAtUtc,
     startedAtUtc: startedAtUtc.present ? startedAtUtc.value : this.startedAtUtc,
+    missionSkippedAtUtc: missionSkippedAtUtc.present
+        ? missionSkippedAtUtc.value
+        : this.missionSkippedAtUtc,
   );
   WakeUpDayRow copyWithCompanion(WakeUpDaysTableCompanion data) {
     return WakeUpDayRow(
@@ -10448,6 +10490,9 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
       startedAtUtc: data.startedAtUtc.present
           ? data.startedAtUtc.value
           : this.startedAtUtc,
+      missionSkippedAtUtc: data.missionSkippedAtUtc.present
+          ? data.missionSkippedAtUtc.value
+          : this.missionSkippedAtUtc,
     );
   }
 
@@ -10459,7 +10504,8 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
           ..write('stoppedAtUtc: $stoppedAtUtc, ')
           ..write('snoozes: $snoozes, ')
           ..write('cardShownAtUtc: $cardShownAtUtc, ')
-          ..write('startedAtUtc: $startedAtUtc')
+          ..write('startedAtUtc: $startedAtUtc, ')
+          ..write('missionSkippedAtUtc: $missionSkippedAtUtc')
           ..write(')'))
         .toString();
   }
@@ -10472,6 +10518,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
     snoozes,
     cardShownAtUtc,
     startedAtUtc,
+    missionSkippedAtUtc,
   );
   @override
   bool operator ==(Object other) =>
@@ -10482,7 +10529,8 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
           other.stoppedAtUtc == this.stoppedAtUtc &&
           other.snoozes == this.snoozes &&
           other.cardShownAtUtc == this.cardShownAtUtc &&
-          other.startedAtUtc == this.startedAtUtc);
+          other.startedAtUtc == this.startedAtUtc &&
+          other.missionSkippedAtUtc == this.missionSkippedAtUtc);
 }
 
 class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
@@ -10492,6 +10540,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
   final Value<int> snoozes;
   final Value<int?> cardShownAtUtc;
   final Value<int?> startedAtUtc;
+  final Value<int?> missionSkippedAtUtc;
   final Value<int> rowid;
   const WakeUpDaysTableCompanion({
     this.date = const Value.absent(),
@@ -10500,6 +10549,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
     this.snoozes = const Value.absent(),
     this.cardShownAtUtc = const Value.absent(),
     this.startedAtUtc = const Value.absent(),
+    this.missionSkippedAtUtc = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   WakeUpDaysTableCompanion.insert({
@@ -10509,6 +10559,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
     this.snoozes = const Value.absent(),
     this.cardShownAtUtc = const Value.absent(),
     this.startedAtUtc = const Value.absent(),
+    this.missionSkippedAtUtc = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : date = Value(date);
   static Insertable<WakeUpDayRow> custom({
@@ -10518,6 +10569,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
     Expression<int>? snoozes,
     Expression<int>? cardShownAtUtc,
     Expression<int>? startedAtUtc,
+    Expression<int>? missionSkippedAtUtc,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -10527,6 +10579,8 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
       if (snoozes != null) 'snoozes': snoozes,
       if (cardShownAtUtc != null) 'card_shown_at_utc': cardShownAtUtc,
       if (startedAtUtc != null) 'started_at_utc': startedAtUtc,
+      if (missionSkippedAtUtc != null)
+        'mission_skipped_at_utc': missionSkippedAtUtc,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -10538,6 +10592,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
     Value<int>? snoozes,
     Value<int?>? cardShownAtUtc,
     Value<int?>? startedAtUtc,
+    Value<int?>? missionSkippedAtUtc,
     Value<int>? rowid,
   }) {
     return WakeUpDaysTableCompanion(
@@ -10547,6 +10602,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
       snoozes: snoozes ?? this.snoozes,
       cardShownAtUtc: cardShownAtUtc ?? this.cardShownAtUtc,
       startedAtUtc: startedAtUtc ?? this.startedAtUtc,
+      missionSkippedAtUtc: missionSkippedAtUtc ?? this.missionSkippedAtUtc,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -10572,6 +10628,9 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
     if (startedAtUtc.present) {
       map['started_at_utc'] = Variable<int>(startedAtUtc.value);
     }
+    if (missionSkippedAtUtc.present) {
+      map['mission_skipped_at_utc'] = Variable<int>(missionSkippedAtUtc.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -10587,6 +10646,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
           ..write('snoozes: $snoozes, ')
           ..write('cardShownAtUtc: $cardShownAtUtc, ')
           ..write('startedAtUtc: $startedAtUtc, ')
+          ..write('missionSkippedAtUtc: $missionSkippedAtUtc, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -18773,6 +18833,7 @@ typedef $$WakeUpDaysTableTableCreateCompanionBuilder =
       Value<int> snoozes,
       Value<int?> cardShownAtUtc,
       Value<int?> startedAtUtc,
+      Value<int?> missionSkippedAtUtc,
       Value<int> rowid,
     });
 typedef $$WakeUpDaysTableTableUpdateCompanionBuilder =
@@ -18783,6 +18844,7 @@ typedef $$WakeUpDaysTableTableUpdateCompanionBuilder =
       Value<int> snoozes,
       Value<int?> cardShownAtUtc,
       Value<int?> startedAtUtc,
+      Value<int?> missionSkippedAtUtc,
       Value<int> rowid,
     });
 
@@ -18822,6 +18884,11 @@ class $$WakeUpDaysTableTableFilterComposer
 
   ColumnFilters<int> get startedAtUtc => $composableBuilder(
     column: $table.startedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get missionSkippedAtUtc => $composableBuilder(
+    column: $table.missionSkippedAtUtc,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -18864,6 +18931,11 @@ class $$WakeUpDaysTableTableOrderingComposer
     column: $table.startedAtUtc,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get missionSkippedAtUtc => $composableBuilder(
+    column: $table.missionSkippedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$WakeUpDaysTableTableAnnotationComposer
@@ -18896,6 +18968,11 @@ class $$WakeUpDaysTableTableAnnotationComposer
 
   GeneratedColumn<int> get startedAtUtc => $composableBuilder(
     column: $table.startedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get missionSkippedAtUtc => $composableBuilder(
+    column: $table.missionSkippedAtUtc,
     builder: (column) => column,
   );
 }
@@ -18939,6 +19016,7 @@ class $$WakeUpDaysTableTableTableManager
                 Value<int> snoozes = const Value.absent(),
                 Value<int?> cardShownAtUtc = const Value.absent(),
                 Value<int?> startedAtUtc = const Value.absent(),
+                Value<int?> missionSkippedAtUtc = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WakeUpDaysTableCompanion(
                 date: date,
@@ -18947,6 +19025,7 @@ class $$WakeUpDaysTableTableTableManager
                 snoozes: snoozes,
                 cardShownAtUtc: cardShownAtUtc,
                 startedAtUtc: startedAtUtc,
+                missionSkippedAtUtc: missionSkippedAtUtc,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -18957,6 +19036,7 @@ class $$WakeUpDaysTableTableTableManager
                 Value<int> snoozes = const Value.absent(),
                 Value<int?> cardShownAtUtc = const Value.absent(),
                 Value<int?> startedAtUtc = const Value.absent(),
+                Value<int?> missionSkippedAtUtc = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WakeUpDaysTableCompanion.insert(
                 date: date,
@@ -18965,6 +19045,7 @@ class $$WakeUpDaysTableTableTableManager
                 snoozes: snoozes,
                 cardShownAtUtc: cardShownAtUtc,
                 startedAtUtc: startedAtUtc,
+                missionSkippedAtUtc: missionSkippedAtUtc,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

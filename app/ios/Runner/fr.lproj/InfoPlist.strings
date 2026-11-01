@@ -8,3 +8,5 @@
 "NSFaceIDUsageDescription" = "Dottoday utilise Face ID pour se déverrouiller lorsque vous activez le verrouillage.";
 "NSMicrophoneUsageDescription" = "Dottoday n'écoute que lorsque le bouton micro est activé, pour transformer vos mots en texte sur cet appareil.";
 "NSSpeechRecognitionUsageDescription" = "Vos mots deviennent du texte sur cet appareil. Rien n'est envoyé à un serveur.";
+"NSCameraUsageDescription" = "Dottoday vérifie la luminosité de la pièce uniquement pendant qu'une mission Lumière est à l'écran, pour arrêter votre réveil. Aucune photo n'est prise ni conservée.";
+"NSMotionUsageDescription" = "Dottoday compte vos pas uniquement pendant qu'une mission Marcher est à l'écran, pour arrêter votre réveil. Rien n'est conservé.";

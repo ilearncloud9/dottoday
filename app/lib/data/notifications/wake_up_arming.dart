@@ -1,10 +1,16 @@
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/notifications/notification_content.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
+import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
+import 'package:dottoday/domain/wake_up/mission.dart';
+import 'package:dottoday/domain/wake_up/mission_sensors.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 /// Hands the week's Wake Up alarms to [AlarmGateway] (docs/15 W1b,
 /// ADR-0017) and returns the instants it armed, which the notification
@@ -16,8 +22,13 @@ import 'package:dottoday/domain/notifications/planned_notification.dart';
 /// while ringing the rest on the notification path (W1a) rather than not
 /// at all.
 final class WakeUpArming {
-  const WakeUpArming(this._gateway, this._db, {bool Function()? minimal})
-    : _minimal = minimal;
+  const WakeUpArming(
+    this._gateway,
+    this._db, {
+    bool Function()? minimal,
+    MissionSensors? sensors,
+  }) : _minimal = minimal,
+       _sensors = sensors;
 
   static const _key = 'armed_wake_ups';
 
@@ -27,6 +38,9 @@ final class WakeUpArming {
   /// Whether the ringing screen is minimal mode's (the provider asks
   /// `LayoutPolicy`; this code never reads the layout, ADR-0016).
   final bool Function()? _minimal;
+
+  /// What missions this device can run (15 §8); none without it.
+  final MissionSensors? _sensors;
 
   /// Arms [wakeUps] (`NotificationPlanner.wakeUps`) for [profile]; with the
   /// switch off, disarms every alarm once. [tasks] finds each day's first
@@ -46,7 +60,7 @@ final class WakeUpArming {
       await _write(null);
       return const {};
     }
-    final armed = await _gateway.sync([
+    final alarms = [
       for (final w in wakeUps)
         composeWakeUpAlarm(
           w,
@@ -55,10 +69,59 @@ final class WakeUpArming {
           minimal: _minimal?.call() ?? false,
           step: steps[w.occurrenceId],
         ),
-    ], startedDays: startedDays);
+    ];
+    final armed = await _gateway.sync(
+      await _withMissions(alarms, profile, tasks.values),
+      startedDays: startedDays,
+    );
     if (armed == null) return known ?? const {};
     await _write(armed);
     return armed;
+  }
+
+  /// [alarms] with each morning's mission (15 §8): the mode, the alarm
+  /// tier, what this device can run and how many dots the day has.
+  Future<List<WakeUpAlarm>> _withMissions(
+    List<WakeUpAlarm> alarms,
+    Profile profile,
+    Iterable<Occurrence> blocks,
+  ) async {
+    final settings = profile.settings;
+    final sensors = _sensors;
+    if (settings.missionMode == MissionMode.off || sensors == null) {
+      return alarms;
+    }
+    final tier = (await _gateway.capabilities()).tier;
+    final ready = {
+      for (final k in MissionKind.values)
+        if (await sensors.support(k) == MissionSupport.ready) k,
+    };
+    final zone = tz.getLocation(profile.tzId);
+    final dots = <String, int>{};
+    for (final b in blocks) {
+      if (b.startUtc case final start?) {
+        dots.update(
+          formatRouteDate(tz.TZDateTime.from(start, zone)),
+          (n) => n + 1,
+          ifAbsent: () => 1,
+        );
+      }
+    }
+    MissionPlan? plan(WakeUpAlarm a) {
+      final local = tz.TZDateTime.from(a.fireAtUtc, zone);
+      return missionFor(
+        settings,
+        weekday: Weekday.values[local.weekday - 1],
+        tier: tier,
+        dots: dots[formatRouteDate(local)] ?? 0,
+        can: ready.contains,
+      );
+    }
+
+    return [
+      for (final a in alarms)
+        a.id == WakeUpAlarm.testId ? a : a.withMission(plan(a)),
+    ];
   }
 
   /// Null until the gateway armed something on this device, and after the

@@ -513,7 +513,18 @@ Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit 
     - The learned "you usually get up ~12 min after Wake Up" offer (`windDownLearnOffer`) needs the median from `wake_up_days`. It is a follow-up below.
     - The store pitch line goes to M17.6 Discovery.
 - [ ] M17.6 Discovery (§11) on the M16 hint scheduler.
-- [ ] M17.7 W5 Physical dismissal. Its sensor plugins are a must-ask.
+- [ ] M17.7 W5 Missions (15 §8, rewritten with the owner's rules and missions, 2026-11-01). Sensors through an in-house bridge (Kotlin `SensorManager`, Swift Core Motion + camera exposure), no new dependency (owner). Three PRs:
+  - [x] M17.7a Engine, modes and Settings: `missionMode` and the morning decision (the snooze rule, chosen days, flags), the skip rules, the 10-minute cap, the skip offer, iOS Stop re-ring, the mission screen; Stand up, Walk, Light, Breathe, Catch the dot. Done 2026-11-01.
+    - Domain: `missionFor` (mode, alarm tier, ready sensors, the day's dots, backup), trackers that turn raw readings into progress (all thresholds in Dart), `missionOffOfferDue`. Settings keys in the synced JSON, no migration; skips in the local `wake_up_days` (Drift 12).
+    - Flow: arming hands each morning's mission to the OS side. "I'm up" (Android) or AlarmKit's Stop (iOS, `MissionStopIntent`, opens the app) quiets the ring, opens `/wake-up/mission/<date>/<kind>` and re-rings a minute later; the screen pushes that out while in use; done or a 5 s "Can't right now" dismisses through the gateway and arms the Wake Up Check; 10 min after the mission first opened the alarm just stops. iOS records a `mission` event that the app's drain opens, since an intent can't open a link. Driving, a missing or denied sensor: the morning ends at once, unrecorded.
+    - Sensors: in-house `MissionSensors.kt` / `MissionSensors.swift` (owner): step counter, ambient lux (repeated every 500 ms; it reports only on change), gravity + user acceleration; iPhone Light reads the camera's EXIF BrightnessValue, no pixels. Permissions (ACTIVITY_RECOGNITION, Motion, Camera) are asked when the mission is picked in Settings, with purpose strings in four languages.
+    - Decided: the skip offer sits on the Wake Up card, where a skip lands; the notification's "I'm up" opens the ringing screen on mission mornings (Android 12+ blocks trampolines); the backup picker uses a record so None is a pick; the mission screen is the Focus ring at 120 px; the repeat editor's weekday chips moved to `shared/pickers/weekday_chips.dart` for reuse.
+    - Verified: 5,848 tests; Android emulator `wake_up_alarm` (4 incl. both mission paths) and sweep; builds for Android, iOS simulator and macOS.
+    - Security §9: no new table (one local column); no task text in events or logs; the mission link passes the allow-list (date + `MissionKind` names only); sensor data is never stored; new OS permissions have usage text in every language (`os_strings_test.dart`); no new dependency.
+    - Not verified here: the iOS gate below (AlarmKit's Stop with the app force-quit) needs a real iPhone on iOS 26.1+.
+  - [ ] M17.7b Pick today's one thing: the pick screen, the one-thing ring + "Your one thing" on Today, the Wake Up card and the widgets (owner: ring + label).
+  - [ ] M17.7c Make sure I'm up: the Wind Down review toggle and the task sheet switch, one morning each; the backup mission.
+  - Real-device gate (owner): iOS mission morning, app force-quit, tap Stop → the app opens on the mission and rings again ~1 min later. Only if that fails, a backup alarm with an ADR.
 
 Follow-ups (M17):
 - [ ] "Vary the sound": choose which 2–6 Start sounds rotate (15 §9); M17.2 rotates through all but Insistent.
@@ -558,7 +569,7 @@ One branch, one PR (`feat/calendar-series`).
   deploy is an owner gate). Done: importer tests for each provider's shape; a series key survives a
   moved instance. Notes: `ExternalEvent.seriesId` sits beside `repeating` (still the device
   rule "this instance can't be written alone"; Google/Microsoft instances can, M7.4).
-  `importedSeriesKey` drops an empty or over-long key. Local schema 12 adds the column
+  `importedSeriesKey` drops an empty or over-long key. Local schema 13 adds the column
   (`_addColumnOnce`, CHECK kept); `validateCalendarLink` checks it.
 - [x] CS2 Imported series settings. A device-only table `calendar_series` (account, series key,
   colour, icon, alerts, sound, travel time, subtask templates, notes override, hidden) — the
@@ -566,7 +577,7 @@ One branch, one PR (`feat/calendar-series`).
   an instance appearing in the 90-day window next month already has the subtasks. Rejected: a synced
   `series` row (imports are device-only, and the materialiser would create instances the calendar
   owns); copying from the previous instance (breaks when that one was edited "this one"). Notes:
-  `CalendarSeries` (`domain/entities/`), local schema 12, `WriteBatch.calendarSeries` (device-only
+  `CalendarSeries` (`domain/entities/`), local schema 13, `WriteBatch.calendarSeries` (device-only
   writer, `validateCalendarSeries`), Undo puts a changed row back and clears a created one (no
   Trash for it). `withSeriesSettings` / `seriesSubtasks` (`domain/calendar/`) shape a new instance;
   a time of day is placed on the instance's own date in the series' zone. A series ended in the

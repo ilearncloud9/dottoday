@@ -43,7 +43,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 12;
+  static const latestSchemaVersion = 13;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -106,10 +106,19 @@ class AppDatabase extends _$AppDatabase {
       // 11 (M17.5, owner 2026-11-01): the Wind Down reminder's settings key
       // is windDownReminder; the value moves from bedtimeReminder.
       if (from < 11) await _moveWindDownReminder();
-      // 12 (docs/02 F5.7): which repeating calendar event a link belongs
+      // 12 (M17.7, docs/15 §8): a skipped mission, for the offer to turn
+      // missions off after 3 skips in 7 days.
+      if (from < 12) {
+        await _addColumnOnce(
+          m,
+          wakeUpDaysTable,
+          wakeUpDaysTable.missionSkippedAtUtc,
+        );
+      }
+      // 13 (docs/02 F5.7): which repeating calendar event a link belongs
       // to (null on upgrade; the next import fills it), and the local
       // calendar_series the person sets for every instance of one.
-      if (from < 12) {
+      if (from < 13) {
         await _addColumnOnce(m, calendarLinks, calendarLinks.seriesKey);
         await _createTableOnce(m, calendarSeriesTable);
       }

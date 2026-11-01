@@ -16,49 +16,72 @@ import 'package:flutter_test/flutter_test.dart';
 // `uiLayout: "full"` for every existing profile; 9 → 10 (M17.3, docs/15
 // §3): the local wake_up_days; 10 → 11 (M17.5): the Wind Down reminder's
 // settings key moves from bedtimeReminder to windDownReminder; 11 → 12
+// (M17.7, docs/15 §8): wake_up_days.mission_skipped_at_utc; 12 → 13
 // (docs/02 F5.7): calendar_links.series_key and calendar_series.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
-  test('a version 11 file gains series keys and settings, rows kept', () async {
+  test('a version 12 file gains series keys and settings, rows kept', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig13');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+
+    final v12 = AppDatabase(NativeDatabase(file));
+    await v12.customStatement(
+      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+      "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+    );
+    await v12.customStatement(
+      'INSERT INTO calendar_accounts (id, user_id, provider, label, '
+      "created_at, updated_at) VALUES ('a', 'u', 'apple_device', 'Work', 0, 0)",
+    );
+    await v12.customStatement(
+      'INSERT INTO calendar_links (id, user_id, account_id, '
+      'external_calendar_id, external_event_id) '
+      "VALUES ('l1', 'u', 'a', 'work', 'E1@0')",
+    );
+    await v12.customStatement(
+      'ALTER TABLE calendar_links DROP COLUMN series_key',
+    );
+    await v12.customStatement('DROP TABLE calendar_series');
+    await v12.customStatement('PRAGMA user_version = 12');
+    await v12.close();
+
+    final v13 = AppDatabase(NativeDatabase(file));
+    addTearDown(v13.close);
+    final row = await v13.select(v13.calendarLinks).getSingle();
+    expect(row.externalEventId, 'E1@0');
+    expect(row.seriesKey, isNull);
+    await expectLater(
+      v13.customStatement(
+        "UPDATE calendar_links SET series_key = '${'x' * 513}' WHERE id = 'l1'",
+      ),
+      throwsA(isA<SqliteException>()),
+      reason: 'the added column keeps its CHECK',
+    );
+    expect(await v13.select(v13.calendarSeriesTable).get(), isEmpty);
+  });
+
+  test('a version 11 file gains the mission skip and keeps its days', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig12');
     addTearDown(() => dir.delete(recursive: true));
     final file = File('${dir.path}/db.sqlite');
 
     final v11 = AppDatabase(NativeDatabase(file));
     await v11.customStatement(
-      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
-      "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+      'ALTER TABLE wake_up_days DROP COLUMN mission_skipped_at_utc',
     );
     await v11.customStatement(
-      'INSERT INTO calendar_accounts (id, user_id, provider, label, '
-      "created_at, updated_at) VALUES ('a', 'u', 'apple_device', 'Work', 0, 0)",
+      "INSERT INTO wake_up_days (date, snoozes) VALUES ('2026-11-02', 2)",
     );
-    await v11.customStatement(
-      'INSERT INTO calendar_links (id, user_id, account_id, '
-      'external_calendar_id, external_event_id) '
-      "VALUES ('l1', 'u', 'a', 'work', 'E1@0')",
-    );
-    await v11.customStatement(
-      'ALTER TABLE calendar_links DROP COLUMN series_key',
-    );
-    await v11.customStatement('DROP TABLE calendar_series');
     await v11.customStatement('PRAGMA user_version = 11');
     await v11.close();
 
     final v12 = AppDatabase(NativeDatabase(file));
     addTearDown(v12.close);
-    final row = await v12.select(v12.calendarLinks).getSingle();
-    expect(row.externalEventId, 'E1@0');
-    expect(row.seriesKey, isNull);
-    await expectLater(
-      v12.customStatement(
-        "UPDATE calendar_links SET series_key = '${'x' * 513}' WHERE id = 'l1'",
-      ),
-      throwsA(isA<SqliteException>()),
-      reason: 'the added column keeps its CHECK',
-    );
-    expect(await v12.select(v12.calendarSeriesTable).get(), isEmpty);
+    final days = await v12.select(v12.wakeUpDaysTable).get();
+    expect(days.single.snoozes, 2);
+    expect(days.single.missionSkippedAtUtc, isNull);
   });
 
   test('a version 10 file moves bedtimeReminder to windDownReminder', () async {

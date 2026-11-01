@@ -137,6 +137,46 @@ void main() {
     });
   });
 
+  group('the mission an event leaves open (15 §8, iOS)', () {
+    final at = DateTime.utc(2026, 11, 2, 6);
+    AlarmEvent e(AlarmEventKind kind, {String? mission, int min = 0}) =>
+        AlarmEvent(
+          'wakeup:2026-11-02',
+          kind,
+          at.add(Duration(minutes: min)),
+          mission: mission,
+        );
+
+    test('the last mission no stop ended', () {
+      expect(
+        openMission([
+          e(AlarmEventKind.rang),
+          e(AlarmEventKind.mission, mission: 'walk', min: 1),
+        ]),
+        ('2026-11-02', 'walk'),
+      );
+    });
+
+    test('a later stop ends it; a ring alone opens nothing', () {
+      expect(
+        openMission([
+          e(AlarmEventKind.mission, mission: 'walk'),
+          e(AlarmEventKind.stopped, min: 3),
+        ]),
+        isNull,
+      );
+      expect(openMission([e(AlarmEventKind.rang)]), isNull);
+    });
+
+    test('a mission event leaves the day as it was', () {
+      const day = WakeUpDay(date: '2026-11-02', snoozes: 1);
+      expect(
+        applyAlarmEvent(day, e(AlarmEventKind.mission, mission: 'walk')),
+        day,
+      );
+    });
+  });
+
   group('alarm events', () {
     test('first ring counts, snoozes add up, the last stop wins', () {
       var day = _today;

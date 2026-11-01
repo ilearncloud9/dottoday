@@ -8,3 +8,5 @@
 "NSFaceIDUsageDescription" = "Dottoday usa Face ID para desbloquearse cuando activas el bloqueo de la app.";
 "NSMicrophoneUsageDescription" = "Dottoday solo escucha mientras el botón del micrófono está activado, para convertir tus palabras en texto en este dispositivo.";
 "NSSpeechRecognitionUsageDescription" = "Tus palabras se convierten en texto en este dispositivo. No se envía nada a ningún servidor.";
+"NSCameraUsageDescription" = "Dottoday comprueba lo iluminada que está la habitación solo mientras una misión Luz está en pantalla, para detener tu despertador. No se toma ni se guarda ninguna foto.";
+"NSMotionUsageDescription" = "Dottoday cuenta tus pasos solo mientras una misión Caminar está en pantalla, para detener tu despertador. No se guarda nada.";

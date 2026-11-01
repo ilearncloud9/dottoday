@@ -1,6 +1,7 @@
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
+import 'package:dottoday/domain/wake_up/mission.dart';
 
 /// Snooze lengths Settings › Wake Up alarm offers, in minutes (15 §9).
 const wakeUpSnoozeChoices = [5, 9, 10, 15];
@@ -58,6 +59,7 @@ final class WakeUpAlarm {
     this.rampSeconds = 0,
     this.minimal = false,
     this.check,
+    this.mission,
   });
 
   /// `wakeup:<yyyy-mm-dd>` (the civil day), or [testId].
@@ -89,6 +91,27 @@ final class WakeUpAlarm {
   /// or null when it is off or the day has no dot to start.
   final WakeUpCheck? check;
 
+  /// This morning's mission (15 §8), or null: "I'm up" then silences the
+  /// ring and opens it, re-ringing each minute until an exit.
+  final MissionPlan? mission;
+
+  /// This alarm with [plan] as its mission.
+  WakeUpAlarm withMission(MissionPlan? plan) => WakeUpAlarm(
+    id: id,
+    fireAtUtc: fireAtUtc,
+    sound: sound,
+    title: title,
+    body: body,
+    stopLabel: stopLabel,
+    snoozeLabel: snoozeLabel,
+    snoozeMinutes: snoozeMinutes,
+    snoozeLimit: snoozeLimit,
+    rampSeconds: rampSeconds,
+    minimal: minimal,
+    check: check,
+    mission: plan,
+  );
+
   /// The test alarm's id: `sync` never disarms it.
   static const testId = 'wakeup:test';
 
@@ -106,7 +129,8 @@ final class WakeUpAlarm {
       other.snoozeLimit == snoozeLimit &&
       other.rampSeconds == rampSeconds &&
       other.minimal == minimal &&
-      other.check == check;
+      other.check == check &&
+      other.mission == mission;
 
   @override
   int get hashCode => Object.hash(
@@ -122,6 +146,7 @@ final class WakeUpAlarm {
     rampSeconds,
     minimal,
     check,
+    mission,
   );
 
   @override

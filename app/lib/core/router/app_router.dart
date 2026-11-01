@@ -34,6 +34,7 @@ final class RouteScreens {
     required this.task,
     required this.focus,
     required this.wakeUp,
+    required this.mission,
     required this.review,
   });
 
@@ -58,6 +59,10 @@ final class RouteScreens {
 
   /// The Wake Up card, full screen (docs/15 §5, M17.3).
   final WidgetBuilder wakeUp;
+
+  /// A morning's mission, full screen (docs/15 §8): its `yyyy-MM-dd` and
+  /// its `MissionKind` name.
+  final Widget Function(BuildContext, String date, String kind) mission;
 
   /// Today's Wind Down review (docs/15 W6).
   final WidgetBuilder review;
@@ -106,6 +111,14 @@ GoRouter buildRouter(
       GoRoute(
         path: AppRoutes.wakeUp,
         builder: (context, state) => screens.wakeUp(context),
+      ),
+      GoRoute(
+        path: AppRoutes.missionPattern,
+        builder: (context, state) => screens.mission(
+          context,
+          state.pathParameters['date']!,
+          state.pathParameters['kind']!,
+        ),
       ),
       GoRoute(
         path: AppRoutes.review,

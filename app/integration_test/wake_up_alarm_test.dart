@@ -118,4 +118,99 @@ void main() {
     });
     expect(await armed(), isFalse);
   });
+
+  // Missions (docs/15 §8): on a mission morning "I'm up" opens the mission
+  // and re-arms the alarm a minute out; the screen in use pushes it out;
+  // the app's dismiss ends it and arms the check. "Only after a snooze"
+  // lets the first ring stop as usual.
+  group('missions', () {
+    Map<String, Object> alarm(String id, {required bool afterSnooze}) => {
+      'id': id,
+      'fireAtMs': DateTime.now().millisecondsSinceEpoch + 3000,
+      'sound': 'start_bells',
+      'title': 'Wake Up',
+      'body': 'Device check',
+      'stop': "I'm up",
+      'snooze': 'Snooze',
+      'snoozeMin': 9,
+      'snoozeLimit': 3,
+      'rampSec': 0,
+      'minimal': false,
+      'checkMin': 10,
+      'checkTitle': 'Start Run?',
+      'checkBody': 'Tap to start.',
+      'checkStart': 'Start',
+      'checkTarget': '',
+      'checkLoud': false,
+      'mission': 'standUp',
+      'missionAfterSnooze': afterSnooze,
+    };
+
+    Future<void> ring(WidgetTester tester, Map<String, Object> a) async {
+      await _channel.invokeMethod<Object>('sync', {
+        'alarms': [a],
+        'started': <String>[],
+      });
+      await waitUntil(
+        tester,
+        () async => await _ringing() == a['id'],
+        timeout: const Duration(seconds: 30),
+      );
+    }
+
+    testWidgets("I'm up opens the mission and re-rings; dismiss ends it", (
+      tester,
+    ) async {
+      if (defaultTargetPlatform != TargetPlatform.android) return;
+      await startApp(tester);
+      const id = 'wakeup:2099-01-02';
+      await ring(tester, alarm(id, afterSnooze: false));
+      final link = await _channel.invokeMethod<String>('perform', {
+        'action': 'up',
+        'id': id,
+      });
+      expect(link, 'dottoday://wake-up/mission/2099-01-02/standUp');
+      await waitUntil(tester, () async => await _ringing() == null);
+      final quiet = await _stored(id);
+      expect(quiet?['state'], 'mission');
+      final reRing = quiet!['fireAtMs']! as int;
+      final now = DateTime.now().millisecondsSinceEpoch;
+      expect(reRing - now, inInclusiveRange(50000, 61000));
+
+      await Future<void>.delayed(const Duration(seconds: 2));
+      await _channel.invokeMethod<void>('keepMission', {'id': id});
+      expect((await _stored(id))!['fireAtMs']! as int, greaterThan(reRing));
+
+      await _channel.invokeMethod<void>('dismiss', {'id': id});
+      expect(await _stored(id), isNull);
+      expect(
+        await _channel.invokeMethod<bool>('checkArmed', {'id': id}),
+        isTrue,
+        reason: 'the check runs after a mission as on every morning',
+      );
+      await _channel.invokeMethod<Object>('sync', {
+        'alarms': <Object>[],
+        'started': ['2099-01-02'],
+      });
+    });
+
+    testWidgets('only after a snooze: the first ring stops as usual', (
+      tester,
+    ) async {
+      if (defaultTargetPlatform != TargetPlatform.android) return;
+      await startApp(tester);
+      const id = 'wakeup:2099-01-03';
+      await ring(tester, alarm(id, afterSnooze: true));
+      final link = await _channel.invokeMethod<String>('perform', {
+        'action': 'up',
+        'id': id,
+      });
+      expect(link, 'dottoday://wake-up');
+      expect(await _stored(id), isNull);
+      await _channel.invokeMethod<Object>('sync', {
+        'alarms': <Object>[],
+        'started': ['2099-01-03'],
+      });
+    });
+  });
 }

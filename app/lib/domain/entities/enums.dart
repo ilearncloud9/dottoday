@@ -66,3 +66,25 @@ enum Weekday { mon, tue, wed, thu, fri, sat, sun }
 /// Where a routine sits on a day (docs/05 `routines`, 11 C2): its first
 /// step at Wake Up, its last step ending at Wind Down, or a fixed time.
 enum RoutineAnchor { wake, bed, time }
+
+/// Which mornings ask for a mission (docs/15 §8 rule 2). Off is the
+/// default; turning missions on starts at [afterSnooze].
+enum MissionMode { off, whenAsked, afterSnooze, chosenDays, always }
+
+/// The six missions of docs/15 §8. [standUp] is the default: every phone
+/// has its sensors and it needs no permission.
+enum MissionKind {
+  standUp,
+  walk,
+  light,
+  breathe,
+  catchDot,
+  oneThing;
+
+  /// On-screen missions prove you're awake, not out of bed (15 §8:
+  /// "Wakes you up, doesn't get you up").
+  bool get onScreen => this == breathe || this == catchDot || this == oneThing;
+
+  /// Missions that read a sensor, so a device may lack them.
+  bool get usesSensor => this == walk || this == light;
+}

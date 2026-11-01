@@ -40,6 +40,51 @@ void main() {
     expect(h.days[_date]?.cardShownAtUtc, todayTestNow);
   });
 
+  group('the offer to turn missions off (15 §8 rule 4)', () {
+    final missions = wakeUpOn.copyWith(missionMode: MissionMode.afterSnooze);
+    List<WakeUpDay> skipped(List<String> dates) => [
+      for (final d in dates)
+        WakeUpDay(date: d, missionSkippedAtUtc: DateTime.parse('${d}T05:00Z')),
+    ];
+    const offer = 'Missions seem to get in the way lately. Turn them off?';
+
+    testWidgets('after 3 skips in 7 days; Turn off turns them off', (
+      tester,
+    ) async {
+      await pumpWakeUp(
+        tester,
+        settings: missions,
+        days: skipped(['2026-10-17', '2026-10-19', '2026-10-21']),
+      );
+      expect(find.text(offer), findsOneWidget);
+      await tester.tap(find.text('Turn off'));
+      await tester.pumpAndSettle();
+      expect(find.text(offer), findsNothing);
+    });
+
+    testWidgets('Keep them retires the offer and keeps missions on', (
+      tester,
+    ) async {
+      await pumpWakeUp(
+        tester,
+        settings: missions,
+        days: skipped(['2026-10-19', '2026-10-20', '2026-10-21']),
+      );
+      await tester.tap(find.text('Keep them'));
+      await tester.pumpAndSettle();
+      expect(find.text(offer), findsNothing);
+    });
+
+    testWidgets('2 skips: no offer', (tester) async {
+      await pumpWakeUp(
+        tester,
+        settings: missions,
+        days: skipped(['2026-10-20', '2026-10-21']),
+      );
+      expect(find.text(offer), findsNothing);
+    });
+  });
+
   testWidgets('Start the day: Focus on a dot under way', (tester) async {
     await pumpWakeUp(tester);
     await _tap(tester, 'Start the day');

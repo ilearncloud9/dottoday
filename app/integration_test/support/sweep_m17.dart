@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 // M17 in the design sweep (docs/15 W1): Settings › Day shape with the
 // Wake Up alarm switched on (its tier line, and Allow where something is
 // in the way), its Wake Up options page (M17.2), the Wake Up card (M17.3),
-// then Notification
-// health's Wake Up row. The switch goes back off, so later runs start as
+// a mission screen (Breathe, M17.7a: still until touched), then
+// Notification health's Wake Up row. The switch goes back off, so later runs start as
 // an upgrade does.
 
 /// The Wake Up alarm's screens, each captured with [shot].
@@ -47,6 +47,13 @@ Future<void> sweepM17(
   await until(find.text('Later'));
   await rest();
   await shot('wake_up_card');
+
+  // A mission (docs/15 §8). Breathe needs no sensor and holds still until
+  // touched; leaving it ends nothing, so no alarm is touched.
+  router.go('/wake-up/mission/2099-01-01/breathe');
+  await until(find.text('Breathe with the ring'));
+  await rest();
+  await shot('wake_up_mission');
 
   router.go('/settings/notifications');
   await rest();

@@ -4,7 +4,7 @@ import 'package:dottoday/data/db/tables/profiles.dart';
 import 'package:drift/drift.dart';
 
 /// What the person set for a repeating calendar event's every instance
-/// (docs/05 `calendar_series`, docs/02 F5.7). Local only, schema 12: like
+/// (docs/05 `calendar_series`, docs/02 F5.7). Local only, schema 13: like
 /// `calendar_links`, never pushed, so no sync columns and no server table.
 @DataClassName('CalendarSeriesRow')
 class CalendarSeriesTable extends Table with TimestampColumns {
