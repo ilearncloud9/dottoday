@@ -227,7 +227,7 @@ Four small changes, all pure consumers of W4's `effectiveWindDown(D)` and the ex
 - The night is drawn thinner as well as fainter, so it reads without colour (owner's surfaces: Today, Wake Up card, week review, menu bar, widgets; not the Live Activity).
 - The review's opening line follows the minute tick. The sleep offer's decline is "No thanks".
 
-**Learned value allowed:** `medianDismissOffsetMin` (W0) may offer, once, in the Day shape row: "You usually get up \~12 min after Wake Up. Move Wind Down 12 min earlier?" Yes / No; never automatic, never repeated inside 30 days, reveal rules from doc 13.
+**As built (follow-up):** the offer sits under Sleep target in Day shape, from 5 stopped mornings and a 10-min median; Yes adds the minutes, rounded up to the target's 15-min steps, to the sleep target. **Learned value allowed:** `medianDismissOffsetMin` (W0) may offer, once, in the Day shape row: "You usually get up \~12 min after Wake Up. Move Wind Down 12 min earlier?" Yes / No; never automatic, never repeated inside 30 days, reveal rules from doc 13.
 
 **Pitch line** (store page and onboarding last screen, under the three pillars, not a fourth pillar): "Starts your morning, ends your evening." Screenshot pair: the Wind Down review with the night arc, the Wake Up card the next morning.
 

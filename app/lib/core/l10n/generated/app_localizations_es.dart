@@ -6347,6 +6347,21 @@ class AppLocalizationsEs extends AppLocalizations {
       'Deja que Dottoday funcione sin límites de batería para que esté lista tras reiniciar.';
 
   @override
+  String windDownLearnOffer(int usual, int more) {
+    return 'Sueles levantarte ~$usual min después de Wake Up. ¿Adelantar Wind Down $more min?';
+  }
+
+  @override
+  String get windDownLearnMove => 'Adelantar';
+
+  @override
+  String get windDownLearnKeep => 'Dejarlo';
+
+  @override
+  String get settingsWindDownLearn =>
+      'Proponer mover Wind Down según cuándo me levanto';
+
+  @override
   String startNudgeTitle(String title) {
     return '¿Empezar $title?';
   }

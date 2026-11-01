@@ -9510,6 +9510,30 @@ abstract class AppLocalizations {
   /// **'Let Dottoday run without battery limits so it\'s ready after a restart.'**
   String get healthWakeUpBatteryDetail;
 
+  /// Learned offer under Sleep target (docs/15 §7b).
+  ///
+  /// In en, this message translates to:
+  /// **'You usually get up ~{usual} min after Wake Up. Move Wind Down {more} min earlier?'**
+  String windDownLearnOffer(int usual, int more);
+
+  /// Learned offer: accept.
+  ///
+  /// In en, this message translates to:
+  /// **'Move it'**
+  String get windDownLearnMove;
+
+  /// Learned offer: decline.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it'**
+  String get windDownLearnKeep;
+
+  /// Day shape switch (docs/15 §9).
+  ///
+  /// In en, this message translates to:
+  /// **'Offer to move Wind Down from how I actually get up'**
+  String get settingsWindDownLearn;
+
   /// Start nudge notification title (docs/15 §11).
   ///
   /// In en, this message translates to:
