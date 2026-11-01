@@ -7,6 +7,7 @@ import 'package:dottoday/domain/notifications/alarm_policy.dart';
 import 'package:dottoday/domain/notifications/day_reminders.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
+import 'package:dottoday/domain/notifications/start_nudges.dart';
 import 'package:dottoday/domain/scheduling/start_escalation.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -57,7 +58,8 @@ final class NotificationPlanner {
   /// future [testAlarmAtUtc] adds the test alarm (M6.5.9). Each occurrence
   /// with a step in [firstSteps] gets one Smallest step reminder at
   /// `escalationAt(DotStart(o))` (M10.6); a real start, Done or a move
-  /// re-plans it away.
+  /// re-plans it away. With [daily]'s `startNudge` on, a dot without
+  /// steps gets "Start `dot`?" at the same moment instead ([startNudges]).
   /// While [daily]'s low-energy mode lasts, only loud ones stay (M12.2).
   ///
   /// When [ringsWakeUp] (a phone) and [daily]'s `wakeUpAlarm` are on, each
@@ -137,6 +139,24 @@ final class NotificationPlanner {
     planned.addAll(
       _smallestSteps(live, withSteps, now, end, location, quietHours, usedIds),
     );
+    if (daily case final settings?) {
+      planned.addAll(
+        startNudges(
+          live,
+          settings: settings,
+          withSteps: withSteps,
+          // The Wake Up Check already asks about the day's first dot.
+          checked: settings.wakeUpCheck
+              ? {for (final w in wakeUps) w.occurrenceId}
+              : const {},
+          nowUtc: now,
+          endUtc: end,
+          location: location,
+          used: usedIds,
+          quietHours: quietHours,
+        ),
+      );
+    }
     if (daily case final settings?) {
       if (settings.windDownReminder) {
         planned.addAll(

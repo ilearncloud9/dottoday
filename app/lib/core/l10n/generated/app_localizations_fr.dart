@@ -6379,6 +6379,21 @@ class AppLocalizationsFr extends AppLocalizations {
       'Proposer d\'ajuster Wind Down selon mon vrai lever';
 
   @override
+  String startNudgeTitle(String title) {
+    return 'Commencer $title ?';
+  }
+
+  @override
+  String get startNudgeBody => 'Touchez Commencer quand vous êtes prêt.';
+
+  @override
+  String get settingsStartNudge => 'Demander quand un point n\'a pas commencé';
+
+  @override
+  String get settingsStartNudgeDetail =>
+      '10 minutes après son début, un rappel doux : « Commencer Course ? »';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

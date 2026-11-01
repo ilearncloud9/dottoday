@@ -6368,6 +6368,22 @@ class AppLocalizationsDe extends AppLocalizations {
       'Anbieten, Wind Down danach zu richten, wann ich aufstehe';
 
   @override
+  String startNudgeTitle(String title) {
+    return '$title starten?';
+  }
+
+  @override
+  String get startNudgeBody => 'Tipp auf Starten, wenn du so weit bist.';
+
+  @override
+  String get settingsStartNudge =>
+      'Nachfragen, wenn ein Punkt nicht begonnen hat';
+
+  @override
+  String get settingsStartNudgeDetail =>
+      '10 Minuten nach Beginn ein sanfter Hinweis: „Laufen starten?“';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

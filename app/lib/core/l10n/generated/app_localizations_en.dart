@@ -6329,6 +6329,21 @@ class AppLocalizationsEn extends AppLocalizations {
       'Offer to move Wind Down from how I actually get up';
 
   @override
+  String startNudgeTitle(String title) {
+    return 'Start $title?';
+  }
+
+  @override
+  String get startNudgeBody => 'Tap Start when you\'re ready.';
+
+  @override
+  String get settingsStartNudge => 'Ask when a dot hasn\'t started';
+
+  @override
+  String get settingsStartNudgeDetail =>
+      '10 minutes after its start, one gentle ping: \"Start Run?\"';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override
