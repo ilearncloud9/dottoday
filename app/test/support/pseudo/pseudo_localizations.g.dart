@@ -4984,6 +4984,18 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get oneThingInInbox => pseudo(super.oneThingInInbox);
 
   @override
+  String get tomorrowMatters => pseudo(super.tomorrowMatters);
+
+  @override
+  String get tomorrowMattersBreathe => pseudo(super.tomorrowMattersBreathe);
+
+  @override
+  String get makeSureUpTitle => pseudo(super.makeSureUpTitle);
+
+  @override
+  String get makeSureUpDetail => pseudo(super.makeSureUpDetail);
+
+  @override
   String get wakeUpRotationTitle => pseudo(super.wakeUpRotationTitle);
 
   @override

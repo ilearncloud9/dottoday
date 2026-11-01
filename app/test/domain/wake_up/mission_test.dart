@@ -154,4 +154,70 @@ void main() {
       MissionKind.oneThing,
     ]);
   });
+
+  group("Make sure I'm up (M17.7c)", () {
+    const asked = Settings(missionMode: MissionMode.whenAsked);
+
+    test('the review toggle flags its date only', () {
+      final s = asked.copyWith(missionFlagDate: '2026-11-03');
+      expect(morningFlagged(s, '2026-11-03'), isTrue);
+      expect(morningFlagged(s, '2026-11-04'), isFalse);
+      expect(morningFlagged(asked, '2026-11-03'), isFalse);
+    });
+
+    test("the sheet's switch flags the morning its dot starts", () {
+      final s = asked.copyWith(missionFlagIds: ['flight']);
+      expect(morningFlagged(s, '2026-11-03', firstDotId: 'flight'), isTrue);
+      expect(morningFlagged(s, '2026-11-03', firstDotId: 'coffee'), isFalse);
+      expect(morningFlagged(s, '2026-11-03'), isFalse);
+    });
+
+    test('flags mean nothing while missions are off', () {
+      const s = Settings(
+        missionFlagDate: '2026-11-03',
+        missionFlagIds: ['flight'],
+      );
+      expect(morningFlagged(s, '2026-11-03', firstDotId: 'flight'), isFalse);
+    });
+
+    test('a flagged morning falls back to Breathe, never a step count', () {
+      const s = Settings(
+        missionMode: MissionMode.whenAsked,
+        missionKind: MissionKind.oneThing,
+        missionBackup: MissionKind.walk,
+      );
+      expect(
+        _plan(s, dots: 1, flagged: true),
+        const MissionPlan(MissionKind.breathe, afterSnooze: false),
+      );
+      expect(
+        _plan(
+          const Settings(
+            missionMode: MissionMode.whenAsked,
+            missionKind: MissionKind.walk,
+          ),
+          flagged: true,
+          can: (k) => k != MissionKind.walk,
+        ),
+        const MissionPlan(MissionKind.breathe, afterSnooze: false),
+      );
+    });
+
+    test('an unflagged morning keeps its own backup', () {
+      const s = Settings(
+        missionMode: MissionMode.always,
+        missionKind: MissionKind.oneThing,
+        missionBackup: MissionKind.standUp,
+      );
+      expect(_plan(s, dots: 1)?.kind, MissionKind.standUp);
+    });
+
+    test('the switch keeps one flag per dot and drops spent ones', () {
+      const s = Settings(missionFlagIds: ['old', 'flight']);
+      final on = withMissionFlag(s, 'gym', on: true, live: {'flight'});
+      expect(on.missionFlagIds, ['flight', 'gym']);
+      final off = withMissionFlag(on, 'flight', on: false, live: {'gym'});
+      expect(off.missionFlagIds, ['gym']);
+    });
+  });
 }

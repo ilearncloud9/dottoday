@@ -98,23 +98,29 @@ final class WakeUpArming {
     };
     final zone = tz.getLocation(profile.tzId);
     final dots = <String, int>{};
+    // Each day's first dot, whose "Make sure I'm up" flags its morning.
+    final first = <String, Occurrence>{};
     for (final b in blocks) {
       if (b.startUtc case final start?) {
-        dots.update(
-          formatRouteDate(tz.TZDateTime.from(start, zone)),
-          (n) => n + 1,
-          ifAbsent: () => 1,
-        );
+        final key = formatRouteDate(tz.TZDateTime.from(start, zone));
+        dots.update(key, (n) => n + 1, ifAbsent: () => 1);
+        if (b.status == OccurrenceStatus.skipped) continue;
+        if (first[key] case final f? when !f.startUtc!.isAfter(start)) {
+          continue;
+        }
+        first[key] = b;
       }
     }
     MissionPlan? plan(WakeUpAlarm a) {
       final local = tz.TZDateTime.from(a.fireAtUtc, zone);
+      final key = formatRouteDate(local);
       return missionFor(
         settings,
         weekday: Weekday.values[local.weekday - 1],
         tier: tier,
-        dots: dots[formatRouteDate(local)] ?? 0,
+        dots: dots[key] ?? 0,
         can: ready.contains,
+        flagged: morningFlagged(settings, key, firstDotId: first[key]?.id),
       );
     }
 

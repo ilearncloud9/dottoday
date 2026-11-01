@@ -122,6 +122,12 @@ abstract class Settings with _$Settings {
     MissionKind? missionBackup,
     @Default(true) bool missionSkipOffer,
     @Default(false) bool missionOffOfferAnswered,
+    // "Make sure I'm up" (15 §8 rule 5, M17.7c): each flag is one morning.
+    // The Wind Down review's toggle stores the morning's date (it clears
+    // itself once that day comes); the task sheet's switch stores the
+    // occurrence, and its morning is the one it starts the day of.
+    String? missionFlagDate,
+    @Default(<String>[]) List<String> missionFlagIds,
     // Today's one thing (15 §8, M17.7b): picked by the mission or from
     // Today, one a day, cleared by its date.
     OneThing? oneThing,
