@@ -16,8 +16,8 @@ import io.flutter.plugin.common.MethodChannel
  * docs/02 F5.7): a scope-All edit or delete of a repeating event, on its
  * `Events` row — the whole series, as the Calendar app's "All events"
  * does. device_calendar would rebuild the RRULE from its own model when it
- * saves, so only DTSTART (moved by `shiftMs`, its date kept), DURATION and
- * TITLE are written here; the rule, zone, exceptions and invitees stay as
+ * saves, so only DTSTART (moved by `shiftMs`, its date kept), the length
+ * and TITLE are written here; the rule, zone, exceptions and invitees stay as
  * they are. Titles are never logged (CLAUDE.md §4).
  */
 object CalendarSeries {
@@ -49,10 +49,21 @@ object CalendarSeries {
             ?: throw IllegalArgumentException()
         val row = find(context, args) ?: return "gone"
         if (!row.writable) return "notWritable"
+        val duration = (args["durationMs"] as? Number)?.toLong()
+        val start = row.start + shift
         val values = ContentValues().apply {
-            put(Events.DTSTART, row.start + shift)
-            (args["durationMs"] as? Number)?.let {
-                put(Events.DURATION, "P${it.toLong() / 1000}S")
+            put(Events.DTSTART, start)
+            // The provider re-expands the series from the fields an update
+            // carries: without its own RRULE (sent back as stored, never
+            // rebuilt) an end reads as the series' last date.
+            put(Events.RRULE, row.rrule)
+            if (row.end != null) {
+                // Stored with an end (device_calendar's events, which also
+                // read the end from here): keep that form; the provider
+                // refuses DURATION beside DTEND.
+                put(Events.DTEND, start + (duration ?: (row.end - row.start)))
+            } else if (duration != null) {
+                put(Events.DURATION, "P${duration / 1000}S")
             }
             (args["title"] as? String)?.let { put(Events.TITLE, it) }
         }
@@ -67,7 +78,13 @@ object CalendarSeries {
         return if (context.contentResolver.delete(uri, null, null) > 0) "written" else "gone"
     }
 
-    private class Row(val id: Long, val start: Long, val writable: Boolean)
+    private class Row(
+        val id: Long,
+        val start: Long,
+        val end: Long?,
+        val rrule: String?,
+        val writable: Boolean,
+    )
 
     /**
      * The series' row in its calendar, or null when gone. Writable only
@@ -91,6 +108,7 @@ object CalendarSeries {
             Events.ALL_DAY,
             Events.IS_ORGANIZER,
             Events.CALENDAR_ACCESS_LEVEL,
+            Events.DTEND,
         )
         context.contentResolver.query(
             ContentUris.withAppendedId(Events.CONTENT_URI, eventId),
@@ -105,7 +123,14 @@ object CalendarSeries {
             // Null on older providers: the account owns its own events.
             val organizer = c.isNull(3) || c.getString(3) != "0"
             val access = c.getInt(4) >= Calendars.CAL_ACCESS_CONTRIBUTOR
-            return Row(eventId, c.getLong(0), repeats && timed && organizer && access)
+            val end = if (c.isNull(5)) null else c.getLong(5)
+            return Row(
+                eventId,
+                c.getLong(0),
+                end,
+                c.getString(1),
+                repeats && timed && organizer && access,
+            )
         }
         return null
     }

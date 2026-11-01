@@ -623,7 +623,15 @@ One branch, one PR (`feat/calendar-series`).
   `/ship-check`-style gate for this section and the PR. Notes: goldens `picker_scope_calendar_*`, `picker_delete_from_calendar_*`
   (derived, both themes, compact and expanded); de/fr/es strings by the agent — native-speaker pass
   joins the open M16 one. The editor line stays "Changes go back to <calendar>" (it already says
-  where edits go). Device check `calendar_series` (iOS simulator, Android emulator).
+  where edits go). Device check `calendar_series` 5/5 on the iPhone 17 Pro simulator (iOS 26.5) and
+  the API 37 emulator, 2026-11-01: three days one series; rename All reaches the calendar; 30 min
+  earlier and 45 min long reach the series with its rule (daily ×3), notes and alert kept; the
+  re-import keeps the same three days; Delete All › from the calendar too removes it. Fixed from
+  it: Android's provider re-expands a series from the fields an update carries, so the stored
+  RRULE goes back unchanged with every write, and the DTEND form device_calendar uses is kept
+  (DURATION beside DTEND is refused); the editor's close after a scoped delete takes its navigator
+  at build, as a delete that reaches a calendar outlasts the editor. The Mac shares the iOS bridge
+  file; its run needs a person at the TCC prompt (08 §6.1, as M7.1b).
 
 ## Pricing (owner sign-off pending)
 

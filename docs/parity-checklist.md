@@ -25,9 +25,9 @@ ticked in 08 §6.1) before a tag.
 
 | Status | iPhone | Android | macOS | Web |
 |---|---|---|---|---|
-| ✓ CI | 38 | 38 | 43 | 53 |
-| ✓ device | 20 | 22 | 12 | 2 |
-| ◐ owner | 4 | 2 | 8 | 5 |
+| ✓ CI | 37 | 37 | 42 | 52 |
+| ✓ device | 21 | 23 | 12 | 2 |
+| ◐ owner | 4 | 2 | 9 | 6 |
 | ◐ manual | 3 | 3 | 3 | 7 |
 | → later | 0 | 0 | 0 | 0 |
 | — n/a | 3 | 3 | 2 | 1 |
@@ -97,7 +97,7 @@ ticked in 08 §6.1) before a tag.
 | F5.4 | Write-back (optional per calendar) | ✓ device<br>calendar_write_back/revoked/regranted · sim, M7.7 | ✓ device<br>calendar_write_back/revoked · emulator, M7.7 | ◐ owner<br>Calendars on this Mac (08 §6.1) | ◐ owner<br>Google/Microsoft calendars (08 §6.1) | `integration_test/calendar_write_back_test.dart`<br>`test/domain/calendar/write_back_merge_test.dart`<br>`supabase/functions/calendar-sync/sync_test.ts` |
 | F5.5 | Travel time: if the event has a location and the user enables it, a buffer block is suggested before it. (R… | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/domain/calendar/travel_time_test.dart`<br>`test/features/timeline/travel_suggestion_test.dart`<br>`test/features/timeline/task_sheet_travel_golden_test.dart` |
 | F5.6 | Links in event descriptions open in the browser | ✓ device<br>calendar_import opens Safari · sim, M7.7 | ✓ device<br>calendar_import opens Chrome · emulator, M7.7 | ✓ CI | ✓ CI | `test/core/utils/web_links_test.dart`<br>`test/features/timeline/note_links_test.dart` |
-| F5.7 | A repeating event from any calendar is one repeating item here (owner request, 2026-11-01; | ✓ CI | ✓ CI | ✓ CI | ✓ CI | `test/domain/calendar/calendar_import_plan_test.dart`<br>`test/data/calendar/calendar_series_writes_test.dart`<br>`test/domain/calendar/calendar_series_edit_test.dart`<br>`test/features/timeline/editor_calendar_series_test.dart`<br>`test/data/calendar/calendar_series_write_back_test.dart`<br>`test/data/calendar/calendar_series_channel_test.dart`<br>`supabase/functions/calendar-sync/sync_test.ts`<br>`supabase/functions/_shared/calendar/calendar_test.ts` |
+| F5.7 | A repeating event from any calendar is one repeating item here (owner request, 2026-11-01; | ✓ device<br>calendar_series · sim, 2026-11-01 | ✓ device<br>calendar_series · emulator, 2026-11-01 | ◐ owner<br>Calendars on this Mac (08 §6.1) | ◐ owner<br>calendar-sync deploy + a real account (08 §6.1) | `test/domain/calendar/calendar_import_plan_test.dart`<br>`test/data/calendar/calendar_series_writes_test.dart`<br>`test/domain/calendar/calendar_series_edit_test.dart`<br>`test/features/timeline/editor_calendar_series_test.dart`<br>`test/data/calendar/calendar_series_write_back_test.dart`<br>`test/data/calendar/calendar_series_channel_test.dart`<br>`supabase/functions/calendar-sync/sync_test.ts`<br>`supabase/functions/_shared/calendar/calendar_test.ts` |
 ## F6. Notifications & alerts
 
 | ID | Feature | iPhone | Android | macOS | Web | Automated evidence |

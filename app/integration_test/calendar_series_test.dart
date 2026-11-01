@@ -14,9 +14,11 @@ import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/calendar/calendar_series_sender.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/recurrence/series_change.dart';
+import 'package:dottoday/features/timeline/editor/task_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 import 'support/cal_app.dart';
 import 'support/calendar_qa.dart';
@@ -63,16 +65,10 @@ void main() {
     expect(linked?.seriesKey, isNotNull);
     debugPrint('CAL_CHECK F5.7 three days, one series: PASS');
 
-    Future<List<dc.Event>> inCalendar() async {
-      final r = await qa.plugin.retrieveEvents(
-        qa.calendarId,
-        dc.RetrieveEventsParams(startDate: qa.at(0, 0), endDate: qa.at(5, 0)),
-      );
-      return [
-        for (final e in r.data ?? const <dc.Event>[])
-          if (e.title == title || e.title == renamed) e,
-      ];
-    }
+    // The series as its calendar has it: the plugin lists a repeating
+    // event once per range on Android, once per repeat on iOS, so the
+    // checks read the series itself.
+    Future<dc.Event?> series() => qa.read(seriesId);
 
     // Rename with scope All in the editor.
     await go(tester, container, AppRoutes.task(days[1].id));
@@ -80,13 +76,17 @@ void main() {
     final field = find.byType(EditableText).first;
     await tester.enterText(field, renamed);
     await tester.pump(const Duration(seconds: 1));
+    // Not the keyboard's Done: Enter in the title is Save itself.
+    FocusManager.instance.primaryFocus?.unfocus();
+    await settle(tester);
+    await reach(tester, find.text('Save'));
     await tapOn(tester, find.text('Save'));
     expect(find.text('This and following'), findsNothing);
     await tapOn(tester, find.text('All'));
     await qa.until(
       tester,
-      inCalendar,
-      (l) => l.length == 3 && l.every((e) => e.title == renamed),
+      series,
+      (e) => e?.title == renamed,
       what: 'renamed in the calendar',
     );
     debugPrint('CAL_CHECK F5.7 rename All reaches every repeat: PASS');
@@ -110,20 +110,16 @@ void main() {
         .read(calendarSeriesWriteBackProvider)
         .edit(earlier, change);
     expect(sent, SeriesSend.sent);
-    final moved = await qa.until(
+    final master = (await qa.until(
       tester,
-      inCalendar,
-      (l) =>
-          l.length == 3 &&
-          l.every(
-            (e) =>
-                e.start!.hour == 6 &&
-                e.start!.minute == 30 &&
-                e.end!.difference(e.start!).inMinutes == 45,
-          ),
+      series,
+      (e) =>
+          e != null &&
+          tz.TZDateTime.from(e.start!, qa.zone).hour == 6 &&
+          tz.TZDateTime.from(e.start!, qa.zone).minute == 30 &&
+          e.end!.difference(e.start!).inMinutes == 45,
       what: 'moved in the calendar',
-    );
-    final master = (await qa.read(seriesId))!;
+    ))!;
     expect(
       master.recurrenceRule?.recurrenceFrequency,
       dc.RecurrenceFrequency.Daily,
@@ -135,22 +131,25 @@ void main() {
       'CAL_CHECK F5.7 time and length All reach the series, rule '
       '${master.recurrenceRule?.recurrenceFrequency} x'
       '${master.recurrenceRule?.totalOccurrences}, notes and '
-      '${master.reminders?.length} alert kept, ${moved.length} repeats: PASS',
+      '${master.reminders?.length} alert kept: PASS',
     );
 
     // The next import keeps every day as the same item.
     await resume(tester);
-    final after = await qa.until(
-      tester,
-      () => qa.items(renamed),
-      (l) => l.length == 3 && l.every((o) => o.durationMin == 45),
-    );
+    final after = await qa.until(tester, () async {
+      final l = await qa.items(renamed);
+      debugPrint(
+        'CAL_ITEMS ${[for (final o in l) '${o.id.substring(24)}|${o.startUtc}|${o.durationMin}']}',
+      );
+      return l;
+    }, (l) => l.length == 3 && l.every((o) => o.durationMin == 45));
     expect({for (final o in after) o.id}, ids);
     debugPrint('CAL_CHECK F5.7 re-import keeps the same days: PASS');
 
     // Delete All, and from the calendar too.
     await go(tester, container, AppRoutes.task(sorted(after)[1].id));
     await tapOn(tester, find.text('Edit'));
+    await reach(tester, find.byTooltip('Delete task'));
     await tapOn(tester, find.byTooltip('Delete task'));
     await tapOn(tester, find.text('All'));
     expect(
@@ -161,7 +160,26 @@ void main() {
       tester,
       find.text('Delete from ${CalendarQa.calendarName} too'),
     );
-    await qa.until(tester, inCalendar, (l) => l.isEmpty, what: 'deleted there');
+    await qa.until(tester, series, (e) => e == null, what: 'deleted there');
     debugPrint('CAL_CHECK F5.7 delete All from the calendar too: PASS');
   });
+}
+
+/// Scrolls the open editor's list until [finder] shows (it builds what
+/// is in view), as the journey test reaches Save.
+Future<void> reach(WidgetTester tester, Finder finder) async {
+  await waitFor(tester, find.byType(TaskEditor));
+  await settle(tester);
+  if (tester.any(finder)) return;
+  await tester.scrollUntilVisible(
+    finder,
+    300,
+    scrollable: find
+        .descendant(
+          of: find.byType(TaskEditor),
+          matching: find.byType(Scrollable),
+        )
+        .first,
+  );
+  await settle(tester);
 }

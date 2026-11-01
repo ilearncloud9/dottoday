@@ -100,6 +100,10 @@ const f5Rows = <String, ParityRow>{
       'supabase/functions/_shared/calendar/calendar_test.ts',
     ],
     all: ci,
+    ios: Cell(Status.device, 'calendar_series · sim, 2026-11-01'),
+    android: Cell(Status.device, 'calendar_series · emulator, 2026-11-01'),
+    macos: _macCal,
+    web: Cell(Status.owner, 'calendar-sync deploy + a real account (08 §6.1)'),
     note:
         'Google/Microsoft series write-back waits on the calendar-sync '
         'deploy (owner gate, 08 §6.1).',
