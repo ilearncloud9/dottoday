@@ -4272,6 +4272,20 @@ class AppLocalizationsDe extends AppLocalizations {
   String get soundsInAppDetail => 'Fertig-Ton und Fokus-Takt';
 
   @override
+  String get soundsEffectsCaption => 'Töne und Haptik';
+
+  @override
+  String get soundsHapticsInApp => 'Haptik in der App';
+
+  @override
+  String get soundsHapticsInAppDetail =>
+      'Ein spürbares Tippen beim Ziehen, Ablegen und Abhaken';
+
+  @override
+  String get soundsEffectsFooter =>
+      'Je nach Einstellungen deines Geräts sind Töne und Haptik eventuell nicht zu hören oder zu spüren.';
+
+  @override
   String get soundInsistentNote =>
       'Laut und wiederholt. Für dich, wenn leisere Töne dich nicht erreichen.';
 

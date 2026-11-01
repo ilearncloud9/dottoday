@@ -139,6 +139,7 @@ final class LayoutPolicy {
     FeatureId.sheetExtras: FeatureVisibility.hidden,
     FeatureId.iconLibrary: FeatureVisibility.hidden,
     FeatureId.sounds: FeatureVisibility.hidden,
+    FeatureId.haptics: FeatureVisibility.hidden,
     FeatureId.quietReminders: FeatureVisibility.hidden,
     FeatureId.dayShapeExtras: FeatureVisibility.hidden,
     FeatureId.planningSettings: FeatureVisibility.hidden,

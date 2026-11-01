@@ -13,6 +13,7 @@ import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/shared/feedback/save_failure.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:dottoday/shared/sounds/sound_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,7 +41,10 @@ final class FocusActions {
       const [],
       l10n.focusDoneMessage(task.title),
     );
-    if (written) playDoneSound(ref);
+    if (!written) return;
+    playDoneSound(ref);
+    // As the Done tiles on Today and the task sheet tap.
+    AppHaptics.playFor(ref, HapticTick.light);
   }
 
   /// +15 min on the planned length, with Undo.

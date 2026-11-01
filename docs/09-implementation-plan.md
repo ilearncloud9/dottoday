@@ -394,6 +394,7 @@ Spec: `12-sounds.md` (with the owner's amendments, 2026-10-28); ADR-0015; `11-st
   - Quiet outliers after the 6 dB limiter, kept in the owner's ear pass (2026-10-31, all ten kept) with `loudnessAccepted`: Music box, Rain, Wind chimes, Forest.
   - The fade-in is baked into the loop, so each repeat fades in again; M17 Wake Up's Android volume ramp (W1b) replaces it there.
   - About 15 MB more across platforms (27 s files).
+- [x] M15.7 Haptics in app (owner, 2026-11-01). Done 2026-11-01. `Settings.inAppHapticsEnabled` (default on, no schema change: a settings key), the Sound effects group on the Sounds page (docs/12 §6), and `shared/haptics/app_haptics.dart`: every in-app haptic goes through `AppHaptics`, and the root's `HapticsScope` carries the switch. Focus's Done taps like the Done tiles. Minimal mode: its own row, Hidden (docs/14 §3).
 
 Follow-ups:
 - [ ] App size: the catalogue adds about 7 MB, mostly the Start sounds. Measure a 15 s Start cap, which would roughly halve it, in the ear pass before a store build.

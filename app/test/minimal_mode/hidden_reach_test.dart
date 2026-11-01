@@ -97,6 +97,12 @@ const reach = <FeatureId, Reach>{
     taps: 1,
     route: '/settings/sounds',
   ),
+  // The switch is on the Sounds page (docs/14 §3, M15.7).
+  FeatureId.haptics: (
+    from: More.everythingElse,
+    taps: 1,
+    route: '/settings/sounds',
+  ),
   FeatureId.quietReminders: (
     from: More.everythingElse,
     taps: 0,

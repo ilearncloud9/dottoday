@@ -6354,7 +6354,7 @@ abstract class AppLocalizations {
   /// **'Playful'**
   String get soundSectionPlayful;
 
-  /// Sounds page: caption over the Start sound, Done sound and Sounds in app rows.
+  /// Sounds page: caption over the Start sound and Done sound rows.
   ///
   /// In en, this message translates to:
   /// **'Also'**
@@ -6395,6 +6395,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The Done sound and the Focus tick'**
   String get soundsInAppDetail;
+
+  /// Sounds page: caption over the Sounds in app and Haptics in app switches.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound effects'**
+  String get soundsEffectsCaption;
+
+  /// Sounds page switch: the app's own haptic taps (docs/12 §2.6).
+  ///
+  /// In en, this message translates to:
+  /// **'Haptics in app'**
+  String get soundsHapticsInApp;
+
+  /// Haptics in app switch subtitle: what it covers.
+  ///
+  /// In en, this message translates to:
+  /// **'Taps you feel as you drag, drop and tick a task done'**
+  String get soundsHapticsInAppDetail;
+
+  /// Sounds page: note under the Sound effects switches (the OS can still mute or turn off haptics).
+  ///
+  /// In en, this message translates to:
+  /// **'Sounds and haptics may not play, depending on your device\'s settings.'**
+  String get soundsEffectsFooter;
 
   /// Start sound list: caption under Insistent (never 'annoying', docs/12 §2.3).
   ///

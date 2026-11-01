@@ -3345,6 +3345,18 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get soundsInAppDetail => pseudo(super.soundsInAppDetail);
 
   @override
+  String get soundsEffectsCaption => pseudo(super.soundsEffectsCaption);
+
+  @override
+  String get soundsHapticsInApp => pseudo(super.soundsHapticsInApp);
+
+  @override
+  String get soundsHapticsInAppDetail => pseudo(super.soundsHapticsInAppDetail);
+
+  @override
+  String get soundsEffectsFooter => pseudo(super.soundsEffectsFooter);
+
+  @override
   String get soundInsistentNote => pseudo(super.soundInsistentNote);
 
   @override

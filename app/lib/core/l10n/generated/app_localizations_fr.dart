@@ -4275,6 +4275,20 @@ class AppLocalizationsFr extends AppLocalizations {
   String get soundsInAppDetail => 'Le son de fin et le tic de Concentration';
 
   @override
+  String get soundsEffectsCaption => 'Sons et vibrations';
+
+  @override
+  String get soundsHapticsInApp => 'Vibrations dans l\'app';
+
+  @override
+  String get soundsHapticsInAppDetail =>
+      'Une petite vibration quand vous déplacez, déposez ou cochez une tâche';
+
+  @override
+  String get soundsEffectsFooter =>
+      'Selon les réglages de votre appareil, les sons et les vibrations peuvent ne pas se déclencher.';
+
+  @override
   String get soundInsistentNote =>
       'Fort et répété. Utile si les sons plus doux ne vous atteignent pas.';
 

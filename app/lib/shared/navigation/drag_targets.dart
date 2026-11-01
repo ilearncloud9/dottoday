@@ -1,10 +1,8 @@
-import 'dart:async';
-
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/pointer_draggable.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 /// The add button as a drag source (Structured's drag-the-+, ADR-0015):
 /// held and dragged onto the day thread, it starts a new task at that time.
@@ -93,7 +91,7 @@ class TaskDropTab extends StatelessWidget {
     return DragTarget<String>(
       onWillAcceptWithDetails: (d) => d.data != newTaskDragId,
       onAcceptWithDetails: (d) {
-        unawaited(HapticFeedback.mediumImpact());
+        AppHaptics.play(context, HapticTick.medium);
         onDropTask(d.data);
       },
       builder: (context, candidates, _) => AnimatedScale(
@@ -128,7 +126,7 @@ class TrashDropZone extends StatelessWidget {
         return DragTarget<String>(
           onWillAcceptWithDetails: (d) => d.data != newTaskDragId,
           onAcceptWithDetails: (d) {
-            unawaited(HapticFeedback.mediumImpact());
+            AppHaptics.play(context, HapticTick.medium);
             onTrash(d.data);
           },
           builder: (context, candidates, _) =>

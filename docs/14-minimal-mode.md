@@ -112,6 +112,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Task sheet extras: +15, Shift the rest, Move, Edit, Alerts, Sound, Travel, Pin, calendar line | M3b–M15 | Hidden | Under the sheet's More, in today's sheet layout |
 | Task icon library picker | ADR-0013 | Hidden | Under the sheet's More with colour; Add uses the default dot |
 | Sounds page, task Sound row, Start and Done sounds | M15 | Hidden | Sounds play exactly as set (defaults for new users); pickers under Everything else |
+| In-app haptics switch | M15.7 | Hidden | Haptics tap as set (on for new users); the switch is on the Sounds page under Everything else |
 | Quiet hours, Wind Down reminder, Day summary | M5–M6.5 | Hidden | Keep running as set; under Everything else |
 | Day shape extras: per-weekday times, 12/24 h, week start | M3d | Hidden | Under Everything else; minimal rows 2–3 edit the "same every day" times |
 | Planning settings: default duration, snapping, shift default, roll over unfinished, show free time, nudges, low-energy row | M3d–M12.2 | Hidden | Values keep applying; under Everything else |

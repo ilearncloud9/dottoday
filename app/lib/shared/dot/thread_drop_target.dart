@@ -1,10 +1,9 @@
-import 'dart:async';
-
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -70,7 +69,7 @@ class _SpanDropTargetState extends State<SpanDropTarget> {
         final text = w.drag.hintFor(d.data, w.span, at);
         if (w.hint.value != text) {
           w.hint.value = text;
-          unawaited(HapticFeedback.selectionClick());
+          AppHaptics.play(context, HapticTick.selection);
         }
         if (at != _at) setState(() => _at = at);
       },
@@ -81,7 +80,7 @@ class _SpanDropTargetState extends State<SpanDropTarget> {
       onAcceptWithDetails: (d) {
         w.hint.value = null;
         setState(() => _at = null);
-        unawaited(HapticFeedback.mediumImpact());
+        AppHaptics.play(context, HapticTick.medium);
         // Desktop: holding Alt inverts the chip (docs/03 §3.2).
         final invert = HardwareKeyboard.instance.isAltPressed;
         final followers = w.shift.value != invert;
@@ -228,7 +227,7 @@ class AllDayDropTarget extends StatelessWidget {
     return DragTarget<String>(
       onWillAcceptWithDetails: (d) => d.data != newTaskDragId,
       onAcceptWithDetails: (d) {
-        unawaited(HapticFeedback.mediumImpact());
+        AppHaptics.play(context, HapticTick.medium);
         onAllDay(d.data);
       },
       builder: (context, candidates, _) => candidates.isEmpty
