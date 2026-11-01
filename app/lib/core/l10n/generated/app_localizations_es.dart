@@ -6362,6 +6362,21 @@ class AppLocalizationsEs extends AppLocalizations {
       'Proponer mover Wind Down según cuándo me levanto';
 
   @override
+  String startNudgeTitle(String title) {
+    return '¿Empezar $title?';
+  }
+
+  @override
+  String get startNudgeBody => 'Toca Empezar cuando quieras.';
+
+  @override
+  String get settingsStartNudge => 'Preguntar si un punto no ha empezado';
+
+  @override
+  String get settingsStartNudgeDetail =>
+      '10 minutos después de su inicio, un aviso suave: «¿Empezar Correr?»';
+
+  @override
   String get wakeUpDiscoveryPromise =>
       'Nuevo: el despertar puede sonar como una alarma, y tu mañana empieza con una tarjeta que muestra tu día.';
 

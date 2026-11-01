@@ -436,7 +436,7 @@ final class AlarmEventsDrainProvider
   }
 }
 
-String _$alarmEventsDrainHash() => r'903b71b759cac14556f72aa32d56fe64ec01f6bc';
+String _$alarmEventsDrainHash() => r'7757027c8467bfc55ebe40dd161998a5e8a88316';
 
 /// Folds what the alarms did while the app was closed (rang, snoozed,
 /// "I'm up") into `wake_up_days`: run on launch and every resume, before

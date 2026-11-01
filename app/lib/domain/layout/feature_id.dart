@@ -27,6 +27,7 @@ enum FeatureId {
   wakeUpAlarm('W1 Wake Up alarm'),
   wakeUpCard('W2 Wake Up card'),
   wakeUpCheck('W3 Wake Up Check'),
+  startNudge('A0 Start nudge'),
   night('W4 + W6 Sleep target and the night'),
   missions('W5 Missions (modes, rules, skip offer)'),
   missionStandUp('W5 Stand up'),

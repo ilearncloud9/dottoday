@@ -9534,6 +9534,30 @@ abstract class AppLocalizations {
   /// **'Offer to move Wind Down from how I actually get up'**
   String get settingsWindDownLearn;
 
+  /// Start nudge notification title (docs/15 §11).
+  ///
+  /// In en, this message translates to:
+  /// **'Start {title}?'**
+  String startNudgeTitle(String title);
+
+  /// Start nudge notification line.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Start when you\'re ready.'**
+  String get startNudgeBody;
+
+  /// Settings › Planning switch (docs/15 §11).
+  ///
+  /// In en, this message translates to:
+  /// **'Ask when a dot hasn\'t started'**
+  String get settingsStartNudge;
+
+  /// Under the Start nudge switch.
+  ///
+  /// In en, this message translates to:
+  /// **'10 minutes after its start, one gentle ping: \"Start Run?\"'**
+  String get settingsStartNudgeDetail;
+
   /// Discovery promise card on Today (docs/15 §11).
   ///
   /// In en, this message translates to:

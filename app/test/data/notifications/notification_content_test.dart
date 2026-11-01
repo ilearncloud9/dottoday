@@ -249,4 +249,29 @@ void main() {
       expect(free.body, startsWith('Wind down now for 9 h before'));
     });
   });
+
+  test('the Start nudge asks "Start <dot>?" with Start (docs/15 §11)', () {
+    final task = occurrenceFixture();
+    final planned = PlannedNotification(
+      id: 4,
+      occurrenceId: task.id,
+      alertIndex: PlannedNotification.startNudgeIndex,
+      fireAtUtc: task.startUtc!.add(const Duration(minutes: 10)),
+      kind: AlertKind.atStart,
+      purpose: NotificationPurpose.startNudge,
+    );
+    final n = composeNotification(
+      planned,
+      task: task,
+      profile: profileFixture(),
+    )!;
+    expect(n.title, 'Start ${task.title}?');
+    expect(n.body, "Tap Start when you're ready.");
+    expect((n.startAction, n.withActions), (true, false));
+    expect(n.channel, NotificationChannelKind.alerts);
+    expect(
+      composeNotification(planned, task: null, profile: profileFixture()),
+      isNull,
+    );
+  });
 }

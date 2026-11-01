@@ -79,6 +79,7 @@ final class LayoutPolicy {
     FeatureId.wakeUpAlarm: FeatureVisibility.simplified,
     FeatureId.wakeUpCard: FeatureVisibility.simplified,
     FeatureId.wakeUpCheck: FeatureVisibility.shown,
+    FeatureId.startNudge: FeatureVisibility.shown,
     FeatureId.night: FeatureVisibility.shown,
     FeatureId.missions: FeatureVisibility.simplified,
     FeatureId.missionStandUp: FeatureVisibility.shown,

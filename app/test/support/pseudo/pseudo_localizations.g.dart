@@ -5033,6 +5033,18 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get settingsWindDownLearn => pseudo(super.settingsWindDownLearn);
 
   @override
+  String startNudgeTitle(String title) => pseudo(super.startNudgeTitle(title));
+
+  @override
+  String get startNudgeBody => pseudo(super.startNudgeBody);
+
+  @override
+  String get settingsStartNudge => pseudo(super.settingsStartNudge);
+
+  @override
+  String get settingsStartNudgeDetail => pseudo(super.settingsStartNudgeDetail);
+
+  @override
   String get wakeUpDiscoveryPromise => pseudo(super.wakeUpDiscoveryPromise);
 
   @override
