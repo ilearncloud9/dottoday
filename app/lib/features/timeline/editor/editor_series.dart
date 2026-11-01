@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/data/calendar/write_back_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/recurrence/series_actions.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/domain/calendar/calendar_series_sender.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
@@ -15,6 +17,7 @@ import 'package:dottoday/domain/recurrence/repeat_rule.dart';
 import 'package:dottoday/domain/recurrence/series_edit.dart';
 import 'package:dottoday/domain/time/wall_clock.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
+import 'package:dottoday/features/timeline/editor/calendar_delete_sheet.dart';
 import 'package:dottoday/features/timeline/editor/editor_scope.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
@@ -164,7 +167,7 @@ Future<void> pickAlerts(
     messenger,
     l10n,
     container.read(undoServiceProvider),
-    await write,
+    (await write).result,
     l10n.snackAlertsSaved(draft.title),
   );
 }
@@ -208,12 +211,18 @@ Future<bool> saveScoped(
     scope: scope,
   );
   if (write == null) return true;
+  final (:result, :calendar) = await write;
+  final name = calendar == SeriesSend.failed
+      ? await _calendarName(container, draft)
+      : null;
   _report(
     messenger,
     l10n,
     container.read(undoServiceProvider),
-    await write,
-    l10n.snackSeriesChanged(draft.title),
+    result,
+    name != null
+        ? l10n.snackSeriesNotSent(name)
+        : l10n.snackSeriesChanged(draft.title),
   );
   return true;
 }
@@ -236,6 +245,11 @@ Future<({bool cancelled, bool done})> deleteScoped(
   );
   if (scope == null) return (cancelled: true, done: false);
   if (scope == EditScope.thisOne) return (cancelled: false, done: false);
+  if (!context.mounted) return (cancelled: true, done: false);
+  final calendar = task.imported == null
+      ? ''
+      : await askDeleteFromCalendar(context, container, target);
+  if (calendar == null) return (cancelled: true, done: false);
   final write = deleteScopedWrite(
     container,
     task: task,
@@ -243,14 +257,24 @@ Future<({bool cancelled, bool done})> deleteScoped(
     scope: scope,
   );
   if (write == null) return (cancelled: false, done: false);
+  final result = await write;
   _report(
     messenger,
     l10n,
     container.read(undoServiceProvider),
-    await write,
-    l10n.snackSeriesDeleted(target.title),
+    result,
+    result is Ok && calendar.isNotEmpty
+        ? await deleteFromCalendar(l10n, container, target, calendar)
+        : l10n.snackSeriesDeleted(target.title),
   );
   return (cancelled: false, done: true);
+}
+
+/// The name of [o]'s calendar, or null for a task made here.
+Future<String?> _calendarName(ProviderContainer ref, Occurrence o) async {
+  final linkId = o.calendarLinkId;
+  if (linkId == null) return null;
+  return (await ref.read(calendarWriteStatusProvider(linkId).future))?.calendar;
 }
 
 void _report(

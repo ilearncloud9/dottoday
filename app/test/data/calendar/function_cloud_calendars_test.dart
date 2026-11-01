@@ -182,6 +182,30 @@ void main() {
     expect(sent.containsKey('title'), isFalse, reason: 'not renamed here');
   });
 
+  test('series: update_series and delete_series with the series id', () async {
+    functions.answer = (_, body) => {
+      'result': body['action'] == 'delete_series' ? 'gone' : 'not_writable',
+    };
+    const at = EventAddress(calendarId: '$_acc/primary', eventId: 'r1');
+    final edit = await gateway().writeSeries(
+      at,
+      const SeriesPatch(
+        shift: Duration(minutes: -30),
+        duration: Duration(minutes: 45),
+      ),
+    );
+    expect(edit, WriteBackOutcome.notWritable);
+    expect(functions.calls.last.$2, {
+      'action': 'update_series',
+      'calendarId': '$_acc/primary',
+      'seriesId': 'r1',
+      'shiftMs': -1800000,
+      'durationMs': 2700000,
+    });
+    expect(await gateway().deleteSeries(at), WriteBackOutcome.gone);
+    expect(functions.calls.last.$2['action'], 'delete_series');
+  });
+
   test('gone events read as null', () async {
     functions.answer = (_, _) => {'event': null};
     const at = EventAddress(calendarId: '$_acc/primary', eventId: 'e1');

@@ -77,6 +77,7 @@
 		97E9999935CA187574047FA1 /* start_morning.caf in Resources */ = {isa = PBXBuildFile; fileRef = EAF148E75D456EA30291022F /* start_morning.caf */; };
 		A18852BAB97CC5F6BDD39A88 /* WidgetSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F0B527264204D0C2F73046 /* WidgetSnapshotTests.swift */; };
 		A1B2C3D4E5F60718293A4B01 /* SpeechBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B02 /* SpeechBridge.swift */; };
+		A1B2C3D4E5F60718293A4C01 /* CalendarSeriesBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4C02 /* CalendarSeriesBridge.swift */; };
 		A1E0BC2D094EABDDE16EC931 /* start_wind_chimes.caf in Resources */ = {isa = PBXBuildFile; fileRef = FF9A7BFB94E4F5D26D9C60FD /* start_wind_chimes.caf */; };
 		A3CDC9C8AF4FA1ED40ED75C6 /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
 		A52B01C7F16748FFA1F864B3 /* clear_spark.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4582D74ACAC8B91600913863 /* clear_spark.caf */; };
@@ -250,6 +251,7 @@
 		9966EEEE9CA48F635D854568 /* clear_elegant.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_elegant.caf; path = Runner/Sounds/clear_elegant.caf; sourceTree = SOURCE_ROOT; };
 		9BD896D8A8380B424F050F63 /* DottodayWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DottodayWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1B2C3D4E5F60718293A4B02 /* SpeechBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SpeechBridge.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718293A4C02 /* CalendarSeriesBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarSeriesBridge.swift; sourceTree = "<group>"; };
 		A7FF859CE408F3EF13C10DAB /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ACF2F1CC152008A2C7D4135F /* quiet_soft.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_soft.caf; path = Runner/Sounds/quiet_soft.caf; sourceTree = SOURCE_ROOT; };
 		AE91336D14B830B8EE8836E4 /* en */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AppShortcuts.strings; sourceTree = "<group>"; };
@@ -533,6 +535,7 @@
 				3013B4C5D6CD3BCE94FE8938 /* AppShortcuts.strings */,
 				D057CBF4043C1304FE844CA9 /* ThinkingBridge.swift */,
 				A1B2C3D4E5F60718293A4B02 /* SpeechBridge.swift */,
+				A1B2C3D4E5F60718293A4C02 /* CalendarSeriesBridge.swift */,
 				38D6FFE543424C4973F4A138 /* Sounds */,
 				923A60B7EFB7BFEBF94DBB37 /* AlarmBridge.swift */,
 			);
@@ -934,6 +937,7 @@
 				393277596608AB97021B23B3 /* DotShortcuts.swift in Sources */,
 				D015D12A752D6D3BCDC243C7 /* ThinkingBridge.swift in Sources */,
 				A1B2C3D4E5F60718293A4B01 /* SpeechBridge.swift in Sources */,
+				A1B2C3D4E5F60718293A4C01 /* CalendarSeriesBridge.swift in Sources */,
 				FB06A964B9B1197955384188 /* WakeUpAlarmKit.swift in Sources */,
 				02678329CCD2A03207DA79D5 /* AlarmBridge.swift in Sources */,
 			);

@@ -6,6 +6,9 @@ import 'package:dottoday/domain/entities/calendar_series.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:timezone/timezone.dart' as tz;
+
+part 'calendar_import_reconcile.dart';
 
 /// One switched-on device calendar and the events read from it.
 final class ImportSource {
@@ -170,218 +173,13 @@ CalendarImportPlan planCalendarImport({
       for (final i in source.items)
         if (within(i.keyMs) && seen.add(i.key)) i,
     ];
-    _reconcile(out, source, items, inWindow[source.accountId] ?? const []);
+    _reconcile(
+      out,
+      source,
+      items,
+      inWindow[source.accountId] ?? const [],
+      tz.getLocation(tzId),
+    );
   }
   return out.build();
-}
-
-void _reconcile(
-  _PlanBuilder out,
-  ImportSource source,
-  List<ImportedItem> items,
-  List<LinkedOccurrence> links,
-) {
-  final byKey = {for (final l in links) l.link.externalEventId: l};
-  final unmatched = <ImportedItem>[];
-  for (final item in items) {
-    final link = byKey.remove(item.key);
-    link == null ? unmatched.add(item) : out.update(source, link, item);
-  }
-  // Moved in the calendar: one item and one link left for the event.
-  final leftByEvent = <String, List<LinkedOccurrence>>{};
-  for (final l in byKey.values) {
-    final event = parseImportKey(l.link.externalEventId)?.$1;
-    if (event != null) (leftByEvent[event] ??= []).add(l);
-  }
-  final newByEvent = <String, List<ImportedItem>>{};
-  for (final i in unmatched) {
-    (newByEvent[i.eventId] ??= []).add(i);
-  }
-  for (final MapEntry(key: event, value: news) in newByEvent.entries) {
-    final left = leftByEvent[event];
-    if (news.length == 1 && left != null && left.length == 1) {
-      out.update(source, left.single, news.single);
-      byKey.remove(left.single.link.externalEventId);
-    } else {
-      for (final i in news) {
-        out.add(source, i);
-      }
-    }
-  }
-  byKey.values.forEach(out.remove);
-}
-
-final class _PlanBuilder {
-  _PlanBuilder({
-    required this.userId,
-    required this.tzId,
-    required this.now,
-    required this.newId,
-    required this.held,
-    required this.series,
-  });
-
-  final String userId;
-  final String tzId;
-  final DateTime now;
-  final String Function() newId;
-  final Set<String> held;
-  final Map<String, CalendarSeries> series;
-  final _links = <CalendarLink>[];
-  final _occurrences = <Occurrence>[];
-  final _subtasks = <Subtask>[];
-  final _removeOccurrences = <String>{};
-  final _removeLinks = <String>{};
-  final _moved = <CalendarMove>[];
-
-  CalendarSeries? _seriesOf(String accountId, String? seriesKey) =>
-      seriesKey == null
-      ? null
-      : series[calendarSeriesLookup(accountId, seriesKey)];
-
-  void add(ImportSource source, ImportedItem item) {
-    final settings = _seriesOf(source.accountId, item.seriesKey);
-    if (settings != null && settings.hidden) return;
-    final link = CalendarLink(
-      id: newId(),
-      userId: userId,
-      accountId: source.accountId,
-      externalCalendarId: source.calendar.id,
-      externalEventId: item.key,
-      etag: ImportFingerprint.of(item).encode(),
-      lastSyncedUtc: now,
-      readOnly: source.calendar.readOnly || !item.writable,
-      location: item.location,
-      seriesKey: item.seriesKey,
-    );
-    _links.add(link);
-    final o = Occurrence(
-      id: newId(),
-      userId: userId,
-      title: item.title,
-      notes: item.notes,
-      colorKey: source.colorKey,
-      startUtc: item.startUtc,
-      tzId: tzId,
-      durationMin: item.durationMin,
-      source: OccurrenceSource.calendar,
-      calendarLinkId: link.id,
-      createdAt: now,
-      updatedAt: now,
-    );
-    if (settings == null) {
-      _occurrences.add(o);
-      return;
-    }
-    _occurrences.add(withSeriesSettings(o, settings));
-    _subtasks.addAll(seriesSubtasks(o, settings, now: now, newId: newId));
-  }
-
-  /// Applies what changed in the calendar since the last import.
-  void update(
-    ImportSource source,
-    LinkedOccurrence existing,
-    ImportedItem item,
-  ) {
-    final link = existing.link;
-    if (held.contains(link.id)) return;
-    final etag = ImportFingerprint.of(item).encode();
-    final readOnly = source.calendar.readOnly || !item.writable;
-    if (link.etag == etag &&
-        link.externalEventId == item.key &&
-        link.readOnly == readOnly &&
-        link.location == item.location &&
-        link.seriesKey == item.seriesKey) {
-      return;
-    }
-    _links.add(
-      link.copyWith(
-        externalEventId: item.key,
-        etag: etag,
-        lastSyncedUtc: now,
-        readOnly: readOnly,
-        location: item.location,
-        seriesKey: item.seriesKey,
-      ),
-    );
-    final o = existing.occurrence;
-    if (existing._hidden || o == null) return;
-    final changed = _changed(o, ImportFingerprint.parse(link.etag), item);
-    if (changed == o) return;
-    _occurrences.add(changed.copyWith(updatedAt: now));
-    final from = o.startUtc;
-    final to = changed.startUtc;
-    if (from != null &&
-        to != null &&
-        from != to &&
-        o.status == OccurrenceStatus.planned) {
-      _moved.add(
-        CalendarMove(
-          occurrenceId: o.id,
-          title: changed.title,
-          fromUtc: from,
-          toUtc: to,
-          durationMin: o.durationMin,
-        ),
-      );
-    }
-  }
-
-  void remove(LinkedOccurrence existing) {
-    if (held.contains(existing.link.id)) return;
-    _removeLinks.add(existing.link.id);
-    final o = existing.occurrence;
-    if (existing._hidden || o == null) return;
-    final before = ImportFingerprint.parse(existing.link.etag);
-    // A series instance's steps and notes came from the series (F5.7):
-    // only doing it counts, or a series ended in the calendar would
-    // fill Trash with one copy of its list per day.
-    final fromSeries =
-        _seriesOf(existing.link.accountId, existing.link.seriesKey) != null;
-    final localWork =
-        o.status != OccurrenceStatus.planned ||
-        o.actualStartUtc != null ||
-        (!fromSeries &&
-            (existing.hasSubtasks || textHash(o.notes) != before?.notes));
-    if (!localWork) {
-      _removeOccurrences.add(o.id);
-      return;
-    }
-    _occurrences.add(
-      o.copyWith(calendarLinkId: null, deletedAt: now, updatedAt: now),
-    );
-  }
-
-  CalendarImportPlan build() => CalendarImportPlan(
-    links: _links,
-    occurrences: _occurrences,
-    subtasks: _subtasks,
-    removeOccurrenceIds: _removeOccurrences,
-    removeLinkIds: _removeLinks,
-    moved: _moved,
-  );
-}
-
-/// [o] with each field the calendar changed since [before] taken from
-/// [item]. Without a fingerprint everything but notes is taken.
-Occurrence _changed(
-  Occurrence o,
-  ImportFingerprint? before,
-  ImportedItem item,
-) {
-  final now = ImportFingerprint.of(item);
-  var out = o;
-  if (before?.startMs != now.startMs) {
-    out = out.copyWith(startUtc: item.startUtc);
-  }
-  if (before?.durationMin != now.durationMin) {
-    out = out.copyWith(durationMin: item.durationMin);
-  }
-  if (before?.title != now.title) out = out.copyWith(title: item.title);
-  // Notes are the person's once edited here: only untouched ones follow.
-  final untouched = before != null && textHash(o.notes) == before.notes;
-  if (before?.notes != now.notes && untouched) {
-    out = out.copyWith(notes: item.notes);
-  }
-  return out;
 }

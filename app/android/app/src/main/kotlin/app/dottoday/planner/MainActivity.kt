@@ -12,6 +12,7 @@ import android.view.WindowManager
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import app.dottoday.planner.alarms.AlarmBridge
+import app.dottoday.planner.calendar.CalendarSeries
 import app.dottoday.planner.intents.IntentQueueBridge
 import app.dottoday.planner.intents.ShareIntake
 import app.dottoday.planner.intents.OngoingDot
@@ -41,7 +42,8 @@ import io.flutter.plugin.common.MethodChannel
  * `dottoday/system_events` says when the clock, zone or calendars change
  * ([SystemEvents], docs/04 §4 "Triggers"). `dottoday/alarm` arms the Wake
  * Up alarms and reads the full-screen-intent permission they need (docs/15
- * W1, [AlarmBridge]).
+ * W1, [AlarmBridge]). `dottoday/calendar_series` changes or deletes a whole
+ * repeating calendar event (docs/02 F5.7, [CalendarSeries]).
  */
 class MainActivity : FlutterFragmentActivity() {
     // Share → Dottoday (M12.4): queued before Flutter reads the intent,
@@ -93,6 +95,7 @@ class MainActivity : FlutterFragmentActivity() {
         DeepWork.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         AlarmBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         HapticsBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
+        CalendarSeries.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dottoday/ongoing")
             .setMethodCallHandler { call, result ->
                 when (call.method) {

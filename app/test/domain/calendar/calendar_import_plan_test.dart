@@ -514,6 +514,42 @@ void main() {
       expect(p.occurrences, isEmpty);
     });
 
+    test('a series moved to another time keeps each day, done or not', () {
+      final days = [nine, nine.add(const Duration(days: 1))];
+      final first = plan([
+        source([for (final d in days) daily('R1', d, series: 'R1')]),
+      ], const []);
+      final done = [
+        for (final e in stored(first))
+          e.occurrence!.startUtc == nine
+              ? LinkedOccurrence(
+                  link: e.link,
+                  occurrence: e.occurrence!.copyWith(
+                    status: OccurrenceStatus.done,
+                  ),
+                )
+              : e,
+      ];
+      // 30 min earlier for the whole series: new instance keys.
+      final earlier = [
+        for (final d in days)
+          daily('R1', d.subtract(const Duration(minutes: 30)), series: 'R1'),
+      ];
+      final p = plan([source(earlier)], done);
+      expect(p.removeOccurrenceIds, isEmpty);
+      expect(p.removeLinkIds, isEmpty);
+      expect(p.occurrences.where((o) => o.deletedAt != null), isEmpty);
+      expect(
+        {for (final o in p.occurrences) o.id},
+        {for (final e in done) e.occurrence!.id},
+        reason: 'the same occurrences, moved',
+      );
+      expect(p.links.map((l) => l.externalEventId).toSet(), {
+        for (final e in earlier)
+          importKey('R1', e.startUtc.millisecondsSinceEpoch),
+      });
+    });
+
     test('a series key too long to store is left out, never cut', () {
       final long = 'x' * (maxExternalEventIdLength + 1);
       expect(importedSeriesKey(long), isNull);

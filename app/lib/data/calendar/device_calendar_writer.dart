@@ -48,13 +48,35 @@ final class DeviceCalendarWriter implements CalendarWriter {
         title: patch.title,
       ),
     );
-    return switch (result) {
-      EventWriteResult.written => WriteBackOutcome.written,
-      EventWriteResult.gone => WriteBackOutcome.gone,
-      EventWriteResult.notWritable => WriteBackOutcome.notWritable,
-      EventWriteResult.failed => WriteBackOutcome.failed,
-    };
+    return _outcome(result);
   }
+
+  @override
+  Future<WriteBackOutcome> writeSeries(
+    EventAddress at,
+    SeriesPatch patch,
+  ) async => _outcome(
+    await _gateway.updateSeries(
+      SeriesUpdate(
+        calendarId: at.calendarId,
+        eventId: at.eventId,
+        shift: patch.shift,
+        duration: patch.duration,
+        title: patch.title,
+      ),
+    ),
+  );
+
+  @override
+  Future<WriteBackOutcome> deleteSeries(EventAddress at) async =>
+      _outcome(await _gateway.deleteSeries(at.calendarId, at.eventId));
+
+  static WriteBackOutcome _outcome(EventWriteResult r) => switch (r) {
+    EventWriteResult.written => WriteBackOutcome.written,
+    EventWriteResult.gone => WriteBackOutcome.gone,
+    EventWriteResult.notWritable => WriteBackOutcome.notWritable,
+    EventWriteResult.failed => WriteBackOutcome.failed,
+  };
 
   static RemoteEvent _remote(ExternalEvent e) => RemoteEvent(
     startUtc: e.startUtc,

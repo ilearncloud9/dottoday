@@ -50,6 +50,21 @@ final class EventPatch {
   final String? title;
 }
 
+/// What a scope-All edit changes on a whole repeating event (docs/02
+/// F5.7): its start moves by [shift] (time of day only), its length and
+/// title become [duration] / [title] when given.
+final class SeriesPatch {
+  const SeriesPatch({required this.shift, this.duration, this.title});
+
+  final Duration shift;
+  final Duration? duration;
+  final String? title;
+
+  /// Whether nothing would change.
+  bool get isEmpty =>
+      shift == Duration.zero && duration == null && title == null;
+}
+
 /// What one conditional write did.
 enum WriteBackOutcome {
   written,
@@ -82,4 +97,11 @@ abstract interface class CalendarWriter {
     EventPatch patch, {
     required String expectedVersion,
   });
+
+  /// Writes [patch] to the whole repeating event at [at] (its event id is
+  /// the series id); the provider's own read-then-write guards it.
+  Future<WriteBackOutcome> writeSeries(EventAddress at, SeriesPatch patch);
+
+  /// Deletes the whole repeating event at [at].
+  Future<WriteBackOutcome> deleteSeries(EventAddress at);
 }

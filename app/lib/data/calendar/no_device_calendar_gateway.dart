@@ -41,4 +41,14 @@ final class NoDeviceCalendarGateway implements DeviceCalendarGateway {
   @override
   Future<EventWriteResult> updateEvent(EventUpdate update) async =>
       EventWriteResult.notWritable;
+
+  @override
+  Future<EventWriteResult> updateSeries(SeriesUpdate update) async =>
+      EventWriteResult.notWritable;
+
+  @override
+  Future<EventWriteResult> deleteSeries(
+    String calendarId,
+    String eventId,
+  ) async => EventWriteResult.notWritable;
 }

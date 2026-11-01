@@ -3339,6 +3339,62 @@
       }
     }
   },
+  "snackSeriesNotSent": "Changed in Dottoday only. {calendar} couldn't be reached.",
+  "@snackSeriesNotSent": {
+    "description": "After a scope-All edit of a repeating calendar event whose calendar couldn't be reached (docs/02 F5.7). The change stays here.",
+    "placeholders": {
+      "calendar": {
+        "type": "String"
+      }
+    }
+  },
+  "seriesDeleteCalendarTitle": "Also delete it from {calendar}?",
+  "@seriesDeleteCalendarTitle": {
+    "description": "Title of the question after deleting every repeat of a calendar event here (docs/02 F5.7).",
+    "placeholders": {
+      "calendar": {
+        "type": "String"
+      }
+    }
+  },
+  "seriesDeleteOnlyHere": "Only in Dottoday",
+  "@seriesDeleteOnlyHere": {
+    "description": "Keeps the repeating event in the person's calendar (the default)."
+  },
+  "seriesDeleteFromCalendar": "Delete from {calendar} too",
+  "@seriesDeleteFromCalendar": {
+    "description": "Deletes every repeat of the event from the person's calendar as well.",
+    "placeholders": {
+      "calendar": {
+        "type": "String"
+      }
+    }
+  },
+  "seriesDeleteFromCalendarDetail": "Every repeat goes, on all your devices. Undo here can't bring it back.",
+  "@seriesDeleteFromCalendarDetail": {
+    "description": "Under 'Delete from … too': what it does."
+  },
+  "snackSeriesDeletedThere": "{title} deleted here and from {calendar}",
+  "@snackSeriesDeletedThere": {
+    "description": "After deleting a repeating event here and from its calendar.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "calendar": {
+        "type": "String"
+      }
+    }
+  },
+  "snackSeriesNotDeletedThere": "Deleted in Dottoday. {calendar} couldn't be reached.",
+  "@snackSeriesNotDeletedThere": {
+    "description": "After deleting a repeating event here when its calendar couldn't be reached.",
+    "placeholders": {
+      "calendar": {
+        "type": "String"
+      }
+    }
+  },
   "snackSeriesDeleted": "{title} deleted",
   "@snackSeriesDeleted": {
     "description": "After a scoped delete of a repeating task.",

@@ -1,6 +1,8 @@
 import 'package:dottoday/domain/calendar/calendar_series_edit.dart';
+import 'package:dottoday/domain/calendar/calendar_series_sender.dart';
 import 'package:dottoday/domain/entities/calendar_series.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/recurrence/series_change.dart';
 import 'package:dottoday/domain/repositories/calendar_series_repository.dart';
 
 import 'timeline_fakes.dart';
@@ -75,5 +77,35 @@ final class FakeCalendarSeriesRepository implements CalendarSeriesRepository {
         ..removeWhere((r) => r.id == s.id)
         ..add(s);
     }
+  }
+}
+
+/// [CalendarSeriesSender] that records what would go to the calendar.
+final class FakeCalendarSeriesSender implements CalendarSeriesSender {
+  FakeCalendarSeriesSender({this.writeBackOn = false});
+
+  /// Whether Send changes back is on for the event's calendar.
+  bool writeBackOn;
+
+  /// What [edit] and [delete] answer when write-back is on.
+  SeriesSend result = SeriesSend.sent;
+  final edits = <(Occurrence, SeriesChange)>[];
+  final deletes = <Occurrence>[];
+
+  @override
+  Future<bool> sends(Occurrence target) async => writeBackOn;
+
+  @override
+  Future<SeriesSend> edit(Occurrence target, SeriesChange change) async {
+    if (!writeBackOn) return SeriesSend.stayed;
+    edits.add((target, change));
+    return result;
+  }
+
+  @override
+  Future<SeriesSend> delete(Occurrence target) async {
+    if (!writeBackOn) return SeriesSend.stayed;
+    deletes.add(target);
+    return result;
   }
 }

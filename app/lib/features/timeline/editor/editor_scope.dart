@@ -1,7 +1,10 @@
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/calendar/calendar_series_actions.dart';
+import 'package:dottoday/data/calendar/write_back_providers.dart';
 import 'package:dottoday/data/recurrence/series_actions.dart';
+import 'package:dottoday/domain/calendar/calendar_series_edit.dart';
+import 'package:dottoday/domain/calendar/calendar_series_sender.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/recurrence/series_edit.dart';
@@ -18,9 +21,16 @@ List<EditScope> scopesFor(TaskView task) => task.series != null
     ? EditScope.values
     : const [EditScope.thisOne, EditScope.all];
 
+/// A scoped write, and whether the calendar's series took it too.
+typedef ScopedWrite = ({
+  Result<UndoToken, AppFailure> result,
+  SeriesSend calendar,
+});
+
 /// [change] to [task]'s series by [scope] (beyond this one); null when
-/// [task] doesn't repeat.
-Future<Result<UndoToken, AppFailure>>? writeScoped(
+/// [task] doesn't repeat. A calendar series' time, length and title also
+/// go to its calendar when Send changes back is on (docs/02 F5.7).
+Future<ScopedWrite>? writeScoped(
   ProviderContainer ref, {
   required TaskView task,
   required Occurrence target,
@@ -33,10 +43,29 @@ Future<Result<UndoToken, AppFailure>>? writeScoped(
     target: target,
     change: change,
     scope: scope,
-  ),
-  (_, final i?) => editImported(ref, series: i, target: target, change: change),
+  ).then((r) => (result: r, calendar: SeriesSend.stayed)),
+  (_, final i?) => _importedEdit(ref, i, target, change),
   _ => null,
 };
+
+Future<ScopedWrite> _importedEdit(
+  ProviderContainer ref,
+  ImportedSeries series,
+  Occurrence target,
+  SeriesChange change,
+) async {
+  final result = await editImported(
+    ref,
+    series: series,
+    target: target,
+    change: change,
+  );
+  if (result is Err) return (result: result, calendar: SeriesSend.stayed);
+  final calendar = await ref
+      .read(calendarSeriesWriteBackProvider)
+      .edit(target, change);
+  return (result: result, calendar: calendar);
+}
 
 /// Deletes [target] and the rest of [task]'s series by [scope]; null
 /// when [task] doesn't repeat.

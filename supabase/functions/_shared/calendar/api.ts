@@ -46,6 +46,23 @@ export interface EventPatch {
   title?: string;
 }
 
+/**
+ * What a scope-All edit changes on a whole repeating event (docs/02 F5.7):
+ * its start moves by [shiftMs] (the time of day; the date stays), its
+ * length becomes [durationMs] when given, its title [title] when given.
+ */
+export interface SeriesPatch {
+  shiftMs: number;
+  durationMs?: number;
+  title?: string;
+}
+
+/** The new start and end of a series that was at [start]–[end]. */
+export function seriesTimes(start: number, end: number, patch: SeriesPatch): { start: number; end: number } {
+  const next = start + patch.shiftMs;
+  return { start: next, end: next + (patch.durationMs ?? end - start) };
+}
+
 export type WriteResult = 'written' | 'changed' | 'gone' | 'not_writable' | 'failed';
 
 /** One provider's calendar API, called with a fresh access token. */
@@ -60,6 +77,10 @@ export interface CalendarApi {
     patch: EventPatch,
     etag: string,
   ): Promise<WriteResult>;
+  /** Changes the whole repeating event [seriesId] (read, then If-Match). */
+  updateSeries(token: string, calendarId: string, seriesId: string, patch: SeriesPatch): Promise<WriteResult>;
+  /** Deletes the whole repeating event [seriesId]. */
+  deleteSeries(token: string, calendarId: string, seriesId: string): Promise<WriteResult>;
 }
 
 /** Thrown when the provider says the access token isn't accepted. */

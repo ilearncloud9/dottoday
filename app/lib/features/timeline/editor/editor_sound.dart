@@ -92,7 +92,7 @@ Future<void> pickSound(
     messenger,
     l10n,
     container.read(undoServiceProvider),
-    await write,
+    (await write).result,
     message: (_) => l10n.snackSeriesChanged(draft.title),
     tokenOf: (t) => t,
   );

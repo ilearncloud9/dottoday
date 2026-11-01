@@ -484,6 +484,7 @@ List<Override> timelineOverrides({
   List<Routine> routines = const [],
   FakeRevealHintRepository? revealHints,
   FakeCalendarSeriesRepository? calendarSeries,
+  FakeCalendarSeriesSender? seriesSender,
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
@@ -518,6 +519,9 @@ List<Override> timelineOverrides({
     ),
     undoServiceProvider.overrideWithValue(undo..calendarSeries = importedRepo),
     calendarSeriesRepositoryProvider.overrideWithValue(importedRepo),
+    calendarSeriesWriteBackProvider.overrideWithValue(
+      seriesSender ?? FakeCalendarSeriesSender(),
+    ),
     trashServiceProvider.overrideWithValue(FakeTrashService(repo, undo)),
     clockProvider.overrideWithValue(FakeClock(now)),
     minuteTickProvider.overrideWith((ref) => minuteTicks ?? Stream.value(now)),

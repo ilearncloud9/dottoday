@@ -1,6 +1,7 @@
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
+import 'package:dottoday/data/calendar/calendar_series_channel.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:flutter/services.dart';
@@ -20,8 +21,10 @@ final class ChannelDeviceCalendarGateway implements DeviceCalendarGateway {
     this._logger, {
     MethodChannel channel = calendarChannel,
     Future<bool> Function(Uri) open = launchUrl,
+    CalendarSeriesChannel? series,
   }) : _channel = channel,
-       _open = open;
+       _open = open,
+       _series = series ?? CalendarSeriesChannel(_logger);
 
   static const calendarChannel = MethodChannel('dottoday/calendars');
 
@@ -34,6 +37,17 @@ final class ChannelDeviceCalendarGateway implements DeviceCalendarGateway {
 
   final Logger _logger;
   final MethodChannel _channel;
+
+  /// Whole-series edits (docs/02 F5.7), the bridge iOS shares.
+  final CalendarSeriesChannel _series;
+
+  @override
+  Future<EventWriteResult> updateSeries(SeriesUpdate update) =>
+      _series.update(update);
+
+  @override
+  Future<EventWriteResult> deleteSeries(String calendarId, String eventId) =>
+      _series.delete(calendarId, eventId);
   final Future<bool> Function(Uri) _open;
 
   @override

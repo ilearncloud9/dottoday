@@ -2208,6 +2208,38 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String snackSeriesNotSent(String calendar) {
+    return 'Changed in Dottoday only. $calendar couldn\'t be reached.';
+  }
+
+  @override
+  String seriesDeleteCalendarTitle(String calendar) {
+    return 'Also delete it from $calendar?';
+  }
+
+  @override
+  String get seriesDeleteOnlyHere => 'Only in Dottoday';
+
+  @override
+  String seriesDeleteFromCalendar(String calendar) {
+    return 'Delete from $calendar too';
+  }
+
+  @override
+  String get seriesDeleteFromCalendarDetail =>
+      'Every repeat goes, on all your devices. Undo here can\'t bring it back.';
+
+  @override
+  String snackSeriesDeletedThere(String title, String calendar) {
+    return '$title deleted here and from $calendar';
+  }
+
+  @override
+  String snackSeriesNotDeletedThere(String calendar) {
+    return 'Deleted in Dottoday. $calendar couldn\'t be reached.';
+  }
+
+  @override
   String snackSeriesDeleted(String title) {
     return '$title deleted';
   }

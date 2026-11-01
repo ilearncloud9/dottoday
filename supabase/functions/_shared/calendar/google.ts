@@ -6,15 +6,17 @@ import {
   maxEvents,
   nextDate,
   plainText,
+  seriesTimes,
   writeResultOf,
 } from './api.ts';
-import type { CalendarApi, CalendarInfo, EventInfo, EventPatch, WriteResult } from './api.ts';
+import type { CalendarApi, CalendarInfo, EventInfo, EventPatch, SeriesPatch, WriteResult } from './api.ts';
 
 const base = 'https://www.googleapis.com/calendar/v3';
 
 interface GoogleTime {
   date?: string;
   dateTime?: string;
+  timeZone?: string;
 }
 
 interface GoogleEvent {
@@ -156,6 +158,41 @@ export function googleApi(send: typeof fetch): CalendarApi {
             ...(patch.title === undefined ? {} : { summary: patch.title }),
           }),
         },
+      );
+      return writeResultOf(r.status);
+    },
+
+    async updateSeries(token, calendarId, seriesId, patch: SeriesPatch): Promise<WriteResult> {
+      if (!writable(await role(token, calendarId))) return 'not_writable';
+      const url = `${base}/calendars/${encodeURIComponent(calendarId)}/events/${encodeURIComponent(seriesId)}`;
+      const r = await send(url, { headers: auth(token) });
+      if (r.status === 404 || r.status === 410) return 'gone';
+      check(r, 'series');
+      const master = (await r.json()) as GoogleEvent;
+      const start = Date.parse(master.start?.dateTime ?? '');
+      const end = Date.parse(master.end?.dateTime ?? '');
+      // All-day or unreadable: its days, not a time, would move.
+      if (Number.isNaN(start) || Number.isNaN(end)) return 'not_writable';
+      const next = seriesTimes(start, end, patch);
+      // The series keeps its own zone, so its repeats stay on wall time.
+      const zone = (t?: GoogleTime) => (t?.timeZone ? { timeZone: t.timeZone } : {});
+      const w = await send(url, {
+        method: 'PATCH',
+        headers: { ...auth(token), 'Content-Type': 'application/json', 'If-Match': master.etag ?? '' },
+        body: JSON.stringify({
+          start: { dateTime: new Date(next.start).toISOString(), ...zone(master.start) },
+          end: { dateTime: new Date(next.end).toISOString(), ...zone(master.end) },
+          ...(patch.title === undefined ? {} : { summary: patch.title }),
+        }),
+      });
+      return writeResultOf(w.status);
+    },
+
+    async deleteSeries(token, calendarId, seriesId): Promise<WriteResult> {
+      if (!writable(await role(token, calendarId))) return 'not_writable';
+      const r = await send(
+        `${base}/calendars/${encodeURIComponent(calendarId)}/events/${encodeURIComponent(seriesId)}`,
+        { method: 'DELETE', headers: auth(token) },
       );
       return writeResultOf(r.status);
     },

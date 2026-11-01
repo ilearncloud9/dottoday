@@ -74,6 +74,8 @@ class AppDelegate: FlutterAppDelegate {
 
     // Wake, clock and calendar changes (docs/04 §4 "Triggers").
     SystemEventsBridge.shared.attach(to: controller.engine.binaryMessenger)
+    // Whole-series edits of repeating calendar events (docs/02 F5.7).
+    CalendarSeriesBridge.shared.attach(to: controller.engine.binaryMessenger)
   }
 
   /// Sends [link] to the router, or keeps it until Dart listens.

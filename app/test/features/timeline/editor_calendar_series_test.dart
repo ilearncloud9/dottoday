@@ -1,3 +1,5 @@
+import 'package:dottoday/data/calendar/write_back_providers.dart';
+import 'package:dottoday/domain/calendar/calendar_series_sender.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
@@ -34,12 +36,32 @@ final _days = [
 late FakeOccurrenceRepository _repo;
 late FakeCalendarSeriesRepository _series;
 
-Future<void> _pump(WidgetTester tester, String id) async {
+late FakeCalendarSeriesSender _sender;
+
+Future<void> _pump(
+  WidgetTester tester,
+  String id, {
+  bool writeBack = false,
+}) async {
   _repo = FakeOccurrenceRepository(_days);
   _series = FakeCalendarSeriesRepository(
     links: {for (final o in _days) o.calendarLinkId!: ('acc', 'R1')},
   );
-  await pumpEditor(tester, id: id, repo: _repo, calendarSeries: _series);
+  _sender = FakeCalendarSeriesSender(writeBackOn: writeBack);
+  await pumpEditor(
+    tester,
+    id: id,
+    repo: _repo,
+    calendarSeries: _series,
+    seriesSender: _sender,
+    overrides: [
+      calendarWriteStatusProvider.overrideWith(
+        (ref, linkId) => Stream.value(
+          CalendarWriteStatus(calendar: 'Home', sends: writeBack),
+        ),
+      ),
+    ],
+  );
 }
 
 Occurrence _row(int day) => _repo.rows.firstWhere((o) => o.id == 'pray-$day');
@@ -122,5 +144,84 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Change which?'), findsNothing);
     expect(_row(22).title, 'Dentist');
+  });
+
+  testWidgets('with Send changes back on, All also goes to the calendar', (
+    tester,
+  ) async {
+    await _pump(tester, 'pray-22', writeBack: true);
+    await tester.enterText(
+      inEditor(find.byType(EditableText)).first,
+      'Bible and prayer',
+    );
+    await tester.pump(const Duration(seconds: 1));
+    await tester.tap(inEditor(find.text('Save')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('All'));
+    await tester.pumpAndSettle();
+    final (target, change) = _sender.edits.single;
+    expect((target.id, change.title), ('pray-22', 'Bible and prayer'));
+  });
+
+  testWidgets('a calendar out of reach says the change stayed here', (
+    tester,
+  ) async {
+    await _pump(tester, 'pray-22', writeBack: true);
+    _sender.result = SeriesSend.failed;
+    await tester.enterText(
+      inEditor(find.byType(EditableText)).first,
+      'Bible and prayer',
+    );
+    await tester.pump(const Duration(seconds: 1));
+    await tester.tap(inEditor(find.text('Save')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('All'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text("Changed in Dottoday only. Home couldn't be reached."),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('Delete All then asks; Only in Dottoday keeps the calendar', (
+    tester,
+  ) async {
+    await _pump(tester, 'pray-22', writeBack: true);
+    await tester.tap(inEditor(find.byTooltip('Delete task')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('All'));
+    await tester.pumpAndSettle();
+    expect(find.text('Also delete it from Home?'), findsOneWidget);
+    expect(find.text('Only in Dottoday'), findsOneWidget);
+    await tester.tap(find.text('Only in Dottoday'));
+    await tester.pumpAndSettle();
+    expect(_sender.deletes, isEmpty);
+    expect(_row(23).deletedAt, isNotNull);
+  });
+
+  testWidgets('Delete from the calendar too sends the delete', (tester) async {
+    await _pump(tester, 'pray-22', writeBack: true);
+    await tester.tap(inEditor(find.byTooltip('Delete task')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('All'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Delete from Home too'));
+    await tester.pumpAndSettle();
+    expect(_sender.deletes.single.id, 'pray-22');
+    expect(
+      find.text('Read the Bible and pray deleted here and from Home'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('with write-back off, Delete All asks nothing more', (
+    tester,
+  ) async {
+    await _pump(tester, 'pray-22');
+    await tester.tap(inEditor(find.byTooltip('Delete task')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('All'));
+    await tester.pumpAndSettle();
+    expect(find.text('Also delete it from Home?'), findsNothing);
   });
 }

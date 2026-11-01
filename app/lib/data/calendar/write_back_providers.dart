@@ -4,6 +4,7 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
+import 'package:dottoday/data/calendar/calendar_series_write_back.dart';
 import 'package:dottoday/data/calendar/calendar_write_back.dart';
 import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/device_calendar_writer.dart';
@@ -11,6 +12,8 @@ import 'package:dottoday/data/daos/calendar_links_dao.dart';
 import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/calendar/calendar_series_sender.dart';
+import 'package:dottoday/domain/calendar/calendar_writer.dart';
 import 'package:dottoday/domain/calendar/write_back_merge.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:flutter/widgets.dart';
@@ -22,20 +25,34 @@ part 'write_back_providers.g.dart';
 /// calendars; Google and Microsoft through `calendar-sync`, conditional on
 /// the event's HTTP etag (M7.4).
 @Riverpod(keepAlive: true)
-CalendarWriteBack calendarWriteBack(Ref ref) {
+CalendarWriteBack calendarWriteBack(Ref ref) => CalendarWriteBack(
+  db: ref.watch(appDatabaseProvider),
+  writerFor: _writers(ref),
+  effects: ref.watch(afterWriteEffectsProvider),
+  clock: ref.watch(clockProvider),
+  logger: ref.watch(loggerProvider),
+);
+
+/// Scope-All edits and deletes of repeating events, sent on the whole
+/// series (docs/02 F5.7), through the same writers.
+@Riverpod(keepAlive: true)
+CalendarSeriesSender calendarSeriesWriteBack(Ref ref) =>
+    CalendarSeriesWriteBack(
+      db: ref.watch(appDatabaseProvider),
+      writerFor: _writers(ref),
+      writes: ref.watch(writeUseCaseProvider),
+      clock: ref.watch(clockProvider),
+      logger: ref.watch(loggerProvider),
+    );
+
+CalendarWriter? Function(CalendarProvider) _writers(Ref ref) {
   final device = DeviceCalendarWriter(ref.watch(deviceCalendarGatewayProvider));
   final cloud = ref.watch(cloudCalendarsProvider);
-  return CalendarWriteBack(
-    db: ref.watch(appDatabaseProvider),
-    writerFor: (provider) => switch (provider) {
-      CalendarProvider.appleDevice || CalendarProvider.androidDevice => device,
-      CalendarProvider.google || CalendarProvider.microsoft => cloud,
-      CalendarProvider.caldav => null,
-    },
-    effects: ref.watch(afterWriteEffectsProvider),
-    clock: ref.watch(clockProvider),
-    logger: ref.watch(loggerProvider),
-  );
+  return (provider) => switch (provider) {
+    CalendarProvider.appleDevice || CalendarProvider.androidDevice => device,
+    CalendarProvider.google || CalendarProvider.microsoft => cloud,
+    CalendarProvider.caldav => null,
+  };
 }
 
 /// Where an imported event's edits go, as the editor says it (docs/03
