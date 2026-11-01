@@ -1,5 +1,6 @@
 import ActivityKit
 import AudioToolbox
+import CoreHaptics
 import EventKit
 import Flutter
 import UIKit
@@ -55,6 +56,9 @@ import workmanager_apple
     }
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "SoundBridge") {
       SoundBridge.shared.attach(to: registrar.messenger())
+    }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "HapticsBridge") {
+      HapticsBridge.shared.attach(to: registrar.messenger())
     }
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "IntentQueueBridge") {
       IntentQueueBridge.shared.attach(to: registrar.messenger())
@@ -321,5 +325,68 @@ final class SoundBridge {
     guard let id = playing?.id else { return }
     playing = nil
     AudioServicesDisposeSystemSoundID(id)
+  }
+}
+
+/// The app's own taps on `dottoday/haptics` (lib/shared/haptics/
+/// app_haptics.dart, docs/12 §6), through Core Haptics: Settings › Sounds ›
+/// Haptics in app decides, not iOS's System Haptics switch (that one only
+/// governs UIKit's feedback generators, which Flutter's HapticFeedback
+/// uses). Accessibility › Touch › Vibration off still silences them.
+/// `play` takes "selection", "light" or "medium" and answers whether a tap
+/// was sent. Main thread.
+final class HapticsBridge {
+  static let shared = HapticsBridge()
+  private var engine: CHHapticEngine?
+
+  func attach(to messenger: FlutterBinaryMessenger) {
+    let channel = FlutterMethodChannel(name: "dottoday/haptics", binaryMessenger: messenger)
+    channel.setMethodCallHandler { call, result in
+      guard call.method == "play", let tick = call.arguments as? String else {
+        result(FlutterMethodNotImplemented)
+        return
+      }
+      result(self.play(tick))
+    }
+  }
+
+  private func play(_ tick: String) -> Bool {
+    guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return false }
+    // Close to UIKit's selection, light and medium impacts.
+    let (intensity, sharpness): (Float, Float) =
+      switch tick {
+      case "selection": (0.45, 0.9)
+      case "medium": (0.8, 0.55)
+      default: (0.6, 0.7)
+      }
+    let event = CHHapticEvent(
+      eventType: .hapticTransient,
+      parameters: [
+        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensity),
+        CHHapticEventParameter(parameterID: .hapticSharpness, value: sharpness),
+      ],
+      relativeTime: 0)
+    do {
+      let player = try running().makePlayer(with: CHHapticPattern(events: [event], parameters: []))
+      try player.start(atTime: CHHapticTimeImmediate)
+      return true
+    } catch {
+      engine = nil
+      return false
+    }
+  }
+
+  /// The engine, started on first use. iOS stops it in the background, on
+  /// an audio interruption or when idle; the next tap starts a fresh one.
+  private func running() throws -> CHHapticEngine {
+    if let engine { return engine }
+    let engine = try CHHapticEngine()
+    engine.playsHapticsOnly = true
+    engine.isAutoShutdownEnabled = true
+    engine.stoppedHandler = { [weak self] _ in DispatchQueue.main.async { self?.engine = nil } }
+    engine.resetHandler = { [weak self] in DispatchQueue.main.async { self?.engine = nil } }
+    try engine.start()
+    self.engine = engine
+    return engine
   }
 }
