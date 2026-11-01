@@ -111,3 +111,22 @@ bool missionOffOfferDue(
   return skipsUtc.where((s) => s.isAfter(since)).length >=
       missionSkipOfferCount;
 }
+
+/// "Can't right now" skips after a hold this long (15 §8 rule 3).
+const missionSkipHold = Duration(seconds: 5);
+
+/// The ring the alarm re-rings after on a mission morning while the
+/// screen is left alone, and how often a screen in use pushes it out.
+const missionReRing = Duration(minutes: 1);
+const missionKeepEvery = Duration(seconds: 30);
+
+/// Breathe (15 §8): hold while the ring grows, let go while it shrinks,
+/// [breaths] times (about 20 s).
+const breatheIn = Duration(seconds: 4);
+const breatheOut = Duration(seconds: 3);
+const breaths = 3;
+
+/// Catch the dot (15 §8): [catchTaps] taps on a dot that drifts once
+/// round its path every [catchLoop], slow and forgiving.
+const catchTaps = 5;
+const catchLoop = Duration(seconds: 10);

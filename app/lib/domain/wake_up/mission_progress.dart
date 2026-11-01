@@ -77,6 +77,11 @@ const _moving = 0.05;
 /// Folds readings into progress for one mission.
 abstract interface class MissionTracker {
   MissionProgress add(SensorReading reading);
+
+  /// Whether the last reading met the condition (light bright enough,
+  /// upright and moving), so the screen can say so before a full second
+  /// has passed.
+  bool get holding;
 }
 
 /// Walk (15 §8): the step delta since the mission began.
@@ -85,6 +90,9 @@ final class WalkTracker implements MissionTracker {
 
   final int target;
   var _steps = 0;
+
+  @override
+  bool get holding => _steps > 0;
 
   @override
   MissionProgress add(SensorReading reading) {
@@ -99,6 +107,8 @@ final class WalkTracker implements MissionTracker {
 /// [missionHold]; a break starts it over.
 final class _Hold {
   Duration? _since;
+
+  bool get holding => _since != null;
 
   MissionProgress add(Duration at, {required bool holds}) {
     if (!holds) {
@@ -118,6 +128,9 @@ final class LightTracker implements MissionTracker {
   double? _base;
 
   @override
+  bool get holding => _hold.holding;
+
+  @override
   MissionProgress add(SensorReading reading) => switch (reading) {
     LuxReading(:final at, :final lux) => _hold.add(at, holds: lux >= lightLux),
     BrightnessReading(:final at, :final value) => _bright(at, value),
@@ -135,6 +148,9 @@ final class LightTracker implements MissionTracker {
 /// Stand up (15 §8): held upright and moving for [missionHold].
 final class StandUpTracker implements MissionTracker {
   final _hold = _Hold();
+
+  @override
+  bool get holding => _hold.holding;
 
   @override
   MissionProgress add(SensorReading reading) => _hold.add(

@@ -23,6 +23,9 @@ abstract class WakeUpDay with _$WakeUpDay {
 
     /// "Start the day" with no dot to start yet (15 §5 step 7).
     DateTime? startedAtUtc,
+
+    /// "Can't right now" skipped the mission (15 §8).
+    DateTime? missionSkippedAtUtc,
   }) = _WakeUpDay;
 }
 

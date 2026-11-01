@@ -3,6 +3,8 @@ import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/wake_up/channel_mission_sensors.dart';
+import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -13,6 +15,10 @@ part 'wake_up_providers.g.dart';
 /// alarm id's day (docs/15 §3).
 String wakeUpDateKey(DateTime nowUtc, String tzId) =>
     formatRouteDate(tz.TZDateTime.from(nowUtc, tz.getLocation(tzId)));
+
+/// The sensors the missions read (docs/15 §8); tests override it.
+@Riverpod(keepAlive: true)
+MissionSensors missionSensors(Ref ref) => const ChannelMissionSensors();
 
 /// Today's row on this device, null until the alarm or the card did
 /// something (docs/15 §3, M17.3).

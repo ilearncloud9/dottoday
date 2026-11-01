@@ -9084,6 +9084,264 @@ abstract class AppLocalizations {
   /// **'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android and on iPhones with iOS 26, as a time-sensitive notification on older iPhones. Pick its sound and snooze under Sound and snooze, and send yourself a test. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.\nThe night: tell Dottoday how much sleep you want and Wind Down moves earlier before an early morning. The day dot shows the night, and the Wind Down review opens with it.'**
   String get releaseNotes120;
 
+  /// Settings › Wake Up: which mornings ask for a mission (docs/15 §8).
+  ///
+  /// In en, this message translates to:
+  /// **'Missions'**
+  String get settingsMissions;
+
+  /// Missions mode: never.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get missionModeOff;
+
+  /// Missions mode: only mornings the user flagged.
+  ///
+  /// In en, this message translates to:
+  /// **'Only when I ask'**
+  String get missionModeWhenAsked;
+
+  /// Missions mode: only rings after a snooze.
+  ///
+  /// In en, this message translates to:
+  /// **'Only after a snooze'**
+  String get missionModeAfterSnooze;
+
+  /// Missions mode: only on chosen weekdays.
+  ///
+  /// In en, this message translates to:
+  /// **'Only on chosen days'**
+  String get missionModeChosenDays;
+
+  /// Missions mode: every wake-up alarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Every time'**
+  String get missionModeAlways;
+
+  /// Settings row: the weekdays missions run on.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get settingsMissionDays;
+
+  /// Settings row: which mission.
+  ///
+  /// In en, this message translates to:
+  /// **'Mission'**
+  String get settingsMission;
+
+  /// Mission name.
+  ///
+  /// In en, this message translates to:
+  /// **'Stand up'**
+  String get missionStandUp;
+
+  /// Mission name.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk'**
+  String get missionWalk;
+
+  /// Mission name.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get missionLight;
+
+  /// Mission name.
+  ///
+  /// In en, this message translates to:
+  /// **'Breathe'**
+  String get missionBreathe;
+
+  /// Mission name.
+  ///
+  /// In en, this message translates to:
+  /// **'Catch the dot'**
+  String get missionCatchDot;
+
+  /// Mission name.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick today\'s one thing'**
+  String get missionOneThing;
+
+  /// Under an on-screen mission in Settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Wakes you up, doesn\'t get you up'**
+  String get missionOnScreenNote;
+
+  /// Settings row: Walk's step target.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get settingsMissionSteps;
+
+  /// Settings row: used when the mission can't run that morning.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup mission'**
+  String get settingsMissionBackup;
+
+  /// Backup mission: none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get missionBackupNone;
+
+  /// Settings switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer to turn missions off after repeated skips'**
+  String get settingsMissionSkipOffer;
+
+  /// Why Missions is greyed.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs alarm-grade wake-up'**
+  String get missionNeedsAlarm;
+
+  /// Why a mission is greyed.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone has no sensor for it'**
+  String get missionSensorMissing;
+
+  /// Why a mission is greyed.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow access in the phone\'s settings to use it'**
+  String get missionSensorDenied;
+
+  /// Under Pick today's one thing in Settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs at least two dots that day.'**
+  String get missionOneThingNeeds;
+
+  /// Mission screen line.
+  ///
+  /// In en, this message translates to:
+  /// **'Stand up and move'**
+  String get missionLineStandUp;
+
+  /// Mission screen line.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk {count} steps'**
+  String missionLineWalk(int count);
+
+  /// Mission screen line.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on a light'**
+  String get missionLineLight;
+
+  /// Mission screen line.
+  ///
+  /// In en, this message translates to:
+  /// **'Breathe with the ring'**
+  String get missionLineBreathe;
+
+  /// Mission screen line.
+  ///
+  /// In en, this message translates to:
+  /// **'Catch the dot {count} times'**
+  String missionLineCatchDot(int count);
+
+  /// Walk's live count.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {target} steps'**
+  String missionStepsProgress(int done, int target);
+
+  /// Seconds held so far.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {target} s'**
+  String missionHoldProgress(int done, int target);
+
+  /// Light's text state.
+  ///
+  /// In en, this message translates to:
+  /// **'Still too dark'**
+  String get missionLightDark;
+
+  /// Light's text state.
+  ///
+  /// In en, this message translates to:
+  /// **'Bright enough, keep it on'**
+  String get missionLightBright;
+
+  /// Stand up's text state.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold the phone upright and move'**
+  String get missionUprightHint;
+
+  /// Breathe: hold while the ring grows.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold'**
+  String get missionBreatheHold;
+
+  /// Breathe: let go while the ring shrinks.
+  ///
+  /// In en, this message translates to:
+  /// **'Let go'**
+  String get missionBreatheLetGo;
+
+  /// Breathe's count.
+  ///
+  /// In en, this message translates to:
+  /// **'Breath {done} of {total}'**
+  String missionBreathCount(int done, int total);
+
+  /// Catch the dot's button for screen readers.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the dot'**
+  String get missionCatchTap;
+
+  /// Catch the dot's count.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String missionCatchCount(int done, int total);
+
+  /// Hold for 5 s to skip the mission.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t right now'**
+  String get missionCantNow;
+
+  /// Under Can't right now.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold for 5 seconds'**
+  String get missionCantNowHint;
+
+  /// Offered once after 3 skips in 7 days.
+  ///
+  /// In en, this message translates to:
+  /// **'Missions seem to get in the way lately. Turn them off?'**
+  String get missionOffOffer;
+
+  /// Accepts the offer.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off'**
+  String get missionOffOfferTurnOff;
+
+  /// Declines the offer for good.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep them'**
+  String get missionOffOfferKeep;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

@@ -22,6 +22,21 @@ abstract final class AppRoutes {
   /// Today's Wind Down review, from the Wind Down notification (15 W6).
   static const review = '/review';
 
+  /// A morning's mission, from "I'm up" on a mission morning (docs/15
+  /// §8): `/wake-up/mission/<yyyy-MM-dd>/<kind>`.
+  static const missionPattern = '/wake-up/mission/:date/:kind';
+
+  /// The mission names a mission location may carry (`MissionKind`'s;
+  /// a test keeps them equal).
+  static const missionKinds = {
+    'standUp',
+    'walk',
+    'light',
+    'breathe',
+    'catchDot',
+    'oneThing',
+  };
+
   static const dayPattern = '/day/:date';
   static const taskPattern = '/task/:id';
 
@@ -36,6 +51,10 @@ abstract final class AppRoutes {
 
   /// Location for Focus on the task with [id] (a UUID v7).
   static String focus(String id) => '/focus/$id';
+
+  /// Location for the [kind] mission on the morning of [date].
+  static String mission(String date, String kind) =>
+      '/wake-up/mission/$date/$kind';
 
   /// Location for a Settings sub-page (docs/09 M3f.7).
   static String settingsPage(SettingsPage page) => '$settings/${page.name}';

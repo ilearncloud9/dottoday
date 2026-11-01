@@ -6103,6 +6103,151 @@ class AppLocalizationsFr extends AppLocalizations {
       'Alarme du réveil : activez-la dans Réglages › Forme de la journée et votre heure de réveil sonne les jours planifiés — comme une alarme sur Android et sur les iPhone sous iOS 26, en notification urgente sur les iPhone plus anciens. Choisissez son son et la répétition dans Son et répétition, avec une alarme de test. Rien ne sonne tant que vous ne l\'activez pas.\nSons : 48 sons de rappel qui vont bien ensemble. Choisissez-en un pour toutes vos tâches ou donnez à une tâche le sien ; la première tâche de la journée sonne avec votre son de début.\nJuste le point suivant : une présentation minimale à choisir à tout moment, sans rien perdre. Aujourd\'hui montre votre fil, la date et un menu.\nFaites glisser une tâche n\'importe où dans la journée, même sur une autre : les tâches qui se chevauchent font un petit nœud dans le fil.\nL\'heure du coucher devient Détente. Les deux bouts de votre journée sont des points, un soleil et une lune ; touchez-en un pour changer son heure.\nLes icônes se remplissent seules : tapez « Sport » et la tâche reçoit un haltère, parmi 524 icônes.\nLa nuit : dites à Dottoday combien de sommeil vous voulez et la détente avance avant un matin matinal. Le point du jour montre la nuit, et le bilan de la détente commence par elle.';
 
   @override
+  String get settingsMissions => 'Missions';
+
+  @override
+  String get missionModeOff => 'Désactivées';
+
+  @override
+  String get missionModeWhenAsked => 'Seulement si je demande';
+
+  @override
+  String get missionModeAfterSnooze => 'Seulement après un report';
+
+  @override
+  String get missionModeChosenDays => 'Seulement certains jours';
+
+  @override
+  String get missionModeAlways => 'À chaque fois';
+
+  @override
+  String get settingsMissionDays => 'Jours';
+
+  @override
+  String get settingsMission => 'Mission';
+
+  @override
+  String get missionStandUp => 'Se lever';
+
+  @override
+  String get missionWalk => 'Marcher';
+
+  @override
+  String get missionLight => 'Lumière';
+
+  @override
+  String get missionBreathe => 'Respirer';
+
+  @override
+  String get missionCatchDot => 'Attraper le point';
+
+  @override
+  String get missionOneThing => 'Choisir la chose du jour';
+
+  @override
+  String get missionOnScreenNote => 'Vous réveille, sans vous sortir du lit';
+
+  @override
+  String get settingsMissionSteps => 'Pas';
+
+  @override
+  String get settingsMissionBackup => 'Mission de secours';
+
+  @override
+  String get missionBackupNone => 'Aucune';
+
+  @override
+  String get settingsMissionSkipOffer =>
+      'Proposer de désactiver les missions après plusieurs sauts';
+
+  @override
+  String get missionNeedsAlarm => 'Nécessite un réveil de niveau alarme';
+
+  @override
+  String get missionSensorMissing =>
+      'Ce téléphone n\'a pas de capteur pour cela';
+
+  @override
+  String get missionSensorDenied =>
+      'Autorisez l\'accès dans les réglages du téléphone pour l\'utiliser';
+
+  @override
+  String get missionOneThingNeeds => 'Il faut au moins deux points ce jour-là.';
+
+  @override
+  String get missionLineStandUp => 'Levez-vous et bougez';
+
+  @override
+  String missionLineWalk(int count) {
+    return 'Faites $count pas';
+  }
+
+  @override
+  String get missionLineLight => 'Allumez une lumière';
+
+  @override
+  String get missionLineBreathe => 'Respirez avec l\'anneau';
+
+  @override
+  String missionLineCatchDot(int count) {
+    return 'Attrapez le point $count fois';
+  }
+
+  @override
+  String missionStepsProgress(int done, int target) {
+    return '$done pas sur $target';
+  }
+
+  @override
+  String missionHoldProgress(int done, int target) {
+    return '$done s sur $target';
+  }
+
+  @override
+  String get missionLightDark => 'Encore trop sombre';
+
+  @override
+  String get missionLightBright => 'Assez lumineux, gardez-la allumée';
+
+  @override
+  String get missionUprightHint => 'Tenez le téléphone droit et bougez';
+
+  @override
+  String get missionBreatheHold => 'Maintenez';
+
+  @override
+  String get missionBreatheLetGo => 'Relâchez';
+
+  @override
+  String missionBreathCount(int done, int total) {
+    return 'Respiration $done sur $total';
+  }
+
+  @override
+  String get missionCatchTap => 'Touchez le point';
+
+  @override
+  String missionCatchCount(int done, int total) {
+    return '$done sur $total';
+  }
+
+  @override
+  String get missionCantNow => 'Pas maintenant';
+
+  @override
+  String get missionCantNowHint => 'Maintenez 5 secondes';
+
+  @override
+  String get missionOffOffer =>
+      'Les missions semblent gêner ces temps-ci. Les désactiver ?';
+
+  @override
+  String get missionOffOfferTurnOff => 'Désactiver';
+
+  @override
+  String get missionOffOfferKeep => 'Les garder';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

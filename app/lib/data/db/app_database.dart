@@ -41,7 +41,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 11;
+  static const latestSchemaVersion = 12;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -104,6 +104,15 @@ class AppDatabase extends _$AppDatabase {
       // 11 (M17.5, owner 2026-11-01): the Wind Down reminder's settings key
       // is windDownReminder; the value moves from bedtimeReminder.
       if (from < 11) await _moveWindDownReminder();
+      // 12 (M17.7, docs/15 §8): a skipped mission, for the offer to turn
+      // missions off after 3 skips in 7 days.
+      if (from < 12) {
+        await _addColumnOnce(
+          m,
+          wakeUpDaysTable,
+          wakeUpDaysTable.missionSkippedAtUtc,
+        );
+      }
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without

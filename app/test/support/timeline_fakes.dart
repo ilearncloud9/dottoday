@@ -762,6 +762,18 @@ final class FakeAlarmGateway implements AlarmGateway {
     events = [];
     return out;
   }
+
+  /// Alarms ended from a mission screen, in order.
+  final dismissed = <String>[];
+
+  @override
+  Future<void> dismiss(String id) async => dismissed.add(id);
+
+  /// How often a mission screen pushed its re-ring out.
+  var kept = 0;
+
+  @override
+  Future<void> keepMission(String id) async => kept++;
 }
 
 /// This device's mornings in memory (docs/15 §3).
@@ -800,6 +812,20 @@ final class FakeWakeUpDayRepository implements WakeUpDayRepository {
     }
     _changes.add(null);
   }
+
+  @override
+  Future<void> markMissionSkipped(String date, DateTime atUtc) async {
+    _days[date] = (_days[date] ?? WakeUpDay(date: date)).copyWith(
+      missionSkippedAtUtc: atUtc,
+    );
+    _changes.add(null);
+  }
+
+  @override
+  Future<List<DateTime>> missionSkipsSince(DateTime sinceUtc) async => [
+    for (final d in _days.values)
+      if (d.missionSkippedAtUtc case final at? when at.isAfter(sinceUtc)) at,
+  ];
 
   @override
   Future<void> markCardShown(String date, DateTime atUtc) async {

@@ -49,6 +49,21 @@ final class DriftWakeUpDayRepository implements WakeUpDayRepository {
   Future<void> markStarted(String date, DateTime atUtc) =>
       _update(date, (d) => d.copyWith(startedAtUtc: d.startedAtUtc ?? atUtc));
 
+  @override
+  Future<void> markMissionSkipped(String date, DateTime atUtc) =>
+      _update(date, (d) => d.copyWith(missionSkippedAtUtc: atUtc));
+
+  @override
+  Future<List<DateTime>> missionSkipsSince(DateTime sinceUtc) async {
+    final t = _db.wakeUpDaysTable;
+    final rows =
+        await (_db.select(t)..where(
+              (d) => d.missionSkippedAtUtc.isBiggerThanValue(_ms(sinceUtc)!),
+            ))
+            .get();
+    return [for (final r in rows) ?_utc(r.missionSkippedAtUtc)];
+  }
+
   Future<void> _update(String date, WakeUpDay Function(WakeUpDay) change) =>
       _db.transaction(
         () async => _write(change(await _read(date) ?? WakeUpDay(date: date))),
@@ -70,6 +85,7 @@ final class DriftWakeUpDayRepository implements WakeUpDayRepository {
           snoozes: Value(day.snoozes),
           cardShownAtUtc: Value(_ms(day.cardShownAtUtc)),
           startedAtUtc: Value(_ms(day.startedAtUtc)),
+          missionSkippedAtUtc: Value(_ms(day.missionSkippedAtUtc)),
         ),
       );
 }
@@ -83,6 +99,7 @@ WakeUpDay? _toDay(WakeUpDayRow? row) => row == null
         snoozes: row.snoozes,
         cardShownAtUtc: _utc(row.cardShownAtUtc),
         startedAtUtc: _utc(row.startedAtUtc),
+        missionSkippedAtUtc: _utc(row.missionSkippedAtUtc),
       );
 
 int? _ms(DateTime? at) => at?.millisecondsSinceEpoch;

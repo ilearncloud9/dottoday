@@ -151,6 +151,15 @@ abstract interface class AlarmGateway {
   /// nothing is armed.
   Future<List<AlarmEvent>> drainEvents();
 
+  /// Ends the morning of alarm [id] from its mission screen (15 §8), done
+  /// or skipped: stops the re-ring and arms the Wake Up Check as "I'm up"
+  /// would. The app records a skip itself (`wake_up_days`).
+  Future<void> dismiss(String id);
+
+  /// Pushes alarm [id]'s re-ring a minute out while its mission screen is
+  /// in use (15 §8 iOS Stop): only a phone left alone rings again.
+  Future<void> keepMission(String id);
+
   /// Arms [alarm] (a [WakeUpAlarm.testId] one) apart from [sync]'s set;
   /// false when this device has no alarm path, so the caller falls back to
   /// the notification test alarm.

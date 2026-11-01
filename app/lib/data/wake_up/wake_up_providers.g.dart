@@ -8,6 +8,52 @@ part of 'wake_up_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// The sensors the missions read (docs/15 §8); tests override it.
+
+@ProviderFor(missionSensors)
+final missionSensorsProvider = MissionSensorsProvider._();
+
+/// The sensors the missions read (docs/15 §8); tests override it.
+
+final class MissionSensorsProvider
+    extends $FunctionalProvider<MissionSensors, MissionSensors, MissionSensors>
+    with $Provider<MissionSensors> {
+  /// The sensors the missions read (docs/15 §8); tests override it.
+  MissionSensorsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'missionSensorsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$missionSensorsHash();
+
+  @$internal
+  @override
+  $ProviderElement<MissionSensors> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  MissionSensors create(Ref ref) {
+    return missionSensors(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(MissionSensors value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<MissionSensors>(value),
+    );
+  }
+}
+
+String _$missionSensorsHash() => r'1f3af2a30c5704b92683a86ac3a118e3e85efd64';
+
 /// Today's row on this device, null until the alarm or the card did
 /// something (docs/15 §3, M17.3).
 

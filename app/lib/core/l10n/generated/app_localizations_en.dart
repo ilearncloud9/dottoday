@@ -6055,6 +6055,150 @@ class AppLocalizationsEn extends AppLocalizations {
       'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android and on iPhones with iOS 26, as a time-sensitive notification on older iPhones. Pick its sound and snooze under Sound and snooze, and send yourself a test. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.\nThe night: tell Dottoday how much sleep you want and Wind Down moves earlier before an early morning. The day dot shows the night, and the Wind Down review opens with it.';
 
   @override
+  String get settingsMissions => 'Missions';
+
+  @override
+  String get missionModeOff => 'Off';
+
+  @override
+  String get missionModeWhenAsked => 'Only when I ask';
+
+  @override
+  String get missionModeAfterSnooze => 'Only after a snooze';
+
+  @override
+  String get missionModeChosenDays => 'Only on chosen days';
+
+  @override
+  String get missionModeAlways => 'Every time';
+
+  @override
+  String get settingsMissionDays => 'Days';
+
+  @override
+  String get settingsMission => 'Mission';
+
+  @override
+  String get missionStandUp => 'Stand up';
+
+  @override
+  String get missionWalk => 'Walk';
+
+  @override
+  String get missionLight => 'Light';
+
+  @override
+  String get missionBreathe => 'Breathe';
+
+  @override
+  String get missionCatchDot => 'Catch the dot';
+
+  @override
+  String get missionOneThing => 'Pick today\'s one thing';
+
+  @override
+  String get missionOnScreenNote => 'Wakes you up, doesn\'t get you up';
+
+  @override
+  String get settingsMissionSteps => 'Steps';
+
+  @override
+  String get settingsMissionBackup => 'Backup mission';
+
+  @override
+  String get missionBackupNone => 'None';
+
+  @override
+  String get settingsMissionSkipOffer =>
+      'Offer to turn missions off after repeated skips';
+
+  @override
+  String get missionNeedsAlarm => 'Needs alarm-grade wake-up';
+
+  @override
+  String get missionSensorMissing => 'This phone has no sensor for it';
+
+  @override
+  String get missionSensorDenied =>
+      'Allow access in the phone\'s settings to use it';
+
+  @override
+  String get missionOneThingNeeds => 'Needs at least two dots that day.';
+
+  @override
+  String get missionLineStandUp => 'Stand up and move';
+
+  @override
+  String missionLineWalk(int count) {
+    return 'Walk $count steps';
+  }
+
+  @override
+  String get missionLineLight => 'Turn on a light';
+
+  @override
+  String get missionLineBreathe => 'Breathe with the ring';
+
+  @override
+  String missionLineCatchDot(int count) {
+    return 'Catch the dot $count times';
+  }
+
+  @override
+  String missionStepsProgress(int done, int target) {
+    return '$done of $target steps';
+  }
+
+  @override
+  String missionHoldProgress(int done, int target) {
+    return '$done of $target s';
+  }
+
+  @override
+  String get missionLightDark => 'Still too dark';
+
+  @override
+  String get missionLightBright => 'Bright enough, keep it on';
+
+  @override
+  String get missionUprightHint => 'Hold the phone upright and move';
+
+  @override
+  String get missionBreatheHold => 'Hold';
+
+  @override
+  String get missionBreatheLetGo => 'Let go';
+
+  @override
+  String missionBreathCount(int done, int total) {
+    return 'Breath $done of $total';
+  }
+
+  @override
+  String get missionCatchTap => 'Tap the dot';
+
+  @override
+  String missionCatchCount(int done, int total) {
+    return '$done of $total';
+  }
+
+  @override
+  String get missionCantNow => 'Can\'t right now';
+
+  @override
+  String get missionCantNowHint => 'Hold for 5 seconds';
+
+  @override
+  String get missionOffOffer =>
+      'Missions seem to get in the way lately. Turn them off?';
+
+  @override
+  String get missionOffOfferTurnOff => 'Turn off';
+
+  @override
+  String get missionOffOfferKeep => 'Keep them';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override
