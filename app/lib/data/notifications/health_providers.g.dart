@@ -8,27 +8,27 @@ part of 'health_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Battery optimisation and Do Not Disturb now (Android); re-read with
-/// `ref.invalidate` on resume.
+/// Battery optimisation and Do Not Disturb now (Android), and whether Do
+/// Not Disturb keeps alarms quiet; re-read with `ref.invalidate` on resume.
 
 @ProviderFor(powerState)
 final powerStateProvider = PowerStateProvider._();
 
-/// Battery optimisation and Do Not Disturb now (Android); re-read with
-/// `ref.invalidate` on resume.
+/// Battery optimisation and Do Not Disturb now (Android), and whether Do
+/// Not Disturb keeps alarms quiet; re-read with `ref.invalidate` on resume.
 
 final class PowerStateProvider
     extends
         $FunctionalProvider<
-          AsyncValue<({bool battery, bool dnd})>,
-          ({bool battery, bool dnd}),
-          FutureOr<({bool battery, bool dnd})>
+          AsyncValue<({bool battery, bool dnd, bool dndAlarms})>,
+          ({bool battery, bool dnd, bool dndAlarms}),
+          FutureOr<({bool battery, bool dnd, bool dndAlarms})>
         >
     with
-        $FutureModifier<({bool battery, bool dnd})>,
-        $FutureProvider<({bool battery, bool dnd})> {
-  /// Battery optimisation and Do Not Disturb now (Android); re-read with
-  /// `ref.invalidate` on resume.
+        $FutureModifier<({bool battery, bool dnd, bool dndAlarms})>,
+        $FutureProvider<({bool battery, bool dnd, bool dndAlarms})> {
+  /// Battery optimisation and Do Not Disturb now (Android), and whether Do
+  /// Not Disturb keeps alarms quiet; re-read with `ref.invalidate` on resume.
   PowerStateProvider._()
     : super(
         from: null,
@@ -45,17 +45,16 @@ final class PowerStateProvider
 
   @$internal
   @override
-  $FutureProviderElement<({bool battery, bool dnd})> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  $FutureProviderElement<({bool battery, bool dnd, bool dndAlarms})>
+  $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<({bool battery, bool dnd})> create(Ref ref) {
+  FutureOr<({bool battery, bool dnd, bool dndAlarms})> create(Ref ref) {
     return powerState(ref);
   }
 }
 
-String _$powerStateHash() => r'9b399b8c6951632b8debc11e5f8be75892ae0be2';
+String _$powerStateHash() => r'372f0026fb77a835dc668ef89f7c8415e9a2831e';
 
 /// Sounds in use whose Android channel the user muted (docs/12 §4): the
 /// default and Start sounds and every pending reminder's. Re-read with
@@ -155,4 +154,4 @@ final class NotificationHealthChecksProvider
 }
 
 String _$notificationHealthChecksHash() =>
-    r'777818a516207376b4b52e05adbff92a5171cef8';
+    r'be76ad4d3f261e610c912fc1f28b297ecc472cd0';

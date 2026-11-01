@@ -1,5 +1,6 @@
 import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
+import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/battery_optimization.dart';
 import 'package:dottoday/domain/notifications/notification_health.dart';
 import 'package:dottoday/domain/sync/clock_skew.dart';
@@ -22,8 +23,16 @@ final class _Power implements BatteryOptimization {
   @override
   Future<void> openSettings() async => opened++;
 
+  int dndOpened = 0;
+
   @override
   Future<bool> doNotDisturb() async => false;
+
+  @override
+  Future<bool> dndAlarmsBlocked() async => false;
+
+  @override
+  Future<void> openDndSettings() async => dndOpened++;
 }
 
 List<Override> _checks(List<HealthCheck> checks) => [
@@ -94,6 +103,67 @@ void main() {
     );
     expect(find.textContaining('Set automatically'), findsOneWidget);
     expect(find.byType(TextButton), findsNothing);
+  });
+
+  testWidgets("Wake Up: Do Not Disturb's fix opens its exceptions", (
+    tester,
+  ) async {
+    final power = _Power();
+    await _pump(
+      tester,
+      const NotificationHealthPage(),
+      overrides: [
+        ..._checks(const [
+          HealthCheck(
+            HealthCheckKind.wakeUp,
+            HealthLevel.problem,
+            wakeUp: AlarmCapabilities(AlarmTier.alarm),
+            wakeUpWarning: WakeUpWarning.dndBlocksAlarms,
+          ),
+        ]),
+        batteryOptimizationProvider.overrideWithValue(power),
+      ],
+    );
+    expect(
+      find.text('Do Not Disturb keeps your Wake Up alarm quiet'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Allow alarms in Do Not Disturb so it rings.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Open settings'));
+    await tester.pump();
+    expect(power.dndOpened, 1);
+    expect(power.opened, 0);
+  });
+
+  testWidgets("Wake Up: battery saving's fix opens the battery list", (
+    tester,
+  ) async {
+    final power = _Power();
+    await _pump(
+      tester,
+      const NotificationHealthPage(),
+      overrides: [
+        ..._checks(const [
+          HealthCheck(
+            HealthCheckKind.wakeUp,
+            HealthLevel.problem,
+            wakeUp: AlarmCapabilities(AlarmTier.alarm),
+            wakeUpWarning: WakeUpWarning.batteryRestricted,
+          ),
+        ]),
+        batteryOptimizationProvider.overrideWithValue(power),
+      ],
+    );
+    expect(
+      find.text('Battery saving may delay your Wake Up alarm'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Open settings'));
+    await tester.pump();
+    expect(power.opened, 1);
   });
 
   testWidgets('the Settings row counts what needs fixing', (tester) async {

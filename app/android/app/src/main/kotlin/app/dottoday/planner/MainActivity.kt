@@ -1,14 +1,17 @@
 package app.dottoday.planner
 
 import android.app.NotificationManager
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import android.util.Log
 import android.view.WindowManager
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -149,6 +152,42 @@ class MainActivity : FlutterFragmentActivity() {
                         result.success(
                             notes.currentInterruptionFilter != NotificationManager.INTERRUPTION_FILTER_ALL,
                         )
+                    }
+                    // Whether Do Not Disturb keeps the Wake Up alarm quiet
+                    // (docs/15 §2): total silence now, or its Alarms
+                    // exception off, which a nightly schedule would apply.
+                    // Reading the policy needs no permission.
+                    "isDndAlarmsBlocked" -> {
+                        val notes = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                        val silent = notes.currentInterruptionFilter ==
+                            NotificationManager.INTERRUPTION_FILTER_NONE
+                        val noAlarms = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
+                            try {
+                                notes.notificationPolicy.priorityCategories and
+                                    NotificationManager.Policy.PRIORITY_CATEGORY_ALARMS == 0
+                            } catch (e: SecurityException) {
+                                false
+                            }
+                        result.success(silent || noAlarms)
+                    }
+                    "openDndSettings" -> {
+                        // Exceptions first; some phones only have the main
+                        // page, and every phone has Sound.
+                        val pages = listOf(
+                            "android.settings.ZEN_MODE_PRIORITY_SETTINGS",
+                            "android.settings.ZEN_MODE_SETTINGS",
+                            Settings.ACTION_SOUND_SETTINGS,
+                        )
+                        val opened = pages.any { action ->
+                            try {
+                                startActivity(Intent(action))
+                                true
+                            } catch (e: ActivityNotFoundException) {
+                                false
+                            }
+                        }
+                        if (!opened) Log.w("DotPower", "no settings page for Do Not Disturb")
+                        result.success(null)
                     }
                     else -> result.notImplemented()
                 }

@@ -6299,6 +6299,21 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get healthWakeUpDnd => 'Do Not Disturb keeps your Wake Up alarm quiet';
+
+  @override
+  String get healthWakeUpDndDetail =>
+      'Allow alarms in Do Not Disturb so it rings.';
+
+  @override
+  String get healthWakeUpBattery =>
+      'Battery saving may delay your Wake Up alarm';
+
+  @override
+  String get healthWakeUpBatteryDetail =>
+      'Let Dottoday run without battery limits so it\'s ready after a restart.';
+
+  @override
   String windDownLearnOffer(int usual, int more) {
     return 'You usually get up ~$usual min after Wake Up. Move Wind Down $more min earlier?';
   }

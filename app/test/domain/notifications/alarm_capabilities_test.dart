@@ -153,4 +153,46 @@ void main() {
       );
     });
   });
+
+  group('Wake Up warnings (battery, Do Not Disturb)', () {
+    const granted = PermissionState.granted;
+    HealthCheck row({
+      AlarmCapabilities wakeUp = const AlarmCapabilities(AlarmTier.alarm),
+      bool battery = false,
+      bool dnd = false,
+    }) => notificationHealth(
+      HealthInputs(
+        platform: HealthPlatform.android,
+        permission: granted,
+        batteryRestricted: battery,
+        dndAlarmsBlocked: dnd,
+        wakeUp: wakeUp,
+      ),
+    ).singleWhere((c) => c.kind == HealthCheckKind.wakeUp);
+
+    test('none: the row is fine', () {
+      expect(row().level, HealthLevel.ok);
+      expect(row().wakeUpWarning, isNull);
+    });
+
+    test('Do Not Disturb first, then battery; each a problem', () {
+      expect(
+        row(battery: true, dnd: true).wakeUpWarning,
+        WakeUpWarning.dndBlocksAlarms,
+      );
+      expect(row(battery: true).wakeUpWarning, WakeUpWarning.batteryRestricted);
+      expect(row(battery: true).level, HealthLevel.problem);
+    });
+
+    test("a tier blocker's fix comes first", () {
+      final blocked = row(
+        dnd: true,
+        wakeUp: const AlarmCapabilities(AlarmTier.headsUp, [
+          AlarmBlocker.fullScreenIntentRevoked,
+        ]),
+      );
+      expect(blocked.wakeUpWarning, isNull);
+      expect(blocked.level, HealthLevel.problem);
+    });
+  });
 }
