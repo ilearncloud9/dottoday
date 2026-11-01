@@ -2,7 +2,7 @@ import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
-import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/domain/time/wind_down.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Rebuilds the day snapshot (B5) from the database and hands it to the
@@ -31,10 +31,21 @@ final class DaySnapshotWriter {
         .watchRange(userId, now, now.add(DaySnapshot.window))
         .first;
     final inbox = await _occurrences.watchInbox(userId).first;
-    final shape = DayShape.containing(
-      tz.getLocation(profile.tzId),
-      now,
-      profile.settings,
+    final location = tz.getLocation(profile.tzId);
+    final settings = profile.settings;
+    final local = tz.TZDateTime.from(now, location);
+    final date = DateTime(local.year, local.month, local.day);
+    final next = nextWakeUtc(location, date, settings);
+    final tomorrow = await _occurrences
+        .watchRange(userId, next, next.add(const Duration(hours: 18)))
+        .first;
+    // The effective Wind Down (docs/15 W4) and, while it shows, the night.
+    final shape = effectiveDayShape(
+      location,
+      date,
+      settings,
+      nowUtc: now,
+      tomorrowHasThread: tomorrow.any((o) => o.startUtc != null),
     );
     final day = await _occurrences
         .watchRange(userId, shape.wakeUtc, shape.bedUtc)
@@ -45,6 +56,7 @@ final class DaySnapshotWriter {
       inboxCount: inbox.length,
       shape: shape,
       dayOccurrences: day,
+      tomorrowWakeUtc: settings.showNightArc ? next : null,
     );
   }
 

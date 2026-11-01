@@ -13,6 +13,7 @@ import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
+import 'package:dottoday/domain/time/wind_down.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -35,9 +36,7 @@ OsNotification? composeNotification(
     body = l10n.testAlarmBody;
   } else if (planned.purpose == NotificationPurpose.windDown) {
     title = l10n.notifWindDownTitle;
-    body = task?.startUtc == null
-        ? l10n.notifWindDownFree
-        : l10n.notifWindDownFirst(task!.title, _time(task.startUtc!, profile));
+    body = _windDownBody(l10n, planned, task, profile);
   } else if (planned.purpose == NotificationPurpose.wakeUp) {
     // Never dropped: an alarm whose first block just went still rings.
     title = l10n.notifWakeUpTitle;
@@ -89,6 +88,34 @@ OsNotification? composeNotification(
         !planned.loud &&
         planned.sound == soundNoneKey,
   );
+}
+
+/// The Wind Down reminder's line. With a sleep target it names what the
+/// night protects, "Wind down now for 7 h 30 before Run at 06:30." (docs/15
+/// W6); without one it is the same as before M17.5.
+String _windDownBody(
+  AppLocalizations l10n,
+  PlannedNotification planned,
+  Occurrence? task,
+  Profile profile,
+) {
+  final start = task?.startUtc;
+  if (profile.settings.sleepTargetMin == null) {
+    return start == null
+        ? l10n.notifWindDownFree
+        : l10n.notifWindDownFirst(task!.title, _time(start, profile));
+  }
+  final location = tz.getLocation(profile.tzId);
+  final local = tz.TZDateTime.from(planned.fireAtUtc, location);
+  final wake = nextWakeUtc(
+    location,
+    DateTime(local.year, local.month, local.day),
+    profile.settings,
+  );
+  final length = _length(l10n, nightMinutes(planned.fireAtUtc, wake));
+  return start == null
+      ? l10n.notifWindDownNudgeNoDot(length, _time(wake, profile))
+      : l10n.notifWindDownNudge(length, task!.title, _time(start, profile));
 }
 
 /// [planned] (a Wake Up) as the alarm `AlarmGateway` arms (docs/15 W1b):
@@ -161,13 +188,15 @@ CatalogueSound? _soundOf(PlannedNotification planned) {
 String smallestStepText(AppLocalizations l10n, Subtask step) {
   final minutes = step.durationMin;
   if (minutes == null) return l10n.smallestStepTitleShort(step.title);
-  final length = minutes < 60
-      ? l10n.durationMinutes(minutes)
-      : minutes % 60 == 0
-      ? l10n.durationHours(minutes ~/ 60)
-      : l10n.durationHoursMinutesShort(minutes ~/ 60, minutes % 60);
-  return l10n.smallestStepTitle(step.title, length);
+  return l10n.smallestStepTitle(step.title, _length(l10n, minutes));
 }
+
+/// "10 min", "2 h", "7 h 30".
+String _length(AppLocalizations l10n, int minutes) => minutes < 60
+    ? l10n.durationMinutes(minutes)
+    : minutes % 60 == 0
+    ? l10n.durationHours(minutes ~/ 60)
+    : l10n.durationHoursMinutesShort(minutes ~/ 60, minutes % 60);
 
 /// A short fingerprint of the shown text, so an edit re-posts (R-10).
 String notificationContentHash(String title, String body) =>

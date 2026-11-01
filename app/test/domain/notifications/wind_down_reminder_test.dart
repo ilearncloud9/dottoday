@@ -103,4 +103,35 @@ void main() {
     );
     expect(n.first.fireAtUtc, DateTime.utc(2026, 10, 22, 20));
   });
+
+  test('a sleep target pulls it earlier before an early tomorrow (15 W4)', () {
+    // Thu 22 Oct: a task at 06:00 Berlin; Wake Up 05:30 that day.
+    final early = const Settings(
+      sleepTargetMin: 8 * 60,
+      dayBoundaries: {Weekday.thu: TimeWindow(start: '05:30', end: '22:00')},
+    );
+    final fire = _windDowns(
+      early,
+      tasks: [_task('early', DateTime.utc(2026, 10, 22, 4))],
+    ).map((n) => n.fireAtUtc);
+    // Wed: 05:30 Thu − 8 h = 21:30 Wed (19:30Z), before 22:00.
+    expect(fire.first, DateTime.utc(2026, 10, 21, 19, 30));
+  });
+
+  test('no target, or tomorrow free: the set Wind Down', () {
+    final early = const Settings(
+      dayBoundaries: {Weekday.thu: TimeWindow(start: '05:30', end: '22:00')},
+    );
+    expect(
+      _windDowns(
+        early,
+        tasks: [_task('early', DateTime.utc(2026, 10, 22, 4))],
+      ).first.fireAtUtc,
+      DateTime.utc(2026, 10, 21, 20),
+    );
+    expect(
+      _windDowns(early.copyWith(sleepTargetMin: 8 * 60)).first.fireAtUtc,
+      DateTime.utc(2026, 10, 21, 20),
+    );
+  });
 }

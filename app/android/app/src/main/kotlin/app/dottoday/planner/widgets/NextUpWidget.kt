@@ -58,10 +58,14 @@ private fun NextUp(context: Context, snapshot: WidgetSnapshot, now: Long) {
             .padding(14.dp).clickable(open(context, link)),
         verticalAlignment = Alignment.Top,
     ) {
-        Text(
-            text = (if (live != null) snapshot.label("now") else snapshot.label("next_up")).uppercase(),
-            style = DotText.caption,
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            DayDot(context, snapshot, now)
+            Spacer(GlanceModifier.width(6.dp))
+            Text(
+                text = (if (live != null) snapshot.label("now") else snapshot.label("next_up")).uppercase(),
+                style = DotText.caption,
+            )
+        }
         Spacer(GlanceModifier.height(10.dp))
         if (block == null) {
             Text(snapshot.label("nothing_next"), style = DotText.meta)

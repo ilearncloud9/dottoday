@@ -11,6 +11,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/day_cues.dart';
+import 'package:dottoday/features/timeline/state/day_ends.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/reality_thread.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
@@ -71,11 +72,14 @@ class DayPage extends ConsumerWidget {
     final now =
         ref.watch(minuteTickProvider).value ??
         ref.watch(clockProvider).nowUtc();
-    final shape = DayShape.on(
-      data.day.location,
-      date,
-      data.settings.boundaryFor(data.day.weekday),
-    );
+    // The effective Wind Down caps the thread (docs/15 W4).
+    final shape =
+        ref.watch(dayEndsProvider(date)).value?.shape ??
+        DayShape.on(
+          data.day.location,
+          date,
+          data.settings.boundaryFor(data.day.weekday),
+        );
     final blocks = data.blocks;
     final summary = daySummaryOf(blocks, shape);
     final format = _format(context, data.day.location, data.settings.use24h);

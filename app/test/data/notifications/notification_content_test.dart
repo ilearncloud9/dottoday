@@ -212,4 +212,41 @@ void main() {
       reason: 'no step left: nothing to post',
     );
   });
+
+  group('the Wind Down reminder (docs/15 W6)', () {
+    // profileFixture: New York; a Wind Down at 22:00 there (02:00Z).
+    final windDown = PlannedNotification(
+      id: 6,
+      occurrenceId: 'run',
+      alertIndex: PlannedNotification.windDownIndex,
+      fireAtUtc: DateTime.utc(2026, 10, 22, 2),
+      kind: AlertKind.atEnd,
+      purpose: NotificationPurpose.windDown,
+    );
+    final run = occurrenceFixture().copyWith(
+      id: 'run',
+      title: 'Run',
+      startUtc: DateTime.utc(2026, 10, 22, 10, 30),
+    );
+
+    test('without a sleep target: as before M17.5', () {
+      final n = composeNotification(
+        windDown,
+        task: run,
+        profile: profileFixture(),
+      )!;
+      expect(n.body, isNot(contains('Wind down now')));
+    });
+
+    test('with one: what the night protects, before the first dot', () {
+      final profile = profileFixture().copyWith(
+        settings: profileFixture().settings.copyWith(sleepTargetMin: 9 * 60),
+      );
+      // Next Wake Up 07:00 New York (11:00Z): 9 h of night.
+      final n = composeNotification(windDown, task: run, profile: profile)!;
+      expect(n.body, startsWith('Wind down now for 9 h before Run at'));
+      final free = composeNotification(windDown, task: null, profile: profile)!;
+      expect(free.body, startsWith('Wind down now for 9 h before'));
+    });
+  });
 }

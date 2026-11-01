@@ -149,7 +149,8 @@ void main() {
       await tester.pumpAndSettle();
       expect(_row('Reply to email').startUtc, isNull);
       expect(find.textContaining('sent to the Inbox'), findsOneWidget);
-      expect(find.text('DAY REVIEW'), findsNothing);
+      // The review stays, all done (docs/15 W6: its night line is there).
+      expect(find.text('Nothing left to move'), findsOneWidget);
     });
 
     testWidgets('moves the rest to tomorrow when Roll is on', (tester) async {

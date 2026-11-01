@@ -4,6 +4,7 @@ import 'package:dottoday/domain/review/week_review.dart';
 import 'package:dottoday/domain/scheduling/day_review.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/domain/time/wind_down.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,7 +20,14 @@ WeekReview weekReviewOf(List<TimelineData> data) => WeekReview.of([
   for (final d in data)
     WeekReviewDay(
       date: d.day.date,
-      snapshot: DaySnapshot.ofDay(blocks: d.blocks, shape: shapeOf(d)),
+      snapshot: DaySnapshot.ofDay(
+        blocks: d.blocks,
+        shape: shapeOf(d),
+        // The night after it, on the review's dots (docs/15 W6).
+        tomorrowWakeUtc: d.settings.showNightArc
+            ? nextWakeUtc(d.day.location, d.day.date, d.settings)
+            : null,
+      ),
     ),
 ], data.first.day.location);
 

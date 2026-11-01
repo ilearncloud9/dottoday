@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/domain/time/day_dot_geometry.dart';
 import 'package:dottoday/features/onboarding/steps/layout_sketch.dart';
 import 'package:dottoday/shared/dot/day_dot.dart';
 import 'package:dottoday/shared/layout/layout_switch.dart';
@@ -42,7 +43,10 @@ class LayoutStep extends ConsumerWidget {
               spacing: DotSpace.l,
               children: [
                 const ExcludeSemantics(
-                  child: DayDot(progress: _dayShare, size: DotSize.dayDot),
+                  child: DayDot(
+                    geometry: DayDotGeometry.filled(_dayShare),
+                    size: DotSize.dayDot,
+                  ),
                 ),
                 Semantics(
                   header: true,

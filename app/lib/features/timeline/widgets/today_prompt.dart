@@ -13,6 +13,7 @@ import 'package:dottoday/domain/scheduling/running_late.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
 import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
+import 'package:dottoday/features/timeline/state/day_ends.dart';
 import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_prompts.dart';
@@ -63,16 +64,21 @@ class TodayPrompt extends ConsumerWidget {
     final now =
         ref.watch(minuteTickProvider).value ??
         ref.watch(clockProvider).nowUtc();
-    final shape = DayShape.on(
-      data.day.location,
-      today,
-      data.settings.boundaryFor(data.day.weekday),
-    );
+    // The effective Wind Down opens the review (docs/15 W4).
+    final shape =
+        ref.watch(dayEndsProvider(today)).value?.shape ??
+        DayShape.on(
+          data.day.location,
+          today,
+          data.settings.boundaryFor(data.day.weekday),
+        );
     void notNow(TodayPromptKind kind) =>
         ref.read(dismissedPromptsProvider.notifier).dismiss(kind, today);
     if (!now.isBefore(shape.bedUtc)) {
+      // A fully-done day gets its review too: the night line and the
+      // sleep offer live there (owner, 2026-10-31).
       if (!dismissed.contains((TodayPromptKind.review, today)) &&
-          reviewOf(data.blocks).hasRest) {
+          reviewOf(data.blocks).total > 0) {
         return _review(context, notNow);
       }
       final weekEnds =

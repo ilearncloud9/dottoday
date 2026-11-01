@@ -6002,8 +6002,74 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get settingsSleepTarget => 'Schlafziel';
+
+  @override
+  String get settingsSleepTargetOff => 'Aus';
+
+  @override
+  String get settingsSleepTargetDetail =>
+      'Die Abendruhe rückt vor einem frühen Morgen nach vorn';
+
+  @override
+  String get settingsShowNight => 'Die Nacht auf dem Tagespunkt zeigen';
+
+  @override
+  String get reviewSleepOffer =>
+      'Neu: Sag Dottoday, wie viel Schlaf du willst, und die Abendruhe rückt vor einem frühen Aufstehen nach vorn.';
+
+  @override
+  String get reviewSleepOfferSet => 'Festlegen';
+
+  @override
+  String get reviewSleepOfferLater => 'Nein danke';
+
+  @override
+  String get onboardingSleepTarget => 'Wie viel Schlaf möchtest du?';
+
+  @override
+  String nightLabel(String length) {
+    return 'Nacht · $length';
+  }
+
+  @override
+  String reviewNightUntil(String length, String time) {
+    return '$length bis zum Aufstehen um $time';
+  }
+
+  @override
+  String reviewNightIfNow(String length) {
+    return '$length, wenn du jetzt zur Ruhe kommst';
+  }
+
+  @override
+  String notifWindDownNudge(String length, String title, String time) {
+    return 'Jetzt zur Ruhe kommen: $length bis $title um $time.';
+  }
+
+  @override
+  String notifWindDownNudgeNoDot(String length, String time) {
+    return 'Jetzt zur Ruhe kommen: $length bis $time.';
+  }
+
+  @override
+  String settingsWindDownFrom(String time, String wake) {
+    return '$time · nach morgen $wake';
+  }
+
+  @override
+  String todayWindDownFooter(String start, String windDown) {
+    return 'Morgen geht\'s um $start los → Abendruhe $windDown';
+  }
+
+  @override
+  String onboardingWindDownLive(String time, String length) {
+    return 'Abendruhe $time · $length Schlaf';
+  }
+
+  @override
   String get releaseNotes120 =>
-      'Aufstehen-Wecker: Schalte ihn unter Einstellungen › Tagesform ein, und deine Aufstehzeit klingelt an geplanten Tagen — auf Android und auf iPhones mit iOS 26 wie ein Wecker, auf älteren iPhones als zeitkritische Mitteilung. Ton und Schlummern wählst du unter Ton und Schlummern, mit einem Testwecker. Nichts klingelt, bevor du ihn einschaltest.\nTöne: 48 Erinnerungstöne, die gut zusammenpassen. Wähle einen für alle Aufgaben oder gib einer Aufgabe ihren eigenen; deine erste Aufgabe des Tages klingelt mit deinem Start-Ton.\nNur der nächste Punkt: ein minimales Layout, jederzeit wählbar, ohne dass etwas verloren geht. Heute zeigt deinen Faden, das Datum und ein Menü.\nZieh eine Aufgabe irgendwohin auf den Tag, auch auf eine andere: Überschneidungen knüpfen einen kleinen Knoten in den Faden.\nAus Schlafenszeit wird Abendruhe. Die beiden Enden deines Tages sind Punkte, eine Sonne und ein Mond; tipp einen an, um seine Zeit zu ändern.\nIcons füllen sich selbst: Schreib „Fitnessstudio“, und die Aufgabe bekommt eine Hantel — aus 524 Icons.';
+      'Aufstehen-Wecker: Schalte ihn unter Einstellungen › Tagesform ein, und deine Aufstehzeit klingelt an geplanten Tagen — auf Android und auf iPhones mit iOS 26 wie ein Wecker, auf älteren iPhones als zeitkritische Mitteilung. Ton und Schlummern wählst du unter Ton und Schlummern, mit einem Testwecker. Nichts klingelt, bevor du ihn einschaltest.\nTöne: 48 Erinnerungstöne, die gut zusammenpassen. Wähle einen für alle Aufgaben oder gib einer Aufgabe ihren eigenen; deine erste Aufgabe des Tages klingelt mit deinem Start-Ton.\nNur der nächste Punkt: ein minimales Layout, jederzeit wählbar, ohne dass etwas verloren geht. Heute zeigt deinen Faden, das Datum und ein Menü.\nZieh eine Aufgabe irgendwohin auf den Tag, auch auf eine andere: Überschneidungen knüpfen einen kleinen Knoten in den Faden.\nAus Schlafenszeit wird Abendruhe. Die beiden Enden deines Tages sind Punkte, eine Sonne und ein Mond; tipp einen an, um seine Zeit zu ändern.\nIcons füllen sich selbst: Schreib „Fitnessstudio“, und die Aufgabe bekommt eine Hantel — aus 524 Icons.\nDie Nacht: Sag Dottoday, wie viel Schlaf du willst, und die Abendruhe rückt vor einem frühen Morgen nach vorn. Der Tagespunkt zeigt die Nacht, und der Rückblick zur Abendruhe beginnt mit ihr.';
 
   @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';

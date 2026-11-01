@@ -17,6 +17,8 @@ const _staticRoutes = {
   'add': AppRoutes.add,
   // "I'm up" on Android's ringing screen (docs/15 §5, M17.3).
   'wake-up': AppRoutes.wakeUp,
+  // The Wind Down notification's tap (docs/15 W6).
+  'review': AppRoutes.review,
 };
 
 /// Maps an incoming location or deep link to its canonical in-app location,

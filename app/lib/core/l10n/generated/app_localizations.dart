@@ -8946,10 +8946,106 @@ abstract class AppLocalizations {
   /// **'Start {title}?'**
   String wakeUpCheckStart(String title);
 
+  /// Day shape row: how much sleep Wind Down plans for (docs/15 W4).
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep target'**
+  String get settingsSleepTarget;
+
+  /// Sleep target value: Wind Down stays as set.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get settingsSleepTargetOff;
+
+  /// Under the Sleep target row.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind Down moves earlier before an early morning'**
+  String get settingsSleepTargetDetail;
+
+  /// Switch: the night arc on the day dot (docs/15 W6).
+  ///
+  /// In en, this message translates to:
+  /// **'Show the night on the day dot'**
+  String get settingsShowNight;
+
+  /// One-time offer in the Wind Down review for existing users (docs/15 §11).
+  ///
+  /// In en, this message translates to:
+  /// **'New: tell Dottoday how much sleep you want, and Wind Down will move earlier before an early Wake Up.'**
+  String get reviewSleepOffer;
+
+  /// Sleep offer: save the sleep target.
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get reviewSleepOfferSet;
+
+  /// Sleep offer: declined for good (unlike the review's Not now, which is for today).
+  ///
+  /// In en, this message translates to:
+  /// **'No thanks'**
+  String get reviewSleepOfferLater;
+
+  /// Onboarding day shape: the sleep slider's label (docs/15 W6).
+  ///
+  /// In en, this message translates to:
+  /// **'How much sleep do you want?'**
+  String get onboardingSleepTarget;
+
+  /// The night on the day dot, read out and on a long-press.
+  ///
+  /// In en, this message translates to:
+  /// **'Night · {length}'**
+  String nightLabel(String length);
+
+  /// Wind Down review's first line at or after Wind Down.
+  ///
+  /// In en, this message translates to:
+  /// **'{length} until Wake Up at {time}'**
+  String reviewNightUntil(String length, String time);
+
+  /// Wind Down review's first line when opened before Wind Down.
+  ///
+  /// In en, this message translates to:
+  /// **'{length} if you wind down now'**
+  String reviewNightIfNow(String length);
+
+  /// Wind Down reminder with a sleep target: what the night protects.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind down now for {length} before {title} at {time}.'**
+  String notifWindDownNudge(String length, String title, String time);
+
+  /// Wind Down reminder with a sleep target and no task tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind down now for {length} before {time}.'**
+  String notifWindDownNudgeNoDot(String length, String time);
+
+  /// Wind Down row value when a sleep target moved it.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} · from tomorrow\'s {wake}'**
+  String settingsWindDownFrom(String time, String wake);
+
+  /// Today's day card footer when tomorrow's early start moved Wind Down.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow starts {start} → wind down {windDown}'**
+  String todayWindDownFooter(String start, String windDown);
+
+  /// Onboarding day shape: Wind Down from the slider, live.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind Down {time} · {length} of sleep'**
+  String onboardingWindDownLive(String time, String length);
+
   /// What's new in 1.2.0 (M15 sounds, M16 minimal layout, the Structured-style day, M17 Wake Up alarm), one item per line (PRD F11).
   ///
   /// In en, this message translates to:
-  /// **'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android and on iPhones with iOS 26, as a time-sensitive notification on older iPhones. Pick its sound and snooze under Sound and snooze, and send yourself a test. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.'**
+  /// **'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android and on iPhones with iOS 26, as a time-sensitive notification on older iPhones. Pick its sound and snooze under Sound and snooze, and send yourself a test. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.\nThe night: tell Dottoday how much sleep you want and Wind Down moves earlier before an early morning. The day dot shows the night, and the Wind Down review opens with it.'**
   String get releaseNotes120;
 
   /// Section title in the task icon picker.

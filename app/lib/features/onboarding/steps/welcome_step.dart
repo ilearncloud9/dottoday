@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/time/day_dot_geometry.dart';
 import 'package:dottoday/shared/dot/day_dot.dart';
 import 'package:flutter/material.dart';
 
@@ -86,6 +87,6 @@ class _DrawingDotState extends State<_DrawingDot> {
     label: context.l10n.onboardingDotLabel,
     image: true,
     excludeSemantics: true,
-    child: DayDot(progress: _fill, size: widget.size),
+    child: DayDot(geometry: DayDotGeometry.filled(_fill), size: widget.size),
   );
 }

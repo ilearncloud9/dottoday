@@ -1,3 +1,4 @@
+import 'package:dottoday/domain/time/day_dot_geometry.dart';
 import 'package:dottoday/shared/dot/day_dot.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ Widget _strip({
   Scaffold(
     body: Column(
       children: [
-        const DayDot(progress: 0.4),
+        const DayDot(geometry: DayDotGeometry.filled(0.4)),
         WeekStrip(
           days: mainWeek,
           selected: 3,

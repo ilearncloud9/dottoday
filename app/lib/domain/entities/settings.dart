@@ -90,6 +90,13 @@ abstract class Settings with _$Settings {
     @Default(true) bool wakeUpCheck,
     @Default(10) int wakeUpCheckMin,
     @Default(false) bool wakeUpCheckLoud,
+    // The night (15 W4, W6, M17.5): a sleep target in minutes (null = off;
+    // a new account starts at 8 h from onboarding) makes Wind Down follow
+    // tomorrow's Wake Up; the night shows on the day dot; and the one-time
+    // sleep offer in the Wind Down review, once answered, never returns.
+    int? sleepTargetMin,
+    @Default(true) bool showNightArc,
+    @Default(false) bool sleepOfferAnswered,
     // The once-a-day "Plan your inbox" card (docs/02 F3.3): off by default.
     @Default(false) bool inboxNudge,
     // Settings › Calendars › Travel time (M7.5, R-17): off until chosen

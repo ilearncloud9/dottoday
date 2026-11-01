@@ -35,7 +35,7 @@ final class SlotFit {
 /// is already past Wind Down.
 ///
 /// ```dart
-/// fitAt(day, fivePm, 60, dayEndUtc: Wind Down).isFree; // true
+/// fitAt(day, fivePm, 60, dayEndUtc: windDown).isFree; // true
 /// ```
 SlotFit fitAt(
   Iterable<Occurrence> day,

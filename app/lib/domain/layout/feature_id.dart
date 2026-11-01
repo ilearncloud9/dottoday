@@ -27,6 +27,7 @@ enum FeatureId {
   wakeUpAlarm('W1 Wake Up alarm'),
   wakeUpCard('W2 Wake Up card'),
   wakeUpCheck('W3 Wake Up Check'),
+  night('W4 + W6 Sleep target and the night'),
   actualTimestamps('B1 actual timestamps'),
   subtaskDurations('B2 subtask durations'),
   liveActivity('A1 Live Activity / ongoing notification'),

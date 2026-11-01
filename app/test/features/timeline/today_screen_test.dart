@@ -26,7 +26,7 @@ void main() {
     // The day's numbers sit under the title (ADR-0015).
     expect(find.textContaining(RegExp(r'^\d+ of \d+ · ')), findsOneWidget);
     expect(
-      find.bySemanticsLabel(RegExp(r'^Day \d+ % through$')),
+      find.bySemanticsLabel(RegExp(r'^Day \d+ % through')),
       findsOneWidget,
     );
     expect(

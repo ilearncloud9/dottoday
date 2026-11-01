@@ -3,6 +3,7 @@
 library;
 
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/time/day_dot_geometry.dart';
 import 'package:dottoday/shared/dot/day_dot.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:flutter/material.dart';
@@ -22,13 +23,28 @@ class _Specimen extends StatelessWidget {
       child: Column(
         spacing: DotSpace.l,
         children: [
-          const Row(
+          const Wrap(
             spacing: DotSpace.l,
+            runSpacing: DotSpace.l,
             children: [
-              DayDot(progress: 0),
-              DayDot(progress: 0.4),
-              DayDot(progress: 1),
-              DayDot(progress: 0.4, size: DotSize.dayDotWatch),
+              DayDot(geometry: DayDotGeometry.filled(0)),
+              DayDot(geometry: DayDotGeometry.filled(0.4)),
+              DayDot(geometry: DayDotGeometry.filled(1)),
+              DayDot(
+                geometry: DayDotGeometry.filled(0.4),
+                size: DotSize.dayDotWatch,
+              ),
+              // The night (docs/15 W6): 5 h, 8 h and 10 h after a 07:00
+              // Wake Up, the day half gone.
+              DayDot(
+                geometry: DayDotGeometry(dayEnd: 19 / 24, progress: 9.5 / 24),
+              ),
+              DayDot(
+                geometry: DayDotGeometry(dayEnd: 16 / 24, progress: 8 / 24),
+              ),
+              DayDot(
+                geometry: DayDotGeometry(dayEnd: 14 / 24, progress: 7 / 24),
+              ),
             ],
           ),
           WeekStrip(
@@ -45,5 +61,5 @@ class _Specimen extends StatelessWidget {
 
 void main() {
   setUpAll(loadAppFonts);
-  goldenMatrix('week_strip', height: 240, build: (_) => const _Specimen());
+  goldenMatrix('week_strip', height: 300, build: (_) => const _Specimen());
 }

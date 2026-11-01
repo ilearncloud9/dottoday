@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/time/day_dot_geometry.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_parts.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_state.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
@@ -58,6 +59,13 @@ class _WakeUpCardBodyState extends State<WakeUpCardBody> {
           planned: m.ahead.length,
           ends: _time(context, m.ahead.lastOrNull?.endUtc ?? m.shape.bedUtc),
           showDot: whole,
+          geometry: dayDotGeometry(
+            wakeUtc: m.shape.wakeUtc,
+            windDownUtc: m.shape.bedUtc,
+            nextWakeUtc: m.nextWakeUtc,
+            nowUtc: m.nowUtc,
+            night: m.settings.showNightArc,
+          ),
         ),
         const SizedBox(height: DotSpace.l),
         if (first == null)

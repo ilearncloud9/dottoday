@@ -1,5 +1,6 @@
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/time/day_dot_geometry.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 
 /// One dot of a [DaySnapshot]: planned and, once known, actual (B1).
@@ -91,6 +92,7 @@ final class DaySnapshot {
     required this.inboxCount,
     this.dayDone = 0,
     this.dayTotal = 0,
+    this.tomorrowWakeUtc,
   });
 
   /// Builds the snapshot at [nowUtc] from occurrences overlapping the next
@@ -107,6 +109,7 @@ final class DaySnapshot {
     required int inboxCount,
     required DayShape shape,
     Iterable<Occurrence> dayOccurrences = const [],
+    DateTime? tomorrowWakeUtc,
   }) {
     final today = [
       for (final o in dayOccurrences)
@@ -125,6 +128,7 @@ final class DaySnapshot {
       inboxCount: inboxCount,
       dayDone: today.where((o) => o.status == OccurrenceStatus.done).length,
       dayTotal: today.length,
+      tomorrowWakeUtc: tomorrowWakeUtc,
     );
   }
 
@@ -140,6 +144,7 @@ final class DaySnapshot {
   factory DaySnapshot.ofDay({
     required Iterable<Occurrence> blocks,
     required DayShape shape,
+    DateTime? tomorrowWakeUtc,
   }) {
     final dots = [
       for (final o in blocks)
@@ -153,6 +158,7 @@ final class DaySnapshot {
       inboxCount: 0,
       dayDone: dots.where((d) => d.done).length,
       dayTotal: dots.length,
+      tomorrowWakeUtc: tomorrowWakeUtc,
     );
   }
 
@@ -176,6 +182,19 @@ final class DaySnapshot {
   /// [dots], so these are counted when the snapshot is built.
   final int dayDone;
   final int dayTotal;
+
+  /// The next Wake Up, where tonight's night ends on the day dot (docs/15
+  /// W6, owner 2026-10-31); null when the night isn't shown.
+  final DateTime? tomorrowWakeUtc;
+
+  /// The day dot's geometry when the snapshot was made: the one every
+  /// painter reads (Today, the week review, the menu bar, the widgets).
+  DayDotGeometry get geometry => dayDotGeometry(
+    wakeUtc: wakeUtc,
+    windDownUtc: bedUtc,
+    nextWakeUtc: tomorrowWakeUtc,
+    nowUtc: generatedAtUtc,
+  );
 
   /// The dot under way when the snapshot was made, if any.
   SnapshotDot? get current => currentAt(generatedAtUtc);
@@ -206,6 +225,7 @@ final class DaySnapshot {
       other is DaySnapshot &&
       other.generatedAtUtc == generatedAtUtc &&
       other.wakeUtc == wakeUtc &&
+      other.tomorrowWakeUtc == tomorrowWakeUtc &&
       other.bedUtc == bedUtc &&
       other.inboxCount == inboxCount &&
       other.dayDone == dayDone &&
@@ -216,6 +236,7 @@ final class DaySnapshot {
   int get hashCode => Object.hash(
     generatedAtUtc,
     wakeUtc,
+    tomorrowWakeUtc,
     bedUtc,
     inboxCount,
     dayDone,

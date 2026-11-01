@@ -79,6 +79,7 @@ final class LayoutPolicy {
     FeatureId.wakeUpAlarm: FeatureVisibility.simplified,
     FeatureId.wakeUpCard: FeatureVisibility.simplified,
     FeatureId.wakeUpCheck: FeatureVisibility.shown,
+    FeatureId.night: FeatureVisibility.shown,
     FeatureId.actualTimestamps: FeatureVisibility.shown,
     FeatureId.subtaskDurations: FeatureVisibility.hidden,
     FeatureId.liveActivity: FeatureVisibility.shown,

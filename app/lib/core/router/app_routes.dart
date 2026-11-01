@@ -19,6 +19,9 @@ abstract final class AppRoutes {
   /// The Wake Up card, full screen over Today (docs/15 §5, M17.3).
   static const wakeUp = '/wake-up';
 
+  /// Today's Wind Down review, from the Wind Down notification (15 W6).
+  static const review = '/review';
+
   static const dayPattern = '/day/:date';
   static const taskPattern = '/task/:id';
 

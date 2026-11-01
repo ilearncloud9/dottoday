@@ -92,7 +92,7 @@ void main() {
   ) async {
     final h = await pumpSettings(tester);
     // Day shape's Wake Up alarm (docs/15 W1a) is the ninth.
-    expect(_cupertinoSwitches(), findsNWidgets(9));
+    expect(_cupertinoSwitches(), findsNWidgets(10));
     // Off for an existing profile, so an upgrade rings nothing new (15 §11).
     expect((await storedSettings(h)).wakeUpAlarm, isFalse);
     await _tapRow(tester, 'Wake Up alarm');
@@ -110,7 +110,7 @@ void main() {
   testWidgets('Android draws Material switches', (tester) async {
     await pumpSettings(tester, platform: TargetPlatform.android);
     expect(_cupertinoSwitches(), findsNothing);
-    expect(find.byType(Switch), findsNWidgets(9));
+    expect(find.byType(Switch), findsNWidgets(10));
   });
 
   testWidgets('choices: week start, time format, shift, snap, theme', (
@@ -197,7 +197,8 @@ void main() {
     tester,
   ) async {
     final h = await pumpSettings(tester);
-    expect(find.text('Off'), findsOneWidget);
+    // The summary's, and Day shape's sleep target (docs/15 W4).
+    expect(find.text('Off'), findsNWidgets(2));
     await _tapRow(tester, 'Day-start summary');
     await tester.tap(find.text('Monday').last);
     await tester.pumpAndSettle();

@@ -4,16 +4,20 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
+import 'package:dottoday/domain/time/day_dot_geometry.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/domain/time/wind_down.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_parts.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
+import 'package:dottoday/features/timeline/state/day_ends.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/widgets/today_menu.dart';
 import 'package:dottoday/shared/dot/day_dot.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -150,20 +154,35 @@ class TodayDot extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final data = ref.watch(timelineDataProvider(today)).value;
+    final ends = ref.watch(dayEndsProvider(today)).value;
     final now =
         ref.watch(minuteTickProvider).value ??
         ref.watch(clockProvider).nowUtc();
-    final progress = data == null
-        ? 0.0
-        : DayShape.on(
-            data.day.location,
-            today,
-            data.settings.boundaryFor(data.day.weekday),
-          ).progressAt(now);
+    final geometry = ends == null || data == null
+        ? const DayDotGeometry.filled(0)
+        : dayDotGeometry(
+            wakeUtc: ends.shape.wakeUtc,
+            windDownUtc: ends.shape.bedUtc,
+            nextWakeUtc: ends.nextWakeUtc,
+            nowUtc: now,
+            night: data.settings.showNightArc,
+          );
+    final night = ends == null
+        ? null
+        : context.l10n.nightLabel(
+            formatDurationShort(
+              context.l10n,
+              nightMinutes(ends.shape.bedUtc, ends.nextWakeUtc),
+            ),
+          );
     return Padding(
       padding: const EdgeInsets.all(DotSpace.xs),
       // The header's line also holds the date and ⋯ (ADR-0015).
-      child: DayDot(progress: progress, size: DotSize.headerDayDot),
+      child: DayDot(
+        geometry: geometry,
+        nightLabel: geometry.hasNight ? night : null,
+        size: DotSize.headerDayDot,
+      ),
     );
   }
 }
@@ -215,7 +234,8 @@ class DayNumbers extends ConsumerWidget {
         data.settings.boundaryFor(data.day.weekday),
       ),
     );
-    return Text(
+    final style = t.styles.dayCaption.copyWith(letterSpacing: 0);
+    final numbers = Text(
       s.total == 0
           ? l10n.dayCardNothing(formatDurationShort(l10n, s.freeMinutes))
           : l10n.dayCardSummary(
@@ -223,7 +243,26 @@ class DayNumbers extends ConsumerWidget {
               s.total,
               formatDurationShort(l10n, s.plannedMinutes),
             ),
-      style: t.styles.dayCaption.copyWith(letterSpacing: 0),
+      style: style,
+    );
+    // An early tomorrow moved Wind Down (docs/15 W4): say so, once, here.
+    final ends = ref.watch(dayEndsProvider(date)).value;
+    if (ends == null || !ends.derived) return numbers;
+    String at(DateTime utc) => timeOfUtc(
+      context,
+      data.day.location,
+      utc,
+      use24h: use24hFor(context, data.settings.use24h),
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        numbers,
+        Text(
+          l10n.todayWindDownFooter(at(ends.nextWakeUtc), at(ends.shape.bedUtc)),
+          style: style,
+        ),
+      ],
     );
   }
 }

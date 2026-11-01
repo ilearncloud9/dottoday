@@ -49,6 +49,11 @@ final class NotificationResponder {
     final planned = decodeNotificationPayload(tap.id ?? 0, tap.payload);
     final action = NotificationAction.fromId(tap.actionId);
     _logger.info('notification.tapped', fields: {'action': action});
+    // The Wind Down reminder opens the review, a free tomorrow included
+    // (owner, 2026-10-31).
+    if (planned?.purpose == NotificationPurpose.windDown) {
+      return _open(AppRoutes.review);
+    }
     // The day-start summary is about the day, not its first task.
     if (planned == null ||
         planned.occurrenceId.isEmpty ||
