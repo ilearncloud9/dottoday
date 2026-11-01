@@ -58,14 +58,17 @@ object AlarmBridge {
                 "ringingId" -> result.success(WakeUpRingService.instance?.ringingId)
                 "checkArmed" -> result.success(WakeUpChecks.armed(context, call.argument<String>("id").orEmpty()))
                 "stored" -> result.success(
-                    WakeUpAlarms.all(context).map { mapOf("id" to it.id, "state" to it.state, "snoozes" to it.snoozes) },
+                    WakeUpAlarms.all(context).map {
+                        mapOf("id" to it.id, "state" to it.state, "snoozes" to it.snoozes, "fireAtMs" to it.fireAtMs)
+                    },
                 )
                 "perform" -> {
                     val id = call.argument<String>("id").orEmpty()
-                    if (call.argument<String>("action") == "snooze") {
-                        WakeUpActions.snooze(context, id)
-                    } else {
-                        WakeUpActions.dismiss(context, id)
+                    when (call.argument<String>("action")) {
+                        "snooze" -> WakeUpActions.snooze(context, id)
+                        // The ringing screen's "I'm up", without opening anything.
+                        "up" -> return@setMethodCallHandler result.success(WakeUpActions.up(context, id))
+                        else -> WakeUpActions.dismiss(context, id)
                     }
                     result.success(null)
                 }
