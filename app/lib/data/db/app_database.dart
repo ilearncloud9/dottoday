@@ -41,7 +41,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 12;
+  static const latestSchemaVersion = 13;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -113,6 +113,9 @@ class AppDatabase extends _$AppDatabase {
           wakeUpDaysTable.missionSkippedAtUtc,
         );
       }
+      // 13: files that ran the first step 11 hold windDownReminder as 0/1,
+      // which Settings.fromJson can't read, so the profile never loaded.
+      if (from < 13) await _repairWindDownReminder();
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without
@@ -129,12 +132,24 @@ class AppDatabase extends _$AppDatabase {
   );
 
   /// Moves `bedtimeReminder` to `windDownReminder` (v11). Not marked
-  /// dirty: the server's 0011 does the same to its copy.
+  /// dirty: the server's 0011 does the same to its copy. The value is
+  /// rebuilt from its JSON type: json_extract turns true/false into 1/0.
   Future<void> _moveWindDownReminder() => customStatement(
     'UPDATE profiles SET settings = json_remove(json_set(settings, '
-    "'\$.windDownReminder', json_extract(settings, '\$.bedtimeReminder')), "
-    "'\$.bedtimeReminder') "
+    "'\$.windDownReminder', json(CASE json_type(settings, "
+    "'\$.bedtimeReminder') WHEN 'true' THEN 'true' WHEN 'false' THEN 'false' "
+    "ELSE 'null' END)), '\$.bedtimeReminder') "
     "WHERE json_type(settings, '\$.bedtimeReminder') IS NOT NULL",
+  );
+
+  /// Turns an integer `windDownReminder` back into a JSON boolean (v13),
+  /// for files the first v11 step wrote 0/1 into. Not marked dirty: that
+  /// step never reached the server, whose 0011 kept booleans.
+  Future<void> _repairWindDownReminder() => customStatement(
+    "UPDATE profiles SET settings = json_set(settings, '\$.windDownReminder', "
+    "json(CASE json_extract(settings, '\$.windDownReminder') WHEN 0 "
+    "THEN 'false' ELSE 'true' END)) "
+    "WHERE json_type(settings, '\$.windDownReminder') = 'integer'",
   );
 
   /// Writes `uiLayout: "full"` where it is missing (v9). Not marked dirty:

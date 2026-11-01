@@ -16,10 +16,45 @@ import 'package:flutter_test/flutter_test.dart';
 // `uiLayout: "full"` for every existing profile; 9 → 10 (M17.3, docs/15
 // §3): the local wake_up_days; 10 → 11 (M17.5): the Wind Down reminder's
 // settings key moves from bedtimeReminder to windDownReminder; 11 → 12
-// (M17.7, docs/15 §8): wake_up_days.mission_skipped_at_utc.
+// (M17.7, docs/15 §8): wake_up_days.mission_skipped_at_utc; 12 → 13:
+// an integer windDownReminder (the first step 11) becomes a boolean.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
+  test(
+    'a version 12 file turns an integer windDownReminder into a boolean',
+    () async {
+      final dir = await Directory.systemTemp.createTemp('dottoday-mig13');
+      addTearDown(() => dir.delete(recursive: true));
+      final file = File('${dir.path}/db.sqlite');
+
+      // What the first step 11 wrote: json_extract had turned true into 1.
+      final v12 = AppDatabase(NativeDatabase(file));
+      for (final (id, settings) in [
+        ('off', '{"windDownReminder":0,"snapMinutes":10}'),
+        ('on', '{"windDownReminder":1}'),
+        ('fine', '{"windDownReminder":false}'),
+      ]) {
+        await v12.customStatement(
+          'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+          "updated_at) VALUES ('$id', 'UTC', 'en', '$settings', 0, 0)",
+        );
+      }
+      await v12.customStatement('PRAGMA user_version = 12');
+      await v12.close();
+
+      final v13 = AppDatabase(NativeDatabase(file));
+      addTearDown(v13.close);
+      expect(await _windDown(v13, 'off'), {'w': 'false', 'b': null, 's': 10});
+      expect(await _windDown(v13, 'on'), {'w': 'true', 'b': null, 's': null});
+      expect(await _windDown(v13, 'fine'), {
+        'w': 'false',
+        'b': null,
+        's': null,
+      });
+    },
+  );
+
   test('a version 11 file gains the mission skip and keeps its days', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig12');
     addTearDown(() => dir.delete(recursive: true));
@@ -63,20 +98,9 @@ void main() {
 
     final v11 = AppDatabase(NativeDatabase(file));
     addTearDown(v11.close);
-    Future<Map<String, Object?>> settings(String id) async =>
-        (await v11
-                .customSelect(
-                  "SELECT json_extract(settings, '\$.windDownReminder') AS w, "
-                  "json_type(settings, '\$.bedtimeReminder') AS b, "
-                  "json_extract(settings, '\$.snapMinutes') AS s "
-                  'FROM profiles WHERE id = ?',
-                  variables: [Variable.withString(id)],
-                )
-                .getSingle())
-            .data;
-    expect(await settings('off'), {'w': 0, 'b': null, 's': 10});
-    expect(await settings('on'), {'w': 1, 'b': null, 's': null});
-    expect(await settings('unset'), {'w': null, 'b': null, 's': 5});
+    expect(await _windDown(v11, 'off'), {'w': 'false', 'b': null, 's': 10});
+    expect(await _windDown(v11, 'on'), {'w': 'true', 'b': null, 's': null});
+    expect(await _windDown(v11, 'unset'), {'w': null, 'b': null, 's': 5});
   });
 
   test('a version 9 file gains wake_up_days and keeps its rows', () async {
@@ -502,6 +526,20 @@ void main() {
     expect(version.read<int>('user_version'), AppDatabase.latestSchemaVersion);
   });
 }
+
+/// The JSON type of a profile's windDownReminder (`'true'`/`'false'`, so a
+/// 0/1 fails), any bedtimeReminder left over, and snapMinutes kept.
+Future<Map<String, Object?>> _windDown(AppDatabase db, String id) async =>
+    (await db
+            .customSelect(
+              "SELECT json_type(settings, '\$.windDownReminder') AS w, "
+              "json_type(settings, '\$.bedtimeReminder') AS b, "
+              "json_extract(settings, '\$.snapMinutes') AS s "
+              'FROM profiles WHERE id = ?',
+              variables: [Variable.withString(id)],
+            )
+            .getSingle())
+        .data;
 
 /// Today's schema minus what version 3 added, to fake an older file.
 Future<void> _dropSchema3Columns(AppDatabase db) async {
