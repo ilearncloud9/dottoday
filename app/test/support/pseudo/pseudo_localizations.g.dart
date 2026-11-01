@@ -4954,6 +4954,19 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get missionOffOfferKeep => pseudo(super.missionOffOfferKeep);
 
   @override
+  String get healthWakeUpDnd => pseudo(super.healthWakeUpDnd);
+
+  @override
+  String get healthWakeUpDndDetail => pseudo(super.healthWakeUpDndDetail);
+
+  @override
+  String get healthWakeUpBattery => pseudo(super.healthWakeUpBattery);
+
+  @override
+  String get healthWakeUpBatteryDetail =>
+      pseudo(super.healthWakeUpBatteryDetail);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

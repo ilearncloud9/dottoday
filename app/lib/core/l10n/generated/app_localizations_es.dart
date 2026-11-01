@@ -6264,6 +6264,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get missionOffOfferKeep => 'Mantenerlas';
 
   @override
+  String get healthWakeUpDnd => 'No molestar silencia tu alarma de Wake Up';
+
+  @override
+  String get healthWakeUpDndDetail =>
+      'Permite las alarmas en No molestar para que suene.';
+
+  @override
+  String get healthWakeUpBattery =>
+      'El ahorro de batería puede frenar tu alarma de Wake Up';
+
+  @override
+  String get healthWakeUpBatteryDetail =>
+      'Deja que Dottoday funcione sin límites de batería para que esté lista tras reiniciar.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

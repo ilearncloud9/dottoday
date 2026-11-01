@@ -6270,6 +6270,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get missionOffOfferKeep => 'Behalten';
 
   @override
+  String get healthWakeUpDnd => '„Nicht stören“ lässt deinen Wecker stumm';
+
+  @override
+  String get healthWakeUpDndDetail =>
+      'Erlaube Wecker bei „Nicht stören“, damit er klingelt.';
+
+  @override
+  String get healthWakeUpBattery =>
+      'Energiesparen kann deinen Wecker verzögern';
+
+  @override
+  String get healthWakeUpBatteryDetail =>
+      'Lass Dottoday ohne Akku-Einschränkung laufen, damit er nach einem Neustart bereit ist.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

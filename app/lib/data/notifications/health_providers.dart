@@ -21,12 +21,16 @@ HealthPlatform currentHealthPlatform() {
   };
 }
 
-/// Battery optimisation and Do Not Disturb now (Android); re-read with
-/// `ref.invalidate` on resume.
+/// Battery optimisation and Do Not Disturb now (Android), and whether Do
+/// Not Disturb keeps alarms quiet; re-read with `ref.invalidate` on resume.
 @riverpod
-Future<({bool battery, bool dnd})> powerState(Ref ref) async {
+Future<({bool battery, bool dnd, bool dndAlarms})> powerState(Ref ref) async {
   final power = ref.watch(batteryOptimizationProvider);
-  return (battery: await power.restricted(), dnd: await power.doNotDisturb());
+  return (
+    battery: await power.restricted(),
+    dnd: await power.doNotDisturb(),
+    dndAlarms: await power.dndAlarmsBlocked(),
+  );
 }
 
 /// Sounds in use whose Android channel the user muted (docs/12 §4): the
@@ -72,6 +76,7 @@ Future<List<HealthCheck>> notificationHealthChecks(Ref ref) async {
       exactAlarms: exact,
       batteryRestricted: power.battery,
       doNotDisturb: power.dnd,
+      dndAlarmsBlocked: power.dndAlarms,
       // The tab mirrors reminders to push once signed in with notifications
       // allowed (M5.3b, M6.1).
       webPushReady: signedIn && permission == PermissionState.granted,

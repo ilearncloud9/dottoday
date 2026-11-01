@@ -9384,6 +9384,30 @@ abstract class AppLocalizations {
   /// **'Keep them'**
   String get missionOffOfferKeep;
 
+  /// Health panel, Wake Up row: DND doesn't let alarms through (docs/15 §2).
+  ///
+  /// In en, this message translates to:
+  /// **'Do Not Disturb keeps your Wake Up alarm quiet'**
+  String get healthWakeUpDnd;
+
+  /// Under the DND warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow alarms in Do Not Disturb so it rings.'**
+  String get healthWakeUpDndDetail;
+
+  /// Health panel, Wake Up row: battery optimisation applies.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery saving may delay your Wake Up alarm'**
+  String get healthWakeUpBattery;
+
+  /// Under the battery warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Let Dottoday run without battery limits so it\'s ready after a restart.'**
+  String get healthWakeUpBatteryDetail;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:
