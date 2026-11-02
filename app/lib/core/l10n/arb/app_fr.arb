@@ -1591,6 +1591,7 @@
   "wakeUpDiscoveryMissionOffer": "Les matins commencent un moment après l'alarme ces temps-ci. Une courte marche ou une lumière pour l'arrêter ?",
   "wakeUpDesktopNote": "Ces réglages sonnent sur ton téléphone. Modifie-les là-bas ou ici ; ils se synchronisent.",
   "helpWakeUpQ": "Comment fonctionne le réveil ?",
+  "wakeUpTierExactOff": "Pour l'instant, le réveil sonne comme une notification, que Ne pas déranger et le mode silencieux peuvent couper. Autorise « Alarmes et rappels » pour qu'il sonne comme une alarme.",
   "wakeUpDiscoveryTierGained": "Ton téléphone peut maintenant faire sonner le réveil de Dottoday comme une alarme. L'activer ?",
   "taskIconCategoryPlanning": "Planification et rythme",
   "taskIconCategoryHealth": "Santé et corps",

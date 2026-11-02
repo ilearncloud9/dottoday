@@ -9648,6 +9648,12 @@ abstract class AppLocalizations {
   /// **'How does Wake Up work?'**
   String get helpWakeUpQ;
 
+  /// Wake Up alarm tier line on Android with Alarms & reminders off (docs/15 §2).
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up rings as a notification for now, so Do Not Disturb and silent mode can quiet it. Allow Alarms & reminders to ring it like an alarm.'**
+  String get wakeUpTierExactOff;
+
   /// Soft reveal on Today after an OS update brings the alarm tier (docs/15 §11).
   ///
   /// In en, this message translates to:

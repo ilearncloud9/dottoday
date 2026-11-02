@@ -6450,6 +6450,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get helpWakeUpQ => 'Comment fonctionne le réveil ?';
 
   @override
+  String get wakeUpTierExactOff =>
+      'Pour l\'instant, le réveil sonne comme une notification, que Ne pas déranger et le mode silencieux peuvent couper. Autorise « Alarmes et rappels » pour qu\'il sonne comme une alarme.';
+
+  @override
   String get wakeUpDiscoveryTierGained =>
       'Ton téléphone peut maintenant faire sonner le réveil de Dottoday comme une alarme. L\'activer ?';
 

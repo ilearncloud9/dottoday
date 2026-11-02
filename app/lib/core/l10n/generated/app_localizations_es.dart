@@ -6433,6 +6433,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get helpWakeUpQ => '¿Cómo funciona el despertar?';
 
   @override
+  String get wakeUpTierExactOff =>
+      'Por ahora el despertar suena como una notificación, que No molestar y el modo silencio pueden callar. Permite «Alarmas y recordatorios» para que suene como una alarma.';
+
+  @override
   String get wakeUpDiscoveryTierGained =>
       'Tu teléfono ya puede hacer sonar el despertar de Dottoday como una alarma. ¿Activarlo?';
 
