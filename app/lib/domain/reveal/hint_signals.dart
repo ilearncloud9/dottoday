@@ -64,3 +64,12 @@ List<String>? _firstThree(List<Occurrence> day) {
 bool _same(List<String> a, List<String> b) =>
     a.length == b.length &&
     [for (var i = 0; i < a.length; i++) a[i] == b[i]].every((x) => x);
+
+/// Whether the newest [lateMorningsForHint] of [offsetsMin] (minutes from
+/// Wake Up to "I'm up", newest first) are each at least
+/// [lateMorningMinutes] (docs/15 §11 mission offer).
+bool lateMorningsOf(Iterable<int> offsetsMin) {
+  final last = offsetsMin.take(lateMorningsForHint).toList();
+  return last.length == lateMorningsForHint &&
+      last.every((m) => m >= lateMorningMinutes);
+}

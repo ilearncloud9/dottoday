@@ -20,6 +20,8 @@ Un planning visuel et serein : votre journée en points sur une ligne. Gratuit.
 ### Description
 Dottoday transforme votre liste de tâches en une journée que vous pouvez suivre. Votre journée est un fil du réveil au coucher, et chaque tâche est un point dessus : cerclé tant qu'elle est à venir, qui se remplit pendant qu'elle a lieu, plein quand elle est faite. Un coup d'œil suffit pour voir ce qui se passe maintenant et ce qui vient ensuite.
 
+Commence votre matin, termine votre soirée. Le réveil peut sonner comme une alarme et ouvre une carte avec votre journée ; la détente du soir se cale sur la première tâche du lendemain.
+
 QUAND LA JOURNÉE BOUGE, TOUT BOUGE
 • Glissez une tâche pour la déplacer, son bord pour changer sa durée.
 • Décalez tout ce qui suit une tâche d'un seul geste, ou ajoutez 15 minutes à la tâche en cours.

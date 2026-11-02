@@ -1,7 +1,9 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/editing/focus_task.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/reveal/hint_scheduler.dart';
 import 'package:dottoday/domain/reveal/hint_signals.dart';
@@ -10,7 +12,8 @@ import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Today's [HintSignals] (docs/14 §5), read from rows Today already loads:
+/// Today's [HintSignals] (docs/14 §5, docs/15 §11), read from rows Today
+/// already loads and this phone's Wake Up state:
 /// today, the three mornings before it (whole days, so today's plan never
 /// counts as a habit) and the week behind it. Null while
 /// any of it is loading, so a half-known day never picks a hint.
@@ -18,7 +21,10 @@ HintSignals? watchHintSignals(WidgetRef ref, DateTime today) {
   final profile = ref.watch(currentProfileProvider).value;
   final data = ref.watch(timelineDataProvider(today)).value;
   final steps = ref.watch(daySubtaskProgressProvider(today)).value;
-  if (profile == null || data == null || steps == null) return null;
+  final discovery = ref.watch(wakeUpDiscoveryProvider).value;
+  if (profile == null || data == null || steps == null || discovery == null) {
+    return null;
+  }
   final now =
       ref.watch(minuteTickProvider).value ?? ref.watch(clockProvider).nowUtc();
   List<Occurrence>? day(int back) => ref
@@ -40,6 +46,9 @@ HintSignals? watchHintSignals(WidgetRef ref, DateTime today) {
   );
   return HintSignals(
     daysOfUse: now.difference(profile.createdAt).inDays,
+    minimal: ref.watch(layoutPolicyProvider.select((p) => p.isMinimal)),
+    wakeUpOffer: discovery.wakeUpOffer,
+    lateMornings: discovery.lateMornings,
     movedTaskId: movedTaskOf(data.blocks, counts),
     sameMornings: sameMornings([...mornings.nonNulls]),
     longTaskId: longTaskOf(data.blocks, counts),

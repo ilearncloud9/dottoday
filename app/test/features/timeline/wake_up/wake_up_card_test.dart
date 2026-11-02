@@ -142,11 +142,14 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(ProposalSheet), findsOneWidget);
     expect(find.text('today'), findsOneWidget, reason: 'over Today');
-    expect(writes.applied, isEmpty, reason: 'on open');
+    // Shift's coach mark records its showing (a hint row, docs/15 §11);
+    // nothing of the plan is written.
+    final plan = writes.applied.where((b) => b.revealHints.isEmpty);
+    expect(plan, isEmpty, reason: 'on open');
     await tester.tap(find.text('Discard'));
     await tester.pumpAndSettle();
     expect(find.byType(ProposalSheet), findsNothing);
-    expect(writes.applied, isEmpty, reason: 'on Discard');
+    expect(plan, isEmpty, reason: 'on Discard');
   });
 
   testWidgets('minimal: first dot and Start; the rest behind Show my day', (

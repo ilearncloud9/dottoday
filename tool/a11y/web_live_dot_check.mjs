@@ -43,8 +43,14 @@ for (const name of ['Get started', 'The full planner', 'Continue', 'Continue', '
   await tapButton(page, name);
 }
 
-// Quick Add over Today, a task that started 5 min ago, 45 min long.
-const start = new Date(Date.now() - 5 * 60_000);
+// Quick Add over Today, a task that started 5 min ago, 45 min long. In the
+// first 5 min after midnight that would be yesterday's clock time, which
+// Quick Add rightly reads as tonight: the task starts at midnight instead.
+const now = new Date();
+const fiveAgo = new Date(now.getTime() - 5 * 60_000);
+const start = fiveAgo.getDate() === now.getDate()
+  ? fiveAgo
+  : new Date(now.getFullYear(), now.getMonth(), now.getDate());
 const hhmm = `${String(start.getHours()).padStart(2, '0')}:${String(start.getMinutes()).padStart(2, '0')}`;
 // A hash change, not a reload: semantics stay on.
 await page.goto(`${baseUrl}#/add`);

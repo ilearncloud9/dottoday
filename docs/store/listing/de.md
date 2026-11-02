@@ -20,6 +20,8 @@ Ein ruhiger, visueller Tagesplaner: dein Tag als Punkte auf einer Linie. Gratis.
 ### Description
 Dottoday macht aus deiner Aufgabenliste einen Tag, dem du folgen kannst. Dein Tag ist ein Faden vom Aufstehen bis zur Schlafenszeit, und jede Aufgabe ist ein Punkt darauf: umrandet, solange sie bevorsteht, füllend, während sie läuft, voll, wenn sie erledigt ist. Ein Blick zeigt dir, was jetzt dran ist und was als Nächstes kommt.
 
+Beginnt deinen Morgen, beendet deinen Abend. Aufstehen kann wie ein Wecker klingeln und öffnet eine Karte mit deinem Tag; die Abendruhe richtet sich nach der ersten Aufgabe von morgen.
+
 WENN SICH DER TAG BEWEGT, BEWEG ALLES MIT
 • Zieh eine Aufgabe, um sie zu verschieben, oder ihre Kante, um die Dauer zu ändern.
 • Verschieb alles nach einer Aufgabe mit einer Geste oder gib der aktuellen Aufgabe 15 Minuten mehr.

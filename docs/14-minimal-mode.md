@@ -62,6 +62,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | W5 Catch the dot | M17 | Shown | Identical: one moving dot and the count |
 | W5 Pick today's one thing | M17 | Shown | The pick screen is identical; the ring and "Your one thing" show on minimal Today too, since it is the day's one decision. Picking from Today's ⋯ is full mode only, as minimal ⋯ holds three items (§4); the morning mission still picks |
 | W5 Make sure I'm up | M17 | Simplified | The Wind Down review's toggle shows; the task sheet's switch sits under More options |
+| W Discovery (promise, coach marks, How it works) | M17 | Simplified | The promise is one line with a single button (Turn on; Later is its ×), without the See how it works link (docs/15 §10). The mission offer, the card's coach marks, the check's text, the How it works link and Help › Wake Up are identical. All share the §5 hint budget in both layouts; minimal mode's own six still show only in minimal |
 | B1 actual timestamps | M6.5 | Shown | Invisible; recorded on tap and Done exactly as in full mode |
 | B2 subtask durations | M6.5 | Hidden | Appear only once Break it down has been used on that task |
 | A1 Live Activity / ongoing notification | M9 | Shown | Unchanged; this surface is minimal mode's heart |

@@ -3,9 +3,15 @@ import 'package:dottoday/core/clock/minute_tick.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/reveal/hint_providers.dart';
 import 'package:dottoday/data/wake_up/channel_mission_sensors.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/reveal_hint.dart';
+import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
+import 'package:dottoday/domain/reveal/hint_scheduler.dart';
+import 'package:dottoday/domain/reveal/hint_signals.dart';
 import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:dottoday/domain/wake_up/one_thing.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
@@ -58,6 +64,41 @@ Future<({int usual, int more})?> learnedWindDownOffer(Ref ref) async {
   return usual == null || more == null ? null : (usual: usual, more: more);
 }
 
+/// The Wake Up discovery signals (docs/15 §11): whether this phone can
+/// ring Wake Up while it is off (the promise), and whether its last
+/// mornings were stopped late with missions off on the alarm tier (the
+/// mission offer). Both false off a phone.
+@riverpod
+Future<({bool wakeUpOffer, bool lateMornings})> wakeUpDiscovery(Ref ref) async {
+  final profile = await ref.watch(currentProfileProvider.future);
+  final caps = await ref.watch(alarmCapabilitiesNowProvider.future);
+  final settings = profile.settings;
+  if (caps.blockers.contains(AlarmBlocker.notAPhone)) {
+    return (wakeUpOffer: false, lateMornings: false);
+  }
+  final missions =
+      settings.wakeUpAlarm &&
+      settings.missionMode == MissionMode.off &&
+      caps.tier == AlarmTier.alarm;
+  final days = missions
+      ? await ref
+            .watch(wakeUpDayRepositoryProvider)
+            .recentStops(lateMorningsForHint)
+      : const <WakeUpDay>[];
+  return (
+    wakeUpOffer: !settings.wakeUpAlarm,
+    lateMornings:
+        missions &&
+        lateMorningsOf(
+          dismissOffsetsMin(
+            days,
+            settings: settings,
+            location: tz.getLocation(profile.tzId),
+          ),
+        ),
+  );
+}
+
 /// The sensors the missions read (docs/15 §8); tests override it.
 @Riverpod(keepAlive: true)
 MissionSensors missionSensors(Ref ref) => const ChannelMissionSensors();
@@ -100,10 +141,31 @@ class AlarmEventsDrain extends _$AlarmEventsDrain {
     if (events.isEmpty) return null;
     await ref.read(wakeUpDayRepositoryProvider).applyEvents(events);
     ref.invalidate(lastWakeUpProvider);
+    await _countCheckPing(events);
     return switch (openMission(events)) {
       (final date, final kind) when AppRoutes.missionKinds.contains(kind) =>
         AppRoutes.mission(date, kind),
       _ => null,
     };
+  }
+
+  /// "I'm up" armed the check, whose notification says where to change it
+  /// while that is due (15 §11): one of its two showings, counted without
+  /// taking the day's hint slot.
+  Future<void> _countCheckPing(List<AlarmEvent> events) async {
+    final stopped = events.any(
+      (e) => e.kind == AlarmEventKind.stopped && e.date != null,
+    );
+    if (!stopped) return;
+    // The row, not a provider only read here (see `readProfile`).
+    final profile = await readProfile(ref.container);
+    if (!profile.settings.wakeUpCheck) return;
+    final repo = ref.read(revealHintRepositoryProvider);
+    if (!await checkPingDue(repo, profile.id)) return;
+    await recordHintShown(
+      ref.container,
+      HintId.wakeUpCheckPing,
+      spendDay: false,
+    );
   }
 }

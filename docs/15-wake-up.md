@@ -377,6 +377,8 @@ Nothing in M17 rings differently until the user has said yes once, and every ent
 
 Added by §7b for **existing users** (new users set it in onboarding): the first Wind Down review after the update opens with a promise card in place of the night line — "New: tell Dottoday how much sleep you want and Wind Down will move itself from tomorrow's first dot." with a sleep slider inline (default 8 h), **Set** and **Not now**. Set writes `sleepTargetMin` and the review re-renders with the night line; Not now never shows the card again, and the row stays in Settings › Day shape. Shown once; the night arc on the dot appears for everyone regardless, since it only draws the Wind Down → Wake Up gap that already exists.
 
+As built (M17.6): every row above except "Device gains the alarm tier" (a follow-up) runs on the M16 hint scheduler in one budget with minimal mode's hints (owner: one a day, twice ever); the onboarding moment is M17.1's Wake Up switch in O4; the check's text counts its two showings without taking the day's slot (docs/09 M17.6).
+
 Copy for every card lives in the ARB files under `wakeUp.discovery.*` and goes through the no-shame audit (§12). No badge counts, no red dots on the Settings tab; the promise card is the only unprompted surface, and it is dismissible.
 
 ## 12. No-shame copy
@@ -415,7 +417,7 @@ Every string below is the shipped English source (`app_en.arb`, prefix `wakeUp.`
 | `health.didNotRing` | Did not ring{reason} | Alarm failed |
 | `discovery.promise` | New: Wake Up can ring like an alarm, and your morning starts with a card that shows your day. |  |
 | `discovery.tierGained` | Your phone can now ring Dottoday's wake-up like an alarm. Turn it on? |  |
-| `discovery.missionOffer` | Mornings start a while after the alarm lately. Want a short walk or a light to switch it off? | You keep oversleeping |
+| `discovery.missionOffer` | Mornings have been starting a while after the alarm. Want a quick walk or a light to switch it off? (As built, M17.6: "lately" and "short" trip the audit.) | You keep oversleeping |
 
 Keys added by §7b: `night.label` "Night · {hours}"; `night.untilWakeUp` "{hours} until Wake Up at {time}"; `night.ifNow` "{hours} if you wind down now"; `night.nudge` "Wind down now for {hours} before your {firstDot}."; `night.nudgeNoDot` "Wind down now for {hours} before {time}."; `night.learnOffer` "You usually get up \~{min} min after Wake Up. Move Wind Down {min} min earlier?"; `onboarding.sleepTarget` "How much sleep do you want?"; `onboarding.windDownLive` "Wind Down {time} · {hours} of sleep"; `pitch.ends` "Starts your morning, ends your evening." Not this: "Sleep debt", "Short night", "You slept", "Sleep score".
 

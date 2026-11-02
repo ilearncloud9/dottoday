@@ -6344,6 +6344,62 @@ class AppLocalizationsEn extends AppLocalizations {
       '10 minutes after its start, one gentle ping: \"Start Run?\"';
 
   @override
+  String get wakeUpDiscoveryPromise =>
+      'New: Wake Up can ring like an alarm, and your morning starts with a card that shows your day.';
+
+  @override
+  String get wakeUpDiscoveryTurnOn => 'Turn on';
+
+  @override
+  String get wakeUpDiscoveryLater => 'Later';
+
+  @override
+  String get wakeUpSeeHowItWorks => 'See how it works';
+
+  @override
+  String get wakeUpHowItWorks => 'How it works';
+
+  @override
+  String get wakeUpExplainRings =>
+      'Wake Up rings at the start of your day, like an alarm where your phone allows it.';
+
+  @override
+  String get wakeUpExplainCard =>
+      'When you stop it, a card shows your day and starts it with one tap.';
+
+  @override
+  String get wakeUpExplainCheck =>
+      'If nothing has started a few minutes later, one gentle check asks.';
+
+  @override
+  String get wakeUpExplainOff =>
+      'Each has its own switch in Settings › Day shape › Wake Up options.';
+
+  @override
+  String get wakeUpDiscoveryStartDay =>
+      'Tap when you\'re up — your day\'s thread starts from here.';
+
+  @override
+  String get wakeUpDiscoveryShift =>
+      'This moves what\'s left; nothing changes until you accept.';
+
+  @override
+  String wakeUpDiscoveryCheckBody(String body) {
+    return '$body You can change or turn this off in Settings › Wake Up.';
+  }
+
+  @override
+  String get wakeUpDiscoveryMissionOffer =>
+      'Mornings have been starting a while after the alarm. Want a quick walk or a light to switch it off?';
+
+  @override
+  String get wakeUpDesktopNote =>
+      'These ring on your phone. Change them there or here; they sync.';
+
+  @override
+  String get helpWakeUpQ => 'How does Wake Up work?';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

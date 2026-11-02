@@ -281,6 +281,25 @@ void main() {
       expect(gateway.armed.single.check, isNull);
     });
 
+    // 15 §11 "First check ping": where to change it, while that is due.
+    test('its first two mornings say where to change it', () async {
+      final gateway = FakeAlarmGateway();
+      var due = true;
+      final arming = WakeUpArming(
+        gateway,
+        db,
+        explainCheck: (userId) async => due,
+      );
+      await arming.arm([_wakeUp(mon)], profile: on, tasks: {'first': run});
+      expect(
+        gateway.armed.single.check!.body,
+        'Tap to start. You can change or turn this off in Settings › Wake Up.',
+      );
+      due = false;
+      await arming.arm([_wakeUp(mon)], profile: on, tasks: {'first': run});
+      expect(gateway.armed.single.check!.body, 'Tap to start.');
+    });
+
     test('a day that began calls its check off', () async {
       final gateway = FakeAlarmGateway();
       await WakeUpArming(gateway, db).arm(

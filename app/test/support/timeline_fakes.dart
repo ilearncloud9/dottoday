@@ -495,7 +495,7 @@ List<Override> timelineOverrides({
   final subs = subtasks ?? FakeSubtaskRepository();
   final seriesRepo = FakeSeriesRepository(series);
   final settingsRepo = FakeSettingsRepository(p);
-  final hintRepo = revealHints ?? FakeRevealHintRepository();
+  final hintRepo = revealHints ?? FakeRevealHintRepository(spentDiscovery());
   final importedRepo = (calendarSeries ?? FakeCalendarSeriesRepository())
     ..occurrences = repo;
   final undo = FakeUndoService(
