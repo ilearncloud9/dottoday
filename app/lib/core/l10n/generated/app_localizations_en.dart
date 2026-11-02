@@ -6400,6 +6400,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get helpWakeUpQ => 'How does Wake Up work?';
 
   @override
+  String get wakeUpTierExactOff =>
+      'Wake Up rings as a notification for now, so Do Not Disturb and silent mode can quiet it. Allow Alarms & reminders to ring it like an alarm.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

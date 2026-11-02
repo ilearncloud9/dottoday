@@ -49,20 +49,25 @@ void main() {
         exactAlarms: false,
       ),
       const AlarmCapabilities(AlarmTier.headsUp, [
-        AlarmBlocker.fullScreenIntentRevoked,
         AlarmBlocker.exactAlarmDenied,
+        AlarmBlocker.fullScreenIntentRevoked,
       ]),
     );
   });
 
-  test('exact alarms off is named, but keeps the tier', () {
+  // Android starts the ringing service only from an exact alarm, so with
+  // "Alarms & reminders" off Wake Up rings as a notification, which Do Not
+  // Disturb and silent mode quiet; it is fixed first.
+  test('exact alarms off: a ringing notification, Allow first', () {
     expect(
       alarmCapabilities(
         platform: HealthPlatform.android,
         permission: granted,
         exactAlarms: false,
       ),
-      const AlarmCapabilities(AlarmTier.alarm, [AlarmBlocker.exactAlarmDenied]),
+      const AlarmCapabilities(AlarmTier.headsUp, [
+        AlarmBlocker.exactAlarmDenied,
+      ]),
     );
   });
 

@@ -176,9 +176,17 @@ final class OsAlarmGateway implements AlarmGateway {
   }
 
   @override
-  Future<void> requestAuthorization() async {
+  Future<void> requestAuthorization({bool promptOnly = false}) async {
+    if (platform == HealthPlatform.android) {
+      if (promptOnly || await exactAlarms.allowed()) return;
+      return exactAlarms.request();
+    }
     if (await _alarmKit() != AlarmKitStatus.notAsked) return;
-    await _channel.invokeMethod<void>('allowAlarms');
+    try {
+      await _channel.invokeMethod<void>('allowAlarms');
+    } on MissingPluginException {
+      return;
+    }
   }
 
   Future<AlarmKitStatus> _alarmKit() async {

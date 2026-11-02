@@ -742,7 +742,13 @@ final class FakeAlarmGateway implements AlarmGateway {
   Future<void> fix(AlarmBlocker blocker) async => fixed.add(blocker);
 
   @override
-  Future<void> requestAuthorization() async => authorizationRequests++;
+  Future<void> requestAuthorization({bool promptOnly = false}) async {
+    authorizationRequests++;
+    if (promptOnly) promptOnlyRequests++;
+  }
+
+  /// How many of [authorizationRequests] were launch-time, prompt-only.
+  var promptOnlyRequests = 0;
 
   /// The started days the last [sync] called checks off for.
   Set<String> started = const {};

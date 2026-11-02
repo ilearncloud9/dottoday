@@ -17,6 +17,7 @@ import 'package:dottoday/data/snapshot/snapshot_providers.dart';
 import 'package:dottoday/data/speech/speech_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/data/system/system_events.dart';
+import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/thinking/thinking_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/data/wake_up/wake_up_providers.dart';
@@ -55,6 +56,7 @@ Future<void> runHousekeeping(WidgetRef ref) async {
     // What the Wake Up alarm did with the app closed, before Today asks
     // whether the Wake Up card opens (docs/15 §3, M17.3).
     await _drainAlarmEvents(ref);
+    if (profile.settings.wakeUpAlarm) await _askForAlarms(ref);
     await ref.read(dailyRefreshProvider).run(profile.id);
     await ref.read(windDownSnapshotProvider).arm(profile.id);
     await ref.read(calendarActionsProvider).importEvents();
@@ -73,6 +75,20 @@ Future<void> _drainAlarmEvents(WidgetRef ref) async {
     ref
         .read(loggerProvider)
         .error('wake_up.drain_failed', error: e, stackTrace: st);
+  }
+}
+
+// Wake Up switched on elsewhere (another device, before an update to iOS
+// 26): this phone asks for alarms once, or it would ring as a notification
+// that Silent and Focus quiet (docs/15 §2). Never holds up the refresh.
+Future<void> _askForAlarms(WidgetRef ref) async {
+  try {
+    await ref.read(alarmGatewayProvider).requestAuthorization(promptOnly: true);
+    ref.invalidate(alarmCapabilitiesNowProvider);
+  } on Object catch (e, st) {
+    ref
+        .read(loggerProvider)
+        .error('wake_up.ask_failed', error: e, stackTrace: st);
   }
 }
 
@@ -195,6 +211,8 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
       ..invalidate(powerStateProvider)
       ..invalidate(mutedSoundsProvider)
       ..invalidate(currentDeviceZoneProvider)
+      // Android's live dot swiped away while the app was away (R-13).
+      ..invalidate(liveActivityDismissedProvider)
       // Apple Intelligence switched on, Gemini Nano downloaded (M14.2).
       ..invalidate(thinkingStatusProvider)
       // The microphone switched on in Settings (M14.5).
