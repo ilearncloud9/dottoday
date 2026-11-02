@@ -6400,6 +6400,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get helpWakeUpQ => 'How does Wake Up work?';
 
   @override
+  String get wakeUpDiscoveryTierGained =>
+      'Your phone can now ring Dottoday\'s wake-up like an alarm. Turn it on?';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

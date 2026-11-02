@@ -9648,6 +9648,12 @@ abstract class AppLocalizations {
   /// **'How does Wake Up work?'**
   String get helpWakeUpQ;
 
+  /// Soft reveal on Today after an OS update brings the alarm tier (docs/15 §11).
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone can now ring Dottoday\'s wake-up like an alarm. Turn it on?'**
+  String get wakeUpDiscoveryTierGained;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

@@ -1591,6 +1591,7 @@
   "wakeUpDiscoveryMissionOffer": "Die Morgen beginnen zuletzt eine Weile nach dem Wecker. Ein kurzer Gang oder Licht, um ihn auszuschalten?",
   "wakeUpDesktopNote": "Das klingelt auf deinem Telefon. Ändere es dort oder hier; es wird synchronisiert.",
   "helpWakeUpQ": "Wie funktioniert Aufstehen?",
+  "wakeUpDiscoveryTierGained": "Dein Telefon kann den Weckruf von Dottoday jetzt wie einen Wecker klingeln lassen. Einschalten?",
   "taskIconCategoryPlanning": "Planung & Rhythmus",
   "taskIconCategoryHealth": "Gesundheit & Körper",
   "taskIconCategoryFitness": "Fitness & Sport",

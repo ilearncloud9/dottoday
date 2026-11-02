@@ -1591,6 +1591,7 @@
   "wakeUpDiscoveryMissionOffer": "Últimamente las mañanas empiezan un rato después de la alarma. ¿Un paseo corto o una luz para apagarla?",
   "wakeUpDesktopNote": "Esto suena en tu teléfono. Cámbialo allí o aquí; se sincroniza.",
   "helpWakeUpQ": "¿Cómo funciona el despertar?",
+  "wakeUpDiscoveryTierGained": "Tu teléfono ya puede hacer sonar el despertar de Dottoday como una alarma. ¿Activarlo?",
   "taskIconCategoryPlanning": "Planificación y ritmo",
   "taskIconCategoryHealth": "Salud y cuerpo",
   "taskIconCategoryFitness": "Fitness y deporte",

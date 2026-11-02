@@ -6433,6 +6433,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get helpWakeUpQ => '¿Cómo funciona el despertar?';
 
   @override
+  String get wakeUpDiscoveryTierGained =>
+      'Tu teléfono ya puede hacer sonar el despertar de Dottoday como una alarma. ¿Activarlo?';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

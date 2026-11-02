@@ -20,10 +20,49 @@ import 'package:flutter_test/flutter_test.dart';
 // (docs/02 F5.7): calendar_links.series_key and calendar_series; 13 → 14:
 // an integer windDownReminder (the first step 11) becomes a boolean;
 // 14 → 15 (M17.6, docs/15 §11): reveal_hints' CHECK names Wake Up's
-// discovery hints (rebuilt, rows kept).
+// discovery hints (rebuilt, rows kept); 15 → 16 (docs/15 §11): and the
+// alarm-tier soft reveal.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
+  test('a version 15 file takes the alarm-tier reveal, rows kept', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig16');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+    final v15 = AppDatabase(NativeDatabase(file));
+    final ddl = await v15
+        .customSelect(
+          "SELECT sql FROM sqlite_master WHERE name = 'reveal_hints'",
+        )
+        .getSingle();
+    final old = ddl
+        .read<String>('sql')
+        .replaceFirst(RegExp(r",\s*'wakeUpTierGained'"), '');
+    expect(old, isNot(contains('wakeUpTierGained')));
+    await v15.customStatement(
+      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+      "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+    );
+    await v15.customStatement('DROP TABLE reveal_hints');
+    await v15.customStatement(old);
+    await v15.customStatement(
+      'INSERT INTO reveal_hints (id, user_id, hint_id, shown_count, '
+      "created_at, updated_at) VALUES ('h1', 'u', 'wakeUpPromise', 1, 0, 0)",
+    );
+    await v15.customStatement('PRAGMA user_version = 15');
+    await v15.close();
+
+    final v16 = AppDatabase(NativeDatabase(file));
+    addTearDown(v16.close);
+    final kept = await v16
+        .customSelect("SELECT shown_count FROM reveal_hints WHERE id = 'h1'")
+        .getSingle();
+    expect(kept.read<int>('shown_count'), 1);
+    await v16.customStatement(
+      'INSERT INTO reveal_hints (id, user_id, hint_id, created_at, '
+      "updated_at) VALUES ('h2', 'u', 'wakeUpTierGained', 0, 0)",
+    );
+  });
   test('a version 14 file takes discovery hints and keeps its own', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig15');
     addTearDown(() => dir.delete(recursive: true));

@@ -7,6 +7,7 @@ import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/reveal/hint_providers.dart';
 import 'package:dottoday/data/wake_up/channel_mission_sensors.dart';
+import 'package:dottoday/data/wake_up/tier_seen_store.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
@@ -65,16 +66,19 @@ Future<({int usual, int more})?> learnedWindDownOffer(Ref ref) async {
 }
 
 /// The Wake Up discovery signals (docs/15 §11): whether this phone can
-/// ring Wake Up while it is off (the promise), and whether its last
-/// mornings were stopped late with missions off on the alarm tier (the
-/// mission offer). Both false off a phone.
+/// ring Wake Up while it is off (the promise), whether its last mornings
+/// were stopped late with missions off on the alarm tier (the mission
+/// offer), and whether an OS update brought the alarm tier while Wake Up
+/// is off and its soft reveal hasn't had that update's showing. All false
+/// off a phone.
 @riverpod
-Future<({bool wakeUpOffer, bool lateMornings})> wakeUpDiscovery(Ref ref) async {
+Future<({bool wakeUpOffer, bool lateMornings, bool tierGained})>
+wakeUpDiscovery(Ref ref) async {
   final profile = await ref.watch(currentProfileProvider.future);
   final caps = await ref.watch(alarmCapabilitiesNowProvider.future);
   final settings = profile.settings;
   if (caps.blockers.contains(AlarmBlocker.notAPhone)) {
-    return (wakeUpOffer: false, lateMornings: false);
+    return (wakeUpOffer: false, lateMornings: false, tierGained: false);
   }
   final missions =
       settings.wakeUpAlarm &&
@@ -85,8 +89,20 @@ Future<({bool wakeUpOffer, bool lateMornings})> wakeUpDiscovery(Ref ref) async {
             .watch(wakeUpDayRepositoryProvider)
             .recentStops(lateMorningsForHint)
       : const <WakeUpDay>[];
+  final gainedAt = settings.wakeUpAlarm
+      ? null
+      : await ref.watch(alarmTierGainedAtProvider.future);
+  final hints = await ref.watch(revealHintsProvider.future);
   return (
     wakeUpOffer: !settings.wakeUpAlarm,
+    tierGained:
+        gainedAt != null &&
+        !_shownSince(
+          hints[HintId.wakeUpTierGained],
+          gainedAt,
+          ref.read(clockProvider).nowUtc(),
+          tz.getLocation(profile.tzId),
+        ),
     lateMornings:
         missions &&
         lateMorningsOf(
@@ -97,6 +113,21 @@ Future<({bool wakeUpOffer, bool lateMornings})> wakeUpDiscovery(Ref ref) async {
           ),
         ),
   );
+}
+
+/// Whether [r] already had its showing for the update at [sinceUtc] on an
+/// earlier day: today's showing keeps the row up until tomorrow.
+bool _shownSince(
+  RevealHint? r,
+  DateTime sinceUtc,
+  DateTime nowUtc,
+  tz.Location zone,
+) {
+  final last = r?.lastShownUtc;
+  if (last == null || last.isBefore(sinceUtc)) return false;
+  final a = tz.TZDateTime.from(last, zone);
+  final b = tz.TZDateTime.from(nowUtc, zone);
+  return a.year != b.year || a.month != b.month || a.day != b.day;
 }
 
 /// The sensors the missions read (docs/15 §8); tests override it.

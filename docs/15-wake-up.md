@@ -377,7 +377,7 @@ Nothing in M17 rings differently until the user has said yes once, and every ent
 
 Added by §7b for **existing users** (new users set it in onboarding): the first Wind Down review after the update opens with a promise card in place of the night line — "New: tell Dottoday how much sleep you want and Wind Down will move itself from tomorrow's first dot." with a sleep slider inline (default 8 h), **Set** and **Not now**. Set writes `sleepTargetMin` and the review re-renders with the night line; Not now never shows the card again, and the row stays in Settings › Day shape. Shown once; the night arc on the dot appears for everyone regardless, since it only draws the Wind Down → Wake Up gap that already exists.
 
-As built (M17.6): every row above except "Device gains the alarm tier" (a follow-up) runs on the M16 hint scheduler in one budget with minimal mode's hints (owner: one a day, twice ever); the onboarding moment is M17.1's Wake Up switch in O4; the check's text counts its two showings without taking the day's slot (docs/09 M17.6).
+As built (M17.6, and the alarm-tier row on 2026-11-02): every row above runs on the M16 hint scheduler in one budget with minimal mode's hints (owner: one a day, twice ever); the onboarding moment is M17.1's Wake Up switch in O4; the check's text counts its two showings without taking the day's slot (docs/09 M17.6).
 
 Copy for every card lives in the ARB files under `wakeUp.discovery.*` and goes through the no-shame audit (§12). No badge counts, no red dots on the Settings tab; the promise card is the only unprompted surface, and it is dismissible.
 

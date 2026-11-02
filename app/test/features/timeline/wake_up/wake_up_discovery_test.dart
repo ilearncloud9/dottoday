@@ -35,6 +35,7 @@ Future<FakeRevealHintRepository> _pumpToday(
   AlarmCapabilities caps = const AlarmCapabilities(AlarmTier.alarm),
   List<WakeUpDay> days = const [],
   List<RevealHint> records = const [],
+  DateTime? tierGainedAt,
 }) async {
   tester.view
     ..physicalSize = const Size(390, 844)
@@ -53,6 +54,7 @@ Future<FakeRevealHintRepository> _pumpToday(
         wakeUpAlarm: caps,
         wakeUpDays: FakeWakeUpDayRepository(days),
         revealHints: hints,
+        alarmTierGainedAt: tierGainedAt,
       ),
     ),
   );
@@ -163,6 +165,34 @@ void main() {
       ],
     );
     expect(find.textContaining(_mission), findsOneWidget);
+  });
+
+  testWidgets('an OS update that brings the alarm tier says so once', (
+    tester,
+  ) async {
+    const gained =
+        "Your phone can now ring Dottoday's wake-up like an alarm. Turn it on?";
+    // The promise has had its showings: the update's own line shows.
+    final hints = await _pumpToday(
+      tester,
+      tierGainedAt: todayTestNow.subtract(const Duration(hours: 2)),
+      records: [
+        RevealHint(
+          id: revealHintRowId(testUserId, HintId.wakeUpPromise),
+          userId: testUserId,
+          hintId: HintId.wakeUpPromise,
+          shownCount: 2,
+          createdAt: todayTestNow,
+          updatedAt: todayTestNow,
+        ),
+      ],
+    );
+    expect(find.textContaining(gained), findsOneWidget);
+    final row = await hints.findById(
+      testUserId,
+      revealHintRowId(testUserId, HintId.wakeUpTierGained),
+    );
+    expect(row?.shownCount, 1);
   });
 
   testWidgets('Help › Wake Up: the four lines and this phone', (tester) async {
