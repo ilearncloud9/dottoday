@@ -19,12 +19,15 @@ import org.json.JSONObject
  * when coming up), the title, "9:00 – 11:00 · 1 of 3", Done and +15 min
  * through [DotActionReceiver] so they work with the app killed. One at a
  * time, on the task-alerts channel, silent after the first post; it times
- * out by itself 30 min after the planned end.
+ * out by itself 30 min after the planned end. Android 14+ lets the user
+ * swipe it away: [OngoingDismissReceiver] remembers that, the trigger of
+ * minimal mode's widget hint as on iOS (docs/14 §5, R-13).
  */
 object OngoingDot {
     const val ID = 0x0D07
     private const val CHANNEL = "alerts"
     private const val KEY = "ongoing"
+    private const val DISMISSED = "ongoing_dismissed"
 
     /** Shows [json], or cancels when null. The content is kept for +15. */
     fun sync(context: Context, json: String?) {
@@ -54,10 +57,40 @@ object OngoingDot {
     fun activeContent(context: Context): String? =
         if (activeId(context) == null) null else DotActionReceiver.prefs(context).getString(KEY, null)
 
-    /** Fires the posted notification's action [label] ("done" / "plus"). */
+    /**
+     * The user swiped the notification away before its own timeout
+     * ([nowMs] before the content's `ends_ms`): remembered until the app
+     * reads it with [takeDismissed]. A timeout or the app's own cancel
+     * never counts.
+     */
+    fun recordDismissed(context: Context, nowMs: Long) {
+        val prefs = DotActionReceiver.prefs(context)
+        val raw = prefs.getString(KEY, null) ?: return
+        val endsMs = runCatching { JSONObject(raw).getLong("ends_ms") }.getOrNull() ?: return
+        if (nowMs >= endsMs) return
+        prefs.edit().putBoolean(DISMISSED, true).remove(KEY).apply()
+    }
+
+    /** Whether the user swiped one away since the last read; clears it. */
+    fun takeDismissed(context: Context): Boolean {
+        val prefs = DotActionReceiver.prefs(context)
+        val dismissed = prefs.getBoolean(DISMISSED, false)
+        if (dismissed) prefs.edit().remove(DISMISSED).apply()
+        return dismissed
+    }
+
+    /**
+     * Fires the posted notification's action [label] ("done" / "plus"), or
+     * with "swipe" what a swipe does: its own delete intent, then gone.
+     */
     fun press(context: Context, label: String) {
         val manager = context.getSystemService(android.app.NotificationManager::class.java)
         val posted = manager.activeNotifications.firstOrNull { it.id == ID } ?: return
+        if (label == "swipe") {
+            posted.notification.deleteIntent?.send()
+            manager.cancel(ID)
+            return
+        }
         val index = if (label == "plus") 1 else 0
         posted.notification.actions?.getOrNull(index)?.actionIntent?.send()
     }
@@ -100,6 +133,7 @@ object OngoingDot {
             .setCategory(NotificationCompat.CATEGORY_PROGRESS)
             .setTimeoutAfter(maxOf(1L, (c["ends_ms"] as Number).toLong() - nowMs))
             .setContentIntent(open(context, id))
+            .setDeleteIntent(OngoingDismissReceiver.pendingIntent(context))
             .addAction(
                 0, c["done_label"] as String,
                 DotActionReceiver.pendingIntent(context, DotActionReceiver.ACTION_MARK_DONE, id),
