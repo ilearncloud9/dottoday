@@ -1,9 +1,11 @@
 // The Android ongoing notification on the emulator (docs/09 M9.4): a live
 // task posts it; its own +15 action adds 15 and Done removes
 // it, both through DotActionReceiver and the queue, so the task in the
-// database follows. Notification permission: tool/device_tests.sh grants it. Android only; the killed-app variant is
+// database follows. A swipe (its own delete intent) is kept for minimal
+// mode's widget hint; Done is not a swipe (docs/14 §5, R-13). Notification permission: tool/device_tests.sh grants it. Android only; the killed-app variant is
 // tool/ongoing_killed_check.sh.
 import 'package:dottoday/core/ids/id_generator.dart';
+import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
@@ -12,6 +14,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -68,5 +71,47 @@ void main() {
       () async => (await stored()).status == OccurrenceStatus.done,
     );
     await waitUntil(tester, () async => await _active() == null);
+    expect(await _channel.invokeMethod<bool>('takeDismissed'), isFalse);
   });
+
+  testWidgets('a swipe is kept for the widget hint', (tester) async {
+    if (defaultTargetPlatform != TargetPlatform.android) return;
+    final container = await startApp(tester);
+    final id = await _postLive(container, 'Swipe check');
+    await waitUntil(tester, () async => await _active() == id);
+    await _channel.invokeMethod<void>('perform', {'action': 'swipe'});
+    await waitUntil(tester, () async => await _active() == null);
+    container.invalidate(liveActivityDismissedProvider);
+    await waitUntil(
+      tester,
+      () async => await container.read(liveActivityDismissedProvider.future),
+    );
+  });
+}
+
+/// A task that started 5 min ago, 30 min long: the live dot. Returns its id.
+Future<String> _postLive(ProviderContainer container, String title) async {
+  final profile = await container.read(localProfileProvider.future);
+  final now = DateTime.now().toUtc();
+  final id = const UuidV7Generator().newId();
+  await container
+      .read(writeUseCaseProvider)
+      .apply(
+        WriteBatch(
+          userId: profile.id,
+          occurrences: [
+            Occurrence(
+              id: id,
+              userId: profile.id,
+              title: title,
+              tzId: profile.tzId,
+              startUtc: now.subtract(const Duration(minutes: 5)),
+              durationMin: 30,
+              createdAt: now,
+              updatedAt: now,
+            ),
+          ],
+        ),
+      );
+  return id;
 }

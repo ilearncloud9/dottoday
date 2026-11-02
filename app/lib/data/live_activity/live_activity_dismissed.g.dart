@@ -8,30 +8,39 @@ part of 'live_activity_dismissed.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Whether the user has ever dismissed a Live Activity themselves (iOS):
-/// the trigger of minimal mode's widget hint (docs/14 §5, M16). The native
-/// side sends one `dismissedByUser` event on `dottoday/live_activity`
-/// (ios/Shared/LiveActivities.swift); it is kept in `local_meta`, per
-/// device and never synced, like the other nudge flags. The hint itself
-/// still follows the one-a-day, twice-ever budget.
+/// Whether the user has ever dismissed the live dot themselves: the
+/// trigger of minimal mode's widget hint (docs/14 §5, M16). iOS sends one
+/// `dismissedByUser` event on `dottoday/live_activity` for a Live Activity
+/// (ios/Shared/LiveActivities.swift); Android keeps a swipe of the ongoing
+/// notification (OngoingDot.kt) until read with `takeDismissed` on
+/// `dottoday/ongoing`, on each build — launch and every resume (R-13). It
+/// is kept in `local_meta`, per device and never synced, like the other
+/// nudge flags. The hint itself still follows the one-a-day, twice-ever
+/// budget.
 
 @ProviderFor(LiveActivityDismissed)
 final liveActivityDismissedProvider = LiveActivityDismissedProvider._();
 
-/// Whether the user has ever dismissed a Live Activity themselves (iOS):
-/// the trigger of minimal mode's widget hint (docs/14 §5, M16). The native
-/// side sends one `dismissedByUser` event on `dottoday/live_activity`
-/// (ios/Shared/LiveActivities.swift); it is kept in `local_meta`, per
-/// device and never synced, like the other nudge flags. The hint itself
-/// still follows the one-a-day, twice-ever budget.
+/// Whether the user has ever dismissed the live dot themselves: the
+/// trigger of minimal mode's widget hint (docs/14 §5, M16). iOS sends one
+/// `dismissedByUser` event on `dottoday/live_activity` for a Live Activity
+/// (ios/Shared/LiveActivities.swift); Android keeps a swipe of the ongoing
+/// notification (OngoingDot.kt) until read with `takeDismissed` on
+/// `dottoday/ongoing`, on each build — launch and every resume (R-13). It
+/// is kept in `local_meta`, per device and never synced, like the other
+/// nudge flags. The hint itself still follows the one-a-day, twice-ever
+/// budget.
 final class LiveActivityDismissedProvider
     extends $AsyncNotifierProvider<LiveActivityDismissed, bool> {
-  /// Whether the user has ever dismissed a Live Activity themselves (iOS):
-  /// the trigger of minimal mode's widget hint (docs/14 §5, M16). The native
-  /// side sends one `dismissedByUser` event on `dottoday/live_activity`
-  /// (ios/Shared/LiveActivities.swift); it is kept in `local_meta`, per
-  /// device and never synced, like the other nudge flags. The hint itself
-  /// still follows the one-a-day, twice-ever budget.
+  /// Whether the user has ever dismissed the live dot themselves: the
+  /// trigger of minimal mode's widget hint (docs/14 §5, M16). iOS sends one
+  /// `dismissedByUser` event on `dottoday/live_activity` for a Live Activity
+  /// (ios/Shared/LiveActivities.swift); Android keeps a swipe of the ongoing
+  /// notification (OngoingDot.kt) until read with `takeDismissed` on
+  /// `dottoday/ongoing`, on each build — launch and every resume (R-13). It
+  /// is kept in `local_meta`, per device and never synced, like the other
+  /// nudge flags. The hint itself still follows the one-a-day, twice-ever
+  /// budget.
   LiveActivityDismissedProvider._()
     : super(
         from: null,
@@ -52,14 +61,17 @@ final class LiveActivityDismissedProvider
 }
 
 String _$liveActivityDismissedHash() =>
-    r'5d8140389e60a3d2565c6a1deea38e2ebfa56bcd';
+    r'1f3a7e739dc45a1b8554fb32fb30a8d796252848';
 
-/// Whether the user has ever dismissed a Live Activity themselves (iOS):
-/// the trigger of minimal mode's widget hint (docs/14 §5, M16). The native
-/// side sends one `dismissedByUser` event on `dottoday/live_activity`
-/// (ios/Shared/LiveActivities.swift); it is kept in `local_meta`, per
-/// device and never synced, like the other nudge flags. The hint itself
-/// still follows the one-a-day, twice-ever budget.
+/// Whether the user has ever dismissed the live dot themselves: the
+/// trigger of minimal mode's widget hint (docs/14 §5, M16). iOS sends one
+/// `dismissedByUser` event on `dottoday/live_activity` for a Live Activity
+/// (ios/Shared/LiveActivities.swift); Android keeps a swipe of the ongoing
+/// notification (OngoingDot.kt) until read with `takeDismissed` on
+/// `dottoday/ongoing`, on each build — launch and every resume (R-13). It
+/// is kept in `local_meta`, per device and never synced, like the other
+/// nudge flags. The hint itself still follows the one-a-day, twice-ever
+/// budget.
 
 abstract class _$LiveActivityDismissed extends $AsyncNotifier<bool> {
   FutureOr<bool> build();

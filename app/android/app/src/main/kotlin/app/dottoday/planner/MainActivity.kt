@@ -118,6 +118,8 @@ class MainActivity : FlutterFragmentActivity() {
                     "activeId" -> result.success(OngoingDot.activeId(this))
                     // The consistency gate (M9.8): what the notification shows.
                     "activeContent" -> result.success(OngoingDot.activeContent(this))
+                    // Minimal mode's widget hint (docs/14 §5): swiped away?
+                    "takeDismissed" -> result.success(OngoingDot.takeDismissed(this))
                     "perform" -> {
                         OngoingDot.press(this, call.argument<String>("action") ?: "")
                         result.success(null)

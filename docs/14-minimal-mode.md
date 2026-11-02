@@ -194,7 +194,7 @@ The mode is chosen in onboarding step 0, changed in two places, and overruled by
 | Same task moved 3 times | "What's the very first thing you'd physically do?" | B3 Unstick (already in the roadmap) |
 | Three mornings with the same first three dots | "Save this as your morning?" | C2 Routines |
 | A task over 60 min saved without steps | "Break it into steps?" | B1 Break it down |
-| First Live Activity dismissed by the user | "Want the next dot on your home screen too?" | A1 Next-up widget |
+| First Live Activity (iOS) or ongoing notification (Android 14+) dismissed by the user | "Want the next dot on your home screen too?" | A1 Next-up widget |
 | 14 days of use | "See your week as seven dots?" | D1 Weekly review |
 | Three tasks finished more than 20 min after plan in a week | "Dottoday can start pre-filling times from how long things really take." | C3 learned defaults (already on; the hint only names it) |
 
