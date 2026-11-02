@@ -99,18 +99,24 @@ import os
     }
 
     /// Makes [specs] the armed set; returns the instants armed (ms). An
-    /// alarm ringing or counting down a snooze stays, as does the test
-    /// alarm. Without permission nothing is armed.
+    /// alarm ringing, counting down a snooze or re-ringing a mission stays,
+    /// as does the test alarm. Without permission nothing is armed.
     static func sync(_ specs: [WakeUpAlarmSpec]) async -> [Int64] {
       let stored = load()
       let live = (try? manager.alarms) ?? []
       let wanted = manager.authorizationState == .authorized ? specs : []
+      // The app no longer plans a morning that rang, so a mission's re-ring
+      // (opening the app syncs) would be called off with it (2026-11-02).
+      func held(_ alarm: Alarm) -> Bool {
+        alarm.state != .scheduled || alarm.id == uuid(testId)
+          || stored[alarm.id.uuidString]?.missionSinceMs != nil
+      }
       var next: [String: WakeUpAlarmSpec] = [:]
-      for alarm in live where alarm.state != .scheduled || alarm.id == uuid(testId) {
+      for alarm in live where held(alarm) {
         next[alarm.id.uuidString] = stored[alarm.id.uuidString]
       }
       // A scheduled alarm stays only while it is wanted unchanged.
-      for alarm in live where alarm.state == .scheduled && alarm.id != uuid(testId) {
+      for alarm in live where !held(alarm) {
         let same = wanted.contains { uuid($0.id) == alarm.id && $0 == stored[alarm.id.uuidString] }
         if !same { try? manager.cancel(id: alarm.id) }
       }
@@ -414,13 +420,16 @@ import os
     }
   }
 
-  /// The alert's stop on a mission morning (docs/15 §8): the app opens on
-  /// the mission, and the ring comes back each minute it is left alone.
+  /// The alert's stop on a mission morning (docs/15 §8): the ring comes
+  /// back each minute it is left alone, and the app opens on the mission.
+  /// The re-ring is armed in the background first: opening the app waits
+  /// for an unlock, and a Stop on the Lock Screen that was never unlocked
+  /// ended the morning silently (owner, 2026-11-02).
   @available(iOS 26.0, *)
   struct MissionStopIntent: LiveActivityIntent {
     static let title: LocalizedStringResource = "Stop"
     static let isDiscoverable = false
-    static let openAppWhenRun = true
+    static let supportedModes: IntentModes = [.background, .foreground(.deferred)]
 
     @Parameter(title: "Alarm")
     var alarm: String
@@ -433,6 +442,8 @@ import os
 
     func perform() async throws -> some IntentResult {
       await WakeUpAlarms.startMission(alarm)
+      // Left locked, the app stays closed; the re-ring is what wakes them.
+      try await continueInForeground(alwaysConfirm: false)
       return .result()
     }
   }
