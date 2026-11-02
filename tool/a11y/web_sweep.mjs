@@ -225,6 +225,17 @@ for (const theme of ['light', 'dark']) {
       await tap(page, 'More options');
       await tapText(page, 'Show everything');
       await page.waitForTimeout(1_200);
+      // M17 (docs/15 §11): Wake Up options say they ring on the phone, the
+      // How it works sheet, the Wake Up card and the one-thing pick screen.
+      await fresh('/settings/wakeUp');
+      await shot('wake_up_options');
+      await tapText(page, 'How it works');
+      await page.waitForTimeout(1_200);
+      await shot('wake_up_explain');
+      await fresh('/wake-up');
+      await shot('wake_up_card');
+      await fresh('/wake-up/mission/2099-01-01/oneThing');
+      await shot('wake_up_one_thing');
       console.log(`PASS ${tag}`);
     } catch (e) {
       failures.push(`${tag}: ${e.message.split('\n')[0]}`);
