@@ -74,6 +74,7 @@
         <!-- Done / +15 / Start from widgets and notifications, queued for the
              app (B6, docs/09 M9.2c). Only this app's PendingIntents reach it. -->
         <receiver android:exported="false" android:name=".intents.DotActionReceiver"/>
+        <receiver android:exported="false" android:name=".intents.OngoingDismissReceiver"/>
         <receiver android:exported="false" android:name=".focus.DeepWorkOff"/>
         <!-- Quick Settings tiles: Add task, Start focus (B6, docs/09 M9.5). -->
         <service

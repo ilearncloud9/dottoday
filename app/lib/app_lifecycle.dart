@@ -9,6 +9,7 @@ import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/intents/intent_providers.dart';
 import 'package:dottoday/data/intents/intent_queue_channel.dart';
+import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -195,6 +196,8 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
       ..invalidate(powerStateProvider)
       ..invalidate(mutedSoundsProvider)
       ..invalidate(currentDeviceZoneProvider)
+      // Android's live dot swiped away while the app was away (R-13).
+      ..invalidate(liveActivityDismissedProvider)
       // Apple Intelligence switched on, Gemini Nano downloaded (M14.2).
       ..invalidate(thinkingStatusProvider)
       // The microphone switched on in Settings (M14.5).

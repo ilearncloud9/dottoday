@@ -9,8 +9,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // The widget hint's trigger (docs/14 §5, M16): iOS sends one
-// `dismissedByUser` event when the user swipes a Live Activity away; it
-// is kept per device in local_meta.
+// `dismissedByUser` event when the user swipes a Live Activity away;
+// Android's ongoing notification keeps a swipe until `takeDismissed` reads
+// it (R-13). Either is kept per device in local_meta.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late AppDatabase db;
@@ -61,5 +62,55 @@ void main() {
     await nativeSays('somethingElse');
     await pumpEventQueue();
     expect(c.read(liveActivityDismissedProvider).value, false);
+  });
+
+  group('Android (R-13)', () {
+    var swiped = false;
+    var reads = 0;
+    setUp(() {
+      swiped = false;
+      reads = 0;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(LiveActivitySink.ongoingChannel, (call) {
+            if (call.method != 'takeDismissed') return null;
+            reads++;
+            final taken = swiped;
+            swiped = false;
+            return Future.value(taken);
+          });
+    });
+    tearDown(
+      () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(LiveActivitySink.ongoingChannel, null),
+    );
+
+    test('no swipe: false', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      expect(
+        await container().read(liveActivityDismissedProvider.future),
+        false,
+      );
+      expect(reads, 1);
+    });
+
+    test('a swipe is read once and kept for good', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      swiped = true;
+      expect(
+        await container().read(liveActivityDismissedProvider.future),
+        true,
+      );
+      // The native flag is spent; local_meta answers from now on.
+      expect(
+        await container().read(liveActivityDismissedProvider.future),
+        true,
+      );
+      expect(reads, 1);
+    });
+  });
+
+  test('the Mac and the web have no live dot to dismiss', () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    expect(await container().read(liveActivityDismissedProvider.future), false);
   });
 }
