@@ -1,7 +1,8 @@
 // The Wake Up alarm through AlarmKit on the iOS 26 simulator (docs/15 W1b,
 // ADR-0017): armed through the real AlarmGateway, AlarmKit alerts at its
 // time; Snooze counts down and alerts again; after a snooze on a mission
-// morning Stop opens the mission and the alarm comes back a minute later.
+// morning Stop opens the mission and the alarm comes back a minute later,
+// through the app's next sync.
 // tool/device_tests.sh keeps the app in front (DEVICE_HOLD), as each
 // alert sends it away. iOS only; Android has wake_up_alarm_test.dart.
 import 'package:dottoday/data/notifications/permission_providers.dart';
@@ -116,6 +117,13 @@ void main() {
       reRing - DateTime.now().millisecondsSinceEpoch,
       inInclusiveRange(50000, 61000),
     );
+    // Opening the app syncs a week that no longer has this morning: the
+    // re-ring stays until the mission ends.
+    await _channel.invokeMethod<Object>('sync', {
+      'alarms': <Object>[],
+      'started': <String>[],
+    });
+    expect((await _stored(id))?['state'], 'scheduled');
     await _channel.invokeMethod<void>('dismiss', {'id': id});
     expect(await _stored(id), isNull);
     debugPrint('DEVICE_RELEASE front');
