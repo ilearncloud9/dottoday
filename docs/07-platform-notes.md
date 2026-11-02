@@ -16,7 +16,7 @@ specified here — never "not available on X".
 - Share extension `DottodayShare` (M12.4, B6): the system compose sheet; Post appends a `shared` add_task entry to the App Group queue (`ShareQueue`, ios/Shared/DotStore.swift); the app drains it into the Inbox. Needs the App Group on device (paid account).
 
 ## Android (min API 26)
-- Notifications: channels (Alerts, Summary, Sync); `SCHEDULE_EXACT_ALARM` requested with rationale;
+- Notifications: channels (Alerts, Summary, Sync); exact alarms through `USE_EXACT_ALARM` on Android 13+ (granted at install to calendar apps; owner 2026-11-02) and `SCHEDULE_EXACT_ALARM` on 12/12L only;
   fall back to inexact if denied and tell the user; full-screen intents only for the alarm-loud
   dots (M6.5.5). A channel's sound is fixed, so each bundled reminder sound has its own
   `alerts_<sound>` channel (M8.4d); `res/raw/keep.xml` keeps the sounds through resource shrinking.

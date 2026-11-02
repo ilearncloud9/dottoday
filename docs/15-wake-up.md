@@ -88,7 +88,7 @@ How the user is told, by moment:
 
 Plugin facts behind the table (as of 2026-10-31; re-verify at build time): [alarm\_kit](https://pub.dev/packages/alarm_kit) and [flutter\_alarmkit](https://pub.dev/packages/flutter_alarmkit) both expose AlarmKit from Flutter; AlarmKit is iOS/iPadOS 26+ only, has no entitlement, needs `NSAlarmKitUsageDescription`, custom sounds must be `.caf`/`.aiff`/`.wav` under 30 s in the bundle, and the countdown needs a WidgetKit extension. Android: from 14, [Play revokes `USE_FULL_SCREEN_INTENT` at install for apps without calling or alarm features](https://source.android.com/docs/core/permissions/fsi-limits), so the store listing and the `AndroidManifest` must present a real alarm feature, and the app checks `canUseFullScreenIntent()` at runtime.
 
-As built (2026-11-02, owner report): on Android the alarm tier needs both the full-screen intent and "Alarms & reminders". Android starts the ringing service only from an exact alarm, so without it Wake Up rings as a notification (`headsUp`, `exactAlarmDenied` first), and the switch asks for it. On iPhone, launch asks for alarms once when Wake Up is on but AlarmKit was never asked.
+As built (2026-11-02, owner report): on Android the alarm tier needs both the full-screen intent and exact alarms (`USE_EXACT_ALARM`, granted at install on 13+; "Alarms & reminders" on 12/12L). Android starts the ringing service only from an exact alarm, so without it Wake Up rings as a notification (`headsUp`, `exactAlarmDenied` first), and the switch asks for it. On iPhone, launch asks for alarms once when Wake Up is on but AlarmKit was never asked.
 
 ## 3. W0 · Shared block: AlarmGateway, Wake Up state, settings
 
