@@ -6890,6 +6890,8 @@
   "@helpWakeUpQ": {"description": "Help question: Wake Up's explain sheet (docs/15 §11)."},
   "wakeUpTierExactOff": "Wake Up rings as a notification for now, so Do Not Disturb and silent mode can quiet it. Allow Alarms & reminders to ring it like an alarm.",
   "@wakeUpTierExactOff": {"description": "Wake Up alarm tier line on Android with Alarms & reminders off (docs/15 §2)."},
+  "wakeUpDiscoveryTierGained": "Your phone can now ring Dottoday's wake-up like an alarm. Turn it on?",
+  "@wakeUpDiscoveryTierGained": {"description": "Soft reveal on Today after an OS update brings the alarm tier (docs/15 §11)."},
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},
   "taskIconCategoryHealth": "Health & body",

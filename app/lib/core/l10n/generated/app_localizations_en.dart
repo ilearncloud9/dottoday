@@ -6404,6 +6404,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Wake Up rings as a notification for now, so Do Not Disturb and silent mode can quiet it. Allow Alarms & reminders to ring it like an alarm.';
 
   @override
+  String get wakeUpDiscoveryTierGained =>
+      'Your phone can now ring Dottoday\'s wake-up like an alarm. Turn it on?';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

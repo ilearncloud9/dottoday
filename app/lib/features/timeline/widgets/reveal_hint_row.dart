@@ -99,6 +99,7 @@ class _RevealHintRowState extends ConsumerState<RevealHintRow> {
     HintId.learnedDefaults => l10n.hintLearned,
     HintId.wakeUpPromise => l10n.wakeUpDiscoveryPromise,
     HintId.missionOffer => l10n.wakeUpDiscoveryMissionOffer,
+    HintId.wakeUpTierGained => l10n.wakeUpDiscoveryTierGained,
     // Coach marks and the check's text: never this row.
     HintId.wakeUpStartDay || HintId.wakeUpShift || HintId.wakeUpCheckPing => '',
   };
@@ -134,7 +135,7 @@ class _RevealHintRowState extends ConsumerState<RevealHintRow> {
       case HintId.wakeUpPromise:
         unawaited(dismissHint(ProviderScope.containerOf(context), pick.hint));
         unawaited(context.push(AppRoutes.settingsPage(SettingsPage.wakeUp)));
-      case HintId.missionOffer:
+      case HintId.missionOffer || HintId.wakeUpTierGained:
         unawaited(context.push(AppRoutes.settingsPage(SettingsPage.wakeUp)));
       case HintId.wakeUpStartDay ||
           HintId.wakeUpShift ||

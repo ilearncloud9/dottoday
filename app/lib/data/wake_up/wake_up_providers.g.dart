@@ -114,32 +114,42 @@ String _$learnedWindDownOfferHash() =>
     r'e8ff06c3f17c716e245f73450f9622b3f2b9b581';
 
 /// The Wake Up discovery signals (docs/15 §11): whether this phone can
-/// ring Wake Up while it is off (the promise), and whether its last
-/// mornings were stopped late with missions off on the alarm tier (the
-/// mission offer). Both false off a phone.
+/// ring Wake Up while it is off (the promise), whether its last mornings
+/// were stopped late with missions off on the alarm tier (the mission
+/// offer), and whether an OS update brought the alarm tier while Wake Up
+/// is off and its soft reveal hasn't had that update's showing. All false
+/// off a phone.
 
 @ProviderFor(wakeUpDiscovery)
 final wakeUpDiscoveryProvider = WakeUpDiscoveryProvider._();
 
 /// The Wake Up discovery signals (docs/15 §11): whether this phone can
-/// ring Wake Up while it is off (the promise), and whether its last
-/// mornings were stopped late with missions off on the alarm tier (the
-/// mission offer). Both false off a phone.
+/// ring Wake Up while it is off (the promise), whether its last mornings
+/// were stopped late with missions off on the alarm tier (the mission
+/// offer), and whether an OS update brought the alarm tier while Wake Up
+/// is off and its soft reveal hasn't had that update's showing. All false
+/// off a phone.
 
 final class WakeUpDiscoveryProvider
     extends
         $FunctionalProvider<
-          AsyncValue<({bool lateMornings, bool wakeUpOffer})>,
-          ({bool lateMornings, bool wakeUpOffer}),
-          FutureOr<({bool lateMornings, bool wakeUpOffer})>
+          AsyncValue<({bool lateMornings, bool tierGained, bool wakeUpOffer})>,
+          ({bool lateMornings, bool tierGained, bool wakeUpOffer}),
+          FutureOr<({bool lateMornings, bool tierGained, bool wakeUpOffer})>
         >
     with
-        $FutureModifier<({bool lateMornings, bool wakeUpOffer})>,
-        $FutureProvider<({bool lateMornings, bool wakeUpOffer})> {
+        $FutureModifier<
+          ({bool lateMornings, bool tierGained, bool wakeUpOffer})
+        >,
+        $FutureProvider<
+          ({bool lateMornings, bool tierGained, bool wakeUpOffer})
+        > {
   /// The Wake Up discovery signals (docs/15 §11): whether this phone can
-  /// ring Wake Up while it is off (the promise), and whether its last
-  /// mornings were stopped late with missions off on the alarm tier (the
-  /// mission offer). Both false off a phone.
+  /// ring Wake Up while it is off (the promise), whether its last mornings
+  /// were stopped late with missions off on the alarm tier (the mission
+  /// offer), and whether an OS update brought the alarm tier while Wake Up
+  /// is off and its soft reveal hasn't had that update's showing. All false
+  /// off a phone.
   WakeUpDiscoveryProvider._()
     : super(
         from: null,
@@ -156,16 +166,20 @@ final class WakeUpDiscoveryProvider
 
   @$internal
   @override
-  $FutureProviderElement<({bool lateMornings, bool wakeUpOffer})>
+  $FutureProviderElement<
+    ({bool lateMornings, bool tierGained, bool wakeUpOffer})
+  >
   $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<({bool lateMornings, bool wakeUpOffer})> create(Ref ref) {
+  FutureOr<({bool lateMornings, bool tierGained, bool wakeUpOffer})> create(
+    Ref ref,
+  ) {
     return wakeUpDiscovery(ref);
   }
 }
 
-String _$wakeUpDiscoveryHash() => r'e413b3792dd139205e136eb0c5d540f35e323cea';
+String _$wakeUpDiscoveryHash() => r'b9927c730ba0cb3b41e2a55edd3828b4572dc48f';
 
 /// The sensors the missions read (docs/15 §8); tests override it.
 

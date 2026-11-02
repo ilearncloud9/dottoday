@@ -43,7 +43,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 15;
+  static const latestSchemaVersion = 16;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -129,6 +129,9 @@ class AppDatabase extends _$AppDatabase {
       // reveal_hints CHECK (server 0012). SQLite can't alter a CHECK: the
       // table is rebuilt, rows kept, as in 6 and 9.
       if (from < 15) await m.alterTable(TableMigration(revealHintsTable));
+      // 16 (docs/15 §11): the alarm-tier soft reveal joins the CHECK
+      // (server 0013); rebuilt, rows kept, as in 15.
+      if (from < 16) await m.alterTable(TableMigration(revealHintsTable));
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without
