@@ -6888,6 +6888,8 @@
   "@wakeUpDesktopNote": {"description": "Wake Up options on a Mac or the web (docs/15 §11)."},
   "helpWakeUpQ": "How does Wake Up work?",
   "@helpWakeUpQ": {"description": "Help question: Wake Up's explain sheet (docs/15 §11)."},
+  "wakeUpTierExactOff": "Wake Up rings as a notification for now, so Do Not Disturb and silent mode can quiet it. Allow Alarms & reminders to ring it like an alarm.",
+  "@wakeUpTierExactOff": {"description": "Wake Up alarm tier line on Android with Alarms & reminders off (docs/15 §2)."},
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},
   "taskIconCategoryHealth": "Health & body",

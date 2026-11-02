@@ -5092,6 +5092,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get helpWakeUpQ => pseudo(super.helpWakeUpQ);
 
   @override
+  String get wakeUpTierExactOff => pseudo(super.wakeUpTierExactOff);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

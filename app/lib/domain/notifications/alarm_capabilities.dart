@@ -13,7 +13,9 @@ enum AlarmTier {
   /// iPhone: breaks through Focus, not the Silent switch.
   timeSensitive,
 
-  /// Android without the full-screen intent: a banner that rings.
+  /// Android without the full-screen intent or without "Alarms &
+  /// reminders": a notification that rings, which Do Not Disturb and
+  /// silent mode can quiet.
   headsUp,
 
   /// Rings nowhere on this device (no permission, or not a phone).
@@ -32,7 +34,9 @@ enum AlarmBlocker {
   /// Android 14+: the full-screen intent was revoked (by Play or the user).
   fullScreenIntentRevoked,
 
-  /// Android 12+: "Alarms & reminders" is off, so the alarm may be late.
+  /// Android 12+: "Alarms & reminders" is off (a new install on Android
+  /// 14+ starts that way). Android starts the ringing screen only from an
+  /// exact alarm, so until it is allowed Wake Up rings as a notification.
   exactAlarmDenied,
 
   /// iOS 26+: Dottoday's alarms are not allowed yet (asked or turned off).
@@ -107,13 +111,15 @@ AlarmCapabilities alarmCapabilities({
       AlarmBlocker.permissionDenied,
     ]);
   }
-  final timing = [if (!exactAlarms) AlarmBlocker.exactAlarmDenied];
-  return fullScreenIntent
-      ? AlarmCapabilities(AlarmTier.alarm, timing)
-      : AlarmCapabilities(AlarmTier.headsUp, [
-          AlarmBlocker.fullScreenIntentRevoked,
-          ...timing,
-        ]);
+  // Without exact alarms `WakeUpAlarms` arms nothing (Android starts the
+  // ringing service only from an exact alarm), so that gap is fixed first.
+  final blockers = [
+    if (!exactAlarms) AlarmBlocker.exactAlarmDenied,
+    if (!fullScreenIntent) AlarmBlocker.fullScreenIntentRevoked,
+  ];
+  return blockers.isEmpty
+      ? const AlarmCapabilities(AlarmTier.alarm)
+      : AlarmCapabilities(AlarmTier.headsUp, blockers);
 }
 
 /// The Wake Up alarm's port to the OS (docs/15 §3, ADR-0017): AlarmKit on
@@ -127,9 +133,12 @@ abstract interface class AlarmGateway {
   /// Opens the system page (or prompt) that removes [blocker].
   Future<void> fix(AlarmBlocker blocker);
 
-  /// Shows the OS's own alarm prompt where it was never shown (iOS 26+,
-  /// when the Wake Up switch goes on); anywhere else, nothing.
-  Future<void> requestAuthorization();
+  /// Asks for what lets Wake Up ring as an alarm, as the switch goes on:
+  /// the OS's alarm prompt where it was never shown (iOS 26+), or the
+  /// "Alarms & reminders" page while it is off (Android 12+). With
+  /// [promptOnly] (on launch, for a switch turned on elsewhere) only the
+  /// in-app prompt shows; no settings page opens by itself.
+  Future<void> requestAuthorization({bool promptOnly = false});
 
   /// Makes [alarms] the armed set: arms new and changed ones and disarms
   /// the rest, except one ringing or snoozed now (only dismissing ends

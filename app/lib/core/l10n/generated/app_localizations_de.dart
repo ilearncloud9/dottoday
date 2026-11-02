@@ -6440,6 +6440,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get helpWakeUpQ => 'Wie funktioniert Aufstehen?';
 
   @override
+  String get wakeUpTierExactOff =>
+      'Aufstehen klingelt vorerst als Mitteilung, die „Bitte nicht stören“ und der Lautlos-Modus stummschalten können. Erlaube „Wecker und Erinnerungen“, damit es wie ein Wecker klingelt.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

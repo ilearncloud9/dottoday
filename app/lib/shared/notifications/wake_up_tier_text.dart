@@ -26,14 +26,17 @@ import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
       l10n.wakeUpTierTimeSensitive,
       l10n.wakeUpTierTimeSensitiveDetail,
     ),
+    AlarmTier.headsUp when blockers.contains(AlarmBlocker.exactAlarmDenied) => (
+      l10n.wakeUpTierExactOff,
+      null,
+    ),
     AlarmTier.headsUp => (l10n.wakeUpTierFsiRevoked, null),
     AlarmTier.none => (l10n.wakeUpTierNoPermission, null),
   };
 }
 
 /// The blocker the one fix button removes, or null when there is nothing
-/// to do here. "Alarms & reminders" has its own health row, so it is only
-/// offered here when it is the sole gap.
+/// to do here: the first, which is the one in the way now.
 AlarmBlocker? wakeUpFix(AlarmCapabilities capabilities) =>
     switch (capabilities.blockers) {
       [AlarmBlocker.notAPhone, ...] => null,

@@ -2,6 +2,7 @@ import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/os_alarm_gateway.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
+import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_health.dart';
 import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
@@ -112,6 +113,36 @@ void main() {
   });
 
   test(
+    'Android: the switch asks for Alarms & reminders while it is off',
+    () async {
+      final exact = _Exact(on: false);
+      final android = OsAlarmGateway(
+        platform: HealthPlatform.android,
+        permission: const UnwiredNotificationPermission(),
+        exactAlarms: exact,
+        channel: _channel,
+      );
+      // On launch nothing opens by itself.
+      await android.requestAuthorization(promptOnly: true);
+      expect(exact.requests, 0);
+      await android.requestAuthorization();
+      expect(exact.requests, 1);
+      exact.on = true;
+      await android.requestAuthorization();
+      expect(exact.requests, 1, reason: 'already allowed');
+      expect(calls, isEmpty, reason: 'AlarmKit is iPhone only');
+    },
+  );
+
+  test('iPhone: the launch prompt shows where never asked', () async {
+    answer((call) => call.method == 'alarmKitStatus' ? 'notAsked' : null);
+    await _gateway(
+      HealthPlatform.iphone,
+    ).requestAuthorization(promptOnly: true);
+    expect(calls.map((c) => c.method), ['alarmKitStatus', 'allowAlarms']);
+  });
+
+  test(
     'sync: the Wake Up Check rides with its alarm; started days go too',
     () async {
       answer((call) => <int>[]);
@@ -146,4 +177,18 @@ void main() {
       expect(sent['checkStart'], 'Start');
     },
   );
+}
+
+/// "Alarms & reminders", allowed or not; counts the settings visits.
+final class _Exact implements ExactAlarms {
+  _Exact({required this.on});
+
+  bool on;
+  var requests = 0;
+
+  @override
+  Future<bool> allowed() async => on;
+
+  @override
+  Future<void> request() async => requests++;
 }
