@@ -4,8 +4,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'reveal_hint.freezed.dart';
 part 'reveal_hint.g.dart';
 
-/// The six progressive-reveal hints of minimal mode (docs/14 §5), in the
-/// order the scheduler prefers them when two trigger on the same day.
+/// The progressive-reveal hints: minimal mode's six (docs/14 §5), then Wake
+/// Up's discovery (docs/15 §11, M17.6), in the order the scheduler prefers
+/// them when two trigger on the same day. All share one budget (owner).
 enum HintId {
   /// Same task moved 3 times → B3 Unstick.
   unstick,
@@ -24,6 +25,25 @@ enum HintId {
 
   /// Three tasks finished > 20 min after plan in a week → C3 defaults.
   learnedDefaults,
+
+  /// Wake Up is off on a phone that can ring it → the promise card on
+  /// Today (15 §11 "Update to M17"); again once after 7 days.
+  wakeUpPromise,
+
+  /// "I'm up" stopped today's alarm → the coach mark on the card's Start
+  /// the day (15 §11 "First dismissal of the alarm").
+  wakeUpStartDay,
+
+  /// The card offers Shift the rest? → its coach mark, once (15 §11).
+  wakeUpShift,
+
+  /// The Wake Up Check's notification says where to change it (15 §11
+  /// "First check ping"). Not a row: the notification's own text.
+  wakeUpCheckPing,
+
+  /// Three mornings stopped ≥ 20 min after Wake Up, missions off → the
+  /// mission soft reveal (15 §11); again only after 30 days.
+  missionOffer,
 }
 
 /// One hint's lifetime record (docs/14 §6 `reveal_hints`), synced so the

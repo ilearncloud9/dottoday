@@ -18,10 +18,66 @@ import 'package:flutter_test/flutter_test.dart';
 // settings key moves from bedtimeReminder to windDownReminder; 11 → 12
 // (M17.7, docs/15 §8): wake_up_days.mission_skipped_at_utc; 12 → 13
 // (docs/02 F5.7): calendar_links.series_key and calendar_series; 13 → 14:
-// an integer windDownReminder (the first step 11) becomes a boolean.
+// an integer windDownReminder (the first step 11) becomes a boolean;
+// 14 → 15 (M17.6, docs/15 §11): reveal_hints' CHECK names Wake Up's
+// discovery hints (rebuilt, rows kept).
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
+  test('a version 14 file takes discovery hints and keeps its own', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig15');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+
+    // Version 14's table: the same, with only minimal mode's six hints.
+    final v14 = AppDatabase(NativeDatabase(file));
+    final ddl = await v14
+        .customSelect(
+          "SELECT sql FROM sqlite_master WHERE name = 'reveal_hints'",
+        )
+        .getSingle();
+    final old = ddl
+        .read<String>('sql')
+        .replaceFirst(RegExp(r", 'wakeUpPromise'[^)]*"), '');
+    expect(old, isNot(contains('wakeUpPromise')));
+    await v14.customStatement(
+      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+      "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+    );
+    await v14.customStatement('DROP TABLE reveal_hints');
+    await v14.customStatement(old);
+    await v14.customStatement(
+      'INSERT INTO reveal_hints (id, user_id, hint_id, shown_count, '
+      "created_at, updated_at) VALUES ('h1', 'u', 'unstick', 2, 0, 0)",
+    );
+    await expectLater(
+      v14.customStatement(
+        'INSERT INTO reveal_hints (id, user_id, hint_id, created_at, '
+        "updated_at) VALUES ('h0', 'u', 'wakeUpPromise', 0, 0)",
+      ),
+      throwsA(anything),
+    );
+    await v14.customStatement('PRAGMA user_version = 14');
+    await v14.close();
+
+    final v15 = AppDatabase(NativeDatabase(file));
+    addTearDown(v15.close);
+    final kept = await v15
+        .customSelect("SELECT shown_count FROM reveal_hints WHERE id = 'h1'")
+        .getSingle();
+    expect(kept.read<int>('shown_count'), 2);
+    await v15.customStatement(
+      'INSERT INTO reveal_hints (id, user_id, hint_id, created_at, '
+      "updated_at) VALUES ('h2', 'u', 'wakeUpPromise', 0, 0)",
+    );
+    await expectLater(
+      v15.customStatement(
+        'INSERT INTO reveal_hints (id, user_id, hint_id, created_at, '
+        "updated_at) VALUES ('h3', 'u', 'streaks', 0, 0)",
+      ),
+      throwsA(anything),
+    );
+  });
   test(
     'a version 13 file turns an integer windDownReminder into a boolean',
     () async {

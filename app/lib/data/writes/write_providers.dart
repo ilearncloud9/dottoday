@@ -13,6 +13,7 @@ import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/notifications/test_alarm.dart';
 import 'package:dottoday/data/notifications/wake_up_arming.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/reveal/hint_providers.dart';
 import 'package:dottoday/data/snapshot/composite_snapshot_sink.dart';
 import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
 import 'package:dottoday/data/snapshot/web_snapshot_sink.dart';
@@ -98,6 +99,8 @@ NotificationSync notificationSync(Ref ref) => NotificationSync(
     ref.watch(appDatabaseProvider),
     minimal: () => readSimplified(ref, FeatureId.wakeUpAlarm),
     sensors: ref.watch(missionSensorsProvider),
+    explainCheck: (userId) =>
+        checkPingDue(ref.read(revealHintRepositoryProvider), userId),
   ),
   days: ref.watch(wakeUpDayRepositoryProvider),
   ringsWakeUp: currentHealthPlatform().isPhone,

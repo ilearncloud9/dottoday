@@ -6384,6 +6384,62 @@ class AppLocalizationsDe extends AppLocalizations {
       '10 Minuten nach Beginn ein sanfter Hinweis: „Laufen starten?“';
 
   @override
+  String get wakeUpDiscoveryPromise =>
+      'Neu: Aufstehen kann wie ein Wecker klingeln, und dein Morgen beginnt mit einer Karte, die deinen Tag zeigt.';
+
+  @override
+  String get wakeUpDiscoveryTurnOn => 'Einschalten';
+
+  @override
+  String get wakeUpDiscoveryLater => 'Später';
+
+  @override
+  String get wakeUpSeeHowItWorks => 'So funktioniert\'s';
+
+  @override
+  String get wakeUpHowItWorks => 'So funktioniert\'s';
+
+  @override
+  String get wakeUpExplainRings =>
+      'Aufstehen klingelt zu Beginn deines Tages, wie ein Wecker, wo dein Telefon es erlaubt.';
+
+  @override
+  String get wakeUpExplainCard =>
+      'Wenn du ihn stoppst, zeigt eine Karte deinen Tag und startet ihn mit einem Tipp.';
+
+  @override
+  String get wakeUpExplainCheck =>
+      'Hat ein paar Minuten später nichts begonnen, fragt eine sanfte Nachricht nach.';
+
+  @override
+  String get wakeUpExplainOff =>
+      'Jedes hat einen eigenen Schalter unter Einstellungen › Tagesform › Aufstehen-Optionen.';
+
+  @override
+  String get wakeUpDiscoveryStartDay =>
+      'Tippe, wenn du auf bist — der Faden deines Tages beginnt hier.';
+
+  @override
+  String get wakeUpDiscoveryShift =>
+      'Das verschiebt, was übrig ist; nichts ändert sich, bevor du zustimmst.';
+
+  @override
+  String wakeUpDiscoveryCheckBody(String body) {
+    return '$body Du kannst das unter Einstellungen › Aufstehen ändern oder ausschalten.';
+  }
+
+  @override
+  String get wakeUpDiscoveryMissionOffer =>
+      'Die Morgen beginnen zuletzt eine Weile nach dem Wecker. Ein kurzer Gang oder Licht, um ihn auszuschalten?';
+
+  @override
+  String get wakeUpDesktopNote =>
+      'Das klingelt auf deinem Telefon. Ändere es dort oder hier; es wird synchronisiert.';
+
+  @override
+  String get helpWakeUpQ => 'Wie funktioniert Aufstehen?';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

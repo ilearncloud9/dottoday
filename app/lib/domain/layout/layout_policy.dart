@@ -89,6 +89,7 @@ final class LayoutPolicy {
     FeatureId.missionCatchDot: FeatureVisibility.shown,
     FeatureId.missionOneThing: FeatureVisibility.shown,
     FeatureId.makeSureImUp: FeatureVisibility.simplified,
+    FeatureId.wakeUpDiscovery: FeatureVisibility.simplified,
     FeatureId.actualTimestamps: FeatureVisibility.shown,
     FeatureId.subtaskDurations: FeatureVisibility.hidden,
     FeatureId.liveActivity: FeatureVisibility.shown,

@@ -9558,6 +9558,96 @@ abstract class AppLocalizations {
   /// **'10 minutes after its start, one gentle ping: \"Start Run?\"'**
   String get settingsStartNudgeDetail;
 
+  /// Discovery promise card on Today (docs/15 §11).
+  ///
+  /// In en, this message translates to:
+  /// **'New: Wake Up can ring like an alarm, and your morning starts with a card that shows your day.'**
+  String get wakeUpDiscoveryPromise;
+
+  /// Promise card: opens Settings › Wake Up options.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on'**
+  String get wakeUpDiscoveryTurnOn;
+
+  /// Promise card: retires it.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get wakeUpDiscoveryLater;
+
+  /// Promise card link to the explain sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'See how it works'**
+  String get wakeUpSeeHowItWorks;
+
+  /// Explain sheet title and the Wake Up options header link (docs/15 §11).
+  ///
+  /// In en, this message translates to:
+  /// **'How it works'**
+  String get wakeUpHowItWorks;
+
+  /// Explain sheet line 1: what rings.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up rings at the start of your day, like an alarm where your phone allows it.'**
+  String get wakeUpExplainRings;
+
+  /// Explain sheet line 2: what the card does.
+  ///
+  /// In en, this message translates to:
+  /// **'When you stop it, a card shows your day and starts it with one tap.'**
+  String get wakeUpExplainCard;
+
+  /// Explain sheet line 3: what the check does.
+  ///
+  /// In en, this message translates to:
+  /// **'If nothing has started a few minutes later, one gentle check asks.'**
+  String get wakeUpExplainCheck;
+
+  /// Explain sheet line 4: where to turn each off.
+  ///
+  /// In en, this message translates to:
+  /// **'Each has its own switch in Settings › Day shape › Wake Up options.'**
+  String get wakeUpExplainOff;
+
+  /// Coach mark on the card's Start the day (docs/15 §11).
+  ///
+  /// In en, this message translates to:
+  /// **'Tap when you\'re up — your day\'s thread starts from here.'**
+  String get wakeUpDiscoveryStartDay;
+
+  /// Coach mark on the card's Shift the rest? (docs/15 §11).
+  ///
+  /// In en, this message translates to:
+  /// **'This moves what\'s left; nothing changes until you accept.'**
+  String get wakeUpDiscoveryShift;
+
+  /// Wake Up Check text on its first 2 mornings: its body, then where to change it (docs/15 §11).
+  ///
+  /// In en, this message translates to:
+  /// **'{body} You can change or turn this off in Settings › Wake Up.'**
+  String wakeUpDiscoveryCheckBody(String body);
+
+  /// Mission soft reveal on Today (docs/15 §11).
+  ///
+  /// In en, this message translates to:
+  /// **'Mornings have been starting a while after the alarm. Want a quick walk or a light to switch it off?'**
+  String get wakeUpDiscoveryMissionOffer;
+
+  /// Wake Up options on a Mac or the web (docs/15 §11).
+  ///
+  /// In en, this message translates to:
+  /// **'These ring on your phone. Change them there or here; they sync.'**
+  String get wakeUpDesktopNote;
+
+  /// Help question: Wake Up's explain sheet (docs/15 §11).
+  ///
+  /// In en, this message translates to:
+  /// **'How does Wake Up work?'**
+  String get helpWakeUpQ;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

@@ -52,6 +52,11 @@ const _$HintIdEnumMap = {
   HintId.nextUpWidget: 'nextUpWidget',
   HintId.weekReview: 'weekReview',
   HintId.learnedDefaults: 'learnedDefaults',
+  HintId.wakeUpPromise: 'wakeUpPromise',
+  HintId.wakeUpStartDay: 'wakeUpStartDay',
+  HintId.wakeUpShift: 'wakeUpShift',
+  HintId.wakeUpCheckPing: 'wakeUpCheckPing',
+  HintId.missionOffer: 'missionOffer',
 };
 
 Value? _$JsonConverterFromJson<Json, Value>(

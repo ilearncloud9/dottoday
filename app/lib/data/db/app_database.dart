@@ -43,7 +43,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 14;
+  static const latestSchemaVersion = 15;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -125,6 +125,10 @@ class AppDatabase extends _$AppDatabase {
       // 14: files that ran the first step 11 hold windDownReminder as 0/1,
       // which Settings.fromJson can't read, so the profile never loaded.
       if (from < 14) await _repairWindDownReminder();
+      // 15 (M17.6, docs/15 §11): Wake Up's discovery hints join the
+      // reveal_hints CHECK (server 0012). SQLite can't alter a CHECK: the
+      // table is rebuilt, rows kept, as in 6 and 9.
+      if (from < 15) await m.alterTable(TableMigration(revealHintsTable));
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without

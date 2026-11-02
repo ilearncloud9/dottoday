@@ -1,9 +1,11 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/time/day_dot_geometry.dart';
 import 'package:dottoday/domain/wake_up/one_thing.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_parts.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_state.dart';
+import 'package:dottoday/features/timeline/wake_up/wake_up_coach_mark.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
@@ -27,6 +29,7 @@ class WakeUpCardBody extends StatefulWidget {
     required this.onLater,
     required this.onPlan,
     this.onMissionsOff,
+    this.coachMark,
     super.key,
   });
 
@@ -40,6 +43,9 @@ class WakeUpCardBody extends StatefulWidget {
 
   /// The once-only offer's answer (15 §8 rule 4): true turns missions off.
   final ValueChanged<bool>? onMissionsOff;
+
+  /// Today's coach mark (15 §11): on Start the day or Shift the rest?.
+  final HintId? coachMark;
 
   @override
   State<WakeUpCardBody> createState() => _WakeUpCardBodyState();
@@ -101,6 +107,8 @@ class _WakeUpCardBodyState extends State<WakeUpCardBody> {
         if (late != null && first != null && !m.lowEnergy) ...[
           const SizedBox(height: DotSpace.l),
           WakeUpLateLine(minutes: late, onShift: () => widget.onShift(late)),
+          if (widget.coachMark == HintId.wakeUpShift)
+            const WakeUpCoachMark(HintId.wakeUpShift),
         ],
         if (widget.minimal && !_showDay && !m.lowEnergy && first != null)
           Align(
@@ -111,6 +119,8 @@ class _WakeUpCardBodyState extends State<WakeUpCardBody> {
             ),
           ),
         const SizedBox(height: DotSpace.xl),
+        if (first != null && widget.coachMark == HintId.wakeUpStartDay)
+          const WakeUpCoachMark(HintId.wakeUpStartDay),
         if (first != null)
           FilledButton(
             onPressed: widget.onStart,

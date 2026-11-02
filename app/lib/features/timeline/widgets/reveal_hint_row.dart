@@ -9,20 +9,23 @@ import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/reveal/hint_providers.dart';
 import 'package:dottoday/domain/entities/reveal_hint.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/reveal/hint_scheduler.dart';
 import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
 import 'package:dottoday/features/timeline/state/hint_signals.dart';
 import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
+import 'package:dottoday/shared/learning/wake_up_explain_sheet.dart';
 import 'package:dottoday/shared/thinking/status_hint.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// Minimal mode's progressive reveal (docs/14 §5): at most one quiet row
-/// a day above the thread — the [StatusHint] line, never a modal or a
-/// toast — chosen by [pickHint]. Its first showing each day is recorded;
-/// *Not now* retires it for good.
+/// The progressive reveal (docs/14 §5) and Wake Up's discovery (docs/15
+/// §11): at most one quiet row a day above the thread — the [StatusHint]
+/// line, never a modal or a toast — chosen by [pickHint]. Its first
+/// showing each day is recorded; *Not now* (the promise's *Later*) retires
+/// it for good.
 class RevealHintRow extends ConsumerStatefulWidget {
   const RevealHintRow({required this.today, super.key});
 
@@ -38,10 +41,6 @@ class _RevealHintRowState extends ConsumerState<RevealHintRow> {
 
   @override
   Widget build(BuildContext context) {
-    // Hints reveal what minimal hides: none in the full layout.
-    if (!ref.watch(layoutPolicyProvider.select((p) => p.isMinimal))) {
-      return const SizedBox.shrink();
-    }
     final signals = watchHintSignals(ref, widget.today);
     final records = ref.watch(revealHintsProvider).value;
     final profile = ref.watch(currentProfileProvider).value;
@@ -63,17 +62,31 @@ class _RevealHintRowState extends ConsumerState<RevealHintRow> {
       );
     }
     final l10n = context.l10n;
+    final promise = pick.hint == HintId.wakeUpPromise;
+    // Minimal's promise is one line with one button (docs/15 §10).
+    final link = promise && !watchSimplified(ref, FeatureId.wakeUpDiscovery);
+    final hint = StatusHint(
+      lead: _text(l10n, pick.hint),
+      action: promise ? l10n.wakeUpDiscoveryTurnOn : l10n.hintShowMe,
+      dismissLabel: promise ? l10n.wakeUpDiscoveryLater : l10n.promptNotNow,
+      onOpen: () => _open(context, pick),
+      onDismiss: () =>
+          unawaited(dismissHint(ProviderScope.containerOf(context), pick.hint)),
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: DotSpace.page),
-      child: StatusHint(
-        lead: _text(l10n, pick.hint),
-        action: l10n.hintShowMe,
-        dismissLabel: l10n.promptNotNow,
-        onOpen: () => _open(context, pick),
-        onDismiss: () => unawaited(
-          dismissHint(ProviderScope.containerOf(context), pick.hint),
-        ),
-      ),
+      child: link
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                hint,
+                TextButton(
+                  onPressed: () => unawaited(showWakeUpExplainSheet(context)),
+                  child: Text(l10n.wakeUpSeeHowItWorks),
+                ),
+              ],
+            )
+          : hint,
     );
   }
 
@@ -84,6 +97,10 @@ class _RevealHintRowState extends ConsumerState<RevealHintRow> {
     HintId.nextUpWidget => l10n.hintWidget,
     HintId.weekReview => l10n.hintWeek,
     HintId.learnedDefaults => l10n.hintLearned,
+    HintId.wakeUpPromise => l10n.wakeUpDiscoveryPromise,
+    HintId.missionOffer => l10n.wakeUpDiscoveryMissionOffer,
+    // Coach marks and the check's text: never this row.
+    HintId.wakeUpStartDay || HintId.wakeUpShift || HintId.wakeUpCheckPing => '',
   };
 
   /// Show me: the hidden feature, where it lives.
@@ -113,6 +130,16 @@ class _RevealHintRowState extends ConsumerState<RevealHintRow> {
         unawaited(
           context.push(AppRoutes.settingsPage(SettingsPage.everything)),
         );
+      // Turn on: Settings › Wake Up; the card has done its job (15 §11).
+      case HintId.wakeUpPromise:
+        unawaited(dismissHint(ProviderScope.containerOf(context), pick.hint));
+        unawaited(context.push(AppRoutes.settingsPage(SettingsPage.wakeUp)));
+      case HintId.missionOffer:
+        unawaited(context.push(AppRoutes.settingsPage(SettingsPage.wakeUp)));
+      case HintId.wakeUpStartDay ||
+          HintId.wakeUpShift ||
+          HintId.wakeUpCheckPing:
+        break;
     }
   }
 }

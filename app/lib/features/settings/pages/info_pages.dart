@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/data/thinking/thinking_providers.dart';
@@ -10,10 +11,13 @@ import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/pages/thinking_status_block.dart';
 import 'package:dottoday/features/settings/widgets/app_lock_group.dart';
 import 'package:dottoday/features/settings/widgets/feedback_sheet.dart';
+import 'package:dottoday/shared/learning/wake_up_explain_sheet.dart';
+import 'package:dottoday/shared/notifications/wake_up_tier_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Settings › Help (docs/09 M3f.7): five quick answers, then Send
+/// Settings › Help (docs/09 M3f.7): six quick answers — the sixth is Wake
+/// Up's explain sheet with this device's tier (docs/15 §11) — then Send
 /// feedback. Answers are on the device, so Help works offline.
 class HelpPage extends StatelessWidget {
   const HelpPage({super.key});
@@ -32,6 +36,7 @@ class HelpPage extends StatelessWidget {
             _Answer(l10n.helpRepeatQ, l10n.helpRepeatA),
             _Answer(l10n.helpPasteQ, l10n.helpPasteA),
             _Answer(l10n.helpKeysQ, l10n.helpKeysA),
+            const _WakeUpAnswer(),
           ],
         ),
         Align(
@@ -48,10 +53,13 @@ class HelpPage extends StatelessWidget {
 
 /// A question that opens to its answer.
 class _Answer extends StatelessWidget {
-  const _Answer(this.question, this.answer);
+  const _Answer(this.question, this.answer, {this.child});
 
   final String question;
   final String answer;
+
+  /// Shown in place of [answer]'s text.
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +71,23 @@ class _Answer extends StatelessWidget {
         expandedAlignment: AlignmentDirectional.centerStart,
         childrenPadding: const EdgeInsets.only(bottom: DotSpace.m),
         title: Text(question, style: t.styles.body),
-        children: [PageText(answer)],
+        children: [child ?? PageText(answer)],
       ),
     );
+  }
+}
+
+/// Help › Wake Up (docs/15 §11): the explain sheet's four lines and how
+/// Wake Up rings on this device, in the §2 tier's plain words.
+class _WakeUpAnswer extends ConsumerWidget {
+  const _WakeUpAnswer();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final caps = ref.watch(alarmCapabilitiesNowProvider).value;
+    final tier = caps == null ? null : wakeUpTierText(l10n, caps).$1;
+    return _Answer(l10n.helpWakeUpQ, '', child: WakeUpExplain(tierLine: tier));
   }
 }
 

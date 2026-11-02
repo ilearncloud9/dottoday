@@ -6,6 +6,7 @@ import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/reveal_hint.dart';
+import 'package:dottoday/domain/repositories/reveal_hint_repository.dart';
 import 'package:dottoday/domain/reveal/hint_scheduler.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -29,18 +30,34 @@ String revealHintRowId(String userId, HintId hint) =>
     const Uuid().v5(Namespace.url.value, 'dottoday:hint:$userId:${hint.name}');
 
 /// Records that [hint] showed (first time today): count + 1 (never past
-/// [hintMaxShows]), when.
+/// [hintMaxShows]), when. [spendDay] false counts the showing without
+/// taking the day's one slot: the Wake Up Check's text is part of its own
+/// notification, not a row (docs/15 §11), and the card's first-dismissal
+/// coach mark is timed to the same mornings.
 Future<Result<void, AppFailure>> recordHintShown(
   ProviderContainer ref,
-  HintId hint,
-) => _change(
+  HintId hint, {
+  bool spendDay = true,
+}) => _change(
   ref,
   hint,
   (h, now) => h.copyWith(
     shownCount: (h.shownCount + 1).clamp(0, hintMaxShows),
-    lastShownUtc: now,
+    lastShownUtc: spendDay ? now : h.lastShownUtc,
   ),
 );
+
+/// Whether the Wake Up Check's notification still adds where to change
+/// it (docs/15 §11 "first 2 times"): not yet shown twice, never retired.
+Future<bool> checkPingDue(RevealHintRepository repo, String userId) async {
+  final r = await repo.findById(
+    userId,
+    revealHintRowId(userId, HintId.wakeUpCheckPing),
+  );
+  return r == null ||
+      (r.dismissedAtUtc == null &&
+          r.shownCount < hintMaxShowsOf(HintId.wakeUpCheckPing));
+}
 
 /// *Not now*: [hint] never shows again (docs/14 §5).
 Future<Result<void, AppFailure>> dismissHint(

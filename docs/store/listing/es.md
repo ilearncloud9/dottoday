@@ -20,6 +20,8 @@ Un planificador visual y tranquilo: tu día como puntos en una línea. Gratis.
 ### Description
 Dottoday convierte tu lista de tareas en un día que puedes seguir. Tu día es un hilo desde que te levantas hasta que te acuestas, y cada tarea es un punto en él: con contorno mientras está por llegar, llenándose mientras ocurre, lleno cuando está hecha. De un vistazo sabes qué toca ahora y qué viene después.
 
+Empieza tu mañana, cierra tu noche. El despertar puede sonar como una alarma y abre una tarjeta con tu día; el momento de desconectar se ajusta a la primera tarea de mañana.
+
 CUANDO EL DÍA SE MUEVE, MUÉVELO TODO
 • Arrastra una tarea para moverla, o su borde para cambiar cuánto dura.
 • Desplaza todo lo que sigue a una tarea con un gesto, o suma 15 minutos a lo que estás haciendo.

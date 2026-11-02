@@ -5045,6 +5045,53 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get settingsStartNudgeDetail => pseudo(super.settingsStartNudgeDetail);
 
   @override
+  String get wakeUpDiscoveryPromise => pseudo(super.wakeUpDiscoveryPromise);
+
+  @override
+  String get wakeUpDiscoveryTurnOn => pseudo(super.wakeUpDiscoveryTurnOn);
+
+  @override
+  String get wakeUpDiscoveryLater => pseudo(super.wakeUpDiscoveryLater);
+
+  @override
+  String get wakeUpSeeHowItWorks => pseudo(super.wakeUpSeeHowItWorks);
+
+  @override
+  String get wakeUpHowItWorks => pseudo(super.wakeUpHowItWorks);
+
+  @override
+  String get wakeUpExplainRings => pseudo(super.wakeUpExplainRings);
+
+  @override
+  String get wakeUpExplainCard => pseudo(super.wakeUpExplainCard);
+
+  @override
+  String get wakeUpExplainCheck => pseudo(super.wakeUpExplainCheck);
+
+  @override
+  String get wakeUpExplainOff => pseudo(super.wakeUpExplainOff);
+
+  @override
+  String get wakeUpDiscoveryStartDay => pseudo(super.wakeUpDiscoveryStartDay);
+
+  @override
+  String get wakeUpDiscoveryShift => pseudo(super.wakeUpDiscoveryShift);
+
+  @override
+  String wakeUpDiscoveryCheckBody(String body) =>
+      pseudo(super.wakeUpDiscoveryCheckBody(body));
+
+  @override
+  String get wakeUpDiscoveryMissionOffer =>
+      pseudo(super.wakeUpDiscoveryMissionOffer);
+
+  @override
+  String get wakeUpDesktopNote => pseudo(super.wakeUpDesktopNote);
+
+  @override
+  String get helpWakeUpQ => pseudo(super.helpWakeUpQ);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

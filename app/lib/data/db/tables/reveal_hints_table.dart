@@ -29,12 +29,14 @@ class RevealHintsTable extends Table with TimestampColumns, SyncColumns {
   @override
   Set<Column<Object>> get primaryKey => {id};
 
-  // Mirrors the server checks in supabase/migrations/0010_minimal_mode.sql.
+  // Mirrors the server checks in supabase/migrations/0010_minimal_mode.sql
+  // and 0012_wake_up_discovery.sql (the hint list).
   @override
   List<String> get customConstraints => const [
     'UNIQUE (user_id, hint_id)',
     "CHECK (hint_id IN ('unstick', 'routines', 'breakDown', 'nextUpWidget', "
-        "'weekReview', 'learnedDefaults'))",
+        "'weekReview', 'learnedDefaults', 'wakeUpPromise', 'wakeUpStartDay', "
+        "'wakeUpShift', 'wakeUpCheckPing', 'missionOffer'))",
     'CHECK (shown_count BETWEEN 0 AND 2)',
   ];
 
