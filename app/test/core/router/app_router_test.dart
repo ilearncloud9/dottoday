@@ -47,7 +47,7 @@ void main() {
       tester,
       router,
       '/day/2026-10-20',
-      'route:day:2026-10-20T00:00:00.000Z',
+      'route:day:2026-10-20',
     );
     await _goAndExpect(tester, router, '/task/$_v7', 'route:task:$_v7');
     router.go('/settings/privacy');
@@ -75,7 +75,7 @@ void main() {
     for (final (link, key) in [
       ('dottoday://task/$_v7', 'route:task:$_v7'),
       ('dottoday://inbox', 'route:inbox'),
-      ('dottoday://day/2026-10-20', 'route:day:2026-10-20T00:00:00.000Z'),
+      ('dottoday://day/2026-10-20', 'route:day:2026-10-20'),
       ('dottoday://task/not-an-id', 'route:today'),
       ('https://evil.example/task/$_v7', 'route:today'),
     ]) {

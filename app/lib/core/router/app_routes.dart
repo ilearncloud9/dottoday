@@ -104,14 +104,16 @@ String formatRouteDate(DateTime date) {
       '${two(date.day)}';
 }
 
-/// Parses a `yyyy-MM-dd` route segment into a UTC midnight calendar date.
+/// Parses a `yyyy-MM-dd` route segment into a local calendar date
+/// (`DateTime(y, m, d)`), the form `todayDateProvider` and the timeline
+/// compare with `==`.
 ///
 /// Returns null for malformed or non-existent dates (`2026-02-30`).
 DateTime? parseRouteDate(String raw) {
   final m = _datePattern.firstMatch(raw);
   if (m == null) return null;
   final (y, mo, d) = (int.parse(m[1]!), int.parse(m[2]!), int.parse(m[3]!));
-  final date = DateTime.utc(y, mo, d);
+  final date = DateTime(y, mo, d);
   final roundTrips = date.year == y && date.month == mo && date.day == d;
   return roundTrips ? date : null;
 }

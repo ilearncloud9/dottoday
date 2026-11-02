@@ -1,3 +1,4 @@
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -47,18 +48,30 @@ class TodayScreen extends ConsumerWidget {
     ..invalidate(todayDateProvider)
     ..invalidate(currentProfileProvider);
 
+  /// [date] when the pager reaches it (±[pagerReachDays] from [today]);
+  /// a link further out opens today rather than a page the pager lacks.
+  static DateTime? _reachable(DateTime? date, DateTime today) {
+    if (date == null) return null;
+    final days = DateTime.utc(
+      date.year,
+      date.month,
+      date.day,
+    ).difference(DateTime.utc(today.year, today.month, today.day)).inDays;
+    return days.abs() <= pagerReachDays ? date : null;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final view = ref.watch(todaySelectionProvider);
     final key = ValueKey(
-      date == null ? 'route:today' : 'route:day:${date!.toIso8601String()}',
+      date == null ? 'route:today' : 'route:day:${formatRouteDate(date!)}',
     );
     if (waitFor(key, _inputs(ref), onRetry: () => _retry(ref)) case final w?) {
       return w;
     }
     final today = ref.watch(todayDateProvider).requireValue;
     final profile = ref.watch(currentProfileProvider).requireValue;
-    final shown = view.day ?? date ?? today;
+    final shown = view.day ?? _reachable(date, today) ?? today;
     final month = view.month ?? DateTime(shown.year, shown.month);
     void select(DateTime d) => ref
         .read(todaySelectionProvider.notifier)
