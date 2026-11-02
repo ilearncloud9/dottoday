@@ -28,6 +28,7 @@ import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/security/app_lock_store.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/data/wake_up/tier_seen_store.dart';
 import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
@@ -487,6 +488,7 @@ List<Override> timelineOverrides({
   WriteFault? writeFault,
   List<Routine> routines = const [],
   FakeRevealHintRepository? revealHints,
+  DateTime? alarmTierGainedAt,
   FakeCalendarSeriesRepository? calendarSeries,
   FakeCalendarSeriesSender? seriesSender,
 }) {
@@ -516,6 +518,8 @@ List<Override> timelineOverrides({
     ),
     // The widget hint's trigger (M16): never dismissed, no database.
     liveActivityDismissedProvider.overrideWith(_NoLiveActivityDismissal.new),
+    // When an OS update brought the alarm tier (docs/15 §11), no database.
+    alarmTierGainedAtProvider.overrideWith((ref) async => alarmTierGainedAt),
     // Minimal mode's hint records (docs/14 §6).
     revealHintRepositoryProvider.overrideWithValue(hintRepo),
     wakeUpDayRepositoryProvider.overrideWithValue(

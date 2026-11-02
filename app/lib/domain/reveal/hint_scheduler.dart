@@ -17,6 +17,7 @@ final class HintSignals {
     this.alarmStopped = false,
     this.shiftOffered = false,
     this.lateMornings = false,
+    this.tierGained = false,
     this.movedTaskId,
     this.sameMornings = false,
     this.longTaskId,
@@ -49,6 +50,10 @@ final class HintSignals {
   /// The last [lateMorningsForHint] mornings were stopped at least
   /// [lateMorningMinutes] after Wake Up, missions off, alarm tier.
   final bool lateMornings;
+
+  /// An OS update brought the alarm tier and its soft reveal hasn't shown
+  /// since (Wake Up still off).
+  final bool tierGained;
 
   /// A task moved [unstickMoves] times with no steps (B3 Unstick).
   final String? movedTaskId;
@@ -166,6 +171,7 @@ bool _triggered(HintId hint, HintSignals s) {
     // The check's notification text, never a surface (15 §11).
     HintId.wakeUpCheckPing => false,
     HintId.missionOffer => today && s.lateMornings,
+    HintId.wakeUpTierGained => today && s.tierGained,
   };
 }
 

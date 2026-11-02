@@ -49,6 +49,7 @@ HintSignals? watchHintSignals(WidgetRef ref, DateTime today) {
     minimal: ref.watch(layoutPolicyProvider.select((p) => p.isMinimal)),
     wakeUpOffer: discovery.wakeUpOffer,
     lateMornings: discovery.lateMornings,
+    tierGained: discovery.tierGained,
     movedTaskId: movedTaskOf(data.blocks, counts),
     sameMornings: sameMornings([...mornings.nonNulls]),
     longTaskId: longTaskOf(data.blocks, counts),

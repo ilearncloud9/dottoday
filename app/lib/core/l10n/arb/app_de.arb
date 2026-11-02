@@ -1592,6 +1592,7 @@
   "wakeUpDesktopNote": "Das klingelt auf deinem Telefon. Ändere es dort oder hier; es wird synchronisiert.",
   "helpWakeUpQ": "Wie funktioniert Aufstehen?",
   "wakeUpTierExactOff": "Aufstehen klingelt vorerst als Mitteilung, die „Bitte nicht stören“ und der Lautlos-Modus stummschalten können. Erlaube „Wecker und Erinnerungen“, damit es wie ein Wecker klingelt.",
+  "wakeUpDiscoveryTierGained": "Dein Telefon kann den Weckruf von Dottoday jetzt wie einen Wecker klingeln lassen. Einschalten?",
   "taskIconCategoryPlanning": "Planung & Rhythmus",
   "taskIconCategoryHealth": "Gesundheit & Körper",
   "taskIconCategoryFitness": "Fitness & Sport",

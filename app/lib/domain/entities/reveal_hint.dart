@@ -44,6 +44,10 @@ enum HintId {
   /// Three mornings stopped ≥ 20 min after Wake Up, missions off → the
   /// mission soft reveal (15 §11); again only after 30 days.
   missionOffer,
+
+  /// An OS update brought the alarm tier while Wake Up is off → "Your
+  /// phone can now ring…" (15 §11), once per such update.
+  wakeUpTierGained,
 }
 
 /// One hint's lifetime record (docs/14 §6 `reveal_hints`), synced so the

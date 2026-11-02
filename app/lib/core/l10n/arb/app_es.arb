@@ -1592,6 +1592,7 @@
   "wakeUpDesktopNote": "Esto suena en tu teléfono. Cámbialo allí o aquí; se sincroniza.",
   "helpWakeUpQ": "¿Cómo funciona el despertar?",
   "wakeUpTierExactOff": "Por ahora el despertar suena como una notificación, que No molestar y el modo silencio pueden callar. Permite «Alarmas y recordatorios» para que suene como una alarma.",
+  "wakeUpDiscoveryTierGained": "Tu teléfono ya puede hacer sonar el despertar de Dottoday como una alarma. ¿Activarlo?",
   "taskIconCategoryPlanning": "Planificación y ritmo",
   "taskIconCategoryHealth": "Salud y cuerpo",
   "taskIconCategoryFitness": "Fitness y deporte",
