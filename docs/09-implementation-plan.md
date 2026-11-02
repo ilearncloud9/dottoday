@@ -373,7 +373,7 @@ Found on the M14 PR's CI (2026-10-29), fixed on the branch: (1) a stale `dictati
 
 ## Milestone 15 — Sounds (goal: every dot has a sound the user picks; the first dot of the day sounds like their Start sound; nothing a user already hears changes)
 
-Spec: `12-sounds.md` (with the owner's amendments, 2026-10-28); ADR-0015; `11-standout-roadmap.md` A0; `10-ui-concept-a.md` §3–§7. Rule for every task: add to the existing sound system (F6.6, M8.4d); nothing is removed or remapped. One PR per phase, branch `feat/sounds-<phase>`.
+Spec: `12-sounds.md` (with the owner's amendments, 2026-10-28); ADR-0018 (numbered 0015 when written); `11-standout-roadmap.md` A0; `10-ui-concept-a.md` §3–§7. Rule for every task: add to the existing sound system (F6.6, M8.4d); nothing is removed or remapped. One PR per phase, branch `feat/sounds-<phase>`.
 
 - [x] M15.1 Tooling (PR #19). **Files** `assets/sounds/manifest.json` (48 sounds with their source page, file URL and licence; per-category duration and loudness), `tool/sounds/fetch.py` (one read of each page's AudioObject, title and licence checked), `tool/sounds/build.py` (trim, mono 44.1 kHz, level per category with a ≤ 6 dB true-peak limiter, `.m4a` for Android and web, IMA4 `.caf` for Apple), `tool/sounds/credits.py` → `CREDITS.md`, `test/policy/sounds_manifest_test.dart`. Done 2026-10-28. Notes:
   - Owner's ear pass: kept all ten sounds outside ±3 LU (`loudnessAccepted`).
@@ -389,7 +389,7 @@ Spec: `12-sounds.md` (with the owner's amendments, 2026-10-28); ADR-0015; `11-st
   - The test alarm rings with the Start sound.
   - The muted banner is Android-only (an R-13 exception: iOS has no API for the silent switch).
   - CI: the reference sheet moved to its own job after it pushed the golden gate past its 30-minute limit.
-- [x] M15.5 Docs. ADR-0015, this milestone, the roadmap pointer, the F6.6 parity row, the CHANGELOG. Done 2026-10-30.
+- [x] M15.5 Docs. ADR-0018 (then 0015), this milestone, the roadmap pointer, the F6.6 parity row, the CHANGELOG. Done 2026-10-30.
 - [x] M15.6 Ten more Start sounds (owner, 2026-10-31). Done 2026-10-31. **Files** `assets/sounds/manifest.json` (Slow bell, Music box, Dawn chorus, Rain, Stream, Waves, Wind chimes, Forest, Clock bell, Beep rise; CC0 from BigSoundBank and Freesound, uploader kept as `author`), `tool/sounds/fetch.py` (per-source file host; brand words refused), `tool/sounds/build.py` (seamless 27 s loops with a 1.5 s crossfaded seam, 10 s fade-in on all but Clock bell and Beep rise; Start up to 28 s; an IMA4 `.caf` of each first-party tone for the iOS bundle), `tool/sounds/credits.py` (CC0 sources listed), `tool/xcode_add_sounds.rb` (every catalogue sound in the iOS bundle), `test/policy/ios_bundled_sounds_test.dart`. Notes:
   - Quiet outliers after the 6 dB limiter, kept in the owner's ear pass (2026-10-31, all ten kept) with `loudnessAccepted`: Music box, Rain, Wind chimes, Forest.
   - The fade-in is baked into the loop, so each repeat fades in again; M17 Wake Up's Android volume ramp (W1b) replaces it there.
@@ -460,7 +460,7 @@ Spec: `15-wake-up.md` (with the owner's decisions of 2026-10-31 in §13); audit 
   - **Android:** the ringing activity and a foreground service capped at 10 min.
   - **Shared:** snooze, the `wake_up_days` state (local only) and sound rotation.
   - **Docs:** ADR-0017.
-  - **Bundle sounds** (owner, 2026-10-31): every Start-tier sound is authored to be AlarmKit-eligible and is already in the iOS bundle (ADR-0015, docs/12 §2.3.1). First, a real-device test records whether AlarmKit repeats a custom bundled `.caf` until stopped or plays it once (`15-wake-up.md` W1).
+  - **Bundle sounds** (owner, 2026-10-31): every Start-tier sound is authored to be AlarmKit-eligible and is already in the iOS bundle (ADR-0018, docs/12 §2.3.1). First, a real-device test records whether AlarmKit repeats a custom bundled `.caf` until stopped or plays it once (`15-wake-up.md` W1).
   - **Done 2026-10-31:**
     - `AlarmGateway.sync` arms the week, and the planner leaves out what it armed (R-10).
     - iOS 26: `AlarmBridge.swift`, `WakeUpAlarmKit.swift` (weak-linked) and `WakeUpAlarmActivity` in `DottodayWidgets`.
