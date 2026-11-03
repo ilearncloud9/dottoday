@@ -121,4 +121,4 @@ Today → Add → Edit/reschedule → Complete → Change day → Reopen, plus: 
 | Android tablet | **Real device** (owner) + emulators | Foldable: emulator only, so fold/hinge cells say `NV (emulator only)` |
 | Web | Local browsers on this Mac | Chrome, Safari, Firefox, Edge as supported. Mobile web runs on the real iPhone and Android phone browsers |
 
-Confirmed by the owner 2026-11-03.
+Confirmed by the owner 2026-11-03. Where redesign builds may run is owner decision 14 (`STATUS.md`): simulators and emulators for iOS and Android, Mac only after asking (its sandbox container is shared with the original app), and web in a local browser with no sign-in. Until a dev flavour exists, real-device cells for the redesign build read `NV (no dev flavour yet)`.
