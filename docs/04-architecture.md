@@ -47,7 +47,7 @@ hlc)` per local write.
 **Push**: batched upserts to Supabase via a `sync_push` RPC that applies per-field LWW using a hybrid
 logical clock (HLC) carried in each change; the RPC returns the authoritative rows.
 
-**Pull**: initial full pull per table paged by `updatedAt`; afterwards Realtime `postgres_changes`
+**Pull**: initial full pull per table paged by the keyset (`updatedAt`, `id`); afterwards Realtime `postgres_changes`
 on the user's rows, each nudge pulling from the cursor.
 
 **Triggers — events, never polling** (owner, 2026-10-31): the open app acts when something happens,
