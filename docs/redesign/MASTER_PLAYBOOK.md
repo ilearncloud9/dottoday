@@ -46,6 +46,7 @@ This is **not** a single prompt to run end-to-end. You are the product owner; Cl
 8. **Ask for product decisions instead of making up missing requirements.** Reversible technical details may be decided by the agent; irreversible product/data decisions need approval.
 9. **Keep progress in files** so you can restart Claude Code sessions without losing context.
 10. **Do not merge until the feature-parity, quality and platform checklists are satisfied.**
+11. **One identity, native presentations** (owner, 2026-11-03): "Dottoday should feel like Dottoday on every platform, but it should never feel like an iPhone app ported to Android, or an Android app ported to iPhone." Prompts B, C, D, E, F and H read `docs/redesign/DESIGN_PRINCIPLES.md` and `docs/redesign/references/platform-guidelines/premium-native-experience.md`, and report per platform in `PLATFORM_QUALITY_MATRIX.md`. Pixel-identical screens are not required. Ordinary platform adaptations are proposed and shown without separate approval. Brand, core-workflow and behaviour changes need approval (`DESIGN_PRINCIPLES.md` §4). The guide's package/widget/folder suggestions are candidates to verify, not mandates.
 
 ---
 
@@ -153,7 +154,9 @@ Record pre-existing failures separately from new regressions.
 
 ### Optional UI/UX skills
 
-**My recommendation:** Start with the official Flutter plugin + Claude Design. Consider **one** extra UI/UX skill (such as UI UX Pro Max) only if the concepts are generic or design guidance is inconsistent. It is optional; additional skills do not replace taste, visual review, real-device testing or UX judgment. Review any third-party skill's repository and script permissions before installation.
+**My recommendation:** Start with the official Flutter plugin + Claude Design. Consider **one** extra UI/UX skill (such as UI UX Pro Max) only if the concepts are generic or design guidance is inconsistent.
+
+**Dottoday (2026-11-03):** where available, use design skills such as `frontend-design` and `ui-ux-pro-max` for creative exploration (Prompts C, D, E). The native-experience guide then evaluates whether the result is native-appropriate and good enough, with `apple-design` as a supplementary HIG check. Never modify third-party skill files. It is optional; additional skills do not replace taste, visual review, real-device testing or UX judgment. Review any third-party skill's repository and script permissions before installation.
 
 ### Claude Design vs. Claude Code
 
@@ -292,6 +295,17 @@ assume they are correct or sufficient. Test edge widths and text scaling.
 Separate reusable domain behavior from replaceable visual presentation.
 Propose an isolated Design Lab that cannot mutate production state.
 
+Read DESIGN_PRINCIPLES.md and the native-experience guide
+(references/platform-guidelines/premium-native-experience.md). Audit each
+platform against the guide's five layers (§1.2) and its per-platform
+checklists (§3.5, §4.4, §5.4, §6.4, §7.3, §8.5). Record where the current
+app feels ported from another platform. List every reader of DotIdiom
+(core/theme/dot_idiom.dart; today only cupertino vs material, with Mac on
+material) and of defaultTargetPlatform/kIsWeb, to size the per-platform
+idiom work for Prompt E (DESIGN_PRINCIPLES.md K13). Fill the "Baseline" column of
+PLATFORM_QUALITY_MATRIX.md with evidence or NOT VERIFIED. Treat the
+guide's package/widget suggestions as candidates to verify against this repo.
+
 Deliver:
 - docs/redesign/ARCHITECTURE_AUDIT.md
 - docs/redesign/UX_AUDIT.md
@@ -344,6 +358,12 @@ For each proposal describe:
 - accessibility, usability risks, implementation complexity and tradeoffs
 
 Use realistic examples from this product. Do not simply recolor the same layout.
+
+Apply DESIGN_PRINCIPLES.md and the native-experience guide: for each concept,
+state what stays identical (identity, feature meaning, routes) and how each
+platform presents it (shell, controls, Back, input, motion), using the guide's
+§9 matrix. Mark every change that needs owner approval (brand, core workflow,
+behaviour) separately from ordinary platform adaptation.
 Write docs/redesign/THREE_UX_CONCEPTS.md and a comparison matrix.
 No production UI changes. STOP for review.
 ```
@@ -392,6 +412,13 @@ planning data, including dense and empty states. Do not copy Structured assets.
 Label design-only interactions versus implemented Flutter behavior. For each
 concept provide strengths, problems, accessibility concerns, and engineering
 tradeoffs. Keep prototypes editable/iterable and export screenshots/specs.
+
+Follow DESIGN_PRINCIPLES.md: iPhone, Mac, Android and web previews of one
+concept must be recognisably the same product but must not be the same
+screen re-skinned. Show each platform's native shell and controls. Label
+effects Flutter may not render natively (e.g. Apple glass) as "approximated"
+or "native view needed". Score each preview with the guide's §21 scorecard,
+per platform.
 
 Do not rewrite the production Flutter app. Wait for my design decisions.
 ```
@@ -445,6 +472,12 @@ Implement the NEW approved Flutter design foundations in the redesign worktree.
 - Responsive logic based on actual available constraints; verify medium-width
   and split-screen behavior; don't blindly reproduce reported 600/840 cutoffs.
 - Keep existing domain state, persistence and business logic intact.
+- Follow DESIGN_PRINCIPLES.md and the guide's §10–§12: semantic tokens with
+  platform mappings; shared content widgets with per-platform shells and
+  controls where the interaction contract differs; layout by available
+  width, conventions by target platform, details by input. No per-platform
+  copies of business logic, no six codebases. Verify any suggested package,
+  folder layout or platform view first; propose an ADR before adopting one.
 
 Use an isolated Design Lab / preview route or entrypoint with synthetic fixtures.
 Reuse old Dot components only when consistent with approved decisions.
@@ -481,6 +514,10 @@ features; do not claim they are complete.
 Implement and visually validate on iPhone, Mac, Android and web;
 verify iPad/Android-tablet widths and narrow desktop browser/window states.
 Include empty, dense, loading, error, long-text and large-text cases.
+
+Follow DESIGN_PRINCIPLES.md: same outcome on every platform, native path on
+each. Check the journey against the guide's per-platform checklists and
+§13 Back/dismiss rules; update PLATFORM_QUALITY_MATRIX.md for this slice.
 
 Run formatting, analyzer and relevant widget/integration tests.
 Capture actual screenshots; compare with the approved concept; iterate.
@@ -588,6 +625,11 @@ Do not claim 60/120fps or native performance without measurements.
 
 Capture before/after/target screenshots. Identify differences and fix them
 in small changes, not a full restyle. Run analyzer and relevant tests.
+
+Use DESIGN_PRINCIPLES.md and the guide as the acceptance standard: §17 device
+matrix and golden journey, §18 P0/P1/P2 gates, §21 scorecard per platform
+(no averaging away a weak platform). Per-platform goldens; never compare
+iOS pixels to Android pixels. Complete PLATFORM_QUALITY_MATRIX.md.
 Create docs/redesign/POLISH_QA_REPORT.md with PASS/FAIL/NOT VERIFIED.
 STOP for approval.
 ```
@@ -763,6 +805,9 @@ app-redesign/                 # Linked worktree, redesign/design-lab
   │   ├── DECISIONS.md
   │   ├── BASELINE.md
   │   ├── PRODUCT_BRIEF.md
+  │   ├── DESIGN_PRINCIPLES.md
+  │   ├── PLATFORM_QUALITY_MATRIX.md
+  │   ├── adr/                # redesign-only ADRs (RD-xxxx)
   │   ├── FEATURE_READINESS.md
   │   ├── FEATURE_PARITY_MATRIX.md
   │   ├── OPEN_PRODUCT_DECISIONS.md

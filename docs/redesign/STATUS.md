@@ -9,7 +9,8 @@ Worktree `/Users/ops/Documents/dottoday-redesign`, branch `redesign/design-lab`.
 | 2 | Configure Claude Code | Done for now (dart-flutter plugin loaded, existing `CLAUDE.md` kept). A redesign note in `CLAUDE.md` is pending, with the ADR below | — |
 | 3 | Capture baseline screenshots | Started: 5 owner iPhone screenshots (dark) | `references/baseline/owner-ios-2026-11-02/` |
 | 4 | Product Brief | **Done, approved 2026-11-02** | `PRODUCT_BRIEF.md` |
-| 5 | Prompt A: feature-readiness audit | Next; waiting for owner go-ahead | — |
+| 5 | Prompt A: feature-readiness audit | **Done; decisions Q1–Q9 answered 2026-11-02** | `FEATURE_READINESS.md`, `FEATURE_PARITY_MATRIX.md`, `OPEN_PRODUCT_DECISIONS.md` |
+| — | Design principle: one identity, native presentations | **Approved 2026-11-03**; ADR RD-0001 accepted (also records decision 2) | `DESIGN_PRINCIPLES.md`, `adr/RD-0001-…`, `PLATFORM_QUALITY_MATRIX.md` |
 | 6+ | Prompt B onward | Not started; not authorised | — |
 
 ## Step 1.3 baseline (approved)
@@ -38,13 +39,36 @@ Worktree `/Users/ops/Documents/dottoday-redesign`, branch `redesign/design-lab`.
 11. **Scope:** every existing feature stays accounted for. Phase 2 ideas are future possibilities unless approved. Free/Pro entitlement logic and pricing are unchanged without separate approval.
 12. **Docs:** unrelated documentation is not changed now.
 
+## Owner decision 13 (2026-11-03): design principle
+
+13. **One product identity, multiple native presentations.** "Dottoday should feel like Dottoday on every platform, but it should never feel like an iPhone app ported to Android, or an Android app ported to iPhone."
+    - **What's required:** one recognisable identity and one consistent feature experience.
+    - **What may differ:** iOS, iPadOS, macOS, Android and web may differ where that improves native usability, familiarity, accessibility or quality. No pixel-identical screens.
+    - **Who approves what:** platform adaptations are proposed and shown at review without separate approval. Changes that materially affect brand, core workflows or product behaviour need approval.
+    - **References:** the primary one is `references/platform-guidelines/premium-native-experience.md` (renamed from `flutter_premium_native_cross_platform_design_guide.md`). The supplementary ones are the playbook's Step 3/14 checklists and the `apple-design` skill.
+    - **Stages affected:** Prompts B, C, D, E, F and H (`MASTER_PLAYBOOK.md` rule 11 and each prompt).
+    - **Scope:** this branch only. It supersedes conflicting redesign rules (CLAUDE.md §11 "differ only in chrome", doc 10 §4, ADR-0007 decisions 3 and 6, doc 03 §6 macOS sheets) without editing them.
+    - **Conflicts:** listed in `DESIGN_PRINCIPLES.md` §7 (K1–K12). Owner decisions taken 2026-11-03:
+      - **K1:** the redesign-branch note is added to `CLAUDE.md` §11.
+      - **K6:** OS chrome uses system typography. The content typeface is chosen per concept and fixed at Step 9.
+      - **K9:** task icons stay one library. Chrome/nav icons may follow the platform; concepts show this and Step 9 fixes it.
+      - **K13:** `DotIdiom` has only cupertino and material, and Mac is on material. Prompt B sizes the work; Prompt E proposes per-platform idioms.
+    - **Test devices:** real iPhone, Mac, Android phone and Android tablet; iPad on simulator only (`PLATFORM_QUALITY_MATRIX.md` §8).
+
 ## Documentation inconsistencies (for Prompt A)
 
-- `docs/15-wake-up.md` §0 says "Status: proposed (needs ADR-0017)", but `docs/adr/0017-wake-up-alarm-gateway.md` exists and plan M17 is ticked. Check which is current; don't edit either now.
+- `docs/15-wake-up.md` §0 says "Status: proposed (needs ADR-0017)", but `docs/adr/0017-wake-up-alarm-gateway.md` exists and plan M17 is ticked. **Investigated in Prompt A:** doc 15 is stale (ADR-0017 is Accepted 2026-10-31). Suggested wording and six more inconsistencies (D2–D7) are in `FEATURE_READINESS.md`. Nothing edited.
+
+## Prompt A decisions (2026-11-02)
+
+Q1–Q9 are recorded in `OPEN_PRODUCT_DECISIONS.md` § Owner answers. The follow-ups are:
+- **Fix the stabilise-first defects on `main`** (Q7): the sync pull stall, the dead Move tile, the `/day` date mismatch, stale-ID taps, and a check of the Android time-zone re-plan. Merge here afterwards.
+- **One docs PR on `main`** (Q14): D1–D7 plus the snooze, insert-bump and Week-scope corrections from Q1, Q2 and Q5.
+- **A dial that crosses midnight** (Q8) needs a separate domain-change approval before it is built.
 
 ## Open items
 
 - **Isolated local Supabase for integration tests:** propose a setup that can't touch the original app's users, sessions, database or services *before* any future integration test run. Don't create or change it until approved.
-- **Redesign ADR:** record decision 2, plus a short redesign note in `CLAUDE.md` so §11 doesn't block exploration.
-- **Baseline screenshot privacy:** `04-today.webp` and `03-today-more-menu.webp` show a personal task title. Ask the owner before committing them.
+- **Merge `main` here:** PRs #70–#74 (Q7 fixes and the docs PR) were all merged to `main` on 2026-11-02/03. Merging `main` into this branch and starting `SYNC_LOG.md` waits for the owner's go-ahead.
+- **Android Wake Up double ring:** if background sync changes or turns off Wake Up while the app is closed, the old native alarm can't be cancelled (R-10). A fix on `main` is proposed as its own session.
 - **`DECISIONS.md` / `SYNC_LOG.md`:** create them at the first decision or merge that needs a log. Decisions are kept above until then.
