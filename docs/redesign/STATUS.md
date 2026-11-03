@@ -11,7 +11,8 @@ Worktree `/Users/ops/Documents/dottoday-redesign`, branch `redesign/design-lab`.
 | 4 | Product Brief | **Done, approved 2026-11-02** | `PRODUCT_BRIEF.md` |
 | 5 | Prompt A: feature-readiness audit | **Done; decisions Q1–Q9 answered 2026-11-02** | `FEATURE_READINESS.md`, `FEATURE_PARITY_MATRIX.md`, `OPEN_PRODUCT_DECISIONS.md` |
 | — | Design principle: one identity, native presentations | **Approved 2026-11-03**; ADR RD-0001 accepted (also records decision 2) | `DESIGN_PRINCIPLES.md`, `adr/RD-0001-…`, `PLATFORM_QUALITY_MATRIX.md` |
-| 6+ | Prompt B onward | Not started; not authorised | — |
+| 6 | Prompt B: architecture and UX audit | **Done; docs committed 2026-11-03 (owner approved docs only)**. Simulator/emulator and local-browser evidence; Mac, iPad landscape and foldables NOT VERIFIED. Design Lab folder not created (awaits approval) | `PLATFORM_BASELINE.md`, `ARCHITECTURE_AUDIT.md`, `UX_AUDIT.md`, `REUSE_VS_REPLACE.md`, `DESIGN_LAB_PLAN.md`, matrix `B:` cells, `references/baseline/PROMPT_B_EVIDENCE.md`. Screenshots (`references/baseline/prompt-b/`, 64 MB) kept locally, not in Git |
+| 7+ | Prompt C onward | Not started; not authorised | — |
 
 ## Step 1.3 baseline (approved)
 
