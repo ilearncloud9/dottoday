@@ -79,10 +79,10 @@ Durations 180–240 ms, standard ease-out; all animation collapses to 0 under re
 | `OverlapKnot` | Dottoday's overlap (ADR-0015 knot amendment): on the thread, two strands in the two tasks' colours cross once between their unchanged dots, beside "Run and Sleep share 15 min"; as a 20 × 14 mark wherever there is no thread | day thread, ThreadPicker caption, Add "Lands on", proposal chips |
 | `ProposalSheet` | B3 (11 §0): title + origin chip + ×, the current thread faded to 35 % under the proposed one (accent-outlined dots), a change list with × per line, option chips, Accept / Discard, "Nothing is saved until you accept"; Accept = one write + 30 s Undo | phones as a sheet, Mac/web in the right-hand panel; every proposal flow |
 | `ColourIconBlock` | "COLOUR AND ICON": 9 colour dots left, 3 quick icons + "…" right; selected icon tinted in the chosen colour | Add, editors, all platforms |
-| `TabBar` (iPhone) / `NavigationBar` (Android) / `Rail` (Mac/web) | Today(dot) · Inbox(tray) · [Week bars, Mac/web only] · Search(magnifier) · Settings(gear); + add button | shells |
+| `TabBar` (iPhone) / `NavigationBar` (Android) / `Rail` (Mac/web) | Today(dot) · Inbox(tray) · [Week bars, expanded width only: Mac, web, large tablets] · Search(magnifier) · Settings(gear); + add button | shells |
 | `SettingsGroup` | grouped card, 48 px rows (Android 56), toggles; first group "DAY SHAPE" has the sun→moon mini-thread | Settings |
-| `CapacityRing` | 36–40 px conic: planned/15 h, hours inside | Mac Week |
-| `WeekSummaryStrip` | Busiest · Lightest · Free · unplanned · Done chips | Mac Week |
+| `CapacityRing` | 36–40 px conic: planned/15 h, hours inside | Week (expanded) |
+| `WeekSummaryStrip` | Busiest · Lightest · Free · unplanned · Done chips | Week (expanded) |
 | `MicButton` | 44 px round button inside a text box's bottom-end corner: `mic` glyph idle, the Concept A dot pulsing in the accent while listening (static under reduced motion), a dimmed glyph while busy; semantics "Dictate" / "Stop dictation" with a toggled state; Space/Enter; haptic tick on start/stop. Dumb: state in, callbacks out (M14.5, ADR-0014) | Brain dump, Notes — only where on-device speech exists |
 | `LaterRow` | minimal layout's Inbox (docs/14 §3, ADR-0016): one quiet row where the thread ends — tray glyph, "Later · 3" in muted meta, 44 px; opens the Inbox; a dragged task let go on it goes back to the Inbox | minimal Today |
 | `BackToToday` | "‹ Today" above a page reached from Today when there is no tab bar (minimal, compact); system Back goes there too (ADR-0016) | minimal Inbox, Settings, Search |
@@ -125,7 +125,7 @@ Also: returning-user sign-in, magic-link "check your mail", account error, and a
 | T3 | Planning a future month (month → pick a day → that day's thread) | `A-ios-future-month` |
 | T4 | Task sheet (tap a row) | `A-ios-task-sheet` |
 | T5 | Mac/web Today three-day spread | `A-mac-today-alt1-spread` |
-| W1 | Week (Mac/web only; phones use the strip + month) | `A-mac-week-alt3-board` |
+| W1 | Week (any expanded width — Mac, web, large tablets; owner 2026-11-02. Compact and medium use the strip + month) | `A-mac-week-alt3-board` |
 | M1 | Month (Mac/web) | `A-mac-month` |
 | I1 | Inbox | `A-ios-inbox`, `A-android-inbox`, `A-mac-inbox` |
 | A1 | Add step 1 What | `A-ios-add-what`, `A-android-add-what` |

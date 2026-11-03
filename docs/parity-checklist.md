@@ -180,7 +180,7 @@ ticked in 08 §6.1) before a tag.
 - **F6.1** Minutes before are a fixed set 5/10/15/30/60 (M3f.2 decision).
 - **F6.2** M8.4d: default set (up to 5) in the Alerts editor; Quiet hours (loud first dot still rings); day-start summary per weekday at Wake Up, skipped on an empty day; Apple keeps the nearest 50 pending.
 - **F6.4** Web system notifications carry Done and Open (Chrome shows two actions, M5.3a); the in-app strip offers Done and Snooze 10 min (M8.4d).
-- **F6.6** M8.4d: Dot, Chime, Bell, Ripple (tool/gen_sounds.dart) or the system sound. M15 (docs/12, ADR-0015): 48 bundled sounds, a sound per task, a Start sound for loud dots, a Done sound; Android one channel per sound (45), Apple a .caf per notification, the web plays it in the in-app strip. Focus/DND respected (time-sensitive on Apple, health panel M6.5.8 names a muted sound channel).
+- **F6.6** M8.4d: Dot, Chime, Bell, Ripple (tool/gen_sounds.dart) or the system sound. M15 (docs/12, ADR-0018): 48 bundled sounds, a sound per task, a Start sound for loud dots, a Done sound; Android one channel per sound (45), Apple a .caf per notification, the web plays it in the in-app strip. Focus/DND respected (time-sensitive on Apple, health panel M6.5.8 names a muted sound channel).
 - **F7.2** Email link verified on the iPhone sim, Android emulator and Chrome (M6.1); Apple and Google need the owner's console set-up on all four; the Mac email link is in the 08 §6.1 Mac run.
 - **F7.3** Background sync on phones; Mac and web sync while open (M6.5.6). Offline-day and two-device scenarios on all four: 08 §6.2.
 - **F7.4** Concept A shows a status line, not a pill (M6.3).
