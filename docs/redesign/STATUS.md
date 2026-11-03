@@ -61,6 +61,7 @@ Until a separate dev flavour exists (decision 6):
 - **iPhone and iPad:** simulators only. The real iPhone is used only for screenshots the owner takes of the current app.
 - **Android phone and tablet:** emulators only. The real devices are kept for later phases.
 - **Mac:** run only if the original Dottoday isn't installed here; otherwise ask first. *Fact (2026-11-03):* no app is in `/Applications`, but the sandbox container `~/Library/Containers/app.dottoday.planner` exists, along with a debug build in DerivedData. So a redesign macOS build would share that data, and the owner is asked first.
+  - **Owner answer (2026-11-03): no Mac build in Prompt B.** Mac layouts are checked through widget tests with `TargetPlatform.macOS` and the web build at the same widths. Checks that need the real Mac app (menu bar, window behaviour) are `NV (no Mac build)` until a dev flavour exists.
 - **Web:** a local browser with no sign-in, so nothing reaches the local Supabase stack the original app uses.
 
 ## Documentation inconsistencies (for Prompt A)
