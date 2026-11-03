@@ -201,7 +201,8 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
   a snooze replaces every alert before the snooze time with one reminder (slot 5, after the 5 alert
   slots); the planner keeps the earliest 64 on iOS and plans 7 days ahead. Payloads carry the occurrence
   ID only (06 §1).
-- [F6.4] Actions on the notification: Done, Snooze 10 min (shifts followers per setting), Open. (R-04)
+- [F6.4] Actions on the notification: Done, Snooze 10 min (re-reminds only; it moves no task), Open.
+  Shifting later tasks is the in-app Running late / Shift the rest (R-04; owner, 2026-11-02).
 - Clarified in M5.1: the actions bring Dottoday forward and are handled in the app (one database
   connection, no background isolate); Done ticks that occurrence only (R-09). Snooze re-reminds in 10
   minutes and moves nothing: a notification can't ask "shift the rest?", so shifting later tasks is
@@ -261,8 +262,9 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
 - [F9.2] iOS Live Activity / Dynamic Island and an Android ongoing notification for the live dot; interactive
   widget actions; Control Center / Action button controls. All surfaces read the day snapshot and call
   the five App Intents only; none talk to Supabase (`11-standout-roadmap.md` A1, B5, B6).
-  Clarified in M14.3 (owner, 2026-10-28, D3): on iPhone, Settings › Siri & Shortcuts lists the five
-  App Intent phrases and opens Shortcuts; no new intent, no Siri work on Mac or Android.
+  Clarified in M14.3 (owner, 2026-10-28, D3): on iPhone and iPad, Settings › Siri & Shortcuts lists the
+  five App Intent phrases and opens Shortcuts; no new intent, no Siri work on Mac or Android. An iPad
+  is iPhone-class for Siri and alarms (owner, 2026-11-02).
 - [F9.3] Apple Watch complication and glance: Phase 2 (not blocking v1), but data layer designed for it.
   Watch rule (ADR-0010): the watch never authenticates — no account, network or token on the wrist; the
   phone pushes the day snapshot; check-offs and +15 queue on the watch; native app (Swift / Compose).

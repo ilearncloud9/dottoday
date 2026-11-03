@@ -133,7 +133,7 @@ class AppShell extends ConsumerWidget {
 }
 
 /// The fixed nav set, in branch order (docs/10 §3): Today · Inbox ·
-/// [Week, Mac/web only] · Search · Settings; [inbox] open tasks badge the
+/// [Week, expanded width only] · Search · Settings; [inbox] open tasks badge the
 /// Inbox (docs/02 F3.3).
 List<ShellDestination> shellDestinations(
   AppLocalizations l10n, {

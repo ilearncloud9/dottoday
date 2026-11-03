@@ -12,7 +12,7 @@ changed. Paths are relative to `app/` unless they start with `docs/`, `ios/`, `a
 - M16 is minimal mode: landed, follow-ups open.
 
 So Wake Up is **M17**, doc **15** (`docs/15-wake-up.md`) and **ADR-0017**. ADR-0010 is
-`watch-never-authenticates`, and there are two ADR-0015 files.
+`watch-never-authenticates`, and there were two ADR-0015 files (reminder sounds is ADR-0018 since 2026-11-02).
 
 ## 1. The §1 checklist
 
