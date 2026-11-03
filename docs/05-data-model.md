@@ -141,8 +141,10 @@ mine jsonb, theirs jsonb, created_at, resolved_at?`
 ### `change_log` (local only) and `sync_cursors` (local only)
 See architecture §4. `change_log (seq autoincrement, entity, entity_id, field, value json, hlc)` is
 the push outbox (rows deleted on ack; its `entity` CHECK names the five synced tables — schema 6
-rebuilt it to add `routines`, keeping pending rows); `sync_cursors (entity pk, since_utc)` holds the highest server
-`updated_at` pulled per table.
+rebuilt it to add `routines`, keeping pending rows); `sync_cursors (entity pk, since_utc, since_at, since_id)` holds the last row pulled per table as a
+keyset: its server `updated_at` text (microseconds kept) and id. A pull resumes *after* it in
+(`updated_at`, `id`) order, because one `sync_push` stamps all its rows with one `now()` and a
+timestamp alone can't page past 500 of them (schema 17; a cursor from before resumes from `since_utc`).
 
 ### Local schema (Drift, `app/lib/data/db`, M2.1)
 - Same tables and checks as the server, `STRICT`, plus `dirty` / `version` on the tables pushed via `sync_push` (profiles, series, occurrences,

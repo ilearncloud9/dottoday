@@ -43,7 +43,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 16;
+  static const latestSchemaVersion = 17;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -132,6 +132,12 @@ class AppDatabase extends _$AppDatabase {
       // 16 (docs/15 §11): the alarm-tier soft reveal joins the CHECK
       // (server 0013); rebuilt, rows kept, as in 15.
       if (from < 16) await m.alterTable(TableMigration(revealHintsTable));
+      // 17: the pull cursor's keyset (updated_at, id), so a page of rows
+      // from one server transaction no longer stalls the pull.
+      if (from < 17) {
+        await _addColumnOnce(m, syncCursors, syncCursors.sinceAt);
+        await _addColumnOnce(m, syncCursors, syncCursors.sinceId);
+      }
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without
