@@ -184,7 +184,7 @@ const f6Rows = <String, ParityRow>{
     all: Cell(Status.manual, 'hear each sound and its preview (08 §6.1 E)'),
     note:
         'M8.4d: Dot, Chime, Bell, Ripple (tool/gen_sounds.dart) or the '
-        'system sound. M15 (docs/12, ADR-0015): 48 bundled sounds, a sound '
+        'system sound. M15 (docs/12, ADR-0018): 48 bundled sounds, a sound '
         'per task, a Start sound for loud dots, a Done sound; Android one '
         'channel per sound (45), Apple a .caf per notification, the web '
         'plays it in the in-app strip. Focus/DND respected (time-sensitive '

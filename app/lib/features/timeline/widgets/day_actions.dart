@@ -39,7 +39,9 @@ ThreadActions dayThreadActions(
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
   final undo = ref.read(undoServiceProvider);
-  Occurrence find(String id) => blocks.firstWhere((o) => o.id == id);
+  // A tap carries the id its row was drawn with; the task may be gone by
+  // now (deleted or synced away), and then the tap does nothing.
+  Occurrence? find(String id) => blocks.where((o) => o.id == id).firstOrNull;
 
   void report<T>(
     Result<T, AppFailure> result,
@@ -65,6 +67,7 @@ ThreadActions dayThreadActions(
     // Unstick (M10.7): the answer is step 1; the move count starts over.
     onUnstick: (id, answer) async {
       final o = find(id);
+      if (o == null) return;
       report(
         await answerUnstick(ref, o, answer),
         (_) => l10n.unstickSaved(o.title),
@@ -85,6 +88,7 @@ ThreadActions dayThreadActions(
     },
     onToggleDone: (id) async {
       final o = find(id);
+      if (o == null) return;
       final wasDone = o.status == OccurrenceStatus.done;
       AppHaptics.playFor(ref, HapticTick.light);
       report(
@@ -96,6 +100,7 @@ ThreadActions dayThreadActions(
     onRunningLate: onRunningLate,
     onExtend: (id) async {
       final o = find(id);
+      if (o == null) return;
       final end = o.endUtc!.add(const Duration(minutes: 15));
       report(
         await extendTask(ref, o),
@@ -105,6 +110,7 @@ ThreadActions dayThreadActions(
     },
     onShiftRest: (id) async {
       final live = find(id);
+      if (live == null) return;
       final overrun = overrunOf(live, blocks);
       if (overrun <= 0) return;
       // More than two behind it: a proposal first (11 C1, M11.1).
@@ -113,10 +119,13 @@ ThreadActions dayThreadActions(
         await shiftRest(ref, day: blocks, live: live, overrunMinutes: overrun),
         (v) {
           final (_, r) = v;
-          final pin = r.blockedById;
+          final pin = switch (r.blockedById) {
+            final id? => find(id),
+            null => null,
+          };
           return pin == null
               ? l10n.snackShifted(r.movedIds.length)
-              : l10n.snackShiftedPartial(r.movedIds.length, find(pin).title);
+              : l10n.snackShiftedPartial(r.movedIds.length, pin.title);
         },
         (v) => v.$1,
       );

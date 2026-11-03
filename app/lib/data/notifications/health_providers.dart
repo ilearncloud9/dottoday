@@ -11,7 +11,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'health_providers.g.dart';
 
-/// This device for the health checks (not for layout, CLAUDE.md §11).
+/// This device for the health checks (not for layout, CLAUDE.md §11). An
+/// iPad reports [HealthPlatform.iphone]: it is iPhone-class for alarms and
+/// Siri (owner, 2026-11-02).
 HealthPlatform currentHealthPlatform() {
   if (kIsWeb) return HealthPlatform.web;
   return switch (defaultTargetPlatform) {

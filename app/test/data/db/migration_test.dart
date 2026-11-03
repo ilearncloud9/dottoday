@@ -21,10 +21,38 @@ import 'package:flutter_test/flutter_test.dart';
 // an integer windDownReminder (the first step 11) becomes a boolean;
 // 14 → 15 (M17.6, docs/15 §11): reveal_hints' CHECK names Wake Up's
 // discovery hints (rebuilt, rows kept); 15 → 16 (docs/15 §11): and the
-// alarm-tier soft reveal.
+// alarm-tier soft reveal; 16 → 17: sync_cursors' keyset (since_at,
+// since_id), null on upgrade.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
+  test(
+    'a version 16 file gains the cursor keyset, null, cursors kept',
+    () async {
+      final dir = await Directory.systemTemp.createTemp('dottoday-mig17');
+      addTearDown(() => dir.delete(recursive: true));
+      final file = File('${dir.path}/db.sqlite');
+      final v16 = AppDatabase(NativeDatabase(file));
+      await v16.customStatement(
+        'ALTER TABLE sync_cursors DROP COLUMN since_at',
+      );
+      await v16.customStatement(
+        'ALTER TABLE sync_cursors DROP COLUMN since_id',
+      );
+      await v16.customStatement(
+        "INSERT INTO sync_cursors (entity, since_utc) VALUES ('series', 42)",
+      );
+      await v16.customStatement('PRAGMA user_version = 16');
+      await v16.close();
+
+      final v17 = AppDatabase(NativeDatabase(file));
+      addTearDown(v17.close);
+      final row = await v17.select(v17.syncCursors).getSingle();
+      expect(row.sinceUtc, 42);
+      expect(row.sinceAt, isNull);
+      expect(row.sinceId, isNull);
+    },
+  );
   test('a version 15 file takes the alarm-tier reveal, rows kept', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig16');
     addTearDown(() => dir.delete(recursive: true));

@@ -124,7 +124,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Sounds page, task Sound row, Start and Done sounds | M15 | Hidden | Sounds play exactly as set (defaults for new users); pickers under Everything else |
 | In-app haptics switch | M15.7 | Hidden | Haptics tap as set (on for new users); the switch is on the Sounds page under Everything else |
 | Quiet hours, Wind Down reminder, Day summary | M5–M6.5 | Hidden | Keep running as set; under Everything else |
-| Day shape extras: per-weekday times, 12/24 h, week start | M3d | Hidden | Under Everything else; minimal rows 2–3 edit the "same every day" times |
+| Day shape extras: per-weekday times, 12/24 h, week start | M3d | Hidden | Under Everything else; minimal rows 2 and 5 edit the "same every day" times |
 | Planning settings: default duration, snapping, shift default, roll over unfinished, show free time, nudges, low-energy row | M3d–M12.2 | Hidden | Values keep applying; under Everything else |
 | Accent colour | M3d | Hidden | A stored accent keeps applying |
 | Backups, import, restore | M8 | Hidden | Settings › Everything else › Data, with Export |
@@ -166,16 +166,19 @@ Five screens change; everything else is reached through them. All are the Concep
 
 **Task sheet.** Title, time, duration (the only place a length changes since ADR-0015), then four buttons: Done · Tomorrow · Later · Delete. *Break it down* appears once B1 ships. *More* expands colour, icon, energy, notes, recurrence and subtasks in the existing sheet layout.
 
-**Settings.** One page, eight rows, no sections:
+**Settings.** One page, nine rows, no sections, then the test alarm card (corrected 2026-11-02 to match the code; M17 added rows 3–4, docs/15 §10):
 
 1. Layout — Minimal / Full (the switch, always first)
 2. Wake Up
-3. Wind Down
-4. Remind me when a dot starts — on/off
-5. Send me a test alarm
-6. Calendars — connect
-7. Account and sync
-8. Everything else… — opens the full Settings tree
+3. Wake Up alarm — on/off
+4. Wake Up options
+5. Wind Down
+6. Remind me when a dot starts — on/off
+7. Calendars — connect
+8. Account and sync
+9. Everything else… — opens the full Settings tree
+
+Below the rows: Send me a test alarm (the test alarm card).
 
 Notification health (A0) is not a row; it appears as a banner above row 1 only when the OS state is wrong.
 

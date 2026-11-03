@@ -26,16 +26,16 @@ final class SupabaseSyncGateway implements SyncGateway {
   @override
   Future<List<Map<String, Object?>>> pull(
     String entity,
-    DateTime sinceUtc, {
+    PullCursor after, {
     required int limit,
   }) => _guard(() async {
-    final rows = await _client
-        .from(entity)
-        .select()
-        .gte('updated_at', sinceUtc.toUtc().toIso8601String())
-        .order('updated_at')
-        .order('id')
-        .limit(limit);
+    final from = _client.from(entity).select();
+    // Quoted: a timestamp holds PostgREST's reserved `.` and `:`.
+    final at = '"${after.updatedAt}"';
+    final rows = await switch (after.id) {
+      null => from.gte('updated_at', after.updatedAt),
+      final id => from.or('updated_at.gt.$at,and(updated_at.eq.$at,id.gt.$id)'),
+    }.order('updated_at').order('id').limit(limit);
     return [for (final r in rows) Map<String, Object?>.from(r)];
   });
 

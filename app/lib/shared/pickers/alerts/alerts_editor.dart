@@ -2,13 +2,11 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/validation/field_rules.dart' show maxAlerts;
 import 'package:dottoday/shared/feedback/permission_notice.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
-
-/// Most alerts one task carries (docs/05 `alerts`).
-const maxAlerts = 5;
 
 /// "10 min before", "At start", "At end", "5 min overdue".
 String alertLabel(AppLocalizations l10n, Alert a) => switch (a.kind) {

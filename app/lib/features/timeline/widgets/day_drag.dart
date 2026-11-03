@@ -198,13 +198,14 @@ final class _DayDrag {
       l10n,
       undo,
       result,
-      message: (v) => switch (v.$2.blockedById) {
-        final pin? => l10n.snackMovedShiftedPartial(
-          o.title,
-          time,
-          _find(pin)!.title,
-        ),
-        null => l10n.snackMovedShifted(o.title, time, v.$2.movedIds.length - 1),
+      message: (v) {
+        final pin = switch (v.$2.blockedById) {
+          final id? => _find(id),
+          null => null,
+        };
+        return pin == null
+            ? l10n.snackMovedShifted(o.title, time, v.$2.movedIds.length - 1)
+            : l10n.snackMovedShiftedPartial(o.title, time, pin.title);
       },
       tokenOf: (v) => v.$1,
     );

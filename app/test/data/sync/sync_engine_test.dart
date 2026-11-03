@@ -235,4 +235,22 @@ void main() {
     expect(run.pulled, greaterThanOrEqualTo(7));
     expect(await b.h.db.select(b.h.db.occurrences).get(), hasLength(7));
   });
+
+  test('a page of rows from one transaction: all arrive, then none', () async {
+    // sync_push stamps one now() per call, so a first push of 600 tasks
+    // (batches of 500) makes 500 rows with one updated_at: a full page a
+    // timestamp-only cursor can't get past.
+    await a.write([
+      for (var i = 0; i < 600; i++)
+        _task('Task $i').copyWith(
+          id: '01928c3e-0000-7000-8000-${i.toString().padLeft(12, '0')}',
+        ),
+    ]);
+    await SyncDevice.engineFor(a, server).run(_account);
+    final engine = SyncDevice.engineFor(b, server);
+    await engine.run(_account);
+    expect(await b.h.db.select(b.h.db.occurrences).get(), hasLength(600));
+    final next = await engine.run(_account);
+    expect(next.pulled, 0, reason: 'the cursor moved past every row');
+  });
 }

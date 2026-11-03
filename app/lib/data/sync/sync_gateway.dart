@@ -37,6 +37,12 @@ final class SyncGatewayException implements Exception {
   String toString() => 'SyncGatewayException(${trouble.name})';
 }
 
+/// Where a pull resumes, in the server's (`updated_at`, `id`) order: after
+/// the row [id] stamped [updatedAt], or from [updatedAt] on (inclusive)
+/// when [id] is null. [updatedAt] is the server's own text, so no
+/// precision is lost on the way back.
+typedef PullCursor = ({String updatedAt, String? id});
+
 /// The server side of sync (docs/04 §4, ADR-0002): a port, Supabase in the
 /// app and a fake in tests. Every call runs as the signed-in user (RLS).
 abstract interface class SyncGateway {
@@ -44,12 +50,12 @@ abstract interface class SyncGateway {
   /// Throws [SyncGatewayException].
   Future<void> push(List<PushChange> changes);
 
-  /// Rows of [entity] updated at or after [sinceUtc], oldest first, at
+  /// Rows of [entity] after [after] in (`updated_at`, `id`) order, at
   /// most [limit]; values in the server's form. Throws
   /// [SyncGatewayException].
   Future<List<Map<String, Object?>>> pull(
     String entity,
-    DateTime sinceUtc, {
+    PullCursor after, {
     required int limit,
   });
 

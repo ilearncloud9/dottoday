@@ -57,6 +57,21 @@ enum AlarmBridge {
           await WakeUpAlarms.keepMission(id)
           result(nil)
         }
+      // Device-test hooks (integration_test/wake_up_alarmkit_test.dart),
+      // as Android's: what rings, what is stored, and the alert's buttons.
+      case "ringingId":
+        guard #available(iOS 26.0, *) else { return result(nil) }
+        result(WakeUpAlarms.ringingId())
+      case "stored":
+        guard #available(iOS 26.0, *) else { return result([[String: Any]]()) }
+        result(WakeUpAlarms.stored())
+      case "perform":
+        let args = call.arguments as? [String: Any]
+        guard #available(iOS 26.0, *), let id = args?["id"] as? String else { return result(nil) }
+        Task {
+          await WakeUpAlarms.perform(args?["action"] as? String ?? "", dayId: id)
+          result(nil)
+        }
       case "disarmAll":
         if #available(iOS 26.0, *) { WakeUpAlarms.disarmAll() }
         result(nil)

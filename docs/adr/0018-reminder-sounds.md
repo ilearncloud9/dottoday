@@ -1,7 +1,7 @@
-# ADR-0015 · Reminder sounds: a bundled catalogue, a per-task sound, a Start sound
+# ADR-0018 · Reminder sounds: a bundled catalogue, a per-task sound, a Start sound
 
 Status: Accepted · Date: 2026-10-30 · Spec docs/12-sounds.md · Amends 11-standout-roadmap A0 ("no
-per-task settings in v1"), docs/02 F6.6 · Built in M15 (PRs #19, #29, #32, #33)
+per-task settings in v1"), docs/02 F6.6 · Built in M15 (PRs #19, #29, #32, #33) · Numbered ADR-0015 until 2026-11-02, when it was renumbered because ADR-0015 is also the Structured-style day thread
 
 ## Context
 F6.6 (M8.4d) shipped four first-party tones (Dot, Chime, Bell, Ripple, synthesised by

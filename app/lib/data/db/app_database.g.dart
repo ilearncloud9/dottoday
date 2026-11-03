@@ -9436,8 +9436,30 @@ class $SyncCursorsTable extends SyncCursors
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _sinceAtMeta = const VerificationMeta(
+    'sinceAt',
+  );
   @override
-  List<GeneratedColumn> get $columns => [entity, sinceUtc];
+  late final GeneratedColumn<String> sinceAt = GeneratedColumn<String>(
+    'since_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sinceIdMeta = const VerificationMeta(
+    'sinceId',
+  );
+  @override
+  late final GeneratedColumn<String> sinceId = GeneratedColumn<String>(
+    'since_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [entity, sinceUtc, sinceAt, sinceId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -9466,6 +9488,18 @@ class $SyncCursorsTable extends SyncCursors
     } else if (isInserting) {
       context.missing(_sinceUtcMeta);
     }
+    if (data.containsKey('since_at')) {
+      context.handle(
+        _sinceAtMeta,
+        sinceAt.isAcceptableOrUnknown(data['since_at']!, _sinceAtMeta),
+      );
+    }
+    if (data.containsKey('since_id')) {
+      context.handle(
+        _sinceIdMeta,
+        sinceId.isAcceptableOrUnknown(data['since_id']!, _sinceIdMeta),
+      );
+    }
     return context;
   }
 
@@ -9483,6 +9517,14 @@ class $SyncCursorsTable extends SyncCursors
         DriftSqlType.int,
         data['${effectivePrefix}since_utc'],
       )!,
+      sinceAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}since_at'],
+      ),
+      sinceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}since_id'],
+      ),
     );
   }
 
@@ -9498,12 +9540,31 @@ class $SyncCursorsTable extends SyncCursors
 class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   final String entity;
   final int sinceUtc;
-  const SyncCursorRow({required this.entity, required this.sinceUtc});
+
+  /// That row's `updated_at` exactly as the server sent it (microseconds,
+  /// which [sinceUtc] drops) and its id: the keyset the next pull resumes
+  /// after. One `sync_push` stamps all its rows with one instant, so the
+  /// id is what moves past a page of them. Null on a cursor from before
+  /// v17, which resumes from [sinceUtc] on.
+  final String? sinceAt;
+  final String? sinceId;
+  const SyncCursorRow({
+    required this.entity,
+    required this.sinceUtc,
+    this.sinceAt,
+    this.sinceId,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['entity'] = Variable<String>(entity);
     map['since_utc'] = Variable<int>(sinceUtc);
+    if (!nullToAbsent || sinceAt != null) {
+      map['since_at'] = Variable<String>(sinceAt);
+    }
+    if (!nullToAbsent || sinceId != null) {
+      map['since_id'] = Variable<String>(sinceId);
+    }
     return map;
   }
 
@@ -9511,6 +9572,12 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
     return SyncCursorsCompanion(
       entity: Value(entity),
       sinceUtc: Value(sinceUtc),
+      sinceAt: sinceAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sinceAt),
+      sinceId: sinceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sinceId),
     );
   }
 
@@ -9522,6 +9589,8 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
     return SyncCursorRow(
       entity: serializer.fromJson<String>(json['entity']),
       sinceUtc: serializer.fromJson<int>(json['sinceUtc']),
+      sinceAt: serializer.fromJson<String?>(json['sinceAt']),
+      sinceId: serializer.fromJson<String?>(json['sinceId']),
     );
   }
   @override
@@ -9530,17 +9599,28 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
     return <String, dynamic>{
       'entity': serializer.toJson<String>(entity),
       'sinceUtc': serializer.toJson<int>(sinceUtc),
+      'sinceAt': serializer.toJson<String?>(sinceAt),
+      'sinceId': serializer.toJson<String?>(sinceId),
     };
   }
 
-  SyncCursorRow copyWith({String? entity, int? sinceUtc}) => SyncCursorRow(
+  SyncCursorRow copyWith({
+    String? entity,
+    int? sinceUtc,
+    Value<String?> sinceAt = const Value.absent(),
+    Value<String?> sinceId = const Value.absent(),
+  }) => SyncCursorRow(
     entity: entity ?? this.entity,
     sinceUtc: sinceUtc ?? this.sinceUtc,
+    sinceAt: sinceAt.present ? sinceAt.value : this.sinceAt,
+    sinceId: sinceId.present ? sinceId.value : this.sinceId,
   );
   SyncCursorRow copyWithCompanion(SyncCursorsCompanion data) {
     return SyncCursorRow(
       entity: data.entity.present ? data.entity.value : this.entity,
       sinceUtc: data.sinceUtc.present ? data.sinceUtc.value : this.sinceUtc,
+      sinceAt: data.sinceAt.present ? data.sinceAt.value : this.sinceAt,
+      sinceId: data.sinceId.present ? data.sinceId.value : this.sinceId,
     );
   }
 
@@ -9548,44 +9628,58 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   String toString() {
     return (StringBuffer('SyncCursorRow(')
           ..write('entity: $entity, ')
-          ..write('sinceUtc: $sinceUtc')
+          ..write('sinceUtc: $sinceUtc, ')
+          ..write('sinceAt: $sinceAt, ')
+          ..write('sinceId: $sinceId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(entity, sinceUtc);
+  int get hashCode => Object.hash(entity, sinceUtc, sinceAt, sinceId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SyncCursorRow &&
           other.entity == this.entity &&
-          other.sinceUtc == this.sinceUtc);
+          other.sinceUtc == this.sinceUtc &&
+          other.sinceAt == this.sinceAt &&
+          other.sinceId == this.sinceId);
 }
 
 class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
   final Value<String> entity;
   final Value<int> sinceUtc;
+  final Value<String?> sinceAt;
+  final Value<String?> sinceId;
   final Value<int> rowid;
   const SyncCursorsCompanion({
     this.entity = const Value.absent(),
     this.sinceUtc = const Value.absent(),
+    this.sinceAt = const Value.absent(),
+    this.sinceId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   SyncCursorsCompanion.insert({
     required String entity,
     required int sinceUtc,
+    this.sinceAt = const Value.absent(),
+    this.sinceId = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : entity = Value(entity),
        sinceUtc = Value(sinceUtc);
   static Insertable<SyncCursorRow> custom({
     Expression<String>? entity,
     Expression<int>? sinceUtc,
+    Expression<String>? sinceAt,
+    Expression<String>? sinceId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (entity != null) 'entity': entity,
       if (sinceUtc != null) 'since_utc': sinceUtc,
+      if (sinceAt != null) 'since_at': sinceAt,
+      if (sinceId != null) 'since_id': sinceId,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -9593,11 +9687,15 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
   SyncCursorsCompanion copyWith({
     Value<String>? entity,
     Value<int>? sinceUtc,
+    Value<String?>? sinceAt,
+    Value<String?>? sinceId,
     Value<int>? rowid,
   }) {
     return SyncCursorsCompanion(
       entity: entity ?? this.entity,
       sinceUtc: sinceUtc ?? this.sinceUtc,
+      sinceAt: sinceAt ?? this.sinceAt,
+      sinceId: sinceId ?? this.sinceId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -9611,6 +9709,12 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
     if (sinceUtc.present) {
       map['since_utc'] = Variable<int>(sinceUtc.value);
     }
+    if (sinceAt.present) {
+      map['since_at'] = Variable<String>(sinceAt.value);
+    }
+    if (sinceId.present) {
+      map['since_id'] = Variable<String>(sinceId.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -9622,6 +9726,8 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
     return (StringBuffer('SyncCursorsCompanion(')
           ..write('entity: $entity, ')
           ..write('sinceUtc: $sinceUtc, ')
+          ..write('sinceAt: $sinceAt, ')
+          ..write('sinceId: $sinceId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -18339,12 +18445,16 @@ typedef $$SyncCursorsTableCreateCompanionBuilder =
     SyncCursorsCompanion Function({
       required String entity,
       required int sinceUtc,
+      Value<String?> sinceAt,
+      Value<String?> sinceId,
       Value<int> rowid,
     });
 typedef $$SyncCursorsTableUpdateCompanionBuilder =
     SyncCursorsCompanion Function({
       Value<String> entity,
       Value<int> sinceUtc,
+      Value<String?> sinceAt,
+      Value<String?> sinceId,
       Value<int> rowid,
     });
 
@@ -18364,6 +18474,16 @@ class $$SyncCursorsTableFilterComposer
 
   ColumnFilters<int> get sinceUtc => $composableBuilder(
     column: $table.sinceUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sinceAt => $composableBuilder(
+    column: $table.sinceAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sinceId => $composableBuilder(
+    column: $table.sinceId,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -18386,6 +18506,16 @@ class $$SyncCursorsTableOrderingComposer
     column: $table.sinceUtc,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get sinceAt => $composableBuilder(
+    column: $table.sinceAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sinceId => $composableBuilder(
+    column: $table.sinceId,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SyncCursorsTableAnnotationComposer
@@ -18402,6 +18532,12 @@ class $$SyncCursorsTableAnnotationComposer
 
   GeneratedColumn<int> get sinceUtc =>
       $composableBuilder(column: $table.sinceUtc, builder: (column) => column);
+
+  GeneratedColumn<String> get sinceAt =>
+      $composableBuilder(column: $table.sinceAt, builder: (column) => column);
+
+  GeneratedColumn<String> get sinceId =>
+      $composableBuilder(column: $table.sinceId, builder: (column) => column);
 }
 
 class $$SyncCursorsTableTableManager
@@ -18437,20 +18573,28 @@ class $$SyncCursorsTableTableManager
               ({
                 Value<String> entity = const Value.absent(),
                 Value<int> sinceUtc = const Value.absent(),
+                Value<String?> sinceAt = const Value.absent(),
+                Value<String?> sinceId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SyncCursorsCompanion(
                 entity: entity,
                 sinceUtc: sinceUtc,
+                sinceAt: sinceAt,
+                sinceId: sinceId,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String entity,
                 required int sinceUtc,
+                Value<String?> sinceAt = const Value.absent(),
+                Value<String?> sinceId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SyncCursorsCompanion.insert(
                 entity: entity,
                 sinceUtc: sinceUtc,
+                sinceAt: sinceAt,
+                sinceId: sinceId,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

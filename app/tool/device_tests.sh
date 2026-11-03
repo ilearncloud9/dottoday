@@ -41,8 +41,8 @@ if [[ ${#tests[@]} -eq 0 ]]; then
     notification_exactness surface_consistency)
   # The live dot (M9.3, M9.4): each platform's own surface.
   if [[ "$platform" == ios ]]; then tests+=(live_activity); else tests+=(ongoing_dot); fi
-  # The Wake Up alarm's ringing service (M17.2); AlarmKit is a device gate.
-  if [[ "$platform" == android ]]; then tests+=(wake_up_alarm); fi
+  # The Wake Up alarm: the ringing service (M17.2), AlarmKit (W1b).
+  if [[ "$platform" == android ]]; then tests+=(wake_up_alarm); else tests+=(wake_up_alarmkit); fi
   # The on-device model (M10.1): availability, and < 2 s where one is ready.
   tests+=(thinking sweep)
 fi
@@ -116,7 +116,8 @@ bring_to_front() {
 # with `DEVICE_GRANT calendar`; `DEVICE_FRONT app` brings the app back; `DEVICE_AWAY <name>` (before a
 # tap that leaves the app) waits, shoots and brings it back; `DEVICE_BACK
 # <name>` (before a tap that opens a system sheet) waits, shoots and presses
-# Back on Android.
+# Back on Android; `DEVICE_HOLD front` keeps the app in front until
+# `DEVICE_RELEASE front`.
 shoot() {
   local out="build/device_shots/${platform}_$1.png"
   mkdir -p build/device_shots
@@ -183,8 +184,15 @@ run_one() {
     --target="integration_test/${t}_test.dart" \
     --use-application-binary="$binary" $keep \
     ${device:+-d "$device"} --dart-define-from-file="$defines" >>"$log" 2>&1 &
-  local drive=$! done_marks="" mark
+  local drive=$! done_marks="" mark held=0
   while kill -0 "$drive" 2>/dev/null; do
+    # `DEVICE_HOLD front` … `DEVICE_RELEASE front`: an AlarmKit alert sends
+    # the app away mid-test (iOS then pauses it), so it is brought back
+    # every few seconds while held.
+    if [[ "$(grep -oE 'DEVICE_(HOLD|RELEASE) front' "$log" | tail -1)" == "DEVICE_HOLD front" ]]; then
+      held=$((held + 1))
+      ((held % 6 == 0)) && bring_to_front >>"$log" 2>&1
+    fi
     for mark in $(grep -oE 'DEVICE_(SHOT|GRANT|FRONT|AWAY|BACK) [a-z0-9_]+' "$log" | tr ' ' ':'); do
       case " $done_marks " in *" $mark "*) continue ;; esac
       done_marks="$done_marks $mark"

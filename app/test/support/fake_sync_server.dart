@@ -5,8 +5,11 @@ import 'package:dottoday/data/sync/sync_gateway.dart';
 /// An in-memory Supabase for sync tests (docs/09 M6.2), faithful to
 /// `sync_push` (migration 0002): per-field last-writer-wins on HLC string
 /// order, a placeholder row for a new id, `field_versions`, and a
-/// server-assigned `updated_at` that only moves forward. Several devices
-/// can share one server ([forDevice]).
+/// server-assigned `updated_at` that only moves forward. Like Postgres'
+/// `now()`, one call's rows share one instant (migration 0001's trigger
+/// runs inside `sync_push`'s transaction), so a big push makes many rows
+/// with the same `updated_at`. Several devices can share one server
+/// ([forDevice]).
 final class FakeSyncServer {
   FakeSyncServer(this.userId);
 
@@ -42,11 +45,12 @@ final class FakeSyncServer {
   void _push(List<PushChange> changes) {
     _maybeFail();
     pushes++;
+    final now = _nextUpdatedAt();
     for (final c in changes) {
       // A new id: a placeholder, created_at by the server (column default).
       final row = table(c.entity).putIfAbsent(
         c.id,
-        () => {'id': c.id, 'user_id': userId, 'created_at': _nextUpdatedAt()},
+        () => {'id': c.id, 'user_id': userId, 'created_at': now},
       );
       var applied = false;
       for (final MapEntry(key: field, value: value) in c.fields.entries) {
@@ -65,9 +69,7 @@ final class FakeSyncServer {
         versions[key] = c.hlc;
         applied = true;
       }
-      if (applied || !row.containsKey('updated_at')) {
-        row['updated_at'] = _nextUpdatedAt();
-      }
+      if (applied || !row.containsKey('updated_at')) row['updated_at'] = now;
     }
     _nudges.add(null);
   }
@@ -84,17 +86,12 @@ final class _DeviceGateway implements SyncGateway {
   @override
   Future<List<Map<String, Object?>>> pull(
     String entity,
-    DateTime sinceUtc, {
+    PullCursor after, {
     required int limit,
   }) async {
     _server._maybeFail();
-    final since = sinceUtc.toUtc().toIso8601String();
     final found =
-        _server
-            .table(entity)
-            .values
-            .where((r) => (r['updated_at']! as String).compareTo(since) >= 0)
-            .toList()
+        _server.table(entity).values.where((r) => _after(r, after)).toList()
           ..sort((a, b) {
             final t = (a['updated_at']! as String).compareTo(
               b['updated_at']! as String,
@@ -108,9 +105,22 @@ final class _DeviceGateway implements SyncGateway {
     ];
   }
 
+  /// PostgREST's `updated_at > t OR (updated_at = t AND id > id)`, or
+  /// `updated_at >= t` without an id.
+  static bool _after(Map<String, Object?> row, PullCursor after) {
+    final t = (row['updated_at']! as String).compareTo(after.updatedAt);
+    return switch (after.id) {
+      null => t >= 0,
+      final id => t > 0 || (t == 0 && (row['id']! as String).compareTo(id) > 0),
+    };
+  }
+
   @override
-  Future<int> count(String entity, DateTime sinceUtc) async =>
-      (await pull(entity, sinceUtc, limit: 1 << 30)).length;
+  Future<int> count(String entity, DateTime sinceUtc) async => (await pull(
+    entity,
+    (updatedAt: sinceUtc.toUtc().toIso8601String(), id: null),
+    limit: 1 << 30,
+  )).length;
 
   @override
   Future<Map<String, Map<String, String>>> fieldVersions(

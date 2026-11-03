@@ -9,24 +9,27 @@ part of 'siri_providers.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Whether Siri can run Dottoday's five App Intents here (docs/09 M14.3,
-/// D3: iPhone only — the Mac has the same intents for Shortcuts, but the
-/// owner scoped Siri discoverability to the iPhone). Read in the data
-/// layer so widgets never branch on the platform.
+/// D3): iPhone and iPad, which the owner counts as iPhone-class for Siri
+/// and alarms (2026-11-02). The Mac has the same intents for Shortcuts,
+/// but Siri discoverability stays off there. Read in the data layer so
+/// widgets never branch on the platform.
 
 @ProviderFor(siriAvailable)
 final siriAvailableProvider = SiriAvailableProvider._();
 
 /// Whether Siri can run Dottoday's five App Intents here (docs/09 M14.3,
-/// D3: iPhone only — the Mac has the same intents for Shortcuts, but the
-/// owner scoped Siri discoverability to the iPhone). Read in the data
-/// layer so widgets never branch on the platform.
+/// D3): iPhone and iPad, which the owner counts as iPhone-class for Siri
+/// and alarms (2026-11-02). The Mac has the same intents for Shortcuts,
+/// but Siri discoverability stays off there. Read in the data layer so
+/// widgets never branch on the platform.
 
 final class SiriAvailableProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether Siri can run Dottoday's five App Intents here (docs/09 M14.3,
-  /// D3: iPhone only — the Mac has the same intents for Shortcuts, but the
-  /// owner scoped Siri discoverability to the iPhone). Read in the data
-  /// layer so widgets never branch on the platform.
+  /// D3): iPhone and iPad, which the owner counts as iPhone-class for Siri
+  /// and alarms (2026-11-02). The Mac has the same intents for Shortcuts,
+  /// but Siri discoverability stays off there. Read in the data layer so
+  /// widgets never branch on the platform.
   SiriAvailableProvider._()
     : super(
         from: null,

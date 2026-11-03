@@ -70,12 +70,20 @@ class ChangeLog extends Table {
   bool get isStrict => true;
 }
 
-/// Local-only pull cursors: the highest server `updated_at` seen per table
-/// (docs/04 §4 "periodic since pull").
+/// Local-only pull cursors: the last row pulled per table, in the server's
+/// (`updated_at`, `id`) order (docs/04 §4 "periodic since pull").
 @DataClassName('SyncCursorRow')
 class SyncCursors extends Table {
   TextColumn get entity => text()();
   IntColumn get sinceUtc => integer()();
+
+  /// That row's `updated_at` exactly as the server sent it (microseconds,
+  /// which [sinceUtc] drops) and its id: the keyset the next pull resumes
+  /// after. One `sync_push` stamps all its rows with one instant, so the
+  /// id is what moves past a page of them. Null on a cursor from before
+  /// v17, which resumes from [sinceUtc] on.
+  TextColumn get sinceAt => text().nullable()();
+  TextColumn get sinceId => text().nullable()();
 
   @override
   Set<Column<Object>> get primaryKey => {entity};

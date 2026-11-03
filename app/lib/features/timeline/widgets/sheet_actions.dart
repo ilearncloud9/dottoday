@@ -4,7 +4,8 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/core/utils/text_fit.dart';
+import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/schedule/planned_colors.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
@@ -13,8 +14,10 @@ import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/features/timeline/widgets/sheet_tiles.dart';
 import 'package:dottoday/features/timeline/widgets/shell_drops.dart';
 import 'package:dottoday/shared/haptics/app_haptics.dart';
+import 'package:dottoday/shared/pickers/day_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -51,7 +54,7 @@ class SheetActions extends ConsumerWidget {
     final done = o.status == OccurrenceStatus.done;
     final messenger = ScaffoldMessenger.of(context);
     final undo = ref.read(undoServiceProvider);
-    final doneTile = _Tile(
+    final doneTile = SheetTile(
       glyph: DotGlyphs.check,
       label: done ? l10n.sheetUndone : l10n.sheetDone,
       filled: !done,
@@ -77,24 +80,24 @@ class SheetActions extends ConsumerWidget {
         unawaited(navigator.maybePop());
       }
 
-      return _TileGrid(
+      return SheetTileGrid(
         tiles: [
           doneTile,
-          _Tile(
+          SheetTile(
             glyph: DotGlyphs.rollForward,
             label: l10n.sheetTomorrow,
             onTap: o.startUtc == null
                 ? null
                 : () => then(() => unawaited(_tomorrow(context, ref))),
           ),
-          _Tile(
+          SheetTile(
             glyph: DotGlyphs.inbox,
             label: l10n.sheetLater,
             onTap: o.startUtc == null || o.pinned
                 ? null
                 : () => then(() => drops.toInbox(o.id)),
           ),
-          _Tile(
+          SheetTile(
             glyph: DotGlyphs.trash,
             label: l10n.sheetDelete,
             onTap: o.pinned ? null : () => then(() => drops.toTrash(o.id)),
@@ -105,9 +108,9 @@ class SheetActions extends ConsumerWidget {
     return Row(
       spacing: DotSpace.s,
       children: [
-        for (final tile in <_Tile>[
+        for (final tile in <SheetTile>[
           doneTile,
-          _Tile(
+          SheetTile(
             glyph: DotGlyphs.clock,
             label: l10n.sheetExtend,
             onTap: o.startUtc == null
@@ -121,27 +124,71 @@ class SheetActions extends ConsumerWidget {
                     tokenOf: (token) => token,
                   ),
           ),
-          _Tile(
+          SheetTile(
             glyph: DotGlyphs.rollForward,
             label: l10n.sheetShift,
             onTap: _shift(context, ref),
           ),
-          _Tile(glyph: DotGlyphs.move, label: l10n.sheetMove),
-          _Tile(glyph: DotGlyphs.edit, label: l10n.sheetEdit, onTap: onEdit),
+          SheetTile(
+            glyph: DotGlyphs.move,
+            label: l10n.sheetMove,
+            onTap: o.startUtc == null || o.pinned
+                ? null
+                : () => unawaited(_move(context, ref)),
+          ),
+          SheetTile(
+            glyph: DotGlyphs.edit,
+            label: l10n.sheetEdit,
+            onTap: onEdit,
+          ),
         ])
           Expanded(child: tile),
       ],
     );
   }
 
+  /// The task's local date.
+  DateTime get _day {
+    final o = task.occurrence;
+    final l = tz.TZDateTime.from(o.startUtc!, tz.getLocation(o.tzId));
+    return DateTime(l.year, l.month, l.day);
+  }
+
   /// Tomorrow at the same time, with Undo (as a week-strip drop).
-  Future<void> _tomorrow(BuildContext context, WidgetRef ref) async {
+  Future<void> _tomorrow(BuildContext context, WidgetRef ref) {
+    final d = _day;
+    return _toDay(context, ref, DateTime(d.year, d.month, d.day + 1));
+  }
+
+  /// Move (docs/03 §3.2 "Move (to a day, same times; pinned stay)"): the
+  /// change-day month the selection bar's Move uses, then the same time on
+  /// the picked day, with Undo.
+  Future<void> _move(BuildContext context, WidgetRef ref) async {
+    final container = ProviderScope.containerOf(context);
+    final from = _day;
+    final to = await showMonthDayPicker(
+      context,
+      plannedFor: (m) => plannedColors(container, m),
+      firstDayOfWeek:
+          ref.read(currentProfileProvider).value?.settings.firstDayOfWeek ?? 1,
+      title: context.l10n.selectionMoveTitle,
+      today: ref.read(todayDateProvider).value ?? from,
+      initial: from,
+    );
+    if (to == null || to == from || !context.mounted) return;
+    await _toDay(context, ref, to);
+  }
+
+  /// The same time on [date], with Undo.
+  Future<void> _toDay(
+    BuildContext context,
+    WidgetRef ref,
+    DateTime date,
+  ) async {
     final o = task.occurrence;
     final messenger = ScaffoldMessenger.of(context);
     final l10n = context.l10n;
     final undo = ref.read(undoServiceProvider);
-    final l = tz.TZDateTime.from(o.startUtc!, tz.getLocation(o.tzId));
-    final date = DateTime(l.year, l.month, l.day + 1);
     final day = DateFormat.MMMMEEEEd(
       Localizations.localeOf(context).toLanguageTag(),
     ).format(date);
@@ -187,112 +234,5 @@ class SheetActions extends ConsumerWidget {
         tokenOf: (v) => v.$1,
       );
     };
-  }
-}
-
-/// The tiles in one row, or — when a label's longest word would not fit
-/// its tile at the current text size — two per row, or one: a label never
-/// breaks mid-word (accessibility-as-code; found by the M16 goldens).
-class _TileGrid extends StatelessWidget {
-  const _TileGrid({required this.tiles});
-
-  final List<_Tile> tiles;
-
-  @override
-  Widget build(BuildContext context) {
-    final style = DotTheme.of(context).styles.button;
-    return LayoutBuilder(
-      builder: (context, box) {
-        bool fits(int perRow) {
-          final width =
-              (box.maxWidth - DotSpace.s * (perRow - 1)) / perRow -
-              2 * DotSpace.xs;
-          return tiles.every(
-            (t) => longestWordFits(context, t.label, style, width),
-          );
-        }
-
-        final perRow = [tiles.length, 2, 1].firstWhere(fits, orElse: () => 1);
-        return Column(
-          spacing: DotSpace.s,
-          children: [
-            for (var i = 0; i < tiles.length; i += perRow)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: DotSpace.s,
-                children: [
-                  for (final t in tiles.skip(i).take(perRow))
-                    Expanded(child: t),
-                  // A short last row keeps the tiles' width.
-                  for (
-                    var k = tiles.skip(i).take(perRow).length;
-                    k < perRow;
-                    k++
-                  )
-                    const Spacer(),
-                ],
-              ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _Tile extends StatelessWidget {
-  const _Tile({
-    required this.glyph,
-    required this.label,
-    this.onTap,
-    this.filled = false,
-  });
-
-  final DotGlyph glyph;
-  final String label;
-  final VoidCallback? onTap;
-  final bool filled;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final c = t.colors;
-    final enabled = onTap != null;
-    final ink = filled ? c.onAccent : (enabled ? c.text : c.muted);
-    return Semantics(
-      button: true,
-      enabled: enabled,
-      label: label,
-      excludeSemantics: true,
-      onTap: onTap,
-      child: Material(
-        color: filled ? c.accentFill : c.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(DotRadii.card),
-          side: filled ? BorderSide.none : BorderSide(color: c.outline),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: DotSize.rowDot * 2),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: DotSpace.s),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: DotSpace.xs,
-                children: [
-                  DotIcon(glyph, color: ink, active: filled),
-                  Text(
-                    label,
-                    textAlign: TextAlign.center,
-                    style: t.styles.button.copyWith(color: ink),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

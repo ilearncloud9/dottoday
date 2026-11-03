@@ -20,7 +20,7 @@ Principles: local-first, boring, testable. The UI never talks to Supabase direct
 
 - **domain/** — pure Dart. `Task`, `Occurrence`, `Series`, `Subtask`, `Alert`, `CalendarLink`
   (freezed). Services: `RecurrenceExpander` (RRULE → occurrences, tz-aware), `DayScheduler`
-  (shift-followers, bump-on-insert, pin rules, running-late), `QuickAddParser`, `NotificationPlanner`
+  (shift-followers, move-with-followers, pin rules, running-late), `QuickAddParser`, `NotificationPlanner`
   (which notifications should exist for a window), `ConflictResolver`. Repository *interfaces*.
 - **data/** — Drift schema (`app_database.dart`, one table file each), DAOs, repository
   implementations, `SupabaseGateway`, `SyncEngine`, `BackupService`, `ExportService`.
@@ -47,7 +47,7 @@ hlc)` per local write.
 **Push**: batched upserts to Supabase via a `sync_push` RPC that applies per-field LWW using a hybrid
 logical clock (HLC) carried in each change; the RPC returns the authoritative rows.
 
-**Pull**: initial full pull per table paged by `updatedAt`; afterwards Realtime `postgres_changes`
+**Pull**: initial full pull per table paged by the keyset (`updatedAt`, `id`); afterwards Realtime `postgres_changes`
 on the user's rows, each nudge pulling from the cursor.
 
 **Triggers — events, never polling** (owner, 2026-10-31): the open app acts when something happens,
@@ -117,7 +117,9 @@ when sync is down.
   (ordered by start), add delta while preserving gaps; skip pinned and (unless included) calendar
   blocks; never move a block across a pinned block — stop shifting at the first pinned block and
   report `partial`. Pure function, returns a new list + a `ShiftReport`.
-- `insert(day, newBlock, policy)`: `overlap` (default off), `bump` (push followers), `fitNextGap`.
+- `insert(day, newBlock, policy)`: `overlap`, `bump` (push followers), `fitNextGap`. Adding a task
+  never bumps: it keeps its time and may overlap (owner, 2026-11-02; ADR-0015). `bump` is the
+  drag-time policy, used by `moveWithFollowers` when a drop jumps past other tasks.
 - `runningLate(day, now, deltaMin)`: shifts all unpinned, not-done blocks whose start ≥ now.
 - `suggestSlots(day, durationMin, prefs)`: next free gaps respecting boundaries and energy windows.
 All are property-tested (no overlaps created unless allowed; pinned never moves; order preserved).

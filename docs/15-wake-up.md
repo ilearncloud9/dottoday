@@ -4,7 +4,7 @@ Oct 31, 2026 · @Kodycio
 
 ## 0. Status and scope
 
-Status: **proposed** (needs ADR-0017). This document extends `11-standout-roadmap.md` §A0 and §A1 and `10-ui-concept-a.md`; it replaces nothing. Doc 13 is the learning reveal (M13) and doc 14 is minimal mode (M16); M14 was voice + AI clarity and M15 was sounds (`12-sounds.md`), so this is doc 15 and ships as **M17 Wake Up** — see §13 for the placement question. (Drafted as doc 14 / M15 / ADR-0010; renumbered 2026-10-31 against `09-implementation-plan.md`.)
+Status: **accepted** (ADR-0017, 2026-10-31); W1–W6 built in M17.1–M17.7; open: real-device gates (08 §6.1 C). This document extends `11-standout-roadmap.md` §A0 and §A1 and `10-ui-concept-a.md`; it replaces nothing. Doc 13 is the learning reveal (M13) and doc 14 is minimal mode (M16); M14 was voice + AI clarity and M15 was sounds (`12-sounds.md`), so this is doc 15 and ships as **M17 Wake Up** — see §13 for the placement question. (Drafted as doc 14 / M15 / ADR-0010; renumbered 2026-10-31 against `09-implementation-plan.md`.)
 
 What it adds, in one line: the first dot of the day becomes an alarm the OS cannot downgrade, dismissing it lands on a Wake Up card that shows the day and offers to replan it, and Wind Down moves itself from tomorrow's first dot. W1–W3 and W5 are **mobile only** (iPhone, Android). W4 and W6 are data and rendering changes and apply on **every platform** wherever the day dot, the Wind Down review or the Wind Down nudge already exist (owner, 2026-10-31). Mac and web read the same data.
 
@@ -24,23 +24,23 @@ Rules that bind every piece: nothing fires without an alarm-tier opt-in made in 
 
 ## 1. Pre-build audit of the current app
 
-The agent runs this inventory first and writes the result to `docs/audits/m17-wake-up-inventory.md` before any code changes; the owner reads it and gives "go". This spec was written without repository access, so every "built" claim below is an assumption to confirm, and the file paths are expected locations, not facts.
+The agent runs this inventory first and writes the result to `docs/audits/m17-wake-up-inventory.md` before any code changes; the owner reads it and gives "go". This spec was written without repository access, so every "built" claim below is an assumption to confirm, and the file paths are expected locations, not facts. Done 2026-10-31: every item below is answered, with code paths, in `docs/audits/m17-wake-up-inventory.md` §1 (rows 1–15).
 
-- [ ] **Day shape.** Where Wake Up, Wind Down live, and whether a separate sleep block exists after Wind Down (settings table, per-weekday overrides or one value, how Today computes the first occurrence). W2 and W4 attach here.
-- [ ] **Notification scheduler (A0).** The `NotificationGateway` port, `syncNotifications()`, the alarm-loud rule for first dot and routine starts, quiet-hours handling, the Android alarm channel id and audio attributes, the iOS interruption level in use. W1 swaps the first-dot path behind this port; confirm the port is the only caller of the plugin.
-- [ ] **Notification health panel** (Settings › Reminders) and onboarding **O4 "Send me a test alarm"**: their state model and goldens. W1 adds states to both rather than adding a second panel.
-- [ ] **Sound library.** The generated tone set (nudge / ping / alarm / done tiers, palettes), file formats and lengths, how the user picks a sound today. AlarmKit needs `.caf`/`.aiff`/`.wav` under 30 s in the bundle; check which alarm cues qualify and whether any Suno-generated longer cues must be trimmed or kept for the in-app ringing screen only.
-- [ ] **B5 snapshot and app-group store.** What the snapshot contains, who writes it and when, whether the first occurrence of the day is derivable from it without the Flutter engine. The W2 card is a snapshot consumer.
-- [ ] **B6 intents.** `StartFocus`, `MarkDone`, `AddFifteen` signatures; W2 and W3 call these and nothing else.
-- [ ] **B3 ProposalSheet and C1 Rebalance triggers.** How a "Running late" proposal is constructed; W2 needs a `lateStart(offsetMin)` trigger.
-- [ ] **B1 timestamps and B2 Smallest step.** Where `actualStartUtc` is set, whether the deferred escalation trigger from A0 was built with B2 or is still a TODO. W3 is that trigger.
-- [ ] **Wind Down review.** Its trigger time and how it reads Wind Down. W4 changes the trigger input.
-- [ ] **Entitlements service.** The single `isPro` flag; W-features stay ungated.
-- [ ] **M13 learning-reveal components** (promise card, soft reveal, explain sheet). §11 reuses them for discovery; confirm their APIs.
-- [ ] **Minimal mode (doc 14, M16).** Whether it has landed; which View-layer flag it uses. §10 variants must read the same flag.
-- [ ] **Native targets.** Does the iOS project already have a Widget Extension (needed by A1 Live Activity)? AlarmKit's countdown draws through the same kind of extension. Is there an App Group? Android: `targetSdk`, whether `USE_FULL_SCREEN_INTENT` and `SCHEDULE_EXACT_ALARM` are declared, and whether `canUseFullScreenIntent()` is checked anywhere.
-- [ ] **Plugin policy.** Which notification plugin is in use and whether it is vendored behind the gateway (dependency-hygiene rule). The AlarmKit plugins below are 0.x; decide vendor-in versus pin.
-- [ ] **Strings.** The no-shame audit script from M12 and the ARB layout; every new key in §12 goes through it.
+- [x] **Day shape.** Where Wake Up, Wind Down live, and whether a separate sleep block exists after Wind Down (settings table, per-weekday overrides or one value, how Today computes the first occurrence). W2 and W4 attach here.
+- [x] **Notification scheduler (A0).** The `NotificationGateway` port, `syncNotifications()`, the alarm-loud rule for first dot and routine starts, quiet-hours handling, the Android alarm channel id and audio attributes, the iOS interruption level in use. W1 swaps the first-dot path behind this port; confirm the port is the only caller of the plugin.
+- [x] **Notification health panel** (Settings › Reminders) and onboarding **O4 "Send me a test alarm"**: their state model and goldens. W1 adds states to both rather than adding a second panel.
+- [x] **Sound library.** The generated tone set (nudge / ping / alarm / done tiers, palettes), file formats and lengths, how the user picks a sound today. AlarmKit needs `.caf`/`.aiff`/`.wav` under 30 s in the bundle; check which alarm cues qualify and whether any Suno-generated longer cues must be trimmed or kept for the in-app ringing screen only.
+- [x] **B5 snapshot and app-group store.** What the snapshot contains, who writes it and when, whether the first occurrence of the day is derivable from it without the Flutter engine. The W2 card is a snapshot consumer.
+- [x] **B6 intents.** `StartFocus`, `MarkDone`, `AddFifteen` signatures; W2 and W3 call these and nothing else.
+- [x] **B3 ProposalSheet and C1 Rebalance triggers.** How a "Running late" proposal is constructed; W2 needs a `lateStart(offsetMin)` trigger.
+- [x] **B1 timestamps and B2 Smallest step.** Where `actualStartUtc` is set, whether the deferred escalation trigger from A0 was built with B2 or is still a TODO. W3 is that trigger.
+- [x] **Wind Down review.** Its trigger time and how it reads Wind Down. W4 changes the trigger input.
+- [x] **Entitlements service.** The single `isPro` flag; W-features stay ungated.
+- [x] **M13 learning-reveal components** (promise card, soft reveal, explain sheet). §11 reuses them for discovery; confirm their APIs.
+- [x] **Minimal mode (doc 14, M16).** Whether it has landed; which View-layer flag it uses. §10 variants must read the same flag.
+- [x] **Native targets.** Does the iOS project already have a Widget Extension (needed by A1 Live Activity)? AlarmKit's countdown draws through the same kind of extension. Is there an App Group? Android: `targetSdk`, whether `USE_FULL_SCREEN_INTENT` and `SCHEDULE_EXACT_ALARM` are declared, and whether `canUseFullScreenIntent()` is checked anywhere.
+- [x] **Plugin policy.** Which notification plugin is in use and whether it is vendored behind the gateway (dependency-hygiene rule). The AlarmKit plugins below are 0.x; decide vendor-in versus pin.
+- [x] **Strings.** The no-shame audit script from M12 and the ARB layout; every new key in §12 goes through it.
 
 Output of the audit: a table of each checkbox with *found at* / *matches spec* / *gap*, plus a one-paragraph recommendation on whether W1 ships with AlarmKit in the first cut or starts on the existing time-sensitive path with AlarmKit as the second PR.
 

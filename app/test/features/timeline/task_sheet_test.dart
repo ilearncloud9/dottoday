@@ -62,6 +62,35 @@ Future<void> _openDeepWork(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+/// Today on [repo], with Deep work's sheet open.
+Future<void> _pumpWith(
+  WidgetTester tester,
+  FakeOccurrenceRepository repo,
+) async {
+  tester.view
+    ..physicalSize = const Size(390, 1400)
+    ..devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: timelineOverrides(
+        now: _now,
+        occurrences: repo,
+        subtasks: FakeSubtaskRepository(demoDaySubtasks(_date)),
+      ),
+      child: MaterialApp(
+        theme: DotTheme.light(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const TodayScreen(),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Deep work: roadmap'));
+  await tester.pumpAndSettle();
+}
+
 Finder _inSheet(Finder f) =>
     find.descendant(of: find.byType(BottomSheet), matching: f);
 
@@ -167,6 +196,37 @@ void main() {
     final inbox = rows.firstWhere((o) => o.isInbox);
     await _pump(tester, TaskScreen(id: inbox.id), rows: rows);
     expect(find.text('Pinned'), findsNothing);
+  });
+
+  testWidgets('Move puts the task on the picked day, same time, with Undo', (
+    tester,
+  ) async {
+    final rows = demoDayRows(_date);
+    final repo = FakeOccurrenceRepository(rows);
+    final deep = rows.firstWhere((o) => o.title == 'Deep work: roadmap');
+    await _pumpWith(tester, repo);
+    await tester.tap(_inSheet(find.text('Move')));
+    await tester.pumpAndSettle();
+    expect(find.text('Move to'), findsOneWidget);
+    await tester.tap(find.bySemanticsLabel(RegExp('^Friday, October 23')).last);
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Deep work: roadmap moved to Friday, October 23'),
+      findsOneWidget,
+    );
+    final moved = repo.rows.firstWhere((o) => o.id == deep.id);
+    expect(moved.startUtc, DateTime.utc(2026, 10, 23, 7));
+  });
+
+  testWidgets('a pinned task has no Move', (tester) async {
+    final rows = [
+      for (final o in demoDayRows(_date))
+        o.title == 'Deep work: roadmap' ? o.copyWith(pinned: true) : o,
+    ];
+    await _pumpWith(tester, FakeOccurrenceRepository(rows));
+    await tester.tap(_inSheet(find.text('Move')));
+    await tester.pumpAndSettle();
+    expect(find.text('Move to'), findsNothing);
   });
 
   testWidgets('Shift is on for the live task running into the next', (

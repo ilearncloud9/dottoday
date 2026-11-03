@@ -30,7 +30,7 @@ class DayShapeGroup extends StatelessWidget {
   final Settings settings;
 
   /// Wake Up, its alarm and Wind Down, "same every day" (minimal Settings
-  /// rows 2–3, docs/14 §4; the alarm is in both layouts, docs/15 §10).
+  /// rows 2–5, docs/14 §4; the alarm is in both layouts, docs/15 §10).
   List<Widget> times(BuildContext context) => _times(context);
 
   @override

@@ -116,18 +116,21 @@ final class SyncEngine {
     void Function(int pulledSoFar)? progress,
   }) async {
     final localWins = !await _hasCursor(entity);
-    var since = await _cursor(entity);
+    var after = await _cursor(entity);
     var rows = 0;
     var conflicts = 0;
     while (true) {
-      final page = await _gateway.pull(entity, since, limit: _pageSize);
+      final page = await _gateway.pull(entity, after, limit: _pageSize);
       if (page.isEmpty) break;
       final ids = [for (final r in page) r['id']! as String];
       final pending = await _outbox.pendingFor(entity, ids);
       final versions = await _gateway.fieldVersions(entity, ids);
       final seen = await _seen(entity, ids);
       await _hlc.receive([for (final v in versions.values) ...v.values]);
-      final last = DateTime.parse(page.last['updated_at']! as String).toUtc();
+      final last = (
+        updatedAt: page.last['updated_at']! as String,
+        id: page.last['id']! as String,
+      );
       await _db.transaction(() async {
         for (final r in page) {
           final id = r['id']! as String;
@@ -146,14 +149,12 @@ final class SyncEngine {
       });
       rows += page.length;
       progress?.call(rows);
-      // A full page whose rows all share the cursor's instant can't move
-      // it; stop rather than read the same page again.
-      if (page.length < _pageSize || !last.isAfter(since)) break;
-      since = last;
+      if (page.length < _pageSize) break;
+      after = last;
     }
     // Visited, even if the server had nothing: the next pull of it is no
     // longer this account's first.
-    if (localWins && rows == 0) await _saveCursor(entity, since);
+    if (localWins && rows == 0) await _saveCursor(entity, after);
     return (rows, conflicts);
   }
 
@@ -274,19 +275,28 @@ final class SyncEngine {
     }
   }
 
-  Future<DateTime> _cursor(String entity) async {
+  /// Where [entity]'s next pull starts: after the last row pulled, or
+  /// from its instant on for a cursor saved before v17.
+  Future<PullCursor> _cursor(String entity) async {
     final row = await (_db.select(
       _db.syncCursors,
     )..where((c) => c.entity.equals(entity))).getSingleOrNull();
-    return DateTime.fromMillisecondsSinceEpoch(row?.sinceUtc ?? 0, isUtc: true);
+    if (row?.sinceAt case final at?) return (updatedAt: at, id: row!.sinceId);
+    final since = DateTime.fromMillisecondsSinceEpoch(
+      row?.sinceUtc ?? 0,
+      isUtc: true,
+    );
+    return (updatedAt: since.toIso8601String(), id: null);
   }
 
-  Future<void> _saveCursor(String entity, DateTime last) => _db
+  Future<void> _saveCursor(String entity, PullCursor last) => _db
       .into(_db.syncCursors)
       .insertOnConflictUpdate(
         SyncCursorsCompanion.insert(
           entity: entity,
-          sinceUtc: last.millisecondsSinceEpoch,
+          sinceUtc: DateTime.parse(last.updatedAt).millisecondsSinceEpoch,
+          sinceAt: Value(last.updatedAt),
+          sinceId: Value(last.id),
         ),
       );
 }
