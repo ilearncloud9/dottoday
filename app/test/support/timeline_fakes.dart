@@ -772,9 +772,11 @@ final class FakeAlarmGateway implements AlarmGateway {
   }
 
   @override
-  Future<void> disarmAll() async {
+  Future<bool> disarmAll() async {
+    if (!reachable) return false;
     armed = const [];
     disarmed++;
+    return true;
   }
 
   @override

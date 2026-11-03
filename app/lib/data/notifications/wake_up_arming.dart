@@ -62,7 +62,9 @@ final class WakeUpArming {
     final known = await _read();
     if (!profile.settings.wakeUpAlarm) {
       if (known == null) return const {};
-      await _gateway.disarmAll();
+      // Out of reach, the alarms still ring: keep them armed here, so the
+      // notification path leaves them out and the next sync disarms them.
+      if (!await _gateway.disarmAll()) return known;
       await _write(null);
       return const {};
     }

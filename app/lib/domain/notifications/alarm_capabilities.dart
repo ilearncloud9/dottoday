@@ -152,8 +152,9 @@ abstract interface class AlarmGateway {
   });
 
   /// Stops and disarms every Wake Up alarm, ringing or snoozed included:
-  /// the switch went off.
-  Future<void> disarmAll();
+  /// the switch went off. False when the OS side can't be reached, so the
+  /// caller keeps what it knew is still armed.
+  Future<bool> disarmAll();
 
   /// What the alarms did since the last drain (rang, snoozed, stopped),
   /// oldest first, with the app perhaps closed (M17.3); empty where
