@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
@@ -75,6 +76,24 @@ void main() {
       find.textContaining('December 14, 2026', findRichText: true),
       findsOneWidget,
     );
+  });
+
+  testWidgets('/day/<today> is today: no Today pill', (tester) async {
+    await pumpToday(tester, date: parseRouteDate('2026-10-21'));
+    expect(
+      find.textContaining('October 21, 2026', findRichText: true),
+      findsOneWidget,
+    );
+    expect(find.widgetWithText(OutlinedButton, 'Today'), findsNothing);
+  });
+
+  testWidgets('/day/:date past the pager\'s reach opens today', (tester) async {
+    await pumpToday(tester, date: parseRouteDate('2028-01-01'));
+    expect(
+      find.textContaining('October 21, 2026', findRichText: true),
+      findsOneWidget,
+    );
+    expect(find.byType(DayCard), findsWidgets);
   });
 
   testWidgets('the caption chevron and the strip handle open the month', (

@@ -97,7 +97,8 @@ void main() {
     test('format pads and round-trips', () {
       final s = formatRouteDate(DateTime(2026, 3, 7));
       expect(s, '2026-03-07');
-      expect(parseRouteDate(s), DateTime.utc(2026, 3, 7));
+      // A local calendar date, as todayDate and AppRoutes.day use.
+      expect(parseRouteDate(s), DateTime(2026, 3, 7));
     });
 
     test('AppRoutes builders', () {

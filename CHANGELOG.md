@@ -73,6 +73,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - M10.1: The thinking help behind Break it down, brain-dump and length suggestions now runs on your device — Apple Intelligence on iPhone and Mac, Gemini Nano on supported Android phones, Chrome's built-in model on the web — and falls back to your own history and simple rules where there is none. Nothing you type goes to a server; Settings › Privacy explains it and can clear what was kept.
 
 ### Fixed
+- A link to a day (`dottoday://day/…`, a widget, Siri) now opens that day properly: a link to today shows today, with its now line and no Today button, and a link more than a year away opens today instead of an empty screen.
 - Move in a task's sheet works: it opens the month, and the task moves to the day you pick at the same time, with Undo. It was always greyed out before. Pinned and Inbox tasks still can't be moved from here.
 - Sync no longer stops bringing down one kind of item after a big change on another device. When 500 or more tasks, steps or repeats were saved in one go (a first sync, an import), this device kept fetching the same 500 forever and never got the rest; it now picks up exactly where it left off.
 - Tapping done, +15 min, Shift the rest or an Unstick answer on a task that had just been deleted or synced away no longer throws an error; the tap does nothing.
