@@ -254,6 +254,31 @@ stack only).
 - The I7 hold is in memory: if the app is killed with D1 open, nothing is deleted, and the hold
   simply ends.
 
+### Refusal feedback on iOS: Live Activity and Siri (third pass, 2026-11-09, awaiting review)
+
+Owner-approved scope: fixes 1 and 2 of the silent-refusal audit only.
+
+- **Live Activity Done / +15** (`LiveMarkDoneIntent`, `LiveAddFifteenIntent`, and the test channel's
+  `perform`): the activity is ended or extended only when `DotActions.performLive` reports the
+  action was queued. Refused (account deletion, queue full, unreadable queue): the activity stays
+  exactly as it was. Live Activity buttons can't show a message, so "unchanged" is the honest result.
+  An action stamped for an owner the app doesn't show yet is queued and counts as queued.
+- **Siri / Shortcuts Mark done, Add 15 minutes, Start focus:** a refused action throws
+  `NotSavedError`, whose text is the existing `intentNotSaved` string (en/de/fr/es: "Dottoday
+  couldn't save this right now. Open Dottoday and try again."): no task, time or account. A queued
+  action keeps its existing silent result.
+- **Limitations:** Start focus from the iOS 18 Control Center control (`openAppWhenRun`) opens the
+  app; whether Control Center shows the thrown error is up to the system and was not verified on a
+  device. How Siri voices a thrown error is the system's wording. Widget Done, Android toasts and the
+  reminder buttons during a deletion are separate follow-ups (not in this pass).
+
+Tests: `ios/RunnerTests/DotIntentsTests` (16, iPhone 16 Pro Simulator, iOS 18.6) adds Live Done and
++15 accepted vs refused for each refusal reason (activity update not run, queue unchanged, no ticked
+dot), an action for an owner not shown (queued, update runs), and the real `MarkDoneIntent`,
+`AddFifteenIntent` and `StartFocusIntent` on the test host's App Group: no error when queued,
+`NotSavedError` when refused, nothing queued, and the message carries no task id or account id.
+`integration_test/live_activity_test.dart` adds a refused Done against a real Live Activity.
+
 ## Deleted accounts (interim, owner-approved)
 
 Built. Delete screen: summary, "Export my data first" (complete and count-verified, or the delete

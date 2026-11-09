@@ -178,17 +178,23 @@ enum LiveActivityBridge {
         guard let args = call.arguments as? [String: Any], let id = args["id"] as? String else {
           return result(FlutterError(code: "bad_args", message: nil, details: nil))
         }
+        // As the activity's own buttons: changed only when queued (CR-160
+        // I7); the result says whether it was.
         Task {
+          let queued: Bool
           if args["kind"] as? String == "add_fifteen" {
             let end = args["planned_end_ms"] as? Double ?? 0
-            DotActions.perform(
-              .addFifteen, occurrenceId: id, plannedEnd: Date(timeIntervalSince1970: end / 1000))
-            await LiveActivities.plusFifteen(occurrenceId: id, plannedEndMs: end)
+            queued = await DotActions.performLive(
+              .addFifteen, occurrenceId: id, plannedEnd: Date(timeIntervalSince1970: end / 1000)
+            ) {
+              await LiveActivities.plusFifteen(occurrenceId: id, plannedEndMs: end)
+            }
           } else {
-            DotActions.perform(.markDone, occurrenceId: id)
-            await LiveActivities.end(occurrenceId: id)
+            queued = await DotActions.performLive(.markDone, occurrenceId: id) {
+              await LiveActivities.end(occurrenceId: id)
+            }
           }
-          result(nil)
+          result(queued)
         }
       default:
         result(FlutterMethodNotImplemented)

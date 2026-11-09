@@ -32,6 +32,22 @@ enum DotActions {
     return true
   }
 
+  /// Queues [kind] for a Live Activity button, then runs [update] (end or
+  /// extend the activity) only if it was queued: a refused Done or +15
+  /// leaves the activity as it was, never shown as done (CR-160 I7). An
+  /// action queued for an owner the app doesn't show yet is queued, so it
+  /// counts. True when queued.
+  @discardableResult
+  static func performLive(
+    _ kind: DotActionKind, occurrenceId: String, plannedEnd: Date? = nil,
+    defaults: UserDefaults? = DotStore.shared, update: () async -> Void
+  ) async -> Bool {
+    guard perform(kind, occurrenceId: occurrenceId, plannedEnd: plannedEnd, defaults: defaults)
+    else { return false }
+    await update()
+    return true
+  }
+
   /// The dot under way now (or, with [orNext], else the next one) in the
   /// stored snapshot: what Siri's "Mark my task done" acts on.
   static func currentBlock(

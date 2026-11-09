@@ -12,6 +12,11 @@ final class DotIntentsTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
+    reset()
+  }
+
+  /// A fresh suite holding one live dot in the snapshot.
+  private func reset() {
     defaults = UserDefaults(suiteName: suite)
     defaults.removePersistentDomain(forName: suite)
     let startMs = Int64(now.timeIntervalSince1970 * 1000) - 10 * 60_000
@@ -170,6 +175,106 @@ final class DotIntentsTests: XCTestCase {
     XCTAssertEqual(DotActions.whatsNext(snapshot, at: now.addingTimeInterval(3600)), "Nothing next")
     XCTAssertEqual(
       DotActions.whatsNext(snapshot, at: now.addingTimeInterval(-3600)), "Next up: Deep work · 11:50")
+  }
+
+  // CR-160 I7: a Live Activity changes only when its action was queued.
+
+  /// Each refusal the queue can give, set up on [defaults].
+  private func refusals(_ queue: DotQueue) -> [(String, () -> Void)] {
+    [
+      ("deleting", { queue.publishOwner("{\"v\":1,\"refuse\":true}") }),
+      ("full", {
+        queue.publishOwner("{\"v\":1,\"owner\":\"\(self.ownerA)\"}")
+        for i in 0..<DotQueue.capacity { queue.append(DotQueue.entry(.addTask, text: "t\(i)")) }
+      }),
+      ("unreadable", { self.defaults.set("{not json", forKey: DotStore.queueKey) }),
+    ]
+  }
+
+  func testLiveDoneAndPlusFifteenChangeTheActivityOnlyWhenQueued() async {
+    for kind in [DotActionKind.markDone, .addFifteen] {
+      let queue = DotQueue(defaults: defaults)
+      // Queued: the activity changes.
+      queue.publishOwner("{\"v\":1,\"owner\":\"\(ownerA)\"}")
+      var updated = false
+      let queued = await DotActions.performLive(
+        kind, occurrenceId: live, plannedEnd: now, defaults: defaults
+      ) { updated = true }
+      XCTAssertTrue(queued, "\(kind)")
+      XCTAssertTrue(updated, "\(kind)")
+      // Refused: nothing queued, nothing changed, no ticked dot.
+      for index in 0..<3 {
+        reset()  // a fresh suite and snapshot for each refusal
+        let (reason, arrange) = refusals(DotQueue(defaults: defaults))[index]
+        arrange()
+        let before = defaults.string(forKey: DotStore.queueKey)
+        var changed = false
+        let ok = await DotActions.performLive(
+          kind, occurrenceId: live, plannedEnd: now, defaults: defaults
+        ) { changed = true }
+        XCTAssertFalse(ok, "\(kind) \(reason)")
+        XCTAssertFalse(changed, "\(kind) \(reason): no visual success")
+        XCTAssertEqual(defaults.string(forKey: DotStore.queueKey), before, "\(kind) \(reason)")
+        XCTAssertEqual(block()["done"] as? Bool, false, "\(kind) \(reason)")
+      }
+      reset()
+    }
+  }
+
+  func testAnActionForAnOwnerNotShownIsQueuedAndCounts() async {
+    // The marker names someone the app doesn't show right now: still queued
+    // (it waits for its owner), so the activity changes as for any queued one.
+    let other = "01928c3e-0000-7000-8000-00000000000b"
+    DotQueue(defaults: defaults).publishOwner("{\"v\":1,\"owner\":\"\(other)\"}")
+    var updated = false
+    let queued = await DotActions.performLive(.markDone, occurrenceId: live, defaults: defaults) {
+      updated = true
+    }
+    XCTAssertTrue(queued)
+    XCTAssertTrue(updated)
+    XCTAssertEqual(DotQueue(defaults: defaults).entries().last?["owner"] as? String, other)
+  }
+
+  // CR-160 I7: Siri and Shortcuts say a refused action wasn't saved, and
+  // stay silent on success. These run the real intents on the test host's
+  // App Group, restored afterwards.
+
+  @available(iOS 16.0, *)
+  func testIntentsSayNotSavedOnlyWhenRefused() async throws {
+    guard let group = DotStore.shared else { throw XCTSkip("no App Group in this host") }
+    let saved = (
+      group.string(forKey: DotStore.queueKey), group.string(forKey: DotStore.queueOwnerKey)
+    )
+    defer {
+      group.set(saved.0, forKey: DotStore.queueKey)
+      group.set(saved.1, forKey: DotStore.queueOwnerKey)
+    }
+    let endMs = Int(now.timeIntervalSince1970 * 1000)
+    let runs: [(String, () async throws -> Void)] = [
+      ("done", { _ = try await MarkDoneIntent(occurrenceId: self.live).perform() }),
+      ("plus15", {
+        _ = try await AddFifteenIntent(occurrenceId: self.live, plannedEndMs: endMs).perform()
+      }),
+      ("start", { _ = try await StartFocusIntent(occurrenceId: self.live).perform() }),
+    ]
+    let queue = DotQueue(defaults: group)
+    for (name, run) in runs {
+      group.removeObject(forKey: DotStore.queueKey)
+      queue.publishOwner("{\"v\":1,\"owner\":\"\(ownerA)\"}")
+      try await run()  // queued: no error, no dialog (unchanged)
+      XCTAssertEqual(queue.entries().count, 1, name)
+      queue.publishOwner("{\"v\":1,\"refuse\":true}")
+      do {
+        try await run()
+        XCTFail("\(name): a refused action must not look done")
+      } catch let error as NotSavedError {
+        let said = String(localized: error.localizedStringResource)
+        XCTAssertFalse(said.isEmpty, name)
+        XCTAssertFalse(said.contains(live), "\(name): no task id")
+        XCTAssertFalse(said.contains(ownerA), "\(name): no account")
+      }
+      XCTAssertEqual(queue.entries().count, 1, "\(name): nothing queued when refused")
+    }
   }
 }
 
