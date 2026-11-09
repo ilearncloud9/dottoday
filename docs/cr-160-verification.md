@@ -78,9 +78,10 @@ I1–I6 and I8 fixed in code with tests; I7 is open (share extension). Device-on
 
 ## I7: queued actions keep their owner (second pass 2026-11-09, awaiting owner review)
 
-**Status: OPEN** pending the owner's review and the validation still outstanding below (macOS
-native tests, share sheets end to end, physical devices). CR-160 stays **CRITICAL — OPEN — RELEASE
-BLOCKER**; PR #75 stays **DRAFT — NOT READY TO MERGE** and was not changed by this pass.
+**Status (owner 2026-11-09):** I7 implementation completed and locally verified in the tested
+scopes; security review and end-to-end verification outstanding (I7 stays OPEN). ED-223 A3: locally
+verified and included in draft review. CR-160: **CRITICAL — OPEN — RELEASE BLOCKER**. PR #75:
+**DRAFT — NOT READY TO MERGE**.
 
 ### Root cause and race timeline (before this pass)
 
