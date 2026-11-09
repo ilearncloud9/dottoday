@@ -3,6 +3,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/calendar/calendar_importer.dart';
 import 'package:dottoday/data/calendar/drift_calendar_source_repository.dart';
 import 'package:dottoday/data/mappers/entity_mappers.dart';
+import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/sync/requeue.dart';
 import 'package:dottoday/domain/calendar/calendar_import_plan.dart';
 import 'package:dottoday/domain/calendar/calendar_import_rules.dart';
@@ -144,6 +145,17 @@ void main() {
     expect(await h.changeLog(), isEmpty);
     final dirty = await h.db.select(h.db.occurrences).get();
     expect(dirty.every((r) => !r.dirty), isTrue);
+  });
+
+  test('nothing is imported for an account being deleted; after, it is '
+      '(CR-160 policy §4)', () async {
+    await sealForDeletion(h.db, userId);
+    expect(await run(), const Err<void, AppFailure>(StorageFailure()));
+    expect(await imported(), isEmpty);
+    expect(await h.db.select(h.db.calendarLinks).get(), isEmpty);
+    await unsealDeletion(h.db, userId);
+    expect(await run(), isA<Ok<void, AppFailure>>());
+    expect(await imported(), isNotEmpty);
   });
 
   test('a second run changes nothing', () async {

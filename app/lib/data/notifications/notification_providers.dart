@@ -11,9 +11,11 @@ import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/data/notifications/notification_responder.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/notifications/push/web_push_wiring.dart';
+import 'package:dottoday/data/notifications/reminder_refusal.dart';
 import 'package:dottoday/data/notifications/sound/sound_player.dart';
 import 'package:dottoday/data/notifications/timer_notification_platform.dart';
 import 'package:dottoday/data/notifications/web/browser_notifications_any.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
@@ -109,6 +111,10 @@ NotificationResponder notificationResponder(Ref ref) => NotificationResponder(
   profile: () => latestProfile(ref),
   open: (location) => ref.read(routerProvider).go(location),
   logger: ref.watch(loggerProvider),
+  deleting: () => ref.read(ownerSwitchProvider).deleting,
+  ownerEpoch: () => ref.read(ownerEpochProvider),
+  refused: (failure) =>
+      ref.read(reminderRefusalProvider.notifier).report(failure),
 );
 
 /// Initialises the platform once (channels, actions, the tap handler) and

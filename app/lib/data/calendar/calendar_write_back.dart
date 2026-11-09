@@ -5,6 +5,7 @@ import 'package:dottoday/data/daos/calendar_links_dao.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/mappers/entity_mappers.dart';
 import 'package:dottoday/data/mappers/row_codec.dart';
+import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
 import 'package:dottoday/data/writes/validate_batch.dart';
@@ -215,16 +216,24 @@ final class CalendarWriteBack {
       externalEventId: importKey(eventId, merge.fingerprint.startMs),
       lastSyncedUtc: now,
     );
-    final committed = await _db.transaction(() async {
-      final current = await _occurrences.findById(
-        item.link.userId,
-        item.occurrence.id,
-      );
-      if (current != item.occurrence) return false;
-      await _links.upsertLink(_codec.encode<CalendarLinkRow>(link.toJson()));
-      await _occurrences.upsertAll(valid);
-      return true;
-    });
+    final bool committed;
+    try {
+      committed = await _db.transaction(() async {
+        // Never while the owner's account is being deleted (CR-160 §4);
+        // imports aren't in its export, so no revision moves.
+        await checkNotSealed(_db, item.link.userId);
+        final current = await _occurrences.findById(
+          item.link.userId,
+          item.occurrence.id,
+        );
+        if (current != item.occurrence) return false;
+        await _links.upsertLink(_codec.encode<CalendarLinkRow>(link.toJson()));
+        await _occurrences.upsertAll(valid);
+        return true;
+      });
+    } on OwnerSealedException {
+      return _Done.skipped;
+    }
     if (valid.isNotEmpty && committed) _effects.schedule(item.link.userId);
     return committed ? _Done.written : _Done.skipped;
   }

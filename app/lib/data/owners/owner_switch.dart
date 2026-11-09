@@ -116,6 +116,10 @@ final class OwnerSwitch {
 
   bool get _busy => _switching > 0 || _refusing > 0;
 
+  /// Whether an account deletion is running ([refuseQueue] to
+  /// [releaseQueue]): a reminder tap must not navigate away from D1 then.
+  bool get deleting => _refusing > 0;
+
   /// From the confirmed deletion of the shown account until [releaseQueue]
   /// (policy §4, I7): widgets, the share extension and the service worker
   /// refuse new actions and say so, rather than queue work that would

@@ -40,7 +40,8 @@ final class EntityWriter<E> {
 /// batch's profile, CR-160) — except [EntityWriter.deviceOnly] rows, which
 /// are only upserted. [guestSession] is set when [owner] is a guest: each
 /// row's first writing session is recorded (CR-160 guest eligibility).
-Future<void> writeRows<E>(
+/// Returns whether any row was written.
+Future<bool> writeRows<E>(
   AppDatabase db,
   EntityWriter<E> writer,
   Iterable<E> rows, {
@@ -76,7 +77,7 @@ Future<void> writeRows<E>(
         ),
     ]);
   }
-  if (changed.isEmpty) return;
+  if (changed.isEmpty) return false;
   await writer.upsertAll(changed);
   if (guestSession != null) {
     await db.batch(
@@ -90,9 +91,10 @@ Future<void> writeRows<E>(
       ], mode: InsertMode.insertOrIgnore),
     );
   }
-  if (synced.isEmpty) return;
+  if (synced.isEmpty) return true;
   await _markDirty(db, writer.table, synced);
   await db.batch((b) => b.insertAll(db.changeLog, log));
+  return true;
 }
 
 Future<void> _markDirty(AppDatabase db, String table, List<String> ids) {

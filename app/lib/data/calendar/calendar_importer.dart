@@ -7,6 +7,7 @@ import 'package:dottoday/data/daos/calendar_links_dao.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/mappers/entity_mappers.dart';
 import 'package:dottoday/data/mappers/row_codec.dart';
+import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/repositories/drift_calendar_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
@@ -223,15 +224,23 @@ final class CalendarImporter implements CalendarImport {
       case Err(:final failure):
         return Err(failure);
     }
-    await _db.transaction(() async {
-      await _links.upsertAll([
-        for (final l in plan.links) _codec.encode<CalendarLinkRow>(l.toJson()),
-      ]);
-      await _occurrences.upsertAll(batch.occurrences);
-      await _subtasks.upsertAll(batch.subtasks);
-      await _links.deleteImported(userId, plan.removeOccurrenceIds);
-      await _links.deleteLinks(userId, plan.removeLinkIds);
-    });
+    try {
+      await _db.transaction(() async {
+        // Never while the owner's account is being deleted (CR-160 §4);
+        // imports aren't in its export, so no revision moves.
+        await checkNotSealed(_db, userId);
+        await _links.upsertAll([
+          for (final l in plan.links)
+            _codec.encode<CalendarLinkRow>(l.toJson()),
+        ]);
+        await _occurrences.upsertAll(batch.occurrences);
+        await _subtasks.upsertAll(batch.subtasks);
+        await _links.deleteImported(userId, plan.removeOccurrenceIds);
+        await _links.deleteLinks(userId, plan.removeLinkIds);
+      });
+    } on OwnerSealedException {
+      return const Err(StorageFailure());
+    }
     _effects.schedule(userId);
     if (plan.moved.isNotEmpty) _onMoved?.call(plan.moved);
     _logger.info(

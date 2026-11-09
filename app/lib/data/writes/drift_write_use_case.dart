@@ -4,6 +4,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/owned_local_meta.dart';
+import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/repositories/drift_calendar_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_reveal_hint_repository.dart';
@@ -79,6 +80,11 @@ final class DriftWriteUseCase implements WriteUseCase {
     } on _NotShown {
       _logger.warn('write.owner_not_shown');
       return const Err(StorageFailure());
+    } on OwnerSealedException {
+      // The owner's account is being deleted (CR-160 policy §4): refused,
+      // shown as the generic "couldn't save".
+      _logger.warn('write.owner_sealed');
+      return const Err(StorageFailure());
     } on Exception catch (e, st) {
       _logger.error('write.failed', error: e, stackTrace: st);
       return const Err(StorageFailure());
@@ -88,22 +94,28 @@ final class DriftWriteUseCase implements WriteUseCase {
   }
 
   Future<void> _write(WriteBatch b) async {
+    // In this transaction, so a deletion sealed after it can't miss it and
+    // one sealed before it refuses it (deletion_seal.dart).
+    await checkNotSealed(_db, b.userId);
     if (b.onlyWhileShown && (await shownOwnerId(_db)) != b.userId) {
       throw const _NotShown();
     }
     final hlc = await _hlc.clock();
     final now = _clock.nowUtc();
     final session = await guestSessionFor(_db, b.userId);
-    Future<void> rows<E>(EntityWriter<E> writer, Iterable<E> items) =>
-        writeRows(
-          _db,
-          writer,
-          items,
-          owner: b.userId,
-          now: now,
-          nextHlc: hlc.now,
-          guestSession: session,
-        );
+    var wrote = false;
+    Future<void> rows<E>(EntityWriter<E> writer, Iterable<E> items) async {
+      final written = await writeRows(
+        _db,
+        writer,
+        items,
+        owner: b.userId,
+        now: now,
+        nextHlc: hlc.now,
+        guestSession: session,
+      );
+      wrote = wrote || written;
+    }
 
     final profile = b.profile;
     if (profile != null) await rows(profileWriter(_profiles), [profile]);
@@ -123,6 +135,8 @@ final class DriftWriteUseCase implements WriteUseCase {
       calendarSeriesWriter(b.userId, _calendarSeries),
       b.calendarSeries,
     );
+    // Only a save that changed something moves the revision D1 compares.
+    if (wrote) await bumpWriteRevision(_db, b.userId);
     await _hlc.save();
   }
 

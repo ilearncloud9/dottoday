@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
@@ -8,8 +6,6 @@ import 'package:dottoday/data/export/export_providers.dart';
 import 'package:dottoday/data/intents/intent_providers.dart';
 import 'package:dottoday/data/owners/account_actions.dart';
 import 'package:dottoday/data/owners/account_export.dart';
-import 'package:dottoday/data/owners/owner_switch.dart';
-import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/intents/action_queue_store.dart';
 import 'package:dottoday/domain/intents/dot_action.dart';
 import 'package:drift/native.dart';
@@ -18,6 +14,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../domain/fixtures.dart';
+import '../../support/deleting_server.dart';
 import '../../support/export_fakes.dart';
 import '../../support/fake_notification_platform.dart';
 import '../../support/owner_app.dart';
@@ -36,41 +33,6 @@ const _s1 = '01928c3e-0000-7000-8000-0000000004a1';
 const _s2 = '01928c3e-0000-7000-8000-0000000004a2';
 const _s3 = '01928c3e-0000-7000-8000-0000000004a3';
 
-/// The server's `delete-account`, with hooks for what happens meanwhile.
-final class _Server implements AccountService {
-  late OwnerSwitch owners;
-  void Function()? during;
-  void Function()? after;
-  var fails = false;
-  var deletes = 0;
-
-  @override
-  Future<Result<void, AppFailure>> deleteAccount() async {
-    deletes++;
-    during?.call();
-    if (fails) return const Err(NetworkFailure(NetworkFailureKind.server));
-    await owners.accountDeleted(_a);
-    after?.call();
-    return const Ok(null);
-  }
-
-  @override
-  bool get available => true;
-  @override
-  Stream<Account> watch() => const Stream.empty();
-  @override
-  Future<Result<void, AppFailure>> signIn(SignInMethod method) async =>
-      const Ok(null);
-  @override
-  Future<Result<void, AppFailure>> sendMagicLink(String email) async =>
-      const Ok(null);
-  @override
-  Stream<RestoreProgress?> watchRestore() => const Stream.empty();
-  @override
-  Future<Result<void, AppFailure>> signOut({bool everywhere = false}) async =>
-      const Ok(null);
-}
-
 void main() {
   setUpAll(() async {
     tz_data.initializeTimeZones();
@@ -79,7 +41,7 @@ void main() {
 
   late AppDatabase db;
   late SharedActionQueue queue;
-  late _Server server;
+  late DeletingServer server;
   late FakeFileGateway files;
   late OwnerApp app;
   late AccountActions actions;
@@ -104,7 +66,7 @@ void main() {
     ownerAppLogs.records.clear();
     db = AppDatabase(NativeDatabase.memory());
     queue = SharedActionQueue();
-    server = _Server();
+    server = DeletingServer(_a);
     files = FakeFileGateway();
     app = OwnerApp(
       db,

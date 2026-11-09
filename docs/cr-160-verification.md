@@ -279,6 +279,114 @@ dot), an action for an owner not shown (queued, update runs), and the real `Mark
 `NotSavedError` when refused, nothing queued, and the message carries no task id or account id.
 `integration_test/live_activity_test.dart` adds a refused Done against a real Live Activity.
 
+### Reminder actions during account deletion (fourth pass, 2026-11-09, awaiting review)
+
+Owner-approved Option 1. The problem: a reminder's Done, Snooze or +15 (iOS, macOS and Android
+notification buttons, the app launched by one, the in-app banner, the web with a tab open) goes
+straight to `NotificationResponder`, which saved through the write path without the I7 queue. D1
+only compared queued action ids, so a save after the review or export was deleted with the account
+and missing from the export, with no warning (F1). The same save while the server deletion ran was
+saved and then removed (F2). A change of owner between the lookup and the save let it land on the
+previous owner's hidden rows (F3). Start and Open navigated with `router.go`, which closed D1
+mid-deletion and ended its hold early (F5).
+
+- **Write revision (F1):** `data/owners/deletion_seal.dart` keeps `write_revision:<owner>` in
+  `local_meta`. `DriftWriteUseCase` raises it inside the save's own transaction, only when rows
+  were actually written (`writeRows` now reports it). A save that fails or rolls back takes the
+  raise with it. D1's review (`summary`, `exportFirst`) records it after the queue drain and before
+  the rows are read, so it can only over-report. `deleteAccount` compares it as well as the queued
+  ids, and a difference returns the existing `ReviewChangedFailure` with the existing D1 behaviour
+  (export status cleared, typed word asked again). The sync log is not used: uploads prune it.
+- **Deletion seal (F2):** `deleteAccount` calls `sealForDeletion` after `refuseQueue`. In one
+  transaction, it writes `deletion_seal:<owner>` and then reads the revision. Every save checks the
+  seal first, inside its own transaction (`checkNotSealed`), and is refused with the generic
+  `StorageFailure` ("Couldn't save on this device. Try again."). Saves for other owners go through.
+  The seal is removed in `finally` on every outcome: review changed, server failure, success
+  (account removal also deletes `%:<owner>` keys) and seal failure. A seal a crash or kill left
+  behind is cleared once at the app's launch (`AppLifecycleScope`), never by the background refresh.
+  The calendar importer and write-back also check the seal. They don't raise the revision because
+  imported events are not in the export.
+- **Why no save can slip between:** the seal and every counted save are SQLite transactions on
+  the same database, and SQLite runs them serializably, across connections too. The background
+  refresh isolate opens its own connection, which is why an in-memory counter was not enough. A save
+  ordered before the seal raised the revision the seal reads, so D1 stops. A save ordered after
+  sees the seal and is refused before it commits. In WAL, a save whose read snapshot predates the
+  seal can't commit its write (`SQLITE_BUSY_SNAPSHOT`), so it fails and nothing is written.
+- **Owner check (F3):** the responder's Done, Snooze and +15 use `.whileShown()`. A change of owner
+  between the lookup and the save writes nothing for either owner.
+- **Feedback and navigation (F5):** while a deletion runs (`OwnerSwitch.deleting`, from
+  `refuseQueue` to `releaseQueue`) the responder doesn't navigate (Open, Start, Wind Down, day
+  summary, Wake Up), so D1 and its hold stay. Two cases report the refusal through
+  `reminderRefusalProvider`: a save refused while a deletion ran, and a save whose owner changed
+  while it was handled (owner epoch). The app root shows `failureMessage` as a SnackBar, with no
+  task or account detail, and no new string. Outside a deletion, reminders behave as before.
+
+Tests (local only):
+
+- `test/data/owners/deletion_reminder_test.dart` (11):
+  - Done, Snooze and +15 after the export stop the deletion; the next export holds the change; the
+    renewed confirmation deletes.
+  - A change before the export is in it.
+  - Each action during the server deletion is refused with `StorageFailure`, saves nothing and
+    doesn't navigate.
+  - Open, Start, Wind Down and day summary don't navigate during the deletion and do afterwards.
+  - A failed server deletion releases the seal and saves resume.
+  - Outside a deletion a reminder saves and the revision rises by one.
+  - Wake Up's Check-ping hint (common write path) is refused during the deletion.
+- `test/data/owners/deletion_race_test.dart` (9):
+  - Concurrency: a raw save raced against `deleteAccount` at 40 microtask offsets; both outcomes
+    were exercised and none was silent.
+  - Concurrency: a reminder Done raced against the confirmation at 55 offsets, the tap sometimes
+    starting first. Each run is detected, refused and reported, or after the deletion finished (a
+    gone task opens Today); a deleted task's route is never opened.
+  - Concurrency: two connections to one WAL file, 60 iterations of a background save against the
+    seal. Every committed save is what the seal read, and a save after the seal is refused.
+  - A change of owner between the lookup and the save.
+  - The revision moves only for a committed change: no-op save, foreign-key failure, rolled-back
+    transaction, refused save; another owner still saves; launch clears a stale seal.
+- `test/data/calendar/calendar_importer_test.dart`: nothing is imported for a sealed account.
+- `deletion_queue_test.dart` (8, I7 queue protections) now uses the shared `DeletingServer`.
+- Mutation check: removing any one safeguard (the revision compare, the seal check, `.whileShown()`,
+  the navigation hold, the revision raise) fails at least one of the new tests.
+
+Results (macOS host, local only):
+
+- `dart format --set-exit-if-changed`: 0 files changed.
+- `flutter analyze` and `dart analyze`: no issues.
+- Unit (`--exclude-tags golden,perf,supabase`, random order, seed 1924442251): 4004 passed, 21
+  skipped.
+- Goldens (`--tags golden`): 2248 passed.
+- Perf (`--tags perf --concurrency=1`): 5 passed.
+- New files: `deletion_reminder_test` 11/11, `deletion_race_test` 9/9.
+- The related owner, I7, responder, write and calendar suites: 151 passed before the new tests.
+- Not run: the `supabase` tag needs a local stack (`supabase start`) and hangs without one, as in
+  CI's unit job; device or simulator runs; integration tests.
+
+Limitations, not fixed by this pass:
+
+- A change synced from another device while D1 is open is not detected. Sync pulls don't raise the
+  revision. That is a separate export-consistency question.
+- Trash purge (30-day tombstones) doesn't raise the revision. It only removes rows the export holds
+  more of, so nothing is lost from a confirmed export.
+- The Android Wake Up alarm actions (snooze, "I'm up") write `wake_up_days` through their own path.
+  That is device-local and not in the export, and the Wake Up ownership blocker still covers it.
+- The SnackBar shows on the topmost Scaffold. With D1 as a dialog (wider windows) it appears under
+  the dialog's barrier. Not checked on a device. Native notification buttons were not driven on a
+  device or simulator in this pass: the tests stop at the responder.
+- On the web, the service worker posts a tap to the first window, which may be a tab without the
+  database (an existing, unrelated issue).
+
+Open before push approval (owner 2026-11-09):
+
+- **A. Refusal-message visibility:** whether the SnackBar can be seen and is announced on every
+  supported layout, the D1 dialog on wider windows included.
+- **B. Crash recovery:** whether clearing a stale seal at launch can reopen saves to an account
+  whose deletion or local removal is still pending.
+- **C. External changes:** changes synced from another device during the D1 review are not
+  covered by the local revision (export-consistency risk, separate).
+- **D. Remaining paths:** the Android Wake Up path, physical-device behaviour, and the writers
+  outside the revision: sync pulls, trash purge, and the calendar import and write-back (seal only).
+
 ## Deleted accounts (interim, owner-approved)
 
 Built. Delete screen: summary, "Export my data first" (complete and count-verified, or the delete

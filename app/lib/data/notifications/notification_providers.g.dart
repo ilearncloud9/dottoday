@@ -249,7 +249,7 @@ final class NotificationResponderProvider
 }
 
 String _$notificationResponderHash() =>
-    r'16ef0bc1027896656c9d77133d715fe1cecab948';
+    r'76bd2f3980d929c4eed11516972c43e5176b1738';
 
 /// Initialises the platform once (channels, actions, the tap handler) and
 /// handles the tap that launched the app. The gateway waits on this before
