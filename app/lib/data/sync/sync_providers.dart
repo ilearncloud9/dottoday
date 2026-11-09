@@ -77,20 +77,23 @@ SyncService syncService(Ref ref) {
     adopt: (id) async {
       final zone = await ref.read(deviceTimeZoneProvider.future);
       final language = ref.read(deviceLanguageProvider);
-      final result = await signInOwner(
-        db,
-        id,
-        ref.read(sharedHlcProvider),
-        freshProfile: (account) =>
-            freshAccountProfile(account, zone, language, clock.nowUtc()),
-      );
+      // The switch around the sign-in step: what widgets and the share
+      // extension queued for the owner shown is applied first, and every
+      // screen, reminder and widget follows another owner (CR-160 I7, I8).
+      final result = await ref
+          .read(ownerSwitchProvider)
+          .signIn(
+            () => signInOwner(
+              db,
+              id,
+              ref.read(sharedHlcProvider),
+              freshProfile: (account) =>
+                  freshAccountProfile(account, zone, language, clock.nowUtc()),
+            ),
+          );
       // The guest's tasks wait for the person's choice (CR-160): not
       // shown under the account, not synced, until it is recorded.
-      if (result.change == OwnerChange.guestChoiceNeeded) return false;
-      if (result.change == OwnerChange.unchanged) return true;
-      // Another owner shows now: every screen, reminder and widget follows.
-      await ref.read(ownerSwitchProvider).signedIn();
-      return true;
+      return result.change != OwnerChange.guestChoiceNeeded;
     },
     conflicts: DriftConflictStore(
       db: db,

@@ -33,7 +33,14 @@ void main() {
     testWidgets('nothing of the account; labelled; the two ways on', (t) async {
       await pumpAccountScreen(t, const SignedOutScreen(), actions: actions);
       expect(find.text('You’re signed out'), findsOneWidget);
-      expect(find.bySemanticsLabel('An empty day'), findsOneWidget);
+      // The illustration is decorative (ED-223): nothing for screen readers.
+      expect(find.bySemanticsLabel('An empty day'), findsNothing);
+      expect(
+        find.textContaining(
+          'Your tasks stay on this device under your account',
+        ),
+        findsOneWidget,
+      );
       expect(find.textContaining('@'), findsNothing);
       await expectA11yGuidelines(t);
       await tapIn(t, find.text('Use without an account'));

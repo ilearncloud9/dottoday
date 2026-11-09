@@ -160,3 +160,14 @@ final class UnexpectedFailure extends AppFailure {
   @override
   String get code => 'unexpected';
 }
+
+/// Account deletion stopped (CR-160 policy §4, I7): something was queued
+/// for the account (a share, a widget or notification action) after the
+/// person reviewed or exported what deleting removes. Nothing was deleted;
+/// they export again or confirm again.
+final class ReviewChangedFailure extends AppFailure {
+  const ReviewChangedFailure();
+
+  @override
+  String get code => 'account.review_changed';
+}

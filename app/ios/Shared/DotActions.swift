@@ -9,13 +9,17 @@ import Foundation
 /// nudge a running app to drain. The app applies it through its single
 /// write path; this side never touches the database.
 enum DotActions {
+  /// False, with nothing queued or patched, when the queue refused it (an
+  /// account being deleted, or full; CR-160 I7).
+  @discardableResult
   static func perform(
     _ kind: DotActionKind, occurrenceId: String? = nil, plannedEnd: Date? = nil,
     text: String? = nil, now: Date = Date(), defaults: UserDefaults? = DotStore.shared
-  ) {
-    guard let defaults else { return }
-    DotQueue(defaults: defaults).append(
-      DotQueue.entry(kind, occurrenceId: occurrenceId, plannedEnd: plannedEnd, text: text, now: now))
+  ) -> Bool {
+    guard let defaults,
+      DotQueue(defaults: defaults).append(
+        DotQueue.entry(kind, occurrenceId: occurrenceId, plannedEnd: plannedEnd, text: text, now: now))
+    else { return false }
     if let occurrenceId {
       SnapshotPatch.patchStored(kind, occurrenceId: occurrenceId, now: now, in: defaults)
     }
@@ -25,6 +29,7 @@ enum DotActions {
     CFNotificationCenterPostNotification(
       CFNotificationCenterGetDarwinNotifyCenter(),
       CFNotificationName(DotStore.queueChanged as CFString), nil, nil, true)
+    return true
   }
 
   /// The dot under way now (or, with [orNext], else the next one) in the

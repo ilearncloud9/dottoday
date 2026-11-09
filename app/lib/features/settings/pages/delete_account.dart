@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
@@ -48,9 +49,8 @@ class DeleteAccountView extends ConsumerStatefulWidget {
 
 /// A leaf: the summary, the typed word, the export's and deletion's state.
 class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
-  late final Future<OwnerSummary> _summary = ref
-      .read(accountActionsProvider)
-      .summary(widget.owner);
+  late final AccountActions _actions;
+  late final Future<OwnerSummary> _summary;
   late final _typed = TextEditingController()..addListener(_changed);
   var _busy = false;
   OwnerExportOutcome? _exported;
@@ -59,7 +59,16 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
   void _changed() => setState(() {});
 
   @override
+  void initState() {
+    super.initState();
+    _actions = ref.read(accountActionsProvider);
+    _summary = _actions.summary(widget.owner);
+  }
+
+  @override
   void dispose() {
+    // Actions queued for the account meanwhile apply again (CR-160 I7).
+    _actions.endDeletion(widget.owner);
     _typed.dispose();
     super.dispose();
   }
@@ -73,9 +82,7 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
       _exported = null;
       _error = null;
     });
-    final outcome = await ref
-        .read(accountActionsProvider)
-        .exportFirst(widget.owner, origin: origin);
+    final outcome = await _actions.exportFirst(widget.owner, origin: origin);
     if (!mounted) return;
     setState(() {
       _busy = false;
@@ -90,11 +97,20 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
       _busy = true;
       _error = null;
     });
-    final result = await ref.read(accountActionsProvider).deleteAccount();
+    final result = await _actions.deleteAccount();
     if (!mounted) return;
     switch (result) {
       case Ok():
         navigator.pop();
+      case Err(failure: final ReviewChangedFailure failure):
+        // Something new arrived: the export no longer covers everything and
+        // the typed word is asked again (CR-160 I7).
+        _typed.clear();
+        setState(() {
+          _busy = false;
+          _exported = null;
+          _error = failureMessage(l10n, failure);
+        });
       case Err(:final failure):
         setState(() {
           _busy = false;

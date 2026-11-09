@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' show Rect;
 
 import 'package:dottoday/core/failures/app_failure.dart';
@@ -6,7 +7,11 @@ import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/db/owned_local_meta.dart';
 import 'package:dottoday/data/export/export_providers.dart';
+import 'package:dottoday/data/intents/action_queue_drainer.dart';
+import 'package:dottoday/data/intents/intent_providers.dart';
+import 'package:dottoday/data/intents/queue_owners.dart';
 import 'package:dottoday/data/owners/account_export.dart';
 import 'package:dottoday/data/owners/account_meta.dart';
 import 'package:dottoday/data/owners/owner_switch.dart';
@@ -16,6 +21,7 @@ import 'package:dottoday/data/sync/guest_settings_choice.dart' as guest;
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:flutter/foundation.dart' show setEquals;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'account_actions.g.dart';
@@ -62,14 +68,25 @@ abstract interface class AccountActions {
   Future<void> decideSettingsLater(String accountId, {required bool later});
 
   /// D1 "Export my data first" for [owner], checked (see
-  /// [exportOwnerChecked]).
+  /// [exportOwnerChecked]). What widgets and the share extension queued for
+  /// [owner] is applied first, so the file holds it; anything that can't
+  /// be applied fails the export (CR-160 I7).
   Future<OwnerExportOutcome> exportFirst(String owner, {Rect? origin});
 
-  /// D1's summary: [owner]'s tasks and unsynced changes.
+  /// D1's summary: [owner]'s tasks and unsynced changes, after what was
+  /// queued for [owner] is applied. From here until [endDeletion], new
+  /// queued actions for [owner] wait unapplied, so [deleteAccount] sees
+  /// them (CR-160 I7).
   Future<OwnerSummary> summary(String owner);
 
-  /// D1 "Delete account": the server deletion, then the device copy.
+  /// D1 "Delete account": the server deletion, then the device copy. While
+  /// it runs, surfaces refuse new actions. [ReviewChangedFailure], and
+  /// nothing deleted, when something was queued for the account since the
+  /// summary or the export.
   Future<Result<void, AppFailure>> deleteAccount();
+
+  /// D1 closed: [owner]'s queued actions apply again.
+  void endDeletion(String owner);
 
   /// Web retry "Finish removing": every pending removal, or the failure.
   Future<Result<void, AppFailure>> finishRemovals();
@@ -144,23 +161,78 @@ final class DeviceAccountActions implements AccountActions {
   Future<void> decideSettingsLater(String accountId, {required bool later}) =>
       deferGuestSettings(_db, accountId, later: later);
 
+  /// For each D1 open: the queued action ids of its owner when it was last
+  /// reviewed (summary or export).
+  final _reviewed = <String, Set<String>>{};
+
+  ActionQueueDrainer get _drainer => _ref.read(actionQueueDrainerProvider);
+
+  /// Applies what is queued for [owner] and holds what comes after;
+  /// returns what is left queued (could not be applied).
+  Future<Set<String>> _review(String owner) async {
+    _drainer.hold(owner);
+    await _drainer.drain(force: owner);
+    final left = await queuedIdsFor(_ref.read(actionQueueStoreProvider), owner);
+    _reviewed[owner] = left;
+    return left;
+  }
+
   @override
-  Future<OwnerExportOutcome> exportFirst(String owner, {Rect? origin}) =>
-      exportOwnerChecked(
-        db: _db,
-        exports: _ref.read(exportServiceProvider),
-        files: _ref.read(fileGatewayProvider),
-        logger: _ref.read(loggerProvider),
-        owner: owner,
-        origin: origin,
+  Future<OwnerExportOutcome> exportFirst(String owner, {Rect? origin}) async {
+    if ((await _review(owner)).isNotEmpty) {
+      // Queued work the file can't hold: never "exported" without it.
+      _ref.read(loggerProvider).error('account.export_queue_unapplied');
+      return OwnerExportOutcome.failed;
+    }
+    return exportOwnerChecked(
+      db: _db,
+      exports: _ref.read(exportServiceProvider),
+      files: _ref.read(fileGatewayProvider),
+      logger: _ref.read(loggerProvider),
+      owner: owner,
+      origin: origin,
+    );
+  }
+
+  @override
+  Future<OwnerSummary> summary(String owner) async {
+    await _review(owner);
+    return ownerSummary(_db, owner);
+  }
+
+  @override
+  Future<Result<void, AppFailure>> deleteAccount() async {
+    final owner = await shownOwnerId(_db);
+    final reviewed = owner == null ? null : _reviewed[owner];
+    if (owner == null || reviewed == null) {
+      return const Err(ReviewChangedFailure());
+    }
+    final owners = _ref.read(ownerSwitchProvider);
+    // From here no surface can queue for the account: work that would
+    // vanish with it, or land with the next owner, is refused instead.
+    await owners.refuseQueue();
+    try {
+      final now = await queuedIdsFor(
+        _ref.read(actionQueueStoreProvider),
+        owner,
       );
+      if (!setEquals(now, reviewed)) {
+        // The next confirmation covers what arrived (the person was told).
+        _reviewed[owner] = now;
+        return const Err(ReviewChangedFailure());
+      }
+      return await _ref.read(accountServiceProvider).deleteAccount();
+    } finally {
+      await owners.releaseQueue();
+    }
+  }
 
   @override
-  Future<OwnerSummary> summary(String owner) => ownerSummary(_db, owner);
-
-  @override
-  Future<Result<void, AppFailure>> deleteAccount() =>
-      _ref.read(accountServiceProvider).deleteAccount();
+  void endDeletion(String owner) {
+    _reviewed.remove(owner);
+    _drainer.release(owner);
+    unawaited(_drainer.drain().catchError((Object _) => 0));
+  }
 
   @override
   Future<Result<void, AppFailure>> finishRemovals() async {

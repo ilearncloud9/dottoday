@@ -1,5 +1,7 @@
 package app.dottoday.planner.intents
 
+import org.json.JSONArray
+import org.json.JSONObject
 import java.security.SecureRandom
 import java.time.Instant
 import java.time.ZoneId
@@ -23,6 +25,57 @@ object DotQueue {
     /** The `home_widget` prefs key the app drains (action_queue_json.dart). */
     const val KEY = "action_queue"
     const val SNAPSHOT_KEY = "snapshot"
+
+    /**
+     * Whom new entries are stamped with, as the app publishes it
+     * (lib/domain/intents/action_queue_store.dart `encodeQueueOwner`).
+     */
+    const val OWNER_KEY = "action_queue_owner"
+
+    /**
+     * Most entries the queue holds (lib/domain/intents/action_queue_store.dart
+     * `queueCapacity`) and the most bytes; past either a new entry is
+     * refused, never an older one evicted (CR-160 I7 retention).
+     */
+    const val CAPACITY = 500
+    const val MAX_BYTES = 1_000_000
+
+    /**
+     * Whether a new entry may join [queue] under [marker]: not while the app
+     * refuses (an account being deleted) and not past [CAPACITY] or
+     * [MAX_BYTES] with [entry] added. Call under `synchronized(DotQueue)`.
+     */
+    fun accepts(queue: JSONArray, marker: String?, entry: Map<String, Any>): Boolean {
+        val m = marker?.let { runCatching { JSONObject(it) }.getOrNull() }
+        if (m?.optBoolean("refuse", false) == true) return false
+        if (queue.length() >= CAPACITY) return false
+        return queue.toString().length + JsonMaps.fromValue(entry).toString().length < MAX_BYTES
+    }
+
+    /**
+     * [entry] stamped with the owner the app published in [marker] (CR-160
+     * I7): its id and guest session, or nothing while a change of owner is
+     * under way or before the app published one; the app then keeps the
+     * entry and never applies it. Call under `synchronized(DotQueue)`, the
+     * lock the app's publish and remove take.
+     */
+    /**
+     * The queue in [raw]; an empty one when there is none, null when it
+     * can't be read (then nothing is appended over it: an unreadable queue
+     * is never replaced, CR-160 I7).
+     */
+    fun parse(raw: String?): JSONArray? =
+        if (raw == null) JSONArray() else runCatching { JSONArray(raw) }.getOrNull()
+
+    fun stamp(entry: Map<String, Any>, marker: String?): Map<String, Any> {
+        val m = marker?.let { runCatching { JSONObject(it) }.getOrNull() } ?: return entry
+        if (m.optBoolean("switching", false) || m.optBoolean("refuse", false)) return entry
+        val owner = m.optString("owner", "").takeIf { it.isNotEmpty() } ?: return entry
+        return entry.toMutableMap().apply {
+            put("owner", owner)
+            m.optString("guest_session", "").takeIf { it.isNotEmpty() }?.let { put("guest_session", it) }
+        }
+    }
 
     private val random = SecureRandom()
 

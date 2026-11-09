@@ -17,7 +17,10 @@ struct AddTaskIntent: AppIntent {
   init(text: String) { self.text = text }
 
   func perform() async throws -> some IntentResult & ProvidesDialog {
-    DotActions.perform(.addTask, text: text)
+    // Refused while an account is being deleted, or when full (CR-160 I7).
+    guard DotActions.perform(.addTask, text: text) else {
+      return .result(dialog: IntentDialog("intentNotSaved"))
+    }
     return .result(dialog: IntentDialog("intentAddTaskDone"))
   }
 }

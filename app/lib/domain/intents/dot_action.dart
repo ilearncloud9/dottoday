@@ -57,23 +57,37 @@ final class QueuedAction {
     required this.id,
     required this.createdAtUtc,
     required this.action,
+    this.owner,
+    this.guestSession,
   });
 
   /// UUID v7 made by the surface: the queue's key, and AddTask's task id.
   final String id;
   final DateTime createdAtUtc;
   final DotAction action;
+
+  /// The profile shown when the surface queued it (CR-160 I7): stamped by
+  /// the native side from the app's published queue owner, under the queue
+  /// lock. Null when nobody could be named (queued during a change of
+  /// owner, or by an older version): such an entry is never applied.
+  final String? owner;
+
+  /// The guest session it was queued in, for a guest owner; the task it
+  /// adds counts as that session's work (guest eligibility, policy §3).
+  final String? guestSession;
 }
 
 /// JSON of one queue entry, as Swift, Kotlin and the service worker write
 /// it: `{"id", "at_ms", "kind": "add_task"|"mark_done"|"add_fifteen"|
 /// "start_focus", "occurrence_id", "planned_end_ms", "text", "note",
-/// "inbox"}`. A share extension or share intent writes `"shared": true`
+/// "inbox", "owner", "guest_session"}`. A share extension or share intent writes `"shared": true`
 /// with the raw `"text"` and an optional `"subject"` instead; the app makes
 /// the title and note from them ([sharedCapture], M12.4).
 Map<String, Object?> encodeQueuedAction(QueuedAction a) => {
   'id': a.id,
   'at_ms': a.createdAtUtc.millisecondsSinceEpoch,
+  'owner': ?a.owner,
+  'guest_session': ?a.guestSession,
   ...switch (a.action) {
     AddTask(:final text, :final note, :final inbox) => {
       'kind': 'add_task',
@@ -99,7 +113,8 @@ Map<String, Object?> encodeQueuedAction(QueuedAction a) => {
 
 /// The entry in [json], or null when it is malformed (unknown kind, an id
 /// that isn't a UUID, missing or mistyped field, oversized text). Ids come
-/// back lowercase (Swift writes them in capitals). Total: never throws.
+/// back lowercase (Swift writes them in capitals). An owner that isn't a
+/// UUID reads as no owner. Total: never throws.
 QueuedAction? decodeQueuedAction(Object? json) {
   if (json is! Map<String, Object?>) return null;
   final id = _id(json['id']);
@@ -111,6 +126,8 @@ QueuedAction? decodeQueuedAction(Object? json) {
     id: id,
     createdAtUtc: DateTime.fromMillisecondsSinceEpoch(at, isUtc: true),
     action: action,
+    owner: _id(json['owner']),
+    guestSession: _id(json['guest_session']),
   );
 }
 

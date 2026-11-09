@@ -3,7 +3,8 @@ package app.dottoday.planner.intents
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import org.json.JSONArray
+import android.widget.Toast
+import app.dottoday.planner.R
 
 /**
  * "Share → Dottoday" (docs/11 B6, docs/09 M12.4): text or a link shared
@@ -25,23 +26,33 @@ object ShareIntake {
         val text = intent.getStringExtra(Intent.EXTRA_TEXT)?.trim().orEmpty()
         if (text.isEmpty()) return false
         val subject = intent.getStringExtra(Intent.EXTRA_SUBJECT)?.trim()
-        append(DotActionReceiver.prefs(context.applicationContext), text, subject, System.currentTimeMillis())
+        if (!append(DotActionReceiver.prefs(context.applicationContext), text, subject, System.currentTimeMillis())) {
+            // Refused (an account being deleted, or the queue full; CR-160
+            // I7): said, and the app opens as usual with nothing queued.
+            Toast.makeText(context, R.string.share_not_saved, Toast.LENGTH_LONG).show()
+            return false
+        }
         IntentQueueBridge.notifyQueued()
         intent.action = Intent.ACTION_VIEW
         intent.data = Uri.parse("dottoday://inbox")
         return true
     }
 
-    /** One `shared` entry, appended under the queue's lock. */
-    fun append(prefs: android.content.SharedPreferences, text: String, subject: String?, nowMs: Long) =
+    /**
+     * One `shared` entry, stamped with the published owner and appended under
+     * the queue's lock; false, with nothing queued, when refused.
+     */
+    fun append(prefs: android.content.SharedPreferences, text: String, subject: String?, nowMs: Long): Boolean =
         synchronized(DotQueue) {
             val entry = DotQueue.entry(DotActionKind.ADD_TASK, nowMs, text = text.take(MAX_TEXT))
                 .toMutableMap()
             entry["shared"] = true
             subject?.takeIf { it.isNotEmpty() }?.let { entry["subject"] = it.take(MAX_SUBJECT) }
-            val queue = prefs.getString(DotQueue.KEY, null)
-                ?.let { runCatching { JSONArray(it) }.getOrNull() } ?: JSONArray()
-            queue.put(JsonMaps.fromValue(entry))
+            val marker = prefs.getString(DotQueue.OWNER_KEY, null)
+            val queue = DotQueue.parse(prefs.getString(DotQueue.KEY, null)) ?: return@synchronized false
+            if (!DotQueue.accepts(queue, marker, entry)) return@synchronized false
+            // The owner shown when it was shared (CR-160 I7).
+            queue.put(JsonMaps.fromValue(DotQueue.stamp(entry, marker)))
             prefs.edit().putString(DotQueue.KEY, queue.toString()).commit()
         }
 }

@@ -11,6 +11,29 @@ const snapshotPath = '__snapshot/day.json';
 /// The action queue the service worker appends to (M9.2).
 const queuePath = '__snapshot/actions.json';
 
+/// The owner the worker stamps queued actions with (CR-160 I7).
+const ownerPath = '__snapshot/queue_owner.json';
+
+/// The Web Locks name `web/action_queue.js` appends under.
+const _queueLock = 'dottoday-action-queue';
+
+@JS('navigator.locks')
+external _LockManager? get _locks;
+
+extension type _LockManager._(JSObject _) implements JSObject {
+  external JSPromise<JSAny?> request(String name, JSFunction callback);
+}
+
+/// Runs [body] holding the queue's Web Lock, shared with the service worker
+/// (CR-160 I7: a read-then-write never overwrites an append). Without Web
+/// Locks (none in this browser) it runs unlocked, as before.
+Future<void> withQueueLock(Future<void> Function() body) async {
+  final locks = _locks;
+  if (locks == null) return body();
+  JSPromise<JSAny?> held(JSAny? _) => body().then<JSAny?>((_) => null).toJS;
+  await locks.request(_queueLock, held.toJS).toDart;
+}
+
 @JS('caches')
 external _CacheStorage? get _caches;
 

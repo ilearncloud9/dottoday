@@ -24,6 +24,7 @@ String failureMessage(AppLocalizations l10n, AppFailure failure) {
     SpeechFailure() => l10n.failureSpeech,
     UndoExpiredFailure() => l10n.failureUndoExpired,
     UnexpectedFailure() => l10n.failureUnexpected,
+    ReviewChangedFailure() => l10n.accountDeleteChangedSinceReview,
   };
 }
 

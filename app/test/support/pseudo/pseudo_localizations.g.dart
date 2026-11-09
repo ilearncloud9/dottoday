@@ -5139,9 +5139,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get signedOutBody => pseudo(super.signedOutBody);
 
   @override
-  String get signedOutArt => pseudo(super.signedOutArt);
-
-  @override
   String get signedOutSignIn => pseudo(super.signedOutSignIn);
 
   @override
@@ -5277,6 +5274,10 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String get accountDeleteExportBroken =>
       pseudo(super.accountDeleteExportBroken);
+
+  @override
+  String get accountDeleteChangedSinceReview =>
+      pseudo(super.accountDeleteChangedSinceReview);
 
   @override
   String get accountDeleteExportClosed =>

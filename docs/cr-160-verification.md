@@ -73,8 +73,185 @@ I1–I6 and I8 fixed in code with tests; I7 is open (share extension). Device-on
 | I4 | Brain dumps, thinking log, recent searches, calendar moves, dictation, learning | `owned_local_meta.dart`: keyed by owner; legacy global values adopted only with exactly one profile, otherwise kept hidden and marked | `test/data/search/`, `calendar_moves_owner_test.dart`, owned-meta tests |
 | I5 | Undo, open editor, focus task, proposal, pending brain dump/routine drop, in-app alerts, trash | Watch the owner epoch and reset; undo refuses another owner's tokens | `owner_switch_reset_test.dart`, `undo_owner_test.dart` |
 | I6 | Delivered notifications | `clearAll` removes pending and delivered at every switch | `owner_switch_test.dart`; criterion 11 "delivered=0 none of A" (macOS, iOS Sim, Android emu) |
-| I7 | Wind Down timer; action queue | **OPEN.** Wind Down cancelled and re-armed; the in-app queue is drained before the switch. Not fixed: a native share-extension action queued under A and read after the switch lands with the next owner (queue entries carry no owner) | `owner_switch_test.dart` "actions queued before the switch…", "a run queued for A…" |
+| I7 | Wind Down timer; action queue | **OPEN** (owner review). Wind Down cancelled and re-armed. Queued native actions now carry their owner and apply only for it (section "I7: queued actions" below); physical devices, iOS/Mac share sheets driven end to end, and owner decisions D-I7-1…4 still open | `queue_owner_switching_test.dart`, `queue_owner_outcomes_test.dart`, `owner_switch_test.dart`, native tests below |
 | I8 | Widgets, Live Activity, ongoing notification, status item, Wake Up alarms | Empty snapshot written at the switch, then the new owner's; `disarmAll` alarms | `owner_switch_test.dart`, `snapshot_write_paths_test.dart` |
+
+## I7: queued actions keep their owner (second pass 2026-11-09, awaiting owner review)
+
+**Status: OPEN** pending the owner's review and the validation still outstanding below (macOS
+native tests, share sheets end to end, physical devices). CR-160 stays **CRITICAL — OPEN — RELEASE
+BLOCKER**; PR #75 stays **DRAFT — NOT READY TO MERGE** and was not changed by this pass.
+
+### Root cause and race timeline (before this pass)
+
+Widgets, controls, Siri, the Live Activity, notification actions, the share extension (iOS, Mac),
+the share intent (Android) and the web service worker append to one shared queue (App Group
+defaults, `home_widget` prefs, Cache Storage). Entries carried **no owner**: the drain applied each
+to whichever profile `latestProfile(ref)` returned at that moment.
+
+| # | Window | What went wrong |
+|---|---|---|
+| W1 | Share posted after the switch's own drain read the queue, before the switch finished | Next drain applied A's share to B (or the guest) |
+| W2 | Sign-in: `signInOwner` flipped the owner, then `signedIn()` drained with the cached profile | An entry could be written for either owner, depending on cache timing |
+| W3 | A drain running (resume, `queueChanged`) while a switch ran | Owner checked before the switch, written after it |
+| W4 | Share posted while the owner changed | No way to tell whose it was; applied to the next owner |
+| W5 | App killed with A shown, share queued, next launch | Applied to whoever was shown at the first drain |
+| W6 | iOS/Mac: the share/widget extension (another process) appends while the app removes | `NSLock` is per process: the app's read-modify-write could drop the append |
+| W7 | Web: the worker appends while a tab removes | No lock at all |
+| W8 | Android background engine (no channel): `home_widget` read-then-write remove | Could drop an append |
+| W9 | Drainer removed unreadable entries | Possibly valid shared content discarded |
+
+### Queue protocol and owner attribution
+
+- **Published marker.** The app publishes what surfaces do with a new entry (`action_queue_owner`;
+  web `__snapshot/queue_owner.json`): `{"v":1,"owner":<profile id>,"guest_session":<id>}` (stamp
+  it), `{"v":1,"switching":true}` around the database flip of every change of owner (stamp
+  nobody), or `{"v":1,"refuse":true}` while an account deletion runs (queue nothing). Published at
+  launch, every resume and after every switch; never while a switch or a deletion is under way
+  (`OwnerSwitch.publishShownOwner`).
+- **Stamped at enqueue, natively, under the queue lock:** Swift `DotQueue.append`, Kotlin
+  `ShareIntake.append` / `DotActionReceiver.perform`, `web/action_queue.js append`. The marker
+  persists in the shared store, so an extension needs no running app.
+- **Refused explicitly, never evicted.** An append is refused (nothing queued, nothing shown as
+  done) while the marker says `refuse`, at 500 entries or 1 MB, when the write doesn't read back,
+  or when the stored queue can't be read (it is never written over). The share sheets say "Dottoday
+  couldn't save this right now. Open Dottoday and try again." (iOS/Mac alert, Android toast, the Add
+  task intent's dialog; four languages); widget/Live Activity/notification buttons do nothing
+  visible; the web worker opens the app instead.
+- **One lock per platform for append, remove and publish:** iOS/Mac `flock` on
+  `action_queue.lock` in the App Group container (app and extensions are separate processes), with
+  `CFPreferencesAppSynchronize` before every read; Android `synchronized(DotQueue)` (one process,
+  verified below); web the Web Lock `dottoday-action-queue` (worker and tab).
+- **Executed only for its owner, checked twice.** The drainer applies an entry only when its owner
+  is the owner the database shows; `DotIntents.apply` refuses any other (`notOwner`); the write
+  carries `onlyWhileShown`, checked inside the write's own transaction (`DriftWriteUseCase`), so a
+  check before a switch can never become a write after it (also from Android's background
+  isolate). A refused write fails and the entry stays.
+- **Waiting, not blocking.** Other owners' entries keep their place; the shown owner's proceed. A
+  switch drains the old owner's before the flip and the new owner's after.
+- **Replay-safe.** Removal happens after the write; a crash in between replays the entry, which
+  then changes nothing (`alreadyApplied`) and is removed. Android's background engine applies but
+  never removes.
+
+### Owner decisions (2026-11-09) and the behaviour now
+
+**1. Unknown owner: conservative.** Entries stamped `switching`, written before the first publish
+after this update, or by an older version have no owner and stay quarantined: never applied,
+synced, shown or previewed, never assigned to the next account or guest session, never expired.
+Automatic legacy attribution was examined and **not built**: no build before CR-160 recorded a
+durable history of owner changes (the only trace, `sync_account`, held the last account and was
+removed by migration 18), so no device can prove one original owner and rule out earlier switches.
+A profile count is not such proof. No recovery UI.
+
+**2. Another account's task: terminal.** Done, +15 or Start for a task that exists only under
+another owner is refused (`droppedForeign`): no task changes, a record
+`queue_outcome:<action id>:<owner>` = `droppedForeign` is written (ids and reason code only; it
+goes with the owner's account removal), then the entry leaves the queue. A crash in between
+records the same outcome again. Not terminal: a database error (the drain throws; the entry
+stays), an inactive owner (waits), an unattributed or unreadable entry (quarantined), and an Add
+task whose id another owner holds (kept: its text may be the only copy). A task gone for everyone
+stays `droppedMissing` as before. Nothing about the other account's task reaches any screen.
+
+**3. Account deletion: export gap closed.** D1's summary first applies what is queued for the
+account (counted in the summary), then **holds** the account's queue: later arrivals wait
+unapplied. "Export my data first" applies it again before building the file; anything left that
+can't be applied fails the export ("Couldn't export all your data…"). At "Delete account" the
+surfaces are switched to `refuse`, then the account's queued ids are compared with the last review;
+if anything arrived, nothing is deleted, the typed word and the export status are cleared, and the
+screen says: "Something new arrived for this account after you started, so nothing was deleted.
+Export again to keep it, then type DELETE again." (four languages). A renewed confirmation without
+exporting deletes it with the account, as the person was told. During the server deletion and until
+the removal is recorded and finished, surfaces refuse; afterwards they stamp the guest. The
+account's queued entries and outcome records go with its copy. A failed server deletion releases
+the refusal; closing D1 releases the hold and applies what waited.
+
+**4. Retention.** Known-owner entries stay until applied, terminally invalid (decision 2) or
+removed with their account (decision 3). Unknown-owner entries stay quarantined. No time-based
+purge. Capacity: 500 entries / 1 MB, then new entries are refused (above), never older ones
+evicted. Logs carry action ids, owner-free reason codes and occurrence ids only, never text.
+
+At-rest protection of the queue (unchanged by this pass, reviewed):
+
+| Platform | Where | Who can read it | At rest |
+|---|---|---|---|
+| iOS | App Group `UserDefaults` plist (`group.app.dottoday.planner`) | The app and its extensions (same team, group entitlement) | iOS Data Protection, default class (until first unlock); not in the SQLCipher database |
+| macOS | Team-prefixed App Group container | The app and its share extension; other processes of the same user subject to macOS App Data / group-container protection | FileVault if on; not encrypted by Dottoday |
+| Android | `HomeWidgetPreferences` in the app's private storage | The app only (one process) | File-based encryption of credential-protected storage; not encrypted by Dottoday |
+| Web | Cache Storage of the app's origin | Pages and the worker of that origin | Browser profile on disk, not encrypted by Dottoday |
+
+Trade-off: a share or Add task text waits in plain text in these stores until applied, and an
+unattributed one waits with no limit. Encrypting the queue would need a key the share extension can
+use without the app (a Keychain/Keystore key shared with extensions): not done in this pass (new
+mechanism, owner decision).
+
+### Locking across execution contexts (verified)
+
+- **iOS/macOS, across processes:** `tool/cr160/queue_lock_check.sh` builds the real
+  `ios/Shared/DotStore.swift` into a command-line driver and runs 8 processes at once on one
+  preferences suite (6 append 60 each, 2 remove 50 seeded): with one lock file every append
+  survives and every removal lands (360 of 360); the control, each process with its own lock file,
+  lost 22 entries and had read-back failures. In the app the lock file is in the App Group
+  container, which the app and its extensions share.
+- **Android, one process:** no component in `AndroidManifest.xml` and no plugin manifest declares
+  `android:process`; the share intent (`MainActivity`), `DotActionReceiver` (widgets,
+  notifications, the ongoing notification), the Start focus tile, the channel (`IntentQueueBridge`)
+  and the WorkManager background engine all run in the app process. Every queue read-modify-write
+  and the marker publish take `synchronized(DotQueue)`; the background engine's `home_widget`
+  fallback only reads (removal and publish are no-ops). `home_widget` writes only the snapshot key.
+- **Web, real tab and worker:** `tool/cr160/web_queue_lock.mjs` serves a page and a real service
+  worker that loads the shipped `app/web/action_queue.js`; the worker appends 120 while the tab
+  removes 40 seeded entries. With the Web Lock: 120 kept, 40 removed, all stamped with the owner;
+  the control without it kept 115 and removed 1. With `refuse`, the worker queued nothing (120
+  refused). The Dart side: `test/web/action_queue_store_web_test.dart` in Chrome for Testing shows
+  `WebActionQueueStore.remove` waits while another context holds the lock.
+- **Check and write:** the `onlyWhileShown` check runs in the write transaction (tested by a drain
+  that believes A is shown after A left). **Crash between write and trim:** replay changes nothing
+  (tested).
+
+### Regression tests and results (second pass, 2026-11-09, local only)
+
+Host Mac15,7, macOS 26.6.2 (25G83); Flutter 3.47.8 / Dart 3.13.7; Supabase CLI 2.121.0 (local
+stack only).
+
+| Test | Covers | Result |
+|---|---|---|
+| `test/data/intents/queue_owner_switching_test.dart` (10) and `queue_owner_outcomes_test.dart` (6), shared `queue_owner_world.dart` | Share for A drained after A left and B signed in (kept, applied to A on return, B zero writes); share mid-switch (quarantined, never applied); app closed then restart; closed app then a switch first; check before a switch refused by the write transaction; A → guest → B → A in quick turns, each once; mixed owners with an inactive owner ahead; another account's task (`droppedForeign`: no write, durable record, removed); an Add task whose id another owner holds (kept); a database error (stays pending); legacy entry with no owner (quarantined); duplicate delivery and crash before trim (applied once); append during a drain; guest share from an earlier guest session (never eligible); account deletion removes only its own entries; logs carry no share text | PASS |
+| `test/data/owners/deletion_queue_test.dart` (8) | Review applies queued work (summary counts it, export holds it); share during the export stops the deletion, a new export keeps it; share between export and confirmation waits unapplied and stops the deletion, renewed confirmation deletes it; during the server deletion surfaces are refused; after the removal is recorded refused until the deletion ends, then the guest's; failed server deletion releases; export can't claim done with unapplied queued work; declined export | PASS |
+| `test/data/owners/owner_switch_test.dart` (12), drainer and intents tests | Switch order, marker publishing, guest work at sign-in | PASS |
+| `test/policy/intent_wire_contract_test.dart`, `os_strings_test.dart` | Swift, Kotlin, JS and Dart spell the owner keys, marker, path and lock the same; every native append stamps; new strings in all four languages | PASS |
+| `tool/action_queue_test.mjs` (9, node) | Worker stamping, nobody while switching, refuse, capacity, unreadable queue never overwritten, concurrent appends | PASS |
+| `test/web/action_queue_store_web_test.dart` (3, Chrome for Testing 1248) | The tab's remove keeps unreadable entries, publishes the marker, and waits for the lock another context holds | PASS |
+| `tool/cr160/web_queue_lock.mjs` (Chromium 156.0.8078.4) | **Real tab + real service worker** running the shipped `action_queue.js`: 120 of 120 appends kept and 40 of 40 removals with the lock (control without: 117 kept, 39 removals lost); while deleting, 120 of 120 refused | PASS |
+| `tool/cr160/queue_lock_check.sh` (macOS 26.6.2) | **8 real processes** on the real `DotStore.swift` code: 360 of 360 with one lock file; controls with a lock file each lost 69 and 36 entries | PASS |
+| `macos/RunnerTests` (7, XCTest, macOS 26.6.2) | Share queue carries the published owner; nobody during a switch; appends and removes from many threads lose nothing; plus the 4 existing menu-bar tests | PASS |
+| `ios/RunnerTests/DotIntentsTests` (13, XCTest, iPhone 16 Pro Simulator, iOS 18.6) | Stamping (owner, guest session, switching, none yet); refused while deleting and when full (nothing patched, nothing evicted); unreadable queue never overwritten; 200 concurrent appends/removes | PASS |
+| `integration_test/cr160_share_owner_test.dart` via `tool/cr160/share_owner_check.sh` (emulator Medium_Phone_API_37.0, Android 17 / API 37, debug) | **Real `ACTION_SEND` shares** through `ShareIntake`, the real channel and encrypted database, three launches: cold start by a share (A's, applied to A); share while B shown (B's); share while the published owner still read A (B never gets it; kept); force-stop; after restart still waiting, A signs back in and gets it once; share mid-switch (no owner, kept); share while an account is being deleted (refused, nothing queued) | PASS |
+| Final gate (no other build running) | `supabase db reset` + `supabase test db`: 14 files, 119 tests PASS; `dart format`: 1675 files, 0 changed; `flutter analyze`: no issues; `flutter test --timeout 90s`: **6,244 passed, 21 skipped, 0 failed** (search p95 test passed) | PASS |
+
+**Not verified end to end (lower-level tests are not counted as these):**
+- The iOS and Mac **share sheets** themselves (`SLComposeServiceViewController` → Post): only the
+  `ShareQueue`/`DotQueue` code they call is tested (XCTest, cross-process check). Driving the Mac
+  share sheet needs an Accessibility grant for UI automation (a security setting, not changed);
+  an iOS share-sheet UI test needs a new UI-test target (owner approval for a native target).
+- The refusal alert in the iOS/Mac share sheet and the Android toast were not seen on screen
+  (Android: the refusal itself is verified; the toast is not asserted).
+- iOS widget, Live Activity, Siri and notification-action appends on a device; the Android widget
+  and notification buttons (they share `DotActionReceiver.perform`, tested only through the share
+  path's lock and the Dart suites).
+- A real service-worker **notification click** (the test worker appends through the same
+  `append`, triggered by a message, not by a notification).
+- Physical iPhone, Android phone; Firefox and Safari; hosted staging.
+
+**Remaining limitations and risks:**
+- Unattributed entries are kept with no automatic expiry and are invisible to everyone (decision 1), but they count toward the 500-entry / 1 MB capacity, so enough of them would make new actions be refused; share
+  text in them, and in any waiting entry, sits unencrypted in the shared store (decision 4 table).
+- A share refused while an account is deleted, or when the queue is full, is not saved: the person
+  is told on the share sheets and the Add task intent; widget, Live Activity and notification
+  buttons just do nothing visible.
+- An account deleted while D1 was never opened (another device, the server) leaves its queued
+  entries waiting under its id until `finishRemoval` runs on this device.
+- The I7 hold is in memory: if the app is killed with D1 open, nothing is deleted, and the hold
+  simply ends.
 
 ## Deleted accounts (interim, owner-approved)
 

@@ -20,10 +20,14 @@ object IntentQueueBridge {
         channel = MethodChannel(messenger, "dottoday/intents").apply {
             setMethodCallHandler { call, result ->
                 when (call.method) {
-                    "readQueue" -> result.success(prefs.getString(DotQueue.KEY, null))
+                    "readQueue" -> result.success(synchronized(DotQueue) { prefs.getString(DotQueue.KEY, null) })
                     "removeQueued" -> {
                         val ids = call.argument<List<String>>("ids")?.toSet() ?: emptySet()
-                        DotActionReceiver.remove(prefs, ids, call.argument<Boolean>("unreadable") == true)
+                        DotActionReceiver.remove(prefs, ids)
+                        result.success(null)
+                    }
+                    "publishOwner" -> {
+                        call.argument<String>("owner")?.let { DotActionReceiver.publishOwner(prefs, it) }
                         result.success(null)
                     }
                     else -> result.notImplemented()

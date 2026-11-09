@@ -67,7 +67,7 @@ void main() {
         case 'signIn':
           expect(
             sources['data/sync/sync_providers.dart'],
-            contains('ref.read(ownerSwitchProvider).signedIn()'),
+            contains('.read(ownerSwitchProvider)'),
           );
           expect(
             sources['data/owners/owner_switch.dart'],

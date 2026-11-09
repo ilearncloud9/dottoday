@@ -93,9 +93,12 @@ Future<void> _askForAlarms(WidgetRef ref) async {
   }
 }
 
-// A queue that can't be read must not hold up the refresh.
+// A queue that can't be read must not hold up the refresh. The owner the
+// surfaces stamp is published again first: after a restart, or a change
+// of owner an app kill interrupted, it names the owner shown (CR-160 I7).
 Future<void> _drainQueue(WidgetRef ref) async {
   try {
+    await ref.read(ownerSwitchProvider).publishShownOwner();
     await ref.read(actionQueueDrainerProvider).drain();
   } on Object catch (e, st) {
     ref

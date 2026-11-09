@@ -1,44 +1,28 @@
-import 'dart:convert';
-
-import 'package:dottoday/core/clock/clock_provider.dart';
-import 'package:dottoday/core/logging/logger.dart';
-import 'package:dottoday/core/logging/logger_provider.dart';
-import 'package:dottoday/data/backup/backup_database.dart';
-import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/db/app_database.dart';
-import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/intents/action_queue_json.dart';
 import 'package:dottoday/data/intents/intent_providers.dart';
 import 'package:dottoday/data/live_activity/web_live_dot_providers.dart';
-import 'package:dottoday/data/notifications/notification_providers.dart';
-import 'package:dottoday/data/notifications/permission_providers.dart';
-import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/sync/account_owners.dart';
-import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
-import 'package:dottoday/domain/intents/action_queue_store.dart';
 import 'package:dottoday/domain/intents/dot_action.dart';
-import 'package:dottoday/domain/notifications/notification_payload.dart';
-import 'package:dottoday/domain/profile/local_profile_service.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:drift/native.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../domain/fixtures.dart';
-import '../../support/fake_clock.dart';
 import '../../support/fake_notification_platform.dart';
-import '../../support/memory_log_sink.dart';
+import '../../support/owner_app.dart';
+import '../../support/shared_action_queue.dart';
 import '../../support/timeline_fakes.dart';
 import '../writes/write_harness.dart';
 
@@ -49,94 +33,7 @@ import '../writes/write_harness.dart';
 
 const _a = '01928c3e-0000-7000-8000-00000000000a';
 const _b = '01928c3e-0000-7000-8000-00000000000b';
-final _now = DateTime.utc(2026, 10, 23, 9);
-
-/// The queue a widget, Siri or the share extension writes (JSON text).
-final class _Queue implements ActionQueueStore {
-  String raw = '[]';
-
-  void add(String id, DotAction action) => raw = jsonEncode([
-    ...decodeQueueArray(raw),
-    encodeQueuedAction(
-      QueuedAction(id: id, createdAtUtc: _now, action: action),
-    ),
-  ]);
-
-  @override
-  Future<List<Object?>> read() async => decodeQueueArray(raw);
-
-  @override
-  Future<void> remove(Set<String> ids, {bool unreadable = false}) async =>
-      raw = withoutEntries(raw, ids, unreadable: unreadable);
-}
-
-/// One app run on [db]: the OS ([platform], [alarms]) and the snapshot
-/// store ([sink]) outlive it, as they do on a device.
-final logs = MemoryLogSink();
-
-final class _App {
-  _App(this.db, this.platform, this.sink, this.alarms, this.queue)
-    : container = ProviderContainer(
-        overrides: [
-          appDatabaseProvider.overrideWithValue(db),
-          backupDatabaseProvider.overrideWithValue(
-            BackupDatabase(NativeDatabase.memory()),
-          ),
-          clockProvider.overrideWithValue(FakeClock(_now)),
-          deviceTimeZoneProvider.overrideWith((ref) async => 'UTC'),
-          deviceLanguageProvider.overrideWithValue('en'),
-          notificationPlatformProvider.overrideWith((ref) async => platform),
-          daySnapshotSinkProvider.overrideWithValue(sink),
-          alarmGatewayProvider.overrideWithValue(alarms),
-          missionSensorsProvider.overrideWithValue(FakeMissionSensors()),
-          actionQueueStoreProvider.overrideWithValue(queue),
-          loggerProvider.overrideWithValue(Logger(logs, FakeClock(_now))),
-        ],
-      );
-
-  final AppDatabase db;
-  final FakeNotificationPlatform platform;
-  final FakeSink sink;
-  final FakeAlarmGateway alarms;
-  final _Queue queue;
-  final ProviderContainer container;
-
-  OwnerSwitch get owners => container.read(ownerSwitchProvider);
-
-  Future<String> shown() async =>
-      (await container.read(localProfileProvider.future)).id;
-
-  Future<void> idle() => container.read(afterWriteEffectsProvider).idle;
-
-  /// [account] signs in (no guest work to choose about), then the switch.
-  Future<void> signIn(String account) async {
-    await signInOwner(
-      db,
-      account,
-      SharedHlc(db, FakeClock(_now)),
-      freshProfile: (id) => freshAccountProfile(id, 'UTC', 'en', _now),
-    );
-    await owners.signedIn();
-  }
-
-  Future<void> write(List<Occurrence> rows) async {
-    await container
-        .read(writeUseCaseProvider)
-        .apply(WriteBatch(userId: rows.first.userId, occurrences: rows));
-    await idle();
-  }
-
-  /// Occurrence ids the OS holds, pending or shown.
-  Set<String> notified() => {
-    for (final n in [
-      ...platform.pendingById.values,
-      ...platform.delivered.values,
-    ])
-      ?decodeNotificationPayload(n.id, n.payload)?.occurrenceId,
-  }..remove('');
-
-  Set<String> snapshotDots() => {for (final d in sink.written.last.dots) d.id};
-}
+final _now = ownerAppNow;
 
 Occurrence _task(String owner, String n, {int inMinutes = 60}) =>
     occurrenceFixture().copyWith(
@@ -159,23 +56,23 @@ void main() {
   late FakeNotificationPlatform platform;
   late FakeSink sink;
   late FakeAlarmGateway alarms;
-  late _Queue queue;
-  late _App app;
+  late SharedActionQueue queue;
+  late OwnerApp app;
   final a1 = _task(_a, '01');
   final a2 = _task(_a, '02', inMinutes: 120);
   final b1 = _task(_b, '11');
 
-  _App start() => _App(db, platform, sink, alarms, queue);
+  OwnerApp start() => OwnerApp(db, platform, sink, alarms, queue);
 
   /// A shown, with two tasks: both reminded and on the widgets; one
   /// reminder already shown in the notification centre.
   setUp(() async {
-    logs.records.clear();
+    ownerAppLogs.records.clear();
     db = AppDatabase(NativeDatabase.memory());
     platform = FakeNotificationPlatform();
     sink = FakeSink();
     alarms = FakeAlarmGateway();
-    queue = _Queue();
+    queue = SharedActionQueue();
     app = start();
     await app.shown(); // the guest, as on first launch
     await app.signIn(_a);
@@ -187,7 +84,10 @@ void main() {
   });
   tearDown(() async {
     // No step of a switch failed quietly.
-    expect(logs.records.where((r) => r.event.endsWith('_failed')), isEmpty);
+    expect(
+      ownerAppLogs.records.where((r) => r.event.endsWith('_failed')),
+      isEmpty,
+    );
     app.container.dispose();
     await db.close();
   });
@@ -254,8 +154,8 @@ void main() {
   test('actions queued before the switch land with A, the owner they were '
       'made for', () async {
     queue
-      ..add('01928c3e-0000-7000-8000-0000000002a1', MarkDone(a1.id))
-      ..add(
+      ..append('01928c3e-0000-7000-8000-0000000002a1', MarkDone(a1.id))
+      ..append(
         '01928c3e-0000-7000-8000-0000000002a2',
         const AddTask('Shared link', inbox: true),
       );
@@ -272,9 +172,10 @@ void main() {
     expect(await repo.watchInbox(guest).first, isEmpty);
   });
 
-  test('an action on A\'s task drained after the switch is dropped', () async {
+  test("an action naming A's task, queued after the switch, is never "
+      'applied: dropped as invalid for the guest it was queued for', () async {
     await app.owners.signOut();
-    queue.add('01928c3e-0000-7000-8000-0000000002a3', MarkDone(a1.id));
+    queue.append('01928c3e-0000-7000-8000-0000000002a3', MarkDone(a1.id));
     await app.container.read(actionQueueDrainerProvider).drain();
     final repo = DriftOccurrenceRepository(db);
     expect(
@@ -282,23 +183,25 @@ void main() {
       isNot(OccurrenceStatus.done),
     );
     expect(await repo.findById(await app.shown(), a1.id), isNull);
-    expect(decodeQueueArray(queue.raw), isEmpty);
+    expect(queue.ids, isEmpty);
   });
 
-  test('signing in: a share queued while the guest showed stays the '
-      "guest's", () async {
+  test("signing in: a share queued while the guest showed stays the guest's "
+      'unless brought in', () async {
     await app.owners.signOut();
     final guest = await app.shown();
-    queue.add(
-      '01928c3e-0000-7000-8000-0000000002a4',
-      const AddTask('Guest note', inbox: true),
-    );
-    await app.signIn(_b);
-    final repo = DriftOccurrenceRepository(db);
     const id = '01928c3e-0000-7000-8000-0000000002a4';
+    queue.append(id, const AddTask('Guest note', inbox: true));
+    // Applied for the guest before the sign-in step: then it is this guest
+    // session's work, and B is asked about it (G1).
+    expect(await app.signInAs(_b), OwnerChange.guestChoiceNeeded);
+    final repo = DriftOccurrenceRepository(db);
     expect((await repo.findById(guest, id))?.title, 'Guest note');
+    expect(queue.ids, isEmpty);
+    await recordGuestChoice(db, _b, GuestChoice.keepSeparate);
+    expect(await app.signInAs(_b), OwnerChange.newAccount);
     expect(await repo.findById(_b, id), isNull);
-    expect(decodeQueueArray(queue.raw), isEmpty);
+    expect((await repo.findById(guest, id))?.title, 'Guest note');
   });
 
   test('repeated switches: each time only the owner shown', () async {

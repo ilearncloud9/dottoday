@@ -107,7 +107,7 @@ void main() {
       await tester.pump();
       await tester.tap(confirm());
       await tester.pumpAndSettle();
-      expect(actions.calls, ['export', 'delete']);
+      expect(actions.calls, ['export', 'delete', 'endDeletion']);
       // Not synced: A2; "Sign out and keep them here" signs out.
       await _tap(tester, 'Sign out');
       expect(find.text('3 changes haven’t synced yet'), findsOneWidget);

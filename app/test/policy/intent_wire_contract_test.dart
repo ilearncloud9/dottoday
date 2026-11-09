@@ -127,4 +127,55 @@ void main() {
       contains("actionQueueKey = 'action_queue'"),
     );
   });
+
+  // CR-160 I7: every writer stamps the owner the app publishes, under the
+  // same key, wire names and lock, so no entry lands with another owner.
+  test('every writer stamps the published owner the way Dart reads it', () {
+    const store = 'lib/domain/intents/action_queue_store.dart';
+    final published = File(store).readAsStringSync();
+    for (final name in ['owner', 'guest_session', 'switching']) {
+      expect(published, contains("'$name'"), reason: 'publish: $name');
+    }
+    expect(published, contains("'action_queue_owner'"));
+    for (final name in ['owner', 'guest_session']) {
+      expect(dart, contains("'$name'"), reason: 'Dart reads $name');
+    }
+    for (final path in [
+      'ios/Shared/DotStore.swift',
+      'android/app/src/main/kotlin/app/dottoday/planner/intents/DotQueue.kt',
+    ]) {
+      final src = File(path).readAsStringSync();
+      for (final name in [
+        'owner',
+        'guest_session',
+        'switching',
+        'action_queue_owner',
+      ]) {
+        expect(src, contains('"$name"'), reason: '$path: $name');
+      }
+    }
+    final js = File('web/action_queue.js').readAsStringSync();
+    expect(js, contains("'__snapshot/queue_owner.json'"));
+    expect(js, contains("'dottoday-action-queue'"));
+    final web = File(
+      'lib/data/snapshot/web/snapshot_store_web.dart',
+    ).readAsStringSync();
+    expect(web, contains("'__snapshot/queue_owner.json'"));
+    expect(web, contains("'dottoday-action-queue'"));
+    // Each native append goes through the stamping step.
+    expect(
+      File('ios/Shared/DotStore.swift').readAsStringSync(),
+      contains('Self.stamped('),
+    );
+    for (final path in [
+      'android/app/src/main/kotlin/app/dottoday/planner/intents/ShareIntake.kt',
+      'android/app/src/main/kotlin/app/dottoday/planner/intents/DotActionReceiver.kt',
+    ]) {
+      expect(
+        File(path).readAsStringSync(),
+        contains('DotQueue.stamp('),
+        reason: path,
+      );
+    }
+  });
 }

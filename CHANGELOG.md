@@ -74,6 +74,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - M10.1: The thinking help behind Break it down, brain-dump and length suggestions now runs on your device — Apple Intelligence on iPhone and Mac, Gemini Nano on supported Android phones, Chrome's built-in model on the web — and falls back to your own history and simple rules where there is none. Nothing you type goes to a server; Settings › Privacy explains it and can clear what was kept.
 
 ### Fixed
+- Something shared to Dottoday, or tapped on a widget, notification or Live Activity, now stays with the account that was shown when it was queued (CR-160 I7). If someone else is signed in when the app picks it up, it waits for its own account instead of landing in theirs; nothing queued is lost when the app is closed, restarted or switching accounts.
 - After signing out and signing in to another account without restarting the app, that account's changes now sync on their own again; before, they waited for Sync now or a restart.
 - A link to a day (`dottoday://day/…`, a widget, Siri) now opens that day properly: a link to today shows today, with its now line and no Today button, and a link more than a year away opens today instead of an empty screen.
 - Move in a task's sheet works: it opens the month, and the task moves to the day you pick at the same time, with Undo. It was always greyed out before. Pinned and Inbox tasks still can't be moved from here.

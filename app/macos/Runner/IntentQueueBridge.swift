@@ -16,11 +16,19 @@ final class IntentQueueBridge {
       let queue = DotQueue(defaults: defaults)
       switch call.method {
       case "readQueue":
-        result(defaults.string(forKey: DotStore.queueKey))
+        result(QueueLock.run { () -> String? in
+          CFPreferencesAppSynchronize(DotStore.appGroup as CFString)
+          return defaults.string(forKey: DotStore.queueKey)
+        })
       case "removeQueued":
         let args = call.arguments as? [String: Any]
-        queue.remove(
-          Set(args?["ids"] as? [String] ?? []), unreadable: args?["unreadable"] as? Bool ?? false)
+        queue.remove(Set(args?["ids"] as? [String] ?? []))
+        result(nil)
+      case "publishOwner":
+        // Whom the share extension stamps (CR-160 I7).
+        if let raw = (call.arguments as? [String: Any])?["owner"] as? String {
+          queue.publishOwner(raw)
+        }
         result(nil)
       default:
         result(FlutterMethodNotImplemented)

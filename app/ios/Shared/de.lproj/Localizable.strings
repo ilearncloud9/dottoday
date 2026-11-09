@@ -11,3 +11,4 @@
 "intentParamTask" = "Aufgabe";
 "intentParamEnd" = "Geplantes Ende";
 "intentNoSnapshot" = "Öffne Dottoday einmal, dann siehst du deinen Tag hier.";
+"intentNotSaved" = "Dottoday konnte das gerade nicht speichern. Öffne Dottoday und versuche es erneut.";

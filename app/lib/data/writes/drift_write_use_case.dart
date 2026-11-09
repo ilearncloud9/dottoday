@@ -3,6 +3,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/db/owned_local_meta.dart';
 import 'package:dottoday/data/repositories/drift_calendar_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_reveal_hint_repository.dart';
@@ -75,6 +76,9 @@ final class DriftWriteUseCase implements WriteUseCase {
     }
     try {
       await _db.transaction(() => _write(valid));
+    } on _NotShown {
+      _logger.warn('write.owner_not_shown');
+      return const Err(StorageFailure());
     } on Exception catch (e, st) {
       _logger.error('write.failed', error: e, stackTrace: st);
       return const Err(StorageFailure());
@@ -84,6 +88,9 @@ final class DriftWriteUseCase implements WriteUseCase {
   }
 
   Future<void> _write(WriteBatch b) async {
+    if (b.onlyWhileShown && (await shownOwnerId(_db)) != b.userId) {
+      throw const _NotShown();
+    }
     final hlc = await _hlc.clock();
     final now = _clock.nowUtc();
     final session = await guestSessionFor(_db, b.userId);
@@ -145,4 +152,9 @@ final class _Materialised {
   final series = <Series>[];
   final occurrences = <Occurrence>[];
   final subtasks = <Subtask>[];
+}
+
+/// The batch's owner stopped being shown before it could commit.
+final class _NotShown implements Exception {
+  const _NotShown();
 }

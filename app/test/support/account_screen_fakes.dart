@@ -78,6 +78,9 @@ base class FakeAccountActions implements AccountActions {
   }
 
   @override
+  void endDeletion(String owner) => calls.add('endDeletion');
+
+  @override
   Future<Result<void, AppFailure>> finishRemovals() async {
     calls.add('finishRemovals');
     return removalResult;

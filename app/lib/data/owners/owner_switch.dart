@@ -2,6 +2,7 @@ import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/intents/intent_providers.dart';
+import 'package:dottoday/data/intents/queue_owners.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/notifications/wake_up_arming.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -9,6 +10,7 @@ import 'package:dottoday/data/snapshot/snapshot_providers.dart';
 import 'package:dottoday/data/sync/account_owners.dart';
 import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
+import 'package:dottoday/domain/intents/action_queue_store.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'owner_switch.g.dart';
@@ -39,19 +41,40 @@ final class OwnerSwitch {
 
   final Ref _ref;
 
+  /// Changes of owner under way; the queue owner is published only when
+  /// none is.
+  int _switching = 0;
+
+  /// Account deletions under way ([refuseQueue]): surfaces refuse new
+  /// entries until each is released.
+  int _refusing = 0;
+
   /// Signing out: the account stops showing at once (policy §2). Its rows
   /// and pending changes stay its own. Call it before the auth sign-out:
   /// clearing this browser's server reminders needs the session (I3).
-  Future<void> signOut() async {
+  Future<void> signOut() => _change(() async {
+    await _drainQueue();
     await _before();
-    await signOutOwner(_ref.read(appDatabaseProvider));
+    await _flip(() => signOutOwner(_ref.read(appDatabaseProvider)));
     await _after();
-  }
+  });
 
-  /// After the sign-in step made another owner the one shown.
-  Future<void> signedIn() async {
-    await _before();
-    await _after();
+  /// The sign-in step [flip] (`signInOwner`), with the switch around it
+  /// when it shows another owner. The shown owner's queued actions are
+  /// applied first, while it is still shown (I7).
+  Future<SignInResult> signIn(Future<SignInResult> Function() flip) async {
+    late SignInResult result;
+    await _change(() async {
+      await _drainQueue();
+      await _flip(() async => result = await flip());
+      if (result.change == OwnerChange.unchanged ||
+          result.change == OwnerChange.guestChoiceNeeded) {
+        return;
+      }
+      await _before();
+      await _after();
+    });
+    return result;
   }
 
   /// After the server confirmed the deletion of [accountId] (policy §4):
@@ -59,33 +82,98 @@ final class OwnerSwitch {
   /// hidden.
   Future<void> accountDeleted(String accountId) async {
     final db = _ref.read(appDatabaseProvider);
-    await _before();
-    await beginAccountRemoval(db, accountId);
-    await _after();
+    await _change(() async {
+      await _drainQueue();
+      await _before();
+      await _flip(() => beginAccountRemoval(db, accountId));
+      await _after();
+    });
     await finishRemoval(accountId);
   }
 
-  /// Removes a deleted account's copy from this device, backups included
-  /// (I2), or finishes a removal an interruption left pending. Idempotent;
-  /// a failure leaves the copy pending and hidden, never anyone else's.
+  /// Removes a deleted account's copy from this device, backups and queued
+  /// actions included (I2, I7), or finishes a removal an interruption left
+  /// pending. Idempotent; a failure leaves the copy pending and hidden,
+  /// never anyone else's.
   Future<void> finishRemoval(String accountId) => finishAccountRemoval(
     _ref.read(appDatabaseProvider),
     accountId,
-    alsoRemove: () =>
-        _ref.read(backupDatabaseProvider).deleteBackupsOf(accountId),
+    alsoRemove: () async {
+      await _ref.read(backupDatabaseProvider).deleteBackupsOf(accountId);
+      await removeQueuedFor(_ref.read(actionQueueStoreProvider), accountId);
+    },
   );
 
-  /// Work that belongs to the owner still shown, done before it changes.
-  /// Each step is guarded: none of them may keep the person from leaving.
-  Future<void> _before() async {
-    // Widget, Siri and share actions carry no owner: applied now, they
-    // land with the owner they were made for (I7). `localProfileProvider`
-    // still holds that owner until [_after].
+  /// Tells the queue's surfaces (widgets, share extension, service worker)
+  /// whom to stamp their actions with: the owner shown now (I7). At launch,
+  /// and after every change of owner; never while one is under way.
+  Future<void> publishShownOwner() async {
+    if (_busy) return;
+    final owner = await shownQueueOwner(_ref.read(appDatabaseProvider));
+    if (_busy) return;
+    await _publish(owner ?? const QueueSwitching());
+  }
+
+  bool get _busy => _switching > 0 || _refusing > 0;
+
+  /// From the confirmed deletion of the shown account until [releaseQueue]
+  /// (policy §4, I7): widgets, the share extension and the service worker
+  /// refuse new actions and say so, rather than queue work that would
+  /// vanish with the account or land with the next owner.
+  Future<void> refuseQueue() async {
+    _refusing++;
+    await _publish(const QueueRefusing());
+  }
+
+  /// Ends [refuseQueue]: the owner shown now is published again.
+  Future<void> releaseQueue() async {
+    _refusing--;
+    await publishShownOwner();
+  }
+
+  Future<void> _change(Future<void> Function() steps) async {
+    _switching++;
+    try {
+      await steps();
+    } finally {
+      _switching--;
+    }
+    await publishShownOwner();
+    // What waited for the owner shown now (I7): applied at once.
+    await _drainQueue();
+  }
+
+  /// [flip] changes the owner in the database. Around it, the surfaces
+  /// stamp nobody: an action queued meanwhile can't be told apart, so it
+  /// is kept and never applied (I7).
+  Future<void> _flip(Future<void> Function() flip) async {
+    await _publish(
+      _refusing > 0 ? const QueueRefusing() : const QueueSwitching(),
+    );
+    await flip();
+  }
+
+  Future<void> _publish(QueueMarker marker) async {
+    if (!await _done(
+      () => _ref.read(actionQueueStoreProvider).publish(marker),
+    )) {
+      _ref.read(loggerProvider).warn('owner_switch.queue_owner_failed');
+    }
+  }
+
+  /// What surfaces queued for the owner still shown, applied while it is
+  /// (I7). Entries of other owners stay queued for them.
+  Future<void> _drainQueue() async {
     if (!await _done(() async {
       await _ref.read(actionQueueDrainerProvider).drain();
     })) {
       _ref.read(loggerProvider).warn('owner_switch.drain_failed');
     }
+  }
+
+  /// Work that belongs to the owner still shown, done before it changes.
+  /// Each step is guarded: none of them may keep the person from leaving.
+  Future<void> _before() async {
     // What the Wake Up alarms did (rang, snoozed, "I'm up") was the old
     // owner's morning: folded in now, never counted for the next owner.
     // A mission it would open is dropped: that owner is leaving.

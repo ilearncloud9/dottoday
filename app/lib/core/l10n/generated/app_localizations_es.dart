@@ -6503,10 +6503,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get signedOutBody =>
-      'Tus tareas se guardan de forma segura en este dispositivo. Vuelven cuando inicies sesión de nuevo con la misma cuenta.';
-
-  @override
-  String get signedOutArt => 'Un día vacío';
+      'Tus tareas se quedan en este dispositivo, en tu cuenta. Vuelven cuando inicies sesión de nuevo con la misma cuenta.';
 
   @override
   String get signedOutSignIn => 'Iniciar sesión';
@@ -6714,6 +6711,10 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get accountDeleteExportBroken =>
       'No se pudieron exportar todos tus datos, así que no se eliminó nada. Inténtalo de nuevo.';
+
+  @override
+  String get accountDeleteChangedSinceReview =>
+      'Llegó algo nuevo para esta cuenta después de empezar, así que no se eliminó nada. Vuelve a exportar para conservarlo y escribe ELIMINAR otra vez.';
 
   @override
   String get accountDeleteExportClosed =>

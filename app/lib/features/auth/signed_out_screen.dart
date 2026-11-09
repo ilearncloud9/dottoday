@@ -61,6 +61,7 @@ class _SignedOutScreenState extends ConsumerState<SignedOutScreen> {
 }
 
 /// The board's empty ring with a lock: a day with nothing shown.
+/// Decorative (board E-CR160, ED-223): screen readers skip it.
 class _EmptyDayArt extends StatelessWidget {
   const _EmptyDayArt();
 
@@ -69,9 +70,7 @@ class _EmptyDayArt extends StatelessWidget {
     final c = DotTheme.of(context).colors;
     return Align(
       alignment: AlignmentDirectional.centerStart,
-      child: Semantics(
-        image: true,
-        label: context.l10n.signedOutArt,
+      child: ExcludeSemantics(
         child: Container(
           width: DotSize.wakeUpDayDot,
           height: DotSize.wakeUpDayDot,

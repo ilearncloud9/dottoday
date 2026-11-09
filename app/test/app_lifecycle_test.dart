@@ -10,6 +10,8 @@ import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/write_back_providers.dart';
+import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/intents/intent_providers.dart';
 import 'package:dottoday/data/intents/no_action_queue_store.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
@@ -35,6 +37,7 @@ import 'package:dottoday/domain/notifications/notification_planner.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/trash/trash_service.dart';
+import 'package:drift/native.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -155,6 +158,10 @@ void main() {
         notificationSyncProvider.overrideWithValue(sync),
         dailyRefreshProvider.overrideWithValue(refresh),
         actionQueueStoreProvider.overrideWithValue(const NoActionQueueStore()),
+        // Read to publish the queue's owner (CR-160 I7).
+        appDatabaseProvider.overrideWithValue(
+          AppDatabase(NativeDatabase.memory()),
+        ),
         windDownSnapshotProvider.overrideWithValue(
           WindDownSnapshot(
             clock: FakeClock(DateTime.utc(2026, 10, 21)),

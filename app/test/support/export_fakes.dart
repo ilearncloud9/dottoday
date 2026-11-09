@@ -18,6 +18,9 @@ final class FakeFileGateway implements FileGateway {
   final delivered = <List<ExportFile>>[];
   final pickLimits = <int>[];
 
+  /// Runs once while the share sheet or save dialog is open (then cleared).
+  void Function()? whileOpen;
+
   /// PNGs handed to [shareImage], by name.
   final images = <String, Uint8List>{};
 
@@ -27,6 +30,9 @@ final class FakeFileGateway implements FileGateway {
     Rect? origin,
   }) async {
     if (throws case final e?) throw e;
+    final hook = whileOpen;
+    whileOpen = null;
+    hook?.call();
     delivered.add(files);
     return outcome;
   }

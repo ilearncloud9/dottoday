@@ -51,7 +51,8 @@ void main() {
     await t.pump();
     await tapIn(t, deleteButton());
     await t.pumpAndSettle();
-    expect(actions.calls, ['delete']);
+    // Closing D1 releases the queue it held (CR-160 I7).
+    expect(actions.calls, ['delete', 'endDeletion']);
   });
 
   testWidgets('no unsynced changes: just tasks and settings', (t) async {
@@ -126,6 +127,7 @@ void main() {
     await t.sendKeyEvent(LogicalKeyboardKey.escape);
     await t.pumpAndSettle();
     expect(find.byType(Dialog), findsNothing);
-    expect(actions.calls, isEmpty);
+    // Nothing deleted or exported; the held queue is released.
+    expect(actions.calls, ['endDeletion']);
   });
 }

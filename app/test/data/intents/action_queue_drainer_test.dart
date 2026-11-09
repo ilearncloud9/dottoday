@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/intents/action_queue_drainer.dart';
 import 'package:dottoday/data/intents/action_queue_json.dart';
+import 'package:dottoday/data/intents/queue_owners.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/domain/entities/enums.dart';
@@ -34,8 +35,10 @@ final class _MemoryStore implements ActionQueueStore {
   }
 
   @override
-  Future<void> remove(Set<String> ids, {bool unreadable = false}) async =>
-      raw = withoutEntries(raw, ids, unreadable: unreadable);
+  Future<void> remove(Set<String> ids) async => raw = withoutEntries(raw, ids);
+
+  @override
+  Future<void> publish(QueueMarker marker) async {}
 }
 
 final _now = DateTime.utc(2026, 10, 21, 14);
@@ -54,7 +57,18 @@ void main() {
   );
 
   Map<String, Object?> entry(String id, DotAction action) => encodeQueuedAction(
-    QueuedAction(id: id, createdAtUtc: _now, action: action),
+    QueuedAction(id: id, createdAtUtc: _now, action: action, owner: userId),
+  );
+
+  DotIntents intents({String owner = userId}) => DotIntents(
+    clock: h.clock,
+    writes: h.writes,
+    occurrences: occurrences,
+    series: DriftSeriesRepository(h.db),
+    profile: () async => profileFixture().copyWith(id: owner),
+    snapshot: () => throw UnimplementedError(),
+    untitled: (_) => 'Untitled',
+    ownerOf: (id) => taskOwnerOf(h.db, id),
   );
 
   setUp(() async {
@@ -71,16 +85,9 @@ void main() {
     store = _MemoryStore();
     drainer = ActionQueueDrainer(
       store: store,
-      intents: DotIntents(
-        clock: h.clock,
-        writes: h.writes,
-        occurrences: occurrences,
-        series: DriftSeriesRepository(h.db),
-        profile: () async => profileFixture(),
-        snapshot: () => throw UnimplementedError(),
-        untitled: (_) => 'Untitled',
-      ),
+      intents: intents(),
       logger: h.logger,
+      shownOwner: () async => userId,
     );
   });
   tearDown(() => h.dispose());
@@ -142,28 +149,26 @@ void main() {
 
   test('a failed write stops the drain and keeps the rest queued', () async {
     // A row for an unknown profile fails the write path's FK check.
+    const nobody = '01928c3e-0000-7000-8000-0000000000ee';
+    Map<String, Object?> theirs(String id, DotAction a) => encodeQueuedAction(
+      QueuedAction(id: id, createdAtUtc: _now, action: a, owner: nobody),
+    );
     store
-      ..append(entry(_a1, const AddTask('ok')))
-      ..append(entry(_a2, MarkDone(base.id)));
+      ..append(theirs(_a1, const AddTask('ok')))
+      ..append(theirs(_a2, MarkDone(base.id)));
     final failing = ActionQueueDrainer(
       store: store,
-      intents: DotIntents(
-        clock: h.clock,
-        writes: h.writes,
-        occurrences: occurrences,
-        series: DriftSeriesRepository(h.db),
-        profile: () async => profileFixture().copyWith(id: 'nobody'),
-        snapshot: () => throw UnimplementedError(),
-        untitled: (_) => 'Untitled',
-      ),
+      intents: intents(owner: nobody),
       logger: h.logger,
+      shownOwner: () async => nobody,
     );
     expect(await failing.drain(), 0);
     expect(store.entries.map((e) => (e! as Map)['id']), [_a1, _a2]);
     expect(h.logs.records.map((r) => r.event), contains('intent.apply_failed'));
   });
 
-  test('unreadable entries are removed; ones added meanwhile stay', () async {
+  test('unreadable entries are kept, never applied; ones added meanwhile '
+      'stay', () async {
     store
       ..append('garbage')
       ..append(entry(_a1, MarkDone(base.id)))
@@ -173,7 +178,7 @@ void main() {
           ..append(entry(_late, StartFocus(base.id)));
       };
     await drainer.drain();
-    expect(store.entries.map((e) => (e! as Map)['id']), [_late]);
+    expect(store.entries, ['garbage', entry(_late, StartFocus(base.id))]);
     expect(
       h.logs.records.map((r) => r.event),
       contains('intent.queue_unreadable'),
@@ -186,22 +191,20 @@ void main() {
       final asked = <String>[];
       final focusing = ActionQueueDrainer(
         store: store,
-        intents: DotIntents(
-          clock: h.clock,
-          writes: h.writes,
-          occurrences: occurrences,
-          series: DriftSeriesRepository(h.db),
-          profile: () async => profileFixture(),
-          snapshot: () => throw UnimplementedError(),
-          untitled: (_) => 'Untitled',
-        ),
+        intents: intents(),
         logger: h.logger,
+        shownOwner: () async => userId,
         now: h.clock.nowUtc,
         onFocus: asked.add,
       );
       Map<String, Object?> at(String id, DotAction a, Duration ago) =>
           encodeQueuedAction(
-            QueuedAction(id: id, createdAtUtc: _now.subtract(ago), action: a),
+            QueuedAction(
+              id: id,
+              createdAtUtc: _now.subtract(ago),
+              action: a,
+              owner: userId,
+            ),
           );
       store
         ..append(at(_a1, StartFocus(base.id), const Duration(seconds: 5)))

@@ -93,8 +93,75 @@ final class DotIntentsTests: XCTestCase {
     let settled = queue.entries()[0]["id"] as! String
     defaults.set(
       (defaults.string(forKey: DotStore.queueKey)!.dropLast()) + ",\"junk\"]", forKey: DotStore.queueKey)
-    queue.remove([settled], unreadable: true)
+    queue.remove([settled])
+    // The unreadable entry stays (CR-160 I7: never discarded unread).
+    let left = try! JSONSerialization.jsonObject(
+      with: defaults.string(forKey: DotStore.queueKey)!.data(using: .utf8)!) as! [Any]
+    XCTAssertEqual(left.count, 2)
     XCTAssertEqual(queue.entries().map { $0["kind"] as? String }, ["start_focus"])
+  }
+
+  // CR-160 I7: every append carries the owner the app published.
+
+  private let ownerA = "01928c3e-0000-7000-8000-00000000000a"
+
+  func testAnAppendCarriesThePublishedOwnerAndGuestSession() {
+    let queue = DotQueue(defaults: defaults)
+    queue.publishOwner("{\"v\":1,\"owner\":\"\(ownerA)\",\"guest_session\":\"s1\"}")
+    ShareQueue.entry(text: "Dentist", link: nil, subject: nil, now: now).map(queue.append)
+    let entry = queue.entries()[0]
+    XCTAssertEqual(entry["owner"] as? String, ownerA)
+    XCTAssertEqual(entry["guest_session"] as? String, "s1")
+    XCTAssertEqual(entry["shared"] as? Bool, true)
+  }
+
+  func testDuringAChangeOfOwnerOrBeforeAnyNobodyIsStamped() {
+    let queue = DotQueue(defaults: defaults)
+    queue.append(DotQueue.entry(.addTask, text: "before any", now: now))
+    queue.publishOwner("{\"v\":1,\"owner\":\"\(ownerA)\"}")
+    queue.publishOwner("{\"v\":1,\"switching\":true}")
+    queue.append(DotQueue.entry(.addTask, text: "switching", now: now))
+    XCTAssertEqual(queue.entries().compactMap { $0["owner"] as? String }, [])
+    XCTAssertEqual(queue.entries().count, 2)
+  }
+
+  func testRefusedWhileAnAccountIsDeletedAndWhenFull() {
+    let queue = DotQueue(defaults: defaults)
+    queue.publishOwner("{\"v\":1,\"refuse\":true}")
+    XCTAssertFalse(DotActions.perform(.markDone, occurrenceId: live, now: now, defaults: defaults))
+    XCTAssertEqual(block()["done"] as? Bool, false, "nothing patched when refused")
+    XCTAssertFalse(ShareQueue.notSaved("de").isEmpty)
+    queue.publishOwner("{\"v\":1,\"owner\":\"\(ownerA)\"}")
+    for i in 0..<DotQueue.capacity { XCTAssertTrue(queue.append(DotQueue.entry(.addTask, text: "t\(i)"))) }
+    XCTAssertFalse(queue.append(DotQueue.entry(.addTask, text: "one more")))
+    XCTAssertEqual(queue.entries().count, DotQueue.capacity, "nothing evicted")
+  }
+
+  func testAnUnreadableQueueIsNeverOverwritten() {
+    defaults.set("{not json", forKey: DotStore.queueKey)
+    let queue = DotQueue(defaults: defaults)
+    XCTAssertFalse(queue.append(DotQueue.entry(.addTask, text: "x")))
+    queue.remove(["x"])
+    XCTAssertEqual(defaults.string(forKey: DotStore.queueKey), "{not json")
+  }
+
+  func testConcurrentAppendsAndRemovesLoseNothing() {
+    let queue = DotQueue(defaults: defaults)
+    queue.publishOwner("{\"v\":1,\"owner\":\"\(ownerA)\"}")
+    let doomed = DotQueue.entry(.markDone, occurrenceId: live, now: now)
+    queue.append(doomed)
+    let id = doomed["id"] as! String
+    DispatchQueue.concurrentPerform(iterations: 200) { i in
+      if i % 10 == 0 {
+        queue.remove([id])
+      } else {
+        queue.append(DotQueue.entry(.addTask, text: "t\(i)", now: now))
+      }
+    }
+    let texts = queue.entries().compactMap { $0["text"] as? String }
+    XCTAssertEqual(texts.count, 180)
+    XCTAssertTrue(queue.entries().allSatisfy { $0["owner"] as? String == ownerA })
+    XCTAssertFalse(queue.entries().contains { $0["id"] as? String == id })
   }
 
   func testWhatsNextReadsTheSnapshotsOwnWords() {

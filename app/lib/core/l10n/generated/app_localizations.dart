@@ -9735,14 +9735,8 @@ abstract class AppLocalizations {
   /// A3 body.
   ///
   /// In en, this message translates to:
-  /// **'Your tasks are kept safely on this device. They come back when you sign in again with the same account.'**
+  /// **'Your tasks stay on this device under your account. They come back when you sign in again with the same account.'**
   String get signedOutBody;
-
-  /// A3 illustration (screen readers).
-  ///
-  /// In en, this message translates to:
-  /// **'An empty day'**
-  String get signedOutArt;
 
   /// A3 main button.
   ///
@@ -9989,6 +9983,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn’t export all your data, so nothing was deleted. Try again.'**
   String get accountDeleteExportBroken;
+
+  /// D1 (CR-160 I7): a share or widget action was queued for the account after the person reviewed or exported; nothing was deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Something new arrived for this account after you started, so nothing was deleted. Export again to keep it, then type DELETE again.'**
+  String get accountDeleteChangedSinceReview;
 
   /// D1: the share sheet or save dialog was closed.
   ///
