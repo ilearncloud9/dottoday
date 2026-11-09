@@ -67,3 +67,14 @@ void showSaveFailureSnack(
     action: SnackBarAction(label: l10n.stateRetry, onPressed: onRetry),
   ),
 );
+
+/// [failure]'s message as a plain snackbar: a write that was refused and
+/// can't be retried from here (a reminder action during an account
+/// deletion, CR-160 §4).
+void showFailureSnack(
+  ScaffoldMessengerState messenger,
+  AppLocalizations l10n,
+  AppFailure failure,
+) => messenger.showSnackBar(
+  SnackBar(content: Text(failureMessage(l10n, failure))),
+);

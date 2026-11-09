@@ -370,22 +370,70 @@ Limitations, not fixed by this pass:
   more of, so nothing is lost from a confirmed export.
 - The Android Wake Up alarm actions (snooze, "I'm up") write `wake_up_days` through their own path.
   That is device-local and not in the export, and the Wake Up ownership blocker still covers it.
-- The SnackBar shows on the topmost Scaffold. With D1 as a dialog (wider windows) it appears under
-  the dialog's barrier. Not checked on a device. Native notification buttons were not driven on a
-  device or simulator in this pass: the tests stop at the responder.
+- Native notification buttons were not driven on a device or simulator in this pass: the tests
+  stop at the responder. (The SnackBar under the D1 dialog is fixed below.)
 - On the web, the service worker posts a tap to the first window, which may be a tab without the
   database (an existing, unrelated issue).
 
 Open before push approval (owner 2026-11-09):
 
-- **A. Refusal-message visibility:** whether the SnackBar can be seen and is announced on every
-  supported layout, the D1 dialog on wider windows included.
+- **A. Refusal-message visibility:** fixed locally (below, uncommitted, awaiting review); still
+  not seen on a device or simulator.
 - **B. Crash recovery:** whether clearing a stale seal at launch can reopen saves to an account
   whose deletion or local removal is still pending.
 - **C. External changes:** changes synced from another device during the D1 review are not
   covered by the local revision (export-consistency risk, separate).
 - **D. Remaining paths:** the Android Wake Up path, physical-device behaviour, and the writers
   outside the revision: sync pulls, trash purge, and the calendar import and write-back (seal only).
+
+#### Refusal message inside the D1 dialog (2026-11-09, uncommitted, awaiting review)
+
+Found after commit `9c253d9`, with a throwaway widget probe. On tablet, Mac and web, D1 is a modal
+dialog. The root SnackBar was drawn under its barrier: dimmed, not hit-testable and missing from the
+semantics tree, so screen readers never heard it. On phones D1 is a full-screen page and the
+SnackBar shows on it.
+
+- While a D1 dialog is open it registers with `refusalDialogsProvider` (a plain counter, set in
+  `initState` and cleared in `dispose`). The root's `showReminderRefusal` then skips the SnackBar,
+  and D1 listens to `reminderRefusalProvider` and shows the existing `failureStorage` message in its
+  existing error line (`StatusLine`, a live region). The phone page doesn't register, so the
+  SnackBar still shows there as before.
+- Priority: a deletion error (`ReviewChangedFailure` "something new arrived", a server failure)
+  replaces the refusal in the error line. A new export or deletion attempt clears it. The typed word,
+  export status and buttons are unchanged.
+- If the deletion succeeds while the refusal is showing, the dialog closes and the same message is
+  shown once as a SnackBar, where it can be seen. **OPEN — BEFORE PUSH (owner 2026-11-09):** that
+  replay reaches the guest (or next account) shown after the deletion. It carries no account
+  detail, but a stale refusal must not be replayed after a deletion or an owner switch. A separate
+  correction is proposed and not yet made.
+- No new strings or components, and no change to deletion, queue, owner or write logic.
+
+Tests: `test/features/settings/delete_account_refusal_test.dart`, 15 passed:
+
+- Tablet (1024×1366, iOS), Mac (1440×900) and web (1280×800, browser):
+  - The refusal is inside the dialog, hit-testable, found exactly once, with no SnackBar.
+  - Its semantics node is a live region labelled with the message.
+  - The text is only the generic message.
+  - D1 stays open and `endDeletion` isn't called.
+  - The accessibility guidelines pass.
+  - The same holds while the deletion runs.
+- Phone: the SnackBar on the D1 page, found once.
+- D1 closed: the SnackBar as before.
+- "Something new arrived" and a server error each replace the refusal, and the dialog stays.
+- Deleted while the refusal shows: the dialog closes and the message is shown once as a SnackBar.
+- Light and dark at 200% text, 1024 and 1280 wide: no overflow, and the line sits inside the dialog
+  and is hit-testable.
+
+Mutation check: the root ignoring the open dialog, no inline refusal, and the refusal above a
+deletion error each fail the tests.
+
+Light, dark, accessibility-guideline and 200% text checks passed in the tested widget layouts.
+
+Runs: `dart format` 0 changed; `flutter analyze` and `dart analyze` clean; 1,854 passed across
+`test/features/settings` (D1 goldens included), `features/auth`, `data/owners`,
+`data/notifications`, `policy`, `shared`, `a11y`, and the app shell, smoke, lifecycle and
+screen-state tests. The full unit, golden and perf suites were not rerun for this change. Nothing
+was checked on a device or simulator.
 
 ## Deleted accounts (interim, owner-approved)
 

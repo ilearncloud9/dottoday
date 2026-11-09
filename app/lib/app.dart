@@ -5,8 +5,6 @@ import 'package:dottoday/app_lifecycle.dart';
 import 'package:dottoday/app_menu.dart';
 import 'package:dottoday/app_shortcut_groups.dart';
 import 'package:dottoday/core/editing/focus_task.dart';
-import 'package:dottoday/core/failures/app_failure.dart';
-import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
@@ -23,6 +21,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/auth/account_gate_view.dart';
 import 'package:dottoday/features/inbox/schedule_from_anywhere.dart';
 import 'package:dottoday/features/lock/lock_gate.dart';
+import 'package:dottoday/features/notifications/reminder_refusal_snack.dart';
 import 'package:dottoday/features/onboarding/onboarding_gate.dart';
 import 'package:dottoday/features/recovery/database_recovery.dart';
 import 'package:dottoday/features/sync_status/sync_sheet.dart';
@@ -62,9 +61,15 @@ class DottodayApp extends ConsumerWidget {
       if (r != null) _openFocus(router, r.id);
     });
     // A reminder action refused while an account was being deleted (CR-160
-    // §4): the generic "couldn't save", over D1, never a silent success.
+    // §4): the generic "couldn't save", never a silent success; an open
+    // D1 dialog says it itself.
     ref.listen(reminderRefusalProvider, (_, r) {
-      if (r != null) _showRefusal(router, r.failure);
+      if (r == null) return;
+      showReminderRefusal(
+        ref,
+        router.routerDelegate.navigatorKey.currentState?.overlay?.context,
+        r.failure,
+      );
     });
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
@@ -150,17 +155,6 @@ void _openFocus(GoRouter router, String id, {bool retry = true}) {
   if (!retry) return;
   WidgetsBinding.instance.addPostFrameCallback(
     (_) => _openFocus(router, id, retry: false),
-  );
-}
-
-/// [failure]'s message on the root `ScaffoldMessenger`, from the root
-/// overlay; nothing when there is no navigator yet.
-void _showRefusal(GoRouter router, AppFailure failure) {
-  final context =
-      router.routerDelegate.navigatorKey.currentState?.overlay?.context;
-  if (context == null) return;
-  ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-    SnackBar(content: Text(failureMessage(context.l10n, failure))),
   );
 }
 

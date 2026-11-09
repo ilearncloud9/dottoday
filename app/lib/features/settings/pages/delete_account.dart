@@ -5,11 +5,13 @@ import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/notifications/reminder_refusal.dart';
 import 'package:dottoday/data/owners/account_actions.dart';
 import 'package:dottoday/data/owners/account_export.dart';
 import 'package:dottoday/data/owners/account_gate.dart';
 import 'package:dottoday/data/owners/account_meta.dart';
 import 'package:dottoday/features/settings/pages/delete_account_parts.dart';
+import 'package:dottoday/shared/feedback/save_failure.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -56,6 +58,11 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
   OwnerExportOutcome? _exported;
   String? _error;
 
+  /// A reminder action refused while this dialog is open (CR-160 §4):
+  /// said in the error line, below any deletion error ([_error] wins).
+  AppFailure? _refusal;
+  RefusalDialogs? _dialogs;
+
   void _changed() => setState(() {});
 
   @override
@@ -63,12 +70,18 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
     super.initState();
     _actions = ref.read(accountActionsProvider);
     _summary = _actions.summary(widget.owner);
+    // Only the dialog: on phones D1 is a page and the SnackBar shows on it.
+    if (widget.wide) {
+      final dialogs = ref.read(refusalDialogsProvider)..opened();
+      _dialogs = dialogs;
+    }
   }
 
   @override
   void dispose() {
     // Actions queued for the account meanwhile apply again (CR-160 I7).
     _actions.endDeletion(widget.owner);
+    _dialogs?.closed();
     _typed.dispose();
     super.dispose();
   }
@@ -81,6 +94,7 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
       _busy = true;
       _exported = null;
       _error = null;
+      _refusal = null;
     });
     final outcome = await _actions.exportFirst(widget.owner, origin: origin);
     if (!mounted) return;
@@ -93,15 +107,23 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
   Future<void> _delete() async {
     final l10n = context.l10n;
     final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.maybeOf(context);
     setState(() {
       _busy = true;
       _error = null;
+      _refusal = null;
     });
     final result = await _actions.deleteAccount();
     if (!mounted) return;
     switch (result) {
       case Ok():
+        final refusal = _refusal;
         navigator.pop();
+        // Said here while the dialog was up; once it's gone, said again
+        // where it can be seen.
+        if (refusal != null && messenger != null) {
+          showFailureSnack(messenger, l10n, refusal);
+        }
       case Err(failure: final ReviewChangedFailure failure):
         // Something new arrived: the export no longer covers everything and
         // the typed word is asked again (CR-160 I7).
@@ -119,6 +141,11 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
     }
   }
 
+  String? _refusalText(BuildContext context) => switch (_refusal) {
+    final f? => failureMessage(context.l10n, f),
+    null => null,
+  };
+
   String? _exportStatus(BuildContext context) {
     final l10n = context.l10n;
     return switch (_exported) {
@@ -131,6 +158,11 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.wide) {
+      ref.listen(reminderRefusalProvider, (_, r) {
+        if (r != null) setState(() => _refusal = r.failure);
+      });
+    }
     final browser = ref.watch(inBrowserProvider);
     final parts = DeleteParts(
       browser: browser,
@@ -139,7 +171,7 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
       typed: _typed,
       busy: _busy,
       exportStatus: _exportStatus(context),
-      error: _error,
+      error: _error ?? _refusalText(context),
       onExport: (origin) => unawaited(_export(origin)),
       onCancel: () => Navigator.of(context).pop(),
       onDelete: _confirmed ? () => unawaited(_delete()) : null,
