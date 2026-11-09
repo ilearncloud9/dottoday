@@ -316,10 +316,10 @@ mid-deletion and ended its hold early (F5).
   between the lookup and the save writes nothing for either owner.
 - **Feedback and navigation (F5):** while a deletion runs (`OwnerSwitch.deleting`, from
   `refuseQueue` to `releaseQueue`) the responder doesn't navigate (Open, Start, Wind Down, day
-  summary, Wake Up), so D1 and its hold stay. Two cases report the refusal through
-  `reminderRefusalProvider`: a save refused while a deletion ran, and a save whose owner changed
-  while it was handled (owner epoch). The app root shows `failureMessage` as a SnackBar, with no
-  task or account detail, and no new string. Outside a deletion, reminders behave as before.
+  summary, Wake Up), so D1 and its hold stay. A save refused while a deletion ran is reported
+  through `reminderRefusalProvider`, but only within the owner session the tap began in (see
+  "Refusals stay in their owner session" below). The message is `failureMessage`, with no task or
+  account detail, and no new string. Outside a deletion, reminders behave as before.
 
 Tests (local only):
 
@@ -386,7 +386,7 @@ Open before push approval (owner 2026-11-09):
 - **D. Remaining paths:** the Android Wake Up path, physical-device behaviour, and the writers
   outside the revision: sync pulls, trash purge, and the calendar import and write-back (seal only).
 
-#### Refusal message inside the D1 dialog (2026-11-09, uncommitted, awaiting review)
+#### Refusal message inside the D1 dialog (2026-11-09, commit `19047b7`)
 
 Found after commit `9c253d9`, with a throwaway widget probe. On tablet, Mac and web, D1 is a modal
 dialog. The root SnackBar was drawn under its barrier: dimmed, not hit-testable and missing from the
@@ -401,11 +401,9 @@ SnackBar shows on it.
 - Priority: a deletion error (`ReviewChangedFailure` "something new arrived", a server failure)
   replaces the refusal in the error line. A new export or deletion attempt clears it. The typed word,
   export status and buttons are unchanged.
-- If the deletion succeeds while the refusal is showing, the dialog closes and the same message is
-  shown once as a SnackBar, where it can be seen. **OPEN — BEFORE PUSH (owner 2026-11-09):** that
-  replay reaches the guest (or next account) shown after the deletion. It carries no account
-  detail, but a stale refusal must not be replayed after a deletion or an owner switch. A separate
-  correction is proposed and not yet made.
+- In `19047b7`, if the deletion succeeded while the refusal was showing, the message was shown
+  again as a SnackBar after the dialog closed, to the guest or next account. That replay is removed
+  in the next section.
 - No new strings or components, and no change to deletion, queue, owner or write logic.
 
 Tests: `test/features/settings/delete_account_refusal_test.dart`, 15 passed:
@@ -434,6 +432,61 @@ Runs: `dart format` 0 changed; `flutter analyze` and `dart analyze` clean; 1,854
 `data/notifications`, `policy`, `shared`, `a11y`, and the app shell, smoke, lifecycle and
 screen-state tests. The full unit, golden and perf suites were not rerun for this change. Nothing
 was checked on a device or simulator.
+
+#### Refusals stay in their owner session (2026-11-09, uncommitted, awaiting review)
+
+Owner decision: a refusal from a previous owner session is never shown to the owner or guest shown
+now, even if this means a tap cut off by the switch ends with no message.
+
+- **Tag at the start:** `NotificationResponder.handle` reads the owner epoch (`ownerEpochProvider`,
+  raised at every change of owner) as soon as the tap arrives, before any profile or task lookup or
+  save. Each refusal carries that epoch. It is never read when the failure happens.
+- **Dropped at every step when the epoch is no longer current:**
+  - The responder (`_refuse`) drops it; a save refused by a change of owner reports nothing.
+  - `ReminderRefusal.report` won't take it.
+  - The app root (`showReminderRefusal`) and the D1 dialog check `current` before showing it.
+- **Not yet shown when the owner changes:**
+  - A refusal reported but not taken yet is cleared, because the notifier is rebuilt on every
+    epoch change.
+  - A SnackBar already on screen, or waiting behind another, has session-bound text: when the
+    epoch moves it removes itself and shows nothing.
+- **No replay:** a successful deletion closes D1 without showing the refusal again. `showFailureSnack`
+  (added in `19047b7` only for that replay) is removed.
+- **Same session, unchanged:** the D1 dialog shows it in its error line, the phone D1 page and a
+  closed D1 get the SnackBar. A save that went through reports nothing.
+- **Untouched:** write outcomes, deletion, the revision, the seal and the I7 queue. Nothing is
+  persisted, and no account identifier is in the message.
+
+Tests (all passed):
+
+- `test/data/notifications/notification_responder_session_test.dart` (8): a save held at the write
+  path, then released as failed.
+  - Done, Snooze and +15 refused within their session are reported, tagged with it.
+  - Begun under A, refused after a switch to B: nothing reported, nothing opened.
+  - Refused after a new guest session began: nothing reported, nothing opened.
+  - A → B → A: still stale.
+  - A save that went through reports nothing.
+  - The epoch is taken before the lookups (switch during lookup: nothing reported).
+- `test/data/notifications/reminder_refusal_test.dart` (3):
+  - Taken within its session.
+  - Never taken from an ended session (A → B, A → B → A).
+  - Reported, then a switch: dropped and no longer current.
+- `delete_account_refusal_test.dart` (now 18):
+  - A successful deletion closes D1 with no replay, and a fresh refusal afterwards shows as usual.
+  - A stale refusal shows neither in D1 nor as a SnackBar.
+  - A refusal waiting behind another SnackBar never appears after a switch.
+  - One on screen goes at once.
+  - Dialog, phone, priority, accessibility and 200% cases as before.
+- `deletion_race_test.dart`: in the racing Done (55 interleavings) every reported refusal was tagged
+  with the session shown when it was reported. A switch between lookup and save reports nothing.
+- Mutation check: removing the responder's, the notifier's or the SnackBar's session check each
+  fails at least one test.
+
+Runs: `dart format` 0 changed; `flutter analyze` and `dart analyze` clean; 1,895 passed across
+`test/features/settings` (D1 goldens included), `features/auth`, `data/owners`,
+`data/notifications`, `data/intents`, `core/editing`, `policy`, `shared`, `a11y`, and the app shell,
+smoke, lifecycle and screen-state tests. The full unit, golden and perf suites were not rerun.
+Nothing was checked on a device or simulator.
 
 ## Deleted accounts (interim, owner-approved)
 

@@ -68,7 +68,7 @@ class DottodayApp extends ConsumerWidget {
       showReminderRefusal(
         ref,
         router.routerDelegate.navigatorKey.currentState?.overlay?.context,
-        r.failure,
+        r,
       );
     });
     return MaterialApp.router(

@@ -5,7 +5,6 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/owners/deletion_seal.dart';
-import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
@@ -74,53 +73,51 @@ void main() {
     expect(outcomes, {'detected', 'refused'});
   });
 
-  test('a reminder Done racing the confirmation: detected, refused and '
-      'said so, or after the deletion; never lost silently', () async {
-    final outcomes = <String>{};
-    // Negative: the tap starts that many microtasks before the confirmation.
-    for (var turns = -30; turns < 80; turns += 2) {
-      final w = await DeletionWorld.boot(_account(0x100 + turns + 30));
-      await w.actions.summary(w.account);
-      final epoch0 = w.app.container.read(ownerEpochProvider);
-      Future<void>? tapped;
-      if (turns < 0) {
-        tapped = w.responder.handle(w.tap('done'));
-        await _yield(-turns);
+  test(
+    'a reminder Done racing the confirmation: kept and detected, or not '
+    'saved; a refusal is only ever reported within its own session',
+    () async {
+      final outcomes = <String>{};
+      // Negative: the tap starts that many microtasks before the confirmation.
+      for (var turns = -30; turns < 80; turns += 2) {
+        final w = await DeletionWorld.boot(_account(0x100 + turns + 30));
+        await w.actions.summary(w.account);
+        Future<void>? tapped;
+        if (turns < 0) {
+          tapped = w.responder.handle(w.tap('done'));
+          await _yield(-turns);
+        }
+        final deleting = w.actions.deleteAccount();
+        await _yield(turns);
+        tapped ??= w.responder.handle(w.tap('done'));
+        final (deleted, _) = await (deleting, tapped).wait;
+        final why = 'turn $turns';
+        expect(
+          w.opened.where((o) => o != AppRoutes.today),
+          isEmpty,
+          reason: '$why: never the task of a deleted account',
+        );
+        // Never into another session (owner 2026-11-09).
+        for (final r in w.refusedIn) {
+          expect(r.tagged, r.shown, reason: '$why: reported in its session');
+        }
+        if (deleted is Err) {
+          // Saved before the seal: kept, and the deletion stopped.
+          expect(deleted, const Err<void, AppFailure>(ReviewChangedFailure()));
+          expect((await w.row())!.status, OccurrenceStatus.done.name);
+          expect(w.refused, isEmpty, reason: why);
+          outcomes.add('detected');
+        } else {
+          // Not saved for anyone; said if its session was still shown.
+          expect(w.refused, anyOf(isEmpty, [const StorageFailure()]));
+          outcomes.add(w.refused.isEmpty ? 'unsaid' : 'refused');
+        }
+        expect(await w.anyRows(), deleted is Err ? hasLength(1) : isEmpty);
+        await w.dispose();
       }
-      final deleting = w.actions.deleteAccount();
-      await _yield(turns);
-      // The deletion had finished (owner changed, no longer deleting).
-      final after =
-          tapped == null &&
-          w.app.container.read(ownerEpochProvider) != epoch0 &&
-          !w.owners.deleting;
-      tapped ??= w.responder.handle(w.tap('done'));
-      final (deleted, _) = await (deleting, tapped).wait;
-      final why = 'turn $turns';
-      expect(
-        w.opened.where((o) => o != AppRoutes.today),
-        isEmpty,
-        reason: '$why: never the task of a deleted account',
-      );
-      if (deleted is Err) {
-        // Saved before the seal: kept, and the deletion stopped.
-        expect(deleted, const Err<void, AppFailure>(ReviewChangedFailure()));
-        expect((await w.row())!.status, OccurrenceStatus.done.name);
-        expect(w.refused, isEmpty, reason: why);
-        outcomes.add('detected');
-      } else if (after) {
-        // The account was gone before the tap: a gone task opens Today.
-        expect(w.refused, isEmpty, reason: why);
-        outcomes.add('after');
-      } else {
-        expect(w.refused, [const StorageFailure()], reason: why);
-        outcomes.add('refused');
-      }
-      expect(await w.anyRows(), deleted is Err ? hasLength(1) : isEmpty);
-      await w.dispose();
-    }
-    expect(outcomes, containsAll(['detected', 'refused']));
-  });
+      expect(outcomes, containsAll(['detected', 'refused', 'unsaid']));
+    },
+  );
 
   test('two connections to one file (the background refresh opens its '
       'own): every save is counted by the seal or refused', () async {
@@ -193,7 +190,8 @@ void main() {
     );
     final revision = await writeRevision(w.db, _a);
     await w.responder.handle(w.tap('done'));
-    expect(w.refused, [const StorageFailure()], reason: 'not shown as done');
+    // Another session is shown now: nothing said in it (owner 2026-11-09).
+    expect(w.refused, isEmpty);
     expect(w.opened, [AppRoutes.today]);
     expect((await w.row())!.status, OccurrenceStatus.planned.name);
     expect(await w.row(owner: _b), isNull);

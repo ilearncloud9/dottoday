@@ -77,6 +77,10 @@ final class DeletionWorld {
   /// What the responder reported as refused, in order.
   final refused = <AppFailure>[];
 
+  /// For each refusal: the owner epoch it was tagged with, and the one
+  /// shown when it was reported.
+  final refusedIn = <({int tagged, int shown})>[];
+
   AppDatabase get db => app.db;
   AccountActions get actions => app.container.read(accountActionsProvider);
   OwnerSwitch get owners => app.owners;
@@ -102,7 +106,10 @@ final class DeletionWorld {
       logger: Logger(ownerAppLogs, FakeClock(ownerAppNow)),
       deleting: () => owners.deleting,
       ownerEpoch: () => c.read(ownerEpochProvider),
-      refused: refused.add,
+      refused: (failure, epoch) {
+        refused.add(failure);
+        refusedIn.add((tagged: epoch, shown: c.read(ownerEpochProvider)));
+      },
     );
   }();
 

@@ -28,7 +28,9 @@ import 'package:dottoday/domain/writes/write_use_case.dart';
 /// (`whileShown`), and never while that account is being deleted (the
 /// write path refuses it). While a deletion runs ([deleting]) nothing
 /// navigates — D1 stays up, with its protection — and a refused write is
-/// reported through [refused], never shown as done.
+/// reported through [refused], never shown as done. A refusal carries the
+/// owner epoch of the tap that caused it and is dropped once another owner
+/// session began: it is never shown to the next owner or guest.
 final class NotificationResponder {
   NotificationResponder({
     required Clock clock,
@@ -39,7 +41,7 @@ final class NotificationResponder {
     required Logger logger,
     bool Function()? deleting,
     int Function()? ownerEpoch,
-    void Function(AppFailure failure)? refused,
+    void Function(AppFailure failure, int epoch)? refused,
   }) : _clock = clock,
        _writes = writes,
        _occurrences = occurrences,
@@ -58,11 +60,11 @@ final class NotificationResponder {
   final Logger _logger;
   final bool Function() _deleting;
   final int Function() _ownerEpoch;
-  final void Function(AppFailure failure) _refused;
+  final void Function(AppFailure failure, int epoch) _refused;
 
   static bool _never() => false;
   static int _first() => 0;
-  static void _ignore(AppFailure _) {}
+  static void _ignore(AppFailure _, int _) {}
 
   /// Goes to [location], except while an account deletion runs: leaving D1
   /// then would end its protection before the deletion does.
@@ -77,9 +79,22 @@ final class NotificationResponder {
   /// Whether the owner shown changed since [epoch].
   bool _moved(int epoch) => _ownerEpoch() != epoch;
 
+  /// Reports [failure] for the tap begun in owner session [epoch], unless
+  /// that session ended: a refusal never crosses into another (CR-160 §4).
+  void _refuse(AppFailure failure, int epoch) {
+    if (_moved(epoch)) {
+      _logger.info('notification.refusal_stale');
+      return;
+    }
+    _refused(failure, epoch);
+  }
+
   /// Handles [tap]; the payload's occurrence ID is the only input trusted,
   /// and only for the current profile (06 §7).
   Future<void> handle(NotificationTap tap) async {
+    // The session this tap began in, before anything is awaited: a refusal
+    // it ends in belongs to it, not to whoever is shown later (CR-160 §4).
+    final tap0 = (deleting: _deleting(), epoch: _ownerEpoch());
     final planned = decodeNotificationPayload(tap.id ?? 0, tap.payload);
     final action = NotificationAction.fromId(tap.actionId);
     _logger.info('notification.tapped', fields: {'action': action});
@@ -102,16 +117,14 @@ final class NotificationResponder {
     if (action == NotificationAction.open) {
       return _open(AppRoutes.task(planned.occurrenceId));
     }
-    // A deletion running, or a change of owner, while this tap is handled:
-    // a save it asks for then never ends silently (CR-160 §4).
-    final tap0 = (deleting: _deleting(), epoch: _ownerEpoch());
     final profile = await _profile();
     final task = await _occurrences.findById(profile.id, planned.occurrenceId);
     if (task == null || task.deletedAt != null) {
-      // Its account went (or is going): Done, Snooze, +15 weren't saved.
+      // Its account is going: Done, Snooze, +15 weren't saved. Said only
+      // within the session the tap began in ([_refuse]).
       final saves = action != NotificationAction.start;
-      if (saves && (tap0.deleting || _deleting() || _moved(tap0.epoch))) {
-        _refused(const StorageFailure());
+      if (saves && (tap0.deleting || _deleting())) {
+        _refuse(const StorageFailure(), tap0.epoch);
       }
       return _open(AppRoutes.today);
     }
@@ -150,12 +163,10 @@ final class NotificationResponder {
     if (result case Err(:final failure)) {
       _logger.warn('notification.action_failed', error: failure);
       // Refused by a deletion: said so, and D1 stays where it is.
-      if (tap0.deleting || _deleting()) return _refused(failure);
-      // Refused by a change of owner: said so; the task isn't shown now.
-      if (_moved(tap0.epoch)) {
-        _refused(failure);
-        return _open(AppRoutes.today);
-      }
+      if (tap0.deleting || _deleting()) return _refuse(failure, tap0.epoch);
+      // Refused by a change of owner: another session is shown now, so
+      // nothing is said in it and its task isn't opened.
+      if (_moved(tap0.epoch)) return _open(AppRoutes.today);
       _open(AppRoutes.task(task.id));
     }
   }

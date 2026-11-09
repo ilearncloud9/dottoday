@@ -113,8 +113,8 @@ NotificationResponder notificationResponder(Ref ref) => NotificationResponder(
   logger: ref.watch(loggerProvider),
   deleting: () => ref.read(ownerSwitchProvider).deleting,
   ownerEpoch: () => ref.read(ownerEpochProvider),
-  refused: (failure) =>
-      ref.read(reminderRefusalProvider.notifier).report(failure),
+  refused: (failure, epoch) =>
+      ref.read(reminderRefusalProvider.notifier).report(failure, epoch: epoch),
 );
 
 /// Initialises the platform once (channels, actions, the tap handler) and

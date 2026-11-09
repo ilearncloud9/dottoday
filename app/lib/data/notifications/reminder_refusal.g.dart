@@ -8,25 +8,18 @@ part of 'reminder_refusal.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// A reminder's Done, Snooze or +15 that was refused while an account
-/// deletion ran (CR-160 policy §4): its generic message is shown — by an
-/// open D1 dialog itself, else by the app root — so a tap never looks like
-/// it worked. Carries no task or account detail.
+/// See [Refusal]. Never persisted; a refusal not shown yet is dropped at
+/// the next change of owner, and one from an ended session is never taken.
 
 @ProviderFor(ReminderRefusal)
 final reminderRefusalProvider = ReminderRefusalProvider._();
 
-/// A reminder's Done, Snooze or +15 that was refused while an account
-/// deletion ran (CR-160 policy §4): its generic message is shown — by an
-/// open D1 dialog itself, else by the app root — so a tap never looks like
-/// it worked. Carries no task or account detail.
+/// See [Refusal]. Never persisted; a refusal not shown yet is dropped at
+/// the next change of owner, and one from an ended session is never taken.
 final class ReminderRefusalProvider
-    extends
-        $NotifierProvider<ReminderRefusal, ({AppFailure failure, int seq})?> {
-  /// A reminder's Done, Snooze or +15 that was refused while an account
-  /// deletion ran (CR-160 policy §4): its generic message is shown — by an
-  /// open D1 dialog itself, else by the app root — so a tap never looks like
-  /// it worked. Carries no task or account detail.
+    extends $NotifierProvider<ReminderRefusal, Refusal?> {
+  /// See [Refusal]. Never persisted; a refusal not shown yet is dropped at
+  /// the next change of owner, and one from an ended session is never taken.
   ReminderRefusalProvider._()
     : super(
         from: null,
@@ -46,43 +39,30 @@ final class ReminderRefusalProvider
   ReminderRefusal create() => ReminderRefusal();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(({AppFailure failure, int seq})? value) {
+  Override overrideWithValue(Refusal? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<({AppFailure failure, int seq})?>(
-        value,
-      ),
+      providerOverride: $SyncValueProvider<Refusal?>(value),
     );
   }
 }
 
-String _$reminderRefusalHash() => r'52c26be98895d3ed27039cde2b82c3b5efdf8dd6';
+String _$reminderRefusalHash() => r'90093eacbd9a2b8e5d580a1ee4352a3c17905399';
 
-/// A reminder's Done, Snooze or +15 that was refused while an account
-/// deletion ran (CR-160 policy §4): its generic message is shown — by an
-/// open D1 dialog itself, else by the app root — so a tap never looks like
-/// it worked. Carries no task or account detail.
+/// See [Refusal]. Never persisted; a refusal not shown yet is dropped at
+/// the next change of owner, and one from an ended session is never taken.
 
-abstract class _$ReminderRefusal
-    extends $Notifier<({AppFailure failure, int seq})?> {
-  ({AppFailure failure, int seq})? build();
+abstract class _$ReminderRefusal extends $Notifier<Refusal?> {
+  Refusal? build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref =
-        this.ref
-            as $Ref<
-              ({AppFailure failure, int seq})?,
-              ({AppFailure failure, int seq})?
-            >;
+    final ref = this.ref as $Ref<Refusal?, Refusal?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<
-                ({AppFailure failure, int seq})?,
-                ({AppFailure failure, int seq})?
-              >,
-              ({AppFailure failure, int seq})?,
+              AnyNotifier<Refusal?, Refusal?>,
+              Refusal?,
               Object?,
               Object?
             >;

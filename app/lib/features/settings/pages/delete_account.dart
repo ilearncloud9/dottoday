@@ -11,7 +11,6 @@ import 'package:dottoday/data/owners/account_export.dart';
 import 'package:dottoday/data/owners/account_gate.dart';
 import 'package:dottoday/data/owners/account_meta.dart';
 import 'package:dottoday/features/settings/pages/delete_account_parts.dart';
-import 'package:dottoday/shared/feedback/save_failure.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -107,7 +106,6 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
   Future<void> _delete() async {
     final l10n = context.l10n;
     final navigator = Navigator.of(context);
-    final messenger = ScaffoldMessenger.maybeOf(context);
     setState(() {
       _busy = true;
       _error = null;
@@ -117,13 +115,9 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
     if (!mounted) return;
     switch (result) {
       case Ok():
-        final refusal = _refusal;
+        // A refusal said here stays with this session: never said again
+        // once the account is gone (CR-160 §4).
         navigator.pop();
-        // Said here while the dialog was up; once it's gone, said again
-        // where it can be seen.
-        if (refusal != null && messenger != null) {
-          showFailureSnack(messenger, l10n, refusal);
-        }
       case Err(failure: final ReviewChangedFailure failure):
         // Something new arrived: the export no longer covers everything and
         // the typed word is asked again (CR-160 I7).
@@ -160,7 +154,10 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
   Widget build(BuildContext context) {
     if (widget.wide) {
       ref.listen(reminderRefusalProvider, (_, r) {
-        if (r != null) setState(() => _refusal = r.failure);
+        final refusals = ref.read(reminderRefusalProvider.notifier);
+        if (r != null && refusals.current(r)) {
+          setState(() => _refusal = r.failure);
+        }
       });
     }
     final browser = ref.watch(inBrowserProvider);

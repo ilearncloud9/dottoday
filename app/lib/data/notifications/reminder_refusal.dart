@@ -7,19 +7,29 @@ part 'reminder_refusal.g.dart';
 /// A reminder's Done, Snooze or +15 that was refused while an account
 /// deletion ran (CR-160 policy §4): its generic message is shown — by an
 /// open D1 dialog itself, else by the app root — so a tap never looks like
-/// it worked. Carries no task or account detail.
+/// it worked. Carries no task or account detail, and only the owner
+/// session ([epoch], the owner epoch the tap began in) it belongs to.
+typedef Refusal = ({AppFailure failure, int seq, int epoch});
+
+/// See [Refusal]. Never persisted; a refusal not shown yet is dropped at
+/// the next change of owner, and one from an ended session is never taken.
 @Riverpod(keepAlive: true)
 class ReminderRefusal extends _$ReminderRefusal {
-  // One not shown yet is the previous owner's after a switch: dropped.
   @override
-  ({AppFailure failure, int seq})? build() {
+  Refusal? build() {
     ref.watch(ownerEpochProvider);
     return null;
   }
 
-  /// Asks for [failure]'s message to be shown.
-  void report(AppFailure failure) =>
-      state = (failure: failure, seq: (state?.seq ?? 0) + 1);
+  /// Asks for [failure]'s message to be shown, for the tap begun in owner
+  /// session [epoch]; dropped when that session already ended.
+  void report(AppFailure failure, {required int epoch}) {
+    if (epoch != ref.read(ownerEpochProvider)) return;
+    state = (failure: failure, seq: (state?.seq ?? 0) + 1, epoch: epoch);
+  }
+
+  /// Whether [r] belongs to the owner session shown now.
+  bool current(Refusal r) => r.epoch == ref.read(ownerEpochProvider);
 }
 
 /// Open D1 dialogs (CR-160 §4, wider windows). The root's SnackBar would

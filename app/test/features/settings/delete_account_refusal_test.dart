@@ -4,6 +4,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/reminder_refusal.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/features/notifications/reminder_refusal_snack.dart';
 import 'package:dottoday/features/settings/pages/delete_account.dart';
 import 'package:dottoday/shared/account/account_buttons.dart';
@@ -76,7 +77,7 @@ void main() {
                 showReminderRefusal(
                   ref,
                   _nav.currentState?.overlay?.context,
-                  r.failure,
+                  r,
                 );
               });
               return Scaffold(
@@ -98,10 +99,19 @@ void main() {
     await t.pumpAndSettle();
   }
 
-  Future<void> refuse(WidgetTester t) async {
-    ProviderScope.containerOf(
-      t.element(find.text('go', skipOffstage: false)),
-    ).read(reminderRefusalProvider.notifier).report(const StorageFailure());
+  ProviderContainer container(WidgetTester t) => ProviderScope.containerOf(
+    t.element(find.text('go', skipOffstage: false)),
+  );
+
+  /// A refusal for a tap begun in owner session [epoch] (now: the current).
+  Future<void> refuse(WidgetTester t, {int? epoch}) async {
+    final c = container(t);
+    c
+        .read(reminderRefusalProvider.notifier)
+        .report(
+          const StorageFailure(),
+          epoch: epoch ?? c.read(ownerEpochProvider),
+        );
     await t.pumpAndSettle();
   }
 
@@ -216,8 +226,8 @@ void main() {
     expect(find.byType(Dialog), findsOneWidget);
   });
 
-  testWidgets('deleted while a refusal shows: said again once the dialog '
-      'closes, where it can be seen', (t) async {
+  testWidgets('deleted while a refusal shows: the dialog closes and it is '
+      'not said again; a fresh one afterwards shows as usual', (t) async {
     await host(t, size: const Size(1280, 800));
     await openD1(t);
     actions.finish = Completer();
@@ -226,8 +236,55 @@ void main() {
     actions.finish!.complete(const Ok(null));
     await t.pumpAndSettle();
     expect(find.byType(Dialog), findsNothing);
+    expect(find.text(_refused), findsNothing);
+    expect(find.byType(SnackBar), findsNothing);
+    // Same session, D1 closed: the usual SnackBar.
+    await refuse(t);
     expect(find.text(_refused).hitTestable(), findsOneWidget);
-    expect(find.byType(SnackBar), findsOneWidget);
+  });
+
+  testWidgets('a refusal from an ended owner session is never shown: not '
+      'in D1, not as a SnackBar', (t) async {
+    await host(t, size: const Size(1280, 800));
+    final start = container(t).read(ownerEpochProvider);
+    container(t).read(ownerEpochProvider.notifier).next();
+    await refuse(t, epoch: start);
+    expect(find.text(_refused), findsNothing);
+    await openD1(t);
+    await refuse(t, epoch: start);
+    expect(find.text(_refused), findsNothing);
+    expect(find.byType(Dialog), findsOneWidget);
+  });
+
+  testWidgets('a refusal waiting behind another SnackBar when the owner '
+      'changes never appears to the next owner', (t) async {
+    await host(t, size: const Size(390, 844));
+    ScaffoldMessenger.of(
+      t.element(find.text('go')),
+    ).showSnackBar(const SnackBar(content: Text('earlier'))); // l10n-ignore
+    await t.pump();
+    await refuse(t);
+    expect(find.text(_refused), findsNothing, reason: 'queued, not shown');
+    container(t).read(ownerEpochProvider.notifier).next();
+    await t.pumpAndSettle(const Duration(seconds: 1));
+    for (var i = 0; i < 12; i++) {
+      await t.pump(const Duration(seconds: 1));
+      expect(find.text(_refused), findsNothing);
+    }
+    await t.pumpAndSettle();
+    expect(find.text(_refused), findsNothing);
+  });
+
+  testWidgets('a refusal on screen when the owner changes goes at once', (
+    t,
+  ) async {
+    await host(t, size: const Size(390, 844));
+    await refuse(t);
+    expect(find.text(_refused), findsOneWidget);
+    container(t).read(ownerEpochProvider.notifier).next();
+    await t.pumpAndSettle();
+    expect(find.text(_refused), findsNothing);
+    expect(find.byType(SnackBar), findsNothing);
   });
 
   for (final dark in [false, true]) {
