@@ -12,4 +12,6 @@ esac
 psql "$DB_URL" -X -q -v ON_ERROR_STOP=1 -f supabase/concurrency/0015_account_revision_race.sql 2>&1 \
   | sed -n 's/^.*NOTICE:  //p; /passed/,+2p'
 supabase/concurrency/auth_admin_delete.sh
+supabase/concurrency/edge_delete.sh
+# Last: it restarts the database, and the stack needs a moment to settle.
 supabase/concurrency/restart_check.sh
