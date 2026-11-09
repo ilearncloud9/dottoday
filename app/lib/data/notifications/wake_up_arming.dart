@@ -89,6 +89,15 @@ final class WakeUpArming {
     return armed;
   }
 
+  /// Disarms every Wake Up alarm and forgets the armed instants: a change
+  /// of owner (CR-160 I8). `armed_wake_ups` is one key per device, not per
+  /// owner, so the alarms (their titles are the old owner's tasks) go
+  /// first; the new owner's resync then arms its own, if any.
+  Future<void> disarmAll() async {
+    await _gateway.disarmAll();
+    await _write(null);
+  }
+
   /// [alarms] with each morning's mission (15 §8): the mode, the alarm
   /// tier, what this device can run and how many dots the day has.
   Future<List<WakeUpAlarm>> _withMissions(

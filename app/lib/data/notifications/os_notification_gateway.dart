@@ -69,6 +69,9 @@ final class OsNotificationGateway implements NotificationGateway {
     }
   }
 
+  @override
+  Future<void> clearAll() async => (await _platform()).clearAll();
+
   Future<bool> _textIsCurrent(
     PlannedNotification planned,
     String? payload,

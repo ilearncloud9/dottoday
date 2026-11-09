@@ -2626,9 +2626,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountDeleteExportFirst => 'Export my data first';
 
   @override
-  String accountDeleteBody(String word) {
-    return 'This deletes your account and everything synced to it. Tasks on this device stay. Type $word to confirm.';
-  }
+  String get accountDeleteBody =>
+      'This deletes your account and everything synced to it. It also removes your copy on this device.';
 
   @override
   String get accountDeleteWord => 'DELETE';
@@ -6406,6 +6405,306 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get wakeUpDiscoveryTierGained =>
       'Your phone can now ring Dottoday\'s wake-up like an alarm. Turn it on?';
+
+  @override
+  String get accountContinue => 'Continue';
+
+  @override
+  String get accountSignOutTitle => 'Sign out?';
+
+  @override
+  String get accountSignOutSyncedBody =>
+      'Your tasks and settings are hidden on this device until you sign in again. Everything has synced to your account.';
+
+  @override
+  String accountSignOutPendingTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes haven’t synced yet',
+      one: '1 change hasn’t synced yet',
+      zero: 'Sync hasn’t been confirmed yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String accountSignOutPendingBody(int count, String email) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'They’re saved on this device for $email and haven’t reached your account yet. They can sync when you sign in again with this account.',
+      one:
+          'It’s saved on this device for $email and hasn’t reached your account yet. It can sync when you sign in again with this account.',
+      zero:
+          'Dottoday hasn’t confirmed that everything reached your account. Anything that didn’t is saved on this device for $email and can sync when you sign in again with this account.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountSignOutIsolation =>
+      'Until then, no one else who uses Dottoday on this device can see them.';
+
+  @override
+  String get accountSignOutKeptHere =>
+      'They stay on this device under this account.';
+
+  @override
+  String get accountStaySignedIn => 'Stay signed in';
+
+  @override
+  String get accountStaySignedInHint => 'Dottoday tries to sync them now.';
+
+  @override
+  String get accountSignOutKeep => 'Sign out and keep them here';
+
+  @override
+  String get accountSignOutEscHint =>
+      'Esc cancels and starts nothing. Stay signed in tries to sync now.';
+
+  @override
+  String get signedOutTitle => 'You’re signed out';
+
+  @override
+  String get signedOutBody =>
+      'Your tasks are kept safely on this device. They come back when you sign in again with the same account.';
+
+  @override
+  String get signedOutArt => 'An empty day';
+
+  @override
+  String get signedOutSignIn => 'Sign in';
+
+  @override
+  String get signedOutUseWithout => 'Use without an account';
+
+  @override
+  String get signedOutUseWithoutHint =>
+      'Opens this device’s plan without an account. Anyone who uses this device without an account can see it.';
+
+  @override
+  String get settingsChoiceTitle => 'Which settings should Dottoday use?';
+
+  @override
+  String get settingsChoiceBody =>
+      'Your account already has settings. This device had different ones before you signed in. Your tasks won’t be deleted.';
+
+  @override
+  String get settingsChoiceLegend => 'Settings to use';
+
+  @override
+  String get settingsChoiceAccount => 'Your account’s settings';
+
+  @override
+  String get settingsChoiceDevice => 'This device’s settings';
+
+  @override
+  String get settingsChoiceTimeZone => 'Time zone';
+
+  @override
+  String get settingsChoiceYourDay => 'Your day';
+
+  @override
+  String settingsChoiceRange(String start, String end) {
+    return '$start – $end';
+  }
+
+  @override
+  String get settingsChoiceOnlyDiffer =>
+      'Only the settings that differ are shown.';
+
+  @override
+  String get settingsChoiceLater => 'Decide later';
+
+  @override
+  String get settingsChoiceLaterHint =>
+      'Until you choose, your account’s settings stay. You can choose in Settings › Account.';
+
+  @override
+  String get accountChooseSettings => 'Choose settings';
+
+  @override
+  String get accountChooseSettingsBody =>
+      'This device had different settings when you signed in.';
+
+  @override
+  String get guestWorkTitle => 'This device has tasks made without an account';
+
+  @override
+  String guestWorkBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tasks were made here without an account since this device was last signed out. They aren’t in any account and may belong to someone else.',
+      one:
+          '1 task was made here without an account since this device was last signed out. It isn’t in any account and may belong to someone else.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestWorkLegend => 'What happens to these tasks';
+
+  @override
+  String get guestWorkKeep => 'Start with your account’s tasks';
+
+  @override
+  String guestWorkKeepBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'These $count stay on this device, separate from your account. Anyone using it without an account can still see them.',
+      one:
+          'This task stays on this device, separate from your account. Anyone using it without an account can still see it.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestWorkBring => 'Bring them into your account';
+
+  @override
+  String guestWorkBringBody(String email) {
+    return 'Only if they’re yours. They’re added to $email and sync to your other devices.';
+  }
+
+  @override
+  String guestWorkMine(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'I made these $count tasks myself',
+      one: 'I made this task myself',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestWorkNotSure =>
+      'Not sure? Keep them separate. You can look through them later by using Dottoday without an account.';
+
+  @override
+  String guestNoticeBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tasks here were made before someone last signed out of this device, so they can’t be added to an account.',
+      one:
+          '1 task here was made before someone last signed out of this device, so it can’t be added to an account.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestNoticeCardTitle => 'You’ll start with your account’s tasks';
+
+  @override
+  String guestNoticeCardBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'The $count tasks stay on this device, separate from your account. Anyone using it without an account can still see them. Nothing is deleted.',
+      one:
+          'The task stays on this device, separate from your account. Anyone using it without an account can still see it. Nothing is deleted.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountDeleteBodyBrowser =>
+      'This deletes your account and everything synced to it. It also removes your copy from this browser.';
+
+  @override
+  String get accountDeleteExportHint =>
+      'Export now, while you’re signed in. Once the account is deleted, nothing from it can be exported here.';
+
+  @override
+  String get accountDeleteExportHintShort =>
+      'While you’re signed in. Afterwards nothing can be exported.';
+
+  @override
+  String get accountDeleteRemovedDevice => 'Removed from this device';
+
+  @override
+  String get accountDeleteRemovedBrowser => 'Removed from this browser';
+
+  @override
+  String get accountDeleteRemovedDeviceLead => 'Removed from this device:';
+
+  @override
+  String get accountDeleteRemovedBrowserLead => 'Removed from this browser:';
+
+  @override
+  String accountDeleteTasks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks',
+      one: '1 task',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String accountDeleteSummary(String tasks) {
+    return '$tasks and your settings. This can’t be undone.';
+  }
+
+  @override
+  String accountDeleteSummaryPending(String tasks, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes that haven’t synced',
+      one: '1 change that hasn’t synced',
+    );
+    return '$tasks, your settings and $_temp0. This can’t be undone.';
+  }
+
+  @override
+  String accountDeleteTypeWord(String word) {
+    return 'Type $word to confirm';
+  }
+
+  @override
+  String get accountDeleteExported =>
+      'Exported. You can delete your account now.';
+
+  @override
+  String get accountDeleteExportBroken =>
+      'Couldn’t export all your data, so nothing was deleted. Try again.';
+
+  @override
+  String get accountDeleteExportClosed =>
+      'Nothing was saved. Export again if you want a copy.';
+
+  @override
+  String get removalRetryTitle => 'Removal from this browser didn’t finish';
+
+  @override
+  String get removalRetryBody =>
+      'An account was deleted, but some of its copy is still in this browser. Until it’s removed it stays hidden: it isn’t shown, synced or added to any account.';
+
+  @override
+  String get removalRetryAction => 'Finish removing';
+
+  @override
+  String get removalRetryHint =>
+      'If it keeps failing, clearing this site’s data in the browser’s settings also removes it, along with anything else saved here.';
+
+  @override
+  String get removalRetryAgain => 'Couldn’t finish removing. Try again.';
+
+  @override
+  String accountTwoSentences(String first, String second) {
+    return '$first $second';
+  }
 
   @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';

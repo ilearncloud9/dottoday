@@ -10,6 +10,7 @@ import 'package:dottoday/data/repositories/drift_routine_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
+import 'package:dottoday/data/sync/guest_sessions.dart';
 import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
 import 'package:dottoday/data/writes/entity_writers.dart';
@@ -85,8 +86,17 @@ final class DriftWriteUseCase implements WriteUseCase {
   Future<void> _write(WriteBatch b) async {
     final hlc = await _hlc.clock();
     final now = _clock.nowUtc();
+    final session = await guestSessionFor(_db, b.userId);
     Future<void> rows<E>(EntityWriter<E> writer, Iterable<E> items) =>
-        writeRows(_db, writer, items, now: now, nextHlc: hlc.now);
+        writeRows(
+          _db,
+          writer,
+          items,
+          owner: b.userId,
+          now: now,
+          nextHlc: hlc.now,
+          guestSession: session,
+        );
 
     final profile = b.profile;
     if (profile != null) await rows(profileWriter(_profiles), [profile]);

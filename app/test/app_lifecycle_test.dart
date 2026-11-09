@@ -15,6 +15,7 @@ import 'package:dottoday/data/intents/no_action_queue_store.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/daily_refresh.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
@@ -65,6 +66,9 @@ final class _Gateway implements NotificationGateway {
 
   @override
   Future<void> apply(NotificationDiff diff) async {}
+
+  @override
+  Future<void> clearAll() async {}
 }
 
 void main() {
@@ -241,6 +245,17 @@ void main() {
     await tester.pump(const Duration(hours: 5));
     await tester.pumpAndSettle();
     verify(() => backup.runDailyIfDue(testUserId)).called(2);
+  });
+
+  testWidgets('another owner shown runs it again (CR-160 I7)', (tester) async {
+    await pump(tester);
+    await tester.pumpAndSettle();
+    expect(gateway.resyncs, 1);
+    ProviderScope.containerOf(
+      tester.element(find.byType(SizedBox)),
+    ).read(ownerEpochProvider.notifier).next();
+    await tester.pumpAndSettle();
+    expect(gateway.resyncs, 2);
   });
 
   testWidgets('a Mac wake or a clock change runs it at once', (tester) async {

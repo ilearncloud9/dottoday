@@ -9,17 +9,23 @@ part of 'learning_meta.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// [LearningMetaState] in `local_meta` (as `InboxNudgeSeen`): each write
-/// is persisted before the state is published, and awaited.
+/// is persisted before the state is published, and awaited. Kept under
+/// `<key>:<ownerId>` for the owner shown and rebuilt at every change of
+/// owner (CR-160); the keys below are the kinds.
 
 @ProviderFor(LearningMeta)
 final learningMetaProvider = LearningMetaProvider._();
 
 /// [LearningMetaState] in `local_meta` (as `InboxNudgeSeen`): each write
-/// is persisted before the state is published, and awaited.
+/// is persisted before the state is published, and awaited. Kept under
+/// `<key>:<ownerId>` for the owner shown and rebuilt at every change of
+/// owner (CR-160); the keys below are the kinds.
 final class LearningMetaProvider
     extends $AsyncNotifierProvider<LearningMeta, LearningMetaState> {
   /// [LearningMetaState] in `local_meta` (as `InboxNudgeSeen`): each write
-  /// is persisted before the state is published, and awaited.
+  /// is persisted before the state is published, and awaited. Kept under
+  /// `<key>:<ownerId>` for the owner shown and rebuilt at every change of
+  /// owner (CR-160); the keys below are the kinds.
   LearningMetaProvider._()
     : super(
         from: null,
@@ -39,10 +45,12 @@ final class LearningMetaProvider
   LearningMeta create() => LearningMeta();
 }
 
-String _$learningMetaHash() => r'481613420e8ea64e6990e67c73e12f1775dee425';
+String _$learningMetaHash() => r'6d7a7935ee5fe1ae7b69d354f233e13e72f3e8cf';
 
 /// [LearningMetaState] in `local_meta` (as `InboxNudgeSeen`): each write
-/// is persisted before the state is published, and awaited.
+/// is persisted before the state is published, and awaited. Kept under
+/// `<key>:<ownerId>` for the owner shown and rebuilt at every change of
+/// owner (CR-160); the keys below are the kinds.
 
 abstract class _$LearningMeta extends $AsyncNotifier<LearningMetaState> {
   FutureOr<LearningMetaState> build();

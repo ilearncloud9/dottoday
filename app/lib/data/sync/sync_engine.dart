@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/db/owner_meta.dart';
 import 'package:dottoday/data/sync/outbox.dart';
 import 'package:dottoday/data/sync/row_merge.dart';
 import 'package:dottoday/data/sync/server_columns.dart';
@@ -10,7 +11,6 @@ import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
 import 'package:dottoday/data/sync/synced_rows.dart';
 import 'package:dottoday/domain/sync/clock_skew.dart';
-import 'package:dottoday/domain/sync/hlc.dart';
 import 'package:drift/drift.dart';
 
 /// What one run did (for the status and tests).
@@ -26,6 +26,9 @@ typedef SyncRun = ({int pulled, int pushed, int conflicts, ClockSkew? skew});
 /// a conflict instead of being overwritten by the push's last-writer-wins.
 /// Pulled rows are written without new outbox rows. A server or network
 /// error stops the run and leaves local data and the outbox as they are.
+/// A run is one owner's (CR-160): it pushes only that account's outbox
+/// entries and keeps its own pull cursors; other owners' rows on the
+/// device are never read for it.
 final class SyncEngine {
   SyncEngine({
     required AppDatabase db,
@@ -60,7 +63,8 @@ final class SyncEngine {
   /// The outbox, for the pending count.
   Outbox get outbox => _outbox;
 
-  /// One full round for [userId] (the signed-in account, already adopted).
+  /// One full round for [userId] (the signed-in account, already made the
+  /// active owner by `signInOwner`).
   /// [onProgress] hears (done, total) while an account's first sync brings
   /// its rows down ("Bringing your tasks… 120 of 300", M6.4).
   /// Throws [SyncGatewayException] when the server can't be reached or
@@ -69,8 +73,8 @@ final class SyncEngine {
     String userId, {
     void Function(int done, int total)? onProgress,
   }) async {
-    final first = !await _hasCursor('profiles');
-    if (first) await _yieldDefaultProfile(userId);
+    final first = !await _hasCursor(userId, 'profiles');
+    if (first) await _settleProfile(userId);
     var total = 0;
     if (first && onProgress != null) {
       for (final entity in syncedEntities) {
@@ -99,7 +103,7 @@ final class SyncEngine {
       return (pulled: pulled, pushed: 0, conflicts: conflicts, skew: skew);
     }
     var pushed = 0;
-    for (final batch in await _outbox.batches(size: _pageSize)) {
+    for (final batch in await _outbox.batches(userId, size: _pageSize)) {
       if (batch.changes.isNotEmpty) await _gateway.push(batch.changes);
       await _outbox.acknowledge(batch);
       pushed += batch.changes.length;
@@ -107,23 +111,22 @@ final class SyncEngine {
     return (pulled: pulled, pushed: pushed, conflicts: conflicts, skew: skew);
   }
 
-  /// Pages through [entity] from its cursor; returns (rows, conflicts).
-  /// The first pull of an entity for an account lets local writes win
-  /// (docs/09 M6.4: what was made here before signing in stays).
+  /// Pages through [entity] from [userId]'s cursor; returns (rows,
+  /// conflicts).
   Future<(int, int)> _pull(
     String userId,
     String entity, {
     void Function(int pulledSoFar)? progress,
   }) async {
-    final localWins = !await _hasCursor(entity);
-    var after = await _cursor(entity);
+    final first = !await _hasCursor(userId, entity);
+    var after = await _cursor(userId, entity);
     var rows = 0;
     var conflicts = 0;
     while (true) {
       final page = await _gateway.pull(entity, after, limit: _pageSize);
       if (page.isEmpty) break;
       final ids = [for (final r in page) r['id']! as String];
-      final pending = await _outbox.pendingFor(entity, ids);
+      final pending = await _outbox.pendingFor(userId, entity, ids);
       final versions = await _gateway.fieldVersions(entity, ids);
       final seen = await _seen(entity, ids);
       await _hlc.receive([for (final v in versions.values) ...v.values]);
@@ -141,11 +144,10 @@ final class SyncEngine {
             pending[id] ?? const {},
             versions[id] ?? const {},
             seen[id] ?? const {},
-            localWins: localWins,
           );
           await _remember(entity, id, versions[id] ?? const {});
         }
-        await _saveCursor(entity, last);
+        await _saveCursor(userId, entity, last);
       });
       rows += page.length;
       progress?.call(rows);
@@ -154,7 +156,7 @@ final class SyncEngine {
     }
     // Visited, even if the server had nothing: the next pull of it is no
     // longer this account's first.
-    if (localWins && rows == 0) await _saveCursor(entity, after);
+    if (first && rows == 0) await _saveCursor(userId, entity, after);
     return (rows, conflicts);
   }
 
@@ -164,9 +166,8 @@ final class SyncEngine {
     Map<String, Object?> remote,
     Map<String, PendingField> pending,
     Map<String, String> versions,
-    Map<String, String> seen, {
-    required bool localWins,
-  }) async {
+    Map<String, String> seen,
+  ) async {
     final id = remote['id']! as String;
     final local = await _rows.find(entity, userId, id);
     final merged = mergeRemote(
@@ -176,20 +177,10 @@ final class SyncEngine {
       pending: pending,
       versions: versions,
       seen: seen,
-      localWins: localWins,
     );
     await _rows.put(entity, merged.row);
     if (merged.settled.isNotEmpty) {
       await _outbox.drop(entity, id, merged.settled);
-    }
-    if (merged.restamp.isNotEmpty) {
-      final clock = await _hlc.clock();
-      final newest = [
-        for (final f in merged.restamp) ?Hlc.tryParse(versions[f] ?? ''),
-      ].reduce((a, b) => a > b ? a : b);
-      final hlc = clock.outrank(newest).toString();
-      await _outbox.restamp(entity, id, merged.restamp, hlc);
-      await _hlc.save();
     }
     final now = _clock.nowUtc().millisecondsSinceEpoch;
     for (final c in merged.conflicts) {
@@ -216,27 +207,37 @@ final class SyncEngine {
     return merged.conflicts.length;
   }
 
-  /// A returning account on a new device (docs/09 M6.4): the profile this
-  /// device made on first launch holds defaults, not choices. Where another
-  /// device already wrote the account's profile, those initial values give
-  /// way (they share the clock of the profile's `created_at`); anything
-  /// changed here since still wins.
-  Future<void> _yieldDefaultProfile(String userId) async {
+  /// An account's first sync on this device (docs/09 M6.4, CR-160
+  /// criterion 7): when the account already has settings on the server,
+  /// they stay. The profile pending here (a fresh device's defaults, or the
+  /// current guest's settings) is not pushed over them; the guest's stay
+  /// kept for an explicit choice (B1). A new account (no settings yet) takes
+  /// this device's profile, so there is nothing to choose. One transaction;
+  /// a run that fails later finds the outbox already settled.
+  Future<void> _settleProfile(String userId) async {
     final server = (await _gateway.fieldVersions('profiles', [userId]))[userId];
-    if (server == null || server.isEmpty) return;
-    final pending = (await _outbox.pendingFor('profiles', [userId]))[userId];
-    final creation = pending?['created_at']?.hlc;
-    if (pending == null || creation == null) return;
-    await _outbox.drop('profiles', userId, [
-      for (final MapEntry(key: field, value: p) in pending.entries)
-        if (p.hlc == creation && server.containsKey(field)) field,
-    ]);
+    final hasSettings = server != null && server.isNotEmpty;
+    await _db.transaction(() async {
+      if (!hasSettings) {
+        await (_db.delete(
+          _db.localMeta,
+        )..where((m) => m.key.equals(guestSettingsKey(userId)))).go();
+        return;
+      }
+      await (_db.delete(_db.changeLog)..where(
+            (c) =>
+                c.ownerId.equals(userId) &
+                c.entity.equals('profiles') &
+                c.entityId.equals(userId),
+          ))
+          .go();
+    });
   }
 
-  Future<bool> _hasCursor(String entity) async =>
-      await (_db.select(
-        _db.syncCursors,
-      )..where((c) => c.entity.equals(entity))).getSingleOrNull() !=
+  Future<bool> _hasCursor(String owner, String entity) async =>
+      await (_db.select(_db.syncCursors)
+            ..where((c) => c.ownerId.equals(owner) & c.entity.equals(entity)))
+          .getSingleOrNull() !=
       null;
 
   static final _epoch = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
@@ -277,10 +278,11 @@ final class SyncEngine {
 
   /// Where [entity]'s next pull starts: after the last row pulled, or
   /// from its instant on for a cursor saved before v17.
-  Future<PullCursor> _cursor(String entity) async {
-    final row = await (_db.select(
-      _db.syncCursors,
-    )..where((c) => c.entity.equals(entity))).getSingleOrNull();
+  Future<PullCursor> _cursor(String owner, String entity) async {
+    final row =
+        await (_db.select(_db.syncCursors)
+              ..where((c) => c.ownerId.equals(owner) & c.entity.equals(entity)))
+            .getSingleOrNull();
     if (row?.sinceAt case final at?) return (updatedAt: at, id: row!.sinceId);
     final since = DateTime.fromMillisecondsSinceEpoch(
       row?.sinceUtc ?? 0,
@@ -289,10 +291,11 @@ final class SyncEngine {
     return (updatedAt: since.toIso8601String(), id: null);
   }
 
-  Future<void> _saveCursor(String entity, PullCursor last) => _db
+  Future<void> _saveCursor(String owner, String entity, PullCursor last) => _db
       .into(_db.syncCursors)
       .insertOnConflictUpdate(
         SyncCursorsCompanion.insert(
+          ownerId: owner,
           entity: entity,
           sinceUtc: DateTime.parse(last.updatedAt).millisecondsSinceEpoch,
           sinceAt: Value(last.updatedAt),

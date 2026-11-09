@@ -1,4 +1,5 @@
 import 'package:dottoday/core/failures/app_failure.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/domain/proposals/proposal.dart';
 import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -134,8 +135,13 @@ final class ProposalRequest {
 /// `ProposalAcceptor`.
 @Riverpod(keepAlive: true)
 class ActiveProposal extends _$ActiveProposal {
+  // Closed at every change of owner (CR-160 I5): its texts and rows are
+  // the previous owner's, and Accept would write them.
   @override
-  ProposalRequest? build() => null;
+  ProposalRequest? build() {
+    ref.watch(ownerEpochProvider);
+    return null;
+  }
 
   void open(ProposalRequest request) => state = request;
 

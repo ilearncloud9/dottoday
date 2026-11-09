@@ -16,14 +16,14 @@ set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a6","role":"authenticated"}';
 
 select lives_ok(
-  format($$select public.sync_push('[{"entity":"occurrences","id":"20000000-0000-0000-0000-0000000006a1","hlc":"%s","fields":{"title":"Do taxes"}}]'::jsonb)$$,
+  format($$select public.sync_push('[{"owner":"00000000-0000-0000-0000-0000000000a6","entity":"occurrences","id":"20000000-0000-0000-0000-0000000006a1","hlc":"%s","fields":{"title":"Do taxes"}}]'::jsonb)$$,
          pg_temp.hlc(-60000)),
   'A pushes a task without a move count');
 select is((select move_count from public.occurrences where id = '20000000-0000-0000-0000-0000000006a1'), 0,
   'a new task starts at 0 moves');
 
 select lives_ok(
-  format($$select public.sync_push('[{"entity":"occurrences","id":"20000000-0000-0000-0000-0000000006a1","hlc":"%s","fields":{"move_count":"3"}}]'::jsonb)$$,
+  format($$select public.sync_push('[{"owner":"00000000-0000-0000-0000-0000000000a6","entity":"occurrences","id":"20000000-0000-0000-0000-0000000006a1","hlc":"%s","fields":{"move_count":"3"}}]'::jsonb)$$,
          pg_temp.hlc(-50000)),
   'A pushes three moves');
 select is((select move_count from public.occurrences where id = '20000000-0000-0000-0000-0000000006a1'), 3,

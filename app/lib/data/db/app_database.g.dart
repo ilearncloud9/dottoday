@@ -9028,6 +9028,20 @@ class $ChangeLogTable extends ChangeLog
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _ownerIdMeta = const VerificationMeta(
+    'ownerId',
+  );
+  @override
+  late final GeneratedColumn<String> ownerId = GeneratedColumn<String>(
+    'owner_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON UPDATE CASCADE',
+    ),
+  );
   static const VerificationMeta _entityMeta = const VerificationMeta('entity');
   @override
   late final GeneratedColumn<String> entity = GeneratedColumn<String>(
@@ -9078,6 +9092,7 @@ class $ChangeLogTable extends ChangeLog
   @override
   List<GeneratedColumn> get $columns => [
     seq,
+    ownerId,
     entity,
     entityId,
     field,
@@ -9101,6 +9116,14 @@ class $ChangeLogTable extends ChangeLog
         _seqMeta,
         seq.isAcceptableOrUnknown(data['seq']!, _seqMeta),
       );
+    }
+    if (data.containsKey('owner_id')) {
+      context.handle(
+        _ownerIdMeta,
+        ownerId.isAcceptableOrUnknown(data['owner_id']!, _ownerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ownerIdMeta);
     }
     if (data.containsKey('entity')) {
       context.handle(
@@ -9155,6 +9178,10 @@ class $ChangeLogTable extends ChangeLog
         DriftSqlType.int,
         data['${effectivePrefix}seq'],
       )!,
+      ownerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner_id'],
+      )!,
       entity: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}entity'],
@@ -9189,6 +9216,12 @@ class $ChangeLogTable extends ChangeLog
 
 class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   final int seq;
+
+  /// Whose change this is (CR-160): the guest profile or one account. Only
+  /// that account's sync pushes it. Follows a guest's re-key to the account
+  /// it is adopted into; no delete action, so a profile with pending work
+  /// can't be removed (never silent loss, R-08).
+  final String ownerId;
   final String entity;
   final String entityId;
   final String field;
@@ -9200,6 +9233,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   final String hlc;
   const ChangeLogRow({
     required this.seq,
+    required this.ownerId,
     required this.entity,
     required this.entityId,
     required this.field,
@@ -9210,6 +9244,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['seq'] = Variable<int>(seq);
+    map['owner_id'] = Variable<String>(ownerId);
     map['entity'] = Variable<String>(entity);
     map['entity_id'] = Variable<String>(entityId);
     map['field'] = Variable<String>(field);
@@ -9221,6 +9256,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   ChangeLogCompanion toCompanion(bool nullToAbsent) {
     return ChangeLogCompanion(
       seq: Value(seq),
+      ownerId: Value(ownerId),
       entity: Value(entity),
       entityId: Value(entityId),
       field: Value(field),
@@ -9236,6 +9272,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ChangeLogRow(
       seq: serializer.fromJson<int>(json['seq']),
+      ownerId: serializer.fromJson<String>(json['ownerId']),
       entity: serializer.fromJson<String>(json['entity']),
       entityId: serializer.fromJson<String>(json['entityId']),
       field: serializer.fromJson<String>(json['field']),
@@ -9248,6 +9285,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'seq': serializer.toJson<int>(seq),
+      'ownerId': serializer.toJson<String>(ownerId),
       'entity': serializer.toJson<String>(entity),
       'entityId': serializer.toJson<String>(entityId),
       'field': serializer.toJson<String>(field),
@@ -9258,6 +9296,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
 
   ChangeLogRow copyWith({
     int? seq,
+    String? ownerId,
     String? entity,
     String? entityId,
     String? field,
@@ -9265,6 +9304,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
     String? hlc,
   }) => ChangeLogRow(
     seq: seq ?? this.seq,
+    ownerId: ownerId ?? this.ownerId,
     entity: entity ?? this.entity,
     entityId: entityId ?? this.entityId,
     field: field ?? this.field,
@@ -9274,6 +9314,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   ChangeLogRow copyWithCompanion(ChangeLogCompanion data) {
     return ChangeLogRow(
       seq: data.seq.present ? data.seq.value : this.seq,
+      ownerId: data.ownerId.present ? data.ownerId.value : this.ownerId,
       entity: data.entity.present ? data.entity.value : this.entity,
       entityId: data.entityId.present ? data.entityId.value : this.entityId,
       field: data.field.present ? data.field.value : this.field,
@@ -9286,6 +9327,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   String toString() {
     return (StringBuffer('ChangeLogRow(')
           ..write('seq: $seq, ')
+          ..write('ownerId: $ownerId, ')
           ..write('entity: $entity, ')
           ..write('entityId: $entityId, ')
           ..write('field: $field, ')
@@ -9296,12 +9338,14 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   }
 
   @override
-  int get hashCode => Object.hash(seq, entity, entityId, field, value, hlc);
+  int get hashCode =>
+      Object.hash(seq, ownerId, entity, entityId, field, value, hlc);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ChangeLogRow &&
           other.seq == this.seq &&
+          other.ownerId == this.ownerId &&
           other.entity == this.entity &&
           other.entityId == this.entityId &&
           other.field == this.field &&
@@ -9311,6 +9355,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
 
 class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
   final Value<int> seq;
+  final Value<String> ownerId;
   final Value<String> entity;
   final Value<String> entityId;
   final Value<String> field;
@@ -9318,6 +9363,7 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
   final Value<String> hlc;
   const ChangeLogCompanion({
     this.seq = const Value.absent(),
+    this.ownerId = const Value.absent(),
     this.entity = const Value.absent(),
     this.entityId = const Value.absent(),
     this.field = const Value.absent(),
@@ -9326,18 +9372,21 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
   });
   ChangeLogCompanion.insert({
     this.seq = const Value.absent(),
+    required String ownerId,
     required String entity,
     required String entityId,
     required String field,
     required String value,
     required String hlc,
-  }) : entity = Value(entity),
+  }) : ownerId = Value(ownerId),
+       entity = Value(entity),
        entityId = Value(entityId),
        field = Value(field),
        value = Value(value),
        hlc = Value(hlc);
   static Insertable<ChangeLogRow> custom({
     Expression<int>? seq,
+    Expression<String>? ownerId,
     Expression<String>? entity,
     Expression<String>? entityId,
     Expression<String>? field,
@@ -9346,6 +9395,7 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
   }) {
     return RawValuesInsertable({
       if (seq != null) 'seq': seq,
+      if (ownerId != null) 'owner_id': ownerId,
       if (entity != null) 'entity': entity,
       if (entityId != null) 'entity_id': entityId,
       if (field != null) 'field': field,
@@ -9356,6 +9406,7 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
 
   ChangeLogCompanion copyWith({
     Value<int>? seq,
+    Value<String>? ownerId,
     Value<String>? entity,
     Value<String>? entityId,
     Value<String>? field,
@@ -9364,6 +9415,7 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
   }) {
     return ChangeLogCompanion(
       seq: seq ?? this.seq,
+      ownerId: ownerId ?? this.ownerId,
       entity: entity ?? this.entity,
       entityId: entityId ?? this.entityId,
       field: field ?? this.field,
@@ -9377,6 +9429,9 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
     final map = <String, Expression>{};
     if (seq.present) {
       map['seq'] = Variable<int>(seq.value);
+    }
+    if (ownerId.present) {
+      map['owner_id'] = Variable<String>(ownerId.value);
     }
     if (entity.present) {
       map['entity'] = Variable<String>(entity.value);
@@ -9400,6 +9455,7 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
   String toString() {
     return (StringBuffer('ChangeLogCompanion(')
           ..write('seq: $seq, ')
+          ..write('ownerId: $ownerId, ')
           ..write('entity: $entity, ')
           ..write('entityId: $entityId, ')
           ..write('field: $field, ')
@@ -9416,6 +9472,17 @@ class $SyncCursorsTable extends SyncCursors
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $SyncCursorsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _ownerIdMeta = const VerificationMeta(
+    'ownerId',
+  );
+  @override
+  late final GeneratedColumn<String> ownerId = GeneratedColumn<String>(
+    'owner_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _entityMeta = const VerificationMeta('entity');
   @override
   late final GeneratedColumn<String> entity = GeneratedColumn<String>(
@@ -9459,7 +9526,13 @@ class $SyncCursorsTable extends SyncCursors
     requiredDuringInsert: false,
   );
   @override
-  List<GeneratedColumn> get $columns => [entity, sinceUtc, sinceAt, sinceId];
+  List<GeneratedColumn> get $columns => [
+    ownerId,
+    entity,
+    sinceUtc,
+    sinceAt,
+    sinceId,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -9472,6 +9545,14 @@ class $SyncCursorsTable extends SyncCursors
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('owner_id')) {
+      context.handle(
+        _ownerIdMeta,
+        ownerId.isAcceptableOrUnknown(data['owner_id']!, _ownerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ownerIdMeta);
+    }
     if (data.containsKey('entity')) {
       context.handle(
         _entityMeta,
@@ -9504,11 +9585,15 @@ class $SyncCursorsTable extends SyncCursors
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {entity};
+  Set<GeneratedColumn> get $primaryKey => {ownerId, entity};
   @override
   SyncCursorRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return SyncCursorRow(
+      ownerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner_id'],
+      )!,
       entity: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}entity'],
@@ -9538,6 +9623,9 @@ class $SyncCursorsTable extends SyncCursors
 }
 
 class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
+  /// The account whose pull this is (CR-160): each account on the device
+  /// resumes its own pull.
+  final String ownerId;
   final String entity;
   final int sinceUtc;
 
@@ -9549,6 +9637,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   final String? sinceAt;
   final String? sinceId;
   const SyncCursorRow({
+    required this.ownerId,
     required this.entity,
     required this.sinceUtc,
     this.sinceAt,
@@ -9557,6 +9646,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['owner_id'] = Variable<String>(ownerId);
     map['entity'] = Variable<String>(entity);
     map['since_utc'] = Variable<int>(sinceUtc);
     if (!nullToAbsent || sinceAt != null) {
@@ -9570,6 +9660,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
 
   SyncCursorsCompanion toCompanion(bool nullToAbsent) {
     return SyncCursorsCompanion(
+      ownerId: Value(ownerId),
       entity: Value(entity),
       sinceUtc: Value(sinceUtc),
       sinceAt: sinceAt == null && nullToAbsent
@@ -9587,6 +9678,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SyncCursorRow(
+      ownerId: serializer.fromJson<String>(json['ownerId']),
       entity: serializer.fromJson<String>(json['entity']),
       sinceUtc: serializer.fromJson<int>(json['sinceUtc']),
       sinceAt: serializer.fromJson<String?>(json['sinceAt']),
@@ -9597,6 +9689,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'ownerId': serializer.toJson<String>(ownerId),
       'entity': serializer.toJson<String>(entity),
       'sinceUtc': serializer.toJson<int>(sinceUtc),
       'sinceAt': serializer.toJson<String?>(sinceAt),
@@ -9605,11 +9698,13 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   }
 
   SyncCursorRow copyWith({
+    String? ownerId,
     String? entity,
     int? sinceUtc,
     Value<String?> sinceAt = const Value.absent(),
     Value<String?> sinceId = const Value.absent(),
   }) => SyncCursorRow(
+    ownerId: ownerId ?? this.ownerId,
     entity: entity ?? this.entity,
     sinceUtc: sinceUtc ?? this.sinceUtc,
     sinceAt: sinceAt.present ? sinceAt.value : this.sinceAt,
@@ -9617,6 +9712,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   );
   SyncCursorRow copyWithCompanion(SyncCursorsCompanion data) {
     return SyncCursorRow(
+      ownerId: data.ownerId.present ? data.ownerId.value : this.ownerId,
       entity: data.entity.present ? data.entity.value : this.entity,
       sinceUtc: data.sinceUtc.present ? data.sinceUtc.value : this.sinceUtc,
       sinceAt: data.sinceAt.present ? data.sinceAt.value : this.sinceAt,
@@ -9627,6 +9723,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   @override
   String toString() {
     return (StringBuffer('SyncCursorRow(')
+          ..write('ownerId: $ownerId, ')
           ..write('entity: $entity, ')
           ..write('sinceUtc: $sinceUtc, ')
           ..write('sinceAt: $sinceAt, ')
@@ -9636,11 +9733,12 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   }
 
   @override
-  int get hashCode => Object.hash(entity, sinceUtc, sinceAt, sinceId);
+  int get hashCode => Object.hash(ownerId, entity, sinceUtc, sinceAt, sinceId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SyncCursorRow &&
+          other.ownerId == this.ownerId &&
           other.entity == this.entity &&
           other.sinceUtc == this.sinceUtc &&
           other.sinceAt == this.sinceAt &&
@@ -9648,12 +9746,14 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
 }
 
 class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
+  final Value<String> ownerId;
   final Value<String> entity;
   final Value<int> sinceUtc;
   final Value<String?> sinceAt;
   final Value<String?> sinceId;
   final Value<int> rowid;
   const SyncCursorsCompanion({
+    this.ownerId = const Value.absent(),
     this.entity = const Value.absent(),
     this.sinceUtc = const Value.absent(),
     this.sinceAt = const Value.absent(),
@@ -9661,14 +9761,17 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
     this.rowid = const Value.absent(),
   });
   SyncCursorsCompanion.insert({
+    required String ownerId,
     required String entity,
     required int sinceUtc,
     this.sinceAt = const Value.absent(),
     this.sinceId = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : entity = Value(entity),
+  }) : ownerId = Value(ownerId),
+       entity = Value(entity),
        sinceUtc = Value(sinceUtc);
   static Insertable<SyncCursorRow> custom({
+    Expression<String>? ownerId,
     Expression<String>? entity,
     Expression<int>? sinceUtc,
     Expression<String>? sinceAt,
@@ -9676,6 +9779,7 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (ownerId != null) 'owner_id': ownerId,
       if (entity != null) 'entity': entity,
       if (sinceUtc != null) 'since_utc': sinceUtc,
       if (sinceAt != null) 'since_at': sinceAt,
@@ -9685,6 +9789,7 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
   }
 
   SyncCursorsCompanion copyWith({
+    Value<String>? ownerId,
     Value<String>? entity,
     Value<int>? sinceUtc,
     Value<String?>? sinceAt,
@@ -9692,6 +9797,7 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
     Value<int>? rowid,
   }) {
     return SyncCursorsCompanion(
+      ownerId: ownerId ?? this.ownerId,
       entity: entity ?? this.entity,
       sinceUtc: sinceUtc ?? this.sinceUtc,
       sinceAt: sinceAt ?? this.sinceAt,
@@ -9703,6 +9809,9 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (ownerId.present) {
+      map['owner_id'] = Variable<String>(ownerId.value);
+    }
     if (entity.present) {
       map['entity'] = Variable<String>(entity.value);
     }
@@ -9724,6 +9833,7 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
   @override
   String toString() {
     return (StringBuffer('SyncCursorsCompanion(')
+          ..write('ownerId: $ownerId, ')
           ..write('entity: $entity, ')
           ..write('sinceUtc: $sinceUtc, ')
           ..write('sinceAt: $sinceAt, ')
@@ -10759,6 +10869,277 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
   }
 }
 
+class $GuestRowSessionsTable extends GuestRowSessions
+    with TableInfo<$GuestRowSessionsTable, GuestRowSessionRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $GuestRowSessionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _entityMeta = const VerificationMeta('entity');
+  @override
+  late final GeneratedColumn<String> entity = GeneratedColumn<String>(
+    'entity',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _entityIdMeta = const VerificationMeta(
+    'entityId',
+  );
+  @override
+  late final GeneratedColumn<String> entityId = GeneratedColumn<String>(
+    'entity_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sessionMeta = const VerificationMeta(
+    'session',
+  );
+  @override
+  late final GeneratedColumn<String> session = GeneratedColumn<String>(
+    'session',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [entity, entityId, session];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'guest_row_sessions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<GuestRowSessionRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('entity')) {
+      context.handle(
+        _entityMeta,
+        entity.isAcceptableOrUnknown(data['entity']!, _entityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityMeta);
+    }
+    if (data.containsKey('entity_id')) {
+      context.handle(
+        _entityIdMeta,
+        entityId.isAcceptableOrUnknown(data['entity_id']!, _entityIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityIdMeta);
+    }
+    if (data.containsKey('session')) {
+      context.handle(
+        _sessionMeta,
+        session.isAcceptableOrUnknown(data['session']!, _sessionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sessionMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {entity, entityId};
+  @override
+  GuestRowSessionRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return GuestRowSessionRow(
+      entity: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity'],
+      )!,
+      entityId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity_id'],
+      )!,
+      session: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session'],
+      )!,
+    );
+  }
+
+  @override
+  $GuestRowSessionsTable createAlias(String alias) {
+    return $GuestRowSessionsTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class GuestRowSessionRow extends DataClass
+    implements Insertable<GuestRowSessionRow> {
+  final String entity;
+  final String entityId;
+  final String session;
+  const GuestRowSessionRow({
+    required this.entity,
+    required this.entityId,
+    required this.session,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['entity'] = Variable<String>(entity);
+    map['entity_id'] = Variable<String>(entityId);
+    map['session'] = Variable<String>(session);
+    return map;
+  }
+
+  GuestRowSessionsCompanion toCompanion(bool nullToAbsent) {
+    return GuestRowSessionsCompanion(
+      entity: Value(entity),
+      entityId: Value(entityId),
+      session: Value(session),
+    );
+  }
+
+  factory GuestRowSessionRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return GuestRowSessionRow(
+      entity: serializer.fromJson<String>(json['entity']),
+      entityId: serializer.fromJson<String>(json['entityId']),
+      session: serializer.fromJson<String>(json['session']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'entity': serializer.toJson<String>(entity),
+      'entityId': serializer.toJson<String>(entityId),
+      'session': serializer.toJson<String>(session),
+    };
+  }
+
+  GuestRowSessionRow copyWith({
+    String? entity,
+    String? entityId,
+    String? session,
+  }) => GuestRowSessionRow(
+    entity: entity ?? this.entity,
+    entityId: entityId ?? this.entityId,
+    session: session ?? this.session,
+  );
+  GuestRowSessionRow copyWithCompanion(GuestRowSessionsCompanion data) {
+    return GuestRowSessionRow(
+      entity: data.entity.present ? data.entity.value : this.entity,
+      entityId: data.entityId.present ? data.entityId.value : this.entityId,
+      session: data.session.present ? data.session.value : this.session,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GuestRowSessionRow(')
+          ..write('entity: $entity, ')
+          ..write('entityId: $entityId, ')
+          ..write('session: $session')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(entity, entityId, session);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is GuestRowSessionRow &&
+          other.entity == this.entity &&
+          other.entityId == this.entityId &&
+          other.session == this.session);
+}
+
+class GuestRowSessionsCompanion extends UpdateCompanion<GuestRowSessionRow> {
+  final Value<String> entity;
+  final Value<String> entityId;
+  final Value<String> session;
+  final Value<int> rowid;
+  const GuestRowSessionsCompanion({
+    this.entity = const Value.absent(),
+    this.entityId = const Value.absent(),
+    this.session = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  GuestRowSessionsCompanion.insert({
+    required String entity,
+    required String entityId,
+    required String session,
+    this.rowid = const Value.absent(),
+  }) : entity = Value(entity),
+       entityId = Value(entityId),
+       session = Value(session);
+  static Insertable<GuestRowSessionRow> custom({
+    Expression<String>? entity,
+    Expression<String>? entityId,
+    Expression<String>? session,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (entity != null) 'entity': entity,
+      if (entityId != null) 'entity_id': entityId,
+      if (session != null) 'session': session,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  GuestRowSessionsCompanion copyWith({
+    Value<String>? entity,
+    Value<String>? entityId,
+    Value<String>? session,
+    Value<int>? rowid,
+  }) {
+    return GuestRowSessionsCompanion(
+      entity: entity ?? this.entity,
+      entityId: entityId ?? this.entityId,
+      session: session ?? this.session,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (entity.present) {
+      map['entity'] = Variable<String>(entity.value);
+    }
+    if (entityId.present) {
+      map['entity_id'] = Variable<String>(entityId.value);
+    }
+    if (session.present) {
+      map['session'] = Variable<String>(session.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GuestRowSessionsCompanion(')
+          ..write('entity: $entity, ')
+          ..write('entityId: $entityId, ')
+          ..write('session: $session, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -10869,6 +11250,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $WakeUpDaysTableTable wakeUpDaysTable = $WakeUpDaysTableTable(
     this,
   );
+  late final $GuestRowSessionsTable guestRowSessions = $GuestRowSessionsTable(
+    this,
+  );
   late final Index routinesUser = Index(
     'routines_user',
     'CREATE INDEX routines_user ON routines (user_id)',
@@ -10896,6 +11280,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final Index changeLogEntity = Index(
     'change_log_entity',
     'CREATE INDEX change_log_entity ON change_log (entity, entity_id)',
+  );
+  late final Index changeLogOwner = Index(
+    'change_log_owner',
+    'CREATE INDEX change_log_owner ON change_log (owner_id)',
   );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -10939,6 +11327,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     fieldSeen,
     localMeta,
     wakeUpDaysTable,
+    guestRowSessions,
     routinesUser,
     routinesUserUpdated,
     routinesDirty,
@@ -10946,6 +11335,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     revealHintsDirty,
     conflictsOpen,
     changeLogEntity,
+    changeLogOwner,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -11154,6 +11544,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.update,
       ),
       result: [TableUpdate('conflicts', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('change_log', kind: UpdateKind.update)],
     ),
   ]);
 }
@@ -11546,6 +11943,24 @@ final class $$ProfilesTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$ChangeLogTable, List<ChangeLogRow>>
+  _changeLogRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.changeLog,
+    aliasName: 'profiles__id__change_log__owner_id',
+  );
+
+  $$ChangeLogTableProcessedTableManager get changeLogRefs {
+    final manager = $$ChangeLogTableTableManager(
+      $_db,
+      $_db.changeLog,
+    ).filter((f) => f.ownerId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_changeLogRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$ProfilesTableFilterComposer
@@ -11818,6 +12233,31 @@ class $$ProfilesTableFilterComposer
           }) => $$ConflictsTableFilterComposer(
             $db: $db,
             $table: $db.conflicts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> changeLogRefs(
+    Expression<bool> Function($$ChangeLogTableFilterComposer f) f,
+  ) {
+    final $$ChangeLogTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.changeLog,
+      getReferencedColumn: (t) => t.ownerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ChangeLogTableFilterComposer(
+            $db: $db,
+            $table: $db.changeLog,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12146,6 +12586,31 @@ class $$ProfilesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> changeLogRefs<T extends Object>(
+    Expression<T> Function($$ChangeLogTableAnnotationComposer a) f,
+  ) {
+    final $$ChangeLogTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.changeLog,
+      getReferencedColumn: (t) => t.ownerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ChangeLogTableAnnotationComposer(
+            $db: $db,
+            $table: $db.changeLog,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ProfilesTableTableManager
@@ -12171,6 +12636,7 @@ class $$ProfilesTableTableManager
             bool routinesTableRefs,
             bool revealHintsTableRefs,
             bool conflictsRefs,
+            bool changeLogRefs,
           })
         > {
   $$ProfilesTableTableManager(_$AppDatabase db, $ProfilesTable table)
@@ -12251,6 +12717,7 @@ class $$ProfilesTableTableManager
                 routinesTableRefs = false,
                 revealHintsTableRefs = false,
                 conflictsRefs = false,
+                changeLogRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -12264,6 +12731,7 @@ class $$ProfilesTableTableManager
                     if (routinesTableRefs) db.routinesTable,
                     if (revealHintsTableRefs) db.revealHintsTable,
                     if (conflictsRefs) db.conflicts,
+                    if (changeLogRefs) db.changeLog,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -12457,6 +12925,27 @@ class $$ProfilesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (changeLogRefs)
+                        await $_getPrefetchedData<
+                          ProfileRow,
+                          $ProfilesTable,
+                          ChangeLogRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._changeLogRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).changeLogRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.ownerId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -12487,6 +12976,7 @@ typedef $$ProfilesTableProcessedTableManager =
         bool routinesTableRefs,
         bool revealHintsTableRefs,
         bool conflictsRefs,
+        bool changeLogRefs,
       })
     >;
 typedef $$SeriesTableTableCreateCompanionBuilder =
@@ -18222,6 +18712,7 @@ typedef $$ConflictsTableProcessedTableManager =
 typedef $$ChangeLogTableCreateCompanionBuilder =
     ChangeLogCompanion Function({
       Value<int> seq,
+      required String ownerId,
       required String entity,
       required String entityId,
       required String field,
@@ -18231,12 +18722,35 @@ typedef $$ChangeLogTableCreateCompanionBuilder =
 typedef $$ChangeLogTableUpdateCompanionBuilder =
     ChangeLogCompanion Function({
       Value<int> seq,
+      Value<String> ownerId,
       Value<String> entity,
       Value<String> entityId,
       Value<String> field,
       Value<String> value,
       Value<String> hlc,
     });
+
+final class $$ChangeLogTableReferences
+    extends BaseReferences<_$AppDatabase, $ChangeLogTable, ChangeLogRow> {
+  $$ChangeLogTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ProfilesTable _ownerIdTable(_$AppDatabase db) =>
+      db.profiles.createAlias('change_log__owner_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get ownerId {
+    final $_column = $_itemColumn<String>('owner_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_ownerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$ChangeLogTableFilterComposer
     extends Composer<_$AppDatabase, $ChangeLogTable> {
@@ -18276,6 +18790,29 @@ class $$ChangeLogTableFilterComposer
     column: $table.hlc,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$ProfilesTableFilterComposer get ownerId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.ownerId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ChangeLogTableOrderingComposer
@@ -18316,6 +18853,29 @@ class $$ChangeLogTableOrderingComposer
     column: $table.hlc,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$ProfilesTableOrderingComposer get ownerId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.ownerId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ChangeLogTableAnnotationComposer
@@ -18344,6 +18904,29 @@ class $$ChangeLogTableAnnotationComposer
 
   GeneratedColumn<String> get hlc =>
       $composableBuilder(column: $table.hlc, builder: (column) => column);
+
+  $$ProfilesTableAnnotationComposer get ownerId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.ownerId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ChangeLogTableTableManager
@@ -18357,12 +18940,9 @@ class $$ChangeLogTableTableManager
           $$ChangeLogTableAnnotationComposer,
           $$ChangeLogTableCreateCompanionBuilder,
           $$ChangeLogTableUpdateCompanionBuilder,
-          (
-            ChangeLogRow,
-            BaseReferences<_$AppDatabase, $ChangeLogTable, ChangeLogRow>,
-          ),
+          (ChangeLogRow, $$ChangeLogTableReferences),
           ChangeLogRow,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool ownerId})
         > {
   $$ChangeLogTableTableManager(_$AppDatabase db, $ChangeLogTable table)
     : super(
@@ -18378,6 +18958,7 @@ class $$ChangeLogTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> seq = const Value.absent(),
+                Value<String> ownerId = const Value.absent(),
                 Value<String> entity = const Value.absent(),
                 Value<String> entityId = const Value.absent(),
                 Value<String> field = const Value.absent(),
@@ -18385,6 +18966,7 @@ class $$ChangeLogTableTableManager
                 Value<String> hlc = const Value.absent(),
               }) => ChangeLogCompanion(
                 seq: seq,
+                ownerId: ownerId,
                 entity: entity,
                 entityId: entityId,
                 field: field,
@@ -18394,6 +18976,7 @@ class $$ChangeLogTableTableManager
           createCompanionCallback:
               ({
                 Value<int> seq = const Value.absent(),
+                required String ownerId,
                 required String entity,
                 required String entityId,
                 required String field,
@@ -18401,6 +18984,7 @@ class $$ChangeLogTableTableManager
                 required String hlc,
               }) => ChangeLogCompanion.insert(
                 seq: seq,
+                ownerId: ownerId,
                 entity: entity,
                 entityId: entityId,
                 field: field,
@@ -18411,15 +18995,51 @@ class $$ChangeLogTableTableManager
               .map(
                 (e) => (
                   e.readTable<$ChangeLogTable, ChangeLogRow>(table),
-                  BaseReferences<_$AppDatabase, $ChangeLogTable, ChangeLogRow>(
-                    db,
-                    table,
-                    e,
-                  ),
+                  $$ChangeLogTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({ownerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (ownerId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.ownerId,
+                                referencedTable: $$ChangeLogTableReferences
+                                    ._ownerIdTable(db),
+                                referencedColumn: $$ChangeLogTableReferences
+                                    ._ownerIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -18434,15 +19054,13 @@ typedef $$ChangeLogTableProcessedTableManager =
       $$ChangeLogTableAnnotationComposer,
       $$ChangeLogTableCreateCompanionBuilder,
       $$ChangeLogTableUpdateCompanionBuilder,
-      (
-        ChangeLogRow,
-        BaseReferences<_$AppDatabase, $ChangeLogTable, ChangeLogRow>,
-      ),
+      (ChangeLogRow, $$ChangeLogTableReferences),
       ChangeLogRow,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool ownerId})
     >;
 typedef $$SyncCursorsTableCreateCompanionBuilder =
     SyncCursorsCompanion Function({
+      required String ownerId,
       required String entity,
       required int sinceUtc,
       Value<String?> sinceAt,
@@ -18451,6 +19069,7 @@ typedef $$SyncCursorsTableCreateCompanionBuilder =
     });
 typedef $$SyncCursorsTableUpdateCompanionBuilder =
     SyncCursorsCompanion Function({
+      Value<String> ownerId,
       Value<String> entity,
       Value<int> sinceUtc,
       Value<String?> sinceAt,
@@ -18467,6 +19086,11 @@ class $$SyncCursorsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<String> get ownerId => $composableBuilder(
+    column: $table.ownerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get entity => $composableBuilder(
     column: $table.entity,
     builder: (column) => ColumnFilters(column),
@@ -18497,6 +19121,11 @@ class $$SyncCursorsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<String> get ownerId => $composableBuilder(
+    column: $table.ownerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get entity => $composableBuilder(
     column: $table.entity,
     builder: (column) => ColumnOrderings(column),
@@ -18527,6 +19156,9 @@ class $$SyncCursorsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<String> get ownerId =>
+      $composableBuilder(column: $table.ownerId, builder: (column) => column);
+
   GeneratedColumn<String> get entity =>
       $composableBuilder(column: $table.entity, builder: (column) => column);
 
@@ -18571,12 +19203,14 @@ class $$SyncCursorsTableTableManager
               $$SyncCursorsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<String> ownerId = const Value.absent(),
                 Value<String> entity = const Value.absent(),
                 Value<int> sinceUtc = const Value.absent(),
                 Value<String?> sinceAt = const Value.absent(),
                 Value<String?> sinceId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SyncCursorsCompanion(
+                ownerId: ownerId,
                 entity: entity,
                 sinceUtc: sinceUtc,
                 sinceAt: sinceAt,
@@ -18585,12 +19219,14 @@ class $$SyncCursorsTableTableManager
               ),
           createCompanionCallback:
               ({
+                required String ownerId,
                 required String entity,
                 required int sinceUtc,
                 Value<String?> sinceAt = const Value.absent(),
                 Value<String?> sinceId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SyncCursorsCompanion.insert(
+                ownerId: ownerId,
                 entity: entity,
                 sinceUtc: sinceUtc,
                 sinceAt: sinceAt,
@@ -19226,6 +19862,189 @@ typedef $$WakeUpDaysTableTableProcessedTableManager =
       WakeUpDayRow,
       PrefetchHooks Function()
     >;
+typedef $$GuestRowSessionsTableCreateCompanionBuilder =
+    GuestRowSessionsCompanion Function({
+      required String entity,
+      required String entityId,
+      required String session,
+      Value<int> rowid,
+    });
+typedef $$GuestRowSessionsTableUpdateCompanionBuilder =
+    GuestRowSessionsCompanion Function({
+      Value<String> entity,
+      Value<String> entityId,
+      Value<String> session,
+      Value<int> rowid,
+    });
+
+class $$GuestRowSessionsTableFilterComposer
+    extends Composer<_$AppDatabase, $GuestRowSessionsTable> {
+  $$GuestRowSessionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entityId => $composableBuilder(
+    column: $table.entityId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get session => $composableBuilder(
+    column: $table.session,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$GuestRowSessionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $GuestRowSessionsTable> {
+  $$GuestRowSessionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entityId => $composableBuilder(
+    column: $table.entityId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get session => $composableBuilder(
+    column: $table.session,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$GuestRowSessionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $GuestRowSessionsTable> {
+  $$GuestRowSessionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get entity =>
+      $composableBuilder(column: $table.entity, builder: (column) => column);
+
+  GeneratedColumn<String> get entityId =>
+      $composableBuilder(column: $table.entityId, builder: (column) => column);
+
+  GeneratedColumn<String> get session =>
+      $composableBuilder(column: $table.session, builder: (column) => column);
+}
+
+class $$GuestRowSessionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $GuestRowSessionsTable,
+          GuestRowSessionRow,
+          $$GuestRowSessionsTableFilterComposer,
+          $$GuestRowSessionsTableOrderingComposer,
+          $$GuestRowSessionsTableAnnotationComposer,
+          $$GuestRowSessionsTableCreateCompanionBuilder,
+          $$GuestRowSessionsTableUpdateCompanionBuilder,
+          (
+            GuestRowSessionRow,
+            BaseReferences<
+              _$AppDatabase,
+              $GuestRowSessionsTable,
+              GuestRowSessionRow
+            >,
+          ),
+          GuestRowSessionRow,
+          PrefetchHooks Function()
+        > {
+  $$GuestRowSessionsTableTableManager(
+    _$AppDatabase db,
+    $GuestRowSessionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$GuestRowSessionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$GuestRowSessionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$GuestRowSessionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> entity = const Value.absent(),
+                Value<String> entityId = const Value.absent(),
+                Value<String> session = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => GuestRowSessionsCompanion(
+                entity: entity,
+                entityId: entityId,
+                session: session,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String entity,
+                required String entityId,
+                required String session,
+                Value<int> rowid = const Value.absent(),
+              }) => GuestRowSessionsCompanion.insert(
+                entity: entity,
+                entityId: entityId,
+                session: session,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$GuestRowSessionsTable, GuestRowSessionRow>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $GuestRowSessionsTable,
+                    GuestRowSessionRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$GuestRowSessionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $GuestRowSessionsTable,
+      GuestRowSessionRow,
+      $$GuestRowSessionsTableFilterComposer,
+      $$GuestRowSessionsTableOrderingComposer,
+      $$GuestRowSessionsTableAnnotationComposer,
+      $$GuestRowSessionsTableCreateCompanionBuilder,
+      $$GuestRowSessionsTableUpdateCompanionBuilder,
+      (
+        GuestRowSessionRow,
+        BaseReferences<
+          _$AppDatabase,
+          $GuestRowSessionsTable,
+          GuestRowSessionRow
+        >,
+      ),
+      GuestRowSessionRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -19262,4 +20081,6 @@ class $AppDatabaseManager {
       $$LocalMetaTableTableManager(_db, _db.localMeta);
   $$WakeUpDaysTableTableTableManager get wakeUpDaysTable =>
       $$WakeUpDaysTableTableTableManager(_db, _db.wakeUpDaysTable);
+  $$GuestRowSessionsTableTableManager get guestRowSessions =>
+      $$GuestRowSessionsTableTableManager(_db, _db.guestRowSessions);
 }

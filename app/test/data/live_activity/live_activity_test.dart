@@ -167,5 +167,27 @@ void main() {
       await sink.write(_snapshot(done: true));
       expect(calls.last.arguments, isNull);
     });
+
+    test('an empty day after a change of owner wins over a late re-plan '
+        '(CR-160 I8)', () async {
+      await sink.write(_snapshot());
+      // The old owner's re-plan fires just as the switch writes the empty
+      // day; it must not post the old dot after it.
+      clock.advance(const Duration(minutes: 38));
+      final replan = timers.single.$2;
+      final empty = DaySnapshot(
+        generatedAtUtc: clock.nowUtc(),
+        wakeUtc: DateTime.utc(2026, 10, 21, 5),
+        bedUtc: DateTime.utc(2026, 10, 21, 20),
+        dots: const [],
+        inboxCount: 0,
+      );
+      replan();
+      await sink.write(empty);
+      await pumpEventQueue();
+      expect(calls.last.arguments, isNull);
+      // Nothing re-arms from the old snapshot.
+      expect(timers, hasLength(1));
+    });
   });
 }

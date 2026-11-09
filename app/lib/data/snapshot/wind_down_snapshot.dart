@@ -24,21 +24,30 @@ final class WindDownSnapshot {
   final Logger _logger;
   final Timer Function(Duration, void Function()) _timer;
   Timer? _pending;
+  var _cancelled = false;
 
   /// Arms one write at [userId]'s Wind Down today, replacing any armed one;
-  /// nothing when Wind Down has passed.
+  /// nothing when Wind Down has passed, or once [cancel]led.
   Future<void> arm(String userId) async {
     final snapshot = await _writer.build(userId);
+    // Cancelled while the day was read (a change of owner, CR-160 I7): this
+    // instance belongs to the owner who left and arms nothing.
+    if (_cancelled) return;
     _pending?.cancel();
     final wait = snapshot.bedUtc.difference(_clock.nowUtc());
     if (wait.isNegative) return;
     _pending = _timer(wait, () => unawaited(_write(userId)));
   }
 
-  /// Stops the armed write.
-  void cancel() => _pending?.cancel();
+  /// Stops the armed write for good; a later [arm] does nothing. The
+  /// provider builds a new instance for the next owner.
+  void cancel() {
+    _cancelled = true;
+    _pending?.cancel();
+  }
 
   Future<void> _write(String userId) async {
+    if (_cancelled) return;
     try {
       await _writer.write(userId);
     } on Object catch (e, st) {

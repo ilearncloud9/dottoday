@@ -44,6 +44,14 @@ final class FakeSyncServer {
 
   void _push(List<PushChange> changes) {
     _maybeFail();
+    // Migration 0014 (CR-160): a change owned by anyone but the signed-in
+    // account is refused, the whole call with it.
+    if (changes.any((c) => c.owner != userId)) {
+      throw SyncGatewayException(
+        SyncTrouble.server,
+        StateError('sync_push: change owned by another account'),
+      );
+    }
     pushes++;
     final now = _nextUpdatedAt();
     for (final c in changes) {

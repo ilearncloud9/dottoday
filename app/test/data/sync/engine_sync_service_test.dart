@@ -40,7 +40,10 @@ void main() {
     service = EngineSyncService(
       engine: device.engine,
       accounts: accounts.stream,
-      adopt: (id) async => adopted.add(id),
+      adopt: (id) async {
+        adopted.add(id);
+        return true;
+      },
       conflicts: DriftConflictStore(
         db: device.h.db,
         writes: device.h.writes,
@@ -79,6 +82,68 @@ void main() {
     expect(s.lastSyncedUtc, _t);
     expect(s.pending, 0);
     expect(server.table('occurrences'), hasLength(1));
+  });
+
+  // CR-160 criterion 9: the sign-in step failed. Nothing syncs for the
+  // account until it succeeds; the status says so; Sync now tries again.
+  test('a failed sign-in step: error, no sync, Sync now retries', () async {
+    var fail = true;
+    final calls = <String>[];
+    final retrying = EngineSyncService(
+      engine: device.engine,
+      accounts: Stream.value(_account),
+      adopt: (id) async {
+        calls.add(id);
+        if (fail) throw StateError('disk full');
+        return true;
+      },
+      conflicts: DriftConflictStore(
+        db: device.h.db,
+        writes: device.h.writes,
+        clock: device.h.clock,
+      ),
+      remoteChanges: const Stream.empty(),
+      clock: device.h.clock,
+      logger: Logger(MemoryLogSink(), device.h.clock),
+      settle: Duration.zero,
+      retryFirst: const Duration(hours: 1),
+    );
+    addTearDown(retrying.dispose);
+    await device.write([occurrenceFixture().copyWith(userId: _account)]);
+    await pumpEventQueue(times: 50);
+    expect((await retrying.watch().first).state, SyncState.error);
+    expect(server.pushes, 0, reason: 'never a round before the step');
+
+    fail = false;
+    await retrying.syncNow();
+    await pumpEventQueue(times: 50);
+    expect(calls, [_account, _account]);
+    expect((await retrying.watch().first).state, SyncState.synced);
+    expect(server.table('occurrences'), hasLength(1));
+  });
+
+  // CR-160: the guest's tasks wait for the person's choice. Nothing syncs
+  // and nothing retries by itself meanwhile.
+  test('a sign-in waiting for the guest choice: no sync, no retry', () async {
+    final waiting = EngineSyncService(
+      engine: device.engine,
+      accounts: Stream.value(_account),
+      adopt: (_) async => false,
+      conflicts: DriftConflictStore(
+        db: device.h.db,
+        writes: device.h.writes,
+        clock: device.h.clock,
+      ),
+      remoteChanges: const Stream.empty(),
+      clock: device.h.clock,
+      logger: Logger(MemoryLogSink(), device.h.clock),
+      settle: Duration.zero,
+    );
+    addTearDown(waiting.dispose);
+    await device.write([occurrenceFixture().copyWith(userId: _account)]);
+    await pumpEventQueue(times: 50);
+    expect(server.pushes, 0);
+    expect((await waiting.watch().first).state, isNot(SyncState.error));
   });
 
   // Signing in during onboarding: the app under the flow is offstage and
@@ -158,7 +223,7 @@ void main() {
     final retrying = EngineSyncService(
       engine: device.engine,
       accounts: accounts.stream,
-      adopt: (_) async {},
+      adopt: (_) async => true,
       conflicts: DriftConflictStore(
         db: device.h.db,
         writes: device.h.writes,

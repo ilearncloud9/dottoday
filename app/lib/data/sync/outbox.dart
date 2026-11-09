@@ -15,21 +15,27 @@ typedef OutboxBatch = ({List<PushChange> changes, List<int> seqs});
 /// The local outbox (`change_log`): what this device wrote and the server
 /// hasn't acknowledged yet (docs/04 §4). Rows leave only when the server
 /// took them or a pull resolved their field; never on an error (R-08).
+/// Every read is one owner's (CR-160): an account's sync never sees, and
+/// so never pushes, another owner's entries.
 final class Outbox {
   Outbox(this._db);
 
   final AppDatabase _db;
 
-  /// How many rows wait (the pill's "N changes waiting").
-  Stream<int> watchCount() {
+  /// How many of [owner]'s rows wait (the pill's "N changes waiting").
+  Stream<int> watchCount(String owner) {
     final count = _db.changeLog.seq.count();
-    return (_db.selectOnly(
-      _db.changeLog,
-    )..addColumns([count])).map((r) => r.read(count) ?? 0).watchSingle();
+    return (_db.selectOnly(_db.changeLog)
+          ..addColumns([count])
+          ..where(_db.changeLog.ownerId.equals(owner)))
+        .map((r) => r.read(count) ?? 0)
+        .watchSingle();
   }
 
-  /// The newest pending value per field of each of [ids] of [entity].
+  /// The newest pending value of [owner] per field of each of [ids] of
+  /// [entity].
   Future<Map<String, Map<String, PendingField>>> pendingFor(
+    String owner,
     String entity,
     Iterable<String> ids,
   ) async {
@@ -37,7 +43,12 @@ final class Outbox {
     if (list.isEmpty) return const {};
     final rows =
         await (_db.select(_db.changeLog)
-              ..where((c) => c.entity.equals(entity) & c.entityId.isIn(list))
+              ..where(
+                (c) =>
+                    c.ownerId.equals(owner) &
+                    c.entity.equals(entity) &
+                    c.entityId.isIn(list),
+              )
               ..orderBy([(c) => OrderingTerm.asc(c.seq)]))
             .get();
     final out = <String, Map<String, PendingField>>{};
@@ -62,29 +73,17 @@ final class Outbox {
           ))
           .go();
 
-  /// Gives the pending writes of [fields] of row [id] the clock [hlc]: a
-  /// first sync keeps them over a newer server copy (docs/09 M6.4).
-  Future<void> restamp(
-    String entity,
-    String id,
-    Iterable<String> fields,
-    String hlc,
-  ) =>
-      (_db.update(_db.changeLog)..where(
-            (c) =>
-                c.entity.equals(entity) &
-                c.entityId.equals(id) &
-                c.field.isIn(fields.toList()),
-          ))
-          .write(ChangeLogCompanion(hlc: Value(hlc)));
-
-  /// Everything waiting, as push batches of at most [size] changes: one
-  /// change per entity version, parents before children (series before
-  /// their occurrences, occurrences before subtasks), oldest first.
-  Future<List<OutboxBatch>> batches({int size = 500}) async {
-    final rows = await (_db.select(
-      _db.changeLog,
-    )..orderBy([(c) => OrderingTerm.asc(c.seq)])).get();
+  /// Everything [owner] has waiting, as push batches of at most [size]
+  /// changes: one change per entity version, parents before children
+  /// (series before their occurrences, occurrences before subtasks),
+  /// oldest first. Each change names [owner], which the server checks
+  /// against the signed-in account (CR-160 criterion 12).
+  Future<List<OutboxBatch>> batches(String owner, {int size = 500}) async {
+    final rows =
+        await (_db.select(_db.changeLog)
+              ..where((c) => c.ownerId.equals(owner))
+              ..orderBy([(c) => OrderingTerm.asc(c.seq)]))
+            .get();
     final groups = <(String, String, String), List<ChangeLogRow>>{};
     for (final r in rows) {
       (groups[(r.entity, r.entityId, r.hlc)] ??= []).add(r);
@@ -113,7 +112,13 @@ final class Outbox {
       // Only device-only fields changed: nothing to send, settled anyway.
       if (fields.isNotEmpty) {
         changes.add(
-          PushChange(entity: key.$1, id: key.$2, hlc: key.$3, fields: fields),
+          PushChange(
+            owner: owner,
+            entity: key.$1,
+            id: key.$2,
+            hlc: key.$3,
+            fields: fields,
+          ),
         );
       }
       if (changes.length == size) {

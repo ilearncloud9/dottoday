@@ -7,7 +7,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/core/router/auth_callback.dart';
 import 'package:dottoday/data/auth/supabase_account_service.dart';
-import 'package:dottoday/data/sync/account_adoption.dart';
+import 'package:dottoday/data/sync/account_owners.dart';
 import 'package:dottoday/data/sync/supabase_sync_gateway.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/domain/auth/account.dart';
@@ -59,7 +59,12 @@ void main() {
           profile: profileFixture().copyWith(id: 'device-local'),
         ),
       );
-      await adoptAccount(h.db, uid, h.hlc);
+      await signInOwner(
+        h.db,
+        uid,
+        h.hlc,
+        freshProfile: (id) => profileFixture().copyWith(id: id),
+      );
       await h.writes.apply(
         WriteBatch(
           userId: uid,

@@ -34,6 +34,7 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/account_fakes.dart';
+import '../../support/account_screen_fakes.dart';
 import '../../support/calendar_fakes.dart';
 import '../../support/cloud_calendar_fakes.dart';
 import '../../support/dot_golden.dart';
@@ -320,6 +321,8 @@ void main() {
             ),
           ),
         ),
+        // CR-160: no database behind the sign-out check.
+        ...accountScreenOverrides(FakeAccountActions()),
       ],
     ),
     build: (_) => const AccountPage(),

@@ -254,7 +254,7 @@ void main() {
     'a re-sync after sign-in to another account leaves imports out',
     () async {
       await run();
-      await h.db.transaction(() => requeueAll(h.db, h.hlc));
+      await h.db.transaction<void>(() => requeueOwner(h.db, userId, h.hlc));
       final queued = await h.changeLog();
       expect(queued, isNotEmpty, reason: 'the profile is queued');
       expect(queued.where((c) => c.entity == 'occurrences'), isEmpty);

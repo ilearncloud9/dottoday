@@ -1,3 +1,4 @@
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'pending_brain_dump.g.dart';
@@ -8,8 +9,12 @@ part 'pending_brain_dump.g.dart';
 /// `PendingRoutineDrop`).
 @Riverpod(keepAlive: true)
 class PendingBrainDump extends _$PendingBrainDump {
+  // The typed lines are the previous owner's after a switch (CR-160 I5).
   @override
-  String? build() => null;
+  String? build() {
+    ref.watch(ownerEpochProvider);
+    return null;
+  }
 
   void request(String text) => state = text;
 

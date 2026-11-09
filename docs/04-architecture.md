@@ -74,10 +74,27 @@ change webhooks (owner gate).
 60 s, record a `conflict` row and show "keep mine / keep theirs" in Sync details; default keeps server.
 Deletes are tombstones (30-day retention = Trash). Never hard-delete locally because of a server error.
 
-**First sync for an account** (M6.4): local wins — pending local writes stand and, if the server
-holds a newer clock, are re-stamped to outrank it. Exception: the profile's first-launch defaults
-(written with the profile's `created_at`) yield to a profile another device already wrote, so a
-returning user keeps their settings; later local edits still win.
+**Owners** (CR-160, ED-193): a device can hold several owners' rows: one guest (made on first
+launch, never signed in) and any accounts that signed in here. Every synced row's `user_id` and every
+outbox entry's `change_log.owner_id` name exactly one owner; `local_meta` records which profile is an
+account (`owner_account:<id>`) and which one the app shows (`active_owner`). Signing in
+(`signInOwner`) makes that account the active owner in one transaction: an account already on the
+device is shown again (its queued work goes up under it); the guest, and only a guest, is adopted
+(re-keyed into the account, rows follow by `ON UPDATE CASCADE`, stable-id rows take the account's
+ids, everything requeued for it); otherwise the account gets a fresh profile of its own and every
+other owner's rows stay as they are, hidden and never pushed. Sync runs, pull cursors, the outbox
+count and push batches are all per owner, and each pushed change names its owner, which `sync_push`
+checks against `auth.uid()` (migration 0014). Signing out stops sync and changes nothing else. A
+deleted account's copy becomes the guest (`releaseAccount`), so the person can bring it into a new
+account. Open (needs owner design): what a signed-out device shows, and the prompt when unsynced
+changes exist at sign-out (criterion 2).
+
+**First sync for an account** (M6.4, CR-160 criteria 6–7): no "local wins". Pulled rows merge with
+the normal per-field rules and conflict flow. The profile: if the account already has settings on
+the server, they stay, and the pending local profile (a fresh device's defaults or an adopted guest's
+choices) is dropped; an adopted guest's is kept in `local_meta` (`guest_settings:<id>`) for an
+explicit choice that is not designed yet. A new account (no settings on the server) takes this
+device's profile.
 
 **Safety**: writes are local-first and immediate; sync failures only change the status pill; daily
 local backup (JSON, last 7) before any migration or bulk import.

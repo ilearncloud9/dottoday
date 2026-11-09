@@ -24,6 +24,10 @@ const _known = {
   // Applies pulled rows; `EngineSyncService` calls `onPulled`, wired to
   // `afterWriteEffects.schedule` in sync_providers.dart.
   'data/sync/synced_rows.dart': 'onPulled',
+  // Moves a guest's chosen tasks and re-keys starters (CR-160); the sign-in
+  // step hands over to OwnerSwitch, which schedules the effects for the new
+  // owner.
+  'data/sync/account_owners.dart': 'signIn',
   // Removes rows already in Trash for 30 days: they left the snapshot when
   // they were trashed (through the write path).
   'data/trash/trash_purge.dart': 'none: rows already out of the snapshot',
@@ -59,6 +63,15 @@ void main() {
           expect(
             sources['data/sync/sync_providers.dart'],
             contains('onPulled: (id) => ref.read(afterWriteEffectsProvider)'),
+          );
+        case 'signIn':
+          expect(
+            sources['data/sync/sync_providers.dart'],
+            contains('ref.read(ownerSwitchProvider).signedIn()'),
+          );
+          expect(
+            sources['data/owners/owner_switch.dart'],
+            contains('afterWriteEffectsProvider'),
           );
       }
     }

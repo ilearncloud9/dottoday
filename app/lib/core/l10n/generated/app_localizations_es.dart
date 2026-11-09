@@ -2630,9 +2630,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get accountDeleteExportFirst => 'Exportar mis datos antes';
 
   @override
-  String accountDeleteBody(String word) {
-    return 'Esto elimina tu cuenta y todo lo sincronizado con ella. Las tareas de este dispositivo se quedan. Escribe $word para confirmar.';
-  }
+  String get accountDeleteBody =>
+      'Esto elimina tu cuenta y todo lo sincronizado con ella. También quita tu copia de este dispositivo.';
 
   @override
   String get accountDeleteWord => 'ELIMINAR';
@@ -6439,6 +6438,309 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get wakeUpDiscoveryTierGained =>
       'Tu teléfono ya puede hacer sonar el despertar de Dottoday como una alarma. ¿Activarlo?';
+
+  @override
+  String get accountContinue => 'Continuar';
+
+  @override
+  String get accountSignOutTitle => '¿Cerrar sesión?';
+
+  @override
+  String get accountSignOutSyncedBody =>
+      'Tus tareas y ajustes quedan ocultos en este dispositivo hasta que vuelvas a iniciar sesión. Todo está sincronizado con tu cuenta.';
+
+  @override
+  String accountSignOutPendingTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cambios aún no se han sincronizado',
+      one: '1 cambio aún no se ha sincronizado',
+      zero: 'La sincronización aún no está confirmada',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String accountSignOutPendingBody(int count, String email) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Están guardados en este dispositivo para $email y aún no han llegado a tu cuenta. Se podrán sincronizar cuando vuelvas a iniciar sesión con esta cuenta.',
+      one:
+          'Está guardado en este dispositivo para $email y aún no ha llegado a tu cuenta. Se podrá sincronizar cuando vuelvas a iniciar sesión con esta cuenta.',
+      zero:
+          'Dottoday aún no ha confirmado que todo haya llegado a tu cuenta. Lo que falte está guardado en este dispositivo para $email y se podrá sincronizar cuando vuelvas a iniciar sesión con esta cuenta.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountSignOutIsolation =>
+      'Hasta entonces, nadie más que use Dottoday en este dispositivo puede verlos.';
+
+  @override
+  String get accountSignOutKeptHere =>
+      'Se quedan en este dispositivo, en esta cuenta.';
+
+  @override
+  String get accountStaySignedIn => 'Mantener la sesión';
+
+  @override
+  String get accountStaySignedInHint =>
+      'Dottoday intentará sincronizarlos ahora.';
+
+  @override
+  String get accountSignOutKeep => 'Cerrar sesión y guardarlos aquí';
+
+  @override
+  String get accountSignOutEscHint =>
+      'Esc cancela y no inicia nada. «Mantener la sesión» intenta sincronizar ahora.';
+
+  @override
+  String get signedOutTitle => 'Has cerrado sesión';
+
+  @override
+  String get signedOutBody =>
+      'Tus tareas se guardan de forma segura en este dispositivo. Vuelven cuando inicies sesión de nuevo con la misma cuenta.';
+
+  @override
+  String get signedOutArt => 'Un día vacío';
+
+  @override
+  String get signedOutSignIn => 'Iniciar sesión';
+
+  @override
+  String get signedOutUseWithout => 'Usar sin cuenta';
+
+  @override
+  String get signedOutUseWithoutHint =>
+      'Abre el plan de este dispositivo sin cuenta. Cualquiera que use este dispositivo sin cuenta puede verlo.';
+
+  @override
+  String get settingsChoiceTitle => '¿Qué ajustes debe usar Dottoday?';
+
+  @override
+  String get settingsChoiceBody =>
+      'Tu cuenta ya tiene ajustes. Este dispositivo tenía otros antes de iniciar sesión. Tus tareas no se eliminarán.';
+
+  @override
+  String get settingsChoiceLegend => 'Ajustes que se usarán';
+
+  @override
+  String get settingsChoiceAccount => 'Los ajustes de tu cuenta';
+
+  @override
+  String get settingsChoiceDevice => 'Los ajustes de este dispositivo';
+
+  @override
+  String get settingsChoiceTimeZone => 'Zona horaria';
+
+  @override
+  String get settingsChoiceYourDay => 'Tu día';
+
+  @override
+  String settingsChoiceRange(String start, String end) {
+    return '$start – $end';
+  }
+
+  @override
+  String get settingsChoiceOnlyDiffer =>
+      'Solo se muestran los ajustes que son distintos.';
+
+  @override
+  String get settingsChoiceLater => 'Decidir más tarde';
+
+  @override
+  String get settingsChoiceLaterHint =>
+      'Hasta que elijas, se quedan los ajustes de tu cuenta. Puedes elegir en Ajustes › Cuenta.';
+
+  @override
+  String get accountChooseSettings => 'Elegir ajustes';
+
+  @override
+  String get accountChooseSettingsBody =>
+      'Este dispositivo tenía otros ajustes cuando iniciaste sesión.';
+
+  @override
+  String get guestWorkTitle =>
+      'Este dispositivo tiene tareas creadas sin cuenta';
+
+  @override
+  String guestWorkBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Se crearon $count tareas aquí sin cuenta desde que se cerró sesión por última vez en este dispositivo. No están en ninguna cuenta y pueden ser de otra persona.',
+      one:
+          'Se creó 1 tarea aquí sin cuenta desde que se cerró sesión por última vez en este dispositivo. No está en ninguna cuenta y puede ser de otra persona.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestWorkLegend => 'Qué pasa con estas tareas';
+
+  @override
+  String get guestWorkKeep => 'Empezar con las tareas de tu cuenta';
+
+  @override
+  String guestWorkKeepBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Estas $count se quedan en este dispositivo, separadas de tu cuenta. Quien lo use sin cuenta aún puede verlas.',
+      one:
+          'Esta tarea se queda en este dispositivo, separada de tu cuenta. Quien lo use sin cuenta aún puede verla.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestWorkBring => 'Añadirlas a tu cuenta';
+
+  @override
+  String guestWorkBringBody(String email) {
+    return 'Solo si son tuyas. Se añaden a $email y se sincronizan con tus otros dispositivos.';
+  }
+
+  @override
+  String guestWorkMine(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Creé estas $count tareas yo mismo',
+      one: 'Creé esta tarea yo mismo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestWorkNotSure =>
+      '¿No estás seguro? Mantenlas separadas. Puedes revisarlas más tarde usando Dottoday sin cuenta.';
+
+  @override
+  String guestNoticeBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tareas de aquí se crearon antes de que alguien cerrara sesión por última vez en este dispositivo, así que no se pueden añadir a una cuenta.',
+      one:
+          '1 tarea de aquí se creó antes de que alguien cerrara sesión por última vez en este dispositivo, así que no se puede añadir a una cuenta.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestNoticeCardTitle => 'Empezarás con las tareas de tu cuenta';
+
+  @override
+  String guestNoticeCardBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Las $count tareas se quedan en este dispositivo, separadas de tu cuenta. Quien lo use sin cuenta aún puede verlas. No se elimina nada.',
+      one:
+          'La tarea se queda en este dispositivo, separada de tu cuenta. Quien lo use sin cuenta aún puede verla. No se elimina nada.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountDeleteBodyBrowser =>
+      'Esto elimina tu cuenta y todo lo sincronizado con ella. También quita tu copia de este navegador.';
+
+  @override
+  String get accountDeleteExportHint =>
+      'Exporta ahora, mientras tienes la sesión iniciada. Cuando se elimine la cuenta, ya no se podrá exportar nada de ella aquí.';
+
+  @override
+  String get accountDeleteExportHintShort =>
+      'Mientras tengas la sesión iniciada. Después no se podrá exportar nada.';
+
+  @override
+  String get accountDeleteRemovedDevice => 'Se quita de este dispositivo';
+
+  @override
+  String get accountDeleteRemovedBrowser => 'Se quita de este navegador';
+
+  @override
+  String get accountDeleteRemovedDeviceLead => 'Se quita de este dispositivo:';
+
+  @override
+  String get accountDeleteRemovedBrowserLead => 'Se quita de este navegador:';
+
+  @override
+  String accountDeleteTasks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tareas',
+      one: '1 tarea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String accountDeleteSummary(String tasks) {
+    return '$tasks y tus ajustes. No se puede deshacer.';
+  }
+
+  @override
+  String accountDeleteSummaryPending(String tasks, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cambios sin sincronizar',
+      one: '1 cambio sin sincronizar',
+    );
+    return '$tasks, tus ajustes y $_temp0. No se puede deshacer.';
+  }
+
+  @override
+  String accountDeleteTypeWord(String word) {
+    return 'Escribe $word para confirmar';
+  }
+
+  @override
+  String get accountDeleteExported =>
+      'Exportado. Ya puedes eliminar tu cuenta.';
+
+  @override
+  String get accountDeleteExportBroken =>
+      'No se pudieron exportar todos tus datos, así que no se eliminó nada. Inténtalo de nuevo.';
+
+  @override
+  String get accountDeleteExportClosed =>
+      'No se guardó nada. Vuelve a exportar si quieres una copia.';
+
+  @override
+  String get removalRetryTitle => 'No se terminó de quitar de este navegador';
+
+  @override
+  String get removalRetryBody =>
+      'Se eliminó una cuenta, pero parte de su copia sigue en este navegador. Hasta que se quite, queda oculta: no se muestra, no se sincroniza ni se añade a ninguna cuenta.';
+
+  @override
+  String get removalRetryAction => 'Terminar de quitar';
+
+  @override
+  String get removalRetryHint =>
+      'Si sigue sin funcionar, borrar los datos de este sitio en los ajustes del navegador también la quita, junto con todo lo demás guardado aquí.';
+
+  @override
+  String get removalRetryAgain =>
+      'No se pudo terminar de quitar. Inténtalo de nuevo.';
+
+  @override
+  String accountTwoSentences(String first, String second) {
+    return '$first $second';
+  }
 
   @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';

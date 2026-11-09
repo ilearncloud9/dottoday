@@ -12,6 +12,7 @@ import 'package:dottoday/data/intents/intent_queue_channel.dart';
 import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:dottoday/data/snapshot/snapshot_providers.dart';
@@ -137,6 +138,9 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
       listenForMenuBarActions(ref.read(dotIntentsProvider));
     }
     _events = ref.read(systemEventsProvider).events.listen(_onSystemEvent);
+    // Another owner is shown (CR-160 I7): the due run was armed for the old
+    // owner's day and zone; run for the new one and re-arm from it.
+    ref.listenManual(ownerEpochProvider, (_, _) => unawaited(_housekeep()));
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => unawaited(_housekeep()),
     );

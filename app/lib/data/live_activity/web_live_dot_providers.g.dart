@@ -9,17 +9,26 @@ part of 'web_live_dot_providers.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// The day snapshot the web sink wrote last, kept in memory with its
-/// titles (the stored copy has none, M9.1) for the tab (M9.7).
+/// titles (the stored copy has none, M9.1) for the tab (M9.7). Empty
+/// again at every change of owner (CR-160 I8): the titles are the old
+/// owner's, and nothing may read them once another owner shows; the
+/// switch's own snapshot write fills it for the new one.
 
 @ProviderFor(LastDaySnapshot)
 final lastDaySnapshotProvider = LastDaySnapshotProvider._();
 
 /// The day snapshot the web sink wrote last, kept in memory with its
-/// titles (the stored copy has none, M9.1) for the tab (M9.7).
+/// titles (the stored copy has none, M9.1) for the tab (M9.7). Empty
+/// again at every change of owner (CR-160 I8): the titles are the old
+/// owner's, and nothing may read them once another owner shows; the
+/// switch's own snapshot write fills it for the new one.
 final class LastDaySnapshotProvider
     extends $NotifierProvider<LastDaySnapshot, DaySnapshot?> {
   /// The day snapshot the web sink wrote last, kept in memory with its
-  /// titles (the stored copy has none, M9.1) for the tab (M9.7).
+  /// titles (the stored copy has none, M9.1) for the tab (M9.7). Empty
+  /// again at every change of owner (CR-160 I8): the titles are the old
+  /// owner's, and nothing may read them once another owner shows; the
+  /// switch's own snapshot write fills it for the new one.
   LastDaySnapshotProvider._()
     : super(
         from: null,
@@ -47,10 +56,13 @@ final class LastDaySnapshotProvider
   }
 }
 
-String _$lastDaySnapshotHash() => r'd11e8206e55b9de865029d263bcbdb52083b8b45';
+String _$lastDaySnapshotHash() => r'0a065babb23d4cf7f98aba90d6516127a0170a07';
 
 /// The day snapshot the web sink wrote last, kept in memory with its
-/// titles (the stored copy has none, M9.1) for the tab (M9.7).
+/// titles (the stored copy has none, M9.1) for the tab (M9.7). Empty
+/// again at every change of owner (CR-160 I8): the titles are the old
+/// owner's, and nothing may read them once another owner shows; the
+/// switch's own snapshot write fills it for the new one.
 
 abstract class _$LastDaySnapshot extends $Notifier<DaySnapshot?> {
   DaySnapshot? build();

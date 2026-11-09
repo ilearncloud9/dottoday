@@ -1,4 +1,5 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,8 +11,13 @@ part 'editing_task.g.dart';
 /// in core so every screen can open a task without importing the editor.
 @Riverpod(keepAlive: true)
 class EditingTask extends _$EditingTask {
+  // Closed at every change of owner (CR-160 I5): the panel never shows
+  // the previous owner's task.
   @override
-  String? build() => null;
+  String? build() {
+    ref.watch(ownerEpochProvider);
+    return null;
+  }
 
   void open(String id) => state = id;
 

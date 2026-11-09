@@ -17,6 +17,7 @@ import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/pwa/tab_live_dot.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/features/auth/account_gate_view.dart';
 import 'package:dottoday/features/inbox/schedule_from_anywhere.dart';
 import 'package:dottoday/features/lock/lock_gate.dart';
 import 'package:dottoday/features/onboarding/onboarding_gate.dart';
@@ -95,9 +96,13 @@ class DottodayApp extends ConsumerWidget {
                     child: DatabaseGate(
                       // The optional app lock over everything else (M5.8).
                       child: LockGate(
-                        // First run on this device (M4).
-                        child: OnboardingGate(
-                          child: child ?? const SizedBox.shrink(),
+                        // After a change of owner: signed out, guest work,
+                        // settings, an unfinished removal (CR-160).
+                        child: AccountGateView(
+                          // First run on this device (M4).
+                          child: OnboardingGate(
+                            child: child ?? const SizedBox.shrink(),
+                          ),
                         ),
                       ),
                     ),

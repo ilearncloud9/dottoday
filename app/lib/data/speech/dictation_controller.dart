@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/speech/speech_providers.dart';
 import 'package:dottoday/domain/speech/dictation_text.dart';
 import 'package:dottoday/domain/speech/speech_recognizer.dart';
@@ -45,8 +46,11 @@ class DictationController extends _$DictationController {
   StreamSubscription<SpeechEvent>? _events;
   Timer? _ticker;
 
+  // A change of owner ends the dictation and drops its text (CR-160): the
+  // rebuild runs [_end] and starts idle.
   @override
   DictationState build() {
+    ref.watch(ownerEpochProvider);
     ref.onDispose(_end);
     return const DictationState();
   }

@@ -2,10 +2,12 @@ import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/calendar.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/sync/stable_ids.dart';
 
 // Minimal valid entities for domain tests. Tests override one field at a
 // time with copyWith so each failure is attributable.
@@ -74,6 +76,15 @@ Profile profileFixture() => Profile(
   tzId: 'America/New_York',
   createdAt: t0,
   updatedAt: t1,
+);
+
+/// [userId]'s record of [hint], under its stable id.
+RevealHint revealHintFixture(String userId, HintId hint) => RevealHint(
+  id: revealHintRowId(userId, hint),
+  userId: userId,
+  hintId: hint,
+  createdAt: t0,
+  updatedAt: t0,
 );
 
 CalendarAccount accountFixture() => CalendarAccount(

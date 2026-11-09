@@ -1,3 +1,4 @@
+import 'package:dottoday/data/db/owner_meta.dart';
 import 'package:dottoday/data/db/tables/calendar_series_table.dart';
 import 'package:dottoday/data/db/tables/calendar_tables.dart';
 // The generated part copies `soundIdCheck` (a column CHECK) verbatim.
@@ -36,6 +37,7 @@ part 'app_database.g.dart';
     FieldSeen,
     LocalMeta,
     WakeUpDaysTable,
+    GuestRowSessions,
   ],
   include: {'search.drift'},
 )
@@ -43,7 +45,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 17;
+  static const latestSchemaVersion = 19;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -76,7 +78,7 @@ class AppDatabase extends _$AppDatabase {
       if (from < 6) {
         await _createTableOnce(m, routinesTable);
         await _addColumnOnce(m, occurrences, occurrences.routineStart);
-        await m.alterTable(TableMigration(changeLog));
+        await _rebuildChangeLog(m);
         await m.alterTable(TableMigration(conflicts));
       }
       // 7 (M13.2): when a step was ticked, for learned step lengths.
@@ -97,7 +99,7 @@ class AppDatabase extends _$AppDatabase {
       // layout in onboarding step 0.
       if (from < 9) {
         await _createTableOnce(m, revealHintsTable);
-        await m.alterTable(TableMigration(changeLog));
+        await _rebuildChangeLog(m);
         await m.alterTable(TableMigration(conflicts));
         await _keepFullLayout();
       }
@@ -138,6 +140,16 @@ class AppDatabase extends _$AppDatabase {
         await _addColumnOnce(m, syncCursors, syncCursors.sinceAt);
         await _addColumnOnce(m, syncCursors, syncCursors.sinceId);
       }
+      // 18 (CR-160): every outbox entry and pull cursor names its owner,
+      // and local_meta says which profile is an account and which shows.
+      if (from < 18) {
+        await _rebuildChangeLog(m);
+        await _ownCursors(m);
+        await _recordOwners();
+      }
+      // 19 (CR-160): the guest session that first wrote each guest row.
+      // Existing rows get none: they are never eligible to move.
+      if (from < 19) await _createTableOnce(m, guestRowSessions);
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without
@@ -181,6 +193,76 @@ class AppDatabase extends _$AppDatabase {
     "WHERE json_extract(settings, '\$.uiLayout') IS NULL",
   );
 
+  /// Rebuilds `change_log` to the current definition, rows kept. Before
+  /// schema 18 it had no `owner_id`: a device then held one profile (the
+  /// sign-in re-keyed it), so every pending change is that profile's.
+  Future<void> _rebuildChangeLog(Migrator m) async {
+    if (await _hasColumn(changeLog, changeLog.ownerId)) {
+      await m.alterTable(TableMigration(changeLog));
+      return;
+    }
+    await m.alterTable(
+      TableMigration(
+        changeLog,
+        newColumns: [changeLog.ownerId],
+        columnTransformer: {
+          changeLog.ownerId: const CustomExpression<String>(
+            '(SELECT id FROM profiles ORDER BY created_at LIMIT 1)',
+          ),
+        },
+      ),
+    );
+  }
+
+  /// Gives the pull cursors their owner (18): the account the device
+  /// synced with. Without one there was never a pull, so none is kept.
+  Future<void> _ownCursors(Migrator m) async {
+    if (await _hasColumn(syncCursors, syncCursors.ownerId)) return;
+    await customStatement(
+      'DELETE FROM sync_cursors WHERE NOT EXISTS '
+      "(SELECT 1 FROM local_meta WHERE key = '$legacySyncAccountKey')",
+    );
+    await m.alterTable(
+      TableMigration(
+        syncCursors,
+        newColumns: [syncCursors.ownerId],
+        columnTransformer: {
+          syncCursors.ownerId: const CustomExpression<String>(
+            "(SELECT value FROM local_meta WHERE key = '$legacySyncAccountKey')",
+          ),
+        },
+      ),
+    );
+  }
+
+  /// The profile the device synced with is an account; the oldest profile
+  /// (the only one before 18) is the one shown (18). Not marked dirty.
+  Future<void> _recordOwners() async {
+    await customStatement(
+      'INSERT OR IGNORE INTO local_meta (key, value) '
+      "SELECT '${accountMarkerKey('')}' || p.id, '1' FROM profiles p "
+      "JOIN local_meta s ON s.key = '$legacySyncAccountKey' AND s.value = p.id",
+    );
+    await customStatement(
+      'INSERT OR IGNORE INTO local_meta (key, value) '
+      "SELECT '$activeOwnerKey', id FROM profiles ORDER BY created_at LIMIT 1",
+    );
+    await customStatement(
+      "DELETE FROM local_meta WHERE key = '$legacySyncAccountKey'",
+    );
+  }
+
+  Future<bool> _hasColumn(
+    TableInfo<Table, Object?> table,
+    GeneratedColumn<Object> column,
+  ) async {
+    final info = await customSelect(
+      'SELECT name FROM pragma_table_info(?)',
+      variables: [Variable.withString(table.actualTableName)],
+    ).get();
+    return info.any((r) => r.read<String>('name') == column.name);
+  }
+
   /// Creates [table] unless it exists (see [_addColumnOnce] for why).
   Future<void> _createTableOnce(
     Migrator m,
@@ -203,11 +285,7 @@ class AppDatabase extends _$AppDatabase {
     TableInfo<Table, Object?> table,
     GeneratedColumn<Object> column,
   ) async {
-    final info = await customSelect(
-      'SELECT name FROM pragma_table_info(?)',
-      variables: [Variable.withString(table.actualTableName)],
-    ).get();
-    if (info.any((r) => r.read<String>('name') == column.name)) return;
+    if (await _hasColumn(table, column)) return;
     await m.addColumn(table, column);
   }
 }

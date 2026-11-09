@@ -1,3 +1,4 @@
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/domain/entities/routine.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,8 +26,12 @@ final class RoutineDropRequest {
 /// its proposal and clears it (as `ActiveProposal`).
 @Riverpod(keepAlive: true)
 class PendingRoutineDrop extends _$PendingRoutineDrop {
+  // The routine is the previous owner's after a switch (CR-160 I5).
   @override
-  RoutineDropRequest? build() => null;
+  RoutineDropRequest? build() {
+    ref.watch(ownerEpochProvider);
+    return null;
+  }
 
   void request(RoutineDropRequest value) => state = value;
 

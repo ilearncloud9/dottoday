@@ -19,6 +19,7 @@ external _ServiceWorkerContainer? get _serviceWorker;
 
 extension type _ServiceWorkerContainer._(JSObject _) implements JSObject {
   external JSPromise<_Registration> get ready;
+  external JSPromise<_Registration?> getRegistration();
   external _ServiceWorker? get controller;
   external void addEventListener(String type, JSFunction listener);
 }
@@ -29,6 +30,11 @@ extension type _ServiceWorker._(JSObject _) implements JSObject {
 
 extension type _Registration._(JSObject _) implements JSObject {
   external JSPromise<JSAny?> showNotification(String title, JSObject options);
+  external JSPromise<JSArray<_Shown>> getNotifications();
+}
+
+extension type _Shown._(JSObject _) implements JSObject {
+  external void close();
 }
 
 extension type _Message._(JSObject _) implements JSObject {
@@ -94,6 +100,21 @@ Future<bool> showBrowserNotification(
           as JSObject;
   await registration.showNotification(n.title, options).toDart;
   return true;
+}
+
+/// Closes every notification this site's service worker still shows
+/// (CR-160 I6): a change of owner leaves none of the previous owner's.
+Future<void> closeBrowserNotifications() async {
+  final worker = _serviceWorker;
+  if (worker == null) return;
+  // Not `ready`: it never completes without a worker, and a change of
+  // owner must not wait on one.
+  final registration = await worker.getRegistration().toDart;
+  if (registration == null) return;
+  final shown = await registration.getNotifications().toDart;
+  for (final n in shown.toDart) {
+    n.close();
+  }
 }
 
 /// One per page: the service worker's messages arrive on it.

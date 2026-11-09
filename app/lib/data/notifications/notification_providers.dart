@@ -63,7 +63,12 @@ Future<NotificationPlatform> notificationPlatform(Ref ref) async {
         player: ref.read(soundPlayerProvider),
       ),
       taps: browserNotificationTaps(),
+      closeShown: closeBrowserNotifications,
     );
+    // Rebuilt for every owner (it watches the profile): the old tab's
+    // timers must die with it, or they post the previous owner's reminders
+    // (CR-160 I3).
+    ref.onDispose(tab.dispose);
     return withServerPush(
       tab,
       client: ref.watch(supabaseClientProvider),

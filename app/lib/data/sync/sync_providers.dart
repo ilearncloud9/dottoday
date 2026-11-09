@@ -6,8 +6,9 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
-import 'package:dottoday/data/sync/account_adoption.dart';
+import 'package:dottoday/data/sync/account_owners.dart';
 import 'package:dottoday/data/sync/drift_conflict_store.dart';
 import 'package:dottoday/data/sync/engine_sync_service.dart';
 import 'package:dottoday/data/sync/server_clock.dart';
@@ -15,6 +16,7 @@ import 'package:dottoday/data/sync/supabase_sync_gateway.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
+import 'package:dottoday/domain/profile/local_profile_service.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -71,12 +73,24 @@ SyncService syncService(Ref ref) {
       clock: clock,
       clockOffset: () => ref.read(serverClockProvider)?.offset,
     ),
-    accounts: _accountIds(client),
+    accounts: accountIdChanges(client),
     adopt: (id) async {
-      // Rows now belong to the account: the profile is read again.
-      if (await adoptAccount(db, id, ref.read(sharedHlcProvider)) != null) {
-        ref.invalidate(localProfileProvider);
-      }
+      final zone = await ref.read(deviceTimeZoneProvider.future);
+      final language = ref.read(deviceLanguageProvider);
+      final result = await signInOwner(
+        db,
+        id,
+        ref.read(sharedHlcProvider),
+        freshProfile: (account) =>
+            freshAccountProfile(account, zone, language, clock.nowUtc()),
+      );
+      // The guest's tasks wait for the person's choice (CR-160): not
+      // shown under the account, not synced, until it is recorded.
+      if (result.change == OwnerChange.guestChoiceNeeded) return false;
+      if (result.change == OwnerChange.unchanged) return true;
+      // Another owner shows now: every screen, reminder and widget follows.
+      await ref.read(ownerSwitchProvider).signedIn();
+      return true;
     },
     conflicts: DriftConflictStore(
       db: db,
@@ -94,7 +108,7 @@ SyncService syncService(Ref ref) {
 }
 
 /// The signed-in account's id, or null; distinct.
-Stream<String?> _accountIds(SupabaseClient client) async* {
+Stream<String?> accountIdChanges(SupabaseClient client) async* {
   String? last = client.auth.currentUser?.id;
   yield last;
   await for (final s in client.auth.onAuthStateChange) {

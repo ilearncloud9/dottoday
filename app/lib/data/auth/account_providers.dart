@@ -5,6 +5,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/router/auth_callback.dart';
 import 'package:dottoday/data/auth/supabase_account_service.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
 import 'package:flutter/foundation.dart';
@@ -67,7 +68,13 @@ AccountService accountService(Ref ref) {
     callbacks: ref.watch(authCallbackInboxProvider).take(),
     logger: ref.watch(loggerProvider),
     restore: () => ref.read(syncServiceProvider).watchRestore(),
-    deleteRemote: () => client.functions.invoke('delete-account'),
+    deleteRemote: () async {
+      final id = client.auth.currentUser?.id;
+      await client.functions.invoke('delete-account');
+      // The account is gone: its copy here is hidden at once and removed
+      // (CR-160 policy §4); an interruption leaves it pending, never shown.
+      if (id != null) await ref.read(ownerSwitchProvider).accountDeleted(id);
+    },
   );
   ref.onDispose(() => unawaited(service.dispose()));
   return service;

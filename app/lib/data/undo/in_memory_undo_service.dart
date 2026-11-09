@@ -29,6 +29,11 @@ import 'package:dottoday/domain/writes/write_use_case.dart';
 /// Redo (M8.6b) is the same mechanism run backwards: an undo is itself
 /// written as a recorded batch, and the rows it overwrote become the one
 /// redo entry; a redo is recorded again as a fresh undo token.
+///
+/// Every token belongs to the owner whose rows it recorded (CR-160 I5): it
+/// does nothing while another owner is shown, so a stale snackbar or
+/// shortcut can never write, and queue, the previous owner's rows after a
+/// switch. [forget] drops everything at the switch itself.
 final class InMemoryUndoService implements UndoService {
   InMemoryUndoService({
     required WriteUseCase writes,
@@ -91,6 +96,8 @@ final class InMemoryUndoService implements UndoService {
     if (before == null || !_clock.nowUtc().isBefore(before.expiresAtUtc)) {
       return const Err(UndoExpiredFailure());
     }
+    // Another owner shown: to them, the previous owner's change is gone.
+    if (!await _isShown(before.userId)) return const Err(UndoExpiredFailure());
     final revert = await _restoring(before);
     final (written, after) = await _record(revert);
     if (written case Err(:final failure)) return Err(failure);
@@ -106,8 +113,23 @@ final class InMemoryUndoService implements UndoService {
       return const Err(UndoExpiredFailure());
     }
     _redo = null;
+    if (!await _isShown(r.before.userId)) {
+      return const Err(UndoExpiredFailure());
+    }
     return _keepForUndo(await _restoring(r.before));
   }
+
+  /// Drops every undo and redo, at a change of owner (CR-160 I5): the rows
+  /// they hold are the previous owner's.
+  void forget() {
+    _pending.clear();
+    _latest = null;
+    _redo = null;
+  }
+
+  /// Whether [userId] is the owner the app shows now.
+  Future<bool> _isShown(String userId) async =>
+      (await _settings.findLocalProfile())?.id == userId;
 
   /// Writes [batch] and keeps its "before" rows under a new undo token.
   Future<Result<UndoToken, AppFailure>> _keepForUndo(WriteBatch batch) async {

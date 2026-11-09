@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/db/owned_local_meta.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,7 +13,8 @@ part 'learning_meta.g.dart';
 
 /// What this device remembers about learning (docs/13 §8): per-title
 /// resets and the reality thread's reveal. In `local_meta`, never synced
-/// or exported, so a reset says "on this device".
+/// or exported, so a reset says "on this device". Per owner (CR-160): the
+/// reset titles are the owner's task titles.
 final class LearningMetaState {
   const LearningMetaState({
     this.resets = const {},
@@ -47,7 +50,9 @@ final class LearningMetaState {
 }
 
 /// [LearningMetaState] in `local_meta` (as `InboxNudgeSeen`): each write
-/// is persisted before the state is published, and awaited.
+/// is persisted before the state is published, and awaited. Kept under
+/// `<key>:<ownerId>` for the owner shown and rebuilt at every change of
+/// owner (CR-160); the keys below are the kinds.
 @Riverpod(keepAlive: true)
 class LearningMeta extends _$LearningMeta {
   static const resetsKey = 'learning_resets';
@@ -57,19 +62,25 @@ class LearningMeta extends _$LearningMeta {
 
   AppDatabase get _db => ref.read(appDatabaseProvider);
 
+  /// Whose values [state] holds; null before a profile exists or while a
+  /// change of owner rebuilds (writes then go nowhere).
+  String? _owner;
+
+  /// The [ownerEpochProvider] value [_owner] belongs to.
+  int? _epoch;
+
   @override
   Future<LearningMetaState> build() async {
-    final rows =
-        await (_db.select(_db.localMeta)..where(
-              (m) => m.key.isIn([
-                resetsKey,
-                captionKey,
-                revealedKey,
-                highlightedKey,
-              ]),
-            ))
-            .get();
-    final kv = {for (final r in rows) r.key: r.value};
+    final epoch = ref.watch(ownerEpochProvider);
+    _owner = null;
+    final owner = await shownOwnerId(_db);
+    if (owner == null) return const LearningMetaState();
+    final kv = {
+      for (final k in [resetsKey, captionKey, revealedKey, highlightedKey])
+        k: await readOwned(_db, k, owner),
+    };
+    _owner = owner;
+    _epoch = epoch;
     return LearningMetaState(
       resets: _decodeResets(kv[resetsKey], onUnreadable: _unreadable),
       captionDay: DateTime.tryParse(kv[captionKey] ?? ''),
@@ -142,13 +153,17 @@ class LearningMeta extends _$LearningMeta {
     state = AsyncData((await future)._copy(resets: resets));
   }
 
-  /// Stores one key; tests replace it to keep the state in memory.
+  /// Stores one key for the owner shown; tests replace it to keep the
+  /// state in memory. A write that outlived its owner (a switch meanwhile)
+  /// is dropped rather than given to the next one.
   @protected
-  Future<void> persist(String key, String value) => _db
-      .into(_db.localMeta)
-      .insertOnConflictUpdate(
-        LocalMetaCompanion.insert(key: key, value: value),
-      );
+  Future<void> persist(String key, String value) async {
+    await future;
+    final owner = _owner;
+    if (owner == null || !ref.mounted) return;
+    if (ref.read(ownerEpochProvider) != _epoch) return;
+    await writeOwned(_db, key, owner, value);
+  }
 }
 
 /// A stored resets map; anything unreadable is reported through

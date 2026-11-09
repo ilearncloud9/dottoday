@@ -1,6 +1,6 @@
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
-import 'package:dottoday/data/sync/account_adoption.dart';
+import 'package:dottoday/data/sync/account_owners.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
@@ -37,10 +37,28 @@ final class SyncDevice {
         profile: profileFixture().copyWith(id: 'device-local'),
       ),
     );
-    await adoptAccount(h.db, server.userId, h.hlc);
+    await signInOwner(
+      h.db,
+      server.userId,
+      h.hlc,
+      freshProfile: (id) => profileFixture().copyWith(id: id),
+    );
   }
 
   Future<SyncRun> sync() => engine.run(server.userId);
+
+  /// [accountId] signs in on this device (CR-160), with the person's
+  /// [choice] for the guest's tasks when one was made.
+  Future<OwnerChange> signIn(String accountId, {GuestChoice? choice}) async {
+    if (choice != null) await recordGuestChoice(h.db, accountId, choice);
+    final r = await signInOwner(
+      h.db,
+      accountId,
+      h.hlc,
+      freshProfile: (id) => profileFixture().copyWith(id: id),
+    );
+    return r.change;
+  }
 
   /// An engine on [device]'s database against another [server].
   static SyncEngine engineFor(SyncDevice device, FakeSyncServer server) =>
@@ -61,8 +79,10 @@ final class SyncDevice {
   Future<Occurrence?> occurrence(String id) =>
       DriftOccurrenceRepository(h.db).findById(server.userId, id);
 
-  Future<int> outboxSize() async =>
-      (await h.db.select(h.db.changeLog).get()).length;
+  /// The account's pending changes (a guest's stay its own, CR-160).
+  Future<int> outboxSize() async => (await (h.db.select(
+    h.db.changeLog,
+  )..where((c) => c.ownerId.equals(server.userId))).get()).length;
 
   Future<void> close() => h.dispose();
 }

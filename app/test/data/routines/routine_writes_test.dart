@@ -92,7 +92,7 @@ void main() {
       WriteBatch(userId: userId, routines: [routineFixture()]),
     );
     await h.db.delete(h.db.changeLog).go();
-    await h.db.transaction(() => requeueAll(h.db, h.hlc));
+    await h.db.transaction<void>(() => requeueOwner(h.db, userId, h.hlc));
     final log = await h.changeLog();
     expect(log.where((c) => c.entity == 'routines'), isNotEmpty);
   });

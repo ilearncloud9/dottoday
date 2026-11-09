@@ -18,3 +18,5 @@ Future<bool> showBrowserNotification(
 }) async => false;
 
 Stream<NotificationTap> browserNotificationTaps() => const Stream.empty();
+
+Future<void> closeBrowserNotifications() async {}

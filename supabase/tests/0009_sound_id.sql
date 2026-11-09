@@ -24,20 +24,20 @@ set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a9","role":"authenticated"}';
 
 select lives_ok(
-  format($$select public.sync_push('[{"entity":"occurrences","id":"20000000-0000-0000-0000-0000000009a1","hlc":"%s","fields":{"title":"Stretch","sound_id":"clear.lift"}}]'::jsonb)$$,
+  format($$select public.sync_push('[{"owner":"00000000-0000-0000-0000-0000000000a9","entity":"occurrences","id":"20000000-0000-0000-0000-0000000009a1","hlc":"%s","fields":{"title":"Stretch","sound_id":"clear.lift"}}]'::jsonb)$$,
          pg_temp.hlc(-60000)),
   'A pushes a task with a sound');
 select is((select sound_id from public.occurrences where id = '20000000-0000-0000-0000-0000000009a1'),
   'clear.lift', 'the sound is kept');
 
 select lives_ok(
-  format($$select public.sync_push('[{"entity":"occurrences","id":"20000000-0000-0000-0000-0000000009a1","hlc":"%s","fields":{"sound_id":"none"}}]'::jsonb)$$,
+  format($$select public.sync_push('[{"owner":"00000000-0000-0000-0000-0000000000a9","entity":"occurrences","id":"20000000-0000-0000-0000-0000000009a1","hlc":"%s","fields":{"sound_id":"none"}}]'::jsonb)$$,
          pg_temp.hlc(-50000)),
   '"none" (silent) is accepted');
 
 -- A newer device's catalogue: an id this server never heard of is fine.
 select lives_ok(
-  format($$select public.sync_push('[{"entity":"occurrences","id":"20000000-0000-0000-0000-0000000009a1","hlc":"%s","fields":{"sound_id":"quiet.from_the_future"}}]'::jsonb)$$,
+  format($$select public.sync_push('[{"owner":"00000000-0000-0000-0000-0000000000a9","entity":"occurrences","id":"20000000-0000-0000-0000-0000000009a1","hlc":"%s","fields":{"sound_id":"quiet.from_the_future"}}]'::jsonb)$$,
          pg_temp.hlc(-40000)),
   'an unknown but well-formed id is accepted');
 

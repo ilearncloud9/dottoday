@@ -61,6 +61,15 @@ class $BackupsTable extends Backups with TableInfo<$BackupsTable, BackupRow> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _ownerMeta = const VerificationMeta('owner');
+  @override
+  late final GeneratedColumn<String> owner = GeneratedColumn<String>(
+    'owner',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -68,6 +77,7 @@ class $BackupsTable extends Backups with TableInfo<$BackupsTable, BackupRow> {
     reason,
     appSchemaVersion,
     json,
+    owner,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -119,6 +129,12 @@ class $BackupsTable extends Backups with TableInfo<$BackupsTable, BackupRow> {
     } else if (isInserting) {
       context.missing(_jsonMeta);
     }
+    if (data.containsKey('owner')) {
+      context.handle(
+        _ownerMeta,
+        owner.isAcceptableOrUnknown(data['owner']!, _ownerMeta),
+      );
+    }
     return context;
   }
 
@@ -148,6 +164,10 @@ class $BackupsTable extends Backups with TableInfo<$BackupsTable, BackupRow> {
         DriftSqlType.string,
         data['${effectivePrefix}json'],
       )!,
+      owner: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner'],
+      ),
     );
   }
 
@@ -168,12 +188,20 @@ class BackupRow extends DataClass implements Insertable<BackupRow> {
   /// `AppDatabase.latestSchemaVersion` when taken, for diagnostics.
   final int appSchemaVersion;
   final String json;
+
+  /// The profile id the backup was taken for (CR-160 I2). Listing,
+  /// restoring, the daily check and retention only ever see one owner's
+  /// backups. Null only for a schema-1 backup whose owner could not be
+  /// proven: such a backup belongs to nobody and is never listed or
+  /// restored.
+  final String? owner;
   const BackupRow({
     required this.id,
     required this.createdAt,
     required this.reason,
     required this.appSchemaVersion,
     required this.json,
+    this.owner,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -183,6 +211,9 @@ class BackupRow extends DataClass implements Insertable<BackupRow> {
     map['reason'] = Variable<String>(reason);
     map['app_schema_version'] = Variable<int>(appSchemaVersion);
     map['json'] = Variable<String>(json);
+    if (!nullToAbsent || owner != null) {
+      map['owner'] = Variable<String>(owner);
+    }
     return map;
   }
 
@@ -193,6 +224,9 @@ class BackupRow extends DataClass implements Insertable<BackupRow> {
       reason: Value(reason),
       appSchemaVersion: Value(appSchemaVersion),
       json: Value(json),
+      owner: owner == null && nullToAbsent
+          ? const Value.absent()
+          : Value(owner),
     );
   }
 
@@ -207,6 +241,7 @@ class BackupRow extends DataClass implements Insertable<BackupRow> {
       reason: serializer.fromJson<String>(json['reason']),
       appSchemaVersion: serializer.fromJson<int>(json['appSchemaVersion']),
       json: serializer.fromJson<String>(json['json']),
+      owner: serializer.fromJson<String?>(json['owner']),
     );
   }
   @override
@@ -218,6 +253,7 @@ class BackupRow extends DataClass implements Insertable<BackupRow> {
       'reason': serializer.toJson<String>(reason),
       'appSchemaVersion': serializer.toJson<int>(appSchemaVersion),
       'json': serializer.toJson<String>(json),
+      'owner': serializer.toJson<String?>(owner),
     };
   }
 
@@ -227,12 +263,14 @@ class BackupRow extends DataClass implements Insertable<BackupRow> {
     String? reason,
     int? appSchemaVersion,
     String? json,
+    Value<String?> owner = const Value.absent(),
   }) => BackupRow(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
     reason: reason ?? this.reason,
     appSchemaVersion: appSchemaVersion ?? this.appSchemaVersion,
     json: json ?? this.json,
+    owner: owner.present ? owner.value : this.owner,
   );
   BackupRow copyWithCompanion(BackupsCompanion data) {
     return BackupRow(
@@ -243,6 +281,7 @@ class BackupRow extends DataClass implements Insertable<BackupRow> {
           ? data.appSchemaVersion.value
           : this.appSchemaVersion,
       json: data.json.present ? data.json.value : this.json,
+      owner: data.owner.present ? data.owner.value : this.owner,
     );
   }
 
@@ -253,14 +292,15 @@ class BackupRow extends DataClass implements Insertable<BackupRow> {
           ..write('createdAt: $createdAt, ')
           ..write('reason: $reason, ')
           ..write('appSchemaVersion: $appSchemaVersion, ')
-          ..write('json: $json')
+          ..write('json: $json, ')
+          ..write('owner: $owner')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(id, createdAt, reason, appSchemaVersion, json);
+      Object.hash(id, createdAt, reason, appSchemaVersion, json, owner);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -269,7 +309,8 @@ class BackupRow extends DataClass implements Insertable<BackupRow> {
           other.createdAt == this.createdAt &&
           other.reason == this.reason &&
           other.appSchemaVersion == this.appSchemaVersion &&
-          other.json == this.json);
+          other.json == this.json &&
+          other.owner == this.owner);
 }
 
 class BackupsCompanion extends UpdateCompanion<BackupRow> {
@@ -278,12 +319,14 @@ class BackupsCompanion extends UpdateCompanion<BackupRow> {
   final Value<String> reason;
   final Value<int> appSchemaVersion;
   final Value<String> json;
+  final Value<String?> owner;
   const BackupsCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.reason = const Value.absent(),
     this.appSchemaVersion = const Value.absent(),
     this.json = const Value.absent(),
+    this.owner = const Value.absent(),
   });
   BackupsCompanion.insert({
     this.id = const Value.absent(),
@@ -291,6 +334,7 @@ class BackupsCompanion extends UpdateCompanion<BackupRow> {
     required String reason,
     required int appSchemaVersion,
     required String json,
+    this.owner = const Value.absent(),
   }) : createdAt = Value(createdAt),
        reason = Value(reason),
        appSchemaVersion = Value(appSchemaVersion),
@@ -301,6 +345,7 @@ class BackupsCompanion extends UpdateCompanion<BackupRow> {
     Expression<String>? reason,
     Expression<int>? appSchemaVersion,
     Expression<String>? json,
+    Expression<String>? owner,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -308,6 +353,7 @@ class BackupsCompanion extends UpdateCompanion<BackupRow> {
       if (reason != null) 'reason': reason,
       if (appSchemaVersion != null) 'app_schema_version': appSchemaVersion,
       if (json != null) 'json': json,
+      if (owner != null) 'owner': owner,
     });
   }
 
@@ -317,6 +363,7 @@ class BackupsCompanion extends UpdateCompanion<BackupRow> {
     Value<String>? reason,
     Value<int>? appSchemaVersion,
     Value<String>? json,
+    Value<String?>? owner,
   }) {
     return BackupsCompanion(
       id: id ?? this.id,
@@ -324,6 +371,7 @@ class BackupsCompanion extends UpdateCompanion<BackupRow> {
       reason: reason ?? this.reason,
       appSchemaVersion: appSchemaVersion ?? this.appSchemaVersion,
       json: json ?? this.json,
+      owner: owner ?? this.owner,
     );
   }
 
@@ -345,6 +393,9 @@ class BackupsCompanion extends UpdateCompanion<BackupRow> {
     if (json.present) {
       map['json'] = Variable<String>(json.value);
     }
+    if (owner.present) {
+      map['owner'] = Variable<String>(owner.value);
+    }
     return map;
   }
 
@@ -355,7 +406,8 @@ class BackupsCompanion extends UpdateCompanion<BackupRow> {
           ..write('createdAt: $createdAt, ')
           ..write('reason: $reason, ')
           ..write('appSchemaVersion: $appSchemaVersion, ')
-          ..write('json: $json')
+          ..write('json: $json, ')
+          ..write('owner: $owner')
           ..write(')'))
         .toString();
   }
@@ -379,6 +431,7 @@ typedef $$BackupsTableCreateCompanionBuilder =
       required String reason,
       required int appSchemaVersion,
       required String json,
+      Value<String?> owner,
     });
 typedef $$BackupsTableUpdateCompanionBuilder =
     BackupsCompanion Function({
@@ -387,6 +440,7 @@ typedef $$BackupsTableUpdateCompanionBuilder =
       Value<String> reason,
       Value<int> appSchemaVersion,
       Value<String> json,
+      Value<String?> owner,
     });
 
 class $$BackupsTableFilterComposer
@@ -420,6 +474,11 @@ class $$BackupsTableFilterComposer
 
   ColumnFilters<String> get json => $composableBuilder(
     column: $table.json,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get owner => $composableBuilder(
+    column: $table.owner,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -457,6 +516,11 @@ class $$BackupsTableOrderingComposer
     column: $table.json,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get owner => $composableBuilder(
+    column: $table.owner,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$BackupsTableAnnotationComposer
@@ -484,6 +548,9 @@ class $$BackupsTableAnnotationComposer
 
   GeneratedColumn<String> get json =>
       $composableBuilder(column: $table.json, builder: (column) => column);
+
+  GeneratedColumn<String> get owner =>
+      $composableBuilder(column: $table.owner, builder: (column) => column);
 }
 
 class $$BackupsTableTableManager
@@ -522,12 +589,14 @@ class $$BackupsTableTableManager
                 Value<String> reason = const Value.absent(),
                 Value<int> appSchemaVersion = const Value.absent(),
                 Value<String> json = const Value.absent(),
+                Value<String?> owner = const Value.absent(),
               }) => BackupsCompanion(
                 id: id,
                 createdAt: createdAt,
                 reason: reason,
                 appSchemaVersion: appSchemaVersion,
                 json: json,
+                owner: owner,
               ),
           createCompanionCallback:
               ({
@@ -536,12 +605,14 @@ class $$BackupsTableTableManager
                 required String reason,
                 required int appSchemaVersion,
                 required String json,
+                Value<String?> owner = const Value.absent(),
               }) => BackupsCompanion.insert(
                 id: id,
                 createdAt: createdAt,
                 reason: reason,
                 appSchemaVersion: appSchemaVersion,
                 json: json,
+                owner: owner,
               ),
           withReferenceMapper: (p0) => p0
               .map(

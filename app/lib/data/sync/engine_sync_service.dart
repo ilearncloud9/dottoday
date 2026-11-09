@@ -22,7 +22,9 @@ abstract interface class ConflictStore {
 }
 
 /// [SyncService] over the [SyncEngine] (docs/04 §4, docs/09 M6.2/M6.3):
-/// nothing while signed out; once signed in it adopts the account, then
+/// nothing while signed out; once signed in it makes the account the
+/// active owner (`signInOwner`, CR-160; retried with every run until it
+/// succeeds, never syncing before), then
 /// syncs on events only: sign-in, shortly after local writes, when the
 /// server nudges (Realtime: a change, or the live feed (re)connecting),
 /// on resume and on "Sync now". Nothing runs on a clock (docs/04 §4 "Triggers").
@@ -34,7 +36,7 @@ final class EngineSyncService implements SyncService {
   EngineSyncService({
     required SyncEngine engine,
     required Stream<String?> accounts,
-    required Future<void> Function(String accountId) adopt,
+    required Future<bool> Function(String accountId) adopt,
     required ConflictStore conflicts,
     required Stream<void> remoteChanges,
     required Clock clock,
@@ -55,7 +57,10 @@ final class EngineSyncService implements SyncService {
   }
 
   final SyncEngine _engine;
-  final Future<void> Function(String) _adopt;
+
+  /// The sign-in step; false while it waits for the person (the guest's
+  /// tasks, CR-160): nothing syncs until a later run finds it done.
+  final Future<bool> Function(String) _adopt;
   final ConflictStore _conflicts;
   final Stream<void> _remote;
   final Clock _clock;
@@ -80,6 +85,9 @@ final class EngineSyncService implements SyncService {
   Timer? _retry;
   var _failures = 0;
   String? _account;
+
+  /// Whether [_account] is the active owner yet (its sign-in step ran).
+  var _owned = false;
   var _status = SyncStatus.localOnly;
   var _running = false;
   var _again = false;
@@ -132,19 +140,14 @@ final class EngineSyncService implements SyncService {
     if (id == _account) return;
     await _stop();
     _account = id;
+    _owned = false;
     if (id == null) {
       _emit(SyncStatus.localOnly);
       return;
     }
-    try {
-      await _adopt(id);
-    } on Object catch (e, s) {
-      _logger.error('sync.adopt_failed', error: e, stackTrace: s);
-      _emit(const SyncStatus(state: SyncState.error));
-      return;
-    }
+    if (!await _own(id)) return;
     _remoteSub = _remote.listen((_) => _later());
-    _outboxSub = _engine.outbox.watchCount().listen((n) {
+    _outboxSub = _engine.outbox.watchCount(id).listen((n) {
       _status = SyncStatus(
         state: _status.state,
         lastSyncedUtc: _status.lastSyncedUtc,
@@ -159,6 +162,21 @@ final class EngineSyncService implements SyncService {
         .watch(id)
         .listen((open) => _emit(_with(conflicts: open)));
     await _run();
+  }
+
+  /// Runs the sign-in step for [id]; on failure shows the error and
+  /// retries like a failed run (criterion 9: "Try again" is "Sync now").
+  Future<bool> _own(String id) async {
+    try {
+      if (!await _adopt(id)) return false;
+    } on Object catch (e, s) {
+      _logger.error('sync.adopt_failed', error: e, stackTrace: s);
+      if (_account == id) _failed(SyncState.error);
+      return false;
+    }
+    if (_account != id) return false;
+    _owned = true;
+    return true;
   }
 
   Future<void> _stop() async {
@@ -182,6 +200,11 @@ final class EngineSyncService implements SyncService {
   Future<void> _run() async {
     final account = _account;
     if (account == null) return;
+    // Never a round for an account that isn't the active owner yet.
+    if (!_owned) {
+      if (!_running) await _signedInAgain(account);
+      return;
+    }
     if (_running) {
       _again = true;
       return;
@@ -215,6 +238,13 @@ final class EngineSyncService implements SyncService {
         unawaited(_run());
       }
     }
+  }
+
+  /// The sign-in step failed before: try it again, then carry on as a
+  /// fresh sign-in.
+  Future<void> _signedInAgain(String account) async {
+    _account = null;
+    await _signedIn(account);
   }
 
   /// Shows [state] and retries after a wait that doubles per failure:

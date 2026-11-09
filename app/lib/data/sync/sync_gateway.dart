@@ -1,19 +1,24 @@
 /// One entity version going up: every field the device changed under one
-/// HLC (docs/04 §4). Values are already in the server's form.
+/// HLC (docs/04 §4). Values are already in the server's form. [owner] is
+/// the local owner the change belongs to; `sync_push` refuses it unless
+/// it is the signed-in account (CR-160 criterion 12).
 final class PushChange {
   const PushChange({
+    required this.owner,
     required this.entity,
     required this.id,
     required this.hlc,
     required this.fields,
   });
 
+  final String owner;
   final String entity;
   final String id;
   final String hlc;
   final Map<String, Object?> fields;
 
   Map<String, Object?> toJson() => {
+    'owner': owner,
     'entity': entity,
     'id': id,
     'hlc': hlc,

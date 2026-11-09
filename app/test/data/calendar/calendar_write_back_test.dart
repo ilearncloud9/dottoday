@@ -5,6 +5,7 @@ import 'package:dottoday/data/calendar/device_calendar_writer.dart';
 import 'package:dottoday/data/calendar/drift_calendar_source_repository.dart';
 import 'package:dottoday/data/calendar/write_back_providers.dart';
 import 'package:dottoday/data/mappers/entity_mappers.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/calendar/calendar_import_rules.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
@@ -283,6 +284,22 @@ void main() {
       await pumpEventQueue();
       expect(state().failed, 0);
       expect(os.updates, hasLength(2));
+    });
+
+    test('a change of owner empties the banner; following goes on', () async {
+      os.writeResult = EventWriteResult.failed;
+      await edit((await occurrence('Standup')).copyWith(startUtc: ten));
+      await pumpEventQueue();
+      await controller().flush();
+      expect(state().failed, 1);
+      // CR-160: the previous owner's failures are not the next one's.
+      container.read(ownerEpochProvider.notifier).next();
+      expect(state().failed, 0);
+      await pumpEventQueue();
+      os.writeResult = EventWriteResult.written;
+      await controller().flush();
+      expect(os.updates, hasLength(2), reason: 'still following the owner');
+      expect(state().failed, 0);
     });
 
     test("a clash waits for Keep mine or Use calendar's", () async {

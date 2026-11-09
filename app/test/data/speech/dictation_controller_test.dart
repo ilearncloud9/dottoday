@@ -1,5 +1,6 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/speech/dictation_controller.dart';
 import 'package:dottoday/data/speech/speech_providers.dart';
 import 'package:dottoday/domain/speech/dictation_text.dart';
@@ -81,5 +82,20 @@ void main() {
     );
     expect(st().phase, DictationPhase.idle);
     expect(st().failure, isA<PermissionFailure>());
+  });
+
+  test('a change of owner ends the dictation and drops its text', () async {
+    await start('notes', text: 'A private');
+    fake.say('words');
+    await pumpEventQueue();
+    expect(st().dictation, isNotNull);
+    final stopsBefore = fake.stops;
+    c.read(ownerEpochProvider.notifier).next();
+    expect(st().phase, DictationPhase.idle);
+    expect((st().owner, st().dictation), (null, null));
+    expect(fake.stops, greaterThan(stopsBefore), reason: 'recognizer stopped');
+    fake.say('late');
+    await pumpEventQueue();
+    expect(st().dictation, isNull, reason: 'a late event lands nowhere');
   });
 }

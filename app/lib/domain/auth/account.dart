@@ -44,8 +44,9 @@ abstract interface class AccountService {
   /// on every other device (docs/06 §2 "Sign out everywhere").
   Future<Result<void, AppFailure>> signOut({bool everywhere = false});
 
-  /// Deletes the account and its synced data (docs/06 §6); the device keeps
-  /// its local copy.
+  /// Deletes the account and its synced data (docs/06 §6); its copy on this
+  /// device is then removed (CR-160 policy §4: export first is the only
+  /// recovery).
   Future<Result<void, AppFailure>> deleteAccount();
 }
 

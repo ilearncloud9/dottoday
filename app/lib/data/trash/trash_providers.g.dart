@@ -9,16 +9,22 @@ part of 'trash_providers.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// App-wide so a token from one screen can be redeemed by the snackbar.
+/// A new, empty one at every change of owner (CR-160 I5); the old one
+/// forgets its rows, so a stale holder of it can't undo either.
 
 @ProviderFor(undoService)
 final undoServiceProvider = UndoServiceProvider._();
 
 /// App-wide so a token from one screen can be redeemed by the snackbar.
+/// A new, empty one at every change of owner (CR-160 I5); the old one
+/// forgets its rows, so a stale holder of it can't undo either.
 
 final class UndoServiceProvider
     extends $FunctionalProvider<UndoService, UndoService, UndoService>
     with $Provider<UndoService> {
   /// App-wide so a token from one screen can be redeemed by the snackbar.
+  /// A new, empty one at every change of owner (CR-160 I5); the old one
+  /// forgets its rows, so a stale holder of it can't undo either.
   UndoServiceProvider._()
     : super(
         from: null,
@@ -52,7 +58,7 @@ final class UndoServiceProvider
   }
 }
 
-String _$undoServiceHash() => r'6d1603fe43d2127508fd58eddafbdec1d8cc7bea';
+String _$undoServiceHash() => r'b1e0a8828e827fa60e73485bb4c49ae6401353ea';
 
 @ProviderFor(trashService)
 final trashServiceProvider = TrashServiceProvider._();

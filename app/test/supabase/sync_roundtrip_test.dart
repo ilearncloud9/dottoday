@@ -4,7 +4,7 @@ library;
 import 'package:dottoday/core/router/auth_callback.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_routine_repository.dart';
-import 'package:dottoday/data/sync/account_adoption.dart';
+import 'package:dottoday/data/sync/account_owners.dart';
 import 'package:dottoday/data/sync/background_sync.dart';
 import 'package:dottoday/data/sync/supabase_sync_gateway.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
@@ -47,7 +47,12 @@ final class _Device {
         ),
       ),
     );
-    await adoptAccount(h.db, account, h.hlc);
+    await signInOwner(
+      h.db,
+      account,
+      h.hlc,
+      freshProfile: (id) => profileFixture().copyWith(id: id),
+    );
   }
 }
 
@@ -141,7 +146,12 @@ void main() {
 
     final up = await a.engine.run(a.account);
     expect(up.pushed, greaterThan(1));
-    expect(await a.h.db.select(a.h.db.changeLog).get(), isEmpty);
+    final left = await a.h.db.select(a.h.db.changeLog).get();
+    expect(
+      left.where((c) => c.ownerId == a.account),
+      isEmpty,
+      reason: "the account's outbox is empty; the guest's stays its own",
+    );
 
     final progress = <(int, int)>[];
     final down = await b.engine.run(
@@ -184,7 +194,9 @@ void main() {
         .map((r) => r.id)
         .toSet();
     expect(got.map((r) => r.id).toSet(), aIds);
-    final profile = (await b.h.db.select(b.h.db.profiles).get()).single;
+    final profile = await (b.h.db.select(
+      b.h.db.profiles,
+    )..where((p) => p.id.equals(b.account))).getSingle();
     expect(profile.tzId, 'Europe/Berlin');
 
     // An edit on b reaches a.

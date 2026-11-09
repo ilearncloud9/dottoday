@@ -93,7 +93,7 @@ hash>` (12-hex SHA-256 prefixes, never the text): a re-import changes only what 
 calendar since, so a local move or rename stays until the calendar changes that same field, and
 notes edited in Dottoday are never replaced. `last_synced_utc` = when calendar changes were last
 applied. Imported occurrences (`source = 'calendar'`) and their subtasks are **device-only**: the
-write path upserts them without `change_log` rows and `requeueAll` skips them (each device imports
+write path upserts them without `change_log` rows and `requeueOwner` skips them (each device imports
 its own calendars, so a synced copy would show twice elsewhere). Google/Microsoft imports (M7.4) are
 device-only too: every signed-in device imports the connected account itself, so all show the same
 events, and subtasks and notes stay where they were made (ADR-0011). Their links key each instance
@@ -139,9 +139,11 @@ for sync, like the imports it shapes; no server table.
 mine jsonb, theirs jsonb, created_at, resolved_at?`
 
 ### `change_log` (local only) and `sync_cursors` (local only)
-See architecture §4. `change_log (seq autoincrement, entity, entity_id, field, value json, hlc)` is
-the push outbox (rows deleted on ack; its `entity` CHECK names the five synced tables — schema 6
-rebuilt it to add `routines`, keeping pending rows); `sync_cursors (entity pk, since_utc, since_at, since_id)` holds the last row pulled per table as a
+See architecture §4. `change_log (seq autoincrement, owner_id → profiles, entity, entity_id, field,
+value json, hlc)` is the push outbox (rows deleted on ack; its `entity` CHECK names the five synced tables — schema 6
+rebuilt it to add `routines`, keeping pending rows; schema 18 added `owner_id`, CR-160: the guest or
+account the change belongs to, `ON UPDATE CASCADE`, no delete action); `sync_cursors (owner_id,
+entity pk, since_utc, since_at, since_id)` holds the last row pulled per account and table as a
 keyset: its server `updated_at` text (microseconds kept) and id. A pull resumes *after* it in
 (`updated_at`, `id`) order, because one `sync_push` stamps all its rows with one `now()` and a
 timestamp alone can't page past 500 of them (schema 17; a cursor from before resumes from `since_utc`).

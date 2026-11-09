@@ -146,4 +146,38 @@ void main() {
     await mirror().schedule(n(9, actions: false));
     expect(pushed(9)['actions'], isEmpty);
   });
+
+  group('a change of owner (CR-160 I3)', () {
+    test("clears the tab and this browser's server copies", () async {
+      final m = mirror();
+      await m.schedule(n(1));
+      await m.schedule(n(2));
+      inner.deliver(1);
+      await m.clearAll();
+      expect(inner.pendingById, isEmpty);
+      expect(inner.delivered, isEmpty);
+      expect(store.rows, isEmpty);
+      expect(store.cleared, 1);
+    });
+
+    test('a server error is logged by event only and never thrown', () async {
+      final m = mirror();
+      await m.schedule(n(1));
+      store.fail = true;
+      await m.clearAll();
+      expect(inner.pendingById, isEmpty);
+      final record = logs.records.single;
+      expect(record.event, 'push.clear_failed');
+      expect(record.errorType, isNull);
+    });
+
+    test('signed out already: only the tab is cleared', () async {
+      final m = mirror();
+      await m.schedule(n(1));
+      target = null;
+      await m.clearAll();
+      expect(inner.pendingById, isEmpty);
+      expect(store.cleared, 0);
+    });
+  });
 }

@@ -62,6 +62,10 @@ final class LiveActivitySink implements DaySnapshotSink {
     final now = _clock.nowUtc();
     final plan = liveDotPlan(snapshot, now);
     final profile = await _profile();
+    // A newer snapshot came while the profile was read (a change of owner
+    // writes an empty day, then the new owner's, CR-160 I8): its own sync
+    // speaks for it; this one must not post the older day after it.
+    if (!identical(snapshot, _last)) return;
     final content = plan == null
         ? null
         : liveActivityContent(
@@ -81,6 +85,7 @@ final class LiveActivitySink implements DaySnapshotSink {
       // notification times out by itself; the next app start syncs it.
       return;
     }
+    if (!identical(snapshot, _last)) return;
     _pending?.cancel();
     final next = nextPlanChange(snapshot, now);
     if (next != null) {

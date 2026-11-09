@@ -145,3 +145,11 @@ Derived (no render; build from the spec and components): Smallest step reminder/
 | `C-ios-onboarding-mode.png` | Onboarding step 0: the day dot, the question, two radio cards with thread sketches, Continue and the step dots (owner, 2026-10-31) | `minimal_onboarding_layout_*` |
 
 `C-ios-today-minimal.png`, `C-ios-add-minimal.png` and `C-ios-settings-minimal.png` are not drawn yet; those screens are derived (above).
+
+### CR-160 account screens (derived, owner-approved board E-CR160, 2026-11-09)
+
+Sign-out (A1, A2 iPhone/Android/Mac-web), signed out (A3), settings choice (B1), guest tasks at sign-in
+(G1, G1b), delete account (interim, phone page and wide dialog) and the web "Removal from this browser
+didn't finish" gate. Board: https://claude.ai/artifact/MaCdg3soqyxnFcxN5G9vja (frames marked NOT FOR
+BUILD are excluded). Built with DotTheme tokens (Inter, the app accent), not the board's Concept E
+Manrope/teal. Goldens: `account_*` in `test/features/auth/goldens/` and `test/features/settings/goldens/`.
