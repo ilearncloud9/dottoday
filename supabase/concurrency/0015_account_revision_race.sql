@@ -58,7 +58,15 @@ create function pg_temp.rev(o uuid) returns bigint language sql as $$
   select revision from public.account_revisions where user_id = o;
 $$;
 create function pg_temp.frozen(o uuid) returns boolean language sql as $$
-  select coalesce(deleting_until > clock_timestamp(), false) from public.account_revisions where user_id = o;
+  select deletion_attempt is not null from public.account_revisions where user_id = o;
+$$;
+create function pg_temp.attempt(o uuid) returns uuid language sql as $$
+  select deletion_attempt from public.account_revisions where user_id = o;
+$$;
+-- Ends the live freeze of [o] through its own attempt (these tests make no
+-- Auth Admin calls, so none is unresolved).
+create function pg_temp.unfreeze(o uuid) returns text language sql as $$
+  select public.release_account_deletion(o, pg_temp.attempt(o));
 $$;
 
 -- Leftovers of an interrupted run first.
@@ -90,7 +98,7 @@ begin
   dpid := pg_temp.open('d', 'service_role', null);
   perform dblink_exec('w', 'begin');
   perform dblink_exec('w', format('update public.occurrences set title = %L where id = %L', 'w1', current_setting('race.ta')));
-  perform dblink_send_query('d', format('select public.begin_account_deletion(%L, %s)', a, r0));
+  perform dblink_send_query('d', format('select outcome from public.begin_account_deletion(%L, %s)', a, r0));
   perform pg_temp.check(pg_temp.waiting(dpid), '1: the freeze waits for an open client write');
   perform dblink_exec('w', 'commit');
   v := pg_temp.result('d');
@@ -107,7 +115,7 @@ begin
   wpid := pg_temp.open('w', 'authenticated', a);
   dpid := pg_temp.open('d', 'service_role', null);
   perform dblink_exec('d', 'begin');
-  select r into v from dblink('d', format('select public.begin_account_deletion(%L, %s)', a, r0)) as t(r text);
+  select r into v from dblink('d', format('select outcome from public.begin_account_deletion(%L, %s)', a, r0)) as t(r text);
   perform pg_temp.check(v = 'frozen', '2: the freeze is taken (not yet committed)');
   perform dblink_send_query('w', format('update public.occurrences set title = %L where id = %L returning 1::text', 'late', current_setting('race.ta')));
   perform pg_temp.check(pg_temp.waiting(wpid), '2: a client write waits for the freeze');
@@ -124,7 +132,7 @@ end $$;
 -- Still frozen from 2: end it so this one starts clean. Its own statement:
 -- inside the block below it would hold A's revision row until the block
 -- ended, and the freeze under test would wait for this session.
-select public.abort_account_deletion(current_setting('race.a')::uuid);
+select pg_temp.unfreeze(current_setting('race.a')::uuid);
 do $$
 declare
   a uuid := current_setting('race.a'); r0 bigint := pg_temp.rev(a); wpid int; dpid int; v text;
@@ -132,7 +140,7 @@ begin
   wpid := pg_temp.open('w', 'service_role', null);
   dpid := pg_temp.open('d', 'service_role', null);
   perform dblink_exec('d', 'begin');
-  perform * from dblink('d', format('select public.begin_account_deletion(%L, %s)', a, r0)) as t(r text);
+  perform * from dblink('d', format('select outcome from public.begin_account_deletion(%L, %s)', a, r0)) as t(r text);
   perform dblink_send_query('w', format(
     'update public.occurrences set title = title || %L where id in (%L, %L) returning 1::text',
     '!', current_setting('race.ta'), current_setting('race.tb')));
@@ -142,7 +150,7 @@ begin
   perform pg_temp.check(v like 'ERROR:%being deleted%', '3: and is refused as a whole (' || v || ')');
   perform pg_temp.check((select title from public.occurrences where id = current_setting('race.tb')::uuid) = 'B task',
     '3: B''s row in that statement was not changed either');
-  perform public.abort_account_deletion(a);
+  perform pg_temp.unfreeze(a);
   perform dblink_disconnect('w'); perform dblink_disconnect('d');
 end $$;
 
@@ -155,7 +163,7 @@ begin
   dpid := pg_temp.open('d', 'service_role', null);
   perform dblink_exec('w', 'begin');
   perform dblink_exec('w', format('delete from public.occurrences where id = %L', current_setting('race.ta')));
-  perform dblink_send_query('d', format('select public.begin_account_deletion(%L, %s)', a, r0));
+  perform dblink_send_query('d', format('select outcome from public.begin_account_deletion(%L, %s)', a, r0));
   perform pg_temp.check(pg_temp.waiting(dpid), '4: the freeze waits for an open hard delete (with its cascade)');
   perform dblink_exec('w', 'rollback');
   v := pg_temp.result('d');
@@ -163,7 +171,7 @@ begin
   perform pg_temp.check(pg_temp.rev(a) = r0, '4: the rollback did not move the revision');
   perform pg_temp.check(exists (select 1 from public.subtasks where occurrence_id = current_setting('race.ta')::uuid),
     '4: the task and its step are still there');
-  perform public.abort_account_deletion(a);
+  perform pg_temp.unfreeze(a);
   perform dblink_disconnect('w'); perform dblink_disconnect('d');
 end $$;
 
@@ -176,7 +184,7 @@ begin
   dpid := pg_temp.open('d', 'service_role', null);
   perform dblink_exec('w', 'begin');
   perform dblink_exec('w', format('insert into public.routines (id, user_id, title) values (gen_random_uuid(), %L, %L)', a, 'Evening'));
-  perform dblink_send_query('d', format('select public.begin_account_deletion(%L, %s)', a, r0));
+  perform dblink_send_query('d', format('select outcome from public.begin_account_deletion(%L, %s)', a, r0));
   perform pg_temp.check(pg_temp.waiting(dpid), '5: the freeze waits after the first statement');
   perform dblink_exec('w', format('update public.occurrences set deleted_at = now() where id = %L', current_setting('race.ta2')));
   perform dblink_exec('w', 'commit');
@@ -212,7 +220,7 @@ begin
   perform dblink_exec('w', 'begin');
   perform dblink_exec('w', format('update public.occurrences set title = %L where id = %L', 'slow', current_setting('race.ta')));
   t0 := clock_timestamp();
-  perform dblink_send_query('d', format('select public.begin_account_deletion(%L, %s)', a, r0));
+  perform dblink_send_query('d', format('select outcome from public.begin_account_deletion(%L, %s)', a, r0));
   v := pg_temp.result('d');
   perform pg_temp.check(v like 'ERROR:%lock timeout%', '7: the freeze stops after its lock timeout (' || v || ')');
   perform pg_temp.check(clock_timestamp() - t0 between interval '4 seconds' and interval '8 seconds',
@@ -267,7 +275,92 @@ begin
   perform dblink_disconnect('w'); perform dblink_disconnect('w2');
 end $$;
 
+
+-- ---------- 10. two freezes at once, same revision: one attempt, joined ----------
+do $$
+declare
+  a uuid := current_setting('race.a'); r0 bigint := pg_temp.rev(a); p1 int; p2 int; v1 text; v2 text; att uuid;
+begin
+  p1 := pg_temp.open('d', 'service_role', null);
+  p2 := pg_temp.open('d2', 'service_role', null);
+  perform dblink_exec('d', 'begin');
+  select r into v1 from dblink('d', format('select attempt::text from public.begin_account_deletion(%L, %s)', a, r0)) as t(r text);
+  perform dblink_send_query('d2', format('select attempt::text from public.begin_account_deletion(%L, %s)', a, r0));
+  perform pg_temp.check(pg_temp.waiting(p2), '10: a second freeze at the same revision waits for the first');
+  perform dblink_exec('d', 'commit');
+  v2 := pg_temp.result('d2');
+  perform pg_temp.check(v1 is not null and v1 = v2, '10: and joins the same attempt, nothing overwritten');
+  perform pg_temp.check(pg_temp.attempt(a)::text = v1, '10: one freeze, the first attempt');
+  perform dblink_disconnect('d'); perform dblink_disconnect('d2');
+end $$;
+
+-- ---------- 11. a freeze at another revision while one is unresolved ----------
+do $$
+declare
+  a uuid := current_setting('race.a'); att uuid := pg_temp.attempt(a); v text; pid int;
+begin
+  pid := pg_temp.open('d', 'service_role', null);
+  select r into v from dblink('d', format('select outcome from public.begin_account_deletion(%L, %s)', a, pg_temp.rev(a) + 1)) as t(r text);
+  perform pg_temp.check(v = 'pending', '11: another revision is told an unresolved deletion exists (' || v || ')');
+  perform pg_temp.check(pg_temp.attempt(a) = att, '11: and can''t take it over');
+  perform dblink_disconnect('d');
+end $$;
+
+-- ---------- 12. a release racing an Auth Admin call being recorded ----------
+do $$
+declare
+  a uuid := current_setting('race.a'); att uuid := pg_temp.attempt(a); p1 int; p2 int; v text;
+begin
+  p1 := pg_temp.open('e', 'service_role', null);
+  p2 := pg_temp.open('r', 'service_role', null);
+  perform dblink_exec('e', 'begin');
+  perform * from dblink('e', format('select public.note_account_deletion_call(%L, %L)::text', a, att)) as t(r text);
+  perform dblink_send_query('r', format('select public.release_account_deletion(%L, %L)', a, att));
+  perform pg_temp.check(pg_temp.waiting(p2), '12: the release waits while a call is being recorded');
+  perform dblink_exec('e', 'commit');
+  v := pg_temp.result('r');
+  perform pg_temp.check(v = 'unresolved', '12: and then refuses: that call''s outcome is unknown (' || v || ')');
+  perform pg_temp.check(pg_temp.frozen(a), '12: still frozen');
+  -- That call was (say) refused for certain: now the attempt may end it.
+  perform * from dblink('e', format('select public.note_account_deletion_refused(%L, %L)::text', a, att)) as t(r text);
+  perform dblink_disconnect('e'); perform dblink_disconnect('r');
+end $$;
+select pg_temp.check(pg_temp.unfreeze(current_setting('race.a')::uuid) = 'released',
+  '12: once the call is known refused, the same attempt ends the freeze');
+
+-- ---------- 13. lost connections ----------
+do $$
+declare
+  a uuid := current_setting('race.a'); r0 bigint := pg_temp.rev(a); pid int;
+begin
+  pid := pg_temp.open('d', 'service_role', null);
+  perform dblink_exec('d', 'begin');
+  perform * from dblink('d', format('select outcome from public.begin_account_deletion(%L, %s)', a, r0)) as t(r text);
+  perform pg_terminate_backend(pid);
+  perform pg_sleep(0.3);
+  perform pg_temp.check(not pg_temp.frozen(a), '13: a freeze whose connection drops before commit never happened');
+  begin perform dblink_disconnect('d'); exception when others then null; end;
+  pid := pg_temp.open('d', 'service_role', null);
+  perform * from dblink('d', format('select outcome from public.begin_account_deletion(%L, %s)', a, r0)) as t(r text);
+  perform pg_terminate_backend(pid);
+  perform pg_sleep(0.3);
+  perform pg_temp.check(pg_temp.frozen(a), '13: a committed freeze survives its connection dropping');
+  begin perform dblink_disconnect('d'); exception when others then null; end;
+end $$;
+do $$
+declare
+  a uuid := current_setting('race.a'); pid int; v text;
+begin
+  pid := pg_temp.open('w', 'authenticated', a);
+  select r into v from dblink('w', format('select count(*)::text from public.occurrences where id = %L', current_setting('race.ta'))) as t(r text);
+  perform dblink_send_query('w', format('update public.occurrences set title = %L where id = %L returning 1::text', 'after drop', current_setting('race.ta')));
+  v := pg_temp.result('w');
+  perform pg_temp.check(v like 'ERROR:%being deleted%', '13: and still refuses writes from a new connection');
+  perform dblink_disconnect('w');
+end $$;
+
 -- ---------- clean up and summarise ----------
+-- A is still frozen (13): removing its auth user is the deletion path, allowed.
 delete from auth.users where id in ((select a from ids), (select b from ids));
 select count(*) filter (where ok) as passed, count(*) filter (where not ok) as failed from results;
 do $$ begin

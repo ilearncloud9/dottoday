@@ -18,7 +18,10 @@ check() { # check <name> <condition...>
   local name="$1"; shift
   if "$@"; then pass=$((pass + 1)); echo "ok - $name"; else fail=$((fail + 1)); echo "NOT OK - $name"; fi
 }
-eq() { [ "$1" = "$2" ] || { echo "  got: [$1] want: [$2]"; return 1; }; }
+eq() { # exactly two values, equal (a stray word-split fails, never passes)
+  [ $# -eq 2 ] || { echo "  eq: expected 2 values, got $#"; return 1; }
+  [ "$1" = "$2" ] || { echo "  got: [$1] want: [$2]"; return 1; }
+}
 sql() { psql "$DB_URL" -X -At -c "$1"; }
 
 admin() { # admin <method> <path> [json]
@@ -69,10 +72,32 @@ revision() { # the session's revision; fails the run if it isn't a number
   [[ "$v" =~ ^[0-9]+$ ]] || { echo "revision read failed: $v" >&2; exit 3; }
   echo "$v"
 }
-freeze() { # freeze <id> <expected> → begin_account_deletion's answer, as the service role
-  curl -s -X POST "$API_URL/rest/v1/rpc/begin_account_deletion" -H "apikey: $SERVICE_ROLE_KEY" \
-    -H "Authorization: Bearer $SERVICE_ROLE_KEY" -H 'Content-Type: application/json' \
-    -d "{\"p_user\":\"$1\",\"p_expected\":$2}" | jq -r .
+svc() { # svc <rpc> <json> → the RPC's JSON answer, as the service role
+  curl -s -X POST "$API_URL/rest/v1/rpc/$1" -H "apikey: $SERVICE_ROLE_KEY" \
+    -H "Authorization: Bearer $SERVICE_ROLE_KEY" -H 'Content-Type: application/json' -d "$2"
+}
+freeze() { # freeze <id> <expected> → begin_account_deletion's outcome
+  local body="{\"p_user\":\"$1\",\"p_expected\":$2}"
+  svc begin_account_deletion "$body" | jq -r '.[0].outcome'
+}
+attempt_of() { # the live attempt id of <id>, from the database
+  sql "select coalesce(deletion_attempt::text, '') from public.account_revisions where user_id = '$1'"
+}
+release() { # release <id> <attempt> → release_account_deletion's answer
+  local body="{\"p_user\":\"$1\",\"p_attempt\":\"$2\"}"
+  svc release_account_deletion "$body" | jq -r .
+}
+note_call() { # note_call <id> <attempt> → true/false
+  local body="{\"p_user\":\"$1\",\"p_attempt\":\"$2\"}"
+  svc note_account_deletion_call "$body" | jq -r .
+}
+note_refused() { # note_refused <id> <attempt> → true/false
+  local body="{\"p_user\":\"$1\",\"p_attempt\":\"$2\"}"
+  svc note_account_deletion_refused "$body" | jq -r .
+}
+attempt_from_retry() { # attempt_from_retry <id> <expected> → the attempt begin returns
+  local body="{\"p_user\":\"$1\",\"p_expected\":$2}"
+  svc begin_account_deletion "$body" | jq -r '.[0].attempt'
 }
 
 sql "delete from auth.users where email like '%@admin-delete.test'" >/dev/null
@@ -116,28 +141,39 @@ check "C is untouched" eq "$(rows_of "$C")" "9"
 r=$(rest "$TB" POST occurrences "{\"id\":\"$(uuidgen | tr A-Z a-z)\",\"user_id\":\"$B\",\"title\":\"ghost\",\"tz_id\":\"UTC\",\"duration_min\":5}")
 check "the deleted user's leftover token writes nothing back ($(status_of "$r"))" eq "$(rows_of "$B")" "0"
 
-# --- 4. Admin failure: abort ends the freeze and voids the old revision ---
+# --- 4. recovery: only a fully resolved attempt ends a freeze ---
 rc=$(revision "$TC")
 check "C freezes" eq "$(freeze "$C" "$rc")" "frozen"
-ab=$(curl -s -X POST "$API_URL/rest/v1/rpc/abort_account_deletion" -H "apikey: $SERVICE_ROLE_KEY" \
-  -H "Authorization: Bearer $SERVICE_ROLE_KEY" -H 'Content-Type: application/json' -d "{\"p_user\":\"$C\"}")
-check "abort ends it" eq "$ab" "true"
+ac=$(attempt_of "$C")
+check "a freeze at another revision can't take over (pending)" eq "$(freeze "$C" $((rc + 1)))" "pending"
+check "an Auth Admin call is recorded before it is made" eq "$(note_call "$C" "$ac")" "true"
+check "C has an attempt id" eq "$([ -n "$ac" ] && echo yes)" "yes"
+check "with that call's outcome unknown, the freeze can't be released" eq "$(release "$C" "$ac")" "unresolved"
+check "nor by another attempt id" eq "$(release "$C" "$(uuidgen | tr A-Z a-z)")" "other_attempt"
+r=$(rest "$TC" PATCH "occurrences?user_id=eq.$C&title=eq.Read" '{"title":"Read more"}')
+check "C stays read-only meanwhile" eq "$(body_of "$r" | jq -r .code)" "DT409"
+# Suppose that call was definitely refused (the Edge Function's job to prove).
+check "a definite refusal resolves it" eq "$(note_refused "$C" "$ac")" "true"
+check "then the same attempt releases the freeze" eq "$(release "$C" "$ac")" "released"
 r=$(rest "$TC" PATCH "occurrences?user_id=eq.$C&title=eq.Read" '{"title":"Read more"}')
 check "C writes again ($(status_of "$r"))" eq "$(status_of "$r")" "204"
-check "the revision from before the abort no longer freezes" eq "$(freeze "$C" "$rc")" "changed"
+check "the revision from before the release no longer freezes" eq "$(freeze "$C" "$rc")" "changed"
 
-# --- 5. unknown outcome: the lease runs out before the Admin deletion ---
+# --- 5. unknown outcome: time passes, the freeze holds, the deletion still completes ---
 rd=$(revision "$TD")
 check "D freezes" eq "$(freeze "$D" "$rd")" "frozen"
-sql "update public.account_revisions set deleting_until = clock_timestamp() - interval '1 second' where user_id = '$D'" >/dev/null
-r=$(rest "$TD" PATCH "occurrences?user_id=eq.$D&title=eq.Read" '{"title":"written after the lease"}')
-check "after the lease a write goes through ($(status_of "$r"))" eq "$(status_of "$r")" "204"
-check "and moves the revision" eq "$(( $(revision "$TD") > rd ))" "1"
+ad=$(attempt_of "$D")
+check "D has an attempt id" eq "$([ -n "$ad" ] && echo yes)" "yes"
+check "D records an Auth Admin call (its outcome then unknown)" eq "$(note_call "$D" "$ad")" "true"
+sql "update public.account_revisions set deletion_started_at = clock_timestamp() - interval '30 days' where user_id = '$D'" >/dev/null
+r=$(rest "$TD" PATCH "occurrences?user_id=eq.$D&title=eq.Read" '{"title":"written a month later"}')
+check "a month later a write is still refused" eq "$(body_of "$r" | jq -r .code)" "DT409"
+check "and the revision hasn't moved" eq "$(revision "$TD")" "$rd"
+check "a retry at the same revision joins the same attempt" eq "$(attempt_from_retry "$D" "$rd")" "$ad"
 r=$(admin DELETE "users/$D")
-# The Admin API checks nothing: this is the documented W2 limit. The Edge
-# Function must not start the Admin call without lease left.
-check "the Admin API still deletes after the lease (no database check: the W2 limit) ($(status_of "$r"))" eq "$(status_of "$r")" "200"
-check "taking the late write with it" eq "$(rows_of "$D")" "0"
+check "the retried Admin deletion succeeds against the frozen account ($(status_of "$r"))" eq "$(status_of "$r")" "200"
+check "removing exactly the frozen state: rows and revision row gone" eq "$(rows_of "$D")" "0"
+check "C is untouched" eq "$(rows_of "$C")" "9"
 
 admin DELETE "users/$C" >/dev/null
 echo "passed $pass, failed $fail"

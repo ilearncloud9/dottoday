@@ -3,7 +3,7 @@
 -- what. The races between sessions are in supabase/concurrency/.
 -- Run with: supabase test db
 begin;
-select plan(90);
+select plan(104);
 
 insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-0000000015a0', 'a15@example.com'),
@@ -24,6 +24,9 @@ $$;
 create function pg_temp.same(o uuid) returns boolean language sql security definer as $$
   select pg_temp.rev(o) = (select rev from pg_temp.marks where owner = o);
 $$;
+create function pg_temp.attempt(o uuid) returns uuid language sql security definer as $$
+  select deletion_attempt from public.account_revisions where user_id = o;
+$$;
 create function pg_temp.hlc(offset_ms bigint) returns text language sql as $$
   select lpad(((extract(epoch from now()) * 1000)::bigint + offset_ms)::text, 13, '0')
          || '-0001-00000000000015a0';
@@ -37,15 +40,20 @@ select is((select relrowsecurity from pg_class where oid = 'public.account_revis
   true, 'account_revisions has RLS');
 select is((select count(*) from pg_proc
             where proname in ('account_revision_bump','account_revision_row','account_revision_statement',
-                              'begin_account_deletion','abort_account_deletion')
+                              'begin_account_deletion','note_account_deletion_call',
+                              'note_account_deletion_refused','release_account_deletion')
               and prosecdef and proconfig @> array['search_path=""']),
-  5::bigint, 'every definer function runs with an empty search_path');
+  7::bigint, 'every definer function runs with an empty search_path');
 select is((select prosecdef from pg_proc where oid = 'public.account_revision()'::regprocedure),
   false, 'account_revision() runs as the caller (RLS applies)');
 select ok(not has_function_privilege('authenticated', 'public.begin_account_deletion(uuid,bigint)', 'EXECUTE'),
   'a signed-in user can''t freeze any account');
-select ok(not has_function_privilege('authenticated', 'public.abort_account_deletion(uuid)', 'EXECUTE'),
-  'a signed-in user can''t end a freeze');
+select ok(not has_function_privilege('authenticated', 'public.release_account_deletion(uuid,uuid)', 'EXECUTE')
+          and not has_function_privilege('anon', 'public.release_account_deletion(uuid,uuid)', 'EXECUTE'),
+  'no signed-in or anonymous caller can end a freeze');
+select ok(not has_function_privilege('authenticated', 'public.note_account_deletion_call(uuid,uuid)', 'EXECUTE')
+          and not has_function_privilege('authenticated', 'public.note_account_deletion_refused(uuid,uuid)', 'EXECUTE'),
+  'nor record or resolve Auth Admin calls');
 select ok(not has_function_privilege('authenticated', 'public.account_revision_bump(uuid)', 'EXECUTE'),
   'a signed-in user can''t call the bump');
 select ok(not has_function_privilege('service_role', 'public.account_revision_bump(uuid)', 'EXECUTE'),
@@ -73,9 +81,9 @@ select is((select revision from public.account_revision()),
 select is((select count(*) from public.account_revisions), 1::bigint, 'A sees only A''s revision row');
 select throws_ok($$update public.account_revisions set revision = 0$$, '42501', null,
   'A can''t forge a revision');
-select throws_ok($$update public.account_revisions set deleting_until = null$$, '42501', null,
+select throws_ok($$update public.account_revisions set deletion_attempt = null$$, '42501', null,
   'A can''t lift a freeze by hand');
-select throws_ok($$select public.begin_account_deletion('00000000-0000-0000-0000-0000000015b0', 0)$$,
+select throws_ok($$select * from public.begin_account_deletion('00000000-0000-0000-0000-0000000015b0', 0)$$,
   '42501', null, 'A can''t freeze B');
 select throws_ok($$select public.account_revision_bump('00000000-0000-0000-0000-0000000015a0')$$,
   '42501', null, 'A can''t call the bump');
@@ -213,26 +221,32 @@ update public.occurrences set user_id = '00000000-0000-0000-0000-0000000015a0'
  where id = '15000000-0000-0000-0000-0000000015a8';
 
 -- ---------- freeze ----------
-select is(public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0',
-            pg_temp.rev('00000000-0000-0000-0000-0000000015a0') - 1),
+select is((select outcome from public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0', pg_temp.rev('00000000-0000-0000-0000-0000000015a0') - 1)),
   'changed', 'a stale expected revision refuses the deletion');
-select is((select deleting_until from public.account_revisions where user_id = '00000000-0000-0000-0000-0000000015a0'),
-  null::timestamptz, 'and freezes nothing');
-select throws_ok($$select public.begin_account_deletion(null, 1)$$, '22004', null,
+select is(pg_temp.attempt('00000000-0000-0000-0000-0000000015a0'), null::uuid, 'and freezes nothing');
+select throws_ok($$select * from public.begin_account_deletion(null, 1)$$, '22004', null,
   'no user: refused');
-select is(public.begin_account_deletion('00000000-0000-0000-0000-00000000dead', 0), 'gone',
-  'an unknown user is reported gone');
+select is((select outcome from public.begin_account_deletion('00000000-0000-0000-0000-00000000dead', 0)),
+  'gone', 'an unknown user is reported gone');
 select pg_temp.mark('00000000-0000-0000-0000-0000000015a0');
-select is(public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0',
-            pg_temp.rev('00000000-0000-0000-0000-0000000015a0')),
+select is((select outcome from public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0', pg_temp.rev('00000000-0000-0000-0000-0000000015a0'))),
   'frozen', 'the export''s revision freezes the account');
+select isnt(pg_temp.attempt('00000000-0000-0000-0000-0000000015a0'), null::uuid, 'under a new attempt id (the fencing token)');
+do $$ begin perform set_config('t.attempt', pg_temp.attempt('00000000-0000-0000-0000-0000000015a0')::text, true); end $$;
 select ok(pg_temp.same('00000000-0000-0000-0000-0000000015a0'), 'freezing doesn''t move the revision');
-select is(public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0',
-            pg_temp.rev('00000000-0000-0000-0000-0000000015a0')),
-  'frozen', 'a retry at the same revision is still frozen');
-select is(public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0',
-            pg_temp.rev('00000000-0000-0000-0000-0000000015a0') - 1),
-  'changed', 'a retry at another revision is refused, the freeze stays');
+select is((select attempt from public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0', pg_temp.rev('00000000-0000-0000-0000-0000000015a0'))),
+  current_setting('t.attempt')::uuid, 'a retry at the same revision joins the same attempt');
+select is((select outcome from public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0', pg_temp.rev('00000000-0000-0000-0000-0000000015a0') - 1)),
+  'pending', 'a request at another revision can''t take over the unresolved deletion');
+select is((select outcome from public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0', pg_temp.rev('00000000-0000-0000-0000-0000000015a0') + 5)),
+  'pending', 'nor can one at a later revision');
+select is(pg_temp.attempt('00000000-0000-0000-0000-0000000015a0'), current_setting('t.attempt')::uuid, 'the attempt is unchanged');
+
+-- Time never ends a freeze: a month later it is still in force.
+reset role;
+update public.account_revisions set deletion_started_at = clock_timestamp() - interval '30 days'
+ where user_id = '00000000-0000-0000-0000-0000000015a0';
+set local role service_role;
 select throws_ok($$update public.occurrences set title = 'svc' where id = '15000000-0000-0000-0000-0000000015a8'$$,
   'DT409', null, 'the service role can''t change a frozen account''s rows');
 select throws_ok($$update public.occurrences set title = title
@@ -281,40 +295,55 @@ select lives_ok($$select public.purge_old_tombstones()$$, 'the purge runs while 
 select is((select count(*) from public.occurrences where id = '15000000-0000-0000-0000-0000000015b1'),
   0::bigint, 'and still purges the other accounts');
 
--- ---------- abort and expiry ----------
+-- ---------- recovery: only a fenced, fully resolved attempt ends a freeze ----------
 set local role service_role;
+select is(public.release_account_deletion('00000000-0000-0000-0000-0000000015a0', gen_random_uuid()), 'other_attempt',
+  'an unrelated attempt id can''t end the freeze');
+select is(public.release_account_deletion('00000000-0000-0000-0000-0000000015a0', null), 'other_attempt', 'nor can no attempt id');
+select ok(public.note_account_deletion_call('00000000-0000-0000-0000-0000000015a0', current_setting('t.attempt')::uuid),
+  'an Auth Admin call is recorded before it is made');
+select ok(not public.note_account_deletion_call('00000000-0000-0000-0000-0000000015a0', gen_random_uuid()),
+  'a call under another attempt is refused (the caller must not make it)');
+select is(public.release_account_deletion('00000000-0000-0000-0000-0000000015a0', current_setting('t.attempt')::uuid), 'unresolved',
+  'a call with an unknown outcome keeps the account frozen');
+select ok(public.note_account_deletion_call('00000000-0000-0000-0000-0000000015a0', current_setting('t.attempt')::uuid), 'a second call (a retry)');
+select ok(public.note_account_deletion_refused('00000000-0000-0000-0000-0000000015a0', current_setting('t.attempt')::uuid),
+  'one definite refusal resolves one call');
+select is(public.release_account_deletion('00000000-0000-0000-0000-0000000015a0', current_setting('t.attempt')::uuid), 'unresolved',
+  'the other call is still unknown: still frozen');
+select ok(public.note_account_deletion_refused('00000000-0000-0000-0000-0000000015a0', current_setting('t.attempt')::uuid), 'the second refusal');
+select ok(not public.note_account_deletion_refused('00000000-0000-0000-0000-0000000015a0', current_setting('t.attempt')::uuid),
+  'a refusal can''t be counted more often than calls were made');
 select pg_temp.mark('00000000-0000-0000-0000-0000000015a0');
-select is(public.abort_account_deletion('00000000-0000-0000-0000-0000000015a0'), true, 'abort ends the freeze');
-select ok(pg_temp.moved('00000000-0000-0000-0000-0000000015a0'), 'and moves the revision, so the old review is void');
-select is(public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0',
-            (select rev from pg_temp.marks where owner = '00000000-0000-0000-0000-0000000015a0')),
-  'changed', 'the revision from before the abort no longer deletes');
-select is(public.abort_account_deletion('00000000-0000-0000-0000-0000000015a0'), false, 'a second abort does nothing');
-select is(public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0',
-            pg_temp.rev('00000000-0000-0000-0000-0000000015a0')),
-  'frozen', 'frozen again at the current revision');
+select is(public.release_account_deletion('00000000-0000-0000-0000-0000000015a0', current_setting('t.attempt')::uuid), 'released',
+  'every call refused: that attempt may end the freeze');
+select ok(pg_temp.moved('00000000-0000-0000-0000-0000000015a0'), 'and the revision moves, so any earlier review is void');
+select is((select outcome from public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0',
+            (select rev from pg_temp.marks where owner = '00000000-0000-0000-0000-0000000015a0'))),
+  'changed', 'the revision from before the release no longer deletes');
+select is(public.release_account_deletion('00000000-0000-0000-0000-0000000015a0', current_setting('t.attempt')::uuid), 'not_frozen',
+  'a late second release does nothing');
+select ok(not public.note_account_deletion_call('00000000-0000-0000-0000-0000000015a0', current_setting('t.attempt')::uuid),
+  'a late call under the ended attempt is refused');
+select is((select outcome from public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0', pg_temp.rev('00000000-0000-0000-0000-0000000015a0'))),
+  'frozen', 'a new deletion freezes again');
+select isnt(pg_temp.attempt('00000000-0000-0000-0000-0000000015a0'), current_setting('t.attempt')::uuid, 'under a new attempt id');
+select is(public.release_account_deletion('00000000-0000-0000-0000-0000000015a0', current_setting('t.attempt')::uuid), 'other_attempt',
+  'the old attempt can''t end the new freeze');
 reset role;
-update public.account_revisions set deleting_until = clock_timestamp() - interval '1 second'
- where user_id = '00000000-0000-0000-0000-0000000015a0';
-set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000015a0","role":"authenticated"}';
-select pg_temp.mark('00000000-0000-0000-0000-0000000015a0');
-select lives_ok($$update public.occurrences set title = 'after expiry' where id = '15000000-0000-0000-0000-0000000015a8'$$,
-  'an expired freeze no longer refuses');
-select ok(pg_temp.moved('00000000-0000-0000-0000-0000000015a0'), 'the write moves the revision');
-select is((select frozen from public.account_revision()), false, 'and the freeze is cleared');
+set local role authenticated;
+select throws_ok($$update public.occurrences set title = 'x' where id = '15000000-0000-0000-0000-0000000015a8'$$,
+  'DT409', null, 'the new freeze refuses writes too');
 reset role;
+set local request.jwt.claims = '{}';
 set local role service_role;
-select is(public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0',
-            (select rev from pg_temp.marks where owner = '00000000-0000-0000-0000-0000000015a0')),
-  'changed', 'a retry after expiry with the old revision is refused');
 
 -- ---------- removing the auth user while frozen (SQL path) ----------
 -- The Auth Admin API path is checked against the running stack in
 -- supabase/concurrency/auth_admin_delete.sh.
-select is(public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0',
-            pg_temp.rev('00000000-0000-0000-0000-0000000015a0')),
-  'frozen', 'frozen before the user is removed');
+select is((select outcome from public.begin_account_deletion('00000000-0000-0000-0000-0000000015a0', pg_temp.rev('00000000-0000-0000-0000-0000000015a0'))),
+  'frozen', 'frozen (the live attempt) before the user is removed');
 reset role;
 select lives_ok($$delete from auth.users where id = '00000000-0000-0000-0000-0000000015a0'$$,
   'deleting the frozen auth user succeeds (the cascade is allowed)');
