@@ -77,11 +77,21 @@ abstract interface class AccountActions {
   /// D1 "Delete account": the server deletion, then the device copy. While
   /// it runs, surfaces refuse new actions. [ReviewChangedFailure], and
   /// nothing deleted, when something was queued for the account since the
-  /// summary or the export.
+  /// summary or the export. [ExportNotSavedFailure], nothing deleted, when
+  /// an export in this D1 session left no saved copy and the person hasn't
+  /// chosen [waiveExport] on this review.
   Future<Result<void, AppFailure>> deleteAccount();
 
   /// D1 closed: [owner]'s queued actions apply again.
   void endDeletion(String owner);
+
+  /// "Delete without a saved copy" (CR-160 Stage C): the person's choice,
+  /// after an export in this D1 session failed, was too large or was
+  /// cancelled, to delete anyway. Holds only for the current review of
+  /// [owner]; any change to what was reviewed voids it. False (nothing
+  /// recorded) when no such export happened. Never bypasses the review's
+  /// other checks.
+  bool waiveExport(String owner);
 
   /// Web retry "Finish removing": every pending removal, or the failure.
   Future<Result<void, AppFailure>> finishRemovals();
@@ -170,6 +180,9 @@ final class DeviceAccountActions implements AccountActions {
 
   @override
   void endDeletion(String owner) => _deletion.endDeletion(owner);
+
+  @override
+  bool waiveExport(String owner) => _deletion.waiveExport(owner);
 
   @override
   Future<Result<void, AppFailure>> finishRemovals() async {

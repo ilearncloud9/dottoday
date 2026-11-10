@@ -6728,7 +6728,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get accountDeleteExportBroken =>
-      'Impossible d’exporter toutes vos données : rien n’a été supprimé. Réessayez.';
+      'Nous n’avons pas pu créer d’export restaurable. Votre compte n’a pas été supprimé.';
 
   @override
   String get accountDeleteChangedSinceReview =>
@@ -6736,7 +6736,21 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get accountDeleteExportClosed =>
-      'Rien n’a été enregistré. Exportez à nouveau si vous voulez une copie.';
+      'L’export a été annulé. Nous ne pouvons pas confirmer que vous avez enregistré une copie.';
+
+  @override
+  String get accountDeleteExportTooLarge =>
+      'Vos données sont trop volumineuses pour un export que cette app peut restaurer. Réessayer n’y changera rien.';
+
+  @override
+  String get accountDeleteWithoutCopyQuestion =>
+      'Supprimer sans copie enregistrée ? Vous risquez de perdre définitivement des données qui ne sont enregistrées nulle part ailleurs.';
+
+  @override
+  String get accountDeleteWithoutCopy => 'Supprimer sans copie enregistrée';
+
+  @override
+  String get accountDeleteExportRetry => 'Réessayer l’export';
 
   @override
   String get removalRetryTitle =>

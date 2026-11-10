@@ -73,26 +73,23 @@ void main() {
     expect(size, lessThan(maxImportBytes));
   });
 
-  test(
-    'over the import limit: the export fails, nothing handed over',
-    () async {
-      // 2,700 tasks with 10,000-character notes (the most a task may hold),
-      // half of them imported calendar events: about 27 MB.
-      final notes = 'n' * 10000;
-      await fill(1350, notes: notes);
-      await DriftOccurrenceRepository(h.db).upsertAll([
-        for (var i = 0; i < 1350; i++)
-          occurrenceFixture().copyWith(
-            id: '01928c3e-0000-7000-9000-${i.toString().padLeft(12, '0')}',
-            title: 'Imported $i',
-            notes: notes,
-            source: OccurrenceSource.calendar,
-          ),
-      ]);
-      expect(await bytes(), greaterThan(maxImportBytes));
-      expect(await export(), OwnerExportOutcome.failed);
-      expect(files.delivered, isEmpty);
-    },
-    timeout: const Timeout(Duration(minutes: 2)),
-  );
+  test('over the import limit: too large (not a plain failure), nothing '
+      'handed over', () async {
+    // 2,700 tasks with 10,000-character notes (the most a task may hold),
+    // half of them imported calendar events: about 27 MB.
+    final notes = 'n' * 10000;
+    await fill(1350, notes: notes);
+    await DriftOccurrenceRepository(h.db).upsertAll([
+      for (var i = 0; i < 1350; i++)
+        occurrenceFixture().copyWith(
+          id: '01928c3e-0000-7000-9000-${i.toString().padLeft(12, '0')}',
+          title: 'Imported $i',
+          notes: notes,
+          source: OccurrenceSource.calendar,
+        ),
+    ]);
+    expect(await bytes(), greaterThan(maxImportBytes));
+    expect(await export(), OwnerExportOutcome.tooLarge);
+    expect(files.delivered, isEmpty);
+  }, timeout: const Timeout(Duration(minutes: 2)));
 }

@@ -6675,7 +6675,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountDeleteExportBroken =>
-      'Couldn’t export all your data, so nothing was deleted. Try again.';
+      'We couldn’t create a restorable export. Your account hasn’t been deleted.';
 
   @override
   String get accountDeleteChangedSinceReview =>
@@ -6683,7 +6683,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountDeleteExportClosed =>
-      'Nothing was saved. Export again if you want a copy.';
+      'The export was cancelled. We can’t confirm that you saved a copy.';
+
+  @override
+  String get accountDeleteExportTooLarge =>
+      'Your data is too large for an export this app can restore. Trying again won’t fix this.';
+
+  @override
+  String get accountDeleteWithoutCopyQuestion =>
+      'Delete without a saved copy? You may permanently lose data that hasn’t been saved elsewhere.';
+
+  @override
+  String get accountDeleteWithoutCopy => 'Delete without a saved copy';
+
+  @override
+  String get accountDeleteExportRetry => 'Try export again';
 
   @override
   String get removalRetryTitle => 'Removal from this browser didn’t finish';

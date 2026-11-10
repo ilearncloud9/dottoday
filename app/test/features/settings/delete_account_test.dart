@@ -71,7 +71,8 @@ void main() {
     await t.pumpAndSettle();
     expect(
       find.text(
-        'Couldn’t export all your data, so nothing was deleted. Try again.',
+        'We couldn’t create a restorable export. Your account hasn’t been '
+        'deleted.',
       ),
       findsOneWidget,
     );
@@ -84,7 +85,12 @@ void main() {
     await page(t);
     await tapIn(t, find.text('Export my data first'));
     await t.pumpAndSettle();
-    expect(find.textContaining('Nothing was saved'), findsOneWidget);
+    expect(
+      find.text(
+        'The export was cancelled. We can’t confirm that you saved a copy.',
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('the server refuses: said, the screen stays', (t) async {
@@ -129,5 +135,143 @@ void main() {
     expect(find.byType(Dialog), findsNothing);
     // Nothing deleted or exported; the held queue is released.
     expect(actions.calls, ['endDeletion']);
+  });
+
+  group('an export that left no saved copy (CR-160 Stage C)', () {
+    const question =
+        'Delete without a saved copy? You may permanently lose data that '
+        'hasn’t been saved elsewhere.';
+    Finder withoutCopy() =>
+        find.widgetWithText(FilledButton, 'Delete without a saved copy');
+
+    Future<void> confirmTyped(WidgetTester t) async {
+      await t.enterText(find.byType(TextField), 'DELETE');
+      await t.pump();
+      await tapIn(t, deleteButton());
+      await t.pumpAndSettle();
+    }
+
+    testWidgets('too large: the real reason, no retry offered', (t) async {
+      actions
+        ..exportOutcome = OwnerExportOutcome.tooLarge
+        ..deleteResult = const Err(ExportNotSavedFailure(retryable: false));
+      await page(t);
+      await tapIn(t, find.text('Export my data first'));
+      await t.pumpAndSettle();
+      expect(
+        find.text(
+          'Your data is too large for an export this app can restore. '
+          'Trying again won’t fix this.',
+        ),
+        findsOneWidget,
+      );
+      await confirmTyped(t);
+      expect(find.text(question), findsOneWidget);
+      expect(find.text('Try export again'), findsNothing);
+      expect(actions.calls, ['export', 'delete'], reason: 'not deleted yet');
+      await expectA11yGuidelines(t);
+    });
+
+    testWidgets('cancelled: deleting asks first; the choice deletes', (
+      t,
+    ) async {
+      actions
+        ..exportOutcome = OwnerExportOutcome.cancelled
+        ..deleteResult = const Err(ExportNotSavedFailure(retryable: true));
+      await page(t);
+      await tapIn(t, find.text('Export my data first'));
+      await t.pumpAndSettle();
+      await confirmTyped(t);
+      expect(find.text(question), findsOneWidget);
+      expect(find.text('Try export again'), findsOneWidget);
+      await tapIn(t, withoutCopy());
+      await t.pumpAndSettle();
+      expect(actions.calls, [
+        'export',
+        'delete',
+        'waive',
+        'delete',
+        'endDeletion',
+      ]);
+    });
+
+    testWidgets('closing the question deletes nothing', (t) async {
+      actions
+        ..exportOutcome = OwnerExportOutcome.failed
+        ..deleteResult = const Err(ExportNotSavedFailure(retryable: true));
+      await page(t);
+      await tapIn(t, find.text('Export my data first'));
+      await t.pumpAndSettle();
+      await confirmTyped(t);
+      await tapIn(t, find.widgetWithText(TextButton, 'Cancel'));
+      await t.pumpAndSettle();
+      expect(find.text(question), findsNothing);
+      expect(actions.calls, ['export', 'delete']);
+      expect(
+        find.byType(DeleteAccountView),
+        findsOneWidget,
+        reason: 'D1 stays',
+      );
+    });
+
+    testWidgets('Try export again runs the export, deletes nothing', (t) async {
+      actions
+        ..exportOutcome = OwnerExportOutcome.cancelled
+        ..deleteResult = const Err(ExportNotSavedFailure(retryable: true));
+      await page(t);
+      await tapIn(t, find.text('Export my data first'));
+      await t.pumpAndSettle();
+      await confirmTyped(t);
+      await tapIn(t, find.text('Try export again'));
+      await t.pumpAndSettle();
+      expect(actions.calls, ['export', 'delete', 'export']);
+    });
+
+    testWidgets('a choice the app refuses (nothing to waive) deletes nothing', (
+      t,
+    ) async {
+      actions
+        ..exportOutcome = OwnerExportOutcome.cancelled
+        ..deleteResult = const Err(ExportNotSavedFailure(retryable: true))
+        ..waiveAccepted = false;
+      await page(t);
+      await tapIn(t, find.text('Export my data first'));
+      await t.pumpAndSettle();
+      await confirmTyped(t);
+      await tapIn(t, withoutCopy());
+      await t.pumpAndSettle();
+      expect(actions.calls, ['export', 'delete', 'waive']);
+    });
+
+    testWidgets('wide (D1 a dialog): asked above it, at 200% text', (t) async {
+      actions
+        ..exportOutcome = OwnerExportOutcome.failed
+        ..deleteResult = const Err(ExportNotSavedFailure(retryable: true));
+      t.view
+        ..physicalSize = const Size(1280, 800)
+        ..devicePixelRatio = 1;
+      addTearDown(t.view.reset);
+      t.platformDispatcher.textScaleFactorTestValue = 2;
+      addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
+      await pumpAccountScreen(
+        t,
+        const DeleteAccountView(owner: 'a', wide: true),
+        actions: actions,
+      );
+      await tapIn(t, find.text('Export my data first'));
+      await t.pumpAndSettle();
+      expect(
+        find.text(
+          'We couldn’t create a restorable export. Your account hasn’t been '
+          'deleted.',
+        ),
+        findsOneWidget,
+      );
+      await confirmTyped(t);
+      expect(t.takeException(), isNull, reason: 'no overflow');
+      expect(find.text(question).hitTestable(), findsOneWidget);
+      expect(withoutCopy().hitTestable(), findsOneWidget);
+      await expectA11yGuidelines(t);
+    });
   });
 }

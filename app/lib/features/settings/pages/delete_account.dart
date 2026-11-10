@@ -11,6 +11,7 @@ import 'package:dottoday/data/owners/account_export.dart';
 import 'package:dottoday/data/owners/account_gate.dart';
 import 'package:dottoday/data/owners/account_meta.dart';
 import 'package:dottoday/features/settings/pages/delete_account_parts.dart';
+import 'package:dottoday/features/settings/pages/delete_without_copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -55,6 +56,9 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
   late final _typed = TextEditingController()..addListener(_changed);
   var _busy = false;
   OwnerExportOutcome? _exported;
+
+  /// Where the last export's share popover pointed, for "Try export again".
+  Rect? _exportOrigin;
   String? _error;
 
   /// A reminder action refused while this dialog is open (CR-160 §4):
@@ -89,6 +93,7 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
       _typed.text.trim() == context.l10n.accountDeleteWord && !_busy;
 
   Future<void> _export(Rect? origin) async {
+    _exportOrigin = origin;
     setState(() {
       _busy = true;
       _exported = null;
@@ -127,11 +132,28 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
           _exported = null;
           _error = failureMessage(l10n, failure);
         });
+      case Err(failure: ExportNotSavedFailure(:final retryable)):
+        // The export left no saved copy: never consent by itself. Asked
+        // separately; the choice holds for this review only.
+        setState(() => _busy = false);
+        await _withoutCopy(retry: retryable);
       case Err(:final failure):
         setState(() {
           _busy = false;
           _error = failureMessage(l10n, failure);
         });
+    }
+  }
+
+  Future<void> _withoutCopy({required bool retry}) async {
+    final choice = await confirmDeleteWithoutCopy(context, retry: retry);
+    if (!mounted) return;
+    switch (choice) {
+      case WithoutCopyChoice.delete:
+        if (_actions.waiveExport(widget.owner)) await _delete();
+      case WithoutCopyChoice.retry:
+        await _export(_exportOrigin);
+      case null:
     }
   }
 
@@ -147,6 +169,7 @@ class _DeleteAccountViewState extends ConsumerState<DeleteAccountView> {
       OwnerExportOutcome.done => l10n.accountDeleteExported,
       OwnerExportOutcome.cancelled => l10n.accountDeleteExportClosed,
       OwnerExportOutcome.failed => l10n.accountDeleteExportBroken,
+      OwnerExportOutcome.tooLarge => l10n.accountDeleteExportTooLarge,
     };
   }
 

@@ -6718,7 +6718,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get accountDeleteExportBroken =>
-      'Nicht alle Daten konnten exportiert werden, deshalb wurde nichts gelöscht. Versuch es noch mal.';
+      'Wir konnten keinen wiederherstellbaren Export erstellen. Dein Konto wurde nicht gelöscht.';
 
   @override
   String get accountDeleteChangedSinceReview =>
@@ -6726,7 +6726,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get accountDeleteExportClosed =>
-      'Nichts wurde gespeichert. Exportiere noch mal, wenn du eine Kopie möchtest.';
+      'Der Export wurde abgebrochen. Wir können nicht bestätigen, dass du eine Kopie gespeichert hast.';
+
+  @override
+  String get accountDeleteExportTooLarge =>
+      'Deine Daten sind zu umfangreich für einen Export, den diese App wiederherstellen kann. Ein neuer Versuch ändert daran nichts.';
+
+  @override
+  String get accountDeleteWithoutCopyQuestion =>
+      'Ohne gespeicherte Kopie löschen? Du verlierst möglicherweise dauerhaft Daten, die nirgendwo sonst gespeichert sind.';
+
+  @override
+  String get accountDeleteWithoutCopy => 'Ohne gespeicherte Kopie löschen';
+
+  @override
+  String get accountDeleteExportRetry => 'Export erneut versuchen';
 
   @override
   String get removalRetryTitle =>

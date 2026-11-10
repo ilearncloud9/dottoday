@@ -171,3 +171,16 @@ final class ReviewChangedFailure extends AppFailure {
   @override
   String get code => 'account.review_changed';
 }
+
+/// D1 (CR-160): the person asked for an export that didn't produce a
+/// restorable copy (it failed, was too large, was cancelled or is still
+/// running), and hasn't chosen to delete without one. Nothing was deleted.
+/// [retryable]: exporting again could work (not for a too-large export).
+final class ExportNotSavedFailure extends AppFailure {
+  const ExportNotSavedFailure({required this.retryable});
+
+  final bool retryable;
+
+  @override
+  String get code => 'account.export_not_saved';
+}

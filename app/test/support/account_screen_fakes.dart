@@ -74,11 +74,26 @@ base class FakeAccountActions implements AccountActions {
   @override
   Future<Result<void, AppFailure>> deleteAccount() async {
     calls.add('delete');
-    return deleteResult;
+    return waived ? afterWaive : deleteResult;
   }
 
   @override
   void endDeletion(String owner) => calls.add('endDeletion');
+
+  /// Whether "Delete without a saved copy" was chosen, and what a deletion
+  /// answers after it.
+  var waived = false;
+  Result<void, AppFailure> afterWaive = const Ok(null);
+
+  /// What [waiveExport] answers (false: no failed export to waive).
+  bool waiveAccepted = true;
+
+  @override
+  bool waiveExport(String owner) {
+    calls.add('waive');
+    waived = waiveAccepted;
+    return waiveAccepted;
+  }
 
   @override
   Future<Result<void, AppFailure>> finishRemovals() async {

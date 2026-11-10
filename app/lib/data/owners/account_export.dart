@@ -1,5 +1,6 @@
 import 'dart:ui' show Rect;
 
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/db/app_database.dart';
@@ -14,7 +15,8 @@ import 'package:drift/drift.dart';
 /// §4: the only recovery once the account is gone).
 enum OwnerExportOutcome {
   /// Every task, repeat, step and routine is in the file, and the file was
-  /// shared, saved or downloaded.
+  /// handed to the share sheet, save dialog or download. That is not proof
+  /// the person kept it.
   done,
 
   /// The person closed the share sheet or save dialog: nothing was saved.
@@ -23,6 +25,10 @@ enum OwnerExportOutcome {
   /// The file couldn't be built, was missing rows, or couldn't be handed
   /// over. Nothing is deleted on the strength of it.
   failed,
+
+  /// The file is over the import limit: the app couldn't restore it, and
+  /// exporting again won't change that (CR-160).
+  tooLarge,
 }
 
 /// Exports [owner]'s full JSON backup (local and unsynced work included:
@@ -54,6 +60,9 @@ Future<OwnerExportOutcome> exportOwnerChecked({
   switch (decodeExportJson(list.single.content)) {
     case Ok(:final value):
       bundle = value;
+    case Err(failure: ValidationFailure(rule: ValidationRule.tooLarge)):
+      logger.info('account.export_too_large');
+      return OwnerExportOutcome.tooLarge;
     case Err():
       return OwnerExportOutcome.failed;
   }

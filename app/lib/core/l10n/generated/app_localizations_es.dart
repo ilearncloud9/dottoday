@@ -6710,7 +6710,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get accountDeleteExportBroken =>
-      'No se pudieron exportar todos tus datos, así que no se eliminó nada. Inténtalo de nuevo.';
+      'No pudimos crear una exportación restaurable. Tu cuenta no se ha eliminado.';
 
   @override
   String get accountDeleteChangedSinceReview =>
@@ -6718,7 +6718,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get accountDeleteExportClosed =>
-      'No se guardó nada. Vuelve a exportar si quieres una copia.';
+      'La exportación se canceló. No podemos confirmar que hayas guardado una copia.';
+
+  @override
+  String get accountDeleteExportTooLarge =>
+      'Tus datos son demasiado grandes para una exportación que esta app pueda restaurar. Volver a intentarlo no lo solucionará.';
+
+  @override
+  String get accountDeleteWithoutCopyQuestion =>
+      '¿Eliminar sin una copia guardada? Podrías perder para siempre datos que no se hayan guardado en otro lugar.';
+
+  @override
+  String get accountDeleteWithoutCopy => 'Eliminar sin una copia guardada';
+
+  @override
+  String get accountDeleteExportRetry => 'Volver a intentar la exportación';
 
   @override
   String get removalRetryTitle => 'No se terminó de quitar de este navegador';

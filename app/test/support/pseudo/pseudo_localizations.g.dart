@@ -5284,6 +5284,20 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.accountDeleteExportClosed);
 
   @override
+  String get accountDeleteExportTooLarge =>
+      pseudo(super.accountDeleteExportTooLarge);
+
+  @override
+  String get accountDeleteWithoutCopyQuestion =>
+      pseudo(super.accountDeleteWithoutCopyQuestion);
+
+  @override
+  String get accountDeleteWithoutCopy => pseudo(super.accountDeleteWithoutCopy);
+
+  @override
+  String get accountDeleteExportRetry => pseudo(super.accountDeleteExportRetry);
+
+  @override
   String get removalRetryTitle => pseudo(super.removalRetryTitle);
 
   @override

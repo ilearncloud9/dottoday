@@ -26,6 +26,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 /// action ids, its local write revision, and what the server check found.
 typedef _Review = ({Set<String> queued, int revision, DeletionCheck check});
 
+/// D1's export for an owner: the owner session it ran in, and how it ended
+/// (both null while it runs).
+typedef _Export = ({int? generation, OwnerExportOutcome? outcome});
+
 /// D1's review, export and deletion (CR-160 policy §4, I7, W0–W2), for
 /// `DeviceAccountActions`.
 ///
@@ -43,6 +47,17 @@ final class AccountDeletion {
   ActionQueueDrainer get _drainer => _ref.read(actionQueueDrainerProvider);
 
   final _reviewed = <String, _Review>{};
+
+  /// D1's last export per owner in this D1 session and owner session
+  /// (CR-160 Stage C): running, or how it ended.
+  final _exports = <String, _Export>{};
+
+  /// The review on which the person chose "Delete without a saved copy":
+  /// valid only while that very review stands (any new review voids it).
+  final _waivedOn = <String, _Review>{};
+
+  /// Moves when D1 closes, so an export finishing later records nothing.
+  final _sessions = <String, int>{};
 
   /// Owners whose deletion outcome is unknown: their seal and the queue
   /// refusal stay until a retry settles it or D1 closes, so nothing local
@@ -65,8 +80,22 @@ final class AccountDeletion {
     return left;
   }
 
-  /// See `AccountActions.exportFirst`.
+  /// See `AccountActions.exportFirst`. Records how it went, for the gate
+  /// in [deleteAccount].
   Future<OwnerExportOutcome> exportFirst(String owner, {Rect? origin}) async {
+    final session = _sessions[owner] ?? 0;
+    // Running from this instant, before any await: a deletion asked for
+    // meanwhile waits for its outcome (never slips through before it).
+    _exports[owner] = (generation: null, outcome: null);
+    final generation = await ownerGeneration(_db);
+    final outcome = await _export(owner, origin);
+    if ((_sessions[owner] ?? 0) == session) {
+      _exports[owner] = (generation: generation, outcome: outcome);
+    }
+    return outcome;
+  }
+
+  Future<OwnerExportOutcome> _export(String owner, Rect? origin) async {
     if ((await _review(owner)).isNotEmpty) {
       // Queued work the file can't hold: never "exported" without it.
       _ref.read(loggerProvider).error('account.export_queue_unapplied');
@@ -88,6 +117,36 @@ final class AccountDeletion {
     );
   }
 
+  /// See `AccountActions.waiveExport`.
+  bool waiveExport(String owner) {
+    final review = _reviewed[owner];
+    // Only after an export that ended without a saved copy: never while
+    // one is running, never in place of one that worked.
+    final ended = _exports[owner]?.outcome;
+    if (review == null || ended == null || ended == OwnerExportOutcome.done) {
+      return false;
+    }
+    _waivedOn[owner] = review;
+    return true;
+  }
+
+  /// Why the last export in this D1 session left no restorable copy, or
+  /// null (none asked for, or one handed over). A running one counts.
+  ExportNotSavedFailure? _shortfall(String owner) => switch (_exports[owner]) {
+    null => null,
+    (outcome: OwnerExportOutcome.done, generation: _) => null,
+    (outcome: null, generation: _) => const ExportNotSavedFailure(
+      retryable: false,
+    ),
+    (outcome: OwnerExportOutcome.tooLarge, generation: _) =>
+      const ExportNotSavedFailure(retryable: false),
+    (
+      outcome: OwnerExportOutcome.cancelled || OwnerExportOutcome.failed,
+      generation: _,
+    ) =>
+      const ExportNotSavedFailure(retryable: true),
+  };
+
   /// See `AccountActions.summary`.
   Future<OwnerSummary> summary(String owner) async {
     await _review(owner);
@@ -106,9 +165,20 @@ final class AccountDeletion {
     if (check is DeletionUnverified) return Err(check.failure);
     final token = check as DeletionVerified;
     // Verified in another owner session (A → B → A): never reused.
-    if (await ownerGeneration(_db) != token.generation) {
+    final generation = await ownerGeneration(_db);
+    if (generation != token.generation) {
+      _exports.remove(owner); // that session's export says nothing now
       await _review(owner);
       return const Err(ReviewChangedFailure());
+    }
+    // An export was asked for and left no restorable copy: only the
+    // person's own choice on this very review lets the deletion go on.
+    if (_exports[owner]?.generation case final g? when g != generation) {
+      _exports.remove(owner);
+    }
+    final shortfall = _shortfall(owner);
+    if (shortfall != null && !identical(_waivedOn[owner], reviewed)) {
+      return Err(shortfall);
     }
     final owners = _ref.read(ownerSwitchProvider);
     // From here no surface can queue for the account: work that would
@@ -178,6 +248,9 @@ final class AccountDeletion {
   /// See `AccountActions.endDeletion`.
   void endDeletion(String owner) {
     _reviewed.remove(owner);
+    _exports.remove(owner);
+    _waivedOn.remove(owner);
+    _sessions[owner] = (_sessions[owner] ?? 0) + 1;
     if (_sealKept.remove(owner)) {
       // Local only: the server's freeze (if the request got that far)
       // stays until a deletion finishes or is proven refused.

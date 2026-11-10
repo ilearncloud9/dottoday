@@ -9978,10 +9978,10 @@ abstract class AppLocalizations {
   /// **'Exported. You can delete your account now.'**
   String get accountDeleteExported;
 
-  /// D1: the export could not be built, checked or saved.
+  /// D1 (CR-160): the export could not be built, checked or handed over; nothing was deleted.
   ///
   /// In en, this message translates to:
-  /// **'Couldn’t export all your data, so nothing was deleted. Try again.'**
+  /// **'We couldn’t create a restorable export. Your account hasn’t been deleted.'**
   String get accountDeleteExportBroken;
 
   /// D1 (CR-160 I7): a share or widget action was queued for the account after the person reviewed or exported; nothing was deleted.
@@ -9990,11 +9990,35 @@ abstract class AppLocalizations {
   /// **'Something new arrived for this account after you started, so nothing was deleted. Export again to keep it, then type DELETE again.'**
   String get accountDeleteChangedSinceReview;
 
-  /// D1: the share sheet or save dialog was closed.
+  /// D1 (CR-160): the share sheet or save dialog was closed; the app cannot confirm a saved copy.
   ///
   /// In en, this message translates to:
-  /// **'Nothing was saved. Export again if you want a copy.'**
+  /// **'The export was cancelled. We can’t confirm that you saved a copy.'**
   String get accountDeleteExportClosed;
+
+  /// D1 (CR-160): the export is over the import limit, so the app could not restore it; retrying will not help.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is too large for an export this app can restore. Trying again won’t fix this.'**
+  String get accountDeleteExportTooLarge;
+
+  /// D1 (CR-160): separate confirmation after an export failed, was too large or was cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete without a saved copy? You may permanently lose data that hasn’t been saved elsewhere.'**
+  String get accountDeleteWithoutCopyQuestion;
+
+  /// D1 (CR-160): the confirmation action that deletes without a saved copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete without a saved copy'**
+  String get accountDeleteWithoutCopy;
+
+  /// D1 (CR-160): the confirmation action that runs the export again (only when retrying could work).
+  ///
+  /// In en, this message translates to:
+  /// **'Try export again'**
+  String get accountDeleteExportRetry;
 
   /// Web: a deleted account’s removal from the browser was interrupted.
   ///
