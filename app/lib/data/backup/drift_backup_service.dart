@@ -1,9 +1,11 @@
 import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:dottoday/data/backup/user_data_snapshot.dart';
+import 'package:dottoday/data/calendar/pending_calendar_series.dart';
 import 'package:dottoday/data/daos/profiles_dao.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
@@ -26,11 +28,13 @@ final class DriftBackupService implements BackupService {
     required WriteUseCase writes,
     required Clock clock,
     required Logger logger,
+    IdGenerator ids = const UuidV7Generator(),
   }) : _db = db,
        _backups = backups,
        _writes = writes,
        _clock = clock,
-       _logger = logger;
+       _logger = logger,
+       _ids = ids;
 
   /// Backups kept per reason; the oldest beyond this are deleted.
   static const retention = {
@@ -46,6 +50,7 @@ final class DriftBackupService implements BackupService {
   final WriteUseCase _writes;
   final Clock _clock;
   final Logger _logger;
+  final IdGenerator _ids;
 
   @override
   Future<Result<bool, AppFailure>> runDailyIfDue(String userId) async {
@@ -197,8 +202,19 @@ final class DriftBackupService implements BackupService {
     final now = _clock.nowUtc();
     final current = await readUserData(_db, userId, now);
     if (current == null) return const Err(StorageFailure());
-    return _writes.apply(
+    final applied = await _writes.apply(
       restorePlan(current: current, backup: incoming, userId: userId, now: now),
+    );
+    if (applied case Err()) return applied;
+    // D1's calendar-series settings (CR-160 Stage A): kept pending under
+    // this account, attached only when a calendar here provably matches.
+    // After the restore, so a refused restore leaves none behind; a failure
+    // here is reported, and importing the file again is safe.
+    return stashCalendarSeriesTemplates(
+      _db,
+      userId,
+      incoming.calendarSeries,
+      _ids,
     );
   }
 

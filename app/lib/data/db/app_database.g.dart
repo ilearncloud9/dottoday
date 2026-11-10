@@ -7125,6 +7125,1236 @@ class CalendarSeriesTableCompanion extends UpdateCompanion<CalendarSeriesRow> {
   }
 }
 
+class $PendingCalendarSeriesTableTable extends PendingCalendarSeriesTable
+    with TableInfo<$PendingCalendarSeriesTableTable, PendingCalendarSeriesRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PendingCalendarSeriesTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _providerMeta = const VerificationMeta(
+    'provider',
+  );
+  @override
+  late final GeneratedColumn<String> provider = GeneratedColumn<String>(
+    'provider',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _externalCalendarIdMeta =
+      const VerificationMeta('externalCalendarId');
+  @override
+  late final GeneratedColumn<String> externalCalendarId =
+      GeneratedColumn<String>(
+        'external_calendar_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _deviceTagMeta = const VerificationMeta(
+    'deviceTag',
+  );
+  @override
+  late final GeneratedColumn<String> deviceTag = GeneratedColumn<String>(
+    'device_tag',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _seriesKeyMeta = const VerificationMeta(
+    'seriesKey',
+  );
+  @override
+  late final GeneratedColumn<String> seriesKey = GeneratedColumn<String>(
+    'series_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _colorKeyMeta = const VerificationMeta(
+    'colorKey',
+  );
+  @override
+  late final GeneratedColumn<String> colorKey = GeneratedColumn<String>(
+    'color_key',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _iconKeyMeta = const VerificationMeta(
+    'iconKey',
+  );
+  @override
+  late final GeneratedColumn<String> iconKey = GeneratedColumn<String>(
+    'icon_key',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _durationMinMeta = const VerificationMeta(
+    'durationMin',
+  );
+  @override
+  late final GeneratedColumn<int> durationMin = GeneratedColumn<int>(
+    'duration_min',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _startMinuteMeta = const VerificationMeta(
+    'startMinute',
+  );
+  @override
+  late final GeneratedColumn<int> startMinute = GeneratedColumn<int>(
+    'start_minute',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tzIdMeta = const VerificationMeta('tzId');
+  @override
+  late final GeneratedColumn<String> tzId = GeneratedColumn<String>(
+    'tz_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _pinnedMeta = const VerificationMeta('pinned');
+  @override
+  late final GeneratedColumn<bool> pinned = GeneratedColumn<bool>(
+    'pinned',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("pinned" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _travelBufferMinMeta = const VerificationMeta(
+    'travelBufferMin',
+  );
+  @override
+  late final GeneratedColumn<int> travelBufferMin = GeneratedColumn<int>(
+    'travel_buffer_min',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _energyMeta = const VerificationMeta('energy');
+  @override
+  late final GeneratedColumn<int> energy = GeneratedColumn<int>(
+    'energy',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _alertsMeta = const VerificationMeta('alerts');
+  @override
+  late final GeneratedColumn<String> alerts = GeneratedColumn<String>(
+    'alerts',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _soundIdMeta = const VerificationMeta(
+    'soundId',
+  );
+  @override
+  late final GeneratedColumn<String> soundId = GeneratedColumn<String>(
+    'sound_id',
+    aliasedName,
+    true,
+    check: () => soundIdCheck,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _subtaskTemplateMeta = const VerificationMeta(
+    'subtaskTemplate',
+  );
+  @override
+  late final GeneratedColumn<String> subtaskTemplate = GeneratedColumn<String>(
+    'subtask_template',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _hiddenMeta = const VerificationMeta('hidden');
+  @override
+  late final GeneratedColumn<bool> hidden = GeneratedColumn<bool>(
+    'hidden',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("hidden" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    createdAt,
+    updatedAt,
+    id,
+    userId,
+    provider,
+    externalCalendarId,
+    deviceTag,
+    seriesKey,
+    title,
+    notes,
+    colorKey,
+    iconKey,
+    durationMin,
+    startMinute,
+    tzId,
+    pinned,
+    travelBufferMin,
+    energy,
+    alerts,
+    soundId,
+    subtaskTemplate,
+    hidden,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'pending_calendar_series';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PendingCalendarSeriesRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('provider')) {
+      context.handle(
+        _providerMeta,
+        provider.isAcceptableOrUnknown(data['provider']!, _providerMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_providerMeta);
+    }
+    if (data.containsKey('external_calendar_id')) {
+      context.handle(
+        _externalCalendarIdMeta,
+        externalCalendarId.isAcceptableOrUnknown(
+          data['external_calendar_id']!,
+          _externalCalendarIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_externalCalendarIdMeta);
+    }
+    if (data.containsKey('device_tag')) {
+      context.handle(
+        _deviceTagMeta,
+        deviceTag.isAcceptableOrUnknown(data['device_tag']!, _deviceTagMeta),
+      );
+    }
+    if (data.containsKey('series_key')) {
+      context.handle(
+        _seriesKeyMeta,
+        seriesKey.isAcceptableOrUnknown(data['series_key']!, _seriesKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_seriesKeyMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    if (data.containsKey('color_key')) {
+      context.handle(
+        _colorKeyMeta,
+        colorKey.isAcceptableOrUnknown(data['color_key']!, _colorKeyMeta),
+      );
+    }
+    if (data.containsKey('icon_key')) {
+      context.handle(
+        _iconKeyMeta,
+        iconKey.isAcceptableOrUnknown(data['icon_key']!, _iconKeyMeta),
+      );
+    }
+    if (data.containsKey('duration_min')) {
+      context.handle(
+        _durationMinMeta,
+        durationMin.isAcceptableOrUnknown(
+          data['duration_min']!,
+          _durationMinMeta,
+        ),
+      );
+    }
+    if (data.containsKey('start_minute')) {
+      context.handle(
+        _startMinuteMeta,
+        startMinute.isAcceptableOrUnknown(
+          data['start_minute']!,
+          _startMinuteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('tz_id')) {
+      context.handle(
+        _tzIdMeta,
+        tzId.isAcceptableOrUnknown(data['tz_id']!, _tzIdMeta),
+      );
+    }
+    if (data.containsKey('pinned')) {
+      context.handle(
+        _pinnedMeta,
+        pinned.isAcceptableOrUnknown(data['pinned']!, _pinnedMeta),
+      );
+    }
+    if (data.containsKey('travel_buffer_min')) {
+      context.handle(
+        _travelBufferMinMeta,
+        travelBufferMin.isAcceptableOrUnknown(
+          data['travel_buffer_min']!,
+          _travelBufferMinMeta,
+        ),
+      );
+    }
+    if (data.containsKey('energy')) {
+      context.handle(
+        _energyMeta,
+        energy.isAcceptableOrUnknown(data['energy']!, _energyMeta),
+      );
+    }
+    if (data.containsKey('alerts')) {
+      context.handle(
+        _alertsMeta,
+        alerts.isAcceptableOrUnknown(data['alerts']!, _alertsMeta),
+      );
+    }
+    if (data.containsKey('sound_id')) {
+      context.handle(
+        _soundIdMeta,
+        soundId.isAcceptableOrUnknown(data['sound_id']!, _soundIdMeta),
+      );
+    }
+    if (data.containsKey('subtask_template')) {
+      context.handle(
+        _subtaskTemplateMeta,
+        subtaskTemplate.isAcceptableOrUnknown(
+          data['subtask_template']!,
+          _subtaskTemplateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('hidden')) {
+      context.handle(
+        _hiddenMeta,
+        hidden.isAcceptableOrUnknown(data['hidden']!, _hiddenMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PendingCalendarSeriesRow map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PendingCalendarSeriesRow(
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      provider: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}provider'],
+      )!,
+      externalCalendarId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}external_calendar_id'],
+      )!,
+      deviceTag: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}device_tag'],
+      ),
+      seriesKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}series_key'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      ),
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+      colorKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}color_key'],
+      ),
+      iconKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon_key'],
+      ),
+      durationMin: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration_min'],
+      ),
+      startMinute: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}start_minute'],
+      ),
+      tzId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tz_id'],
+      ),
+      pinned: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}pinned'],
+      ),
+      travelBufferMin: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}travel_buffer_min'],
+      ),
+      energy: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}energy'],
+      ),
+      alerts: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}alerts'],
+      ),
+      soundId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sound_id'],
+      ),
+      subtaskTemplate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}subtask_template'],
+      ),
+      hidden: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}hidden'],
+      )!,
+    );
+  }
+
+  @override
+  $PendingCalendarSeriesTableTable createAlias(String alias) {
+    return $PendingCalendarSeriesTableTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class PendingCalendarSeriesRow extends DataClass
+    implements Insertable<PendingCalendarSeriesRow> {
+  final int createdAt;
+  final int updatedAt;
+  final String id;
+  final String userId;
+  final String provider;
+  final String externalCalendarId;
+  final String? deviceTag;
+  final String seriesKey;
+  final String? title;
+  final String? notes;
+  final String? colorKey;
+  final String? iconKey;
+  final int? durationMin;
+  final int? startMinute;
+  final String? tzId;
+  final bool? pinned;
+  final int? travelBufferMin;
+  final int? energy;
+  final String? alerts;
+  final String? soundId;
+  final String? subtaskTemplate;
+  final bool hidden;
+  const PendingCalendarSeriesRow({
+    required this.createdAt,
+    required this.updatedAt,
+    required this.id,
+    required this.userId,
+    required this.provider,
+    required this.externalCalendarId,
+    this.deviceTag,
+    required this.seriesKey,
+    this.title,
+    this.notes,
+    this.colorKey,
+    this.iconKey,
+    this.durationMin,
+    this.startMinute,
+    this.tzId,
+    this.pinned,
+    this.travelBufferMin,
+    this.energy,
+    this.alerts,
+    this.soundId,
+    this.subtaskTemplate,
+    required this.hidden,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['provider'] = Variable<String>(provider);
+    map['external_calendar_id'] = Variable<String>(externalCalendarId);
+    if (!nullToAbsent || deviceTag != null) {
+      map['device_tag'] = Variable<String>(deviceTag);
+    }
+    map['series_key'] = Variable<String>(seriesKey);
+    if (!nullToAbsent || title != null) {
+      map['title'] = Variable<String>(title);
+    }
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    if (!nullToAbsent || colorKey != null) {
+      map['color_key'] = Variable<String>(colorKey);
+    }
+    if (!nullToAbsent || iconKey != null) {
+      map['icon_key'] = Variable<String>(iconKey);
+    }
+    if (!nullToAbsent || durationMin != null) {
+      map['duration_min'] = Variable<int>(durationMin);
+    }
+    if (!nullToAbsent || startMinute != null) {
+      map['start_minute'] = Variable<int>(startMinute);
+    }
+    if (!nullToAbsent || tzId != null) {
+      map['tz_id'] = Variable<String>(tzId);
+    }
+    if (!nullToAbsent || pinned != null) {
+      map['pinned'] = Variable<bool>(pinned);
+    }
+    if (!nullToAbsent || travelBufferMin != null) {
+      map['travel_buffer_min'] = Variable<int>(travelBufferMin);
+    }
+    if (!nullToAbsent || energy != null) {
+      map['energy'] = Variable<int>(energy);
+    }
+    if (!nullToAbsent || alerts != null) {
+      map['alerts'] = Variable<String>(alerts);
+    }
+    if (!nullToAbsent || soundId != null) {
+      map['sound_id'] = Variable<String>(soundId);
+    }
+    if (!nullToAbsent || subtaskTemplate != null) {
+      map['subtask_template'] = Variable<String>(subtaskTemplate);
+    }
+    map['hidden'] = Variable<bool>(hidden);
+    return map;
+  }
+
+  PendingCalendarSeriesTableCompanion toCompanion(bool nullToAbsent) {
+    return PendingCalendarSeriesTableCompanion(
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      id: Value(id),
+      userId: Value(userId),
+      provider: Value(provider),
+      externalCalendarId: Value(externalCalendarId),
+      deviceTag: deviceTag == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deviceTag),
+      seriesKey: Value(seriesKey),
+      title: title == null && nullToAbsent
+          ? const Value.absent()
+          : Value(title),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+      colorKey: colorKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(colorKey),
+      iconKey: iconKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iconKey),
+      durationMin: durationMin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(durationMin),
+      startMinute: startMinute == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startMinute),
+      tzId: tzId == null && nullToAbsent ? const Value.absent() : Value(tzId),
+      pinned: pinned == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pinned),
+      travelBufferMin: travelBufferMin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(travelBufferMin),
+      energy: energy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(energy),
+      alerts: alerts == null && nullToAbsent
+          ? const Value.absent()
+          : Value(alerts),
+      soundId: soundId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(soundId),
+      subtaskTemplate: subtaskTemplate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(subtaskTemplate),
+      hidden: Value(hidden),
+    );
+  }
+
+  factory PendingCalendarSeriesRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PendingCalendarSeriesRow(
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      provider: serializer.fromJson<String>(json['provider']),
+      externalCalendarId: serializer.fromJson<String>(
+        json['externalCalendarId'],
+      ),
+      deviceTag: serializer.fromJson<String?>(json['deviceTag']),
+      seriesKey: serializer.fromJson<String>(json['seriesKey']),
+      title: serializer.fromJson<String?>(json['title']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      colorKey: serializer.fromJson<String?>(json['colorKey']),
+      iconKey: serializer.fromJson<String?>(json['iconKey']),
+      durationMin: serializer.fromJson<int?>(json['durationMin']),
+      startMinute: serializer.fromJson<int?>(json['startMinute']),
+      tzId: serializer.fromJson<String?>(json['tzId']),
+      pinned: serializer.fromJson<bool?>(json['pinned']),
+      travelBufferMin: serializer.fromJson<int?>(json['travelBufferMin']),
+      energy: serializer.fromJson<int?>(json['energy']),
+      alerts: serializer.fromJson<String?>(json['alerts']),
+      soundId: serializer.fromJson<String?>(json['soundId']),
+      subtaskTemplate: serializer.fromJson<String?>(json['subtaskTemplate']),
+      hidden: serializer.fromJson<bool>(json['hidden']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'createdAt': serializer.toJson<int>(createdAt),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'provider': serializer.toJson<String>(provider),
+      'externalCalendarId': serializer.toJson<String>(externalCalendarId),
+      'deviceTag': serializer.toJson<String?>(deviceTag),
+      'seriesKey': serializer.toJson<String>(seriesKey),
+      'title': serializer.toJson<String?>(title),
+      'notes': serializer.toJson<String?>(notes),
+      'colorKey': serializer.toJson<String?>(colorKey),
+      'iconKey': serializer.toJson<String?>(iconKey),
+      'durationMin': serializer.toJson<int?>(durationMin),
+      'startMinute': serializer.toJson<int?>(startMinute),
+      'tzId': serializer.toJson<String?>(tzId),
+      'pinned': serializer.toJson<bool?>(pinned),
+      'travelBufferMin': serializer.toJson<int?>(travelBufferMin),
+      'energy': serializer.toJson<int?>(energy),
+      'alerts': serializer.toJson<String?>(alerts),
+      'soundId': serializer.toJson<String?>(soundId),
+      'subtaskTemplate': serializer.toJson<String?>(subtaskTemplate),
+      'hidden': serializer.toJson<bool>(hidden),
+    };
+  }
+
+  PendingCalendarSeriesRow copyWith({
+    int? createdAt,
+    int? updatedAt,
+    String? id,
+    String? userId,
+    String? provider,
+    String? externalCalendarId,
+    Value<String?> deviceTag = const Value.absent(),
+    String? seriesKey,
+    Value<String?> title = const Value.absent(),
+    Value<String?> notes = const Value.absent(),
+    Value<String?> colorKey = const Value.absent(),
+    Value<String?> iconKey = const Value.absent(),
+    Value<int?> durationMin = const Value.absent(),
+    Value<int?> startMinute = const Value.absent(),
+    Value<String?> tzId = const Value.absent(),
+    Value<bool?> pinned = const Value.absent(),
+    Value<int?> travelBufferMin = const Value.absent(),
+    Value<int?> energy = const Value.absent(),
+    Value<String?> alerts = const Value.absent(),
+    Value<String?> soundId = const Value.absent(),
+    Value<String?> subtaskTemplate = const Value.absent(),
+    bool? hidden,
+  }) => PendingCalendarSeriesRow(
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    provider: provider ?? this.provider,
+    externalCalendarId: externalCalendarId ?? this.externalCalendarId,
+    deviceTag: deviceTag.present ? deviceTag.value : this.deviceTag,
+    seriesKey: seriesKey ?? this.seriesKey,
+    title: title.present ? title.value : this.title,
+    notes: notes.present ? notes.value : this.notes,
+    colorKey: colorKey.present ? colorKey.value : this.colorKey,
+    iconKey: iconKey.present ? iconKey.value : this.iconKey,
+    durationMin: durationMin.present ? durationMin.value : this.durationMin,
+    startMinute: startMinute.present ? startMinute.value : this.startMinute,
+    tzId: tzId.present ? tzId.value : this.tzId,
+    pinned: pinned.present ? pinned.value : this.pinned,
+    travelBufferMin: travelBufferMin.present
+        ? travelBufferMin.value
+        : this.travelBufferMin,
+    energy: energy.present ? energy.value : this.energy,
+    alerts: alerts.present ? alerts.value : this.alerts,
+    soundId: soundId.present ? soundId.value : this.soundId,
+    subtaskTemplate: subtaskTemplate.present
+        ? subtaskTemplate.value
+        : this.subtaskTemplate,
+    hidden: hidden ?? this.hidden,
+  );
+  PendingCalendarSeriesRow copyWithCompanion(
+    PendingCalendarSeriesTableCompanion data,
+  ) {
+    return PendingCalendarSeriesRow(
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      provider: data.provider.present ? data.provider.value : this.provider,
+      externalCalendarId: data.externalCalendarId.present
+          ? data.externalCalendarId.value
+          : this.externalCalendarId,
+      deviceTag: data.deviceTag.present ? data.deviceTag.value : this.deviceTag,
+      seriesKey: data.seriesKey.present ? data.seriesKey.value : this.seriesKey,
+      title: data.title.present ? data.title.value : this.title,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      colorKey: data.colorKey.present ? data.colorKey.value : this.colorKey,
+      iconKey: data.iconKey.present ? data.iconKey.value : this.iconKey,
+      durationMin: data.durationMin.present
+          ? data.durationMin.value
+          : this.durationMin,
+      startMinute: data.startMinute.present
+          ? data.startMinute.value
+          : this.startMinute,
+      tzId: data.tzId.present ? data.tzId.value : this.tzId,
+      pinned: data.pinned.present ? data.pinned.value : this.pinned,
+      travelBufferMin: data.travelBufferMin.present
+          ? data.travelBufferMin.value
+          : this.travelBufferMin,
+      energy: data.energy.present ? data.energy.value : this.energy,
+      alerts: data.alerts.present ? data.alerts.value : this.alerts,
+      soundId: data.soundId.present ? data.soundId.value : this.soundId,
+      subtaskTemplate: data.subtaskTemplate.present
+          ? data.subtaskTemplate.value
+          : this.subtaskTemplate,
+      hidden: data.hidden.present ? data.hidden.value : this.hidden,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingCalendarSeriesRow(')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('provider: $provider, ')
+          ..write('externalCalendarId: $externalCalendarId, ')
+          ..write('deviceTag: $deviceTag, ')
+          ..write('seriesKey: $seriesKey, ')
+          ..write('title: $title, ')
+          ..write('notes: $notes, ')
+          ..write('colorKey: $colorKey, ')
+          ..write('iconKey: $iconKey, ')
+          ..write('durationMin: $durationMin, ')
+          ..write('startMinute: $startMinute, ')
+          ..write('tzId: $tzId, ')
+          ..write('pinned: $pinned, ')
+          ..write('travelBufferMin: $travelBufferMin, ')
+          ..write('energy: $energy, ')
+          ..write('alerts: $alerts, ')
+          ..write('soundId: $soundId, ')
+          ..write('subtaskTemplate: $subtaskTemplate, ')
+          ..write('hidden: $hidden')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    createdAt,
+    updatedAt,
+    id,
+    userId,
+    provider,
+    externalCalendarId,
+    deviceTag,
+    seriesKey,
+    title,
+    notes,
+    colorKey,
+    iconKey,
+    durationMin,
+    startMinute,
+    tzId,
+    pinned,
+    travelBufferMin,
+    energy,
+    alerts,
+    soundId,
+    subtaskTemplate,
+    hidden,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PendingCalendarSeriesRow &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.provider == this.provider &&
+          other.externalCalendarId == this.externalCalendarId &&
+          other.deviceTag == this.deviceTag &&
+          other.seriesKey == this.seriesKey &&
+          other.title == this.title &&
+          other.notes == this.notes &&
+          other.colorKey == this.colorKey &&
+          other.iconKey == this.iconKey &&
+          other.durationMin == this.durationMin &&
+          other.startMinute == this.startMinute &&
+          other.tzId == this.tzId &&
+          other.pinned == this.pinned &&
+          other.travelBufferMin == this.travelBufferMin &&
+          other.energy == this.energy &&
+          other.alerts == this.alerts &&
+          other.soundId == this.soundId &&
+          other.subtaskTemplate == this.subtaskTemplate &&
+          other.hidden == this.hidden);
+}
+
+class PendingCalendarSeriesTableCompanion
+    extends UpdateCompanion<PendingCalendarSeriesRow> {
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> provider;
+  final Value<String> externalCalendarId;
+  final Value<String?> deviceTag;
+  final Value<String> seriesKey;
+  final Value<String?> title;
+  final Value<String?> notes;
+  final Value<String?> colorKey;
+  final Value<String?> iconKey;
+  final Value<int?> durationMin;
+  final Value<int?> startMinute;
+  final Value<String?> tzId;
+  final Value<bool?> pinned;
+  final Value<int?> travelBufferMin;
+  final Value<int?> energy;
+  final Value<String?> alerts;
+  final Value<String?> soundId;
+  final Value<String?> subtaskTemplate;
+  final Value<bool> hidden;
+  final Value<int> rowid;
+  const PendingCalendarSeriesTableCompanion({
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.provider = const Value.absent(),
+    this.externalCalendarId = const Value.absent(),
+    this.deviceTag = const Value.absent(),
+    this.seriesKey = const Value.absent(),
+    this.title = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.colorKey = const Value.absent(),
+    this.iconKey = const Value.absent(),
+    this.durationMin = const Value.absent(),
+    this.startMinute = const Value.absent(),
+    this.tzId = const Value.absent(),
+    this.pinned = const Value.absent(),
+    this.travelBufferMin = const Value.absent(),
+    this.energy = const Value.absent(),
+    this.alerts = const Value.absent(),
+    this.soundId = const Value.absent(),
+    this.subtaskTemplate = const Value.absent(),
+    this.hidden = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PendingCalendarSeriesTableCompanion.insert({
+    required int createdAt,
+    required int updatedAt,
+    required String id,
+    required String userId,
+    required String provider,
+    required String externalCalendarId,
+    this.deviceTag = const Value.absent(),
+    required String seriesKey,
+    this.title = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.colorKey = const Value.absent(),
+    this.iconKey = const Value.absent(),
+    this.durationMin = const Value.absent(),
+    this.startMinute = const Value.absent(),
+    this.tzId = const Value.absent(),
+    this.pinned = const Value.absent(),
+    this.travelBufferMin = const Value.absent(),
+    this.energy = const Value.absent(),
+    this.alerts = const Value.absent(),
+    this.soundId = const Value.absent(),
+    this.subtaskTemplate = const Value.absent(),
+    this.hidden = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt),
+       id = Value(id),
+       userId = Value(userId),
+       provider = Value(provider),
+       externalCalendarId = Value(externalCalendarId),
+       seriesKey = Value(seriesKey);
+  static Insertable<PendingCalendarSeriesRow> custom({
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? provider,
+    Expression<String>? externalCalendarId,
+    Expression<String>? deviceTag,
+    Expression<String>? seriesKey,
+    Expression<String>? title,
+    Expression<String>? notes,
+    Expression<String>? colorKey,
+    Expression<String>? iconKey,
+    Expression<int>? durationMin,
+    Expression<int>? startMinute,
+    Expression<String>? tzId,
+    Expression<bool>? pinned,
+    Expression<int>? travelBufferMin,
+    Expression<int>? energy,
+    Expression<String>? alerts,
+    Expression<String>? soundId,
+    Expression<String>? subtaskTemplate,
+    Expression<bool>? hidden,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (provider != null) 'provider': provider,
+      if (externalCalendarId != null)
+        'external_calendar_id': externalCalendarId,
+      if (deviceTag != null) 'device_tag': deviceTag,
+      if (seriesKey != null) 'series_key': seriesKey,
+      if (title != null) 'title': title,
+      if (notes != null) 'notes': notes,
+      if (colorKey != null) 'color_key': colorKey,
+      if (iconKey != null) 'icon_key': iconKey,
+      if (durationMin != null) 'duration_min': durationMin,
+      if (startMinute != null) 'start_minute': startMinute,
+      if (tzId != null) 'tz_id': tzId,
+      if (pinned != null) 'pinned': pinned,
+      if (travelBufferMin != null) 'travel_buffer_min': travelBufferMin,
+      if (energy != null) 'energy': energy,
+      if (alerts != null) 'alerts': alerts,
+      if (soundId != null) 'sound_id': soundId,
+      if (subtaskTemplate != null) 'subtask_template': subtaskTemplate,
+      if (hidden != null) 'hidden': hidden,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PendingCalendarSeriesTableCompanion copyWith({
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? provider,
+    Value<String>? externalCalendarId,
+    Value<String?>? deviceTag,
+    Value<String>? seriesKey,
+    Value<String?>? title,
+    Value<String?>? notes,
+    Value<String?>? colorKey,
+    Value<String?>? iconKey,
+    Value<int?>? durationMin,
+    Value<int?>? startMinute,
+    Value<String?>? tzId,
+    Value<bool?>? pinned,
+    Value<int?>? travelBufferMin,
+    Value<int?>? energy,
+    Value<String?>? alerts,
+    Value<String?>? soundId,
+    Value<String?>? subtaskTemplate,
+    Value<bool>? hidden,
+    Value<int>? rowid,
+  }) {
+    return PendingCalendarSeriesTableCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      provider: provider ?? this.provider,
+      externalCalendarId: externalCalendarId ?? this.externalCalendarId,
+      deviceTag: deviceTag ?? this.deviceTag,
+      seriesKey: seriesKey ?? this.seriesKey,
+      title: title ?? this.title,
+      notes: notes ?? this.notes,
+      colorKey: colorKey ?? this.colorKey,
+      iconKey: iconKey ?? this.iconKey,
+      durationMin: durationMin ?? this.durationMin,
+      startMinute: startMinute ?? this.startMinute,
+      tzId: tzId ?? this.tzId,
+      pinned: pinned ?? this.pinned,
+      travelBufferMin: travelBufferMin ?? this.travelBufferMin,
+      energy: energy ?? this.energy,
+      alerts: alerts ?? this.alerts,
+      soundId: soundId ?? this.soundId,
+      subtaskTemplate: subtaskTemplate ?? this.subtaskTemplate,
+      hidden: hidden ?? this.hidden,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (provider.present) {
+      map['provider'] = Variable<String>(provider.value);
+    }
+    if (externalCalendarId.present) {
+      map['external_calendar_id'] = Variable<String>(externalCalendarId.value);
+    }
+    if (deviceTag.present) {
+      map['device_tag'] = Variable<String>(deviceTag.value);
+    }
+    if (seriesKey.present) {
+      map['series_key'] = Variable<String>(seriesKey.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (colorKey.present) {
+      map['color_key'] = Variable<String>(colorKey.value);
+    }
+    if (iconKey.present) {
+      map['icon_key'] = Variable<String>(iconKey.value);
+    }
+    if (durationMin.present) {
+      map['duration_min'] = Variable<int>(durationMin.value);
+    }
+    if (startMinute.present) {
+      map['start_minute'] = Variable<int>(startMinute.value);
+    }
+    if (tzId.present) {
+      map['tz_id'] = Variable<String>(tzId.value);
+    }
+    if (pinned.present) {
+      map['pinned'] = Variable<bool>(pinned.value);
+    }
+    if (travelBufferMin.present) {
+      map['travel_buffer_min'] = Variable<int>(travelBufferMin.value);
+    }
+    if (energy.present) {
+      map['energy'] = Variable<int>(energy.value);
+    }
+    if (alerts.present) {
+      map['alerts'] = Variable<String>(alerts.value);
+    }
+    if (soundId.present) {
+      map['sound_id'] = Variable<String>(soundId.value);
+    }
+    if (subtaskTemplate.present) {
+      map['subtask_template'] = Variable<String>(subtaskTemplate.value);
+    }
+    if (hidden.present) {
+      map['hidden'] = Variable<bool>(hidden.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingCalendarSeriesTableCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('provider: $provider, ')
+          ..write('externalCalendarId: $externalCalendarId, ')
+          ..write('deviceTag: $deviceTag, ')
+          ..write('seriesKey: $seriesKey, ')
+          ..write('title: $title, ')
+          ..write('notes: $notes, ')
+          ..write('colorKey: $colorKey, ')
+          ..write('iconKey: $iconKey, ')
+          ..write('durationMin: $durationMin, ')
+          ..write('startMinute: $startMinute, ')
+          ..write('tzId: $tzId, ')
+          ..write('pinned: $pinned, ')
+          ..write('travelBufferMin: $travelBufferMin, ')
+          ..write('energy: $energy, ')
+          ..write('alerts: $alerts, ')
+          ..write('soundId: $soundId, ')
+          ..write('subtaskTemplate: $subtaskTemplate, ')
+          ..write('hidden: $hidden, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $RoutinesTableTable extends RoutinesTable
     with TableInfo<$RoutinesTableTable, RoutineRow> {
   @override
@@ -11238,6 +12468,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $CalendarSeriesTableTable calendarSeriesTable =
       $CalendarSeriesTableTable(this);
+  late final $PendingCalendarSeriesTableTable pendingCalendarSeriesTable =
+      $PendingCalendarSeriesTableTable(this);
   late final $RoutinesTableTable routinesTable = $RoutinesTableTable(this);
   late final $RevealHintsTableTable revealHintsTable = $RevealHintsTableTable(
     this,
@@ -11319,6 +12551,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     calendarLinksUserEvent,
     calendarLinksAccountEvent,
     calendarSeriesTable,
+    pendingCalendarSeriesTable,
     routinesTable,
     revealHintsTable,
     conflicts,
@@ -11502,6 +12735,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('calendar_series', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('pending_calendar_series', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('pending_calendar_series', kind: UpdateKind.update)],
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
@@ -11888,6 +13135,31 @@ final class $$ProfilesTableReferences
     );
   }
 
+  static MultiTypedResultKey<
+    $PendingCalendarSeriesTableTable,
+    List<PendingCalendarSeriesRow>
+  >
+  _pendingCalendarSeriesTableRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.pendingCalendarSeriesTable,
+        aliasName: 'profiles__id__pending_calendar_series__user_id',
+      );
+
+  $$PendingCalendarSeriesTableTableProcessedTableManager
+  get pendingCalendarSeriesTableRefs {
+    final manager = $$PendingCalendarSeriesTableTableTableManager(
+      $_db,
+      $_db.pendingCalendarSeriesTable,
+    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _pendingCalendarSeriesTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
   static MultiTypedResultKey<$RoutinesTableTable, List<RoutineRow>>
   _routinesTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.routinesTable,
@@ -12164,6 +13436,33 @@ class $$ProfilesTableFilterComposer
                 $removeJoinBuilderFromRootComposer,
           ),
     );
+    return f(composer);
+  }
+
+  Expression<bool> pendingCalendarSeriesTableRefs(
+    Expression<bool> Function($$PendingCalendarSeriesTableTableFilterComposer f)
+    f,
+  ) {
+    final $$PendingCalendarSeriesTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.pendingCalendarSeriesTable,
+          getReferencedColumn: (t) => t.userId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$PendingCalendarSeriesTableTableFilterComposer(
+                $db: $db,
+                $table: $db.pendingCalendarSeriesTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 
@@ -12512,6 +13811,35 @@ class $$ProfilesTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> pendingCalendarSeriesTableRefs<T extends Object>(
+    Expression<T> Function(
+      $$PendingCalendarSeriesTableTableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$PendingCalendarSeriesTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.pendingCalendarSeriesTable,
+          getReferencedColumn: (t) => t.userId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$PendingCalendarSeriesTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.pendingCalendarSeriesTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
   Expression<T> routinesTableRefs<T extends Object>(
     Expression<T> Function($$RoutinesTableTableAnnotationComposer a) f,
   ) {
@@ -12633,6 +13961,7 @@ class $$ProfilesTableTableManager
             bool occurrencesRefs,
             bool subtasksRefs,
             bool calendarSeriesTableRefs,
+            bool pendingCalendarSeriesTableRefs,
             bool routinesTableRefs,
             bool revealHintsTableRefs,
             bool conflictsRefs,
@@ -12714,6 +14043,7 @@ class $$ProfilesTableTableManager
                 occurrencesRefs = false,
                 subtasksRefs = false,
                 calendarSeriesTableRefs = false,
+                pendingCalendarSeriesTableRefs = false,
                 routinesTableRefs = false,
                 revealHintsTableRefs = false,
                 conflictsRefs = false,
@@ -12728,6 +14058,8 @@ class $$ProfilesTableTableManager
                     if (occurrencesRefs) db.occurrences,
                     if (subtasksRefs) db.subtasks,
                     if (calendarSeriesTableRefs) db.calendarSeriesTable,
+                    if (pendingCalendarSeriesTableRefs)
+                      db.pendingCalendarSeriesTable,
                     if (routinesTableRefs) db.routinesTable,
                     if (revealHintsTableRefs) db.revealHintsTable,
                     if (conflictsRefs) db.conflicts,
@@ -12862,6 +14194,27 @@ class $$ProfilesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (pendingCalendarSeriesTableRefs)
+                        await $_getPrefetchedData<
+                          ProfileRow,
+                          $ProfilesTable,
+                          PendingCalendarSeriesRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._pendingCalendarSeriesTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).pendingCalendarSeriesTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.userId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (routinesTableRefs)
                         await $_getPrefetchedData<
                           ProfileRow,
@@ -12973,6 +14326,7 @@ typedef $$ProfilesTableProcessedTableManager =
         bool occurrencesRefs,
         bool subtasksRefs,
         bool calendarSeriesTableRefs,
+        bool pendingCalendarSeriesTableRefs,
         bool routinesTableRefs,
         bool revealHintsTableRefs,
         bool conflictsRefs,
@@ -17431,6 +18785,684 @@ typedef $$CalendarSeriesTableTableProcessedTableManager =
       CalendarSeriesRow,
       PrefetchHooks Function({bool userId, bool accountId})
     >;
+typedef $$PendingCalendarSeriesTableTableCreateCompanionBuilder =
+    PendingCalendarSeriesTableCompanion Function({
+      required int createdAt,
+      required int updatedAt,
+      required String id,
+      required String userId,
+      required String provider,
+      required String externalCalendarId,
+      Value<String?> deviceTag,
+      required String seriesKey,
+      Value<String?> title,
+      Value<String?> notes,
+      Value<String?> colorKey,
+      Value<String?> iconKey,
+      Value<int?> durationMin,
+      Value<int?> startMinute,
+      Value<String?> tzId,
+      Value<bool?> pinned,
+      Value<int?> travelBufferMin,
+      Value<int?> energy,
+      Value<String?> alerts,
+      Value<String?> soundId,
+      Value<String?> subtaskTemplate,
+      Value<bool> hidden,
+      Value<int> rowid,
+    });
+typedef $$PendingCalendarSeriesTableTableUpdateCompanionBuilder =
+    PendingCalendarSeriesTableCompanion Function({
+      Value<int> createdAt,
+      Value<int> updatedAt,
+      Value<String> id,
+      Value<String> userId,
+      Value<String> provider,
+      Value<String> externalCalendarId,
+      Value<String?> deviceTag,
+      Value<String> seriesKey,
+      Value<String?> title,
+      Value<String?> notes,
+      Value<String?> colorKey,
+      Value<String?> iconKey,
+      Value<int?> durationMin,
+      Value<int?> startMinute,
+      Value<String?> tzId,
+      Value<bool?> pinned,
+      Value<int?> travelBufferMin,
+      Value<int?> energy,
+      Value<String?> alerts,
+      Value<String?> soundId,
+      Value<String?> subtaskTemplate,
+      Value<bool> hidden,
+      Value<int> rowid,
+    });
+
+final class $$PendingCalendarSeriesTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $PendingCalendarSeriesTableTable,
+          PendingCalendarSeriesRow
+        > {
+  $$PendingCalendarSeriesTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ProfilesTable _userIdTable(_$AppDatabase db) =>
+      db.profiles.createAlias('pending_calendar_series__user_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<String>('user_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$PendingCalendarSeriesTableTableFilterComposer
+    extends Composer<_$AppDatabase, $PendingCalendarSeriesTableTable> {
+  $$PendingCalendarSeriesTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get provider => $composableBuilder(
+    column: $table.provider,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get externalCalendarId => $composableBuilder(
+    column: $table.externalCalendarId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get deviceTag => $composableBuilder(
+    column: $table.deviceTag,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get seriesKey => $composableBuilder(
+    column: $table.seriesKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get colorKey => $composableBuilder(
+    column: $table.colorKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get iconKey => $composableBuilder(
+    column: $table.iconKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get durationMin => $composableBuilder(
+    column: $table.durationMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get startMinute => $composableBuilder(
+    column: $table.startMinute,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tzId => $composableBuilder(
+    column: $table.tzId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get pinned => $composableBuilder(
+    column: $table.pinned,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get travelBufferMin => $composableBuilder(
+    column: $table.travelBufferMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get energy => $composableBuilder(
+    column: $table.energy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get alerts => $composableBuilder(
+    column: $table.alerts,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get soundId => $composableBuilder(
+    column: $table.soundId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get subtaskTemplate => $composableBuilder(
+    column: $table.subtaskTemplate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hidden => $composableBuilder(
+    column: $table.hidden,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ProfilesTableFilterComposer get userId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PendingCalendarSeriesTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $PendingCalendarSeriesTableTable> {
+  $$PendingCalendarSeriesTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get provider => $composableBuilder(
+    column: $table.provider,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get externalCalendarId => $composableBuilder(
+    column: $table.externalCalendarId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get deviceTag => $composableBuilder(
+    column: $table.deviceTag,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get seriesKey => $composableBuilder(
+    column: $table.seriesKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get colorKey => $composableBuilder(
+    column: $table.colorKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get iconKey => $composableBuilder(
+    column: $table.iconKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get durationMin => $composableBuilder(
+    column: $table.durationMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get startMinute => $composableBuilder(
+    column: $table.startMinute,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tzId => $composableBuilder(
+    column: $table.tzId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get pinned => $composableBuilder(
+    column: $table.pinned,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get travelBufferMin => $composableBuilder(
+    column: $table.travelBufferMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get energy => $composableBuilder(
+    column: $table.energy,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get alerts => $composableBuilder(
+    column: $table.alerts,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get soundId => $composableBuilder(
+    column: $table.soundId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get subtaskTemplate => $composableBuilder(
+    column: $table.subtaskTemplate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hidden => $composableBuilder(
+    column: $table.hidden,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ProfilesTableOrderingComposer get userId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PendingCalendarSeriesTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PendingCalendarSeriesTableTable> {
+  $$PendingCalendarSeriesTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get provider =>
+      $composableBuilder(column: $table.provider, builder: (column) => column);
+
+  GeneratedColumn<String> get externalCalendarId => $composableBuilder(
+    column: $table.externalCalendarId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get deviceTag =>
+      $composableBuilder(column: $table.deviceTag, builder: (column) => column);
+
+  GeneratedColumn<String> get seriesKey =>
+      $composableBuilder(column: $table.seriesKey, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<String> get colorKey =>
+      $composableBuilder(column: $table.colorKey, builder: (column) => column);
+
+  GeneratedColumn<String> get iconKey =>
+      $composableBuilder(column: $table.iconKey, builder: (column) => column);
+
+  GeneratedColumn<int> get durationMin => $composableBuilder(
+    column: $table.durationMin,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get startMinute => $composableBuilder(
+    column: $table.startMinute,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get tzId =>
+      $composableBuilder(column: $table.tzId, builder: (column) => column);
+
+  GeneratedColumn<bool> get pinned =>
+      $composableBuilder(column: $table.pinned, builder: (column) => column);
+
+  GeneratedColumn<int> get travelBufferMin => $composableBuilder(
+    column: $table.travelBufferMin,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get energy =>
+      $composableBuilder(column: $table.energy, builder: (column) => column);
+
+  GeneratedColumn<String> get alerts =>
+      $composableBuilder(column: $table.alerts, builder: (column) => column);
+
+  GeneratedColumn<String> get soundId =>
+      $composableBuilder(column: $table.soundId, builder: (column) => column);
+
+  GeneratedColumn<String> get subtaskTemplate => $composableBuilder(
+    column: $table.subtaskTemplate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get hidden =>
+      $composableBuilder(column: $table.hidden, builder: (column) => column);
+
+  $$ProfilesTableAnnotationComposer get userId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PendingCalendarSeriesTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PendingCalendarSeriesTableTable,
+          PendingCalendarSeriesRow,
+          $$PendingCalendarSeriesTableTableFilterComposer,
+          $$PendingCalendarSeriesTableTableOrderingComposer,
+          $$PendingCalendarSeriesTableTableAnnotationComposer,
+          $$PendingCalendarSeriesTableTableCreateCompanionBuilder,
+          $$PendingCalendarSeriesTableTableUpdateCompanionBuilder,
+          (
+            PendingCalendarSeriesRow,
+            $$PendingCalendarSeriesTableTableReferences,
+          ),
+          PendingCalendarSeriesRow,
+          PrefetchHooks Function({bool userId})
+        > {
+  $$PendingCalendarSeriesTableTableTableManager(
+    _$AppDatabase db,
+    $PendingCalendarSeriesTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PendingCalendarSeriesTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$PendingCalendarSeriesTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$PendingCalendarSeriesTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> createdAt = const Value.absent(),
+                Value<int> updatedAt = const Value.absent(),
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> provider = const Value.absent(),
+                Value<String> externalCalendarId = const Value.absent(),
+                Value<String?> deviceTag = const Value.absent(),
+                Value<String> seriesKey = const Value.absent(),
+                Value<String?> title = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<String?> colorKey = const Value.absent(),
+                Value<String?> iconKey = const Value.absent(),
+                Value<int?> durationMin = const Value.absent(),
+                Value<int?> startMinute = const Value.absent(),
+                Value<String?> tzId = const Value.absent(),
+                Value<bool?> pinned = const Value.absent(),
+                Value<int?> travelBufferMin = const Value.absent(),
+                Value<int?> energy = const Value.absent(),
+                Value<String?> alerts = const Value.absent(),
+                Value<String?> soundId = const Value.absent(),
+                Value<String?> subtaskTemplate = const Value.absent(),
+                Value<bool> hidden = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PendingCalendarSeriesTableCompanion(
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                id: id,
+                userId: userId,
+                provider: provider,
+                externalCalendarId: externalCalendarId,
+                deviceTag: deviceTag,
+                seriesKey: seriesKey,
+                title: title,
+                notes: notes,
+                colorKey: colorKey,
+                iconKey: iconKey,
+                durationMin: durationMin,
+                startMinute: startMinute,
+                tzId: tzId,
+                pinned: pinned,
+                travelBufferMin: travelBufferMin,
+                energy: energy,
+                alerts: alerts,
+                soundId: soundId,
+                subtaskTemplate: subtaskTemplate,
+                hidden: hidden,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int createdAt,
+                required int updatedAt,
+                required String id,
+                required String userId,
+                required String provider,
+                required String externalCalendarId,
+                Value<String?> deviceTag = const Value.absent(),
+                required String seriesKey,
+                Value<String?> title = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<String?> colorKey = const Value.absent(),
+                Value<String?> iconKey = const Value.absent(),
+                Value<int?> durationMin = const Value.absent(),
+                Value<int?> startMinute = const Value.absent(),
+                Value<String?> tzId = const Value.absent(),
+                Value<bool?> pinned = const Value.absent(),
+                Value<int?> travelBufferMin = const Value.absent(),
+                Value<int?> energy = const Value.absent(),
+                Value<String?> alerts = const Value.absent(),
+                Value<String?> soundId = const Value.absent(),
+                Value<String?> subtaskTemplate = const Value.absent(),
+                Value<bool> hidden = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PendingCalendarSeriesTableCompanion.insert(
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                id: id,
+                userId: userId,
+                provider: provider,
+                externalCalendarId: externalCalendarId,
+                deviceTag: deviceTag,
+                seriesKey: seriesKey,
+                title: title,
+                notes: notes,
+                colorKey: colorKey,
+                iconKey: iconKey,
+                durationMin: durationMin,
+                startMinute: startMinute,
+                tzId: tzId,
+                pinned: pinned,
+                travelBufferMin: travelBufferMin,
+                energy: energy,
+                alerts: alerts,
+                soundId: soundId,
+                subtaskTemplate: subtaskTemplate,
+                hidden: hidden,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $PendingCalendarSeriesTableTable,
+                    PendingCalendarSeriesRow
+                  >(table),
+                  $$PendingCalendarSeriesTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({userId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (userId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.userId,
+                                referencedTable:
+                                    $$PendingCalendarSeriesTableTableReferences
+                                        ._userIdTable(db),
+                                referencedColumn:
+                                    $$PendingCalendarSeriesTableTableReferences
+                                        ._userIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PendingCalendarSeriesTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PendingCalendarSeriesTableTable,
+      PendingCalendarSeriesRow,
+      $$PendingCalendarSeriesTableTableFilterComposer,
+      $$PendingCalendarSeriesTableTableOrderingComposer,
+      $$PendingCalendarSeriesTableTableAnnotationComposer,
+      $$PendingCalendarSeriesTableTableCreateCompanionBuilder,
+      $$PendingCalendarSeriesTableTableUpdateCompanionBuilder,
+      (PendingCalendarSeriesRow, $$PendingCalendarSeriesTableTableReferences),
+      PendingCalendarSeriesRow,
+      PrefetchHooks Function({bool userId})
+    >;
 typedef $$RoutinesTableTableCreateCompanionBuilder =
     RoutinesTableCompanion Function({
       required int createdAt,
@@ -20065,6 +22097,12 @@ class $AppDatabaseManager {
       $$SubtasksTableTableManager(_db, _db.subtasks);
   $$CalendarSeriesTableTableTableManager get calendarSeriesTable =>
       $$CalendarSeriesTableTableTableManager(_db, _db.calendarSeriesTable);
+  $$PendingCalendarSeriesTableTableTableManager
+  get pendingCalendarSeriesTable =>
+      $$PendingCalendarSeriesTableTableTableManager(
+        _db,
+        _db.pendingCalendarSeriesTable,
+      );
   $$RoutinesTableTableTableManager get routinesTable =>
       $$RoutinesTableTableTableManager(_db, _db.routinesTable);
   $$RevealHintsTableTableTableManager get revealHintsTable =>

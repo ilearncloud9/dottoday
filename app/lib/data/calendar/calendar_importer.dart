@@ -3,6 +3,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/logging/logger.dart';
+import 'package:dottoday/data/calendar/pending_series_attach.dart';
 import 'package:dottoday/data/daos/calendar_links_dao.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/mappers/entity_mappers.dart';
@@ -11,6 +12,7 @@ import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/repositories/drift_calendar_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
+import 'package:dottoday/data/sync/pull_guard.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
 import 'package:dottoday/data/writes/validate_batch.dart';
 import 'package:dottoday/domain/calendar/calendar_import.dart';
@@ -118,6 +120,9 @@ final class CalendarImporter implements CalendarImport {
       return const Ok(null);
     }
     try {
+      // The owner session this run began in: a restored template attaches
+      // only if it is still the one shown (CR-160 Stage A).
+      final owner = await _ownerSession(userId);
       final now = _clock.nowUtc();
       final from = _startOfYesterday(now, location);
       final to = from.add(const Duration(days: horizonDays + 1));
@@ -127,6 +132,9 @@ final class CalendarImporter implements CalendarImport {
         final source = await _read(userId, c, from, to, location, untitled);
         source.$1 == null ? untouched.add(source.$2) : sources.add(source.$1!);
       }
+      // After the reads: their calendars have their rows now, and new
+      // instances of an attached series take its settings in this plan.
+      if (owner != null) await _attachPending(owner);
       final plan = planCalendarImport(
         userId: userId,
         sources: sources,
@@ -147,6 +155,28 @@ final class CalendarImporter implements CalendarImport {
     } on Exception catch (e, st) {
       _logger.error('calendar.import_failed', error: e, stackTrace: st);
       return const Err(StorageFailure());
+    }
+  }
+
+  Future<PullOwner?> _ownerSession(String userId) async {
+    try {
+      return await beginPull(_db, userId);
+    } on PullRefusedException {
+      return null;
+    }
+  }
+
+  /// Attaches restored templates whose calendar is now here
+  /// ([attachPendingCalendarSeries]). Never stops the import: a refusal
+  /// (the owner changed) or a failure leaves them pending for the next run.
+  Future<void> _attachPending(PullOwner owner) async {
+    try {
+      final n = await attachPendingCalendarSeries(_db, owner, _ids);
+      if (n > 0) _logger.info('calendar.series_attached', fields: {'n': n});
+    } on PullRefusedException catch (e) {
+      _logger.info('calendar.series_attach_refused', fields: {'why': e.reason});
+    } on Exception catch (e, st) {
+      _logger.error('calendar.series_attach_failed', error: e, stackTrace: st);
     }
   }
 

@@ -134,6 +134,16 @@ ends the series its planned instances are removed outright rather than sent to T
 the write path (validated, undoable — Undo of the write that created a row clears it) but never queued
 for sync, like the imports it shapes; no server table.
 
+### `pending_calendar_series` (local only, schema 20, CR-160 Stage A)
+`id, user_id, provider, external_calendar_id, device_tag?, series_key` and the `calendar_series`
+settings columns with the same CHECKs; unique `(user_id, provider, external_calendar_id, series_key)`.
+Calendar-series settings restored from a D1 file and not attached to a calendar here yet: named by the
+calendar's provider ids instead of a `calendar_accounts` row. Owned by the account that imported the
+file (`ON DELETE/UPDATE CASCADE` from `profiles`, and in the owner-removal table list), never pushed.
+Written only by a file import (refused unless that account is shown and not sealed) and removed only
+by an attach; both count as a save for D1's review (write revision). Attach rules: see "Export
+format", `calendarSeries`.
+
 ### `conflicts`
 `id, user_id, entity ('series'|'occurrences'|'subtasks'|'profiles'|'routines'), entity_id, field,
 mine jsonb, theirs jsonb, created_at, resolved_at?`
@@ -313,3 +323,42 @@ rename (the data-export skill's default) — the restore must flow through the w
 change-logged and syncs to the person's other devices like any edit, and one transaction already
 leaves nothing half-applied; and a payload checksum in the envelope (v1 stays as it is: a truncated
 or edited file already fails JSON parsing or row validation, and a newer `version` is refused).
+
+Clarified in CR-160 Stage A: D1's export (and only D1's) adds an optional `calendarSeries[]`, one item
+per `calendar_series` row and per pending template of the owner, with or without current instances:
+the row's settings (snake_case, as stored, `account_id` left out) plus `provider`,
+`external_calendar_id` (the calendar's `calendar_accounts.external_account_id`) and, for a device
+calendar, `device_tag` (16 hex digits, `local_meta.calendar_device_tag`: which install it came from,
+not a person). The file stays `version: 1`; an older importer skips the key, and every other export
+and backup leaves it out. D1's completeness check counts these items too. Import validates each item
+(the `calendar_series` rules, id bounds, a device tag only on a device calendar, one item per
+calendar and series, one owner) and keeps them **pending** under the importing account with new local
+ids, never attached during the import. A pending template is attached to a calendar (becoming a
+`calendar_series` row) only by the calendar import, inside one transaction that re-checks the owner
+session (shown account, same owner generation, not sealed or being removed), and only when all of
+these hold: the provider is Apple's device store; the template's device tag is this install's; exactly
+one of **that owner's** `calendar_accounts` rows has the same provider and calendar id; and no
+`calendar_series` row exists yet for that calendar and series key (the one here wins; the template
+stays). Nothing is matched by title, label, email or likeness, and anything else stays pending, whole.
+
+Why those rules. Device calendar ids are this device's only, so a template restored on another device
+or a reinstall stays pending (`device_tag` differs). Apple's EventKit calendar and event identifiers
+are opaque unique strings, so on the same install an equal id is the same calendar and series, or
+nothing. Android's CalendarContract ids are per-device integer row ids (`"3"`, `"57"`): the same
+numbers exist on every phone, and nothing documents them as stable when a calendar account is removed
+and added again or re-synced, so an equal id is not proof: Android templates never attach. Google
+and Microsoft calendars reach the app as `<server connection id>/<provider calendar id>`; the
+connection id is a random `calendar_accounts.id` on the server, deleted with the account and new on
+every reconnect, and the provider's stable account id (the OAuth subject, `external_account_id`
+server-side) never leaves the `calendar-sync` Edge Function. So cloud templates never attach either;
+**cloud-template restoration is not done and remains a CR-160 release blocker.**
+
+Future `calendar-sync` change needed for cloud templates (not built; needs its own approval and
+deploy): (1) return, per connected account, a verified stable provider identity derived server-side
+from the OAuth subject (for example a keyed hash of `provider + external_account_id`, so the raw
+subject never reaches the device or the file), and give each calendar that identity plus the
+provider's own calendar id as separate fields beside today's composite `id`; (2) have the client store
+both on the `calendar_accounts` row and write them into each cloud `calendarSeries` item; (3) attach a
+cloud template only when provider, that verified identity, provider calendar id and series key all
+match a calendar of the current owner. Files exported before that change carry no verified identity,
+so their cloud templates stay pending.

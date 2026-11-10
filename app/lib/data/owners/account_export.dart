@@ -33,7 +33,8 @@ enum OwnerExportOutcome {
 
 /// Exports [owner]'s full JSON backup (local and unsynced work included:
 /// it is read from this device) and checks it before saying it worked:
-/// the decoded file holds as many series, tasks, steps and routines as the
+/// the decoded file holds as many series, tasks, steps, routines and
+/// calendar-series templates (attached and pending: CR-160 Stage A) as the
 /// device has for [owner] (imported calendar events included, as ordinary
 /// tasks: CR-160), and the hand-off reported no error. A file over the
 /// import limit fails the decode, so it is never reported as done.
@@ -81,13 +82,20 @@ Future<OwnerExportOutcome> exportOwnerChecked({
   }
 }
 
-typedef _Counts = ({int series, int tasks, int steps, int routines});
+typedef _Counts = ({
+  int series,
+  int tasks,
+  int steps,
+  int routines,
+  int calendarSeries,
+});
 
 bool _complete(ExportBundle b, _Counts local) =>
     b.series.length == local.series &&
     b.occurrences.length == local.tasks &&
     b.subtasks.length == local.steps &&
-    b.routines.length == local.routines;
+    b.routines.length == local.routines &&
+    b.calendarSeries.length == local.calendarSeries;
 
 Future<_Counts> _localCounts(AppDatabase db, String owner) async {
   final row = await db
@@ -97,7 +105,10 @@ Future<_Counts> _localCounts(AppDatabase db, String owner) async {
         'SELECT (SELECT COUNT(*) FROM series WHERE user_id = ?1) AS s, '
         '(SELECT COUNT(*) FROM occurrences WHERE user_id = ?1) AS o, '
         '(SELECT COUNT(*) FROM subtasks WHERE user_id = ?1) AS st, '
-        '(SELECT COUNT(*) FROM routines WHERE user_id = ?1) AS r',
+        '(SELECT COUNT(*) FROM routines WHERE user_id = ?1) AS r, '
+        '(SELECT COUNT(*) FROM calendar_series WHERE user_id = ?1) + '
+        '(SELECT COUNT(*) FROM pending_calendar_series WHERE user_id = ?1) '
+        'AS cs',
         variables: [Variable<String>(owner)],
       )
       .getSingle();
@@ -106,5 +117,6 @@ Future<_Counts> _localCounts(AppDatabase db, String owner) async {
     tasks: row.read<int>('o'),
     steps: row.read<int>('st'),
     routines: row.read<int>('r'),
+    calendarSeries: row.read<int>('cs'),
   );
 }

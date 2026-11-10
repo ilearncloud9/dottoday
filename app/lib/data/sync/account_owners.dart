@@ -223,6 +223,7 @@ const _ownedTables = [
   'reveal_hints',
   'conflicts',
   'calendar_series',
+  'pending_calendar_series',
   'calendar_links',
   'calendar_accounts',
 ];

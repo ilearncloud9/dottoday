@@ -4,6 +4,7 @@ import 'package:dottoday/data/db/tables/calendar_tables.dart';
 // The generated part copies `soundIdCheck` (a column CHECK) verbatim.
 import 'package:dottoday/data/db/tables/columns.dart';
 import 'package:dottoday/data/db/tables/occurrences.dart';
+import 'package:dottoday/data/db/tables/pending_calendar_series_table.dart';
 import 'package:dottoday/data/db/tables/profiles.dart';
 import 'package:dottoday/data/db/tables/reveal_hints_table.dart';
 import 'package:dottoday/data/db/tables/routines_table.dart';
@@ -16,7 +17,8 @@ part 'app_database.g.dart';
 
 /// The local source of truth (docs/04 §4): server tables mirrored with sync
 /// columns, plus the local-only `change_log`, `sync_cursors`, `field_seen`,
-/// `local_meta`, `wake_up_days` and `calendar_series`.
+/// `local_meta`, `wake_up_days`, `calendar_series` and
+/// `pending_calendar_series`.
 ///
 /// Open it with `openAppDatabase` (connection/connection.dart) so the
 /// SQLCipher key is applied before any statement (06 §4, ADR-0006).
@@ -27,6 +29,7 @@ part 'app_database.g.dart';
     CalendarAccounts,
     CalendarLinks,
     CalendarSeriesTable,
+    PendingCalendarSeriesTable,
     Occurrences,
     Subtasks,
     RoutinesTable,
@@ -45,7 +48,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 19;
+  static const latestSchemaVersion = 20;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -150,6 +153,11 @@ class AppDatabase extends _$AppDatabase {
       // 19 (CR-160): the guest session that first wrote each guest row.
       // Existing rows get none: they are never eligible to move.
       if (from < 19) await _createTableOnce(m, guestRowSessions);
+      // 20 (CR-160 Stage A): calendar-series settings restored from a D1
+      // file, kept until a calendar here provably matches them.
+      if (from < 20) {
+        await _createTableOnce(m, pendingCalendarSeriesTable);
+      }
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without

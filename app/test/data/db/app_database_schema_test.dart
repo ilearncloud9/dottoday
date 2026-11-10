@@ -65,6 +65,7 @@ void main() {
       'local_meta',
       'wake_up_days',
       'calendar_series',
+      'pending_calendar_series',
       'guest_row_sessions',
     });
     expect(rows.every((r) => r.read<int>('strict') == 1), isTrue);

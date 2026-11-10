@@ -23,10 +23,51 @@ import 'package:flutter_test/flutter_test.dart';
 // discovery hints (rebuilt, rows kept); 15 → 16 (docs/15 §11): and the
 // alarm-tier soft reveal; 16 → 17: sync_cursors' keyset (since_at,
 // since_id), null on upgrade; 17 → 18 (CR-160): change_log.owner_id and
-// sync_cursors.owner_id, and the owners recorded in local_meta.
+// sync_cursors.owner_id, and the owners recorded in local_meta; 19 → 20
+// (CR-160 Stage A): pending_calendar_series, empty, rows kept.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
+  test('a version 19 file gains pending calendar series, empty, its own '
+      'calendar series kept', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig20');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+    final v19 = AppDatabase(NativeDatabase(file));
+    await v19.customStatement(
+      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+      "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+    );
+    await v19.customStatement(
+      'INSERT INTO calendar_accounts (id, user_id, provider, label, '
+      'external_account_id, created_at, updated_at) '
+      "VALUES ('a', 'u', 'apple_device', 'Work', 'cal', 0, 0)",
+    );
+    await v19.customStatement(
+      'INSERT INTO calendar_series (id, user_id, account_id, series_key, '
+      "title, created_at, updated_at) VALUES ('s', 'u', 'a', 'k', 'Gym', 0, 0)",
+    );
+    await v19.customStatement('DROP TABLE pending_calendar_series');
+    await v19.customStatement('PRAGMA user_version = 19');
+    await v19.close();
+
+    final v20 = AppDatabase(NativeDatabase(file));
+    addTearDown(v20.close);
+    expect(await v20.select(v20.pendingCalendarSeriesTable).get(), isEmpty);
+    final kept = await v20.select(v20.calendarSeriesTable).getSingle();
+    expect((kept.title, kept.seriesKey), ('Gym', 'k'));
+    await expectLater(
+      v20.customStatement(
+        'INSERT INTO pending_calendar_series (id, user_id, provider, '
+        'external_calendar_id, device_tag, series_key, created_at, '
+        "updated_at) VALUES ('p', 'u', 'google', 'acc/cal', "
+        "'0123456789abcdef', 'k', 0, 0)",
+      ),
+      throwsA(isA<SqliteException>()),
+      reason: 'a cloud template never carries a device tag',
+    );
+  });
+
   test('a version 17 file: every outbox entry and cursor gets its owner, '
       'the synced profile is an account and shows', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig18');

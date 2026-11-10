@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/domain/export/export_bundle.dart';
+import 'package:dottoday/domain/validation/calendar_series_validator.dart';
 import 'package:dottoday/domain/validation/entity_validators.dart';
 import 'package:dottoday/domain/validation/routine_validator.dart';
 
@@ -61,12 +62,16 @@ Result<ExportBundle, ValidationFailure> _validated(ExportBundle b) {
   final occurrences = b.occurrences.map(validateOccurrence).toList();
   final subtasks = b.subtasks.map(validateSubtask).toList();
   final routines = b.routines.map(validateRoutine).toList();
+  final templates = b.calendarSeries
+      .map(validateCalendarSeriesTemplate)
+      .toList();
   for (final r in [
     profile,
     ...series,
     ...occurrences,
     ...subtasks,
     ...routines,
+    ...templates,
   ]) {
     if (r case Err(:final failure)) return Err(failure);
   }
@@ -82,6 +87,7 @@ Result<ExportBundle, ValidationFailure> _validated(ExportBundle b) {
     ],
     subtasks: subtasks.map(ok).toList(),
     routines: routines.map(ok).toList(),
+    calendarSeries: templates.map(ok).toList(),
   );
   return _consistent(clean) ? Ok(clean) : const Err(_badFile);
 }
@@ -92,10 +98,18 @@ bool _consistent(ExportBundle b) {
   final occurrenceIds = {for (final o in b.occurrences) o.id};
   final subtaskIds = {for (final s in b.subtasks) s.id};
   final routineIds = {for (final r in b.routines) r.id};
+  final templateIds = {for (final t in b.calendarSeries) t.id};
+  // One template per calendar and series, as `calendar_series` holds one.
+  final templateKeys = {
+    for (final t in b.calendarSeries)
+      (t.provider, t.externalCalendarId, t.seriesKey),
+  };
   if (seriesIds.length != b.series.length ||
       occurrenceIds.length != b.occurrences.length ||
       subtaskIds.length != b.subtasks.length ||
-      routineIds.length != b.routines.length) {
+      routineIds.length != b.routines.length ||
+      templateIds.length != b.calendarSeries.length ||
+      templateKeys.length != b.calendarSeries.length) {
     return false;
   }
   final ownerIds = {
@@ -104,6 +118,7 @@ bool _consistent(ExportBundle b) {
     for (final o in b.occurrences) o.userId,
     for (final s in b.subtasks) s.userId,
     for (final r in b.routines) r.userId,
+    for (final t in b.calendarSeries) t.userId,
   };
   return ownerIds.length == 1 &&
       b.occurrences.every(

@@ -152,7 +152,7 @@ final class AccountServiceProvider
   }
 }
 
-String _$accountServiceHash() => r'2fbe22a9a00bd0412b10564a6a151c9eaa1a3690';
+String _$accountServiceHash() => r'435c5a6ed701cae67b3cae8dbc2a09245cea4c2a';
 
 /// The current account, live.
 
