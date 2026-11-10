@@ -4152,6 +4152,10 @@
   "@exportTooLargeToRestore": {
     "description": "Settings › Export (CR-160 Stage B0): a JSON export over the 25 MB import limit was refused, so no file was made or handed over."
   },
+  "backupNotRestorable": "This operation can’t continue because Dottoday can’t create a backup it can restore. Your existing data hasn’t been changed.",
+  "@backupNotRestorable": {
+    "description": "Settings › Export (CR-160 backup safety): an import or restore stopped because its safety backup could not be read back as a restorable copy; nothing was changed."
+  },
   "exportBackups": "On this device",
   "@exportBackups": {
     "description": "Export page group caption for local backups."

@@ -182,6 +182,17 @@ final class ForeignRowsFailure extends AppFailure {
   String get code => 'write.foreign_rows';
 }
 
+/// The safety backup an import or restore takes first could not be read
+/// back as a restorable copy (over the import limit, invalid, incomplete or
+/// not the owner's): the operation stopped before any change (CR-160
+/// backup safety).
+final class BackupNotRestorableFailure extends AppFailure {
+  const BackupNotRestorableFailure();
+
+  @override
+  String get code => 'backup.not_restorable';
+}
+
 /// A JSON export over the 25 MB import limit: the app couldn't
 /// restore it, so no file was made or handed over (CR-160 Stage B0).
 final class ExportTooLargeFailure extends AppFailure {

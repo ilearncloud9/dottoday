@@ -29,6 +29,7 @@ String failureMessage(AppLocalizations l10n, AppFailure failure) {
     ExportTooLargeFailure() => l10n.exportTooLargeToRestore,
     // Generic copy until a specific message is approved (CR-160 Finding X).
     ForeignRowsFailure() => l10n.failureStorage,
+    BackupNotRestorableFailure() => l10n.backupNotRestorable,
   };
 }
 

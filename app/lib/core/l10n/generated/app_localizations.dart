@@ -4104,6 +4104,12 @@ abstract class AppLocalizations {
   /// **'This export is too large for Dottoday to restore using the current import format. No restorable export was created.'**
   String get exportTooLargeToRestore;
 
+  /// Settings › Export (CR-160 backup safety): an import or restore stopped because its safety backup could not be read back as a restorable copy; nothing was changed.
+  ///
+  /// In en, this message translates to:
+  /// **'This operation can’t continue because Dottoday can’t create a backup it can restore. Your existing data hasn’t been changed.'**
+  String get backupNotRestorable;
+
   /// Export page group caption for local backups.
   ///
   /// In en, this message translates to:

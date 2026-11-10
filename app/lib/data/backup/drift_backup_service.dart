@@ -4,11 +4,13 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
+import 'package:dottoday/data/backup/backup_retention.dart';
 import 'package:dottoday/data/backup/user_data_snapshot.dart';
 import 'package:dottoday/data/calendar/pending_calendar_series.dart';
 import 'package:dottoday/data/daos/profiles_dao.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/writes/foreign_rows.dart';
+import 'package:dottoday/domain/backup/backup_restorability.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/backup/restore_plan.dart';
 import 'package:dottoday/domain/export/export_bundle.dart';
@@ -37,7 +39,8 @@ final class DriftBackupService implements BackupService {
        _logger = logger,
        _ids = ids;
 
-  /// Backups kept per reason; the oldest beyond this are deleted.
+  /// Backups kept per reason; the oldest beyond this are deleted, except
+  /// the owner's last restorable one ([pruneKeepingRestorable]).
   static const retention = {
     BackupReason.daily: 7,
     BackupReason.preImport: 5,
@@ -93,7 +96,19 @@ final class DriftBackupService implements BackupService {
   Future<Result<BackupInfo, AppFailure>> create(
     String userId,
     BackupReason reason,
-  ) async {
+  ) => _create(userId, reason, verify: false);
+
+  /// [verify]: the safety backup before an import or restore (CR-160
+  /// backup safety). It is stored only if within the import limit, then
+  /// read back and checked the way a restore would read it, complete
+  /// against the account it was taken of; otherwise it is removed and
+  /// [BackupNotRestorableFailure] stops the operation before any live
+  /// change. Pruning runs only after that check passed.
+  Future<Result<BackupInfo, AppFailure>> _create(
+    String userId,
+    BackupReason reason, {
+    required bool verify,
+  }) async {
     final now = _clock.nowUtc();
     try {
       final bundle = await _db.transaction(
@@ -101,6 +116,7 @@ final class DriftBackupService implements BackupService {
       );
       if (bundle == null) return const Err(StorageFailure());
       final json = encodeExportJson(bundle);
+      if (verify && exceedsImportLimit(json)) return _notRestorable();
       final id = await _backups
           .into(_backups.backups)
           .insert(
@@ -112,7 +128,18 @@ final class DriftBackupService implements BackupService {
               owner: Value(userId),
             ),
           );
-      await _prune(userId, reason);
+      if (verify && !await _storedRestorable(id, userId, bundle)) {
+        await (_backups.delete(
+          _backups.backups,
+        )..where((b) => b.id.equals(id))).go();
+        return _notRestorable();
+      }
+      await pruneKeepingRestorable(
+        _backups,
+        userId,
+        reason.name,
+        retention[reason]!,
+      );
       return Ok(
         BackupInfo(
           id: id,
@@ -125,6 +152,26 @@ final class DriftBackupService implements BackupService {
       _logger.error('backup.create_failed', error: e, stackTrace: st);
       return const Err(StorageFailure());
     }
+  }
+
+  Result<BackupInfo, AppFailure> _notRestorable() {
+    _logger.warn('backup.not_restorable');
+    return const Err(BackupNotRestorableFailure());
+  }
+
+  /// Whether stored backup [id] reads back as [owner]'s complete,
+  /// restorable copy of [bundle].
+  Future<bool> _storedRestorable(
+    int id,
+    String owner,
+    ExportBundle bundle,
+  ) async {
+    final row = await (_backups.select(
+      _backups.backups,
+    )..where((b) => b.id.equals(id))).getSingleOrNull();
+    return row != null &&
+        row.owner == owner &&
+        isRestorableBackup(row.json, owner, matches: bundle);
   }
 
   /// The shown owner's backups only; ownerless (legacy) ones never appear.
@@ -210,7 +257,9 @@ final class DriftBackupService implements BackupService {
       _logger.warn('backup.foreign_rows');
       return const Err(ForeignRowsFailure());
     }
-    if (await create(userId, safety) case Err(:final failure)) {
+    // A safety backup that a restore could actually read, or nothing
+    // changes (CR-160 backup safety).
+    if (await _create(userId, safety, verify: true) case Err(:final failure)) {
       return Err(failure);
     }
     final now = _clock.nowUtc();
@@ -235,13 +284,4 @@ final class DriftBackupService implements BackupService {
   /// The profile the app shows, whose backups [list] and [restore] see.
   Future<String?> _shownOwner() async =>
       (await ProfilesDao(_db).findActive())?.id;
-
-  /// Retention per owner: one owner's backups never push out another's.
-  Future<void> _prune(String owner, BackupReason reason) =>
-      _backups.customStatement(
-        'DELETE FROM backups WHERE owner = ? AND reason = ? AND id NOT IN '
-        '(SELECT id FROM backups WHERE owner = ? AND reason = ? '
-        'ORDER BY created_at DESC, id DESC LIMIT ?)',
-        [owner, reason.name, owner, reason.name, retention[reason]],
-      );
 }

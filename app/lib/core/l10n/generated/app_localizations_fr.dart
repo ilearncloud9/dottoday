@@ -2818,6 +2818,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cet export est trop volumineux pour être restauré par Dottoday avec le format d’importation actuel. Aucun export restaurable n’a été créé.';
 
   @override
+  String get backupNotRestorable =>
+      'Cette opération ne peut pas continuer, car Dottoday ne peut pas créer de sauvegarde restaurable. Vos données existantes n’ont pas été modifiées.';
+
+  @override
   String get exportBackups => 'Sur cet appareil';
 
   @override

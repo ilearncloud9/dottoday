@@ -190,4 +190,29 @@ void main() {
     });
     expect(result, isA<Err<void, AppFailure>>());
   });
+
+  test("a guest backup taken after the promotion holds none of A's rows "
+      'and still restores (legitimate guest recovery kept)', () async {
+    final guest = await app.shown();
+    await write(guest);
+    expect(await app.signInAs(_a), OwnerChange.guestChoiceNeeded);
+    await recordGuestChoice(db, _a, GuestChoice.bringIn);
+    await app.signInAs(_a);
+    await app.owners.signOut();
+    expect(await app.shown(), guest);
+    final note = occurrenceFixture().copyWith(
+      id: '01928c3e-0000-7000-8000-0000000003a9',
+      userId: guest,
+      title: 'Guest after',
+    );
+    await app.container
+        .read(writeUseCaseProvider)
+        .apply(WriteBatch(userId: guest, occurrences: [note]));
+    final after = (await backups().create(
+      guest,
+      BackupReason.daily,
+    )).when(ok: (b) => b.id, err: (f) => fail(f.code));
+    expect(await backups().restore(guest, after), isA<Ok<void, AppFailure>>());
+    expect((await holders()).values.toSet(), {_a}, reason: "A's untouched");
+  });
 }
