@@ -1,5 +1,6 @@
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
+import 'package:dottoday/data/backup/guest_backup_cutoff.dart';
 import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/intents/intent_providers.dart';
 import 'package:dottoday/data/intents/queue_owners.dart';
@@ -66,7 +67,16 @@ final class OwnerSwitch {
     late SignInResult result;
     await _change(() async {
       await _drainQueue();
-      await _flip(() async => result = await flip());
+      // One fenced step with any backup work: a guest-work move and its
+      // backup cutoff are recorded before another backup can start
+      // (CR-160 guest-backup privacy, guest_backup_cutoff.dart).
+      await guestBackupFence.run(() async {
+        await _flip(() async => result = await flip());
+        await recordPendingGuestCutoffs(
+          _ref.read(appDatabaseProvider),
+          _ref.read(backupDatabaseProvider),
+        );
+      });
       if (result.change == OwnerChange.unchanged ||
           result.change == OwnerChange.guestChoiceNeeded) {
         return;

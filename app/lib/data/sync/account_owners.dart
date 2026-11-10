@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dottoday/data/backup/guest_backup_cutoff.dart';
 import 'package:dottoday/data/daos/profiles_dao.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/owner_meta.dart';
@@ -118,7 +119,12 @@ Future<SignInResult> signInOwner(
   if (guestSettings != null) {
     await _put(db, guestSettingsKey(accountId), jsonEncode(guestSettings));
   }
-  if (bring) await _moveGuestWork(db, guest!, accountId, movable, hlc);
+  if (bring) {
+    await _moveGuestWork(db, guest!, accountId, movable, hlc);
+    // The guest's earlier backups hold this work now: hidden from here,
+    // in this transaction (CR-160 guest-backup privacy).
+    await markGuestBackupsPending(db, guest);
+  }
   final kept = all - (bring ? movable.tasks : 0);
   if (kept > 0 && movable.tasks == 0) {
     await _put(db, guestNoticeKey(accountId), 'ineligible');

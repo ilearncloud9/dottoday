@@ -165,10 +165,10 @@ void main() {
   test('an old guest backup cannot reclaim rows promoted into A', () async {
     final guest = await app.shown();
     await write(guest);
-    expect(
-      await backups().create(guest, BackupReason.daily),
-      isA<Ok<BackupInfo, AppFailure>>(),
-    );
+    final old = (await backups().create(
+      guest,
+      BackupReason.daily,
+    )).when(ok: (b) => b, err: (f) => fail(f.code));
     expect(await app.signInAs(_a), OwnerChange.guestChoiceNeeded);
     await recordGuestChoice(db, _a, GuestChoice.bringIn);
     await app.signInAs(_a);
@@ -176,11 +176,10 @@ void main() {
 
     await app.owners.signOut();
     expect(await app.shown(), guest, reason: 'the same guest profile');
-    final old = (await backups().list()).single;
+    // Hidden from later guest sessions since P1; refused even by id.
+    expect(await backups().list(), isEmpty);
     final result = await backups().restore(guest, old.id);
-    expect((await backups().list()).map((b) => b.id), [
-      old.id,
-    ], reason: 'refused before its safety backup');
+    expect(await backups().list(), isEmpty, reason: 'no safety backup taken');
 
     expect(await holders(), {
       'series': _a,

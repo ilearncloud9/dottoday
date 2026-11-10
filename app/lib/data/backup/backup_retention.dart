@@ -1,5 +1,7 @@
 import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:dottoday/domain/backup/backup_restorability.dart';
+import 'package:dottoday/domain/backup/backup_service.dart';
+import 'package:dottoday/domain/export/export_bundle.dart';
 import 'package:dottoday/domain/export/export_json.dart';
 import 'package:drift/drift.dart';
 
@@ -12,12 +14,16 @@ import 'package:drift/drift.dart';
 /// state. At most one extra backup per owner, and only while none newer can
 /// be restored; account removal still deletes every one of the owner's
 /// backups. Other owners' backups are never read or touched.
+///
+/// A [hidden] backup (a guest's from before its work moved into an
+/// account) is never the one kept: it can't be listed or restored.
 Future<void> pruneKeepingRestorable(
   BackupDatabase backups,
   String owner,
   String reason,
-  int keep,
-) async {
+  int keep, {
+  bool Function(int id) hidden = _none,
+}) async {
   final rows = await _ownedNewestFirst(backups, owner);
   final doomed = [
     for (final r in rows.where((r) => r.reason == reason).skip(keep)) r.id,
@@ -25,7 +31,7 @@ Future<void> pruneKeepingRestorable(
   if (doomed.isEmpty) return;
   for (final r in rows) {
     // Over the limit is refused by size alone, without reading the text.
-    if (r.bytes > maxImportBytes) continue;
+    if (r.bytes > maxImportBytes || hidden(r.id)) continue;
     if (!await _restorable(backups, r.id, owner)) continue;
     doomed.remove(r.id); // the last restorable one stays
     break;
@@ -65,4 +71,49 @@ Future<bool> _restorable(BackupDatabase backups, int id, String owner) async {
     backups.backups,
   )..where((b) => b.id.equals(id) & b.owner.equals(owner))).getSingleOrNull();
   return row != null && isRestorableBackup(row.json, owner);
+}
+
+bool _none(int id) => false;
+
+/// [owner]'s stored backups, newest first, without their content.
+Future<List<BackupInfo>> backupInfosOf(
+  BackupDatabase backups,
+  String owner,
+) async {
+  final rows = await backups
+      .customSelect(
+        'SELECT id, created_at, reason, length(json) AS size FROM backups '
+        'WHERE owner = ? ORDER BY created_at DESC, id DESC',
+        variables: [Variable.withString(owner)],
+        readsFrom: {backups.backups},
+      )
+      .get();
+  return [
+    for (final r in rows)
+      BackupInfo(
+        id: r.read<int>('id'),
+        createdAtUtc: DateTime.fromMillisecondsSinceEpoch(
+          r.read<int>('created_at'),
+          isUtc: true,
+        ),
+        reason: BackupReason.values.byName(r.read<String>('reason')),
+        sizeBytes: r.read<int>('size'),
+      ),
+  ];
+}
+
+/// Whether stored backup [id] reads back as [owner]'s complete, restorable
+/// copy of [bundle] (the safety backup's check, CR-160 backup safety).
+Future<bool> storedBackupRestorable(
+  BackupDatabase backups,
+  int id,
+  String owner,
+  ExportBundle bundle,
+) async {
+  final row = await (backups.select(
+    backups.backups,
+  )..where((b) => b.id.equals(id))).getSingleOrNull();
+  return row != null &&
+      row.owner == owner &&
+      isRestorableBackup(row.json, owner, matches: bundle);
 }

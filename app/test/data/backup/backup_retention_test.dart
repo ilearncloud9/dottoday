@@ -137,6 +137,22 @@ void main() {
     expect(await ids(_a), isNot(contains(foreign)));
   });
 
+  test('a hidden backup (a guest\'s from before a move) is never the one '
+      'kept', () async {
+    final hiddenGood = await put(_a, 'daily', _restorable(_a));
+    for (var i = 0; i < 7; i++) {
+      await put(_a, 'daily', _oversized);
+    }
+    await pruneKeepingRestorable(
+      db,
+      _a,
+      'daily',
+      7,
+      hidden: (id) => id <= hiddenGood,
+    );
+    expect(await ids(_a), isNot(contains(hiddenGood)));
+  });
+
   group('isRestorableBackup', () {
     final bundle = ExportBundle(
       exportedAt: DateTime.utc(2026, 11, 10),

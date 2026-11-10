@@ -5,12 +5,12 @@ import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:dottoday/data/backup/backup_retention.dart';
+import 'package:dottoday/data/backup/guest_backup_cutoff.dart';
 import 'package:dottoday/data/backup/user_data_snapshot.dart';
 import 'package:dottoday/data/calendar/pending_calendar_series.dart';
 import 'package:dottoday/data/daos/profiles_dao.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/writes/foreign_rows.dart';
-import 'package:dottoday/domain/backup/backup_restorability.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/backup/restore_plan.dart';
 import 'package:dottoday/domain/export/export_bundle.dart';
@@ -32,6 +32,7 @@ final class DriftBackupService implements BackupService {
     required Clock clock,
     required Logger logger,
     IdGenerator ids = const UuidV7Generator(),
+    this.afterRead,
   }) : _db = db,
        _backups = backups,
        _writes = writes,
@@ -55,6 +56,10 @@ final class DriftBackupService implements BackupService {
   final Clock _clock;
   final Logger _logger;
   final IdGenerator _ids;
+
+  /// Tests only: runs between reading the account and storing its backup,
+  /// to race a guest-work move against it (guest_backup_cutoff.dart).
+  final Future<void> Function()? afterRead;
 
   @override
   Future<Result<bool, AppFailure>> runDailyIfDue(String userId) async {
@@ -96,7 +101,15 @@ final class DriftBackupService implements BackupService {
   Future<Result<BackupInfo, AppFailure>> create(
     String userId,
     BackupReason reason,
-  ) => _create(userId, reason, verify: false);
+  ) => _fenced(() => _create(userId, reason, verify: false));
+
+  /// [body] under [guestBackupFence], after recording any cutoff a crash
+  /// left pending (CR-160 guest-backup privacy).
+  Future<T> _fenced<T>(Future<T> Function() body) =>
+      guestBackupFence.run(() async {
+        await recordPendingGuestCutoffs(_db, _backups);
+        return body();
+      });
 
   /// [verify]: the safety backup before an import or restore (CR-160
   /// backup safety). It is stored only if within the import limit, then
@@ -117,6 +130,7 @@ final class DriftBackupService implements BackupService {
       if (bundle == null) return const Err(StorageFailure());
       final json = encodeExportJson(bundle);
       if (verify && exceedsImportLimit(json)) return _notRestorable();
+      await afterRead?.call();
       final id = await _backups
           .into(_backups.backups)
           .insert(
@@ -128,7 +142,8 @@ final class DriftBackupService implements BackupService {
               owner: Value(userId),
             ),
           );
-      if (verify && !await _storedRestorable(id, userId, bundle)) {
+      if (verify &&
+          !await storedBackupRestorable(_backups, id, userId, bundle)) {
         await (_backups.delete(
           _backups.backups,
         )..where((b) => b.id.equals(id))).go();
@@ -139,6 +154,7 @@ final class DriftBackupService implements BackupService {
         userId,
         reason.name,
         retention[reason]!,
+        hidden: (await guestBackupCutoff(_db, userId)).hides,
       );
       return Ok(
         BackupInfo(
@@ -159,54 +175,32 @@ final class DriftBackupService implements BackupService {
     return const Err(BackupNotRestorableFailure());
   }
 
-  /// Whether stored backup [id] reads back as [owner]'s complete,
-  /// restorable copy of [bundle].
-  Future<bool> _storedRestorable(
-    int id,
-    String owner,
-    ExportBundle bundle,
-  ) async {
-    final row = await (_backups.select(
-      _backups.backups,
-    )..where((b) => b.id.equals(id))).getSingleOrNull();
-    return row != null &&
-        row.owner == owner &&
-        isRestorableBackup(row.json, owner, matches: bundle);
-  }
-
-  /// The shown owner's backups only; ownerless (legacy) ones never appear.
+  /// The shown owner's backups only; ownerless (legacy) ones never appear,
+  /// nor a guest's taken before its work moved into an account.
   @override
-  Future<List<BackupInfo>> list() async {
+  Future<List<BackupInfo>> list() => _fenced(() async {
     final owner = await _shownOwner();
-    if (owner == null) return const [];
-    final rows = await _backups
-        .customSelect(
-          'SELECT id, created_at, reason, length(json) AS size FROM backups '
-          'WHERE owner = ? ORDER BY created_at DESC, id DESC',
-          variables: [Variable.withString(owner)],
-          readsFrom: {_backups.backups},
-        )
-        .get();
+    if (owner == null) return const <BackupInfo>[];
+    final hidden = await guestBackupCutoff(_db, owner);
     return [
-      for (final r in rows)
-        BackupInfo(
-          id: r.read<int>('id'),
-          createdAtUtc: DateTime.fromMillisecondsSinceEpoch(
-            r.read<int>('created_at'),
-            isUtc: true,
-          ),
-          reason: BackupReason.values.byName(r.read<String>('reason')),
-          sizeBytes: r.read<int>('size'),
-        ),
+      for (final b in await backupInfosOf(_backups, owner))
+        if (!hidden.hides(b.id)) b,
     ];
-  }
+  });
 
   /// Refuses, changing nothing, unless [userId] is the owner shown and the
-  /// backup is [userId]'s. Another owner's backup fails exactly like an
-  /// unknown id, so its existence is not revealed either.
+  /// backup is [userId]'s and not hidden. Another owner's backup, or a
+  /// hidden one, fails exactly like an unknown id, so its existence is not
+  /// revealed either.
   @override
-  Future<Result<void, AppFailure>> restore(String userId, int backupId) async {
+  Future<Result<void, AppFailure>> restore(String userId, int backupId) =>
+      _fenced(() => _restore(userId, backupId));
+
+  Future<Result<void, AppFailure>> _restore(String userId, int backupId) async {
     if (await _shownOwner() != userId) return const Err(StorageFailure());
+    if ((await guestBackupCutoff(_db, userId)).hides(backupId)) {
+      return const Err(StorageFailure());
+    }
     final row =
         await (_backups.select(_backups.backups)
               ..where((b) => b.id.equals(backupId) & b.owner.equals(userId)))
@@ -222,7 +216,7 @@ final class DriftBackupService implements BackupService {
 
   @override
   Future<Result<void, AppFailure>> importJson(String userId, String json) =>
-      _replaceFrom(userId, json, BackupReason.preImport);
+      _fenced(() => _replaceFrom(userId, json, BackupReason.preImport));
 
   /// Decodes [json], backs up the current state, then writes the restore.
   Future<Result<void, AppFailure>> _replaceFrom(
