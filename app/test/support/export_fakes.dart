@@ -58,15 +58,20 @@ final class FakeFileGateway implements FileGateway {
 /// One file per format, named after it.
 final class FakeExportService implements ExportService {
   final built = <ExportFormat>[];
+
+  /// Whether each build was D1's (CR-160), in order.
+  final forDeletion = <bool>[];
   AppFailure? failure;
 
   @override
   Future<Result<List<ExportFile>, AppFailure>> build(
     String userId,
-    ExportFormat format,
-  ) async {
+    ExportFormat format, {
+    bool forAccountDeletion = false,
+  }) async {
     if (failure case final f?) return Err(f);
     built.add(format);
+    forDeletion.add(forAccountDeletion);
     return Ok([
       ExportFile(
         name: 'dottoday.${format.name}',

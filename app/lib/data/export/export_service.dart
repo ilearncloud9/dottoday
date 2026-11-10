@@ -12,10 +12,13 @@ import 'package:timezone/timezone.dart' as tz;
 abstract interface class ExportService {
   /// [format]'s files for [userId], named with today's local date (the
   /// profile's zone). Never throws: a read failure is a [StorageFailure].
+  /// [forAccountDeletion]: D1's export (CR-160), which keeps imported
+  /// calendar events as ordinary tasks; every other export leaves them out.
   Future<Result<List<ExportFile>, AppFailure>> build(
     String userId,
-    ExportFormat format,
-  );
+    ExportFormat format, {
+    bool forAccountDeletion = false,
+  });
 }
 
 /// [ExportService] reading one consistent snapshot of the database: the
@@ -37,12 +40,14 @@ final class DriftExportService implements ExportService {
   @override
   Future<Result<List<ExportFile>, AppFailure>> build(
     String userId,
-    ExportFormat format,
-  ) async {
+    ExportFormat format, {
+    bool forAccountDeletion = false,
+  }) async {
     final now = _clock.nowUtc();
     try {
       final bundle = await _db.transaction(
-        () => readUserData(_db, userId, now),
+        () =>
+            readUserData(_db, userId, now, importedAsTasks: forAccountDeletion),
       );
       if (bundle == null) return const Err(StorageFailure());
       final date = _localDate(now, bundle.profile.tzId);

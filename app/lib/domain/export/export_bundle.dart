@@ -91,6 +91,28 @@ final class ExportBundle {
     );
   }
 
+  /// The bundle with every imported calendar event kept as an ordinary task
+  /// (`source` user, no calendar link), with all its subtasks: the D1
+  /// export before an account deletion (CR-160), the only copy left of what
+  /// the person did on those events (steps, done, notes, times, colour,
+  /// alerts), which never sync and which a calendar re-import can't bring
+  /// back. Ids and every other field stay, so the file imports as it is.
+  /// What a calendar series sets for its future instances is not here
+  /// (`calendar_series`: no place in format v1).
+  ExportBundle withImportedAsTasks() => ExportBundle(
+    exportedAt: exportedAt,
+    profile: profile,
+    series: series,
+    occurrences: [
+      for (final o in occurrences)
+        o.source == OccurrenceSource.calendar
+            ? o.copyWith(source: OccurrenceSource.user, calendarLinkId: null)
+            : o,
+    ],
+    subtasks: subtasks,
+    routines: routines,
+  );
+
   /// The same data owned by [userId], so an import can never write rows for
   /// another account (06 §9, RLS would reject them anyway).
   ExportBundle reownedTo(String userId) => ExportBundle(

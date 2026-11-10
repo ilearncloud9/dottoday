@@ -226,8 +226,7 @@ final class CalendarImporter implements CalendarImport {
     }
     try {
       await _db.transaction(() async {
-        // Never while the owner's account is being deleted (CR-160 §4);
-        // imports aren't in its export, so no revision moves.
+        // Never while the owner's account is being deleted (CR-160 §4).
         await checkNotSealed(_db, userId);
         await _links.upsertAll([
           for (final l in plan.links)
@@ -237,6 +236,13 @@ final class CalendarImporter implements CalendarImport {
         await _subtasks.upsertAll(batch.subtasks);
         await _links.deleteImported(userId, plan.removeOccurrenceIds);
         await _links.deleteLinks(userId, plan.removeLinkIds);
+        // Imported events are in D1's export (as tasks): a change to them
+        // after the review stops the deletion (CR-160).
+        if (plan.occurrences.isNotEmpty ||
+            plan.subtasks.isNotEmpty ||
+            plan.removeOccurrenceIds.isNotEmpty) {
+          await bumpWriteRevision(_db, userId);
+        }
       });
     } on OwnerSealedException {
       return const Err(StorageFailure());

@@ -28,8 +28,9 @@ enum OwnerExportOutcome {
 /// Exports [owner]'s full JSON backup (local and unsynced work included:
 /// it is read from this device) and checks it before saying it worked:
 /// the decoded file holds as many series, tasks, steps and routines as the
-/// device has for [owner] (imported calendar events never travel, docs/05
-/// "Export format"), and the hand-off reported no error.
+/// device has for [owner] (imported calendar events included, as ordinary
+/// tasks: CR-160), and the hand-off reported no error. A file over the
+/// import limit fails the decode, so it is never reported as done.
 Future<OwnerExportOutcome> exportOwnerChecked({
   required AppDatabase db,
   required ExportService exports,
@@ -39,7 +40,11 @@ Future<OwnerExportOutcome> exportOwnerChecked({
   Rect? origin,
 }) async {
   final List<ExportFile> list;
-  switch (await exports.build(owner, ExportFormat.json)) {
+  switch (await exports.build(
+    owner,
+    ExportFormat.json,
+    forAccountDeletion: true,
+  )) {
     case Ok(:final value) when value.length == 1:
       list = value;
     case _:
@@ -78,12 +83,11 @@ bool _complete(ExportBundle b, _Counts local) =>
 Future<_Counts> _localCounts(AppDatabase db, String owner) async {
   final row = await db
       .customSelect(
+        // Every row, imported calendar events and their steps included:
+        // D1's file is the only copy of them after the deletion (CR-160).
         'SELECT (SELECT COUNT(*) FROM series WHERE user_id = ?1) AS s, '
-        '(SELECT COUNT(*) FROM occurrences WHERE user_id = ?1 '
-        "AND source <> 'calendar') AS o, "
-        '(SELECT COUNT(*) FROM subtasks st WHERE st.user_id = ?1 '
-        'AND NOT EXISTS (SELECT 1 FROM occurrences x WHERE '
-        "x.id = st.occurrence_id AND x.source = 'calendar')) AS st, "
+        '(SELECT COUNT(*) FROM occurrences WHERE user_id = ?1) AS o, '
+        '(SELECT COUNT(*) FROM subtasks WHERE user_id = ?1) AS st, '
         '(SELECT COUNT(*) FROM routines WHERE user_id = ?1) AS r',
         variables: [Variable<String>(owner)],
       )

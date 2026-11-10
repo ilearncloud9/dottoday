@@ -5,6 +5,7 @@ import 'package:dottoday/data/calendar/device_calendar_writer.dart';
 import 'package:dottoday/data/calendar/drift_calendar_source_repository.dart';
 import 'package:dottoday/data/calendar/write_back_providers.dart';
 import 'package:dottoday/data/mappers/entity_mappers.dart';
+import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/calendar/calendar_import_rules.dart';
@@ -197,6 +198,29 @@ void main() {
     await push(prefer: WriteBackPrefer.calendar);
     expect((await occurrence('Standup')).startUtc, noon);
     expect(await writeBack.pending(userId), isEmpty);
+  });
+
+  test('taking the calendar\'s version changes an exported task: the '
+      'revision moves, so a D1 review made before stops (CR-160)', () async {
+    await optIn();
+    final o = await occurrence('Standup');
+    await edit(o.copyWith(startUtc: ten));
+    final noon = nine.add(const Duration(hours: 3));
+    os.eventsByCalendar['work']![0] = standup(start: noon);
+    await push();
+    final reviewed = await writeRevision(h.db, userId);
+    await push(prefer: WriteBackPrefer.calendar);
+    expect((await occurrence('Standup')).startUtc, noon);
+    expect(await writeRevision(h.db, userId), greaterThan(reviewed));
+  });
+
+  test('a write-back that only updates the link moves no revision', () async {
+    await optIn();
+    await edit((await occurrence('Standup')).copyWith(startUtc: ten));
+    final reviewed = await writeRevision(h.db, userId);
+    await push();
+    expect(os.updates, hasLength(1));
+    expect(await writeRevision(h.db, userId), reviewed);
   });
 
   test('Keep mine sends mine over the calendar change', () async {

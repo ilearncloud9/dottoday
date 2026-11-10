@@ -33,9 +33,14 @@ final class _ShortExport implements ExportService {
   @override
   Future<Result<List<ExportFile>, AppFailure>> build(
     String userId,
-    ExportFormat format,
-  ) async {
-    final bundle = await real.build(userId, format);
+    ExportFormat format, {
+    bool forAccountDeletion = false,
+  }) async {
+    final bundle = await real.build(
+      userId,
+      format,
+      forAccountDeletion: forAccountDeletion,
+    );
     final files = (bundle as Ok<List<ExportFile>, AppFailure>).value;
     final b =
         (decodeExportJson(files.single.content)

@@ -219,8 +219,7 @@ final class CalendarWriteBack {
     final bool committed;
     try {
       committed = await _db.transaction(() async {
-        // Never while the owner's account is being deleted (CR-160 §4);
-        // imports aren't in its export, so no revision moves.
+        // Never while the owner's account is being deleted (CR-160 §4).
         await checkNotSealed(_db, item.link.userId);
         final current = await _occurrences.findById(
           item.link.userId,
@@ -229,6 +228,8 @@ final class CalendarWriteBack {
         if (current != item.occurrence) return false;
         await _links.upsertLink(_codec.encode<CalendarLinkRow>(link.toJson()));
         await _occurrences.upsertAll(valid);
+        // The adopted event is in D1's export (as a task): CR-160.
+        if (valid.isNotEmpty) await bumpWriteRevision(_db, item.link.userId);
         return true;
       });
     } on OwnerSealedException {
