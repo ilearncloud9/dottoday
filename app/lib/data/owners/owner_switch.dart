@@ -1,6 +1,8 @@
+import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/backup/guest_backup_cutoff.dart';
+import 'package:dottoday/data/backup/guest_backup_scrub.dart';
 import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/intents/intent_providers.dart';
 import 'package:dottoday/data/intents/queue_owners.dart';
@@ -75,6 +77,7 @@ final class OwnerSwitch {
         await recordPendingGuestCutoffs(
           _ref.read(appDatabaseProvider),
           _ref.read(backupDatabaseProvider),
+          nowUtc: _ref.read(clockProvider).nowUtc(),
         );
       });
       if (result.change == OwnerChange.unchanged ||
@@ -109,6 +112,24 @@ final class OwnerSwitch {
     _ref.read(appDatabaseProvider),
     accountId,
     alsoRemove: () async {
+      // P2: guest backups holding work moved into this account lose it
+      // (the guest's own work kept), now that its deletion is confirmed.
+      // Idempotent; a backup that can't be scrubbed stays hidden.
+      await guestBackupFence.run(() async {
+        final db = _ref.read(appDatabaseProvider);
+        final backups = _ref.read(backupDatabaseProvider);
+        await recordPendingGuestCutoffs(
+          db,
+          backups,
+          nowUtc: _ref.read(clockProvider).nowUtc(),
+        );
+        final left = await scrubForDeletedAccount(db, backups, accountId);
+        if (left > 0) {
+          _ref
+              .read(loggerProvider)
+              .warn('backup.guest_scrub_left', fields: {'count': left});
+        }
+      });
       await _ref.read(backupDatabaseProvider).deleteBackupsOf(accountId);
       await removeQueuedFor(_ref.read(actionQueueStoreProvider), accountId);
     },

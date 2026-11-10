@@ -162,20 +162,18 @@ void main() {
     expect(await titlesOf(guest), isNot(contains('Walk')));
   });
 
-  test(
-    "after A is deleted, the guest backup can't bring A's work back",
-    () async {
-      final guest = await app.shown();
-      await write(guest, [task(guest, _promoted, 'Secret plan')]);
-      final before = await backup(guest);
-      await promote();
-      await app.owners.accountDeleted(_a);
-      expect(await app.shown(), guest);
-      final result = await backups().restore(guest, before);
-      expect(result, isA<Err<void, AppFailure>>());
-      expect(await titlesOf(guest), isNot(contains('Secret plan')));
-    },
-  );
+  test("after A's deletion is confirmed (P2), the backup comes back without "
+      "A's work", () async {
+    final guest = await app.shown();
+    await write(guest, [task(guest, _promoted, 'Secret plan')]);
+    final before = await backup(guest);
+    await promote();
+    await app.owners.accountDeleted(_a);
+    expect(await app.shown(), guest);
+    expect((await backups().list()).map((b) => b.id), contains(before));
+    expect(await backups().restore(guest, before), isA<Ok<void, AppFailure>>());
+    expect(await titlesOf(guest), isNot(contains('Secret plan')));
+  });
 
   test('a guest backup taken after the promotion stays the guest\'s', () async {
     final guest = await app.shown();
@@ -244,8 +242,9 @@ void main() {
       BackupReason.daily,
     )).when(ok: (b) => b.id, err: (f) => fail(f.code));
     await move;
-    expect(await guestBackupCutoff(db, guest), isA<CutoffAt>());
-    expect((await guestBackupCutoff(db, guest)).hides(id), isTrue);
+    final v = await guestBackupVisibility(db, guest);
+    expect(v.promotions.single.pending, isFalse);
+    expect(v.hides(id), isTrue);
   });
 
   test('crash after the move, before the cutoff: hidden (fail closed); the '
@@ -263,12 +262,13 @@ void main() {
       SharedHlc(db, FakeClock(ownerAppNow)),
       freshProfile: (id) => freshAccountProfile(id, 'UTC', 'en', ownerAppNow),
     );
-    expect(await guestBackupCutoff(db, guest), isA<PendingCutoff>());
-    expect((await guestBackupCutoff(db, guest)).hides(before + 1000), isTrue);
+    final pending = await guestBackupVisibility(db, guest);
+    expect(pending.promotions.single.pending, isTrue);
+    expect(pending.hides(before + 1000), isTrue, reason: 'fail closed');
     // After the restart: A's own backup is the first backup work.
     final aBackup = await backup(_a);
-    final cut = await guestBackupCutoff(db, guest);
-    expect(cut, isA<CutoffAt>());
+    final cut = await guestBackupVisibility(db, guest);
+    expect(cut.promotions.single.pending, isFalse);
     expect(cut.hides(before), isTrue);
     expect(cut.hides(aBackup), isFalse, reason: 'not expanded past A');
     await app.owners.signOut();

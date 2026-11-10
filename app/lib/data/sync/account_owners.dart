@@ -120,10 +120,20 @@ Future<SignInResult> signInOwner(
     await _put(db, guestSettingsKey(accountId), jsonEncode(guestSettings));
   }
   if (bring) {
-    await _moveGuestWork(db, guest!, accountId, movable, hlc);
-    // The guest's earlier backups hold this work now: hidden from here,
-    // in this transaction (CR-160 guest-backup privacy).
-    await markGuestBackupsPending(db, guest);
+    // The guest's earlier backups hold this work: hidden from this commit,
+    // with what moved where, for scrubbing (CR-160 I1 guest-backup privacy).
+    await markGuestBackupsPending(
+      db,
+      guest!,
+      account: accountId,
+      moved: {
+        'series': movable.series,
+        'occurrences': movable.occurrences,
+        'subtasks': movable.subtasks,
+        'routines': movable.routines,
+      },
+    );
+    await _moveGuestWork(db, guest, accountId, movable, hlc);
   }
   final kept = all - (bring ? movable.tasks : 0);
   if (kept > 0 && movable.tasks == 0) {

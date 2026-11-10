@@ -6,6 +6,7 @@ import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:dottoday/data/backup/backup_retention.dart';
 import 'package:dottoday/data/backup/guest_backup_cutoff.dart';
+import 'package:dottoday/data/backup/guest_backup_scrub.dart';
 import 'package:dottoday/data/backup/user_data_snapshot.dart';
 import 'package:dottoday/data/calendar/pending_calendar_series.dart';
 import 'package:dottoday/data/daos/profiles_dao.dart';
@@ -63,6 +64,7 @@ final class DriftBackupService implements BackupService {
 
   @override
   Future<Result<bool, AppFailure>> runDailyIfDue(String userId) async {
+    await _maintain();
     final since = _clock.nowUtc().subtract(dailyInterval);
     final recent =
         await (_backups.select(_backups.backups)
@@ -103,11 +105,28 @@ final class DriftBackupService implements BackupService {
     BackupReason reason,
   ) => _fenced(() => _create(userId, reason, verify: false));
 
+  /// Maintenance on every start and resume (housekeeping calls
+  /// [runDailyIfDue]): P3 scrubs guest backups hidden for 30 days or more
+  /// (CR-160 I1). Its failure never stops the daily backup; it is retried
+  /// on the next run.
+  Future<void> _maintain() async {
+    try {
+      final left = await _fenced(
+        () => scrubExpiredGuestBackups(_db, _backups, nowUtc: _clock.nowUtc()),
+      );
+      if (left > 0) {
+        _logger.warn('backup.guest_scrub_left', fields: {'count': left});
+      }
+    } on Exception catch (e, st) {
+      _logger.error('backup.guest_scrub_failed', error: e, stackTrace: st);
+    }
+  }
+
   /// [body] under [guestBackupFence], after recording any cutoff a crash
   /// left pending (CR-160 guest-backup privacy).
   Future<T> _fenced<T>(Future<T> Function() body) =>
       guestBackupFence.run(() async {
-        await recordPendingGuestCutoffs(_db, _backups);
+        await recordPendingGuestCutoffs(_db, _backups, nowUtc: _clock.nowUtc());
         return body();
       });
 
@@ -154,7 +173,7 @@ final class DriftBackupService implements BackupService {
         userId,
         reason.name,
         retention[reason]!,
-        hidden: (await guestBackupCutoff(_db, userId)).hides,
+        hidden: (await guestBackupVisibility(_db, userId)).hides,
       );
       return Ok(
         BackupInfo(
@@ -181,7 +200,7 @@ final class DriftBackupService implements BackupService {
   Future<List<BackupInfo>> list() => _fenced(() async {
     final owner = await _shownOwner();
     if (owner == null) return const <BackupInfo>[];
-    final hidden = await guestBackupCutoff(_db, owner);
+    final hidden = await guestBackupVisibility(_db, owner);
     return [
       for (final b in await backupInfosOf(_backups, owner))
         if (!hidden.hides(b.id)) b,
@@ -198,7 +217,7 @@ final class DriftBackupService implements BackupService {
 
   Future<Result<void, AppFailure>> _restore(String userId, int backupId) async {
     if (await _shownOwner() != userId) return const Err(StorageFailure());
-    if ((await guestBackupCutoff(_db, userId)).hides(backupId)) {
+    if ((await guestBackupVisibility(_db, userId)).hides(backupId)) {
       return const Err(StorageFailure());
     }
     final row =
