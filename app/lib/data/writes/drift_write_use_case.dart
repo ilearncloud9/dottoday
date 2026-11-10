@@ -16,6 +16,7 @@ import 'package:dottoday/data/sync/guest_sessions.dart';
 import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
 import 'package:dottoday/data/writes/entity_writers.dart';
+import 'package:dottoday/data/writes/foreign_rows.dart';
 import 'package:dottoday/data/writes/row_writer.dart';
 import 'package:dottoday/data/writes/validate_batch.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -80,6 +81,11 @@ final class DriftWriteUseCase implements WriteUseCase {
     } on _NotShown {
       _logger.warn('write.owner_not_shown');
       return const Err(StorageFailure());
+    } on ForeignRowException {
+      // A row of another account on this device: never taken over
+      // (CR-160 Finding X). Rolled back whole.
+      _logger.warn('write.foreign_row');
+      return const Err(ForeignRowsFailure());
     } on OwnerSealedException {
       // The owner's account is being deleted (CR-160 policy §4): refused,
       // shown as the generic "couldn't save".

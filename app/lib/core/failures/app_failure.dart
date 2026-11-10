@@ -172,6 +172,16 @@ final class ReviewChangedFailure extends AppFailure {
   String get code => 'account.review_changed';
 }
 
+/// A write, import or restore named a row id another account on this
+/// device holds (CR-160 Finding X): refused whole, nothing changed for
+/// anyone.
+final class ForeignRowsFailure extends AppFailure {
+  const ForeignRowsFailure();
+
+  @override
+  String get code => 'write.foreign_rows';
+}
+
 /// A JSON export over the 25 MB import limit: the app couldn't
 /// restore it, so no file was made or handed over (CR-160 Stage B0).
 final class ExportTooLargeFailure extends AppFailure {

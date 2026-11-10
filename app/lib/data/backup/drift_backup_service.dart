@@ -8,6 +8,7 @@ import 'package:dottoday/data/backup/user_data_snapshot.dart';
 import 'package:dottoday/data/calendar/pending_calendar_series.dart';
 import 'package:dottoday/data/daos/profiles_dao.dart';
 import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/writes/foreign_rows.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/backup/restore_plan.dart';
 import 'package:dottoday/domain/export/export_bundle.dart';
@@ -195,6 +196,19 @@ final class DriftBackupService implements BackupService {
     // Imports are exempt: a file is deliberately re-owned to [userId].
     if (requireOwner && incoming.profile.id != userId) {
       return const Err(StorageFailure());
+    }
+    // A row id another account here holds: refused before the safety
+    // backup or any change (CR-160 Finding X). The write path checks again
+    // inside its transaction.
+    final foreign = await foreignRowTable(_db, userId, {
+      'series': [for (final s in incoming.series) s.id],
+      'occurrences': [for (final o in incoming.occurrences) o.id],
+      'subtasks': [for (final s in incoming.subtasks) s.id],
+      'routines': [for (final r in incoming.routines) r.id],
+    });
+    if (foreign != null) {
+      _logger.warn('backup.foreign_rows');
+      return const Err(ForeignRowsFailure());
     }
     if (await create(userId, safety) case Err(:final failure)) {
       return Err(failure);

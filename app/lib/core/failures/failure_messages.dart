@@ -27,6 +27,8 @@ String failureMessage(AppLocalizations l10n, AppFailure failure) {
     ReviewChangedFailure() => l10n.accountDeleteChangedSinceReview,
     ExportNotSavedFailure() => l10n.accountDeleteWithoutCopyQuestion,
     ExportTooLargeFailure() => l10n.exportTooLargeToRestore,
+    // Generic copy until a specific message is approved (CR-160 Finding X).
+    ForeignRowsFailure() => l10n.failureStorage,
   };
 }
 

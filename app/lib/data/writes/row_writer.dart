@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/writes/foreign_rows.dart';
 import 'package:dottoday/domain/sync/hlc.dart';
 import 'package:dottoday/domain/writes/field_changes.dart';
 import 'package:drift/drift.dart';
@@ -78,6 +79,9 @@ Future<bool> writeRows<E>(
     ]);
   }
   if (changed.isEmpty) return false;
+  // [EntityWriter.find] only sees [owner]'s rows: one another owner holds
+  // looked new, and the upsert below would take it over (CR-160 Finding X).
+  await checkNoForeignRows(db, writer.table, owner, changed.map(writer.idOf));
   await writer.upsertAll(changed);
   if (guestSession != null) {
     await db.batch(
