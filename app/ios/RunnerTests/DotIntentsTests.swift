@@ -34,6 +34,8 @@ final class DotIntentsTests: XCTestCase {
     ]
     let data = try! JSONSerialization.data(withJSONObject: snapshot)
     defaults.set(String(data: data, encoding: .utf8), forKey: DotStore.snapshotKey)
+    // The app has run once: the queue's key is published (CR-160 I1).
+    XCTAssertTrue(QueueSeal.ensureKey(defaults, suite: suite))
   }
 
   private func block() -> [String: Any] {
@@ -81,7 +83,8 @@ final class DotIntentsTests: XCTestCase {
     DotActions.perform(.addTask, text: "Call mum 3pm", now: now, defaults: defaults)
     let entry = DotQueue(defaults: defaults).entries().single
     XCTAssertEqual(entry?["kind"] as? String, "add_task")
-    XCTAssertEqual(entry?["text"] as? String, "Call mum 3pm")
+    XCTAssertNil(entry?["text"], "sealed at rest (CR-160 I1)")
+    XCTAssertEqual(entry.map(QueueSeal.open)?["text"] as? String, "Call mum 3pm")
     XCTAssertEqual(block()["done"] as? Bool, false)
   }
 
@@ -163,7 +166,7 @@ final class DotIntentsTests: XCTestCase {
         queue.append(DotQueue.entry(.addTask, text: "t\(i)", now: now))
       }
     }
-    let texts = queue.entries().compactMap { $0["text"] as? String }
+    let texts = queue.entries().map(QueueSeal.open).compactMap { $0["text"] as? String }
     XCTAssertEqual(texts.count, 180)
     XCTAssertTrue(queue.entries().allSatisfy { $0["owner"] as? String == ownerA })
     XCTAssertFalse(queue.entries().contains { $0["id"] as? String == id })
@@ -275,6 +278,139 @@ final class DotIntentsTests: XCTestCase {
       }
       XCTAssertEqual(queue.entries().count, 1, "\(name): nothing queued when refused")
     }
+  }
+
+  // MARK: - Queued words sealed at rest (CR-160 I1, Q3)
+
+  private func stored() -> String? {
+    CFPreferencesAppSynchronize(suite as CFString)
+    return defaults.string(forKey: DotStore.queueKey)
+  }
+
+  private func opened(_ queue: DotQueue) -> [[String: Any]] {
+    let raw = queue.readForApp() ?? "[]"
+    return (try! JSONSerialization.jsonObject(with: Data(raw.utf8)) as! [Any])
+      .compactMap { $0 as? [String: Any] }
+  }
+
+  private func writeRaw(_ entries: [[String: Any]]) {
+    let data = try! JSONSerialization.data(withJSONObject: entries)
+    defaults.set(String(data: data, encoding: .utf8), forKey: DotStore.queueKey)
+  }
+
+  private let owner = "01928c3e-0000-7000-8000-00000000000a"
+
+  func testAShareIsSealedAtRestOpenedForTheAppOwnerKept() {
+    let queue = DotQueue(defaults: defaults, suite: suite)
+    queue.publishOwner(#"{"v":1,"owner":"\#(owner)"}"#)
+    let entry = ShareQueue.entry(text: "Secret plan", link: nil, subject: "Page title", now: now)!
+    XCTAssertTrue(queue.append(entry))
+    let raw = stored() ?? ""
+    XCTAssertFalse(raw.contains("Secret plan"))
+    XCTAssertFalse(raw.contains("Page title"))
+    let app = opened(queue).single
+    XCTAssertEqual(app?["text"] as? String, "Secret plan")
+    XCTAssertEqual(app?["subject"] as? String, "Page title")
+    XCTAssertEqual(app?["owner"] as? String, owner)
+    XCTAssertNil(app?["sealed"])
+  }
+
+  func testEverySealIsFresh() {
+    let queue = DotQueue(defaults: defaults, suite: suite)
+    queue.append(DotQueue.entry(.addTask, text: "Same", now: now))
+    queue.append(DotQueue.entry(.addTask, text: "Same", now: now))
+    let seals = queue.entries().compactMap { ($0["sealed"] as? [String: Any])?["ct"] as? String }
+    XCTAssertEqual(seals.count, 2)
+    XCTAssertNotEqual(seals[0], seals[1])
+  }
+
+  func testAnExtensionSealsWithThePublicKeyOnly() {
+    let (id, key) = QueueSeal.publishedKey(defaults)!
+    let entry = DotQueue.entry(.addTask, text: "From the share sheet", now: now)
+    let sealed = QueueSeal.seal(entry, keyId: id, publicKey: key)!
+    XCTAssertNil(sealed["text"])
+    XCTAssertEqual(QueueSeal.open(sealed)["text"] as? String, "From the share sheet")
+  }
+
+  func testWithNoPublishedKeyTextIsRefusedIdsStillQueue() {
+    defaults.removeObject(forKey: QueueSeal.publicKeyKey)
+    let queue = DotQueue(defaults: defaults, suite: suite)
+    XCTAssertFalse(queue.append(DotQueue.entry(.addTask, text: "No key", now: now)))
+    XCTAssertTrue(queue.append(DotQueue.entry(.markDone, occurrenceId: live, now: now)))
+    XCTAssertFalse((stored() ?? "").contains("No key"))
+  }
+
+  func testAnEarlierVersionsPlaintextIsSealedInPlaceIdempotently() {
+    let legacy: [[String: Any]] = [
+      ["id": "01928c3e-0000-7000-8000-0000000009a1", "at_ms": 1, "kind": "add_task",
+       "shared": true, "text": "Old share", "owner": owner],
+      ["id": "01928c3e-0000-7000-8000-0000000009a2", "at_ms": 2, "kind": "add_task",
+       "text": "No owner"],
+      ["id": "01928c3e-0000-7000-8000-0000000009a3", "at_ms": 3, "kind": "mark_done",
+       "occurrence_id": live],
+    ]
+    writeRaw(legacy)
+    let queue = DotQueue(defaults: defaults, suite: suite)
+    let app = opened(queue)
+    let raw = stored() ?? ""
+    XCTAssertFalse(raw.contains("Old share"))
+    XCTAssertFalse(raw.contains("No owner"))
+    let kept = queue.entries()
+    XCTAssertEqual(kept.map { $0["id"] as? String }, legacy.map { $0["id"] as? String })
+    XCTAssertEqual(kept.map { $0["owner"] as? String }, [owner, nil, nil])
+    XCTAssertNil(kept[2]["sealed"], "ids only")
+    XCTAssertEqual(app.map { $0["text"] as? String }, ["Old share", "No owner", nil])
+    XCTAssertNil(app[1]["owner"], "never attributed")
+    _ = opened(queue)
+    XCTAssertEqual(stored(), raw, "idempotent")
+  }
+
+  func testAChangedOwnerStampNoLongerOpens() {
+    let queue = DotQueue(defaults: defaults, suite: suite)
+    queue.publishOwner(#"{"v":1,"owner":"\#(owner)"}"#)
+    queue.append(DotQueue.entry(.addTask, text: "Secret", now: now))
+    var entry = queue.entries().single!
+    entry["owner"] = "01928c3e-0000-7000-8000-00000000000b"
+    writeRaw([entry])
+    let app = opened(queue).single
+    XCTAssertEqual(app?["unreadable"] as? Bool, true)
+    XCTAssertNil(app?["text"])
+    XCTAssertEqual(queue.entries().count, 1, "never erased")
+  }
+
+  func testALostKeyKeepsEntriesUnreadableAndANewKeyIsMade() {
+    let queue = DotQueue(defaults: defaults, suite: suite)
+    queue.append(DotQueue.entry(.addTask, text: "Before", now: now))
+    let (oldId, _) = QueueSeal.publishedKey(defaults)!
+    QueueSeal.deleteKey(oldId)
+    let app = opened(queue)
+    XCTAssertEqual(app.single?["unreadable"] as? Bool, true)
+    XCTAssertNotEqual(QueueSeal.publishedKey(defaults)?.id, oldId, "a new pair")
+    XCTAssertTrue(queue.append(DotQueue.entry(.addTask, text: "After", now: now)))
+    let now2 = opened(queue)
+    XCTAssertEqual(now2.count, 2)
+    XCTAssertEqual(now2[0]["unreadable"] as? Bool, true)
+    XCTAssertEqual(now2[1]["text"] as? String, "After")
+  }
+
+  func testOldKeysKeepOpeningAfterANewKey() {
+    let queue = DotQueue(defaults: defaults, suite: suite)
+    queue.append(DotQueue.entry(.addTask, text: "Old key", now: now))
+    defaults.removeObject(forKey: QueueSeal.publicKeyKey)
+    XCTAssertTrue(QueueSeal.ensureKey(defaults, suite: suite))
+    queue.append(DotQueue.entry(.addTask, text: "New key", now: now))
+    XCTAssertEqual(opened(queue).map { $0["text"] as? String }, ["Old key", "New key"])
+  }
+
+  func testConcurrentSharesAndAppReadsLoseNothing() {
+    let queue = DotQueue(defaults: defaults, suite: suite)
+    DispatchQueue.concurrentPerform(iterations: 60) { i in
+      if i % 3 == 0 { _ = queue.readForApp() }
+      queue.append(DotQueue.entry(.addTask, text: "t\(i)", now: now))
+    }
+    let texts = opened(queue).compactMap { $0["text"] as? String }
+    XCTAssertEqual(Set(texts).count, 60)
+    XCTAssertFalse((stored() ?? "").contains("\"text\""))
   }
 }
 

@@ -60,6 +60,45 @@ object DotQueue {
      * lock the app's publish and remove take.
      */
     /**
+     * Seals the words of every plaintext entry in [prefs]'s queue in place,
+     * under the queue's lock, ids, times and owner stamps unchanged (CR-160
+     * I1). All or nothing in one commit: if any entry can't be sealed the
+     * queue is left exactly as it was, to try again next time; a crash
+     * before the commit leaves it as it was, after it sealed. Idempotent.
+     */
+    fun sealPlaintext(prefs: android.content.SharedPreferences) = synchronized(DotQueue) {
+        val queue = parse(prefs.getString(KEY, null)) ?: return@synchronized
+        var changed = false
+        val out = JSONArray()
+        for (i in 0 until queue.length()) {
+            val entry = queue.optJSONObject(i)
+            if (entry == null || !QueueCipher.hasPlainText(entry)) {
+                out.put(queue.get(i))
+                continue
+            }
+            out.put(QueueCipher.seal(entry) ?: return@synchronized)
+            changed = true
+        }
+        if (changed) prefs.edit().putString(KEY, out.toString()).commit()
+    }
+
+    /**
+     * The queue as the app reads it: sealed words opened, or the entry
+     * marked unreadable (kept, never applied). The stored queue stays
+     * sealed. Under the queue's lock.
+     */
+    fun readOpened(prefs: android.content.SharedPreferences): String? = synchronized(DotQueue) {
+        val raw = prefs.getString(KEY, null) ?: return@synchronized null
+        val queue = parse(raw) ?: return@synchronized raw
+        val out = JSONArray()
+        for (i in 0 until queue.length()) {
+            val entry = queue.optJSONObject(i)
+            out.put(if (entry == null) queue.get(i) else QueueCipher.open(entry))
+        }
+        out.toString()
+    }
+
+    /**
      * The queue in [raw]; an empty one when there is none, null when it
      * can't be read (then nothing is appended over it: an unreadable queue
      * is never replaced, CR-160 I7).

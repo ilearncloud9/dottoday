@@ -213,6 +213,11 @@ final class IntentQueueBridge {
 
   func attach(to messenger: FlutterBinaryMessenger) {
     let channel = FlutterMethodChannel(name: "dottoday/intents", binaryMessenger: messenger)
+    // The queue's key pair, so extensions and Siri can seal from now on
+    // (CR-160 I1): before this, a text action is refused, never stored.
+    if let defaults = DotStore.shared {
+      _ = QueueLock.run { QueueSeal.ensureKey(defaults, suite: DotStore.appGroup) }
+    }
     // The drain's read and its atomic remove (lib/data/intents/
     // native_action_queue_store.dart): on the main thread, like every
     // in-app append, so none falls between a read and a write.
@@ -221,10 +226,9 @@ final class IntentQueueBridge {
       let queue = DotQueue(defaults: defaults)
       switch call.method {
       case "readQueue":
-        result(QueueLock.run { () -> String? in
-          CFPreferencesAppSynchronize(DotStore.appGroup as CFString)
-          return defaults.string(forKey: DotStore.queueKey)
-        })
+        // Plaintext from an earlier version sealed first; the app gets the
+        // words opened (CR-160 I1).
+        result(queue.readForApp())
       case "removeQueued":
         let args = call.arguments as? [String: Any]
         queue.remove(Set(args?["ids"] as? [String] ?? []))

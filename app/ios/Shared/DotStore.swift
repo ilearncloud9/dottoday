@@ -72,7 +72,14 @@ struct DotQueue {
       let marker = Self.marker(defaults.string(forKey: DotStore.queueOwnerKey))
       if marker?["refuse"] as? Bool == true { return false }
       guard let list = storedEntries(), list.count < Self.capacity else { return false }
-      return write(list + [Self.stamped(entry, marker: marker)])
+      // Words sealed to the app's key with the owner stamp inside (CR-160
+      // I1): no key or a failed seal refuses the entry, never plaintext.
+      var stamped = Self.stamped(entry, marker: marker)
+      if QueueSeal.hasPlainText(stamped) {
+        guard let sealed = QueueSeal.seal(stamped, defaults: defaults) else { return false }
+        stamped = sealed
+      }
+      return write(list + [stamped])
     }
   }
 
@@ -116,14 +123,14 @@ struct DotQueue {
   }
 
   /// What another process wrote since this one last read.
-  private func reload() {
+  func reload() {
     CFPreferencesAppSynchronize(suite as CFString)
   }
 
   /// The stored array; empty when there is none, nil when it can't be read
   /// (then nothing is written over it: an unreadable queue is never
   /// replaced, CR-160 I7).
-  private func storedEntries() -> [Any]? {
+  func storedEntries() -> [Any]? {
     guard let raw = defaults.string(forKey: DotStore.queueKey) else { return [] }
     guard let data = raw.data(using: .utf8) else { return nil }
     return (try? JSONSerialization.jsonObject(with: data)) as? [Any]
@@ -134,7 +141,7 @@ struct DotQueue {
   /// Writes [list]; false when it can't be encoded, is over [maxBytes], or
   /// didn't read back (storage full).
   @discardableResult
-  private func write(_ list: [Any]) -> Bool {
+  func write(_ list: [Any]) -> Bool {
     guard let data = try? JSONSerialization.data(withJSONObject: list),
       data.count <= Self.maxBytes,
       let raw = String(data: data, encoding: .utf8)

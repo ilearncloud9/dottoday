@@ -80,15 +80,18 @@
 		A1B2C3D4E5F60718293A4C01 /* CalendarSeriesBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4C02 /* CalendarSeriesBridge.swift */; };
 		A1E0BC2D094EABDDE16EC931 /* start_wind_chimes.caf in Resources */ = {isa = PBXBuildFile; fileRef = FF9A7BFB94E4F5D26D9C60FD /* start_wind_chimes.caf */; };
 		A3CDC9C8AF4FA1ED40ED75C6 /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
+		2D49B58D88195523A151A779 /* QueueSeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F44BA5A4700262A526CE88 /* QueueSeal.swift */; };
 		A52B01C7F16748FFA1F864B3 /* clear_spark.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4582D74ACAC8B91600913863 /* clear_spark.caf */; };
 		A5CF70EC905AA3EA73533AC0 /* reminder_ripple.caf in Resources */ = {isa = PBXBuildFile; fileRef = 5FA0495FCE149F9D328BFADE /* reminder_ripple.caf */; };
 		A6885C93D510F19B4D4A75AC /* clear_smile.caf in Resources */ = {isa = PBXBuildFile; fileRef = 938E2D9F7892511A64ACA938 /* clear_smile.caf */; };
 		A870E3DA3E7EFA6C4B7ABEA8 /* LiveActivityViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF327A6E80AA18432DB80F2 /* LiveActivityViews.swift */; };
 		AC3888CD0B372BDD1DB9839B /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
+		F8A4C22EF59C9E4D86CFAE48 /* QueueSeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F44BA5A4700262A526CE88 /* QueueSeal.swift */; };
 		B05AA8769152360FD3DF4F79 /* done_swift.caf in Resources */ = {isa = PBXBuildFile; fileRef = B17CFA3AEC0E7D9360BD76CA /* done_swift.caf */; };
 		B3FC611264B06762603B4051 /* play_horse.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2C53CB871101D5E3B05CA68 /* play_horse.caf */; };
 		B550A49FF95CF8D4E1279CCE /* done_succeeded.caf in Resources */ = {isa = PBXBuildFile; fileRef = 53A045524ECFC47C52272928 /* done_succeeded.caf */; };
 		B90E9CF17CDA85AD851A3D4B /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
+		5E35D6D0B8EC3E4A7E49E17B /* QueueSeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F44BA5A4700262A526CE88 /* QueueSeal.swift */; };
 		BA76BE689526EC3B4969C5CA /* DotControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656B1CE923F32B8B268C4ECA /* DotControls.swift */; };
 		BB0429360429E5429F263C41 /* start_bells.caf in Resources */ = {isa = PBXBuildFile; fileRef = 6E87541BA029AEF4C9AE8052 /* start_bells.caf */; };
 		BBAA3E56E6C49F3DE03507E3 /* start_music_box.caf in Resources */ = {isa = PBXBuildFile; fileRef = EED2C1D0EC543210C3DBD83D /* start_music_box.caf */; };
@@ -235,6 +238,7 @@
 		80E55EE769C90EE357400A18 /* clear_involved.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_involved.caf; path = Runner/Sounds/clear_involved.caf; sourceTree = SOURCE_ROOT; };
 		81D23147C1D9E28E463F9315 /* DotIntentsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotIntentsTests.swift; sourceTree = "<group>"; };
 		81DCE2F7DB27897A1C8F948D /* DotStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotStore.swift; sourceTree = "<group>"; };
+		C1F44BA5A4700262A526CE88 /* QueueSeal.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QueueSeal.swift; sourceTree = "<group>"; };
 		82DBBA36E160CA6125E5785E /* clear_quick.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_quick.caf; path = Runner/Sounds/clear_quick.caf; sourceTree = SOURCE_ROOT; };
 		89D24CE647055FDCBE987970 /* clear_lift.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_lift.caf; path = Runner/Sounds/clear_lift.caf; sourceTree = SOURCE_ROOT; };
 		8A7F3DBEA3F12BCB8407A9B4 /* play_gulls.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_gulls.caf; path = Runner/Sounds/play_gulls.caf; sourceTree = SOURCE_ROOT; };
@@ -343,6 +347,7 @@
 			isa = PBXGroup;
 			children = (
 				81DCE2F7DB27897A1C8F948D /* DotStore.swift */,
+				C1F44BA5A4700262A526CE88 /* QueueSeal.swift */,
 				12C08AB5AB645575C2308593 /* SnapshotPatch.swift */,
 				3B9475CDDE68AAF01310D87A /* DotActions.swift */,
 				AEF20C1EBD7428AB1D846DDA /* DotIntents.swift */,
@@ -883,6 +888,7 @@
 			files = (
 				29267702C36DF550D7792F61 /* ShareViewController.swift in Sources */,
 				AC3888CD0B372BDD1DB9839B /* DotStore.swift in Sources */,
+				F8A4C22EF59C9E4D86CFAE48 /* QueueSeal.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -904,6 +910,7 @@
 				474B4C2CF42CC943669A58D7 /* DottodayWidgets.swift in Sources */,
 				E97610F8CA6D24F677ABC9D3 /* Views.swift in Sources */,
 				A3CDC9C8AF4FA1ED40ED75C6 /* DotStore.swift in Sources */,
+				2D49B58D88195523A151A779 /* QueueSeal.swift in Sources */,
 				F0266253C4A161C72DCF526E /* SnapshotPatch.swift in Sources */,
 				E2F14629C6B99D94D3D76BDF /* DotActions.swift in Sources */,
 				940225C74F717DD0AC2BE39D /* DotIntents.swift in Sources */,
@@ -928,6 +935,7 @@
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */,
 				B90E9CF17CDA85AD851A3D4B /* DotStore.swift in Sources */,
+				5E35D6D0B8EC3E4A7E49E17B /* QueueSeal.swift in Sources */,
 				365730C79D3B6A13E92D6B5F /* SnapshotPatch.swift in Sources */,
 				FF4E69F492C56F95BC3EBD48 /* DotActions.swift in Sources */,
 				0277774B9AAC96638F8B085E /* DotIntents.swift in Sources */,

@@ -42,7 +42,13 @@ object ShareIntake {
      * One `shared` entry, stamped with the published owner and appended under
      * the queue's lock; false, with nothing queued, when refused.
      */
-    fun append(prefs: android.content.SharedPreferences, text: String, subject: String?, nowMs: Long): Boolean =
+    fun append(
+        prefs: android.content.SharedPreferences,
+        text: String,
+        subject: String?,
+        nowMs: Long,
+        alias: String = QueueCipher.CURRENT_ALIAS,
+    ): Boolean =
         synchronized(DotQueue) {
             val entry = DotQueue.entry(DotActionKind.ADD_TASK, nowMs, text = text.take(MAX_TEXT))
                 .toMutableMap()
@@ -51,8 +57,12 @@ object ShareIntake {
             val marker = prefs.getString(DotQueue.OWNER_KEY, null)
             val queue = DotQueue.parse(prefs.getString(DotQueue.KEY, null)) ?: return@synchronized false
             if (!DotQueue.accepts(queue, marker, entry)) return@synchronized false
-            // The owner shown when it was shared (CR-160 I7).
-            queue.put(JsonMaps.fromValue(DotQueue.stamp(entry, marker)))
+            // The owner shown when it was shared (CR-160 I7), then its words
+            // sealed with that stamp authenticated (CR-160 I1): no sealing,
+            // no entry; never stored as plaintext.
+            val stamped = JsonMaps.fromValue(DotQueue.stamp(entry, marker)) as org.json.JSONObject
+            val sealed = QueueCipher.seal(stamped, alias) ?: return@synchronized false
+            queue.put(sealed)
             prefs.edit().putString(DotQueue.KEY, queue.toString()).commit()
         }
 }

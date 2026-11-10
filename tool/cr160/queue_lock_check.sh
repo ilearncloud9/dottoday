@@ -14,7 +14,8 @@ work="$(mktemp -d)"
 suite="app.dottoday.lockcheck.$$"
 bin="$work/qlock"
 trap 'defaults delete "$suite" >/dev/null 2>&1 || true; rm -rf "$work"' EXIT
-swiftc -O -o "$bin" app/ios/Shared/DotStore.swift tool/cr160/queue_lock/main.swift
+swiftc -O -o "$bin" app/ios/Shared/DotStore.swift app/ios/Shared/QueueSeal.swift \
+  tool/cr160/queue_lock/main.swift
 
 run() { # run <shared|separate>: one lock dir for all, or one each (control)
   local mode="$1" lock="$work/shared"
@@ -22,6 +23,7 @@ run() { # run <shared|separate>: one lock dir for all, or one each (control)
   l() { if [[ "$mode" == shared ]]; then echo "$work/shared"; else mkdir -p "$work/$1"; echo "$work/$1"; fi; }
   defaults delete "$suite" >/dev/null 2>&1 || true
   "$bin" "$suite" "$lock" publish '{"v":1,"owner":"01928c3e-0000-7000-8000-00000000000a"}'
+  "$bin" "$suite" "$lock" key
   "$bin" "$suite" "$lock" append seed 100 >/dev/null
   local ids
   ids=$(defaults read "$suite" action_queue | python3 -c 'import json,sys; print(" ".join(e["id"] for e in json.loads(sys.stdin.read())))')
@@ -33,11 +35,11 @@ run() { # run <shared|separate>: one lock dir for all, or one each (control)
   "$bin" "$suite" "$lock" count
 }
 
-echo "with the lock (expect entries 360, one owner, nothing refused):"
+echo "with the lock (expect entries 360, one owner, no plaintext, nothing refused):"
 locked=$(run shared)
 echo "$locked" | sed "s/^/  /"
 echo "control, each process its own lock (no exclusion; losses expected):"
 run separate | sed "s/^/  /"
-[[ "$(tail -1 <<<"$locked")" == "entries 360 owners 01928c3e-0000-7000-8000-00000000000a" ]] \
+[[ "$(tail -1 <<<"$locked")" == "entries 360 owners 01928c3e-0000-7000-8000-00000000000a plaintext 0" ]] \
   && echo "QUEUE LOCK CROSS-PROCESS: PASS ($(sw_vers -productVersion))" \
   || { echo "QUEUE LOCK CROSS-PROCESS: FAIL"; exit 1; }
