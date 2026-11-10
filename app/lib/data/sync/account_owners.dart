@@ -424,7 +424,7 @@ Future<Set<String>> _rekeyStarters(
     for (final o in rows) {
       final start = o.startUtc;
       final id = o.seriesId == null && start != null
-          ? _starterRekey(o.id, start, o.tzId, guest, account)
+          ? starterRekeyFor(o.id, start, o.tzId, guest, account)
           : null;
       if (id == null || await _exists(db, id)) {
         out.add(o.id);
@@ -452,8 +452,10 @@ Future<bool> _exists(AppDatabase db, String occurrenceId) async =>
 
 /// [id]'s account id if it is the guest's starter for a day around
 /// [startMs] (a starter sits on its day's Wake Up to Wind Down, which can
-/// cross midnight); null if it is not a starter.
-String? _starterRekey(
+/// cross midnight); null if it is not a starter. Deterministic, so a guest
+/// backup's starter can be matched to the account copy it became (CR-160
+/// I1 legacy evidence scrub).
+String? starterRekeyFor(
   String id,
   int startMs,
   String tzId,

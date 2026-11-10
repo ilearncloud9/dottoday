@@ -46,6 +46,7 @@ import 'dart:convert';
 import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/owned_local_meta.dart';
+import 'package:dottoday/data/db/owner_meta.dart';
 import 'package:drift/drift.dart';
 
 const _kind = 'guest_backup_promotions';
@@ -130,11 +131,29 @@ final class GuestPromotion {
   };
 }
 
-/// Which of one owner's backups are hidden, from its promotions in order.
+/// Which of one owner's backups are hidden: a guest's from before the
+/// legacy boundary (legacy_guest_quarantine.dart), and those its promotions
+/// govern, in order.
 final class GuestBackupVisibility {
-  const GuestBackupVisibility(this.promotions);
+  const GuestBackupVisibility(
+    this.promotions, {
+    this.guest = false,
+    this.legacyUpTo,
+  });
 
   final List<GuestPromotion> promotions;
+
+  /// Whether the owner is a guest (no account marker): only a guest's
+  /// backups can hold work that moved into an account.
+  final bool guest;
+
+  /// The legacy boundary; null when not recorded yet (fail closed).
+  final int? legacyUpTo;
+
+  /// Whether backup [id] is in the legacy quarantine: a guest's, from
+  /// before the boundary, or any of a guest's while it is unknown.
+  bool quarantines(int id) =>
+      guest && (legacyUpTo == null || id <= legacyUpTo!);
 
   /// The promotion whose moved work backup [id] may hold, if recorded.
   GuestPromotion? governing(int id) {
@@ -146,6 +165,7 @@ final class GuestBackupVisibility {
 
   /// Whether backup [id] is hidden from listing and restoring.
   bool hides(int id) {
+    if (quarantines(id)) return true;
     final g = governing(id);
     if (g != null) return !g.scrubbed.contains(id);
     return promotions.any((p) => p.pending);
@@ -195,7 +215,20 @@ Future<List<String>> guestsWithPromotions(AppDatabase db) async => [
 Future<GuestBackupVisibility> guestBackupVisibility(
   AppDatabase db,
   String owner,
-) async => GuestBackupVisibility(await guestPromotions(db, owner));
+) async => GuestBackupVisibility(
+  await guestPromotions(db, owner),
+  guest: await _meta(db, accountMarkerKey(owner)) == null,
+  legacyUpTo: int.tryParse(await _meta(db, legacyGuestBoundaryKey) ?? ''),
+);
+
+/// `local_meta` key of the legacy guest-backup boundary: the last backup id
+/// issued before this protection first ran (legacy_guest_quarantine.dart).
+/// Device-wide, written once.
+const legacyGuestBoundaryKey = 'legacy_guest_backup_boundary';
+
+Future<String?> _meta(AppDatabase db, String key) async => (await (db.select(
+  db.localMeta,
+)..where((m) => m.key.equals(key))).getSingleOrNull())?.value;
 
 /// In the transaction that moves [guest]'s work into [account]: records the
 /// promotion, pending, so from its commit the guest's earlier backups are

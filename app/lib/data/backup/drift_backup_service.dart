@@ -4,9 +4,9 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
+import 'package:dottoday/data/backup/backup_privacy.dart';
 import 'package:dottoday/data/backup/backup_retention.dart';
 import 'package:dottoday/data/backup/guest_backup_cutoff.dart';
-import 'package:dottoday/data/backup/guest_backup_scrub.dart';
 import 'package:dottoday/data/backup/user_data_snapshot.dart';
 import 'package:dottoday/data/calendar/pending_calendar_series.dart';
 import 'package:dottoday/data/daos/profiles_dao.dart';
@@ -105,28 +105,28 @@ final class DriftBackupService implements BackupService {
     BackupReason reason,
   ) => _fenced(() => _create(userId, reason, verify: false));
 
-  /// Maintenance on every start and resume (housekeeping calls
-  /// [runDailyIfDue]): P3 scrubs guest backups hidden for 30 days or more
-  /// (CR-160 I1). Its failure never stops the daily backup; it is retried
-  /// on the next run.
+  /// Maintenance on start and resume ([runBackupMaintenance], CR-160 I1):
+  /// a failure never stops the daily backup and is retried next run.
   Future<void> _maintain() async {
     try {
-      final left = await _fenced(
-        () => scrubExpiredGuestBackups(_db, _backups, nowUtc: _clock.nowUtc()),
+      await _fenced(
+        () => runBackupMaintenance(
+          _db,
+          _backups,
+          nowUtc: _clock.nowUtc(),
+          logger: _logger,
+        ),
       );
-      if (left > 0) {
-        _logger.warn('backup.guest_scrub_left', fields: {'count': left});
-      }
     } on Exception catch (e, st) {
       _logger.error('backup.guest_scrub_failed', error: e, stackTrace: st);
     }
   }
 
-  /// [body] under [guestBackupFence], after recording any cutoff a crash
-  /// left pending (CR-160 guest-backup privacy).
+  /// [body] under [guestBackupFence], after [prepareFencedBackupWork]
+  /// (CR-160 guest-backup privacy).
   Future<T> _fenced<T>(Future<T> Function() body) =>
       guestBackupFence.run(() async {
-        await recordPendingGuestCutoffs(_db, _backups, nowUtc: _clock.nowUtc());
+        await prepareFencedBackupWork(_db, _backups, nowUtc: _clock.nowUtc());
         return body();
       });
 
