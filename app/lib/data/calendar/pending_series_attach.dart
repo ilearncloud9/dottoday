@@ -1,4 +1,5 @@
 import 'package:dottoday/core/ids/id_generator.dart';
+import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/calendar/pending_calendar_series.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/mappers/entity_mappers.dart';
@@ -94,4 +95,23 @@ Future<bool> _attach(
     db.pendingCalendarSeriesTable,
   )..where((p) => p.id.equals(t.id))).go();
   return true;
+}
+
+/// The calendar import's attach step: never stops the import; a refusal
+/// (the owner changed) or a failure leaves templates pending for the next
+/// run.
+Future<void> attachPendingForImport(
+  AppDatabase db,
+  PullOwner owner,
+  IdGenerator ids,
+  Logger logger,
+) async {
+  try {
+    final n = await attachPendingCalendarSeries(db, owner, ids);
+    if (n > 0) logger.info('calendar.series_attached', fields: {'n': n});
+  } on PullRefusedException catch (e) {
+    logger.info('calendar.series_attach_refused', fields: {'why': e.reason});
+  } on Exception catch (e, st) {
+    logger.error('calendar.series_attach_failed', error: e, stackTrace: st);
+  }
 }

@@ -14,6 +14,7 @@ import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/data/sync/pull_guard.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
+import 'package:dottoday/data/writes/foreign_rows.dart';
 import 'package:dottoday/data/writes/validate_batch.dart';
 import 'package:dottoday/domain/calendar/calendar_import.dart';
 import 'package:dottoday/domain/calendar/calendar_import_plan.dart';
@@ -120,9 +121,11 @@ final class CalendarImporter implements CalendarImport {
       return const Ok(null);
     }
     try {
-      // The owner session this run began in: a restored template attaches
-      // only if it is still the one shown (CR-160 Stage A).
-      final owner = await _ownerSession(userId);
+      // The owner session this run began in (CR-160 Stage A, I1): nothing
+      // is imported for an owner not shown, sealed or being removed, and
+      // the commit re-checks it.
+      final owner = await ownerSessionOrNull(_db, userId);
+      if (owner == null) return const Err(StorageFailure());
       final now = _clock.nowUtc();
       final from = _startOfYesterday(now, location);
       final to = from.add(const Duration(days: horizonDays + 1));
@@ -134,7 +137,7 @@ final class CalendarImporter implements CalendarImport {
       }
       // After the reads: their calendars have their rows now, and new
       // instances of an attached series take its settings in this plan.
-      if (owner != null) await _attachPending(owner);
+      await attachPendingForImport(_db, owner, _ids, _logger);
       final plan = planCalendarImport(
         userId: userId,
         sources: sources,
@@ -151,32 +154,10 @@ final class CalendarImporter implements CalendarImport {
             calendarSeriesLookup(s.accountId, s.seriesKey): s,
         },
       );
-      return await _apply(userId, plan);
+      return await _apply(owner, plan);
     } on Exception catch (e, st) {
       _logger.error('calendar.import_failed', error: e, stackTrace: st);
       return const Err(StorageFailure());
-    }
-  }
-
-  Future<PullOwner?> _ownerSession(String userId) async {
-    try {
-      return await beginPull(_db, userId);
-    } on PullRefusedException {
-      return null;
-    }
-  }
-
-  /// Attaches restored templates whose calendar is now here
-  /// ([attachPendingCalendarSeries]). Never stops the import: a refusal
-  /// (the owner changed) or a failure leaves them pending for the next run.
-  Future<void> _attachPending(PullOwner owner) async {
-    try {
-      final n = await attachPendingCalendarSeries(_db, owner, _ids);
-      if (n > 0) _logger.info('calendar.series_attached', fields: {'n': n});
-    } on PullRefusedException catch (e) {
-      _logger.info('calendar.series_attach_refused', fields: {'why': e.reason});
-    } on Exception catch (e, st) {
-      _logger.error('calendar.series_attach_failed', error: e, stackTrace: st);
     }
   }
 
@@ -236,9 +217,10 @@ final class CalendarImporter implements CalendarImport {
   /// are validated the same way (06 §7) and the same after-write effects
   /// (reminders, widgets) follow the commit.
   Future<Result<void, AppFailure>> _apply(
-    String userId,
+    PullOwner owner,
     CalendarImportPlan plan,
   ) async {
+    final userId = owner.userId;
     if (plan.isEmpty) return const Ok(null);
     final valid = validateBatch(
       WriteBatch(
@@ -256,8 +238,19 @@ final class CalendarImporter implements CalendarImport {
     }
     try {
       await _db.transaction(() async {
-        // Never while the owner's account is being deleted (CR-160 §4).
-        await checkNotSealed(_db, userId);
+        // Still the session the run began in, not sealed or being removed
+        // (CR-160 §4, I1), and every row written is this owner's own: an
+        // id another owner holds refuses the whole commit.
+        await checkPull(_db, owner);
+        await checkNoForeignRows(_db, 'calendar_links', userId, [
+          for (final l in plan.links) l.id,
+        ]);
+        await checkNoForeignRows(_db, 'occurrences', userId, [
+          for (final o in batch.occurrences) o.id,
+        ]);
+        await checkNoForeignRows(_db, 'subtasks', userId, [
+          for (final t in batch.subtasks) t.id,
+        ]);
         await _links.upsertAll([
           for (final l in plan.links)
             _codec.encode<CalendarLinkRow>(l.toJson()),
@@ -274,8 +267,12 @@ final class CalendarImporter implements CalendarImport {
           await bumpWriteRevision(_db, userId);
         }
       });
-    } on OwnerSealedException {
+    } on PullRefusedException catch (e) {
+      _logger.info('calendar.import_refused', fields: {'why': e.reason});
       return const Err(StorageFailure());
+    } on ForeignRowException {
+      _logger.warn('calendar.import_foreign_row');
+      return const Err(ForeignRowsFailure());
     }
     _effects.schedule(userId);
     if (plan.moved.isNotEmpty) _onMoved?.call(plan.moved);

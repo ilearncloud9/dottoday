@@ -1,21 +1,24 @@
 import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
+import 'package:dottoday/data/calendar/write_back_items.dart';
 import 'package:dottoday/data/daos/calendar_links_dao.dart';
 import 'package:dottoday/data/db/app_database.dart';
-import 'package:dottoday/data/mappers/entity_mappers.dart';
 import 'package:dottoday/data/mappers/row_codec.dart';
 import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
+import 'package:dottoday/data/sync/pull_guard.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
+import 'package:dottoday/data/writes/foreign_rows.dart';
 import 'package:dottoday/data/writes/validate_batch.dart';
 import 'package:dottoday/domain/calendar/calendar_writer.dart';
 import 'package:dottoday/domain/calendar/imported_event.dart';
 import 'package:dottoday/domain/calendar/write_back_merge.dart';
-import 'package:dottoday/domain/entities/calendar.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
+
+export 'package:dottoday/data/calendar/write_back_items.dart';
 
 const _codec = RowCodec();
 
@@ -27,44 +30,6 @@ const writeBackProviders = {
   'google',
   'microsoft',
 };
-
-/// One imported item moved, resized or renamed here and not yet in its
-/// calendar (docs/09 M7.3).
-final class PendingWriteBack {
-  const PendingWriteBack({
-    required this.link,
-    required this.occurrence,
-    required this.provider,
-    required this.base,
-  });
-
-  final CalendarLink link;
-  final Occurrence occurrence;
-  final CalendarProvider provider;
-
-  /// What the calendar last had (`calendar_links.etag`).
-  final ImportFingerprint base;
-
-  /// Changes when either side does: an attempt that failed or clashed is
-  /// not repeated on its own until then (no retry storm, R-08).
-  String get signature => [
-    link.etag,
-    occurrence.startUtc?.millisecondsSinceEpoch,
-    occurrence.durationMin,
-    textHash(occurrence.title),
-  ].join('|');
-}
-
-/// What one [CalendarWriteBack.push] left to the person, by link id.
-final class WriteBackReport {
-  const WriteBackReport({this.failed = const {}, this.clashes = const {}});
-
-  /// Couldn't reach the calendar: the banner offers Retry.
-  final Set<String> failed;
-
-  /// Changed in the calendar too: Keep mine / Use calendar's.
-  final Set<String> clashes;
-}
 
 enum _Done { written, failed, clash, skipped }
 
@@ -96,16 +61,23 @@ final class CalendarWriteBack {
   final Clock _clock;
   final Logger _logger;
 
-  /// [userId]'s items with something to send, now.
-  Future<List<PendingWriteBack>> pending(String userId) async => _pendingOf(
-    await _links.writeBackCandidates(userId, writeBackProviders).get(),
-  );
+  /// [userId]'s items with something to send, now. The owner session is
+  /// read first, so a change of owner after it only ever fails closed.
+  Future<List<PendingWriteBack>> pending(String userId) async {
+    final generation = await ownerGeneration(_db);
+    return pendingWriteBacksOf(
+      await _links.writeBackCandidates(userId, writeBackProviders).get(),
+      generation,
+    );
+  }
 
   /// The same, re-read whenever an occurrence, link or calendar changes.
   Stream<List<PendingWriteBack>> watchPending(String userId) => _links
       .writeBackCandidates(userId, writeBackProviders)
       .watch()
-      .map(_pendingOf);
+      .asyncMap(
+        (rows) async => pendingWriteBacksOf(rows, await ownerGeneration(_db)),
+      );
 
   /// Sends [items] one by one; [prefer] settles clashes ("Keep mine",
   /// "Use calendar's"), else they are reported. [untitled] is the
@@ -141,6 +113,7 @@ final class CalendarWriteBack {
     final writer = _writerFor(item.provider);
     final eventId = parseImportKey(item.link.externalEventId)?.$1;
     if (writer == null || eventId == null) return _Done.skipped;
+    if (!await _sessionHolds(item)) return _Done.skipped;
     final at = EventAddress(
       calendarId: item.link.externalCalendarId,
       eventId: eventId,
@@ -180,6 +153,9 @@ final class CalendarWriteBack {
     );
     if (merge is! WriteBackMerged) return _Done.clash;
     final patch = merge.patch;
+    // Checked again just before the calendar is written: a write sent
+    // there can't be undone by a local rollback (CR-160 I1).
+    if (patch != null && !await _sessionHolds(item)) return _Done.skipped;
     final outcome = patch == null
         ? WriteBackOutcome.written
         : await writer.write(at, patch, expectedVersion: remote.version);
@@ -219,8 +195,15 @@ final class CalendarWriteBack {
     final bool committed;
     try {
       committed = await _db.transaction(() async {
-        // Never while the owner's account is being deleted (CR-160 §4).
-        await checkNotSealed(_db, item.link.userId);
+        // The session it was read in, not sealed or being removed (CR-160
+        // §4, I1), and only this owner's own rows.
+        await checkPull(_db, _session(item));
+        await checkNoForeignRows(_db, 'calendar_links', item.link.userId, [
+          link.id,
+        ]);
+        await checkNoForeignRows(_db, 'occurrences', item.link.userId, [
+          for (final o in valid) o.id,
+        ]);
         final current = await _occurrences.findById(
           item.link.userId,
           item.occurrence.id,
@@ -232,7 +215,10 @@ final class CalendarWriteBack {
         if (valid.isNotEmpty) await bumpWriteRevision(_db, item.link.userId);
         return true;
       });
-    } on OwnerSealedException {
+    } on PullRefusedException {
+      return _Done.skipped;
+    } on ForeignRowException {
+      _logger.warn('calendar.write_back_foreign_row');
       return _Done.skipped;
     }
     if (valid.isNotEmpty && committed) _effects.schedule(item.link.userId);
@@ -244,33 +230,34 @@ final class CalendarWriteBack {
   /// it isn't tried again; the next import removes a gone event.
   Future<_Done> _keepLocal(PendingWriteBack item) async {
     final link = item.link.copyWith(readOnly: true);
-    await _links.upsertLink(_codec.encode<CalendarLinkRow>(link.toJson()));
+    try {
+      await _db.transaction(() async {
+        await checkPull(_db, _session(item));
+        await checkNoForeignRows(_db, 'calendar_links', link.userId, [link.id]);
+        await _links.upsertLink(_codec.encode<CalendarLinkRow>(link.toJson()));
+      });
+    } on PullRefusedException {
+      return _Done.skipped;
+    } on ForeignRowException {
+      _logger.warn('calendar.write_back_foreign_row');
+    }
     return _Done.skipped;
   }
 
-  static List<PendingWriteBack> _pendingOf(
-    List<(CalendarLinkRow, OccurrenceRow, CalendarAccountRow)> rows,
-  ) => [
-    for (final (linkRow, occurrenceRow, accountRow) in rows)
-      ?_pendingFrom(linkRow, occurrenceRow, accountRow),
-  ];
+  /// The owner session [item] was read in (generation -1: none recorded,
+  /// so never matches: fail closed).
+  static PullOwner _session(PendingWriteBack item) =>
+      (userId: item.link.userId, generation: item.ownerGeneration ?? -1);
 
-  static PendingWriteBack? _pendingFrom(
-    CalendarLinkRow linkRow,
-    OccurrenceRow occurrenceRow,
-    CalendarAccountRow accountRow,
-  ) {
-    final link = CalendarLink.fromJson(_codec.decode(linkRow));
-    final base = ImportFingerprint.parse(link.etag);
-    final o = occurrenceFromRow(occurrenceRow);
-    if (base == null || o.startUtc == null || !hasLocalChange(o, base)) {
-      return null;
+  /// Whether [item]'s owner session still holds (shown, same generation,
+  /// not sealed, not being removed).
+  Future<bool> _sessionHolds(PendingWriteBack item) async {
+    try {
+      await _db.transaction(() => checkPull(_db, _session(item)));
+      return true;
+    } on PullRefusedException catch (e) {
+      _logger.info('calendar.write_back_refused', fields: {'why': e.reason});
+      return false;
     }
-    return PendingWriteBack(
-      link: link,
-      occurrence: o,
-      provider: CalendarAccount.fromJson(_codec.decode(accountRow)).provider,
-      base: base,
-    );
   }
 }

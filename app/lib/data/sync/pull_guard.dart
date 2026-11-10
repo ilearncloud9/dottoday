@@ -61,6 +61,15 @@ Future<PullOwner> beginPull(AppDatabase db, String userId) =>
       return owner;
     });
 
+/// [beginPull], or null when [userId] isn't the shown, live account.
+Future<PullOwner?> ownerSessionOrNull(AppDatabase db, String userId) async {
+  try {
+    return await beginPull(db, userId);
+  } on PullRefusedException {
+    return null;
+  }
+}
+
 /// Inside the caller's transaction, before it writes anything pulled:
 /// throws [PullRefusedException] unless [owner] is still shown in the same
 /// session, not sealed for deletion and not being removed.

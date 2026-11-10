@@ -32,6 +32,7 @@ const ownerCheckedTables = {
   'routines',
   'reveal_hints',
   'calendar_series',
+  'calendar_links',
 };
 
 /// Throws [ForeignRowException] when any of [ids] in [table] belongs to an
