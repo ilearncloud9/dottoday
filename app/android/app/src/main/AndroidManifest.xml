@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- Task alerts (M5.1, docs/07 Android). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -32,12 +33,25 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <!-- Walk, the step mission (docs/15 §8): asked when it is picked. -->
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+    <!-- No Android backup of any app data (docs/06 §4, CR-160 I1): the
+         databases are useless without their Keystore-held key (never backed
+         up), while widget and queue preferences hold task text in plain
+         form. allowBackup="false" stops Auto Backup and adb backup;
+         dataExtractionRules also stops Android 12+ device-to-device
+         transfer, which allowBackup alone no longer does; the legacy
+         fullBackupContent rules exclude everything should backup ever be
+         re-enabled. tools:replace keeps these whatever a library declares.
+         Dottoday's own local backups and export are the recovery path. -->
     <application
         android:label="Dottoday"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:localeConfig="@xml/locales_config"
-        android:enableOnBackInvokedCallback="true">
+        android:enableOnBackInvokedCallback="true"
+        android:allowBackup="false"
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        tools:replace="android:allowBackup,android:fullBackupContent,android:dataExtractionRules">
         <activity
             android:name=".MainActivity"
             android:exported="true"

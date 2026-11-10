@@ -69,4 +69,87 @@ void main() {
       isTrue,
     );
   });
+
+  // No Android backup of app data (CR-160 I1, docs/06 §4): Auto Backup and
+  // adb backup off, Android 12+ cloud backup and device transfer excluding
+  // every domain, the legacy rules excluding everything too, and no build
+  // type's manifest overriding them. A manifest test proves the declaration
+  // only; the platform's behaviour is checked on a device.
+  group('Android backup', () {
+    const domains = [
+      'root',
+      'file',
+      'database',
+      'sharedpref',
+      'external',
+      'device_root',
+      'device_file',
+      'device_database',
+      'device_sharedpref',
+    ];
+
+    String app() =>
+        RegExp(r'<application[^>]*>').firstMatch(_manifest)!.group(0)!;
+
+    test('the application turns backup off and names both rule files', () {
+      expect(app(), contains('android:allowBackup="false"'));
+      expect(app(), contains('android:fullBackupContent="@xml/backup_rules"'));
+      expect(
+        app(),
+        contains('android:dataExtractionRules="@xml/data_extraction_rules"'),
+      );
+      expect(
+        app(),
+        contains(
+          'tools:replace="android:allowBackup,android:fullBackupContent,'
+          'android:dataExtractionRules"',
+        ),
+      );
+    });
+
+    test('Android 12+: cloud backup and device transfer exclude every '
+        'domain, include nothing', () {
+      final rules = File(
+        'android/app/src/main/res/xml/data_extraction_rules.xml',
+      ).readAsStringSync();
+      expect(rules, isNot(contains('<include')));
+      for (final section in ['cloud-backup', 'device-transfer']) {
+        final body = RegExp(
+          '<$section>([\\s\\S]*?)</$section>',
+        ).firstMatch(rules)!.group(1)!;
+        for (final d in domains) {
+          expect(
+            body,
+            contains('<exclude domain="$d" path="." />'),
+            reason: '$section $d',
+          );
+        }
+      }
+    });
+
+    test('Android 11 and older: the legacy rules exclude every domain', () {
+      final rules = File(
+        'android/app/src/main/res/xml/backup_rules.xml',
+      ).readAsStringSync();
+      expect(rules, isNot(contains('<include')));
+      for (final d in domains) {
+        expect(rules, contains('<exclude domain="$d" path="." />'));
+      }
+    });
+
+    test('no build type or flavor manifest turns backup back on', () {
+      final manifests = Directory('android/app/src')
+          .listSync()
+          .whereType<Directory>()
+          .map((d) => File('${d.path}/AndroidManifest.xml'))
+          .where((f) => f.existsSync() && !f.path.contains('/main/'));
+      expect(manifests, isNotEmpty);
+      for (final f in manifests) {
+        final text = f.readAsStringSync();
+        expect(text, isNot(contains('allowBackup')), reason: f.path);
+        expect(text, isNot(contains('BackupContent')), reason: f.path);
+        expect(text, isNot(contains('dataExtractionRules')), reason: f.path);
+      }
+    });
+  });
 }
