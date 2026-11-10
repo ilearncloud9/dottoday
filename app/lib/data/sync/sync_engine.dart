@@ -4,7 +4,10 @@ import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/owner_meta.dart';
+import 'package:dottoday/data/owners/deletion_seal.dart';
+import 'package:dottoday/data/sync/field_seen.dart';
 import 'package:dottoday/data/sync/outbox.dart';
+import 'package:dottoday/data/sync/pull_guard.dart';
 import 'package:dottoday/data/sync/row_merge.dart';
 import 'package:dottoday/data/sync/server_columns.dart';
 import 'package:dottoday/data/sync/shared_hlc.dart';
@@ -13,9 +16,8 @@ import 'package:dottoday/data/sync/synced_rows.dart';
 import 'package:dottoday/domain/sync/clock_skew.dart';
 import 'package:drift/drift.dart';
 
-/// What one run did (for the status and tests).
-/// What a round did. [skew] is set when the device clock is more than
-/// 5 min off; when it is fast, [pushed] is 0 and the outbox waits (M6.5.7).
+/// What a round did. [skew]: the device clock is more than 5 min off; when
+/// it is fast, [pushed] is 0 and the outbox waits (M6.5.7).
 typedef SyncRun = ({int pulled, int pushed, int conflicts, ClockSkew? skew});
 
 /// Offline-first sync (docs/04 §4, ADR-0002, R-08): pull what changed on
@@ -28,7 +30,10 @@ typedef SyncRun = ({int pulled, int pushed, int conflicts, ClockSkew? skew});
 /// error stops the run and leaves local data and the outbox as they are.
 /// A run is one owner's (CR-160): it pushes only that account's outbox
 /// entries and keeps its own pull cursors; other owners' rows on the
-/// device are never read for it.
+/// device are never read for it. Every transaction that writes pulled data
+/// re-checks the owner session it began in (pull_guard.dart) and moves the
+/// owner's write revision when a row really changed (CR-160 W1, W4); a
+/// refused page rolls back with its cursor.
 final class SyncEngine {
   SyncEngine({
     required AppDatabase db,
@@ -46,7 +51,8 @@ final class SyncEngine {
        _pageSize = pageSize,
        _clockOffset = clockOffset,
        _outbox = Outbox(db),
-       _rows = SyncedRows(db);
+       _rows = SyncedRows(db),
+       _fieldSeen = FieldSeen(db);
 
   final AppDatabase _db;
   final SyncGateway _gateway;
@@ -59,6 +65,7 @@ final class SyncEngine {
   final Duration? Function()? _clockOffset;
   final Outbox _outbox;
   final SyncedRows _rows;
+  final FieldSeen _fieldSeen;
 
   /// The outbox, for the pending count.
   Outbox get outbox => _outbox;
@@ -68,13 +75,15 @@ final class SyncEngine {
   /// [onProgress] hears (done, total) while an account's first sync brings
   /// its rows down ("Bringing your tasks… 120 of 300", M6.4).
   /// Throws [SyncGatewayException] when the server can't be reached or
-  /// refuses; what was done before stays done.
+  /// refuses, and [PullRefusedException] when [userId] isn't (or stops
+  /// being) the shown, live account; what was done before stays done.
   Future<SyncRun> run(
     String userId, {
     void Function(int done, int total)? onProgress,
   }) async {
+    final owner = await beginPull(_db, userId);
     final first = !await _hasCursor(userId, 'profiles');
-    if (first) await _settleProfile(userId);
+    if (first) await _settleProfile(owner);
     var total = 0;
     if (first && onProgress != null) {
       for (final entity in syncedEntities) {
@@ -86,7 +95,7 @@ final class SyncEngine {
     var conflicts = 0;
     for (final entity in syncedEntities) {
       final (rows, found) = await _pull(
-        userId,
+        owner,
         entity,
         progress: first && onProgress != null
             ? (n) => onProgress((pulled + n).clamp(0, total), total)
@@ -114,10 +123,11 @@ final class SyncEngine {
   /// Pages through [entity] from [userId]'s cursor; returns (rows,
   /// conflicts).
   Future<(int, int)> _pull(
-    String userId,
+    PullOwner owner,
     String entity, {
     void Function(int pulledSoFar)? progress,
   }) async {
+    final userId = owner.userId;
     final first = !await _hasCursor(userId, entity);
     var after = await _cursor(userId, entity);
     var rows = 0;
@@ -128,16 +138,18 @@ final class SyncEngine {
       final ids = [for (final r in page) r['id']! as String];
       final pending = await _outbox.pendingFor(userId, entity, ids);
       final versions = await _gateway.fieldVersions(entity, ids);
-      final seen = await _seen(entity, ids);
+      final seen = await _fieldSeen.seen(entity, ids);
       await _hlc.receive([for (final v in versions.values) ...v.values]);
       final last = (
         updatedAt: page.last['updated_at']! as String,
         id: page.last['id']! as String,
       );
       await _db.transaction(() async {
+        await checkPull(_db, owner);
+        var changed = false;
         for (final r in page) {
           final id = r['id']! as String;
-          conflicts += await _apply(
+          final (found, rowChanged) = await _apply(
             userId,
             entity,
             toLocalRow(r),
@@ -145,8 +157,12 @@ final class SyncEngine {
             versions[id] ?? const {},
             seen[id] ?? const {},
           );
-          await _remember(entity, id, versions[id] ?? const {});
+          conflicts += found;
+          changed |= rowChanged;
+          await _fieldSeen.remember(entity, id, versions[id] ?? const {});
         }
+        // Only a real change invalidates a deletion review (D1).
+        if (changed) await bumpWriteRevision(_db, userId);
         await _saveCursor(userId, entity, last);
       });
       rows += page.length;
@@ -154,13 +170,18 @@ final class SyncEngine {
       if (page.length < _pageSize) break;
       after = last;
     }
-    // Visited, even if the server had nothing: the next pull of it is no
-    // longer this account's first.
-    if (first && rows == 0) await _saveCursor(userId, entity, after);
+    // Visited even when empty: the next pull of it is no longer the first.
+    if (first && rows == 0) {
+      await _db.transaction(() async {
+        await checkPull(_db, owner);
+        await _saveCursor(userId, entity, after);
+      });
+    }
     return (rows, conflicts);
   }
 
-  Future<int> _apply(
+  /// Merges one pulled row; returns (conflicts, whether the row changed).
+  Future<(int, bool)> _apply(
     String userId,
     String entity,
     Map<String, Object?> remote,
@@ -168,6 +189,7 @@ final class SyncEngine {
     Map<String, String> versions,
     Map<String, String> seen,
   ) async {
+    await checkPulledRow(_db, entity, userId, remote);
     final id = remote['id']! as String;
     final local = await _rows.find(entity, userId, id);
     final merged = mergeRemote(
@@ -204,7 +226,12 @@ final class SyncEngine {
       id,
       dirty: pending.length > merged.settled.length,
     );
-    return merged.conflicts.length;
+    // Compared as stored, so a pull that rewrites the same values (or only
+    // touches device-side bookkeeping) is no change.
+    final stored = await _rows.find(entity, userId, id);
+    final changed =
+        merged.conflicts.isNotEmpty || jsonEncode(local) != jsonEncode(stored);
+    return (merged.conflicts.length, changed);
   }
 
   /// An account's first sync on this device (docs/09 M6.4, CR-160
@@ -214,10 +241,12 @@ final class SyncEngine {
   /// kept for an explicit choice (B1). A new account (no settings yet) takes
   /// this device's profile, so there is nothing to choose. One transaction;
   /// a run that fails later finds the outbox already settled.
-  Future<void> _settleProfile(String userId) async {
+  Future<void> _settleProfile(PullOwner owner) async {
+    final userId = owner.userId;
     final server = (await _gateway.fieldVersions('profiles', [userId]))[userId];
     final hasSettings = server != null && server.isNotEmpty;
     await _db.transaction(() async {
+      await checkPull(_db, owner);
       if (!hasSettings) {
         await (_db.delete(
           _db.localMeta,
@@ -241,40 +270,6 @@ final class SyncEngine {
       null;
 
   static final _epoch = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
-
-  /// The server versions this device last pulled for [ids].
-  Future<Map<String, Map<String, String>>> _seen(
-    String entity,
-    List<String> ids,
-  ) async {
-    final rows = await (_db.select(
-      _db.fieldSeen,
-    )..where((f) => f.entity.equals(entity) & f.entityId.isIn(ids))).get();
-    final out = <String, Map<String, String>>{};
-    for (final r in rows) {
-      (out[r.entityId] ??= {})[r.field] = r.hlc;
-    }
-    return out;
-  }
-
-  Future<void> _remember(
-    String entity,
-    String id,
-    Map<String, String> versions,
-  ) async {
-    for (final MapEntry(key: field, value: hlc) in versions.entries) {
-      await _db
-          .into(_db.fieldSeen)
-          .insertOnConflictUpdate(
-            FieldSeenCompanion.insert(
-              entity: entity,
-              entityId: id,
-              field: field,
-              hlc: hlc,
-            ),
-          );
-    }
-  }
 
   /// Where [entity]'s next pull starts: after the last row pulled, or
   /// from its instant on for a cursor saved before v17.

@@ -13,8 +13,11 @@ import 'fake_sync_server.dart';
 /// One device signed in to [server] (docs/09 M6.2): its own database,
 /// clock and write path, the shared fake server behind its engine.
 final class SyncDevice {
-  SyncDevice(this.server, DateTime now, {String name = 'device'})
-    : h = WriteHarness(now) {
+  SyncDevice(FakeSyncServer server, DateTime now, {String name = 'device'})
+    : this.on(WriteHarness(now), server, name: name);
+
+  /// A device on an existing harness [h] (its own database file, say).
+  SyncDevice.on(this.h, this.server, {String name = 'device'}) {
     engine = SyncEngine(
       db: h.db,
       gateway: server.forDevice(),

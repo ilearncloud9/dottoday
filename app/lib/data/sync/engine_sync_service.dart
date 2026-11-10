@@ -4,6 +4,7 @@ import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
+import 'package:dottoday/data/sync/pull_guard.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
 import 'package:dottoday/domain/auth/account.dart';
@@ -210,6 +211,7 @@ final class EngineSyncService implements SyncService {
       return;
     }
     _running = true;
+    final before = _status.state;
     _emit(_with(state: SyncState.syncing));
     try {
       final run = await _engine.run(account, onProgress: _progress);
@@ -219,6 +221,11 @@ final class EngineSyncService implements SyncService {
       _retry?.cancel();
       _failures = 0;
       if (run.pulled > 0) _onPulled?.call(account);
+    } on PullRefusedException catch (e) {
+      // The account was switched, is being deleted or removed (CR-160): the
+      // round stops with nothing written; a later one, if any, retries.
+      _logger.info('sync.pull_refused', fields: {'reason': e.reason});
+      _failed(before);
     } on SyncGatewayException catch (e, s) {
       if (e.trouble == SyncTrouble.server) {
         _logger.warn('sync.server_refused', error: e.cause, stackTrace: s);

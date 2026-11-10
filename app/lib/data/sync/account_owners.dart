@@ -6,6 +6,7 @@ import 'package:dottoday/data/db/owner_meta.dart';
 import 'package:dottoday/data/mappers/entity_mappers.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/sync/guest_sessions.dart';
+import 'package:dottoday/data/sync/pull_guard.dart';
 import 'package:dottoday/data/sync/requeue.dart';
 import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/writes/entity_writers.dart';
@@ -124,6 +125,8 @@ Future<SignInResult> signInOwner(
   }
   await _put(db, accountMarkerKey(accountId), '1');
   await _put(db, activeOwnerKey, accountId);
+  // Another owner is shown: a pull begun before is from an ended session.
+  await bumpOwnerGeneration(db);
   await _forget(db, guestChoiceKey(accountId));
   await rotateGuestSession(db);
   return (
@@ -139,6 +142,7 @@ Future<SignInResult> signInOwner(
 /// guest session ends: work made before can't be brought into anyone.
 Future<void> signOutOwner(AppDatabase db) => db.transaction(() async {
   await _put(db, activeOwnerKey, '');
+  await bumpOwnerGeneration(db);
   await rotateGuestSession(db);
 });
 
