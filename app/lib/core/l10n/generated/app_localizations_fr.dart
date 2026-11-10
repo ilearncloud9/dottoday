@@ -2814,6 +2814,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ce fichier fait plus de 25 Mo, trop pour être importé. Rien n\'a été modifié.';
 
   @override
+  String get exportTooLargeToRestore =>
+      'Cet export est trop volumineux pour être restauré par Dottoday avec le format d’importation actuel. Aucun export restaurable n’a été créé.';
+
+  @override
   String get exportBackups => 'Sur cet appareil';
 
   @override

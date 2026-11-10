@@ -324,6 +324,13 @@ change-logged and syncs to the person's other devices like any edit, and one tra
 leaves nothing half-applied; and a payload checksum in the envelope (v1 stays as it is: a truncated
 or edited file already fails JSON parsing or row validation, and a newer `version` is refused).
 
+Clarified in CR-160 Stage B0: every JSON export obeys the import limit too (`exceedsImportLimit`,
+the rule `decodeExportJson` applies; exactly 25 MB is accepted). Settings › Export refuses a larger
+one with "This export is too large for Dottoday to restore using the current import format. No
+restorable export was created." and hands nothing over; D1 reports it as too large (Stage C). The
+planned multipart format (manifest + parts, staged import) is specified in
+`docs/cr-160-multipart-export.md` and ADR-0019; none of it is built yet.
+
 Clarified in CR-160 Stage A: D1's export (and only D1's) adds an optional `calendarSeries[]`, one item
 per `calendar_series` row and per pending template of the owner, with or without current instances:
 the row's settings (snake_case, as stored, `account_id` left out) plus `provider`,

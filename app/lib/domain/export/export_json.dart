@@ -10,6 +10,13 @@ import 'package:dottoday/domain/validation/routine_validator.dart';
 /// Largest import accepted, in UTF-8 bytes (06 §7).
 const maxImportBytes = 25 * 1024 * 1024;
 
+/// Whether [text] is over the import limit: the one size rule, shared by
+/// the import ([decodeExportJson]) and every JSON export, so the app never
+/// writes a file it would refuse to read back (CR-160 Stage B0). Exactly
+/// [maxImportBytes] is still accepted.
+bool exceedsImportLimit(String text) =>
+    text.length > maxImportBytes || utf8.encode(text).length > maxImportBytes;
+
 /// Serialises [bundle] as JSON v1 (docs/05 "Export format").
 String encodeExportJson(ExportBundle bundle) =>
     const JsonEncoder.withIndent(' ').convert(bundle.toJson());
@@ -30,8 +37,7 @@ const _badFile = ValidationFailure(
 /// before M8.1 may still hold them. The caller backs up first
 /// and imports in one transaction (M2.4).
 Result<ExportBundle, ValidationFailure> decodeExportJson(String text) {
-  if (text.length > maxImportBytes ||
-      utf8.encode(text).length > maxImportBytes) {
+  if (exceedsImportLimit(text)) {
     return const Err(
       ValidationFailure(ValidationField.importFile, ValidationRule.tooLarge),
     );

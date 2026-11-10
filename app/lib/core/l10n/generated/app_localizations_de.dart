@@ -2816,6 +2816,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Diese Datei ist größer als 25 MB und zu groß zum Importieren. Es wurde nichts geändert.';
 
   @override
+  String get exportTooLargeToRestore =>
+      'Dieser Export ist zu groß, um ihn mit dem aktuellen Importformat in Dottoday wiederherzustellen. Es wurde kein wiederherstellbarer Export erstellt.';
+
+  @override
   String get exportBackups => 'Auf diesem Gerät';
 
   @override

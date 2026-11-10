@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:dottoday/data/backup/user_data_snapshot.dart';
 import 'package:dottoday/data/export/export_service.dart';
 import 'package:dottoday/data/owners/account_export.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/domain/entities/enums.dart';
-import 'package:dottoday/domain/export/export_files.dart';
 import 'package:dottoday/domain/export/export_json.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -50,15 +50,13 @@ void main() {
     owner: userId,
   );
 
+  /// D1's file size, measured on the encoded bundle: the export itself
+  /// refuses to build a file over the limit (CR-160 Stage B0).
   Future<int> bytes() async {
-    final built = await DriftExportService(
-      db: h.db,
-      clock: h.clock,
-      logger: h.logger,
-    ).build(userId, ExportFormat.json, forAccountDeletion: true);
-    return utf8
-        .encode(built.when(ok: (f) => f.single.content, err: (_) => ''))
-        .length;
+    final bundle = await h.db.transaction(
+      () => readUserData(h.db, userId, h.clock.nowUtc(), importedAsTasks: true),
+    );
+    return utf8.encode(encodeExportJson(bundle!)).length;
   }
 
   test('measures: bytes per plain task in the D1 file', () async {

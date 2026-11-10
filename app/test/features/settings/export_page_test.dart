@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/export/export_files.dart';
@@ -71,6 +72,23 @@ void main() {
     files.throws = Exception('no sheet');
     await _tap(tester, 'Everything (JSON)');
     expect(find.textContaining("Couldn't save or share"), findsOneWidget);
+  });
+
+  testWidgets('an export too large to restore says so; nothing handed over, '
+      'never "Exported" (CR-160 Stage B0)', (tester) async {
+    await pump(tester);
+    exports.failure = const ExportTooLargeFailure();
+    await _tap(tester, 'Everything (JSON)');
+    expect(
+      find.text(
+        'This export is too large for Dottoday to restore using the current '
+        'import format. No restorable export was created.',
+      ),
+      findsOneWidget,
+    );
+    expect(files.delivered, isEmpty);
+    expect(find.text('Exported'), findsNothing);
+    await expectA11yGuidelines(tester);
   });
 
   testWidgets('import says what it replaces; nothing before Replace', (

@@ -54,6 +54,10 @@ Future<OwnerExportOutcome> exportOwnerChecked({
   )) {
     case Ok(:final value) when value.length == 1:
       list = value;
+    // Over the import limit: the same outcome the decode below gives.
+    case Err(failure: ExportTooLargeFailure()):
+      logger.info('account.export_too_large');
+      return OwnerExportOutcome.tooLarge;
     case _:
       return OwnerExportOutcome.failed;
   }

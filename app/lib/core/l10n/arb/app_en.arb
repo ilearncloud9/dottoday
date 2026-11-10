@@ -4148,6 +4148,10 @@
   "@exportTooLarge": {
     "description": "Import refused: file too large."
   },
+  "exportTooLargeToRestore": "This export is too large for Dottoday to restore using the current import format. No restorable export was created.",
+  "@exportTooLargeToRestore": {
+    "description": "Settings › Export (CR-160 Stage B0): a JSON export over the 25 MB import limit was refused, so no file was made or handed over."
+  },
   "exportBackups": "On this device",
   "@exportBackups": {
     "description": "Export page group caption for local backups."

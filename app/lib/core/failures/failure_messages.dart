@@ -26,6 +26,7 @@ String failureMessage(AppLocalizations l10n, AppFailure failure) {
     UnexpectedFailure() => l10n.failureUnexpected,
     ReviewChangedFailure() => l10n.accountDeleteChangedSinceReview,
     ExportNotSavedFailure() => l10n.accountDeleteWithoutCopyQuestion,
+    ExportTooLargeFailure() => l10n.exportTooLargeToRestore,
   };
 }
 

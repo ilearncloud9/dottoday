@@ -2165,6 +2165,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get exportTooLarge => pseudo(super.exportTooLarge);
 
   @override
+  String get exportTooLargeToRestore => pseudo(super.exportTooLargeToRestore);
+
+  @override
   String get exportBackups => pseudo(super.exportBackups);
 
   @override

@@ -4098,6 +4098,12 @@ abstract class AppLocalizations {
   /// **'This file is over 25 MB, too large to import. Nothing was changed.'**
   String get exportTooLarge;
 
+  /// Settings › Export (CR-160 Stage B0): a JSON export over the 25 MB import limit was refused, so no file was made or handed over.
+  ///
+  /// In en, this message translates to:
+  /// **'This export is too large for Dottoday to restore using the current import format. No restorable export was created.'**
+  String get exportTooLargeToRestore;
+
   /// Export page group caption for local backups.
   ///
   /// In en, this message translates to:

@@ -5,6 +5,7 @@ import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/backup/user_data_snapshot.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/domain/export/export_files.dart';
+import 'package:dottoday/domain/export/export_json.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Builds the export files (docs/09 M8.1, R-11). A port so widget tests
@@ -12,6 +13,8 @@ import 'package:timezone/timezone.dart' as tz;
 abstract interface class ExportService {
   /// [format]'s files for [userId], named with today's local date (the
   /// profile's zone). Never throws: a read failure is a [StorageFailure].
+  /// A JSON file over the import limit is an [ExportTooLargeFailure]: never
+  /// made, since the app couldn't restore it (CR-160 Stage B0).
   /// [forAccountDeletion]: D1's export (CR-160), which keeps imported
   /// calendar events as ordinary tasks; every other export leaves them out.
   Future<Result<List<ExportFile>, AppFailure>> build(
@@ -51,7 +54,13 @@ final class DriftExportService implements ExportService {
       );
       if (bundle == null) return const Err(StorageFailure());
       final date = _localDate(now, bundle.profile.tzId);
-      return Ok(exportFiles(format, bundle, date: date));
+      final files = exportFiles(format, bundle, date: date);
+      if (format == ExportFormat.json &&
+          files.any((f) => exceedsImportLimit(f.content))) {
+        _logger.warn('export.too_large', fields: {'format': format});
+        return const Err(ExportTooLargeFailure());
+      }
+      return Ok(files);
     } on Exception catch (e, st) {
       _logger.error(
         'export.build_failed',

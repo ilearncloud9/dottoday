@@ -172,6 +172,15 @@ final class ReviewChangedFailure extends AppFailure {
   String get code => 'account.review_changed';
 }
 
+/// A JSON export over the 25 MB import limit: the app couldn't
+/// restore it, so no file was made or handed over (CR-160 Stage B0).
+final class ExportTooLargeFailure extends AppFailure {
+  const ExportTooLargeFailure();
+
+  @override
+  String get code => 'export.too_large';
+}
+
 /// D1 (CR-160): the person asked for an export that didn't produce a
 /// restorable copy (it failed, was too large, was cancelled or is still
 /// running), and hasn't chosen to delete without one. Nothing was deleted.
