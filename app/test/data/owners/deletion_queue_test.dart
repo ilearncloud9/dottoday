@@ -6,6 +6,7 @@ import 'package:dottoday/data/export/export_providers.dart';
 import 'package:dottoday/data/intents/intent_providers.dart';
 import 'package:dottoday/data/owners/account_actions.dart';
 import 'package:dottoday/data/owners/account_export.dart';
+import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/intents/action_queue_store.dart';
 import 'package:dottoday/domain/intents/dot_action.dart';
 import 'package:drift/native.dart';
@@ -77,6 +78,7 @@ void main() {
       extra: [
         accountServiceProvider.overrideWithValue(server),
         fileGatewayProvider.overrideWithValue(files),
+        syncServiceProvider.overrideWithValue(server.verifier(db)),
       ],
     );
     server.owners = app.owners;

@@ -72,6 +72,16 @@ final class SupabaseSyncGateway implements SyncGateway {
   });
 
   @override
+  Future<({int revision, bool frozen})> accountRevision() => _guard(() async {
+    final rows = await _client.rpc<List<dynamic>>('account_revision');
+    final row = rows.single as Map<String, dynamic>;
+    return (
+      revision: (row['revision'] as num).toInt(),
+      frozen: row['frozen'] == true,
+    );
+  });
+
+  @override
   Stream<void> changes() => RealtimeNudges(_openFeed).stream();
 
   /// One `dottoday-sync` channel on every synced table.

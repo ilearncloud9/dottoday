@@ -9,6 +9,7 @@ import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/sync/account_owners.dart';
+import 'package:dottoday/data/sync/deletion_verifier.dart';
 import 'package:dottoday/data/sync/drift_conflict_store.dart';
 import 'package:dottoday/data/sync/engine_sync_service.dart';
 import 'package:dottoday/data/sync/server_clock.dart';
@@ -43,6 +44,10 @@ final class LocalOnlySyncService implements SyncService {
   @override
   Stream<RestoreProgress> watchRestore() =>
       Stream.value(const RestoreProgress(done: 0, total: 0));
+
+  @override
+  Future<DeletionCheck> verifyForDeletion(String owner) async =>
+      const DeletionUnverified(AuthFailure());
 }
 
 /// This device's clock against the server's, from fresh access tokens
@@ -65,14 +70,22 @@ SyncService syncService(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   final clock = ref.watch(clockProvider);
   final gateway = SupabaseSyncGateway(client);
+  final engine = SyncEngine(
+    db: db,
+    gateway: gateway,
+    hlc: ref.watch(sharedHlcProvider),
+    clock: clock,
+    clockOffset: () => ref.read(serverClockProvider)?.offset,
+  );
+  final verifier = DeletionVerifier(
+    engine: engine,
+    gateway: gateway,
+    db: db,
+    logger: ref.watch(loggerProvider),
+  );
   final service = EngineSyncService(
-    engine: SyncEngine(
-      db: db,
-      gateway: gateway,
-      hlc: ref.watch(sharedHlcProvider),
-      clock: clock,
-      clockOffset: () => ref.read(serverClockProvider)?.offset,
-    ),
+    engine: engine,
+    verify: verifier.verify,
     accounts: accountIdChanges(client),
     adopt: (id) async {
       final zone = await ref.read(deviceTimeZoneProvider.future);

@@ -79,6 +79,9 @@ final class _Held implements SyncGateway {
       _inner.count(entity, sinceUtc);
   @override
   Stream<void> changes() => _inner.changes();
+  @override
+  Future<({int revision, bool frozen})> accountRevision() =>
+      _inner.accountRevision();
 }
 
 void main() {
@@ -171,7 +174,11 @@ void main() {
     await expectLater(
       engine.run(_account),
       throwsA(
-        isA<PullRefusedException>().having((e) => e.reason, 'reason', 'sealed'),
+        isA<PullRefusedException>().having(
+          (e) => e.reason,
+          'reason',
+          PullRefusal.sealed,
+        ),
       ),
     );
     expect(await snapshot(), before);
@@ -222,7 +229,7 @@ void main() {
           isA<PullRefusedException>().having(
             (e) => e.reason,
             'reason',
-            'owner_changed',
+            PullRefusal.ownerChanged,
           ),
         ),
       );
@@ -255,7 +262,7 @@ void main() {
         isA<PullRefusedException>().having(
           (e) => e.reason,
           'reason',
-          'removal_pending',
+          PullRefusal.removalPending,
         ),
       ),
     );
@@ -273,7 +280,7 @@ void main() {
         isA<PullRefusedException>().having(
           (e) => e.reason,
           'reason',
-          'foreign_row',
+          PullRefusal.foreignRow,
         ),
       ),
     );
@@ -302,7 +309,7 @@ void main() {
         isA<PullRefusedException>().having(
           (e) => e.reason,
           'reason',
-          'foreign_row',
+          PullRefusal.foreignRow,
         ),
       ),
     );

@@ -25,6 +25,33 @@ final class FakeSyncServer {
   /// What the next call throws, if anything.
   SyncTrouble? failNext;
 
+  /// The account's revision (migration 0015): every committed change to a
+  /// synced row moves it, whatever the route.
+  var revision = 0;
+
+  /// A deletion froze the account: pushes are refused, reads go on.
+  var frozen = false;
+
+  /// Runs once at the start of the next [_DeviceGateway.accountRevision]
+  /// (another device's write landing between two reads, say).
+  FutureOr<void> Function()? beforeRevisionRead;
+
+  /// Another device or a server function changed [entity] row [id]: new
+  /// values, a new `updated_at`, the revision moves.
+  void edit(String entity, String id, Map<String, Object?> fields) {
+    final row = table(entity)[id]!;
+    row.addAll(fields);
+    row['updated_at'] = _nextUpdatedAt();
+    revision++;
+  }
+
+  /// A hard delete on the server (the tombstone purge, say): the row is
+  /// gone without a trace a cursor could see; the revision moves.
+  void hardDelete(String entity, String id) {
+    table(entity).remove(id);
+    revision++;
+  }
+
   SyncGateway forDevice() => _DeviceGateway(this);
 
   /// Rows of [entity] as the server holds them.
@@ -44,6 +71,12 @@ final class FakeSyncServer {
 
   void _push(List<PushChange> changes) {
     _maybeFail();
+    if (frozen) {
+      throw SyncGatewayException(
+        SyncTrouble.server,
+        StateError('sync_push: account is being deleted'),
+      );
+    }
     // Migration 0014 (CR-160): a change owned by anyone but the signed-in
     // account is refused, the whole call with it.
     if (changes.any((c) => c.owner != userId)) {
@@ -78,6 +111,7 @@ final class FakeSyncServer {
         applied = true;
       }
       if (applied || !row.containsKey('updated_at')) row['updated_at'] = now;
+      if (applied) revision++;
     }
     _nudges.add(null);
   }
@@ -147,4 +181,13 @@ final class _DeviceGateway implements SyncGateway {
 
   @override
   Stream<void> changes() => _server._nudges.stream;
+
+  @override
+  Future<({int revision, bool frozen})> accountRevision() async {
+    final before = _server.beforeRevisionRead;
+    _server.beforeRevisionRead = null;
+    await before?.call();
+    _server._maybeFail();
+    return (revision: _server.revision, frozen: _server.frozen);
+  }
 }

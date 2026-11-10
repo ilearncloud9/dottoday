@@ -4,23 +4,16 @@ import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
+import 'package:dottoday/data/sync/conflict_store.dart';
 import 'package:dottoday/data/sync/pull_guard.dart';
+import 'package:dottoday/data/sync/replaying.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
 import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/sync/clock_skew.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 
-/// Reads the open conflicts and acts on them (the database side).
-abstract interface class ConflictStore {
-  Stream<List<SyncConflict>> watch(String userId);
-
-  /// "Keep mine": writes the device's value again, as a new local edit.
-  Future<Result<void, AppFailure>> keepMine(String userId, String id);
-
-  /// "Keep theirs": the server value already applies; closes the conflict.
-  Future<void> close(String id);
-}
+export 'package:dottoday/data/sync/conflict_store.dart';
 
 /// [SyncService] over the [SyncEngine] (docs/04 §4, docs/09 M6.2/M6.3):
 /// nothing while signed out; once signed in it makes the account the
@@ -43,6 +36,7 @@ final class EngineSyncService implements SyncService {
     required Clock clock,
     required Logger logger,
     void Function(String accountId)? onPulled,
+    Future<DeletionCheck> Function(String owner)? verify,
     Duration settle = const Duration(seconds: 3),
     this.retryFirst = const Duration(seconds: 5),
     this.retryMax = const Duration(minutes: 5),
@@ -53,6 +47,7 @@ final class EngineSyncService implements SyncService {
        _clock = clock,
        _logger = logger,
        _onPulled = onPulled,
+       _verify = verify,
        _settle = settle {
     _accountSub = accounts.listen((id) => unawaited(_signedIn(id)));
   }
@@ -67,6 +62,7 @@ final class EngineSyncService implements SyncService {
   final Clock _clock;
   final Logger _logger;
   final void Function(String)? _onPulled;
+  final Future<DeletionCheck> Function(String)? _verify;
   final Duration _settle;
 
   /// The wait before retrying a failed run; doubles per failure.
@@ -94,11 +90,11 @@ final class EngineSyncService implements SyncService {
   var _again = false;
 
   @override
-  Stream<SyncStatus> watch() => _replaying(() => _status, _state.stream);
+  Stream<SyncStatus> watch() => replaying(() => _status, _state.stream);
 
   @override
   Stream<RestoreProgress> watchRestore() =>
-      _replaying(() => _lastRestore, _restore.stream);
+      replaying(() => _lastRestore, _restore.stream);
 
   @override
   Future<Result<void, AppFailure>> syncNow() async {
@@ -111,6 +107,16 @@ final class EngineSyncService implements SyncService {
       SyncState.error => const Err(NetworkFailure(NetworkFailureKind.server)),
       _ => const Ok(null),
     };
+  }
+
+  @override
+  Future<DeletionCheck> verifyForDeletion(String owner) async {
+    final verify = _verify;
+    // Only the shown, adopted account (CR-160): never another owner's.
+    if (verify == null || _account != owner || !_owned) {
+      return const DeletionUnverified(AuthFailure());
+    }
+    return verify(owner);
   }
 
   @override
@@ -286,19 +292,6 @@ final class EngineSyncService implements SyncService {
 
   /// From the last finished round (M6.5.7).
   ClockSkew? _skew;
-
-  /// The current value, then every change. Subscribes at once, unlike an
-  /// `async*` that waits at its first `yield`: Riverpod pauses listeners
-  /// under the onboarding flow, and a change made meanwhile (signing in
-  /// there) must still arrive on resume, not be lost on the broadcast.
-  static Stream<T> _replaying<T extends Object>(
-    T? Function() current,
-    Stream<T> changes,
-  ) => Stream.multi((out) {
-    if (current() case final value?) out.add(value);
-    final sub = changes.listen(out.add);
-    out.onCancel = sub.cancel;
-  });
 
   void _emit(SyncStatus s) {
     _status = s;

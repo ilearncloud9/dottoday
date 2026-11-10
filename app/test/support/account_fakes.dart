@@ -55,9 +55,15 @@ final class FakeAccountService implements AccountService {
     return result;
   }
 
+  /// The revisions deletions were asked at, in order.
+  final deletedAt = <int>[];
+
   @override
-  Future<Result<void, AppFailure>> deleteAccount() async {
+  Future<Result<void, AppFailure>> deleteAccount({
+    required int expectedRevision,
+  }) async {
     calls.add('delete');
+    deletedAt.add(expectedRevision);
     return result;
   }
 }

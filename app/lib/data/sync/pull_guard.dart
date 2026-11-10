@@ -22,14 +22,16 @@ const ownerGenerationKey = 'owner_generation';
 /// The owner session a pull belongs to.
 typedef PullOwner = ({String userId, int generation});
 
+/// Why a pull was refused (an enum, so logs can carry it: never content).
+enum PullRefusal { ownerChanged, sealed, removalPending, foreignRow }
+
 /// A pull for an owner no longer shown in the session it began in, being
 /// deleted or removed, or a pulled row that isn't that owner's: refused,
 /// and the transaction it was raised in (page, cursor, revision) rolls back.
 final class PullRefusedException implements Exception {
   const PullRefusedException(this.reason);
 
-  /// For logs: `owner_changed`, `sealed`, `removal_pending` or `foreign_row`.
-  final String reason;
+  final PullRefusal reason;
 
   @override
   String toString() => 'PullRefusedException($reason)';
@@ -66,14 +68,14 @@ Future<void> checkPull(AppDatabase db, PullOwner owner) async {
   try {
     await checkNotSealed(db, owner.userId);
   } on OwnerSealedException {
-    throw const PullRefusedException('sealed');
+    throw const PullRefusedException(PullRefusal.sealed);
   }
   if (await isRemovalPending(db, owner.userId)) {
-    throw const PullRefusedException('removal_pending');
+    throw const PullRefusedException(PullRefusal.removalPending);
   }
   if (await activeOwnerId(db) != owner.userId ||
       await ownerGeneration(db) != owner.generation) {
-    throw const PullRefusedException('owner_changed');
+    throw const PullRefusedException(PullRefusal.ownerChanged);
   }
 }
 
@@ -89,7 +91,7 @@ Future<void> checkPulledRow(
   final id = remote['id'];
   final named = entity == 'profiles' ? id : remote['user_id'];
   if (id is! String || named != userId) {
-    throw const PullRefusedException('foreign_row');
+    throw const PullRefusedException(PullRefusal.foreignRow);
   }
   final ownerColumn = entity == 'profiles' ? 'id' : 'user_id';
   final held = await db
@@ -99,7 +101,7 @@ Future<void> checkPulledRow(
       )
       .getSingleOrNull();
   if (held != null && held.read<String>('owner') != userId) {
-    throw const PullRefusedException('foreign_row');
+    throw const PullRefusedException(PullRefusal.foreignRow);
   }
 }
 

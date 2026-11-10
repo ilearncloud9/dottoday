@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'dart:convert';
 
 import 'package:dottoday/core/clock/clock.dart';
@@ -7,6 +9,7 @@ import 'package:dottoday/data/db/owner_meta.dart';
 import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/sync/field_seen.dart';
 import 'package:dottoday/data/sync/outbox.dart';
+import 'package:dottoday/data/sync/pull_cursors.dart';
 import 'package:dottoday/data/sync/pull_guard.dart';
 import 'package:dottoday/data/sync/row_merge.dart';
 import 'package:dottoday/data/sync/server_columns.dart';
@@ -52,7 +55,8 @@ final class SyncEngine {
        _clockOffset = clockOffset,
        _outbox = Outbox(db),
        _rows = SyncedRows(db),
-       _fieldSeen = FieldSeen(db);
+       _fieldSeen = FieldSeen(db),
+       _cursors = PullCursors(db);
 
   final AppDatabase _db;
   final SyncGateway _gateway;
@@ -66,12 +70,12 @@ final class SyncEngine {
   final Outbox _outbox;
   final SyncedRows _rows;
   final FieldSeen _fieldSeen;
+  final PullCursors _cursors;
 
   /// The outbox, for the pending count.
   Outbox get outbox => _outbox;
 
-  /// One full round for [userId] (the signed-in account, already made the
-  /// active owner by `signInOwner`).
+  /// One full round for [userId] (the active owner, `signInOwner`).
   /// [onProgress] hears (done, total) while an account's first sync brings
   /// its rows down ("Bringing your tasks… 120 of 300", M6.4).
   /// Throws [SyncGatewayException] when the server can't be reached or
@@ -80,14 +84,42 @@ final class SyncEngine {
   Future<SyncRun> run(
     String userId, {
     void Function(int done, int total)? onProgress,
-  }) async {
+  }) => exclusively(() => _round(userId, onProgress));
+
+  /// Runs [body] with no other round of this engine in between (a round
+  /// [body] starts joins it): D1's verification is one sequence.
+  Future<T> exclusively<T>(Future<T> Function() body) {
+    if (Zone.current[_held] == this) return body();
+    final before = _tail;
+    final done = Completer<void>();
+    _tail = done.future;
+    return before
+        .then((_) => runZoned(body, zoneValues: {_held: this}))
+        .whenComplete(done.complete);
+  }
+
+  static final _held = Object(); // zone key: a round holding the engine
+  Future<void> _tail = Future.value();
+
+  /// Every synced row of [owner]'s account again, from the start (cursors
+  /// stay); a row hard-deleted on the server stays here.
+  Future<void> pullEverything(PullOwner owner) => exclusively(() async {
+    for (final entity in syncedEntities) {
+      await _pull(owner, entity, fromStart: true);
+    }
+  });
+
+  Future<SyncRun> _round(
+    String userId,
+    void Function(int done, int total)? onProgress,
+  ) async {
     final owner = await beginPull(_db, userId);
-    final first = !await _hasCursor(userId, 'profiles');
+    final first = !await _cursors.has(userId, 'profiles');
     if (first) await _settleProfile(owner);
     var total = 0;
     if (first && onProgress != null) {
       for (final entity in syncedEntities) {
-        total += await _gateway.count(entity, _epoch);
+        total += await _gateway.count(entity, PullCursors.epoch);
       }
       onProgress(0, total);
     }
@@ -120,16 +152,19 @@ final class SyncEngine {
     return (pulled: pulled, pushed: pushed, conflicts: conflicts, skew: skew);
   }
 
-  /// Pages through [entity] from [userId]'s cursor; returns (rows,
-  /// conflicts).
+  /// Pages through [entity] from [userId]'s cursor ([fromStart]: from the
+  /// start, the cursor untouched); returns (rows, conflicts).
   Future<(int, int)> _pull(
     PullOwner owner,
     String entity, {
     void Function(int pulledSoFar)? progress,
+    bool fromStart = false,
   }) async {
     final userId = owner.userId;
-    final first = !await _hasCursor(userId, entity);
-    var after = await _cursor(userId, entity);
+    final first = !fromStart && !await _cursors.has(userId, entity);
+    var after = fromStart
+        ? (updatedAt: PullCursors.epoch.toIso8601String(), id: null)
+        : await _cursors.after(userId, entity);
     var rows = 0;
     var conflicts = 0;
     while (true) {
@@ -163,7 +198,7 @@ final class SyncEngine {
         }
         // Only a real change invalidates a deletion review (D1).
         if (changed) await bumpWriteRevision(_db, userId);
-        await _saveCursor(userId, entity, last);
+        if (!fromStart) await _cursors.save(userId, entity, last);
       });
       rows += page.length;
       progress?.call(rows);
@@ -174,7 +209,7 @@ final class SyncEngine {
     if (first && rows == 0) {
       await _db.transaction(() async {
         await checkPull(_db, owner);
-        await _saveCursor(userId, entity, after);
+        await _cursors.save(userId, entity, after);
       });
     }
     return (rows, conflicts);
@@ -262,39 +297,4 @@ final class SyncEngine {
           .go();
     });
   }
-
-  Future<bool> _hasCursor(String owner, String entity) async =>
-      await (_db.select(_db.syncCursors)
-            ..where((c) => c.ownerId.equals(owner) & c.entity.equals(entity)))
-          .getSingleOrNull() !=
-      null;
-
-  static final _epoch = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
-
-  /// Where [entity]'s next pull starts: after the last row pulled, or
-  /// from its instant on for a cursor saved before v17.
-  Future<PullCursor> _cursor(String owner, String entity) async {
-    final row =
-        await (_db.select(_db.syncCursors)
-              ..where((c) => c.ownerId.equals(owner) & c.entity.equals(entity)))
-            .getSingleOrNull();
-    if (row?.sinceAt case final at?) return (updatedAt: at, id: row!.sinceId);
-    final since = DateTime.fromMillisecondsSinceEpoch(
-      row?.sinceUtc ?? 0,
-      isUtc: true,
-    );
-    return (updatedAt: since.toIso8601String(), id: null);
-  }
-
-  Future<void> _saveCursor(String owner, String entity, PullCursor last) => _db
-      .into(_db.syncCursors)
-      .insertOnConflictUpdate(
-        SyncCursorsCompanion.insert(
-          ownerId: owner,
-          entity: entity,
-          sinceUtc: DateTime.parse(last.updatedAt).millisecondsSinceEpoch,
-          sinceAt: Value(last.updatedAt),
-          sinceId: Value(last.id),
-        ),
-      );
 }

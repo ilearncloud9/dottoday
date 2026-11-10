@@ -79,4 +79,9 @@ abstract interface class SyncGateway {
   /// each time the live feed (re)joins, since changes while it was down
   /// went unannounced (Realtime); the engine then pulls.
   Stream<void> changes();
+
+  /// The signed-in account's server revision (migration 0015), which every
+  /// committed change to its synced rows moves, and whether a deletion has
+  /// frozen it. One read, one snapshot. Throws [SyncGatewayException].
+  Future<({int revision, bool frozen})> accountRevision();
 }

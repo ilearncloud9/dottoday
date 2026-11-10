@@ -72,4 +72,33 @@ abstract interface class SyncService {
   /// tasks… 120 of 300", docs/09 M6.4); finished after every run, so the
   /// screen never waits on a device that is offline.
   Stream<RestoreProgress> watchRestore();
+
+  /// D1's review (CR-160 W0, W2): this device holds everything the server
+  /// has for [owner] at one server revision, nothing of it is still waiting
+  /// to go up, and no conflict hides a local value. Bounded; never a guess.
+  Future<DeletionCheck> verifyForDeletion(String owner);
+}
+
+/// What [SyncService.verifyForDeletion] established.
+sealed class DeletionCheck {
+  const DeletionCheck();
+}
+
+/// Everything [serverRevision] covers is on this device, checked in owner
+/// session [generation]; only that session may send it with a deletion.
+final class DeletionVerified extends DeletionCheck {
+  const DeletionVerified({
+    required this.serverRevision,
+    required this.generation,
+  });
+
+  final int serverRevision;
+  final int generation;
+}
+
+/// Not established, for [failure]'s reason: a deletion must not go ahead.
+final class DeletionUnverified extends DeletionCheck {
+  const DeletionUnverified(this.failure);
+
+  final AppFailure failure;
 }

@@ -22,7 +22,7 @@ final class SupabaseAccountService implements AccountService {
     required Stream<Uri> callbacks,
     required Logger logger,
     Stream<RestoreProgress> Function()? restore,
-    Future<void> Function()? deleteRemote,
+    Future<void> Function(int expectedRevision)? deleteRemote,
     OpenOAuth? openOAuth,
   }) : _logger = logger,
        _restore = restore,
@@ -39,8 +39,9 @@ final class SupabaseAccountService implements AccountService {
   final OpenOAuth _openOAuth;
   final Stream<RestoreProgress> Function()? _restore;
 
-  /// Calls the `delete-account` Edge Function (M6.5); throws if it fails.
-  final Future<void> Function()? _deleteRemote;
+  /// Calls the `delete-account` Edge Function (M6.5) with the revision
+  /// the review verified; throws if it fails.
+  final Future<void> Function(int expectedRevision)? _deleteRemote;
   late final StreamSubscription<Uri> _callbacks;
 
   /// Where the sign-in page sends the code: `dottoday://auth-callback` in
@@ -94,17 +95,22 @@ final class SupabaseAccountService implements AccountService {
   /// `delete-account` function removes the user, every row follows, and a
   /// confirmation is mailed. This device keeps its copy and is signed out.
   @override
-  Future<Result<void, AppFailure>> deleteAccount() async {
+  Future<Result<void, AppFailure>> deleteAccount({
+    required int expectedRevision,
+  }) async {
     final remote = _deleteRemote;
     if (remote == null) return const Err(AuthFailure());
     try {
-      await remote();
-    } on FunctionException catch (e, s) {
-      _logger.warn('auth.delete_refused', error: e, stackTrace: s);
-      return const Err(NetworkFailure(NetworkFailureKind.server));
+      await remote(expectedRevision);
+    } on FunctionException catch (e) {
+      final code = e.details is Map ? (e.details as Map)['error'] : null;
+      _logger.warn('auth.delete_refused', fields: {'status': e.status});
+      return Err(deletionFailure(e.status, code is String ? code : null));
     } on Exception catch (e, s) {
-      _logger.warn('auth.delete_unreachable', error: e, stackTrace: s);
-      return const Err(NetworkFailure(NetworkFailureKind.offline));
+      // No answer: the request may have run (CR-160 W2). Unknown, never
+      // taken as "not deleted".
+      _logger.warn('auth.delete_unknown', error: e, stackTrace: s);
+      return const Err(NetworkFailure(NetworkFailureKind.timeout));
     }
     try {
       await _auth.signOut(scope: SignOutScope.local);
@@ -179,3 +185,31 @@ final class SupabaseAccountService implements AccountService {
 }
 
 enum _Step { oauth, magicLink, signOut }
+
+/// What a `delete-account` answer other than success means (CR-160 W2,
+/// the Stage 2 contract), by status AND the function's error code. Only
+/// answers that prove nothing was deleted map to a plain failure; anything
+/// else (another code, another body, a gateway's answer) is
+/// `NetworkFailure(timeout)`: unknown. `busy` proves no Auth Admin call was
+/// made; the server may still hold a freeze with none recorded (its own
+/// answer was lost), which a retry at the same revision resumes.
+AppFailure deletionFailure(int status, String? error) => switch ((
+  status,
+  error,
+)) {
+  (409, 'changed') => const ReviewChangedFailure(),
+  (401, 'session not valid') => const AuthFailure(),
+  // Nothing frozen, or the freeze released after a proven refusal.
+  (503, 'busy') ||
+  (500, 'not_deleted') ||
+  (500, 'could_not_delete') ||
+  (400, 'update_required') => const NetworkFailure(NetworkFailureKind.server),
+  // 503 pending and every other answer: the outcome isn't known.
+  _ => const NetworkFailure(NetworkFailureKind.timeout),
+};
+
+/// Whether a 2xx answer of `delete-account` says the account is deleted
+/// (`{"deleted": true}`, also with `already`). Anything else from a 2xx is
+/// not the function's deletion contract: the outcome counts as unknown and
+/// nothing on this device is removed.
+bool confirmsDeletion(Object? body) => body is Map && body['deleted'] == true;

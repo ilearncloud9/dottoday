@@ -1,4 +1,5 @@
 import 'package:dottoday/core/failures/app_failure.dart';
+import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/db/app_database.dart';
@@ -9,12 +10,14 @@ import 'package:dottoday/data/owners/account_actions.dart';
 import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
+import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 
@@ -26,6 +29,7 @@ import 'fake_clock.dart';
 import 'fake_notification_platform.dart';
 import 'owner_app.dart';
 import 'shared_action_queue.dart';
+import 'sync_fakes.dart';
 import 'timeline_fakes.dart';
 
 /// One device with account [account] signed in and one task of its
@@ -44,6 +48,7 @@ final class DeletionWorld {
     final db = AppDatabase(NativeDatabase.memory());
     final server = DeletingServer(account);
     final files = FakeFileGateway();
+    final sync = server.verifier(db);
     final app = OwnerApp(
       db,
       FakeNotificationPlatform(),
@@ -53,10 +58,11 @@ final class DeletionWorld {
       extra: [
         accountServiceProvider.overrideWithValue(server),
         fileGatewayProvider.overrideWithValue(files),
+        syncServiceProvider.overrideWithValue(sync),
       ],
     );
     server.owners = app.owners;
-    final w = DeletionWorld._(account, taskId, app, server, files);
+    final w = DeletionWorld._(account, taskId, app, server, files)..sync = sync;
     w._occurrences = occurrences;
     await app.shown();
     await app.signIn(account);
@@ -69,6 +75,10 @@ final class DeletionWorld {
   final OwnerApp app;
   final DeletingServer server;
   final FakeFileGateway files;
+
+  /// D1's verification (verified at [DeletingServer.revision] unless a
+  /// test says otherwise).
+  late final FakeSyncService sync;
   OccurrenceRepository Function(OccurrenceRepository)? _occurrences;
 
   /// Where the responder navigated, in order.
@@ -140,6 +150,11 @@ final class DeletionWorld {
   /// Every row with [taskId], whoever owns it.
   Future<List<OccurrenceRow>> anyRows() =>
       (db.select(db.occurrences)..where((o) => o.id.equals(taskId))).get();
+
+  /// One save of [o] through the app's write path.
+  Future<Result<void, AppFailure>> save(Occurrence o) => app.container
+      .read(writeUseCaseProvider)
+      .apply(WriteBatch(userId: o.userId, occurrences: [o]));
 
   /// The last exported file's text.
   String exported() => files.delivered.last.single.content;
