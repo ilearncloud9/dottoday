@@ -246,6 +246,44 @@ can't read the new backups (the backup database is schema 3 since B4 already).
 | Mutations | Accounts back to one file: caught (the form gate). Guests to parts: caught by six I1 privacy tests (`guest_backup_privacy_test.dart`, `scrub_memory_test.dart`), which is why guests keep one file |
 | Memory and time (three runs) | Undo of the 24 MB import through the service: 2.6–2.9 s, **74–80 MB above idle** (was 309–312 MB). 24 MB import: 3.3–4.1 s, 55–60 MB. 60 MB restore from parts with its safety backup: 7.9–8.0 s, 37–43 MB above a raised idle (lower bound). Not device figures; web not measured |
 
+### B6 verification (2026-11-11, local)
+Built, reachable from tests only until B7 (owner decision 1 below):
+- `data/export/part_stream.dart`: reading an account's rows as parts, shared by backups and exports
+  (one way to read, one format). `RowScope.standard` (a backup or Settings export: imported calendar
+  events and their steps left out) or `RowScope.accountDeletion` (D1: imported events kept as ordinary
+  tasks, every calendar-series template). B4's backup writer now uses it unchanged in behaviour.
+- `data/export/multipart_export.dart`: one read transaction, a planning pass (D1's completeness check
+  runs inside it), then each 10 MB part prepared; an account that fits one part gets today's single
+  file (`FitsOneFile`); a row larger than any part fails it (`ExportTooLargeFailure`).
+- `data/export/prepared_file.dart`: **prepared** (§10 state 1). Native writes each file to a temporary
+  folder (`.part`, flushed, renamed), reads it back and checks the hash, one part in memory at a time;
+  the web keeps the bytes for its downloads. A mismatch fails the export and removes what was prepared.
+- `domain/export/export_handoff.dart`: the three states and `checkPossession` (the manifest must be
+  exactly the prepared one; every part matched once).
+- `data/owners/account_export_set.dart`: D1 with a set. A handoff is `uncertain`, closing the sheet
+  `cancelled`, a part not prepared or a handoff error `failed`, a row too large `tooLarge`; `done` only
+  after `confirmOwnerSet`. `setShortfall` keeps the deletion waiting after `uncertain` exactly as after
+  `cancelled` (another export, a confirmation, or "Delete without a saved copy"). The single-file D1
+  rule is unchanged (decision 7).
+- The set's file names are shared with B1's splitter (`partFileStem`, `partFileName`,
+  `manifestFileName`).
+
+Owner decisions (B6 plan):
+1. **Tests only until B7**: Settings keeps its 25 MB refusal and D1 its `tooLarge` until B7 wires
+   both with picking, "Check my files" and approved copy, so nobody can export a set they can't yet
+   import. No new strings in B6.
+2. **Settings switches to multipart automatically above the part target** when B7 wires it
+   (decision 6 in §11).
+3. **Exporting a stored backup** is not an existing feature and stays out of scope.
+
+| Gate | Result |
+|---|---|
+| Stage C consent extended to multipart | `account_export_set_test.dart`: a handoff is `uncertain` with every row the device has (imported event kept as a task, its step, the template); closed sheet `cancelled`; handoff error `failed`; row too large `tooLarge`; fits one part → the single-file rule; `done` only by exactly the files; the deletion waits after `uncertain`, `cancelled` and `failed`, never after `done`; the completeness check fails with one row fewer in any table |
+| Prepared, possession | `multipart_export_test.dart`: several parts, each prepared, named by the set, read back to its hash, at most the target; the set imports through B3 to exactly the account; fits one part → single file; row too large refused; a file that doesn't read back fails it and removes what was prepared; an incomplete set prepares nothing; native temporary files read back and removed; possession confirmed for exactly the set in any order, refused for a missing, changed or doubled part, another export's manifest or parts |
+| Backups unchanged | Every backup test passes after the writer moved onto the part stream |
+| Mutations | Completeness not checked (prepare and D1), handoff counted as done, confirmation without the check, `uncertain` letting the deletion through, D1 dropping imported events, native store skipping its read-back, possession ignoring the manifest or a missing part, never a single file: 10 of 10 caught |
+| Memory and time (host VM, SQLCipher file, three runs per scope) | 59 MB account as 6 parts prepared as temporary files: Settings scope 2.9–3.0 s at 49–71 MB above idle; D1 scope 2.2–2.3 s at 52–70 MB. Within §7's 100 MB. Idle measured after a 60 MB import in the same process; not device figures; web not measured |
+
 ## 7. Size policy and acceptance criteria (provisional)
 Provisional limits: **10 MB per written part, 25 MB per file read.** No maximum part count is adopted
 yet. Each limit is confirmed or changed only from measurements against these criteria (B8):
@@ -338,8 +376,8 @@ unchanged. The 25 MB import limit is unchanged.
    import never survives into another app run.
 4. Converting existing oversized backups to parts, or reading them in place only.
 5. Pausing retention pruning of oversized backups until B4 ships (keeps originals; costs storage).
-6. Whether Settings exports above the part target switch to multipart automatically (proposed) or
-   ask first.
+6. ~~Whether Settings exports above the part target switch to multipart automatically or ask
+   first~~ Decided in B6: automatically, wired in B7.
 7. Whether single-file D1 exports also require possession confirmation.
 8. New copy for every multipart state (approval needed before B6/B7).
 9. Web per-part download UI and the "Check my files" verify step (design review, B7).

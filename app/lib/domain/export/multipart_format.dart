@@ -207,3 +207,18 @@ String canonicalJson(Object? json) => jsonEncode(json);
 
 /// Lowercase hex SHA-256 of [text]'s UTF-8 bytes.
 String sha256Hex(String text) => sha256.convert(utf8.encode(text)).toString();
+
+/// The stem every file of one set shares: dated in the profile's zone and
+/// told apart by its export id, never named after content.
+String partFileStem(String date, String exportId) =>
+    'dottoday-backup-$date-${exportId.substring(0, 8)}';
+
+/// The manifest's file name.
+String manifestFileName(String stem) => '$stem-manifest.json';
+
+/// Part [index] of [total]'s file name, numbers padded so they sort.
+String partFileName(String stem, int index, int total) {
+  final width = '$total'.length.clamp(2, 6);
+  String n(int i) => '$i'.padLeft(width, '0');
+  return '$stem-part-${n(index)}-of-${n(total)}.json';
+}

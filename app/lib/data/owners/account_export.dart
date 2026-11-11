@@ -71,7 +71,7 @@ Future<OwnerExportOutcome> exportOwnerChecked({
     case Err():
       return OwnerExportOutcome.failed;
   }
-  if (!_complete(bundle, await _localCounts(db, owner))) {
+  if (!_complete(bundle, await localOwnerCounts(db, owner))) {
     logger.error('account.export_incomplete');
     return OwnerExportOutcome.failed;
   }
@@ -86,7 +86,9 @@ Future<OwnerExportOutcome> exportOwnerChecked({
   }
 }
 
-typedef _Counts = ({
+/// What [owner] has on this device, every row (imported calendar events
+/// and their steps included) and every calendar-series template.
+typedef OwnerCounts = ({
   int series,
   int tasks,
   int steps,
@@ -94,14 +96,15 @@ typedef _Counts = ({
   int calendarSeries,
 });
 
-bool _complete(ExportBundle b, _Counts local) =>
+bool _complete(ExportBundle b, OwnerCounts local) =>
     b.series.length == local.series &&
     b.occurrences.length == local.tasks &&
     b.subtasks.length == local.steps &&
     b.routines.length == local.routines &&
     b.calendarSeries.length == local.calendarSeries;
 
-Future<_Counts> _localCounts(AppDatabase db, String owner) async {
+/// [OwnerCounts] of [owner] (D1's completeness check, CR-160).
+Future<OwnerCounts> localOwnerCounts(AppDatabase db, String owner) async {
   final row = await db
       .customSelect(
         // Every row, imported calendar events and their steps included:

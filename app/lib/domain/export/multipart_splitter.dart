@@ -86,14 +86,12 @@ ExportSplit splitExport(
   final parts = _write(rows, sizes, exportId, profile);
   // The plan is an upper bound, so this holds unless the plan is wrong.
   assert(parts.every((p) => utf8.encode(p).length <= targetBytes));
-  final stem = 'dottoday-backup-$date-${exportId.substring(0, 8)}';
-  final width = '${parts.length}'.length.clamp(2, 6);
-  String n(int i) => '$i'.padLeft(width, '0');
+  final stem = partFileStem(date, exportId);
   final entries = [
     for (final (i, text) in parts.indexed)
       PartEntry(
         index: i + 1,
-        name: '$stem-part-${n(i + 1)}-of-${n(parts.length)}.json',
+        name: partFileName(stem, i + 1, parts.length),
         bytes: utf8.encode(text).length,
         sha256: sha256Hex(text),
         counts: _counts(rows, sizes, i),
@@ -112,7 +110,7 @@ ExportSplit splitExport(
   );
   return MultipartSplit(manifest, [
     ExportFile(
-      name: '$stem-manifest.json',
+      name: manifestFileName(stem),
       mimeType: 'application/json',
       content: canonicalJson(manifest.toJson()),
     ),
