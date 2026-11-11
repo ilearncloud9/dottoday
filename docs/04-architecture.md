@@ -109,7 +109,9 @@ is logged and never undoes the write (the next write or app start repairs it).
 **Backups** (M2.4): JSON v1 bundles (the export format) in a separate SQLCipher file
 `dottoday-backups.db` with the same key — daily (keep 7, at most one per 24 h), plus pre-import and
 pre-restore (keep 5 each). A backup over the 25 MB import limit is stored as parts in `backup_parts`
-(CR-160 Stage B4, `docs/cr-160-multipart-export.md` §8). Restore/import go through the write path: missing rows are soft-deleted,
+(CR-160 Stage B4, `docs/cr-160-multipart-export.md` §8). Restore/import run through the staged
+pipeline (CR-160 B5, same doc §5: staged and checked whole, then the safety backup, then one
+commit) and the write path: missing rows are soft-deleted,
 so the change syncs and is undoable via the pre-restore backup. Schema migrations take an encrypted
 `VACUUM INTO` snapshot of the old file (`dottoday.db.pre-v<N>`, keep 2) instead, because new code
 can't read an old schema as JSON. Web stores backups in a second WASM database (encrypted like the main one, M2.9) and takes no

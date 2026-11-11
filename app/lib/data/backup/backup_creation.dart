@@ -10,10 +10,9 @@
 /// read back and checked the way a restore would read it, complete against
 /// the account it was taken of; one that fails is removed and
 /// [BackupNotRestorableFailure] stops the operation before any live change.
-/// Until B5 a safety backup is never stored as parts: today's restore (and
-/// so Undo) can't read them, so an account too large for one file is
-/// refused as before B4 (owner decision, 2026-11-11). Every backup stored as
-/// parts is always read back whole. Pruning runs only after a check passed.
+/// A safety backup may be parts: the staged restore, and so Undo, reads
+/// them (B5 lifted B4's refusal). Every backup stored as parts is always
+/// read back whole. Pruning runs only after a check passed.
 library;
 
 import 'dart:convert';
@@ -63,9 +62,7 @@ Future<Result<BackupInfo, AppFailure>> createBackup(
 
   int? id;
   var size = 0;
-  // A safety backup always tries one file first: it must be one (above).
-  if (verify ||
-      !await previousBackupLarge(backups, owner, limit: limits.singleFile)) {
+  if (!await previousBackupLarge(backups, owner, limit: limits.singleFile)) {
     final bundle = await db.transaction(() => readUserData(db, owner, now));
     if (bundle == null) return const Err(StorageFailure());
     final json = encodeExportJson(bundle);
@@ -91,8 +88,6 @@ Future<Result<BackupInfo, AppFailure>> createBackup(
       size = json.length;
     }
   }
-  // Until B5, a safety backup too large for one file is refused.
-  if (id == null && verify) return notRestorable();
   if (id == null) {
     // Too large for one file: parts (CR-160 Stage B4).
     final stored = await writeMultipartBackup(

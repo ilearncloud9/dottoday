@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
@@ -14,11 +16,15 @@ import '../../support/guest_backup_world.dart';
 import '../../support/owner_app.dart';
 import '../../support/staged_import_world.dart';
 
-// CR-160 Stage B3 gate: the staged pipeline gives exactly the result of
-// today's in-memory import or restore for the same input, from each of
-// its three sources: the same rows (re-owned, normalised, Trash rule),
-// the same pending templates, the same outbox entries; imported calendar
-// events dropped; staging left empty.
+// CR-160 Stage B3 gate, kept by B5: the staged pipeline gives exactly the
+// result of the in-memory import or restore it replaced, for the same
+// input, from each of its three sources: the same rows (re-owned,
+// normalised, Trash rule), the same pending templates, the same outbox
+// entries; imported calendar events dropped; staging left empty. That
+// path is gone (B5), so its result is the fixture it recorded just before
+// (fixtures/pre_b5_replace_state.txt: the in-memory import of this file
+// and the in-memory restore of it as a stored backup, which were
+// identical).
 
 void main() {
   setUpAll(() async {
@@ -26,30 +32,23 @@ void main() {
     await initializeDateFormatting();
   });
 
-  late GuestBackupWorld today;
   late GuestBackupWorld staged;
-  setUp(() async {
-    today = await stagedWorld();
-    staged = await stagedWorld();
-  });
-  tearDown(() async {
-    await today.dispose();
-    await staged.dispose();
-  });
+  setUp(() async => staged = await stagedWorld());
+  tearDown(() => staged.dispose());
 
   final text = encodeExportJson(stagedFile());
 
+  final before = File(
+    'test/data/backup/fixtures/pre_b5_replace_state.txt',
+  ).readAsStringSync();
+
   Future<void> expectSame() async {
-    final want = await stagedState(today);
-    expect(await stagedState(staged), want);
+    // Compared as text, so a difference shows where.
+    expect('${await stagedState(staged)}', before);
     expect(await stagingLeft(staged), 0);
   }
 
-  test('a JSON v1 file: the same result as today\'s import', () async {
-    expect(
-      await today.backups.importJson(stagedOwner, text),
-      isA<Ok<void, AppFailure>>(),
-    );
+  test('a JSON v1 file: the same result as the in-memory import', () async {
     expect(
       await stagedImporter(
         staged,
@@ -62,11 +61,15 @@ void main() {
     expect(titles, isNot(contains('Not in the file')), reason: 'Trash');
   });
 
-  test('a multipart set of the same file: the same result', () async {
+  test('Settings import (the backup service): the same result', () async {
     expect(
-      await today.backups.importJson(stagedOwner, text),
+      await staged.backups.importJson(stagedOwner, text),
       isA<Ok<void, AppFailure>>(),
     );
+    await expectSame();
+  });
+
+  test('a multipart set of the same file: the same result', () async {
     final split =
         splitExport(
               stagedFile(),
@@ -97,7 +100,7 @@ void main() {
     await expectSame();
   });
 
-  test('a stored backup, read in place: the same result as today\'s '
+  test('a stored backup, read in place: the same result as the in-memory '
       'restore', () async {
     final own = encodeExportJson(stagedFile().reownedTo(stagedOwner));
     Future<int> store(GuestBackupWorld w) => w.store
@@ -111,12 +114,7 @@ void main() {
             owner: const Value(stagedOwner),
           ),
         );
-    final a = await store(today);
     final b = await store(staged);
-    expect(
-      await today.backups.restore(stagedOwner, a),
-      isA<Ok<void, AppFailure>>(),
-    );
     expect(
       await stagedImporter(staged).restoreBackup(
         stagedOwner,
@@ -125,6 +123,25 @@ void main() {
         // Inside the fence: today's safety backup would take it again.
         safety: () async => const Ok(null),
       ),
+      isA<Ok<void, AppFailure>>(),
+    );
+    await expectSame();
+  });
+
+  test('Settings restore (the backup service): the same result', () async {
+    final id = await staged.store
+        .into(staged.store.backups)
+        .insert(
+          BackupsCompanion.insert(
+            createdAt: ownerAppNow.millisecondsSinceEpoch,
+            reason: 'daily',
+            appSchemaVersion: 21,
+            json: encodeExportJson(stagedFile().reownedTo(stagedOwner)),
+            owner: const Value(stagedOwner),
+          ),
+        );
+    expect(
+      await staged.backups.restore(stagedOwner, id),
       isA<Ok<void, AppFailure>>(),
     );
     await expectSame();

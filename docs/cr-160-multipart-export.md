@@ -191,6 +191,36 @@ innermost zone, so the second pass runs its page reads back in the main database
 | Mutations | Parts written outside one transaction, no read-back after writing, retention or the audit trusting parts unread, foreign keys off, a restore staging a manifest as one file, no profile-is-the-owner check in the restore or in verification, a safety backup stored as parts: each caught. The two profile checks are caught by parts that are wholly another account's (profile and every row, hashes recomputed); a set with only the profile changed is also refused by B3's one-owner check |
 | Memory and time (host VM, SQLCipher files, WAL; three runs each) | 59 MB account written as 5 MB parts (decision 6): 4.6–4.8 s, 61–86 MB above idle, within §7's 100 MB. As 10 MB parts it measured 120–131 MB, over it: peak grows with part size (a part is in memory as rows, a sorted copy, its text and its bytes). Restoring the 5 MB parts: 4.7–4.9 s, 30–56 MB above an idle already raised by the write, so a lower bound. Not device figures; web not measured |
 
+### B5 verification (2026-11-11, local)
+Settings import, backup restore and Undo now run through the staged pipeline
+(`DriftBackupService.importJson` / `restore` → `StagedImporter`); the in-memory path is removed
+(`_replaceFrom`, `domain/backup/restore_plan.dart` and its test). B4's refusal (decision 5 above) is
+lifted: a safety backup may be parts, since the restore, and so Undo, reads them. No schema change,
+dependency or new string: the pipeline's failures are the ones Settings already words.
+
+Owner decisions (B5 plan):
+1. **Stale staging is cleaned at start and resume**, in the backup maintenance the daily check runs
+   (main isolate, under `guestBackupFence`): imports of any other app run (`importRunId`, one per
+   isolate) or begun over 24 h ago go; a failure is logged and retried.
+2. **The import preview stays until B7**: Settings still decodes the picked file (at most 25 MB) for
+   the confirmation's date and count; a multipart file is refused there as before.
+3. **Web**: the CI web database probe (`tool/web_db_probe.dart`) now stages a v1 file through the
+   pipeline's staging and whole-set checks on the encrypted web database.
+
+Found while switching: the pipeline checked other accounts' row ids (Finding X) only inside the
+commit, after its safety backup, where the in-memory path refused before it; a refused import left a
+needless safety backup (`foreign_ids_restore_test.dart`). The check now runs with the whole-set
+checks, before the safety backup (the commit still checks again).
+
+| Gate | Result |
+|---|---|
+| Legacy single-file regression suite unchanged | Every existing backup, owner, Settings, export and undo test passes without edits. The B3 equivalence tests compared against the in-memory path; just before removing it, its result was recorded (`fixtures/pre_b5_replace_state.txt`, the import of the hostile file and the restore of it as a stored backup, which were identical; deterministic over two runs). The pipeline and the service now match it for a v1 file, a multipart set and a stored backup. Edited: B4's own tests (safety backups as parts now go ahead; the service restores parts) |
+| Any backup restores, from Settings | `staged_import_wiring_test.dart`: a stored 27 MB single-file backup restores through the service; `backup_safety_test.dart`: an import for an account too large for one file, then Undo from its parts; `multipart_backup_test.dart`: the service restores parts |
+| Stale staging | An earlier run's import is removed by maintenance, this run's kept |
+| Mutations | No safety backup, import or restore without its safety backup, no stale cleanup, cleanup ignoring this run, other accounts' rows checked only at commit: each caught |
+| Web (built-in browser, Chromium, local) | `PROBE:OK cipher=chacha20 temp_store=2 import=occurrences+profile`. Not run locally: the probe's Playwright storage scan (CI) and a web commit |
+| Memory and time (host VM, SQLCipher files, WAL; three runs; `test/perf/backup_service_memory_test.dart`) | Through the service, safety backups included. 24 MB file import: 3.2–3.9 s, 54–59 MB above idle. 60 MB restore from 5 MB parts with its safety backup (as parts): 7.7–9.0 s, 34–44 MB above an idle already raised (lower bound). **Undo of that import: 1.8–2.1 s but 309–312 MB above idle, over §7's 150 MB.** The restore is small (the safety backup of the small account before the import); the peak is its own safety backup of the account now, 24 MB written as one file. The single-file path holds the whole account, its 24 MB JSON text and, to verify it, the text read back and decoded. That path is unchanged since M2.4 and serves every daily and safety backup up to 25 MB; B5 only measured it. Not device figures; web not measured. **Open:** the owner chose (2026-11-11) to fix it as its own step after B5, likely by storing backups as parts from a lower size (this changes B4 decision 1, so it comes back for approval) |
+
 ## 7. Size policy and acceptance criteria (provisional)
 Provisional limits: **10 MB per written part, 25 MB per file read.** No maximum part count is adopted
 yet. Each limit is confirmed or changed only from measurements against these criteria (B8):
@@ -214,9 +244,10 @@ pre-import backup it takes is restorable at any size (B4 before B5, §9).
   over it is stored as parts in the backup database (backup schema 3: a `backup_parts` table beside
   `backups`, the `backups` row holding the manifest), written by the multipart writer one part at a
   time, restored through §5. Built in B4 (see B4 verification).
-- **Existing backups over 25 MB**: today they **cannot be restored**, and normal retention can still
-  remove them (unchanged by B0; decision 5). This work never rewrites, deletes or marks them unusable.
-  **Proposed, not built or verified:** make them restorable through §5 with a **legacy backup
+- **Existing backups over 25 MB**: restorable since B5 (the legacy backup source below, built in B3,
+  measured in B3, live in B5); before B5 they could not be restored. Normal retention can still remove
+  them (unchanged; decision 5). This work never rewrites, deletes or marks them unusable.
+  **Built in B3 (originally proposed here):** make them restorable through §5 with a **legacy backup
   source** that reads the stored JSON **inside the encrypted backup database with SQLite's JSON
   functions** (`json_each(json, '$.occurrences')` and so on, paged), decoding one row at a time, with
   no new dependency and without decoding the whole document in Dart. Whether this meets the §7

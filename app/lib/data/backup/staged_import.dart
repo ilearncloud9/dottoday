@@ -5,9 +5,9 @@
 /// commit transaction. Nothing live changes before the commit, and a
 /// refusal anywhere discards the staging.
 ///
-/// Reachable from tests only until B5 switches Settings import and backup
-/// restore to it; until B4 the caller's safety backup is today's verified
-/// single-file one. Main isolate only (cross_runtime_fence_test.dart).
+/// Every Settings import, backup restore and Undo runs here (B5, through
+/// `DriftBackupService`); the caller's safety backup is its verified one,
+/// single file or parts. Main isolate only (cross_runtime_fence_test.dart).
 library;
 
 import 'package:dottoday/core/clock/clock.dart';

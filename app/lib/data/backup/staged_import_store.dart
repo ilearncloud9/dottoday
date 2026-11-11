@@ -16,6 +16,7 @@ library;
 
 import 'dart:convert';
 
+import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/sync/pull_guard.dart';
 import 'package:drift/drift.dart';
@@ -216,6 +217,11 @@ Future<void> discardStagedImport(AppDatabase db, StagedImport import) =>
               s.owner.equals(import.owner.userId),
         ))
         .go();
+
+/// This app run's id: imports it begins are its own, and
+/// [cleanUpStaleImports] removes those of any other run. One per isolate,
+/// and only the main isolate imports (CR-160 B5).
+final importRunId = const UuidV7Generator().newId();
 
 /// Deletes every import begun by another app run, or begun more than
 /// [stagedImportLifetime] before [nowUtc] (or "in the future": a clock set

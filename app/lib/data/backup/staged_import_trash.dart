@@ -1,7 +1,7 @@
 /// The staged import's Trash rule (CR-160 Stage B3), inside the commit's
-/// transaction: as `restorePlan` does, the owner's live rows the staged set
-/// doesn't hold get `deleted_at = now` through the write path (synced,
-/// restorable for 30 days), never a hard delete.
+/// transaction: as the in-memory restore (removed in B5) did, the owner's
+/// live rows the staged set doesn't hold get `deleted_at = now` through
+/// the write path (synced, restorable for 30 days), never a hard delete.
 library;
 
 import 'package:dottoday/data/backup/staged_import_store.dart';
@@ -13,9 +13,9 @@ import 'package:drift/drift.dart';
 /// Rows trashed per chunk.
 const _chunk = 500;
 
-/// The owner's live rows the staged set doesn't hold go to Trash, as
-/// `restorePlan` does: imported calendar events and their steps are never
-/// part of a backup, so they are never trashed by one.
+/// The owner's live rows the staged set doesn't hold go to Trash, as the
+/// in-memory restore did: imported calendar events and their steps are
+/// never part of a backup, so they are never trashed by one.
 Future<void> trashAbsent(
   AppDatabase db,
   StagedImport import,

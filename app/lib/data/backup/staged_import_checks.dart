@@ -4,15 +4,19 @@
 /// dropped (never validated, as `ExportBundle.withoutImported` runs before
 /// validation); every other row passes the v1 validators; then, in SQL,
 /// exactly one profile, one owner, references that resolve inside the set
-/// and one calendar template per calendar and series. Ids are unique per
+/// and one calendar template per calendar and series; then no row id
+/// another account here holds (Finding X, as the in-memory import asked
+/// before its safety backup; the commit checks again). Ids are unique per
 /// table by the staging key. Any failure refuses the import before the
 /// safety backup and before any live change.
 library;
 
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/backup/staged_import_sources.dart';
 import 'package:dottoday/data/backup/staged_import_store.dart';
 import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/writes/foreign_rows.dart';
 import 'package:dottoday/domain/export/import_rows.dart';
 import 'package:dottoday/domain/export/multipart_format.dart';
 import 'package:drift/drift.dart';
@@ -44,6 +48,40 @@ Future<void> verifyStagedRows(
     if (n != 0) throw badImportFile;
   }
   if (await _count(db, import, _profiles) != 1) throw badImportFile;
+  await _noForeignRows(db, import);
+}
+
+/// Refuses with [ForeignRowsFailure] when a staged row's id is held by
+/// another owner here; ids read a page at a time.
+Future<void> _noForeignRows(AppDatabase db, StagedImport import) async {
+  for (final table in const ['series', 'occurrences', 'subtasks', 'routines']) {
+    var after = '';
+    while (true) {
+      final ids = [
+        for (final r
+            in await db
+                .customSelect(
+                  'SELECT row_id FROM import_staging WHERE import_id = ?1 '
+                  'AND owner = ?2 AND entity = ?3 AND row_id > ?4 '
+                  'ORDER BY row_id LIMIT 500',
+                  variables: [
+                    ..._keys(import),
+                    Variable.withString(table),
+                    Variable.withString(after),
+                  ],
+                  readsFrom: {db.importStaging},
+                )
+                .get())
+          r.read<String>('row_id'),
+      ];
+      if (ids.isEmpty) break;
+      if (await foreignRowTable(db, import.owner.userId, {table: ids}) !=
+          null) {
+        throw const SourceRefused(ForeignRowsFailure());
+      }
+      after = ids.last;
+    }
+  }
 }
 
 Future<void> _matchTotals(

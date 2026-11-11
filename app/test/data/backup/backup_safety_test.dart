@@ -6,6 +6,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:dottoday/data/backup/drift_backup_service.dart';
 import 'package:dottoday/data/backup/multipart_backup_store.dart';
+import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
@@ -88,14 +89,13 @@ void main() {
     isA<F>(),
   );
 
-  // An account too large for one backup file: until B5 its safety backup
-  // can't be one today's restore (Undo) reads, so the import or restore is
-  // refused before any change and nothing is stored (owner decision,
-  // 2026-11-11; B4 stores daily backups of it as parts). Limits shrunk so
-  // the account is small.
-  group('an account over the single-file limit is refused until B5', () {
+  // CR-160 B4/B5: an account too large for one backup file gets its safety
+  // backup as verified parts, and the import or restore goes ahead (B4
+  // refused both until B5 made the restore, and so Undo, read parts).
+  // Limits shrunk so the account is small.
+  group('an account over the single-file limit', () {
     late DriftBackupService small;
-    setUp(() async {
+    setUp(() {
       small = DriftBackupService(
         db: h.db,
         backups: backups,
@@ -112,31 +112,49 @@ void main() {
           notes: 'n' * 10000,
         ),
     ]);
+    Future<int> safety(BackupReason reason) async {
+      final row = await (backups.select(
+        backups.backups,
+      )..where((b) => b.reason.equals(reason.name))).getSingle();
+      expect(await verifyStoredMultipart(backups, row.id, userId), isTrue);
+      expect(
+        (await (backups.select(
+          backups.backupParts,
+        )..where((p) => p.backupId.equals(row.id))).get()).length,
+        greaterThan(1),
+      );
+      return row.id;
+    }
 
-    test('importing a file', () async {
+    Set<String> live(List<OccurrenceRow> rows) => {
+      for (final o in rows)
+        if (o.deletedAt == null) o.title,
+    };
+
+    test('importing a file, then Undo from its parts', () async {
       await grow();
-      final before = await live();
+      final before = live(await h.db.select(h.db.occurrences).get());
       expect(
         await small.importJson(userId, smallFile()),
-        refusedAs<BackupNotRestorableFailure>(),
+        isA<Ok<void, AppFailure>>(),
       );
-      expect(await live(), before);
-      expect(await stored(), isEmpty);
+      expect(live(await h.db.select(h.db.occurrences).get()), {
+        'From the file',
+      });
+      final id = await safety(BackupReason.preImport);
+      expect(await small.restore(userId, id), isA<Ok<void, AppFailure>>());
+      expect(live(await h.db.select(h.db.occurrences).get()), before);
     });
 
-    test('restoring an earlier backup', () async {
+    test('restoring an earlier backup: verified parts first, then the '
+        'restore', () async {
       final earlier = (await small.create(
         userId,
         BackupReason.daily,
       )).when(ok: (b) => b.id, err: (f) => fail(f.code));
       await grow();
-      final before = await live();
-      expect(
-        await small.restore(userId, earlier),
-        refusedAs<BackupNotRestorableFailure>(),
-      );
-      expect(await live(), before);
-      expect(await stored(), [earlier]);
+      expect(await small.restore(userId, earlier), isA<Ok<void, AppFailure>>());
+      await safety(BackupReason.preRestore);
     });
   });
 

@@ -8,20 +8,19 @@ import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:dottoday/data/backup/backup_privacy.dart';
 import 'package:dottoday/data/backup/backup_retention.dart';
 import 'package:dottoday/data/backup/guest_backup_cutoff.dart';
-import 'package:dottoday/data/backup/user_data_snapshot.dart';
-import 'package:dottoday/data/calendar/pending_calendar_series.dart';
+import 'package:dottoday/data/backup/staged_import.dart';
+import 'package:dottoday/data/backup/staged_import_store.dart';
 import 'package:dottoday/data/daos/profiles_dao.dart';
 import 'package:dottoday/data/db/app_database.dart';
-import 'package:dottoday/data/writes/foreign_rows.dart';
+import 'package:dottoday/data/writes/drift_write_use_case.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
-import 'package:dottoday/domain/backup/restore_plan.dart';
-import 'package:dottoday/domain/export/export_bundle.dart';
-import 'package:dottoday/domain/export/export_json.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 
-/// [BackupService] storing JSON v1 bundles in [BackupDatabase].
+/// [BackupService] storing backups in [BackupDatabase] (JSON v1, or parts
+/// above the import limit) and importing or restoring through the staged
+/// pipeline (CR-160 Stage B5).
 ///
 /// Every backup belongs to the owner it was taken for (CR-160 I2): the
 /// daily check, retention, listing and restore each see one owner's
@@ -126,6 +125,21 @@ final class DriftBackupService implements BackupService {
     } on Exception catch (e, st) {
       _logger.error('backup.guest_scrub_failed', error: e, stackTrace: st);
     }
+    // Staging left by an earlier run (a crash, a kill) or begun too long
+    // ago: removed here, on the main isolate, never an import of this run
+    // (CR-160 B5, decision 1). A failure is retried next run.
+    try {
+      final gone = await _fenced(
+        () => cleanUpStaleImports(
+          _db,
+          runId: importRunId,
+          nowUtc: _clock.nowUtc(),
+        ),
+      );
+      if (gone > 0) _logger.info('import.stale_removed', fields: {'n': gone});
+    } on Exception catch (e, st) {
+      _logger.error('import.stale_cleanup_failed', error: e, stackTrace: st);
+    }
   }
 
   /// [body] under [guestBackupFence], after [prepareFencedBackupWork]
@@ -179,87 +193,59 @@ final class DriftBackupService implements BackupService {
   /// Refuses, changing nothing, unless [userId] is the owner shown and the
   /// backup is [userId]'s and not hidden. Another owner's backup, or a
   /// hidden one, fails exactly like an unknown id, so its existence is not
-  /// revealed either.
+  /// revealed either. Through the staged pipeline (CR-160 B5), which takes
+  /// [guestBackupFence] itself: a backup of any size or form restores.
   @override
-  Future<Result<void, AppFailure>> restore(String userId, int backupId) =>
-      _fenced(() => _restore(userId, backupId));
-
-  Future<Result<void, AppFailure>> _restore(String userId, int backupId) async {
-    if (await _shownOwner() != userId) return const Err(StorageFailure());
-    if ((await guestBackupVisibility(_db, userId)).hides(backupId)) {
-      return const Err(StorageFailure());
-    }
-    final row =
-        await (_backups.select(_backups.backups)
-              ..where((b) => b.id.equals(backupId) & b.owner.equals(userId)))
-            .getSingleOrNull();
-    if (row == null) return const Err(StorageFailure());
-    return _replaceFrom(
+  Future<Result<void, AppFailure>> restore(String userId, int backupId) async {
+    final importer = _importer();
+    if (importer == null) return const Err(StorageFailure());
+    return importer.restoreBackup(
       userId,
-      row.json,
-      BackupReason.preRestore,
-      requireOwner: true,
+      _backups,
+      backupId,
+      safety: () => _safety(userId, BackupReason.preRestore),
     );
   }
 
+  /// A JSON v1 file, through the staged pipeline (CR-160 B5) under
+  /// [guestBackupFence]: staged and checked whole, then the verified
+  /// pre-import backup, then one commit.
   @override
   Future<Result<void, AppFailure>> importJson(String userId, String json) =>
-      _fenced(() => _replaceFrom(userId, json, BackupReason.preImport));
+      _fenced(() async {
+        final importer = _importer();
+        if (importer == null) return const Err(StorageFailure());
+        return importer.importText(
+          userId,
+          json,
+          safety: () => _safety(userId, BackupReason.preImport),
+        );
+      });
 
-  /// Decodes [json], backs up the current state, then writes the restore.
-  Future<Result<void, AppFailure>> _replaceFrom(
+  /// The verified safety backup an import or restore needs, inside the
+  /// fence (the pipeline's safety step).
+  Future<Result<void, AppFailure>> _safety(
     String userId,
-    String json,
-    BackupReason safety, {
-    bool requireOwner = false,
-  }) async {
-    final ExportBundle incoming;
-    switch (decodeExportJson(json)) {
-      case Ok(:final value):
-        incoming = value;
-      case Err(:final failure):
-        return Err(failure);
+    BackupReason reason,
+  ) async => (await _create(userId, reason, verify: true)).map((_) {});
+
+  /// The staged importer over this service's database; null (logged) when
+  /// the write path isn't the database's own, which alone can commit an
+  /// import (fakes in UI tests never import).
+  StagedImporter? _importer() {
+    final writes = _writes;
+    if (writes is! DriftWriteUseCase) {
+      _logger.error('import.no_write_path');
+      return null;
     }
-    // A stored backup's content must be its owner's own profile too (the
-    // owner column says so already; this guards a row written wrongly).
-    // Imports are exempt: a file is deliberately re-owned to [userId].
-    if (requireOwner && incoming.profile.id != userId) {
-      return const Err(StorageFailure());
-    }
-    // A row id another account here holds: refused before the safety
-    // backup or any change (CR-160 Finding X). The write path checks again
-    // inside its transaction.
-    final foreign = await foreignRowTable(_db, userId, {
-      'series': [for (final s in incoming.series) s.id],
-      'occurrences': [for (final o in incoming.occurrences) o.id],
-      'subtasks': [for (final s in incoming.subtasks) s.id],
-      'routines': [for (final r in incoming.routines) r.id],
-    });
-    if (foreign != null) {
-      _logger.warn('backup.foreign_rows');
-      return const Err(ForeignRowsFailure());
-    }
-    // A safety backup that a restore could actually read, or nothing
-    // changes (CR-160 backup safety).
-    if (await _create(userId, safety, verify: true) case Err(:final failure)) {
-      return Err(failure);
-    }
-    final now = _clock.nowUtc();
-    final current = await readUserData(_db, userId, now);
-    if (current == null) return const Err(StorageFailure());
-    final applied = await _writes.apply(
-      restorePlan(current: current, backup: incoming, userId: userId, now: now),
-    );
-    if (applied case Err()) return applied;
-    // D1's calendar-series settings (CR-160 Stage A): kept pending under
-    // this account, attached only when a calendar here provably matches.
-    // After the restore, so a refused restore leaves none behind; a failure
-    // here is reported, and importing the file again is safe.
-    return stashCalendarSeriesTemplates(
-      _db,
-      userId,
-      incoming.calendarSeries,
-      _ids,
+    return StagedImporter(
+      db: _db,
+      writes: writes,
+      effects: writes.effects,
+      clock: _clock,
+      ids: _ids,
+      logger: _logger,
+      runId: importRunId,
     );
   }
 

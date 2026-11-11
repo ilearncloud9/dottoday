@@ -1,7 +1,7 @@
 /// The staged import's commit (CR-160 Stage B3,
 /// docs/cr-160-multipart-export.md §5 step 5): one transaction on the app
-/// database that turns the owner's data into the staged set, as
-/// `restorePlan` does for a whole bundle. Inside it:
+/// database that turns the owner's data into the staged set, as the
+/// in-memory restore (removed in B5) did for a whole bundle. Inside it:
 ///
 /// - the staging fence (owner shown, same owner session, not sealed, not
 ///   being removed);
@@ -90,8 +90,8 @@ Future<void> commitStagedImport(
     ),
   );
   // Trash first, from the owner's rows as they are before this import (as
-  // `restorePlan` takes its `current`): instances materialised below for
-  // the imported series are never the import's to trash.
+  // the in-memory restore took them): instances materialised below for the
+  // imported series are never the import's to trash.
   await trashAbsent(db, import, nowUtc, apply);
   // A series with its staged instances, so materialising it sees them.
   await _pages(db, import, 'series', (page) async {

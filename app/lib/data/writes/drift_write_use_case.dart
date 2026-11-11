@@ -53,6 +53,11 @@ final class DriftWriteUseCase implements WriteUseCase {
   final Clock _clock;
   final Materialiser _materialiser;
   final AfterWriteEffects _effects;
+
+  /// The effects [apply] schedules after a write; a caller of
+  /// [applyWithoutEffects] schedules them once after its own transaction
+  /// (the staged import, CR-160 B3/B5).
+  AfterWriteEffects get effects => _effects;
   final Logger _logger;
   final SharedHlc _hlc;
   final DriftOccurrenceRepository _occurrences;

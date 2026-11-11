@@ -5,6 +5,9 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
+import 'package:dottoday/data/backup/staged_import_checks.dart';
+import 'package:dottoday/data/backup/staged_import_sources.dart';
+import 'package:dottoday/data/backup/staged_import_store.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/connection/connection.dart';
 import 'package:dottoday/data/db/database_key_store.dart';
@@ -16,6 +19,8 @@ import 'package:dottoday/data/snapshot/web/snapshot_store_web.dart';
 import 'package:dottoday/data/snapshot/web_snapshot_sink.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/export/export_bundle.dart';
+import 'package:dottoday/domain/export/export_json.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:flutter/widgets.dart';
@@ -69,6 +74,8 @@ Future<String> _probe() async {
   final cipher = await _cipher(db);
   final temp = await _stageAndSort(db);
   _report('PROBE-STEP staged');
+  final imported = await _stagedImport(db, at);
+  _report('PROBE-STEP staged-import');
   await db.close();
   _report('PROBE-STEP closed');
 
@@ -77,7 +84,7 @@ Future<String> _probe() async {
   final again = await DriftOccurrenceRepository(db).findById('u', 'o');
   await db.close();
   if (again?.title != probeTitle) throw StateError('reopen failed');
-  return 'cipher=$cipher $temp';
+  return 'cipher=$cipher $temp $imported';
 }
 
 Future<void> _writeSnapshot(DateTime at, Occurrence? row) async {
@@ -136,6 +143,56 @@ Future<String> _stageAndSort(AppDatabase db) async {
     throw StateError('temp storage may use files: $compiled temp_store=$store');
   }
   return '$compiled temp_store=$store';
+}
+
+/// The staged import's own staging and whole-set checks (CR-160 B5: the
+/// import and restore path on every platform) on the encrypted web
+/// database: a JSON v1 file staged with `json_each`, every row decoded and
+/// validated, the SQL checks run (`json_extract`), then discarded.
+Future<String> _stagedImport(AppDatabase db, DateTime at) async {
+  const owner = '01928c3e-0000-7000-8000-00000000e0b1';
+  const importId = '01928c3e-0000-7000-8000-00000000e0b2';
+  // One staging session per owner: _stageAndSort's goes first. Staging
+  // checks that 'u' is the owner shown, as a real import does.
+  await db.customStatement("DELETE FROM import_sessions WHERE owner = 'u'");
+  await db.customStatement(
+    'INSERT INTO import_sessions (import_id, owner, owner_generation, '
+    "run_id, started_at, declared_bytes) VALUES ('$importId', 'u', 0, "
+    "'probe', 0, 1048576)",
+  );
+  final import = (importId: importId, owner: (userId: 'u', generation: 0));
+  final text = encodeExportJson(
+    ExportBundle(
+      exportedAt: at,
+      profile: Profile(id: owner, createdAt: at, updatedAt: at),
+      occurrences: [
+        Occurrence(
+          id: '01928c3e-0000-7000-8000-00000000e0b3',
+          userId: owner,
+          title: probeTitle,
+          tzId: 'UTC',
+          durationMin: 30,
+          startUtc: at,
+          createdAt: at,
+          updatedAt: at,
+        ),
+      ],
+    ),
+  );
+  await stageLegacyText(db, import, text);
+  await verifyStagedRows(db, import);
+  final staged = await db
+      .customSelect(
+        "SELECT entity FROM import_staging WHERE import_id = '$importId' "
+        'ORDER BY entity',
+      )
+      .get();
+  await discardStagedImport(db, import);
+  final kinds = [for (final r in staged) r.read<String>('entity')].join('+');
+  if (kinds != 'occurrences+profile') {
+    throw StateError('staged import: $kinds');
+  }
+  return 'import=$kinds';
 }
 
 Future<Object?> _cipher(AppDatabase db) async =>

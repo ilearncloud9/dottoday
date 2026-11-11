@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:crypto/crypto.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/backup/backup_audit.dart';
@@ -8,12 +5,10 @@ import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:dottoday/data/backup/backup_retention.dart';
 import 'package:dottoday/data/backup/drift_backup_service.dart';
 import 'package:dottoday/data/backup/multipart_backup_store.dart';
-import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/domain/backup/backup_recovery.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
-import 'package:drift/drift.dart' show OrderingTerm;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -28,6 +23,7 @@ import '../writes/write_harness.dart';
 // a 500 KB account is "too large".
 
 const _day = Duration(hours: 25);
+const _after = '01928c3e-0000-7000-9000-0000000007b1';
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
@@ -65,18 +61,6 @@ void main() {
     await h.dispose();
     await backups.close();
   });
-
-  /// Every task row (as a digest), the outbox and the write revision.
-  Future<String> live() async {
-    final rows = await (h.db.select(
-      h.db.occurrences,
-    )..orderBy([(o) => OrderingTerm(expression: o.id)])).get();
-    final digest = sha256.convert(
-      utf8.encode(jsonEncode([for (final r in rows) r.toJson()])),
-    );
-    return '$digest|${(await h.changeLog()).length}|'
-        '${await writeRevision(h.db, userId)}';
-  }
 
   Future<int> count(String table) => backups
       .customSelect('SELECT COUNT(*) AS n FROM $table')
@@ -159,13 +143,17 @@ void main() {
     expect(await verifyStoredMultipart(backups, good, userId), isTrue);
   });
 
-  test("today's in-memory restore refuses a multipart backup and changes "
-      'nothing', () async {
+  test('the backup service restores a backup stored as parts (B5)', () async {
     final id = await create();
     h.clock.advance(_day);
-    final before = await live();
-    expect(await service.restore(userId, id), isA<Err<void, AppFailure>>());
-    expect(await live(), before);
+    await DriftOccurrenceRepository(h.db).upsertAll([
+      occurrenceFixture().copyWith(id: _after, title: 'Added after'),
+    ]);
+    expect(await service.restore(userId, id), isA<Ok<void, AppFailure>>());
+    final added = await (h.db.select(
+      h.db.occurrences,
+    )..where((o) => o.id.equals(_after))).getSingle();
+    expect(added.deletedAt, isNotNull, reason: 'not in the backup: Trash');
     expect(await verifyStoredMultipart(backups, id, userId), isTrue);
   });
 

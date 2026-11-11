@@ -332,7 +332,11 @@ an imported event stay on the device that has the event (as ADR-0011 already say
 <yyyy-MM-dd>.csv` (empty tables left out), dated in the profile's zone, never named after content.
 Restore/import policy is **replace**, said in the confirmation in those words ("Anything here that
 isn't in it moves to Trash"): it runs through the write path in one transaction after a pre-import
-(or pre-restore) backup, and Undo restores that backup. Rejected: a staging database swapped in by
+(or pre-restore) backup, and Undo restores that backup. Since CR-160 B5 the file or backup is first
+staged in encrypted tables of the same database (`import_sessions`, `import_staging`) and checked
+whole, then the safety backup, then the one commit through the write path
+(`docs/cr-160-multipart-export.md` §5); backups over the import limit are stored as parts
+(`backup_parts`, backup schema 3). Rejected: a staging database swapped in by
 rename (the data-export skill's default) — the restore must flow through the write path so it is
 change-logged and syncs to the person's other devices like any edit, and one transaction already
 leaves nothing half-applied; and a payload checksum in the envelope (v1 stays as it is: a truncated
