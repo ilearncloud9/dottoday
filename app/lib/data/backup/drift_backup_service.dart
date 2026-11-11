@@ -222,6 +222,25 @@ final class DriftBackupService implements BackupService {
         );
       });
 
+  /// A multipart set, through the staged pipeline (CR-160 B7) under
+  /// [guestBackupFence], as [importJson]: staged a part at a time and
+  /// checked whole, then the verified pre-import backup, then one commit.
+  @override
+  Future<Result<void, AppFailure>> importSet(
+    String userId,
+    String manifest,
+    List<Future<String> Function()> parts,
+  ) => _fenced(() async {
+    final importer = _importer();
+    if (importer == null) return const Err(StorageFailure());
+    return importer.importMultipart(
+      userId,
+      manifest,
+      parts: parts,
+      safety: () => _safety(userId, BackupReason.preImport),
+    );
+  });
+
   /// The verified safety backup an import or restore needs, inside the
   /// fence (the pipeline's safety step).
   Future<Result<void, AppFailure>> _safety(

@@ -4176,6 +4176,30 @@ abstract class AppLocalizations {
   /// **'Your browser may ask you to allow several downloads.'**
   String get exportDownloadNote;
 
+  /// Settings › Export › Import (CR-160 B7): sheet shown while some files of a multipart backup are still missing.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the rest of this backup'**
+  String get importAddTitle;
+
+  /// Settings › Export › Import (CR-160 B7): how many files of the set are in.
+  ///
+  /// In en, this message translates to:
+  /// **'{added} of {total} files added.'**
+  String importAddedCount(int added, int total);
+
+  /// Settings › Export › Import (CR-160 B7): picks more files of the set.
+  ///
+  /// In en, this message translates to:
+  /// **'Add files…'**
+  String get importAddFiles;
+
+  /// Settings › Export › Import (CR-160 B7): a picked file belongs to another backup.
+  ///
+  /// In en, this message translates to:
+  /// **'This file isn’t part of this backup. Nothing was changed.'**
+  String get importPartForeign;
+
   /// Export page group caption for local backups.
   ///
   /// In en, this message translates to:

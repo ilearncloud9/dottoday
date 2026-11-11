@@ -2857,6 +2857,21 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your browser may ask you to allow several downloads.';
 
   @override
+  String get importAddTitle => 'Add the rest of this backup';
+
+  @override
+  String importAddedCount(int added, int total) {
+    return '$added of $total files added.';
+  }
+
+  @override
+  String get importAddFiles => 'Add files…';
+
+  @override
+  String get importPartForeign =>
+      'This file isn’t part of this backup. Nothing was changed.';
+
+  @override
   String get exportBackups => 'On this device';
 
   @override

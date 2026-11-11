@@ -2868,6 +2868,21 @@ class AppLocalizationsFr extends AppLocalizations {
       'Votre navigateur peut vous demander d’autoriser plusieurs téléchargements.';
 
   @override
+  String get importAddTitle => 'Ajoutez le reste de cette sauvegarde';
+
+  @override
+  String importAddedCount(int added, int total) {
+    return '$added fichiers sur $total ajoutés.';
+  }
+
+  @override
+  String get importAddFiles => 'Ajouter des fichiers…';
+
+  @override
+  String get importPartForeign =>
+      'Ce fichier ne fait pas partie de cette sauvegarde. Rien n’a été modifié.';
+
+  @override
   String get exportBackups => 'Sur cet appareil';
 
   @override

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
+import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/export/export_files.dart';
 import 'package:dottoday/domain/export/export_json.dart';
 import 'package:dottoday/domain/export/multipart_format.dart';
@@ -67,6 +68,32 @@ void main() {
       isA<Ok<void, AppFailure>>(),
     );
     await expectSame();
+  });
+
+  test('Settings import of a set (the backup service, CR-160 B7b): the '
+      'same result, after its pre-import backup', () async {
+    final split =
+        splitExport(
+              stagedFile(),
+              exportId: '01928c3e-0000-7000-8000-0000000000e2',
+              appVersion: '1',
+              schemaVersion: 21,
+              purpose: ExportPurpose.export,
+              date: '2026-11-11',
+              targetBytes: 2048,
+            )
+            as MultipartSplit;
+    expect(
+      await staged.backups.importSet(stagedOwner, split.files.first.content, [
+        for (final ExportFile(:content) in split.files.skip(1))
+          () async => content,
+      ]),
+      isA<Ok<void, AppFailure>>(),
+    );
+    await expectSame();
+    expect((await staged.backups.list()).map((b) => b.reason), [
+      BackupReason.preImport,
+    ]);
   });
 
   test('a multipart set of the same file: the same result', () async {

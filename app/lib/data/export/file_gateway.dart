@@ -17,28 +17,6 @@ enum DeliveryOutcome {
   cancelled,
 }
 
-/// What picking a backup file gave.
-sealed class PickedBackup {
-  const PickedBackup();
-}
-
-/// The person closed the picker.
-final class PickCancelled extends PickedBackup {
-  const PickCancelled();
-}
-
-/// The file is bigger than the import limit; it was never read.
-final class PickTooLarge extends PickedBackup {
-  const PickTooLarge();
-}
-
-/// The file's bytes.
-final class PickedBytes extends PickedBackup {
-  const PickedBytes(this.bytes);
-
-  final Uint8List bytes;
-}
-
 /// One picked file (CR-160 B7): its name and size, its bytes read only
 /// when asked, so a set is read one file at a time.
 final class PickedFile {
@@ -71,12 +49,10 @@ abstract interface class FileGateway {
     Rect? origin,
   });
 
-  /// Opens the file picker for a `.json` backup and reads it, refusing
-  /// anything over [maxBytes] before reading it.
-  Future<PickedBackup> pickBackup({required int maxBytes});
-
-  /// Opens the file picker for one or more `.json` files (a multipart set,
-  /// CR-160 B7); empty when it was closed. Nothing is read yet.
+  /// Opens the file picker for one or more `.json` files (a backup, or the
+  /// files of a multipart set, CR-160 B7); empty when it was closed.
+  /// Nothing is read yet, so a file over the import limit is refused by
+  /// its size before reading.
   Future<List<PickedFile>> pickJsonFiles();
 
   /// Hands a prepared set over (CR-160 B7): the share sheet with every
@@ -175,20 +151,6 @@ final class PlatformFileGateway implements FileGateway {
       if (saved == null && !kIsWeb) return DeliveryOutcome.cancelled;
     }
     return DeliveryOutcome.delivered;
-  }
-
-  @override
-  Future<PickedBackup> pickBackup({required int maxBytes}) async {
-    final file = await FilePicker.pickFile(
-      type: FileType.custom,
-      allowedExtensions: const ['json'],
-    );
-    if (file == null) return const PickCancelled();
-    final size = await file.length();
-    if (size != null && size > maxBytes) return const PickTooLarge();
-    final bytes = await file.readAsBytes();
-    if (bytes.length > maxBytes) return const PickTooLarge();
-    return PickedBytes(bytes);
   }
 
   @override

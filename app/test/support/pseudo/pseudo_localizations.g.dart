@@ -2206,6 +2206,19 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get exportDownloadNote => pseudo(super.exportDownloadNote);
 
   @override
+  String get importAddTitle => pseudo(super.importAddTitle);
+
+  @override
+  String importAddedCount(int added, int total) =>
+      pseudo(super.importAddedCount(added, total));
+
+  @override
+  String get importAddFiles => pseudo(super.importAddFiles);
+
+  @override
+  String get importPartForeign => pseudo(super.importPartForeign);
+
+  @override
   String get exportBackups => pseudo(super.exportBackups);
 
   @override

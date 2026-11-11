@@ -309,6 +309,30 @@ and D1 (B7c) add theirs.
 | Web build | `flutter build web` compiles the new code (the conditional prepared-file store) |
 | Not yet | The device and web screenshot sweep runs with B7's gate after B7c; not run on devices |
 
+### B7b verification (2026-11-11, local)
+Settings › Export › Import a backup… takes one JSON v1 file (today's import, unchanged) or the files
+of a set, picked at once or over several picks (`data/export/picked_import.dart`). Files are read one
+at a time; one over the import limit is refused by its size, unread. A set's files must all be one
+export's (the first file says which); another backup's file is refused ("This file isn't part of this
+backup. Nothing was changed."). While files are missing, "Add the rest of this backup" says "{added}
+of {total} files added." with "Add files…". Once every file is in, the set is checked whole (every
+hash, index and count); a changed part is refused and leaves the draft, so the right file can be added
+in its place. Then today's confirmation, with the set's date and its tasks not in Trash (owner
+decision 2), and `BackupService.importSet` runs it through the staged pipeline under the fence after
+the verified pre-import backup; Undo as before. One picker for every import (owner decision 1):
+`FileGateway.pickBackup` and its result types are gone. Four approved strings; de, fr and es pending
+native-speaker review.
+
+| Gate | Result |
+|---|---|
+| Reader | `picked_import_test.dart`: one v1 file is today's import; a whole set complete, live tasks counted (a task in Trash not), read in order; gathered over picks, a part twice harmless; another backup's file, a v1 file among a set's, two v1 files: foreign; a changed part refused and removed, the right file completes it; over the limit refused unread; not UTF-8 or not a backup refused |
+| Flow | `import_set_test.dart`: a whole set goes to today's confirmation (date, 3 tasks) and imports in order, not as a single file; part of a set opens Add the rest, another backup's file is refused there, the rest completes it; closing it imports nothing; another backup's file in the first pick is refused before any question. Accessibility guidelines pass |
+| Same result | `staged_import_test.dart`: a set imported through the backup service gives exactly the pre-B5 fixture, after one pre-import backup |
+| Goldens (derived) | `import_set_add_rest_*` (light/dark × 3 widths × 1×/2×, + 2.0 text, RTL) |
+| Regression | Every existing Settings and export test passes; one named edit: `export_page_test.dart` asserted that the picker was handed the 25 MB limit, now that it opened once (the limit is checked by size before reading, which its too-large test still covers). The import tests' single-file shorthand (`PickedBytes`, `PickTooLarge`, `PickCancelled`) moved into the test fake |
+| Mutations | One v1 file among others accepted, any set accepted, no whole check, a changed part kept, size not checked before reading, Trash counted, a set imported without its safety backup, a set imported as a single file: 8 of 8 caught (the Trash count needed a task in Trash in the test set, added) |
+| Not yet | Device and web screenshot sweep with B7's gate after B7c |
+
 ## 7. Size policy and acceptance criteria (provisional)
 Provisional limits: **10 MB per written part, 25 MB per file read.** No maximum part count is adopted
 yet. Each limit is confirmed or changed only from measurements against these criteria (B8):

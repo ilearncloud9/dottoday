@@ -2864,6 +2864,21 @@ class AppLocalizationsEs extends AppLocalizations {
       'Puede que tu navegador te pida permitir varias descargas.';
 
   @override
+  String get importAddTitle => 'Añade el resto de esta copia';
+
+  @override
+  String importAddedCount(int added, int total) {
+    return '$added de $total archivos añadidos.';
+  }
+
+  @override
+  String get importAddFiles => 'Añadir archivos…';
+
+  @override
+  String get importPartForeign =>
+      'Este archivo no forma parte de esta copia. No se ha cambiado nada.';
+
+  @override
   String get exportBackups => 'En este dispositivo';
 
   @override

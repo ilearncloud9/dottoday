@@ -2870,6 +2870,21 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dein Browser fragt eventuell, ob mehrere Downloads erlaubt sind.';
 
   @override
+  String get importAddTitle => 'Füge den Rest dieser Sicherung hinzu';
+
+  @override
+  String importAddedCount(int added, int total) {
+    return '$added von $total Dateien hinzugefügt.';
+  }
+
+  @override
+  String get importAddFiles => 'Dateien hinzufügen…';
+
+  @override
+  String get importPartForeign =>
+      'Diese Datei gehört nicht zu dieser Sicherung. Es wurde nichts geändert.';
+
+  @override
   String get exportBackups => 'Auf diesem Gerät';
 
   @override

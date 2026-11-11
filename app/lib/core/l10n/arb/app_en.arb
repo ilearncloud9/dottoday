@@ -4178,6 +4178,14 @@
   "@exportDownloaded": {"description": "Web (CR-160 B7): a file of the set whose download was requested."},
   "exportDownloadNote": "Your browser may ask you to allow several downloads.",
   "@exportDownloadNote": {"description": "Web (CR-160 B7): note under the download list."},
+  "importAddTitle": "Add the rest of this backup",
+  "@importAddTitle": {"description": "Settings › Export › Import (CR-160 B7): sheet shown while some files of a multipart backup are still missing."},
+  "importAddedCount": "{added} of {total} files added.",
+  "@importAddedCount": {"description": "Settings › Export › Import (CR-160 B7): how many files of the set are in.", "placeholders": {"added": {"type": "int"}, "total": {"type": "int"}}},
+  "importAddFiles": "Add files…",
+  "@importAddFiles": {"description": "Settings › Export › Import (CR-160 B7): picks more files of the set."},
+  "importPartForeign": "This file isn’t part of this backup. Nothing was changed.",
+  "@importPartForeign": {"description": "Settings › Export › Import (CR-160 B7): a picked file belongs to another backup."},
   "exportBackups": "On this device",
   "@exportBackups": {
     "description": "Export page group caption for local backups."

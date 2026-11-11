@@ -98,7 +98,7 @@ void main() {
     files.picked = PickedBytes(utf8.encode(text));
     await pump(tester);
     await _tap(tester, 'Import a backup…');
-    expect(files.pickLimits, [maxImportBytes]);
+    expect(files.picks, 1);
     expect(find.text('Replace your tasks with this backup?'), findsOneWidget);
     expect(find.textContaining('has 3 tasks'), findsOneWidget);
     expect(find.textContaining('moves to Trash'), findsOneWidget);
