@@ -2811,6 +2811,52 @@ class AppLocalizationsEn extends AppLocalizations {
       'This operation can’t continue because Dottoday can’t create a backup it can restore. Your existing data hasn’t been changed.';
 
   @override
+  String exportSetIntro(int count) {
+    return 'Your data is large, so it’s saved as $count files. Keep them together: you need every one to restore.';
+  }
+
+  @override
+  String exportSetDone(int count) {
+    return 'Exported as $count files';
+  }
+
+  @override
+  String get exportCheckFiles => 'Check my files…';
+
+  @override
+  String get exportCheckFilesDetail =>
+      'Pick every file to confirm they’re complete';
+
+  @override
+  String exportCheckAll(int count) {
+    return 'All $count files are here and complete.';
+  }
+
+  @override
+  String exportCheckMissing(int missing, int count) {
+    return '$missing of $count files are missing. Pick the manifest and every part.';
+  }
+
+  @override
+  String get exportCheckWrong =>
+      'These files don’t match this export. Pick the files you just saved.';
+
+  @override
+  String exportDownloadTitle(int count) {
+    return 'Download $count files';
+  }
+
+  @override
+  String get exportDownload => 'Download';
+
+  @override
+  String get exportDownloaded => 'Downloaded';
+
+  @override
+  String get exportDownloadNote =>
+      'Your browser may ask you to allow several downloads.';
+
+  @override
   String get exportBackups => 'On this device';
 
   @override

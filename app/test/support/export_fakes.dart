@@ -5,6 +5,8 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/export/export_service.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
+import 'package:dottoday/data/export/multipart_export.dart';
+import 'package:dottoday/data/export/prepared_file.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/export/export_files.dart';
 
@@ -53,7 +55,44 @@ final class FakeFileGateway implements FileGateway {
     pickLimits.add(maxBytes);
     return picked;
   }
+
+  /// What [pickJsonFiles] returns next (then cleared); empty: closed.
+  List<PickedFile> pickedFiles = const [];
+
+  /// Prepared sets handed to [deliverPrepared].
+  final deliveredSets = <List<PreparedFile>>[];
+
+  /// Files [downloadPrepared] was asked for, by name.
+  final downloads = <String>[];
+
+  @override
+  Future<List<PickedFile>> pickJsonFiles() async {
+    final files = pickedFiles;
+    pickedFiles = const [];
+    return files;
+  }
+
+  @override
+  Future<DeliveryOutcome> deliverPrepared(
+    List<PreparedFile> files, {
+    Rect? origin,
+  }) async {
+    if (throws case final e?) throw e;
+    deliveredSets.add(files);
+    return outcome;
+  }
+
+  @override
+  Future<void> downloadPrepared(PreparedFile file) async {
+    if (throws case final e?) throw e;
+    downloads.add(file.name);
+  }
 }
+
+/// [files] as picked files read from their bytes.
+List<PickedFile> pickedFrom(List<PreparedFile> files) => [
+  for (final f in files) PickedFile(f.name, f.size, () async => f.bytes!),
+];
 
 /// One file per format, named after it.
 final class FakeExportService implements ExportService {
@@ -79,6 +118,19 @@ final class FakeExportService implements ExportService {
         content: format.name,
       ),
     ]);
+  }
+
+  /// What [prepareSet] gives (default: the account fits one file).
+  Result<PreparedExport, AppFailure> set = const Ok(FitsOneFile());
+  final setVersions = <String>[];
+
+  @override
+  Future<Result<PreparedExport, AppFailure>> prepareSet(
+    String userId, {
+    required String appVersion,
+  }) async {
+    setVersions.add(appVersion);
+    return set;
   }
 }
 

@@ -9,11 +9,14 @@ import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/export/export_providers.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
+import 'package:dottoday/data/export/multipart_export.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
+import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/export/export_bundle.dart';
 import 'package:dottoday/domain/export/export_files.dart';
 import 'package:dottoday/domain/export/export_json.dart';
+import 'package:dottoday/features/settings/widgets/export_set_sheet.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,6 +35,23 @@ Future<void> exportAs(BuildContext context, ExportFormat format) async {
   final l10n = context.l10n;
   final origin = _originOf(context);
   final profile = await readProfile(container);
+  // Over one part, JSON is a set (CR-160 B7, owner: automatic).
+  if (format == ExportFormat.json) {
+    final version = await container.read(appVersionProvider.future);
+    final set = await container
+        .read(exportServiceProvider)
+        .prepareSet(profile.id, appVersion: version);
+    switch (set) {
+      case Ok(value: final PreparedSet value):
+        if (context.mounted) await handOverSet(context, value, origin);
+        return;
+      case Ok(value: FitsOneFile()):
+        break; // today's single file, below
+      case Err(:final failure):
+        _say(messenger, failureMessage(l10n, failure));
+        return;
+    }
+  }
   final built = await container
       .read(exportServiceProvider)
       .build(profile.id, format);

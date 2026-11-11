@@ -2,6 +2,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/export/export_service.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
+import 'package:dottoday/data/export/multipart_export.dart';
 import 'package:dottoday/data/owners/account_export.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/export/export_bundle.dart';
@@ -58,6 +59,12 @@ final class _ShortExport implements ExportService {
       ),
     );
   }
+
+  @override
+  Future<Result<PreparedExport, AppFailure>> prepareSet(
+    String userId, {
+    required String appVersion,
+  }) => real.prepareSet(userId, appVersion: appVersion);
 }
 
 void main() {

@@ -2171,6 +2171,41 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get backupNotRestorable => pseudo(super.backupNotRestorable);
 
   @override
+  String exportSetIntro(int count) => pseudo(super.exportSetIntro(count));
+
+  @override
+  String exportSetDone(int count) => pseudo(super.exportSetDone(count));
+
+  @override
+  String get exportCheckFiles => pseudo(super.exportCheckFiles);
+
+  @override
+  String get exportCheckFilesDetail => pseudo(super.exportCheckFilesDetail);
+
+  @override
+  String exportCheckAll(int count) => pseudo(super.exportCheckAll(count));
+
+  @override
+  String exportCheckMissing(int missing, int count) =>
+      pseudo(super.exportCheckMissing(missing, count));
+
+  @override
+  String get exportCheckWrong => pseudo(super.exportCheckWrong);
+
+  @override
+  String exportDownloadTitle(int count) =>
+      pseudo(super.exportDownloadTitle(count));
+
+  @override
+  String get exportDownload => pseudo(super.exportDownload);
+
+  @override
+  String get exportDownloaded => pseudo(super.exportDownloaded);
+
+  @override
+  String get exportDownloadNote => pseudo(super.exportDownloadNote);
+
+  @override
   String get exportBackups => pseudo(super.exportBackups);
 
   @override

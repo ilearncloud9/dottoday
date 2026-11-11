@@ -284,6 +284,31 @@ Owner decisions (B6 plan):
 | Mutations | Completeness not checked (prepare and D1), handoff counted as done, confirmation without the check, `uncertain` letting the deletion through, D1 dropping imported events, native store skipping its read-back, possession ignoring the manifest or a missing part, never a single file: 10 of 10 caught |
 | Memory and time (host VM, SQLCipher file, three runs per scope) | 59 MB account as 6 parts prepared as temporary files: Settings scope 2.9–3.0 s at 49–71 MB above idle; D1 scope 2.2–2.3 s at 52–70 MB. Within §7's 100 MB. Idle measured after a 60 MB import in the same process; not device figures; web not measured |
 
+### B7a verification (2026-11-11, local)
+Settings › Export › Everything (JSON) over one part is a set, automatically (B6 decision 2); below one
+part nothing changes. iPhone and Android hand every prepared file to one share sheet by path; the Mac
+copies them into a folder the person picks (`.part`, then renamed); then a sheet says "Exported as N
+files" with what that means and "Check my files…". The web lists one Download per file (the browser
+may block a burst), each marked "Downloaded" once asked, with the same check. The check
+(`data/export/picked_set_check.dart`) reads the picked files one at a time and answers complete, how
+many are missing, or that they don't match. The prepared files are removed when the sheet closes, or
+at once when the share sheet is closed or fails. New: `FileGateway.pickJsonFiles`,
+`deliverPrepared`, `downloadPrepared`; `ExportService.prepareSet`.
+
+Copy: the owner approved the B7 copy (2026-11-11). Eleven strings land in B7a; German, French and
+Spanish are drafted here and **pending native-speaker review**, like B0's size refusal. Import (B7b)
+and D1 (B7c) add theirs.
+
+| Gate | Result |
+|---|---|
+| Flow | `export_set_test.dart`: native hands every file over at once (no single file), then the sheet and a complete check; missing and another export's files answered; a closed share sheet shows nothing; the web lists one Download per file, marks each, hands nothing over by share. Accessibility guidelines (targets, labels, contrast) pass on both |
+| Check | `picked_set_check_test.dart`: complete in any order; the manifest, some parts or everything missing (counted); another export, this set's parts under another manifest, a changed or unreadable file, a file or manifest twice: wrong |
+| Goldens (derived) | `export_set_native_*` (light/dark × compact/medium/expanded × 1×/2×, + 2.0 text, RTL) and `export_set_web_*` (medium, expanded) |
+| Regression | Every existing Settings and export test passes; edits: three D1 test fakes forward `prepareSet`, the shared fake gateway and export service gain the new methods |
+| Mutations | JSON never a set, the check ignoring missing parts or another manifest, the web handing over like native, a closed share sheet still showing the sheet: 5 of 5 caught (the foreign-manifest case needed its own test, added) |
+| Web build | `flutter build web` compiles the new code (the conditional prepared-file store) |
+| Not yet | The device and web screenshot sweep runs with B7's gate after B7c; not run on devices |
+
 ## 7. Size policy and acceptance criteria (provisional)
 Provisional limits: **10 MB per written part, 25 MB per file read.** No maximum part count is adopted
 yet. Each limit is confirmed or changed only from measurements against these criteria (B8):

@@ -4110,6 +4110,72 @@ abstract class AppLocalizations {
   /// **'This operation can’t continue because Dottoday can’t create a backup it can restore. Your existing data hasn’t been changed.'**
   String get backupNotRestorable;
 
+  /// Settings › Export (CR-160 B7): a JSON export over the part target is saved as a set of files (a manifest and its parts).
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is large, so it’s saved as {count} files. Keep them together: you need every one to restore.'**
+  String exportSetIntro(int count);
+
+  /// Settings › Export (CR-160 B7): title of the sheet after a set was handed to the share sheet or save dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Exported as {count} files'**
+  String exportSetDone(int count);
+
+  /// Settings › Export and Delete account (CR-160 B7): picks every file of a set back to confirm they were saved complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Check my files…'**
+  String get exportCheckFiles;
+
+  /// Settings › Export (CR-160 B7): detail under “Check my files…”.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick every file to confirm they’re complete'**
+  String get exportCheckFilesDetail;
+
+  /// Settings › Export (CR-160 B7): every file of the set was picked back and matched.
+  ///
+  /// In en, this message translates to:
+  /// **'All {count} files are here and complete.'**
+  String exportCheckAll(int count);
+
+  /// Settings › Export (CR-160 B7): files of the set were not picked back.
+  ///
+  /// In en, this message translates to:
+  /// **'{missing} of {count} files are missing. Pick the manifest and every part.'**
+  String exportCheckMissing(int missing, int count);
+
+  /// Settings › Export (CR-160 B7): the picked files are another export's, changed, or picked twice.
+  ///
+  /// In en, this message translates to:
+  /// **'These files don’t match this export. Pick the files you just saved.'**
+  String get exportCheckWrong;
+
+  /// Web (CR-160 B7): title of the per-file download list for a set.
+  ///
+  /// In en, this message translates to:
+  /// **'Download {count} files'**
+  String exportDownloadTitle(int count);
+
+  /// Web (CR-160 B7): button that downloads one file of a set.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get exportDownload;
+
+  /// Web (CR-160 B7): a file of the set whose download was requested.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded'**
+  String get exportDownloaded;
+
+  /// Web (CR-160 B7): note under the download list.
+  ///
+  /// In en, this message translates to:
+  /// **'Your browser may ask you to allow several downloads.'**
+  String get exportDownloadNote;
+
   /// Export page group caption for local backups.
   ///
   /// In en, this message translates to:

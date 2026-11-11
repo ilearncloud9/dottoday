@@ -2824,6 +2824,52 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dieser Vorgang kann nicht fortgesetzt werden, weil Dottoday keine Sicherung erstellen kann, die sich wiederherstellen lässt. Deine vorhandenen Daten wurden nicht geändert.';
 
   @override
+  String exportSetIntro(int count) {
+    return 'Deine Daten sind groß, daher werden sie als $count Dateien gespeichert. Bewahre sie zusammen auf: Zum Wiederherstellen brauchst du jede einzelne.';
+  }
+
+  @override
+  String exportSetDone(int count) {
+    return 'Als $count Dateien exportiert';
+  }
+
+  @override
+  String get exportCheckFiles => 'Meine Dateien prüfen…';
+
+  @override
+  String get exportCheckFilesDetail =>
+      'Wähle alle Dateien aus, um zu bestätigen, dass sie vollständig sind';
+
+  @override
+  String exportCheckAll(int count) {
+    return 'Alle $count Dateien sind da und vollständig.';
+  }
+
+  @override
+  String exportCheckMissing(int missing, int count) {
+    return '$missing von $count Dateien fehlen. Wähle das Manifest und jeden Teil aus.';
+  }
+
+  @override
+  String get exportCheckWrong =>
+      'Diese Dateien gehören nicht zu diesem Export. Wähle die Dateien aus, die du gerade gespeichert hast.';
+
+  @override
+  String exportDownloadTitle(int count) {
+    return '$count Dateien herunterladen';
+  }
+
+  @override
+  String get exportDownload => 'Herunterladen';
+
+  @override
+  String get exportDownloaded => 'Heruntergeladen';
+
+  @override
+  String get exportDownloadNote =>
+      'Dein Browser fragt eventuell, ob mehrere Downloads erlaubt sind.';
+
+  @override
   String get exportBackups => 'Auf diesem Gerät';
 
   @override

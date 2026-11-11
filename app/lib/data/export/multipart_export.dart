@@ -30,10 +30,20 @@ final class FitsOneFile extends PreparedExport {
 
 /// A prepared set: its manifest (first) and parts, in order.
 final class PreparedSet extends PreparedExport {
-  const PreparedSet(this.manifest, this.manifestFile, this.parts);
+  const PreparedSet(
+    this.manifest,
+    this.manifestFile,
+    this.parts, [
+    this._store,
+  ]);
   final ExportManifest manifest;
   final PreparedFile manifestFile;
   final List<PreparedFile> parts;
+  final PreparedFileStore? _store;
+
+  /// Removes the prepared files once they were handed over and the person
+  /// is done with them.
+  Future<void> discard() async => _store?.discard();
 
   /// Every file, the manifest first.
   List<PreparedFile> get files => [manifestFile, ...parts];
@@ -122,7 +132,7 @@ Future<Result<PreparedExport, AppFailure>> prepareMultipartExport(
         utf8.encode(text),
         sha256Hex(text),
       );
-      return Ok(PreparedSet(manifest, file, parts));
+      return Ok(PreparedSet(manifest, file, parts, store));
     });
   } on PreparedMismatch {
     logger.error('export.prepare_mismatch');

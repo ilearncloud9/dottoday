@@ -4156,6 +4156,28 @@
   "@backupNotRestorable": {
     "description": "Settings › Export (CR-160 backup safety): an import or restore stopped because its safety backup could not be read back as a restorable copy; nothing was changed."
   },
+  "exportSetIntro": "Your data is large, so it’s saved as {count} files. Keep them together: you need every one to restore.",
+  "@exportSetIntro": {"description": "Settings › Export (CR-160 B7): a JSON export over the part target is saved as a set of files (a manifest and its parts).", "placeholders": {"count": {"type": "int"}}},
+  "exportSetDone": "Exported as {count} files",
+  "@exportSetDone": {"description": "Settings › Export (CR-160 B7): title of the sheet after a set was handed to the share sheet or save dialog.", "placeholders": {"count": {"type": "int"}}},
+  "exportCheckFiles": "Check my files…",
+  "@exportCheckFiles": {"description": "Settings › Export and Delete account (CR-160 B7): picks every file of a set back to confirm they were saved complete."},
+  "exportCheckFilesDetail": "Pick every file to confirm they’re complete",
+  "@exportCheckFilesDetail": {"description": "Settings › Export (CR-160 B7): detail under “Check my files…”."},
+  "exportCheckAll": "All {count} files are here and complete.",
+  "@exportCheckAll": {"description": "Settings › Export (CR-160 B7): every file of the set was picked back and matched.", "placeholders": {"count": {"type": "int"}}},
+  "exportCheckMissing": "{missing} of {count} files are missing. Pick the manifest and every part.",
+  "@exportCheckMissing": {"description": "Settings › Export (CR-160 B7): files of the set were not picked back.", "placeholders": {"missing": {"type": "int"}, "count": {"type": "int"}}},
+  "exportCheckWrong": "These files don’t match this export. Pick the files you just saved.",
+  "@exportCheckWrong": {"description": "Settings › Export (CR-160 B7): the picked files are another export's, changed, or picked twice."},
+  "exportDownloadTitle": "Download {count} files",
+  "@exportDownloadTitle": {"description": "Web (CR-160 B7): title of the per-file download list for a set.", "placeholders": {"count": {"type": "int"}}},
+  "exportDownload": "Download",
+  "@exportDownload": {"description": "Web (CR-160 B7): button that downloads one file of a set."},
+  "exportDownloaded": "Downloaded",
+  "@exportDownloaded": {"description": "Web (CR-160 B7): a file of the set whose download was requested."},
+  "exportDownloadNote": "Your browser may ask you to allow several downloads.",
+  "@exportDownloadNote": {"description": "Web (CR-160 B7): note under the download list."},
   "exportBackups": "On this device",
   "@exportBackups": {
     "description": "Export page group caption for local backups."

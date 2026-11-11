@@ -7,6 +7,7 @@ import 'package:dottoday/data/backup/drift_backup_service.dart';
 import 'package:dottoday/data/calendar/calendar_importer.dart';
 import 'package:dottoday/data/calendar/drift_calendar_source_repository.dart';
 import 'package:dottoday/data/export/export_service.dart';
+import 'package:dottoday/data/export/multipart_export.dart';
 import 'package:dottoday/data/mappers/entity_mappers.dart';
 import 'package:dottoday/data/owners/account_export.dart';
 import 'package:dottoday/data/owners/deletion_seal.dart';
@@ -146,6 +147,12 @@ final class _WithoutImports implements ExportService {
     ExportFormat format, {
     bool forAccountDeletion = false,
   }) => real.build(userId, format);
+
+  @override
+  Future<Result<PreparedExport, AppFailure>> prepareSet(
+    String userId, {
+    required String appVersion,
+  }) => real.prepareSet(userId, appVersion: appVersion);
 }
 
 void main() {

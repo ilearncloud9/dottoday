@@ -2818,6 +2818,52 @@ class AppLocalizationsEs extends AppLocalizations {
       'Esta operación no puede continuar porque Dottoday no puede crear una copia de seguridad que pueda restaurar. Tus datos actuales no se han modificado.';
 
   @override
+  String exportSetIntro(int count) {
+    return 'Tus datos son grandes, así que se guardan en $count archivos. Mantenlos juntos: necesitas todos para restaurar.';
+  }
+
+  @override
+  String exportSetDone(int count) {
+    return 'Exportado en $count archivos';
+  }
+
+  @override
+  String get exportCheckFiles => 'Comprobar mis archivos…';
+
+  @override
+  String get exportCheckFilesDetail =>
+      'Elige todos los archivos para confirmar que están completos';
+
+  @override
+  String exportCheckAll(int count) {
+    return 'Los $count archivos están aquí y completos.';
+  }
+
+  @override
+  String exportCheckMissing(int missing, int count) {
+    return 'Faltan $missing de $count archivos. Elige el manifiesto y cada parte.';
+  }
+
+  @override
+  String get exportCheckWrong =>
+      'Estos archivos no corresponden a esta exportación. Elige los archivos que acabas de guardar.';
+
+  @override
+  String exportDownloadTitle(int count) {
+    return 'Descargar $count archivos';
+  }
+
+  @override
+  String get exportDownload => 'Descargar';
+
+  @override
+  String get exportDownloaded => 'Descargado';
+
+  @override
+  String get exportDownloadNote =>
+      'Puede que tu navegador te pida permitir varias descargas.';
+
+  @override
   String get exportBackups => 'En este dispositivo';
 
   @override

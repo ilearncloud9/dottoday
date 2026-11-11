@@ -1,9 +1,13 @@
 import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/backup/user_data_snapshot.dart';
 import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/export/multipart_export.dart';
+import 'package:dottoday/data/export/part_stream.dart';
+import 'package:dottoday/data/export/prepared_file.dart';
 import 'package:dottoday/domain/export/export_files.dart';
 import 'package:dottoday/domain/export/export_json.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -22,6 +26,16 @@ abstract interface class ExportService {
     ExportFormat format, {
     bool forAccountDeletion = false,
   });
+
+  /// The JSON export as a multipart set when it's over one part (CR-160
+  /// B7, docs/cr-160-multipart-export.md §4): each file prepared (written
+  /// and read back to its hash) before anything is handed over.
+  /// [FitsOneFile] means [build] applies. [appVersion] goes in the
+  /// manifest.
+  Future<Result<PreparedExport, AppFailure>> prepareSet(
+    String userId, {
+    required String appVersion,
+  });
 }
 
 /// [ExportService] reading one consistent snapshot of the database: the
@@ -32,13 +46,16 @@ final class DriftExportService implements ExportService {
     required AppDatabase db,
     required Clock clock,
     required Logger logger,
+    IdGenerator ids = const UuidV7Generator(),
   }) : _db = db,
        _clock = clock,
-       _logger = logger;
+       _logger = logger,
+       _ids = ids;
 
   final AppDatabase _db;
   final Clock _clock;
   final Logger _logger;
+  final IdGenerator _ids;
 
   @override
   Future<Result<List<ExportFile>, AppFailure>> build(
@@ -70,6 +87,30 @@ final class DriftExportService implements ExportService {
       );
       return const Err(StorageFailure());
     }
+  }
+
+  @override
+  Future<Result<PreparedExport, AppFailure>> prepareSet(
+    String userId, {
+    required String appVersion,
+  }) async {
+    final now = _clock.nowUtc();
+    final profile = await (_db.select(
+      _db.profiles,
+    )..where((p) => p.id.equals(userId))).getSingleOrNull();
+    if (profile == null) return const Err(StorageFailure());
+    return prepareMultipartExport(
+      _db,
+      userId,
+      scope: RowScope.standard,
+      store: platformPreparedFileStore(),
+      logger: _logger,
+      nowUtc: now,
+      exportId: _ids.newId(),
+      appVersion: appVersion,
+      schemaVersion: AppDatabase.latestSchemaVersion,
+      date: _localDate(now, profile.tzId),
+    );
   }
 
   /// `yyyy-MM-dd` in [tzId] (UTC if the zone is unknown), ASCII digits.
