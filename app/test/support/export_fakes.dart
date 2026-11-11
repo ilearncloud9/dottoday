@@ -158,12 +158,18 @@ final class FakeExportService implements ExportService {
   Result<PreparedExport, AppFailure> set = const Ok(FitsOneFile());
   final setVersions = <String>[];
 
+  /// Whether each [prepareSet] was D1's.
+  final setForDeletion = <bool>[];
+
   @override
   Future<Result<PreparedExport, AppFailure>> prepareSet(
     String userId, {
-    required String appVersion,
+    required Future<String> Function() appVersion,
+    bool forAccountDeletion = false,
+    CompleteCheck? complete,
   }) async {
-    setVersions.add(appVersion);
+    setVersions.add(await appVersion());
+    setForDeletion.add(forAccountDeletion);
     return set;
   }
 }

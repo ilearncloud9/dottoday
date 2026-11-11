@@ -7,9 +7,12 @@ import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/export/file_gateway.dart';
+import 'package:dottoday/data/export/picked_set_check.dart';
 import 'package:dottoday/data/owners/account_deletion.dart';
 import 'package:dottoday/data/owners/account_export.dart';
 import 'package:dottoday/data/owners/account_meta.dart';
+import 'package:dottoday/data/owners/deletion_sets.dart';
 import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/sync/account_owners.dart';
@@ -65,8 +68,26 @@ abstract interface class AccountActions {
   /// D1 "Export my data first" for [owner], checked (see
   /// [exportOwnerChecked]). What widgets and the share extension queued for
   /// [owner] is applied first, so the file holds it; anything that can't
-  /// be applied fails the export (CR-160 I7).
-  Future<OwnerExportOutcome> exportFirst(String owner, {Rect? origin});
+  /// be applied fails the export (CR-160 I7). An account too large for
+  /// one file is exported as a set (CR-160 B7c), handed over by
+  /// [handOver] when given (the web's per-file downloads), else the share
+  /// sheet or a folder; it is [OwnerExportOutcome.uncertain] until
+  /// [checkExport] confirms it.
+  Future<OwnerExportOutcome> exportFirst(
+    String owner, {
+    Rect? origin,
+    SetHandOver? handOver,
+  });
+
+  /// D1 "Check my files" (CR-160 B7c): [picked] against the set [owner]'s
+  /// last export handed over. A complete set makes that export
+  /// [OwnerExportOutcome.done], in this D1 session and owner session only.
+  /// Null when there is no uncertain set to check.
+  Future<PickedSetCheck?> checkExport(String owner, List<PickedFile> picked);
+
+  /// How many files [owner]'s last D1 set is, the manifest counted; null
+  /// when the last export wasn't a set.
+  int? exportFileCount(String owner);
 
   /// D1's summary: [owner]'s tasks and unsynced changes, after what was
   /// queued for [owner] is applied. From here until [endDeletion], new
@@ -169,8 +190,18 @@ final class DeviceAccountActions implements AccountActions {
   late final _deletion = AccountDeletion(_ref);
 
   @override
-  Future<OwnerExportOutcome> exportFirst(String owner, {Rect? origin}) =>
-      _deletion.exportFirst(owner, origin: origin);
+  Future<OwnerExportOutcome> exportFirst(
+    String owner, {
+    Rect? origin,
+    SetHandOver? handOver,
+  }) => _deletion.exportFirst(owner, origin: origin, handOver: handOver);
+
+  @override
+  Future<PickedSetCheck?> checkExport(String owner, List<PickedFile> picked) =>
+      _deletion.checkExport(owner, picked);
+
+  @override
+  int? exportFileCount(String owner) => _deletion.exportFileCount(owner);
 
   @override
   Future<OwnerSummary> summary(String owner) => _deletion.summary(owner);

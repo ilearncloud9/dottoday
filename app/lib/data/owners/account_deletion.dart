@@ -9,12 +9,16 @@ import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/db/owned_local_meta.dart';
 import 'package:dottoday/data/export/export_providers.dart';
+import 'package:dottoday/data/export/file_gateway.dart';
+import 'package:dottoday/data/export/picked_set_check.dart';
 import 'package:dottoday/data/intents/action_queue_drainer.dart';
 import 'package:dottoday/data/intents/intent_providers.dart';
 import 'package:dottoday/data/intents/queue_owners.dart';
 import 'package:dottoday/data/owners/account_export.dart';
+import 'package:dottoday/data/owners/account_export_set.dart';
 import 'package:dottoday/data/owners/account_meta.dart';
 import 'package:dottoday/data/owners/deletion_seal.dart';
+import 'package:dottoday/data/owners/deletion_sets.dart';
 import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/sync/pull_guard.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
@@ -47,6 +51,7 @@ final class AccountDeletion {
   ActionQueueDrainer get _drainer => _ref.read(actionQueueDrainerProvider);
 
   final _reviewed = <String, _Review>{};
+  final _sets = DeletionSets(); // the set each D1 export handed over (B7c)
 
   /// D1's last export per owner in this D1 session and owner session
   /// (CR-160 Stage C): running, or how it ended.
@@ -82,20 +87,29 @@ final class AccountDeletion {
 
   /// See `AccountActions.exportFirst`. Records how it went, for the gate
   /// in [deleteAccount].
-  Future<OwnerExportOutcome> exportFirst(String owner, {Rect? origin}) async {
+  Future<OwnerExportOutcome> exportFirst(
+    String owner, {
+    Rect? origin,
+    SetHandOver? handOver,
+  }) async {
     final session = _sessions[owner] ?? 0;
     // Running from this instant, before any await: a deletion asked for
     // meanwhile waits for its outcome (never slips through before it).
     _exports[owner] = (generation: null, outcome: null);
     final generation = await ownerGeneration(_db);
-    final outcome = await _export(owner, origin);
+    await _sets.clear(owner);
+    final outcome = await _export(owner, origin, handOver);
     if ((_sessions[owner] ?? 0) == session) {
       _exports[owner] = (generation: generation, outcome: outcome);
     }
     return outcome;
   }
 
-  Future<OwnerExportOutcome> _export(String owner, Rect? origin) async {
+  Future<OwnerExportOutcome> _export(
+    String owner,
+    Rect? origin,
+    SetHandOver? handOver,
+  ) async {
     if ((await _review(owner)).isNotEmpty) {
       // Queued work the file can't hold: never "exported" without it.
       _ref.read(loggerProvider).error('account.export_queue_unapplied');
@@ -107,6 +121,10 @@ final class AccountDeletion {
       _ref.read(loggerProvider).info('account.export_unverified');
       return OwnerExportOutcome.failed;
     }
+    // Too large for one file: a set, uncertain until its files are
+    // checked (CR-160 B7c). Otherwise today's single file.
+    final set = await _sets.export(_ref, owner, origin, handOver);
+    if (set != null) return set;
     return exportOwnerChecked(
       db: _db,
       exports: _ref.read(exportServiceProvider),
@@ -116,6 +134,33 @@ final class AccountDeletion {
       origin: origin,
     );
   }
+
+  /// See `AccountActions.checkExport`.
+  Future<PickedSetCheck?> checkExport(
+    String owner,
+    List<PickedFile> picked,
+  ) async {
+    final (set, export) = (_sets.of(owner), _exports[owner]);
+    if (set == null || export?.outcome != OwnerExportOutcome.uncertain) {
+      return null;
+    }
+    final session = _sessions[owner];
+    final check = await confirmOwnerSet(set, picked);
+    // Done only in the D1 session and owner session the set was made in.
+    if (check is PickedSetComplete &&
+        _sessions[owner] == session &&
+        identical(_exports[owner], export) &&
+        export!.generation == await ownerGeneration(_db)) {
+      _exports[owner] = (
+        generation: export.generation,
+        outcome: OwnerExportOutcome.done,
+      );
+    }
+    return check;
+  }
+
+  /// See `AccountActions.exportFileCount`.
+  int? exportFileCount(String owner) => _sets.fileCount(owner);
 
   /// See `AccountActions.waiveExport`.
   bool waiveExport(String owner) {
@@ -131,21 +176,11 @@ final class AccountDeletion {
   }
 
   /// Why the last export in this D1 session left no restorable copy, or
-  /// null (none asked for, or one handed over). A running one counts.
-  ExportNotSavedFailure? _shortfall(String owner) => switch (_exports[owner]) {
-    null => null,
-    (outcome: OwnerExportOutcome.done, generation: _) => null,
-    (outcome: null, generation: _) => const ExportNotSavedFailure(
-      retryable: false,
-    ),
-    (outcome: OwnerExportOutcome.tooLarge, generation: _) =>
-      const ExportNotSavedFailure(retryable: false),
-    (
-      outcome: OwnerExportOutcome.cancelled || OwnerExportOutcome.failed,
-      generation: _,
-    ) =>
-      const ExportNotSavedFailure(retryable: true),
-  };
+  /// null (none asked for, or one handed over): [exportShortfall].
+  ExportNotSavedFailure? _shortfall(String owner) => exportShortfall(
+    asked: _exports.containsKey(owner),
+    outcome: _exports[owner]?.outcome,
+  );
 
   /// See `AccountActions.summary`.
   Future<OwnerSummary> summary(String owner) async {
@@ -250,6 +285,7 @@ final class AccountDeletion {
     _reviewed.remove(owner);
     _exports.remove(owner);
     _waivedOn.remove(owner);
+    unawaited(_sets.clear(owner));
     _sessions[owner] = (_sessions[owner] ?? 0) + 1;
     if (_sealKept.remove(owner)) {
       // Local only: the server's freeze (if the request got that far)

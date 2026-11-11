@@ -1,99 +1,65 @@
-/// D1's export as a multipart set (CR-160 Stage B6,
+/// D1's export as a multipart set (CR-160 Stage B6/B7c,
 /// docs/cr-160-multipart-export.md §10): only possession confirmed ends
-/// well; a handoff without it is uncertain and, like a cancelled export,
-/// leaves the deletion refused until the files are confirmed or the person
-/// chooses to delete without a saved copy. The single-file D1 rule is
-/// unchanged (decision 7). Reachable from tests only until B7.
+/// well; a handoff without it is [OwnerExportOutcome.uncertain] and, like
+/// a cancelled export, leaves the deletion waiting until the files are
+/// confirmed or the person chooses to delete without a saved copy. The
+/// single-file D1 rule is unchanged (decision 7).
 library;
 
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/export/export_service.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
 import 'package:dottoday/data/export/multipart_export.dart';
-import 'package:dottoday/data/export/part_stream.dart';
+import 'package:dottoday/data/export/picked_set_check.dart';
 import 'package:dottoday/data/export/prepared_file.dart';
 import 'package:dottoday/data/owners/account_export.dart';
-import 'package:dottoday/domain/export/export_handoff.dart';
-import 'package:dottoday/domain/export/multipart_format.dart';
 
-/// How a multipart D1 export ended.
-enum OwnerSetOutcome {
-  /// Possession confirmed: every file picked back and matched.
-  done,
-
-  /// Handed over, not confirmed: deletion refused like [cancelled].
-  uncertain,
-
-  /// The share sheet or save dialog was closed.
-  cancelled,
-
-  /// A part wasn't prepared, rows were missing, or the handoff failed.
-  failed,
-
-  /// One row larger than any part (§4); exporting again won't help.
-  tooLarge,
-
-  /// The account fits one file: D1's single-file export applies.
-  singleFile,
-}
-
-/// A prepared, handed-over set and where it stands.
-typedef OwnerSet = ({OwnerSetOutcome outcome, PreparedSet? set});
+/// A handed-over set and how its handoff ended ([OwnerExportOutcome.done]
+/// only once its files are confirmed: [confirmOwnerSet]).
+typedef OwnerSet = ({OwnerExportOutcome outcome, PreparedSet? set});
 
 /// Prepares [owner]'s D1 set (imported calendar events as tasks, every
 /// template), checks it holds every row the device has in the same read,
-/// and hands it to [deliver].
-Future<OwnerSet> exportOwnerSet(
+/// and hands it to [deliver]. Null when the account fits one file: D1's
+/// single-file export applies, unchanged (decision 7).
+Future<OwnerSet?> exportOwnerSet(
   AppDatabase db,
   String owner, {
-  required PreparedFileStore store,
+  required ExportService exports,
   required Logger logger,
   required Future<DeliveryOutcome> Function(List<PreparedFile>) deliver,
-  required DateTime nowUtc,
-  required String exportId,
-  required String appVersion,
-  required int schemaVersion,
-  required String date,
-  int targetBytes = partTargetBytes,
+  required Future<String> Function() appVersion,
 }) async {
-  final prepared = await prepareMultipartExport(
-    db,
+  final prepared = await exports.prepareSet(
     owner,
-    scope: RowScope.accountDeletion,
-    store: store,
-    logger: logger,
-    nowUtc: nowUtc,
-    exportId: exportId,
     appVersion: appVersion,
-    schemaVersion: schemaVersion,
-    date: date,
-    targetBytes: targetBytes,
+    forAccountDeletion: true,
     complete: ownerSetComplete(db, owner),
   );
   final PreparedSet set;
   switch (prepared) {
     case Ok(value: FitsOneFile()):
-      return (outcome: OwnerSetOutcome.singleFile, set: null);
+      return null;
     case Ok(value: final PreparedSet value):
       set = value;
     case Err(failure: ExportTooLargeFailure()):
-      return (outcome: OwnerSetOutcome.tooLarge, set: null);
+      return (outcome: OwnerExportOutcome.tooLarge, set: null);
     case Err():
-      return (outcome: OwnerSetOutcome.failed, set: null);
+      return (outcome: OwnerExportOutcome.failed, set: null);
   }
   try {
-    final handed = await deliver(set.files);
-    return (
-      outcome: handed == DeliveryOutcome.delivered
-          ? OwnerSetOutcome.uncertain
-          : OwnerSetOutcome.cancelled,
-      set: set,
-    );
+    if (await deliver(set.files) == DeliveryOutcome.delivered) {
+      return (outcome: OwnerExportOutcome.uncertain, set: set);
+    }
+    await set.discard();
+    return (outcome: OwnerExportOutcome.cancelled, set: null);
   } on Exception catch (e, s) {
     logger.error('account.export_hand_off_failed', error: e, stackTrace: s);
-    return (outcome: OwnerSetOutcome.failed, set: set);
+    await set.discard();
+    return (outcome: OwnerExportOutcome.failed, set: null);
   }
 }
 
@@ -108,26 +74,29 @@ CompleteCheck ownerSetComplete(AppDatabase db, String owner) => (totals) async {
       totals['calendarSeries'] == local.calendarSeries;
 };
 
-/// [set] confirmed from the files picked back: [OwnerSetOutcome.done]
-/// only when they are exactly the prepared set; otherwise it stays
-/// [OwnerSetOutcome.uncertain].
-OwnerSetOutcome confirmOwnerSet(
+/// [picked] against [set], read one file at a time: only
+/// [PickedSetComplete] confirms it ([OwnerExportOutcome.done]).
+Future<PickedSetCheck> confirmOwnerSet(
   PreparedSet set,
-  String manifestText,
-  Iterable<String> parts,
-) => checkPossession(set.manifest, manifestText, parts) is PossessionConfirmed
-    ? OwnerSetOutcome.done
-    : OwnerSetOutcome.uncertain;
+  List<PickedFile> picked,
+) => checkPickedSet(set.manifest, picked);
 
-/// Why the last multipart D1 export left no confirmed copy, or null (none,
-/// confirmed, or a single file whose own rule applies): the deletion waits
-/// for a confirmation, another export or "Delete without a saved copy",
-/// as for a cancelled single-file export.
-ExportNotSavedFailure? setShortfall(OwnerSetOutcome? outcome) =>
-    switch (outcome) {
-      null || OwnerSetOutcome.done || OwnerSetOutcome.singleFile => null,
-      OwnerSetOutcome.tooLarge => const ExportNotSavedFailure(retryable: false),
-      OwnerSetOutcome.uncertain ||
-      OwnerSetOutcome.cancelled ||
-      OwnerSetOutcome.failed => const ExportNotSavedFailure(retryable: true),
-    };
+/// Why a D1 export left no restorable copy, so the deletion waits for
+/// another export, a confirmation or "Delete without a saved copy"; null
+/// when none was [asked] for or it was [OwnerExportOutcome.done]. A running
+/// one ([outcome] null) and a too-large one can't be retried.
+ExportNotSavedFailure? exportShortfall({
+  required bool asked,
+  required OwnerExportOutcome? outcome,
+}) {
+  if (!asked) return null;
+  return switch (outcome) {
+    OwnerExportOutcome.done => null,
+    null || OwnerExportOutcome.tooLarge => const ExportNotSavedFailure(
+      retryable: false,
+    ),
+    OwnerExportOutcome.uncertain ||
+    OwnerExportOutcome.cancelled ||
+    OwnerExportOutcome.failed => const ExportNotSavedFailure(retryable: true),
+  };
+}

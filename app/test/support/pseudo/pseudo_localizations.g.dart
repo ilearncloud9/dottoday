@@ -2219,6 +2219,14 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get importPartForeign => pseudo(super.importPartForeign);
 
   @override
+  String accountDeleteExportUncertain(int count) =>
+      pseudo(super.accountDeleteExportUncertain(count));
+
+  @override
+  String accountDeleteWithoutCopySetQuestion(int count) =>
+      pseudo(super.accountDeleteWithoutCopySetQuestion(count));
+
+  @override
   String get exportBackups => pseudo(super.exportBackups);
 
   @override

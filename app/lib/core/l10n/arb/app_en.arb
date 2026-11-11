@@ -4186,6 +4186,10 @@
   "@importAddFiles": {"description": "Settings › Export › Import (CR-160 B7): picks more files of the set."},
   "importPartForeign": "This file isn’t part of this backup. Nothing was changed.",
   "@importPartForeign": {"description": "Settings › Export › Import (CR-160 B7): a picked file belongs to another backup."},
+  "accountDeleteExportUncertain": "Your data was handed over as {count} files. We can’t confirm you saved all of them. Check your files, or export again.",
+  "@accountDeleteExportUncertain": {"description": "Delete account (CR-160 B7c): a set too large for one file was handed over but its files weren't picked back and matched.", "placeholders": {"count": {"type": "int"}}},
+  "accountDeleteWithoutCopySetQuestion": "Delete without a confirmed copy? We can’t confirm all {count} files were saved. You may permanently lose data that hasn’t been saved elsewhere.",
+  "@accountDeleteWithoutCopySetQuestion": {"description": "Delete account (CR-160 B7c): the separate confirmation after a set export that wasn't confirmed.", "placeholders": {"count": {"type": "int"}}},
   "exportBackups": "On this device",
   "@exportBackups": {
     "description": "Export page group caption for local backups."

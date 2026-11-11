@@ -73,14 +73,16 @@ void main() {
   test(
     'too large: refused, not retryable; the choice still lets it go',
     () async {
-      final notes = 'n' * 10000;
+      // Too large is one row larger than any part (CR-160 B7c, §10): an
+      // account over 25 MB is a set now. Parts of 1,500 bytes here.
+      await w.dispose();
+      w = await DeletionWorld.boot(_account, partTarget: 1500);
       await DriftOccurrenceRepository(w.db).upsertAll([
-        for (var i = 0; i < 2700; i++)
-          occurrenceFixture().copyWith(
-            id: '01928c3e-0000-7000-9000-${i.toString().padLeft(12, '0')}',
-            userId: _account,
-            notes: notes,
-          ),
+        occurrenceFixture().copyWith(
+          id: '01928c3e-0000-7000-9000-000000000001',
+          userId: _account,
+          notes: 'n' * 2000,
+        ),
       ]);
       expect(
         await w.actions.exportFirst(_account),

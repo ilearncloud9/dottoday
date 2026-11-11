@@ -2879,6 +2879,16 @@ class AppLocalizationsEs extends AppLocalizations {
       'Este archivo no forma parte de esta copia. No se ha cambiado nada.';
 
   @override
+  String accountDeleteExportUncertain(int count) {
+    return 'Tus datos se entregaron en $count archivos. No podemos confirmar que los hayas guardado todos. Comprueba tus archivos o vuelve a exportar.';
+  }
+
+  @override
+  String accountDeleteWithoutCopySetQuestion(int count) {
+    return '¿Eliminar sin una copia confirmada? No podemos confirmar que se guardaran los $count archivos. Podrías perder para siempre datos que no se hayan guardado en otro lugar.';
+  }
+
+  @override
   String get exportBackups => 'En este dispositivo';
 
   @override

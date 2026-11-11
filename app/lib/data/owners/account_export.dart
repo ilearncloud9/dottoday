@@ -19,6 +19,12 @@ enum OwnerExportOutcome {
   /// the person kept it.
   done,
 
+  /// A set too large for one file was handed over but its files were not
+  /// picked back and matched (CR-160 B7c, §10): the deletion waits, as
+  /// after [cancelled], until "Check my files" confirms them, another
+  /// export, or "Delete without a saved copy". A confirmed set is [done].
+  uncertain,
+
   /// The person closed the share sheet or save dialog: nothing was saved.
   cancelled,
 

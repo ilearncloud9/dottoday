@@ -36,10 +36,12 @@ Future<void> exportAs(BuildContext context, ExportFormat format) async {
   final profile = await readProfile(container);
   // Over one part, JSON is a set (CR-160 B7, owner: automatic).
   if (format == ExportFormat.json) {
-    final version = await container.read(appVersionProvider.future);
     final set = await container
         .read(exportServiceProvider)
-        .prepareSet(profile.id, appVersion: version);
+        .prepareSet(
+          profile.id,
+          appVersion: () => container.read(appVersionProvider.future),
+        );
     switch (set) {
       case Ok(value: final PreparedSet value):
         if (context.mounted) await handOverSet(context, value, origin);

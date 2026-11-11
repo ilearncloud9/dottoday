@@ -15,6 +15,7 @@ final class DeleteParts {
     required this.busy,
     required this.exportStatus,
     required this.error,
+    this.exportCheck,
     required this.onExport,
     required this.onCancel,
     required this.onDelete,
@@ -29,6 +30,9 @@ final class DeleteParts {
 
   /// How "Export my data first" went, said under it.
   final String? exportStatus;
+
+  /// "Check my files…" under it while a set export is uncertain (B7c).
+  final Widget? exportCheck;
 
   /// Why deleting didn't go through.
   final String? error;
@@ -58,6 +62,7 @@ class DeletePageLayout extends StatelessWidget {
           _ExportButton(p),
           DecisionNote(l10n.accountDeleteExportHint),
           if (p.exportStatus case final s?) StatusLine(s),
+          ?p.exportCheck,
           _Summary(p),
           _TypedWord(p),
           if (p.error case final e?) StatusLine(e),
@@ -132,6 +137,7 @@ class DeleteDialogLayout extends StatelessWidget {
                 ],
               ),
               if (p.exportStatus case final s?) StatusLine(s),
+              ?p.exportCheck,
               _Summary(p),
               _TypedWord(p),
               if (p.error case final e?) StatusLine(e),

@@ -2885,6 +2885,16 @@ class AppLocalizationsDe extends AppLocalizations {
       'Diese Datei gehört nicht zu dieser Sicherung. Es wurde nichts geändert.';
 
   @override
+  String accountDeleteExportUncertain(int count) {
+    return 'Deine Daten wurden als $count Dateien übergeben. Wir können nicht bestätigen, dass du alle gespeichert hast. Prüfe deine Dateien oder exportiere erneut.';
+  }
+
+  @override
+  String accountDeleteWithoutCopySetQuestion(int count) {
+    return 'Ohne bestätigte Kopie löschen? Wir können nicht bestätigen, dass alle $count Dateien gespeichert wurden. Daten, die nicht anderswo gespeichert sind, können dauerhaft verloren gehen.';
+  }
+
+  @override
   String get exportBackups => 'Auf diesem Gerät';
 
   @override

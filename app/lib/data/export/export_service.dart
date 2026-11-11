@@ -10,6 +10,7 @@ import 'package:dottoday/data/export/part_stream.dart';
 import 'package:dottoday/data/export/prepared_file.dart';
 import 'package:dottoday/domain/export/export_files.dart';
 import 'package:dottoday/domain/export/export_json.dart';
+import 'package:dottoday/domain/export/multipart_format.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Builds the export files (docs/09 M8.1, R-11). A port so widget tests
@@ -30,11 +31,15 @@ abstract interface class ExportService {
   /// The JSON export as a multipart set when it's over one part (CR-160
   /// B7, docs/cr-160-multipart-export.md §4): each file prepared (written
   /// and read back to its hash) before anything is handed over.
-  /// [FitsOneFile] means [build] applies. [appVersion] goes in the
-  /// manifest.
+  /// [FitsOneFile] means [build] applies. [appVersion] is read for the
+  /// manifest only when there is one. [forAccountDeletion]: D1's set
+  /// (imported calendar events as tasks, every template), checked by
+  /// [complete] in the same read.
   Future<Result<PreparedExport, AppFailure>> prepareSet(
     String userId, {
-    required String appVersion,
+    required Future<String> Function() appVersion,
+    bool forAccountDeletion = false,
+    CompleteCheck? complete,
   });
 }
 
@@ -47,15 +52,18 @@ final class DriftExportService implements ExportService {
     required Clock clock,
     required Logger logger,
     IdGenerator ids = const UuidV7Generator(),
+    int partTarget = partTargetBytes,
   }) : _db = db,
        _clock = clock,
        _logger = logger,
-       _ids = ids;
+       _ids = ids,
+       _partTarget = partTarget;
 
   final AppDatabase _db;
   final Clock _clock;
   final Logger _logger;
   final IdGenerator _ids;
+  final int _partTarget;
 
   @override
   Future<Result<List<ExportFile>, AppFailure>> build(
@@ -92,7 +100,9 @@ final class DriftExportService implements ExportService {
   @override
   Future<Result<PreparedExport, AppFailure>> prepareSet(
     String userId, {
-    required String appVersion,
+    required Future<String> Function() appVersion,
+    bool forAccountDeletion = false,
+    CompleteCheck? complete,
   }) async {
     final now = _clock.nowUtc();
     final profile = await (_db.select(
@@ -102,7 +112,7 @@ final class DriftExportService implements ExportService {
     return prepareMultipartExport(
       _db,
       userId,
-      scope: RowScope.standard,
+      scope: forAccountDeletion ? RowScope.accountDeletion : RowScope.standard,
       store: platformPreparedFileStore(),
       logger: _logger,
       nowUtc: now,
@@ -110,6 +120,8 @@ final class DriftExportService implements ExportService {
       appVersion: appVersion,
       schemaVersion: AppDatabase.latestSchemaVersion,
       date: _localDate(now, profile.tzId),
+      targetBytes: _partTarget,
+      complete: complete,
     );
   }
 

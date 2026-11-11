@@ -8,6 +8,7 @@ import 'package:dottoday/data/export/file_gateway.dart';
 import 'package:dottoday/data/export/multipart_export.dart';
 import 'package:dottoday/data/export/picked_set_check.dart';
 import 'package:dottoday/data/owners/account_gate.dart';
+import 'package:dottoday/features/settings/widgets/set_file_rows.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -74,106 +75,38 @@ Future<void> showExportSetSheet(
   ).whenComplete(set.discard);
 }
 
-class ExportSetSheet extends ConsumerStatefulWidget {
+class ExportSetSheet extends StatefulWidget {
   const ExportSetSheet({required this.set, required this.browser, super.key});
 
   final PreparedSet set;
   final bool browser;
 
   @override
-  ConsumerState<ExportSetSheet> createState() => _ExportSetSheetState();
+  State<ExportSetSheet> createState() => _ExportSetSheetState();
 }
 
-// Leaf state: which files were downloaded and the last check's answer.
-class _ExportSetSheetState extends ConsumerState<ExportSetSheet> {
-  final _downloaded = <String>{};
-  PickedSetCheck? _check;
-  var _checking = false;
+class _ExportSetSheetState extends State<ExportSetSheet> {
+  final _asked = <String>{};
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final l10n = context.l10n;
     final files = widget.set.files;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(l10n.exportSetIntro(files.length), style: t.styles.body),
+        Text(context.l10n.exportSetIntro(files.length), style: t.styles.body),
         const SizedBox(height: DotSpace.s),
         if (widget.browser) ...[
-          for (final f in files)
-            ListTile(
-              minTileHeight: DotTouch.android,
-              contentPadding: EdgeInsets.zero,
-              title: Text(f.name, style: t.styles.rowTitle),
-              trailing: _downloaded.contains(f.name)
-                  ? Text(
-                      l10n.exportDownloaded,
-                      style: t.styles.body.copyWith(color: t.colors.muted),
-                    )
-                  : TextButton(
-                      onPressed: () => unawaited(_download(f.name)),
-                      child: Text(l10n.exportDownload),
-                    ),
-            ),
-          Text(
-            l10n.exportDownloadNote,
-            style: t.styles.body.copyWith(color: t.colors.muted),
-          ),
+          DownloadList(files: files, asked: _asked),
           const SizedBox(height: DotSpace.s),
         ],
-        ListTile(
-          minTileHeight: DotTouch.android,
-          contentPadding: EdgeInsets.zero,
-          title: Text(l10n.exportCheckFiles, style: t.styles.rowTitle),
-          subtitle: Text(l10n.exportCheckFilesDetail),
-          enabled: !_checking,
-          onTap: () => unawaited(_checkFiles()),
+        CheckFilesRow(
+          count: files.length,
+          check: (picked) => checkPickedSet(widget.set.manifest, picked),
         ),
-        if (_answer(context) case final answer?)
-          Semantics(
-            liveRegion: true,
-            child: Text(answer, style: t.styles.body),
-          ),
       ],
     );
-  }
-
-  String? _answer(BuildContext context) {
-    final l10n = context.l10n;
-    final count = widget.set.files.length;
-    return switch (_check) {
-      null => null,
-      PickedSetComplete() => l10n.exportCheckAll(count),
-      PickedSetMissing(:final missing) => l10n.exportCheckMissing(
-        missing,
-        count,
-      ),
-      PickedSetWrong() => l10n.exportCheckWrong,
-    };
-  }
-
-  Future<void> _download(String name) async {
-    final file = widget.set.files.firstWhere((f) => f.name == name);
-    await ref.read(fileGatewayProvider).downloadPrepared(file);
-    if (!mounted) return;
-    setState(() => _downloaded.add(name));
-  }
-
-  Future<void> _checkFiles() async {
-    setState(() => _checking = true);
-    final picked = await ref.read(fileGatewayProvider).pickJsonFiles();
-    if (!mounted) return;
-    if (picked.isEmpty) {
-      setState(() => _checking = false);
-      return;
-    }
-    final check = await checkPickedSet(widget.set.manifest, picked);
-    if (!mounted) return;
-    setState(() {
-      _checking = false;
-      _check = check;
-    });
   }
 }

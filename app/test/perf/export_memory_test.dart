@@ -76,7 +76,7 @@ void main() {
             logger: w.app.container.read(loggerProvider),
             nowUtc: ownerAppNow,
             exportId: '01928c3e-0000-7000-8000-0000000000e7',
-            appVersion: '1',
+            appVersion: () async => '1',
             schemaVersion: 21,
             date: '2026-11-11',
           );

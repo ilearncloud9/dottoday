@@ -87,7 +87,7 @@ Future<Result<PreparedExport, AppFailure>> prepareSet(
   logger: w.app.container.read(loggerProvider),
   nowUtc: ownerAppNow,
   exportId: setExportId,
-  appVersion: '1.0.0',
+  appVersion: () async => '1.0.0',
   schemaVersion: 21,
   date: '2026-11-11',
   targetBytes: targetBytes,

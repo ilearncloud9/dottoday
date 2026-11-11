@@ -124,8 +124,15 @@ final class _WithoutTemplates implements ExportService {
   @override
   Future<Result<PreparedExport, AppFailure>> prepareSet(
     String userId, {
-    required String appVersion,
-  }) => real.prepareSet(userId, appVersion: appVersion);
+    required Future<String> Function() appVersion,
+    bool forAccountDeletion = false,
+    CompleteCheck? complete,
+  }) => real.prepareSet(
+    userId,
+    appVersion: appVersion,
+    forAccountDeletion: forAccountDeletion,
+    complete: complete,
+  );
 }
 
 void main() {

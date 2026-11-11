@@ -2872,6 +2872,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'This file isn’t part of this backup. Nothing was changed.';
 
   @override
+  String accountDeleteExportUncertain(int count) {
+    return 'Your data was handed over as $count files. We can’t confirm you saved all of them. Check your files, or export again.';
+  }
+
+  @override
+  String accountDeleteWithoutCopySetQuestion(int count) {
+    return 'Delete without a confirmed copy? We can’t confirm all $count files were saved. You may permanently lose data that hasn’t been saved elsewhere.';
+  }
+
+  @override
   String get exportBackups => 'On this device';
 
   @override

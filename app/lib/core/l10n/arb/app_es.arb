@@ -683,6 +683,8 @@
   "importAddedCount": "{added} de {total} archivos añadidos.",
   "importAddFiles": "Añadir archivos…",
   "importPartForeign": "Este archivo no forma parte de esta copia. No se ha cambiado nada.",
+  "accountDeleteExportUncertain": "Tus datos se entregaron en {count} archivos. No podemos confirmar que los hayas guardado todos. Comprueba tus archivos o vuelve a exportar.",
+  "accountDeleteWithoutCopySetQuestion": "¿Eliminar sin una copia confirmada? No podemos confirmar que se guardaran los {count} archivos. Podrías perder para siempre datos que no se hayan guardado en otro lugar.",
   "exportBackups": "En este dispositivo",
   "exportBackupsNote": "Dottoday guarda una copia de seguridad cada día (las últimas 7) y otra antes de cada importación o restauración, cifradas y solo en este dispositivo.",
   "exportBackupsNone": "Aún no hay copias de seguridad. La primera se hará la próxima vez que abras Dottoday.",

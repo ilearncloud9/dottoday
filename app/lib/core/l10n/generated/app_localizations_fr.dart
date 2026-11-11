@@ -2883,6 +2883,16 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ce fichier ne fait pas partie de cette sauvegarde. Rien n’a été modifié.';
 
   @override
+  String accountDeleteExportUncertain(int count) {
+    return 'Vos données ont été transmises en $count fichiers. Nous ne pouvons pas confirmer que vous les avez tous enregistrés. Vérifiez vos fichiers ou exportez à nouveau.';
+  }
+
+  @override
+  String accountDeleteWithoutCopySetQuestion(int count) {
+    return 'Supprimer sans copie confirmée ? Nous ne pouvons pas confirmer que les $count fichiers ont été enregistrés. Vous risquez de perdre définitivement des données qui ne sont pas enregistrées ailleurs.';
+  }
+
+  @override
   String get exportBackups => 'Sur cet appareil';
 
   @override

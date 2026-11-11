@@ -11,6 +11,7 @@ import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
+import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -44,6 +45,7 @@ final class DeletionWorld {
     String account, {
     String taskId = '01928c3e-0000-7000-8000-0000000001a1',
     OccurrenceRepository Function(OccurrenceRepository)? occurrences,
+    int? partTarget,
   }) async {
     final db = AppDatabase(NativeDatabase.memory());
     final server = DeletingServer(account);
@@ -59,6 +61,10 @@ final class DeletionWorld {
         accountServiceProvider.overrideWithValue(server),
         fileGatewayProvider.overrideWithValue(files),
         syncServiceProvider.overrideWithValue(sync),
+        // D1's set export (CR-160 B7c) writes the version in its manifest.
+        appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),
+        if (partTarget != null)
+          exportPartTargetProvider.overrideWithValue(partTarget),
       ],
     );
     server.owners = app.owners;

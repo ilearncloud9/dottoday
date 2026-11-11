@@ -683,6 +683,8 @@
   "importAddedCount": "{added} von {total} Dateien hinzugefügt.",
   "importAddFiles": "Dateien hinzufügen…",
   "importPartForeign": "Diese Datei gehört nicht zu dieser Sicherung. Es wurde nichts geändert.",
+  "accountDeleteExportUncertain": "Deine Daten wurden als {count} Dateien übergeben. Wir können nicht bestätigen, dass du alle gespeichert hast. Prüfe deine Dateien oder exportiere erneut.",
+  "accountDeleteWithoutCopySetQuestion": "Ohne bestätigte Kopie löschen? Wir können nicht bestätigen, dass alle {count} Dateien gespeichert wurden. Daten, die nicht anderswo gespeichert sind, können dauerhaft verloren gehen.",
   "exportBackups": "Auf diesem Gerät",
   "exportBackupsNote": "Dottoday legt jeden Tag ein Backup an (die letzten 7) und eines vor jedem Import oder jeder Wiederherstellung – verschlüsselt und nur auf diesem Gerät.",
   "exportBackupsNone": "Noch keine Backups. Das erste wird beim nächsten Öffnen von Dottoday angelegt.",

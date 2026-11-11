@@ -683,6 +683,8 @@
   "importAddedCount": "{added} fichiers sur {total} ajoutés.",
   "importAddFiles": "Ajouter des fichiers…",
   "importPartForeign": "Ce fichier ne fait pas partie de cette sauvegarde. Rien n’a été modifié.",
+  "accountDeleteExportUncertain": "Vos données ont été transmises en {count} fichiers. Nous ne pouvons pas confirmer que vous les avez tous enregistrés. Vérifiez vos fichiers ou exportez à nouveau.",
+  "accountDeleteWithoutCopySetQuestion": "Supprimer sans copie confirmée ? Nous ne pouvons pas confirmer que les {count} fichiers ont été enregistrés. Vous risquez de perdre définitivement des données qui ne sont pas enregistrées ailleurs.",
   "exportBackups": "Sur cet appareil",
   "exportBackupsNote": "Dottoday fait une sauvegarde chaque jour (les 7 dernières) et une avant chaque import ou restauration, chiffrées, sur cet appareil uniquement.",
   "exportBackupsNone": "Pas encore de sauvegarde. La première sera faite à la prochaine ouverture de Dottoday.",

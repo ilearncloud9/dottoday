@@ -333,6 +333,33 @@ native-speaker review.
 | Mutations | One v1 file among others accepted, any set accepted, no whole check, a changed part kept, size not checked before reading, Trash counted, a set imported without its safety backup, a set imported as a single file: 8 of 8 caught (the Trash count needed a task in Trash in the test set, added) |
 | Not yet | Device and web screenshot sweep with B7's gate after B7c |
 
+### B7c verification (2026-11-11, local)
+Delete account › "Export my data first" for an account too large for one file is a set; one that
+fits keeps the single-file rule unchanged (decision 7). The set goes through the export service
+(`prepareSet(forAccountDeletion: true)`, D1's completeness check in the same read) and is handed to
+the share sheet or a folder, or on the web to one Download per file; it counts as handed over only
+once every file was asked for (owner decision 2), else `cancelled`. Handed over, it is
+`OwnerExportOutcome.uncertain` (owner decision 1: one outcome type; B6's separate type is gone), said
+as "Your data was handed over as {count} files. We can't confirm you saved all of them. Check your
+files, or export again.", with "Check my files…". `AccountActions.checkExport` compares the picked
+files with the set D1 kept (`data/owners/deletion_sets.dart`); only exactly its files make the export
+`done`, and only in the D1 session and owner session it was made in, and only if no newer export
+started meanwhile. While `uncertain` the deletion waits as after `cancelled`; "Delete without a saved
+copy" asks "Delete without a confirmed copy? We can't confirm all {count} files were saved…". The set's
+files stay until D1 closes or another export starts (owner decision 3). The rule itself is
+`exportShortfall` (`account_export_set.dart`). Shared rows with Settings: `DownloadList`,
+`CheckFilesRow` (`features/settings/widgets/set_file_rows.dart`). Two approved strings; de, fr and es
+pending native-speaker review.
+
+| Gate | Result |
+|---|---|
+| Stage C consent extended to multipart | `deletion_set_test.dart` (the real D1 actions, parts of 4,000 bytes): handed over is `uncertain` and the deletion waits; a check missing a file changes nothing; exactly the files makes it `done` and the deletion goes; after `uncertain`, "Delete without a saved copy" lets it go; closing D1 removes the files and the set; A → B → A, a later check never lets it go; a check still reading when a new export starts never marks the new one done; a new export removes the set before it and its files; a closed sheet, or the web closing its downloads early, is `cancelled` with no set kept. `account_export_set_test.dart`: every row (imported event as a task, its step, the template), completeness, cancelled/failed keep no set, too large, fits one file → the single-file rule, `exportShortfall` |
+| Screen | `delete_account_set_test.dart`: the uncertain status and a complete check → "Exported. You can delete your account now."; a check missing files is said and stays uncertain; deleting while uncertain asks the set question with "Try export again"; web: one Download per file, all of them → uncertain, closing early → cancelled. A11y guidelines pass |
+| Goldens (derived) | `account_delete_set_native_*` (compact, + 2.0 text, RTL), `account_delete_set_web_*` (expanded), `account_delete_set_without_copy_*` |
+| Regression | Every existing D1, Settings and export test passes. One named edit: `deletion_consent_test.dart`'s "too large" case used a 27 MB account; under §10 that is a set now, so the case is one task larger than any part (parts of 1,500 bytes), with the same assertions. Test support: `DeletionWorld` gives the app version and an optional part size; the fakes gain the new methods |
+| Mutations | `uncertain` letting the deletion through, no session/generation/newer-export guard, any check counting as done, closing D1 keeping the files, a new export keeping the old set, the web counting any download as handed over, the set question never asked, large accounts as one file: 8 of 8 caught (the guard and the new-export case needed their own tests, added) |
+| Not yet | B7's gate: the device and web screenshot sweep (iPhone, Android, Mac, web) over B7a–c |
+
 ## 7. Size policy and acceptance criteria (provisional)
 Provisional limits: **10 MB per written part, 25 MB per file read.** No maximum part count is adopted
 yet. Each limit is confirmed or changed only from measurements against these criteria (B8):
@@ -428,5 +455,6 @@ unchanged. The 25 MB import limit is unchanged.
 6. ~~Whether Settings exports above the part target switch to multipart automatically or ask
    first~~ Decided in B6: automatically, wired in B7.
 7. Whether single-file D1 exports also require possession confirmation.
-8. New copy for every multipart state (approval needed before B6/B7).
+8. ~~New copy for every multipart state~~ Approved 2026-11-11 (B7 plan); de, fr and es pending
+   native-speaker review.
 9. Web per-part download UI and the "Check my files" verify step (design review, B7).

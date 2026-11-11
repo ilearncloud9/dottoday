@@ -66,7 +66,7 @@ Future<Result<PreparedExport, AppFailure>> prepareMultipartExport(
   required Logger logger,
   required DateTime nowUtc,
   required String exportId,
-  required String appVersion,
+  required Future<String> Function() appVersion,
   required int schemaVersion,
   required String date,
   int targetBytes = partTargetBytes,
@@ -118,7 +118,7 @@ Future<Result<PreparedExport, AppFailure>> prepareMultipartExport(
       final manifest = ExportManifest(
         exportId: exportId,
         exportedAtMs: nowUtc.millisecondsSinceEpoch,
-        appVersion: appVersion,
+        appVersion: await appVersion(),
         schemaVersion: schemaVersion,
         purpose: scope == RowScope.accountDeletion
             ? ExportPurpose.accountDeletion

@@ -4200,6 +4200,18 @@ abstract class AppLocalizations {
   /// **'This file isn’t part of this backup. Nothing was changed.'**
   String get importPartForeign;
 
+  /// Delete account (CR-160 B7c): a set too large for one file was handed over but its files weren't picked back and matched.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data was handed over as {count} files. We can’t confirm you saved all of them. Check your files, or export again.'**
+  String accountDeleteExportUncertain(int count);
+
+  /// Delete account (CR-160 B7c): the separate confirmation after a set export that wasn't confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete without a confirmed copy? We can’t confirm all {count} files were saved. You may permanently lose data that hasn’t been saved elsewhere.'**
+  String accountDeleteWithoutCopySetQuestion(int count);
+
   /// Export page group caption for local backups.
   ///
   /// In en, this message translates to:
