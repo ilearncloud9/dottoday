@@ -1,7 +1,8 @@
 # CR-160 Stage B · Multipart export and staged import (specification)
 
-Status: **specification only** (Stage B0, 2026-11-10). Nothing in this document is built yet except
-§10 (the Settings export size refusal). Decision record: ADR-0019. Owner of the approval: the
+Status: **specification**, built in stages. Built so far (uncommitted unless noted): B0 (§10, the
+Settings export size refusal); B1 (format, splitter, part checks, file kinds; committed `017677d`);
+B2 (staging tables, schema 21, inactive; §6 results in "B2 verification" below). Decision record: ADR-0019. Owner of the approval: the
 product owner, per stage gate in §9. Release status: CR-160 stays CRITICAL · OPEN · RELEASE BLOCKER.
 
 ## 1. Problem
@@ -104,6 +105,18 @@ rule; template keys replace).
 | Bounded growth | Manifest totals and part sizes are known before staging; refuse a set whose declared size exceeds the accepted total (§7). Staging is deleted after commit or failure. | Size-cap and cleanup tests; staging bytes ≤ 1.2 × file bytes. |
 | Rollback on failure, disk full, termination | Live changes only in the one commit transaction; `SQLITE_FULL` or any exception rolls back; termination rolls back via the journal on next open, then startup cleanup. | Forced `SQLITE_FULL`, exception injection, kill during commit. |
 
+### B2 verification (2026-11-11, local)
+| Requirement | Result |
+|---|---|
+| Ownership and generation fencing | `staged_import_store_test.dart`: another owner, A → B → A, sealed and removal pending refuse staging and beginning |
+| Isolation | Two owners stage at once and each reads only its own; a forged (import, owner) pair reads and stages nothing; account removal deletes only that owner's staging |
+| Encrypted at rest, native | Database, WAL and shm hold no staged text while open and after close (host `staging_encryption_test.dart`; `integration_test/staging_encryption_test.dart` on device). Temp storage: this SQLCipher build is compiled `TEMP_STORE=2` (in memory), checked per connection; a file scan can't prove it, since SQLite unlinks temp files at once |
+| Encrypted at rest, web | The CI web probe stages 2,000 rows carrying the probe secret and forces a sort: 0 plaintext hits in browser storage (Chromium). This sqlite3mc build sets no `TEMP_STORE`, so the web connection now sets `PRAGMA temp_store = MEMORY` (decision 2) |
+| Never synced, never in normal queries | Policy test: only the store, the schema and account removal name the tables; the outbox CHECK, search triggers and synced-table list don't. Staging writes no outbox entry and no write revision |
+| Startup cleanup | Another run's import, a day-old one and one "in the future" are deleted; a killed-and-reopened file is cleaned by the next run. Main isolate only (cross-runtime policy test); wired in when the pipeline goes live |
+| Bounded growth | Over 64 MiB declared refused; a part that would pass the declared size refused whole |
+| Rollback | A part stages all or nothing (duplicate id, missing id, over size). Commit rollback, disk full and kill during commit are B3's gate |
+
 ## 7. Size policy and acceptance criteria (provisional)
 Provisional limits: **10 MB per written part, 25 MB per file read.** No maximum part count is adopted
 yet. Each limit is confirmed or changed only from measurements against these criteria (B8):
@@ -184,9 +197,13 @@ are not limited. D1 maps the same failure to its existing `tooLarge` outcome, so
 unchanged. The 25 MB import limit is unchanged.
 
 ## 11. Open decisions
-1. Part target (10 MB provisional) and accepted total, after §7 measurements.
-2. Whether SQLite temporary files need `temp_store = MEMORY` (depends on the §6 encryption check).
-3. Staging session lifetime (24 h proposed) and one active import per owner.
+1. Part target (10 MB provisional) and accepted total (64 MiB provisional in B2,
+   `maxStagedImportBytes`), after §7 measurements.
+2. ~~Whether SQLite temporary files need `temp_store = MEMORY`~~ Decided in B2: native SQLCipher is
+   compiled `TEMP_STORE=2` (memory) already; the web sets `temp_store = MEMORY`. Web memory under it
+   is measured with the rest in B8.
+3. ~~Staging session lifetime and concurrency~~ Decided in B2: 24 h, one import per owner, and an
+   import never survives into another app run.
 4. Converting existing oversized backups to parts, or reading them in place only.
 5. Pausing retention pruning of oversized backups until B4 ships (keeps originals; costs storage).
 6. Whether Settings exports above the part target switch to multipart automatically (proposed) or

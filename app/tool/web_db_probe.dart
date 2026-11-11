@@ -67,6 +67,8 @@ Future<String> _probe() async {
     throw StateError('FTS5 search failed');
   }
   final cipher = await _cipher(db);
+  final temp = await _stageAndSort(db);
+  _report('PROBE-STEP staged');
   await db.close();
   _report('PROBE-STEP closed');
 
@@ -75,7 +77,7 @@ Future<String> _probe() async {
   final again = await DriftOccurrenceRepository(db).findById('u', 'o');
   await db.close();
   if (again?.title != probeTitle) throw StateError('reopen failed');
-  return 'cipher=$cipher';
+  return 'cipher=$cipher $temp';
 }
 
 Future<void> _writeSnapshot(DateTime at, Occurrence? row) async {
@@ -91,6 +93,49 @@ Future<void> _writeSnapshot(DateTime at, Occurrence? row) async {
     ),
   );
   if (await readStoredSnapshot() == null) throw StateError('no snapshot');
+}
+
+/// Staged-import rows carrying the probe title (CR-160 Stage B2, spec §6:
+/// staging is encrypted at rest on the web too), sorted with no index so a
+/// temp B-tree is needed. Fails unless temp storage stays in memory:
+/// TEMP_STORE=2 or 3 with the default temp_store, or temp_store=2.
+Future<String> _stageAndSort(AppDatabase db) async {
+  await db.customStatement(
+    'INSERT INTO import_sessions (import_id, owner, owner_generation, '
+    "run_id, started_at, declared_bytes) VALUES ('${'1' * 36}', 'u', 0, "
+    "'probe', 0, 104857600)",
+  );
+  await db.transaction(() async {
+    for (var i = 0; i < 2000; i++) {
+      await db.customStatement(
+        'INSERT INTO import_staging (import_id, owner, entity, row_id, '
+        "part_index, json) VALUES ('${'1' * 36}', 'u', 'occurrences', ?, 1, "
+        '?)',
+        ['s$i', '{"id":"s$i","title":"$probeTitle $i"}'],
+      );
+    }
+  });
+  await db
+      .customSelect('SELECT json FROM import_staging ORDER BY json DESC')
+      .get();
+  final compiled = [
+    for (final r in await db.customSelect('PRAGMA compile_options').get())
+      if ('${r.data.values.first}'.startsWith('TEMP_STORE'))
+        '${r.data.values.first}',
+  ].join(',');
+  final store = (await db.customSelect('PRAGMA temp_store').getSingle())
+      .data
+      .values
+      .first;
+  final inMemory =
+      store == 2 ||
+      (store == 0 &&
+          (compiled.contains('TEMP_STORE=2') ||
+              compiled.contains('TEMP_STORE=3')));
+  if (!inMemory) {
+    throw StateError('temp storage may use files: $compiled temp_store=$store');
+  }
+  return '$compiled temp_store=$store';
 }
 
 Future<Object?> _cipher(AppDatabase db) async =>

@@ -52,6 +52,14 @@ final _ownerChange = RegExp(
   r'finishAccountRemoval|beginAccountRemoval',
 );
 
+/// Staged-import work (CR-160 Stage B2): main isolate only. Its stale-import
+/// cleanup must never run elsewhere, or it could delete an import the app
+/// is staging.
+final _staging = RegExp(
+  r'staged_import_store|beginStagedImport|stagePart|cleanUpStaleImports|'
+  r'discardStagedImport',
+);
+
 String _read(String path) => File(path).readAsStringSync();
 
 List<File> _files(String dir, String suffix) => Directory(dir).existsSync()
@@ -89,6 +97,7 @@ void main() {
       final src = sources[path]!;
       expect(_fenced.hasMatch(src), isFalse, reason: path);
       expect(_ownerChange.hasMatch(src), isFalse, reason: path);
+      expect(_staging.hasMatch(src), isFalse, reason: path);
     }
   });
 

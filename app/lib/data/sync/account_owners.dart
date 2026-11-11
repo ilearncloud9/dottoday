@@ -198,6 +198,11 @@ Future<void> finishAccountRemoval(
         accountId,
       ]);
     }
+    // Its staged imports (CR-160 Stage B2): no FK to profiles, so
+    // explicitly; their staged rows go with them (ON DELETE CASCADE).
+    await db.customStatement('DELETE FROM import_sessions WHERE owner = ?', [
+      accountId,
+    ]);
     await (db.delete(db.profiles)..where((p) => p.id.equals(accountId))).go();
     // Owner-keyed values (`<kind>:<owner>`), the pending mark last of all.
     await db.customStatement(

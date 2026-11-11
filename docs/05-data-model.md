@@ -144,6 +144,20 @@ Written only by a file import (refused unless that account is shown and not seal
 by an attach; both count as a save for D1's review (write revision). Attach rules: see "Export
 format", `calendarSeries`.
 
+### `import_sessions` and `import_staging` (local only, schema 21, CR-160 Stage B2)
+`import_sessions (import_id pk, owner, owner_generation, run_id, started_at, declared_bytes,
+staged_bytes)`, unique `owner` (one import per owner) and `(import_id, owner)`;
+`import_staging (import_id, owner, entity, row_id, part_index, json)`, primary key
+`(import_id, entity, row_id)` (ids unique per table across an import), `(import_id, owner)` → the
+session `ON DELETE CASCADE ON UPDATE RESTRICT`. The staging area of the staged import
+(`docs/cr-160-multipart-export.md` §5–§6): rows held in the encrypted main database until one commit
+applies them (B3). **No reference to `profiles`**: a re-keyed profile cascades `user_id` everywhere
+else, and an import's owner must never move with it; account removal deletes its sessions
+explicitly. Never in the outbox, never synced, read and written only by
+`data/backup/staged_import_store.dart` (policy-tested). Every write runs the pull fence (owner shown,
+same owner generation, not sealed, not being removed). Imports of another app run, or begun 24 h
+ago or more, are deleted by the main isolate's cleanup. Empty until the staged pipeline is live.
+
 ### `conflicts`
 `id, user_id, entity ('series'|'occurrences'|'subtasks'|'profiles'|'routines'), entity_id, field,
 mine jsonb, theirs jsonb, created_at, resolved_at?`

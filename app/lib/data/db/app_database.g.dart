@@ -12370,6 +12370,907 @@ class GuestRowSessionsCompanion extends UpdateCompanion<GuestRowSessionRow> {
   }
 }
 
+class $ImportSessionsTable extends ImportSessions
+    with TableInfo<$ImportSessionsTable, ImportSessionRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ImportSessionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _importIdMeta = const VerificationMeta(
+    'importId',
+  );
+  @override
+  late final GeneratedColumn<String> importId = GeneratedColumn<String>(
+    'import_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ownerMeta = const VerificationMeta('owner');
+  @override
+  late final GeneratedColumn<String> owner = GeneratedColumn<String>(
+    'owner',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ownerGenerationMeta = const VerificationMeta(
+    'ownerGeneration',
+  );
+  @override
+  late final GeneratedColumn<int> ownerGeneration = GeneratedColumn<int>(
+    'owner_generation',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _runIdMeta = const VerificationMeta('runId');
+  @override
+  late final GeneratedColumn<String> runId = GeneratedColumn<String>(
+    'run_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startedAtMeta = const VerificationMeta(
+    'startedAt',
+  );
+  @override
+  late final GeneratedColumn<int> startedAt = GeneratedColumn<int>(
+    'started_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _declaredBytesMeta = const VerificationMeta(
+    'declaredBytes',
+  );
+  @override
+  late final GeneratedColumn<int> declaredBytes = GeneratedColumn<int>(
+    'declared_bytes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _stagedBytesMeta = const VerificationMeta(
+    'stagedBytes',
+  );
+  @override
+  late final GeneratedColumn<int> stagedBytes = GeneratedColumn<int>(
+    'staged_bytes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    importId,
+    owner,
+    ownerGeneration,
+    runId,
+    startedAt,
+    declaredBytes,
+    stagedBytes,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'import_sessions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ImportSessionRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('import_id')) {
+      context.handle(
+        _importIdMeta,
+        importId.isAcceptableOrUnknown(data['import_id']!, _importIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_importIdMeta);
+    }
+    if (data.containsKey('owner')) {
+      context.handle(
+        _ownerMeta,
+        owner.isAcceptableOrUnknown(data['owner']!, _ownerMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ownerMeta);
+    }
+    if (data.containsKey('owner_generation')) {
+      context.handle(
+        _ownerGenerationMeta,
+        ownerGeneration.isAcceptableOrUnknown(
+          data['owner_generation']!,
+          _ownerGenerationMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_ownerGenerationMeta);
+    }
+    if (data.containsKey('run_id')) {
+      context.handle(
+        _runIdMeta,
+        runId.isAcceptableOrUnknown(data['run_id']!, _runIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_runIdMeta);
+    }
+    if (data.containsKey('started_at')) {
+      context.handle(
+        _startedAtMeta,
+        startedAt.isAcceptableOrUnknown(data['started_at']!, _startedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startedAtMeta);
+    }
+    if (data.containsKey('declared_bytes')) {
+      context.handle(
+        _declaredBytesMeta,
+        declaredBytes.isAcceptableOrUnknown(
+          data['declared_bytes']!,
+          _declaredBytesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_declaredBytesMeta);
+    }
+    if (data.containsKey('staged_bytes')) {
+      context.handle(
+        _stagedBytesMeta,
+        stagedBytes.isAcceptableOrUnknown(
+          data['staged_bytes']!,
+          _stagedBytesMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {importId};
+  @override
+  ImportSessionRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ImportSessionRow(
+      importId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}import_id'],
+      )!,
+      owner: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner'],
+      )!,
+      ownerGeneration: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}owner_generation'],
+      )!,
+      runId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}run_id'],
+      )!,
+      startedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}started_at'],
+      )!,
+      declaredBytes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}declared_bytes'],
+      )!,
+      stagedBytes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}staged_bytes'],
+      )!,
+    );
+  }
+
+  @override
+  $ImportSessionsTable createAlias(String alias) {
+    return $ImportSessionsTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class ImportSessionRow extends DataClass
+    implements Insertable<ImportSessionRow> {
+  final String importId;
+  final String owner;
+
+  /// `owner_generation` when it began: A → B → A refuses it.
+  final int ownerGeneration;
+
+  /// The app run that began it: a later run never continues it.
+  final String runId;
+  final int startedAt;
+
+  /// The size the import says it is; staging never grows past it.
+  final int declaredBytes;
+  final int stagedBytes;
+  const ImportSessionRow({
+    required this.importId,
+    required this.owner,
+    required this.ownerGeneration,
+    required this.runId,
+    required this.startedAt,
+    required this.declaredBytes,
+    required this.stagedBytes,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['import_id'] = Variable<String>(importId);
+    map['owner'] = Variable<String>(owner);
+    map['owner_generation'] = Variable<int>(ownerGeneration);
+    map['run_id'] = Variable<String>(runId);
+    map['started_at'] = Variable<int>(startedAt);
+    map['declared_bytes'] = Variable<int>(declaredBytes);
+    map['staged_bytes'] = Variable<int>(stagedBytes);
+    return map;
+  }
+
+  ImportSessionsCompanion toCompanion(bool nullToAbsent) {
+    return ImportSessionsCompanion(
+      importId: Value(importId),
+      owner: Value(owner),
+      ownerGeneration: Value(ownerGeneration),
+      runId: Value(runId),
+      startedAt: Value(startedAt),
+      declaredBytes: Value(declaredBytes),
+      stagedBytes: Value(stagedBytes),
+    );
+  }
+
+  factory ImportSessionRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ImportSessionRow(
+      importId: serializer.fromJson<String>(json['importId']),
+      owner: serializer.fromJson<String>(json['owner']),
+      ownerGeneration: serializer.fromJson<int>(json['ownerGeneration']),
+      runId: serializer.fromJson<String>(json['runId']),
+      startedAt: serializer.fromJson<int>(json['startedAt']),
+      declaredBytes: serializer.fromJson<int>(json['declaredBytes']),
+      stagedBytes: serializer.fromJson<int>(json['stagedBytes']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'importId': serializer.toJson<String>(importId),
+      'owner': serializer.toJson<String>(owner),
+      'ownerGeneration': serializer.toJson<int>(ownerGeneration),
+      'runId': serializer.toJson<String>(runId),
+      'startedAt': serializer.toJson<int>(startedAt),
+      'declaredBytes': serializer.toJson<int>(declaredBytes),
+      'stagedBytes': serializer.toJson<int>(stagedBytes),
+    };
+  }
+
+  ImportSessionRow copyWith({
+    String? importId,
+    String? owner,
+    int? ownerGeneration,
+    String? runId,
+    int? startedAt,
+    int? declaredBytes,
+    int? stagedBytes,
+  }) => ImportSessionRow(
+    importId: importId ?? this.importId,
+    owner: owner ?? this.owner,
+    ownerGeneration: ownerGeneration ?? this.ownerGeneration,
+    runId: runId ?? this.runId,
+    startedAt: startedAt ?? this.startedAt,
+    declaredBytes: declaredBytes ?? this.declaredBytes,
+    stagedBytes: stagedBytes ?? this.stagedBytes,
+  );
+  ImportSessionRow copyWithCompanion(ImportSessionsCompanion data) {
+    return ImportSessionRow(
+      importId: data.importId.present ? data.importId.value : this.importId,
+      owner: data.owner.present ? data.owner.value : this.owner,
+      ownerGeneration: data.ownerGeneration.present
+          ? data.ownerGeneration.value
+          : this.ownerGeneration,
+      runId: data.runId.present ? data.runId.value : this.runId,
+      startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
+      declaredBytes: data.declaredBytes.present
+          ? data.declaredBytes.value
+          : this.declaredBytes,
+      stagedBytes: data.stagedBytes.present
+          ? data.stagedBytes.value
+          : this.stagedBytes,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ImportSessionRow(')
+          ..write('importId: $importId, ')
+          ..write('owner: $owner, ')
+          ..write('ownerGeneration: $ownerGeneration, ')
+          ..write('runId: $runId, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('declaredBytes: $declaredBytes, ')
+          ..write('stagedBytes: $stagedBytes')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    importId,
+    owner,
+    ownerGeneration,
+    runId,
+    startedAt,
+    declaredBytes,
+    stagedBytes,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ImportSessionRow &&
+          other.importId == this.importId &&
+          other.owner == this.owner &&
+          other.ownerGeneration == this.ownerGeneration &&
+          other.runId == this.runId &&
+          other.startedAt == this.startedAt &&
+          other.declaredBytes == this.declaredBytes &&
+          other.stagedBytes == this.stagedBytes);
+}
+
+class ImportSessionsCompanion extends UpdateCompanion<ImportSessionRow> {
+  final Value<String> importId;
+  final Value<String> owner;
+  final Value<int> ownerGeneration;
+  final Value<String> runId;
+  final Value<int> startedAt;
+  final Value<int> declaredBytes;
+  final Value<int> stagedBytes;
+  final Value<int> rowid;
+  const ImportSessionsCompanion({
+    this.importId = const Value.absent(),
+    this.owner = const Value.absent(),
+    this.ownerGeneration = const Value.absent(),
+    this.runId = const Value.absent(),
+    this.startedAt = const Value.absent(),
+    this.declaredBytes = const Value.absent(),
+    this.stagedBytes = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ImportSessionsCompanion.insert({
+    required String importId,
+    required String owner,
+    required int ownerGeneration,
+    required String runId,
+    required int startedAt,
+    required int declaredBytes,
+    this.stagedBytes = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : importId = Value(importId),
+       owner = Value(owner),
+       ownerGeneration = Value(ownerGeneration),
+       runId = Value(runId),
+       startedAt = Value(startedAt),
+       declaredBytes = Value(declaredBytes);
+  static Insertable<ImportSessionRow> custom({
+    Expression<String>? importId,
+    Expression<String>? owner,
+    Expression<int>? ownerGeneration,
+    Expression<String>? runId,
+    Expression<int>? startedAt,
+    Expression<int>? declaredBytes,
+    Expression<int>? stagedBytes,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (importId != null) 'import_id': importId,
+      if (owner != null) 'owner': owner,
+      if (ownerGeneration != null) 'owner_generation': ownerGeneration,
+      if (runId != null) 'run_id': runId,
+      if (startedAt != null) 'started_at': startedAt,
+      if (declaredBytes != null) 'declared_bytes': declaredBytes,
+      if (stagedBytes != null) 'staged_bytes': stagedBytes,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ImportSessionsCompanion copyWith({
+    Value<String>? importId,
+    Value<String>? owner,
+    Value<int>? ownerGeneration,
+    Value<String>? runId,
+    Value<int>? startedAt,
+    Value<int>? declaredBytes,
+    Value<int>? stagedBytes,
+    Value<int>? rowid,
+  }) {
+    return ImportSessionsCompanion(
+      importId: importId ?? this.importId,
+      owner: owner ?? this.owner,
+      ownerGeneration: ownerGeneration ?? this.ownerGeneration,
+      runId: runId ?? this.runId,
+      startedAt: startedAt ?? this.startedAt,
+      declaredBytes: declaredBytes ?? this.declaredBytes,
+      stagedBytes: stagedBytes ?? this.stagedBytes,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (importId.present) {
+      map['import_id'] = Variable<String>(importId.value);
+    }
+    if (owner.present) {
+      map['owner'] = Variable<String>(owner.value);
+    }
+    if (ownerGeneration.present) {
+      map['owner_generation'] = Variable<int>(ownerGeneration.value);
+    }
+    if (runId.present) {
+      map['run_id'] = Variable<String>(runId.value);
+    }
+    if (startedAt.present) {
+      map['started_at'] = Variable<int>(startedAt.value);
+    }
+    if (declaredBytes.present) {
+      map['declared_bytes'] = Variable<int>(declaredBytes.value);
+    }
+    if (stagedBytes.present) {
+      map['staged_bytes'] = Variable<int>(stagedBytes.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ImportSessionsCompanion(')
+          ..write('importId: $importId, ')
+          ..write('owner: $owner, ')
+          ..write('ownerGeneration: $ownerGeneration, ')
+          ..write('runId: $runId, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('declaredBytes: $declaredBytes, ')
+          ..write('stagedBytes: $stagedBytes, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ImportStagingTable extends ImportStaging
+    with TableInfo<$ImportStagingTable, ImportStagingRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ImportStagingTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _importIdMeta = const VerificationMeta(
+    'importId',
+  );
+  @override
+  late final GeneratedColumn<String> importId = GeneratedColumn<String>(
+    'import_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ownerMeta = const VerificationMeta('owner');
+  @override
+  late final GeneratedColumn<String> owner = GeneratedColumn<String>(
+    'owner',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _entityMeta = const VerificationMeta('entity');
+  @override
+  late final GeneratedColumn<String> entity = GeneratedColumn<String>(
+    'entity',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<String> rowId = GeneratedColumn<String>(
+    'row_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _partIndexMeta = const VerificationMeta(
+    'partIndex',
+  );
+  @override
+  late final GeneratedColumn<int> partIndex = GeneratedColumn<int>(
+    'part_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _jsonMeta = const VerificationMeta('json');
+  @override
+  late final GeneratedColumn<String> json = GeneratedColumn<String>(
+    'json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    importId,
+    owner,
+    entity,
+    rowId,
+    partIndex,
+    json,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'import_staging';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ImportStagingRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('import_id')) {
+      context.handle(
+        _importIdMeta,
+        importId.isAcceptableOrUnknown(data['import_id']!, _importIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_importIdMeta);
+    }
+    if (data.containsKey('owner')) {
+      context.handle(
+        _ownerMeta,
+        owner.isAcceptableOrUnknown(data['owner']!, _ownerMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ownerMeta);
+    }
+    if (data.containsKey('entity')) {
+      context.handle(
+        _entityMeta,
+        entity.isAcceptableOrUnknown(data['entity']!, _entityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityMeta);
+    }
+    if (data.containsKey('row_id')) {
+      context.handle(
+        _rowIdMeta,
+        rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_rowIdMeta);
+    }
+    if (data.containsKey('part_index')) {
+      context.handle(
+        _partIndexMeta,
+        partIndex.isAcceptableOrUnknown(data['part_index']!, _partIndexMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partIndexMeta);
+    }
+    if (data.containsKey('json')) {
+      context.handle(
+        _jsonMeta,
+        json.isAcceptableOrUnknown(data['json']!, _jsonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_jsonMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {importId, entity, rowId};
+  @override
+  ImportStagingRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ImportStagingRow(
+      importId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}import_id'],
+      )!,
+      owner: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner'],
+      )!,
+      entity: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity'],
+      )!,
+      rowId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}row_id'],
+      )!,
+      partIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}part_index'],
+      )!,
+      json: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}json'],
+      )!,
+    );
+  }
+
+  @override
+  $ImportStagingTable createAlias(String alias) {
+    return $ImportStagingTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class ImportStagingRow extends DataClass
+    implements Insertable<ImportStagingRow> {
+  final String importId;
+  final String owner;
+
+  /// `profile` or a part table name (multipart_format.dart `partTables`).
+  final String entity;
+  final String rowId;
+  final int partIndex;
+  final String json;
+  const ImportStagingRow({
+    required this.importId,
+    required this.owner,
+    required this.entity,
+    required this.rowId,
+    required this.partIndex,
+    required this.json,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['import_id'] = Variable<String>(importId);
+    map['owner'] = Variable<String>(owner);
+    map['entity'] = Variable<String>(entity);
+    map['row_id'] = Variable<String>(rowId);
+    map['part_index'] = Variable<int>(partIndex);
+    map['json'] = Variable<String>(json);
+    return map;
+  }
+
+  ImportStagingCompanion toCompanion(bool nullToAbsent) {
+    return ImportStagingCompanion(
+      importId: Value(importId),
+      owner: Value(owner),
+      entity: Value(entity),
+      rowId: Value(rowId),
+      partIndex: Value(partIndex),
+      json: Value(json),
+    );
+  }
+
+  factory ImportStagingRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ImportStagingRow(
+      importId: serializer.fromJson<String>(json['importId']),
+      owner: serializer.fromJson<String>(json['owner']),
+      entity: serializer.fromJson<String>(json['entity']),
+      rowId: serializer.fromJson<String>(json['rowId']),
+      partIndex: serializer.fromJson<int>(json['partIndex']),
+      json: serializer.fromJson<String>(json['json']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'importId': serializer.toJson<String>(importId),
+      'owner': serializer.toJson<String>(owner),
+      'entity': serializer.toJson<String>(entity),
+      'rowId': serializer.toJson<String>(rowId),
+      'partIndex': serializer.toJson<int>(partIndex),
+      'json': serializer.toJson<String>(json),
+    };
+  }
+
+  ImportStagingRow copyWith({
+    String? importId,
+    String? owner,
+    String? entity,
+    String? rowId,
+    int? partIndex,
+    String? json,
+  }) => ImportStagingRow(
+    importId: importId ?? this.importId,
+    owner: owner ?? this.owner,
+    entity: entity ?? this.entity,
+    rowId: rowId ?? this.rowId,
+    partIndex: partIndex ?? this.partIndex,
+    json: json ?? this.json,
+  );
+  ImportStagingRow copyWithCompanion(ImportStagingCompanion data) {
+    return ImportStagingRow(
+      importId: data.importId.present ? data.importId.value : this.importId,
+      owner: data.owner.present ? data.owner.value : this.owner,
+      entity: data.entity.present ? data.entity.value : this.entity,
+      rowId: data.rowId.present ? data.rowId.value : this.rowId,
+      partIndex: data.partIndex.present ? data.partIndex.value : this.partIndex,
+      json: data.json.present ? data.json.value : this.json,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ImportStagingRow(')
+          ..write('importId: $importId, ')
+          ..write('owner: $owner, ')
+          ..write('entity: $entity, ')
+          ..write('rowId: $rowId, ')
+          ..write('partIndex: $partIndex, ')
+          ..write('json: $json')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(importId, owner, entity, rowId, partIndex, json);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ImportStagingRow &&
+          other.importId == this.importId &&
+          other.owner == this.owner &&
+          other.entity == this.entity &&
+          other.rowId == this.rowId &&
+          other.partIndex == this.partIndex &&
+          other.json == this.json);
+}
+
+class ImportStagingCompanion extends UpdateCompanion<ImportStagingRow> {
+  final Value<String> importId;
+  final Value<String> owner;
+  final Value<String> entity;
+  final Value<String> rowId;
+  final Value<int> partIndex;
+  final Value<String> json;
+  final Value<int> rowid;
+  const ImportStagingCompanion({
+    this.importId = const Value.absent(),
+    this.owner = const Value.absent(),
+    this.entity = const Value.absent(),
+    this.rowId = const Value.absent(),
+    this.partIndex = const Value.absent(),
+    this.json = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ImportStagingCompanion.insert({
+    required String importId,
+    required String owner,
+    required String entity,
+    required String rowId,
+    required int partIndex,
+    required String json,
+    this.rowid = const Value.absent(),
+  }) : importId = Value(importId),
+       owner = Value(owner),
+       entity = Value(entity),
+       rowId = Value(rowId),
+       partIndex = Value(partIndex),
+       json = Value(json);
+  static Insertable<ImportStagingRow> custom({
+    Expression<String>? importId,
+    Expression<String>? owner,
+    Expression<String>? entity,
+    Expression<String>? rowId,
+    Expression<int>? partIndex,
+    Expression<String>? json,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (importId != null) 'import_id': importId,
+      if (owner != null) 'owner': owner,
+      if (entity != null) 'entity': entity,
+      if (rowId != null) 'row_id': rowId,
+      if (partIndex != null) 'part_index': partIndex,
+      if (json != null) 'json': json,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ImportStagingCompanion copyWith({
+    Value<String>? importId,
+    Value<String>? owner,
+    Value<String>? entity,
+    Value<String>? rowId,
+    Value<int>? partIndex,
+    Value<String>? json,
+    Value<int>? rowid,
+  }) {
+    return ImportStagingCompanion(
+      importId: importId ?? this.importId,
+      owner: owner ?? this.owner,
+      entity: entity ?? this.entity,
+      rowId: rowId ?? this.rowId,
+      partIndex: partIndex ?? this.partIndex,
+      json: json ?? this.json,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (importId.present) {
+      map['import_id'] = Variable<String>(importId.value);
+    }
+    if (owner.present) {
+      map['owner'] = Variable<String>(owner.value);
+    }
+    if (entity.present) {
+      map['entity'] = Variable<String>(entity.value);
+    }
+    if (rowId.present) {
+      map['row_id'] = Variable<String>(rowId.value);
+    }
+    if (partIndex.present) {
+      map['part_index'] = Variable<int>(partIndex.value);
+    }
+    if (json.present) {
+      map['json'] = Variable<String>(json.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ImportStagingCompanion(')
+          ..write('importId: $importId, ')
+          ..write('owner: $owner, ')
+          ..write('entity: $entity, ')
+          ..write('rowId: $rowId, ')
+          ..write('partIndex: $partIndex, ')
+          ..write('json: $json, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -12485,6 +13386,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $GuestRowSessionsTable guestRowSessions = $GuestRowSessionsTable(
     this,
   );
+  late final $ImportSessionsTable importSessions = $ImportSessionsTable(this);
+  late final $ImportStagingTable importStaging = $ImportStagingTable(this);
   late final Index routinesUser = Index(
     'routines_user',
     'CREATE INDEX routines_user ON routines (user_id)',
@@ -12561,6 +13464,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     localMeta,
     wakeUpDaysTable,
     guestRowSessions,
+    importSessions,
+    importStaging,
     routinesUser,
     routinesUserUpdated,
     routinesDirty,
@@ -22077,6 +22982,497 @@ typedef $$GuestRowSessionsTableProcessedTableManager =
       GuestRowSessionRow,
       PrefetchHooks Function()
     >;
+typedef $$ImportSessionsTableCreateCompanionBuilder =
+    ImportSessionsCompanion Function({
+      required String importId,
+      required String owner,
+      required int ownerGeneration,
+      required String runId,
+      required int startedAt,
+      required int declaredBytes,
+      Value<int> stagedBytes,
+      Value<int> rowid,
+    });
+typedef $$ImportSessionsTableUpdateCompanionBuilder =
+    ImportSessionsCompanion Function({
+      Value<String> importId,
+      Value<String> owner,
+      Value<int> ownerGeneration,
+      Value<String> runId,
+      Value<int> startedAt,
+      Value<int> declaredBytes,
+      Value<int> stagedBytes,
+      Value<int> rowid,
+    });
+
+class $$ImportSessionsTableFilterComposer
+    extends Composer<_$AppDatabase, $ImportSessionsTable> {
+  $$ImportSessionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get importId => $composableBuilder(
+    column: $table.importId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get owner => $composableBuilder(
+    column: $table.owner,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ownerGeneration => $composableBuilder(
+    column: $table.ownerGeneration,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get startedAt => $composableBuilder(
+    column: $table.startedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get declaredBytes => $composableBuilder(
+    column: $table.declaredBytes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get stagedBytes => $composableBuilder(
+    column: $table.stagedBytes,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ImportSessionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ImportSessionsTable> {
+  $$ImportSessionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get importId => $composableBuilder(
+    column: $table.importId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get owner => $composableBuilder(
+    column: $table.owner,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ownerGeneration => $composableBuilder(
+    column: $table.ownerGeneration,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get startedAt => $composableBuilder(
+    column: $table.startedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get declaredBytes => $composableBuilder(
+    column: $table.declaredBytes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get stagedBytes => $composableBuilder(
+    column: $table.stagedBytes,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ImportSessionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ImportSessionsTable> {
+  $$ImportSessionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get importId =>
+      $composableBuilder(column: $table.importId, builder: (column) => column);
+
+  GeneratedColumn<String> get owner =>
+      $composableBuilder(column: $table.owner, builder: (column) => column);
+
+  GeneratedColumn<int> get ownerGeneration => $composableBuilder(
+    column: $table.ownerGeneration,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get runId =>
+      $composableBuilder(column: $table.runId, builder: (column) => column);
+
+  GeneratedColumn<int> get startedAt =>
+      $composableBuilder(column: $table.startedAt, builder: (column) => column);
+
+  GeneratedColumn<int> get declaredBytes => $composableBuilder(
+    column: $table.declaredBytes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get stagedBytes => $composableBuilder(
+    column: $table.stagedBytes,
+    builder: (column) => column,
+  );
+}
+
+class $$ImportSessionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ImportSessionsTable,
+          ImportSessionRow,
+          $$ImportSessionsTableFilterComposer,
+          $$ImportSessionsTableOrderingComposer,
+          $$ImportSessionsTableAnnotationComposer,
+          $$ImportSessionsTableCreateCompanionBuilder,
+          $$ImportSessionsTableUpdateCompanionBuilder,
+          (
+            ImportSessionRow,
+            BaseReferences<
+              _$AppDatabase,
+              $ImportSessionsTable,
+              ImportSessionRow
+            >,
+          ),
+          ImportSessionRow,
+          PrefetchHooks Function()
+        > {
+  $$ImportSessionsTableTableManager(
+    _$AppDatabase db,
+    $ImportSessionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ImportSessionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ImportSessionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ImportSessionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> importId = const Value.absent(),
+                Value<String> owner = const Value.absent(),
+                Value<int> ownerGeneration = const Value.absent(),
+                Value<String> runId = const Value.absent(),
+                Value<int> startedAt = const Value.absent(),
+                Value<int> declaredBytes = const Value.absent(),
+                Value<int> stagedBytes = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ImportSessionsCompanion(
+                importId: importId,
+                owner: owner,
+                ownerGeneration: ownerGeneration,
+                runId: runId,
+                startedAt: startedAt,
+                declaredBytes: declaredBytes,
+                stagedBytes: stagedBytes,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String importId,
+                required String owner,
+                required int ownerGeneration,
+                required String runId,
+                required int startedAt,
+                required int declaredBytes,
+                Value<int> stagedBytes = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ImportSessionsCompanion.insert(
+                importId: importId,
+                owner: owner,
+                ownerGeneration: ownerGeneration,
+                runId: runId,
+                startedAt: startedAt,
+                declaredBytes: declaredBytes,
+                stagedBytes: stagedBytes,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$ImportSessionsTable, ImportSessionRow>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $ImportSessionsTable,
+                    ImportSessionRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ImportSessionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ImportSessionsTable,
+      ImportSessionRow,
+      $$ImportSessionsTableFilterComposer,
+      $$ImportSessionsTableOrderingComposer,
+      $$ImportSessionsTableAnnotationComposer,
+      $$ImportSessionsTableCreateCompanionBuilder,
+      $$ImportSessionsTableUpdateCompanionBuilder,
+      (
+        ImportSessionRow,
+        BaseReferences<_$AppDatabase, $ImportSessionsTable, ImportSessionRow>,
+      ),
+      ImportSessionRow,
+      PrefetchHooks Function()
+    >;
+typedef $$ImportStagingTableCreateCompanionBuilder =
+    ImportStagingCompanion Function({
+      required String importId,
+      required String owner,
+      required String entity,
+      required String rowId,
+      required int partIndex,
+      required String json,
+      Value<int> rowid,
+    });
+typedef $$ImportStagingTableUpdateCompanionBuilder =
+    ImportStagingCompanion Function({
+      Value<String> importId,
+      Value<String> owner,
+      Value<String> entity,
+      Value<String> rowId,
+      Value<int> partIndex,
+      Value<String> json,
+      Value<int> rowid,
+    });
+
+class $$ImportStagingTableFilterComposer
+    extends Composer<_$AppDatabase, $ImportStagingTable> {
+  $$ImportStagingTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get importId => $composableBuilder(
+    column: $table.importId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get owner => $composableBuilder(
+    column: $table.owner,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rowId => $composableBuilder(
+    column: $table.rowId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get partIndex => $composableBuilder(
+    column: $table.partIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get json => $composableBuilder(
+    column: $table.json,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ImportStagingTableOrderingComposer
+    extends Composer<_$AppDatabase, $ImportStagingTable> {
+  $$ImportStagingTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get importId => $composableBuilder(
+    column: $table.importId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get owner => $composableBuilder(
+    column: $table.owner,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rowId => $composableBuilder(
+    column: $table.rowId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get partIndex => $composableBuilder(
+    column: $table.partIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get json => $composableBuilder(
+    column: $table.json,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ImportStagingTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ImportStagingTable> {
+  $$ImportStagingTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get importId =>
+      $composableBuilder(column: $table.importId, builder: (column) => column);
+
+  GeneratedColumn<String> get owner =>
+      $composableBuilder(column: $table.owner, builder: (column) => column);
+
+  GeneratedColumn<String> get entity =>
+      $composableBuilder(column: $table.entity, builder: (column) => column);
+
+  GeneratedColumn<String> get rowId =>
+      $composableBuilder(column: $table.rowId, builder: (column) => column);
+
+  GeneratedColumn<int> get partIndex =>
+      $composableBuilder(column: $table.partIndex, builder: (column) => column);
+
+  GeneratedColumn<String> get json =>
+      $composableBuilder(column: $table.json, builder: (column) => column);
+}
+
+class $$ImportStagingTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ImportStagingTable,
+          ImportStagingRow,
+          $$ImportStagingTableFilterComposer,
+          $$ImportStagingTableOrderingComposer,
+          $$ImportStagingTableAnnotationComposer,
+          $$ImportStagingTableCreateCompanionBuilder,
+          $$ImportStagingTableUpdateCompanionBuilder,
+          (
+            ImportStagingRow,
+            BaseReferences<
+              _$AppDatabase,
+              $ImportStagingTable,
+              ImportStagingRow
+            >,
+          ),
+          ImportStagingRow,
+          PrefetchHooks Function()
+        > {
+  $$ImportStagingTableTableManager(_$AppDatabase db, $ImportStagingTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ImportStagingTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ImportStagingTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ImportStagingTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> importId = const Value.absent(),
+                Value<String> owner = const Value.absent(),
+                Value<String> entity = const Value.absent(),
+                Value<String> rowId = const Value.absent(),
+                Value<int> partIndex = const Value.absent(),
+                Value<String> json = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ImportStagingCompanion(
+                importId: importId,
+                owner: owner,
+                entity: entity,
+                rowId: rowId,
+                partIndex: partIndex,
+                json: json,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String importId,
+                required String owner,
+                required String entity,
+                required String rowId,
+                required int partIndex,
+                required String json,
+                Value<int> rowid = const Value.absent(),
+              }) => ImportStagingCompanion.insert(
+                importId: importId,
+                owner: owner,
+                entity: entity,
+                rowId: rowId,
+                partIndex: partIndex,
+                json: json,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$ImportStagingTable, ImportStagingRow>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $ImportStagingTable,
+                    ImportStagingRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ImportStagingTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ImportStagingTable,
+      ImportStagingRow,
+      $$ImportStagingTableFilterComposer,
+      $$ImportStagingTableOrderingComposer,
+      $$ImportStagingTableAnnotationComposer,
+      $$ImportStagingTableCreateCompanionBuilder,
+      $$ImportStagingTableUpdateCompanionBuilder,
+      (
+        ImportStagingRow,
+        BaseReferences<_$AppDatabase, $ImportStagingTable, ImportStagingRow>,
+      ),
+      ImportStagingRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -22121,4 +23517,8 @@ class $AppDatabaseManager {
       $$WakeUpDaysTableTableTableManager(_db, _db.wakeUpDaysTable);
   $$GuestRowSessionsTableTableManager get guestRowSessions =>
       $$GuestRowSessionsTableTableManager(_db, _db.guestRowSessions);
+  $$ImportSessionsTableTableManager get importSessions =>
+      $$ImportSessionsTableTableManager(_db, _db.importSessions);
+  $$ImportStagingTableTableManager get importStaging =>
+      $$ImportStagingTableTableManager(_db, _db.importStaging);
 }

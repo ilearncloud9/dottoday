@@ -24,10 +24,44 @@ import 'package:flutter_test/flutter_test.dart';
 // alarm-tier soft reveal; 16 → 17: sync_cursors' keyset (since_at,
 // since_id), null on upgrade; 17 → 18 (CR-160): change_log.owner_id and
 // sync_cursors.owner_id, and the owners recorded in local_meta; 19 → 20
-// (CR-160 Stage A): pending_calendar_series, empty, rows kept.
+// (CR-160 Stage A): pending_calendar_series, empty, rows kept; 20 → 21
+// (CR-160 Stage B2): import_sessions and import_staging, empty.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
+  test(
+    'a version 20 file gains the staging tables, empty, rows kept',
+    () async {
+      final dir = await Directory.systemTemp.createTemp('dottoday-mig21');
+      addTearDown(() => dir.delete(recursive: true));
+      final file = File('${dir.path}/db.sqlite');
+      final v20 = AppDatabase(NativeDatabase(file));
+      await v20.customStatement(
+        'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+        "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+      );
+      await v20.customStatement('DROP TABLE import_staging');
+      await v20.customStatement('DROP TABLE import_sessions');
+      await v20.customStatement('PRAGMA user_version = 20');
+      await v20.close();
+
+      final v21 = AppDatabase(NativeDatabase(file));
+      addTearDown(v21.close);
+      expect(await v21.select(v21.importSessions).get(), isEmpty);
+      expect(await v21.select(v21.importStaging).get(), isEmpty);
+      expect((await v21.select(v21.profiles).getSingle()).id, 'u');
+      // The staged row's owner must be its session's (composite FK).
+      await expectLater(
+        v21.customStatement(
+          'INSERT INTO import_staging (import_id, owner, entity, row_id, '
+          "part_index, json) VALUES ('${'0' * 36}', 'u', 'occurrences', 'o', "
+          "1, '{}')",
+        ),
+        throwsA(anything),
+      );
+    },
+  );
+
   test('a version 19 file gains pending calendar series, empty, its own '
       'calendar series kept', () async {
     final dir = await Directory.systemTemp.createTemp('dottoday-mig20');

@@ -47,7 +47,7 @@ sensitive personal data.
   - **Retention**: entries with no owner, or whose words are unreadable, are retained with no expiry and no review screen (Q4, deferred to I4). They are never attributed from their task id (Q1, not approved).
   - **Web**: the web queue holds Done and +15 by id only, with no text.
   - **Test hooks**: the queue's test hooks exist only in Android's `debug` source set, never in `main`, `profile` or `release` (policy-tested).
-- Web: Drift WASM over IndexedDB on `sqlite3mc.wasm` (one tab at a time); the raw DB key is stored in IndexedDB sealed by a non-extractable WebCrypto AES-GCM key (ADR-0003 amendment, M2.9). Accept that web at-rest protection is weaker (page script can unwrap it); document in privacy page.
+- Web: Drift WASM over IndexedDB on `sqlite3mc.wasm` (one tab at a time); the raw DB key is stored in IndexedDB sealed by a non-extractable WebCrypto AES-GCM key (ADR-0003 amendment, M2.9). Accept that web at-rest protection is weaker (page script can unwrap it); document in privacy page. Temp storage stays in memory on both: native SQLCipher is compiled `TEMP_STORE=2`, and the web connection sets `temp_store = MEMORY` because its sqlite3mc build sets none (CR-160 Stage B2).
 - Server: Postgres encryption at rest (Supabase default); Vault for tokens; daily backups with PITR on paid tier.
 
 ## 5. Data in transit

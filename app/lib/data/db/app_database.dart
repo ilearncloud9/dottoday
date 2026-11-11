@@ -3,6 +3,7 @@ import 'package:dottoday/data/db/tables/calendar_series_table.dart';
 import 'package:dottoday/data/db/tables/calendar_tables.dart';
 // The generated part copies `soundIdCheck` (a column CHECK) verbatim.
 import 'package:dottoday/data/db/tables/columns.dart';
+import 'package:dottoday/data/db/tables/import_staging_tables.dart';
 import 'package:dottoday/data/db/tables/occurrences.dart';
 import 'package:dottoday/data/db/tables/pending_calendar_series_table.dart';
 import 'package:dottoday/data/db/tables/profiles.dart';
@@ -17,8 +18,8 @@ part 'app_database.g.dart';
 
 /// The local source of truth (docs/04 §4): server tables mirrored with sync
 /// columns, plus the local-only `change_log`, `sync_cursors`, `field_seen`,
-/// `local_meta`, `wake_up_days`, `calendar_series` and
-/// `pending_calendar_series`.
+/// `local_meta`, `wake_up_days`, `calendar_series`,
+/// `pending_calendar_series` and the staged-import tables.
 ///
 /// Open it with `openAppDatabase` (connection/connection.dart) so the
 /// SQLCipher key is applied before any statement (06 §4, ADR-0006).
@@ -41,6 +42,8 @@ part 'app_database.g.dart';
     LocalMeta,
     WakeUpDaysTable,
     GuestRowSessions,
+    ImportSessions,
+    ImportStaging,
   ],
   include: {'search.drift'},
 )
@@ -48,7 +51,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 20;
+  static const latestSchemaVersion = 21;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -157,6 +160,12 @@ class AppDatabase extends _$AppDatabase {
       // file, kept until a calendar here provably matches them.
       if (from < 20) {
         await _createTableOnce(m, pendingCalendarSeriesTable);
+      }
+      // 21 (CR-160 Stage B2): staged imports, empty; nothing writes them
+      // until the staged pipeline is live (B3–B5).
+      if (from < 21) {
+        await _createTableOnce(m, importSessions);
+        await _createTableOnce(m, importStaging);
       }
     },
     beforeOpen: (details) async {
