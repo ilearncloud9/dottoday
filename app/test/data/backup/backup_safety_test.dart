@@ -5,9 +5,9 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:dottoday/data/backup/drift_backup_service.dart';
+import 'package:dottoday/data/backup/multipart_backup_store.dart';
 import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
-import 'package:dottoday/domain/backup/backup_restorability.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/export/export_bundle.dart';
 import 'package:dottoday/domain/export/export_json.dart';
@@ -56,15 +56,6 @@ void main() {
     await backups.close();
   });
 
-  /// About 30 MB of JSON: 3,000 tasks with the longest notes allowed.
-  Future<void> grow() => DriftOccurrenceRepository(h.db).upsertAll([
-    for (var i = 0; i < 3000; i++)
-      occurrenceFixture().copyWith(
-        id: '01928c3e-0000-7000-9000-${i.toString().padLeft(12, '0')}',
-        notes: 'n' * 10000,
-      ),
-  ]);
-
   /// Everything a refused operation must leave alone: every task row (as
   /// a digest, so a failure doesn't print 30 MB), the outbox and the write
   /// revision.
@@ -97,34 +88,59 @@ void main() {
     isA<F>(),
   );
 
-  group('a safety backup that could not be restored stops the operation', () {
-    test('a 30 MB account importing a file', () async {
+  // An account too large for one backup file: until B5 its safety backup
+  // can't be one today's restore (Undo) reads, so the import or restore is
+  // refused before any change and nothing is stored (owner decision,
+  // 2026-11-11; B4 stores daily backups of it as parts). Limits shrunk so
+  // the account is small.
+  group('an account over the single-file limit is refused until B5', () {
+    late DriftBackupService small;
+    setUp(() async {
+      small = DriftBackupService(
+        db: h.db,
+        backups: backups,
+        writes: h.writes,
+        clock: h.clock,
+        logger: h.logger,
+        limits: (singleFile: 200000, part: 64000),
+      );
+    });
+    Future<void> grow() => DriftOccurrenceRepository(h.db).upsertAll([
+      for (var i = 0; i < 50; i++)
+        occurrenceFixture().copyWith(
+          id: '01928c3e-0000-7000-9000-${i.toString().padLeft(12, '0')}',
+          notes: 'n' * 10000,
+        ),
+    ]);
+
+    test('importing a file', () async {
       await grow();
       final before = await live();
-      final kept = await stored();
       expect(
-        await service.importJson(userId, smallFile()),
+        await small.importJson(userId, smallFile()),
         refusedAs<BackupNotRestorableFailure>(),
       );
-      expect(await live(), before, reason: 'no live change');
-      expect(await stored(), kept, reason: 'nothing stored or pruned');
-    }, timeout: const Timeout(Duration(minutes: 2)));
+      expect(await live(), before);
+      expect(await stored(), isEmpty);
+    });
 
-    test('a 30 MB account restoring an earlier backup', () async {
-      final earlier = (await service.create(
+    test('restoring an earlier backup', () async {
+      final earlier = (await small.create(
         userId,
         BackupReason.daily,
       )).when(ok: (b) => b.id, err: (f) => fail(f.code));
       await grow();
       final before = await live();
       expect(
-        await service.restore(userId, earlier),
+        await small.restore(userId, earlier),
         refusedAs<BackupNotRestorableFailure>(),
       );
       expect(await live(), before);
       expect(await stored(), [earlier]);
-    }, timeout: const Timeout(Duration(minutes: 2)));
+    });
+  });
 
+  group('a safety backup that could not be restored stops the operation', () {
     test('a backup that stores but fails restore validation', () async {
       // Within the database's rules, not the app's: the backup of it would
       // be refused by every restore.
@@ -199,32 +215,37 @@ void main() {
     expect(titles, {occurrenceFixture().title});
   });
 
-  test('the last restorable backup survives 8 oversized daily rotations, '
-      'then goes once a newer one can be restored', () async {
-    final last = (await service.create(
+  test('daily backups too large for one file are verified parts and count '
+      'as restorable: retention keeps 7, the older single file goes '
+      '(CR-160 Stage B4)', () async {
+    final small = DriftBackupService(
+      db: h.db,
+      backups: backups,
+      writes: h.writes,
+      clock: h.clock,
+      logger: h.logger,
+      limits: (singleFile: 200000, part: 64000),
+    );
+    final last = (await small.create(
       userId,
       BackupReason.daily,
     )).when(ok: (b) => b.id, err: (f) => fail(f.code));
-    await grow();
+    await DriftOccurrenceRepository(h.db).upsertAll([
+      for (var i = 0; i < 50; i++)
+        occurrenceFixture().copyWith(
+          id: '01928c3e-0000-7000-9000-${i.toString().padLeft(12, '0')}',
+          notes: 'n' * 10000,
+        ),
+    ]);
     for (var day = 0; day < 8; day++) {
       h.clock.advance(_day);
-      expect(await service.runDailyIfDue(userId), isA<Ok<bool, AppFailure>>());
+      expect(await small.runDailyIfDue(userId), isA<Ok<bool, AppFailure>>());
     }
     final ids = await stored();
-    expect(ids, contains(last), reason: 'the only one a restore can read');
-    expect(ids, hasLength(8), reason: '7 daily + the restorable one');
-    final kept = await (backups.select(
-      backups.backups,
-    )..where((b) => b.id.equals(last))).getSingle();
-    expect(isRestorableBackup(kept.json, userId), isTrue);
-
-    // Back under the limit: a new restorable daily replaces it.
-    await h.db.customStatement(
-      "DELETE FROM occurrences WHERE id LIKE '01928c3e-0000-7000-9000-%'",
-    );
-    h.clock.advance(_day);
-    await service.runDailyIfDue(userId);
-    expect(await stored(), isNot(contains(last)));
-    expect(await stored(), hasLength(7));
-  }, timeout: const Timeout(Duration(minutes: 3)));
+    expect(ids, hasLength(7));
+    expect(ids, isNot(contains(last)));
+    for (final id in ids) {
+      expect(await verifyStoredMultipart(backups, id, userId), isTrue);
+    }
+  });
 }

@@ -27,6 +27,7 @@ final _fenced = RegExp(
 /// Settings flows.
 const _mainIsolateOnly = {
   'app_lifecycle.dart',
+  'data/backup/backup_creation.dart',
   'data/backup/backup_privacy.dart',
   'data/backup/backup_providers.dart',
   'data/backup/drift_backup_service.dart',

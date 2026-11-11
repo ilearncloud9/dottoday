@@ -7,6 +7,7 @@ library;
 
 import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:dottoday/data/backup/guest_backup_cutoff.dart';
+import 'package:dottoday/data/backup/multipart_backup_store.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/domain/backup/backup_recovery.dart';
 
@@ -83,8 +84,11 @@ Future<List<BackupAuditEntry>> auditBackups(
   final rows = await backups
       .customSelect(
         'SELECT id, owner, app_schema_version, reason, '
-        'length(CAST(json AS BLOB)) AS bytes FROM backups ORDER BY id',
-        readsFrom: {backups.backups},
+        // A multipart backup's size is its parts' (CR-160 Stage B4).
+        'COALESCE((SELECT SUM(p.bytes) FROM backup_parts p WHERE '
+        'p.backup_id = backups.id), length(CAST(json AS BLOB))) AS bytes '
+        'FROM backups ORDER BY id',
+        readsFrom: {backups.backups, backups.backupParts},
       )
       .get();
   return [
@@ -116,7 +120,13 @@ Future<BackupAuditEntry> _audit(
       backups.backups,
     )..where((b) => b.id.equals(id))).getSingle();
     try {
-      recovery = classifyBackupJson(row.json, owner);
+      // A multipart backup (CR-160 Stage B4) is read back whole, a part at
+      // a time: restorable, or malformed when any part fails its check.
+      recovery = owner != null && await isMultipartBackup(backups, id)
+          ? (await verifyStoredMultipart(backups, id, owner)
+                ? BackupRecovery.restorable
+                : BackupRecovery.malformed)
+          : classifyBackupJson(row.json, owner);
     } on Object {
       recovery = BackupRecovery.unknown;
     }

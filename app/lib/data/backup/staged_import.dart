@@ -112,10 +112,7 @@ final class StagedImporter {
     return _run(
       userId,
       declared: bytes,
-      stage: (i) async {
-        await stageStoredBackup(_db, backups, i, backupId);
-        return null;
-      },
+      stage: (i) => stageStoredBackup(_db, backups, i, backupId),
       safety: safety,
     );
   });

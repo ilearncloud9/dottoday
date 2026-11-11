@@ -8,6 +8,7 @@ import 'dart:convert';
 
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
+import 'package:dottoday/data/backup/multipart_backup_store.dart';
 import 'package:dottoday/data/backup/staged_import_store.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/domain/export/export_bundle.dart';
@@ -109,7 +110,11 @@ Future<TableCounts> stageMultipart(
 /// of rows at a time: the stored text is never decoded whole in Dart, so a
 /// backup over 25 MB can be read too (§8). The caller holds
 /// `guestBackupFence` and has checked the backup may be shown.
-Future<void> stageStoredBackup(
+///
+/// A multipart backup (Stage B4) is staged a part at a time from
+/// `backup_parts`, each part checked against its manifest; its totals come
+/// back for the global checks.
+Future<TableCounts?> stageStoredBackup(
   AppDatabase db,
   BackupDatabase backups,
   StagedImport import,
@@ -117,6 +122,10 @@ Future<void> stageStoredBackup(
   int page = 1000,
 }) async {
   final owner = import.owner.userId;
+  final manifest = await storedManifest(backups, backupId, owner);
+  if (manifest != null) {
+    return _stageStoredParts(db, backups, import, backupId, manifest);
+  }
   final meta = await backups
       .customSelect(
         r"SELECT json_extract(json, '$.version') AS v, "
@@ -181,6 +190,41 @@ Future<void> stageStoredBackup(
       next = rows.last.read<int>('k') + 1;
     }
   }
+  return null;
+}
+
+Future<TableCounts> _stageStoredParts(
+  AppDatabase db,
+  BackupDatabase backups,
+  StagedImport import,
+  int backupId,
+  ExportManifest manifest,
+) async {
+  final set = PartSet(manifest);
+  for (final entry in manifest.parts) {
+    final text = await storedPartText(backups, backupId, entry.index);
+    if (text == null) throw badImportFile;
+    switch (set.add(text)) {
+      case PartRefused():
+        throw badImportFile;
+      case PartAccepted(duplicate: true):
+        throw badImportFile;
+      case PartAccepted(:final part):
+        // A stored backup is its owner's own (today's requireOwner rule).
+        if (part.index == 1 && part.profile?['id'] != import.owner.userId) {
+          throw const SourceRefused(StorageFailure());
+        }
+        await stagePart(
+          db,
+          import,
+          partIndex: part.index,
+          profile: part.profile,
+          rows: part.rows,
+        );
+    }
+  }
+  if (!set.complete) throw badImportFile;
+  return manifest.totals;
 }
 
 /// The size [import] of stored backup [backupId] declares (its bytes), or
@@ -192,13 +236,15 @@ Future<int?> storedBackupBytes(
 ) async =>
     (await backups
             .customSelect(
-              'SELECT length(CAST(json AS BLOB)) AS n FROM backups '
-              'WHERE id = ? AND owner = ?',
+              // A multipart backup's size is its parts' (Stage B4).
+              'SELECT COALESCE((SELECT SUM(p.bytes) FROM backup_parts p '
+              'WHERE p.backup_id = backups.id), length(CAST(json AS BLOB))) '
+              'AS n FROM backups WHERE id = ? AND owner = ?',
               variables: [
                 Variable.withInt(backupId),
                 Variable.withString(owner),
               ],
-              readsFrom: {backups.backups},
+              readsFrom: {backups.backups, backups.backupParts},
             )
             .getSingleOrNull())
         ?.read<int>('n');

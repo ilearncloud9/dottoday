@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:drift/drift.dart' show OrderingTerm;
 import 'package:drift/native.dart';
@@ -54,10 +56,35 @@ void main() {
     expect(await db.select(db.backups).get(), hasLength(1));
   });
 
-  test('a fresh database is created at schema 2 with the index', () async {
+  test('a version 2 file gains backup_parts, empty; its backups kept, and '
+      'parts go with their backup', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-bk3');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/b.db');
+    final v2 = BackupDatabase(NativeDatabase(file));
+    await v2.customStatement(
+      'INSERT INTO backups (created_at, reason, app_schema_version, json, '
+      "owner) VALUES (0, 'daily', 20, '{}', 'p-1')",
+    );
+    await v2.customStatement('DROP TABLE backup_parts');
+    await v2.customStatement('PRAGMA user_version = 2');
+    await v2.close();
+    final v3 = BackupDatabase(NativeDatabase(file));
+    addTearDown(v3.close);
+    expect(await v3.select(v3.backupParts).get(), isEmpty);
+    expect(await v3.select(v3.backups).get(), hasLength(1));
+    await v3.customStatement(
+      'INSERT INTO backup_parts (backup_id, part_index, sha256, bytes, json) '
+      "VALUES (1, 1, '${'a' * 64}', 2, '{}')",
+    );
+    await v3.deleteBackupsOf('p-1');
+    expect(await v3.select(v3.backupParts).get(), isEmpty, reason: 'cascade');
+  });
+
+  test('a fresh database is created at schema 3 with the index', () async {
     final db = BackupDatabase(NativeDatabase.memory());
     addTearDown(db.close);
-    expect(db.schemaVersion, 2);
+    expect(db.schemaVersion, 3);
     final index = await db
         .customSelect(
           "SELECT name FROM sqlite_master WHERE type = 'index' "

@@ -150,6 +150,47 @@ Not yet: the pipeline is not wired to any caller (B5); its safety backup is the 
 verified backup refuses accounts over 25 MB until B4; multipart staging of a stored backup above the
 64 MiB provisional total is refused.
 
+### B4 verification (2026-11-11, local)
+Built: backup schema 3 (`backup_parts`: backup id and part index as key, SHA-256, bytes, the part's
+text; `ON DELETE CASCADE` from `backups`, foreign keys switched on at every open; STRICT, CHECKs on
+index, hash length, size and JSON), `domain/export/multipart_planner.dart` (where parts end, shared
+with B1's splitter), `data/backup/multipart_backup_writer.dart`, `multipart_backup_store.dart` and
+`backup_creation.dart`; retention, the audit and the staged restore read parts.
+
+Owner decisions (B4 plan, recommendations 1–4):
+1. **Parts only above 25 MB.** A backup that fits is today's single file; an account whose last
+   backup was already large goes straight to parts, without reading itself into memory whole.
+2. **Guest backups stored as parts stay hidden and unscrubbed**, like oversized ones (I1): the privacy
+   scrubs can't read a manifest, so they count it as unreadable and leave it, hidden (fail closed).
+3. **Verified** means: the manifest decodes, every part is present, its hash, index, total and counts
+   match, part 1's profile is the owner's, and the totals equal the rows read.
+4. **Retention is unchanged** for existing oversized single-file backups.
+5. **Until B5, safety backups are never parts** (2026-11-11). Today's restore, and so Undo, reads one
+   file only, so an import or restore for an account too large for one file is refused before any
+   change, as before B4. Daily backups of it are stored as parts. B5 lifts the refusal when the
+   staged pipeline becomes the restore path.
+6. **Stored backups use 5 MB parts** (2026-11-11), not the 10 MB of an exported file
+   (`backupPartTargetBytes`): see Memory and time below.
+
+How a write stays all-or-nothing: the account is read twice inside one read transaction (one
+consistent cut; the first pass plans where parts end, the second writes them, one part in memory at a
+time), and the backup row, its parts and its manifest go in one transaction of the backups file. Then
+the stored set is read back a part at a time and checked; one that fails is deleted (its parts with
+it) and the backup is refused. Drift resolves a query's transaction from the
+innermost zone, so the second pass runs its page reads back in the main database's transaction zone
+(otherwise they wait on that transaction: a deadlock, found as a hung test).
+
+| Gate | Result |
+|---|---|
+| Any backup restores | `multipart_backup_world_test.dart`: an account (the hostile file imported) backed up as parts restores through B3 to exactly what its single-file backup restores to (rows, Trash, templates, outbox); staging gone. A stored single file over the import limit takes the same `json_each` path B3 measured |
+| All or nothing | `multipart_backup_test.dart`: a write that fails at part 2 leaves no backup row and no part; parts that don't read back whole are removed and the backup refused (`BackupNotRestorableFailure`) |
+| Retention | Eight newer copies with a damaged part: the oldest, only restorable backup is kept. `backup_safety_test.dart`: daily backups too large for one file are verified parts, retention keeps 7 |
+| Privacy | A guest's backup stored as parts stays hidden, unlisted, unchanged and unrestorable through promotion and P2; removing the account removes its own parts |
+| Today's restore | The in-memory restore refuses a backup stored as parts and changes nothing. `backup_safety_test.dart`: an import or restore whose safety backup would need parts is refused (`BackupNotRestorableFailure`), nothing changed, nothing stored (decision 5) |
+| Audit | Parts that verify are restorable, sized by their parts; damaged ones are malformed |
+| Mutations | Parts written outside one transaction, no read-back after writing, retention or the audit trusting parts unread, foreign keys off, a restore staging a manifest as one file, no profile-is-the-owner check in the restore or in verification, a safety backup stored as parts: each caught. The two profile checks are caught by parts that are wholly another account's (profile and every row, hashes recomputed); a set with only the profile changed is also refused by B3's one-owner check |
+| Memory and time (host VM, SQLCipher files, WAL; three runs each) | 59 MB account written as 5 MB parts (decision 6): 4.6–4.8 s, 61–86 MB above idle, within §7's 100 MB. As 10 MB parts it measured 120–131 MB, over it: peak grows with part size (a part is in memory as rows, a sorted copy, its text and its bytes). Restoring the 5 MB parts: 4.7–4.9 s, 30–56 MB above an idle already raised by the write, so a lower bound. Not device figures; web not measured |
+
 ## 7. Size policy and acceptance criteria (provisional)
 Provisional limits: **10 MB per written part, 25 MB per file read.** No maximum part count is adopted
 yet. Each limit is confirmed or changed only from measurements against these criteria (B8):
@@ -169,8 +210,10 @@ and stated in the release notes; it is never silently truncated.
 **Ordering gate (correction A):** the staged pipeline becomes the active import path only after the
 pre-import backup it takes is restorable at any size (B4 before B5, §9).
 
-- **New backups**: stored as parts in the backup database (backup schema 3: a `backup_parts` table
-  beside `backups`), written by the multipart writer one part at a time, restored through §5.
+- **New backups**: a backup that fits the 25 MB import limit is today's JSON v1 row, unchanged. One
+  over it is stored as parts in the backup database (backup schema 3: a `backup_parts` table beside
+  `backups`, the `backups` row holding the manifest), written by the multipart writer one part at a
+  time, restored through §5. Built in B4 (see B4 verification).
 - **Existing backups over 25 MB**: today they **cannot be restored**, and normal retention can still
   remove them (unchanged by B0; decision 5). This work never rewrites, deletes or marks them unusable.
   **Proposed, not built or verified:** make them restorable through §5 with a **legacy backup

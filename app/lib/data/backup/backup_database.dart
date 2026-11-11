@@ -30,15 +30,46 @@ class Backups extends Table {
   bool get isStrict => true;
 }
 
+/// One part of a multipart backup (CR-160 Stage B4, backup schema 3,
+/// docs/cr-160-multipart-export.md §8): a backup over the import limit is
+/// stored as parts, its `backups` row holding the manifest. Ownership,
+/// privacy cutoffs and quarantine stay keyed by the backup's id, and the
+/// parts go with their backup (ON DELETE CASCADE).
+@DataClassName('BackupPartRow')
+class BackupParts extends Table {
+  IntColumn get backupId => integer()();
+
+  /// 1-based, as the manifest numbers them.
+  IntColumn get partIndex => integer()();
+  TextColumn get sha256 => text()();
+  IntColumn get bytes => integer()();
+  TextColumn get json => text()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {backupId, partIndex};
+
+  @override
+  List<String> get customConstraints => const [
+    'FOREIGN KEY (backup_id) REFERENCES backups (id) ON DELETE CASCADE',
+    'CHECK (part_index >= 1)',
+    'CHECK (length(sha256) = 64)',
+    'CHECK (bytes > 0)',
+    'CHECK (json_valid(json))',
+  ];
+
+  @override
+  bool get isStrict => true;
+}
+
 /// Local backups, in their own encrypted file (`dottoday-backups.db`, same
 /// key as the app database, 06 §4) so damage to one file can't take the
 /// other with it.
-@DriftDatabase(tables: [Backups])
+@DriftDatabase(tables: [Backups, BackupParts])
 class BackupDatabase extends _$BackupDatabase {
   BackupDatabase(super.executor);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -49,7 +80,12 @@ class BackupDatabase extends _$BackupDatabase {
     onUpgrade: (m, from, to) async {
       // Forward-only steps, one per version.
       if (from < 2) await _addOwner(m);
+      // 3 (CR-160 Stage B4): multipart backups' parts, empty.
+      if (from < 3) await m.createTable(backupParts);
     },
+    // Per connection, never persisted: parts cascade with their backup
+    // only while foreign keys are on (the web connection sets none).
+    beforeOpen: (details) => customStatement('PRAGMA foreign_keys = ON'),
   );
 
   /// Schema 2 (CR-160 I2): every backup gets an owner. A schema-1 backup

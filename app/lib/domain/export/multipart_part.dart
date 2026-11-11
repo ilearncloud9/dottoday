@@ -10,6 +10,8 @@ library;
 
 import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
+
 import 'package:dottoday/domain/export/export_json.dart';
 import 'package:dottoday/domain/export/multipart_format.dart';
 
@@ -85,8 +87,15 @@ final class PartRefused extends PartCheck {
 
 /// Checks [text] as a part of [manifest].
 PartCheck checkPart(ExportManifest manifest, String text) {
-  if (exceedsImportLimit(text)) return const PartRefused(PartProblem.tooLarge);
-  final hash = sha256Hex(text);
+  // Encoded once for the limit, the hash and the size (peak memory, §7).
+  if (text.length > maxImportBytes) {
+    return const PartRefused(PartProblem.tooLarge);
+  }
+  final encoded = utf8.encode(text);
+  if (encoded.length > maxImportBytes) {
+    return const PartRefused(PartProblem.tooLarge);
+  }
+  final hash = sha256.convert(encoded).toString();
   final entry = manifest.parts.where((p) => p.sha256 == hash).firstOrNull;
   if (entry == null) return const PartRefused(PartProblem.hashMismatch);
   final part = _decode(text);
@@ -96,7 +105,7 @@ PartCheck checkPart(ExportManifest manifest, String text) {
       part.index == entry.index &&
       part.total == manifest.parts.length &&
       (part.profile != null) == (part.index == 1) &&
-      utf8.encode(text).length == entry.bytes &&
+      encoded.length == entry.bytes &&
       partTables.every((t) => part.counts[t] == entry.counts[t]);
   return consistent
       ? PartAccepted(part)

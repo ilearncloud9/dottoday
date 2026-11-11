@@ -3,6 +3,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/logging/logger.dart';
+import 'package:dottoday/data/backup/backup_creation.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:dottoday/data/backup/backup_privacy.dart';
 import 'package:dottoday/data/backup/backup_retention.dart';
@@ -18,6 +19,7 @@ import 'package:dottoday/domain/export/export_bundle.dart';
 import 'package:dottoday/domain/export/export_json.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 
 /// [BackupService] storing JSON v1 bundles in [BackupDatabase].
 ///
@@ -34,6 +36,7 @@ final class DriftBackupService implements BackupService {
     required Logger logger,
     IdGenerator ids = const UuidV7Generator(),
     this.afterRead,
+    @visibleForTesting this.limits = defaultBackupLimits,
   }) : _db = db,
        _backups = backups,
        _writes = writes,
@@ -61,6 +64,9 @@ final class DriftBackupService implements BackupService {
   /// Tests only: runs between reading the account and storing its backup,
   /// to race a guest-work move against it (guest_backup_cutoff.dart).
   final Future<void> Function()? afterRead;
+
+  /// The single-file limit and the part target (tests shrink them).
+  final BackupLimits limits;
 
   @override
   Future<Result<bool, AppFailure>> runDailyIfDue(String userId) async {
@@ -130,68 +136,31 @@ final class DriftBackupService implements BackupService {
         return body();
       });
 
-  /// [verify]: the safety backup before an import or restore (CR-160
-  /// backup safety). It is stored only if within the import limit, then
-  /// read back and checked the way a restore would read it, complete
-  /// against the account it was taken of; otherwise it is removed and
-  /// [BackupNotRestorableFailure] stops the operation before any live
-  /// change. Pruning runs only after that check passed.
+  /// One backup, single file or parts, verified when [verify] (the safety
+  /// backup before an import or restore): backup_creation.dart.
   Future<Result<BackupInfo, AppFailure>> _create(
     String userId,
     BackupReason reason, {
     required bool verify,
   }) async {
-    final now = _clock.nowUtc();
     try {
-      final bundle = await _db.transaction(
-        () => readUserData(_db, userId, now),
-      );
-      if (bundle == null) return const Err(StorageFailure());
-      final json = encodeExportJson(bundle);
-      if (verify && exceedsImportLimit(json)) return _notRestorable();
-      await afterRead?.call();
-      final id = await _backups
-          .into(_backups.backups)
-          .insert(
-            BackupsCompanion.insert(
-              createdAt: now.millisecondsSinceEpoch,
-              reason: reason.name,
-              appSchemaVersion: AppDatabase.latestSchemaVersion,
-              json: json,
-              owner: Value(userId),
-            ),
-          );
-      if (verify &&
-          !await storedBackupRestorable(_backups, id, userId, bundle)) {
-        await (_backups.delete(
-          _backups.backups,
-        )..where((b) => b.id.equals(id))).go();
-        return _notRestorable();
-      }
-      await pruneKeepingRestorable(
+      return await createBackup(
+        _db,
         _backups,
         userId,
-        reason.name,
-        retention[reason]!,
-        hidden: (await guestBackupVisibility(_db, userId)).hides,
-      );
-      return Ok(
-        BackupInfo(
-          id: id,
-          createdAtUtc: now,
-          reason: reason,
-          sizeBytes: json.length,
-        ),
+        reason,
+        now: _clock.nowUtc(),
+        keep: retention[reason]!,
+        verify: verify,
+        ids: _ids,
+        logger: _logger,
+        limits: limits,
+        afterRead: afterRead,
       );
     } on Exception catch (e, st) {
       _logger.error('backup.create_failed', error: e, stackTrace: st);
       return const Err(StorageFailure());
     }
-  }
-
-  Result<BackupInfo, AppFailure> _notRestorable() {
-    _logger.warn('backup.not_restorable');
-    return const Err(BackupNotRestorableFailure());
   }
 
   /// The shown owner's backups only; ownerless (legacy) ones never appear,

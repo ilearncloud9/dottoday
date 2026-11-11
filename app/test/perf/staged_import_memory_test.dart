@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
+import 'package:dottoday/data/backup/multipart_backup_writer.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/connection/cipher_setup.dart';
 import 'package:dottoday/domain/export/export_bundle.dart';
@@ -24,7 +25,7 @@ import '../support/owner_app.dart';
 import '../support/rss_sampler.dart';
 import '../support/staged_import_world.dart';
 
-// CR-160 Stage B3 measurement, not a gate by itself: duration and peak RSS
+// CR-160 Stage B3 and B4 measurements, not gates by themselves: duration and peak RSS
 // above idle of the staged import (spec §7: import ≤ 150 MB above idle on
 // native for any part ≤ 25 MB). Host VM (flutter_tester), on a SQLCipher
 // file in WAL mode as the app opens it (an in-memory database would count
@@ -52,14 +53,18 @@ ExportBundle _account(int n, String owner) => ExportBundle(
 String _mb(int bytes) => mb(bytes);
 
 /// A fresh SQLCipher file, WAL, as the app opens its database.
-Future<AppDatabase> _fileDb() async {
+Future<AppDatabase> _fileDb() async => AppDatabase(await _cipherFile());
+
+/// The backups file the same way (CR-160 Stage B4).
+Future<BackupDatabase> _fileBackups() async =>
+    BackupDatabase(await _cipherFile());
+
+Future<NativeDatabase> _cipherFile() async {
   final dir = await Directory.systemTemp.createTemp('dottoday-b3-perf');
   addTearDown(() => dir.delete(recursive: true));
-  return AppDatabase(
-    NativeDatabase(
-      File('${dir.path}/dottoday.db'),
-      setup: (raw) => configureCipherConnection(raw, 'ef' * 32),
-    ),
+  return NativeDatabase(
+    File('${dir.path}/dottoday.db'),
+    setup: (raw) => configureCipherConnection(raw, 'ef' * 32),
   );
 }
 
@@ -164,5 +169,64 @@ void main() {
     },
     skip: !enabled,
     timeout: const Timeout(Duration(minutes: 10)),
+  );
+
+  test(
+    'a 60 MB account backed up as 5 MB parts, then restored (CR-160 Stage B4)',
+    () async {
+      final w = await stagedWorld(db: await _fileDb());
+      final store = await _fileBackups();
+      addTearDown(store.close);
+      final split =
+          splitExport(
+                _account(5800, 'x'),
+                exportId: '01928c3e-0000-7000-8000-0000000000e3',
+                appVersion: '1',
+                schemaVersion: 21,
+                purpose: ExportPurpose.export,
+                date: '2026-11-11',
+              )
+              as MultipartSplit;
+      expect(
+        await stagedImporter(w).importMultipart(
+          stagedOwner,
+          split.files.first.content,
+          parts: [
+            for (final ExportFile(:content) in split.files.skip(1))
+              () async => content,
+          ],
+          safety: () async => const Ok(null),
+        ),
+        isA<Ok<void, AppFailure>>(),
+      );
+      StoredParts? stored;
+      final write = await measureRss(() async {
+        stored = await writeMultipartBackup(
+          w.db,
+          store,
+          stagedOwner,
+          reason: 'daily',
+          nowUtc: ownerAppNow,
+          exportId: '01928c3e-0000-7000-8000-0000000000e4',
+          schemaVersion: AppDatabase.latestSchemaVersion,
+        );
+        expect(stored, isNotNull);
+      });
+      report('backup, written as parts', stored!.bytes, write);
+      final restore = await measureRss(() async {
+        final r = await stagedImporter(w, runId: 'run-2').restoreBackup(
+          stagedOwner,
+          store,
+          stored!.id,
+          safety: () async => const Ok(null),
+        );
+        expect(r, isA<Ok<void, AppFailure>>());
+      });
+      report('restore, stored parts', stored!.bytes, restore);
+      expect(await stagingLeft(w), 0);
+      await w.dispose();
+    },
+    skip: !enabled,
+    timeout: const Timeout(Duration(minutes: 15)),
   );
 }

@@ -19,6 +19,7 @@ import 'package:dottoday/domain/export/export_files.dart';
 import 'package:dottoday/domain/export/export_json.dart';
 import 'package:dottoday/domain/export/multipart_format.dart';
 import 'package:dottoday/domain/export/multipart_part.dart';
+import 'package:dottoday/domain/export/multipart_planner.dart';
 
 /// The result of [splitExport].
 sealed class ExportSplit {
@@ -73,8 +74,15 @@ ExportSplit splitExport(
   final single = encodeExportJson(bundle);
   if (utf8.encode(single).length <= targetBytes) return SingleFileSplit(single);
   final profile = json['profile']! as Map<String, Object?>;
-  final (:table, plan: sizes) = _plan(rows, exportId, profile, targetBytes);
-  if (sizes == null) return RowTooLarge(table);
+  final planner = PartPlanner(
+    exportId: exportId,
+    profile: profile,
+    targetBytes: targetBytes,
+  );
+  for (final r in rows) {
+    if (!planner.add(r.table, r.row)) return RowTooLarge(planner.tooLarge!);
+  }
+  final sizes = planner.finish();
   final parts = _write(rows, sizes, exportId, profile);
   // The plan is an upper bound, so this holds unless the plan is wrong.
   assert(parts.every((p) => utf8.encode(p).length <= targetBytes));
@@ -116,49 +124,6 @@ ExportSplit splitExport(
       ),
   ]);
 }
-
-/// Rows per part; or the table of a row too large for any part.
-({String table, List<int>? plan}) _plan(
-  List<PartRow> rows,
-  String exportId,
-  Map<String, Object?> profile,
-  int target,
-) {
-  final firstHeader = _headerBytes(exportId, profile);
-  final header = _headerBytes(exportId, null);
-  final plan = <int>[];
-  var used = firstHeader;
-  var count = 0;
-  for (final r in rows) {
-    // +1: the comma before it (an upper bound for an array's first row).
-    final size = utf8.encode(canonicalJson(r.row)).length + 1;
-    if (header + size > target) return (table: r.table, plan: null);
-    if (used + size > target) {
-      plan.add(count);
-      used = header;
-      count = 0;
-    }
-    used += size;
-    count++;
-  }
-  plan.add(count);
-  return (table: '', plan: plan);
-}
-
-/// Bytes of an empty part, with the widest index and total a plan can need.
-int _headerBytes(String exportId, Map<String, Object?>? profile) => utf8
-    .encode(
-      canonicalJson(
-        ExportPart(
-          exportId: exportId,
-          index: 999999,
-          total: 999999,
-          profile: profile,
-          rows: {for (final t in partTables) t: const []},
-        ).toJson(),
-      ),
-    )
-    .length;
 
 List<String> _write(
   List<PartRow> rows,

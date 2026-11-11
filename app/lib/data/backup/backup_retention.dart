@@ -1,4 +1,5 @@
 import 'package:dottoday/data/backup/backup_database.dart';
+import 'package:dottoday/data/backup/multipart_backup_store.dart';
 import 'package:dottoday/domain/backup/backup_restorability.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/export/export_bundle.dart';
@@ -67,6 +68,10 @@ Future<List<_Row>> _ownedNewestFirst(
 }
 
 Future<bool> _restorable(BackupDatabase backups, int id, String owner) async {
+  // A multipart backup (CR-160 Stage B4): read back whole, a part at a time.
+  if (await isMultipartBackup(backups, id)) {
+    return verifyStoredMultipart(backups, id, owner);
+  }
   final row = await (backups.select(
     backups.backups,
   )..where((b) => b.id.equals(id) & b.owner.equals(owner))).getSingleOrNull();
@@ -82,10 +87,12 @@ Future<List<BackupInfo>> backupInfosOf(
 ) async {
   final rows = await backups
       .customSelect(
-        'SELECT id, created_at, reason, length(json) AS size FROM backups '
-        'WHERE owner = ? ORDER BY created_at DESC, id DESC',
+        // A multipart backup's size is its parts' (CR-160 Stage B4).
+        'SELECT id, created_at, reason, COALESCE((SELECT SUM(p.bytes) FROM '
+        'backup_parts p WHERE p.backup_id = backups.id), length(json)) AS '
+        'size FROM backups WHERE owner = ? ORDER BY created_at DESC, id DESC',
         variables: [Variable.withString(owner)],
-        readsFrom: {backups.backups},
+        readsFrom: {backups.backups, backups.backupParts},
       )
       .get();
   return [
