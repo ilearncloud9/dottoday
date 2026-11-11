@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'source_scan.dart';
 
 // CR-160 Stage B2 (docs/cr-160-multipart-export.md §6): the staging tables
-// are never synced and never read in normal queries. Only the staging store
-// reads or writes them; the schema declares them; account removal deletes
+// are never synced and never read in normal queries. Only the staged import
+// (data/backup/staged_import_*.dart) reads or writes them; the schema declares them; account removal deletes
 // them. No outbox entity, synced-table list or trigger names them.
 
 final _staging = RegExp(
@@ -15,7 +15,10 @@ final _staging = RegExp(
 );
 
 const _allowed = {
+  'data/backup/staged_import_checks.dart',
+  'data/backup/staged_import_commit.dart',
   'data/backup/staged_import_store.dart',
+  'data/backup/staged_import_trash.dart',
   'data/db/app_database.dart',
   'data/db/tables/import_staging_tables.dart',
   'data/sync/account_owners.dart',

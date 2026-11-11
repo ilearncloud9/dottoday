@@ -65,6 +65,18 @@ final class DriftWriteUseCase implements WriteUseCase {
 
   @override
   Future<Result<void, AppFailure>> apply(WriteBatch batch) async {
+    final result = await applyWithoutEffects(batch);
+    if (result is Ok) _effects.schedule(batch.userId);
+    return result;
+  }
+
+  /// [apply] without the after-write effects: the same validation, seal,
+  /// shown-owner and Finding X checks, in its own savepoint when the caller
+  /// holds a transaction. For a caller that writes several batches in one
+  /// transaction (the staged import's commit, CR-160 Stage B3): effects
+  /// scheduled inside it would run inside that transaction, so the caller
+  /// schedules them once ([AfterWriteEffects.schedule]) after it commits.
+  Future<Result<void, AppFailure>> applyWithoutEffects(WriteBatch batch) async {
     if (!batch.isSingleOwner) {
       throw ArgumentError.value(batch.userId, 'batch', 'mixes row owners');
     }
@@ -95,7 +107,6 @@ final class DriftWriteUseCase implements WriteUseCase {
       _logger.error('write.failed', error: e, stackTrace: st);
       return const Err(StorageFailure());
     }
-    _effects.schedule(batch.userId);
     return const Ok(null);
   }
 

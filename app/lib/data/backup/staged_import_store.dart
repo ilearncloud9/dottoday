@@ -100,7 +100,7 @@ Future<void> stagePart(
   required Map<String, List<Map<String, Object?>>> rows,
   Map<String, Object?>? profile,
 }) => db.transaction(() async {
-  await _fence(db, import);
+  await checkStagedImport(db, import);
   final staged = [
     if (profile != null) ('profile', profile),
     for (final MapEntry(key: table, value: list) in rows.entries)
@@ -166,11 +166,29 @@ Future<List<Map<String, Object?>>> stagedRows(
   String entity, {
   String afterRowId = '',
   int limit = 500,
+}) async => [
+  for (final (_, row) in await stagedRowsWithIds(
+    db,
+    import,
+    entity,
+    afterRowId: afterRowId,
+    limit: limit,
+  ))
+    row,
+];
+
+/// [stagedRows] with each row's staging key (for the next page).
+Future<List<(String, Map<String, Object?>)>> stagedRowsWithIds(
+  AppDatabase db,
+  StagedImport import,
+  String entity, {
+  String afterRowId = '',
+  int limit = 500,
 }) async {
   final rows = await db
       .customSelect(
-        'SELECT json FROM import_staging WHERE import_id = ? AND owner = ? '
-        'AND entity = ? AND row_id > ? ORDER BY row_id LIMIT ?',
+        'SELECT row_id, json FROM import_staging WHERE import_id = ? AND '
+        'owner = ? AND entity = ? AND row_id > ? ORDER BY row_id LIMIT ?',
         variables: [
           Variable.withString(import.importId),
           Variable.withString(import.owner.userId),
@@ -183,7 +201,10 @@ Future<List<Map<String, Object?>>> stagedRows(
       .get();
   return [
     for (final r in rows)
-      jsonDecode(r.read<String>('json')) as Map<String, Object?>,
+      (
+        r.read<String>('row_id'),
+        jsonDecode(r.read<String>('json')) as Map<String, Object?>,
+      ),
   ];
 }
 
@@ -220,8 +241,9 @@ Future<int> cleanUpStaleImports(
 }
 
 /// Inside the caller's transaction: [import] still exists and its owner
-/// is still shown in the session it began in, live.
-Future<void> _fence(AppDatabase db, StagedImport import) async {
+/// is still shown in the session it began in, live. Throws
+/// [StagingRefusedException] otherwise (the commit runs it too).
+Future<void> checkStagedImport(AppDatabase db, StagedImport import) async {
   try {
     await checkPull(db, import.owner);
   } on PullRefusedException {

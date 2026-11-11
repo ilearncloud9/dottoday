@@ -25,10 +25,11 @@ import 'timeline_fakes.dart';
 // the moves of its work into accounts (P1 hiding, P2 and P3 scrubbing).
 
 final class GuestBackupWorld {
-  GuestBackupWorld()
-    : db = AppDatabase(NativeDatabase.memory()),
+  /// On [db] when given (a file, for crash tests), else in memory.
+  GuestBackupWorld({AppDatabase? db})
+    : db = db ?? AppDatabase(NativeDatabase.memory()),
       _platform = FakeNotificationPlatform() {
-    app = OwnerApp(db, _platform, FakeSink(), FakeAlarmGateway(), queue);
+    app = OwnerApp(this.db, _platform, FakeSink(), FakeAlarmGateway(), queue);
   }
 
   final AppDatabase db;

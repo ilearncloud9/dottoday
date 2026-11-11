@@ -33,6 +33,8 @@ const _mainIsolateOnly = {
   'data/backup/guest_backup_cutoff.dart',
   'data/backup/guest_backup_scrub.dart',
   'data/backup/legacy_guest_quarantine.dart',
+  'data/backup/staged_import.dart',
+  'data/backup/staged_import_sources.dart',
   'data/owners/owner_switch.dart',
   'data/sync/account_owners.dart',
   'features/settings/pages/export_flows.dart',

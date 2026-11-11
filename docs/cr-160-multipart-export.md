@@ -2,7 +2,8 @@
 
 Status: **specification**, built in stages. Built so far (uncommitted unless noted): B0 (§10, the
 Settings export size refusal); B1 (format, splitter, part checks, file kinds; committed `017677d`);
-B2 (staging tables, schema 21, inactive; §6 results in "B2 verification" below). Decision record: ADR-0019. Owner of the approval: the
+B2 (staging tables, schema 21, inactive; §6 results in "B2 verification" below; committed
+`7a99f0e`); B3 (the staged pipeline, reachable from tests only; "B3 verification" below). Decision record: ADR-0019. Owner of the approval: the
 product owner, per stage gate in §9. Release status: CR-160 stays CRITICAL · OPEN · RELEASE BLOCKER.
 
 ## 1. Problem
@@ -116,6 +117,38 @@ rule; template keys replace).
 | Startup cleanup | Another run's import, a day-old one and one "in the future" are deleted; a killed-and-reopened file is cleaned by the next run. Main isolate only (cross-runtime policy test); wired in when the pipeline goes live |
 | Bounded growth | Over 64 MiB declared refused; a part that would pass the declared size refused whole |
 | Rollback | A part stages all or nothing (duplicate id, missing id, over size). Commit rollback, disk full and kill during commit are B3's gate |
+
+### B3 verification (2026-11-11, local)
+Built: `data/backup/staged_import.dart` (the importer), `staged_import_sources.dart` (v1 text, multipart
+set a part at a time, stored backup read in place with `json_each` pages), `staged_import_checks.dart`
+(the whole set, in v1's order: decode every row, drop imported events and their steps, validate the
+rest with v1's validators via `domain/export/import_rows.dart`, then one profile, one owner, references
+and template keys in SQL), `staged_import_commit.dart` and `staged_import_trash.dart`.
+
+Two design points the build settled:
+- **After-write effects never run inside the commit.** Writing each chunk through
+  `WriteUseCase.apply` inside the commit transaction scheduled the effects (notification re-sync, day
+  snapshot) in that transaction's zone, so they read uncommitted or rolled-back data and collided with
+  its end (found by the Finding X rollback test). `DriftWriteUseCase.applyWithoutEffects` is `apply`
+  without them (same validation, seal, shown-owner and foreign-row checks, own savepoint); the importer
+  schedules the effects once after the commit. Owner-approved (option A).
+- **Trash first.** The rows to trash are the owner's live rows before the import (as `restorePlan`
+  takes `current`); computing them after writing the set also trashed instances materialised for the
+  imported series.
+- A stored backup is restored under `guestBackupFence` from the visibility check to the commit, so no
+  privacy scrub can rewrite it in between; its safety backup runs inside the fence (B4/B5 wiring).
+
+| Gate | Result |
+|---|---|
+| Same result as today | `staged_import_test.dart`: a v1 file, a multipart set of it and a stored backup each give exactly today's rows (re-owned, normalised, Trash rule), pending templates and outbox entries; ids materialised at run time compared as one placeholder. A backup not the owner's, or with another's profile inside, refused |
+| Rollback | `staged_import_rollback_test.dart`: bad row in a later part, orphan step, two owners, another account's row (Finding X, inside the commit), A → B and A → B → A between staging and commit, seal, removal begun, refused safety backup, failure part-way through the commit, full disk (`max_page_count`): owner's and other owner's data, outbox and revisions unchanged, staging gone |
+| Crash | `staged_import_crash_test.dart`: the SQLCipher/WAL files copied inside the commit after 3 chunks reopen with the owner's data as before; the next run's cleanup removes the staging (same-process copy, not a process kill). No effect scheduled inside the commit, one after |
+| Mutations | No transaction, no Trash step, no templates, imported events kept, effects inside the commit: each caught |
+| Memory and time (host VM, SQLCipher file, WAL; three runs) | 24 MB v1 file: 54–56 MB above idle, 3.5–3.9 s. 59 MB multipart (6 parts): 51–52 MB, 9.3–9.7 s. 30 MB stored backup over the import limit, read in place: about 40 MB, 4.3–5.0 s. All within §7's 150 MB; not device figures, web not measured. On an in-memory database the same runs showed 143–264 MB because its own pages count as process memory |
+
+Not yet: the pipeline is not wired to any caller (B5); its safety backup is the caller's, and today's
+verified backup refuses accounts over 25 MB until B4; multipart staging of a stored backup above the
+64 MiB provisional total is refused.
 
 ## 7. Size policy and acceptance criteria (provisional)
 Provisional limits: **10 MB per written part, 25 MB per file read.** No maximum part count is adopted
