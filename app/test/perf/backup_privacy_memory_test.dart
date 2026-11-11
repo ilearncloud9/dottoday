@@ -1,9 +1,7 @@
 @Tags(['perf'])
 library;
 
-import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:dottoday/data/backup/guest_backup_cutoff.dart';
@@ -16,6 +14,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../support/guest_backup_world.dart';
 import '../support/owner_app.dart';
+import '../support/rss_sampler.dart';
 
 // CR-160 I1 measurement, not a gate: duration and peak RSS above idle of
 // the guest-backup privacy steps on backups near the 25 MB import limit.
@@ -27,45 +26,6 @@ import '../support/owner_app.dart';
 const _a = '01928c3e-0000-7000-8000-00000000000a';
 const _rowsPerSession = 1150; // ~11.8 MB of JSON each
 const _notes = 10000; // maxNotesLength
-
-/// Samples the process's RSS every 2 ms from another isolate (the test's
-/// own isolate is blocked inside SQLite calls) until told to stop.
-Future<({int idle, int peak, Duration took})> _measure(
-  Future<void> Function() body,
-) async {
-  final back = ReceivePort();
-  final iso = await Isolate.spawn(_sample, back.sendPort);
-  final msgs = StreamIterator(back);
-  await msgs.moveNext();
-  final stop = msgs.current as SendPort;
-  final idle = ProcessInfo.currentRss;
-  final watch = Stopwatch()..start();
-  await body();
-  watch.stop();
-  stop.send(null);
-  await msgs.moveNext();
-  final peak = msgs.current as int;
-  iso.kill();
-  back.close();
-  return (idle: idle, peak: peak, took: watch.elapsed);
-}
-
-void _sample(SendPort out) {
-  final stop = ReceivePort();
-  out.send(stop.sendPort);
-  var peak = ProcessInfo.currentRss;
-  final timer = Timer.periodic(const Duration(milliseconds: 2), (_) {
-    final now = ProcessInfo.currentRss;
-    if (now > peak) peak = now;
-  });
-  stop.first.then((_) {
-    timer.cancel();
-    out.send(peak);
-    stop.close();
-  });
-}
-
-String _mb(int bytes) => (bytes / (1024 * 1024)).toStringAsFixed(1);
 
 void main() {
   final enabled = Platform.environment['CR160_PERF'] != null;
@@ -138,7 +98,7 @@ void main() {
         r.json.length,
     ];
     return '${sizes.length} backups, '
-        '${[for (final s in sizes) _mb(s)].join(' / ')} MB';
+        '${[for (final s in sizes) mb(s)].join(' / ')} MB';
   }
 
   /// Each backup handled by policy after the step: the restorable ones
@@ -164,16 +124,12 @@ void main() {
     expect(checked, greaterThanOrEqualTo(6));
   }
 
-  void report(
-    String step,
-    String backups,
-    ({int idle, int peak, Duration took}) m,
-  ) {
+  void report(String step, String backups, RssMeasure m) {
     // ignore: avoid_print, the measurement is the output.
     print(
       'CR160_PERF $step: ${m.took.inMilliseconds} ms, '
-      'peak ${_mb(m.peak - m.idle)} MB above idle '
-      '(idle ${_mb(m.idle)} MB); $backups',
+      'peak ${mb(m.peak - m.idle)} MB above idle '
+      '(idle ${mb(m.idle)} MB); $backups',
     );
   }
 
@@ -181,7 +137,7 @@ void main() {
     'P2 + legacy scrub on a confirmed deletion',
     () async {
       final backups = await world();
-      final m = await _measure(() => w.app.owners.accountDeleted(_a));
+      final m = await measureRss(() => w.app.owners.accountDeleted(_a));
       report('deletion cleanup (legacy + P2)', backups, m);
       await expectPolicy();
       await w.dispose();
@@ -195,7 +151,7 @@ void main() {
     () async {
       final backups = await world();
       w.clock.advance(const Duration(days: 31));
-      final m = await _measure(() => w.backups.runDailyIfDue(guest));
+      final m = await measureRss(() => w.backups.runDailyIfDue(guest));
       report('maintenance (P3 + legacy + daily backup)', backups, m);
       await expectPolicy();
       await w.dispose();

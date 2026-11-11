@@ -579,8 +579,9 @@ Already covered by earlier I1 tests:
 - **Sampling:** RSS every 2 ms from a separate isolate.
 - **Runs:** each step in a fresh process.
 - **Scope:** flutter_tester on the macOS host (Mac15,7), in-memory SQLite with **no SQLCipher**,
-  no I/O. These are **not** iPhone, Android or Mac app figures, and the web was not measured (it
-  keeps no local backups).
+  no I/O. These are **not** iPhone, Android or Mac app figures, and the web was **not measured**.
+  The web does keep local backups (an encrypted sqlite3mc database in IndexedDB, taken by the
+  same daily housekeeping), so these steps run there too; browser memory remains unmeasured.
 - **What the number means:** "above idle" is RSS growth over a warm process. Heap freed during
   setup can be reused without RSS growth, so it understates the working set. It compares like
   with like, before and after.
