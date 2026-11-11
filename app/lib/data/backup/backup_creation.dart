@@ -1,10 +1,14 @@
 /// Taking one backup (CR-160 backup safety, Stage B4). Under
 /// `guestBackupFence`, called by `DriftBackupService` only.
 ///
-/// A backup that fits the import limit is today's JSON v1 row, unchanged.
-/// One over it is written as parts (multipart_backup_writer.dart), so it can
-/// be restored (§8): an account whose last backup was already that large
-/// goes straight to parts, without first reading itself into memory whole.
+/// An account's backup is always parts (multipart_backup_writer.dart), at
+/// any size: a part is the most it holds in memory, where one file held the
+/// whole account several times over (about 240–310 MB above idle for 24 MB;
+/// owner decision, option A, 2026-11-11). A guest's backup that fits the
+/// import limit stays today's JSON v1 row, the form the guest-backup privacy
+/// scrubs (I1) can clean; one over it is parts, hidden when its work moves
+/// (B4 decision 2), and a guest whose last backup was that large goes
+/// straight to parts, without first reading itself into memory whole.
 ///
 /// [verify] (the safety backup before an import or restore): the backup is
 /// read back and checked the way a restore would read it, complete against
@@ -28,6 +32,7 @@ import 'package:dottoday/data/backup/multipart_backup_store.dart';
 import 'package:dottoday/data/backup/multipart_backup_writer.dart';
 import 'package:dottoday/data/backup/user_data_snapshot.dart';
 import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/sync/account_owners.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/export/export_json.dart';
 import 'package:drift/drift.dart';
@@ -62,7 +67,8 @@ Future<Result<BackupInfo, AppFailure>> createBackup(
 
   int? id;
   var size = 0;
-  if (!await previousBackupLarge(backups, owner, limit: limits.singleFile)) {
+  if (!await isAccount(db, owner) &&
+      !await previousBackupLarge(backups, owner, limit: limits.singleFile)) {
     final bundle = await db.transaction(() => readUserData(db, owner, now));
     if (bundle == null) return const Err(StorageFailure());
     final json = encodeExportJson(bundle);
@@ -89,7 +95,7 @@ Future<Result<BackupInfo, AppFailure>> createBackup(
     }
   }
   if (id == null) {
-    // Too large for one file: parts (CR-160 Stage B4).
+    // An account's, or too large for one file: parts (CR-160 B4).
     final stored = await writeMultipartBackup(
       db,
       backups,

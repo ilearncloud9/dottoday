@@ -108,7 +108,8 @@ is logged and never undoes the write (the next write or app start repairs it).
 
 **Backups** (M2.4): JSON v1 bundles (the export format) in a separate SQLCipher file
 `dottoday-backups.db` with the same key — daily (keep 7, at most one per 24 h), plus pre-import and
-pre-restore (keep 5 each). A backup over the 25 MB import limit is stored as parts in `backup_parts`
+pre-restore (keep 5 each). An account's backup is stored as parts in `backup_parts` at any size, a
+guest's only over the 25 MB import limit
 (CR-160 Stage B4, `docs/cr-160-multipart-export.md` §8). Restore/import run through the staged
 pipeline (CR-160 B5, same doc §5: staged and checked whole, then the safety backup, then one
 commit) and the write path: missing rows are soft-deleted,

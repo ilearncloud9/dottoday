@@ -6,6 +6,7 @@ import 'package:dottoday/data/backup/backup_database.dart';
 import 'package:dottoday/data/backup/guest_backup_cutoff.dart';
 import 'package:dottoday/data/backup/multipart_backup_store.dart';
 import 'package:dottoday/data/backup/multipart_backup_writer.dart';
+import 'package:dottoday/data/backup/user_data_snapshot.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/domain/export/export_json.dart';
 import 'package:dottoday/domain/export/multipart_format.dart';
@@ -67,7 +68,22 @@ void main() {
       id = (await _parts(w, stagedOwner)).id;
       expect(await _partsOf(w, id), greaterThan(1));
     } else {
-      id = await w.backup(stagedOwner);
+      // A JSON v1 row, as an account's backups were before option A
+      // (they are parts now): the same rows, read the same way.
+      final bundle = await w.db.transaction(
+        () => readUserData(w.db, stagedOwner, ownerAppNow),
+      );
+      id = await w.store
+          .into(w.store.backups)
+          .insert(
+            BackupsCompanion.insert(
+              createdAt: ownerAppNow.millisecondsSinceEpoch,
+              reason: 'daily',
+              appSchemaVersion: AppDatabase.latestSchemaVersion,
+              json: encodeExportJson(bundle!),
+              owner: const Value(stagedOwner),
+            ),
+          );
       expect(await _partsOf(w, id), 0);
     }
     await w.write(stagedOwner, [w.task(stagedOwner, _after, 'Added after')]);

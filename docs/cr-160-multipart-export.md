@@ -160,6 +160,8 @@ with B1's splitter), `data/backup/multipart_backup_writer.dart`, `multipart_back
 Owner decisions (B4 plan, recommendations 1–4):
 1. **Parts only above 25 MB.** A backup that fits is today's single file; an account whose last
    backup was already large goes straight to parts, without reading itself into memory whole.
+   *Amended 2026-11-11 (option A, see "Backup memory" below): an account's backup is always parts;
+   this rule now applies to guests only.*
 2. **Guest backups stored as parts stay hidden and unscrubbed**, like oversized ones (I1): the privacy
    scrubs can't read a manifest, so they count it as unreadable and leave it, hidden (fail closed).
 3. **Verified** means: the manifest decodes, every part is present, its hash, index, total and counts
@@ -219,7 +221,30 @@ checks, before the safety backup (the commit still checks again).
 | Stale staging | An earlier run's import is removed by maintenance, this run's kept |
 | Mutations | No safety backup, import or restore without its safety backup, no stale cleanup, cleanup ignoring this run, other accounts' rows checked only at commit: each caught |
 | Web (built-in browser, Chromium, local) | `PROBE:OK cipher=chacha20 temp_store=2 import=occurrences+profile`. Not run locally: the probe's Playwright storage scan (CI) and a web commit |
-| Memory and time (host VM, SQLCipher files, WAL; three runs; `test/perf/backup_service_memory_test.dart`) | Through the service, safety backups included. 24 MB file import: 3.2–3.9 s, 54–59 MB above idle. 60 MB restore from 5 MB parts with its safety backup (as parts): 7.7–9.0 s, 34–44 MB above an idle already raised (lower bound). **Undo of that import: 1.8–2.1 s but 309–312 MB above idle, over §7's 150 MB.** The restore is small (the safety backup of the small account before the import); the peak is its own safety backup of the account now, 24 MB written as one file. The single-file path holds the whole account, its 24 MB JSON text and, to verify it, the text read back and decoded. That path is unchanged since M2.4 and serves every daily and safety backup up to 25 MB; B5 only measured it. Not device figures; web not measured. **Open:** the owner chose (2026-11-11) to fix it as its own step after B5, likely by storing backups as parts from a lower size (this changes B4 decision 1, so it comes back for approval) |
+| Memory and time (host VM, SQLCipher files, WAL; three runs; `test/perf/backup_service_memory_test.dart`) | Through the service, safety backups included. 24 MB file import: 3.2–3.9 s, 54–59 MB above idle. 60 MB restore from 5 MB parts with its safety backup (as parts): 7.7–9.0 s, 34–44 MB above an idle already raised (lower bound). **Undo of that import: 1.8–2.1 s but 309–312 MB above idle, over §7's 150 MB.** The restore is small (the safety backup of the small account before the import); the peak is its own safety backup of the account now, 24 MB written as one file. The single-file path holds the whole account, its 24 MB JSON text and, to verify it, the text read back and decoded. That path is unchanged since M2.4 and serves every daily and safety backup up to 25 MB; B5 only measured it. Not device figures; web not measured. Fixed after B5 by option A ("Backup memory" below) |
+
+### Backup memory (option A, 2026-11-11, local)
+B5 measured an Undo of a 24 MB import at 309–312 MB above idle: the safety backup of a 24 MB account
+written as one file (the account, its JSON text and, to verify it, the text read back and decoded).
+Measured per form, each in a fresh process (host VM, SQLCipher files): one file costs about ten times
+its size (1 MB: 24 MB; 10 MB: 98 MB; 24 MB: 237 MB above idle), parts stay under about 70 MB at any
+size (1 MB: 19 MB; 10 MB: 69 MB; 24 MB: 65 MB) and take up to 1.3 times as long.
+
+Owner decision (option A): **an account's backup is always parts**, at any size
+(`backup_creation.dart`, `isAccount`). **A guest's backup keeps today's rule** (one JSON v1 file up
+to 25 MB, parts above), because the I1 privacy scrubs (P2, P3) clean only one-file backups and would
+leave a guest's parts hidden instead (B4 decision 2); a guest's large backup can still peak about
+240 MB. Rejected: parts above 5 MB for everyone (guest backups of 5–25 MB would be hidden, not
+cleaned); teaching the scrubs to clean parts (an I1 change, its own stage). Existing single-file
+backups are unchanged and still restore, prune, audit and scrub as before. An older app version
+can't read the new backups (the backup database is schema 3 since B4 already).
+
+| Gate | Result |
+|---|---|
+| Form | `backup_form_test.dart`: a small account's backup is verified parts (its row holds the manifest) and restores; a guest's within the limit is one JSON v1 file |
+| Regression | Full unit suite passes; one edit: `multipart_backup_world_test.dart`'s single-file reference is now inserted as a v1 row (an account's backup is parts) |
+| Mutations | Accounts back to one file: caught (the form gate). Guests to parts: caught by six I1 privacy tests (`guest_backup_privacy_test.dart`, `scrub_memory_test.dart`), which is why guests keep one file |
+| Memory and time (three runs) | Undo of the 24 MB import through the service: 2.6–2.9 s, **74–80 MB above idle** (was 309–312 MB). 24 MB import: 3.3–4.1 s, 55–60 MB. 60 MB restore from parts with its safety backup: 7.9–8.0 s, 37–43 MB above a raised idle (lower bound). Not device figures; web not measured |
 
 ## 7. Size policy and acceptance criteria (provisional)
 Provisional limits: **10 MB per written part, 25 MB per file read.** No maximum part count is adopted
