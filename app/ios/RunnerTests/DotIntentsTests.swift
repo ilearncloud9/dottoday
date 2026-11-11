@@ -412,6 +412,39 @@ final class DotIntentsTests: XCTestCase {
     XCTAssertEqual(Set(texts).count, 60)
     XCTAssertFalse((stored() ?? "").contains("\"text\""))
   }
+
+  func testAMixedQueueAfterARestartOpensAllAndSealsTheRest() {
+    let queue = DotQueue(defaults: defaults, suite: suite)
+    queue.publishOwner(#"{"v":1,"owner":"\#(owner)"}"#)
+    queue.append(DotQueue.entry(.addTask, text: "Sealed before", now: now))
+    let sealed = queue.entries().single!
+    writeRaw([
+      sealed,
+      ["id": "01928c3e-0000-7000-8000-0000000009c1", "at_ms": 5, "kind": "add_task",
+       "shared": true, "text": "Left in plaintext", "owner": owner],
+    ])
+    let app = opened(queue)
+    XCTAssertEqual(app.map { $0["text"] as? String }, ["Sealed before", "Left in plaintext"])
+    let raw = stored() ?? ""
+    XCTAssertFalse(raw.contains("Left in plaintext"))
+    XCTAssertTrue(queue.entries().allSatisfy { $0["sealed"] != nil })
+    XCTAssertTrue(
+      NSDictionary(dictionary: queue.entries()[0]).isEqual(to: sealed), "untouched")
+  }
+
+  func testStrayPlaintextBesideWordsThatFailToOpenIsMarkedUnreadable() {
+    let queue = DotQueue(defaults: defaults, suite: suite)
+    queue.publishOwner(#"{"v":1,"owner":"\#(owner)"}"#)
+    queue.append(DotQueue.entry(.addTask, text: "Secret", now: now))
+    var entry = queue.entries().single!
+    entry["owner"] = "01928c3e-0000-7000-8000-00000000000b"
+    entry["text"] = "Planted"
+    writeRaw([entry])
+    let app = opened(queue).single
+    // The app's decoder refuses any entry marked unreadable (CR-160 I1).
+    XCTAssertEqual(app?["unreadable"] as? Bool, true)
+    XCTAssertEqual(queue.entries().count, 1, "never erased")
+  }
 }
 
 extension Array {

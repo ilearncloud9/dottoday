@@ -115,8 +115,13 @@ Map<String, Object?> encodeQueuedAction(QueuedAction a) => {
 /// that isn't a UUID, missing or mistyped field, oversized text). Ids come
 /// back lowercase (Swift writes them in capitals). An owner that isn't a
 /// UUID reads as no owner. Total: never throws.
+///
+/// An entry whose sealed words were not opened (still `sealed`, or marked
+/// `unreadable` by the native read) is null too, whatever plaintext it
+/// still carries: unreadable is final, never a fallback (CR-160 I1).
 QueuedAction? decodeQueuedAction(Object? json) {
   if (json is! Map<String, Object?>) return null;
+  if (json['unreadable'] != null || json['sealed'] != null) return null;
   final id = _id(json['id']);
   final at = json['at_ms'];
   if (id == null || at is! int || at < 0) return null;

@@ -24,6 +24,7 @@ library;
 
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
+import 'package:dottoday/data/backup/backup_rows.dart';
 import 'package:dottoday/data/backup/guest_backup_cutoff.dart';
 import 'package:dottoday/data/backup/guest_backup_scrub.dart';
 import 'package:dottoday/data/db/app_database.dart';
@@ -74,26 +75,35 @@ Future<LegacyScrub> scrubLegacyByEvidence(
   var scrubbed = 0;
   var unreadable = 0;
   if (owners.isEmpty) return (scrubbed: 0, unreadable: 0);
-  final rows = await backups.select(backups.backups).get();
-  for (final row in rows) {
-    final guest = row.owner;
+  // Ids first, then one backup's text at a time (backup_rows.dart).
+  for (final (:id, owner: guest) in await backupKeys(backups)) {
     if (guest == null) continue;
     final visibility = await guestBackupVisibility(db, guest);
-    if (!visibility.quarantines(row.id)) continue;
-    final bundle = _decoded(row.json);
+    if (!visibility.quarantines(id)) continue;
+    final String json;
+    switch (await readBackupOf(backups, id, guest)) {
+      case BackupGone():
+        continue; // removed after listing: nothing left to scrub
+      case BackupOwnerChanged():
+        unreadable++; // unresolved: untouched, still quarantined
+        continue;
+      case BackupText(json: final text):
+        json = text;
+    }
+    final bundle = _decoded(json);
     if (bundle == null) {
       unreadable++;
       continue;
     }
     final evidence = await _evidence(db, bundle, guest, owners);
     if (evidence.values.every((ids) => ids.isEmpty)) continue;
-    final clean = scrubbedBackupJson(row.json, guest, evidence);
+    final clean = scrubbedBackupJson(json, guest, evidence);
     if (clean == null) {
       unreadable++;
       continue;
     }
     await (backups.update(backups.backups)
-          ..where((b) => b.id.equals(row.id) & b.owner.equals(guest)))
+          ..where((b) => b.id.equals(id) & b.owner.equals(guest)))
         .write(BackupsCompanion(json: Value(clean)));
     scrubbed++;
   }

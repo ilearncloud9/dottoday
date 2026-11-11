@@ -244,8 +244,10 @@ stack only).
 - Physical iPhone, Android phone; Firefox and Safari; hosted staging.
 
 **Remaining limitations and risks:**
-- Unattributed entries are kept with no automatic expiry and are invisible to everyone (decision 1), but they count toward the 500-entry / 1 MB capacity, so enough of them would make new actions be refused; share
-  text in them, and in any waiting entry, sits unencrypted in the shared store (decision 4 table).
+- Unattributed entries are kept with no automatic expiry and are invisible to everyone (decision 1), but they count toward the 500-entry / 1 MB capacity, so enough of them would make new actions be refused. Their
+  share text, and any waiting entry's, has been sealed at rest on Android and Apple since
+  Iteration 1 Q2/Q3 (see "Iteration 1 final verification" below); ids, times and owners are
+  still plaintext.
 - A share refused while an account is deleted, or when the queue is full, is not saved: the person
   is told on the share sheets and the Add task intent; widget, Live Activity and notification
   buttons just do nothing visible.
@@ -487,6 +489,156 @@ Runs: `dart format` 0 changed; `flutter analyze` and `dart analyze` clean; 1,895
 `data/notifications`, `data/intents`, `core/editing`, `policy`, `shared`, `a11y`, and the app shell,
 smoke, lifecycle and screen-state tests. The full unit, golden and perf suites were not rerun.
 Nothing was checked on a device or simulator.
+
+## Iteration 1 final verification (2026-11-10, local only, uncommitted, awaiting review)
+
+Iteration 1 of the 5-iteration plan (account ownership and privacy). Accepted base: `733d7dda`.
+Host Mac15,7, macOS 26.6.2; Flutter 3.47.8. **Local evidence:** this Mac, its iOS Simulator, the
+Android emulator. **CI:** none for this checkpoint. **Physical devices and other browsers:** none.
+Nothing ran against hosted Supabase.
+
+### Cross-runtime fencing
+
+`guestBackupFence` is a lock within one Dart isolate. It is enough only while every backup
+operation, guest-work move, restore and privacy cleanup runs in the app's main isolate. That is
+true today: `test/policy/cross_runtime_fence_test.dart` (7 tests) fails if any of it becomes
+reachable elsewhere.
+
+- The only other Dart entry point is `backgroundRefreshDispatcher` (workmanager). Neither it nor
+  `daily_refresh`, the action-queue drainer or background sync names any backup, fence,
+  owner-change or account-removal code.
+- The calling files are exactly the backup data layer, the owner switch and sign-in step, app
+  lifecycle housekeeping and the Settings export flows.
+- The Apple extensions and `ios/Shared` run no Flutter engine and open no database. Only the two
+  app bridges (`AppDelegate.swift`, macOS `IntentQueueBridge.swift`) open sealed words.
+- On Android, only `DotQueue.kt` and the channel open sealed words.
+- Web workers touch no IndexedDB and no backups.
+
+No unsupported entry point was found, so no new locking was added. This is a check of the code's
+shape, not of runtime behaviour. A future background backup, an extension database or a
+worker-side restore would fail this test and needs a cross-process lock first.
+
+### Backup and privacy failure injection
+
+Two files: `test/data/backup/backup_privacy_failure_test.dart` (6 tests) and
+`hidden_backup_survival_test.dart` (1). Failures are injected with SQLite triggers that abort the
+write.
+
+| Case | Result |
+|---|---|
+| Legacy evidence scrub fails just before a confirmed deletion (no promotion recorded, so only the legacy scrub can act) | The deletion call fails; removal stays pending; rows, owners, outbox, both write revisions and the shown owner unchanged; every backup byte-identical and the legacy backup still hidden. The rerun scrubs it, still quarantined, and finishes |
+| P2 rewrite aborted before it lands | Same: unchanged, hidden, nothing recorded as scrubbed. The rerun scrubs and shows it |
+| Crash between the validated rewrite and recording it as scrubbed | Rewritten but still hidden; a direct restore is refused. The rerun records it without rewriting again |
+| Restore holding the fence while a deletion is confirmed | The scrub waits until the restore ends (backup still holds the moved row mid-restore), then runs; no stored backup and no live guest row holds the moved work |
+| Restore of the hidden backup queued behind the deletion | Either refused or restored after the scrub; the moved work is never restored |
+| Backups file recreated under an existing P1 cutoff | New guest backups, with restarted ids under the cutoff, are hidden (fail closed) until P2 shows them clean. The legacy-cutoff case was already covered by `legacy_guest_backup_test.dart` |
+| Oversized (25 MB + 1) and not-a-backup guest backups, legacy and under a cutoff | Through the legacy scrub, P2, P3 after 31 days and maintenance: unchanged, hidden, stored, restore refused. The audit says `oversized` / `malformed`; none `restorableNow` |
+
+Mutation checks (temporary source changes, restored afterwards; working tree verified):
+
+| Mutation | Result |
+|---|---|
+| Restore not fenced | Caught |
+| Legacy scrub removed from deletion cleanup | Caught |
+| P2 records "scrubbed" before rewriting | Caught by 2 tests |
+
+### Shared queue
+
+**Defect found and fixed (uncommitted, needs review).** The native read returns an entry it can't
+open marked `unreadable`, keeping its other fields. An entry stored with both sealed words and
+stray `text` is never migrated, because it already has sealed words. If its words then failed to
+open, `decodeQueuedAction` applied the stray text. Our writers never produce such an entry; it
+needs a tampered or corrupted store. The fix is one line in `domain/intents/dot_action.dart`:
+any entry still `sealed`, or marked `unreadable`, decodes to null, whatever plaintext it carries.
+
+| Test | Result |
+|---|---|
+| `test/data/intents/sealed_queue_test.dart` (4): mixed queue after a restart (opened applies, unopenable kept across drains and owners); unreadable with stray text refused; sealed words as the background store reads them kept, never removed; no-owner entries quarantined whether opened or not | PASS (the stray-text test failed before the fix) |
+| `ios/RunnerTests/DotIntentsTests` (27, iPhone 17 Simulator, iOS 26.5): adds a mixed sealed + leftover-plaintext queue (all open, the rest sealed, sealed entry untouched) and stray plaintext beside words that fail to open (marked unreadable, kept) | PASS 27/27 |
+| `integration_test/queue_cipher_test.dart` (11, emulator Medium_Phone_API_37.0, Android 17 / API 37, debug): adds the mixed queue after a restart, stray plaintext never reaching the app as an action, and 40 concurrent shares and app reads (nothing lost, no plaintext at rest) | PASS 11/11 |
+
+Already covered by earlier I1 tests:
+
+- **Interrupted migration:** all or nothing, with a single write per platform. Android writes only
+  if every entry sealed; Apple writes only if the list is complete.
+- **Key loss and failed decryption:** covered on both platforms.
+- **Concurrent native writes and app drains:** Swift (60 threads), the cross-process lock tool
+  (360 entries, 0 plaintext) and the Dart drainer.
+- **Unknown owner:** Dart.
+- **No plaintext fallback on write:** Swift (no published key) and Android (refusal).
+- **Debug-hook isolation:** a profile APK inspected earlier, plus the new policy test. The release
+  APK is still **not built or inspected** (that build was denied earlier and was not retried).
+
+### Performance and memory near 25 MB
+
+`test/perf/backup_privacy_memory_test.dart` (`perf` tag, skipped unless `CR160_PERF` is set).
+
+- **Workload:** six guest backups. Two are legacy backups and three are under a P1 cutoff, each
+  23.7 MB of JSON with kept and moved work. The sixth is a 25.0 MB oversized backup. The moved
+  half is then promoted.
+- **Sampling:** RSS every 2 ms from a separate isolate.
+- **Runs:** each step in a fresh process.
+- **Scope:** flutter_tester on the macOS host (Mac15,7), in-memory SQLite with **no SQLCipher**,
+  no I/O. These are **not** iPhone, Android or Mac app figures, and the web was not measured (it
+  keeps no local backups).
+- **What the number means:** "above idle" is RSS growth over a warm process. Heap freed during
+  setup can be reused without RSS growth, so it understates the working set. It compares like
+  with like, before and after.
+
+**Memory fix (2026-11-11, uncommitted).** The P2/P3 scrub (`_scrubPromotion`) and the legacy
+evidence scrub (`scrubLegacyByEvidence`) each read every candidate backup's JSON in one query
+(about 6 × 24 MB held at once). Both now list ids and owners without any text, then read one
+backup's text at a time (`data/backup/backup_rows.dart`). Nothing else changed:
+
+- same visibility and quarantine checks;
+- same owner-guarded update by original id;
+- same read-back validation before the scrubbed marker;
+- same fence and failure semantics.
+
+Each read rechecks the owner: a backup removed between the listing and its read is the only one skipped; one whose owner changed is counted as left (never scrubbed, recorded or shown); a failed read throws, so the scrub stops and the removal stays pending. The benchmark below ran before this owner recheck was added (one extra small column per read; not re-measured).
+
+| Step | Before (3 runs) | After (6 runs) | Change |
+|---|---|---|---|
+| Deletion cleanup (legacy + P2) | 194.1 / 209.7 / 209.2 MB, mean 204.3; 2.13–2.17 s | 32.3 / 39.5 / 38.3 / 49.2 / 47.7 / 28.1 MB, mean 39.2 (range 28.1–49.2); 2.00–2.08 s | −165 MB (−81 %); time −5 % |
+| Maintenance (P3 + legacy + daily backup) | 167.1 / 167.4 / 169.3 MB, mean 167.9; 1.65–1.68 s | 40.0 / 29.1 / 29.5 / 66.3 / 29.6 / 42.8 MB, mean 39.6 (range 29.1–66.3); 1.56–1.60 s | −128 MB (−76 %); time −5 % |
+
+Notes on the measurements:
+
+- The last three "after" runs also assert each backup's outcome. The legacy backups stay
+  quarantined, the P1 backups are listed again without the moved work, and the oversized one is
+  hidden, stored and byte-identical. All three passed.
+- Every run is under the 100 MB engineering target for this synthetic workload. That target is
+  not an approved release budget, and these figures are not comparable with the Stage B
+  import/export budgets.
+- Variability is about ±20 MB, from GC timing.
+
+Regression tests: `test/data/backup/scrub_memory_test.dart` (7). A drift `QueryInterceptor` on a
+copy of the store counts the backup texts each query returns.
+
+| Check | Result |
+|---|---|
+| P2, P3 and the legacy scrub return at most one text per query (the pre-fix code returned 7 and 8; mutation caught) | Pass |
+| Each backup's scrubbed marker is absent when its rewrite runs | Pass |
+| Oversized, not-a-backup and ownerless backups untouched | Pass |
+| A failure on the second of three backups: the first stays scrubbed and shown, the rest hidden and unchanged, the removal pending; the rerun finishes, the legacy and junk backups stay hidden | Pass |
+| Repeated maintenance changes nothing after the first run | Pass |
+| Between listing and reading (P2 and legacy): a removed backup is skipped; one whose owner changed is left untouched, unrecorded and counted (mutation treating it as removed: caught by 2 tests) | Pass |
+| A failed read is never skipped: the scrub throws, nothing after it is recorded, the backups stay hidden | Pass |
+
+Restore-versus-scrub serialisation is the existing test in `backup_privacy_failure_test.dart`;
+it passes after the fix.
+
+### Unverified
+
+- The release APK (denied build).
+- Physical iPhone, Android and Mac; locked-device and before-first-unlock behaviour.
+- Real share sheets, Siri and Shortcuts end to end.
+- Restore to a new device (device-only keys).
+- Older Android versions.
+- Firefox and Safari.
+- Hosted Supabase.
+- Goldens; the Supabase-, web- and perf-tagged suites, except the one measurement above.
+- A process kill during migration (only the single-write design and the restart-state tests).
 
 ## Deleted accounts (interim, owner-approved)
 

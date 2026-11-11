@@ -187,4 +187,56 @@ void main() {
     expect(decodeQueuedAction(background.single), isNull);
     expect((await opened()).single['text'], 'Secret plan');
   });
+  testWidgets('after a restart, a mixed queue (sealed, and plaintext an '
+      'interrupted upgrade left): all open; the rest is sealed', (_) async {
+    await share('Sealed before');
+    final sealed = stored(await raw()).single;
+    await writeRaw([
+      sealed,
+      {
+        'id': '01928c3e-0000-7000-8000-0000000009c1',
+        'at_ms': 5,
+        'kind': 'add_task',
+        'shared': true,
+        'text': 'Left in plaintext',
+        'owner': _a,
+      },
+    ]);
+    final app = await opened();
+    expect(
+      [for (final e in app) e['text']],
+      ['Sealed before', 'Left in plaintext'],
+    );
+    final r = await raw();
+    expect(r, isNot(contains('Left in plaintext')));
+    expect(stored(r).every((e) => e['sealed'] is Map), isTrue);
+    expect(stored(r).first['sealed'], sealed['sealed'], reason: 'untouched');
+  });
+
+  testWidgets('stray plaintext beside words that fail to open never reaches '
+      'the app as an action', (_) async {
+    await share('Secret plan');
+    final e = stored(await raw()).single
+      ..['owner'] = _b
+      ..['text'] = 'Planted';
+    await writeRaw([e]);
+    final app = (await opened()).single;
+    expect(app['unreadable'], isTrue);
+    expect(decodeQueuedAction(app), isNull, reason: 'no plaintext fallback');
+    expect(stored(await raw()), hasLength(1));
+  });
+
+  testWidgets('concurrent shares and app reads lose nothing and leave no '
+      'plaintext', (_) async {
+    await Future.wait([
+      for (var i = 0; i < 40; i++)
+        if (i % 4 == 0) opened() else share('t$i'),
+    ]);
+    final texts = {for (final e in await opened()) e['text']};
+    expect(texts, {
+      for (var i = 0; i < 40; i++)
+        if (i % 4 != 0) 't$i',
+    });
+    expect(await raw(), isNot(contains('"text"')));
+  });
 }

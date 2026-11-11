@@ -20,6 +20,7 @@ library;
 
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/backup/backup_database.dart';
+import 'package:dottoday/data/backup/backup_rows.dart';
 import 'package:dottoday/data/backup/guest_backup_cutoff.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/domain/backup/backup_restorability.dart';
@@ -82,30 +83,36 @@ Future<int> _scrubPromotion(
   int index,
 ) async {
   var left = 0;
-  final rows = await (backups.select(
-    backups.backups,
-  )..where((b) => b.owner.equals(guest))).get();
-  for (final row in rows) {
+  // Ids first, then one backup's text at a time (backup_rows.dart).
+  for (final (:id, owner: _) in await backupKeys(backups, owner: guest)) {
     final promotions = await guestPromotions(db, guest);
     final p = promotions[index];
     final visibility = GuestBackupVisibility(promotions);
-    if (!identical(visibility.governing(row.id), p)) continue;
-    if (p.scrubbed.contains(row.id)) continue;
-    final clean = scrubbedBackupJson(row.json, guest, p.moved);
+    if (!identical(visibility.governing(id), p)) continue;
+    if (p.scrubbed.contains(id)) continue;
+    final String json;
+    switch (await readBackupOf(backups, id, guest)) {
+      case BackupGone():
+        continue; // removed after listing: nothing left to scrub
+      case BackupOwnerChanged():
+        left++; // unresolved: untouched, not recorded
+        continue;
+      case BackupText(json: final text):
+        json = text;
+    }
+    final clean = scrubbedBackupJson(json, guest, p.moved);
     if (clean == null) {
       left++;
       continue;
     }
-    if (clean != row.json) {
+    if (clean != json) {
       await (backups.update(backups.backups)
-            ..where((b) => b.id.equals(row.id) & b.owner.equals(guest)))
+            ..where((b) => b.id.equals(id) & b.owner.equals(guest)))
           .write(BackupsCompanion(json: Value(clean)));
     }
     await saveGuestPromotions(db, guest, [
       for (var j = 0; j < promotions.length; j++)
-        j == index
-            ? p.copyWith(scrubbed: {...p.scrubbed, row.id})
-            : promotions[j],
+        j == index ? p.copyWith(scrubbed: {...p.scrubbed, id}) : promotions[j],
     ]);
   }
   return left;
