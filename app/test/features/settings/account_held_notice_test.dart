@@ -1,5 +1,4 @@
 import 'package:dottoday/data/auth/account_providers.dart';
-import 'package:dottoday/data/owners/held_tasks.dart';
 import 'package:dottoday/domain/auth/account.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -29,8 +28,7 @@ void main() {
               ),
             ),
           ),
-          ...accountScreenOverrides(FakeAccountActions()),
-          heldTasksProvider.overrideWith((ref) => Stream.value(held)),
+          ...accountScreenOverrides(FakeAccountActions(), held: held),
         ],
       );
       expect(

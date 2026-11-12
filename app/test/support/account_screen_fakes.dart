@@ -10,6 +10,7 @@ import 'package:dottoday/data/owners/account_export.dart';
 import 'package:dottoday/data/owners/account_gate.dart';
 import 'package:dottoday/data/owners/account_meta.dart';
 import 'package:dottoday/data/owners/deletion_sets.dart';
+import 'package:dottoday/data/owners/held_tasks.dart';
 import 'package:dottoday/data/sync/account_owners.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:flutter_riverpod/misc.dart';
@@ -153,10 +154,12 @@ base class FakeAccountActions implements AccountActions {
 List<Override> accountScreenOverrides(
   FakeAccountActions actions, {
   int pending = 0,
+  int held = 0,
   bool browser = false,
 }) => [
   accountActionsProvider.overrideWithValue(actions),
   ownerPendingProvider.overrideWith((ref, owner) => Stream.value(pending)),
+  heldTasksProvider.overrideWith((ref) => Stream.value(held)),
   settingsChoiceLaterProvider.overrideWith((ref) => Stream.value(false)),
   inBrowserProvider.overrideWithValue(browser),
 ];
