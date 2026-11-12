@@ -665,18 +665,26 @@ are not limited. D1 maps the same failure to its existing `tooLarge` outcome, so
 unchanged. The 25 MB import limit is unchanged.
 
 ## 11. Open decisions
-1. Part target (10 MB provisional) and accepted total (64 MiB provisional in B2,
-   `maxStagedImportBytes`), after §7 measurements.
+1. ~~Part target and accepted total~~ Decided 2026-11-12 (owner, from B8): exports keep 10 MB parts,
+   backups 5 MB parts, the accepted total stays 64 MiB (`maxStagedImportBytes`). Every device stayed
+   inside §7's memory rows at these sizes; the web's supported size is 30 MB (B8).
 2. ~~Whether SQLite temporary files need `temp_store = MEMORY`~~ Decided in B2: native SQLCipher is
    compiled `TEMP_STORE=2` (memory) already; the web sets `temp_store = MEMORY`. Web memory under it
    is measured with the rest in B8.
 3. ~~Staging session lifetime and concurrency~~ Decided in B2: 24 h, one import per owner, and an
    import never survives into another app run.
-4. Converting existing oversized backups to parts, or reading them in place only.
-5. Pausing retention pruning of oversized backups until B4 ships (keeps originals; costs storage).
+4. ~~Converting existing oversized backups to parts~~ Decided 2026-11-12: read in place only, no
+   conversion. They restore that way (B3, B5); a conversion would be a second copy and a new step, and
+   normal retention ages them out.
+5. ~~Pausing retention pruning of oversized backups until B4 ships~~ Closed 2026-11-12, not needed:
+   B4 ships in the same release.
 6. ~~Whether Settings exports above the part target switch to multipart automatically or ask
    first~~ Decided in B6: automatically, wired in B7.
-7. Whether single-file D1 exports also require possession confirmation.
+7. ~~Whether single-file D1 exports also require possession confirmation~~ Decided 2026-11-12: no.
+   One file handed over is the whole export (Stage C's rule stands); a set still needs "Check my
+   files" (§10).
 8. ~~New copy for every multipart state~~ Approved 2026-11-11 (B7 plan); de, fr and es pending
    native-speaker review.
-9. Web per-part download UI and the "Check my files" verify step (design review, B7).
+9. ~~Web per-part download UI and the "Check my files" verify step~~ Closed 2026-11-12 on the owner's
+   review of B7's gate screenshots (`app/build/sweep/web_*cr160_*`, light and dark, compact and
+   expanded, G1–G3 fixed); any change found there is its own fix.

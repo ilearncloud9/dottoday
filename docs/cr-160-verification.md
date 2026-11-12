@@ -19,8 +19,8 @@ Nothing below ran against hosted Supabase.
 | 7 | No silent settings replacement | PASS (automated) | `first_sync_test.dart` "a guest's settings never replace the account's", "choosing the guest's settings"; B1 built (`settings_choice_screen.dart`, `account_screens_test.dart` group "B1 settings"); web flow 2 server check. B1 not tapped on a platform run |
 | 8 | No duplicate starter content | PASS (automated) | Stable ids (`domain/sync/stable_ids.dart`); `account_switch_test.dart` "starters planted on two devices merge into one". Not in a web/device run |
 | 9 | Interrupted or failed migration | PASS (automated + Chromium, local stack) | `account_switch_test.dart` group "interrupted"; `engine_sync_service_test.dart` failed sign-in step; web flow 4 (reload after the local step; not inside it) |
-| 10 | Web end-to-end | PARTIAL | Chromium 156: flows 1–5 PASS on the local stack (runs below). Firefox, Safari PENDING (no driver; installing one needs the owner's go). Hosted staging PENDING |
-| 11 | Shared-device tests on all four platforms | PARTIAL | PASS on the local stack: macOS 26.6.2, iOS 18.6 Simulator, Android 17 emulator, web/Chromium (runs below). Physical iPhone/Android and hosted staging PENDING |
+| 10 | Web end-to-end | PARTIAL | Chromium 156: flows 1–5 PASS on the local stack (runs below); re-run after Stage B (B8, 2026-11-12): flows 1–5 PASS. Firefox, Safari PENDING (no driver; installing one needs the owner's go). Hosted staging PENDING |
+| 11 | Shared-device tests on all four platforms | PARTIAL | PASS on the local stack: macOS 26.6.2, iOS 18.6 Simulator, Android 17 emulator, web/Chromium (runs below); re-run after Stage B (B8, 2026-11-12): PASS on macOS, the iPhone 17 Pro Simulator (iOS 26.5), the Android API 37 emulator and Chromium 156, after the test was brought up to D1's review step (`docs/cr-160-multipart-export.md`, B8). Physical iPhone/Android and hosted staging PENDING |
 | 12 | Server-side guard | PASS (pgTAP, local stack) | `supabase/migrations/0014_push_owner_guard.sql` + `supabase/tests/0014_push_owner_guard.sql`; `supabase db reset` + `supabase test db`: 14 files, 119 tests. Not deployed |
 
 ## CRITICAL — OPEN — RELEASE BLOCKER (owner 2026-11-09)
@@ -630,6 +630,12 @@ Restore-versus-scrub serialisation is the existing test in `backup_privacy_failu
 it passes after the fix.
 
 ### Unverified
+
+Updated after Stage B (B8, 2026-11-12): the measurements of `docs/cr-160-multipart-export.md` §7 ran on
+a physical iPhone 17 Pro (profile build, temporary databases, none of the account flows), and the
+regression pass ran on the simulators, the Mac and Chromium; the list below still holds otherwise,
+with §7's 4 GB iPhone and 3 GB Android phone and real file picks in each platform's picker added.
+
 
 - The release APK (denied build).
 - Physical iPhone, Android and Mac; locked-device and before-first-unlock behaviour.
