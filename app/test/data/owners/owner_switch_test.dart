@@ -277,11 +277,21 @@ void main() {
       ];
       await app.owners.signOut();
       expect(alarms.events, isEmpty);
+      // A's morning (schema 22): stored under A, never shown to the next
+      // owner (CR-160 Wake Up audit).
+      final rows = await app.db
+          .customSelect(
+            'SELECT owner_id, rang_at_utc FROM wake_up_days '
+            "WHERE date = '2026-10-23'",
+          )
+          .get();
+      expect(rows.single.read<String>('owner_id'), _a);
+      expect(rows.single.read<int>('rang_at_utc'), rang.millisecondsSinceEpoch);
       final day = await app.container
           .read(wakeUpDayRepositoryProvider)
           .watch('2026-10-23')
           .first;
-      expect(day?.rangAtUtc, rang);
+      expect(day, isNull, reason: 'the next owner never sees it');
       // Nothing is left for the next owner's launch drain to count.
       expect(
         await app.container.read(alarmEventsDrainProvider.notifier).run(),

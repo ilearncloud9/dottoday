@@ -11603,6 +11603,18 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $WakeUpDaysTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _ownerIdMeta = const VerificationMeta(
+    'ownerId',
+  );
+  @override
+  late final GeneratedColumn<String> ownerId = GeneratedColumn<String>(
+    'owner_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
   late final GeneratedColumn<String> date = GeneratedColumn<String>(
@@ -11680,6 +11692,7 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
   );
   @override
   List<GeneratedColumn> get $columns => [
+    ownerId,
     date,
     rangAtUtc,
     stoppedAtUtc,
@@ -11700,6 +11713,12 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('owner_id')) {
+      context.handle(
+        _ownerIdMeta,
+        ownerId.isAcceptableOrUnknown(data['owner_id']!, _ownerIdMeta),
+      );
+    }
     if (data.containsKey('date')) {
       context.handle(
         _dateMeta,
@@ -11760,11 +11779,15 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {date};
+  Set<GeneratedColumn> get $primaryKey => {ownerId, date};
   @override
   WakeUpDayRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return WakeUpDayRow(
+      ownerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner_id'],
+      )!,
       date: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}date'],
@@ -11806,6 +11829,10 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
 }
 
 class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
+  /// The profile whose morning this is; '' for rows from before 22 that
+  /// no profile can claim, which no one sees.
+  final String ownerId;
+
   /// `yyyy-MM-dd` in the profile's zone.
   final String date;
   final int? rangAtUtc;
@@ -11817,6 +11844,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   /// "Can't right now" skipped the mission (15 §8). Schema 12.
   final int? missionSkippedAtUtc;
   const WakeUpDayRow({
+    required this.ownerId,
     required this.date,
     this.rangAtUtc,
     this.stoppedAtUtc,
@@ -11828,6 +11856,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['owner_id'] = Variable<String>(ownerId);
     map['date'] = Variable<String>(date);
     if (!nullToAbsent || rangAtUtc != null) {
       map['rang_at_utc'] = Variable<int>(rangAtUtc);
@@ -11850,6 +11879,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
 
   WakeUpDaysTableCompanion toCompanion(bool nullToAbsent) {
     return WakeUpDaysTableCompanion(
+      ownerId: Value(ownerId),
       date: Value(date),
       rangAtUtc: rangAtUtc == null && nullToAbsent
           ? const Value.absent()
@@ -11876,6 +11906,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return WakeUpDayRow(
+      ownerId: serializer.fromJson<String>(json['ownerId']),
       date: serializer.fromJson<String>(json['date']),
       rangAtUtc: serializer.fromJson<int?>(json['rangAtUtc']),
       stoppedAtUtc: serializer.fromJson<int?>(json['stoppedAtUtc']),
@@ -11891,6 +11922,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'ownerId': serializer.toJson<String>(ownerId),
       'date': serializer.toJson<String>(date),
       'rangAtUtc': serializer.toJson<int?>(rangAtUtc),
       'stoppedAtUtc': serializer.toJson<int?>(stoppedAtUtc),
@@ -11902,6 +11934,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   }
 
   WakeUpDayRow copyWith({
+    String? ownerId,
     String? date,
     Value<int?> rangAtUtc = const Value.absent(),
     Value<int?> stoppedAtUtc = const Value.absent(),
@@ -11910,6 +11943,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
     Value<int?> startedAtUtc = const Value.absent(),
     Value<int?> missionSkippedAtUtc = const Value.absent(),
   }) => WakeUpDayRow(
+    ownerId: ownerId ?? this.ownerId,
     date: date ?? this.date,
     rangAtUtc: rangAtUtc.present ? rangAtUtc.value : this.rangAtUtc,
     stoppedAtUtc: stoppedAtUtc.present ? stoppedAtUtc.value : this.stoppedAtUtc,
@@ -11924,6 +11958,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   );
   WakeUpDayRow copyWithCompanion(WakeUpDaysTableCompanion data) {
     return WakeUpDayRow(
+      ownerId: data.ownerId.present ? data.ownerId.value : this.ownerId,
       date: data.date.present ? data.date.value : this.date,
       rangAtUtc: data.rangAtUtc.present ? data.rangAtUtc.value : this.rangAtUtc,
       stoppedAtUtc: data.stoppedAtUtc.present
@@ -11945,6 +11980,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   @override
   String toString() {
     return (StringBuffer('WakeUpDayRow(')
+          ..write('ownerId: $ownerId, ')
           ..write('date: $date, ')
           ..write('rangAtUtc: $rangAtUtc, ')
           ..write('stoppedAtUtc: $stoppedAtUtc, ')
@@ -11958,6 +11994,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
 
   @override
   int get hashCode => Object.hash(
+    ownerId,
     date,
     rangAtUtc,
     stoppedAtUtc,
@@ -11970,6 +12007,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is WakeUpDayRow &&
+          other.ownerId == this.ownerId &&
           other.date == this.date &&
           other.rangAtUtc == this.rangAtUtc &&
           other.stoppedAtUtc == this.stoppedAtUtc &&
@@ -11980,6 +12018,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
 }
 
 class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
+  final Value<String> ownerId;
   final Value<String> date;
   final Value<int?> rangAtUtc;
   final Value<int?> stoppedAtUtc;
@@ -11989,6 +12028,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
   final Value<int?> missionSkippedAtUtc;
   final Value<int> rowid;
   const WakeUpDaysTableCompanion({
+    this.ownerId = const Value.absent(),
     this.date = const Value.absent(),
     this.rangAtUtc = const Value.absent(),
     this.stoppedAtUtc = const Value.absent(),
@@ -11999,6 +12039,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
     this.rowid = const Value.absent(),
   });
   WakeUpDaysTableCompanion.insert({
+    this.ownerId = const Value.absent(),
     required String date,
     this.rangAtUtc = const Value.absent(),
     this.stoppedAtUtc = const Value.absent(),
@@ -12009,6 +12050,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
     this.rowid = const Value.absent(),
   }) : date = Value(date);
   static Insertable<WakeUpDayRow> custom({
+    Expression<String>? ownerId,
     Expression<String>? date,
     Expression<int>? rangAtUtc,
     Expression<int>? stoppedAtUtc,
@@ -12019,6 +12061,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (ownerId != null) 'owner_id': ownerId,
       if (date != null) 'date': date,
       if (rangAtUtc != null) 'rang_at_utc': rangAtUtc,
       if (stoppedAtUtc != null) 'stopped_at_utc': stoppedAtUtc,
@@ -12032,6 +12075,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
   }
 
   WakeUpDaysTableCompanion copyWith({
+    Value<String>? ownerId,
     Value<String>? date,
     Value<int?>? rangAtUtc,
     Value<int?>? stoppedAtUtc,
@@ -12042,6 +12086,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
     Value<int>? rowid,
   }) {
     return WakeUpDaysTableCompanion(
+      ownerId: ownerId ?? this.ownerId,
       date: date ?? this.date,
       rangAtUtc: rangAtUtc ?? this.rangAtUtc,
       stoppedAtUtc: stoppedAtUtc ?? this.stoppedAtUtc,
@@ -12056,6 +12101,9 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (ownerId.present) {
+      map['owner_id'] = Variable<String>(ownerId.value);
+    }
     if (date.present) {
       map['date'] = Variable<String>(date.value);
     }
@@ -12086,6 +12134,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
   @override
   String toString() {
     return (StringBuffer('WakeUpDaysTableCompanion(')
+          ..write('ownerId: $ownerId, ')
           ..write('date: $date, ')
           ..write('rangAtUtc: $rangAtUtc, ')
           ..write('stoppedAtUtc: $stoppedAtUtc, ')
@@ -22544,6 +22593,7 @@ typedef $$LocalMetaTableProcessedTableManager =
     >;
 typedef $$WakeUpDaysTableTableCreateCompanionBuilder =
     WakeUpDaysTableCompanion Function({
+      Value<String> ownerId,
       required String date,
       Value<int?> rangAtUtc,
       Value<int?> stoppedAtUtc,
@@ -22555,6 +22605,7 @@ typedef $$WakeUpDaysTableTableCreateCompanionBuilder =
     });
 typedef $$WakeUpDaysTableTableUpdateCompanionBuilder =
     WakeUpDaysTableCompanion Function({
+      Value<String> ownerId,
       Value<String> date,
       Value<int?> rangAtUtc,
       Value<int?> stoppedAtUtc,
@@ -22574,6 +22625,11 @@ class $$WakeUpDaysTableTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<String> get ownerId => $composableBuilder(
+    column: $table.ownerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get date => $composableBuilder(
     column: $table.date,
     builder: (column) => ColumnFilters(column),
@@ -22619,6 +22675,11 @@ class $$WakeUpDaysTableTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<String> get ownerId => $composableBuilder(
+    column: $table.ownerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get date => $composableBuilder(
     column: $table.date,
     builder: (column) => ColumnOrderings(column),
@@ -22664,6 +22725,9 @@ class $$WakeUpDaysTableTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<String> get ownerId =>
+      $composableBuilder(column: $table.ownerId, builder: (column) => column);
+
   GeneratedColumn<String> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
 
@@ -22727,6 +22791,7 @@ class $$WakeUpDaysTableTableTableManager
               $$WakeUpDaysTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<String> ownerId = const Value.absent(),
                 Value<String> date = const Value.absent(),
                 Value<int?> rangAtUtc = const Value.absent(),
                 Value<int?> stoppedAtUtc = const Value.absent(),
@@ -22736,6 +22801,7 @@ class $$WakeUpDaysTableTableTableManager
                 Value<int?> missionSkippedAtUtc = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WakeUpDaysTableCompanion(
+                ownerId: ownerId,
                 date: date,
                 rangAtUtc: rangAtUtc,
                 stoppedAtUtc: stoppedAtUtc,
@@ -22747,6 +22813,7 @@ class $$WakeUpDaysTableTableTableManager
               ),
           createCompanionCallback:
               ({
+                Value<String> ownerId = const Value.absent(),
                 required String date,
                 Value<int?> rangAtUtc = const Value.absent(),
                 Value<int?> stoppedAtUtc = const Value.absent(),
@@ -22756,6 +22823,7 @@ class $$WakeUpDaysTableTableTableManager
                 Value<int?> missionSkippedAtUtc = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WakeUpDaysTableCompanion.insert(
+                ownerId: ownerId,
                 date: date,
                 rangAtUtc: rangAtUtc,
                 stoppedAtUtc: stoppedAtUtc,

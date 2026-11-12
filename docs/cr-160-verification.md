@@ -33,8 +33,45 @@ The draft PR is for review only. Before it can be marked ready:
    restarts.
 2. **Wake Up ownership.** Find out whether per-device Wake Up days can show another account's
    schedule or arm the wrong account's alarms; isolate before release.
+   **Audit 2026-11-12 (read-only; no Wake Up code changed, awaiting the owner).**
+   - *Armed alarms: isolated.* Their titles are the owner's tasks; every owner switch disarms them all
+     before the new owner's are armed (I8, `WakeUpArming.disarmAll`; `owner_switch_test.dart`). On
+     Android that also stops a ringing alarm and clears the "snoozed" note (`WakeUpAlarms.disarmAll`);
+     on iOS it cancels every AlarmKit alarm, snooze countdowns included.
+   - **Android gentle Wake Up Check: leaks across a switch.** After an alarm rings, `WakeUpChecks.arm`
+     schedules the gentle check a few minutes later with the task's title, body and a
+     `dottoday://focus/<task id>` link in its PendingIntent. `WakeUpAlarms.disarmAll` cancels only the
+     alarms in its list, not this PendingIntent, and the I6 notification clear-up doesn't reach it (it
+     is not a flutter_local_notifications request). So a switch inside that window shows the next
+     account the previous account's task title. iOS: the gentle check is a pending
+     `UNNotificationRequest`, removed by I6's clear-up at the switch; loud checks are alarms on both
+     platforms and are disarmed. Found by reading the code; not yet reproduced on a device.
+   - *`wake_up_days` is per device, not per owner (by design, schema 10).* It holds times and counts
+     only, no task text: rang, stopped, snoozes, card shown, started, mission skipped. After a switch the
+     next account sees and is steered by the previous one's mornings: Notification health's "Last
+     wake-up" time, the learned Wind Down offer and the late-mornings hint (`recentStops`), and today's
+     row, which can keep the Wake Up card from showing or call off today's Wake Up Check when the
+     previous account already started its day. Settings, the alarm tier record and mission flags are
+     per owner or device facts and are fine.
+   **Fixed 2026-11-12 (owner's go for this session).**
+   - *Android check:* `WakeUpChecks` remembers each gentle check it arms and `cancelAll` calls them off
+     (pending and showing); `WakeUpAlarms.disarmAll`, run at every change of owner, calls it.
+     `integration_test/wake_up_alarm_test.dart` "a change of owner calls off an armed check": **failed on
+     the old code** (the check stayed armed), passes with the fix (Android API 37 emulator).
+   - *Per-owner Wake Up days:* schema 22 gives `wake_up_days` an owner (key owner + day); a device with
+     one profile keeps its rows, with several they go to '' and no one sees them. Every read and write is
+     the shown owner's (`DriftWakeUpDayRepository`); a switch folds the old owner's alarm events in first,
+     so they land with it. The schema-18 and -22 owner upgrades live in `data/db/owner_migration.dart`
+     (moved out of `app_database.dart` unchanged, 300-line cap). Tests: `wake_up_owner_migration_test.dart`
+     (3), `wake_up_days_owner_test.dart`, `owner_switch_test.dart` (A's morning stored under A, never
+     shown to the next owner). Device: Wake Up alarm and app launch (the upgrade) pass on the Android
+     emulator, AlarmKit and app launch on the iPhone 17 Pro Simulator (local).
+
 3. **Android ringing alarm.** Verify the limitation on a real ringing alarm; no previous-account task
    text may stay visible after a switch; mitigation if it cannot be removed at once.
+   **2026-11-12, emulator:** a switch stops a ringing alarm and clears the snoozed note
+   (`WakeUpAlarms.disarmAll`) and, since the Wake Up fix above, the gentle check with its task title.
+   A real Android phone ringing is still the owner's by-hand check.
 4. ~~**Offline sign-out** shows an error although the sign-out took effect: fix.~~ **Fixed 2026-11-12.**
    gotrue clears this device's session before it tells the server, so `SupabaseAccountService.signOut`
    now treats an unreachable server after the session is gone as signed out here (no error), and

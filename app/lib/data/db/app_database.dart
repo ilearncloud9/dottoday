@@ -1,5 +1,5 @@
 import 'package:dottoday/data/db/legacy_outbox.dart';
-import 'package:dottoday/data/db/owner_meta.dart';
+import 'package:dottoday/data/db/owner_migration.dart';
 import 'package:dottoday/data/db/tables/calendar_series_table.dart';
 import 'package:dottoday/data/db/tables/calendar_tables.dart';
 // The generated part copies `soundIdCheck` (a column CHECK) verbatim.
@@ -52,7 +52,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 21;
+  static const latestSchemaVersion = 22;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -85,7 +85,7 @@ class AppDatabase extends _$AppDatabase {
       if (from < 6) {
         await _createTableOnce(m, routinesTable);
         await _addColumnOnce(m, occurrences, occurrences.routineStart);
-        await _rebuildChangeLog(m);
+        await rebuildChangeLog(this, m);
         await m.alterTable(TableMigration(conflicts));
       }
       // 7 (M13.2): when a step was ticked, for learned step lengths.
@@ -106,7 +106,7 @@ class AppDatabase extends _$AppDatabase {
       // layout in onboarding step 0.
       if (from < 9) {
         await _createTableOnce(m, revealHintsTable);
-        await _rebuildChangeLog(m);
+        await rebuildChangeLog(this, m);
         await m.alterTable(TableMigration(conflicts));
         await _keepFullLayout();
       }
@@ -150,9 +150,9 @@ class AppDatabase extends _$AppDatabase {
       // 18 (CR-160): every outbox entry and pull cursor names its owner,
       // and local_meta says which profile is an account and which shows.
       if (from < 18) {
-        await _rebuildChangeLog(m);
-        await _ownCursors(m);
-        await _recordOwners();
+        await rebuildChangeLog(this, m);
+        await ownCursors(this, m);
+        await recordOwners(this);
         await recordLegacyOutbox(this); // checked at the first sync (blocker 8)
       }
       // 19 (CR-160): the guest session that first wrote each guest row.
@@ -169,6 +169,10 @@ class AppDatabase extends _$AppDatabase {
         await _createTableOnce(m, importSessions);
         await _createTableOnce(m, importStaging);
       }
+      // 22 (CR-160 Wake Up audit): Wake Up days per owner. A device with one
+      // profile gives it its rows; with several no one can say whose
+      // mornings they were, so they go to '' (seen by no one).
+      if (from < 22) await ownWakeUpDays(this, m);
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without
@@ -211,65 +215,6 @@ class AppDatabase extends _$AppDatabase {
     "UPDATE profiles SET settings = json_set(settings, '\$.uiLayout', 'full') "
     "WHERE json_extract(settings, '\$.uiLayout') IS NULL",
   );
-
-  /// Rebuilds `change_log` to the current definition, rows kept. Before
-  /// schema 18 it had no `owner_id`: a device then held one profile (the
-  /// sign-in re-keyed it), so every pending change is that profile's.
-  Future<void> _rebuildChangeLog(Migrator m) async {
-    if (await _hasColumn(changeLog, changeLog.ownerId)) {
-      await m.alterTable(TableMigration(changeLog));
-      return;
-    }
-    await m.alterTable(
-      TableMigration(
-        changeLog,
-        newColumns: [changeLog.ownerId],
-        columnTransformer: {
-          changeLog.ownerId: const CustomExpression<String>(
-            '(SELECT id FROM profiles ORDER BY created_at LIMIT 1)',
-          ),
-        },
-      ),
-    );
-  }
-
-  /// Gives the pull cursors their owner (18): the account the device
-  /// synced with. Without one there was never a pull, so none is kept.
-  Future<void> _ownCursors(Migrator m) async {
-    if (await _hasColumn(syncCursors, syncCursors.ownerId)) return;
-    await customStatement(
-      'DELETE FROM sync_cursors WHERE NOT EXISTS '
-      "(SELECT 1 FROM local_meta WHERE key = '$legacySyncAccountKey')",
-    );
-    await m.alterTable(
-      TableMigration(
-        syncCursors,
-        newColumns: [syncCursors.ownerId],
-        columnTransformer: {
-          syncCursors.ownerId: const CustomExpression<String>(
-            "(SELECT value FROM local_meta WHERE key = '$legacySyncAccountKey')",
-          ),
-        },
-      ),
-    );
-  }
-
-  /// The profile the device synced with is an account; the oldest profile
-  /// (the only one before 18) is the one shown (18). Not marked dirty.
-  Future<void> _recordOwners() async {
-    await customStatement(
-      'INSERT OR IGNORE INTO local_meta (key, value) '
-      "SELECT '${accountMarkerKey('')}' || p.id, '1' FROM profiles p "
-      "JOIN local_meta s ON s.key = '$legacySyncAccountKey' AND s.value = p.id",
-    );
-    await customStatement(
-      'INSERT OR IGNORE INTO local_meta (key, value) '
-      "SELECT '$activeOwnerKey', id FROM profiles ORDER BY created_at LIMIT 1",
-    );
-    await customStatement(
-      "DELETE FROM local_meta WHERE key = '$legacySyncAccountKey'",
-    );
-  }
 
   Future<bool> _hasColumn(
     TableInfo<Table, Object?> table,
