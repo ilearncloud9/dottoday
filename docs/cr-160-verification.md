@@ -56,6 +56,38 @@ The draft PR is for review only. Before it can be marked ready:
    the owner's separate go.
 8. **Older-build data.** Records already misattributed by older builds: define detection,
    quarantine or recovery before release; never relabel possibly mixed data as the current account's.
+   **Investigation 2026-11-12 (read-only, awaiting the owner's choice).** Exposed: only a device on
+   which a build before schema 18 signed into a second account (B after A); the old sign-in re-keyed
+   A's rows to B on that device, and schema 18 gives every pending change the device's one profile (B).
+   - *A's rows that reached the server:* safe from B. A push touching them updates nothing (RLS) and
+     0014's `sync_push` refuses the whole call: "row … not accessible" (42501). But the client maps
+     every refusal to `SyncTrouble.server` and retries, so on such a device **B's sync stays stuck**
+     (status "Couldn't sync"), every later change of B's waiting with it. Not a leak; it breaks R-08.
+   - *A's rows that never reached the server* (made or changed offline before the switch): schema 18
+     names B as their owner and they are **uploaded into B's account**. This is the residual leak.
+     Nothing on the device tells them from B's own offline work: no build before CR-160 recorded who
+     signed in when (`sync_account` held only the last account), rows carry no account history, and a
+     row with no server history looks like any new task.
+   - *A trace that does exist:* `field_seen` records every row the device pulled from a server. A row
+     with that history that B's server refuses as "not accessible" proves the device switched accounts
+     on an old build; the refusal names the row (`sync_push: row <id> of <table> not accessible`).
+   **Built 2026-11-12 (owner: "detect, then hold", with a notice).** `data/sync/legacy_switch.dart`:
+   the upgrade from schema < 18 records the outbox (`legacy_outbox_until`, `legacy_check_due`;
+   `data/db/legacy_outbox.dart`). The account's first sync after it, once pulled and before any push,
+   asks the server read-only which suspect rows are its own (`SyncGateway.ownIds`, RLS): rows with
+   `field_seen` history and changes pending at the upgrade. A suspect with history that the account
+   doesn't hold proves the switch; then those rows, their steps and every pending-at-upgrade row the
+   account doesn't hold move to a hidden owner (a profile marked an account, so never a guest, and
+   held: `owner_held:<id>`; no one signs in as it, so never shown or synced). Kept, never deleted. A
+   push refused as "not accessible" (`SyncGatewayException.foreign`) holds that row and goes on
+   instead of retrying forever. Settings › Account says so while anything is held (owner-approved
+   copy; de, fr, es pending native-speaker review). Tests: `legacy_switch_test.dart` (5, incl. never a
+   guest after a sign-out; the main case fails with the check removed), `account_held_notice_test.dart`;
+   on the local stack (`test/supabase/legacy_switch_test.dart`, two real accounts): nothing of A's
+   reaches B's account and B's new task does (with the check removed, A's offline task did reach B),
+   and the real refusal is parsed and held. **Still open:** a device whose A never synced at all leaves
+   no trace to detect; no recovery screen for held tasks (design work).
+
 9. **Migration 0014** is not deployed; rollout per `docs/cr-160-rollout.md` after separate approval.
 
 ## Guest work on a shared device

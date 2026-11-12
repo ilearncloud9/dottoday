@@ -5,14 +5,15 @@ import 'dart:convert';
 import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/data/db/app_database.dart';
-import 'package:dottoday/data/db/owner_meta.dart';
 import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/sync/field_seen.dart';
+import 'package:dottoday/data/sync/legacy_switch.dart';
 import 'package:dottoday/data/sync/outbox.dart';
 import 'package:dottoday/data/sync/pull_cursors.dart';
 import 'package:dottoday/data/sync/pull_guard.dart';
 import 'package:dottoday/data/sync/row_merge.dart';
 import 'package:dottoday/data/sync/server_columns.dart';
+import 'package:dottoday/data/sync/settle_profile.dart';
 import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
 import 'package:dottoday/data/sync/synced_rows.dart';
@@ -115,7 +116,7 @@ final class SyncEngine {
   ) async {
     final owner = await beginPull(_db, userId);
     final first = !await _cursors.has(userId, 'profiles');
-    if (first) await _settleProfile(owner);
+    if (first) await settleProfile(_db, _gateway, owner);
     var total = 0;
     if (first && onProgress != null) {
       for (final entity in syncedEntities) {
@@ -143,13 +144,31 @@ final class SyncEngine {
     if (skew?.fast ?? false) {
       return (pulled: pulled, pushed: 0, conflicts: conflicts, skew: skew);
     }
-    var pushed = 0;
-    for (final batch in await _outbox.batches(userId, size: _pageSize)) {
-      if (batch.changes.isNotEmpty) await _gateway.push(batch.changes);
-      await _outbox.acknowledge(batch);
-      pushed += batch.changes.length;
-    }
+    // Before anything goes up: rows an old build gave this account (blocker 8).
+    await checkLegacySwitch(_db, _gateway, userId);
+    final pushed = await _pushAll(userId);
     return (pulled: pulled, pushed: pushed, conflicts: conflicts, skew: skew);
+  }
+
+  /// The outbox, page by page. A row the server refuses as another
+  /// account's is held, never retried; the rest still goes up (blocker 8).
+  Future<int> _pushAll(String userId, {int held = 0}) async {
+    var pushed = 0;
+    try {
+      for (final batch in await _outbox.batches(userId, size: _pageSize)) {
+        if (batch.changes.isNotEmpty) await _gateway.push(batch.changes);
+        await _outbox.acknowledge(batch);
+        pushed += batch.changes.length;
+      }
+    } on SyncGatewayException catch (e) {
+      final row = e.foreign;
+      if (row == null || held >= 20) rethrow;
+      await holdRows(_db, userId, {
+        row.entity: {row.id},
+      });
+      return pushed + await _pushAll(userId, held: held + 1);
+    }
+    return pushed;
   }
 
   /// Pages through [entity] from [userId]'s cursor ([fromStart]: from the
@@ -267,34 +286,5 @@ final class SyncEngine {
     final changed =
         merged.conflicts.isNotEmpty || jsonEncode(local) != jsonEncode(stored);
     return (merged.conflicts.length, changed);
-  }
-
-  /// An account's first sync on this device (docs/09 M6.4, CR-160
-  /// criterion 7): when the account already has settings on the server,
-  /// they stay. The profile pending here (a fresh device's defaults, or the
-  /// current guest's settings) is not pushed over them; the guest's stay
-  /// kept for an explicit choice (B1). A new account (no settings yet) takes
-  /// this device's profile, so there is nothing to choose. One transaction;
-  /// a run that fails later finds the outbox already settled.
-  Future<void> _settleProfile(PullOwner owner) async {
-    final userId = owner.userId;
-    final server = (await _gateway.fieldVersions('profiles', [userId]))[userId];
-    final hasSettings = server != null && server.isNotEmpty;
-    await _db.transaction(() async {
-      await checkPull(_db, owner);
-      if (!hasSettings) {
-        await (_db.delete(
-          _db.localMeta,
-        )..where((m) => m.key.equals(guestSettingsKey(userId)))).go();
-        return;
-      }
-      await (_db.delete(_db.changeLog)..where(
-            (c) =>
-                c.ownerId.equals(userId) &
-                c.entity.equals('profiles') &
-                c.entityId.equals(userId),
-          ))
-          .go();
-    });
   }
 }

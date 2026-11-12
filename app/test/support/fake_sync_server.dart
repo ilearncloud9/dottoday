@@ -32,6 +32,11 @@ final class FakeSyncServer {
   /// A deletion froze the account: pushes are refused, reads go on.
   var frozen = false;
 
+  /// Ids another account holds on this server (CR-160 blocker 8): never
+  /// in this account's [ownIds], and a push touching one is refused as
+  /// `sync_push` does, naming the row.
+  final foreignIds = <String>{};
+
   /// Runs once at the start of the next [_DeviceGateway.accountRevision]
   /// (another device's write landing between two reads, say).
   FutureOr<void> Function()? beforeRevisionRead;
@@ -76,6 +81,15 @@ final class FakeSyncServer {
         SyncTrouble.server,
         StateError('sync_push: account is being deleted'),
       );
+    }
+    for (final c in changes) {
+      if (foreignIds.contains(c.id)) {
+        throw SyncGatewayException(
+          SyncTrouble.server,
+          StateError('sync_push: row not accessible'),
+          foreign: (entity: c.entity, id: c.id),
+        );
+      }
     }
     // Migration 0014 (CR-160): a change owned by anyone but the signed-in
     // account is refused, the whole call with it.
@@ -163,6 +177,16 @@ final class _DeviceGateway implements SyncGateway {
     (updatedAt: sinceUtc.toUtc().toIso8601String(), id: null),
     limit: 1 << 30,
   )).length;
+
+  @override
+  Future<Set<String>> ownIds(String entity, List<String> ids) async {
+    _server._maybeFail();
+    final held = _server.table(entity);
+    return {
+      for (final id in ids)
+        if (held.containsKey(id)) id,
+    };
+  }
 
   @override
   Future<Map<String, Map<String, String>>> fieldVersions(

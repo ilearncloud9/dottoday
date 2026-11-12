@@ -8,6 +8,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/owners/account_actions.dart';
 import 'package:dottoday/data/owners/account_gate.dart';
+import 'package:dottoday/data/owners/held_tasks.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
@@ -223,6 +224,9 @@ class _SignedIn extends ConsumerWidget {
           style: DotTheme.of(context).styles.caption,
         ),
         Text(l10n.accountSignedInAs(email), style: t.styles.body),
+        // Held from an old build's switch of accounts (CR-160 blocker 8).
+        if ((ref.watch(heldTasksProvider).value ?? 0) > 0)
+          Text(l10n.accountHeldTasks, style: t.styles.rowMeta),
         if (later && owner != null)
           SettingsGroup(
             caption: '',

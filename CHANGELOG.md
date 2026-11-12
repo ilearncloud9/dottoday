@@ -75,6 +75,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - M10.1: The thinking help behind Break it down, brain-dump and length suggestions now runs on your device — Apple Intelligence on iPhone and Mac, Gemini Nano on supported Android phones, Chrome's built-in model on the web — and falls back to your own history and simple rules where there is none. Nothing you type goes to a server; Settings › Privacy explains it and can clear what was kept.
 
 ### Fixed
+- On a test device where an older version signed into a second account, that account no longer receives the first account's tasks. They're set aside on the device, and Settings › Account says so (CR-160).
 - Signing out while offline no longer shows an error: you're signed out on this device. "Sign out everywhere" while offline says that your other devices are still signed in (CR-160).
 - "Sync now" and "Stay signed in" now tell you when the sync didn't go through, also when one was already running (CR-160).
 - An import or backup restore that runs out of storage space now says so, and that nothing was changed; it used to say only that saving failed (CR-160 B8).

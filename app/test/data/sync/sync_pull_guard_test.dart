@@ -53,6 +53,10 @@ final class _Held implements SyncGateway {
   void release() => _release!.complete();
 
   @override
+  Future<Set<String>> ownIds(String entity, List<String> ids) =>
+      _inner.ownIds(entity, ids);
+
+  @override
   Future<Map<String, Map<String, String>>> fieldVersions(
     String entity,
     List<String> ids,

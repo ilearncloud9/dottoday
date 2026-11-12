@@ -33,10 +33,15 @@ enum SyncTrouble { offline, server }
 
 /// A failed round trip.
 final class SyncGatewayException implements Exception {
-  const SyncGatewayException(this.trouble, this.cause);
+  const SyncGatewayException(this.trouble, this.cause, {this.foreign});
 
   final SyncTrouble trouble;
   final Object cause;
+
+  /// The row `sync_push` refused because another account holds it (42501
+  /// "row … not accessible"), when the refusal names one (CR-160 blocker
+  /// 8): it is held on this device, never retried.
+  final ({String entity, String id})? foreign;
 
   @override
   String toString() => 'SyncGatewayException(${trouble.name})';
@@ -84,4 +89,8 @@ abstract interface class SyncGateway {
   /// committed change to its synced rows moves, and whether a deletion has
   /// frozen it. One read, one snapshot. Throws [SyncGatewayException].
   Future<({int revision, bool frozen})> accountRevision();
+
+  /// Which of [ids] of [entity] the signed-in account holds on the server:
+  /// read-only, RLS answers for the caller only (CR-160 blocker 8).
+  Future<Set<String>> ownIds(String entity, List<String> ids);
 }

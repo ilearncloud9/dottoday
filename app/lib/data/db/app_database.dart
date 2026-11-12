@@ -1,3 +1,4 @@
+import 'package:dottoday/data/db/legacy_outbox.dart';
 import 'package:dottoday/data/db/owner_meta.dart';
 import 'package:dottoday/data/db/tables/calendar_series_table.dart';
 import 'package:dottoday/data/db/tables/calendar_tables.dart';
@@ -152,6 +153,7 @@ class AppDatabase extends _$AppDatabase {
         await _rebuildChangeLog(m);
         await _ownCursors(m);
         await _recordOwners();
+        await recordLegacyOutbox(this); // checked at the first sync (blocker 8)
       }
       // 19 (CR-160): the guest session that first wrote each guest row.
       // Existing rows get none: they are never eligible to move.

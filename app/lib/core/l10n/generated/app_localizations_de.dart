@@ -2632,6 +2632,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Du bist auf diesem Gerät abgemeldet. Deine anderen Geräte konnten nicht abgemeldet werden, weil du offline bist. Um sie abzumelden, melde dich wieder an und wähle „Überall abmelden“, wenn du online bist.';
 
   @override
+  String get accountHeldTasks =>
+      'Einige Aufgaben auf diesem Gerät stammen aus einem anderen Konto. Sie sind auf diesem Gerät beiseitegelegt und werden nicht synchronisiert.';
+
+  @override
   String get accountDelete => 'Konto löschen';
 
   @override

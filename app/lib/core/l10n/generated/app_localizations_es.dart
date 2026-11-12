@@ -2625,6 +2625,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Has cerrado sesión en este dispositivo. No se pudo cerrar sesión en tus otros dispositivos porque no tienes conexión. Para cerrarla en ellos, vuelve a iniciar sesión y elige «Cerrar sesión en todas partes» cuando tengas conexión.';
 
   @override
+  String get accountHeldTasks =>
+      'Algunas tareas de este dispositivo proceden de otra cuenta. Se guardan aparte en este dispositivo y no se sincronizarán.';
+
+  @override
   String get accountDelete => 'Eliminar cuenta';
 
   @override

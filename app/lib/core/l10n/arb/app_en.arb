@@ -3927,6 +3927,10 @@
   "@accountSignedOutHereOnly": {
     "description": "Settings › Account (CR-160 blocker 4): Sign out everywhere while offline; this device is signed out, the others are not."
   },
+  "accountHeldTasks": "Some tasks on this device came from another account. They’re set aside on this device and won’t sync.",
+  "@accountHeldTasks": {
+    "description": "Settings › Account (CR-160 blocker 8): tasks an older build gave this account came from another account; held on the device, hidden, never synced."
+  },
   "accountDelete": "Delete account",
   "@accountDelete": {
     "description": "Account page destructive button and the confirm dialog's button."

@@ -2004,6 +2004,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get accountSignedOutHereOnly => pseudo(super.accountSignedOutHereOnly);
 
   @override
+  String get accountHeldTasks => pseudo(super.accountHeldTasks);
+
+  @override
   String get accountDelete => pseudo(super.accountDelete);
 
   @override

@@ -614,6 +614,7 @@
   "accountSignOut": "Abmelden",
   "accountSignOutEverywhere": "Überall abmelden",
   "accountSignedOutHereOnly": "Du bist auf diesem Gerät abgemeldet. Deine anderen Geräte konnten nicht abgemeldet werden, weil du offline bist. Um sie abzumelden, melde dich wieder an und wähle „Überall abmelden“, wenn du online bist.",
+  "accountHeldTasks": "Einige Aufgaben auf diesem Gerät stammen aus einem anderen Konto. Sie sind auf diesem Gerät beiseitegelegt und werden nicht synchronisiert.",
   "accountDelete": "Konto löschen",
   "accountDeleteTitle": "Dein Konto löschen?",
   "accountDeleteExportFirst": "Erst meine Daten exportieren",

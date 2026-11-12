@@ -3786,6 +3786,12 @@ abstract class AppLocalizations {
   /// **'You’re signed out on this device. Your other devices couldn’t be signed out because you’re offline. To sign them out, sign in again and choose Sign out everywhere when you’re online.'**
   String get accountSignedOutHereOnly;
 
+  /// Settings › Account (CR-160 blocker 8): tasks an older build gave this account came from another account; held on the device, hidden, never synced.
+  ///
+  /// In en, this message translates to:
+  /// **'Some tasks on this device came from another account. They’re set aside on this device and won’t sync.'**
+  String get accountHeldTasks;
+
   /// Account page destructive button and the confirm dialog's button.
   ///
   /// In en, this message translates to:

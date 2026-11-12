@@ -2630,6 +2630,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Vous êtes déconnecté sur cet appareil. Impossible de déconnecter vos autres appareils, car vous êtes hors ligne. Pour les déconnecter, reconnectez-vous et choisissez « Se déconnecter partout » une fois en ligne.';
 
   @override
+  String get accountHeldTasks =>
+      'Certaines tâches de cet appareil proviennent d’un autre compte. Elles sont mises de côté sur cet appareil et ne seront pas synchronisées.';
+
+  @override
   String get accountDelete => 'Supprimer le compte';
 
   @override

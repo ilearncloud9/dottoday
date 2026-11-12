@@ -2621,6 +2621,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'You’re signed out on this device. Your other devices couldn’t be signed out because you’re offline. To sign them out, sign in again and choose Sign out everywhere when you’re online.';
 
   @override
+  String get accountHeldTasks =>
+      'Some tasks on this device came from another account. They’re set aside on this device and won’t sync.';
+
+  @override
   String get accountDelete => 'Delete account';
 
   @override
