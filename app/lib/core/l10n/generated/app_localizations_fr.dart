@@ -2626,6 +2626,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get accountSignOutEverywhere => 'Se déconnecter partout';
 
   @override
+  String get accountSignedOutHereOnly =>
+      'Vous êtes déconnecté sur cet appareil. Impossible de déconnecter vos autres appareils, car vous êtes hors ligne. Pour les déconnecter, reconnectez-vous et choisissez « Se déconnecter partout » une fois en ligne.';
+
+  @override
   String get accountDelete => 'Supprimer le compte';
 
   @override

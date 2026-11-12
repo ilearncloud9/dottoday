@@ -49,6 +49,15 @@ final class NetworkFailure extends AppFailure {
   String get code => 'network.${kind.name}';
 }
 
+/// "Sign out everywhere" while offline: this device is signed out, the
+/// other devices are not (CR-160 blocker 4).
+final class SignedOutHereOnlyFailure extends AppFailure {
+  const SignedOutHereOnlyFailure();
+
+  @override
+  String get code => 'auth.signed_out_here_only';
+}
+
 /// Session missing, expired or revoked.
 final class AuthFailure extends AppFailure {
   const AuthFailure();

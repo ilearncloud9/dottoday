@@ -2628,6 +2628,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get accountSignOutEverywhere => 'Überall abmelden';
 
   @override
+  String get accountSignedOutHereOnly =>
+      'Du bist auf diesem Gerät abgemeldet. Deine anderen Geräte konnten nicht abgemeldet werden, weil du offline bist. Um sie abzumelden, melde dich wieder an und wähle „Überall abmelden“, wenn du online bist.';
+
+  @override
   String get accountDelete => 'Konto löschen';
 
   @override

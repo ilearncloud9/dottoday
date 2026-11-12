@@ -3780,6 +3780,12 @@ abstract class AppLocalizations {
   /// **'Sign out everywhere'**
   String get accountSignOutEverywhere;
 
+  /// Settings › Account (CR-160 blocker 4): Sign out everywhere while offline; this device is signed out, the others are not.
+  ///
+  /// In en, this message translates to:
+  /// **'You’re signed out on this device. Your other devices couldn’t be signed out because you’re offline. To sign them out, sign in again and choose Sign out everywhere when you’re online.'**
+  String get accountSignedOutHereOnly;
+
   /// Account page destructive button and the confirm dialog's button.
   ///
   /// In en, this message translates to:

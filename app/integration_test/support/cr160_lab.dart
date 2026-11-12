@@ -122,9 +122,7 @@ final class Cr160Lab {
   Future<bool> signOut() async {
     final r = await actions.signOut();
     await c.read(afterWriteEffectsProvider).idle;
-    report(
-      'signed out: auth ${r is Ok ? 'ok' : 'err (local session cleared)'}',
-    );
+    report('signed out: auth ${r is Ok ? 'ok' : 'err'}');
     return r is Ok;
   }
 

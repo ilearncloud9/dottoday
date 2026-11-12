@@ -11,7 +11,7 @@ Nothing below ran against hosted Supabase.
 | # | Criterion | Status | Evidence |
 |---|---|---|---|
 | 1 | Strict ownership | PASS (automated) | `change_log.owner_id`, owner-keyed `sync_cursors` (schema 18), `guest_row_sessions` (19); `account_switch_test.dart` "only a guest is adopted"; `migration_test.dart` v17 → v18; owner-keyed caches (I4), backups (I2) |
-| 2 | Safe sign-out | PARTIAL (data and screens PASS, automated + local stack, 4 platforms; the share-extension race (I7) and the misleading offline error are open) | A1/A2/A3 built (`sign_out_prompt.dart`, `signed_out_screen.dart`); `sign_out_prompt_test.dart` (A1 only when confirmed and nothing waits; A2 otherwise; Esc cancels with no sync on Mac/web); `owner_switch_test.dart` "signing out: nothing of A is pending, shown or on a surface"; criterion 11 runs. A2 ships the narrower sentence (device-only surfaces unverified) |
+| 2 | Safe sign-out | PARTIAL (data and screens PASS, automated + local stack, 4 platforms; the misleading offline error fixed 2026-11-12, blocker 4; the share-extension race (I7) as recorded below) | A1/A2/A3 built (`sign_out_prompt.dart`, `signed_out_screen.dart`); `sign_out_prompt_test.dart` (A1 only when confirmed and nothing waits; A2 otherwise; Esc cancels with no sync on Mac/web); `owner_switch_test.dart` "signing out: nothing of A is pending, shown or on a surface"; criterion 11 runs. A2 ships the narrower sentence (device-only surfaces unverified) |
 | 3 | Safe account switching | PARTIAL (PASS automated + local stack, 4 platforms; share-extension actions queued under A can land with B (I7), Wake Up ownership unverified) | `account_switch_test.dart` "B signs in: none of A goes up, shows, or changes owner"; `sync_engine_test.dart` (replaces the old leaking test); `owner_switch_test.dart` (queued runs/actions, repeated switches, restart); criterion 11 step 3 (RLS + admin) |
 | 4 | Unsynced data preserved without leaking | PASS (automated + local stack, 4 platforms) | `account_switch_test.dart` group "signing out"; criterion 11 steps 2–4: A's offline tasks reach A once each, never B |
 | 5 | Guest → new account | PASS (automated + Chromium, local stack) | Explicit "Bring them in" with "I made these tasks myself" (G1); only the current guest session's tasks (`account_switch_test.dart` group "guest eligibility", incl. clock change and restart); web flow 1 |
@@ -35,8 +35,20 @@ The draft PR is for review only. Before it can be marked ready:
    schedule or arm the wrong account's alarms; isolate before release.
 3. **Android ringing alarm.** Verify the limitation on a real ringing alarm; no previous-account task
    text may stay visible after a switch; mitigation if it cannot be removed at once.
-4. **Offline sign-out** shows an error although the sign-out took effect: fix.
-5. **Sync now** must always give truthful feedback, including while a run is failing.
+4. ~~**Offline sign-out** shows an error although the sign-out took effect: fix.~~ **Fixed 2026-11-12.**
+   gotrue clears this device's session before it tells the server, so `SupabaseAccountService.signOut`
+   now treats an unreachable server after the session is gone as signed out here (no error), and
+   "Sign out everywhere" offline as `SignedOutHereOnlyFailure`: "You’re signed out on this device. Your
+   other devices couldn’t be signed out because you’re offline…" (owner-approved; de, fr, es pending
+   native-speaker review). Tests: `test/data/auth/supabase_sign_out_test.dart`,
+   `sign_out_prompt_test.dart`; criterion 11's offline step now expects success and logged
+   `signed out: auth ok` on the iPhone 17 Pro Simulator, the Mac and Chromium (local stack).
+5. ~~**Sync now** must always give truthful feedback, including while a run is failing.~~ **Fixed
+   2026-11-12.** `EngineSyncService.syncNow` pressed during a run waits for that run and the one it
+   asked for, then reports how they ended (`syncOutcome`); A2 "Stay signed in" shows a failure as the
+   Sync sheet does (`AccountActions.syncNow` returns the result). No new copy. Tests:
+   `engine_sync_service_test.dart` "Sync now during a run reports its end" (fails without the fix),
+   `sign_out_prompt_test.dart` "A2 Stay signed in: a sync that fails says so".
 6. **Visual discrepancy.** The new screens use DotTheme (Inter, app accent), not the approved
    Concept E Manrope/teal treatment; screen-specific adjustments only.
 7. **Verification.** Firefox and Safari (criterion 10); physical iPhone and Android incl. widgets,

@@ -2621,6 +2621,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get accountSignOutEverywhere => 'Cerrar sesión en todas partes';
 
   @override
+  String get accountSignedOutHereOnly =>
+      'Has cerrado sesión en este dispositivo. No se pudo cerrar sesión en tus otros dispositivos porque no tienes conexión. Para cerrarla en ellos, vuelve a iniciar sesión y elige «Cerrar sesión en todas partes» cuando tengas conexión.';
+
+  @override
   String get accountDelete => 'Eliminar cuenta';
 
   @override

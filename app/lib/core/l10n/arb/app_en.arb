@@ -3923,6 +3923,10 @@
   "@accountSignOutEverywhere": {
     "description": "Account page: ends the account's sessions on every device (06 §2)."
   },
+  "accountSignedOutHereOnly": "You’re signed out on this device. Your other devices couldn’t be signed out because you’re offline. To sign them out, sign in again and choose Sign out everywhere when you’re online.",
+  "@accountSignedOutHereOnly": {
+    "description": "Settings › Account (CR-160 blocker 4): Sign out everywhere while offline; this device is signed out, the others are not."
+  },
   "accountDelete": "Delete account",
   "@accountDelete": {
     "description": "Account page destructive button and the confirm dialog's button."

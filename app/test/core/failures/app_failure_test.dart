@@ -11,6 +11,7 @@ List<AppFailure> _all() => [
   const ImportStorageFullFailure(),
   for (final k in NetworkFailureKind.values) NetworkFailure(k),
   const AuthFailure(),
+  const SignedOutHereOnlyFailure(),
   for (final f in ValidationField.values)
     for (final r in ValidationRule.values) ValidationFailure(f, r),
   for (final e in EntityKind.values) ...[

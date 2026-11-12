@@ -22,15 +22,20 @@ base class FakeAccountActions implements AccountActions {
   Result<void, AppFailure> removalResult = const Ok(null);
   Result<void, AppFailure> settingsResult = const Ok(null);
   OwnerSummary summaryValue = (tasks: 42, pending: 3);
+  Result<void, AppFailure> signOutResult = const Ok(null);
+  Result<void, AppFailure> syncResult = const Ok(null);
 
   @override
   Future<Result<void, AppFailure>> signOut({bool everywhere = false}) async {
     calls.add(everywhere ? 'signOutEverywhere' : 'signOut');
-    return const Ok(null);
+    return signOutResult;
   }
 
   @override
-  Future<void> syncNow() async => calls.add('syncNow');
+  Future<Result<void, AppFailure>> syncNow() async {
+    calls.add('syncNow');
+    return syncResult;
+  }
 
   @override
   Future<void> useWithoutAccount() async => calls.add('useWithoutAccount');

@@ -613,6 +613,7 @@
   "accountSignedInAs": "Angemeldet als {email}",
   "accountSignOut": "Abmelden",
   "accountSignOutEverywhere": "Überall abmelden",
+  "accountSignedOutHereOnly": "Du bist auf diesem Gerät abgemeldet. Deine anderen Geräte konnten nicht abgemeldet werden, weil du offline bist. Um sie abzumelden, melde dich wieder an und wähle „Überall abmelden“, wenn du online bist.",
   "accountDelete": "Konto löschen",
   "accountDeleteTitle": "Dein Konto löschen?",
   "accountDeleteExportFirst": "Erst meine Daten exportieren",

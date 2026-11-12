@@ -88,6 +88,7 @@ final class EngineSyncService implements SyncService {
   var _status = SyncStatus.localOnly;
   var _running = false;
   var _again = false;
+  Completer<void>? _idle;
 
   @override
   Stream<SyncStatus> watch() => replaying(() => _status, _state.stream);
@@ -100,13 +101,9 @@ final class EngineSyncService implements SyncService {
   Future<Result<void, AppFailure>> syncNow() async {
     if (_account == null) return const Ok(null);
     await _run();
-    return switch (_status.state) {
-      SyncState.offline => const Err(
-        NetworkFailure(NetworkFailureKind.offline),
-      ),
-      SyncState.error => const Err(NetworkFailure(NetworkFailureKind.server)),
-      _ => const Ok(null),
-    };
+    // A run was under way: wait for it and the round asked for (blocker 5).
+    if (_running) await (_idle ??= Completer<void>()).future;
+    return syncOutcome(_status.state);
   }
 
   @override
@@ -249,6 +246,9 @@ final class EngineSyncService implements SyncService {
       if (_again) {
         _again = false;
         unawaited(_run());
+      } else {
+        _idle?.complete();
+        _idle = null;
       }
     }
   }

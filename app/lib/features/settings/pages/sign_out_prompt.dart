@@ -55,7 +55,11 @@ Future<void> signOutWithCheck(
         );
       }
     case SignOutAnswer.stay:
-      await actions.syncNow();
+      if (await actions.syncNow() case Err(:final failure)) {
+        messenger.showSnackBar(
+          SnackBar(content: Text(failureMessage(l10n, failure))),
+        );
+      }
     case null:
       return;
   }

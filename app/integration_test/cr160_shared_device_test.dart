@@ -93,7 +93,8 @@ Future<List<String>> _aSignsInAndGoesOffline(
   expect(await lab.outbox(a.id), greaterThanOrEqualTo(2));
   final pending = (await lab.pendingNotifications()).values.toSet();
   expect(pending, containsAll([a1.id, a2.id]));
-  await lab.signOut();
+  // Offline, the sign-out has still happened here: no error (blocker 4).
+  expect(await lab.signOut(), isTrue);
   final afterOut = await activeOwnerId(lab.db);
   expect(afterOut, isNot(a.id));
   expect(await isAccount(lab.db, afterOut!), isFalse);

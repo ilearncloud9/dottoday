@@ -84,12 +84,24 @@ final class SupabaseAccountService implements AccountService {
       _restore?.call() ?? Stream.value(null);
 
   @override
-  Future<Result<void, AppFailure>> signOut({bool everywhere = false}) =>
-      _guard(_Step.signOut, () async {
-        await _auth.signOut(
-          scope: everywhere ? SignOutScope.global : SignOutScope.local,
-        );
-      });
+  Future<Result<void, AppFailure>> signOut({bool everywhere = false}) async {
+    final result = await _guard(_Step.signOut, () async {
+      await _auth.signOut(
+        scope: everywhere ? SignOutScope.global : SignOutScope.local,
+      );
+    });
+    // gotrue clears this device's session before it tells the server, so
+    // offline the sign-out has still happened here (CR-160 blocker 4).
+    // Only "everywhere" left something undone: the other devices.
+    if (result case Err(
+      failure: NetworkFailure(),
+    ) when _auth.currentSession == null) {
+      return everywhere
+          ? const Err(SignedOutHereOnlyFailure())
+          : const Ok(null);
+    }
+    return result;
+  }
 
   /// Deletes the account and everything synced to it (06 §6, M6.5): the
   /// `delete-account` function removes the user, every row follows, and a

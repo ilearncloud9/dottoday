@@ -2617,6 +2617,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountSignOutEverywhere => 'Sign out everywhere';
 
   @override
+  String get accountSignedOutHereOnly =>
+      'You’re signed out on this device. Your other devices couldn’t be signed out because you’re offline. To sign them out, sign in again and choose Sign out everywhere when you’re online.';
+
+  @override
   String get accountDelete => 'Delete account';
 
   @override

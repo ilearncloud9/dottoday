@@ -36,8 +36,9 @@ abstract interface class AccountActions {
   /// device, docs/06 §2).
   Future<Result<void, AppFailure>> signOut({bool everywhere = false});
 
-  /// A2 "Stay signed in": tries to sync now.
-  Future<void> syncNow();
+  /// A2 "Stay signed in": tries to sync now; how the run ended, never
+  /// before it has (CR-160 blocker 5).
+  Future<Result<void, AppFailure>> syncNow();
 
   /// A3 "Use without an account": the device's guest plan.
   Future<void> useWithoutAccount();
@@ -136,9 +137,8 @@ final class DeviceAccountActions implements AccountActions {
   }
 
   @override
-  Future<void> syncNow() async {
-    await _ref.read(syncServiceProvider).syncNow();
-  }
+  Future<Result<void, AppFailure>> syncNow() =>
+      _ref.read(syncServiceProvider).syncNow();
 
   @override
   Future<void> useWithoutAccount() async {

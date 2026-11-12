@@ -16,6 +16,7 @@ String failureMessage(AppLocalizations l10n, AppFailure failure) {
     NetworkFailure(kind: NetworkFailureKind.server) =>
       l10n.failureNetworkServer,
     AuthFailure() => l10n.failureAuth,
+    SignedOutHereOnlyFailure() => l10n.accountSignedOutHereOnly,
     ValidationFailure(:final rule) => _validation(l10n, rule),
     NotFoundFailure() => l10n.failureNotFound,
     ConflictFailure() => l10n.failureConflict,

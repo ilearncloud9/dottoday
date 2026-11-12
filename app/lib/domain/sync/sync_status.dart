@@ -7,6 +7,14 @@ import 'package:dottoday/domain/sync/clock_skew.dart';
 /// sheet read this.
 enum SyncState { localOnly, synced, syncing, offline, error }
 
+/// What "Sync now" reports once a run has ended in [state]: offline or a
+/// refusing server are failures; anything else is fine.
+Result<void, AppFailure> syncOutcome(SyncState state) => switch (state) {
+  SyncState.offline => const Err(NetworkFailure(NetworkFailureKind.offline)),
+  SyncState.error => const Err(NetworkFailure(NetworkFailureKind.server)),
+  _ => const Ok(null),
+};
+
 /// A field two devices changed within a minute (docs/04 §4): the server's
 /// value is applied; the user may keep theirs instead. [title] names the
 /// task; [field], [mine] and [theirs] are display text, never logged.

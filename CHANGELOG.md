@@ -75,6 +75,8 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - M10.1: The thinking help behind Break it down, brain-dump and length suggestions now runs on your device — Apple Intelligence on iPhone and Mac, Gemini Nano on supported Android phones, Chrome's built-in model on the web — and falls back to your own history and simple rules where there is none. Nothing you type goes to a server; Settings › Privacy explains it and can clear what was kept.
 
 ### Fixed
+- Signing out while offline no longer shows an error: you're signed out on this device. "Sign out everywhere" while offline says that your other devices are still signed in (CR-160).
+- "Sync now" and "Stay signed in" now tell you when the sync didn't go through, also when one was already running (CR-160).
 - An import or backup restore that runs out of storage space now says so, and that nothing was changed; it used to say only that saving failed (CR-160 B8).
 - A sheet's title and close button now stay in view when its content scrolls; they used to slide under the handle on a phone-sized browser. Questions like "Delete without a confirmed copy?" no longer stretch across a wide Mac or browser window. A large export's files are named by a random part of the export, so two exports made close together never share file names (CR-160 B7 gate, G1–G3).
 - Something shared to Dottoday, or tapped on a widget, notification or Live Activity, now stays with the account that was shown when it was queued (CR-160 I7). If someone else is signed in when the app picks it up, it waits for its own account instead of landing in theirs; nothing queued is lost when the app is closed, restarted or switching accounts.

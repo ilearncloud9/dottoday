@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:dottoday/core/failures/app_failure.dart';
+import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/settings/pages/sign_out_prompt.dart';
 import 'package:flutter/material.dart';
@@ -135,5 +137,34 @@ void main() {
     await t.pumpAndSettle();
     expect(find.text('3 changes haven’t synced yet'), findsNothing);
     expect(actions.calls, isEmpty);
+  });
+
+  // CR-160 blockers 4 and 5: the result is told as it is.
+  testWidgets('A2 Stay signed in: a sync that fails says so', (t) async {
+    actions.syncResult = const Err(NetworkFailure(NetworkFailureKind.offline));
+    await open(t, status: _confirmed, pending: 3);
+    await t.tap(find.text('Stay signed in'));
+    await t.pumpAndSettle();
+    expect(find.byType(SnackBar), findsOneWidget);
+  });
+
+  testWidgets('a sign-out that took effect shows no error', (t) async {
+    await open(t, status: _confirmed);
+    await t.tap(find.widgetWithText(FilledButton, 'Sign out'));
+    await t.pumpAndSettle();
+    expect(find.byType(SnackBar), findsNothing);
+  });
+
+  testWidgets('everywhere, offline: says the other devices stay signed in', (
+    t,
+  ) async {
+    actions.signOutResult = const Err(SignedOutHereOnlyFailure());
+    await open(t, status: _confirmed);
+    await t.tap(find.widgetWithText(FilledButton, 'Sign out'));
+    await t.pumpAndSettle();
+    expect(
+      find.textContaining('other devices couldn’t be signed out'),
+      findsOneWidget,
+    );
   });
 }

@@ -170,6 +170,25 @@ void main() {
     expect((await settled()).state, SyncState.offline);
   });
 
+  // CR-160 blocker 5: "Sync now" pressed while a run is under way reports
+  // how that run and the one it asked for end, never "Ok" before.
+  for (final refused in [true, false]) {
+    test('Sync now during a run reports its end (refused: $refused)', () async {
+      accounts.add(_account);
+      await settled();
+      await device.write([occurrenceFixture().copyWith(userId: _account)]);
+      server.frozen = refused;
+      final first = service.syncNow();
+      final second = await service.syncNow();
+      expect(
+        second,
+        refused ? isA<Err<void, AppFailure>>() : isA<Ok<void, AppFailure>>(),
+      );
+      await first;
+      server.frozen = false;
+    });
+  }
+
   test('a local write is pushed shortly after', () async {
     accounts.add(_account);
     await settled();
