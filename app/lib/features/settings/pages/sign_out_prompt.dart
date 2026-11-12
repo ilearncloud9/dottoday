@@ -103,31 +103,28 @@ class SignOutPrompt extends StatelessWidget {
           wide ? DotRadii.cardLarge : DotRadii.sheet,
         ),
       ),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: DotSize.promptWidth),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(DotSpace.xl),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: DotSpace.l,
-            children: [
-              if (n != null && !wide)
-                android
-                    ? DotIcon(DotGlyphs.cloudSync, color: t.colors.accentInk)
-                    : const TonalBadge(DotGlyphs.cloudSync),
-              Semantics(
-                header: true,
-                child: Text(
-                  title,
-                  textAlign: android ? TextAlign.center : TextAlign.start,
-                  style: t.styles.promptTitle,
-                ),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(DotSpace.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: DotSpace.l,
+          children: [
+            if (n != null && !wide)
+              android
+                  ? DotIcon(DotGlyphs.cloudSync, color: t.colors.accentInk)
+                  : const TonalBadge(DotGlyphs.cloudSync),
+            Semantics(
+              header: true,
+              child: Text(
+                title,
+                textAlign: android ? TextAlign.center : TextAlign.start,
+                style: t.styles.promptTitle,
               ),
-              Text(body, style: t.styles.body.copyWith(color: t.colors.muted)),
-              ...actions,
-            ],
-          ),
+            ),
+            Text(body, style: t.styles.body.copyWith(color: t.colors.muted)),
+            ...actions,
+          ],
         ),
       ),
     );

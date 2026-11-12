@@ -140,7 +140,7 @@ void main() {
     );
     expect(
       a.files.first.name,
-      'dottoday-backup-2026-11-11-01928c3e-manifest.json',
+      'dottoday-backup-2026-11-11-000000e1-manifest.json',
     );
     expect(
       a.files[1].name,

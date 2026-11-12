@@ -105,59 +105,53 @@ class DeleteDialogLayout extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
       ),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: DotSize.promptWidth),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(DotSpace.xl),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: DotSpace.m,
-            children: [
-              Semantics(
-                header: true,
-                child: Text(
-                  l10n.accountDeleteTitle,
-                  style: t.styles.promptTitle,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(DotSpace.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: DotSpace.m,
+          children: [
+            Semantics(
+              header: true,
+              child: Text(l10n.accountDeleteTitle, style: t.styles.promptTitle),
+            ),
+            Text(
+              p.browser
+                  ? l10n.accountDeleteBodyBrowser
+                  : l10n.accountDeleteBody,
+              style: t.styles.body.copyWith(color: t.colors.muted),
+            ),
+            Wrap(
+              spacing: DotSpace.m,
+              runSpacing: DotSpace.s,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                _ExportButton(p),
+                DecisionNote(l10n.accountDeleteExportHintShort),
+              ],
+            ),
+            if (p.exportStatus case final s?) StatusLine(s),
+            ?p.exportCheck,
+            _Summary(p),
+            _TypedWord(p),
+            if (p.error case final e?) StatusLine(e),
+            Wrap(
+              alignment: WrapAlignment.end,
+              spacing: DotSpace.s,
+              runSpacing: DotSpace.s,
+              children: [
+                OutlinedButton(
+                  onPressed: p.onCancel,
+                  child: Text(l10n.editorCancel),
                 ),
-              ),
-              Text(
-                p.browser
-                    ? l10n.accountDeleteBodyBrowser
-                    : l10n.accountDeleteBody,
-                style: t.styles.body.copyWith(color: t.colors.muted),
-              ),
-              Wrap(
-                spacing: DotSpace.m,
-                runSpacing: DotSpace.s,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  _ExportButton(p),
-                  DecisionNote(l10n.accountDeleteExportHintShort),
-                ],
-              ),
-              if (p.exportStatus case final s?) StatusLine(s),
-              ?p.exportCheck,
-              _Summary(p),
-              _TypedWord(p),
-              if (p.error case final e?) StatusLine(e),
-              Wrap(
-                alignment: WrapAlignment.end,
-                spacing: DotSpace.s,
-                runSpacing: DotSpace.s,
-                children: [
-                  OutlinedButton(
-                    onPressed: p.onCancel,
-                    child: Text(l10n.editorCancel),
-                  ),
-                  FilledButton(
-                    onPressed: p.onDelete,
-                    child: Text(l10n.accountDelete),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                FilledButton(
+                  onPressed: p.onDelete,
+                  child: Text(l10n.accountDelete),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

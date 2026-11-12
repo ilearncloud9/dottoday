@@ -33,8 +33,9 @@ name, bytes, sha256 (lowercase hex of the exact file bytes), counts}`.
 Part fields: `exportId`, `index`, `total`, then the v1 row arrays in v1's storage form (`series`,
 `occurrences`, `subtasks`, `routines`, `calendarSeries`); `profile` is in part 1 only.
 
-Names (informative only): `dottoday-backup-<yyyy-MM-dd>-<first 8 of exportId>-manifest.json` and
-`…-part-03-of-07.json`, dated in the profile's zone, never content.
+Names (informative only): `dottoday-backup-<yyyy-MM-dd>-<last 8 of exportId>-manifest.json` and
+`…-part-03-of-07.json`, dated in the profile's zone, never content. The last 8 characters are the
+id's random tail (its first 8 are its time, shared by exports a minute apart: B7 gate G3).
 
 ### Compatibility and refusal
 | File given to | Older importer (shipped builds) | New importer |
@@ -407,6 +408,30 @@ view, so the sweep scrolls to them as a person would; a web build without `flutt
 text input, so the typed word goes through the field's controller. The three sweep steps moved from
 `sweep_test.dart` to `support/sweep_steps.dart`, unchanged; the main design sweep was **not re-run**
 after that move. Gate: **not passed** until G1 is fixed and the compact web run is clean.
+
+#### G1–G3 fixed (2026-11-12, local)
+| # | Fix | Proof |
+|---|---|---|
+| G1 | `AppSheet` keeps its title row (and close button) fixed above the body; only the body scrolls. Every titled sheet, unchanged at rest | `test/shared/sheets/app_sheet_scroll_test.dart` (fails on the old sheet: the close button scrolled 736 px off); all 2,334 goldens unchanged by it |
+| G2 | Dialogs are capped at `DotSize.promptWidth` (480) in the theme's `DialogThemeData`; `showAppSheet`'s popover keeps its own 560. D1's and the sign-out prompt's own 480 caps are removed (the theme holds it now). Three buttons that don't fit side by side stack, Flutter's own `OverflowBar` | `test/core/theme/dialog_width_test.dart` |
+| G3 | `partFileStem` takes the export id's last 8 characters (random), not its first 8 (time) | `test/domain/export/part_file_names_test.dart`; 8 web export-set goldens re-made for the new names, nothing else in them changed |
+
+Re-run after the fixes (local):
+
+| Target | Light | Dark |
+|---|---|---|
+| Chromium compact, `cr160_set_sweep` | PASS, no A11Y finding | PASS, no A11Y finding |
+| Chromium expanded, `cr160_set_sweep` | PASS | PASS |
+| Mac, `cr160_set_sweep` | PASS, 9/9 | PASS, 9/9 |
+| iPhone 17 Pro simulator, main design sweep (`sweep`, `.env.example`) | PASS, 39/39 | PASS, 39/39 |
+
+The main sweep re-run also covers the `sweep_steps.dart` move. iPhone and Android `cr160_set_sweep`
+were not re-run: G1 and G2 only showed at the web compact and expanded widths, and G3 is pinned by its
+test. A widget-test note: Flutter's tap-target guideline also flags a row cut in half at a scroll
+edge (a normal scroll position, not a defect), so the G1 test asserts the header, not the guideline,
+after scrolling; the at-rest guideline checks in `app_sheet_test.dart` still run. G4 stays a note.
+Seen in passing, not from this work: the main sweep's `wake_up_explain` shot shows iOS's own "schedule
+alarms and timers" prompt over the sheet (Wake Up, out of scope here). Gate: **passed** locally (not CI).
 
 ## 7. Size policy and acceptance criteria (provisional)
 Provisional limits: **10 MB per written part, 25 MB per file read.** No maximum part count is adopted

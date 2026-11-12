@@ -209,9 +209,16 @@ String canonicalJson(Object? json) => jsonEncode(json);
 String sha256Hex(String text) => sha256.convert(utf8.encode(text)).toString();
 
 /// The stem every file of one set shares: dated in the profile's zone and
-/// told apart by its export id, never named after content.
+/// told apart by its export id, never named after content. The id's last 8
+/// characters are random; its first 8 are its time, the same for exports a
+/// minute apart (CR-160 B7 gate, G3).
+///
+/// ```dart
+/// partFileStem('2026-11-12', '019a7b3c-1d2e-7f00-8abc-0123456789ab');
+/// // 'dottoday-backup-2026-11-12-456789ab'
+/// ```
 String partFileStem(String date, String exportId) =>
-    'dottoday-backup-$date-${exportId.substring(0, 8)}';
+    'dottoday-backup-$date-${exportId.substring(exportId.length - 8)}';
 
 /// The manifest's file name.
 String manifestFileName(String stem) => '$stem-manifest.json';

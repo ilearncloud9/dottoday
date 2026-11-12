@@ -57,7 +57,7 @@ void main() {
     expect(set.manifest.purpose, ExportPurpose.export);
     expect(
       set.files.first.name,
-      'dottoday-backup-2026-11-11-01928c3e-manifest.json',
+      'dottoday-backup-2026-11-11-000000f1-manifest.json',
     );
     for (final (i, p) in set.parts.indexed) {
       final entry = set.manifest.parts[i];
