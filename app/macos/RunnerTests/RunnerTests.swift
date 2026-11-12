@@ -16,23 +16,30 @@ final class RunnerTests: XCTestCase {
     super.setUp()
     defaults = UserDefaults(suiteName: suite)
     defaults.removePersistentDomain(forName: suite)
+    // The app has run once: the queue's key is published, without which
+    // words are refused, never queued as plaintext (CR-160 I1).
+    XCTAssertTrue(QueueSeal.ensureKey(defaults, suite: suite))
   }
 
-  func testAShareCarriesThePublishedOwner() {
+  func testAShareCarriesThePublishedOwner() throws {
     let queue = DotQueue(defaults: defaults)
     queue.publishOwner("{\"v\":1,\"owner\":\"\(ownerA)\"}")
-    ShareQueue.entry(text: "Dentist", link: "https://dentist.example", subject: nil)
-      .map(queue.append)
-    let entry = queue.entries()[0]
+    let share = try XCTUnwrap(
+      ShareQueue.entry(text: "Dentist", link: "https://dentist.example", subject: nil))
+    XCTAssertTrue(queue.append(share))
+    let entry = try XCTUnwrap(queue.entries().first)
     XCTAssertEqual(entry["owner"] as? String, ownerA)
     XCTAssertEqual(entry["shared"] as? Bool, true)
+    XCTAssertEqual(
+      QueueSeal.open(entry)["text"] as? String, "Dentist\nhttps://dentist.example")
   }
 
-  func testDuringAChangeOfOwnerTheShareNamesNobody() {
+  func testDuringAChangeOfOwnerTheShareNamesNobody() throws {
     let queue = DotQueue(defaults: defaults)
     queue.publishOwner("{\"v\":1,\"switching\":true}")
-    ShareQueue.entry(text: "Dentist", link: nil, subject: nil).map(queue.append)
-    XCTAssertNil(queue.entries()[0]["owner"])
+    let share = try XCTUnwrap(ShareQueue.entry(text: "Dentist", link: nil, subject: nil))
+    XCTAssertTrue(queue.append(share))
+    XCTAssertNil(try XCTUnwrap(queue.entries().first)["owner"])
   }
 
   func testAppendsFromManyThreadsAndRemovesLoseNothing() {
@@ -46,7 +53,7 @@ final class RunnerTests: XCTestCase {
       if i % 4 == 0 { queue.remove([ids[i / 4]]) }
     }
     // 25 seeded, all removed; 100 appended meanwhile, none lost.
-    let texts = queue.entries().compactMap { $0["text"] as? String }
+    let texts = queue.entries().map(QueueSeal.open).compactMap { $0["text"] as? String }
     XCTAssertEqual(texts.count, 100)
     XCTAssertFalse(texts.contains { $0.hasPrefix("old") })
   }
