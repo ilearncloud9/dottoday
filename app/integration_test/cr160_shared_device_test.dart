@@ -8,6 +8,7 @@
 // the stack the test can cut), and the defines SUPABASE_URL (the switch's
 // address), SUPABASE_ANON_KEY and CR160_SERVICE_KEY (local stack only).
 // Prints `CR160 …` lines with ids and counts, never task text.
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/sync/account_owners.dart';
@@ -215,8 +216,15 @@ Future<void> _deletedAccount(
       .create(d.id, BackupReason.daily);
   expect(backup is Ok, isTrue);
   expect(await lab.backups(d.id), greaterThanOrEqualTo(1));
+  // D1 reviews first (its summary verifies the server's state); deleting
+  // without a review is refused (CR-160, commits 9c253d9f and de21c03a).
+  await lab.actions.summary(d.id);
   final deleted = await lab.actions.deleteAccount();
-  expect(deleted is Ok, isTrue, reason: 'functions serve');
+  expect(
+    deleted is Ok,
+    isTrue,
+    reason: deleted is Err<void, AppFailure> ? deleted.failure.code : '',
+  );
   await lab.until('removal finished', () async {
     return (await pendingRemovals(lab.db)).isEmpty;
   });

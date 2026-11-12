@@ -433,16 +433,165 @@ after scrolling; the at-rest guideline checks in `app_sheet_test.dart` still run
 Seen in passing, not from this work: the main sweep's `wake_up_explain` shot shows iOS's own "schedule
 alarms and timers" prompt over the sheet (Wake Up, out of scope here). Gate: **passed** locally (not CI).
 
+### B8: device measurements (2026-11-12, local)
+`integration_test/cr160_measure_test.dart`, profile mode, three runs, each its own process: the host
+measurements' code and 60 MB account (5,800 tasks, 58.8 MB as six 10 MB parts) on temporary SQLCipher
+files of their own (the app's database and the device's data are never opened). Memory is sampled every
+2 ms from another isolate; the database folder (file, WAL, shm) every 20 ms; after the import, a
+checkpoint and SQLite's page counts.
+
+**Mac (this Mac, macOS 26, profile build):**
+
+| §7 measure | Result (3 runs) | Criterion | |
+|---|---|---|---|
+| Import peak memory | 10–20 MB above idle, 8.5–10.2 s | ≤ 150 MB | Pass |
+| Export peak memory, 10 MB parts | 38–51 MB, 3.0 s | ≤ 100 MB | Pass |
+| Export peak memory, 5 MB parts | 22–29 MB, 3.0 s | ≤ 100 MB | Pass |
+| Backup written as 5 MB parts | 16–49 MB, 5.1–5.2 s | (export's 100 MB) | Pass |
+| Restore of those parts | 10–14 MB, 3.7 s | ≤ 150 MB | Pass |
+| Round trip | the exported set, imported into a second database, is identical (every row, Trash, outbox) | identical | Pass |
+| Staging storage | 81.1 MB when the commit's first chunk ran: **1.38 ×** the files (staging plus that chunk) | ≤ 1.2 × | **Over** |
+| Released after commit | 68.6 MB of free pages (1.17 ×) inside the file after the checkpoint; the file keeps them for reuse, it does not shrink | released | Pages yes, file size no |
+| Commit transient storage | the folder peaks **628 MB above its start: 10.7 ×** the files. The WAL holds every page the one commit transaction writes until the checkpoint (≈ 315 MB) on top of the file | ≤ 5 × | **Over** |
+| The account at rest | 245.6 MB of pages in use for a 58.8 MB account (4.2 ×): its rows, search index and sync outbox | not in §7 | — |
+
+Storage is the same on every run (SQLite's own behaviour, not timing). B8 stopped here for the owner's
+decision (the storage investigation below); the owner then revised §7's storage rows and B8 went on.
+
+**iPhone 17 Pro (physical, iOS 27.2, profile build over wireless; three runs, and three more of the backup
+steps alone):**
+
+| §7 measure | Result | Criterion | |
+|---|---|---|---|
+| Import peak memory | 0–32 MB above idle, 5.5–5.6 s | ≤ 150 MB | Pass |
+| Export, 10 MB parts / 5 MB parts | 50–60 MB / 27–33 MB, 2.8 s | ≤ 100 MB | Pass |
+| Backup written as 5 MB parts | alone: 72–83 MB, 3.6–3.8 s. In the full run it read 47 / 139 / 62 MB: that run's idle was already 754 MB (two imports and two exports before it in one process), so it is not the step's own figure | ≤ 100 MB | Pass |
+| Restore of those parts | 7–15 MB, 3.2–3.3 s | ≤ 150 MB | Pass |
+| Round trip | identical | identical | Pass |
+| Storage | the same bytes as the Mac to the page (81.1 / 245.6 / 68.6 MB; peak 617–623 MB) | revised rows | Pass |
+
+The phone is not §7's 4 GB iPhone (it has more memory); the 4 GB iPhone stays on the owner's by-hand
+list. The test app (no data: its databases were temporary files) is still installed on the phone:
+removing it from this session was refused by the tool's safety check.
+
+**Android emulator (API 37, arm64; launched with `-memory 3072`, which this AVD ignored: 3.8 GB visible;
+three runs, and three of the backup steps alone):**
+
+| §7 measure | Result | Criterion | |
+|---|---|---|---|
+| Import peak memory | 20–23 MB, 7.8–9.5 s | ≤ 150 MB | Pass |
+| Export, 10 MB parts / 5 MB parts | 38–43 MB / 7–8 MB, 3.9–4.6 s | ≤ 100 MB | Pass |
+| Backup written as 5 MB parts | alone: 42–51 MB, 4.9–5.0 s | ≤ 100 MB | Pass |
+| Restore of those parts | 11–17 MB, 4.1–4.5 s | ≤ 150 MB | Pass |
+| Round trip / storage | identical / the same bytes as the Mac | | Pass |
+
+An emulator's memory is the Mac's; a 3 GB Android phone stays on the owner's by-hand list.
+
+**Web (Chromium 156 headless, desktop; `integration_test/cr160_measure_web_test.dart` through the app's
+own services in a fresh profile, `tool/cr160/web_measure.mjs` sampling the tab every 100 ms; three runs):**
+
+| Step | JS heap peak | Tab (renderer) resident peak | Time |
+|---|---|---|---|
+| Import the 60 MB set | **267 / 285 / 315 MB** | 1.84–1.98 GB | 73–94 s |
+| Export, 10 MB parts | 182–190 MB | 1.42–1.55 GB | 3.3–3.5 s |
+| Import that export back | 250 MB | 1.38–1.82 GB | 30–42 s |
+| Backup written / restored | 179–186 / 188–198 MB | 1.10–1.32 / 1.33–1.47 GB | 4.3–4.6 / 28–32 s |
+| Round trip | same table counts | | Pass |
+
+- §7's web criterion (tab heap ≤ 300 MB) is met in two runs of three and missed in one (315 MB). The
+  test itself holds the 60 MB set as strings before the import (the app reads picked files when it
+  needs them), so the heap overstates the app by up to that much.
+- The tab's resident memory is about **1.9 GB** at the import's peak: sqlite3's IndexedDB file system
+  keeps the database file and its WAL (each about 315 MB here, §7's storage rows) in memory, on top of the
+  wasm and JS heaps. §7 has no criterion for it; decision 2 asked for web memory to be measured here.
+- A web import of 60 MB takes 73–94 s (native 5.5–9.5 s).
+
+B8 stopped here for the owner's decision on the web's supported size (§7: "If the 60 MB reference fails
+a criterion on a platform, that platform's supported size is lowered and stated in the release notes").
+The owner chose to measure 30 MB (2,900 tasks, `--dart-define=CR160_TASKS=2900`), three runs:
+
+| Step (30 MB) | JS heap peak | Tab resident peak (start ≈ 0.7 GB) | Time |
+|---|---|---|---|
+| Import the set (3 parts) | 224–232 MB | 1.38–1.53 GB | 16.7–17.5 s |
+| Export, 10 MB parts | 124–132 MB | 1.41–1.50 GB | 1.1 s |
+| Import that export back | 177–208 MB | 1.54–1.67 GB | 9.6–9.9 s |
+| Backup written / restored | 127–149 / 167–172 MB | 1.50–1.65 / 1.60–1.72 GB | 1.7 / 8.7–9.0 s |
+| Round trip | same table counts | | Pass |
+
+**Web supported size: 30 MB of exported data** (owner, 2026-11-12), stated in the release notes
+(CHANGELOG). Native keeps the 60 MB reference. Nothing in the app enforces 30 MB on the web: a larger
+account still imports (60 MB passed functionally above, slower and with the heap near 300 MB); the 64 MiB
+accepted total is unchanged everywhere.
+
+**Regression on the device matrix (2026-11-12, local; CI defines for the device suite, the local stack
+for criteria 10 and 11):**
+
+| Target | Device suite (`tool/device_tests.sh`, 11 tests) | Criterion 11, shared device | Criterion 10, web flows |
+|---|---|---|---|
+| iPhone 17 Pro simulator (iOS 26.5) | PASS, all 11 (notification exactness 20/20, no duplicates) | PASS | — |
+| Android emulator (API 37) | PASS, all 11 (exactness 20/20) | PASS | — |
+| Mac (debug) | — | PASS | — |
+| Chromium 156 (profile builds) | — | PASS (flow 3) | flows 1, 2, 4, 5 PASS |
+
+The first attempt ran out of disk (194 MB free): nine iPhone builds failed before reaching the app. The
+owner approved erasing the test simulator; the rest ran one platform at a time, builds cleared between.
+On the way:
+- `cr160_shared_device_test.dart` was stale: since commits 9c253d9f / de21c03a deleting an account needs
+  D1's review (`summary`) first, and the test deleted without one (refused, no request reached the
+  function). The test now reviews first and names the failure's code when deletion is refused.
+- The erased simulator asked AlarmKit's "Allow Dottoday to schedule alarms and timers?" again, and
+  `wake_up_alarmkit` waited on it until its 15-minute limit; Allow was tapped on the test simulator and it
+  passed (221 s).
+- Seen once, not reproduced: the first design sweep on the erased simulator logged a 6–12 px
+  `RenderFlex` overflow in `DayCard` (`lib/shared/dot/day_card.dart:183`, the page squeezed to 90 px)
+  during its brain-dump legs; the re-run passed with none. Not CR-160.
+
+Not covered (the owner's by-hand list): §7's 4 GB iPhone and 3 GB Android phone, Firefox and Safari,
+the hosted project, the release APK, real file picks in each platform's picker.
+
+#### Storage investigation (2026-11-12, host, `test/perf/import_storage_test.dart`)
+SQLite's `dbstat` on the same SQLCipher file, per table, for the 58.8 MB set:
+
+| When | Where the pages are | MB | × files |
+|---|---|---|---|
+| Staged (the commit's first chunk) | `import_staging` and its key | 68.6 | 1.17 × |
+| Committed (after a checkpoint) | `change_log` (the sync outbox: every imported field's value, queued to push) and its two indexes | 107.7 | 1.83 × |
+| | `occurrences` (the tasks) and their indexes | 69.3 | 1.18 × |
+| | `search_index_content` (the search index keeps its own copy of title and notes) | 68.0 | 1.16 × |
+| | the rest of the search index | 0.3 | — |
+
+What this means:
+- **Staging is within 1.2 × by pages (1.17 ×).** The Mac's 1.38 × was the folder: staging plus the WAL
+  frames not yet checkpointed. §7's "file sizes before/after" method measures the WAL too.
+- **The account at rest is about 4.2 × its files:** the tasks once, the search index's copy once, and the
+  sync outbox's queued values almost twice (field values as JSON plus two indexes). The reference
+  account's notes are one long word, so a real account's search index adds more than 0.3 MB.
+- **The commit's peak is that 4.2 × written twice, plus staging:** the one transaction (§6) writes each
+  page to the WAL until the checkpoint, on top of the file. 5 × can't hold while the account at rest is
+  over about 2 ×: it is a consequence of the single transaction, not a leak.
+- **A full disk during an import** rolls back whole (B3), but the importer turned it into the general
+  `StorageFailure` ("Couldn't save on this device. Try again."). Fixed in B8 (owner-approved copy): the
+  write path reports `StorageFullFailure` (still shown with the generic copy for an edit), and an import
+  or restore that fills the disk is `ImportStorageFullFailure`: "There isn’t enough storage space to
+  import this backup. Nothing was changed. Free up some space and try again." (de, fr, es pending
+  native-speaker review). SQLite rolls the transaction back itself on a full disk, so drift's own
+  rollback reports `CouldNotRollBackException` with the original error as its cause; the importer looks
+  through it. Test: `staged_import_rollback_test.dart` "a full disk during the commit".
+- **No free-space reading exists today.** A check before an import needs a small platform call on iPhone,
+  Android and the Mac (no new package) and `navigator.storage.estimate()` on the web.
+
 ## 7. Size policy and acceptance criteria (provisional)
-Provisional limits: **10 MB per written part, 25 MB per file read.** No maximum part count is adopted
+Provisional limits: **10 MB per written part, 25 MB per file read.** The storage rows were revised by the owner on
+2026-11-12 from the B8 investigation. No maximum part count is adopted
 yet. Each limit is confirmed or changed only from measurements against these criteria (B8):
 
 | Measure | Criterion | How |
 |---|---|---|
 | Import peak memory | ≤ 150 MB above the app's idle RSS on native for any part ≤ 25 MB; web tab heap ≤ 300 MB for the reference account | `ProcessInfo.currentRss` sampling in an integration test; Chrome performance memory on web |
 | Export peak memory | ≤ 100 MB above idle on native | same |
-| Staging storage | ≤ 1.2 × total file bytes, released after commit | file sizes before/after |
-| Commit transient storage | ≤ 5 × total file bytes (WAL, outbox, search index) | WAL and file sizes during commit |
+| Staging storage | ≤ 1.2 × total file bytes, its pages freed after commit | SQLite `dbstat` pages of the staging table (revised in B8: the folder's size counts WAL frames too) |
+| Account at rest | recorded, no limit yet: about 4.2 × the files today (tasks 1.2 ×, search index copy 1.2 ×, sync outbox 1.8 ×) | `dbstat` after a checkpoint (added in B8) |
+| Commit transient storage | the folder's peak ≤ 2.2 × (the account at rest + staging) (revised in B8: the one commit transaction writes every page it touches, staging's freed pages included, to the WAL until the checkpoint, so the peak is about twice what it touches; so 5 × the files can't hold while the account at rest is over about 2 ×) | WAL and file sizes during commit |
 | Supported account size | reference account of 60 MB JSON round-trips on the low-end device set (a 3 GB Android phone, an iPhone with 4 GB, a Mac, Chrome desktop) within the memory criteria | B8 device matrix |
 
 If the 60 MB reference fails a criterion on a platform, that platform's supported size is lowered
