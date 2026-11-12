@@ -358,7 +358,55 @@ pending native-speaker review.
 | Goldens (derived) | `account_delete_set_native_*` (compact, + 2.0 text, RTL), `account_delete_set_web_*` (expanded), `account_delete_set_without_copy_*` |
 | Regression | Every existing D1, Settings and export test passes. One named edit: `deletion_consent_test.dart`'s "too large" case used a 27 MB account; under §10 that is a set now, so the case is one task larger than any part (parts of 1,500 bytes), with the same assertions. Test support: `DeletionWorld` gives the app version and an optional part size; the fakes gain the new methods |
 | Mutations | `uncertain` letting the deletion through, no session/generation/newer-export guard, any check counting as done, closing D1 keeping the files, a new export keeping the old set, the web counting any download as handed over, the set question never asked, large accounts as one file: 8 of 8 caught (the guard and the new-export case needed their own tests, added) |
-| Not yet | B7's gate: the device and web screenshot sweep (iPhone, Android, Mac, web) over B7a–c |
+| Device and web | B7's gate, below |
+
+### B7 gate: device and web sweep (2026-11-12, local)
+The set screens of B7a–c on every target, light and dark, each with its live accessibility tree
+checked (44 pt / 48 dp targets, every tappable node labelled; `integration_test/support/a11y_tree.dart`).
+`integration_test/cr160_set_sweep_test.dart` starts the real app through `bootstrap()` with two
+test-only overrides (`bootstrap(overrides:)`, which the app never passes): parts of 16 KB, so forty
+seeded tasks with long notes make a set, and `SweepGateway`, which stands in for the native share
+sheet, folder picker and file picker that a test can't drive (every handoff "delivers"; every pick
+returns files it was handed). Delete account runs against the **local** Supabase stack only (a lab
+account, never deleted; the hosted project untouched). Shots: `app/build/sweep/<platform>[_dark]_cr160_*`
+(web: `web[_dark]_<width>_cr160_*`). Runs: `tool/device_tests.sh <ios|android> cr160_set_sweep`
+(`DEFINES` = local-stack defines), `SWEEP_TARGET=integration_test/cr160_set_sweep_test.dart
+tool/mac_sweep.sh`, and on the web a profile build with `SWEEP_HOST_SHOTS=true` driven by
+`tool/cr160/web_set_sweep.mjs` (Playwright Chromium 156, which saves each announced shot).
+
+| Target | Light | Dark | Shots |
+|---|---|---|---|
+| iPhone 17 Pro simulator (iOS 26.5) | PASS, 9/9 a11y | PASS, 9/9 a11y | export set, check missing, check complete; import "Add the rest" (2 of 7), another backup's file refused, Replace question; D1 uncertain, the set question, confirmed |
+| Android API 37 emulator | PASS, 9/9 a11y | PASS, 9/9 a11y | the same nine |
+| This Mac (debug, its kept container: the guest had grown to 66 files) | PASS, 9/9 a11y | PASS, 9/9 a11y | the same nine |
+| Chromium, expanded (1280×800) | PASS | PASS | ten: the nine less the native set sheet, plus the Download lists (Settings, D1) |
+| Chromium, compact (390×844) | **FAIL** (2 findings) | **FAIL** (same) | the same ten; D1 all PASS |
+
+The real platform sheets, opened for a set (`integration_test/cr160_real_sheet_sweep_test.dart`, no
+gateway override): iPhone, the share sheet says "7 Documents" with Save to Files
+(`ios_cr160_real_sheet.png`); Mac, the folder picker over Export (`macos_cr160_real_sheet_window.png`,
+cropped to the app window). With either open nothing says it was saved. Not covered: closing the
+Mac picker for real (macOS refused the keystroke to this session; the cancelled path is unit- and
+widget-tested), picking real files in iOS Files, Android's file chooser and a browser's file dialog
+(the owner's by-hand device list).
+
+Findings, graded (docs/08 §7):
+
+| # | Grade | Where | Finding |
+|---|---|---|---|
+| G1 | **BLOCKER** (a11y floor) | Web compact, Settings › Export, the set sheet with its Download list | Once the list is taller than the sheet (7 files on 390×844), the sheet's title and close button scroll up under the drag handle and are cut off; the half-visible close button is a 48×22 target (48×44 one step earlier), under the 44 / 48 floor. From the shared `showAppSheet` when its content scrolls; D1's own Download sheet passed |
+| G2 | FIX | Mac and web expanded, "Delete without a confirmed copy?" (and Stage C's "Delete without a saved copy?", the same dialog) | A title-less `AlertDialog` with no width cap: it spans almost the whole window as one line of text. B7c's golden covered compact only |
+| G3 | FIX | Export file names (`partFileStem`) | The stem takes the export id's first 8 characters, a UUID v7's time: two exports about a minute apart get identical file names, so a second export can overwrite the first in a folder and the two sets look alike in a picker. Import still refuses the other set's file by its content (shown on every target) |
+| G4 | NOTE | Web compact, Download list | Long file names wrap mid-name ("…-2026-11-1 / 2-01a1ce18-part-01- / of-06.json") |
+
+Sweep fixes made on the way (test code only): the iOS run never created `build/sweep/`
+(`device_tests.sh`); `mac_sweep.sh` matched shot names with `[a-z_]*`, which cut `cr160` short; theme is
+the owner's setting, so the sweep pins it after signing the lab account in (a new account follows the
+system, which is dark on this Mac); Android's soft keyboard leaves D1's buttons just below the scrolled
+view, so the sweep scrolls to them as a person would; a web build without `flutter drive` has no test
+text input, so the typed word goes through the field's controller. The three sweep steps moved from
+`sweep_test.dart` to `support/sweep_steps.dart`, unchanged; the main design sweep was **not re-run**
+after that move. Gate: **not passed** until G1 is fixed and the compact web run is clean.
 
 ## 7. Size policy and acceptance criteria (provisional)
 Provisional limits: **10 MB per written part, 25 MB per file read.** No maximum part count is adopted

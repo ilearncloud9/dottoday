@@ -25,6 +25,8 @@
 # DRIVER picks the driver (default test_driver/integration_test.dart; the
 # sweep uses test_driver/screenshot_driver.dart automatically).
 # SWEEP_THEME=dark runs the sweep dark (shots named <platform>_dark_*).
+# cr160_set_sweep (CR-160 B7 gate) runs the same way, against the local
+# Supabase stack named in DEFINES.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 platform="${1:?android | ios}"
@@ -128,12 +130,16 @@ shoot() {
   fi
 }
 
+# The design sweep and its CR-160 B7 gate (cr160_set_sweep) both run as
+# sweeps: from source, with the screenshot driver.
+is_sweep() { [[ "$1" == sweep || "$1" == *_sweep ]]; }
+
 run_one() {
   local t="$1" log="$logs/${platform}_$1.log" driver binary
   driver="${DRIVER:-test_driver/integration_test.dart}"
-  [[ "$t" == sweep ]] && driver=test_driver/screenshot_driver.dart
+  is_sweep "$t" && driver=test_driver/screenshot_driver.dart
   : >"$log"
-  if [[ "$t" == sweep ]]; then
+  if is_sweep "$t"; then
     :
   elif [[ "$platform" == android ]]; then
     flutter build apk --debug -t "integration_test/${t}_test.dart" \
@@ -147,11 +153,13 @@ run_one() {
     binary=build/ios/iphonesimulator/Runner.app
     xcrun simctl install "${device:-booted}" "$binary" >>"$log" 2>&1 || return 1
   fi
-  [[ "$t" != sweep ]] && { prepare "$t" >>"$log" 2>&1 || return 1; }
+  ! is_sweep "$t" && { prepare "$t" >>"$log" 2>&1 || return 1; }
   # The sweep needs no permission; its screenshots come out blank from a
   # prebuilt binary, so it is driven from source, tagged per platform
   # (build/sweep/<platform>_<shot>.png).
-  if [[ "$t" == sweep ]]; then
+  if is_sweep "$t"; then
+    # iOS saves each shot here itself (simctl); nothing else creates it.
+    mkdir -p build/sweep
     with_limit flutter drive --driver="$driver" \
       --target="integration_test/${t}_test.dart" \
       --dart-define=SWEEP_TAG="$platform" \
