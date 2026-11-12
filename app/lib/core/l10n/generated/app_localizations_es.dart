@@ -2814,6 +2814,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Esta exportación es demasiado grande para que Dottoday la restaure con el formato de importación actual. No se ha creado ninguna exportación restaurable.';
 
   @override
+  String get importStorageFull =>
+      'No hay suficiente espacio de almacenamiento para importar esta copia de seguridad. No se ha cambiado nada. Libera espacio e inténtalo de nuevo.';
+
+  @override
   String get backupNotRestorable =>
       'Esta operación no puede continuar porque Dottoday no puede crear una copia de seguridad que pueda restaurar. Tus datos actuales no se han modificado.';
 

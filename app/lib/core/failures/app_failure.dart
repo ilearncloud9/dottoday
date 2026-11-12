@@ -18,6 +18,25 @@ final class StorageFailure extends AppFailure {
   String get code => 'storage';
 }
 
+/// The device ran out of storage while writing: everything the write
+/// touched was rolled back. Shown as [StorageFailure] is (CR-160 B8).
+final class StorageFullFailure extends AppFailure {
+  const StorageFullFailure();
+
+  @override
+  String get code => 'storage.full';
+}
+
+/// An import or backup restore ran out of storage: it rolled back whole,
+/// nothing changed (CR-160 B8: imports fill a disk long before memory runs
+/// short), said as such.
+final class ImportStorageFullFailure extends AppFailure {
+  const ImportStorageFullFailure();
+
+  @override
+  String get code => 'import.storage_full';
+}
+
 enum NetworkFailureKind { offline, timeout, server }
 
 /// Backend unreachable or erroring. Local data is unaffected (docs/04 §4).

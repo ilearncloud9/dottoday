@@ -23,9 +23,11 @@ import 'package:dottoday/data/backup/staged_import_commit.dart';
 import 'package:dottoday/data/backup/staged_import_sources.dart';
 import 'package:dottoday/data/backup/staged_import_store.dart';
 import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/db/storage_full.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
 import 'package:dottoday/data/writes/drift_write_use_case.dart';
 import 'package:dottoday/domain/export/multipart_format.dart';
+import 'package:drift/drift.dart' show CouldNotRollBackException;
 import 'package:flutter/foundation.dart';
 
 /// Takes the pre-import (or pre-restore) backup, restorable or refused.
@@ -159,13 +161,25 @@ final class StagedImporter {
       return Err(_failureOf(e.reason));
     } on CommitFailed catch (e) {
       _logger.warn('import.commit_refused');
-      return Err(e.failure);
+      return Err(_importFull(e) ?? e.failure);
     } on Exception catch (e, st) {
       _logger.error('import.failed', error: e, stackTrace: st);
-      return const Err(StorageFailure());
+      return Err(_importFull(e) ?? const StorageFailure());
     } finally {
       await discardStagedImport(_db, import);
     }
+  }
+
+  /// The device filled up during staging or the commit: SQLite's own
+  /// error, or the write path's [StorageFullFailure], possibly behind
+  /// drift's [CouldNotRollBackException] (SQLite rolled back first).
+  static AppFailure? _importFull(Object e) {
+    final cause = e is CouldNotRollBackException ? e.cause : e;
+    final full = switch (cause) {
+      CommitFailed(failure: StorageFullFailure()) => true,
+      _ => isStorageFull(cause),
+    };
+    return full ? const ImportStorageFullFailure() : null;
   }
 
   static AppFailure _failureOf(StagingRefusal reason) => switch (reason) {

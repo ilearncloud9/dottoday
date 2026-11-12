@@ -4,6 +4,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/db/owned_local_meta.dart';
+import 'package:dottoday/data/db/storage_full.dart';
 import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/repositories/drift_calendar_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
@@ -110,7 +111,9 @@ final class DriftWriteUseCase implements WriteUseCase {
       return const Err(StorageFailure());
     } on Exception catch (e, st) {
       _logger.error('write.failed', error: e, stackTrace: st);
-      return const Err(StorageFailure());
+      return Err(
+        isStorageFull(e) ? const StorageFullFailure() : const StorageFailure(),
+      );
     }
     return const Ok(null);
   }

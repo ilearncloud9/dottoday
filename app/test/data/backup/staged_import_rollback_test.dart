@@ -247,10 +247,12 @@ void main() {
     expect(chunks, 3);
   });
 
-  test('a full disk during the commit: rolled back whole', () async {
+  test('a full disk during the commit: rolled back whole, said as full '
+      '(CR-160 B8)', () async {
     var first = true;
+    late ImportResult r;
     await expectUnchanged(
-      await importText(
+      r = await importText(
         encodeExportJson(stagedFile()),
         afterChunk: () async {
           if (!first) return;
@@ -265,5 +267,10 @@ void main() {
       ),
     );
     await w.db.customStatement('PRAGMA max_page_count = 1073741823');
+    expect(r, isA<Err<void, AppFailure>>());
+    expect(
+      (r as Err<void, AppFailure>).failure,
+      isA<ImportStorageFullFailure>(),
+    );
   });
 }

@@ -667,6 +667,7 @@
   "exportNotBackup": "Esta no es una copia de seguridad de Dottoday, o viene de una versión más reciente de Dottoday. No se ha cambiado nada.",
   "exportTooLarge": "Este archivo supera los 25 MB y es demasiado grande para importarlo. No se ha cambiado nada.",
   "exportTooLargeToRestore": "Esta exportación es demasiado grande para que Dottoday la restaure con el formato de importación actual. No se ha creado ninguna exportación restaurable.",
+  "importStorageFull": "No hay suficiente espacio de almacenamiento para importar esta copia de seguridad. No se ha cambiado nada. Libera espacio e inténtalo de nuevo.",
   "backupNotRestorable": "Esta operación no puede continuar porque Dottoday no puede crear una copia de seguridad que pueda restaurar. Tus datos actuales no se han modificado.",
   "exportSetIntro": "Tus datos son grandes, así que se guardan en {count} archivos. Mantenlos juntos: necesitas todos para restaurar.",
   "exportSetDone": "Exportado en {count} archivos",

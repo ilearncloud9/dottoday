@@ -2820,6 +2820,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dieser Export ist zu groß, um ihn mit dem aktuellen Importformat in Dottoday wiederherzustellen. Es wurde kein wiederherstellbarer Export erstellt.';
 
   @override
+  String get importStorageFull =>
+      'Es ist nicht genug Speicherplatz frei, um diese Sicherung zu importieren. Es wurde nichts geändert. Gib etwas Speicherplatz frei und versuche es erneut.';
+
+  @override
   String get backupNotRestorable =>
       'Dieser Vorgang kann nicht fortgesetzt werden, weil Dottoday keine Sicherung erstellen kann, die sich wiederherstellen lässt. Deine vorhandenen Daten wurden nicht geändert.';
 

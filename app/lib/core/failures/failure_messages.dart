@@ -6,6 +6,9 @@ import 'package:dottoday/core/l10n/l10n.dart';
 String failureMessage(AppLocalizations l10n, AppFailure failure) {
   return switch (failure) {
     StorageFailure() => l10n.failureStorage,
+    // The generic copy until an edit's own message is approved (CR-160 B8).
+    StorageFullFailure() => l10n.failureStorage,
+    ImportStorageFullFailure() => l10n.importStorageFull,
     NetworkFailure(kind: NetworkFailureKind.offline) =>
       l10n.failureNetworkOffline,
     NetworkFailure(kind: NetworkFailureKind.timeout) =>

@@ -4104,6 +4104,12 @@ abstract class AppLocalizations {
   /// **'This export is too large for Dottoday to restore using the current import format. No restorable export was created.'**
   String get exportTooLargeToRestore;
 
+  /// Settings › Import or a backup restore (CR-160 B8): the device ran out of storage during the import, which rolled back whole.
+  ///
+  /// In en, this message translates to:
+  /// **'There isn’t enough storage space to import this backup. Nothing was changed. Free up some space and try again.'**
+  String get importStorageFull;
+
   /// Settings › Export (CR-160 backup safety): an import or restore stopped because its safety backup could not be read back as a restorable copy; nothing was changed.
   ///
   /// In en, this message translates to:
