@@ -91,8 +91,10 @@ void main() {
     await w.actions.exportFirst(_account);
     final files = handed();
     w.actions.endDeletion(_account);
-    // Removed in the background (D1 closing never waits on the disk).
-    for (var i = 0; i < 100 && File(files.first.path!).existsSync(); i++) {
+    // Removed in the background (D1 closing never waits on the disk), one
+    // file after another: wait for all of them, not just the first.
+    bool anyLeft() => files.any((f) => File(f.path!).existsSync());
+    for (var i = 0; i < 100 && anyLeft(); i++) {
       await Future<void>.delayed(const Duration(milliseconds: 20));
     }
     for (final f in files) {
