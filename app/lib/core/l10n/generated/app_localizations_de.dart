@@ -2851,7 +2851,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String exportCheckMissing(int missing, int count) {
-    return '$missing von $count Dateien fehlen. Wähle das Manifest und jeden Teil aus.';
+    return 'Fehlende Dateien: $missing von $count. Wähle das Manifest und jeden Teil aus.';
   }
 
   @override
@@ -2874,7 +2874,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dein Browser fragt eventuell, ob mehrere Downloads erlaubt sind.';
 
   @override
-  String get importAddTitle => 'Füge den Rest dieser Sicherung hinzu';
+  String get importAddTitle => 'Rest dieser Sicherung hinzufügen';
 
   @override
   String importAddedCount(int added, int total) {
@@ -6660,9 +6660,9 @@ class AppLocalizationsDe extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          '$count Aufgaben wurden hier seit der letzten Abmeldung ohne Konto erstellt. Sie gehören zu keinem Konto und vielleicht jemand anderem.',
+          '$count Aufgaben wurden hier seit der letzten Abmeldung ohne Konto erstellt. Sie sind in keinem Konto und gehören vielleicht jemand anderem.',
       one:
-          '1 Aufgabe wurde hier seit der letzten Abmeldung ohne Konto erstellt. Sie gehört zu keinem Konto und vielleicht jemand anderem.',
+          '1 Aufgabe wurde hier seit der letzten Abmeldung ohne Konto erstellt. Sie ist in keinem Konto und gehört vielleicht jemand anderem.',
     );
     return '$_temp0';
   }
@@ -6679,7 +6679,7 @@ class AppLocalizationsDe extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          'Diese $count bleiben auf diesem Gerät, getrennt von deinem Konto. Wer es ohne Konto nutzt, kann sie weiter sehen.',
+          'Diese $count Aufgaben bleiben auf diesem Gerät, getrennt von deinem Konto. Wer es ohne Konto nutzt, kann sie weiter sehen.',
       one:
           'Diese Aufgabe bleibt auf diesem Gerät, getrennt von deinem Konto. Wer es ohne Konto nutzt, kann sie weiter sehen.',
     );
@@ -6842,7 +6842,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get removalRetryAgain =>
-      'Das Entfernen ging gerade nicht. Versuch es noch mal.';
+      'Das Entfernen konnte nicht abgeschlossen werden. Versuch es noch mal.';
 
   @override
   String accountTwoSentences(String first, String second) {

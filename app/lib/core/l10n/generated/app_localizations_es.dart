@@ -2845,7 +2845,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String exportCheckMissing(int missing, int count) {
-    return 'Faltan $missing de $count archivos. Elige el manifiesto y cada parte.';
+    return 'Archivos que faltan: $missing de $count. Elige el manifiesto y cada parte.';
   }
 
   @override
@@ -2868,7 +2868,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Puede que tu navegador te pida permitir varias descargas.';
 
   @override
-  String get importAddTitle => 'Añade el resto de esta copia';
+  String get importAddTitle => 'Añadir el resto de esta copia de seguridad';
 
   @override
   String importAddedCount(int added, int total) {
@@ -2880,7 +2880,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get importPartForeign =>
-      'Este archivo no forma parte de esta copia. No se ha cambiado nada.';
+      'Este archivo no forma parte de esta copia de seguridad. No se ha cambiado nada.';
 
   @override
   String accountDeleteExportUncertain(int count) {
@@ -2889,7 +2889,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String accountDeleteWithoutCopySetQuestion(int count) {
-    return '¿Eliminar sin una copia confirmada? No podemos confirmar que se guardaran los $count archivos. Podrías perder para siempre datos que no se hayan guardado en otro lugar.';
+    return '¿Eliminar sin una copia confirmada? No podemos confirmar que se hayan guardado los $count archivos. Podrías perder para siempre datos que no se hayan guardado en otro lugar.';
   }
 
   @override
@@ -6672,7 +6672,7 @@ class AppLocalizationsEs extends AppLocalizations {
       count,
       locale: localeName,
       other:
-          'Estas $count se quedan en este dispositivo, separadas de tu cuenta. Quien lo use sin cuenta aún puede verlas.',
+          'Estas $count tareas se quedan en este dispositivo, separadas de tu cuenta. Quien lo use sin cuenta aún puede verlas.',
       one:
           'Esta tarea se queda en este dispositivo, separada de tu cuenta. Quien lo use sin cuenta aún puede verla.',
     );
@@ -6692,15 +6692,15 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Creé estas $count tareas yo mismo',
-      one: 'Creé esta tarea yo mismo',
+      other: 'Estas $count tareas las creé yo',
+      one: 'Esta tarea la creé yo',
     );
     return '$_temp0';
   }
 
   @override
   String get guestWorkNotSure =>
-      '¿No estás seguro? Mantenlas separadas. Puedes revisarlas más tarde usando Dottoday sin cuenta.';
+      '¿Tienes dudas? Mantenlas separadas. Puedes revisarlas más tarde usando Dottoday sin cuenta.';
 
   @override
   String guestNoticeBody(int count) {
@@ -6744,16 +6744,17 @@ class AppLocalizationsEs extends AppLocalizations {
       'Mientras tengas la sesión iniciada. Después no se podrá exportar nada.';
 
   @override
-  String get accountDeleteRemovedDevice => 'Se quita de este dispositivo';
+  String get accountDeleteRemovedDevice => 'Se quitará de este dispositivo';
 
   @override
-  String get accountDeleteRemovedBrowser => 'Se quita de este navegador';
+  String get accountDeleteRemovedBrowser => 'Se quitará de este navegador';
 
   @override
-  String get accountDeleteRemovedDeviceLead => 'Se quita de este dispositivo:';
+  String get accountDeleteRemovedDeviceLead =>
+      'Se quitará de este dispositivo:';
 
   @override
-  String get accountDeleteRemovedBrowserLead => 'Se quita de este navegador:';
+  String get accountDeleteRemovedBrowserLead => 'Se quitará de este navegador:';
 
   @override
   String accountDeleteTasks(int count) {

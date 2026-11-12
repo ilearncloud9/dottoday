@@ -2819,7 +2819,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get importStorageFull =>
-      'Il n’y a pas assez d’espace de stockage pour importer cette sauvegarde. Rien n’a été modifié. Libère de l’espace et réessaie.';
+      'Il n’y a pas assez d’espace de stockage pour importer cette sauvegarde. Rien n’a été modifié. Libérez de l’espace et réessayez.';
 
   @override
   String get backupNotRestorable =>
@@ -2849,7 +2849,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String exportCheckMissing(int missing, int count) {
-    return '$missing fichiers sur $count manquent. Sélectionnez le manifeste et chaque partie.';
+    return 'Fichiers manquants : $missing sur $count. Sélectionnez le manifeste et chaque partie.';
   }
 
   @override
@@ -2872,11 +2872,11 @@ class AppLocalizationsFr extends AppLocalizations {
       'Votre navigateur peut vous demander d’autoriser plusieurs téléchargements.';
 
   @override
-  String get importAddTitle => 'Ajoutez le reste de cette sauvegarde';
+  String get importAddTitle => 'Ajouter le reste de cette sauvegarde';
 
   @override
   String importAddedCount(int added, int total) {
-    return '$added fichiers sur $total ajoutés.';
+    return 'Fichiers ajoutés : $added sur $total.';
   }
 
   @override
@@ -6717,7 +6717,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get guestWorkNotSure =>
-      'Pas sûr ? Gardez-les à part. Vous pourrez les parcourir plus tard en utilisant Dottoday sans compte.';
+      'Vous hésitez ? Gardez-les à part. Vous pourrez les parcourir plus tard en utilisant Dottoday sans compte.';
 
   @override
   String guestNoticeBody(int count) {
@@ -6811,7 +6811,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get accountDeleteExportBroken =>
-      'Nous n’avons pas pu créer d’export restaurable. Votre compte n’a pas été supprimé.';
+      'Impossible de créer un export restaurable. Votre compte n’a pas été supprimé.';
 
   @override
   String get accountDeleteChangedSinceReview =>
@@ -6852,7 +6852,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get removalRetryAgain =>
-      'Le retrait n’a pas pu se terminer. Réessayez.';
+      'Impossible de terminer le retrait. Réessayez.';
 
   @override
   String accountTwoSentences(String first, String second) {
