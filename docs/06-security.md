@@ -92,3 +92,4 @@ task title as well as OPFS and IndexedDB.
 - [ ] Speech stays on the device: every speech bridge requires on-device recognition, none uses a network API, the mic is hidden where it can't (`speech_on_device_test.dart`); no transcript in logs.
 - [ ] Every OS permission has its usage text in every shipped language (mic, speech, calendars; `os_strings_test.dart`).
 - [ ] No model or speech output is written before the user accepts it (ADR-0009 §3).
+- [ ] Signing out and in as another account never uploads, shows or merges the previous account's local data or pending changes; guest → account migration never loses, duplicates or overwrites work (CR-160, release blocker; criteria in `docs/redesign/E_IMPLEMENTATION_HANDOFF.md` § CR-160).
