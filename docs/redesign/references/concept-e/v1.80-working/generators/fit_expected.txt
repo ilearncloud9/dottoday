@@ -1,0 +1,5 @@
+# Expected text-fit flags (not defects): the Pick up parcel row drawn mid-swipe (content shifted 74 px to reveal Move / Delete). CR-165 (4), ED-214.
+E-PhonesMinimal H-CLIP 3:00–3:45 PM x3
+E-PhonesMinimal H-CLIP Pick up parcel x3
+E-PhonesMinimal-Dark H-CLIP 3:00–3:45 PM x3
+E-PhonesMinimal-Dark H-CLIP Pick up parcel x3

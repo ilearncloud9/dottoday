@@ -1,0 +1,404 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "A-Focus.dc.html": {
+      "h": 1400,
+      "title": "A · Refined Timeline · minimal look, Mac and Web (C's full layout, A's look)",
+      "w": 2760,
+      "x": 10187,
+      "y": 2400
+    },
+    "A-Map.dc.html": {
+      "h": 1860,
+      "title": "A · features, responsive map, scorecard",
+      "w": 1440,
+      "x": 5680,
+      "y": 2400
+    },
+    "A-Phones.dc.html": {
+      "h": 2140,
+      "title": "A · Refined Timeline · phones",
+      "w": 2760,
+      "x": 0,
+      "y": 2400
+    },
+    "A-PhonesMinimal.dc.html": {
+      "h": 1800,
+      "title": "A · Refined Timeline · minimal look, phones (C's layout, A's look)",
+      "w": 2760,
+      "x": 2840,
+      "y": 2510
+    },
+    "A-Workspace.dc.html": {
+      "h": 1460,
+      "title": "A · Refined Timeline · Mac and web workspace (B's layout, A's look)",
+      "w": 2760,
+      "x": 7200,
+      "y": 2400
+    },
+    "B-Map.dc.html": {
+      "h": 1680,
+      "title": "B · features, responsive map, scorecard",
+      "w": 1440,
+      "x": 5680,
+      "y": 4860
+    },
+    "B-Phones.dc.html": {
+      "h": 1300,
+      "title": "B · Productivity Workspace · phones",
+      "w": 2760,
+      "x": 0,
+      "y": 4860
+    },
+    "B-Wide.dc.html": {
+      "h": 1380,
+      "title": "B · Productivity Workspace · Mac and web",
+      "w": 2760,
+      "x": 2840,
+      "y": 4860
+    },
+    "C-Map.dc.html": {
+      "h": 2300,
+      "title": "C · features, responsive map, scorecard",
+      "w": 1440,
+      "x": 5680,
+      "y": 6960
+    },
+    "C-Minimal.dc.html": {
+      "h": 1900,
+      "title": "C · Focus-First · minimal look, Mac and web",
+      "w": 2760,
+      "x": 2840,
+      "y": 7130
+    },
+    "C-Phones.dc.html": {
+      "h": 1660,
+      "title": "C · Focus-First · phones",
+      "w": 2760,
+      "x": 0,
+      "y": 6960
+    },
+    "C-PhonesMinimal.dc.html": {
+      "h": 1760,
+      "title": "C · Focus-First · minimal look, phones",
+      "w": 2760,
+      "x": 7200,
+      "y": 6960
+    },
+    "C-Wide.dc.html": {
+      "h": 1340,
+      "title": "C · Focus-First · Mac and web",
+      "w": 2760,
+      "x": 10067,
+      "y": 6960
+    },
+    "D1-Settings.dc.html": {
+      "h": 1860,
+      "title": "Decision 1 · Settings navigation",
+      "w": 2400,
+      "x": 30,
+      "y": 9865
+    },
+    "D2-TaskSurface.dc.html": {
+      "h": 2320,
+      "title": "Decision 2 · task viewing and editing",
+      "w": 2400,
+      "x": 2463,
+      "y": 9715
+    },
+    "D3-Duplicates.dc.html": {
+      "h": 2280,
+      "title": "Decision 3 · duplicate screens",
+      "w": 1800,
+      "x": 4960,
+      "y": 9680
+    },
+    "E-FullA-v2.dc.html": {
+      "h": 5740,
+      "title": "E · Full Mac/web · Option A v2 · approved G1-1 (ED-073) · active Full design",
+      "w": 2760,
+      "x": 8520,
+      "y": 14800
+    },
+    "E-FullA.dc.html": {
+      "h": 1420,
+      "title": "E · G1-1 option A · Full on Mac and web = Workspace (for comparison, not approved)",
+      "w": 2760,
+      "x": 65,
+      "y": 24050
+    },
+    "E-FullB.dc.html": {
+      "h": 1420,
+      "title": "E · G1-1 option B · Full on Mac and web = timeline-led Today, Workspace inside (for comparison, not approved)",
+      "w": 2760,
+      "x": 2840,
+      "y": 20960
+    },
+    "E-G2-4.dc.html": {
+      "h": 2030,
+      "title": "G2-4 · Settings and \"Everything else\" · decision board (no E board changed)",
+      "w": 2760,
+      "x": 15720,
+      "y": 13960
+    },
+    "E-G2-5-FullEditor.dc.html": {
+      "h": 2060,
+      "title": "G2-5 · option C · not chosen · historical reference",
+      "w": 2900,
+      "x": 15720,
+      "y": 19650
+    },
+    "E-G2-5-MergePreview.dc.html": {
+      "h": 4710,
+      "title": "G2-5 merge preview · approved and merged (ED-087) · historical reference",
+      "w": 2900,
+      "x": 18780,
+      "y": 20040
+    },
+    "E-G2-5-OptionD-RefinedEditor.dc.html": {
+      "h": 3910,
+      "title": "G2-5 · option D · approved (ED-086) and merged (ED-087) · full reference incl. iPad",
+      "w": 2900,
+      "x": 15720,
+      "y": 21860
+    },
+    "E-G2-5.dc.html": {
+      "h": 1170,
+      "title": "G2-5 · options A and B · not chosen · historical reference",
+      "w": 2900,
+      "x": 15720,
+      "y": 18340
+    },
+    "E-G2-6-Review.dc.html": {
+      "h": 2100,
+      "title": "G2-6 · minimal task screens · approved (ED-089) and merged into E-PhonesMinimal and E-Minimal · historical reference",
+      "w": 2700,
+      "x": 21860,
+      "y": 13800
+    },
+    "E-G2-6.dc.html": {
+      "h": 1190,
+      "title": "G2-6 · options · option A chosen (ED-088) · historical reference",
+      "w": 2900,
+      "x": 21860,
+      "y": 12480
+    },
+    "E-G2-8.dc.html": {
+      "h": 3700,
+      "title": "G2-8 · Brain dump and Routine through Add · option A approved (ED-091) and merged · historical reference",
+      "w": 2900,
+      "x": 21860,
+      "y": 16100
+    },
+    "E-G2-9.dc.html": {
+      "h": 3040,
+      "title": "G2-9 · The Day menu · option B approved (ED-093) and merged · historical reference",
+      "w": 2900,
+      "x": 21860,
+      "y": 20000
+    },
+    "E-Map-v1.0.dc.html": {
+      "h": 1860,
+      "title": "E · Map v1.0 snapshot (exact copy of A-Map, historical)",
+      "w": 1440,
+      "x": 8520,
+      "y": 12480
+    },
+    "E-Map.dc.html": {
+      "h": 4320,
+      "title": "E · Refined Focus · Map v1.1 working (features, responsive, scorecard, decisions)",
+      "w": 2760,
+      "x": 5680,
+      "y": 12480
+    },
+    "E-Minimal.dc.html": {
+      "h": 4320,
+      "title": "E · Refined Focus · minimal look, Mac and web (C's layout, E's look) · task column (ED-089), Day menu (ED-093) and Day review column (ED-099) merged",
+      "w": 2760,
+      "x": 12880,
+      "y": 12480
+    },
+    "E-Phones.dc.html": {
+      "h": 10520,
+      "title": "E · Refined Focus · phones (v1.0 = A-Phones) · Add modes (ED-091), Day menu (ED-093), Day review and When picker (ED-099) merged",
+      "w": 2760,
+      "x": 30,
+      "y": 12480
+    },
+    "E-PhonesCalendar.dc.html": {
+      "h": 1360,
+      "title": "E · Calendar on phones (G2-1) · review board, approved 4 Nov and now in E-Phones",
+      "w": 2760,
+      "x": 15720,
+      "y": 12480
+    },
+    "E-PhonesMinimal.dc.html": {
+      "h": 3950,
+      "title": "E · Refined Focus · minimal look, phones (v1.0 = A-PhonesMinimal) · minimal task sheet merged (ED-089)",
+      "w": 2760,
+      "x": 2825,
+      "y": 12480
+    },
+    "E-SettingsReview.dc.html": {
+      "h": 2090,
+      "title": "E · Settings (G2-4) · review board, approved and merged (ED-084)",
+      "w": 2900,
+      "x": 15720,
+      "y": 16120
+    },
+    "E-WakeWindDown-Settings-Candidate.dc.html": {
+      "h": 7420,
+      "title": "E · Wake Up and Wind Down · r2 approved 4 Nov (ED-084), merged into E boards · tablet and dial-rule reference",
+      "w": 3000,
+      "x": 18780,
+      "y": 12480
+    },
+    "E-Workspace.dc.html": {
+      "h": 1460,
+      "title": "E · Refined Focus · Mac and web workspace (v1.0 = A-Workspace)",
+      "w": 2760,
+      "x": 2840,
+      "y": 22490
+    },
+    "Main.dc.html": {
+      "h": 1900,
+      "title": "Round 1 · side by side and evaluation",
+      "w": 2760,
+      "x": 0,
+      "y": 0
+    },
+    "E-G2-10.dc.html": {
+      "h": 4000,
+      "w": 2900,
+      "x": 21860,
+      "y": 23200,
+      "title": "G2-10 · One keyboard scheme · option B approved, scheme reconciled with the built app (ED-095) · historical reference"
+    },
+    "E-G2-11.dc.html": {
+      "h": 5240,
+      "w": 2900,
+      "x": 21860,
+      "y": 27360,
+      "title": "G2-11 · Web routes · option A′ approved, D4 reconciled per layout (ED-097) · corrected routing table"
+    },
+    "E-G2-12.dc.html": {
+      "h": 5210,
+      "w": 2900,
+      "x": 21860,
+      "y": 32760,
+      "title": "G2-12 · Duplicate screens · option A approved (ED-099) and merged · historical review board"
+    },
+    "E-G3-1.dc.html": {
+      "h": 5590,
+      "w": 2900,
+      "x": 21860,
+      "y": 38130,
+      "title": "G3-1 · Scale direction · resolved: C · Both, revised (ED-104) · review board kept as history"
+    },
+    "E-G3-2.dc.html": {
+      "h": 2230,
+      "w": 2900,
+      "x": 21860,
+      "y": 43920,
+      "title": "G3-2 · One drawing for the large now-dot · A one drawing, B plainer web, C keep · decision board (no E board changed)"
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-03T15:30:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "rowA": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "A · Refined Timeline",
+      "w": 240,
+      "x": 0,
+      "y": 2080
+    },
+    "rowB": {
+      "kind": "title1",
+      "maxW": 7120,
+      "text": "B · Productivity Workspace",
+      "w": 240,
+      "x": 0,
+      "y": 4540
+    },
+    "rowC": {
+      "kind": "title1",
+      "maxW": 7120,
+      "text": "C · Focus-First Planner",
+      "w": 240,
+      "x": 0,
+      "y": 6640
+    },
+    "rowD": {
+      "kind": "title1",
+      "maxW": 6760,
+      "text": "Decisions · not approved for implementation",
+      "w": 240,
+      "x": 0,
+      "y": 9360
+    },
+    "rowE": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "E · Refined Focus · v1.1 working (v1.0 archived) · leading candidate, not approved for production implementation",
+      "w": 240,
+      "x": 0,
+      "y": 12160
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "A-Phones.dc.html",
+    "A-Map.dc.html",
+    "A-Workspace.dc.html",
+    "A-Focus.dc.html",
+    "A-PhonesMinimal.dc.html",
+    "B-Phones.dc.html",
+    "B-Wide.dc.html",
+    "B-Map.dc.html",
+    "C-Phones.dc.html",
+    "C-Wide.dc.html",
+    "C-Minimal.dc.html",
+    "C-PhonesMinimal.dc.html",
+    "C-Map.dc.html",
+    "D1-Settings.dc.html",
+    "D2-TaskSurface.dc.html",
+    "D3-Duplicates.dc.html",
+    "E-Phones.dc.html",
+    "E-PhonesMinimal.dc.html",
+    "E-Map.dc.html",
+    "E-Map-v1.0.dc.html",
+    "E-Workspace.dc.html",
+    "E-Minimal.dc.html",
+    "E-FullA.dc.html",
+    "E-FullB.dc.html",
+    "E-FullA-v2.dc.html",
+    "E-PhonesCalendar.dc.html",
+    "E-G2-4.dc.html",
+    "E-SettingsReview.dc.html",
+    "E-WakeWindDown-Settings-Candidate.dc.html",
+    "E-G2-5.dc.html",
+    "E-G2-5-FullEditor.dc.html",
+    "E-G2-5-OptionD-RefinedEditor.dc.html",
+    "E-G2-5-MergePreview.dc.html",
+    "E-G2-6.dc.html",
+    "E-G2-6-Review.dc.html",
+    "E-G2-8.dc.html",
+    "E-G2-9.dc.html",
+    "E-G2-10.dc.html",
+    "E-G2-11.dc.html",
+    "E-G2-12.dc.html",
+    "E-G3-1.dc.html",
+    "E-G3-2.dc.html"
+  ],
+  "pages": [],
+  "title": "Dottoday Round 1 Concepts"
+}

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Signed out</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 0 28px 44px; display: flex; flex-direction: column; background: {{t.ground}}; color: {{t.ink}}; font-family: Manrope, sans-serif;">
+  <div style="flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 20px;">
+    <svg width="96" height="96" viewBox="0 0 96 96" fill="none" aria-hidden="true">
+      <circle cx="48" cy="48" r="40" stroke="{{t.ring}}" stroke-width="10"></circle>
+      <circle cx="48" cy="48" r="30" fill="{{t.ringInner}}"></circle>
+      <path d="M40 46v-4a8 8 0 0 1 16 0v4" stroke="{{t.secondary}}" stroke-width="2.5" stroke-linecap="round"></path>
+      <rect x="36" y="46" width="24" height="17" rx="5" stroke="{{t.secondary}}" stroke-width="2.5"></rect>
+    </svg>
+    <h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 800; letter-spacing: -0.5px;">You’re signed out</h1>
+    <p style="margin: 0; font-size: 15px; line-height: 22px; color: {{t.secondary}};">Your tasks stay on this device under your account. They come back when you sign in again with the same account.</p>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 10px;">
+    <button type="button" style="height: 52px; border-radius: 26px; border: none; background: {{t.accent}}; color: {{t.onAccent}}; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 700;">Sign in</button>
+    <button type="button" style="height: 52px; border-radius: 26px; border: 1.5px solid {{t.outline}}; background: transparent; color: {{t.ink}}; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 700;">Use without an account</button>
+    <div style="font-size: 13px; line-height: 18px; color: {{t.secondary}}; text-align: center; padding: 0 8px;">Opens this device’s plan without an account. Anyone who uses this device without an account can see it.</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark
+      ? { ground: '#171416', ink: '#F3ECE4', secondary: '#C7BEC4', outline: '#8C838A', accent: '#5BC4B8', onAccent: '#0C2523', ring: '#28232A', ringInner: '#1F1B1E' }
+      : { ground: '#FBF7F1', ink: '#241F2B', secondary: '#6A6273', outline: '#DDD7E0', accent: '#11615C', onAccent: '#FFFFFF', ring: '#EDE7DF', ringInner: '#F6F1EA' };
+    return { t };
+  }
+}
+</script>
+</body>
+</html>

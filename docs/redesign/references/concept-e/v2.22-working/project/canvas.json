@@ -1,0 +1,756 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "A-Focus.dc.html": {
+      "h": 1400,
+      "title": "A · Refined Timeline · minimal look, Mac and Web (C's full layout, A's look)",
+      "w": 2760,
+      "x": 10187,
+      "y": 2400
+    },
+    "A-Map.dc.html": {
+      "h": 1860,
+      "title": "A · features, responsive map, scorecard",
+      "w": 1440,
+      "x": 5680,
+      "y": 2400
+    },
+    "A-Phones.dc.html": {
+      "h": 2140,
+      "title": "A · Refined Timeline · phones",
+      "w": 2760,
+      "x": 0,
+      "y": 2400
+    },
+    "A-PhonesMinimal.dc.html": {
+      "h": 1800,
+      "title": "A · Refined Timeline · minimal look, phones (C's layout, A's look)",
+      "w": 2760,
+      "x": 2840,
+      "y": 2510
+    },
+    "A-Workspace.dc.html": {
+      "h": 1460,
+      "title": "A · Refined Timeline · Mac and web workspace (B's layout, A's look)",
+      "w": 2760,
+      "x": 7200,
+      "y": 2400
+    },
+    "B-Map.dc.html": {
+      "h": 1680,
+      "title": "B · features, responsive map, scorecard",
+      "w": 1440,
+      "x": 5680,
+      "y": 4860
+    },
+    "B-Phones.dc.html": {
+      "h": 1300,
+      "title": "B · Productivity Workspace · phones",
+      "w": 2760,
+      "x": 0,
+      "y": 4860
+    },
+    "B-Wide.dc.html": {
+      "h": 1380,
+      "title": "B · Productivity Workspace · Mac and web",
+      "w": 2760,
+      "x": 2840,
+      "y": 4860
+    },
+    "C-Map.dc.html": {
+      "h": 2300,
+      "title": "C · features, responsive map, scorecard",
+      "w": 1440,
+      "x": 5680,
+      "y": 6960
+    },
+    "C-Minimal.dc.html": {
+      "h": 1900,
+      "title": "C · Focus-First · minimal look, Mac and web",
+      "w": 2760,
+      "x": 2840,
+      "y": 7130
+    },
+    "C-Phones.dc.html": {
+      "h": 1660,
+      "title": "C · Focus-First · phones",
+      "w": 2760,
+      "x": 0,
+      "y": 6960
+    },
+    "C-PhonesMinimal.dc.html": {
+      "h": 1760,
+      "title": "C · Focus-First · minimal look, phones",
+      "w": 2760,
+      "x": 7200,
+      "y": 6960
+    },
+    "C-Wide.dc.html": {
+      "h": 1340,
+      "title": "C · Focus-First · Mac and web",
+      "w": 2760,
+      "x": 10067,
+      "y": 6960
+    },
+    "D1-Settings.dc.html": {
+      "h": 1860,
+      "title": "Decision 1 · Settings navigation",
+      "w": 2400,
+      "x": 30,
+      "y": 9865
+    },
+    "D2-TaskSurface.dc.html": {
+      "h": 2320,
+      "title": "Decision 2 · task viewing and editing",
+      "w": 2400,
+      "x": 2463,
+      "y": 9715
+    },
+    "D3-Duplicates.dc.html": {
+      "h": 2280,
+      "title": "Decision 3 · duplicate screens",
+      "w": 1800,
+      "x": 4960,
+      "y": 9680
+    },
+    "E-FullA-v2.dc.html": {
+      "h": 7400,
+      "title": "E · Full Mac/web · Option A v2 · approved G1-1 (ED-073) · active Full design · G3-5 hover (ED-116) · Plan panel A + B (ED-184)",
+      "w": 2760,
+      "x": 8520,
+      "y": 14800
+    },
+    "E-FullA.dc.html": {
+      "h": 1420,
+      "title": "E · G1-1 option A · Full on Mac and web = Workspace (for comparison, not approved)",
+      "w": 2760,
+      "x": 65,
+      "y": 29720
+    },
+    "E-FullB.dc.html": {
+      "h": 1420,
+      "title": "E · G1-1 option B · Full on Mac and web = timeline-led Today, Workspace inside (for comparison, not approved)",
+      "w": 2760,
+      "x": 2840,
+      "y": 20960
+    },
+    "E-G2-10.dc.html": {
+      "h": 4000,
+      "title": "G2-10 · One keyboard scheme · option B approved, scheme reconciled with the built app (ED-095) · historical reference",
+      "w": 2900,
+      "x": 21860,
+      "y": 23200
+    },
+    "E-G2-11.dc.html": {
+      "h": 5240,
+      "title": "G2-11 · Web routes · option A′ approved, D4 reconciled per layout (ED-097) · corrected routing table",
+      "w": 2900,
+      "x": 21860,
+      "y": 27360
+    },
+    "E-G2-12.dc.html": {
+      "h": 5210,
+      "title": "G2-12 · Duplicate screens · option A approved (ED-099) and merged · historical review board",
+      "w": 2900,
+      "x": 21860,
+      "y": 32760
+    },
+    "E-G2-4.dc.html": {
+      "h": 2030,
+      "title": "G2-4 · Settings and \"Everything else\" · decision board (no E board changed)",
+      "w": 2760,
+      "x": 15720,
+      "y": 13960
+    },
+    "E-G2-5-FullEditor.dc.html": {
+      "h": 2060,
+      "title": "G2-5 · option C · not chosen · historical reference",
+      "w": 2900,
+      "x": 15720,
+      "y": 19650
+    },
+    "E-G2-5-MergePreview.dc.html": {
+      "h": 4710,
+      "title": "G2-5 merge preview · approved and merged (ED-087) · historical reference",
+      "w": 2900,
+      "x": 18780,
+      "y": 20040
+    },
+    "E-G2-5-OptionD-RefinedEditor.dc.html": {
+      "h": 3910,
+      "title": "G2-5 · option D · approved (ED-086) and merged (ED-087) · full reference incl. iPad",
+      "w": 2900,
+      "x": 15720,
+      "y": 21860
+    },
+    "E-G2-5.dc.html": {
+      "h": 1170,
+      "title": "G2-5 · options A and B · not chosen · historical reference",
+      "w": 2900,
+      "x": 15720,
+      "y": 18340
+    },
+    "E-G2-6-Review.dc.html": {
+      "h": 2100,
+      "title": "G2-6 · minimal task screens · approved (ED-089) and merged into E-PhonesMinimal and E-Minimal · historical reference",
+      "w": 2700,
+      "x": 21860,
+      "y": 13800
+    },
+    "E-G2-6.dc.html": {
+      "h": 1190,
+      "title": "G2-6 · options · option A chosen (ED-088) · historical reference",
+      "w": 2900,
+      "x": 21860,
+      "y": 12480
+    },
+    "E-G2-8.dc.html": {
+      "h": 3700,
+      "title": "G2-8 · Brain dump and Routine through Add · option A approved (ED-091) and merged · historical reference",
+      "w": 2900,
+      "x": 21860,
+      "y": 16100
+    },
+    "E-G2-9.dc.html": {
+      "h": 3040,
+      "title": "G2-9 · The Day menu · option B approved (ED-093) and merged · historical reference",
+      "w": 2900,
+      "x": 21860,
+      "y": 20000
+    },
+    "E-G3-1.dc.html": {
+      "h": 5590,
+      "title": "G3-1 · Scale direction · resolved: C · Both, revised (ED-104) · review board kept as history",
+      "w": 2900,
+      "x": 21860,
+      "y": 38130
+    },
+    "E-G3-2.dc.html": {
+      "h": 2230,
+      "title": "G3-2 · One orb drawing · resolved: A (ED-106) · review board kept as history (option A orbs corrected)",
+      "w": 2900,
+      "x": 21860,
+      "y": 43920
+    },
+    "E-G3-3.dc.html": {
+      "h": 3680,
+      "title": "G3-3 · Content typeface · resolved: A · Manrope (ED-110) · review board kept as history",
+      "w": 2900,
+      "x": 21860,
+      "y": 53570
+    },
+    "E-G3-4.dc.html": {
+      "h": 3400,
+      "title": "G3-4 · iOS switch colour when on · resolved: A · teal (ED-112) · review board kept as history",
+      "w": 2900,
+      "x": 21860,
+      "y": 57450
+    },
+    "E-G3-5.dc.html": {
+      "h": 3620,
+      "title": "G3-5 · Hover and drag on web blocks · resolved: C · Hybrid (ED-116) · review board kept as history",
+      "w": 2900,
+      "x": 21860,
+      "y": 61050
+    },
+    "E-G3-6-Android.dc.html": {
+      "h": 2880,
+      "title": "G3-6 · Android bottom row · revised C APPROVED (ED-125) and merged (ED-126) · A and B kept as history",
+      "w": 2900,
+      "x": 21860,
+      "y": 86700
+    },
+    "E-G3-6-BottomRow.dc.html": {
+      "h": 4820,
+      "title": "G3-6 · iPhone bottom row: + in the bar's line · APPROVED (ED-124) and merged (ED-126) · board kept as history",
+      "w": 2900,
+      "x": 21860,
+      "y": 81680
+    },
+    "E-G3-6-Compat.dc.html": {
+      "h": 5190,
+      "title": "G3-6 · Compatibility results: F2 on iOS 18.6, N3 on iOS 26.5 (ED-131) · F1 decided (a), ED-132",
+      "w": 2900,
+      "x": 21860,
+      "y": 97970
+    },
+    "E-G3-6-Decision.dc.html": {
+      "h": 4540,
+      "title": "G3-6 · Glass and vibrancy · RESOLVED as design and architecture direction (ED-133) · tests pending",
+      "w": 2900,
+      "x": 21860,
+      "y": 89700
+    },
+    "E-G3-6-Native.dc.html": {
+      "h": 3560,
+      "title": "G3-6 · Native-first exploration (B) · genuine iOS captures vs our drawings · G3-6 still open",
+      "w": 2900,
+      "x": 21860,
+      "y": 70070
+    },
+    "E-G3-6-Remaining.dc.html": {
+      "h": 3490,
+      "title": "G3-6 · Mac warm tint APPROVED (ED-130) · status by component · compatibility results on E-G3-6-Compat",
+      "w": 2900,
+      "x": 21860,
+      "y": 94360
+    },
+    "E-G3-6-Spikes.dc.html": {
+      "h": 7650,
+      "title": "G3-6 · Native feasibility spikes · results incl. your iPhone (genuine captures) · G3-6 still open",
+      "w": 2900,
+      "x": 21860,
+      "y": 73830
+    },
+    "E-G3-6.dc.html": {
+      "h": 5000,
+      "title": "G3-6 · Glass and vibrancy · first board: A vs C (B not shown) · open; see G3-6 Native-first",
+      "w": 2900,
+      "x": 21860,
+      "y": 64870
+    },
+    "E-G3-7.dc.html": {
+      "h": 5120,
+      "title": "G3-7 · iPhone keyboard and the teal Add key · resolved: C · stock keyboard (ED-135) · board kept as history",
+      "w": 2900,
+      "x": 21860,
+      "y": 103280
+    },
+    "E-Map-v1.0.dc.html": {
+      "h": 1860,
+      "title": "E · Map v1.0 snapshot (exact copy of A-Map, historical)",
+      "w": 1440,
+      "x": 8520,
+      "y": 12480
+    },
+    "E-Map.dc.html": {
+      "h": 5960,
+      "title": "E · Refined Focus · Map v1.1 working (features, responsive, scorecard, decisions)",
+      "w": 2760,
+      "x": 5680,
+      "y": 12480
+    },
+    "E-Minimal.dc.html": {
+      "h": 4440,
+      "title": "E · Refined Focus · minimal look, Mac and web (C's layout, E's look) · task column (ED-089), Day menu (ED-093) and Day r",
+      "w": 2760,
+      "x": 12880,
+      "y": 12480
+    },
+    "E-Phones.dc.html": {
+      "h": 7920,
+      "title": "E · Refined Focus · phones (v1.0 = A-Phones) · Add modes (ED-091), Day menu (ED-093), Day review and When picker (ED-099",
+      "w": 2760,
+      "x": 30,
+      "y": 12480
+    },
+    "E-PhonesCalendar.dc.html": {
+      "h": 1360,
+      "title": "E · Calendar on phones (G2-1) · review board, approved 4 Nov and now in E-Phones",
+      "w": 2760,
+      "x": 15720,
+      "y": 12480
+    },
+    "E-PhonesMinimal.dc.html": {
+      "h": 5080,
+      "title": "E · Refined Focus · minimal look, phones (v1.0 = A-PhonesMinimal) · minimal task sheet merged (ED-089)",
+      "w": 2760,
+      "x": 2825,
+      "y": 12480
+    },
+    "E-SettingsReview.dc.html": {
+      "h": 2090,
+      "title": "E · Settings (G2-4) · review board, approved and merged (ED-084)",
+      "w": 2900,
+      "x": 15720,
+      "y": 16120
+    },
+    "E-V1.dc.html": {
+      "h": 5440,
+      "title": "Visual review · all three corrections approved and merged (ED-108) · review board kept as history",
+      "w": 2900,
+      "x": 21860,
+      "y": 47930
+    },
+    "E-WakeWindDown-Settings-Candidate.dc.html": {
+      "h": 7420,
+      "title": "E · Wake Up and Wind Down · r2 approved 4 Nov (ED-084), merged into E boards · tablet and dial-rule reference",
+      "w": 3000,
+      "x": 18780,
+      "y": 12480
+    },
+    "E-Workspace.dc.html": {
+      "h": 1460,
+      "title": "E · Refined Focus · Mac and web workspace (v1.0 = A-Workspace)",
+      "w": 2760,
+      "x": 2840,
+      "y": 22490
+    },
+    "Main.dc.html": {
+      "h": 1900,
+      "title": "Round 1 · side by side and evaluation",
+      "w": 2760,
+      "x": 0,
+      "y": 0
+    },
+    "E-Phones-2.dc.html": {
+      "h": 4200,
+      "title": "E · Refined Focus · phones, part 2 · Add modes, Day review and When picker, keyboard states (moved from E-Phones, ED-144)",
+      "w": 2760,
+      "x": 30,
+      "y": 20560
+    },
+    "E-G3-9b-Palette.dc.html": {
+      "h": 2680,
+      "title": "G3-9b · Full task colour palette · APPROVED via the colour-selection board (ED-161) · review board kept as history",
+      "w": 2900,
+      "x": 21860,
+      "y": 108600
+    },
+    "E-G3-9b-Screens.dc.html": {
+      "h": 6880,
+      "title": "G3-9b · Colour selection on every platform · APPROVED (ED-161) and merged into E-Phones-3, E-Phones, E-FullA-v2 · review board kept as history",
+      "w": 2900,
+      "x": 21860,
+      "y": 111480
+    },
+    "E-Phones-3.dc.html": {
+      "h": 4560,
+      "title": "E · Refined Focus · phones, part 3 · colour selection and Appearance (G3-9b approved, ED-161)",
+      "w": 2760,
+      "x": 30,
+      "y": 24960
+    },
+    "E-Earlier.dc.html": {
+      "h": 2140,
+      "title": "E · Earlier fold · collapsed, expanded, reopened · iPhone, Android, Mac, web (G3-12 approved, ED-164)",
+      "w": 2760,
+      "x": 2825,
+      "y": 17720
+    },
+    "E-Responsive.dc.html": {
+      "h": 2760,
+      "title": "E · Responsive · 600 / 840, editor docks from 1160 (ED-167), H1 and M (ED-168), C1 (ED-170), tablet direction (ED-171)",
+      "w": 2760,
+      "x": 5680,
+      "y": 18520
+    },
+    "E-G4-3.dc.html": {
+      "h": 960,
+      "title": "G4-3 · Mac minimum window · B approved, 840 × 640 (ED-169) · board kept as history",
+      "w": 2900,
+      "x": 21860,
+      "y": 118520
+    },
+    "E-G4-3-Narrow.dc.html": {
+      "h": 2400,
+      "title": "Narrow Mac · Full and Minimal from 840 · approved (ED-169, ED-170) · active reference",
+      "w": 2900,
+      "x": 21860,
+      "y": 119640
+    },
+    "E-MobileWeb.dc.html": {
+      "h": 2040,
+      "title": "E · Mobile web · compact Full and Minimal in phone browsers (G4-5 approved, ED-172)",
+      "w": 2900,
+      "x": 5680,
+      "y": 22280
+    },
+    "E-G4-6-Dark-Tokens.dc.html": {
+      "h": 5740,
+      "title": "G4-6 · Dark tokens · Stage 1 FINAL (ED-174 to ED-179) · device behaviour pending",
+      "w": 2900,
+      "x": 21860,
+      "y": 122200
+    },
+    "E-G4-6-Dark-Frames.dc.html": {
+      "h": 6900,
+      "title": "G4-6 · Stage 2 visual review · light vs dark · APPROVED (ED-180) · merged as dark companions (ED-181) · kept as history",
+      "w": 3600,
+      "x": 21860,
+      "y": 128100
+    },
+    "E-Phones-Dark.dc.html": {
+      "h": 7920,
+      "w": 2760,
+      "x": 30,
+      "y": 31900,
+      "title": "Dark · E-Phones · G4-6 Stage 3 (ED-181) · dark companion of the light board, final P1 tokens · device tests pending"
+    },
+    "E-PhonesMinimal-Dark.dc.html": {
+      "h": 5080,
+      "w": 2760,
+      "x": 2870,
+      "y": 31900,
+      "title": "Dark · E-PhonesMinimal · G4-6 Stage 3 (ED-181) · dark companion of the light board, final P1 tokens · device tests pending"
+    },
+    "E-FullA-v2-Dark.dc.html": {
+      "h": 7400,
+      "w": 2760,
+      "x": 5710,
+      "y": 31900,
+      "title": "Dark · E-FullA-v2 · G4-6 Stage 3 (ED-181) · dark companion of the light board, final P1 tokens · device tests pending"
+    },
+    "E-Minimal-Dark.dc.html": {
+      "h": 4440,
+      "w": 2760,
+      "x": 8550,
+      "y": 31900,
+      "title": "Dark · E-Minimal · G4-6 Stage 3 (ED-181) · dark companion of the light board, final P1 tokens · device tests pending"
+    },
+    "E-Phones-2-Dark.dc.html": {
+      "h": 4200,
+      "w": 2760,
+      "x": 11390,
+      "y": 31900,
+      "title": "Dark · E-Phones-2 · G4-6 Stage 3 (ED-181) · dark companion of the light board, final P1 tokens · device tests pending"
+    },
+    "E-Phones-3-Dark.dc.html": {
+      "h": 4560,
+      "w": 2760,
+      "x": 14230,
+      "y": 31900,
+      "title": "Dark · E-Phones-3 · G4-6 Stage 3 (ED-181) · dark companion of the light board, final P1 tokens · device tests pending"
+    },
+    "E-Earlier-Dark.dc.html": {
+      "h": 2140,
+      "w": 2760,
+      "x": 17070,
+      "y": 31900,
+      "title": "Dark · E-Earlier · G4-6 Stage 3 (ED-181) · dark companion of the light board, final P1 tokens · device tests pending"
+    },
+    "E-G4-3-Narrow-Dark.dc.html": {
+      "h": 2400,
+      "w": 2900,
+      "x": 17070,
+      "y": 34120,
+      "title": "Dark · E-G4-3-Narrow · G4-6 Stage 3 (ED-181) · dark companion of the light board, final P1 tokens · device tests pending"
+    },
+    "E-Responsive-Dark.dc.html": {
+      "h": 2760,
+      "w": 2760,
+      "x": 8550,
+      "y": 36420,
+      "title": "Dark · E-Responsive · G4-6 Stage 3 (ED-181) · dark companion of the light board, final P1 tokens · device tests pending"
+    },
+    "E-MobileWeb-Dark.dc.html": {
+      "h": 2040,
+      "w": 2900,
+      "x": 17070,
+      "y": 36600,
+      "title": "Dark · E-MobileWeb · G4-6 Stage 3 (ED-181) · dark companion of the light board, final P1 tokens · device tests pending"
+    },
+    "E-PlanPanel-Options.dc.html": {
+      "h": 4180,
+      "w": 2900,
+      "x": 21860,
+      "y": 135160,
+      "title": "Plan panel on Mac and web · A + B APPROVED (ED-184) and merged · options board kept as history"
+    },
+    "E-G4-7-States.dc.html": {
+      "h": 8000,
+      "w": 3600,
+      "x": 21860,
+      "y": 139500,
+      "title": "G4-7 · Shared states and accessibility kit · light and dark · for your review, not merged (ED-186)"
+    },
+    "E-G4-7-Q4-KeepBoth.dc.html": {
+      "h": 2720,
+      "w": 3600,
+      "x": 21860,
+      "y": 147660,
+      "title": "G4-7 Q4 · Keep both for notes · approved design (ED-195) · not built, not merged · linked from E-G4-7-States"
+    },
+    "E-G3-C1-Font-Comparison.dc.html": {
+      "h": 5400,
+      "w": 3400,
+      "x": 21860,
+      "y": 150500,
+      "title": "G3-C1 · Android task text font · cleanup 7a and 7b · comparison for review, not applied (ED-203)"
+    },
+    "E-DF2.dc.html": {
+      "h": 1720,
+      "title": "Design fixes group 2 · before Wake Up fold (CR-021) and the moving now (CR-022, CR-103) · approved (ED-246) · reference board",
+      "w": 2760,
+      "x": 21860,
+      "y": 156140
+    },
+    "E-DF3.dc.html": {
+      "h": 1600,
+      "title": "Design fixes group 3 · focus order (CR-105), the Week for screen readers (CR-107), Reduce Transparency / Increase Contrast (CR-103) · approved (ED-248) · reference board",
+      "w": 2760,
+      "x": 21860,
+      "y": 158100
+    },
+    "E-T1.dc.html": {
+      "h": 2540,
+      "title": "Tablet Q1 · Full on an expanded tablet · decided: A, the Workspace (ED-252) · B, C, D kept as history",
+      "w": 2160,
+      "x": 21860,
+      "y": 159940
+    },
+    "E-T2.dc.html": {
+      "x": 21860,
+      "y": 162720,
+      "w": 2160,
+      "h": 1360,
+      "title": "Tablet Q2 · the Day menu in Minimal on tablets · decided: A, by width (ED-254) · B kept as history"
+    },
+    "E-T3.dc.html": {
+      "x": 21860,
+      "y": 164320,
+      "w": 2160,
+      "h": 2200,
+      "title": "Tablet Q3 · content type size on touch tablets · decided: B, phone content sizes with touch spacing (ED-256) · A kept as history"
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-03T15:30:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "rowA": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "A · Refined Timeline",
+      "w": 240,
+      "x": 0,
+      "y": 2080
+    },
+    "rowB": {
+      "kind": "title1",
+      "maxW": 7120,
+      "text": "B · Productivity Workspace",
+      "w": 240,
+      "x": 0,
+      "y": 4540
+    },
+    "rowC": {
+      "kind": "title1",
+      "maxW": 7120,
+      "text": "C · Focus-First Planner",
+      "w": 240,
+      "x": 0,
+      "y": 6640
+    },
+    "rowD": {
+      "kind": "title1",
+      "maxW": 6760,
+      "text": "Decisions · not approved for implementation",
+      "w": 240,
+      "x": 0,
+      "y": 9360
+    },
+    "rowE": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "E · Refined Focus · v1.1 working (v1.0 archived) · leading candidate, not approved for production implementation",
+      "w": 240,
+      "x": 0,
+      "y": 12160
+    },
+    "rowEDark": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "E · Dark mode · G4-6 Stage 3 (ED-181) · dark companions of the active boards; light boards unchanged",
+      "w": 240,
+      "x": 0,
+      "y": 31580
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "A-Phones.dc.html",
+    "A-Map.dc.html",
+    "A-Workspace.dc.html",
+    "A-Focus.dc.html",
+    "A-PhonesMinimal.dc.html",
+    "B-Phones.dc.html",
+    "B-Wide.dc.html",
+    "B-Map.dc.html",
+    "C-Phones.dc.html",
+    "C-Wide.dc.html",
+    "C-Minimal.dc.html",
+    "C-PhonesMinimal.dc.html",
+    "C-Map.dc.html",
+    "D1-Settings.dc.html",
+    "D2-TaskSurface.dc.html",
+    "D3-Duplicates.dc.html",
+    "E-Phones.dc.html",
+    "E-Phones-2.dc.html",
+    "E-Phones-3.dc.html",
+    "E-PhonesMinimal.dc.html",
+    "E-Earlier.dc.html",
+    "E-Map.dc.html",
+    "E-Responsive.dc.html",
+    "E-MobileWeb.dc.html",
+    "E-Map-v1.0.dc.html",
+    "E-Workspace.dc.html",
+    "E-Minimal.dc.html",
+    "E-FullA.dc.html",
+    "E-FullB.dc.html",
+    "E-FullA-v2.dc.html",
+    "E-PhonesCalendar.dc.html",
+    "E-G2-4.dc.html",
+    "E-SettingsReview.dc.html",
+    "E-WakeWindDown-Settings-Candidate.dc.html",
+    "E-G2-5.dc.html",
+    "E-G2-5-FullEditor.dc.html",
+    "E-G2-5-OptionD-RefinedEditor.dc.html",
+    "E-G2-5-MergePreview.dc.html",
+    "E-G2-6.dc.html",
+    "E-G2-6-Review.dc.html",
+    "E-G2-8.dc.html",
+    "E-G2-9.dc.html",
+    "E-G2-10.dc.html",
+    "E-G2-11.dc.html",
+    "E-G2-12.dc.html",
+    "E-G3-1.dc.html",
+    "E-G3-2.dc.html",
+    "E-V1.dc.html",
+    "E-G3-3.dc.html",
+    "E-G3-4.dc.html",
+    "E-G3-5.dc.html",
+    "E-G3-6.dc.html",
+    "E-G3-6-Native.dc.html",
+    "E-G3-6-Spikes.dc.html",
+    "E-G3-6-BottomRow.dc.html",
+    "E-G3-6-Android.dc.html",
+    "E-G3-6-Decision.dc.html",
+    "E-G3-6-Remaining.dc.html",
+    "E-G3-6-Compat.dc.html",
+    "E-G3-7.dc.html",
+    "E-G3-9b-Palette.dc.html",
+    "E-G3-9b-Screens.dc.html",
+    "E-G4-3.dc.html",
+    "E-G4-3-Narrow.dc.html",
+    "E-G4-6-Dark-Tokens.dc.html",
+    "E-G4-6-Dark-Frames.dc.html",
+    "E-Phones-Dark.dc.html",
+    "E-PhonesMinimal-Dark.dc.html",
+    "E-FullA-v2-Dark.dc.html",
+    "E-Minimal-Dark.dc.html",
+    "E-Phones-2-Dark.dc.html",
+    "E-Phones-3-Dark.dc.html",
+    "E-Earlier-Dark.dc.html",
+    "E-G4-3-Narrow-Dark.dc.html",
+    "E-Responsive-Dark.dc.html",
+    "E-MobileWeb-Dark.dc.html",
+    "E-PlanPanel-Options.dc.html",
+    "E-G4-7-States.dc.html",
+    "E-G4-7-Q4-KeepBoth.dc.html",
+    "E-G3-C1-Font-Comparison.dc.html",
+    "E-DF2.dc.html",
+    "E-DF3.dc.html",
+    "E-T1.dc.html",
+    "E-T2.dc.html",
+    "E-T3.dc.html"
+  ],
+  "pages": [],
+  "title": "Dottoday Round 1 Concepts"
+}

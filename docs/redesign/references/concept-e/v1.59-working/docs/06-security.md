@@ -1,0 +1,95 @@
+# 06 — Security & Privacy
+
+A planner holds a person's whole life schedule. Treat titles, notes, locations and calendar data as
+sensitive personal data.
+
+## 1. Threat model (STRIDE-lite)
+
+| Threat | Example | Mitigation |
+|---|---|---|
+| Unauthorised data access via API | user A reads user B's rows through PostgREST | RLS on every table, `user_id = auth.uid()` policies, no `security definer` views exposed; RLS tests in CI |
+| Token theft on device | stolen phone, malware reading prefs | Supabase session stored in Keychain/Keystore via `flutter_secure_storage`; local DB SQLCipher-encrypted with a key from secure storage; biometric/App-lock optional |
+| Token theft on web | XSS reads localStorage | Strict CSP (no inline scripts), Supabase session in memory + refresh via HttpOnly cookie through a thin Edge Function proxy (or `persistSession` with PKCE and short TTL if proxy not built in v1 — ADR-0003), `Trusted Types` where supported |
+| Calendar OAuth secret leakage | client contains Google client secret | OAuth code flow completes in an Edge Function; refresh tokens in Supabase Vault; client never sees provider tokens |
+| Injection | SQL/RRULE/markdown | parameterised queries only (Drift/PostgREST); RRULE parsed by library and re-serialised, never concatenated; notes rendered with a sanitising markdown-lite renderer, links `rel=noopener`, no raw HTML |
+| Notification spoofing / data in payloads | payload shows notes on lock screen | notification body = title + time only; notes never in payload; "hide content on lock screen" setting |
+| Sync tampering | malicious client sets another user's `user_id` | `sync_push` RPC overwrites `user_id` with `auth.uid()`; HLC bounded (reject > 5 min future) |
+| Account takeover | magic link reuse | Supabase defaults: single-use links, 10-min expiry; rate limits; Sign in with Apple/Google via PKCE |
+| Data loss | bug deletes rows | tombstones + 30-day trash, daily local backups, export; destructive endpoints require confirmation |
+| Supply chain | compromised pub package | lockfile committed, `dart pub outdated --mode=null-safety` + `osv-scanner` in CI, deps justified in ADRs |
+| Secrets in repo | `.env` committed | `.gitignore`, `gitleaks` pre-commit + CI, only `SUPABASE_URL` and anon key in client env |
+
+## 2. Authentication & session
+- Methods: email magic link (OTP), Sign in with Apple (required on iOS when offering social login), Google.
+- PKCE flow on all platforms. Access token TTL 1 h, refresh rotation on. Sessions revocable from settings ("Sign out everywhere").
+- Optional app lock: biometrics/passcode via `local_auth`; auto-lock after N minutes; blur in app switcher.
+
+## 3. Authorisation (Supabase RLS)
+- Every table: `enable row level security`, policies for select/insert/update/delete scoped to `auth.uid()`.
+- `profiles.id` is `auth.users.id`; insert via trigger on signup.
+- `calendar_accounts` tokens are in Vault; Edge Functions use the service role but filter by the invoking user's JWT. M7.4: clients may only read and delete their own `calendar_accounts` rows (only `calendar-oauth` creates them); the Vault functions (`calendar_token_get/put`, `calendar_account_connect`, `calendar_oauth_take_state`) are executable by `service_role` only; `calendar_oauth_states` has no client grants; deleting an account row deletes its token (trigger). pgTAP: `supabase/tests/0005_calendar_oauth.sql`.
+- `sync_push` RPC is `security invoker`; validates payload shapes; caps batch size (500 rows).
+
+## 4. Data at rest
+- Device: SQLCipher (AES-256) with a 32-byte random key in Keychain/Keystore. Backups encrypted with the same key; export files are plaintext **by user action only**, with a warning.
+- Web: Drift WASM over IndexedDB on `sqlite3mc.wasm` (one tab at a time); the raw DB key is stored in IndexedDB sealed by a non-extractable WebCrypto AES-GCM key (ADR-0003 amendment, M2.9). Accept that web at-rest protection is weaker (page script can unwrap it); document in privacy page.
+- Server: Postgres encryption at rest (Supabase default); Vault for tokens; daily backups with PITR on paid tier.
+
+## 5. Data in transit
+TLS 1.2+ only; certificate pinning not used (Supabase rotates); HSTS on web.
+
+## 6. Privacy
+- No third-party analytics SDKs in v1. Crash reporting (Sentry) with `sendDefaultPii=false`, breadcrumbs scrubbed of titles/notes.
+- Data minimisation: no location unless the user adds it to a task; no contacts; no ad IDs.
+- GDPR: export (F7), delete account (Edge Function deletes all rows + auth user within 24 h, emails confirmation), privacy policy and data-processing page in-app. App Store privacy labels: "Data not linked to you" where accurate.
+  M8.6: the policy is `app/web/privacy.html` (served with the web build; Settings › Privacy links to it when `PRIVACY_POLICY_URL` is set, https only), and Settings › Privacy itself says what stays local, what sync sends and — only in builds with `SENTRY_DSN` — what a crash report holds. The store answers and the code they rest on are in `docs/store/privacy-labels.md` (crash data and diagnostics: not linked; email, name, user id, synced tasks: linked, app functionality; Google/Microsoft events pass through `calendar-sync` unstored; device calendars never leave the device). A change to what leaves the device updates that file and the policy in the same commit.
+- Children: 13+ age gate in onboarding copy. M8.6: "Dottoday is for people aged 13 and over." on O1 Welcome (`onboardingAgeNote`), in the store descriptions and the policy; no birth-date prompt (no age is collected). Questionnaire answers and the EU consent-age question for legal review: `docs/store/age-rating.md`.
+
+- Speech (M14, ADR-0014; owner, 2026-10-28): the microphone is used only while the user holds the mic button on, and only through the platform's **on-device** recognizer (iOS/macOS `requiresOnDeviceRecognition`; Android API 31+ `createOnDeviceSpeechRecognizer`; web `processLocally = true`). Where on-device recognition is missing the mic is hidden (D2). Audio is never recorded to a file; transcripts are not stored apart from the text the user keeps in the field, never logged (log IDs and event names only, `no_pii_in_logs`), never sent. Permission texts (D5): `NSMicrophoneUsageDescription` "Dottoday listens only while the mic button is on, to turn your words into text on this device.", `NSSpeechRecognitionUsageDescription` "Your words are turned into text on this device. Nothing is sent to a server." (en/de/fr/es, iOS and macOS); Android `RECORD_AUDIO` with an in-app rationale before the system dialog; macOS `com.apple.security.device.audio-input`.
+
+## 7. Input validation
+- Every external input validated at the boundary: Quick Add text (length, control chars stripped), import JSON (schema + size ≤ 25 MB), calendar events (field lengths: titles cleaned of control characters and clipped to 200, notes to 10 000, ids that don't fit their column skipped, never cut; event links kept only when http(s) — M7.1/M7.2; write-back sends only start, end and a title already validated as a task title, and an Android event id must be numeric before it reaches the plugin's query — M7.3; Google/Microsoft answers are type-checked field by field in the app, malformed events skipped, the sign-in URL opened only when https; `calendar-sync` checks every calendar id against the caller's own accounts, a window ≤ 100 days, ids ≤ 256/512, titles ≤ 200 and a non-empty etag; `calendar-oauth` sends the browser back only to `dottoday://settings/calendars` or an origin in `CALENDAR_RETURN_ORIGINS` — M7.4), deep links (allow-listed routes only), notification payloads (ID lookups only).
+- Server CHECK constraints mirror client rules (see data model).
+
+## 8. Platform hardening
+- iOS/macOS: App Transport Security default, Keychain `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`, `NSFaceIDUsageDescription`, no `UIFileSharingEnabled`.
+- Android: `android:allowBackup="false"` (we do our own backups), network security config (cleartext off), `FLAG_SECURE` when app lock is on, Play Integrity not required v1.
+- Web: CSP `default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' <supabase> <supabase wss> https://fonts.gstatic.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, HSTS, nosniff, Permissions-Policy, service worker scope limited. Generated per deployment by `app/tool/web_csp.sh` (M5.7). Why the extras: `'unsafe-inline'` for styles only (Flutter's engine sets inline styles; no inline scripts anywhere), `fonts.gstatic.com` for Flutter's glyph fallback (font files only, nothing about the user is sent); CanvasKit is served from the site, not the CDN.
+- Logging never includes task content; `Logger.redact()` enforced via lint rule (`avoid_print` + custom lint `no_pii_in_logs`).
+
+### Web push (M5.3b)
+Reminder text never reaches our server or the browser vendor's push service in the clear: the app
+encrypts each push body in the browser to that browser's own subscription keys (RFC 8291,
+`web/push_crypto.js`) and uploads only the ciphertext, the fire time and the ID-only plan
+(`scheduled_pushes`, RLS: own rows on own subscriptions; ≤ 500 pending per subscription). The
+`send-push` Edge Function holds the VAPID private key (function secret), accepts only the
+service-role caller (cron), forwards ciphertext with `TTL: 3600`, drops subscriptions the push service
+reports gone (404/410) and logs counts only. `push_subscriptions` stores the endpoint only; the
+browser's `p256dh`/`auth` keys stay in the browser.
+
+### Home-screen widgets (M5.4)
+Widgets can't open the encrypted database, so the app writes the next 24 h (titles, times, colours,
+IDs) and the Inbox count to the platform's widget store: the iOS app-group `UserDefaults`
+(Data Protection: available after first unlock) and Android's app-private `SharedPreferences`. It is
+the same text the widget shows on the home screen; notes and subtasks are never included, and the
+snapshot is overwritten on every write. Since M9.1 this is the day snapshot (B5, docs/04 §4), which
+adds actual start/end times, not more text. The web's copy (Cache Storage, for the service worker)
+carries **no titles** — ids, times, colours and UI labels only — because browser storage outside the
+encrypted database is plaintext; CI's web-database probe scans Cache Storage and `localStorage` for a
+task title as well as OPFS and IndexedDB.
+
+## 9. Security checklist (run at every `/ship-check`)
+- [ ] New/changed tables have RLS enabled and policies tested (pgTAP tests pass).
+- [ ] No secret, token, or private key in the diff (`gitleaks` clean).
+- [ ] All new inputs validated client + server.
+- [ ] No task content in logs, crash reports, or notification payloads.
+- [ ] Session/keys only in secure storage; nothing sensitive in SharedPreferences/localStorage.
+- [ ] Destructive actions are undoable or confirmed.
+- [ ] Dependencies added are justified and scanned.
+- [ ] Deep links and notification actions can't open another user's data (ID is looked up under current user).
+- [ ] Web CSP unchanged or tightened; no inline scripts added.
+- [ ] Account deletion and export still work end-to-end.
+- [ ] Speech stays on the device: every speech bridge requires on-device recognition, none uses a network API, the mic is hidden where it can't (`speech_on_device_test.dart`); no transcript in logs.
+- [ ] Every OS permission has its usage text in every shipped language (mic, speech, calendars; `os_strings_test.dart`).
+- [ ] No model or speech output is written before the user accepts it (ADR-0009 §3).
+- [ ] Signing out and in as another account never uploads, shows or merges the previous account's local data or pending changes; guest → account migration never loses, duplicates or overwrites work (CR-160, release blocker; criteria in `docs/redesign/E_IMPLEMENTATION_HANDOFF.md` § CR-160).

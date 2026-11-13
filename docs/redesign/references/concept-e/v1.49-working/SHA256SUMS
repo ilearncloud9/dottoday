@@ -1,0 +1,12 @@
+8367bb8dc51b6675d91e2f0e64863e9185cb40a07160dca6945a4124845623dc  ./generators/fit.txt
+b018af80fb1de7673334d00e808fac088adcb3e4034a409446da6b63be92d2c7  ./generators/fixfit.py
+ec28b824e7691e6b5832eed872ac307d19450b77e559c056183515ba1cc451f1  ./generators/planpanel.py
+b82004714d09703a5898fc95d574fba89ef4bdfb1180d4b0f13e01a226ef0a84  ./generators/stage3.py
+ea215b1d1dfa164537557a3f5ca05cdfb45fa7907d7652e5a56b596b4cd252da  ./generators/swaps.json
+b72530a0af57c50a5cce3052f0b8d6d02056e10eda6d2fd19da5336a77a43c91  ./pre/E-FullA-v2.dc.html
+b634dffbd3a752023bf4acd03a554fff2eb8a592456b73acfff52bd5b9ae9bb8  ./pre/E-G4-3-Narrow.dc.html
+b5129a36eeeda3beb859093956e08e985251d263a4809a46fa1a86028103abdc  ./project/E-FullA-v2-Dark.dc.html
+b632da34fbb86cc84dac4b18ce30d085f86dc1712a75ab9a8611a351f29061c0  ./project/E-FullA-v2.dc.html
+5452efd72e4889dcfa859b2d79e5f5301eaf704ceb8c6506da068df00a093911  ./project/E-G4-3-Narrow-Dark.dc.html
+cd3d00110e3a4ddcda754c4fa552a2a0724c7111f084d1afbd1085170d77fa75  ./project/E-G4-3-Narrow.dc.html
+57212ffe999a32916eef292b1ba721a2cae209a4b92e0e3b293e51747352f152  ./project/E-PlanPanel-Options.dc.html

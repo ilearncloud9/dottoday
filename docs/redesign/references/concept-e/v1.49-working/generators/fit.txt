@@ -1,0 +1,19 @@
+<script>window.addEventListener('load',()=>setTimeout(()=>{const out=[];
+const isCtl=e=>/^(BUTTON|A|LABEL)$/.test(e.tagName)||/tab|button|menuitem|option|switch|radio|checkbox/.test(e.getAttribute('role')||'');
+document.querySelectorAll('body *').forEach(e=>{
+ if(![...e.childNodes].some(n=>n.nodeType===3&&n.textContent.trim()))return;
+ if(e.closest('[aria-hidden=true],[data-kb]'))return;
+ const b=e.getBoundingClientRect(); if(b.width<3||b.height<3)return;
+ const r=document.createRange(); const tn=[...e.childNodes].filter(n=>n.nodeType===3&&n.textContent.trim()); r.setStartBefore(tn[0]); r.setEndAfter(tn[tn.length-1]); const rs=[...r.getClientRects()]; if(!rs.length)return;
+ const tr=r.getBoundingClientRect(); const cs=getComputedStyle(e); const lh=parseFloat(cs.lineHeight)||parseFloat(cs.fontSize)*1.25;
+ const t=e.textContent.trim().slice(0,30); const z=b.width/e.offsetWidth||1;
+ // control (or its nearest control ancestor) with text wrapping onto more lines than its box allows
+ const ctl=isCtl(e)?e:e.closest('button,a,[role=tab],[role=button],[role=menuitem],label');
+ if(ctl){const cb=ctl.getBoundingClientRect(); if(tr.right>cb.right+1.5||tr.left<cb.left-1.5||tr.bottom>cb.bottom+1.5||tr.top<cb.top-1.5) out.push('CTL-OUT|'+t+'|'+Math.round(cb.left)+','+Math.round(cb.top));}
+ // text outside its own box horizontally
+ if(tr.right>b.right+1.5*z && cs.overflow!=='visible') out.push('SELF-CLIP|'+t+'|'+Math.round(b.left)+','+Math.round(b.top));
+ // horizontally clipped by an overflow ancestor
+ for(let p=e.parentElement;p&&p!==document.body;p=p.parentElement){const o=getComputedStyle(p);if(o.overflowX!=='visible'){const pb=p.getBoundingClientRect();if(tr.right>pb.right+1.5||tr.left<pb.left-1.5){out.push('H-CLIP|'+t+'|'+Math.round(b.left)+','+Math.round(b.top));}break;}}
+ // text overlapping next sibling text? skip
+});
+document.body.setAttribute('data-fit',out.join(' || '));},1500))</script>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sign out with unsynced changes</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{t.ground}}; color: {{t.ink}}; font-family: Manrope, sans-serif;">
+  <div style="padding: 64px 20px 0; display: flex; flex-direction: column; gap: 20px;">
+    <div style="font-family: -apple-system, system-ui, sans-serif; font-size: 34px; font-weight: 700; letter-spacing: 0.3px;">Account</div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="font-size: 13px; font-weight: 700; color: {{t.secondary}}; letter-spacing: 0.4px;">SYNC</div>
+      <div style="background: {{t.surface}}; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-size: 15px;">Signed in as sam@example.com</div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: {{t.secondary}};">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8a5 5 0 0 1 8.5-3.5M13 8a5 5 0 0 1-8.5 3.5M11.5 2v2.5H9M4.5 14v-2.5H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span>3 changes waiting to sync</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="position: absolute; inset: 0; background: {{t.scrim}};"></div>
+  <div role="alertdialog" aria-labelledby="a2-title" aria-describedby="a2-body" style="position: absolute; left: 20px; right: 20px; top: 214px; background: {{t.sheet}}; border-radius: 28px; padding: 28px 24px 20px; display: flex; flex-direction: column; gap: 16px;">
+    <div style="width: 44px; height: 44px; border-radius: 22px; background: {{t.tonal}}; color: {{t.tonalInk}}; display: flex; align-items: center; justify-content: center;">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M6 15.5h9.5a3.5 3.5 0 0 0 .4-7A5 5 0 0 0 6.3 7.6 4 4 0 0 0 6 15.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M11 9.5v4M9 11.5l2 2 2-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+    <h2 id="a2-title" style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700; letter-spacing: -0.2px;">3 changes haven’t synced yet</h2>
+    <p id="a2-body" style="margin: 0; font-size: 15px; line-height: 22px; color: {{t.ink2}};">They’re saved on this device for sam@example.com and haven’t reached your account yet. They can sync when you sign in again with this account. Until then, no one else who uses Dottoday on this device can see them.</p>
+    <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 4px;">
+      <button type="button" style="height: 52px; border-radius: 26px; border: none; background: {{t.accent}}; color: {{t.onAccent}}; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 700;">Stay signed in</button>
+      <div style="font-size: 13px; line-height: 18px; color: {{t.secondary}}; text-align: center;">Dottoday tries to sync them now.</div>
+      <button type="button" style="height: 52px; border-radius: 26px; border: 1.5px solid {{t.outline}}; background: transparent; color: {{t.ink}}; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 700;">Sign out and keep them here</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark
+      ? { ground: '#171416', surface: '#1F1B1E', sheet: '#2F2A30', ink: '#F3ECE4', ink2: '#E2DAD6', secondary: '#C7BEC4', outline: '#8C838A', accent: '#5BC4B8', onAccent: '#0C2523', tonal: '#1E3A37', tonalInk: '#A3E2D9', scrim: 'rgba(0,0,0,.55)' }
+      : { ground: '#FBF7F1', surface: '#FFFDF9', sheet: '#FFFDF9', ink: '#241F2B', ink2: '#4E4757', secondary: '#6A6273', outline: '#DDD7E0', accent: '#11615C', onAccent: '#FFFFFF', tonal: '#E2EFEC', tonalInk: '#0B4642', scrim: 'rgba(36,31,43,.30)' };
+    return { t };
+  }
+}
+</script>
+</body>
+</html>

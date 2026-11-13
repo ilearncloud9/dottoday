@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Account, choose settings later</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{t.ground}}; color: {{t.ink}}; font-family: Manrope, sans-serif;">
+  <div style="padding: 64px 20px 0; display: flex; flex-direction: column; gap: 20px;">
+    <div style="font-family: -apple-system, system-ui, sans-serif; font-size: 34px; font-weight: 700; letter-spacing: 0.3px;">Account</div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="font-size: 13px; font-weight: 700; color: {{t.secondary}}; letter-spacing: 0.4px;">SYNC</div>
+      <div style="background: {{t.surface}}; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-size: 15px;">Signed in as sam@example.com</div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: {{t.secondary}};">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span>Synced</span>
+        </div>
+      </div>
+    </div>
+    <a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 12px 16px; box-sizing: border-box; border-radius: 20px; background: {{t.surface}}; color: {{t.ink}}; text-decoration: none;">
+      <span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px;">
+        <span style="font-size: 16px; line-height: 22px; font-weight: 700;">Choose settings</span>
+        <span style="font-size: 14px; line-height: 20px; color: {{t.secondary}};">This device had different settings when you signed in.</span>
+      </span>
+      <svg width="10" height="16" viewBox="0 0 10 16" fill="none" aria-hidden="true" style="flex: none; color: {{t.secondary}};"><path d="M2 2l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark
+      ? { ground: '#171416', surface: '#1F1B1E', ink: '#F3ECE4', secondary: '#C7BEC4' }
+      : { ground: '#FBF7F1', surface: '#FFFDF9', ink: '#241F2B', secondary: '#6A6273' };
+    return { t };
+  }
+}
+</script>
+</body>
+</html>

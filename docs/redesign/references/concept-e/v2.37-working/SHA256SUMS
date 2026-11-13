@@ -1,0 +1,11 @@
+452da86b981101c02dce8dcf78d1b198b275ea3666c4abc9e0393efeb0cab66e  ./R2-6-light.png
+6acf4fe2aceddb66fcf0214812c275c8676e07065d67b3cc131d1c52b1a66387  ./docs/E_DECISION_REGISTER.md
+3b5d88e17c3c4ca56638a1a5949b2282b74fd80e5eeb825ed6308cff2a74c236  ./docs/E_DESIGN_DECISIONS.md
+0f75396866fe275f804e784decdf72da7d4af8938d41bba0b39b99ad16b4e77c  ./docs/STATUS.md
+80ad51cd4b37d1bec66051e0b0125cc6d0642edbbca19130d6787c4916404e9a  ./generators/r25_build.py
+d12c01ede2e96b45177162803cad751ec788e94a1fcf0a0e3100058ec88bf48a  ./generators/r26_build.py
+95ed32b4a6a30dd8db6bd20f8c7b74f3e4bf5625d11beeed8f852ac797c4bd26  ./project/E-R2-5-Dark.dc.html
+3bc9ca3874db1f1a1a2ad5668cefc157c5f21ca52a92413f1ae019b5a2b806eb  ./project/E-R2-5.dc.html
+1cb0a1ec0e7885981bef268d0b61d6c4f3a6580a8667a7ae8add4a45d1a7bbcf  ./project/E-R2-6-Dark.dc.html
+492fab915594c92da95ebdd28dfd1b863d9fb35455f4766ab9cef8c59685d9b5  ./project/E-R2-6.dc.html
+464faabc6908411139a51949a9fcb01ab3e6dce2cd8c22553bfd7846bd1b12c3  ./project/canvas.json

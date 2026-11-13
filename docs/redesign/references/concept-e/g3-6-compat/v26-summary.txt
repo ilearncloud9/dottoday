@@ -1,0 +1,93 @@
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=full | screen 402x874 safe top 62 bottom 34 | bar x 21.0 w 292.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 6.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 73.0
+FL INSETS top=62.0 bottom=151.0
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=full | screen 402x874 safe top 62 bottom 34 | bar x 21.0 w 292.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 6.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 73.0
+FL INSETS top=62.0 bottom=151.0
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=full | screen 402x874 safe top 62 bottom 34 | bar x 21.0 w 292.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 6.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 73.0
+FL INSETS top=62.0 bottom=151.0
+TAB 2 Calendar selected=2 dayHidden=true
+FL TAB Calendar shows Tue 3 Nov
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=full | screen 402x874 safe top 62 bottom 34 | bar x 21.0 w 292.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 6.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 73.0
+FL INSETS top=62.0 bottom=151.0
+TAB 1 Inbox selected=1 dayHidden=false
+FL TAB Inbox shows Tue 3 Nov
+badge 4
+FL INBOX now 4
+badge 5
+FL INBOX now 5
+badge 6
+FL INBOX now 6
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=minimal | screen 402x874 safe top 62 bottom 34 | bar x 30.0 w 274.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 15.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 91.3
+FL INSETS top=62.0 bottom=151.0
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=minimal | screen 402x874 safe top 62 bottom 34 | bar x 30.0 w 274.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 15.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 91.3
+FL INSETS top=62.0 bottom=151.0
+TAB 1 Today selected=1 dayHidden=false
+FL TAB Today shows Tue 3 Nov
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=minimal | screen 402x874 safe top 62 bottom 34 | bar x 30.0 w 274.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 15.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 91.3
+FL INSETS top=62.0 bottom=151.0
+TAB 2 Inbox selected=2 dayHidden=false
+FL TAB Inbox shows Tue 3 Nov
+badge 4
+FL INBOX now 4
+badge 5
+FL INBOX now 5
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=full | screen 402x874 safe top 62 bottom 34 | bar x 21.0 w 292.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 6.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 73.0
+FL INSETS top=62.0 bottom=151.0
+ADD native mode=Task
+FL ADD OPEN mode=Task date=Tue 3 Nov tab=Today
+FL KEYBOARD viewInsets.bottom=0.0
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=full | screen 402x874 safe top 62 bottom 34 | bar x 21.0 w 292.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 6.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 73.0
+FL INSETS top=62.0 bottom=151.0
+ADD native mode=Task
+ADD native mode=Brain dump
+FL ADD OPEN mode=Task date=Tue 3 Nov tab=Today
+FL ADD OPEN mode=Brain dump date=Tue 3 Nov tab=Today
+FL KEYBOARD viewInsets.bottom=0.0
+FL KEYBOARD viewInsets.bottom=0.0
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=full | screen 402x874 safe top 62 bottom 34 | bar x 21.0 w 292.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 6.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 73.0
+FL INSETS top=62.0 bottom=151.0
+TAB 1 Inbox selected=1 dayHidden=false
+FL TAB Inbox shows Tue 3 Nov
+DAY CONTEXT today=false
+FL DAY now Wed 4 Nov
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=full | screen 402x874 safe top 62 bottom 34 | bar x 21.0 w 292.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 6.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 73.0
+FL INSETS top=62.0 bottom=151.0
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=minimal | screen 402x874 safe top 62 bottom 34 | bar x 30.0 w 274.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 15.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 91.3
+FL INSETS top=62.0 bottom=151.0
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=full | screen 402x874 safe top 62 bottom 34 | bar x 21.0 w 292.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 6.0 | dMid 0.00 | day 142.7x63.3 right 21.0 above bar 16.0 | tab item w 73.0
+FL INSETS top=62.0 bottom=170.33333333333337
+ALIGN os 26.5 glass=1 nav=full | screen 402x874 safe top 62 bottom 34 | bar x 21.0 w 292.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 6.0 | dMid 0.00 | day 142.7x63.3 right 21.0 above bar 16.0 | tab item w 73.0
+FL INSETS top=62.0 bottom=170.33333333333337
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=full | screen 402x874 safe top 62 bottom 34 | bar x 21.0 w 292.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 6.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 73.0
+FL INSETS top=62.0 bottom=151.0
+launched variant=N3 os=26.5 idiom=0
+badge 3
+ALIGN os 26.5 glass=1 nav=full | screen 402x874 safe top 62 bottom 34 | bar x 21.0 w 292.0 h 62.0 bottom gap 21.0 | + 62.0x62.0 right 21.0 bottom 21.0 | gap 6.0 | dMid 0.00 | day 83.0x44.0 right 21.0 above bar 16.0 | tab item w 73.0
+FL INSETS top=62.0 bottom=151.0

@@ -1,0 +1,14 @@
+8a15aef1b8f02632cad17f7c92847100ffb296331ae46d8da22a7b801d52fc41  ./docs/E_DECISION_REGISTER.md
+a82689e1fcb4c045e9212be7ff15d327a7051cf1611d7479542ea8c1879a70f0  ./docs/E_DESIGN_DECISIONS.md
+3b1906432de352e2015332fbcb13cccd60dabadb6c1b876a2a13880fb295b899  ./docs/E_IMPLEMENTATION_HANDOFF.md
+3b98e40e63ec2335aef257a8cd05ca5a40701f7f21f18dcdbaa1bc6f893a8f75  ./e-cr160/before/AndroidA2.dc.html
+b3be5c5895f6990af20d1cf540c6cb32c12a2991fa19df0f76e5ac0be2e76694  ./e-cr160/before/DesktopA2.dc.html
+42f3651ae788e06bd04315a2d8a6d63e317c55a6a3592bffbc2591c59f63ce98  ./e-cr160/before/Main.dc.html
+acb6832ab7906be9a56e69ba1b153f288a9400387b8b432510fcf9a49e160709  ./e-cr160/before/canvas.json
+e34447284f9abd478b8c678c9cfcb5766d53a5c16d2a095929457514fc32802f  ./e-cr160/project/AndroidA2.dc.html
+92af6762d56488b7b6c83473036b806a819699519b9f15069c8fe629d5c40263  ./e-cr160/project/DesktopA2.dc.html
+afcc5dc080e472726ba2094cc2b716cbdc59f5624c7124832f4d2aea011e86ad  ./e-cr160/project/Main.dc.html
+b01d6cadbfb228c7bca089546ffd1946adeea4d2dd615f667f0ecc2fceafff8b  ./e-cr160/project/canvas.json
+7435eae425700129b9a55b831cc9ffe8e2a4207e07cc62050030cda3cc5ea764  ./evidence/project-DesktopA2-dark.png
+d573990f0aaf1e185e082a87af4f7eb926aea0f9058c549e6b7b126b5a8f67ef  ./evidence/project-Main-light.png
+4a0f2fd30310eb3e874475afc2059945acf3a61fa160fdd1b8b7c68db125b41a  ./generators/cr160a2.py

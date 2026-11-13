@@ -1,0 +1,827 @@
+<title>Dottoday Onboarding Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap">
+<style>
+/* Layout: a workbench. Step rail left, the live device centre, notes right; spec and "later" below. */
+:root{
+  --bg:#EEEAF0; --panel:#FFFFFF; --fg:#241F2B; --muted:#5F5868; --line:#DCD5E0; --accent:#11615C; --accent-soft:#E2EFEC; --on-accent:#FFFFFF;
+  --font:Manrope, system-ui, -apple-system, "Segoe UI", sans-serif; --sys:Roboto, system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121013; --panel:#1E1A1F; --fg:#F3ECE4; --muted:#B9B0B7; --line:#3A3439; --accent:#5BC4B8; --accent-soft:#1E3A37; --on-accent:#0B2321; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121013; --panel:#1E1A1F; --fg:#F3ECE4; --muted:#B9B0B7; --line:#3A3439; --accent:#5BC4B8; --accent-soft:#1E3A37; --on-accent:#0B2321; color-scheme:dark}
+body{background:var(--bg); color:var(--fg); font:500 15px/1.5 var(--font)}
+*{box-sizing:border-box}
+.page{max-width:1560px; margin:0 auto; padding-block:28px 64px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); display:flex; flex-direction:column; gap:28px}
+.eyebrow{font:700 12px/1 var(--font); letter-spacing:.12em; text-transform:uppercase; color:var(--accent)}
+h1{font:800 clamp(28px,4vw,44px)/1.1 var(--font); margin:10px 0 10px; text-wrap:balance; letter-spacing:-.01em}
+.lede{max-width:68ch; color:var(--muted); margin:0; font-size:16px}
+.bar{display:flex; flex-wrap:wrap; gap:12px 20px; align-items:center}
+.ctl{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.ctl > span{font:700 12px var(--font); color:var(--muted); letter-spacing:.06em; text-transform:uppercase}
+.seg{display:inline-flex; background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:3px; gap:2px; flex-wrap:wrap}
+.seg button{border:0; background:transparent; color:var(--fg); font:700 13px var(--font); min-height:36px; padding:0 14px; border-radius:999px; cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.ghostbtn{border:1px solid var(--line); background:var(--panel); color:var(--fg); font:700 13px var(--font); min-height:40px; padding:0 16px; border-radius:999px; cursor:pointer; display:inline-flex; align-items:center; gap:6px}
+button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+.stage{display:grid; grid-template-columns:250px minmax(0,1fr) 300px; gap:24px; align-items:start}
+.rail,.notes{background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:18px; display:flex; flex-direction:column; gap:14px; min-width:0}
+.rail h2,.notes h2{font:800 13px var(--font); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:0}
+.steps{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; position:relative}
+.steps::before{content:""; position:absolute; left:17px; top:18px; bottom:18px; width:3px; background:var(--line); border-radius:2px}
+.steps button{position:relative; width:100%; text-align:left; border:0; background:transparent; color:var(--fg); border-radius:14px; padding:8px 8px 8px 44px; cursor:pointer; min-height:52px; font:inherit}
+.steps button::before{content:""; position:absolute; left:9px; top:16px; width:19px; height:19px; border-radius:50%; background:var(--panel); box-shadow:inset 0 0 0 3px var(--line)}
+.steps button.past::before{background:var(--accent); box-shadow:none}
+.steps button[aria-current="step"]{background:var(--accent-soft)}
+.steps button[aria-current="step"]::before{background:var(--panel); box-shadow:inset 0 0 0 6px var(--accent)}
+.steps b{display:block; font:800 15px var(--font)}
+.steps small{display:block; color:var(--muted); font-size:13px; line-height:1.35}
+.meter{font:600 13px/1.4 var(--font); color:var(--muted); border-top:1px solid var(--line); padding-top:12px}
+.meter strong{color:var(--fg); font-variant-numeric:tabular-nums}
+.devcol{display:flex; flex-direction:column; align-items:center; gap:12px; min-width:0}
+.fit{width:100%; display:flex; justify-content:center; overflow:hidden}
+.fit-inner{transform-origin:top center}
+.cap{font:600 13px var(--font); color:var(--muted); text-align:center}
+.notes h3{font:800 20px/1.25 var(--font); margin:0; text-wrap:balance}
+.notes p{margin:0; color:var(--muted)}
+.nrow{display:flex; flex-direction:column; gap:3px; border-top:1px solid var(--line); padding-top:10px}
+.nrow b{font:800 12px var(--font); letter-spacing:.08em; text-transform:uppercase; color:var(--accent)}
+.nrow span{font-size:14px; line-height:1.45}
+section.blk{display:flex; flex-direction:column; gap:14px}
+section.blk > h2{font:800 24px var(--font); margin:0}
+.later{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px}
+.lcard{background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:6px}
+.lcard em{font:800 11px var(--font); font-style:normal; letter-spacing:.1em; color:var(--accent)}
+.lcard b{font:800 17px var(--font)}
+.lcard span{color:var(--muted); font-size:14px}
+.tbl{overflow-x:auto; background:var(--panel); border:1px solid var(--line); border-radius:18px}
+table{border-collapse:collapse; width:100%; min-width:720px; font-size:14px}
+th,td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--line); vertical-align:top}
+th{font:800 12px var(--font); letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:800}
+.why{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px}
+.why div{background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:16px}
+.why b{display:block; font:800 16px var(--font); margin-bottom:4px}
+.why span{color:var(--muted); font-size:14px}
+.foot{color:var(--muted); font-size:13px; max-width:100ch}
+.foot a{color:var(--accent)}
+@media (max-width:1240px){.stage{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .devcol{grid-column:1 / -1; order:-1} .later{grid-template-columns:repeat(2,minmax(0,1fr))} .why{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:720px){.stage{grid-template-columns:minmax(0,1fr)} .later{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- The device (its own light/dark, the app's Concept E tokens) ---------- */
+.dev{position:relative; font-family:var(--font)}
+.dev.ios{width:414px; height:868px; border-radius:66px; background:#1B181D; padding:12px; box-shadow:0 30px 60px -20px rgba(20,14,24,.45), inset 0 0 0 2px #3A353D}
+.dev.android{width:432px; height:932px; border-radius:46px; background:#1B181D; padding:10px; box-shadow:0 30px 60px -20px rgba(20,14,24,.45), inset 0 0 0 2px #3A353D}
+.dev.ipad{width:1220px; height:860px; border-radius:44px; background:#1B181D; padding:20px; box-shadow:0 30px 60px -20px rgba(20,14,24,.45), inset 0 0 0 2px #3A353D}
+.dev.mac{width:1280px; height:830px; border-radius:14px; background:transparent; padding:0; box-shadow:0 40px 80px -30px rgba(20,14,24,.55), 0 0 0 1px rgba(0,0,0,.25)}
+.screen{
+  --g:#FBF7F1; --s:#FFFDF9; --ink:#241F2B; --sec:#6A6273; --acc:#11615C; --accd:#0B4642; --on:#FFFFFF; --ln:#DDD7E0; --tint:#E2EFEC;
+  --night:#E6E2F4; --dawn:#FBE3CC; --dusk:#E9E2F7; --star:#A9A2CF; --day:#FFF0D2; --scrim:rgba(36,31,43,.28); --glass:rgba(255,253,249,.82); --sh:0 10px 30px -12px rgba(36,31,43,.28);
+  --c-ind:#5B5FD6; --c-cor:#DF6147; --c-amb:#AF7E22; --c-blu:#338ED1; --c-grn:#469763; --c-vio:#8B5CF6; --c-brn:#8C6A4F; --tip:#2E2836; --tipfg:#FBF7F1;
+  --sysdlg:#F2F2F7; --sysfg:#000000; --syssec:#3C3C43; --sysbtn:#0A7AFF; --sysln:rgba(60,60,67,.29); --adlg:#ECE6F0; --afg:#1D1B20; --abtn:#65558F;
+  position:relative; width:100%; height:100%; overflow:hidden; background:var(--g); color:var(--ink); border-radius:54px; isolation:isolate}
+.screen.dark{
+  --g:#171416; --s:#28232A; --ink:#F3ECE4; --sec:#C7BEC4; --acc:#5BC4B8; --accd:#A3E2D9; --on:#0B2321; --ln:#4A4348; --tint:#1E3A37;
+  --night:#16142A; --dawn:#3A2A1F; --dusk:#28233F; --star:#8C88BE; --day:#33291A; --scrim:rgba(0,0,0,.5); --glass:rgba(43,38,42,.86); --sh:0 10px 30px -12px rgba(0,0,0,.7);
+  --c-ind:#7A7EDE; --c-cor:#E2725B; --c-amb:#D9A23A; --c-blu:#4A9BD6; --c-grn:#4CA36B; --c-vio:#9672E6; --c-brn:#A67F60; --tip:#F3ECE4; --tipfg:#171416;
+  --sysdlg:#2C2C2E; --sysfg:#FFFFFF; --syssec:#EBEBF5; --sysbtn:#0A84FF; --sysln:rgba(84,84,88,.65); --adlg:#2B2930; --afg:#E6E0E9; --abtn:#D0BCFF}
+.android .screen{border-radius:36px}
+.ipad .screen{border-radius:26px}
+.mac .screen{border-radius:14px}
+.i{fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex:none}
+.sb{position:absolute; left:0; right:0; top:0; height:54px; display:flex; align-items:center; justify-content:space-between; padding:0 34px 0 46px; font:700 16px -apple-system, "SF Pro Text", var(--font); z-index:30; color:var(--ink); pointer-events:none}
+.android .sb{height:40px; padding:0 22px; font:500 14px var(--sys)}
+.island{position:absolute; left:50%; top:11px; width:124px; height:36px; margin-left:-62px; background:#000; border-radius:20px; z-index:31}
+.punch{position:absolute; left:50%; top:12px; width:22px; height:22px; margin-left:-11px; background:#000; border-radius:50%; z-index:31}
+.home{position:absolute; left:50%; bottom:8px; width:140px; height:5px; margin-left:-70px; border-radius:3px; background:var(--ink); opacity:.85; z-index:40}
+.android .home{width:108px; height:4px; margin-left:-54px; bottom:9px; opacity:.6}
+.sbi{display:flex; gap:6px; align-items:center}
+.titlebar{position:absolute; left:0; right:0; top:0; height:52px; display:flex; align-items:center; gap:8px; padding:0 18px; z-index:30}
+.tl{width:12px; height:12px; border-radius:50%}
+
+/* views */
+.vp{position:absolute; inset:0; overflow:hidden}
+.view{position:absolute; inset:0; display:flex; flex-direction:column; padding:60px 24px 34px}
+.android .view{padding-top:48px}
+.view.enter{animation:vin var(--dur-in) cubic-bezier(.05,.7,.1,1) both}
+.view.enter.back{animation-name:vinb}
+.view.exit{animation:vout var(--dur-out) cubic-bezier(.3,0,.8,.15) both; pointer-events:none}
+.view.exit.back{animation-name:voutb}
+@keyframes vin{from{opacity:0; transform:translateY(18px)}}
+@keyframes vinb{from{opacity:0; transform:translateY(-14px)}}
+@keyframes vout{to{opacity:0; transform:translateY(-12px)}}
+@keyframes voutb{to{opacity:0; transform:translateY(14px)}}
+.nav{height:48px; display:flex; align-items:center; gap:8px; flex:none}
+.back{height:44px; min-width:44px; border:0; background:none; color:var(--accd); font:600 17px var(--font); display:flex; align-items:center; gap:0; padding:0 4px 0 0; cursor:pointer; border-radius:22px}
+.android .back{width:48px; justify-content:center; padding:0; color:var(--ink)}
+.prog{flex:1; display:flex; align-items:center; justify-content:center; gap:0}
+.prog i{width:10px; height:10px; border-radius:50%; background:var(--s); box-shadow:inset 0 0 0 2px var(--ln); transition:all .4s}
+.prog i.on{background:var(--acc); box-shadow:none}
+.prog i.cur{width:14px; height:14px; background:var(--s); box-shadow:inset 0 0 0 4px var(--acc)}
+.prog b{width:26px; height:3px; background:var(--ln); position:relative; overflow:hidden}
+.prog b::after{content:""; position:absolute; inset:0; background:var(--acc); transform:scaleX(var(--f,0)); transform-origin:left; transition:transform .5s cubic-bezier(.2,0,0,1)}
+.navsp{width:60px}
+.android .navsp{width:48px}
+.h1{font:800 34px/40px var(--font); letter-spacing:-.01em; margin:0; text-wrap:balance}
+.h2{font:800 28px/34px var(--font); letter-spacing:-.01em; margin:14px 0 0; text-wrap:balance}
+.sub{font:500 17px/25px var(--font); color:var(--sec); margin:8px 0 0}
+.grow{flex:1; min-height:0; position:relative}
+.cta{display:flex; flex-direction:column; gap:8px; flex:none}
+.pbtn{height:56px; border:0; border-radius:28px; background:var(--acc); color:var(--on); font:800 17px var(--font); cursor:pointer; transition:transform .12s, opacity .2s; position:relative; overflow:hidden}
+.pbtn:active{transform:scale(.97)}
+.pbtn:disabled{opacity:.38; cursor:default; transform:none}
+.tbtn{height:50px; border:0; border-radius:25px; background:transparent; color:var(--accd); font:700 17px var(--font); cursor:pointer}
+.fine{font:500 13px var(--font); color:var(--sec); text-align:center; margin:6px 0 0}
+
+/* hello */
+.hero{display:flex; justify-content:center; align-items:center}
+.hero svg{width:300px; height:330px; overflow:visible}
+.seg-arc{fill:none; stroke-width:14; stroke-linecap:round; stroke-dasharray:var(--l) 999; stroke-dashoffset:var(--l); animation:draw .55s cubic-bezier(.3,0,.2,1) forwards; animation-delay:var(--d)}
+@keyframes draw{to{stroke-dashoffset:0}}
+.core{transform-box:fill-box; transform-origin:center; animation:pop .6s cubic-bezier(.34,1.56,.64,1) .1s both}
+@keyframes pop{from{transform:scale(0); opacity:0}}
+.thr{stroke-dasharray:160; stroke-dashoffset:160; animation:draw .6s cubic-bezier(.3,0,.2,1) 1.25s forwards}
+.pd{transform-box:fill-box; transform-origin:center; animation:pop .5s cubic-bezier(.34,1.56,.64,1) both}
+.rise{animation:rise .6s cubic-bezier(.05,.7,.1,1) both; animation-delay:var(--d,0s)}
+@keyframes rise{from{opacity:0; transform:translateY(14px)}}
+.clockt{font:800 22px var(--font); fill:var(--ink)}
+.clocks{font:700 11px var(--font); fill:var(--sec); letter-spacing:.08em}
+
+/* day dial */
+.dial{position:absolute; top:0; bottom:0; left:-24px; right:-24px; overflow:hidden; touch-action:none;
+  background:linear-gradient(to bottom, var(--night) 0%, var(--night) calc(var(--a) - 14%), var(--dawn) var(--a), var(--g) calc(var(--a) + 16%), var(--g) calc(var(--b) - 16%), var(--dusk) var(--b), var(--night) calc(var(--b) + 14%), var(--night) 100%);
+  -webkit-mask-image:linear-gradient(transparent, #000 9%, #000 91%, transparent); mask-image:linear-gradient(transparent, #000 9%, #000 91%, transparent)}
+.card .dial{left:-26px; right:-26px}
+.stars{position:absolute; left:0; right:0; pointer-events:none; opacity:.55; background-image:radial-gradient(circle, var(--star) 1px, transparent 1.6px), radial-gradient(circle, var(--star) .8px, transparent 1.3px); background-size:46px 34px, 29px 41px; background-position:8px 6px, 21px 19px}
+.stars.t{top:0; -webkit-mask-image:linear-gradient(#000 40%, transparent); mask-image:linear-gradient(#000 40%, transparent)}
+.stars.b{bottom:0; -webkit-mask-image:linear-gradient(transparent, #000 60%); mask-image:linear-gradient(transparent, #000 60%)}
+.ticks span::after{content:""; position:absolute; left:calc(100% + 40px); top:50%; width:260px; height:1px; background:linear-gradient(to right, var(--ln) 60%, transparent); opacity:.55}
+.ticks{position:absolute; left:38px; top:0; bottom:0; width:56px}
+.ticks span{position:absolute; right:0; transform:translateY(-50%); font:700 12px var(--font); color:var(--sec); font-variant-numeric:tabular-nums}
+.rail2{position:absolute; left:120px; top:0; bottom:0; width:4px; margin-left:-2px; background-image:linear-gradient(var(--ln) 50%, transparent 0); background-size:4px 10px}
+.awake{position:absolute; left:120px; width:6px; margin-left:-3px; background:var(--acc); border-radius:3px}
+.hdl{position:absolute; left:120px; width:52px; height:52px; margin:-26px 0 0 -26px; border-radius:50%; background:var(--s); box-shadow:var(--sh), 0 0 0 3px var(--hc) inset; color:var(--hc); display:flex; align-items:center; justify-content:center; cursor:grab; touch-action:none; z-index:3; transition:transform .15s}
+.hdl.drag{transform:scale(1.12); cursor:grabbing}
+.hdl.sun{--hc:var(--c-amb)} .hdl.moon{--hc:var(--c-ind)}
+.hdl{box-shadow:var(--sh), 0 0 0 3px var(--hc) inset, 0 0 0 9px color-mix(in srgb, var(--hc) 16%, transparent)}
+.hdl.drag{box-shadow:var(--sh), 0 0 0 3px var(--hc) inset, 0 0 0 14px color-mix(in srgb, var(--hc) 20%, transparent)}
+.bub{position:absolute; left:158px; transform:translateY(-50%); background:var(--s); border-radius:16px; padding:8px 14px; box-shadow:var(--sh); pointer-events:none; z-index:2}
+.bub b{display:block; font:800 20px var(--font); font-variant-numeric:tabular-nums}
+.bub small{display:block; font:700 12px var(--font); color:var(--sec); letter-spacing:.06em; text-transform:uppercase}
+.bub.tick{animation:tick .22s ease}
+@keyframes tick{50%{transform:translateY(-50%) scale(1.06)}}
+.sum{flex:none; text-align:center; font:700 15px var(--font); color:var(--sec); margin:10px 0 12px; font-variant-numeric:tabular-nums}
+.sum b{color:var(--ink)}
+.halo{position:absolute; left:96px; width:120px; height:120px; margin:-60px 0 0 -60px; border-radius:50%; pointer-events:none; opacity:.55; filter:blur(18px); transition:opacity .3s}
+
+/* rhythm */
+.rchips{flex:none; display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:10px 0 14px}
+.rchip{height:46px; border:0; border-radius:23px; padding:0 16px 0 6px; background:var(--s); color:var(--ink); font:700 15px var(--font); display:inline-flex; align-items:center; gap:8px; cursor:pointer; box-shadow:0 0 0 1px var(--ln) inset, 0 4px 12px -6px rgba(0,0,0,.18); transition:transform .15s, box-shadow .2s}
+.rchip:active{transform:scale(.95)}
+.rchip .rd{width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:var(--s); color:var(--cc); box-shadow:inset 0 0 0 3px var(--cc); transition:background .2s, color .2s}
+.rchip[aria-pressed="true"]{box-shadow:0 0 0 2px var(--cc) inset}
+.rchip[aria-pressed="true"] .rd{background:var(--cc); color:var(--s)}
+.addown{flex:none; display:flex; align-items:center; gap:8px; height:52px; padding:0 4px 0 8px; margin:0 0 12px; border-radius:26px; background:var(--s); box-shadow:0 0 0 1px var(--ln) inset}
+.addown:focus-within{box-shadow:0 0 0 2px var(--acc) inset}
+.addown .rd{width:34px; height:34px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; color:var(--cc); box-shadow:inset 0 0 0 3px var(--cc); transition:color .2s, box-shadow .2s}
+.addown input{flex:1; min-width:0; border:0; outline:0; background:transparent; color:var(--ink); font:700 15px var(--font)}
+.addown input::placeholder{color:var(--sec); font-weight:500}
+.ao-add{width:44px; height:44px; border:0; border-radius:22px; background:var(--acc); color:var(--on); display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none}
+.ao-add:disabled{opacity:.38; cursor:default}
+.trow.routine .dt{width:32px; height:32px; left:82px; top:-16px; box-shadow:0 0 0 3px var(--cc) inset}
+.trow.cmp .lb small{display:none} .trow.cmp .lb{top:-11px} .trow.cmp .lb b{font-size:14px}
+.trow.routine.cmp .dt{width:24px; height:24px; left:86px; top:-12px} .trow.routine.cmp .dt svg{width:14px; height:14px}
+.trow.anchor.cmp .dt{width:32px; height:32px; left:82px; top:-16px}
+.trow.routine:not(.cmp) .lb{top:-17px} .trow.routine:not(.cmp) .lb b{font-size:15px} .trow.routine .lb small{font-size:12px}
+.fly{position:absolute; z-index:40; border-radius:50%; background:var(--cc); pointer-events:none; box-shadow:0 6px 14px -4px rgba(0,0,0,.35)}
+
+/* first thing */
+.field{margin-top:18px; display:flex; align-items:center; gap:10px; height:58px; padding:0 8px 0 18px; border-radius:29px; background:var(--s); box-shadow:0 0 0 2px var(--acc), var(--sh)}
+.field input{flex:1; min-width:0; border:0; outline:0; background:transparent; color:var(--ink); font:700 19px var(--font)}
+.field input::placeholder{color:var(--sec); font-weight:500}
+.chip{display:flex; align-items:center; gap:8px; min-height:30px; margin-top:10px; font:700 14px var(--font); color:var(--sec)}
+.chip .pill{display:inline-flex; align-items:center; gap:6px; padding:4px 10px 4px 6px; border-radius:15px; background:var(--tint); color:var(--accd); animation:rise .3s cubic-bezier(.05,.7,.1,1) both}
+.chip .pd2{width:18px; height:18px; border-radius:50%; background:var(--cc)}
+.sugg{display:flex; gap:8px; flex-wrap:wrap; margin-top:6px}
+.sugg button{height:40px; border:0; border-radius:20px; padding:0 14px; background:var(--s); color:var(--ink); font:700 14px var(--font); box-shadow:0 0 0 1px var(--ln) inset; cursor:pointer; display:flex; align-items:center; gap:6px}
+.sugg button i{width:10px; height:10px; border-radius:50%; background:var(--cc)}
+.tl2{position:absolute; inset:12px 0 8px}
+.tline{position:absolute; left:98px; width:4px; margin-left:-2px; background:var(--ln); border-radius:2px}
+.tpast{position:absolute; left:98px; width:4px; margin-left:-2px; background:var(--acc); border-radius:2px}
+.trow{position:absolute; left:0; right:0; height:0}
+.trow .tt{position:absolute; right:calc(100% - 72px); top:-10px; font:700 13px var(--font); color:var(--sec); font-variant-numeric:tabular-nums; white-space:nowrap}
+.trow .dt{position:absolute; left:78px; top:-20px; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:var(--s); color:var(--cc); box-shadow:0 0 0 3px var(--cc) inset}
+.trow.task .dt{background:var(--cc); color:var(--s); box-shadow:none; width:44px; height:44px; left:76px; top:-22px; cursor:pointer; border:0; padding:0}
+.trow .lb{position:absolute; left:132px; right:0; top:-21px; line-height:1.25}
+.trow .lb b{display:block; font:800 17px var(--font); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.trow .lb small{display:block; font:600 13px var(--font); color:var(--sec)}
+.trow.ghost{transition:top .42s cubic-bezier(.34,1.4,.64,1), opacity .25s}
+.trow.ghost .dt{background:transparent; box-shadow:0 0 0 2.5px var(--cc) inset; border:0; opacity:.9}
+.trow.ghost .dt::after{content:""; width:16px; height:16px; border-radius:50%; background:var(--cc); opacity:.5}
+.trow.ghost .lb b{color:var(--sec)}
+.nowm{position:absolute; left:66px; right:0; height:0; z-index:2}
+.nowm::before{content:""; position:absolute; left:20px; right:0; top:-1px; height:2px; background:var(--c-cor); opacity:.55}
+.nowm span{position:absolute; left:0; top:-11px; height:22px; padding:0 7px; border-radius:11px; background:var(--c-cor); color:#FFFFFF; font:800 11px/22px var(--font); letter-spacing:.04em}
+.drop{animation:drop .62s cubic-bezier(.3,0,.2,1) both}
+@keyframes drop{0%{transform:translateY(-160px); opacity:0}55%{transform:translateY(0); opacity:1}72%{transform:translateY(-12px)}86%{transform:translateY(0)}93%{transform:translateY(-3px)}100%{transform:none}}
+.trow.task.done .dt{background:var(--s); color:var(--cc); box-shadow:0 0 0 3px var(--cc) inset}
+.trow.task.done .lb b{text-decoration:line-through; text-decoration-thickness:2px; color:var(--sec)}
+.burst{position:absolute; left:98px; top:0; width:44px; height:44px; margin:-22px 0 0 -22px; border-radius:50%; box-shadow:0 0 0 3px var(--cc); pointer-events:none; animation:burst .5s ease-out forwards}
+@keyframes burst{to{transform:scale(2.1); opacity:0}}
+
+/* banner + sheet + dialogs */
+.banner{position:absolute; left:12px; right:12px; top:56px; z-index:50; display:flex; gap:12px; align-items:center; padding:12px 14px; border-radius:24px; background:var(--glass); backdrop-filter:blur(20px) saturate(1.6); -webkit-backdrop-filter:blur(20px) saturate(1.6); box-shadow:var(--sh); animation:bannerIn .42s cubic-bezier(.05,.7,.1,1) .45s both}
+.android .banner{top:44px; border-radius:20px}
+@keyframes bannerIn{from{transform:translateY(-130%); opacity:0}}
+.appic{width:40px; height:40px; border-radius:11px; flex:none; background:var(--acc); display:flex; align-items:center; justify-content:center}
+.appic i{width:16px; height:16px; border-radius:50%; background:var(--on); box-shadow:0 0 0 4px var(--acc), 0 0 0 6px var(--on)}
+.banner .bt{flex:1; min-width:0; line-height:1.3}
+.banner .bt b{font:800 15px var(--font)} .banner .bt span{display:block; font:500 14px var(--font); color:var(--sec)}
+.banner .when{font:600 12px var(--font); color:var(--sec); align-self:flex-start}
+.pv{position:absolute; top:-9px; left:16px; font:800 10px/18px var(--font); letter-spacing:.1em; padding:0 7px; border-radius:9px; background:var(--tip); color:var(--tipfg)}
+.sheet{position:absolute; left:8px; right:8px; bottom:8px; z-index:45; background:var(--s); border-radius:40px; padding:26px 22px 24px; box-shadow:0 -10px 40px -10px rgba(0,0,0,.3); animation:sheetIn .5s cubic-bezier(.05,.7,.1,1) .8s both}
+.android .sheet{border-radius:28px 28px 28px 28px}
+@keyframes sheetIn{from{transform:translateY(110%)}}
+.sheet .h2{margin:0}
+.scrim{position:absolute; inset:0; background:var(--scrim); z-index:60; animation:fade .25s both; display:flex; align-items:center; justify-content:center}
+@keyframes fade{from{opacity:0}}
+.ialert{width:270px; border-radius:14px; background:var(--sysdlg); color:var(--sysfg); text-align:center; font-family:-apple-system,"SF Pro Text",var(--font); overflow:hidden; animation:alertIn .3s cubic-bezier(.2,1.2,.4,1) both}
+@keyframes alertIn{from{transform:scale(1.15); opacity:0}}
+.ialert .at{padding:19px 16px 15px} .ialert b{display:block; font-size:17px; line-height:22px; font-weight:600} .ialert p{margin:4px 0 0; font-size:13px; line-height:18px; color:var(--syssec)}
+.ialert .ab{display:flex; border-top:.5px solid var(--sysln)} .ialert .ab button{flex:1; height:44px; border:0; background:none; color:var(--sysbtn); font:400 17px -apple-system,var(--font); cursor:pointer}
+.ialert .ab button + button{border-left:.5px solid var(--sysln); font-weight:600}
+.adlg{width:312px; border-radius:28px; background:var(--adlg); color:var(--afg); padding:24px; font-family:var(--sys); text-align:center; animation:alertIn .3s cubic-bezier(.2,1.2,.4,1) both}
+.adlg b{display:block; font:400 24px/32px var(--sys); margin:14px 0 22px}
+.adlg button{display:block; width:100%; height:40px; border:0; border-radius:20px; margin-top:8px; font:500 14px var(--sys); cursor:pointer; background:var(--abtn); color:var(--adlg)}
+.adlg button + button{background:transparent; color:var(--abtn); box-shadow:inset 0 0 0 1px var(--abtn)}
+.mbanner{position:absolute; right:16px; top:60px; width:340px; z-index:70; border-radius:16px; background:var(--glass); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:var(--sh); padding:12px; display:flex; gap:10px; animation:bannerX .4s cubic-bezier(.05,.7,.1,1) both; font-family:-apple-system,var(--font)}
+@keyframes bannerX{from{transform:translateX(120%)}}
+.mbanner .bt{flex:1; font-size:13px; line-height:1.35} .mbanner .bt b{display:block}
+.mbanner .mb{display:flex; flex-direction:column; gap:6px} .mbanner .mb button{height:28px; padding:0 12px; border:0; border-radius:8px; background:var(--s); color:var(--ink); font:600 13px var(--font); cursor:pointer}
+
+/* today */
+.today .bigt{font:800 34px/40px var(--font); margin:8px 0 0}
+.today .date{font:700 15px var(--font); color:var(--sec)}
+.hint{position:absolute; z-index:20; height:40px; padding:0 14px; border-radius:20px; background:var(--tip); color:var(--tipfg); display:flex; align-items:center; gap:8px; font:700 14px var(--font); white-space:nowrap; transition:opacity .4s, transform .4s; animation:rise .5s cubic-bezier(.05,.7,.1,1) 1.1s both}
+.hint::before{content:""; position:absolute; left:-6px; top:14px; border:6px solid transparent; border-left:0; border-right-color:var(--tip)}
+.hint.gone{opacity:0; transform:translateY(-6px); pointer-events:none}
+.sync{flex:none; display:flex; align-items:center; gap:12px; padding:12px 8px 12px 14px; border-radius:22px; background:var(--s); box-shadow:0 0 0 1px var(--ln) inset; margin:8px 0 10px; animation:rise .5s cubic-bezier(.05,.7,.1,1) 1.6s both; transition:opacity .3s, transform .3s}
+.sync.gone{opacity:0; transform:translateY(10px)}
+.sync .st{flex:1; line-height:1.3} .sync .st b{display:block; font:800 15px var(--font)} .sync .st span{font:500 13px var(--font); color:var(--sec)}
+.sync .sbtn{height:40px; border:0; border-radius:20px; padding:0 14px; background:var(--tint); color:var(--accd); font:800 14px var(--font); cursor:pointer}
+.xbtn{width:44px; height:44px; border:0; background:none; color:var(--sec); display:flex; align-items:center; justify-content:center; cursor:pointer; border-radius:22px}
+.tabs{flex:none; display:flex; justify-content:space-around; height:62px; margin:0 -12px -8px; border-radius:31px; background:var(--glass); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); box-shadow:var(--sh); align-items:center}
+.android .tabs{border-radius:0; margin:0 -24px -34px; height:80px; padding-bottom:14px; box-shadow:none; background:var(--s)}
+.tabs span{display:flex; flex-direction:column; align-items:center; gap:2px; font:700 11px var(--font); color:var(--sec); min-width:60px}
+.tabs span.on{color:var(--accd)}
+.android .tabs span.on svg{background:var(--tint); border-radius:16px; width:56px; padding:4px 16px; height:32px}
+.stg .trow,.stg .nowm,.stg .sync{animation:rise .5s cubic-bezier(.05,.7,.1,1) both}
+
+/* wide (iPad, Mac/web): the steps in a card over your own Today, blurred */
+.wide .back-app{position:absolute; inset:0; display:flex; transition:filter .7s cubic-bezier(.2,0,0,1), transform .7s cubic-bezier(.2,0,0,1)}
+.wide .back-app.blur{filter:blur(16px) saturate(.85); transform:scale(1.03)}
+.side{width:250px; flex:none; padding:70px 14px 20px; display:flex; flex-direction:column; gap:2px}
+.ipad .side{margin:14px; border-radius:24px; background:var(--glass); box-shadow:var(--sh); padding-top:50px}
+.mac .side{background:var(--s); box-shadow:1px 0 0 var(--ln)}
+.side span{height:40px; display:flex; align-items:center; gap:10px; padding:0 12px; border-radius:12px; font:700 15px var(--font); color:var(--ink)}
+.side span.on{background:var(--tint); color:var(--accd)}
+.side span.sub2{padding-left:40px; font-weight:600; color:var(--sec)}
+.side em{font:800 11px var(--font); font-style:normal; letter-spacing:.1em; color:var(--sec); padding:14px 12px 4px}
+.main{flex:1; min-width:0; padding:64px 48px 30px; display:flex; flex-direction:column}
+.wscrim{position:absolute; inset:0; background:var(--scrim); opacity:.6; transition:opacity .6s; z-index:5}
+.wscrim.gone{opacity:0; pointer-events:none}
+.card{position:absolute; left:50%; top:50%; width:440px; height:760px; margin:-372px 0 0 -220px; border-radius:36px; background:var(--g); box-shadow:0 40px 90px -30px rgba(0,0,0,.5); overflow:hidden; z-index:10; transition:transform .6s cubic-bezier(.2,0,0,1), opacity .45s}
+.card.gone{transform:scale(.94); opacity:0; pointer-events:none}
+.card .view{padding:22px 26px 24px}
+.wide .sheet{left:10px; right:10px; bottom:10px; border-radius:30px}
+.card .banner{top:74px; left:14px; right:14px}
+
+.rm .view.enter,.rm .view.exit{animation-name:fade !important; animation-duration:.2s !important; transform:none}
+.rm .view.exit{animation-name:fadeo !important}
+@keyframes fadeo{to{opacity:0}}
+.rm .seg-arc,.rm .thr{animation:none; stroke-dashoffset:0}
+.rm .core,.rm .pd,.rm .rise,.rm .drop,.rm .chip .pill,.rm .stg .trow,.rm .stg .nowm,.rm .stg .sync,.rm .hint{animation:fade .2s both}
+.rm .banner,.rm .sheet,.rm .mbanner,.rm .ialert,.rm .adlg{animation:fade .2s both}
+.rm .trow.ghost{transition:opacity .2s}
+.rm .bub.tick{animation:none}
+.bub,.awake{transition:none}
+.rm .wide .back-app,.rm .card{transition:filter .2s, opacity .2s}
+.rm .back-app.blur{transform:none}
+.rm .card.gone{transform:none}
+.rm .burst{display:none}
+@media (prefers-reduced-motion: reduce){.ghostbtn,.seg button{transition:none}}
+</style>
+
+<div class="page" id="page">
+  <header>
+    <div class="eyebrow">Concept E · Round 2 · R2-16 · Interactive prototype</div>
+    <h1>Onboarding you can try</h1>
+    <p class="lede">The R2-16 onboarding, redesigned and wired up. Tap through it on each platform: drag the sun and the moon, type a real first task, and see the reminder ask arrive at the moment it means something. Proposed for review; nothing is built.</p>
+  </header>
+
+  <div class="bar" role="toolbar" aria-label="Prototype controls">
+    <div class="ctl"><span id="lp">Platform</span><div class="seg" role="group" aria-labelledby="lp" id="c-plat">
+      <button id="p-ios" data-v="ios" aria-pressed="true">iPhone</button><button id="p-android" data-v="android" aria-pressed="false">Android</button><button id="p-ipad" data-v="ipad" aria-pressed="false">iPad</button><button id="p-mac" data-v="mac" aria-pressed="false">Mac and web</button></div></div>
+    <div class="ctl"><span id="lt">Device theme</span><div class="seg" role="group" aria-labelledby="lt" id="c-theme">
+      <button id="t-light" data-v="light" aria-pressed="true">Light</button><button id="t-dark" data-v="dark" aria-pressed="false">Dark</button></div></div>
+    <div class="ctl"><span id="lm">Motion</span><div class="seg" role="group" aria-labelledby="lm" id="c-motion">
+      <button id="m-full" data-v="full" aria-pressed="true">Full</button><button id="m-reduced" data-v="reduced" aria-pressed="false">Reduced</button></div></div>
+    <button class="ghostbtn" id="restart" type="button"><svg class="i" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.5-5.8M4 4v4h4"/></svg>Start over</button>
+  </div>
+
+  <div class="stage">
+    <nav class="rail" aria-label="Steps">
+      <h2>The flow</h2>
+      <ol class="steps" id="steps"></ol>
+      <div class="meter" id="meter"></div>
+    </nav>
+    <div class="devcol">
+      <div class="fit" id="fit"><div class="fit-inner" id="fitin"></div></div>
+      <div class="cap" id="cap"></div>
+    </div>
+    <aside class="notes" aria-live="polite" id="notes"></aside>
+  </div>
+
+  <section class="blk" aria-labelledby="h-later">
+    <h2 id="h-later">Later, when it helps</h2>
+    <p class="foot" style="margin:0">Everything the built flow asked up front now waits for the moment it is useful. Each is one dismissible card, shown once.</p>
+    <div class="later">
+      <div class="lcard"><em>DAY 2 · ON OPEN</em><b>Want it simpler?</b><span>Try Less: just the next dot. One tap to switch back.</span></div>
+      <div class="lcard"><em>AFTER 3 TASKS</em><b>Make it a habit</b><span>Your routines land as “most days”. After three tasks: repeat Gym every Mon, Wed, Fri? It suggests; you decide.</span></div>
+      <div class="lcard"><em>FIRST WIND DOWN</em><b>Close the day</b><span>Move what’s left to tomorrow, kindly. No streaks.</span></div>
+      <div class="lcard"><em>SECOND DEVICE</em><b>Sign in to sync</b><span>Only when it helps; the app works fully without it.</span></div>
+    </div>
+  </section>
+
+  <section class="blk" aria-labelledby="h-motion">
+    <h2 id="h-motion">Motion, haptics and Reduce Motion</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Moment</th><th>Full motion</th><th>Reduce Motion</th><th>Haptic (iOS / Android)</th></tr></thead>
+      <tbody>
+        <tr><td>The day dot</td><td>Five arcs draw in turn (90 ms apart, 550 ms each), the centre pops with a spring, the thread drops out of it.</td><td>Shown complete.</td><td>None</td></tr>
+        <tr><td>Changing step</td><td>New content rises 18 px and fades in, 420 ms, emphasized decelerate; Back reverses it.</td><td>200 ms cross-fade.</td><td>None</td></tr>
+        <tr><td>Sun and moon</td><td>Follow the finger. The sky moves with them; the time label pops at each hour.</td><td>Follow the finger; no pop.</td><td>Selection tick at each hour / CLOCK_TICK</td></tr>
+        <tr><td>What fills your days</td><td>The chip’s dot arcs onto its time on the thread, 560 ms, then the row settles with a small pop.</td><td>The row fades in.</td><td>Selection tick on each chip</td></tr>
+        <tr><td>Typing a time</td><td>A ghost dot glides to the time it reads, spring 420 ms.</td><td>The ghost dot fades in at the time.</td><td>None</td></tr>
+        <tr><td>Put it on today</td><td>The dot drops onto its time with one small bounce, 620 ms.</td><td>Appears in place.</td><td>Light impact on landing / CONFIRM</td></tr>
+        <tr><td>Reminder preview</td><td>Slides down from the top like the real one; the ask rises from the bottom.</td><td>Both fade in.</td><td>None</td></tr>
+        <tr><td>You’re in (tablets, Mac, web)</td><td>The card shrinks to 94% and fades; the blur over your Today clears, 700 ms.</td><td>Cross-fade.</td><td>None</td></tr>
+        <tr><td>Tap the dot</td><td>Fills with a check and a ring that fades outward, 500 ms.</td><td>Check appears.</td><td>Success / CONFIRM</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section class="blk" aria-labelledby="h-why">
+    <h2 id="h-why">Why this beats the built flow</h2>
+    <div class="why">
+      <div><b>Value before set-up</b><span>Four required taps from launch to your own Today (Get started, Continue, That’s my day or Skip for now, Put it on today). The built flow has seven steps.</span></div>
+      <div><b>Ask in context</b><span>Notifications are asked right after the first task, with that task’s own reminder previewed; the system prompt follows a yes. Android 13+ and Apple guidance both ask for this.</span></div>
+      <div><b>Your data, not a sample</b><span>The sun and moon shape the thread, the routines you tap land on it, and the first task joins them. Nothing to unlearn, and on tablets your own Today is visible behind the card the whole time.</span></div>
+      <div><b>One identity, native presentation</b><span>Same steps and brand everywhere; Back, system dialogs, status bars, tab bars and haptics follow each platform (RD-0001).</span></div>
+      <div><b>Accessible by construction</b><span>The sun and moon are sliders (arrow keys, swipe up or down with VoiceOver and TalkBack); every step scrolls at 200% text; colour is never the only signal.</span></div>
+      <div><b>No-shame and private</b><span>“Not now” is never held against you. The first task is read on the device; nothing leaves it without an account.</span></div>
+    </div>
+    <p class="foot">Copy: built strings kept where they exist (Wake Up, Wind Down, Sign in to sync, the 13+ note); new lines are proposals for owner review. Mac and web share one layout at the same width; the web asks for notifications through the browser’s own prompt. Sources: <a href="https://developer.apple.com/videos/play/wwdc2025/246/">Apple WWDC25 privacy guidance</a>, <a href="https://m2.material.io/design/communication/onboarding.html">Material onboarding</a>, <a href="https://developer.android.com/develop/ui/compose/notifications/notification-permission">Android notification permission</a>.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+const IC={
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>',
+  moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  chevL:'<path d="M15 5l-7 7 7 7"/>', arrL:'<path d="M20 12H5M11 6l-6 6 6 6"/>', check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>', bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/>',
+  gym:'<path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/>', call:'<path d="M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
+  focus:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>', task:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  cloud:'<path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 9.2 4.5 4.5 0 0 0 7 18z"/>', today:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+  plan:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>', review:'<path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/>',
+  search:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>', inbox:'<path d="M4 13l2.5-7h11L20 13v6H4zM4 13h5l1 2h4l1-2h5"/>', gear:'<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>',
+  run:'<circle cx="14" cy="4.5" r="1.5"/><path d="M9 20l3-6 3 2v5M6 11l3.5-3 4 1 2 3 3 1"/>', read:'<path d="M12 6.5C10 5 7 4.5 4 5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5zM12 6.5V19"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>', dot:'<circle cx="12" cy="12" r="4"/>', meal:'<path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 1-3 4-3 8h3v10"/>', pill:'<rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)"/><path d="M9.5 9.5l5 5"/>', music:'<path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 7l9 6 9-6"/>'
+};
+const sv=(n,s=20,w=2)=>`<svg class="i" width="${s}" height="${s}" viewBox="0 0 24 24" aria-hidden="true" style="stroke-width:${w}">${IC[n]}</svg>`;
+const NOW=581; // 9:41
+const STEPS=[
+  {t:'Hello',d:'The day dot draws itself. One promise, one button.'},
+  {t:'Your day',d:'Drag the sun and the moon. The only set-up.'},
+  {t:'What fills your days',d:'Tap the usual things. They land on your thread.'},
+  {t:'Your first thing',d:'Type it like you’d say it. The time is read as you type.'},
+  {t:'A nudge, in context',d:'Your task lands; its own reminder is previewed, then asked.'},
+  {t:'You’re in',d:'The real Today, already yours.'}
+];
+const NOTES=[
+  {h:'Hello',what:'One promise and one action. The day dot draws itself as five coloured parts of a day, and its thread drops into the next screen. No splash, no carousel, no account wall.',motion:'Arcs draw in turn, the centre pops with a spring, the thread drops (about 1.8 s in all, plays once). Press Replay on the left to see it again.',a11y:'The dot is one image (“The day dot”). The 13+ note sits on this first screen. “I have an account” goes straight to sign-in and restore.'},
+  {h:'Your day',what:'Drag the sun for Wake Up and the moon for Wind Down. The sky follows, the awake part of the thread fills in, and the total updates live. Defaults of 7:00 and 11:00 make this one tap.',motion:'Handles follow the finger and grow while held; the time label pops at each hour with a selection haptic.',a11y:'Each handle is a slider: arrow keys move 15 minutes, Page Up and Page Down move an hour; VoiceOver and TalkBack read “Wake Up, 7:00 AM”.'},
+  {h:'What fills your days?',what:'Tap the things that are part of most days. Each one flies onto your thread at a time that fits the day you just drew: a run soon after Wake Up, reading before Wind Down. Or type your own and press Return: it gets a matching icon (a plain dot if none fits) and lands at the time you typed, or in the biggest free gap. Tapping none is fine; the button becomes “Skip for now”.',motion:'The chip’s dot arcs onto the thread (560 ms) and the row settles with a small pop; tapping again lifts it off. The rows are your thread from here on, through to Today.',a11y:'Each chip is a toggle button (“Gym, not selected”); the add field has a label and works with Return or the + button. Times follow Wake Up and Wind Down and can be changed in Today. A routine you also type as today’s task is shown once.'},
+  {h:'Your first thing',what:'Type one real thing, like “gym 6pm”. The time is read on the device as you type and a ghost dot glides to it on your own thread. Or tap a suggestion.',motion:'The ghost dot moves with a gentle spring each time the time changes; the reading chip rises in.',a11y:'The reading is announced politely (“Gym, 6:00 PM, 1 hour”). Without a time the task goes to the next free slot, and you can move it later.'},
+  {h:'A nudge, in context',what:'Your task drops onto its time. Then a preview of its exact reminder slides in, and only now the app asks. “Allow nudges” shows the system prompt; “Not now” goes straight in.',motion:'Drop with one small bounce, then the banner from the top, then the ask from the bottom, staggered so each reads on its own.',a11y:'Focus moves to the ask. Either answer reaches Today. The app works fully without notifications, as Android 13+ requires.'},
+  {h:'You’re in',what:'This is the real Today, not a summary screen. One hint (“Tap the dot when it’s done”) disappears after the first tap, and a small sync offer can be dismissed. Try tapping the task’s dot.',motion:'Rows rise in turn. On tablets, Mac and web the card fades away and the blur over your Today clears.',a11y:'The hint is announced once and never comes back. The sync card has a close button with a 44 pt target.'}
+];
+const PLAT={
+  ios:{cap:'iPhone · compact · large titles, ‹ Back, the iOS notification alert, haptic ticks',w:414,h:868},
+  android:{cap:'Android phone · compact · ← Back with predictive back, the Android 13+ permission dialog, edge to edge',w:432,h:932},
+  ipad:{cap:'iPad · expanded · the same steps in a card over your own Today, which stays visible (blurred) the whole time',w:1220,h:860},
+  mac:{cap:'Mac and web · expanded · same card over the app window; Return continues, Esc goes back, arrows move the sun and moon',w:1280,h:830}
+};
+const prm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pageDark=()=>{const t=document.documentElement.dataset.theme; if(t) return t==='dark'; return matchMedia('(prefers-color-scheme: dark)').matches;};
+const st={plat:'ios',theme:pageDark()?'dark':'light',rm:prm,step:0,wake:420,wind:1380,text:'',task:null,nudge:null,dialog:false,hint:true,sync:true,done:false,acct:false,t0:performance.now(),taps:0,routines:new Set(),custom:[]};
+const fmt=m=>{m=((m%1440)+1440)%1440; let h=Math.floor(m/60), mm=m%60, ap=h<12?'AM':'PM'; h=h%12||12; return `${h}:${String(mm).padStart(2,'0')} ${ap}`;};
+const hrs=m=>{const h=Math.floor(m/60), r=m%60; return !h?`${r} min`:r?`${h} h ${r} min`:`${h} h`;};
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function kind(title){const t=title.toLowerCase();
+  const M=[[/gym|workout|lift|weights/,'gym','--c-cor',60],[/run|jog|walk|hike|dog|bike|cycl|swim|yoga|stretch/,'run','--c-cor',45],[/call|meet|chat|1:1|sam|standup/,'call','--c-blu',30],
+    [/deep|focus|write|roadmap|study|work|code/,'focus','--c-ind',90],[/read|book/,'read','--c-brn',30],[/breakfast|lunch|dinner|cook|meal|eat/,'meal','--c-amb',45],
+    [/med|pill|vitamin/,'pill','--c-vio',15],[/music|piano|guitar|practi|sing/,'music','--c-vio',30]];
+  for(const [re,icon,c,dur] of M) if(re.test(t)) return {icon,c,dur};
+  return {icon:'task',c:'--c-grn',dur:30};}
+function parse(s){
+  const raw=s.trim(); if(!raw) return null;
+  let m=null, best=null;
+  for(const x of raw.matchAll(/\b(?:at\s+)?(\d{1,2})(?::(\d{2}))?\s*(am|pm|a\.m\.|p\.m\.)?(?=[\s.,!]|$)/gi)){ if(x[2]||x[3]||/^at/i.test(x[0])){best=x;break;} }
+  let time=null, inferred=false;
+  if(best){ let h=+best[1], mi=+(best[2]||0); const ap=(best[3]||'').toLowerCase();
+    if(h<=23&&mi<60){ if(ap.startsWith('p')&&h<12) h+=12; else if(ap.startsWith('a')&&h===12) h=0; else if(!ap&&h<7) h+=12; time=h*60+mi; m=best; } }
+  if(time===null){ const w=raw.match(/\b(noon|tonight|this evening|this morning|this afternoon)\b/i);
+    if(w){ time={noon:720,tonight:1200,'this evening':1140,'this morning':540,'this afternoon':900}[w[1].toLowerCase()]; m=w; } }
+  let title=m?raw.replace(m[0],' '):raw; title=title.replace(/\s+/g,' ').replace(/\s+(at|by|@)$/i,'').trim();
+  if(!title) title='New task'; title=title.charAt(0).toUpperCase()+title.slice(1);
+  if(time===null){ time=Math.ceil((NOW+1)/30)*30; inferred=true; }
+  const k=kind(title); return {title, time, inferred, ...k};
+}
+const RT=[{id:'run',t:'Morning run',c:'--c-cor',icon:'run'},{id:'deep',t:'Deep work',c:'--c-ind',icon:'focus'},{id:'gym',t:'Gym',c:'--c-vio',icon:'gym'},{id:'read',t:'Read',c:'--c-brn',icon:'read'}];
+function allRT(){ return [...RT, ...st.custom]; }
+function rtime(id){ const cu=st.custom.find(x=>x.id===id); if(cu) return cu.time; const q=m=>Math.round(m/15)*15; return {run:q(st.wake+15),deep:q(Math.max(540,st.wake+60)),gym:q(Math.min(1080,st.wind-120)),read:q(st.wind-90)}[id]; }
+function clampT(t){return Math.min(Math.max(t, st.wake), st.wind);}
+
+/* ---------- thread (vertical day) ---------- */
+function threadHTML(h, opts={}){
+  const pad=28, y=t=>pad+(clampT(t)-st.wake)/(st.wind-st.wake)*(h-2*pad);
+  const items=[{t:st.wake,lb:'Wake Up',sm:fmt(st.wake),icon:'sun',c:'--c-amb',k:'anchor'}];
+  if(st.task&&!opts.noTask) items.push({t:st.task.time,lb:st.task.title,sm:`${fmt(st.task.time)} · ${hrs(st.task.dur)}`,icon:st.task.icon,c:st.task.c,k:'task'});
+  allRT().forEach(rt=>{ if(!st.routines.has(rt.id)) return; if(st.task&&!opts.noTask&&st.task.title.toLowerCase().startsWith(rt.t.toLowerCase())) return;
+    items.push({t:rtime(rt.id),lb:rt.t,sm:'Most days',icon:rt.icon,c:rt.c,k:'routine',id:rt.id}); });
+  items.push({t:st.wind,lb:'Wind Down',sm:fmt(st.wind),icon:'moon',c:'--c-ind',k:'anchor'});
+  items.sort((a,b)=>a.t-b.t||(a.k==='anchor'&&a.icon==='moon'?1:-1)); let ys=items.map(i=>y(i.t));
+  const gp=(a,b)=>(a.k==='routine'&&b.k==='routine')?40:(a.k==='routine'||b.k==='routine')?46:52;
+  let need=0; for(let i=1;i<items.length;i++) need+=gp(items[i-1],items[i]); const kf=Math.min(1,(h-2*pad)/need);
+  for(let i=1;i<ys.length;i++) ys[i]=Math.max(ys[i], ys[i-1]+gp(items[i-1],items[i])*kf);
+  for(let i=ys.length-2;i>=0;i--) ys[i]=Math.min(ys[i], ys[i+1]-gp(items[i],items[i+1])*kf);
+  const top=ys[0], bot=ys[ys.length-1], ny=y(NOW);
+  let html=`<div class="tline" style="top:${top}px;height:${bot-top}px"></div><div class="tpast" style="top:${top}px;height:${Math.max(0,ny-top)}px"></div>`;
+  html+=`<div class="nowm" style="top:${ny}px"><span>NOW</span></div>`;
+  items.forEach((it,i)=>{
+    const d=opts.stagger?` style="top:${ys[i]}px;animation-delay:${.15+i*.12}s"`:` style="top:${ys[i]}px"`;
+    const cls=`trow ${it.k}${kf<1&&it.k!=='task'?' cmp':''}${it.k==='task'&&st.done?' done':''}${it.k==='task'&&opts.drop?' drop':''}`;
+    const dot=it.k==='task'
+      ? `<button class="dt" id="taskdot" style="--cc:var(${it.c})" aria-label="${esc(it.lb)}, ${it.sm}${st.done?', done':''}. ${st.done?'Mark not done':'Mark done'}">${sv(st.done?'check':it.icon,20,2.4)}</button>`
+      : `<span class="dt" style="--cc:var(${it.c})">${sv(it.icon,20)}</span>`;
+    html+=`<div class="${cls}"${it.id?` data-id="${it.id}"`:''}${d}><span class="tt">${fmt(it.t)}</span>${dot}<span class="lb"><b>${esc(it.lb)}</b><small>${it.k==='anchor'?(it.icon==='sun'?'Start of your day':'Time to slow down'):it.sm}</small></span></div>`;
+  });
+  if(opts.ghost) html+=`<div class="trow ghost" id="ghost" style="top:${y(NOW)}px;opacity:0;--cc:var(--c-grn)"><span class="tt" id="g-tt"></span><span class="dt"></span><span class="lb"><b id="g-lb"></b><small>Not placed yet</small></span></div>`;
+  return {html, y};
+}
+
+/* ---------- views ---------- */
+function navHTML(i){
+  const back=st.plat==='android'||st.plat==='ipad'&&false?`<button class="back" data-act="back" aria-label="Back">${sv('arrL',24)}</button>`:`<button class="back" data-act="back">${sv('chevL',22,2.6)}Back</button>`;
+  let p=''; for(let k=1;k<=4;k++){ p+=`<i class="${k<i?'on':k===i?'cur':''}"></i>`; if(k<4) p+=`<b style="--f:${k<i?1:0}"></b>`; }
+  return `<div class="nav">${back}<span class="prog" role="img" aria-label="Step ${i} of 4">${p}</span><span class="navsp"></span></div>`;
+}
+function vHello(){
+  const C=2*Math.PI*62, parts=[['--c-amb',.16],['--c-ind',.24],['--c-cor',.14],['--c-blu',.2],['--c-grn',.16]];
+  let a=-90, arcs='';
+  parts.forEach(([c,f],i)=>{ const l=C*f-14; arcs+=`<circle class="seg-arc" cx="150" cy="120" r="62" transform="rotate(${a+5} 150 120)" style="stroke:var(${c});--l:${l.toFixed(1)};--d:${(.15+i*.09).toFixed(2)}s"/>`; a+=f*360; });
+  return `<div class="view hello" style="justify-content:space-between">
+    <div class="grow hero" role="img" aria-label="The day dot: a ring of five coloured parts of a day, with a thread running down from it">
+      <svg viewBox="0 0 300 330">
+        <line x1="150" y1="196" x2="150" y2="330" stroke="var(--ln)" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/>
+        <circle cx="150" cy="120" r="62" fill="none" stroke="var(--ln)" stroke-width="14" opacity=".45"/>
+        ${arcs}
+        <circle class="core" cx="150" cy="120" r="40" fill="var(--s)" style="filter:drop-shadow(0 6px 12px rgba(0,0,0,.12))"/>
+        <text class="clockt" x="150" y="124" text-anchor="middle">9:41</text><text class="clocks" x="150" y="142" text-anchor="middle">NOW</text>
+        <line class="thr" x1="150" y1="196" x2="150" y2="330" stroke="var(--acc)" stroke-width="5" stroke-linecap="round"/>
+        <circle class="pd" cx="150" cy="236" r="9" fill="var(--c-cor)" style="animation-delay:1.55s"/>
+        <circle class="pd" cx="150" cy="276" r="9" fill="var(--c-blu)" style="animation-delay:1.68s"/>
+        <circle class="pd" cx="150" cy="316" r="9" fill="var(--c-grn)" style="animation-delay:1.81s"/>
+      </svg>
+    </div>
+    <div style="flex:none">
+      <h1 class="h1 rise" style="text-align:center;--d:.5s">Your day, as a thread.</h1>
+      <p class="sub rise" style="text-align:center;--d:.62s">See where the time goes. Move it all when the day moves.</p>
+      <div class="cta rise" style="margin-top:26px;--d:.74s"><button class="pbtn" data-act="next">Get started</button><button class="tbtn" data-act="acct">I have an account</button></div>
+      <p class="fine rise" style="--d:.8s">Dottoday is for people aged 13 and over.</p>
+    </div></div>`;
+}
+function vDay(){
+  return `<div class="view">${navHTML(1)}
+    <h2 class="h2">Your day runs from…</h2><p class="sub">Drag the sun and the moon. You can fine-tune each weekday later.</p>
+    <div class="grow" style="margin-top:14px"><div class="dial" id="dial">
+      <div class="ticks" id="ticks"></div><div class="rail2"></div><div class="awake" id="awake"></div>
+      <div class="stars t" id="st-t"></div><div class="stars b" id="st-b"></div>
+      <div class="hdl sun" id="h-sun" role="slider" tabindex="0" aria-label="Wake Up" aria-valuemin="240" aria-valuemax="720">${sv('sun',26)}</div>
+      <div class="hdl moon" id="h-moon" role="slider" tabindex="0" aria-label="Wind Down" aria-valuemin="1080" aria-valuemax="1560">${sv('moon',24)}</div>
+      <div class="bub" id="b-sun"><small>Wake Up</small><b></b></div><div class="bub" id="b-moon"><small>Wind Down</small><b></b></div>
+    </div></div>
+    <div class="sum" id="sum" aria-live="polite"></div>
+    <div class="cta"><button class="pbtn" data-act="next">Continue</button></div></div>`;
+}
+function vRhythm(){
+  return `<div class="view">${navHTML(2)}
+    <h2 class="h2">What fills your days?</h2><p class="sub">Tap any. They land on the thread at a time that fits.</p>
+    <div class="grow" id="tl-wrap" style="margin-top:6px"><div class="tl2" id="tl"></div></div>
+    <div class="rchips" id="rchips" role="group" aria-label="Things you do most days">${allRT().map(x=>chipHTML(x)).join('')}</div>
+    <form class="addown" id="addown"><span class="rd" id="ao-ic" style="--cc:var(--c-grn)">${sv('dot',18,2.4)}</span><input id="ao-in" autocomplete="off" placeholder="Add your own, like walk the dog 7am" aria-label="Add something you do most days, then press Return"><button type="submit" class="ao-add" id="ao-add" aria-label="Add to my thread" disabled>${sv('plus',20,2.6)}</button></form>
+    <div class="cta"><button class="pbtn" data-act="next" id="rt-next">${st.routines.size?'That’s my day':'Skip for now'}</button></div></div>`;
+}
+function chipHTML(x){ const on=st.routines.has(x.id); return `<button class="rchip" data-rt="${x.id}" aria-pressed="${on}" style="--cc:var(${x.c})"><span class="rd">${sv(on?'check':x.icon,18,2.4)}</span>${x.t}</button>`; }
+function mountRhythm(v){
+  drawThread(v,{noTask:true});
+  v.addEventListener('click',e=>{
+    const b=e.target.closest('[data-rt]'); if(!b) return;
+    const id=b.dataset.rt, x=allRT().find(r=>r.id===id), add=!st.routines.has(id);
+    add?st.routines.add(id):st.routines.delete(id);
+    const tmp=document.createElement('div'); tmp.innerHTML=chipHTML(x); const nb=tmp.firstElementChild; b.replaceWith(nb); nb.focus({preventScroll:true});
+    v.querySelector('#rt-next').textContent=st.routines.size?'That’s my day':'Skip for now';
+    drawThread(v,{noTask:true}); if(st.plat==='ipad'||st.plat==='mac') drawWide();
+    const row=v.querySelector(`#tl .trow[data-id="${id}"]`); if(!add||!row) return;
+    if(st.rm){ row.animate([{opacity:0},{opacity:1}],{duration:200}); return; }
+    flyTo(v, nb.querySelector('.rd'), row, x.c);
+  });
+  const inp=v.querySelector('#ao-in'), ic=v.querySelector('#ao-ic'), add=v.querySelector('#ao-add');
+  const look=t=>{ const k=kind(t); return {icon:k.icon==='task'?'dot':k.icon, c:k.c}; };
+  const full=()=>st.custom.length>=4;
+  const sync=()=>{ const p=parse(inp.value); const l=look(p?p.title:''); ic.style.setProperty('--cc',`var(${l.c})`); ic.innerHTML=sv(l.icon,18,2.4); add.disabled=!p||full(); };
+  if(full()){ inp.disabled=true; inp.placeholder='That’s plenty for now'; }
+  inp.addEventListener('input',sync);
+  v.querySelector('#addown').addEventListener('submit',e=>{
+    e.preventDefault(); const p=parse(inp.value); if(!p||full()) return;
+    const l=look(p.title), used=new Set(allRT().map(x=>x.c)), pal=['--c-grn','--c-blu','--c-amb','--c-vio','--c-brn'];
+    const c=l.icon==='dot'?(pal.find(x=>!used.has(x))||pal[st.custom.length%pal.length]):l.c;
+    const time=p.inferred?gapTime():Math.min(st.wind-15,Math.max(st.wake+15,p.time));
+    const x={id:'c'+st.custom.length+'-'+Math.round(performance.now()),t:p.title,c,icon:l.icon,time};
+    st.custom.push(x); st.routines.add(x.id);
+    const tmp=document.createElement('div'); tmp.innerHTML=chipHTML(x); v.querySelector('#rchips').appendChild(tmp.firstElementChild);
+    v.querySelector('#rt-next').textContent='That’s my day';
+    drawThread(v,{noTask:true}); if(st.plat==='ipad'||st.plat==='mac') drawWide();
+    const row=v.querySelector(`#tl .trow[data-id="${x.id}"]`);
+    if(row){ if(st.rm) row.animate([{opacity:0},{opacity:1}],{duration:200}); else flyTo(v, ic, row, c); }
+    inp.value=''; sync(); if(full()){ inp.disabled=true; inp.placeholder='That’s plenty for now'; } else inp.focus({preventScroll:true});
+  });
+}
+function gapTime(){
+  const ts=[st.wake, ...[...st.routines].map(rtime), st.wind].sort((a,b)=>a-b); let best=0;
+  for(let i=1;i<ts.length;i++) if(ts[i]-ts[i-1]>ts[best+1]-ts[best]) best=i-1;
+  return Math.round((ts[best]+ts[best+1])/2/15)*15;
+}
+function flyTo(v, fromEl, row, col){
+    const vr=v.getBoundingClientRect(), sc=vr.width/v.offsetWidth, a=fromEl.getBoundingClientRect(), bt=row.querySelector('.dt').getBoundingClientRect();
+    const f=document.createElement('span'); f.className='fly'; f.style.cssText=`left:${(a.left-vr.left)/sc}px;top:${(a.top-vr.top)/sc}px;width:${a.width/sc}px;height:${a.height/sc}px;--cc:var(${col})`;
+    v.appendChild(f); row.style.opacity=0;
+    const dx=(bt.left+bt.width/2-a.left-a.width/2)/sc, dy=(bt.top+bt.height/2-a.top-a.height/2)/sc;
+    f.animate([{transform:'translate(0,0) scale(1)'},{transform:`translate(${dx*.45}px,${dy*.55-50}px) scale(1.25)`,offset:.5},{transform:`translate(${dx}px,${dy}px) scale(.94)`}],{duration:560,easing:'cubic-bezier(.3,0,.2,1)'}).onfinish=()=>{
+      f.remove(); row.style.opacity=''; row.querySelector('.dt').animate([{transform:'scale(.6)'},{transform:'scale(1.15)'},{transform:'scale(1)'}],{duration:320,easing:'cubic-bezier(.34,1.56,.64,1)'}); };
+}
+function vFirst(){
+  const sg=[['Gym 6pm','--c-cor'],['Call with Sam 1pm','--c-blu'],['Deep work: roadmap 10am','--c-ind']];
+  return `<div class="view">${navHTML(3)}
+    <h2 class="h2">What’s one thing for today?</h2><p class="sub">Say it the way you would to a friend.</p>
+    <label class="field" for="ob-task"><input id="ob-task" autocomplete="off" placeholder="e.g. gym 6pm" value="${esc(st.text)}" aria-describedby="ob-read"></label>
+    <div class="chip" id="ob-read" aria-live="polite"></div>
+    <div class="sugg">${sg.map(([t,c])=>`<button data-sg="${esc(t)}" style="--cc:var(${c})"><i></i>${esc(t)}</button>`).join('')}</div>
+    <div class="grow" id="tl-wrap" style="margin-top:6px"><div class="tl2" id="tl"></div></div>
+    <div class="cta"><button class="pbtn" id="put" data-act="put" disabled>Put it on today</button></div></div>`;
+}
+function vNudge(){
+  const t=st.task, rem=t.time-10;
+  const alert = st.dialog ? dialogHTML() : '';
+  return `<div class="view">${navHTML(4)}
+    <div class="grow" id="tl-wrap" style="margin:64px 0 282px"><div class="tl2" id="tl"></div></div>
+    <div class="banner" role="note" aria-label="Reminder preview"><span class="pv">PREVIEW</span><span class="appic"><i></i></span>
+      <span class="bt"><b>${esc(t.title)} in 10 minutes</b><span>${fmt(t.time)} – ${fmt(t.time+t.dur)}</span></span><span class="when">${fmt(rem)}</span></div>
+    <div class="sheet" role="dialog" aria-labelledby="ask-h"><h2 class="h2" id="ask-h">Want this before ${esc(t.title)}?</h2>
+      <p class="sub">A quiet nudge 10 minutes before each task. Change it any time.</p>
+      <div class="cta" style="margin-top:20px"><button class="pbtn" data-act="allow" id="allow">Allow nudges</button><button class="tbtn" data-act="notnow">Not now</button></div></div>
+    ${alert}</div>`;
+}
+function dialogHTML(){
+  if(st.plat==='android') return `<div class="scrim"><div class="adlg" role="alertdialog" aria-label="Allow Dottoday to send you notifications?"><span style="color:var(--abtn)">${sv('bell',26)}</span><b>Allow <strong style="font-weight:500">Dottoday</strong> to send you notifications?</b><button data-act="sys-yes">Allow</button><button data-act="sys-no">Don’t allow</button></div></div>`;
+  if(st.plat==='mac') return `<div class="mbanner" role="alertdialog" aria-label="Dottoday would like to send you notifications"><span class="appic" style="width:34px;height:34px"><i></i></span><span class="bt"><b>“Dottoday” Notifications</b>Notifications may include alerts, sounds and badges.</span><span class="mb"><button data-act="sys-yes">Allow</button><button data-act="sys-no">Don’t Allow</button></span></div>`;
+  return `<div class="scrim"><div class="ialert" role="alertdialog" aria-label="Dottoday would like to send you notifications"><div class="at"><b>“Dottoday” Would Like to Send You Notifications</b><p>Notifications may include alerts, sounds and icon badges. These can be configured in Settings.</p></div><div class="ab"><button data-act="sys-no">Don’t Allow</button><button data-act="sys-yes">Allow</button></div></div></div>`;
+}
+function vToday(){
+  return `<div class="view today stg">
+    <div class="date">Thursday 13 November</div><h2 class="bigt">Today</h2>
+    <div class="grow" id="tl-wrap"><div class="tl2" id="tl"></div>${st.hint?`<div class="hint" id="hint" role="status">Tap the dot when it’s done</div>`:''}</div>
+    ${st.sync?`<div class="sync" id="sync"><span style="color:var(--accd)">${sv('cloud',24)}</span><span class="st"><b>Sign in to sync</b><span>Use Dottoday on all your devices with a copy kept safe.</span></span><button class="sbtn" data-act="acct">Sign in</button><button class="xbtn" data-act="nosync" aria-label="Dismiss sign in to sync">${sv('x',18)}</button></div>`:''}
+    ${st.plat==='ios'||st.plat==='android'?tabsHTML():''}</div>`;
+}
+function tabsHTML(){
+  const t=[['today','Today'],['plan','Plan'],['review','Review'],['search','Search']];
+  return `<div class="tabs" role="tablist">${t.map(([i,l],k)=>`<span role="tab" aria-selected="${k===0}" class="${k===0?'on':''}">${sv(i,22)}${l}</span>`).join('')}</div>`;
+}
+function vAcct(){
+  const apple=st.plat!=='android'?`<button class="pbtn" style="background:var(--ink);color:var(--g)" data-act="noop"> Continue with Apple</button>`:'';
+  return `<div class="view">${`<div class="nav"><button class="back" data-act="acct-back">${st.plat==='android'?sv('arrL',24):sv('chevL',22,2.6)+'Back'}</button></div>`}
+    <h2 class="h2">Welcome back</h2><p class="sub">Sign in and your days come back to this device. No set-up again.</p>
+    <div class="grow"></div>
+    <div class="cta">${apple}<button class="pbtn" style="background:var(--s);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ln)" data-act="noop">Continue with Google</button><button class="pbtn" style="background:var(--s);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ln)" data-act="noop">${sv('mail',20)} Continue with email</button></div>
+    <p class="fine">Prototype: sign-in itself is the approved account flow (after CR-160).</p></div>`;
+}
+const VIEWS=[vHello,vDay,vRhythm,vFirst,vNudge,vToday];
+
+/* ---------- device chrome ---------- */
+function statusHTML(){
+  if(st.plat==='mac') return `<div class="titlebar"><span class="tl" style="background:#FF5F57"></span><span class="tl" style="background:#FEBC2E"></span><span class="tl" style="background:#28C840"></span><span style="flex:1;text-align:center;font:700 13px var(--font);color:var(--sec)">Dottoday</span><span style="width:52px"></span></div>`;
+  const icons=`<span class="sbi"><svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="10" y="2" width="3" height="10" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg><svg width="26" height="13" viewBox="0 0 26 13" aria-hidden="true"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="16" height="9" rx="2" fill="currentColor"/><rect x="24" y="4" width="2" height="5" rx="1" fill="currentColor" opacity=".4"/></svg></span>`;
+  if(st.plat==='ipad') return `<div class="sb" style="height:32px;padding:0 28px;font-size:14px"><span>9:41 Thu 13 Nov</span>${icons}</div>`;
+  return `<div class="sb"><span>9:41</span>${icons}</div>${st.plat==='ios'?'<div class="island"></div>':'<div class="punch"></div>'}`;
+}
+function wideBack(){
+  const rows=[['today','Today',1],['plan','Plan',0],['inbox','Inbox',0,1],['review','Review',0],['search','Search',0]];
+  const side=`<div class="side">${rows.map(([i,l,on,s])=>`<span class="${on?'on':''}${s?' sub2':''}">${s?'':sv(i,20)}${l}</span>`).join('')}<span style="margin-top:auto">${sv('gear',20)}Settings</span></div>`;
+  return `${side}<div class="main"><div class="date" style="font:700 15px var(--font);color:var(--sec)">Thursday 13 November</div><h2 style="font:800 40px/46px var(--font);margin:6px 0 0">Today</h2><div class="grow" id="tl-wide" style="max-width:640px"><div class="tl2" id="tlw"></div></div></div>`;
+}
+function buildDevice(){
+  const d=document.createElement('div'); d.className=`dev ${st.plat}`; d.id='dev';
+  const wide=st.plat==='ipad'||st.plat==='mac';
+  d.innerHTML=`<div class="screen ${st.theme==='dark'?'dark':''} ${wide?'wide':''}" id="screen">${statusHTML()}
+    ${wide?`<div class="back-app ${st.step<5&&!st.acct?'blur':''}" id="backapp">${wideBack()}</div><div class="wscrim ${st.step<5||st.acct?'':'gone'}" id="wscrim"></div><div class="card ${st.step<5||st.acct?'':'gone'}" id="card"><div class="vp" id="vp"></div></div><div class="vp" id="vp2" style="pointer-events:none"></div>`
+          :`<div class="vp" id="vp"></div>`}
+    ${st.plat==='ios'||st.plat==='android'?'<div class="home"></div>':''}</div>`;
+  const fi=document.getElementById('fitin'); fi.innerHTML=''; fi.appendChild(d);
+  document.getElementById('page').classList.toggle('rm',st.rm);
+  fitDevice(); showView(0,true);
+}
+function fitDevice(){
+  const p=PLAT[st.plat], fit=document.getElementById('fit'), fi=document.getElementById('fitin');
+  const aw=fit.clientWidth, ah=Math.max(520, Math.min(window.innerHeight-60, 980));
+  const s=Math.min(1, aw/p.w, ah/p.h);
+  fi.style.transform=`scale(${s})`; fi.style.width=p.w+'px'; fit.style.height=Math.ceil(p.h*s)+'px';
+}
+
+/* ---------- view switching ---------- */
+let lastStep=0;
+function showView(dir, instant){
+  const wide=st.plat==='ipad'||st.plat==='mac';
+  const inCard=wide&&(st.step<5||st.acct);
+  const vp=document.getElementById(inCard||!wide?'vp':'vp2');
+  if(wide){ document.getElementById('card').classList.toggle('gone',!inCard); document.getElementById('wscrim').classList.toggle('gone',!inCard);
+    document.getElementById('backapp').classList.toggle('blur',inCard); document.getElementById('vp2').innerHTML='';
+    if(!inCard) document.getElementById('vp').innerHTML=''; drawWide(); }
+  const html=st.acct?vAcct():(wide&&!inCard?'':VIEWS[st.step]());
+  const old=[...vp.querySelectorAll('.view')];
+  old.forEach(o=>{ if(instant){o.remove();return;} o.classList.remove('enter','back'); o.classList.add('exit'); if(dir<0) o.classList.add('back'); setTimeout(()=>o.remove(), 260); });
+  if(!html){ renderChrome(); return; }
+  const tmp=document.createElement('div'); tmp.innerHTML=html; const v=tmp.firstElementChild;
+  if(!instant){ v.classList.add('enter'); if(dir<0) v.classList.add('back'); }
+  vp.appendChild(v);
+  if(wide&&!inCard){}
+  mount(v); renderChrome();
+}
+function drawWide(){
+  const w=document.getElementById('tlw'); if(!w) return;
+  const m=document.querySelector('#backapp .main'); m.querySelector('.sync')?.remove();
+  if(st.step===5&&!st.acct&&st.sync){ const s=document.createElement('div'); s.className='sync'; s.id='sync'; s.style.maxWidth='640px';
+      s.innerHTML=`<span style="color:var(--accd)">${sv('cloud',24)}</span><span class="st"><b>Sign in to sync</b><span>Use Dottoday on all your devices with a copy kept safe.</span></span><button class="sbtn" data-act="acct">Sign in</button><button class="xbtn" data-act="nosync" aria-label="Dismiss sign in to sync">${sv('x',18)}</button>`; m.appendChild(s); }
+  const h=document.getElementById('tl-wide').clientHeight-20;
+  const r=threadHTML(h,{stagger:st.step===5}); w.innerHTML=r.html;
+  if(st.step===5&&!st.acct){ const g=document.getElementById('tl-wide');
+    if(st.hint&&!g.querySelector('.hint')){ const td=w.querySelector('.trow.task'); if(td){ const hi=document.createElement('div'); hi.className='hint'; hi.id='hint'; hi.textContent='Tap the dot when it’s done'; hi.style.left='140px'; hi.style.top=(parseFloat(td.style.top)+12-20+44)+'px'; g.appendChild(hi);} }
+    else if(!st.hint) g.querySelector('.hint')?.remove();
+  }
+}
+function mount(v){
+  if(st.acct) return;
+  if(st.step===1) mountDay(v);
+  if(st.step===2) mountRhythm(v);
+  if(st.step===3) mountFirst(v);
+  if(st.step===4) drawThread(v,{drop:true});
+  if(st.step===5) { drawThread(v,{stagger:true}); placeHint(v); }
+  if(st.step===4&&!st.dialog) setTimeout(()=>v.querySelector('#allow')?.focus({preventScroll:true}), 900);
+}
+function drawThread(v,opts){ const tl=v.querySelector('#tl'); if(!tl) return; const h=v.querySelector('#tl-wrap').clientHeight-20; const r=threadHTML(h,opts); tl.innerHTML=r.html; return r; }
+function placeHint(v){ const hi=v.querySelector('#hint'), td=v.querySelector('.trow.task'); if(!hi||!td) return; hi.style.left='132px'; hi.style.top=(parseFloat(td.style.top)+12+40)+'px'; }
+
+/* ---------- step 2: sun and moon ---------- */
+function mountDay(v){
+  const dial=v.querySelector('#dial'), ticks=v.querySelector('#ticks'), H=()=>dial.clientHeight, PAD=34, MIN=240, MAX=1560;
+  const ypos=m=>PAD+(m-MIN)/(MAX-MIN)*(H()-2*PAD);
+  ticks.innerHTML=[300,480,660,840,1020,1200,1380,1500].map(m=>`<span style="top:${ypos(m)}px">${fmt(m).replace(':00','')}</span>`).join('');
+  const upd=(which)=>{
+    const a=ypos(st.wake), b=ypos(st.wind), H0=H();
+    const aw=v.querySelector('#awake'); aw.style.top=a+'px'; aw.style.height=(b-a)+'px';
+    dial.style.setProperty('--a',(a/H0*100).toFixed(1)+'%'); dial.style.setProperty('--b',(b/H0*100).toFixed(1)+'%');
+    v.querySelector('#st-t').style.height=Math.max(0,a-20)+'px'; v.querySelector('#st-b').style.height=Math.max(0,H0-b-20)+'px';
+    for(const [id,m,bid] of [['h-sun',st.wake,'b-sun'],['h-moon',st.wind,'b-moon']]){
+      const el=v.querySelector('#'+id), y=ypos(m); el.style.top=y+'px';
+      el.setAttribute('aria-valuenow',m); el.setAttribute('aria-valuetext',`${id==='h-sun'?'Wake Up':'Wind Down'}, ${fmt(m)}`);
+      const bb=v.querySelector('#'+bid); bb.style.top=y+'px'; const nt=fmt(m); const bt=bb.querySelector('b');
+      if(bt.textContent&&bt.textContent!==nt&&nt.endsWith(':00 '+nt.slice(-2))&&which===bid){ bb.classList.remove('tick'); void bb.offsetWidth; bb.classList.add('tick'); }
+      bt.textContent=nt; }
+    if(st.plat==='ipad'||st.plat==='mac') drawWide();
+    const aw2=st.wind-st.wake; v.querySelector('#sum').innerHTML=`<b>${hrs(aw2)} awake</b> · ${hrs(1440-aw2)} of sleep`;
+  };
+  const bind=(id,key,lo,hi,bid)=>{
+    const el=v.querySelector('#'+id);
+    el.addEventListener('pointerdown',e=>{ el.setPointerCapture(e.pointerId); el.classList.add('drag'); e.preventDefault(); });
+    el.addEventListener('pointermove',e=>{ if(!el.hasPointerCapture(e.pointerId)) return; const r=dial.getBoundingClientRect();
+      const f=(e.clientY-r.top)/r.height, px=f*H(); let m=MIN+(px-PAD)/(H()-2*PAD)*(MAX-MIN); m=Math.round(m/15)*15; m=Math.min(hi,Math.max(lo,m));
+      if(m!==st[key]){ st[key]=m; upd(bid); } });
+    const end=e=>{ el.classList.remove('drag'); };
+    el.addEventListener('pointerup',end); el.addEventListener('pointercancel',end);
+    el.addEventListener('keydown',e=>{ const s={ArrowUp:-15,ArrowLeft:-15,ArrowDown:15,ArrowRight:15,PageUp:-60,PageDown:60}[e.key]; if(s===undefined) return; e.preventDefault(); e.stopPropagation(); st[key]=Math.min(hi,Math.max(lo,st[key]+s)); upd(bid); });
+  };
+  bind('h-sun','wake',240,720,'b-sun'); bind('h-moon','wind',1080,1560,'b-moon');
+  requestAnimationFrame(()=>upd());
+}
+
+/* ---------- step 3: first thing ---------- */
+function mountFirst(v){
+  const inp=v.querySelector('#ob-task'), read=v.querySelector('#ob-read'), put=v.querySelector('#put');
+  const r=drawThread(v,{ghost:true, noTask:true});
+  const upd=()=>{
+    st.text=inp.value; const p=parse(inp.value); const g=v.querySelector('#ghost');
+    put.disabled=!p;
+    if(!p){ read.innerHTML=`<span>Add a time like 6pm, or leave it out.</span>`; g.style.opacity=0; return; }
+    read.innerHTML=`<span class="pill" style="--cc:var(${p.c})"><span class="pd2"></span>${esc(p.title)} · ${fmt(p.time)} · ${hrs(p.dur)}</span>${p.inferred?'<span>next free slot</span>':''}`;
+    g.style.setProperty('--cc',`var(${p.c})`); g.style.opacity=1; g.style.top=r.y(p.time)+'px';
+    v.querySelector('#g-tt').textContent=fmt(p.time); v.querySelector('#g-lb').textContent=p.title;
+  };
+  inp.addEventListener('input',upd);
+  inp.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!put.disabled){ e.preventDefault(); act('put'); } });
+  v.querySelectorAll('[data-sg]').forEach(b=>b.addEventListener('click',()=>{ inp.value=b.dataset.sg; upd(); inp.focus({preventScroll:true}); }));
+  upd();
+  if(st.plat==='mac'||st.plat==='ipad') setTimeout(()=>inp.focus({preventScroll:true}),450);
+}
+
+/* ---------- actions ---------- */
+function go(step){ document.querySelectorAll('#screen .mbanner, #screen > .scrim').forEach(x=>x.remove()); const dir=step>=st.step?1:-1; st.step=step; st.dialog=false; st.acct=false; if(step===0) st.t0=performance.now(); showView(dir); }
+function act(a){
+  st.taps++;
+  if(a==='next') go(st.step+1);
+  else if(a==='back'){ if(st.step>0) go(st.step-1); }
+  else if(a==='acct'){ st.acct=true; showView(1); }
+  else if(a==='acct-back'){ st.acct=false; showView(-1); }
+  else if(a==='put'){ const p=parse(st.text); if(!p) return; st.task=p; go(4); }
+  else if(a==='allow'){ st.dialog=true; const v=document.querySelector('#vp .view:last-child'); const t=document.createElement('div'); t.innerHTML=dialogHTML(); (st.plat==='mac'?document.getElementById('screen'):v).appendChild(t.firstElementChild); document.querySelector('#screen [data-act="sys-yes"]')?.focus({preventScroll:true}); }
+  else if(a==='sys-yes'||a==='sys-no'||a==='notnow'){ st.nudge=a==='sys-yes'; st.dialog=false; go(5); }
+  else if(a==='nosync'){ st.sync=false; const s=document.getElementById('sync'); if(s){ s.classList.add('gone'); setTimeout(()=>{ s.remove(); if(st.plat==='ipad'||st.plat==='mac') return; },300);} }
+  renderChrome();
+}
+function toggleDone(){
+  st.done=!st.done; if(st.hint){ st.hint=false; document.getElementById('hint')?.classList.add('gone'); }
+  const wrap=document.querySelector('#tl')||document.querySelector('#tlw');
+  const isWide=st.plat==='ipad'||st.plat==='mac';
+  const tl=isWide?document.getElementById('tlw'):document.querySelector('#vp .view:last-child #tl');
+  const row=tl.querySelector('.trow.task'); row.classList.toggle('done',st.done);
+  const b=row.querySelector('.dt'); b.innerHTML=sv(st.done?'check':st.task.icon,20,2.4);
+  b.setAttribute('aria-label',`${st.task.title}, ${fmt(st.task.time)}${st.done?', done. Mark not done':'. Mark done'}`);
+  if(st.done&&!st.rm){ const bu=document.createElement('span'); bu.className='burst'; bu.style.top=row.style.top; bu.style.setProperty('--cc',`var(${st.task.c})`); tl.appendChild(bu); setTimeout(()=>bu.remove(),520); }
+  renderChrome();
+}
+document.getElementById('fitin').addEventListener('click',e=>{
+  const dot=e.target.closest('#taskdot'); if(dot&&st.step===5){ toggleDone(); return; }
+  const b=e.target.closest('[data-act]'); if(b&&!b.disabled){ act(b.dataset.act); return; }
+  if(st.step===5&&st.hint&&e.target.closest('.screen')){ st.hint=false; document.getElementById('hint')?.classList.add('gone'); }
+});
+document.getElementById('fitin').addEventListener('keydown',e=>{
+  if(e.target.closest('[role=slider]')||e.target.tagName==='INPUT'&&e.key!=='Escape') return;
+  if(e.key==='Escape'){ if(st.acct) act('acct-back'); else if(st.step>0&&st.step<5) act('back'); }
+});
+
+/* ---------- page chrome ---------- */
+function renderChrome(){
+  const ol=document.getElementById('steps');
+  ol.innerHTML=STEPS.map((s,i)=>`<li><button data-go="${i}" class="${i<st.step?'past':''}" ${i===st.step&&!st.acct?'aria-current="step"':''}><b>${s.t}</b><small>${s.d}</small></button></li>`).join('');
+  const n=st.acct?{h:'I have an account',what:'Returning people go straight to sign-in and restore, never through set-up again. Apple sign-in appears on Apple platforms only.',motion:'Same step change as the flow.',a11y:'Back returns to Hello; the buttons are full-width 56 pt targets.'}:NOTES[st.step];
+  document.getElementById('notes').innerHTML=`<h2>Step ${st.acct?'·':st.step+1} of 6</h2><h3>${n.h}</h3><p>${n.what}</p>
+    <div class="nrow"><b>Motion</b><span>${n.motion}</span></div><div class="nrow"><b>Accessibility</b><span>${n.a11y}</span></div>
+    <div class="nrow"><b>On this platform</b><span>${PLAT[st.plat].cap}</span></div>
+    ${st.step===0?'<button class="ghostbtn" id="replay" type="button">Replay the day dot</button>':''}`;
+  document.getElementById('cap').textContent=PLAT[st.plat].cap.split(' · ').slice(0,2).join(' · ');
+  const req=Math.min(st.step,3)+(st.step>=4?0:0);
+  document.getElementById('meter').innerHTML= st.step===5
+    ? `You reached your own Today. Required taps: <strong>4</strong>. Routines: <strong>${st.routines.size}</strong>. ${st.nudge===true?'Nudges on.':st.nudge===false?'Nudges off; the app works the same.':''}`
+    : `Required taps so far: <strong>${Math.min(st.step,4)}</strong> of 4. Nothing else is asked before Today.`;
+}
+document.getElementById('steps').addEventListener('click',e=>{ const b=e.target.closest('[data-go]'); if(!b) return; const i=+b.dataset.go;
+  if(i>=4&&!st.task){ st.text='Gym 6pm'; st.task=parse('Gym 6pm'); } go(i); });
+document.getElementById('notes').addEventListener('click',e=>{ if(e.target.id==='replay'){ showView(1); } });
+function seg(id,key,map){ const g=document.getElementById(id); g.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
+  g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); map(b.dataset.v); }); }
+const press=(id,v)=>document.querySelectorAll(`#${id} button`).forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===v)));
+seg('c-plat','plat',v=>{ st.plat=v; st.dialog=false; buildDevice(); });
+seg('c-theme','theme',v=>{ st.theme=v; document.getElementById('screen').classList.toggle('dark',v==='dark'); });
+seg('c-motion','rm',v=>{ st.rm=v==='reduced'; document.getElementById('page').classList.toggle('rm',st.rm); });
+document.getElementById('restart').addEventListener('click',()=>{ Object.assign(st,{step:0,wake:420,wind:1380,text:'',task:null,nudge:null,dialog:false,hint:true,sync:true,done:false,acct:false,taps:0,routines:new Set(),custom:[]}); buildDevice(); });
+press('c-theme',st.theme); press('c-motion',st.rm?'reduced':'full');
+let rt; window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(fitDevice,80); });
+if(location.hash){ const h=location.hash.slice(1); if(PLAT[h]){ st.plat=h; press('c-plat',h); } }
+buildDevice();
+})();
+</script>

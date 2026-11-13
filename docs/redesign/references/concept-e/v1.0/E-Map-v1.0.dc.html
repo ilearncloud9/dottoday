@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>A · Map</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-variant-numeric:tabular-nums}
+a{color:#11615C}a:hover{color:#0B4642}
+.c{padding:5px 10px;border-bottom:1px solid #ECE8EE;vertical-align:top;text-align:left}
+.h{padding:8px 10px;border-bottom:1px solid rgba(36,31,43,.22);text-align:left;font-weight:700;font-size:12.5px;color:#241F2B}
+.p{display:inline-block;font-size:12px;font-weight:600;line-height:18px;padding:0 7px;border-radius: 6px;background:#E3F1E7;color:#1D6436}
+.n{display:inline-block;font-size:12px;font-weight:500;line-height:18px;padding:0 7px;border-radius: 6px;background:#EDE7DF;color:#4E4757}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1860px; box-sizing: border-box; padding: 56px; background: #FBF7F1; font-family: Manrope, system-ui, sans-serif; color: #241F2B; display: flex; flex-direction: column; gap: 36px;">
+
+<header style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;">
+ <div style="max-width: 860px;">
+  <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700; letter-spacing: -0.6px;">A · Refined Timeline: map</h1>
+  <p style="margin: 8px 0 0; font-size: 16px; line-height: 24px; color: #4E4757;">Where every feature lives, what Round 1 prototyped at each width, and how the concept scores. Scores are design judgements from the artboards, not measurements.</p>
+ </div>
+ <div style="font-size: 13px; color: #6A6273; text-align: right; line-height: 20px;">Tue 3 Nov 2026 · Prompt D, Round 1<br>Not prototyped in Round 1: iPad, Android tablet / foldable, mobile web, Mac / web narrow window</div>
+</header>
+
+<!-- Feature access map -->
+<section aria-labelledby="fam">
+ <h2 id="fam" style="margin: 0 0 10px; font-size: 20px; line-height: 26px; font-weight: 700;">Feature access map</h2>
+ <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; line-height: 17px; color: #2E2836;">
+  <thead><tr><th class="h" style="width: 190px;">Feature</th><th class="h">iPhone</th><th class="h">Android phone</th><th class="h">Mac</th><th class="h">Web desktop</th></tr></thead>
+  <tbody>
+   <tr><td class="c" style="font-weight: 700;">Today timeline</td><td class="c">Today tab</td><td class="c">Today in the navigation bar</td><td class="c">Sidebar › Today, three-day spread</td><td class="c">Sidebar › Today, /today, /day/:date</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Add / quick add</td><td class="c">+ above the tab bar (2 taps + typing)</td><td class="c">Extended FAB "Add"</td><td class="c">Toolbar +, ⌘N anywhere</td><td class="c">Toolbar Add, n</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Paste a list</td><td class="c">Paste into Add → "Add 4 tasks"</td><td class="c">Same, in the Add sheet</td><td class="c">⌘V in the Add popover</td><td class="c">Paste in the Add popover</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Brain dump</td><td class="c">Add › Brain dump; hold +; Day › Plan</td><td class="c">FAB menu; Add mode; Day › Plan</td><td class="c">File › New Brain Dump ⇧⌘N; Day ▾</td><td class="c">Add popover mode; Day ▾</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Routines</td><td class="c">Add › Routine; Day › Drop a routine; Settings › Planning</td><td class="c">FAB menu › Routine; Day menu; Settings</td><td class="c">Sidebar › Routines; Add popover</td><td class="c">Sidebar › Routines; Add popover</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Pick today's one thing</td><td class="c">Day › Plan</td><td class="c">Day › Plan</td><td class="c">Day ▾ toolbar and menu bar</td><td class="c">Day ▾ popover</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Low-energy</td><td class="c">Day › View; Settings › Planning</td><td class="c">Day › View; Settings</td><td class="c">Day ▾; Settings window</td><td class="c">Day ▾; Settings</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Running late, Shift the rest</td><td class="c">Live row; task sheet; Day › Replan</td><td class="c">Live row; task sheet; Day › Replan</td><td class="c">Toolbar Running late; Day › Shift the Rest; right-click</td><td class="c">Toolbar Running late; Day ▾; inspector</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Duplicate day</td><td class="c">Day › Plan</td><td class="c">Day › Plan</td><td class="c">Day › Duplicate Day</td><td class="c">Day ▾</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Copy day as text</td><td class="c">Day › Share</td><td class="c">Day › Share</td><td class="c">Day › Copy Day as Text</td><td class="c">Day ▾</td></tr>
+   <tr><td class="c" style="font-weight: 700;">This week</td><td class="c">Day › Reflect</td><td class="c">Day › Reflect</td><td class="c">Sidebar › Reviews</td><td class="c">Sidebar › Reviews</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Review the day</td><td class="c">Day › Reflect; evening prompt</td><td class="c">Day › Reflect; evening prompt</td><td class="c">Day › Review the Day; Reviews</td><td class="c">Reviews; /review</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Week</td><td class="c">Not on compact (as today)</td><td class="c">Not on compact (as today)</td><td class="c">Calendar › Week, ⌘3</td><td class="c">Calendar › Week, /week</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Month</td><td class="c">Calendar tab; title ▾; pull-open kept</td><td class="c">Calendar; title ▾</td><td class="c">Calendar › Month, ⌘4; date popover</td><td class="c">Calendar › Month, /month</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Go to date</td><td class="c">Title ▾ → month sheet (2 taps)</td><td class="c">Title ▾ → M3 date picker</td><td class="c">Date button; Go to Date… ⇧⌘G</td><td class="c">Date button; /day/2026-11-03</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Inbox</td><td class="c">Inbox tab (badge 3)</td><td class="c">Inbox tab (badge 3)</td><td class="c">Sidebar › Inbox 3</td><td class="c">Sidebar › Inbox, /inbox</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Search + past days</td><td class="c">Search tab</td><td class="c">Search</td><td class="c">Sidebar › Search; ⌘F</td><td class="c">Sidebar › Search; /</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Settings</td><td class="c">Avatar on Today (hypothesis)</td><td class="c">Avatar in the top app bar (hypothesis)</td><td class="c">Dottoday › Settings… ⌘, (own window)</td><td class="c">Sidebar footer; /settings</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Wake Up + missions</td><td class="c">Sun cap on the thread; Settings › Your day</td><td class="c">Same</td><td class="c">Sun cap; Settings › Your day</td><td class="c">Sun cap; Settings › Your day</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Focus</td><td class="c">Task sheet › Focus; live row</td><td class="c">Task sheet › Focus</td><td class="c">Inspector › Focus; /focus/:id</td><td class="c">Inspector › Focus; /focus/:id</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Undo</td><td class="c">Toast Undo (above the tab bar)</td><td class="c">Snackbar Undo (above the bar)</td><td class="c">Edit › Undo ⌘Z</td><td class="c">Toast Undo; Ctrl/⌘ Z</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Export</td><td class="c">Settings › Data &amp; privacy</td><td class="c">Settings › Data &amp; privacy</td><td class="c">File › Export…</td><td class="c">Settings › Data &amp; privacy (download)</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Sync status</td><td class="c">Sync icon by the avatar</td><td class="c">Sync icon in the top app bar</td><td class="c">Sidebar footer "Synced"</td><td class="c">Sidebar footer "Synced"</td></tr>
+   <tr><td class="c" style="font-weight: 700;">Minimal mode</td><td class="c">Day › View › Show less; Settings › Appearance</td><td class="c">Same</td><td class="c">Day ▾; Settings window</td><td class="c">Day ▾; Settings</td></tr>
+  </tbody>
+ </table>
+</section>
+
+<div style="display: grid; grid-template-columns: 520px minmax(0, 1fr); gap: 48px; align-items: start;">
+ <!-- Responsive map -->
+ <section aria-labelledby="rbm">
+  <h2 id="rbm" style="margin: 0 0 10px; font-size: 20px; line-height: 26px; font-weight: 700;">Responsive behaviour map</h2>
+  <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; line-height: 17px;">
+   <thead><tr><th class="h" style="width: 120px;">Device</th><th class="h">Compact &lt; 600</th><th class="h">Medium 600–839</th><th class="h">Expanded ≥ 840</th></tr></thead>
+   <tbody>
+    <tr><td class="c" style="font-weight: 700;">Phone</td><td class="c"><span class="p">Prototyped (Round 1)</span><div style="margin-top: 4px; color: #4E4757;">iPhone 390, Android 412: tabs / nav bar, Day chip, +</div></td><td class="c"><span class="n">Not prototyped</span><div style="margin-top: 4px; color: #4E4757;">Large phone landscape</div></td><td class="c"><span class="n">Not prototyped</span></td></tr>
+    <tr><td class="c" style="font-weight: 700;">Tablet</td><td class="c"><span class="n">Not prototyped</span><div style="margin-top: 4px; color: #4E4757;">Split view: phone layout</div></td><td class="c"><span class="n">Not prototyped</span><div style="margin-top: 4px; color: #4E4757;">Overlay sidebar, centred thread, popover / side sheet</div></td><td class="c"><span class="n">Not prototyped</span><div style="margin-top: 4px; color: #4E4757;">Sidebar + spread; panes split at a hinge</div></td></tr>
+    <tr><td class="c" style="font-weight: 700;">Mac / web window</td><td class="c"><span class="n">Not prototyped</span><div style="margin-top: 4px; color: #4E4757;">Mobile web: bottom bar, no edge swipe</div></td><td class="c"><span class="n">Not prototyped</span><div style="margin-top: 4px; color: #4E4757;">Narrow window: capped reading width</div></td><td class="c"><span class="p">Prototyped (Round 1)</span><div style="margin-top: 4px; color: #4E4757;">1280: sidebar, three-day spread, inspector (overlays below 1100)</div></td></tr>
+   </tbody>
+  </table>
+ </section>
+
+ <!-- Scorecard -->
+ <section aria-labelledby="sc">
+  <h2 id="sc" style="margin: 0 0 4px; font-size: 20px; line-height: 26px; font-weight: 700;">Guide §21 scorecard (0–5)</h2>
+  <p style="margin: 0 0 8px; font-size: 12.5px; color: #6A6273;">Design judgements from the Round 1 artboards; nothing was run or measured.</p>
+  <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; line-height: 17px; font-variant-numeric: tabular-nums;">
+   <thead><tr><th class="h">Dimension</th><th class="h">iPhone</th><th class="h">Mac</th><th class="h">Android phone</th><th class="h">Web desktop</th><th class="h" style="color: #6A6273;">iPad</th><th class="h" style="color: #6A6273;">Android tablet</th><th class="h" style="color: #6A6273;">Mobile web</th></tr></thead>
+   <tbody>
+    <tr><td class="c">Product identity</td><td class="c">5</td><td class="c">4</td><td class="c">5</td><td class="c">4</td><td class="c" rowspan="9" style="color: #6A6273; vertical-align: middle;">Not prototyped</td><td class="c" rowspan="9" style="color: #6A6273; vertical-align: middle;">Not prototyped</td><td class="c" rowspan="9" style="color: #6A6273; vertical-align: middle;">Not prototyped</td></tr>
+    <tr><td class="c">Platform familiarity</td><td class="c">4</td><td class="c">4</td><td class="c">4</td><td class="c">4</td></tr>
+    <tr><td class="c">Interaction correctness</td><td class="c">4</td><td class="c">4</td><td class="c">4</td><td class="c">4</td></tr>
+    <tr><td class="c">Input adaptability</td><td class="c">3</td><td class="c">4</td><td class="c">3</td><td class="c">5</td></tr>
+    <tr><td class="c">Responsive composition</td><td class="c">3</td><td class="c">4</td><td class="c">3</td><td class="c">4</td></tr>
+    <tr><td class="c">OS integration</td><td class="c">3</td><td class="c">4</td><td class="c">3</td><td class="c">2</td></tr>
+    <tr><td class="c">Crisp visual finish</td><td class="c">4</td><td class="c">4</td><td class="c">4</td><td class="c">4</td></tr>
+    <tr><td class="c">Performance</td><td class="c" colspan="4" style="color: #6A6273;">Not measured</td></tr>
+    <tr><td class="c">Accessibility</td><td class="c">4</td><td class="c">3</td><td class="c">4</td><td class="c">4</td></tr>
+   </tbody>
+  </table>
+ </section>
+</div>
+
+<!-- Assessment lists -->
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 28px; font-size: 13px; line-height: 19px; color: #2E2836;">
+ <section aria-labelledby="s1">
+  <h2 id="s1" style="margin: 0 0 8px; font-size: 17px; line-height: 22px; font-weight: 700;">Strengths</h2>
+  <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+   <li>Lowest risk to "the timeline is the product": painters, gestures, providers and routes are reused.</li>
+   <li>The same thread on all four platforms; only the shell changes.</li>
+   <li>The ⋯ catch-all becomes one grouped Day menu, and every former ⋯ item has a named home.</li>
+   <li>Add is visible at every width; Brain dump and Routine are 1 tap from Add.</li>
+   <li>Move works, and doubles as the screen-reader "Move to…".</li>
+  </ul>
+ </section>
+ <section aria-labelledby="s2">
+  <h2 id="s2" style="margin: 0 0 8px; font-size: 17px; line-height: 22px; font-weight: 700;">Problems</h2>
+  <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+   <li>The least different concept; it can read as "the same app, polished".</li>
+   <li>The Day menu is still a menu: Pick one thing and Low-energy stay one level deep.</li>
+   <li>Running late is 3 taps on phones, 1–2 on wide windows.</li>
+   <li>Wide windows stay a day thread, not a planning workspace.</li>
+  </ul>
+ </section>
+ <section aria-labelledby="s3">
+  <h2 id="s3" style="margin: 0 0 8px; font-size: 17px; line-height: 22px; font-weight: 700;">Accessibility concerns</h2>
+  <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+   <li>The medium-detent sheet must work at 200 % text: the four action tiles re-stack to two rows.</li>
+   <li>Halos and the dotted thread are decorative; state is read from text ("Now", "done") and the ring, never colour alone.</li>
+   <li>Under reduced motion the bead glow is static and the completion pulse becomes a fade.</li>
+   <li>Day menu sections need announced headers; Running late on another day needs a spoken reason.</li>
+   <li>Dimmed side days keep text at 4.5:1 or better.</li>
+  </ul>
+ </section>
+ <section aria-labelledby="s4">
+  <h2 id="s4" style="margin: 0 0 8px; font-size: 17px; line-height: 22px; font-weight: 700;">Engineering tradeoffs</h2>
+  <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+   <li>Rebuilt: shells, the task surface, Settings, the Day menu and missions. Reused: the timeline itself.</li>
+   <li>iOS glass and Mac vibrancy are approximated in Flutter (blur + tint); the native look needs a platform view.</li>
+   <li>Web path URLs need a static-host rewrite; ?task= makes the inspector restorable.</li>
+   <li>One editor must work at the medium detent, the large detent and as an inspector.</li>
+   <li>SF Symbols chrome needs a native path; Material Symbols on Android do not.</li>
+  </ul>
+ </section>
+ <section aria-labelledby="s5" style="border-radius: 22px; background: #FBEBD0; padding: 16px 18px; color: #3D2600;">
+  <h2 id="s5" style="margin: 0 0 8px; font-size: 17px; line-height: 22px; font-weight: 700;">Hypotheses (not approved)</h2>
+  <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+   <li>Settings leaves the tab bar: avatar, sidebar footer, ⌘,.</li>
+   <li>One task surface: sheet, /task/:id and editor merge; every entry point kept.</li>
+   <li>Calendar becomes a destination (Month on phones, Week + Month wide).</li>
+   <li>Brain dump and Routine become modes of Add.</li>
+   <li>Day menu items work on any viewed day; Running late stays today-only.</li>
+   <li>Settings regrouped into six jobs, duplicates merged.</li>
+  </ul>
+ </section>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1860}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

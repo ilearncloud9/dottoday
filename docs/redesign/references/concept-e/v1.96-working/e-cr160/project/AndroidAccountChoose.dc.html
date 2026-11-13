@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Account, choose settings later, Android</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{t.ground}}; color: {{t.ink}}; font-family: Manrope, sans-serif;">
+  <div style="height: 64px; margin-top: 32px; display: flex; align-items: center; gap: 8px; padding: 0 4px;">
+    <button type="button" aria-label="Back" style="width: 48px; height: 48px; border: none; background: transparent; color: {{t.ink}}; display: flex; align-items: center; justify-content: center;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </button>
+    <div style="font-family: Roboto, sans-serif; font-size: 22px; font-weight: 400;">Account</div>
+  </div>
+  <div style="padding: 8px 16px; display: flex; flex-direction: column; gap: 4px;">
+    <div style="font-family: Roboto, sans-serif; font-size: 14px; font-weight: 500; color: {{t.accentText}}; padding: 8px 0;">Sync</div>
+    <div style="font-size: 16px; line-height: 24px;">Signed in as sam@example.com</div>
+    <div style="font-size: 14px; line-height: 20px; color: {{t.secondary}};">Synced</div>
+  </div>
+  <a href="#" style="display: flex; align-items: center; gap: 16px; min-height: 72px; margin-top: 8px; padding: 8px 16px; box-sizing: border-box; color: {{t.ink}}; text-decoration: none;">
+    <span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px;">
+      <span style="font-size: 16px; line-height: 24px; font-weight: 600;">Choose settings</span>
+      <span style="font-size: 14px; line-height: 20px; color: {{t.secondary}};">This device had different settings when you signed in.</span>
+    </span>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex: none; color: {{t.secondary}};"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  </a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark
+      ? { ground: '#171416', ink: '#F3ECE4', secondary: '#C7BEC4', accentText: '#5BC4B8' }
+      : { ground: '#FBF7F1', ink: '#241F2B', secondary: '#6A6273', accentText: '#11615C' };
+    return { t };
+  }
+}
+</script>
+</body>
+</html>

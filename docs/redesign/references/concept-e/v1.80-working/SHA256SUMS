@@ -1,0 +1,12 @@
+8b330799f6002a92f8f7216ee95f5fd1bbb691743abf69e973609de764a5ab10  ./docs/E_CONSISTENCY_REPORT.md
+6485411010a0ca71ac58609646bcbc9fae083599e331ff7923fed257bbe890da  ./docs/E_DECISION_REGISTER.md
+ad67b2581e6490f6e5943dcc1e09c168817f3627ce1c910ac1ef287038fdb3a0  ./docs/E_DESIGN_DECISIONS.md
+105347cb1f9c499284d28fa6c66bbdf672ffebae026e3ac386d226b5cd4eb71b  ./docs/E_DESIGN_RULES.md
+b7fc02044d33555d41d503da57de490ab4c1eca5811484a2810ff636a45fea65  ./docs/E_IMPLEMENTATION_HANDOFF.md
+ee51feaa73a5d7e0cf8439299cb97236452657c19f8b811f640e92fc2773e831  ./evidence/phonesminimal-swipe-row.png
+9b6dbbdf1e7511aea1a6a75d9ff10e33e284fa4afdf48e9655380282ebb7f424  ./generators/cr165.py
+70988c14b044af81c5fd15ec5a9de4065d0e0e8a264b82fd70bec26ae831e2fe  ./generators/fit_expected.txt
+d9937964920faff99e0eaefebbdc8ae6206bff383f7a93909c4400b2bcbd6ce3  ./project/E-FullA-v2.dc.html
+ab58d3b36ba5cb9f3a56a47504eac7e764fc8b9248638d7f1af4fec61b7c9509  ./project/E-G4-3-Narrow.dc.html
+fe022eb83bb8f89accc4d48526a9e00ea6b9c4c1195526ab434f1816a29d7c2b  ./project/E-Map.dc.html
+4524e6bfccf2dcf9f3cb91d7fe158735b8f99718ac3782d57f9a3e2c236b2fc2  ./project/canvas.json

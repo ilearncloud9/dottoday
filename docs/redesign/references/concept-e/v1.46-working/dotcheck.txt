@@ -1,0 +1,11 @@
+<script>window.addEventListener('load',()=>setTimeout(()=>{function rgb(s){const m=s.match(/rgba?\(([^)]+)\)/);if(!m)return null;const p=m[1].split(',').map(x=>parseFloat(x));return {r:p[0],g:p[1],b:p[2],a:p.length>3?p[3]:1}}
+function lin(c){c/=255;return c<=0.03928?c/12.92:Math.pow((c+0.055)/1.055,2.4)}function L(c){return 0.2126*lin(c.r)+0.7152*lin(c.g)+0.0722*lin(c.b)}
+function hex(c){return '#'+[c.r,c.g,c.b].map(v=>Math.round(v).toString(16).padStart(2,'0')).join('').toUpperCase()}
+function bgAt(el){let layers=[];for(let e=el.parentElement;e;e=e.parentElement){const cs=getComputedStyle(e);const c=rgb(cs.backgroundColor);if(c&&c.a>0){layers.push(c);if(c.a>=0.98)break}if(e.dataset&&e.dataset.theme)break}
+let out={r:23,g:20,b:22};for(let i=layers.length-1;i>=0;i--){const c=layers[i];out={r:c.r*c.a+out.r*(1-c.a),g:c.g*c.a+out.g*(1-c.a),b:c.b*c.a+out.b*(1-c.a)}}return out}
+// also detect overlays (scrims / sheets) drawn after the thread that cover it
+const res=[];document.querySelectorAll('[data-theme="dark"]').forEach(box=>{const sec=box.closest('section').getAttribute('aria-label');let i=0;box.querySelectorAll('*').forEach(el=>{const cs=getComputedStyle(el);if(cs.borderLeftStyle!=='dotted')return;const fg=rgb(cs.borderLeftColor);const r=el.getBoundingClientRect();if(!r.height)return;const b=bgAt(el);
+// covering scrim?
+const cx=r.left+r.width/2, cy=r.top+Math.min(r.height/2,20);const top=document.elementFromPoint(cx,cy);let covered=top&&!el.contains(top)&&top!==el.parentElement?(getComputedStyle(top).backgroundColor):'';
+const c=(Math.max(L(fg),L(b))+0.05)/(Math.min(L(fg),L(b))+0.05);let hid=false;for(let p=el;p&&p!==box;p=p.parentElement){if(p.getAttribute&&p.getAttribute('aria-hidden')==='true')hid=true;}
+res.push([sec,i,hex(fg),hex(b),c.toFixed(2),hid?'aria-hidden':'',covered].join(' | '));i++})});document.body.setAttribute('data-dot',res.join(' || '));},1500));</script>

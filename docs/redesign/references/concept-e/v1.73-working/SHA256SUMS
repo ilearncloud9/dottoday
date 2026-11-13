@@ -1,0 +1,13 @@
+bf5e86b184546efa530cced963f10e5900791d984341996a9aeae9dc77bd803f  ./docs/E_CLEANUP_BATCH.md
+934a76959b732fed6fadb2a1f773b66b836d66e44701a086f47d45a90dd96f46  ./docs/E_CONSISTENCY_REPORT.md
+a57a9dcdea57a3db31c8065e59bc525bc252e1de409203252173a8eea88f49e1  ./docs/E_DECISION_REGISTER.md
+ef571a31adc12ec47540fe8549a997db98797c2e14c30e7966eaf9751bc5ce43  ./docs/E_DESIGN_DECISIONS.md
+caaae8e23c1605c26cfa0061f1c94c34cbb190c70ceb7896b361e2d47e43d903  ./docs/E_DESIGN_RULES.md
+b5a00c96060e294265426161557c091d09fe9d661c48630ce43d25f61303053e  ./docs/E_IMPLEMENTATION_HANDOFF.md
+777fe041c6868f927e3ec25793cccceb8580441f8519ab73bd86d2f46d6e2864  ./evidence/web-minimal-after.png
+0e1e8dd3444b65b6eea80d72599a1d274ee3ee9f4ed521fbfd9ac5e80fc10b0f  ./evidence/web-minimal-before.png
+8c5ac1aba53508d5ce0c5be4f1903b9a6def58735f330f7f8f80dae27d7ded4e  ./generators/item11.py
+d0e76567e65fd3cff7c25687430322fc327c32e1a3ed7302fb5c8d4f9a9c01d2  ./project/E-Map.dc.html
+2e884ae8a5f1151bea2d29240dc2c54190af163bbf75e0940be8bd6ce3490be2  ./project/E-Minimal-Dark.dc.html
+31b8aba1a20e4481cf09580fdfe378ec0102565f72a5842558fa824279f93026  ./project/E-Minimal.dc.html
+4524e6bfccf2dcf9f3cb91d7fe158735b8f99718ac3782d57f9a3e2c236b2fc2  ./project/canvas.json

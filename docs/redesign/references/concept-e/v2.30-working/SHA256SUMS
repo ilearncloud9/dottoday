@@ -1,0 +1,9 @@
+d39b42407e8ba9140fa7311985257fad15caae40211652018a3bf56f35ba1195  ./R2-1-light.png
+1beab0fc819137f463b737b1aa3c8ba0991301301afe7ac871fdc6a1ea928583  ./docs/E_DECISION_REGISTER.md
+6095469dbd9b410d85b9664dee398c576a8b0333a6902c79bef4e1988b9563e7  ./docs/E_DESIGN_DECISIONS.md
+41af1dbfa7f17cd702df5a060ed01f3ecce30ed6a8e81ad968983f690aeb6404  ./generators/build.py
+722cb1b82173e0a1b5d0d285ad3aee5e4d618001dae40a5de878b2ed26160c81  ./generators/frames.py
+e7884ace5d7223b2b7336eda53cfcce249541eb2b0555c0ed3996d072caf5082  ./generators/parts.py
+57b07471df4a695e9ba88d4fd6ede0c1a9da1f650d3ca79220d722c4453497c0  ./project/E-R2-1-Dark.dc.html
+2676da8113d36484ec07cab75f4c228764bd5feb54add405b6d88a68fb8fef77  ./project/E-R2-1.dc.html
+abbd27761056ccef052763d8e83f4930d3bc4f06b42042952df677078545e10d  ./project/canvas.json

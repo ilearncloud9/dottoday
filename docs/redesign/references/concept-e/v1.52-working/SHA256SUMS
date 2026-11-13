@@ -1,0 +1,17 @@
+3a2eb75d7d290cf2b038493a01d5b6770225cc19ffbfa5d1acaa7ae869436f21  ./captures/E-G4-7-States-40pct.png
+531362e84315f1d01e41677704961ce3bef5417bd8373538544548d40877d98e  ./captures/E-G4-7-States.pdf
+01d19350ef71baad74e095a804f814ce154d822d3a703f1b4bd6fd6b24b59513  ./generators/darkpost.py
+8791594a86381e95f3109c0fc8e982399b38183267e3a4cfeac289d0623fd789  ./generators/fix96.py
+118d1c414efd45f7fa6d87c4eb8529bebc58b3e7174a9db3a88d70b50dc0e263  ./generators/stage3.py
+09cf42bbbb0c2793ca0c22bf70dfcf1413577d12891bda25e8049db7600165e7  ./generators/states.py
+13f83b32488cf0d65241c41f89d1302e0765a7fdd4c379d488f823fe948f5433  ./generators/swaps.json
+77d08d48427761babd6d2585be9c77d4569a5ac8dac52af7e085f48e8060135d  ./project/E-FullA-v2-Dark.dc.html
+49c8d76651e36336aeacdc966ddf27a1ee4b2d6301addf09e7cb7d3462892e4e  ./project/E-FullA-v2.dc.html
+2dcda484497e1ba1e50a36f2a85424265c4e89dfb2b0ae58bb007258d3d58a2b  ./project/E-G4-7-States.dc.html
+07d97f5a11fe5168fb3eec84d98b3bf56d91516bb00dc6dcdf2b88e1d68c2243  ./project/E-Map.dc.html
+4a0f6df938af0949ac74a7ba0a968956c59eb5c3cc7fa634357104c9b5c8968f  ./project/E-Phones-2-Dark.dc.html
+ad89151c416bcc623097b7812495b8f41653b385a1d8d75cab5b2d5c02665b54  ./project/E-Phones-2.dc.html
+4e2c0beb08fab1d9b92e9144f378444a75260c6076013b27cbfc4b74e3860306  ./project/E-Phones-3-Dark.dc.html
+e9e3c738ba156564e3160f98f05f79a8b95dc1f1d5433d95280185217d253206  ./project/E-Phones-3.dc.html
+5aa2944aa3241d3f8003c0597aa7835bd34e65986a9e3792392221856e9934f7  ./project/E-Phones.dc.html
+69a598d878d3e80ced2ebed366cde2bed902818d2ff3e283783ac3e9acb37ab8  ./project/canvas.json

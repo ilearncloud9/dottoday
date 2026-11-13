@@ -1,0 +1,10 @@
+518648b311f3a78b801e74a7105c3cf83d7cebb342e0f4ed2edb61f2d4c9ff79  ./generators/mergeplan.py
+31e8fb70dc429f85ad25e90274499621b3e43d6cba7eb011c7ad1531d4a98693  ./generators/stage3.py
+13f83b32488cf0d65241c41f89d1302e0765a7fdd4c379d488f823fe948f5433  ./generators/swaps.json
+b632da34fbb86cc84dac4b18ce30d085f86dc1712a75ab9a8611a351f29061c0  ./pre/E-FullA-v2.dc.html
+cd3d00110e3a4ddcda754c4fa552a2a0724c7111f084d1afbd1085170d77fa75  ./pre/E-G4-3-Narrow.dc.html
+f8b4679837cb4c9889111c6bf645a52b00cb02905e911012d69cc144fc4c521e  ./project/E-FullA-v2-Dark.dc.html
+1766a380e6770ffb373d59450e72aa6a355f3c238cf99e72ce0b274b98717e88  ./project/E-FullA-v2.dc.html
+a7944cb5cda6642a8358410a74d7c41d3b9c94341b30fc4fa0c0f4b489a8faa3  ./project/E-G4-3-Narrow-Dark.dc.html
+b0e5d537ba3472a0d3283f3e01f4af2743c0f50536e5071cd2cd736345b0deac  ./project/E-G4-3-Narrow.dc.html
+a2cd473feff03dcb0c27d000543cafa499c92eb41a944d66fbeb7e7ebfc58bc7  ./project/canvas.json

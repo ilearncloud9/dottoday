@@ -1,0 +1,470 @@
+<title>Dottoday System Surfaces</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap">
+<style>
+/* Layout: a workbench. Surfaces left, the live device centre, the shared snapshot and intent log right. */
+:root{
+  --bg:#EEEAF0; --panel:#FFFFFF; --fg:#241F2B; --muted:#5F5868; --line:#DCD5E0; --accent:#11615C; --accent-soft:#E2EFEC; --on-accent:#FFFFFF; --code:#F4F1F6;
+  --font:Manrope, system-ui, -apple-system, "Segoe UI", sans-serif; --sys:Roboto, system-ui, sans-serif; --apple:-apple-system, "SF Pro Text", Manrope, system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121013; --panel:#1E1A1F; --fg:#F3ECE4; --muted:#B9B0B7; --line:#3A3439; --accent:#5BC4B8; --accent-soft:#1E3A37; --on-accent:#0B2321; --code:#28232A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121013; --panel:#1E1A1F; --fg:#F3ECE4; --muted:#B9B0B7; --line:#3A3439; --accent:#5BC4B8; --accent-soft:#1E3A37; --on-accent:#0B2321; --code:#28232A; color-scheme:dark}
+body{background:var(--bg); color:var(--fg); font:500 15px/1.5 var(--font)}
+*{box-sizing:border-box}
+.page{max-width:1560px; margin:0 auto; padding-block:28px 64px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); display:flex; flex-direction:column; gap:24px}
+.eyebrow{font:700 12px/1 var(--font); letter-spacing:.12em; text-transform:uppercase; color:var(--accent)}
+h1{font:800 clamp(28px,4vw,44px)/1.1 var(--font); margin:10px 0 10px; text-wrap:balance; letter-spacing:-.01em}
+.lede{max-width:72ch; color:var(--muted); margin:0; font-size:16px}
+.bar{display:flex; flex-wrap:wrap; gap:12px 20px; align-items:center}
+.ctl{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.ctl > span,.ctl > label{font:700 12px var(--font); color:var(--muted); letter-spacing:.06em; text-transform:uppercase}
+.seg{display:inline-flex; background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:3px; gap:2px; flex-wrap:wrap}
+.seg button{border:0; background:transparent; color:var(--fg); font:700 13px var(--font); min-height:36px; padding:0 14px; border-radius:999px; cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--on-accent)}
+.ghostbtn{border:1px solid var(--line); background:var(--panel); color:var(--fg); font:700 13px var(--font); min-height:40px; padding:0 16px; border-radius:999px; cursor:pointer; display:inline-flex; align-items:center; gap:6px}
+.clock{display:flex; align-items:center; gap:12px; background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:4px 16px 4px 14px; min-height:44px; flex:1; min-width:260px; max-width:520px}
+.clock output{font:800 15px var(--font); font-variant-numeric:tabular-nums; min-width:72px}
+.clock input{flex:1; accent-color:var(--accent); min-width:0}
+button:focus-visible,[tabindex]:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+.stage{display:grid; grid-template-columns:230px minmax(0,1fr) 320px; gap:24px; align-items:start}
+.rail,.side{background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:18px; display:flex; flex-direction:column; gap:14px; min-width:0}
+.rail h2,.side h2{font:800 13px var(--font); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:0}
+.surf{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px}
+.surf button{width:100%; text-align:left; border:0; background:transparent; color:var(--fg); border-radius:14px; padding:10px 12px; cursor:pointer; min-height:48px; font:inherit}
+.surf button[aria-current="true"]{background:var(--accent-soft)}
+.surf b{display:block; font:800 15px var(--font)} .surf small{display:block; color:var(--muted); font-size:13px; line-height:1.35}
+.devcol{display:flex; flex-direction:column; align-items:center; gap:12px; min-width:0}
+.fit{width:100%; display:flex; justify-content:center; overflow:hidden}
+.fit-inner{transform-origin:top center}
+.cap{font:600 13px var(--font); color:var(--muted); text-align:center; max-width:60ch}
+.snap{font:600 12.5px/1.6 ui-monospace, Menlo, monospace; background:var(--code); border-radius:12px; padding:12px; white-space:pre-wrap; word-break:break-word; margin:0}
+.snap i{font-style:normal; color:var(--accent)}
+.log{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; max-height:260px; overflow:auto}
+.log li{font-size:13px; line-height:1.4; padding:8px 10px; border-radius:10px; background:var(--code)}
+.log li b{color:var(--accent)} .log li.fresh{animation:flash 1s ease}
+@keyframes flash{from{background:var(--accent-soft)}}
+.side p{margin:0; color:var(--muted); font-size:14px}
+section.blk{display:flex; flex-direction:column; gap:14px}
+section.blk > h2{font:800 24px var(--font); margin:0}
+.grid3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px}
+.card{background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:16px}
+.card b{display:block; font:800 16px var(--font); margin-bottom:4px} .card span{color:var(--muted); font-size:14px}
+.tbl{overflow-x:auto; background:var(--panel); border:1px solid var(--line); border-radius:18px}
+table{border-collapse:collapse; width:100%; min-width:760px; font-size:14px}
+th,td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--line); vertical-align:top}
+th{font:800 12px var(--font); letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+tr:last-child td{border-bottom:0} td:first-child{font-weight:800}
+.foot{color:var(--muted); font-size:13px; max-width:100ch; margin:0}
+@media (max-width:1240px){.stage{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .devcol{grid-column:1 / -1; order:-1} .grid3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:720px){.stage{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- device (its own light/dark: the app's Concept E tokens) ---------- */
+.dev{position:relative}
+.dev.ios{width:414px; height:868px; border-radius:66px; background:#1B181D; padding:12px; box-shadow:0 30px 60px -20px rgba(20,14,24,.45), inset 0 0 0 2px #3A353D}
+.dev.android{width:432px; height:932px; border-radius:46px; background:#1B181D; padding:10px; box-shadow:0 30px 60px -20px rgba(20,14,24,.45), inset 0 0 0 2px #3A353D}
+.dev.ipad{width:1220px; height:860px; border-radius:44px; background:#1B181D; padding:20px; box-shadow:0 30px 60px -20px rgba(20,14,24,.45), inset 0 0 0 2px #3A353D}
+.dev.mac,.dev.web{width:1280px; height:800px; border-radius:14px; box-shadow:0 40px 80px -30px rgba(20,14,24,.55), 0 0 0 1px rgba(0,0,0,.25)}
+.screen{
+  --g:#FBF7F1; --s:#FFFDF9; --ink:#241F2B; --sec:#6A6273; --acc:#11615C; --accd:#0B4642; --on:#FFFFFF; --ln:#DDD7E0; --tint:#E2EFEC; --chip:#ECE5DC;
+  --c-ind:#5B5FD6; --c-cor:#E2725B; --c-amb:#D9A23A; --c-blu:#4A9BD6; --c-grn:#469763; --c-vio:#8B5CF6; --c-brn:#8C6A4F; --c-pnk:#D9668F; --c-gry:#7A7280; --c-tea:#2A9D8F;
+  --w1:#BFD7E8; --w2:#E9D7C9; --w3:#D6C5E3; --lk1:#3D4C72; --lk2:#7A5C7E; --a1:#C9DDD6; --a2:#E8DCCB; --a3:#D9CBE6;
+  --wsurf:#FFFDF9; --wsh:0 0 0 .5px rgba(36,31,43,.10), 0 8px 22px rgba(36,31,43,.14); --glass:rgba(255,253,249,.86);
+  --shade:#E9E3EC; --ncard:#F7F2FA; --nink:#1D1B20; --qson:#B8E4DD; --qsonf:#0B3B36; --qsoff:#E2DCE6;
+  --mbar:rgba(246,242,248,.72); --mink:#1D1B20; --mbg:rgba(246,242,248,.94); --msep:rgba(0,0,0,.12); --msel:rgba(0,0,0,.10); --mhov:#2E6BE6; --d1:#9DB8D8; --d2:#D8C4D9;
+  --tbar:#DED8E2; --tact:#F7F3F9; --sheet:#F2F2F7; --field:#FFFFFF; --scrim:rgba(20,16,24,.35);
+  position:relative; width:100%; height:100%; overflow:hidden; background:var(--g); color:var(--ink); border-radius:54px; isolation:isolate; font-family:var(--font)}
+.screen.dark{
+  --g:#171416; --s:#28232A; --ink:#F3ECE4; --sec:#C7BEC4; --acc:#5BC4B8; --accd:#A3E2D9; --on:#0B2321; --ln:#4A4348; --tint:#1E3A37; --chip:#37313A;
+  --c-ind:#7A7EDE; --c-cor:#E2725B; --c-amb:#D9A23A; --c-blu:#4A9BD6; --c-grn:#4CA36B; --c-vio:#9672E6; --c-brn:#A67F60; --c-pnk:#D9668F; --c-gry:#8C838A; --c-tea:#2A9D8F;
+  --w1:#1E2B3A; --w2:#2C2329; --w3:#231E33; --lk1:#141A2C; --lk2:#2D2132; --a1:#1C2A27; --a2:#2A241D; --a3:#251F30;
+  --wsurf:#28232A; --wsh:0 0 0 .5px rgba(255,255,255,.08), 0 8px 22px rgba(0,0,0,.45); --glass:rgba(43,38,42,.86);
+  --shade:#141218; --ncard:#2B2930; --nink:#E6E0E9; --qson:#2F5C56; --qsonf:#D4F1EC; --qsoff:#36343B;
+  --mbar:rgba(30,28,34,.72); --mink:#ECE8EE; --mbg:rgba(40,38,44,.94); --msep:rgba(255,255,255,.12); --msel:rgba(255,255,255,.16); --d1:#1B2536; --d2:#2B2131;
+  --tbar:#1E1C22; --tact:#2B2930; --sheet:#1C1C1E; --field:#2C2C2E; --scrim:rgba(0,0,0,.55)}
+.android .screen{border-radius:36px} .ipad .screen{border-radius:26px} .mac .screen,.web .screen{border-radius:14px}
+.i{fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex:none}
+.num{font-variant-numeric:tabular-nums}
+.sb{position:absolute; left:0; right:0; top:0; height:54px; display:flex; align-items:center; justify-content:space-between; padding:0 34px 0 46px; font:700 16px var(--apple); z-index:30; pointer-events:none}
+.android .sb{height:40px; padding:0 22px; font:500 14px var(--sys)} .ipad .sb{height:32px; padding:0 28px; font-size:14px}
+.sb.light{color:#FEFEFE}
+.home{position:absolute; left:50%; bottom:8px; width:140px; height:5px; margin-left:-70px; border-radius:3px; background:var(--ink); opacity:.8; z-index:40}
+.android .home{width:108px; height:4px; margin-left:-54px; opacity:.6} .ipad .home{width:160px; margin-left:-80px}
+.punch{position:absolute; left:50%; top:12px; width:22px; height:22px; margin-left:-11px; background:#000; border-radius:50%; z-index:31}
+.wall{position:absolute; inset:0}
+
+/* Dynamic Island: the real Live Activity presentation, tap to expand */
+.isl{position:absolute; left:50%; top:11px; transform:translateX(-50%); z-index:45; background:#000; color:#FEFEFE; border:0; padding:0; cursor:pointer; display:flex; align-items:center; overflow:hidden;
+  width:124px; height:36px; border-radius:20px; transition:width .45s cubic-bezier(.3,1.3,.5,1), height .45s cubic-bezier(.3,1.3,.5,1), border-radius .45s; font-family:var(--apple)}
+.isl.compact{width:200px; justify-content:space-between; padding:0 12px}
+.isl.exp{width:370px; height:96px; border-radius:42px; padding:0 18px; gap:12px; cursor:default}
+.isl .it{flex:1; min-width:0; text-align:left} .isl .it b{display:block; font:700 16px var(--apple); white-space:nowrap; overflow:hidden; text-overflow:ellipsis} .isl .it span{font:500 13px var(--apple); opacity:.75}
+.isl .ib{width:44px; height:44px; border-radius:50%; border:0; display:flex; align-items:center; justify-content:center; color:#FEFEFE; font:700 13px var(--apple); cursor:pointer; flex:none}
+
+/* widgets (shared E look) */
+.wg{position:absolute; border-radius:22px; background:var(--wsurf); box-shadow:var(--wsh); padding:14px; display:flex; flex-direction:column; gap:8px; overflow:hidden; color:var(--ink); text-align:left; border:0; font-family:var(--font); cursor:pointer}
+.android .wg{border-radius:28px}
+.wg .hd{display:flex; align-items:center; gap:6px; font:800 11px var(--font); letter-spacing:.8px; color:var(--sec); text-transform:uppercase}
+.wg .hd .ct{margin-left:auto; font:600 12px var(--font); letter-spacing:0; text-transform:none}
+.wg .tt{font:800 15px/19px var(--font)}
+.wg .mt{font:600 12px var(--font); color:var(--sec)}
+.wg .bignum{font:800 40px/44px var(--font)}
+.rows{display:flex; flex-direction:column; position:relative}
+.rows::before{content:""; position:absolute; left:7px; top:10px; bottom:10px; width:2px; background:var(--ln); border-radius:1px}
+.row{display:flex; align-items:center; gap:10px; position:relative; z-index:1}
+.row .tm{width:62px; flex:none; font:600 12px var(--font); color:var(--sec)} .row.now .tm{color:var(--acc); font-weight:800}
+.row .nm{flex:1; min-width:0; font:600 14px var(--font); white-space:nowrap; overflow:hidden; text-overflow:ellipsis} .row.now .nm{font-weight:800}
+.hol{width:14px; height:14px; border-radius:50%; flex:none; background:var(--wsurf); box-shadow:inset 0 0 0 2.5px var(--cc)}
+.dbtn{width:38px; height:38px; border-radius:50%; border:0; background:var(--cc); color:#FEFEFE; display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none; transition:transform .15s}
+.dbtn:active{transform:scale(.9)}
+.empty{font:600 13px var(--font); color:var(--sec)}
+
+/* lock screen */
+.lockclock{position:absolute; left:0; right:0; top:92px; text-align:center; color:#FEFEFE; font-family:var(--apple)}
+.lockclock div:first-child{font:600 18px var(--apple)} .lockclock div:last-child{font:700 92px/100px var(--apple); letter-spacing:-2px}
+.lrect{position:absolute; left:109px; top:238px; width:180px; color:#FEFEFE; font-family:var(--apple); display:flex; flex-direction:column; gap:2px; background:none; border:0; text-align:left; cursor:pointer}
+.la{position:absolute; left:14px; right:14px; bottom:44px; border-radius:24px; background:var(--glass); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); padding:16px; display:flex; flex-direction:column; gap:14px; color:var(--ink)}
+.cbtn{flex:1; height:44px; border-radius:22px; border:0; display:flex; align-items:center; justify-content:center; gap:6px; font:800 16px var(--font); cursor:pointer}
+.bar6{flex:1; height:6px; border-radius:3px; position:relative; overflow:hidden}
+.bar6 span{position:absolute; left:0; top:0; bottom:0; border-radius:3px; transition:width .5s cubic-bezier(.2,0,0,1)}
+
+/* control center */
+.cc{position:absolute; inset:0; background:linear-gradient(160deg, rgba(40,36,46,.86), rgba(20,18,24,.92)); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); padding:90px 26px; display:grid; grid-template-columns:repeat(4, 1fr); gap:18px; align-content:start; color:#FEFEFE; font-family:var(--apple)}
+.ccb{display:flex; flex-direction:column; align-items:center; gap:8px; background:none; border:0; color:#FEFEFE; font:600 11px var(--apple); cursor:pointer}
+.ccb span{width:68px; height:68px; border-radius:50%; background:rgba(255,255,255,.16); display:flex; align-items:center; justify-content:center}
+.ccb.sys{opacity:.45; cursor:default}
+.ccb.dt span{background:rgba(91,196,184,.3)}
+
+/* android shade */
+.qs{height:64px; border-radius:32px; display:flex; align-items:center; gap:12px; padding:0 16px; font:500 14px var(--sys); border:0; cursor:pointer; text-align:left}
+.ong{border-radius:24px; background:var(--ncard); color:var(--nink); padding:14px 16px; font-family:var(--sys)}
+.ong .act{display:flex; gap:8px; margin-top:12px}
+.ong .act button{height:36px; border:0; border-radius:18px; padding:0 14px; background:transparent; font:500 14px var(--sys); cursor:pointer}
+
+/* mac */
+.mbar{position:absolute; left:0; right:0; top:0; height:30px; display:flex; align-items:center; justify-content:space-between; padding:0 14px; background:var(--mbar); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); font:500 13px var(--apple); color:var(--mink); z-index:20}
+.mbar .si{display:flex; align-items:center; gap:6px; height:22px; padding:0 8px; border-radius:5px; background:none; border:0; color:inherit; font:inherit; cursor:pointer}
+.mbar .si[aria-expanded="true"]{background:var(--msel)}
+.mmenu{position:absolute; top:34px; width:320px; border-radius:10px; background:var(--mbg); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); padding:5px; box-shadow:0 0 0 .5px rgba(0,0,0,.25), 0 12px 32px rgba(0,0,0,.22); z-index:25; animation:mm .14s ease-out; font-family:var(--apple)}
+@keyframes mm{from{opacity:0; transform:translateY(-4px)}}
+.mi{width:100%; height:24px; display:flex; align-items:center; gap:8px; padding:0 12px; border-radius:5px; font:400 13px var(--apple); color:var(--mink); background:none; border:0; text-align:left; cursor:pointer}
+.mi:hover:not([disabled]){background:var(--mhov); color:#FEFEFE} .mi[disabled]{opacity:.5; cursor:default}
+.msep{height:1px; background:var(--msep); margin:5px 12px}
+
+/* web tab */
+.tabs{position:absolute; left:0; right:0; top:0; height:44px; background:var(--tbar); display:flex; align-items:flex-end; padding:0 10px; gap:4px}
+.tab{height:36px; width:330px; border-radius:10px 10px 0 0; background:var(--tact); display:flex; align-items:center; gap:8px; padding:0 12px; font:500 13px system-ui; color:var(--mink)}
+.tab span{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.url{position:absolute; left:0; right:0; top:44px; height:42px; background:var(--tact); display:flex; align-items:center; padding:0 14px; border-bottom:1px solid var(--msep)}
+.url span{flex:1; height:30px; border-radius:15px; background:var(--tbar); display:flex; align-items:center; padding:0 14px; font:500 13px system-ui; color:var(--sec)}
+
+/* sheets and toasts */
+.scrimx{position:absolute; inset:0; background:var(--scrim); z-index:60; display:flex; align-items:flex-end; animation:fade .2s both}
+@keyframes fade{from{opacity:0}}
+.qa{width:100%; background:var(--s); border-radius:32px 32px 0 0; padding:18px 18px 40px; animation:up .38s cubic-bezier(.05,.7,.1,1) both}
+@keyframes up{from{transform:translateY(100%)}}
+.qa form{display:flex; gap:8px; align-items:center; height:56px; padding:0 6px 0 18px; border-radius:28px; background:var(--g); box-shadow:inset 0 0 0 2px var(--acc)}
+.qa input{flex:1; min-width:0; border:0; outline:0; background:transparent; color:var(--ink); font:700 17px var(--font)}
+.qa input::placeholder{color:var(--sec); font-weight:500}
+.qa .go{width:44px; height:44px; border-radius:22px; border:0; background:var(--acc); color:var(--on); display:flex; align-items:center; justify-content:center; cursor:pointer}
+.wide .scrimx{align-items:center; justify-content:center} .wide .qa{width:460px; border-radius:28px; padding:18px; animation-name:pop}
+@keyframes pop{from{transform:scale(.94); opacity:0}}
+.toast{position:absolute; left:50%; bottom:60px; transform:translateX(-50%); z-index:70; background:#2E2836; color:#FBF7F1; height:44px; padding:0 18px; border-radius:22px; display:flex; align-items:center; gap:8px; font:700 14px var(--font); white-space:nowrap; animation:toast 2.6s ease both; pointer-events:none}
+@keyframes toast{0%{opacity:0; transform:translate(-50%,10px)}10%,85%{opacity:1; transform:translate(-50%,0)}100%{opacity:0}}
+.ripple{animation:rip .6s ease-out}
+@keyframes rip{0%{box-shadow:var(--wsh), 0 0 0 0 rgba(91,196,184,.6)}100%{box-shadow:var(--wsh), 0 0 0 14px rgba(91,196,184,0)}}
+.rm *, .rm *::before{animation-duration:.01s !important; transition-duration:.01s !important}
+</style>
+
+<div class="page" id="page">
+  <header>
+    <div class="eyebrow">Concept E · Round 2 · R2-17 · Interactive prototype</div>
+    <h1>System surfaces you can try</h1>
+    <p class="lede">Every place Dottoday appears outside the app, wired to one shared day snapshot. Drag the clock, tap Done or +15 min on any surface, add a task from a control or the share sheet, and watch every other surface follow. Only what is built is drawn; proposed for review, nothing is built.</p>
+  </header>
+
+  <div class="bar" role="toolbar" aria-label="Prototype controls">
+    <div class="ctl"><span id="lp">Platform</span><div class="seg" role="group" aria-labelledby="lp" id="c-plat">
+      <button data-v="ios" aria-pressed="true">iPhone</button><button data-v="android" aria-pressed="false">Android</button><button data-v="ipad" aria-pressed="false">iPad</button><button data-v="mac" aria-pressed="false">Mac</button><button data-v="web" aria-pressed="false">Web</button></div></div>
+    <div class="ctl"><span id="lt">Device theme</span><div class="seg" role="group" aria-labelledby="lt" id="c-theme">
+      <button data-v="light" aria-pressed="true">Light</button><button data-v="dark" aria-pressed="false">Dark</button></div></div>
+    <div class="clock"><label for="time" style="font:700 12px var(--font);color:var(--muted);letter-spacing:.06em;text-transform:uppercase">Time</label><input id="time" type="range" min="390" max="1380" step="1" value="642" aria-describedby="time-out"><output id="time-out" for="time">10:42 AM</output></div>
+    <button class="ghostbtn" id="reset" type="button"><svg class="i" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.5-5.8M4 4v4h4"/></svg>Reset the day</button>
+  </div>
+
+  <div class="stage">
+    <nav class="rail" aria-label="Surfaces"><h2>Surfaces</h2><ul class="surf" id="surf"></ul></nav>
+    <div class="devcol"><div class="fit" id="fit"><div class="fit-inner" id="fitin"></div></div><div class="cap" id="cap"></div></div>
+    <aside class="side">
+      <h2>The day snapshot</h2>
+      <p>The one thing every surface reads. Nothing here talks to the server.</p>
+      <pre class="snap" id="snap" aria-live="polite"></pre>
+      <h2>Intents run</h2>
+      <ol class="log" id="log" aria-live="polite"></ol>
+    </aside>
+  </div>
+
+  <section class="blk" aria-labelledby="h-rules">
+    <h2 id="h-rules">How every surface behaves</h2>
+    <div class="grid3">
+      <div class="card"><b>One snapshot, five intents</b><span>Surfaces read the day snapshot and run only Add task, Mark done, +15 min, Start focus and Open. None talks to Supabase (CLAUDE.md §11).</span></div>
+      <div class="card"><b>The thread and the dot</b><span>The task under way is a ring in its colour that fills as time passes. Dots ahead are hollow, done ones are filled. The day dot fills from Wake Up to Wind Down.</span></div>
+      <div class="card"><b>Text from the app</b><span>Every word arrives formatted and translated in the snapshot: Now, Next up, until {time}, {time} left, Done, +15 min, {n} in Inbox. No new strings.</span></div>
+      <div class="card"><b>Act without opening</b><span>Done and +15 min run in place on widgets, the Live Activity, the island, the notification and the menu. Add task and Start focus open the app where they must.</span></div>
+      <div class="card"><b>Calm by default</b><span>No overdue badges, no red, no streaks. A task that ran past its end just stops being “now”. The notification is silent and alerts once.</span></div>
+      <div class="card"><b>Native chrome, one identity</b><span>WidgetKit and Glance shapes, the Dynamic Island, Quick Settings, the macOS menu and the browser tab keep their system form; the dot and colours are Dottoday’s.</span></div>
+    </div>
+  </section>
+
+  <section class="blk" aria-labelledby="h-built">
+    <h2 id="h-built">What is built and what this changes</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Surface</th><th>Built today</th><th>Concept E change (design only)</th><th>Motion</th></tr></thead>
+      <tbody>
+        <tr><td>Widgets (iOS, iPadOS, Android)</td><td>Next up, Today, Inbox; Done on Next up</td><td>Now ring, hollow dots ahead, a thread line, the day dot in each header</td><td>The system’s own timeline reload; no custom motion</td></tr>
+        <tr><td>Live Activity and Dynamic Island</td><td>Lock card, compact, minimal, expanded; Done and +15 min</td><td>Ring and progress bar in the task colour; the next task after the bar</td><td>The island expands with the system spring; the bar advances with the clock</td></tr>
+        <tr><td>Controls and Quick Settings</td><td>Add task, Start focus</td><td>The ring glyph for Start focus (custom symbol)</td><td>System press feedback</td></tr>
+        <tr><td>Ongoing notification</td><td>Title, range · count, countdown, Done, +15 min</td><td>Progress line and ring in the task colour</td><td>None (silent, alerts once)</td></tr>
+        <tr><td>Mac menu bar and web tab</td><td>Day dot status item and menu; “● 18 min left · …” title and ring favicon</td><td>Ring favicon in the task colour</td><td>Menu opens with the system fade</td></tr>
+        <tr><td>Share into Inbox</td><td>iOS, macOS and Android share targets (no web)</td><td>Dottoday icon in the system sheet</td><td>System sheet</td></tr>
+      </tbody></table></div>
+    <p class="foot">Not drawn, because each would be a new native target and needs the owner first: a watch app, Mac or web widgets, and a redesigned Wake Up alarm Live Activity (that is the Wake Up re-check). iPad has no Live Activities (ActivityKit), so the island and lock card are iPhone only.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+const IC={check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>', plus:'<path d="M12 5v14M5 12h14"/>', focus:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" fill="currentColor"/>',
+  inbox:'<path d="M3 13h5l1.5 3h5L16 13h5"/><path d="M5.5 5h13L21 13v6H3v-6z"/>', send:'<path d="M5 12h14M13 6l6 6-6 6"/>', wifi:'<path d="M5 12a7 7 0 0 1 14 0M8.5 12a3.5 3.5 0 0 1 7 0"/><circle cx="12" cy="15" r="1.4" fill="currentColor"/>',
+  moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>', bt:'<path d="M7 7l10 10-5 4V3l5 4L7 17"/>', fl:'<path d="M9 3h6l-1 6h-4zM10 9h4v12h-4z"/>', share:'<path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/>'};
+const sv=(n,s=20,w=2)=>`<svg class="i" width="${s}" height="${s}" viewBox="0 0 24 24" aria-hidden="true" style="stroke-width:${w}">${IC[n]}</svg>`;
+const SEED=()=>[
+  {id:'run',t:'Morning run',s:405,e:450,c:'--c-cor',done:true},{id:'cof',t:'Coffee and plan the day',s:450,e:465,c:'--c-amb',done:true},{id:'stand',t:'Team standup',s:480,e:495,c:'--c-blu',done:true},
+  {id:'deep',t:'Deep work: roadmap',s:540,e:660,c:'--c-ind'},{id:'lunch',t:'Lunch',s:750,e:795,c:'--c-pnk'},{id:'dent',t:'Dentist',s:840,e:870,c:'--c-gry'},
+  {id:'parcel',t:'Pick up parcel',s:900,e:945,c:'--c-grn'},{id:'gym',t:'Gym',s:1080,e:1140,c:'--c-vio'},{id:'plants',t:'Water plants',s:1200,e:1210,c:'--c-tea'},{id:'read',t:'Read',s:1290,e:1320,c:'--c-brn'}];
+const WAKE=390, WIND=1380;
+const SURF={
+  ios:[['home','Home Screen','Widgets, and the Dynamic Island while a task is under way'],['lock','Lock Screen','Next up and the Live Activity'],['cc','Control Center','Add task, Start focus'],['share','Share sheet','Text or a link into Inbox']],
+  android:[['home','Home screen','Glance widgets'],['shade','Shade','Quick Settings tiles and the ongoing notification'],['share','Share sheet','Text or a link into Inbox']],
+  ipad:[['home','Home Screen','The widgets at iPad sizes']],
+  mac:[['menu','Menu bar','The day dot and its menu'],['share','Share menu','Into Inbox from any app']],
+  web:[['tab','Browser tab','The live dot in the title and favicon']]};
+const PLAT={ios:{w:414,h:868,cap:'iPhone · WidgetKit, ActivityKit, Controls (iOS 18)'},android:{w:432,h:932,cap:'Android · Glance widgets, Quick Settings tiles, an ongoing notification'},ipad:{w:1220,h:860,cap:'iPad · the same widgets; no Live Activity on iPad'},mac:{w:1280,h:800,cap:'Mac · the day dot status item (⌘-drag removes it)'},web:{w:1280,h:800,cap:'Web · the tab title and favicon follow the dot'}};
+const pageDark=()=>{const t=document.documentElement.dataset.theme; return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;};
+const st={plat:'ios',surf:'home',theme:pageDark()?'dark':'light',now:642,tasks:SEED(),inbox:3,island:'compact',menu:false,sheet:null,log:[]};
+
+const fmt=m=>{m=((Math.round(m)%1440)+1440)%1440; let h=Math.floor(m/60), mm=m%60, ap=h<12?'AM':'PM'; h=h%12||12; return `${h}:${String(mm).padStart(2,'0')} ${ap}`;};
+const range=t=>`${fmt(t.s).replace(/ (AM|PM)$/,m=>fmt(t.e).endsWith(m)?'':m)} – ${fmt(t.e)}`;
+const minsLeft=m=>m<60?`${m} min`:`${Math.floor(m/60)} h ${m%60?m%60+' min':''}`.trim();
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* the snapshot: the only thing surfaces read */
+function snap(){
+  const ts=st.tasks.slice().sort((a,b)=>a.s-b.s);
+  const live=ts.find(t=>!t.done&&t.s<=st.now&&st.now<t.e)||null;
+  const next=ts.find(t=>!t.done&&t.s>st.now)||null;
+  const ahead=ts.filter(t=>!t.done&&t.e>st.now);
+  const done=ts.filter(t=>t.done).length;
+  return {live,next,ahead,done,total:ts.length,inbox:st.inbox,day:Math.min(1,Math.max(0,(st.now-WAKE)/(WIND-WAKE)))};
+}
+const share=t=>Math.min(1,Math.max(0,(st.now-t.s)/(t.e-t.s)));
+function ring(size,p,col,track,w,inner=''){
+  w=w||Math.max(3,size*.12); const r=(size-w)/2, c=2*Math.PI*r;
+  return `<span aria-hidden="true" style="position:relative;width:${size}px;height:${size}px;flex:none;display:inline-flex;align-items:center;justify-content:center"><svg width="${size}" height="${size}" style="position:absolute;inset:0"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${track||`color-mix(in srgb, ${col} 22%, transparent)`}" stroke-width="${w}"/><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="${(c*p).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${size/2} ${size/2})" style="transition:stroke-dasharray .5s cubic-bezier(.2,0,0,1)"/></svg>${inner}</span>`;
+}
+const cv=t=>`var(${t.c})`;
+const daydot=(s,size=14,col='var(--acc)')=>ring(size,s.day,col,`color-mix(in srgb, ${col} 18%, transparent)`,size*.2,`<span style="width:${size*.3}px;height:${size*.3}px;border-radius:50%;background:${col}"></span>`);
+const leftOf=t=>Math.max(1,Math.ceil(t.e-st.now));
+
+/* ---------- widgets ---------- */
+function wNext(s,x,y,w,h){
+  const t=s.live||s.next;
+  if(!t) return `<button class="wg" data-open="today" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"><span class="hd">${daydot(s)}Next up</span><span class="empty" style="margin-top:auto">Nothing else today</span></button>`;
+  return `<div class="wg" role="group" aria-label="Next up widget" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"><span class="hd">${daydot(s)}${s.live?'Now':'Next up'}</span>
+    <span style="display:flex;gap:8px;align-items:flex-start">${s.live?ring(22,share(t),cv(t)):`<span class="hol" style="--cc:${cv(t)};width:18px;height:18px;margin:2px"></span>`}<span class="tt">${esc(t.t)}</span></span>
+    <span style="margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between"><span class="mt num">${s.live?`until ${fmt(t.e)}`:fmt(t.s)}</span><button class="dbtn" data-act="done" data-id="${t.id}" style="--cc:${cv(t)}" aria-label="Done, ${esc(t.t)}">${sv('check',17,2.8)}</button></span></div>`;
+}
+function wToday(s,x,y,w,h,rows){
+  const rh=h<200?24:30, list=s.ahead.slice(0,rows);
+  const body=list.length?list.map(t=>{const now=s.live&&t.id===s.live.id;
+    return `<div class="row ${now?'now':''}" style="height:${rh}px">${now?ring(16,share(t),cv(t),null,3):`<span class="hol" style="--cc:${cv(t)}"></span>`}<span class="tm num">${now?'Now':fmt(t.s)}</span><span class="nm">${esc(t.t)}</span></div>`;}).join(''):'<span class="empty">Nothing else today</span>';
+  return `<button class="wg" data-open="today" aria-label="Today widget, ${s.done} of ${s.total} done" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;gap:${h<200?6:10}px"><span class="hd">${daydot(s)}Today<span class="ct num">${s.done} of ${s.total} done</span></span><span class="rows">${body}</span></button>`;
+}
+function wInbox(s,x,y,w,h){
+  return `<button class="wg" data-open="inbox" aria-label="Inbox widget, ${s.inbox} in Inbox" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"><span class="hd" style="color:var(--acc)">${sv('inbox',16)}Inbox</span><span class="bignum num" style="margin-top:auto">${s.inbox}</span><span class="mt">${s.inbox?`${s.inbox} in Inbox`:'Inbox is clear'}</span></button>`;
+}
+
+/* ---------- iPhone ---------- */
+function island(s){
+  const t=s.live; if(!t) return '';
+  if(st.island==='exp') return `<div class="isl exp" role="group" aria-label="Live Activity, expanded">${ring(44,share(t),cv(t),'rgba(255,255,255,.2)',4)}<span class="it"><b>${esc(t.t)}</b><span class="num">${minsLeft(leftOf(t))} left · ${s.done} of ${s.total}</span></span>
+    <button class="ib" data-act="done" data-id="${t.id}" style="background:${cv(t)}" aria-label="Done">${sv('check',20,2.8)}</button><button class="ib" data-act="plus" data-id="${t.id}" style="background:rgba(255,255,255,.16)" aria-label="+15 min">+15</button><button class="ib" data-act="isl-close" aria-label="Collapse" style="width:28px;background:none;opacity:.6">×</button></div>`;
+  return `<button class="isl compact" data-act="isl-open" aria-label="Live Activity: ${esc(t.t)}, ${minsLeft(leftOf(t))} left. Expand">${ring(22,share(t),cv(t),'rgba(255,255,255,.22)',3)}<span class="num" style="font:700 14px var(--apple);color:${cv(t)}">${minsLeft(leftOf(t))}</span></button>`;
+}
+function iosHome(s){
+  return `<div class="wall" style="background:linear-gradient(160deg,var(--w1),var(--w2) 55%,var(--w3))"></div>${statusBar('9:41')}${s.live?island(s):'<div class="isl" aria-hidden="true" style="cursor:default"></div>'}
+    ${wNext(s,24,70,158,158)}${wInbox(s,208,70,158,158)}${wToday(s,24,250,342,158,4)}${wToday(s,24,430,342,354,9)}`;
+}
+function iosLock(s){
+  const t=s.live, nx=s.live?s.next:null, r=s.live||s.next;
+  const rect=r?`<button class="lrect" data-open="today"><span style="display:flex;align-items:center;gap:5px;font:600 11px var(--apple);opacity:.85">${ring(13,s.day,'#FEFEFE','rgba(255,255,255,.35)',2.6)}${s.live?'NOW':'NEXT UP'}</span><span style="font:700 15px var(--apple)">${esc(r.t)}</span><span class="num" style="font:500 13px var(--apple);opacity:.8">${s.live?`until ${fmt(r.e)}`:fmt(r.s)}</span></button>`:'';
+  const la=t?`<div class="la" role="group" aria-label="Live Activity"><div style="display:flex;align-items:center;gap:8px"><span class="bar6" style="background:color-mix(in srgb, ${cv(t)} 22%, transparent)"><span style="width:${share(t)*100}%;background:${cv(t)}"></span></span>${nx?`<span class="hol" style="--cc:var(--sec);width:9px;height:9px;background:transparent;box-shadow:inset 0 0 0 1.5px var(--sec)"></span><span style="font:600 12px var(--font);color:var(--sec);white-space:nowrap">${esc(nx.t)} · ${fmt(nx.s)}</span>`:''}</div>
+    <div style="display:flex;align-items:center;gap:12px">${ring(44,share(t),cv(t),null,5)}<div style="flex:1;min-width:0"><div style="font:800 17px var(--font);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(t.t)}</div><div class="num" style="font:600 14px var(--font);color:var(--sec)">${range(t)} · <b style="color:var(--ink)">${minsLeft(leftOf(t))} left</b></div></div><span class="num" style="font:600 14px var(--font);color:var(--sec)">${s.done} of ${s.total}</span></div>
+    <div style="display:flex;gap:12px"><button class="cbtn" data-act="done" data-id="${t.id}" style="background:${cv(t)};color:#FEFEFE">${sv('check',18,2.8)}Done</button><button class="cbtn" data-act="plus" data-id="${t.id}" style="background:var(--chip);color:var(--ink)">+15 min</button></div></div>`:'';
+  return `<div class="wall" style="background:linear-gradient(180deg,var(--lk1),var(--lk2))"></div>${statusBar('9:41',true)}<div class="isl" aria-hidden="true" style="cursor:default"></div>
+    <div class="lockclock"><div>Thursday 13 November</div><div class="num">${fmt(st.now).replace(/ (AM|PM)/,'')}</div></div>${rect}${la}`;
+}
+function iosCC(){
+  const sys=(ic,l)=>`<span class="ccb sys" aria-hidden="true"><span>${sv(ic,26)}</span>${l}</span>`;
+  return `<div class="wall" style="background:linear-gradient(160deg,var(--w1),var(--w2) 55%,var(--w3))"></div><div class="cc">${sys('wifi','Wi-Fi')}${sys('bt','Bluetooth')}${sys('moon','Focus')}${sys('fl','Torch')}
+    <button class="ccb dt" data-act="add"><span>${sv('plus',30,2.2)}</span>Add task</button><button class="ccb dt" data-act="focus"><span>${sv('focus',30,2.2)}</span>Start focus</button></div>${statusBar('9:41',true)}<div class="isl" aria-hidden="true" style="cursor:default"></div>`;
+}
+function shareSheet(android){
+  if(android) return `<div class="wall" style="background:linear-gradient(170deg,var(--a1),var(--a2) 60%,var(--a3))"></div>${statusBar('9:41')}
+    <div style="position:absolute;left:0;right:0;bottom:0;border-radius:28px 28px 0 0;background:var(--ncard);color:var(--nink);padding:18px 18px 40px;font-family:var(--sys)">
+    <div style="width:32px;height:4px;border-radius:2px;background:var(--sec);margin:0 auto 14px;opacity:.6"></div><div style="font:400 14px var(--sys);opacity:.75">Sharing link</div><div style="font:500 16px var(--sys);margin:2px 0 16px">Book the car service</div>
+    <div style="display:flex;justify-content:space-between">${['Dottoday','Keep','Messages','Drive'].map((n,i)=>`<button ${i===0?'data-act="share-post"':'disabled'} style="display:flex;flex-direction:column;align-items:center;gap:6px;width:72px;background:none;border:0;color:inherit;font:400 12px var(--sys);cursor:${i?'default':'pointer'}"><span style="width:52px;height:52px;border-radius:50%;background:${i?'var(--qsoff)':'var(--acc)'};display:flex;align-items:center;justify-content:center">${i?'':'<span style="width:18px;height:18px;border-radius:50%;background:#FEFEFE;box-shadow:0 0 0 4px var(--acc),0 0 0 7px #FEFEFE"></span>'}</span>${n}</button>`).join('')}</div></div>`;
+  return `<div class="wall" style="background:linear-gradient(160deg,var(--w1),var(--w2) 55%,var(--w3))"></div>${statusBar('9:41')}<div class="isl" aria-hidden="true" style="cursor:default"></div>
+    <div style="position:absolute;left:8px;right:8px;bottom:8px;border-radius:38px;background:var(--sheet);padding:18px 16px 30px;color:var(--ink);font-family:var(--apple)">
+    <div style="display:flex;gap:12px;align-items:center;padding:4px 4px 14px;border-bottom:1px solid var(--msep)"><span style="width:44px;height:44px;border-radius:10px;background:var(--chip)"></span><span><b style="font:600 15px var(--apple)">garage.example.com</b><br><span style="font:400 13px var(--apple);color:var(--sec)">Book the car service</span></span></div>
+    <div style="display:flex;justify-content:space-between;padding:16px 4px">${['Dottoday','Notes','Reminders','More'].map((n,i)=>`<button ${i===0?'data-act="share-post"':'disabled'} style="display:flex;flex-direction:column;align-items:center;gap:6px;width:70px;background:none;border:0;color:inherit;font:500 11px var(--apple);cursor:${i?'default':'pointer'}"><span style="width:60px;height:60px;border-radius:15px;background:${i?'var(--chip)':'var(--acc)'};display:flex;align-items:center;justify-content:center">${i?'':'<span style="width:22px;height:22px;border-radius:50%;background:#FEFEFE;box-shadow:0 0 0 5px var(--acc),0 0 0 8px #FEFEFE"></span>'}</span>${n}</button>`).join('')}</div>
+    <div style="font:400 13px var(--apple);color:var(--sec);padding:0 4px">Tap Dottoday: the system compose sheet opens, then Post adds an Inbox task with the link as its note.</div></div>`;
+}
+function statusBar(t,light){
+  const icons=`<span style="display:flex;gap:6px;align-items:center"><svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="10" y="2" width="3" height="10" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg><svg width="26" height="13" viewBox="0 0 26 13" aria-hidden="true"><rect x=".5" y=".5" width="22" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="16" height="9" rx="2" fill="currentColor"/></svg></span>`;
+  const time=st.plat==='ipad'?`${fmt(st.now).replace(/ (AM|PM)/,'')} Thu 13 Nov`:fmt(st.now).replace(/ (AM|PM)/,'');
+  return `<div class="sb ${light?'light':''}"><span class="num">${time}</span>${icons}</div>${st.plat==='android'?'<div class="punch"></div>':''}`;
+}
+
+/* ---------- Android ---------- */
+function andHome(s){
+  return `<div class="wall" style="background:linear-gradient(170deg,var(--a1),var(--a2) 60%,var(--a3))"></div>${statusBar()}${wNext(s,16,60,182,182)}${wInbox(s,214,60,182,182)}${wToday(s,16,262,380,186,4)}${wToday(s,16,468,380,330,8)}`;
+}
+function andShade(s){
+  const t=s.live, qs=(act,ic,l,on,sys)=>`<button class="qs" ${act?`data-act="${act}"`:'disabled'} style="background:var(${on?'--qson':'--qsoff'});color:var(${on?'--qsonf':'--nink'});${sys?'opacity:.55;cursor:default':''}">${sv(ic,22)}<span>${l}</span></button>`;
+  const ong=t?`<div class="ong" role="group" aria-label="Ongoing notification"><div style="display:flex;align-items:center;gap:8px;font:500 12px var(--sys)"><span style="width:22px;height:22px;border-radius:50%;background:${cv(t)};display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:50%;background:#FEFEFE"></span></span>Dottoday<span class="num" style="opacity:.7">· ${String(Math.floor(leftOf(t))).padStart(2,'0')}:00 ⏱</span></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:10px"><div style="flex:1;min-width:0"><div style="font:500 16px var(--sys)">${esc(t.t)}</div><div class="num" style="font:400 14px var(--sys);opacity:.8;margin-top:2px">${range(t)} · ${s.done} of ${s.total}</div></div>${ring(36,share(t),cv(t),null,4)}</div>
+    <div style="height:4px;border-radius:2px;background:color-mix(in srgb, ${cv(t)} 22%, transparent);margin-top:12px;overflow:hidden"><div style="width:${share(t)*100}%;height:100%;background:${cv(t)};transition:width .5s"></div></div>
+    <div class="act"><button data-act="done" data-id="${t.id}" style="color:${cv(t)}">Done</button><button data-act="plus" data-id="${t.id}" style="color:${cv(t)}">+15 min</button></div></div>`
+    :`<div class="ong" style="font:400 14px var(--sys);opacity:.8">No task under way, so no ongoing notification. It appears when the next task starts${s.next?` (${esc(s.next.t)}, ${fmt(s.next.s)})`:''}.</div>`;
+  return `<div class="wall" style="background:var(--shade)"></div>${statusBar()}<div style="position:absolute;left:16px;right:16px;top:56px;display:grid;grid-template-columns:1fr 1fr;gap:10px">${qs('add','plus','Add task',true)}${qs('focus','focus','Start focus')}${qs('','wifi','Internet',true,true)}${qs('','moon','Do Not Disturb',false,true)}</div>
+    <div style="position:absolute;left:16px;right:16px;top:240px">${ong}</div>`;
+}
+
+/* ---------- iPad ---------- */
+function ipadHome(s){
+  return `<div class="wall" style="background:linear-gradient(160deg,var(--w1),var(--w2) 55%,var(--w3))"></div>${statusBar()}${wNext(s,60,70,170,170)}${wInbox(s,60,262,170,170)}${wToday(s,252,70,364,362,9).replace('Today widget','Today widget, large')}${wToday(s,638,70,364,170,4)}`;
+}
+
+/* ---------- Mac ---------- */
+function macMenu(s){
+  const t=s.live||s.next, live=!!s.live;
+  const title=t?` ${esc(t.t.length>24?t.t.slice(0,23)+'…':t.t)} · ${live?`until ${fmt(t.e)}`:fmt(t.s)}`:'';
+  const menu=st.menu?`<div class="mmenu" role="menu" aria-label="Day dot menu" style="right:170px">
+    <button class="mi" disabled role="menuitem">${live?'Now':'Next up'}</button>
+    ${t?`<button class="mi" role="menuitem" data-open="task">${live?ring(14,share(t),cv(t),null,2.5):`<span class="hol" style="--cc:${cv(t)};width:10px;height:10px"></span>`}<span><b>${esc(t.t)}</b> · ${live?`until ${fmt(t.e)}`:fmt(t.s)}</span></button>
+    <button class="mi" role="menuitem" data-act="done" data-id="${t.id}">Done</button><button class="mi" role="menuitem" data-act="plus" data-id="${t.id}">+15 min</button>`:'<button class="mi" disabled>Nothing else today</button>'}
+    <div class="msep"></div>${s.ahead.filter(x=>!t||x.id!==t.id).map(x=>`<button class="mi" role="menuitem" data-open="task"><span class="hol" style="--cc:${cv(x)};width:10px;height:10px;background:transparent"></span>${esc(x.t)} · ${fmt(x.s)}</button>`).join('')}
+    <div class="msep"></div><button class="mi" role="menuitem" data-open="today">Today</button></div>`:'';
+  return `<div class="wall" style="background:linear-gradient(160deg,var(--d1),var(--d2))"></div><div class="mbar"><span style="font-weight:700"> Finder&nbsp;&nbsp;<span style="font-weight:500">File&nbsp;&nbsp;Edit&nbsp;&nbsp;View</span></span>
+    <span style="display:flex;align-items:center;gap:14px"><button class="si" data-act="menu" aria-haspopup="menu" aria-expanded="${st.menu}" aria-label="${t?`${live?'Now':'Next up'}: ${esc(t.t)}`:'Nothing else today'}">${daydot(s,15,'var(--mink)')}<span>${title}</span></button><span>⌁</span><span class="num">Thu 13 Nov ${fmt(st.now)}</span></span></div>${menu}
+    <div style="position:absolute;left:60px;bottom:60px;max-width:420px;color:var(--mink);font:500 14px/1.5 var(--apple);opacity:.85">Click the day dot in the menu bar. Done and +15 min run in the app without bringing it forward.</div>`;
+}
+function macShare(){
+  return `<div class="wall" style="background:linear-gradient(160deg,var(--d1),var(--d2))"></div><div class="mbar"><span style="font-weight:700"> Safari</span><span class="num">Thu 13 Nov ${fmt(st.now)}</span></div>
+    <div style="position:absolute;left:120px;top:90px;width:640px;height:420px;border-radius:12px;background:var(--tact);box-shadow:0 20px 50px rgba(0,0,0,.25);overflow:hidden"><div style="height:44px;background:var(--tbar);display:flex;align-items:center;padding:0 14px;gap:10px;color:var(--mink);font:500 13px var(--apple)">garage.example.com<span style="margin-left:auto;display:flex">${sv('share',18)}</span></div>
+    <div class="mmenu" role="menu" style="position:absolute;right:14px;top:40px;width:220px"><button class="mi" data-act="share-post" role="menuitem"><span style="width:16px;height:16px;border-radius:4px;background:var(--acc)"></span>Dottoday</button><button class="mi" disabled>Notes</button><button class="mi" disabled>Reminders</button><button class="mi" disabled>Messages</button></div></div>`;
+}
+/* ---------- Web ---------- */
+function webTab(s){
+  const t=s.live, title=t?`● ${minsLeft(leftOf(t))} left · ${esc(t.t)}`:'Dottoday';
+  const fav=t?ring(16,share(t),cv(t),null,3,`<span style="width:6px;height:6px;border-radius:50%;background:${cv(t)}"></span>`):`<span style="width:16px;height:16px;border-radius:50%;background:var(--acc)"></span>`;
+  return `<div class="wall" style="background:var(--g)"></div><div class="tabs"><div class="tab">${fav}<span>${title}</span></div><div style="height:30px;display:flex;align-items:center;padding:0 12px;font:500 13px system-ui;color:var(--sec)">Inbox (2) · Mail</div></div>
+    <div class="url"><span>dottoday.app/today</span></div>
+    <div style="position:absolute;left:80px;right:80px;top:130px;color:var(--ink)"><div style="font:700 15px var(--font);color:var(--sec)">Thursday 13 November</div><div style="font:800 40px/46px var(--font)">Today</div>
+    <p style="max-width:560px;color:var(--sec);font:500 15px/1.5 var(--font)">On the web the live dot lives in the tab: its title counts down and its favicon is the ring, so you can see the task from any other tab. ${t?'':'Nothing is under way right now, so the tab shows the plain title.'}</p></div>`;
+}
+
+/* ---------- render ---------- */
+function screenHTML(){
+  const s=snap(), p=st.plat, f=st.surf;
+  if(p==='ios') return f==='lock'?iosLock(s):f==='cc'?iosCC():f==='share'?shareSheet(false):iosHome(s);
+  if(p==='android') return f==='shade'?andShade(s):f==='share'?shareSheet(true):andHome(s);
+  if(p==='ipad') return ipadHome(s);
+  if(p==='mac') return f==='share'?macShare():macMenu(s);
+  return webTab(s);
+}
+function sheetHTML(){
+  if(st.sheet==='add') return `<div class="scrimx" data-act="sheet-close"><div class="qa" role="dialog" aria-label="Add task"><form id="qa-form"><input id="qa-in" autocomplete="off" placeholder="Call Mum tomorrow 3pm 20m" aria-label="Add task"><button class="go" aria-label="Add task">${sv('send',20,2.4)}</button></form><p style="margin:10px 4px 0;font:500 13px var(--font);color:var(--sec)">Quick Add over Today. In this prototype, anything you add goes to Inbox.</p></div></div>`;
+  if(st.sheet==='compose') return `<div class="scrimx" data-act="sheet-close"><div class="qa" role="dialog" aria-label="Dottoday" style="font-family:var(--apple)"><div style="display:flex;justify-content:space-between;align-items:center;font:400 17px var(--apple);padding:0 4px 12px"><button data-act="sheet-close" style="background:none;border:0;color:#0A7AFF;font:inherit;cursor:pointer">Cancel</button><b>Dottoday</b><button data-act="share-done" style="background:none;border:0;color:#0A7AFF;font:600 17px var(--apple);cursor:pointer">Post</button></div><div style="padding:12px;border-radius:12px;background:var(--field);font:400 16px/22px var(--apple)">Book the car service<div style="font:400 13px var(--apple);color:var(--sec);margin-top:6px">garage.example.com/booking</div></div></div></div>`;
+  return '';
+}
+function render(){
+  const scr=document.getElementById('screen');
+  scr.innerHTML=screenHTML()+sheetHTML()+(st.plat==='ios'||st.plat==='android'||st.plat==='ipad'?'<div class="home"></div>':'');
+  if(st.sheet==='add'){ const f=scr.querySelector('#qa-form'), i=scr.querySelector('#qa-in'); i.focus({preventScroll:true});
+    f.addEventListener('submit',e=>{ e.preventDefault(); const v=i.value.trim(); if(!v) return; st.inbox++; st.sheet=null; logI('Add task',`“${v}” → Inbox`); toast('Added to Inbox'); render(); }); }
+  renderSide();
+}
+function renderSide(){
+  const s=snap();
+  document.getElementById('snap').innerHTML=
+`<i>now</i>      ${fmt(st.now)}
+<i>live</i>     ${s.live?`${esc(s.live.t)} · until ${fmt(s.live.e)} · ${minsLeft(leftOf(s.live))} left`:'—'}
+<i>next_up</i>  ${s.next?`${esc(s.next.t)} · ${fmt(s.next.s)}`:'Nothing else today'}
+<i>count</i>    ${s.done} of ${s.total}
+<i>inbox</i>    ${s.inbox?`${s.inbox} in Inbox`:'Inbox is clear'}
+<i>day_dot</i>  ${Math.round(s.day*100)} % of Wake Up → Wind Down`;
+  document.getElementById('log').innerHTML=st.log.length?st.log.map((l,i)=>`<li class="${i===0&&l.fresh?'fresh':''}"><b>${l.i}</b> · ${l.d}<br><span style="color:var(--muted)">from ${l.from} · ${l.at}</span></li>`).join(''):'<li>No intents yet. Tap Done, +15 min, Add task or Start focus on a surface.</li>';
+  st.log.forEach(l=>l.fresh=false);
+  document.getElementById('surf').innerHTML=SURF[st.plat].map(([id,t,d])=>`<li><button data-surf="${id}" aria-current="${id===st.surf}"><b>${t}</b><small>${d}</small></button></li>`).join('');
+  document.getElementById('cap').textContent=PLAT[st.plat].cap;
+}
+function buildDevice(){
+  const fi=document.getElementById('fitin'), wide=st.plat==='ipad'||st.plat==='mac'||st.plat==='web';
+  fi.innerHTML=`<div class="dev ${st.plat}" id="dev"><div class="screen ${st.theme==='dark'?'dark':''} ${wide?'wide':''}" id="screen"></div></div>`;
+  fit(); render();
+}
+function fit(){
+  const p=PLAT[st.plat], f=document.getElementById('fit'), fi=document.getElementById('fitin');
+  const s=Math.min(1, f.clientWidth/p.w, Math.max(520,Math.min(innerHeight-60,980))/p.h);
+  fi.style.transform=`scale(${s})`; fi.style.width=p.w+'px'; f.style.height=Math.ceil(p.h*s)+'px';
+}
+const surfName=()=>SURF[st.plat].find(x=>x[0]===st.surf)[1];
+function logI(i,d){ st.log.unshift({i,d,from:`${{ios:'iPhone',android:'Android',ipad:'iPad',mac:'Mac',web:'Web'}[st.plat]} ${surfName()}`,at:fmt(st.now),fresh:true}); st.log=st.log.slice(0,12); }
+function toast(t){ const scr=document.getElementById('screen'); scr.querySelector('.toast')?.remove(); const d=document.createElement('div'); d.className='toast'; d.setAttribute('role','status'); d.textContent=t; scr.appendChild(d); setTimeout(()=>d.remove(),2700); }
+function act(a,el){
+  const task=el?.dataset.id?st.tasks.find(t=>t.id===el.dataset.id):null;
+  if(a==='done'&&task){ task.done=true; logI('Mark done',esc(task.t)); render(); toast(`${task.t} done`); }
+  else if(a==='plus'&&task){ task.e+=15; logI('+15 min',`${esc(task.t)} now until ${fmt(task.e)}`); render(); toast(`${task.t} · 15 min more`); }
+  else if(a==='add'){ st.sheet='add'; render(); }
+  else if(a==='focus'){ const s=snap(), t=s.live||s.next; logI('Start focus',t?esc(t.t):'the next task'); render(); toast(t?`Opens Focus · ${t.t}`:'Opens Focus'); }
+  else if(a==='isl-open'){ st.island='exp'; render(); }
+  else if(a==='isl-close'){ st.island='compact'; render(); }
+  else if(a==='menu'){ st.menu=!st.menu; render(); }
+  else if(a==='share-post'){ if(st.plat==='ios'){ st.sheet='compose'; render(); } else { st.inbox++; st.menu=false; logI('Add task','“Book the car service” → Inbox (shared link kept as the note)'); render(); toast('Added to Inbox'); } }
+  else if(a==='share-done'){ st.inbox++; st.sheet=null; logI('Add task','“Book the car service” → Inbox (shared link kept as the note)'); render(); toast('Added to Inbox'); }
+  else if(a==='sheet-close'){ st.sheet=null; render(); }
+}
+document.getElementById('fitin').addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]'); if(b&&b.classList.contains('scrimx')&&e.target!==b) return;
+  if(b&&!b.disabled){ e.stopPropagation(); if(st.plat==='mac'&&b.closest('.mmenu')&&b.dataset.act!=='menu') st.menu=false; act(b.dataset.act,b); return; }
+  const o=e.target.closest('[data-open]'); if(o){ const what={today:'Opens Today',inbox:'Opens Inbox',task:'Opens the task'}[o.dataset.open]; logI('Open',what.replace('Opens ','')); st.menu=false; render(); toast(what); return; }
+  if(st.menu&&!e.target.closest('.mmenu')){ st.menu=false; render(); }
+});
+document.getElementById('surf').addEventListener('click',e=>{ const b=e.target.closest('[data-surf]'); if(!b) return; st.surf=b.dataset.surf; st.menu=false; st.sheet=null; st.island='compact'; render(); });
+const tm=document.getElementById('time'), to=document.getElementById('time-out');
+tm.addEventListener('input',()=>{ st.now=+tm.value; to.textContent=fmt(st.now); render(); });
+function seg(id,fn){ const g=document.getElementById(id); g.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); fn(b.dataset.v); }); }
+const press=(id,v)=>document.querySelectorAll(`#${id} button`).forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===v)));
+seg('c-plat',v=>{ st.plat=v; st.surf=SURF[v][0][0]; st.menu=false; st.sheet=null; buildDevice(); });
+seg('c-theme',v=>{ st.theme=v; document.getElementById('screen').classList.toggle('dark',v==='dark'); });
+document.getElementById('reset').addEventListener('click',()=>{ Object.assign(st,{now:642,tasks:SEED(),inbox:3,island:'compact',menu:false,sheet:null,log:[]}); tm.value=642; to.textContent=fmt(642); render(); });
+press('c-theme',st.theme);
+if(matchMedia('(prefers-reduced-motion: reduce)').matches) document.getElementById('page').classList.add('rm');
+let rt; addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(fit,80); });
+const h=location.hash.slice(1); if(PLAT[h]){ st.plat=h; st.surf=SURF[h][0][0]; press('c-plat',h); }
+buildDevice();
+})();
+</script>

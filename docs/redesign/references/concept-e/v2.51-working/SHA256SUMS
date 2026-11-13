@@ -1,0 +1,7 @@
+12706a58b99195943cd892f0e4fbdbd13a827f047aa95142245adb711a7ef1b6  ./Onboarding-Options-light.png
+eb075e603411b5e9579c922fceb0a5e89ea30cdf88535214fae95bc61c42a732  ./docs/E_DECISION_REGISTER.md
+74a79dc3fe4b56293c0b245e5891b5e93fd15b14ed32d76a30e8bc8097f0d297  ./docs/E_DESIGN_DECISIONS.md
+64ae178cb679d5aa2aa75d98b34c50cd7d78d4718514faf1bd9803521ead4acd  ./generators/onboarding_options_build.py
+d23e999840eb1a1bdbf3c995a496e7b81343a4d898b4c3b1f07965edd8585606  ./project/E-Onboarding-Options-Dark.dc.html
+a49dfa61ae90e914879894dfde7fad59d0c7ff3acdcbc11bb7bf635074e50705  ./project/E-Onboarding-Options.dc.html
+9dad4e0299b5e42a253d9281383eb993b1126656cd442c4ef82f562b08666b2c  ./project/canvas.json

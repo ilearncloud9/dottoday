@@ -1,0 +1,20 @@
+{
+  "v": 3,
+  "createdOnFiles": {"v": 1, "at": "2026-11-13T18:17:14Z"},
+  "title": "Dottoday R2-17 Options",
+  "launch": {"view": "canvas"},
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {"x": 0, "y": 0, "w": 1900, "h": 1260, "title": "R2-17 · System surfaces · two Concept E options · overview and recommendation (ED-308)"},
+    "R2-17-A.dc.html": {"x": 0, "y": 1660, "w": 1900, "h": 3540, "title": "R2-17 · Option A · The thread · light"},
+    "R2-17-A-Dark.dc.html": {"x": 1980, "y": 1660, "w": 1900, "h": 3540, "title": "R2-17 · Option A · The thread · dark"},
+    "R2-17-B.dc.html": {"x": 0, "y": 5600, "w": 1900, "h": 3540, "title": "R2-17 · Option B · The day dot · light"},
+    "R2-17-B-Dark.dc.html": {"x": 1980, "y": 5600, "w": 1900, "h": 3540, "title": "R2-17 · Option B · The day dot · dark"}
+  },
+  "order": ["Main.dc.html", "R2-17-A.dc.html", "R2-17-A-Dark.dc.html", "R2-17-B.dc.html", "R2-17-B-Dark.dc.html"],
+  "notes": {
+    "optA": {"x": 0, "y": 1380, "text": "Option A · The thread", "kind": "title1", "maxW": 3880},
+    "optB": {"x": 0, "y": 5320, "text": "Option B · The day dot", "kind": "title1", "maxW": 3880}
+  },
+  "designSystems": []
+}

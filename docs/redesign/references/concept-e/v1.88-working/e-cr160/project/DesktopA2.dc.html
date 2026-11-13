@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sign out with unsynced changes, Mac and web</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 960px; height: 640px; position: relative; overflow: hidden; display: flex; background: {{t.ground}}; color: {{t.ink}}; font-family: Manrope, sans-serif;">
+  <div style="width: 240px; flex: none; background: {{t.sidebar}}; padding: 24px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; font-family: system-ui, -apple-system, sans-serif; font-size: 14px;">
+    <div style="font-family: Manrope, sans-serif; font-weight: 700; font-size: 16px; padding: 0 8px 14px;">Settings</div>
+    <div style="padding: 8px; color: {{t.secondary}};">Your day</div>
+    <div style="padding: 8px; color: {{t.secondary}};">Planning</div>
+    <div style="padding: 8px; border-radius: 10px; background: {{t.selected}}; font-weight: 600;">Account</div>
+    <div style="padding: 8px; color: {{t.secondary}};">Data and privacy</div>
+  </div>
+  <div style="flex: 1 1 auto; padding: 40px 48px; display: flex; flex-direction: column; gap: 12px;">
+    <div style="font-size: 22px; font-weight: 700;">Account</div>
+    <div style="font-size: 15px;">Signed in as sam@example.com</div>
+    <div style="font-size: 14px; color: {{t.secondary}};">3 changes waiting to sync</div>
+  </div>
+  <div style="position: absolute; inset: 0; background: {{t.scrim}};"></div>
+  <div role="alertdialog" aria-labelledby="da2-title" aria-describedby="da2-body" style="position: absolute; left: 260px; top: 150px; width: 440px; box-sizing: border-box; background: {{t.sheet}}; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+    <h2 id="da2-title" style="margin: 0; font-size: 18px; line-height: 23px; font-weight: 700;">3 changes haven’t synced yet</h2>
+    <p id="da2-body" style="margin: 0; font-size: 14px; line-height: 21px; color: {{t.ink2}};">They’re saved on this device for sam@example.com and haven’t reached your account yet. They can sync when you sign in again with this account. They stay on this device under this account.</p>
+    <div style="display: flex; justify-content: flex-end; gap: 10px; padding-top: 6px;">
+      <button type="button" style="height: 40px; padding: 0 18px; border-radius: 20px; border: 1.5px solid {{t.outline}}; background: transparent; color: {{t.ink}}; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 700;">Sign out and keep them here</button>
+      <button type="button" style="height: 40px; padding: 0 18px; border-radius: 20px; border: none; background: {{t.accent}}; color: {{t.onAccent}}; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 700;">Stay signed in</button>
+    </div>
+    <div style="font-size: 12.5px; line-height: 18px; color: {{t.secondary}}; text-align: right;">Esc cancels and starts nothing. Stay signed in tries to sync now.</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":960,"height":640}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark
+      ? { ground: '#171416', sidebar: '#1F1B1E', selected: '#1E3A37', sheet: '#2F2A30', ink: '#F3ECE4', ink2: '#E2DAD6', secondary: '#C7BEC4', outline: '#8C838A', accent: '#5BC4B8', onAccent: '#0C2523', scrim: 'rgba(0,0,0,.55)' }
+      : { ground: '#FBF7F1', sidebar: '#F3ECE2', selected: '#D9ECE9', sheet: '#FFFDF9', ink: '#241F2B', ink2: '#4E4757', secondary: '#6A6273', outline: '#CFC6D6', accent: '#11615C', onAccent: '#FFFFFF', scrim: 'rgba(36,31,43,.30)' };
+    return { t };
+  }
+}
+</script>
+</body>
+</html>

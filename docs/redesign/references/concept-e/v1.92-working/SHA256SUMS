@@ -1,0 +1,10 @@
+3e26631049aa6dfaa6da14d4b83410cbb4e130fc5cc71b768fcea4f9ac1cc527  ./docs/E_CONSISTENCY_REPORT.md
+eee7a0e83e33c7b43ef03beebd89da640d922850ce9452be1fecbbdff0527af7  ./docs/E_DECISION_REGISTER.md
+2e6ab5e64961e3b5963be63558500eebe1483ec9f9ec3f5f2314592552a40678  ./docs/E_DESIGN_DECISIONS.md
+e34447284f9abd478b8c678c9cfcb5766d53a5c16d2a095929457514fc32802f  ./e-cr160/before/AndroidA2.dc.html
+8127d5057e17a330c08fb41d04364b3cbc7879db991fd5ef424e4a8a69a61886  ./e-cr160/before/AndroidA2Unconfirmed.dc.html
+1a528158706939253ca15baf8b3349db0cc8180f68cc9b83f825530a94f85f39  ./e-cr160/project/AndroidA2.dc.html
+00d541d5c4c82e041baa1f9224bf3cb51e45b75361c26cd2abf4392a3bce59c2  ./e-cr160/project/AndroidA2Unconfirmed.dc.html
+0de47de45eacbae99a84c02636192e0f55f774a6cd766d31bb80ef2933c9824d  ./evidence/h-AndroidA2-light.png
+176932ad9f61281176595cbe1e04d81360b4467efb84785b00b74562959504f8  ./evidence/h-AndroidA2Unconfirmed-dark.png
+f2a2efbd1a3491cb76d3b8134f0a0770979fe56dd5b106a9f2d88324d1cb354e  ./generators/cr160hint.py

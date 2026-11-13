@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sign out with unsynced changes, Android</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{t.ground}}; color: {{t.ink}}; font-family: Manrope, sans-serif;">
+  <div style="height: 64px; margin-top: 32px; display: flex; align-items: center; gap: 8px; padding: 0 4px;">
+    <button type="button" aria-label="Back" style="width: 48px; height: 48px; border: none; background: transparent; color: {{t.ink}}; display: flex; align-items: center; justify-content: center;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </button>
+    <div style="font-family: Roboto, sans-serif; font-size: 22px; font-weight: 400;">Account</div>
+  </div>
+  <div style="padding: 8px 16px; display: flex; flex-direction: column; gap: 4px;">
+    <div style="font-family: Roboto, sans-serif; font-size: 14px; font-weight: 500; color: {{t.accentText}}; padding: 8px 0;">Sync</div>
+    <div style="font-size: 16px; line-height: 24px;">Signed in as sam@example.com</div>
+    <div style="font-size: 14px; line-height: 20px; color: {{t.secondary}};">3 changes waiting to sync</div>
+  </div>
+  <div style="position: absolute; inset: 0; background: {{t.scrim}};"></div>
+  <div role="alertdialog" aria-labelledby="aa2-title" aria-describedby="aa2-body" style="position: absolute; left: 24px; right: 24px; top: 200px; background: {{t.sheet}}; border-radius: 28px; padding: 24px; display: flex; flex-direction: column; gap: 16px; align-items: center;">
+    <div style="color: {{t.accentText}};">
+      <svg width="24" height="24" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M6 15.5h9.5a3.5 3.5 0 0 0 .4-7A5 5 0 0 0 6.3 7.6 4 4 0 0 0 6 15.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M11 9.5v4M9 11.5l2 2 2-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+    <h2 id="aa2-title" style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 700; text-align: center;">3 changes haven’t synced yet</h2>
+    <p id="aa2-body" style="margin: 0; font-size: 14px; line-height: 20px; color: {{t.ink2}};">They’re saved on this device for sam@example.com and haven’t reached your account yet. They can sync when you sign in again with this account. They stay on this device under this account.</p>
+    <div style="align-self: stretch; display: flex; flex-direction: column; gap: 8px; padding-top: 8px;">
+      <button type="button" style="height: 48px; border-radius: 24px; border: none; background: {{t.tonal}}; color: {{t.tonalInk}}; font-family: Roboto, sans-serif; font-size: 14px; font-weight: 500;">Stay signed in</button>
+      <div style="font-size: 13px; line-height: 18px; color: {{t.secondary}}; text-align: center;">Dottoday tries to sync them now.</div>
+      <button type="button" style="height: 48px; border-radius: 24px; border: none; background: transparent; color: {{t.accentText}}; font-family: Roboto, sans-serif; font-size: 14px; font-weight: 500;">Sign out and keep them here</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark
+      ? { ground: '#171416', sheet: '#2F2A30', ink: '#F3ECE4', ink2: '#E2DAD6', secondary: '#C7BEC4', accentText: '#5BC4B8', tonal: '#1E3A37', tonalInk: '#A3E2D9', scrim: 'rgba(0,0,0,.55)' }
+      : { ground: '#FBF7F1', sheet: '#FFFDF9', ink: '#241F2B', ink2: '#4E4757', secondary: '#6A6273', accentText: '#11615C', tonal: '#CFE8E4', tonalInk: '#062F2C', scrim: 'rgba(36,31,43,.36)' };
+    return { t };
+  }
+}
+</script>
+</body>
+</html>

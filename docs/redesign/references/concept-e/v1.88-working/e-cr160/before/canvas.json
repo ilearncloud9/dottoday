@@ -1,0 +1,296 @@
+{
+ "v": 3,
+ "attachments": {},
+ "boards": {
+  "Main.dc.html": {
+   "h": 844,
+   "title": "A2 · Sign out with unsynced changes · light",
+   "w": 390,
+   "x": 0,
+   "y": 0
+  },
+  "MainDark.dc.html": {
+   "h": 844,
+   "title": "A2 · Sign out with unsynced changes · dark",
+   "w": 390,
+   "x": 470,
+   "y": 0
+  },
+  "SettingsChoice.dc.html": {
+   "h": 844,
+   "title": "B1 · Settings choice · light",
+   "w": 390,
+   "x": 940,
+   "y": 1264
+  },
+  "SettingsChoiceDark.dc.html": {
+   "h": 844,
+   "title": "B1 · Settings choice · dark",
+   "w": 390,
+   "x": 1410,
+   "y": 1264
+  },
+  "SignOutPlain.dc.html": {
+   "h": 844,
+   "title": "A1 · Sign out, all synced · light",
+   "w": 390,
+   "x": 940,
+   "y": 0
+  },
+  "SignOutPlainDark.dc.html": {
+   "h": 844,
+   "title": "A1 · Sign out, all synced · dark",
+   "w": 390,
+   "x": 1410,
+   "y": 0
+  },
+  "SignedOut.dc.html": {
+   "h": 844,
+   "title": "A3 · Signed out · light",
+   "w": 390,
+   "x": 0,
+   "y": 1264
+  },
+  "SignedOutDark.dc.html": {
+   "h": 844,
+   "title": "A3 · Signed out · dark",
+   "w": 390,
+   "x": 470,
+   "y": 1264
+  },
+  "GuestWork.dc.html": {
+   "x": 0,
+   "y": 2528,
+   "w": 390,
+   "h": 844,
+   "title": "G1 · Guest tasks, eligible to bring in · light"
+  },
+  "GuestWorkDark.dc.html": {
+   "x": 470,
+   "y": 2528,
+   "w": 390,
+   "h": 844,
+   "title": "G1 · Guest tasks, eligible to bring in · dark"
+  },
+  "DeleteChoice.dc.html": {
+   "x": 940,
+   "y": 2528,
+   "w": 390,
+   "h": 844,
+   "title": "CONDITIONAL PROPOSAL, not for build · Delete account: the copy on this device · light"
+  },
+  "DeleteChoiceDark.dc.html": {
+   "x": 1410,
+   "y": 2528,
+   "w": 390,
+   "h": 844,
+   "title": "CONDITIONAL PROPOSAL, not for build · Delete account: the copy on this device · dark"
+  },
+  "KeptCopy.dc.html": {
+   "x": 1880,
+   "y": 2528,
+   "w": 390,
+   "h": 844,
+   "title": "CONDITIONAL PROPOSAL, not for build · Kept copy: export only · light"
+  },
+  "KeptCopyDark.dc.html": {
+   "x": 2350,
+   "y": 2528,
+   "w": 390,
+   "h": 844,
+   "title": "CONDITIONAL PROPOSAL, not for build · Kept copy: export only · dark"
+  },
+  "AndroidA2.dc.html": {
+   "x": 0,
+   "y": 3792,
+   "w": 390,
+   "h": 844,
+   "title": "A2 · Android adaptation · light"
+  },
+  "AndroidA2Dark.dc.html": {
+   "x": 470,
+   "y": 3792,
+   "w": 390,
+   "h": 844,
+   "title": "A2 · Android adaptation · dark"
+  },
+  "DesktopA2.dc.html": {
+   "x": 940,
+   "y": 3792,
+   "w": 960,
+   "h": 640,
+   "title": "A2 · Mac and web adaptation · light"
+  },
+  "DesktopA2Dark.dc.html": {
+   "x": 1980,
+   "y": 3792,
+   "w": 960,
+   "h": 640,
+   "title": "A2 · Mac and web adaptation · dark"
+  },
+  "GuestWorkLocked.dc.html": {
+   "x": 0,
+   "y": 5056,
+   "w": 390,
+   "h": 844,
+   "title": "G1b · Guest tasks, not eligible · light"
+  },
+  "GuestWorkLockedDark.dc.html": {
+   "x": 470,
+   "y": 5056,
+   "w": 390,
+   "h": 844,
+   "title": "G1b · Guest tasks, not eligible · dark"
+  },
+  "DeleteNative.dc.html": {
+   "x": 940,
+   "y": 5056,
+   "w": 390,
+   "h": 844,
+   "title": "D1 interim · Delete account, iPhone and Android · light"
+  },
+  "DeleteNativeDark.dc.html": {
+   "x": 1410,
+   "y": 5056,
+   "w": 390,
+   "h": 844,
+   "title": "D1 interim · Delete account, iPhone and Android · dark"
+  },
+  "DeleteWeb.dc.html": {
+   "x": 0,
+   "y": 6320,
+   "w": 960,
+   "h": 640,
+   "title": "D1 web · Delete account · light"
+  },
+  "DeleteWebDark.dc.html": {
+   "x": 1040,
+   "y": 6320,
+   "w": 960,
+   "h": 640,
+   "title": "D1 web · Delete account · dark"
+  },
+  "DeleteWebRetry.dc.html": {
+   "x": 2080,
+   "y": 6320,
+   "w": 960,
+   "h": 640,
+   "title": "D1 web · Removal didn't finish · light"
+  },
+  "DeleteWebRetryDark.dc.html": {
+   "x": 3120,
+   "y": 6320,
+   "w": 960,
+   "h": 640,
+   "title": "D1 web · Removal didn't finish · dark"
+  }
+ },
+ "createdOnFiles": {
+  "at": "2026-11-08T21:10:00Z",
+  "v": 1
+ },
+ "designSystems": [],
+ "launch": {
+  "view": "canvas"
+ },
+ "notes": {
+  "row1": {
+   "kind": "title1",
+   "maxW": 1800,
+   "text": "CR-160 · Signing out (revised 2026-11-08, awaiting approval)",
+   "w": 240,
+   "x": 0,
+   "y": -300
+  },
+  "row2": {
+   "kind": "title1",
+   "maxW": 1800,
+   "text": "Signed out · Choosing settings (revised, awaiting approval)",
+   "w": 240,
+   "x": 0,
+   "y": 964
+  },
+  "row3": {
+   "x": 0,
+   "y": 2228,
+   "text": "Guest tasks at sign-in · Deleted account: conditional proposal (not for build)",
+   "kind": "title1",
+   "maxW": 2740
+  },
+  "row4": {
+   "x": 0,
+   "y": 3492,
+   "text": "Platform adaptations of A2 (awaiting approval)",
+   "kind": "title1",
+   "maxW": 2940
+  },
+  "condA": {
+   "x": 1880,
+   "y": 0,
+   "w": 360,
+   "size": "s",
+   "fill": "orange",
+   "text": "When each sign-out sheet shows\n\nA1 only when the server has confirmed the last sync and nothing is waiting (no pending changes, no open conflicts). Otherwise A2.\n\nA2's last sentence (\"no one else … can see them\") ships only after the isolation fixes I1–I8 in docs/cr-160-verification.md pass: reminders already shown, web timers and pushes, widgets and Wind Down timer, backups, brain dumps and recent searches, undo and open editors, the action queue."
+  },
+  "condG": {
+   "x": 2830,
+   "y": 2528,
+   "w": 360,
+   "size": "s",
+   "fill": "orange",
+   "text": "G1 shows only for guest tasks made since this device was last signed out, in the current guest session. \"Bring them in\" also needs the \"I made these tasks myself\" box: a choice, never proof of ownership. Tasks made before the last sign-out get G1b instead: they stay on this device and can't be brought in. No preview of guest tasks after sign-in."
+  },
+  "row5": {
+   "x": 0,
+   "y": 4756,
+   "text": "Guest tasks not eligible · Delete account, interim native flow",
+   "kind": "title1",
+   "maxW": 1800
+  },
+  "row6": {
+   "x": 0,
+   "y": 6020,
+   "text": "Delete account on the web: no Keep option",
+   "kind": "title1",
+   "maxW": 4080
+  },
+  "condD": {
+   "x": 2830,
+   "y": 3000,
+   "w": 360,
+   "size": "s",
+   "fill": "orange",
+   "text": "Locked copy (D1 Keep and the kept-copy row) is a conditional proposal only. It would need owner-bound protection (an encrypted copy opened by a recovery passphrase set while signed in), designed, implemented and tested first. A device passcode never proves who owned a deleted account. Interim on every platform: export while signed in, then delete and remove the copy."
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "MainDark.dc.html",
+  "SignOutPlain.dc.html",
+  "SignOutPlainDark.dc.html",
+  "SignedOut.dc.html",
+  "SignedOutDark.dc.html",
+  "SettingsChoice.dc.html",
+  "SettingsChoiceDark.dc.html",
+  "GuestWork.dc.html",
+  "GuestWorkDark.dc.html",
+  "DeleteChoice.dc.html",
+  "DeleteChoiceDark.dc.html",
+  "KeptCopy.dc.html",
+  "KeptCopyDark.dc.html",
+  "AndroidA2.dc.html",
+  "AndroidA2Dark.dc.html",
+  "DesktopA2.dc.html",
+  "DesktopA2Dark.dc.html",
+  "GuestWorkLocked.dc.html",
+  "GuestWorkLockedDark.dc.html",
+  "DeleteNative.dc.html",
+  "DeleteNativeDark.dc.html",
+  "DeleteWeb.dc.html",
+  "DeleteWebDark.dc.html",
+  "DeleteWebRetry.dc.html",
+  "DeleteWebRetryDark.dc.html"
+ ],
+ "pages": [],
+ "title": "E-CR160 Sign-out and Settings"
+}
