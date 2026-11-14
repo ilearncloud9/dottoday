@@ -1,0 +1,1134 @@
+{
+"Sleep target": [
+[
+"E-G3-4",
+"#E6E3F7",
+"<path d=\"M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z\"></path>"
+],
+[
+"E-G3-4",
+"#E6E3F7",
+"<path d=\"M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z\"></path>"
+],
+[
+"E-Phones",
+"#E6E3F7",
+"<path d=\"M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#E6E3F7",
+"<path d=\"M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z\"></path>"
+]
+],
+"Ring like an alarm": [
+[
+"E-G3-4",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"13\" r=\"7\"></circle><path d=\"M12 10v3l2 2M5 4L2 7M19 4l3 3\"></path>"
+],
+[
+"E-G3-4",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"13\" r=\"7\"></circle><path d=\"M12 10v3l2 2M5 4L2 7M19 4l3 3\"></path>"
+],
+[
+"E-G3-4",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"13\" r=\"7\"></circle><path d=\"M12 10v3l2 2M5 4L2 7M19 4l3 3\"></path>"
+],
+[
+"E-G3-4",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"13\" r=\"7\"></circle><path d=\"M12 10v3l2 2M5 4L2 7M19 4l3 3\"></path>"
+],
+[
+"E-Phones",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"13\" r=\"7\"></circle><path d=\"M12 10v3l2 2M5 4L2 7M19 4l3 3\"></path>"
+],
+[
+"E-Phones",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"13\" r=\"7\"></circle><path d=\"M12 10v3l2 2M5 4L2 7M19 4l3 3\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"13\" r=\"7\"></circle><path d=\"M12 10v3l2 2M5 4L2 7M19 4l3 3\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"13\" r=\"7\"></circle><path d=\"M12 10v3l2 2M5 4L2 7M19 4l3 3\"></path>"
+]
+],
+"Wind Down reminder": [
+[
+"E-G3-4",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-G3-4",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-G3-4",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-G3-4",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-Phones",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-Phones",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-R2-20",
+"#E6E3F7",
+"<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"></path>"
+],
+[
+"E-R2-20",
+"#E6E3F7",
+"<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"></path>"
+],
+[
+"E-R2-20",
+"#E6E3F7",
+"<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+]
+],
+"Ring on these days": [
+[
+"E-G3-4",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"13\" r=\"7\"></circle><path d=\"M12 10v3l2 2M5 4L2 7M19 4l3 3\"></path>"
+],
+[
+"E-G3-4",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"13\" r=\"7\"></circle><path d=\"M12 10v3l2 2M5 4L2 7M19 4l3 3\"></path>"
+],
+[
+"E-Phones",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"13\" r=\"7\"></circle><path d=\"M12 10v3l2 2M5 4L2 7M19 4l3 3\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"13\" r=\"7\"></circle><path d=\"M12 10v3l2 2M5 4L2 7M19 4l3 3\"></path>"
+]
+],
+"Your day": [
+[
+"E-G3-9b-Screens",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>"
+],
+[
+"E-Phones-3",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>"
+],
+[
+"E-Phones",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>"
+],
+[
+"E-PhonesMinimal",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>"
+],
+[
+"E-R2-11",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>"
+],
+[
+"E-R2-11",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>"
+],
+[
+"E-R2-18",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>"
+],
+[
+"E-R2-18",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>"
+],
+[
+"E-R2-20",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>"
+],
+[
+"E-R2-21",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#FBEBC8",
+"<circle cx=\"12\" cy=\"12\" r=\"4\"></circle><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"></path>"
+]
+],
+"Planning": [
+[
+"E-G3-9b-Screens",
+"#E2EFEC",
+"<rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"2.5\"></rect><path d=\"M9.5 4.5v15M3.5 9.5h6\"></path>"
+],
+[
+"E-Phones-3",
+"#E2EFEC",
+"<rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"2.5\"></rect><path d=\"M9.5 4.5v15M3.5 9.5h6\"></path>"
+],
+[
+"E-Phones",
+"#E2EFEC",
+"<rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"2.5\"></rect><path d=\"M9.5 4.5v15M3.5 9.5h6\"></path>"
+],
+[
+"E-PhonesMinimal",
+"#E2EFEC",
+"<rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"2.5\"></rect><path d=\"M9.5 4.5v15M3.5 9.5h6\"></path>"
+],
+[
+"E-R2-11",
+"#E2EFEC",
+"<rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"2.5\"></rect><path d=\"M9.5 4.5v15M3.5 9.5h6\"></path>"
+],
+[
+"E-R2-11",
+"#E2EFEC",
+"<rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"2.5\"></rect><path d=\"M9.5 4.5v15M3.5 9.5h6\"></path>"
+],
+[
+"E-R2-18",
+"#E2EFEC",
+"<rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"2.5\"></rect><path d=\"M9.5 4.5v15M3.5 9.5h6\"></path>"
+],
+[
+"E-R2-18",
+"#E2EFEC",
+"<rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"2.5\"></rect><path d=\"M9.5 4.5v15M3.5 9.5h6\"></path>"
+],
+[
+"E-R2-20",
+"#E2EFEC",
+"<rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"2.5\"></rect><path d=\"M9.5 4.5v15M3.5 9.5h6\"></path>"
+],
+[
+"E-R2-21",
+"#E2EFEC",
+"<rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"2.5\"></rect><path d=\"M9.5 4.5v15M3.5 9.5h6\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#E2EFEC",
+"<rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"2.5\"></rect><path d=\"M9.5 4.5v15M3.5 9.5h6\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#E2EFEC",
+"<rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"2.5\"></rect><path d=\"M9.5 4.5v15M3.5 9.5h6\"></path>"
+]
+],
+"Reminders": [
+[
+"E-G3-9b-Screens",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-Phones-3",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-Phones",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-PhonesMinimal",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-R2-11",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-R2-11",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-R2-18",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-R2-18",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-R2-20",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-R2-21",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#E6E3F7",
+"<path d=\"M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0\"></path>"
+]
+],
+"Appearance": [
+[
+"E-G3-9b-Screens",
+"#F6E2EA",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 000 18z\" fill=\"currentColor\"></path>"
+],
+[
+"E-Phones-3",
+"#F6E2EA",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 000 18z\" fill=\"currentColor\"></path>"
+],
+[
+"E-Phones",
+"#F6E2EA",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 000 18z\" fill=\"currentColor\"></path>"
+],
+[
+"E-PhonesMinimal",
+"#F6E2EA",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 000 18z\" fill=\"currentColor\"></path>"
+],
+[
+"E-R2-11",
+"#F6E2EA",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 000 18z\" fill=\"currentColor\"></path>"
+],
+[
+"E-R2-11",
+"#F6E2EA",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 000 18z\" fill=\"currentColor\"></path>"
+],
+[
+"E-R2-18",
+"#F6E2EA",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 000 18z\" fill=\"currentColor\"></path>"
+],
+[
+"E-R2-18",
+"#F6E2EA",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 000 18z\" fill=\"currentColor\"></path>"
+],
+[
+"E-R2-20",
+"#F6E2EA",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 000 18z\" fill=\"currentColor\"></path>"
+],
+[
+"E-R2-21",
+"#F6E2EA",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 000 18z\" fill=\"currentColor\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#F6E2EA",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 000 18z\" fill=\"currentColor\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#F6E2EA",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 3a9 9 0 000 18z\" fill=\"currentColor\"></path>"
+]
+],
+"Data and privacy": [
+[
+"E-G3-9b-Screens",
+"#E3F1E7",
+"<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2.5\"></rect><path d=\"M8 10V7a4 4 0 018 0v3\"></path>"
+],
+[
+"E-Phones-3",
+"#E3F1E7",
+"<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2.5\"></rect><path d=\"M8 10V7a4 4 0 018 0v3\"></path>"
+],
+[
+"E-Phones",
+"#E3F1E7",
+"<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2.5\"></rect><path d=\"M8 10V7a4 4 0 018 0v3\"></path>"
+],
+[
+"E-PhonesMinimal",
+"#E3F1E7",
+"<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2.5\"></rect><path d=\"M8 10V7a4 4 0 018 0v3\"></path>"
+],
+[
+"E-R2-11",
+"#E3F1E7",
+"<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2.5\"></rect><path d=\"M8 10V7a4 4 0 018 0v3\"></path>"
+],
+[
+"E-R2-11",
+"#E3F1E7",
+"<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2.5\"></rect><path d=\"M8 10V7a4 4 0 018 0v3\"></path>"
+],
+[
+"E-R2-18",
+"#E3F1E7",
+"<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2.5\"></rect><path d=\"M8 10V7a4 4 0 018 0v3\"></path>"
+],
+[
+"E-R2-18",
+"#E3F1E7",
+"<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2.5\"></rect><path d=\"M8 10V7a4 4 0 018 0v3\"></path>"
+],
+[
+"E-R2-20",
+"#E3F1E7",
+"<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2.5\"></rect><path d=\"M8 10V7a4 4 0 018 0v3\"></path>"
+],
+[
+"E-R2-21",
+"#E3F1E7",
+"<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2.5\"></rect><path d=\"M8 10V7a4 4 0 018 0v3\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#E3F1E7",
+"<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2.5\"></rect><path d=\"M8 10V7a4 4 0 018 0v3\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#E3F1E7",
+"<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2.5\"></rect><path d=\"M8 10V7a4 4 0 018 0v3\"></path>"
+]
+],
+"Help and about": [
+[
+"E-G3-9b-Screens",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01\"></path>"
+],
+[
+"E-Phones-3",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01\"></path>"
+],
+[
+"E-Phones",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01\"></path>"
+],
+[
+"E-PhonesMinimal",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01\"></path>"
+],
+[
+"E-R2-11",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01\"></path>"
+],
+[
+"E-R2-11",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01\"></path>"
+],
+[
+"E-R2-18",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01\"></path>"
+],
+[
+"E-R2-18",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01\"></path>"
+],
+[
+"E-R2-20",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01\"></path>"
+]
+],
+"Wake Up and Wind Down": [
+[
+"E-Phones",
+"#E6E3F7",
+"<path d=\"M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z\"></path>"
+],
+[
+"E-R2-11",
+"#E6E3F7",
+"<path d=\"M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#E6E3F7",
+"<path d=\"M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z\"></path>"
+]
+],
+"Learn my day": [
+[
+"E-Phones",
+"#EDE7DF",
+"<path d=\"M4 19V9M10 19V5M16 19v-6M22 19H2\"></path>"
+],
+[
+"E-R2-11",
+"#EDE7DF",
+"<path d=\"M4 19V9M10 19V5M16 19v-6M22 19H2\"></path>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#EDE7DF",
+"<path d=\"M4 19V9M10 19V5M16 19v-6M22 19H2\"></path>"
+]
+],
+"Layout": [
+[
+"E-PhonesMinimal",
+"#E2EFEC",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><circle cx=\"12\" cy=\"12\" r=\"3\" fill=\"currentColor\"></circle>"
+],
+[
+"E-WakeWindDown-Settings-Candidate",
+"#E2EFEC",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><circle cx=\"12\" cy=\"12\" r=\"3\" fill=\"currentColor\"></circle>"
+]
+],
+"Task starts": [
+[
+"E-R2-20",
+"#E2EFEC",
+"<path d=\"M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0\"></path>"
+],
+[
+"E-R2-20",
+"#E2EFEC",
+"<path d=\"M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0\"></path>"
+],
+[
+"E-R2-20",
+"#E2EFEC",
+"<path d=\"M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0\"></path>"
+]
+],
+"Sound": [
+[
+"E-R2-20",
+"#EDE7DF",
+"<path d=\"M4 9v6h4l5 4V5L8 9z\"></path><path d=\"M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11\"></path>"
+],
+[
+"E-R2-20",
+"#EDE7DF",
+"<path d=\"M4 9v6h4l5 4V5L8 9z\"></path><path d=\"M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11\"></path>"
+],
+[
+"E-R2-20",
+"#EDE7DF",
+"<path d=\"M4 9v6h4l5 4V5L8 9z\"></path><path d=\"M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11\"></path>"
+]
+],
+"Quiet hours": [
+[
+"E-R2-20",
+"#E6E3F7",
+"<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"></path><path d=\"M15 4h4l-4 4h4\"></path>"
+],
+[
+"E-R2-20",
+"#E6E3F7",
+"<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"></path><path d=\"M15 4h4l-4 4h4\"></path>"
+],
+[
+"E-R2-20",
+"#E6E3F7",
+"<path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"></path><path d=\"M15 4h4l-4 4h4\"></path>"
+]
+],
+"Day-start summary": [
+[
+"E-R2-20",
+"#FBEBC8",
+"<path d=\"M3 18h18M6 14a6 6 0 0 1 12 0M12 4v3M5 8l1.5 1.5M19 8l-1.5 1.5\"></path>"
+],
+[
+"E-R2-20",
+"#FBEBC8",
+"<path d=\"M3 18h18M6 14a6 6 0 0 1 12 0M12 4v3M5 8l1.5 1.5M19 8l-1.5 1.5\"></path>"
+],
+[
+"E-R2-20",
+"#FBEBC8",
+"<path d=\"M3 18h18M6 14a6 6 0 0 1 12 0M12 4v3M5 8l1.5 1.5M19 8l-1.5 1.5\"></path>"
+]
+],
+"Notification health": [
+[
+"E-R2-20",
+"#E3F1E7",
+"<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>"
+],
+[
+"E-R2-20",
+"#E2EFEC",
+"<path d=\"M12 4l9 16H3z\"></path><path d=\"M12 10v4M12 17v.5\"></path>"
+],
+[
+"E-R2-20",
+"#E3F1E7",
+"<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>"
+]
+],
+"Notifications are on": [
+[
+"E-R2-20",
+"#E3F1E7",
+"<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>"
+],
+[
+"E-R2-20",
+"#E3F1E7",
+"<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>"
+],
+[
+"E-R2-20",
+"#E3F1E7",
+"<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>"
+]
+],
+"Alarm-grade wake-up is on.": [
+[
+"E-R2-20",
+"#E3F1E7",
+"<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>"
+]
+],
+"Focus": [
+[
+"E-R2-20",
+"#EDE7DF",
+"<path d=\"M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0\"></path>"
+],
+[
+"E-R2-20",
+"#EDE7DF",
+"<path d=\"M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0\"></path>"
+]
+],
+"Your clock is right": [
+[
+"E-R2-20",
+"#E3F1E7",
+"<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>"
+],
+[
+"E-R2-20",
+"#E3F1E7",
+"<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>"
+],
+[
+"E-R2-20",
+"#E3F1E7",
+"<path d=\"M5 12.5l4.5 4.5L19 7.5\"></path>"
+]
+],
+"Send me a test alarm": [
+[
+"E-R2-20",
+"#E2EFEC",
+"<path d=\"M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0\"></path>"
+],
+[
+"E-R2-20",
+"#E2EFEC",
+"<path d=\"M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0\"></path>"
+]
+],
+"Reminders arrive while Dottoday is open": [
+[
+"E-R2-20",
+"#EDE7DF",
+"<path d=\"M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0\"></path>"
+]
+],
+"Sync": [
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M20 12a8 8 0 0 1-14 5.3M4 12a8 8 0 0 1 14-5.3\"></path><path d=\"M18 3v4h-4M6 21v-4h4\"></path>"
+],
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M20 12a8 8 0 0 1-14 5.3M4 12a8 8 0 0 1 14-5.3\"></path><path d=\"M18 3v4h-4M6 21v-4h4\"></path>"
+],
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M20 12a8 8 0 0 1-14 5.3M4 12a8 8 0 0 1 14-5.3\"></path><path d=\"M18 3v4h-4M6 21v-4h4\"></path>"
+],
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M20 12a8 8 0 0 1-14 5.3M4 12a8 8 0 0 1 14-5.3\"></path><path d=\"M18 3v4h-4M6 21v-4h4\"></path>"
+],
+[
+"E-R2-23",
+"#E2EFEC",
+"<path d=\"M20 12a8 8 0 0 1-14 5.3M4 12a8 8 0 0 1 14-5.3\"></path><path d=\"M18 3v4h-4M6 21v-4h4\"></path>"
+]
+],
+"Calendars": [
+[
+"E-R2-21",
+"#E6E3F7",
+"<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2.5\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>"
+],
+[
+"E-R2-21",
+"#E6E3F7",
+"<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2.5\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>"
+],
+[
+"E-R2-21",
+"#E6E3F7",
+"<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2.5\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>"
+],
+[
+"E-R2-21",
+"#E6E3F7",
+"<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2.5\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>"
+],
+[
+"E-R2-23",
+"#E6E3F7",
+"<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2.5\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>"
+]
+],
+"Export": [
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6\"></path>"
+],
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6\"></path>"
+],
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6\"></path>"
+],
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6\"></path>"
+],
+[
+"E-R2-23",
+"#E2EFEC",
+"<path d=\"M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6\"></path>"
+]
+],
+"Trash": [
+[
+"E-R2-21",
+"#EDE7DF",
+"<path d=\"M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<path d=\"M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<path d=\"M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<path d=\"M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13\"></path>"
+],
+[
+"E-R2-23",
+"#EDE7DF",
+"<path d=\"M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13\"></path>"
+]
+],
+"Everything (JSON)": [
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6\"></path>"
+],
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6\"></path>"
+],
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6\"></path>"
+],
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6\"></path>"
+]
+],
+"Tasks (CSV)": [
+[
+"E-R2-21",
+"#E4E3F7",
+"<path d=\"M4 6h16M4 12h16M4 18h16\"></path>"
+],
+[
+"E-R2-21",
+"#E4E3F7",
+"<path d=\"M4 6h16M4 12h16M4 18h16\"></path>"
+],
+[
+"E-R2-21",
+"#E4E3F7",
+"<path d=\"M4 6h16M4 12h16M4 18h16\"></path>"
+],
+[
+"E-R2-21",
+"#E4E3F7",
+"<path d=\"M4 6h16M4 12h16M4 18h16\"></path>"
+]
+],
+"Calendar (.ics)": [
+[
+"E-R2-21",
+"#E6E3F7",
+"<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2.5\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>"
+],
+[
+"E-R2-21",
+"#E6E3F7",
+"<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2.5\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>"
+],
+[
+"E-R2-21",
+"#E6E3F7",
+"<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2.5\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>"
+],
+[
+"E-R2-21",
+"#E6E3F7",
+"<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2.5\"></rect><path d=\"M3 10h18M8 3v4M16 3v4\"></path>"
+]
+],
+"Import a backup…": [
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M9 14L4 9l5-5\"></path><path d=\"M4 9h10a6 6 0 0 1 0 12h-3\"></path>"
+],
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M9 14L4 9l5-5\"></path><path d=\"M4 9h10a6 6 0 0 1 0 12h-3\"></path>"
+],
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M9 14L4 9l5-5\"></path><path d=\"M4 9h10a6 6 0 0 1 0 12h-3\"></path>"
+],
+[
+"E-R2-21",
+"#E2EFEC",
+"<path d=\"M9 14L4 9l5-5\"></path><path d=\"M4 9h10a6 6 0 0 1 0 12h-3\"></path>"
+]
+],
+"Nov 13, 2026, 6:30 AM": [
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+]
+],
+"Nov 12, 2026, 9:14 PM": [
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+]
+],
+"Nov 12, 2026, 6:31 AM": [
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+]
+],
+"Nov 11, 2026, 6:30 AM": [
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+]
+],
+"Nov 10, 2026, 6:32 AM": [
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+],
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+]
+],
+"No backups yet. The first is taken the next time Dottoday opens.": [
+[
+"E-R2-21",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+]
+],
+"Low-energy mode": [
+[
+"E-R2-22",
+"#E2EFEC",
+"<path d=\"M5 19c0-8 6-14 15-14 0 9-6 15-14 15\"></path><path d=\"M5 19l7-7\"></path>"
+]
+],
+"Privacy": [
+[
+"E-R2-23",
+"#E6E3F7",
+"<path d=\"M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z\"></path>"
+]
+],
+"Reality thread": [
+[
+"E-R2-23",
+"#E2EFEC",
+"<path d=\"M4 19V9M10 19V5M16 19v-6M22 19H2\"></path>"
+],
+[
+"E-R2-23",
+"#E2EFEC",
+"<path d=\"M4 19V9M10 19V5M16 19v-6M22 19H2\"></path>"
+]
+],
+"Task lengths": [
+[
+"E-R2-23",
+"#E4E3F7",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+],
+[
+"E-R2-23",
+"#E4E3F7",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 7.5V12l3 2\"></path>"
+]
+],
+"Step lengths": [
+[
+"E-R2-23",
+"#E6E3F7",
+"<path d=\"M4 6h16M4 12h10M4 18h6\"></path>"
+],
+[
+"E-R2-23",
+"#E6E3F7",
+"<path d=\"M4 6h16M4 12h10M4 18h6\"></path>"
+]
+],
+"Help": [
+[
+"E-R2-24",
+"#E2EFEC",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 0 1 4.9.7c0 1.7-2.4 2.2-2.4 3.8M12 17h.01\"></path>"
+],
+[
+"E-R2-24",
+"#E2EFEC",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M9.5 9a2.5 2.5 0 0 1 4.9.7c0 1.7-2.4 2.2-2.4 3.8M12 17h.01\"></path>"
+]
+],
+"Siri &amp; Shortcuts": [
+[
+"E-R2-24",
+"#E4E3F7",
+"<rect x=\"9\" y=\"3\" width=\"6\" height=\"11\" rx=\"3\"></rect><path d=\"M5 11a7 7 0 0 0 14 0M12 18v3\"></path>"
+],
+[
+"E-R2-24",
+"#E4E3F7",
+"<rect x=\"9\" y=\"3\" width=\"6\" height=\"11\" rx=\"3\"></rect><path d=\"M5 11a7 7 0 0 0 14 0M12 18v3\"></path>"
+]
+],
+"About Dottoday": [
+[
+"E-R2-24",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 11v6M12 7.5h.01\"></path>"
+],
+[
+"E-R2-24",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 11v6M12 7.5h.01\"></path>"
+]
+],
+"Send feedback": [
+[
+"E-R2-24",
+"#E2EFEC",
+"<rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2.5\"></rect><path d=\"M3 7l9 6 9-6\"></path>"
+],
+[
+"E-R2-24",
+"#E2EFEC",
+"<rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2.5\"></rect><path d=\"M3 7l9 6 9-6\"></path>"
+]
+],
+"Version": [
+[
+"E-R2-24",
+"#EDE7DF",
+"<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M12 11v6M12 7.5h.01\"></path>"
+]
+],
+"What&#39;s new": [
+[
+"E-R2-24",
+"#E2EFEC",
+"<path d=\"M12 3l2.5 5.5L20 9.5l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-1z\"></path>"
+]
+],
+"Open-source licences": [
+[
+"E-R2-24",
+"#EDE7DF",
+"<path d=\"M7 3h7l5 5v13H7z\"></path><path d=\"M14 3v5h5M10 13h6M10 17h6\"></path>"
+]
+],
+"Day shape": [
+[
+"E-WakeWindDown-Settings-Candidate",
+"#E2EFEC",
+"<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><circle cx=\"12\" cy=\"12\" r=\"3\" fill=\"currentColor\"></circle>"
+]
+]
+}
