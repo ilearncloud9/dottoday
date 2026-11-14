@@ -4,7 +4,7 @@ library;
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/router/auth_callback.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
-import 'package:dottoday/data/sync/account_adoption.dart';
+import 'package:dottoday/data/sync/account_owners.dart';
 import 'package:dottoday/data/sync/supabase_sync_gateway.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -44,7 +44,12 @@ final class _Device {
         profile: profileFixture().copyWith(id: 'device-local'),
       ),
     );
-    await adoptAccount(h.db, uid, h.hlc);
+    await signInOwner(
+      h.db,
+      uid,
+      h.hlc,
+      freshProfile: (id) => profileFixture().copyWith(id: id),
+    );
   }
 
   Future<int> reconnect() async => (await _engine.run(uid)).conflicts;

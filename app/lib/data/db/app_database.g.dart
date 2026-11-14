@@ -7125,6 +7125,1236 @@ class CalendarSeriesTableCompanion extends UpdateCompanion<CalendarSeriesRow> {
   }
 }
 
+class $PendingCalendarSeriesTableTable extends PendingCalendarSeriesTable
+    with TableInfo<$PendingCalendarSeriesTableTable, PendingCalendarSeriesRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PendingCalendarSeriesTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _providerMeta = const VerificationMeta(
+    'provider',
+  );
+  @override
+  late final GeneratedColumn<String> provider = GeneratedColumn<String>(
+    'provider',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _externalCalendarIdMeta =
+      const VerificationMeta('externalCalendarId');
+  @override
+  late final GeneratedColumn<String> externalCalendarId =
+      GeneratedColumn<String>(
+        'external_calendar_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _deviceTagMeta = const VerificationMeta(
+    'deviceTag',
+  );
+  @override
+  late final GeneratedColumn<String> deviceTag = GeneratedColumn<String>(
+    'device_tag',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _seriesKeyMeta = const VerificationMeta(
+    'seriesKey',
+  );
+  @override
+  late final GeneratedColumn<String> seriesKey = GeneratedColumn<String>(
+    'series_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _colorKeyMeta = const VerificationMeta(
+    'colorKey',
+  );
+  @override
+  late final GeneratedColumn<String> colorKey = GeneratedColumn<String>(
+    'color_key',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _iconKeyMeta = const VerificationMeta(
+    'iconKey',
+  );
+  @override
+  late final GeneratedColumn<String> iconKey = GeneratedColumn<String>(
+    'icon_key',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _durationMinMeta = const VerificationMeta(
+    'durationMin',
+  );
+  @override
+  late final GeneratedColumn<int> durationMin = GeneratedColumn<int>(
+    'duration_min',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _startMinuteMeta = const VerificationMeta(
+    'startMinute',
+  );
+  @override
+  late final GeneratedColumn<int> startMinute = GeneratedColumn<int>(
+    'start_minute',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tzIdMeta = const VerificationMeta('tzId');
+  @override
+  late final GeneratedColumn<String> tzId = GeneratedColumn<String>(
+    'tz_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _pinnedMeta = const VerificationMeta('pinned');
+  @override
+  late final GeneratedColumn<bool> pinned = GeneratedColumn<bool>(
+    'pinned',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("pinned" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _travelBufferMinMeta = const VerificationMeta(
+    'travelBufferMin',
+  );
+  @override
+  late final GeneratedColumn<int> travelBufferMin = GeneratedColumn<int>(
+    'travel_buffer_min',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _energyMeta = const VerificationMeta('energy');
+  @override
+  late final GeneratedColumn<int> energy = GeneratedColumn<int>(
+    'energy',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _alertsMeta = const VerificationMeta('alerts');
+  @override
+  late final GeneratedColumn<String> alerts = GeneratedColumn<String>(
+    'alerts',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _soundIdMeta = const VerificationMeta(
+    'soundId',
+  );
+  @override
+  late final GeneratedColumn<String> soundId = GeneratedColumn<String>(
+    'sound_id',
+    aliasedName,
+    true,
+    check: () => soundIdCheck,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _subtaskTemplateMeta = const VerificationMeta(
+    'subtaskTemplate',
+  );
+  @override
+  late final GeneratedColumn<String> subtaskTemplate = GeneratedColumn<String>(
+    'subtask_template',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _hiddenMeta = const VerificationMeta('hidden');
+  @override
+  late final GeneratedColumn<bool> hidden = GeneratedColumn<bool>(
+    'hidden',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("hidden" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    createdAt,
+    updatedAt,
+    id,
+    userId,
+    provider,
+    externalCalendarId,
+    deviceTag,
+    seriesKey,
+    title,
+    notes,
+    colorKey,
+    iconKey,
+    durationMin,
+    startMinute,
+    tzId,
+    pinned,
+    travelBufferMin,
+    energy,
+    alerts,
+    soundId,
+    subtaskTemplate,
+    hidden,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'pending_calendar_series';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PendingCalendarSeriesRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('provider')) {
+      context.handle(
+        _providerMeta,
+        provider.isAcceptableOrUnknown(data['provider']!, _providerMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_providerMeta);
+    }
+    if (data.containsKey('external_calendar_id')) {
+      context.handle(
+        _externalCalendarIdMeta,
+        externalCalendarId.isAcceptableOrUnknown(
+          data['external_calendar_id']!,
+          _externalCalendarIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_externalCalendarIdMeta);
+    }
+    if (data.containsKey('device_tag')) {
+      context.handle(
+        _deviceTagMeta,
+        deviceTag.isAcceptableOrUnknown(data['device_tag']!, _deviceTagMeta),
+      );
+    }
+    if (data.containsKey('series_key')) {
+      context.handle(
+        _seriesKeyMeta,
+        seriesKey.isAcceptableOrUnknown(data['series_key']!, _seriesKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_seriesKeyMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    if (data.containsKey('color_key')) {
+      context.handle(
+        _colorKeyMeta,
+        colorKey.isAcceptableOrUnknown(data['color_key']!, _colorKeyMeta),
+      );
+    }
+    if (data.containsKey('icon_key')) {
+      context.handle(
+        _iconKeyMeta,
+        iconKey.isAcceptableOrUnknown(data['icon_key']!, _iconKeyMeta),
+      );
+    }
+    if (data.containsKey('duration_min')) {
+      context.handle(
+        _durationMinMeta,
+        durationMin.isAcceptableOrUnknown(
+          data['duration_min']!,
+          _durationMinMeta,
+        ),
+      );
+    }
+    if (data.containsKey('start_minute')) {
+      context.handle(
+        _startMinuteMeta,
+        startMinute.isAcceptableOrUnknown(
+          data['start_minute']!,
+          _startMinuteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('tz_id')) {
+      context.handle(
+        _tzIdMeta,
+        tzId.isAcceptableOrUnknown(data['tz_id']!, _tzIdMeta),
+      );
+    }
+    if (data.containsKey('pinned')) {
+      context.handle(
+        _pinnedMeta,
+        pinned.isAcceptableOrUnknown(data['pinned']!, _pinnedMeta),
+      );
+    }
+    if (data.containsKey('travel_buffer_min')) {
+      context.handle(
+        _travelBufferMinMeta,
+        travelBufferMin.isAcceptableOrUnknown(
+          data['travel_buffer_min']!,
+          _travelBufferMinMeta,
+        ),
+      );
+    }
+    if (data.containsKey('energy')) {
+      context.handle(
+        _energyMeta,
+        energy.isAcceptableOrUnknown(data['energy']!, _energyMeta),
+      );
+    }
+    if (data.containsKey('alerts')) {
+      context.handle(
+        _alertsMeta,
+        alerts.isAcceptableOrUnknown(data['alerts']!, _alertsMeta),
+      );
+    }
+    if (data.containsKey('sound_id')) {
+      context.handle(
+        _soundIdMeta,
+        soundId.isAcceptableOrUnknown(data['sound_id']!, _soundIdMeta),
+      );
+    }
+    if (data.containsKey('subtask_template')) {
+      context.handle(
+        _subtaskTemplateMeta,
+        subtaskTemplate.isAcceptableOrUnknown(
+          data['subtask_template']!,
+          _subtaskTemplateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('hidden')) {
+      context.handle(
+        _hiddenMeta,
+        hidden.isAcceptableOrUnknown(data['hidden']!, _hiddenMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PendingCalendarSeriesRow map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PendingCalendarSeriesRow(
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      provider: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}provider'],
+      )!,
+      externalCalendarId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}external_calendar_id'],
+      )!,
+      deviceTag: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}device_tag'],
+      ),
+      seriesKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}series_key'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      ),
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+      colorKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}color_key'],
+      ),
+      iconKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon_key'],
+      ),
+      durationMin: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration_min'],
+      ),
+      startMinute: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}start_minute'],
+      ),
+      tzId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tz_id'],
+      ),
+      pinned: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}pinned'],
+      ),
+      travelBufferMin: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}travel_buffer_min'],
+      ),
+      energy: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}energy'],
+      ),
+      alerts: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}alerts'],
+      ),
+      soundId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sound_id'],
+      ),
+      subtaskTemplate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}subtask_template'],
+      ),
+      hidden: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}hidden'],
+      )!,
+    );
+  }
+
+  @override
+  $PendingCalendarSeriesTableTable createAlias(String alias) {
+    return $PendingCalendarSeriesTableTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class PendingCalendarSeriesRow extends DataClass
+    implements Insertable<PendingCalendarSeriesRow> {
+  final int createdAt;
+  final int updatedAt;
+  final String id;
+  final String userId;
+  final String provider;
+  final String externalCalendarId;
+  final String? deviceTag;
+  final String seriesKey;
+  final String? title;
+  final String? notes;
+  final String? colorKey;
+  final String? iconKey;
+  final int? durationMin;
+  final int? startMinute;
+  final String? tzId;
+  final bool? pinned;
+  final int? travelBufferMin;
+  final int? energy;
+  final String? alerts;
+  final String? soundId;
+  final String? subtaskTemplate;
+  final bool hidden;
+  const PendingCalendarSeriesRow({
+    required this.createdAt,
+    required this.updatedAt,
+    required this.id,
+    required this.userId,
+    required this.provider,
+    required this.externalCalendarId,
+    this.deviceTag,
+    required this.seriesKey,
+    this.title,
+    this.notes,
+    this.colorKey,
+    this.iconKey,
+    this.durationMin,
+    this.startMinute,
+    this.tzId,
+    this.pinned,
+    this.travelBufferMin,
+    this.energy,
+    this.alerts,
+    this.soundId,
+    this.subtaskTemplate,
+    required this.hidden,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['provider'] = Variable<String>(provider);
+    map['external_calendar_id'] = Variable<String>(externalCalendarId);
+    if (!nullToAbsent || deviceTag != null) {
+      map['device_tag'] = Variable<String>(deviceTag);
+    }
+    map['series_key'] = Variable<String>(seriesKey);
+    if (!nullToAbsent || title != null) {
+      map['title'] = Variable<String>(title);
+    }
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    if (!nullToAbsent || colorKey != null) {
+      map['color_key'] = Variable<String>(colorKey);
+    }
+    if (!nullToAbsent || iconKey != null) {
+      map['icon_key'] = Variable<String>(iconKey);
+    }
+    if (!nullToAbsent || durationMin != null) {
+      map['duration_min'] = Variable<int>(durationMin);
+    }
+    if (!nullToAbsent || startMinute != null) {
+      map['start_minute'] = Variable<int>(startMinute);
+    }
+    if (!nullToAbsent || tzId != null) {
+      map['tz_id'] = Variable<String>(tzId);
+    }
+    if (!nullToAbsent || pinned != null) {
+      map['pinned'] = Variable<bool>(pinned);
+    }
+    if (!nullToAbsent || travelBufferMin != null) {
+      map['travel_buffer_min'] = Variable<int>(travelBufferMin);
+    }
+    if (!nullToAbsent || energy != null) {
+      map['energy'] = Variable<int>(energy);
+    }
+    if (!nullToAbsent || alerts != null) {
+      map['alerts'] = Variable<String>(alerts);
+    }
+    if (!nullToAbsent || soundId != null) {
+      map['sound_id'] = Variable<String>(soundId);
+    }
+    if (!nullToAbsent || subtaskTemplate != null) {
+      map['subtask_template'] = Variable<String>(subtaskTemplate);
+    }
+    map['hidden'] = Variable<bool>(hidden);
+    return map;
+  }
+
+  PendingCalendarSeriesTableCompanion toCompanion(bool nullToAbsent) {
+    return PendingCalendarSeriesTableCompanion(
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      id: Value(id),
+      userId: Value(userId),
+      provider: Value(provider),
+      externalCalendarId: Value(externalCalendarId),
+      deviceTag: deviceTag == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deviceTag),
+      seriesKey: Value(seriesKey),
+      title: title == null && nullToAbsent
+          ? const Value.absent()
+          : Value(title),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+      colorKey: colorKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(colorKey),
+      iconKey: iconKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iconKey),
+      durationMin: durationMin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(durationMin),
+      startMinute: startMinute == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startMinute),
+      tzId: tzId == null && nullToAbsent ? const Value.absent() : Value(tzId),
+      pinned: pinned == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pinned),
+      travelBufferMin: travelBufferMin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(travelBufferMin),
+      energy: energy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(energy),
+      alerts: alerts == null && nullToAbsent
+          ? const Value.absent()
+          : Value(alerts),
+      soundId: soundId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(soundId),
+      subtaskTemplate: subtaskTemplate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(subtaskTemplate),
+      hidden: Value(hidden),
+    );
+  }
+
+  factory PendingCalendarSeriesRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PendingCalendarSeriesRow(
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      provider: serializer.fromJson<String>(json['provider']),
+      externalCalendarId: serializer.fromJson<String>(
+        json['externalCalendarId'],
+      ),
+      deviceTag: serializer.fromJson<String?>(json['deviceTag']),
+      seriesKey: serializer.fromJson<String>(json['seriesKey']),
+      title: serializer.fromJson<String?>(json['title']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      colorKey: serializer.fromJson<String?>(json['colorKey']),
+      iconKey: serializer.fromJson<String?>(json['iconKey']),
+      durationMin: serializer.fromJson<int?>(json['durationMin']),
+      startMinute: serializer.fromJson<int?>(json['startMinute']),
+      tzId: serializer.fromJson<String?>(json['tzId']),
+      pinned: serializer.fromJson<bool?>(json['pinned']),
+      travelBufferMin: serializer.fromJson<int?>(json['travelBufferMin']),
+      energy: serializer.fromJson<int?>(json['energy']),
+      alerts: serializer.fromJson<String?>(json['alerts']),
+      soundId: serializer.fromJson<String?>(json['soundId']),
+      subtaskTemplate: serializer.fromJson<String?>(json['subtaskTemplate']),
+      hidden: serializer.fromJson<bool>(json['hidden']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'createdAt': serializer.toJson<int>(createdAt),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'provider': serializer.toJson<String>(provider),
+      'externalCalendarId': serializer.toJson<String>(externalCalendarId),
+      'deviceTag': serializer.toJson<String?>(deviceTag),
+      'seriesKey': serializer.toJson<String>(seriesKey),
+      'title': serializer.toJson<String?>(title),
+      'notes': serializer.toJson<String?>(notes),
+      'colorKey': serializer.toJson<String?>(colorKey),
+      'iconKey': serializer.toJson<String?>(iconKey),
+      'durationMin': serializer.toJson<int?>(durationMin),
+      'startMinute': serializer.toJson<int?>(startMinute),
+      'tzId': serializer.toJson<String?>(tzId),
+      'pinned': serializer.toJson<bool?>(pinned),
+      'travelBufferMin': serializer.toJson<int?>(travelBufferMin),
+      'energy': serializer.toJson<int?>(energy),
+      'alerts': serializer.toJson<String?>(alerts),
+      'soundId': serializer.toJson<String?>(soundId),
+      'subtaskTemplate': serializer.toJson<String?>(subtaskTemplate),
+      'hidden': serializer.toJson<bool>(hidden),
+    };
+  }
+
+  PendingCalendarSeriesRow copyWith({
+    int? createdAt,
+    int? updatedAt,
+    String? id,
+    String? userId,
+    String? provider,
+    String? externalCalendarId,
+    Value<String?> deviceTag = const Value.absent(),
+    String? seriesKey,
+    Value<String?> title = const Value.absent(),
+    Value<String?> notes = const Value.absent(),
+    Value<String?> colorKey = const Value.absent(),
+    Value<String?> iconKey = const Value.absent(),
+    Value<int?> durationMin = const Value.absent(),
+    Value<int?> startMinute = const Value.absent(),
+    Value<String?> tzId = const Value.absent(),
+    Value<bool?> pinned = const Value.absent(),
+    Value<int?> travelBufferMin = const Value.absent(),
+    Value<int?> energy = const Value.absent(),
+    Value<String?> alerts = const Value.absent(),
+    Value<String?> soundId = const Value.absent(),
+    Value<String?> subtaskTemplate = const Value.absent(),
+    bool? hidden,
+  }) => PendingCalendarSeriesRow(
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    provider: provider ?? this.provider,
+    externalCalendarId: externalCalendarId ?? this.externalCalendarId,
+    deviceTag: deviceTag.present ? deviceTag.value : this.deviceTag,
+    seriesKey: seriesKey ?? this.seriesKey,
+    title: title.present ? title.value : this.title,
+    notes: notes.present ? notes.value : this.notes,
+    colorKey: colorKey.present ? colorKey.value : this.colorKey,
+    iconKey: iconKey.present ? iconKey.value : this.iconKey,
+    durationMin: durationMin.present ? durationMin.value : this.durationMin,
+    startMinute: startMinute.present ? startMinute.value : this.startMinute,
+    tzId: tzId.present ? tzId.value : this.tzId,
+    pinned: pinned.present ? pinned.value : this.pinned,
+    travelBufferMin: travelBufferMin.present
+        ? travelBufferMin.value
+        : this.travelBufferMin,
+    energy: energy.present ? energy.value : this.energy,
+    alerts: alerts.present ? alerts.value : this.alerts,
+    soundId: soundId.present ? soundId.value : this.soundId,
+    subtaskTemplate: subtaskTemplate.present
+        ? subtaskTemplate.value
+        : this.subtaskTemplate,
+    hidden: hidden ?? this.hidden,
+  );
+  PendingCalendarSeriesRow copyWithCompanion(
+    PendingCalendarSeriesTableCompanion data,
+  ) {
+    return PendingCalendarSeriesRow(
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      provider: data.provider.present ? data.provider.value : this.provider,
+      externalCalendarId: data.externalCalendarId.present
+          ? data.externalCalendarId.value
+          : this.externalCalendarId,
+      deviceTag: data.deviceTag.present ? data.deviceTag.value : this.deviceTag,
+      seriesKey: data.seriesKey.present ? data.seriesKey.value : this.seriesKey,
+      title: data.title.present ? data.title.value : this.title,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      colorKey: data.colorKey.present ? data.colorKey.value : this.colorKey,
+      iconKey: data.iconKey.present ? data.iconKey.value : this.iconKey,
+      durationMin: data.durationMin.present
+          ? data.durationMin.value
+          : this.durationMin,
+      startMinute: data.startMinute.present
+          ? data.startMinute.value
+          : this.startMinute,
+      tzId: data.tzId.present ? data.tzId.value : this.tzId,
+      pinned: data.pinned.present ? data.pinned.value : this.pinned,
+      travelBufferMin: data.travelBufferMin.present
+          ? data.travelBufferMin.value
+          : this.travelBufferMin,
+      energy: data.energy.present ? data.energy.value : this.energy,
+      alerts: data.alerts.present ? data.alerts.value : this.alerts,
+      soundId: data.soundId.present ? data.soundId.value : this.soundId,
+      subtaskTemplate: data.subtaskTemplate.present
+          ? data.subtaskTemplate.value
+          : this.subtaskTemplate,
+      hidden: data.hidden.present ? data.hidden.value : this.hidden,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingCalendarSeriesRow(')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('provider: $provider, ')
+          ..write('externalCalendarId: $externalCalendarId, ')
+          ..write('deviceTag: $deviceTag, ')
+          ..write('seriesKey: $seriesKey, ')
+          ..write('title: $title, ')
+          ..write('notes: $notes, ')
+          ..write('colorKey: $colorKey, ')
+          ..write('iconKey: $iconKey, ')
+          ..write('durationMin: $durationMin, ')
+          ..write('startMinute: $startMinute, ')
+          ..write('tzId: $tzId, ')
+          ..write('pinned: $pinned, ')
+          ..write('travelBufferMin: $travelBufferMin, ')
+          ..write('energy: $energy, ')
+          ..write('alerts: $alerts, ')
+          ..write('soundId: $soundId, ')
+          ..write('subtaskTemplate: $subtaskTemplate, ')
+          ..write('hidden: $hidden')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    createdAt,
+    updatedAt,
+    id,
+    userId,
+    provider,
+    externalCalendarId,
+    deviceTag,
+    seriesKey,
+    title,
+    notes,
+    colorKey,
+    iconKey,
+    durationMin,
+    startMinute,
+    tzId,
+    pinned,
+    travelBufferMin,
+    energy,
+    alerts,
+    soundId,
+    subtaskTemplate,
+    hidden,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PendingCalendarSeriesRow &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.provider == this.provider &&
+          other.externalCalendarId == this.externalCalendarId &&
+          other.deviceTag == this.deviceTag &&
+          other.seriesKey == this.seriesKey &&
+          other.title == this.title &&
+          other.notes == this.notes &&
+          other.colorKey == this.colorKey &&
+          other.iconKey == this.iconKey &&
+          other.durationMin == this.durationMin &&
+          other.startMinute == this.startMinute &&
+          other.tzId == this.tzId &&
+          other.pinned == this.pinned &&
+          other.travelBufferMin == this.travelBufferMin &&
+          other.energy == this.energy &&
+          other.alerts == this.alerts &&
+          other.soundId == this.soundId &&
+          other.subtaskTemplate == this.subtaskTemplate &&
+          other.hidden == this.hidden);
+}
+
+class PendingCalendarSeriesTableCompanion
+    extends UpdateCompanion<PendingCalendarSeriesRow> {
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> provider;
+  final Value<String> externalCalendarId;
+  final Value<String?> deviceTag;
+  final Value<String> seriesKey;
+  final Value<String?> title;
+  final Value<String?> notes;
+  final Value<String?> colorKey;
+  final Value<String?> iconKey;
+  final Value<int?> durationMin;
+  final Value<int?> startMinute;
+  final Value<String?> tzId;
+  final Value<bool?> pinned;
+  final Value<int?> travelBufferMin;
+  final Value<int?> energy;
+  final Value<String?> alerts;
+  final Value<String?> soundId;
+  final Value<String?> subtaskTemplate;
+  final Value<bool> hidden;
+  final Value<int> rowid;
+  const PendingCalendarSeriesTableCompanion({
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.provider = const Value.absent(),
+    this.externalCalendarId = const Value.absent(),
+    this.deviceTag = const Value.absent(),
+    this.seriesKey = const Value.absent(),
+    this.title = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.colorKey = const Value.absent(),
+    this.iconKey = const Value.absent(),
+    this.durationMin = const Value.absent(),
+    this.startMinute = const Value.absent(),
+    this.tzId = const Value.absent(),
+    this.pinned = const Value.absent(),
+    this.travelBufferMin = const Value.absent(),
+    this.energy = const Value.absent(),
+    this.alerts = const Value.absent(),
+    this.soundId = const Value.absent(),
+    this.subtaskTemplate = const Value.absent(),
+    this.hidden = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PendingCalendarSeriesTableCompanion.insert({
+    required int createdAt,
+    required int updatedAt,
+    required String id,
+    required String userId,
+    required String provider,
+    required String externalCalendarId,
+    this.deviceTag = const Value.absent(),
+    required String seriesKey,
+    this.title = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.colorKey = const Value.absent(),
+    this.iconKey = const Value.absent(),
+    this.durationMin = const Value.absent(),
+    this.startMinute = const Value.absent(),
+    this.tzId = const Value.absent(),
+    this.pinned = const Value.absent(),
+    this.travelBufferMin = const Value.absent(),
+    this.energy = const Value.absent(),
+    this.alerts = const Value.absent(),
+    this.soundId = const Value.absent(),
+    this.subtaskTemplate = const Value.absent(),
+    this.hidden = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt),
+       id = Value(id),
+       userId = Value(userId),
+       provider = Value(provider),
+       externalCalendarId = Value(externalCalendarId),
+       seriesKey = Value(seriesKey);
+  static Insertable<PendingCalendarSeriesRow> custom({
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? provider,
+    Expression<String>? externalCalendarId,
+    Expression<String>? deviceTag,
+    Expression<String>? seriesKey,
+    Expression<String>? title,
+    Expression<String>? notes,
+    Expression<String>? colorKey,
+    Expression<String>? iconKey,
+    Expression<int>? durationMin,
+    Expression<int>? startMinute,
+    Expression<String>? tzId,
+    Expression<bool>? pinned,
+    Expression<int>? travelBufferMin,
+    Expression<int>? energy,
+    Expression<String>? alerts,
+    Expression<String>? soundId,
+    Expression<String>? subtaskTemplate,
+    Expression<bool>? hidden,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (provider != null) 'provider': provider,
+      if (externalCalendarId != null)
+        'external_calendar_id': externalCalendarId,
+      if (deviceTag != null) 'device_tag': deviceTag,
+      if (seriesKey != null) 'series_key': seriesKey,
+      if (title != null) 'title': title,
+      if (notes != null) 'notes': notes,
+      if (colorKey != null) 'color_key': colorKey,
+      if (iconKey != null) 'icon_key': iconKey,
+      if (durationMin != null) 'duration_min': durationMin,
+      if (startMinute != null) 'start_minute': startMinute,
+      if (tzId != null) 'tz_id': tzId,
+      if (pinned != null) 'pinned': pinned,
+      if (travelBufferMin != null) 'travel_buffer_min': travelBufferMin,
+      if (energy != null) 'energy': energy,
+      if (alerts != null) 'alerts': alerts,
+      if (soundId != null) 'sound_id': soundId,
+      if (subtaskTemplate != null) 'subtask_template': subtaskTemplate,
+      if (hidden != null) 'hidden': hidden,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PendingCalendarSeriesTableCompanion copyWith({
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? provider,
+    Value<String>? externalCalendarId,
+    Value<String?>? deviceTag,
+    Value<String>? seriesKey,
+    Value<String?>? title,
+    Value<String?>? notes,
+    Value<String?>? colorKey,
+    Value<String?>? iconKey,
+    Value<int?>? durationMin,
+    Value<int?>? startMinute,
+    Value<String?>? tzId,
+    Value<bool?>? pinned,
+    Value<int?>? travelBufferMin,
+    Value<int?>? energy,
+    Value<String?>? alerts,
+    Value<String?>? soundId,
+    Value<String?>? subtaskTemplate,
+    Value<bool>? hidden,
+    Value<int>? rowid,
+  }) {
+    return PendingCalendarSeriesTableCompanion(
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      provider: provider ?? this.provider,
+      externalCalendarId: externalCalendarId ?? this.externalCalendarId,
+      deviceTag: deviceTag ?? this.deviceTag,
+      seriesKey: seriesKey ?? this.seriesKey,
+      title: title ?? this.title,
+      notes: notes ?? this.notes,
+      colorKey: colorKey ?? this.colorKey,
+      iconKey: iconKey ?? this.iconKey,
+      durationMin: durationMin ?? this.durationMin,
+      startMinute: startMinute ?? this.startMinute,
+      tzId: tzId ?? this.tzId,
+      pinned: pinned ?? this.pinned,
+      travelBufferMin: travelBufferMin ?? this.travelBufferMin,
+      energy: energy ?? this.energy,
+      alerts: alerts ?? this.alerts,
+      soundId: soundId ?? this.soundId,
+      subtaskTemplate: subtaskTemplate ?? this.subtaskTemplate,
+      hidden: hidden ?? this.hidden,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (provider.present) {
+      map['provider'] = Variable<String>(provider.value);
+    }
+    if (externalCalendarId.present) {
+      map['external_calendar_id'] = Variable<String>(externalCalendarId.value);
+    }
+    if (deviceTag.present) {
+      map['device_tag'] = Variable<String>(deviceTag.value);
+    }
+    if (seriesKey.present) {
+      map['series_key'] = Variable<String>(seriesKey.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (colorKey.present) {
+      map['color_key'] = Variable<String>(colorKey.value);
+    }
+    if (iconKey.present) {
+      map['icon_key'] = Variable<String>(iconKey.value);
+    }
+    if (durationMin.present) {
+      map['duration_min'] = Variable<int>(durationMin.value);
+    }
+    if (startMinute.present) {
+      map['start_minute'] = Variable<int>(startMinute.value);
+    }
+    if (tzId.present) {
+      map['tz_id'] = Variable<String>(tzId.value);
+    }
+    if (pinned.present) {
+      map['pinned'] = Variable<bool>(pinned.value);
+    }
+    if (travelBufferMin.present) {
+      map['travel_buffer_min'] = Variable<int>(travelBufferMin.value);
+    }
+    if (energy.present) {
+      map['energy'] = Variable<int>(energy.value);
+    }
+    if (alerts.present) {
+      map['alerts'] = Variable<String>(alerts.value);
+    }
+    if (soundId.present) {
+      map['sound_id'] = Variable<String>(soundId.value);
+    }
+    if (subtaskTemplate.present) {
+      map['subtask_template'] = Variable<String>(subtaskTemplate.value);
+    }
+    if (hidden.present) {
+      map['hidden'] = Variable<bool>(hidden.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingCalendarSeriesTableCompanion(')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('provider: $provider, ')
+          ..write('externalCalendarId: $externalCalendarId, ')
+          ..write('deviceTag: $deviceTag, ')
+          ..write('seriesKey: $seriesKey, ')
+          ..write('title: $title, ')
+          ..write('notes: $notes, ')
+          ..write('colorKey: $colorKey, ')
+          ..write('iconKey: $iconKey, ')
+          ..write('durationMin: $durationMin, ')
+          ..write('startMinute: $startMinute, ')
+          ..write('tzId: $tzId, ')
+          ..write('pinned: $pinned, ')
+          ..write('travelBufferMin: $travelBufferMin, ')
+          ..write('energy: $energy, ')
+          ..write('alerts: $alerts, ')
+          ..write('soundId: $soundId, ')
+          ..write('subtaskTemplate: $subtaskTemplate, ')
+          ..write('hidden: $hidden, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $RoutinesTableTable extends RoutinesTable
     with TableInfo<$RoutinesTableTable, RoutineRow> {
   @override
@@ -9028,6 +10258,20 @@ class $ChangeLogTable extends ChangeLog
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _ownerIdMeta = const VerificationMeta(
+    'ownerId',
+  );
+  @override
+  late final GeneratedColumn<String> ownerId = GeneratedColumn<String>(
+    'owner_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON UPDATE CASCADE',
+    ),
+  );
   static const VerificationMeta _entityMeta = const VerificationMeta('entity');
   @override
   late final GeneratedColumn<String> entity = GeneratedColumn<String>(
@@ -9078,6 +10322,7 @@ class $ChangeLogTable extends ChangeLog
   @override
   List<GeneratedColumn> get $columns => [
     seq,
+    ownerId,
     entity,
     entityId,
     field,
@@ -9101,6 +10346,14 @@ class $ChangeLogTable extends ChangeLog
         _seqMeta,
         seq.isAcceptableOrUnknown(data['seq']!, _seqMeta),
       );
+    }
+    if (data.containsKey('owner_id')) {
+      context.handle(
+        _ownerIdMeta,
+        ownerId.isAcceptableOrUnknown(data['owner_id']!, _ownerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ownerIdMeta);
     }
     if (data.containsKey('entity')) {
       context.handle(
@@ -9155,6 +10408,10 @@ class $ChangeLogTable extends ChangeLog
         DriftSqlType.int,
         data['${effectivePrefix}seq'],
       )!,
+      ownerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner_id'],
+      )!,
       entity: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}entity'],
@@ -9189,6 +10446,12 @@ class $ChangeLogTable extends ChangeLog
 
 class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   final int seq;
+
+  /// Whose change this is (CR-160): the guest profile or one account. Only
+  /// that account's sync pushes it. Follows a guest's re-key to the account
+  /// it is adopted into; no delete action, so a profile with pending work
+  /// can't be removed (never silent loss, R-08).
+  final String ownerId;
   final String entity;
   final String entityId;
   final String field;
@@ -9200,6 +10463,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   final String hlc;
   const ChangeLogRow({
     required this.seq,
+    required this.ownerId,
     required this.entity,
     required this.entityId,
     required this.field,
@@ -9210,6 +10474,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['seq'] = Variable<int>(seq);
+    map['owner_id'] = Variable<String>(ownerId);
     map['entity'] = Variable<String>(entity);
     map['entity_id'] = Variable<String>(entityId);
     map['field'] = Variable<String>(field);
@@ -9221,6 +10486,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   ChangeLogCompanion toCompanion(bool nullToAbsent) {
     return ChangeLogCompanion(
       seq: Value(seq),
+      ownerId: Value(ownerId),
       entity: Value(entity),
       entityId: Value(entityId),
       field: Value(field),
@@ -9236,6 +10502,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ChangeLogRow(
       seq: serializer.fromJson<int>(json['seq']),
+      ownerId: serializer.fromJson<String>(json['ownerId']),
       entity: serializer.fromJson<String>(json['entity']),
       entityId: serializer.fromJson<String>(json['entityId']),
       field: serializer.fromJson<String>(json['field']),
@@ -9248,6 +10515,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'seq': serializer.toJson<int>(seq),
+      'ownerId': serializer.toJson<String>(ownerId),
       'entity': serializer.toJson<String>(entity),
       'entityId': serializer.toJson<String>(entityId),
       'field': serializer.toJson<String>(field),
@@ -9258,6 +10526,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
 
   ChangeLogRow copyWith({
     int? seq,
+    String? ownerId,
     String? entity,
     String? entityId,
     String? field,
@@ -9265,6 +10534,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
     String? hlc,
   }) => ChangeLogRow(
     seq: seq ?? this.seq,
+    ownerId: ownerId ?? this.ownerId,
     entity: entity ?? this.entity,
     entityId: entityId ?? this.entityId,
     field: field ?? this.field,
@@ -9274,6 +10544,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   ChangeLogRow copyWithCompanion(ChangeLogCompanion data) {
     return ChangeLogRow(
       seq: data.seq.present ? data.seq.value : this.seq,
+      ownerId: data.ownerId.present ? data.ownerId.value : this.ownerId,
       entity: data.entity.present ? data.entity.value : this.entity,
       entityId: data.entityId.present ? data.entityId.value : this.entityId,
       field: data.field.present ? data.field.value : this.field,
@@ -9286,6 +10557,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   String toString() {
     return (StringBuffer('ChangeLogRow(')
           ..write('seq: $seq, ')
+          ..write('ownerId: $ownerId, ')
           ..write('entity: $entity, ')
           ..write('entityId: $entityId, ')
           ..write('field: $field, ')
@@ -9296,12 +10568,14 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
   }
 
   @override
-  int get hashCode => Object.hash(seq, entity, entityId, field, value, hlc);
+  int get hashCode =>
+      Object.hash(seq, ownerId, entity, entityId, field, value, hlc);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ChangeLogRow &&
           other.seq == this.seq &&
+          other.ownerId == this.ownerId &&
           other.entity == this.entity &&
           other.entityId == this.entityId &&
           other.field == this.field &&
@@ -9311,6 +10585,7 @@ class ChangeLogRow extends DataClass implements Insertable<ChangeLogRow> {
 
 class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
   final Value<int> seq;
+  final Value<String> ownerId;
   final Value<String> entity;
   final Value<String> entityId;
   final Value<String> field;
@@ -9318,6 +10593,7 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
   final Value<String> hlc;
   const ChangeLogCompanion({
     this.seq = const Value.absent(),
+    this.ownerId = const Value.absent(),
     this.entity = const Value.absent(),
     this.entityId = const Value.absent(),
     this.field = const Value.absent(),
@@ -9326,18 +10602,21 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
   });
   ChangeLogCompanion.insert({
     this.seq = const Value.absent(),
+    required String ownerId,
     required String entity,
     required String entityId,
     required String field,
     required String value,
     required String hlc,
-  }) : entity = Value(entity),
+  }) : ownerId = Value(ownerId),
+       entity = Value(entity),
        entityId = Value(entityId),
        field = Value(field),
        value = Value(value),
        hlc = Value(hlc);
   static Insertable<ChangeLogRow> custom({
     Expression<int>? seq,
+    Expression<String>? ownerId,
     Expression<String>? entity,
     Expression<String>? entityId,
     Expression<String>? field,
@@ -9346,6 +10625,7 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
   }) {
     return RawValuesInsertable({
       if (seq != null) 'seq': seq,
+      if (ownerId != null) 'owner_id': ownerId,
       if (entity != null) 'entity': entity,
       if (entityId != null) 'entity_id': entityId,
       if (field != null) 'field': field,
@@ -9356,6 +10636,7 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
 
   ChangeLogCompanion copyWith({
     Value<int>? seq,
+    Value<String>? ownerId,
     Value<String>? entity,
     Value<String>? entityId,
     Value<String>? field,
@@ -9364,6 +10645,7 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
   }) {
     return ChangeLogCompanion(
       seq: seq ?? this.seq,
+      ownerId: ownerId ?? this.ownerId,
       entity: entity ?? this.entity,
       entityId: entityId ?? this.entityId,
       field: field ?? this.field,
@@ -9377,6 +10659,9 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
     final map = <String, Expression>{};
     if (seq.present) {
       map['seq'] = Variable<int>(seq.value);
+    }
+    if (ownerId.present) {
+      map['owner_id'] = Variable<String>(ownerId.value);
     }
     if (entity.present) {
       map['entity'] = Variable<String>(entity.value);
@@ -9400,6 +10685,7 @@ class ChangeLogCompanion extends UpdateCompanion<ChangeLogRow> {
   String toString() {
     return (StringBuffer('ChangeLogCompanion(')
           ..write('seq: $seq, ')
+          ..write('ownerId: $ownerId, ')
           ..write('entity: $entity, ')
           ..write('entityId: $entityId, ')
           ..write('field: $field, ')
@@ -9416,6 +10702,17 @@ class $SyncCursorsTable extends SyncCursors
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $SyncCursorsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _ownerIdMeta = const VerificationMeta(
+    'ownerId',
+  );
+  @override
+  late final GeneratedColumn<String> ownerId = GeneratedColumn<String>(
+    'owner_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _entityMeta = const VerificationMeta('entity');
   @override
   late final GeneratedColumn<String> entity = GeneratedColumn<String>(
@@ -9459,7 +10756,13 @@ class $SyncCursorsTable extends SyncCursors
     requiredDuringInsert: false,
   );
   @override
-  List<GeneratedColumn> get $columns => [entity, sinceUtc, sinceAt, sinceId];
+  List<GeneratedColumn> get $columns => [
+    ownerId,
+    entity,
+    sinceUtc,
+    sinceAt,
+    sinceId,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -9472,6 +10775,14 @@ class $SyncCursorsTable extends SyncCursors
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('owner_id')) {
+      context.handle(
+        _ownerIdMeta,
+        ownerId.isAcceptableOrUnknown(data['owner_id']!, _ownerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ownerIdMeta);
+    }
     if (data.containsKey('entity')) {
       context.handle(
         _entityMeta,
@@ -9504,11 +10815,15 @@ class $SyncCursorsTable extends SyncCursors
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {entity};
+  Set<GeneratedColumn> get $primaryKey => {ownerId, entity};
   @override
   SyncCursorRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return SyncCursorRow(
+      ownerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner_id'],
+      )!,
       entity: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}entity'],
@@ -9538,6 +10853,9 @@ class $SyncCursorsTable extends SyncCursors
 }
 
 class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
+  /// The account whose pull this is (CR-160): each account on the device
+  /// resumes its own pull.
+  final String ownerId;
   final String entity;
   final int sinceUtc;
 
@@ -9549,6 +10867,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   final String? sinceAt;
   final String? sinceId;
   const SyncCursorRow({
+    required this.ownerId,
     required this.entity,
     required this.sinceUtc,
     this.sinceAt,
@@ -9557,6 +10876,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['owner_id'] = Variable<String>(ownerId);
     map['entity'] = Variable<String>(entity);
     map['since_utc'] = Variable<int>(sinceUtc);
     if (!nullToAbsent || sinceAt != null) {
@@ -9570,6 +10890,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
 
   SyncCursorsCompanion toCompanion(bool nullToAbsent) {
     return SyncCursorsCompanion(
+      ownerId: Value(ownerId),
       entity: Value(entity),
       sinceUtc: Value(sinceUtc),
       sinceAt: sinceAt == null && nullToAbsent
@@ -9587,6 +10908,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SyncCursorRow(
+      ownerId: serializer.fromJson<String>(json['ownerId']),
       entity: serializer.fromJson<String>(json['entity']),
       sinceUtc: serializer.fromJson<int>(json['sinceUtc']),
       sinceAt: serializer.fromJson<String?>(json['sinceAt']),
@@ -9597,6 +10919,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'ownerId': serializer.toJson<String>(ownerId),
       'entity': serializer.toJson<String>(entity),
       'sinceUtc': serializer.toJson<int>(sinceUtc),
       'sinceAt': serializer.toJson<String?>(sinceAt),
@@ -9605,11 +10928,13 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   }
 
   SyncCursorRow copyWith({
+    String? ownerId,
     String? entity,
     int? sinceUtc,
     Value<String?> sinceAt = const Value.absent(),
     Value<String?> sinceId = const Value.absent(),
   }) => SyncCursorRow(
+    ownerId: ownerId ?? this.ownerId,
     entity: entity ?? this.entity,
     sinceUtc: sinceUtc ?? this.sinceUtc,
     sinceAt: sinceAt.present ? sinceAt.value : this.sinceAt,
@@ -9617,6 +10942,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   );
   SyncCursorRow copyWithCompanion(SyncCursorsCompanion data) {
     return SyncCursorRow(
+      ownerId: data.ownerId.present ? data.ownerId.value : this.ownerId,
       entity: data.entity.present ? data.entity.value : this.entity,
       sinceUtc: data.sinceUtc.present ? data.sinceUtc.value : this.sinceUtc,
       sinceAt: data.sinceAt.present ? data.sinceAt.value : this.sinceAt,
@@ -9627,6 +10953,7 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   @override
   String toString() {
     return (StringBuffer('SyncCursorRow(')
+          ..write('ownerId: $ownerId, ')
           ..write('entity: $entity, ')
           ..write('sinceUtc: $sinceUtc, ')
           ..write('sinceAt: $sinceAt, ')
@@ -9636,11 +10963,12 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
   }
 
   @override
-  int get hashCode => Object.hash(entity, sinceUtc, sinceAt, sinceId);
+  int get hashCode => Object.hash(ownerId, entity, sinceUtc, sinceAt, sinceId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SyncCursorRow &&
+          other.ownerId == this.ownerId &&
           other.entity == this.entity &&
           other.sinceUtc == this.sinceUtc &&
           other.sinceAt == this.sinceAt &&
@@ -9648,12 +10976,14 @@ class SyncCursorRow extends DataClass implements Insertable<SyncCursorRow> {
 }
 
 class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
+  final Value<String> ownerId;
   final Value<String> entity;
   final Value<int> sinceUtc;
   final Value<String?> sinceAt;
   final Value<String?> sinceId;
   final Value<int> rowid;
   const SyncCursorsCompanion({
+    this.ownerId = const Value.absent(),
     this.entity = const Value.absent(),
     this.sinceUtc = const Value.absent(),
     this.sinceAt = const Value.absent(),
@@ -9661,14 +10991,17 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
     this.rowid = const Value.absent(),
   });
   SyncCursorsCompanion.insert({
+    required String ownerId,
     required String entity,
     required int sinceUtc,
     this.sinceAt = const Value.absent(),
     this.sinceId = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : entity = Value(entity),
+  }) : ownerId = Value(ownerId),
+       entity = Value(entity),
        sinceUtc = Value(sinceUtc);
   static Insertable<SyncCursorRow> custom({
+    Expression<String>? ownerId,
     Expression<String>? entity,
     Expression<int>? sinceUtc,
     Expression<String>? sinceAt,
@@ -9676,6 +11009,7 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (ownerId != null) 'owner_id': ownerId,
       if (entity != null) 'entity': entity,
       if (sinceUtc != null) 'since_utc': sinceUtc,
       if (sinceAt != null) 'since_at': sinceAt,
@@ -9685,6 +11019,7 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
   }
 
   SyncCursorsCompanion copyWith({
+    Value<String>? ownerId,
     Value<String>? entity,
     Value<int>? sinceUtc,
     Value<String?>? sinceAt,
@@ -9692,6 +11027,7 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
     Value<int>? rowid,
   }) {
     return SyncCursorsCompanion(
+      ownerId: ownerId ?? this.ownerId,
       entity: entity ?? this.entity,
       sinceUtc: sinceUtc ?? this.sinceUtc,
       sinceAt: sinceAt ?? this.sinceAt,
@@ -9703,6 +11039,9 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (ownerId.present) {
+      map['owner_id'] = Variable<String>(ownerId.value);
+    }
     if (entity.present) {
       map['entity'] = Variable<String>(entity.value);
     }
@@ -9724,6 +11063,7 @@ class SyncCursorsCompanion extends UpdateCompanion<SyncCursorRow> {
   @override
   String toString() {
     return (StringBuffer('SyncCursorsCompanion(')
+          ..write('ownerId: $ownerId, ')
           ..write('entity: $entity, ')
           ..write('sinceUtc: $sinceUtc, ')
           ..write('sinceAt: $sinceAt, ')
@@ -10263,6 +11603,18 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $WakeUpDaysTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _ownerIdMeta = const VerificationMeta(
+    'ownerId',
+  );
+  @override
+  late final GeneratedColumn<String> ownerId = GeneratedColumn<String>(
+    'owner_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
   late final GeneratedColumn<String> date = GeneratedColumn<String>(
@@ -10340,6 +11692,7 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
   );
   @override
   List<GeneratedColumn> get $columns => [
+    ownerId,
     date,
     rangAtUtc,
     stoppedAtUtc,
@@ -10360,6 +11713,12 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('owner_id')) {
+      context.handle(
+        _ownerIdMeta,
+        ownerId.isAcceptableOrUnknown(data['owner_id']!, _ownerIdMeta),
+      );
+    }
     if (data.containsKey('date')) {
       context.handle(
         _dateMeta,
@@ -10420,11 +11779,15 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {date};
+  Set<GeneratedColumn> get $primaryKey => {ownerId, date};
   @override
   WakeUpDayRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return WakeUpDayRow(
+      ownerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner_id'],
+      )!,
       date: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}date'],
@@ -10466,6 +11829,10 @@ class $WakeUpDaysTableTable extends WakeUpDaysTable
 }
 
 class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
+  /// The profile whose morning this is; '' for rows from before 22 that
+  /// no profile can claim, which no one sees.
+  final String ownerId;
+
   /// `yyyy-MM-dd` in the profile's zone.
   final String date;
   final int? rangAtUtc;
@@ -10477,6 +11844,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   /// "Can't right now" skipped the mission (15 §8). Schema 12.
   final int? missionSkippedAtUtc;
   const WakeUpDayRow({
+    required this.ownerId,
     required this.date,
     this.rangAtUtc,
     this.stoppedAtUtc,
@@ -10488,6 +11856,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['owner_id'] = Variable<String>(ownerId);
     map['date'] = Variable<String>(date);
     if (!nullToAbsent || rangAtUtc != null) {
       map['rang_at_utc'] = Variable<int>(rangAtUtc);
@@ -10510,6 +11879,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
 
   WakeUpDaysTableCompanion toCompanion(bool nullToAbsent) {
     return WakeUpDaysTableCompanion(
+      ownerId: Value(ownerId),
       date: Value(date),
       rangAtUtc: rangAtUtc == null && nullToAbsent
           ? const Value.absent()
@@ -10536,6 +11906,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return WakeUpDayRow(
+      ownerId: serializer.fromJson<String>(json['ownerId']),
       date: serializer.fromJson<String>(json['date']),
       rangAtUtc: serializer.fromJson<int?>(json['rangAtUtc']),
       stoppedAtUtc: serializer.fromJson<int?>(json['stoppedAtUtc']),
@@ -10551,6 +11922,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'ownerId': serializer.toJson<String>(ownerId),
       'date': serializer.toJson<String>(date),
       'rangAtUtc': serializer.toJson<int?>(rangAtUtc),
       'stoppedAtUtc': serializer.toJson<int?>(stoppedAtUtc),
@@ -10562,6 +11934,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   }
 
   WakeUpDayRow copyWith({
+    String? ownerId,
     String? date,
     Value<int?> rangAtUtc = const Value.absent(),
     Value<int?> stoppedAtUtc = const Value.absent(),
@@ -10570,6 +11943,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
     Value<int?> startedAtUtc = const Value.absent(),
     Value<int?> missionSkippedAtUtc = const Value.absent(),
   }) => WakeUpDayRow(
+    ownerId: ownerId ?? this.ownerId,
     date: date ?? this.date,
     rangAtUtc: rangAtUtc.present ? rangAtUtc.value : this.rangAtUtc,
     stoppedAtUtc: stoppedAtUtc.present ? stoppedAtUtc.value : this.stoppedAtUtc,
@@ -10584,6 +11958,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   );
   WakeUpDayRow copyWithCompanion(WakeUpDaysTableCompanion data) {
     return WakeUpDayRow(
+      ownerId: data.ownerId.present ? data.ownerId.value : this.ownerId,
       date: data.date.present ? data.date.value : this.date,
       rangAtUtc: data.rangAtUtc.present ? data.rangAtUtc.value : this.rangAtUtc,
       stoppedAtUtc: data.stoppedAtUtc.present
@@ -10605,6 +11980,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   @override
   String toString() {
     return (StringBuffer('WakeUpDayRow(')
+          ..write('ownerId: $ownerId, ')
           ..write('date: $date, ')
           ..write('rangAtUtc: $rangAtUtc, ')
           ..write('stoppedAtUtc: $stoppedAtUtc, ')
@@ -10618,6 +11994,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
 
   @override
   int get hashCode => Object.hash(
+    ownerId,
     date,
     rangAtUtc,
     stoppedAtUtc,
@@ -10630,6 +12007,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is WakeUpDayRow &&
+          other.ownerId == this.ownerId &&
           other.date == this.date &&
           other.rangAtUtc == this.rangAtUtc &&
           other.stoppedAtUtc == this.stoppedAtUtc &&
@@ -10640,6 +12018,7 @@ class WakeUpDayRow extends DataClass implements Insertable<WakeUpDayRow> {
 }
 
 class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
+  final Value<String> ownerId;
   final Value<String> date;
   final Value<int?> rangAtUtc;
   final Value<int?> stoppedAtUtc;
@@ -10649,6 +12028,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
   final Value<int?> missionSkippedAtUtc;
   final Value<int> rowid;
   const WakeUpDaysTableCompanion({
+    this.ownerId = const Value.absent(),
     this.date = const Value.absent(),
     this.rangAtUtc = const Value.absent(),
     this.stoppedAtUtc = const Value.absent(),
@@ -10659,6 +12039,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
     this.rowid = const Value.absent(),
   });
   WakeUpDaysTableCompanion.insert({
+    this.ownerId = const Value.absent(),
     required String date,
     this.rangAtUtc = const Value.absent(),
     this.stoppedAtUtc = const Value.absent(),
@@ -10669,6 +12050,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
     this.rowid = const Value.absent(),
   }) : date = Value(date);
   static Insertable<WakeUpDayRow> custom({
+    Expression<String>? ownerId,
     Expression<String>? date,
     Expression<int>? rangAtUtc,
     Expression<int>? stoppedAtUtc,
@@ -10679,6 +12061,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (ownerId != null) 'owner_id': ownerId,
       if (date != null) 'date': date,
       if (rangAtUtc != null) 'rang_at_utc': rangAtUtc,
       if (stoppedAtUtc != null) 'stopped_at_utc': stoppedAtUtc,
@@ -10692,6 +12075,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
   }
 
   WakeUpDaysTableCompanion copyWith({
+    Value<String>? ownerId,
     Value<String>? date,
     Value<int?>? rangAtUtc,
     Value<int?>? stoppedAtUtc,
@@ -10702,6 +12086,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
     Value<int>? rowid,
   }) {
     return WakeUpDaysTableCompanion(
+      ownerId: ownerId ?? this.ownerId,
       date: date ?? this.date,
       rangAtUtc: rangAtUtc ?? this.rangAtUtc,
       stoppedAtUtc: stoppedAtUtc ?? this.stoppedAtUtc,
@@ -10716,6 +12101,9 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (ownerId.present) {
+      map['owner_id'] = Variable<String>(ownerId.value);
+    }
     if (date.present) {
       map['date'] = Variable<String>(date.value);
     }
@@ -10746,6 +12134,7 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
   @override
   String toString() {
     return (StringBuffer('WakeUpDaysTableCompanion(')
+          ..write('ownerId: $ownerId, ')
           ..write('date: $date, ')
           ..write('rangAtUtc: $rangAtUtc, ')
           ..write('stoppedAtUtc: $stoppedAtUtc, ')
@@ -10753,6 +12142,1178 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
           ..write('cardShownAtUtc: $cardShownAtUtc, ')
           ..write('startedAtUtc: $startedAtUtc, ')
           ..write('missionSkippedAtUtc: $missionSkippedAtUtc, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $GuestRowSessionsTable extends GuestRowSessions
+    with TableInfo<$GuestRowSessionsTable, GuestRowSessionRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $GuestRowSessionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _entityMeta = const VerificationMeta('entity');
+  @override
+  late final GeneratedColumn<String> entity = GeneratedColumn<String>(
+    'entity',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _entityIdMeta = const VerificationMeta(
+    'entityId',
+  );
+  @override
+  late final GeneratedColumn<String> entityId = GeneratedColumn<String>(
+    'entity_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sessionMeta = const VerificationMeta(
+    'session',
+  );
+  @override
+  late final GeneratedColumn<String> session = GeneratedColumn<String>(
+    'session',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [entity, entityId, session];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'guest_row_sessions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<GuestRowSessionRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('entity')) {
+      context.handle(
+        _entityMeta,
+        entity.isAcceptableOrUnknown(data['entity']!, _entityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityMeta);
+    }
+    if (data.containsKey('entity_id')) {
+      context.handle(
+        _entityIdMeta,
+        entityId.isAcceptableOrUnknown(data['entity_id']!, _entityIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityIdMeta);
+    }
+    if (data.containsKey('session')) {
+      context.handle(
+        _sessionMeta,
+        session.isAcceptableOrUnknown(data['session']!, _sessionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sessionMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {entity, entityId};
+  @override
+  GuestRowSessionRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return GuestRowSessionRow(
+      entity: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity'],
+      )!,
+      entityId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity_id'],
+      )!,
+      session: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session'],
+      )!,
+    );
+  }
+
+  @override
+  $GuestRowSessionsTable createAlias(String alias) {
+    return $GuestRowSessionsTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class GuestRowSessionRow extends DataClass
+    implements Insertable<GuestRowSessionRow> {
+  final String entity;
+  final String entityId;
+  final String session;
+  const GuestRowSessionRow({
+    required this.entity,
+    required this.entityId,
+    required this.session,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['entity'] = Variable<String>(entity);
+    map['entity_id'] = Variable<String>(entityId);
+    map['session'] = Variable<String>(session);
+    return map;
+  }
+
+  GuestRowSessionsCompanion toCompanion(bool nullToAbsent) {
+    return GuestRowSessionsCompanion(
+      entity: Value(entity),
+      entityId: Value(entityId),
+      session: Value(session),
+    );
+  }
+
+  factory GuestRowSessionRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return GuestRowSessionRow(
+      entity: serializer.fromJson<String>(json['entity']),
+      entityId: serializer.fromJson<String>(json['entityId']),
+      session: serializer.fromJson<String>(json['session']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'entity': serializer.toJson<String>(entity),
+      'entityId': serializer.toJson<String>(entityId),
+      'session': serializer.toJson<String>(session),
+    };
+  }
+
+  GuestRowSessionRow copyWith({
+    String? entity,
+    String? entityId,
+    String? session,
+  }) => GuestRowSessionRow(
+    entity: entity ?? this.entity,
+    entityId: entityId ?? this.entityId,
+    session: session ?? this.session,
+  );
+  GuestRowSessionRow copyWithCompanion(GuestRowSessionsCompanion data) {
+    return GuestRowSessionRow(
+      entity: data.entity.present ? data.entity.value : this.entity,
+      entityId: data.entityId.present ? data.entityId.value : this.entityId,
+      session: data.session.present ? data.session.value : this.session,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GuestRowSessionRow(')
+          ..write('entity: $entity, ')
+          ..write('entityId: $entityId, ')
+          ..write('session: $session')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(entity, entityId, session);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is GuestRowSessionRow &&
+          other.entity == this.entity &&
+          other.entityId == this.entityId &&
+          other.session == this.session);
+}
+
+class GuestRowSessionsCompanion extends UpdateCompanion<GuestRowSessionRow> {
+  final Value<String> entity;
+  final Value<String> entityId;
+  final Value<String> session;
+  final Value<int> rowid;
+  const GuestRowSessionsCompanion({
+    this.entity = const Value.absent(),
+    this.entityId = const Value.absent(),
+    this.session = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  GuestRowSessionsCompanion.insert({
+    required String entity,
+    required String entityId,
+    required String session,
+    this.rowid = const Value.absent(),
+  }) : entity = Value(entity),
+       entityId = Value(entityId),
+       session = Value(session);
+  static Insertable<GuestRowSessionRow> custom({
+    Expression<String>? entity,
+    Expression<String>? entityId,
+    Expression<String>? session,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (entity != null) 'entity': entity,
+      if (entityId != null) 'entity_id': entityId,
+      if (session != null) 'session': session,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  GuestRowSessionsCompanion copyWith({
+    Value<String>? entity,
+    Value<String>? entityId,
+    Value<String>? session,
+    Value<int>? rowid,
+  }) {
+    return GuestRowSessionsCompanion(
+      entity: entity ?? this.entity,
+      entityId: entityId ?? this.entityId,
+      session: session ?? this.session,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (entity.present) {
+      map['entity'] = Variable<String>(entity.value);
+    }
+    if (entityId.present) {
+      map['entity_id'] = Variable<String>(entityId.value);
+    }
+    if (session.present) {
+      map['session'] = Variable<String>(session.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GuestRowSessionsCompanion(')
+          ..write('entity: $entity, ')
+          ..write('entityId: $entityId, ')
+          ..write('session: $session, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ImportSessionsTable extends ImportSessions
+    with TableInfo<$ImportSessionsTable, ImportSessionRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ImportSessionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _importIdMeta = const VerificationMeta(
+    'importId',
+  );
+  @override
+  late final GeneratedColumn<String> importId = GeneratedColumn<String>(
+    'import_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ownerMeta = const VerificationMeta('owner');
+  @override
+  late final GeneratedColumn<String> owner = GeneratedColumn<String>(
+    'owner',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ownerGenerationMeta = const VerificationMeta(
+    'ownerGeneration',
+  );
+  @override
+  late final GeneratedColumn<int> ownerGeneration = GeneratedColumn<int>(
+    'owner_generation',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _runIdMeta = const VerificationMeta('runId');
+  @override
+  late final GeneratedColumn<String> runId = GeneratedColumn<String>(
+    'run_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startedAtMeta = const VerificationMeta(
+    'startedAt',
+  );
+  @override
+  late final GeneratedColumn<int> startedAt = GeneratedColumn<int>(
+    'started_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _declaredBytesMeta = const VerificationMeta(
+    'declaredBytes',
+  );
+  @override
+  late final GeneratedColumn<int> declaredBytes = GeneratedColumn<int>(
+    'declared_bytes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _stagedBytesMeta = const VerificationMeta(
+    'stagedBytes',
+  );
+  @override
+  late final GeneratedColumn<int> stagedBytes = GeneratedColumn<int>(
+    'staged_bytes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    importId,
+    owner,
+    ownerGeneration,
+    runId,
+    startedAt,
+    declaredBytes,
+    stagedBytes,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'import_sessions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ImportSessionRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('import_id')) {
+      context.handle(
+        _importIdMeta,
+        importId.isAcceptableOrUnknown(data['import_id']!, _importIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_importIdMeta);
+    }
+    if (data.containsKey('owner')) {
+      context.handle(
+        _ownerMeta,
+        owner.isAcceptableOrUnknown(data['owner']!, _ownerMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ownerMeta);
+    }
+    if (data.containsKey('owner_generation')) {
+      context.handle(
+        _ownerGenerationMeta,
+        ownerGeneration.isAcceptableOrUnknown(
+          data['owner_generation']!,
+          _ownerGenerationMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_ownerGenerationMeta);
+    }
+    if (data.containsKey('run_id')) {
+      context.handle(
+        _runIdMeta,
+        runId.isAcceptableOrUnknown(data['run_id']!, _runIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_runIdMeta);
+    }
+    if (data.containsKey('started_at')) {
+      context.handle(
+        _startedAtMeta,
+        startedAt.isAcceptableOrUnknown(data['started_at']!, _startedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startedAtMeta);
+    }
+    if (data.containsKey('declared_bytes')) {
+      context.handle(
+        _declaredBytesMeta,
+        declaredBytes.isAcceptableOrUnknown(
+          data['declared_bytes']!,
+          _declaredBytesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_declaredBytesMeta);
+    }
+    if (data.containsKey('staged_bytes')) {
+      context.handle(
+        _stagedBytesMeta,
+        stagedBytes.isAcceptableOrUnknown(
+          data['staged_bytes']!,
+          _stagedBytesMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {importId};
+  @override
+  ImportSessionRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ImportSessionRow(
+      importId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}import_id'],
+      )!,
+      owner: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner'],
+      )!,
+      ownerGeneration: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}owner_generation'],
+      )!,
+      runId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}run_id'],
+      )!,
+      startedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}started_at'],
+      )!,
+      declaredBytes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}declared_bytes'],
+      )!,
+      stagedBytes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}staged_bytes'],
+      )!,
+    );
+  }
+
+  @override
+  $ImportSessionsTable createAlias(String alias) {
+    return $ImportSessionsTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class ImportSessionRow extends DataClass
+    implements Insertable<ImportSessionRow> {
+  final String importId;
+  final String owner;
+
+  /// `owner_generation` when it began: A → B → A refuses it.
+  final int ownerGeneration;
+
+  /// The app run that began it: a later run never continues it.
+  final String runId;
+  final int startedAt;
+
+  /// The size the import says it is; staging never grows past it.
+  final int declaredBytes;
+  final int stagedBytes;
+  const ImportSessionRow({
+    required this.importId,
+    required this.owner,
+    required this.ownerGeneration,
+    required this.runId,
+    required this.startedAt,
+    required this.declaredBytes,
+    required this.stagedBytes,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['import_id'] = Variable<String>(importId);
+    map['owner'] = Variable<String>(owner);
+    map['owner_generation'] = Variable<int>(ownerGeneration);
+    map['run_id'] = Variable<String>(runId);
+    map['started_at'] = Variable<int>(startedAt);
+    map['declared_bytes'] = Variable<int>(declaredBytes);
+    map['staged_bytes'] = Variable<int>(stagedBytes);
+    return map;
+  }
+
+  ImportSessionsCompanion toCompanion(bool nullToAbsent) {
+    return ImportSessionsCompanion(
+      importId: Value(importId),
+      owner: Value(owner),
+      ownerGeneration: Value(ownerGeneration),
+      runId: Value(runId),
+      startedAt: Value(startedAt),
+      declaredBytes: Value(declaredBytes),
+      stagedBytes: Value(stagedBytes),
+    );
+  }
+
+  factory ImportSessionRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ImportSessionRow(
+      importId: serializer.fromJson<String>(json['importId']),
+      owner: serializer.fromJson<String>(json['owner']),
+      ownerGeneration: serializer.fromJson<int>(json['ownerGeneration']),
+      runId: serializer.fromJson<String>(json['runId']),
+      startedAt: serializer.fromJson<int>(json['startedAt']),
+      declaredBytes: serializer.fromJson<int>(json['declaredBytes']),
+      stagedBytes: serializer.fromJson<int>(json['stagedBytes']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'importId': serializer.toJson<String>(importId),
+      'owner': serializer.toJson<String>(owner),
+      'ownerGeneration': serializer.toJson<int>(ownerGeneration),
+      'runId': serializer.toJson<String>(runId),
+      'startedAt': serializer.toJson<int>(startedAt),
+      'declaredBytes': serializer.toJson<int>(declaredBytes),
+      'stagedBytes': serializer.toJson<int>(stagedBytes),
+    };
+  }
+
+  ImportSessionRow copyWith({
+    String? importId,
+    String? owner,
+    int? ownerGeneration,
+    String? runId,
+    int? startedAt,
+    int? declaredBytes,
+    int? stagedBytes,
+  }) => ImportSessionRow(
+    importId: importId ?? this.importId,
+    owner: owner ?? this.owner,
+    ownerGeneration: ownerGeneration ?? this.ownerGeneration,
+    runId: runId ?? this.runId,
+    startedAt: startedAt ?? this.startedAt,
+    declaredBytes: declaredBytes ?? this.declaredBytes,
+    stagedBytes: stagedBytes ?? this.stagedBytes,
+  );
+  ImportSessionRow copyWithCompanion(ImportSessionsCompanion data) {
+    return ImportSessionRow(
+      importId: data.importId.present ? data.importId.value : this.importId,
+      owner: data.owner.present ? data.owner.value : this.owner,
+      ownerGeneration: data.ownerGeneration.present
+          ? data.ownerGeneration.value
+          : this.ownerGeneration,
+      runId: data.runId.present ? data.runId.value : this.runId,
+      startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
+      declaredBytes: data.declaredBytes.present
+          ? data.declaredBytes.value
+          : this.declaredBytes,
+      stagedBytes: data.stagedBytes.present
+          ? data.stagedBytes.value
+          : this.stagedBytes,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ImportSessionRow(')
+          ..write('importId: $importId, ')
+          ..write('owner: $owner, ')
+          ..write('ownerGeneration: $ownerGeneration, ')
+          ..write('runId: $runId, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('declaredBytes: $declaredBytes, ')
+          ..write('stagedBytes: $stagedBytes')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    importId,
+    owner,
+    ownerGeneration,
+    runId,
+    startedAt,
+    declaredBytes,
+    stagedBytes,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ImportSessionRow &&
+          other.importId == this.importId &&
+          other.owner == this.owner &&
+          other.ownerGeneration == this.ownerGeneration &&
+          other.runId == this.runId &&
+          other.startedAt == this.startedAt &&
+          other.declaredBytes == this.declaredBytes &&
+          other.stagedBytes == this.stagedBytes);
+}
+
+class ImportSessionsCompanion extends UpdateCompanion<ImportSessionRow> {
+  final Value<String> importId;
+  final Value<String> owner;
+  final Value<int> ownerGeneration;
+  final Value<String> runId;
+  final Value<int> startedAt;
+  final Value<int> declaredBytes;
+  final Value<int> stagedBytes;
+  final Value<int> rowid;
+  const ImportSessionsCompanion({
+    this.importId = const Value.absent(),
+    this.owner = const Value.absent(),
+    this.ownerGeneration = const Value.absent(),
+    this.runId = const Value.absent(),
+    this.startedAt = const Value.absent(),
+    this.declaredBytes = const Value.absent(),
+    this.stagedBytes = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ImportSessionsCompanion.insert({
+    required String importId,
+    required String owner,
+    required int ownerGeneration,
+    required String runId,
+    required int startedAt,
+    required int declaredBytes,
+    this.stagedBytes = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : importId = Value(importId),
+       owner = Value(owner),
+       ownerGeneration = Value(ownerGeneration),
+       runId = Value(runId),
+       startedAt = Value(startedAt),
+       declaredBytes = Value(declaredBytes);
+  static Insertable<ImportSessionRow> custom({
+    Expression<String>? importId,
+    Expression<String>? owner,
+    Expression<int>? ownerGeneration,
+    Expression<String>? runId,
+    Expression<int>? startedAt,
+    Expression<int>? declaredBytes,
+    Expression<int>? stagedBytes,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (importId != null) 'import_id': importId,
+      if (owner != null) 'owner': owner,
+      if (ownerGeneration != null) 'owner_generation': ownerGeneration,
+      if (runId != null) 'run_id': runId,
+      if (startedAt != null) 'started_at': startedAt,
+      if (declaredBytes != null) 'declared_bytes': declaredBytes,
+      if (stagedBytes != null) 'staged_bytes': stagedBytes,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ImportSessionsCompanion copyWith({
+    Value<String>? importId,
+    Value<String>? owner,
+    Value<int>? ownerGeneration,
+    Value<String>? runId,
+    Value<int>? startedAt,
+    Value<int>? declaredBytes,
+    Value<int>? stagedBytes,
+    Value<int>? rowid,
+  }) {
+    return ImportSessionsCompanion(
+      importId: importId ?? this.importId,
+      owner: owner ?? this.owner,
+      ownerGeneration: ownerGeneration ?? this.ownerGeneration,
+      runId: runId ?? this.runId,
+      startedAt: startedAt ?? this.startedAt,
+      declaredBytes: declaredBytes ?? this.declaredBytes,
+      stagedBytes: stagedBytes ?? this.stagedBytes,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (importId.present) {
+      map['import_id'] = Variable<String>(importId.value);
+    }
+    if (owner.present) {
+      map['owner'] = Variable<String>(owner.value);
+    }
+    if (ownerGeneration.present) {
+      map['owner_generation'] = Variable<int>(ownerGeneration.value);
+    }
+    if (runId.present) {
+      map['run_id'] = Variable<String>(runId.value);
+    }
+    if (startedAt.present) {
+      map['started_at'] = Variable<int>(startedAt.value);
+    }
+    if (declaredBytes.present) {
+      map['declared_bytes'] = Variable<int>(declaredBytes.value);
+    }
+    if (stagedBytes.present) {
+      map['staged_bytes'] = Variable<int>(stagedBytes.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ImportSessionsCompanion(')
+          ..write('importId: $importId, ')
+          ..write('owner: $owner, ')
+          ..write('ownerGeneration: $ownerGeneration, ')
+          ..write('runId: $runId, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('declaredBytes: $declaredBytes, ')
+          ..write('stagedBytes: $stagedBytes, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ImportStagingTable extends ImportStaging
+    with TableInfo<$ImportStagingTable, ImportStagingRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ImportStagingTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _importIdMeta = const VerificationMeta(
+    'importId',
+  );
+  @override
+  late final GeneratedColumn<String> importId = GeneratedColumn<String>(
+    'import_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ownerMeta = const VerificationMeta('owner');
+  @override
+  late final GeneratedColumn<String> owner = GeneratedColumn<String>(
+    'owner',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _entityMeta = const VerificationMeta('entity');
+  @override
+  late final GeneratedColumn<String> entity = GeneratedColumn<String>(
+    'entity',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<String> rowId = GeneratedColumn<String>(
+    'row_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _partIndexMeta = const VerificationMeta(
+    'partIndex',
+  );
+  @override
+  late final GeneratedColumn<int> partIndex = GeneratedColumn<int>(
+    'part_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _jsonMeta = const VerificationMeta('json');
+  @override
+  late final GeneratedColumn<String> json = GeneratedColumn<String>(
+    'json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    importId,
+    owner,
+    entity,
+    rowId,
+    partIndex,
+    json,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'import_staging';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ImportStagingRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('import_id')) {
+      context.handle(
+        _importIdMeta,
+        importId.isAcceptableOrUnknown(data['import_id']!, _importIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_importIdMeta);
+    }
+    if (data.containsKey('owner')) {
+      context.handle(
+        _ownerMeta,
+        owner.isAcceptableOrUnknown(data['owner']!, _ownerMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ownerMeta);
+    }
+    if (data.containsKey('entity')) {
+      context.handle(
+        _entityMeta,
+        entity.isAcceptableOrUnknown(data['entity']!, _entityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityMeta);
+    }
+    if (data.containsKey('row_id')) {
+      context.handle(
+        _rowIdMeta,
+        rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_rowIdMeta);
+    }
+    if (data.containsKey('part_index')) {
+      context.handle(
+        _partIndexMeta,
+        partIndex.isAcceptableOrUnknown(data['part_index']!, _partIndexMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partIndexMeta);
+    }
+    if (data.containsKey('json')) {
+      context.handle(
+        _jsonMeta,
+        json.isAcceptableOrUnknown(data['json']!, _jsonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_jsonMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {importId, entity, rowId};
+  @override
+  ImportStagingRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ImportStagingRow(
+      importId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}import_id'],
+      )!,
+      owner: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owner'],
+      )!,
+      entity: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity'],
+      )!,
+      rowId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}row_id'],
+      )!,
+      partIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}part_index'],
+      )!,
+      json: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}json'],
+      )!,
+    );
+  }
+
+  @override
+  $ImportStagingTable createAlias(String alias) {
+    return $ImportStagingTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class ImportStagingRow extends DataClass
+    implements Insertable<ImportStagingRow> {
+  final String importId;
+  final String owner;
+
+  /// `profile` or a part table name (multipart_format.dart `partTables`).
+  final String entity;
+  final String rowId;
+  final int partIndex;
+  final String json;
+  const ImportStagingRow({
+    required this.importId,
+    required this.owner,
+    required this.entity,
+    required this.rowId,
+    required this.partIndex,
+    required this.json,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['import_id'] = Variable<String>(importId);
+    map['owner'] = Variable<String>(owner);
+    map['entity'] = Variable<String>(entity);
+    map['row_id'] = Variable<String>(rowId);
+    map['part_index'] = Variable<int>(partIndex);
+    map['json'] = Variable<String>(json);
+    return map;
+  }
+
+  ImportStagingCompanion toCompanion(bool nullToAbsent) {
+    return ImportStagingCompanion(
+      importId: Value(importId),
+      owner: Value(owner),
+      entity: Value(entity),
+      rowId: Value(rowId),
+      partIndex: Value(partIndex),
+      json: Value(json),
+    );
+  }
+
+  factory ImportStagingRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ImportStagingRow(
+      importId: serializer.fromJson<String>(json['importId']),
+      owner: serializer.fromJson<String>(json['owner']),
+      entity: serializer.fromJson<String>(json['entity']),
+      rowId: serializer.fromJson<String>(json['rowId']),
+      partIndex: serializer.fromJson<int>(json['partIndex']),
+      json: serializer.fromJson<String>(json['json']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'importId': serializer.toJson<String>(importId),
+      'owner': serializer.toJson<String>(owner),
+      'entity': serializer.toJson<String>(entity),
+      'rowId': serializer.toJson<String>(rowId),
+      'partIndex': serializer.toJson<int>(partIndex),
+      'json': serializer.toJson<String>(json),
+    };
+  }
+
+  ImportStagingRow copyWith({
+    String? importId,
+    String? owner,
+    String? entity,
+    String? rowId,
+    int? partIndex,
+    String? json,
+  }) => ImportStagingRow(
+    importId: importId ?? this.importId,
+    owner: owner ?? this.owner,
+    entity: entity ?? this.entity,
+    rowId: rowId ?? this.rowId,
+    partIndex: partIndex ?? this.partIndex,
+    json: json ?? this.json,
+  );
+  ImportStagingRow copyWithCompanion(ImportStagingCompanion data) {
+    return ImportStagingRow(
+      importId: data.importId.present ? data.importId.value : this.importId,
+      owner: data.owner.present ? data.owner.value : this.owner,
+      entity: data.entity.present ? data.entity.value : this.entity,
+      rowId: data.rowId.present ? data.rowId.value : this.rowId,
+      partIndex: data.partIndex.present ? data.partIndex.value : this.partIndex,
+      json: data.json.present ? data.json.value : this.json,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ImportStagingRow(')
+          ..write('importId: $importId, ')
+          ..write('owner: $owner, ')
+          ..write('entity: $entity, ')
+          ..write('rowId: $rowId, ')
+          ..write('partIndex: $partIndex, ')
+          ..write('json: $json')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(importId, owner, entity, rowId, partIndex, json);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ImportStagingRow &&
+          other.importId == this.importId &&
+          other.owner == this.owner &&
+          other.entity == this.entity &&
+          other.rowId == this.rowId &&
+          other.partIndex == this.partIndex &&
+          other.json == this.json);
+}
+
+class ImportStagingCompanion extends UpdateCompanion<ImportStagingRow> {
+  final Value<String> importId;
+  final Value<String> owner;
+  final Value<String> entity;
+  final Value<String> rowId;
+  final Value<int> partIndex;
+  final Value<String> json;
+  final Value<int> rowid;
+  const ImportStagingCompanion({
+    this.importId = const Value.absent(),
+    this.owner = const Value.absent(),
+    this.entity = const Value.absent(),
+    this.rowId = const Value.absent(),
+    this.partIndex = const Value.absent(),
+    this.json = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ImportStagingCompanion.insert({
+    required String importId,
+    required String owner,
+    required String entity,
+    required String rowId,
+    required int partIndex,
+    required String json,
+    this.rowid = const Value.absent(),
+  }) : importId = Value(importId),
+       owner = Value(owner),
+       entity = Value(entity),
+       rowId = Value(rowId),
+       partIndex = Value(partIndex),
+       json = Value(json);
+  static Insertable<ImportStagingRow> custom({
+    Expression<String>? importId,
+    Expression<String>? owner,
+    Expression<String>? entity,
+    Expression<String>? rowId,
+    Expression<int>? partIndex,
+    Expression<String>? json,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (importId != null) 'import_id': importId,
+      if (owner != null) 'owner': owner,
+      if (entity != null) 'entity': entity,
+      if (rowId != null) 'row_id': rowId,
+      if (partIndex != null) 'part_index': partIndex,
+      if (json != null) 'json': json,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ImportStagingCompanion copyWith({
+    Value<String>? importId,
+    Value<String>? owner,
+    Value<String>? entity,
+    Value<String>? rowId,
+    Value<int>? partIndex,
+    Value<String>? json,
+    Value<int>? rowid,
+  }) {
+    return ImportStagingCompanion(
+      importId: importId ?? this.importId,
+      owner: owner ?? this.owner,
+      entity: entity ?? this.entity,
+      rowId: rowId ?? this.rowId,
+      partIndex: partIndex ?? this.partIndex,
+      json: json ?? this.json,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (importId.present) {
+      map['import_id'] = Variable<String>(importId.value);
+    }
+    if (owner.present) {
+      map['owner'] = Variable<String>(owner.value);
+    }
+    if (entity.present) {
+      map['entity'] = Variable<String>(entity.value);
+    }
+    if (rowId.present) {
+      map['row_id'] = Variable<String>(rowId.value);
+    }
+    if (partIndex.present) {
+      map['part_index'] = Variable<int>(partIndex.value);
+    }
+    if (json.present) {
+      map['json'] = Variable<String>(json.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ImportStagingCompanion(')
+          ..write('importId: $importId, ')
+          ..write('owner: $owner, ')
+          ..write('entity: $entity, ')
+          ..write('rowId: $rowId, ')
+          ..write('partIndex: $partIndex, ')
+          ..write('json: $json, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -10857,6 +13418,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $CalendarSeriesTableTable calendarSeriesTable =
       $CalendarSeriesTableTable(this);
+  late final $PendingCalendarSeriesTableTable pendingCalendarSeriesTable =
+      $PendingCalendarSeriesTableTable(this);
   late final $RoutinesTableTable routinesTable = $RoutinesTableTable(this);
   late final $RevealHintsTableTable revealHintsTable = $RevealHintsTableTable(
     this,
@@ -10869,6 +13432,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $WakeUpDaysTableTable wakeUpDaysTable = $WakeUpDaysTableTable(
     this,
   );
+  late final $GuestRowSessionsTable guestRowSessions = $GuestRowSessionsTable(
+    this,
+  );
+  late final $ImportSessionsTable importSessions = $ImportSessionsTable(this);
+  late final $ImportStagingTable importStaging = $ImportStagingTable(this);
   late final Index routinesUser = Index(
     'routines_user',
     'CREATE INDEX routines_user ON routines (user_id)',
@@ -10896,6 +13464,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final Index changeLogEntity = Index(
     'change_log_entity',
     'CREATE INDEX change_log_entity ON change_log (entity, entity_id)',
+  );
+  late final Index changeLogOwner = Index(
+    'change_log_owner',
+    'CREATE INDEX change_log_owner ON change_log (owner_id)',
   );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -10931,6 +13503,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     calendarLinksUserEvent,
     calendarLinksAccountEvent,
     calendarSeriesTable,
+    pendingCalendarSeriesTable,
     routinesTable,
     revealHintsTable,
     conflicts,
@@ -10939,6 +13512,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     fieldSeen,
     localMeta,
     wakeUpDaysTable,
+    guestRowSessions,
+    importSessions,
+    importStaging,
     routinesUser,
     routinesUserUpdated,
     routinesDirty,
@@ -10946,6 +13522,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     revealHintsDirty,
     conflictsOpen,
     changeLogEntity,
+    changeLogOwner,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -11118,6 +13695,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         'profiles',
         limitUpdateKind: UpdateKind.delete,
       ),
+      result: [TableUpdate('pending_calendar_series', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('pending_calendar_series', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
       result: [TableUpdate('routines', kind: UpdateKind.delete)],
     ),
     WritePropagation(
@@ -11154,6 +13745,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.update,
       ),
       result: [TableUpdate('conflicts', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('change_log', kind: UpdateKind.update)],
     ),
   ]);
 }
@@ -11491,6 +14089,31 @@ final class $$ProfilesTableReferences
     );
   }
 
+  static MultiTypedResultKey<
+    $PendingCalendarSeriesTableTable,
+    List<PendingCalendarSeriesRow>
+  >
+  _pendingCalendarSeriesTableRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.pendingCalendarSeriesTable,
+        aliasName: 'profiles__id__pending_calendar_series__user_id',
+      );
+
+  $$PendingCalendarSeriesTableTableProcessedTableManager
+  get pendingCalendarSeriesTableRefs {
+    final manager = $$PendingCalendarSeriesTableTableTableManager(
+      $_db,
+      $_db.pendingCalendarSeriesTable,
+    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _pendingCalendarSeriesTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
   static MultiTypedResultKey<$RoutinesTableTable, List<RoutineRow>>
   _routinesTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.routinesTable,
@@ -11542,6 +14165,24 @@ final class $$ProfilesTableReferences
     ).filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_conflictsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$ChangeLogTable, List<ChangeLogRow>>
+  _changeLogRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.changeLog,
+    aliasName: 'profiles__id__change_log__owner_id',
+  );
+
+  $$ChangeLogTableProcessedTableManager get changeLogRefs {
+    final manager = $$ChangeLogTableTableManager(
+      $_db,
+      $_db.changeLog,
+    ).filter((f) => f.ownerId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_changeLogRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -11752,6 +14393,33 @@ class $$ProfilesTableFilterComposer
     return f(composer);
   }
 
+  Expression<bool> pendingCalendarSeriesTableRefs(
+    Expression<bool> Function($$PendingCalendarSeriesTableTableFilterComposer f)
+    f,
+  ) {
+    final $$PendingCalendarSeriesTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.pendingCalendarSeriesTable,
+          getReferencedColumn: (t) => t.userId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$PendingCalendarSeriesTableTableFilterComposer(
+                $db: $db,
+                $table: $db.pendingCalendarSeriesTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
   Expression<bool> routinesTableRefs(
     Expression<bool> Function($$RoutinesTableTableFilterComposer f) f,
   ) {
@@ -11818,6 +14486,31 @@ class $$ProfilesTableFilterComposer
           }) => $$ConflictsTableFilterComposer(
             $db: $db,
             $table: $db.conflicts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> changeLogRefs(
+    Expression<bool> Function($$ChangeLogTableFilterComposer f) f,
+  ) {
+    final $$ChangeLogTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.changeLog,
+      getReferencedColumn: (t) => t.ownerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ChangeLogTableFilterComposer(
+            $db: $db,
+            $table: $db.changeLog,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12072,6 +14765,35 @@ class $$ProfilesTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> pendingCalendarSeriesTableRefs<T extends Object>(
+    Expression<T> Function(
+      $$PendingCalendarSeriesTableTableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$PendingCalendarSeriesTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.pendingCalendarSeriesTable,
+          getReferencedColumn: (t) => t.userId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$PendingCalendarSeriesTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.pendingCalendarSeriesTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
   Expression<T> routinesTableRefs<T extends Object>(
     Expression<T> Function($$RoutinesTableTableAnnotationComposer a) f,
   ) {
@@ -12146,6 +14868,31 @@ class $$ProfilesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> changeLogRefs<T extends Object>(
+    Expression<T> Function($$ChangeLogTableAnnotationComposer a) f,
+  ) {
+    final $$ChangeLogTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.changeLog,
+      getReferencedColumn: (t) => t.ownerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ChangeLogTableAnnotationComposer(
+            $db: $db,
+            $table: $db.changeLog,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ProfilesTableTableManager
@@ -12168,9 +14915,11 @@ class $$ProfilesTableTableManager
             bool occurrencesRefs,
             bool subtasksRefs,
             bool calendarSeriesTableRefs,
+            bool pendingCalendarSeriesTableRefs,
             bool routinesTableRefs,
             bool revealHintsTableRefs,
             bool conflictsRefs,
+            bool changeLogRefs,
           })
         > {
   $$ProfilesTableTableManager(_$AppDatabase db, $ProfilesTable table)
@@ -12248,9 +14997,11 @@ class $$ProfilesTableTableManager
                 occurrencesRefs = false,
                 subtasksRefs = false,
                 calendarSeriesTableRefs = false,
+                pendingCalendarSeriesTableRefs = false,
                 routinesTableRefs = false,
                 revealHintsTableRefs = false,
                 conflictsRefs = false,
+                changeLogRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -12261,9 +15012,12 @@ class $$ProfilesTableTableManager
                     if (occurrencesRefs) db.occurrences,
                     if (subtasksRefs) db.subtasks,
                     if (calendarSeriesTableRefs) db.calendarSeriesTable,
+                    if (pendingCalendarSeriesTableRefs)
+                      db.pendingCalendarSeriesTable,
                     if (routinesTableRefs) db.routinesTable,
                     if (revealHintsTableRefs) db.revealHintsTable,
                     if (conflictsRefs) db.conflicts,
+                    if (changeLogRefs) db.changeLog,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -12394,6 +15148,27 @@ class $$ProfilesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (pendingCalendarSeriesTableRefs)
+                        await $_getPrefetchedData<
+                          ProfileRow,
+                          $ProfilesTable,
+                          PendingCalendarSeriesRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._pendingCalendarSeriesTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).pendingCalendarSeriesTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.userId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (routinesTableRefs)
                         await $_getPrefetchedData<
                           ProfileRow,
@@ -12457,6 +15232,27 @@ class $$ProfilesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (changeLogRefs)
+                        await $_getPrefetchedData<
+                          ProfileRow,
+                          $ProfilesTable,
+                          ChangeLogRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._changeLogRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).changeLogRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.ownerId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -12484,9 +15280,11 @@ typedef $$ProfilesTableProcessedTableManager =
         bool occurrencesRefs,
         bool subtasksRefs,
         bool calendarSeriesTableRefs,
+        bool pendingCalendarSeriesTableRefs,
         bool routinesTableRefs,
         bool revealHintsTableRefs,
         bool conflictsRefs,
+        bool changeLogRefs,
       })
     >;
 typedef $$SeriesTableTableCreateCompanionBuilder =
@@ -16941,6 +19739,684 @@ typedef $$CalendarSeriesTableTableProcessedTableManager =
       CalendarSeriesRow,
       PrefetchHooks Function({bool userId, bool accountId})
     >;
+typedef $$PendingCalendarSeriesTableTableCreateCompanionBuilder =
+    PendingCalendarSeriesTableCompanion Function({
+      required int createdAt,
+      required int updatedAt,
+      required String id,
+      required String userId,
+      required String provider,
+      required String externalCalendarId,
+      Value<String?> deviceTag,
+      required String seriesKey,
+      Value<String?> title,
+      Value<String?> notes,
+      Value<String?> colorKey,
+      Value<String?> iconKey,
+      Value<int?> durationMin,
+      Value<int?> startMinute,
+      Value<String?> tzId,
+      Value<bool?> pinned,
+      Value<int?> travelBufferMin,
+      Value<int?> energy,
+      Value<String?> alerts,
+      Value<String?> soundId,
+      Value<String?> subtaskTemplate,
+      Value<bool> hidden,
+      Value<int> rowid,
+    });
+typedef $$PendingCalendarSeriesTableTableUpdateCompanionBuilder =
+    PendingCalendarSeriesTableCompanion Function({
+      Value<int> createdAt,
+      Value<int> updatedAt,
+      Value<String> id,
+      Value<String> userId,
+      Value<String> provider,
+      Value<String> externalCalendarId,
+      Value<String?> deviceTag,
+      Value<String> seriesKey,
+      Value<String?> title,
+      Value<String?> notes,
+      Value<String?> colorKey,
+      Value<String?> iconKey,
+      Value<int?> durationMin,
+      Value<int?> startMinute,
+      Value<String?> tzId,
+      Value<bool?> pinned,
+      Value<int?> travelBufferMin,
+      Value<int?> energy,
+      Value<String?> alerts,
+      Value<String?> soundId,
+      Value<String?> subtaskTemplate,
+      Value<bool> hidden,
+      Value<int> rowid,
+    });
+
+final class $$PendingCalendarSeriesTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $PendingCalendarSeriesTableTable,
+          PendingCalendarSeriesRow
+        > {
+  $$PendingCalendarSeriesTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ProfilesTable _userIdTable(_$AppDatabase db) =>
+      db.profiles.createAlias('pending_calendar_series__user_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<String>('user_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$PendingCalendarSeriesTableTableFilterComposer
+    extends Composer<_$AppDatabase, $PendingCalendarSeriesTableTable> {
+  $$PendingCalendarSeriesTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get provider => $composableBuilder(
+    column: $table.provider,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get externalCalendarId => $composableBuilder(
+    column: $table.externalCalendarId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get deviceTag => $composableBuilder(
+    column: $table.deviceTag,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get seriesKey => $composableBuilder(
+    column: $table.seriesKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get colorKey => $composableBuilder(
+    column: $table.colorKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get iconKey => $composableBuilder(
+    column: $table.iconKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get durationMin => $composableBuilder(
+    column: $table.durationMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get startMinute => $composableBuilder(
+    column: $table.startMinute,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tzId => $composableBuilder(
+    column: $table.tzId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get pinned => $composableBuilder(
+    column: $table.pinned,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get travelBufferMin => $composableBuilder(
+    column: $table.travelBufferMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get energy => $composableBuilder(
+    column: $table.energy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get alerts => $composableBuilder(
+    column: $table.alerts,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get soundId => $composableBuilder(
+    column: $table.soundId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get subtaskTemplate => $composableBuilder(
+    column: $table.subtaskTemplate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hidden => $composableBuilder(
+    column: $table.hidden,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ProfilesTableFilterComposer get userId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PendingCalendarSeriesTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $PendingCalendarSeriesTableTable> {
+  $$PendingCalendarSeriesTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get provider => $composableBuilder(
+    column: $table.provider,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get externalCalendarId => $composableBuilder(
+    column: $table.externalCalendarId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get deviceTag => $composableBuilder(
+    column: $table.deviceTag,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get seriesKey => $composableBuilder(
+    column: $table.seriesKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get colorKey => $composableBuilder(
+    column: $table.colorKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get iconKey => $composableBuilder(
+    column: $table.iconKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get durationMin => $composableBuilder(
+    column: $table.durationMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get startMinute => $composableBuilder(
+    column: $table.startMinute,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tzId => $composableBuilder(
+    column: $table.tzId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get pinned => $composableBuilder(
+    column: $table.pinned,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get travelBufferMin => $composableBuilder(
+    column: $table.travelBufferMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get energy => $composableBuilder(
+    column: $table.energy,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get alerts => $composableBuilder(
+    column: $table.alerts,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get soundId => $composableBuilder(
+    column: $table.soundId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get subtaskTemplate => $composableBuilder(
+    column: $table.subtaskTemplate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hidden => $composableBuilder(
+    column: $table.hidden,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ProfilesTableOrderingComposer get userId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PendingCalendarSeriesTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PendingCalendarSeriesTableTable> {
+  $$PendingCalendarSeriesTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get provider =>
+      $composableBuilder(column: $table.provider, builder: (column) => column);
+
+  GeneratedColumn<String> get externalCalendarId => $composableBuilder(
+    column: $table.externalCalendarId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get deviceTag =>
+      $composableBuilder(column: $table.deviceTag, builder: (column) => column);
+
+  GeneratedColumn<String> get seriesKey =>
+      $composableBuilder(column: $table.seriesKey, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<String> get colorKey =>
+      $composableBuilder(column: $table.colorKey, builder: (column) => column);
+
+  GeneratedColumn<String> get iconKey =>
+      $composableBuilder(column: $table.iconKey, builder: (column) => column);
+
+  GeneratedColumn<int> get durationMin => $composableBuilder(
+    column: $table.durationMin,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get startMinute => $composableBuilder(
+    column: $table.startMinute,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get tzId =>
+      $composableBuilder(column: $table.tzId, builder: (column) => column);
+
+  GeneratedColumn<bool> get pinned =>
+      $composableBuilder(column: $table.pinned, builder: (column) => column);
+
+  GeneratedColumn<int> get travelBufferMin => $composableBuilder(
+    column: $table.travelBufferMin,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get energy =>
+      $composableBuilder(column: $table.energy, builder: (column) => column);
+
+  GeneratedColumn<String> get alerts =>
+      $composableBuilder(column: $table.alerts, builder: (column) => column);
+
+  GeneratedColumn<String> get soundId =>
+      $composableBuilder(column: $table.soundId, builder: (column) => column);
+
+  GeneratedColumn<String> get subtaskTemplate => $composableBuilder(
+    column: $table.subtaskTemplate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get hidden =>
+      $composableBuilder(column: $table.hidden, builder: (column) => column);
+
+  $$ProfilesTableAnnotationComposer get userId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PendingCalendarSeriesTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PendingCalendarSeriesTableTable,
+          PendingCalendarSeriesRow,
+          $$PendingCalendarSeriesTableTableFilterComposer,
+          $$PendingCalendarSeriesTableTableOrderingComposer,
+          $$PendingCalendarSeriesTableTableAnnotationComposer,
+          $$PendingCalendarSeriesTableTableCreateCompanionBuilder,
+          $$PendingCalendarSeriesTableTableUpdateCompanionBuilder,
+          (
+            PendingCalendarSeriesRow,
+            $$PendingCalendarSeriesTableTableReferences,
+          ),
+          PendingCalendarSeriesRow,
+          PrefetchHooks Function({bool userId})
+        > {
+  $$PendingCalendarSeriesTableTableTableManager(
+    _$AppDatabase db,
+    $PendingCalendarSeriesTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PendingCalendarSeriesTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$PendingCalendarSeriesTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$PendingCalendarSeriesTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> createdAt = const Value.absent(),
+                Value<int> updatedAt = const Value.absent(),
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> provider = const Value.absent(),
+                Value<String> externalCalendarId = const Value.absent(),
+                Value<String?> deviceTag = const Value.absent(),
+                Value<String> seriesKey = const Value.absent(),
+                Value<String?> title = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<String?> colorKey = const Value.absent(),
+                Value<String?> iconKey = const Value.absent(),
+                Value<int?> durationMin = const Value.absent(),
+                Value<int?> startMinute = const Value.absent(),
+                Value<String?> tzId = const Value.absent(),
+                Value<bool?> pinned = const Value.absent(),
+                Value<int?> travelBufferMin = const Value.absent(),
+                Value<int?> energy = const Value.absent(),
+                Value<String?> alerts = const Value.absent(),
+                Value<String?> soundId = const Value.absent(),
+                Value<String?> subtaskTemplate = const Value.absent(),
+                Value<bool> hidden = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PendingCalendarSeriesTableCompanion(
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                id: id,
+                userId: userId,
+                provider: provider,
+                externalCalendarId: externalCalendarId,
+                deviceTag: deviceTag,
+                seriesKey: seriesKey,
+                title: title,
+                notes: notes,
+                colorKey: colorKey,
+                iconKey: iconKey,
+                durationMin: durationMin,
+                startMinute: startMinute,
+                tzId: tzId,
+                pinned: pinned,
+                travelBufferMin: travelBufferMin,
+                energy: energy,
+                alerts: alerts,
+                soundId: soundId,
+                subtaskTemplate: subtaskTemplate,
+                hidden: hidden,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int createdAt,
+                required int updatedAt,
+                required String id,
+                required String userId,
+                required String provider,
+                required String externalCalendarId,
+                Value<String?> deviceTag = const Value.absent(),
+                required String seriesKey,
+                Value<String?> title = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<String?> colorKey = const Value.absent(),
+                Value<String?> iconKey = const Value.absent(),
+                Value<int?> durationMin = const Value.absent(),
+                Value<int?> startMinute = const Value.absent(),
+                Value<String?> tzId = const Value.absent(),
+                Value<bool?> pinned = const Value.absent(),
+                Value<int?> travelBufferMin = const Value.absent(),
+                Value<int?> energy = const Value.absent(),
+                Value<String?> alerts = const Value.absent(),
+                Value<String?> soundId = const Value.absent(),
+                Value<String?> subtaskTemplate = const Value.absent(),
+                Value<bool> hidden = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PendingCalendarSeriesTableCompanion.insert(
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                id: id,
+                userId: userId,
+                provider: provider,
+                externalCalendarId: externalCalendarId,
+                deviceTag: deviceTag,
+                seriesKey: seriesKey,
+                title: title,
+                notes: notes,
+                colorKey: colorKey,
+                iconKey: iconKey,
+                durationMin: durationMin,
+                startMinute: startMinute,
+                tzId: tzId,
+                pinned: pinned,
+                travelBufferMin: travelBufferMin,
+                energy: energy,
+                alerts: alerts,
+                soundId: soundId,
+                subtaskTemplate: subtaskTemplate,
+                hidden: hidden,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $PendingCalendarSeriesTableTable,
+                    PendingCalendarSeriesRow
+                  >(table),
+                  $$PendingCalendarSeriesTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({userId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (userId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.userId,
+                                referencedTable:
+                                    $$PendingCalendarSeriesTableTableReferences
+                                        ._userIdTable(db),
+                                referencedColumn:
+                                    $$PendingCalendarSeriesTableTableReferences
+                                        ._userIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PendingCalendarSeriesTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PendingCalendarSeriesTableTable,
+      PendingCalendarSeriesRow,
+      $$PendingCalendarSeriesTableTableFilterComposer,
+      $$PendingCalendarSeriesTableTableOrderingComposer,
+      $$PendingCalendarSeriesTableTableAnnotationComposer,
+      $$PendingCalendarSeriesTableTableCreateCompanionBuilder,
+      $$PendingCalendarSeriesTableTableUpdateCompanionBuilder,
+      (PendingCalendarSeriesRow, $$PendingCalendarSeriesTableTableReferences),
+      PendingCalendarSeriesRow,
+      PrefetchHooks Function({bool userId})
+    >;
 typedef $$RoutinesTableTableCreateCompanionBuilder =
     RoutinesTableCompanion Function({
       required int createdAt,
@@ -18222,6 +21698,7 @@ typedef $$ConflictsTableProcessedTableManager =
 typedef $$ChangeLogTableCreateCompanionBuilder =
     ChangeLogCompanion Function({
       Value<int> seq,
+      required String ownerId,
       required String entity,
       required String entityId,
       required String field,
@@ -18231,12 +21708,35 @@ typedef $$ChangeLogTableCreateCompanionBuilder =
 typedef $$ChangeLogTableUpdateCompanionBuilder =
     ChangeLogCompanion Function({
       Value<int> seq,
+      Value<String> ownerId,
       Value<String> entity,
       Value<String> entityId,
       Value<String> field,
       Value<String> value,
       Value<String> hlc,
     });
+
+final class $$ChangeLogTableReferences
+    extends BaseReferences<_$AppDatabase, $ChangeLogTable, ChangeLogRow> {
+  $$ChangeLogTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ProfilesTable _ownerIdTable(_$AppDatabase db) =>
+      db.profiles.createAlias('change_log__owner_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get ownerId {
+    final $_column = $_itemColumn<String>('owner_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_ownerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$ChangeLogTableFilterComposer
     extends Composer<_$AppDatabase, $ChangeLogTable> {
@@ -18276,6 +21776,29 @@ class $$ChangeLogTableFilterComposer
     column: $table.hlc,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$ProfilesTableFilterComposer get ownerId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.ownerId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ChangeLogTableOrderingComposer
@@ -18316,6 +21839,29 @@ class $$ChangeLogTableOrderingComposer
     column: $table.hlc,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$ProfilesTableOrderingComposer get ownerId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.ownerId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ChangeLogTableAnnotationComposer
@@ -18344,6 +21890,29 @@ class $$ChangeLogTableAnnotationComposer
 
   GeneratedColumn<String> get hlc =>
       $composableBuilder(column: $table.hlc, builder: (column) => column);
+
+  $$ProfilesTableAnnotationComposer get ownerId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.ownerId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ChangeLogTableTableManager
@@ -18357,12 +21926,9 @@ class $$ChangeLogTableTableManager
           $$ChangeLogTableAnnotationComposer,
           $$ChangeLogTableCreateCompanionBuilder,
           $$ChangeLogTableUpdateCompanionBuilder,
-          (
-            ChangeLogRow,
-            BaseReferences<_$AppDatabase, $ChangeLogTable, ChangeLogRow>,
-          ),
+          (ChangeLogRow, $$ChangeLogTableReferences),
           ChangeLogRow,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool ownerId})
         > {
   $$ChangeLogTableTableManager(_$AppDatabase db, $ChangeLogTable table)
     : super(
@@ -18378,6 +21944,7 @@ class $$ChangeLogTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> seq = const Value.absent(),
+                Value<String> ownerId = const Value.absent(),
                 Value<String> entity = const Value.absent(),
                 Value<String> entityId = const Value.absent(),
                 Value<String> field = const Value.absent(),
@@ -18385,6 +21952,7 @@ class $$ChangeLogTableTableManager
                 Value<String> hlc = const Value.absent(),
               }) => ChangeLogCompanion(
                 seq: seq,
+                ownerId: ownerId,
                 entity: entity,
                 entityId: entityId,
                 field: field,
@@ -18394,6 +21962,7 @@ class $$ChangeLogTableTableManager
           createCompanionCallback:
               ({
                 Value<int> seq = const Value.absent(),
+                required String ownerId,
                 required String entity,
                 required String entityId,
                 required String field,
@@ -18401,6 +21970,7 @@ class $$ChangeLogTableTableManager
                 required String hlc,
               }) => ChangeLogCompanion.insert(
                 seq: seq,
+                ownerId: ownerId,
                 entity: entity,
                 entityId: entityId,
                 field: field,
@@ -18411,15 +21981,51 @@ class $$ChangeLogTableTableManager
               .map(
                 (e) => (
                   e.readTable<$ChangeLogTable, ChangeLogRow>(table),
-                  BaseReferences<_$AppDatabase, $ChangeLogTable, ChangeLogRow>(
-                    db,
-                    table,
-                    e,
-                  ),
+                  $$ChangeLogTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({ownerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (ownerId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.ownerId,
+                                referencedTable: $$ChangeLogTableReferences
+                                    ._ownerIdTable(db),
+                                referencedColumn: $$ChangeLogTableReferences
+                                    ._ownerIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -18434,15 +22040,13 @@ typedef $$ChangeLogTableProcessedTableManager =
       $$ChangeLogTableAnnotationComposer,
       $$ChangeLogTableCreateCompanionBuilder,
       $$ChangeLogTableUpdateCompanionBuilder,
-      (
-        ChangeLogRow,
-        BaseReferences<_$AppDatabase, $ChangeLogTable, ChangeLogRow>,
-      ),
+      (ChangeLogRow, $$ChangeLogTableReferences),
       ChangeLogRow,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool ownerId})
     >;
 typedef $$SyncCursorsTableCreateCompanionBuilder =
     SyncCursorsCompanion Function({
+      required String ownerId,
       required String entity,
       required int sinceUtc,
       Value<String?> sinceAt,
@@ -18451,6 +22055,7 @@ typedef $$SyncCursorsTableCreateCompanionBuilder =
     });
 typedef $$SyncCursorsTableUpdateCompanionBuilder =
     SyncCursorsCompanion Function({
+      Value<String> ownerId,
       Value<String> entity,
       Value<int> sinceUtc,
       Value<String?> sinceAt,
@@ -18467,6 +22072,11 @@ class $$SyncCursorsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<String> get ownerId => $composableBuilder(
+    column: $table.ownerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get entity => $composableBuilder(
     column: $table.entity,
     builder: (column) => ColumnFilters(column),
@@ -18497,6 +22107,11 @@ class $$SyncCursorsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<String> get ownerId => $composableBuilder(
+    column: $table.ownerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get entity => $composableBuilder(
     column: $table.entity,
     builder: (column) => ColumnOrderings(column),
@@ -18527,6 +22142,9 @@ class $$SyncCursorsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<String> get ownerId =>
+      $composableBuilder(column: $table.ownerId, builder: (column) => column);
+
   GeneratedColumn<String> get entity =>
       $composableBuilder(column: $table.entity, builder: (column) => column);
 
@@ -18571,12 +22189,14 @@ class $$SyncCursorsTableTableManager
               $$SyncCursorsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<String> ownerId = const Value.absent(),
                 Value<String> entity = const Value.absent(),
                 Value<int> sinceUtc = const Value.absent(),
                 Value<String?> sinceAt = const Value.absent(),
                 Value<String?> sinceId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SyncCursorsCompanion(
+                ownerId: ownerId,
                 entity: entity,
                 sinceUtc: sinceUtc,
                 sinceAt: sinceAt,
@@ -18585,12 +22205,14 @@ class $$SyncCursorsTableTableManager
               ),
           createCompanionCallback:
               ({
+                required String ownerId,
                 required String entity,
                 required int sinceUtc,
                 Value<String?> sinceAt = const Value.absent(),
                 Value<String?> sinceId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SyncCursorsCompanion.insert(
+                ownerId: ownerId,
                 entity: entity,
                 sinceUtc: sinceUtc,
                 sinceAt: sinceAt,
@@ -18971,6 +22593,7 @@ typedef $$LocalMetaTableProcessedTableManager =
     >;
 typedef $$WakeUpDaysTableTableCreateCompanionBuilder =
     WakeUpDaysTableCompanion Function({
+      Value<String> ownerId,
       required String date,
       Value<int?> rangAtUtc,
       Value<int?> stoppedAtUtc,
@@ -18982,6 +22605,7 @@ typedef $$WakeUpDaysTableTableCreateCompanionBuilder =
     });
 typedef $$WakeUpDaysTableTableUpdateCompanionBuilder =
     WakeUpDaysTableCompanion Function({
+      Value<String> ownerId,
       Value<String> date,
       Value<int?> rangAtUtc,
       Value<int?> stoppedAtUtc,
@@ -19001,6 +22625,11 @@ class $$WakeUpDaysTableTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<String> get ownerId => $composableBuilder(
+    column: $table.ownerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get date => $composableBuilder(
     column: $table.date,
     builder: (column) => ColumnFilters(column),
@@ -19046,6 +22675,11 @@ class $$WakeUpDaysTableTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<String> get ownerId => $composableBuilder(
+    column: $table.ownerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get date => $composableBuilder(
     column: $table.date,
     builder: (column) => ColumnOrderings(column),
@@ -19091,6 +22725,9 @@ class $$WakeUpDaysTableTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<String> get ownerId =>
+      $composableBuilder(column: $table.ownerId, builder: (column) => column);
+
   GeneratedColumn<String> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
 
@@ -19154,6 +22791,7 @@ class $$WakeUpDaysTableTableTableManager
               $$WakeUpDaysTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<String> ownerId = const Value.absent(),
                 Value<String> date = const Value.absent(),
                 Value<int?> rangAtUtc = const Value.absent(),
                 Value<int?> stoppedAtUtc = const Value.absent(),
@@ -19163,6 +22801,7 @@ class $$WakeUpDaysTableTableTableManager
                 Value<int?> missionSkippedAtUtc = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WakeUpDaysTableCompanion(
+                ownerId: ownerId,
                 date: date,
                 rangAtUtc: rangAtUtc,
                 stoppedAtUtc: stoppedAtUtc,
@@ -19174,6 +22813,7 @@ class $$WakeUpDaysTableTableTableManager
               ),
           createCompanionCallback:
               ({
+                Value<String> ownerId = const Value.absent(),
                 required String date,
                 Value<int?> rangAtUtc = const Value.absent(),
                 Value<int?> stoppedAtUtc = const Value.absent(),
@@ -19183,6 +22823,7 @@ class $$WakeUpDaysTableTableTableManager
                 Value<int?> missionSkippedAtUtc = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WakeUpDaysTableCompanion.insert(
+                ownerId: ownerId,
                 date: date,
                 rangAtUtc: rangAtUtc,
                 stoppedAtUtc: stoppedAtUtc,
@@ -19226,6 +22867,680 @@ typedef $$WakeUpDaysTableTableProcessedTableManager =
       WakeUpDayRow,
       PrefetchHooks Function()
     >;
+typedef $$GuestRowSessionsTableCreateCompanionBuilder =
+    GuestRowSessionsCompanion Function({
+      required String entity,
+      required String entityId,
+      required String session,
+      Value<int> rowid,
+    });
+typedef $$GuestRowSessionsTableUpdateCompanionBuilder =
+    GuestRowSessionsCompanion Function({
+      Value<String> entity,
+      Value<String> entityId,
+      Value<String> session,
+      Value<int> rowid,
+    });
+
+class $$GuestRowSessionsTableFilterComposer
+    extends Composer<_$AppDatabase, $GuestRowSessionsTable> {
+  $$GuestRowSessionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entityId => $composableBuilder(
+    column: $table.entityId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get session => $composableBuilder(
+    column: $table.session,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$GuestRowSessionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $GuestRowSessionsTable> {
+  $$GuestRowSessionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entityId => $composableBuilder(
+    column: $table.entityId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get session => $composableBuilder(
+    column: $table.session,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$GuestRowSessionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $GuestRowSessionsTable> {
+  $$GuestRowSessionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get entity =>
+      $composableBuilder(column: $table.entity, builder: (column) => column);
+
+  GeneratedColumn<String> get entityId =>
+      $composableBuilder(column: $table.entityId, builder: (column) => column);
+
+  GeneratedColumn<String> get session =>
+      $composableBuilder(column: $table.session, builder: (column) => column);
+}
+
+class $$GuestRowSessionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $GuestRowSessionsTable,
+          GuestRowSessionRow,
+          $$GuestRowSessionsTableFilterComposer,
+          $$GuestRowSessionsTableOrderingComposer,
+          $$GuestRowSessionsTableAnnotationComposer,
+          $$GuestRowSessionsTableCreateCompanionBuilder,
+          $$GuestRowSessionsTableUpdateCompanionBuilder,
+          (
+            GuestRowSessionRow,
+            BaseReferences<
+              _$AppDatabase,
+              $GuestRowSessionsTable,
+              GuestRowSessionRow
+            >,
+          ),
+          GuestRowSessionRow,
+          PrefetchHooks Function()
+        > {
+  $$GuestRowSessionsTableTableManager(
+    _$AppDatabase db,
+    $GuestRowSessionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$GuestRowSessionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$GuestRowSessionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$GuestRowSessionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> entity = const Value.absent(),
+                Value<String> entityId = const Value.absent(),
+                Value<String> session = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => GuestRowSessionsCompanion(
+                entity: entity,
+                entityId: entityId,
+                session: session,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String entity,
+                required String entityId,
+                required String session,
+                Value<int> rowid = const Value.absent(),
+              }) => GuestRowSessionsCompanion.insert(
+                entity: entity,
+                entityId: entityId,
+                session: session,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$GuestRowSessionsTable, GuestRowSessionRow>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $GuestRowSessionsTable,
+                    GuestRowSessionRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$GuestRowSessionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $GuestRowSessionsTable,
+      GuestRowSessionRow,
+      $$GuestRowSessionsTableFilterComposer,
+      $$GuestRowSessionsTableOrderingComposer,
+      $$GuestRowSessionsTableAnnotationComposer,
+      $$GuestRowSessionsTableCreateCompanionBuilder,
+      $$GuestRowSessionsTableUpdateCompanionBuilder,
+      (
+        GuestRowSessionRow,
+        BaseReferences<
+          _$AppDatabase,
+          $GuestRowSessionsTable,
+          GuestRowSessionRow
+        >,
+      ),
+      GuestRowSessionRow,
+      PrefetchHooks Function()
+    >;
+typedef $$ImportSessionsTableCreateCompanionBuilder =
+    ImportSessionsCompanion Function({
+      required String importId,
+      required String owner,
+      required int ownerGeneration,
+      required String runId,
+      required int startedAt,
+      required int declaredBytes,
+      Value<int> stagedBytes,
+      Value<int> rowid,
+    });
+typedef $$ImportSessionsTableUpdateCompanionBuilder =
+    ImportSessionsCompanion Function({
+      Value<String> importId,
+      Value<String> owner,
+      Value<int> ownerGeneration,
+      Value<String> runId,
+      Value<int> startedAt,
+      Value<int> declaredBytes,
+      Value<int> stagedBytes,
+      Value<int> rowid,
+    });
+
+class $$ImportSessionsTableFilterComposer
+    extends Composer<_$AppDatabase, $ImportSessionsTable> {
+  $$ImportSessionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get importId => $composableBuilder(
+    column: $table.importId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get owner => $composableBuilder(
+    column: $table.owner,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ownerGeneration => $composableBuilder(
+    column: $table.ownerGeneration,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get startedAt => $composableBuilder(
+    column: $table.startedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get declaredBytes => $composableBuilder(
+    column: $table.declaredBytes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get stagedBytes => $composableBuilder(
+    column: $table.stagedBytes,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ImportSessionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ImportSessionsTable> {
+  $$ImportSessionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get importId => $composableBuilder(
+    column: $table.importId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get owner => $composableBuilder(
+    column: $table.owner,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ownerGeneration => $composableBuilder(
+    column: $table.ownerGeneration,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get runId => $composableBuilder(
+    column: $table.runId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get startedAt => $composableBuilder(
+    column: $table.startedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get declaredBytes => $composableBuilder(
+    column: $table.declaredBytes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get stagedBytes => $composableBuilder(
+    column: $table.stagedBytes,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ImportSessionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ImportSessionsTable> {
+  $$ImportSessionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get importId =>
+      $composableBuilder(column: $table.importId, builder: (column) => column);
+
+  GeneratedColumn<String> get owner =>
+      $composableBuilder(column: $table.owner, builder: (column) => column);
+
+  GeneratedColumn<int> get ownerGeneration => $composableBuilder(
+    column: $table.ownerGeneration,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get runId =>
+      $composableBuilder(column: $table.runId, builder: (column) => column);
+
+  GeneratedColumn<int> get startedAt =>
+      $composableBuilder(column: $table.startedAt, builder: (column) => column);
+
+  GeneratedColumn<int> get declaredBytes => $composableBuilder(
+    column: $table.declaredBytes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get stagedBytes => $composableBuilder(
+    column: $table.stagedBytes,
+    builder: (column) => column,
+  );
+}
+
+class $$ImportSessionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ImportSessionsTable,
+          ImportSessionRow,
+          $$ImportSessionsTableFilterComposer,
+          $$ImportSessionsTableOrderingComposer,
+          $$ImportSessionsTableAnnotationComposer,
+          $$ImportSessionsTableCreateCompanionBuilder,
+          $$ImportSessionsTableUpdateCompanionBuilder,
+          (
+            ImportSessionRow,
+            BaseReferences<
+              _$AppDatabase,
+              $ImportSessionsTable,
+              ImportSessionRow
+            >,
+          ),
+          ImportSessionRow,
+          PrefetchHooks Function()
+        > {
+  $$ImportSessionsTableTableManager(
+    _$AppDatabase db,
+    $ImportSessionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ImportSessionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ImportSessionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ImportSessionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> importId = const Value.absent(),
+                Value<String> owner = const Value.absent(),
+                Value<int> ownerGeneration = const Value.absent(),
+                Value<String> runId = const Value.absent(),
+                Value<int> startedAt = const Value.absent(),
+                Value<int> declaredBytes = const Value.absent(),
+                Value<int> stagedBytes = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ImportSessionsCompanion(
+                importId: importId,
+                owner: owner,
+                ownerGeneration: ownerGeneration,
+                runId: runId,
+                startedAt: startedAt,
+                declaredBytes: declaredBytes,
+                stagedBytes: stagedBytes,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String importId,
+                required String owner,
+                required int ownerGeneration,
+                required String runId,
+                required int startedAt,
+                required int declaredBytes,
+                Value<int> stagedBytes = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ImportSessionsCompanion.insert(
+                importId: importId,
+                owner: owner,
+                ownerGeneration: ownerGeneration,
+                runId: runId,
+                startedAt: startedAt,
+                declaredBytes: declaredBytes,
+                stagedBytes: stagedBytes,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$ImportSessionsTable, ImportSessionRow>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $ImportSessionsTable,
+                    ImportSessionRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ImportSessionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ImportSessionsTable,
+      ImportSessionRow,
+      $$ImportSessionsTableFilterComposer,
+      $$ImportSessionsTableOrderingComposer,
+      $$ImportSessionsTableAnnotationComposer,
+      $$ImportSessionsTableCreateCompanionBuilder,
+      $$ImportSessionsTableUpdateCompanionBuilder,
+      (
+        ImportSessionRow,
+        BaseReferences<_$AppDatabase, $ImportSessionsTable, ImportSessionRow>,
+      ),
+      ImportSessionRow,
+      PrefetchHooks Function()
+    >;
+typedef $$ImportStagingTableCreateCompanionBuilder =
+    ImportStagingCompanion Function({
+      required String importId,
+      required String owner,
+      required String entity,
+      required String rowId,
+      required int partIndex,
+      required String json,
+      Value<int> rowid,
+    });
+typedef $$ImportStagingTableUpdateCompanionBuilder =
+    ImportStagingCompanion Function({
+      Value<String> importId,
+      Value<String> owner,
+      Value<String> entity,
+      Value<String> rowId,
+      Value<int> partIndex,
+      Value<String> json,
+      Value<int> rowid,
+    });
+
+class $$ImportStagingTableFilterComposer
+    extends Composer<_$AppDatabase, $ImportStagingTable> {
+  $$ImportStagingTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get importId => $composableBuilder(
+    column: $table.importId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get owner => $composableBuilder(
+    column: $table.owner,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rowId => $composableBuilder(
+    column: $table.rowId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get partIndex => $composableBuilder(
+    column: $table.partIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get json => $composableBuilder(
+    column: $table.json,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ImportStagingTableOrderingComposer
+    extends Composer<_$AppDatabase, $ImportStagingTable> {
+  $$ImportStagingTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get importId => $composableBuilder(
+    column: $table.importId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get owner => $composableBuilder(
+    column: $table.owner,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rowId => $composableBuilder(
+    column: $table.rowId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get partIndex => $composableBuilder(
+    column: $table.partIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get json => $composableBuilder(
+    column: $table.json,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ImportStagingTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ImportStagingTable> {
+  $$ImportStagingTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get importId =>
+      $composableBuilder(column: $table.importId, builder: (column) => column);
+
+  GeneratedColumn<String> get owner =>
+      $composableBuilder(column: $table.owner, builder: (column) => column);
+
+  GeneratedColumn<String> get entity =>
+      $composableBuilder(column: $table.entity, builder: (column) => column);
+
+  GeneratedColumn<String> get rowId =>
+      $composableBuilder(column: $table.rowId, builder: (column) => column);
+
+  GeneratedColumn<int> get partIndex =>
+      $composableBuilder(column: $table.partIndex, builder: (column) => column);
+
+  GeneratedColumn<String> get json =>
+      $composableBuilder(column: $table.json, builder: (column) => column);
+}
+
+class $$ImportStagingTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ImportStagingTable,
+          ImportStagingRow,
+          $$ImportStagingTableFilterComposer,
+          $$ImportStagingTableOrderingComposer,
+          $$ImportStagingTableAnnotationComposer,
+          $$ImportStagingTableCreateCompanionBuilder,
+          $$ImportStagingTableUpdateCompanionBuilder,
+          (
+            ImportStagingRow,
+            BaseReferences<
+              _$AppDatabase,
+              $ImportStagingTable,
+              ImportStagingRow
+            >,
+          ),
+          ImportStagingRow,
+          PrefetchHooks Function()
+        > {
+  $$ImportStagingTableTableManager(_$AppDatabase db, $ImportStagingTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ImportStagingTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ImportStagingTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ImportStagingTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> importId = const Value.absent(),
+                Value<String> owner = const Value.absent(),
+                Value<String> entity = const Value.absent(),
+                Value<String> rowId = const Value.absent(),
+                Value<int> partIndex = const Value.absent(),
+                Value<String> json = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ImportStagingCompanion(
+                importId: importId,
+                owner: owner,
+                entity: entity,
+                rowId: rowId,
+                partIndex: partIndex,
+                json: json,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String importId,
+                required String owner,
+                required String entity,
+                required String rowId,
+                required int partIndex,
+                required String json,
+                Value<int> rowid = const Value.absent(),
+              }) => ImportStagingCompanion.insert(
+                importId: importId,
+                owner: owner,
+                entity: entity,
+                rowId: rowId,
+                partIndex: partIndex,
+                json: json,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$ImportStagingTable, ImportStagingRow>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $ImportStagingTable,
+                    ImportStagingRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ImportStagingTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ImportStagingTable,
+      ImportStagingRow,
+      $$ImportStagingTableFilterComposer,
+      $$ImportStagingTableOrderingComposer,
+      $$ImportStagingTableAnnotationComposer,
+      $$ImportStagingTableCreateCompanionBuilder,
+      $$ImportStagingTableUpdateCompanionBuilder,
+      (
+        ImportStagingRow,
+        BaseReferences<_$AppDatabase, $ImportStagingTable, ImportStagingRow>,
+      ),
+      ImportStagingRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -19246,6 +23561,12 @@ class $AppDatabaseManager {
       $$SubtasksTableTableManager(_db, _db.subtasks);
   $$CalendarSeriesTableTableTableManager get calendarSeriesTable =>
       $$CalendarSeriesTableTableTableManager(_db, _db.calendarSeriesTable);
+  $$PendingCalendarSeriesTableTableTableManager
+  get pendingCalendarSeriesTable =>
+      $$PendingCalendarSeriesTableTableTableManager(
+        _db,
+        _db.pendingCalendarSeriesTable,
+      );
   $$RoutinesTableTableTableManager get routinesTable =>
       $$RoutinesTableTableTableManager(_db, _db.routinesTable);
   $$RevealHintsTableTableTableManager get revealHintsTable =>
@@ -19262,4 +23583,10 @@ class $AppDatabaseManager {
       $$LocalMetaTableTableManager(_db, _db.localMeta);
   $$WakeUpDaysTableTableTableManager get wakeUpDaysTable =>
       $$WakeUpDaysTableTableTableManager(_db, _db.wakeUpDaysTable);
+  $$GuestRowSessionsTableTableManager get guestRowSessions =>
+      $$GuestRowSessionsTableTableManager(_db, _db.guestRowSessions);
+  $$ImportSessionsTableTableManager get importSessions =>
+      $$ImportSessionsTableTableManager(_db, _db.importSessions);
+  $$ImportStagingTableTableManager get importStaging =>
+      $$ImportStagingTableTableManager(_db, _db.importStaging);
 }

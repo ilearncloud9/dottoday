@@ -4,25 +4,21 @@ import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
+import 'package:dottoday/data/sync/conflict_store.dart';
+import 'package:dottoday/data/sync/pull_guard.dart';
+import 'package:dottoday/data/sync/replaying.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
 import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/sync/clock_skew.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 
-/// Reads the open conflicts and acts on them (the database side).
-abstract interface class ConflictStore {
-  Stream<List<SyncConflict>> watch(String userId);
-
-  /// "Keep mine": writes the device's value again, as a new local edit.
-  Future<Result<void, AppFailure>> keepMine(String userId, String id);
-
-  /// "Keep theirs": the server value already applies; closes the conflict.
-  Future<void> close(String id);
-}
+export 'package:dottoday/data/sync/conflict_store.dart';
 
 /// [SyncService] over the [SyncEngine] (docs/04 §4, docs/09 M6.2/M6.3):
-/// nothing while signed out; once signed in it adopts the account, then
+/// nothing while signed out; once signed in it makes the account the
+/// active owner (`signInOwner`, CR-160; retried with every run until it
+/// succeeds, never syncing before), then
 /// syncs on events only: sign-in, shortly after local writes, when the
 /// server nudges (Realtime: a change, or the live feed (re)connecting),
 /// on resume and on "Sync now". Nothing runs on a clock (docs/04 §4 "Triggers").
@@ -34,12 +30,13 @@ final class EngineSyncService implements SyncService {
   EngineSyncService({
     required SyncEngine engine,
     required Stream<String?> accounts,
-    required Future<void> Function(String accountId) adopt,
+    required Future<bool> Function(String accountId) adopt,
     required ConflictStore conflicts,
     required Stream<void> remoteChanges,
     required Clock clock,
     required Logger logger,
     void Function(String accountId)? onPulled,
+    Future<DeletionCheck> Function(String owner)? verify,
     Duration settle = const Duration(seconds: 3),
     this.retryFirst = const Duration(seconds: 5),
     this.retryMax = const Duration(minutes: 5),
@@ -50,17 +47,22 @@ final class EngineSyncService implements SyncService {
        _clock = clock,
        _logger = logger,
        _onPulled = onPulled,
+       _verify = verify,
        _settle = settle {
     _accountSub = accounts.listen((id) => unawaited(_signedIn(id)));
   }
 
   final SyncEngine _engine;
-  final Future<void> Function(String) _adopt;
+
+  /// The sign-in step; false while it waits for the person (the guest's
+  /// tasks, CR-160): nothing syncs until a later run finds it done.
+  final Future<bool> Function(String) _adopt;
   final ConflictStore _conflicts;
   final Stream<void> _remote;
   final Clock _clock;
   final Logger _logger;
   final void Function(String)? _onPulled;
+  final Future<DeletionCheck> Function(String)? _verify;
   final Duration _settle;
 
   /// The wait before retrying a failed run; doubles per failure.
@@ -80,28 +82,38 @@ final class EngineSyncService implements SyncService {
   Timer? _retry;
   var _failures = 0;
   String? _account;
+
+  /// Whether [_account] is the active owner yet (its sign-in step ran).
+  var _owned = false;
   var _status = SyncStatus.localOnly;
   var _running = false;
   var _again = false;
+  Completer<void>? _idle;
 
   @override
-  Stream<SyncStatus> watch() => _replaying(() => _status, _state.stream);
+  Stream<SyncStatus> watch() => replaying(() => _status, _state.stream);
 
   @override
   Stream<RestoreProgress> watchRestore() =>
-      _replaying(() => _lastRestore, _restore.stream);
+      replaying(() => _lastRestore, _restore.stream);
 
   @override
   Future<Result<void, AppFailure>> syncNow() async {
     if (_account == null) return const Ok(null);
     await _run();
-    return switch (_status.state) {
-      SyncState.offline => const Err(
-        NetworkFailure(NetworkFailureKind.offline),
-      ),
-      SyncState.error => const Err(NetworkFailure(NetworkFailureKind.server)),
-      _ => const Ok(null),
-    };
+    // A run was under way: wait for it and the round asked for (blocker 5).
+    if (_running) await (_idle ??= Completer<void>()).future;
+    return syncOutcome(_status.state);
+  }
+
+  @override
+  Future<DeletionCheck> verifyForDeletion(String owner) async {
+    final verify = _verify;
+    // Only the shown, adopted account (CR-160): never another owner's.
+    if (verify == null || _account != owner || !_owned) {
+      return const DeletionUnverified(AuthFailure());
+    }
+    return verify(owner);
   }
 
   @override
@@ -132,19 +144,14 @@ final class EngineSyncService implements SyncService {
     if (id == _account) return;
     await _stop();
     _account = id;
+    _owned = false;
     if (id == null) {
       _emit(SyncStatus.localOnly);
       return;
     }
-    try {
-      await _adopt(id);
-    } on Object catch (e, s) {
-      _logger.error('sync.adopt_failed', error: e, stackTrace: s);
-      _emit(const SyncStatus(state: SyncState.error));
-      return;
-    }
+    if (!await _own(id)) return;
     _remoteSub = _remote.listen((_) => _later());
-    _outboxSub = _engine.outbox.watchCount().listen((n) {
+    _outboxSub = _engine.outbox.watchCount(id).listen((n) {
       _status = SyncStatus(
         state: _status.state,
         lastSyncedUtc: _status.lastSyncedUtc,
@@ -159,6 +166,21 @@ final class EngineSyncService implements SyncService {
         .watch(id)
         .listen((open) => _emit(_with(conflicts: open)));
     await _run();
+  }
+
+  /// Runs the sign-in step for [id]; on failure shows the error and
+  /// retries like a failed run (criterion 9: "Try again" is "Sync now").
+  Future<bool> _own(String id) async {
+    try {
+      if (!await _adopt(id)) return false;
+    } on Object catch (e, s) {
+      _logger.error('sync.adopt_failed', error: e, stackTrace: s);
+      if (_account == id) _failed(SyncState.error);
+      return false;
+    }
+    if (_account != id) return false;
+    _owned = true;
+    return true;
   }
 
   Future<void> _stop() async {
@@ -182,11 +204,17 @@ final class EngineSyncService implements SyncService {
   Future<void> _run() async {
     final account = _account;
     if (account == null) return;
+    // Never a round for an account that isn't the active owner yet.
+    if (!_owned) {
+      if (!_running) await _signedInAgain(account);
+      return;
+    }
     if (_running) {
       _again = true;
       return;
     }
     _running = true;
+    final before = _status.state;
     _emit(_with(state: SyncState.syncing));
     try {
       final run = await _engine.run(account, onProgress: _progress);
@@ -196,6 +224,11 @@ final class EngineSyncService implements SyncService {
       _retry?.cancel();
       _failures = 0;
       if (run.pulled > 0) _onPulled?.call(account);
+    } on PullRefusedException catch (e) {
+      // The account was switched, is being deleted or removed (CR-160): the
+      // round stops with nothing written; a later one, if any, retries.
+      _logger.info('sync.pull_refused', fields: {'reason': e.reason});
+      _failed(before);
     } on SyncGatewayException catch (e, s) {
       if (e.trouble == SyncTrouble.server) {
         _logger.warn('sync.server_refused', error: e.cause, stackTrace: s);
@@ -213,8 +246,18 @@ final class EngineSyncService implements SyncService {
       if (_again) {
         _again = false;
         unawaited(_run());
+      } else {
+        _idle?.complete();
+        _idle = null;
       }
     }
+  }
+
+  /// The sign-in step failed before: try it again, then carry on as a
+  /// fresh sign-in.
+  Future<void> _signedInAgain(String account) async {
+    _account = null;
+    await _signedIn(account);
   }
 
   /// Shows [state] and retries after a wait that doubles per failure:
@@ -249,19 +292,6 @@ final class EngineSyncService implements SyncService {
 
   /// From the last finished round (M6.5.7).
   ClockSkew? _skew;
-
-  /// The current value, then every change. Subscribes at once, unlike an
-  /// `async*` that waits at its first `yield`: Riverpod pauses listeners
-  /// under the onboarding flow, and a change made meanwhile (signing in
-  /// there) must still arrive on resume, not be lost on the broadcast.
-  static Stream<T> _replaying<T extends Object>(
-    T? Function() current,
-    Stream<T> changes,
-  ) => Stream.multi((out) {
-    if (current() case final value?) out.add(value);
-    final sub = changes.listen(out.add);
-    out.onCancel = sub.cancel;
-  });
 
   void _emit(SyncStatus s) {
     _status = s;

@@ -118,9 +118,13 @@ import Foundation
     init() {}
     init(occurrenceId: String) { self.occurrenceId = occurrenceId }
 
+    // Refused (an account being deleted, the queue full or unreadable):
+    // the activity stays as it was. Live Activity buttons can't show a
+    // message, so unchanged is the honest answer (CR-160 I7).
     func perform() async throws -> some IntentResult {
-      DotActions.perform(.markDone, occurrenceId: occurrenceId)
-      await LiveActivities.end(occurrenceId: occurrenceId)
+      await DotActions.performLive(.markDone, occurrenceId: occurrenceId) {
+        await LiveActivities.end(occurrenceId: occurrenceId)
+      }
       return .result()
     }
   }
@@ -143,11 +147,14 @@ import Foundation
       self.plannedEndMs = plannedEndMs
     }
 
+    // Refused: the activity keeps its end (see LiveMarkDoneIntent).
     func perform() async throws -> some IntentResult {
-      DotActions.perform(
+      await DotActions.performLive(
         .addFifteen, occurrenceId: occurrenceId,
-        plannedEnd: Date(timeIntervalSince1970: Double(plannedEndMs) / 1000))
-      await LiveActivities.plusFifteen(occurrenceId: occurrenceId, plannedEndMs: Double(plannedEndMs))
+        plannedEnd: Date(timeIntervalSince1970: Double(plannedEndMs) / 1000)
+      ) {
+        await LiveActivities.plusFifteen(occurrenceId: occurrenceId, plannedEndMs: Double(plannedEndMs))
+      }
       return .result()
     }
   }

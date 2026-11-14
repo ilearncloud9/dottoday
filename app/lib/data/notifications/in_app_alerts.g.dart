@@ -50,7 +50,7 @@ final class InAppAlertsProvider
   }
 }
 
-String _$inAppAlertsHash() => r'da2fba0c2648b82b7be75097a9cd564d51ec4e02';
+String _$inAppAlertsHash() => r'b8397dc0d22bf554ef893796a47da8f8a731c3bc';
 
 /// Reminders shown inside the app instead of by the OS: on the web without
 /// notification permission, and quiet-hours ones (docs/07 Web, M5.3).

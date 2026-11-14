@@ -7,11 +7,14 @@ import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
+import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/intents/intent_providers.dart';
 import 'package:dottoday/data/intents/intent_queue_channel.dart';
 import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
+import 'package:dottoday/data/owners/deletion_seal.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
 import 'package:dottoday/data/snapshot/snapshot_providers.dart';
@@ -92,14 +95,27 @@ Future<void> _askForAlarms(WidgetRef ref) async {
   }
 }
 
-// A queue that can't be read must not hold up the refresh.
+// A queue that can't be read must not hold up the refresh. The owner the
+// surfaces stamp is published again first: after a restart, or a change
+// of owner an app kill interrupted, it names the owner shown (CR-160 I7).
 Future<void> _drainQueue(WidgetRef ref) async {
   try {
+    await ref.read(ownerSwitchProvider).publishShownOwner();
     await ref.read(actionQueueDrainerProvider).drain();
   } on Object catch (e, st) {
     ref
         .read(loggerProvider)
         .error('intent.drain_failed', error: e, stackTrace: st);
+  }
+}
+
+Future<void> _clearDeletionSeals(WidgetRef ref) async {
+  try {
+    await clearDeletionSeals(ref.read(appDatabaseProvider));
+  } on Object catch (e, st) {
+    ref
+        .read(loggerProvider)
+        .error('account.unseal_failed', error: e, stackTrace: st);
   }
 }
 
@@ -137,8 +153,14 @@ class _AppLifecycleScopeState extends ConsumerState<AppLifecycleScope>
       listenForMenuBarActions(ref.read(dotIntentsProvider));
     }
     _events = ref.read(systemEventsProvider).events.listen(_onSystemEvent);
+    // Another owner is shown (CR-160 I7): the due run was armed for the old
+    // owner's day and zone; run for the new one and re-arm from it.
+    ref.listenManual(ownerEpochProvider, (_, _) => unawaited(_housekeep()));
+    // A deletion seal a crash left: none can be running at launch (CR-160
+    // §4). Before the first frame's housekeeping saves anything.
+    final unsealed = _clearDeletionSeals(ref);
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) => unawaited(_housekeep()),
+      (_) => unawaited(unsealed.then((_) => _housekeep())),
     );
   }
 

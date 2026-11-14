@@ -20,4 +20,9 @@ void applyWebCipherKey(CommonDatabase db, String hexKey) {
   if (cipher.isEmpty) throw StateError('sqlite3mc cipher support missing.');
   // Touch the schema so a wrong key fails here, not on a later query.
   db.select('SELECT count(*) FROM sqlite_master');
+  // This sqlite3mc build sets no TEMP_STORE, so sorts and temp tables could
+  // go to temp files, which its cipher is not shown to cover. Keep them in
+  // memory (CR-160 Stage B2, spec §6 decision 2; the native SQLCipher build
+  // is compiled with TEMP_STORE=2 already).
+  db.execute('PRAGMA temp_store = MEMORY');
 }

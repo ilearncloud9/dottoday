@@ -133,6 +133,13 @@ final class FlnNotificationPlatform implements NotificationPlatform {
   @override
   Future<void> cancel(int id) => _plugin.cancel(id);
 
+  /// `cancelAll` (plugin 18) removes pending requests and the delivered
+  /// ones from the notification centre on iOS, macOS and Android (CR-160
+  /// I6); on Android it also takes the ongoing live dot, which the next
+  /// snapshot posts again for the owner shown.
+  @override
+  Future<void> clearAll() => _plugin.cancelAll();
+
   /// Sounds whose channel the user turned below sound-making importance
   /// in Android's settings (docs/12 §4, the health panel). Empty elsewhere.
   @override

@@ -7,9 +7,10 @@ import 'package:flutter/services.dart';
 /// M9.2): the native side removes settled entries in one locked step, so
 /// an action a Live Activity, widget or notification queues during a drain
 /// is never overwritten (two `home_widget` calls — read, then write — left
-/// that gap; found by integration_test/live_activity_test.dart). Where the
-/// channel doesn't exist (the background refresh's engine) it falls back
-/// to [HomeWidgetActionQueueStore].
+/// that gap; found by integration_test/live_activity_test.dart). The
+/// marker the surfaces stamp by is published under the same lock (CR-160 I7).
+/// Where the channel doesn't exist (Android's background refresh engine)
+/// it falls back to [HomeWidgetActionQueueStore].
 final class NativeActionQueueStore implements ActionQueueStore {
   const NativeActionQueueStore({
     MethodChannel channel = const MethodChannel('dottoday/intents'),
@@ -30,15 +31,23 @@ final class NativeActionQueueStore implements ActionQueueStore {
   }
 
   @override
-  Future<void> remove(Set<String> ids, {bool unreadable = false}) async {
-    if (ids.isEmpty && !unreadable) return;
+  Future<void> remove(Set<String> ids) async {
+    if (ids.isEmpty) return;
     try {
-      await _channel.invokeMethod<void>('removeQueued', {
-        'ids': ids.toList(),
-        'unreadable': unreadable,
+      await _channel.invokeMethod<void>('removeQueued', {'ids': ids.toList()});
+    } on MissingPluginException {
+      await _fallback.remove(ids);
+    }
+  }
+
+  @override
+  Future<void> publish(QueueMarker marker) async {
+    try {
+      await _channel.invokeMethod<void>('publishOwner', {
+        'owner': encodeQueueMarker(marker),
       });
     } on MissingPluginException {
-      await _fallback.remove(ids, unreadable: unreadable);
+      await _fallback.publish(marker);
     }
   }
 }

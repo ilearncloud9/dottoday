@@ -56,7 +56,7 @@ final class ActiveProposalProvider
   }
 }
 
-String _$activeProposalHash() => r'89ae81764eafbb40abe61429edd690e453440b20';
+String _$activeProposalHash() => r'77fc6587b5f97691f5acf9710e802c31b8d1d697';
 
 /// The proposal on screen, if any: a bottom sheet on phones, the right-hand
 /// panel at the expanded width (docs/10 §4 "no sheets at expanded"). Held

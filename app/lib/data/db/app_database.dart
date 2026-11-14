@@ -1,8 +1,12 @@
+import 'package:dottoday/data/db/legacy_outbox.dart';
+import 'package:dottoday/data/db/owner_migration.dart';
 import 'package:dottoday/data/db/tables/calendar_series_table.dart';
 import 'package:dottoday/data/db/tables/calendar_tables.dart';
 // The generated part copies `soundIdCheck` (a column CHECK) verbatim.
 import 'package:dottoday/data/db/tables/columns.dart';
+import 'package:dottoday/data/db/tables/import_staging_tables.dart';
 import 'package:dottoday/data/db/tables/occurrences.dart';
+import 'package:dottoday/data/db/tables/pending_calendar_series_table.dart';
 import 'package:dottoday/data/db/tables/profiles.dart';
 import 'package:dottoday/data/db/tables/reveal_hints_table.dart';
 import 'package:dottoday/data/db/tables/routines_table.dart';
@@ -15,7 +19,8 @@ part 'app_database.g.dart';
 
 /// The local source of truth (docs/04 §4): server tables mirrored with sync
 /// columns, plus the local-only `change_log`, `sync_cursors`, `field_seen`,
-/// `local_meta`, `wake_up_days` and `calendar_series`.
+/// `local_meta`, `wake_up_days`, `calendar_series`,
+/// `pending_calendar_series` and the staged-import tables.
 ///
 /// Open it with `openAppDatabase` (connection/connection.dart) so the
 /// SQLCipher key is applied before any statement (06 §4, ADR-0006).
@@ -26,6 +31,7 @@ part 'app_database.g.dart';
     CalendarAccounts,
     CalendarLinks,
     CalendarSeriesTable,
+    PendingCalendarSeriesTable,
     Occurrences,
     Subtasks,
     RoutinesTable,
@@ -36,6 +42,9 @@ part 'app_database.g.dart';
     FieldSeen,
     LocalMeta,
     WakeUpDaysTable,
+    GuestRowSessions,
+    ImportSessions,
+    ImportStaging,
   ],
   include: {'search.drift'},
 )
@@ -43,7 +52,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 17;
+  static const latestSchemaVersion = 22;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -76,7 +85,7 @@ class AppDatabase extends _$AppDatabase {
       if (from < 6) {
         await _createTableOnce(m, routinesTable);
         await _addColumnOnce(m, occurrences, occurrences.routineStart);
-        await m.alterTable(TableMigration(changeLog));
+        await rebuildChangeLog(this, m);
         await m.alterTable(TableMigration(conflicts));
       }
       // 7 (M13.2): when a step was ticked, for learned step lengths.
@@ -97,7 +106,7 @@ class AppDatabase extends _$AppDatabase {
       // layout in onboarding step 0.
       if (from < 9) {
         await _createTableOnce(m, revealHintsTable);
-        await m.alterTable(TableMigration(changeLog));
+        await rebuildChangeLog(this, m);
         await m.alterTable(TableMigration(conflicts));
         await _keepFullLayout();
       }
@@ -138,6 +147,32 @@ class AppDatabase extends _$AppDatabase {
         await _addColumnOnce(m, syncCursors, syncCursors.sinceAt);
         await _addColumnOnce(m, syncCursors, syncCursors.sinceId);
       }
+      // 18 (CR-160): every outbox entry and pull cursor names its owner,
+      // and local_meta says which profile is an account and which shows.
+      if (from < 18) {
+        await rebuildChangeLog(this, m);
+        await ownCursors(this, m);
+        await recordOwners(this);
+        await recordLegacyOutbox(this); // checked at the first sync (blocker 8)
+      }
+      // 19 (CR-160): the guest session that first wrote each guest row.
+      // Existing rows get none: they are never eligible to move.
+      if (from < 19) await _createTableOnce(m, guestRowSessions);
+      // 20 (CR-160 Stage A): calendar-series settings restored from a D1
+      // file, kept until a calendar here provably matches them.
+      if (from < 20) {
+        await _createTableOnce(m, pendingCalendarSeriesTable);
+      }
+      // 21 (CR-160 Stage B2): staged imports, empty; nothing writes them
+      // until the staged pipeline is live (B3–B5).
+      if (from < 21) {
+        await _createTableOnce(m, importSessions);
+        await _createTableOnce(m, importStaging);
+      }
+      // 22 (CR-160 Wake Up audit): Wake Up days per owner. A device with one
+      // profile gives it its rows; with several no one can say whose
+      // mornings they were, so they go to '' (seen by no one).
+      if (from < 22) await ownWakeUpDays(this, m);
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without
@@ -181,6 +216,17 @@ class AppDatabase extends _$AppDatabase {
     "WHERE json_extract(settings, '\$.uiLayout') IS NULL",
   );
 
+  Future<bool> _hasColumn(
+    TableInfo<Table, Object?> table,
+    GeneratedColumn<Object> column,
+  ) async {
+    final info = await customSelect(
+      'SELECT name FROM pragma_table_info(?)',
+      variables: [Variable.withString(table.actualTableName)],
+    ).get();
+    return info.any((r) => r.read<String>('name') == column.name);
+  }
+
   /// Creates [table] unless it exists (see [_addColumnOnce] for why).
   Future<void> _createTableOnce(
     Migrator m,
@@ -203,11 +249,7 @@ class AppDatabase extends _$AppDatabase {
     TableInfo<Table, Object?> table,
     GeneratedColumn<Object> column,
   ) async {
-    final info = await customSelect(
-      'SELECT name FROM pragma_table_info(?)',
-      variables: [Variable.withString(table.actualTableName)],
-    ).get();
-    if (info.any((r) => r.read<String>('name') == column.name)) return;
+    if (await _hasColumn(table, column)) return;
     await m.addColumn(table, column);
   }
 }

@@ -4,19 +4,23 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
+import 'package:dottoday/data/owners/account_actions.dart';
+import 'package:dottoday/data/owners/account_gate.dart';
+import 'package:dottoday/data/owners/held_tasks.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/features/settings/pages/account_dialogs.dart';
+import 'package:dottoday/features/settings/pages/delete_account.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
+import 'package:dottoday/features/settings/pages/sign_out_prompt.dart';
 import 'package:dottoday/shared/account/sign_in_parts.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 /// Settings › Account (docs/09 M3f.7; wired in M6.1 / M6.5): the name,
 /// then signed out — the sign-in choices, off until accounts arrive — or
@@ -181,7 +185,8 @@ class _SignedOutState extends ConsumerState<_SignedOut> {
 }
 
 /// "Signed in as …", Sign out, Sign out everywhere (06 §2), Delete
-/// account.
+/// account; and "Choose settings" while B1 waits ("Decide later", CR-160).
+/// Signing out asks first (A1 / A2) and leaves A3; deleting is D1.
 class _SignedIn extends ConsumerWidget {
   const _SignedIn({required this.email});
 
@@ -191,7 +196,25 @@ class _SignedIn extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final service = ref.watch(accountServiceProvider);
+    final owner = ref.watch(currentProfileProvider).value?.id;
+    final later = ref.watch(settingsChoiceLaterProvider).value ?? false;
+    final status = ref.watch(syncStatusProvider).value;
+    final pending = owner == null
+        ? null
+        : ref.watch(ownerPendingProvider(owner)).value;
+    void signOut({bool everywhere = false}) {
+      if (owner == null) return;
+      unawaited(
+        signOutWithCheck(
+          context,
+          email: email,
+          status: status,
+          pending: pending,
+          everywhere: everywhere,
+        ),
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
@@ -201,47 +224,38 @@ class _SignedIn extends ConsumerWidget {
           style: DotTheme.of(context).styles.caption,
         ),
         Text(l10n.accountSignedInAs(email), style: t.styles.body),
-        OutlinedButton(
-          onPressed: () => unawaited(_run(context, service.signOut())),
-          child: Text(l10n.accountSignOut),
-        ),
+        // Held from an old build's switch of accounts (CR-160 blocker 8).
+        if ((ref.watch(heldTasksProvider).value ?? 0) > 0)
+          Text(l10n.accountHeldTasks, style: t.styles.rowMeta),
+        if (later && owner != null)
+          SettingsGroup(
+            caption: '',
+            children: [
+              SettingsRow(
+                glyph: DotGlyphs.settings,
+                tint: t.colors.accentInk,
+                title: l10n.accountChooseSettings,
+                subtitle: l10n.accountChooseSettingsBody,
+                onTap: () => unawaited(
+                  ref
+                      .read(accountActionsProvider)
+                      .decideSettingsLater(owner, later: false),
+                ),
+              ),
+            ],
+          ),
+        OutlinedButton(onPressed: signOut, child: Text(l10n.accountSignOut)),
         TextButton(
-          onPressed: () =>
-              unawaited(_run(context, service.signOut(everywhere: true))),
+          onPressed: () => signOut(everywhere: true),
           child: Text(l10n.accountSignOutEverywhere),
         ),
         TextButton(
-          onPressed: () => unawaited(_delete(context, service)),
+          onPressed: owner == null
+              ? null
+              : () => unawaited(deleteAccountFlow(context, owner)),
           child: Text(l10n.accountDelete),
         ),
       ],
-    );
-  }
-
-  Future<void> _delete(BuildContext context, AccountService service) async {
-    final choice = await confirmDeleteAccount(context);
-    if (!context.mounted) return;
-    switch (choice) {
-      case DeleteChoice.delete:
-        await _run(context, service.deleteAccount());
-      case DeleteChoice.exportFirst:
-        await context.push(AppRoutes.settingsPage(SettingsPage.export));
-      case DeleteChoice.cancel:
-        return;
-    }
-  }
-}
-
-/// Runs an account action; a failure is said in a snackbar.
-Future<void> _run(
-  BuildContext context,
-  Future<Result<void, dynamic>> op,
-) async {
-  final messenger = ScaffoldMessenger.of(context);
-  final l10n = context.l10n;
-  if (await op case Err(:final failure)) {
-    messenger.showSnackBar(
-      SnackBar(content: Text(failureMessage(l10n, failure))),
     );
   }
 }

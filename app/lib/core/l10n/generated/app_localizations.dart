@@ -3780,6 +3780,18 @@ abstract class AppLocalizations {
   /// **'Sign out everywhere'**
   String get accountSignOutEverywhere;
 
+  /// Settings › Account (CR-160 blocker 4): Sign out everywhere while offline; this device is signed out, the others are not.
+  ///
+  /// In en, this message translates to:
+  /// **'You’re signed out on this device. Your other devices couldn’t be signed out because you’re offline. To sign them out, sign in again and choose Sign out everywhere when you’re online.'**
+  String get accountSignedOutHereOnly;
+
+  /// Settings › Account (CR-160 blocker 8): tasks an older build gave this account came from another account; held on the device, hidden, never synced.
+  ///
+  /// In en, this message translates to:
+  /// **'Some tasks on this device came from another account. They’re set aside on this device and won’t sync.'**
+  String get accountHeldTasks;
+
   /// Account page destructive button and the confirm dialog's button.
   ///
   /// In en, this message translates to:
@@ -3798,11 +3810,11 @@ abstract class AppLocalizations {
   /// **'Export my data first'**
   String get accountDeleteExportFirst;
 
-  /// Delete account confirm dialog body.
+  /// Delete account (device): what is deleted and removed.
   ///
   /// In en, this message translates to:
-  /// **'This deletes your account and everything synced to it. Tasks on this device stay. Type {word} to confirm.'**
-  String accountDeleteBody(String word);
+  /// **'This deletes your account and everything synced to it. It also removes your copy on this device.'**
+  String get accountDeleteBody;
 
   /// The word typed to confirm account deletion.
   ///
@@ -4097,6 +4109,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This file is over 25 MB, too large to import. Nothing was changed.'**
   String get exportTooLarge;
+
+  /// Settings › Export (CR-160 Stage B0): a JSON export over the 25 MB import limit was refused, so no file was made or handed over.
+  ///
+  /// In en, this message translates to:
+  /// **'This export is too large for Dottoday to restore using the current import format. No restorable export was created.'**
+  String get exportTooLargeToRestore;
+
+  /// Settings › Import or a backup restore (CR-160 B8): the device ran out of storage during the import, which rolled back whole.
+  ///
+  /// In en, this message translates to:
+  /// **'There isn’t enough storage space to import this backup. Nothing was changed. Free up some space and try again.'**
+  String get importStorageFull;
+
+  /// Settings › Export (CR-160 backup safety): an import or restore stopped because its safety backup could not be read back as a restorable copy; nothing was changed.
+  ///
+  /// In en, this message translates to:
+  /// **'This operation can’t continue because Dottoday can’t create a backup it can restore. Your existing data hasn’t been changed.'**
+  String get backupNotRestorable;
+
+  /// Settings › Export (CR-160 B7): a JSON export over the part target is saved as a set of files (a manifest and its parts).
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is large, so it’s saved as {count} files. Keep them together: you need every one to restore.'**
+  String exportSetIntro(int count);
+
+  /// Settings › Export (CR-160 B7): title of the sheet after a set was handed to the share sheet or save dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Exported as {count} files'**
+  String exportSetDone(int count);
+
+  /// Settings › Export and Delete account (CR-160 B7): picks every file of a set back to confirm they were saved complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Check my files…'**
+  String get exportCheckFiles;
+
+  /// Settings › Export (CR-160 B7): detail under “Check my files…”.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick every file to confirm they’re complete'**
+  String get exportCheckFilesDetail;
+
+  /// Settings › Export (CR-160 B7): every file of the set was picked back and matched.
+  ///
+  /// In en, this message translates to:
+  /// **'All {count} files are here and complete.'**
+  String exportCheckAll(int count);
+
+  /// Settings › Export (CR-160 B7): files of the set were not picked back.
+  ///
+  /// In en, this message translates to:
+  /// **'{missing} of {count} files are missing. Pick the manifest and every part.'**
+  String exportCheckMissing(int missing, int count);
+
+  /// Settings › Export (CR-160 B7): the picked files are another export's, changed, or picked twice.
+  ///
+  /// In en, this message translates to:
+  /// **'These files don’t match this export. Pick the files you just saved.'**
+  String get exportCheckWrong;
+
+  /// Web (CR-160 B7): title of the per-file download list for a set.
+  ///
+  /// In en, this message translates to:
+  /// **'Download {count} files'**
+  String exportDownloadTitle(int count);
+
+  /// Web (CR-160 B7): button that downloads one file of a set.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get exportDownload;
+
+  /// Web (CR-160 B7): a file of the set whose download was requested.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded'**
+  String get exportDownloaded;
+
+  /// Web (CR-160 B7): note under the download list.
+  ///
+  /// In en, this message translates to:
+  /// **'Your browser may ask you to allow several downloads.'**
+  String get exportDownloadNote;
+
+  /// Settings › Export › Import (CR-160 B7): sheet shown while some files of a multipart backup are still missing.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the rest of this backup'**
+  String get importAddTitle;
+
+  /// Settings › Export › Import (CR-160 B7): how many files of the set are in.
+  ///
+  /// In en, this message translates to:
+  /// **'{added} of {total} files added.'**
+  String importAddedCount(int added, int total);
+
+  /// Settings › Export › Import (CR-160 B7): picks more files of the set.
+  ///
+  /// In en, this message translates to:
+  /// **'Add files…'**
+  String get importAddFiles;
+
+  /// Settings › Export › Import (CR-160 B7): a picked file belongs to another backup.
+  ///
+  /// In en, this message translates to:
+  /// **'This file isn’t part of this backup. Nothing was changed.'**
+  String get importPartForeign;
+
+  /// Delete account (CR-160 B7c): a set too large for one file was handed over but its files weren't picked back and matched.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data was handed over as {count} files. We can’t confirm you saved all of them. Check your files, or export again.'**
+  String accountDeleteExportUncertain(int count);
+
+  /// Delete account (CR-160 B7c): the separate confirmation after a set export that wasn't confirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete without a confirmed copy? We can’t confirm all {count} files were saved. You may permanently lose data that hasn’t been saved elsewhere.'**
+  String accountDeleteWithoutCopySetQuestion(int count);
 
   /// Export page group caption for local backups.
   ///
@@ -9659,6 +9791,402 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your phone can now ring Dottoday\'s wake-up like an alarm. Turn it on?'**
   String get wakeUpDiscoveryTierGained;
+
+  /// CR-160 account screens: the main button.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get accountContinue;
+
+  /// A1 sign-out dialog title (everything synced).
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out?'**
+  String get accountSignOutTitle;
+
+  /// A1 sign-out dialog body.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tasks and settings are hidden on this device until you sign in again. Everything has synced to your account.'**
+  String get accountSignOutSyncedBody;
+
+  /// A2 title: changes not yet synced (0: the last sync is not confirmed).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Sync hasn’t been confirmed yet} =1{1 change hasn’t synced yet} other{{count} changes haven’t synced yet}}'**
+  String accountSignOutPendingTitle(int count);
+
+  /// A2 body before the isolation sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Dottoday hasn’t confirmed that everything reached your account. Anything that didn’t is saved on this device for {email} and can sync when you sign in again with this account.} =1{It’s saved on this device for {email} and hasn’t reached your account yet. It can sync when you sign in again with this account.} other{They’re saved on this device for {email} and haven’t reached your account yet. They can sync when you sign in again with this account.}}'**
+  String accountSignOutPendingBody(int count, String email);
+
+  /// A2: the isolation promise; shown only once CR-160 I1-I8 are verified (a2IsolationVerified).
+  ///
+  /// In en, this message translates to:
+  /// **'Until then, no one else who uses Dottoday on this device can see them.'**
+  String get accountSignOutIsolation;
+
+  /// A2: the narrower sentence used until the isolation promise is verified.
+  ///
+  /// In en, this message translates to:
+  /// **'They stay on this device under this account.'**
+  String get accountSignOutKeptHere;
+
+  /// A2 main button: closes and syncs now.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay signed in'**
+  String get accountStaySignedIn;
+
+  /// A2 (iPhone): under Stay signed in.
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday tries to sync them now.'**
+  String get accountStaySignedInHint;
+
+  /// A2 second button: signs out, the changes stay on the device.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out and keep them here'**
+  String get accountSignOutKeep;
+
+  /// A2 (Mac/web): keyboard note under the buttons.
+  ///
+  /// In en, this message translates to:
+  /// **'Esc cancels and starts nothing. Stay signed in tries to sync now.'**
+  String get accountSignOutEscHint;
+
+  /// A3 signed-out screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'You’re signed out'**
+  String get signedOutTitle;
+
+  /// A3 body.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tasks stay on this device under your account. They come back when you sign in again with the same account.'**
+  String get signedOutBody;
+
+  /// A3 main button.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get signedOutSignIn;
+
+  /// A3 second button: the device plan without an account.
+  ///
+  /// In en, this message translates to:
+  /// **'Use without an account'**
+  String get signedOutUseWithout;
+
+  /// A3 note under Use without an account.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens this device’s plan without an account. Anyone who uses this device without an account can see it.'**
+  String get signedOutUseWithoutHint;
+
+  /// B1 title.
+  ///
+  /// In en, this message translates to:
+  /// **'Which settings should Dottoday use?'**
+  String get settingsChoiceTitle;
+
+  /// B1 body.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account already has settings. This device had different ones before you signed in. Your tasks won’t be deleted.'**
+  String get settingsChoiceBody;
+
+  /// B1 group label (screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'Settings to use'**
+  String get settingsChoiceLegend;
+
+  /// B1 option.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account’s settings'**
+  String get settingsChoiceAccount;
+
+  /// B1 option.
+  ///
+  /// In en, this message translates to:
+  /// **'This device’s settings'**
+  String get settingsChoiceDevice;
+
+  /// B1 row label.
+  ///
+  /// In en, this message translates to:
+  /// **'Time zone'**
+  String get settingsChoiceTimeZone;
+
+  /// B1 row label: Wake Up to Wind Down.
+  ///
+  /// In en, this message translates to:
+  /// **'Your day'**
+  String get settingsChoiceYourDay;
+
+  /// B1 Your day value: Wake Up – Wind Down.
+  ///
+  /// In en, this message translates to:
+  /// **'{start} – {end}'**
+  String settingsChoiceRange(String start, String end);
+
+  /// B1 note under the options.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the settings that differ are shown.'**
+  String get settingsChoiceOnlyDiffer;
+
+  /// B1 second button.
+  ///
+  /// In en, this message translates to:
+  /// **'Decide later'**
+  String get settingsChoiceLater;
+
+  /// B1 note under Decide later.
+  ///
+  /// In en, this message translates to:
+  /// **'Until you choose, your account’s settings stay. You can choose in Settings › Account.'**
+  String get settingsChoiceLaterHint;
+
+  /// Settings › Account row: opens B1 again after Decide later.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose settings'**
+  String get accountChooseSettings;
+
+  /// Settings › Account row subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This device had different settings when you signed in.'**
+  String get accountChooseSettingsBody;
+
+  /// G1/G1b title.
+  ///
+  /// In en, this message translates to:
+  /// **'This device has tasks made without an account'**
+  String get guestWorkTitle;
+
+  /// G1 body.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task was made here without an account since this device was last signed out. It isn’t in any account and may belong to someone else.} other{{count} tasks were made here without an account since this device was last signed out. They aren’t in any account and may belong to someone else.}}'**
+  String guestWorkBody(int count);
+
+  /// G1 group label (screen readers).
+  ///
+  /// In en, this message translates to:
+  /// **'What happens to these tasks'**
+  String get guestWorkLegend;
+
+  /// G1 option (the default).
+  ///
+  /// In en, this message translates to:
+  /// **'Start with your account’s tasks'**
+  String get guestWorkKeep;
+
+  /// G1 option detail.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{This task stays on this device, separate from your account. Anyone using it without an account can still see it.} other{These {count} stay on this device, separate from your account. Anyone using it without an account can still see them.}}'**
+  String guestWorkKeepBody(int count);
+
+  /// G1 option.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring them into your account'**
+  String get guestWorkBring;
+
+  /// G1 option detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Only if they’re yours. They’re added to {email} and sync to your other devices.'**
+  String guestWorkBringBody(String email);
+
+  /// G1 checkbox, required for Bring them in.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{I made this task myself} other{I made these {count} tasks myself}}'**
+  String guestWorkMine(int count);
+
+  /// G1 note.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sure? Keep them separate. You can look through them later by using Dottoday without an account.'**
+  String get guestWorkNotSure;
+
+  /// G1b body.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task here was made before someone last signed out of this device, so it can’t be added to an account.} other{{count} tasks here were made before someone last signed out of this device, so they can’t be added to an account.}}'**
+  String guestNoticeBody(int count);
+
+  /// G1b card title.
+  ///
+  /// In en, this message translates to:
+  /// **'You’ll start with your account’s tasks'**
+  String get guestNoticeCardTitle;
+
+  /// G1b card detail.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{The task stays on this device, separate from your account. Anyone using it without an account can still see it. Nothing is deleted.} other{The {count} tasks stay on this device, separate from your account. Anyone using it without an account can still see them. Nothing is deleted.}}'**
+  String guestNoticeCardBody(int count);
+
+  /// D1 (web) body.
+  ///
+  /// In en, this message translates to:
+  /// **'This deletes your account and everything synced to it. It also removes your copy from this browser.'**
+  String get accountDeleteBodyBrowser;
+
+  /// D1 (phone layout): under Export my data first.
+  ///
+  /// In en, this message translates to:
+  /// **'Export now, while you’re signed in. Once the account is deleted, nothing from it can be exported here.'**
+  String get accountDeleteExportHint;
+
+  /// D1 (wide dialog): beside Export my data first.
+  ///
+  /// In en, this message translates to:
+  /// **'While you’re signed in. Afterwards nothing can be exported.'**
+  String get accountDeleteExportHintShort;
+
+  /// D1 (phone layout) summary caption, upper-cased by the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from this device'**
+  String get accountDeleteRemovedDevice;
+
+  /// D1 (phone layout, web) summary caption, upper-cased by the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from this browser'**
+  String get accountDeleteRemovedBrowser;
+
+  /// D1 (wide dialog) summary lead, in bold.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from this device:'**
+  String get accountDeleteRemovedDeviceLead;
+
+  /// D1 (wide dialog, web) summary lead, in bold.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from this browser:'**
+  String get accountDeleteRemovedBrowserLead;
+
+  /// D1 summary: the task count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task} other{{count} tasks}}'**
+  String accountDeleteTasks(int count);
+
+  /// D1 summary, nothing waiting to sync.
+  ///
+  /// In en, this message translates to:
+  /// **'{tasks} and your settings. This can’t be undone.'**
+  String accountDeleteSummary(String tasks);
+
+  /// D1 summary with changes waiting to sync.
+  ///
+  /// In en, this message translates to:
+  /// **'{tasks}, your settings and {count, plural, =1{1 change that hasn’t synced} other{{count} changes that haven’t synced}}. This can’t be undone.'**
+  String accountDeleteSummaryPending(String tasks, int count);
+
+  /// D1 field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Type {word} to confirm'**
+  String accountDeleteTypeWord(String word);
+
+  /// D1: the checked export was saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Exported. You can delete your account now.'**
+  String get accountDeleteExported;
+
+  /// D1 (CR-160): the export could not be built, checked or handed over; nothing was deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t create a restorable export. Your account hasn’t been deleted.'**
+  String get accountDeleteExportBroken;
+
+  /// D1 (CR-160 I7): a share or widget action was queued for the account after the person reviewed or exported; nothing was deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Something new arrived for this account after you started, so nothing was deleted. Export again to keep it, then type DELETE again.'**
+  String get accountDeleteChangedSinceReview;
+
+  /// D1 (CR-160): the share sheet or save dialog was closed; the app cannot confirm a saved copy.
+  ///
+  /// In en, this message translates to:
+  /// **'The export was cancelled. We can’t confirm that you saved a copy.'**
+  String get accountDeleteExportClosed;
+
+  /// D1 (CR-160): the export is over the import limit, so the app could not restore it; retrying will not help.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is too large for an export this app can restore. Trying again won’t fix this.'**
+  String get accountDeleteExportTooLarge;
+
+  /// D1 (CR-160): separate confirmation after an export failed, was too large or was cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete without a saved copy? You may permanently lose data that hasn’t been saved elsewhere.'**
+  String get accountDeleteWithoutCopyQuestion;
+
+  /// D1 (CR-160): the confirmation action that deletes without a saved copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete without a saved copy'**
+  String get accountDeleteWithoutCopy;
+
+  /// D1 (CR-160): the confirmation action that runs the export again (only when retrying could work).
+  ///
+  /// In en, this message translates to:
+  /// **'Try export again'**
+  String get accountDeleteExportRetry;
+
+  /// Web: a deleted account’s removal from the browser was interrupted.
+  ///
+  /// In en, this message translates to:
+  /// **'Removal from this browser didn’t finish'**
+  String get removalRetryTitle;
+
+  /// Web retry body.
+  ///
+  /// In en, this message translates to:
+  /// **'An account was deleted, but some of its copy is still in this browser. Until it’s removed it stays hidden: it isn’t shown, synced or added to any account.'**
+  String get removalRetryBody;
+
+  /// Web retry button.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish removing'**
+  String get removalRetryAction;
+
+  /// Web retry note.
+  ///
+  /// In en, this message translates to:
+  /// **'If it keeps failing, clearing this site’s data in the browser’s settings also removes it, along with anything else saved here.'**
+  String get removalRetryHint;
+
+  /// Web retry: Finish removing did not work this time.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t finish removing. Try again.'**
+  String get removalRetryAgain;
+
+  /// Two sentences of one paragraph, in order (A2's body, then its isolation sentence).
+  ///
+  /// In en, this message translates to:
+  /// **'{first} {second}'**
+  String accountTwoSentences(String first, String second);
 
   /// Section title in the task icon picker.
   ///

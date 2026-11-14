@@ -8,12 +8,18 @@ part of 'snapshot_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The Wind Down write of the day snapshot (docs/09 M9.1).
+/// The Wind Down write of the day snapshot (docs/09 M9.1). One per owner
+/// shown: a change of owner disposes it, cancelling the armed timer, which
+/// was armed at the old owner's Wind Down (CR-160 I7); the switch arms the
+/// new one.
 
 @ProviderFor(windDownSnapshot)
 final windDownSnapshotProvider = WindDownSnapshotProvider._();
 
-/// The Wind Down write of the day snapshot (docs/09 M9.1).
+/// The Wind Down write of the day snapshot (docs/09 M9.1). One per owner
+/// shown: a change of owner disposes it, cancelling the armed timer, which
+/// was armed at the old owner's Wind Down (CR-160 I7); the switch arms the
+/// new one.
 
 final class WindDownSnapshotProvider
     extends
@@ -23,7 +29,10 @@ final class WindDownSnapshotProvider
           WindDownSnapshot
         >
     with $Provider<WindDownSnapshot> {
-  /// The Wind Down write of the day snapshot (docs/09 M9.1).
+  /// The Wind Down write of the day snapshot (docs/09 M9.1). One per owner
+  /// shown: a change of owner disposes it, cancelling the armed timer, which
+  /// was armed at the old owner's Wind Down (CR-160 I7); the switch arms the
+  /// new one.
   WindDownSnapshotProvider._()
     : super(
         from: null,
@@ -57,4 +66,4 @@ final class WindDownSnapshotProvider
   }
 }
 
-String _$windDownSnapshotHash() => r'33d8f320b2b8a1ce8ea3ba3f2383075e07457de3';
+String _$windDownSnapshotHash() => r'9f959219c861f841e153459729abb0392dd7b4ad';

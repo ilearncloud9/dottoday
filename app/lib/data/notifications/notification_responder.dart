@@ -1,8 +1,10 @@
 import 'package:dottoday/core/clock/clock.dart';
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/intents/dot_action.dart';
 import 'package:dottoday/domain/notifications/notification_payload.dart';
@@ -21,6 +23,14 @@ import 'package:dottoday/domain/writes/write_use_case.dart';
 ///
 /// Snooze only re-reminds: a notification can't ask "shift the rest?", so
 /// moving later tasks stays with the in-app Running late (docs/02 F6).
+///
+/// CR-160: a write lands only while the task's owner is still shown
+/// (`whileShown`), and never while that account is being deleted (the
+/// write path refuses it). While a deletion runs ([deleting]) nothing
+/// navigates — D1 stays up, with its protection — and a refused write is
+/// reported through [refused], never shown as done. A refusal carries the
+/// owner epoch of the tap that caused it and is dropped once another owner
+/// session began: it is never shown to the next owner or guest.
 final class NotificationResponder {
   NotificationResponder({
     required Clock clock,
@@ -29,23 +39,62 @@ final class NotificationResponder {
     required Future<Profile> Function() profile,
     required void Function(String location) open,
     required Logger logger,
+    bool Function()? deleting,
+    int Function()? ownerEpoch,
+    void Function(AppFailure failure, int epoch)? refused,
   }) : _clock = clock,
        _writes = writes,
        _occurrences = occurrences,
        _profile = profile,
-       _open = open,
-       _logger = logger;
+       _navigate = open,
+       _logger = logger,
+       _deleting = deleting ?? _never,
+       _ownerEpoch = ownerEpoch ?? _first,
+       _refused = refused ?? _ignore;
 
   final Clock _clock;
   final WriteUseCase _writes;
   final OccurrenceRepository _occurrences;
   final Future<Profile> Function() _profile;
-  final void Function(String location) _open;
+  final void Function(String location) _navigate;
   final Logger _logger;
+  final bool Function() _deleting;
+  final int Function() _ownerEpoch;
+  final void Function(AppFailure failure, int epoch) _refused;
+
+  static bool _never() => false;
+  static int _first() => 0;
+  static void _ignore(AppFailure _, int _) {}
+
+  /// Goes to [location], except while an account deletion runs: leaving D1
+  /// then would end its protection before the deletion does.
+  void _open(String location) {
+    if (_deleting()) {
+      _logger.info('notification.open_held');
+      return;
+    }
+    _navigate(location);
+  }
+
+  /// Whether the owner shown changed since [epoch].
+  bool _moved(int epoch) => _ownerEpoch() != epoch;
+
+  /// Reports [failure] for the tap begun in owner session [epoch], unless
+  /// that session ended: a refusal never crosses into another (CR-160 §4).
+  void _refuse(AppFailure failure, int epoch) {
+    if (_moved(epoch)) {
+      _logger.info('notification.refusal_stale');
+      return;
+    }
+    _refused(failure, epoch);
+  }
 
   /// Handles [tap]; the payload's occurrence ID is the only input trusted,
   /// and only for the current profile (06 §7).
   Future<void> handle(NotificationTap tap) async {
+    // The session this tap began in, before anything is awaited: a refusal
+    // it ends in belongs to it, not to whoever is shown later (CR-160 §4).
+    final tap0 = (deleting: _deleting(), epoch: _ownerEpoch());
     final planned = decodeNotificationPayload(tap.id ?? 0, tap.payload);
     final action = NotificationAction.fromId(tap.actionId);
     _logger.info('notification.tapped', fields: {'action': action});
@@ -71,13 +120,29 @@ final class NotificationResponder {
     final profile = await _profile();
     final task = await _occurrences.findById(profile.id, planned.occurrenceId);
     if (task == null || task.deletedAt != null) {
+      // Its account is going: Done, Snooze, +15 weren't saved. Said only
+      // within the session the tap began in ([_refuse]).
+      final saves = action != NotificationAction.start;
+      if (saves && (tap0.deleting || _deleting())) {
+        _refuse(const StorageFailure(), tap0.epoch);
+      }
       return _open(AppRoutes.today);
     }
-    final now = _clock.nowUtc();
     if (action == NotificationAction.start) {
       // Smallest step's Start (M10.6): Focus records the real start (B1).
       return _open(AppRoutes.focus(task.id));
     }
+    await _act(profile.id, task, action, tap0: tap0);
+  }
+
+  /// Done, Snooze or +15 on [task], [owner]'s.
+  Future<void> _act(
+    String owner,
+    Occurrence task,
+    NotificationAction action, {
+    required ({bool deleting, int epoch}) tap0,
+  }) async {
+    final now = _clock.nowUtc();
     final changed = switch (action) {
       NotificationAction.done => progress.markDone(task, now),
       // The web's +15 (M9.7): 15 more minutes, as the live row's +15.
@@ -90,11 +155,18 @@ final class NotificationResponder {
         ),
       ),
     };
+    // Only while this owner is still shown: a change of owner since the
+    // lookup refuses it, for either owner (CR-160 I7).
     final result = await _writes.apply(
-      WriteBatch(userId: profile.id, occurrences: [changed]),
+      WriteBatch(userId: owner, occurrences: [changed]).whileShown(),
     );
     if (result case Err(:final failure)) {
       _logger.warn('notification.action_failed', error: failure);
+      // Refused by a deletion: said so, and D1 stays where it is.
+      if (tap0.deleting || _deleting()) return _refuse(failure, tap0.epoch);
+      // Refused by a change of owner: another session is shown now, so
+      // nothing is said in it and its task isn't opened.
+      if (_moved(tap0.epoch)) return _open(AppRoutes.today);
       _open(AppRoutes.task(task.id));
     }
   }

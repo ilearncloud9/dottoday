@@ -3,11 +3,19 @@ import 'dart:convert';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/domain/export/export_bundle.dart';
+import 'package:dottoday/domain/validation/calendar_series_validator.dart';
 import 'package:dottoday/domain/validation/entity_validators.dart';
 import 'package:dottoday/domain/validation/routine_validator.dart';
 
 /// Largest import accepted, in UTF-8 bytes (06 §7).
 const maxImportBytes = 25 * 1024 * 1024;
+
+/// Whether [text] is over the import limit: the one size rule, shared by
+/// the import ([decodeExportJson]) and every JSON export, so the app never
+/// writes a file it would refuse to read back (CR-160 Stage B0). Exactly
+/// [maxImportBytes] is still accepted.
+bool exceedsImportLimit(String text) =>
+    text.length > maxImportBytes || utf8.encode(text).length > maxImportBytes;
 
 /// Serialises [bundle] as JSON v1 (docs/05 "Export format").
 String encodeExportJson(ExportBundle bundle) =>
@@ -29,8 +37,7 @@ const _badFile = ValidationFailure(
 /// before M8.1 may still hold them. The caller backs up first
 /// and imports in one transaction (M2.4).
 Result<ExportBundle, ValidationFailure> decodeExportJson(String text) {
-  if (text.length > maxImportBytes ||
-      utf8.encode(text).length > maxImportBytes) {
+  if (exceedsImportLimit(text)) {
     return const Err(
       ValidationFailure(ValidationField.importFile, ValidationRule.tooLarge),
     );
@@ -61,12 +68,16 @@ Result<ExportBundle, ValidationFailure> _validated(ExportBundle b) {
   final occurrences = b.occurrences.map(validateOccurrence).toList();
   final subtasks = b.subtasks.map(validateSubtask).toList();
   final routines = b.routines.map(validateRoutine).toList();
+  final templates = b.calendarSeries
+      .map(validateCalendarSeriesTemplate)
+      .toList();
   for (final r in [
     profile,
     ...series,
     ...occurrences,
     ...subtasks,
     ...routines,
+    ...templates,
   ]) {
     if (r case Err(:final failure)) return Err(failure);
   }
@@ -82,6 +93,7 @@ Result<ExportBundle, ValidationFailure> _validated(ExportBundle b) {
     ],
     subtasks: subtasks.map(ok).toList(),
     routines: routines.map(ok).toList(),
+    calendarSeries: templates.map(ok).toList(),
   );
   return _consistent(clean) ? Ok(clean) : const Err(_badFile);
 }
@@ -92,10 +104,18 @@ bool _consistent(ExportBundle b) {
   final occurrenceIds = {for (final o in b.occurrences) o.id};
   final subtaskIds = {for (final s in b.subtasks) s.id};
   final routineIds = {for (final r in b.routines) r.id};
+  final templateIds = {for (final t in b.calendarSeries) t.id};
+  // One template per calendar and series, as `calendar_series` holds one.
+  final templateKeys = {
+    for (final t in b.calendarSeries)
+      (t.provider, t.externalCalendarId, t.seriesKey),
+  };
   if (seriesIds.length != b.series.length ||
       occurrenceIds.length != b.occurrences.length ||
       subtaskIds.length != b.subtasks.length ||
-      routineIds.length != b.routines.length) {
+      routineIds.length != b.routines.length ||
+      templateIds.length != b.calendarSeries.length ||
+      templateKeys.length != b.calendarSeries.length) {
     return false;
   }
   final ownerIds = {
@@ -104,6 +124,7 @@ bool _consistent(ExportBundle b) {
     for (final o in b.occurrences) o.userId,
     for (final s in b.subtasks) s.userId,
     for (final r in b.routines) r.userId,
+    for (final t in b.calendarSeries) t.userId,
   };
   return ownerIds.length == 1 &&
       b.occurrences.every(

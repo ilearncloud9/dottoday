@@ -17,9 +17,27 @@ final class ShareViewController: SLComposeServiceViewController {
     let subject = item?.attributedTitle?.string
     let typed = contentText ?? ""
     sharedLink(in: item) { link in
-      ShareQueue.append(text: typed, link: link?.absoluteString, subject: subject)
-      self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+      if ShareQueue.append(text: typed, link: link?.absoluteString, subject: subject) {
+        self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+      } else {
+        self.refused()
+      }
     }
+  }
+
+  /// Dottoday refused the share (an account being deleted, or the queue
+  /// full; CR-160 I7): said, and nothing kept.
+  private func refused() {
+    let message = ShareQueue.notSaved()
+    let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+    alert.addAction(
+      UIAlertAction(title: "OK", style: .default) { _ in
+        self.extensionContext?.cancelRequest(
+          withError: NSError(
+            domain: "app.dottoday.share", code: 1,
+            userInfo: [NSLocalizedDescriptionKey: message]))
+      })
+    present(alert, animated: true)
   }
 
   override func configurationItems() -> [Any]! { [] }

@@ -3,6 +3,7 @@ import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/export/export_service.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
+import 'package:dottoday/domain/export/multipart_format.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'export_providers.g.dart';
@@ -16,4 +17,10 @@ ExportService exportService(Ref ref) => DriftExportService(
   db: ref.watch(appDatabaseProvider),
   clock: ref.watch(clockProvider),
   logger: ref.watch(loggerProvider),
+  partTarget: ref.watch(exportPartTargetProvider),
 );
+
+/// A multipart export's part target (§4: 10 MB). Tests shrink it so a
+/// small account exports as a set.
+@Riverpod(keepAlive: true)
+int exportPartTarget(Ref ref) => partTargetBytes;

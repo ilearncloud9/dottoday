@@ -242,6 +242,7 @@ fails when an ID has no row. "Clarified in …" bullets refine the one before an
 - [F7.5] Automatic daily local backup (last 7 kept) + manual export JSON/CSV/ICS from any platform. Import from JSON. (R-11)
 - [F7.6] Trash with 30-day restore; permanent delete requires confirmation. (R-11)
 - [F7.7] Account deletion: one tap in settings, deletes server data within 24 h, confirmed by email (GDPR).
+  CR-160 (owner-approved, interim on every platform): the delete screen first offers **"Export my data first"** (the full JSON backup of the account's local and unsynced work, checked against the device's counts before it says it worked), then shows what is removed ("42 tasks, your settings and 3 changes that haven't synced") and asks for the typed word. Deleting removes the account on the server **and its copy from this device** (browser on the web): the profile, its rows, pending changes and owner-keyed local data. There is no "keep on this device" option; once deleted, nothing of the account can be exported here. A removal that is interrupted stays hidden and finishes at the next launch (iPhone, Android, Mac) or behind "Finish removing" (web). Policy: `docs/cr-160-ownership-policy.md` §4.
 
 ## F8. Views & navigation
 

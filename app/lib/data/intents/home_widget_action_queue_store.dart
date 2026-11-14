@@ -7,6 +7,8 @@ import 'package:home_widget/home_widget.dart';
 /// (docs/09 M9.2): the iOS App Group `UserDefaults` (written by the App
 /// Intents in the app and the widget extension) and Android's
 /// `home_widget` prefs (written by `DotActionReceiver`). Same key on both.
+/// Used only where `dottoday/intents` isn't registered (Android's
+/// background refresh engine): it reads, and leaves removal to the app.
 final class HomeWidgetActionQueueStore implements ActionQueueStore {
   const HomeWidgetActionQueueStore();
 
@@ -18,16 +20,14 @@ final class HomeWidgetActionQueueStore implements ActionQueueStore {
     );
   }
 
-  // Re-reads right before writing, so an action a surface appended during
-  // the drain survives; the gap is one platform call.
+  // Removes nothing: without the native lock a read-then-write here could
+  // overwrite an action a surface appends in between (CR-160 I7). What
+  // this engine applied stays queued and is removed by the app's next
+  // drain, where replaying it changes nothing (M9.2 "idempotent replay").
   @override
-  Future<void> remove(Set<String> ids, {bool unreadable = false}) async {
-    if (ids.isEmpty && !unreadable) return;
-    await HomeWidget.setAppGroupId(HomeWidgetSink.appGroupId);
-    final raw = await HomeWidget.getWidgetData<String>(actionQueueKey);
-    await HomeWidget.saveWidgetData<String>(
-      actionQueueKey,
-      withoutEntries(raw, ids, unreadable: unreadable),
-    );
-  }
+  Future<void> remove(Set<String> ids) async {}
+
+  // Only the app publishes the owner; a background job never changes it.
+  @override
+  Future<void> publish(QueueMarker marker) async {}
 }

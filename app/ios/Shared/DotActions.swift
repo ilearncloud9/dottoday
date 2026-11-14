@@ -9,13 +9,17 @@ import Foundation
 /// nudge a running app to drain. The app applies it through its single
 /// write path; this side never touches the database.
 enum DotActions {
+  /// False, with nothing queued or patched, when the queue refused it (an
+  /// account being deleted, or full; CR-160 I7).
+  @discardableResult
   static func perform(
     _ kind: DotActionKind, occurrenceId: String? = nil, plannedEnd: Date? = nil,
     text: String? = nil, now: Date = Date(), defaults: UserDefaults? = DotStore.shared
-  ) {
-    guard let defaults else { return }
-    DotQueue(defaults: defaults).append(
-      DotQueue.entry(kind, occurrenceId: occurrenceId, plannedEnd: plannedEnd, text: text, now: now))
+  ) -> Bool {
+    guard let defaults,
+      DotQueue(defaults: defaults).append(
+        DotQueue.entry(kind, occurrenceId: occurrenceId, plannedEnd: plannedEnd, text: text, now: now))
+    else { return false }
     if let occurrenceId {
       SnapshotPatch.patchStored(kind, occurrenceId: occurrenceId, now: now, in: defaults)
     }
@@ -25,6 +29,23 @@ enum DotActions {
     CFNotificationCenterPostNotification(
       CFNotificationCenterGetDarwinNotifyCenter(),
       CFNotificationName(DotStore.queueChanged as CFString), nil, nil, true)
+    return true
+  }
+
+  /// Queues [kind] for a Live Activity button, then runs [update] (end or
+  /// extend the activity) only if it was queued: a refused Done or +15
+  /// leaves the activity as it was, never shown as done (CR-160 I7). An
+  /// action queued for an owner the app doesn't show yet is queued, so it
+  /// counts. True when queued.
+  @discardableResult
+  static func performLive(
+    _ kind: DotActionKind, occurrenceId: String, plannedEnd: Date? = nil,
+    defaults: UserDefaults? = DotStore.shared, update: () async -> Void
+  ) async -> Bool {
+    guard perform(kind, occurrenceId: occurrenceId, plannedEnd: plannedEnd, defaults: defaults)
+    else { return false }
+    await update()
+    return true
   }
 
   /// The dot under way now (or, with [orNext], else the next one) in the

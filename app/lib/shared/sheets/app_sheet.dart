@@ -57,13 +57,15 @@ Future<T?> showAppSheet<T>({
     return showDialog<T>(
       context: context,
       builder: (_) => Dialog(
+        // Its own width, not the theme's prompt cap (G2): 560, not 480.
+        constraints: const BoxConstraints(
+          minWidth: DotSize.dialogMin,
+          maxWidth: appSheetMaxWidth,
+        ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(DotRadii.sheet)),
         ),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: appSheetMaxWidth),
-          child: sheet,
-        ),
+        child: sheet,
       ),
     );
   }
@@ -83,7 +85,8 @@ Future<T?> showAppSheet<T>({
 }
 
 /// Content frame shared by the sheet and popover: optional title row with a
-/// close button, padded scrollable body that stays above the keyboard.
+/// close button, always in view, over a padded scrollable body that stays
+/// above the keyboard.
 class AppSheet extends StatelessWidget {
   const AppSheet({required this.child, this.title, super.key});
 
@@ -94,23 +97,38 @@ class AppSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final insets = MediaQuery.viewInsetsOf(context).bottom;
+    final title = this.title;
+    // The title row stays put and only the body scrolls: scrolled with it,
+    // the close button slid under the drag handle, cut to 48×22 (CR-160
+    // B7 gate, G1).
     return Padding(
       padding: EdgeInsetsDirectional.only(bottom: insets),
-      child: SingleChildScrollView(
-        padding: const EdgeInsetsDirectional.fromSTEB(
-          DotSpace.l,
-          DotSpace.s,
-          DotSpace.l,
-          DotSpace.xl,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (title case final title?) _TitleRow(title: title, style: t),
-            child,
-          ],
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (title != null)
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(
+                DotSpace.l,
+                DotSpace.s,
+                DotSpace.l,
+                0,
+              ),
+              child: _TitleRow(title: title, style: t),
+            ),
+          Flexible(
+            child: SingleChildScrollView(
+              padding: EdgeInsetsDirectional.fromSTEB(
+                DotSpace.l,
+                title == null ? DotSpace.s : 0,
+                DotSpace.l,
+                DotSpace.xl,
+              ),
+              child: child,
+            ),
+          ),
+        ],
       ),
     );
   }

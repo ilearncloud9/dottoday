@@ -22,10 +22,168 @@ import 'package:flutter_test/flutter_test.dart';
 // 14 → 15 (M17.6, docs/15 §11): reveal_hints' CHECK names Wake Up's
 // discovery hints (rebuilt, rows kept); 15 → 16 (docs/15 §11): and the
 // alarm-tier soft reveal; 16 → 17: sync_cursors' keyset (since_at,
-// since_id), null on upgrade.
+// since_id), null on upgrade; 17 → 18 (CR-160): change_log.owner_id and
+// sync_cursors.owner_id, and the owners recorded in local_meta; 19 → 20
+// (CR-160 Stage A): pending_calendar_series, empty, rows kept; 20 → 21
+// (CR-160 Stage B2): import_sessions and import_staging, empty.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
+  test(
+    'a version 20 file gains the staging tables, empty, rows kept',
+    () async {
+      final dir = await Directory.systemTemp.createTemp('dottoday-mig21');
+      addTearDown(() => dir.delete(recursive: true));
+      final file = File('${dir.path}/db.sqlite');
+      final v20 = AppDatabase(NativeDatabase(file));
+      await v20.customStatement(
+        'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+        "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+      );
+      await v20.customStatement('DROP TABLE import_staging');
+      await v20.customStatement('DROP TABLE import_sessions');
+      await v20.customStatement('PRAGMA user_version = 20');
+      await v20.close();
+
+      final v21 = AppDatabase(NativeDatabase(file));
+      addTearDown(v21.close);
+      expect(await v21.select(v21.importSessions).get(), isEmpty);
+      expect(await v21.select(v21.importStaging).get(), isEmpty);
+      expect((await v21.select(v21.profiles).getSingle()).id, 'u');
+      // The staged row's owner must be its session's (composite FK).
+      await expectLater(
+        v21.customStatement(
+          'INSERT INTO import_staging (import_id, owner, entity, row_id, '
+          "part_index, json) VALUES ('${'0' * 36}', 'u', 'occurrences', 'o', "
+          "1, '{}')",
+        ),
+        throwsA(anything),
+      );
+    },
+  );
+
+  test('a version 19 file gains pending calendar series, empty, its own '
+      'calendar series kept', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig20');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+    final v19 = AppDatabase(NativeDatabase(file));
+    await v19.customStatement(
+      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+      "updated_at) VALUES ('u', 'UTC', 'en', '{}', 0, 0)",
+    );
+    await v19.customStatement(
+      'INSERT INTO calendar_accounts (id, user_id, provider, label, '
+      'external_account_id, created_at, updated_at) '
+      "VALUES ('a', 'u', 'apple_device', 'Work', 'cal', 0, 0)",
+    );
+    await v19.customStatement(
+      'INSERT INTO calendar_series (id, user_id, account_id, series_key, '
+      "title, created_at, updated_at) VALUES ('s', 'u', 'a', 'k', 'Gym', 0, 0)",
+    );
+    await v19.customStatement('DROP TABLE pending_calendar_series');
+    await v19.customStatement('PRAGMA user_version = 19');
+    await v19.close();
+
+    final v20 = AppDatabase(NativeDatabase(file));
+    addTearDown(v20.close);
+    expect(await v20.select(v20.pendingCalendarSeriesTable).get(), isEmpty);
+    final kept = await v20.select(v20.calendarSeriesTable).getSingle();
+    expect((kept.title, kept.seriesKey), ('Gym', 'k'));
+    await expectLater(
+      v20.customStatement(
+        'INSERT INTO pending_calendar_series (id, user_id, provider, '
+        'external_calendar_id, device_tag, series_key, created_at, '
+        "updated_at) VALUES ('p', 'u', 'google', 'acc/cal', "
+        "'0123456789abcdef', 'k', 0, 0)",
+      ),
+      throwsA(isA<SqliteException>()),
+      reason: 'a cloud template never carries a device tag',
+    );
+  });
+
+  test('a version 17 file: every outbox entry and cursor gets its owner, '
+      'the synced profile is an account and shows', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig18');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+    final v17 = AppDatabase(NativeDatabase(file));
+    await v17.customStatement(
+      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+      "updated_at) VALUES ('acct', 'UTC', 'en', '{}', 0, 0)",
+    );
+    await v17.customStatement('DROP TABLE change_log');
+    await v17.customStatement(
+      'CREATE TABLE change_log (seq INTEGER NOT NULL PRIMARY KEY '
+      'AUTOINCREMENT, entity TEXT NOT NULL, entity_id TEXT NOT NULL, '
+      'field TEXT NOT NULL, value TEXT NOT NULL, hlc TEXT NOT NULL, '
+      "CHECK (entity IN ('series', 'occurrences', 'subtasks', 'profiles', "
+      "'routines', 'reveal_hints')), CHECK (length(field) <= 64), "
+      'CHECK (json_valid(value))) STRICT',
+    );
+    await v17.customStatement(
+      'INSERT INTO change_log (entity, entity_id, field, value, hlc) '
+      "VALUES ('occurrences', 'o1', 'title', '\"Do taxes\"', 'h1')",
+    );
+    await v17.customStatement('DROP TABLE sync_cursors');
+    await v17.customStatement(
+      'CREATE TABLE sync_cursors (entity TEXT NOT NULL, since_utc INTEGER '
+      'NOT NULL, since_at TEXT, since_id TEXT, PRIMARY KEY (entity)) STRICT',
+    );
+    await v17.customStatement(
+      "INSERT INTO sync_cursors (entity, since_utc) VALUES ('series', 42)",
+    );
+    await v17.customStatement(
+      "INSERT INTO local_meta (key, value) VALUES ('sync_account', 'acct')",
+    );
+    await v17.customStatement('PRAGMA user_version = 17');
+    await v17.close();
+
+    final v18 = AppDatabase(NativeDatabase(file));
+    addTearDown(v18.close);
+    final kept = await v18.select(v18.changeLog).getSingle();
+    expect((kept.entityId, kept.ownerId), ('o1', 'acct'));
+    final cursor = await v18.select(v18.syncCursors).getSingle();
+    expect((cursor.ownerId, cursor.sinceUtc), ('acct', 42));
+    final meta = {
+      for (final m in await v18.select(v18.localMeta).get()) m.key: m.value,
+    };
+    expect(meta['owner_account:acct'], '1');
+    expect(meta['active_owner'], 'acct');
+    expect(meta.containsKey('sync_account'), isFalse);
+  });
+
+  test('a version 17 file never signed in: its profile stays a guest, '
+      'stray cursors go', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig18g');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+    final v17 = AppDatabase(NativeDatabase(file));
+    await v17.customStatement(
+      'INSERT INTO profiles (id, tz_id, locale, settings, created_at, '
+      "updated_at) VALUES ('guest', 'UTC', 'en', '{}', 0, 0)",
+    );
+    await v17.customStatement('DROP TABLE sync_cursors');
+    await v17.customStatement(
+      'CREATE TABLE sync_cursors (entity TEXT NOT NULL, since_utc INTEGER '
+      'NOT NULL, since_at TEXT, since_id TEXT, PRIMARY KEY (entity)) STRICT',
+    );
+    await v17.customStatement(
+      "INSERT INTO sync_cursors (entity, since_utc) VALUES ('series', 42)",
+    );
+    await v17.customStatement('PRAGMA user_version = 17');
+    await v17.close();
+
+    final v18 = AppDatabase(NativeDatabase(file));
+    addTearDown(v18.close);
+    expect(await v18.select(v18.syncCursors).get(), isEmpty);
+    final meta = {
+      for (final m in await v18.select(v18.localMeta).get()) m.key: m.value,
+    };
+    expect(meta['active_owner'], 'guest');
+    expect(meta.keys.where((k) => k.startsWith('owner_account:')), isEmpty);
+  });
+
   test(
     'a version 16 file gains the cursor keyset, null, cursors kept',
     () async {
@@ -40,7 +198,8 @@ void main() {
         'ALTER TABLE sync_cursors DROP COLUMN since_id',
       );
       await v16.customStatement(
-        "INSERT INTO sync_cursors (entity, since_utc) VALUES ('series', 42)",
+        'INSERT INTO sync_cursors (owner_id, entity, since_utc) '
+        "VALUES ('a', 'series', 42)",
       );
       await v16.customStatement('PRAGMA user_version = 16');
       await v16.close();
@@ -315,8 +474,9 @@ void main() {
         );
       }
       await v8.customStatement(
-        'INSERT INTO change_log (entity, entity_id, field, value, hlc) '
-        "VALUES ('routines', 'r1', 'title', '\"Morning\"', 'h1')",
+        'INSERT INTO change_log (owner_id, entity, entity_id, field, value, '
+        "hlc) VALUES ('missing', 'routines', 'r1', 'title', '\"Morning\"', "
+        "'h1')",
       );
       await v8.customStatement('DROP TABLE reveal_hints');
       await v8.customStatement('PRAGMA user_version = 8');
@@ -342,8 +502,9 @@ void main() {
         "updated_at) VALUES ('h1', 'missing', 'unstick', 0, 0)",
       );
       await v9.customStatement(
-        'INSERT INTO change_log (entity, entity_id, field, value, hlc) '
-        "VALUES ('reveal_hints', 'h1', 'shown_count', '1', 'h2')",
+        'INSERT INTO change_log (owner_id, entity, entity_id, field, value, '
+        "hlc) VALUES ('missing', 'reveal_hints', 'h1', 'shown_count', '1', "
+        "'h2')",
       );
       expect(await v9.select(v9.revealHintsTable).get(), hasLength(1));
     },
@@ -500,9 +661,10 @@ void main() {
     addTearDown(v6.close);
     final kept = await v6.select(v6.changeLog).getSingle();
     expect((kept.entityId, kept.hlc), ('o1', 'h1'));
+    expect(kept.ownerId, 'u', reason: 'the one profile owns it (18)');
     await v6.customStatement(
-      'INSERT INTO change_log (entity, entity_id, field, value, hlc) '
-      "VALUES ('routines', 'r1', 'title', '\"Morning\"', 'h2')",
+      'INSERT INTO change_log (owner_id, entity, entity_id, field, value, '
+      "hlc) VALUES ('u', 'routines', 'r1', 'title', '\"Morning\"', 'h2')",
     );
     await v6.customStatement(
       'INSERT INTO routines (id, user_id, title, created_at, updated_at) '

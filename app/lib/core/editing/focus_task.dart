@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,8 +16,12 @@ part 'focus_task.g.dart';
 /// any screen can open Focus without importing it.
 @Riverpod(keepAlive: true)
 class FocusTask extends _$FocusTask {
+  // Ends at every change of owner (CR-160 I5).
   @override
-  String? build() => null;
+  String? build() {
+    ref.watch(ownerEpochProvider);
+    return null;
+  }
 
   void open(String id) => state = id;
 
@@ -28,8 +33,13 @@ class FocusTask extends _$FocusTask {
 /// new, even for the same dot.
 @Riverpod(keepAlive: true)
 class FocusRequest extends _$FocusRequest {
+  // A request not yet opened is the previous owner's after a switch
+  // (CR-160 I5): dropped.
   @override
-  ({String id, int seq})? build() => null;
+  ({String id, int seq})? build() {
+    ref.watch(ownerEpochProvider);
+    return null;
+  }
 
   void request(String id) => state = (id: id, seq: (state?.seq ?? 0) + 1);
 }

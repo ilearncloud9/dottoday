@@ -3,6 +3,9 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/db/owned_local_meta.dart';
+import 'package:dottoday/data/db/storage_full.dart';
+import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/repositories/drift_calendar_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_reveal_hint_repository.dart';
@@ -10,9 +13,11 @@ import 'package:dottoday/data/repositories/drift_routine_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/repositories/drift_settings_repository.dart';
 import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
+import 'package:dottoday/data/sync/guest_sessions.dart';
 import 'package:dottoday/data/sync/shared_hlc.dart';
 import 'package:dottoday/data/writes/after_write_effects.dart';
 import 'package:dottoday/data/writes/entity_writers.dart';
+import 'package:dottoday/data/writes/foreign_rows.dart';
 import 'package:dottoday/data/writes/row_writer.dart';
 import 'package:dottoday/data/writes/validate_batch.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -49,6 +54,11 @@ final class DriftWriteUseCase implements WriteUseCase {
   final Clock _clock;
   final Materialiser _materialiser;
   final AfterWriteEffects _effects;
+
+  /// The effects [apply] schedules after a write; a caller of
+  /// [applyWithoutEffects] schedules them once after its own transaction
+  /// (the staged import, CR-160 B3/B5).
+  AfterWriteEffects get effects => _effects;
   final Logger _logger;
   final SharedHlc _hlc;
   final DriftOccurrenceRepository _occurrences;
@@ -61,6 +71,18 @@ final class DriftWriteUseCase implements WriteUseCase {
 
   @override
   Future<Result<void, AppFailure>> apply(WriteBatch batch) async {
+    final result = await applyWithoutEffects(batch);
+    if (result is Ok) _effects.schedule(batch.userId);
+    return result;
+  }
+
+  /// [apply] without the after-write effects: the same validation, seal,
+  /// shown-owner and Finding X checks, in its own savepoint when the caller
+  /// holds a transaction. For a caller that writes several batches in one
+  /// transaction (the staged import's commit, CR-160 Stage B3): effects
+  /// scheduled inside it would run inside that transaction, so the caller
+  /// schedules them once ([AfterWriteEffects.schedule]) after it commits.
+  Future<Result<void, AppFailure>> applyWithoutEffects(WriteBatch batch) async {
     if (!batch.isSingleOwner) {
       throw ArgumentError.value(batch.userId, 'batch', 'mixes row owners');
     }
@@ -74,19 +96,51 @@ final class DriftWriteUseCase implements WriteUseCase {
     }
     try {
       await _db.transaction(() => _write(valid));
+    } on _NotShown {
+      _logger.warn('write.owner_not_shown');
+      return const Err(StorageFailure());
+    } on ForeignRowException {
+      // A row of another account on this device: never taken over
+      // (CR-160 Finding X). Rolled back whole.
+      _logger.warn('write.foreign_row');
+      return const Err(ForeignRowsFailure());
+    } on OwnerSealedException {
+      // The owner's account is being deleted (CR-160 policy §4): refused,
+      // shown as the generic "couldn't save".
+      _logger.warn('write.owner_sealed');
+      return const Err(StorageFailure());
     } on Exception catch (e, st) {
       _logger.error('write.failed', error: e, stackTrace: st);
-      return const Err(StorageFailure());
+      return Err(
+        isStorageFull(e) ? const StorageFullFailure() : const StorageFailure(),
+      );
     }
-    _effects.schedule(batch.userId);
     return const Ok(null);
   }
 
   Future<void> _write(WriteBatch b) async {
+    // In this transaction, so a deletion sealed after it can't miss it and
+    // one sealed before it refuses it (deletion_seal.dart).
+    await checkNotSealed(_db, b.userId);
+    if (b.onlyWhileShown && (await shownOwnerId(_db)) != b.userId) {
+      throw const _NotShown();
+    }
     final hlc = await _hlc.clock();
     final now = _clock.nowUtc();
-    Future<void> rows<E>(EntityWriter<E> writer, Iterable<E> items) =>
-        writeRows(_db, writer, items, now: now, nextHlc: hlc.now);
+    final session = await guestSessionFor(_db, b.userId);
+    var wrote = false;
+    Future<void> rows<E>(EntityWriter<E> writer, Iterable<E> items) async {
+      final written = await writeRows(
+        _db,
+        writer,
+        items,
+        owner: b.userId,
+        now: now,
+        nextHlc: hlc.now,
+        guestSession: session,
+      );
+      wrote = wrote || written;
+    }
 
     final profile = b.profile;
     if (profile != null) await rows(profileWriter(_profiles), [profile]);
@@ -106,6 +160,8 @@ final class DriftWriteUseCase implements WriteUseCase {
       calendarSeriesWriter(b.userId, _calendarSeries),
       b.calendarSeries,
     );
+    // Only a save that changed something moves the revision D1 compares.
+    if (wrote) await bumpWriteRevision(_db, b.userId);
     await _hlc.save();
   }
 
@@ -135,4 +191,9 @@ final class _Materialised {
   final series = <Series>[];
   final occurrences = <Occurrence>[];
   final subtasks = <Subtask>[];
+}
+
+/// The batch's owner stopped being shown before it could commit.
+final class _NotShown implements Exception {
+  const _NotShown();
 }

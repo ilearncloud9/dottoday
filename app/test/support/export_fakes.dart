@@ -5,8 +5,33 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/export/export_service.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
+import 'package:dottoday/data/export/multipart_export.dart';
+import 'package:dottoday/data/export/prepared_file.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/export/export_files.dart';
+import 'package:dottoday/domain/export/export_json.dart';
+
+/// A scripted single-file pick (the import tests' shorthand for
+/// [FakeFileGateway.pickedFiles]).
+sealed class PickedBackup {
+  const PickedBackup();
+}
+
+/// The picker was closed.
+final class PickCancelled extends PickedBackup {
+  const PickCancelled();
+}
+
+/// One file over the import limit.
+final class PickTooLarge extends PickedBackup {
+  const PickTooLarge();
+}
+
+/// One file with these bytes.
+final class PickedBytes extends PickedBackup {
+  const PickedBytes(this.bytes);
+  final Uint8List bytes;
+}
 
 /// Records what was handed over and returns a scripted pick.
 final class FakeFileGateway implements FileGateway {
@@ -16,7 +41,9 @@ final class FakeFileGateway implements FileGateway {
   DeliveryOutcome outcome = DeliveryOutcome.delivered;
   Exception? throws;
   final delivered = <List<ExportFile>>[];
-  final pickLimits = <int>[];
+
+  /// Runs once while the share sheet or save dialog is open (then cleared).
+  void Function()? whileOpen;
 
   /// PNGs handed to [shareImage], by name.
   final images = <String, Uint8List>{};
@@ -27,6 +54,9 @@ final class FakeFileGateway implements FileGateway {
     Rect? origin,
   }) async {
     if (throws case final e?) throw e;
+    final hook = whileOpen;
+    whileOpen = null;
+    hook?.call();
     delivered.add(files);
     return outcome;
   }
@@ -42,25 +72,79 @@ final class FakeFileGateway implements FileGateway {
     return outcome;
   }
 
+  /// What [pickJsonFiles] returns next (then cleared); empty: closed.
+  List<PickedFile> pickedFiles = const [];
+
+  /// Prepared sets handed to [deliverPrepared].
+  final deliveredSets = <List<PreparedFile>>[];
+
+  /// Files [downloadPrepared] was asked for, by name.
+  final downloads = <String>[];
+
+  /// How many times the picker opened.
+  var picks = 0;
+
   @override
-  Future<PickedBackup> pickBackup({required int maxBytes}) async {
-    pickLimits.add(maxBytes);
-    return picked;
+  Future<List<PickedFile>> pickJsonFiles() async {
+    picks++;
+    final files = pickedFiles;
+    pickedFiles = const [];
+    if (files.isNotEmpty) return files;
+    return switch (picked) {
+      PickCancelled() => const [],
+      // Never read: refused by its size first.
+      PickTooLarge() => [
+        PickedFile(
+          'large.json',
+          maxImportBytes + 1,
+          () => throw StateError('read a file over the limit'),
+        ),
+      ],
+      PickedBytes(:final bytes) => [
+        PickedFile('backup.json', bytes.length, () async => bytes),
+      ],
+    };
+  }
+
+  @override
+  Future<DeliveryOutcome> deliverPrepared(
+    List<PreparedFile> files, {
+    Rect? origin,
+  }) async {
+    if (throws case final e?) throw e;
+    deliveredSets.add(files);
+    return outcome;
+  }
+
+  @override
+  Future<void> downloadPrepared(PreparedFile file) async {
+    if (throws case final e?) throw e;
+    downloads.add(file.name);
   }
 }
+
+/// [files] as picked files read from their bytes.
+List<PickedFile> pickedFrom(List<PreparedFile> files) => [
+  for (final f in files) PickedFile(f.name, f.size, () async => f.bytes!),
+];
 
 /// One file per format, named after it.
 final class FakeExportService implements ExportService {
   final built = <ExportFormat>[];
+
+  /// Whether each build was D1's (CR-160), in order.
+  final forDeletion = <bool>[];
   AppFailure? failure;
 
   @override
   Future<Result<List<ExportFile>, AppFailure>> build(
     String userId,
-    ExportFormat format,
-  ) async {
+    ExportFormat format, {
+    bool forAccountDeletion = false,
+  }) async {
     if (failure case final f?) return Err(f);
     built.add(format);
+    forDeletion.add(forAccountDeletion);
     return Ok([
       ExportFile(
         name: 'dottoday.${format.name}',
@@ -68,6 +152,25 @@ final class FakeExportService implements ExportService {
         content: format.name,
       ),
     ]);
+  }
+
+  /// What [prepareSet] gives (default: the account fits one file).
+  Result<PreparedExport, AppFailure> set = const Ok(FitsOneFile());
+  final setVersions = <String>[];
+
+  /// Whether each [prepareSet] was D1's.
+  final setForDeletion = <bool>[];
+
+  @override
+  Future<Result<PreparedExport, AppFailure>> prepareSet(
+    String userId, {
+    required Future<String> Function() appVersion,
+    bool forAccountDeletion = false,
+    CompleteCheck? complete,
+  }) async {
+    setVersions.add(await appVersion());
+    setForDeletion.add(forAccountDeletion);
+    return set;
   }
 }
 
@@ -126,6 +229,21 @@ final class FakeBackupService implements BackupService {
     if (failure case final f?) return Err(f);
     _take(BackupReason.preImport);
     imported.add(json);
+    return const Ok(null);
+  }
+
+  /// Sets imported: the manifest and every part, read in order.
+  final importedSets = <List<String>>[];
+
+  @override
+  Future<Result<void, AppFailure>> importSet(
+    String userId,
+    String manifest,
+    List<Future<String> Function()> parts,
+  ) async {
+    if (failure case final f?) return Err(f);
+    _take(BackupReason.preImport);
+    importedSets.add([manifest, for (final p in parts) await p()]);
     return const Ok(null);
   }
 }

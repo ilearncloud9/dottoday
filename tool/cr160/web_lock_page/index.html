@@ -1,0 +1,50 @@
+<!doctype html><meta charset="utf-8"><title>queue lock</title>
+<script>
+// The tab's half, as lib/data/intents/web_action_queue_store.dart does it:
+// read, drop the settled ids, write back, holding the same Web Lock
+// (withQueueLock) — or, for the control, without it.
+const CACHE = 'dottoday-day-snapshot';
+const url = (p) => new URL(p, location.href).href;
+async function readQueue() {
+  const hit = await (await caches.open(CACHE)).match(url('__snapshot/actions.json'));
+  return hit ? hit.json() : [];
+}
+async function put(path, value) {
+  await (await caches.open(CACHE)).put(url(path), new Response(JSON.stringify(value)));
+}
+async function removeOne(id, locked) {
+  const body = async () => {
+    const list = await readQueue();
+    await new Promise((r) => setTimeout(r, 2)); // the gap a read-then-write has
+    await put('__snapshot/actions.json', list.filter((e) => e.id !== id));
+  };
+  return locked ? navigator.locks.request('dottoday-action-queue', body) : body();
+}
+window.runScenario = async (locked, marker) => {
+  await caches.delete(CACHE);
+  await put('__snapshot/queue_owner.json', marker);
+  const seeded = Array.from({ length: 40 }, (_, i) => ({ id: `seed-${i}` }));
+  await put('__snapshot/actions.json', seeded);
+  const sw = navigator.serviceWorker.controller;
+  const appended = new Promise((resolve) =>
+    navigator.serviceWorker.addEventListener('message', (e) => resolve(e.data), { once: true }));
+  sw.postMessage({ type: 'append', n: 120, tag: 'w' });
+  await Promise.all(seeded.map((e) => removeOne(e.id, locked)));
+  const { refused } = await appended;
+  const list = await readQueue();
+  return {
+    refused,
+    total: list.length,
+    workerEntries: list.filter((e) => e.id.startsWith('w-')).length,
+    seedsLeft: list.filter((e) => e.id.startsWith('seed-')).length,
+    owners: [...new Set(list.map((e) => e.owner ?? null))],
+  };
+};
+window.ready = navigator.serviceWorker.register('sw.js').then(async () => {
+  await navigator.serviceWorker.ready;
+  if (!navigator.serviceWorker.controller) {
+    await new Promise((r) => navigator.serviceWorker.addEventListener('controllerchange', r, { once: true }));
+  }
+  return true;
+});
+</script>

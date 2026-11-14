@@ -11,9 +11,11 @@ import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/data/notifications/notification_responder.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/notifications/push/web_push_wiring.dart';
+import 'package:dottoday/data/notifications/reminder_refusal.dart';
 import 'package:dottoday/data/notifications/sound/sound_player.dart';
 import 'package:dottoday/data/notifications/timer_notification_platform.dart';
 import 'package:dottoday/data/notifications/web/browser_notifications_any.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
@@ -63,7 +65,12 @@ Future<NotificationPlatform> notificationPlatform(Ref ref) async {
         player: ref.read(soundPlayerProvider),
       ),
       taps: browserNotificationTaps(),
+      closeShown: closeBrowserNotifications,
     );
+    // Rebuilt for every owner (it watches the profile): the old tab's
+    // timers must die with it, or they post the previous owner's reminders
+    // (CR-160 I3).
+    ref.onDispose(tab.dispose);
     return withServerPush(
       tab,
       client: ref.watch(supabaseClientProvider),
@@ -104,6 +111,10 @@ NotificationResponder notificationResponder(Ref ref) => NotificationResponder(
   profile: () => latestProfile(ref),
   open: (location) => ref.read(routerProvider).go(location),
   logger: ref.watch(loggerProvider),
+  deleting: () => ref.read(ownerSwitchProvider).deleting,
+  ownerEpoch: () => ref.read(ownerEpochProvider),
+  refused: (failure, epoch) =>
+      ref.read(reminderRefusalProvider.notifier).report(failure, epoch: epoch),
 );
 
 /// Initialises the platform once (channels, actions, the tap handler) and

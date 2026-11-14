@@ -13,7 +13,8 @@ class CalendarLinksDao extends DatabaseAccessor<AppDatabase>
   CalendarLinksDao(super.attachedDatabase);
 
   /// Every link of [userId] whose account is one of [providers], with its
-  /// occurrence when one still points at it (deleted ones included).
+  /// occurrence when one of [userId]'s still points at it (deleted ones
+  /// included). Another owner's row is never joined (CR-160 I1).
   Future<List<(CalendarLinkRow, OccurrenceRow?)>> linked(
     String userId,
     Set<String> providers,
@@ -26,7 +27,8 @@ class CalendarLinksDao extends DatabaseAccessor<AppDatabase>
           ),
           leftOuterJoin(
             occurrences,
-            occurrences.calendarLinkId.equalsExp(calendarLinks.id),
+            occurrences.calendarLinkId.equalsExp(calendarLinks.id) &
+                occurrences.userId.equals(userId),
           ),
         ])..where(
           calendarLinks.userId.equals(userId) &
@@ -42,7 +44,8 @@ class CalendarLinksDao extends DatabaseAccessor<AppDatabase>
   /// [userId]'s live imported occurrences that may send changes back
   /// (docs/09 M7.3): a writable link of a switched-on calendar of
   /// [providers] with write-back on. Watchable, so an edit here starts a
-  /// write-back.
+  /// write-back. Only [userId]'s own rows: another owner's is never sent
+  /// to [userId]'s calendar (CR-160 I1).
   Selectable<(CalendarLinkRow, OccurrenceRow, CalendarAccountRow)>
   writeBackCandidates(String userId, Set<String> providers) {
     final query =
@@ -61,6 +64,7 @@ class CalendarLinksDao extends DatabaseAccessor<AppDatabase>
               calendarAccounts.provider.isIn(providers) &
               calendarAccounts.writeBack.equals(true) &
               calendarAccounts.enabled.equals(true) &
+              occurrences.userId.equals(userId) &
               occurrences.deletedAt.isNull(),
         );
     return query.map(

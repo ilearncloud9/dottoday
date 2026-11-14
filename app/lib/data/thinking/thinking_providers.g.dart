@@ -8,12 +8,16 @@ part of 'thinking_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Saved breakdowns and the local prompt log.
+/// Saved breakdowns, brain dumps and the local prompt log of the owner the
+/// app shows: a new one at every change of owner (CR-160 I4), and with it a
+/// new [thinkingService].
 
 @ProviderFor(thinkingMemory)
 final thinkingMemoryProvider = ThinkingMemoryProvider._();
 
-/// Saved breakdowns and the local prompt log.
+/// Saved breakdowns, brain dumps and the local prompt log of the owner the
+/// app shows: a new one at every change of owner (CR-160 I4), and with it a
+/// new [thinkingService].
 
 final class ThinkingMemoryProvider
     extends
@@ -23,7 +27,9 @@ final class ThinkingMemoryProvider
           LocalThinkingMemory
         >
     with $Provider<LocalThinkingMemory> {
-  /// Saved breakdowns and the local prompt log.
+  /// Saved breakdowns, brain dumps and the local prompt log of the owner the
+  /// app shows: a new one at every change of owner (CR-160 I4), and with it a
+  /// new [thinkingService].
   ThinkingMemoryProvider._()
     : super(
         from: null,
@@ -58,7 +64,7 @@ final class ThinkingMemoryProvider
   }
 }
 
-String _$thinkingMemoryHash() => r'f20120049315a860669ab2ed16e28642f6a93677';
+String _$thinkingMemoryHash() => r'eb04ae339730ebaa61f489e700f3772b830f02a8';
 
 /// The platform's on-device model transport: the method channel on
 /// iOS/macOS/Android, the Prompt API in the browser.

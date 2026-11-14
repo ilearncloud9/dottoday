@@ -33,6 +33,10 @@ Future<void> checkA11yTree(WidgetTester tester, String screen) async {
       if (!result.passed) failed.add('$key: ${result.reason}');
     }
     debugPrint('A11Y $screen ${failed.isEmpty ? 'PASS' : 'FAIL'}');
+    // Each finding as it is found: a later failure must not hide it.
+    for (final f in failed) {
+      debugPrint('A11Y $screen $f');
+    }
     a11yFindings.addAll(failed.map((f) => '$screen — $f'));
   } finally {
     handle.dispose();

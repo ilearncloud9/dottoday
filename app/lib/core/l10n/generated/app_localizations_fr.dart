@@ -2626,6 +2626,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get accountSignOutEverywhere => 'Se déconnecter partout';
 
   @override
+  String get accountSignedOutHereOnly =>
+      'Vous êtes déconnecté sur cet appareil. Impossible de déconnecter vos autres appareils, car vous êtes hors ligne. Pour les déconnecter, reconnectez-vous et choisissez « Se déconnecter partout » une fois en ligne.';
+
+  @override
+  String get accountHeldTasks =>
+      'Certaines tâches de cet appareil proviennent d’un autre compte. Elles sont mises de côté sur cet appareil et ne seront pas synchronisées.';
+
+  @override
   String get accountDelete => 'Supprimer le compte';
 
   @override
@@ -2635,9 +2643,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get accountDeleteExportFirst => 'Exporter d\'abord mes données';
 
   @override
-  String accountDeleteBody(String word) {
-    return 'Cela supprime votre compte et tout ce qui y est synchronisé. Les tâches sur cet appareil restent. Saisissez $word pour confirmer.';
-  }
+  String get accountDeleteBody =>
+      'Cela supprime votre compte et tout ce qui y est synchronisé. Votre copie sur cet appareil est aussi retirée.';
 
   @override
   String get accountDeleteWord => 'SUPPRIMER';
@@ -2813,6 +2820,89 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get exportTooLarge =>
       'Ce fichier fait plus de 25 Mo, trop pour être importé. Rien n\'a été modifié.';
+
+  @override
+  String get exportTooLargeToRestore =>
+      'Cet export est trop volumineux pour être restauré par Dottoday avec le format d’importation actuel. Aucun export restaurable n’a été créé.';
+
+  @override
+  String get importStorageFull =>
+      'Il n’y a pas assez d’espace de stockage pour importer cette sauvegarde. Rien n’a été modifié. Libérez de l’espace et réessayez.';
+
+  @override
+  String get backupNotRestorable =>
+      'Cette opération ne peut pas continuer, car Dottoday ne peut pas créer de sauvegarde restaurable. Vos données existantes n’ont pas été modifiées.';
+
+  @override
+  String exportSetIntro(int count) {
+    return 'Vos données sont volumineuses : elles sont enregistrées en $count fichiers. Gardez-les ensemble, chacun est nécessaire pour restaurer.';
+  }
+
+  @override
+  String exportSetDone(int count) {
+    return 'Exporté en $count fichiers';
+  }
+
+  @override
+  String get exportCheckFiles => 'Vérifier mes fichiers…';
+
+  @override
+  String get exportCheckFilesDetail =>
+      'Sélectionnez tous les fichiers pour confirmer qu’ils sont complets';
+
+  @override
+  String exportCheckAll(int count) {
+    return 'Les $count fichiers sont là et complets.';
+  }
+
+  @override
+  String exportCheckMissing(int missing, int count) {
+    return 'Fichiers manquants : $missing sur $count. Sélectionnez le manifeste et chaque partie.';
+  }
+
+  @override
+  String get exportCheckWrong =>
+      'Ces fichiers ne correspondent pas à cet export. Sélectionnez les fichiers que vous venez d’enregistrer.';
+
+  @override
+  String exportDownloadTitle(int count) {
+    return 'Télécharger $count fichiers';
+  }
+
+  @override
+  String get exportDownload => 'Télécharger';
+
+  @override
+  String get exportDownloaded => 'Téléchargé';
+
+  @override
+  String get exportDownloadNote =>
+      'Votre navigateur peut vous demander d’autoriser plusieurs téléchargements.';
+
+  @override
+  String get importAddTitle => 'Ajouter le reste de cette sauvegarde';
+
+  @override
+  String importAddedCount(int added, int total) {
+    return 'Fichiers ajoutés : $added sur $total.';
+  }
+
+  @override
+  String get importAddFiles => 'Ajouter des fichiers…';
+
+  @override
+  String get importPartForeign =>
+      'Ce fichier ne fait pas partie de cette sauvegarde. Rien n’a été modifié.';
+
+  @override
+  String accountDeleteExportUncertain(int count) {
+    return 'Vos données ont été transmises en $count fichiers. Nous ne pouvons pas confirmer que vous les avez tous enregistrés. Vérifiez vos fichiers ou exportez à nouveau.';
+  }
+
+  @override
+  String accountDeleteWithoutCopySetQuestion(int count) {
+    return 'Supprimer sans copie confirmée ? Nous ne pouvons pas confirmer que les $count fichiers ont été enregistrés. Vous risquez de perdre définitivement des données qui ne sont pas enregistrées ailleurs.';
+  }
 
   @override
   String get exportBackups => 'Sur cet appareil';
@@ -6456,6 +6546,326 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get wakeUpDiscoveryTierGained =>
       'Ton téléphone peut maintenant faire sonner le réveil de Dottoday comme une alarme. L\'activer ?';
+
+  @override
+  String get accountContinue => 'Continuer';
+
+  @override
+  String get accountSignOutTitle => 'Se déconnecter ?';
+
+  @override
+  String get accountSignOutSyncedBody =>
+      'Vos tâches et vos réglages sont masqués sur cet appareil jusqu’à votre prochaine connexion. Tout est synchronisé avec votre compte.';
+
+  @override
+  String accountSignOutPendingTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count modifications ne sont pas encore synchronisées',
+      one: '1 modification n’est pas encore synchronisée',
+      zero: 'La synchronisation n’est pas encore confirmée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String accountSignOutPendingBody(int count, String email) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Elles sont enregistrées sur cet appareil pour $email et ne sont pas encore arrivées sur votre compte. Elles pourront être synchronisées quand vous vous reconnecterez avec ce compte.',
+      one:
+          'Elle est enregistrée sur cet appareil pour $email et n’est pas encore arrivée sur votre compte. Elle pourra être synchronisée quand vous vous reconnecterez avec ce compte.',
+      zero:
+          'Dottoday n’a pas encore confirmé que tout est arrivé sur votre compte. Ce qui manque est enregistré sur cet appareil pour $email et pourra être synchronisé quand vous vous reconnecterez avec ce compte.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountSignOutIsolation =>
+      'D’ici là, personne d’autre utilisant Dottoday sur cet appareil ne peut les voir.';
+
+  @override
+  String get accountSignOutKeptHere =>
+      'Elles restent sur cet appareil, dans ce compte.';
+
+  @override
+  String get accountStaySignedIn => 'Rester connecté';
+
+  @override
+  String get accountStaySignedInHint =>
+      'Dottoday essaie de les synchroniser maintenant.';
+
+  @override
+  String get accountSignOutKeep => 'Se déconnecter et les garder ici';
+
+  @override
+  String get accountSignOutEscHint =>
+      'Échap annule sans rien lancer. « Rester connecté » essaie de synchroniser maintenant.';
+
+  @override
+  String get signedOutTitle => 'Vous êtes déconnecté';
+
+  @override
+  String get signedOutBody =>
+      'Vos tâches restent sur cet appareil, dans votre compte. Elles reviennent quand vous vous reconnectez avec le même compte.';
+
+  @override
+  String get signedOutSignIn => 'Se connecter';
+
+  @override
+  String get signedOutUseWithout => 'Utiliser sans compte';
+
+  @override
+  String get signedOutUseWithoutHint =>
+      'Ouvre le plan de cet appareil sans compte. Toute personne qui utilise cet appareil sans compte peut le voir.';
+
+  @override
+  String get settingsChoiceTitle =>
+      'Quels réglages Dottoday doit-il utiliser ?';
+
+  @override
+  String get settingsChoiceBody =>
+      'Votre compte a déjà des réglages. Cet appareil en avait d’autres avant votre connexion. Vos tâches ne seront pas supprimées.';
+
+  @override
+  String get settingsChoiceLegend => 'Réglages à utiliser';
+
+  @override
+  String get settingsChoiceAccount => 'Les réglages de votre compte';
+
+  @override
+  String get settingsChoiceDevice => 'Les réglages de cet appareil';
+
+  @override
+  String get settingsChoiceTimeZone => 'Fuseau horaire';
+
+  @override
+  String get settingsChoiceYourDay => 'Votre journée';
+
+  @override
+  String settingsChoiceRange(String start, String end) {
+    return '$start – $end';
+  }
+
+  @override
+  String get settingsChoiceOnlyDiffer =>
+      'Seuls les réglages qui diffèrent sont affichés.';
+
+  @override
+  String get settingsChoiceLater => 'Décider plus tard';
+
+  @override
+  String get settingsChoiceLaterHint =>
+      'Tant que vous n’avez pas choisi, les réglages de votre compte restent. Vous pouvez choisir dans Réglages › Compte.';
+
+  @override
+  String get accountChooseSettings => 'Choisir les réglages';
+
+  @override
+  String get accountChooseSettingsBody =>
+      'Cet appareil avait d’autres réglages quand vous vous êtes connecté.';
+
+  @override
+  String get guestWorkTitle => 'Cet appareil a des tâches créées sans compte';
+
+  @override
+  String guestWorkBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tâches ont été créées ici sans compte depuis la dernière déconnexion de cet appareil. Elles ne sont dans aucun compte et appartiennent peut-être à quelqu’un d’autre.',
+      one:
+          '1 tâche a été créée ici sans compte depuis la dernière déconnexion de cet appareil. Elle n’est dans aucun compte et appartient peut-être à quelqu’un d’autre.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestWorkLegend => 'Ce qu’il advient de ces tâches';
+
+  @override
+  String get guestWorkKeep => 'Commencer avec les tâches de votre compte';
+
+  @override
+  String guestWorkKeepBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Ces $count tâches restent sur cet appareil, séparées de votre compte. Toute personne qui l’utilise sans compte peut encore les voir.',
+      one:
+          'Cette tâche reste sur cet appareil, séparée de votre compte. Toute personne qui l’utilise sans compte peut encore la voir.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestWorkBring => 'Les ajouter à votre compte';
+
+  @override
+  String guestWorkBringBody(String email) {
+    return 'Seulement si elles sont à vous. Elles sont ajoutées à $email et synchronisées sur vos autres appareils.';
+  }
+
+  @override
+  String guestWorkMine(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'J’ai créé ces $count tâches moi-même',
+      one: 'J’ai créé cette tâche moi-même',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestWorkNotSure =>
+      'Vous hésitez ? Gardez-les à part. Vous pourrez les parcourir plus tard en utilisant Dottoday sans compte.';
+
+  @override
+  String guestNoticeBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tâches ici ont été créées avant la dernière déconnexion de cet appareil : elles ne peuvent donc pas être ajoutées à un compte.',
+      one:
+          '1 tâche ici a été créée avant la dernière déconnexion de cet appareil : elle ne peut donc pas être ajoutée à un compte.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestNoticeCardTitle =>
+      'Vous commencerez avec les tâches de votre compte';
+
+  @override
+  String guestNoticeCardBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Les $count tâches restent sur cet appareil, séparées de votre compte. Toute personne qui l’utilise sans compte peut encore les voir. Rien n’est supprimé.',
+      one:
+          'La tâche reste sur cet appareil, séparée de votre compte. Toute personne qui l’utilise sans compte peut encore la voir. Rien n’est supprimé.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountDeleteBodyBrowser =>
+      'Cela supprime votre compte et tout ce qui y est synchronisé. Votre copie dans ce navigateur est aussi retirée.';
+
+  @override
+  String get accountDeleteExportHint =>
+      'Exportez maintenant, tant que vous êtes connecté. Une fois le compte supprimé, rien ne pourra plus en être exporté ici.';
+
+  @override
+  String get accountDeleteExportHintShort =>
+      'Tant que vous êtes connecté. Ensuite, plus rien ne pourra être exporté.';
+
+  @override
+  String get accountDeleteRemovedDevice => 'Retiré de cet appareil';
+
+  @override
+  String get accountDeleteRemovedBrowser => 'Retiré de ce navigateur';
+
+  @override
+  String get accountDeleteRemovedDeviceLead => 'Retiré de cet appareil :';
+
+  @override
+  String get accountDeleteRemovedBrowserLead => 'Retiré de ce navigateur :';
+
+  @override
+  String accountDeleteTasks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tâches',
+      one: '1 tâche',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String accountDeleteSummary(String tasks) {
+    return '$tasks et vos réglages. Cette action est irréversible.';
+  }
+
+  @override
+  String accountDeleteSummaryPending(String tasks, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count modifications non synchronisées',
+      one: '1 modification non synchronisée',
+    );
+    return '$tasks, vos réglages et $_temp0. Cette action est irréversible.';
+  }
+
+  @override
+  String accountDeleteTypeWord(String word) {
+    return 'Saisissez $word pour confirmer';
+  }
+
+  @override
+  String get accountDeleteExported =>
+      'Exporté. Vous pouvez maintenant supprimer votre compte.';
+
+  @override
+  String get accountDeleteExportBroken =>
+      'Impossible de créer un export restaurable. Votre compte n’a pas été supprimé.';
+
+  @override
+  String get accountDeleteChangedSinceReview =>
+      'Un nouvel élément est arrivé pour ce compte depuis que vous avez commencé : rien n’a été supprimé. Exportez à nouveau pour le garder, puis saisissez de nouveau SUPPRIMER.';
+
+  @override
+  String get accountDeleteExportClosed =>
+      'L’export a été annulé. Nous ne pouvons pas confirmer que vous avez enregistré une copie.';
+
+  @override
+  String get accountDeleteExportTooLarge =>
+      'Vos données sont trop volumineuses pour un export que cette app peut restaurer. Réessayer n’y changera rien.';
+
+  @override
+  String get accountDeleteWithoutCopyQuestion =>
+      'Supprimer sans copie enregistrée ? Vous risquez de perdre définitivement des données qui ne sont enregistrées nulle part ailleurs.';
+
+  @override
+  String get accountDeleteWithoutCopy => 'Supprimer sans copie enregistrée';
+
+  @override
+  String get accountDeleteExportRetry => 'Réessayer l’export';
+
+  @override
+  String get removalRetryTitle =>
+      'Le retrait de ce navigateur n’est pas terminé';
+
+  @override
+  String get removalRetryBody =>
+      'Un compte a été supprimé, mais une partie de sa copie est encore dans ce navigateur. Tant qu’elle n’est pas retirée, elle reste masquée : elle n’est ni affichée, ni synchronisée, ni ajoutée à un compte.';
+
+  @override
+  String get removalRetryAction => 'Terminer le retrait';
+
+  @override
+  String get removalRetryHint =>
+      'Si cela ne marche toujours pas, effacer les données de ce site dans les réglages du navigateur la retire aussi, avec tout ce qui est enregistré ici.';
+
+  @override
+  String get removalRetryAgain =>
+      'Impossible de terminer le retrait. Réessayez.';
+
+  @override
+  String accountTwoSentences(String first, String second) {
+    return '$first $second';
+  }
 
   @override
   String get taskIconCategoryPlanning => 'Planification et rythme';

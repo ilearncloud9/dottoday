@@ -24,9 +24,29 @@ final class WriteBatch {
     this.routines = const [],
     this.revealHints = const [],
     this.calendarSeries = const [],
+    this.onlyWhileShown = false,
   });
 
   final String userId;
+
+  /// Commit only while [userId] is the owner the app shows, checked inside
+  /// the write's transaction (CR-160 I7: an action queued by a widget or the
+  /// share extension never lands after a change of owner). Otherwise the
+  /// write fails and nothing is written.
+  final bool onlyWhileShown;
+
+  /// This batch, committed only while its owner is shown.
+  WriteBatch whileShown() => WriteBatch(
+    userId: userId,
+    profile: profile,
+    series: series,
+    occurrences: occurrences,
+    subtasks: subtasks,
+    routines: routines,
+    revealHints: revealHints,
+    calendarSeries: calendarSeries,
+    onlyWhileShown: true,
+  );
   final Profile? profile;
 
   /// Saved series are (re-)materialised in the same transaction.

@@ -1,3 +1,4 @@
+import 'package:dottoday/data/calendar/pending_calendar_series.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/mappers/entity_mappers.dart';
 import 'package:dottoday/domain/export/export_bundle.dart';
@@ -9,12 +10,17 @@ import 'package:drift/drift.dart';
 ///
 /// Imported calendar events are left out ([ExportBundle.withoutImported]):
 /// backups and exports never carry them, and because the current state is
-/// read the same way, a restore never moves them to Trash either.
+/// read the same way, a restore never moves them to Trash either. Only
+/// [importedAsTasks] (D1's export before an account deletion, CR-160)
+/// keeps them, as ordinary tasks ([ExportBundle.withImportedAsTasks]), and
+/// adds every calendar-series template, attached or pending (CR-160 Stage
+/// A, [readCalendarSeriesTemplates]); other exports and backups have none.
 Future<ExportBundle?> readUserData(
   AppDatabase db,
   String userId,
-  DateTime nowUtc,
-) async {
+  DateTime nowUtc, {
+  bool importedAsTasks = false,
+}) async {
   final profile = await (db.select(
     db.profiles,
   )..where((p) => p.id.equals(userId))).getSingleOrNull();
@@ -39,12 +45,18 @@ Future<ExportBundle?> readUserData(
             ..where((r) => r.userId.equals(userId))
             ..orderBy([(r) => OrderingTerm(expression: r.id)]))
           .get();
-  return ExportBundle(
+  final bundle = ExportBundle(
     exportedAt: nowUtc,
     profile: profileFromRow(profile),
     series: series.map(seriesFromRow).toList(),
     occurrences: occurrences.map(occurrenceFromRow).toList(),
     subtasks: subtasks.map(subtaskFromRow).toList(),
     routines: routines.map(routineFromRow).toList(),
-  ).withoutImported();
+    calendarSeries: importedAsTasks
+        ? await readCalendarSeriesTemplates(db, userId)
+        : const [],
+  );
+  return importedAsTasks
+      ? bundle.withImportedAsTasks()
+      : bundle.withoutImported();
 }

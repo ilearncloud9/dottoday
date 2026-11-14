@@ -1,19 +1,24 @@
 /// One entity version going up: every field the device changed under one
-/// HLC (docs/04 §4). Values are already in the server's form.
+/// HLC (docs/04 §4). Values are already in the server's form. [owner] is
+/// the local owner the change belongs to; `sync_push` refuses it unless
+/// it is the signed-in account (CR-160 criterion 12).
 final class PushChange {
   const PushChange({
+    required this.owner,
     required this.entity,
     required this.id,
     required this.hlc,
     required this.fields,
   });
 
+  final String owner;
   final String entity;
   final String id;
   final String hlc;
   final Map<String, Object?> fields;
 
   Map<String, Object?> toJson() => {
+    'owner': owner,
     'entity': entity,
     'id': id,
     'hlc': hlc,
@@ -28,10 +33,15 @@ enum SyncTrouble { offline, server }
 
 /// A failed round trip.
 final class SyncGatewayException implements Exception {
-  const SyncGatewayException(this.trouble, this.cause);
+  const SyncGatewayException(this.trouble, this.cause, {this.foreign});
 
   final SyncTrouble trouble;
   final Object cause;
+
+  /// The row `sync_push` refused because another account holds it (42501
+  /// "row … not accessible"), when the refusal names one (CR-160 blocker
+  /// 8): it is held on this device, never retried.
+  final ({String entity, String id})? foreign;
 
   @override
   String toString() => 'SyncGatewayException(${trouble.name})';
@@ -74,4 +84,13 @@ abstract interface class SyncGateway {
   /// each time the live feed (re)joins, since changes while it was down
   /// went unannounced (Realtime); the engine then pulls.
   Stream<void> changes();
+
+  /// The signed-in account's server revision (migration 0015), which every
+  /// committed change to its synced rows moves, and whether a deletion has
+  /// frozen it. One read, one snapshot. Throws [SyncGatewayException].
+  Future<({int revision, bool frozen})> accountRevision();
+
+  /// Which of [ids] of [entity] the signed-in account holds on the server:
+  /// read-only, RLS answers for the caller only (CR-160 blocker 8).
+  Future<Set<String>> ownIds(String entity, List<String> ids);
 }

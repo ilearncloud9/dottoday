@@ -51,6 +51,7 @@
 		3C471531455953FF93B2CBDB /* play_frog.caf in Resources */ = {isa = PBXBuildFile; fileRef = D0ABF79B5C8EDB4465EF5746 /* play_frog.caf */; };
 		3C652C711830E623D626F173 /* clear_bright.caf in Resources */ = {isa = PBXBuildFile; fileRef = 48609A3F0C209768664C863E /* clear_bright.caf */; };
 		3D052759CF477BA6E3474773 /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD451A8BE2D7D08996B3C88E /* DotStore.swift */; };
+		07D855B3619632B39C8C966C /* QueueSeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D96B6C66E14E3B68B381FDB /* QueueSeal.swift */; };
 		42D8375DD4C894DD801BFF8F /* done_succeeded.caf in Resources */ = {isa = PBXBuildFile; fileRef = 1D6F28BD8EC68EB6B2A3F3C6 /* done_succeeded.caf */; };
 		4484EC05B8B380B9B81105E1 /* quiet_whisper.caf in Resources */ = {isa = PBXBuildFile; fileRef = E5183269BDF498C457B716F6 /* quiet_whisper.caf */; };
 		4D7A1B2C2E8F000100C0FFEE /* CalendarBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7A1B2D2E8F000100C0FFEE /* CalendarBridge.swift */; };
@@ -92,6 +93,7 @@
 		C8FA01E1EF4BAD7ADEE82C9D /* start_strike.caf in Resources */ = {isa = PBXBuildFile; fileRef = 8262E72B02992ABC6ECD7CD2 /* start_strike.caf */; };
 		CC0B079C32D2086B8FC98BBD /* start_beep_rise.caf in Resources */ = {isa = PBXBuildFile; fileRef = 683A1ADCE23EE8C6B21B1C7A /* start_beep_rise.caf */; };
 		D74A14723FFB04FCF582C67F /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD451A8BE2D7D08996B3C88E /* DotStore.swift */; };
+		ABD355220B8FDD4C6C3DD215 /* QueueSeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D96B6C66E14E3B68B381FDB /* QueueSeal.swift */; };
 		DC694768AC610803EF3FE3F6 /* clear_involved.caf in Resources */ = {isa = PBXBuildFile; fileRef = A48F3673E981EC1FA3A39D90 /* clear_involved.caf */; };
 		DF4A770EE4392F92326D536B /* start_clock_bell.caf in Resources */ = {isa = PBXBuildFile; fileRef = 60F77EECECA5D0032FA9A1AF /* start_clock_bell.caf */; };
 		E475D6700AB45BD578AA316C /* quiet_pull.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4B0CD317A4E7936A6C0365A5 /* quiet_pull.caf */; };
@@ -259,6 +261,7 @@
 		EE5FC895D2C19BB4E7D48BE6 /* DayDotImageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DayDotImageTests.swift; sourceTree = "<group>"; };
 		EE87AF667EAB48922F2C250E /* clear_lift.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_lift.caf; path = ../ios/Runner/Sounds/clear_lift.caf; sourceTree = SOURCE_ROOT; };
 		FD451A8BE2D7D08996B3C88E /* DotStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DotStore.swift; path = ../../ios/Shared/DotStore.swift; sourceTree = "<group>"; };
+		6D96B6C66E14E3B68B381FDB /* QueueSeal.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QueueSeal.swift; path = ../../ios/Shared/QueueSeal.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -382,6 +385,7 @@
 				A1B2C3D4E5F60718293A4B04 /* SpeechBridge.swift */,
 				A1B2C3D4E5F60718293A4C04 /* CalendarSeriesBridge.swift */,
 				FD451A8BE2D7D08996B3C88E /* DotStore.swift */,
+				6D96B6C66E14E3B68B381FDB /* QueueSeal.swift */,
 				064113D26C4B8C6EC4357132 /* IntentQueueBridge.swift */,
 			);
 			path = Runner;
@@ -817,6 +821,7 @@
 				A1B2C3D4E5F60718293A4B03 /* SpeechBridge.swift in Sources */,
 				A1B2C3D4E5F60718293A4C03 /* CalendarSeriesBridge.swift in Sources */,
 				D74A14723FFB04FCF582C67F /* DotStore.swift in Sources */,
+				ABD355220B8FDD4C6C3DD215 /* QueueSeal.swift in Sources */,
 				EA0ECF4143D7501174EC83E3 /* IntentQueueBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -827,6 +832,7 @@
 			files = (
 				F3D55486F824C4C714E893C3 /* ShareViewController.swift in Sources */,
 				3D052759CF477BA6E3474773 /* DotStore.swift in Sources */,
+				07D855B3619632B39C8C966C /* QueueSeal.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

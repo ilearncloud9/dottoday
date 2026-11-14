@@ -1,3 +1,4 @@
+import 'package:dottoday/domain/entities/calendar_series_template.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/routine.dart';
@@ -9,7 +10,9 @@ import 'package:dottoday/domain/entities/utc_millis_converter.dart';
 /// Everything a user owns, as exported and imported (docs/05 "Export
 /// format", R-11): `{version, exportedAt, profile, series, occurrences,
 /// subtasks, routines}`, values in the same canonical form as storage (snake_case,
-/// UTC epoch ms).
+/// UTC epoch ms). D1's export (CR-160 Stage A) adds an optional
+/// `calendarSeries`: an older importer skips a key it doesn't know, so the
+/// file stays v1 and every other export leaves the key out.
 final class ExportBundle {
   const ExportBundle({
     required this.exportedAt,
@@ -18,6 +21,7 @@ final class ExportBundle {
     this.occurrences = const [],
     this.subtasks = const [],
     this.routines = const [],
+    this.calendarSeries = const [],
   });
 
   /// Decodes a v1 bundle. Throws on any shape mismatch; use
@@ -39,6 +43,10 @@ final class ExportBundle {
       routines: json.containsKey('routines')
           ? list('routines', Routine.fromJson)
           : const [],
+      // CR-160 Stage A: only D1's export has it.
+      calendarSeries: json.containsKey('calendarSeries')
+          ? list('calendarSeries', CalendarSeriesTemplate.fromJson)
+          : const [],
     );
   }
 
@@ -52,6 +60,11 @@ final class ExportBundle {
   final List<Subtask> subtasks;
   final List<Routine> routines;
 
+  /// What the person set for repeating calendar events, by provider ids
+  /// (CR-160 Stage A): restored as pending templates, never attached on
+  /// import ([CalendarSeriesTemplate]).
+  final List<CalendarSeriesTemplate> calendarSeries;
+
   Map<String, Object?> toJson() => {
     'version': version,
     'exportedAt': const UtcMillisConverter().toJson(exportedAt),
@@ -60,6 +73,9 @@ final class ExportBundle {
     'occurrences': [for (final o in occurrences) o.toJson()],
     'subtasks': [for (final s in subtasks) s.toJson()],
     'routines': [for (final r in routines) r.toJson()],
+    // Left out when empty: Settings exports and backups stay as they were.
+    if (calendarSeries.isNotEmpty)
+      'calendarSeries': [for (final t in calendarSeries) t.toJson()],
   };
 
   /// The bundle without imported calendar events and their subtasks
@@ -88,8 +104,32 @@ final class ExportBundle {
           if (!droppedIds.contains(s.occurrenceId)) s,
       ],
       routines: routines,
+      calendarSeries: calendarSeries,
     );
   }
+
+  /// The bundle with every imported calendar event kept as an ordinary task
+  /// (`source` user, no calendar link), with all its subtasks: the D1
+  /// export before an account deletion (CR-160), the only copy left of what
+  /// the person did on those events (steps, done, notes, times, colour,
+  /// alerts), which never sync and which a calendar re-import can't bring
+  /// back. Ids and every other field stay, so the file imports as it is.
+  /// What a calendar series sets for its future instances travels in
+  /// [calendarSeries] (CR-160 Stage A).
+  ExportBundle withImportedAsTasks() => ExportBundle(
+    exportedAt: exportedAt,
+    profile: profile,
+    series: series,
+    occurrences: [
+      for (final o in occurrences)
+        o.source == OccurrenceSource.calendar
+            ? o.copyWith(source: OccurrenceSource.user, calendarLinkId: null)
+            : o,
+    ],
+    subtasks: subtasks,
+    routines: routines,
+    calendarSeries: calendarSeries,
+  );
 
   /// The same data owned by [userId], so an import can never write rows for
   /// another account (06 §9, RLS would reject them anyway).
@@ -100,5 +140,6 @@ final class ExportBundle {
     occurrences: [for (final o in occurrences) o.copyWith(userId: userId)],
     subtasks: [for (final s in subtasks) s.copyWith(userId: userId)],
     routines: [for (final r in routines) r.copyWith(userId: userId)],
+    calendarSeries: [for (final t in calendarSeries) t.reownedTo(userId)],
   );
 }

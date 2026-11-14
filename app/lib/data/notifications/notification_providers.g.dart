@@ -201,7 +201,7 @@ final class NotificationPlatformProvider
 }
 
 String _$notificationPlatformHash() =>
-    r'08ec626b3763c8b04fcf6efc5dc3152eb019e34b';
+    r'2faaba0381c1ba6a1e7c469bcec267d0f3e98ce5';
 
 @ProviderFor(notificationResponder)
 final notificationResponderProvider = NotificationResponderProvider._();
@@ -249,7 +249,7 @@ final class NotificationResponderProvider
 }
 
 String _$notificationResponderHash() =>
-    r'16ef0bc1027896656c9d77133d715fe1cecab948';
+    r'0bc077baaedc98d181ec024f4647034d09925293';
 
 /// Initialises the platform once (channels, actions, the tap handler) and
 /// handles the tap that launched the app. The gateway waits on this before

@@ -23,7 +23,7 @@ set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a0","role":"authenticated"}';
 
 select lives_ok(
-  format($$select public.sync_push('[{"entity":"reveal_hints","id":"40000000-0000-0000-0000-0000000010a1","hlc":"%s","fields":{"hint_id":"unstick","shown_count":"1"}}]'::jsonb)$$,
+  format($$select public.sync_push('[{"owner":"00000000-0000-0000-0000-0000000000a0","entity":"reveal_hints","id":"40000000-0000-0000-0000-0000000010a1","hlc":"%s","fields":{"hint_id":"unstick","shown_count":"1"}}]'::jsonb)$$,
          pg_temp.hlc(-60000)),
   'A pushes a hint record');
 select is((select shown_count from public.reveal_hints where id = '40000000-0000-0000-0000-0000000010a1'), 1,
@@ -44,7 +44,7 @@ select throws_ok(
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000b0","role":"authenticated"}';
 select is((select count(*) from public.reveal_hints), 0::bigint, 'B sees none of A''s hints');
 select throws_ok(
-  format($$select public.sync_push('[{"entity":"reveal_hints","id":"40000000-0000-0000-0000-0000000010a1","hlc":"%s","fields":{"shown_count":"2"}}]'::jsonb)$$,
+  format($$select public.sync_push('[{"owner":"00000000-0000-0000-0000-0000000000b0","entity":"reveal_hints","id":"40000000-0000-0000-0000-0000000010a1","hlc":"%s","fields":{"shown_count":"2"}}]'::jsonb)$$,
          pg_temp.hlc(-40000, '00000000000000b0')),
   null, null, 'B cannot write A''s hint');
 

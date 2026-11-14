@@ -19,17 +19,24 @@ final class TimerNotificationPlatform implements NotificationPlatform {
     required ShowNotification show,
     required void Function(OsNotification n) onInApp,
     Stream<NotificationTap> taps = const Stream.empty(),
+    Future<void> Function()? closeShown,
   }) : _clock = clock,
        _show = show,
        _onInApp = onInApp,
-       _taps = taps;
+       _taps = taps,
+       _closeShown = closeShown;
 
   final Clock _clock;
   final ShowNotification _show;
   final void Function(OsNotification n) _onInApp;
   final Stream<NotificationTap> _taps;
+
+  /// Closes the notifications this page already posted (the service
+  /// worker's `getNotifications`); none without it.
+  final Future<void> Function()? _closeShown;
   final _pending = <int, (OsNotification, Timer)>{};
   StreamSubscription<NotificationTap>? _tapSub;
+  var _disposed = false;
 
   @override
   Future<void> initialize(void Function(NotificationTap) onTap) async {
@@ -55,7 +62,24 @@ final class TimerNotificationPlatform implements NotificationPlatform {
   Future<Set<String>> mutedSoundIds() async => const {};
 
   @override
+  Future<void> clearAll() async {
+    _cancelTimers();
+    await _closeShown?.call();
+  }
+
+  /// Stops every timer and the tap listener for good: the provider built
+  /// another platform (a new owner, CR-160 I3), and nothing of this one may
+  /// fire after that, however late.
+  void dispose() {
+    _disposed = true;
+    _cancelTimers();
+    unawaited(_tapSub?.cancel());
+    _tapSub = null;
+  }
+
+  @override
   Future<void> schedule(OsNotification n) async {
+    if (_disposed) return;
     // Replaced in the same turn, so overlapping calls can't double a timer.
     _pending.remove(n.id)?.$2.cancel();
     final wait = n.fireAtUtc.difference(_clock.nowUtc());
@@ -65,6 +89,18 @@ final class TimerNotificationPlatform implements NotificationPlatform {
 
   Future<void> _fire(OsNotification n) async {
     _pending.remove(n.id);
-    if (n.silent || !await _show(n)) _onInApp(n);
+    if (_disposed) return;
+    // Disposed while the browser posted it: the banner belongs to an owner
+    // no longer shown.
+    if (n.silent || !await _show(n)) {
+      if (!_disposed) _onInApp(n);
+    }
+  }
+
+  void _cancelTimers() {
+    for (final (_, timer) in _pending.values) {
+      timer.cancel();
+    }
+    _pending.clear();
   }
 }

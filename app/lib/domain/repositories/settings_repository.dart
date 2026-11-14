@@ -7,7 +7,8 @@ abstract interface class SettingsRepository {
   /// The profile [userId], re-emitting on every change; null until created.
   Stream<Profile?> watchProfile(String userId);
 
-  /// The local profile, or null on first launch.
+  /// The profile the app shows (the active owner, CR-160), or null on
+  /// first launch.
   Future<Profile?> findLocalProfile();
 
   /// Inserts or replaces the profile by id.

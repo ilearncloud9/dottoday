@@ -45,8 +45,16 @@ class Conflicts extends Table {
 /// order via `sync_push` (docs/04 §4). Rows are deleted once acknowledged.
 @DataClassName('ChangeLogRow')
 @TableIndex(name: 'change_log_entity', columns: {#entity, #entityId})
+@TableIndex(name: 'change_log_owner', columns: {#ownerId})
 class ChangeLog extends Table {
   IntColumn get seq => integer().autoIncrement()();
+
+  /// Whose change this is (CR-160): the guest profile or one account. Only
+  /// that account's sync pushes it. Follows a guest's re-key to the account
+  /// it is adopted into; no delete action, so a profile with pending work
+  /// can't be removed (never silent loss, R-08).
+  TextColumn get ownerId =>
+      text().references(Profiles, #id, onUpdate: KeyAction.cascade)();
   TextColumn get entity => text()();
   TextColumn get entityId => text()();
   TextColumn get field => text()();
@@ -74,6 +82,9 @@ class ChangeLog extends Table {
 /// (`updated_at`, `id`) order (docs/04 §4 "periodic since pull").
 @DataClassName('SyncCursorRow')
 class SyncCursors extends Table {
+  /// The account whose pull this is (CR-160): each account on the device
+  /// resumes its own pull.
+  TextColumn get ownerId => text()();
   TextColumn get entity => text()();
   IntColumn get sinceUtc => integer()();
 
@@ -86,7 +97,7 @@ class SyncCursors extends Table {
   TextColumn get sinceId => text().nullable()();
 
   @override
-  Set<Column<Object>> get primaryKey => {entity};
+  Set<Column<Object>> get primaryKey => {ownerId, entity};
 
   @override
   bool get isStrict => true;
@@ -118,6 +129,25 @@ class FieldSeen extends Table {
 
   @override
   Set<Column<Object>> get primaryKey => {entity, entityId, field};
+
+  @override
+  bool get isStrict => true;
+}
+
+/// Local-only (CR-160): which guest session first wrote each guest row.
+/// A session is a random id in `local_meta` (`guest_session`), replaced at
+/// every change of owner on the device (sign-in, sign-out, account removal),
+/// so it doesn't depend on clocks and survives restarts and offline use. Only
+/// rows first written in the current session may be brought into an account.
+/// A row with no entry (written before schema 19) is never eligible.
+@DataClassName('GuestRowSessionRow')
+class GuestRowSessions extends Table {
+  TextColumn get entity => text()();
+  TextColumn get entityId => text()();
+  TextColumn get session => text()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {entity, entityId};
 
   @override
   bool get isStrict => true;

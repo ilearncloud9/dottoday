@@ -14,6 +14,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
 import '../../support/account_fakes.dart';
+import '../../support/account_screen_fakes.dart';
 import '../../support/sync_fakes.dart';
 import 'settings_harness.dart';
 
@@ -74,6 +75,7 @@ void main() {
       expect(find.text('Ada'), findsOneWidget);
     });
 
+    // CR-160: D1 (typed word, export first) and sign-out through A1/A2.
     testWidgets('signed in: Delete needs the typed word', (tester) async {
       final service = FakeAccountService(
         account: const SignedIn(
@@ -81,32 +83,40 @@ void main() {
           method: SignInMethod.email,
         ),
       );
+      final actions = FakeAccountActions();
       await pumpSettings(
         tester,
         location: '/settings/account',
-        overrides: [accountServiceProvider.overrideWithValue(service)],
+        overrides: [
+          accountServiceProvider.overrideWithValue(service),
+          ...accountScreenOverrides(actions, pending: 3),
+        ],
       );
       expect(find.text('Signed in as kody@example.com'), findsOneWidget);
       await _tap(tester, 'Delete account');
-      Finder confirm() => find.descendant(
-        of: find.byType(AlertDialog),
-        matching: find.widgetWithText(FilledButton, 'Delete account'),
-      );
+      Finder confirm() => find.widgetWithText(FilledButton, 'Delete account');
       expect(tester.widget<FilledButton>(confirm()).onPressed, isNull);
+      await tester.tap(find.text('Export my data first'));
+      await tester.pumpAndSettle();
+      expect(actions.calls, ['export']);
+      expect(
+        find.text('Exported. You can delete your account now.'),
+        findsOneWidget,
+      );
       await tester.enterText(find.byType(TextField), 'DELETE');
       await tester.pump();
       await tester.tap(confirm());
       await tester.pumpAndSettle();
-      expect(service.calls, ['delete']);
+      expect(actions.calls, ['export', 'delete', 'endDeletion']);
+      // Not synced: A2; "Sign out and keep them here" signs out.
       await _tap(tester, 'Sign out');
-      expect(service.calls, ['delete', 'signOut']);
+      expect(find.text('3 changes haven’t synced yet'), findsOneWidget);
+      await _tap(tester, 'Sign out and keep them here');
+      expect(actions.calls.last, 'signOut');
       await _tap(tester, 'Sign out everywhere');
-      expect(service.calls.last, 'signOutEverywhere');
-      // M6.5: a copy first, if wanted.
-      await _tap(tester, 'Delete account');
-      await _tap(tester, 'Export my data first');
-      expect(find.text('Export'), findsWidgets);
-      expect(service.calls.where((c) => c == 'delete'), hasLength(1));
+      await _tap(tester, 'Sign out and keep them here');
+      expect(actions.calls.last, 'signOutEverywhere');
+      expect(service.calls, isEmpty);
     });
 
     // M6.3: the header says how sync stands (`A-ios-settings`).

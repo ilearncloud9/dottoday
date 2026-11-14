@@ -23,6 +23,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:go_router/go_router.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -31,7 +32,10 @@ import 'package:timezone/data/latest.dart' as tz_data;
 ///
 /// Throws [EnvConfigError] before the first frame if the compile-time env
 /// defines are missing or invalid (docs/09 M0.3, ADR-0005).
-Future<void> bootstrap() async {
+///
+/// [overrides] are for device sweeps only (CR-160 B7 gate: a small part
+/// size and a scripted file gateway); the app passes none.
+Future<void> bootstrap({List<Override> overrides = const []}) async {
   WidgetsFlutterBinding.ensureInitialized();
   final sinks = FanOutLogSink([const DeveloperLogSink()]);
   final logger = Logger(sinks, const SystemClock());
@@ -91,6 +95,7 @@ Future<void> bootstrap() async {
             routerProvider.overrideWithValue(router),
             supabaseClientProvider.overrideWithValue(supabase),
             authCallbackInboxProvider.overrideWithValue(callbacks),
+            ...overrides,
           ],
         );
       },

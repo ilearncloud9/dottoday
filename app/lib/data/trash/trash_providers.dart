@@ -2,6 +2,7 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/trash/drift_trash_service.dart';
 import 'package:dottoday/data/undo/in_memory_undo_service.dart';
@@ -13,18 +14,25 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'trash_providers.g.dart';
 
 /// App-wide so a token from one screen can be redeemed by the snackbar.
+/// A new, empty one at every change of owner (CR-160 I5); the old one
+/// forgets its rows, so a stale holder of it can't undo either.
 @Riverpod(keepAlive: true)
-UndoService undoService(Ref ref) => InMemoryUndoService(
-  writes: ref.watch(writeUseCaseProvider),
-  occurrences: ref.watch(occurrenceRepositoryProvider),
-  subtasks: ref.watch(subtaskRepositoryProvider),
-  series: ref.watch(seriesRepositoryProvider),
-  routines: ref.watch(routineRepositoryProvider),
-  calendarSeries: ref.watch(calendarSeriesRepositoryProvider),
-  settings: ref.watch(settingsRepositoryProvider),
-  clock: ref.watch(clockProvider),
-  ids: const UuidV7Generator(),
-);
+UndoService undoService(Ref ref) {
+  ref.watch(ownerEpochProvider);
+  final service = InMemoryUndoService(
+    writes: ref.watch(writeUseCaseProvider),
+    occurrences: ref.watch(occurrenceRepositoryProvider),
+    subtasks: ref.watch(subtaskRepositoryProvider),
+    series: ref.watch(seriesRepositoryProvider),
+    routines: ref.watch(routineRepositoryProvider),
+    calendarSeries: ref.watch(calendarSeriesRepositoryProvider),
+    settings: ref.watch(settingsRepositoryProvider),
+    clock: ref.watch(clockProvider),
+    ids: const UuidV7Generator(),
+  );
+  ref.onDispose(service.forget);
+  return service;
+}
 
 @Riverpod(keepAlive: true)
 TrashService trashService(Ref ref) => DriftTrashService(

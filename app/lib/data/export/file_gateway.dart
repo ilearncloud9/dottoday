@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui' show Rect;
 
 import 'package:dottoday/data/export/folder_writer.dart';
+import 'package:dottoday/data/export/prepared_file.dart';
 import 'package:dottoday/domain/export/export_files.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -16,26 +17,16 @@ enum DeliveryOutcome {
   cancelled,
 }
 
-/// What picking a backup file gave.
-sealed class PickedBackup {
-  const PickedBackup();
-}
+/// One picked file (CR-160 B7): its name and size, its bytes read only
+/// when asked, so a set is read one file at a time.
+final class PickedFile {
+  const PickedFile(this.name, this.size, this.read);
 
-/// The person closed the picker.
-final class PickCancelled extends PickedBackup {
-  const PickCancelled();
-}
+  final String name;
 
-/// The file is bigger than the import limit; it was never read.
-final class PickTooLarge extends PickedBackup {
-  const PickTooLarge();
-}
-
-/// The file's bytes.
-final class PickedBytes extends PickedBackup {
-  const PickedBytes(this.bytes);
-
-  final Uint8List bytes;
+  /// Null when the platform can't say before reading.
+  final int? size;
+  final Future<Uint8List> Function() read;
 }
 
 /// The only way files leave or enter the app (docs/09 M8.1, R-11), and only
@@ -58,9 +49,24 @@ abstract interface class FileGateway {
     Rect? origin,
   });
 
-  /// Opens the file picker for a `.json` backup and reads it, refusing
-  /// anything over [maxBytes] before reading it.
-  Future<PickedBackup> pickBackup({required int maxBytes});
+  /// Opens the file picker for one or more `.json` files (a backup, or the
+  /// files of a multipart set, CR-160 B7); empty when it was closed.
+  /// Nothing is read yet, so a file over the import limit is refused by
+  /// its size before reading.
+  Future<List<PickedFile>> pickJsonFiles();
+
+  /// Hands a prepared set over (CR-160 B7): the share sheet with every
+  /// file by path on iPhone and Android, a folder the person picks on the
+  /// Mac. The web never calls this: it downloads each file with
+  /// [downloadPrepared]. Throws only on a platform error.
+  Future<DeliveryOutcome> deliverPrepared(
+    List<PreparedFile> files, {
+    Rect? origin,
+  });
+
+  /// Web: asks the browser to download [file] (one tap per file, so the
+  /// browser doesn't block a burst of downloads).
+  Future<void> downloadPrepared(PreparedFile file);
 }
 
 /// [FileGateway] over `share_plus` and `file_picker`.
@@ -148,17 +154,47 @@ final class PlatformFileGateway implements FileGateway {
   }
 
   @override
-  Future<PickedBackup> pickBackup({required int maxBytes}) async {
-    final file = await FilePicker.pickFile(
+  Future<List<PickedFile>> pickJsonFiles() async => [
+    for (final f in await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: const ['json'],
+    ))
+      PickedFile(f.name, f.lengthSync(), f.readAsBytes),
+  ];
+
+  @override
+  Future<DeliveryOutcome> deliverPrepared(
+    List<PreparedFile> files, {
+    Rect? origin,
+  }) async {
+    if (_sharesFiles) {
+      final result = await SharePlus.instance.share(
+        ShareParams(
+          files: [
+            for (final f in files)
+              XFile(f.path!, name: f.name, mimeType: f.mimeType),
+          ],
+          fileNameOverrides: [for (final f in files) f.name],
+          sharePositionOrigin: origin,
+        ),
+      );
+      return result.status == ShareResultStatus.dismissed
+          ? DeliveryOutcome.cancelled
+          : DeliveryOutcome.delivered;
+    }
+    final folder = await FilePicker.getDirectoryPath();
+    if (folder == null) return DeliveryOutcome.cancelled;
+    await copyIntoFolder(folder, [for (final f in files) (f.name, f.path!)]);
+    return DeliveryOutcome.delivered;
+  }
+
+  @override
+  Future<void> downloadPrepared(PreparedFile file) async {
+    await FilePicker.saveFile(
+      fileName: file.name,
+      bytes: file.bytes!,
+      mimeType: file.mimeType,
     );
-    if (file == null) return const PickCancelled();
-    final size = await file.length();
-    if (size != null && size > maxBytes) return const PickTooLarge();
-    final bytes = await file.readAsBytes();
-    if (bytes.length > maxBytes) return const PickTooLarge();
-    return PickedBytes(bytes);
   }
 
   static Uint8List _bytes(ExportFile f) => utf8.encode(f.content);

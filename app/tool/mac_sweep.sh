@@ -3,6 +3,8 @@
 # and captures the app window each time the test prints SWEEP_SHOT <name>
 # (integration_test's takeScreenshot doesn't support macOS).
 # SWEEP_THEME=dark runs it dark (shots named macos_dark_*).
+# SWEEP_TARGET runs another sweep (CR-160 B7 gate:
+# integration_test/cr160_set_sweep_test.dart); DEFINES its defines file.
 # Every SWEEP_SHOT is captured, so new legs (M14: privacy_ai_status,
 # brain_dump_mic / brain_dump_no_mic, proposal_origin, editor_notes) need
 # no change here.
@@ -20,15 +22,15 @@ for w in list where (w[kCGWindowOwnerName as String] as? String)?.lowercased() =
 }
 SWIFT
 }
-flutter drive -d macos --dart-define-from-file=.env.example \
+flutter drive -d macos --dart-define-from-file="${DEFINES:-.env.example}" \
   --dart-define=SWEEP_TAG=macos \
   ${SWEEP_THEME:+--dart-define=SWEEP_THEME="$SWEEP_THEME"} \
   --driver=test_driver/screenshot_driver.dart \
-  --target=integration_test/sweep_test.dart >"$log" 2>&1 &
+  --target="${SWEEP_TARGET:-integration_test/sweep_test.dart}" >"$log" 2>&1 &
 drive=$!
 seen=""
 while kill -0 "$drive" 2>/dev/null; do
-  for name in $(grep -o 'SWEEP_SHOT [a-z_]*' "$log" | cut -d' ' -f2); do
+  for name in $(grep -o 'SWEEP_SHOT [a-z0-9_]*' "$log" | cut -d' ' -f2); do
     case " $seen " in *" $name "*) continue ;; esac
     # Stage Manager draws a window outside the active stage as a small
     # thumbnail, which is what -l then captures: bring the app forward

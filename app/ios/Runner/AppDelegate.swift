@@ -178,17 +178,23 @@ enum LiveActivityBridge {
         guard let args = call.arguments as? [String: Any], let id = args["id"] as? String else {
           return result(FlutterError(code: "bad_args", message: nil, details: nil))
         }
+        // As the activity's own buttons: changed only when queued (CR-160
+        // I7); the result says whether it was.
         Task {
+          let queued: Bool
           if args["kind"] as? String == "add_fifteen" {
             let end = args["planned_end_ms"] as? Double ?? 0
-            DotActions.perform(
-              .addFifteen, occurrenceId: id, plannedEnd: Date(timeIntervalSince1970: end / 1000))
-            await LiveActivities.plusFifteen(occurrenceId: id, plannedEndMs: end)
+            queued = await DotActions.performLive(
+              .addFifteen, occurrenceId: id, plannedEnd: Date(timeIntervalSince1970: end / 1000)
+            ) {
+              await LiveActivities.plusFifteen(occurrenceId: id, plannedEndMs: end)
+            }
           } else {
-            DotActions.perform(.markDone, occurrenceId: id)
-            await LiveActivities.end(occurrenceId: id)
+            queued = await DotActions.performLive(.markDone, occurrenceId: id) {
+              await LiveActivities.end(occurrenceId: id)
+            }
           }
-          result(nil)
+          result(queued)
         }
       default:
         result(FlutterMethodNotImplemented)
@@ -207,6 +213,11 @@ final class IntentQueueBridge {
 
   func attach(to messenger: FlutterBinaryMessenger) {
     let channel = FlutterMethodChannel(name: "dottoday/intents", binaryMessenger: messenger)
+    // The queue's key pair, so extensions and Siri can seal from now on
+    // (CR-160 I1): before this, a text action is refused, never stored.
+    if let defaults = DotStore.shared {
+      _ = QueueLock.run { QueueSeal.ensureKey(defaults, suite: DotStore.appGroup) }
+    }
     // The drain's read and its atomic remove (lib/data/intents/
     // native_action_queue_store.dart): on the main thread, like every
     // in-app append, so none falls between a read and a write.
@@ -215,10 +226,18 @@ final class IntentQueueBridge {
       let queue = DotQueue(defaults: defaults)
       switch call.method {
       case "readQueue":
-        result(defaults.string(forKey: DotStore.queueKey))
+        // Plaintext from an earlier version sealed first; the app gets the
+        // words opened (CR-160 I1).
+        result(queue.readForApp())
       case "removeQueued":
         let args = call.arguments as? [String: Any]
-        queue.remove(Set(args?["ids"] as? [String] ?? []), unreadable: args?["unreadable"] as? Bool ?? false)
+        queue.remove(Set(args?["ids"] as? [String] ?? []))
+        result(nil)
+      case "publishOwner":
+        // Whom the share extension, widgets and Siri stamp (CR-160 I7).
+        if let raw = (call.arguments as? [String: Any])?["owner"] as? String {
+          queue.publishOwner(raw)
+        }
         result(nil)
       default:
         result(FlutterMethodNotImplemented)

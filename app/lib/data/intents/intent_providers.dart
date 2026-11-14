@@ -4,9 +4,12 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/editing/focus_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
+import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/db/owned_local_meta.dart';
 import 'package:dottoday/data/intents/action_queue_drainer.dart';
 import 'package:dottoday/data/intents/native_action_queue_store.dart';
 import 'package:dottoday/data/intents/no_action_queue_store.dart';
+import 'package:dottoday/data/intents/queue_owners.dart';
 import 'package:dottoday/data/intents/web_action_queue_store.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
@@ -31,6 +34,7 @@ DotIntents dotIntents(Ref ref) => DotIntents(
   snapshot: () async =>
       ref.read(daySnapshotWriterProvider).write((await latestProfile(ref)).id),
   untitled: (language) => _l10n(language).inboxUntitled,
+  ownerOf: (id) => taskOwnerOf(ref.read(appDatabaseProvider), id),
 );
 
 /// Where this platform's surfaces queue actions (docs/09 M9.2). On the
@@ -51,6 +55,10 @@ ActionQueueDrainer actionQueueDrainer(Ref ref) => ActionQueueDrainer(
   store: ref.watch(actionQueueStoreProvider),
   intents: ref.watch(dotIntentsProvider),
   logger: ref.watch(loggerProvider),
+  shownOwner: () => shownOwnerId(ref.read(appDatabaseProvider)),
+  prepare: (queued) => keepGuestOrigin(ref.read(appDatabaseProvider), queued),
+  recordTerminal: (queued, outcome) =>
+      recordQueueOutcome(ref.read(appDatabaseProvider), queued, outcome),
   now: ref.watch(clockProvider).nowUtc,
   // Start focus from a control, tile or Siri opens Focus (M10.5).
   onFocus: (id) => ref.read(focusRequestProvider.notifier).request(id),
