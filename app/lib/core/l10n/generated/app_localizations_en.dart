@@ -2935,7 +2935,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get helpMoveA =>
-      'Drag it along the thread, or drag its edges to change how long it is. Long-press to pick several.';
+      'Drag it along the thread to any time, even over another task. Open it › Duration to change how long it is. Long-press to pick several.';
 
   @override
   String get helpLateQ => 'I\'m running late. Can everything move?';

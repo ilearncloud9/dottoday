@@ -9,7 +9,7 @@ Dottoday : planning du jour
 Votre journée, comme un fil
 
 ### Promotional text
-Planifiez votre journée en points sur une ligne. Glissez pour déplacer, tirez le bord pour la durée, et décalez toute la suite d'un geste quand les plans changent.
+Planifiez votre journée en points sur une ligne. Glissez une tâche à n'importe quelle heure, et décalez toute la suite d'un geste quand les plans changent.
 
 ### Keywords
 agenda,planning,journée,emploi du temps,blocs de temps,routine,calendrier,tâches,to do,tdah
@@ -23,7 +23,7 @@ Dottoday transforme votre liste de tâches en une journée que vous pouvez suivr
 Commence votre matin, termine votre soirée. Le réveil peut sonner comme une alarme et ouvre une carte avec votre journée ; la détente du soir se cale sur la première tâche du lendemain.
 
 QUAND LA JOURNÉE BOUGE, TOUT BOUGE
-• Glissez une tâche pour la déplacer, son bord pour changer sa durée.
+• Glissez une tâche à n'importe quelle heure ; réglez sa longueur dans Durée.
 • Décalez tout ce qui suit une tâche d'un seul geste, ou ajoutez 15 minutes à la tâche en cours.
 • Appui long pour choisir plusieurs tâches et les déplacer ensemble.
 • Les tâches épinglées restent en place.

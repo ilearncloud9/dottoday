@@ -4255,7 +4255,7 @@
   "@helpMoveQ": {
     "description": "Help question."
   },
-  "helpMoveA": "Drag it along the thread, or drag its edges to change how long it is. Long-press to pick several.",
+  "helpMoveA": "Drag it along the thread to any time, even over another task. Open it › Duration to change how long it is. Long-press to pick several.",
   "@helpMoveA": {
     "description": "Help answer."
   },

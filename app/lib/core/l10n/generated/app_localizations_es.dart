@@ -2943,7 +2943,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get helpMoveA =>
-      'Arrástrala a lo largo del hilo, o arrastra sus bordes para cambiar su duración. Mantén pulsado para elegir varias.';
+      'Arrástrala a lo largo del hilo a cualquier hora, incluso sobre otra tarea. Ábrela › Duración para cambiar cuánto dura. Mantén pulsado para elegir varias.';
 
   @override
   String get helpLateQ => 'Voy con retraso. ¿Se puede mover todo?';

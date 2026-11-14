@@ -2949,7 +2949,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get helpMoveA =>
-      'Zieh sie am Faden entlang oder zieh an ihren Rändern, um die Dauer zu ändern. Lange drücken, um mehrere auszuwählen.';
+      'Zieh sie am Faden entlang an jede Stelle, auch über eine andere Aufgabe. Öffne sie › Dauer, um die Länge zu ändern. Lange drücken, um mehrere auszuwählen.';
 
   @override
   String get helpLateQ => 'Ich bin spät dran. Kann sich alles verschieben?';

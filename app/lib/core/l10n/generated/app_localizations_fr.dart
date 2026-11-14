@@ -2947,7 +2947,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get helpMoveA =>
-      'Faites-la glisser le long du fil, ou tirez ses bords pour changer sa durée. Appui long pour en choisir plusieurs.';
+      'Faites-la glisser le long du fil à n\'importe quelle heure, même sur une autre tâche. Ouvrez-la › Durée pour changer sa longueur. Appui long pour en choisir plusieurs.';
 
   @override
   String get helpLateQ => 'Je suis en retard. Tout peut-il bouger ?';

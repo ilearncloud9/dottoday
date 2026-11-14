@@ -700,7 +700,7 @@
   "exportRestored": "Backup wiederhergestellt",
   "helpIntro": "Schnelle Antworten. Noch etwas? Sende unten Feedback.",
   "helpMoveQ": "Wie verschiebe ich eine Aufgabe?",
-  "helpMoveA": "Zieh sie am Faden entlang oder zieh an ihren Rändern, um die Dauer zu ändern. Lange drücken, um mehrere auszuwählen.",
+  "helpMoveA": "Zieh sie am Faden entlang an jede Stelle, auch über eine andere Aufgabe. Öffne sie › Dauer, um die Länge zu ändern. Lange drücken, um mehrere auszuwählen.",
   "helpLateQ": "Ich bin spät dran. Kann sich alles verschieben?",
   "helpLateA": "Ja: ⋯ › Ich bin spät dran verschiebt den Rest des Tages um 5, 15 oder 30 Minuten und stoppt an angehefteten Aufgaben. Du kannst die aktuelle Aufgabe auch überspringen oder kürzen.",
   "helpRepeatQ": "Wie funktionieren wiederkehrende Aufgaben?",

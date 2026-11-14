@@ -9,7 +9,7 @@ Dottoday: planificador diario
 Tu día, como un hilo
 
 ### Promotional text
-Planifica tu día como puntos en una línea. Arrastra para mover, tira del borde para la duración y desplaza todo lo que sigue con un gesto cuando cambian los planes.
+Planifica tu día como puntos en una línea. Arrastra una tarea a cualquier hora y desplaza todo lo que sigue con un gesto cuando cambian los planes.
 
 ### Keywords
 planificador,agenda,horario,línea de tiempo,bloques de tiempo,rutina,calendario,tareas,tdah
@@ -23,7 +23,7 @@ Dottoday convierte tu lista de tareas en un día que puedes seguir. Tu día es u
 Empieza tu mañana, cierra tu noche. El despertar puede sonar como una alarma y abre una tarjeta con tu día; el momento de desconectar se ajusta a la primera tarea de mañana.
 
 CUANDO EL DÍA SE MUEVE, MUÉVELO TODO
-• Arrastra una tarea para moverla, o su borde para cambiar cuánto dura.
+• Arrastra una tarea a cualquier hora; ajusta cuánto dura en Duración.
 • Desplaza todo lo que sigue a una tarea con un gesto, o suma 15 minutos a lo que estás haciendo.
 • Mantén pulsado para elegir varias tareas y moverlas juntas.
 • Las tareas fijadas no se mueven.

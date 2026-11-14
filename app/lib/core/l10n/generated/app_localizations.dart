@@ -4305,7 +4305,7 @@ abstract class AppLocalizations {
   /// Help answer.
   ///
   /// In en, this message translates to:
-  /// **'Drag it along the thread, or drag its edges to change how long it is. Long-press to pick several.'**
+  /// **'Drag it along the thread to any time, even over another task. Open it › Duration to change how long it is. Long-press to pick several.'**
   String get helpMoveA;
 
   /// Help question.
