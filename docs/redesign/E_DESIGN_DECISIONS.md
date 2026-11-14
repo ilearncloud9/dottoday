@@ -4378,24 +4378,139 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Board:** E-R2-24 and E-R2-24-Dark section 5 now show "Kalender", "Calendrier" and "Boîte" on the tab bars, and the findings read "Decided". The Help and What's new notes say what happens to each text. Board height is now 7760. Version `1794619797-a65a`. Snapshot v3.05-working.
 - Nothing built. The PR is the only app change.
 
+### ED-328 · R2-25 approved: moving tasks (touch drag, tablet pointer, swipe) (boards E-R2-25, E-R2-25-Dark)
+- **Date:** 2026-11-14. **Owner:** "lets work on these" (the platform and edge-state gaps from the Round 2 close-out audit), then "Approve both".
+- **Gap pass:** R2-25 to R2-31 draw the platform gaps and missing edge states the close-out audit found (presented 2026-11-14). R2-25 is the first.
+- **Approved as drawn, all built behaviour and strings:**
+  - **Touch drag on phones (iPhone and Android):**
+    - a 250 ms hold lifts the row (a mouse lifts at once); the row stays dimmed; the dot follows the finger with its time range;
+    - the landing preview on the thread; overlaps allowed, with the knot only after the drop;
+    - "Shift later tasks" and "Calendar events too";
+    - drop targets: the Wake Up cap ("All day"), the Trash bin (ink, never red) and the Inbox tab;
+    - the drop toasts with Undo; haptics, auto-scroll, cancel by letting go; screen readers use Select then Move.
+  - **Tablets:** iPad touch drag to Wednesday with the drop box and "Wed · 11:00 – 11:45 AM"; the pointer hover tint and pointer drag (ED-116); an Android tablet Inbox task dragged onto Thursday.
+  - **Swipe actions:** phone Inbox rows only; start → end Move to Trash, end → start Schedule; Android the same, with the first-row hint.
+- **Not built, so not drawn:** an overlap preview while dragging; Esc or Back to cancel a drag.
+- **Board labels:** "Approved · ED-328"; canvas titles updated. Published `1794675893-d525`; labelled `1794676731-c464`.
+- Nothing built or committed. Snapshot v3.06-working.
+
+### ED-329 · R2-26 approved: time states (overrun, Now through the day, Focus past its end) (boards E-R2-26, E-R2-26-Dark)
+- **Date:** 2026-11-14. **Owner:** "Approve both". Part of the gap pass (ED-328).
+- **Approved as drawn, all built behaviour and strings:**
+  - **Past the planned end, on Today:** the live card becomes an ordinary row, "9:00–11:00 AM · not done", muted, never red and never "late"; "Need more time?" with "… ended 12 min ago", Catch up and Not now; the Running late sheet (How late +5 / +15 / +30; Shift the rest, Skip, Shorten); the optional "Ended 12 minutes ago. Done?" alert; Reality view; widgets and the Live Activity.
+  - **Now through the day (design choice, approved):** the minimal Now view follows the built rule of the widgets and the Mac menu bar (Now, then Next up, then Nothing else today). At 6:30 it shows the approved Wake Up card (R2-19); between tasks, Next up with "{duration} free"; after an overrun, Next up with the unticked tasks under Earlier, "· not done". iPhone and Android.
+  - **Focus past its end:** nothing ends by itself; the ring holds full, "0 min left", step timer 0:00; Done and +15 toasts. iPhone and Android.
+  - **Mac menu bar after the end:** "Next up · Lunch · 12:30 PM"; Done and +15 min leave with the live task.
+- **Not built, so not drawn:** a pause in Focus; the floating Mac Now window (ED-066); any minutes-over display.
+- **Board labels:** "Approved · ED-329"; canvas titles updated. Published `1794676675-6dcb`; labelled `1794676731-c464`.
+- Nothing built or committed. Snapshot v3.06-working.
+
+### ED-330 · R2-27 approved: day states and task sheets (boards E-R2-27, E-R2-27-Dark)
+- **Date:** 2026-11-14. **Owner:** "Approve R2-27". Part of the gap pass (ED-328).
+- **Approved as drawn, all built behaviour and strings:**
+  - **Every task done:** "9 of 9 done", then the Day review with "Nothing left to move" and Not now; no celebration, no score.
+  - **A past day:** the "● Today" pill; no banner and no prompts; "· not done" on unticked tasks; a dashed, faded dot and muted title for a skipped task; free time without "add here"; drag and Done still work.
+  - **Three overlapping tasks:** a chain of pairwise knots. Dense days are not compacted (built).
+  - **All-day items:** tinted chips above the day, scrolling sideways, with no limit.
+  - **Empty today on Android:** "Nothing planned · 16 h free", the empty line, Add to this day, Pull from inbox · 3, Copy a day…; the empty Wake Up card ("Nothing planned yet", Plan today, Later).
+  - **Task sheets:** a done task (Not done tile); a past task not done (Shift the rest off); a calendar event, editable, with "Changes go back to Work" or "From Work · changes stay in Dottoday"; five alerts (Add chips off, "Up to 5 alerts").
+- **Not built, so not drawn:** a compact dense day; a custom alert time; the minimal "Rest of today" on Android (the approved iPhone frame is the reference).
+- **Board labels:** "Approved · ED-330"; canvas titles updated. Published `1794677213-2a3d`; labelled `1794677692-fe49`.
+- Nothing built or committed. Snapshot v3.07-working.
+
+
+### ED-331 · R2-28 approved: small states (boards E-R2-28, E-R2-28-Dark)
+- **Date:** 2026-11-14. **Owner:** "Approve R2-28". Part of the gap pass (ED-328).
+- **Approved as drawn, all built behaviour and strings:**
+  - **Move to a day:** the "Move to" sheet with the month view; days that have tasks carry dots.
+  - **No free slot:** the Inbox schedule sheet when nothing fits the chosen day.
+  - **Quiet week:** "A quiet week: nothing was planned.", empty rings, the "0 of 0 done" chip and the share card.
+  - **No search results:** "No matches for “…”", "Try fewer words, or another filter.", Show all and Recent.
+  - **Calendars:** the iOS permission alert with the Info.plist reason; the load error "This didn't load" / "Your tasks are safe on this device." with Try again.
+  - **Missions:** no sensor on this phone, access blocked in the phone's settings, "Needs at least two dots that day.", backup mission None.
+  - **Small toasts:** the short confirmations for these flows.
+- **Not built, so not drawn:** a "Date…" option in the picker; progress for export, import or connecting a calendar.
+- **Board labels:** "Approved · ED-331"; canvas titles updated. Published `1794678088-9fe6`; labelled `1794680077-7abc`.
+- **Owner comment "add icons" (2026-11-14):** each mission row now has an icon from the app's own task icons (stand up, walking, light bulb, lungs, a target for Catch the dot, a star for one thing), marked Design-only because the built picker is text only. Board height 2800. Published `1794680533-0511`.
+- Nothing built or committed. Snapshot v3.08-working.
+
+
+### ED-332 · R2-29 approved: Android parity, and one icon per Settings row everywhere (boards E-R2-29, E-R2-29-Dark)
+- **Date:** 2026-11-14. **Owner:** "Approve R2-29". Part of the gap pass (ED-328).
+- **Approved as drawn on Android, all built behaviour and strings:**
+  - **Minimal Settings:** the nine rows with Layout first, Check it works below; Everything else… with Search first.
+  - **Learning and Reality:** Settings › Learning status rows (no switch; Energy suggestions is the one switch, off until 20 high-energy tasks); the caption before the reveal; Reality on with a Material Plan | Reality segmented button and the insight.
+  - **Launcher shortcuts:** long-press shows Add task and What's next, both with the app icon. iPhone has no Home Screen quick actions.
+  - **Help and about:** Help, About Dottoday, Send feedback (no Siri row on Android); Help's Wake Up answer adds Android's alarm line; About shows "1.2.0 (4)".
+  - **Calendars:** device calendars switch off (no Disconnect); access off shows "Open your device's Settings, find Dottoday and allow access to Calendars."; Disconnect as a Material dialog.
+  - **App lock:** Privacy with Lock Dottoday and Lock after; the system unlock sheet with "Unlock Dottoday" and PIN fallback; a failed try leaves the locked screen; Recents shows a blank card while the lock is on.
+  - **Duplicate day:** the Day menu, Copy to which day? (copies at once, no confirm), "Copied 8 tasks" with Undo; one-off tasks only.
+- **Settings icons (owner comment "add icons and make sure they are always consistent…"):** every Settings row has an icon, and each setting has one glyph and one colour on every platform. Source: the approved iPhone tile where one was drawn, otherwise the app's own SettingsRow glyph and tint. Shape follows each platform's approved anatomy: a 30 px rounded tile on iPhone, iPad, Mac and web (22 px in the Mac toolbar), a 40 px circle on Android; Android circles now take each setting's colour instead of one teal. Wind Down reminder is the bell everywhere (R2-20 had a moon). Dark Appearance tiles fixed. Status and list rows (calendar colour dots, backup dates, export formats, mission choices, notification health state) keep what they show. Applied to E-Phones, E-Phones-3, E-PhonesMinimal, E-FullA-v2, E-R2-11, E-R2-18, E-R2-20, E-R2-21, E-R2-24, E-R2-28 and E-R2-29, light and dark; no board height changed. Decision and review boards (G-series, Settings review, candidates) are left as records. Published `1794683197-e908`.
+- **Copy:** the Help Wake Up answer still says "Settings › Day shape" (stale; for the separate copy PR).
+- **Not built, so not drawn:** long shortcut labels; copying to several days or picking tasks to copy; Duplicate day in minimal.
+- **Board labels:** "Approved · ED-332"; canvas titles updated. Published `1794681007-f605`; labelled `1794683410-0978`.
+- Nothing built or committed. Snapshot v3.09-working.
+
+### ED-333 · R2-30 approved: Mac and web parity (boards E-R2-30, E-R2-30-Dark)
+- **Date:** 2026-11-14. **Owner:** "Approve R2-30". Part of the gap pass (ED-328).
+- **Approved as drawn, built content inside the approved shell (E-FullA-v2, E-Minimal):**
+  - **Search:** Mac with results grouped by day (Today first, Inbox with Schedule) and the seven filters; web with no results, Show all and Recent.
+  - **Routines:** the Mac page with Edit, Drop on today, New routine and the alarm note.
+  - **Focus:** the whole window on Mac and web (ED-285); web's Deep work points to the computer's Do Not Disturb.
+  - **Settings panes:** Trash as a centred dialog with Restore; Help and about (no Siri row); Calendars (Mac reads its own; web Google and Microsoft only); Privacy with App lock.
+  - **3 days and Month:** 3 days on the hour canvas (yesterday, today, tomorrow); Month as cards with titles, +N more, N of N done and Light day.
+  - **Minimal on wide:** Inbox with the next free slot and Place, Calendar as the month, Search unchanged.
+  - **Menus and copying:** Edit (Undo, Redo, Delete, no keys shown) and Window (system items); Copy to which day? as a centred dialog, then "Copied 8 tasks" with Undo.
+- **Design-only:** the Workspace sidebar, the Settings window and the 3 days tab are the approved design (in the app, Settings is a page and 3 days is Today's spread); Search or run results are drawn but the palette is not built.
+- **Code gap:** minimal Inbox at expanded width still shows the full Inbox (Drop onto today, Auto-plan); docs/14 §3 says next free slot and Place only.
+- **Icons:** the Mac Settings toolbar now shows General (teal person) and Help (the Help and about icon), completing ED-332.
+- **Board labels:** "Approved · ED-333"; canvas titles updated. Published `1794684549-bd33`; labelled `1794684721-7d89`.
+- Nothing built or committed. Snapshot v3.10-working.
+
+### ED-334 · R2-31 approved: tablets, windows, folds and browsers (boards E-R2-31, E-R2-31-Dark); the gap pass is complete
+- **Date:** 2026-11-14. **Owner:** "Approve R2-31". Last board of the gap pass (ED-328).
+- **Approved as drawn, on the approved R2-1 tablet frames and the R2-7 toast:**
+  - **Stage Manager:** the layout follows the window: an 820-wide window gets the iPad top tabs (medium), 1180 the sidebar and Workspace (expanded), under 600 the phone layout (as Split View ½).
+  - **Foldable:** unfolded flat and tabletop are medium with the rail; folded is the phone.
+  - **Undo toast at medium width:** centred on the content area, beside the rail and never under it, on iPad, Android tablet and the unfolded foldable; dark as approved in R2-7.
+  - **Tablet browsers:** iPad Safari in landscape shows the web Workspace; Android Chrome in portrait shows the rail, as the native app at the same width (ED-172).
+- **Code gap:** the app reads no display features, so content runs across a hinge in both postures; the approved rule (no pane or text across a hinge, ED-099, ED-110; tabletop as compact, ED-168) needs a code task.
+- **Board labels:** "Approved · ED-334"; canvas titles updated. Published `1794685110-14bf`; labelled `1794685183-e302`.
+- **Gap pass complete:** R2-25 to R2-31 approved (ED-328 to ED-334). Code gaps found along the way: Search or run not built (ED-333), minimal Inbox at wide widths (ED-333), hinge awareness (ED-334), the stale "Day shape" Help text (ED-332).
+- Nothing built or committed. Snapshot v3.11-working.
+
+### ED-335 · Round 2 close-out audit recorded
+- **Date:** 2026-11-14. **Owner:** "close out the audit findings". The four-check audit of 2026-11-14 (every open row against the live boards and the log) and the gap pass that answered it.
+- **Closed by the gap pass (R2-25 to R2-31, ED-328 to ED-334):** every platform gap in the audit's §2 (touch drag and pointer states; Android swipe, empty day, minimal Settings, Reality and learning, shortcuts; Mac and web Search, Routines, Focus, Trash, 3 days, Month, minimal Inbox, Calendar and Search, Search or run results, Edit and Window menus; Help and about, Calendars, App lock and Duplicate day off iPhone; Stage Manager, the foldable, the Undo toast at medium width, tablet browsers) and every edge state in §3 except those not built.
+- **Not built, noted on the boards:** Focus paused, a first-week Week in review, a compact dense day, a custom alert time, progress for export, import and calendar connecting.
+- **Still to design (audit §1):** Settings › Planning, Sound and Siri & Shortcuts pages; Past days and the year strip; Pick today's one thing from the Day menu; Rebalance (result, before and after, pin, drag chip); the Mac and web Add popover with live chips (CR-069); the Mac and web Go to date popover (CR-082); spoken Brain dump; the Wake Up explainer page (ED-099). Also the tasks-before-Wake-Up fold and phone landscape. Consistency report: CR-048, CR-069, CR-081 to CR-084 are design fixes.
+- **Still needs the owner (audit §4):** permanent delete from Trash (F7.6, new copy); the R2-19-B tablet alarm rows and tablet missions added after approval; Catch the dot (four dots, three taps, "Tap the blue dot"); "Plan from Inbox · 3" on the Full empty day; Today on launch scrolled to now; the "After" label clash; the Mac context menu's two item sets ("Delete ⌫" and "Move to Trash ⌘⌫"); the sync heading read twice (ED-190); the optional web-storage line (ED-191); the iPhone signing exception (ED-263); onboarding before build (ED-305: the 13+ age note, three new strings, a build go-ahead); before build: the isolated Supabase proposal (Q9), Wind Down past midnight (Q8), web push (Q11) and calendar webhooks (Q13) setup, the Wake Up plugin approval, the device-list table (must-ask schema). **Answered since the audit:** the R2-20 Android row icons (ED-332).
+- **Blocked (audit §5):** account screens wait on CR-160 ([ilearncloud9/dottoday#75](https://github.com/ilearncloud9/dottoday/pull/75), still a draft). The Help move answer is done: [ilearncloud9/dottoday#76](https://github.com/ilearncloud9/dottoday/pull/76) is merged.
+- **Records brought up to date (audit §6):** the tablet checklist (header, every §3 row, §5 coverage); traceability (section D gaps and the missing R2-1 to R2-24 log); the screen inventory (§2 rewritten, 57 rows marked "Designed in Round 2", §3 and §4 notes); the consistency report (19 Round 2 rows: 12 resolved, 6 design fix, 1 waiting on CR-160); STATUS and the handoff; this file's pending answers. Canvas: E-Minimal's Show everything note now says the Workspace (ED-073) and its status-item inset points to R2-17 (ED-309); four G3-6 and G4-7 board titles no longer say "open" or "for your review" (published `1794687460-0165`).
+- **The R2-19-B split, recorded:** boards cut off at 8,000 px are split: E-R2-19-B now ends at 6,640 px and E-R2-19-B-2 (light and dark) holds the rest, unchanged in content. Approved with R2-19 (ED-314); the tablet rows on it are still the open question above.
+- **Code gaps found by the gap pass:** Search or run not built (ED-333); minimal Inbox at wide widths shows the full Inbox (ED-333); no hinge awareness (ED-334); the Help Wake Up answer says "Day shape" (ED-332), which matches today's app until the Your day restructure ships.
+- **Release gate (ED-238):** Concept E stays LEADING CANDIDATE — NOT APPROVED FOR PRODUCTION IMPLEMENTATION until the owner approves it as a whole; the open items above are what stands between Round 2 and that approval.
+- Nothing built. Snapshot v3.12-working.
 ---
 
 ## Pending owner answers
+
+> **Round 2 close-out (2026-11-14, ED-335).** Rows answered by later decisions are marked. The decisions still waiting on the owner are listed in ED-335.
 
 | Thread | Question | Where it stands |
 |---|---|---|
 | 9acf09f2 | Scale direction: "keep large", "C confidence" (modest rows, one big hero, more space between groups) or "both"? | Asked twice on 2026-11-03 (22:43 and 22:47 UTC). No answer. The large scale is on the boards (ED-025, ED-026). **Presented 2026-11-05 as G3-1 on `E-G3-1` (ED-101); option C revised to the owner's sizes (ED-103).** |
 | 9acf09f2 | The owner's comment ended with "what". Was more text cut off? | Asked on 2026-11-03. **Closed 2026-11-05 (ED-103): the owner says it is not a new design requirement.** |
-| 24c4bdf0 | A-Map still describes A-Wide. Should the map follow A-Focus as the Mac/web design? | Asked on 2026-11-04. No answer. The working E Map answers this for E, but the owner has not confirmed it (ED-056). |
+| 24c4bdf0 | A-Map still describes A-Wide. Should the map follow A-Focus as the Mac/web design? | Asked on 2026-11-04. No answer. The working E Map answers this for E, but the owner has not confirmed it (ED-056). **Close-out (ED-335): superseded; Concept E is the design, A-Map is history.** |
 | (canvas) | Is E-Focus the minimal or the full Mac/web presentation? The title says minimal; the content is full. | Never asked directly (ED-005). **Answered 2026-11-04:** E-Minimal replaced it as the wide minimal layout (ED-064), and E keeps no wide Focus presentation (ED-065). |
 | f55c7d26 | "the keyboard": restore the whole iPhone keyboard to its look from before the iOS-controls pass? | Offered on 2026-11-03. No answer (ED-032). |
 | 69ac6f26 | iOS switch on-state: teal or system green? | Offered on 2026-11-03. No answer (ED-041). **Answered 2026-11-05: teal (G3-4 option A, ED-112).** |
 | 69ac6f26 | iOS system greys and colours below 4.5:1 contrast (tab labels #8E8E93 at about 3.1:1): keep native, or darken? | Raised on 2026-11-03. The swipe colours were reverted, but the tab labels were never decided (ED-042). |
 | 323fc074 | Simplify the web orb to match C's plainer web orb? | Offered on 2026-11-03. No answer (ED-052). **Presented 2026-11-05 as option B of G3-2 (ED-105); not chosen: G3-2 resolved as A (ED-106).** |
 | 94195952 | Flatten the hover-lift shadow on Lunch (web workspace)? | Offered on 2026-11-03. No answer (ED-053). **Answered 2026-11-06: hybrid C (ED-116): flat hover tint, lift only while dragging.** |
-| 5f96cf43 | The minimal-phone choices (tab names, Settings location, Earlier row, tap-to-Focus, time summary, tab-label grey). | Listed on 2026-11-04 as "small choices you might want to check". No answer (ED-055). |
-| 55c6e2ea | C minimal phones: "Tell me what to keep or change". | No answer. This is a C board, so it only matters as a reference for E. |
-| (Round 1) | All "Hypothesis · not approved" relocations: Settings out of the tab bar, one task surface, Add modes, Day menu, Calendar destination, Settings regrouping, Workspace and Focus structure. | These need an explicit owner decision before Round 2 or implementation (ED-043 to ED-051). Group 1 settled the mode structure only (ED-065 to ED-069); the rest are in register Groups 2–4. |
+| 5f96cf43 | The minimal-phone choices (tab names, Settings location, Earlier row, tap-to-Focus, time summary, tab-label grey). | Listed on 2026-11-04 as "small choices you might want to check". No answer (ED-055). **Close-out (ED-335): answered by G1-5, G2-3 and G2-4 (ED-068, ED-084, ED-238) and the approved E-PhonesMinimal.** |
+| 55c6e2ea | C minimal phones: "Tell me what to keep or change". | No answer. This is a C board, so it only matters as a reference for E. **Close-out (ED-335): superseded; C is history.** |
+| (Round 1) | All "Hypothesis · not approved" relocations: Settings out of the tab bar, one task surface, Add modes, Day menu, Calendar destination, Settings regrouping, Workspace and Focus structure. | These need an explicit owner decision before Round 2 or implementation (ED-043 to ED-051). Group 1 settled the mode structure only (ED-065 to ED-069); the rest are in register Groups 2–4. **Close-out (ED-335): each answered in Groups 2 to 4 (ED-073 to ED-099, ED-238) and drawn in Round 2.** |
 | (canvas) | "Plan from Inbox · 3" on the iPhone empty day: keep it or remove it? | Never asked (ED-039). |
 | d06d1077 | Create task (ED-140): keep "Add another" (check beside it; Return keeps the screen open for the next task) or drop it? | Raised 2026-11-06 (ED-140). **Answered 2026-11-07: option A, no "Add another" (ED-152).** |
 | ef95bd66 | Brain dump and Routine tabs (ED-139): their frames on `E-Phones-2` still use the old compact Add sheet. Redraw them in the Create task chrome? | Raised 2026-11-06 (CR-125). Asked in the decision review (Q-A2). **Answered 2026-11-07: Brain dump (ED-147, ED-148) and Routine (ED-149) open full screen on iPhone and Android. Closed.** |

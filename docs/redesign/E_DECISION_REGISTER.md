@@ -1221,3 +1221,11 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - ED-325: R2-24 the rest of the app proposed (This week, Calendars, App lock, Help and about, web install, German and French pass); flags: no built Calendar tab string, French Inbox tab wraps, two out-of-date built texts.
 - ED-326: R2-24 approved (the rest of the app); three copy flags still open; every Round 2 board is now approved, account screens wait for CR-160.
 - ED-327: copy decided: Calendar tab label (Calendar / Kalender / Calendrier), French tab-only "Boîte", move answer fixed in its own PR, Day shape release note changes with the Settings build.
+- ED-328: R2-25 approved (gap pass): touch drag on phones and tablets, tablet pointer hover and drag, Inbox swipe actions; built only.
+- ED-329: R2-26 approved (gap pass): past the planned end ("· not done", Need more time?, Running late), Now through the day (Now / Next up / Nothing else today), Focus past its end, Mac menu bar.
+- ED-330: R2-27 approved (gap pass): all-done day, past day, 3+ overlaps, all-day chips, empty today on Android, done/past/calendar task sheets, the 5-alert limit.
+- ED-331: R2-28 approved (gap pass): Move to a day, no free slot, quiet week, no search results, calendar permission and load error, mission edge states, small toasts.
+- ED-332: R2-29 approved (gap pass): Android minimal Settings, learning and Reality, launcher shortcuts, Help and about, Calendars, App lock, Duplicate day; one icon and colour per Settings row on every platform (11 boards).
+- ED-333: R2-30 approved (gap pass): Mac and web Search, Search or run (design-only), Routines, Focus, Trash, Settings panes, 3 days, Month, minimal Inbox/Calendar/Search, Edit and Window menus, Copy to which day.
+- ED-334: R2-31 approved (gap pass, last board): Stage Manager, the foldable (flat, tabletop, folded), the Undo toast at medium width, tablet browsers; hinge awareness is a code gap. Gap pass complete.
+- ED-335: Round 2 close-out audit recorded: what the gap pass closed, what is still to design, still needs the owner or is blocked; records and stale canvas notes brought up to date; the R2-19-B split recorded.

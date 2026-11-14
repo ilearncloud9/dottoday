@@ -42,16 +42,16 @@ Implementation and device testing are outside these dispositions: a Resolved ent
 
 | Disposition | Entries |
 |---|---|
-| Resolved | 140 |
-| Still open | 14 (owner decision 0 · design fix 0 · verification 1 · implementation 13) |
-| Round 2 | 19 |
+| Resolved | 152 |
+| Still open | 21 (owner decision 0 · design fix 6 · verification 1 · implementation 14) |
+| Round 2 | 0 (closed out 2026-11-14, ED-335) |
 | **Total** | **173** (CR-001 to CR-173) |
 
 **Still open · owner decision:** .  
-**Still open · design fix:** .  
+**Still open · design fix:** CR-048, CR-069, CR-081, CR-082, CR-083, CR-084.  
 **Still open · verification:** CR-121.  
-**Still open · implementation:** CR-042, CR-068, CR-097, CR-098, CR-104, CR-106, CR-142, CR-158, CR-159, CR-160, CR-161, CR-163, CR-164. CR-160 stays **CRITICAL — OPEN — RELEASE BLOCKER**.  
-**Round 2:** CR-048, CR-069, CR-076, CR-077, CR-078, CR-079, CR-080, CR-081, CR-082, CR-083, CR-084, CR-085, CR-086, CR-087, CR-088, CR-089, CR-090, CR-094, CR-127.
+**Still open · implementation:** CR-042, CR-068, CR-087, CR-097, CR-098, CR-104, CR-106, CR-142, CR-158, CR-159, CR-160, CR-161, CR-163, CR-164. CR-160 stays **CRITICAL — OPEN — RELEASE BLOCKER**.  
+**Round 2:** none. At the close-out (ED-335) 12 became Resolved (CR-076 to CR-080, CR-085, CR-086, CR-088 to CR-090, CR-094, CR-127), 6 design fix and 1 implementation (CR-087, waiting on CR-160).
 
 **Notes from the reconciliation:**
 - The main tables below were never updated after Addenda 1–3. CR-032, CR-034, CR-036, CR-043, CR-109 and CR-110 still show their old status there; the addenda and this section supersede it.
@@ -112,7 +112,7 @@ Implementation and device testing are outside these dispositions: a Resolved ent
 | CR-045 | E-Minimal sidebar vs ⌘ order | Resolved | G2-10 · ED-095 (minimal ⌘1–4 = Now · Inbox · Calendar · Search, the sidebar order); ED-170 |
 | CR-046 | Reviews vs Review | Resolved | G3-10 · ED-162 |
 | CR-047 | One Settings entry per platform | Resolved | G2-3 option A · ED-238 (avatar on phones, ⌘, window on Mac, sidebar foot on web); Settings pages keep the bar with no tab selected (ED-234, ED-235) |
-| CR-048 | Settings screens not drawn | Round 2 | Root, minimal Settings, Mac window and web two panes drawn and approved (G2-4 · ED-081, ED-084); Appearance (ED-161). The remaining group pages are Round 2 stage 3 (G4-1 · ED-166) |
+| CR-048 | Settings screens not drawn | Still open · design fix | Root, minimal Settings, Mac window and web two panes drawn and approved (G2-4 · ED-081, ED-084); Appearance (ED-161). The remaining group pages are Round 2 stage 3 (G4-1 · ED-166) · **Round 2 close-out (ED-335):** Settings root, groups and pages drawn in Round 2 (R2-11, R2-20 to R2-24, R2-29, R2-30); the Planning, Sound and Siri & Shortcuts pages are still undrawn |
 | CR-049 | Lists on the sidebar | Resolved | G2-2 · ED-080 (removed) |
 | CR-050 | "Week view in full mode" on phones | Resolved | G2-1 · ED-075; the band text was corrected in ED-243 |
 | CR-051 | ⌘1–4 | Resolved | G2-10 · ED-095 (option B) |
@@ -133,32 +133,32 @@ Implementation and device testing are outside these dispositions: a Resolved ent
 | CR-066 | Web routes | Resolved | G2-11 · ED-097 |
 | CR-067 | URLs for E-Minimal places | Resolved | Destinations: G2-11 · ED-097. The Day column state, the narrow Day panel and the Search or run palette have no address: CR-067 option A · ED-242 |
 | CR-068 | Path rewrite; refresh and Back untested | Still open · implementation | ED-260 spike (go_router 18.1.1): refresh, Back and Forward with ?task= pass only with GoRouter.optionURLReflectsImperativeAPIs (or go for task opens); the app sets neither yet |
-| CR-069 | Quick Add on wide is entry-only | Round 2 | Entries drawn (G2-8 · ED-091: File menu, web Add ▾). The wide Add surface is Round 2 stage 1 (G4-1 · ED-166, which lists CR-069 to CR-090) |
+| CR-069 | Quick Add on wide is entry-only | Still open · design fix | Entries drawn (G2-8 · ED-091: File menu, web Add ▾). The wide Add surface is Round 2 stage 1 (G4-1 · ED-166, which lists CR-069 to CR-090) · **Round 2 close-out (ED-335):** Tablets drawn (R2-3); the Mac and web Add popover with live chips is still undrawn |
 | CR-070 | Three task surfaces | Resolved | G2-5 · ED-086; G2-6 · ED-088, ED-089; G4-3 · ED-170 C1 (a) |
 | CR-071 | E-Minimal task screen vs doc 14 | Resolved | G2-6 · ED-088, ED-089 |
 | CR-072 | "More details" has no destination | Resolved | G2-6 · ED-088 (More options opens the option D editor), ED-089 |
 | CR-073 | E-Minimal web task screen | Resolved | G2-6 · ED-089 (drawn in the web column) |
 | CR-074 | Phone task editor not drawn | Resolved | G2-5 · ED-086, ED-087; G2-12 · ED-099 (Move → When picker) |
 | CR-075 | Generic proposal sheet | Resolved | G2-8 · ED-091 (one ProposalSheet; inspector and Day column on wide); ED-150 (full screen on phones) |
-| CR-076 | Focus screen | Round 2 | G4-1 · ED-166 stage 2 (Focus session) |
-| CR-077 | Reality thread has no wide home | Round 2 | Menu entry on every platform (G2-9 · ED-093, Plan / Reality); the screen is Round 2 (ED-166) |
-| CR-078 | Multi-select and selection bar | Round 2 | G4-1 · ED-166 stage 2 |
-| CR-079 | Undo toast and ⌘Z feedback | Round 2 | G4-1 · ED-166 stage 2; only the conflict Undo is designed (G4-7 Q3 · ED-194) |
-| CR-080 | Inbox, Calendar, Search screens | Round 2 | Phone Calendar drawn (ED-079); Inbox and Search in Round 2 (ED-166) |
-| CR-081 | Rebalance and shift-followers | Round 2 | Rebalance… in every Full Day menu (ED-093); chip and pin in Round 2 (ED-166) |
-| CR-082 | Go to a date | Round 2 | Phone month sheet (ED-075, ED-079) replaces the M3 date picker; Mac/web Go to Date popover in Round 2 (ED-166) |
-| CR-083 | Spoken Brain dump | Round 2 | Phone Brain dump mode has the mic (ED-091); wide in Round 2 (ED-166) |
-| CR-084 | This week, Past days, year strip | Round 2 | Day review, Week in review and ‹ stepping (G2-12 · ED-099); year strip in Round 2 (ED-166) |
-| CR-085 | Low-energy screen | Round 2 | G4-1 · ED-166 |
-| CR-086 | Wake Up family and notifications | Round 2 | Settings, alarm and device picker drawn (ED-084); card, Check, missions, notifications in Round 2 stage 3 (ED-166) |
-| CR-087 | Account, sync, data, Trash | Round 2 | Sync states (G4-7 · ED-186, ED-187, direction only, not merged); account screens (ED-222 to ED-230); recovery, app lock, export, backups, import, Trash in Round 2 (ED-166) |
-| CR-088 | System surfaces | Round 2 | G4-1 · ED-166 stage 3 |
-| CR-089 | Onboarding | Round 2 | G4-1 · ED-166 stage 3 |
-| CR-090 | Duplicate-day picker, Copy-day confirmation | Round 2 | G4-1 · ED-166 |
+| CR-076 | Focus screen | Resolved | G4-1 · ED-166 stage 2 (Focus session) · **Round 2 close-out (ED-335):** R2-9 (ED-286), Mac and web R2-30 (ED-333), overrun R2-26 (ED-329) |
+| CR-077 | Reality thread has no wide home | Resolved | Menu entry on every platform (G2-9 · ED-093, Plan / Reality); the screen is Round 2 (ED-166) · **Round 2 close-out (ED-335):** R2-23 (ED-324), Android R2-29 (ED-332) |
+| CR-078 | Multi-select and selection bar | Resolved | G4-1 · ED-166 stage 2 · **Round 2 close-out (ED-335):** R2-6 (ED-279) |
+| CR-079 | Undo toast and ⌘Z feedback | Resolved | G4-1 · ED-166 stage 2; only the conflict Undo is designed (G4-7 Q3 · ED-194) · **Round 2 close-out (ED-335):** R2-7 (ED-281), medium width R2-31 (ED-334) |
+| CR-080 | Inbox, Calendar, Search screens | Resolved | Phone Calendar drawn (ED-079); Inbox and Search in Round 2 (ED-166) · **Round 2 close-out (ED-335):** R2-12, R2-13, R2-30 (ED-293, ED-295, ED-333) |
+| CR-081 | Rebalance and shift-followers | Still open · design fix | Rebalance… in every Full Day menu (ED-093); chip and pin in Round 2 (ED-166) · **Round 2 close-out (ED-335):** Rebalance result, before and after, pin and drag chip still undrawn |
+| CR-082 | Go to a date | Still open · design fix | Phone month sheet (ED-075, ED-079) replaces the M3 date picker; Mac/web Go to Date popover in Round 2 (ED-166) · **Round 2 close-out (ED-335):** Mac and web Go to date popover still undrawn; Move to a day drawn (R2-28) |
+| CR-083 | Spoken Brain dump | Still open · design fix | Phone Brain dump mode has the mic (ED-091); wide in Round 2 (ED-166) · **Round 2 close-out (ED-335):** Spoken Brain dump states still undrawn |
+| CR-084 | This week, Past days, year strip | Still open · design fix | Day review, Week in review and ‹ stepping (G2-12 · ED-099); year strip in Round 2 (ED-166) · **Round 2 close-out (ED-335):** This week drawn (R2-14, R2-24, R2-28); Past days and the year strip still undrawn |
+| CR-085 | Low-energy screen | Resolved | G4-1 · ED-166 · **Round 2 close-out (ED-335):** R2-22 (ED-322) |
+| CR-086 | Wake Up family and notifications | Resolved | Settings, alarm and device picker drawn (ED-084); card, Check, missions, notifications in Round 2 stage 3 (ED-166) · **Round 2 close-out (ED-335):** R2-19 (ED-314), R2-20 (ED-317) |
+| CR-087 | Account, sync, data, Trash | Still open · implementation | Sync states (G4-7 · ED-186, ED-187, direction only, not merged); account screens (ED-222 to ED-230); recovery, app lock, export, backups, import, Trash in Round 2 (ED-166) · **Round 2 close-out (ED-335):** Sync, data and Trash drawn (R2-8, R2-21, R2-28, R2-30); account screens wait on CR-160 |
+| CR-088 | System surfaces | Resolved | G4-1 · ED-166 stage 3 · **Round 2 close-out (ED-335):** R2-17 (ED-309), Android shortcuts R2-29 (ED-332) |
+| CR-089 | Onboarding | Resolved | G4-1 · ED-166 stage 3 · **Round 2 close-out (ED-335):** R2-16 (ED-305) |
+| CR-090 | Duplicate-day picker, Copy-day confirmation | Resolved | G4-1 · ED-166 · **Round 2 close-out (ED-335):** R2-22, R2-29, R2-30 (ED-322, ED-332, ED-333) |
 | CR-091 | Mac minimum window | Resolved | G4-3 · ED-169, ED-170 (E-G4-3-Narrow) |
 | CR-092 | Day column hidden state | Resolved | G4-3 · ED-170 (fold drawn); ED-218; Full week shows the days that fit (ED-169) |
 | CR-093 | E-Minimal splits 1280 differently on Mac and web | Resolved | CR-093 option A · ED-232 (web uses the Mac split 200 / 790 / 290; insets at 290) |
-| CR-094 | Tablets, mobile web, landscape | Round 2 | Mobile web G4-5 · ED-172; landscape phones G4-2 · ED-168 (H1); tablets ED-090, G4-4 · ED-171 (screens in Round 2) |
+| CR-094 | Tablets, mobile web, landscape | Resolved | Mobile web G4-5 · ED-172; landscape phones G4-2 · ED-168 (H1); tablets ED-090, G4-4 · ED-171 (screens in Round 2) · **Round 2 close-out (ED-335):** Tablets R2-1 to R2-31, mobile web on tablets R2-31 (ED-334); phone landscape rule ED-168 |
 | CR-095 | Breakpoints and Mac minimum | Resolved | G4-2 · ED-167; G4-3 · ED-169 |
 | CR-096 | Glass approximations | Resolved | G3-6 · ED-128, ED-133 (native-first directions); device checks in the handoff |
 | CR-097 | Mini window feasibility | Still open · implementation | ED-260: feasible as a native NSPanel fed by the status item's snapshot and channel; no new dependency; Mac run NV |
@@ -191,7 +191,7 @@ Implementation and device testing are outside these dispositions: a Resolved ent
 | CR-124 | E-Phones over 8000 px | Resolved | ED-144 |
 | CR-125 | Brain dump / Routine frames | Resolved | ED-147 to ED-149 |
 | CR-126 | Rules §8.4 Add sheet | Resolved | ED-140 (rules updated) |
-| CR-127 | Tablet versions of the new screens | Round 2 | ED-090; G4-4 · ED-171 |
+| CR-127 | Tablet versions of the new screens | Resolved | ED-090; G4-4 · ED-171 · **Round 2 close-out (ED-335):** Round 2 drew the tablet versions (R2-1 to R2-31) |
 | CR-128 | History boards redrawn | Resolved | ED-146 to ED-151 (decisions G2-8 A and G3-7 C unchanged) |
 | CR-129 | "Add another" | Resolved | ED-152 |
 | CR-130 | Leftover "Add another" text | Resolved | ED-153 |

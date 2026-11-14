@@ -9,7 +9,11 @@ Status words (ED-128), used in every row:
 - **Tests still outstanding**: not verified; never marked passed without a recorded run.
 - **Production implementation not authorised**: true for every row below.
 
-## Current state at a glance (2026-11-08, after ED-184)
+## Current state at a glance (2026-11-14, after ED-335)
+
+Round 2 is complete (R2-1 to R2-31, ED-267 to ED-334) and closed out (ED-335). Concept E is still LEADING CANDIDATE — NOT APPROVED FOR PRODUCTION IMPLEMENTATION (ED-238). Build requirements found in Round 2 that are not yet built: Search or run (design-only on R2-30), minimal Inbox at expanded width (docs/14 §3), hinge awareness (ED-099, ED-334), the Settings restructure that removes Day shape (ED-321). Open owner items are listed in ED-335. The sections below are kept as history.
+
+## Current state at a glance (2026-11-08, after ED-184) (history)
 
 1. **Approved visual design:** Groups 1–3 complete (to ED-165). G4-1 to G4-6 resolved (ED-166 to ED-181): Round 2 order, breakpoints and docked editor, Mac minimum 840 × 640, tablet navigation strategy, compact mobile web, dark mode (P1 tokens, 12 dark task colours, Mac D1 sidebar, dark companions of every active board). Plan panel A + B (ED-184). Text always fits (ED-183). Boards: E-Phones, -2, -3, E-PhonesMinimal, E-FullA-v2, E-Minimal, E-Earlier, E-Responsive, E-MobileWeb, E-G4-3-Narrow and each `-Dark` copy.
 2. **Selected architecture:** native-first glass and bars (ED-128, ED-133: iOS N3 native bar, native Day menu, Flutter chrome elsewhere, Android C in Flutter, Mac native vibrancy with warm tint); width classes 600 / 840 and editor docking from 1160 (ED-167); platform-native tablet navigation (ED-171).

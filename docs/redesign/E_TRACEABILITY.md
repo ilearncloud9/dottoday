@@ -173,7 +173,7 @@ Home columns name where each feature lives in Concept E. "Hidden in Minimal, rea
 | Month view | Calendar tab Month (EPC) | Calendar views › Month ⌘4 | Hidden in Minimal, reached via title ▾ (EPM) or EM Calendar row and finder | APPROVED (ED-075, ED-073) | Not started |
 | Week view | None on phones (as built) | Calendar views › Week | Hidden in Minimal, reached via EM finder "Week" or Show Everything | APPROVED (ED-073); tablets OPEN G4-4 | Not started |
 | Three-day spread + Inbox sidebar | None (as built) | 3 days view + Inbox column | Hidden in Minimal, reached via Show Everything; EM Inbox row | APPROVED (ED-073); the A-Wide spread itself is rejected (ED-003) | Not started |
-| Drag to move, overlaps, knot | Thread (EP F1, F5 captions) | Grid drag, drag from Inbox | EPM F2, EM web hint | ADOPTED FROM BOARD; drag states not drawn | Not started |
+| Drag to move, overlaps, knot | Thread (EP F1, F5 captions) | Grid drag, drag from Inbox | EPM F2, EM web hint | ADOPTED FROM BOARD; drag states APPROVED R2-25 (ED-328) | Not started |
 | Multi-select + selection bar (incl. Save as routine) | Tip only "Hold a dot to select several tasks" | Not drawn | EPM caption only | NOT DESIGNED: draw the selection bar, n selected, Save as routine, ⇧/⌘-click | Not started |
 | Shift the rest / followers / pin / Rebalance | Task sheet Shift the rest; Day menu | Day menu Time section, context menu, inspector | Need more time? popover "Shift the rest" | OPEN G2-9; pin and drag chip NOT DESIGNED | Not started |
 | Running late +5/15/30 | "Need more time? +15 +30" (EP F3); Day menu "Running late" | Need More Time… ▸ +5/+15/+30 | Need more time? +15/+30 (EPM, EM) | OPEN G3-11, G3-10 | Not started |
@@ -297,28 +297,28 @@ Home columns name where each feature lives in Concept E. "Hidden in Minimal, rea
 
 Parity features or accepted decisions with no drawn home. Each names what it needs.
 
-- **Multi-select selection bar and Save as routine.** Only a tip is drawn. Needs a drawing on every platform (R-04, R-05, G4-1).
-- **Reality thread.** Phones have a Day menu entry only. FA2's Day and View menus have no entry, so wide Full loses it. Needs a wide entry and the Reality screen.
-- **Tasks before Wake Up fold.** No board draws it. Needs a folded and open state.
-- **Undo toast / snackbar.** Conflict Undo drawn and approved (E-G4-7-States C3, C5; ED-194); not built. Other Undo toasts still follow their own decisions.
-- **Sync banner, sync sheet and conflict state.** Only the indicator is drawn (R-08, G4-7).
-- **Phone Inbox screen and the one scheduling picker.** Phones have only the tab badge (G2-12).
-- **Focus session screen.** Every board has entries; none draws the session (running, paused, overrun).
-- **Wake Up family.** Alarm ringing, snooze, card, Check and all missions are undrawn on every platform (G4-1).
-- **Settings tree.** No Settings page is drawn except the wide first row. All nine sections, 13 sub-pages and minimal Settings need drawing (G2-3, G2-4).
-- **Task editor at full size on phones.** Large detent (iPhone) and full editor (Android) are not drawn (G2-5).
-- **Editor fields colour, icon, pin, travel, energy.** Captions only.
-- **iOS Move picker.** Only the Android dial is drawn (G2-7).
-- **Pick today's one thing in Minimal.** Neither EPM's nor EM's "hides, never removes" band lists it. Needs a minimal path and a screen.
-- **Brain dump screen, Routines page, Break it down, Smallest step, Unstick, AI status.** Entries only (G2-8, G2-2).
-- **Search screen, Past days and year strip, weekly review.** Entries only.
-- **Account, recovery, app lock, export/import, Trash, calendar connect.** Not drawn. Onboarding is now approved as the interactive prototype (R2-16, ED-305).
-- **System surfaces.** Widgets, Live Activity, Controls, Siri page, share extension, PWA install. Not drawn.
-- **Notifications.** Task alert, Start nudge, day-start summary, notification health, test alarm. Not drawn.
-- **Duplicate-day target picker and Copy confirmation.** Not drawn.
-- **Wide Add popover with live chips.** Not drawn on Mac or web.
-- **Layouts.** iPad, Android tablet and foldable, mobile web, phone landscape, Mac 960 × 640 window, dark mode (G4-2 to G4-6).
-- **States.** Loading, error, offline, empty past/future day, 200 % text, reduced motion, reduced transparency (G4-7).
+- **Multi-select selection bar and Save as routine.** Only a tip is drawn. Needs a drawing on every platform (R-04, R-05, G4-1). **Round 2 close-out (ED-335):** Closed: R2-6 (ED-279).
+- **Reality thread.** Phones have a Day menu entry only. FA2's Day and View menus have no entry, so wide Full loses it. Needs a wide entry and the Reality screen. **Round 2 close-out (ED-335):** Closed: R2-23 (ED-324), Android R2-29 (ED-332).
+- **Tasks before Wake Up fold.** No board draws it. Needs a folded and open state. **Round 2 close-out (ED-335):** Still open (no Round 2 board).
+- **Undo toast / snackbar.** Conflict Undo drawn and approved (E-G4-7-States C3, C5; ED-194); not built. Other Undo toasts still follow their own decisions. **Round 2 close-out (ED-335):** Closed: R2-7 (ED-281), medium width R2-31 (ED-334).
+- **Sync banner, sync sheet and conflict state.** Only the indicator is drawn (R-08, G4-7). **Round 2 close-out (ED-335):** Closed: R2-8 (ED-283).
+- **Phone Inbox screen and the one scheduling picker.** Phones have only the tab badge (G2-12). **Round 2 close-out (ED-335):** Closed: R2-13 (ED-295), no free slot R2-28 (ED-331).
+- **Focus session screen.** Every board has entries; none draws the session (running, paused, overrun). **Round 2 close-out (ED-335):** Closed: R2-9 (ED-286), Mac and web R2-30 (ED-333); overrun R2-26 (ED-329); paused is not built.
+- **Wake Up family.** Alarm ringing, snooze, card, Check and all missions are undrawn on every platform (G4-1). **Round 2 close-out (ED-335):** Closed: R2-19 Option B (ED-314); missions edge states R2-28 (ED-331).
+- **Settings tree.** No Settings page is drawn except the wide first row. All nine sections, 13 sub-pages and minimal Settings need drawing (G2-3, G2-4). **Round 2 close-out (ED-335):** Closed except Settings › Planning, Sound and Siri & Shortcuts pages (still open): R2-11, R2-20 to R2-24, R2-29, R2-30.
+- **Task editor at full size on phones.** Large detent (iPhone) and full editor (Android) are not drawn (G2-5). **Round 2 close-out (ED-335):** Closed: R2-4 and R2-27 task sheets (ED-274, ED-330).
+- **Editor fields colour, icon, pin, travel, energy.** Captions only. **Round 2 close-out (ED-335):** Partly closed: colour and icon R2-15 (ED-299); pin, travel and energy still captions.
+- **iOS Move picker.** Only the Android dial is drawn (G2-7). **Round 2 close-out (ED-335):** Closed: R2-28 Move to a day (ED-331).
+- **Pick today's one thing in Minimal.** Neither EPM's nor EM's "hides, never removes" band lists it. Needs a minimal path and a screen. **Round 2 close-out (ED-335):** Still open (only the Wake Up mission is drawn).
+- **Brain dump screen, Routines page, Break it down, Smallest step, Unstick, AI status.** Entries only (G2-8, G2-2). **Round 2 close-out (ED-335):** Closed: R2-22, R2-23, R2-30 (ED-322, ED-324, ED-333); spoken Brain dump still open.
+- **Search screen, Past days and year strip, weekly review.** Entries only. **Round 2 close-out (ED-335):** Closed: Search R2-13, R2-28, R2-30; weekly review R2-14, R2-24, R2-28. Past days and the year strip still open.
+- **Account, recovery, app lock, export/import, Trash, calendar connect.** Not drawn. Onboarding is now approved as the interactive prototype (R2-16, ED-305). **Round 2 close-out (ED-335):** Closed: R2-21, R2-24, R2-28, R2-29, R2-30. Account waits on CR-160.
+- **System surfaces.** Widgets, Live Activity, Controls, Siri page, share extension, PWA install. Not drawn. **Round 2 close-out (ED-335):** Closed: R2-17 (ED-309), Android shortcuts R2-29, web install R2-24. Siri page still open.
+- **Notifications.** Task alert, Start nudge, day-start summary, notification health, test alarm. Not drawn. **Round 2 close-out (ED-335):** Closed: R2-20 (ED-317).
+- **Duplicate-day target picker and Copy confirmation.** Not drawn. **Round 2 close-out (ED-335):** Closed: R2-22, R2-29, R2-30 (no confirm step, as built).
+- **Wide Add popover with live chips.** Not drawn on Mac or web. **Round 2 close-out (ED-335):** Still open.
+- **Layouts.** iPad, Android tablet and foldable, mobile web, phone landscape, Mac 960 × 640 window, dark mode (G4-2 to G4-6). **Round 2 close-out (ED-335):** Closed: R2-1, R2-2, R2-31, R2-30; phone landscape still open.
+- **States.** Loading, error, offline, empty past/future day, 200 % text, reduced motion, reduced transparency (G4-7). **Round 2 close-out (ED-335):** Mostly closed: R2-8, R2-26 to R2-28; 200 % on R2-7 only, reduced motion and transparency left to device tests.
 - **Register coverage.** "Cancel multi-select and drag on a mode switch" and "a mode switch is not a Back step" have no register ID (ED-072 open items). Each needs one.
 
 ## E. Rejected (must not return)
@@ -346,10 +346,19 @@ Also excluded by later owner answers (not ED "REJECTED", but not to be built):
 
 
 ## Updates after the first pass
+- **2026-11-14, ED-335 (Round 2 close-out):** the log above had no lines for R2-1 to R2-15 or R2-20 to R2-24. For the record: R2-1 navigation (ED-267), R2-2 Workspace (ED-269), R2-3 Add (ED-271), R2-4 Edit (ED-274), R2-5 complete and Day menu (ED-276), R2-6 multi-select (ED-279), R2-7 Undo (ED-281), R2-8 sync (ED-283), R2-9 Focus (ED-286), R2-10 keyboard overlays (ED-288), R2-11 Settings on tablets (ED-291), R2-12 Calendar (ED-293), R2-13 Inbox and Search (ED-295), R2-14 reviews (ED-297), R2-15 colour picker (ED-299), R2-20 notifications (ED-317), R2-21 data safety (ED-319), R2-22 planning helpers (ED-322), R2-23 proposals and learning (ED-324), R2-24 the rest of the app (ED-326). Section D now says which gaps each board closed. Nothing built.
+
 > **Tablets (owner sequencing, 2026-11-04).** Phone and Mac boards do not count as tablet designs. Tablet gaps listed here stay open until Prompt D Round 2. The comprehensive tablet coverage checklist is a mandatory step before Round 2 begins (`STATUS.md` Open items); until then each Group 2 decision only records its iPad and Android tablet/foldable implications.
 
 - **2026-11-13, ED-304 to ED-314 (Round 2 stage 3 close and R2-19):** R2-16 onboarding APPROVED as the interactive “Dottoday Onboarding Prototype” (ED-305); R2-17 system surfaces APPROVED (ED-309; the interactive version ED-307 withdrawn, options ED-308); R2-18 Wake Up and Wind Down tablet re-check APPROVED (ED-311); R2-19 the Wake Up alarm APPROVED as Option B, “The thread wakes up” (ED-314), with tablet ringing, snooze and mission screens added after approval. Rows C.3 and C.5 above updated. Other Round 2 approvals (R2-1 to R2-15) are recorded in E_DESIGN_DECISIONS and the register; their C rows here are not yet refreshed. Nothing built or committed.
 - **2026-11-14, ED-321 (Day shape):** the owner chose A. Settings › Your day has no Day shape row, and the two Day shape rows above are updated. Nothing built or committed.
+- **2026-11-14, ED-328 and ED-329 (gap pass):** R2-25 moving tasks and R2-26 time states approved; the Drag to move row is updated. Nothing built or committed.
+- **2026-11-14, ED-330 (gap pass):** R2-27 day states and task sheets approved. Nothing built or committed.
+- **2026-11-14, ED-331 (gap pass):** R2-28 small states approved (move to a day, no slot, quiet week, no results, calendars, missions). Nothing built or committed.
+- **2026-11-14, ED-332 (gap pass):** R2-29 Android parity approved, with the Settings icon pass across 11 boards (R-13). Nothing built or committed.
+- **2026-11-14, ED-333 (gap pass):** R2-30 Mac and web parity approved (R-13); Search or run not built, minimal Inbox at wide widths a code gap. Nothing built or committed.
+- **2026-11-14, ED-334 (gap pass):** R2-31 tablets approved (R-13); hinge awareness a code gap. Gap pass complete. Nothing built or committed.
+- **2026-11-14, ED-335:** Round 2 close-out audit recorded; section D marked; the R2-19-B split recorded. Nothing built.
 
 - **2026-11-04, ED-080:** G2-2 approved. The Lists sketch is removed from E-FullA-v2; read any Lists row above as REJECTED. The Routines page is APPROVED but NOT DESIGNED (to draw; route in G2-11).
 - **2026-11-04, ED-079:** Calendar screens approved and drawn on E-Phones.
