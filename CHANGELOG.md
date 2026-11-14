@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Help's "How do I move a task?" and the store listings no longer mention dragging a task's edges: drag a task to any time on the thread, and change how long it is in its sheet's Duration.
 - Docs brought in line with the code and the owner's 2026-11-02 answers: Wake Up (docs/15) is accepted and built, with only the real-device gates open; the reminder-sounds ADR is now ADR-0018, so ADR-0015 means only the Structured-style day thread; the Week tab shows at any expanded width, tablets included; a notification's Snooze only reminds again (shifting the rest stays in the app); adding a task at a taken time overlaps rather than bumping later tasks; minimal Settings lists its nine rows; an iPad counts as an iPhone for Siri and alarms. The alerts editor now uses the one five-alert limit from the field rules.
 - Dottoday no longer checks for changes on a timer; it reacts when something happens. Changes from your other devices arrive within seconds, also right after your connection comes back. While the app is open, midnight's refresh and the daily backup happen on the moment, and on a Mac also right after it wakes or the time zone changes. Edits to your phone's or Mac's calendars show up in Dottoday about two seconds later.
 - Bedtime is now Wind Down, everywhere. The Wake Up and Wind Down ends of the day are dots like your tasks — a sun and a sleepy moon — and tapping one changes its time, for every day or only that weekday.

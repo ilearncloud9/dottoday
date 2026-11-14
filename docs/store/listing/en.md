@@ -13,7 +13,7 @@ Dottoday: Day Planner
 Your day, as a thread
 
 ### Promotional text
-Plan your day as dots on a line. Drag to move, pull to resize, and shift everything after a task in one gesture when plans change.
+Plan your day as dots on a line. Drag a task to any time, and shift everything after it in one gesture when plans change.
 
 ### Keywords
 planner,daily planner,timeline,schedule,time blocking,routine,calendar,to do,tasks,focus,adhd
@@ -27,7 +27,7 @@ Dottoday turns your to-do list into a day you can follow. Your day is a thread f
 Starts your morning, ends your evening. Wake Up can ring like an alarm and opens a card with your day; Wind Down moves itself from tomorrow's first task.
 
 WHEN THE DAY MOVES, MOVE IT ALL
-• Drag a task to move it, drag its edge to change how long it takes.
+• Drag a task to any time on the day; set how long it takes in its Duration.
 • Shift everything after a task in one gesture, or add 15 minutes to what you are doing now.
 • Long-press to pick several tasks and move them together.
 • Pinned tasks stay put when others shift.

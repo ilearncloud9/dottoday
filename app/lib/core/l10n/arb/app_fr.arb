@@ -678,7 +678,7 @@
   "exportRestored": "Sauvegarde restaurée",
   "helpIntro": "Des réponses rapides. Autre chose ? Envoyez un avis ci-dessous.",
   "helpMoveQ": "Comment déplacer une tâche ?",
-  "helpMoveA": "Faites-la glisser le long du fil, ou tirez ses bords pour changer sa durée. Appui long pour en choisir plusieurs.",
+  "helpMoveA": "Faites-la glisser le long du fil à n'importe quelle heure, même sur une autre tâche. Ouvrez-la › Durée pour changer sa longueur. Appui long pour en choisir plusieurs.",
   "helpLateQ": "Je suis en retard. Tout peut-il bouger ?",
   "helpLateA": "Oui : ⋯ › Je suis en retard décale le reste de la journée de 5, 15 ou 30 minutes, jusqu'aux tâches épinglées. Vous pouvez aussi passer ou raccourcir la tâche en cours.",
   "helpRepeatQ": "Comment fonctionnent les tâches récurrentes ?",
