@@ -4071,6 +4071,301 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
   - Same visuals and motion as the phone missions, reused from one source, in the tablet Walk layout: the mission on the left, the time and its line on the right, Can't right now centred under both.
   - Catch the dot uses the whole screen, with four loops sized to the tablet.
   - Board height 9840. Snapshot v2.88-working.
+- **Records audit (owner: "make sure to record all changes appropriately", 2026-11-13):** E_TABLET_CHECKLIST rows Onboarding (R2-16, ED-305) and System surfaces (R2-17, ED-309) updated, and a Wake Up alarm on tablets row added (ED-314). E_TRACEABILITY C.3 and C.5 rows and gap list updated for R2-16 to R2-19. Snapshots v2.31, v2.35, v2.38, v2.42 and v2.54, which no entry cited, are now cited in ED-266, ED-273, ED-278, ED-285 and ED-304. Docs snapshot v2.89-working. Canvas unchanged (latest version `1794601747-f5c7`).
+
+### ED-315 · Round 2 order after stage 3: the screens outside the three stages (R2-20 to R2-24)
+- **Date:** 2026-11-13. **Owner:** "Yes, start R2-20", on the proposed order below.
+- **Why:** ED-166 says the screens outside the three stages are drawn after them, still in Round 2, but set no order. Each item was checked against this file: none of these screens has a design yet.
+- **Order** (non-negotiables first, every platform together, as G4-1):
+  - **R2-20 Notifications and alerts:** task alert, the at-start reminder, day-start summary, Wind Down reminder, the in-app strip, Settings › Reminders, notification health and the test alarm (R-10).
+  - **R2-21 Data safety:** backups, export and import, the Trash page, the encrypted database recovery screen (R-08, R-11).
+  - **R2-22 Planning helpers:** the Routines page, Duplicate day and Copy day as text, Low-energy mode, Day shape with the sleep target and night editor.
+  - **R2-23 Proposal flows:** Break it down, Smallest step / Unstick, On-device AI status, the Reality thread (ProposalSheet; nothing written before Accept).
+  - **R2-24 The rest:** Week in review share and learning reveal, calendar connect, App lock, Feedback and What's new, PWA install, a long-string (de / fr) pass.
+  - **After CR-160:** account screens.
+- **Records:** E_SCREEN_INVENTORY reconciled: 28 rows that a later approval covers now carry a dated "Since" note, and a header note says the decisions file wins where an unchecked row disagrees. The ED-314 records-audit note, which had landed after the end of the log, is moved into ED-314.
+- **Classification:** RESOLVED (planning). Nothing built or committed.
+
+### ED-316 · R2-20 proposed: notifications and alerts on every platform (boards E-R2-20, E-R2-20-Dark)
+- **Date:** 2026-11-13. **Owner:** "Yes, start R2-20" (order ED-315). First item after stage 3.
+- **Scope:** every reminder Dottoday sends and the Settings that shape them, as built (docs/02 F6, docs/09 M5, M6.5, M8.4d): task alerts, Wind Down, the day-start summary, the in-app strip, Settings › Reminders, Notification health and the test alarm. The sample is the R2-19 Thursday (Team standup at 8:00 AM).
+- **Drawn:**
+  - **1 · Task reminders:**
+    - iPhone Lock Screen (time-sensitive "Starts in 10 minutes", grouped);
+    - the long-press actions Done, Snooze 10 min, Open;
+    - the Android shade with the "Task alerts" channel and the same three actions;
+    - the Mac banner, where Done and Snooze 10 min sit under Options;
+    - the in-app strip: a task's with Done and Snooze 10 min, Wind Down's with Open and Later;
+    - the browser's own notification, with Done and Open;
+    - the five alert texts and the quiet-hours, Focus and sound rules.
+  - **2 · Wind Down and the day-start summary:**
+    - iPhone at 11:00 PM: the sleep-target nudge, "Wind down now for 7 h 30 before Morning run at 6:45 AM.";
+    - iPhone at Wake Up: "Your day · 9 blocks, first at 6:45 AM";
+    - the Android "Wind Down" channel, including "Nothing planned for tomorrow yet.".
+  - **3 · Settings › Reminders:**
+    - the iPhone page with the built rows: Task starts, Sound, Quiet hours, Day-start summary, Wind Down reminder, Notification health;
+    - iPhone with notifications off and quiet hours on (From and Until);
+    - Android with the exact-timing notice;
+    - iPad and Android tablet two-pane pages from the approved R2-11 root, with Reminders tinted.
+  - **4 · Notification health and the test alarm:**
+    - iPhone all good, rows in the built order: permission, Wake Up with the last wake-up, Focus, clock;
+    - Android with two things to fix: exact timing (Allow) and battery saving (Open settings);
+    - Mac and web lists. The Wake Up row is phones only; the web's "arrive with the tab closed" is information, not a problem;
+    - the test alarm in five steps: the row; Send or Cancel; "Ringing in 42 s…"; the notification; "Did it ring?" with its two answers.
+- **Copy:** every string is built (app_en.arb). No new copy.
+- **Design-only:** the Concept E look of the in-app strip and of the Settings pages (the approved ED-084 page anatomy). System notifications are drawn by each system; Dottoday sets only the title, text, actions, channel and sound.
+- **Not redrawn:** the Mac Settings window's Reminders pane, which holds the same rows (ED-081); the Task starts default-alert editor (the approved Alerts editor); the Sound page and the day-start weekday sheet.
+- **Rules:** exactly once (R-10, F6.3); no late, missed or overdue, and no red (no-shame); nothing is lost (quiet hours, Focus and Do Not Disturb make reminders silent, never gone); the same features on every platform (R-13), with the web snoozing from the strip.
+- **Board:** canvas x 21860 / 23900, y 208680, 1900 × 6660. Version `1794602875-fd35`; the page then saved `1794602877-03ec`, which only adds the two files to createdOnFiles. Both boards read back equal to local. Snapshot v2.90-working.
+- **Status:** proposed for owner review. Nothing built or committed.
+- **Update (owner comment on the Reminders page: "Add the dottoday menu in all the phone settings mockup that is not a half pull up for the light and dark"):** the approved phone bar, with no tab selected (ED-234, ED-235), is now on all five pushed Settings pages, in light and dark: iPhone Reminders, iPhone Reminders with notifications off, Android Reminders, iPhone Notification health and Android Notification health. The bar is copied from the live E-Phones pages; long pages scroll under it. The tablet panes keep their sidebar or drawer and no bar (R2-11). Version `1794603521-80db`, made from the live files after checking they matched local. Snapshot v2.91-working.
+
+### ED-317 · R2-20 approved: notifications and alerts on every platform (boards E-R2-20, E-R2-20-Dark)
+- **Date:** 2026-11-13. **Owner:** "Approve R2-20 and move on to R2-21".
+- **Approved:** E-R2-20 and E-R2-20-Dark as drawn (ED-316), with the phone bar on every pushed Settings page (ED-316 update). This covers:
+  - task alerts with Done, Snooze 10 min and Open on iPhone, Android, Mac and web;
+  - the in-app strip;
+  - Wind Down and the day-start summary;
+  - Settings › Reminders on phones and in two panes on tablets;
+  - Notification health in the built order, and the test alarm.
+- **Board labels:** "Approved · ED-317"; canvas titles updated. Version `1794604037-aa5e`.
+- **Still to verify before build:** nothing new; the platform checks stay as built (exact alarms and battery saving on Android tablets).
+- Nothing built or committed. Snapshot v2.92-working.
+
+### ED-318 · R2-21 proposed: data safety on every platform (boards E-R2-21, E-R2-21-Dark)
+- **Date:** 2026-11-13. **Owner:** "Approve R2-20 and move on to R2-21" (order ED-315).
+- **Scope:** as built (docs/02 F7.5, F7.6; docs/09 M2.4, M2.5, M3f.9a, M8.1). Covers Settings › Data and privacy, Export with the backups kept on the device, import and restore, Trash, and the recovery screen shown when the database can't be opened (R-08, R-11).
+- **Drawn:**
+  - **1 · Settings › Data and privacy:**
+    - iPhone and Android, with the built Data rows (Sync, Calendars, Export, Trash) and the phone bar with no tab selected (ED-234, ED-235);
+    - iPad and Android tablet in two panes (R2-11), showing Export on the right.
+  - **2 · Export:**
+    - the top of the page (three exports, the plain-file warning, Import a backup…);
+    - On this device (the daily backups, "Before an import", and the note);
+    - the empty state;
+    - Android.
+  - **3 · Taking a file out:**
+    - the iOS share sheet holding `dottoday-backup-<date>.json`;
+    - the Mac save dialog;
+    - the toast texts: not a backup, over 25 MB, couldn't save or share, Backup imported · Undo, Exported.
+  - **4 · Import and restore:**
+    - "Replace your tasks with this backup?" as an iOS alert and as an M3 dialog;
+    - "Go back to this backup?";
+    - Backup restored · Undo.
+  - **5 · Trash:** the built sheet, with each task's dot in the skipped state and Restore; "Dentist restored"; Trash is empty; Android.
+  - **6 · Recovery:**
+    - the key is missing → Start fresh;
+    - the inline "Start with an empty planner?";
+    - where the old file is kept → Continue;
+    - on the web: open in another tab, the tab that handed over, and no answer in 5 s.
+- **Copy:** every string is built (app_en.arb). The backup dates, the 214-task count and the kept path are examples. No new copy.
+- **Design-only:** the Concept E look of the pages, the sheet, the recovery screen (a locked dot on a broken thread) and the toast. Share sheets, save dialogs, file pickers and alerts belong to each system.
+- **For the owner:** F7.6 asks for permanent delete with a confirmation. It is not built: tasks leave Trash after 30 days. It is not drawn, because it needs new copy and your OK. The built Trash is a sheet; "the full page with selection" (M3f.7 note) is not built either.
+- **Not redrawn:** the Sync sheet (approved in R2-8 and G4-7); Calendars (R2-24); the Mac Settings window pane and File › Export… (ED-081); App lock (R2-24).
+- **Board:** canvas x 21860 / 23900, y 215460, 1900 × 7480. Version `1794604340-0b79`; the page then saved `1794604343-db7d`, which only adds the two files to createdOnFiles. Both boards read back equal to local. Snapshot v2.93-working.
+- **Status:** proposed for owner review. Nothing built or committed.
+- **Update (owner comment on the Android Data and privacy page: "add icons"):** every Android Settings row on R2-21 now has a leading icon in the approved Android root's style: a 40 dp circle in #CFE8E4 with a #062F2C glyph. In light and dark this covers Data and privacy (Sync, Calendars, Export, Trash) and Export (the three formats, Import a backup… and the backups). The Android tablet pane follows. Board height 7560. Version `1794604530-f26a`, made from the live files after checking they matched local. Snapshot v2.94-working.
+
+### ED-319 · R2-21 approved: data safety on every platform (boards E-R2-21, E-R2-21-Dark)
+- **Date:** 2026-11-13. **Owner:** "Approve R2-21 and move on to R2-22".
+- **Approved:** E-R2-21 and E-R2-21-Dark as drawn (ED-318), with the Android row icons (ED-318 update). This covers:
+  - Settings › Data and privacy;
+  - Export with the backups kept on the device, and taking a file out;
+  - import and restore;
+  - Trash as a sheet;
+  - the database recovery screen on phones and the web.
+- **Still open:** permanent delete from Trash (F7.6) is not built and not drawn. It needs new copy and the owner's OK.
+- **Board labels:** "Approved · ED-319"; canvas titles updated. Version `1794604830-da24`.
+- Nothing built or committed. Snapshot v2.95-working.
+
+### ED-320 · R2-22 proposed: planning helpers on every platform; one Day shape question (boards E-R2-22, E-R2-22-Dark)
+- **Date:** 2026-11-13. **Owner:** "Approve R2-21 and move on to R2-22" (order ED-315).
+- **Scope:** as built (11 C2 routines, 11 D2 low energy; docs/09 M3f.6, M11.4, M12.2). Routines, Duplicate day and Copy day as text, and Low-energy mode.
+- **Drawn:**
+  - **1 · Routines:**
+    - the iPhone page, pushed from Settings › Planning, Today's menu or Add, with the phone bar. Each card shows a mini thread, name, summary, step chips, Drop on today and Edit;
+    - the week strip picking Fri 14 ("Drop on Fri 14");
+    - the empty state;
+    - Android;
+    - Edit routine as a pull-up: Name, When, steps with colour, length, the free time kept and ↑ ↓ ×; Add step; Delete routine;
+    - Drop as the approved proposal (ED-150), where a step that is already there is kept;
+    - iPad, with Routines as a sidebar destination in the R2-1 shell and the cards side by side. Mac and web use the same content area.
+  - **2 · Duplicate day and Copy day as text:**
+    - the month sheet "Copy to which day?" ("Copy which day?" from an empty day);
+    - the clipboard text in the built format (✓ done, ○ open, skipped ones left out);
+    - the toast texts.
+  - **3 · Low-energy mode:**
+    - Today with the one dot, Done and Not today, "Later · 5", the once-a-day offer and "Nudges are off until tomorrow's Wake Up";
+    - Show what's later;
+    - "Move everything optional to tomorrow?" as the proposal, with Move them;
+    - Nothing else today;
+    - Android;
+    - the Settings › Planning row;
+    - the Mac and web spread.
+  - **4 · Day shape:** a question, not a drawing.
+- **Question for the owner (Day shape):** the approved Your day page (ED-084) has a Day shape row, "Morning, focus and evening blocks". The app has no such blocks. The built Day shape rows moved to Wake Up and Wind Down (ED-084, R2-18) and to Appearance (Week starts, Time format).
+  - **A (recommended):** remove the row; nothing is lost.
+  - **B:** make the blocks a new feature, with new copy and data, which needs the owner's OK and a spec first.
+  - The sleep target and night editor are already approved (ED-084, R2-18).
+  - **Answered 2026-11-14: A, the row is removed (ED-321).**
+- **Copy:** every string is built (app_en.arb). The routines, times and counts are examples. No new copy.
+- **Design-only:** the Concept E routine card and mini thread, the low-energy card and ring, the month sheet look. The proposal and the toast are the approved ones.
+- **Board:** canvas x 21860 / 23900, y 223140, 1900 × 6000. Version `1794605189-2edf`; both boards read back equal to local. Snapshot v2.96-working.
+- **Status:** proposed for owner review. Nothing built or committed.
+
+### ED-321 · Day shape row removed from Settings › Your day (owner chose A; boards E-Phones, E-R2-11 and the Settings root everywhere)
+- **Date:** 2026-11-14. **Owner:** "A: remove the row and make sure you update every necessary document and canvas." Answers the ED-320 question.
+- **Decision:** Settings › Your day has no Day shape row. The page keeps two groups:
+  - "The two ends of your day": Wake Up and Wind Down;
+  - "The day itself": Learn my day.
+  - Morning, focus and evening blocks are not planned. There is no new copy, data or spec.
+- **Why:** the app has no such blocks. Every built Day shape setting already has an approved place:
+  - Wake Up, Wind Down, different days, the sleep target and the night are in Wake Up and Wind Down (ED-084, R2-18);
+  - Week starts and Time format are in Appearance (ED-161).
+- **Canvas** (version `1794612394-b691`; every changed file read back equal to local):
+  - **Row removed:** E-Phones and E-Phones-Dark (iPhone Your day), E-R2-11 and E-R2-11-Dark (iPad Your day pane).
+  - **Settings root summary:** "Wake Up and Wind Down, day shape, learning" is now "Wake Up and Wind Down, learning" on E-Phones, E-Phones-3, E-PhonesMinimal, E-R2-11, E-R2-18, E-R2-20 and E-R2-21, light and dark.
+  - **E-FullA-v2 and E-FullA-v2-Dark:** the Settings stub line "Day shape · Reminders · …" is now "Your day · Reminders · …".
+  - **E-Map:** the row is now "Sleep target, night (Day shape row removed, ED-321)", drawn in Settings › Your day › Wake Up and Wind Down.
+  - **E-R2-22 and E-R2-22-Dark:** section 4 records the decision in place of the question. R2-22 itself is still proposed (ED-320).
+  - **Labels:** E-R2-11, E-R2-11-Dark, E-R2-22, E-R2-22-Dark and E-SettingsReview.
+  - **Kept as history:** E-SettingsReview, E-WakeWindDown-Settings-Candidate and E-G3-9b-Screens are approved review boards. They still show the old row; E-SettingsReview's label says it has since been removed.
+- **Copy:** no new strings. One design summary line got shorter.
+- **Built app:** unchanged. The built Settings › Day shape group maps onto Wake Up and Wind Down and Appearance when the redesign is built (ED-084). Docs that describe the build (02, 14, 15, FEATURE_PARITY_MATRIX, UX_AUDIT, FEATURE_READINESS) are left as they are.
+- **Canvas housekeeping:** the page's own save (version `1794608833-416b`) did two things, both kept as the page saved them:
+  - cut board titles to 120 characters;
+  - set E-R2-19-B and E-R2-19-B-Dark from 9840 to 8000 high.
+- **Snapshot:** v2.97-working.
+- **Status:** decided. Nothing built or committed.
+
+### ED-322 · R2-22 approved: planning helpers on every platform (boards E-R2-22, E-R2-22-Dark)
+- **Date:** 2026-11-14. **Owner:** "Approve, start R2-23".
+- **Approved:** E-R2-22 and E-R2-22-Dark as drawn (ED-320), with the Day shape decision (ED-321). This covers:
+  - Routines: the page, the week strip, the empty state, Edit routine, Drop as the approved proposal, iPad in the sidebar, Mac and web;
+  - Duplicate day and Copy day as text: the month sheet, the clipboard format, the toasts;
+  - Low-energy mode: Today, the once-a-day offer, "Move everything optional to tomorrow?" as a proposal, Nothing else today, the Settings row, Mac and web.
+- **Board labels:** "Approved · ED-322"; canvas titles updated. Version `1794612660-0037`.
+- Nothing built or committed. Snapshot v2.98-working.
+
+### ED-323 · R2-23 proposed: proposal flows and learning on every platform (boards E-R2-23, E-R2-23-Dark)
+- **Date:** 2026-11-14. **Owner:** "Approve, start R2-23".
+- **Scope:** as built (docs/11 B1 to B3 and A3; docs/09 M10.6, M10.7, M14.2). Four flows: Break it down, Smallest step and Unstick, Help with thinking, and the Reality thread.
+- **Drawn:**
+  - **1 · Break it down:**
+    - the entry is the approved editor (G2-5 D) with no steps, where Break it down sits in the Steps header;
+    - the proposal from the on-device model: the lead row ("was 2 h → now 2 h 15"), up to 5 steps (a ring sized by length, a title, a length, More), Add a step, Total, the Smallest step line, Accept, Discard, "Nothing is saved until you accept";
+    - a step opened: sub-steps, "depth 2 of 3", Break this down, Remove step;
+    - no model: three empty steps and the "Made with simple rules · …" hint; Accept waits until every step has a title;
+    - Android;
+    - Mac and web as a panel beside the day;
+    - the step length picker;
+    - Add before the task exists ("4 steps · saved with the task");
+    - the Show less hint "Break it into steps?".
+  - **2 · Smallest step and Unstick:**
+    - Smallest step on the live task, with Start, and the same as a notification;
+    - Unstick under a task moved three times, then "Step 1 added to …" with Undo;
+    - Android;
+    - the Week card's last line.
+  - **3 · Help with thinking:**
+    - Settings › Data and privacy with a Privacy group;
+    - Privacy › Help with thinking with Apple Intelligence off (Open Settings and its iPhone note);
+    - the model on, with history cleared;
+    - Android with Gemini Nano downloading;
+    - every status line, the rules hints and the Brain dump captions.
+  - **4 · Reality thread:**
+    - Today still learning ("… 6 so far", ×);
+    - Reality on: Plan | Reality, the real times, and the insight with OK;
+    - the "usually" explanation and the reset confirmation;
+    - Settings › Your day › Learn my day before and after the reveal;
+    - the toasts.
+- **Built behaviour kept:**
+  - Only Break it down is a proposal: nothing is written before Accept.
+  - Unstick writes one step at once, with Undo.
+  - Smallest step only opens Focus.
+  - The reality insight writes nothing.
+  - Neither cue has a dismiss, and both are hidden while Reality is on.
+  - There is no switch for the model or for learning.
+- **Design choice for the owner:** a Privacy group under Data on the approved Data and privacy page (R2-21). It holds the built Settings › Privacy page, so Help with thinking has a home. The row label "Privacy" and its subtitle are built strings.
+- **Copy:** every string is built (app_en.arb). The tasks, times and counts are examples. No new copy.
+- **Design-only:**
+  - the step ring and its length chip;
+  - the faint plan rings beside moved dots in Reality;
+  - "0 of 1" under the task after Unstick.
+- **Not drawn:** Android Reality and Learn my day, which use the same rows in M3.
+- **Board:** canvas x 21860 / 23900, y 229260, 1900 × 7480 (the canvas caps boards at 8000). Version `1794613342-ed2a`; read back equal to local. Snapshot v2.99-working.
+- **Status:** proposed for owner review. Nothing built or committed.
+
+### ED-324 · R2-23 approved: proposal flows and learning on every platform (boards E-R2-23, E-R2-23-Dark)
+- **Date:** 2026-11-14. **Owner:** "Approve, start R2-24".
+- **Approved:** E-R2-23 and E-R2-23-Dark as drawn (ED-323). This covers:
+  - Break it down (the proposal, an opened step, the rules fallback, Android, the Mac and web panel, Add, the Show less hint);
+  - Smallest step and Unstick;
+  - Help with thinking, including the design choice: a Privacy group under Data on Settings › Data and privacy;
+  - the Reality thread and Learn my day.
+- **Board labels:** "Approved · ED-324"; canvas titles updated. Version `1794616988-eab7`.
+- Nothing built or committed. Snapshot v3.00-working.
+
+### ED-325 · R2-24 proposed: the rest of the app on every platform, plus a German and French pass (boards E-R2-24, E-R2-24-Dark)
+- **Date:** 2026-11-14. **Owner:** "Approve, start R2-24".
+- **Scope:** as built. This week (the week review), Calendars, App lock, Help and about (Help, Send feedback, About Dottoday, What's new), the web install strip, and a German and French long-string pass.
+- **Drawn:**
+  - **1 · This week:**
+    - the Wind Down card on the week's last day;
+    - the sheet: seven dots with done/total, a day's first three tasks, the chips, one pace-and-load sentence;
+    - scrolled: the carry card (Place or Leave in Inbox), the share image, Show task titles, Share image, "No streaks here — just what happened.";
+    - Place as the approved proposal, with "Place them";
+    - the share image with titles, the toasts.
+  - **2 · Calendars:**
+    - not asked yet; connected (device calendars and a Google account, with Read-only marked);
+    - scrolled: Send changes back, When the day shifts, Travel time;
+    - the Disconnect alert, access off, the three strips above every screen, the onboarding row.
+  - **3 · App lock:**
+    - at the top of Privacy (Settings › Data and privacy › Privacy, ED-324);
+    - Lock after, the locked screen, the app-switcher cover;
+    - the web's "Uses your computer's lock".
+  - **4 · Help and about, and installing on the web:**
+    - Settings › Help and about (Help, Siri & Shortcuts, About Dottoday, Send feedback; Privacy moved to Data and privacy, ED-324);
+    - Help, Send feedback (with the diagnostics preview), About Dottoday, What's new, the update strip;
+    - the web install strip (Chrome and Edge only).
+  - **5 · German and French:** the tab bar, the four sheet buttons, the proposal footer, the carry card, toasts and the install strip, in built German and French.
+- **Built behaviour kept:**
+  - Place is a proposal; Leave in Inbox and the carry toast have Undo.
+  - The share image has no titles unless switched on.
+  - Feedback is a mail draft and never includes what tasks say.
+  - App lock is per device and off by default; the web has no switch.
+  - There are no "Add to Home Screen" instructions for Safari; none are built.
+- **Flags for the owner:**
+  - **The Calendar tab has no built string.** The approved tab (ED-069, ED-075) shows "Calendar" in every language. A new key with German and French text is new copy and needs your OK.
+  - **French "Boîte de réception" does not fit the tab.** It wraps to two lines at 10 pt. The options are two lines, or a shorter tab-only string, which is new copy.
+  - **Two built texts are out of date, in English, German and French:**
+    - 1.2.0's release note says "Settings › Day shape", which no longer exists (ED-321);
+    - the Help answer "How do I move a task?" says "drag its edges", but edge resize was removed (ADR-0015).
+- **Copy:** every string is built (app_en, app_de, app_fr). The tasks, counts, account and calendar names are examples. No new copy.
+- **Design-only:**
+  - the week dots and the share card look;
+  - the big teal dot on the locked screen.
+- **Board:** canvas x 21860 / 23900, y 236860, 1900 × 7740. Version `1794617467-5316`; read back equal to local. Snapshot v3.01-working.
+- **Update (owner comment "make this a proper dottoday", 2026-11-14):** the locked screen and the app-switcher cover now show the Dottoday brand mark (ED-011: the Today ring with its filled centre) in place of a plain teal circle. The built lock screen draws a filled day dot; matching the mark in the app is a build follow-up. Version `1794618113-c456`. Snapshot v3.02-working.
+- **Update (owner comment "add the + sign", 2026-11-14):** the German and French tab-bar samples now carry the approved + button (copied from E-Phones), not a blank circle. Version `1794618531-aceb`. Snapshot v3.03-working.
+- **Status:** proposed for owner review. Nothing built or committed.
+
+### ED-326 · R2-24 approved: the rest of the app on every platform (boards E-R2-24, E-R2-24-Dark)
+- **Date:** 2026-11-14. **Owner:** "Approve R2-24".
+- **Approved:** E-R2-24 and E-R2-24-Dark as drawn (ED-325), with the two comment updates: the Dottoday brand mark on the locked screen and the cover, and the + on the German and French tab bars. This covers:
+  - This week: the review, carrying unfinished tasks, sharing;
+  - Calendars;
+  - App lock;
+  - Help and about, Send feedback, About Dottoday, What's new;
+  - the web install strip;
+  - the German and French long-string pass.
+- **Still open (copy, for the owner):**
+  - a string for the Calendar tab in every language;
+  - French "Boîte de réception" on the tab: two lines or a shorter tab-only string;
+  - the out-of-date "Settings › Day shape" release note and "drag its edges" help answer, in English, German and French.
+- **Build follow-up:** the built lock screen draws a filled day dot; it should draw the brand mark (ED-011).
+- **Board labels:** "Approved · ED-326"; canvas titles updated. Version `1794619149-7595`.
+- **Round 2:** every board in the plan is drawn and approved (R2-1 to R2-24). The account screens wait for CR-160.
+- Nothing built or committed. Snapshot v3.04-working.
 
 ---
 
@@ -4093,4 +4388,3 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 | (canvas) | "Plan from Inbox · 3" on the iPhone empty day: keep it or remove it? | Never asked (ED-039). |
 | d06d1077 | Create task (ED-140): keep "Add another" (check beside it; Return keeps the screen open for the next task) or drop it? | Raised 2026-11-06 (ED-140). **Answered 2026-11-07: option A, no "Add another" (ED-152).** |
 | ef95bd66 | Brain dump and Routine tabs (ED-139): their frames on `E-Phones-2` still use the old compact Add sheet. Redraw them in the Create task chrome? | Raised 2026-11-06 (CR-125). Asked in the decision review (Q-A2). **Answered 2026-11-07: Brain dump (ED-147, ED-148) and Routine (ED-149) open full screen on iPhone and Android. Closed.** |
-- **Records audit (owner: "make sure to record all changes appropriately", 2026-11-13):** E_TABLET_CHECKLIST rows Onboarding (R2-16, ED-305) and System surfaces (R2-17, ED-309) updated, and a Wake Up alarm on tablets row added (ED-314). E_TRACEABILITY C.3 and C.5 rows and gap list updated for R2-16 to R2-19. Snapshots v2.31, v2.35, v2.38, v2.42 and v2.54, which no entry cited, are now cited in ED-266, ED-273, ED-278, ED-285 and ED-304. Docs snapshot v2.89-working. Canvas unchanged (latest version `1794601747-f5c7`).

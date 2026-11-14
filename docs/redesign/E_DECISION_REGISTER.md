@@ -1208,3 +1208,15 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - ED-312: R2-19 the Wake Up alarm proposed (ring, snooze, card, late start, check, missions, fallbacks, iPad card).
 - ED-313: R2-19 Option B "The thread wakes up" beside Option A (ED-312); chosen in ED-314.
 - ED-314: R2-19 approved = Option B "The thread wakes up" (E-R2-19-B); Option A becomes history.
+- ED-315: Round 2 order after stage 3: R2-20 notifications, R2-21 data safety, R2-22 planning helpers, R2-23 proposal flows, R2-24 the rest; accounts after CR-160. Inventory reconciled.
+- ED-316: R2-20 notifications and alerts proposed on every platform (task alerts, Wind Down, summary, strip, Settings › Reminders, health, test alarm); built strings only.
+- ED-317: R2-20 approved (notifications and alerts, with the phone bar on pushed Settings pages).
+- ED-318: R2-21 data safety proposed (Data and privacy, Export and backups, import and restore, Trash, recovery); permanent delete from Trash open for the owner.
+- ED-319: R2-21 approved (data safety, with the Android row icons); permanent delete from Trash still open.
+- ED-320: R2-22 planning helpers proposed (Routines, Duplicate day, Copy as text, Low-energy mode); Day shape row question open (A remove, recommended; B new feature). Answered by ED-321.
+- ED-321: Day shape row removed from Settings › Your day (owner chose A); the Settings root summary is now "Wake Up and Wind Down, learning"; morning, focus and evening blocks are not planned.
+- ED-322: R2-22 approved (Routines, Duplicate day, Copy as text, Low-energy mode; no Day shape row).
+- ED-323: R2-23 proposal flows and learning proposed (Break it down, Smallest step, Unstick, Help with thinking, Reality thread); one design choice: a Privacy group on Data and privacy.
+- ED-324: R2-23 approved (proposal flows and learning, with the Privacy group on Data and privacy).
+- ED-325: R2-24 the rest of the app proposed (This week, Calendars, App lock, Help and about, web install, German and French pass); flags: no built Calendar tab string, French Inbox tab wraps, two out-of-date built texts.
+- ED-326: R2-24 approved (the rest of the app); three copy flags still open; every Round 2 board is now approved, account screens wait for CR-160.

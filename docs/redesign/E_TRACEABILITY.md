@@ -208,7 +208,7 @@ Home columns name where each feature lives in Concept E. "Hidden in Minimal, rea
 
 | Feature | E home on phones | E home on Mac/web (FA2) | E home in Minimal | Status | Verification |
 |---|---|---|---|---|---|
-| Day shape, different days, week start, time format | Settings (not drawn); caps on thread | Settings row list names "Day shape" | Not drawn | Day shape page NOT DESIGNED; onboarding Your day step APPROVED (R2-16, ED-305) | Not started |
+| Day shape, different days, week start, time format | Settings (not drawn); caps on thread | Settings row list names "Day shape" | Not drawn | No Day shape page: the row is removed (ED-321); its settings are in Wake Up and Wind Down (ED-084, R2-18) and Appearance (ED-161); onboarding Your day step APPROVED (R2-16, ED-305) | Not started |
 | Sleep target, Wind Down from tomorrow, learn offer, night on the day dot | Not drawn | Not drawn | Moon cap in end-of-day inset (EPM) | NOT DESIGNED: night editor | Not started |
 | Wake Up alarm (alarm-grade) | Drawn: E-R2-19-B | Not drawn (notification fallback) | Not drawn | APPROVED (R2-19 Option B, ED-314): ringing, snoozed, permission, iOS 16–25 fallback, tablets | NV: needs device |
 | Snooze, Wake Up card, Wake Up Check | Drawn: E-R2-19-B | Not drawn | Not drawn | APPROVED (R2-19 Option B, ED-314) | NV: needs device |
@@ -257,7 +257,7 @@ Home columns name where each feature lives in Concept E. "Hidden in Minimal, rea
 |---|---|---|---|---|---|
 | Header: account row | Avatar opens Settings and account | Settings window | Avatar | OPEN G2-3; NOT DESIGNED | Not started |
 | Layout row | First Settings row (rule) | "Settings, first row" drawn | First Settings row | APPROVED (ED-067); phone row not drawn | Not started |
-| Day shape (10 + 1 rows) | Not drawn | Named in the row list | Not drawn | OPEN G2-4, G2-12; NOT DESIGNED | Not started |
+| Day shape (10 + 1 rows) | Not drawn | Named in the row list | Not drawn | CLOSED: no Day shape page (ED-321); the 10 + 1 rows moved to Wake Up and Wind Down (ED-084, R2-18) and Appearance (ED-161) | Not started |
 | Planning (10 rows) | Not drawn | Not drawn | Not drawn | OPEN G2-4; NOT DESIGNED | Not started |
 | Learning (4 rows) | Not drawn | Not drawn | Not drawn | OPEN G2-4; NOT DESIGNED | Not started |
 | Reminders (6 + 2 rows) | Not drawn | Named in the row list | Not drawn | OPEN G2-4; NOT DESIGNED | Not started |
@@ -349,6 +349,7 @@ Also excluded by later owner answers (not ED "REJECTED", but not to be built):
 > **Tablets (owner sequencing, 2026-11-04).** Phone and Mac boards do not count as tablet designs. Tablet gaps listed here stay open until Prompt D Round 2. The comprehensive tablet coverage checklist is a mandatory step before Round 2 begins (`STATUS.md` Open items); until then each Group 2 decision only records its iPad and Android tablet/foldable implications.
 
 - **2026-11-13, ED-304 to ED-314 (Round 2 stage 3 close and R2-19):** R2-16 onboarding APPROVED as the interactive “Dottoday Onboarding Prototype” (ED-305); R2-17 system surfaces APPROVED (ED-309; the interactive version ED-307 withdrawn, options ED-308); R2-18 Wake Up and Wind Down tablet re-check APPROVED (ED-311); R2-19 the Wake Up alarm APPROVED as Option B, “The thread wakes up” (ED-314), with tablet ringing, snooze and mission screens added after approval. Rows C.3 and C.5 above updated. Other Round 2 approvals (R2-1 to R2-15) are recorded in E_DESIGN_DECISIONS and the register; their C rows here are not yet refreshed. Nothing built or committed.
+- **2026-11-14, ED-321 (Day shape):** the owner chose A. Settings › Your day has no Day shape row, and the two Day shape rows above are updated. Nothing built or committed.
 
 - **2026-11-04, ED-080:** G2-2 approved. The Lists sketch is removed from E-FullA-v2; read any Lists row above as REJECTED. The Routines page is APPROVED but NOT DESIGNED (to draw; route in G2-11).
 - **2026-11-04, ED-079:** Calendar screens approved and drawn on E-Phones.
