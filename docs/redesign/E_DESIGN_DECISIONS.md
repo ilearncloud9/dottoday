@@ -4367,6 +4367,17 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Round 2:** every board in the plan is drawn and approved (R2-1 to R2-24). The account screens wait for CR-160.
 - Nothing built or committed. Snapshot v3.04-working.
 
+### ED-327 · Copy decisions from the German and French pass: Calendar tab label, French "Boîte", the move answer
+- **Date:** 2026-11-14. **Owner** (answers to the three ED-325 questions): Calendar tab "Calendar / Kalender / Calendrier"; French Inbox tab "Boîte" on the tab only; fix the out-of-date texts in a separate PR.
+- **Decisions:**
+  - **Calendar tab label:** a new tab-label string: EN "Calendar", DE "Kalender", FR "Calendrier". It is added to the ARB files when the Concept E tab bar is built (the built app's tab is still Week).
+  - **French Inbox tab:** a tab-only string "Boîte". Screen titles, toasts and buttons keep "Boîte de réception". German "Eingang" and English "Inbox" are unchanged. Tab labels stay on one line.
+  - **"How do I move a task?" (`helpMoveA`):** it still says to drag a task's edges, but edge resize was removed (ADR-0015). It is out of date in the app today, so it is fixed now, in all three languages, in its own PR from main (session "help-move-copy").
+  - **Release note 1.2.0 ("Settings › Day shape"):** correct for the app as built today. It changes only when the redesign's Settings is built (ED-321), so it is left alone now and recorded here for that build.
+- **New copy approved:** the Calendar tab label (three languages) and the French tab-only "Boîte". The new move-answer wording is reviewed in its PR.
+- **Board:** E-R2-24 and E-R2-24-Dark section 5 now show "Kalender", "Calendrier" and "Boîte" on the tab bars, and the findings read "Decided". The Help and What's new notes say what happens to each text. Board height is now 7760. Version `1794619797-a65a`. Snapshot v3.05-working.
+- Nothing built. The PR is the only app change.
+
 ---
 
 ## Pending owner answers

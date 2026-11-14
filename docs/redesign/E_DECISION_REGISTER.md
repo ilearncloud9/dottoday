@@ -1220,3 +1220,4 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - ED-324: R2-23 approved (proposal flows and learning, with the Privacy group on Data and privacy).
 - ED-325: R2-24 the rest of the app proposed (This week, Calendars, App lock, Help and about, web install, German and French pass); flags: no built Calendar tab string, French Inbox tab wraps, two out-of-date built texts.
 - ED-326: R2-24 approved (the rest of the app); three copy flags still open; every Round 2 board is now approved, account screens wait for CR-160.
+- ED-327: copy decided: Calendar tab label (Calendar / Kalender / Calendrier), French tab-only "Boîte", move answer fixed in its own PR, Day shape release note changes with the Settings build.
