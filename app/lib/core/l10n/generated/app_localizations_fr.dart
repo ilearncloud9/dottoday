@@ -5967,7 +5967,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Proposer de décaler la journée si je me lève après le plan';
 
   @override
-  String get wakeUpLateAfterRow => 'À partir de';
+  String get wakeUpLateOfferAfterRow => 'Proposer après';
 
   @override
   String wakeUpCardGreeting(String date) {
@@ -6043,6 +6043,9 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get wakeUpCheckRowDetail =>
       'Un rappel si rien n\'a commencé quelques minutes après le lever';
+
+  @override
+  String get wakeUpCheckAfterRow => 'Vérifier après';
 
   @override
   String get wakeUpCheckAsRow => 'Sous forme de';

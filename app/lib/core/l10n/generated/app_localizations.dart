@@ -8898,11 +8898,11 @@ abstract class AppLocalizations {
   /// **'Offer to shift the day when I\'m up after plan'**
   String get wakeUpLateOfferRow;
 
-  /// Row: minutes after Wake Up before the shift offer shows.
+  /// Row and picker title: minutes after Wake Up before the shift offer shows. Names its setting so a screen reader can tell it from the check's (ED-337).
   ///
   /// In en, this message translates to:
-  /// **'After'**
-  String get wakeUpLateAfterRow;
+  /// **'Offer after'**
+  String get wakeUpLateOfferAfterRow;
 
   /// Wake Up card's first line; date is the weekday and date.
   ///
@@ -8987,6 +8987,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'One nudge if nothing has started a few minutes after I\'m up'**
   String get wakeUpCheckRowDetail;
+
+  /// Row and picker title: minutes after Wake Up before the Wake Up Check nudges (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'Check after'**
+  String get wakeUpCheckAfterRow;
 
   /// Row: how the Wake Up Check comes (gentle ping or alarm).
   ///

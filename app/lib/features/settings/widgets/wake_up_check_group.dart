@@ -37,7 +37,7 @@ class WakeUpCheckGroup extends StatelessWidget {
           SettingsRow(
             glyph: DotGlyphs.clock,
             tint: t.colors.accentInk,
-            title: l10n.wakeUpLateAfterRow,
+            title: l10n.wakeUpCheckAfterRow,
             value: l10n.durationMinutes(settings.wakeUpCheckMin),
             onTap: () => unawaited(_pickAfter(context)),
           ),
@@ -57,7 +57,7 @@ class WakeUpCheckGroup extends StatelessWidget {
     final l10n = context.l10n;
     final picked = await showChoiceSheet<int>(
       context,
-      title: l10n.wakeUpLateAfterRow,
+      title: l10n.wakeUpCheckAfterRow,
       selected: settings.wakeUpCheckMin,
       options: [
         for (final m in wakeUpCheckChoices)

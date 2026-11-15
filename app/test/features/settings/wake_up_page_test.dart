@@ -150,10 +150,35 @@ void main() {
     expect(find.text('Show it when I first open the app'), findsOneWidget);
     await _tap(tester, 'Offer to shift the day when I\'m up after plan');
     expect((await storedSettings(h)).wakeUpLateOffer, isFalse);
-    expect(find.text('After'), findsOneWidget, reason: "the check's only");
+    expect(find.text('Offer after'), findsNothing);
+    expect(find.text('Check after'), findsOneWidget, reason: "the check's");
     await _tap(tester, "Your day on one screen when you're up");
     expect((await storedSettings(h)).wakeUpCard, isFalse);
     expect(find.text('Show it when I first open the app'), findsNothing);
+  });
+
+  testWidgets('the two delays say which setting they change (ED-337)', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await _pump(tester);
+    for (final row in ['Offer after', 'Check after']) {
+      await tester.ensureVisible(find.text(row));
+      expect(
+        find.bySemanticsLabel(RegExp('(^|\n)$row\n')),
+        findsOneWidget,
+        reason: row,
+      );
+    }
+    expect(find.bySemanticsLabel(RegExp('(^|\n)After\n')), findsNothing);
+    // Each picker's title names its setting too.
+    await _tap(tester, 'Offer after');
+    expect(find.text('Offer after'), findsNWidgets(2));
+    await tester.tapAt(const Offset(10, 10));
+    await tester.pumpAndSettle();
+    await _tap(tester, 'Check after');
+    expect(find.text('Check after'), findsNWidgets(2));
+    handle.dispose();
   });
 
   testWidgets('Morning card off for anyone without Wake Up', (tester) async {
