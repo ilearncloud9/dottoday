@@ -9,10 +9,18 @@ import 'package:flutter/material.dart';
 /// the count (docs/10 §1 "the Inbox is a dotted ring holding loose dots",
 /// `A-ios-inbox`).
 class InboxHeader extends StatelessWidget {
-  const InboxHeader({required this.count, required this.minutes, super.key});
+  const InboxHeader({
+    required this.count,
+    required this.minutes,
+    this.routines = true,
+    super.key,
+  });
 
   final int count;
   final int minutes;
+
+  /// Whether "Drop a routine…" shows; minimal hides it (docs/14 §3).
+  final bool routines;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +41,7 @@ class InboxHeader extends StatelessWidget {
                 l10n.inboxSummary(count, formatDurationShort(l10n, minutes)),
                 style: t.styles.body.copyWith(color: t.colors.muted),
               ),
-              const InboxRoutinesButton(),
+              if (routines) const InboxRoutinesButton(),
             ],
           ),
         ),

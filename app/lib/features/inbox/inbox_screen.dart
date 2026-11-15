@@ -6,11 +6,13 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
 import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/features/inbox/state/inbox_state.dart';
 import 'package:dottoday/features/inbox/widgets/completed_group.dart';
@@ -38,7 +40,8 @@ import 'package:timezone/timezone.dart' as tz;
 
 /// The Inbox (docs/10 §5.2 I1, `A-ios-inbox`): what has no time yet, a
 /// quick-add field, filters, the next free slot that fits something, and
-/// what is already done.
+/// what is already done. Minimal (docs/14 §3 `inboxExtras` Hidden) draws
+/// the list with the next free slot, swipe and Place only, at every width.
 class InboxScreen extends ConsumerWidget {
   const InboxScreen({super.key});
 
@@ -79,6 +82,7 @@ class InboxScreen extends ConsumerWidget {
       rangeText: (s) =>
           context.l10n.threadTimeRange(time(s.startUtc), time(s.endUtc)),
     );
+    final extras = watchOnScreen(ref, FeatureId.inboxExtras);
     final narrow = Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
@@ -86,7 +90,11 @@ class InboxScreen extends ConsumerWidget {
         child: _Body(
           items: items,
           room: room,
-          filter: ref.watch(inboxFilterChoiceProvider),
+          extras: extras,
+          // No filter chips in minimal, so no stored filter hides a row.
+          filter: extras
+              ? ref.watch(inboxFilterChoiceProvider)
+              : InboxFilter.all,
           commands: commands,
           oneThingId: ref.watch(todayOneThingIdProvider),
         ),
@@ -104,7 +112,7 @@ class InboxScreen extends ConsumerWidget {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, box) =>
-              WidthClass.of(box.maxWidth) == WidthClass.expanded
+              extras && WidthClass.of(box.maxWidth) == WidthClass.expanded
               ? _wide(context, ref, items, today, zone, time, commands)
               : narrow,
         ),
@@ -160,6 +168,7 @@ class _Body extends StatelessWidget {
   const _Body({
     required this.items,
     required this.room,
+    required this.extras,
     required this.filter,
     required this.commands,
     this.oneThingId,
@@ -170,6 +179,9 @@ class _Body extends StatelessWidget {
 
   final List<Occurrence> items;
   final DayRoom? room;
+
+  /// Filters, Routines, swipe hint and Completed (docs/14 §3).
+  final bool extras;
   final InboxFilter filter;
   final InboxCommands commands;
 
@@ -192,12 +204,14 @@ class _Body extends StatelessWidget {
         DotSpace.xxl,
       ),
       children: [
-        InboxHeader(count: work.count, minutes: work.minutes),
+        InboxHeader(count: work.count, minutes: work.minutes, routines: extras),
         const SizedBox(height: DotSpace.l),
         InboxAddField(onSubmit: commands.add),
         const SizedBox(height: DotSpace.m),
-        const InboxFilters(),
-        const SizedBox(height: DotSpace.m),
+        if (extras) ...[
+          const InboxFilters(),
+          const SizedBox(height: DotSpace.m),
+        ],
         if (work.count == 0 || shown.isEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: DotSpace.xl),
@@ -233,7 +247,7 @@ class _Body extends StatelessWidget {
             onMoveUp: s.moveUp,
             onMoveDown: s.moveDown,
           ),
-          after: (i) => i == 0
+          after: (i) => i == 0 && extras
               ? const InboxSwipeHint()
               : const SizedBox(height: DotSpace.s),
         ),
@@ -253,7 +267,7 @@ class _Body extends StatelessWidget {
             ),
           ),
         ],
-        ..._completed(done),
+        if (extras) ..._completed(done),
       ],
     );
   }
