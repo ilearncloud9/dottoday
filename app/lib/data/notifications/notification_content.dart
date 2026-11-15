@@ -13,6 +13,7 @@ import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
+import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/domain/time/wind_down.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -114,12 +115,9 @@ String _windDownBody(
         : l10n.notifWindDownFirst(task!.title, _time(start, profile));
   }
   final location = tz.getLocation(profile.tzId);
-  final local = tz.TZDateTime.from(planned.fireAtUtc, location);
-  final wake = nextWakeUtc(
-    location,
-    DateTime(local.year, local.month, local.day),
-    profile.settings,
-  );
+  // The day this Wind Down closes, which after midnight is yesterday (Q8).
+  final day = DayShape.dayOf(location, planned.fireAtUtc, profile.settings);
+  final wake = nextWakeUtc(location, day, profile.settings);
   final length = _length(l10n, nightMinutes(planned.fireAtUtc, wake));
   return start == null
       ? l10n.notifWindDownNudgeNoDot(length, _time(wake, profile))

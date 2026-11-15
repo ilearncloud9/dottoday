@@ -1507,6 +1507,7 @@
   "reviewNightIfNow": "{length}, wenn du jetzt zur Ruhe kommst",
   "notifWindDownNudge": "Jetzt zur Ruhe kommen: {length} bis {title} um {time}.",
   "notifWindDownNudgeNoDot": "Jetzt zur Ruhe kommen: {length} bis {time}.",
+  "timeNextDay": "{time}, am nächsten Tag",
   "settingsWindDownFrom": "{time} · nach morgen {wake}",
   "todayWindDownFooter": "Morgen geht's um {start} los → Abendruhe {windDown}",
   "onboardingWindDownLive": "Abendruhe {time} · {length} Schlaf",

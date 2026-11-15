@@ -176,7 +176,7 @@ sheet confirms first.
 ## Settings JSON (profiles.settings) — validated with a schema on both sides
 ```json
 {
-  "dayBoundaries": {"mon": {"start": "07:00", "end": "22:00"}, "...": {}},
+  "dayBoundaries": {"mon": {"start": "07:00", "end": "22:00"}, "fri": {"start": "08:00", "end": "24:30"}, "...": {}},
   "snapMinutes": 5,
   "shiftFollowers": "ask",
   "includeCalendarInShift": false,
@@ -227,10 +227,23 @@ sheet confirms first.
 - Clarified in M1.1: `icon_key` is a lowercase snake_case token ≤ 48 chars (default `circle`) until
   the picker set is the 26 `TaskIcon`s (M3a.2; older keys map to the nearest icon); the UI draws a plain dot for `circle` and for keys it does not know. `color_key` must be
   one of the 9 Concept A task colour keys or a retired 12-palette key kept for sync
-  (`task_color_keys.gen.dart`, ADR-0007, M3a.1); `settings.accent` is one of the 4 accents. Day boundaries are `HH:mm` with
-  start < end (no wrap); quiet hours may wrap past midnight. `quietHours: null` means off and is the
+  (`task_color_keys.gen.dart`, ADR-0007, M3a.1); `settings.accent` is one of the 4 accents. Day boundaries are `HH:mm`
+  with start < end (see "Wind Down after midnight" below); quiet hours may wrap past midnight. `quietHours: null` means off and is the
   default for new profiles (the example above shows the suggested window once enabled). Validation
   checks `tz_id` against the bundled IANA database, which `bootstrap()` loads before `runApp`.
+- Clarified for Q8 (owner, Round 2 close-out, ED-336): **Wind Down after midnight.** A day's
+  `end` counts from that day's own midnight and may pass it: 00:30 the next morning is stored as
+  `24:30`, and it still belongs to the day it closes (its Wind Down reminder, review and night).
+  Rules: `start` is `00:00`–`23:59`; `end` is after `start` and less than 24 h after it (hours
+  `00`–`47`). `24:00` is midnight. The app resolves an end at or after `24:00` on the next calendar
+  day's wall clock (DST-true: a time in a spring-forward gap moves on, a fall-back overlap takes the
+  earlier instant) and holds it at the next day's Wake Up, so a night is never negative. The clock
+  belongs to the previous day until, and including, that day's configured Wind Down
+  (`DayShape.dayOf`); Today still turns at midnight, and the Wind Down review opens on the day the
+  clock belongs to. Editors store a Wind Down picked at or before Wake Up a day on (`dayWindow`) and
+  show it as "00:30, next day". An older end stored at or before `start` is read the same way. No
+  column changes: the server's `validate_settings()` only checks the key; the client checks the
+  rule (`checkDayWindow`). Older app versions cannot read `24:30` and fall back to 22:00.
 - Clarified in M3c.3: `durationPresets` are the Add flow's duration chips — 1–12 distinct lengths of
   5–1440 min, sorted; absent means the default list. Checked by the client validator; the server's
   `validate_settings()` ignores keys it doesn't know, so older rows stay valid.

@@ -108,8 +108,7 @@ Validated<Settings> validateSettings(Settings s) {
           ValidationField.settings,
           ValidationRule.outOfRange,
         ),
-      for (final window in s.dayBoundaries.values)
-        checkTimeWindow(window, allowWrap: false),
+      for (final window in s.dayBoundaries.values) checkDayWindow(window),
       checkRange(
         ValidationField.duration,
         s.defaultDurationMin,

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Wind Down can fall after midnight. Set it to 00:30 (tap the Wind Down dot or its row in Settings) and it shows as "00:30, next day" and still ends the day before: its reminder rings once at 00:30, and the review it opens is that day's. Wind Down never runs past the next morning's Wake Up. A Wind Down at midnight was read as 22:00 before; it now really is midnight.
 - Today opens at now: on today's date the day scrolls so the task you're in (or the now line, between tasks) sits in view above the Day and Add buttons, also on small phones. Other days still open at their first task. With Reduce Motion it jumps there instead of scrolling.
 - Settings › Wake Up options: the two delay rows that both said "After" now say "Offer after" (when the Morning card offers to shift the day) and "Check after" (when Check I've started nudges), in their pickers too, so a screen reader says which one you're changing.
 - In the minimal layout the Inbox shows only your tasks, the next free slot with Place, and swipe, on every screen size: the Mac/web Inbox no longer shows Drop onto today, Auto-plan the week, Sort, filters, Drop a routine… or the Completed group, and phones no longer show the filters, the swipe hint, Drop a routine… or Completed (docs/14 §3). The full layout is unchanged.

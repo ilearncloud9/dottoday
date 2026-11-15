@@ -40,6 +40,8 @@ Future<void> showCapTimeSheet(
         Localizations.localeOf(context).toLanguageTag(),
       ).format(date),
       use24h: settings.use24h,
+      // A Wind Down at or before Wake Up falls after midnight (Q8).
+      nextDayUpTo: windDown ? windowMinutes(window.start) : null,
     ),
   );
   if (picked == null) return;
@@ -68,9 +70,14 @@ class _CapSheet extends StatefulWidget {
     required this.everyDay,
     required this.weekday,
     required this.use24h,
+    this.nextDayUpTo,
   });
 
   final ClockTime initial;
+
+  /// Wake Up's minute when this is Wind Down: a time at or before it is
+  /// labelled "next day".
+  final int? nextDayUpTo;
   final bool everyDay;
 
   /// "Saturday".
@@ -99,6 +106,16 @@ class _CapSheetState extends State<_CapSheet> {
           use24h: widget.use24h,
           onChanged: (t) => setState(() => _time = t),
         ),
+        // Midnight itself (00:00) reads as the day's own end, unlabelled.
+        if (widget.nextDayUpTo case final wake?
+            when _time.minutesOfDay > 0 && _time.minutesOfDay <= wake)
+          Text(
+            l10n.timeNextDay(
+              formatClockTime(context, _time, use24h: widget.use24h),
+            ),
+            textAlign: TextAlign.center,
+            style: DotTheme.of(context).styles.rowMeta,
+          ),
         SegmentedButton<bool>(
           showSelectedIcon: false,
           segments: [

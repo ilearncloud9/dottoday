@@ -1507,6 +1507,7 @@
   "reviewNightIfNow": "{length} si desconectas ahora",
   "notifWindDownNudge": "Desconecta ahora: {length} antes de {title} a las {time}.",
   "notifWindDownNudgeNoDot": "Desconecta ahora: {length} antes de las {time}.",
+  "timeNextDay": "{time}, al día siguiente",
   "settingsWindDownFrom": "{time} · según mañana {wake}",
   "todayWindDownFooter": "Mañana empieza a las {start} → desconexión a las {windDown}",
   "onboardingWindDownLive": "Desconexión a las {time} · {length} de sueño",

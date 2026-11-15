@@ -9144,6 +9144,12 @@ abstract class AppLocalizations {
   /// **'Wind down now for {length} before {time}.'**
   String notifWindDownNudgeNoDot(String length, String time);
 
+  /// A Wind Down after midnight: its time and that it falls the next morning (it still ends the day before).
+  ///
+  /// In en, this message translates to:
+  /// **'{time}, next day'**
+  String timeNextDay(String time);
+
   /// Wind Down row value when a sleep target moved it.
   ///
   /// In en, this message translates to:

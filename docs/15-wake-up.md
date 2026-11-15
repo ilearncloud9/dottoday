@@ -207,7 +207,7 @@ If the day has no thread: the dot is empty, the first-dot slot becomes "Nothing 
 
 **What the user sees.** In Settings › Day shape, Wind Down shows "22:45 · from tomorrow's 06:30" with the sleep target chip beside it; tapping explains in one sentence. On Today, when tomorrow's first dot is earlier than usual, the Wind Down dot moves earlier and the day card footer reads "Tomorrow starts 06:00 → wind down 22:15". No other nudge. If the derived Wind Down would fall before the current time plus 1 h, the configured Wind Down wins and nothing is said.
 
-**Edges.** Per-weekday Wind Down overrides keep winning when earlier. Timezone change re-derives. Tomorrow has no thread → configured Wind Down. The Wind Down review's weekly picture (D1) gains nothing; the daily review opens at the effective Wind Down.
+**Edges.** A Wind Down after midnight (Q8, docs/05 "Wind Down after midnight", e.g. `24:30`) is still day D's: its reminder fires once at 00:30 with day D's key, the review it opens is day D's, and it is held at tomorrow's Wake Up so the night is never negative. Per-weekday Wind Down overrides keep winning when earlier. Timezone change re-derives. Tomorrow has no thread → configured Wind Down. The Wind Down review's weekly picture (D1) gains nothing; the daily review opens at the effective Wind Down.
 
 **As built (M17.5).** `effectiveDayShape` in `domain/time/wind_down.dart` is anchored on tomorrow's Wake Up time (owner's anchor) and read through the `dayEnds` provider. There is no sleep block (§1), so nothing else is subtracted.
 

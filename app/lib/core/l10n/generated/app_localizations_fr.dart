@@ -6147,6 +6147,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String timeNextDay(String time) {
+    return '$time, le lendemain';
+  }
+
+  @override
   String settingsWindDownFrom(String time, String wake) {
     return '$time · selon demain $wake';
   }

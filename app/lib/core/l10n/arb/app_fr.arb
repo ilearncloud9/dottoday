@@ -1507,6 +1507,7 @@
   "reviewNightIfNow": "{length} si vous vous détendez maintenant",
   "notifWindDownNudge": "Détendez-vous maintenant : {length} avant {title} à {time}.",
   "notifWindDownNudgeNoDot": "Détendez-vous maintenant : {length} avant {time}.",
+  "timeNextDay": "{time}, le lendemain",
   "settingsWindDownFrom": "{time} · selon demain {wake}",
   "todayWindDownFooter": "Demain commence à {start} → détente à {windDown}",
   "onboardingWindDownLive": "Détente à {time} · {length} de sommeil",
