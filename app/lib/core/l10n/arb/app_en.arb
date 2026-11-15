@@ -2416,6 +2416,48 @@
       }
     }
   },
+  "trashDeleteNow": "Delete now",
+  "@trashDeleteNow": {
+    "description": "Trash row: delete this task for good, after a confirm (F7.6, ED-336)."
+  },
+  "trashDeleteNowTitle": "Delete “{title}” now?",
+  "@trashDeleteNowTitle": {
+    "description": "Confirm before deleting one task from Trash for good (ED-337).",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDeleteNowBody": "It can't be restored after this.",
+  "@trashDeleteNowBody": {
+    "description": "Body of the Delete now confirm (ED-337)."
+  },
+  "trashDeleteNowAction": "Delete",
+  "@trashDeleteNowAction": {
+    "description": "Delete now confirm: the action button, in ink, never red (ED-337)."
+  },
+  "trashEmptyTitle": "Empty Trash?",
+  "@trashEmptyTitle": {
+    "description": "Confirm before deleting everything in Trash for good (ED-337)."
+  },
+  "trashEmptyBody": "{count, plural, =1{1 task will be deleted.} other{{count} tasks will be deleted.}} They can't be restored after this.",
+  "@trashEmptyBody": {
+    "description": "Body of the Empty Trash confirm with how many tasks go (ED-337).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trashEmptyAction": "Empty Trash",
+  "@trashEmptyAction": {
+    "description": "Trash sheet action under the list, and the Empty Trash confirm's button (ED-337)."
+  },
+  "trashEmptied": "Trash emptied",
+  "@trashEmptied": {
+    "description": "Toast after Empty Trash; no Undo (ED-337)."
+  },
   "settingsAbout": "About",
   "@settingsAbout": {
     "description": "Settings group caption."

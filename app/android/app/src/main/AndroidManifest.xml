@@ -44,7 +44,7 @@
          Dottoday's own local backups and export are the recovery path. -->
     <application
         android:label="Dottoday"
-        android:name="${applicationName}"
+        android:name=".DottodayApp"
         android:icon="@mipmap/ic_launcher"
         android:localeConfig="@xml/locales_config"
         android:enableOnBackInvokedCallback="true"

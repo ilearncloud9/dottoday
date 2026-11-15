@@ -56,12 +56,13 @@ final class OsAlarmGateway implements AlarmGateway {
   }
 
   @override
-  Future<void> disarmAll() async {
-    if (!_native) return;
+  Future<bool> disarmAll() async {
+    if (!_native) return true;
     try {
       await _channel.invokeMethod<void>('disarmAll');
+      return true;
     } on MissingPluginException {
-      return;
+      return false;
     }
   }
 

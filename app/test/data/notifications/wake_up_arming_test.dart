@@ -212,6 +212,41 @@ void main() {
     expect(gateway.disarmed, 1);
   });
 
+  // R-10: a background engine that can't reach the gateway leaves the old
+  // alarm ringing; forgetting it would ring that instant twice later.
+  test('switched off out of reach: still armed until a disarm lands', () async {
+    final gateway = FakeAlarmGateway();
+    final arming = WakeUpArming(gateway, db);
+    await arming.arm([_wakeUp(mon)], profile: on, tasks: const {});
+    final off = profileFixture();
+    gateway.reachable = false;
+    expect(await arming.arm(const [], profile: off, tasks: const {}), {mon});
+    expect(gateway.disarmed, 0);
+    gateway.reachable = true;
+    expect(await arming.arm(const [], profile: off, tasks: const {}), isEmpty);
+    expect(gateway.disarmed, 1);
+    expect(await arming.arm(const [], profile: off, tasks: const {}), isEmpty);
+    expect(gateway.disarmed, 1);
+  });
+
+  test(
+    'moved out of reach: the old instant counts, the new one does not',
+    () async {
+      final gateway = FakeAlarmGateway();
+      final arming = WakeUpArming(gateway, db);
+      await arming.arm([_wakeUp(mon)], profile: on, tasks: const {});
+      final moved = mon.add(const Duration(minutes: 30));
+      gateway.reachable = false;
+      expect(await arming.arm([_wakeUp(moved)], profile: on, tasks: const {}), {
+        mon,
+      });
+      gateway.reachable = true;
+      expect(await arming.arm([_wakeUp(moved)], profile: on, tasks: const {}), {
+        moved,
+      });
+    },
+  );
+
   test('a device that arms nothing rings everything on the old path', () async {
     final gateway = FakeAlarmGateway()..arms = false;
     final armed = await WakeUpArming(

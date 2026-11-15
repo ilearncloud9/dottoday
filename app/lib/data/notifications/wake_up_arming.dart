@@ -16,11 +16,11 @@ import 'package:timezone/timezone.dart' as tz;
 /// ADR-0017) and returns the instants it armed, which the notification
 /// path then leaves out, so a Wake Up rings exactly once (R-10).
 ///
-/// The armed instants are kept per device in `local_meta`: a background
-/// engine can't reach the gateway (Android registers its channel on the
-/// activity), and it still leaves out what the last reachable sync armed,
-/// while ringing the rest on the notification path (W1a) rather than not
-/// at all.
+/// The armed instants are kept per device in `local_meta`: an engine that
+/// can't reach the gateway still leaves out what the last reachable sync
+/// armed, while ringing the rest on the notification path (W1a) rather
+/// than not at all. On Android every engine reaches it, the background
+/// resync's included (ADR-0019).
 final class WakeUpArming {
   const WakeUpArming(
     this._gateway,
@@ -62,7 +62,9 @@ final class WakeUpArming {
     final known = await _read();
     if (!profile.settings.wakeUpAlarm) {
       if (known == null) return const {};
-      await _gateway.disarmAll();
+      // Out of reach, the alarms still ring: keep them armed here, so the
+      // notification path leaves them out and the next sync disarms them.
+      if (!await _gateway.disarmAll()) return known;
       await _write(null);
       return const {};
     }
@@ -94,7 +96,9 @@ final class WakeUpArming {
   /// owner, so the alarms (their titles are the old owner's tasks) go
   /// first; the new owner's resync then arms its own, if any.
   Future<void> disarmAll() async {
-    await _gateway.disarmAll();
+    // Out of reach, the alarms still ring: keep them, as arm() does, so the
+    // next reachable sync disarms them.
+    if (!await _gateway.disarmAll()) return;
     await _write(null);
   }
 

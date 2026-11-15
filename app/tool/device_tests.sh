@@ -43,8 +43,9 @@ if [[ ${#tests[@]} -eq 0 ]]; then
     notification_exactness surface_consistency)
   # The live dot (M9.3, M9.4): each platform's own surface.
   if [[ "$platform" == ios ]]; then tests+=(live_activity); else tests+=(ongoing_dot); fi
-  # The Wake Up alarm: the ringing service (M17.2), AlarmKit (W1b).
-  if [[ "$platform" == android ]]; then tests+=(wake_up_alarm); else tests+=(wake_up_alarmkit); fi
+  # The Wake Up alarm: the ringing service (M17.2), AlarmKit (W1b); on
+  # Android also re-armed by the background worker (ADR-0019).
+  if [[ "$platform" == android ]]; then tests+=(wake_up_alarm wake_up_background); else tests+=(wake_up_alarmkit); fi
   # The on-device model (M10.1): availability, and < 2 s where one is ready.
   tests+=(thinking sweep)
 fi

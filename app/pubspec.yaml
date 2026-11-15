@@ -13,6 +13,9 @@ dependencies:
   connectivity_plus: ^7.3.1
   crypto: ^3.0.5
   device_calendar: ^4.3.0
+  # In-repo, Android only: the app's channels on every engine (ADR-0019).
+  dottoday_engine_hooks:
+    path: packages/dottoday_engine_hooks
   drift: ^2.35.2
   file_picker: ^13.1.0
   flutter:

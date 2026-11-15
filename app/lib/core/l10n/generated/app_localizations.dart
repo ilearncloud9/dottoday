@@ -2388,6 +2388,54 @@ abstract class AppLocalizations {
   /// **'{title} restored'**
   String settingsRestored(String title);
 
+  /// Trash row: delete this task for good, after a confirm (F7.6, ED-336).
+  ///
+  /// In en, this message translates to:
+  /// **'Delete now'**
+  String get trashDeleteNow;
+
+  /// Confirm before deleting one task from Trash for good (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'Delete “{title}” now?'**
+  String trashDeleteNowTitle(String title);
+
+  /// Body of the Delete now confirm (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'It can\'t be restored after this.'**
+  String get trashDeleteNowBody;
+
+  /// Delete now confirm: the action button, in ink, never red (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get trashDeleteNowAction;
+
+  /// Confirm before deleting everything in Trash for good (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'Empty Trash?'**
+  String get trashEmptyTitle;
+
+  /// Body of the Empty Trash confirm with how many tasks go (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task will be deleted.} other{{count} tasks will be deleted.}} They can\'t be restored after this.'**
+  String trashEmptyBody(int count);
+
+  /// Trash sheet action under the list, and the Empty Trash confirm's button (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'Empty Trash'**
+  String get trashEmptyAction;
+
+  /// Toast after Empty Trash; no Undo (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'Trash emptied'**
+  String get trashEmptied;
+
   /// Settings group caption.
   ///
   /// In en, this message translates to:

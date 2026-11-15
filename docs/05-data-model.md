@@ -192,6 +192,12 @@ Locally (M2.5) the purge never removes a tombstone that is still `dirty` (the se
 delete) or a series-instance tombstone with `original_start_utc` at or after `now − 1 day` (the
 Materialiser reads it as "skip this instance"). Trashing a task trashes its live subtasks with the
 same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in memory.
+Permanent delete (F7.6, ED-336: Trash's "Delete now" per task and "Empty Trash") is one write-path
+transaction that moves the occurrence's and its subtasks' `deleted_at` to `now − 60 days` (twice the
+window, so a Trash list already watching with an older cutoff drops it too). It is never a local
+`DELETE`: the tombstone syncs like any delete (docs/04 §4), every device's Trash hides it at once, and
+the server's nightly purge and each device's purge remove it once it is clean. Not undoable; the
+sheet confirms first.
 
 ## Settings JSON (profiles.settings) — validated with a schema on both sides
 ```json

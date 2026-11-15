@@ -1583,6 +1583,40 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get trashDeleteNow => 'Eliminar ahora';
+
+  @override
+  String trashDeleteNowTitle(String title) {
+    return '¿Eliminar “$title” ahora?';
+  }
+
+  @override
+  String get trashDeleteNowBody => 'Después ya no se podrá restaurar.';
+
+  @override
+  String get trashDeleteNowAction => 'Eliminar';
+
+  @override
+  String get trashEmptyTitle => '¿Vaciar la papelera?';
+
+  @override
+  String trashEmptyBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Se eliminarán $count tareas.',
+      one: 'Se eliminará 1 tarea.',
+    );
+    return '$_temp0 Después ya no se podrán restaurar.';
+  }
+
+  @override
+  String get trashEmptyAction => 'Vaciar papelera';
+
+  @override
+  String get trashEmptied => 'Papelera vaciada';
+
+  @override
   String get settingsAbout => 'Acerca de';
 
   @override

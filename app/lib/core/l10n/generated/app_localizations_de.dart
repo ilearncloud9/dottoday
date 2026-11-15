@@ -1586,6 +1586,41 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get trashDeleteNow => 'Jetzt löschen';
+
+  @override
+  String trashDeleteNowTitle(String title) {
+    return '„$title“ jetzt löschen?';
+  }
+
+  @override
+  String get trashDeleteNowBody =>
+      'Danach lässt es sich nicht mehr wiederherstellen.';
+
+  @override
+  String get trashDeleteNowAction => 'Löschen';
+
+  @override
+  String get trashEmptyTitle => 'Papierkorb leeren?';
+
+  @override
+  String trashEmptyBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Aufgaben werden gelöscht.',
+      one: '1 Aufgabe wird gelöscht.',
+    );
+    return '$_temp0 Danach lassen sie sich nicht mehr wiederherstellen.';
+  }
+
+  @override
+  String get trashEmptyAction => 'Papierkorb leeren';
+
+  @override
+  String get trashEmptied => 'Papierkorb geleert';
+
+  @override
   String get settingsAbout => 'Über';
 
   @override

@@ -94,6 +94,12 @@ final class FakeOccurrenceRepository implements OccurrenceRepository {
     _changes.add(null);
   }
 
+  /// Hard-deletes [ids] (Trash's Delete now in the fake).
+  void remove(Iterable<String> ids) {
+    ids.forEach(_rows.remove);
+    _changes.add(null);
+  }
+
   List<Occurrence> _range(DateTime from, DateTime to) =>
       _rows.values
           .where(
@@ -641,6 +647,27 @@ final class FakeTrashService implements TrashService {
     return const Ok(null);
   }
 
+  /// Drops the rows outright: the fake has no window to age them past.
+  @override
+  Future<Result<int, AppFailure>> deleteNow(
+    String userId,
+    Set<String> ids,
+  ) async {
+    final gone = [
+      for (final o in occurrences.rows)
+        if (ids.contains(o.id) && o.deletedAt != null) o.id,
+    ];
+    occurrences.remove(gone);
+    return Ok(gone.length);
+  }
+
+  @override
+  Future<Result<int, AppFailure>> emptyTrash(String userId) async =>
+      deleteNow(userId, {
+        for (final o in occurrences.rows)
+          if (o.userId == userId) o.id,
+      });
+
   @override
   Future<Result<int, AppFailure>> purgeExpired(String userId) async =>
       const Ok(0);
@@ -772,9 +799,11 @@ final class FakeAlarmGateway implements AlarmGateway {
   }
 
   @override
-  Future<void> disarmAll() async {
+  Future<bool> disarmAll() async {
+    if (!reachable) return false;
     armed = const [];
     disarmed++;
+    return true;
   }
 
   @override

@@ -1580,6 +1580,40 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get trashDeleteNow => 'Delete now';
+
+  @override
+  String trashDeleteNowTitle(String title) {
+    return 'Delete “$title” now?';
+  }
+
+  @override
+  String get trashDeleteNowBody => 'It can\'t be restored after this.';
+
+  @override
+  String get trashDeleteNowAction => 'Delete';
+
+  @override
+  String get trashEmptyTitle => 'Empty Trash?';
+
+  @override
+  String trashEmptyBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks will be deleted.',
+      one: '1 task will be deleted.',
+    );
+    return '$_temp0 They can\'t be restored after this.';
+  }
+
+  @override
+  String get trashEmptyAction => 'Empty Trash';
+
+  @override
+  String get trashEmptied => 'Trash emptied';
+
+  @override
   String get settingsAbout => 'About';
 
   @override

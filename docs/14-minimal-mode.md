@@ -128,7 +128,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Planning settings: default duration, snapping, shift default, roll over unfinished, show free time, nudges, low-energy row | M3d–M12.2 | Hidden | Values keep applying; under Everything else |
 | Accent colour | M3d | Hidden | A stored accent keeps applying |
 | Backups, import, restore | M8 | Hidden | Settings › Everything else › Data, with Export |
-| Trash | M3d | Hidden | Under Everything else |
+| Trash | M3d | Hidden | Under Everything else; Restore, Delete now and Empty Trash (F7.6) come with it |
 | Help, Feedback, What's new, About + licences | M8 | Hidden | Under Everything else |
 | Privacy page (AI status, clear thinking/searches) | M10, M14.2 | Hidden | Under Everything else |
 | Proposal model-status line (`StatusHint`) | M14.2 | Hidden | Proposals open without the "simple rules" tip |
