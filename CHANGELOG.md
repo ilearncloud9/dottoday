@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - Drag a task anywhere on the day, even onto another task: overlapping tasks keep their dots, and the thread between them ties a small knot in both colours with "Run and Sleep share 15 min". The same knot marks an overlap in the time picker, when adding a task and in suggested plans. A task's length is now changed in its sheet; the day no longer has resize handles.
 
 ### Added
+- Alarm sounds on: choose the one phone or tablet that rings your Wake Up alarm, under Settings › Wake Up options. It shows whether that device is ready and when it rings next, and your other phones stop ringing once they sync. A Mac and the web never ring. If you already use the Wake Up alarm, the first phone that syncs becomes the one, so nothing goes quiet.
 - Delete tasks from Trash for good: each task in Settings › Trash has Delete now beside Restore, and Empty Trash under the list clears it all. Each asks once first ("It can't be restored after this."), and the delete reaches your other devices too. Tasks you leave in Trash still go by themselves after 30 days.
 - When an update to your phone's system lets Dottoday's Wake Up ring like an alarm and Wake Up is off, Today says so once, with a button to turn it on.
 - On Android 14 and later, swiping away the live dot's ongoing notification counts like dismissing a Live Activity on iPhone: in the minimal layout, Dottoday may then suggest the Next up widget once.

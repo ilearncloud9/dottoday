@@ -22,10 +22,28 @@ import 'package:flutter_test/flutter_test.dart';
 // 14 → 15 (M17.6, docs/15 §11): reveal_hints' CHECK names Wake Up's
 // discovery hints (rebuilt, rows kept); 15 → 16 (docs/15 §11): and the
 // alarm-tier soft reveal; 16 → 17: sync_cursors' keyset (since_at,
-// since_id), null on upgrade.
+// since_id), null on upgrade; 17 → 18 (ED-084): the devices cache.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
+  test('a version 17 file gains the devices cache (ED-084)', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig18');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+    final v17 = AppDatabase(NativeDatabase(file));
+    await v17.customStatement('DROP TABLE devices');
+    await v17.customStatement(
+      "INSERT INTO sync_cursors (entity, since_utc) VALUES ('series', 42)",
+    );
+    await v17.customStatement('PRAGMA user_version = 17');
+    await v17.close();
+
+    final v18 = AppDatabase(NativeDatabase(file));
+    addTearDown(v18.close);
+    expect(await v18.select(v18.devicesTable).get(), isEmpty);
+    expect((await v18.select(v18.syncCursors).getSingle()).sinceUtc, 42);
+  });
+
   test(
     'a version 16 file gains the cursor keyset, null, cursors kept',
     () async {

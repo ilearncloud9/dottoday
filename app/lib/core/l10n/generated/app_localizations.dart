@@ -9150,6 +9150,96 @@ abstract class AppLocalizations {
   /// **'{time}, next day'**
   String timeNextDay(String time);
 
+  /// Settings › Wake Up: the row naming the one device that rings Wake Up (ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm sounds on'**
+  String get settingsAlarmSoundsOn;
+
+  /// A device on the account's list, named by its kind.
+  ///
+  /// In en, this message translates to:
+  /// **'iPhone'**
+  String get deviceIphone;
+
+  /// A device on the account's list, named by its kind.
+  ///
+  /// In en, this message translates to:
+  /// **'iPad'**
+  String get deviceIpad;
+
+  /// A device on the account's list, named by its kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Android phone'**
+  String get deviceAndroidPhone;
+
+  /// A device on the account's list, named by its kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Android tablet'**
+  String get deviceAndroidTablet;
+
+  /// The device being used now, e.g. 'This iPhone'.
+  ///
+  /// In en, this message translates to:
+  /// **'This {device}'**
+  String deviceThis(String device);
+
+  /// Alarm sounds on: the chosen device rings Wake Up.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get alarmDeviceReady;
+
+  /// Alarm sounds on: the chosen device rings at its next Wake Up time.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready · {time}'**
+  String alarmDeviceReadyAt(String time);
+
+  /// Alarm sounds on: the chosen device hasn't synced the change yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting to sync'**
+  String get alarmDeviceWaiting;
+
+  /// Alarm sounds on: the chosen device doesn't allow Dottoday's alarms.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarms off on that device'**
+  String get alarmDeviceAlarmsOff;
+
+  /// Alarm sounds on: no device is chosen.
+  ///
+  /// In en, this message translates to:
+  /// **'No device rings'**
+  String get alarmDeviceNone;
+
+  /// Alarm sounds on: the chosen device hasn't been seen for a day.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get alarmDeviceOffline;
+
+  /// Alarm sounds on: the line under the row.
+  ///
+  /// In en, this message translates to:
+  /// **'Only this one phone or tablet rings Wake Up. A Mac and the web never ring.'**
+  String get alarmDeviceNote;
+
+  /// A device on the account list, named by its kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Mac'**
+  String get deviceMac;
+
+  /// A device on the account list, named by its kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Web browser'**
+  String get deviceWeb;
+
   /// Wind Down row value when a sleep target moved it.
   ///
   /// In en, this message translates to:

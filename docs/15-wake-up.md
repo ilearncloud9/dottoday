@@ -344,6 +344,24 @@ Rules for the screen: a switch that cannot take effect on this device is greyed,
 
 Rows added by §7b (same table, after Sleep target): **Show the night on the day dot** (`showNightArc`, switch, default on, always shown) and **Offer to move Wind Down from how I actually get up** (`windDownLearnOffer`, switch, default on, shown when sleep target is set). The sleep-target row's default becomes 8 h for accounts created after this milestone and stays off for existing accounts until they touch it.
 
+### 9a. Alarm sounds on (ED-084, R2-19; built after the Round 2 close-out)
+
+One device per account rings Wake Up: `Settings.alarmDeviceId`, a row of the account's device list
+(docs/05 `devices`). The rule is `ringsOnThisDevice` (`domain/devices/alarm_device.dart`): the device
+must be a phone or tablet and be the chosen one; before any is chosen every phone rings, and the first
+one to sync with Wake Up on claims it, so an upgrade silences nobody. `NotificationSync` asks it before
+arming; a phone that isn't chosen disarms what it armed (`WakeUpArming.disarm`) and leaves Wake Up off
+the notification path, then reports its row (`DeviceReporter`). Mac and web are listed and never ring.
+
+Settings › Wake Up options shows **Alarm sounds on** under the Wake Up alarm switch while it is on: the
+chosen device ("This iPhone") and its state, with "Only this one phone or tablet rings Wake Up. A Mac
+and the web never ring." under it. States (`alarmDeviceState`): **Ready** (with its next Wake Up),
+**Waiting to sync** (chosen, not yet taken over), **Alarms off on that device** (alarms not allowed
+there), **No device rings**, **Offline** (not seen for 24 h). A tap opens the list of devices that can
+ring. Stated limits: no backup ringing, no exactly-once across devices (an offline device may ring once
+during a switch), and a change reaches the ringing device only when it syncs. The design's "Switching"
+state reads as Waiting to sync.
+
 ## 10. Minimal mode
 
 Every W-surface reads the minimal-mode flag from doc 14 (M16) and renders a reduced variant from the same ViewModel; nothing is removed, only hidden behind one tap. The full and minimal variants share goldens in the same matrix.

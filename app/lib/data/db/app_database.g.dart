@@ -10759,6 +10759,629 @@ class WakeUpDaysTableCompanion extends UpdateCompanion<WakeUpDayRow> {
   }
 }
 
+class $DevicesTableTable extends DevicesTable
+    with TableInfo<$DevicesTableTable, DeviceRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DevicesTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON UPDATE CASCADE ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _platformMeta = const VerificationMeta(
+    'platform',
+  );
+  @override
+  late final GeneratedColumn<String> platform = GeneratedColumn<String>(
+    'platform',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _formMeta = const VerificationMeta('form');
+  @override
+  late final GeneratedColumn<String> form = GeneratedColumn<String>(
+    'form',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _canRingMeta = const VerificationMeta(
+    'canRing',
+  );
+  @override
+  late final GeneratedColumn<bool> canRing = GeneratedColumn<bool>(
+    'can_ring',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("can_ring" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _alarmOnMeta = const VerificationMeta(
+    'alarmOn',
+  );
+  @override
+  late final GeneratedColumn<bool> alarmOn = GeneratedColumn<bool>(
+    'alarm_on',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("alarm_on" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _ringsMeta = const VerificationMeta('rings');
+  @override
+  late final GeneratedColumn<bool> rings = GeneratedColumn<bool>(
+    'rings',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("rings" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _armedWakeUtcMeta = const VerificationMeta(
+    'armedWakeUtc',
+  );
+  @override
+  late final GeneratedColumn<int> armedWakeUtc = GeneratedColumn<int>(
+    'armed_wake_utc',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastSeenUtcMeta = const VerificationMeta(
+    'lastSeenUtc',
+  );
+  @override
+  late final GeneratedColumn<int> lastSeenUtc = GeneratedColumn<int>(
+    'last_seen_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<int> deletedAt = GeneratedColumn<int>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    platform,
+    form,
+    canRing,
+    alarmOn,
+    rings,
+    armedWakeUtc,
+    lastSeenUtc,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'devices';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DeviceRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('platform')) {
+      context.handle(
+        _platformMeta,
+        platform.isAcceptableOrUnknown(data['platform']!, _platformMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_platformMeta);
+    }
+    if (data.containsKey('form')) {
+      context.handle(
+        _formMeta,
+        form.isAcceptableOrUnknown(data['form']!, _formMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_formMeta);
+    }
+    if (data.containsKey('can_ring')) {
+      context.handle(
+        _canRingMeta,
+        canRing.isAcceptableOrUnknown(data['can_ring']!, _canRingMeta),
+      );
+    }
+    if (data.containsKey('alarm_on')) {
+      context.handle(
+        _alarmOnMeta,
+        alarmOn.isAcceptableOrUnknown(data['alarm_on']!, _alarmOnMeta),
+      );
+    }
+    if (data.containsKey('rings')) {
+      context.handle(
+        _ringsMeta,
+        rings.isAcceptableOrUnknown(data['rings']!, _ringsMeta),
+      );
+    }
+    if (data.containsKey('armed_wake_utc')) {
+      context.handle(
+        _armedWakeUtcMeta,
+        armedWakeUtc.isAcceptableOrUnknown(
+          data['armed_wake_utc']!,
+          _armedWakeUtcMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_seen_utc')) {
+      context.handle(
+        _lastSeenUtcMeta,
+        lastSeenUtc.isAcceptableOrUnknown(
+          data['last_seen_utc']!,
+          _lastSeenUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_lastSeenUtcMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DeviceRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DeviceRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      platform: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}platform'],
+      )!,
+      form: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}form'],
+      )!,
+      canRing: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}can_ring'],
+      )!,
+      alarmOn: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}alarm_on'],
+      )!,
+      rings: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}rings'],
+      )!,
+      armedWakeUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}armed_wake_utc'],
+      ),
+      lastSeenUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}last_seen_utc'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  $DevicesTableTable createAlias(String alias) {
+    return $DevicesTableTable(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+}
+
+class DeviceRow extends DataClass implements Insertable<DeviceRow> {
+  final String id;
+  final String userId;
+  final String platform;
+  final String form;
+  final bool canRing;
+  final bool alarmOn;
+  final bool rings;
+  final int? armedWakeUtc;
+  final int lastSeenUtc;
+  final int? deletedAt;
+  const DeviceRow({
+    required this.id,
+    required this.userId,
+    required this.platform,
+    required this.form,
+    required this.canRing,
+    required this.alarmOn,
+    required this.rings,
+    this.armedWakeUtc,
+    required this.lastSeenUtc,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['platform'] = Variable<String>(platform);
+    map['form'] = Variable<String>(form);
+    map['can_ring'] = Variable<bool>(canRing);
+    map['alarm_on'] = Variable<bool>(alarmOn);
+    map['rings'] = Variable<bool>(rings);
+    if (!nullToAbsent || armedWakeUtc != null) {
+      map['armed_wake_utc'] = Variable<int>(armedWakeUtc);
+    }
+    map['last_seen_utc'] = Variable<int>(lastSeenUtc);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<int>(deletedAt);
+    }
+    return map;
+  }
+
+  DevicesTableCompanion toCompanion(bool nullToAbsent) {
+    return DevicesTableCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      platform: Value(platform),
+      form: Value(form),
+      canRing: Value(canRing),
+      alarmOn: Value(alarmOn),
+      rings: Value(rings),
+      armedWakeUtc: armedWakeUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(armedWakeUtc),
+      lastSeenUtc: Value(lastSeenUtc),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory DeviceRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DeviceRow(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      platform: serializer.fromJson<String>(json['platform']),
+      form: serializer.fromJson<String>(json['form']),
+      canRing: serializer.fromJson<bool>(json['canRing']),
+      alarmOn: serializer.fromJson<bool>(json['alarmOn']),
+      rings: serializer.fromJson<bool>(json['rings']),
+      armedWakeUtc: serializer.fromJson<int?>(json['armedWakeUtc']),
+      lastSeenUtc: serializer.fromJson<int>(json['lastSeenUtc']),
+      deletedAt: serializer.fromJson<int?>(json['deletedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'platform': serializer.toJson<String>(platform),
+      'form': serializer.toJson<String>(form),
+      'canRing': serializer.toJson<bool>(canRing),
+      'alarmOn': serializer.toJson<bool>(alarmOn),
+      'rings': serializer.toJson<bool>(rings),
+      'armedWakeUtc': serializer.toJson<int?>(armedWakeUtc),
+      'lastSeenUtc': serializer.toJson<int>(lastSeenUtc),
+      'deletedAt': serializer.toJson<int?>(deletedAt),
+    };
+  }
+
+  DeviceRow copyWith({
+    String? id,
+    String? userId,
+    String? platform,
+    String? form,
+    bool? canRing,
+    bool? alarmOn,
+    bool? rings,
+    Value<int?> armedWakeUtc = const Value.absent(),
+    int? lastSeenUtc,
+    Value<int?> deletedAt = const Value.absent(),
+  }) => DeviceRow(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    platform: platform ?? this.platform,
+    form: form ?? this.form,
+    canRing: canRing ?? this.canRing,
+    alarmOn: alarmOn ?? this.alarmOn,
+    rings: rings ?? this.rings,
+    armedWakeUtc: armedWakeUtc.present ? armedWakeUtc.value : this.armedWakeUtc,
+    lastSeenUtc: lastSeenUtc ?? this.lastSeenUtc,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  DeviceRow copyWithCompanion(DevicesTableCompanion data) {
+    return DeviceRow(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      platform: data.platform.present ? data.platform.value : this.platform,
+      form: data.form.present ? data.form.value : this.form,
+      canRing: data.canRing.present ? data.canRing.value : this.canRing,
+      alarmOn: data.alarmOn.present ? data.alarmOn.value : this.alarmOn,
+      rings: data.rings.present ? data.rings.value : this.rings,
+      armedWakeUtc: data.armedWakeUtc.present
+          ? data.armedWakeUtc.value
+          : this.armedWakeUtc,
+      lastSeenUtc: data.lastSeenUtc.present
+          ? data.lastSeenUtc.value
+          : this.lastSeenUtc,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DeviceRow(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('platform: $platform, ')
+          ..write('form: $form, ')
+          ..write('canRing: $canRing, ')
+          ..write('alarmOn: $alarmOn, ')
+          ..write('rings: $rings, ')
+          ..write('armedWakeUtc: $armedWakeUtc, ')
+          ..write('lastSeenUtc: $lastSeenUtc, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    platform,
+    form,
+    canRing,
+    alarmOn,
+    rings,
+    armedWakeUtc,
+    lastSeenUtc,
+    deletedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DeviceRow &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.platform == this.platform &&
+          other.form == this.form &&
+          other.canRing == this.canRing &&
+          other.alarmOn == this.alarmOn &&
+          other.rings == this.rings &&
+          other.armedWakeUtc == this.armedWakeUtc &&
+          other.lastSeenUtc == this.lastSeenUtc &&
+          other.deletedAt == this.deletedAt);
+}
+
+class DevicesTableCompanion extends UpdateCompanion<DeviceRow> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> platform;
+  final Value<String> form;
+  final Value<bool> canRing;
+  final Value<bool> alarmOn;
+  final Value<bool> rings;
+  final Value<int?> armedWakeUtc;
+  final Value<int> lastSeenUtc;
+  final Value<int?> deletedAt;
+  final Value<int> rowid;
+  const DevicesTableCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.platform = const Value.absent(),
+    this.form = const Value.absent(),
+    this.canRing = const Value.absent(),
+    this.alarmOn = const Value.absent(),
+    this.rings = const Value.absent(),
+    this.armedWakeUtc = const Value.absent(),
+    this.lastSeenUtc = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DevicesTableCompanion.insert({
+    required String id,
+    required String userId,
+    required String platform,
+    required String form,
+    this.canRing = const Value.absent(),
+    this.alarmOn = const Value.absent(),
+    this.rings = const Value.absent(),
+    this.armedWakeUtc = const Value.absent(),
+    required int lastSeenUtc,
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       platform = Value(platform),
+       form = Value(form),
+       lastSeenUtc = Value(lastSeenUtc);
+  static Insertable<DeviceRow> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? platform,
+    Expression<String>? form,
+    Expression<bool>? canRing,
+    Expression<bool>? alarmOn,
+    Expression<bool>? rings,
+    Expression<int>? armedWakeUtc,
+    Expression<int>? lastSeenUtc,
+    Expression<int>? deletedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (platform != null) 'platform': platform,
+      if (form != null) 'form': form,
+      if (canRing != null) 'can_ring': canRing,
+      if (alarmOn != null) 'alarm_on': alarmOn,
+      if (rings != null) 'rings': rings,
+      if (armedWakeUtc != null) 'armed_wake_utc': armedWakeUtc,
+      if (lastSeenUtc != null) 'last_seen_utc': lastSeenUtc,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DevicesTableCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? platform,
+    Value<String>? form,
+    Value<bool>? canRing,
+    Value<bool>? alarmOn,
+    Value<bool>? rings,
+    Value<int?>? armedWakeUtc,
+    Value<int>? lastSeenUtc,
+    Value<int?>? deletedAt,
+    Value<int>? rowid,
+  }) {
+    return DevicesTableCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      platform: platform ?? this.platform,
+      form: form ?? this.form,
+      canRing: canRing ?? this.canRing,
+      alarmOn: alarmOn ?? this.alarmOn,
+      rings: rings ?? this.rings,
+      armedWakeUtc: armedWakeUtc ?? this.armedWakeUtc,
+      lastSeenUtc: lastSeenUtc ?? this.lastSeenUtc,
+      deletedAt: deletedAt ?? this.deletedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (platform.present) {
+      map['platform'] = Variable<String>(platform.value);
+    }
+    if (form.present) {
+      map['form'] = Variable<String>(form.value);
+    }
+    if (canRing.present) {
+      map['can_ring'] = Variable<bool>(canRing.value);
+    }
+    if (alarmOn.present) {
+      map['alarm_on'] = Variable<bool>(alarmOn.value);
+    }
+    if (rings.present) {
+      map['rings'] = Variable<bool>(rings.value);
+    }
+    if (armedWakeUtc.present) {
+      map['armed_wake_utc'] = Variable<int>(armedWakeUtc.value);
+    }
+    if (lastSeenUtc.present) {
+      map['last_seen_utc'] = Variable<int>(lastSeenUtc.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<int>(deletedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DevicesTableCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('platform: $platform, ')
+          ..write('form: $form, ')
+          ..write('canRing: $canRing, ')
+          ..write('alarmOn: $alarmOn, ')
+          ..write('rings: $rings, ')
+          ..write('armedWakeUtc: $armedWakeUtc, ')
+          ..write('lastSeenUtc: $lastSeenUtc, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -10869,6 +11492,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $WakeUpDaysTableTable wakeUpDaysTable = $WakeUpDaysTableTable(
     this,
   );
+  late final $DevicesTableTable devicesTable = $DevicesTableTable(this);
   late final Index routinesUser = Index(
     'routines_user',
     'CREATE INDEX routines_user ON routines (user_id)',
@@ -10896,6 +11520,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final Index changeLogEntity = Index(
     'change_log_entity',
     'CREATE INDEX change_log_entity ON change_log (entity, entity_id)',
+  );
+  late final Index devicesUser = Index(
+    'devices_user',
+    'CREATE INDEX devices_user ON devices (user_id)',
   );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -10939,6 +11567,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     fieldSeen,
     localMeta,
     wakeUpDaysTable,
+    devicesTable,
     routinesUser,
     routinesUserUpdated,
     routinesDirty,
@@ -10946,6 +11575,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     revealHintsDirty,
     conflictsOpen,
     changeLogEntity,
+    devicesUser,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -11154,6 +11784,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.update,
       ),
       result: [TableUpdate('conflicts', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('devices', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('devices', kind: UpdateKind.update)],
     ),
   ]);
 }
@@ -11546,6 +12190,24 @@ final class $$ProfilesTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$DevicesTableTable, List<DeviceRow>>
+  _devicesTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.devicesTable,
+    aliasName: 'profiles__id__devices__user_id',
+  );
+
+  $$DevicesTableTableProcessedTableManager get devicesTableRefs {
+    final manager = $$DevicesTableTableTableManager(
+      $_db,
+      $_db.devicesTable,
+    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_devicesTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$ProfilesTableFilterComposer
@@ -11818,6 +12480,31 @@ class $$ProfilesTableFilterComposer
           }) => $$ConflictsTableFilterComposer(
             $db: $db,
             $table: $db.conflicts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> devicesTableRefs(
+    Expression<bool> Function($$DevicesTableTableFilterComposer f) f,
+  ) {
+    final $$DevicesTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.devicesTable,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DevicesTableTableFilterComposer(
+            $db: $db,
+            $table: $db.devicesTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12146,6 +12833,31 @@ class $$ProfilesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> devicesTableRefs<T extends Object>(
+    Expression<T> Function($$DevicesTableTableAnnotationComposer a) f,
+  ) {
+    final $$DevicesTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.devicesTable,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DevicesTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.devicesTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ProfilesTableTableManager
@@ -12171,6 +12883,7 @@ class $$ProfilesTableTableManager
             bool routinesTableRefs,
             bool revealHintsTableRefs,
             bool conflictsRefs,
+            bool devicesTableRefs,
           })
         > {
   $$ProfilesTableTableManager(_$AppDatabase db, $ProfilesTable table)
@@ -12251,6 +12964,7 @@ class $$ProfilesTableTableManager
                 routinesTableRefs = false,
                 revealHintsTableRefs = false,
                 conflictsRefs = false,
+                devicesTableRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -12264,6 +12978,7 @@ class $$ProfilesTableTableManager
                     if (routinesTableRefs) db.routinesTable,
                     if (revealHintsTableRefs) db.revealHintsTable,
                     if (conflictsRefs) db.conflicts,
+                    if (devicesTableRefs) db.devicesTable,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -12457,6 +13172,27 @@ class $$ProfilesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (devicesTableRefs)
+                        await $_getPrefetchedData<
+                          ProfileRow,
+                          $ProfilesTable,
+                          DeviceRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._devicesTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).devicesTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.userId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -12487,6 +13223,7 @@ typedef $$ProfilesTableProcessedTableManager =
         bool routinesTableRefs,
         bool revealHintsTableRefs,
         bool conflictsRefs,
+        bool devicesTableRefs,
       })
     >;
 typedef $$SeriesTableTableCreateCompanionBuilder =
@@ -19226,6 +19963,422 @@ typedef $$WakeUpDaysTableTableProcessedTableManager =
       WakeUpDayRow,
       PrefetchHooks Function()
     >;
+typedef $$DevicesTableTableCreateCompanionBuilder =
+    DevicesTableCompanion Function({
+      required String id,
+      required String userId,
+      required String platform,
+      required String form,
+      Value<bool> canRing,
+      Value<bool> alarmOn,
+      Value<bool> rings,
+      Value<int?> armedWakeUtc,
+      required int lastSeenUtc,
+      Value<int?> deletedAt,
+      Value<int> rowid,
+    });
+typedef $$DevicesTableTableUpdateCompanionBuilder =
+    DevicesTableCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<String> platform,
+      Value<String> form,
+      Value<bool> canRing,
+      Value<bool> alarmOn,
+      Value<bool> rings,
+      Value<int?> armedWakeUtc,
+      Value<int> lastSeenUtc,
+      Value<int?> deletedAt,
+      Value<int> rowid,
+    });
+
+final class $$DevicesTableTableReferences
+    extends BaseReferences<_$AppDatabase, $DevicesTableTable, DeviceRow> {
+  $$DevicesTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ProfilesTable _userIdTable(_$AppDatabase db) =>
+      db.profiles.createAlias('devices__user_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<String>('user_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DevicesTableTableFilterComposer
+    extends Composer<_$AppDatabase, $DevicesTableTable> {
+  $$DevicesTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get platform => $composableBuilder(
+    column: $table.platform,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get form => $composableBuilder(
+    column: $table.form,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get canRing => $composableBuilder(
+    column: $table.canRing,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get alarmOn => $composableBuilder(
+    column: $table.alarmOn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get rings => $composableBuilder(
+    column: $table.rings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get armedWakeUtc => $composableBuilder(
+    column: $table.armedWakeUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lastSeenUtc => $composableBuilder(
+    column: $table.lastSeenUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ProfilesTableFilterComposer get userId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DevicesTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $DevicesTableTable> {
+  $$DevicesTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get platform => $composableBuilder(
+    column: $table.platform,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get form => $composableBuilder(
+    column: $table.form,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get canRing => $composableBuilder(
+    column: $table.canRing,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get alarmOn => $composableBuilder(
+    column: $table.alarmOn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get rings => $composableBuilder(
+    column: $table.rings,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get armedWakeUtc => $composableBuilder(
+    column: $table.armedWakeUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get lastSeenUtc => $composableBuilder(
+    column: $table.lastSeenUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ProfilesTableOrderingComposer get userId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DevicesTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DevicesTableTable> {
+  $$DevicesTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get platform =>
+      $composableBuilder(column: $table.platform, builder: (column) => column);
+
+  GeneratedColumn<String> get form =>
+      $composableBuilder(column: $table.form, builder: (column) => column);
+
+  GeneratedColumn<bool> get canRing =>
+      $composableBuilder(column: $table.canRing, builder: (column) => column);
+
+  GeneratedColumn<bool> get alarmOn =>
+      $composableBuilder(column: $table.alarmOn, builder: (column) => column);
+
+  GeneratedColumn<bool> get rings =>
+      $composableBuilder(column: $table.rings, builder: (column) => column);
+
+  GeneratedColumn<int> get armedWakeUtc => $composableBuilder(
+    column: $table.armedWakeUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get lastSeenUtc => $composableBuilder(
+    column: $table.lastSeenUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  $$ProfilesTableAnnotationComposer get userId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DevicesTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DevicesTableTable,
+          DeviceRow,
+          $$DevicesTableTableFilterComposer,
+          $$DevicesTableTableOrderingComposer,
+          $$DevicesTableTableAnnotationComposer,
+          $$DevicesTableTableCreateCompanionBuilder,
+          $$DevicesTableTableUpdateCompanionBuilder,
+          (DeviceRow, $$DevicesTableTableReferences),
+          DeviceRow,
+          PrefetchHooks Function({bool userId})
+        > {
+  $$DevicesTableTableTableManager(_$AppDatabase db, $DevicesTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DevicesTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DevicesTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DevicesTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> platform = const Value.absent(),
+                Value<String> form = const Value.absent(),
+                Value<bool> canRing = const Value.absent(),
+                Value<bool> alarmOn = const Value.absent(),
+                Value<bool> rings = const Value.absent(),
+                Value<int?> armedWakeUtc = const Value.absent(),
+                Value<int> lastSeenUtc = const Value.absent(),
+                Value<int?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DevicesTableCompanion(
+                id: id,
+                userId: userId,
+                platform: platform,
+                form: form,
+                canRing: canRing,
+                alarmOn: alarmOn,
+                rings: rings,
+                armedWakeUtc: armedWakeUtc,
+                lastSeenUtc: lastSeenUtc,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                required String platform,
+                required String form,
+                Value<bool> canRing = const Value.absent(),
+                Value<bool> alarmOn = const Value.absent(),
+                Value<bool> rings = const Value.absent(),
+                Value<int?> armedWakeUtc = const Value.absent(),
+                required int lastSeenUtc,
+                Value<int?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DevicesTableCompanion.insert(
+                id: id,
+                userId: userId,
+                platform: platform,
+                form: form,
+                canRing: canRing,
+                alarmOn: alarmOn,
+                rings: rings,
+                armedWakeUtc: armedWakeUtc,
+                lastSeenUtc: lastSeenUtc,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$DevicesTableTable, DeviceRow>(table),
+                  $$DevicesTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({userId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (userId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.userId,
+                                referencedTable: $$DevicesTableTableReferences
+                                    ._userIdTable(db),
+                                referencedColumn: $$DevicesTableTableReferences
+                                    ._userIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DevicesTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DevicesTableTable,
+      DeviceRow,
+      $$DevicesTableTableFilterComposer,
+      $$DevicesTableTableOrderingComposer,
+      $$DevicesTableTableAnnotationComposer,
+      $$DevicesTableTableCreateCompanionBuilder,
+      $$DevicesTableTableUpdateCompanionBuilder,
+      (DeviceRow, $$DevicesTableTableReferences),
+      DeviceRow,
+      PrefetchHooks Function({bool userId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -19262,4 +20415,6 @@ class $AppDatabaseManager {
       $$LocalMetaTableTableManager(_db, _db.localMeta);
   $$WakeUpDaysTableTableTableManager get wakeUpDaysTable =>
       $$WakeUpDaysTableTableTableManager(_db, _db.wakeUpDaysTable);
+  $$DevicesTableTableTableManager get devicesTable =>
+      $$DevicesTableTableTableManager(_db, _db.devicesTable);
 }

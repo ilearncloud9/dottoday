@@ -1,4 +1,5 @@
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/domain/devices/device.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:flutter/foundation.dart';
@@ -18,11 +19,25 @@ Future<SettingsHarness> _pump(
   WidgetTester tester, {
   Settings settings = _on,
   FakeAlarmGateway? gateway,
+  List<Device> devices = const [],
 }) => pumpSettings(
   tester,
   settings: settings,
   location: AppRoutes.settingsPage(SettingsPage.wakeUp),
   alarmGateway: gateway,
+  devices: devices,
+);
+
+Device _device(String id, DeviceForm form, {bool rings = true}) => Device(
+  id: id,
+  userId: testUserId,
+  platform: DevicePlatform.ios,
+  form: form,
+  canRing: true,
+  alarmOn: true,
+  rings: rings,
+  armedWakeUtc: DateTime.utc(2026, 10, 22, 5),
+  lastSeenUtc: DateTime.utc(2026, 10, 21, 8),
 );
 
 Future<void> _tap(WidgetTester tester, String text) async {
@@ -33,6 +48,30 @@ Future<void> _tap(WidgetTester tester, String text) async {
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
+
+  testWidgets('Alarm sounds on: the chosen device, its state, and a pick', (
+    tester,
+  ) async {
+    final h = await _pump(
+      tester,
+      settings: _on.copyWith(alarmDeviceId: 'self'),
+      devices: [
+        _device('self', DeviceForm.phone),
+        _device('ipad', DeviceForm.tablet, rings: false),
+      ],
+    );
+    expect(find.text('Alarm sounds on'), findsOneWidget);
+    expect(find.text('This iPhone'), findsOneWidget);
+    expect(find.text('Ready · 07:00'), findsOneWidget);
+    await _tap(tester, 'Alarm sounds on');
+    await _tap(tester, 'iPad');
+    expect((await storedSettings(h)).alarmDeviceId, 'ipad');
+  });
+
+  testWidgets('Alarm sounds on: hidden while the alarm is off', (tester) async {
+    await _pump(tester, settings: const Settings(use24h: true));
+    expect(find.text('Alarm sounds on'), findsNothing);
+  });
 
   testWidgets('off: the switch, the test and health only', (tester) async {
     await _pump(tester, settings: const Settings(use24h: true));
