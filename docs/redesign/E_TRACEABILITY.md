@@ -359,6 +359,7 @@ Also excluded by later owner answers (not ED "REJECTED", but not to be built):
 - **2026-11-15, ED-345:** R2-39 approved (the ED-246 fold on every platform, Minimal and the Mac and web Day column; CR-021 fully drawn). Nothing built.
 - **2026-11-15, ED-346:** R2-40 approved (pin, travel time and energy in the editor on every platform; the last editor captions closed). Nothing built.
 - **2026-11-15, ED-347:** R2-41 approved (phone landscape under H1); the last undrawn layout. Nothing built; H1 device checks pending.
+- **2026-11-15, ED-348:** Year strip option B approved (R2-34); "Running late" kept as built (no-shame exception). Nothing built.
 
 > **Tablets (owner sequencing, 2026-11-04).** Phone and Mac boards do not count as tablet designs. Tablet gaps listed here stay open until Prompt D Round 2. The comprehensive tablet coverage checklist is a mandatory step before Round 2 begins (`STATUS.md` Open items); until then each Group 2 decision only records its iPad and Android tablet/foldable implications.
 

@@ -1004,7 +1004,7 @@ Shortcut conflicts between boards are listed in §14.
 - Contrast (computed on `#FBF7F1`): ink 15.07, secondary 5.45, teal 6.81. Fails: iOS inactive tab label `#8E8E93` 3.06; four task colours below 3:1 as rings; white on amber 2.29. Glass contrast as rendered: **UNRESOLVED**.
 - Reduced motion: bead glow static, completion pulse becomes a fade. Reduced transparency: **UNRESOLVED**.
 - Dimmed side days keep text at 4.5:1 (Map).
-- No-shame copy: no streaks, no red for incomplete, no "late/missed/failed". "Still open", "ended", "free", "Need more time?" follow it. "Running late" is gone from every active board (ED-162): Need more time? as a question, Need More Time… where it opens choices.
+- No-shame copy: no streaks, no red for incomplete, no "late/missed/failed". "Still open", "ended", "free", "Need more time?" follow it. "Running late" is gone from every active board (ED-162): Need more time? as a question, Need More Time… where it opens choices. **Exception (ED-348, owner):** the Running late sheet's title and the Settings › Planning row "Running-late nudge" keep their built wording.
 
 ### 12.3 Text always fits (ED-183, owner, 2026-11-08)
 Text never falls out of its container, at any window size, text size (Dynamic Type / font scale up to 200 %) or zoom. Checked on every board with an automated fit check; part of done for every screen.
