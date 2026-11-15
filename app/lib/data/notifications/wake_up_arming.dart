@@ -16,11 +16,11 @@ import 'package:timezone/timezone.dart' as tz;
 /// ADR-0017) and returns the instants it armed, which the notification
 /// path then leaves out, so a Wake Up rings exactly once (R-10).
 ///
-/// The armed instants are kept per device in `local_meta`: a background
-/// engine can't reach the gateway (Android registers its channel on the
-/// activity), and it still leaves out what the last reachable sync armed,
-/// while ringing the rest on the notification path (W1a) rather than not
-/// at all.
+/// The armed instants are kept per device in `local_meta`: an engine that
+/// can't reach the gateway still leaves out what the last reachable sync
+/// armed, while ringing the rest on the notification path (W1a) rather
+/// than not at all. On Android every engine reaches it, the background
+/// resync's included (ADR-0019).
 final class WakeUpArming {
   const WakeUpArming(
     this._gateway,

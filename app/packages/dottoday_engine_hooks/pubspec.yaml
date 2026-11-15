@@ -1,0 +1,21 @@
+name: dottoday_engine_hooks
+description: Dottoday's own channels on every Android Flutter engine (ADR-0019).
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: ^3.8.0
+  flutter: ">=3.32.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+# Listed as a plugin only so GeneratedPluginRegistrant attaches it to every
+# engine, the workmanager background engine included (ADR-0019).
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: app.dottoday.engine_hooks
+        pluginClass: EngineHooksPlugin
