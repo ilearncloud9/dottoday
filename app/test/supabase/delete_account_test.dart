@@ -7,13 +7,16 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger.dart';
 import 'package:dottoday/core/router/auth_callback.dart';
 import 'package:dottoday/data/auth/supabase_account_service.dart';
+import 'package:dottoday/data/devices/device_remote.dart';
 import 'package:dottoday/data/sync/account_adoption.dart';
 import 'package:dottoday/data/sync/supabase_sync_gateway.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/domain/auth/account.dart';
+import 'package:dottoday/domain/devices/device.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
+import 'package:uuid/uuid.dart';
 
 import '../data/writes/write_harness.dart';
 import '../domain/fixtures.dart';
@@ -73,9 +76,22 @@ void main() {
         clock: h.clock,
       ).run(uid);
       expect(await adminRows('occurrences', uid), hasLength(1));
+      // This phone on the device list (ED-084), written as the app does.
+      await SupabaseDeviceRemote(client).put(
+        Device(
+          id: const Uuid().v7(),
+          userId: uid,
+          platform: DevicePlatform.ios,
+          form: DeviceForm.phone,
+          canRing: true,
+          lastSeenUtc: h.clock.nowUtc(),
+        ),
+      );
+      expect(await adminRows('devices', uid), hasLength(1));
 
       expect(await service.deleteAccount(), isA<Ok<void, Object?>>());
       expect(await adminRows('occurrences', uid), isEmpty);
+      expect(await adminRows('devices', uid), isEmpty);
       expect(await adminRows('profiles', uid), isEmpty);
       expect(await service.watch().first, isA<LocalOnly>());
       expect(await h.db.select(h.db.occurrences).get(), hasLength(1));
