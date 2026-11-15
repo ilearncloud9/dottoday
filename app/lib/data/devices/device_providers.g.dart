@@ -103,7 +103,7 @@ final class DeviceIdentityProvider
   }
 }
 
-String _$deviceIdentityHash() => r'1ac8e2e1abfbac99101975d9dcac8646331eaa9a';
+String _$deviceIdentityHash() => r'f37658a8d95ecf15f96bd8400ec4a2bf4aa16ab2';
 
 /// Keeps this install's row and decides whether it rings Wake Up.
 
