@@ -4504,7 +4504,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Sync heading (ED-190):** the owner's words stay on screen; the heading is hidden from the screen reader so it is read once.
 - **Web storage line (ED-191):** dropped; Sync details stays the one place for the warning.
 - **iPhone signing (ED-263):** no exception; the CR-121 rerun is on a throwaway iOS 26.5 Simulator.
-- **Onboarding (ED-305):** the 13+ age note is a footnote on the last step ("You're in"); "Skip for now" approved; the built "Five is plenty to start with." is reused. The build go-ahead itself stays behind the release gate (ED-238).
+- **Onboarding (ED-305):** the 13+ age note is a footnote on the last step ("You're in") (**since:** moved to Hello and reworded, ED-351); "Skip for now" approved; the built "Five is plenty to start with." is reused. The build go-ahead itself stays behind the release gate (ED-238).
 - **Wind Down past midnight (Q8):** extend the day model now so Wind Down can cross midnight (docs/05 change before the build), not the 24:00 cap.
 - **Wake Up plugin:** approved: the in-repo Android plugin package for the double-ring fix (branch `fix/wake-up-background-bridge`), with an ADR line.
 - **Device-list table:** approved: a new migration with RLS policies and tests, local only; any push to the hosted project is asked again.
@@ -4619,6 +4619,19 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **The static boards are history:** E-R2-16 and E-R2-16-Dark (ED-300), which draw the built flow including step 0 (Show less / Show everything), are titled "APPROVED as the interactive prototype … this static board is history" (ED-305). A check that reads them is reading history.
 - **Reachability (parity rule):** dropping onboarding step 0 keeps Layout reachable from the Day menu (Show less / Show everything), Settings › Layout and the Mac View menu (ED-067); FEATURE_PARITY_MATRIX notes it.
 - **Records:** ED-305 states it; E_TRACEABILITY (layout row) and E_SCREEN_INVENTORY (onboarding row) already said "no layout step". No board changed. Nothing built.
+
+### ED-351 · The 13+ age note moves to Hello, reworded
+- **Date:** 2026-11-15. **Owner** (comment on the onboarding prototype, on the note under "Sign in to sync" on You're in): "move this to hello and it should read "Dottoday is for people aged 13+.""
+- **Change:** the age note leaves the last step (You're in) and sits on Hello, under "I have an account", as fine print. Text: **"Dottoday is for people aged 13+."** This replaces the ED-336 placement (footnote on the last step) and the ED-304 removal from Hello.
+- **New copy (flagged):** the built `onboardingAgeNote` reads "Dottoday is for people aged 13 and over."; the new wording changes that string in every language when built. docs/06-security.md (Children, M8.6) places the note on O1 Welcome, which Hello now matches again; its quoted wording updates with the build, and the store descriptions and policy keep their own wording unless the owner says otherwise.
+- **Prototype:** "Dottoday Onboarding Prototype" (https://claude.ai/artifact/3dgrJiQ8GGEdxgnD9PCvjL) published as version `1794780049-65a7`; the copy note under "Why this beats the built flow" updated. Checked on iPhone and iPad: Hello fits without scrolling. Snapshot v3.26-working.
+- Nothing built; the build go-ahead stays behind the release gate (ED-238).
+
+### ED-352 · Q9 approved: an isolated local Supabase stack for integration tests
+- **Date:** 2026-11-15. **Owner:** "Approve Q9".
+- **Approved (decision A):** P1 to P4 of `Q9_TEST_STACK_PROPOSAL.md` as written: a second local stack `dottoday-test` built by `tool/test_stack.sh` in a git-ignored `.test-stack/`, every port +1000 (decision C left at the proposal's defaults); a URL guard in `local_supabase.dart` that accepts only a loopback test stack (55321, or 54321 when `CI=true`) with keys from the environment only; test users on `@example.test` removed in `tearDownAll`; never linked, never `db push`, `link`, `secrets` or `deploy`.
+- **Not approved here (decision B):** the CLAUDE.md §7 wording change; CLAUDE.md is unchanged until the owner says so. `supabase/README.md` (P5, first bullet) is part of the approved PR.
+- **Next:** one PR on its own branch cut from `origin/main`, verified by running both stacks side by side and checking the original stack's data is untouched. Nothing created yet. Must run before any integration test run (Prompt F).
 
 ---
 

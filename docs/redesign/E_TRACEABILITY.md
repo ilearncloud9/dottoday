@@ -362,6 +362,8 @@ Also excluded by later owner answers (not ED "REJECTED", but not to be built):
 - **2026-11-15, ED-348:** Year strip option B approved (R2-34); "Running late" kept as built (no-shame exception). Nothing built.
 - **2026-11-15, ED-349:** R2-42 approved (Year strip option B on Mac and web). Nothing built.
 - **2026-11-15, ED-350:** confirmed: the approved onboarding (ED-305) has no Layout step. No board changed.
+- **2026-11-15, ED-351:** age note on Hello, "Dottoday is for people aged 13+." (new copy). Prototype updated. Nothing built.
+- **2026-11-15, ED-352:** Q9 test stack approved (P1 to P4). Nothing created yet.
 
 > **Tablets (owner sequencing, 2026-11-04).** Phone and Mac boards do not count as tablet designs. Tablet gaps listed here stay open until Prompt D Round 2. The comprehensive tablet coverage checklist is a mandatory step before Round 2 begins (`STATUS.md` Open items); until then each Group 2 decision only records its iPad and Android tablet/foldable implications.
 

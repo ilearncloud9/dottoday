@@ -35,7 +35,7 @@ Q10–Q15 can wait (below).
 |---|---|---|---|---|
 | Q7 | **Fix the "stabilise first" defects on `main` now?** | Sync pull stall (confirmed by reading the code), dead Move tile, `/day` date mismatch, stale-ID taps; Android time-zone re-plan (inferred) | (a) fix them on `main` with PRs before Prompt F, then merge into this branch · (b) fix them inside the redesign branch · (c) defer | (a). The sync stall can silently lose changes for current testers, and all of these sit under screens the redesign rebuilds |
 | Q8 | **Circular Wake Up dial crossing midnight** | Model can't express a Wind Down after midnight (`DayShape.on`, `docs/05`) | (a) dial limited to the current model (Wind Down ≤ 23:59) · (b) extend the domain to allow after-midnight Wind Down (schema/settings change → separate approval) | (a) for the concepts, dial shold not be limited. (b) separately if you want night owls supported |
-| Q9 | **Isolated local Supabase for integration tests** | Only one local stack, shared with the original worktree; tests leave users behind; env vars could point tests at the hosted project | Proposal to follow (open item in `STATUS.md`). Nothing is created until approved | Ask for the proposal before Prompt F |
+| Q9 | **Isolated local Supabase for integration tests** | Only one local stack, shared with the original worktree; tests leave users behind; env vars could point tests at the hosted project | Proposal to follow (open item in `STATUS.md`). Nothing is created until approved · **2026-11-15:** proposal written, `Q9_TEST_STACK_PROPOSAL.md`, **approved 2026-11-15 (ED-352)**, P1 to P4; the PR is next | Ask for the proposal before Prompt F |
 
 ## Can wait (not needed for concepts or the first slice)
 
