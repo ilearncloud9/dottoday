@@ -29,7 +29,7 @@ Tablet columns: there is no tablet-specific code. iPad behaves like iPhone and A
 | Tasks before Wake Up fold | tap the fold | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | |
 | Reality thread | Plan/Reality toggle once learned | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | |
 | Duplicate day, Copy day as text | ⋯ only | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | |
-| Minimal layout (Show less / Show everything) | ⋯, Settings Layout row, onboarding step 0 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `FeatureId` policy test |
+| Minimal layout (Show less / Show everything) | ⋯, Settings Layout row, onboarding step 0 (redesign: no onboarding step, ED-305 / ED-350; a day-2 card offers it, and the Day menu and Settings keep it reachable) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | `FeatureId` policy test |
 
 ## 2. Capture and editing
 

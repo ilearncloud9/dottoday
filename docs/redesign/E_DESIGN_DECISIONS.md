@@ -3833,7 +3833,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Date:** 2026-11-13. **Owner:** "Approve the interactive R2-16 and move on to R2-17 (system surfaces)".
 - **Approved:** the artifact **“Dottoday Onboarding Prototype”**, headed “Concept E · Round 2 · R2-16 · Interactive prototype” (https://claude.ai/artifact/3dgrJiQ8GGEdxgnD9PCvjL). It was approved as revised through the owner's comments (ED-304 updates): content version `1794591097-8545`, snapshot v2.62-working.
 - **Confirmed by the owner (2026-11-13), and labelled:** the prototype page now reads “Approved (ED-305, 13 Nov 2026)”. Labelled version `1794593098-7a9a`; only the label changed. On the Design canvas, the E-R2-16 and E-R2-16-Dark board titles read “APPROVED as the interactive prototype ‘Dottoday Onboarding Prototype’ (ED-305) · this static board is history” (canvas version `1794593110-0673`). Snapshot v2.64-working.
-  - The flow: Hello → Your day (sun and moon) → What fills your days? (up to 5 routines, ready-made or typed, auto icon) → A nudge, in context → You're in (the real Today, with the approved menus).
+  - The flow: Hello → Your day (sun and moon) → What fills your days? (up to 5 routines, ready-made or typed, auto icon) → A nudge, in context → You're in (the real Today, with the approved menus). No Layout step: the layout choice is the day-2 "Want it simpler?" card (confirmed ED-350).
   - Three required taps.
 - **Replaces:** the static R2-16 board (ED-300), The First Thread board (ED-303) as the onboarding direction, and options A to F (ED-301, ED-302). Those boards stay on the canvas as history.
 - **Open before build:**
@@ -4612,6 +4612,13 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Strings:** R2-34's; no new copy. Building B needs a change to `year_strip.dart` (ED-348).
 - **Board labels:** "Approved · ED-349 · 15 Nov 2026"; canvas titles updated. Published `1794763007-9111`, approved `1794763222-4259`.
 - Nothing built. Snapshot v3.24-working.
+
+### ED-350 · Confirmed: the approved onboarding has no Layout step
+- **Date:** 2026-11-15. **Owner:** asked to confirm and record a disagreement between two checks (one said the approved onboarding has a Layout step, one said it does not).
+- **Confirmed against the approved artifact** "Dottoday Onboarding Prototype", headed "Concept E · Round 2 · R2-16 · Interactive prototype · Approved (ED-305, 13 Nov 2026)" (https://claude.ai/artifact/3dgrJiQ8GGEdxgnD9PCvjL, live version `1794702516-e90b`): five steps, Hello → Your day → What fills your days? → A nudge, in context → You're in. **There is no Layout step.** The layout choice appears only after onboarding, as the one-time "Later, when it helps" card on day 2 ("Want it simpler? Try Less: just the next dot. One tap to switch back.").
+- **The static boards are history:** E-R2-16 and E-R2-16-Dark (ED-300), which draw the built flow including step 0 (Show less / Show everything), are titled "APPROVED as the interactive prototype … this static board is history" (ED-305). A check that reads them is reading history.
+- **Reachability (parity rule):** dropping onboarding step 0 keeps Layout reachable from the Day menu (Show less / Show everything), Settings › Layout and the Mac View menu (ED-067); FEATURE_PARITY_MATRIX notes it.
+- **Records:** ED-305 states it; E_TRACEABILITY (layout row) and E_SCREEN_INVENTORY (onboarding row) already said "no layout step". No board changed. Nothing built.
 
 ---
 

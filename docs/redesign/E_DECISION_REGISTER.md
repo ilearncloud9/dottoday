@@ -1243,3 +1243,4 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - ED-347: R2-41 approved (phone landscape on iPhone and Android under ED-168 H1: Today, the editor, Add with the keyboard, Minimal Now; the ED-335 still-to-design list is complete).
 - ED-348: owner choices: Year strip option B approved (replaces the ED-339 strip; needs `year_strip.dart`); "Running late" sheet title and "Running-late nudge" row kept as built, recorded exceptions to the no-shame rule.
 - ED-349: R2-42 approved (Year strip option B on Mac and web as the built centred dialog from Past days; keyboard and screen reader; no new copy).
+- ED-350: confirmed against the approved prototype (ED-305) that onboarding has no Layout step; the layout choice is the day-2 "Want it simpler?" card; the static R2-16 board is history.
