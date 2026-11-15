@@ -6091,7 +6091,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Proposer de décaler la journée si je me lève après le plan';
 
   @override
-  String get wakeUpLateAfterRow => 'À partir de';
+  String get wakeUpLateOfferAfterRow => 'Proposer après';
 
   @override
   String wakeUpCardGreeting(String date) {
@@ -6169,6 +6169,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Un rappel si rien n\'a commencé quelques minutes après le lever';
 
   @override
+  String get wakeUpCheckAfterRow => 'Vérifier après';
+
+  @override
   String get wakeUpCheckAsRow => 'Sous forme de';
 
   @override
@@ -6232,6 +6235,61 @@ class AppLocalizationsFr extends AppLocalizations {
   String notifWindDownNudgeNoDot(String length, String time) {
     return 'Détendez-vous maintenant : $length avant $time.';
   }
+
+  @override
+  String timeNextDay(String time) {
+    return '$time, le lendemain';
+  }
+
+  @override
+  String get settingsAlarmSoundsOn => 'L\'alarme sonne sur';
+
+  @override
+  String get deviceIphone => 'iPhone';
+
+  @override
+  String get deviceIpad => 'iPad';
+
+  @override
+  String get deviceAndroidPhone => 'Téléphone Android';
+
+  @override
+  String get deviceAndroidTablet => 'Tablette Android';
+
+  @override
+  String deviceThis(String device) {
+    return 'Cet appareil ($device)';
+  }
+
+  @override
+  String get alarmDeviceReady => 'Prêt';
+
+  @override
+  String alarmDeviceReadyAt(String time) {
+    return 'Prêt · $time';
+  }
+
+  @override
+  String get alarmDeviceWaiting => 'En attente de synchronisation';
+
+  @override
+  String get alarmDeviceAlarmsOff => 'Alarmes désactivées sur cet appareil';
+
+  @override
+  String get alarmDeviceNone => 'Aucun appareil ne sonne';
+
+  @override
+  String get alarmDeviceOffline => 'Hors ligne';
+
+  @override
+  String get alarmDeviceNote =>
+      'Seul ce téléphone ou cette tablette sonne au réveil. Un Mac et le web ne sonnent jamais.';
+
+  @override
+  String get deviceMac => 'Mac';
+
+  @override
+  String get deviceWeb => 'Navigateur web';
 
   @override
   String settingsWindDownFrom(String time, String wake) {

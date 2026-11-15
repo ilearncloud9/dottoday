@@ -1,4 +1,5 @@
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/domain/devices/device.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:flutter/foundation.dart';
@@ -18,11 +19,25 @@ Future<SettingsHarness> _pump(
   WidgetTester tester, {
   Settings settings = _on,
   FakeAlarmGateway? gateway,
+  List<Device> devices = const [],
 }) => pumpSettings(
   tester,
   settings: settings,
   location: AppRoutes.settingsPage(SettingsPage.wakeUp),
   alarmGateway: gateway,
+  devices: devices,
+);
+
+Device _device(String id, DeviceForm form, {bool rings = true}) => Device(
+  id: id,
+  userId: testUserId,
+  platform: DevicePlatform.ios,
+  form: form,
+  canRing: true,
+  alarmOn: true,
+  rings: rings,
+  armedWakeUtc: DateTime.utc(2026, 10, 22, 5),
+  lastSeenUtc: DateTime.utc(2026, 10, 21, 8),
 );
 
 Future<void> _tap(WidgetTester tester, String text) async {
@@ -33,6 +48,30 @@ Future<void> _tap(WidgetTester tester, String text) async {
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
+
+  testWidgets('Alarm sounds on: the chosen device, its state, and a pick', (
+    tester,
+  ) async {
+    final h = await _pump(
+      tester,
+      settings: _on.copyWith(alarmDeviceId: 'self'),
+      devices: [
+        _device('self', DeviceForm.phone),
+        _device('ipad', DeviceForm.tablet, rings: false),
+      ],
+    );
+    expect(find.text('Alarm sounds on'), findsOneWidget);
+    expect(find.text('This iPhone'), findsOneWidget);
+    expect(find.text('Ready · 07:00'), findsOneWidget);
+    await _tap(tester, 'Alarm sounds on');
+    await _tap(tester, 'iPad');
+    expect((await storedSettings(h)).alarmDeviceId, 'ipad');
+  });
+
+  testWidgets('Alarm sounds on: hidden while the alarm is off', (tester) async {
+    await _pump(tester, settings: const Settings(use24h: true));
+    expect(find.text('Alarm sounds on'), findsNothing);
+  });
 
   testWidgets('off: the switch, the test and health only', (tester) async {
     await _pump(tester, settings: const Settings(use24h: true));
@@ -150,10 +189,35 @@ void main() {
     expect(find.text('Show it when I first open the app'), findsOneWidget);
     await _tap(tester, 'Offer to shift the day when I\'m up after plan');
     expect((await storedSettings(h)).wakeUpLateOffer, isFalse);
-    expect(find.text('After'), findsOneWidget, reason: "the check's only");
+    expect(find.text('Offer after'), findsNothing);
+    expect(find.text('Check after'), findsOneWidget, reason: "the check's");
     await _tap(tester, "Your day on one screen when you're up");
     expect((await storedSettings(h)).wakeUpCard, isFalse);
     expect(find.text('Show it when I first open the app'), findsNothing);
+  });
+
+  testWidgets('the two delays say which setting they change (ED-337)', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await _pump(tester);
+    for (final row in ['Offer after', 'Check after']) {
+      await tester.ensureVisible(find.text(row));
+      expect(
+        find.bySemanticsLabel(RegExp('(^|\n)$row\n')),
+        findsOneWidget,
+        reason: row,
+      );
+    }
+    expect(find.bySemanticsLabel(RegExp('(^|\n)After\n')), findsNothing);
+    // Each picker's title names its setting too.
+    await _tap(tester, 'Offer after');
+    expect(find.text('Offer after'), findsNWidgets(2));
+    await tester.tapAt(const Offset(10, 10));
+    await tester.pumpAndSettle();
+    await _tap(tester, 'Check after');
+    expect(find.text('Check after'), findsNWidgets(2));
+    handle.dispose();
   });
 
   testWidgets('Morning card off for anyone without Wake Up', (tester) async {

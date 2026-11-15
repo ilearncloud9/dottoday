@@ -17,6 +17,10 @@ const _translations = ['de', 'fr', 'es'];
 /// only when the English word is the right word in that language.
 const _sameAsEnglish = {
   'de': {
+    'deviceIphone', // product names
+    'deviceIpad',
+    'deviceMac',
+    'alarmDeviceOffline', // "Offline"
     'settingsMission', // "Mission"
     'routineSummary',
     'routineDropTitle',
@@ -47,6 +51,9 @@ const _sameAsEnglish = {
     'layoutMinimal',
   },
   'fr': {
+    'deviceIphone', // product names
+    'deviceIpad',
+    'deviceMac',
     'settingsMissions', // "Missions"
     'settingsMission', // "Mission"
     // "Minimal" is the word in French too (M16).
@@ -78,6 +85,9 @@ const _sameAsEnglish = {
     'inAppAlertOk',
   },
   'es': {
+    'deviceIphone', // product names
+    'deviceIpad',
+    'deviceMac',
     'routineSummary',
     'learnInsightOk',
     'realityMetaJoin',

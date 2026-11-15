@@ -58,7 +58,7 @@ final class DayEndsProvider
   }
 }
 
-String _$dayEndsHash() => r'2bd5f428313cc0aa0e58d2b5a1ee8aa9d008d0c8';
+String _$dayEndsHash() => r'4b3b56f3692ca110319ed461b24b066ca31f745e';
 
 final class DayEndsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<DayEnds>, DateTime> {

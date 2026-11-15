@@ -6043,7 +6043,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Offer to shift the day when I\'m up after plan';
 
   @override
-  String get wakeUpLateAfterRow => 'After';
+  String get wakeUpLateOfferAfterRow => 'Offer after';
 
   @override
   String wakeUpCardGreeting(String date) {
@@ -6121,6 +6121,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'One nudge if nothing has started a few minutes after I\'m up';
 
   @override
+  String get wakeUpCheckAfterRow => 'Check after';
+
+  @override
   String get wakeUpCheckAsRow => 'As';
 
   @override
@@ -6184,6 +6187,61 @@ class AppLocalizationsEn extends AppLocalizations {
   String notifWindDownNudgeNoDot(String length, String time) {
     return 'Wind down now for $length before $time.';
   }
+
+  @override
+  String timeNextDay(String time) {
+    return '$time, next day';
+  }
+
+  @override
+  String get settingsAlarmSoundsOn => 'Alarm sounds on';
+
+  @override
+  String get deviceIphone => 'iPhone';
+
+  @override
+  String get deviceIpad => 'iPad';
+
+  @override
+  String get deviceAndroidPhone => 'Android phone';
+
+  @override
+  String get deviceAndroidTablet => 'Android tablet';
+
+  @override
+  String deviceThis(String device) {
+    return 'This $device';
+  }
+
+  @override
+  String get alarmDeviceReady => 'Ready';
+
+  @override
+  String alarmDeviceReadyAt(String time) {
+    return 'Ready · $time';
+  }
+
+  @override
+  String get alarmDeviceWaiting => 'Waiting to sync';
+
+  @override
+  String get alarmDeviceAlarmsOff => 'Alarms off on that device';
+
+  @override
+  String get alarmDeviceNone => 'No device rings';
+
+  @override
+  String get alarmDeviceOffline => 'Offline';
+
+  @override
+  String get alarmDeviceNote =>
+      'Only this one phone or tablet rings Wake Up. A Mac and the web never ring.';
+
+  @override
+  String get deviceMac => 'Mac';
+
+  @override
+  String get deviceWeb => 'Web browser';
 
   @override
   String settingsWindDownFrom(String time, String wake) {

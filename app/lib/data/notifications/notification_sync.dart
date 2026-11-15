@@ -1,4 +1,5 @@
 import 'package:dottoday/core/clock/clock.dart';
+import 'package:dottoday/data/devices/device_reporter.dart';
 import 'package:dottoday/data/notifications/wake_up_arming.dart';
 import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/domain/entities/alert.dart';
@@ -7,6 +8,7 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/notifications/notification_gateway.dart';
 import 'package:dottoday/domain/notifications/notification_planner.dart';
+import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
@@ -30,8 +32,10 @@ final class NotificationSync {
     SubtaskRepository? subtasks,
     WakeUpArming? arming,
     WakeUpDayRepository? days,
+    DeviceReporter? devices,
     this.ringsWakeUp = false,
-  }) : _clock = clock,
+  }) : _devices = devices,
+       _clock = clock,
        _planner = planner,
        _gateway = gateway,
        _occurrences = occurrences,
@@ -66,8 +70,14 @@ final class NotificationSync {
   /// This device's mornings: a card "Start the day" calls the check off.
   final WakeUpDayRepository? _days;
 
-  /// Whether this device rings the Wake Up alarm: phones only (docs/15 W1).
+  /// Whether this device can ring the Wake Up alarm: phones and tablets
+  /// (docs/15 W1). Which one does is [_devices]' call (ED-084).
   final bool ringsWakeUp;
+
+  /// This install on the account's device list: whether it is the one
+  /// that rings ("Alarm sounds on"), and its row. Null rings on every
+  /// phone, as before the list.
+  final DeviceReporter? _devices;
 
   /// Re-plans [userId]'s notifications and applies the delta to the OS;
   /// nothing unless [userId] is the owner shown (CR-160 I6, I8): a run
@@ -87,7 +97,21 @@ final class NotificationSync {
         )
         .first;
     final series = await _series.watchActive(userId).first;
-    final armed = await _armWakeUps(profile, blocks);
+    final here = ringsWakeUp && (await _devices?.ringsHere(profile) ?? true);
+    final wakeUps = _planner.wakeUps(
+      occurrences: blocks,
+      tzId: profile.tzId,
+      daily: profile.settings,
+      ringsWakeUp: here,
+    );
+    final armed = await _armWakeUps(profile, blocks, wakeUps, here: here);
+    await _devices?.report(
+      profile,
+      ringsHere: here,
+      nextWakeUtc: wakeUps
+          .map((w) => w.fireAtUtc)
+          .fold<DateTime?>(null, (a, b) => a == null || b.isBefore(a) ? b : a),
+    );
     final desired = _planner.plan(
       occurrences: blocks,
       tzId: profile.tzId,
@@ -101,7 +125,7 @@ final class NotificationSync {
       startSound: profile.settings.startSoundId,
       testAlarmAtUtc: await _testAlarmAt?.call(),
       withSteps: await _withSteps(userId, blocks),
-      ringsWakeUp: ringsWakeUp,
+      ringsWakeUp: here,
       armedWakeUps: armed,
     );
     final diff = NotificationPlanner.diff(desired, await _gateway.pending());
@@ -115,15 +139,13 @@ final class NotificationSync {
   Future<Set<DateTime>> _armWakeUps(
     Profile profile,
     List<Occurrence> blocks,
-  ) async {
+    List<PlannedNotification> wakeUps, {
+    required bool here,
+  }) async {
     final arming = _arming;
     if (arming == null || !ringsWakeUp) return const {};
-    final wakeUps = _planner.wakeUps(
-      occurrences: blocks,
-      tzId: profile.tzId,
-      daily: profile.settings,
-      ringsWakeUp: ringsWakeUp,
-    );
+    // Another device is the one that rings: take back what this one armed.
+    if (!here) return arming.disarm();
     return arming.arm(
       wakeUps,
       profile: profile,

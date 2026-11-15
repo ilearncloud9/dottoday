@@ -4,7 +4,6 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
-import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
 import 'package:dottoday/domain/time/wind_down.dart';
@@ -127,14 +126,10 @@ class _DayShapeStepState extends ConsumerState<DayShapeStep> {
   void _save(int wake, int bed) => unawaited(
     updateSettings(
       ProviderScope.containerOf(context, listen: false),
-      (s) =>
-          withCommonWindow(
-            s,
-            TimeWindow(start: windowTime(wake), end: windowTime(bed)),
-          ).copyWith(
-            sleepTargetMin: _snap(_sleepFor(wake, bed)),
-            sleepOfferAnswered: true,
-          ),
+      (s) => withCommonWindow(s, dayWindow(wake, bed)).copyWith(
+        sleepTargetMin: _snap(_sleepFor(wake, bed)),
+        sleepOfferAnswered: true,
+      ),
     ),
   );
 }

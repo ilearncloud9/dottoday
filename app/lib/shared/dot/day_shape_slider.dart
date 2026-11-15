@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,9 +12,11 @@ const int minAwakeMinutes = 60;
 /// handles and "15 h awake" between. Each handle is its own slider for
 /// keyboards (arrows ±[step], Page ±1 h) and screen readers.
 ///
-/// Minutes are after local midnight; Wind Down stops one [step] before
-/// midnight (`HH:mm` windows end by 23:59, docs/05). A drag moves locally
-/// and calls [onChanged] once on release, so a drag is one settings write.
+/// Minutes are after the day's own midnight; Wind Down stops one [step]
+/// before midnight, unless it is already set after midnight (docs/05,
+/// Q8: set from its time field), when the track runs on to it and the
+/// handle may stay there. A drag moves locally and calls [onChanged] once
+/// on release, so a drag is one settings write.
 class DayShapeSlider extends StatefulWidget {
   const DayShapeSlider({
     required this.wakeMinute,
@@ -69,20 +73,27 @@ class _DayShapeSliderState extends State<DayShapeSlider> {
 
   void _commit() => widget.onChanged(_wake, _bed);
 
+  /// The latest Wind Down a drag reaches: a step before midnight, or the
+  /// stored one when it is later (Q8).
+  int get _lastBed => max(Duration.minutesPerDay - step, widget.bedMinute);
+
+  /// Minutes the track spans: the calendar day, or on to [_lastBed].
+  int get _span => max(Duration.minutesPerDay, _lastBed + step);
+
   void _setWake(int m, {bool commit = true}) {
     final v = (m / step).round() * step;
-    setState(() => _wake = v.clamp(0, _bed - minAwakeMinutes));
+    setState(
+      () => _wake = v.clamp(
+        0,
+        min(_bed - minAwakeMinutes, Duration.minutesPerDay - step),
+      ),
+    );
     if (commit) _commit();
   }
 
   void _setBed(int m, {bool commit = true}) {
     final v = (m / step).round() * step;
-    setState(
-      () => _bed = v.clamp(
-        _wake + minAwakeMinutes,
-        Duration.minutesPerDay - step,
-      ),
-    );
+    setState(() => _bed = v.clamp(_wake + minAwakeMinutes, _lastBed));
     if (commit) _commit();
   }
 
@@ -109,9 +120,8 @@ class _DayShapeSliderState extends State<DayShapeSlider> {
 
   Widget _track(BuildContext context, DotTheme t, double width) {
     final span = width - _handle;
-    double x(int minute) => span * minute / Duration.minutesPerDay;
-    int minuteAt(double dx) =>
-        ((dx - _handle / 2) / span * Duration.minutesPerDay).round();
+    double x(int minute) => span * minute / _span;
+    int minuteAt(double dx) => ((dx - _handle / 2) / span * _span).round();
     final wakeX = x(wakeMinute);
     final bedX = x(bedMinute);
     final label = t.styles.rowMeta.copyWith(
@@ -202,12 +212,8 @@ class _DayShapeSliderState extends State<DayShapeSlider> {
     child: _Handle(
       name: name,
       value: widget.timeText(minute),
-      increased: widget.timeText(
-        (minute + step).clamp(0, Duration.minutesPerDay),
-      ),
-      decreased: widget.timeText(
-        (minute - step).clamp(0, Duration.minutesPerDay),
-      ),
+      increased: widget.timeText((minute + step).clamp(0, _span)),
+      decreased: widget.timeText((minute - step).clamp(0, _span)),
       onStep: (steps) => set(minute + steps * step),
     ),
   );

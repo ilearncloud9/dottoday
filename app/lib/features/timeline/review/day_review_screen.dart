@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// Today's Wind Down review on its own page (docs/15 W6, owner
+/// The Wind Down review on its own page (of the day the clock belongs to,
+/// so after a late Wind Down it is still yesterday's, Q8) (docs/15 W6, owner
 /// 2026-10-31): where the Wind Down notification's tap lands. It holds the
 /// same `DayReviewBody` as the card on Today.
 class DayReviewScreen extends ConsumerWidget {
@@ -16,7 +17,7 @@ class DayReviewScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
-    final today = ref.watch(todayDateProvider).value;
+    final today = ref.watch(reviewDateProvider).value;
     void close() =>
         context.canPop() ? context.pop() : context.go(AppRoutes.today);
     return Scaffold(

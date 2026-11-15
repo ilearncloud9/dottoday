@@ -267,3 +267,28 @@ final class DropShift {
   /// meaningful with [followers].
   final bool calendar;
 }
+
+/// Where "now" sits on a thread: the row at [index] of its entries, and
+/// how far down that row ([fraction], 0–1).
+typedef ThreadAnchor = ({int index, double fraction});
+
+/// The live task's row (a folded zone holding it included) or else the
+/// free gap with the now marker; null when the thread shows neither, e.g.
+/// any day but today. Today opens scrolled to it (ED-336).
+ThreadAnchor? nowAnchor(List<ThreadEntry> entries) {
+  bool live(ThreadTask t) => t.state == DotState.live;
+  final task = entries.indexWhere(
+    (e) => switch (e) {
+      ThreadTaskEntry(:final task) => live(task),
+      ThreadOutside(:final tasks) => tasks.any(live),
+      ThreadCap() || ThreadGap() || ThreadOverlap() => false,
+    },
+  );
+  if (task >= 0) return (index: task, fraction: 0);
+  for (final (i, e) in entries.indexed) {
+    if (e case ThreadGap(:final nowFraction?)) {
+      return (index: i, fraction: nowFraction);
+    }
+  }
+  return null;
+}

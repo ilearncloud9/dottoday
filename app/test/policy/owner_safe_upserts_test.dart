@@ -28,6 +28,10 @@ const _known = {
   'data/calendar/drift_calendar_source_repository.dart': 'own rows',
   // A server table under RLS, not a local row.
   'data/notifications/push/supabase_push_store.dart': 'server',
+  'data/devices/device_remote.dart': 'server',
+  // The devices cache (ED-084): this install's row under its per-account
+  // id (`device_id:<owner>`), and the server's list under RLS (own rows).
+  'data/devices/device_reporter.dart': 'own rows',
 };
 
 void main() {

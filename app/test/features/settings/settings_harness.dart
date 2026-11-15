@@ -16,6 +16,7 @@ import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/calendar/calendar_import.dart';
 import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
+import 'package:dottoday/domain/devices/device.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
@@ -75,6 +76,7 @@ Future<SettingsHarness> pumpSettings(
   Env? env,
   FakeAlarmGateway? alarmGateway,
   FakeWakeUpDayRepository? wakeUpDays,
+  List<Device> devices = const [],
 }) async {
   tester.view
     ..physicalSize = size
@@ -105,6 +107,7 @@ Future<SettingsHarness> pumpSettings(
         diagnostics: diagnostics ?? const FakeDiagnosticsReader(),
         alarmGateway: alarmGateway,
         wakeUpDays: wakeUpDays,
+        devices: devices,
       ),
       linkLauncherProvider.overrideWithValue(links),
       appVersionProvider.overrideWith((ref) async => '0.1.0 (1)'),

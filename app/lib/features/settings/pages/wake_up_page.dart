@@ -11,6 +11,7 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
+import 'package:dottoday/features/settings/widgets/alarm_device_row.dart';
 import 'package:dottoday/features/settings/widgets/mission_group.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_alarm_row.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_card_group.dart';
@@ -44,7 +45,8 @@ class _WakeUpPageState extends ConsumerState<WakeUpPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final settings = ref.watch(currentProfileProvider).value?.settings;
+    final profile = ref.watch(currentProfileProvider).value;
+    final settings = profile?.settings;
     if (settings == null) return const SizedBox.shrink();
     final minimal = watchSimplified(ref, FeatureId.wakeUpAlarm);
     final full = !minimal || _more;
@@ -64,7 +66,11 @@ class _WakeUpPageState extends ConsumerState<WakeUpPage> {
         ),
         SettingsGroup(
           caption: l10n.wakeUpAlarmCaption,
-          children: [WakeUpAlarmRow(on: settings.wakeUpAlarm)],
+          children: [
+            WakeUpAlarmRow(on: settings.wakeUpAlarm),
+            if (settings.wakeUpAlarm && profile != null)
+              AlarmDeviceRow(profile: profile),
+          ],
         ),
         if (settings.wakeUpAlarm) ...[
           WakeUpSoundGroup(settings: settings, full: full),

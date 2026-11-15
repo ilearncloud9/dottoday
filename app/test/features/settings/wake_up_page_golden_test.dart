@@ -4,6 +4,7 @@ library;
 
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
+import 'package:dottoday/domain/devices/device.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
@@ -11,13 +12,14 @@ import 'package:dottoday/features/settings/pages/wake_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:golden_toolkit/golden_toolkit.dart' hide Device;
+import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/dot_golden.dart';
 import '../../support/timeline_fakes.dart';
 
 // Settings › Wake Up alarm › Sound and snooze (derived — docs/15 §9, §10,
-// M17.2): on with every row, on with alarms not allowed yet (the fix in
+// M17.2; Alarm sounds on, ED-084): on with every row, on with alarms not allowed yet (the fix in
 // the switch row), and minimal mode's short form.
 
 List<Override> _overrides(
@@ -26,8 +28,22 @@ List<Override> _overrides(
 }) => [
   ...timelineOverrides(
     now: DateTime.utc(2026, 10, 21, 9),
-    profile: testProfile(settings: settings),
+    profile: testProfile(settings: settings.copyWith(alarmDeviceId: 'self')),
     wakeUpAlarm: caps,
+    // This iPhone rings Wake Up (ED-084): "Alarm sounds on" reads Ready.
+    devices: [
+      Device(
+        id: 'self',
+        userId: testUserId,
+        platform: DevicePlatform.ios,
+        form: DeviceForm.phone,
+        canRing: true,
+        alarmOn: true,
+        rings: true,
+        armedWakeUtc: DateTime.utc(2026, 10, 22, 5),
+        lastSeenUtc: DateTime.utc(2026, 10, 21, 8),
+      ),
+    ],
   ),
   envProvider.overrideWithValue(
     Env(
@@ -41,6 +57,7 @@ const _on = Settings(wakeUpAlarm: true, startSoundId: 'start.sunrise');
 
 void main() {
   setUpAll(loadAppFonts);
+  setUpAll(tz_data.initializeTimeZones);
   goldenMatrix(
     'settings_wake_up_on',
     height: 1600,

@@ -3,6 +3,7 @@ import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/icon_keys.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
+import 'package:dottoday/domain/time/day_boundaries.dart';
 import 'package:rrule/rrule.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -184,14 +185,31 @@ bool _sameDigits(DateTime parsed, String value) {
 
 final _hhmm = RegExp(r'^([01]\d|2[0-3]):[0-5]\d$');
 
-/// A `HH:mm`–`HH:mm` window; [allowWrap] permits end before start.
-ValidationFailure? checkTimeWindow(TimeWindow window, {bool allowWrap = true}) {
+/// A `HH:mm`–`HH:mm` window that may wrap past midnight (quiet hours).
+ValidationFailure? checkTimeWindow(TimeWindow window) {
   final invalid = _fail(ValidationField.settings, ValidationRule.invalidFormat);
   if (!_hhmm.hasMatch(window.start) || !_hhmm.hasMatch(window.end)) {
     return invalid;
   }
-  final order = window.start.compareTo(window.end);
-  if (order == 0 || (!allowWrap && order > 0)) {
+  if (window.start == window.end) {
+    return _fail(ValidationField.settings, ValidationRule.outOfRange);
+  }
+  return null;
+}
+
+/// A day's Wake Up → Wind Down window (docs/05 "Day boundaries", Q8):
+/// Wake Up `00:00`–`23:59`; Wind Down after it and less than 24 h later,
+/// counted from the day's own midnight, so 00:30 the next morning is
+/// `24:30`.
+ValidationFailure? checkDayWindow(TimeWindow window) {
+  final wake = _hhmm.hasMatch(window.start)
+      ? windowMinutes(window.start)
+      : null;
+  final bed = tryWindowMinutes(window.end);
+  if (wake == null || bed == null) {
+    return _fail(ValidationField.settings, ValidationRule.invalidFormat);
+  }
+  if (bed <= wake || bed - wake >= Duration.minutesPerDay) {
     return _fail(ValidationField.settings, ValidationRule.outOfRange);
   }
   return null;

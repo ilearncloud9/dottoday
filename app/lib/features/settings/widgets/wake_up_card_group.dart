@@ -82,7 +82,7 @@ class WakeUpCardGroup extends StatelessWidget {
             SettingsRow(
               glyph: DotGlyphs.clock,
               tint: t.colors.accentInk,
-              title: l10n.wakeUpLateAfterRow,
+              title: l10n.wakeUpLateOfferAfterRow,
               value: l10n.durationMinutes(settings.wakeUpLateMin),
               onTap: () => unawaited(_pickLate(context)),
             ),
@@ -95,7 +95,7 @@ class WakeUpCardGroup extends StatelessWidget {
     final l10n = context.l10n;
     final picked = await showChoiceSheet<int>(
       context,
-      title: l10n.wakeUpLateAfterRow,
+      title: l10n.wakeUpLateOfferAfterRow,
       selected: settings.wakeUpLateMin,
       options: [
         for (final m in wakeUpLateChoices)

@@ -1,6 +1,7 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/devices/device_providers.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/live_activity/live_activity_sink.dart';
 import 'package:dottoday/data/live_activity/web_live_dot_providers.dart';
@@ -103,6 +104,7 @@ NotificationSync notificationSync(Ref ref) => NotificationSync(
         checkPingDue(ref.read(revealHintRepositoryProvider), userId),
   ),
   days: ref.watch(wakeUpDayRepositoryProvider),
+  devices: ref.watch(deviceReporterProvider),
   ringsWakeUp: currentHealthPlatform().isPhone,
 );
 

@@ -4,6 +4,7 @@ import 'package:dottoday/data/db/tables/calendar_series_table.dart';
 import 'package:dottoday/data/db/tables/calendar_tables.dart';
 // The generated part copies `soundIdCheck` (a column CHECK) verbatim.
 import 'package:dottoday/data/db/tables/columns.dart';
+import 'package:dottoday/data/db/tables/devices_table.dart';
 import 'package:dottoday/data/db/tables/import_staging_tables.dart';
 import 'package:dottoday/data/db/tables/occurrences.dart';
 import 'package:dottoday/data/db/tables/pending_calendar_series_table.dart';
@@ -20,7 +21,8 @@ part 'app_database.g.dart';
 /// The local source of truth (docs/04 §4): server tables mirrored with sync
 /// columns, plus the local-only `change_log`, `sync_cursors`, `field_seen`,
 /// `local_meta`, `wake_up_days`, `calendar_series`,
-/// `pending_calendar_series` and the staged-import tables.
+/// `pending_calendar_series`, the staged-import tables and the
+/// `devices` cache.
 ///
 /// Open it with `openAppDatabase` (connection/connection.dart) so the
 /// SQLCipher key is applied before any statement (06 §4, ADR-0006).
@@ -45,6 +47,7 @@ part 'app_database.g.dart';
     GuestRowSessions,
     ImportSessions,
     ImportStaging,
+    DevicesTable,
   ],
   include: {'search.drift'},
 )
@@ -52,7 +55,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 22;
+  static const latestSchemaVersion = 23;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -149,7 +152,9 @@ class AppDatabase extends _$AppDatabase {
       }
       // 18 (CR-160): every outbox entry and pull cursor names its owner,
       // and local_meta says which profile is an account and which shows.
-      if (from < 18) {
+      // A file main's build took to 18 for the devices cache (before
+      // these steps were renumbered after it) gets this step too.
+      if (from < 18 || !await hasColumn(this, changeLog, changeLog.ownerId)) {
         await rebuildChangeLog(this, m);
         await ownCursors(this, m);
         await recordOwners(this);
@@ -173,6 +178,9 @@ class AppDatabase extends _$AppDatabase {
       // profile gives it its rows; with several no one can say whose
       // mornings they were, so they go to '' (seen by no one).
       if (from < 22) await ownWakeUpDays(this, m);
+      // 23 (ED-084, server 0016): the account's device list for "Alarm
+      // sounds on", a local cache.
+      if (from < 23) await _createTableOnce(m, devicesTable);
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without

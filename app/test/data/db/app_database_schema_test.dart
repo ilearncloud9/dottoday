@@ -69,6 +69,7 @@ void main() {
       'guest_row_sessions',
       'import_sessions',
       'import_staging',
+      'devices',
     });
     expect(rows.every((r) => r.read<int>('strict') == 1), isTrue);
   });

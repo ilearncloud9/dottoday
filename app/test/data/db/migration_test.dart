@@ -25,10 +25,25 @@ import 'package:flutter_test/flutter_test.dart';
 // since_id), null on upgrade; 17 → 18 (CR-160): change_log.owner_id and
 // sync_cursors.owner_id, and the owners recorded in local_meta; 19 → 20
 // (CR-160 Stage A): pending_calendar_series, empty, rows kept; 20 → 21
-// (CR-160 Stage B2): import_sessions and import_staging, empty.
+// (CR-160 Stage B2): import_sessions and import_staging, empty; 22 → 23 (ED-084): the
+// devices cache.
 // Steps are idempotent, so a file an older build opened (user_version
 // lowered) upgrades again (M8.5).
 void main() {
+  test('a version 17 file gains the devices cache (ED-084)', () async {
+    final dir = await Directory.systemTemp.createTemp('dottoday-mig18');
+    addTearDown(() => dir.delete(recursive: true));
+    final file = File('${dir.path}/db.sqlite');
+    final v17 = AppDatabase(NativeDatabase(file));
+    await v17.customStatement('DROP TABLE devices');
+    await v17.customStatement('PRAGMA user_version = 17');
+    await v17.close();
+
+    final v18 = AppDatabase(NativeDatabase(file));
+    addTearDown(v18.close);
+    expect(await v18.select(v18.devicesTable).get(), isEmpty);
+  });
+
   test(
     'a version 20 file gains the staging tables, empty, rows kept',
     () async {
