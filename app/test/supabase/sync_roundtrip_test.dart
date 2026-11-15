@@ -62,10 +62,11 @@ Future<SupabaseClient> _signIn(String email) async {
 }
 
 void main() {
+  useLocalSupabase();
   setUpAll(tz_data.initializeTimeZones);
 
   test('a task and a repeat go up from one device and down to another', () async {
-    final email = 'm62-${DateTime.now().microsecondsSinceEpoch}@example.com';
+    final email = testEmail('m62');
     final first = await _signIn(email);
     // The second device: its own session for the same account.
     final second = localClient();
