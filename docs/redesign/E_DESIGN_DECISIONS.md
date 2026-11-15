@@ -4575,6 +4575,30 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Board labels:** "Approved · ED-344 · 15 Nov 2026"; canvas titles updated. Published `1794752914-c71b`, approved `1794754177-f107`.
 - Nothing built. Snapshot v3.19-working.
 
+### ED-345 · R2-39 approved: before Wake Up and after Wind Down, everywhere (boards E-R2-39, E-R2-39-Dark)
+- **Date:** 2026-11-15. **Owner:** "Approve R2-39". Seventh board for the audit's never-drawn screens (ED-335 §1). The fold item on the still-to-design list was checked against E-DF2 first: the rule was approved there (ED-246) but drawn only for iPhone Full, light. This board draws the rest.
+- **Approved as drawn:** the ED-246 row (the Earlier fold component, ED-164: the task's colour dot, Show or Hide) on Android Full before Wake Up, folded and shown (a task crossing 7:00 stays inline); iPhone Full after Wind Down, folded, below the moon cap; a live task after Wind Down, where the zone opens by itself with the now bead; iPhone and Android Minimal with "After Wind Down" and no count; the Mac Day column (Full) with "1 task after Wind Down" and keyboard focus; the web Day column (Minimal) opened, with focus. Tab reaches the row; Space or Return toggles; → opens, ← closes; ↓ moves into the group. The horizon does not draw outside tasks; its spoken summary names them. The Week folds nothing.
+- **Strings:** the counted labels are built (`threadOutsideBefore`, `threadOutsideAfter`). Show and Hide and the Minimal no-count lines are approved design (ED-164, ED-246), not built: the app shows the count in both layouts and a chevron in the dot column. No new copy; Early run and Pack the bag are sample data.
+- **Board labels:** "Approved · ED-345 · 15 Nov 2026"; canvas titles updated. Published `1794759901-47cb`, approved `1794760034-a03b`.
+- Nothing built. Snapshot v3.20-working.
+
+### ED-346 · R2-40 approved: pin, travel time and energy in the editor (boards E-R2-40, E-R2-40-Dark)
+- **Date:** 2026-11-15. **Owner:** "Approve R2-40". Eighth board for the audit's never-drawn screens (ED-335 §1); pin, travel and energy were captions only. Option D (ED-086) placed them (More card, Energy pill) but drew the More card only on iPad and no pickers.
+- **Approved as drawn:** the editor's More card below Notes on iPhone and Android, in the built order: Sound, Travel time, Pinned (the built switch with "Stays put when other tasks shift"; replaces option D's "Pin · Off ›" screen), Delete task. Travel time opens the built ticked list (None, 5 min to 2 h before): an iPhone sheet, an Android modal bottom sheet (ED-340); the row is hidden for an Inbox task. The Energy pill (iPhone) and chip (Android) open a three-item menu (Low, Medium, High); picking the ticked level clears it, as built. Today shows a pinned task's lock and "· 15 min travel"; travel time is not counted as free. The calendar travel suggestion (TravelSuggestionCard: Add / Not now, written only on Add, with Undo) on every platform.
+- **Design-only:** the Mac and web inspector (E-FullA-v2) gains the More rows under Notes: Energy, Sound and Travel time as pop-up buttons, Pinned as a switch, Delete task; a native pop-up on Mac, a listbox menu on web.
+- **Strings:** all built; no new copy. Main St 4 is sample data.
+- **Board labels:** "Approved · ED-346 · 15 Nov 2026"; canvas titles updated. Published `1794760982-0f95`, approved `1794761095-9e21`.
+- Nothing built. Snapshot v3.21-working.
+
+### ED-347 · R2-41 approved: phone landscape (boards E-R2-41, E-R2-41-Dark)
+- **Date:** 2026-11-15. **Owner:** "Approve R2-41". Ninth and last board for the audit's never-drawn screens (ED-335 §1). The rule was approved as ED-168 H1 (usable height under 480 keeps the compact layout, never docks, the keyboard never changes the class); only 25 % schematics existed (E-Responsive, E-MobileWeb).
+- **Approved as drawn (iPhone 16 Pro 874 × 402, Android 915 × 412, light and dark):** Today in Full keeps the phone's own navigation and never becomes the Workspace; the day sits in a 640 column (`DotSize.readableColumn`) centred between the safe areas and opens at now (ED-337); rows put the time beside the title (built `wideThreadRowFrom` 440). The editor opens full height, 640 wide, over the day and never docks (no medium detent at this height; Android: the modal bottom sheet, ED-340). Add sits above the landscape keyboard; the keyboard never changes the layout or resets the sheet. Minimal stays Minimal: Now with the horizon across and the now dot beside its words, actions, Also now and Next.
+- **Design-only:** the week strip folds into the title row (the title opens the month, as on Android, E-Phones); the tab bar's and the M3 navigation bar's items sit side by side, with the Day button and Add beside them; Minimal Now in two columns.
+- **Strings:** from the approved frames; no new copy.
+- **Board labels:** "Approved · ED-347 · 15 Nov 2026"; canvas titles updated. Published `1794762278-b237`, approved `1794762319-4e1c`.
+- **Still to verify on devices:** H1 is not built; the device and keyboard checks of ED-168 stay PENDING.
+- Nothing built. Snapshot v3.22-working. With R2-41 the ED-335 still-to-design list is complete.
+
 ---
 
 ## Pending owner answers

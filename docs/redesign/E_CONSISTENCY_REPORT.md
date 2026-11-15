@@ -85,7 +85,7 @@ Implementation and device testing are outside these dispositions: a Resolved ent
 | CR-018 | Wake Up / Wind Down cap size | Resolved | Cleanup 5 · ED-201 |
 | CR-019 | Flat dots | Resolved | ED-023 (halos and glows removed); G4-6 · ED-178 (T1: dark now-dot without shadow) |
 | CR-020 | Done count in Earlier | Resolved | G3-12 · ED-164; spoken summary · ED-165 |
-| CR-021 | Horizon range and before-Wake-Up fold | Resolved | Group 2 · ED-246 (board E-DF2): built fold drawn; crossing tasks inline; the horizon names outside tasks in its spoken summary |
+| CR-021 | Horizon range and before-Wake-Up fold | Resolved | Group 2 · ED-246 (board E-DF2): built fold drawn; crossing tasks inline; the horizon names outside tasks in its spoken summary. ED-345 (R2-39): drawn on Android, Minimal and the Mac and web Day column |
 | CR-022 | Now-bead motion and announcement | Resolved | Group 2 · ED-246 (board E-DF2): once a minute, 200 ms slide, Reduce Motion jumps, silent label, one polite announcement per task change |
 | CR-023 | Wide pane widths | Resolved | G4-2 · ED-168 (Full sidebar 216); cleanup 11 · ED-207 (Minimal sidebar 200); G4-3 · ED-170 C1 (a) (the 248 inspector is not the editor) |
 | CR-024 | Mac sidebar material | Resolved | G3-6 · ED-130; cleanup 9a · ED-165 |
@@ -158,7 +158,7 @@ Implementation and device testing are outside these dispositions: a Resolved ent
 | CR-091 | Mac minimum window | Resolved | G4-3 · ED-169, ED-170 (E-G4-3-Narrow) |
 | CR-092 | Day column hidden state | Resolved | G4-3 · ED-170 (fold drawn); ED-218; Full week shows the days that fit (ED-169) |
 | CR-093 | E-Minimal splits 1280 differently on Mac and web | Resolved | CR-093 option A · ED-232 (web uses the Mac split 200 / 790 / 290; insets at 290) |
-| CR-094 | Tablets, mobile web, landscape | Resolved | Mobile web G4-5 · ED-172; landscape phones G4-2 · ED-168 (H1); tablets ED-090, G4-4 · ED-171 (screens in Round 2) · **Round 2 close-out (ED-335):** Tablets R2-1 to R2-31, mobile web on tablets R2-31 (ED-334); phone landscape rule ED-168 |
+| CR-094 | Tablets, mobile web, landscape | Resolved | Mobile web G4-5 · ED-172; landscape phones G4-2 · ED-168 (H1); tablets ED-090, G4-4 · ED-171 (screens in Round 2) · **Round 2 close-out (ED-335):** Tablets R2-1 to R2-31, mobile web on tablets R2-31 (ED-334); phone landscape rule ED-168; screens R2-41 (ED-347) |
 | CR-095 | Breakpoints and Mac minimum | Resolved | G4-2 · ED-167; G4-3 · ED-169 |
 | CR-096 | Glass approximations | Resolved | G3-6 · ED-128, ED-133 (native-first directions); device checks in the handoff |
 | CR-097 | Mini window feasibility | Still open · implementation | ED-260: feasible as a native NSPanel fed by the status item's snapshot and channel; no new dependency; Mac run NV |
@@ -635,12 +635,12 @@ These have no frame, no menu item and no caption in E. Each still needs a place 
   - only the caps on the thread are drawn.
 - **Thread details:**
   - Reality thread: a phone Day-menu item only, with no Mac or web home;
-  - the fold for tasks that start before Wake Up: Morning run (6:45) is drawn after the 7:00 cap.
+  - the fold for tasks that start before Wake Up: Morning run (6:45) is drawn after the 7:00 cap (resolved ED-246; drawn everywhere R2-39, ED-345).
 - **Assist:** Smallest step, Unstick, on-device AI status.
 - **Selection:**
   - selection bar with "Save as routine";
   - the shift-followers drag chip;
-  - pin, travel and energy fields.
+  - pin, travel and energy fields (drawn and approved R2-40, ED-346).
 - **Settings:**
   - the Low-energy header switch;
   - notification health and test alarm, quiet hours, day-start summary, nudges, sounds.

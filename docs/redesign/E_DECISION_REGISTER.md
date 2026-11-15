@@ -1238,3 +1238,6 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - ED-342: R2-36 approved (Mac and web Add popover with live chips; Go to date popover; CR-069, CR-082 closed); Year strip option B proposed on R2-34, owner to choose.
 - ED-343: R2-37 approved (spoken Brain dump on iPhone, Android, Mac and web: permission, listening, first-use tip, stopped, refused, web without on-device speech; CR-083 closed).
 - ED-344: R2-38 approved (the Wake Up explainer: How it works on Wake Up options, Help on every platform; new `wakeUpExplainOff` line for the copy PR; Android Wake Up options page design-only).
+- ED-345: R2-39 approved (before Wake Up and after Wind Down on Android, the live task in a zone, Minimal without a count, the Mac and web Day column; light and dark; no new copy).
+- ED-346: R2-40 approved (pin, travel time and energy: the More card, the Travel time list, the Energy menu and the day row on iPhone and Android; Mac and web inspector rows design-only; the travel suggestion; no new copy).
+- ED-347: R2-41 approved (phone landscape on iPhone and Android under ED-168 H1: Today, the editor, Add with the keyboard, Minimal Now; the ED-335 still-to-design list is complete).

@@ -191,7 +191,7 @@ Home columns name where each feature lives in Concept E. "Hidden in Minimal, rea
 | Paste a list → tasks | Paste into Add (EP I2) | Capture field "Paste a list for several" | Paste into Add → Brain dump proposal | ADOPTED FROM BOARD | Not started |
 | Add another, duration chips, typed time | EP F2 | Not drawn | Two chips at most (EPM F3) | ADOPTED FROM BOARD; wide NOT DESIGNED | Not started · **Close-out (ED-335):** no Add another (ED-152); wide Add still to design |
 | Task sheet, `/task/:id` | Medium detent (EP F3), M3 sheet (EP F6) | Inspector; `/task/<id>` redirects | Minimal sheet described, not drawn; EM right-column task screen | OPEN G2-5, G2-6, G2-11; dead Move tile OPEN G2-7 | Not started · **Close-out (ED-335):** settled: G2-5 ED-086; G2-6 ED-088; G2-7 ED-077, ED-099; G2-11 ED-097; R2-4, R2-27 (ED-274, ED-330) |
-| Editor fields (time, duration, colour, icon, notes, subtasks, repeat, alerts ≤ 5, pin, travel, energy) | Large detent not drawn | Inspector: date, time, repeat, alerts, subtasks, overlaps, notes | Task sheet › More; EM More details | OPEN G2-5; colour, icon, pin, travel, energy NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-5 ED-086; R2-4, R2-15, R2-27; pin, travel and energy captions only |
+| Editor fields (time, duration, colour, icon, notes, subtasks, repeat, alerts ≤ 5, pin, travel, energy) | Large detent not drawn | Inspector: date, time, repeat, alerts, subtasks, overlaps, notes | Task sheet › More; EM More details | OPEN G2-5; colour, icon, pin, travel, energy NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-5 ED-086; R2-4, R2-15, R2-27; pin, travel and energy captions only · **2026-11-15:** pin, travel, energy approved R2-40 (ED-346) |
 | Inbox, schedule in ≤ 2 taps | Inbox tab with badge | Inbox column, drag, `m` | Inbox tab (EPM), EM Inbox row | APPROVED (ED-038, ED-068, ED-073); phone Inbox screen NOT DESIGNED; picker OPEN G2-12 | Not started · **Close-out (ED-335):** settled: G2-12 ED-099; R2-13, R2-28 (ED-295, ED-331) |
 | Brain dump (typed) | Add segment, FAB menu, Day menu | Sidebar Plan › Brain dump, Inbox column block, Day menu ⇧⌘N | Paste several lines into Add; EM ⇧⌘N and finder | OPEN G2-8, G2-2; Brain dump screen NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-2 ED-080; G2-8 ED-091 |
 | Brain dump (spoken) | Not drawn | Dictate mic on the Brain dump block | Hidden in Minimal (as built) | NOT DESIGNED: listening, permission denied, web fallback | NV: needs device · **Close-out (ED-335):** still to design |
@@ -307,7 +307,7 @@ Parity features or accepted decisions with no drawn home. Each names what it nee
 - **Wake Up family.** Alarm ringing, snooze, card, Check and all missions are undrawn on every platform (G4-1). **Round 2 close-out (ED-335):** Closed: R2-19 Option B (ED-314); missions edge states R2-28 (ED-331).
 - **Settings tree.** No Settings page is drawn except the wide first row. All nine sections, 13 sub-pages and minimal Settings need drawing (G2-3, G2-4). **Round 2 close-out (ED-335):** Closed except Settings › Planning, Sound and Siri & Shortcuts pages (still open): R2-11, R2-20 to R2-24, R2-29, R2-30.
 - **Task editor at full size on phones.** Large detent (iPhone) and full editor (Android) are not drawn (G2-5). **Round 2 close-out (ED-335):** Closed: R2-4 and R2-27 task sheets (ED-274, ED-330).
-- **Editor fields colour, icon, pin, travel, energy.** Captions only. **Round 2 close-out (ED-335):** Partly closed: colour and icon R2-15 (ED-299); pin, travel and energy still captions.
+- **Editor fields colour, icon, pin, travel, energy.** Captions only. **Round 2 close-out (ED-335):** Partly closed: colour and icon R2-15 (ED-299); pin, travel and energy still captions. **2026-11-15:** drawn and approved R2-40 (ED-346).
 - **iOS Move picker.** Only the Android dial is drawn (G2-7). **Round 2 close-out (ED-335):** Closed: R2-28 Move to a day (ED-331).
 - **Pick today's one thing in Minimal.** Neither EPM's nor EM's "hides, never removes" band lists it. Needs a minimal path and a screen. **Round 2 close-out (ED-335):** Still open (only the Wake Up mission is drawn).
 - **Brain dump screen, Routines page, Break it down, Smallest step, Unstick, AI status.** Entries only (G2-8, G2-2). **Round 2 close-out (ED-335):** Closed: R2-22, R2-23, R2-30 (ED-322, ED-324, ED-333); spoken Brain dump still open.
@@ -317,7 +317,7 @@ Parity features or accepted decisions with no drawn home. Each names what it nee
 - **Notifications.** Task alert, Start nudge, day-start summary, notification health, test alarm. Not drawn. **Round 2 close-out (ED-335):** Closed: R2-20 (ED-317).
 - **Duplicate-day target picker and Copy confirmation.** Not drawn. **Round 2 close-out (ED-335):** Closed: R2-22, R2-29, R2-30 (no confirm step, as built).
 - **Wide Add popover with live chips.** Not drawn on Mac or web. **Round 2 close-out (ED-335):** Still open.
-- **Layouts.** iPad, Android tablet and foldable, mobile web, phone landscape, Mac 960 × 640 window, dark mode (G4-2 to G4-6). **Round 2 close-out (ED-335):** Closed: R2-1, R2-2, R2-31, R2-30; phone landscape still open.
+- **Layouts.** iPad, Android tablet and foldable, mobile web, phone landscape, Mac 960 × 640 window, dark mode (G4-2 to G4-6). **Round 2 close-out (ED-335):** Closed: R2-1, R2-2, R2-31, R2-30; phone landscape still open. **2026-11-15:** phone landscape drawn and approved R2-41 (ED-347).
 - **States.** Loading, error, offline, empty past/future day, 200 % text, reduced motion, reduced transparency (G4-7). **Round 2 close-out (ED-335):** Mostly closed: R2-8, R2-26 to R2-28; 200 % on R2-7 only, reduced motion and transparency left to device tests.
 - **Register coverage.** "Cancel multi-select and drag on a mode switch" and "a mode switch is not a Back step" have no register ID (ED-072 open items). Each needs one.
 
@@ -356,6 +356,9 @@ Also excluded by later owner answers (not ED "REJECTED", but not to be built):
 - **2026-11-15, ED-342:** R2-36 approved (Add popover, Go to date); Year strip option B proposed. Nothing built.
 - **2026-11-15, ED-343:** R2-37 approved (spoken Brain dump, CR-083). Nothing built.
 - **2026-11-15, ED-344:** R2-38 approved (the Wake Up explainer); `wakeUpExplainOff` new copy approved for the copy PR. Nothing built.
+- **2026-11-15, ED-345:** R2-39 approved (the ED-246 fold on every platform, Minimal and the Mac and web Day column; CR-021 fully drawn). Nothing built.
+- **2026-11-15, ED-346:** R2-40 approved (pin, travel time and energy in the editor on every platform; the last editor captions closed). Nothing built.
+- **2026-11-15, ED-347:** R2-41 approved (phone landscape under H1); the last undrawn layout. Nothing built; H1 device checks pending.
 
 > **Tablets (owner sequencing, 2026-11-04).** Phone and Mac boards do not count as tablet designs. Tablet gaps listed here stay open until Prompt D Round 2. The comprehensive tablet coverage checklist is a mandatory step before Round 2 begins (`STATUS.md` Open items); until then each Group 2 decision only records its iPad and Android tablet/foldable implications.
 
