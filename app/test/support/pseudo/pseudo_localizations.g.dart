@@ -4715,7 +4715,7 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get wakeUpLateOfferRow => pseudo(super.wakeUpLateOfferRow);
 
   @override
-  String get wakeUpLateAfterRow => pseudo(super.wakeUpLateAfterRow);
+  String get wakeUpLateOfferAfterRow => pseudo(super.wakeUpLateOfferAfterRow);
 
   @override
   String wakeUpCardGreeting(String date) =>
@@ -4765,6 +4765,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get wakeUpCheckRowDetail => pseudo(super.wakeUpCheckRowDetail);
+
+  @override
+  String get wakeUpCheckAfterRow => pseudo(super.wakeUpCheckAfterRow);
 
   @override
   String get wakeUpCheckAsRow => pseudo(super.wakeUpCheckAsRow);
