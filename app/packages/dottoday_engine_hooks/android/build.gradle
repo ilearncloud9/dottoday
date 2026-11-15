@@ -1,0 +1,19 @@
+// Java on purpose: no Kotlin plugin to keep in step with AGP (ADR-0019).
+group 'app.dottoday.engine_hooks'
+version '1.0'
+
+apply plugin: 'com.android.library'
+
+android {
+    namespace 'app.dottoday.engine_hooks'
+    compileSdk flutter.compileSdkVersion
+
+    defaultConfig {
+        minSdk 26
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
