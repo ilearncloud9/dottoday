@@ -1242,3 +1242,4 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - ED-346: R2-40 approved (pin, travel time and energy: the More card, the Travel time list, the Energy menu and the day row on iPhone and Android; Mac and web inspector rows design-only; the travel suggestion; no new copy).
 - ED-347: R2-41 approved (phone landscape on iPhone and Android under ED-168 H1: Today, the editor, Add with the keyboard, Minimal Now; the ED-335 still-to-design list is complete).
 - ED-348: owner choices: Year strip option B approved (replaces the ED-339 strip; needs `year_strip.dart`); "Running late" sheet title and "Running-late nudge" row kept as built, recorded exceptions to the no-shame rule.
+- ED-349: R2-42 approved (Year strip option B on Mac and web as the built centred dialog from Past days; keyboard and screen reader; no new copy).

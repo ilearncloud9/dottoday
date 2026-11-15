@@ -4606,6 +4606,13 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Boards:** E-R2-34 and E-R2-34-Dark: option B frames labelled "Approved · ED-348 · 15 Nov 2026"; the original strip frame labelled "Replaced by option B (ED-348)"; canvas titles updated. Published `1794762747-e9d6`; fit 4139/4140.
 - Nothing built. Snapshot v3.23-working.
 
+### ED-349 · R2-42 approved: Year strip option B on Mac and web (boards E-R2-42, E-R2-42-Dark)
+- **Date:** 2026-11-15. **Owner:** "Approve R2-42". ED-348 approved option B, drawn on R2-34 for iPhone and Android only; Mac and web Past days had the Year strip button but neither option drawn.
+- **Approved as drawn:** from Past days, Year strip opens as the built centred dialog (`app_sheet.dart`, at most 560 wide) on Mac and web, and on expanded tablets by the same width rule: the twelve month dots six to a row, the month in progress dashed, a month opening its days below ("October · 26 of 31 days planned"), Share image and Done. Esc or a click outside closes it. Keyboard: arrows move a focus ring between months, Return opens a month, Tab reaches Share image and Done; screen readers read each month ("Nov, 3 days planned"). The web window is the same at `/#/search`.
+- **Strings:** R2-34's; no new copy. Building B needs a change to `year_strip.dart` (ED-348).
+- **Board labels:** "Approved · ED-349 · 15 Nov 2026"; canvas titles updated. Published `1794763007-9111`, approved `1794763222-4259`.
+- Nothing built. Snapshot v3.24-working.
+
 ---
 
 ## Pending owner answers
