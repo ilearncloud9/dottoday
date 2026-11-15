@@ -1244,6 +1244,31 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.settingsRestored(title));
 
   @override
+  String get trashDeleteNow => pseudo(super.trashDeleteNow);
+
+  @override
+  String trashDeleteNowTitle(String title) =>
+      pseudo(super.trashDeleteNowTitle(title));
+
+  @override
+  String get trashDeleteNowBody => pseudo(super.trashDeleteNowBody);
+
+  @override
+  String get trashDeleteNowAction => pseudo(super.trashDeleteNowAction);
+
+  @override
+  String get trashEmptyTitle => pseudo(super.trashEmptyTitle);
+
+  @override
+  String trashEmptyBody(int count) => pseudo(super.trashEmptyBody(count));
+
+  @override
+  String get trashEmptyAction => pseudo(super.trashEmptyAction);
+
+  @override
+  String get trashEmptied => pseudo(super.trashEmptied);
+
+  @override
   String get settingsAbout => pseudo(super.settingsAbout);
 
   @override

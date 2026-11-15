@@ -1586,6 +1586,40 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get trashDeleteNow => 'Supprimer maintenant';
+
+  @override
+  String trashDeleteNowTitle(String title) {
+    return 'Supprimer « $title » maintenant ?';
+  }
+
+  @override
+  String get trashDeleteNowBody => 'Elle ne pourra plus être restaurée.';
+
+  @override
+  String get trashDeleteNowAction => 'Supprimer';
+
+  @override
+  String get trashEmptyTitle => 'Vider la corbeille ?';
+
+  @override
+  String trashEmptyBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tâches seront supprimées.',
+      one: '1 tâche sera supprimée.',
+    );
+    return '$_temp0 Elles ne pourront plus être restaurées.';
+  }
+
+  @override
+  String get trashEmptyAction => 'Vider la corbeille';
+
+  @override
+  String get trashEmptied => 'Corbeille vidée';
+
+  @override
   String get settingsAbout => 'À propos';
 
   @override
