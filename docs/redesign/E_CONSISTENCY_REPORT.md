@@ -133,7 +133,7 @@ Implementation and device testing are outside these dispositions: a Resolved ent
 | CR-066 | Web routes | Resolved | G2-11 · ED-097 |
 | CR-067 | URLs for E-Minimal places | Resolved | Destinations: G2-11 · ED-097. The Day column state, the narrow Day panel and the Search or run palette have no address: CR-067 option A · ED-242 |
 | CR-068 | Path rewrite; refresh and Back untested | Still open · implementation | ED-260 spike (go_router 18.1.1): refresh, Back and Forward with ?task= pass only with GoRouter.optionURLReflectsImperativeAPIs (or go for task opens); the app sets neither yet |
-| CR-069 | Quick Add on wide is entry-only | Still open · design fix | Entries drawn (G2-8 · ED-091: File menu, web Add ▾). The wide Add surface is Round 2 stage 1 (G4-1 · ED-166, which lists CR-069 to CR-090) · **Round 2 close-out (ED-335):** Tablets drawn (R2-3); the Mac and web Add popover with live chips is still undrawn |
+| CR-069 | Quick Add on wide is entry-only | Still open · design fix | Entries drawn (G2-8 · ED-091: File menu, web Add ▾). The wide Add surface is Round 2 stage 1 (G4-1 · ED-166, which lists CR-069 to CR-090) · **Round 2 close-out (ED-335):** Tablets drawn (R2-3); the Mac and web Add popover with live chips is still undrawn · **2026-11-15 (ED-342):** Mac and web Add popover with live chips approved R2-36 · Closed |
 | CR-070 | Three task surfaces | Resolved | G2-5 · ED-086; G2-6 · ED-088, ED-089; G4-3 · ED-170 C1 (a) |
 | CR-071 | E-Minimal task screen vs doc 14 | Resolved | G2-6 · ED-088, ED-089 |
 | CR-072 | "More details" has no destination | Resolved | G2-6 · ED-088 (More options opens the option D editor), ED-089 |
@@ -146,8 +146,8 @@ Implementation and device testing are outside these dispositions: a Resolved ent
 | CR-079 | Undo toast and ⌘Z feedback | Resolved | G4-1 · ED-166 stage 2; only the conflict Undo is designed (G4-7 Q3 · ED-194) · **Round 2 close-out (ED-335):** R2-7 (ED-281), medium width R2-31 (ED-334) |
 | CR-080 | Inbox, Calendar, Search screens | Resolved | Phone Calendar drawn (ED-079); Inbox and Search in Round 2 (ED-166) · **Round 2 close-out (ED-335):** R2-12, R2-13, R2-30 (ED-293, ED-295, ED-333) |
 | CR-081 | Rebalance and shift-followers | Still open · design fix | Rebalance… in every Full Day menu (ED-093); chip and pin in Round 2 (ED-166) · **Round 2 close-out (ED-335):** Rebalance result, before and after, pin and drag chip still undrawn |
-| CR-082 | Go to a date | Still open · design fix | Phone month sheet (ED-075, ED-079) replaces the M3 date picker; Mac/web Go to Date popover in Round 2 (ED-166) · **Round 2 close-out (ED-335):** Mac and web Go to date popover still undrawn; Move to a day drawn (R2-28) |
-| CR-083 | Spoken Brain dump | Still open · design fix | Phone Brain dump mode has the mic (ED-091); wide in Round 2 (ED-166) · **Round 2 close-out (ED-335):** Spoken Brain dump states still undrawn |
+| CR-082 | Go to a date | Still open · design fix | Phone month sheet (ED-075, ED-079) replaces the M3 date picker; Mac/web Go to Date popover in Round 2 (ED-166) · **Round 2 close-out (ED-335):** Mac and web Go to date popover still undrawn; Move to a day drawn (R2-28) · **2026-11-15 (ED-342):** Mac and web Go to date popover approved R2-36 · Closed |
+| CR-083 | Spoken Brain dump | Still open · design fix | Phone Brain dump mode has the mic (ED-091); wide in Round 2 (ED-166) · **Round 2 close-out (ED-335):** Spoken Brain dump states still undrawn · **2026-11-15 (ED-343):** spoken Brain dump on iPhone, Android, Mac and web approved R2-37 · Closed |
 | CR-084 | This week, Past days, year strip | Still open · design fix | Day review, Week in review and ‹ stepping (G2-12 · ED-099); year strip in Round 2 (ED-166) · **Round 2 close-out (ED-335):** This week drawn (R2-14, R2-24, R2-28); Past days and the year strip still undrawn |
 | CR-085 | Low-energy screen | Resolved | G4-1 · ED-166 · **Round 2 close-out (ED-335):** R2-22 (ED-322) |
 | CR-086 | Wake Up family and notifications | Resolved | Settings, alarm and device picker drawn (ED-084); card, Check, missions, notifications in Round 2 stage 3 (ED-166) · **Round 2 close-out (ED-335):** R2-19 (ED-314), R2-20 (ED-317) |
@@ -444,7 +444,7 @@ Most of these are now resolved; see § Current disposition.
 | CR-080 | The Inbox, Calendar and Search screens are not drawn. Phones have tabs, and EM has sidebar rows that open nothing drawn | EP F1; EPM F1; EM sidebar | NOT DESIGNED |
 | CR-081 | Rebalance is only an EW menu item. The shift-followers drag chip and pin are not drawn | EW Day menu | NOT DESIGNED |
 | CR-082 | Go to a date has entries only: ⇧⌘G, EM's date button and "Go to date…" in the finder. No Mac or web date popover, and no Android M3 date picker, is drawn | EM toolbar and finder; EP I4 | NOT DESIGNED |
-| CR-083 | Spoken Brain dump exists only as EW's Dictate mic. Phones and EM have no mic | EW Brain dump block | NOT DESIGNED |
+| CR-083 | Spoken Brain dump exists only as EW's Dictate mic. Phones and EM have no mic | EW Brain dump block | DESIGNED 2026-11-15 (ED-343, R2-37) |
 | CR-084 | This week, Past days and the year strip are entries only (EM "Reviews" and "Past days" in the finder; EW "Review") | EM finder; EW sidebar | NOT DESIGNED |
 | CR-085 | Low-energy mode's screen and header switch are not drawn. Only menu items exist | EP I3; EM menu bar | NOT DESIGNED |
 | CR-086 | The Wake Up family (alarm, card, Check, missions, day shape, sleep target) and notifications (task alert, Start nudge, health, test alarm) are not drawn | Inventory §1.3 | NOT DESIGNED |
@@ -659,7 +659,7 @@ These have no frame, no menu item and no caption in E. Each still needs a place 
   - Controls and Quick Settings tiles;
   - App Intents and Siri, Share into Inbox;
   - PWA install, web push, the web tab live dot.
-- **Spoken Brain dump:** only on the Mac workspace (the Dictate mic).
+- **Spoken Brain dump:** only on the Mac workspace (the Dictate mic). **2026-11-15:** drawn on all four platforms, R2-37 (ED-343).
 
 **Entry point drawn, screen not drawn:**
 - Focus, Search;

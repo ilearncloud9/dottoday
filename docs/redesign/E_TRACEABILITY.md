@@ -110,52 +110,52 @@ These are still tagged "Hypothesis · not approved" on a board, but a later owne
 
 | Item | Board / frame | Status | Conflict, if any | Implementation requirement |
 |---|---|---|---|---|
-| Settings leaves the tab bar: avatar on phones, ⌘, own window on Mac, sidebar foot and `/settings` on web | EP F1, F5; EPM F1, F5; EM sidebar; FA2 platform note | OPEN G2-3 | Built app has a Settings tab; every entry must still reach Settings. | Settings opens from the avatar on phones, ⌘, window on Mac, sidebar foot on web. |
-| Brain dump and Routine as Add modes (segmented Task · Brain dump · Routine; hold on +; M3 FAB menu) | EP F2, EP I5 | OPEN G2-8 | iOS hold menu is not drawn; a hold-only path needs a visible alternative (accessibility). | Add offers Task, Brain dump and Routine; both modes go through the proposal sheet. |
-| Unified task surface: pull up to the large detent = full editor (iPhone); one M3 bottom sheet (Android) | EP F3, EP F6 | OPEN G2-5 | Save model (autosave vs Save) is undecided; large-detent layout not drawn. | One task surface per platform that grows into the editor; save behaviour per G2-5. |
-| Move opens a day + time picker (fixes the dead tile); M3 dial on Android | EP F3, EP F6 (Design-only) | OPEN G2-7 | Built Move tile is dead (✗). iOS picker not drawn. | Move opens one day-and-time picker; also a screen-reader "Move to…" action. |
-| Day ▾ menu replaces the ⋯ catch-all (Replan · Plan · Reflect · View · Share) | EP I3, I6 (Design-only) | OPEN G2-9 | Uses "Running late", which breaks the no-"late" rule (G3-10). | One grouped Day menu per platform holding every former ⋯ item. |
-| Day menu on Mac/web: Time · Plan · Day · Layout sections; Replan button removed | FA2 Mac Day menu, web popover, empty-day disabled states | OPEN G2-9 | Has no Plan / Reality item, which the phone Day menu has (parity loss on wide). | Wide Day menu as drawn, plus a Reality-thread entry. |
-| "Need More Time…" behaves like the built Running late | FA2 open items | OPEN G2-9, G3-10 | None with built behaviour. Name differs across boards. | Rename only; extend the live task and move the rest, as built. |
-| One set of increments +5 / +15 / +30 everywhere | FA2 inspector, Day menu, web chips | OPEN G3-11 | Phones (EP F3, EPM) and EM show only +15 / +30. Built app has +5. | Show +5, +15 and +30 on every platform; check 44 pt targets on phones. |
-| "Plan from Inbox · 3" button on the empty iPhone day | EP F4 | OPEN G2-13 | Owner removed the Inbox tray; unclear if this button too (ED-039). | Keep or remove per G2-13; it is a built empty-day action. |
-| No Inbox suggestions on an empty minimal day | EPM F4 | OPEN G2-13 | None found. | Empty minimal day shows Add only; Inbox stays one tab away. |
-| Done tasks folded into one "Earlier · 3 done" row | EPM F2, EM Day column | OPEN G3-12 | doc 14 §4 keeps done tasks in place; the count is a judging number. | Fold or keep in place per G3-12. |
-| Summary line shows time, not counts | EPM F1 note, EM toolbar | OPEN G3-12 | Full EP shows "3 of 9 done" (fine in Full). | Minimal summary shows time only. |
+| Settings leaves the tab bar: avatar on phones, ⌘, own window on Mac, sidebar foot and `/settings` on web | EP F1, F5; EPM F1, F5; EM sidebar; FA2 platform note | OPEN G2-3 | Built app has a Settings tab; every entry must still reach Settings. | Settings opens from the avatar on phones, ⌘, window on Mac, sidebar foot on web. · **Close-out (ED-335):** settled: G2-3 ED-238 |
+| Brain dump and Routine as Add modes (segmented Task · Brain dump · Routine; hold on +; M3 FAB menu) | EP F2, EP I5 | OPEN G2-8 | iOS hold menu is not drawn; a hold-only path needs a visible alternative (accessibility). | Add offers Task, Brain dump and Routine; both modes go through the proposal sheet. · **Close-out (ED-335):** settled: G2-8 ED-091 |
+| Unified task surface: pull up to the large detent = full editor (iPhone); one M3 bottom sheet (Android) | EP F3, EP F6 | OPEN G2-5 | Save model (autosave vs Save) is undecided; large-detent layout not drawn. | One task surface per platform that grows into the editor; save behaviour per G2-5. · **Close-out (ED-335):** settled: G2-5 ED-086 |
+| Move opens a day + time picker (fixes the dead tile); M3 dial on Android | EP F3, EP F6 (Design-only) | OPEN G2-7 | Built Move tile is dead (✗). iOS picker not drawn. | Move opens one day-and-time picker; also a screen-reader "Move to…" action. · **Close-out (ED-335):** settled: G2-7 ED-077, ED-099 |
+| Day ▾ menu replaces the ⋯ catch-all (Replan · Plan · Reflect · View · Share) | EP I3, I6 (Design-only) | OPEN G2-9 | Uses "Running late", which breaks the no-"late" rule (G3-10). | One grouped Day menu per platform holding every former ⋯ item. · **Close-out (ED-335):** settled: G2-9 ED-093; G3-10 ED-162 |
+| Day menu on Mac/web: Time · Plan · Day · Layout sections; Replan button removed | FA2 Mac Day menu, web popover, empty-day disabled states | OPEN G2-9 | Has no Plan / Reality item, which the phone Day menu has (parity loss on wide). | Wide Day menu as drawn, plus a Reality-thread entry. · **Close-out (ED-335):** settled: G2-9 ED-093 |
+| "Need More Time…" behaves like the built Running late | FA2 open items | OPEN G2-9, G3-10 | None with built behaviour. Name differs across boards. | Rename only; extend the live task and move the rest, as built. · **Close-out (ED-335):** settled: G2-9 ED-093; G3-10 ED-162 |
+| One set of increments +5 / +15 / +30 everywhere | FA2 inspector, Day menu, web chips | OPEN G3-11 | Phones (EP F3, EPM) and EM show only +15 / +30. Built app has +5. | Show +5, +15 and +30 on every platform; check 44 pt targets on phones. · **Close-out (ED-335):** settled: G3-11 ED-163 |
+| "Plan from Inbox · 3" button on the empty iPhone day | EP F4 | OPEN G2-13 | Owner removed the Inbox tray; unclear if this button too (ED-039). | Keep or remove per G2-13; it is a built empty-day action. · **Close-out (ED-335):** settled: G2-13 ED-077, adopted from board; owner question open (ED-335) |
+| No Inbox suggestions on an empty minimal day | EPM F4 | OPEN G2-13 | None found. | Empty minimal day shows Add only; Inbox stays one tab away. · **Close-out (ED-335):** settled: G2-13 ED-077, adopted from board; owner question open (ED-335) |
+| Done tasks folded into one "Earlier · 3 done" row | EPM F2, EM Day column | OPEN G3-12 | doc 14 §4 keeps done tasks in place; the count is a judging number. | Fold or keep in place per G3-12. · **Close-out (ED-335):** settled: G3-12 ED-164 |
+| Summary line shows time, not counts | EPM F1 note, EM toolbar | OPEN G3-12 | Full EP shows "3 of 9 done" (fine in Full). | Minimal summary shows time only. · **Close-out (ED-335):** settled: G3-12 ED-164 |
 | Focus by tapping or clicking the big now-dot | EPM F1, EM caption | ADOPTED FROM BOARD | Accessibility: the orb must be a labelled button; EPM phones show no separate Focus button. | The orb is a button labelled "Focus"; keep the Focus tile/button route too. |
-| Task screen opens in the Day column and closes back to the Day (✕ / Esc) | EM I-task, EM web caption | OPEN G2-5, G2-6 | EM's set lacks Done and Delete (G2-6 option A wants doc 14's set). Web version only described. | Wide minimal task screen in the right column with Esc focus return. |
-| Hide the Day column (⌥⌘D / "Hide the day thread") | EM Mac, EM web | OPEN G2-10 (key) | G2-10 proposes ⌥⌘I instead of ⌥⌘D. | Day column can be hidden and shown; key per G2-10. |
-| Everything else finder (⌘K Mac, `k` web; also finds tasks) | EM I-finder | OPEN G2-4, G2-10 | FA2 uses ⌘K for the command palette; one key cannot mean both. | One ⌘K meaning across modes, per G2-10; finder contents per G2-4. |
-| ⌘K command palette (commands and tasks) | FA2 palette inset | OPEN G2-10 | Clashes with EM's ⌘K finder. | Palette as drawn, once G2-10 settles ⌘K. |
-| Mac keys: ⌘1–4 = Day / 3 Days / Week / Month; Inbox ⇧⌘I; Today ⌘T; ⌘← ⌘→; ⌘[ ⌘]; Go to Date ⇧⌘T; Search ⌘F; Move ⇧⌘M; Focus ⇧⌘F; Show Less ⇧⌘L | FA2 key table, View and Go menus | OPEN G2-10 | Built ⌘2 = Inbox changes meaning. EM uses ⌘1–4 = Now/Day/Calendar/Inbox, ⌘F = Focus, ⌘M Move, ⇧⌘G Go to date. | One key scheme for both modes per G2-10. |
-| Web single keys (n, b, /, t, [ ], d 3 w m, g, i, ⇧L, f, ?); never ⌘/Ctrl N, T, W, L, 1–4 | FA2 web hint bar, key table; EM web hint | OPEN G2-10 | Built web binds ⌘1–4, which browsers use for tabs. | Single keys outside text fields, per G2-10. |
-| Web routes: `/today?task=`, `/3-days/<date>`, `/week/<date>`, `/month/<yyyy-mm>`, `/task/<id>` redirects on wide, `/now` only in Minimal | FA2 route table; EM web `/now` | OPEN G2-11 | Path URLs need a static-host rewrite. EW's `/plan/...` is not adopted. | Keep every built route; add dated routes per G2-11. |
+| Task screen opens in the Day column and closes back to the Day (✕ / Esc) | EM I-task, EM web caption | OPEN G2-5, G2-6 | EM's set lacks Done and Delete (G2-6 option A wants doc 14's set). Web version only described. | Wide minimal task screen in the right column with Esc focus return. · **Close-out (ED-335):** settled: G2-5 ED-086; G2-6 ED-088 |
+| Hide the Day column (⌥⌘D / "Hide the day thread") | EM Mac, EM web | OPEN G2-10 (key) | G2-10 proposes ⌥⌘I instead of ⌥⌘D. | Day column can be hidden and shown; key per G2-10. · **Close-out (ED-335):** settled: G2-10 ED-095 |
+| Everything else finder (⌘K Mac, `k` web; also finds tasks) | EM I-finder | OPEN G2-4, G2-10 | FA2 uses ⌘K for the command palette; one key cannot mean both. | One ⌘K meaning across modes, per G2-10; finder contents per G2-4. · **Close-out (ED-335):** settled: G2-4 ED-081, ED-084; G2-10 ED-095 |
+| ⌘K command palette (commands and tasks) | FA2 palette inset | OPEN G2-10 | Clashes with EM's ⌘K finder. | Palette as drawn, once G2-10 settles ⌘K. · **Close-out (ED-335):** settled: G2-10 ED-095 |
+| Mac keys: ⌘1–4 = Day / 3 Days / Week / Month; Inbox ⇧⌘I; Today ⌘T; ⌘← ⌘→; ⌘[ ⌘]; Go to Date ⇧⌘T; Search ⌘F; Move ⇧⌘M; Focus ⇧⌘F; Show Less ⇧⌘L | FA2 key table, View and Go menus | OPEN G2-10 | Built ⌘2 = Inbox changes meaning. EM uses ⌘1–4 = Now/Day/Calendar/Inbox, ⌘F = Focus, ⌘M Move, ⇧⌘G Go to date. | One key scheme for both modes per G2-10. · **Close-out (ED-335):** settled: G2-10 ED-095 |
+| Web single keys (n, b, /, t, [ ], d 3 w m, g, i, ⇧L, f, ?); never ⌘/Ctrl N, T, W, L, 1–4 | FA2 web hint bar, key table; EM web hint | OPEN G2-10 | Built web binds ⌘1–4, which browsers use for tabs. | Single keys outside text fields, per G2-10. · **Close-out (ED-335):** settled: G2-10 ED-095 |
+| Web routes: `/today?task=`, `/3-days/<date>`, `/week/<date>`, `/month/<yyyy-mm>`, `/task/<id>` redirects on wide, `/now` only in Minimal | FA2 route table; EM web `/now` | OPEN G2-11 | Path URLs need a static-host rewrite. EW's `/plan/...` is not adopted. | Keep every built route; add dated routes per G2-11. · **Close-out (ED-335):** settled: G2-11 ED-097 |
 | What the switch keeps: date, open task, view, scroll | FA2 "What the switch keeps" | ADOPTED FROM BOARD (behaviour approved by ED-067) | None found. | Restore date, task, view and scroll on return to Full. |
-| Unsaved inspector edits on a mode switch | FA2 "What the switch keeps" | OPEN G2-5 | None until G2-5. | Follow the G2-5 save model. |
-| Multi-selection and drag in progress cancelled on switch | FA2 "What the switch keeps" | OPEN (ED-072 open item; no register ID yet) | Needs a register entry. | Cancel on switch with Undo available, if approved. |
-| Switching layout is not a Back step; a `/week` link while Minimal is on | FA2 open items | OPEN G2-11 (link); Back rule has no register ID | None found. | Decide before routing work. |
-| Extra Full sidebar rows: Plan (Inbox, Routines, Brain dump), Review | FA2 sidebar | OPEN G2-2 | None found. | Rows as drawn, per G2-2. |
-| "Lists (future, not part of this release)" sketch | FA2 sidebar | OPEN G2-2 | Outside parity (brief §9, Q6). | Do not build Lists. |
+| Unsaved inspector edits on a mode switch | FA2 "What the switch keeps" | OPEN G2-5 | None until G2-5. | Follow the G2-5 save model. · **Close-out (ED-335):** settled: G2-5 ED-086 |
+| Multi-selection and drag in progress cancelled on switch | FA2 "What the switch keeps" | OPEN (ED-072 open item; no register ID yet) | Needs a register entry. | Cancel on switch with Undo available, if approved. · **Close-out (ED-335):** drawn R2-6 (ED-279) |
+| Switching layout is not a Back step; a `/week` link while Minimal is on | FA2 open items | OPEN G2-11 (link); Back rule has no register ID | None found. | Decide before routing work. · **Close-out (ED-335):** settled: G2-11 ED-097 |
+| Extra Full sidebar rows: Plan (Inbox, Routines, Brain dump), Review | FA2 sidebar | OPEN G2-2 | None found. | Rows as drawn, per G2-2. · **Close-out (ED-335):** settled: G2-2 ED-080 |
+| "Lists (future, not part of this release)" sketch | FA2 sidebar | OPEN G2-2 | Outside parity (brief §9, Q6). | Do not build Lists. · **Close-out (ED-335):** settled: G2-2 ED-080 |
 | Hover lift shadow on a web block (Lunch) | FA2 web Day | RESOLVED G3-5 option C (ED-116); merged into FA2 (Lunch hover) | None: rest flat, hover tint `#F5F1EB` + hairline, lift only while dragging (rules §7.4). Motion timing, scale and haptics OPEN (§7.5). | Implement per rules §7.4 when Workspace blocks are built; not yet implemented. |
 | Mac Now mini window (Window › Show Now ⌥⌘0) | EM I-mini | ADOPTED FROM BOARD, feasibility check required (ED-066) | New window type; may not be possible in Flutter today. | Spike first; build only if feasible. |
 | Mac status item menu (Mark Done, Need More Time?, Show Now Window) | EM I-menu | ADOPTED FROM BOARD, feasibility check required (ED-066) | A status item is already built (`DayDotStatusItem.swift`); EM tags it "Built today". Only the new menu items need checking. | Extend the built status item; keep its current function. |
-| Context menu set (Open, Mark Done, Move To…, Duplicate, Copy as Text, Need More Time ▸, Shift the Rest, Focus, Move to Trash) | FA2 Mac right-click; EM horizon right-click | OPEN G2-10, G3-10 | EM uses Delete ⌫ and lacks Need More Time; FA2 uses Move to Trash ⌘⌫. | One item set and naming in both modes; native PlatformMenu. |
-| "Gentle Day" / "Low-energy day" / "Low-Energy Mode" | EM menu caption and finder; EPM F2; FA2 Day menu | OPEN G3-10 | Built name is "Low-energy mode". | One name per G3-10. |
-| iPhone unselected tab-label grey #8E8E93 (≈3.1:1) vs #6E6E73 | EP vs EPM tab bars | OPEN G3-8 | Fails WCAG 4.5:1 text contrast. | Use a grey that passes 4.5:1. |
+| Context menu set (Open, Mark Done, Move To…, Duplicate, Copy as Text, Need More Time ▸, Shift the Rest, Focus, Move to Trash) | FA2 Mac right-click; EM horizon right-click | OPEN G2-10, G3-10 | EM uses Delete ⌫ and lacks Need More Time; FA2 uses Move to Trash ⌘⌫. | One item set and naming in both modes; native PlatformMenu. · **Close-out (ED-335):** settled: G2-10 ED-095; G3-10 ED-162 |
+| "Gentle Day" / "Low-energy day" / "Low-Energy Mode" | EM menu caption and finder; EPM F2; FA2 Day menu | OPEN G3-10 | Built name is "Low-energy mode". | One name per G3-10. · **Close-out (ED-335):** settled: G3-10 ED-162 |
+| iPhone unselected tab-label grey #8E8E93 (≈3.1:1) vs #6E6E73 | EP vs EPM tab bars | OPEN G3-8 | Fails WCAG 4.5:1 text contrast. | Use a grey that passes 4.5:1. · **Close-out (ED-335):** settled: G3-8 ED-154 |
 | iOS switch on-state in teal | EP iPhone frames | RESOLVED G3-4 option A (ED-112) · design verification PASS (ED-117) | None in the designs: 8 iOS switches `#11615C`. Built app: 3 switches without a tint (ED-117). | Flutter: NOT YET IMPLEMENTED / VERIFIED (implementation checks in rules §4.2). Dark mode: PENDING G4-6. |
 | Whole iPhone keyboard look | EP F2, EPM F3 | RESOLVED G3-7 C (ED-135) | Stock keyboard drawn; teal key removed. | Stock keyboard; neutral return adds; Add in field row / nav bar. |
-| Glass and vibrancy: native or approximated | EP, EPM, EM notes | OPEN G3-6 | Native glass needs platform views; reduced-transparency fallback not drawn. | Per G3-6, with a reduced-transparency fallback. |
-| Large scale vs "C confidence" | all boards | OPEN G3-1 | None found. | Keep large values until G3-1. |
-| Web orb drawn like the Mac orb | EM web Now | OPEN G3-2 | None found. | One orb drawing per G3-2. |
-| Minimal phones: Search, Past days, Routines, Export, Trash under Settings › Everything else | EPM band, EPM F3 note | OPEN G2-4 | None found. | Minimal Settings has an Everything else row that reaches each item. |
+| Glass and vibrancy: native or approximated | EP, EPM, EM notes | OPEN G3-6 | Native glass needs platform views; reduced-transparency fallback not drawn. | Per G3-6, with a reduced-transparency fallback. · **Close-out (ED-335):** settled: G3-6 ED-133 |
+| Large scale vs "C confidence" | all boards | OPEN G3-1 | None found. | Keep large values until G3-1. · **Close-out (ED-335):** settled: G3-1 ED-104 |
+| Web orb drawn like the Mac orb | EM web Now | OPEN G3-2 | None found. | One orb drawing per G3-2. · **Close-out (ED-335):** settled: G3-2 ED-106 |
+| Minimal phones: Search, Past days, Routines, Export, Trash under Settings › Everything else | EPM band, EPM F3 note | OPEN G2-4 | None found. | Minimal Settings has an Everything else row that reaches each item. · **Close-out (ED-335):** settled: G2-4 ED-081, ED-084 |
 | Routines hint after three similar mornings | EPM band | ADOPTED FROM BOARD | None found (built hint). | Keep the built hint as a Routines entry in Minimal. |
 | Two chips at most and a "Lands at" preview in minimal Add | EPM F3, F6 (Design-only) | ADOPTED FROM BOARD | None found. | Minimal Add shows at most two parsed chips and the landing preview. |
 | Calendar tab Month screen with day preview card, Open day, Add to selected day | EPC iPhone and Android Calendar frames (Proposed · for review) | APPROVED (ED-075, ED-079) | Drawn on EP Calendar row. | Build from the shared month grid; 52 × 62 pt / 56 × 62 dp day buttons. |
 | Pull-down month drawn with the same grid and dots | EPC iPhone Today | ADOPTED FROM BOARD | None found. | Reuse the one month component for the peek. |
 | Android title opens the month as an M3 modal bottom sheet | EPC Android Today | ADOPTED FROM BOARD | ED-047 said Android would use the M3 date picker; EPC uses the app grid in a sheet. ED-075 allows adapting controls. | Bottom sheet with the shared grid; drag down or Back closes. |
 | Up to three task dots per day, then +n; large text swaps dots for a count | EPC "One month component" | ADOPTED FROM BOARD | None found. | Month cells follow this rule at every text size. |
-| Minimal phones reach Month, Week and Go to date through Everything else | EPC "Minimal mode" note | OPEN G2-4 | EPM band says the date ▾ opens the month sheet in Minimal. Two boards disagree. | Pick one minimal path; the title ▾ sheet is the simpler one. |
-| Tablets get Month · Week in the Calendar view | EPC note | OPEN G4-4 | No tablet layout is drawn. | Per G4-4. |
+| Minimal phones reach Month, Week and Go to date through Everything else | EPC "Minimal mode" note | OPEN G2-4 | EPM band says the date ▾ opens the month sheet in Minimal. Two boards disagree. | Pick one minimal path; the title ▾ sheet is the simpler one. · **Close-out (ED-335):** settled: G2-4 ED-081, ED-084 |
+| Tablets get Month · Week in the Calendar view | EPC note | OPEN G4-4 | No tablet layout is drawn. | Per G4-4. · **Close-out (ED-335):** settled: G4-4 ED-171 |
 
 ---
 
@@ -168,72 +168,72 @@ Home columns name where each feature lives in Concept E. "Hidden in Minimal, rea
 | Feature | E home on phones | E home on Mac/web (FA2) | E home in Minimal | Status | Verification |
 |---|---|---|---|---|---|
 | Today timeline, day paging ±365 | Today tab (EP F1, F5) | Day view and Week grid | Today tab (EPM F2); EM Day column | APPROVED (ED-069, ED-073, ED-068); paging gesture not drawn | Not started |
-| Go to a date | Title ▾ month sheet (EP I4), Calendar tab (EPC) | Go › Go to Date…, palette, `/day/<date>` | Title ▾ (EPM band); EM toolbar date button, finder | APPROVED phones (ED-075); wide keys OPEN G2-10. Must fix the built UTC/local defect | Not started |
+| Go to a date | Title ▾ month sheet (EP I4), Calendar tab (EPC) | Go › Go to Date…, palette, `/day/<date>` | Title ▾ (EPM band); EM toolbar date button, finder | APPROVED phones (ED-075); wide keys OPEN G2-10. Must fix the built UTC/local defect | Not started · **Close-out (ED-335):** settled: G2-10 ED-095 |
 | Week strip, month pull-open | Week strip (EP F1, F5); pull-down kept (EPC) | No strip; Month view instead | Not drawn on EPM; title ▾ sheet | APPROVED (ED-075) | Not started |
 | Month view | Calendar tab Month (EPC) | Calendar views › Month ⌘4 | Hidden in Minimal, reached via title ▾ (EPM) or EM Calendar row and finder | APPROVED (ED-075, ED-073) | Not started |
-| Week view | None on phones (as built) | Calendar views › Week | Hidden in Minimal, reached via EM finder "Week" or Show Everything | APPROVED (ED-073); tablets OPEN G4-4 | Not started |
+| Week view | None on phones (as built) | Calendar views › Week | Hidden in Minimal, reached via EM finder "Week" or Show Everything | APPROVED (ED-073); tablets OPEN G4-4 | Not started · **Close-out (ED-335):** settled: G4-4 ED-171; tablets R2-12 (ED-293) |
 | Three-day spread + Inbox sidebar | None (as built) | 3 days view + Inbox column | Hidden in Minimal, reached via Show Everything; EM Inbox row | APPROVED (ED-073); the A-Wide spread itself is rejected (ED-003) | Not started |
 | Drag to move, overlaps, knot | Thread (EP F1, F5 captions) | Grid drag, drag from Inbox | EPM F2, EM web hint | ADOPTED FROM BOARD; drag states APPROVED R2-25 (ED-328) | Not started |
-| Multi-select + selection bar (incl. Save as routine) | Tip only "Hold a dot to select several tasks" | Not drawn | EPM caption only | NOT DESIGNED: draw the selection bar, n selected, Save as routine, ⇧/⌘-click | Not started |
-| Shift the rest / followers / pin / Rebalance | Task sheet Shift the rest; Day menu | Day menu Time section, context menu, inspector | Need more time? popover "Shift the rest" | OPEN G2-9; pin and drag chip NOT DESIGNED | Not started |
-| Running late +5/15/30 | "Need more time? +15 +30" (EP F3); Day menu "Running late" | Need More Time… ▸ +5/+15/+30 | Need more time? +15/+30 (EPM, EM) | OPEN G3-11, G3-10 | Not started |
-| Now-marker, live dot, done + Undo, ⌘Z | Now-bead, ring dot on every thread | Now line and bead; ⌘Z | Orb and horizon | APPROVED (ED-009, ED-066); Undo toast NOT DESIGNED | Not started |
-| Tasks before Wake Up fold | Not drawn (EP F1 shows Morning run unfolded) | Not drawn | Not drawn | NOT DESIGNED: draw the fold, closed and open | Not started |
-| Reality thread | Day menu › View › Plan / Reality (EP I3, I6) | Missing from FA2 Day and View menus | Not listed in either band | NOT DESIGNED: the Reality screen everywhere, and a wide entry | Not started |
-| Duplicate day, Copy day as text | Day menu Plan / Share | Day menu Day section | Hidden in Minimal phones, reached via Show everything; EM Day menu and finder | OPEN G2-9; target-day picker NOT DESIGNED | Not started |
+| Multi-select + selection bar (incl. Save as routine) | Tip only "Hold a dot to select several tasks" | Not drawn | EPM caption only | NOT DESIGNED: draw the selection bar, n selected, Save as routine, ⇧/⌘-click | Not started · **Close-out (ED-335):** drawn R2-6 (ED-279) |
+| Shift the rest / followers / pin / Rebalance | Task sheet Shift the rest; Day menu | Day menu Time section, context menu, inspector | Need more time? popover "Shift the rest" | OPEN G2-9; pin and drag chip NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-9 ED-093; R2-5, R2-26 (ED-276, ED-329); pin and Rebalance still to design |
+| Running late +5/15/30 | "Need more time? +15 +30" (EP F3); Day menu "Running late" | Need More Time… ▸ +5/+15/+30 | Need more time? +15/+30 (EPM, EM) | OPEN G3-11, G3-10 | Not started · **Close-out (ED-335):** settled: G3-10 ED-162; G3-11 ED-163; R2-26 (ED-329) |
+| Now-marker, live dot, done + Undo, ⌘Z | Now-bead, ring dot on every thread | Now line and bead; ⌘Z | Orb and horizon | APPROVED (ED-009, ED-066); Undo toast NOT DESIGNED | Not started · **Close-out (ED-335):** Undo R2-7 (ED-281) |
+| Tasks before Wake Up fold | Not drawn (EP F1 shows Morning run unfolded) | Not drawn | Not drawn | NOT DESIGNED: draw the fold, closed and open | Not started · **Close-out (ED-335):** still to design |
+| Reality thread | Day menu › View › Plan / Reality (EP I3, I6) | Missing from FA2 Day and View menus | Not listed in either band | NOT DESIGNED: the Reality screen everywhere, and a wide entry | Not started · **Close-out (ED-335):** R2-23, R2-29 (ED-324, ED-332) |
+| Duplicate day, Copy day as text | Day menu Plan / Share | Day menu Day section | Hidden in Minimal phones, reached via Show everything; EM Day menu and finder | OPEN G2-9; target-day picker NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-9 ED-093; R2-22, R2-29, R2-30 |
 | Minimal layout switch | Day menu Show less / Show everything; Settings row 1 | View › Show Less, Day menu Layout, Settings row 1 | Day ▾ first item; EM View menu, finder | APPROVED (ED-067); onboarding step 0 NOT DESIGNED | Not started |
 
 ### C.2 Capture and editing
 
 | Feature | E home on phones | E home on Mac/web (FA2) | E home in Minimal | Status | Verification |
 |---|---|---|---|---|---|
-| Quick Add with natural-language time | + button, Android FAB (EP F2) | Toolbar + / capture field, ⌘N / `n` | EPM F3, F6; EM Add field | ADOPTED FROM BOARD; wide Add popover and live chips NOT DESIGNED | Not started |
+| Quick Add with natural-language time | + button, Android FAB (EP F2) | Toolbar + / capture field, ⌘N / `n` | EPM F3, F6; EM Add field | ADOPTED FROM BOARD; wide Add popover and live chips NOT DESIGNED | Not started · **Close-out (ED-335):** tablets R2-3 (ED-271); Mac and web Add popover still to design |
 | Paste a list → tasks | Paste into Add (EP I2) | Capture field "Paste a list for several" | Paste into Add → Brain dump proposal | ADOPTED FROM BOARD | Not started |
-| Add another, duration chips, typed time | EP F2 | Not drawn | Two chips at most (EPM F3) | ADOPTED FROM BOARD; wide NOT DESIGNED | Not started |
-| Task sheet, `/task/:id` | Medium detent (EP F3), M3 sheet (EP F6) | Inspector; `/task/<id>` redirects | Minimal sheet described, not drawn; EM right-column task screen | OPEN G2-5, G2-6, G2-11; dead Move tile OPEN G2-7 | Not started |
-| Editor fields (time, duration, colour, icon, notes, subtasks, repeat, alerts ≤ 5, pin, travel, energy) | Large detent not drawn | Inspector: date, time, repeat, alerts, subtasks, overlaps, notes | Task sheet › More; EM More details | OPEN G2-5; colour, icon, pin, travel, energy NOT DESIGNED | Not started |
-| Inbox, schedule in ≤ 2 taps | Inbox tab with badge | Inbox column, drag, `m` | Inbox tab (EPM), EM Inbox row | APPROVED (ED-038, ED-068, ED-073); phone Inbox screen NOT DESIGNED; picker OPEN G2-12 | Not started |
-| Brain dump (typed) | Add segment, FAB menu, Day menu | Sidebar Plan › Brain dump, Inbox column block, Day menu ⇧⌘N | Paste several lines into Add; EM ⇧⌘N and finder | OPEN G2-8, G2-2; Brain dump screen NOT DESIGNED | Not started |
-| Brain dump (spoken) | Not drawn | Dictate mic on the Brain dump block | Hidden in Minimal (as built) | NOT DESIGNED: listening, permission denied, web fallback | NV: needs device |
-| On-device AI and AI status | Not drawn | Not drawn | Not drawn | NOT DESIGNED: AI status row and unavailable state | NV: needs device |
-| Proposal sheet | "Add 4 tasks" (EP I2) | "Nothing is added until you accept" + Plan it | Brain dump proposal (EPM F3) | ADOPTED FROM BOARD; generic sheet NOT DESIGNED | Not started |
-| Break it down | Not drawn | Not drawn | EM More details list only | NOT DESIGNED: thinking, proposal, AI unavailable | Not started |
-| Smallest step, Unstick, Rebalance | Not drawn | Rebalance… in Day menu | Not drawn | NOT DESIGNED (Smallest step, Unstick); Rebalance OPEN G2-9 | Not started |
-| Routines (save, drop on a day) | Add segment, FAB menu, Day menu, empty day "Drop a routine" | Sidebar Plan › Routines, Inbox column, Day menu | Hidden in Minimal, reached via hint or Settings › Everything else (EPM); EM View › Routines, finder | OPEN G2-2, G2-8; Routines page NOT DESIGNED | Not started |
-| Focus `/focus/:id` | Task sheet Focus tile | Inspector Focus, context menu | Big-dot tap (EPM); EM Focus button | APPROVED as a feature (ED-065, ED-066); Focus session screen NOT DESIGNED | Not started |
-| Pick today's one thing | Day menu Plan | Day menu Plan | Not listed on EPM or EM | OPEN G2-9; screen and minimal path NOT DESIGNED | Not started |
-| Low-energy mode | Day menu View | Day menu Layout (✓) | Day ▾ "Low-energy day"; EM "Gentle Day" | OPEN G3-10; header switch NOT DESIGNED | Not started |
+| Add another, duration chips, typed time | EP F2 | Not drawn | Two chips at most (EPM F3) | ADOPTED FROM BOARD; wide NOT DESIGNED | Not started · **Close-out (ED-335):** no Add another (ED-152); wide Add still to design |
+| Task sheet, `/task/:id` | Medium detent (EP F3), M3 sheet (EP F6) | Inspector; `/task/<id>` redirects | Minimal sheet described, not drawn; EM right-column task screen | OPEN G2-5, G2-6, G2-11; dead Move tile OPEN G2-7 | Not started · **Close-out (ED-335):** settled: G2-5 ED-086; G2-6 ED-088; G2-7 ED-077, ED-099; G2-11 ED-097; R2-4, R2-27 (ED-274, ED-330) |
+| Editor fields (time, duration, colour, icon, notes, subtasks, repeat, alerts ≤ 5, pin, travel, energy) | Large detent not drawn | Inspector: date, time, repeat, alerts, subtasks, overlaps, notes | Task sheet › More; EM More details | OPEN G2-5; colour, icon, pin, travel, energy NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-5 ED-086; R2-4, R2-15, R2-27; pin, travel and energy captions only |
+| Inbox, schedule in ≤ 2 taps | Inbox tab with badge | Inbox column, drag, `m` | Inbox tab (EPM), EM Inbox row | APPROVED (ED-038, ED-068, ED-073); phone Inbox screen NOT DESIGNED; picker OPEN G2-12 | Not started · **Close-out (ED-335):** settled: G2-12 ED-099; R2-13, R2-28 (ED-295, ED-331) |
+| Brain dump (typed) | Add segment, FAB menu, Day menu | Sidebar Plan › Brain dump, Inbox column block, Day menu ⇧⌘N | Paste several lines into Add; EM ⇧⌘N and finder | OPEN G2-8, G2-2; Brain dump screen NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-2 ED-080; G2-8 ED-091 |
+| Brain dump (spoken) | Not drawn | Dictate mic on the Brain dump block | Hidden in Minimal (as built) | NOT DESIGNED: listening, permission denied, web fallback | NV: needs device · **Close-out (ED-335):** still to design |
+| On-device AI and AI status | Not drawn | Not drawn | Not drawn | NOT DESIGNED: AI status row and unavailable state | NV: needs device · **Close-out (ED-335):** R2-23 (ED-324) |
+| Proposal sheet | "Add 4 tasks" (EP I2) | "Nothing is added until you accept" + Plan it | Brain dump proposal (EPM F3) | ADOPTED FROM BOARD; generic sheet NOT DESIGNED | Not started · **Close-out (ED-335):** R2-22, R2-23 (ED-322, ED-324) |
+| Break it down | Not drawn | Not drawn | EM More details list only | NOT DESIGNED: thinking, proposal, AI unavailable | Not started · **Close-out (ED-335):** R2-23 (ED-324) |
+| Smallest step, Unstick, Rebalance | Not drawn | Rebalance… in Day menu | Not drawn | NOT DESIGNED (Smallest step, Unstick); Rebalance OPEN G2-9 | Not started · **Close-out (ED-335):** settled: G2-9 ED-093; R2-23 (ED-324); Rebalance still to design |
+| Routines (save, drop on a day) | Add segment, FAB menu, Day menu, empty day "Drop a routine" | Sidebar Plan › Routines, Inbox column, Day menu | Hidden in Minimal, reached via hint or Settings › Everything else (EPM); EM View › Routines, finder | OPEN G2-2, G2-8; Routines page NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-2 ED-080; G2-8 ED-091 |
+| Focus `/focus/:id` | Task sheet Focus tile | Inspector Focus, context menu | Big-dot tap (EPM); EM Focus button | APPROVED as a feature (ED-065, ED-066); Focus session screen NOT DESIGNED | Not started · **Close-out (ED-335):** R2-9, R2-26, R2-30 |
+| Pick today's one thing | Day menu Plan | Day menu Plan | Not listed on EPM or EM | OPEN G2-9; screen and minimal path NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-9 ED-093; Day menu path still to design |
+| Low-energy mode | Day menu View | Day menu Layout (✓) | Day ▾ "Low-energy day"; EM "Gentle Day" | OPEN G3-10; header switch NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G3-10 ED-162; R2-22 (ED-322) |
 
 ### C.3 Mornings, nights and alerts
 
 | Feature | E home on phones | E home on Mac/web (FA2) | E home in Minimal | Status | Verification |
 |---|---|---|---|---|---|
 | Day shape, different days, week start, time format | Settings (not drawn); caps on thread | Settings row list names "Day shape" | Not drawn | No Day shape page: the row is removed (ED-321); its settings are in Wake Up and Wind Down (ED-084, R2-18) and Appearance (ED-161); onboarding Your day step APPROVED (R2-16, ED-305) | Not started |
-| Sleep target, Wind Down from tomorrow, learn offer, night on the day dot | Not drawn | Not drawn | Moon cap in end-of-day inset (EPM) | NOT DESIGNED: night editor | Not started |
+| Sleep target, Wind Down from tomorrow, learn offer, night on the day dot | Not drawn | Not drawn | Moon cap in end-of-day inset (EPM) | NOT DESIGNED: night editor | Not started · **Close-out (ED-335):** Settings › Wake Up and Wind Down (E-Phones, R2-11) |
 | Wake Up alarm (alarm-grade) | Drawn: E-R2-19-B | Not drawn (notification fallback) | Not drawn | APPROVED (R2-19 Option B, ED-314): ringing, snoozed, permission, iOS 16–25 fallback, tablets | NV: needs device |
 | Snooze, Wake Up card, Wake Up Check | Drawn: E-R2-19-B | Not drawn | Not drawn | APPROVED (R2-19 Option B, ED-314) | NV: needs device |
 | Missions: stand up, walk, light | Drawn: E-R2-19-B | — (as built) | Not drawn | APPROVED (R2-19 Option B, ED-314); also drawn for tablets, not offered there yet | NV: needs device |
 | Missions: breathe, catch the dot, one thing; hold-to-skip | Drawn: E-R2-19-B | Not drawn | Not drawn | APPROVED (R2-19 Option B, ED-314), with Can't right now (hold 5 s); also drawn for tablets | Not started |
-| Wind Down review `/review` | Day menu Reflect › Review the day | Day menu, sidebar Review | End-of-day card (EPM inset); EM Day menu, finder | OPEN G2-12; full review page NOT DESIGNED | Not started |
-| Task alerts (lead time, ≤ 5, exactly once) | Not drawn (in More) | Inspector Alerts + Add alert | Task sheet › More | ADOPTED FROM BOARD (wide); phones NOT DESIGNED | NV: needs device |
-| Notification health, test alarm | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started |
-| Quiet hours, day-start summary, Wind Down reminder, nudges | Not drawn | Not drawn | Not drawn | NOT DESIGNED (Settings) | Not started |
-| Sounds (per dot, Start sound, haptics) | Not drawn | Not drawn | Not drawn | NOT DESIGNED | NV: needs device |
+| Wind Down review `/review` | Day menu Reflect › Review the day | Day menu, sidebar Review | End-of-day card (EPM inset); EM Day menu, finder | OPEN G2-12; full review page NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-12 ED-099; R2-14 (ED-297) |
+| Task alerts (lead time, ≤ 5, exactly once) | Not drawn (in More) | Inspector Alerts + Add alert | Task sheet › More | ADOPTED FROM BOARD (wide); phones NOT DESIGNED | NV: needs device · **Close-out (ED-335):** R2-20, R2-27 (ED-317, ED-330) |
+| Notification health, test alarm | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started · **Close-out (ED-335):** R2-20 (ED-317) |
+| Quiet hours, day-start summary, Wind Down reminder, nudges | Not drawn | Not drawn | Not drawn | NOT DESIGNED (Settings) | Not started · **Close-out (ED-335):** R2-20 (ED-317) |
+| Sounds (per dot, Start sound, haptics) | Not drawn | Not drawn | Not drawn | NOT DESIGNED | NV: needs device · **Close-out (ED-335):** Sound page still to design |
 
 ### C.4 Data, sync and accounts
 
 | Feature | E home on phones | E home on Mac/web (FA2) | E home in Minimal | Status | Verification |
 |---|---|---|---|---|---|
-| Encrypted local DB, recovery screen | Not drawn | Not drawn | Not drawn | NOT DESIGNED: recovery screen | Not started |
-| Sync + status (banner, sheet, sidebar line) | Sync icon in the glass capsule / top bar | Sidebar foot "Synced · 10:42" | Top bar (EPM); EM toolbar / footer "Synced" | ADOPTED FROM BOARD (indicator); banner and sheet OPEN G4-7. Must fix the built pull stall | Not started |
-| Account: Apple, Google, email; sign out everywhere; delete | Avatar | Settings window | Avatar; EM Settings | OPEN G2-3; account screens NOT DESIGNED | Not started |
-| App lock | Not drawn | Not drawn (— on web) | Not drawn | NOT DESIGNED | Not started |
-| Backups, restore, export JSON/CSV/ICS, import | Not drawn | File › Export…; Settings › Data | Hidden in Minimal, reached via Settings › Everything else › Data (EPM); EM finder, File › Export… | OPEN G2-4; panels NOT DESIGNED | Not started |
-| Trash (30 days), Undo/Redo | Swipe Delete (EP I1) | Move to Trash ⌘⌫, ⌘Z | EPM swipe Delete; EM finder "Backups and Trash" | OPEN G3-10 (name); Trash page and Undo toast NOT DESIGNED | Not started |
+| Encrypted local DB, recovery screen | Not drawn | Not drawn | Not drawn | NOT DESIGNED: recovery screen | Not started · **Close-out (ED-335):** R2-21 (ED-319) |
+| Sync + status (banner, sheet, sidebar line) | Sync icon in the glass capsule / top bar | Sidebar foot "Synced · 10:42" | Top bar (EPM); EM toolbar / footer "Synced" | ADOPTED FROM BOARD (indicator); banner and sheet OPEN G4-7. Must fix the built pull stall | Not started · **Close-out (ED-335):** settled: G4-7 ED-186 to ED-196 |
+| Account: Apple, Google, email; sign out everywhere; delete | Avatar | Settings window | Avatar; EM Settings | OPEN G2-3; account screens NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-3 ED-238; waits on CR-160 |
+| App lock | Not drawn | Not drawn (— on web) | Not drawn | NOT DESIGNED | Not started · **Close-out (ED-335):** R2-24, R2-29, R2-30 |
+| Backups, restore, export JSON/CSV/ICS, import | Not drawn | File › Export…; Settings › Data | Hidden in Minimal, reached via Settings › Everything else › Data (EPM); EM finder, File › Export… | OPEN G2-4; panels NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-4 ED-081, ED-084; R2-21 (ED-319) |
+| Trash (30 days), Undo/Redo | Swipe Delete (EP I1) | Move to Trash ⌘⌫, ⌘Z | EPM swipe Delete; EM finder "Backups and Trash" | OPEN G3-10 (name); Trash page and Undo toast NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G3-10 ED-162; R2-21, R2-30 |
 | Device calendars + write-back | Event row "Calendar, read-only" | Event row; Settings › Calendars | Event on horizon and Day column | ADOPTED FROM BOARD (event row); connect and permission screens NOT DESIGNED | Not started |
-| Google/Microsoft calendars | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started |
+| Google/Microsoft calendars | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started · **Close-out (ED-335):** R2-24, R2-28, R2-29, R2-30 |
 | Search with history, Past days, year strip | Search tab | Sidebar Search ⌘F / `/` | Hidden in Minimal phones, reached via Settings › Everything else; EM Search row; Past days in EM finder | APPROVED as a destination (ED-069, ED-068); Search screen and Past days NOT DESIGNED | Not started |
-| Weekly review + share, learning reveal, hints | Day menu Reflect › This week | Day menu "This Week", sidebar Review | EM View › Reviews, finder; not listed on EPM | OPEN G3-10, G2-12; screen NOT DESIGNED | Not started |
+| Weekly review + share, learning reveal, hints | Day menu Reflect › This week | Day menu "This Week", sidebar Review | EM View › Reviews, finder; not listed on EPM | OPEN G3-10, G2-12; screen NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-12 ED-099; G3-10 ED-162 |
 
 ### C.5 System surfaces
 
@@ -242,54 +242,54 @@ Home columns name where each feature lives in Concept E. "Hidden in Minimal, rea
 | Home / lock-screen widgets | Drawn: E-R2-17 | — (menu bar on Mac) | Not drawn | APPROVED (R2-17, ED-309) | NV: needs device |
 | Live Activity / ongoing notification | Drawn: E-R2-17 | — (web tab live dot not drawn) | Not drawn | APPROVED (R2-17, ED-309); none on iPad | NV: needs device |
 | Controls / Quick Settings tiles | Drawn: E-R2-17 | — | Not drawn | APPROVED (R2-17, ED-309) | NV: needs device |
-| App Intents, Siri & Shortcuts page | Not drawn | — | Not drawn | NOT DESIGNED | Not started |
+| App Intents, Siri & Shortcuts page | Not drawn | — | Not drawn | NOT DESIGNED | Not started · **Close-out (ED-335):** Siri & Shortcuts page still to design |
 | Share into Inbox | Drawn: E-R2-17 | Not drawn (Mac ✓d; web uses paste) | Not drawn | APPROVED (R2-17, ED-309) | NV: needs device |
-| Menu bar, app menus (Mac) | — | Menu bar with View, Go and Day menus drawn | EM menu bar inset and status item | ADOPTED FROM BOARD; keys OPEN G2-10 | Not started |
-| Keyboard shortcuts | Hardware keyboard not drawn | FA2 key tables | EM keys | OPEN G2-10 | Not started |
-| Deep links `dottoday://` and web URLs | Not drawn (scheme unchanged) | FA2 route table | `/now` (EM) | OPEN G2-11 | Not started |
-| PWA install, service worker | — | Not drawn | — | NOT DESIGNED (G4-5) | Not started |
-| Languages en/de/fr/es | No board | No board | No board | NOT DESIGNED: a long-string (de/fr) pass on core frames | Not started |
-| Feedback, What's new | Not drawn | Settings row list names "Help" | Not drawn | NOT DESIGNED | Not started |
+| Menu bar, app menus (Mac) | — | Menu bar with View, Go and Day menus drawn | EM menu bar inset and status item | ADOPTED FROM BOARD; keys OPEN G2-10 | Not started · **Close-out (ED-335):** settled: G2-10 ED-095; Edit and Window R2-30 (ED-333) |
+| Keyboard shortcuts | Hardware keyboard not drawn | FA2 key tables | EM keys | OPEN G2-10 | Not started · **Close-out (ED-335):** settled: G2-10 ED-095; R2-10 (ED-288) |
+| Deep links `dottoday://` and web URLs | Not drawn (scheme unchanged) | FA2 route table | `/now` (EM) | OPEN G2-11 | Not started · **Close-out (ED-335):** settled: G2-11 ED-097; routes ED-097 |
+| PWA install, service worker | — | Not drawn | — | NOT DESIGNED (G4-5) | Not started · **Close-out (ED-335):** settled: G4-5 ED-172; R2-24 (ED-326) |
+| Languages en/de/fr/es | No board | No board | No board | NOT DESIGNED: a long-string (de/fr) pass on core frames | Not started · **Close-out (ED-335):** long-string pass R2-24 (ED-326) |
+| Feedback, What's new | Not drawn | Settings row list names "Help" | Not drawn | NOT DESIGNED | Not started · **Close-out (ED-335):** R2-24 (ED-326) |
 
 ### C.6 Settings inventory (grouped by current section)
 
 | Feature | E home on phones | E home on Mac/web (FA2) | E home in Minimal | Status | Verification |
 |---|---|---|---|---|---|
-| Header: account row | Avatar opens Settings and account | Settings window | Avatar | OPEN G2-3; NOT DESIGNED | Not started |
+| Header: account row | Avatar opens Settings and account | Settings window | Avatar | OPEN G2-3; NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-3 ED-238; waits on CR-160 |
 | Layout row | First Settings row (rule) | "Settings, first row" drawn | First Settings row | APPROVED (ED-067); phone row not drawn | Not started |
 | Day shape (10 + 1 rows) | Not drawn | Named in the row list | Not drawn | CLOSED: no Day shape page (ED-321); the 10 + 1 rows moved to Wake Up and Wind Down (ED-084, R2-18) and Appearance (ED-161) | Not started |
-| Planning (10 rows) | Not drawn | Not drawn | Not drawn | OPEN G2-4; NOT DESIGNED | Not started |
-| Learning (4 rows) | Not drawn | Not drawn | Not drawn | OPEN G2-4; NOT DESIGNED | Not started |
-| Reminders (6 + 2 rows) | Not drawn | Named in the row list | Not drawn | OPEN G2-4; NOT DESIGNED | Not started |
-| Look (Theme, Accent, Language) | Not drawn | Not drawn | Not drawn | OPEN G2-4, G4-6; NOT DESIGNED | Not started |
-| Data (Sync, Calendars, Export, Trash) | Not drawn | Named in the row list | Settings › Everything else › Data | OPEN G2-4; NOT DESIGNED | Not started |
-| About (Help, Siri & Shortcuts, Privacy, About, Send feedback) | Not drawn | "Help" named | Not drawn | OPEN G2-4; NOT DESIGNED | Not started |
-| Minimal Settings (9 rows + Everything else) | Not drawn | — | EPM band; EM finder (partial) | OPEN G2-4; NOT DESIGNED | Not started |
-| 13 sub-pages, incl. the Wake Up page (~23 rows) | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started |
+| Planning (10 rows) | Not drawn | Not drawn | Not drawn | OPEN G2-4; NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-4 ED-081, ED-084; still to design (Low-energy row only, R2-22) |
+| Learning (4 rows) | Not drawn | Not drawn | Not drawn | OPEN G2-4; NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-4 ED-081, ED-084; R2-23, R2-29 |
+| Reminders (6 + 2 rows) | Not drawn | Named in the row list | Not drawn | OPEN G2-4; NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-4 ED-081, ED-084; R2-20 (ED-317) |
+| Look (Theme, Accent, Language) | Not drawn | Not drawn | Not drawn | OPEN G2-4, G4-6; NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-4 ED-081, ED-084; G4-6 ED-174 to ED-181; E-Phones-3, R2-11 |
+| Data (Sync, Calendars, Export, Trash) | Not drawn | Named in the row list | Settings › Everything else › Data | OPEN G2-4; NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-4 ED-081, ED-084; R2-21, R2-30 |
+| About (Help, Siri & Shortcuts, Privacy, About, Send feedback) | Not drawn | "Help" named | Not drawn | OPEN G2-4; NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-4 ED-081, ED-084; R2-24, R2-29, R2-30; Siri page still to design |
+| Minimal Settings (9 rows + Everything else) | Not drawn | — | EPM band; EM finder (partial) | OPEN G2-4; NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-4 ED-081, ED-084; E-PhonesMinimal, R2-29 |
+| 13 sub-pages, incl. the Wake Up page (~23 rows) | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started · **Close-out (ED-335):** most drawn R2-11, R2-20 to R2-24; Planning, Sound, Siri still to design |
 
 ### C.7 Duplicates and reach (each entry must survive any merge)
 
 | Feature | E home on phones | E home on Mac/web (FA2) | E home in Minimal | Status | Verification |
 |---|---|---|---|---|---|
-| Wake Up alarm switch (3 places) | Not drawn | Not drawn | Not drawn | OPEN G2-12; NOT DESIGNED | NV: needs device |
-| Wake Up / Wind Down times (3) | Caps on thread only | Not drawn | Not drawn | OPEN G2-12; NOT DESIGNED | Not started |
-| Test alarm card (3 builds) | Not drawn | Not drawn | Not drawn | OPEN G2-12; NOT DESIGNED | Not started |
-| Notification health (3) | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started |
+| Wake Up alarm switch (3 places) | Not drawn | Not drawn | Not drawn | OPEN G2-12; NOT DESIGNED | NV: needs device · **Close-out (ED-335):** settled: G2-12 ED-099; R2-19 (ED-314) |
+| Wake Up / Wind Down times (3) | Caps on thread only | Not drawn | Not drawn | OPEN G2-12; NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-12 ED-099; E-Phones, R2-11, R2-18 |
+| Test alarm card (3 builds) | Not drawn | Not drawn | Not drawn | OPEN G2-12; NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-12 ED-099; R2-20 (ED-317) |
+| Notification health (3) | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started · **Close-out (ED-335):** R2-20 (ED-317) |
 | Layout full/minimal (3) | Day menu, Settings row 1 | View menu, Day menu, Settings row 1 | Day ▾, EM View menu | APPROVED (ED-067); onboarding has no layout step (R2-16, ED-305) | Not started |
-| Low-energy mode (3) | Day menu | Day menu Layout | Day ▾, EM finder | OPEN G3-10; Settings row and header switch NOT DESIGNED | Not started |
-| Routines (5) | Add, FAB menu, Day menu, empty day | Sidebar, Inbox column, Day menu | Hint, Everything else, EM View | OPEN G2-2, G2-8 | Not started |
-| Default alerts (2) | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started |
-| Account / sync (4) | Glass capsule (sync + avatar) | Sidebar foot | Top bar; EM toolbar | OPEN G2-3, G4-7 | Not started |
-| Feedback / What's new (2 / 2) | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started |
-| Export (2) | Not drawn | File › Export…, Settings › Data | Everything else, EM finder | OPEN G2-4; screens NOT DESIGNED | Not started |
-| Wake Up explainer (2) | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started |
-| Wind Down controls (5) | Not drawn | Not drawn | Not drawn | OPEN G2-12; NOT DESIGNED | Not started |
-| Day review (3 forms) | Day menu | Day menu, sidebar Review | End-of-day card | OPEN G2-12 | Not started |
+| Low-energy mode (3) | Day menu | Day menu Layout | Day ▾, EM finder | OPEN G3-10; Settings row and header switch NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G3-10 ED-162; R2-22 (ED-322) |
+| Routines (5) | Add, FAB menu, Day menu, empty day | Sidebar, Inbox column, Day menu | Hint, Everything else, EM View | OPEN G2-2, G2-8 | Not started · **Close-out (ED-335):** settled: G2-2 ED-080; G2-8 ED-091; R2-22 (ED-322) |
+| Default alerts (2) | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started · **Close-out (ED-335):** R2-20 (ED-317) |
+| Account / sync (4) | Glass capsule (sync + avatar) | Sidebar foot | Top bar; EM toolbar | OPEN G2-3, G4-7 | Not started · **Close-out (ED-335):** settled: G2-3 ED-238; G4-7 ED-186 to ED-196; waits on CR-160 |
+| Feedback / What's new (2 / 2) | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started · **Close-out (ED-335):** R2-24 (ED-326) |
+| Export (2) | Not drawn | File › Export…, Settings › Data | Everything else, EM finder | OPEN G2-4; screens NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-4 ED-081, ED-084; R2-21 (ED-319) |
+| Wake Up explainer (2) | Not drawn | Not drawn | Not drawn | NOT DESIGNED | Not started · **Close-out (ED-335):** still to design |
+| Wind Down controls (5) | Not drawn | Not drawn | Not drawn | OPEN G2-12; NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-12 ED-099; E-Phones, R2-18, R2-20 |
+| Day review (3 forms) | Day menu | Day menu, sidebar Review | End-of-day card | OPEN G2-12 | Not started · **Close-out (ED-335):** settled: G2-12 ED-099; R2-14 (ED-297) |
 | Month (2, now 3) | Calendar tab, title ▾ sheet, pull-down | Month view | Title ▾ / EM Calendar row | APPROVED (ED-075) | Not started |
 | Today header (TodayHeader, SpreadHeader) | Nav-row title (ED-040) | Workspace toolbar | EPM top bar; EM toolbar | APPROVED (ED-040, ED-073) | Not started |
-| Capture field (Add sheet, Inbox field) | Add sheet | Capture field in Inbox column | Add sheet; EM Add field | OPEN G2-12 | Not started |
-| Inbox scheduling (3 sheets) | Not drawn | Drag, `m` to move | Not drawn | OPEN G2-12; phones NOT DESIGNED | Not started |
-| "After" label clash (two Wake Up settings) | Not drawn | Not drawn | Not drawn | OPEN G3-10 | Not started |
+| Capture field (Add sheet, Inbox field) | Add sheet | Capture field in Inbox column | Add sheet; EM Add field | OPEN G2-12 | Not started · **Close-out (ED-335):** settled: G2-12 ED-099 |
+| Inbox scheduling (3 sheets) | Not drawn | Drag, `m` to move | Not drawn | OPEN G2-12; phones NOT DESIGNED | Not started · **Close-out (ED-335):** settled: G2-12 ED-099 |
+| "After" label clash (two Wake Up settings) | Not drawn | Not drawn | Not drawn | OPEN G3-10 | Not started · **Close-out (ED-335):** settled: G3-10 ED-162 |
 
 ---
 
@@ -347,6 +347,15 @@ Also excluded by later owner answers (not ED "REJECTED", but not to be built):
 
 ## Updates after the first pass
 - **2026-11-14, ED-335 (Round 2 close-out):** the log above had no lines for R2-1 to R2-15 or R2-20 to R2-24. For the record: R2-1 navigation (ED-267), R2-2 Workspace (ED-269), R2-3 Add (ED-271), R2-4 Edit (ED-274), R2-5 complete and Day menu (ED-276), R2-6 multi-select (ED-279), R2-7 Undo (ED-281), R2-8 sync (ED-283), R2-9 Focus (ED-286), R2-10 keyboard overlays (ED-288), R2-11 Settings on tablets (ED-291), R2-12 Calendar (ED-293), R2-13 Inbox and Search (ED-295), R2-14 reviews (ED-297), R2-15 colour picker (ED-299), R2-20 notifications (ED-317), R2-21 data safety (ED-319), R2-22 planning helpers (ED-322), R2-23 proposals and learning (ED-324), R2-24 the rest of the app (ED-326). Section D now says which gaps each board closed. Nothing built.
+- **2026-11-15, ED-336:** owner answers to the close-out list recorded. Nothing built.
+- **2026-11-15, ED-337:** R2-32 approved with its new copy. Nothing built.
+- **2026-11-15, ED-338:** R2-33 approved; Settings page title icons on every platform; Android mirrors iPhone. Nothing built.
+- **2026-11-15, ED-339:** R2-34 approved (Past days, the year strip, Pick today's one thing). Nothing built.
+- **2026-11-15, ED-340:** Android pull-ups are M3 modal bottom sheets, matching iPhone. Nothing built.
+- **2026-11-15, ED-341:** R2-35 approved (Rebalance); Android Appearance cards and icon. Nothing built.
+- **2026-11-15, ED-342:** R2-36 approved (Add popover, Go to date); Year strip option B proposed. Nothing built.
+- **2026-11-15, ED-343:** R2-37 approved (spoken Brain dump, CR-083). Nothing built.
+- **2026-11-15, ED-344:** R2-38 approved (the Wake Up explainer); `wakeUpExplainOff` new copy approved for the copy PR. Nothing built.
 
 > **Tablets (owner sequencing, 2026-11-04).** Phone and Mac boards do not count as tablet designs. Tablet gaps listed here stay open until Prompt D Round 2. The comprehensive tablet coverage checklist is a mandatory step before Round 2 begins (`STATUS.md` Open items); until then each Group 2 decision only records its iPad and Android tablet/foldable implications.
 

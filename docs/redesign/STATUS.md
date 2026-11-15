@@ -82,8 +82,8 @@ Q1–Q9 are recorded in `OPEN_PRODUCT_DECISIONS.md` § Owner answers. The follow
 
 ## Where we stopped (2026-11-14, after ED-335)
 - **Complete:** Round 2, R2-1 to R2-31 (ED-267 to ED-334), and its close-out audit (ED-335). Snapshots to v3.12-working.
-- **Open, needs the owner:** the ED-335 list (permanent delete, R2-19-B tablet rows, Catch the dot, Plan from Inbox · 3, Today on launch, the "After" label, the Mac context menu set, small items, onboarding before build, before-build setup).
-- **Still to design:** Settings › Planning, Sound and Siri pages; Past days and the year strip; Pick today's one thing; Rebalance; the Mac and web Add and Go to date popovers; spoken Brain dump; the Wake Up explainer.
+- **Owner answers (2026-11-15, ED-336, drawn and approved as R2-32, ED-337):** the ED-335 list is answered except the release gate and the Q11 and Q13 hosted setup. Next: boards for the undrawn screens (R2-33 Planning, Sounds and Siri approved, ED-338; R2-34 Past days and one thing approved, ED-339; Android pull-ups are bottom sheets, ED-340; R2-35 Rebalance approved, ED-341; R2-36 Add and Go to date approved, ED-342; R2-37 spoken Brain dump approved, ED-343; R2-38 the Wake Up explainer approved, ED-344; Year strip option B awaiting your choice; R2-39 on); the Q9 proposal; build tasks for Trash delete, Today at now, the "After" labels, Catch the dot, Wind Down past midnight and the device table; the Wake Up plugin is in its own session.
+- **Still to design:** the tasks-before-Wake-Up fold (check against E-DF2, ED-246, first); editor captions for pin, travel and energy; phone landscape.
 - **Code gaps:** Search or run, minimal Inbox at wide widths, hinge awareness (each behind the release gate except the minimal Inbox, which is a docs/14 conformance fix).
 
 ## Where we stopped (2026-11-08, after ED-184) (history)
