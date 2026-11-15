@@ -9,8 +9,10 @@ import 'package:dottoday/data/repositories/drift_subtask_repository.dart';
 import 'package:dottoday/data/trash/drift_trash_service.dart';
 import 'package:dottoday/data/undo/in_memory_undo_service.dart';
 import 'package:dottoday/domain/scheduling/task_progress.dart';
+import 'package:dottoday/domain/trash/trash_service.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
+import 'package:drift/drift.dart' show Variable;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
@@ -185,6 +187,73 @@ void main() {
       expect(await trash.watchTrash(userId).first, isEmpty);
       _ok(await trash.restoreOccurrences(userId, {task.id}));
       expect(await deletedAt(task.id), isNotNull);
+    });
+  });
+
+  // Permanent delete (docs/02 F7.6, ED-336): a synced tombstone aged past
+  // the window, never a local DELETE the server doesn't hear of.
+  group('delete now', () {
+    Future<List<String>> inTrash() async =>
+        (await trash.watchTrash(userId).first).map((o) => o.id).toList();
+
+    Future<int> dirtyOf(String table, String id) async =>
+        (await h.db
+                .customSelect(
+                  'SELECT dirty FROM $table WHERE id = ?',
+                  variables: [Variable(id)],
+                )
+                .getSingle())
+            .read<int>('dirty');
+
+    test(
+      'leaves Trash at once as a dirty tombstone with its subtasks',
+      () async {
+        _ok(await trash.trashOccurrences(userId, {task.id}));
+        expect(_ok(await trash.deleteNow(userId, {task.id})), 1);
+        expect(await inTrash(), isEmpty);
+        final cutoff = h.clock.nowUtc().subtract(TrashService.retention);
+        expect((await deletedAt(task.id))!.isBefore(cutoff), isTrue);
+        final s = (await subtasks.findById(userId, sub.id))!;
+        expect(s.deletedAt!.isBefore(cutoff), isTrue);
+        expect(await dirtyOf('occurrences', task.id), 1, reason: 'syncs');
+        expect(await dirtyOf('subtasks', sub.id), 1, reason: 'syncs');
+      },
+    );
+
+    test('cannot be restored afterwards', () async {
+      _ok(await trash.trashOccurrences(userId, {task.id}));
+      _ok(await trash.deleteNow(userId, {task.id}));
+      _ok(await trash.restoreOccurrences(userId, {task.id}));
+      expect(await deletedAt(task.id), isNotNull);
+    });
+
+    test('ignores live and unknown ids', () async {
+      expect(_ok(await trash.deleteNow(userId, {task.id, 'nope'})), 0);
+      expect(await deletedAt(task.id), isNull);
+    });
+
+    test('purged once the server has the tombstone', () async {
+      _ok(await trash.trashOccurrences(userId, {task.id}));
+      _ok(await trash.deleteNow(userId, {task.id}));
+      expect(_ok(await trash.purgeExpired(userId)), 0, reason: 'unsynced');
+      await h.db.customStatement('UPDATE occurrences SET dirty = 0');
+      await h.db.customStatement('UPDATE subtasks SET dirty = 0');
+      expect(_ok(await trash.purgeExpired(userId)), 2);
+      expect(await occurrences.findById(userId, task.id), isNull);
+      expect(await subtasks.findById(userId, sub.id), isNull);
+    });
+
+    test('Empty Trash deletes every task in Trash and nothing else', () async {
+      final other = task.copyWith(id: 'other');
+      final live = task.copyWith(id: 'live');
+      await h.writes.apply(
+        WriteBatch(userId: userId, occurrences: [other, live]),
+      );
+      _ok(await trash.trashOccurrences(userId, {task.id, other.id}));
+      expect(_ok(await trash.emptyTrash(userId)), 2);
+      expect(await inTrash(), isEmpty);
+      expect(await deletedAt(live.id), isNull);
+      expect(_ok(await trash.emptyTrash(userId)), 0);
     });
   });
 
