@@ -80,7 +80,7 @@ void main() {
       arming: WakeUpArming(alarms, h.db),
       ringsWakeUp: form != DeviceForm.desktop,
       devices: DeviceReporter(
-        identity: DeviceIdentity(
+        identity: DeviceIdentity.onDatabase(
           h.db,
           platform: platform,
           form: form,

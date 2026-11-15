@@ -9,7 +9,6 @@ import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
 import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/write_back_providers.dart';
-import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
 import 'package:dottoday/data/devices/device_identity.dart';
 import 'package:dottoday/data/devices/device_providers.dart';
@@ -67,7 +66,6 @@ import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
-import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -567,11 +565,7 @@ List<Override> timelineOverrides({
     ),
     // The account's device list (ED-084); this install is 'self'.
     deviceRepositoryProvider.overrideWithValue(FakeDeviceRepository(devices)),
-    deviceIdentityProvider.overrideWith((ref) {
-      final db = AppDatabase(NativeDatabase.memory());
-      ref.onDispose(db.close);
-      return DeviceIdentity(db, newId: () => 'self');
-    }),
+    deviceIdentityProvider.overrideWithValue(fakeDeviceIdentity()),
     // No platform channel in widget tests (its reply would arrive outside
     // fake time): battery optimisation and DND read as off (M6.5.8).
     batteryOptimizationProvider.overrideWithValue(
@@ -951,6 +945,17 @@ final class FakeWakeUpDayRepository implements WakeUpDayRepository {
     _days[date] = d.copyWith(startedAtUtc: d.startedAtUtc ?? atUtc);
     _changes.add(null);
   }
+}
+
+/// This install as 'self' on every account, kept in memory (no database,
+/// so web tests compile too).
+DeviceIdentity fakeDeviceIdentity() {
+  final meta = <String, String>{};
+  return DeviceIdentity(
+    read: (key) async => meta[key],
+    write: (key, value) async => meta[key] = value,
+    newId: () => 'self',
+  );
 }
 
 /// [DeviceRepository] in memory (ED-084).

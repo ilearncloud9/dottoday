@@ -25,7 +25,7 @@ DeviceRepository deviceRepository(Ref ref) =>
 /// This install: its id per account, platform and form.
 @Riverpod(keepAlive: true)
 DeviceIdentity deviceIdentity(Ref ref) =>
-    DeviceIdentity(ref.watch(appDatabaseProvider));
+    DeviceIdentity.onDatabase(ref.watch(appDatabaseProvider));
 
 /// Keeps this install's row and decides whether it rings Wake Up.
 @Riverpod(keepAlive: true)

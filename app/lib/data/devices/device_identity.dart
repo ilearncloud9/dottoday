@@ -8,16 +8,38 @@ import 'package:uuid/uuid.dart';
 /// account, so a second account signed in on the same phone gets a row of
 /// its own (CR-160: no row is shared across accounts).
 final class DeviceIdentity {
-  DeviceIdentity(
-    this._db, {
+  DeviceIdentity({
+    required Future<String?> Function(String key) read,
+    required Future<void> Function(String key, String value) write,
     DevicePlatform? platform,
     DeviceForm? form,
     String Function()? newId,
-  }) : platform = platform ?? _platform(),
+  }) : _read = read,
+       _write = write,
+       platform = platform ?? _platform(),
        _form = form,
        _newId = newId ?? const Uuid().v7;
 
-  final AppDatabase _db;
+  /// Ids kept in [db]'s `local_meta`.
+  factory DeviceIdentity.onDatabase(
+    AppDatabase db, {
+    DevicePlatform? platform,
+    DeviceForm? form,
+    String Function()? newId,
+  }) => DeviceIdentity(
+    read: (key) async => (await (db.select(
+      db.localMeta,
+    )..where((m) => m.key.equals(key))).getSingleOrNull())?.value,
+    write: (key, value) => db
+        .into(db.localMeta)
+        .insert(LocalMetaCompanion.insert(key: key, value: value)),
+    platform: platform,
+    form: form,
+    newId: newId,
+  );
+
+  final Future<String?> Function(String key) _read;
+  final Future<void> Function(String key, String value) _write;
 
   /// Where this install runs.
   final DevicePlatform platform;
@@ -36,14 +58,9 @@ final class DeviceIdentity {
   /// This install's id for [userId], created on first use.
   Future<String> idFor(String userId) async {
     final key = 'device_id:$userId';
-    final row = await (_db.select(
-      _db.localMeta,
-    )..where((m) => m.key.equals(key))).getSingleOrNull();
-    if (row != null) return row.value;
+    if (await _read(key) case final id?) return id;
     final id = _newId();
-    await _db
-        .into(_db.localMeta)
-        .insert(LocalMetaCompanion.insert(key: key, value: id));
+    await _write(key, id);
     return id;
   }
 
