@@ -78,6 +78,8 @@ class Thread extends StatefulWidget {
     this.actions = const ThreadActions(),
     this.side = false,
     this.dayLabel = '',
+    this.anchorIndex,
+    this.anchorKey,
     super.key,
   }) : sliver = false;
 
@@ -88,6 +90,8 @@ class Thread extends StatefulWidget {
     this.actions = const ThreadActions(),
     this.side = false,
     this.dayLabel = '',
+    this.anchorIndex,
+    this.anchorKey,
     super.key,
   }) : sliver = true;
 
@@ -104,6 +108,11 @@ class Thread extends StatefulWidget {
 
   /// The day, for the drop box's screen-reader label.
   final String dayLabel;
+
+  /// The entry that carries [anchorKey], so a scroll view can find its
+  /// row (today's card opens at now, ED-336).
+  final int? anchorIndex;
+  final GlobalKey? anchorKey;
 
   @override
   State<Thread> createState() => _ThreadState();
@@ -164,16 +173,25 @@ class _ThreadState extends State<Thread> {
     if (widget.sliver) {
       return SliverList.builder(
         itemCount: entries.length,
-        itemBuilder: (_, i) => _entry(entries[i], dropBox: i == box),
+        itemBuilder: (_, i) => _keyed(i, _entry(entries[i], dropBox: i == box)),
       );
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        for (final (i, e) in entries.indexed) _entry(e, dropBox: i == box),
+        for (final (i, e) in entries.indexed)
+          _keyed(i, _entry(e, dropBox: i == box)),
       ],
     );
   }
+
+  Widget _keyed(int i, Widget row) => switch (widget.anchorKey) {
+    final key? when i == widget.anchorIndex => KeyedSubtree(
+      key: key,
+      child: row,
+    ),
+    _ => row,
+  };
 
   Widget _entry(ThreadEntry e, {required bool dropBox}) {
     final a = widget.actions;

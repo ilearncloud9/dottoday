@@ -185,6 +185,7 @@ class DayPage extends ConsumerWidget {
             ),
             reality: toggle,
             note: note,
+            openAtNow: date == today,
           )
         : DayCard(
             title: _title(context),
@@ -195,6 +196,7 @@ class DayPage extends ConsumerWidget {
             footer: footer,
             reality: toggle,
             note: note,
+            openAtNow: date == today,
           );
     final insight = reality == null
         ? null
