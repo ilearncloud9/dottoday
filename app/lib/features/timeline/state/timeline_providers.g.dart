@@ -47,6 +47,51 @@ final class TodayDateProvider
 
 String _$todayDateHash() => r'196739fb7fb57c61ae77ad5a3776363cfc1d8d09';
 
+/// The day the Wind Down review is about (docs/15 W6): the day the clock
+/// still belongs to, so a Wind Down after midnight reviews the day it
+/// closes, not the new calendar day (Q8). Today itself turns at midnight.
+
+@ProviderFor(reviewDate)
+final reviewDateProvider = ReviewDateProvider._();
+
+/// The day the Wind Down review is about (docs/15 W6): the day the clock
+/// still belongs to, so a Wind Down after midnight reviews the day it
+/// closes, not the new calendar day (Q8). Today itself turns at midnight.
+
+final class ReviewDateProvider
+    extends
+        $FunctionalProvider<AsyncValue<DateTime>, DateTime, FutureOr<DateTime>>
+    with $FutureModifier<DateTime>, $FutureProvider<DateTime> {
+  /// The day the Wind Down review is about (docs/15 W6): the day the clock
+  /// still belongs to, so a Wind Down after midnight reviews the day it
+  /// closes, not the new calendar day (Q8). Today itself turns at midnight.
+  ReviewDateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'reviewDateProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$reviewDateHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<DateTime> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<DateTime> create(Ref ref) {
+    return reviewDate(ref);
+  }
+}
+
+String _$reviewDateHash() => r'3fc9dccc1697a210137fd321dee4b3218702eced';
+
 /// The live contents of [date] (year/month/day) for the local profile.
 ///
 /// Stream providers here read their dependencies synchronously and return

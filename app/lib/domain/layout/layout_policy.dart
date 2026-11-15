@@ -77,6 +77,7 @@ final class LayoutPolicy {
     FeatureId.onboarding: FeatureVisibility.simplified,
     FeatureId.alarmsHealth: FeatureVisibility.shown,
     FeatureId.wakeUpAlarm: FeatureVisibility.simplified,
+    FeatureId.alarmDevice: FeatureVisibility.shown,
     FeatureId.wakeUpCard: FeatureVisibility.simplified,
     FeatureId.wakeUpCheck: FeatureVisibility.shown,
     FeatureId.startNudge: FeatureVisibility.shown,

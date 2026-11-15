@@ -6137,6 +6137,61 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String timeNextDay(String time) {
+    return '$time, am nächsten Tag';
+  }
+
+  @override
+  String get settingsAlarmSoundsOn => 'Wecker klingelt auf';
+
+  @override
+  String get deviceIphone => 'iPhone';
+
+  @override
+  String get deviceIpad => 'iPad';
+
+  @override
+  String get deviceAndroidPhone => 'Android-Smartphone';
+
+  @override
+  String get deviceAndroidTablet => 'Android-Tablet';
+
+  @override
+  String deviceThis(String device) {
+    return 'Dieses Gerät ($device)';
+  }
+
+  @override
+  String get alarmDeviceReady => 'Bereit';
+
+  @override
+  String alarmDeviceReadyAt(String time) {
+    return 'Bereit · $time';
+  }
+
+  @override
+  String get alarmDeviceWaiting => 'Wartet auf Abgleich';
+
+  @override
+  String get alarmDeviceAlarmsOff => 'Wecker auf diesem Gerät aus';
+
+  @override
+  String get alarmDeviceNone => 'Kein Gerät klingelt';
+
+  @override
+  String get alarmDeviceOffline => 'Offline';
+
+  @override
+  String get alarmDeviceNote =>
+      'Nur dieses eine Smartphone oder Tablet klingelt zum Aufwachen. Mac und Web klingeln nie.';
+
+  @override
+  String get deviceMac => 'Mac';
+
+  @override
+  String get deviceWeb => 'Webbrowser';
+
+  @override
   String settingsWindDownFrom(String time, String wake) {
     return '$time · nach morgen $wake';
   }

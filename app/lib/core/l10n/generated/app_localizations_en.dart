@@ -6099,6 +6099,61 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String timeNextDay(String time) {
+    return '$time, next day';
+  }
+
+  @override
+  String get settingsAlarmSoundsOn => 'Alarm sounds on';
+
+  @override
+  String get deviceIphone => 'iPhone';
+
+  @override
+  String get deviceIpad => 'iPad';
+
+  @override
+  String get deviceAndroidPhone => 'Android phone';
+
+  @override
+  String get deviceAndroidTablet => 'Android tablet';
+
+  @override
+  String deviceThis(String device) {
+    return 'This $device';
+  }
+
+  @override
+  String get alarmDeviceReady => 'Ready';
+
+  @override
+  String alarmDeviceReadyAt(String time) {
+    return 'Ready · $time';
+  }
+
+  @override
+  String get alarmDeviceWaiting => 'Waiting to sync';
+
+  @override
+  String get alarmDeviceAlarmsOff => 'Alarms off on that device';
+
+  @override
+  String get alarmDeviceNone => 'No device rings';
+
+  @override
+  String get alarmDeviceOffline => 'Offline';
+
+  @override
+  String get alarmDeviceNote =>
+      'Only this one phone or tablet rings Wake Up. A Mac and the web never ring.';
+
+  @override
+  String get deviceMac => 'Mac';
+
+  @override
+  String get deviceWeb => 'Web browser';
+
+  @override
   String settingsWindDownFrom(String time, String wake) {
     return '$time · from tomorrow\'s $wake';
   }

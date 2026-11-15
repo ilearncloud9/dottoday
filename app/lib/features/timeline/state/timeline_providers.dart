@@ -9,6 +9,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/scheduling/start_nudge.dart';
+import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/layout/timeline_day.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -26,6 +27,17 @@ Future<DateTime> todayDate(Ref ref) async {
   final profile = await ref.watch(currentProfileProvider.future);
   final local = tz.TZDateTime.from(now, tz.getLocation(profile.tzId));
   return DateTime(local.year, local.month, local.day);
+}
+
+/// The day the Wind Down review is about (docs/15 W6): the day the clock
+/// still belongs to, so a Wind Down after midnight reviews the day it
+/// closes, not the new calendar day (Q8). Today itself turns at midnight.
+@riverpod
+Future<DateTime> reviewDate(Ref ref) async {
+  final now =
+      ref.watch(minuteTickProvider).value ?? ref.watch(clockProvider).nowUtc();
+  final profile = await ref.watch(currentProfileProvider.future);
+  return DayShape.dayOf(tz.getLocation(profile.tzId), now, profile.settings);
 }
 
 /// Everything the timeline needs for one day.

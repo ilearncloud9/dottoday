@@ -24,6 +24,9 @@ const _windDownLead = Duration(hours: 1);
 /// - [tomorrowHasThread] is false;
 /// - the derived one would fall before [nowUtc] + 1 h.
 ///
+/// A Wind Down after midnight (Q8) never passes tomorrow's Wake Up: it is
+/// held there, a night of 0.
+///
 /// ```dart
 /// effectiveDayShape(berlin, DateTime(2026, 11, 2), s.copyWith(
 ///     sleepTargetMin: 480), nowUtc: noon, tomorrowHasThread: true);
@@ -36,7 +39,7 @@ DayShape effectiveDayShape(
   required DateTime nowUtc,
   required bool tomorrowHasThread,
 }) {
-  final today = DayShape.on(location, date, settings.boundaryFor(_day(date)));
+  final today = configuredDayShape(location, date, settings);
   final target = settings.sleepTargetMin;
   if (target == null || !tomorrowHasThread) return today;
   final derived = nextWakeUtc(
@@ -48,6 +51,21 @@ DayShape effectiveDayShape(
   if (derived.isBefore(nowUtc.add(_windDownLead))) return today;
   if (!derived.isAfter(today.wakeUtc)) return today;
   return DayShape(wakeUtc: today.wakeUtc, bedUtc: derived);
+}
+
+/// Day [date]'s configured shape (its weekday's window), a Wind Down after
+/// midnight held at tomorrow's Wake Up (Q8).
+DayShape configuredDayShape(
+  tz.Location location,
+  DateTime date,
+  Settings settings,
+) {
+  final today = DayShape.on(location, date, settings.boundaryFor(_day(date)));
+  final next = nextWakeUtc(location, date, settings);
+  if (!today.bedUtc.isAfter(next) || !next.isAfter(today.wakeUtc)) {
+    return today;
+  }
+  return DayShape(wakeUtc: today.wakeUtc, bedUtc: next);
 }
 
 /// The Wake Up after day [date]: tomorrow's, on its own weekday window.

@@ -4827,6 +4827,55 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.notifWindDownNudgeNoDot(length, time));
 
   @override
+  String timeNextDay(String time) => pseudo(super.timeNextDay(time));
+
+  @override
+  String get settingsAlarmSoundsOn => pseudo(super.settingsAlarmSoundsOn);
+
+  @override
+  String get deviceIphone => pseudo(super.deviceIphone);
+
+  @override
+  String get deviceIpad => pseudo(super.deviceIpad);
+
+  @override
+  String get deviceAndroidPhone => pseudo(super.deviceAndroidPhone);
+
+  @override
+  String get deviceAndroidTablet => pseudo(super.deviceAndroidTablet);
+
+  @override
+  String deviceThis(String device) => pseudo(super.deviceThis(device));
+
+  @override
+  String get alarmDeviceReady => pseudo(super.alarmDeviceReady);
+
+  @override
+  String alarmDeviceReadyAt(String time) =>
+      pseudo(super.alarmDeviceReadyAt(time));
+
+  @override
+  String get alarmDeviceWaiting => pseudo(super.alarmDeviceWaiting);
+
+  @override
+  String get alarmDeviceAlarmsOff => pseudo(super.alarmDeviceAlarmsOff);
+
+  @override
+  String get alarmDeviceNone => pseudo(super.alarmDeviceNone);
+
+  @override
+  String get alarmDeviceOffline => pseudo(super.alarmDeviceOffline);
+
+  @override
+  String get alarmDeviceNote => pseudo(super.alarmDeviceNote);
+
+  @override
+  String get deviceMac => pseudo(super.deviceMac);
+
+  @override
+  String get deviceWeb => pseudo(super.deviceWeb);
+
+  @override
   String settingsWindDownFrom(String time, String wake) =>
       pseudo(super.settingsWindDownFrom(time, wake));
 

@@ -23,12 +23,15 @@ bool lowEnergyOn(Settings settings, DateTime nowUtc) =>
 /// // 2026-10-22 05:00Z (07:00 Berlin)
 /// ```
 DateTime nextWakeUtc(tz.Location zone, DateTime nowUtc, Settings settings) {
-  final today = DayShape.containing(zone, nowUtc, settings);
-  if (today.wakeUtc.isAfter(nowUtc)) return today.wakeUtc;
+  // The calendar date, not `DayShape.containing`: after midnight, before a
+  // late Wind Down (Q8), that is still yesterday, whose Wake Up is past.
   final local = tz.TZDateTime.from(nowUtc, zone);
-  final tomorrow = DateTime(local.year, local.month, local.day + 1);
-  final weekday = Weekday.values[tomorrow.weekday - 1];
-  return DayShape.on(zone, tomorrow, settings.boundaryFor(weekday)).wakeUtc;
+  for (var d = 0; ; d++) {
+    final date = DateTime(local.year, local.month, local.day + d);
+    final weekday = Weekday.values[date.weekday - 1];
+    final wake = DayShape.on(zone, date, settings.boundaryFor(weekday)).wakeUtc;
+    if (wake.isAfter(nowUtc)) return wake;
+  }
 }
 
 /// An optional task (11 C1, docs/09 M11.1; the specs have no "optional"

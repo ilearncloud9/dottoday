@@ -41,13 +41,8 @@ class DayShapeGroup extends StatelessWidget {
     final wake = windowMinutes(common.start);
     final bed = windowMinutes(common.end);
     String at(int m) => clockText(context, m, settings.use24h);
-    void setWindow(int w, int b) => changeSettings(
-      context,
-      (s) => withCommonWindow(
-        s,
-        TimeWindow(start: windowTime(w), end: windowTime(b)),
-      ),
-    );
+    void setWindow(int w, int b) =>
+        changeSettings(context, (s) => withCommonWindow(s, dayWindow(w, b)));
     return SettingsGroup(
       caption: l10n.settingsDayShape,
       children: [
@@ -78,13 +73,8 @@ class DayShapeGroup extends StatelessWidget {
     final wake = windowMinutes(common.start);
     final bed = windowMinutes(common.end);
     String at(int m) => clockText(context, m, settings.use24h);
-    void setWindow(int w, int b) => changeSettings(
-      context,
-      (s) => withCommonWindow(
-        s,
-        TimeWindow(start: windowTime(w), end: windowTime(b)),
-      ),
-    );
+    void setWindow(int w, int b) =>
+        changeSettings(context, (s) => withCommonWindow(s, dayWindow(w, b)));
     return [
       SettingsRow(
         glyph: DotGlyphs.sunrise,
@@ -115,7 +105,7 @@ class DayShapeGroup extends StatelessWidget {
           settings,
           wakeMinute: wake,
           windDownMinute: bed,
-          at: at,
+          at: (m) => windDownText(context, m, settings.use24h),
         ),
         onTap: () => unawaited(
           _time(context, l10n.settingsWindDown, bed, (m) => setWindow(wake, m)),
@@ -233,6 +223,12 @@ enum _Format {
 /// "7:00" / "7:00 AM" for a minute of the day in the user's format.
 String clockText(BuildContext context, int minute, bool? use24h) =>
     formatClockTime(context, ClockTime.fromMinutes(minute), use24h: use24h);
+
+/// [clockText] for a Wind Down, with ", next day" after midnight (Q8).
+String windDownText(BuildContext context, int minute, bool? use24h) {
+  final time = clockText(context, minute, use24h);
+  return windDownNextDay(minute) ? context.l10n.timeNextDay(time) : time;
+}
 
 /// "Sat" for a weekday key.
 String weekdayName(String locale, Weekday d) =>

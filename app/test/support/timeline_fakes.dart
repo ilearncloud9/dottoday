@@ -10,6 +10,8 @@ import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/write_back_providers.dart';
 import 'package:dottoday/data/dev/demo_day.dart';
+import 'package:dottoday/data/devices/device_identity.dart';
+import 'package:dottoday/data/devices/device_providers.dart';
 import 'package:dottoday/data/export/export_providers.dart';
 import 'package:dottoday/data/export/export_service.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
@@ -35,6 +37,7 @@ import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/calendar/calendar_import.dart';
 import 'package:dottoday/domain/calendar/calendar_source_repository.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
+import 'package:dottoday/domain/devices/device.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/routine.dart';
@@ -47,6 +50,7 @@ import 'package:dottoday/domain/notifications/battery_optimization.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
+import 'package:dottoday/domain/repositories/device_repository.dart';
 import 'package:dottoday/domain/repositories/occurrence_repository.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
@@ -497,6 +501,7 @@ List<Override> timelineOverrides({
   DateTime? alarmTierGainedAt,
   FakeCalendarSeriesRepository? calendarSeries,
   FakeCalendarSeriesSender? seriesSender,
+  List<Device> devices = const [],
 }) {
   final p = profile ?? testProfile();
   final repo = occurrences ?? FakeOccurrenceRepository();
@@ -558,6 +563,9 @@ List<Override> timelineOverrides({
     alarmGatewayProvider.overrideWithValue(
       alarmGateway ?? FakeAlarmGateway(wakeUpAlarm),
     ),
+    // The account's device list (ED-084); this install is 'self'.
+    deviceRepositoryProvider.overrideWithValue(FakeDeviceRepository(devices)),
+    deviceIdentityProvider.overrideWithValue(fakeDeviceIdentity()),
     // No platform channel in widget tests (its reply would arrive outside
     // fake time): battery optimisation and DND read as off (M6.5.8).
     batteryOptimizationProvider.overrideWithValue(
@@ -935,6 +943,49 @@ final class FakeWakeUpDayRepository implements WakeUpDayRepository {
   Future<void> markStarted(String date, DateTime atUtc) async {
     final d = _days[date] ?? WakeUpDay(date: date);
     _days[date] = d.copyWith(startedAtUtc: d.startedAtUtc ?? atUtc);
+    _changes.add(null);
+  }
+}
+
+/// This install as 'self' on every account, kept in memory (no database,
+/// so web tests compile too).
+DeviceIdentity fakeDeviceIdentity() {
+  final meta = <String, String>{};
+  return DeviceIdentity(
+    read: (key) async => meta[key],
+    write: (key, value) async => meta[key] = value,
+    newId: () => 'self',
+  );
+}
+
+/// [DeviceRepository] in memory (ED-084).
+final class FakeDeviceRepository implements DeviceRepository {
+  FakeDeviceRepository([List<Device> devices = const []])
+    : _devices = {for (final d in devices) d.id: d};
+
+  final Map<String, Device> _devices;
+  final _changes = StreamController<void>.broadcast();
+
+  @override
+  Stream<List<Device>> watchAll(String userId) async* {
+    List<Device> now() => [
+      for (final d in _devices.values)
+        if (d.userId == userId && d.deletedAt == null) d,
+    ];
+    yield now();
+    await for (final _ in _changes.stream) {
+      yield now();
+    }
+  }
+
+  @override
+  Future<Device?> findById(String userId, String id) async => _devices[id];
+
+  @override
+  Future<void> upsertAll(List<Device> devices) async {
+    for (final d in devices) {
+      _devices[d.id] = d;
+    }
     _changes.add(null);
   }
 }

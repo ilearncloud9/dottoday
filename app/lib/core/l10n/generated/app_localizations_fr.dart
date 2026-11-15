@@ -6147,6 +6147,61 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String timeNextDay(String time) {
+    return '$time, le lendemain';
+  }
+
+  @override
+  String get settingsAlarmSoundsOn => 'L\'alarme sonne sur';
+
+  @override
+  String get deviceIphone => 'iPhone';
+
+  @override
+  String get deviceIpad => 'iPad';
+
+  @override
+  String get deviceAndroidPhone => 'Téléphone Android';
+
+  @override
+  String get deviceAndroidTablet => 'Tablette Android';
+
+  @override
+  String deviceThis(String device) {
+    return 'Cet appareil ($device)';
+  }
+
+  @override
+  String get alarmDeviceReady => 'Prêt';
+
+  @override
+  String alarmDeviceReadyAt(String time) {
+    return 'Prêt · $time';
+  }
+
+  @override
+  String get alarmDeviceWaiting => 'En attente de synchronisation';
+
+  @override
+  String get alarmDeviceAlarmsOff => 'Alarmes désactivées sur cet appareil';
+
+  @override
+  String get alarmDeviceNone => 'Aucun appareil ne sonne';
+
+  @override
+  String get alarmDeviceOffline => 'Hors ligne';
+
+  @override
+  String get alarmDeviceNote =>
+      'Seul ce téléphone ou cette tablette sonne au réveil. Un Mac et le web ne sonnent jamais.';
+
+  @override
+  String get deviceMac => 'Mac';
+
+  @override
+  String get deviceWeb => 'Navigateur web';
+
+  @override
   String settingsWindDownFrom(String time, String wake) {
     return '$time · selon demain $wake';
   }

@@ -70,22 +70,68 @@ Settings withCapAt(
   required bool everyDay,
 }) {
   TimeWindow moved(TimeWindow w) => windDown
-      ? w.copyWith(end: windowTime(minute))
-      : w.copyWith(start: windowTime(minute));
+      ? dayWindow(windowMinutes(w.start), minute)
+      : dayWindow(minute, windowMinutes(w.end));
   if (!everyDay) return withDayWindow(s, day, moved(s.boundaryFor(day)));
   final common = moved(commonWindow(s));
   return withDayWindow(withCommonWindow(s, common), day, common);
 }
 
-/// `HH:mm` for minutes after midnight; 1440 is `24:00` (Wind Down at
-/// midnight).
+/// `HH:mm` for minutes after the day's own midnight. A Wind Down after
+/// midnight keeps counting (docs/05 "Day boundaries", Q8): 1440 is `24:00`
+/// and 00:30 the next morning is `24:30`.
 String windowTime(int minutes) {
   String two(int n) => n.toString().padLeft(2, '0');
   return '${two(minutes ~/ 60)}:${two(minutes % 60)}';
 }
 
-/// Minutes after midnight of an `HH:mm` window end (`24:00` is 1440).
+/// Minutes after midnight of an `HH:mm` window end (`24:30` is 1470).
 int windowMinutes(String hhmm) {
   final parts = hhmm.split(':');
   return int.parse(parts[0]) * 60 + int.parse(parts[1]);
 }
+
+/// [windowMinutes] for stored text that may be malformed: null unless it
+/// is `HH:mm` with hours 0–47.
+int? tryWindowMinutes(String hhmm) {
+  final m = _windowPattern.firstMatch(hhmm);
+  if (m == null) return null;
+  final hours = int.parse(m.group(1)!);
+  return hours < 48 ? hours * 60 + int.parse(m.group(2)!) : null;
+}
+
+final _windowPattern = RegExp(r'^(\d{2}):([0-5]\d)$');
+
+/// The stored Wind Down for a picked wall-clock [pickedMinute] (0–1439, or
+/// 1440 for midnight) on a day that wakes at [wakeMinute]: at or before
+/// Wake Up it falls after midnight and belongs to the day it closes (Q8),
+/// so it is stored a day on.
+///
+/// ```dart
+/// windDownMinute(420, 30); // 1470: 00:30 the next morning
+/// windDownMinute(420, 1320); // 1320: 22:00 the same evening
+/// ```
+int windDownMinute(int wakeMinute, int pickedMinute) =>
+    pickedMinute <= wakeMinute
+    ? pickedMinute + Duration.minutesPerDay
+    : pickedMinute;
+
+/// The stored window for Wake Up [wake] (0–1439) and Wind Down [bed]
+/// (either a wall-clock pick or an already stored end): a Wind Down at or
+/// before Wake Up moves a day on ([windDownMinute]), and one a full day or
+/// more after it moves back, so the window always validates (Q8).
+///
+/// ```dart
+/// dayWindow(420, 30); // 07:00–24:30
+/// dayWindow(420, 1320); // 07:00–22:00
+/// ```
+TimeWindow dayWindow(int wake, int bed) {
+  var end = windDownMinute(wake, bed);
+  if (end - wake >= Duration.minutesPerDay) end -= Duration.minutesPerDay;
+  return TimeWindow(start: windowTime(wake), end: windowTime(end));
+}
+
+/// Whether a stored Wind Down ([windowMinutes]) is after midnight, so the
+/// editors label it "next day". `24:00` reads as the day's own midnight,
+/// as it did before Q8, so it carries no label.
+bool windDownNextDay(int minutes) => minutes > Duration.minutesPerDay;

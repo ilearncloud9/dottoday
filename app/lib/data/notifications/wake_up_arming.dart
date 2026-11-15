@@ -59,15 +59,8 @@ final class WakeUpArming {
     Map<String, Subtask> steps = const {},
     Set<String> startedDays = const {},
   }) async {
+    if (!profile.settings.wakeUpAlarm) return disarm();
     final known = await _read();
-    if (!profile.settings.wakeUpAlarm) {
-      if (known == null) return const {};
-      // Out of reach, the alarms still ring: keep them armed here, so the
-      // notification path leaves them out and the next sync disarms them.
-      if (!await _gateway.disarmAll()) return known;
-      await _write(null);
-      return const {};
-    }
     final explain =
         profile.settings.wakeUpCheck &&
         (await _explainCheck?.call(profile.id) ?? false);
@@ -89,6 +82,19 @@ final class WakeUpArming {
     if (armed == null) return known ?? const {};
     await _write(armed);
     return armed;
+  }
+
+  /// Disarms every Wake Up alarm this device armed, once: the switch went
+  /// off, or another device is the one that rings (ED-084). Returns what is
+  /// still armed: out of reach (a background engine), the alarms still
+  /// ring, so they stay recorded, the notification path leaves them out
+  /// and the next sync disarms them.
+  Future<Set<DateTime>> disarm() async {
+    final known = await _read();
+    if (known == null) return const {};
+    if (!await _gateway.disarmAll()) return known;
+    await _write(null);
+    return const {};
   }
 
   /// [alarms] with each morning's mission (15 §8): the mode, the alarm

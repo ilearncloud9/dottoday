@@ -207,7 +207,7 @@ If the day has no thread: the dot is empty, the first-dot slot becomes "Nothing 
 
 **What the user sees.** In Settings › Day shape, Wind Down shows "22:45 · from tomorrow's 06:30" with the sleep target chip beside it; tapping explains in one sentence. On Today, when tomorrow's first dot is earlier than usual, the Wind Down dot moves earlier and the day card footer reads "Tomorrow starts 06:00 → wind down 22:15". No other nudge. If the derived Wind Down would fall before the current time plus 1 h, the configured Wind Down wins and nothing is said.
 
-**Edges.** Per-weekday Wind Down overrides keep winning when earlier. Timezone change re-derives. Tomorrow has no thread → configured Wind Down. The Wind Down review's weekly picture (D1) gains nothing; the daily review opens at the effective Wind Down.
+**Edges.** A Wind Down after midnight (Q8, docs/05 "Wind Down after midnight", e.g. `24:30`) is still day D's: its reminder fires once at 00:30 with day D's key, the review it opens is day D's, and it is held at tomorrow's Wake Up so the night is never negative. Per-weekday Wind Down overrides keep winning when earlier. Timezone change re-derives. Tomorrow has no thread → configured Wind Down. The Wind Down review's weekly picture (D1) gains nothing; the daily review opens at the effective Wind Down.
 
 **As built (M17.5).** `effectiveDayShape` in `domain/time/wind_down.dart` is anchored on tomorrow's Wake Up time (owner's anchor) and read through the `dayEnds` provider. There is no sleep block (§1), so nothing else is subtracted.
 
@@ -343,6 +343,24 @@ A new Settings section **Wake Up** sits directly under Day shape (Wake Up / Wind
 Rules for the screen: a switch that cannot take effect on this device is greyed, not hidden, with its reason and fix button inline; changing `alarmEnabled` or `anchor` re-runs `syncNotifications()` immediately; turning `alarmEnabled` off disarms and clears any pending check; defaults are applied per-device on first launch after the M17 update so that nothing rings differently until the user says yes (§11). Minimal mode shows the same screen with rows collapsed into three groups (§10).
 
 Rows added by §7b (same table, after Sleep target): **Show the night on the day dot** (`showNightArc`, switch, default on, always shown) and **Offer to move Wind Down from how I actually get up** (`windDownLearnOffer`, switch, default on, shown when sleep target is set). The sleep-target row's default becomes 8 h for accounts created after this milestone and stays off for existing accounts until they touch it.
+
+### 9a. Alarm sounds on (ED-084, R2-19; built after the Round 2 close-out)
+
+One device per account rings Wake Up: `Settings.alarmDeviceId`, a row of the account's device list
+(docs/05 `devices`). The rule is `ringsOnThisDevice` (`domain/devices/alarm_device.dart`): the device
+must be a phone or tablet and be the chosen one; before any is chosen every phone rings, and the first
+one to sync with Wake Up on claims it, so an upgrade silences nobody. `NotificationSync` asks it before
+arming; a phone that isn't chosen disarms what it armed (`WakeUpArming.disarm`) and leaves Wake Up off
+the notification path, then reports its row (`DeviceReporter`). Mac and web are listed and never ring.
+
+Settings › Wake Up options shows **Alarm sounds on** under the Wake Up alarm switch while it is on: the
+chosen device ("This iPhone") and its state, with "Only this one phone or tablet rings Wake Up. A Mac
+and the web never ring." under it. States (`alarmDeviceState`): **Ready** (with its next Wake Up),
+**Waiting to sync** (chosen, not yet taken over), **Alarms off on that device** (alarms not allowed
+there), **No device rings**, **Offline** (not seen for 24 h). A tap opens the list of devices that can
+ring. Stated limits: no backup ringing, no exactly-once across devices (an offline device may ring once
+during a switch), and a change reaches the ringing device only when it syncs. The design's "Switching"
+state reads as Waiting to sync.
 
 ## 10. Minimal mode
 
