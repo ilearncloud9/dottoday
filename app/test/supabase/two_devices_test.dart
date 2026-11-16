@@ -60,6 +60,7 @@ final class _Device {
 }
 
 void main() {
+  useLocalSupabase();
   setUpAll(tz_data.initializeTimeZones);
 
   late _Device phone;
@@ -68,7 +69,7 @@ void main() {
   String newId() => const UuidV7Generator().newId();
 
   setUpAll(() async {
-    final email = 'm66-${DateTime.now().microsecondsSinceEpoch}@example.com';
+    final email = testEmail('m66');
     final first = localClient();
     await first.auth.signInWithOtp(
       email: email,

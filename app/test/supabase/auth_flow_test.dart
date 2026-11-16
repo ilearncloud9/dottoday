@@ -20,6 +20,7 @@ import 'local_supabase.dart';
 // link, the server's redirect to dottoday://auth-callback, the PKCE code
 // exchange; then the web-push store as that user (RLS, migration 0003).
 void main() {
+  useLocalSupabase();
   test(
     'magic link → callback → signed in; push rows are the user\'s own',
     () async {
@@ -37,7 +38,7 @@ void main() {
         await callbacks.close();
         await client.dispose();
       });
-      final email = 'm61-${DateTime.now().microsecondsSinceEpoch}@example.com';
+      final email = testEmail('m61');
 
       expect(await service.watch().first, isA<LocalOnly>());
       await service.sendMagicLink(email);
