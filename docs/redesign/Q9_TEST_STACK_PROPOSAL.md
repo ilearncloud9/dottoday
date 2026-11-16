@@ -1,6 +1,6 @@
 # Q9 · An isolated local Supabase stack for integration tests (proposal)
 
-**Status:** approved 2026-11-15 (ED-352): decision A (P1 to P4 as written), C at the defaults. Decision B (CLAUDE.md §7 wording) not approved; CLAUDE.md stays as it is. Nothing created yet; the PR is next.
+**Status:** approved 2026-11-15 (ED-352): decision A (P1 to P4 as written), C at the defaults. Decision B (CLAUDE.md §7 wording) not approved; CLAUDE.md stays as it is. Built and merged to `main` 2026-11-16 as [ilearncloud9/dottoday#82](https://github.com/ilearncloud9/dottoday/pull/82).
 **Scope:** local development on this Mac only. CI already runs on a fresh, throw-away runner and keeps its current setup.
 
 ## 1. What is wrong today (read from the repo, nothing run)
