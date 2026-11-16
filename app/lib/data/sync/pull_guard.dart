@@ -74,13 +74,15 @@ Future<PullOwner?> ownerSessionOrNull(AppDatabase db, String userId) async {
 /// throws [PullRefusedException] unless [owner] is still shown in the same
 /// session, not sealed for deletion and not being removed.
 Future<void> checkPull(AppDatabase db, PullOwner owner) async {
+  // Its own check, first: checkNotSealed also refuses a pending removal,
+  // but the pull names the reason.
+  if (await isRemovalPending(db, owner.userId)) {
+    throw const PullRefusedException(PullRefusal.removalPending);
+  }
   try {
     await checkNotSealed(db, owner.userId);
   } on OwnerSealedException {
     throw const PullRefusedException(PullRefusal.sealed);
-  }
-  if (await isRemovalPending(db, owner.userId)) {
-    throw const PullRefusedException(PullRefusal.removalPending);
   }
   if (await activeOwnerId(db) != owner.userId ||
       await ownerGeneration(db) != owner.generation) {

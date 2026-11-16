@@ -15,6 +15,7 @@
 library;
 
 import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/db/owner_meta.dart';
 import 'package:drift/drift.dart';
 
 const _sealKind = 'deletion_seal';
@@ -29,9 +30,16 @@ final class OwnerSealedException implements Exception {
 }
 
 /// Inside the caller's transaction: throws [OwnerSealedException] while
-/// [owner]'s deletion is sealed.
+/// [owner]'s deletion is sealed, or while its local removal is pending.
+///
+/// The seal lives only while the deletion runs: launch clears one a crash
+/// left ([clearDeletionSeals]). The pending-removal mark is what stays, so
+/// it closes the same door: after a crash, nothing saves to an account
+/// whose removal hasn't finished (CR-160 open item B, fail closed). The
+/// removal itself deletes with plain statements and never comes here.
 Future<void> checkNotSealed(AppDatabase db, String owner) async {
-  if (await _get(db, _sealKey(owner)) != null) {
+  if (await _get(db, _sealKey(owner)) != null ||
+      await _get(db, removalPendingKey(owner)) != null) {
     throw const OwnerSealedException();
   }
 }

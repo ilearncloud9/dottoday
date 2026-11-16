@@ -203,10 +203,21 @@ Future<void> finishAccountRemoval(
     await db.customStatement('DELETE FROM import_sessions WHERE owner = ?', [
       accountId,
     ]);
+    // Its Wake Up mornings (schema 22, keyed by owner_id, no FK) and its
+    // device list (ED-084): by its exact id, not left to a cascade.
+    await db.customStatement('DELETE FROM wake_up_days WHERE owner_id = ?', [
+      accountId,
+    ]);
+    await db.customStatement('DELETE FROM devices WHERE user_id = ?', [
+      accountId,
+    ]);
     await (db.delete(db.profiles)..where((p) => p.id.equals(accountId))).go();
     // Owner-keyed values (`<kind>:<owner>`), the pending mark last of all.
+    // An exact, case-sensitive suffix: LIKE ignores ASCII case, so it would
+    // also take a key ending in another id that differs only in case.
     await db.customStatement(
-      "DELETE FROM local_meta WHERE key LIKE '%:' || ? AND key <> ?",
+      'DELETE FROM local_meta '
+      "WHERE substr(key, -length(?1) - 1) = ':' || ?1 AND key <> ?2",
       [accountId, removalPendingKey(accountId)],
     );
     await _forget(db, removalPendingKey(accountId));

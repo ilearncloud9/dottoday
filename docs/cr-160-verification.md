@@ -76,8 +76,8 @@ The draft PR is for review only. Before it can be marked ready:
    gotrue clears this device's session before it tells the server, so `SupabaseAccountService.signOut`
    now treats an unreachable server after the session is gone as signed out here (no error), and
    "Sign out everywhere" offline as `SignedOutHereOnlyFailure`: "You’re signed out on this device. Your
-   other devices couldn’t be signed out because you’re offline…" (owner-approved; de, fr, es pending
-   native-speaker review). Tests: `test/data/auth/supabase_sign_out_test.dart`,
+   other devices couldn’t be signed out because you’re offline…" (owner-approved; de, fr, es approved by
+   the owner as written 2026-11-15). Tests: `test/data/auth/supabase_sign_out_test.dart`,
    `sign_out_prompt_test.dart`; criterion 11's offline step now expects success and logged
    `signed out: auth ok` on the iPhone 17 Pro Simulator, the Mac and Chromium (local stack).
 5. ~~**Sync now** must always give truthful feedback, including while a run is failing.~~ **Fixed
@@ -87,7 +87,9 @@ The draft PR is for review only. Before it can be marked ready:
    `engine_sync_service_test.dart` "Sync now during a run reports its end" (fails without the fix),
    `sign_out_prompt_test.dart` "A2 Stay signed in: a sync that fails says so".
 6. **Visual discrepancy.** The new screens use DotTheme (Inter, app accent), not the approved
-   Concept E Manrope/teal treatment; screen-specific adjustments only.
+   Concept E Manrope/teal treatment; screen-specific adjustments only. **Decided (owner
+   2026-11-15):** CR-160 merges in the current theme, matching the rest of the app; Concept E
+   restyles these screens with every other screen when it lands. Not a CR-160 blocker.
 7. **Verification.** Firefox and Safari (criterion 10); physical iPhone and Android incl. widgets,
    Live Activity, lock-screen notifications, Wake Up alarms (criterion 11); hosted staging only after
    the owner's separate go.
@@ -118,12 +120,15 @@ The draft PR is for review only. Before it can be marked ready:
    held: `owner_held:<id>`; no one signs in as it, so never shown or synced). Kept, never deleted. A
    push refused as "not accessible" (`SyncGatewayException.foreign`) holds that row and goes on
    instead of retrying forever. Settings › Account says so while anything is held (owner-approved
-   copy; de, fr, es pending native-speaker review). Tests: `legacy_switch_test.dart` (5, incl. never a
+   copy; de, fr, es approved by the owner as written 2026-11-15). Tests: `legacy_switch_test.dart` (5, incl. never a
    guest after a sign-out; the main case fails with the check removed), `account_held_notice_test.dart`;
    on the local stack (`test/supabase/legacy_switch_test.dart`, two real accounts): nothing of A's
    reaches B's account and B's new task does (with the check removed, A's offline task did reach B),
-   and the real refusal is parsed and held. **Still open:** a device whose A never synced at all leaves
-   no trace to detect; no recovery screen for held tasks (design work).
+   and the real refusal is parsed and held. **Accepted as known limits (owner 2026-11-15):** a device
+   whose A never synced at all leaves no trace to detect, so A's tasks can still reach B there (only
+   devices that ran a pre-CR-160 build, none released); held tasks have no recovery screen, only the
+   Settings › Account notice. Both go in the release notes; a recovery screen is a follow-up after
+   release.
 
 9. **Migration 0014** is not deployed; rollout per `docs/cr-160-rollout.md` after separate approval.
 
@@ -261,10 +266,17 @@ At-rest protection of the queue (unchanged by this pass, reviewed):
 | Android | `HomeWidgetPreferences` in the app's private storage | The app only (one process) | File-based encryption of credential-protected storage; not encrypted by Dottoday |
 | Web | Cache Storage of the app's origin | Pages and the worker of that origin | Browser profile on disk, not encrypted by Dottoday |
 
-Trade-off: a share or Add task text waits in plain text in these stores until applied, and an
-unattributed one waits with no limit. Encrypting the queue would need a key the share extension can
-use without the app (a Keychain/Keystore key shared with extensions): not done in this pass (new
-mechanism, owner decision).
+Trade-off as of this pass: a share or Add task text waited in plain text in these stores until
+applied, and an unattributed one waits with no limit. Since Iteration 1 (`733d7dda`), iOS, macOS and
+Android seal the text to the app's key at enqueue (`QueueSeal.swift`, `QueueCipher.kt`); ids, times
+and owners stay plain there.
+
+**Web: residual confidentiality risk, accepted (owner 2026-11-15).** The web queue keeps share and
+Add task text in **plain text** in the origin's Cache Storage until a tab applies it, and an
+unattributed entry keeps it with no limit. Its only protection is the browser's same-origin access
+boundary and the browser profile on disk. Dottoday adds no encryption at rest on the web, and no
+OS-level disk encryption is assumed. WebCrypto sealing is not part of I7; a separate design can be
+considered if the threat model requires it.
 
 ### Locking across execution contexts (verified)
 
@@ -463,7 +475,34 @@ Open before push approval (owner 2026-11-09):
 - **A. Refusal-message visibility:** fixed locally (below, uncommitted, awaiting review); still
   not seen on a device or simulator.
 - **B. Crash recovery:** whether clearing a stale seal at launch can reopen saves to an account
-  whose deletion or local removal is still pending.
+  whose deletion or local removal is still pending. **Design accepted (owner 2026-11-15), fail
+  closed:** clearing the seal must never make a pending-removal account visible or writable, and the
+  removal runner finishes the interrupted removal. Not verified until a crash/restart test shows:
+  the pending-removal marker survives a restart; no foreground or background writer can write to
+  that account; iPhone, Android and Mac resume the removal at launch; the web still requires
+  "Finish removing"; repeating the recovery never deletes another account's data.
+  **Built and verified locally 2026-11-16 (owner-approved scope: two app fixes and tests).**
+  `checkNotSealed` (`data/owners/deletion_seal.dart`) now also refuses an owner whose removal is
+  pending, so clearing the seal at launch reopens nothing: the write path (direct and shown-only
+  writes, so queued actions), pending calendar series, and, through `checkPull`, sync pulls and
+  calendar import and write-back are all refused. `checkPull` checks the pending removal first and
+  keeps its own reason (`removalPending`). The removal deletes with plain statements, never through
+  these guards, so it still finishes. `finishAccountRemoval` now also deletes the account's Wake Up
+  days (`owner_id`, schema 22) and device-list rows (`user_id`), and matches owner-keyed settings by
+  an exact, case-sensitive suffix: SQLite `LIKE` ignores ASCII case, so the old `LIKE '%:' || id`
+  also deleted a key ending in an id that differs only in case. Test:
+  `test/data/owners/removal_crash_restart_test.dart` (7) on a file database, closed and reopened as
+  a crash and relaunch would: the mark survives and A stays hidden; with A forced shown, a direct
+  write, a shown-only write, a queued action, a sync pull and the calendar paths' `checkPull` are
+  refused (source check: the importer and write-back commit through `checkPull` in their
+  transaction); the shown guest and account B still save; the native launch runner finishes the
+  removal; on the web the runner leaves it pending and refused until "Finish removing"; an
+  interrupted cleanup changes nothing and resumes; cleanup repeated after it finished changes
+  nothing. Every case compares the guest's and B's tasks, Wake Up days, devices and settings
+  before and after, and keeps four look-alike keys (A's id with a prefix, a suffix, as the kind,
+  in upper case). Mutation checks: without the new guard 2 cases fail; without the Wake Up and
+  device cleanup 4 fail; with `LIKE` the upper-case key is deleted. Local only: not on a device,
+  not in CI yet.
 - **C. External changes:** changes synced from another device during the D1 review are not
   covered by the local revision (export-consistency risk, separate).
 - **D. Remaining paths:** the Android Wake Up path, physical-device behaviour, and the writers

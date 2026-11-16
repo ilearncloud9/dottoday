@@ -82,6 +82,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - M10.1: The thinking help behind Break it down, brain-dump and length suggestions now runs on your device — Apple Intelligence on iPhone and Mac, Gemini Nano on supported Android phones, Chrome's built-in model on the web — and falls back to your own history and simple rules where there is none. Nothing you type goes to a server; Settings › Privacy explains it and can clear what was kept.
 
 ### Fixed
+- If the app is closed while an account is being deleted, nothing can be saved to that account when it opens again, and its removal finishes as before. Removing an account from a device now also removes its Wake Up history and its entry on the device list, and never another person's settings whose name only looks similar (CR-160).
 - On a shared device, Wake Up is now each person's own: switching accounts calls off the previous person's Wake Up Check on Android, and each account sees and learns only from its own mornings (CR-160).
 - On a test device where an older version signed into a second account, that account no longer receives the first account's tasks. They're set aside on the device, and Settings › Account says so (CR-160).
 - Signing out while offline no longer shows an error: you're signed out on this device. "Sign out everywhere" while offline says that your other devices are still signed in (CR-160).
