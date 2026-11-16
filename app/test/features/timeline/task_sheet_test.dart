@@ -26,8 +26,9 @@ Future<void> _pump(
   List<Occurrence>? rows,
   ThemeMode mode = ThemeMode.light,
 }) async {
+  // Tall enough for the whole sheet at the Concept E type scale (M18.1).
   tester.view
-    ..physicalSize = const Size(390, 1000)
+    ..physicalSize = const Size(390, 1400)
     ..devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   _subtasks = FakeSubtaskRepository(demoDaySubtasks(_date));

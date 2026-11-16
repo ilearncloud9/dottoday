@@ -1,6 +1,8 @@
 import 'package:flutter/painting.dart';
 
-/// Type roles of Concept A (docs/10-ui-concept-a.md §2.2), Inter (bundled).
+/// Type roles in Manrope (bundled), Concept E's content face (ED-110), at
+/// the E phone scale (E_DESIGN_RULES.md §3.2, ED-104; M18.1). Chrome moves
+/// to each platform's system face in M18.6.
 ///
 /// Sizes are unscaled logical pixels; the system text scaler (up to 200 %)
 /// is applied by Flutter at render time, so never clamp it here. Every role
@@ -31,28 +33,28 @@ final class DotType {
   /// Roles in [text], with [muted] for captions and meta.
   factory DotType.withColors({required Color text, required Color muted}) =>
       DotType(
-        pageTitle: _inter(28, 34, 700, text, tracking: -0.02),
-        pageTitleExpanded: _inter(30, 36, 700, text, tracking: -0.02),
-        topBarTitle: _inter(22, 28, 600, text),
-        caption: _inter(12, 16, 600, muted, tracking: 0.06),
-        cardTitle: _inter(15, 20, 700, text),
-        rowTitle: _inter(16, 22, 500, text),
-        liveRowTitle: _inter(20, 26, 700, text),
-        rowMeta: _inter(12, 16, 500, muted),
-        body: _inter(16, 22, 400, text),
-        button: _inter(14, 18, 600, text),
-        tabLabel: _inter(10, 12, 500, muted),
-        tabLabelActive: _inter(10, 12, 600, text),
-        stripDate: _inter(18, 22, 600, text),
-        stripWeekday: _inter(13, 16, 500, muted),
-        monthDate: _inter(15, 20, 500, text),
-        dayTitle: _inter(28, 34, 800, text, tracking: -0.03),
-        dayCaption: _inter(13, 18, 700, muted, tracking: 0.06),
-        threadTitle: _inter(20, 26, 700, text),
-        threadMeta: _inter(15, 20, 500, muted),
+        pageTitle: _manrope(28, 34, 700, text, tracking: -0.02),
+        pageTitleExpanded: _manrope(30, 36, 700, text, tracking: -0.02),
+        topBarTitle: _manrope(24, 32, 400, text),
+        caption: _manrope(12, 16, 600, muted, tracking: 0.06),
+        cardTitle: _manrope(15, 20, 700, text),
+        rowTitle: _manrope(17, 21, 700, text),
+        liveRowTitle: _manrope(19, 24, 700, text),
+        rowMeta: _manrope(13, 18, 400, muted),
+        body: _manrope(15, 22, 400, text),
+        button: _manrope(15, 20, 700, text),
+        tabLabel: _manrope(10, 12, 500, muted),
+        tabLabelActive: _manrope(10, 12, 600, text),
+        stripDate: _manrope(18, 22, 600, text),
+        stripWeekday: _manrope(13, 16, 500, muted),
+        monthDate: _manrope(15, 20, 500, text),
+        dayTitle: _manrope(28, 34, 700, text),
+        dayCaption: _manrope(13, 18, 700, muted, tracking: 0.06),
+        threadTitle: _manrope(17, 21, 700, text),
+        threadMeta: _manrope(13, 18, 400, muted),
       );
 
-  static const fontFamily = 'Inter';
+  static const fontFamily = 'Manrope';
 
   /// The weight `**bold**` notes take (markdown-lite, docs/02 F2.9).
   static const _strongWeight = 700;
@@ -81,7 +83,7 @@ final class DotType {
   /// The page title at expanded width (Mac/web 30/700).
   final TextStyle pageTitleExpanded;
 
-  /// Android top-bar title (22/600), a §2.2 platform idiom.
+  /// Android top-bar title (24/400, E §3.3), a platform idiom.
   final TextStyle topBarTitle;
 
   /// 12/600, uppercase by the caller (`TIME`, `DAY SHAPE`), +0.06em, muted.
@@ -90,19 +92,19 @@ final class DotType {
   /// "Wednesday · Today" (15/700).
   final TextStyle cardTitle;
 
-  /// Task rows (16/500).
+  /// Task rows (17/700, E §3.2).
   final TextStyle rowTitle;
 
-  /// The live row (20/700, as [threadTitle]; ADR-0015).
+  /// The live (now) row (19/24/700 on Full Today, ED-104).
   final TextStyle liveRowTitle;
 
-  /// Time range, "1 h free" (12/500, muted).
+  /// Time range, "1 h free" (13/400, muted, E §3.2).
   final TextStyle rowMeta;
 
-  /// Sheet and settings text that is not a row title (16/400).
+  /// Sheet and settings text that is not a row title (15/22/400).
   final TextStyle body;
 
-  /// Button and chip labels (14/600, measured against `Main`).
+  /// Button and chip labels (15/700, E primary button).
   final TextStyle button;
 
   /// Tab bar (10/500, 10/600 active; Android 12 via [androidTab]).
@@ -119,19 +121,19 @@ final class DotType {
   /// Week-strip weekday names (≈ 13/500 muted, `Main`).
   final TextStyle stripWeekday;
 
-  /// Today's title, "October 21, 2026" (28/800, tight, ADR-0015): one
-  /// line with the day dot and ⋯ on a 390 pt phone.
+  /// Today's title, "October 21, 2026" (28/34/700, E §3.3 date title):
+  /// one line with the day dot and ⋯ on a 390 pt phone.
   final TextStyle dayTitle;
 
   /// Today's "FRI, OCT 30" line over [dayTitle] (13/700, uppercase by the
   /// caller, muted) and the day's numbers under it.
   final TextStyle dayCaption;
 
-  /// A task on the day thread (20/700, ADR-0015); [rowTitle] stays for
-  /// lists and the Mac spread's side days.
+  /// A task on the day thread (17/21/700, E row title); [rowTitle] stays
+  /// for lists and the Mac spread's side days.
   final TextStyle threadTitle;
 
-  /// A day-thread row's time range (15/500, muted).
+  /// A day-thread row's time range (13/400, muted, E row time).
   final TextStyle threadMeta;
 
   /// Android's 12 px tab labels (§2.2).
@@ -164,7 +166,7 @@ final class DotType {
   }
 }
 
-TextStyle _inter(
+TextStyle _manrope(
   double size,
   double lineHeight,
   int weight,

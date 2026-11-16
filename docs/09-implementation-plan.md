@@ -597,7 +597,7 @@ Rules for every task in M18 to M22:
 ## Milestone 18 — Concept E foundations (goal: the approved tokens, components and adaptive shell, with the existing screens still working on top of them)
 
 - [x] M18.0 Rulebook and spec. Done 2026-11-16 (ED-357): docs/14 §3 rows and `FeatureId`s `earlierFold`, `threadOutside`, `searchOrRun` (the policy test passes); the other listed features already had rows (noted under §3); docs/03 and docs/10 carry a redesign-branch history note. ~~**Owner gate:** CLAUDE.md §11 names Concept E (RD-0002) as the design source on this branch~~ done 2026-11-16 (owner approved, ED-356). Add the `docs/14-minimal-mode.md` §3 rows and `FeatureId`s for the features Concept E adds or moves: the Earlier fold (ED-164), the before-Wake-Up fold (ED-246, ED-345), Pick today's one thing from the Day menu (ED-339), the Year strip (ED-348), Rebalance (ED-341), Search or run (ED-333), pin, travel time and energy (ED-346), and spoken Brain dump (ED-343). Point `docs/03-ux-spec.md` and `docs/10-ui-concept-a.md` at the E docs as history.
-- [ ] M18.1 Light tokens in `core/theme/` (`DotTheme`), replacing the Concept A values:
+- [x] M18.1 Light tokens in `core/theme/` (`DotTheme`), replacing the Concept A values. Done 2026-11-16 (ED-358): neutrals, the teal accent `#11615C` as the new default (indigo, coral and violet accents unchanged until M20.7: E violet fails 4.5:1 as a button), the nine E task fills, Manrope (bundled, OFL in About › Licenses) at the E phone scale, card radii 20 / 24, the accent focus ring; ring shades per colour move to M18.3, elevation tiers to M18.4 with the components that use them; the app icon and launch colours stay until M22.4. Originally listed:
   - colour roles and the accent (rules §4);
   - 12 task colours with ring and glyph shades (ED-155, ED-161, ED-196) and their keys (staged, M20.7);
   - Manrope for content, system type for chrome (ED-110, ED-206);
@@ -627,7 +627,9 @@ Rules for every task in M18 to M22:
   - the Mac minimum window of 840 × 640 with the narrow Day fold (ED-169, ED-170);
   - tablet navigation by width, native per platform (ED-171, R2-1 ED-266 and ED-267), with Stage Manager, foldables and the hinge (R2-31, ED-334);
   - compact mobile web (ED-172, E-MobileWeb);
-  - phone landscape (R2-41, ED-347).
+  - phone landscape (R2-41, ED-347);
+  - touch-first web windows use the touch-tablet sizes (ED-261, ED-256);
+  - Apple Pencil and Android stylus: handwriting in text fields only (T4, ED-258).
 - [ ] M18.6 Native chrome, with no new native target (ED-128):
   - iPhone: the N3 native tab bar with + in its line (ED-124, ED-132), the native Day menu, the stock keyboard (ED-135), and the + named "Add a task" (ED-240);
   - Android: bottom row C in Flutter (ED-125);
@@ -650,6 +652,7 @@ Rules for every task in M18 to M22:
 - [ ] M19.2 Today in Full on wide screens:
   - Mac and web Workspace (E-FullA-v2, ED-073) with the Plan panel A + B (ED-184);
   - hover and drag on web blocks (ED-116);
+  - the Workspace's Day / 3 days / Week / Month tabs (ED-333; in today's app 3 days is Today's spread);
   - expanded tablets (R2-2, ED-269);
   - the narrow Mac (E-G4-3-Narrow).
 - [ ] M19.3 Add:
@@ -668,6 +671,7 @@ Rules for every task in M18 to M22:
   - reopen from the Earlier fold;
   - change day by the Day menu, swipe or arrows (R2-5, ED-276), and Go to date (R2-36, ED-342).
 - [ ] M19.6 The same journey in Minimal:
+  - the Now tab (phones) and Now pane (Mac and web): the horizon, the large now-dot and the orb, with Done, Focus and Need more time? (ED-066, ED-106);
   - E-PhonesMinimal and E-Minimal (ED-089, ED-106, ED-145);
   - the minimal task sheet title (ED-216);
   - the minimal sidebar at 200 (ED-207).
@@ -692,6 +696,7 @@ Rules for every task in M18 to M22:
   - one grouped Day menu, contents per mode (ED-093; tablets ED-254);
   - Routines, Duplicate day, Copy as text and Low-energy mode (R2-22, ED-322);
   - Pick today's one thing (R2-34, ED-339);
+  - Day review and Week in review, one surface each with every entry kept (G2-12, ED-099; tablets R2-14, ED-297);
   - Rebalance with pins and the calendar trigger (R2-35, ED-341).
 - [ ] M20.4 Proposal flows (R2-23, ED-324):
   - Brain dump, spoken Brain dump with its permission and web states (R2-37, ED-343);
@@ -708,14 +713,15 @@ Rules for every task in M18 to M22:
   - six groups and "Everything else" (G2-4, ED-081 to ED-084), opened from Settings' native place (ED-238);
   - tablets (R2-11, ED-291); Planning, Sounds and Siri pages (R2-33, ED-338);
   - the Day shape row removed (ED-321);
-  - Appearance and colour selection (G3-9b, ED-161).
+  - Appearance and colour selection (G3-9b, ED-161), with the colour and icon picker on tablets (R2-15, ED-299);
+  - the Mac Settings window, Dottoday › Settings… ⌘, (ED-238, ED-333; today Settings is a page).
   **Colour data:** brown, plum and olive ship over two releases (ED-219); custom colours are stored as a hex value in `color_key` (ED-220). App colour and Your colours need new `profiles` columns (ED-221), which is a must-ask migration.
 - [ ] M20.8 Wake Up and Wind Down:
   - Settings pages and the dial (ED-084), with tablets (R2-18, ED-311);
   - the alarm, option B "The thread wakes up" (R2-19, ED-314), with tablet missions that need no movement and Catch the dot "Tap the blue circle" (ED-336);
   - the explainer (R2-38, ED-344);
   - Wind Down after midnight, on the day model from #81.
-- [ ] M20.9 Notifications and system surfaces: task alerts, the Wind Down summary, Reminders, health and the test alarm (R2-20, ED-317); widgets, Live Activity, the menu bar and controls reading `DaySnapshot` only (R2-17, ED-309). These are visual changes only; delivery stays exactly-once (R-10).
+- [ ] M20.9 Notifications and system surfaces: task alerts, the Wind Down summary, Reminders, health and the test alarm (R2-20, ED-317); widgets, Live Activity, the menu bar and controls reading `DaySnapshot` only (R2-17, ED-309). These are visual changes only; delivery stays exactly-once (R-10). Also the Mac Now mini window, Window › Show Now ⌥⌘0: a native non-activating panel fed by the day snapshot and the status-item channel, with Need More Time +5 / +15 / +30 (ED-066, CR-042, CR-097, ED-260). It is not a second Flutter window and not a new target.
 - [ ] M20.10 Data safety and sync:
   - Data and privacy, Export and backups, import and restore, Trash with Delete now and Empty Trash (R2-21, ED-319, ED-336);
   - sync states and conflicts (R2-8, ED-283) with Undo after a resolved conflict (ED-194) and Keep both for notes (ED-195);
@@ -723,7 +729,7 @@ Rules for every task in M18 to M22:
 - [ ] M20.11 Onboarding from the approved interactive prototype (ED-305, ED-350, ED-351). It replaces the current flow:
   - five steps, with no Layout step;
   - the 13+ note on Hello, "Dottoday is for people aged 13+.";
-  - the day-2 "Want it simpler?" card.
+  - the "Later, when it helps" cards, each shown once and dismissible: day 2 "Want it simpler?", after three tasks "Make it a habit", the first Wind Down "Close the day", a second device "Sign in to sync".
 - [ ] M20.12 Accounts (CR-160, ED-193, ED-222). **Blocked** until [ilearncloud9/dottoday#75](https://github.com/ilearncloud9/dottoday/pull/75) merges and the owner approves the account screens (not yet drawn). Acceptance criteria are in handoff § CR-160.
 - [ ] M20.13 The rest:
   - This week, Calendars, App lock, Help and about, web install, and the de/fr copy decisions (R2-24, ED-326, ED-327);
@@ -751,7 +757,23 @@ Rules for every task in M18 to M22:
 - [ ] M22.1 Hosted Supabase: push the redesign's migrations (must-ask; includes ED-221 if built) and run `tool/hosted_rls_test.sh`.
 - [ ] M22.2 Owner setup: web push delivery (Q11) and calendar change webhooks (Q13).
 - [ ] M22.3 Copy: native-speaker pass on the new de/fr/es strings, store descriptions (the 13+ note), and the release note for the new task-colour shades (ED-161, colour review Decision 1).
-- [ ] M22.4 Merge `redesign/design-lab` to `main` through a PR, with CHANGELOG, `SYNC_LOG.md` and the PR description listing what changed and what was not verified. All four platforms ship the same release (R-13).
+- [ ] M22.4 Brand rollout (MASTER_PLAYBOOK step 15, owner gate): the app icon, launch marks and launch colours move to Concept E. Until then `tool/gen_app_icons.dart` keeps the shipped indigo mark and `#FAFAF8` / `#121214` launch surfaces (pinned in M18.1).
+- [ ] M22.5 Merge `redesign/design-lab` to `main` through a PR, with CHANGELOG, `SYNC_LOG.md` and the PR description listing what changed and what was not verified. All four platforms ship the same release (R-13).
+
+## Ideas Concept E noted but did not design (owner decides; do not start)
+
+Round 2 found these while drawing. They are not built today and Concept E has no approved design for them, so each needs a design and the owner's OK before it becomes a task (ED-328 to ED-332, ED-335).
+
+- [ ] Focus: pause a running Focus session (ED-329, ED-335).
+- [ ] Moving: an overlap preview while dragging; Esc or Back cancels a drag (ED-328).
+- [ ] Day states: a compact layout for a very dense day (ED-330, ED-335).
+- [ ] Alerts: a custom alert time, beyond the preset lead times (ED-330, ED-335).
+- [ ] Android Minimal "Rest of today" (the iPhone frame is the reference, ED-330).
+- [ ] Pickers: a "Date…" option in the move-to-a-day picker (ED-331).
+- [ ] Progress for export, import and connecting a calendar (ED-331, ED-335).
+- [ ] Copy a day to several days, or pick which tasks to copy; Duplicate day in Minimal (ED-332).
+- [ ] Long keyboard-shortcut labels (ED-332).
+- [ ] A first-week Week in review (ED-335).
 
 ## Follow-ups after M12 (found at the M12.6 ship-check)
 

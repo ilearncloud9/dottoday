@@ -52,7 +52,11 @@ void main() {
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField).last, 'new york');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('New York'));
+    // Tap the row, not the middle of its title: the search field's cursor
+    // handle sits over the title's centre at the Concept E type scale.
+    await tester.tap(
+      find.ancestor(of: find.text('New York'), matching: find.byType(ListTile)),
+    );
     await tester.pumpAndSettle();
     await tester.pump(const Duration(seconds: 1));
     expect(_deep().tzId, 'America/New_York');

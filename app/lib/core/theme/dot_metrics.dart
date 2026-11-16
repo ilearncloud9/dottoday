@@ -28,10 +28,13 @@ abstract final class DotSpace {
   static const double fabClearance = 56 + l + l;
 }
 
-/// Corner radii (docs/10 §2.3).
+/// Corner radii (Concept E, E_DESIGN_RULES.md §6.3; M18.1).
 abstract final class DotRadii {
-  static const double card = 16;
-  static const double cardLarge = 18;
+  /// Cards and grouped rows (E: 20–28).
+  static const double card = 20;
+
+  /// Larger cards: the Now card (24, ED-202), action tiles.
+  static const double cardLarge = 24;
   static const double sheet = 28;
   static const double pill = 999;
 

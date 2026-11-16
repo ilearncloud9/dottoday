@@ -114,7 +114,7 @@ void main() {
       ]);
       expect(s.firstDayOfWeek, 1);
       expect(s.theme, ThemePreference.system);
-      expect(s.accent, 'indigo');
+      expect(s.accent, 'teal');
     });
 
     test('quiet hours off round-trips (null is not replaced by a default)', () {

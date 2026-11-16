@@ -4726,6 +4726,40 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Records:** CHANGELOG entry added. Plan M18.0 ticked.
 - No UI changed.
 
+### ED-358 · M18.1 done: Concept E light tokens; Concept E ideas added to the plan
+- **Date:** 2026-11-16. **Owner:** "Start M18.1"; "Yes, download and go" (the Manrope download); "Also add any new ideas that is in Concept E that is not existing … to the plan".
+- **Tokens:** the light theme moves to Concept E (rules §3–§4, §6.3):
+  - **Neutrals:** ground `#FBF7F1`, cards `#FFFDF9`, ink `#241F2B`, secondary `#6A6273`, the thread ahead `#BEB6C7`, and an 8 % ink hairline.
+  - **Task fills:** E shades for the nine keys (ED-161).
+  - **Accent:** the `teal` accent is E's `#11615C` and the new default (`docs/05` example updated). Indigo, coral and violet keep their values until the App colour work (M20.7), because E's violet fails 4.5:1 as a button colour.
+  - **Type:** Manrope replaces Inter (ED-110), downloaded from github.com/google/fonts (`Manrope[wght].ttf`, OFL; licence in About › Licenses), at the E phone scale: row title 700 17, now row 700 19/24, row time 400 13, body 15/22, buttons 700 15, Android top bar 400 24/32.
+  - **Shape:** card radii 20 / 24.
+  - **Focus ring:** the accent (ED-211).
+- **Deliberately not changed here:**
+  - dark values (M18.2);
+  - the per-colour ring shades (M18.3, with the dots that use them);
+  - elevation tiers (M18.4);
+  - the app icon and launch colours. These stay the shipped brand until the brand rollout (new plan task M22.4; `tool/gen_app_icons.dart` pins them).
+- **Layout fixes the new type scale needed:**
+  - the Week "Today" button lets its label wrap;
+  - the Week day-header row is capped at half the board and scrolls by itself at 200 % text;
+  - no text is clamped.
+- **Tests:**
+  - updated to the new values (theme, palette, focus ring, live activity, snapshot, settings default);
+  - two tests that tapped rows the bigger type moved now use a taller screen or tap the row itself;
+  - 2,199 goldens regenerated; samples checked against the boards (E colours and type on today's layouts, as expected before M19);
+  - `flutter test --exclude-tags supabase`: 6,099 passed, 21 skipped, 0 failed;
+  - `flutter analyze`: clean.
+- **Plan additions (Concept E features not yet listed):**
+  - touch-first web sizes (ED-261) and stylus handwriting (ED-258) in M18.5;
+  - the Workspace Day / 3 days / Week / Month tabs in M19.2;
+  - Minimal's Now tab and pane in M19.6;
+  - Day review and Week in review (ED-099, R2-14) in M20.3;
+  - the tablet colour picker (R2-15) and the Mac Settings window in M20.7;
+  - the Mac Now mini window in M20.9;
+  - all four "Later, when it helps" cards in M20.11.
+- **New plan section, "Ideas Concept E noted but did not design":** ten items that need a design and the owner's OK first (ED-328 to ED-335).
+
 ---
 
 ## Pending owner answers

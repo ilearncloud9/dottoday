@@ -6,15 +6,15 @@ part of 'task_palette.dart';
 /// The 9 task colours in picker order (docs/10 §2.1); identical in both
 /// themes. [key] is the persisted `color_key` (docs/05-data-model.md).
 enum TaskColor {
-  coral(Color(0xFFE5674F)),
-  amber(Color(0xFFD99A1F)),
-  mint(Color(0xFF2FA37A)),
-  teal(Color(0xFF1F9E9E)),
-  sky(Color(0xFF2E8FD6)),
-  indigo(Color(0xFF3B6CF6)),
-  violet(Color(0xFF7A5AF8)),
-  rose(Color(0xFFD64F86)),
-  slate(Color(0xFF6B6B70));
+  coral(Color(0xFFE2725B)),
+  amber(Color(0xFFD9A23A)),
+  mint(Color(0xFF4CA36B)),
+  teal(Color(0xFF2A9D8F)),
+  sky(Color(0xFF4A9BD6)),
+  indigo(Color(0xFF5B5FD6)),
+  violet(Color(0xFF8B5CF6)),
+  rose(Color(0xFFD9668F)),
+  slate(Color(0xFF6E6A75));
 
   const TaskColor(this.color);
 
@@ -46,7 +46,7 @@ const _legacy = <String, TaskColor>{
 /// persisted `settings.accent`.
 enum DotAccent {
   indigo(light: Color(0xFF3B6CF6), dark: Color(0xFF7FA0FF)),
-  teal(light: Color(0xFF1F9E9E), dark: Color(0xFF4CC9C9)),
+  teal(light: Color(0xFF11615C), dark: Color(0xFF4CC9C9)),
   coral(light: Color(0xFFE5674F), dark: Color(0xFFFF8A73)),
   violet(light: Color(0xFF7A5AF8), dark: Color(0xFFA58BFF));
 
@@ -56,7 +56,7 @@ enum DotAccent {
   final Color dark;
 
   /// Accent for new profiles and unknown keys.
-  static const fallback = DotAccent.indigo;
+  static const fallback = DotAccent.teal;
 
   static final _byKey = values.asNameMap();
 

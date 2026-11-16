@@ -217,13 +217,12 @@ ButtonStyle _pill(DotType type, DotColors c, {bool filled = false}) =>
 /// How strongly a focused ink row is washed with the accent.
 const _focusWash = 0.22;
 
-/// [rest] (null: the button's default), or a 2 px ring in the text colour
-/// while keyboard-focused: it reads on the accent fill, on raised surfaces
-/// and in both themes.
+/// [rest] (null: the button's default), or a 2 px solid ring in the
+/// accent while keyboard-focused (ED-211: 6.81:1 light).
 WidgetStateProperty<BorderSide?> _focusRing(DotColors c, {BorderSide? rest}) =>
     WidgetStateProperty.resolveWith(
       (s) => s.contains(WidgetState.focused)
-          ? BorderSide(color: c.text, width: DotSize.smallDotOutline)
+          ? BorderSide(color: c.accentInk, width: DotSize.smallDotOutline)
           : rest,
     );
 

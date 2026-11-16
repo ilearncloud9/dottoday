@@ -30,16 +30,18 @@ void main() {
       final l = DotColors.light();
       final d = DotColors.dark();
       expect(
-        [l.surface, l.raised, l.text, l.muted, l.outline, l.hairline],
+        [l.surface, l.raised, l.text, l.muted, l.hairline],
+        // Concept E light (E_DESIGN_RULES.md §4.1, M18.1).
         const [
-          Color(0xFFFAFAF8),
-          Color(0xFFFFFFFF),
-          Color(0xFF1A1A1C),
-          Color(0xFF6B6B70),
-          Color(0xFFE2E2DE),
-          Color(0xFFC9C9C4),
+          Color(0xFFFBF7F1),
+          Color(0xFFFFFDF9),
+          Color(0xFF241F2B),
+          Color(0xFF6A6273),
+          Color(0xFFBEB6C7),
         ],
       );
+      // The outline is E's 8 % ink hairline over the card colour.
+      expect(l.outline, Color.alphaBlend(const Color(0x14241F2B), l.raised));
       expect(
         [d.surface, d.raised, d.text, d.muted, d.outline, d.hairline],
         const [
@@ -51,9 +53,9 @@ void main() {
           Color(0xFF3A3A40),
         ],
       );
-      expect(l.accent, const Color(0xFF3B6CF6));
+      expect(l.accent, const Color(0xFF11615C));
       expect(l.onAccent, const Color(0xFFFFFFFF));
-      expect(d.accent, const Color(0xFF7FA0FF));
+      expect(d.accent, const Color(0xFF4CC9C9));
       expect(d.onAccent, const Color(0xFF0B1020));
       expect(l.accentTint.a, closeTo(0.12, 0.01));
       expect(d.accentTint.a, closeTo(0.22, 0.01));
@@ -108,7 +110,7 @@ void main() {
       expect(t.pageTitleExpanded.fontSize, 30);
       expect(
         [t.topBarTitle.fontSize, t.topBarTitle.fontWeight],
-        [22, FontWeight.w600],
+        [24, FontWeight.w400],
       );
       expect([t.caption.fontSize, t.caption.fontWeight], [12, FontWeight.w600]);
       expect(t.caption.color, Colors.grey);
@@ -118,13 +120,13 @@ void main() {
       );
       expect(
         [t.rowTitle.fontSize, t.rowTitle.fontWeight],
-        [16, FontWeight.w500],
+        [17, FontWeight.w700],
       );
       expect(
         [t.liveRowTitle.fontSize, t.liveRowTitle.fontWeight],
-        [20, FontWeight.w700],
+        [19, FontWeight.w700],
       );
-      expect([t.rowMeta.fontSize, t.rowMeta.color], [12, Colors.grey]);
+      expect([t.rowMeta.fontSize, t.rowMeta.color], [13, Colors.grey]);
       expect(
         [t.tabLabel.fontSize, t.tabLabelActive.fontWeight],
         [10, FontWeight.w600],
@@ -134,11 +136,11 @@ void main() {
         t.rowMeta.fontFeatures,
         contains(const FontFeature.tabularFigures()),
       );
-      expect(t.rowTitle.fontFamily, 'Inter');
+      expect(t.rowTitle.fontFamily, 'Manrope');
     });
 
     test('radii and sizes', () {
-      expect([DotRadii.card, DotRadii.cardLarge, DotRadii.sheet], [16, 18, 28]);
+      expect([DotRadii.card, DotRadii.cardLarge, DotRadii.sheet], [20, 24, 28]);
       expect(
         [DotRadii.fabAndroid, DotRadii.railItem, DotRadii.pill],
         [16, 16, 999],

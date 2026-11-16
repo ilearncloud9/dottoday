@@ -40,7 +40,7 @@ void main() {
     );
     expect(tab.title, '● 38 min left · Deep work: roadmap');
     final svg = _decoded(tab.favicon!);
-    expect(svg, contains("stroke='#3b6cf6'"));
+    expect(svg, contains("stroke='#5b5fd6'"));
     // 82 of 120 min: 68 % of a 2πr = 75.40 ring.
     expect(svg, contains("stroke-dasharray='51.52 75.40'"));
     expect(tab.badge, 3);

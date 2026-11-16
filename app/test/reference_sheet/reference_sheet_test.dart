@@ -97,7 +97,7 @@ void _text(Canvas canvas, String text, Offset at) {
       text: TextSpan(
         text: text,
         style: const TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'Manrope',
           fontSize: 26,
           fontWeight: FontWeight.w600,
           color: Color(0xFF1A1A1C),

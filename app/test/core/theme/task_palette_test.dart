@@ -22,8 +22,9 @@ void main() {
       TaskColor.values.map((c) => c.key).join(' '),
       'coral amber mint teal sky indigo violet rose slate',
     );
-    expect(TaskColor.amber.color.toARGB32(), 0xFFD99A1F);
-    expect(TaskColor.slate.color.toARGB32(), 0xFF6B6B70);
+    // Concept E shades (ED-161, M18.1).
+    expect(TaskColor.amber.color.toARGB32(), 0xFFD9A23A);
+    expect(TaskColor.slate.color.toARGB32(), 0xFF6E6A75);
   });
 
   test('the 4 accents of Settings › Look', () {
@@ -33,8 +34,9 @@ void main() {
       'coral',
       'violet',
     ]);
+    expect(DotAccent.teal.light.toARGB32(), 0xFF11615C);
     expect(DotAccent.teal.dark.toARGB32(), 0xFF4CC9C9);
-    expect(DotAccent.fallback, DotAccent.indigo);
+    expect(DotAccent.fallback, DotAccent.teal);
   });
 
   test('domain key sets mirror the enums', () {

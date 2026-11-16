@@ -5,8 +5,9 @@ import 'package:dottoday/core/theme/task_palette.dart';
 import 'package:dottoday/core/theme/tokens.dart';
 import 'package:flutter/painting.dart';
 
-/// Semantic colour roles of Concept A (docs/10-ui-concept-a.md §2.1) for
-/// one brightness and one accent.
+/// Semantic colour roles for one brightness and one accent. Light roles
+/// follow Concept E (E_DESIGN_RULES.md §4.1–4.2, ED-353); dark roles are
+/// Concept A's until M18.2.
 ///
 /// ```dart
 /// final c = DotTheme.of(context).colors;
@@ -104,8 +105,8 @@ final class DotColors {
 
 DotColors _resolve(Brightness brightness, Color accent) {
   final dark = brightness == Brightness.dark;
-  final surface = dark ? DotPrimitives.night12 : DotPrimitives.paper;
-  final raised = dark ? DotPrimitives.night1C : DotPrimitives.white;
+  final surface = dark ? DotPrimitives.night12 : DotPrimitives.ground;
+  final raised = dark ? DotPrimitives.night1C : DotPrimitives.cream;
   final text = dark ? DotPrimitives.snow : DotPrimitives.ink;
   // White on the default light accent and navy on the dark one (§2.1); the
   // other accents take whichever of the two reads better on them.
@@ -126,9 +127,12 @@ DotColors _resolve(Brightness brightness, Color accent) {
     surface: surface,
     raised: raised,
     text: text,
-    muted: dark ? DotPrimitives.grey9A : DotPrimitives.grey6B,
-    outline: dark ? DotPrimitives.night2C : DotPrimitives.stoneE2,
-    hairline: dark ? DotPrimitives.night3A : DotPrimitives.stoneC9,
+    muted: dark ? DotPrimitives.grey9A : DotPrimitives.grey6A,
+    // E draws edges as an 8 % ink hairline over whatever is below.
+    outline: dark
+        ? DotPrimitives.night2C
+        : Color.alphaBlend(DotPrimitives.hairline, raised),
+    hairline: dark ? DotPrimitives.night3A : DotPrimitives.lilacBE,
     accent: accent,
     accentInk: inkFor(accent, backgrounds: inkBackgrounds, toward: text),
     onAccent: onAccent,

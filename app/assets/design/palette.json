@@ -1,23 +1,23 @@
 {
-  "$comment": "Task colours and accents, docs/10-ui-concept-a.md §2.1. Order is the picker order. Edit here, then run: dart run tool/gen_task_palette.dart",
+  "$comment": "Task colours and accents. Light values are Concept E (docs/redesign/E_DESIGN_RULES.md §4.3, ED-155, ED-161; M18.1); of the accents only teal (Concept E's #11615C, the new default) changed; the others and every dark accent stay as they were until the App colour work (M20.7) and dark mode (M18.2). Order is the picker order. Edit here, then run: dart run tool/gen_task_palette.dart",
   "default": "indigo",
   "colors": [
-    { "key": "coral", "hex": "#E5674F" },
-    { "key": "amber", "hex": "#D99A1F" },
-    { "key": "mint", "hex": "#2FA37A" },
-    { "key": "teal", "hex": "#1F9E9E" },
-    { "key": "sky", "hex": "#2E8FD6" },
-    { "key": "indigo", "hex": "#3B6CF6" },
-    { "key": "violet", "hex": "#7A5AF8" },
-    { "key": "rose", "hex": "#D64F86" },
-    { "key": "slate", "hex": "#6B6B70" }
+    { "key": "coral", "hex": "#E2725B" },
+    { "key": "amber", "hex": "#D9A23A" },
+    { "key": "mint", "hex": "#4CA36B" },
+    { "key": "teal", "hex": "#2A9D8F" },
+    { "key": "sky", "hex": "#4A9BD6" },
+    { "key": "indigo", "hex": "#5B5FD6" },
+    { "key": "violet", "hex": "#8B5CF6" },
+    { "key": "rose", "hex": "#D9668F" },
+    { "key": "slate", "hex": "#6E6A75" }
   ],
   "$legacyComment": "Keys from the 12-colour palette (docs/03 §1, M1.0) that may still be stored; they render as the mapped colour and are never written by the app (ADR-0007).",
   "legacy": { "tangerine": "amber", "lime": "mint", "magenta": "rose" },
-  "defaultAccent": "indigo",
+  "defaultAccent": "teal",
   "accents": [
     { "key": "indigo", "light": "#3B6CF6", "dark": "#7FA0FF" },
-    { "key": "teal", "light": "#1F9E9E", "dark": "#4CC9C9" },
+    { "key": "teal", "light": "#11615C", "dark": "#4CC9C9" },
     { "key": "coral", "light": "#E5674F", "dark": "#FF8A73" },
     { "key": "violet", "light": "#7A5AF8", "dark": "#A58BFF" }
   ]

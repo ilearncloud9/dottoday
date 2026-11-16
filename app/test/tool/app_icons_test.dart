@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dottoday/core/theme/tokens.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../tool/gen_app_icons.dart' as gen;
@@ -11,8 +9,6 @@ import '../../tool/icons/raster.dart';
 // App icons and launch marks (docs/09 M8.6): every file is what
 // tool/gen_app_icons.dart draws, in the Concept A colours, and every
 // platform manifest names files that exist.
-String _hex(Color c) =>
-    '#${(c.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}';
 
 void main() {
   for (final job in gen.iconJobs()) {
@@ -31,9 +27,9 @@ void main() {
     });
   }
 
-  test('surfaces match the tokens and the platform launch colours', () {
-    expect(gen.paperHex, _hex(DotPrimitives.paper));
-    expect(gen.nightHex, _hex(DotPrimitives.night12));
+  // The icon and launch colours stay the shipped brand until the brand
+  // rollout (plan M22.4), so they are no longer tied to `DotPrimitives`.
+  test('the platform launch colours match the generator', () {
     final accent = gen.accentHex();
     final day = File(
       'android/app/src/main/res/values/colors.xml',

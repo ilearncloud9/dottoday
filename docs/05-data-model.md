@@ -206,7 +206,7 @@ sheet confirms first.
   "use24h": null,
   "firstDayOfWeek": 1,
   "theme": "system",
-  "accent": "indigo",
+  "accent": "teal",
   "reduceMotion": null,
   "showFreeTime": true,
   "runningLateNudge": true,

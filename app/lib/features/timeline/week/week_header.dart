@@ -242,7 +242,12 @@ class _Nav extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             spacing: DotSpace.s,
-            children: [Text(l10n.weekToday), keys(_t)],
+            // Flexible: at 200 % text the label and its key may not fit
+            // the button's width (M18.1 type scale); the label wraps.
+            children: [
+              Flexible(child: Text(l10n.weekToday)),
+              keys(_t),
+            ],
           ),
         ),
         Tooltip(

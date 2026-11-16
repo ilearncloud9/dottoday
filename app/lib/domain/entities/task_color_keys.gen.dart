@@ -26,4 +26,4 @@ const defaultTaskColorKey = 'indigo';
 const accentKeys = <String>['indigo', 'teal', 'coral', 'violet'];
 
 /// `settings.accent` for new profiles.
-const defaultAccentKey = 'indigo';
+const defaultAccentKey = 'teal';

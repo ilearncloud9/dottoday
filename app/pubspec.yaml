@@ -76,9 +76,10 @@ flutter:
     - assets/licenses/
     - assets/sounds/
   fonts:
-    - family: Inter
+    # Concept E content type (ED-110, M18.1); OFL, licence in assets/licenses/manrope.txt.
+    - family: Manrope
       fonts:
-        - asset: assets/fonts/Inter-Variable.ttf
+        - asset: assets/fonts/Manrope-Variable.ttf
 
 # ADR-0006: link SQLCipher instead of plain SQLite on every native target (encryption at rest, 06 §4).
 hooks:

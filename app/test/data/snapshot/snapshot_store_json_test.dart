@@ -40,7 +40,7 @@ void main() {
     final deep = blocks.firstWhere((b) => b['title'] == 'Deep work: roadmap');
     expect(deep['time'], '9:00 AM');
     expect(deep['until'], 'until 11:00 AM');
-    expect(deep['color'], '#3B6CF6');
+    expect(deep['color'], '#5B5FD6');
     expect(deep['end_ms'], (deep['start_ms']! as int) + 120 * 60 * 1000);
     expect(json['labels'], containsPair('inbox', '3 in Inbox'));
     expect(json['labels'], containsPair('next_up', 'Next up'));

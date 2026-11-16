@@ -38,7 +38,7 @@ class WeekBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, box) {
-      final board = _board(context);
+      final board = _board(context, box.maxHeight);
       if (box.maxWidth >= _minWidth) return board;
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -47,25 +47,17 @@ class WeekBoard extends StatelessWidget {
     },
   );
 
-  Widget _board(BuildContext context) => Column(
+  /// [height] caps the day headers at half the board: at 200 % text on a
+  /// short phone they would otherwise push the hour grid off the bottom
+  /// (M18.1). Over the cap the header row scrolls by itself and stays put.
+  Widget _board(BuildContext context, double height) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      Row(
-        children: [
-          const SizedBox(width: _gutter),
-          for (final d in loads)
-            Expanded(
-              child: _DayHeader(
-                load: d,
-                isToday: d.date == today,
-                tag: identical(d, summary.busiest)
-                    ? context.l10n.weekBusiestTag
-                    : identical(d, summary.lightest)
-                    ? context.l10n.weekLightestTag
-                    : null,
-              ),
-            ),
-        ],
+      ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: height.isFinite ? height / 2 : double.infinity,
+        ),
+        child: SingleChildScrollView(child: _headers(context)),
       ),
       Expanded(
         child: SingleChildScrollView(
@@ -82,6 +74,24 @@ class WeekBoard extends StatelessWidget {
           ),
         ),
       ),
+    ],
+  );
+
+  Widget _headers(BuildContext context) => Row(
+    children: [
+      const SizedBox(width: _gutter),
+      for (final d in loads)
+        Expanded(
+          child: _DayHeader(
+            load: d,
+            isToday: d.date == today,
+            tag: identical(d, summary.busiest)
+                ? context.l10n.weekBusiestTag
+                : identical(d, summary.lightest)
+                ? context.l10n.weekLightestTag
+                : null,
+          ),
+        ),
     ],
   );
 }

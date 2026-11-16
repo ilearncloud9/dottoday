@@ -68,7 +68,7 @@ void main() {
       expect(c['count_label'], '1 of 3 done today');
       expect(c['done_label'], 'Done');
       expect(c['plus_label'], '+15 min');
-      expect(c['color'], '#3B6CF6');
+      expect(c['color'], '#5B5FD6');
       expect(c['icon'], 'code');
       expect(
         c['ends_ms'],
@@ -78,7 +78,7 @@ void main() {
         {
           'id': '01928c3e-0000-7000-8000-0000000000b2',
           'title': 'Reply to email',
-          'color': '#E5674F',
+          'color': '#E2725B',
           'time': '11:00',
         },
       ]);

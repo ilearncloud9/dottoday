@@ -5,29 +5,23 @@
 // screens show the same mark in the accent on the surface colour.
 //
 // Run from app/:  dart run tool/gen_app_icons.dart
-// Colours come from assets/design/palette.json (accent) and the surfaces
-// of docs/10 §2.1; test/tool/app_icons_test.dart checks every file below
-// is what this writes and that the colours match `DotPrimitives`.
-import 'dart:convert';
+// The colours are the shipped brand mark (Concept A's indigo on its
+// surfaces). They stay fixed while Concept E is built: the in-app tokens
+// moved to Concept E in M18.1, but the app icon and launch colours change
+// only with the brand rollout (MASTER_PLAYBOOK step 15; plan M22.4).
+// test/tool/app_icons_test.dart checks every file below is what this writes
+// and that the platform launch colours match.
 import 'dart:io';
 
 import 'icons/raster.dart';
 
-/// Surface colours of docs/10 §2.1 (`DotPrimitives.paper` / `night12`).
+/// Launch surfaces of the shipped brand (docs/10 §2.1).
 const paperHex = '#FAFAF8';
 const nightHex = '#121214';
 
-/// The indigo accent (light, dark) from the design palette.
-({String light, String dark}) accentHex() {
-  final json =
-      jsonDecode(File('assets/design/palette.json').readAsStringSync())
-          as Map<String, Object?>;
-  final key = json['defaultAccent'];
-  final accent = (json['accents']! as List)
-      .cast<Map<String, Object?>>()
-      .firstWhere((a) => a['key'] == key);
-  return (light: accent['light']! as String, dark: accent['dark']! as String);
-}
+/// The brand mark's indigo (light, dark), docs/10 §2.1.
+({String light, String dark}) accentHex() =>
+    (light: '#3B6CF6', dark: '#7FA0FF');
 
 /// How an icon is drawn: the mark's colour and what is behind it.
 enum IconKind {
