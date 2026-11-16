@@ -19,8 +19,8 @@ Nothing below ran against hosted Supabase.
 | 7 | No silent settings replacement | PASS (automated) | `first_sync_test.dart` "a guest's settings never replace the account's", "choosing the guest's settings"; B1 built (`settings_choice_screen.dart`, `account_screens_test.dart` group "B1 settings"); web flow 2 server check. B1 not tapped on a platform run |
 | 8 | No duplicate starter content | PASS (automated) | Stable ids (`domain/sync/stable_ids.dart`); `account_switch_test.dart` "starters planted on two devices merge into one". Not in a web/device run |
 | 9 | Interrupted or failed migration | PASS (automated + Chromium, local stack) | `account_switch_test.dart` group "interrupted"; `engine_sync_service_test.dart` failed sign-in step; web flow 4 (reload after the local step; not inside it) |
-| 10 | Web end-to-end | PARTIAL | Chromium 156: flows 1–5 PASS on the local stack (runs below); re-run after Stage B (B8, 2026-11-12): flows 1–5 PASS. 2026-11-16, at `80d583fe` with migrations 0001–0016 and this branch's Edge Functions served locally: Firefox 157 flows 1–5 PASS, WebKit 27.2 flows 1–5 PASS, real Safari 27.2 flows 1–5 PASS. Hosted staging PENDING |
-| 11 | Shared-device tests on all four platforms | PARTIAL | PASS on the local stack: macOS 26.6.2, iOS 18.6 Simulator, Android 17 emulator, web/Chromium (runs below); re-run after Stage B (B8, 2026-11-12): PASS on macOS, the iPhone 17 Pro Simulator (iOS 26.5), the Android API 37 emulator and Chromium 156, after the test was brought up to D1's review step (`docs/cr-160-multipart-export.md`, B8). 2026-11-16: PASS on a **physical iPhone 17 Pro (iOS 27.2.1)**, local stack, with a test-build-only address patch (section "Physical iPhone 2026-11-16" below); PASS on a **physical Android tablet, Galaxy Tab S8+ (Android 16)**, local stack, no app changes (section "Physical Android tablet 2026-11-16" below). An Android phone was not used. Hosted staging PENDING |
+| 10 | Web end-to-end | PARTIAL | Chromium 156: flows 1–5 PASS on the local stack (runs below); re-run after Stage B (B8, 2026-11-12): flows 1–5 PASS. 2026-11-16, at `80d583fe` with migrations 0001–0016 and this branch's Edge Functions served locally: Firefox 157 flows 1–5 PASS, WebKit 27.2 flows 1–5 PASS, real Safari 27.2 flows 1–5 PASS. Hosted staging: the local stack stands in (owner 2026-11-16, "Staging decision" below) |
+| 11 | Shared-device tests on all four platforms | PARTIAL | PASS on the local stack: macOS 26.6.2, iOS 18.6 Simulator, Android 17 emulator, web/Chromium (runs below); re-run after Stage B (B8, 2026-11-12): PASS on macOS, the iPhone 17 Pro Simulator (iOS 26.5), the Android API 37 emulator and Chromium 156, after the test was brought up to D1's review step (`docs/cr-160-multipart-export.md`, B8). 2026-11-16: PASS on a **physical iPhone 17 Pro (iOS 27.2.1)**, local stack, with a test-build-only address patch (section "Physical iPhone 2026-11-16" below); PASS on a **physical Android tablet, Galaxy Tab S8+ (Android 16)**, local stack, no app changes (section "Physical Android tablet 2026-11-16" below). An Android phone was not used. Hosted staging: the local stack stands in (owner 2026-11-16, "Staging decision" below) |
 | 12 | Server-side guard | PASS (pgTAP, local stack) | `supabase/migrations/0014_push_owner_guard.sql` + `supabase/tests/0014_push_owner_guard.sql`; `supabase db reset` + `supabase test db`: 14 files, 119 tests. Not deployed |
 
 ## CRITICAL — OPEN — RELEASE BLOCKER (owner 2026-11-09)
@@ -933,6 +933,34 @@ the end of each feed are passed through.
   `127.0.0.1`; the app itself has one client, so this does not affect it.
 
 
+## Staging decision (owner 2026-11-16)
+
+No separate staging Supabase project exists. The beta's "web staging" uses the one hosted project the
+testers use, so deploying 0014 there would refuse every older beta build's pushes. The owner chose
+to let the **local stack stand in for staging**:
+- migrations 0001–0016;
+- this branch's Edge Functions;
+- the runs above on Chromium, Firefox, WebKit, real Safari, a physical iPhone 17 Pro and a physical
+  Galaxy Tab S8+.
+
+The alternatives were a separate staging project, or the hosted beta project after shipping the
+client.
+
+**Accepted as untested before production:**
+- real TLS and latency;
+- hosted Supabase auth email (sign-in used the local Mailpit);
+- Edge Functions on hosted Deno with production secrets;
+- redirect-URL and function-secret configuration on the hosted project.
+
+None of these is CR-160's ownership logic, but a configuration error there would first show at the
+production deploy.
+
+**Still required before production** (`docs/cr-160-rollout.md`):
+- the older-build check, run against a local stack with 0014 applied;
+- the order of ship the client, confirm testers updated, then deploy;
+- the production deploy only with the owner's separate approval, in a quiet window, then a week of
+  watching Postgres logs for `names no owner`.
+
 ## Physical iPhone 2026-11-16 (local stack, owner at the phone)
 
 **Device:** iPhone 17 Pro (iPhone18,1), iOS 27.2.1 (24B156), on the same Wi-Fi as the Mac.
@@ -1014,8 +1042,9 @@ arms and rings real alarms.
 
 ### Still unverified
 
-- **Hosted staging**: not touched; the same runs against staging need the owner's go (and 0014
-  deployed there, `docs/cr-160-rollout.md`).
+- **Hosted staging**: not run; the owner accepted the local stack in its place (2026-11-16, "Staging
+  decision"). Hosted TLS, auth email, Edge Functions and their configuration stay untested until the
+  production deploy.
 - **Physical devices**: iPhone and Android phone not run. Only a device can show: notifications
   removed from a real lock screen / notification centre after the switch, widgets, Live Activity,
   the Android ongoing notification, the Mac status item and Wake Up alarms after a switch (I7, I8),

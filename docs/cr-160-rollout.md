@@ -45,6 +45,9 @@ once 0014 is live every push from an older build is refused.**
    counts per build, and the web deploy. Run the older-build check above on staging.
 4. **Deploy 0014** to staging first: `supabase db push` to staging only, run `supabase test db`
    there, run the shared-device checks (`docs/cr-160-verification.md` criterion 11) against staging.
+   **Owner 2026-11-16:** no separate staging project exists, so the local stack (0001–0016) stands in
+   for staging (`docs/cr-160-verification.md`, "Staging decision"). Before production, still run the
+   older-build check from step 3 against a local stack with 0014 applied.
 5. **Then production, only with the owner's separate authorisation**, in a quiet window. Watch the Postgres logs
    for `sync_push: change … names no owner` (older builds still syncing) for a week.
 6. **Rollback:** a new migration restoring the 0010 `sync_push` body (never editing 0014). Data is
