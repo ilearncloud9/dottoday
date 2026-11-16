@@ -1,6 +1,8 @@
 # CR-160 verification: account ownership and switching
 
-CR-160 (ED-193) is a critical privacy/security release blocker. The acceptance criteria are in
+CR-160 (ED-193) was a critical privacy/security release blocker. **Closed by the owner 2026-11-16**
+(section "Owner close-out 2026-11-16" below); the production deploy of 0014–0016 still needs the
+owner's separate approval (`docs/cr-160-rollout.md`). The acceptance criteria are in
 `docs/redesign/E_IMPLEMENTATION_HANDOFF.md` § CR-160 on `redesign/design-lab`. This file records
 what proves each one on `fix/cr-160-account-ownership`, and what is still not run.
 
@@ -11,19 +13,19 @@ Nothing below ran against hosted Supabase.
 | # | Criterion | Status | Evidence |
 |---|---|---|---|
 | 1 | Strict ownership | PASS (automated) | `change_log.owner_id`, owner-keyed `sync_cursors` (schema 18), `guest_row_sessions` (19); `account_switch_test.dart` "only a guest is adopted"; `migration_test.dart` v17 → v18; owner-keyed caches (I4), backups (I2) |
-| 2 | Safe sign-out | PARTIAL (data and screens PASS, automated + local stack, 4 platforms; the misleading offline error fixed 2026-11-12, blocker 4; the share-extension race (I7) as recorded below) | A1/A2/A3 built (`sign_out_prompt.dart`, `signed_out_screen.dart`); `sign_out_prompt_test.dart` (A1 only when confirmed and nothing waits; A2 otherwise; Esc cancels with no sync on Mac/web); `owner_switch_test.dart` "signing out: nothing of A is pending, shown or on a surface"; criterion 11 runs. A2 ships the narrower sentence (device-only surfaces unverified) |
-| 3 | Safe account switching | PARTIAL (PASS automated + local stack, 4 platforms; share-extension actions queued under A can land with B (I7), Wake Up ownership unverified) | `account_switch_test.dart` "B signs in: none of A goes up, shows, or changes owner"; `sync_engine_test.dart` (replaces the old leaking test); `owner_switch_test.dart` (queued runs/actions, repeated switches, restart); criterion 11 step 3 (RLS + admin) |
+| 2 | Safe sign-out | PASS (automated + local stack, 4 platforms; the misleading offline error fixed 2026-11-12, blocker 4; I7 closed 2026-11-16, share sheets on a physical iPhone, Mac and Android tablet) | A1/A2/A3 built (`sign_out_prompt.dart`, `signed_out_screen.dart`); `sign_out_prompt_test.dart` (A1 only when confirmed and nothing waits; A2 otherwise; Esc cancels with no sync on Mac/web); `owner_switch_test.dart` "signing out: nothing of A is pending, shown or on a surface"; criterion 11 runs. A2 ships the narrower sentence (device-only surfaces unverified) |
+| 3 | Safe account switching | PASS (automated + local stack, 4 platforms; queued actions keep their owner (I7, closed 2026-11-16); Wake Up per owner, fixed 2026-11-12 and checked on a physical iPhone and Android tablet) | `account_switch_test.dart` "B signs in: none of A goes up, shows, or changes owner"; `sync_engine_test.dart` (replaces the old leaking test); `owner_switch_test.dart` (queued runs/actions, repeated switches, restart); criterion 11 step 3 (RLS + admin) |
 | 4 | Unsynced data preserved without leaking | PASS (automated + local stack, 4 platforms) | `account_switch_test.dart` group "signing out"; criterion 11 steps 2–4: A's offline tasks reach A once each, never B |
 | 5 | Guest → new account | PASS (automated + Chromium, local stack) | Explicit "Bring them in" with "I made these tasks myself" (G1); only the current guest session's tasks (`account_switch_test.dart` group "guest eligibility", incl. clock change and restart); web flow 1 |
 | 6 | Guest → existing account | PASS (automated + Chromium, local stack) | `first_sync_test.dart` "a guest's tasks join the account's"; web flow 2 (2+2 once each, settings stay the account's) |
 | 7 | No silent settings replacement | PASS (automated) | `first_sync_test.dart` "a guest's settings never replace the account's", "choosing the guest's settings"; B1 built (`settings_choice_screen.dart`, `account_screens_test.dart` group "B1 settings"); web flow 2 server check. B1 not tapped on a platform run |
 | 8 | No duplicate starter content | PASS (automated) | Stable ids (`domain/sync/stable_ids.dart`); `account_switch_test.dart` "starters planted on two devices merge into one". Not in a web/device run |
 | 9 | Interrupted or failed migration | PASS (automated + Chromium, local stack) | `account_switch_test.dart` group "interrupted"; `engine_sync_service_test.dart` failed sign-in step; web flow 4 (reload after the local step; not inside it) |
-| 10 | Web end-to-end | PARTIAL | Chromium 156: flows 1–5 PASS on the local stack (runs below); re-run after Stage B (B8, 2026-11-12): flows 1–5 PASS. 2026-11-16, at `80d583fe` with migrations 0001–0016 and this branch's Edge Functions served locally: Firefox 157 flows 1–5 PASS, WebKit 27.2 flows 1–5 PASS, real Safari 27.2 flows 1–5 PASS. Hosted staging: the local stack stands in (owner 2026-11-16, "Staging decision" below) |
-| 11 | Shared-device tests on all four platforms | PARTIAL | PASS on the local stack: macOS 26.6.2, iOS 18.6 Simulator, Android 17 emulator, web/Chromium (runs below); re-run after Stage B (B8, 2026-11-12): PASS on macOS, the iPhone 17 Pro Simulator (iOS 26.5), the Android API 37 emulator and Chromium 156, after the test was brought up to D1's review step (`docs/cr-160-multipart-export.md`, B8). 2026-11-16: PASS on a **physical iPhone 17 Pro (iOS 27.2.1)**, local stack, with a test-build-only address patch (section "Physical iPhone 2026-11-16" below); PASS on a **physical Android tablet, Galaxy Tab S8+ (Android 16)**, local stack, no app changes (section "Physical Android tablet 2026-11-16" below). An Android phone was not used. Hosted staging: the local stack stands in (owner 2026-11-16, "Staging decision" below) |
+| 10 | Web end-to-end | PASS (local stack; owner 2026-11-16) | Chromium 156: flows 1–5 PASS on the local stack (runs below); re-run after Stage B (B8, 2026-11-12): flows 1–5 PASS. 2026-11-16, at `80d583fe` with migrations 0001–0016 and this branch's Edge Functions served locally: Firefox 157 flows 1–5 PASS, WebKit 27.2 flows 1–5 PASS, real Safari 27.2 flows 1–5 PASS. Hosted staging: the local stack stands in (owner 2026-11-16, "Staging decision" below) |
+| 11 | Shared-device tests on all four platforms | PASS (local stack; owner 2026-11-16) | PASS on the local stack: macOS 26.6.2, iOS 18.6 Simulator, Android 17 emulator, web/Chromium (runs below); re-run after Stage B (B8, 2026-11-12): PASS on macOS, the iPhone 17 Pro Simulator (iOS 26.5), the Android API 37 emulator and Chromium 156, after the test was brought up to D1's review step (`docs/cr-160-multipart-export.md`, B8). 2026-11-16: PASS on a **physical iPhone 17 Pro (iOS 27.2.1)**, local stack, with a test-build-only address patch (section "Physical iPhone 2026-11-16" below); PASS on a **physical Android tablet, Galaxy Tab S8+ (Android 16)**, local stack, no app changes (section "Physical Android tablet 2026-11-16" below). An Android phone was not used. Hosted staging: the local stack stands in (owner 2026-11-16, "Staging decision" below) |
 | 12 | Server-side guard | PASS (pgTAP, local stack) | `supabase/migrations/0014_push_owner_guard.sql` + `supabase/tests/0014_push_owner_guard.sql`; `supabase db reset` + `supabase test db`: 14 files, 119 tests. Not deployed |
 
-## CRITICAL — OPEN — RELEASE BLOCKER (owner 2026-11-09)
+## Release blockers (owner 2026-11-09; all closed or accepted 2026-11-16, see "Owner close-out")
 
 The draft PR is for review only. Before it can be marked ready:
 
@@ -149,7 +151,7 @@ tasks brought in by that person.
 
 ## Account isolation across every visible surface (I1–I8)
 
-I1–I6 and I8 fixed in code with tests; I7 is open (share extension). Device-only effects are named in "Still unverified".
+I1–I8 fixed in code with tests; I7 closed 2026-11-16 (share sheets on physical devices). Device-only effects are named in "Still unverified".
 
 | # | Surface | Fix | Tests |
 |---|---|---|---|
@@ -159,7 +161,7 @@ I1–I6 and I8 fixed in code with tests; I7 is open (share extension). Device-on
 | I4 | Brain dumps, thinking log, recent searches, calendar moves, dictation, learning | `owned_local_meta.dart`: keyed by owner; legacy global values adopted only with exactly one profile, otherwise kept hidden and marked | `test/data/search/`, `calendar_moves_owner_test.dart`, owned-meta tests |
 | I5 | Undo, open editor, focus task, proposal, pending brain dump/routine drop, in-app alerts, trash | Watch the owner epoch and reset; undo refuses another owner's tokens | `owner_switch_reset_test.dart`, `undo_owner_test.dart` |
 | I6 | Delivered notifications | `clearAll` removes pending and delivered at every switch | `owner_switch_test.dart`; criterion 11 "delivered=0 none of A" (macOS, iOS Sim, Android emu) |
-| I7 | Wind Down timer; action queue | **OPEN** (device runs only; owner code review closed 2026-11-16). Wind Down cancelled and re-armed. Queued native actions now carry their owner and apply only for it (section "I7: queued actions" below); D-I7-1…4 built as decided; physical devices and iOS/Mac share sheets driven end to end still open | `queue_owner_switching_test.dart`, `queue_owner_outcomes_test.dart`, `owner_switch_test.dart`, native tests below |
+| I7 | Wind Down timer; action queue | **Closed 2026-11-16** (owner code review closed; share sheets passed on a physical iPhone, Mac and Android tablet; remaining device paths accepted, "Owner close-out"). Wind Down cancelled and re-armed. Queued native actions now carry their owner and apply only for it (section "I7: queued actions" below); D-I7-1…4 built as decided | `queue_owner_switching_test.dart`, `queue_owner_outcomes_test.dart`, `owner_switch_test.dart`, native tests below |
 | I8 | Widgets, Live Activity, ongoing notification, status item, Wake Up alarms | Empty snapshot written at the switch, then the new owner's; `disarmAll` alarms | `owner_switch_test.dart`, `snapshot_write_paths_test.dart` |
 
 ## I7: queued actions keep their owner (second pass 2026-11-09, awaiting owner review)
@@ -176,6 +178,9 @@ queue's plain text at rest accepted as a residual confidentiality risk (at-rest 
 runs listed under "Not verified end to end" pass: physical iPhone and Android phone, the iOS and
 Mac share sheets driven end to end, widget, Live Activity, Siri and notification buttons on a
 device, and a real service-worker notification click.
+
+**Closed 2026-11-16 (owner):** the share sheets passed on a physical iPhone, the Mac and a physical
+Android tablet; the rest is accepted in "Owner close-out 2026-11-16" below.
 
 ### Root cause and race timeline (before this pass)
 
@@ -1066,6 +1071,47 @@ defect. That run's screen cannot be replayed.
   is not observable from the page. Safari's own storage limits and ITP over days are not exercised
   (automation sessions are short and ephemeral).
 - The magic-link PKCE callback on each platform (sign-in used the link's token directly).
+
+## Physical Mac share sheet 2026-11-16 (local stack, owner at the Mac)
+
+**Build:** `59a3a0a6`, `flutter build macos --profile` against the local stack (127.0.0.1:54321,
+migrations 0001–0016); no app changes. Stale `DottodayShare.appex` registrations from older build
+folders were removed first (`pluginkit -r`), so only this build's extension was registered. The
+sign-in link was opened with `open -a <this build>`: about twenty older builds claim `dottoday://`,
+and one of them took the first link.
+
+| Check | How | Result |
+|---|---|---|
+| Share, A shown | Signed in as `mac-a@example.test`; owner shared a note from Notes → Share → Dottoday | **PASS**: in A's Inbox; server: under A only (1 row, 1 account) |
+| Switch | Sign out of A, sign in as `mac-b@example.test` | **PASS**: A's share not in B's Inbox (owner); server unchanged |
+| Share, B shown | Same, as B | **PASS**: in B's Inbox; server: A's share under A only, B's under B only |
+
+Not covered: a share posted during the switch itself on the Mac (covered by `macos/RunnerTests`,
+"nobody during a switch", and on the Android tablet by `share_owner_check.sh`).
+
+## Owner close-out 2026-11-16
+
+After the physical iPhone, Mac and Android tablet runs, the owner closed CR-160 as a release blocker
+and took PR #75 out of draft, accepting the following (owner, 2026-11-16, "Accept, mark ready"):
+
+1. **Android ringing alarm on real hardware.** A real tablet: a switch calls off A's alarm and its
+   gentle check, and A's alarm rings for A; the emulator: a switch while it rings stops it and clears
+   the snoozed note. A switch made while the tablet is actually ringing was not run. Accepted.
+2. **Silent refusal** on Android widget Done, the ongoing notification, the Quick Settings tile and
+   the iOS widget Done while an account is being deleted or the queue is full. Feedback only: nothing
+   leaks or is lost. Accepted as a known limit; a visible message is a follow-up.
+3. **Queued share text at rest on iOS, Mac and Android** (App Group defaults, app-private prefs):
+   protected by the platform, not encrypted by Dottoday. Accepted as a residual confidentiality risk,
+   as for the web queue (owner 2026-11-15).
+4. **Cloud calendar templates** (Google, Microsoft) are not restored after an import
+   (`docs/05-data-model.md`). Not account isolation; it needs a `calendar-sync` change with its own
+   approval and deploy. Removed from CR-160 and tracked as a separate follow-up.
+5. Not device-tested, accepted: Siri and Shortcuts, Live Activity and notification action buttons,
+   the Control Center control, the share sheets' refusal alert, before-first-unlock behaviour, a real
+   service-worker notification click, an Android phone (the tablet stands in).
+
+Still required before production: `docs/cr-160-rollout.md` (the older-build check, client first, then
+the 0014–0016 deploy with the owner's separate approval).
 
 ## Plan for criterion 10 (web end-to-end) · run on Chromium 2026-11-09 (above); Firefox, Safari PENDING
 

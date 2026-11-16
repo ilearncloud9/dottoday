@@ -4,7 +4,7 @@ Status: **specification**, built in stages. Built so far (uncommitted unless not
 Settings export size refusal); B1 (format, splitter, part checks, file kinds; committed `017677d`);
 B2 (staging tables, schema 21, inactive; §6 results in "B2 verification" below; committed
 `7a99f0e`); B3 (the staged pipeline, reachable from tests only; "B3 verification" below). Decision record: ADR-0019. Owner of the approval: the
-product owner, per stage gate in §9. Release status: CR-160 stays CRITICAL · OPEN · RELEASE BLOCKER.
+product owner, per stage gate in §9. Release status: CR-160 closed by the owner 2026-11-16 (`docs/cr-160-verification.md`).
 
 ## 1. Problem
 An account whose JSON v1 export is over 25 MB (`maxImportBytes`) has no restorable copy today:

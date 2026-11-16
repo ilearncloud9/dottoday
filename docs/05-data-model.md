@@ -420,7 +420,7 @@ and Microsoft calendars reach the app as `<server connection id>/<provider calen
 connection id is a random `calendar_accounts.id` on the server, deleted with the account and new on
 every reconnect, and the provider's stable account id (the OAuth subject, `external_account_id`
 server-side) never leaves the `calendar-sync` Edge Function. So cloud templates never attach either;
-**cloud-template restoration is not done and remains a CR-160 release blocker.**
+**cloud-template restoration is not done**; the owner moved it out of CR-160 on 2026-11-16 as a separate follow-up (`docs/cr-160-verification.md` § "Owner close-out 2026-11-16").
 
 Future `calendar-sync` change needed for cloud templates (not built; needs its own approval and
 deploy): (1) return, per connected account, a verified stable provider identity derived server-side
