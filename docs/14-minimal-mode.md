@@ -138,6 +138,9 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Database recovery screen | M6.5 | Shown | System state; unchanged |
 | Web install banner | M8 | Hidden | No install prompt in minimal |
 | Onboarding extras: welcome, account step, habits step, calendar connect, Done step | M4 | Simplified | Welcome → step 0; minimal skips account and Done, and turns habits into the first-task step |
+| Earlier fold (done tasks before now) | Concept E, ED-164 | Shown | Minimal's own presentation: done tasks before now fold into one "Earlier" row with no count; Show opens it, a reopened task returns to its time. Full phones keep their rows; the Full Mac/web Day column folds the same way |
+| Before Wake Up / After Wind Down rows (`ThreadOutside`) | built; Concept E, ED-246, ED-345 | Simplified | "Before Wake Up" / "After Wind Down" with no count (full shows the count); each unfolds into ordinary rows and a zone holding the live task starts open |
+| Search or run (⌘K / Ctrl K, `k` on web; Mac and web) | Concept E, ED-333, not built | Simplified | Minimal's ⌘K is the Everything else finder: places, Plan the day, Reflect and settings, and it also finds tasks; full's palette runs every command |
 
 **Matrix notes from the M16 inventory (30 Oct 2026).** Where a row above was written before the code it describes:
 
@@ -154,6 +157,8 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 - *D1, D3.* There is no weekly-review switch in Settings today, and the journal lives in Search › Past days.
 - *Not built yet.* A2, B5, E1, F1/F2 and F3 (Phase 2 / future) have rows and `FeatureId`s but no View to subtract from.
 - *Pro.* No "Dottoday Pro" row until the owner signs off pricing (09 › Pricing; `isPro` is true in every build).
+
+**Concept E rows (2026-11-16, M18.0, ED-357).** The last three rows are features Concept E adds. On `redesign/design-lab`, rows that assume minimal has no tab bar or sidebar, or reaches the Inbox only through a Later row, are superseded by ED-068 (Now · Today · Inbox tabs on phones; Now · Inbox · Calendar · Search sidebar on Mac and web) and listed in `docs/redesign/E_DESIGN_RULES.md` §9.0; per ED-068 those rows are not rewritten. The other features Concept E restyles already have rows: Rebalance (C1), Pick today's one thing (W5), Past days + Year strip, Pinned tasks, Travel time, C4 Energy, the dictation mic (spoken Brain dump).
 
 From now on every new feature spec declares its row in this table before it is built; the row is part of its done criteria.
 

@@ -165,5 +165,9 @@ final class LayoutPolicy {
     FeatureId.recovery: FeatureVisibility.shown,
     FeatureId.installBanner: FeatureVisibility.hidden,
     FeatureId.onboardingExtras: FeatureVisibility.simplified,
+    // Concept E (M18.0, ED-357): docs/14 §3's last three rows.
+    FeatureId.earlierFold: FeatureVisibility.shown,
+    FeatureId.threadOutside: FeatureVisibility.simplified,
+    FeatureId.searchOrRun: FeatureVisibility.simplified,
   };
 }

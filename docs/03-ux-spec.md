@@ -1,5 +1,7 @@
 # 03 — UX Specification
 
+> **On `redesign/design-lab` (2026-11-16, ED-357):** Concept E is the approved design (RD-0002, ED-353; CLAUDE.md §11). Build from `docs/redesign/E_IMPLEMENTATION_HANDOFF.md` § "Build sources", in the order of `docs/09-implementation-plan.md` M18–M22. On this branch, this document is history wherever Concept E differs: its visual design (§3) and navigation.
+
 Goal: a calm, legible, fast interface that feels native on every platform while sharing one design
 system. "Flawless" here means: no dead ends, no ambiguous gestures, every action undoable, every
 state (empty, loading, error, offline) designed.

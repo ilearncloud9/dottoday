@@ -134,7 +134,10 @@ enum FeatureId {
   installBanner('Web install banner'),
   onboardingExtras(
     'Onboarding extras: welcome, account step, habits step, calendar connect, Done step',
-  );
+  ),
+  earlierFold('Earlier fold (done tasks before now)'),
+  threadOutside('Before Wake Up / After Wind Down rows (`ThreadOutside`)'),
+  searchOrRun('Search or run (⌘K / Ctrl K, `k` on web; Mac and web)');
 
   const FeatureId(this.docRow);
 

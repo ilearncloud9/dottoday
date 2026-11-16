@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ## [Unreleased]
 
+### Added
+- Concept E groundwork (redesign branch): the minimal-mode table lists the Earlier fold, the Before Wake Up / After Wind Down rows and Search or run, each with its layout rule, before any of them is built.
+
 ### Changed
 - Wind Down can fall after midnight. Set it to 00:30 (tap the Wind Down dot or its row in Settings) and it shows as "00:30, next day" and still ends the day before: its reminder rings once at 00:30, and the review it opens is that day's. Wind Down never runs past the next morning's Wake Up. A Wind Down at midnight was read as 22:00 before; it now really is midnight.
 - Today opens at now: on today's date the day scrolls so the task you're in (or the now line, between tasks) sits in view above the Day and Add buttons, also on small phones. Other days still open at their first task. With Reduce Motion it jumps there instead of scrolling.

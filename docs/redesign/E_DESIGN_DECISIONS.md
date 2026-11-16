@@ -4710,6 +4710,22 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Change:** the redesign-branch bullet in CLAUDE.md §11 now makes Concept E (RD-0002, ED-353) the design source on `redesign/design-lab`. It points to the handoff's "Build sources" and the plan's M18–M22, and keeps the decision log as the tie-breaker (ED-314). DESIGN_PRINCIPLES and RD-0001 still govern presentation, and the Concept A bullets below do not apply on this branch. The rest of CLAUDE.md is unchanged.
 - **Records:** RD-0002's open consequence is closed. The M18.0 owner gate is done; its docs/14 rows and doc pointers are still to do.
 
+### ED-357 · M18.0 done: Minimal-mode rows for Concept E's new features
+- **Date:** 2026-11-16. **Owner:** "Start M18.0". The CLAUDE.md §11 gate was done in ED-356.
+- **docs/14 §3:** three rows were added, each with a `FeatureId` and a `LayoutPolicy` entry, so the policy test keeps docs and code in step:
+  - Earlier fold (ED-164), **Shown**;
+  - Before Wake Up / After Wind Down rows, `ThreadOutside` (ED-246, ED-345), **Simplified**: no count in Minimal;
+  - Search or run, ⌘K / `k` on Mac and web (ED-333), **Simplified**: Minimal's ⌘K is the Everything else finder.
+- **Already had rows, unchanged:** Rebalance (C1), Pick today's one thing (W5; Minimal's Day menu leaves it out, ED-093), Past days + Year strip, Pinned tasks, Travel time, C4 Energy, and the dictation mic (spoken Brain dump, ED-343).
+- **Not rewritten, per ED-068:** the rows superseded by Concept E's Minimal navigation (tabs and sidebar instead of the Later row). docs/14 now says so under §3 and points to `E_DESIGN_RULES.md` §9.0.
+- **docs/03 and docs/10:** a redesign-branch note says Concept E is the design and they are history where it differs.
+- **Checks:**
+  - `flutter test test/domain/layout/layout_policy_test.dart test/minimal_mode/hidden_reach_test.dart`: 5 passed.
+  - `flutter analyze`: no issues.
+  - `dart format`: no changes.
+- **Records:** CHANGELOG entry added. Plan M18.0 ticked.
+- No UI changed.
+
 ---
 
 ## Pending owner answers

@@ -1,5 +1,7 @@
 # 10 · UI spec — Concept A, "the thread and the dot"
 
+> **On `redesign/design-lab` (2026-11-16, ED-357):** Concept E is the approved design (RD-0002, ED-353; CLAUDE.md §11). Build from `docs/redesign/E_IMPLEMENTATION_HANDOFF.md` § "Build sources", in the order of `docs/09-implementation-plan.md` M18–M22. On this branch, this document is history wherever Concept E differs: its look, components and screen inventory; ADR-0007 is not rewritten.
+
 Status: **adopted** (ADR-0007). This document is the single source of truth for how Dottoday looks and behaves on every platform. Where it conflicts with `03-ux-spec.md`, this document wins; `03-ux-spec.md` keeps the interaction rules that this file does not restate.
 
 Reference renders live in `docs/design-references/png/` (2× PNG) with their HTML sources in `docs/design-references/src/`. `docs/design-references/README.md` indexes them. The renders are the visual target; this document is the contract.
