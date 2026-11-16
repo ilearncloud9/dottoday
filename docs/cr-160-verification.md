@@ -159,7 +159,7 @@ I1–I6 and I8 fixed in code with tests; I7 is open (share extension). Device-on
 | I4 | Brain dumps, thinking log, recent searches, calendar moves, dictation, learning | `owned_local_meta.dart`: keyed by owner; legacy global values adopted only with exactly one profile, otherwise kept hidden and marked | `test/data/search/`, `calendar_moves_owner_test.dart`, owned-meta tests |
 | I5 | Undo, open editor, focus task, proposal, pending brain dump/routine drop, in-app alerts, trash | Watch the owner epoch and reset; undo refuses another owner's tokens | `owner_switch_reset_test.dart`, `undo_owner_test.dart` |
 | I6 | Delivered notifications | `clearAll` removes pending and delivered at every switch | `owner_switch_test.dart`; criterion 11 "delivered=0 none of A" (macOS, iOS Sim, Android emu) |
-| I7 | Wind Down timer; action queue | **OPEN** (owner review). Wind Down cancelled and re-armed. Queued native actions now carry their owner and apply only for it (section "I7: queued actions" below); physical devices, iOS/Mac share sheets driven end to end, and owner decisions D-I7-1…4 still open | `queue_owner_switching_test.dart`, `queue_owner_outcomes_test.dart`, `owner_switch_test.dart`, native tests below |
+| I7 | Wind Down timer; action queue | **OPEN** (device runs only; owner code review closed 2026-11-16). Wind Down cancelled and re-armed. Queued native actions now carry their owner and apply only for it (section "I7: queued actions" below); D-I7-1…4 built as decided; physical devices and iOS/Mac share sheets driven end to end still open | `queue_owner_switching_test.dart`, `queue_owner_outcomes_test.dart`, `owner_switch_test.dart`, native tests below |
 | I8 | Widgets, Live Activity, ongoing notification, status item, Wake Up alarms | Empty snapshot written at the switch, then the new owner's; `disarmAll` alarms | `owner_switch_test.dart`, `snapshot_write_paths_test.dart` |
 
 ## I7: queued actions keep their owner (second pass 2026-11-09, awaiting owner review)
@@ -168,6 +168,14 @@ I1–I6 and I8 fixed in code with tests; I7 is open (share extension). Device-on
 scopes; security review and end-to-end verification outstanding (I7 stays OPEN). ED-223 A3: locally
 verified and included in draft review. CR-160: **CRITICAL — OPEN — RELEASE BLOCKER**. PR #75:
 **DRAFT — NOT READY TO MERGE**.
+
+**Owner code review closed (2026-11-15/16)**, after the walkthrough of this section: (a) crash
+during account deletion accepted as designed and since verified (open item B below); (b) the web
+queue's plain text at rest accepted as a residual confidentiality risk (at-rest table above);
+(c) the remaining limitations below accepted as known limits. **I7 stays OPEN** until the device
+runs listed under "Not verified end to end" pass: physical iPhone and Android phone, the iOS and
+Mac share sheets driven end to end, widget, Live Activity, Siri and notification buttons on a
+device, and a real service-worker notification click.
 
 ### Root cause and race timeline (before this pass)
 
@@ -336,7 +344,7 @@ stack only).
   `append`, triggered by a message, not by a notification).
 - Physical iPhone, Android phone; Firefox and Safari; hosted staging.
 
-**Remaining limitations and risks:**
+**Remaining limitations and risks** (accepted as known limits, owner 2026-11-16):
 - Unattributed entries are kept with no automatic expiry and are invisible to everyone (decision 1), but they count toward the 500-entry / 1 MB capacity, so enough of them would make new actions be refused. Their
   share text, and any waiting entry's, has been sealed at rest on Android and Apple since
   Iteration 1 Q2/Q3 (see "Iteration 1 final verification" below); ids, times and owners are
