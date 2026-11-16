@@ -13,3 +13,6 @@ supabase/snippets
 
 # Flutter DevTools per-developer settings
 app/devtools_options.yaml
+
+# Isolated local Supabase stack for integration tests (tool/test_stack.sh)
+.test-stack/

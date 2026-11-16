@@ -30,6 +30,7 @@ import 'local_supabase.dart';
 // M6.5, 06 §6): the delete-account function removes the user and every
 // synced row; the device keeps its copy and is signed out.
 void main() {
+  useLocalSupabase();
   setUpAll(tz_data.initializeTimeZones);
 
   test(
@@ -54,7 +55,7 @@ void main() {
         await h.dispose();
         await client.dispose();
       });
-      final email = 'm65-${DateTime.now().microsecondsSinceEpoch}@example.com';
+      final email = testEmail('m65');
       await service.sendMagicLink(email);
       final signedIn = service.watch().firstWhere((a) => a is SignedIn);
       callbacks.add(await magicLinkCallback(email));
