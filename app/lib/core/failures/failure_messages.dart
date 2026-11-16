@@ -6,6 +6,9 @@ import 'package:dottoday/core/l10n/l10n.dart';
 String failureMessage(AppLocalizations l10n, AppFailure failure) {
   return switch (failure) {
     StorageFailure() => l10n.failureStorage,
+    // The generic copy until an edit's own message is approved (CR-160 B8).
+    StorageFullFailure() => l10n.failureStorage,
+    ImportStorageFullFailure() => l10n.importStorageFull,
     NetworkFailure(kind: NetworkFailureKind.offline) =>
       l10n.failureNetworkOffline,
     NetworkFailure(kind: NetworkFailureKind.timeout) =>
@@ -13,6 +16,7 @@ String failureMessage(AppLocalizations l10n, AppFailure failure) {
     NetworkFailure(kind: NetworkFailureKind.server) =>
       l10n.failureNetworkServer,
     AuthFailure() => l10n.failureAuth,
+    SignedOutHereOnlyFailure() => l10n.accountSignedOutHereOnly,
     ValidationFailure(:final rule) => _validation(l10n, rule),
     NotFoundFailure() => l10n.failureNotFound,
     ConflictFailure() => l10n.failureConflict,
@@ -24,6 +28,12 @@ String failureMessage(AppLocalizations l10n, AppFailure failure) {
     SpeechFailure() => l10n.failureSpeech,
     UndoExpiredFailure() => l10n.failureUndoExpired,
     UnexpectedFailure() => l10n.failureUnexpected,
+    ReviewChangedFailure() => l10n.accountDeleteChangedSinceReview,
+    ExportNotSavedFailure() => l10n.accountDeleteWithoutCopyQuestion,
+    ExportTooLargeFailure() => l10n.exportTooLargeToRestore,
+    // Generic copy until a specific message is approved (CR-160 Finding X).
+    ForeignRowsFailure() => l10n.failureStorage,
+    BackupNotRestorableFailure() => l10n.backupNotRestorable,
   };
 }
 

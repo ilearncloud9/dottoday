@@ -105,6 +105,11 @@ abstract interface class NotificationPlatform {
 
   Future<void> schedule(OsNotification n);
 
+  /// Removes every notification of this app, pending and already shown
+  /// (CR-160 I6): on a change of owner nothing of the previous owner may
+  /// stay in the notification centre; the resync then plans the new one.
+  Future<void> clearAll();
+
   /// Catalogue sound ids whose OS channel the user muted (Android; empty
   /// where sounds have no channel), for the health panel (docs/12 §4).
   Future<Set<String>> mutedSoundIds();

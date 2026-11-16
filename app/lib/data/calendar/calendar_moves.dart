@@ -1,3 +1,4 @@
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/domain/calendar/calendar_import_plan.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -9,8 +10,13 @@ part 'calendar_moves.g.dart';
 /// suggestion is not worth syncing.
 @Riverpod(keepAlive: true)
 class CalendarMoves extends _$CalendarMoves {
+  // Emptied at every change of owner (CR-160): the moves carry the
+  // previous owner's event titles.
   @override
-  Map<String, CalendarMove> build() => const {};
+  Map<String, CalendarMove> build() {
+    ref.watch(ownerEpochProvider);
+    return const {};
+  }
 
   /// Adds [moved]; a second move of the same event keeps its first start,
   /// so the delay is the whole shift, and a move back drops it.

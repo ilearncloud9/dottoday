@@ -3,6 +3,7 @@ import 'dart:ui' show Locale;
 import 'package:dottoday/core/clock/minute_tick.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/live_activity/web_live_dot.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,11 +11,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'web_live_dot_providers.g.dart';
 
 /// The day snapshot the web sink wrote last, kept in memory with its
-/// titles (the stored copy has none, M9.1) for the tab (M9.7).
+/// titles (the stored copy has none, M9.1) for the tab (M9.7). Empty
+/// again at every change of owner (CR-160 I8): the titles are the old
+/// owner's, and nothing may read them once another owner shows; the
+/// switch's own snapshot write fills it for the new one.
 @Riverpod(keepAlive: true)
 class LastDaySnapshot extends _$LastDaySnapshot {
   @override
-  DaySnapshot? build() => null;
+  DaySnapshot? build() {
+    ref.watch(ownerEpochProvider);
+    return null;
+  }
 
   // A plain setter for the sink; state is the notifier's own.
   // ignore: use_setters_to_change_properties

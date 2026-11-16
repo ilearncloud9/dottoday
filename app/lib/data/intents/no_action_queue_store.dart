@@ -1,7 +1,6 @@
 import 'package:dottoday/domain/intents/action_queue_store.dart';
 
-/// Where nothing outside the app queues actions: the Mac (its menu bar runs
-/// in the app and calls the intents directly) and tests.
+/// Where nothing outside the app queues actions (Linux, Windows, tests).
 final class NoActionQueueStore implements ActionQueueStore {
   const NoActionQueueStore();
 
@@ -9,5 +8,8 @@ final class NoActionQueueStore implements ActionQueueStore {
   Future<List<Object?>> read() async => const [];
 
   @override
-  Future<void> remove(Set<String> ids, {bool unreadable = false}) async {}
+  Future<void> remove(Set<String> ids) async {}
+
+  @override
+  Future<void> publish(QueueMarker marker) async {}
 }

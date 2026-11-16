@@ -1,0 +1,165 @@
+import 'dart:ui' show Rect;
+
+import 'package:dottoday/core/failures/app_failure.dart';
+import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/data/export/file_gateway.dart';
+import 'package:dottoday/data/export/picked_set_check.dart';
+import 'package:dottoday/data/export/prepared_file.dart';
+import 'package:dottoday/data/owners/account_actions.dart';
+import 'package:dottoday/data/owners/account_export.dart';
+import 'package:dottoday/data/owners/account_gate.dart';
+import 'package:dottoday/data/owners/account_meta.dart';
+import 'package:dottoday/data/owners/deletion_sets.dart';
+import 'package:dottoday/data/owners/held_tasks.dart';
+import 'package:dottoday/data/sync/account_owners.dart';
+import 'package:dottoday/domain/entities/settings.dart';
+import 'package:flutter_riverpod/misc.dart';
+
+/// The CR-160 account screens' actions, recorded; answers set per test.
+base class FakeAccountActions implements AccountActions {
+  final calls = <String>[];
+  OwnerExportOutcome exportOutcome = OwnerExportOutcome.done;
+  Result<void, AppFailure> deleteResult = const Ok(null);
+  Result<void, AppFailure> removalResult = const Ok(null);
+  Result<void, AppFailure> settingsResult = const Ok(null);
+  OwnerSummary summaryValue = (tasks: 42, pending: 3);
+  Result<void, AppFailure> signOutResult = const Ok(null);
+  Result<void, AppFailure> syncResult = const Ok(null);
+
+  @override
+  Future<Result<void, AppFailure>> signOut({bool everywhere = false}) async {
+    calls.add(everywhere ? 'signOutEverywhere' : 'signOut');
+    return signOutResult;
+  }
+
+  @override
+  Future<Result<void, AppFailure>> syncNow() async {
+    calls.add('syncNow');
+    return syncResult;
+  }
+
+  @override
+  Future<void> useWithoutAccount() async => calls.add('useWithoutAccount');
+
+  @override
+  Future<void> signedIn() async => calls.add('signedIn');
+
+  @override
+  Future<void> finishInterruptedSignOut() async =>
+      calls.add('finishInterruptedSignOut');
+
+  @override
+  Future<void> chooseGuestWork(String accountId, GuestChoice choice) async =>
+      calls.add('guest:${choice.name}');
+
+  @override
+  Future<void> dismissGuestNotice(String accountId) async =>
+      calls.add('dismissNotice');
+
+  @override
+  Future<Result<void, AppFailure>> useDeviceSettings(Profile account) async {
+    calls.add('useDevice');
+    return settingsResult;
+  }
+
+  @override
+  Future<void> keepAccountSettings(String accountId) async =>
+      calls.add('keepAccount');
+
+  @override
+  Future<void> decideSettingsLater(
+    String accountId, {
+    required bool later,
+  }) async => calls.add(later ? 'later' : 'chooseNow');
+
+  /// Sets handed to [exportFirst]'s handOver (the web's downloads).
+  final handedOver = <List<PreparedFile>>[];
+
+  /// What [exportFirst] hands to its handOver when the outcome is a set.
+  List<PreparedFile>? setFiles;
+
+  @override
+  Future<OwnerExportOutcome> exportFirst(
+    String owner, {
+    Rect? origin,
+    SetHandOver? handOver,
+  }) async {
+    calls.add('export');
+    if (setFiles case final files? when handOver != null) {
+      handedOver.add(files);
+      final handed = await handOver(files);
+      return handed == DeliveryOutcome.delivered
+          ? OwnerExportOutcome.uncertain
+          : OwnerExportOutcome.cancelled;
+    }
+    return exportOutcome;
+  }
+
+  /// What [checkExport] answers, and the files it was given.
+  PickedSetCheck? checkAnswer;
+  final checked = <List<PickedFile>>[];
+
+  @override
+  Future<PickedSetCheck?> checkExport(
+    String owner,
+    List<PickedFile> picked,
+  ) async {
+    calls.add('check');
+    checked.add(picked);
+    return checkAnswer;
+  }
+
+  /// What [exportFileCount] answers.
+  int? fileCount;
+
+  @override
+  int? exportFileCount(String owner) => fileCount;
+
+  @override
+  Future<OwnerSummary> summary(String owner) async => summaryValue;
+
+  @override
+  Future<Result<void, AppFailure>> deleteAccount() async {
+    calls.add('delete');
+    return waived ? afterWaive : deleteResult;
+  }
+
+  @override
+  void endDeletion(String owner) => calls.add('endDeletion');
+
+  /// Whether "Delete without a saved copy" was chosen, and what a deletion
+  /// answers after it.
+  var waived = false;
+  Result<void, AppFailure> afterWaive = const Ok(null);
+
+  /// What [waiveExport] answers (false: no failed export to waive).
+  bool waiveAccepted = true;
+
+  @override
+  bool waiveExport(String owner) {
+    calls.add('waive');
+    waived = waiveAccepted;
+    return waiveAccepted;
+  }
+
+  @override
+  Future<Result<void, AppFailure>> finishRemovals() async {
+    calls.add('finishRemovals');
+    return removalResult;
+  }
+}
+
+/// Overrides for a screen test: [actions], no database behind the gate
+/// helpers, [pending] changes waiting for every owner.
+List<Override> accountScreenOverrides(
+  FakeAccountActions actions, {
+  int pending = 0,
+  int held = 0,
+  bool browser = false,
+}) => [
+  accountActionsProvider.overrideWithValue(actions),
+  ownerPendingProvider.overrideWith((ref, owner) => Stream.value(pending)),
+  heldTasksProvider.overrideWith((ref) => Stream.value(held)),
+  settingsChoiceLaterProvider.overrideWith((ref) => Stream.value(false)),
+  inBrowserProvider.overrideWithValue(browser),
+];

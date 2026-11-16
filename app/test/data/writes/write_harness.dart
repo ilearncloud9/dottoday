@@ -26,6 +26,9 @@ final class FakeGateway implements NotificationGateway {
   final applied = <NotificationDiff>[];
   bool failNext = false;
 
+  /// How many times everything was removed (a change of owner, CR-160 I6).
+  int clearedAll = 0;
+
   @override
   Future<Map<int, PlannedNotification>> pending() async => {...pendingSet};
 
@@ -40,6 +43,12 @@ final class FakeGateway implements NotificationGateway {
     for (final n in diff.schedule) {
       pendingSet[n.id] = n;
     }
+  }
+
+  @override
+  Future<void> clearAll() async {
+    clearedAll++;
+    pendingSet.clear();
   }
 }
 

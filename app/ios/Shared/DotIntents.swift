@@ -5,6 +5,20 @@ import Foundation
 // the widget extension. Widgets, controls, the Live Activity and Siri call
 // these and nothing else; each one queues for the app (DotActions).
 
+/// What Siri and Shortcuts say when Dottoday refused an action and saved
+/// nothing (an account being deleted, the queue full or unreadable; CR-160
+/// I7): the same generic words as Add task's refusal, never a task, a time
+/// or an account. Thrown, so the success path keeps its own (silent) result.
+@available(iOS 16.0, macOS 13.0, *)
+struct NotSavedError: Error, CustomLocalizedStringResourceConvertible {
+  var localizedStringResource: LocalizedStringResource { "intentNotSaved" }
+
+  /// Throws when [queued] is false.
+  static func unless(_ queued: Bool) throws {
+    if !queued { throw NotSavedError() }
+  }
+}
+
 @available(iOS 16.0, macOS 13.0, *)
 struct AddTaskIntent: AppIntent {
   static var title: LocalizedStringResource = "intentAddTaskTitle"
@@ -17,7 +31,10 @@ struct AddTaskIntent: AppIntent {
   init(text: String) { self.text = text }
 
   func perform() async throws -> some IntentResult & ProvidesDialog {
-    DotActions.perform(.addTask, text: text)
+    // Refused while an account is being deleted, or when full (CR-160 I7).
+    guard DotActions.perform(.addTask, text: text) else {
+      return .result(dialog: IntentDialog("intentNotSaved"))
+    }
     return .result(dialog: IntentDialog("intentAddTaskDone"))
   }
 }
@@ -48,7 +65,7 @@ struct MarkDoneIntent: AppIntent {
 
   func perform() async throws -> some IntentResult {
     guard let id = occurrenceId ?? DotActions.currentBlock()?.id else { return .result() }
-    DotActions.perform(.markDone, occurrenceId: id)
+    try NotSavedError.unless(DotActions.perform(.markDone, occurrenceId: id))
     return .result()
   }
 }
@@ -77,8 +94,9 @@ struct AddFifteenIntent: AppIntent {
     guard let id = occurrenceId ?? current?.id,
       let endMs = plannedEndMs.map(Double.init) ?? current?.endMs
     else { return .result() }
-    DotActions.perform(
-      .addFifteen, occurrenceId: id, plannedEnd: Date(timeIntervalSince1970: endMs / 1000))
+    try NotSavedError.unless(
+      DotActions.perform(
+        .addFifteen, occurrenceId: id, plannedEnd: Date(timeIntervalSince1970: endMs / 1000)))
     return .result()
   }
 }
@@ -97,7 +115,7 @@ struct StartFocusIntent: AppIntent {
 
   func perform() async throws -> some IntentResult {
     guard let id = occurrenceId ?? DotActions.currentBlock(orNext: true)?.id else { return .result() }
-    DotActions.perform(.startFocus, occurrenceId: id)
+    try NotSavedError.unless(DotActions.perform(.startFocus, occurrenceId: id))
     return .result()
   }
 }

@@ -9,4 +9,8 @@ abstract interface class NotificationGateway {
 
   /// Cancels then schedules exactly what [diff] lists.
   Future<void> apply(NotificationDiff diff);
+
+  /// Removes every notification of this app, pending and delivered, on a
+  /// change of owner (CR-160 I6); the next resync plans the new owner's.
+  Future<void> clearAll();
 }

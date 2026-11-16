@@ -8,9 +8,11 @@ import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/repositories/reveal_hint_repository.dart';
 import 'package:dottoday/domain/reveal/hint_scheduler.dart';
+import 'package:dottoday/domain/sync/stable_ids.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:uuid/uuid.dart';
+
+export 'package:dottoday/domain/sync/stable_ids.dart' show revealHintRowId;
 
 part 'hint_providers.g.dart';
 
@@ -23,11 +25,6 @@ Stream<Map<HintId, RevealHint>> revealHints(Ref ref) {
       .asyncExpand((p) => repo.watchAll(p.id))
       .map((rows) => {for (final r in rows) r.hintId: r});
 }
-
-/// One row per user and hint, on every device: a name-based UUID (v5)
-/// of both, so two devices showing the same hint update one row.
-String revealHintRowId(String userId, HintId hint) =>
-    const Uuid().v5(Namespace.url.value, 'dottoday:hint:$userId:${hint.name}');
 
 /// Records that [hint] showed (first time today): count + 1 (never past
 /// [hintMaxShows]), when. [spendDay] false counts the showing without

@@ -84,6 +84,17 @@ final class WakeUpArming {
     return armed;
   }
 
+  /// Disarms every Wake Up alarm and forgets the armed instants: a change
+  /// of owner (CR-160 I8). `armed_wake_ups` is one key per device, not per
+  /// owner, so the alarms (their titles are the old owner's tasks) go
+  /// first; the new owner's resync then arms its own, if any.
+  Future<void> disarmAll() async {
+    // Out of reach, the alarms still ring: keep them, as arm() does, so the
+    // next reachable sync disarms them.
+    if (!await _gateway.disarmAll()) return;
+    await _write(null);
+  }
+
   /// Disarms every Wake Up alarm this device armed, once: the switch went
   /// off, or another device is the one that rings (ED-084). Returns what is
   /// still armed: out of reach (a background engine), the alarms still

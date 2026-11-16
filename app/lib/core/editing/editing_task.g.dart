@@ -50,7 +50,7 @@ final class EditingTaskProvider
   }
 }
 
-String _$editingTaskHash() => r'e732d963b0a59598c2e29330ebb371802c0a029c';
+String _$editingTaskHash() => r'c6550650e982b977d5c1e5c191b468ab81dec357';
 
 /// The task open in the Mac/web editor panel (docs/10 §4 "editing in a
 /// right-hand TaskEditor panel, no sheets", M3e.5); null = closed. Held

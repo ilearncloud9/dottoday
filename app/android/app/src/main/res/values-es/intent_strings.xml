@@ -4,4 +4,6 @@
     <string name="shortcut_add_task">Añadir tarea</string>
     <string name="shortcut_whats_next">Qué sigue</string>
     <string name="tile_start_focus">Empezar a concentrarte</string>
+    <!-- A share Dottoday refused (CR-160 I7). -->
+    <string name="share_not_saved">Dottoday no ha podido guardarlo ahora. Abre Dottoday y vuelve a intentarlo.</string>
 </resources>

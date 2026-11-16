@@ -18,7 +18,7 @@ final class DriftSettingsRepository implements SettingsRepository {
 
   @override
   Future<Profile?> findLocalProfile() async =>
-      _toEntity(await _dao.findFirst());
+      _toEntity(await _dao.findActive());
 
   @override
   Future<void> upsert(Profile profile) =>

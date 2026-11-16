@@ -72,6 +72,30 @@ final class SupabaseSyncGateway implements SyncGateway {
   });
 
   @override
+  Future<({int revision, bool frozen})> accountRevision() => _guard(() async {
+    final rows = await _client.rpc<List<dynamic>>('account_revision');
+    final row = rows.single as Map<String, dynamic>;
+    return (
+      revision: (row['revision'] as num).toInt(),
+      frozen: row['frozen'] == true,
+    );
+  });
+
+  @override
+  Future<Set<String>> ownIds(String entity, List<String> ids) =>
+      _guard(() async {
+        final out = <String>{};
+        for (var i = 0; i < ids.length; i += 100) {
+          final rows = await _client
+              .from(entity)
+              .select('id')
+              .inFilter('id', ids.sublist(i, (i + 100).clamp(0, ids.length)));
+          out.addAll(rows.map((r) => r['id'] as String));
+        }
+        return out;
+      });
+
+  @override
   Stream<void> changes() => RealtimeNudges(_openFeed).stream();
 
   /// One `dottoday-sync` channel on every synced table.
@@ -108,12 +132,23 @@ final class SupabaseSyncGateway implements SyncGateway {
     return () async => _client.removeChannel(channel);
   }
 
+  /// The row a 0014 "not accessible" refusal names, if this is one.
+  static ({String entity, String id})? _foreign(PostgrestException e) {
+    if (e.code != '42501') return null;
+    final m = _notAccessible.firstMatch(e.message);
+    return m == null ? null : (entity: m[2]!, id: m[1]!);
+  }
+
+  static final _notAccessible = RegExp(
+    r'sync_push: row ([0-9a-f-]{36}) of ([a-z_]+) not accessible',
+  );
+
   /// Network trouble is "offline"; anything the server refused is "server".
   static Future<T> _guard<T>(Future<T> Function() run) async {
     try {
       return await run();
     } on PostgrestException catch (e) {
-      throw SyncGatewayException(SyncTrouble.server, e);
+      throw SyncGatewayException(SyncTrouble.server, e, foreign: _foreign(e));
     } on AuthException catch (e) {
       throw SyncGatewayException(SyncTrouble.server, e);
     } on Exception catch (e) {

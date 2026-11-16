@@ -1,7 +1,6 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
-import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
@@ -38,7 +37,6 @@ Future<Result<UndoToken, AppFailure>?> plantStarters(
     zone: zone,
     userId: profile.id,
     nowUtc: now,
-    ids: const UuidV7Generator(),
   );
   return ref
       .read(undoServiceProvider)

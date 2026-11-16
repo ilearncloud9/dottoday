@@ -52,7 +52,7 @@ final class FocusTaskProvider extends $NotifierProvider<FocusTask, String?> {
   }
 }
 
-String _$focusTaskHash() => r'c42ad16be89861dfb67416a63860258807d94a47';
+String _$focusTaskHash() => r'89447fa7e44630a59a544f3e97a00eba5da47e0c';
 
 /// The task in Focus on Mac/web: a centred view in the content area with
 /// the rail kept (docs/09 M10.5, docs/10 §4); null = none. Phones push
@@ -119,7 +119,7 @@ final class FocusRequestProvider
   }
 }
 
-String _$focusRequestHash() => r'f61fd45d37cba47eac9820235b3d7e9f1c6432ce';
+String _$focusRequestHash() => r'11dcb02430157813dd25aa849746cc838aaba40f';
 
 /// A surface asked for Focus on a dot (Start focus from a control, a
 /// tile or Siri, docs/09 M10.5); the app root opens it. Each request is

@@ -58,4 +58,13 @@ abstract interface class BackupService {
   /// Replaces [userId]'s data with an export file (JSON v1), after a
   /// [BackupReason.preImport] backup. Invalid files change nothing.
   Future<Result<void, AppFailure>> importJson(String userId, String json);
+
+  /// Replaces [userId]'s data with a multipart set (CR-160 B7): its
+  /// [manifest] and each of [parts] read when needed, after a
+  /// [BackupReason.preImport] backup. Invalid sets change nothing.
+  Future<Result<void, AppFailure>> importSet(
+    String userId,
+    String manifest,
+    List<Future<String> Function()> parts,
+  );
 }

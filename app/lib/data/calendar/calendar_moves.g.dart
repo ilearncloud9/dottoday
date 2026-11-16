@@ -53,7 +53,7 @@ final class CalendarMovesProvider
   }
 }
 
-String _$calendarMovesHash() => r'8e1d59162684ac453acab7548165a6d9955da511';
+String _$calendarMovesHash() => r'1ebd6aa06226ecb5f49687e83e6862b2999090d3';
 
 /// Imported events the calendar moved since launch, by occurrence id,
 /// until Today's "moved · Rebalance?" prompt is used or put away

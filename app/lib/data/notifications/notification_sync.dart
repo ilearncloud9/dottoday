@@ -79,8 +79,13 @@ final class NotificationSync {
   /// phone, as before the list.
   final DeviceReporter? _devices;
 
-  /// Re-plans [userId]'s notifications and applies the delta to the OS.
+  /// Re-plans [userId]'s notifications and applies the delta to the OS;
+  /// nothing unless [userId] is the owner shown (CR-160 I6, I8): a run
+  /// queued before a change of owner must not plan, arm or cancel anything
+  /// for the owner who left. The switch's own run plans the new one.
   Future<void> resync(String userId) async {
+    final shown = await _settings.findLocalProfile();
+    if (shown?.id != userId) return;
     final profile = await _settings.watchProfile(userId).first;
     if (profile == null) return;
     final now = _clock.nowUtc();

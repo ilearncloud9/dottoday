@@ -48,7 +48,7 @@ final class PendingRoutineDropProvider
 }
 
 String _$pendingRoutineDropHash() =>
-    r'88fa21bf0108c077877abde20498bf4e630caa87';
+    r'63ca05d8cb5630815af7deccb4d3a5ac820b21da';
 
 /// The routine drop waiting for the host in the app shell, which opens
 /// its proposal and clears it (as `ActiveProposal`).

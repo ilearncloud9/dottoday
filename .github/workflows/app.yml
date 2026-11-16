@@ -168,13 +168,17 @@ jobs:
           xcodebuild test -workspace macos/Runner.xcworkspace -scheme Runner
           -destination 'platform=macOS' -only-testing:RunnerTests -quiet
       # The Swift half of the B6 intents (docs/09 M9.2): queue entries and the
-      # optimistic snapshot patch, in RunnerTests on a simulator.
+      # optimistic snapshot patch, in RunnerTests on a simulator. Signed ad
+      # hoc ("sign to run locally", no team): the sealed queue (CR-160 I1)
+      # keeps its key in the Keychain, which an unsigned app can't reach
+      # (-34018), so the real Keychain is what these tests exercise.
       - if: matrix.target == 'ios'
         name: Swift unit tests (RunnerTests)
         run: >-
           xcodebuild test -workspace ios/Runner.xcworkspace -scheme Runner
           -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
-          -only-testing:RunnerTests CODE_SIGNING_ALLOWED=NO -quiet
+          -only-testing:RunnerTests CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual
+          DEVELOPMENT_TEAM= PROVISIONING_PROFILE_SPECIFIER= -quiet
 
   integration-android:
     # The device tests on an Android emulator (docs/08 §6, docs/09 M4.9): cold launch,

@@ -27,6 +27,7 @@ Result<WriteBatch, ValidationFailure> validateBatch(WriteBatch batch) {
           for (final s in batch.calendarSeries)
             _unwrap(validateCalendarSeries(s)),
         ],
+        onlyWhileShown: batch.onlyWhileShown,
       ),
     );
   } on _Invalid catch (e) {

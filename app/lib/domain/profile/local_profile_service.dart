@@ -42,26 +42,45 @@ final class LocalProfileService {
   }) async {
     final existing = await _settings.findLocalProfile();
     if (existing != null) return Ok(existing);
-    final now = _clock.nowUtc();
-    final profile = Profile(
-      id: _ids.newId(),
-      tzId: _knownZone(deviceTzId) ? deviceTzId : 'UTC',
-      locale: language,
-      createdAt: now,
-      updatedAt: now,
+    final profile = freshAccountProfile(
+      _ids.newId(),
+      deviceTzId,
+      language,
+      _clock.nowUtc(),
     );
     final written = await _writes.apply(
       WriteBatch(userId: profile.id, profile: profile),
     );
     return written.map((_) => profile);
   }
+}
 
-  static bool _knownZone(String id) {
-    try {
-      tz.getLocation(id);
-      return true;
-    } on tz.LocationNotFoundException {
-      return false;
-    }
+/// A new profile [id] with this device's defaults: [deviceTzId] (UTC when
+/// the tz database doesn't know it) and [language]. The guest's on first
+/// launch, or an account's first on a device holding another account's
+/// rows (CR-160), whose server settings then win.
+///
+/// ```dart
+/// freshAccountProfile(id, 'Europe/Berlin', 'de', now).tzId; // Europe/Berlin
+/// ```
+Profile freshAccountProfile(
+  String id,
+  String deviceTzId,
+  String language,
+  DateTime nowUtc,
+) => Profile(
+  id: id,
+  tzId: _knownZone(deviceTzId) ? deviceTzId : 'UTC',
+  locale: language,
+  createdAt: nowUtc,
+  updatedAt: nowUtc,
+);
+
+bool _knownZone(String id) {
+  try {
+    tz.getLocation(id);
+    return true;
+  } on tz.LocationNotFoundException {
+    return false;
   }
 }

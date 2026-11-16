@@ -1,6 +1,7 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/data/thinking/channel_thinking_transport.dart';
 import 'package:dottoday/data/thinking/local_thinking_memory.dart';
@@ -15,10 +16,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'thinking_providers.g.dart';
 
-/// Saved breakdowns and the local prompt log.
+/// Saved breakdowns, brain dumps and the local prompt log of the owner the
+/// app shows: a new one at every change of owner (CR-160 I4), and with it a
+/// new [thinkingService].
 @Riverpod(keepAlive: true)
-LocalThinkingMemory thinkingMemory(Ref ref) =>
-    LocalThinkingMemory(ref.watch(appDatabaseProvider));
+LocalThinkingMemory thinkingMemory(Ref ref) {
+  ref.watch(ownerEpochProvider);
+  final memory = LocalThinkingMemory(ref.watch(appDatabaseProvider));
+  ref.onDispose(memory.retire);
+  return memory;
+}
 
 /// The platform's on-device model transport: the method channel on
 /// iOS/macOS/Android, the Prompt API in the browser.

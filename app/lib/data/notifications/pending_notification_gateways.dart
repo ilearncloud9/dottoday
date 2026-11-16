@@ -12,6 +12,9 @@ final class UnwiredNotificationGateway implements NotificationGateway {
 
   @override
   Future<void> apply(NotificationDiff diff) async {}
+
+  @override
+  Future<void> clearAll() async {}
 }
 
 /// Placeholder until home-screen widgets land (M5.4).

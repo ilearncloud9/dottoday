@@ -4,8 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
-import '../../support/fake_ids.dart';
-
 // O3 starter habits (docs/09 M4.3): placed by the user's own day.
 
 void main() {
@@ -25,7 +23,6 @@ void main() {
       zone: berlin,
       userId: 'u',
       nowUtc: DateTime.utc(2026, 10, 21, 9),
-      ids: FakeIds('s'),
     );
     expect(rows, hasLength(maxStarters));
     String at(String name) {

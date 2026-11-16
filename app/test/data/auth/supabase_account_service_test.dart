@@ -153,7 +153,7 @@ void main() {
   });
 
   group('delete account (M6.5)', () {
-    SupabaseAccountService withRemote(Future<void> Function() remote) =>
+    SupabaseAccountService withRemote(Future<void> Function(int) remote) =>
         SupabaseAccountService(
           auth,
           redirectTo: _redirect,
@@ -166,17 +166,25 @@ void main() {
       when(
         () => auth.signOut(scope: any(named: 'scope')),
       ).thenAnswer((_) async {});
-      var called = 0;
-      final s = withRemote(() async => called++);
-      expect(await s.deleteAccount(), isA<Ok<void, AppFailure>>());
-      expect(called, 1);
+      final sent = <int>[];
+      final s = withRemote((revision) async => sent.add(revision));
+      expect(
+        await s.deleteAccount(expectedRevision: 12),
+        isA<Ok<void, AppFailure>>(),
+      );
+      expect(sent, [12], reason: 'the reviewed revision goes with it');
       verify(() => auth.signOut(scope: SignOutScope.local)).called(1);
       await s.dispose();
     });
 
     test('the server refuses: an error, still signed in', () async {
-      final s = withRemote(() => throw const FunctionException(status: 500));
-      final r = await s.deleteAccount();
+      final s = withRemote(
+        (_) => throw const FunctionException(
+          status: 500,
+          details: {'error': 'could_not_delete'},
+        ),
+      );
+      final r = await s.deleteAccount(expectedRevision: 1);
       expect(
         (r as Err).failure,
         const NetworkFailure(NetworkFailureKind.server),
@@ -185,8 +193,76 @@ void main() {
       await s.dispose();
     });
 
+    test('a dropped connection is an unknown outcome, never "not '
+        'deleted"', () async {
+      final s = withRemote((_) => throw Exception('connection reset'));
+      final r = await s.deleteAccount(expectedRevision: 3);
+      expect(
+        (r as Err).failure,
+        const NetworkFailure(NetworkFailureKind.timeout),
+      );
+      verifyNever(() => auth.signOut(scope: any(named: 'scope')));
+      await s.dispose();
+    });
+
+    for (final (status, error, want) in [
+      (409, 'changed', 'review'),
+      (503, 'pending', 'unknown'),
+      (503, 'busy', 'server'),
+      (500, 'not_deleted', 'server'),
+      (500, 'could_not_delete', 'server'),
+      (400, 'update_required', 'server'),
+      (401, 'session not valid', 'auth'),
+      (401, null, 'unknown'), // a gateway's 401: not the function's contract
+      (502, null, 'unknown'),
+      (500, 'something else', 'unknown'),
+    ]) {
+      test('$status $error: $want', () {
+        final f = deletionFailure(status, error);
+        switch (want) {
+          case 'review':
+            expect(f, isA<ReviewChangedFailure>());
+          case 'auth':
+            expect(f, isA<AuthFailure>());
+          case 'server':
+            expect(f, const NetworkFailure(NetworkFailureKind.server));
+          case 'unknown':
+            expect(f, const NetworkFailure(NetworkFailureKind.timeout));
+        }
+      });
+    }
+
+    test('a 2xx is a deletion only with the function\'s "deleted"', () {
+      expect(confirmsDeletion({'deleted': true, 'mailed': false}), isTrue);
+      expect(confirmsDeletion({'deleted': true, 'already': true}), isTrue);
+      expect(confirmsDeletion({'released': true}), isFalse);
+      expect(confirmsDeletion({'deleted': 'true'}), isFalse);
+      expect(confirmsDeletion('ok'), isFalse);
+      expect(confirmsDeletion(null), isFalse);
+    });
+
+    test(
+      'an unexpected 2xx answer is unknown: nothing removed, signed in',
+      () async {
+        final s = withRemote(
+          (_) =>
+              throw const FormatException('delete-account: unexpected answer'),
+        );
+        final r = await s.deleteAccount(expectedRevision: 3);
+        expect(
+          (r as Err).failure,
+          const NetworkFailure(NetworkFailureKind.timeout),
+        );
+        verifyNever(() => auth.signOut(scope: any(named: 'scope')));
+        await s.dispose();
+      },
+    );
+
     test('without the function wired: refused', () async {
-      expect(await service.deleteAccount(), isA<Err<void, AppFailure>>());
+      expect(
+        await service.deleteAccount(expectedRevision: 1),
+        isA<Err<void, AppFailure>>(),
+      );
     });
   });
 

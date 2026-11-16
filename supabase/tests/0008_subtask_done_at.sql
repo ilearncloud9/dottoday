@@ -19,13 +19,13 @@ set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a8","r
 
 select lives_ok(
   format($$select public.sync_push('[
-    {"entity":"occurrences","id":"20000000-0000-0000-0000-0000000008a1","hlc":"%1$s","fields":{"title":"Clean"}},
-    {"entity":"subtasks","id":"30000000-0000-0000-0000-0000000008a1","hlc":"%1$s","fields":{"occurrence_id":"20000000-0000-0000-0000-0000000008a1","title":"Dishes"}}
+    {"owner":"00000000-0000-0000-0000-0000000000a8","entity":"occurrences","id":"20000000-0000-0000-0000-0000000008a1","hlc":"%1$s","fields":{"title":"Clean"}},
+    {"owner":"00000000-0000-0000-0000-0000000000a8","entity":"subtasks","id":"30000000-0000-0000-0000-0000000008a1","hlc":"%1$s","fields":{"occurrence_id":"20000000-0000-0000-0000-0000000008a1","title":"Dishes"}}
   ]'::jsonb)$$, pg_temp.hlc(-60000)),
   'A pushes a task with a step and no tick time');
 
 select lives_ok(
-  format($$select public.sync_push('[{"entity":"subtasks","id":"30000000-0000-0000-0000-0000000008a1","hlc":"%s","fields":{"done":true,"done_at":"2026-10-26T09:15:00.000Z"}}]'::jsonb)$$,
+  format($$select public.sync_push('[{"owner":"00000000-0000-0000-0000-0000000000a8","entity":"subtasks","id":"30000000-0000-0000-0000-0000000008a1","hlc":"%s","fields":{"done":true,"done_at":"2026-10-26T09:15:00.000Z"}}]'::jsonb)$$,
          pg_temp.hlc(-50000)),
   'A ticks the step');
 select is((select done_at from public.subtasks where id = '30000000-0000-0000-0000-0000000008a1'),
@@ -33,7 +33,7 @@ select is((select done_at from public.subtasks where id = '30000000-0000-0000-00
 
 -- An older client unticks without knowing the column: never refused.
 select lives_ok(
-  format($$select public.sync_push('[{"entity":"subtasks","id":"30000000-0000-0000-0000-0000000008a1","hlc":"%s","fields":{"done":false}}]'::jsonb)$$,
+  format($$select public.sync_push('[{"owner":"00000000-0000-0000-0000-0000000000a8","entity":"subtasks","id":"30000000-0000-0000-0000-0000000008a1","hlc":"%s","fields":{"done":false}}]'::jsonb)$$,
          pg_temp.hlc(-40000)),
   'an untick that leaves done_at is accepted');
 

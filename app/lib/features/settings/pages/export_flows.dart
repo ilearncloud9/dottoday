@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/failure_messages.dart';
@@ -9,11 +8,14 @@ import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/export/export_providers.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
+import 'package:dottoday/data/export/multipart_export.dart';
+import 'package:dottoday/data/export/picked_import.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
+import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
-import 'package:dottoday/domain/export/export_bundle.dart';
 import 'package:dottoday/domain/export/export_files.dart';
-import 'package:dottoday/domain/export/export_json.dart';
+import 'package:dottoday/features/settings/widgets/export_set_sheet.dart';
+import 'package:dottoday/features/settings/widgets/import_set_sheet.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,6 +34,25 @@ Future<void> exportAs(BuildContext context, ExportFormat format) async {
   final l10n = context.l10n;
   final origin = _originOf(context);
   final profile = await readProfile(container);
+  // Over one part, JSON is a set (CR-160 B7, owner: automatic).
+  if (format == ExportFormat.json) {
+    final set = await container
+        .read(exportServiceProvider)
+        .prepareSet(
+          profile.id,
+          appVersion: () => container.read(appVersionProvider.future),
+        );
+    switch (set) {
+      case Ok(value: final PreparedSet value):
+        if (context.mounted) await handOverSet(context, value, origin);
+        return;
+      case Ok(value: FitsOneFile()):
+        break; // today's single file, below
+      case Err(:final failure):
+        _say(messenger, failureMessage(l10n, failure));
+        return;
+    }
+  }
   final built = await container
       .read(exportServiceProvider)
       .build(profile.id, format);
@@ -61,30 +82,56 @@ Future<void> exportAs(BuildContext context, ExportFormat format) async {
   }
 }
 
-/// Picks a JSON backup, shows what it holds and that it replaces what is
-/// here, then imports it (after a pre-import backup, M2.4).
+/// Picks a backup (one JSON v1 file, or the files of a set: CR-160 B7b),
+/// shows what it holds and that it replaces what is here, then imports it
+/// (after a pre-import backup, M2.4). A set missing files is gathered in
+/// "Add the rest of this backup" first.
 Future<void> importBackup(BuildContext context) async {
   final container = ProviderScope.containerOf(context, listen: false);
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
   final locale = Localizations.localeOf(context).toLanguageTag();
-  final picked = await _pickBackup(container, messenger, l10n);
-  if (picked == null) return;
-  final (:text, :bundle) = picked;
+  final files = await container.read(fileGatewayProvider).pickJsonFiles();
+  if (files.isEmpty) return;
+  final picked = await addPicked(null, files);
+  final DateTime exportedAt;
+  final int tasks;
+  final Future<Result<void, AppFailure>> Function(String owner) run;
+  final backups = container.read(backupServiceProvider);
+  switch (picked) {
+    case PickRefused(:final reason):
+      _say(messenger, pickRefusalText(l10n, reason));
+      return;
+    case PickedSingle(:final text, :final bundle):
+      exportedAt = bundle.exportedAt;
+      tasks = bundle.occurrences.where((o) => o.deletedAt == null).length;
+      run = (owner) => backups.importJson(owner, text);
+    case PickedSet(:final draft):
+      if (!draft.complete) {
+        if (!context.mounted) return;
+        if (await showImportSetSheet(context, draft) == null) return;
+      }
+      exportedAt = DateTime.fromMillisecondsSinceEpoch(
+        draft.manifest!.exportedAtMs,
+        isUtc: true,
+      );
+      tasks = draft.liveTasks!;
+      run = (owner) =>
+          backups.importSet(owner, draft.manifestText!, draft.readers);
+  }
   final profile = await readProfile(container);
   if (!context.mounted) return;
   final yes = await _confirm(
     context,
     title: l10n.exportImportTitle,
     body: l10n.exportImportBody(
-      _date(bundle.exportedAt, profile.tzId, DateFormat.yMMMd(locale)),
-      bundle.occurrences.where((o) => o.deletedAt == null).length,
+      _date(exportedAt, profile.tzId, DateFormat.yMMMd(locale)),
+      tasks,
     ),
     action: l10n.exportImportAction,
   );
   if (!yes) return;
-  final backups = container.read(backupServiceProvider);
-  final result = await backups.importJson(profile.id, text);
+  final result = await run(profile.id);
   container.invalidate(backupListProvider);
   _afterReplace(
     container,
@@ -94,35 +141,6 @@ Future<void> importBackup(BuildContext context) async {
     l10n.exportImported,
     BackupReason.preImport,
   );
-}
-
-/// The picked file as text and its validated bundle; null (after saying
-/// why, unless the picker was just closed) when there is nothing to import.
-Future<({String text, ExportBundle bundle})?> _pickBackup(
-  ProviderContainer container,
-  ScaffoldMessengerState messenger,
-  AppLocalizations l10n,
-) async {
-  final picked = await container
-      .read(fileGatewayProvider)
-      .pickBackup(maxBytes: maxImportBytes);
-  final String text;
-  switch (picked) {
-    case PickCancelled():
-      return null;
-    case PickTooLarge():
-      _say(messenger, l10n.exportTooLarge);
-      return null;
-    case PickedBytes(:final bytes):
-      text = _utf8(bytes);
-  }
-  switch (decodeExportJson(text)) {
-    case Ok(:final value):
-      return (text: text, bundle: value);
-    case Err(:final failure):
-      _say(messenger, _importRefusal(l10n, failure));
-      return null;
-  }
 }
 
 /// Restores backup [info] from this device, after confirming.
@@ -197,24 +215,6 @@ Future<void> _undo(
   container.invalidate(backupListProvider);
   if (result case Err(:final failure)) {
     _say(messenger, failureMessage(l10n, failure));
-  }
-}
-
-String _importRefusal(AppLocalizations l10n, ValidationFailure failure) =>
-    switch (failure) {
-      ValidationFailure(rule: ValidationRule.tooLarge) => l10n.exportTooLarge,
-      ValidationFailure(field: ValidationField.importFile) =>
-        l10n.exportNotBackup,
-      _ => failureMessage(l10n, failure),
-    };
-
-/// The picked bytes as text; an empty string (refused as not a backup)
-/// when they aren't UTF-8.
-String _utf8(List<int> bytes) {
-  try {
-    return utf8.decode(bytes);
-  } on FormatException {
-    return '';
   }
 }
 

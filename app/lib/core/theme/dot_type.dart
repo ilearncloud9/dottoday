@@ -26,6 +26,8 @@ final class DotType {
     required this.dayCaption,
     required this.threadTitle,
     required this.threadMeta,
+    required this.promptTitle,
+    required this.choiceTitle,
   });
 
   /// Roles in [text], with [muted] for captions and meta.
@@ -50,6 +52,8 @@ final class DotType {
         dayCaption: _inter(13, 18, 700, muted, tracking: 0.06),
         threadTitle: _inter(20, 26, 700, text),
         threadMeta: _inter(15, 20, 500, muted),
+        promptTitle: _inter(22, 28, 700, text, tracking: -0.01),
+        choiceTitle: _inter(17, 22, 700, text),
       );
 
   static const fontFamily = 'Inter';
@@ -134,6 +138,13 @@ final class DotType {
   /// A day-thread row's time range (15/500, muted).
   final TextStyle threadMeta;
 
+  /// A decision screen's or prompt's title: sign out, delete, the account
+  /// choices (CR-160 boards A1–A3, B1, G1, D1; 22/700).
+  final TextStyle promptTitle;
+
+  /// An option's title on a decision screen (B1, G1; 17/700).
+  final TextStyle choiceTitle;
+
   /// Android's 12 px tab labels (§2.2).
   TextStyle androidTab(TextStyle tab) => tab.copyWith(fontSize: 12);
 
@@ -160,6 +171,8 @@ final class DotType {
       dayCaption: l(dayCaption, other.dayCaption),
       threadTitle: l(threadTitle, other.threadTitle),
       threadMeta: l(threadMeta, other.threadMeta),
+      promptTitle: l(promptTitle, other.promptTitle),
+      choiceTitle: l(choiceTitle, other.choiceTitle),
     );
   }
 }

@@ -3,7 +3,6 @@ import 'package:dottoday/domain/onboarding/starter_habits.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-import 'fake_ids.dart';
 import 'timeline_fakes.dart';
 
 /// Morning run, Lunch and Read on Thu 22 Oct 2026 in Berlin (07:00–22:00),
@@ -28,6 +27,5 @@ List<Occurrence> firstThreadRows() {
     zone: berlin,
     userId: testUserId,
     nowUtc: DateTime.utc(2026, 10, 21, 9),
-    ids: FakeIds('first'),
   );
 }
