@@ -1,6 +1,6 @@
 # Concept E — consistency review (v1.1)
 
-**Status:** LEADING CANDIDATE — NOT APPROVED FOR PRODUCTION IMPLEMENTATION. Written 2026-11-04 for owner review. Findings only: no board was changed. **Reconciled 2026-11-13:** every entry's current disposition is in § Current disposition below; the original findings are unchanged.
+**Status:** APPROVED FOR PRODUCTION IMPLEMENTATION (ED-353, 2026-11-15); was a leading candidate when written. Written 2026-11-04 for owner review. Findings only: no board was changed. **Reconciled 2026-11-13:** every entry's current disposition is in § Current disposition below; the original findings are unchanged.
 
 **What was reviewed:** the live E boards on canvas version `1793767935-3ecd`.
 
@@ -603,7 +603,7 @@ The v1.0 report is kept unchanged below, with its headings moved down one level.
 *Original title: "Concept E — feature coverage and consistency report (v1.0)".*
 
 
-**Status:** LEADING CANDIDATE — NOT APPROVED FOR PRODUCTION IMPLEMENTATION. Written 2026-11-04 for owner review.
+**Status:** APPROVED FOR PRODUCTION IMPLEMENTATION (ED-353, 2026-11-15); was a leading candidate when written. Written 2026-11-04 for owner review.
 
 **Cross-checked:**
 - the five E boards and the working `E-Map`;

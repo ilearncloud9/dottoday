@@ -1,6 +1,6 @@
 # Concept E — decision register
 
-**Status: LEADING CANDIDATE — NOT APPROVED FOR PRODUCTION IMPLEMENTATION.**
+**Status:** **APPROVED FOR PRODUCTION IMPLEMENTATION (ED-353, 2026-11-15).** Earlier text that calls Concept E a leading candidate describes its own date.
 
 | Item | Value |
 |---|---|
@@ -16,24 +16,24 @@
 **How the review runs.**
 1. One group at a time. **Group 1 is complete** (2026-11-04, ED-065 to ED-073; G1-1 = Option A). **Group 2 is reviewed now, one decision at a time** (ED-074); G2-1 to G2-7 and G2-13 are settled; G2-8 resolved (ED-091); G2-9 resolved (ED-093); G2-10 resolved (ED-095); G2-11 resolved (ED-097); G2-12 resolved (ED-099). **Group 2 is complete** (2026-11-05); its completion summary lists what stays open for feasibility. The mode-switch workflow rule is resolved (ED-100) and its clarifications approved (ED-103). **Group 3 is reviewed now, one decision at a time** (ED-101): corrections are kept apart from new design proposals, each change to an approved screen gets a focused comparison first, and drawings not yet seen by the owner are flagged (ED-102). G3-1 resolved as option C revised and merged into E-Phones Today (ED-104). G3-2 resolved as option A and merged into E-Minimal (ED-106). G2-4, G2-5, G2-6, G2-8, G2-9 and G2-10 get visual comparisons before approval. Groups 3–4 wait until Group 2 is complete and reconciled.
 2. Each answer is logged as a new decision-log entry (ED-065 onward). Old entries are never edited.
-3. After each group: `E_DESIGN_RULES.md`, the affected boards and the working E-Map are updated together, and this register marks the decisions RESOLVED with the new ED number as evidence.
-4. A decision is RESOLVED only with explicit owner approval (a quote and where it was said). A canvas edit approves only that visual change. Deleting a board is not a rejection of the idea unless the intent is clear.
+3. After each group: `E_DESIGN_RULES.md`, the affected boards and the working E-Map are updated together, and this register marks the decisions APPROVED with the new ED number as evidence.
+4. A decision is APPROVED only with explicit owner approval (a quote and where it was said). A canvas edit approves only that visual change. Deleting a board is not a rejection of the idea unless the intent is clear.
 
-**Status words.** OPEN = no owner answer yet. PARTLY RESOLVED = part is answered (evidence given), part is open. RESOLVED = answered (evidence given).
+**Status words.** OPEN = no owner answer yet. PARTLY RESOLVED = part is answered (evidence given), part is open. APPROVED = the owner approved it (evidence given); it was written RESOLVED until ED-354.
 
 ## Summary
 
-| Group | Decisions | Open | Partly resolved | Resolved | Adopted from board |
+| Group | Decisions | Open | Partly resolved | Approved | Adopted from board |
 |---|---|---|---|---|---|
 | 1 · Foundational experience | 5 | 0 | 0 | 5 | 0 |
-| 2 · Navigation and workflows | 13 | 0 | 0 | 10 | 3 |
-| 3 · Visual and interaction consistency | 12 | 11 | 1 | 0 | 0 |
-| 4 · Missing experiences | 7 | 7 | 0 | 0 | 0 |
-| **Total** | **37** | **18** | **1** | **15** | **3** |
+| 2 · Navigation and workflows | 13 | 0 | 0 | 13 | 0 |
+| 3 · Visual and interaction consistency | 12 | 0 | 0 | 12 | 0 |
+| 4 · Missing experiences | 7 | 0 | 0 | 7 | 0 |
+| **Total** | **37** | **0** | **0** | **37** | **0** |
 
-Counts refreshed 2026-11-05 at the close of Group 2 (ED-099). Adopted from board (ED-077: G2-3, G2-7, G2-13) means no conflict was found and the owner may still override.
+Counts refreshed 2026-11-15 (ED-353): Group 3 closed at ED-164, Group 4 at ED-196; the three adopted from the board were settled later (G2-3 ED-238, G2-7 ED-099 one When picker, G2-13 ED-336). Earlier count: 2026-11-05 at the close of Group 2 (ED-099). Adopted from board (ED-077: G2-3, G2-7, G2-13) means no conflict was found and the owner may still override.
 
-Final sign-off, asked once after Group 4 and not counted above: **approve Concept E as the direction** (E-Map D #1). Until then E is a leading candidate only.
+Final sign-off, asked once after Group 4 and not counted above: **approve Concept E as the direction** (E-Map D #1). **Given 2026-11-15 (ED-353).**
 
 ## Resolved already (with evidence)
 
@@ -110,7 +110,7 @@ These are settled and are not asked again. Each one settles only what its eviden
 - **Option A v2 (2026-11-04, ED-072):** `E-FullA-v2` makes option A a complete candidate: Day menu with Show Less, Need More Time… wording, a proposed key scheme and a proposed route scheme. Those are proposals for G2-10 and G2-11, which stay open.
 - **Owner review (2026-11-04):** "Looks right" on `E-FullA-v2` as the Option A candidate (ED-072). This is not the G1-1 choice.
 - **Owner answer (2026-11-04):** "Approve Option A" (ED-073).
-- **Status:** RESOLVED · ED-073. Full on Mac and web = Workspace (`E-FullA-v2`). Its proposed keys, routes, Day menu and increments stay open in Group 2.
+- **Status:** APPROVED · ED-073. Full on Mac and web = Workspace (`E-FullA-v2`). Its proposed keys, routes, Day menu and increments stay open in Group 2.
 - **Sources:** E-Map D #2, #4; CR-032, CR-043; ED-003, ED-050, ED-057, ED-064; rules §9.1, §9.4, §14.1 item 15, §14.3 N2; inventory "Owner decision needed — wide Standard layout"; parity matrix "Three-day spread + Inbox sidebar".
 
 ### G1-2 · How Standard, Minimal, Focus and Workspace fit together
@@ -143,7 +143,7 @@ These are settled and are not asked again. Each one settles only what its eviden
 
 - **Affects:** product behaviour (how many modes exist) · design.
 - **Owner answer (2026-11-04):** "G1-2 — APPROVED. Two main presentation modes: Full and Minimal. Focus remains a feature available from either mode. Workspace provides advanced planning within Full." Plus: "Do not treat this structural approval as permission to redesign existing boards without review."
-- **Status:** RESOLVED (structure) · ED-065. What Full looks like on Mac/web stays with G1-1.
+- **Status:** APPROVED (structure) · ED-065. What Full looks like on Mac/web stays with G1-1.
 - **Sources:** E-Map D #3, #4, #21; CR-029, CR-032, CR-033; ED-004, ED-005, ED-062, ED-064; rules §9 and §9.5; inventory "Owner decision needed — wide Focus presentation".
 
 ### G1-3 · Where "Now" lives
@@ -176,7 +176,7 @@ These are settled and are not asked again. Each one settles only what its eviden
 
 - **Affects:** product behaviour (where Now appears) · design · implementation (mini window feasibility).
 - **Owner answer (2026-11-04):** "G1-3 — APPROVED. Now leads in Minimal. Full shows the current task on the Today timeline rather than requiring a separate Now destination. Keep Focus accessible, and mark the proposed Mac mini window and status item for feasibility verification."
-- **Status:** RESOLVED · ED-066. The Mac Now mini window and menu-bar status item are NEEDS VERIFICATION (feasibility), not approved as drawn. The web `/now` route in the consequences table is not decided (G2-11).
+- **Status:** APPROVED · ED-066. The Mac Now mini window and menu-bar status item are NEEDS VERIFICATION (feasibility), not approved as drawn. The web `/now` route in the consequences table is not decided (G2-11).
 - **Sources:** E-Map D #5, #16; CR-031, CR-042, CR-097; ED-051, ED-055 (tap-to-Focus); rules §9.3; inventory §3 "Full-mode Now on phones"; doc 14 §3 rows A1, A3.
 
 ### G1-4 · How people switch between Minimal and Full
@@ -209,7 +209,7 @@ These are settled and are not asked again. Each one settles only what its eviden
 
 - **Affects:** design (placement) · product behaviour only if you choose C.
 - **Owner answer (2026-11-04):** "G1-4 — APPROVED. The Full/Minimal switch should remain accessible through the Day menu and the first Settings row, with platform-appropriate native access such as the Mac View menu. Preserve the current task, selected day and relevant navigation state when switching."
-- **Status:** RESOLVED · ED-067. ⌘K and any switch shortcut belong to G2-10.
+- **Status:** APPROVED · ED-067. ⌘K and any switch shortcut belong to G2-10.
 - **Sources:** CR-041; E-Minimal band; doc 14 §2 rule 6, §5 "Where the switch lives", §6 "The flag"; D3 "Layout (full / minimal)"; rules §9.2.
 
 ### G1-5 · Tabs and sidebar rows: one set per mode, on phones and big screens
@@ -249,9 +249,9 @@ These are settled and are not asked again. Each one settles only what its eviden
 - **Owner answer (2026-11-04):** "G1-5 — APPROVE THE EXISTING MINIMAL NAVIGATION PATTERNS, NOT OPTION A." Minimal phones keep Now · Today · Inbox in the bottom navigation; Minimal Mac and web keep Now · Inbox · Calendar · Search in the sidebar, with the Day timeline in its own column. "These are deliberate platform/viewport adaptations, not missing designs." Do not replace the wide sidebar, move Calendar and Search out of it, or remove the phone Minimal tab bar for uniformity. "For G1-5's Full navigation, keep the current phone design and defer the final wide sidebar arrangement until G1-1 is resolved." Shortcuts and web routes are not decided here.
 - **Recommendation A above: not accepted.** The text above is kept as it was presented.
 - **Status:**
-  - Minimal (phones and wide): RESOLVED · ED-068. Supersedes doc 14 §3 / ADR-0016 minimal-navigation assumptions for the redesign branch only; neither is edited.
-  - Full phones: RESOLVED · ED-069 (current `E-Phones` tab bar kept).
-  - Full Mac/web sidebar: RESOLVED · ED-073 (E-Workspace's sidebar, as on `E-FullA-v2`); which extra rows stay is G2-2.
+  - Minimal (phones and wide): APPROVED · ED-068. Supersedes doc 14 §3 / ADR-0016 minimal-navigation assumptions for the redesign branch only; neither is edited.
+  - Full phones: APPROVED · ED-069 (current `E-Phones` tab bar kept).
+  - Full Mac/web sidebar: APPROVED · ED-073 (E-Workspace's sidebar, as on `E-FullA-v2`); which extra rows stay is G2-2.
   - Shortcuts (⌘1–4) and routes: moved to G2-10 and G2-11.
 - **Sources:** E-Map D #4, #6; CR-034, CR-036, CR-037, CR-043, CR-044, CR-045, CR-050; ED-038, ED-055; rules §8.1, §14.2 I24, §14.3 N3, N4, N7; doc 14 §3.
 
@@ -276,28 +276,28 @@ Reviewed after Group 1. **Re-baselined 2026-11-04 from the boards (ED-076, ED-07
 
 | Decision | Status |
 |---|---|
-| G2-1 Calendar | RESOLVED (ED-075); screens on `E-PhonesCalendar` for review |
-| G2-2 extra Full sidebar rows | RESOLVED (ED-080): rows kept, Lists removed, Routines page |
-| G2-3 Settings entry | RESOLVED · option A (ED-238); was adopted from board (ED-077) |
+| G2-1 Calendar | APPROVED (ED-075); screens on `E-PhonesCalendar` for review |
+| G2-2 extra Full sidebar rows | APPROVED (ED-080): rows kept, Lists removed, Routines page |
+| G2-3 Settings entry | APPROVED · option A (ED-238); was adopted from board (ED-077) |
 | G2-7 Move picker | ADOPTED FROM BOARD (ED-077); iOS, Android and Mac/web pickers drawn as the one When picker (ED-099) |
 | G2-13 Plan from Inbox on the empty day | ADOPTED FROM BOARD (ED-077) |
-| G2-4 Settings | RESOLVED and merged (ED-081 to ED-084) |
-| G2-5 Task editor | RESOLVED and merged (ED-086, ED-087): option D |
-| G2-6 Minimal task screen | RESOLVED and merged (ED-088, ED-089) |
-| G2-8 Add modes | RESOLVED and merged (ED-090, ED-091): option A |
-| G2-9 Day menu | RESOLVED and merged (ED-092, ED-093): option B |
-| G2-10 Keyboard | RESOLVED and merged (ED-094, ED-095): option B, reconciled with the built app |
-| G2-11 Web routes | RESOLVED and merged (ED-096, ED-097): option A′, D4 reconciled per layout |
-| G2-12 Duplicate screens | RESOLVED and merged (ED-098, ED-099): option A |
-| Mode switch mid-action (workflow) | RESOLVED (ED-100): cancel drag / selection, keep date, task, saved edits, Undo and drafts |
-| G3-1 Scale direction | RESOLVED and merged (ED-104): option C · Both, revised; Full phone Today only |
-| Dimmed Today copies under sheets on E-Phones (6) | RESOLVED and merged (ED-108): G3-1 now card |
-| Flagged E-Minimal drawings (Day review column, web Day menu) | RESOLVED and merged (ED-108): Week in review row removed; key hints added; flags cleared |
-| G3-3 Content typeface | RESOLVED (ED-110): option A · Manrope for content, system chrome; no board changed |
-| G3-2 One orb drawing | RESOLVED and merged (ED-106): option A; E-Minimal Mac and web orbs |
-| G3-4 iOS switch colour | RESOLVED (ED-112): option A · teal; 8 iOS switches as drawn; no board changed · design verification PASS (ED-117) · Flutter NOT YET IMPLEMENTED / VERIFIED (3 known gaps) · dark mode PENDING G4-6 |
-| G3-5 Hover lift on a web block | RESOLVED and merged (ED-116): option C · Hybrid; Lunch on E-FullA-v2; shared rule in rules §7.4; motion open |
-| G3-6 Glass and vibrancy | **RESOLVED (ED-133)** as a design and selected architecture direction: rows ED-124/125/126 + Minimal exception ED-132; D1 N3, D2 F2 (18.6 Simulator PASS; 16/17 PENDING), D3 native Day menu, D4 Flutter chrome, D5 Android C in Flutter, D6 Mac native vibrancy + 35 % tint (ED-130). Implementation tests PENDING (handoff checklist); production implementation not authorised |
+| G2-4 Settings | APPROVED and merged (ED-081 to ED-084) |
+| G2-5 Task editor | APPROVED and merged (ED-086, ED-087): option D |
+| G2-6 Minimal task screen | APPROVED and merged (ED-088, ED-089) |
+| G2-8 Add modes | APPROVED and merged (ED-090, ED-091): option A |
+| G2-9 Day menu | APPROVED and merged (ED-092, ED-093): option B |
+| G2-10 Keyboard | APPROVED and merged (ED-094, ED-095): option B, reconciled with the built app |
+| G2-11 Web routes | APPROVED and merged (ED-096, ED-097): option A′, D4 reconciled per layout |
+| G2-12 Duplicate screens | APPROVED and merged (ED-098, ED-099): option A |
+| Mode switch mid-action (workflow) | APPROVED (ED-100): cancel drag / selection, keep date, task, saved edits, Undo and drafts |
+| G3-1 Scale direction | APPROVED and merged (ED-104): option C · Both, revised; Full phone Today only |
+| Dimmed Today copies under sheets on E-Phones (6) | APPROVED and merged (ED-108): G3-1 now card |
+| Flagged E-Minimal drawings (Day review column, web Day menu) | APPROVED and merged (ED-108): Week in review row removed; key hints added; flags cleared |
+| G3-3 Content typeface | APPROVED (ED-110): option A · Manrope for content, system chrome; no board changed |
+| G3-2 One orb drawing | APPROVED and merged (ED-106): option A; E-Minimal Mac and web orbs |
+| G3-4 iOS switch colour | APPROVED (ED-112): option A · teal; 8 iOS switches as drawn; no board changed · design verification PASS (ED-117) · Flutter NOT YET IMPLEMENTED / VERIFIED (3 known gaps) · dark mode PENDING G4-6 |
+| G3-5 Hover lift on a web block | APPROVED and merged (ED-116): option C · Hybrid; Lunch on E-FullA-v2; shared rule in rules §7.4; motion open |
+| G3-6 Glass and vibrancy | **APPROVED (ED-133)** as a design and selected architecture direction: rows ED-124/125/126 + Minimal exception ED-132; D1 N3, D2 F2 (18.6 Simulator PASS; 16/17 PENDING), D3 native Day menu, D4 Flutter chrome, D5 Android C in Flutter, D6 Mac native vibrancy + 35 % tint (ED-130). Implementation tests PENDING (handoff checklist); production implementation not authorised |
 | G3-6 follow-up · iPhone bottom row (+ in the bar's line, Day moved) | **APPROVED (ED-124)** · Full and Minimal; proposal ED-122 on `E-G3-6-BottomRow`; merged into E-Phones and E-PhonesMinimal (ED-126); N3's hands-on and accessibility checks not approved, still open |
 | G3-6 follow-up · Android bottom row (+ only) | **APPROVED (ED-125): revised option C** (floating frosted toolbar, icon-only +, Day left), not A or B; proposal ED-123 on `E-G3-6-Android`; merged (ED-126); custom Material-inspired arrangement |
 | G3-C1 Task text in system font inside phone sheets | OPEN · direction agreed (ED-112); comparison drawn (ED-203); **CLOSED (ED-204): Android task text in Manrope (600 20 input, 700 24/30 title)** |
@@ -358,7 +358,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - **Board changes if approved:** add one iPhone and one Android Calendar (Month) frame to `E-Phones`, shown to you first. The existing frames are not altered.
 - **Affects:** design · product (which month surfaces exist).
 - **Owner answer (2026-11-04):** "For G2-1, I choose Option A", with the keep-list in ED-075.
-- **Status:** RESOLVED · ED-075. Calendar screens drawn for review on `E-PhonesCalendar`.
+- **Status:** APPROVED · ED-075. Calendar screens drawn for review on `E-PhonesCalendar`.
 - **Sources:** E-Map D #10; ED-047, ED-069, ED-073; D3 Month row; CR-050, CR-082; Q4, Q5; `app_shell.dart`, `month_screen.dart`, `today_month.dart`, `shared/dot/month_grid.dart`.
 
 #### G2-2 · Extra Full sidebar rows on Mac and web: Plan, Routines, Brain dump, Review, "Lists"
@@ -381,7 +381,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - **Affects:** design · product (Lists).
 - **Correction (ED-077):** the owner's Q6 answer explicitly allows a labelled future sketch of project-style grouping, so removing "Lists" (recommendation A above) is not needed. The board is kept as drawn, and Lists stays outside the implementation spec.
 - **Owner answer (2026-11-04):** recommendation A accepted: keep the rows, remove Lists, Routines gets its own page (ED-080).
-- **Status:** RESOLVED · ED-080.
+- **Status:** APPROVED · ED-080.
 - **Sources:** ED-050, ED-073; CR-046, CR-049, CR-084; D3 Routines and "This week" rows.
 
 ### Settings placement
@@ -398,8 +398,8 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Android: avatar in the top app bar.
   - Web: sidebar footer, `/settings`.
 - **Affects:** design (entry point move; every entry still reaches Settings).
-- **Status:** RESOLVED 2026-11-13, option A (ED-238). Settings pages keep the platform bar with no tab selected (ED-234, ED-235). Not built.
-- **Status:** ADOPTED FROM BOARD · ED-077 (no conflict found; owner may override). Previous status line: OPEN.
+- **Status:** APPROVED 2026-11-13, option A (ED-238). Settings pages keep the platform bar with no tab selected (ED-234, ED-235). Not built.
+- **Status:** ADOPTED FROM BOARD · ED-077 (no conflict found; owner may override). Previous status line: OPEN. **Since:** APPROVED 2026-11-13, option A (ED-238).
 - **Sources:** E-Map D #7; ED-043; D1; CR-033, CR-047.
 
 #### G2-4 · Settings regrouped into six jobs, and what "Everything else" opens
@@ -415,7 +415,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Web: `/settings/<group>`.
 - **Affects:** design · implementation.
 - **Owner answer (2026-11-04):** "Accept A + A" (ED-081).
-- **Status:** RESOLVED · ED-081, ED-082, ED-083, ED-084 (direction, iPhone icons, Wake Up and Wind Down, one alarm device). Merged into the E boards.
+- **Status:** APPROVED · ED-081, ED-082, ED-083, ED-084 (direction, iPhone icons, Wake Up and Wind Down, one alarm device). Merged into the E boards.
 - **Sources:** E-Map D #9 (part); ED-048; D1; D3 "Minimal Everything else"; CR-040, CR-048; N7.
 
 ### Task viewing and editing
@@ -445,7 +445,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Options A and B stay on `E-G2-5`.
 - **Option D added 2026-11-04 (ED-085):** `E-G2-5-OptionD-RefinedEditor` is exploratory. The task dot opens the colour and icon picker; date, time and alerts sit in one card with Repeat and Energy pills; steps and notes are edited in place; a full scope chooser handles repeating tasks; there's a Create task variant; Android, iPad and Mac/web versions are drawn.
 - **Owner answer (2026-11-04):** "Approve option D" (ED-086).
-- **Status:** RESOLVED · ED-086. The switch rule for selections and drags moves to G2-11.
+- **Status:** APPROVED · ED-086. The switch rule for selections and drags moves to G2-11.
 - **Sources:** E-Map D #8; ED-044, ED-064 (task screen in column); D2; CR-070, CR-073, CR-074; D3 "Task detail".
 
 #### G2-6 · What the minimal task screen offers
@@ -466,7 +466,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - E-Minimal's Day-column screen has no Done or Delete and adds Move….
   - Decision board `E-G2-6`: options A (built set in option D's look, plus Need more time? for the running task), B (E-Minimal as drawn) and C (A plus Move…).
 - **Owner answer (2026-11-04):** option A behaviour (ED-088). Drawings on `E-G2-6-Review` approved and merged into `E-PhonesMinimal` and `E-Minimal` (ED-089).
-- **Status:** RESOLVED · ED-088, ED-089.
+- **Status:** APPROVED · ED-088, ED-089.
 - **Sources:** CR-071, CR-072; N17; ED-064; doc 14 §3 "Task sheet", §4.
 
 #### G2-7 · Move opens a day-and-time picker
@@ -481,7 +481,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Android: M3 time picker with Change day.
   - Web: popover; `m` key.
 - **Affects:** product behaviour (Move works) · design.
-- **Status:** ADOPTED FROM BOARD · ED-077 (no conflict found; owner may override). Previous status line: OPEN.
+- **Status:** ADOPTED FROM BOARD · ED-077 (no conflict found; owner may override). Previous status line: OPEN. **Since:** APPROVED as the one When picker (ED-099).
 - **Drawn 2026-11-05 (ED-099):** the picker is the G2-12 When picker: iPhone and Android sheets on `E-Phones`, the Mac/web popover on `E-FullA-v2`; Move To… ⇧⌘M and web `m` open it. Status unchanged.
 - **Sources:** ED-049; CR-074; parity matrix; PROMPT_D_ROUND1 "Move tile discrepancy".
 
@@ -506,7 +506,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - **Android tablets and foldables:** the FAB sits in the navigation rail at medium/expanded and its menu opens beside the rail; Brain dump and Routine open as a side sheet in expanded, a bottom sheet in compact; folding keeps the draft (it is already in local history); Ctrl+Shift+N.
   - **Unverified:** the proposal's placement in two panes; the M3 FAB menu in a rail; dictation on tablets. **Round 2:** draw these in the tablet checklist pass.
 - **Owner answer (2026-11-04):** "I approve G2-8 Option A", including the designs on E-G2-8; keys stay with G2-10 (ED-091).
-- **Status:** RESOLVED and merged · ED-091.
+- **Status:** APPROVED and merged · ED-091.
 - **Sources:** E-Map D #11; ED-045; Q3; CR-057, CR-075, CR-083.
 
 ### Day menus and contextual actions
@@ -555,7 +555,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - **Names:** Low-energy mode (built) replaces Low-energy day and Gentle Day; Drop a routine… in the menu.
 - **Tablet implications (recorded, not drawn):** iPad uses the Day ▾ pull-down at every width and shows the same groups in the iPadOS menu bar with a keyboard; Android tablets anchor the M3 menu to the Day button in every window size (with the day pane in two-pane); wide minimal on tablets follows the phones unless Round 2 decides otherwise. Unverified: iPadOS menu-bar contents per window size; Android shortcut helper.
 - **Resolved 2026-11-05 (ED-093): option B.** Full: Time · Plan · Day · Layout on every platform, Replan inside Time, Plan / Reality in Layout. Minimal phones: Show everything · Low-energy mode · Settings. Minimal Mac and web: E-Minimal's richer menu with aligned names and Show Everything. Need more time (+5 / +15 / +30, behaves as built Running late); Low-energy mode; Drop a routine…. Keys stay G2-10, routes G2-11. Merged into E-Phones, E-FullA-v2, E-PhonesMinimal, E-Minimal and E-Map (canvas `1793833662-a67e`); E-G2-9 kept as history.
-- **Status:** RESOLVED · ED-093. *Refreshed after Group 1.*
+- **Status:** APPROVED · ED-093. *Refreshed after Group 1.*
 - **Sources:** ED-046, ED-067, ED-072; CR-037, CR-039, CR-058, CR-059; doc 14 §3, §4; built Today ⋯ menu (`today_menu.dart`).
 
 ### Keyboard shortcuts and web routes
@@ -609,7 +609,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Which ⌘1–4 set applies follows the Round 2 tablet layout (Full or minimal).
   - Reserved system keys are to be checked per OS version on devices.
 - **Resolved 2026-11-05 (ED-095): option B.** Full ⌘1–4 Today · Inbox · Week · Month (built); minimal Now · Inbox · Calendar · Search. Verification kept ⌘D = Done (built, doc 10, plan M3e.6) and ⌘↩ = Inbox Place in First Free Gap; Duplicate has no key; no ⇧⌘I; web 1–4 mirror ⌘1–4. User-facing changes are listed in ED-095. Merged into E-FullA-v2, E-Minimal and E-Map (canvas `1793837638-aed0`); E-G2-10 kept as history.
-- **Status:** RESOLVED · ED-095. *Refreshed after Group 1.*
+- **Status:** APPROVED · ED-095. *Refreshed after Group 1.*
 - **Sources:** ED-072; CR-045, CR-051 to CR-057, CR-061; N6, N8; `app_shortcuts.dart`, `app_menu.dart`.
 
 #### G2-11 · One set of web routes
@@ -650,7 +650,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Each window keeps its own place and Back history (unverified with go_router).
   - Universal links / App Links are not built.
 - **Resolved 2026-11-05 (ED-097): option A′ with D1–D4.** D4 reconciled per layout: minimal phones' `/today` = Today tab; minimal Mac/web's `/today` reveals the Day column; date links open a date-based place on every layout (minimal phones: Today tab, month sheet for `/month`); task links open on the task's date (rule T); Back / Forward / Refresh keep view, date and task; built `dottoday://`, sign-in, notification and widget links unchanged. Corrected table on `E-G2-11`; labels merged into E-FullA-v2, E-Minimal and E-Map (canvas `1793850945-1f54`).
-- **Status:** RESOLVED · ED-097. Previous status line: OPEN · presented on `E-G2-11` (ED-096); recommendation A′. *Refreshed after Group 1.*
+- **Status:** APPROVED · ED-097. Previous status line: OPEN · presented on `E-G2-11` (ED-096); recommendation A′. *Refreshed after Group 1.*
 - **Sources:** ED-072; CR-066, CR-067, CR-068; `app_routes.dart`, `app_router.dart`, `deep_link_guard.dart`; docs/08 (calendar return URL).
 
 ### Duplicate-screen consolidation
@@ -669,7 +669,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - **Affects:** design · implementation.
 - **Re-baselined 2026-11-05 (ED-098):** most of D3's merges are settled by later decisions (listed in ED-098). Three questions remain, drawn on `E-G2-12`: Q1 one Day review surface per platform; Q2 one picker for Inbox Schedule and Move; Q3 rename "This week" → "Week in review". Options A (all three, recommended), B (Q1 and Q2), C (none). The Month item is settled by G2-1 (ED-075); the Everything else item by G2-4.
 - **Resolved 2026-11-05 (ED-099): option A.** Q1 one Day review per platform (phone sheet; Full Mac/web Review place with Week in Review beside it; minimal Mac/web Day column); Q2 one When picker for Inbox Schedule, Move and Move To… (sheet on phones, popover on Mac/web; scheduling rules, overlaps and Undo unchanged); Q3 "This week" → Week in review, labels only, no route renamed. Every entry kept. Merged into E-Phones, E-FullA-v2, E-Minimal, E-PhonesMinimal and E-Map; `E-G2-12` kept as the historical review board.
-- **Status:** RESOLVED · ED-099. Previous status line: OPEN · presented on `E-G2-12` (ED-098); recommendation A.
+- **Status:** APPROVED · ED-099. Previous status line: OPEN · presented on `E-G2-12` (ED-098); recommendation A.
 - **Sources:** E-Map D #9; D3; Q4; CR-090.
 
 #### G2-13 · "Plan from Inbox · 3" on the empty iPhone day
@@ -684,7 +684,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Android: same.
   - Web: same.
 - **Affects:** design.
-- **Status:** ADOPTED FROM BOARD · ED-077 (no conflict found; owner may override). Previous status line: OPEN.
+- **Status:** ADOPTED FROM BOARD · ED-077 (no conflict found; owner may override). Previous status line: OPEN. **Since:** APPROVED 2026-11-15 as "Pull from inbox · {count}", Full only (ED-336).
 - **Sources:** ED-039; ED-037; doc 14 §3 "Empty-day actions".
 
 ### Group 2 completion (2026-11-05, after ED-099)
@@ -735,7 +735,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - **Affects:** design.
 - **Presented 2026-11-05 (ED-101)** on `E-G3-1`: iPhone and Android Today drawn three ways from E-Phones F1 and F5 (A copy; B and C change the thread list only). Kind: new design proposal, not a correction. Measured: task rows above the tab bar A 6, B 6, C 5; 44 pt targets in all. Mac/web Full: C leaves the Workspace grid unchanged. Minimal: unchanged.
 - **Revised 2026-11-05 (ED-103):** at the owner's request, option C now uses a 45 ring (24 icon), a 19/700 title and 32 px around the now group; the card grows with its text. Six task rows fit on iPhone and Android, as in A. Checks drawn: compact iPhone and Android, long title, 200 % text, scrolled, 2x thread alignment; no overlap or clipping, 44 pt / 48 dp targets.
-- **Status:** RESOLVED 2026-11-05 (ED-104): option C · Both, revised, merged into E-Phones Frames 1 and 5 only. E-Minimal, E-FullA-v2 and the other layouts are not rescaled. The 3 Nov comment ending in "what" is closed: not a requirement.
+- **Status:** APPROVED 2026-11-05 (ED-104): option C · Both, revised, merged into E-Phones Frames 1 and 5 only. E-Minimal, E-FullA-v2 and the other layouts are not rescaled. The 3 Nov comment ending in "what" is closed: not a requirement.
 - **Tablets (for Prompt D Round 2, not drawn):** iPad and Android tablets in a compact window (Split View, Slide Over, compact multi-window) use the phone Today exactly, current task included. At medium and expanded widths the thread pane keeps the same 45 ring, 19/700 title and 32 gaps (a width class never shrinks rows); the card widens with the pane, and the title line length is capped by the pane, not stretched. In two panes the current task stays in the Today list; the detail pane does not repeat it. Foldables follow the window class, not the posture. Whether tablet Full uses the phone thread or a Workspace-style grid is decided in Round 2; if a grid, G3-1 does not apply there (the Workspace was left unchanged). Unverified: Dynamic Type / font scale above 200 % on iPad, and pointer hover on the card.
 - **Sources:** ED-025, ED-026; CR-007; pending table 9acf09f2.
 
@@ -752,7 +752,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Web: same drawing as Mac.
 - **Affects:** design.
 - **Presented 2026-11-05 (ED-105)** on `E-G3-2`. Kind: consistency correction. Found: one SVG everywhere; only the centre type differs (phones 800 at 0.36 of the orb, Mac and web 700 at 0.27; inherited from Concept C). A: the phones' centre type at the same proportion everywhere (Mac 100 px, web 85 px; phones unchanged). B: plainer web orb. C: keep as drawn.
-- **Status:** RESOLVED 2026-11-05 (ED-106): option A, merged into E-Minimal (Mac 100 / web 85, 800). The board first drew A's Mac and web orbs too light (font error); corrected, and the owner confirmed the merged orbs ("Looks right").
+- **Status:** APPROVED 2026-11-05 (ED-106): option A, merged into E-Minimal (Mac 100 / web 85, 800). The board first drew A's Mac and web orbs too light (font error); corrected, and the owner confirmed the merged orbs ("Looks right").
 - **Sources:** ED-020, ED-052, ED-059; CR-003; N11.
 
 ### Typography and spacing
@@ -770,7 +770,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Web: Manrope content, system stack chrome.
 - **Affects:** design · implementation (font asset).
 - **Presented 2026-11-05 (ED-109)** on `E-G3-3`: E-Phones Today in Manrope, Inter and the system font; specimen; facts (licences, built app, measured widths).
-- **Status:** RESOLVED 2026-11-05 (ED-110): option A, Manrope for task names, descriptions, times, the Now-dot numbers, task sheets and other branded content; native system type for chrome. No board changed. Text size rules, implementation checks and tablet notes in rules §3.4–3.6. Follow-up correction (task text in system font inside phone sheets) proposed in rules §3.7, awaiting the owner.
+- **Status:** APPROVED 2026-11-05 (ED-110): option A, Manrope for task names, descriptions, times, the Now-dot numbers, task sheets and other branded content; native system type for chrome. No board changed. Text size rules, implementation checks and tablet notes in rules §3.4–3.6. Follow-up correction (task text in system font inside phone sheets) proposed in rules §3.7, awaiting the owner.
 - **Sources:** ED-012; CR-112; I29; `DESIGN_PRINCIPLES.md` K6.
 
 ### Colours, surfaces and states
@@ -788,7 +788,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Web: teal toggle.
 - **Affects:** design.
 - **Presented 2026-11-05 (ED-111)** on `E-G3-4`: the four iPhone frames with switches as drawn (teal) and with system green; 3× close-ups with On/Off Labels; measured contrast (teal 7.16:1, green 2.19:1 against the row).
-- **Status:** RESOLVED 2026-11-05 (ED-112): option A, teal. The 8 iOS switches stay as drawn; native shape, motion and interaction; On/Off Labels honoured; Android unchanged; dark-mode contrast checked separately under G4-6.
+- **Status:** APPROVED 2026-11-05 (ED-112): option A, teal. The 8 iOS switches stay as drawn; native shape, motion and interaction; On/Off Labels honoured; Android unchanged; dark-mode contrast checked separately under G4-6.
 - **Verification 2026-11-06 (ED-117):** design verification PASS; Flutter implementation NOT YET IMPLEMENTED / VERIFIED (implementation checks and three known gaps in rules §4.2, future tasks only); dark-mode verification PENDING G4-6.
 - **Sources:** ED-041; CR-099.
 
@@ -806,7 +806,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - **Affects:** design.
 - **Presented 2026-11-05 (ED-113)** on `E-G3-5`: E-FullA-v2 web Plan Day as drawn and with Lunch flattened; 2× close-ups at rest, hover and dragging over another block.
 - **Option C (owner, 2026-11-05, ED-115):** flat at rest; B's tint and hairline on hover; A's lift only while dragging; teal focus ring unchanged. Drawn next to A and B on the revised `E-G3-5`. Recommendation changed to **C**.
-- **Status:** RESOLVED 2026-11-06 (ED-116): option C. Merged into E-FullA-v2 (Lunch hover: tint and hairline). Shared rule for eligible Workspace blocks in rules §7.4. Drag timing, scale and haptics stay open (§7.5).
+- **Status:** APPROVED 2026-11-06 (ED-116): option C. Merged into E-FullA-v2 (Lunch hover: tint and hairline). Shared rule for eligible Workspace blocks in rules §7.4. Drag timing, scale and haptics stay open (§7.5).
 - **Sources:** ED-053.
 
 #### G3-6 · Glass and vibrancy: native views or Flutter approximations
@@ -830,7 +830,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - **D6 approved 2026-11-06 (ED-130):** native sidebar vibrancy, `#EFE7DB` at 35 %, light mode; Reduce Transparency fallback, Increase Contrast, VoiceOver, keyboard and dark mode (G4-6) PENDING.
 - **Compatibility run 2026-11-06 (ED-131)** on `E-G3-6-Compat`: F2 on iOS 18.6 and N3 on iOS 26.5 (Simulator) pass the functional and accessibility-setting checks listed there; two test-app defects fixed; one architecture limit F1 (N3 Minimal capsule 274 pt) needs a decision; iOS 16/17, devices and VoiceOver PENDING.
 - **F1 decided (ED-132):** option (a), keep the 6 pt gap; the iOS 26+ Minimal capsule keeps Apple's width. Merged into E-PhonesMinimal.
-- **Status:** RESOLVED 2026-11-06 (ED-133) as a design and selected architecture direction; every untested behaviour stays PENDING in `E_IMPLEMENTATION_HANDOFF.md`.
+- **Status:** APPROVED 2026-11-06 (ED-133) as a design and selected architecture direction; every untested behaviour stays PENDING in `E_IMPLEMENTATION_HANDOFF.md`.
 - **Sources:** E-Map D #20; CR-096, CR-106; ED-034, ED-035, ED-122 to ED-126.
 
 #### G3-7 · iPhone keyboard and the teal "Add" key
@@ -846,7 +846,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Web: Enter adds.
 - **Affects:** design · implementation.
 - **Presented 2026-11-06 (ED-134)** on `E-G3-7`: audit of the four drawn keyboards, genuine iOS 18.6 / 26.5 default keyboards, options A, B, C drawn on copies of the Full and Minimal Add frames; recommendation A (stock keyboard + teal Add bar), C as the minimal alternative.
-- **Status:** RESOLVED 2026-11-06 (ED-135): option C · stock keyboard, neutral return key adds; teal Add stays in the field row / nav bar; merged into E-Phones and E-PhonesMinimal.
+- **Status:** APPROVED 2026-11-06 (ED-135): option C · stock keyboard, neutral return key adds; teal Add stays in the field row / nav bar; merged into E-Phones and E-PhonesMinimal.
 - **Sources:** ED-031, ED-032; CR-099.
 
 ### Open questions from the owner's latest edits (2026-11-06 to 11-07)
@@ -858,16 +858,16 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - **Recommendation (superseded): B.** Matches the owner's earlier request and keeps entering several tasks quick (R-06); one row, nothing removed.
 - **Consequences.** iPhone: check row (teal check). Android: M3 checkbox row. Mac / web: same row in the capture popover. Tablets: Round 2.
 - **Affects:** design · implementation (CR-129).
-- **Status:** RESOLVED 2026-11-07: option A, no "Add another" (ED-152); the owner's final choice supersedes the recommendation.
+- **Status:** APPROVED 2026-11-07: option A, no "Add another" (ED-152); the owner's final choice supersedes the recommendation.
 
 #### Q-A2 · Brain dump and Routine in the Create task chrome
-- **Status:** Full-screen part RESOLVED 2026-11-07 (ED-147 to ED-150); tab and action rules set by the owner (ED-152). Q-A2a resolved (ED-153). **Q-A2 RESOLVED.**
+- **Status:** Full-screen part APPROVED 2026-11-07 (ED-147 to ED-150); tab and action rules set by the owner (ED-152). Q-A2a resolved (ED-153). **Q-A2 APPROVVED.**
 
 #### Q-A2a · Title in the iPhone Brain dump and Routine header
 - **Why it matters.** iPhone Create task's header is Cancel · (no title) · ⋯ · Create task; the full-screen Brain dump and Routine (ED-147, ED-149) show a centred title ("Brain dump", "Routine") that repeats the selected tab. Android shows a title in all three (New task / Brain dump / Routine), so Android is already consistent.
 - **Options.** A. Remove the iPhone centre title on Brain dump and Routine (header = Cancel only), matching Create task. B. Keep the titles.
 - **Recommendation: A.** The selected tab already names the mode; matching Create task makes the three tabs read as one screen.
-- **Status:** RESOLVED 2026-11-07: option A (ED-153).
+- **Status:** APPROVED 2026-11-07: option A (ED-153).
 
 ### Accessibility corrections
 
@@ -883,7 +883,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Android: check NavigationBar labels.
   - Web: check sidebar labels.
 - **Affects:** design.
-- **Status:** RESOLVED 2026-11-07: option A, #6E6E73 in Full and Minimal (ED-154).
+- **Status:** APPROVED 2026-11-07: option A, #6E6E73 in Full and Minimal (ED-154).
 - **Sources:** ED-042; CR-101; I6.
 
 #### G3-9 · Task colours that are too light as rings
@@ -898,7 +898,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Android: same.
   - Web: same.
 - **Affects:** design.
-- **Status:** RESOLVED 2026-11-07: option A, ring tokens coral #DF6147, amber #AF7E22, sky #338ED1, green #469763; ink glyphs on amber (ED-155).
+- **Status:** APPROVED 2026-11-07: option A, ring tokens coral #DF6147, amber #AF7E22, sky #338ED1, green #469763; ink glyphs on amber (ED-155).
 - **Sources:** CR-013; rules §4.3, §12.1.
 
 
@@ -910,10 +910,10 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - **Proposed (not approved):** E shades for the 8 shared keys; slate kept with E shade `#6E6A75` and Brown `#8C6A4F` as a new key; new Plum `#9E4F8F` and Olive `#7F8A3A` (12 total); rings for teal `#289588` and rose `#D75E89` (both under 3:1 on the Minimal surface `#F3EEE6`); E shades for the 4 accent keys (teal `#11615C` default, indigo `#3F45C4`, coral `#A3412A`, violet `#6440D6`); custom colours: drawn per the owner's direction (⋯ › All colours; Mac / web Custom colour…), ring and check derived at render time, saved hex never changed.
 - **Unchanged and kept:** ED-155 rings and ink amber glyphs; all stored keys; active boards and picker.
 - **2026-11-07 (ED-156):** Mac and web custom colour picker APPROVED (design); phone All colours redrawn as a half sheet with the hex in the title row on iPhone and Android.
-- **Q-G3-9b-1:** RESOLVED 2026-11-07, yes: the in-progress arc uses the ring shade for colours under 3:1 (ED-157).
+- **Q-G3-9b-1:** APPROVED 2026-11-07, yes: the in-progress arc uses the ring shade for colours under 3:1 (ED-157).
 - **Layout and pinned preview (ED-159, proposed):** Layout moves from the Settings root to Appearance on every platform; the preview stays pinned and shows Everything ↔ Less with motion; tab bar / toolbar on Settings except under pull-ups; Suggested removed from Edit palette. Supersedes G1-4's Settings-root placement if approved.
 - **Appearance (ED-158, proposed):** theme thumbnails, App colour with Edit palette half sheet and live preview on iPhone and Android; Mac / web Appearance pane with Custom… and Preview.
-- **Status:** RESOLVED 2026-11-07: approved as drawn on E-G3-9b-Screens and merged (ED-161). Data changes for custom colours and new keys stay must-ask. G3-10 resumes after.
+- **Status:** APPROVED 2026-11-07: approved as drawn on E-G3-9b-Screens and merged (ED-161). Data changes for custom colours and new keys stay must-ask. G3-10 resumes after.
 
 ### No-shame terminology and feature names
 
@@ -929,7 +929,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Android: same as iPhone.
   - Web: same.
 - **Affects:** design (copy).
-- **Status:** RESOLVED 2026-11-07: option A with native Mac menu conventions (ED-162).
+- **Status:** APPROVED 2026-11-07: option A with native Mac menu conventions (ED-162).
 - **Sources:** E-Map D #17; CR-046, CR-060, CR-062, CR-064, CR-065; I21, I22, I24, I30; N9, N10.
 
 #### G3-11 · "Need more time" amounts
@@ -944,7 +944,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Android: three chips.
   - Web: popover with three items.
 - **Affects:** product behaviour (only if C) · design.
-- **Status:** RESOLVED 2026-11-07: option A, +5 / +15 / +30 everywhere (ED-163).
+- **Status:** APPROVED 2026-11-07: option A, +5 / +15 / +30 everywhere (ED-163).
 - **Sources:** CR-063; I23; parity matrix "Running late +5/15/30".
 
 #### G3-12 · Done tasks and numbers in Minimal
@@ -959,7 +959,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Android: same as iPhone.
   - Web: same as Mac.
 - **Affects:** product behaviour (minimal rule) · design.
-- **Status:** RESOLVED 2026-11-07: option A, "Earlier" with no count, also on the Full Mac/web Day column (ED-164). Group 3 complete.
+- **Status:** APPROVED 2026-11-07: option A, "Earlier" with no count, also on the Full Mac/web Day column (ED-164). Group 3 complete.
 - **Sources:** E-Map D #14; ED-055; CR-020, CR-035.
 
 ### Group 3 completion (2026-11-07, after ED-164)
@@ -1002,7 +1002,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Android: same set as iPhone plus full Add sheet and swipe.
   - Web: same as Mac plus Day menu popover.
 - **Affects:** design (order).
-- **Status:** RESOLVED 2026-11-07: option A, core journey first, then interaction and recovery, then supporting experiences (ED-166). Round 2 not started.
+- **Status:** APPROVED 2026-11-07: option A, core journey first, then interaction and recovery, then supporting experiences (ED-166). Round 2 not started.
 - **Sources:** CR-069 to CR-090; inventory §2; rules §14.1.
 
 #### G4-2 · Width breakpoints
@@ -1017,7 +1017,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Android: tablets and unfolded foldables medium/expanded.
   - Web: same thresholds.
 - **Affects:** design · implementation.
-- **Status:** RESOLVED 2026-11-07: option C, 600 / 840 kept, editor docks from 1160 (ED-167). Refined by ED-168: H1 (short height) and M (docking minimums) approved.
+- **Status:** APPROVED 2026-11-07: option C, 600 / 840 kept, editor docks from 1160 (ED-167). Refined by ED-168: H1 (short height) and M (docking minimums) approved.
 - **Sources:** E-Map D #19; CR-095; rules §12.2.
 
 #### G4-3 · Mac minimum window
@@ -1033,7 +1033,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Web: narrow browser windows share it.
 - **Affects:** product behaviour (window size) · design.
 - **Update 2026-11-07 (after ED-167):** under 600 / 840, 960 is *expanded*, not medium, so this entry's premise changed. The options are re-presented on board E-G4-3 (A keep 960 × 640, B 840 × 640, C 600 × 480, D 1160 × 720).
-- **Status:** RESOLVED 2026-11-07: option B, 840 × 640, design only (ED-169). Follow-ups approved (ED-170): the Day-column fold (button labelled "Day", no shortcut), the narrow toolbar, the short-window now-dot, and C1 (a).
+- **Status:** APPROVED 2026-11-07: option B, 840 × 640, design only (ED-169). Follow-ups approved (ED-170): the Day-column fold (button labelled "Day", no shortcut), the narrow toolbar, the short-window now-dot, and C1 (a).
 - **Sources:** E-Map D #19; CR-091, CR-095.
 
 #### G4-4 · iPad and Android tablet shell
@@ -1048,7 +1048,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Android: rail on tablets and foldables; hinge-aware panes.
   - Web: shares medium/expanded.
 - **Affects:** design · implementation.
-- **Status:** RESOLVED 2026-11-07 as strategy: option A with native navigation per platform (ED-171). Tablet screens are drawn in Round 2; not visually complete.
+- **Status:** APPROVED 2026-11-07 as strategy: option A with native navigation per platform (ED-171). Tablet screens are drawn in Round 2; not visually complete.
 - **Sources:** CR-094; inventory §3; Q6; D2 iPad/Android tablet rows.
 
 #### G4-5 · Mobile web and phone landscape
@@ -1063,7 +1063,7 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Android: landscape keeps compact shell.
   - Web: phone-width layout with browser Back.
 - **Affects:** design.
-- **Status:** RESOLVED 2026-11-07: option A, a compact mobile web with its own web bottom bar; routes as ED-097 (ED-172). Phone landscape is covered by H1 (ED-168). Browser behaviour PENDING testing.
+- **Status:** APPROVED 2026-11-07: option A, a compact mobile web with its own web bottom bar; routes as ED-097 (ED-172). Phone landscape is covered by H1 (ED-168). Browser behaviour PENDING testing.
 - **Sources:** CR-094; inventory §3.
 
 #### G4-6 · Dark mode
@@ -1078,11 +1078,11 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
   - Android: dark tonal bars.
   - Web: dark solid surfaces; no flash on switch.
 - **Affects:** design.
-- **Status:** P1, the switch tint, the focus gap and the iPhone, Android and web materials APPROVED (ED-174). Dark task colours frozen (ED-175); Mac D1 with the primary-text label approved (ED-176). Stage 2 key frames presented (ED-177). I1, T1 and T2-B approved: Stage 1 tokens FINAL (ED-178). Q1-B and two text corrections approved (ED-179). Stage 2 screens APPROVED (ED-180). Stage 3 merged as dark companions of every active board (ED-181). **RESOLVED as design**; device and assistive-technology tests PENDING; CR-153 to CR-156 await the owner.
+- **Status:** P1, the switch tint, the focus gap and the iPhone, Android and web materials APPROVED (ED-174). Dark task colours frozen (ED-175); Mac D1 with the primary-text label approved (ED-176). Stage 2 key frames presented (ED-177). I1, T1 and T2-B approved: Stage 1 tokens FINAL (ED-178). Q1-B and two text corrections approved (ED-179). Stage 2 screens APPROVED (ED-180). Stage 3 merged as dark companions of every active board (ED-181). **APPROVED as design**; device and assistive-technology tests PENDING; CR-153 to CR-156 await the owner.
 - **Sources:** CR-103; rules §10, §14.1 item 1.
 
 #### G4-P · Plan panel on Mac and web (owner-raised, 2026-11-08)
-- **Status:** RESOLVED as A + B (ED-182 options, ED-184 approved and merged). Related rule: text always fits (ED-183, rules §12.3).
+- **Status:** APPROVED as A + B (ED-182 options, ED-184 approved and merged). Related rule: text always fits (ED-183, rules §12.3).
 
 #### G4-7 · Shared states and accessibility states
 - **Why it matters.** Loading, empty, error, offline, sync conflict, 200 % text, reduced motion and reduced transparency are not drawn anywhere. R-08 needs a visible sync state.
@@ -1246,3 +1246,26 @@ G1-5's option A is no longer assumed anywhere. G2-2, G2-7, G2-9, G2-10 and G2-11
 - ED-350: confirmed against the approved prototype (ED-305) that onboarding has no Layout step; the layout choice is the day-2 "Want it simpler?" card; the static R2-16 board is history.
 - ED-351: the 13+ age note moves to Hello, under "I have an account", as "Dottoday is for people aged 13+." (new copy; replaces the ED-336 last-step placement).
 - ED-352: Q9 approved (P1 to P4: `dottoday-test` stack on ports +1000, local-only URL guard, test-user cleanup, never linked); CLAUDE.md §7 wording not changed.
+
+## Catch-up (2026-11-15, ED-353): decisions not listed above
+
+Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register names every decision.
+
+- **2026-11-04, ED-079:** Calendar screens approved and added to E-Phones.
+- **2026-11-05, ED-107:** Visual review presented: the two flagged E-Minimal drawings and the six dimmed Todays.
+- **2026-11-05, ED-114:** Canvas edits saved from the page (observed 2026-11-05).
+- **2026-11-06, ED-121:** G3-6 spike run on the owner's iPhone; hands-on checks stopped.
+- **2026-11-06, ED-136:** G3-7 follow-up: iOS 26 keyboard drawing, step keyboard, keyboard dismissal, Gboard note.
+- **2026-11-06, ED-137:** Full editor shows the task's existing steps and notes; typing scrolls them into view.
+- **2026-11-06, ED-138:** "Back in the editor" gets Repeat, Energy, steps and notes.
+- **2026-11-06, ED-139:** "Create task (detailed)" gets the Task · Brain dump · Routine tabs.
+- **2026-11-06, ED-141:** Android parity for ED-137, ED-138 and ED-140.
+- **2026-11-06, ED-142:** Android Create task gets the Task · Brain dump · Routine choice (ED-139 parity).
+- **2026-11-06, ED-143:** Withdrawn: Android check key drawn in Gboard's default colour.
+- **2026-11-06, ED-144:** E-Phones split into two boards so nothing is cut off on the canvas.
+- **2026-11-06, ED-145:** Minimal's option D editor shows steps and notes, with auto-scroll (ED-137 for Minimal).
+- **2026-11-07, ED-146:** G2-8 board: A1 shows the current iPhone Add screen.
+- **2026-11-07, ED-160:** Android toolbar: the selected item is highlighted as a whole (icon and label).
+- **2026-11-07, ED-173:** G4-6 option A approved (process); Stage 1 dark token system presented.
+- **2026-11-08, ED-185:** Four consistency corrections approved and applied (CR-153 to CR-156).
+- **2026-11-16, ED-354:** every settled item is marked approved: decision headings, register statuses, STATUS, board badges and canvas titles (canvas `1794787239-a691`). No design changed.

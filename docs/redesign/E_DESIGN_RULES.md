@@ -1,6 +1,6 @@
 # Concept E — Refined Focus: design rules
 
-**Status: LEADING CANDIDATE — NOT APPROVED FOR PRODUCTION IMPLEMENTATION.**
+**Status:** **APPROVED FOR PRODUCTION IMPLEMENTATION (ED-353, 2026-11-15).** Earlier text that calls Concept E a leading candidate describes its own date.
 Branch `redesign/design-lab` only. `DESIGN_PRINCIPLES.md` and ADR RD-0001 still govern. Nothing here is a production spec until the owner approves Concept E.
 
 This file records the design system that the Concept E boards actually draw, so new screens stay consistent. Where the boards are silent, it says **UNRESOLVED** instead of inventing a value. Decisions and their reasons live in `E_DESIGN_DECISIONS.md` (written separately); this file holds the rules and tokens.
@@ -1078,6 +1078,8 @@ Text never falls out of its container, at any window size, text size (Dynamic Ty
 ---
 
 ## 14. Unresolved specifications
+
+> **Settled (2026-11-15, ED-353):** every item in §14.1 and §14.2 was designed or decided later: Groups 2 to 4 (ED-074 to ED-196), the cleanup batch (ED-197 to ED-221), Round 2 (R2-1 to R2-42, ED-264 to ED-349). The list is kept as the v1.0/v1.1 record. Where it disagrees with the decision log, the log wins.
 
 ### 14.1 Not designed
 

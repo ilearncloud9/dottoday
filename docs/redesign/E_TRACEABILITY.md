@@ -517,3 +517,106 @@ Also excluded by later owner answers (not ED "REJECTED", but not to be built):
 - **2026-11-06, ED-117:** G3-4 verification audit: designs PASS; stale traceability rows for G3-3, G3-4 (two rows, incl. ED-028) and G3-5 corrected; ED-041 cross-referenced to ED-112; switch implementation checks and three Flutter gaps recorded (future tasks only).
 - **2026-11-06, ED-116:** G3-5 RESOLVED as C · Hybrid and MERGED into E-FullA-v2 (Lunch hover). Shared hover/drag rule recorded (rules §7.4). Motion details OPEN.
 - **2026-11-05, ED-099:** G2-12 is RESOLVED (option A) and **Group 2 is complete**. One Day review (phone sheet; Full Mac/web Review place with Week in Review beside it; minimal Mac/web Day column), one When picker (Inbox Schedule, Move, Move To…; sheet on phones, popover on Mac/web) and the name Week in review are APPROVED and DRAWN on `E-Phones`, `E-FullA-v2`, `E-Minimal`; captions on `E-PhonesMinimal`; rows on `E-Map`. This supersedes the OPEN G2-12 / G2-7 status in the rows "Move opens a day + time picker", "Wind Down review `/review`", "Weekly review + share", "Day review (3 forms)", "Inbox scheduling (3 sheets)" and the gap "iOS Move picker" (the table keeps its earlier wording). Every entry kept (Day menu, Wind Down prompt and notification, sidebar Review, View › Reviews, finder, ⌘K; Schedule, Move tile, swipe Move, ⇧⌘M, `m`); `/review` unchanged. Implementation requirements (later, not now): one review presenter by layout; Schedule and Move share the picker; the Move tile's month becomes Date…; `weekReviewTitle` renamed in four languages. Verification: entry-to-screen tests per layout, Undo after each placement, semantics on suggestions and the thread slider, keyboard-only on Mac and web. Still NOT DESIGNED: Week in review states (first week, no data), share image, learning reveal (G4); the picker's no-free-time state. Tablets: NOT DRAWN (Round 2).
+
+## Catch-up (2026-11-15, ED-353): decisions not logged above
+
+Each is recorded in full in `E_DESIGN_DECISIONS.md`; the boards and documents it names are where it lives.
+
+- **2026-11-04, ED-078:** Corrections found by the traceability audit.
+- **2026-11-04, ED-085:** G2-5 option D explored (Refined full task editor).
+- **2026-11-04, ED-090:** Tablet coverage checklist deferred to the start of Round 2; G2-8 presented.
+- **2026-11-04, ED-092:** G2-9 presented: the Day menu.
+- **2026-11-05, ED-094:** G2-10 presented: one keyboard scheme.
+- **2026-11-05, ED-096:** G2-11 presented: web routes.
+- **2026-11-05, ED-098:** G2-12 presented: duplicate screens, re-baselined.
+- **2026-11-09, ED-205:** Cleanup 8c approved (option A) and applied: iPad "Alarms off" tag.
+- **2026-11-09, ED-206:** Cleanup 10 (Day button font) approved (option A) and applied.
+- **2026-11-09, ED-207:** Cleanup 11 (Minimal sidebar width) approved (option A) and applied.
+- **2026-11-09, ED-208:** Cleanup 12 (repeat marker) approved (option A) and applied.
+- **2026-11-09, ED-209:** Cleanup 14 (Now card on wide) approved (option A) and applied.
+- **2026-11-09, ED-210:** Cleanup 15 (glass shadow tiers) approved (option A): five tiers confirmed, no board change.
+- **2026-11-09, ED-211:** Cleanup 9c (web focus ring) and 10 (web Add teal) applied on the owner's OK.
+- **2026-11-09, ED-212:** CR-166 applied on the owner's OK: dark now-ring tracks follow ED-174.
+- **2026-11-09, ED-213:** ED-205 contrast refinement: light bell-off icon #986C1C.
+- **2026-11-09, ED-214:** CR-165 (2) and (4) approved; (2) applied to the selected sidebar row, one label held for a location correction.
+- **2026-11-09, ED-215:** CR-165 (2) remainder applied: Week Today column header label.
+- **2026-11-09, ED-216:** Minimal task sheet title: Manrope 800 21/26 kept (option A); "Android Minimal edit title" corrected.
+- **2026-11-09, ED-217:** ED-199 outliers reconciled (option A): Lunch corrected; board key and Lands-at marker exempt by role.
+- **2026-11-09, ED-218:** CR-143 approved (option A): ⌥⌘I toggles the right-hand pane in both modes.
+- **2026-11-09, ED-219:** Colour data Decision 1 (option A): brown, plum and olive become stored keys in two releases.
+- **2026-11-09, ED-220:** Colour data Decision 2 (option A, C1): a custom task colour is stored as hex in `color_key`.
+- **2026-11-09, ED-221:** Colour data Decision 3 (option A): App colour hex and "Your colours" in their own profile columns.
+- **2026-11-09, ED-222:** CR-160 screen audit (criteria 2 and 7) and the A2 wording fix on E-CR160.
+- **2026-11-09, ED-223:** E-CR160 A3 wording fixed (signed out).
+- **2026-11-09, ED-224:** E-CR160: A1 Android and Mac/web adaptations added.
+- **2026-11-09, ED-225:** E-CR160: A2 "Sync hasn't been confirmed yet" on iPhone, Android and Mac/web.
+- **2026-11-09, ED-226:** E-CR160: Android A2 gets the "Stay signed in" hint.
+- **2026-11-09, ED-227:** E-CR160: A3 (signed out) Android and Mac/web adaptations added.
+- **2026-11-09, ED-228:** E-CR160: B1 (settings choice) Android and Mac/web adaptations added.
+- **2026-11-09, ED-229:** E-CR160 iPhone B1: label column grows at large text.
+- **2026-11-09, ED-230:** E-CR160: Settings › Account "Choose settings" row (after Decide later) on three platforms.
+- **2026-11-09, ED-231:** E-CR160 implementation handoff (read-only).
+- **2026-11-13, ED-232:** CR-093 option A: E-Minimal web uses the Mac split (200 / 790 / 290).
+- **2026-11-13, ED-233:** CR-093 follow-ups: one orb, one hide-button name, ⌥⌘I in the spoken labels.
+- **2026-11-13, ED-234:** Phone tab bar / toolbar on every pushed Settings page (not on pull-ups).
+- **2026-11-13, ED-235:** Settings pages: no tab selected in the phone bar.
+- **2026-11-13, ED-236:** E-G2-4 (history board): its three iPhone Settings frames get the phone bar.
+- **2026-11-13, ED-237:** E-SettingsReview (approved review board): its four phone Settings frames get the phone bar.
+- **2026-11-13, ED-239:** CR-025 / CR-098 option A: native right-click menus on Mac; drawings unified at radius 10.
+- **2026-11-13, ED-240:** CR-117 option A: the + is named "Add a task" on every platform.
+- **2026-11-13, ED-241:** CR-015 option A: now-bead size by context.
+- **2026-11-13, ED-242:** CR-067 option A: the Day column state, the Day panel and the palette have no address.
+- **2026-11-13, ED-243:** Group 1 design fixes: stale board copy (CR-006, CR-050).
+- **2026-11-13, ED-244:** The last four board hypotheses approved.
+- **2026-11-13, ED-245:** Group 2 design fixes presented on E-DF2 (before Wake Up, the moving now) · for review.
+- **2026-11-13, ED-247:** Group 3 design fixes presented on E-DF3 (keyboard and screen-reader paths) · for review.
+- **2026-11-13, ED-248:** Group 3 approved: focus order, the Week for screen readers, Reduce Transparency / Increase Contrast (E-DF3).
+- **2026-11-13, ED-249:** Tablet coverage checklist written (the preparation step before Round 2).
+- **2026-11-13, ED-250:** Tablet Q1 mockups on E-T1 (Full on an expanded tablet) · for review.
+- **2026-11-13, ED-251:** Tablet Q1: options C and D added, every option on iPad and Android tablet (E-T1).
+- **2026-11-13, ED-252:** Tablet Q1 approved: option A, the Workspace on expanded tablets.
+- **2026-11-13, ED-253:** Tablet Q2 mockups: the Day menu in Minimal on tablets.
+- **2026-11-13, ED-254:** Tablet Q2 approved: option A, the Day menu in Minimal by width.
+- **2026-11-13, ED-255:** Tablet Q3 mockups: content type size on touch tablets.
+- **2026-11-13, ED-256:** Tablet Q3 approved: option B, phone content sizes with touch spacing.
+- **2026-11-13, ED-257:** Tablet Q4 mockups: Apple Pencil and Android stylus.
+- **2026-11-13, ED-258:** Tablet Q4 approved: option A, handwriting in text fields only.
+- **2026-11-13, ED-259:** Tablet Q5 approved: the option D editor sits beside the day only where it can dock.
+- **2026-11-13, ED-260:** The nine open verification checks, run (CR-014, CR-042, CR-068, CR-097, CR-098, CR-102, CR-104, CR-106, CR-121).
+- **2026-11-13, ED-261:** CR-102 approved: touch-first web windows use the ED-256 touch sizes.
+- **2026-11-13, ED-262:** iOS 26.5 Simulator run: tab bar contrast on glass (CR-106) and menu order (CR-121).
+- **2026-11-13, ED-263:** Correction to ED-262: the + was not in its approved position.
+- **2026-11-13, ED-264:** Prompt D Round 2 started.
+- **2026-11-13, ED-265:** R2-1 proposed: the tablet navigation shell (boards E-R2-1, E-R2-1-Dark).
+- **2026-11-13, ED-266:** R2-1a approved: medium Minimal on tablets uses E-Minimal's places, by width.
+- **2026-11-13, ED-268:** R2-2 proposed: Today on expanded tablets, the Workspace at touch sizes (boards E-R2-2, E-R2-2-Dark).
+- **2026-11-13, ED-270:** R2-3 proposed: Add on expanded tablets (boards E-R2-3, E-R2-3-Dark).
+- **2026-11-13, ED-272:** R2-4 proposed: Edit on tablets; question R2-4a (boards E-R2-4, E-R2-4-Dark).
+- **2026-11-13, ED-273:** R2-4a approved: B, the option D editor docked beside the grid on expanded tablets.
+- **2026-11-13, ED-275:** R2-5 proposed: complete, change day, reopen and the Day menu on expanded tablets (boards E-R2-5, E-R2-5-Dark).
+- **2026-11-13, ED-277:** R2-6 proposed: multi-select and the selection bar on every platform; question R2-6a (boards E-R2-6, E-R2-6-Dark).
+- **2026-11-13, ED-278:** R2-6a approved: A, the built selection card in E on every platform.
+- **2026-11-13, ED-280:** R2-7 proposed: Undo, the toast and ⌘Z / Ctrl+Z on every platform (boards E-R2-7, E-R2-7-Dark).
+- **2026-11-13, ED-282:** R2-8 proposed: sync states and conflicts on tablets (boards E-R2-8, E-R2-8-Dark).
+- **2026-11-13, ED-284:** R2-9 proposed: Focus on every platform; question R2-9a (boards E-R2-9, E-R2-9-Dark).
+- **2026-11-13, ED-285:** R2-9a approved: B, Focus takes the whole window on expanded windows.
+- **2026-11-13, ED-287:** R2-10 proposed: keyboard overlays on tablets (boards E-R2-10, E-R2-10-Dark).
+- **2026-11-13, ED-289:** R2-11 proposed: Settings on tablets (boards E-R2-11, E-R2-11-Dark).
+- **2026-11-13, ED-290:** Auto theme tile shows white and dark in every dark board (owner comment).
+- **2026-11-13, ED-292:** R2-12 proposed: Calendar on tablets, Month and Week (boards E-R2-12, E-R2-12-Dark).
+- **2026-11-13, ED-294:** R2-13 proposed: Inbox and Search on every platform (boards E-R2-13, E-R2-13-Dark).
+- **2026-11-13, ED-296:** R2-14 proposed: Day review and Week in review on tablets (boards E-R2-14, E-R2-14-Dark).
+- **2026-11-13, ED-298:** R2-15 proposed: colour and icon picker on tablets (boards E-R2-15, E-R2-15-Dark).
+- **2026-11-13, ED-300:** R2-16 proposed: onboarding on every platform (boards E-R2-16, E-R2-16-Dark).
+- **2026-11-13, ED-301:** Onboarding: three new directions for the owner (board E-Onboarding-Options, own board).
+- **2026-11-13, ED-302:** Onboarding: three more directions, D, E and F (same board, E-Onboarding-Options).
+- **2026-11-13, ED-303:** Onboarding recommendation: "The First Thread" (boards E-Onboarding-Signature, E-Onboarding-Signature-Dark).
+- **2026-11-13, ED-315:** Round 2 order after stage 3: the screens outside the three stages (R2-20 to R2-24).
+- **2026-11-13, ED-316:** R2-20 proposed: notifications and alerts on every platform (boards E-R2-20, E-R2-20-Dark).
+- **2026-11-13, ED-318:** R2-21 proposed: data safety on every platform (boards E-R2-21, E-R2-21-Dark).
+- **2026-11-13, ED-320:** R2-22 proposed: planning helpers on every platform; one Day shape question (boards E-R2-22, E-R2-22-Dark).
+- **2026-11-14, ED-323:** R2-23 proposed: proposal flows and learning on every platform (boards E-R2-23, E-R2-23-Dark).
+- **2026-11-14, ED-325:** R2-24 proposed: the rest of the app on every platform, plus a German and French pass (boards E-R2-24, E-R2-24-Dark).
+- **2026-11-14, ED-327:** Copy decisions from the German and French pass: Calendar tab label, French "Boîte", the move answer.
+- **2026-11-15, ED-353:** Concept E approved for production implementation (release gate, ED-238).
+- **2026-11-16, ED-354:** every settled item is marked approved: decision headings, register statuses, STATUS, board badges and canvas titles (canvas `1794787239-a691`). No design changed.

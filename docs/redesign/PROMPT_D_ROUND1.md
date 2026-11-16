@@ -49,7 +49,7 @@ See the `Main` board.
 
 ## Concept E — Refined Focus (added 2026-11-04)
 
-**Status: LEADING CANDIDATE — NOT APPROVED FOR PRODUCTION IMPLEMENTATION.** Round 2 has not started; the finalists are still unapproved.
+**Status (history):** written as LEADING CANDIDATE before Round 2. Concept E is approved for production implementation since ED-353 (2026-11-15).
 
 - **What it is:** E v1.0 is an exact copy of the owner's latest modified A boards (canvas version 1793757110-10fc): `E-Phones`, `E-PhonesMinimal`, `E-Workspace`, `E-Focus`, plus `E-Map-v1.0` (the A map, kept unchanged as a historical snapshot) and a new working `E-Map`. The copies keep their "A · …" headers so they stay byte-identical; SHA-256 sums are in `references/concept-e/v1.0/SHA256SUMS`.
 - **Concept A on the canvas:** left as the owner edited it (A-Wide and A-Minimal were deleted by the owner before E was made). Not restored.

@@ -1,6 +1,6 @@
 # Concept E — implementation handoff checklist
 
-**Status:** design-phase record. G3-6 resolved as a design and selected architecture direction (ED-133); every box below is PENDING until run. **Production implementation is not authorised** by anything in this file. It lists what an implementation task must satisfy and verify once the owner authorises it. Created 2026-11-06 (ED-128); add a section per decision group as decisions land.
+**Status:** **Concept E is approved for production implementation (ED-353, 2026-11-15).** Every box below is PENDING until run; each is built through a `docs/09-implementation-plan.md` task and CLAUDE.md §10 must-ask items still apply. "Production implementation not authorised" in the rows below describes the state before ED-353. It lists what an implementation task must satisfy and verify once the owner authorises it. Created 2026-11-06 (ED-128); add a section per decision group as decisions land.
 
 Status words (ED-128), used in every row:
 - **Approved visual design**: the owner approved how it looks.
@@ -9,9 +9,41 @@ Status words (ED-128), used in every row:
 - **Tests still outstanding**: not verified; never marked passed without a recorded run.
 - **Production implementation not authorised**: true for every row below.
 
+## Build sources (ED-353) · what Concept E is built from
+
+Concept E was approved for production implementation on 2026-11-15 (ED-353). Build from these, in this order of authority: the decision log, then the boards, then the rules (ED-314: the decision log wins where an unchecked row or old board disagrees).
+
+**Documents (`docs/redesign/`)**
+- `E_DESIGN_DECISIONS.md`: every decision, ED-001 to ED-353.
+- `E_DESIGN_RULES.md`: tokens, type, spacing, platform rules.
+- `E_SCREEN_INVENTORY.md`: every screen and where it is drawn.
+- `E_TRACEABILITY.md`: decision → board → requirement.
+- This file: build and test requirements per decision.
+- `E_TABLET_CHECKLIST.md`: tablet coverage.
+- `E_CONSISTENCY_REPORT.md`: every CR and how it was settled.
+- `E_COLOUR_DATA_REVIEW.md`: colour keys, staged releases (ED-219 to ED-221).
+- `E_CR160_HANDOFF.md`: account ownership; a release blocker.
+- `FEATURE_PARITY_MATRIX.md`: every feature keeps a home.
+- `DESIGN_PRINCIPLES.md`, `adr/RD-0001-one-identity-native-presentations.md`, `adr/RD-0002-concept-e-approved.md`.
+- `OPEN_PRODUCT_DECISIONS.md`: product answers Q1 to Q15.
+- `Q9_TEST_STACK_PROPOSAL.md`: the isolated test stack, approved as ED-352.
+- Outside this folder: `docs/14-minimal-mode.md`, as superseded for this branch where ED-075 says so.
+
+**Boards:** Design canvas https://claude.ai/artifact/FmSwyPQt7FrCh3fXPkkXX9. Each board has a dark companion where one is listed.
+- **Active product boards:** E-Phones, E-Phones-2, E-Phones-3, E-PhonesMinimal, E-Minimal, E-FullA-v2, E-Earlier, E-Responsive, E-MobileWeb, E-G4-3-Narrow (each with -Dark); E-G4-7-States and E-G4-7-Q4-KeepBoth (states and accessibility kit); E-DF2, E-DF3 (design fixes); E-G4-6-Dark-Tokens (dark tokens).
+- **Round 2 approved boards:** E-R2-1 to E-R2-42 with their -Dark copies, including E-R2-19-B and E-R2-19-B-2 (option B). E-R2-19 (option A) and the static E-R2-16 are history.
+- **Approved reference boards:** E-G2-5-OptionD-RefinedEditor (the editor incl. iPad), E-G2-11 (routing table), E-G3-6-Decision / -Remaining / -Compat (glass and vibrancy direction), E-G3-9b-Screens (colour selection), E-WakeWindDown-Settings-Candidate (tablet and dial rule), E-T1 to E-T4 (tablet answers; chosen option only).
+- **History only, not built:** E-Workspace (kept as reference; E-FullA-v2 is active), E-FullA, E-FullB, E-Map, E-Map-v1.0, E-PhonesCalendar, E-SettingsReview, E-G2-* option boards, E-G3-1 to E-G3-7 review boards, E-V1, E-G3-9b-Palette, E-G3-C1-Font-Comparison, E-G4-3, E-G4-6-Dark-Frames, E-PlanPanel-Options, E-Onboarding-Options, E-Onboarding-Signature.
+
+**Interactive prototype:** onboarding, "Dottoday Onboarding Prototype" https://claude.ai/artifact/3dgrJiQ8GGEdxgnD9PCvjL, version `1794780049-65a7` (ED-305, ED-350, ED-351).
+
+**Snapshot:** `references/concept-e/v3.27-working/` (docs at approval) and `v3.28-working/` (approved labels, ED-354), each with SHA256SUMS. Canvas version `1794787239-a691`.
+
+**Not yet designed, by design:** the CR-160 account screens (sign in, sign out, switching). They are drawn and approved after [ilearncloud9/dottoday#75](https://github.com/ilearncloud9/dottoday/pull/75), before account switching is built.
+
 ## Current state at a glance (2026-11-14, after ED-335)
 
-Round 2 is complete (R2-1 to R2-31, ED-267 to ED-334) and closed out (ED-335). Concept E is still LEADING CANDIDATE — NOT APPROVED FOR PRODUCTION IMPLEMENTATION (ED-238). Build requirements found in Round 2 that are not yet built: Search or run (design-only on R2-30), minimal Inbox at expanded width (docs/14 §3), hinge awareness (ED-099, ED-334), the Settings restructure that removes Day shape (ED-321). Open owner items are listed in ED-335. The sections below are kept as history.
+Round 2 is complete (R2-1 to R2-31, ED-267 to ED-334) and closed out (ED-335). Concept E was then still a leading candidate (ED-238); it is approved for production implementation since ED-353 (2026-11-15). Build requirements found in Round 2 that are not yet built: Search or run (design-only on R2-30), minimal Inbox at expanded width (docs/14 §3), hinge awareness (ED-099, ED-334), the Settings restructure that removes Day shape (ED-321). Open owner items are listed in ED-335. The sections below are kept as history.
 
 ## Current state at a glance (2026-11-08, after ED-184) (history)
 

@@ -3,7 +3,7 @@
 **Status:** this is the mandatory preparation step before Prompt D Round 2 (ED-090). It is written on 2026-11-13 and recorded as ED-249.
 
 - **Round 2 is complete (2026-11-14, ED-335):** R2-1 to R2-31 are approved (ED-267 to ED-334). Each row in §3 says which board and decision cover it; what is still open is listed in E_DESIGN_DECISIONS.md ED-335. This checklist first said what Round 2 had to draw (ED-249).
-- **Concept E** stays LEADING CANDIDATE — NOT APPROVED FOR PRODUCTION IMPLEMENTATION.
+- **Concept E** is APPROVED FOR PRODUCTION IMPLEMENTATION (ED-353, 2026-11-15).
 - **CR-160** stays CRITICAL — OPEN — RELEASE BLOCKER.
 
 **Scope (ED-090):**

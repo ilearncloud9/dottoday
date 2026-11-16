@@ -14,7 +14,7 @@
 | E-Focus | A-Focus | yes |
 | E-Map-v1.0 | A-Map (frozen snapshot) | yes |
 
-**Status.** LEADING CANDIDATE — NOT APPROVED FOR PRODUCTION IMPLEMENTATION. "ACCEPTED FOR CONCEPT E" means the owner accepted it as a design decision. It does not approve implementation.
+**Status.** **APPROVED FOR PRODUCTION IMPLEMENTATION (ED-353, 2026-11-15).** Until then it was LEADING CANDIDATE — NOT APPROVED FOR PRODUCTION IMPLEMENTATION; entries before ED-353 that say so describe their own date. "ACCEPTED FOR CONCEPT E" means the owner accepted it as a design decision.
 
 **How to maintain this log.**
 - Every future change to E adds a new entry here (ED-next), changes the board, and updates `E_DESIGN_RULES.md`, all in the same step.
@@ -711,7 +711,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Classification:** PROPOSED / AWAITING OWNER REVIEW. Nothing here resolves G1-1 or Group 2.
 - **Owner review (2026-11-04):** "Looks right", in reply to "Does Option A v2 work as the Full candidate?". This accepts `E-FullA-v2` as the Option A candidate board. It is not the G1-1 choice. The keys, routes, increments and Replan move stay proposals until approved one by one.
 
-### ED-073 · G1-1 resolved: Option A, Workspace is Full on Mac and web
+### ED-073 · G1-1 approved: Option A, Workspace is Full on Mac and web
 - **Date:** 2026-11-04. **Owner answer:** "Approve Option A", replying to "Approve G1-1 as Option A (Workspace is Full on Mac and web)?".
 - **Settles:**
   - Full on Mac and web is the Workspace layout: sidebar, Inbox and Routines column, time grid with Day / 3 days / Week / Month, docked inspector. The candidate is `E-FullA-v2`, built on `E-Workspace`.
@@ -736,7 +736,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
   - **Order of work:** no commit, no Flutter work and no Group 3 until Group 2 is complete and reconciled.
 - **Classification:** ACCEPTED (process).
 
-### ED-075 · G2-1 resolved: Calendar tab opens Month; one month grid, three ways in
+### ED-075 · G2-1 approved: Calendar tab opens Month; one month grid, three ways in
 - **Date:** 2026-11-04. **Owner answer:** "For G2-1, I choose Option A." The owner listed what to keep:
   - Full-mode phones keep Today · Inbox · Calendar · Search.
   - The Calendar tab opens a complete Month screen.
@@ -811,7 +811,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Also on `E-FullA-v2`:** its header and canvas title now say G1-1 is approved (ED-073). That corrects the stale "G1-1 open" label listed in ED-078.
 - **Classification:** ACCEPTED.
 
-### ED-081 · G2-4 resolved: six-group Settings root; "Everything else" means only the Settings row
+### ED-081 · G2-4 approved: six-group Settings root; "Everything else" means only the Settings row
 - **Date:** 2026-11-04. **Owner answer:** "Accept A + A" on the `E-G2-4` decision board.
 - **Part 1 (Settings root), option A:**
   - **Order on every platform:** Account on top, then Layout as the first row (G1-4), then Settings search.
@@ -935,7 +935,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
   - The board is rearranged into four rows. Canvas `1793823228-4b25`; the previous revision is kept as `E-G2-5-OptionD-RefinedEditor.r1.dc.html`.
 
 
-### ED-086 · G2-5 resolved: option D, the refined full task editor
+### ED-086 · G2-5 approved: option D, the refined full task editor
 - **Date:** 2026-11-04. **Owner answer:** "Approve option D", on `E-G2-5-OptionD-RefinedEditor` (canvas `1793823228-4b25`).
 - **Settles:**
   - **One task surface:** a medium detent pulls up to the full editor on iPhone; Android uses a partial sheet that expands to full screen; iPad shows the editor beside the day; Mac and web use the inspector with a colour and icon popover.
@@ -994,7 +994,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Classification:** behaviour ACCEPTED. Drawings PROPOSED / AWAITING OWNER REVIEW. E-Minimal and E-PhonesMinimal are unchanged until the owner approves.
 
 
-### ED-089 · G2-6 resolved: the minimal task screen drawings approved and merged
+### ED-089 · G2-6 approved: the minimal task screen drawings approved and merged
 - **Date:** 2026-11-04. **Owner answer:** approved the drawings on `E-G2-6-Review` and asked for them to be merged into E-PhonesMinimal and E-Minimal, keeping each board's identity and the approved behaviour.
 - **Merged (canvas version `1793826732-d0c2`):**
   - **`E-PhonesMinimal`:** new "Task sheet (minimal)" row: iPhone with a task ahead, iPhone with the task running, Android with the task running, and More options → option D editor.
@@ -1015,7 +1015,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Classification:** process ACCEPTED. G2-8 PROPOSED / AWAITING OWNER ANSWER.
 
 
-### ED-091 · G2-8 resolved: Brain dump and Routine are modes of Add (option A), merged
+### ED-091 · G2-8 approved: Brain dump and Routine are modes of Add (option A), merged
 - **Date:** 2026-11-04. **Owner answer:** "I approve G2-8 Option A — Brain Dump and Routine as modes of Add, including the designs shown on E-G2-8."
 - **Settles:**
   - **iPhone:** Add keeps its Task · Brain dump · Routine segmented control (E-Phones F2). Task is the default with the title focused, so the quick add stays two taps.
@@ -1041,7 +1041,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Settled with it in every option (proposed):** +5 / +15 / +30; Need more time behaves like the built Running late; one name, Low-energy mode; Show less / Show everything always in the menu.
 - **Classification:** PROPOSED / AWAITING OWNER ANSWER.
 
-### ED-093 · G2-9 resolved: one Full Day menu everywhere; wide minimal keeps E-Minimal's menu (option B), merged
+### ED-093 · G2-9 approved: one Full Day menu everywhere; wide minimal keeps E-Minimal's menu (option B), merged
 - **Date:** 2026-11-05. **Owner answer:** "For G2-9, I choose Option B." The owner approved one Full Day menu structure on every platform using E-FullA-v2's four groups, kept E-Minimal's richer Day menu on Mac and web, and kept the simpler menu on minimal phones. E-Minimal's commands are not to be removed to match the older phone minimal spec.
 - **Settles:**
   - **Full, every platform:** Time · Plan · Day · Layout.
@@ -1111,7 +1111,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Canvas note:** a page edit just before this (`1793833907-178a`) moved E-Phones to x 129, y 12760 and set its frame to 8000. Its content ends at about 9420, so the bottom (Add modes row and insets band) is cut off in the frame, and the frame now overlaps E-PhonesMinimal by 64 px. It was left as set; the owner is asked whether to restore the frame.
 - **Classification:** PROPOSED / AWAITING OWNER ANSWER.
 
-### ED-095 · G2-10 resolved: one keyboard scheme, option B, reconciled with the built app
+### ED-095 · G2-10 approved: one keyboard scheme, option B, reconciled with the built app
 - **Date:** 2026-11-05. **Owner answer:** "I approve G2-10 Option B for ⌘1–4." Full keeps ⌘1 Today, ⌘2 Inbox, ⌘3 Week and ⌘4 Month. Minimal uses its own destinations. ⌘2 is Inbox in both modes. Native modifiers apply on every platform, with no OS or browser conflicts. The owner asked for the other proposed changes, especially ⌘D, to be verified before the decision is marked resolved.
 - **Verified against the built app** (`app_shortcuts.dart`, `app_shortcut_groups.dart`, `app_menu.dart`, `today_keys.dart`, `task_keys.dart`, `task_editor.dart`, `wide_inbox.dart`, `week_view.dart`, `month_screen.dart`):
   - ⌘D marks done in two places. On Today it marks the running task done (with Undo). In the task editor it toggles Done.
@@ -1242,7 +1242,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
   - Universal links / App Links are not built.
 - **Classification:** PROPOSED / AWAITING OWNER ANSWER.
 
-### ED-097 · G2-11 resolved: option A′, D4 reconciled per layout
+### ED-097 · G2-11 approved: option A′, D4 reconciled per layout
 - **Date:** 2026-11-05. **Owner:** "I approve G2-11 Option A′ (A-prime) as the web routing direction for Concept E, with one required clarification to D4." D1 (keep hash URLs and existing links), D2 (`?task=` with strict id validation and signed-in authorization), D3 (no personal search text in URLs) and D4 (a link never silently changes the Full/Minimal preference) are approved. Before finalizing D4 the owner required: minimal phones' `/today` opens Today, not Now; minimal Mac/web's `/today` reveals the Day column without treating it as Now; `/day/:date` and other calendar links open a date-based place on every layout, including minimal phones (no Calendar tab); a task link opens the task and its date, past, current or upcoming; Full Mac/web keeps the Workspace; Back, Forward and Refresh keep view, date and open task; `dottoday://` links, sign-in callbacks and notification/widget links keep working.
 - **Supersedes:** ED-096's D4 answer ("in minimal, Week, 3 Days or a day → Calendar"; `/today` → `/now` in minimal) and its "Show Everything returns to the last Full place". ED-096 is kept unchanged above.
 - **Corrected routing table** (address after `dottoday.app/#`; web at phone width uses the phone columns; tablets in Round 2):
@@ -1294,7 +1294,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Tablets (recorded, not drawn):** review as a pane beside the day on iPad landscape and Android expanded; picker as a popover / side sheet.
 - **Classification:** PROPOSED / AWAITING OWNER ANSWER.
 
-### ED-099 · G2-12 resolved: option A, duplicate screens consolidated
+### ED-099 · G2-12 approved: option A, duplicate screens consolidated
 - **Date:** 2026-11-05. Owner, in this session: "I approve G2-12 Option A — Consolidate Duplicate Screens, including all three recommendations shown on E-G2-12." Supersedes the open status in ED-098; ED-098 is not edited.
 - **Q1 · One Day review.** One body and one behaviour (DayReviewBody: done count, "Move the rest to tomorrow?", sleep line), presented per platform:
   - **iPhone:** a sheet (large detent) for every entry. **Android:** an M3 bottom sheet; predictive Back closes it first.
@@ -1366,7 +1366,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **The 3 Nov comment ending in "what":** the owner says it is not a new design requirement. Closed; no change.
 - **Classification:** G3-1 PROPOSED / AWAITING OWNER ANSWER (C revised). ED-100 RESOLVED · APPROVED. ED-102 flags unchanged.
 
-### ED-104 · G3-1 resolved: option C · Both, revised; merged into E-Phones Today only
+### ED-104 · G3-1 approved: option C · Both, revised; merged into E-Phones Today only
 - **Date:** 2026-11-05. **Owner, in this session:** "I approve option C · Both, revised. Apply this decision only to the Full phone Today presentation shown in G3-1. Do not automatically rescale E-Minimal, E-FullA-v2 or other approved layouts. Record tablet adaptations for Prompt D Round 2. Preserve historical designs."
 - **Decision:** on Full phone Today the current task has a 45 pt/dp ring (5.5 px stroke, 24 icon), a 19/700 title (line height 24) and a card of 80 pt (iPhone) / 82 dp (Android) minimum that grows with its text; 32 above and below the now group. Every other row, dot and name keeps the large scale (ED-025). Six task rows fit above the tab bar, as before.
 - **Merged into `E-Phones`** Frame 1 (iPhone Today) and Frame 5 (Android Today) only, from the same code that drew the approved option, and checked to match it exactly; the rest of E-Phones is unchanged, byte for byte. Each frame's caption gains "Approved · G3-1 (ED-104)". Frame sizes unchanged (E-Phones 2760 × 10520).
@@ -1386,7 +1386,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Tablets (recorded, not drawn):** minimal on tablets sizes the orb by window; under A the centre type keeps the 0.36 proportion; Round 2 checklist.
 - **Classification:** PROPOSED / AWAITING OWNER ANSWER.
 
-### ED-106 · G3-2 resolved: option A, one orb drawing; merged into E-Minimal
+### ED-106 · G3-2 approved: option A, one orb drawing; merged into E-Minimal
 - **Date:** 2026-11-05. **Owner, in this session:** "A · One drawing".
 - **Decision:** the orb is one drawing on every platform. Same SVG (unchanged); centre type at the phones' proportion: numeral 800, −0.05 em, 0.36 of the orb; icon and "min left" scaled. iPhone 236: 84 / icon 22 / 13; Android 228: 80 / 22 / 13; Mac 280: **100 / 26 / 15**; web 240: **85 / 22 / 13**. Orb sizes, ring, arc, track, shadow and layout unchanged.
 - **Merged into `E-Minimal`:** only the centre of the Mac and web orbs, plus one caption line ("Approved · G3-2 (ED-106)"); the board's note that E-Minimal follows "orb numeral 700" is removed. Checked: the merged orbs match option A value for value; nothing overlaps them; stack 149 of 179 px (Mac) and 127 of 153 (web). E-PhonesMinimal unchanged (already A). Not touched: Full phone Today, the compact rings (Now mini window, task sheet header), the E-Minimal Day column, the two flagged drawings, E-Focus (v1.0 archive).
@@ -1426,7 +1426,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Tablets:** same face and type roles; recorded for Round 2.
 - **Classification:** PROPOSED / AWAITING OWNER ANSWER.
 
-### ED-110 · G3-3 resolved: Manrope is Dottoday's content typeface
+### ED-110 · G3-3 approved: Manrope is Dottoday's content typeface
 - **Date:** 2026-11-05. **Owner, in this session:** "For G3-3, I approve Option A — Manrope as Dottoday's content typeface. Please retain Manrope across Concept E for task names, descriptions, times, the large Now-dot numbers, task sheets and other branded content. Continue using appropriate native system typography for platform chrome …" Requirements: keep the hierarchy, weights, spacing and geometry; no unnecessary visual change; document the scale and text-size behaviour; record implementation checks and tablet/foldable notes; keep history and the unrelated `E-G3-2-Size` board untouched; no Flutter code, no commit; approval before merging new visual changes.
 - **Boards:** no E board changed. Every E board already draws content in Manrope (ED-012), so the approved hierarchy, weights, spacing and geometry stand as drawn. Only the canvas title of `E-G3-3` changed (now "resolved: A"); the board file is unchanged and kept as history. Snapshot in `references/concept-e/g3-3-resolved/`.
 - **Recorded in the rules:** §3.1 (family resolved); §3.4 text size and accessibility (iOS Dynamic Type, Android non-linear font scale, Mac open, web rem; wrap not shrink; minimum heights; orb numeral sized to the orb; Bold Text); §3.5 implementation checks (licence, glyph coverage for en/de/es/fr and fallback scripts, international layout, tabular numerals, weights, font loading, screenshot regression, size, ADR); §3.6 tablets and foldables (Round 2).
@@ -1446,7 +1446,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Tablets:** iPad uses the same switch and colour; recorded for Round 2.
 - **Classification:** PROPOSED / AWAITING OWNER ANSWER.
 
-### ED-112 · G3-4 resolved: Dottoday teal for active iOS switches; G3-C1 and two accessibility checks tracked
+### ED-112 · G3-4 approved: Dottoday teal for active iOS switches; G3-C1 and two accessibility checks tracked
 - **Date:** 2026-11-05. **Owner, in this session:** "For G3-4, I approve Option A — Dottoday teal for active iOS switches. Keep the eight iOS switches as currently drawn in Concept E." Preserve: native iOS switch shape, animation and interaction; the approved teal; sufficient contrast between active track, white thumb and surrounding surface; support for iOS On/Off Labels and accessibility settings; the existing Android switch styling. "No visual changes to the approved iPhone switch designs are needed. For future dark-mode designs, verify contrast separately rather than assuming the light-mode teal works on every surface."
 - **Boards:** no E board changed. `E-G3-4` kept as history; its canvas title now says "resolved: A". Snapshot `references/concept-e/g3-4-resolved/`.
 - **Rules:** §4.2 `switchOn` token (teal, measured contrast, On/Off Labels, Android unchanged, dark mode checked separately under G4-6).
@@ -1481,7 +1481,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **E-Phones frame:** the canvas index height is restored to 10520 (content ends at 10497). The board file is unchanged (byte-identical to `v1.12-working/`). The 120-character title cuts from ED-114 are kept; E-G3-2-Size stays as the page left it (removed).
 - **Classification:** PROPOSED / AWAITING OWNER ANSWER (G3-5). E-Phones height: done.
 
-### ED-116 · G3-5 resolved: option C · Hybrid, merged into E-FullA-v2
+### ED-116 · G3-5 approved: option C · Hybrid, merged into E-FullA-v2
 - **Date:** 2026-11-06. **Owner, in this session:** "I approve G3-5 Option C — Hybrid. This is my final decision for the hover and drag appearance." Rules: resting flat, no shadow; pointer hover `#F5F1EB` tint and thin outline, no elevation; active drag A's soft lift, clearly above overlapping tasks; keyboard focus keeps the teal ring; reduced motion keeps clear feedback without animated lift; high contrast gets boundaries that do not depend on shadows; touch does not simulate hover. "Apply the approved hover appearance to Lunch on E-FullA-v2 and record the shared interaction rule for other eligible Workspace blocks. Do not change the grid layout, task sizes, typography, colors elsewhere or unrelated screens. Keep drag animation timing, scaling and haptics open for the later motion decision." The message ends mid-sentence ("Do not silently approve tho…"); read here as: do not treat the open motion items as approved.
 - **Merged (canvas `1793919701-ad03`; copy in `references/concept-e/v1.13-working/`; the pre-merge E-FullA-v2 is byte-identical to `v1.9-working/E-FullA-v2.dc.html`):** E-FullA-v2 web Plan Day frame, Lunch: `box-shadow: 0 0 0 1px rgba(36,31,43,.10), 0 8px 18px …` → `box-shadow: 0 0 0 1px rgba(36,31,43,.10); background: #F5F1EB`. Caption line added: "Approved · G3-5 (ED-116)". Nothing else changed.
 - **Checked:** the diff is those two places only; Lunch renders as the `E-G3-5` option C hover frame; no lift shadow remains on the board at rest or hover; content 5698 of 5740.
@@ -1654,14 +1654,14 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Classification:** N3 suitable on iOS 26.5 for Full; Minimal needs decision F1. F2 works on iOS 18.6 with the two fixes recorded as implementation rules. G3-6 OPEN pending the owner's review. Production implementation not authorised.
 - **Later (2026-11-06):** F1 decided as option (a) (ED-132).
 
-### ED-132 · F1 decided: iPhone Minimal on iOS 26+ keeps the 6 pt gap; native capsule width
+### ED-132 · F1 approved: iPhone Minimal on iOS 26+ keeps the 6 pt gap; native capsule width
 - **Date:** 2026-11-06. **Owner:** "For G3-6 F1, I approve Option (a) — Keep the 6 pt gap to the + button on iOS 26+ Minimal. I want to preserve genuine Apple Liquid Glass rather than replace the Minimal tab bar with a Flutter approximation."
 - **Rule:** Minimal destinations stay Now · Today · Inbox. The native teal glass + stays 21 pt from the right and bottom. The visible native tab capsule sits 6 pt left of the +, centres level, and keeps Apple's system-determined three-tab width (274 pt measured on iOS 26.5, 402 pt iPhone), so its left inset grows (≈ 39 pt there instead of 21). Alignment is computed from the rendered capsule's actual bounds on every layout pass, never from a hardcoded 274 pt; the same relation holds on other iPhone sizes, rotation and accessibility settings. Day ▾ position, Full geometry (21 / 6 / 21), navigation, selected states and Inbox badges unchanged. F2 on iOS 16–18 keeps the passing ED-124 Minimal arrangement (bar 21 from the left).
 - **Merged:** the five iPhone Minimal frames with the tab bar on `E-PhonesMinimal` now draw the capsule at the measured width with the 6 pt gap (on the 390 pt frames: right edge 90, width 274, left 26; ≈ 39 on a 402 pt phone); the iPhone Minimal Now caption carries the exception. Measured on the board, all five: 274 wide, gap 6, + 21 / 21, Day right 21 and 16 above, centres level. Android, Full iPhone, Mac, web and historical boards unchanged. E-Map's phone-bottom-row line updated.
 - **Snapshot:** `references/concept-e/v1.15-working/`.
 - **Classification:** F1 APPROVED and MERGED (design). Implementation rule recorded; not built.
 
-### ED-133 · G3-6 resolved as a design and selected architecture direction
+### ED-133 · G3-6 approved as a design and selected architecture direction
 - **Date:** 2026-11-06. **Owner:** "G3-6 may be marked resolved as a design and selected architecture direction if the decision records are complete, but no untested implementation behavior may be marked PASS."
 - **Resolved:** phone bottom rows (ED-124, ED-125, merged ED-126; Minimal exception ED-132); iPhone N3 native composition (D1), F2 on iOS 16–18 (D2, Simulator PASS on 18.6, ED-131), native Day UIMenu (D3), other iPhone chrome in Flutter (D4), Android C in Flutter (D5), Mac native vibrancy with 35 % warm tint (D6, ED-130); tablets deferred to Prompt D Round 2; web unchanged.
 - **Still PENDING (never PASS until run):** iOS 16 and 17; physical-device VoiceOver and Full Keyboard Access; the duplicate native accessibility elements and missing badge announcement on iOS 26; N3 tap and hold on a device; deep links and tab restoration; Reduce Transparency and Increase Contrast on a device; the iOS 26.5 retest of disabled Day-menu actions and the + menu order; Large Content Viewer; Android blur performance, insets, TalkBack, keyboard; Mac Reduce Transparency fallback, Increase Contrast, VoiceOver, keyboard, dark tint (G4-6). Listed in `E_IMPLEMENTATION_HANDOFF.md`.
@@ -1678,7 +1678,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Classification:** G3-7 PRESENTED · AWAITING OWNER DECISION.
 - **Later (2026-11-06):** option C chosen and merged (ED-135).
 
-### ED-135 · G3-7 resolved: C · stock iPhone keyboard, neutral return key, no extra bar
+### ED-135 · G3-7 approved: C · stock iPhone keyboard, neutral return key, no extra bar
 - **Date:** 2026-11-06. **Owner:** "C · stock only".
 - **Rule:** iPhone Add uses the stock iOS keyboard. The return key is the neutral "return" type (never "done" or another accented type, ED-030) and pressing it adds, exactly like Add. No custom key, no accessory bar. The teal Add stays where it is: in the field row (Full) and in the nav bar (Minimal). This replaces how ED-031 was drawn (a teal "Add" key iOS cannot show); ED-031's intent, a visible teal Add on the Add screen and no blue "done", is kept. It settles ED-032: the keyboard is the stock one.
 - **Merged:** E-Phones iPhone Add (Full) and E-PhonesMinimal iPhone Add (Minimal): the teal key replaced by the stock "return" key in the boards' keyboard style; platform notes updated. Byte-identical to option C on `E-G3-7`. E-Map's familiarity note updated. Nothing else changed (Android, Mac, web, other frames).
@@ -1802,7 +1802,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Fit:** content 5077 px; board grown 5040 → 5120 (file and canvas h); it is the last board in its column.
 - **Classification:** MERGED (reference board sync). Production implementation not authorised.
 
-### ED-152 · Q-A1 resolved: no "Add another"; each Add tab has its own action
+### ED-152 · Q-A1 approved: no "Add another"; each Add tab has its own action
 - **Date:** 2026-11-07. **Owner:** "My final decision for Q-A1 is OPTION A: DO NOT KEEP 'ADD ANOTHER'." Supersedes the earlier recommendation of option B (register Q-A1, 2026-11-06/07).
 - **Authoritative Create task reference:** E-Phones "iPhone · Add a task: Create task (detailed), title focused (ED-140)": Add opens on the Task tab, title focused, native keyboard up. No return to the compact Add sheet.
 - **Rules (the owner's, recorded verbatim in substance):**
@@ -1823,7 +1823,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Closes:** Q-A2 (with Q-A2a), CR-130, CR-131.
 - **Classification:** MERGED (design). Production implementation not authorised.
 
-### ED-154 · G3-8 resolved: inactive iPhone tab labels #6E6E73
+### ED-154 · G3-8 approved: inactive iPhone tab labels #6E6E73
 - **Date:** 2026-11-07. **Owner:** "A · darker #6E6E73".
 - **Decision:** inactive tab labels and icons on iPhone use `#6E6E73` (4.75:1 on `#FBF7F1`) in Full and Minimal; selected stays teal `#11615C`. Replaces the iOS system grey `#8E8E93` (3.06:1) on Full. iPad follows (Round 2).
 - **Merged:** E-Phones (12 tab items) and E-Phones-2 (9) changed from `#8E8E93`; E-PhonesMinimal already used `#6E6E73`. E-Map notes it. A grey menu chevron icon (non-text) keeps the system grey. E-PhonesCalendar (approved review board, reference) keeps its original drawing.
@@ -1840,7 +1840,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Classification:** MERGED (design). Production implementation not authorised.
 
 
-### ED-155 · G3-9 resolved: darker ahead-ring shades, fills unchanged; ink check on amber
+### ED-155 · G3-9 approved: darker ahead-ring shades, fills unchanged; ink check on amber
 - **Date:** 2026-11-07. **Owner:** "For G3-9, I approve Option A — darker ring shades with task fills unchanged."
 - **Tokens (one fill + one ring per task colour):** coral fill `#E2725B` / ring `#DF6147`; amber fill `#D9A23A` / ring `#AF7E22`; sky fill `#4A9BD6` / ring `#338ED1`; green fill `#4CA36B` / ring `#469763`. Other task colours keep ring = fill (they already meet 3:1). The ring token is used for the ahead-task ring and for the icon drawn inside that ring; done fills, the past thread, overlap knots, the current-task (now) progress ring and Wake Up / Wind Down stay on the fill colour. Glyphs on an amber fill (done check, task icon) are ink `#241F2B` (7.03:1) instead of white (2.29:1).
 - **Merged (canvas `1794066219-c3df`, E-Map `1794066237-c9f8`):** E-Phones 60 ring uses + 21 amber glyphs; E-Phones-2 12 + 14; E-PhonesMinimal 26 + 3; E-FullA-v2 37 + 4 (ahead dots in Day/Week and the horizon); E-Minimal 6; E-Workspace 14 + 2; E-Map note. No sizes, spacing, type, navigation or behaviour changed. E-PhonesCalendar (reference) unchanged.
@@ -1907,7 +1907,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Classification:** MERGED (design). Production implementation not authorised.
 
 
-### ED-162 · G3-10 resolved: one vocabulary, native Mac menu conventions
+### ED-162 · G3-10 approved: one vocabulary, native Mac menu conventions
 - **Date:** 2026-11-07. **Owner:** "For G3-10, I approve Option A — One vocabulary across Dottoday, with native Mac menu conventions."
 - **Vocabulary:** Low-energy mode; Brain dump; Review (singular); Today for the screen, Day for the actions menu; Need more time? (question) and Need More Time… (opens +5 / +15 / +30); Delete on phones (and web), Move to Trash ⌘⌫ in Mac menus, both the same deletion workflow (Trash 30 days, Undo 30 s, verified read-only in the original app). Mac menus in Title Case (Low-Energy Mode, Brain Dump…).
 - **Boards changed (canvas `1794080104-b060`):** E-Phones (caption), E-PhonesMinimal (two captions), E-FullA-v2 (fidelity list and captions: Need More Time…, Review, Low-energy name resolved), E-Minimal (Mac View menu and finder "Review"; captions), E-Workspace (Day menu "Need More Time… ▸" and its submenu, ⌘K palette "Need more time · +15 min"), E-Map (feature rows, open list, Mac interaction note, C references). E-Phones-2 and E-Phones-3 already used the approved names. Verified: no "Running late", "Reviews", "Gentle Day" or "Low-energy day" on any active board; all boards fit.
@@ -1916,7 +1916,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Classification:** MERGED (design). Production implementation not authorised.
 
 
-### ED-163 · G3-11 resolved: Need more time offers +5, +15 and +30 everywhere
+### ED-163 · G3-11 approved: Need more time offers +5, +15 and +30 everywhere
 - **Date:** 2026-11-07. **Owner:** "For G3-11, I approve Option A — +5, +15 and +30 minutes everywhere."
 - **Behaviour (unchanged from the built app):** exactly three choices; each keeps the existing extension, scheduling, overlap and free-time rules, in the task's own date context; applied once and only on the user's choice. Nothing is applied by opening a sheet, menu or palette. No-shame wording from ED-162.
 - **Presentation:** iPhone and Android sheets and Now cards: three 44 pt chips, row wraps under the label at 200 % text (checked headless: no clipping, nothing pushed out). Mac: Need More Time… submenu, three items (already drawn). Web: popover with three items. ⌘K: "Need more time · +15 min" plus Need More Time… for the others. Accessible names "Extend task by 5 / 15 / 30 minutes". iPad and Android tablets: three choices are a requirement for Prompt D Round 2; layout not assumed.
@@ -1924,7 +1924,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Classification:** MERGED (design). Production implementation not authorised.
 
 
-### ED-164 · G3-12 resolved: done tasks fold into "Earlier", with no count
+### ED-164 · G3-12 approved: done tasks fold into "Earlier", with no count
 - **Date:** 2026-11-07. **Owner:** "For G3-12, I approve Option A — Fold completed tasks into "Earlier", with no count."
 - **Rule:** see `E_DESIGN_RULES.md` "Earlier fold". Done tasks before now fold into one collapsible "Earlier" row; no count or number; only done tasks fold; no empty group; expanded rows keep time, colour, done appearance and actions; reopening returns the task to its time; presentation only.
 - **Scope:** Minimal Today on phones, Minimal Day column on Mac and web, and the Full Mac/web Day column where the fold was already drawn. Full phone threads and other Full screens unchanged; approved Full counts kept.
@@ -1956,7 +1956,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Canvas:** `1794083800-6a81` (E-Phones, E-Phones-2, E-PhonesMinimal, E-Minimal, E-FullA-v2) and `1794084013-af5b` (E-Map: G4-1 and follow-up notes, board grown 4440 → 4600, fits 4559/4600); verified fit, no moved text, no new clipping; live = local. Snapshot `v1.36-working`.
 - **Classification:** design records; device behaviour not verified; no data change.
 
-### ED-166 · G4-1 resolved: Round 2 draws the core journey first
+### ED-166 · G4-1 approved: Round 2 draws the core journey first
 - **Date:** 2026-11-07. **Owner:** "I approve Option A: CORE JOURNEY FIRST. … It does not authorize starting Prompt D Round 2 or building the app."
 - **Order:**
   - (1) **Core task journey:** Today → Add → Edit → Complete → Change day → Reopen, each step connected to the next, with the approved Full and Minimal differences kept.
@@ -1970,7 +1970,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Classification:** RESOLVED (planning). Round 2 not started; nothing built.
 
 
-### ED-167 · G4-2 resolved: 600 / 840 kept; the editor docks only from 1160
+### ED-167 · G4-2 approved: 600 / 840 kept; the editor docks only from 1160
 - **Date:** 2026-11-07. **Owner:** "For G4-2, I approve Option C — retain the 600 / 840 layout breakpoints, but dock the task editor only from 1160 px when there is sufficient usable space."
 - **Approved strategy:** see rules §12.2. Classes stay 600 / 840 (window width, logical pixels). The editor floats below 1160 and docks from 1160 when the minimum widths hold. This supersedes the 1100 rule. Breakpoint changes never save, never lose state and never commit a proposal.
 - **Read-only check of the built app:**
@@ -2015,7 +2015,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Classification:** responsive rules APPROVED; device and accessibility behaviour (landscape phones, keyboard, foldables, Split View, 100 / 130 / 200 % text) PENDING testing; nothing built.
 
 
-### ED-169 · G4-3 resolved: Mac minimum window 840 × 640 (design only)
+### ED-169 · G4-3 approved: Mac minimum window 840 × 640 (design only)
 - **Date:** 2026-11-07. **Owner:** "For G4-3, I approve Option B — Mac minimum window size of 840 × 640 logical pixels. … This is design approval only. Do not edit `MainFlutterWindow.swift`."
 - **Approved:**
   - The minimum window is 840 × 640. It still opens at 1280 × 800.
@@ -2066,7 +2066,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
   - Fit: Narrow 2330/2400, E-Responsive 2755/2760, E-Map 4955/5040, E-Minimal 4280/4320, E-FullA-v2 6739/6780. Live = local.
 - **PENDING:** physical device, VoiceOver and Tab order, resizing with unsaved edits.
 
-### ED-171 · G4-4 resolved: tablet navigation by width class, native per platform (strategy only)
+### ED-171 · G4-4 approved: tablet navigation by width class, native per platform (strategy only)
 - **Date:** 2026-11-07. **Owner:** "I select Option A as the responsive navigation direction, refined for each platform. … The actual tablet screens, detailed navigation geometry, transitions and control placement still require visual design and review in Prompt D Round 2."
 - **Width classes:** compact < 600, medium 600–839, expanded ≥ 840 (window, not device), plus H1 and the editor/inspector rules.
 - **iPad:**
@@ -2081,7 +2081,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Status:** strategy APPROVED; tablet screens NOT DRAWN (Round 2, not started). Not visually complete.
 
 
-### ED-172 · G4-5 resolved: a proper compact mobile web
+### ED-172 · G4-5 approved: a proper compact mobile web
 - **Date:** 2026-11-07. **Owner:** "For G4-5, I approve Option A — a proper compact mobile-web experience."
 - **Layout:**
   - 600 / 840 classes and H1 apply.
@@ -2483,7 +2483,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** text contrast ≥ 6.64:1; no clipping (200 % frame wraps and scrolls); content 7945 of 8000 px; only the caution text and its note label changed (diff); live equals local (version 1794166239-30c9). Snapshot v1.56-working.
 - **Note for the owner:** the card heading repeats the status line just above it ("2 changes waiting to sync"), so screen readers hear it twice. Kept exactly as written.
 
-### ED-191 · G4-7 Q2 resolved at design level (signed-in web); Q2-W1 open
+### ED-191 · G4-7 Q2 approved at design level (signed-in web); Q2-W1 open
 - **Date:** 2026-11-08. **Owner:** "Final approval" of the Q2 browser-storage warning frames Q2a–Q2d with the owner's caution wording (ED-190).
 - **Resolved at design level:** option A behaviour (ED-188) and the web Sync details warning (ED-189 frames, ED-190 caution wording), light and dark, including 200 % text.
 - **Board:** E-G4-7-States labels only: Q2 tags now "Q2 warning approved (ED-191) · not merged"; group title and decision box updated. No frame content changed. Live equals local (version 1794166328-4ff1). Snapshot v1.57-working.
@@ -2703,7 +2703,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** exactly 2 values changed (one per theme); every element's position identical; text-fit identical; E-PhonesMinimal and -Dark untouched; the board-key source identical. Published version `1794218769-3479`; 3 files equal local. Snapshot v1.83-working. ED-210, ED-212 and ED-213 unchanged.
 
 
-### ED-218 · CR-143 resolved (option A): ⌥⌘I toggles the right-hand pane in both modes
+### ED-218 · CR-143 approved (option A): ⌥⌘I toggles the right-hand pane in both modes
 - **Date:** 2026-11-09. **Owner:** "Option A".
 - **Rule:** on Mac, ⌥⌘I shows/hides the right-hand pane of the current mode: Full → View › Show/Hide Inspector; Minimal → View › Show/Hide Day Column. Each mode's View menu holds only one of the two, so one key per command per menu bar holds. ⌥⌘D stays never-bound (macOS Dock). Web: no single-key shortcut (View, ⌘K and the "Hide the day thread" button).
 - **Boards:** E-Minimal (6 per theme) and the Full inspector already drew ⌥⌘I. Only the stale notes changed: E-G4-3-Narrow and -Dark (the "shown inconsistently" note, 1 each) and the E-Map Mac row ("hide ⌥⌘D" → "hide ⌥⌘I", plus the status line). No ⌥⌘D remains on the active boards. Text-fit identical. Published version `1794218921-623c`; 3 files equal local. Snapshot v1.84-working.
@@ -3150,7 +3150,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Status:** PROPOSED · awaiting the owner (tablet checklist Q1).
 
 
-### ED-252 · Tablet Q1 decided: option A, the Workspace on expanded tablets
+### ED-252 · Tablet Q1 approved: option A, the Workspace on expanded tablets
 - **Date:** 2026-11-13. **Owner:** "Option A" (board E-T1).
 - **Decision:** on expanded tablet windows (≥ 840; iPad landscape, Android tablets, unfolded foldables), Full is the Workspace, the same layout as Mac and web at the same width (ED-073, DESIGN_PRINCIPLES §2):
   - sidebar;
@@ -3180,7 +3180,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Board:** E-T2, canvas x 21860, y 162720. Published version `1794569862-8c6d`; both files equal local.
 - **Checklist:** Q2 in `E_TABLET_CHECKLIST.md` points to E-T2. Snapshot v2.19-working.
 
-### ED-254 · Tablet Q2 decided: option A, the Day menu in Minimal by width
+### ED-254 · Tablet Q2 approved: option A, the Day menu in Minimal by width
 - **Date:** 2026-11-13. **Owner:** "Option A" (board E-T2).
 - **Decision:** in Minimal on tablets, the window's width decides which Day menu appears (DESIGN_PRINCIPLES §2, ED-252, CR-093). It is the same as Minimal on Mac and web at that width.
   - Medium and expanded windows (≥ 600; iPad and Android tablets in landscape and portrait, unfolded foldables): E-Minimal's Day menu (ED-093). It has Need more time (+5 / +15 / +30), Shift the rest, Brain dump, Drop a routine, Duplicate, Copy as text, Review the day, Low-energy mode and Show everything.
@@ -3209,7 +3209,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Board:** E-T3, canvas x 21860, y 164320. Published version `1794570331-b3f5`; both files equal local.
 - **Checklist:** Q3 in `E_TABLET_CHECKLIST.md` points to E-T3. Snapshot v2.21-working.
 
-### ED-256 · Tablet Q3 decided: option B, phone content sizes with touch spacing
+### ED-256 · Tablet Q3 approved: option B, phone content sizes with touch spacing
 - **Date:** 2026-11-13. **Owner:** "Option B" (board E-T3).
 - **Decision:** on touch tablets in medium and expanded windows, the wide layouts (E-Minimal, E-FullA-v2, and the Workspace per ED-252) keep their composition but use the phone content scale (rules §3.2, Phones column) with touch spacing:
   - row title 17, row time 13, now row 18, Minimal Now title 26;
@@ -3246,7 +3246,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Board:** E-T4, canvas x 21860, y 166760. Published version `1794570660-610a`; both files equal local.
 - **Checklist:** Q4 in `E_TABLET_CHECKLIST.md` points to E-T4. Snapshot v2.23-working.
 
-### ED-258 · Tablet Q4 decided: option A, handwriting in text fields only
+### ED-258 · Tablet Q4 approved: option A, handwriting in text fields only
 - **Date:** 2026-11-13. **Owner:** "Option A" (board E-T4).
 - **Decision:** Apple Pencil and Android styluses do two things.
   - **In text fields** (Add, task title, notes, Search or run, Settings fields), the system's own handwriting turns writing into text: Scribble on iPad, system stylus handwriting on Android tablets that have it. The usual time parsing then runs (R-06, R-07).
@@ -3258,7 +3258,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Board:** E-T4 relabelled. Published version `1794570730-38e8`; both files equal local.
 - **Checklist:** Q4 answered in `E_TABLET_CHECKLIST.md`. Q5 is open. Snapshot v2.24-working.
 
-### ED-259 · Tablet Q5 decided: the option D editor sits beside the day only where it can dock
+### ED-259 · Tablet Q5 approved: the option D editor sits beside the day only where it can dock
 - **Date:** 2026-11-13. **Owner:** "Approve as proposed" (no board; the proposal was in `E_TABLET_CHECKLIST.md` §4 Q5).
 - **Decision:** option D's "editor beside the day" (ED-086) is the docked case of ED-167. It applies only where the docking predicate holds (ED-168): window width ≥ 1160, and sidebar 216 + Today 480 (600 above 130 % text) + editor 420, plus dividers and gutters, fit. Elsewhere, the same editor floats over Today, and compact windows use the phone sheet. The editor, its state and its fields are the same in every case. Crossing the boundary never saves, discards or commits anything (ED-100, ED-168).
 - **Applies to both platforms, by width, never by device (DESIGN_PRINCIPLES §2):**
@@ -3326,7 +3326,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
   - Owner decision: CR-102 (touch-capable web).
   - Still verification: CR-106 (iOS glass, Mac sidebar) and CR-121.
 
-### ED-261 · CR-102 decided: touch-first web windows use the ED-256 touch sizes
+### ED-261 · CR-102 approved: touch-first web windows use the ED-256 touch sizes
 - **Date:** 2026-11-13. **Owner:** "Yes, apply ED-256" (question raised by ED-260).
 - **Decision:** on web, when the primary pointer is coarse (`(pointer: coarse)`, e.g. a tablet browser, or a touchscreen laptop used by touch), the wide layouts use the ED-256 touch sizes:
   - row title 17, time 13, now row 18, Minimal Now title 26;
@@ -3390,7 +3390,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Question R2-1a (owner):** medium Minimal on tablets uses E-Minimal's places (Now · Inbox · Calendar · Search), by width as in Q2 (ED-254). The checklist had listed the phones' set (Now · Today · Inbox). Recommended: by width.
 - **Board:** E-R2-1 and E-R2-1-Dark at canvas y 168380. Published version `1794574289-853b`; all three files equal local. Snapshot v2.30-working.
 
-### ED-266 · R2-1a decided: medium Minimal on tablets uses E-Minimal's places, by width
+### ED-266 · R2-1a approved: medium Minimal on tablets uses E-Minimal's places, by width
 - **Date:** 2026-11-13. **Owner:** "By width (recommended)".
 - **Decision:** in Minimal, medium tablet windows (600–839; iPad top tabs, Android rail) offer Now · Inbox · Calendar · Search, E-Minimal's places, the same as wide Minimal on Mac and web. This follows Q2 (ED-254) and DESIGN_PRINCIPLES §2: width decides. Compact windows keep the phones' Now · Today · Inbox. Expanded windows use the sidebar with the same four places.
 - **Applied:** E-R2-1 and E-R2-1-Dark (row 2 tag and note, canvas title). Published version `1794574600-2173`; all three files equal local. Snapshot v2.31-working.
@@ -3464,7 +3464,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Sources:** the iPhone full editor (E-Phones, "Full editor (pulled up from F3)") and Android Edit task (E-Phones), reused; the sheet grabber and phone keyboard are removed. The Mac inspector comes from E-G4-3-Narrow.
 - **Board:** canvas y 175260. Published version `1794575799-a0be`; all five files equal local. Snapshot v2.34-working.
 
-### ED-273 · R2-4a decided: B, the option D editor docked beside the grid on expanded tablets
+### ED-273 · R2-4a approved: B, the option D editor docked beside the grid on expanded tablets
 - **Date:** 2026-11-13. **Owner:** "B · editor docked".
 - **Decision:** on expanded tablets, tapping a task in the Workspace opens the approved full editor (option D, ED-086), not the Mac inspector.
   - It docks at the right, 420 wide, where the ED-168 minimums fit (≥ 1160; sidebar 216, grid ≥ 480, editor 420). The grid narrows to the days that fit (minimum column 180, ED-269), and the Plan panel steps aside below 3 days (ED-184).
@@ -3519,7 +3519,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Sample:** phones select Team standup, Deep work: roadmap and Call with Sam; tablets select the Tuesday and Wednesday Lunch and Dentist.
 - **Board:** canvas y 179280. Published version `1794576765-dee4`; all five files equal local. Snapshot v2.37-working.
 
-### ED-278 · R2-6a decided: A, the built selection card in E on every platform
+### ED-278 · R2-6a approved: A, the built selection card in E on every platform
 - **Date:** 2026-11-13. **Owner:** "A · built card".
 - **Decision:** multi-select on every platform uses the app's built SelectionBarFrame, restyled in E: "3 selected" with ✕ (Done selecting), then Move · Duplicate · Colour · Save as routine · Delete, icon over label, on E's surface.
   - Phones: it floats above the bottom row; the tabs, + and Day stay.
@@ -3597,7 +3597,7 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
   - To check in the build: one spoken label for the ring; Reduced Motion stops its animation.
 - **Board:** canvas y 184240. Published version `1794578593-3bc4`; all five files equal local. Snapshot v2.41-working.
 
-### ED-285 · R2-9a decided: B, Focus takes the whole window on expanded windows
+### ED-285 · R2-9a approved: B, Focus takes the whole window on expanded windows
 - **Date:** 2026-11-13. **Owner:** "B · whole window" (against the recommended A).
 - **Decision:** on expanded windows (tablets, Mac, web), Focus takes the whole window. The sidebar or drawer hides; the ring, time, title and "18 min left" sit on the left; the step card, step thread, toggles, Done, "+15 min", "Next step" and the note sit on the right. Leaving with ‹ Today or Esc returns to the place and state you came from. Phones, compact and medium windows keep the full-screen phone layout.
 - **Implementation consequence (not built):** this replaces the built `FocusFrame` (content area with the rail kept, `features/focus/focus_screen.dart`) with a two-column whole-window layout at the expanded width class. The tabs underneath must still keep their state while Focus is up; the parts (`FocusView` pieces) are reused, not forked. Per the owner's rule, replace the old layout; don't keep both.
@@ -4633,6 +4633,53 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Not approved here (decision B):** the CLAUDE.md §7 wording change; CLAUDE.md is unchanged until the owner says so. `supabase/README.md` (P5, first bullet) is part of the approved PR.
 - **Next:** one PR on its own branch cut from `origin/main`, verified by running both stacks side by side and checking the original stack's data is untouched. Nothing created yet. Must run before any integration test run (Prompt F).
 
+### ED-353 · Concept E approved for production implementation (release gate, ED-238)
+- **Date:** 2026-11-15. **Owner:** "make sure all files needed to build concept E and approved is recorded correctly in all the appropriated files/ docs including all the decisions made and the approved screens marked as approved or chosen. if everything is recorded correctly in the current state. overall Concept E is approved."
+- **Records audit run first (2026-11-15):** ED-001 to ED-352 are all present once, with no gaps or duplicates. The register and the traceability checklist were missing entries; both now carry a catch-up list. Fixed:
+  - stale "not approved" banners in the E documents;
+  - the register summary;
+  - the design rules' §14 "unresolved" list (all settled);
+  - four inventory rows marked partly designed that later boards cover;
+  - stale labels on the canvas (see "Canvas" below).
+  Nothing in the design changed.
+- **Approved for production implementation:** Concept E as a whole. This covers:
+  - every board on the canvas marked approved, chosen or active;
+  - the approved interactive onboarding prototype (ED-305, ED-351);
+  - the decisions ED-001 to ED-353 as recorded here.
+  `E_IMPLEMENTATION_HANDOFF.md` § "Build sources" lists them. Where boards disagree, this decision log wins (ED-314). History boards stay history: their option frames are not built.
+- **Still required before the parts they gate (not removed by this approval):**
+  - **CR-160** is a release blocker. Its account screens are not drawn yet, so they must be drawn and approved before account switching is built ([ilearncloud9/dottoday#75](https://github.com/ilearncloud9/dottoday/pull/75)).
+  - Device and accessibility tests in the handoff stay pending until run.
+  - CLAUDE.md §10 must-ask items still apply: new dependencies, schema changes and migrations, anything on the hosted Supabase project (Q11 web push, Q13 calendar webhooks), new native targets, anything that sends task text off-device.
+  - The Q9 isolated test stack ([ilearncloud9/dottoday#82](https://github.com/ilearncloud9/dottoday/pull/82)) runs before any integration test.
+  - Building goes through `docs/09-implementation-plan.md` tasks (Prompt F), each with its own definition of done.
+- **New copy approved with it:** every string marked new on an approved board, as approved on that board (for example ED-351 "Dottoday is for people aged 13+.").
+- **Records:** banners in E_DESIGN_DECISIONS, E_DESIGN_RULES, E_SCREEN_INVENTORY, E_CONSISTENCY_REPORT, E_DECISION_REGISTER, E_IMPLEMENTATION_HANDOFF, E_TABLET_CHECKLIST and STATUS now say approved (ED-353). New redesign ADR `adr/RD-0002-concept-e-approved.md`. Snapshot v3.27-working.
+- **Canvas:** board titles and in-board status labels that still said proposed, "for your review", "needs your call" or "not approved" were brought up to date, each where a recorded decision settled it. Main and E-Map carry the approval. Option frames on history boards keep their labels. Changed:
+  - 26 boards: E-Phones, E-PhonesMinimal, E-Minimal, E-FullA-v2, E-R2-2, E-R2-16, E-R2-18, E-R2-19, E-R2-33, E-R2-35 and E-R2-38, each with its dark copy; E-DF3, E-G4-7-States, E-Map and Main.
+  - 3 canvas titles: E-G3-C1-Font-Comparison, E-Map and E-Workspace.
+  - Published as version `1794783581-11ff`; all 27 files read back equal.
+
+### ED-354 · Every settled item is marked approved
+- **Date:** 2026-11-16. **Owner:** "if something has been setteled then mark as approved to it and make sure to record it properly".
+- **Rule:** an owner decision is called **approved** everywhere: in decision headings, register statuses, STATUS, board badges and canvas titles. "Resolved", "decided", "chosen" and "settled" are no longer used for owner decisions. On option boards, the chosen option's frames say "Approved · ED-nnn". Frames of other options say "Not chosen · option X approved (ED-nnn)". Neutral frames say "History · option X approved (ED-nnn)". Consistency-report fixes (CR rows) keep "Resolved", because they are corrections, not owner choices.
+- **Docs:**
+  - 41 decision headings changed from "resolved"/"decided" to "approved", with the matching catch-up lines in E_TRACEABILITY.
+  - E_DECISION_REGISTER: 64 statuses changed from RESOLVED to APPROVED, plus its status-words line and summary column. The three items adopted from boards now note when they were approved: G2-3 (ED-238), G2-7 (ED-099) and G2-13 (ED-336).
+  - STATUS: 36 "resolved"/"decided" for owner decisions changed to "approved". Snapshot folder names are kept.
+- **Canvas** (version `1794787239-a691`; 54 files read back equal):
+  - 24 titles changed. Examples: G3-1 to G3-7 "approved: …"; T1 to T4 "approved: …"; G3-6-Decision "APPROVED as design and architecture direction"; Dark tokens "Stage 1 approved as final"; R2-19 option A "not chosen; Option B approved".
+  - 53 boards: 199 badges relabelled. Examples:
+    - G2-4, G2-6-Review, G2-11, G2-12, G3-6-BottomRow, G3-9b-Palette and -Screens, PhonesCalendar and V1: approved;
+    - G2-10: option A not chosen, option B approved;
+    - Chosen / Decided / R2-xa decided: approved;
+    - DF2, DF3, T1 to T4: "Light only · approved";
+    - R2-16: "Approved as the interactive prototype (ED-305) · this static board is history";
+    - R2-19-B new copy: approved (ED-336);
+    - E-FullA-v2 unsaved inspector edits: approved (ED-086, ED-100);
+    - "Hypothesis · each one approved or replaced (ED-353)" on the active boards' legends.
+- No design changed. Snapshot v3.28-working.
+
 ---
 
 ## Pending owner answers
@@ -4641,11 +4688,11 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 
 | Thread | Question | Where it stands |
 |---|---|---|
-| 9acf09f2 | Scale direction: "keep large", "C confidence" (modest rows, one big hero, more space between groups) or "both"? | Asked twice on 2026-11-03 (22:43 and 22:47 UTC). No answer. The large scale is on the boards (ED-025, ED-026). **Presented 2026-11-05 as G3-1 on `E-G3-1` (ED-101); option C revised to the owner's sizes (ED-103).** |
+| 9acf09f2 | Scale direction: "keep large", "C confidence" (modest rows, one big hero, more space between groups) or "both"? | Asked twice on 2026-11-03 (22:43 and 22:47 UTC). No answer. The large scale is on the boards (ED-025, ED-026). **Presented 2026-11-05 as G3-1 on `E-G3-1` (ED-101); option C revised to the owner's sizes (ED-103). Resolved by ED-104 (G3-1, option C · Both, revised).** |
 | 9acf09f2 | The owner's comment ended with "what". Was more text cut off? | Asked on 2026-11-03. **Closed 2026-11-05 (ED-103): the owner says it is not a new design requirement.** |
 | 24c4bdf0 | A-Map still describes A-Wide. Should the map follow A-Focus as the Mac/web design? | Asked on 2026-11-04. No answer. The working E Map answers this for E, but the owner has not confirmed it (ED-056). **Close-out (ED-335): superseded; Concept E is the design, A-Map is history.** |
 | (canvas) | Is E-Focus the minimal or the full Mac/web presentation? The title says minimal; the content is full. | Never asked directly (ED-005). **Answered 2026-11-04:** E-Minimal replaced it as the wide minimal layout (ED-064), and E keeps no wide Focus presentation (ED-065). |
-| f55c7d26 | "the keyboard": restore the whole iPhone keyboard to its look from before the iOS-controls pass? | Offered on 2026-11-03. No answer (ED-032). |
+| f55c7d26 | "the keyboard": restore the whole iPhone keyboard to its look from before the iOS-controls pass? | Offered on 2026-11-03. No answer (ED-032). **Settled by G3-7 (ED-135): the stock iPhone keyboard with a neutral return key.** |
 | 69ac6f26 | iOS switch on-state: teal or system green? | Offered on 2026-11-03. No answer (ED-041). **Answered 2026-11-05: teal (G3-4 option A, ED-112).** |
 | 69ac6f26 | iOS system greys and colours below 4.5:1 contrast (tab labels #8E8E93 at about 3.1:1): keep native, or darken? | Raised on 2026-11-03. The swipe colours were reverted, but the tab labels were never decided (ED-042). |
 | 323fc074 | Simplify the web orb to match C's plainer web orb? | Offered on 2026-11-03. No answer (ED-052). **Presented 2026-11-05 as option B of G3-2 (ED-105); not chosen: G3-2 resolved as A (ED-106).** |
