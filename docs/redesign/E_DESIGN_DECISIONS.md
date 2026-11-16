@@ -4680,6 +4680,31 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
     - "Hypothesis · each one approved or replaced (ED-353)" on the active boards' legends.
 - No design changed. Snapshot v3.28-working.
 
+### ED-355 · The Concept E build is written into the implementation plan
+- **Date:** 2026-11-16. **Owner:** "write the build tasks into the implementation plan".
+- **Where:** `docs/09-implementation-plan.md` § "Concept E build", milestones M18 to M22, 37 tasks. They follow `MASTER_PLAYBOOK.md` steps 10 to 16:
+  - **M18:** foundations (Prompt E): tokens, components, adaptive shell, native chrome, navigation.
+  - **M19:** the first vertical slice (Prompt F): Today → Add → Edit/reschedule → Complete → Change day → Reopen.
+  - **M20:** fourteen migration slices (Prompt G).
+  - **M21:** platform QA (Prompt H).
+  - **M22:** release.
+- **Rules written into the plan:**
+  - replace, don't layer;
+  - models, persistence, sync and the backend stay unchanged unless a task names the change and the owner approves it;
+  - docs/14 §3 rows and `FeatureId`s come before building;
+  - layout by width class only;
+  - each slice's definition of done;
+  - owner stops after each milestone, after M19, and after each M20 slice;
+  - integration tests run on `tool/test_stack.sh` (ED-352).
+- **Every task cites its decisions and boards.** All 120 cited decisions were checked against their headings.
+- **Owner gates inside the plan:**
+  - M18.0: the CLAUDE.md §11 wording;
+  - M20.7: the ED-221 migration;
+  - M20.12: blocked on PR #75 and the account screens;
+  - M22.1 and M22.2: the hosted project, Q11 and Q13.
+- **Branch:** `main` was merged into `redesign/design-lab` first (`c3e72852`, PRs #70 to #82, no conflicts), so the plan sits on top of the merged work: Today at now, Trash delete, Wind Down after midnight, the device table and the Q9 test stack.
+- Nothing built. Snapshot v3.29-working.
+
 ---
 
 ## Pending owner answers

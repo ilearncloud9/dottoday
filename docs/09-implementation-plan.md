@@ -571,6 +571,188 @@ Follow-ups (M17):
 
 - [x] Day model: Wind Down after midnight (Q8) and the device list for "Alarm sounds on" (ED-084), owner-approved in the Round 2 close-out (ED-336) and the plan of 2026-11-15. Done 2026-11-15 (`feat/day-model-night-and-devices`). **Wind Down after midnight:** a day's end counts from its own midnight (`24:30` is 00:30 next morning) and still belongs to the day it closes (docs/05 "Wind Down after midnight"); `DayShape.on` resolves it on the next day's wall clock, `DayShape.dayOf` keeps the previous day until its Wind Down, `effectiveDayShape` holds it at the next Wake Up, the reminder planner looks one day back, `checkDayWindow` replaces the no-wrap rule, the cap sheet and Settings' Wind Down row store a pick at or before Wake Up a day on and show "00:30, next day", and the day-shape slider keeps such a Wind Down (its drag still stops before midnight). Decided: Today still turns at midnight; only the review, reminder and night follow the day (rejected: moving Today itself, which would change every task date rule). Also fixes `24:00` read as 22:00. No migration. **Devices:** Supabase `0016_devices.sql` (RLS, 50-device cap, realtime; pgTAP 0016), Drift schema 18 cache, `Settings.alarmDeviceId`, `DeviceReporter` in `NotificationSync`, Settings › Wake Up › Alarm sounds on, `FeatureId.alarmDevice` and its docs/14 row. Decided: rows upsert directly, not through `sync_push` (one writer per row; avoids colliding with CR-160's `sync_push` rewrite), numbered 0016 after CR-160's 0014/0015; no device names (no new dependency, no PII). Tests: `wind_down_after_midnight_test` (Berlin and New York DST), `day_shape_slider_test`, `alarm_device_test`, `alarm_device_sync_test`, `wake_up_page_test`, migration 17 → 18. **Owner:** pushes 0016 to the hosted project before release (not done here).
 
+## Concept E build (approved 2026-11-15, ED-353; RD-0002)
+
+The redesign is built in the order of `docs/redesign/MASTER_PLAYBOOK.md` steps 10 to 16: foundations
+(Prompt E), one full journey (Prompt F), then one slice at a time (Prompt G), platform QA (Prompt H)
+and release. **What to build from:** `docs/redesign/E_IMPLEMENTATION_HANDOFF.md` § "Build sources".
+The decision log `docs/redesign/E_DESIGN_DECISIONS.md` wins where a board or older doc disagrees
+(ED-314). Each task cites its decisions (ED-nnn) and boards (R2-n on the Design canvas).
+
+Rules for every task in M18 to M22:
+- **Replace, don't layer.** Each slice replaces the Concept A widgets it covers, with no flag, no parallel theme and no fallback. Deleting more than 30 lines of replaced code is said in the commit body (CLAUDE.md §6).
+- **Unchanged underneath:** task models, IDs, persistence, sync, notifications, recurrence and backend calls. The exception is a change the task names and the owner approved (playbook step 11).
+- **Minimal mode:** every new feature gets its `docs/14-minimal-mode.md` §3 row and `FeatureId` before it is built (CLAUDE.md §5, §11).
+- **Layout:** by width class only (600 / 840, ED-167); never `Platform.isX`. Native presentation per platform (RD-0001).
+- **Each slice is done when:**
+  - goldens pass against the board, in light and dark, at three widths;
+  - semantics tests pass (R-12), with 200 % text and Reduce Motion covered;
+  - en/de/fr/es strings ship in the same commit;
+  - the sweep has an entry for it;
+  - the no-shame string audit passes ("Running late" is the recorded exception, ED-348);
+  - for proposal flows, a test shows nothing is written before Accept.
+- **Owner stops:** each milestone ends with `/ship-check` and the owner's go. M19 and every M20 slice also stop for the owner's review (playbook steps 11 and 12). The CLAUDE.md §10 must-ask items still apply.
+- **Tests:** integration tests run on the isolated test stack, `tool/test_stack.sh` (ED-352).
+
+## Milestone 18 — Concept E foundations (goal: the approved tokens, components and adaptive shell, with the existing screens still working on top of them)
+
+- [ ] M18.0 Rulebook and spec. **Owner gate:** CLAUDE.md §11 names Concept E (RD-0002) as the design source on this branch. Add the `docs/14-minimal-mode.md` §3 rows and `FeatureId`s for the features Concept E adds or moves: the Earlier fold (ED-164), the before-Wake-Up fold (ED-246, ED-345), Pick today's one thing from the Day menu (ED-339), the Year strip (ED-348), Rebalance (ED-341), Search or run (ED-333), pin, travel time and energy (ED-346), and spoken Brain dump (ED-343). Point `docs/03-ux-spec.md` and `docs/10-ui-concept-a.md` at the E docs as history.
+- [ ] M18.1 Light tokens in `core/theme/` (`DotTheme`), replacing the Concept A values:
+  - colour roles and the accent (rules §4);
+  - 12 task colours with ring and glyph shades (ED-155, ED-161, ED-196) and their keys (staged, M20.7);
+  - Manrope for content, system type for chrome (ED-110, ED-206);
+  - the scale: phones (ED-104), touch tablets (ED-256), Mac and web Now (ED-209);
+  - spacing and radii (Now card 24, ED-202);
+  - elevation tiers (ED-210);
+  - the focus ring (ED-211);
+  - motion durations with Reduce Motion;
+  - text always fits (ED-183).
+- [ ] M18.2 Dark tokens: P1 surfaces, the 12 dark task colours, dark now-ring tracks at 25 %, Mac D1 sidebar (ED-173 to ED-181, ED-212). The theme is restored before first paint on web (handoff G4-6).
+- [ ] M18.3 Thread components:
+  - the day thread and dots: now ring (ED-198), ahead ring (ED-199, ED-217), calendar-event dot (ED-200), caps (ED-201), the repeat marker (ED-208), the overlap knot;
+  - the Now card (ED-202, ED-209);
+  - the Earlier fold (ED-164);
+  - the before-Wake-Up and after-Wind-Down folds (ED-246, ED-345);
+  - the moving now (ED-246);
+  - the "Alarms off" device tag (ED-205, ED-213).
+  Goldens against E-Phones, E-Earlier and E-DF2 at three widths, light and dark.
+- [ ] M18.4 Shared components:
+  - one `ProposalSheet`, full screen on phones (ED-150);
+  - the state and accessibility kit for empty, loading, error, offline and permission states (ED-186, E-G4-7-States);
+  - the Undo toast and snackbar (R2-7, ED-281);
+  - sheets, menus, chips, the selection bar (R2-6, ED-279) and tags.
+  Every one meets 44 pt / 48 dp hit areas (rules §6.4, CR-100).
+- [ ] M18.5 Adaptive shell:
+  - width classes 600 / 840, with the editor docking from 1160 (ED-167) and the H1 short-height and M docking rules (ED-168);
+  - the Mac minimum window of 840 × 640 with the narrow Day fold (ED-169, ED-170);
+  - tablet navigation by width, native per platform (ED-171, R2-1 ED-266 and ED-267), with Stage Manager, foldables and the hinge (R2-31, ED-334);
+  - compact mobile web (ED-172, E-MobileWeb);
+  - phone landscape (R2-41, ED-347).
+- [ ] M18.6 Native chrome, with no new native target (ED-128):
+  - iPhone: the N3 native tab bar with + in its line (ED-124, ED-132), the native Day menu, the stock keyboard (ED-135), and the + named "Add a task" (ED-240);
+  - Android: bottom row C in Flutter (ED-125);
+  - Mac: the vibrancy sidebar with a 35 % warm tint (ED-130); native menus and context menus through one NSMenu channel (ED-239, CR-098); "Move to Trash ⌘⌫" (ED-336); SF Symbols in native chrome only (CR-014, ED-260).
+  Device glass checks go to M21.
+- [ ] M18.7 Navigation:
+  - one keyboard scheme (ED-095), with ⌥⌘I for the right-hand pane (ED-218) and the tablet keyboard overlays (R2-10, ED-288);
+  - web routes A′ with `?task=` (ED-097, ED-242, CR-068 browser test);
+  - Settings from its native secondary place (ED-238);
+  - Back and dismiss rules (rules §13);
+  - switching Full ↔ Minimal mid-action (ED-100).
+- [ ] M18.8 Acceptance and ship-check. The existing screens run on the new tokens on all four targets with nothing lost (parity matrix); component goldens and semantics tests pass; CHANGELOG. **STOP for the owner.**
+
+## Milestone 19 — First vertical slice: Today → Add → Edit/reschedule → Complete → Change day → Reopen (Prompt F)
+
+- [ ] M19.1 Today in Full:
+  - iPhone and Android: E-Phones, G3-1 (ED-104);
+  - opens at now, with the current task in view (ED-336);
+  - "Pull from inbox · {count}" on an empty day (ED-336).
+- [ ] M19.2 Today in Full on wide screens:
+  - Mac and web Workspace (E-FullA-v2, ED-073) with the Plan panel A + B (ED-184);
+  - hover and drag on web blocks (ED-116);
+  - expanded tablets (R2-2, ED-269);
+  - the narrow Mac (E-G4-3-Narrow).
+- [ ] M19.3 Add:
+  - Create task with Task · Brain dump · Routine tabs (ED-139 to ED-142, ED-152), a neutral return key on the iPhone keyboard (ED-135);
+  - the Mac and web Add popover with live chips (R2-36, ED-342);
+  - tablets (R2-3, ED-271).
+  Natural-language time and paste-a-list keep working (R-06, R-07).
+- [ ] M19.4 Edit and reschedule:
+  - the option D editor (ED-086, ED-087) with steps and notes (ED-137, ED-145);
+  - pin, travel time and energy (R2-40, ED-346);
+  - docked or floating by width (ED-167; tablets R2-4, ED-273);
+  - one When picker for Move and Schedule (ED-099);
+  - Need more time +5 / +15 / +30 (ED-163).
+- [ ] M19.5 Complete and Reopen:
+  - Done with Undo (R2-7, ED-281) and the done circle;
+  - reopen from the Earlier fold;
+  - change day by the Day menu, swipe or arrows (R2-5, ED-276), and Go to date (R2-36, ED-342).
+- [ ] M19.6 The same journey in Minimal:
+  - E-PhonesMinimal and E-Minimal (ED-089, ED-106, ED-145);
+  - the minimal task sheet title (ED-216);
+  - the minimal sidebar at 200 (ED-207).
+- [ ] M19.7 Acceptance (playbook step 11):
+  - verified on iPhone, Android, Mac and web, plus iPad and Android-tablet widths and a narrow browser or window;
+  - cases: empty, dense, loading, error, long text and 200 % text;
+  - screenshots compared with the boards;
+  - `PLATFORM_QUALITY_MATRIX.md` updated;
+  - regressions and untested targets recorded honestly.
+  **STOP: the owner uses the journey and approves it before M20.**
+
+## Milestone 20 — Migrate the rest, one slice at a time (Prompt G; the owner reviews each slice)
+
+- [ ] M20.1 Calendar:
+  - Month on phones (ED-075, ED-079);
+  - Month and Week on wide screens and tablets (R2-12, ED-293);
+  - Past days and the Year strip option B, which needs `year_strip.dart` (R2-34, ED-339, ED-348; Mac and web R2-42, ED-349).
+- [ ] M20.2 Inbox and Search on every platform (R2-13, ED-295):
+  - Search or run on Mac and web (R2-30, ED-333);
+  - the minimal Inbox at wide widths follows docs/14 §3 (ED-333).
+- [ ] M20.3 Day menu and planning:
+  - one grouped Day menu, contents per mode (ED-093; tablets ED-254);
+  - Routines, Duplicate day, Copy as text and Low-energy mode (R2-22, ED-322);
+  - Pick today's one thing (R2-34, ED-339);
+  - Rebalance with pins and the calendar trigger (R2-35, ED-341).
+- [ ] M20.4 Proposal flows (R2-23, ED-324):
+  - Brain dump, spoken Brain dump with its permission and web states (R2-37, ED-343);
+  - Break it down, Smallest step, Unstick, Help with thinking, the Reality thread and learning.
+  Each one has a test that nothing is written before Accept.
+- [ ] M20.5 Moving and selecting:
+  - touch drag, tablet pointer and swipe (R2-25, ED-328);
+  - multi-select and the selection bar (R2-6, ED-278, ED-279);
+  - overlaps allowed (ADR-0015), with Shift the rest in one gesture (R-05).
+- [ ] M20.6 Focus and states:
+  - Focus on every platform, whole window on expanded screens (R2-9, ED-285, ED-286);
+  - time states (R2-26, ED-329), day states (R2-27, ED-330) and small states (R2-28, ED-331).
+- [ ] M20.7 Settings:
+  - six groups and "Everything else" (G2-4, ED-081 to ED-084), opened from Settings' native place (ED-238);
+  - tablets (R2-11, ED-291); Planning, Sounds and Siri pages (R2-33, ED-338);
+  - the Day shape row removed (ED-321);
+  - Appearance and colour selection (G3-9b, ED-161).
+  **Colour data:** brown, plum and olive ship over two releases (ED-219); custom colours are stored as a hex value in `color_key` (ED-220). App colour and Your colours need new `profiles` columns (ED-221), which is a must-ask migration.
+- [ ] M20.8 Wake Up and Wind Down:
+  - Settings pages and the dial (ED-084), with tablets (R2-18, ED-311);
+  - the alarm, option B "The thread wakes up" (R2-19, ED-314), with tablet missions that need no movement and Catch the dot "Tap the blue circle" (ED-336);
+  - the explainer (R2-38, ED-344);
+  - Wind Down after midnight, on the day model from #81.
+- [ ] M20.9 Notifications and system surfaces: task alerts, the Wind Down summary, Reminders, health and the test alarm (R2-20, ED-317); widgets, Live Activity, the menu bar and controls reading `DaySnapshot` only (R2-17, ED-309). These are visual changes only; delivery stays exactly-once (R-10).
+- [ ] M20.10 Data safety and sync:
+  - Data and privacy, Export and backups, import and restore, Trash with Delete now and Empty Trash (R2-21, ED-319, ED-336);
+  - sync states and conflicts (R2-8, ED-283) with Undo after a resolved conflict (ED-194) and Keep both for notes (ED-195);
+  - web persistent storage and its truthful states (ED-188 to ED-192).
+- [ ] M20.11 Onboarding from the approved interactive prototype (ED-305, ED-350, ED-351). It replaces the current flow:
+  - five steps, with no Layout step;
+  - the 13+ note on Hello, "Dottoday is for people aged 13+.";
+  - the day-2 "Want it simpler?" card.
+- [ ] M20.12 Accounts (CR-160, ED-193, ED-222). **Blocked** until [ilearncloud9/dottoday#75](https://github.com/ilearncloud9/dottoday/pull/75) merges and the owner approves the account screens (not yet drawn). Acceptance criteria are in handoff § CR-160.
+- [ ] M20.13 The rest:
+  - This week, Calendars, App lock, Help and about, web install, and the de/fr copy decisions (R2-24, ED-326, ED-327);
+  - Android parity (R2-29, ED-332);
+  - Mac and web parity, including Edit and Window menus (R2-30, ED-333);
+  - keyboard and screen-reader paths (ED-248, E-DF3).
+- [ ] M20.14 Remove what M18 to M20 replaced: unused Concept A widgets, tokens and goldens (named in the commit body; CLAUDE.md §6). Parity matrix §7: every entry point still reaches its feature.
+
+## Milestone 21 — Platform QA (Prompt H)
+
+- [ ] M21.1 Run every pending box in `E_IMPLEMENTATION_HANDOFF.md`, recording each run. Never mark a box passed without a run. This covers:
+  - glass, blur and vibrancy on devices;
+  - Reduce Transparency and Increase Contrast;
+  - VoiceOver, TalkBack and NVDA;
+  - Dynamic Type and font scale at 200 %;
+  - keyboard order;
+  - theme switching and web first paint;
+  - Plan panel resizing;
+  - the web storage browsers (Safari, Firefox, Chromium).
+- [ ] M21.2 Sweep: every screen in light and dark, LTR and pseudo-locale, at the largest text size and with Reduce Motion. On the iPhone and Android simulators, Mac, web, and iPad and Android-tablet widths. Screenshots go next to the boards; findings are graded BLOCKER / FIX / NOTE, with one fix round.
+- [ ] M21.3 Real-device gates: the Wake Up alarm (M17 follow-up), H1 landscape, the foldable hinge, Stage Manager, and the iOS 16/17 fallbacks (ED-131).
+
+## Milestone 22 — Release (owner gates throughout)
+
+- [ ] M22.1 Hosted Supabase: push the redesign's migrations (must-ask; includes ED-221 if built) and run `tool/hosted_rls_test.sh`.
+- [ ] M22.2 Owner setup: web push delivery (Q11) and calendar change webhooks (Q13).
+- [ ] M22.3 Copy: native-speaker pass on the new de/fr/es strings, store descriptions (the 13+ note), and the release note for the new task-colour shades (ED-161, colour review Decision 1).
+- [ ] M22.4 Merge `redesign/design-lab` to `main` through a PR, with CHANGELOG, `SYNC_LOG.md` and the PR description listing what changed and what was not verified. All four platforms ship the same release (R-13).
+
 ## Follow-ups after M12 (found at the M12.6 ship-check)
 
 - [x] Web: a popover's autofocused text field (Add, Brain dump) shows a caret but takes keys only after a click, in the browser pane's Chromium and headless Chromium; on phones and the Mac it types at once. Check real desktop Chrome (08 §6.1 E), then hand the field DOM focus when the popover opens. The web sweep clicks first and notes it. Done 2026-10-26. Cause (traced in the browser): Brain dump opens from Today's ⋯ menu; with semantics on, the menu item's DOM element holds the browser focus and goes away as the menu closes, so the engine reports the Flutter view unfocused. When the popover's field then takes DOM focus, the view counts as refocused and the framework (`_ViewState.didChangeViewFocus`) moves Flutter's focus to the first traversable node in the view — the app-wide key catcher in `AppCommandScope` — so the field lost focus for a moment, and the engine's deferred blur of the closed connection then left the browser's focus on `flutter-view` with the caret still drawn. Add from a button never lost the view's focus, which is why it typed. Fix: the key catcher is `skipTraversal: true` (no Tab stop, like `TodayKeys`), so the framework falls back to the focused route — the popover — and the field keeps its focus; nothing is done per field (rejected: a web-only DOM refocus, deferring sheets until a menu closes — tried, still failed — and the menu on the root navigator — tried, still failed). Tests: `test/core/shortcuts/app_command_scope_focus_test.dart` replays the view's unfocus/refocus with a sheet (compact) and a popover (expanded) open — fails without the fix; `tool/a11y/popover_focus_check.mjs` (CI a11y-web) opens Add and Brain dump at 390 and 1280 and types without a click — fails on the old build (`<flutter-view>`), passes now; the keyboard checks still pass. The check also times each field, from the tap to the field's focus, and fails past 3 s (owner, 2026-10-26: slower focus on a phone browser is a bug, not a slow runner); the times are printed in CI. The web sweep types into the brain dump at both widths again.

@@ -1269,3 +1269,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-07, ED-173:** G4-6 option A approved (process); Stage 1 dark token system presented.
 - **2026-11-08, ED-185:** Four consistency corrections approved and applied (CR-153 to CR-156).
 - **2026-11-16, ED-354:** every settled item is marked approved: decision headings, register statuses, STATUS, board badges and canvas titles (canvas `1794787239-a691`). No design changed.
+- **2026-11-16, ED-355:** the Concept E build is written into `docs/09-implementation-plan.md` as M18 to M22 (37 tasks, each citing its decisions). Nothing built.

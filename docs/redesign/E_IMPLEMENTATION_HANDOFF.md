@@ -11,7 +11,7 @@ Status words (ED-128), used in every row:
 
 ## Build sources (ED-353) · what Concept E is built from
 
-Concept E was approved for production implementation on 2026-11-15 (ED-353). Build from these, in this order of authority: the decision log, then the boards, then the rules (ED-314: the decision log wins where an unchecked row or old board disagrees).
+Concept E was approved for production implementation on 2026-11-15 (ED-353). The build order and tasks are `docs/09-implementation-plan.md` M18 to M22 (ED-355). Build from these, in this order of authority: the decision log, then the boards, then the rules (ED-314: the decision log wins where an unchecked row or old board disagrees).
 
 **Documents (`docs/redesign/`)**
 - `E_DESIGN_DECISIONS.md`: every decision, ED-001 to ED-353.
