@@ -4705,6 +4705,11 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Branch:** `main` was merged into `redesign/design-lab` first (`c3e72852`, PRs #70 to #82, no conflicts), so the plan sits on top of the merged work: Today at now, Trash delete, Wind Down after midnight, the device table and the Q9 test stack.
 - Nothing built. Snapshot v3.29-working.
 
+### ED-356 · CLAUDE.md §11 names Concept E as the design source
+- **Date:** 2026-11-16. **Owner:** "approve the CLAUDE.md §11 change".
+- **Change:** the redesign-branch bullet in CLAUDE.md §11 now makes Concept E (RD-0002, ED-353) the design source on `redesign/design-lab`. It points to the handoff's "Build sources" and the plan's M18–M22, and keeps the decision log as the tie-breaker (ED-314). DESIGN_PRINCIPLES and RD-0001 still govern presentation, and the Concept A bullets below do not apply on this branch. The rest of CLAUDE.md is unchanged.
+- **Records:** RD-0002's open consequence is closed. The M18.0 owner gate is done; its docs/14 rows and doc pointers are still to do.
+
 ---
 
 ## Pending owner answers

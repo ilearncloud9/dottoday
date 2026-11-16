@@ -25,4 +25,4 @@ ED-238 made the overall approval a release gate after Round 2.
   - the Q9 isolated test stack (ED-352) before integration tests;
   - device and accessibility tests (handoff);
   - CLAUDE.md §10 must-ask items, including schema changes, the hosted Supabase project (Q11, Q13), new dependencies and new native targets.
-- CLAUDE.md §11 still names `DESIGN_PRINCIPLES.md` and RD-0001 for UI on this branch. Naming Concept E there is a rulebook change for the owner to approve.
+- CLAUDE.md §11 names Concept E as the design source on this branch (owner approved 2026-11-16, ED-356).

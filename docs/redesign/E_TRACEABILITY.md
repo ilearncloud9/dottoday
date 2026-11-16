@@ -621,3 +621,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; the boards and documents it
 - **2026-11-15, ED-353:** Concept E approved for production implementation (release gate, ED-238).
 - **2026-11-16, ED-354:** every settled item is marked approved: decision headings, register statuses, STATUS, board badges and canvas titles (canvas `1794787239-a691`). No design changed.
 - **2026-11-16, ED-355:** the Concept E build is written into `docs/09-implementation-plan.md` as M18 to M22 (37 tasks, each citing its decisions). Nothing built.
+- **2026-11-16, ED-356:** CLAUDE.md §11 names Concept E as the design source on this branch.

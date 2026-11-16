@@ -596,7 +596,7 @@ Rules for every task in M18 to M22:
 
 ## Milestone 18 — Concept E foundations (goal: the approved tokens, components and adaptive shell, with the existing screens still working on top of them)
 
-- [ ] M18.0 Rulebook and spec. **Owner gate:** CLAUDE.md §11 names Concept E (RD-0002) as the design source on this branch. Add the `docs/14-minimal-mode.md` §3 rows and `FeatureId`s for the features Concept E adds or moves: the Earlier fold (ED-164), the before-Wake-Up fold (ED-246, ED-345), Pick today's one thing from the Day menu (ED-339), the Year strip (ED-348), Rebalance (ED-341), Search or run (ED-333), pin, travel time and energy (ED-346), and spoken Brain dump (ED-343). Point `docs/03-ux-spec.md` and `docs/10-ui-concept-a.md` at the E docs as history.
+- [ ] M18.0 Rulebook and spec. ~~**Owner gate:** CLAUDE.md §11 names Concept E (RD-0002) as the design source on this branch~~ done 2026-11-16 (owner approved, ED-356). Add the `docs/14-minimal-mode.md` §3 rows and `FeatureId`s for the features Concept E adds or moves: the Earlier fold (ED-164), the before-Wake-Up fold (ED-246, ED-345), Pick today's one thing from the Day menu (ED-339), the Year strip (ED-348), Rebalance (ED-341), Search or run (ED-333), pin, travel time and energy (ED-346), and spoken Brain dump (ED-343). Point `docs/03-ux-spec.md` and `docs/10-ui-concept-a.md` at the E docs as history.
 - [ ] M18.1 Light tokens in `core/theme/` (`DotTheme`), replacing the Concept A values:
   - colour roles and the accent (rules §4);
   - 12 task colours with ring and glyph shades (ED-155, ED-161, ED-196) and their keys (staged, M20.7);
