@@ -72,7 +72,7 @@ final class _Device {
 
 Future<_Device> _device(String tag) async {
   final client = localClient();
-  final email = '$tag-${DateTime.now().microsecondsSinceEpoch}@example.com';
+  final email = testEmail(tag);
   await client.auth.signInWithOtp(
     email: email,
     emailRedirectTo: authCallbackLink,
@@ -96,6 +96,7 @@ Occurrence _task(String id, String owner) =>
     occurrenceFixture().copyWith(id: id, userId: owner, title: 'Row');
 
 void main() {
+  useLocalSupabase();
   setUpAll(tz_data.initializeTimeZones);
 
   test('an old-build switch: A\'s rows held, none reach B', () async {
