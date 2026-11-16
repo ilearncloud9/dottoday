@@ -1,15 +1,20 @@
-// Drives the CR-160 web builds in Playwright's Chromium (local only).
-// Usage (after `npm ci` in tool/a11y): node tool/cr160/web_flows.mjs <scenario>
+// Drives the CR-160 web builds in Playwright's Chromium, Firefox or WebKit
+// (local only; WebKit is Safari's engine, not Safari itself).
+// Usage (after `npm ci` in tool/a11y): [BROWSER=firefox|webkit] node tool/cr160/web_flows.mjs <scenario>
 //   scenarios: shared, flow1, flow2, flow4, flow5
 // Builds are served at http://127.0.0.1:8099/: /shared/ (cr160_shared_device_test),
 // /test/ (cr160_web_flows_test) and /app/ (the real app), one origin. See
 // docs/cr-160-verification.md, criterion 10.
-import { chromium } from '../a11y/node_modules/playwright/index.mjs';
+import * as pw from '../a11y/node_modules/playwright/index.mjs';
 
 const base = 'http://127.0.0.1:8099';
 const scenario = process.argv[2];
-const browser = await chromium.launch({ headless: true });
-console.log(`browser chromium ${browser.version()}`);
+const engine = process.env.BROWSER ?? 'chromium';
+if (!['chromium', 'firefox', 'webkit'].includes(engine)) {
+  throw new Error(`BROWSER must be chromium, firefox or webkit, not ${engine}`);
+}
+const browser = await pw[engine].launch({ headless: true });
+console.log(`browser ${engine} ${browser.version()}`);
 
 function watch(page, tag) {
   const lines = [];
@@ -120,4 +125,6 @@ try {
   process.exitCode = 1;
 } finally {
   await browser.close();
+  // The waiters' timeouts would keep Node alive for up to 10 minutes.
+  process.exit(process.exitCode ?? 0);
 }

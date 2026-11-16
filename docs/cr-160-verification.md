@@ -19,7 +19,7 @@ Nothing below ran against hosted Supabase.
 | 7 | No silent settings replacement | PASS (automated) | `first_sync_test.dart` "a guest's settings never replace the account's", "choosing the guest's settings"; B1 built (`settings_choice_screen.dart`, `account_screens_test.dart` group "B1 settings"); web flow 2 server check. B1 not tapped on a platform run |
 | 8 | No duplicate starter content | PASS (automated) | Stable ids (`domain/sync/stable_ids.dart`); `account_switch_test.dart` "starters planted on two devices merge into one". Not in a web/device run |
 | 9 | Interrupted or failed migration | PASS (automated + Chromium, local stack) | `account_switch_test.dart` group "interrupted"; `engine_sync_service_test.dart` failed sign-in step; web flow 4 (reload after the local step; not inside it) |
-| 10 | Web end-to-end | PARTIAL | Chromium 156: flows 1–5 PASS on the local stack (runs below); re-run after Stage B (B8, 2026-11-12): flows 1–5 PASS. Firefox, Safari PENDING (no driver; installing one needs the owner's go). Hosted staging PENDING |
+| 10 | Web end-to-end | PARTIAL | Chromium 156: flows 1–5 PASS on the local stack (runs below); re-run after Stage B (B8, 2026-11-12): flows 1–5 PASS. 2026-11-16, at `80d583fe` with migrations 0001–0016 and this branch's Edge Functions served locally: Firefox 157 flows 1–5 PASS, WebKit 27.2 flows 1–5 PASS. Safari itself PENDING (`safaridriver --enable`, owner). Hosted staging PENDING |
 | 11 | Shared-device tests on all four platforms | PARTIAL | PASS on the local stack: macOS 26.6.2, iOS 18.6 Simulator, Android 17 emulator, web/Chromium (runs below); re-run after Stage B (B8, 2026-11-12): PASS on macOS, the iPhone 17 Pro Simulator (iOS 26.5), the Android API 37 emulator and Chromium 156, after the test was brought up to D1's review step (`docs/cr-160-multipart-export.md`, B8). Physical iPhone/Android and hosted staging PENDING |
 | 12 | Server-side guard | PASS (pgTAP, local stack) | `supabase/migrations/0014_push_owner_guard.sql` + `supabase/tests/0014_push_owner_guard.sql`; `supabase db reset` + `supabase test db`: 14 files, 119 tests. Not deployed |
 
@@ -887,8 +887,9 @@ profile, the second tab a second page in the same profile.
 | 01:49 | 2 Guest → existing account | Chromium 156, two fresh contexts | profile | `node tool/cr160/web_flows.mjs flow2` | **PASS** | Profile 1: A with Europe/Berlin and 2 tasks. Profile 2: guest with Asia/Tokyo and 2 tasks signs in as A with Bring in: 2+2 tasks once each on the server; server profile and the stored device profile stay Europe/Berlin. Not covered: starters/hints, the B1 screen |
 | 02:12 | 4 Interrupted migration | Chromium 156 | profile | `node tool/cr160/web_flows.mjs flow4` | **PASS** | Guest with 3 tasks, Bring in recorded, sign-in verified, **network cut at once and the page left** (`RELOAD-NOW` → same tab loads `flow4after`). Before leaving: the local sign-in step had already run (A shown, 3 rows). After the reload, still offline: A shown, status failed (the state that offers Try again), outbox kept; network back: each task once on the server. Not covered: a reload *inside* the local sign-in transaction (it finished before the reload could land; atomicity is unit-tested, criterion 9) |
 | 02:10 | 5 Second tab | Chromium 156, one context | profile | `node tool/cr160/web_flows.mjs flow5` | **PASS** | Tab 1 signed in as A with a task; tab 2 opens the real app: "Dottoday is open in another tab", no A task text (semantics tree). Tab 1 switches to B; tab 2 reloads: still the lock screen, nothing of A. Not covered: "Use it here", a second tab during flow 1 |
-| — | 1–5 | Firefox | — | — | **PENDING** | Playwright's Firefox isn't installed and no geckodriver; installing either is a download the owner has to allow |
-| — | 1–5 | Safari | — | — | **PENDING** | `safaridriver` exists but needs `safaridriver --enable` (admin, a system setting); not done |
+| 2026-11-16 01:0x | 1–5 | Firefox 157.0 (Playwright 1.64.1, owner-approved install), fresh contexts | profile | `BROWSER=firefox node tool/cr160/web_flows.mjs <flow>` | **PASS** (5/5) | As Chromium: flow 1 3 tasks once each, also after reload; flow 2 2+2 once each, Europe/Berlin kept; flow 3 offline sign-out, A's offline tasks kept, deleted account leaves 0 rows, 0 backups; flow 5 second tab locked, no A text, also while B. Flow 4: the reload landed **before** the local sign-in step finished (A rows 0, not shown); after it, offline: A shown with 3 rows, status failed, outbox kept; online: each task once on the server |
+| 2026-11-16 01:1x | 1–5 | WebKit 27.2 (Playwright 1.64.1), fresh contexts | profile | `BROWSER=webkit node tool/cr160/web_flows.mjs <flow>` | **PASS** (5/5) | Same results as Firefox, flow 4 also reloading before the sign-in step finished. WebKit is Safari's engine, **not Safari**: no Safari UI, extensions, ITP or Safari's own storage policy |
+| — | 1–5 | Safari | — | — | **PENDING** | `safaridriver` needs `safaridriver --enable` (admin, a system setting) that only the owner can run |
 | — | private window | Chromium | — | — | Covered in effect | Every Playwright context is a fresh, ephemeral profile (like a private window); a real Chrome incognito window was not used |
 
 Output excerpt (flow 4):
@@ -942,7 +943,9 @@ the end of each feed are passed through.
   / Keystore behaviour after reinstall.
 - **Screens**: G1, G1b, B1, A1–A3 and D1 were exercised through `AccountActions`, not by tapping
   them; their widget tests cover the screens.
-- **Firefox and Safari** (above), and a reload inside the local sign-in transaction.
+- **Safari** itself (Firefox and WebKit ran 2026-11-16, above), and a reload provably *inside* the local
+  sign-in transaction: on Firefox and WebKit the reload landed before it committed (A rows 0), but whether
+  mid-transaction or before it began is not observable from the page.
 - The magic-link PKCE callback on each platform (sign-in used the link's token directly).
 
 ## Plan for criterion 10 (web end-to-end) · run on Chromium 2026-11-09 (above); Firefox, Safari PENDING
