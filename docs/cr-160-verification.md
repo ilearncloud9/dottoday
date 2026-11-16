@@ -20,7 +20,7 @@ Nothing below ran against hosted Supabase.
 | 8 | No duplicate starter content | PASS (automated) | Stable ids (`domain/sync/stable_ids.dart`); `account_switch_test.dart` "starters planted on two devices merge into one". Not in a web/device run |
 | 9 | Interrupted or failed migration | PASS (automated + Chromium, local stack) | `account_switch_test.dart` group "interrupted"; `engine_sync_service_test.dart` failed sign-in step; web flow 4 (reload after the local step; not inside it) |
 | 10 | Web end-to-end | PARTIAL | Chromium 156: flows 1–5 PASS on the local stack (runs below); re-run after Stage B (B8, 2026-11-12): flows 1–5 PASS. 2026-11-16, at `80d583fe` with migrations 0001–0016 and this branch's Edge Functions served locally: Firefox 157 flows 1–5 PASS, WebKit 27.2 flows 1–5 PASS, real Safari 27.2 flows 1–5 PASS. Hosted staging PENDING |
-| 11 | Shared-device tests on all four platforms | PARTIAL | PASS on the local stack: macOS 26.6.2, iOS 18.6 Simulator, Android 17 emulator, web/Chromium (runs below); re-run after Stage B (B8, 2026-11-12): PASS on macOS, the iPhone 17 Pro Simulator (iOS 26.5), the Android API 37 emulator and Chromium 156, after the test was brought up to D1's review step (`docs/cr-160-multipart-export.md`, B8). Physical iPhone/Android and hosted staging PENDING |
+| 11 | Shared-device tests on all four platforms | PARTIAL | PASS on the local stack: macOS 26.6.2, iOS 18.6 Simulator, Android 17 emulator, web/Chromium (runs below); re-run after Stage B (B8, 2026-11-12): PASS on macOS, the iPhone 17 Pro Simulator (iOS 26.5), the Android API 37 emulator and Chromium 156, after the test was brought up to D1's review step (`docs/cr-160-multipart-export.md`, B8). 2026-11-16: PASS on a **physical iPhone 17 Pro (iOS 27.2.1)**, local stack, with a test-build-only address patch (section "Physical iPhone 2026-11-16" below). Physical Android and hosted staging PENDING |
 | 12 | Server-side guard | PASS (pgTAP, local stack) | `supabase/migrations/0014_push_owner_guard.sql` + `supabase/tests/0014_push_owner_guard.sql`; `supabase db reset` + `supabase test db`: 14 files, 119 tests. Not deployed |
 
 ## CRITICAL — OPEN — RELEASE BLOCKER (owner 2026-11-09)
@@ -931,6 +931,47 @@ the end of each feed are passed through.
 - On the web, GoTrue shares sessions between Supabase clients whose URL *host* matches (one
   BroadcastChannel per host). The test's admin client therefore uses `localhost` while the app uses
   `127.0.0.1`; the app itself has one client, so this does not affect it.
+
+
+## Physical iPhone 2026-11-16 (local stack, owner at the phone)
+
+**Device:** iPhone 17 Pro (iPhone18,1), iOS 27.2.1 (24B156), on the same Wi-Fi as the Mac.
+
+**Server:** this Mac's local Supabase with migrations 0001–0016 and this branch's Edge Functions,
+reached through `tool/cr160/net_switch.py 192.168.1.131` (its new bind-address option).
+
+**Branch:** `9529a5ec`.
+
+**What differed from a release build** (test build only, reverted after the run, never committed):
+- `Info.plist` had `NSAppTransportSecurity › NSAllowsArbitraryLoads` and
+  `NSLocalNetworkUsageDescription`.
+- `core/env/env.dart` also accepted `http://192.168.1.131`. The app rejects plain HTTP to anything but
+  localhost at startup, and an iPhone has no port forwarding to the Mac.
+- `integration_test/support/cr160_start.dart` printed startup errors (diagnosis only).
+
+Hosted staging (HTTPS) needs none of this.
+
+| Check | How | Result |
+|---|---|---|
+| Criterion 11 shared device | `flutter test integration_test/cr160_shared_device_test.dart -d <iPhone>` (debug) | **PASS** (`All tests passed`, 1:14). A's reminder **delivered on the real phone**. Network cut: offline seen after 12 s. Offline sign-out without an error. A's 2 offline tasks kept (outbox 59). B: server rows 1, only B's own; 8 pending reminders, none of A's; delivered 0. A again: server 3, RLS 3, B ids 0. D deleted: 0 occurrences, profiles, change_log, local_meta, backups left |
+| Share sheet, A shown | Real app (profile build); owner shared a note from Notes | **PASS**: landed in A's Inbox (as the note's iCloud link); server: A 1, B 0 |
+| Share sheet, B shown | Same, after signing out of A and into B | **PASS**: in B's Inbox; server: A 1, B 1 |
+| Widget after a switch | Home-screen widget showing A's task; sign out of A, sign in as B | **PASS**: no A content in the widget or in B's Inbox (owner) |
+| Live Activity after a switch | Start on A's task ("A live"); sign out of A; sign in as B | **PASS** (owner): A's Live Activity never showed after the sign-out or with B signed in |
+| Widget when A returns | B signs out, A signs in again | **PASS** (owner): the widget showed A's "A live" again, so the switch-time clearing doesn't leave the widget dead for the owner |
+| Wake Up called off at a switch | A set Wake Up 4 min ahead; B signed in before it | **PASS**: nothing rang at A's time with B shown |
+| Wake Up rings for its owner | A set Wake Up 3 min ahead and stayed signed in | **PASS**: rang and showed A's day ("A live", 1 Inbox, Start day / Later). Proves the previous row isn't a dead alarm |
+| Real network drop | Wi-Fi off in Control Center; two tasks added; Wi-Fi on | **PASS**: offline shown, app kept working; after Wi-Fi came back both tasks on the server once each under A (two ids), none under B |
+| Reinstall | App deleted, the same build reinstalled | **PASS**: started at onboarding, signed out, nothing of A or B |
+
+**Sign-in for the guided checks:** the real app's magic link. The email came from the local Mailpit,
+was verified on the Mac, and the app's `dottoday://auth-callback?code=…` was opened on the phone with
+`xcrun devicectl device process launch --payload-url`. The code exchange (PKCE) ran on the phone.
+
+**Not covered here:** Siri and Shortcuts, Live Activity and notification action buttons, the Control
+Center control, the iOS share sheet's refusal alert, and before-first-unlock behaviour.
+
+**Physical Android:** still PENDING.
 
 ### Still unverified
 

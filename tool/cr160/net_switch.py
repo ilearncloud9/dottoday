@@ -3,6 +3,10 @@ API (127.0.0.1:54321) on 127.0.0.1:54331 that the app under test talks to,
 plus a control endpoint on 127.0.0.1:54332 (/off, /on, /state).
 Off = every open connection is cut and new ones are closed at once, so the
 app's sync gateway sees a real network failure. Local only.
+
+Usage: python3 net_switch.py [bind address]. The default, 127.0.0.1, serves
+simulators and browsers on this Mac; a physical phone on the same Wi-Fi
+needs this Mac's Wi-Fi address (e.g. `ipconfig getifaddr en0`).
 """
 import asyncio
 import sys
@@ -82,9 +86,10 @@ async def control(cr, cw):
 
 
 async def main():
-    s1 = await asyncio.start_server(handle, '127.0.0.1', 54331)
-    s2 = await asyncio.start_server(control, '127.0.0.1', 54332)
-    print('proxy up 54331 -> 54321, control 54332', flush=True)
+    host = sys.argv[1] if len(sys.argv) > 1 else '127.0.0.1'
+    s1 = await asyncio.start_server(handle, host, 54331)
+    s2 = await asyncio.start_server(control, host, 54332)
+    print(f'proxy up {host}:54331 -> 54321, control {host}:54332', flush=True)
     async with s1, s2:
         await asyncio.gather(s1.serve_forever(), s2.serve_forever())
 
