@@ -20,7 +20,7 @@ Nothing below ran against hosted Supabase.
 | 8 | No duplicate starter content | PASS (automated) | Stable ids (`domain/sync/stable_ids.dart`); `account_switch_test.dart` "starters planted on two devices merge into one". Not in a web/device run |
 | 9 | Interrupted or failed migration | PASS (automated + Chromium, local stack) | `account_switch_test.dart` group "interrupted"; `engine_sync_service_test.dart` failed sign-in step; web flow 4 (reload after the local step; not inside it) |
 | 10 | Web end-to-end | PARTIAL | Chromium 156: flows 1–5 PASS on the local stack (runs below); re-run after Stage B (B8, 2026-11-12): flows 1–5 PASS. 2026-11-16, at `80d583fe` with migrations 0001–0016 and this branch's Edge Functions served locally: Firefox 157 flows 1–5 PASS, WebKit 27.2 flows 1–5 PASS, real Safari 27.2 flows 1–5 PASS. Hosted staging PENDING |
-| 11 | Shared-device tests on all four platforms | PARTIAL | PASS on the local stack: macOS 26.6.2, iOS 18.6 Simulator, Android 17 emulator, web/Chromium (runs below); re-run after Stage B (B8, 2026-11-12): PASS on macOS, the iPhone 17 Pro Simulator (iOS 26.5), the Android API 37 emulator and Chromium 156, after the test was brought up to D1's review step (`docs/cr-160-multipart-export.md`, B8). 2026-11-16: PASS on a **physical iPhone 17 Pro (iOS 27.2.1)**, local stack, with a test-build-only address patch (section "Physical iPhone 2026-11-16" below). Physical Android and hosted staging PENDING |
+| 11 | Shared-device tests on all four platforms | PARTIAL | PASS on the local stack: macOS 26.6.2, iOS 18.6 Simulator, Android 17 emulator, web/Chromium (runs below); re-run after Stage B (B8, 2026-11-12): PASS on macOS, the iPhone 17 Pro Simulator (iOS 26.5), the Android API 37 emulator and Chromium 156, after the test was brought up to D1's review step (`docs/cr-160-multipart-export.md`, B8). 2026-11-16: PASS on a **physical iPhone 17 Pro (iOS 27.2.1)**, local stack, with a test-build-only address patch (section "Physical iPhone 2026-11-16" below); PASS on a **physical Android tablet, Galaxy Tab S8+ (Android 16)**, local stack, no app changes (section "Physical Android tablet 2026-11-16" below). An Android phone was not used. Hosted staging PENDING |
 | 12 | Server-side guard | PASS (pgTAP, local stack) | `supabase/migrations/0014_push_owner_guard.sql` + `supabase/tests/0014_push_owner_guard.sql`; `supabase db reset` + `supabase test db`: 14 files, 119 tests. Not deployed |
 
 ## CRITICAL — OPEN — RELEASE BLOCKER (owner 2026-11-09)
@@ -971,7 +971,46 @@ was verified on the Mac, and the app's `dottoday://auth-callback?code=…` was o
 **Not covered here:** Siri and Shortcuts, Live Activity and notification action buttons, the Control
 Center control, the iOS share sheet's refusal alert, and before-first-unlock behaviour.
 
-**Physical Android:** still PENDING.
+**Physical Android:** see the next section (tablet).
+
+## Physical Android tablet 2026-11-16 (local stack, owner at the tablet)
+
+**Device:** Samsung Galaxy Tab S8+ (SM-X800, Wi-Fi), Android 16 (API 36), over USB.
+
+**Server:** the same local stack, reached with `adb reverse tcp:54321/54331/54332`. The app talked to
+`http://127.0.0.1:54331` (the switch), as on the emulator, so **no app or manifest change** was
+needed.
+
+**Builds:** debug, at `c0cbc976`. Tests ran through `tool/device_tests.sh` (install, `pm grant`
+POST_NOTIFICATIONS, `appops` SCHEDULE_EXACT_ALARM, then run).
+
+**No Android phone was used.** What a phone would add:
+- a cellular network drop (the tablet is Wi-Fi only);
+- a phone-sized layout (outside CR-160);
+- another maker's power management (alarms).
+
+Wake Up treats every Android device as phone-class (`HealthPlatform.android.isPhone`), so the tablet
+arms and rings real alarms.
+
+| Check | How | Result |
+|---|---|---|
+| Criterion 11 shared device | `DEFINES=<local> tool/device_tests.sh android R52T90A2EVJ cr160_shared_device` | **PASS** (166 s). A's reminder delivered on the tablet. Network cut: offline seen after 10 s. Offline sign-out without an error. A's 2 offline tasks kept (outbox 54). B: RLS 1, own only; 8 pending reminders, none of A's; delivered 0. A again: server 3, RLS 3, B ids 0. D deleted: 0 rows, 0 backups left. The informational "A title as text/semantics" line read `false` here (`true` on the iPhone); the test does not assert it, cause not investigated |
+| Real `ACTION_SEND` shares | `tool/cr160/share_owner_check.sh R52T90A2EVJ` | **PASS** (16, API 36): three launches with force-stops; shares kept their queued owner; a share mid-switch named nobody; a share during a deletion was refused |
+| Share, A shown / B shown | Real app; owner shared text from another app | **PASS** / **PASS**: server shows "Share as A" under A only and "Share as B" under B only |
+| Ongoing notification after a switch | Start on A's "Tab live"; sign out | **PASS**: `dumpsys notification` showed the ongoing "Tab live" notification before; after the sign-out, no Dottoday notification at all |
+| Widget after a switch | Home-screen widget; sign out of A, sign in as B | **PASS** (owner): no A content with B shown |
+| Wake Up called off at a switch | A set 5:26, B signed in before | **PASS**: nothing rang; `dumpsys alarm` had no Dottoday Wake Up alarm with B shown |
+| Wake Up rings for its owner | A set 5:36, stayed signed in | **PASS**: `dumpsys alarm` showed `WAKE_UP_RING` at 05:36:00 and `WAKE_UP_CHECK` at 05:40; it rang and showed A's day |
+| Wake Up check cancelled at a switch (blocker 3 on a device) | A signed out at 05:37, before the 05:40 check | **PASS**: no pending `WAKE_UP_RING`/`WAKE_UP_CHECK` left; the 7 remaining Dottoday alarms are the guest's daily 22:00 reminder |
+| Reinstall | `adb uninstall`, `adb install` of the same build | **PASS**: onboarding, signed out, nothing of A or B |
+| Real Wi-Fi drop | Not run on the tablet | The app's traffic went over USB (`adb reverse`), so Wi-Fi off cannot cut it. Covered by this tablet's switch cut (criterion 11) and the iPhone's real Wi-Fi drop |
+
+**Not covered here:**
+- the notification and widget action buttons;
+- the full-screen Wake Up over the lock screen;
+- before-first-unlock behaviour;
+- the release APK (never built, as before).
+
 
 ### Still unverified
 
