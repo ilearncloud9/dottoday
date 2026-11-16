@@ -5,9 +5,9 @@ import 'package:dottoday/core/theme/task_palette.dart';
 import 'package:dottoday/core/theme/tokens.dart';
 import 'package:flutter/painting.dart';
 
-/// Semantic colour roles for one brightness and one accent. Light roles
-/// follow Concept E (E_DESIGN_RULES.md §4.1–4.2, ED-353); dark roles are
-/// Concept A's until M18.2.
+/// Semantic colour roles for one brightness and one accent, in Concept E:
+/// light (E_DESIGN_RULES.md §4.1–4.2, M18.1) and dark P1 Warm Charcoal
+/// (ED-174, ED-178, M18.2).
 ///
 /// ```dart
 /// final c = DotTheme.of(context).colors;
@@ -105,16 +105,16 @@ final class DotColors {
 
 DotColors _resolve(Brightness brightness, Color accent) {
   final dark = brightness == Brightness.dark;
-  final surface = dark ? DotPrimitives.night12 : DotPrimitives.ground;
-  final raised = dark ? DotPrimitives.night1C : DotPrimitives.cream;
-  final text = dark ? DotPrimitives.snow : DotPrimitives.ink;
-  // White on the default light accent and navy on the dark one (§2.1); the
+  final surface = dark ? DotPrimitives.charcoal17 : DotPrimitives.ground;
+  final raised = dark ? DotPrimitives.charcoal1F : DotPrimitives.cream;
+  final text = dark ? DotPrimitives.linen : DotPrimitives.ink;
+  // White on the light teal and teal ink on the dark one (ED-174); the
   // other accents take whichever of the two reads better on them.
   final onAccent =
       contrastRatio(DotPrimitives.white, accent) >=
-          contrastRatio(DotPrimitives.navy, accent)
+          contrastRatio(DotPrimitives.tealInk, accent)
       ? DotPrimitives.white
-      : DotPrimitives.navy;
+      : DotPrimitives.tealInk;
   final tint = accent.withValues(alpha: dark ? 0.22 : 0.12);
   final inkBackgrounds = [
     surface,
@@ -127,12 +127,13 @@ DotColors _resolve(Brightness brightness, Color accent) {
     surface: surface,
     raised: raised,
     text: text,
-    muted: dark ? DotPrimitives.grey9A : DotPrimitives.grey6A,
-    // E draws edges as an 8 % ink hairline over whatever is below.
+    muted: dark ? DotPrimitives.greyC7 : DotPrimitives.grey6A,
+    // E draws light edges as an 8 % ink hairline over whatever is below;
+    // dark edges are the P1 divider.
     outline: dark
-        ? DotPrimitives.night2C
+        ? DotPrimitives.charcoal3E
         : Color.alphaBlend(DotPrimitives.hairline, raised),
-    hairline: dark ? DotPrimitives.night3A : DotPrimitives.lilacBE,
+    hairline: dark ? DotPrimitives.mauve6B : DotPrimitives.lilacBE,
     accent: accent,
     accentInk: inkFor(accent, backgrounds: inkBackgrounds, toward: text),
     onAccent: onAccent,
@@ -145,6 +146,6 @@ DotColors _resolve(Brightness brightness, Color accent) {
       minRatio: 5,
     ),
     accentTint: tint,
-    success: DotPrimitives.green2F,
+    success: dark ? DotPrimitives.green82 : DotPrimitives.green2F,
   );
 }

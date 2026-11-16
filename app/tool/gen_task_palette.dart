@@ -40,7 +40,9 @@ Future<void> writeFormatted(String source, String path) async {
 /// JSON. Throws [FormatException] on a malformed palette.
 String renderTaskPalette(Object? json) {
   final p = _Palette.parse(json);
-  final colors = p.colors.map((c) => '  ${c.key}(${_color(c.hex)})');
+  final colors = p.colors.map(
+    (c) => '  ${c.key}(${_color(c.hex)}, dark: ${_color(c.dark)})',
+  );
   final accents = p.accents.map(
     (a) => '  ${a.key}(light: ${_color(a.light)}, dark: ${_color(a.dark)})',
   );
@@ -51,15 +53,21 @@ String renderTaskPalette(Object? json) {
 $_header
 part of 'task_palette.dart';
 
-/// The 9 task colours in picker order (docs/10 §2.1); identical in both
-/// themes. [key] is the persisted `color_key` (docs/05-data-model.md).
+/// The 9 task colours in picker order, with their light and dark values
+/// (Concept E, ED-161 and ED-175). [key] is the persisted `color_key`
+/// (docs/05-data-model.md); the theme picks the value, the key never
+/// changes.
 enum TaskColor {
 ${colors.join(',\n')};
 
-  const TaskColor(this.color);
+  const TaskColor(this.color, {required this.dark});
 
-  /// The colour of the dot, segment and chip, before any alpha.
+  /// The light colour of the dot, segment and chip, before any alpha.
   final Color color;
+
+  /// The same colour in the dark theme (ED-175: ≥ 3.5:1 on every dark
+  /// surface).
+  final Color dark;
 
   /// Colour for new tasks and unknown keys; matches the column default.
   static const fallback = TaskColor.${p.fallback};
@@ -217,10 +225,12 @@ final class _Palette {
 final class _Color {
   _Color.parse(Object? json)
     : key = _keyOf(_map(json, 'colour')['key'], 'colour key'),
-      hex = _hexOf(_map(json, 'colour')['hex'], 'colour hex');
+      hex = _hexOf(_map(json, 'colour')['hex'], 'colour hex'),
+      dark = _hexOf(_map(json, 'colour')['dark'], 'colour dark');
 
   final String key;
   final String hex;
+  final String dark;
 }
 
 final class _Accent {

@@ -3,23 +3,29 @@
 
 part of 'task_palette.dart';
 
-/// The 9 task colours in picker order (docs/10 §2.1); identical in both
-/// themes. [key] is the persisted `color_key` (docs/05-data-model.md).
+/// The 9 task colours in picker order, with their light and dark values
+/// (Concept E, ED-161 and ED-175). [key] is the persisted `color_key`
+/// (docs/05-data-model.md); the theme picks the value, the key never
+/// changes.
 enum TaskColor {
-  coral(Color(0xFFE2725B)),
-  amber(Color(0xFFD9A23A)),
-  mint(Color(0xFF4CA36B)),
-  teal(Color(0xFF2A9D8F)),
-  sky(Color(0xFF4A9BD6)),
-  indigo(Color(0xFF5B5FD6)),
-  violet(Color(0xFF8B5CF6)),
-  rose(Color(0xFFD9668F)),
-  slate(Color(0xFF6E6A75));
+  coral(Color(0xFFE2725B), dark: Color(0xFFE2725B)),
+  amber(Color(0xFFD9A23A), dark: Color(0xFFD9A23A)),
+  mint(Color(0xFF4CA36B), dark: Color(0xFF4CA36B)),
+  teal(Color(0xFF2A9D8F), dark: Color(0xFF2A9D8F)),
+  sky(Color(0xFF4A9BD6), dark: Color(0xFF4A9BD6)),
+  indigo(Color(0xFF5B5FD6), dark: Color(0xFF7A7EDE)),
+  violet(Color(0xFF8B5CF6), dark: Color(0xFF9672E6)),
+  rose(Color(0xFFD9668F), dark: Color(0xFFD9668F)),
+  slate(Color(0xFF6E6A75), dark: Color(0xFF898590));
 
-  const TaskColor(this.color);
+  const TaskColor(this.color, {required this.dark});
 
-  /// The colour of the dot, segment and chip, before any alpha.
+  /// The light colour of the dot, segment and chip, before any alpha.
   final Color color;
+
+  /// The same colour in the dark theme (ED-175: ≥ 3.5:1 on every dark
+  /// surface).
+  final Color dark;
 
   /// Colour for new tasks and unknown keys; matches the column default.
   static const fallback = TaskColor.indigo;
@@ -46,7 +52,7 @@ const _legacy = <String, TaskColor>{
 /// persisted `settings.accent`.
 enum DotAccent {
   indigo(light: Color(0xFF3B6CF6), dark: Color(0xFF7FA0FF)),
-  teal(light: Color(0xFF11615C), dark: Color(0xFF4CC9C9)),
+  teal(light: Color(0xFF11615C), dark: Color(0xFF5BC4B8)),
   coral(light: Color(0xFFE5674F), dark: Color(0xFFFF8A73)),
   violet(light: Color(0xFF7A5AF8), dark: Color(0xFFA58BFF));
 

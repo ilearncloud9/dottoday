@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ### Changed
 - The app takes on Concept E's colours and type (redesign branch): a warm background and cream cards, ink text, the teal accent as the default, the Concept E task colours, and Manrope instead of Inter, at the Concept E sizes. A saved accent keeps its colour; the app icon is unchanged for now. At 200 % text the Week's day headers scroll on their own instead of pushing the hours off a short screen.
+- Dark mode takes on Concept E's warm charcoal (redesign branch): a deeper warm background, linen text, the lighter dark teal, and dark shades of the task colours that stay readable on every dark surface.
 
 ### Added
 - Concept E groundwork (redesign branch): the minimal-mode table lists the Earlier fold, the Before Wake Up / After Wind Down rows and Search or run, each with its layout rule, before any of them is built.

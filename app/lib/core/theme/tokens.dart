@@ -1,8 +1,8 @@
 import 'package:flutter/painting.dart';
 
-/// Primitive colours, named by what they look like, not by role. Light
-/// values are Concept E's (docs/redesign/E_DESIGN_RULES.md §4.1, M18.1);
-/// dark values are still Concept A's until M18.2.
+/// Primitive colours, named by what they look like, not by role: Concept E
+/// light (docs/redesign/E_DESIGN_RULES.md §4.1, M18.1) and dark, the P1
+/// Warm Charcoal set (ED-174, ED-178; M18.2).
 ///
 /// The only file with raw hex values besides the generated task palette.
 /// Widgets never read these: they read roles from `DotTheme.of(context)`.
@@ -26,15 +26,32 @@ abstract final class DotPrimitives {
   /// E `threadAhead`: the dotted thread and free-time dots.
   static const lilacBE = Color(0xFFBEB6C7);
 
-  static const night12 = Color(0xFF121214);
-  static const night1C = Color(0xFF1C1C20);
-  static const snow = Color(0xFFF2F2F0);
-  static const grey9A = Color(0xFF9A9AA0);
-  static const night2C = Color(0xFF2C2C32);
-  static const night3A = Color(0xFF3A3A40);
+  /// Dark `ground`: the app background.
+  static const charcoal17 = Color(0xFF171416);
 
-  static const navy = Color(0xFF0B1020);
+  /// Dark `surface`: cards and sheets.
+  static const charcoal1F = Color(0xFF1F1B1E);
+
+  /// Dark `text` (on ground 15.6:1).
+  static const linen = Color(0xFFF3ECE4);
+
+  /// Dark `secondary`.
+  static const greyC7 = Color(0xFFC7BEC4);
+
+  /// Dark `divider`: hairlines and card edges.
+  static const charcoal3E = Color(0xFF3E373D);
+
+  /// Dark dotted thread ahead (T2-B, ED-178: 3.15:1 on ground).
+  static const mauve6B = Color(0xFF6B6369);
+
+  /// Ink on the dark teal accent (ED-174).
+  static const tealInk = Color(0xFF0C2523);
+
+  /// Light success (done check on a completed day).
   static const green2F = Color(0xFF2FA37A);
+
+  /// Dark success (ED-174).
+  static const green82 = Color(0xFF82CF9F);
 
   /// Floating-element shadow, E ink at 10 %.
   static const shadow = Color(0x1A241F2B);

@@ -44,19 +44,20 @@ void main() {
       expect(l.outline, Color.alphaBlend(const Color(0x14241F2B), l.raised));
       expect(
         [d.surface, d.raised, d.text, d.muted, d.outline, d.hairline],
+        // Concept E dark, P1 Warm Charcoal (ED-174, ED-178; M18.2).
         const [
-          Color(0xFF121214),
-          Color(0xFF1C1C20),
-          Color(0xFFF2F2F0),
-          Color(0xFF9A9AA0),
-          Color(0xFF2C2C32),
-          Color(0xFF3A3A40),
+          Color(0xFF171416),
+          Color(0xFF1F1B1E),
+          Color(0xFFF3ECE4),
+          Color(0xFFC7BEC4),
+          Color(0xFF3E373D),
+          Color(0xFF6B6369),
         ],
       );
       expect(l.accent, const Color(0xFF11615C));
       expect(l.onAccent, const Color(0xFFFFFFFF));
-      expect(d.accent, const Color(0xFF4CC9C9));
-      expect(d.onAccent, const Color(0xFF0B1020));
+      expect(d.accent, const Color(0xFF5BC4B8));
+      expect(d.onAccent, const Color(0xFF0C2523));
       expect(l.accentTint.a, closeTo(0.12, 0.01));
       expect(d.accentTint.a, closeTo(0.22, 0.01));
       expect(l.success, const Color(0xFF2FA37A));

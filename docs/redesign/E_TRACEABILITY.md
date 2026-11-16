@@ -624,3 +624,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; the boards and documents it
 - **2026-11-16, ED-356:** CLAUDE.md §11 names Concept E as the design source on this branch.
 - **2026-11-16, ED-357:** M18.0 done: docs/14 §3 rows and FeatureIds for the Earlier fold, the Before Wake Up / After Wind Down rows and Search or run.
 - **2026-11-16, ED-358:** M18.1 done (Concept E light tokens, Manrope); Concept E features and noted ideas added to the plan.
+- **2026-11-16, ED-359:** M18.2 done (Concept E dark tokens, P1 Warm Charcoal; dark task fills).

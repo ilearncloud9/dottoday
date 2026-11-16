@@ -4760,6 +4760,22 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
   - all four "Later, when it helps" cards in M20.11.
 - **New plan section, "Ideas Concept E noted but did not design":** ten items that need a design and the owner's OK first (ED-328 to ED-335).
 
+### ED-359 · M18.2 done: Concept E dark tokens
+- **Date:** 2026-11-16. **Owner:** "Start M18.2".
+- **Tokens:** the dark theme is P1 Warm Charcoal (ED-174, ED-178):
+  - ground `#171416`, cards `#1F1B1E`, text `#F3ECE4`, secondary `#C7BEC4`, divider `#3E373D`;
+  - the dotted thread ahead `#6B6369` (T2-B);
+  - teal `#5BC4B8` with ink `#0C2523`;
+  - success `#82CF9F`.
+- **Dark task fills:** the dark values of ED-175 for the nine stored keys. `palette.json` now holds a dark value per colour, and the generator emits it. The theme picks the value; the stored key never changes.
+- **Other accents:** indigo, coral and violet stay as they were until M20.7.
+- **With their components later:** the dark now-ring tracks at 25 % (M18.3), the caps and large now-dot details (ED-177, M18.3), and the Mac D1 sidebar and I1 icon (M18.6).
+- **Checks:**
+  - theme and palette tests updated;
+  - 1,101 goldens regenerated; the dark Today checked against the dark token board;
+  - `flutter test --exclude-tags supabase`: 6,099 passed, 21 skipped, 0 failed;
+  - `flutter analyze`: clean.
+
 ---
 
 ## Pending owner answers

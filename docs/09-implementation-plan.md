@@ -607,7 +607,7 @@ Rules for every task in M18 to M22:
   - the focus ring (ED-211);
   - motion durations with Reduce Motion;
   - text always fits (ED-183).
-- [ ] M18.2 Dark tokens: P1 surfaces, the 12 dark task colours, dark now-ring tracks at 25 %, Mac D1 sidebar (ED-173 to ED-181, ED-212). The theme is restored before first paint on web (handoff G4-6).
+- [x] M18.2 Dark tokens. Done 2026-11-16 (ED-359): P1 ground, cards, text, secondary, divider, the T2-B thread, teal `#5BC4B8` with ink `#0C2523`, success `#82CF9F`, and the nine dark task fills (ED-175) as a second value per colour in `palette.json`; dark ring tracks and the Mac D1 sidebar come with their components (M18.3, M18.6). Originally listed: P1 surfaces, the 12 dark task colours, dark now-ring tracks at 25 %, Mac D1 sidebar (ED-173 to ED-181, ED-212). The theme is restored before first paint on web (handoff G4-6).
 - [ ] M18.3 Thread components:
   - the day thread and dots: now ring (ED-198), ahead ring (ED-199, ED-217), calendar-event dot (ED-200), caps (ED-201), the repeat marker (ED-208), the overlap knot;
   - the Now card (ED-202, ED-209);

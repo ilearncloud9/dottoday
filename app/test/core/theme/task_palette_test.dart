@@ -35,7 +35,7 @@ void main() {
       'violet',
     ]);
     expect(DotAccent.teal.light.toARGB32(), 0xFF11615C);
-    expect(DotAccent.teal.dark.toARGB32(), 0xFF4CC9C9);
+    expect(DotAccent.teal.dark.toARGB32(), 0xFF5BC4B8);
     expect(DotAccent.fallback, DotAccent.teal);
   });
 
@@ -69,7 +69,11 @@ void main() {
       for (final c in TaskColor.values) {
         test(c.key, () {
           final s = tasks[c];
-          expect(s.color, c.color, reason: 'graphics keep the spec hue');
+          expect(
+            s.color,
+            colors.isDark ? c.dark : c.color,
+            reason: 'graphics keep the spec hue of their theme (ED-175)',
+          );
           expect(s.tint.a, 1);
           for (final bg in [colors.surface, colors.raised, s.tint]) {
             expect(contrastRatio(s.ink, bg), greaterThanOrEqualTo(4.5));

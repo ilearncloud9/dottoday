@@ -80,7 +80,8 @@ final class TaskPalette {
   factory TaskPalette.resolve(DotColors colors) {
     final alpha = colors.isDark ? TaskAlpha.tintDark : TaskAlpha.tintLight;
     return TaskPalette._([
-      for (final c in TaskColor.values) _swatch(c.color, colors, alpha),
+      for (final c in TaskColor.values)
+        _swatch(colors.isDark ? c.dark : c.color, colors, alpha),
     ]);
   }
 
@@ -92,7 +93,7 @@ final class TaskPalette {
   TaskPalette lerp(TaskPalette other, double t) => TaskPalette._([
     for (final c in TaskColor.values)
       TaskSwatch(
-        color: c.color,
+        color: Color.lerp(this[c].color, other[c].color, t)!,
         ink: Color.lerp(this[c].ink, other[c].ink, t)!,
         tint: Color.lerp(this[c].tint, other[c].tint, t)!,
         glyph: Color.lerp(this[c].glyph, other[c].glyph, t)!,
