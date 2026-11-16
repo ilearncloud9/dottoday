@@ -1012,7 +1012,8 @@ needed.
 **Builds:** debug, at `c0cbc976`. Tests ran through `tool/device_tests.sh` (install, `pm grant`
 POST_NOTIFICATIONS, `appops` SCHEDULE_EXACT_ALARM, then run).
 
-**No Android phone was used.** What a phone would add:
+**No Android phone was used; the owner accepted the tablet as physical Android for CR-160
+(2026-11-16).** What a phone would add:
 - a cellular network drop (the tablet is Wi-Fi only);
 - a phone-sized layout (outside CR-160);
 - another maker's power management (alarms).
@@ -1022,7 +1023,7 @@ arms and rings real alarms.
 
 | Check | How | Result |
 |---|---|---|
-| Criterion 11 shared device | `DEFINES=<local> tool/device_tests.sh android R52T90A2EVJ cr160_shared_device` | **PASS** (166 s). A's reminder delivered on the tablet. Network cut: offline seen after 10 s. Offline sign-out without an error. A's 2 offline tasks kept (outbox 54). B: RLS 1, own only; 8 pending reminders, none of A's; delivered 0. A again: server 3, RLS 3, B ids 0. D deleted: 0 rows, 0 backups left. The informational "A title as text/semantics" line read `false` here (`true` on the iPhone); the test does not assert it, cause not investigated |
+| Criterion 11 shared device | `DEFINES=<local> tool/device_tests.sh android R52T90A2EVJ cr160_shared_device` | **PASS** (166 s). A's reminder delivered on the tablet. Network cut: offline seen after 10 s. Offline sign-out without an error. A's 2 offline tasks kept (outbox 54). B: RLS 1, own only; 8 pending reminders, none of A's; delivered 0. A again: server 3, RLS 3, B ids 0. D deleted: 0 rows, 0 backups left. The informational "A title as text/semantics" line read `false` here (`true` on the iPhone); see the note below the table |
 | Real `ACTION_SEND` shares | `tool/cr160/share_owner_check.sh R52T90A2EVJ` | **PASS** (16, API 36): three launches with force-stops; shares kept their queued owner; a share mid-switch named nobody; a share during a deletion was refused |
 | Share, A shown / B shown | Real app; owner shared text from another app | **PASS** / **PASS**: server shows "Share as A" under A only and "Share as B" under B only |
 | Ongoing notification after a switch | Start on A's "Tab live"; sign out | **PASS**: `dumpsys notification` showed the ongoing "Tab live" notification before; after the sign-out, no Dottoday notification at all |
@@ -1032,6 +1033,14 @@ arms and rings real alarms.
 | Wake Up check cancelled at a switch (blocker 3 on a device) | A signed out at 05:37, before the 05:40 check | **PASS**: no pending `WAKE_UP_RING`/`WAKE_UP_CHECK` left; the 7 remaining Dottoday alarms are the guest's daily 22:00 reminder |
 | Reinstall | `adb uninstall`, `adb install` of the same build | **PASS**: onboarding, signed out, nothing of A or B |
 | Real Wi-Fi drop | Not run on the tablet | The app's traffic went over USB (`adb reverse`), so Wi-Fi off cannot cut it. Covered by this tablet's switch cut (criterion 11) and the iPhone's real Wi-Fi drop |
+
+**The `false` title line (investigated 2026-11-16):** a rerun on the same tablet with a temporary,
+uncommitted diagnostic printed the screen at each title check. At A's check it read **`true`**: A's
+Today with the task "cr160 A synced …" as text and as its semantics label. The later checks read
+`false` while the "This device has tasks made without an account" notice covered the screen, which
+is correct (nothing of A is shown). The earlier `false` is consistent with that notice already up
+at A's check: the tablet held a guest task left by an earlier failed attempt on it. Not a CR-160
+defect. That run's screen cannot be replayed.
 
 **Not covered here:**
 - the notification and widget action buttons;
