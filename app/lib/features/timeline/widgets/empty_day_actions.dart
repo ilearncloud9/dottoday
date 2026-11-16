@@ -106,7 +106,7 @@ class _Action extends StatelessWidget {
           customBorder: const StadiumBorder(),
           child: dashed
               ? CustomPaint(
-                  painter: DashedPillPainter(color: c.hairline),
+                  painter: DashedPillPainter(color: c.threadAhead),
                   child: content,
                 )
               : content,

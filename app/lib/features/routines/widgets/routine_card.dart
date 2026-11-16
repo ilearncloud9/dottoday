@@ -148,7 +148,7 @@ class RoutineMiniThread extends StatelessWidget {
                 state: DotState.upcoming,
                 dotSize: 0,
               ),
-              hairline: t.colors.hairline,
+              hairline: t.colors.threadAhead,
               accent: t.colors.accent,
               accentTint: t.colors.accentTint,
             ),

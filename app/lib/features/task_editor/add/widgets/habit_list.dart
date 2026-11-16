@@ -188,7 +188,7 @@ class _MiniThread extends StatelessWidget {
           Container(
             width: DotSize.freeLine,
             height: DotSize.freeLine,
-            color: t.colors.hairline,
+            color: t.colors.threadAhead,
           ),
       ],
     );

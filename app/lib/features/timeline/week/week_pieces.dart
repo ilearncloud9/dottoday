@@ -73,7 +73,7 @@ class WeekDropBox extends StatelessWidget {
         onTap: onTap,
         customBorder: const StadiumBorder(),
         child: CustomPaint(
-          painter: DashedPillPainter(color: t.colors.hairline),
+          painter: DashedPillPainter(color: t.colors.threadAhead),
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: DotTouch.min),
             child: Center(

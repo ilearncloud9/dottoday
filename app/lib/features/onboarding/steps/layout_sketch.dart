@@ -88,7 +88,7 @@ class LayoutSketchView extends StatelessWidget {
           accent: t.colors.accent,
           accentTint: t.colors.accentTint,
           neutral: t.colors.muted,
-          faint: t.colors.hairline,
+          faint: t.colors.threadAhead,
           fill: t.colors.raised,
           rtl: Directionality.of(context) == TextDirection.rtl,
         ),

@@ -25,7 +25,7 @@ class CompletionDot extends StatelessWidget {
         share: completion.share,
         accent: c.accent,
         track: Color.alphaBlend(c.accentTint, c.raised),
-        hairline: c.hairline,
+        hairline: c.threadAhead,
       ),
     );
   }

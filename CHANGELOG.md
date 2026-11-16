@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Concept E's full colour set (redesign branch): dark cards and sheets are lighter, as the approved dark boards draw them; links, chips and focus rings use Concept E's own teal shades; the indigo, coral and violet accents and every task colour take their Concept E shades; titles, tabs and section headers use each platform's own font (Roboto on the web).
+
+### Changed
 - The app takes on Concept E's colours and type (redesign branch): a warm background and cream cards, ink text, the teal accent as the default, the Concept E task colours, and Manrope instead of Inter, at the Concept E sizes. A saved accent keeps its colour; the app icon is unchanged for now. At 200 % text the Week's day headers scroll on their own instead of pushing the hours off a short screen.
 - Dark mode takes on Concept E's warm charcoal (redesign branch): a deeper warm background, linen text, the lighter dark teal, and dark shades of the task colours that stay readable on every dark surface.
 

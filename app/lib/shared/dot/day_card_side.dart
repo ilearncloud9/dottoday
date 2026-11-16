@@ -124,7 +124,7 @@ class _SideNumbers extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: past ? c.accent : null,
-            border: past ? null : Border.all(color: c.hairline),
+            border: past ? null : Border.all(color: c.threadAhead),
           ),
         ),
         // A narrow window's side day wraps the words, never overflows.

@@ -48,7 +48,7 @@ class JournalDayRow extends StatelessWidget {
       color: t.colors.raised,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.card),
-        side: BorderSide(color: t.colors.hairline),
+        side: BorderSide(color: t.colors.threadAhead),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(

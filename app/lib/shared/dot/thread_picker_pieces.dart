@@ -95,7 +95,7 @@ class PickerDay extends StatelessWidget {
   Widget _axis(DotTheme t) => CustomPaint(
     painter: ThreadAxisPainter(
       piece: const FreePiece(),
-      hairline: t.colors.hairline,
+      hairline: t.colors.threadAhead,
       accent: t.colors.accent,
       accentTint: t.colors.accentTint,
     ),
@@ -122,7 +122,7 @@ class PickerDay extends StatelessWidget {
                       state: DotState.upcoming,
                       dotSize: DotSize.pickerDot,
                     ),
-                    hairline: t.colors.hairline,
+                    hairline: t.colors.threadAhead,
                     accent: t.colors.accent,
                     accentTint: t.colors.accentTint,
                   ),

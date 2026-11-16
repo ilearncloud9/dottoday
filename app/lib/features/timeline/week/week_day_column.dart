@@ -111,7 +111,7 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
         bottom: 0,
         child: CustomPaint(
           size: Size(DotSpace.hairline * 2, _height),
-          painter: WeekSpine(color: c.hairline),
+          painter: WeekSpine(color: c.threadAhead),
         ),
       ),
       if (now != null) _line(c.accent, _y(now), DotSpace.hairline * 2),

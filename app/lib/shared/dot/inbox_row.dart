@@ -166,7 +166,7 @@ class _Card extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DotRadii.card),
           side: BorderSide(
-            color: row.selected == true ? c.accent : c.hairline,
+            color: row.selected == true ? c.accent : c.threadAhead,
             width: row.selected == true ? DotSize.smallDotOutline : 1,
           ),
         ),

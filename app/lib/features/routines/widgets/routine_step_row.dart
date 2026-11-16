@@ -210,7 +210,7 @@ class _Icon extends StatelessWidget {
       onPressed: onPressed,
       icon: DotIcon(
         glyph,
-        color: onPressed == null ? t.colors.hairline : t.colors.text,
+        color: onPressed == null ? t.colors.threadAhead : t.colors.text,
         size: DotSize.rowIcon,
       ),
     );

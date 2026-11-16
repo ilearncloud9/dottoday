@@ -20,13 +20,14 @@ void main() {
   Widget notes() => Builder(
     builder: (context) => MediaQuery(
       data: MediaQuery.of(context).copyWith(disableAnimations: true),
+      // In a scrolling list, as the editor hosts it (task_editor.dart): at
+      // 200 % text Notes is taller than the 320 px cell and scrolls.
       child: Scaffold(
-        body: Padding(
+        body: ListView(
           padding: const EdgeInsets.all(16),
-          child: EditorNotes(
-            notes: 'Bring the signed form.',
-            onChanged: (_) {},
-          ),
+          children: [
+            EditorNotes(notes: 'Bring the signed form.', onChanged: (_) {}),
+          ],
         ),
       ),
     ),

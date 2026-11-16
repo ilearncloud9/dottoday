@@ -235,7 +235,7 @@ class _Legend extends StatelessWidget {
             border: filled
                 ? null
                 : Border.all(
-                    color: t.colors.hairline,
+                    color: t.colors.threadAhead,
                     width: DotSpace.hairline * 1.5,
                   ),
           ),

@@ -80,6 +80,12 @@ flutter:
     - family: Manrope
       fonts:
         - asset: assets/fonts/Manrope-Variable.ttf
+    # Web chrome only: Flutter web cannot reach the visitor's system font, which
+    # Concept E names for web chrome (E rules §3.1). Provisional, pending the
+    # owner's font review; OFL, licence in assets/licenses/roboto.txt.
+    - family: RobotoWeb
+      fonts:
+        - asset: assets/fonts/Roboto-Variable.ttf
 
 # ADR-0006: link SQLCipher instead of plain SQLite on every native target (encryption at rest, 06 §4).
 hooks:

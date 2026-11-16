@@ -62,7 +62,7 @@ class _DoneDot extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
     return DecoratedBox(
-      decoration: BoxDecoration(shape: BoxShape.circle, color: c.hairline),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: c.threadAhead),
       child: Padding(
         padding: const EdgeInsets.all(DotSpace.xxs),
         child: DotIcon(

@@ -59,7 +59,7 @@ class FocusStepCard extends StatelessWidget {
                             : done / state.steps.length,
                         strokeWidth: DotSize.liveRing,
                         color: t.colors.accent,
-                        backgroundColor: t.colors.hairline,
+                        backgroundColor: t.colors.threadAhead,
                       ),
                     ),
                   ),
@@ -103,7 +103,7 @@ class FocusStepCard extends StatelessWidget {
                   value: p,
                   minHeight: DotSize.segment,
                   color: t.colors.accent,
-                  backgroundColor: t.colors.hairline,
+                  backgroundColor: t.colors.threadAhead,
                 ),
               ),
             // The timer runs on the step's usual length (docs/13 §5).

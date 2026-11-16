@@ -4776,6 +4776,46 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
   - `flutter test --exclude-tags supabase`: 6,099 passed, 21 skipped, 0 failed;
   - `flutter analyze`: clean.
 
+### ED-360 · Foundation step 1: the full Concept E token set, staged, with two guards
+- **Date:** 2026-11-17. **Owner:** "Approve step 1" (after the Foundation Step 1 review page). Earlier on 2026-11-16 the owner chose:
+  - the token decisions A to D from the token review: A replace the structure, B dark cards as drawn, C chrome in the platform font, D Concept E accents;
+  - for A, the staged way ("i will go with your recommendation"), after the strict-or-staged trial showed both draw identical pixels;
+  - Roboto for web chrome ("download Roboto … i might get to review this font later");
+  - section headings to change with each screen's rebuild.
+- **Why this redoes M18.1 and M18.2:** a check against the canvas found that those steps had fitted Concept E into Concept A's 12 colour roles. The dark cards were `#1F1B1E`, where the approved dark boards draw `#28232A` (5,629 uses against 468).
+- **Built:**
+  - **Every Concept E colour role, light and dark.** The dark values are the ones the approved dark boards draw for each light value (ED-181, matched across 50 board pairs). This includes dark cards `#28232A`, teal's own text `#0B4642` / `#A3E2D9` and tonal `#E2EFEC` / `#1E3A37`, the dark focus ring `#7FD6CB`, caps, the orb, outlines, placeholder and state colours.
+  - **The accents:** indigo, coral and violet in Concept E shades. Coral uses the ring shade `#DF6147`, because its fill (2.90:1) is under 3:1 on the ground (the ED-155 rule). Buttons derive a shade so their text reaches 5:1 (ED-161).
+  - **Task colours:** a light ahead-ring shade per task colour (ED-155) and the dark fills (ED-175).
+  - **Type:** chrome (the date title, page titles, tabs, section headers, the Android top bar) in the platform's own face. The web uses the bundled Roboto (`RobotoWeb`, OFL), provisional pending the owner's font review.
+  - **Shape and depth:** Concept E radii (iOS sheet 38, tiles 22, pull-down 26, menus 22 / 10, blocks 18, tip 20, round chips) and the ED-210 tier 2 and tier 3 shadows.
+- **Staged names:** widgets keep their old role names with Concept E values. The colours also carry Concept E names (`ground`, `card`, `ink`, `secondary`, `hairline`, `accentText`, `tonal`). The old `hairline` role, which meant the dotted thread, is renamed `threadAhead` (41 uses) so that `hairline` can mean an edge, as it does in Concept E.
+- **Guards:**
+  - `test/core/theme/concept_e_board_values_test.dart` fails if any colour role or task colour stops matching the values measured on the boards.
+  - `test/policy/concept_e_names_test.dart` fails if a file marked `// concept-e: rebuilt` reads a Concept A role name or uppercases text.
+  - Plan M20.14 deletes the old names.
+- **Not in this step:**
+  - light warning and error colours: Concept E never designed them, so they get a canvas board first;
+  - uppercase headings, which change with each screen's rebuild.
+- **Tests updated to Concept E:**
+  - Settings page titles stack under "‹ Settings" at every text size, as E-R2-20 frame 07 draws them;
+  - the Siri and time-zone tests scroll to their rows before tapping;
+  - the notes-mic golden hosts Notes in a scrolling list, as the editor does. The 4 px overflow was in the test harness, not the app.
+- **Checks:**
+  - `flutter test --exclude-tags supabase`: 6,149 passed, 21 skipped, 0 failed;
+  - `flutter analyze`: clean;
+  - 2,091 goldens regenerated;
+  - the side-by-side against `docs/design-references/concept-e/` was reviewed by the owner.
+
+### ED-361 · How the Concept E build runs: approval per step, new boards for missing designs, motion, foundations first
+- **Date:** 2026-11-16 and 2026-11-17. **Owner's answers:**
+  - **Approval:** each foundation step is built in the worktree, shown as a board-vs-app side-by-side, and committed only after approval. Nothing is pushed until the owner says.
+  - **Missing designs:** anything without an approved design gets a new board on the Design canvas, in light and dark, approved by the owner and recorded before it is built.
+  - **Motion:** 180 / 200 / 240 ms with ease-out, as the app has and ED-246 uses; Reduce Motion jumps. Concept E never set timings (rules §7.5).
+  - **Native:** every platform uses its own native parts (the owner: iPhone, Android, Mac, web, iPad and Android tablets "use it's platforms native").
+  - **Order: foundations first.** The owner first chose a Today and task sheet pilot, then withdrew it before any pilot work began ("i want to go back to pilot decision as i would like to follow the previous plan"). The build follows the plan's order: M18.3 to M18.8, then M19 from Today (M19.1).
+- **Guiding question rule:** the owner asked for clarifying questions instead of assumptions ("make sure to ask clarifying questions and don't assume").
+
 ---
 
 ## Pending owner answers

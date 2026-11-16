@@ -1,4 +1,3 @@
-import 'package:dottoday/core/theme/tokens.dart';
 import 'package:flutter/material.dart' show kMinInteractiveDimension;
 import 'package:flutter/painting.dart';
 
@@ -33,9 +32,30 @@ abstract final class DotRadii {
   /// Cards and grouped rows (E: 20–28).
   static const double card = 20;
 
-  /// Larger cards: the Now card (24, ED-202), action tiles.
+  /// Larger cards: the Now card (24, ED-202).
   static const double cardLarge = 24;
+
+  /// Android sheets and dialogs (28); iOS sheets use [sheetIos].
   static const double sheet = 28;
+
+  /// iOS sheet top corners (38, E §6.3).
+  static const double sheetIos = 38;
+
+  /// Action tiles and the Add field (22).
+  static const double tile = 22;
+
+  /// The iOS Day pull-down (26); the Android Day menu (22).
+  static const double pullDownIos = 26;
+  static const double menuAndroid = 22;
+
+  /// Mac menus as drawn (10; native NSMenu in the app, ED-239).
+  static const double menuMac = 10;
+
+  /// Workspace blocks (18).
+  static const double block = 18;
+
+  /// The tip pill (20).
+  static const double tip = 20;
   static const double pill = 999;
 
   /// Android FAB: rounded square (a §4 idiom).
@@ -44,8 +64,8 @@ abstract final class DotRadii {
   /// Mac/web rail items.
   static const double railItem = 16;
 
-  /// M3 chips on Android (a §4 idiom); iOS chips are [pill].
-  static const double chipAndroid = 8;
+  /// Chips on Android: fully round, as every Concept E chip (§6.3).
+  static const double chipAndroid = pill;
 }
 
 /// Dot and thread sizes (docs/10 §2.3).
@@ -208,24 +228,19 @@ abstract final class DotTouch {
   static const tooltipWait = Duration(milliseconds: 500);
 }
 
-/// Shadow of floating elements: tab bar, FAB, menus (docs/10 §2.3).
+/// Concept E's glass elevation (ED-210), light values; the dark theme's
+/// shadows are black at 18 / 22 / 26 / 50 % (ED-181) and come with the
+/// components in M18.3–M18.4.
 abstract final class DotElevation {
-  /// Today's day sheet (ADR-0015): a soft lift off the page, in place of
-  /// an outline, so its edge reads without a line.
+  /// Tier 2 (Day ▾): `0 6 16`, ink at 10 %. Today's day sheet lifts off
+  /// the page with it, upward.
   static const sheet = [
-    BoxShadow(
-      color: DotPrimitives.shadow,
-      offset: Offset(0, -2),
-      blurRadius: 16,
-    ),
+    BoxShadow(color: Color(0x1A241F2B), offset: Offset(0, -6), blurRadius: 16),
   ];
 
+  /// Tier 3 (floating bar, +, menus): `0 10 30`, ink at 12 %.
   static const floating = [
-    BoxShadow(
-      color: DotPrimitives.shadow,
-      offset: Offset(0, 8),
-      blurRadius: 24,
-    ),
+    BoxShadow(color: Color(0x1F241F2B), offset: Offset(0, 10), blurRadius: 30),
   ];
 }
 

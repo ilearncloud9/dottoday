@@ -608,6 +608,7 @@ Rules for every task in M18 to M22:
   - motion durations with Reduce Motion;
   - text always fits (ED-183).
 - [x] M18.2 Dark tokens. Done 2026-11-16 (ED-359): P1 ground, cards, text, secondary, divider, the T2-B thread, teal `#5BC4B8` with ink `#0C2523`, success `#82CF9F`, and the nine dark task fills (ED-175) as a second value per colour in `palette.json`; dark ring tracks and the Mac D1 sidebar come with their components (M18.3, M18.6). Originally listed: P1 surfaces, the 12 dark task colours, dark now-ring tracks at 25 %, Mac D1 sidebar (ED-173 to ED-181, ED-212). The theme is restored before first paint on web (handoff G4-6).
+- [x] M18.1–M18.2 redone as foundation step 1, 2026-11-17 (ED-360): the full Concept E token set from the board measurements, staged names, the board-match and Concept E name guards.
 - [ ] M18.3 Thread components:
   - the day thread and dots: now ring (ED-198), ahead ring (ED-199, ED-217), calendar-event dot (ED-200), caps (ED-201), the repeat marker (ED-208), the overlap knot;
   - the Now card (ED-202, ED-209);
@@ -736,7 +737,7 @@ Rules for every task in M18 to M22:
   - Android parity (R2-29, ED-332);
   - Mac and web parity, including Edit and Window menus (R2-30, ED-333);
   - keyboard and screen-reader paths (ED-248, E-DF3).
-- [ ] M20.14 Remove what M18 to M20 replaced: unused Concept A widgets, tokens and goldens (named in the commit body; CLAUDE.md §6). Parity matrix §7: every entry point still reaches its feature.
+- [ ] M20.14 Remove what M18 to M20 replaced: unused Concept A widgets, tokens and goldens, and the Concept A colour role names (`surface`, `raised`, `text`, `muted`, `outline`, `accentInk`, `accentTint`; ED-360) (named in the commit body; CLAUDE.md §6). Parity matrix §7: every entry point still reaches its feature.
 
 ## Milestone 21 — Platform QA (Prompt H)
 

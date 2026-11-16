@@ -41,7 +41,8 @@ Future<void> writeFormatted(String source, String path) async {
 String renderTaskPalette(Object? json) {
   final p = _Palette.parse(json);
   final colors = p.colors.map(
-    (c) => '  ${c.key}(${_color(c.hex)}, dark: ${_color(c.dark)})',
+    (c) =>
+        '  ${c.key}(${_color(c.hex)}, ring: ${_color(c.ring)}, dark: ${_color(c.dark)})',
   );
   final accents = p.accents.map(
     (a) => '  ${a.key}(light: ${_color(a.light)}, dark: ${_color(a.dark)})',
@@ -60,13 +61,17 @@ part of 'task_palette.dart';
 enum TaskColor {
 ${colors.join(',\n')};
 
-  const TaskColor(this.color, {required this.dark});
+  const TaskColor(this.color, {required this.ring, required this.dark});
 
   /// The light colour of the dot, segment and chip, before any alpha.
   final Color color;
 
-  /// The same colour in the dark theme (ED-175: ≥ 3.5:1 on every dark
-  /// surface).
+  /// The light ahead ring and its icon: [color], or a deeper shade where
+  /// [color] is under 3:1 on the ground (ED-155, ED-161).
+  final Color ring;
+
+  /// The same colour in the dark theme, also its ring (ED-175: ≥ 3.5:1 on
+  /// every dark surface).
   final Color dark;
 
   /// Colour for new tasks and unknown keys; matches the column default.
@@ -226,10 +231,12 @@ final class _Color {
   _Color.parse(Object? json)
     : key = _keyOf(_map(json, 'colour')['key'], 'colour key'),
       hex = _hexOf(_map(json, 'colour')['hex'], 'colour hex'),
+      ring = _hexOf(_map(json, 'colour')['ring'], 'colour ring'),
       dark = _hexOf(_map(json, 'colour')['dark'], 'colour dark');
 
   final String key;
   final String hex;
+  final String ring;
   final String dark;
 }
 

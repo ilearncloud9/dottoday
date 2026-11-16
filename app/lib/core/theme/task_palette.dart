@@ -35,6 +35,7 @@ abstract final class TaskAlpha {
 final class TaskSwatch {
   const TaskSwatch({
     required this.color,
+    required this.ring,
     required this.ink,
     required this.tint,
     required this.glyph,
@@ -42,6 +43,10 @@ final class TaskSwatch {
 
   /// Dot outline, icon, live segment and the filled done dot (§2.1).
   final Color color;
+
+  /// Concept E's ahead ring and the icon inside it (ED-155; in dark the
+  /// fill itself, ED-175). Done fills, thread and knots keep [color].
+  final Color ring;
 
   /// [color] as text on the theme's surfaces and on [tint] (≥ 4.5:1, §7.4).
   final Color ink;
@@ -81,7 +86,12 @@ final class TaskPalette {
     final alpha = colors.isDark ? TaskAlpha.tintDark : TaskAlpha.tintLight;
     return TaskPalette._([
       for (final c in TaskColor.values)
-        _swatch(colors.isDark ? c.dark : c.color, colors, alpha),
+        _swatch(
+          colors.isDark ? c.dark : c.color,
+          colors.isDark ? c.dark : c.ring,
+          colors,
+          alpha,
+        ),
     ]);
   }
 
@@ -94,6 +104,7 @@ final class TaskPalette {
     for (final c in TaskColor.values)
       TaskSwatch(
         color: Color.lerp(this[c].color, other[c].color, t)!,
+        ring: Color.lerp(this[c].ring, other[c].ring, t)!,
         ink: Color.lerp(this[c].ink, other[c].ink, t)!,
         tint: Color.lerp(this[c].tint, other[c].tint, t)!,
         glyph: Color.lerp(this[c].glyph, other[c].glyph, t)!,
@@ -101,13 +112,19 @@ final class TaskPalette {
   ]);
 }
 
-TaskSwatch _swatch(Color color, DotColors colors, double tintAlpha) {
+TaskSwatch _swatch(
+  Color color,
+  Color ring,
+  DotColors colors,
+  double tintAlpha,
+) {
   final tint = Color.alphaBlend(
     color.withValues(alpha: tintAlpha),
     colors.raised,
   );
   return TaskSwatch(
     color: color,
+    ring: ring,
     ink: inkFor(
       color,
       backgrounds: [colors.surface, colors.raised, tint],

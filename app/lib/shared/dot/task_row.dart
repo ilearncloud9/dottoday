@@ -256,7 +256,7 @@ class ThreadRowFrame extends StatelessWidget {
           child: CustomPaint(
             painter: ThreadAxisPainter(
               piece: piece,
-              hairline: c.hairline,
+              hairline: c.threadAhead,
               accent: c.accent,
               accentTint: Color.alphaBlend(c.accentTint, c.raised),
               ghostSide: Directionality.of(context) == TextDirection.rtl

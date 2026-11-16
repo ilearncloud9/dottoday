@@ -75,7 +75,7 @@ class _CantRightNowState extends State<CantRightNow>
                   builder: (context, _) => LinearProgressIndicator(
                     value: _hold.value,
                     color: t.colors.accentInk,
-                    backgroundColor: t.colors.hairline,
+                    backgroundColor: t.colors.threadAhead,
                   ),
                 ),
               ),

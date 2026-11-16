@@ -97,11 +97,11 @@ class _InboxAddFieldState extends State<InboxAddField> {
             fillColor: t.colors.raised,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(DotRadii.card),
-              borderSide: BorderSide(color: t.colors.hairline),
+              borderSide: BorderSide(color: t.colors.threadAhead),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(DotRadii.card),
-              borderSide: BorderSide(color: t.colors.hairline),
+              borderSide: BorderSide(color: t.colors.threadAhead),
             ),
           ),
         ),

@@ -53,7 +53,7 @@ class WeekCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DotRadii.card),
           side: BorderSide(
-            color: live ? c.accent : c.hairline,
+            color: live ? c.accent : c.threadAhead,
             width: live ? DotSize.smallDotOutline : DotSpace.hairline,
           ),
         ),

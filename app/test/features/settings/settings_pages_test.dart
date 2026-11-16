@@ -259,13 +259,13 @@ void main() {
     });
   }
 
-  // A title word wider than the space beside ‹ ("Notification" at 200 %
-  // on a 390 px phone) puts the title under ‹ on the full width, so it
-  // wraps at its space instead of breaking mid-word. Real fonts: the test
-  // font draws every letter a full square wide.
+  // Concept E stacks a Settings page's large title under "‹ Settings" at
+  // every text size (E-R2-20 frame 07, docs/design-references/concept-e;
+  // ED-360). A long word still wraps at its space, never mid-word. Real
+  // fonts: the test font draws every letter a full square wide.
   group('page title', () {
     setUpAll(loadAppFonts);
-    for (final (scale, stacked) in [(1.0, false), (2.0, true)]) {
+    for (final (scale, stacked) in [(1.0, true), (2.0, true)]) {
       testWidgets('page title at ${(scale * 100).round()} % text', (
         tester,
       ) async {

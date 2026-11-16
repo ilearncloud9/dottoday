@@ -30,8 +30,9 @@ void main() {
       final l = DotColors.light();
       final d = DotColors.dark();
       expect(
-        [l.surface, l.raised, l.text, l.muted, l.hairline],
-        // Concept E light (E_DESIGN_RULES.md §4.1, M18.1).
+        [l.ground, l.card, l.ink, l.secondary, l.threadAhead],
+        // Concept E light; every role is checked against the boards in
+        // concept_e_board_values_test.dart (ED-360).
         const [
           Color(0xFFFBF7F1),
           Color(0xFFFFFDF9),
@@ -40,26 +41,30 @@ void main() {
           Color(0xFFBEB6C7),
         ],
       );
-      // The outline is E's 8 % ink hairline over the card colour.
-      expect(l.outline, Color.alphaBlend(const Color(0x14241F2B), l.raised));
+      // The edge is Concept E's 8 % ink hairline over the card colour.
+      expect(l.hairline, Color.alphaBlend(const Color(0x14241F2B), l.card));
       expect(
-        [d.surface, d.raised, d.text, d.muted, d.outline, d.hairline],
-        // Concept E dark, P1 Warm Charcoal (ED-174, ED-178; M18.2).
+        [d.ground, d.card, d.ink, d.secondary, d.threadAhead],
+        // Concept E dark, P1 Warm Charcoal: cards are #28232A as the
+        // approved dark boards draw them (ED-181, ED-360).
         const [
           Color(0xFF171416),
-          Color(0xFF1F1B1E),
+          Color(0xFF28232A),
           Color(0xFFF3ECE4),
           Color(0xFFC7BEC4),
-          Color(0xFF3E373D),
           Color(0xFF6B6369),
         ],
       );
+      expect(d.hairline, Color.alphaBlend(const Color(0x1AFFF5EB), d.card));
       expect(l.accent, const Color(0xFF11615C));
       expect(l.onAccent, const Color(0xFFFFFFFF));
       expect(d.accent, const Color(0xFF5BC4B8));
       expect(d.onAccent, const Color(0xFF0C2523));
-      expect(l.accentTint.a, closeTo(0.12, 0.01));
-      expect(d.accentTint.a, closeTo(0.22, 0.01));
+      // Teal's own Concept E text and tonal pair (ED-174).
+      expect(l.accentText, const Color(0xFF0B4642));
+      expect(d.accentText, const Color(0xFFA3E2D9));
+      expect(l.tonal, const Color(0xFFE2EFEC));
+      expect(d.tonal, const Color(0xFF1E3A37));
       expect(l.success, const Color(0xFF2FA37A));
     });
 
@@ -77,10 +82,9 @@ void main() {
             contrastRatio(c.onAccent, c.accentFill),
             greaterThanOrEqualTo(5),
           );
-          expect(
-            contrastRatio(c.onAccent, c.accent),
-            greaterThanOrEqualTo(4.5),
-          );
+          // Text on a button sits on accentFill (above); the accent itself
+          // is a graphic and reaches 3:1 on the page (ED-161, ED-360).
+          expect(contrastRatio(c.accent, c.ground), greaterThanOrEqualTo(3));
         });
       }
     }
@@ -107,13 +111,14 @@ void main() {
         [t.pageTitle.fontSize, t.pageTitle.fontWeight],
         [28, FontWeight.w700],
       );
-      expect(t.pageTitle.letterSpacing, closeTo(-0.56, 1e-9));
+      // Chrome is in the platform's own face (decision C, ED-360).
+      expect(t.pageTitle.fontFamily, isNull);
       expect(t.pageTitleExpanded.fontSize, 30);
       expect(
         [t.topBarTitle.fontSize, t.topBarTitle.fontWeight],
         [24, FontWeight.w400],
       );
-      expect([t.caption.fontSize, t.caption.fontWeight], [12, FontWeight.w600]);
+      expect([t.caption.fontSize, t.caption.fontWeight], [13, FontWeight.w600]);
       expect(t.caption.color, Colors.grey);
       expect(
         [t.cardTitle.fontSize, t.cardTitle.fontWeight],

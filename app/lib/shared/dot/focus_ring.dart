@@ -40,7 +40,7 @@ class FocusRing extends StatelessWidget {
             painter: _RingPainter(
               sweep: sweep,
               color: swatch.color,
-              track: t.colors.hairline,
+              track: t.colors.threadAhead,
               inner: t.colors.raised,
               stroke: DotSize.focusRingStroke * size / DotSize.focusRing,
             ),

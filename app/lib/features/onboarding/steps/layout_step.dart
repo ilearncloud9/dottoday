@@ -229,7 +229,7 @@ class _StepDots extends StatelessWidget {
               width: i == 0 ? DotSpace.l + DotSpace.xxs : DotSpace.s,
               height: DotSpace.s,
               decoration: BoxDecoration(
-                color: i == 0 ? t.colors.accent : t.colors.hairline,
+                color: i == 0 ? t.colors.accent : t.colors.threadAhead,
                 borderRadius: BorderRadius.circular(DotRadii.pill),
               ),
             ),

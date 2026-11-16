@@ -1,24 +1,24 @@
 {
-  "$comment": "Task colours and accents in Concept E: light fills (ED-155, ED-161; M18.1) and dark fills (ED-175; M18.2). Of the accents only teal is Concept E's (light #11615C, dark #5BC4B8, the default); indigo, coral and violet stay as they were until the App colour work (M20.7). Order is the picker order. Edit here, then run: dart run tool/gen_task_palette.dart",
+  "$comment": "Task colours and accents in Concept E: light fills and ahead rings (ED-155, ED-161), dark fills that are also the dark rings (ED-175). Accents (ED-360): teal is the default; indigo, coral and violet take their Concept E shades, coral the ring shade #DF6147 because its fill is under 3:1 on the ground; buttons derive a darker or lighter shade for text. Order is the picker order. Edit here, then run: dart run tool/gen_task_palette.dart",
   "default": "indigo",
   "colors": [
-    { "key": "coral", "hex": "#E2725B", "dark": "#E2725B" },
-    { "key": "amber", "hex": "#D9A23A", "dark": "#D9A23A" },
-    { "key": "mint", "hex": "#4CA36B", "dark": "#4CA36B" },
-    { "key": "teal", "hex": "#2A9D8F", "dark": "#2A9D8F" },
-    { "key": "sky", "hex": "#4A9BD6", "dark": "#4A9BD6" },
-    { "key": "indigo", "hex": "#5B5FD6", "dark": "#7A7EDE" },
-    { "key": "violet", "hex": "#8B5CF6", "dark": "#9672E6" },
-    { "key": "rose", "hex": "#D9668F", "dark": "#D9668F" },
-    { "key": "slate", "hex": "#6E6A75", "dark": "#898590" }
+    { "key": "coral", "hex": "#E2725B", "ring": "#DF6147", "dark": "#E2725B" },
+    { "key": "amber", "hex": "#D9A23A", "ring": "#AF7E22", "dark": "#D9A23A" },
+    { "key": "mint", "hex": "#4CA36B", "ring": "#469763", "dark": "#4CA36B" },
+    { "key": "teal", "hex": "#2A9D8F", "ring": "#289588", "dark": "#2A9D8F" },
+    { "key": "sky", "hex": "#4A9BD6", "ring": "#338ED1", "dark": "#4A9BD6" },
+    { "key": "indigo", "hex": "#5B5FD6", "ring": "#5B5FD6", "dark": "#7A7EDE" },
+    { "key": "violet", "hex": "#8B5CF6", "ring": "#8B5CF6", "dark": "#9672E6" },
+    { "key": "rose", "hex": "#D9668F", "ring": "#D75E89", "dark": "#D9668F" },
+    { "key": "slate", "hex": "#6E6A75", "ring": "#6E6A75", "dark": "#898590" }
   ],
   "$legacyComment": "Keys from the 12-colour palette (docs/03 §1, M1.0) that may still be stored; they render as the mapped colour and are never written by the app (ADR-0007).",
   "legacy": { "tangerine": "amber", "lime": "mint", "magenta": "rose" },
   "defaultAccent": "teal",
   "accents": [
-    { "key": "indigo", "light": "#3B6CF6", "dark": "#7FA0FF" },
+    { "key": "indigo", "light": "#5B5FD6", "dark": "#7A7EDE" },
     { "key": "teal", "light": "#11615C", "dark": "#5BC4B8" },
-    { "key": "coral", "light": "#E5674F", "dark": "#FF8A73" },
-    { "key": "violet", "light": "#7A5AF8", "dark": "#A58BFF" }
+    { "key": "coral", "light": "#DF6147", "dark": "#E2725B" },
+    { "key": "violet", "light": "#8B5CF6", "dark": "#9672E6" }
   ]
 }

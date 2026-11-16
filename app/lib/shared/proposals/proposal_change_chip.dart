@@ -33,7 +33,7 @@ class ProposalChangeChip extends StatelessWidget {
       ),
       ProposalChange.untouched ||
       ProposalChange.overlaps ||
-      ProposalChange.toInbox => (t.colors.hairline, t.colors.muted),
+      ProposalChange.toInbox => (t.colors.threadAhead, t.colors.muted),
       _ => (t.colors.accentTint, t.colors.accentInk),
     };
     return DecoratedBox(

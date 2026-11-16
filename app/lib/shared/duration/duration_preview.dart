@@ -125,7 +125,7 @@ class DurationPreviewBar extends StatelessWidget {
               end: 0,
               child: CustomPaint(
                 size: const Size.fromHeight(DotSize.freeLine),
-                painter: _DottedLine(t.colors.hairline),
+                painter: _DottedLine(t.colors.threadAhead),
               ),
             ),
             PositionedDirectional(

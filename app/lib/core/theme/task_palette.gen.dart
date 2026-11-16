@@ -8,23 +8,27 @@ part of 'task_palette.dart';
 /// (docs/05-data-model.md); the theme picks the value, the key never
 /// changes.
 enum TaskColor {
-  coral(Color(0xFFE2725B), dark: Color(0xFFE2725B)),
-  amber(Color(0xFFD9A23A), dark: Color(0xFFD9A23A)),
-  mint(Color(0xFF4CA36B), dark: Color(0xFF4CA36B)),
-  teal(Color(0xFF2A9D8F), dark: Color(0xFF2A9D8F)),
-  sky(Color(0xFF4A9BD6), dark: Color(0xFF4A9BD6)),
-  indigo(Color(0xFF5B5FD6), dark: Color(0xFF7A7EDE)),
-  violet(Color(0xFF8B5CF6), dark: Color(0xFF9672E6)),
-  rose(Color(0xFFD9668F), dark: Color(0xFFD9668F)),
-  slate(Color(0xFF6E6A75), dark: Color(0xFF898590));
+  coral(Color(0xFFE2725B), ring: Color(0xFFDF6147), dark: Color(0xFFE2725B)),
+  amber(Color(0xFFD9A23A), ring: Color(0xFFAF7E22), dark: Color(0xFFD9A23A)),
+  mint(Color(0xFF4CA36B), ring: Color(0xFF469763), dark: Color(0xFF4CA36B)),
+  teal(Color(0xFF2A9D8F), ring: Color(0xFF289588), dark: Color(0xFF2A9D8F)),
+  sky(Color(0xFF4A9BD6), ring: Color(0xFF338ED1), dark: Color(0xFF4A9BD6)),
+  indigo(Color(0xFF5B5FD6), ring: Color(0xFF5B5FD6), dark: Color(0xFF7A7EDE)),
+  violet(Color(0xFF8B5CF6), ring: Color(0xFF8B5CF6), dark: Color(0xFF9672E6)),
+  rose(Color(0xFFD9668F), ring: Color(0xFFD75E89), dark: Color(0xFFD9668F)),
+  slate(Color(0xFF6E6A75), ring: Color(0xFF6E6A75), dark: Color(0xFF898590));
 
-  const TaskColor(this.color, {required this.dark});
+  const TaskColor(this.color, {required this.ring, required this.dark});
 
   /// The light colour of the dot, segment and chip, before any alpha.
   final Color color;
 
-  /// The same colour in the dark theme (ED-175: ≥ 3.5:1 on every dark
-  /// surface).
+  /// The light ahead ring and its icon: [color], or a deeper shade where
+  /// [color] is under 3:1 on the ground (ED-155, ED-161).
+  final Color ring;
+
+  /// The same colour in the dark theme, also its ring (ED-175: ≥ 3.5:1 on
+  /// every dark surface).
   final Color dark;
 
   /// Colour for new tasks and unknown keys; matches the column default.
@@ -51,10 +55,10 @@ const _legacy = <String, TaskColor>{
 /// User-selectable accent (Settings › Look, docs/10 §2.1). [key] is the
 /// persisted `settings.accent`.
 enum DotAccent {
-  indigo(light: Color(0xFF3B6CF6), dark: Color(0xFF7FA0FF)),
+  indigo(light: Color(0xFF5B5FD6), dark: Color(0xFF7A7EDE)),
   teal(light: Color(0xFF11615C), dark: Color(0xFF5BC4B8)),
-  coral(light: Color(0xFFE5674F), dark: Color(0xFFFF8A73)),
-  violet(light: Color(0xFF7A5AF8), dark: Color(0xFFA58BFF));
+  coral(light: Color(0xFFDF6147), dark: Color(0xFFE2725B)),
+  violet(light: Color(0xFF8B5CF6), dark: Color(0xFF9672E6));
 
   const DotAccent({required this.light, required this.dark});
 

@@ -1,58 +1,188 @@
 import 'package:flutter/painting.dart';
 
-/// Primitive colours, named by what they look like, not by role: Concept E
-/// light (docs/redesign/E_DESIGN_RULES.md §4.1, M18.1) and dark, the P1
-/// Warm Charcoal set (ED-174, ED-178; M18.2).
+/// Primitive colours shared by both themes.
 ///
-/// The only file with raw hex values besides the generated task palette.
-/// Widgets never read these: they read roles from `DotTheme.of(context)`.
+/// With [DotPalette], the only file with raw hex values besides the
+/// generated task palette. Widgets never read these: they read roles from
+/// `DotTheme.of(context)`.
 abstract final class DotPrimitives {
-  /// E `ground`: the app background.
-  static const ground = Color(0xFFFBF7F1);
-
-  /// E `surface`: cards, sheets, popovers.
-  static const cream = Color(0xFFFFFDF9);
   static const white = Color(0xFFFFFFFF);
-
-  /// E `ink`: primary text (15.07:1 on [ground]).
-  static const ink = Color(0xFF241F2B);
-
-  /// E `secondary`: times, summaries, labels (5.45:1 on [ground]).
-  static const grey6A = Color(0xFF6A6273);
-
-  /// E `hairline`: rgba(36,31,43,.08), row and card edges.
-  static const hairline = Color(0x14241F2B);
-
-  /// E `threadAhead`: the dotted thread and free-time dots.
-  static const lilacBE = Color(0xFFBEB6C7);
-
-  /// Dark `ground`: the app background.
-  static const charcoal17 = Color(0xFF171416);
-
-  /// Dark `surface`: cards and sheets.
-  static const charcoal1F = Color(0xFF1F1B1E);
-
-  /// Dark `text` (on ground 15.6:1).
-  static const linen = Color(0xFFF3ECE4);
-
-  /// Dark `secondary`.
-  static const greyC7 = Color(0xFFC7BEC4);
-
-  /// Dark `divider`: hairlines and card edges.
-  static const charcoal3E = Color(0xFF3E373D);
-
-  /// Dark dotted thread ahead (T2-B, ED-178: 3.15:1 on ground).
-  static const mauve6B = Color(0xFF6B6369);
 
   /// Ink on the dark teal accent (ED-174).
   static const tealInk = Color(0xFF0C2523);
+}
 
-  /// Light success (done check on a completed day).
-  static const green2F = Color(0xFF2FA37A);
+/// Concept E's colour values for one theme: light (E_DESIGN_RULES.md §4)
+/// and dark P1 Warm Charcoal (ED-174 to ED-181). Every dark value is the
+/// one the approved dark boards draw for the light value beside it.
+final class DotPalette {
+  const DotPalette._({
+    required this.ground,
+    required this.card,
+    required this.sunk,
+    required this.chip,
+    required this.tile,
+    required this.control,
+    required this.sheet,
+    required this.avatar,
+    required this.canvas,
+    required this.ink,
+    required this.ink2,
+    required this.secondary,
+    required this.tertiary,
+    required this.ring,
+    required this.placeholder,
+    required this.threadAhead,
+    required this.threadOnRaised,
+    required this.controlOutline,
+    required this.hairline,
+    required this.hairlineStrong,
+    required this.calendarIcon,
+    required this.tabOff,
+    required this.accentText,
+    required this.tonal,
+    required this.tonalAndroid,
+    required this.onTonalAndroid,
+    required this.selectedWeb,
+    required this.focus,
+    required this.switchOn,
+    required this.wakeCap,
+    required this.wakeIcon,
+    required this.windCap,
+    required this.windIcon,
+    required this.orbTrack,
+    required this.orbInner,
+    required this.destructive,
+    required this.swipeMove,
+    required this.success,
+    required this.scrim,
+    required this.shadow,
+  });
 
-  /// Dark success (ED-174).
-  static const green82 = Color(0xFF82CF9F);
+  static const light = DotPalette._(
+    ground: Color(0xFFFBF7F1),
+    card: Color(0xFFFFFDF9),
+    sunk: Color(0xFFF6F1EA),
+    chip: Color(0xFFEDE7DF),
+    tile: Color(0xFFF1ECE4),
+    control: Color(0xFFECE5DC),
+    sheet: Color(0xFFFFFDF9),
+    avatar: Color(0xFFE7DFEF),
+    canvas: Color(0xFFEFE7DB),
+    ink: Color(0xFF241F2B),
+    ink2: Color(0xFF4E4757),
+    secondary: Color(0xFF6A6273),
+    tertiary: Color(0xFF7A7280),
+    ring: Color(0xFF8A8494),
+    placeholder: Color(0xFF6F6978),
+    threadAhead: Color(0xFFBEB6C7),
+    threadOnRaised: Color(0xFFBEB6C7),
+    controlOutline: Color(0xFFCFC6D6),
+    hairline: Color(0x14241F2B),
+    hairlineStrong: Color(0x1F241F2B),
+    calendarIcon: Color(0xFF3B3543),
+    tabOff: Color(0xFF6E6E73),
+    accentText: Color(0xFF0B4642),
+    tonal: Color(0xFFE2EFEC),
+    tonalAndroid: Color(0xFFCFE8E4),
+    onTonalAndroid: Color(0xFF062F2C),
+    selectedWeb: Color(0xFFD9ECE9),
+    focus: Color(0xFF11615C),
+    switchOn: Color(0xFF11615C),
+    wakeCap: Color(0xFFFBEBC8),
+    wakeIcon: Color(0xFF9A5A0E),
+    windCap: Color(0xFFE6E3F7),
+    windIcon: Color(0xFF4B3FB0),
+    orbTrack: Color(0xFFE4E3F7),
+    orbInner: Color(0xFFF1F0FB),
+    destructive: Color(0xFFC8322F),
+    swipeMove: Color(0xFF6A6273),
+    success: Color(0xFF2FA37A),
+    scrim: Color(0x4D241F2B),
+    shadow: Color(0xFF241F2B),
+  );
 
-  /// Floating-element shadow, E ink at 10 %.
-  static const shadow = Color(0x1A241F2B);
+  static const dark = DotPalette._(
+    ground: Color(0xFF171416),
+    card: Color(0xFF28232A),
+    sunk: Color(0xFF1F1B1E),
+    chip: Color(0xFF2F2A30),
+    tile: Color(0xFF2F2A30),
+    control: Color(0xFF37313A),
+    sheet: Color(0xFF2F2A30),
+    avatar: Color(0xFF37313A),
+    canvas: Color(0xFF28232A),
+    ink: Color(0xFFF3ECE4),
+    ink2: Color(0xFFC7BEC4),
+    secondary: Color(0xFFC7BEC4),
+    tertiary: Color(0xFF8C838A),
+    ring: Color(0xFF8C838A),
+    placeholder: Color(0xFFA0999F),
+    threadAhead: Color(0xFF6B6369),
+    threadOnRaised: Color(0xFF7B7279),
+    controlOutline: Color(0xFF4A4348),
+    hairline: Color(0x1AFFF5EB),
+    hairlineStrong: Color(0x29FFF5EB),
+    calendarIcon: Color(0xFFE6DEE2),
+    tabOff: Color(0xFFC7BEC4),
+    accentText: Color(0xFFA3E2D9),
+    tonal: Color(0xFF1E3A37),
+    tonalAndroid: Color(0xFF1E3A37),
+    onTonalAndroid: Color(0xFFA3E2D9),
+    selectedWeb: Color(0xFF1E3A37),
+    focus: Color(0xFF7FD6CB),
+    switchOn: Color(0xFF2A8C83),
+    wakeCap: Color(0xFF483924),
+    wakeIcon: Color(0xFFD9A23A),
+    windCap: Color(0xFF333148),
+    windIcon: Color(0xFFA9ACEB),
+    orbTrack: Color(0xFF302F48),
+    orbInner: Color(0xFF28232A),
+    destructive: Color(0xFFB5473C),
+    swipeMove: Color(0xFF636366),
+    success: Color(0xFF82CF9F),
+    scrim: Color(0x99000000),
+    shadow: Color(0xFF000000),
+  );
+
+  final Color ground,
+      card,
+      sunk,
+      chip,
+      tile,
+      control,
+      sheet,
+      avatar,
+      canvas,
+      ink,
+      ink2,
+      secondary,
+      tertiary,
+      ring,
+      placeholder,
+      threadAhead,
+      threadOnRaised,
+      controlOutline,
+      hairline,
+      hairlineStrong,
+      calendarIcon,
+      tabOff,
+      accentText,
+      tonal,
+      tonalAndroid,
+      onTonalAndroid,
+      selectedWeb,
+      focus,
+      switchOn,
+      wakeCap,
+      wakeIcon,
+      windCap,
+      windIcon,
+      orbTrack,
+      orbInner,
+      destructive,
+      swipeMove,
+      success,
+      scrim,
+      shadow;
 }

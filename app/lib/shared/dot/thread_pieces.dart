@@ -165,7 +165,10 @@ class _DropBox extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(DotRadii.card),
         child: CustomPaint(
-          painter: DashedPillPainter(color: c.hairline, radius: DotRadii.card),
+          painter: DashedPillPainter(
+            color: c.threadAhead,
+            radius: DotRadii.card,
+          ),
           child: Padding(
             padding: const EdgeInsets.all(DotSpace.l),
             child: Column(
@@ -207,7 +210,7 @@ class _AddHere extends StatelessWidget {
         onTap: onTap,
         customBorder: const StadiumBorder(),
         child: CustomPaint(
-          painter: DashedPillPainter(color: c.hairline),
+          painter: DashedPillPainter(color: c.threadAhead),
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: DotTouch.android),
             child: Padding(

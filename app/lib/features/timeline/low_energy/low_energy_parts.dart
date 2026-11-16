@@ -22,7 +22,7 @@ class LowEnergyCard extends StatelessWidget {
         color: dashed ? null : t.colors.raised,
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
         border: Border.all(
-          color: dashed ? t.colors.outline : t.colors.hairline,
+          color: dashed ? t.colors.outline : t.colors.threadAhead,
         ),
       ),
       child: Padding(padding: const EdgeInsets.all(DotSpace.l), child: child),

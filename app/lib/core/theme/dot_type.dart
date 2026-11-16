@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/painting.dart';
 
 /// Type roles in Manrope (bundled), Concept E's content face (ED-110), at
@@ -33,28 +34,34 @@ final class DotType {
   /// Roles in [text], with [muted] for captions and meta.
   factory DotType.withColors({required Color text, required Color muted}) =>
       DotType(
-        pageTitle: _manrope(28, 34, 700, text, tracking: -0.02),
-        pageTitleExpanded: _manrope(30, 36, 700, text, tracking: -0.02),
-        topBarTitle: _manrope(24, 32, 400, text),
-        caption: _manrope(12, 16, 600, muted, tracking: 0.06),
+        // Chrome in the platform's own face (E §3.3, decision C).
+        pageTitle: _system(28, 34, 700, text),
+        pageTitleExpanded: _system(30, 36, 700, text),
+        topBarTitle: _system(24, 32, 400, text),
+        // Section headers: E has no uppercase captions (menu headers 13/18).
+        caption: _system(13, 18, 600, muted),
         cardTitle: _manrope(15, 20, 700, text),
         rowTitle: _manrope(17, 21, 700, text),
         liveRowTitle: _manrope(19, 24, 700, text),
         rowMeta: _manrope(13, 18, 400, muted),
         body: _manrope(15, 22, 400, text),
         button: _manrope(15, 20, 700, text),
-        tabLabel: _manrope(10, 12, 500, muted),
-        tabLabelActive: _manrope(10, 12, 600, text),
+        tabLabel: _system(10, 12, 500, muted),
+        tabLabelActive: _system(10, 12, 600, text),
         stripDate: _manrope(18, 22, 600, text),
-        stripWeekday: _manrope(13, 16, 500, muted),
+        stripWeekday: _system(13, 16, 500, muted),
         monthDate: _manrope(15, 20, 500, text),
-        dayTitle: _manrope(28, 34, 700, text),
-        dayCaption: _manrope(13, 18, 700, muted, tracking: 0.06),
+        dayTitle: _system(28, 34, 700, text, tracking: -0.01),
+        // E summary line, 700 15/20 secondary.
+        dayCaption: _manrope(15, 20, 700, muted),
         threadTitle: _manrope(17, 21, 700, text),
         threadMeta: _manrope(13, 18, 400, muted),
       );
 
   static const fontFamily = 'Manrope';
+
+  /// Web chrome's stand-in for the system font (see `_system`).
+  static const webChromeFamily = 'RobotoWeb';
 
   /// The weight `**bold**` notes take (markdown-lite, docs/02 F2.9).
   static const _strongWeight = 700;
@@ -186,3 +193,23 @@ TextStyle _manrope(
     color: color,
   );
 }
+
+/// A chrome role in the platform's own face (E §3.1): SF Pro on Apple and
+/// Roboto on Android come from the system (no family set). Flutter web
+/// cannot reach the visitor's system font, so the web uses the bundled
+/// Roboto (owner, 2026-11-16; provisional pending the owner's font review).
+TextStyle _system(
+  double size,
+  double lineHeight,
+  int weight,
+  Color color, {
+  double tracking = 0,
+}) => TextStyle(
+  fontFamily: kIsWeb ? DotType.webChromeFamily : null,
+  fontSize: size,
+  height: lineHeight / size,
+  letterSpacing: tracking * size,
+  fontWeight: FontWeight.values[(weight ~/ 100) - 1],
+  fontFeatures: const [FontFeature.tabularFigures()],
+  color: color,
+);

@@ -75,12 +75,12 @@ class LoadingThread extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (var i = 0; i < _rows; i++) ...[
-              _SkeletonRow(wide: i.isEven, color: c.hairline),
+              _SkeletonRow(wide: i.isEven, color: c.threadAhead),
               if (i < _rows - 1)
                 // The glyph's line is its centre: under the dots' centres.
                 DotIcon(
                   DotGlyphs.dottedLine,
-                  color: c.hairline,
+                  color: c.threadAhead,
                   size: DotSize.rowDot,
                 ),
             ],

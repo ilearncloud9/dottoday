@@ -22,7 +22,7 @@ class _Specimen extends StatelessWidget {
       'text': c.text,
       'muted': c.muted,
       'outline': c.outline,
-      'hairline': c.hairline,
+      'hairline': c.threadAhead,
       'accent': c.accent,
       'accentInk': c.accentInk,
       'tint': Color.alphaBlend(c.accentTint, c.raised),

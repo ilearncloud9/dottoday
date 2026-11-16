@@ -94,7 +94,7 @@ class _Card extends StatelessWidget {
         decoration: BoxDecoration(
           color: t.colors.raised,
           borderRadius: BorderRadius.circular(DotRadii.card),
-          border: Border.all(color: t.colors.hairline),
+          border: Border.all(color: t.colors.threadAhead),
         ),
         child: Padding(
           padding: const EdgeInsets.all(DotSpace.l),

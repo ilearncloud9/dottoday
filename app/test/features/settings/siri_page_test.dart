@@ -36,6 +36,8 @@ void main() {
       tester,
       overrides: [siriAvailableProvider.overrideWithValue(true)],
     );
+    await tester.ensureVisible(find.text('Siri & Shortcuts'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Siri & Shortcuts'));
     await tester.pumpAndSettle();
     expect(find.text('What you can say'.toUpperCase()), findsOneWidget);
